@@ -26,26 +26,18 @@
   height: 20px;
   margin-right: 8px;
   margin-left: 5px;
-  background-color: silver;
+  background-color: #c0c0c0;
   display: inline-block;
   float: left;
 }
 
 .wmd-button {
-  width: 20px;
-  height: 20px;
   padding-left: 2px;
   padding-right: 3px;
   margin-right: 5px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  border: 0;
-  width: 20px;
-  height: 20px;
   position: relative;
   border: 0;
   float: left;
-
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
@@ -58,7 +50,7 @@
   background-image: none !important;
   background-position: 0 0;
   background-repeat: repeat;
-  background-color: white;
+  background-color: #fff;
   padding: 4px;
 }
 
@@ -101,32 +93,32 @@
 }
 
 #wmd-heading-button:before {
-  content:  "\f031";
+  content: "\f031";
 }
 
 #wmd-hr-button:before {
-  content:  "\f068";
+  content: "\f068";
 }
 
 #wmd-undo-button:before {
-  content:  "\f0e2";
+  content: "\f0e2";
 }
 
 #wmd-redo-button:before {
-  content:  "\f01e";
+  content: "\f01e";
 }
 
 #wmd-quote-post:before {
-  content:  "\f0e5";
+  content: "\f0e5";
 }
 
 .wmd-prompt-background {
-  background-color: black;
+  background-color: #000;
 }
 
 .wmd-prompt-dialog {
-  border: 1px solid #999999;
-  background-color: whitesmoke;
+  border: 1px solid #999;
+  background-color: #f5f5f5;
 }
 
 .wmd-prompt-dialog > div {
@@ -135,12 +127,12 @@
 }
 
 .wmd-prompt-dialog > form > input[type="text"] {
-  border: 1px solid #999999;
-  color: black;
+  border: 1px solid #999;
+  color: #000;
 }
 
 .wmd-prompt-dialog > form > input[type="button"] {
-  border: 1px solid #888888;
+  border: 1px solid #888;
   font-family: trebuchet MS, helvetica, sans-serif;
   font-size: 0.8em;
   font-weight: bold;

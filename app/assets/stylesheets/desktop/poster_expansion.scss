@@ -8,7 +8,7 @@
   box-shadow: 0 2px 6px $primary_border_color;
   margin-top: -2px;
   background-color: $primary_background_color;
-  padding: 12px 12px 5px 12px;
+  padding: 12px 12px 5px;
 
   h1 {
     display: inline-block;
@@ -39,6 +39,7 @@
     margin-top: 0;
     color: $secondary_text_color;
   }
+
   .groups {
     font-size: 13px;
     font-weight: normal;
@@ -61,7 +62,7 @@
   }
 
   p {
-    margin: 0 0 5px 0;
+    margin: 0 0 5px;
   }
 
   p.loading {
@@ -70,7 +71,7 @@
   }
 
   .btn {
-    margin: 0 0 7px 0;
+    margin: 0 0 7px;
   }
 
   .new-user a {

@@ -8,6 +8,7 @@
 %nav {
   margin-left: 0;
   list-style: none;
+
   > li > a {
     display: block;
     text-decoration: none;
@@ -20,20 +21,24 @@
 .nav-pills {
   @extend %nav;
   @extend .clearfix;
+
   > li {
     float: left;
     margin-right: 5px;
+
     > a {
-      border: none;
+      border: 0;
       padding: 5px 12px;
       color: $nav-pills-color;
       font-size: 16px;
       line-height: 20px;
+
       &:hover {
         color: $nav-pills-color-hover;
         background-color: $nav-pills-background-color-hover;
       }
     }
+
     &.active > a, > a.active {
       border-color: darken($nav-pills-background-color-active, 10%);
       color: $tertiary_text_color;
@@ -53,11 +58,14 @@
   overflow: hidden;
   background-color: $nav-stacked-background-color;
   @include box-shadow(0 1px 0 $secondary_shadow_color);
+
   > li {
     border-bottom: 1px solid $nav-stacked-divider-color;
+
     &:last-of-type {
       border-bottom: 0;
     }
+
     > a {
       margin: 0;
       padding: 13px 13px 13px 30px;
@@ -67,15 +75,18 @@
       color: $nav-stacked-color;
     }
   }
+
   .active > a,
   .active .fa-chevron-right {
     color: $tertiary_text_color;
     background-color: $nav-stacked-background-color-active;
   }
+
   .count {
     font-size: 12px;
     line-height: 16px;
   }
+
   .fa-chevron-right {
     float: right;
     margin: 0;

@@ -14,16 +14,20 @@
   line-height: 18px;
   text-align: center;
   cursor: pointer;
+
   &:active {
     text-shadow: none;
   }
+
   &[disabled], &.disabled {
     cursor: default;
     opacity: 0.4;
   }
+
   .fa {
     margin-right: 7px;
   }
+
   &.no-text {
     .fa {
       margin-right: 0;
@@ -36,7 +40,7 @@
 // --------------------------------------------------
 
 .btn {
-  border: none;
+  border: 0;
   color: $primary_text_color;
   font-weight: normal;
   background: lighten($secondary_background_color, 73%);
@@ -44,32 +48,37 @@
   &[href] {
     color: $btn-default-color;
   }
+
   &:hover {
     background: #aaa;
     color: #fff;
   }
+
   &:active {
-    @include linear-gradient( darken(#aaa, 8%), #aaa);
+    @include linear-gradient(darken(#aaa, 8%), #aaa);
   }
+
   &[disabled] {
     background: $btn-default-background-color;
-    &:hover { color: $primary_text_color; }
     cursor: not-allowed;
+
+    &:hover {
+      color: $primary_text_color;
+    }
   }
 }
 
 // Buttons used in admin panel
 // --------------------------------------------------
 .btn-admin {
-  text-align:left;
+  text-align: left;
 }
 
 // Primary button
 // --------------------------------------------------
 
 .btn-primary {
-  border: none;
-  color: $tertiary_text_color;
+  border: 0;
   font-weight: normal;
   color: #fff;
   background: $btn-primary-background-color;
@@ -77,14 +86,17 @@
   &[href] {
     color: $tertiary_text_color;
   }
+
   &:hover {
     color: #fff;
     background: darken($btn-primary-background-color, 12%);
   }
+
   &:active {
     @include linear-gradient(darken($btn-primary-background-color, 18%), darken($btn-primary-background-color, 12%));
     color: #fff;
   }
+
   &[disabled] {
     background: $btn-primary-background-color;
   }
@@ -97,15 +109,19 @@
   color: $tertiary_text_color;
   font-weight: normal;
   background: $btn-danger-background-color;
+
   &[href] {
     color: $tertiary_text_color;
   }
-  &:hover{
+
+  &:hover {
     background: $btn-danger-background-color-dark;
   }
+
   &:active {
     @include linear-gradient($btn-danger-background-color-dark, $btn-danger-background-color);
   }
+
   &[disabled] {
     background: $btn-danger-background-color;
   }
@@ -118,43 +134,56 @@
   color: $tertiary_text_color;
   text-shadow: 0 1px 0 rgba($primary_shadow_color, 0.2);
   @include box-shadow(inset 0 1px 0 rgba($secondary_shadow_color, 0.1));
+
   &[href] {
     color: $tertiary_text_color;
   }
+
   &:before {
     margin-right: 7px;
     font-family: zocial;
     line-height: 0.9;
   }
+
   &.google {
     background: $google;
+
     &:before {
       content: "G";
     }
   }
+
   &.facebook {
     background: $facebook;
+
     &:before {
       content: "f";
     }
   }
+
   &.cas {
     background: $cas;
   }
+
   &.twitter {
     background: $twitter;
+
     &:before {
       content: "T";
     }
   }
+
   &.yahoo {
     background: $yahoo;
+
     &:before {
       content: "Y";
     }
   }
+
   &.github {
     background: $github;
+
     &:before {
       content: "g";
     }
@@ -165,7 +194,6 @@
 // --------------------------------------------------
 
 // Small
-
 .btn-small {
   padding: 3px 6px;
   font-size: 12px;
@@ -173,7 +201,6 @@
 }
 
 // Large
-
 .btn-large {
   padding: 9px 18px;
   font-size: 16px;

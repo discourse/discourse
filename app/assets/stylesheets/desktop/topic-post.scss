@@ -40,76 +40,87 @@ h1 .topic-statuses .topic-status i {
   max-width: 80px;
   height: auto;
   max-height: 40px;
-  }
+}
 
 .post-cloak {
   padding: 0;
 
   &:first-of-type {
-    border-top: none;
+    border-top: 0;
   }
 
 
-.reply-to-tab {
-  display: block;
-  position: absolute;
-  left: 120px;
-  z-index: 400;
-  padding: 5px 12px;
-  border: 1px solid $primary_border_color;
-  font-size: 12px;
-  margin-left: -8px;
-  background: $primary_background_color;
-  color: $secondary_text_color;
-  @include medium-width {
-    left: 107px;
-  }
-  @include small-width {
-    left: 103px;
-  }
-}
+  .reply-to-tab {
+    display: block;
+    position: absolute;
+    left: 120px;
+    z-index: 400;
+    padding: 5px 12px;
+    border: 1px solid $primary_border_color;
+    font-size: 12px;
+    margin-left: -8px;
+    background: $primary_background_color;
+    color: $secondary_text_color;
 
-.avoid-tab {
-  padding-top: 25px;
-  .topic-meta-data-inside {margin-top: -30px;}
-}
-
-.gutter {
-  .reply-new {
-    .discourse-no-touch & {
-     opacity:0;
-     transition: opacity linear 0.4s;
-     -webkit-transition: opacity linear 0.4s;
+    @include medium-width {
+      left: 107px;
     }
-    .discourse-touch & {opacity: 1;}
-  }
-}
 
-section.post-menu-area, .post-actions {
+    @include small-width {
+      left: 103px;
+    }
+  }
+
+  .avoid-tab {
+    padding-top: 25px;
+
+    .topic-meta-data-inside {
+      margin-top: -30px;
+    }
+  }
+
+  .gutter {
+    .reply-new {
+      .discourse-no-touch & {
+        opacity: 0;
+        transition: opacity linear 0.4s;
+        -webkit-transition: opacity linear 0.4s;
+      }
+
+      .discourse-touch & {
+        opacity: 1;
+      }
+    }
+  }
+
+  section.post-menu-area, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
-       transition: opacity linear 0.4s;
-    -webkit-transition: opacity linear 0.4s;
+      transition: opacity linear 0.4s;
+      -webkit-transition: opacity linear 0.4s;
     }
-    .discourse-touch & {opacity: 1;}
+
+    .discourse-touch & {
+      opacity: 1;
+    }
   }
 
   &:hover section.post-menu-area, &:hover .post-actions {
     opacity: 1;
-
   }
 
   &:hover .gutter {
-      .reply-new,
-      .track-link {
-        opacity:1;
-      }
+    .reply-new,
+    .track-link {
+      opacity: 1;
     }
+  }
 }
 
 nav.post-controls {
-    padding: 0;
-    button {
+  padding: 0;
+
+  button {
     color: lighten($primary_text_color, 50%);
     margin-right: 2px;
   }
@@ -124,11 +135,19 @@ nav.post-controls {
     padding: 8px 15px;
     padding-bottom: 20px;
     margin-left: 0;
-    span.badge-posts {color: lighten($primary_text_color, 50%);}
+
+    span.badge-posts {
+      color: lighten($primary_text_color, 50%);
+    }
+
     &:hover {
       background: lighten($secondary_background_color, 76%);
-      span.badge-posts {color: $primary_text_color;}
+
+      span.badge-posts {
+        color: $primary_text_color;
+      }
     }
+
     i {
       margin-left: 5px;
     }
@@ -141,16 +160,15 @@ nav.post-controls {
     padding: 8px 20px;
     margin-left: 10px;
 
-    &:hover {  color: $tertiary_text_color;
+    &:hover {
+      color: $tertiary_text_color;
       background: $emphasis_text_color;
     }
 
     &:active {
       background: $emphasis_background_color;
-    @include box-shadow(inset 0 1px 3px rgba($primary_shadow_color, .3));
-
+      @include box-shadow(inset 0 1px 3px rgba($primary_shadow_color, .3));
     }
-
   }
 
   .create i {
@@ -162,79 +180,98 @@ nav.post-controls {
     padding: 8px 10px;
     vertical-align: top;
     background: transparent;
-    border: none;
+    border: 0;
     margin-left: 3px;
     transition: all linear 0.15s;
-         &:hover {
-          background: lighten($secondary_background_color, 76%);
-          color: $primary_text_color;
-        }
 
-        &:active {
-            @include box-shadow(inset 0 1px 3px rgba($primary_shadow_color, .4));
-        }
+    &:hover {
+      background: lighten($secondary_background_color, 76%);
+      color: $primary_text_color;
+    }
 
-        &.hidden {
-          display: none;
-        }
-        &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
-          float: right;
-        }
+    &:active {
+      @include box-shadow(inset 0 1px 3px rgba($primary_shadow_color, .4));
+    }
 
-        &.delete:hover {
-          background: $warning_text_color;
-          color: $tertiary_text_color;
-        }
+    &.hidden {
+      display: none;
+    }
 
-        &.like:hover {color: $like_color;
-          background: $like_background_color;
-        }
+    &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
+      float: right;
+    }
 
-        &.bookmark {padding: 8px 11px; }
+    &.delete:hover {
+      background: $warning_text_color;
+      color: $tertiary_text_color;
+    }
 
-        .read-icon {
-          &:before {
-            font-family: "FontAwesome";
-            content: "\f02e";
-          }
-          &.unseen {
-            &:before {
-              content: "\f097";
-            }
-          }
-          &.last-read {
-            color: $warning_text_color;
-          }
-          &.bookmarked {
-            &:before {
-              color: $link-color;
-            }
-          }
+    &.like:hover {color: $like_color;
+      background: $like_background_color;
+    }
+
+    &.bookmark {
+      padding: 8px 11px;
+    }
+
+    .read-icon {
+      &:before {
+        font-family: "FontAwesome";
+        content: "\f02e";
+      }
+
+      &.unseen {
+        &:before {
+          content: "\f097";
         }
       }
+
+      &.last-read {
+        color: $warning_text_color;
+      }
+
+      &.bookmarked {
+        &:before {
+          color: $link-color;
+        }
+      }
+    }
+  }
+}
+
+.embedded-posts {
+  background: lighten($secondary_background_color, 76%);
+
+  .quote .title, blockquote, .onebox, .onebox-result {
+    background: lighten($secondary_background_color, 70%);
+    border-left: 5px solid lighten($secondary_background_color, 60%);
   }
 
-  .embedded-posts {
-    background: lighten($secondary_background_color, 76%);
-    .quote .title, blockquote, .onebox, .onebox-result {
-      background: lighten($secondary_background_color, 70%);
-      border-left: 5px solid lighten($secondary_background_color, 60%);
-    }
+  &.bottom {
+    margin-top: -11px;
+  }
 
-    &.bottom { margin-top: -11px;}
-    .topic-meta-data h5 {margin: 5px;}
-    .topic-meta-data-inside {
-    margin: -3px 0 0 0;
+  .topic-meta-data h5 {
+    margin: 5px;
+  }
+
+  .topic-meta-data-inside {
+    margin: -3px 0 0;
     color: $secondary_text_color;
-    }
-    .topic-meta-data {padding-top: 20px;}
   }
+
+  .topic-meta-data {
+    padding-top: 20px;
+  }
+}
 
 .bottom-round nav.post-controls .show-replies {
-background: lighten($secondary_background_color, 76%);
-margin-bottom: 0;
-padding-bottom: 8px;
-  &:hover {background: lighten($secondary_background_color, 76%);
+  background: lighten($secondary_background_color, 76%);
+  margin-bottom: 0;
+  padding-bottom: 8px;
+
+  &:hover {
+    background: lighten($secondary_background_color, 76%);
   }
 }
 
@@ -244,7 +281,10 @@ padding-bottom: 8px;
   .relative-date {
     margin-left: 5px;
   }
-  .avatar { margin-right: 2px; }
+
+  .avatar {
+    margin-right: 2px;
+  }
 }
 
 a.star {
@@ -257,11 +297,13 @@ a.star {
 }
 
 .topic-map {
-  margin: 20px 0 0 0;
+  margin: 20px 0 0;
   border: 1px solid $primary_border_color;
 
   .buttons .btn {
-    &:hover {border: 1px solid $primary_border_color !important;}
+    &:hover {
+      border: 1px solid $primary_border_color !important;
+    }
   }
 
   .topic-links li {
@@ -275,7 +317,7 @@ a.star {
   }
 
   h4 {
-    margin: 0 0 3px 0;
+    margin: 0 0 3px;
     color: $secondary_text_color;
     font-weight: normal;
     font-size: 12px;
@@ -297,14 +339,13 @@ a.star {
     color: $secondary_text_color;
   }
 
-
-
   .avatars {
     > div {
       float: left;
       position: relative;
       margin: 3px 0;
     }
+
     .post-count {
       position: absolute;
       top: 2px;
@@ -313,7 +354,7 @@ a.star {
       font-weight: normal;
       font-size: 11px;
       line-height: 14px;
-          }
+    }
   }
 
   .avatar {
@@ -325,62 +366,79 @@ a.star {
     li {
       float: left;
       padding: 7px 11px;
+
       &:last-of-type {
         border-right: 0;
       }
     }
+
     a, .number {
       line-height: 20px;
     }
+
     .number, i {
       color: $secondary_text_color;
     }
+
     .avatar + a {
       float: left;
     }
   }
+
   .avatars,
   .links,
   .information {
     padding: 7px 14px;
     color: $primary_text_color;
   }
+
   .information {
     border-top: 1px solid $primary_border_color;
   }
 
-.participants { // PMs //
-  .user {float: left; margin: 7px 20px 7px 0;}
-}
+  .participants { // PMs //
+    .user {
+      float: left;
+      margin: 7px 20px 7px 0;
+    }
+  }
 
   .topic-links {
     li > a {
       margin-left: 5px;
     }
+
     .badge-notification {
       margin: 0 0 4px;
     }
   }
+
   .buttons {
     float: right;
+
     .btn {
       border: 0;
       border-bottom: 1px solid lighten($secondary_background_color, 76%);
       padding: 0 23px;
       color: $primary_text_color;
       background: lighten($secondary_background_color, 76%);
+
       &:hover {
         background: lighten($secondary_background_color, 60%);
         color: $primary_text_color;
         border: none !important;
         border-bottom: 1px solid lighten($secondary_background_color, 60%) !important;
-        span.badge-posts {color: $primary_text_color;}
+
+        span.badge-posts {
+          color: $primary_text_color;
+        }
       }
 
       &.collapsed {
         border-bottom: 0;
         padding-bottom: 1px;
       }
+
       .fa {
         margin: 0;
         font-size: 18px;
@@ -392,6 +450,7 @@ a.star {
 
 #topic-footer-buttons {
   padding: 10px 10px 0 0;
+
   p {
     line-height: 32px;
     color: $secondary_text_color;
@@ -401,13 +460,16 @@ a.star {
 
 #suggested-topics {
   clear: left;
-  padding: 20px 0 15px 0;
+  padding: 20px 0 15px;
+
   #topic-list > tbody > tr:nth-child(even) {
     background-color: lighten($secondary_background_color, 77%);
   }
+
   #topic-list > tbody > tr:nth-child(odd) {
     background-color: $primary_background_color;
   }
+
   table {
     box-shadow: none;
     border-radius: 0;
@@ -415,9 +477,9 @@ a.star {
     margin-top: 10px;
   }
 
-   .title {
+  .title {
     font-size: 14px; line-height: 8px;
-   }
+  }
 }
 
 span.post-count {
@@ -434,7 +496,10 @@ button.expand-post {
   .btn {
     margin-bottom: 5px;
     margin-right: 10px;
-    .fa-star {margin-right: 5px;}
+
+    .fa-star {
+      margin-right: 5px;
+    }
   }
 }
 
@@ -464,32 +529,39 @@ iframe {
   float: left;
   width: 78%;
   max-width: 800px;
-  .topic-statuses {
-  i {  color: $primary_text_color;
-}
-  .unpinned {  color: $secondary_text_color;}
 
+  .topic-statuses {
+    i {
+      color: $primary_text_color;
+    }
+
+    .unpinned {
+      color: $secondary_text_color;
+    }
   }
-  .topic-link {color: $primary_text_color;}
+
+  .topic-link {
+    color: $primary_text_color;
+  }
 }
 
 
 @include medium-width {
   .extra-info-wrapper {
-  max-width: 740px;
-}
+    max-width: 740px;
+  }
 }
 
 
 @include small-width {
-    .extra-info-wrapper {
-  max-width: 680px;
-}
+  .extra-info-wrapper {
+    max-width: 680px;
+  }
 }
 
 .extra-info {
   h1 {
-    margin: 5px 0 0 0;
+    margin: 5px 0 0;
     font-size: 1.8em;
     line-height: 1.2em;
   }
@@ -524,7 +596,6 @@ iframe {
   }
 
   .contents {
-
     text-align: center;
 
     a {
@@ -543,26 +614,29 @@ iframe {
 
     h3 a {
       width: auto;
-
     }
 
     h3.full-name {
       font-weight: normal;
       font-size: 12px;
       margin-top: 2px;
-      a {color: $secondary_text_color;}
+
+      a {
+        color: $secondary_text_color;
+      }
     }
   }
 
-  h3 { display: block; }
-
+  h3 {
+    display: block;
+  }
 }
 
 .open >.dropdown-menu {
   display: block;
 }
 
-.dropdown-menu li  {
+.dropdown-menu li {
   margin: 5px 0;
 }
 
@@ -585,15 +659,16 @@ iframe {
   margin-top: 15px;
   word-wrap: break-word;
 
-  h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
-
+  h1, h2, h3, h4, h5, h6 {
+    margin: 30px 0 10px;
+  }
 }
 
-  a.mention {
-    padding: 2px 4px;
-    color: $primary_text_color;
-    background: lighten($secondary_background_color, 76%);
-  }
+a.mention {
+  padding: 2px 4px;
+  color: $primary_text_color;
+  background: lighten($secondary_background_color, 76%);
+}
 
 
 .modal-body {
@@ -604,7 +679,7 @@ iframe {
 
 .deleted {
   .topic-body {
-  background-color: $warning_background_color;
+    background-color: $warning_background_color;
   }
 }
 
@@ -622,15 +697,15 @@ iframe {
   width: 265px;
   margin-left: -4px;
 
-    h3 {
-      margin: 5px 0;
-    }
+  h3 {
+    margin: 5px 0;
+  }
 
-    input[type=text] {
-      font-size: 16px;
-      width: 92%;
-      margin-bottom: 10px;
-    }
+  input[type=text] {
+    font-size: 16px;
+    width: 92%;
+    margin-bottom: 10px;
+  }
 }
 
 .post-select {
@@ -643,11 +718,12 @@ iframe {
   right: 20px;
   padding: 5px 8px;
   margin-top: 5px;
-
 }
 
 .topic-admin-menu {
-  h3 {margin-top: 0;}
+  h3 {
+    margin-top: 0;
+  }
 }
 
 .deleted-user-avatar {
@@ -659,13 +735,13 @@ iframe {
 }
 
 .staff a {
-  margin: -2px 0 0 0;
+  margin: -2px 0 0;
   background-color: $highlight_background_color;
 }
 
 .topic-meta-data {
-float: left;
-position: relative;
+  float: left;
+  position: relative;
 
   h3 {
     font-size: 13px;
@@ -689,65 +765,91 @@ position: relative;
   color: $secondary_text_color;
 }
 
-
-blockquote { /* solo quotes */
+// solo quotes
+blockquote {
   margin: 14px 0;
   padding: 12px;
 
-    a.mention {background: lighten($secondary_background_color, 70%);}
-    p:first-of-type {margin-top: 0;}
-    p:last-of-type {margin-bottom: 0;}
+  a.mention {
+    background: lighten($secondary_background_color, 70%);
+  }
+
+  p:first-of-type {
+    margin-top: 0;
+  }
+
+  p:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
-.quote { /* quotes with attribution */
+// quotes with attribution
+.quote {
   margin-top: 14px;
-  blockquote {margin-top: 0; padding-top: 0;
-  .onebox-result {background-color: $secondary_text_color;}
 
+  blockquote {
+    margin-top: 0;
+    padding-top: 0;
 
+    .onebox-result {
+      background-color: $secondary_text_color;
+    }
   }
 
   .title {
-  border-left: 5px solid $primary_border_color;
-  background-color: lighten($secondary_background_color, 76%);
-  padding: 12px;
-  .avatar { margin-right: 7px; }
-  img {margin-top: -4px;}
+    border-left: 5px solid $primary_border_color;
+    background-color: lighten($secondary_background_color, 76%);
+    padding: 12px;
 
-}
+    .avatar {
+      margin-right: 7px;
+    }
+
+    img {
+      margin-top: -4px;
+    }
+  }
 }
 
 .quote-controls {
   float: right;
   color: $secondary_text_color;
+
   a {
-  margin: 0;
+    margin: 0;
   }
-    .back:before,
-    .quote-other-topic:before {
+
+  .back:before,
+  .quote-other-topic:before {
     display: inline-block;
     margin-left: 8px;
     color: $secondary_text_color;
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
-    }
-    .back:before {
+  }
+
+  .back:before {
     content: "\f062";
-    }
-    .quote-other-topic:before {
+  }
+
+  .quote-other-topic:before {
     content: "\f061";
-    }
+  }
 }
 
 .gutter {
   float: left;
-
   margin-top: 6px;
-      ul {margin: 0;}
-      padding-left: 10px;
+  padding-left: 10px;
 
-  i {font-size: 12px;}
+  ul {
+    margin: 0;
+  }
+
+  i {
+    font-size: 12px;
+  }
 
   .post-links {
     list-style-type: none;
@@ -755,6 +857,7 @@ blockquote { /* solo quotes */
     position: relative;
     margin-left: 5px;
     line-height: 18px;
+
     a i {
       position: absolute;
       left: 0;
@@ -762,8 +865,14 @@ blockquote { /* solo quotes */
       margin-bottom: 20px;
       margin-top: 2px;
     }
-    a {color: $secondary_text_color;}
-    li {margin-bottom: 10px;}
+
+    a {
+      color: $secondary_text_color;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
   }
 }
 
@@ -771,10 +880,12 @@ blockquote { /* solo quotes */
   border-top: 1px solid $primary_border_color;
   float: left;
   position: relative;
-  padding: 10px 0 15px 0;
+  padding: 10px 0 15px;
+
   &.highlighted {
     background-color: $emphasis_background_color;
   }
+
   img, svg {
     max-width: 100%;
   }
@@ -791,54 +902,111 @@ blockquote { /* solo quotes */
 
 //columns
 
-.span14 { width: 70%; padding-left: 1%; } //main content
-.span2 {width: 9%; }
-.span11 {width: 85%; padding-left: 2%;}
-.span5 {width: 19%; padding-left: 1%; }
-
-
-@media screen and (max-width: 966px) {
-  .gutter {display: none;}
-  .span14 { width: 80%; max-width: 720px; } //main content
+//main content
+.span14 {
+  width: 70%;
+  padding-left: 1%;
 }
 
-.row:before, .row:after {display: table; content: "";}
-.row:after {clear: both;}
+.span2 {
+  width: 9%;
+}
 
+.span11 {
+  width: 85%;
+  padding-left: 2%;
+}
+
+.span5 {
+  width: 19%;
+  padding-left: 1%;
+}
+
+@media screen and (max-width: 966px) {
+  .gutter {
+    display: none;
+  }
+
+  //main content
+  .span14 {
+    width: 80%;
+    max-width: 720px;
+  }
+}
+
+.row:before, .row:after {
+  display: table;
+  content: "";
+}
+
+.row:after {
+  clear: both;
+}
 
 .embedded-posts {
-  h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: lighten($secondary_background_color, 70%);}
-  &.bottom {
-    .topic-meta-data {padding-left: 13px;}
-    &.hidden {display: block; opacity: 0; }
-
+  h1, h2, h3 {
+    margin: 10px 0;
   }
-  &.bottom .arrow {float: right; margin: 0 0 0 0;}
-  &.top {
 
+  a.mention {
+    background: lighten($secondary_background_color, 70%);
+  }
+
+  &.bottom {
+    .topic-meta-data {
+      padding-left: 13px;
+    }
+
+    &.hidden {
+      display: block;
+      opacity: 0;
+    }
+  }
+
+  &.bottom .arrow {
+    float: right; margin: 0;
+  }
+
+  &.top {
     margin-left: 112px;
     max-width: 775px;
-    .topic-meta-data {padding-left: 13px;}
+
+    .topic-meta-data {
+      padding-left: 13px;
+    }
 
     @include medium-width {
-    margin-left: 99px;
+      margin-left: 99px;
     }
 
     @include small-width {
-    margin-left: 95px;
-    max-width: 720px;
+      margin-left: 95px;
+      max-width: 720px;
     }
   }
-  &.top.span14 {padding-left: 0;}
-  .topic-body, .topic-meta-data {border: none;}
-  .row {border-top: 1px solid $primary_border_color; padding-top: 7px;}
-  .reply:first-of-type .row {border-top: none;}
+
+  &.top.span14 {
+    padding-left: 0;
+  }
+
+  .topic-body, .topic-meta-data {
+    border: 0;
+  }
+
+  .row {
+    border-top: 1px solid $primary_border_color;
+    padding-top: 7px;
+  }
+
+  .reply:first-of-type .row {
+    border-top: 0;
+  }
 }
 
 .dropdown {
   position: relative;
 }
+
 .caret {
   display: inline-block;
   width: 0;
@@ -850,6 +1018,7 @@ blockquote { /* solo quotes */
   content: "";
   margin-left: 5px;
 }
+
 .dropdown-menu {
   position: absolute;
   bottom: 115%;
@@ -865,9 +1034,18 @@ blockquote { /* solo quotes */
   border: 1px solid $primary_border_color;
   box-shadow: 0 1px 5px rgba($primary_shadow_color, .4);
   background-clip: padding-box;
-  span {font-size: 12px;}
-.title {font-weight: bold; display: block; font-size: 14px;}
+
+  span {
+    font-size: 12px;
+  }
+
+  .title {
+    font-weight: bold;
+    display: block;
+    font-size: 14px;
+  }
 }
+
 .dropdown-menu a {
   display: block;
   padding: 3px 15px;
@@ -880,6 +1058,7 @@ blockquote { /* solo quotes */
     margin-left: 26px;
   }
 }
+
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
@@ -918,7 +1097,6 @@ blockquote { /* solo quotes */
 }
 
 #selected-posts {
-
   padding-left: 20px;
   margin-left: 330px;
   width: 200px;
@@ -930,8 +1108,6 @@ blockquote { /* solo quotes */
   padding: 5px;
   margin-bottom: 5px;
 
-
-
   button {
     width: 180px;
     margin: 4px auto;
@@ -942,26 +1118,32 @@ blockquote { /* solo quotes */
   &.hidden {
     display: none;
   }
+
   .controls {
     margin-top: 10px;
   }
+
   p {
     font-size: 13px;
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
   }
+
   p.cancel {
-    margin: 10px 0 0 0;
+    margin: 10px 0 0;
   }
+
   h3 {
     font-size: 25px;
     color: $primary_text_color;
     margin-bottom: 5px;
+
     i {
       margin-right: 7px;
     }
   }
+
   .btn {
-    border: none;
+    border: 0;
     color: $tertiary_text_color;
     font-weight: normal;
     margin-bottom: 10px;
@@ -970,16 +1152,18 @@ blockquote { /* solo quotes */
     &[href] {
       color: $tertiary_text_color;
     }
-    &:hover
-    {
+
+    &:hover {
       color: $tertiary_text_color;
       background: darken($btn-primary-background-color, 12%);
     }
+
     &:active {
       @include linear-gradient(darken($btn-primary-background-color, 18%), darken($btn-primary-background-color, 12%));
       @include box-shadow(inset 0 1px 3px rgba($primary_shadow_color, 0.2));
       color: $tertiary_text_color;
     }
+
     &[disabled] {
       text-shadow: 0 1px 0 rgba($primary_shadow_color, 0.2);
       @include linear-gradient($btn-primary-background-color, $btn-primary-background-color-dark);
@@ -987,6 +1171,7 @@ blockquote { /* solo quotes */
     }
   }
 }
+
 .topic-post {
   &.selected {
     article.boxed {
@@ -996,6 +1181,7 @@ blockquote { /* solo quotes */
           color: $tertiary_text_color;
         }
       }
+
       .topic-body {
         .contents:after {
           display: none;
@@ -1003,6 +1189,7 @@ blockquote { /* solo quotes */
       }
     }
   }
+
   article.boxed {
     position: relative;
     line-height: 21px;
@@ -1033,24 +1220,24 @@ a.attachment:before {
 }
 
 .private_message .gutter, .deleted-topic .gutter,.read_restricted .gutter {
-    position: relative;
+  position: relative;
 }
 
 .private_message .gutter:before, .deleted-topic .gutter:before, .read_restricted .gutter:before {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 10px;
-    color: lighten($primary_text_color, 76%);
-    font: 90px/1 FontAwesome;
-    content: "\f05c";
-    z-index: -5;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  color: lighten($primary_text_color, 76%);
+  font: 90px/1 FontAwesome;
+  content: "\f05c";
+  z-index: -5;
 }
 
 .read_restricted .gutter:before {
-    content: "\f0c0";
+  content: "\f0c0";
 }
 
 .private_message .gutter:before {
-    content: "\f0e0";
+  content: "\f0e0";
 }

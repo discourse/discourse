@@ -5,53 +5,66 @@
     min-width: 960px;
     min-height: 500px;
   }
+
   #revision-controls {
     float: left;
+
     .btn[disabled]:hover {
       color: lighten($primary_text_color, 35%);
     }
   }
+
   #revision-numbers {
     display: inline-block;
     min-width: 80px;
     text-align: center;
   }
+
   #display-modes {
     text-align: right;
   }
+
   #revision-loading {
     float: left;
     margin: 5px 0 0 10px;
+
     .fa {
       margin-right: 7px;
     }
   }
+
   #revision-details {
     background-color: lighten($secondary_background_color, 76%);
     padding: 5px;
     margin-top: 10px;
   }
+
   #revisions {
     word-wrap: break-word;
+
     .row, table {
       margin-top: 10px;
       padding-bottom: 10px;
       border-bottom: 1px dotted;
     }
   }
+
   img {
     max-width: 670px;
     height: auto;
   }
+
   .inline-diff {
     width: 670px;
   }
+
   .markdown {
     font-family: monospace;
     font-size: 12px;
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
+
     td {
       width: 50%;
       vertical-align: top;
@@ -60,72 +73,90 @@
       white-space: pre-wrap;
     }
   }
+
   .span8, .markdown {
     img {
       max-width: 400px;
     }
   }
+
   ins, .diff-ins {
     code, img {
       border: 2px solid $success_border_color;
     }
+
     img {
       opacity: .75;
       filter: alpha(opacity=75);
     }
+
     a {
       color: $success_text_color;
       text-decoration: none;
     }
   }
+
   img.diff-ins, code.diff-ins {
     border: 2px solid $success_border_color;
   }
+
   img.diff-ins {
     opacity: .75;
     filter: alpha(opacity=75);
   }
+
   .diff-ins {
     background: $success_background_color;
   }
+
   ins {
     color: $success_text_color;
     background: $success_background_color;
   }
+
   del, .diff-del {
     code, img {
       border: 2px solid $warning_border_color;
     }
+
     img {
       opacity: .5;
       filter: alpha(opacity=50);
     }
+
     a {
       color: $warning_text_color;
       text-decoration: none;
     }
   }
+
   img.diff-del, code.diff-del {
     border: 2px solid $warning_border_color;
   }
+
   img.diff-del {
     opacity: .5;
     filter: alpha(opacity=50);
   }
+
   .diff-del {
     background: $warning_background_color;
   }
+
   del {
     color: $warning_text_color;
     background: $warning_background_color;
   }
+
   span.date {
     font-weight: bold;
   }
+
   span.edit-reason {
     background-color: $highlight_background_color;
-    padding: 3px 5px 5px 5px;
+    padding: 3px 5px 5px;
   }
+
   .modal-header {
     height: 42px;
   }

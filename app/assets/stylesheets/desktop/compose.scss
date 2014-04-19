@@ -16,6 +16,9 @@
   @include box-shadow(3px 3px 3px rgba($primary_shadow_color, 0.14));
   background: lighten($highlight, 15%);
   border: 1px solid $highlight_border_color;
+  padding: 10px;
+  width: 600px;
+  position: absolute;
 
   &.urgent {
     background: lighten($warning_border_color, 15%);
@@ -40,10 +43,6 @@
   a.close:hover {
     opacity: 1.0;
   }
-
-  padding: 10px;
-  width: 600px;
-  position: absolute;
 
   ul.topics {
     list-style: none;
@@ -75,31 +74,37 @@
   margin-left: 10px;
 }
 
-
 .autocomplete {
   z-index: 999999;
   position: absolute;
   width: 240px;
   background-color: $primary_background_color;
   border: 1px solid $primary_border_color;
+
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
+
     li {
       border-bottom: 1px solid $primary_border_color;
+
       a[href] {
         padding: 5px;
         display: block;
+
         span.username {
           color: $primary_text_color;
         }
+
         span.name {
           font-size: 11px;
         }
+
         &.selected {
           background-color: lighten($secondary_background_color, 60%);
         }
+
         @include hover {
           background-color: lighten($secondary_background_color, 60%);
           text-decoration: none;
@@ -110,27 +115,6 @@
 }
 
 #reply-control {
-  .toggle-preview, #draft-status, #file-uploading {
-    position: absolute;
-    bottom: -31px;
-    margin-top: 0;
-  }
-  .toggle-preview {
-    right: 5px;
-    text-decoration: underline;
-  }
-  #file-uploading {
-    left: 51%;
-    font-size: 12px;
-    color: $secondary_text_color;
-  }
-  #draft-status {
-    right: 51%;
-    color: $primary_text_color;
-    &.flash {
-      color: $warning_text_color;
-    }
-  }
   @include transition(height 0.4s ease);
   width: 100%;
   z-index: 1039;
@@ -139,6 +123,33 @@
   bottom: 0;
   font-size: 14px;
   position: fixed;
+
+  .toggle-preview, #draft-status, #file-uploading {
+    position: absolute;
+    bottom: -31px;
+    margin-top: 0;
+  }
+
+  .toggle-preview {
+    right: 5px;
+    text-decoration: underline;
+  }
+
+  #file-uploading {
+    left: 51%;
+    font-size: 12px;
+    color: $secondary_text_color;
+  }
+
+  #draft-status {
+    right: 51%;
+    color: $primary_text_color;
+
+    &.flash {
+      color: $warning_text_color;
+    }
+  }
+
   .toggler {
     display: block;
     width: 13px;
@@ -148,44 +159,56 @@
     font-size: 15px;
     color: $primary_text_color;
     text-decoration: none;
+
     &:before {
       font-family: "FontAwesome";
       content: "\f078";
     }
   }
+
   a.cancel {
     text-decoration: underline;
     padding-left: 7px;
   }
+
   .control-row {
     margin: 0 0 0 5px;
   }
+
   .saving-text {
     display: none;
   }
+
   .draft-text {
     display: none;
   }
+
   .grippie {
     display: none;
   }
+
   // The various states
   &.open {
     height: 300px;
+
     .grippie {
       display: block;
     }
   }
+
   &.closed {
     height: 0 !important;
   }
+
   &.draft {
     height: 40px !important;
     cursor: pointer;
     border-top: 1px solid $primary_border_color;
+
     .draft-text {
       display: block;
     }
+
     .toggler {
       &:before {
         font-family: "FontAwesome";
@@ -193,12 +216,15 @@
       }
     }
   }
+
   &.saving {
     height: 40px !important;
     border-top: 1px solid $primary_border_color;
+
     .saving-text {
       display: block;
     }
+
     .toggler {
       &:before {
         font-family: "FontAwesome";
@@ -206,6 +232,7 @@
       }
     }
   }
+
   .spinner {
     position: absolute;
     @include fades-in(0.25s);
@@ -224,12 +251,14 @@
       position: 17px 17px;
     };
   }
+
   &.loading {
     .spinner {
       z-index: 1000;
       @include visible;
     }
   }
+
   .reply-area {
     max-width: 1500px;
     margin-left: auto;
@@ -239,84 +268,115 @@
 
   // When the post is new (new topic) the sizings are different
   &.edit-title {
-
     &.open {
       height: 400px;
     }
+
     .contents {
       input#reply-title {
         padding: 7px 10px;
         margin: 6px 10px 3px 0;
         color: $primary_text_color;
-
       }
+
       input#reply-title {
         width: 400px;
-                color: $primary_text_color;
-
+        color: $primary_text_color;
       }
+
       .wmd-controls {
         @include transition(top 0.3s ease);
         top: 100px;
       }
     }
   }
+
   .contents {
     padding: 10px;
     min-width: 1280px;
+
     .form-element {
       display: inline-block;
+
       .chzn-container {
         width: 400px;
         margin-top: 6px;
+
         a {
           padding-top: 4px;
           height: 28px;
         }
+
         b {
           margin-top: 4px;
         }
       }
+
       .category-combobox {
         width: 430px;
-        @include medium-width { width: 285px; }
-        @include small-width { width: 220px; }
+
+        @include medium-width {
+          width: 285px;
+        }
+
+        @include small-width {
+          width: 220px;
+        }
 
         .chzn-drop {
           left: -9000px;
           width: 428px;
-          @include medium-width { width: 283px; }
-          @include small-width { width: 218px; }
+
+          @include medium-width {
+            width: 283px;
+          }
+
+          @include small-width {
+            width: 218px;
+          }
         }
+
         .chzn-search input {
           width: 378px;
-          @include medium-width { width: 233px; }
-          @include small-width { width: 168px; }
+
+          @include medium-width {
+            width: 233px;
+          }
+
+          @include small-width {
+            width: 168px;
+          }
         }
       }
     }
+
     .edit-reason-input {
       display: inline-block;
       position: absolute;
       margin-left: 10px;
       top: 18px;
+
       #edit-reason {
         margin: 0;
         padding: 5px;
         float: left;
       }
     }
+
     #reply-title {
       color: $primary_text_color;
       margin-right: 10px;
       float: left;
+
       &:disabled {
         background-color: lighten($secondary_background_color, 60%);
       }
     }
+
     #wmd-input:disabled {
       background-color: lighten($primary_background_color, 60%);
     }
+
     #wmd-input, #wmd-preview {
       color: $primary_text_color;
 
@@ -329,6 +389,7 @@
         max-width: 100%;
       }
     }
+
     #wmd-preview {
       border: 1px dashed $primary_border_color;
       overflow: auto;
@@ -339,37 +400,45 @@
         visibility: hidden;
       }
     }
+
     #wmd-input {
       bottom: 35px;
     }
+
     .submit-panel {
       position: absolute;
       display: block;
       bottom: 8px;
     }
+
     .auto-close-fields .examples {
       margin-top: 0;
       padding-bottom: 8px;
     }
   }
+
   .title-input, .category-input, .show-admin-options {
     position: relative;
     display: inline;
   }
+
   .show-admin-options {
     vertical-align: top;
     margin-top: 8px;
     background: lighten($secondary_background_color, 60%);
-  &:hover {
-    color: $tertiary_text_color;
-    background: lighten($secondary_background_color, 35%);
+
+    &:hover {
+      color: $tertiary_text_color;
+      background: lighten($secondary_background_color, 35%);
+    }
   }
-  }
+
   .title-input .popup-tip {
     width: 300px;
     left: -8px;
     margin-top: 8px;
   }
+
   .category-input .popup-tip {
     width: 240px;
     left: 432px;
@@ -383,10 +452,11 @@
 
 div.ac-wrap.disabled {
   input {
-    display:none;
+    display: none;
   }
+
   .item a {
-    display:none;
+    display: none;
   }
 }
 
@@ -394,10 +464,12 @@ div.ac-wrap {
   background-color: $primary_background_color;
   border: 1px solid $primary_border_color;
   padding: 5px 10px;
+
   div.item {
     float: left;
     margin-right: 10px;
     margin-bottom: 5px;
+
     span {
       padding-left: 5px;
       height: 22px;
@@ -405,6 +477,7 @@ div.ac-wrap {
       line-height: 22px;
       vertical-align: bottom;
     }
+
     a.remove {
       margin-left: 4px;
       font-size: 10px;
@@ -414,6 +487,7 @@ div.ac-wrap {
       width: 10px;
       display: inline-block;
       border: 1px solid $primary_border_color;
+
       &:hover {
         background-color: $warning_background_color;
         border: 1px solid $warning_border_color;
@@ -422,6 +496,7 @@ div.ac-wrap {
       }
     }
   }
+
   input[type="text"] {
     float: left;
     margin-top: 5px;
@@ -431,7 +506,6 @@ div.ac-wrap {
     box-shadow: none;
   }
 }
-
 
 #reply-control.edit-title.private-message {
   .wmd-controls {
@@ -450,14 +524,17 @@ div.ac-wrap {
       #wmd-input {
         width: 100%;
       }
+
       .preview-wrapper {
         display: none;
       }
+
       .textarea-wrapper {
         width: 100%;
       }
     }
   }
+
   .wmd-controls {
     left: 30px;
     right: 30px;
@@ -485,11 +562,16 @@ div.ac-wrap {
       h1, h2, h3, h4, h5, h6 {
         margin: 30px 0 10px;
       }
+
       p {
         margin-top: 19px;
       }
-      blockquote p:first-of-type {margin-top: 0px;}
+
+      blockquote p:first-of-type {
+        margin-top: 0;
+      }
     }
+
     #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
@@ -503,6 +585,7 @@ div.ac-wrap {
       @include border-radius-all(0);
       transition: none;
     }
+
     #wmd-preview-scroller {
       font-size: 13px;
       line-height: 18px;
@@ -510,11 +593,13 @@ div.ac-wrap {
       font-weight: normal;
       overflow: scroll;
       visibility: hidden;
+
       .marker, .caret {
         display: inline-block;
         vertical-align: top;
       }
     }
+
     .textarea-wrapper, .preview-wrapper {
       position: relative;
       @include box-sizing(border-box);
@@ -524,19 +609,23 @@ div.ac-wrap {
       padding: 0;
       width: 50%;
     }
+
     .textarea-wrapper {
       padding-right: 5px;
       float: left;
+
       .popup-tip {
         margin-top: 3px;
         right: 4px;
       }
     }
+
     .preview-wrapper {
       padding-left: 5px;
       float: right;
     }
   }
+
   #wmd-button-bar {
     top: 0;
     position: absolute;
@@ -565,8 +654,9 @@ div.ac-wrap {
   input {
     width: 150px;
   }
+
   .examples {
-    margin: 10px 0 0 0;
+    margin: 10px 0 0;
     color: $secondary_text_color;
   }
 }
@@ -575,11 +665,13 @@ div.ac-wrap {
   form {
     margin: 0;
   }
+
   .auto-close-fields {
     i.fa-clock-o {
       font-size: 16px;
       line-height: 8px;
     }
+
     input {
       margin: 0;
     }

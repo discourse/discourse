@@ -8,9 +8,10 @@
 
 .topic-post {
   border-top: 1px solid $primary_border_color;
-  padding: 6px 0 3px 0;
+  padding: 6px 0 3px;
+
   &:first-of-type {
-    border-top: none;
+    border-top: 0;
   }
 }
 
@@ -19,31 +20,31 @@ nav.post-controls {
   padding: 0;
   border-right: 1px solid $primary_border_color;
   margin-top: 10px;
-  button {color: lighten($primary_text_color, 35%);
-  border-radius: 4px;
-  margin-right: 2px;
 
-}
-
-
-span.badge-posts {
-  margin-right: 5px;
-}
-
-.show-replies {
-  display: none;
-  i {
-    margin-left: 5px;
+  button {
+    color: lighten($primary_text_color, 35%);
+    border-radius: 4px;
+    margin-right: 2px;
   }
-}
 
+  span.badge-posts {
+    margin-right: 5px;
+  }
 
+  .show-replies {
+    display: none;
 
-button.create {
-  float: right !important;
-  margin-right: 0;
-  color: $primary_text_color;
-  padding-right: 7px;}
+    i {
+      margin-left: 5px;
+    }
+  }
+
+  button.create {
+    float: right !important;
+    margin-right: 0;
+    color: $primary_text_color;
+    padding-right: 7px;
+  }
 }
 
 .create i {
@@ -52,31 +53,37 @@ button.create {
 
 
 button {
-  border: none;
+  border: 0;
   font-size: 17px;
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
   float: left !important;
+
   &.hidden {
     display: none;
   }
+
   &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
     float: right;
   }
+
   .read-icon {
     &:before {
       font-family: "FontAwesome";
       content: "\f02e";
     }
+
     &.unseen {
       &:before {
         content: "\f097";
       }
     }
+
     &.last-read {
       color: $warning_text_color;
     }
+
     &.bookmarked {
       &:before {
         color: $bookmarkColor;
@@ -85,14 +92,11 @@ button {
   }
 }
 
-
-
 .embedded-posts {
   .topic-meta-data h5 a {
     margin-left: 10px;
   }
 }
-
 
 .reply-new {
   display: none;
@@ -119,18 +123,17 @@ a.star {
 }
 
 .topic-map {
+  border-radius: 5px;
+  margin: 15px 10px 20px;
+  border: 1px solid $primary_border_color;
 
   .btn {
-    border-radius: 0 4px 0 4px;
+    border-radius: 0 4px;
   }
 
   .topic-links li {
     word-wrap: break-word;
   }
-
-  border-radius: 5px;
-  margin: 15px 10px 20px 10px;
-  border: 1px solid $primary_border_color;
 
   h3 {
     margin-bottom: 4px;
@@ -139,7 +142,7 @@ a.star {
   }
 
   h4 {
-    margin: 0 0 3px 0;
+    margin: 0 0 3px;
     color: $secondary_text_color;
     font-weight: normal;
     font-size: 12px;
@@ -162,6 +165,7 @@ a.star {
       position: relative;
       margin: 3px 0;
     }
+
     .post-count {
       position: absolute;
       top: 2px;
@@ -170,7 +174,7 @@ a.star {
       font-weight: normal;
       font-size: 11px;
       line-height: 14px;
-          }
+    }
   }
 
   .avatar {
@@ -188,21 +192,26 @@ a.star {
     li {
       float: left;
       padding: 7px 11px;
+
       &:last-of-type {
         border-right: 0;
       }
     }
+
     a, .number {
       font-weight: bold;
       line-height: 20px;
     }
+
     .number {
       color: $emphasis_text_color;
     }
+
     .avatar + a {
       float: left;
     }
   }
+
   .avatars,
   .links,
   .information {
@@ -213,13 +222,16 @@ a.star {
   .information {
     border-top: 1px solid $primary_border_color;
   }
+
   .topic-links {
     .badge-notification {
       margin: 0 0 4px;
     }
   }
+
   .buttons {
     float: right;
+
     .btn {
       border: 0;
       border-bottom: 1px solid $primary_border_color;
@@ -227,12 +239,13 @@ a.star {
       padding: 0 23px;
       color: $primary_text_color;
       background: lighten($secondary_background_color, 60%);
+
       &:hover {
         background: lighten($secondary_background_color, 60%);
         color: $primary_text_color;
         border-bottom: 1px solid $primary_border_color;
-
       }
+
       .fa {
         margin: 0;
         font-size: 18px;
@@ -244,27 +257,25 @@ a.star {
 
 #topic-footer-buttons {
   border-top: 1px solid $primary_border_color;
-  padding: 20px 10px 0 10px;
+  padding: 20px 10px 0;
 }
 
 #suggested-topics {
   clear: left;
-  padding: 20px 10px 15px 10px;
-    th.views, td.views, td.activity, th.activity, th.likes, td.likes {
+  padding: 20px 10px 15px;
+
+  th.views, td.views, td.activity, th.activity, th.likes, td.likes {
     display: none;
-    }
-
-   a.badge-category, a.badge-category-parent {
-    font-size: 10px;
-    }
-
-   .title {
-    font-size: 14px; line-height: 8px;
   }
 
+  a.badge-category, a.badge-category-parent {
+    font-size: 10px;
+  }
+
+  .title {
+    font-size: 14px; line-height: 8px;
+  }
 }
-
-
 
 span.post-count {
   background: $secondary_background_color;
@@ -272,20 +283,22 @@ span.post-count {
   opacity: .8;
 }
 
-
 #topic-footer-buttons {
   .btn {
     margin-bottom: 5px;
     margin-right: 10px;
-    .fa-star {margin-right: 5px;}
+
+    .fa-star {
+      margin-right: 5px;
+    }
   }
 }
 
 #topic-title {
   z-index: 1000;
   background: lighten($secondary_background_color, 76%);
-  margin: 0 0 0 0 !important;
-  padding: 15px 10px 15px 10px;
+  margin: 0 !important;
+  padding: 15px 10px;
 }
 
 .topic-post {
@@ -293,6 +306,7 @@ span.post-count {
     max-width: 100%;
     height: auto;
   }
+
   &.moderator {
     background-color: $emphasis_background_color;
   }
@@ -332,7 +346,7 @@ iframe {
   display: block;
 }
 
-.dropdown-menu li  {
+.dropdown-menu li {
   margin: 5px 0;
 }
 
@@ -358,24 +372,24 @@ iframe {
   }
 }
 
-
 #share-link {
   width: 265px;
   margin-left: -4px;
 
-    h3 {
-      margin: 5px 0;
-    }
+  h3 {
+    margin: 5px 0;
+  }
 
-    input[type=text] {
-      font-size: 16px;
-      width: 92%;
-      margin-bottom: 10px;
-    }
+  input[type=text] {
+    font-size: 16px;
+    width: 92%;
+    margin-bottom: 10px;
+  }
 }
 
 #selected-posts {
   padding-left: 20px;
+
   .btn {
     margin-bottom: 10px;
   }
@@ -412,7 +426,7 @@ iframe {
   border-radius: 4px;
   padding: 4px;
   margin: -4px 0 0 -4px;
-  background-color: lighten(yellow, 35%);
+  background-color: lighten(#ff0, 35%);
 }
 
 .new-user a {
@@ -433,34 +447,40 @@ iframe {
   margin-right: 50px;
 }
 
-span.btn-text {display: none;}
+span.btn-text {
+  display: none;
+}
 
 blockquote {
-  clear:both;
+  clear: both;
   margin: 0;
 }
 
 .quote-controls {
   float: right;
   color: $primary_text_color;
+
   a {
-  margin: 0;
+    margin: 0;
   }
-    .back:before,
-    .quote-other-topic:before {
+
+  .back:before,
+  .quote-other-topic:before {
     display: inline-block;
     margin-left: 8px;
     color: $primary_text_color;
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
-    }
-    .back:before {
+  }
+
+  .back:before {
     content: "\f062";
-    }
-    .quote-other-topic:before {
+  }
+
+  .quote-other-topic:before {
     content: "\f061";
-    }
+  }
 }
 
 
@@ -469,12 +489,18 @@ blockquote {
   background-color: lighten($secondary_background_color, 76%);
   padding: 10px 10px 0 12px;
   clear: both;
-  .avatar { margin-right: 7px; }
+
+  .avatar {
+    margin-right: 7px;
+  }
 }
 
-.gutter { display: none; }
+.gutter {
+  display: none;
+}
 
-.posts-wrapper {  position: relative;
+.posts-wrapper {
+  position: relative;
 }
 
 .topic-body.highlighted {

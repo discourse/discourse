@@ -1,0 +1,44 @@
+exclude:
+  - "app/assets/stylesheets/common/foundation/**"
+  - "app/assets/stylesheets/desktop/magnific-popup.scss"
+  - "app/assets/stylesheets/mobile/magnific-popup.scss"
+  - "app/assets/stylesheets/vendor/**"
+
+linters:
+  StringQuotes:
+    style: double_quotes
+  Indentation:
+    width: 2
+  Comment:
+    exclude:
+      - "app/assets/stylesheets/desktop/code_highlighting.scss"
+      - "test/stylesheets/test_helper.css"
+  LeadingZero:
+    enabled: false
+  SelectorDepth:
+    enabled: false
+  CapitalizationInSelector:
+    enabled: false
+  NameFormat:
+    enabled: false
+  PropertySortOrder:
+    enabled: false
+  DuplicateProperty:
+  # Excludes required because of false positives with rgba fallbacks
+    exclude:
+      - "app/assets/stylesheets/desktop/modal.scss"
+      - "app/assets/stylesheets/mobile/modal.scss"
+      - "app/assets/stylesheets/mobile/topic-list.scss"
+  SingleLinePerSelector:
+    enabled: false
+  DeclarationOrder:
+    enabled: false
+  IdWithExtraneousSelector:
+    enabled: false
+  PlaceholderInExtend:
+    # Used for clearfix extending
+    enabled: false
+  ZeroUnit:
+    exclude:
+      # False positive filed as https://github.com/causes/scss-lint/issues/128
+      - "app/assets/stylesheets/common/admin/admin_base.scss"

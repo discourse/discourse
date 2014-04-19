@@ -3,20 +3,19 @@
   position: relative;
   left: -5px;
   bottom: -5px;
-  text-shadow: -1px -1px 0 $btn-primary-background-color,
-    1px 1px 0 $btn-primary-background-color,
-    1px -1px 0 $btn-primary-background-color,
-    -1px 1px 0 $btn-primary-background-color;
+  text-shadow: -1px -1px 0 $btn-primary-background-color, 1px 1px 0 $btn-primary-background-color, 1px -1px 0 $btn-primary-background-color, -1px 1px 0 $btn-primary-background-color;
 }
 
 .upload-selector {
-  input[type="text"]{
+  input[type="text"] {
     width: 520px;
   }
+
   input[type="file"] {
     font-size: 14px;
     line-height: 18px;
   }
+
   .description {
     color: lighten($primary_text_color, 35%);
   }

@@ -21,11 +21,13 @@
   white-space: nowrap;
   display: inline-block;
   line-height: 1;
+
   i.fa {
     font-size: 11px;
     vertical-align: 1px;
   }
 }
+
 .badge-wrapper {
   white-space: nowrap;
 }
@@ -33,32 +35,37 @@
 .badge-category {
   padding: 6px;
   color: $tertiary_text_color;
+
   &[href] {
-  color: $tertiary_text_color;
+    color: $tertiary_text_color;
   }
 }
 
 .badge-category-parent {
   padding: 6px 2px;
   width: 2px;
+
   .category-name {
     display: none;
   }
+
   &:before {
     content: "\a0";
   }
 }
 
 .d-dropdown .badge-category {
-&.restricted {
+  &.restricted {
     div {
       display: inline-block;
       margin: 0;
     }
-}}
+  }
+}
 
-h1 a.badge-category div {vertical-align: top;}
-
+h1 a.badge-category div {
+  vertical-align: top;
+}
 
 // Notification badge
 // --------------------------------------------------
@@ -72,22 +79,19 @@ h1 a.badge-category div {vertical-align: top;}
   min-width: 11px;
   text-align: center;
   background-color: $notification_badge_background_color;
+
   &[href] {
-  color: $tertiary_text_color;
+    color: $tertiary_text_color;
   }
 
   // New posts
-
   &.new-posts, &.unread-posts {
     background-color: lighten($emphasis_text_color, 20%);
     color: $tertiary_text_color;
     font-weight: normal;
   }
 
-
-
   // Click count
-
   &.clicks {
     font-weight: normal;
     background-color: #ddd;
@@ -105,6 +109,7 @@ h1 a.badge-category div {vertical-align: top;}
   font-weight: normal;
   font-size: 14px;
   line-height: 1;
+
   &[href] {
     color: $topic-list-td-color;
   }

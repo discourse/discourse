@@ -32,16 +32,9 @@
 }
 
 .wmd-button {
-  width: 20px;
-  height: 20px;
   padding-left: 2px;
   padding-right: 3px;
   margin-right: 5px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  border: 0;
-  width: 20px;
-  height: 20px;
   position: relative;
   border: 0;
   float: left;
@@ -58,7 +51,7 @@
   background-image: none !important;
   background-position: 0 0;
   background-repeat: repeat;
-  background-color: white;
+  background-color: #fff;
   padding: 4px;
 }
 
@@ -101,23 +94,23 @@
 }
 
 #wmd-heading-button:before {
-  content:  "\f031";
+  content: "\f031";
 }
 
 #wmd-hr-button:before {
-  content:  "\f068";
+  content: "\f068";
 }
 
 #wmd-undo-button:before {
-  content:  "\f0e2";
+  content: "\f0e2";
 }
 
 #wmd-redo-button:before {
-  content:  "\f01e";
+  content: "\f01e";
 }
 
 #wmd-quote-post:before {
-  content:  "\f0e5";
+  content: "\f0e5";
 }
 
 .wmd-prompt-background {
