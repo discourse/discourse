@@ -1,5 +1,3 @@
-require_dependency 'trashable'
-
 class Invite < ActiveRecord::Base
   include Trashable
 

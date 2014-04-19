@@ -1,4 +1,5 @@
 require_dependency 'single_sign_on'
+
 class DiscourseSingleSignOn < SingleSignOn
   def self.sso_url
     SiteSetting.sso_url

@@ -1,7 +1,6 @@
 require "spec_helper"
-require_dependency "concern/positionable"
 
-describe Concern::Positionable do
+describe Positionable do
 
   def positions
     TestItem.order('position asc, id asc').pluck(:id)
@@ -10,7 +9,7 @@ describe Concern::Positionable do
   context "move_to" do
     before do
       class TestItem < ActiveRecord::Base
-        include Concern::Positionable
+        include Positionable
       end
 
       Topic.exec_sql("create temporary table test_items(id int primary key, position int)")

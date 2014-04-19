@@ -1,8 +1,6 @@
-require_dependency "concern/positionable"
-
 class Category < ActiveRecord::Base
 
-  include Concern::Positionable
+  include Positionable
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
