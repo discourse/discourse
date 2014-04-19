@@ -536,6 +536,10 @@ iframe {
       line-height: 1.3;
     }
 
+    .new-user a {
+      color: $secondary_text_color;
+    }
+
     a.user-group {
       color: lighten($primary_text_color, 50%);
       width: 100%;
@@ -652,10 +656,6 @@ iframe {
 
 .deleted-user-avatar {
   font-size: 36px;
-}
-
-.new-user a {
-  color: $secondary_text_color;
 }
 
 .staff a {
