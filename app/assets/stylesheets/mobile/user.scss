@@ -96,31 +96,7 @@
     border-left: 0;
     border-right: 0;
   }
-  .map {
-    height: 50px;
-  }
-  .avatar {
-    float: left;
-    width: 45px;
-    background-color: $primary_background_color;
-  }
 
-  nav.buttons {
-    width: 180px;
-    padding: 0;
-    .btn {
-      width: 100%;
-      margin-bottom: 5px;
-      @include box-sizing(border-box);
-    }
-  }
-  h2 {
-    a {
-      font-size: 14px;
-      color: $secondary_text_color;
-      cursor: pointer;
-    }
-  }
 }
 
 .user-main {
@@ -273,40 +249,5 @@
       background-color: $highlight_background_color;
       padding: 3px 5px 5px 5px;
     }
-  }
-}
-
-// styling of bottom section
-.user-stream .child-actions {
-  margin-top: 8px;
-  .avatar-link {
-    float: none;
-  }
-  .fa {
-    width: 15px;
-    display: inline-block;
-    color: lighten($primary_text_color, 35%);
-  }
-  .avatar-wrapper {
-    border: none;
-  }
-  .avatar-link {
-    margin-right: 3px;
-
-  }
-}
-
-.avatar-selector {
-  label {
-    display: inline-block;
-    margin-right: 10px;
-  }
-  #avatar-input {
-    width: 0;
-    height: 0;
-    overflow: hidden;
-  }
-  .avatar {
-    margin: 5px 10px 5px 0;
   }
 }

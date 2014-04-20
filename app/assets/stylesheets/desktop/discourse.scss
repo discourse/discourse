@@ -41,70 +41,17 @@ body {
   }
 }
 
-a.no-href {
-  cursor: pointer;
-}
-
 header {
   margin-bottom: 15px;
 }
 
 body {
 
-  button.ok {
-    background: $btn-success-background;
-    color: $tertiary_text_color;
-    @include hover {
-      background: lighten($btn-success-background, 10%);
-      color: $tertiary_text_color;
-    }
-  }
-  button.cancel {
-    background: $btn-danger-background-color;
-    color: $tertiary_text_color;
-    @include hover {
-      background: lighten($btn-danger-background-color, 10%);
-      color: $tertiary_text_color;
-    }
-  }
-
   // tab focus in firefox
   button:focus::-moz-focus-inner {
   border: 1px dotted;
   }
 
-  .coldmap-high {
-    color: $coldmap-high !important;
-  }
-  .coldmap-med {
-    color: $coldmap-med !important;
-  }
-  .coldmap-low {
-    color: $coldmap-low !important;
-  }
-  .heatmap-high {
-    color: $heatmap-high !important;
-  }
-  .heatmap-med {
-    color: $heatmap-med !important;
-  }
-  .heatmap-low {
-    color: $heatmap-low !important;
-  }
-  #loading-message {
-    position: absolute;
-    font-size: 30px;
-    text-align: center;
-    top: 120px;
-    left: 500px;
-    color: lighten($primary_text_color, 35%);
-  }
-  .top-space {
-    margin-top: 10px;
-  }
-  ul.breadcrumb {
-    margin: 0 10px 0 10px;
-  }
   .boxed {
     height: 100%;
     @include border-radius-all(5px);
@@ -164,32 +111,6 @@ body {
     }
   }
 
-  /**/
-  .message {
-    @include border-radius-all(8px);
-    background-color: $primary_background_color;
-    padding: 14px;
-    h2 {
-      margin-bottom: 20px;
-    }
-    p {
-      font-size: 20px;
-    }
-  }
-  #footer {
-    .container {
-      height: 50px;
-      .contents {
-        padding-top: 10px;
-        a[href] {
-          color: $tertiary_text_color;
-        }
-      }
-    }
-  }
-  .clear-transitions {
-    @include transition(none !important);
-  }
   .grippie {
     width: 100%;
     border: 1px solid $primary_border_color;
@@ -200,18 +121,6 @@ body {
     background-color: lighten($secondary_background_color, 60%);
     display:block;
     background: image-url("grippie.png") lighten($secondary_background_color, 76%) no-repeat center 3px;
-  }
-}
-
-form {
-  .tip {
-    display: inline-block;
-    &.good {
-      color: $success_text_color;
-    }
-    &.bad {
-      color: $warning_text_color;
-    }
   }
 }
 
@@ -234,79 +143,6 @@ blockquote {
           }
   }
 }
-
-#wmd-input {
-  resize: none;
-}
-
-#pagedown-editor {
-  width: 540px;
-  background-color: $primary_background_color;
-  padding: 0 10px 13px 10px;
-  border: 1px solid $primary_border_color;
-  .preview {
-    margin-top: 8px;
-    border: 1px dashed $primary_border_color;
-    padding: 8px 8px 0 8px;
-    p {
-      margin: 0 0 10px 0;
-    }
-  }
-  .preview.hidden {
-    display: none;
-  }
-}
-
-.spinner {
-  width: 100px;
-  margin: 10px auto 30px auto;
-  background-color: #000;
-  @include border-radius-all(10px);
-  padding: 10px 10px 10px 30px;
-  font-size: 15px;
-  line-height: 23px;
-  text-align: center;
-  color: $primary_background_color;
-  background: {
-    image: image-url("spinner_96_w.gif");
-    repeat: no-repeat;
-    position: 10px 8px;
-    size: 25px;
-  };
-  -webkit-animation: spinner .25s;
-  animation: spinner .25s;
-}
-
-//loading spinner fade-in
-@-webkit-keyframes spinner {
-    from {opacity: 0}
-    to {opacity: 1}
-}@keyframes fade {
-    from {opacity: 0}
-    to {opacity: 1}
-}
-
-
-
-
-.avatar {
-  @include border-radius-all(2px);
-}
-
-.avatar-wrapper {
-  background-color: $primary_background_color;
-  display: inline-block;
-  border: 1px solid $primary_border_color;
-  @include border-radius-all(5px);
-  img {
-    @include border-radius-all(4px);
-  }
-}
-
-.profiler-results.profiler-left {
-  top: 60px !important;
-}
-
 
 /* bootstrap carryover */
 
