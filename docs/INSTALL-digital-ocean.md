@@ -66,6 +66,16 @@ Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/4446/5f28af7f5b345823.png" width="586" height="246"> 
 
+# Email
+
+**Email is critical for account creation and notifications in Discourse. If you do not configure email before bootstrapping you will have a broken site!**
+
+- Already have a mail server? Great. Use your existing mail server credentials.
+
+- No existing mail server, or you don't know what it is? No problem, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and use the credentials provided in the dashboard.
+
+- For proper email deliverability, you must set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) in your DNS. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
+
 # Edit Discourse Configuration
 
 Edit the Discourse configuration at `app.yml`:
@@ -85,16 +95,6 @@ We recommend Nano because it works like a typical GUI text editor, just use your
 <img src="https://meta.discourse.org/uploads/default/4435/67807de39c6bbc61.png" width="578" height="407"> 
 
 After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
-
-# Email
-
-**Email is critical for account creation and notifications in Discourse. If you do not configure email before bootstrapping you will have a broken site!**
-
-- Already have a mail server? Great. Use your existing mail server credentials.
-
-- No existing mail server, or you don't know what it is? No problem, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and use the credentials provided in the dashboard.
-
-- For proper email deliverability, you must set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) in your DNS. In Mandrill, that's under Sending Domains, View DKIM/SPF setup instructions.
 
 # Bootstrap Discourse
 
