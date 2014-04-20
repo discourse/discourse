@@ -58,6 +58,27 @@ Email deliverability can be hard. We strongly recommend using dedicated email se
 
 If you'd like to enable *replying* to topics via email, [see this howto](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
+### New User Sandbox and the Trust System
+
+Discourse is designed to offer safe defaults for communities, even if you set up the site and walk away from it forever. There is a [trust system in Discourse](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) where regular users automatically earn abilities to assist in governing the community as they actively participate in it over time.
+
+All new users start out at trust level zero, in a trust sandbox with restrictions for their safety and everyone else's safety. **Trust level zero users _cannot_** &hellip;
+
+- post more than 2 hyperlinks
+- post any images or file attachments
+- send private messages
+- flag posts or topics
+- have actual links in the "about me" field of their profile
+- @name mention more than 2 users in a post
+
+There are also a lot of rate limits around how many actions new users can take.
+
+These defaults are indeed safe for the Internet out of the box, but they may be too conservative for your site:
+
+- If you are pre-vetting users, or your site is private and you approve all new users manually, you can set everyone's `default trust level` to 1.
+
+- You can individually adjust these conservative default new user restrictions. Search the settings for `newuser`. Two settings we see commonly adjusted are `newuser max images` and `newuser max replies per topic`.
+
 ### Categories
 
 You have three categories out of the box:
