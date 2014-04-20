@@ -16,63 +16,8 @@ body {
   margin-left: 12px;
 }
 
-
-
-a.no-href {
-  cursor: pointer;
-}
-
-
 body {
 
-  button.ok {
-   background: $success_background_color;
-    color: $emphasis_text_color;
-    @include hover {
-      background: darken($success_background_color, 10%);
-      color: $emphasis_text_color;
-    }
-  }
-  button.cancel {
-   background: $warning_background_color;
-    color: $emphasis_text_color;
-    @include hover {
-   background: $warning_background_color;
-      color: $emphasis_text_color;
-    }
-  }
-  .coldmap-high {
-    color: $coldmap-high !important;
-  }
-  .coldmap-med {
-    color: $coldmap-med !important;
-  }
-  .coldmap-low {
-    color: $coldmap-low !important;
-  }
-  .heatmap-high {
-    color: $heatmap-high !important;
-  }
-  .heatmap-med {
-    color: $heatmap-med !important;
-  }
-  .heatmap-low {
-    color: $heatmap-low !important;
-  }
-  #loading-message {
-    position: absolute;
-    font-size: 30px;
-    text-align: center;
-    top: 120px;
-    left: 500px;
-    color: $secondary_text_color;
-  }
-  .top-space {
-    margin-top: 10px;
-  }
-  ul.breadcrumb {
-    margin: 0 10px 0 10px;
-  }
   .boxed {
     height: 100%;
     @include border-radius-all(5px);
@@ -138,44 +83,10 @@ body {
       }
     }
   }
-  .message {
-    @include border-radius-all(8px);
-    background-color: $primary_background_color;
-    padding: 14px;
-    h2 {
-      margin-bottom: 20px;
-    }
-    p {
-      font-size: 20px;
-    }
-  }
-  #footer {
-    .container {
-      height: 50px;
-      .contents {
-        padding-top: 10px;
-        a[href] {
-          color: $primary_background_color;
-        }
-      }
-    }
-  }
-  .clear-transitions {
-    @include transition(none !important);
-  }
+
+
 }
 
-form {
-  .tip {
-    display: inline-block;
-    &.good {
-      color: $success_text_color;
-    }
-    &.bad {
-      color: $warning_text_color;
-    }
-  }
-}
 
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
@@ -200,62 +111,4 @@ blockquote {
       color: darken($tertiary_text_color, 60%);
     }
   }
-}
-
-#wmd-input {
-  resize: none;
-}
-
-#pagedown-editor {
-  width: 540px;
-  background-color: $primary_background_color;
-  padding: 0 10px 13px 10px;
-  border: 1px solid $primary_border_color;
-  .preview {
-    margin-top: 8px;
-    border: 1px dashed $primary_border_color;
-    padding: 8px 8px 0 8px;
-    p {
-      margin: 0 0 10px 0;
-    }
-  }
-  .preview.hidden {
-    display: none;
-  }
-}
-
-.spinner {
-  width: 100px;
-  margin: 0 auto 30px auto;
-  background-color: $secondary_background_color;
-  @include border-radius-all(10px);
-  padding: 10px 10px 10px 30px;
-  font-size: 15px;
-  line-height: 23px;
-  text-align: center;
-  color: $tertiary_text_color;
-  background: {
-    image: image-url("spinner_96_w.gif");
-    repeat: no-repeat;
-    position: 10px 8px;
-    size: 25px;
-  };
-}
-
-.avatar {
-  @include border-radius-all(2px);
-}
-
-.avatar-wrapper {
-  background-color: $primary_background_color;
-  display: inline-block;
-  border: 1px solid $primary_border_color;
-  @include border-radius-all(5px);
-  img {
-    @include border-radius-all(4px);
-  }
-}
-
-.profiler-results.profiler-left {
-  top: 60px !important;
 }
