@@ -1443,7 +1443,7 @@ en:
         settings: "Settings"
         all: "All"
         sending_test: "Sending test Email..."
-        test_error: "There was an issue sending email. Please check your settings and try again."
+        test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
         sent_at: "Sent At"
