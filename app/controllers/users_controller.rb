@@ -5,7 +5,7 @@ require_dependency 'avatar_upload_service'
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect]
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :toggle_avatar, :clear_profile_background, :destroy]
   before_filter :respond_to_suspicious_request, only: [:create]
@@ -78,6 +78,15 @@ class UsersController < ApplicationController
 
   def preferences
     render nothing: true
+  end
+
+  def my_redirect
+    puts params[:path]
+    if current_user.present? && params[:path] =~ /^[a-z\-]+$/
+      redirect_to "/users/#{current_user.username}/#{params[:path]}"
+      return
+    end
+    raise Discourse::NotFound.new
   end
 
   def invited

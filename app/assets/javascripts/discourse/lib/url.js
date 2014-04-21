@@ -70,6 +70,17 @@ Discourse.URL = Em.Object.createWithMixins({
     // Schedule a DOM cleanup event
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
 
+    // Rewrite /my/* urls
+    if (path.indexOf('/my/') === 0) {
+      var currentUser = Discourse.User.current();
+      if (currentUser) {
+        path = path.replace('/my/', '/users/' + currentUser.get('username_lower') + "/");
+      } else {
+        document.location.href = "/404";
+        return;
+      }
+    }
+
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path)) { return; }
     if (this.navigatedToPost(oldPath, path)) { return; }
