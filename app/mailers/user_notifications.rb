@@ -42,7 +42,7 @@ class UserNotifications < ActionMailer::Base
     @last_seen_at = I18n.l(@user.last_seen_at || @user.created_at, format: :short)
 
     # A list of topics to show the user
-    @featured_topics = Topic.for_digest(user, min_date, limit: 20, top_order: true).to_a
+    @featured_topics = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics, top_order: true).to_a
 
     # Don't send email unless there is content in it
     if @featured_topics.present?
