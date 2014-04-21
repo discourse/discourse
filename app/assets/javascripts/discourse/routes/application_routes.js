@@ -53,8 +53,7 @@ Discourse.Route.buildRoutes(function() {
     this.route('category', { path: '/category/:parentSlug/:slug' });
 
     // homepage
-    var homepage = Discourse.User.current() ? Discourse.User.currentProp('homepage') : Discourse.Utilities.defaultHomepage();
-    this.route(homepage, { path: '/' });
+    this.route(Discourse.Utilities.defaultHomepage(), { path: '/' });
   });
 
   this.resource('group', { path: '/groups/:name' }, function() {

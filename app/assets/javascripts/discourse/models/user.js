@@ -389,16 +389,6 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
-  /**
-    Homepage of the user
-
-    @property homepage
-    @type {String}
-  **/
-  homepage: function() {
-    return this.get("should_be_redirected_to_top") ? "top" : Discourse.Utilities.defaultHomepage();
-  }.property("should_be_redirected_to_top"),
-
   updateMutedCategories: function() {
     this.set("mutedCategories", Discourse.Category.findByIds(this.muted_category_ids));
   }.observes("muted_category_ids"),

@@ -177,7 +177,7 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-    var homepage = Discourse.User.current() ? Discourse.User.currentProp('homepage') : Discourse.Utilities.defaultHomepage();
+    var homepage = Discourse.Utilities.defaultHomepage();
 
     if (path === "/" && (oldPath === "/" || oldPath === "/" + homepage)) {
       // refresh the list

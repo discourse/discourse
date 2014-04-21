@@ -25,25 +25,3 @@ test("isAllowedToUploadAFile", function() {
   user.setProperties({ admin: false, moderator: true });
   ok(user.isAllowedToUploadAFile("image"), "moderator can always upload a file");
 });
-
-test("homepage", function() {
-  var user = Discourse.User.create({ should_be_redirected_to_top: false });
-  var defaultHomepage = Discourse.Utilities.defaultHomepage();
-
-  equal(user.get("homepage"), defaultHomepage, "user's homepage is default when not redirected");
-
-  user.set("should_be_redirected_to_top", true);
-
-  equal(user.get("homepage"), "top", "user's homepage is top when redirected");
-});
-
-asyncTestDiscourse("findByUsername", function() {
-  expect(3);
-
-  Discourse.User.findByUsername('eviltrout').then(function (user) {
-    present(user);
-    equal(user.get('username'), 'eviltrout', 'it has the correct username');
-    equal(user.get('name'), 'Robin Ward', 'it has the full name since it has details');
-    start();
-  });
-});
