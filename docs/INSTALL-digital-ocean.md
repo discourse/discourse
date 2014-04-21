@@ -102,30 +102,31 @@ Be sure to save the `app.yml` file, and begin bootstrapping Discourse:
 
     ./launcher bootstrap app
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4447/b4ce4a481a3676ac.png" width="594" height="231"> 
-
 This command can take up to 8 minutes. It is automagically configuring your Discourse environment.
+
+<img src="https://meta-discourse.r.worldssl.net/uploads/default/4448/55b88822f00fa505.png" width="593" height="229"> 
 
 After that completes, start Discourse:
 
     ./launcher start app
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4448/55b88822f00fa505.png" width="593" height="229"> 
+Congratulations! You now have your own instance of Discourse!
 
-Congratulations! You now have your own instance of Discourse! 
+It should be accessible via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can also visit the server IP directly, e.g. `http://192.168.1.1`.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/_optimized/f77/1a4/68503db6d2_690x280.png" width="690" height="291">
-
-It should be accessible via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can also access it by visiting the server IP directly, e.g. `http://192.168.1.1`.
+<img src="/uploads/default/4512/56d0c013a24981cd.png" width="690" height="342"> 
 
 # Register New Account and Become Admin
 
-There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; be sure you register a new account via one of those email addresses, and your account will automatically be made an Admin. 
+There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; be sure you register a new account via one of those email addresses, and your account will automatically be made an Admin.
+
+<img src="/uploads/default/4513/459a7df42fb9ee83.png" width="690" height="350"> 
+
+You should see Staff topics and the Admin Quick Start Guide. Please read it!
 
 # Post-Install Maintenance
 
 To **upgrade Discourse to the latest version**, visit `/admin/docker`, refresh the page a few times (yes, seriously) and then press the Upgrade button at the top. View the live output at the bottom of your browser to see when things are complete. You should see:
-
 
     Killed sidekiq
     Restarting unicorn pid: 37
