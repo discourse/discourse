@@ -81,7 +81,6 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    puts params[:path]
     if current_user.present? && params[:path] =~ /^[a-z\-]+$/
       redirect_to "/users/#{current_user.username}/#{params[:path]}"
       return
