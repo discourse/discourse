@@ -1353,16 +1353,16 @@ en:
 
     digest:
       why: "Here's a brief summary of the discussion on %{site_link} since we last saw you on %{last_seen_at}."
-      subject_template: "[%{site_name}] Forum Activity for %{date}"
+      subject_template: "[%{site_name}] Digest for %{date}"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
-      other_new_topics: "Other New Topics:"
+      other_new_topics: "Top Topics:"
       unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"
-      more_topics: "Also, since we last saw you on %{last_seen_at} there have been %{new_topics_since_seen} new topics posted."
-      more_topics_category: "Also, since we last saw you on %{last_seen_at} there have been %{new_topics_since_seen} new topics posted in the following categories:"
+      more_topics: "There were **%{new_topics_since_seen}** other new topics posted since you were last here on %{last_seen_at}."
+      more_topics_category: "There were **%{new_topics_since_seen}** other new topics posted in these categories since you were last here on %{last_seen_at}:"
 
       posts:
         one: "1 post"
