@@ -372,10 +372,9 @@
     }
   }
   .wmd-controls {
-    left: 30px;
-    right: 30px;
+    left: auto;
+    right: auto;
     position: absolute;
-    top: 50px;
     bottom: 48px;
 
     // this removes the topmost margin;
