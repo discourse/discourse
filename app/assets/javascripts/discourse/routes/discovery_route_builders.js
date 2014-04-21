@@ -167,6 +167,7 @@ Discourse.addInitializer(function() {
   });
 
   Discourse.Site.currentProp('periods').forEach(function(period) {
+    Discourse["DiscoveryTop" + period.capitalize() + "Controller"] = Discourse.DiscoverySortableController.extend();
     Discourse["DiscoveryTop" + period.capitalize() + "Route"] = buildTopicRoute('top/' + period);
     Discourse["DiscoveryTop" + period.capitalize() + "CategoryRoute"] = buildCategoryRoute('top/' + period);
     Discourse["DiscoveryTop" + period.capitalize() + "CategoryNoneRoute"] = buildCategoryRoute('top/' + period, {no_subcategories: true});
