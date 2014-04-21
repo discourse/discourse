@@ -21,6 +21,7 @@ module Jobs
       return unless post.present?
 
       raw = post.raw.dup
+      start_raw = raw.dup
       downloaded_urls = {}
 
       extract_images_from(post.cooked).each do |image|
@@ -28,9 +29,10 @@ module Jobs
         src = "http:" + src if src.start_with?("//")
 
         if is_valid_image_url(src)
+          hotlinked = nil
           begin
             # have we already downloaded that file?
-            if !downloaded_urls.include?(src)
+            unless downloaded_urls.include?(src)
               begin
                 hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked")
               rescue Discourse::InvalidParameters
@@ -71,10 +73,15 @@ module Jobs
 
       end
 
-      # TODO: make sure the post hasn´t changed while we were downloading remote images
-      if raw != post.raw
+      post.reload
+      if start_raw != post.raw
+        # post was edited - start over (after 10 minutes)
+        backoff = args.fetch(:backoff, 1) + 1
+        delay = SiteSetting.ninja_edit_window * args[:backoff]
+        Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, args.merge!(backoff: backoff))
+      elsif raw != post.raw
         options = { edit_reason: I18n.t("upload.edit_reason") }
-        options[:bypass_bump] = true if args[:bypass_bump] == true
+        options[:bypass_bump] = !!args[:bypass_bump]
         post.revise(Discourse.system_user, raw, options)
       end
     end
