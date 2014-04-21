@@ -302,6 +302,9 @@ files:
       test: false
       default: true
   download_remote_images_threshold: 20
+  disabled_image_download_domains:
+    list: true
+    default: ''
   create_thumbnails: true
   clean_up_uploads: false
   clean_orphan_uploads_grace_period_hours: 1
