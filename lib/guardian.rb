@@ -182,6 +182,7 @@ class Guardian
 
   def can_invite_to_forum?
     authenticated? &&
+    !SiteSetting.enable_sso &&
     (
       (!SiteSetting.must_approve_users? && @user.has_trust_level?(:regular)) ||
       is_staff?
