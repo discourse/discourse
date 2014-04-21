@@ -60,7 +60,7 @@ Switch to your Docker folder:
 
     cd /var/docker
 
-Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`, so the path becomes `containers/app.yml`:
+Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`:
 
     cp samples/standalone.yml containers/app.yml
 
@@ -118,9 +118,9 @@ Congratulations! You now have your own instance of Discourse!
 
 It should be accessible via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can also access it by visiting the server IP directly, e.g. `http://192.168.1.1`.
 
-# Log In and Become Admin
+# Register New Account and Become Admin
 
-Sign into your Discourse instance. There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; be sure you log in via one of those email addresses, and your account will automatically be made an Admin.
+There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; be sure you register a new account via one of those email addresses, and your account will automatically be made an Admin. 
 
 # Post-Install Maintenance
 
