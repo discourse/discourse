@@ -1,6 +1,9 @@
 /**
   Support for quoting other users.
 **/
+
+var esc = Handlebars.Utils.escapeExpression;
+
 Discourse.Dialect.replaceBlock({
   start: new RegExp("\\[quote=?([^\\[\\]]+)?\\]([\\s\\S]*)", "igm"),
   stop: '[/quote]',
@@ -19,7 +22,7 @@ Discourse.Dialect.replaceBlock({
         if (i > 0) {
           var assignment = p.split(':');
           if (assignment[0] && assignment[1]) {
-            params['data-' + assignment[0]] = assignment[1].trim();
+            params['data-' + esc(assignment[0])] = esc(assignment[1].trim());
           }
         }
       });
