@@ -58,9 +58,25 @@ Email deliverability can be hard. We strongly recommend using dedicated email se
 
 If you'd like to enable *replying* to topics via email, [see this howto](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
+### Edit the Pinned Welcome Topic
+
+One of the default topics is [Welcome to Discourse](/t/welcome/6). This topic is pinned globally, so it will appear on the homepage for all new users. Your welcome topic is important because it is the first thing you visitors will see:
+
+- Where am I?
+- Who is this discussion area for?
+- What can I [find here](https://www.youtube.com/watch?v=d0VNHe5fq30)?
+- Why should I visit here?
+
+[Edit this welcome topic](/t/welcome/6) and write a **brief introduction to your community**. Think of it as your "elevator pitch" &ndash; how would you describe this site to a stranger on an elevator when you had about 1 minute to talk?
+
+Pinning topics works a little differently in Discourse:
+
+- Users can hide pins on topics once they have read them via the controls at the bottom of the topic, so they don't stay pinned forever for everyone.
+- When you pin a topic, you can choose to pin it globally to all topic lists, or pin it only within its category.
+
 ### New User Sandbox and the Trust System
 
-Discourse is designed to offer safe defaults for communities, even if you set up the site and walk away from it forever. There is a [trust system in Discourse](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) where regular users automatically earn abilities to assist in governing the community as they actively participate in it over time.
+Discourse is designed to offer safe defaults for communities, even if you set up the site and walk away from it forever. There is a [trust system in Discourse](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) where regular users automatically earn abilities to assist in governing the community as they participate over time.
 
 All new users start out at trust level zero, in a trust sandbox with restrictions for their safety and everyone else's safety. **Trust level zero users _cannot_** &hellip;
 
@@ -71,9 +87,9 @@ All new users start out at trust level zero, in a trust sandbox with restriction
 - have actual links in the "about me" field of their profile
 - @name mention more than 2 users in a post
 
-There are also a lot of rate limits around how many actions new users can take.
+There are also a lot of rate limits around how many actions new users can take. Of course, new users don't stay new users forever; reading a variety of topics is enough to [transition to trust level 1](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) in about 15 minutes.
 
-These defaults are indeed safe for the Internet out of the box, but they may be too conservative for your site:
+These defaults are safe for the Internet out of the box, but they may be too conservative for your site:
 
 - If you are pre-vetting users, or your site is private and you approve all new users manually, you can set everyone's `default trust level` to 1.
 
@@ -100,22 +116,6 @@ Basic image uploads work fine out of the box stored locally, provided you have a
 - If you'd like other sorts of files to be uploaded beyond just images, modify the [file settings](/admin/site_settings/category/files).
 
 - If you'd rather store your images and files on Amazon S3, [follow this howto](http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229).
-
-### Edit the Pinned Welcome Topic
-
-One of the default topics is [Welcome to Discourse](/t/welcome/6). This topic is pinned globally, so it will appear on the homepage for all new users. Your welcome topic is important because it is the first thing you visitors will see:
-
-- Where am I?
-- Who is this discussion area for? 
-- What can I [find here](https://www.youtube.com/watch?v=d0VNHe5fq30)?
-- Why should I visit here?
-
-[Edit this welcome topic](/t/welcome/6) and write a **brief introduction to your community**. Think of it as your "elevator pitch" &ndash; how would you describe this site to a stranger on an elevator when you had about 1 minute to talk?
-
-Pinning topics works a little differently in Discourse:
-
-- Users can hide pins on topics once they have read them via the controls at the bottom of the topic, so they don't stay pinned forever for everyone.
-- When you pin a topic, you can choose to pin it globally to all topic lists, or pin it only within its category.
 
 ### Customize CSS / Headers
 
