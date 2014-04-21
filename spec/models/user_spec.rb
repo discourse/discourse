@@ -969,7 +969,7 @@ describe User do
   describe "#gravatar_template" do
 
     it "returns a gravatar based template" do
-      User.gravatar_template("em@il.com").should == "//www.gravatar.com/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&r=pg&d=identicon"
+      User.gravatar_template("em@il.com").should == "//www.gravatar.com/avatar/6dc2fde946483a1d8a84b89345a1b638.png?s={size}&amp;r=pg&amp;d=identicon"
     end
 
   end
