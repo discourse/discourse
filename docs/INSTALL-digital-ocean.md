@@ -78,7 +78,7 @@ We recommend Nano because it works like a typical GUI text editor, just use your
  
 - Set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want your Discourse available at `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
  
-- Place your mail credentials in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
+- Place your mail credentials in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary. Put also your text between single quotes (aside from `DISCOURSE_SMTP_PORT`).
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 so you have more memory room.
 
@@ -120,7 +120,7 @@ It should be accessible via the domain name `discourse.example.com` you entered 
 
 # Log In and Become Admin
 
-Sign into your Discourse instance. There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; be sure you log in via one of those email addresses, and your account will automatically be made an Admin.
+Sign into your Discourse instance. There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; be sure you register via one of those email addresses, and your account will automatically be made an Admin.
 
 # Post-Install Maintenance
 
