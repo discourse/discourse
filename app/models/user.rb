@@ -32,6 +32,7 @@ class User < ActiveRecord::Base
   has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :uploads
+  has_many :user_custom_fields, dependent: :destroy
 
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
@@ -68,6 +69,7 @@ class User < ActiveRecord::Base
 
   after_save :update_tracked_topics
   after_save :clear_global_notice_if_needed
+  after_save :save_custom_fields
 
   after_create :create_email_token
   after_create :create_user_stat
@@ -587,7 +589,34 @@ class User < ActiveRecord::Base
     nil
   end
 
+  def custom_fields
+    @custom_fields ||= begin
+      @custom_fields_orig = Hash[*user_custom_fields.pluck(:name,:value).flatten]
+      @custom_fields_orig.dup
+    end
+  end
+
   protected
+
+  def save_custom_fields
+    if @custom_fields && @custom_fields_orig != @custom_fields
+      dup = @custom_fields.dup
+
+      user_custom_fields.each do |f|
+        if dup[f.name] != f.value
+          f.destroy
+        else
+          dup.remove[f.name]
+        end
+      end
+
+      dup.each do |k,v|
+        user_custom_fields.create(name: k, value: v)
+      end
+
+      @custom_fields_orig = @custom_fields
+    end
+  end
 
   def cook
     if bio_raw.present?

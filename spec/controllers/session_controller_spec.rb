@@ -43,7 +43,6 @@ describe SessionController do
       response.should redirect_to('/')
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       logged_on_user.email.should == user.email
-      
       logged_on_user.single_sign_on_record.external_id.should == "abc"
       logged_on_user.single_sign_on_record.external_username.should == 'sam'
     end
@@ -54,11 +53,16 @@ describe SessionController do
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
+      sso.custom_fields["shop_url"] = "http://my_shop.com"
+      sso.custom_fields["shop_name"] = "Sam"
 
       get :sso_login, Rack::Utils.parse_query(sso.payload)
       response.should redirect_to('/a/')
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+      # ensure nothing is transient
+      logged_on_user = User.find(logged_on_user.id)
 
       logged_on_user.email.should == 'bob@bob.com'
       logged_on_user.name.should == 'Sam Saffron'
@@ -67,8 +71,11 @@ describe SessionController do
       logged_on_user.single_sign_on_record.external_id.should == "666"
       logged_on_user.single_sign_on_record.external_username.should == 'sam'
       logged_on_user.active.should == true
+      logged_on_user.custom_fields["shop_url"].should == "http://my_shop.com"
+      logged_on_user.custom_fields["shop_name"].should == "Sam"
+      logged_on_user.custom_fields["bla"].should == nil
     end
-    
+
     it 'allows login to existing account with valid nonce' do
       sso = get_sso('/hello/world')
       sso.external_id = '997'

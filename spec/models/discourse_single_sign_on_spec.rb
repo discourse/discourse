@@ -19,6 +19,8 @@ describe DiscourseSingleSignOn do
     sso.username = "sam"
     sso.name = "sam saffron"
     sso.external_id = "100"
+    sso.custom_fields["a"] = "Aa"
+    sso.custom_fields["b.b"] = "B.b"
     sso
   end
 
@@ -28,6 +30,8 @@ describe DiscourseSingleSignOn do
     parsed.username.should == sso.username
     parsed.name.should == sso.name
     parsed.external_id.should == sso.external_id
+    parsed.custom_fields["a"].should == "Aa"
+    parsed.custom_fields["b.b"].should == "B.b"
   end
 
   it "can fill in data on way back" do

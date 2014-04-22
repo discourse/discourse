@@ -60,6 +60,10 @@ class DiscourseSingleSignOn < SingleSignOn
       user.enqueue_welcome_message('welcome_user')
     end
 
+    custom_fields.each do |k,v|
+      user.custom_fields[k] = v
+    end
+
     # optionally save the user and sso_record if they have changed
     user.save!
     sso_record.save!

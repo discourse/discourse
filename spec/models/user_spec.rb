@@ -1149,4 +1149,29 @@ describe User do
 
   end
 
+  describe "custom fields" do
+    it "allows modification of custom fields" do
+      user = Fabricate(:user)
+
+      user.custom_fields["a"].should == nil
+
+      user.custom_fields["bob"] = "marley"
+      user.custom_fields["jack"] = "black"
+      user.save
+
+      user = User.find(user.id)
+
+      user.custom_fields["bob"].should == "marley"
+      user.custom_fields["jack"].should == "black"
+
+      user.custom_fields.delete("bob")
+      user.custom_fields["jack"] = "jill"
+
+      user.save
+      user = User.find(user.id)
+
+      user.custom_fields.should == {"jack" => "jill"}
+    end
+  end
+
 end

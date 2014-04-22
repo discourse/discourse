@@ -1,5 +1,7 @@
 class SingleSignOn
-  ACCESSORS = [:nonce, :name, :username, :email, :about_me, :external_email, :external_username, :external_name, :external_id]
+  ACCESSORS = [:nonce, :name, :username, :email,
+               :about_me, :external_email, :external_username,
+               :external_name, :external_id]
   FIXNUMS = []
   NONCE_EXPIRY_TIME = 10.minutes
 
@@ -12,14 +14,6 @@ class SingleSignOn
 
   def self.sso_url
     raise RuntimeError, "sso_url not implemented on class, be sure to set it on instance"
-  end
-
-  def sso_secret
-    @sso_secret || self.class.sso_secret
-  end
-
-  def sso_url
-    @sso_url || self.class.sso_url
   end
 
   def self.parse(payload, sso_secret = nil)
@@ -39,8 +33,32 @@ class SingleSignOn
       val = val.to_i if FIXNUMS.include? k
       sso.send("#{k}=", val)
     end
+
+    decoded_hash.each do |k,v|
+      # 1234567
+      # custom.
+      #
+      if k[0..6] == "custom."
+        field = k[7..-1]
+        sso.custom_fields[field] = v
+      end
+    end
+
     sso
   end
+
+  def sso_secret
+    @sso_secret || self.class.sso_secret
+  end
+
+  def sso_url
+    @sso_url || self.class.sso_url
+  end
+
+  def custom_fields
+    @custom_fields ||= {}
+  end
+
 
   def sign(payload)
     OpenSSL::HMAC.hexdigest("sha256", sso_secret, payload)
@@ -63,6 +81,12 @@ class SingleSignOn
      next unless (val = send k)
 
      payload[k] = val
+    end
+
+    if @custom_fields
+      @custom_fields.each do |k,v|
+        payload["custom.#{k}"] = v.to_s
+      end
     end
 
     Rack::Utils.build_query(payload)
