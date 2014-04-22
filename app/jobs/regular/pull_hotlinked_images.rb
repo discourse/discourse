@@ -31,7 +31,10 @@ module Jobs
           begin
             # have we already downloaded that file?
             if !downloaded_urls.include?(src)
-              hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked") rescue Discourse::InvalidParameters
+              begin
+                hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked")
+              rescue Discourse::InvalidParameters
+              end
               if hotlinked.try(:size) <= @max_size
                 filename = File.basename(URI.parse(src).path)
                 upload = Upload.create_for(post.user_id, hotlinked, filename, hotlinked.size, { origin: src })
