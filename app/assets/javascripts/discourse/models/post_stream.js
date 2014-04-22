@@ -513,7 +513,7 @@ Discourse.PostStream = Em.Object.extend({
 
     if (existing && existing.updated_at !== updatedAt) {
       var url = "/posts/" + postId;
-      Discourse.ajax(url).then(function(p){
+      Discourse.ajaxUncaughtError(url).then(function(p){
         postStream.storePost(Discourse.Post.create(p));
       });
     }
@@ -530,7 +530,7 @@ Discourse.PostStream = Em.Object.extend({
     var postStream = this,
         url = "/posts/" + post.get('id') + "/reply-history.json";
 
-    return Discourse.ajax(url).then(function(result) {
+    return Discourse.ajaxUncaughtError(url).then(function(result) {
       return result.map(function (p) {
         return postStream.storePost(Discourse.Post.create(p));
       });
@@ -683,7 +683,7 @@ Discourse.PostStream = Em.Object.extend({
         data = { post_ids: postIds },
         postStream = this;
 
-    return Discourse.ajax(url, {data: data}).then(function(result) {
+    return Discourse.ajaxUncaughtError(url, {data: data}).then(function(result) {
       var posts = Em.get(result, "post_stream.posts");
       if (posts) {
         posts.forEach(function (p) {
@@ -778,7 +778,7 @@ Discourse.PostStream.reopenClass({
     delete opts.nearPost;
 
     return PreloadStore.getAndRemove("topic_" + topicId, function() {
-      return Discourse.ajax(url + ".json", {data: opts});
+      return Discourse.ajaxUncaughtError(url + ".json", {data: opts});
     });
 
   }

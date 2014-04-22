@@ -27,7 +27,7 @@ function finderFor(filter, params) {
         url += "?" + encoded.join('&');
       }
     }
-    return Discourse.ajax(url);
+    return Discourse.ajaxUncaughtError(url);
   };
 }
 
@@ -73,7 +73,7 @@ Discourse.TopicList = Discourse.Model.extend({
       var self = this;
       this.set('loadingMore', true);
 
-      return Discourse.ajax({url: moreUrl}).then(function (result) {
+      return Discourse.ajaxUncaughtError({url: moreUrl}).then(function (result) {
         var topicsAdded = 0;
         if (result) {
           // the new topics loaded from the server
@@ -125,7 +125,7 @@ Discourse.TopicList.reopenClass({
     var defer = new Ember.Deferred(),
         url = Discourse.getURL("/") + filter + "?topic_ids=" + topic_ids.join(",");
 
-    Discourse.ajax({url: url}).then(function (result) {
+    Discourse.ajaxUncaughtError({url: url}).then(function (result) {
       if (result) {
         // the new topics loaded from the server
         var newTopics = Discourse.TopicList.topicsFrom(result);

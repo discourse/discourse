@@ -28,7 +28,7 @@ Discourse.Topic = Discourse.Model.extend({
     var a = this.get('archetype');
     if (a !== 'regular' && a !== 'private_message') {
       this.set('archetype', 'regular');
-      return Discourse.ajax(this.get('url'), {
+      return Discourse.ajaxUncaughtError(this.get('url'), {
         type: 'PUT',
         data: {archetype: 'regular'}
       });
@@ -149,7 +149,7 @@ Discourse.Topic = Discourse.Model.extend({
     if (property === 'pinned') {
       this.set('pinned_at', value ? moment() : null);
     }
-    return Discourse.ajax(this.get('url') + "/status", {
+    return Discourse.ajaxUncaughtError(this.get('url') + "/status", {
       type: 'PUT',
       data: {status: property, enabled: value ? 'true' : 'false' }
     });
@@ -174,7 +174,7 @@ Discourse.Topic = Discourse.Model.extend({
   toggleStar: function() {
     var topic = this;
     topic.toggleProperty('starred');
-    return Discourse.ajax({
+    return Discourse.ajaxUncaughtError({
       url: "" + (this.get('url')) + "/star",
       type: 'PUT',
       data: { starred: topic.get('starred') ? true : false }
@@ -194,7 +194,7 @@ Discourse.Topic = Discourse.Model.extend({
     // Don't save unless we can
     if (!this.get('details.can_edit')) return;
 
-    return Discourse.ajax(this.get('url'), {
+    return Discourse.ajaxUncaughtError(this.get('url'), {
       type: 'PUT',
       data: { title: this.get('title'), category: this.get('category.name') }
     });
@@ -202,7 +202,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Reset our read data for this topic
   resetRead: function() {
-    return Discourse.ajax("/t/" + this.get('id') + "/timings", {
+    return Discourse.ajaxUncaughtError("/t/" + this.get('id') + "/timings", {
       type: 'DELETE'
     });
   },
@@ -214,7 +214,7 @@ Discourse.Topic = Discourse.Model.extend({
     @param {String} emailOrUsername The email or username of the user to be invited
   **/
   createInvite: function(emailOrUsername) {
-    return Discourse.ajax("/t/" + this.get('id') + "/invite", {
+    return Discourse.ajaxUncaughtError("/t/" + this.get('id') + "/invite", {
       type: 'POST',
       data: { user: emailOrUsername }
     });
@@ -228,7 +228,7 @@ Discourse.Topic = Discourse.Model.extend({
       'details.can_delete': false,
       'details.can_recover': true
     });
-    return Discourse.ajax("/t/" + this.get('id'), { type: 'DELETE' });
+    return Discourse.ajaxUncaughtError("/t/" + this.get('id'), { type: 'DELETE' });
   },
 
   // Recover this topic if deleted
@@ -239,7 +239,7 @@ Discourse.Topic = Discourse.Model.extend({
       'details.can_delete': true,
       'details.can_recover': false
     });
-    return Discourse.ajax("/t/" + this.get('id') + "/recover", { type: 'PUT' });
+    return Discourse.ajaxUncaughtError("/t/" + this.get('id') + "/recover", { type: 'PUT' });
   },
 
   // Update our attributes from a JSON result
@@ -273,7 +273,7 @@ Discourse.Topic = Discourse.Model.extend({
     topic.set('pinned', false);
     topic.set('unpinned', true);
 
-    Discourse.ajax("/t/" + this.get('id') + "/clear-pin", {
+    Discourse.ajaxUncaughtError("/t/" + this.get('id') + "/clear-pin", {
       type: 'PUT'
     }).then(null, function() {
       // On error, put the pin back
@@ -294,7 +294,7 @@ Discourse.Topic = Discourse.Model.extend({
     topic.set('pinned', true);
     topic.set('unpinned', false);
 
-    Discourse.ajax("/t/" + this.get('id') + "/re-pin", {
+    Discourse.ajaxUncaughtError("/t/" + this.get('id') + "/re-pin", {
       type: 'PUT'
     }).then(null, function() {
       // On error, put the pin back
@@ -365,7 +365,7 @@ Discourse.Topic.reopenClass({
     @returns A promise that will resolve to the topics
   **/
   findSimilarTo: function(title, body) {
-    return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
+    return Discourse.ajaxUncaughtError("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
       if (Array.isArray(results)) {
         return results.map(function(topic) { return Discourse.Topic.create(topic); });
       } else {
@@ -407,11 +407,11 @@ Discourse.Topic.reopenClass({
     }
 
     // Check the preload store. If not, load it via JSON
-    return Discourse.ajax(url + ".json", {data: data});
+    return Discourse.ajaxUncaughtError(url + ".json", {data: data});
   },
 
   mergeTopic: function(topicId, destinationTopicId) {
-    var promise = Discourse.ajax("/t/" + topicId + "/merge-topic", {
+    var promise = Discourse.ajaxUncaughtError("/t/" + topicId + "/merge-topic", {
       type: 'POST',
       data: {destination_topic_id: destinationTopicId}
     }).then(function (result) {
@@ -422,7 +422,7 @@ Discourse.Topic.reopenClass({
   },
 
   movePosts: function(topicId, opts) {
-    var promise = Discourse.ajax("/t/" + topicId + "/move-posts", {
+    var promise = Discourse.ajaxUncaughtError("/t/" + topicId + "/move-posts", {
       type: 'POST',
       data: opts
     }).then(function (result) {
@@ -433,7 +433,7 @@ Discourse.Topic.reopenClass({
   },
 
   changeOwners: function(topicId, opts) {
-    var promise = Discourse.ajax("/t/" + topicId + "/change-owner", {
+    var promise = Discourse.ajaxUncaughtError("/t/" + topicId + "/change-owner", {
       type: 'POST',
       data: opts
     }).then(function (result) {
@@ -444,7 +444,7 @@ Discourse.Topic.reopenClass({
   },
 
   bulkOperation: function(topics, operation) {
-    return Discourse.ajax("/topics/bulk", {
+    return Discourse.ajaxUncaughtError("/topics/bulk", {
       type: 'PUT',
       data: {
         topic_ids: topics.map(function(t) { return t.get('id'); }),
@@ -454,14 +454,14 @@ Discourse.Topic.reopenClass({
   },
 
   bulkOperationByFilter: function(filter, operation) {
-    return Discourse.ajax("/topics/bulk", {
+    return Discourse.ajaxUncaughtError("/topics/bulk", {
       type: 'PUT',
       data: { filter: filter, operation: operation }
     });
   },
 
   resetNew: function() {
-    return Discourse.ajax("/topics/reset-new", {type: 'PUT'});
+    return Discourse.ajaxUncaughtError("/topics/reset-new", {type: 'PUT'});
   }
 
 

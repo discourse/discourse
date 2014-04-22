@@ -58,7 +58,7 @@ Discourse.TopicDetails = Discourse.Model.extend({
   updateNotifications: function(v) {
     this.set('notification_level', v);
     this.set('notifications_reason_id', null);
-    return Discourse.ajax("/t/" + (this.get('topic.id')) + "/notifications", {
+    return Discourse.ajaxUncaughtError("/t/" + (this.get('topic.id')) + "/notifications", {
       type: 'POST',
       data: { notification_level: v }
     });
@@ -68,7 +68,7 @@ Discourse.TopicDetails = Discourse.Model.extend({
     var users = this.get('allowed_users'),
         username = user.get('username');
 
-    Discourse.ajax("/t/" + this.get('topic.id') + "/remove-allowed-user", {
+    Discourse.ajaxUncaughtError("/t/" + this.get('topic.id') + "/remove-allowed-user", {
       type: 'PUT',
       data: { username: username }
     }).then(function() {

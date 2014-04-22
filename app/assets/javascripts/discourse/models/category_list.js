@@ -14,7 +14,7 @@ Discourse.CategoryList = Ember.ArrayProxy.extend({
   },
 
   moveCategory: function(categoryId, position){
-    Discourse.ajax("/category/" + categoryId + "/move", {
+    Discourse.ajaxUncaughtError("/category/" + categoryId + "/move", {
       type: 'POST',
       data: { position: position }
     });
@@ -59,7 +59,7 @@ Discourse.CategoryList.reopenClass({
     var self = this;
 
     return PreloadStore.getAndRemove("categories_list", function() {
-      return Discourse.ajax("/categories.json");
+Discourse.ajaxUncaughtErroriscourse.ajax("/categories.json");
     }).then(function(result) {
       return Discourse.CategoryList.create({
         categories: self.categoriesFrom(result),

@@ -25,7 +25,7 @@ Discourse.HeaderController = Discourse.Controller.extend({
     showNotifications: function(headerView) {
       var self = this;
 
-      Discourse.ajax("/notifications").then(function(result) {
+      Discourse.ajaxUncaughtError("/notifications").then(function(result) {
         self.set("notifications", result);
         self.set("currentUser.unread_notifications", 0);
         headerView.showDropdownBySelector("#user-notifications");

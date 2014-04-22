@@ -25,7 +25,7 @@ Discourse.EmailLog.reopenClass({
     var status = filter.status || "all";
     filter = _.omit(filter, "status");
 
-    return Discourse.ajax("/admin/email/" + status + ".json", { data: filter }).then(function(logs) {
+    return Discourse.ajaxUncaughtError("/admin/email/" + status + ".json", { data: filter }).then(function(logs) {
       return _.map(logs, function (log) {
         return Discourse.EmailLog.create(log);
       });

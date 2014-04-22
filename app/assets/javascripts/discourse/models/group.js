@@ -33,7 +33,7 @@ Discourse.Group = Discourse.Model.extend({
 
   // TODO: Refactor so adminGroups doesn't store the groups inside itself either.
   findMembers: function() {
-    return Discourse.ajax('/groups/' + this.get('name') + '/members').then(function(result) {
+    return Discourse.ajaxUncaughtError('/groups/' + this.get('name') + '/members').then(function(result) {
       return result.map(function(u) { return Discourse.User.create(u) });
     });
   },
@@ -73,7 +73,7 @@ Discourse.Group = Discourse.Model.extend({
     var self = this;
     this.set('disableSave', true);
 
-    return Discourse.ajax("/admin/groups/" + this.get('id'), {type: "DELETE"})
+    return Discourse.ajaxUncaughtError("/admin/groups/" + this.get('id'), {type: "DELETE"})
       .then(function(){
         return true;
       }, function() {
@@ -87,7 +87,7 @@ Discourse.Group = Discourse.Model.extend({
     var self = this;
     self.set('disableSave', true);
 
-    return Discourse.ajax("/admin/groups", {type: "POST", data: {
+    return Discourse.ajaxUncaughtError("/admin/groups", {type: "POST", data: {
       group: {
         name: this.get('name'),
         alias_level: this.get('alias_level'),
@@ -111,7 +111,7 @@ Discourse.Group = Discourse.Model.extend({
     var self = this;
     self.set('disableSave', true);
 
-    return Discourse.ajax("/admin/groups/" + this.get('id'), {
+    return Discourse.ajaxUncaughtError("/admin/groups/" + this.get('id'), {
       type: "PUT",
       data: {
         group: {
@@ -134,7 +134,7 @@ Discourse.Group = Discourse.Model.extend({
     var data = {};
     if (opts.beforePostId) { data.before_post_id = opts.beforePostId; }
 
-    return Discourse.ajax("/groups/" + this.get('name') + "/posts.json", { data: data }).then(function (posts) {
+    return Discourse.ajaxUncaughtError("/groups/" + this.get('name') + "/posts.json", { data: data }).then(function (posts) {
       return posts.map(function (p) {
         p.user = Discourse.User.create(p.user);
         return Em.Object.create(p);
@@ -145,7 +145,7 @@ Discourse.Group = Discourse.Model.extend({
 
 Discourse.Group.reopenClass({
   findAll: function(){
-    return Discourse.ajax("/admin/groups.json").then(function(groups){
+    return Discourse.ajaxUncaughtError("/admin/groups.json").then(function(groups){
       var list = Discourse.SelectableArray.create();
       _.each(groups,function(group){
         list.addObject(Discourse.Group.create(group));
@@ -155,13 +155,13 @@ Discourse.Group.reopenClass({
   },
 
   findGroupCounts: function(name) {
-    return Discourse.ajax("/groups/" + name + "/counts.json").then(function (result) {
+    return Discourse.ajaxUncaughtError("/groups/" + name + "/counts.json").then(function (result) {
       return Em.Object.create(result.counts);
     });
   },
 
   find: function(name) {
-    return Discourse.ajax("/groups/" + name + ".json").then(function(g) {
+    return Discourse.ajaxUncaughtError("/groups/" + name + ".json").then(function(g) {
       return Discourse.Group.create(g.basic_group);
     });
   },

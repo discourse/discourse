@@ -15,7 +15,7 @@ Discourse.EmailPreview.reopenClass({
       lastSeenAt = moment().subtract('days',7).format('YYYY-MM-DD');
     }
 
-    return Discourse.ajax("/admin/email/preview-digest.json", {
+    return Discourse.ajaxUncaughtError("/admin/email/preview-digest.json", {
       data: {last_seen_at: lastSeenAt}
     }).then(function (result) {
       return Discourse.EmailPreview.create(result);

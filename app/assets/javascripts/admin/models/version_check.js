@@ -41,7 +41,7 @@ Discourse.VersionCheck = Discourse.Model.extend({
 
 Discourse.VersionCheck.reopenClass({
   find: function() {
-    return Discourse.ajax('/admin/version_check').then(function(json) {
+    return Discourse.ajaxUncaughtError('/admin/version_check').then(function(json) {
       return Discourse.VersionCheck.create(json);
     });
   }

@@ -15,7 +15,7 @@ Discourse.Backup = Discourse.Model.extend({
     @returns {Promise} a promise that resolves when the backup has been destroyed
   **/
   destroy: function() {
-    return Discourse.ajax("/admin/backups/" + this.get("filename"), { type: "DELETE" });
+    return Discourse.ajaxUncaughtError("/admin/backups/" + this.get("filename"), { type: "DELETE" });
   },
 
   /**
@@ -25,7 +25,7 @@ Discourse.Backup = Discourse.Model.extend({
     @returns {Promise} a promise that resolves when the backup has started being restored
   **/
   restore: function() {
-    return Discourse.ajax("/admin/backups/" + this.get("filename") + "/restore", { type: "POST" });
+    return Discourse.ajaxUncaughtError("/admin/backups/" + this.get("filename") + "/restore", { type: "POST" });
   }
 
 });
@@ -40,7 +40,7 @@ Discourse.Backup.reopenClass({
   **/
   find: function() {
     return PreloadStore.getAndRemove("backups", function() {
-      return Discourse.ajax("/admin/backups.json");
+      return Discourse.ajaxUncaughtError("/admin/backups.json");
     }).then(function(backups) {
       return backups.map(function (backup) { return Discourse.Backup.create(backup); });
     });
@@ -53,7 +53,7 @@ Discourse.Backup.reopenClass({
     @returns {Promise} a promise that resolves when the backup has started
   **/
   start: function() {
-    return Discourse.ajax("/admin/backups", { type: "POST" }).then(function(result) {
+    return Discourse.ajaxUncaughtError("/admin/backups", { type: "POST" }).then(function(result) {
       if (!result.success) { bootbox.alert(result.message); }
     });
   },
@@ -65,7 +65,7 @@ Discourse.Backup.reopenClass({
     @returns {Promise} a promise that resolves when the backup has been cancelled
   **/
   cancel: function() {
-    return Discourse.ajax("/admin/backups/cancel.json").then(function(result) {
+    return Discourse.ajaxUncaughtError("/admin/backups/cancel.json").then(function(result) {
       if (!result.success) { bootbox.alert(result.message); }
     });
   },
@@ -77,7 +77,7 @@ Discourse.Backup.reopenClass({
     @returns {Promise} a promise that resolves when the rollback is done
   **/
   rollback: function() {
-    return Discourse.ajax("/admin/backups/rollback.json").then(function(result) {
+    return Discourse.ajaxUncaughtError("/admin/backups/rollback.json").then(function(result) {
       if (!result.success) {
         bootbox.alert(result.message);
       } else {

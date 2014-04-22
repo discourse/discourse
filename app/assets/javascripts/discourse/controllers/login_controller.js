@@ -49,7 +49,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
       this.set('loggingIn', true);
 
       var loginController = this;
-      Discourse.ajax("/session", {
+      Discourse.ajaxUncaughtError("/session", {
         data: { login: this.get('loginName'), password: this.get('loginPassword') },
         type: 'POST'
       }).then(function (result) {

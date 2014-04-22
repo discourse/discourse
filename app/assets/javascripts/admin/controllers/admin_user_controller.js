@@ -36,7 +36,7 @@ Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
     },
 
     saveTitle: function() {
-      Discourse.ajax("/users/" + this.get('username').toLowerCase(), {
+      Discourse.ajaxUncaughtError("/users/" + this.get('username').toLowerCase(), {
         data: {title: this.get('title')},
         type: 'PUT'
       }).then(null, function(e){
@@ -52,7 +52,7 @@ Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
 
     savePrimaryGroup: function() {
       var self = this;
-      Discourse.ajax("/admin/users/" + this.get('id') + "/primary_group", {
+      Discourse.ajaxUncaughtError("/admin/users/" + this.get('id') + "/primary_group", {
         type: 'PUT',
         data: {primary_group_id: this.get('primary_group_id')}
       }).then(function () {

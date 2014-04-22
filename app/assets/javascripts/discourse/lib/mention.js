@@ -18,7 +18,7 @@ function lookup(username) {
     if (typeof cached !== "undefined") {
       resolve(cached);
     } else {
-      Discourse.ajax("/users/is_local_username", { data: { username: username } }).then(function(r) {
+      Discourse.ajaxUncaughtError("/users/is_local_username", { data: { username: username } }).then(function(r) {
         localCache[username] = r.valid;
         resolve(r.valid);
       });

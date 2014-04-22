@@ -115,7 +115,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
     Discourse.TopicTrackingState.current().updateSeen(topicId, highestSeen);
 
     if (!$.isEmptyObject(newTimings)) {
-      Discourse.ajax('/topics/timings', {
+      Discourse.ajaxUncaughtError('/topics/timings', {
         data: {
           timings: newTimings,
           topic_time: this.get('topicTime'),

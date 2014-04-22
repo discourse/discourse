@@ -51,7 +51,7 @@ Discourse.UserStream = Discourse.Model.extend({
       userStream.set('loading', false);
     };
 
-    return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
+    return Discourse.ajaxUncaughtError(url, {cache: 'false'}).then( function(result) {
       if (result && result.user_actions) {
         var copy = Em.A();
         result.user_actions.forEach(function(action) {

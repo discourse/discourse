@@ -29,7 +29,7 @@ Discourse.StaticController = Discourse.Controller.extend({
       text = text.match(/<!-- preload-content: -->((?:.|[\n\r])*)<!-- :preload-content -->/)[1];
       this.set('content', text);
     } else {
-      return Discourse.ajax(path + ".html", {dataType: 'html'}).then(function (result) {
+      return Discourse.ajaxUncaughtError(path + ".html", {dataType: 'html'}).then(function (result) {
         self.set('content', result);
       });
     }

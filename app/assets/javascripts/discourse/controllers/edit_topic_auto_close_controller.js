@@ -36,7 +36,7 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
   setAutoClose: function(time) {
     var self = this;
     this.send('hideModal');
-    Discourse.ajax({
+    Discourse.ajaxUncaughtError({
       url: '/t/' + this.get('id') + '/autoclose',
       type: 'PUT',
       dataType: 'json',

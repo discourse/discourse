@@ -13,7 +13,7 @@ Discourse.TopList.reopenClass({
   find: function(filter) {
     return PreloadStore.getAndRemove("top_lists", function() {
       var url = Discourse.getURL("/") + (filter || "top") + ".json";
-      return Discourse.ajax(url);
+      return Discourse.ajaxUncaughtError(url);
     }).then(function (result) {
       var topList = Discourse.TopList.create({
         can_create_topic: result.can_create_topic,

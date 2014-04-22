@@ -57,7 +57,7 @@ Discourse.Category = Discourse.Model.extend({
       url = "/categories/" + this.get('id');
     }
 
-    return Discourse.ajax(url, {
+    return Discourse.ajaxUncaughtError(url, {
       data: {
         name: this.get('name'),
         color: this.get('color'),
@@ -83,7 +83,7 @@ Discourse.Category = Discourse.Model.extend({
   }.property("permissions"),
 
   destroy: function() {
-    return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
+    return Discourse.ajaxUncaughtError("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
   },
 
   addPermission: function(permission){
@@ -251,7 +251,7 @@ Discourse.Category.reopenClass({
   },
 
   reloadBySlugOrId: function(slugOrId) {
-    return Discourse.ajax("/category/" + slugOrId + "/show.json").then(function (result) {
+    return Discourse.ajaxUncaughtError("/category/" + slugOrId + "/show.json").then(function (result) {
       return Discourse.Category.create(result.category);
     });
   }

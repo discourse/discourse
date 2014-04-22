@@ -82,7 +82,7 @@ Discourse.SiteSetting = Discourse.Model.extend({
     // Update the setting
     var setting = this, data = {};
     data[this.get('setting')] = this.get('value');
-    return Discourse.ajax("/admin/site_settings/" + this.get('setting'), {
+    return Discourse.ajaxUncaughtError("/admin/site_settings/" + this.get('setting'), {
       data: data,
       type: 'PUT'
     }).then(function() {
@@ -114,7 +114,7 @@ Discourse.SiteSetting = Discourse.Model.extend({
 Discourse.SiteSetting.reopenClass({
 
   findAll: function() {
-    return Discourse.ajax("/admin/site_settings").then(function (settings) {
+    return Discourse.ajaxUncaughtError("/admin/site_settings").then(function (settings) {
       // Group the results by category
       var categoryNames = [],
           categories = {},
@@ -135,7 +135,7 @@ Discourse.SiteSetting.reopenClass({
   },
 
   update: function(key, value) {
-    return Discourse.ajax("/admin/site_settings/" + key, {
+    return Discourse.ajaxUncaughtError("/admin/site_settings/" + key, {
       type: 'PUT',
       data: { value: value }
     });

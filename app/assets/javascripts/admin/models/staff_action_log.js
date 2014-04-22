@@ -58,7 +58,7 @@ Discourse.StaffActionLog.reopenClass({
   },
 
   findAll: function(filters) {
-    return Discourse.ajax("/admin/logs/staff_action_logs.json", { data: filters }).then(function(staff_actions) {
+    return Discourse.ajaxUncaughtError("/admin/logs/staff_action_logs.json", { data: filters }).then(function(staff_actions) {
       return staff_actions.map(function(s) {
         return Discourse.StaffActionLog.create(s);
       });

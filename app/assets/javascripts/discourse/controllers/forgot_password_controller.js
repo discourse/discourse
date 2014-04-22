@@ -16,7 +16,7 @@ Discourse.ForgotPasswordController = Discourse.Controller.extend(Discourse.Modal
 
   submit: function() {
 
-    Discourse.ajax("/session/forgot_password", {
+    Discourse.ajaxUncaughtError("/session/forgot_password", {
       data: { login: this.get('accountEmailOrUsername') },
       type: 'POST'
     });

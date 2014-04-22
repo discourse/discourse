@@ -146,7 +146,7 @@ Discourse.User = Discourse.Model.extend({
     @returns Result of ajax call
   **/
   changeUsername: function(newUsername) {
-    return Discourse.ajax("/users/" + this.get('username_lower') + "/preferences/username", {
+    return Discourse.ajaxUncaughtError("/users/" + this.get('username_lower') + "/preferences/username", {
       type: 'PUT',
       data: { new_username: newUsername }
     });
@@ -160,7 +160,7 @@ Discourse.User = Discourse.Model.extend({
     @returns Result of ajax call
   **/
   changeEmail: function(email) {
-    return Discourse.ajax("/users/" + this.get('username_lower') + "/preferences/email", {
+    return Discourse.ajaxUncaughtError("/users/" + this.get('username_lower') + "/preferences/email", {
       type: 'PUT',
       data: { email: email }
     });
@@ -207,7 +207,7 @@ Discourse.User = Discourse.Model.extend({
       data[s + '_category_ids'] = cats;
     });
 
-    return Discourse.ajax("/users/" + this.get('username_lower'), {
+    return Discourse.ajaxUncaughtError("/users/" + this.get('username_lower'), {
       data: data,
       type: 'PUT'
     }).then(function(data) {
@@ -228,7 +228,7 @@ Discourse.User = Discourse.Model.extend({
     @returns {Promise} the result of the change password operation
   **/
   changePassword: function() {
-    return Discourse.ajax("/session/forgot_password", {
+    return Discourse.ajaxUncaughtError("/session/forgot_password", {
       dataType: 'json',
       data: { login: this.get('username') },
       type: 'POST'
@@ -245,7 +245,7 @@ Discourse.User = Discourse.Model.extend({
   loadUserAction: function(id) {
     var user = this;
     var stream = this.get('stream');
-    return Discourse.ajax("/user_actions/" + id + ".json", { cache: 'false' }).then(function(result) {
+    return Discourse.ajaxUncaughtError("/user_actions/" + id + ".json", { cache: 'false' }).then(function(result) {
       if (result) {
         if ((user.get('streamFilter') || result.action_type) !== result.action_type) return;
         var action = Discourse.UserAction.collapseStream([Discourse.UserAction.create(result)]);
@@ -297,7 +297,7 @@ Discourse.User = Discourse.Model.extend({
     var user = this;
 
     return PreloadStore.getAndRemove("user_" + user.get('username'), function() {
-      return Discourse.ajax("/users/" + user.get('username') + '.json');
+      return Discourse.ajaxUncaughtError("/users/" + user.get('username') + '.json');
     }).then(function (json) {
 
       if (!Em.isEmpty(json.user.stats)) {
@@ -340,7 +340,7 @@ Discourse.User = Discourse.Model.extend({
     @returns {Promise} the result of the toggle avatar selection
   */
   toggleAvatarSelection: function(useUploadedAvatar) {
-    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/toggle", {
+    return Discourse.ajaxUncaughtError("/users/" + this.get("username_lower") + "/preferences/avatar/toggle", {
       type: 'PUT',
       data: { use_uploaded_avatar: useUploadedAvatar }
     });
@@ -354,7 +354,7 @@ Discourse.User = Discourse.Model.extend({
   */
   clearProfileBackground: function() {
     var user = this;
-    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/profile_background/clear", {
+    return Discourse.ajaxUncaughtError("/users/" + this.get("username_lower") + "/preferences/profile_background/clear", {
       type: 'PUT',
       data: { }
     }).then(function() {
@@ -383,7 +383,7 @@ Discourse.User = Discourse.Model.extend({
     @returns {Promise} the result of the server call
   **/
   createInvite: function(email) {
-    return Discourse.ajax('/invites', {
+    return Discourse.ajaxUncaughtError('/invites', {
       type: 'POST',
       data: {email: email}
     });
@@ -407,7 +407,7 @@ Discourse.User = Discourse.Model.extend({
 
   delete: function() {
     if (this.get('can_delete_account')) {
-      return Discourse.ajax("/users/" + this.get('username'), {
+      return Discourse.ajaxUncaughtError("/users/" + this.get('username'), {
         type: 'DELETE',
         data: {context: window.location.pathname}
       });
@@ -451,7 +451,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
   **/
   logout: function() {
     var discourseUserClass = this;
-    return Discourse.ajax("/session/" + Discourse.User.currentProp('username'), {
+    return Discourse.ajaxUncaughtError("/session/" + Discourse.User.currentProp('username'), {
       type: 'DELETE'
     }).then(function () {
       discourseUserClass.currentUser = null;
@@ -467,7 +467,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     @param {Number} forUserId user id - provide when changing username
   **/
   checkUsername: function(username, email, forUserId) {
-    return Discourse.ajax('/users/check_username', {
+    return Discourse.ajaxUncaughtError('/users/check_username', {
       data: { username: username, email: email, for_user_id: forUserId }
     });
   },
@@ -517,7 +517,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     @returns Result of ajax call
   **/
   createAccount: function(name, email, password, username, passwordConfirm, challenge) {
-    return Discourse.ajax("/users", {
+    return Discourse.ajaxUncaughtError("/users", {
       data: {
         name: name,
         email: email,
