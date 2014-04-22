@@ -93,7 +93,7 @@ Discourse.HTML = {
 
     html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) +
             extraClasses + "\" ";
-
+    name = Handlebars.Utils.escapeExpression(name);
     // Add description if we have it
     if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
 
