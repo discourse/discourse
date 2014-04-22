@@ -20,7 +20,7 @@ Discourse.AdminGroupsController = Ember.Controller.extend({
     },
 
     newGroup: function(){
-      var group = Discourse.Group.create({ loadedUsers: true }),
+      var group = Discourse.Group.create({ loadedUsers: true, visible: true }),
           model = this.get("model");
       model.addObject(group);
       model.select(group);

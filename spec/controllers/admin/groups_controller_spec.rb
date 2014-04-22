@@ -22,7 +22,8 @@ describe Admin::GroupsController do
       "name"=>group.name,
       "user_count"=>1,
       "automatic"=>false,
-      "alias_level"=>0
+      "alias_level"=>0,
+      "visible"=>true
     }]
   end
 

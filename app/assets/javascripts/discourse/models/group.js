@@ -83,17 +83,19 @@ Discourse.Group = Discourse.Model.extend({
       });
   },
 
+  asJSON: function() {
+    return { group: {
+             name: this.get('name'),
+             alias_level: this.get('alias_level'),
+             visible: !!this.get('visible'),
+             usernames: this.get('usernames') } };
+  },
+
   create: function(){
     var self = this;
     self.set('disableSave', true);
 
-    return Discourse.ajax("/admin/groups", {type: "POST", data: {
-      group: {
-        name: this.get('name'),
-        alias_level: this.get('alias_level'),
-        usernames: this.get('usernames')
-      }
-    }}).then(function(resp) {
+    return Discourse.ajax("/admin/groups", {type: "POST", data: this.asJSON()}).then(function(resp) {
       self.set('disableSave', false);
       self.set('id', resp.id);
     }, function (error) {
@@ -113,13 +115,7 @@ Discourse.Group = Discourse.Model.extend({
 
     return Discourse.ajax("/admin/groups/" + this.get('id'), {
       type: "PUT",
-      data: {
-        group: {
-          name: this.get('name'),
-          alias_level: this.get('alias_level'),
-          usernames: this.get('usernames')
-        }
-      }
+      data: this.asJSON()
     }).then(function(){
       self.set('disableSave', false);
     }, function(e){

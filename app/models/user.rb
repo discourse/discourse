@@ -109,7 +109,7 @@ class User < ActiveRecord::Base
   end
 
   def custom_groups
-    groups.where(automatic: false)
+    groups.where(automatic: false, visible: true)
   end
 
   def self.username_available?(username)

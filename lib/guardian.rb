@@ -109,6 +109,10 @@ class Guardian
   alias :can_send_activation_email? :can_moderate?
   alias :can_grant_badges? :can_moderate?
 
+  def can_see_group?(group)
+    group.present? && group.visible?
+  end
+
 
 
   # Can we impersonate this user?

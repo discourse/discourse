@@ -238,6 +238,16 @@ describe Guardian do
       Guardian.new.can_see?(nil).should be_false
     end
 
+    describe 'a Group' do
+      it "returns true when the group is visible" do
+        Guardian.new.can_see?(Group.new).should be_true
+      end
+
+      it "returns false when the group is invisible" do
+        Guardian.new.can_see?(Group.new(visible: false)).should be_false
+      end
+    end
+
     describe 'a Topic' do
       it 'allows non logged in users to view topics' do
         Guardian.new.can_see?(topic).should be_true

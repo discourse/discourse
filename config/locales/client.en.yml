@@ -177,6 +177,7 @@ en:
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
 
     groups:
+      visible: "Group is visible to all users"
       title:
         one: "group"
         other: "groups"
