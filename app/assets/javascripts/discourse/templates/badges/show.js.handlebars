@@ -1,4 +1,4 @@
-<div class='container badges'>
+<div class='container show-badge'>
   <h1>
     {{#link-to 'badges.index'}}{{i18n badges.title}}{{/link-to}}
     <i class='fa fa-angle-right'></i>
@@ -18,7 +18,13 @@
     <br>
     {{#each userBadges}}
       {{#link-to 'userActivity' user}}
-        {{avatar user imageSize="large"}}
+        <div class="badge-user">
+          {{avatar user imageSize="large"}}
+          <div class="details">
+            <span class="username">{{user.username}}</span>
+            {{unboundDate granted_at}}
+          </div>
+        </div>
       {{/link-to}}
     {{/each}}
   {{else}}

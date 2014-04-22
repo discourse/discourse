@@ -74,3 +74,24 @@ table.badges-listing {
     border-top: 1px solid $primary-border-color;
   }
 }
+
+/* /badges/:id/:slug page styling. */
+.show-badge {
+  .badge-user {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid $secondary_border_color;
+    margin-bottom: 3px;
+
+    .details {
+      float: right;
+      margin: 0 10px;
+      padding-top: 3px;
+      color: $primary_text_color;
+    }
+    .date {
+      display: block;
+      color: $secondary_text_color;
+    }
+  }
+}
