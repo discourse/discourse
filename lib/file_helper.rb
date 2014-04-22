@@ -1,3 +1,5 @@
+require "open-uri"
+
 class FileHelper
 
   def self.is_image?(filename)
@@ -7,11 +9,12 @@ class FileHelper
   def self.download(url, max_file_size, tmp_file_name)
     raise Discourse::InvalidParameters unless url =~ /^https?:\/\//
 
-    extension = File.extname(URI.parse(url).path)
+    uri = URI.parse(url)
+    extension = File.extname(uri.path)
     tmp = Tempfile.new([tmp_file_name, extension])
 
     File.open(tmp.path, "wb") do |f|
-      downloaded = open(url, "rb", read_timeout: 5)
+      downloaded = uri.open("rb", read_timeout: 5)
       while f.size <= max_file_size && data = downloaded.read(max_file_size)
         f.write(data)
       end
