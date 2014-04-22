@@ -16,17 +16,24 @@
   {{#if userBadges}}
     <h2>{{i18n users}}</h2>
     <br>
+    <div>
     {{#each userBadges}}
-      {{#link-to 'userActivity' user}}
-        <div class="badge-user">
-          {{avatar user imageSize="large"}}
-          <div class="details">
-            <span class="username">{{user.username}}</span>
-            {{unboundDate granted_at}}
+        {{#link-to 'userActivity' user}}
+          <div class="badge-user">
+            {{avatar user imageSize="large"}}
+            <div class="details">
+              <span class="username">{{user.username}}</span>
+              {{unboundDate granted_at}}
+            </div>
           </div>
-        </div>
-      {{/link-to}}
-    {{/each}}
+        {{/link-to}}
+      {{/each}}
+    </div>
+    {{#if showMoreUsers}}
+      <button class="btn" {{action loadMore}}>
+        {{countI18n badges.more_badges count=moreUserCount}}
+      </button>
+    {{/if}}
   {{else}}
     {{#unless userBadgesLoaded}}
       <div class='spinner'>{{i18n loading}}</div>
