@@ -128,6 +128,19 @@ describe Guardian do
     it "returns true to another user" do
       Guardian.new(user).can_send_private_message?(another_user).should be_true
     end
+
+    context "enable_private_messages is false" do
+      before { SiteSetting.stubs(:enable_private_messages).returns(false) }
+
+      it "returns false if user is not the contact user" do
+        Guardian.new(user).can_send_private_message?(another_user).should be_false
+      end
+
+      it "returns true for the contact user" do
+        SiteSetting.stubs(:site_contact_username).returns(user.username)
+        Guardian.new(user).can_send_private_message?(another_user).should be_true
+      end
+    end
   end
 
   describe 'can_reply_as_new_topic' do

@@ -210,7 +210,7 @@ class Guardian
     # Have to be a basic level at least
     @user.has_trust_level?(:basic) &&
     # PMs are enabled
-    SiteSetting.enable_private_messages
+    (SiteSetting.enable_private_messages || @user.username == SiteSetting.site_contact_username)
   end
 
   private
