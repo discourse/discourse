@@ -245,8 +245,14 @@ module Discourse
     SiteSetting.after_fork
     $redis.client.reconnect
     Rails.cache.reconnect
-    # /!\ HACK /!\ force sidekiq to create a new connection to redis
-    Sidekiq.instance_variable_set(:@redis, nil)
+    # shuts down all connections in the pool
+    Sidekiq.redis_pool.shutdown{|c| nil}
+    # re-establish
+    Sidekiq.redis = sidekiq_redis_config
+  end
+
+  def self.sidekiq_redis_config
+    { url: $redis.url, namespace: 'sidekiq' }
   end
 
 end
