@@ -1354,12 +1354,14 @@
           // [links][] uses links as its reference
           attrs = { ref: ( m[ 1 ] || String(children) ).toLowerCase(),  original: orig.substr( 0, consumed ) };
 
-          link = [ "link_ref", attrs ].concat( children );
+          if (children && children.length > 0) {
+            link = [ "link_ref", attrs ].concat( children );
 
-          // We can't check if the reference is known here as it likely wont be
-          // found till after. Check it in md tree->hmtl tree conversion.
-          // Store the original so that conversion can revert if the ref isn't found.
-          return [ consumed, link ];
+            // We can't check if the reference is known here as it likely wont be
+            // found till after. Check it in md tree->hmtl tree conversion.
+            // Store the original so that conversion can revert if the ref isn't found.
+            return [ consumed, link ];
+          }
         }
 
         // Another check for references
