@@ -61,6 +61,9 @@ I18n.pluralizationRules = {
   },
   "zh_TW": function(n) {
     return n === 0 ? ["zero", "none", "other"] : "other";
+  },
+  "ko": function(n) {
+    return n === 0 ? ["zero", "none", "other"] : "other";
   }
 };
 
