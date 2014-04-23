@@ -236,6 +236,7 @@ class CookedPostProcessor
   def disable_if_low_on_disk_space
     if available_disk_space < SiteSetting.download_remote_images_threshold
       SiteSetting.download_remote_images_to_local = false
+      SystemMessage.create(Discourse.site_contact_user, :download_remote_images_disabled)
       return true
     end
     false
