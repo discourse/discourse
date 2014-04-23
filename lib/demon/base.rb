@@ -17,6 +17,14 @@ class Demon::Base
     end
   end
 
+  def self.restart
+    return unless @demons
+    @demons.values.each do |demon|
+      demon.stop
+      demon.start
+    end
+  end
+
   def self.ensure_running
     @demons.values.each do |demon|
       demon.ensure_running
@@ -39,6 +47,7 @@ class Demon::Base
     if @pid
       Process.kill("HUP",@pid)
       @pid = nil
+      @started = false
     end
   end
 
