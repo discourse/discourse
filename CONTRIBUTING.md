@@ -117,4 +117,13 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 
   > Though we ask you to clean your history and squash commit before submitting a pull-request, please do not change any commits you've submitted already (as other work might be build on top).
 
+## Translations
+
+Translators can do their work in our [Transifex project](https://www.transifex.com/projects/p/discourse-org/). For more information, please see these how-to topics:
+
+* [Contributing a translation to Discourse](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882)
+* [How to add a new language](https://meta.discourse.org/t/how-to-add-a-new-language/14970)
+
+
+
 [m]: http://meta.discourse.org
