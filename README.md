@@ -60,7 +60,7 @@ Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https
 [![Code Climate](https://codeclimate.com/github/discourse/discourse.png)](https://codeclimate.com/github/discourse/discourse)
 
 Discourse is **100% free** and **open-source**. We encourage and support an active, healthy community that
-accepts contributions from the public. We'd like you to be a part of that community.
+accepts contributions from the public &ndash; including you!
 
 Before contributing to Discourse:
 
