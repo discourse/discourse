@@ -69,6 +69,23 @@ before_fork do |server, worker|
       end
     end
 
+    sidekiqs = ENV['UNICORN_SIDEKIQS'].to_i
+    if sidekiqs > 0
+      puts "Starting up #{sidekiqs} supervised sidekiqs"
+      require 'demon/sidekiq'
+
+      Demon::Sidekiq.start(sidekiqs)
+
+      class ::Unicorn::HttpServer
+        alias :master_sleep_orig :master_sleep
+
+        def master_sleep(sec)
+          Demon::Sidekiq.ensure_running
+          master_sleep_orig(sec)
+        end
+      end
+    end
+
   end
 
   ActiveRecord::Base.connection.disconnect!
