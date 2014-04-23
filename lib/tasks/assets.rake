@@ -31,28 +31,6 @@ task 'assets:precompile:before' do
       compiled
     end
 
-    class SassCompressor
-      def evaluate(context, locals, &block)
-        ::Sprockets.cache_compiled("sass", data) do
-           # HACK, SASS compiler will degrade to aweful perf with huge files
-           # Bypass if larger than 500kb, ensure assets are minified prior
-           if context.pathname &&
-              context.pathname.to_s =~ /.css$/ &&
-              data.length > 500.kilobytes
-             puts "Skipped minifying #{context.pathname} cause it is larger than 200KB, minify in source control or avoid large CSS files"
-             data
-           else
-             ::Sass::Engine.new(data, {
-                :syntax => :scss,
-                :cache => false,
-                :read_cache => false,
-                :style => :compressed
-              }).render
-           end
-        end
-      end
-    end
-
     class UglifierCompressor
 
       def evaluate(context, locals, &block)
@@ -67,4 +45,3 @@ task 'assets:precompile:before' do
 end
 
 task 'assets:precompile' => 'assets:precompile:before'
-
