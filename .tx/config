@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[discourse-pt-br.clientenyml]
+[discourse-org.clientenyml]
 file_filter = config/locales/client.<lang>.yml
 source_file = config/locales/client.en.yml
 source_lang = en
@@ -11,7 +11,7 @@ trans.ko_KR = config/locales/client.ko.yml
 trans.pt_PT = config/locales/client.pt.yml
 type = YML
 
-[discourse-pt-br.serverenyml]
+[discourse-org.serverenyml]
 file_filter = config/locales/server.<lang>.yml
 source_file = config/locales/server.en.yml
 source_lang = en
@@ -21,7 +21,7 @@ trans.ko_KR = config/locales/server.ko.yml
 trans.pt_PT = config/locales/server.pt.yml
 type = YML
 
-[discourse-pt-br.403html]
+[discourse-org.403html]
 file_filter = public/403.<lang>.html
 source_file = public/403.html
 source_lang = en
@@ -31,7 +31,7 @@ trans.fr_FR = public/403.fr.html
 # trans.pt_PT = public/403.pt.html
 type = HTML
 
-[discourse-pt-br.422html]
+[discourse-org.422html]
 file_filter = public/422.<lang>.html
 source_file = public/422.html
 source_lang = en
@@ -41,7 +41,7 @@ trans.fr_FR = public/422.fr.html
 # trans.pt_PT = public/422.pt.html
 type = HTML
 
-[discourse-pt-br.500html]
+[discourse-org.500html]
 file_filter = public/500.<lang>.html
 source_file = public/500.html
 source_lang = en
@@ -51,7 +51,7 @@ trans.fr_FR = public/500.fr.html
 # trans.pt_PT = public/500.pt.html
 type = HTML
 
-[discourse-pt-br.503html]
+[discourse-org.503html]
 file_filter = public/503.<lang>.html
 source_file = public/503.html
 source_lang = en
