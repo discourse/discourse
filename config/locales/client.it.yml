@@ -550,7 +550,7 @@ it:
       local_tip: "Clicca per selezionare un'immagine dal tuo dispositivo."
       local_tip_with_attachments: "Clicca per selezionare un'immagine o un file dal tuo dispositivo (estensioni permesse: {{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
-      hint_for_chrome: "(puoi anche trascinare o incollare le immagini nell'editor per caricarle)"
+      hint_for_supported_browsers: "(puoi anche trascinare o incollare le immagini nell'editor per caricarle)"
       uploading: "In caricamento"
       image_link: "Il link a cui la tua immagine punterà"
     search:

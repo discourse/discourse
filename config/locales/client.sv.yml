@@ -540,7 +540,7 @@ sv:
       local_tip: "klicka för att välja en bild från din enhet."
       local_tip_with_attachments: "klicka för att välja en bild eller fil från din enhet (tillåtna filtyper: {{authorized_extensions}})"
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
-      hint_for_chrome: "(du kan också dra och släppa eller klistra in bilder i redigeraren för att ladda upp dem)"
+      hint_for_supported_browsers: "(du kan också dra och släppa eller klistra in bilder i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
     search:
       title: "sök efter trådar, inlägg, användare, eller kategorier"

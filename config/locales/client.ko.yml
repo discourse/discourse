@@ -495,7 +495,7 @@ ko:
       local_tip: "내 컴퓨터에서 이미지를 가져오기"
       local_tip_with_attachments: "내 컴퓨터에서 이미지나 파일 가져오기 (사용 가능한 확장자: {{authorized_extensions}})"
       hint: "(드래그&드랍으로 업로드 가능)"
-      hint_for_chrome: "(드래그&드랍으로 이미지 업로드 가능)"
+      hint_for_supported_browsers: "(드래그&드랍으로 이미지 업로드 가능)"
       uploading: "업로드 중입니다..."
     search:
       title: "토픽, 게시물, 사용자, 카테고리를 검색"

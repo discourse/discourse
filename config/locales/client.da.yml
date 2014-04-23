@@ -511,7 +511,7 @@ da:
       local_tip: "klik for at vælge et billede fra din computer."
       local_tip_with_attachments: "klik for at vælge et billede eller en fil fra din computer (tilladte filendelser: {{authorized_extensions}})"
       hint: "(du kan også trække og slippe ind i editoren for at uploade dem)"
-      hint_for_chrome: "(du kan også trække og slippe eller indsætte i editoren for at uploade dem)"
+      hint_for_supported_browsers: "(du kan også trække og slippe eller indsætte i editoren for at uploade dem)"
       uploading: "Uploader billede"
     search:
       title: "søg efter emner, indlæg, brugere eller kategorier"

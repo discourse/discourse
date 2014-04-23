@@ -297,9 +297,9 @@ zh_TW:
         uploaded_avatar_empty: "新增一張自訂圖片"
         upload_title: "上傳你的圖片"
         image_is_not_a_square: "警告: 我們裁切了你的圖片，因為該圖片不是正方形的。"
-        
+
       change_profile_background:
-        title: "設定背景圖案"  
+        title: "設定背景圖案"
 
       email:
         title: "電子郵件"
@@ -605,7 +605,7 @@ zh_TW:
       local_tip: "按此從你的電腦選擇圖片"
       local_tip_with_attachments: "按此從你的電腦選擇一張圖片或一個檔案 (允許的副檔名: {{authorized_extensions}})。"
       hint: "(你也可以將檔案拖放至編輯器直接上傳)"
-      hint_for_chrome: "(你也可以將圖片拖放或貼上至編輯器直接上傳)"
+      hint_for_supported_browsers: "(你也可以將圖片拖放或貼上至編輯器直接上傳)"
       uploading: "正在上傳"
 
     search:
@@ -756,7 +756,7 @@ zh_TW:
           description: "功能與追蹤相同，並在有新帖子時通知你。"
         tracking_pm:
           title: "追蹤"
-          description: "當有人以 @用戶名稱 提到你或回覆你的帖子時通知你，並顯示未讀的新帖子數目。" 
+          description: "當有人以 @用戶名稱 提到你或回覆你的帖子時通知你，並顯示未讀的新帖子數目。"
         tracking:
           title: "追蹤"
           description: "當有人以 @用戶名稱 提到你或回覆你的帖子時通知你，並顯示未讀的新帖子數目。"

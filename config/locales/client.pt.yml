@@ -454,7 +454,7 @@ pt:
       local_tip: "Carregue para selecionar um ficheiro do seu dispositivo"
       local_tip_with_attachments: "carregue para selecionar uma imagem ou ficheiro do seu dispositivo (extensões permitidas: {{authorized_extensions}})"
       hint: "(poderá também arrastar o ficheiro para o editor para fazer o upload)"
-      hint_for_chrome: "(poderá também arrastar a imagem ou \"colar\" directamente no editor para fazer o upload)"
+      hint_for_supported_browsers: "(poderá também arrastar a imagem ou \"colar\" directamente no editor para fazer o upload)"
       uploading: "A enviar"
     search:
       title: "procurar por tópicos, posts, utilizadores, ou categorias"

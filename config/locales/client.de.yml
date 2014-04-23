@@ -550,7 +550,7 @@ de:
       local_tip: "Klicke hier, um ein Bild von deinem Gerät zu wählen."
       local_tip_with_attachments: "Klicke hier, um ein Bild oder eine Datei von deinem Gerät zu wählen (Erlaubte Dateiendungen: {{authorized_extensions}})"
       hint: "(du kannst auch drag & drop verwenden, um etwas in den editor hochzuladen)"
-      hint_for_chrome: "(du kannst auch drag & drop oder copy & paste verwenden, um etwas in den editor hochzuladen)"
+      hint_for_supported_browsers: "(du kannst auch drag & drop oder copy & paste verwenden, um etwas in den editor hochzuladen)"
       uploading: "Hochladen..."
       image_link: "Der Link deines Bildes verweist auf"
     search:

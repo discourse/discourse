@@ -547,7 +547,7 @@ es:
       local_tip: "click para seleccionar una imagen desde su dispositivo."
       local_tip_with_attachments: "click para seleccionar una imaged o un archivo deste tu dispositivo (extensiones válidas: {{authorized_extensions}})"
       hint: "(también puedes arrastrarlos al editor para subirlos)"
-      hint_for_chrome: "(también puedes arrastrarlos o pegarlos en el editor para subirlos)"
+      hint_for_supported_browsers: "(también puedes arrastrarlos o pegarlos en el editor para subirlos)"
       uploading: "Subiendo imagen"
     search:
       title: "buscar por temas, publicaciones, usuarios o categorías"

@@ -578,7 +578,7 @@ cs:
       local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení."
       local_tip_with_attachments: "klikněte sem pro výběr obrázku nebo souboru z vašeho zařízení."
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
-      hint_for_chrome: "(můžete také rovnou obrázky do editoru přetáhnout nebo vložit)"
+      hint_for_supported_browsers: "(můžete také rovnou obrázky do editoru přetáhnout nebo vložit)"
       uploading: "Nahrávám"
       image_link: "adresa na kterou má váš obrázek odkazovat"
     search:

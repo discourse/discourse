@@ -22,8 +22,11 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
   hint: function() {
     // cf. http://stackoverflow.com/a/9851769/11983
     var isChrome = !!window.chrome && !(!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0);
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+    var isSupported = isChrome || isFirefox;
+
     // chrome is the only browser that support copy & paste of images.
-    return I18n.t("upload_selector.hint" + (isChrome ? "_for_chrome" : ""));
+    return I18n.t("upload_selector.hint" + (isSupported ? "_for_supported_browsers" : ""));
   }.property(),
 
   didInsertElement: function() {
