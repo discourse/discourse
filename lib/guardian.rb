@@ -110,7 +110,7 @@ class Guardian
   alias :can_grant_badges? :can_moderate?
 
   def can_see_group?(group)
-    group.present? && group.visible?
+    group.present? && (is_admin? || group.visible?)
   end
 
 

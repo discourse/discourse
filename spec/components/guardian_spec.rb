@@ -239,12 +239,20 @@ describe Guardian do
     end
 
     describe 'a Group' do
+      let(:group) { Group.new }
+      let(:invisible_group) { Group.new(visible: false) }
+
       it "returns true when the group is visible" do
-        Guardian.new.can_see?(Group.new).should be_true
+        Guardian.new.can_see?(group).should be_true
+      end
+
+      it "returns true when the group is visible but the user is an admin" do
+        admin = Fabricate.build(:admin)
+        Guardian.new(admin).can_see?(invisible_group).should be_true
       end
 
       it "returns false when the group is invisible" do
-        Guardian.new.can_see?(Group.new(visible: false)).should be_false
+        Guardian.new.can_see?(invisible_group).should be_false
       end
     end
 
