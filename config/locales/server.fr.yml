@@ -728,7 +728,7 @@ fr:
     email_in_min_trust: "Le niveau de confiance minimum qu'un utilisateur doit avoir pour être autorisés à poster de nouveaux sujets par e-mail"
     email_in_category: "La catégorie où les nouveaux e-mails seront affichés"
     email_prefix: "Le [label] qui sera utiliser dans le sujet des emails. Par défaut il prend la valeur de 'title'"
-    minimum_topics_similar: "Combien de sujets ont besoin d'existé dans la base de données avant que des sujets similaires soit présentés."
+    minimum_topics_similar: "Combien de sujets ont besoin d'exister dans la base de données avant que des sujets similaires soit présentés."
     relative_date_duration: "Nombre de jours après la création d'un message à partir desquels les dates seront affichées en absolu plutôt qu'en relatif. Exemple: relatif : 7j, absolut : 20 Fév"
     delete_user_max_post_age: "L'âge maximum du premier message d'un utilisateur, en jours, qui permet de supprimer un utilisateur."
     delete_all_posts_max: "Le nombre maximum de messages qui peuvent être supprimer en une seule fois avec le bouton Supprimer tous les messages. Si un utilisateur a plus que ce nombre de messages, les messages ses messages ne pourront pas être supprimé en une seul fois et l'utilisateur ne pourra pas être supprimé."
