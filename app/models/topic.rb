@@ -55,13 +55,17 @@ class Topic < ActiveRecord::Base
                                         :case_sensitive => false,
                                         :collection => Proc.new{ Topic.listable_topics } }
 
-  validates :category_id, :presence => true ,:exclusion => {:in => [SiteSetting.uncategorized_category_id]},
-                                     :if => Proc.new { |t|
-                                           (t.new_record? || t.category_id_changed?) &&
-                                           !SiteSetting.allow_uncategorized_topics &&
-                                           (t.archetype.nil? || t.archetype == Archetype.default) &&
-                                           (!t.user_id || !t.user.staff?)
-                                       }
+  validates :category_id,
+            :presence => true,
+            :exclusion => {
+              :in => Proc.new{[SiteSetting.uncategorized_category_id]}
+            },
+            :if => Proc.new { |t|
+                   (t.new_record? || t.category_id_changed?) &&
+                   !SiteSetting.allow_uncategorized_topics &&
+                   (t.archetype.nil? || t.archetype == Archetype.default) &&
+                   (!t.user_id || !t.user.staff?)
+            }
 
 
   before_validation do
