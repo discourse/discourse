@@ -2,9 +2,9 @@
   <div class='content-list span6'>
     <h3>{{i18n admin.groups.edit}}</h3>
     <ul>
-      {{#each group in model}}
+      {{#each group in arrangedContent}}
         <li>
-          <a href="#" {{action "edit" group}} {{bind-attr class="group.active"}}>{{group.name}} <span class="count">{{group.userCountDisplay}}</span></a>
+        <a href='#' {{action showGroup group}}>{{group.name}} <span class="count">{{group.userCountDisplay}}</span></a>
         </li>
       {{/each}}
     </ul>
@@ -15,44 +15,6 @@
   </div>
 
   <div class='content-editor'>
-    {{#if model.active}}
-      {{#if model.active.loadedUsers}}
-        {{#with model.active}}
-          {{#if automatic}}
-            <h3>{{name}}</h3>
-          {{else}}
-            {{textField value=name placeholderKey="admin.groups.name_placeholder"}}
-          {{/if}}
-
-          <div class="control-group">
-            <label class="control-label">{{i18n admin.groups.group_members}}</label>
-            <div class="controls">
-              {{userSelector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabledBinding="automatic"}}
-            </div>
-          </div>
-          <div class="control-group">
-            <div class="controls">
-              {{input type="checkbox" checked=visible}} {{i18n groups.visible}}
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label">{{i18n groups.alias_levels.title}}</label>
-            <div class="controls">
-              {{combobox valueAttribute="value" value=alias_level content=controller.aliasLevelOptions}}
-            </div>
-          </div>
-          <div class='controls'>
-            <button {{action save this}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
-            {{#unless automatic}}
-              <a {{action destroy this}} class='delete-link'>{{i18n admin.customize.delete}}</a>
-            {{/unless}}
-          </div>
-        {{/with}}
-      {{else}}
-        <div class='spinner'>{{i18n loading}}</div>
-      {{/if}}
-    {{else}}
-      {{i18n admin.groups.about}}
-    {{/if}}
+    {{outlet}}
   </div>
 </div>

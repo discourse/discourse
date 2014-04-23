@@ -270,7 +270,7 @@ $.fn.autocomplete = function(options) {
     }
   });
 
-  return $(this).keydown(function(e) {
+  $(this).keydown(function(e) {
     var c, caretPosition, i, initial, next, prev, prevIsGood, stopFound, term, total, userToComplete;
 
     if(options.allowAny){
@@ -405,4 +405,6 @@ $.fn.autocomplete = function(options) {
       }
     }
   });
+
+  return this;
 };

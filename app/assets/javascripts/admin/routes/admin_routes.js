@@ -43,7 +43,9 @@ Discourse.Route.buildRoutes(function() {
       this.route('screenedUrls', { path: '/screened_urls' });
     });
 
-    this.route('groups');
+    this.resource('adminGroups', { path: '/groups'}, function() {
+      this.resource('adminGroup', { path: '/:name' });
+    });
 
     this.resource('adminUsers', { path: '/users' }, function() {
       this.resource('adminUser', { path: '/:username' }, function() {
