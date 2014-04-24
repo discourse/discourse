@@ -33,22 +33,20 @@
   {{/unless}}
 
   <div class="pull-right">
-    <div class='num posts'><a href="{{lastUnreadUrl}}">{{number posts_count numberKey="posts_long"}}</a></div>
+    <div class='num posts'><a href="{{lastUnreadUrl}}">{{number posts_count numberKey="posts_long"}} <i class="fa fa-comment"></i></a></div>
 
     {{#if like_count}}
-      <div class='num likes'><a href='{{url}}{{#if has_summary}}?filter=summary{{/if}}' title='{{i18n topic.likes count="like_count"}}'><i class='fa fa-heart'></i> {{number like_count numberKey="likes_long"}}</a></div>
+      <div class='num likes'><a href='{{url}}{{#if has_summary}}?filter=summary{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{number like_count numberKey="likes_long"}} <i class='fa fa-heart'></i></a></div>
     {{/if}}
-
-    <div class='last-poster'>
-      <i class="fa fa-user"></i> {{last_poster_username}}
-    </div>
 
     {{#if bumped}}
       <div class='num activity last'>
+        <a href="{{lastPostUrl}}" title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{last_poster_username}}</a>
         <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
       </div>
     {{else}}
       <div class='num activity last'>
+        <a href="{{url}}" title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{last_poster_username}}</a>
         <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{rawDate created_at}}}'>{{unboundAge created_at}}</a>
       </div>
     {{/if}}
