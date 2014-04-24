@@ -80,8 +80,10 @@ module Jobs
         delay = SiteSetting.ninja_edit_window * args[:backoff]
         Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, args.merge!(backoff: backoff))
       elsif raw != post.raw
-        options = { edit_reason: I18n.t("upload.edit_reason") }
-        options[:bypass_bump] = !!args[:bypass_bump]
+        options = {
+          edit_reason: I18n.t("upload.edit_reason"),
+          bypass_bump: true # we never want that job to bump the topic
+        }
         post.revise(Discourse.system_user, raw, options)
       end
     end
