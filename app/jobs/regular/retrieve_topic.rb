@@ -13,8 +13,7 @@ module Jobs
       if args[:user_id]
         user = User.find_by(id: args[:user_id])
       end
-
-      TopicRetriever.new(args[:embed_url], no_throttle: user.try(:staff?)).retrieve
+      TopicRetriever.new(args[:embed_url], author_username: args[:author_username], no_throttle: user.try(:staff?)).retrieve
     end
 
   end
