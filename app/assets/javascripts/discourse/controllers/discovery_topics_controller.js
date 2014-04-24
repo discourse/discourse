@@ -81,7 +81,16 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
       } else {
         promise = Discourse.Topic.bulkOperationByFilter(this.get('filter'), operation);
       }
-      promise.then(function() { self.send('refresh'); });
+      promise.then(function(result) {
+        if (result && result.topic_ids) {
+          var tracker = Discourse.TopicTrackingState.current();
+          result.topic_ids.forEach(function(t) {
+            tracker.removeTopic(t);
+          });
+          tracker.incrementMessageCount();
+        }
+        self.send('refresh');
+      });
     }
   },
 
