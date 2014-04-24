@@ -1368,7 +1368,7 @@ en:
       subject_template: "[%{site_name}] Digest for %{date}"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
-      other_new_topics: "Top Topics:"
+      other_new_topics: "Popular topics:"
       unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
