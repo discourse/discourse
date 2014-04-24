@@ -72,6 +72,16 @@ class SiteSetting < ActiveRecord::Base
                   .first
   end
 
+  def self.should_download_images?(src)
+    setting = disabled_image_download_domains
+    return true unless setting.present?
+    host = URI.parse(src).host
+
+    return !(setting.split('|').include?(host))
+  rescue URI::InvalidURIError
+    return true
+  end
+
   def self.scheme
     use_https? ? "https" : "http"
   end
