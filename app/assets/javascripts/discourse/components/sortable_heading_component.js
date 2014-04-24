@@ -12,8 +12,8 @@ Discourse.SortableHeadingComponent = Ember.Component.extend({
   attributeBindings: ['colspan'],
 
   sortable: function() {
-    return this.get('order') && this.get('sortBy');
-  }.property('order', 'sortBy'),
+    return this.get('sortBy');
+  }.property('sortBy'),
 
   iconSortClass: function() {
     if (this.get('sortable') && this.get('sortBy') === this.get('order')) {
