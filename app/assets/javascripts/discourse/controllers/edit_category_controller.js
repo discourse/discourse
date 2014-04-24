@@ -58,9 +58,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     return false;
   }.property('saving', 'name', 'color', 'deleting'),
 
-  emailInEnabled: function() {
-    return Discourse.SiteSettings.email_in;
-  },
+  emailInEnabled: Discourse.computed.setting('email_in'),
 
   deleteDisabled: function() {
     return (this.get('deleting') || this.get('saving') || false);

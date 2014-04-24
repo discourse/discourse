@@ -31,9 +31,7 @@ Discourse.UserInvitedController = Ember.ObjectController.extend({
 
     @property maxInvites
   **/
-  maxInvites: function() {
-    return Discourse.SiteSettings.invites_shown;
-  }.property(),
+  maxInvites: Discourse.computed.setting('invites_shown'),
 
   /**
     Can the currently logged in user invite users to the site

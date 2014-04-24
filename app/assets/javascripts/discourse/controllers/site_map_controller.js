@@ -13,9 +13,7 @@ Discourse.SiteMapController = Ember.ArrayController.extend(Discourse.HasCurrentU
     return Discourse.SiteSettings.faq_url ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq');
   }.property(),
 
-  showMobileToggle: function() {
-    return Discourse.SiteSettings.enable_mobile_theme;
-  }.property(),
+  showMobileToggle: Discourse.computed.setting('enable_mobile_theme'),
 
   mobileViewLinkTextKey: function() {
     return Discourse.Mobile.mobileView ? "desktop_view" : "mobile_view";

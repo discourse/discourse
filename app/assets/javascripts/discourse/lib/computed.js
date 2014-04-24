@@ -128,5 +128,19 @@ Discourse.computed = {
       if (typeof result !== "undefined" && result.toString() === defaultValue) { return; }
       return result;
     }).property(path);
+  },
+
+  /**
+    Creates a property from a SiteSetting. In the future the plan is for them to
+    be able to update when changed.
+
+    @method setting
+    @param {String} name of site setting
+  **/
+  setting: function(name) {
+    return Ember.computed(function() {
+      return Discourse.SiteSettings[name];
+    }).property();
   }
+
 };

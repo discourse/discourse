@@ -20,13 +20,8 @@ Discourse.AdminUserController = Discourse.ObjectController.extend({});
 Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
   editingTitle: false,
 
-  showApproval: function() {
-    return Discourse.SiteSettings.must_approve_users;
-  }.property(),
-
-  showBadges: function() {
-    return Discourse.SiteSettings.enable_badges;
-  }.property(),
+  showApproval: Discourse.computed.setting('must_approve_users'),
+  showBadges: Discourse.computed.setting('enable_badges'),
 
   primaryGroupDirty: Discourse.computed.propertyNotEqual('originalPrimaryGroupId', 'primary_group_id'),
 
