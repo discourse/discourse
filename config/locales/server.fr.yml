@@ -188,7 +188,7 @@ fr:
   meta_category_description: "Discussion sur ce forum, son organisation, son fonctionnement, et comment nous pouvons l'améliorer."
   staff_category_name: "Staff"
   staff_category_description: "Catégorie privée pour les discussions du staff. Les sujets ne sont visibles que pour les admins et les modérateurs."
-  assets_topic_body: "C'est un sujet pour stocker les éléments utilisés dans la design du forum. Ne pas supprimer!"
+  assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du forum. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   category:
     topic_prefix: "A propos de la catégorie %{category}"
     replace_paragraph: "[Remplacez ce premier paragraphe par une courte description de votre nouvelle catégorie. Ce texte apparaît dans la zone de sélection de catégorie, alors essayez de le maintenir en dessous de 200 caractères. Cette catégorie n'apparaîtra pas sur la page de des catégories tant que vous modifiez ce texte ou jusqu'à ce que vous créeriez des sujets.]"
@@ -762,6 +762,8 @@ fr:
     embed_truncate: "Tronquer les messages importés"
     embed_category: "Catégorie des sujets créés"
     embed_post_limit: "Le nombre maximum de messages à incorporer"
+    embed_whitelist_selector: "selecteur css pour les éléments qui seront autorisés dans les contenus intégrés"
+    embed_blacklist_selector: "selecteur css pour les éléments qui seront interdits dans les contenus intégrés"
     tos_accept_required: "Si il est activé, les utilisateurs devront cocher une case sur le formulaire d'inscription pour confirmer qu'ils acceptent les conditions de service. Modifier \"Formulaire d'inscription : Message des Conditions d'utilisation» dans l'onglet Contenu pour modifier le message."
     notify_about_flags_after: "Si il y a des signalements qui n'ont pas été traités après ce nombre d'heure, envoyer un email à contact_email.  Désactiver la fonctionnalité en indiquant: 0."
   notification_types:

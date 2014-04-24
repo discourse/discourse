@@ -1486,8 +1486,11 @@ fr:
           one: "Les utilisateurs ne peuvent pas être supprimés s'ils ont posté des messages Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jour ne peut pas être supprimé.)"
           other: "Les utilisateurs ne peuvent pas être supprimés s'ils ont posté des messages Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jours ne peut pas être supprimé.)"
         cant_delete_all_posts:
-          one: "Vous ne pouvez pas supprimer tous les messages. Certains messages sont âgés de plus de %{count} jour."
-          other: "Vous ne pouvez pas supprimer tous les messages. Certains messages sont âgés de plus de %{count} jours."
+          one: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de  %{count} jour. (voir l'option delete_user_max_post_age)"
+          other: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de  %{count} jours. (voir l'option delete_user_max_post_age)"
+        cant_delete_all_too_many_posts:
+          one: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus de 1 message. (voir l'option delete_all_posts_max)"
+          other: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus de %{count} messages. (voir l'option delete_all_posts_max)"
         delete_confirm: "Êtes-vous SUR de vouloir supprimer cet utilisateur ? Cette action est définitive !"
         delete_and_block: "<b>Oui</>, et <b>bloquer</b> les inscriptions furures avec cette adresse mail et cette adresse IP"
         delete_dont_block: "<b>Oui</b>, juste supprimer l'utilisateur"
@@ -1614,6 +1617,7 @@ fr:
         mark_tracking: '<b>m</b> then <b>t</b> Marquer le sujet comme suivi'
         mark_watching: '<b>m</b> puis <b>w</b> Marquer le sujet comme surveillé'
     badges:
+      title: Badges
       badge_count:
         one: "1 badge"
         other: "%{count} badges"

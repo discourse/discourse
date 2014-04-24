@@ -267,7 +267,7 @@ zh_CN:
         ok: "您的名字符合要求。"
       username:
         title: "用户名"
-        instructions: "必须是独一无二的，中间不能有空格。其他人可以使用 @{{username}} 来提及您。"
+        instructions: "必须是独一无二的，中间不能有空格。其他人可以使用 @username 来提及您。"
         short_instructions: "其他人可以用 @{{username}} 来提及您。"
         available: "您的用户名可用。"
         global_match: "电子邮箱与注册用户名相匹配。"

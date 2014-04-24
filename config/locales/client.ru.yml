@@ -12,6 +12,10 @@ ru:
         storage_units:
           format: '! ''%n %u'''
           units:
+            byte:
+              one: Байт
+              few: Байта
+              other: Байт
             gb: ГБ
             kb: КБ
             mb: МБ
@@ -51,9 +55,39 @@ ru:
           one: "> 1г"
           few: "> %{count}л"
           other: "> %{count}л"
+        almost_x_years:
+          one: "1г"
+          few: "%{count}л"
+          other: "%{count}л"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        x_minutes:
+          one: "1 мин"
+          few: "%{count} минут"
+          other: "%{count} минут"
+        x_hours:
+          one: "1 час"
+          few: "%{count} часов"
+          other: "%{count} часов"
+        x_days:
+          one: "1 день"
+          few: "%{count} дней"
+          other: "%{count} дней"
         date_year: "D MMM YYYY"
+      medium_with_ago:
+        x_minutes:
+          one: "1 минуту назад"
+          few: "%{count} минут назад"
+          other: "%{count} минут назад"
+        x_hours:
+          one: "1 час назад"
+          few: "%{count} часов назад"
+          other: "%{count} часов назад"
+        x_days:
+          one: "1 день назад"
+          few: "%{count} дней назад"
+          other: "%{count} дней назад"
     share:
       topic: 'поделиться ссылкой на тему'
       post: 'ссылка на сообщение #%{postNumber}'
@@ -91,6 +125,26 @@ ru:
     weekly: "еженедельно"
     every_two_weeks: "каждые две недели"
     max: "максимально"
+    character_count:
+      one: "{{count}} буква"
+      few: "{{count}} буквы"
+      other: "{{count}} букв"
+    in_n_seconds:
+      one: "за 1 секунду"
+      few: "за {{count}} секунды"
+      other: "за {{count}} секунд"
+    in_n_minutes:
+      one: "за 1 минуту"
+      few: "за {{count}} минуты"
+      other: "за {{count}} минут"
+    in_n_hours:
+      one: "за 1 час"
+      few: "за {{count}} часа"
+      other: "за {{count}} часов"
+    in_n_days:
+      one: "за 1 день"
+      few: "за {{count}} дня"
+      other: "за {{count}} дней"
     suggested_topics:
       title: "Похожие темы"
     bookmarks:
@@ -278,6 +332,7 @@ ru:
       website: "Веб-сайт"
       email_settings: "Электронная почта"
       email_digests:
+        title: "В случае моего отсутствия на форуме, присылайте мне сводку новостей:"
         daily: "ежедневно"
         weekly: "еженедельно"
         bi_weekly: "каждые две недели"
@@ -287,6 +342,9 @@ ru:
       categories_settings: "Категории"
       new_topic_duration:
         label: "Считать темы новыми, если"
+        not_viewed: "они еще не просмотрены вами"
+        last_here: "они были размещены после вашего последнего посещения"
+      auto_track_topics: "Автоматически отслеживать темы, которые я просматриваю"
       auto_track_options:
         never: "никогда"
         always: "всегда"
@@ -513,6 +571,7 @@ ru:
     topics:
       bulk:
         reset_read: "Сбросить прочтённые"
+        dismiss_read: "Отклонить прочтённость"
         toggle: "переключить массовый выбор тем"
         actions: "Массовое действие"
         change_category: "Изменить категорию"
@@ -548,7 +607,12 @@ ru:
         one: '1 новая тема'
         few: '{{count}} новых темы'
         other: '{{count}} новых тем'
+      unread_topics:
+        one: '1 непрочитанная тема'
+        few: '{{count}} непрочитанные темы'
+        other: '{{count}} непрочитанных тем'
       title: 'Тема'
+      loading_more: "Загрузка тем..."
       loading: 'Загружаю тему...'
       invalid_access:
         title: "Частная тема"
@@ -631,6 +695,7 @@ ru:
         invisible: "Сделать невидимой"
         visible: "Сделать видимой"
         reset_read: "Сбросить счетчики"
+        multi_select: "Выбрать сообщения"
         convert_to_topic: "Преобразовать в обычную тему"
       reply:
         title: 'Ответить'
@@ -657,6 +722,7 @@ ru:
         title: 'Пригласить друзей'
         action: 'Выслать приглашение по электронной почте'
         help: 'отправьте приглашения своим друзьям, чтобы они тоже смогли поучаствовать в обсуждении темы'
+        email_placeholder: 'name@example.com'
         success: "Приглашение отправлено по адресу <b>{{email}}</b>. Мы вышлем вам уведомление, когда вашим приглашением воспользуются. Проверьте вкладку <b>Приглашения</b> на вашей странице пользователя, чтобы видеть, кого вы уже пригласили."
         error: "К сожалению, мы не смогли пригласить этого человека. Возможно, он уже пользователь форума?"
       login_reply: 'Войдите, чтобы ответить'
@@ -728,6 +794,10 @@ ru:
           no_value: "Нет, удалить только сообщение"
       actions:
         flag: 'Жалоба'
+        clear_flags:
+          one: "Очистить жалобу"
+          few: "Очистить жалобы"
+          other: "Очистить жалобы"
         it_too:
           off_topic: "Пожаловаться"
           spam: "Пожаловаться"
@@ -827,6 +897,7 @@ ru:
       title: 'Почему вы хотите пожаловаться на сообщение?'
       action: 'Пожаловаться'
       take_action: "Принять меры"
+      notify_action: 'Личное сообщение'
       delete_spammer: "Удалить спамера"
       delete_confirm: "Вы собираетесь удалить <b>%{posts}</b> сообщений и <b>%{topics}</b> тем этого пользователя, а так же удалить его учетную запись, добавить его IP адрес <b>%{ip_address}</b> и его почтовый адрес <b>%{email}</b> в черный список. Вы действительно уверены, что ваши помыслы чисты и действия не продиктованы гневом?"
       yes_delete_spammer: "Да, удалить спамера"
@@ -840,6 +911,7 @@ ru:
     flagging_topic:
       title: "Почему вы хотите пожаловаться на сообщение?"
       action: "Пометить тему"
+      notify_action: "Личное сообщение"
     topic_map:
       title: "Сводка по теме"
       links_shown: "показать все {{totalLinks}} ссылок..."

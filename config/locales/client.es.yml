@@ -61,6 +61,7 @@ es:
         x_days:
           one: "1 día"
           other: "%{count} días"
+        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "hace 1 minuto"
@@ -467,11 +468,11 @@ es:
         need_more_for_title: "{{n}} para completar el título"
         need_more_for_reply: "{{n}} para completar la respuesta"
       error:
-        title_missing: "Es necesario un título."
+        title_missing: "Es necesario un título"
         title_too_short: "El título debe ser por lo menos de {{min}} caracteres."
-        title_too_long: "El título debe ser de menos de {{max}} caracteres."
+        title_too_long: "El título no puede tener más de {{max}} caracteres."
         post_missing: "El post no puede estar vacío."
-        post_length: "El post deber ser por lo menos de {{min}} caracteres."
+        post_length: "El post debe tener por lo menos {{min}} caracteres."
         category_missing: "Debes escoger una categoría."
       save_edit: "Guardar edición"
       reply_original: "Responder en el tema original"
@@ -498,10 +499,10 @@ es:
       bold_text: "Texto en negrita"
       italic_title: "Cursiva"
       italic_text: "Texto en cursiva"
-      link_title: "Hipervinculo"
+      link_title: "Hipervínculo"
       link_description: "introduzca descripción de enlace aquí"
       link_dialog_title: "Insertar enlace"
-      link_optional_text: "titulo opcional"
+      link_optional_text: "título opcional"
       quote_title: "Cita"
       quote_text: "Cita"
       code_title: "Código de muestra"
@@ -525,7 +526,7 @@ es:
     notifications:
       title: "notificaciones por menciones de tu @nombre, respuestas a tus publicaciones y temas, mensajes privados, etc."
       none: "No tienes notificaciones por el momento."
-      more: "ver antiguas notificaciones"
+      more: "ver notificaciones antiguas"
       mentioned: "<span title='mencionado' class='icon'>@</span> {{username}} {{link}}"
       quoted: "<i title='citado' class='fa fa-quote-right'></i> {{username}} {{link}}"
       replied: "<i title='replicado' class='fa fa-reply'></i> {{username}} {{link}}"
@@ -808,6 +809,9 @@ es:
         share: "comparte un enlace a esta publicación"
         more: "Más"
         delete_replies:
+          confirm:
+            one: "¿Quieres eliminar también la respuesta directa a este post?"
+            other: "¿Quieres eliminar también las {{count}} respuestas directas a este post?"
           yes_value: "Sí, borrar también las respuestas"
           no_value: "No, solo este post"
       actions:
@@ -933,6 +937,8 @@ es:
       delete: 'Eliminar categoría'
       create: 'Crear categoría'
       save: 'Guardar categoria'
+      creation_error: Se ha producido un error al crear la categoría.
+      save_error: Ha ocurrido un error al guardar la categoría
       more_posts: "ver todos {{posts}}..."
       name: "Nombre de la categoría"
       description: "Descripción"
@@ -949,14 +955,18 @@ es:
       change_in_category_topic: "Editar descripción"
       already_used: 'Este color ha sido usado para otra categoría'
       security: "Seguridad"
+      auto_close_label: "Cerrar automaticamente los temas después de:"
       auto_close_units: "horas"
+      email_in: "Dirección de correo electrónico personalizada para el correo entrante:"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
       this_year: "este año"
       position: "posición"
+      default_position: "Posición predeterminada"
     flagging:
       title: '¿Por qué estas informando sobre este mensaje?'
       action: 'Informar sobre este mensaje'
+      take_action: "Tomar medidas"
       notify_action: 'Mensaje privado'
       delete_spammer: "Borrar spammer"
       yes_delete_spammer: "Sí, borrar spammer"
@@ -1490,11 +1500,13 @@ es:
         name: Nombre
         display_name: Nombre a mostrar
         description: Descripción
+        badge_type: Tipo de distintivo
         save: Guardar
         delete: Borrar
     lightbox:
       download: "descargar"
     keyboard_shortcuts_help:
+      title: 'Atajos de teclado (experimental)'
       jump_to:
         title: 'Saltar a'
         new: '<b>g</b> then <b>n</b> Nuevo'
@@ -1502,6 +1514,7 @@ es:
         starred: '<b>g</b> then <b>f</b> Añadido'
         categories: '<b>g</b> then <b>c</b> Categorias'
       navigation:
+        title: 'Navegación'
         back: '<b>u</b> Atrás'
         next_prev: '<b>`</b>/<b>~</b> Sección siguiente/anterior'
       application:
@@ -1510,6 +1523,7 @@ es:
         notifications: '<b>n</b> Abrir notificaciones'
         search: '<b>/</b> Buscar'
       actions:
+        title: 'Acciones'
         share_topic: '<b>s</b> Compartir tema'
         reply_topic: '<b>r</b> Responder al tema'
         like: '<b>l</b> Me gusta el post'

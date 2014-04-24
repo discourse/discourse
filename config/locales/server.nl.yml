@@ -23,8 +23,11 @@ nl:
   log_in: "Inloggen"
   via: "%{username} via %{site_name}"
   is_reserved: "is gereserveerd"
+  errors:
+    embed:
+      load_from_remote: "Er ging iets mis bij het laden van dat bericht."
   backup:
-    operation_already_running: "Er draait al een %{operation}. Kan nu niet een nieuwe %{operation} starten."
+    operation_already_running: "Er wordt al een opdracht uitgevoerd. Kan nu niet een nieuwe opdracht starten."
     backup_file_should_be_tar_gz: "Het backupbestand moet een .tar.gz archief zijn."
     not_enough_space_on_disk: "Er is niet voldoende ruimte op de schijf vrij om deze backup te uploaden."
   not_logged_in: "Om dat te kunnen doen moet je ingelogd zijn."
@@ -40,6 +43,7 @@ nl:
       other: "Nog %{count} reacties"
     loading: "Discussie laden..."
     permalink: "Permalink"
+    imported_from: "Deze topic is een voortzetting van de oorspronkelijke topic: %{link}"
     in_reply_to: "in reactie op %{username}"
     replies:
       one: "1 reactie"
@@ -62,7 +66,7 @@ nl:
     other: "Sorry, nieuwe leden kunnen %{count} bestanden in een bericht opnemen."
   too_many_links:
     zero: "Sorry, nieuwe leden kunnen geen links in een bericht opnemen."
-    one: "Sorry, nieuwe leden kunnen één links in een bericht opnemen."
+    one: "Sorry, nieuwe leden kunnen één link in een bericht opnemen."
     other: "Sorry, nieuwe leden kunnen %{count} links in een bericht opnemen."
   spamming_host: "Sorry, je kan niet linken naar die host."
   just_posted_that: "lijkt teveel op het bericht dat je net geschreven hebt"
@@ -172,6 +176,8 @@ nl:
               cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
         user:
           attributes:
+            password:
+              common: "is een van de 5000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
             ip_address:
               signup_not_allowed: "Inschrijven vanaf dit account is niet toegestaan."
   user_profile:
@@ -253,8 +259,8 @@ nl:
     distance_in_words_verbose:
       half_a_minute: "zonet"
       less_than_x_seconds:
-        one: "nu"
-        other: "nu"
+        one: "zonet"
+        other: "zonet"
       x_seconds:
         one: "1 seconde geleden"
         other: "%{count} seconden geleden"
@@ -324,9 +330,9 @@ nl:
       email_title: 'Betreft je bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Licht moderatoren in'
+      title: 'Licht moderators in'
       description: 'Dit bericht moet door een moderator bekeken worden. Dit vanwege de <a href=''/faq''>FAQ</a>, <a href=''%{tos_url}''>TOS</a> of een andere reden hier nog niet genoemd.'
-      long_form: 'moderatoren ingelicht'
+      long_form: 'moderators ingelicht'
       email_title: 'Graag aandacht voor een bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -335,7 +341,7 @@ nl:
       long_form: 'heeft deze post toegevoegd aan zijn favorieten'
     like:
       title: 'Leuk'
-      description: 'Vind dit bericht leuk'
+      description: 'Vind ik leuk'
       long_form: 'vindt dit bericht leuk'
     vote:
       title: 'Stem'
@@ -552,6 +558,7 @@ nl:
     max_image_height: "Maximale hoogte van een afbeelding in een bericht"
     category_featured_topics: "Aantal topics dat wordt weergegeven in de categorielijst. An het wijzigen van dit getal kan het tot 15 minuten duren voordat de lijst is bijgewerkt."
     add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle leden-content behalve voor interne links (inclusief parent domeinen). NB: Als je dit verandert, moet je ook alle 'baked markdown' updaten met \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "Een pipe-gescheiden lijst van domeinen waar 'nofollow' niet is toegevoegd (voorbeelddomein.com zal automatisch sub.voorbeelddomein.com toestaan)."
     post_excerpt_maxlength: "Maximale lengte in tekens van een uittreksel van een bericht"
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed' bericht."
     category_post_template: "De berichttemplate die gebruikt wordt als je een nieuwe categorie aanmaakt"
@@ -590,6 +597,7 @@ nl:
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
     enable_escaped_fragments: "Val terug op Google's Ajax-Crawling API als een crawler niet gedetecteerd is."
     enable_noscript_support: "Ondersteun &lt;noscript&gt; tag"
+    allow_moderators_to_create_categories: "Moderators mogen nieuwe categorieën maken"
     top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|new|unread|starred|categories|top|read|posted"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     share_links: "De volgorde en selectie van items in het deelmenu. Bijvoorbeeld twitter|facebook|google+"
@@ -616,6 +624,7 @@ nl:
     login_required: "Inloggen vereist om berichten te kunnen lezen"
     min_username_length: "Minimum lengte gebruikersnaam. (Geldt niet als globaal unieke gebruikersnamen actief is)"
     min_password_length: "Minimum lengte wachtwoord."
+    block_common_passwords: "Weiger wachtwoorden uit de lijst van de 5000 meest gebruikte wachtwoorden."
     enable_sso: "Gebruikers kunnen inloggen via een andere site (Single Sign On)"
     sso_url: "URL van single sign on eindpunt"
     sso_secret: "Geheime tekenreeks voor het encrypten/decrypten van SSO informatie, zorg er voor dat het 10 tekens of langer is"
@@ -655,7 +664,7 @@ nl:
     clean_orphan_uploads_grace_period_hours: "Na hoeveel uur een weesbestand voor verwijderding gemarkeerd wordt."
     purge_deleted_uploads_grace_period_days: "Na hoeveel uur een weesbestand definitief verwijderd wordt."
     enable_s3_uploads: "Of we uploads op Amazon S3 willen zetten of niet"
-    s3_upload_bucket: "De 'bucket' waarin we onze uploads naar Amazon S3 willen zetten"
+    s3_upload_bucket: "De Amazon S3 bucket waar de bestanden naar geupload worden. WAARSCHUWING: gebruik kleine letters, geen punten."
     s3_access_key_id: "De Amazon S3 access key id dat wordt gebruikt om afbeeldingen te uploaden"
     s3_secret_access_key: "De Amazon S3 secret access key dat wordt gebruikt om afbeeldingen te uploaden"
     s3_region: "De Amazon S3 region name dat wordt gebruikt om afbeeldingen te uploaden"
@@ -695,6 +704,7 @@ nl:
     authorized_extensions: "Een met pipes (|) gescheiden lijst van bestandsextensies die mogen worden geupload"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
     title_prettify: "Voorkom veel voorkomende fouten in titels (alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
+    title_sanitize: "Verwijder html-tags uit de titel"
     topic_views_heat_low: "Het aantal keer dat een topic bekeken moet zijn om een laag 'heat' level te hebben."
     topic_views_heat_medium: "Het aantal keer dat een topic bekeken moet zijn om een medium 'heat' level te hebben."
     topic_views_heat_high: "Het aantal keer dat een topic bekeken moet zijn om een hoog 'heat' level te hebben."
@@ -714,6 +724,7 @@ nl:
     email_in_address: "Het emailadres waarnaar nieuwe topics gemaild kunnen worden. Leeg laten betekent dat gebruikers niet globaal kunnen plaatsen."
     email_in_min_trust: "Het minium trustlevel dat een gebruiker moet hebben om nieuwe topics te kunnen mailen"
     email_in_category: "De categorie waar nieuwe mails in geplaatst worden"
+    email_prefix: "Het [label] dat in het onderwerp van mails gebruikt wordt. Indien niets is ingevuld, wordt 'titel' gebruikt."
     minimum_topics_similar: "Hoeveel topics moeten er in de database staan voordat er vergelijkbare topics getoond worden?"
     relative_date_duration: "Na hoeveel dagen de datum van een bericht relatief zijn in plaats van absoluut.Voorbeelden: relatieve datum: 7d, absolute datum: 20 feb"
     delete_user_max_post_age: "Na hoeveel dagen na het eerste bericht van een gebruiker mag een admin deze gebruiker nog verwijderen."
@@ -722,7 +733,7 @@ nl:
     email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
     allow_uploaded_avatars: "Sta toe dat avatars geupload kunnen worden"
     allow_animated_avatars: "Gebruikers mogen een animated GIF gebruiken als avatar. LET OP: draai de rake task avatars:regenerate nadat je deze instelling hebt geactiveerd."
-    digest_min_excerpt_length: "Hoeveel karakters er ongeveer per bericht getoond wordt in de mail digest"
+    digest_min_excerpt_length: "Hoeveel karakters er ongeveer per bericht getoond worden in de mail digest"
     default_digest_email_frequency: "Hoe vaak ontvangen gebruikers standaard de digestmails. Ze kunnen dit in hun eigen instellingen nog aanpassen."
     default_external_links_in_new_tab: "Open externe links in a nieuwe tab. Gebruikers kunnen dit wijzigen in hun instellingen."
     detect_custom_avatars: "Check of gebruikers een eigen avatar geupload hebben"
@@ -759,6 +770,7 @@ nl:
     invited_to_private_message: "%{display_username} heeft je uitgenodigd voor een privé-bericht: %{link}"
     invitee_accepted: "%{display_username} heeft je uitnodiging geaccepteerd"
     linked: "%{display_username} heeft je gelinkt in %{link}"
+    granted_badge: "%{link} is aan jou toegekend"
   search:
     within_post: "#%{post_number} door %{username}: %{excerpt}"
     types:
@@ -1249,7 +1261,7 @@ nl:
     signup_form_message: 'Ik heb de <a href="/tos" target="_blank">Algemene Voorwaarden</a> gelezen en ga hiermee akkoord.'
   deleted: 'verwijderd'
   upload:
-    edit_reason: "We hebben kopieën van de externe afbeeldingen gedownload"
+    edit_reason: "We hebben lokale kopieën van afbeeldingen in dit bericht gedownload"
     unauthorized: "Sorry, je mag dat bestand niet uploaden (toegestane extensies: %{authorized_extensions})."
     pasted_image_filename: "Geplakte afbeelding"
     attachments:

@@ -161,6 +161,7 @@ it:
       sent_by_user: "Inviato da <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Inviato da <a href='{{userUrl}}'>te</a>"
     groups:
+      visible: "Il Gruppo è visibile a tutti gli utenti"
       title:
         one: "gruppo"
         other: "gruppi"
@@ -468,12 +469,12 @@ it:
         need_more_for_title: "{{n}} per andare al titolo"
         need_more_for_reply: "Ancora {{n}} per arrivare al post"
       error:
-        title_missing: "Il titolo è obbligatorio."
-        title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri."
-        title_too_long: "Il titolo deve essere più corto di {{max}} caratteri."
-        post_missing: "I post non possono essere vuoti."
-        post_length: "I post devono essere almeno di {{min}} caratteri."
-        category_missing: "Devi scegliere una categoria."
+        title_missing: "Il titolo è richiesto"
+        title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
+        title_too_long: "Il titolo non può essere più lungo di {{max}} caratteri"
+        post_missing: "Il post non può essere vuoto"
+        post_length: "Il post deve essere lungo almeno {{min}} caratteri"
+        category_missing: "Devi scegliere una categoria"
       save_edit: "Salva le modifiche"
       reply_original: "Rispondi al topic originale"
       reply_here: "Rispondi qui"
@@ -540,6 +541,7 @@ it:
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} spostato {{link}}"
       total_flagged: "Numero totale di post segnalati"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Ti è stato assegnato {{link}}"
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -550,7 +552,7 @@ it:
       local_tip: "Clicca per selezionare un'immagine dal tuo dispositivo."
       local_tip_with_attachments: "Clicca per selezionare un'immagine o un file dal tuo dispositivo (estensioni permesse: {{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
-      hint_for_supported_browsers: "(puoi anche trascinare o incollare le immagini nell'editor per caricarle)"
+      hint_for_supported_browsers: "(puoi anche trascinare o incollare immagini nell'editor per caricarle)"
       uploading: "In caricamento"
       image_link: "Il link a cui la tua immagine punterà"
     search:
@@ -1302,7 +1304,7 @@ it:
         settings: "Impostazioni"
         all: "Tutto"
         sending_test: "Invio email di prova..."
-        test_error: "C'è stato un errore durante l'invio dell'email. Controlla le impostazioni e riprova."
+        test_error: "C'è stato un problema nell'invio dell'email di test. Controlla nuovamente le impostazioni email, verifica che il tuo host non blocchi le connessioni email e riprova."
         sent: "Inviato"
         skipped: "Salta"
         sent_at: "Inviato a"
@@ -1486,8 +1488,11 @@ it:
           one: "Non è possibile cancellare utenti se hanno post attivi. Elimina tutti i posti prima di cancellare un utente (post più vecchi di %{count} giorni non possono essere cancellati)."
           other: "Non è possibile cancellare utenti se hanno post attivi. Elimina tutti i posti prima di cancellare un utente (post più vecchi di %{count} giorni non possono essere cancellati)."
         cant_delete_all_posts:
-          one: "Impossibile eliminare tutti i post. Alcuni sono più vecchi di %{count} giorni."
-          other: "Impossibile eliminare tutti i post. Alcuni sono più vecchi di %{count} giorni."
+          one: "Non posso cancellare tutti i post. Alcuni sono più vecchi di %{count} giorno. (L'impostazione delete_user_max_post_age.)"
+          other: "Non posso cancellare tutti i post. Alcuni sono più vecchi di %{count} giorni. (L'impostazione delete_user_max_post_age.)"
+        cant_delete_all_too_many_posts:
+          one: "Non posso cancellare tutti i post perché l'utente ha più di 1 post. (L'impostazione delete_all_posts_max.)"
+          other: "Non posso cancellare tutti i post perché l'utente ha più di %{count} post. (L'impostazione delete_all_posts_max.)"
         delete_confirm: "sei SICURO che vuoi cancellare questo utente. Non è possibile tornare indietro!"
         delete_and_block: "<b>Si</b>, e <b>blocca</b> iscrizioni future da questa email e indirizzo IP"
         delete_dont_block: "<b>Si</b>, solo cancella l'utente"
@@ -1614,12 +1619,17 @@ it:
         mark_tracking: '<b>m</b> then <b>t</b> Contrassegna il topic come "Seguito"'
         mark_watching: '<b>m</b> quindi <b>w</b> Contrassegna il topic come "sotto osservazione"'
     badges:
+      title: Targhette
       badge_count:
         one: "1 Targhetta"
         other: "%{count} Targhette"
       more_badges:
         one: "+1 Più"
         other: "+%{count} Più"
+      granted:
+        one: "1 assegnato"
+        other: "%{count} assegnati"
+      select_badge_for_title: Scegli una targhetta da usare come tuo titolo
       example_badge:
         name: Targhetta Esempio
         description: Questa è una targhetta generica d'esempio

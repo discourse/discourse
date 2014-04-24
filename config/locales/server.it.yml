@@ -179,7 +179,7 @@ it:
   meta_category_description: "Discussioni circa questo forum, la sua organizzazione, come funziona e come migliorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni tra lo staff. I topic sono visibili solo agli amministratori e ai moderatori."
-  assets_topic_body: "Questo è un topic per utilizzato per salvare i file utilizzati nel design del forum. Non cancellarlo!"
+  assets_topic_body: "Questo è un topic permanente, visibile solo allo staff, utilizzabile per salvare immagini e files utilizzati nel design del forum. Non eliminarlo!\n\n\nEcco come:\n\n\n1. Rispondi a questo topic.\n2. Carica tutte le immagini che desideri usare per loghi, favicon e così via. (Usa l'icona di upload nell'editor del post o trascina direttamente le immagini.)\n3. Invia la risposta per postarla.\n4. Fai click destro sulle immagini nel tuo nuovo post per ottenere il percorso delle immagini caricate o clicca l'icona di modifica post e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni fondamentali](/admin/site_settings/category/required).\n\nInoltre, se hai bisogno di permettere upload di file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "[Usa questo primo paragrafo per una breve descrizione della categoria. Cerca di stare sotto i 200 caratteri.]"
@@ -549,6 +549,7 @@ it:
     max_image_height: "Massima altezza delle immagini in un post"
     category_featured_topics: "Numero di topic mostrati per categoira nella pagina /categories"
     add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Modificare questa opzione comporta l'aggiornamento di tutto il contenuto markdown salvato"
+    exclude_rel_nofollow_domains: "Una lista di domini in cui nofollow non è aggiunto (tld.com autorizzerà automaticamente sub.tld.com)"
     post_excerpt_maxlength: "Lunghezza massima dell'estratto di un post (caratteri)"
     post_onebox_maxlength: "Lunghezza massima di un post oneboxed (caratteri)"
     onebox_domains_whitelist: "Una lista di domini di whitelist per l'utilizzo di onebox. (Esempio: eviltrout.com)"
@@ -589,6 +590,7 @@ it:
     ga_universal_domain_name: "Nome di dominio Google Universal Analytics (analytics.js), es: mysite.com; leggi http://google.com/analytics"
     enable_escaped_fragments: "Utilizza l'API Ajax-Crawling di Google se non è rilevato alcun crawler"
     enable_noscript_support: "Abilità il tipico supporto ai webcrawler dei motori di ricerca attraverso il tag Noscript"
+    allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
     top_menu: "Determina quali elementi vengono mostrati nella navigazione in homepage, ed in quale ordine. Esempio latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determina quali elementi vengono mostrati nel menù del post, ed in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     share_links: "Determina quali elementi vengono mostrati nella dialog di condivisione e in quale ordine. Esempio twitter|facebook|google+"
@@ -696,6 +698,7 @@ it:
     authorized_extensions: "È possibile caricare una lista di estensioni separate da una barra verticale (|)"
     max_similar_results: "Numero di topic simili da mostrare all'utente durante la creazione di un nuovo topic"
     title_prettify: "Previeni refusi ed errori comuni nei titoli, inclusi Tutto maiuscolo, Primo carattere minuscolo, ! e ? ripetuti, . aggiuntivi alla fine, etc etc."
+    title_sanitize: "Rimuovi tag html dal titolo"
     topic_views_heat_low: "Il numero di visite affinché il livello di heat di un topic è basso."
     topic_views_heat_medium: "Il numero di visite affinché il livello di heat di un topic è medio."
     topic_views_heat_high: "Il numero di visite affinché il livello di heat di un topic è alto."
@@ -703,6 +706,7 @@ it:
     tos_url: "Se hai un documento dei Termini di Servizio ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
     privacy_policy_url: "Se hai un documento sulle Politiche di Privacy ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
     newuser_spam_host_threshold: "Il numero delle volte che un nuovo utente può postare un link verso lo stesso host compreso nel `newuser_spam_host_posts` post prima che venga considerato spam."
+    white_listed_spam_host_domains: "Una lista di domini esclusi dall'host spam testing, i nuovi utenti potranno creare un numero illimitato di post con link a questi domini"
     staff_like_weight: "Peso extra attribuito ai Like quando effettuato dallo staff"
     reply_by_email_enabled: "Permetti la risposta ai topic via email"
     reply_by_email_address: "Template di risposta via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
@@ -724,6 +728,7 @@ it:
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione"
     allow_uploaded_avatars: "Permetti agli utenti di caricare il loro avatar custom."
     allow_animated_avatars: "Permetti agli utenti di usare GIF animate come avatar. ATTENZIONE: è fortemente consigliato eseguire il task avatars:regenerate dopo aver modificato questa impostazione."
+    digest_topics: "Il numero massimo di topic da mostrare in un'email di riepilogo"
     digest_min_excerpt_length: "Numero caratteri ideale per ogni post nel sunto via email"
     default_digest_email_frequency: "Quanto spesso gli utenti ricevono mail di riepilogo. Possono modificare questa impostazione nel loro pannello utente."
     default_external_links_in_new_tab: "Apri link esterni in una nuova scheda. Gli utenti possono modificare questa impostazione nelle loro preferenze."
@@ -750,6 +755,8 @@ it:
     embed_truncate: "Tronca i post importati"
     embed_category: "Categoria dei topic creati"
     embed_post_limit: "Numero massimo di post da incorporare"
+    embed_whitelist_selector: "selettore css per gli elementi permessi negli embeds"
+    embed_blacklist_selector: "selettore css per gli elementi che sono rimossi dagli embeds"
     tos_accept_required: "Se abilitato, gli utenti dovranno accettare i Termini del Servizio durante l'iscrizione. Modifica 'Signup Form: Terms of Service Message' nel tab dei contenuti per editare il messaggio."
     notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo molte ore, invia un'email all'email contact_email. Imposta 0 per disattivare."
   notification_types:
@@ -764,6 +771,7 @@ it:
     invited_to_private_message: "%{display_username} ti ha invitato in un messaggio privato: %{link}"
     invitee_accepted: "%{display_username} ha accettato il tuo invito"
     linked: "%{display_username} ti ha linkato in %{link}"
+    granted_badge: "Ti è stato assegnato %{link}"
   search:
     within_post: "#%{post_number} di %{username}: %{excerpt}"
     types:
@@ -804,9 +812,9 @@ it:
       one: "Questo topic è stato chiuso automaticamente dopo 1 minuto. Non sono permesse nuove risposte."
       other: "Questo topic è stato chiuso automaticamente dopo %{count} minuti. Non sono permesse nuove risposte."
     autoclosed_disabled: "Questo topic è ora aperto. Sono permesse nuove risposte."
-    pinned_enabled: "Questo topic è stato evidenziato. Sarà mostrato in cima alla sua categoria. Può essere rimosso da un moderatore, o dagli utenti cliccando sul tasto \"Non più in evidenza\"."
+    pinned_enabled: "Questo topic è stato evidenziato. Sarà mostrato in cima alla sua categoria finché non sarà rimosso per chiunque dall'evidenza da un membro dello staff o dai singoli utenti per se stessi."
     pinned_disabled: "Questo topic è stato unpinned. Non sarà più mostrato in cima alla sua categoria."
-    pinned_globally_enabled: "Questo topic è ora in evidenza globalmente. Apparirà in cima alla sua categoria e su tutte le liste dei topic finché non sarà rimosso dall'evidenza da un moderatore, o finché non verrà premuto il tasto \"Rimuovi Pin\"."
+    pinned_globally_enabled: "Questo topic è ora in evidenza globalmente. Apparirà in cima alla sua categoria e su tutte le liste dei topic finché non sarà rimosso per chiunque dall'evidenza da un membro dello staff o dai singoli utenti per se stessi."
     pinned_globally_disabled: "Questo topic non è più in evidenza. Non apparirà più in cima alla sua categoria."
     visible_enabled: "Questo topic è stato reso visibile. Sarà mostrato nella lista dei topic."
     visible_disabled: "Questo topic è stato reso invisibile. Non verrà più mostrato nella lista dei topic. Sarà possibile accedervi solo tramite link diretto."
@@ -910,16 +918,17 @@ it:
     text_body_template: |
       E' disponibile una nuova versione di Discourse:
 
-      Versione attuale: %{installed_version}
+      Versione corrente: %{installed_version}
       Nuova versione: **%{new_version}**
 
-      - Scopri le novità tramite il [changelog su GitHub](https://github.com/discourse/discourse/commits/master).
+      - Scopri le novità sul [Changelog GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Aggiorna visitando la pagina `\admin\docker` e premendo il tasto "Upgrade" dopo aver ricaricato un po' di volte la pagina.
+      - Per aggiornare visita [%{base_url}/admin/docker](%{base_url}/admin/docker) e ricarica la pagina un po' di volte finché non apparirà un tasto "Upgrade Discourse". Premilo per avviare l'aggiornamento.
+
 
       - Visita http://meta.discourse.org per novità, discussioni e supporto per Discourse.
 
-      ### Note di rilascio
+      ### Note di Rilascio
 
       %{notes}
   flags_reminder:
@@ -1104,6 +1113,9 @@ it:
         one: "1 utente in attesa di approvazione"
         other: "%{count} utenti in attesa di approvazione"
       text_body_template: "Ci sono nuove iscrizioni che vanno approvate (o rifiutate) prima che possano accedere a questo forum. \n\n[Per favore valutale nella sezione di amministrazione](%{base_url}/admin/users/list/pending).\n"
+    download_remote_images_disabled:
+      subject_template: "Il Download delle immagini remote è disabilitato"
+      text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché il limite di spazio sul disco definito in `download_remote_images_threshold` è stato raggiunto."
   unsubscribe_link: "Se vuoi cancellarti per non ricevere più queste email, visita le tue [preferenze utente](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Risposte precedenti"
@@ -1170,14 +1182,15 @@ it:
         %{respond_instructions}
     digest:
       why: "Questo è un breve riassunto di ciò che è successo su %{site_link} da quando ti abbiamo visto l'ultima volta il %{last_seen_at}."
-      subject_template: "[%{site_name}] Attività del forum del %{date}"
+      subject_template: "[%{site_name}] Riepilogo per %{date}"
       new_activity: "Nuove attività nei tuoi topic e post:"
       top_topics: "Post recenti che sono piaciuti alla community:"
-      other_new_topics: "Altri nuovi topic:"
       unsubscribe: "Questa email di riepilogo è stata inviata da %{site_link} perché non ti abbiamo visto da un pò.\nSe vuoi disabilitare l'invio o cambiare le preferenze email, %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
       read_more: "Leggi altro"
+      more_topics: "Sono stati postati altri **%{new_topics_since_seen}** nuovi topic dall'ultima volta che ti sei connesso il %{last_seen_at}."
+      more_topics_category: "Sono stati postati altri **%{new_topics_since_seen}** nuovi topic in queste categoria dall'ultima volta che ti sei connesso il %{last_seen_at}:"
       posts:
         one: "1 post"
         other: "%{count} post"
@@ -1248,6 +1261,7 @@ it:
     edit_reason: "Abbiamo scaricato copie locali delle immagini in questo post"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
     pasted_image_filename: "Immagine incollata"
+    store_failure: "Upload #%{upload_id} fallito per l'utente #%{user_id}."
     attachments:
       too_large: "Spiacenti, la dimensione del file che vuoi caricare è eccessiva (la dimensione massima è %{max_size_kb}%kb)."
     images:

@@ -32,7 +32,7 @@ ko:
         about_x_hours:
           other: "%{count}시간"
         x_days:
-          other: "%{count}일"
+          other: "%{count}d"
         about_x_years:
           other: "%{count}년"
         over_x_years:
@@ -853,7 +853,7 @@ ko:
       default_position: "Default Position"
       parent: "부모 카테고리"
     flagging:
-      title: '어떤 이유로 이 게시물을 신고하겠습니까?'
+      title: '왜 이 게시글을 privately flagging 하나요?'
       action: '게시물 신고'
       take_action: "조치를 취하기"
       notify_action: '알림'
@@ -900,7 +900,7 @@ ko:
     categories_list: "카테고리 목록"
     filters:
       latest:
-        title: "최신글"
+        title: "최신"
         help: "가장 최근 토픽"
       hot:
         title: "인기 있는 글"
@@ -917,9 +917,9 @@ ko:
         help: "카테고리별로 그룹화 된 모든 토픽"
       unread:
         title:
-          zero: "읽지 않은 글"
-          one: "읽지 않은 글(1)"
-          other: "읽지 않은 글({{count}})"
+          zero: "읽지 않은"
+          one: "읽지 않은(1)"
+          other: "읽지 않은({{count}})"
         help: "추적되었지만 읽지 않은 게시글"
       new:
         lower_title_with_count:
@@ -927,9 +927,9 @@ ko:
           other: "{{count}} new"
         lower_title: "new"
         title:
-          zero: "새로운 글"
-          one: "새로운 글(1)"
-          other: "새로운 글({{count}})"
+          zero: "새로운"
+          one: "새로운(1)"
+          other: "새로운({{count}})"
         help: "마지막 방문 이후 새로운 글"
       posted:
         title: "내 게시물"
@@ -1293,6 +1293,8 @@ ko:
           embedding: "Embedding"
           uncategorized: '카테고리 없음'
           backups: "백업"
+      badges:
+        new: New
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
