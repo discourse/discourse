@@ -504,7 +504,7 @@ Discourse.PostStream = Em.Object.extend({
     }
   },
 
-  triggerChangedPost: function(postId, updatedAt, type) {
+  triggerChangedPost: function(postId, updatedAt) {
     if (!postId) { return; }
 
     var postIdentityMap = this.get('postIdentityMap'),
