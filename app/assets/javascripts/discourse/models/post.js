@@ -284,9 +284,30 @@ Discourse.Post = Discourse.Model.extend({
     var post = this;
     Object.keys(otherPost).forEach(function (key) {
       var value = otherPost[key];
-      if (typeof value !== "function") {
-        post.set(key, value);
+      var oldValue = post.get(key);
+
+      if(!value) {
+        value = null;
       }
+
+      if(!oldValue) {
+        oldValue = null;
+      }
+
+      var skip = false;
+
+      if (typeof value !== "function" && oldValue !== value) {
+
+        // wishing for an identity map
+        if(key === "reply_to_user") {
+          skip = Em.get(value, "username") === Em.get(oldValue, "username");
+        }
+
+        if(!skip) {
+          post.set(key, value);
+        }
+      }
+
     });
   },
 

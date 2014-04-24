@@ -218,6 +218,8 @@ class PostsController < ApplicationController
   def render_post_json(post)
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
     post_serializer.add_raw = true
+    post_serializer.topic_slug = post.topic.slug if post.topic.present?
+
     counts = PostAction.counts_for([post], current_user)
     if counts && counts = counts[post.id]
       post_serializer.post_actions = counts

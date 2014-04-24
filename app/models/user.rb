@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   has_one :user_stat, dependent: :destroy
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
+  belongs_to :primary_group, class_name: 'Group'
 
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users

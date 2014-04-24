@@ -62,6 +62,17 @@ describe PostsController do
       let(:action) { :show }
       let(:params) { {id: post.id} }
     end
+
+    it 'gets all the expected fields' do
+      # non fabricated test
+      new_post = create_post
+      xhr :get, :show, {id: new_post.id}
+      parsed = JSON.parse(response.body)
+      parsed["topic_slug"].should == new_post.topic.slug
+      parsed["moderator"].should == false
+      parsed["username"].should == new_post.user.username
+      parsed["cooked"].should == new_post.cooked
+    end
   end
 
   describe 'by_number' do

@@ -78,8 +78,13 @@ class PostSerializer < BasicPostSerializer
   end
 
   def primary_group_name
-    return nil unless object.user && @topic_view
-    return @topic_view.primary_group_names[object.user.primary_group_id] if object.user.primary_group_id
+    return nil unless object.user && object.user.primary_group_id
+
+    if @topic_view
+      @topic_view.primary_group_names[object.user.primary_group_id]
+    else
+      object.user.primary_group.name if object.user.primary_group
+    end
   end
 
   def link_counts
