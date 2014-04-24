@@ -21,5 +21,16 @@ Discourse.BadgesShowRoute = Ember.Route.extend({
       controller.set('userBadgesLoaded', true);
     });
     controller.set('model', model);
+  },
+
+  actions: {
+    loadMore: function() {
+      var self = this;
+      Discourse.UserBadge.findByBadgeId(this.currentModel.get('id'), {
+        granted_before: this.get('controller.minGrantedAt') / 1000
+      }).then(function(userBadges) {
+        self.get('controller.userBadges').pushObjects(userBadges);
+      });
+    }
   }
 });

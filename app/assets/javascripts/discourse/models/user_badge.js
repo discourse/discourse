@@ -53,6 +53,10 @@ Discourse.UserBadge.reopenClass({
 
     userBadges = userBadges.map(function(userBadgeJson) {
       var userBadge = Discourse.UserBadge.create(userBadgeJson);
+
+      var grantedAtDate = Date.parse(userBadge.get('granted_at'));
+      userBadge.set('grantedAt', grantedAtDate);
+
       userBadge.set('badge', badges[userBadge.get('badge_id')]);
       if (userBadge.get('user_id')) {
         userBadge.set('user', users[userBadge.get('user_id')]);
@@ -90,8 +94,13 @@ Discourse.UserBadge.reopenClass({
     @param {String} badgeId
     @returns {Promise} a promise that resolves to an array of `Discourse.UserBadge`.
   **/
-  findByBadgeId: function(badgeId) {
-    return Discourse.ajax("/user_badges.json?badge_id=" + badgeId).then(function(json) {
+  findByBadgeId: function(badgeId, options) {
+    if (!options) { options = {}; }
+    var url = "/user_badges.json?badge_id=" + badgeId;
+    if (options.granted_before) {
+      url = url + "&granted_before=" + encodeURIComponent(options.granted_before);
+    }
+    return Discourse.ajax(url).then(function(json) {
       return Discourse.UserBadge.createFromJson(json);
     });
   },

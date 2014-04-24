@@ -1717,6 +1717,7 @@ en:
         new_badge: New Badge
         new: New
         name: Name
+        badge: Badge
         display_name: Display Name
         description: Description
         badge_type: Badge Type
