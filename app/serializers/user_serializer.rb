@@ -131,4 +131,8 @@ class UserSerializer < BasicUserSerializer
     CategoryUser.lookup(object, :watching).pluck(:category_id)
   end
 
+  def bio_cooked
+    object.bio_processed
+  end
+
 end
