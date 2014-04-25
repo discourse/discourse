@@ -51,6 +51,20 @@ describe Concern::HasCustomFields do
       test_item.custom_fields.should == {"jack" => "jill"}
     end
 
+    it "double save actually saves" do
+
+      test_item = TestItem.new
+      test_item.custom_fields = {"a" => "b"}
+      test_item.save
+
+      test_item.custom_fields["c"] = "d"
+      test_item.save
+
+      db_item = TestItem.find(test_item.id)
+      db_item.custom_fields.should == {"a" => "b", "c" => "d"}
+
+    end
+
 
     it "simple modifications don't interfere" do
       test_item = TestItem.new

@@ -14,6 +14,10 @@ module Concern
       end
     end
 
+    def custom_fields=(data)
+      custom_fields.replace(data)
+    end
+
     protected
 
     def save_custom_fields
@@ -24,7 +28,7 @@ module Concern
           if dup[f.name] != f.value
             f.destroy
           else
-            dup.remove[f.name]
+            dup.delete(f.name)
           end
         end
 
@@ -32,7 +36,7 @@ module Concern
           _custom_fields.create(name: k, value: v)
         end
 
-        @custom_fields_orig = @custom_fields
+        @custom_fields_orig = dup
       end
     end
   end
