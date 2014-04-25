@@ -136,9 +136,10 @@ describe Guardian do
         Guardian.new(user).can_send_private_message?(another_user).should be_false
       end
 
-      it "returns true for the contact user" do
+      it "returns true for the contact user and system user" do
         SiteSetting.stubs(:site_contact_username).returns(user.username)
         Guardian.new(user).can_send_private_message?(another_user).should be_true
+        Guardian.new(Discourse.system_user).can_send_private_message?(another_user).should be_true
       end
     end
   end
