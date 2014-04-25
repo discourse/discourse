@@ -1,2 +1,7 @@
 @import "common";
 @import "desktop/*";
+
+/* These files doesn't actually exist, they are injected by DiscourseSassImporter. */
+
+@import "plugins";
+@import "plugins_desktop";

@@ -1,5 +1,8 @@
 @import "common";
 @import "mobile/*";
 
-/* This file doesn't actually exist, it is injected by DiscourseSassImporter. */
+
+/* These files doesn't actually exist, they are injected by DiscourseSassImporter. */
+
+@import "plugins";
 @import "plugins_mobile";

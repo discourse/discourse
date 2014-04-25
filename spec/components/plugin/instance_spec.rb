@@ -9,6 +9,8 @@ describe Plugin::Instance do
     DiscoursePluginRegistry.server_side_javascripts.clear
     DiscoursePluginRegistry.stylesheets.clear
     DiscoursePluginRegistry.mobile_stylesheets.clear
+    DiscoursePluginRegistry.desktop_stylesheets.clear
+    DiscoursePluginRegistry.sass_variables.clear
   end
 
   context "find_all" do
@@ -35,7 +37,7 @@ describe Plugin::Instance do
 
       plugin.send :register_assets!
 
-      DiscoursePluginRegistry.mobile_stylesheets.count.should == 2
+      DiscoursePluginRegistry.mobile_stylesheets.count.should == 0
       DiscoursePluginRegistry.stylesheets.count.should == 2
     end
 
@@ -45,7 +47,8 @@ describe Plugin::Instance do
       plugin.send :register_assets!
 
       DiscoursePluginRegistry.mobile_stylesheets.count.should == 0
-      DiscoursePluginRegistry.stylesheets.count.should == 1
+      DiscoursePluginRegistry.desktop_stylesheets.count.should == 1
+      DiscoursePluginRegistry.stylesheets.count.should == 0
     end
 
     it "registers mobile css properly" do
@@ -56,6 +59,26 @@ describe Plugin::Instance do
       DiscoursePluginRegistry.mobile_stylesheets.count.should == 1
       DiscoursePluginRegistry.stylesheets.count.should == 0
     end
+
+    it "registers desktop css properly" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_asset("test.css", :desktop)
+      plugin.send :register_assets!
+
+      DiscoursePluginRegistry.desktop_stylesheets.count.should == 1
+      DiscoursePluginRegistry.stylesheets.count.should == 0
+    end
+
+
+    it "registers sass variable properly" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_asset("test.css", :variables)
+      plugin.send :register_assets!
+
+      DiscoursePluginRegistry.sass_variables.count.should == 1
+      DiscoursePluginRegistry.stylesheets.count.should == 0
+    end
+
 
     it "registers admin javascript properly" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
@@ -116,6 +139,9 @@ describe Plugin::Instance do
       plugin.register_asset("desktop.css", :desktop)
       plugin.register_asset("desktop2.css", :desktop)
 
+      plugin.register_asset("variables1.scss", :variables)
+      plugin.register_asset("variables2.scss", :variables)
+
       plugin.register_asset("code.js")
 
       plugin.register_asset("server_side.js", :server_side)
@@ -128,8 +154,10 @@ describe Plugin::Instance do
       DiscoursePluginRegistry.javascripts.count.should == 3
       DiscoursePluginRegistry.admin_javascripts.count.should == 2
       DiscoursePluginRegistry.server_side_javascripts.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 4
-      DiscoursePluginRegistry.mobile_stylesheets.count.should == 3
+      DiscoursePluginRegistry.desktop_stylesheets.count.should == 2
+      DiscoursePluginRegistry.sass_variables.count.should == 2
+      DiscoursePluginRegistry.stylesheets.count.should == 2
+      DiscoursePluginRegistry.mobile_stylesheets.count.should == 1
     end
   end
 
