@@ -182,10 +182,10 @@ class TopicLink < ActiveRecord::Base
 
       # Remove links that aren't there anymore
       if added_urls.present?
-        TopicLink.delete_all ["(url not in (:urls)) AND (post_id = :post_id)", urls: added_urls, post_id: post.id]
-        TopicLink.delete_all ["(url not in (:urls)) AND (link_post_id = :post_id)", urls: reflected_urls, post_id: post.id]
+        TopicLink.delete_all ["(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)", urls: added_urls, post_id: post.id]
+        TopicLink.delete_all ["(url not in (:urls)) AND (link_post_id = :post_id AND reflection)", urls: reflected_urls, post_id: post.id]
       else
-        TopicLink.delete_all ["post_id = :post_id OR link_post_id = :post_id", post_id: post.id]
+        TopicLink.delete_all ["(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)", post_id: post.id]
       end
     end
   end
