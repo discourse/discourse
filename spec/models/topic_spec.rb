@@ -722,6 +722,21 @@ describe Topic do
 
       end
 
+      context 'new key' do
+        before do
+          topic.update_meta_data('other' => 'key')
+          topic.save!
+        end
+
+        it "can be loaded" do
+          Topic.find(topic.id).meta_data["other"].should == "key"
+        end
+
+        it "is in sync with custom_fields" do
+          Topic.find(topic.id).custom_fields["other"].should == "key"
+        end
+      end
+
 
     end
 
@@ -1380,7 +1395,17 @@ describe Topic do
       topic.stubs(:has_topic_embed?).returns(false)
       topic.expandable_first_post?.should be_false
     end
+  end
 
+  it "has custom fields" do
+    topic = Fabricate(:topic)
+    topic.custom_fields["a"].should == nil
 
+    topic.custom_fields["bob"] = "marley"
+    topic.custom_fields["jack"] = "black"
+    topic.save
+
+    topic = Topic.find(topic.id)
+    topic.custom_fields.should == {"bob" => "marley", "jack" => "black"}
   end
 end
