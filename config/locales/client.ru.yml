@@ -760,6 +760,7 @@ ru:
       reply_as_new_topic: "Ответить в новой теме"
       continue_discussion: "Продолжить обсуждение из {{postLink}}:"
       follow_quote: "перейти к цитируемому сообщению"
+      show_full: "Показать полный текст"
       deleted_by: "Удалено"
       expand_collapse: "развернуть/свернуть"
       has_replies:

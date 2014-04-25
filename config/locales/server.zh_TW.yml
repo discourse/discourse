@@ -348,22 +348,18 @@ zh_TW:
     top_referrers:
       title: "最高引用"
       xaxis: "用戶"
-      num_visits: "瀏覽量"
-      num_topics: "主題數"
       num_clicks: "點擊率"
+      num_topics: "主題數"
     top_traffic_sources:
       title: "最高流量來源"
       xaxis: "網域"
-      num_visits: "瀏覽量"
+      num_clicks: "點擊率"
       num_topics: "主題數"
       num_users: "用戶數量"
-      num_clicks: "點擊率"
     top_referred_topics:
       title: "最高引用主題"
       xaxis: "主題"
-      num_visits: "瀏覽量"
       num_clicks: "點擊率"
-
   dashboard:
     rails_env_warning: "伺服器現在運行 %{env} 模式。"
     host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"

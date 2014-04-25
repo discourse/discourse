@@ -550,6 +550,7 @@ es:
       hint: "(también puedes arrastrarlos al editor para subirlos)"
       hint_for_supported_browsers: "(también puedes arrastrarlos o pegarlos en el editor para subirlos)"
       uploading: "Subiendo imagen"
+      image_link: "el link de tu imagen apuntará a"
     search:
       title: "buscar por temas, publicaciones, usuarios o categorías"
       placeholder: "escribe tu búsqueda aquí"
@@ -566,6 +567,7 @@ es:
       title: 'Favoritos'
       help:
         star: 'añadir este tema a tu lista de estrellas'
+        unstar: 'quitar este tema de tu lista de estrellas'
     topics:
       bulk:
         reset_read: "Restablecer leidos"
@@ -740,6 +742,9 @@ es:
         action: "mover a un tema nuevo"
         topic_name: "Nombre del tema nuevo"
         error: "Hubo un error moviendo los posts al nuevo tema"
+        instructions:
+          one: "Estas a punto de crear un tema nuevo y rellenarlo con el post que has seleccionado."
+          other: "Estas a punto de crear un tema nuevo y rellenarlo con los <b>{{count}}</b> posts que has seleccionado."
       merge_topic:
         title: "Mover a un tema existente"
         action: "mover a un tema existente"
@@ -758,6 +763,7 @@ es:
         delete: eliminar seleccionado
         cancel: cancelar selección
         select_all: seleccionar todo
+        deselect_all: deshacer selección
         description:
           one: Ha seleccionado <b>1</b> mensaje.
           other: Ha seleccionado <b>{{count}}</b> mensajes.
@@ -1158,6 +1164,7 @@ es:
         no_primary: "(ningún grupo principal)"
         title: "Grupos"
         edit: "Editar grupos"
+        refresh: "Actualizar"
         new: "Nuevo"
         selector_placeholder: "añadir usuarios"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que la regla del nombre usuario"
@@ -1501,14 +1508,19 @@ es:
         display_name: Nombre a mostrar
         description: Descripción
         badge_type: Tipo de distintivo
+        granted_by: Concedido por
+        granted_at: Concedido en
         save: Guardar
         delete: Borrar
+        revoke: Revocar
+        grant: Conceder
     lightbox:
       download: "descargar"
     keyboard_shortcuts_help:
       title: 'Atajos de teclado (experimental)'
       jump_to:
         title: 'Saltar a'
+        latest: '<b>g</b> then <b>l</b> Últimos'
         new: '<b>g</b> then <b>n</b> Nuevo'
         unread: '<b>g</b> then <b>u</b> No leídos'
         starred: '<b>g</b> then <b>f</b> Añadido'
@@ -1516,6 +1528,7 @@ es:
       navigation:
         title: 'Navegación'
         back: '<b>u</b> Atrás'
+        up_down: '<b>k</b>/<b>j</b> Mover la selección arriba/abajo'
         next_prev: '<b>`</b>/<b>~</b> Sección siguiente/anterior'
       application:
         title: 'Aplicación'
@@ -1524,13 +1537,23 @@ es:
         search: '<b>/</b> Buscar'
       actions:
         title: 'Acciones'
+        star: '<b>f</b> Poner estrella en este tema'
         share_topic: '<b>s</b> Compartir tema'
+        share_post: '<b>shift s</b> Compartir post'
         reply_topic: '<b>r</b> Responder al tema'
+        reply_post: '<b>shift r</b> Responder al post'
         like: '<b>l</b> Me gusta el post'
         flag: '<b>!</b> Marcar post con bandera'
         bookmark: '<b>b</b> Marcar post'
         edit: '<b>e</b> Editar post'
         delete: '<b>d</b> Borrar post'
+        mark_muted: '<b>m</b> then <b>m</b> Marcar el tema como silenciado'
     badges:
+      more_badges:
+        one: "+1 mas"
+        other: "+%{count} Mas"
+      granted:
+        one: "1 concedido"
+        other: "%{count} concedido"
       example_badge:
         description: Esto es un ejemplo de badge.
