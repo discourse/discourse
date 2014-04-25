@@ -101,7 +101,8 @@ Discourse.Badge = Discourse.Model.extend({
       data: {
         name: this.get('name'),
         description: this.get('description'),
-        badge_type_id: this.get('badge_type_id')
+        badge_type_id: this.get('badge_type_id'),
+        allow_title: this.get('allow_title')
       }
     }).then(function(json) {
       self.updateFromJson(json);

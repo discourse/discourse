@@ -5,7 +5,7 @@ describe BadgesController do
 
   context 'index' do
     it 'should return a list of all badges' do
-      xhr :get, :index
+      get :index, format: :json
 
       response.status.should == 200
       parsed = JSON.parse(response.body)
@@ -15,7 +15,7 @@ describe BadgesController do
 
   context 'show' do
     it "should return a badge" do
-      xhr :get, :show, id: badge.id
+      get :show, id: badge.id, format: :json
       response.status.should == 200
       parsed = JSON.parse(response.body)
       parsed["badge"].should be_present

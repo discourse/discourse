@@ -4,6 +4,7 @@ class Badge < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
   validates :badge_type, presence: true
+  validates :allow_title, inclusion: [true, false]
 end
 
 # == Schema Information
@@ -17,8 +18,10 @@ end
 #  grant_count   :integer          default(0), not null
 #  created_at    :datetime
 #  updated_at    :datetime
+#  allow_title   :boolean          default(FALSE), not null
 #
 # Indexes
 #
-#  index_badges_on_name  (name) UNIQUE
+#  index_badges_on_badge_type_id  (badge_type_id)
+#  index_badges_on_name           (name) UNIQUE
 #

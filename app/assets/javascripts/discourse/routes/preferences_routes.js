@@ -194,7 +194,7 @@ Discourse.PreferencesBadgeTitleRoute = Discourse.RestrictedUserRoute.extend({
         controller.set('selectedUserBadgeId', userBadge.get('id'));
       }
     });
-    if (!controller.get('selectedUserBadgeId')) {
+    if (!controller.get('selectedUserBadgeId') && controller.get('selectableUserBadges.length') > 0) {
       controller.set('selectedUserBadgeId', controller.get('selectableUserBadges')[0].get('id'));
     }
   }

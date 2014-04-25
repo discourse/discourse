@@ -18,10 +18,7 @@ Discourse.PreferencesBadgeTitleController = Ember.ArrayController.extend({
     }
   }.property('saving'),
 
-  selectableUserBadges: Em.computed.filter('model', function(userBadge) {
-    var badgeType = userBadge.get('badge.badge_type.name');
-    return (badgeType === "Gold" || badgeType === "Silver");
-  }),
+  selectableUserBadges: Em.computed.filterBy('model', 'badge.allow_title', true),
 
   selectedUserBadge: function() {
     var selectedUserBadgeId = parseInt(this.get('selectedUserBadgeId'));
@@ -34,9 +31,7 @@ Discourse.PreferencesBadgeTitleController = Ember.ArrayController.extend({
     return selectedUserBadge;
   }.property('selectedUserBadgeId'),
 
-  titleNotChanged: function() {
-    return this.get('user.title') === this.get('selectedUserBadge.badge.name');
-  }.property('selectedUserBadge', 'user.title'),
+  titleNotChanged: Discourse.computed.propertyEqual('user.title', 'selectedUserBadge.badge.name'),
 
   disableSave: Em.computed.or('saving', 'titleNotChanged'),
 

@@ -33,15 +33,8 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
   canEditName: Discourse.computed.setting('enable_names'),
 
   canSelectTitle: function() {
-    if (!Discourse.SiteSettings.enable_badges || this.get('model.badge_count') === 0) {
-      return false;
-    }
-
-    // If the first featured badge isn't gold or silver we know the user won't have
-    // _any_ gold or silver badges.
-    var badgeType = this.get('model.featured_user_badges')[0].get('badge.badge_type.name');
-    return (badgeType === "Gold" || badgeType === "Silver");
-  }.property('model.badge_count', 'model.featured_user_badges.@each.badge.badge_type.name'),
+    return Discourse.SiteSettings.enable_badges && this.get('model.badge_count') > 0;
+  }.property('model.badge_count'),
 
   availableLocales: function() {
     return Discourse.SiteSettings.available_locales.split('|').map( function(s) {
