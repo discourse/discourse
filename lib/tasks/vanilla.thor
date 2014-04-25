@@ -93,7 +93,7 @@ class Vanilla < Thor
             username: UserNameSuggester.suggest(user[:name]),
             created_at: DateTime.strptime(user[:date_inserted], "%Y-%m-%d %H:%M:%S"),
             trust_level: TrustLevel.levels[:basic],
-            bio_raw: (user[:discovery_text] || "").gsub("\\n", "\n")
+            bio_raw: clean_up(user[:discovery_text])
           ).id
 
           users_created += 1
@@ -168,7 +168,7 @@ class Vanilla < Thor
         position: category[:sort].to_i,
         user: get_user_by_previous_id(category[:insert_user_id]) || Discourse.system_user,
         created_at: parse_category_date(category[:date_inserted]),
-        description: category[:description].gsub("\\n", "\n"),
+        description: clean_up(category[:description]),
         parent_category_id: new_parent_category_id
       )
       # return the new category id
@@ -189,7 +189,7 @@ class Vanilla < Thor
 
         options = {
           title: discussion[:name],
-          raw: discussion[:body].gsub("\\n", "\n"),
+          raw: clean_up(discussion[:body]),
           created_at: discussion[:created_at],
           skip_validations: true
         }
@@ -220,7 +220,7 @@ class Vanilla < Thor
 
         options = {
           topic_id: topic_id,
-          raw: comment[:body].gsub("\\n", "\n"),
+          raw: clean_up(comment[:body]),
           created_at: DateTime.strptime(comment[:date_inserted], "%Y-%m-%d %H:%M:%S"),
           skip_validations: true
         }
@@ -281,7 +281,7 @@ class Vanilla < Thor
         options = {
           archetype: Archetype::private_message,
           title: "Private message from #{user.username}",
-          raw: message[:body].gsub("\\n", "\n"),
+          raw: clean_up(message[:body]),
           target_usernames: target_usernames.join(","),
           created_at: DateTime.strptime(conversation[:date_inserted], "%Y-%m-%d %H:%M:%S"),
           skip_validations: true
@@ -310,7 +310,7 @@ class Vanilla < Thor
 
         options = {
           topic_id: topic_id,
-          raw: message[:body].gsub("\\n", "\n"),
+          raw: clean_up(message[:body]),
           created_at: DateTime.strptime(message[:date_inserted], "%Y-%m-%d %H:%M:%S"),
           skip_validations: true
         }
@@ -333,6 +333,14 @@ class Vanilla < Thor
     def get_category_by_previous_id(previous_id)
       category = @categories.select { |c| c[:category_id] == previous_id }.first
       Category.find(category[:new_id]) if category && category[:new_id]
+    end
+
+    def clean_up(raw)
+      (raw || "").gsub("\\n", "\n")
+                 .gsub(/<\/?pre\s*>/i, "\n```\n")
+                 .gsub(/<\/?code\s*>/i, "`")
+                 .gsub("&lt;", "<")
+                 .gsub("&gt;", ">")
     end
 
     def enable_rate_limiter
