@@ -183,3 +183,7 @@ $quote-background: lighten($black, 76%);
 
 $topicMenuColor: darken($white, 80%);
 $bookmarkColor: $blue;
+
+
+/* This file doesn't actually exist, it is injected by DiscourseSassImporter. */
+@import "plugins_variables";

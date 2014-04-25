@@ -26,6 +26,15 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
     }.merge!(super)
   end
 
+  def special_imports
+    {
+      "plugins" => DiscoursePluginRegistry.stylesheets,
+      "plugins_mobile" => DiscoursePluginRegistry.mobile_stylesheets,
+      "plugins_desktop" => DiscoursePluginRegistry.desktop_stylesheets,
+      "plugins_variables" => DiscoursePluginRegistry.sass_variables
+    }
+  end
+
   def find_relative(name, base, options)
     if name =~ GLOB
       glob_imports(name, Pathname.new(base), options)
@@ -35,12 +44,8 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
   end
 
   def find(name, options)
-    if name == "plugins" || name == "plugins_mobile"
-      if name == "plugins"
-        stylesheets = DiscoursePluginRegistry.stylesheets
-      elsif name == "plugins_mobile"
-        stylesheets = DiscoursePluginRegistry.mobile_stylesheets
-      end
+    if special_imports.has_key? name
+      stylesheets = special_imports[name]
       contents = ""
       stylesheets.each do |css_file|
         if css_file =~ /\.scss$/
