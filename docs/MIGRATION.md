@@ -1,74 +1,59 @@
-# Discourse Migration Guide
+Deploying [Discourse on Docker][1] is currently our recommended setup. It avoids many pitfalls installations have, such as misconfigured nginx, sub-optimal Ruby defaults and so on. 
 
-## Install new server
+The Docker based setup ensures we are all on the same page when diagnosing installation issues and completely eradicates a class of support calls. 
 
-Complete a fresh install of Discourse on the new server, following the official guide, except for the initial database population (rake db:migrate).
+Today, all sites hosted by Discourse are on Docker. 
 
-## Review old server
+This is a basic guide on how to move your current Discourse setup to a Docker based setup.
 
-On old server, run `git status` and review changes to the tree. For example:
+## Getting started
 
-    # On branch master
-    # Changes not staged for commit:
-    #   (use "git add <file>..." to update what will be committed)
-    #   (use "git checkout -- <file>..." to discard changes in working directory)
-    #
-    #	modified:   app/assets/javascripts/external/Markdown.Editor.js
-    #	modified:   app/views/layouts/application.html.erb
-    #	modified:   config/application.rb
-    #
-    # Untracked files:
-    #   (use "git add <file>..." to include in what will be committed)
-    #
-    #	app/views/layouts/application.html.erb.bitnami
-    #	config/environments/production.rb
-    #	log/sidekiq.pid
-    #	vendor/gems/active_model_serializers/
-    #	vendor/gems/fast_blank/
-    #	vendor/gems/message_bus/
-    #	vendor/gems/redis-rack-cache/
-    #	vendor/gems/sprockets/
-    #	vendor/gems/vestal_versions/
+First, get a blank site with working email installed. Follow the guide at https://github.com/discourse/discourse_docker and install a new, empty Discourse instance.
 
-### Review for changes
+**Tips:** 
 
-Review each of the changed files for changes that need to be manually moved over
+- Bind the web to a different port than port 80, if you are on the same box. Eg:
 
-* Ignore all files under vendor/gems
-* Ignore files under log/
+        expose:
+          - "81:80"
 
-Check your config/environments/production.rb, config/discourse.pill,
-config/database.yml (as per the upgrade instructions)
+- Be sure to enter your email in the developer email section, so you get admin:
 
-## Move DB
+        env:
+          # your email here
+          DISCOURSE_DEVELOPER_EMAILS: 'my_email@email.com'
 
-Take DB dump with:
 
-    pg_dump --no-owner -U user_name -W database_name > backup_file_name.sql
+- Make sure email is setup and working by visiting `/admin/email` and sending a test email.
 
-Copy it over to the new server
+- Make sure you have ssh access to your container `./launcher ssh my_container` must work. 
 
-Run as discourse user:
-```
-createdb discourse_prod
-psql discourse_prod
-    \i backup_file_name.sql
-```
-On oldserver:
+**If any of the above is skipped your migration will fail.**
 
-`rsync -avz -e ssh public newserver:public`
+At the end of this process you will have a working website. Carry on.
 
-On the new server:
-```
-    bundle install --without test --deployment
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake db:migrate
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake assets:precompile
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production bundle exec rake posts:rebake
-```
-If the `rake db:migrate` step fails, you might have to run it twice.
 
-Are you just testing your migration? Disable outgoing email by changing
-`config/environments/production.rb` and adding the following below the mail
-configuration:
+## Exporting and importing the old site
 
-    config.action_mailer.perform_deliveries = false
+- Ensure you are running the absolute latest version of Discourse. We had bugs in the export code in the past, make sure you are on latest before attempting an export.
+
+- On your current instance
+  - go to `/admin/backups` and click on the ![Backup](https://meta-discourse.r.worldssl.net/uploads/default/3418/083f92873b96625c.png) button.
+  - once the backup is done, you will be able to ![Download](https://meta-discourse.r.worldssl.net/uploads/default/3420/fd77ea7e700101cd.png) it.
+
+- On your newly installed docker instance
+  - enable the `allow_restore` site setting
+  - refresh your browser for the change to be taken into account
+  - go to `/admin/backups` and ![Upload](https://meta-discourse.r.worldssl.net/uploads/default/3419/21e172a1f1059364.png) your backup.
+  - once your upload is done, click on the ![Restore](https://meta-discourse.r.worldssl.net/uploads/default/3421/2946f976f3bea2bb.png) button
+
+
+- Destroy old container `./launcher destroy web` 
+
+- Change port binding so its on 80
+
+- Start a new container
+
+Yay. You are done. 
+
+  [1]: INSTALL-digital-ocean.md
