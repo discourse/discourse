@@ -133,6 +133,18 @@ describe Category do
     Fabricate(:category, name: "  blanks ").name.should == "blanks"
   end
 
+  it "has custom fields" do
+    category = Fabricate(:category, name: " music")
+    category.custom_fields["a"].should == nil
+
+    category.custom_fields["bob"] = "marley"
+    category.custom_fields["jack"] = "black"
+    category.save
+
+    category = Category.find(category.id)
+    category.custom_fields.should == {"bob" => "marley", "jack" => "black"}
+  end
+
   describe "short name" do
     let!(:category) { Fabricate(:category, name: 'xx') }
 

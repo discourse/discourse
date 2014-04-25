@@ -6,6 +6,7 @@ require_dependency 'enum'
 require_dependency 'post_analyzer'
 require_dependency 'validators/post_validator'
 require_dependency 'plugin/filter'
+require_dependency "concern/has_custom_fields"
 
 require 'archetype'
 require 'digest/sha1'
@@ -13,6 +14,7 @@ require 'digest/sha1'
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
+  include Concern::HasCustomFields
 
   rate_limit
   rate_limit :limit_posts_per_day

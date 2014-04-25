@@ -1,4 +1,8 @@
+require_dependency "concern/has_custom_fields"
+
 class Group < ActiveRecord::Base
+  include Concern::HasCustomFields
+
   has_many :category_groups
   has_many :group_users, dependent: :destroy
 

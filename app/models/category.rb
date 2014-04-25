@@ -1,6 +1,9 @@
+require_dependency "concern/has_custom_fields"
+
 class Category < ActiveRecord::Base
 
   include Positionable
+  include Concern::HasCustomFields
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,

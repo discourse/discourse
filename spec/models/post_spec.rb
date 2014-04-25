@@ -814,4 +814,16 @@ describe Post do
     end
   end
 
+  it "has custom fields" do
+    post = Fabricate(:post)
+    post.custom_fields["a"].should == nil
+
+    post.custom_fields["Tommy"] = "Hanks"
+    post.custom_fields["Vincent"] = "Vega"
+    post.save
+
+    post = Post.find(post.id)
+    post.custom_fields.should == {"Tommy" => "Hanks", "Vincent" => "Vega"}
+  end
+
 end
