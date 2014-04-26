@@ -20,6 +20,11 @@ The only officially supported installs of Discourse are the [Docker](https://www
 - [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/) (we recommend 2.0.0-p353 or higher)
 
 
+
+## Security
+
+We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.
+
 [do]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-digital-ocean.md
 [docker]: https://github.com/discourse/discourse_docker
 [bitnami]: http://bitnami.com/stack/discourse
