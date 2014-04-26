@@ -4,7 +4,7 @@ Discourse is the 100% open source, next-generation discussion platform built for
 
 - a mailing list
 - a discussion forum
-- a longer form chat room
+- a long-form chat room
 
 To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
 
