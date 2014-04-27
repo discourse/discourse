@@ -6,7 +6,6 @@ require_dependency 'summarize'
 require_dependency 'discourse'
 require_dependency 'post_destroyer'
 require_dependency 'user_name_suggester'
-require_dependency 'roleable'
 require_dependency 'pretty_text'
 require_dependency 'url_helper'
 

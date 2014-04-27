@@ -1,6 +1,5 @@
 require_dependency 'rate_limiter'
 require_dependency 'system_message'
-require_dependency 'trashable'
 
 class PostAction < ActiveRecord::Base
   class AlreadyActed < StandardError; end
