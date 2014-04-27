@@ -69,6 +69,7 @@ module Onebox
           liveleak.com
           lessonplanet.com
           mashable.com
+          meetup.com
           mlb.com
           myspace.com
           nba.com
