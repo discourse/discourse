@@ -53,20 +53,23 @@
         <div class='details'>
           <div class='primary'>
           {{boundAvatar model imageSize="huge"}}
-          <h1>{{username}} {{{statusIcon}}}</h1>
-          <h2>{{name}}</h2>
 
-          <div class='bio'>{{{bio_cooked}}}</div>
+          <div class="primary-textual">
+            <h1>{{username}} {{{statusIcon}}}</h1>
+            <h2>{{name}}</h2>
 
-          {{groups-list groups=custom_groups}}
+            <div class='bio'>{{{bio_cooked}}}</div>
 
-          {{#if isSuspended}}
-            <div class='suspended'>
-              <i class='fa fa-ban'></i>
-              <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
-              <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
+            {{groups-list groups=custom_groups}}
+
+            {{#if isSuspended}}
+              <div class='suspended'>
+                <i class='fa fa-ban'></i>
+                <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
+                <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
+              </div>
+            {{/if}}
             </div>
-          {{/if}}
           </div>
 
           <div class='secondary'>
