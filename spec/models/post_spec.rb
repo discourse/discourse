@@ -798,8 +798,7 @@ describe Post do
 
   describe "has_host_spam" do
     it "correctly detects host spam" do
-      post = Fabricate(:post, raw: "hello from my site http://www.somesite.com
-                       http://#{GlobalSetting.hostname} ")
+      post = Fabricate(:post, raw: "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}")
 
       post.total_hosts_usage.should == {"www.somesite.com" => 1}
       post.acting_user.trust_level = 0

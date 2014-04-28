@@ -167,6 +167,7 @@ class Post < ActiveRecord::Base
               .reject{|h| !h.include?('.')}
 
     hosts << GlobalSetting.hostname
+    hosts << RailsMultisite::ConnectionManagement.current_hostname
 
   end
 
