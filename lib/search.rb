@@ -128,10 +128,11 @@ class Search
       # the issue while we figure out what is up in Rails
       secure_category_ids
 
-      categories = Category.includes(:category_search_data)
-                           .where("category_search_data.search_data @@ #{ts_query}")
-                           .references(:category_search_data)
-                           .order("topics_month DESC")
+
+      search_criteria = {:name_cont => @original_term.downcase}
+
+      search = Category.search(search_criteria)
+      categories = search.result(:distinct => false).order("topics_month DESC")
                            .secured(@guardian)
                            .limit(@limit)
 
@@ -145,7 +146,7 @@ class Search
       search_criteria = {:name_or_email_cont => @original_term.downcase}
 
       search = User.search(search_criteria)
-      users = search.result(:distinct => true).order("last_posted_at DESC").limit(@limit)
+      users = search.result(:distinct => false).order("last_posted_at DESC").limit(@limit)
 
       users.each do |u|
         @results.add_result(SearchResult.from_user(u))
