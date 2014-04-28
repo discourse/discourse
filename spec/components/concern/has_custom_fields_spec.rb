@@ -1,34 +1,35 @@
 require "spec_helper"
 
+
 describe HasCustomFields do
 
   context "custom_fields" do
     before do
 
-      Topic.exec_sql("create temporary table test_items(id SERIAL primary key)")
-      Topic.exec_sql("create temporary table test_item_custom_fields(id SERIAL primary key, test_item_id int, name varchar(256) not null, value text)")
+      Topic.exec_sql("create temporary table custom_fields_test_items(id SERIAL primary key)")
+      Topic.exec_sql("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text)")
 
-      class TestItem < ActiveRecord::Base
+      class CustomFieldsTestItem < ActiveRecord::Base
         include HasCustomFields
       end
 
-      class TestItemCustomField < ActiveRecord::Base
-        belongs_to :test_item
+      class CustomFieldsTestItemCustomField < ActiveRecord::Base
+        belongs_to :custom_fields_test_item
       end
     end
 
     after do
-      Topic.exec_sql("drop table test_items")
-      Topic.exec_sql("drop table test_item_custom_fields")
+      Topic.exec_sql("drop table custom_fields_test_items")
+      Topic.exec_sql("drop table custom_fields_test_item_custom_fields")
 
       # import is making my life hard, we need to nuke this out of orbit
       des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
-      des[ActiveRecord::Base].delete(TestItem)
-      des[ActiveRecord::Base].delete(TestItemCustomField)
+      des[ActiveRecord::Base].delete(CustomFieldsTestItem)
+      des[ActiveRecord::Base].delete(CustomFieldsTestItemCustomField)
     end
 
     it "simple modification of custom fields" do
-      test_item = TestItem.new
+      test_item = CustomFieldsTestItem.new
 
       test_item.custom_fields["a"].should == nil
 
@@ -37,7 +38,7 @@ describe HasCustomFields do
 
       test_item.save
 
-      test_item = TestItem.find(test_item.id)
+      test_item = CustomFieldsTestItem.find(test_item.id)
 
       test_item.custom_fields["bob"].should == "marley"
       test_item.custom_fields["jack"].should == "black"
@@ -46,13 +47,13 @@ describe HasCustomFields do
       test_item.custom_fields["jack"] = "jill"
 
       test_item.save
-      test_item = TestItem.find(test_item.id)
+      test_item = CustomFieldsTestItem.find(test_item.id)
 
       test_item.custom_fields.should == {"jack" => "jill"}
     end
 
     it "casts integers to string without error" do
-      test_item = TestItem.new
+      test_item = CustomFieldsTestItem.new
       test_item.custom_fields["a"].should == nil
       test_item.custom_fields["a"] = 0
 
@@ -62,20 +63,20 @@ describe HasCustomFields do
       # should be casted right after saving
       test_item.custom_fields["a"].should == "0"
 
-      test_item = TestItem.find(test_item.id)
+      test_item = CustomFieldsTestItem.find(test_item.id)
       test_item.custom_fields["a"].should == "0"
     end
 
     it "double save actually saves" do
 
-      test_item = TestItem.new
+      test_item = CustomFieldsTestItem.new
       test_item.custom_fields = {"a" => "b"}
       test_item.save
 
       test_item.custom_fields["c"] = "d"
       test_item.save
 
-      db_item = TestItem.find(test_item.id)
+      db_item = CustomFieldsTestItem.find(test_item.id)
       db_item.custom_fields.should == {"a" => "b", "c" => "d"}
 
     end
@@ -83,11 +84,11 @@ describe HasCustomFields do
 
     it "handles arrays properly" do
 
-      test_item = TestItem.new
+      test_item = CustomFieldsTestItem.new
       test_item.custom_fields = {"a" => ["b", "c", "d"]}
       test_item.save
 
-      db_item = TestItem.find(test_item.id)
+      db_item = CustomFieldsTestItem.find(test_item.id)
       db_item.custom_fields.should == {"a" => ["b", "c", "d"]}
 
       db_item.custom_fields["a"] = ["c", "d"]
@@ -98,18 +99,18 @@ describe HasCustomFields do
 
     it "casts integers in arrays properly without error" do
 
-      test_item = TestItem.new
+      test_item = CustomFieldsTestItem.new
       test_item.custom_fields = {"a" => ["b", 10, "d"]}
       test_item.save
       test_item.custom_fields.should == {"a" => ["b", "10", "d"]}
 
-      db_item = TestItem.find(test_item.id)
+      db_item = CustomFieldsTestItem.find(test_item.id)
       db_item.custom_fields.should == {"a" => ["b", "10", "d"]}
 
     end
 
     it "simple modifications don't interfere" do
-      test_item = TestItem.new
+      test_item = CustomFieldsTestItem.new
 
       test_item.custom_fields["a"].should == nil
 
@@ -117,7 +118,7 @@ describe HasCustomFields do
       test_item.custom_fields["jack"] = "black"
       test_item.save
 
-      test_item2 = TestItem.new
+      test_item2 = CustomFieldsTestItem.new
 
       test_item2.custom_fields["x"].should == nil
 
@@ -125,8 +126,8 @@ describe HasCustomFields do
       test_item2.custom_fields["de"] = "la playa"
       test_item2.save
 
-      test_item = TestItem.find(test_item.id)
-      test_item2 = TestItem.find(test_item2.id)
+      test_item = CustomFieldsTestItem.find(test_item.id)
+      test_item2 = CustomFieldsTestItem.find(test_item2.id)
 
       test_item.custom_fields.should == {"jack" => "black", "bob" => "marley"}
       test_item2.custom_fields.should == {"sixto" => "rodriguez", "de" => "la playa"}
