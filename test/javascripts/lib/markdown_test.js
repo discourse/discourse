@@ -354,6 +354,8 @@ test("sanitize", function() {
   equal(sanitize("<canvas>draw me!</canvas>"), "draw me!");
 
   cooked("[the answer](javascript:alert(42))", "<p><a>the answer</a></p>", "it prevents XSS");
+
+  cooked("<i class=\"fa fa-bug fa-spin\" style=\"font-size:600%\"></i>\n<!-- -->", "<p><i></i><br/>&lt;!-- --&gt;</p>", "it doesn't circumvent XSS with comments");
 });
 
 test("URLs in BBCode tags", function() {

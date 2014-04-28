@@ -42,7 +42,6 @@ function processTextNodes(node, event, emitter) {
   for (var j=1; j<node.length; j++) {
     var textContent = node[j];
     if (typeof textContent === "string") {
-
       if (dialect.options.sanitize && !skipSanitize[textContent]) {
         textContent = Discourse.Markdown.sanitize(textContent);
       }
@@ -63,8 +62,8 @@ function processTextNodes(node, event, emitter) {
 
     }
   }
-
 }
+
 
 /**
   Parse a JSON ML tree, using registered handlers to adjust it if necessary.
@@ -96,7 +95,7 @@ function parseTree(tree, path, insideCounts) {
 
       insideCounts[tagName] = (insideCounts[tagName] || 0) + 1;
 
-      if (n && n.length === 2 && n[0] === "p" && /^<!--([\s\S]*)-->$/m.exec(n[1])) {
+      if (n && n.length === 2 && n[0] === "p" && /^<!--([\s\S]*)-->$/.exec(n[1])) {
         // Remove paragraphs around comment-only nodes.
         tree[i] = n[1];
       } else {
