@@ -134,7 +134,10 @@ class Guardian
   def can_approve?(target)
     is_staff? && target && not(target.approved?)
   end
-  alias :can_activate? :can_approve?
+
+  def can_activate?(target)
+    is_staff? && target && not(target.active?)
+  end
 
   def can_suspend?(user)
     user && is_staff? && user.regular?

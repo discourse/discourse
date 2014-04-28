@@ -195,6 +195,14 @@ describe SessionController do
         end
       end
 
+      describe 'deactivated user' do
+        it 'should return an error' do
+          User.any_instance.stubs(:active).returns(false)
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          expect(JSON.parse(response.body)['error']).to eq(I18n.t('login.not_activated'))
+        end
+      end
+
       describe 'success by username' do
         it 'logs in correctly' do
           xhr :post, :create, login: user.username, password: 'myawesomepassword'

@@ -57,7 +57,7 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def refresh_browsers
-    MessageBus.publish "/file-change", ["refresh"], user_ids: [@user.id]
+    refresh_browser @user
     render nothing: true
   end
 
@@ -131,6 +131,7 @@ class Admin::UsersController < Admin::AdminController
   def deactivate
     guardian.ensure_can_deactivate!(@user)
     @user.deactivate
+    refresh_browser @user
     render nothing: true
   end
 
@@ -180,6 +181,10 @@ class Admin::UsersController < Admin::AdminController
 
     def fetch_user
       @user = User.where(id: params[:user_id]).first
+    end
+
+    def refresh_browser(user)
+      MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     end
 
 end

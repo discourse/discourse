@@ -82,7 +82,7 @@ class SessionController < ApplicationController
       return
     end
 
-    user.email_confirmed? ? login(user) : not_activated(user)
+    (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
   def forgot_password

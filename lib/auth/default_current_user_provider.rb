@@ -27,7 +27,7 @@ class Auth::DefaultCurrentUserProvider
       current_user = User.where(auth_token: auth_token).first
     end
 
-    if current_user && current_user.suspended?
+    if current_user && (current_user.suspended? || !current_user.active)
       current_user = nil
     end
 
