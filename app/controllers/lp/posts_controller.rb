@@ -4,6 +4,8 @@ class Lp::PostsController < PostsController
 
     begin
       ActiveRecord::Base.connection.transaction do
+        Oneboxer.preview(params[:url], invalidate_oneboxes: true) if params[:url].present?
+
         topic_post_params = {
           skip_validations: true,
           auto_track: false,
