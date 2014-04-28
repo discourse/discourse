@@ -25,6 +25,7 @@ module Onebox
             # Post Link
             post = Post.where(topic_id: route[:topic_id], post_number: route[:post_number].to_i).first
             return linked unless post
+            return linked if post.hidden
             return linked unless Guardian.new.can_see?(post)
 
             topic = post.topic
