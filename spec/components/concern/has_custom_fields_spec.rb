@@ -1,7 +1,6 @@
 require "spec_helper"
-require_dependency "concern/has_custom_fields"
 
-describe Concern::HasCustomFields do
+describe HasCustomFields do
 
   context "custom_fields" do
     before do
@@ -10,7 +9,7 @@ describe Concern::HasCustomFields do
       Topic.exec_sql("create temporary table test_item_custom_fields(id SERIAL primary key, test_item_id int, name varchar(256) not null, value text)")
 
       class TestItem < ActiveRecord::Base
-        include Concern::HasCustomFields
+        include HasCustomFields
       end
 
       class TestItemCustomField < ActiveRecord::Base

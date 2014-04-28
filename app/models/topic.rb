@@ -5,12 +5,11 @@ require_dependency 'rate_limiter'
 require_dependency 'text_sentinel'
 require_dependency 'text_cleaner'
 require_dependency 'archetype'
-require_dependency "concern/has_custom_fields"
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
-  include Concern::HasCustomFields
+  include HasCustomFields
   include Trashable
   extend Forwardable
 

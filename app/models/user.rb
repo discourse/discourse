@@ -8,12 +8,11 @@ require_dependency 'post_destroyer'
 require_dependency 'user_name_suggester'
 require_dependency 'pretty_text'
 require_dependency 'url_helper'
-require_dependency 'concern/has_custom_fields'
 
 class User < ActiveRecord::Base
   include Roleable
   include UrlHelper
-  include Concern::HasCustomFields
+  include HasCustomFields
 
   has_many :posts
   has_many :notifications, dependent: :destroy
