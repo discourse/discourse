@@ -23,7 +23,7 @@ module Email
 
       @template_args = {site_name: SiteSetting.email_prefix.presence || SiteSetting.title,
                         base_url: Discourse.base_url,
-                        user_preferences_url: "#{Discourse.base_url}/user_preferences" }.merge!(@opts)
+                        user_preferences_url: "#{Discourse.base_url}/my/preferences" }.merge!(@opts)
 
       if @template_args[:url].present?
         @template_args[:respond_instructions] =
