@@ -110,6 +110,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
       full_filename, syntax = Sass::Util.destructure(find_real_file(dir, name, options))
       return unless full_filename && File.readable?(full_filename)
 
+      depend_on(full_filename)
       Sass::Engine.for_file(full_filename, options)
     end
 end
