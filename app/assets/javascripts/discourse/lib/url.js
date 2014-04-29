@@ -241,7 +241,26 @@ Discourse.URL = Em.Object.createWithMixins({
   handleURL: function(path) {
     var router = this.get('router');
     router.router.updateURL(path);
-    return router.handleURL(path);
+
+    var split = path.split('#'),
+        elementId;
+
+    if (split.length === 2) {
+      path = split[0];
+      elementId = split[1];
+    }
+
+    var transition = router.handleURL(path);
+    transition.promise.then(function() {
+      if (elementId) {
+        Em.run.next('afterRender', function() {
+          var offset = $('#' + elementId).offset();
+          if (offset && offset.top) {
+            $('html, body').scrollTop(offset.top - $('header').height() - 10);
+          }
+        });
+      }
+    });
   }
 
 });

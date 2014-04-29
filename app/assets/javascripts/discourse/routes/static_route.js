@@ -6,35 +6,27 @@
   @namespace Discourse
   @module Discourse
 **/
-_.each(Discourse.StaticController.PAGES, function(page) {
-
+Discourse.StaticController.PAGES.forEach(function(page) {
   Discourse[page.capitalize() + "Route"] = Discourse.Route.extend({
 
     renderTemplate: function() {
       this.render('static');
     },
 
-    setupController: function() {
-      var config_key = Discourse.StaticController.CONFIGS[page];
-      if (config_key && Discourse.SiteSettings[config_key].length > 0) {
-        Discourse.URL.redirectTo(Discourse.SiteSettings[config_key]);
-      } else {
-        this.controllerFor('static').loadPath("/" + page);
+    beforeModel: function(transition) {
+      var configKey = Discourse.StaticController.CONFIGS[page];
+      if (configKey && Discourse.SiteSettings[configKey].length > 0) {
+        transition.abort();
+        Discourse.URL.redirectTo(Discourse.SiteSettings[configKey]);
       }
-    }
+    },
 
+    model: function() {
+      return Discourse.StaticPage.find(page);
+    },
+
+    setupController: function(controller, model) {
+      this.controllerFor('static').set('model', model);
+    }
   });
-
-});
-
-Discourse.LoginRoute.reopen({
-  beforeModel: function() {
-    if (!Discourse.SiteSettings.login_required) {
-      this.transitionTo('discovery.latest').then(function(e) {
-        Ember.run.next(function() {
-          e.send('showLogin');
-        });
-      });
-    }
-  }
 });
