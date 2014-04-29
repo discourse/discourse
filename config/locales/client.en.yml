@@ -1749,6 +1749,7 @@ en:
         grant: Grant
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
+        allow_title: Allow badge to be used as a title
 
     lightbox:
       download: "download"
