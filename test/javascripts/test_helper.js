@@ -79,11 +79,7 @@ Discourse.setupForTesting();
 Discourse.injectTestHelpers();
 Discourse.runInitializers();
 Discourse.start();
-
-Discourse.Router.map(function() {
-  Discourse.routeBuilder.call(this);
-});
-
+Discourse.Route.mapRoutes();
 
 QUnit.testStart(function() {
   // Allow our tests to change site settings and have them reset before the next test

@@ -23,15 +23,23 @@ Discourse.Route = Em.Route.extend({
 
 });
 
+var routeBuilder;
 
 Discourse.Route.reopenClass({
 
   buildRoutes: function(builder) {
-    var oldBuilder = Discourse.routeBuilder;
-    Discourse.routeBuilder = function() {
+    var oldBuilder = routeBuilder;
+    routeBuilder = function() {
       if (oldBuilder) oldBuilder.call(this);
       return builder.call(this);
     };
+  },
+
+  mapRoutes: function() {
+    Discourse.Router.map(function() {
+      routeBuilder.call(this);
+      this.route('unknown', {path: '*path'});
+    });
   },
 
   cleanDOM: function() {
