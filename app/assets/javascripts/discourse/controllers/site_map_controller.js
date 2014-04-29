@@ -1,13 +1,8 @@
 Discourse.SiteMapController = Ember.ArrayController.extend(Discourse.HasCurrentUser, {
   itemController: "siteMapCategory",
 
-  showAdminLinks: function() {
-    return this.get("currentUser.staff");
-  }.property("currentUser.staff"),
-
-  flaggedPostsCount: function() {
-    return this.get("currentUser.site_flagged_posts_count");
-  }.property("currentUser.site_flagged_posts_count"),
+  showAdminLinks: Em.computed.alias('currentUser.staff'),
+  flaggedPostsCount: Em.computed.alias("currentUser.site_flagged_posts_count"),
 
   faqUrl: function() {
     return Discourse.SiteSettings.faq_url ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq');
