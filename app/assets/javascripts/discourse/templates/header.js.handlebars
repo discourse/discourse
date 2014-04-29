@@ -42,10 +42,13 @@
           {{/if}}
         </div>
       {{/unless}}
-      <ul class='icons clearfix'>
+      <ul class='icons clearfix' role='navigation'>
         <li class='notifications'>
           {{#if currentUser}}
-            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'><i class='fa fa-comment'></i></a>
+            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'>
+              <i class='fa fa-comment'></i>
+              <span class='sr-only'>{{i18n notifications.title}}</span>
+            </a>
             {{#if currentUser.unread_notifications}}
               <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
             {{/if}}
@@ -53,12 +56,12 @@
               <a href='#' class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
           {{else}}
-            <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}'><i class='fa fa-comment'></i></a>
+            <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}' aria-hidden="true"><i class='fa fa-comment'></i></a>
           {{/if}}
         </li>
         <li>
           {{#if Discourse.loginRequired}}
-            <a id='search-button' class='icon expand' href='#' {{action showLogin}}>
+            <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action showLogin}}>
               <i class='fa fa-search'></i>
             </a>
           {{else}}
@@ -68,6 +71,7 @@
                data-dropdown="search-dropdown"
                title='{{i18n search.title}}'>
                <i class='fa fa-search'></i>
+               <span class="sr-only">{{i18n search.title}}</span>
             </a>
           {{/if}}
         </li>
@@ -75,6 +79,7 @@
           {{#if Discourse.loginRequired}}
             <a class='icon'
                href="#"
+               aria-hidden="true"
                {{action showLogin}}>
                <i class='fa fa-bars'></i>
             </a>
@@ -86,6 +91,7 @@
                title='{{i18n site_map}}'
                id="site-map">
                <i class='fa fa-bars'></i>
+               <span class="sr-only">{{i18n site_map}}</span>
             </a>
           {{/if}}
           {{#if currentUser.site_flagged_posts_count}}
@@ -100,10 +106,10 @@
                href="#"
                title='{{i18n user.avatar.title}}'
                id="current-user">
-                 {{boundAvatar currentUser imageSize="medium" }}
+                 {{boundAvatar currentUser imageSize="medium"}}
             </a>
           {{else}}
-            <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='fa fa-user' title='{{i18n not_logged_in_user}}'></i></div>
+            <div class="icon not-logged-in-avatar" aria-hidden="true" {{action showLogin}}><i class='fa fa-user' title='{{i18n not_logged_in_user}}'></i></div>
           {{/if}}
         </li>
       </ul>
