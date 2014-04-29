@@ -53,6 +53,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
         else
           contents << File.read(css_file)
         end
+        depend_on(css_file)
       end
       Sass::Engine.new(contents, options.merge(
         filename: "#{name}.scss",
