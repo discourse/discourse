@@ -782,7 +782,7 @@ en:
     newuser_max_images: "How many images a new user can add to a post"
     newuser_max_attachments: "How many attachments a new user can add to a post"
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post"
-    newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic"
+    newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them"
     max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
 
     create_thumbnails: "Create thumbnails for lightboxed images"
