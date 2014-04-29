@@ -154,9 +154,10 @@ class Search
     end
 
     def posts_query(limit)
-      posts = Post.includes(:post_search_data, {:topic => :category})
-                  .where("post_search_data.search_data @@ #{ts_query}")
-                  .where("topics.deleted_at" => nil)
+
+      search_criteria = {:raw_cont => @original_term.downcase}
+      search = Post.includes(:post_search_data, {:topic => :category}).search(search_criteria)
+      posts = search.result(:distinct => false).where("topics.deleted_at" => nil)
                   .where("topics.visible")
                   .where("topics.archetype <> ?", Archetype.private_message)
                   .references(:post_search_data, {:topic => :category})
