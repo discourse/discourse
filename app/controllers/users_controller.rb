@@ -462,6 +462,6 @@ class UsersController < ApplicationController
         :password,
         :username,
         :active
-      ).merge(ip_address: request.ip)
+      ).merge(ip_address: request.ip, registration_ip_address: request.ip)
     end
 end

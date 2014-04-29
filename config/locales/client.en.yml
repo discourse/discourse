@@ -417,6 +417,8 @@ en:
 
       ip_address:
         title: "Last IP Address"
+      registration_ip_address:
+        title: "Registration IP Address"
       avatar:
         title: "Avatar"
       title:

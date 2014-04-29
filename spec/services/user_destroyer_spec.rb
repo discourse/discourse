@@ -248,9 +248,18 @@ describe UserDestroyer do
         UserDestroyer.new(@admin).destroy(@user)
       end
 
-      it "creates new screened_ip_address records when block_ip is true" do
-        ScreenedIpAddress.expects(:watch).with(@user.ip_address).returns(stub_everything)
-        UserDestroyer.new(@admin).destroy(@user, {block_ip: true})
+      context "block_ip is true" do
+        it "creates a new screened_ip_address record" do
+          ScreenedIpAddress.expects(:watch).with(@user.ip_address).returns(stub_everything)
+          UserDestroyer.new(@admin).destroy(@user, {block_ip: true})
+        end
+
+        it "creates two new screened_ip_address records when registration_ip_address is different than last ip_address" do
+          @user.registration_ip_address = '12.12.12.12'
+          ScreenedIpAddress.expects(:watch).with(@user.ip_address).returns(stub_everything)
+          ScreenedIpAddress.expects(:watch).with(@user.registration_ip_address).returns(stub_everything)
+          UserDestroyer.new(@admin).destroy(@user, {block_ip: true})
+        end
       end
     end
 
