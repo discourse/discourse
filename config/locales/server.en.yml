@@ -803,7 +803,7 @@ en:
 
     max_image_size_kb: "The maximum size of images we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
     max_attachment_size_kb: "The maximum size of files we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
-    authorized_extensions: "A pipe (|) separated list of file extensions allowed for upload"
+    authorized_extensions: "A pipe (|) separated list of file extensions allowed for upload ('*' for enabling all file types)"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."

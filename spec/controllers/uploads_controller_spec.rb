@@ -28,7 +28,7 @@ describe UploadsController do
 
       let(:text_file) do
         ActionDispatch::Http::UploadedFile.new({
-          filename: 'LICENSE.txt',
+          filename: 'LICENSE.TXT',
           tempfile: File.new("#{Rails.root}/LICENSE.txt")
         })
       end
@@ -39,7 +39,7 @@ describe UploadsController do
 
         context 'when authorized' do
 
-          before { SiteSetting.stubs(:authorized_extensions).returns(".png|.txt") }
+          before { SiteSetting.stubs(:authorized_extensions).returns(".PNG|.txt") }
 
           it 'is successful with an image' do
             xhr :post, :create, file: logo
@@ -71,6 +71,22 @@ describe UploadsController do
           it 'rejects the upload' do
             xhr :post, :create, file: text_file
             response.status.should eq 422
+          end
+
+        end
+
+        context 'when everything is authorized' do
+
+          before { SiteSetting.stubs(:authorized_extensions).returns("*") }
+
+          it 'is successful with an image' do
+            xhr :post, :create, file: logo
+            response.status.should eq 200
+          end
+
+          it 'is successful with an attachment' do
+            xhr :post, :create, file: text_file
+            response.status.should eq 200
           end
 
         end

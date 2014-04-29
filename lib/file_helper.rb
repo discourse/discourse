@@ -31,7 +31,7 @@ class FileHelper
   end
 
   def self.images_regexp
-    @@images_regexp ||= /\.(#{images.to_a.join("|").gsub(".", "\.")})$/i
+    @@images_regexp ||= /\.(#{images.to_a.join("|")})$/i
   end
 
 end

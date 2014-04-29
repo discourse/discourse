@@ -284,7 +284,7 @@ files:
     default: 1024
   authorized_extensions:
     client: true
-    default: '.jpg|.jpeg|.png|.gif'
+    default: 'jpg|jpeg|png|gif'
     refresh: true
     list: true
   crawl_images:
