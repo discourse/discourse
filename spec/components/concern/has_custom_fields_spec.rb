@@ -67,6 +67,26 @@ describe HasCustomFields do
       test_item.custom_fields["a"].should == "0"
     end
 
+    it "reload loads from database" do
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields["a"] = 0
+
+      test_item.custom_fields["a"].should == 0
+      test_item.save
+
+      # should be casted right after saving
+      test_item.custom_fields["a"].should == "0"
+
+      CustomFieldsTestItem.exec_sql("UPDATE custom_fields_test_item_custom_fields SET value='1' WHERE custom_fields_test_item_id=? AND name='a'", test_item.id)
+
+      # still the same, did not load
+      test_item.custom_fields["a"].should == "0"
+
+      # refresh loads from database
+      test_item.reload.custom_fields["a"].should == "1"
+      test_item.custom_fields["a"].should == "1"
+
+    end
     it "double save actually saves" do
 
       test_item = CustomFieldsTestItem.new

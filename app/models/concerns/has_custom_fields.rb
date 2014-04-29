@@ -7,6 +7,12 @@ module HasCustomFields
     after_save :save_custom_fields
   end
 
+  def reload(options = nil)
+    @custom_fields = nil
+    @custom_fields_orig = nil
+    super
+  end
+
   def custom_fields
     @custom_fields ||= refresh_custom_fields_from_db.dup
   end
