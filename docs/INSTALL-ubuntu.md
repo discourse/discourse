@@ -143,7 +143,7 @@ We only support Docker based installs now. Please see [our **official install gu
 
 >     # For instance, if prompted with `libreadline6-dev libsqlite3-dev sqlite3 autoconf' etc
 >     # Install the missing packages with this command, run as your user:
->     # sudo apt-get install libreadline6-dev libsqlite3-dev sqlite3 autoconf
+>     # sudo apt-get install libreadline6-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev bison libffi-dev
 >     # Repeat the autolibs test until you see "Requirements installation successful"
 
 
