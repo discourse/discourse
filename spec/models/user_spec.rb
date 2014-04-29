@@ -935,6 +935,16 @@ describe User do
       it "returns true when the user has posted too much" do
         user.posted_too_much_in_topic?(topic.id).should be_true
       end
+
+      context "with a reply" do
+        before do
+          PostCreator.new(Fabricate(:user), raw: 'whatever this is a raw post', topic_id: topic.id, reply_to_post_number: post.post_number).create
+        end
+
+        it "resets the `posted_too_much` threshold" do
+          user.posted_too_much_in_topic?(topic.id).should be_false
+        end
+      end
     end
 
     it "returns false for a user who created the topic" do

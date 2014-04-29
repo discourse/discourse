@@ -41,6 +41,11 @@ class UserAction < ActiveRecord::Base
     include ActiveModel::SerializerSupport
   end
 
+  def self.last_action_in_topic(user_id, topic_id)
+    UserAction.where(user_id: user_id,
+                     target_topic_id: topic_id,
+                     action_type: [RESPONSE, MENTION, QUOTE]).order('created_at DESC').pluck(:target_post_id).first
+  end
 
   def self.stats(user_id, guardian)
 

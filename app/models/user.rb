@@ -386,10 +386,16 @@ class User < ActiveRecord::Base
 
   def posted_too_much_in_topic?(topic_id)
 
-    # Does not apply to staff or your own topics
-    return false if staff? || Topic.where(id: topic_id, user_id: id).exists?
+    # Does not apply to staff, non-new members or your own topics
+    return false if staff? ||
+                    (trust_level != TrustLevel.levels[:newuser]) ||
+                    Topic.where(id: topic_id, user_id: id).exists?
 
-    trust_level == TrustLevel.levels[:newuser] && (Post.where(topic_id: topic_id, user_id: id).count >= SiteSetting.newuser_max_replies_per_topic)
+    last_action_in_topic = UserAction.last_action_in_topic(id, topic_id)
+    since_reply = Post.where(user_id: id, topic_id: topic_id)
+    since_reply = since_reply.where('id > ?', last_action_in_topic) if last_action_in_topic
+
+    (since_reply.count >= SiteSetting.newuser_max_replies_per_topic)
   end
 
   def bio_excerpt
