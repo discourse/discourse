@@ -54,23 +54,23 @@ h1 .topic-statuses .topic-status i {
   position: absolute;
   right: 330px;
   z-index: 400;
-  padding: 2px 10px 4px;
+  padding: 2px 8px 3px;
   border: 1px solid $primary_border_color;
   font-size: 12px;
   background: $primary_background_color;
   color: $secondary_text_color;
   @include medium-width {
-    right: 260px;
+    right: 300px;
   }
   @include small-width {
-    right: 200px;
+    right: 230px;
   }
 }
 
 
 .topic-meta-data-inside {
   float: right;
-  margin-top: -35px;
+  margin-top: -30px;
   float: right;
   font-size: 12px;
 }
@@ -231,11 +231,11 @@ nav.post-controls {
     .topic-meta-data {padding-left: 13px;}
 
     @include medium-width {
-    margin-left: 99px;
+    margin-left: 59px;
     }
 
     @include small-width {
-    margin-left: 95px;
+    margin-left: 57px;
     max-width: 720px;
     }
   }
@@ -587,7 +587,7 @@ iframe {
     width: 45px;
     height: 45px;
     position: absolute;
-    top: 10px;
+    top: 16px;
   }
 
   .contents {
@@ -805,7 +805,7 @@ blockquote { /* solo quotes */
 
 .gutter {
   float: left;
-  margin-top: 5px;
+  margin-top: 12px;
       ul {margin: 0;}
       padding-left: 10px;
 
