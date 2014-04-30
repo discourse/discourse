@@ -4,8 +4,6 @@ class Lp::PostsController < PostsController
 
     begin
       ActiveRecord::Base.connection.transaction do
-        Oneboxer.preview(params[:url], invalidate_oneboxes: true) if params[:url].present?
-
         topic_post_params = {
           skip_validations: true,
           auto_track: false,
@@ -17,6 +15,10 @@ class Lp::PostsController < PostsController
         topic_post = Post.find_by_raw(topic_post_params[:raw])
 
         unless topic_post.present?
+          URI.extract(topic_post_params[:raw], %w(http https)).each do |uri|
+            Oneboxer.preview uri, invalidate_oneboxes: true
+          end
+
           topic_user = params[:topic_email].present? ? User.find_by_email(params[:topic_email]) : current_user
           topic_post_creator = PostCreator.new(topic_user, topic_post_params)
           topic_post = topic_post_creator.create
