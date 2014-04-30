@@ -181,7 +181,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_raw?
-    @add_raw.present? && (scope.user.try(:staff?) || yours)
+    @add_raw.present? && (!object.hidden || scope.user.try(:staff?) || yours)
   end
 
   def include_link_counts?
