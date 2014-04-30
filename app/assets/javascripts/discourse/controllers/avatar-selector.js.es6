@@ -7,7 +7,7 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-Discourse.AvatarSelectorController = Discourse.Controller.extend(Discourse.ModalFunctionality, {
+export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
 
   actions: {
     useUploadedAvatar: function() { this.set("use_uploaded_avatar", true); },
