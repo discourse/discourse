@@ -159,7 +159,7 @@ describe Email::MessageBuilder do
     end
 
     it "has the user_preferences_url" do
-      expect(template_args[:user_preferences_url]).to eq("#{Discourse.base_url}/user_preferences")
+      expect(template_args[:user_preferences_url]).to eq("#{Discourse.base_url}/my/preferences")
     end
   end
 
