@@ -9,11 +9,29 @@
 **/
 Discourse.Resolver = Ember.DefaultResolver.extend({
 
+  /**
+    For our ES6 modules, Discourse standardizes on dashed, lower case names.
+    This method converts camelCase to that format.
+
+    @method normalizeName
+    @param {String} name to convert
+    @returns {String} the converted name
+
+  **/
+  normalizeName: function(name) {
+    return name.replace(/([a-z])([A-Z])/g, '$1-$2').replace('_', '-').toLowerCase();
+  },
+
   resolveController: function(parsedName) {
-    var moduleName = "discourse/controllers/" + parsedName.fullNameWithoutType,
+    var normalized = this.normalizeName(parsedName.fullNameWithoutType),
+        moduleName = "discourse/controllers/" + normalized,
         module = requirejs.entries[moduleName];
 
     if (module) {
+      if (normalized !== parsedName.fullNameWithoutType) {
+        Em.Logger.error(parsedName.fullNameWithoutType + " was used to look up an ES6 module. You should use " + normalized+ " instead.");
+      }
+
       module = require(moduleName, null, null, true /* force sync */);
       if (module && module['default']) { module = module['default']; }
     }
