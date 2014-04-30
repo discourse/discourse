@@ -7,7 +7,7 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   loading: false,
   viewMode: "side_by_side",
   revisionsTextKey: "post.revisions.controls.comparing_previous_to_current_out_of_total",
