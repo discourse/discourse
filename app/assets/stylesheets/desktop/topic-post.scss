@@ -70,7 +70,7 @@ h1 .topic-statuses .topic-status i {
 
 .topic-meta-data-inside {
   float: right;
-  margin-top: -54px;
+  margin-top: -35px;
   float: right;
   font-size: 12px;
 }
@@ -259,7 +259,7 @@ nav.post-controls {
   }
   .topic-meta-data h5 {
     position: absolute;
-    left: 75px;
+    left: 70px;
     top: 4px;
     z-index: 1;
     font-size: 13px;
@@ -270,8 +270,8 @@ nav.post-controls {
     }
   }
   .topic-meta-data-inside {
-  margin: -10px 0 0 0;
-  color: $secondary_text_color;
+    margin: -15px 0 0 0;
+    color: $secondary_text_color;
   }
   .topic-meta-data {padding-top: 20px;}
 }
@@ -566,15 +566,15 @@ iframe {
   .names {
     position: absolute;
     left: 66px;
-    top: 30px;
+    top: 10px;
     width: 400px;
     z-index: 1;
     @include medium-width {
-      left: 98px;
+      left: 60px;
     }
 
     @include small-width {
-      left: 94px;
+      left: 55px;
     }
   }
 
@@ -586,7 +586,7 @@ iframe {
     width: 45px;
     height: 45px;
     position: absolute;
-    top: 35px;
+    top: 10px;
   }
 
   .contents {
@@ -650,7 +650,7 @@ iframe {
 
 .contents .cooked {
   margin-right: 60px;
-  margin-top: 37px;
+  margin-top: 20px;
   word-wrap: break-word;
 
   h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
