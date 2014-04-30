@@ -12,6 +12,9 @@ class DiscourseIIFE < Sprockets::Processor
     return data if (path =~ /test\_helper\.js/)
     return data if (path =~ /javascripts\/helpers\//)
 
+    # Ignore ES6 files
+    return data if (path =~ /\.es6/)
+
     # Ignore translations
     return data if (path =~ /\/translations/)
 

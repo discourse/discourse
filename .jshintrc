@@ -72,5 +72,6 @@
   "white": false,
   "eqnull": true,
   "quotmark": false,
-  "lastsemic": true
+  "lastsemic": true,
+  "esnext": true
 }

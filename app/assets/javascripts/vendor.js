@@ -5,9 +5,9 @@
 //= require jquery_include.js
 //= require ember_include.js
 
+//= require loader
 //= require message-bus
 //= require jquery.ui.widget.js
-//= require_tree ./discourse/ember
 //= require LAB.js
 //= require Markdown.Converter.js
 //= require better_markdown.js
@@ -38,3 +38,4 @@
 //= require lock-on.js
 //= require ember-cloaking
 //= require break_string
+//= require_tree ./discourse/ember
