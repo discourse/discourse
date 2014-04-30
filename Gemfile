@@ -139,6 +139,7 @@ gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sass'
+gem 'es6_module_transpiler-rails'
 gem 'sidekiq'
 gem 'sidekiq-failures'
 

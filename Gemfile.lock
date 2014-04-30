@@ -83,6 +83,8 @@ GEM
     ember-source (1.6.0.beta.2)
       handlebars-source (~> 1.0)
     erubis (2.7.0)
+    es6_module_transpiler-rails (0.4.0)
+      execjs
     eventmachine (1.0.3)
     excon (0.28.0)
     execjs (2.0.2)
@@ -401,6 +403,7 @@ DEPENDENCIES
   email_reply_parser-discourse
   ember-rails
   ember-source (= 1.6.0.beta.2)
+  es6_module_transpiler-rails
   eventmachine
   fabrication
   fakeweb (~> 1.3.0)
