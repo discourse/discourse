@@ -153,7 +153,7 @@ cs:
 
       We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
 
-      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
+      You'll be able to reply to this topic again once someone has replied to you. In the meantime, consider editing your previous replies.
   activerecord:
     attributes:
       category:
