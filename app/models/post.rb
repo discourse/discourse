@@ -498,7 +498,14 @@ class Post < ActiveRecord::Base
     revision = PostRevision.where(post_id: id, number: version).first
     return unless revision
     revision.user_id = last_editor_id
-    revision.modifications = changes.extract!(:raw, :cooked, :edit_reason)
+    modifications = changes.extract!(:raw, :cooked, :edit_reason)
+    [:raw, :cooked, :edit_reason].each do |field|
+      if modifications[field].present?
+        old_value = revision.modifications[field].try(:[], 0) || ""
+        new_value = modifications[field][1]
+        revision.modifications[field] = [old_value, new_value]
+      end
+    end
     revision.save
   end
 
