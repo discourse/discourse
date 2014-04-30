@@ -52,9 +52,9 @@ h1 .topic-statuses .topic-status i {
 
 .reply-to-tab {
   position: absolute;
-  right: 300px;
+  right: 330px;
   z-index: 400;
-  padding: 5px 12px;
+  padding: 2px 10px 4px;
   border: 1px solid $primary_border_color;
   font-size: 12px;
   background: $primary_background_color;
@@ -70,7 +70,7 @@ h1 .topic-statuses .topic-status i {
 
 .topic-meta-data-inside {
   float: right;
-  margin-top: -36px;
+  margin-top: -54px;
   float: right;
   font-size: 12px;
 }
@@ -226,8 +226,8 @@ nav.post-controls {
   &.bottom .arrow {float: right; margin: 0 0 0 0;}
   &.top {
 
-    margin-left: 112px;
-    max-width: 775px;
+    margin-left: 66px;
+    max-width: 713px;
     .topic-meta-data {padding-left: 13px;}
 
     @include medium-width {
@@ -254,15 +254,15 @@ nav.post-controls {
   .topic-meta-data {
     position: relative;
     .avatar {
-      margin-left: 10px;
       margin-top: -10px;
     }
   }
   .topic-meta-data h5 {
     position: absolute;
-    left: 100px;
-    top: 0px;
+    left: 75px;
+    top: 4px;
     z-index: 1;
+    font-size: 13px;
     width: 100%;
     a {
       font-weight: bold;
@@ -270,7 +270,7 @@ nav.post-controls {
     }
   }
   .topic-meta-data-inside {
-  margin: -3px 0 0 0;
+  margin: -10px 0 0 0;
   color: $secondary_text_color;
   }
   .topic-meta-data {padding-top: 20px;}
@@ -565,8 +565,8 @@ iframe {
 
   .names {
     position: absolute;
-    left: 110px;
-    top: 5px;
+    left: 66px;
+    top: 30px;
     width: 400px;
     z-index: 1;
   }
@@ -579,8 +579,7 @@ iframe {
     width: 45px;
     height: 45px;
     position: absolute;
-    left: 30px;
-    top: 10px;
+    top: 35px;
   }
 
   .contents {
@@ -643,8 +642,8 @@ iframe {
 }
 
 .contents .cooked {
-  margin-right: 50px;
-  margin-top: 30px;
+  margin-right: 60px;
+  margin-top: 37px;
   word-wrap: break-word;
 
   h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
@@ -723,7 +722,7 @@ iframe {
 
 .topic-meta-data {
   h3 {
-    font-size: 13px;
+    font-size: 15px;
     margin-top: 5px;
     overflow: hidden;
     line-height: 1.2em;
@@ -797,8 +796,7 @@ blockquote { /* solo quotes */
 
 .gutter {
   float: left;
-
-  margin-top: 6px;
+  margin-top: 5px;
       ul {margin: 0;}
       padding-left: 10px;
 
@@ -826,7 +824,7 @@ blockquote { /* solo quotes */
   float: left;
   position: relative;
   border-top: 1px solid $primary_border_color;
-  padding: 10px 0 15px 0;
+  padding: 20px 0 15px 0;
   &.highlighted {
     background-color: $emphasis_background_color;
   }
@@ -846,9 +844,9 @@ blockquote { /* solo quotes */
 
 //columns
 
-.span14 { width: 70%; padding-left: 1%; } //main content
-.span2 {width: 9%; }
-.span11 {width: 85%; padding-left: 2%;}
+.span14 { width: 70%; } //main content
+.span2 {width: 6%; }
+.span11 {width: 86%; padding-left: 2%;}
 .span5 {width: 19%; padding-left: 1%; }
 
 
