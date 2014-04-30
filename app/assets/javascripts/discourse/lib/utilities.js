@@ -13,6 +13,7 @@ Discourse.Utilities = {
       case 'small': return 25;
       case 'medium': return 32;
       case 'large': return 45;
+      case 'extra_large': return 60;
       case 'huge': return 120;
     }
     return size;

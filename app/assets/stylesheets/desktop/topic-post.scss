@@ -51,27 +51,28 @@ h1 .topic-statuses .topic-status i {
 
 
 .reply-to-tab {
-  display: block;
   position: absolute;
-  left: 120px;
+  right: 300px;
   z-index: 400;
   padding: 5px 12px;
   border: 1px solid $primary_border_color;
   font-size: 12px;
-  margin-left: -8px;
   background: $primary_background_color;
   color: $secondary_text_color;
   @include medium-width {
-    left: 107px;
+    right: 260px;
   }
   @include small-width {
-    left: 103px;
+    right: 200px;
   }
 }
 
-.avoid-tab {
-  padding-top: 25px;
-  .topic-meta-data-inside {margin-top: -30px;}
+
+.topic-meta-data-inside {
+  float: right;
+  margin-top: -36px;
+  float: right;
+  font-size: 12px;
 }
 
 .gutter {
@@ -212,23 +213,68 @@ nav.post-controls {
           }
         }
       }
-  }
+}
 
-  .embedded-posts {
-    background: lighten($secondary_background_color, 76%);
-    .quote .title, blockquote, .onebox, .onebox-result {
-      background: lighten($secondary_background_color, 70%);
-      border-left: 5px solid lighten($secondary_background_color, 60%);
+.embedded-posts {
+  h1, h2, h3 {margin: 10px 0;}
+  a.mention {background: lighten($secondary_background_color, 70%);}
+  &.bottom {
+    .topic-meta-data {padding-left: 13px;}
+    &.hidden {display: block; opacity: 0; }
+
+  }
+  &.bottom .arrow {float: right; margin: 0 0 0 0;}
+  &.top {
+
+    margin-left: 112px;
+    max-width: 775px;
+    .topic-meta-data {padding-left: 13px;}
+
+    @include medium-width {
+    margin-left: 99px;
     }
 
-    &.bottom { margin-top: -11px;}
-    .topic-meta-data h5 {margin: 5px;}
-    .topic-meta-data-inside {
-    margin: -3px 0 0 0;
-    color: $secondary_text_color;
+    @include small-width {
+    margin-left: 95px;
+    max-width: 720px;
     }
-    .topic-meta-data {padding-top: 20px;}
   }
+  &.top.span14 {padding-left: 0;}
+  .topic-body, .topic-meta-data {border: none;}
+  .row {border-top: 1px solid $primary_border_color; padding-top: 7px;}
+  .reply:first-of-type .row {border-top: none;}
+
+  background: lighten($secondary_background_color, 76%);
+  .quote .title, blockquote, .onebox, .onebox-result {
+    background: lighten($secondary_background_color, 70%);
+    border-left: 5px solid lighten($secondary_background_color, 60%);
+  }
+
+  &.bottom { margin-top: -11px;}
+  .topic-meta-data {
+    position: relative;
+    .avatar {
+      margin-left: 10px;
+      margin-top: -10px;
+    }
+  }
+  .topic-meta-data h5 {
+    position: absolute;
+    left: 100px;
+    top: 0px;
+    z-index: 1;
+    width: 100%;
+    a {
+      font-weight: bold;
+      color: lighten($primary_text_color, 25%);
+    }
+  }
+  .topic-meta-data-inside {
+  margin: -3px 0 0 0;
+  color: $secondary_text_color;
+  }
+  .topic-meta-data {padding-top: 20px;}
+}
 
 .bottom-round nav.post-controls .show-replies {
 background: lighten($secondary_background_color, 76%);
@@ -513,27 +559,40 @@ iframe {
 
 .topic-meta-data {
   margin-bottom: 10px;
-  width: 92px;
   border-top: 1px solid $primary_border_color;
   padding-top: 30px;
+  width: 92px;
 
-  img {
-    text-align: center;
+  .names {
+    position: absolute;
+    left: 110px;
+    top: 5px;
+    width: 400px;
+    z-index: 1;
+  }
+
+  .names, .user-title {
+    display: inline;
+  }
+
+  .main-avatar img {
     width: 45px;
     height: 45px;
+    position: absolute;
+    left: 30px;
+    top: 10px;
   }
 
   .contents {
 
-    text-align: center;
-
     a {
-      margin: 0 auto;
-      width: 45px;
-      word-wrap: break-word;
-      color: $primary_text_color;
       font-weight: normal;
       line-height: 1.3;
+    }
+
+    .username a {
+      font-weight: bold;
+      color: lighten($primary_text_color, 25%);
     }
 
     .new-user a {
@@ -547,7 +606,6 @@ iframe {
 
     h3 a {
       width: auto;
-
     }
 
     h3.full-name {
@@ -558,7 +616,7 @@ iframe {
     }
   }
 
-  h3 { display: block; }
+  h3 { display: inline; }
 
 }
 
@@ -586,7 +644,7 @@ iframe {
 
 .contents .cooked {
   margin-right: 50px;
-  margin-top: 15px;
+  margin-top: 30px;
   word-wrap: break-word;
 
   h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
@@ -664,9 +722,6 @@ iframe {
 }
 
 .topic-meta-data {
-float: left;
-position: relative;
-
   h3 {
     font-size: 13px;
     margin-top: 5px;
@@ -768,9 +823,9 @@ blockquote { /* solo quotes */
 }
 
 .topic-body {
-  border-top: 1px solid $primary_border_color;
   float: left;
   position: relative;
+  border-top: 1px solid $primary_border_color;
   padding: 10px 0 15px 0;
   &.highlighted {
     background-color: $emphasis_background_color;
@@ -806,35 +861,6 @@ blockquote { /* solo quotes */
 .row:after {clear: both;}
 
 
-.embedded-posts {
-  h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: lighten($secondary_background_color, 70%);}
-  &.bottom {
-    .topic-meta-data {padding-left: 13px;}
-    &.hidden {display: block; opacity: 0; }
-
-  }
-  &.bottom .arrow {float: right; margin: 0 0 0 0;}
-  &.top {
-
-    margin-left: 112px;
-    max-width: 775px;
-    .topic-meta-data {padding-left: 13px;}
-
-    @include medium-width {
-    margin-left: 99px;
-    }
-
-    @include small-width {
-    margin-left: 95px;
-    max-width: 720px;
-    }
-  }
-  &.top.span14 {padding-left: 0;}
-  .topic-body, .topic-meta-data {border: none;}
-  .row {border-top: 1px solid $primary_border_color; padding-top: 7px;}
-  .reply:first-of-type .row {border-top: none;}
-}
 
 .dropdown {
   position: relative;
