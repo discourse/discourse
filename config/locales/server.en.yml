@@ -1381,8 +1381,8 @@ en:
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"
-      more_topics: "There were %{new_topics_since_seen} other new topics posted since you were last here on %{last_seen_at}."
-      more_topics_category: "There were %{new_topics_since_seen} other new topics posted in these categories since you were last here on %{last_seen_at}:"
+      more_topics: "There were %{new_topics_since_seen} other new topics posted since you last visited on %{last_seen_at}."
+      more_topics_category: "There were %{new_topics_since_seen} other new topics posted in these categories since you last visited on %{last_seen_at}:"
 
       posts:
         one: "1 post"
