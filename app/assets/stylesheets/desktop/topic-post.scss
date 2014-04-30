@@ -263,7 +263,7 @@ nav.post-controls {
     top: 4px;
     z-index: 1;
     font-size: 13px;
-    width: 100%;
+    width: 300px;
     a {
       font-weight: bold;
       color: lighten($primary_text_color, 25%);
@@ -580,6 +580,7 @@ iframe {
 
   .names, .user-title {
     display: inline;
+    font-size: 13px;
   }
 
   .main-avatar img {
@@ -599,6 +600,7 @@ iframe {
     .username a {
       font-weight: bold;
       color: lighten($primary_text_color, 25%);
+      font-size: 13px;
     }
 
     .new-user a {
