@@ -98,7 +98,7 @@ en:
     of_value: "of"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
-    log_in: "Log In"
+    log_in: "Sign In"
     age: "Age"
     last_post: "Last Post"
     joined: "Joined"
@@ -487,7 +487,7 @@ en:
       complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
 
     login:
-      title: "Log In"
+      title: "Sign In"
       username: "Login"
       password: "Password"
       email_placeholder: "email or username"
@@ -853,7 +853,7 @@ en:
         success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
         error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
 
-      login_reply: 'Log In to Reply'
+      login_reply: 'Sign In to Reply'
 
       filters:
         n_posts:
