@@ -95,7 +95,7 @@ describe PostAction do
       post.reload
       post.hidden.should be_false
 
-      PostAction.hide_post!(post)
+      PostAction.hide_post!(post, PostActionType.types[:off_topic])
       post.reload
       post.hidden.should be_true
     end
