@@ -1,4 +1,6 @@
 class Group < ActiveRecord::Base
+  include HasCustomFields
+
   has_many :category_groups
   has_many :group_users, dependent: :destroy
 

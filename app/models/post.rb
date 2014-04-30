@@ -13,6 +13,7 @@ require 'digest/sha1'
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
+  include HasCustomFields
 
   rate_limit
   rate_limit :limit_posts_per_day
