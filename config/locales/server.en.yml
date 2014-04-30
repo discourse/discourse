@@ -358,11 +358,11 @@ en:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'This post is radically off-topic in the current conversation, and should probably be moved to a different topic. If this is a topic, perhaps it does not belong here.'
+      description: 'This post is radically off-topic in the current topic, and should probably be moved. If this is a topic, perhaps it does not belong here.'
       long_form: 'flagged this as off-topic'
     spam:
       title: 'Spam'
-      description: 'This post is an advertisement. It is not useful or relevant to the current conversation, but promotional in nature.'
+      description: 'This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.'
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Inappropriate'
@@ -1104,7 +1104,7 @@ en:
 
         ... was hidden due to community flagging.
 
-        Keep in mind that multiple community members flagged this post before it was hidden, so **please consider how you might revise your post to reflect their feedback.** You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your forum trust level.
+        Keep in mind that multiple community members flagged this post before it was hidden, so **please consider how you might revise your post to reflect their feedback.** You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your trust level.
 
         However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
 
