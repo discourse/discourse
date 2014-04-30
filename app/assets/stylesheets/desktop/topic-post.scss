@@ -569,6 +569,13 @@ iframe {
     top: 30px;
     width: 400px;
     z-index: 1;
+    @include medium-width {
+      left: 98px;
+    }
+
+    @include small-width {
+      left: 94px;
+    }
   }
 
   .names, .user-title {
