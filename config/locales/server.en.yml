@@ -1092,13 +1092,15 @@ en:
 
         %{base_url}%{url}
 
-        ... was hidden due to community flagging.
+        ...  was hidden because multiple members of the Community flagged it.
 
-        Keep in mind that multiple community members flagged this post before it was hidden, so **please consider how you might revise your post to reflect their feedback.** You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your forum trust level.
+        **Please consider revising your post in light of this feedback from your fellow Community members.** You can edit your post after 10 minutes, and it will be automatically unhidden. This will increase your trust level within the Community.
 
-        However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
+        However, if the post is hidden by the Community a second time, moderators will be notified and further action may be taken, including the possible suspension of your account.
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        For additional guidance and more information about how to increase your trust levels and gain more privileges within the Community, please refer to our [FAQ](%{base_url}/faq).
+
+        Thank you for participating!
 
     usage_tips:
       text_body_template: |
