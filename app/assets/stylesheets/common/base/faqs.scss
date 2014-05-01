@@ -21,19 +21,13 @@
      margin-bottom: 8px;
   }
 
-  ul,
-  ol {
+  ul:not(.nav-pills),
+  ol:not(.nav-pills) {
     margin-left: 40px;
   }
 
-
-  .container {
-    @extend .clearfix;
-    width: 960px;
-    margin: 0 auto;
-    padding: 20px 10px;
-    margin-top: -60px;
-  }
-
+  /* intended only for /faq, /tos, and /privacy */
+  width: 700px;
+  padding-left:20px;
 
 }
