@@ -27,7 +27,7 @@
           ]]></description>
           <link><%= topic_url %></link>
           <pubDate><%= topic.created_at.rfc2822 %></pubDate>
-          <guid><%= topic_url %></guid>
+          <guid isPermaLink="false">topic-<%= topic.id %></guid>
           <source url="<%= topic_url %>.rss"><%= topic.title %></source>
         </item>
       <% end %>
