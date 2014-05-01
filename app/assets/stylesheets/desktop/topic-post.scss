@@ -604,7 +604,7 @@ iframe {
     }
 
     .new-user a {
-      color: $secondary_text_color;
+      color: lighten($primary_text_color, 50%);
     }
 
     a.user-group {
