@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.BadgesShowController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   grantDates: Em.computed.mapBy('userBadges', 'grantedAt'),
   minGrantedAt: Em.computed.min('grantDates'),
 
