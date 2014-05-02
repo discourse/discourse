@@ -1,4 +1,4 @@
-require_dependency 'discourse_sass_importer'
+require_dependency 'sass/discourse_sass_compiler'
 
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
@@ -14,29 +14,7 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def compile_stylesheet(scss)
-    env = Rails.application.assets
-
-    # In production Rails.application.assets is a Sprockets::Index
-    #  instead of Sprockets::Environment, there is no cleaner way
-    #  to get the environment from the index.
-    if env.is_a?(Sprockets::Index)
-      env = env.instance_variable_get('@environment')
-    end
-
-    context = env.context_class.new(env, "custom.scss", "app/assets/stylesheets/custom.scss")
-
-    ::Sass::Engine.new(scss, {
-      syntax: :scss,
-      cache: false,
-      read_cache: false,
-      style: :compressed,
-      filesystem_importer: DiscourseSassImporter,
-      sprockets: {
-        context: context,
-        environment: context.environment
-      }
-    }).render
-
+    DiscourseSassCompiler.compile(scss, 'custom')
   rescue => e
     puts e.backtrace.join("\n") unless Sass::SyntaxError === e
 
@@ -49,13 +27,7 @@ class SiteCustomization < ActiveRecord::Base
         begin
           self.send("#{stylesheet_attr}_baked=", compile_stylesheet(self.send(stylesheet_attr)))
         rescue Sass::SyntaxError => e
-          error = e.sass_backtrace_str("custom stylesheet")
-          error.gsub!("\n", '\A ')
-          error.gsub!("'", '\27 ')
-
-          self.send("#{stylesheet_attr}_baked=",
-  "footer { white-space: pre; }
-  footer:after { content: '#{error}' }")
+          self.send("#{stylesheet_attr}_baked=", DiscourseSassCompiler.error_as_css(e, "custom stylesheet"))
         end
       end
     end

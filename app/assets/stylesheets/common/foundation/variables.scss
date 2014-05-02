@@ -26,7 +26,6 @@ $base-font-size: 14px !default;
 $base-line-height: 19px !default;
 $base-font-family: Helvetica, Arial, sans-serif !default;
 
-@import "colors";
-
-/* This file doesn't actually exist, it is injected by DiscourseSassImporter. */
+/* These files don't actually exist. They're injected by DiscourseSassImporter. */
+@import "theme_variables";
 @import "plugins_variables";

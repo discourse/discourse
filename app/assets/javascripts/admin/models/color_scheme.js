@@ -27,7 +27,7 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   copy: function() {
     var newScheme = Discourse.ColorScheme.create({name: this.get('name'), enabled: false, can_edit: true, colors: Em.A()});
     _.each(this.get('colors'), function(c){
-      newScheme.colors.pushObject(Discourse.ColorSchemeColor.create({name: c.get('name'), hex: c.get('hex'), opacity: c.get('opacity')}));
+      newScheme.colors.pushObject(Discourse.ColorSchemeColor.create({name: c.get('name'), hex: c.get('hex')}));
     });
     return newScheme;
   },
@@ -40,7 +40,7 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   }.property('name', 'enabled', 'colors.@each.changed', 'saving'),
 
   disableSave: function() {
-    return !this.get('changed') || this.get('saving');
+    return !this.get('changed') || this.get('saving') || _.any(this.get('colors'), function(c) { return !c.get('valid'); });
   }.property('changed'),
 
   newRecord: function() {
@@ -48,6 +48,8 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   }.property('id'),
 
   save: function() {
+    if (this.get('is_base') || this.get('disableSave')) return;
+
     var self = this;
     this.set('savingStatus', I18n.t('saving'));
     this.set('saving',true);
@@ -57,7 +59,7 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
     data.colors = [];
     _.each(this.get('colors'), function(c) {
       if (!self.id || c.get('changed')) {
-        data.colors.pushObject({name: c.get('name'), hex: c.get('hex'), opacity: c.get('opacity')});
+        data.colors.pushObject({name: c.get('name'), hex: c.get('hex')});
       }
     });
 
@@ -104,8 +106,8 @@ Discourse.ColorScheme.reopenClass({
           id: colorScheme.id,
           name: colorScheme.name,
           enabled: colorScheme.enabled,
-          can_edit: colorScheme.can_edit,
-          colors: colorScheme.colors.map(function(c) { return Discourse.ColorSchemeColor.create({name: c.name, hex: c.hex, opacity: c.opacity}); })
+          is_base: colorScheme.is_base,
+          colors: colorScheme.colors.map(function(c) { return Discourse.ColorSchemeColor.create({name: c.name, hex: c.hex}); })
         }));
       });
       colorSchemes.set('loading', false);

@@ -8,6 +8,6 @@
 **/
 Discourse.AdminCustomizeIndexRoute = Discourse.Route.extend({
   redirect: function() {
-    this.transitionTo('adminCustomize.css_html');
+    this.transitionTo('adminCustomize.colors');
   }
 });

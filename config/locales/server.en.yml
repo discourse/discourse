@@ -211,6 +211,10 @@ en:
               common: "is one of the 10000 most common passwords. Please use a more secure password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "is not a valid color"
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"

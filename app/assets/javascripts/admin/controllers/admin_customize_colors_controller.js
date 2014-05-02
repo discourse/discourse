@@ -8,11 +8,10 @@
 **/
 Discourse.AdminCustomizeColorsController = Ember.ArrayController.extend({
 
-  filter: null,
   onlyOverridden: false,
 
   baseColorScheme: function() {
-    return this.get('model').findBy('id', 1);
+    return this.get('model').findBy('is_base', true);
   }.property('model.@each.id'),
 
   baseColors: function() {
@@ -28,15 +27,10 @@ Discourse.AdminCustomizeColorsController = Ember.ArrayController.extend({
     this.set('selectedItem', null);
   },
 
-  filterContent: Discourse.debounce(function() {
+  filterContent: function() {
     if (!this.get('selectedItem')) { return; }
 
-    var filter;
-    if (this.get('filter')) {
-      filter = this.get('filter').toLowerCase();
-    }
-
-    if ((filter === undefined || filter.length < 1) && !this.get('onlyOverridden')) {
+    if (!this.get('onlyOverridden')) {
       this.set('colors', this.get('selectedItem.colors'));
       return;
     }
@@ -44,18 +38,12 @@ Discourse.AdminCustomizeColorsController = Ember.ArrayController.extend({
     var matches = Em.A(), self = this, baseColor;
 
     _.each(this.get('selectedItem.colors'), function(color){
-      if (filter === undefined || filter.length < 1 || color.get('name').toLowerCase().indexOf(filter) > -1) {
-        if (self.get('onlyOverridden')) {
-          baseColor = self.get('baseColors').get(color.get('name'));
-          if (color.get('hex') === baseColor.get('hex') && color.get('opacity') === baseColor.get('opacity')) {
-            return;
-          }
-        }
-        matches.pushObject(color);
-      }
+      baseColor = self.get('baseColors').get(color.get('name'));
+      if (color.get('hex') !== baseColor.get('hex')) matches.pushObject(color);
     });
+
     this.set('colors', matches);
-  }, 250).observes('filter', 'onlyOverridden'),
+  }.observes('onlyOverridden'),
 
   actions: {
     selectColorScheme: function(colorScheme) {
@@ -64,6 +52,7 @@ Discourse.AdminCustomizeColorsController = Ember.ArrayController.extend({
       this.set('colors', colorScheme.get('colors'));
       colorScheme.set('savingStatus', null);
       colorScheme.set('selected', true);
+      this.filterContent();
     },
 
     newColorScheme: function() {
@@ -71,10 +60,7 @@ Discourse.AdminCustomizeColorsController = Ember.ArrayController.extend({
       newColorScheme.set('name', I18n.t('admin.customize.colors.new_name'));
       this.pushObject(newColorScheme);
       this.send('selectColorScheme', newColorScheme);
-    },
-
-    clearFilter: function() {
-      this.set('filter', null);
+      this.set('onlyOverridden', false);
     },
 
     undo: function(color) {

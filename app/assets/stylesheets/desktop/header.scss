@@ -8,8 +8,8 @@
   top: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 2px 4px -2px rgba($primary, .25);
-  background-color: $secondary;
+  box-shadow: 0 2px 4px -2px rgba($header_primary, .25);
+  background-color: $header_background;
   padding-top: 3px;
   .docked & {
     position: fixed;
@@ -42,7 +42,7 @@
   .current-username {
     float: left;
     a {
-      color: $primary;
+      color: $header_primary;
       font-size: 14px;
       display:block;
       margin-top: 10px;
@@ -65,7 +65,7 @@
     .icon {
       display: block;
       padding: 3px;
-      color: scale-color($primary, $lightness: 50%);
+      color: scale-color($header_primary, $lightness: 50%);
       text-decoration: none;
       cursor: pointer;
       border-top: 1px solid transparent;

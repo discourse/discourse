@@ -11,8 +11,8 @@ describe Admin::ColorSchemesController do
         name: 'Such Design',
         enabled: true,
         colors: [
-          {name: '$primary_background_color', hex: 'FFBB00', opacity: '100'},
-          {name: '$secondary_background_color', hex: '888888', opacity: '70'}
+          {name: 'primary', hex: 'FFBB00'},
+          {name: 'secondary', hex: '888888'}
         ]
       }
     } }
@@ -40,6 +40,14 @@ describe Admin::ColorSchemesController do
         xhr :post, :create, valid_params
         ::JSON.parse(response.body)['id'].should be_present
       end
+
+      it "returns failure with invalid params" do
+        params = valid_params
+        params[:color_scheme][:colors][0][:hex] = 'cool color please'
+        xhr :post, :create, valid_params
+        response.should_not be_success
+        ::JSON.parse(response.body)['errors'].should be_present
+      end
     end
 
     describe "update" do
@@ -55,6 +63,16 @@ describe Admin::ColorSchemesController do
         ColorSchemeRevisor.expects(:revise).returns(existing)
         xhr :put, :update, valid_params.merge(id: existing.id)
         ::JSON.parse(response.body)['id'].should be_present
+      end
+
+      it "returns failure with invalid params" do
+        color_scheme = Fabricate(:color_scheme)
+        params = valid_params.merge(id: color_scheme.id)
+        params[:color_scheme][:colors][0][:name] = color_scheme.colors.first.name
+        params[:color_scheme][:colors][0][:hex] = 'cool color please'
+        xhr :put, :update, params
+        response.should_not be_success
+        ::JSON.parse(response.body)['errors'].should be_present
       end
     end
 

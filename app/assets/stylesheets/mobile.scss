@@ -1,6 +1,17 @@
 @import "common";
-@import "mobile/*";
+/* @import "mobile/*"; I don't know why this doesn't work */
 
+@import "mobile/compose";
+@import "mobile/discourse";
+@import "mobile/faqs";
+@import "mobile/header";
+@import "mobile/login";
+@import "mobile/modal";
+@import "mobile/topic-list";
+@import "mobile/topic-post";
+@import "mobile/topic";
+@import "mobile/upload";
+@import "mobile/user";
 
 /* These files doesn't actually exist, they are injected by DiscourseSassImporter. */
 

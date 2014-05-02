@@ -528,12 +528,10 @@ iframe {
   width: 78%;
   max-width: 800px;
   .topic-statuses {
-  i {  color: $primary;
-}
-  .unpinned {  color: $primary;}
-
+    i         { color: $header_primary; }
+    .unpinned { color: $header_primary; }
   }
-  .topic-link {color: $primary;}
+  .topic-link { color: $header_primary; }
 }
 
 

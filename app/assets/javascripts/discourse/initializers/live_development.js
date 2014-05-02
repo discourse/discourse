@@ -62,7 +62,8 @@ Discourse.addInitializer(function() {
             if (!$(this).data('orig')) {
               $(this).data('orig', this.href);
             }
-            this.href = $(this).data('orig') + "&hash=" + me.hash;
+            var orig = $(this).data('orig');
+            this.href = orig + (orig.indexOf('?') >= 0 ? "&hash=" : "?hash=") + me.hash;
           }
         });
       }

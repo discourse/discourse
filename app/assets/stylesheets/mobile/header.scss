@@ -9,8 +9,8 @@
   position: absolute;
   top: 0;
   z-index: 1001;
-  background-color: $secondary;
-  box-shadow: 0 0 3px rgba($primary, .6);
+  background-color: $header_background;
+  box-shadow: 0 0 3px rgba($header_primary, .6);
 
   .docked & {
     position: fixed;
@@ -47,7 +47,7 @@
     float: left;
     display: none;
     a {
-      color: darken($primary, 40%);
+      color: darken($header_primary, 40%);
       font-size: 14px;
       line-height: 40px;
     }
@@ -69,7 +69,7 @@
     .icon {
       display: block;
       padding: 4px;
-      color: scale-color($primary, $lightness: 50%);
+      color: scale-color($header_primary, $lightness: 50%);
       text-decoration: none;
       cursor: pointer;
       &:hover {

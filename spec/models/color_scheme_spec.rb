@@ -2,10 +2,28 @@ require 'spec_helper'
 
 describe ColorScheme do
 
+  describe '#base_colors' do
+    it 'parses the colors.scss file and returns a hash' do
+      File.stubs(:readlines).with(described_class::BASE_COLORS_FILE).returns([
+        '$primary:   #333333 !default;',
+        '$secondary: #ffffff !default;  ',
+        '$highlight: #ffff4d;',
+        '  $danger:#e45735    !default;',
+      ])
+
+      colors = described_class.base_colors
+      colors.should be_a(Hash)
+      colors['primary'].should == '333333'
+      colors['secondary'].should == 'ffffff'
+      colors['highlight'].should == 'ffff4d'
+      colors['danger'].should == 'e45735'
+    end
+  end
+
   let(:valid_params) { {name: "Best Colors Evar", enabled: true, colors: valid_colors} }
   let(:valid_colors) { [
-    {name: '$primary_background_color', hex: 'FFBB00', opacity: '100'},
-    {name: '$secondary_background_color', hex: '888888', opacity: '70'}
+    {name: '$primary_background_color', hex: 'FFBB00'},
+    {name: '$secondary_background_color', hex: '888888'}
   ]}
 
   describe "new" do
@@ -31,8 +49,8 @@ describe ColorScheme do
   end
 
   describe "#enabled" do
-    it "returns the base color scheme when there is no enabled record" do
-      described_class.enabled.id.should == 1
+    it "returns nil when there is no enabled record" do
+      described_class.enabled.should be_nil
     end
 
     it "returns the enabled color scheme" do

@@ -1466,6 +1466,15 @@ en:
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color scheme?"
           under_construction: "NOTE: Changes made here will do nothing! This feature is under construction!"
+          primary: 'primary'
+          secondary: 'secondary'
+          tertiary: 'tertiary'
+          header_background: "header background"
+          header_primary: "header primary"
+          highlight: 'highlight'
+          danger: 'danger'
+          success: 'success'
+          love: 'love'
 
 
       email:

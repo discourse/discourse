@@ -15,29 +15,23 @@ Discourse.ColorSchemeColor = Discourse.Model.extend({
   },
 
   startTrackingChanges: function() {
-    this.set('originals', {
-      hex: this.get('hex') || 'FFFFFF',
-      opacity: this.get('opacity') || '100'
-    });
+    this.set('originals', {hex: this.get('hex') || 'FFFFFF'});
     this.notifyPropertyChange('hex'); // force changed property to be recalculated
   },
 
   changed: function() {
     if (!this.originals) return false;
-
-    if (this.get('hex') !== this.originals['hex'] || this.get('opacity').toString() !== this.originals['opacity'].toString()) {
-      return true;
-    } else {
-      return false;
-    }
-  }.property('hex', 'opacity'),
+    if (this.get('hex') !== this.originals['hex']) return true;
+    return false;
+  }.property('hex'),
 
   undo: function() {
-    if (this.originals) {
-      this.set('hex',     this.originals['hex']);
-      this.set('opacity', this.originals['opacity']);
-    }
+    if (this.originals) this.set('hex', this.originals['hex']);
   },
+
+  translatedName: function() {
+    return I18n.t('admin.customize.colors.' + this.get('name'));
+  }.property('name'),
 
   /**
     brightness returns a number between 0 (darkest) to 255 (brightest).
@@ -61,11 +55,7 @@ Discourse.ColorSchemeColor = Discourse.Model.extend({
     }
   }.observes('hex'),
 
-  opacityChanged: function() {
-    if (this.get('opacity')) {
-      var o = this.get('opacity').toString().replace(/[^\d.]/g, "");
-      if (parseInt(o,10) > 100) { o = o.substr(0,o.length-1); }
-      this.set('opacity', o);
-    }
-  }.observes('opacity')
+  valid: function() {
+    return this.get('hex').match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) !== null;
+  }.property('hex')
 });

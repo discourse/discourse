@@ -77,17 +77,17 @@ body {
     .clear-transitions {
     @include transition(none !important);
   }
-  form {
-  .tip {
-    display: inline-block;
-    &.good {
-      color: $success;
-    }
-    &.bad {
-      color: $danger;
-    }
+
+.tip {
+  display: inline-block;
+  &.good {
+    color: $success;
+  }
+  &.bad {
+    color: $danger;
   }
 }
+
 
 #wmd-input {
   resize: none;

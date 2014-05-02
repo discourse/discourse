@@ -16,7 +16,7 @@ class ColorSchemeRevisor
   def revise
     ColorScheme.transaction do
       if @params[:enabled]
-        ColorScheme.update_all enabled: false
+        ColorScheme.where('id != ?', @color_scheme.id).update_all enabled: false
       end
 
       @color_scheme.name    = @params[:name]
@@ -25,7 +25,7 @@ class ColorSchemeRevisor
 
       if @params[:colors]
         new_version = @params[:colors].any? do |c|
-          (existing = @color_scheme.colors_by_name[c[:name]]).nil? or existing.hex != c[:hex] or existing.opacity != c[:opacity]
+          (existing = @color_scheme.colors_by_name[c[:name]]).nil? or existing.hex != c[:hex]
         end
       end
 
@@ -47,7 +47,7 @@ class ColorSchemeRevisor
         end
       end
 
-      @color_scheme.save!
+      @color_scheme.save
       @color_scheme.clear_colors_cache
     end
     @color_scheme

@@ -44,4 +44,16 @@ task 'assets:precompile:before' do
 
 end
 
-task 'assets:precompile' => 'assets:precompile:before'
+task 'assets:precompile:css' => 'environment' do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    puts "Compiling css for #{db}"
+    [:desktop, :mobile].each do |target|
+      puts DiscourseStylesheets.compile(target)
+    end
+  end
+end
+
+task 'assets:precompile' => 'assets:precompile:before' do
+  # Run after assets:precompile
+  Rake::Task["assets:precompile:css"].invoke
+end

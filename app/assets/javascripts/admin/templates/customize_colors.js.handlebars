@@ -4,9 +4,9 @@
   <h3>{{i18n admin.customize.colors.long_title}}</h3>
   <ul>
     {{#each model}}
-      {{#if can_edit}}
+      {{#unless is_base}}
         <li><a {{action selectColorScheme this}} {{bind-attr class="selected:active"}}>{{description}}</a></li>
-      {{/if}}
+      {{/unless}}
     {{/each}}
   </ul>
   <button {{action newColorScheme}} class='btn'>{{i18n admin.customize.new}}</button>
@@ -36,27 +36,22 @@
             {{i18n admin.site_settings.show_overriden}}
           </label>
         </div>
-        <div class='controls'>
-          {{textField value=filter placeholderKey="type_to_filter"}}
-          <button {{action clearFilter}} class="btn">{{i18n admin.site_settings.clear_filter}}</button>
-        </div>
       </div>
 
+      {{#if colors.length}}
       <table class="table colors">
         <thead>
           <tr>
             <th></th>
             <th class="hex">{{i18n admin.customize.color}}</th>
-            <th class="opacity">{{i18n admin.customize.opacity}}</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {{#each colors}}
-            <tr {{bind-attr class="changed"}}>
-              <td class="name">{{name}}</td>
-              <td class="hex">{{color-input hexValue=hex brightnessValue=brightness}}</td>
-              <td class="opacity">{{textField class="opacity-input" value=opacity maxlength="3"}}</td>
+            <tr {{bind-attr class="changed valid:valid:invalid"}}>
+              <td class="name" {{bind-attr title="name"}}>{{translatedName}}</td>
+              <td class="hex">{{color-input hexValue=hex brightnessValue=brightness valid=valid}}</td>
               <td class="changed">
                 <button {{bind-attr class=":btn :undo changed::invisible"}} {{action undo this}}>undo</button>
               </td>
@@ -64,6 +59,9 @@
           {{/each}}
         </tbody>
       </table>
+      {{else}}
+        <p>{{i18n search.no_results}}</p>
+      {{/if}}
     </div>
   </div>
 {{else}}

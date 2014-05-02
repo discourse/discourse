@@ -25,14 +25,23 @@ describe ColorSchemeRevisor do
       color_scheme.reload.should_not be_enabled
     end
 
-    it "can change colors" do
-      described_class.revise(color_scheme, valid_params.merge(colors: [
-        {name: color.name, hex: 'BEEF99', opacity: 99}
+    def test_color_change(color_scheme_arg, expected_enabled)
+      described_class.revise(color_scheme_arg, valid_params.merge(colors: [
+        {name: color.name, hex: 'BEEF99'}
       ]))
-      color_scheme.reload
-      color_scheme.colors.size.should == 1
-      color_scheme.colors.first.hex.should == 'BEEF99'
-      color_scheme.colors.first.opacity.should == 99
+      color_scheme_arg.reload
+      color_scheme_arg.enabled.should == expected_enabled
+      color_scheme_arg.colors.size.should == 1
+      color_scheme_arg.colors.first.hex.should == 'BEEF99'
+    end
+
+    it "can change colors of a color scheme that's not enabled" do
+      test_color_change(color_scheme, false)
+    end
+
+    it "can change colors of the enabled color scheme" do
+      color_scheme.update_attribute(:enabled, true)
+      test_color_change(color_scheme, true)
     end
 
     it "disables other color scheme before enabling" do
@@ -40,6 +49,17 @@ describe ColorSchemeRevisor do
       described_class.revise(color_scheme, valid_params.merge(enabled: true))
       prev_enabled.reload.enabled.should == false
       color_scheme.reload.enabled.should == true
+    end
+
+    it "doesn't make changes when a color is invalid" do
+      expect {
+        cs = described_class.revise(color_scheme, valid_params.merge(colors: [
+          {name: color.name, hex: 'OOPS'}
+        ]))
+        cs.should_not be_valid
+        cs.errors.should be_present
+      }.to_not change { color_scheme.reload.version }
+      color_scheme.colors.first.hex.should == color.hex
     end
 
     describe "versions" do
@@ -50,25 +70,23 @@ describe ColorSchemeRevisor do
       end
 
       it "creates a new version if colors have changed" do
-        old_hex, old_opacity = color.hex, color.opacity
+        old_hex = color.hex
         expect {
           described_class.revise(color_scheme, valid_params.merge(colors: [
-            {name: color.name, hex: 'BEEF99', opacity: 99}
+            {name: color.name, hex: 'BEEF99'}
           ]))
         }.to change { color_scheme.reload.version }.by(1)
         old_version = ColorScheme.find_by(versioned_id: color_scheme.id, version: (color_scheme.version - 1))
         old_version.should_not be_nil
         old_version.colors.count.should == color_scheme.colors.count
         old_version.colors_by_name[color.name].hex.should == old_hex
-        old_version.colors_by_name[color.name].opacity.should == old_opacity
         color_scheme.colors_by_name[color.name].hex.should == 'BEEF99'
-        color_scheme.colors_by_name[color.name].opacity.should == 99
       end
 
       it "doesn't create a new version if colors have not changed" do
         expect {
           described_class.revise(color_scheme, valid_params.merge(colors: [
-            {name: color.name, hex: color.hex, opacity: color.opacity}
+            {name: color.name, hex: color.hex}
           ]))
         }.to_not change { color_scheme.reload.version }
       end
@@ -85,10 +103,10 @@ describe ColorSchemeRevisor do
     end
 
     context 'when there are previous versions' do
-      let(:new_color_params) { {name: color.name, hex: 'BEEF99', opacity: 99} }
+      let(:new_color_params) { {name: color.name, hex: 'BEEF99'} }
 
       before do
-        @prev_hex, @prev_opacity = color.hex, color.opacity
+        @prev_hex = color.hex
         described_class.revise(color_scheme, valid_params.merge(colors: [ new_color_params ]))
       end
 
@@ -99,9 +117,7 @@ describe ColorSchemeRevisor do
         }.to change { color_scheme.reload.version }.by(-1)
         color_scheme.colors.size.should == 1
         color_scheme.colors.first.hex.should == @prev_hex
-        color_scheme.colors.first.opacity.should == @prev_opacity
         color_scheme.colors_by_name[new_color_params[:name]].hex.should == @prev_hex
-        color_scheme.colors_by_name[new_color_params[:name]].opacity.should == @prev_opacity
       end
 
       it "destroys the old version's record" do

@@ -31,7 +31,8 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
       "plugins" => DiscoursePluginRegistry.stylesheets,
       "plugins_mobile" => DiscoursePluginRegistry.mobile_stylesheets,
       "plugins_desktop" => DiscoursePluginRegistry.desktop_stylesheets,
-      "plugins_variables" => DiscoursePluginRegistry.sass_variables
+      "plugins_variables" => DiscoursePluginRegistry.sass_variables,
+      "theme_variables" => [ColorScheme::BASE_COLORS_FILE]
     }
   end
 
@@ -45,21 +46,41 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
 
   def find(name, options)
     if special_imports.has_key? name
-      stylesheets = special_imports[name]
-      contents = ""
-      stylesheets.each do |css_file|
-        if css_file =~ /\.scss$/
-          contents << "@import '#{css_file}';"
+      if name == "theme_variables"
+        contents = ""
+        if color_scheme = ColorScheme.enabled
+          ColorScheme.base_colors.each do |name, base_hex|
+            override = color_scheme.colors_by_name[name]
+            contents << "$#{name}: ##{override ? override.hex : base_hex} !default;\n"
+          end
         else
-          contents << File.read(css_file)
+          special_imports[name].each do |css_file|
+            contents << File.read(css_file)
+          end
         end
-        depend_on(css_file)
+
+        Sass::Engine.new(contents, options.merge(
+          filename: "#{name}.scss",
+          importer: self,
+          syntax: :scss
+        ))
+      else
+        stylesheets = special_imports[name]
+        contents = ""
+        stylesheets.each do |css_file|
+          if css_file =~ /\.scss$/
+            contents << "@import '#{css_file}';"
+          else
+            contents << File.read(css_file)
+          end
+          depend_on(css_file)
+        end
+        Sass::Engine.new(contents, options.merge(
+          filename: "#{name}.scss",
+          importer: self,
+          syntax: :scss
+        ))
       end
-      Sass::Engine.new(contents, options.merge(
-        filename: "#{name}.scss",
-        importer: self,
-        syntax: :scss
-      ))
     elsif name =~ GLOB
       nil # globs must be relative
     else

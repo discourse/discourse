@@ -4,6 +4,7 @@
 @import "common/foundation/helpers";
 
 
+
 .admin-contents table {
   width: 100%;
   tr {text-align: left;}
@@ -434,13 +435,17 @@ section.details {
   .colors {
     thead th       { border: none; }
     td.hex         { width: 100px; }
+    td.changed     { width: 300px; }
     .hex-input     { width: 80px; }
-    td.opacity     { width: 50px; }
-    .opacity-input { width: 30px; }
-    .hex, .opacity { text-align: center; }
+    .hex           { text-align: center; }
 
     .changed .name {
       color: scale-color($highlight, $lightness: -50%);
+    }
+    .invalid .hex input {
+      background-color: white;
+      color: black;
+      border-color: $danger;
     }
   }
 }
