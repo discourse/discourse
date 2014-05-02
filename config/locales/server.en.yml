@@ -61,7 +61,7 @@ en:
     loading: "Loading Discussion..."
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
-    in_reply_to: "in reply to %{username}"
+    in_reply_to: "reply to %{username}"
     replies:
       one: "1 reply"
       other: "%{count} replies"

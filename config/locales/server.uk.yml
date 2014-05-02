@@ -35,7 +35,7 @@ uk:
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
-    in_reply_to: "in reply to %{username}"
+    in_reply_to: "reply to %{username}"
   too_many_mentions:
     one: "Даруйте, Ви можете згадувати у дописі тільки %{count} користувача."
     other: "Даруйте, Ви не можете згадувати інших користувачів."
