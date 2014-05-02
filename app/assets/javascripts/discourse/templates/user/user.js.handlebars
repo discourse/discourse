@@ -31,21 +31,21 @@
           <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
             {{#link-to 'userPrivateMessages.index' model}}
               {{i18n user.messages.all}}
-              <span class='count'>({{private_messages_stats.all}})</span>
+              {{#if hasPMs}}<span class='count'>({{private_messages_stats.all}})</span>{{/if}}
               <span class='fa fa-chevron-right'></span>
             {{/link-to}}
           </li>
           <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
             {{#link-to 'userPrivateMessages.mine' model}}
               {{i18n user.messages.mine}}
-              <span class='count'>({{private_messages_stats.mine}})</span>
+              {{#if hasStartedPMs}}<span class='count'>({{private_messages_stats.mine}})</span>{{/if}}
               <span class='fa fa-chevron-right'></span>
             {{/link-to}}
           </li>
           <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
             {{#link-to 'userPrivateMessages.unread' model}}
               {{i18n user.messages.unread}}
-              <span class='count'>({{private_messages_stats.unread}})</span>
+              {{#if hasUnreadPMs}}<span class='count'>({{private_messages_stats.unread}})</span>{{/if}}
               <span class='fa fa-chevron-right'></span>
             {{/link-to}}
           </li>
