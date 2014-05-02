@@ -121,7 +121,7 @@ class TopicQuery
 
   def list_private_messages_unread(user)
     list = private_messages_for(user)
-    list = TopicQuery.unread_filter(list)
+    list = list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number")
     TopicList.new(:private_messages, user, list)
   end
 
@@ -165,7 +165,7 @@ class TopicQuery
       options.reverse_merge!(per_page: SiteSetting.topics_per_page)
 
       # Start with a list of all topics
-      result = Topic.where(id: TopicAllowedUser.where(user_id: user.id).pluck(:topic_id))
+      result = Topic.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
                     .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
                     .order(TopicQuerySQL.order_nocategory_basic_bumped)
                     .private_messages

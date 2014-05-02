@@ -69,7 +69,8 @@ class UserSerializer < BasicUserSerializer
                      :uploaded_avatar_template,
                      :muted_category_ids,
                      :tracked_category_ids,
-                     :watched_category_ids
+                     :watched_category_ids,
+                     :private_messages_stats
 
 
   def auto_track_topics_after_msecs
@@ -129,6 +130,10 @@ class UserSerializer < BasicUserSerializer
 
   def watched_category_ids
     CategoryUser.lookup(object, :watching).pluck(:category_id)
+  end
+
+  def private_messages_stats
+    UserAction.private_messages_stats(object.id, scope)
   end
 
   def bio_cooked

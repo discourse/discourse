@@ -281,17 +281,6 @@ Discourse.User = Discourse.Model.extend({
     return this.get('stats').rejectProperty('isPM');
   }.property('stats.@each.isPM'),
 
-  /**
-  This user's stats, only including PMs.
-
-    @property statsPmsOnly
-    @type {Array}
-  **/
-  statsPmsOnly: function() {
-    if (this.blank('stats')) return [];
-    return this.get('stats').filterProperty('isPM');
-  }.property('stats.@each.isPM'),
-
 
   findDetails: function() {
     var user = this;

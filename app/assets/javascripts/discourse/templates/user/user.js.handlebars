@@ -29,13 +29,25 @@
         <h3><i class='fa fa-envelope'></i> {{i18n user.private_messages}}</h3>
         <ul class='action-list nav-stacked'>
           <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
-            {{#link-to 'userPrivateMessages.index' model}}{{i18n user.messages.all}}<span class='fa fa-chevron-right'></span>{{/link-to}}
+            {{#link-to 'userPrivateMessages.index' model}}
+              {{i18n user.messages.all}}
+              <span class='count'>({{private_messages_stats.all}})</span>
+              <span class='fa fa-chevron-right'></span>
+            {{/link-to}}
           </li>
           <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
-            {{#link-to 'userPrivateMessages.mine' model}}{{i18n user.messages.mine}}<span class='fa fa-chevron-right'></span>{{/link-to}}
+            {{#link-to 'userPrivateMessages.mine' model}}
+              {{i18n user.messages.mine}}
+              <span class='count'>({{private_messages_stats.mine}})</span>
+              <span class='fa fa-chevron-right'></span>
+            {{/link-to}}
           </li>
           <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
-            {{#link-to 'userPrivateMessages.unread' model}}{{i18n user.messages.unread}}<span class='fa fa-chevron-right'></span>{{/link-to}}
+            {{#link-to 'userPrivateMessages.unread' model}}
+              {{i18n user.messages.unread}}
+              <span class='count'>({{private_messages_stats.unread}})</span>
+              <span class='fa fa-chevron-right'></span>
+            {{/link-to}}
           </li>
         </ul>
       {{/if}}

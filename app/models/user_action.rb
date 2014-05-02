@@ -73,6 +73,18 @@ SQL
     results
   end
 
+  def self.private_messages_stats(user_id, guardian)
+    return unless guardian.can_see_private_messages?(user_id)
+    # list the stats for: all/mine/unread (topic-based)
+    private_messages = Topic.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user_id})")
+                            .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user_id})")
+                            .private_messages
+    all = private_messages.count
+    mine = private_messages.where(user_id: user_id).count
+    unread = private_messages.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number").count
+    { all: all, mine: mine, unread: unread }
+  end
+
   def self.stream_item(action_id, guardian)
     stream(action_id: action_id, guardian: guardian).first
   end
