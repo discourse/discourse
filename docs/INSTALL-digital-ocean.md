@@ -126,13 +126,7 @@ You should see Staff topics and the Admin Quick Start Guide. Please read it!
 
 # Post-Install Maintenance
 
-To **upgrade Discourse to the latest version**, visit `/admin/docker`, refresh the page a few times (yes, seriously) and then press the Upgrade button at the top. View the live output at the bottom of your browser to see when things are complete. You should see:
-
-    Killed sidekiq
-    Restarting unicorn pid: 37
-
-
-Then you know it's complete. (Yes, we will be improving this process soon!)
+To **upgrade Discourse to the latest version**, visit `/admin/docker` and follow the instructions.
 
 The `launcher` command in the `/var/docker` folder can be used for various kinds of maintenance:
 
