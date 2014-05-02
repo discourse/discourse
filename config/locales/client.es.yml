@@ -230,12 +230,12 @@ es:
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_reason: "Causa: "
       mailing_list_mode: "Recibe un email cada vez que se crea un nuevo post en el forum (a menos que el tema o categoría esté silenciado)"
-      watched_categories: "Haciendo visto"
-      watched_categories_instructions: "El mismo que Tracking, además serás notificado de todas las publicaciones y temas nuevos."
+      watched_categories: "Revisado"
+      watched_categories_instructions: "Verá automáticamente todos los temas de estas categorías. Se le notificarán todos las publicaciones y temas nuevos, además de las cuentas de los no leídos y las nuevas publicaciones aparecerán cerca de la lista del tema en concreto."
       tracked_categories: "Rastreado"
       tracked_categories_instructions: "Automáticamente estarás suscrito a todos los temas nuevos y existentes, manteniéndote informado sobre el número de publicaciones nuevas y no leídas"
       muted_categories: "Silenciado"
-      muted_categories_instructions: "No recibirás nada sobre este tema, y no aparecerá en tu pestaña de no leídos."
+      muted_categories_instructions: "No recibirá notificaciones sobre ningún tema nuevo en esta categoría, y no aparecerán en la sección de \"no leídos\"."
       delete_account: "Borrar mi cuenta"
       delete_account_confirm: "Estás seguro que quieres borrar permanentemente tu cuenta? Esta acción no puede ser deshecho!"
       deleted_yourself: "Tu cuenta ha sido borrado con exito."
@@ -522,6 +522,7 @@ es:
       admin_options_title: "Opciones de moderación para este tema"
       auto_close_label: "Hora de auto-cierre:"
       auto_close_units: "(# de horas, una fecha, o marca de tiempo)"
+      auto_close_examples: 'Poner el tiempo exacto o el número de horas -24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Por favor, ingrese un valor válido."
     notifications:
       title: "notificaciones por menciones de tu @nombre, respuestas a tus publicaciones y temas, mensajes privados, etc."
@@ -662,6 +663,8 @@ es:
         position: "post %{current} de %{total}"
       notifications:
         reasons:
+          '3_6': 'Recibirá notificaciones porque está mirando esta categoría.'
+          '3_5': 'Recibirá notificaciones porque ha empezado a ver este tema automáticamente.'
           '3_2': 'Recibirás notificaciones porque estás viendo este tema.'
           '3_1': 'Recibirás notificaciones porque creaste este tema.'
           '3': 'Recibirás notificaciones porque estás viendo este tema.'
@@ -674,11 +677,13 @@ es:
           '0_2': 'Estás ignorando todas las notificaciones en este tema.'
         watching_pm:
           title: "Viendo"
+          description: "Le notificaremos todas las publicaciones nuevas en este mensaje privado. Las no leídas y las publicaciones nuevas aparecerán también cerca de la lista de temas."
         watching:
           title: "Viendo"
           description: "igual que Siguiendo, además serás notificado de todos los nuevos posts."
         tracking_pm:
           title: "Siguiendo"
+          description: "Le notificaremos solo los casos en los que alguien mencione su @nombre o responda a su publicación. Los no leídos y las publicaciones nuevas apareceran al lado de la lista de temas."
         tracking:
           title: "Siguiendo"
           description: "serás notificado de los mensajes sin leer, menciones a tu @nombre y respuestas a tus posts."
@@ -687,6 +692,7 @@ es:
           description: "serás notificado solo si alguien menciona tu @nombre o responde a tus posts."
         muted_pm:
           title: "Silenciado"
+          description: "Nunca se le notificará nada de este mensaje privado."
         muted:
           title: "Silenciado"
           description: "no serás notificado de nada en este tema, y no aparecerá en tu pestaña de no leidos."
@@ -728,10 +734,12 @@ es:
         title: 'Invitar amigos a responder'
         action: 'Invitar por email'
         help: 'enviar invitaciones a tus amigos para que puedan responder a este tema con un solo click'
+        to_topic: "Le enviaremos un breve correo electrónico a su amigo permitiéndole responder inmediatamente a este tema haciendo click en un enlace, no requiere registro."
+        to_forum: "Le enviaremos un breve correo electrónico a su amigo para unirse clicando un enlace, no hace falta registrarse."
         email_placeholder: 'dirección de email'
         success: "¡Gracias! Hemos enviado una invitación a <b>{{email}}</b>. Te avisaremos cuando acepte su invitación. Verifica la pestaña de invitaciones en tu página de usuario para llevar un registro de quién has invitado."
         error: "Lo sentimos, no podemos invitar a esa persona. ¿Tal vez ya es un usuario?"
-      login_reply: 'Inicia sesión para responder'
+      login_reply: 'Iniciar sesión para responder'
       filters:
         n_posts:
           one: "1 mensaje"
@@ -796,7 +804,9 @@ es:
         edit: "Lo sentimos, hubo un error al editar tu publicación. Por favor, inténtalo de nuevo."
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
         attachment_too_large: "Lo siento, el archivo que estas intentando subir es demasiado grande (el tamaño máximo es {{max_size_kb}}kb)."
+        image_too_large: "Lo sentimos, la imagen que está intentando cargar es demasiado grande (el tamaño máximo es de {{max_size_kb}}kb), por favor, cambie el tamaño e inténtelo de nuevo."
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
+        upload_not_authorized: "Lo sentimos, el archivo que intenta cargar no está autorizado (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir archivos adjuntos."
       abandon:
@@ -924,17 +934,23 @@ es:
           previous: "Revisión anterior"
           next: "Siguiente revisión"
           last: "Última revisión"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs. <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
+            title: "Muestra la producción asistida con adiciones y eleminaciones en línea"
             button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
+            title: "Mostrar la producción asistida estas de lado a lado"
             button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
+            title: "Mostrar la fuente de la rebaja de un lado a otro"
             button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "Editado por"
     category:
+      can: 'puede&hellip; '
       none: '(sin categoría)'
+      choose: 'Seleccionar una categoría&hellip;'
       edit: 'editar'
       edit_long: "Editar categoría"
       view: 'Ver temas en la categoría'
@@ -969,14 +985,18 @@ es:
       this_year: "este año"
       position: "posición"
       default_position: "Posición predeterminada"
+      parent: "Categoría Original"
     flagging:
       title: '¿Por qué estas informando sobre este mensaje?'
       action: 'Informar sobre este mensaje'
       take_action: "Tomar medidas"
       notify_action: 'Mensaje privado'
       delete_spammer: "Borrar spammer"
+      delete_confirm: "Está a punto de eliminar <b>%{posts}</b> publicaciones y <b>%{topics}</b> temas de este usuario, borar su cuenta, bloquear sus inicios de sesión de su dirección IP <b>%{ip_address}</b>, y añadir su dirección de email <b>%{email}</b> en una lista de bloqueo permanente. ¿Está seguro de que este usuario es realmente un spammer?"
       yes_delete_spammer: "Sí, borrar spammer"
       cant: "Lo sentimos, no se puede informar sobre el tema en este momento."
+      custom_placeholder_notify_user: "¿Por qué esta publicación requiere hablarle a este usuario directamente y por privado? Sé específico, constructivo y siempre amable."
+      custom_placeholder_notify_moderators: "¿Por qué esta publicación requiere la atención de un moderador? Haznos saber qué te preocupa específicamente y añade los enlaces relevantes dónde sea posible."
       custom_message:
         at_least: "introduce al menos {{n}} caracteres"
         more: "{{n}} para ir..."
@@ -985,7 +1005,7 @@ es:
       notify_action: "Mensaje privado"
     topic_map:
       title: "Resumen de temas"
-      links_shown: "mostrar los {{totalLinks}} links..."
+      links_shown: "mostrar los {{totalLinks}} enlaces..."
       clicks:
         one: "1 click"
         other: "%{count} clicks"
@@ -1394,7 +1414,7 @@ es:
         unsuspend_failed: "Algo salió mal quitando ban a este usuario {{error}}"
         suspend_duration: "¿Cuánto tiempo le gustaría aplicar ban al usuario? (days)"
         suspend_duration_units: "(días)"
-        suspend_reason_label: "Por qué lo estás suspendiendo? Este texto <b>será visible para todos</b> en la página de perfil del usuario, y además será mostrado al usuario cuando trate de ingresar el sitio. Mantenlo simple."
+        suspend_reason_label: "¿Por qué lo pospones? Este texto <b>será visible para todos</b> en la página de perfil del usuario, y además será mostrado al usuario cuando trate de ingresar en el sitio web. Mantenlo simplificado."
         suspend_reason: "Causa"
         suspended_by: "Suspendido por"
         delete_all_posts: "Eliminar todos los mensajes"
@@ -1520,6 +1540,7 @@ es:
       title: 'Atajos de teclado (experimental)'
       jump_to:
         title: 'Saltar a'
+        home: '<b>g</b> ahora <b>h</b> Home (Anterior)'
         latest: '<b>g</b> then <b>l</b> Últimos'
         new: '<b>g</b> then <b>n</b> Nuevo'
         unread: '<b>g</b> then <b>u</b> No leídos'
@@ -1529,12 +1550,14 @@ es:
         title: 'Navegación'
         back: '<b>u</b> Atrás'
         up_down: '<b>k</b>/<b>j</b> Mover la selección arriba/abajo'
+        open: '<b>o</b> or <b>Entrar</b> Abrir tema seleccionado'
         next_prev: '<b>`</b>/<b>~</b> Sección siguiente/anterior'
       application:
         title: 'Aplicación'
         create: '<b>c</b> Crear un tema nuevo'
         notifications: '<b>n</b> Abrir notificaciones'
         search: '<b>/</b> Buscar'
+        help: '<b>?</b> Abrir el asistente de accesos directos del teclado'
       actions:
         title: 'Acciones'
         star: '<b>f</b> Poner estrella en este tema'
@@ -1548,6 +1571,9 @@ es:
         edit: '<b>e</b> Editar post'
         delete: '<b>d</b> Borrar post'
         mark_muted: '<b>m</b> then <b>m</b> Marcar el tema como silenciado'
+        mark_regular: '<b>m</b> ahora <b>r</b> Marcar este tema como estándar'
+        mark_tracking: '<b>m</b> ahora <b>t</b> Marcar tema como seguido'
+        mark_watching: '<b>m</b> ahora <b>w</b> Marcar tema como visto'
     badges:
       more_badges:
         one: "+1 mas"

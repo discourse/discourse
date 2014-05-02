@@ -1,15 +1,9 @@
 # encoding: utf-8
 #
-# French translation - Traduction française
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
-# This file contains content for the client portion of Discourse, sent out
-# to the Javascript app.
-#
-# To work with us on translations, see:
+# To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-pt-br/
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
 
 fr:
   js:
@@ -17,10 +11,8 @@ fr:
       voteCount:
         one: "1 vote"
         other: "%{count} votes"
-
       results:
-        show: "Voir les résultats"
-        hide: "Cacher les résultats"
-
+        show: Voir les résultats
+        hide: Cacher les résultats
       close_poll: "Fermer le sondage"
       open_poll: "Réouvrir le sondage"

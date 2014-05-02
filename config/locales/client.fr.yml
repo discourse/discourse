@@ -161,6 +161,7 @@ fr:
       sent_by_user: "Envoyé par <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Envoyé par <a href='{{userUrl}}'>vous</a>"
     groups:
+      visible: "Les groupes sont visibles pour tous les utilisateurs"
       title:
         one: "groupe"
         other: "groupes"
@@ -371,6 +372,8 @@ fr:
         instructions: "Doit être d'au moins %{count} caractères."
       ip_address:
         title: "Dernières adresses IP"
+      registration_ip_address:
+        title: "Adresse IP d'enregistrement"
       avatar:
         title: "Avatar"
       title:
@@ -469,11 +472,11 @@ fr:
         need_more_for_reply: "{{n}} caractères restant pour le message"
       error:
         title_missing: "Le titre est obligatoire."
-        title_too_short: "Le titre doit avoir au moins {{min}} caractères."
-        title_too_long: "Le titre ne doit pas dépasser les {{max}} caractères."
-        post_missing: "Le message ne peut être vide."
-        post_length: "Le message doit avoir au moins {{min}} caractères."
-        category_missing: "Vous devez choisir une catégorie."
+        title_too_short: "Le titre doit avoir au moins {{min}} caractères"
+        title_too_long: "Le titre ne doit pas dépasser les {{max}} caractères"
+        post_missing: "Le message ne peut être vide"
+        post_length: "Le message doit avoir au moins {{min}} caractères"
+        category_missing: "Vous devez choisir une catégorie"
       save_edit: "Sauvegarder la modification"
       reply_original: "Répondre sur le sujet d'origine"
       reply_here: "Répondre ici"
@@ -540,6 +543,7 @@ fr:
       moved_post: "<i title='message déplacé' class='fa fa-arrow-right'></i> {{username}} a déplacé {{link}}"
       total_flagged: "Nombre total de messages signalés"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Vous avez obtenu {{link}}"
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -550,7 +554,7 @@ fr:
       local_tip: "cliquez pour sélectionner une image depuis votre ordinateur"
       local_tip_with_attachments: "Cliquez pour sélectionner une image ou un fichier depuis votre ordinateur (extensions autorisées : {{authorized_extensions}})."
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
-      hint_for_supported_browsers: "(vous pouvez aussi faire un glisser-déposer ou coller des images dans l'éditeur pour les télécharger)"
+      hint_for_supported_browsers: "(vous pouvez aussi glisser et déposer ou coller des images dans l'éditeur pour les envoyer) "
       uploading: "Fichier en cours d'envoi"
       image_link: "lien vers lequel pointe l'image"
     search:
@@ -745,7 +749,7 @@ fr:
         email_placeholder: 'nom@exemple.com'
         success: "Merci ! Nous avons envoyé un mail à <b>{{email}}</b>. Nous vous informerons lorsqu'ils auront retourné votre invitation. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être est -elle déjà un utilisateur ?"
-      login_reply: 'Connectez-vous pour répondre'
+      login_reply: 'Se connecter pour répondre'
       filters:
         n_posts:
           one: "1 message"
@@ -1297,12 +1301,26 @@ fr:
         delete: "Supprimer"
         delete_confirm: "Supprimer cette personnalisation"
         about: "La personnalisation du site vous permet de modifier les feuilles de styles et en-têtes de votre site. Choisissez ou ajouter un style pour commencer l'édition."
+        color: "Couleur"
+        opacity: "Opacité"
+        copy: "Copier"
+        css_html:
+          title: "CSS, HTML"
+          long_title: "Personnalisation du CSS et HTML"
+        colors:
+          title: "Couleurs"
+          long_title: "Palettes de couleurs"
+          about: "Les palettes de couleurs vous permette de modifier les couleurs utilisées par le site sans écrire de CSS. Choisissez ou ajoutez en une pour commencer."
+          new_name: "Nouvelle palette de couleurs"
+          copy_name_prefix: "Copie de"
+          delete_confirm: "Supprimer cette palette de couleurs ?"
+          under_construction: "NOTE: Les modifications faites ici n'ont aucun impact ! Cette fonctionnalité est en cours de construction !"
       email:
         title: "Email"
         settings: "Paramètres"
         all: "Tous"
         sending_test: "Envoi en cours de l'email de test..."
-        test_error: "Il y a eu un problème avec l'envoi de l'email. Veuillez vérifier vos paramètres et réessayer."
+        test_error: "Il y a eu un problème avec l'envoi de l'email de test. Veuillez vérifier vos paramètres, que votre hébergeur ne bloque pas les connections aux emails, et réessayer."
         sent: "Envoyé"
         skipped: "Passé"
         sent_at: "Envoyer à"
@@ -1560,6 +1578,7 @@ fr:
         new_badge: Nouveau Badge
         new: Nouveau
         name: Nom
+        badge: Badge
         display_name: Nom affiché
         description: Description
         badge_type: Type de badge
@@ -1576,6 +1595,7 @@ fr:
         grant: Accorder
         no_user_badges: "%{name} ne s'est vu accordé aucun badge."
         no_badges: Il n'y a aucun badge qui peuvent être accorder.
+        allow_title: Autoriser l'utilisation d'un badge comme titre
     lightbox:
       download: "télécharger"
     keyboard_shortcuts_help:
@@ -1624,6 +1644,10 @@ fr:
       more_badges:
         one: "+1 autre"
         other: "+%{count} autres"
+      granted:
+        one: "1 décerné"
+        other: "%{count} décernés"
+      select_badge_for_title: Sélectionner un badge pour l'utiliser comme votre titre
       example_badge:
         name: Exemple de badge
         description: Ceci est un badge d'exemple.

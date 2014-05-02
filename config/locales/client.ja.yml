@@ -34,7 +34,6 @@ ja:
     of_value: "/"
     generic_error: "申し訳ありませんが、エラーが発生しました"
     generic_error_with_reason: "エラーが発生しました: %{error}"
-    log_in: "ログイン"
     age: "経過"
     joined: "参加者"
     admin_title: "管理者"

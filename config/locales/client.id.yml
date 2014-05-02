@@ -36,7 +36,6 @@ id:
     yes_value: "Ya"
     of_value: "dari"
     generic_error: "Maaf, terjadi kesalahan."
-    log_in: "Masuk"
     age: "Umur"
     admin_title: "Admin"
     flags_title: "Tanda"

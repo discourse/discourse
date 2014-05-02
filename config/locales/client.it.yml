@@ -372,6 +372,8 @@ it:
         instructions: "Deve essere almeno di %{count} caratteri."
       ip_address:
         title: "Ultimo indirizzo IP"
+      registration_ip_address:
+        title: "Indirizzo IP di Registrazione"
       avatar:
         title: "Avatar"
       title:
@@ -747,7 +749,7 @@ it:
         email_placeholder: 'nome@esempio.com'
         success: "Grazie! Abbiamo invitato <b>{{email}}</b>. Ti faremo sapere quando l'invito verrà accettato. Controlla la tab Inviti nella tua pagina personale per tener traccia delle persone che inviti. "
         error: "Spiacenti, non possiamo invitare quella persona. Forse è già un utente?"
-      login_reply: 'Effettua l''accesso per rispondere'
+      login_reply: 'Accedi per rispondere'
       filters:
         n_posts:
           one: "1 post"
@@ -1299,6 +1301,20 @@ it:
         delete: "Cancella"
         delete_confirm: "Cancella questa personalizzazione?"
         about: "La personalizzazione del sito ti permette di modificare fogli di stile e testate. Selezionane o aggiungine una per iniziare."
+        color: "Colore"
+        opacity: "Opacità"
+        copy: "Copia"
+        css_html:
+          title: "CSS, HTML"
+          long_title: "Personalizzazioni CSS e HTML"
+        colors:
+          title: "Colori"
+          long_title: "Combinazioni Colori"
+          about: "Le combinazioni di colori ti permettono di modificare i colori utilizzati sul sito senza scrivere CSS. Scegline una per iniziare."
+          new_name: "Nuova Combinazione Colori"
+          copy_name_prefix: "Copia di"
+          delete_confirm: "Eliminare questa combinazione di colori?"
+          under_construction: "AVVISO: I cambiamenti effettuati qui non avranno alcun effetto! Questa funzionalità è in costruzione!"
       email:
         title: "Email"
         settings: "Impostazioni"
@@ -1562,6 +1578,7 @@ it:
         new_badge: Nuova Targhetta
         new: Nuovo
         name: Nome
+        badge: Targhetta
         display_name: Visualizza Nome
         description: Descrizione
         badge_type: Tipo di Targhetta
@@ -1578,6 +1595,7 @@ it:
         grant: Assegna
         no_user_badges: "%{name} non ha ricevuto alcuna targhetta."
         no_badges: Non ci sono targhette da assegnare.
+        allow_title: Permetti di utilizzare le targhette come titoli
     lightbox:
       download: "Scaricamento"
     keyboard_shortcuts_help:

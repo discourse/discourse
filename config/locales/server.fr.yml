@@ -20,7 +20,7 @@ fr:
   posts: "messages"
   loading: "Chargement"
   powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, le rendu est meilleur avec le JavaScript activé'
-  log_in: "Connexion"
+  log_in: "Se connecter"
   via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
   errors:
@@ -550,6 +550,7 @@ fr:
     crawl_images: "Permettre aux images provenant de sources tierces d'insérer la hauteur et la largeur de celles-ci"
     download_remote_images_to_local: "Téléchargez une copie des images distantes référencées dans les messages"
     download_remote_images_threshold: "Quantité d'espace disque disponible minimum requise pour télécharger localement des images distantes  (en pour cent)"
+    disabled_image_download_domains: "Une liste délimitée par un pipe (|) des domaines pour lesquels les images ne seront jamais téléchargé localement."
     ninja_edit_window: "Temps d'édition avant de sauvegarder une nouvelle version, en secondes."
     post_edit_time_limit: "Temps en minutes durant lequel les messages peuvent être modifiés et supprimés par l'auteur. Mettre à 0 pour permettre l'édition et la suppression des messages à tout moment."
     edit_history_visible_to_public: "Autoriser tout le monde à voir les versions précédentes d'un posté édité. Quand désactivé, seuls les membres de l'équipe peuvent consulter l'historique des éditions."
@@ -667,7 +668,7 @@ fr:
     clean_orphan_uploads_grace_period_hours: "La période de grâce (en heures) avant qu'un téléchargement orphelin soit retiré."
     purge_deleted_uploads_grace_period_days: "La période de grâce (en jours) avant qu'un transfert supprimé soit effacé."
     enable_s3_uploads: "Placer les fichiers sur Amazon S3"
-    s3_upload_bucket: "Le bucket name Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule (cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
+    s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans périodes."
     s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images"
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images"
     s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images"
@@ -689,7 +690,7 @@ fr:
     newuser_max_images: "Combien d'images un nouvel utilisateur peut-il ajouter à un message"
     newuser_max_attachments: "Combien de fichiers un nouvel utilisateur peut-il ajouter à un message"
     newuser_max_mentions_per_post: "Nombre maximal de @pseudo qu'un nouvel utilisateur peut mentionner dans un message"
-    newuser_max_replies_per_topic: "Nombre maximum de réponses qu'un nouvel utilisateur peut faire par sujet"
+    newuser_max_replies_per_topic: "Nombre maximum de réponses qu'un nouvel utilisateur peut faire dans une même discussion avant que quelqu'un lui réponde"
     max_mentions_per_post: "Nombre maximal de @pseudo qu'un utilisateur peut mentionner dans un message"
     create_thumbnails: "Créer un aperçu pour les images imbriquées"
     email_time_window_mins: "Combien de minutes devons nous attendre avant d'envoyer des notifications de réponse par emails, pour donner une chance à l'utilisateur d'éditer et de finaliser leurs messages."
@@ -704,9 +705,10 @@ fr:
     category_colors: "Une liste de couleurs autorisées pour les catégories (au format hexadécimal, séparés par un |)"
     max_image_size_kb: "La taille maximale des images que nous permettons aux utilisateurs d'envoyer (en Ko) - configure la limite dans nginx (client_max_body_size) / apache ou proxy aussi."
     max_attachment_size_kb: "La taille maximale des fichiers que nous permettons aux utilisateurs d'envoyer (en Ko) - configure la limite dans nginx (client_max_body_size) / apache ou proxy aussi."
-    authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois de fichiers (séparés par un |)"
+    authorized_extensions: "Une liste de pipes (|) des extensions de fichier autorisées pour les envois sur le serveur ('*' pour autoriser tout les types)"
     max_similar_results: "Nombre de sujets similaires à afficher lorsqu'un utilisateur est en train de créer un nouveau sujet"
     title_prettify: "Corrige les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples ! et ?, un . inutile à la fin, etc.)"
+    title_sanitize: "Supprimer les éléments html des titres"
     topic_views_heat_low: "Le nombre de vues à partir duquel le niveau d'intensité du sujet est : faible."
     topic_views_heat_medium: "Le nombre de vues à partir duquel le niveau d'intensité du sujet est : moyen."
     topic_views_heat_high: "Le nombre de vues à partir duquel le niveau d'intensité du sujet est : élevé."
@@ -728,7 +730,7 @@ fr:
     email_in_min_trust: "Le niveau de confiance minimum qu'un utilisateur doit avoir pour être autorisés à poster de nouveaux sujets par e-mail"
     email_in_category: "La catégorie où les nouveaux e-mails seront affichés"
     email_prefix: "Le [label] qui sera utiliser dans le sujet des emails. Par défaut il prend la valeur de 'title'"
-    minimum_topics_similar: "Combien de sujets ont besoin d'existé dans la base de données avant que des sujets similaires soit présentés."
+    minimum_topics_similar: "Combien de sujets ont besoin d'exister dans la base de données avant que des sujets similaires soit présentés."
     relative_date_duration: "Nombre de jours après la création d'un message à partir desquels les dates seront affichées en absolu plutôt qu'en relatif. Exemple: relatif : 7j, absolut : 20 Fév"
     delete_user_max_post_age: "L'âge maximum du premier message d'un utilisateur, en jours, qui permet de supprimer un utilisateur."
     delete_all_posts_max: "Le nombre maximum de messages qui peuvent être supprimer en une seule fois avec le bouton Supprimer tous les messages. Si un utilisateur a plus que ce nombre de messages, les messages ses messages ne pourront pas être supprimé en une seul fois et l'utilisateur ne pourra pas être supprimé."
@@ -736,6 +738,7 @@ fr:
     email_editable: "Autoriser les utilisateurs à changer leur adresse e-mail après l'inscription."
     allow_uploaded_avatars: "Autoriser les utilisateurs d'envoyer leurs propres avatars."
     allow_animated_avatars: "Autoriser les utilisateurs à utiliser des avatars avec des gif animés. ATTENTION: il est hautement recommandé d'exécuter la tâche rake avatars:regenerate après avoir changé ce paramètre."
+    digest_topics: "Le nombre maximum de sujets à afficher dans l'email de résumé"
     digest_min_excerpt_length: "Combien de caractères nous visons pour chaque message dans l'e-mail résumé"
     default_digest_email_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les emails par défaut. Ils peuvent changer ce paramétrage dans leur préférences."
     default_external_links_in_new_tab: "Les liens externes s'ouvrent dans un nouvel onglet. Les utilisateurs peuvent modifier ceci dans leurs préférences."
@@ -778,6 +781,7 @@ fr:
     invited_to_private_message: "%{display_username} vous a invité dans une conversation privée: %{link}"
     invitee_accepted: "%{display_username} a accepté votre invitation"
     linked: "%{display_username} a mentionné l'un de vos messages : %{link}"
+    granted_badge: "Vous avez obtenu le badge %{link}"
   search:
     within_post: "#%{post_number} par %{username}: %{excerpt}"
     types:
@@ -818,9 +822,9 @@ fr:
       one: "Ce sujet a été automatiquement fermé après 1 minute. Aucune réponse n'est permise dorénavant."
       other: "Ce sujet a été automatiquement fermé après %{count} minutes. Aucune réponse n'est permise dorénavant."
     autoclosed_disabled: "Ce sujet est maintenant ouvert. Vous pouvez y participer."
-    pinned_enabled: "Ce sujet est maintenant épinglé. Il apparaîtra en haut de sa catégorie jusqu'à ce qu'il soit désépinglé par un modérateur, ou par chaque utilisateur utilisant le bouton Désépingler."
+    pinned_enabled: "Ce sujet est maintenant épinglé. Il apparaîtra en haut de sa catégorie jusqu'à ce qu'il soit désépinglé par un modérateur, ou individuellement par les utilisateurs eux-mêmes."
     pinned_disabled: "Ce sujet est maintenant désépinglé. Il n'apparaîtra plus en haut de sa categorie."
-    pinned_globally_enabled: "Ce sujet est maintenant épinglée pour tous. Il apparaîtra en haut de sa catégorie et de chaque liste de sujets jusqu'à ce qu'il soit désépinglé par un modérateur, ou en utilisant le bouton Désépingler."
+    pinned_globally_enabled: "Ce sujet est maintenant épinglée pour tous. Il apparaîtra en haut de sa catégorie et de chaque liste de sujets jusqu'à ce qu'il soit désépinglé par un modérateur, ou individuellement par les utilisateurs eux-mêmes."
     pinned_globally_disabled: "Ce sujet est maintenant désépinglé. Il n'apparaîtra plus en haut de sa catégorie."
     visible_enabled: "Ce sujet est maintenant visible. Il sera affiché dans la liste des sujets."
     visible_disabled: "Ce sujet est maintenant invisible. Il ne sera plus affichée dans la liste des sujets. Le seul moyen d'y accéder est par lien direct."
@@ -1134,6 +1138,9 @@ fr:
         Il y a de nouvelles inscriptions utilisateurs en attente d'approbation (ou rejet) avant d'avoir accès à ce forum.
 
         [Veuillez les viser dans la section d'administration](%{base_url}/admin/users/list/pending).
+    download_remote_images_disabled:
+      subject_template: "Téléchargement d'images distantes désactivé"
+      text_body_template: "Le paramètre `download_remote_images_to_local` à été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
   unsubscribe_link: "Si vous ne souhaitez plus recevoir ces emails, visitez vos [préférences utilisateur](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Réponses précédentes"
@@ -1197,14 +1204,16 @@ fr:
         %{respond_instructions}
     digest:
       why: "Voici un bref résumé de ce qui s'est passé sur %{site_link} depuis la dernière fois que nous vous avons vu(e) le %{last_seen_at}."
-      subject_template: "[%{site_name}] Activité du Forum pour %{date}"
+      subject_template: "[%{site_name}] Résumé du %{date}"
       new_activity: "Nouvelles activités sur vos sujets et messages :"
-      top_topics: "Sujets récents appréciés par la communautée :"
-      other_new_topics: "Autres nouveaux sujets:"
+      top_topics: "Messages populaires"
+      other_new_topics: "Sujets populaires"
       unsubscribe: "Ce mail résumé vous est transmis courtoisement par %{site_link} quand nous ne vous avons pas vu depuis quelques temps. Pour vous désabonner %{unsubscribe_link}."
       click_here: "cliquez ici"
       from: "Résumé de %{site_name}"
-      read_more: "En Lire Plus"
+      read_more: "En lire plus"
+      more_topics: "Il y a eu %{new_topics_since_seen} nouvelles discussions postées depuis votre dernière visite le %{last_seen_at}."
+      more_topics_category: "Il y a eu %{new_topics_since_seen} nouvelles discussions postées dans cette catégorie depuis votre dernière visite le %{last_seen_at}."
       posts:
         one: "1 message"
         other: "%{count} messages"
@@ -1273,7 +1282,7 @@ fr:
     signup_form_message: 'J''ai lu et j''accepte les <a href="/tos" target="_blank">Conditions d''utilisation</ a>.'
   deleted: 'supprimé'
   upload:
-    edit_reason: "Nous téléchargeons des copies locales des images de ce message"
+    edit_reason: "Nous avons téléchargé des copies locales des images distantes"
     unauthorized: "Désolé, le fichier que vous essayer d'envoyer n'est pas autorisé (extensions autorisés : %{authorized_extensions})."
     pasted_image_filename: "Image collée"
     store_failure: "Erreur lors du stockage de #%{upload_id} par l'utilisateur #%{user_id}."

@@ -13,8 +13,7 @@ zh_TW:
           format: '%n %u'
           units:
             byte:
-              one: Byte
-              other: Bytes
+              other: 位元組
             gb: GB
             kb: KB
             mb: MB
@@ -94,6 +93,8 @@ zh_TW:
     weekly: "每週"
     every_two_weeks: "每兩週"
     max: "最多"
+    character_count:
+      other: "{{count}} 個字元"
     in_n_seconds:
       other: "在 {{count}} 秒"
     in_n_minutes:
@@ -115,7 +116,7 @@ zh_TW:
     cancel: "取消"
     save: "儲存變更"
     saving: "正在儲存..."
-    saved: "儲存完畢!"
+    saved: "儲存完畢！"
     upload: "上傳"
     uploading: "正在上傳..."
     uploaded: "上傳完畢!"
@@ -139,10 +140,11 @@ zh_TW:
       sent_by_user: "寄件者為 <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "寄件者為 <a href='{{userUrl}}'>你</a>"
     groups:
+      visible: "群組可被所有使用者看到"
       title:
         other: "群組"
       members: "成員"
-      posts: "帖子"
+      posts: "貼文"
       alias_levels:
         title: "誰能用此群組作為別名?"
         nobody: "沒有"
@@ -151,8 +153,8 @@ zh_TW:
         members_mods_and_admins: "群組成員、管理人及版主"
         everyone: "所有人"
     user_action_groups:
-      '1': "已讚好"
-      '2': "已收到的讚好"
+      '1': "已按讚"
+      '2': "已收到的讚"
       '3': "書籤"
       '4': "討論話題"
       '5': "貼文"
@@ -168,14 +170,18 @@ zh_TW:
       all_subcategories: "所有次分類"
       no_subcategory: "無次分類"
       category: "分類"
-      posts: "帖子"
+      posts: "貼文"
       topics: "討論話題"
       latest: "最近"
       latest_by: "最後由"
       toggle_ordering: "顯示/隱藏排序控制"
       subcategories: "次分類:"
       topic_stats: "新討論的數目。"
-      post_stats: "新帖子的數目。"
+      topic_stat_sentence:
+        other: "在過去一%{unit}內有 %{count} 個新討混話題。"
+      post_stats: "新貼文的數目。"
+      post_stat_sentence:
+        other: "在過去一%{unit}內有 %{count} 篇新貼文。"
     user:
       said: "{{username}} 說了:"
       profile: "基本資料"
@@ -202,7 +208,7 @@ zh_TW:
       suspended_reason: "原因: "
       mailing_list_mode: "在論壇上有新討論話題時，你將會收到郵件。(除非你將該討論話題或分類消音)"
       watched_categories: "觀看"
-      watched_categories_instructions: "你將會自動觀看在此分類的新討論話題。您將收到的所有新帖子和討論話題，加上未讀和新討論話題的數量也將出現在討論話題的列表旁。"
+      watched_categories_instructions: "你將會自動觀看在此分類的新討論話題。您將收到的所有新貼文和討論話題，加上未讀和新討論話題的數量也將出現在討論話題的列表旁。"
       tracked_categories: "追蹤"
       tracked_categories_instructions: "你將追蹤所有在此分類的新討論話題。討論話題列表上將會出現未讀及新討論話題數。"
       muted_categories: "消音"
@@ -212,9 +218,9 @@ zh_TW:
       deleted_yourself: "你的帳號已成功刪除"
       delete_yourself_not_allowed: "帳號不能刪除。請聯絡管理人。"
       unread_message_count:
-        one: "信息 (1)"
-        other: "信息 ({{count}})"
-        zero: "信息"
+        one: "訊息 (1)"
+        other: "訊息 ({{count}})"
+        zero: "訊息"
       messages:
         all: "全部"
         mine: "我的"
@@ -229,7 +235,7 @@ zh_TW:
         title: "修改關於我"
       change_username:
         title: "修改用戶名稱"
-        confirm: "如果你修改了你的用戶名稱，之前引用你的帖子或以 @用戶名稱 提到你的連結都將失效，你確定要修改嗎?"
+        confirm: "如果你修改了你的用戶名稱，之前引用你的貼文或以 @用戶名稱 提到你的連結都將失效，你確定要修改嗎？"
         taken: "抱歉，此用戶名稱已經有人使用。"
         error: "修改你的用戶名稱時發生錯誤。"
         invalid: "此用戶名稱無效，只能使用數字與英文字母。"
@@ -291,36 +297,27 @@ zh_TW:
         daily: "每天"
         weekly: "每週"
         bi_weekly: "每兩週"
-
-      email_direct: "當有人引用、回覆我的帖子，或以 @用戶名稱 提到我時以電子郵件通知我。"
+      email_direct: "當有人引用、回覆我的貼文，或以 @用戶名稱 提到我時以電子郵件通知我。"
       email_private_messages: "當有人寄給我私人訊息時以電子郵件通知我。"
       email_always: "即時我經常來此網站也以電子郵件通知我，並告訴我最近論壇有什麼新文章。"
-
       other_settings: "其它"
       categories_settings: "分類"
-
       new_topic_duration:
         label: "識為新討論的條件:"
         not_viewed: "我未看過的討論"
         last_here: "我上次到訪後建立的討論"
         after_n_days:
-          one: "昨天建立的討論"
-          other: "最近 {{count}} 天建立的討論"
+          other: "發表於最近 {{count}} 天內"
         after_n_weeks:
-          one: "上週建立的討論"
-          other: "最近 {{count}} 週建立的討論"
-
+          other: "發表於最近 {{count}} 週內"
       auto_track_topics: "自動追蹤我參與的討論"
       auto_track_options:
         never: "永不"
         always: "總是"
         after_n_seconds:
-          one: "1 秒鐘後"
-          other: "{{count}} 秒鐘後"
+          other: "{{count}} 秒後"
         after_n_minutes:
-          one: "1 分鐘後"
           other: "{{count}} 分鐘後"
-
       invited:
         search: "輸入要搜尋邀請的文字..."
         title: "邀請"
@@ -331,7 +328,7 @@ zh_TW:
         redeemed_at: "接受日期"
         pending: "尚未接受的邀請"
         topics_entered: "參與的討論話題"
-        posts_read_count: "已讀的帖子"
+        posts_read_count: "已讀的貼文"
         expired: "此邀請已過期"
         rescind: "刪除邀請"
         rescinded: "邀請已刪除"
@@ -347,6 +344,8 @@ zh_TW:
         instructions: "至少要 %{count} 個字。"
       ip_address:
         title: "最近的 IP 位址"
+      registration_ip_address:
+        title: "註冊之 IP 位址"
       avatar:
         title: "頭像"
       title:
@@ -360,7 +359,7 @@ zh_TW:
         the_topic: "討論話題"
     loading: "正在載入"
     close: "關閉"
-    assets_changed_confirm: "Discourse已經更新，你要刷新頁面以獲得最新版本嗎?"
+    assets_changed_confirm: "Discourse 已經更新，你要重整頁面以獲得最新版本嗎？"
     read_only_mode:
       enabled: "管理人開啟了唯讀模式。你可以繼續瀏覽論壇，可是不能進行交流動作。"
       login_disabled: "在唯讀模式下不能登入"
@@ -372,16 +371,16 @@ zh_TW:
     week: '週'
     week_desc: '7 天內建立的討論話題'
     day: '天'
-    first_post: 第一則帖子
+    first_post: 第一則貼文
     mute: 消音
     unmute: 取消阻絕
-    last_post: 最後一則帖子
+    last_post: 最後一則貼文
     summary:
-      enabled_description: "你正在檢視此討論話題的摘要，按下方再次檢視所有帖子。"
+      enabled_description: "你正在檢視此討論話題的摘要，按下方再次檢視所有貼文。"
       description: "總共有 <b>{{count}}</b> 個回覆，僅顯示最相關的回覆節省閱讀時間?"
       description_time: "總共有 <b>{{count}}</b> 個回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀，僅顯示最相關的回覆節省閱讀時間?"
       enable: '以摘要檢視此討論話題'
-      disable: '顯示所有帖子'
+      disable: '顯示所有貼文'
     private_message_info:
       title: "私人訊息"
       invite: "邀請其他人..."
@@ -440,19 +439,16 @@ zh_TW:
       saved_local_draft_tip: "本地儲存完畢"
       similar_topics: "與你的討論話題類似的討論..."
       drafts_offline: "離線草稿"
-
       min_length:
         need_more_for_title: "討論話題名稱還需要 {{n}} 個字"
-        need_more_for_reply: "帖子還需要 {{n}} 個字"
-
+        need_more_for_reply: "貼文還需要 {{n}} 個字"
       error:
-        title_missing: "討論話題名稱為必填欄位。"
-        title_too_short: "討論話題名稱必需多於 {{min}} 個字。"
-        title_too_long: "討論話題名稱必需少於 {{max}} 個字。"
-        post_missing: "帖子不可空白。"
-        post_length: "帖子必需多於 {{min}} 個字。"
-        category_missing: "你必需選擇一個分類。"
-
+        title_missing: "標題為必填欄位"
+        title_too_short: "標題必須至少 {{min}} 個字元"
+        title_too_long: "標題不能超過 {{max}} 個字元"
+        post_missing: "貼文不可空白"
+        post_length: "貼文必須至少 {{min}} 個字元。"
+        category_missing: "你必須選擇一個分類。"
       save_edit: "儲存編輯"
       reply_original: "回覆至原始的討論話題"
       reply_here: "在此回覆"
@@ -466,14 +462,14 @@ zh_TW:
       edit_reason_placeholder: "你為什麼做編輯?"
       show_edit_reason: "(請加入編輯原因)"
       reply_placeholder: "在此輸入，請使用 Markdown (http://wowubuntu.com/markdown/) 與 BBCode (http://www.bbcode.org/reference.php) 調整格式，拖放或貼上圖片可以直接上傳。"
-      view_new_post: "檢視你的新帖子。"
+      view_new_post: "檢視你的新貼文。"
       saving: "正在儲存..."
       saved: "儲存完畢!"
-      saved_draft: "你有一則帖子的草稿尚未完成，按這裡可以繼續編輯。"
+      saved_draft: "你有一則貼文的草稿尚未完成，按這裡可以繼續編輯。"
       uploading: "正在上傳..."
       show_preview: '顯示預覽 &raquo;'
       hide_preview: '&laquo; 隱藏預覽'
-      quote_post_title: "引用完整帖子"
+      quote_post_title: "引用完整貼文"
       bold_title: "粗體"
       bold_text: "粗體字"
       italic_title: "斜體"
@@ -501,9 +497,10 @@ zh_TW:
       admin_options_title: "此討論話題的職員可選用設定"
       auto_close_label: "自動關閉討論話題的期限:"
       auto_close_units: "(小時、時間或完整的日期與時間)"
+      auto_close_examples: '輸入絕對時間或者相對小時 — 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "請輸入有效的值。"
     notifications:
-      title: "以 @用戶名稱 提到、回覆您的帖子與討論話題、私人訊息... 的通知。"
+      title: "以 @用戶名稱 提到、回覆您的貼文與討論話題、私人訊息... 的通知。"
       none: "你目前沒有任何通知。"
       more: "檢視較舊的通知"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
@@ -516,7 +513,7 @@ zh_TW:
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} 已接受你的邀請"
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} 移動了 {{link}}"
-      total_flagged: "所有被投訴的帖子"
+      total_flagged: "所有被投訴的貼文"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> 你已升級 {{link}}"
     upload_selector:
       title: "加入一張圖片"
@@ -528,10 +525,11 @@ zh_TW:
       local_tip: "按此從你的電腦選擇圖片"
       local_tip_with_attachments: "按此從你的電腦選擇一張圖片或一個檔案 (允許的副檔名: {{authorized_extensions}})。"
       hint: "(你也可以將檔案拖放至編輯器直接上傳)"
+      hint_for_supported_browsers: "( 你也可以將圖片拖放或貼上至編輯器內直接上傳 )"
       uploading: "正在上傳"
       image_link: "連結你的圖片將指向"
     search:
-      title: "搜尋討論話題、帖子、用戶或分類"
+      title: "搜尋討論話題、貼文、用戶或分類"
       placeholder: "在此輸入你想搜尋的文字"
       no_results: "未找到任何結果。"
       searching: "正在搜尋..."
@@ -550,23 +548,21 @@ zh_TW:
     topics:
       bulk:
         reset_read: "重設閱讀"
-        dismiss_read: "設定未讀帖子為已讀"
-        dismiss_new: "設定新帖子為已讀"
+        dismiss_read: "設定未讀貼文為已讀"
+        dismiss_new: "設定新貼文為已讀"
         toggle: "批量切換選擇討論話題"
         actions: "批量操作"
         change_category: "改變分類"
         close_topics: "關閉討論話題"
         notification_level: "改變通知等級"
         selected:
-          one: "你選擇了 <b>1</b> 個討論話題."
-          other: "你選擇了 <b>{{count}}</b> 個討論話題."
-
+          other: "你已選擇了 <b>{{count}}</b> 個討論話題。"
       none:
         starred: "你尚未收藏任何討論話題，要收藏討論話題請按標題前面的星號。"
         unread: "你沒有未讀的討論話題。"
         new: "你沒有新的討論話題。"
         read: "你尚未閱讀任何討論話題。"
-        posted: "你尚未在任何討論話題裡帖子。"
+        posted: "你尚未在任何討論話題裡發表貼文。"
         latest: "沒有最近的討論話題。"
         hot: "沒有熱門的討論話題。"
         category: "沒有 {{category}} 的討論話題。"
@@ -582,18 +578,16 @@ zh_TW:
         category: "{{category}} 分類已經沒有其它討論話題了。"
         top: "沒有更多精選討論話題。"
     topic:
-      filter_to: "在討論話題裡顯示 {{post_count}} 則帖子"
+      filter_to: "在討論話題裡顯示 {{post_count}} 則貼文"
       create: '建立討論話題'
       create_long: '建立新討論話題'
       private_message: '建立私人訊息'
       list: '討論話題'
       new: '新討論話題'
       new_topics:
-        one: '有 1 個新討論話題'
-        other: '有 {{count}} 個新討論話題'
+        other: '{{count}} 個新討論話題'
       unread_topics:
-        one: '有 1 個未讀的討論話題'
-        other: '有 {{count}} 個未讀的討論話題'
+        other: '{{count}} 個未讀討論話題'
       title: '討論話題'
       loading_more: "載入更多討論話題..."
       loading: '正在載入討論話題...'
@@ -609,6 +603,10 @@ zh_TW:
         description: "抱歉，找不到此討論話題，可能已被板主刪除。"
       unread_posts:
         other: "你有 {{count}} 個未讀的舊文章在討論內"
+      new_posts:
+        other: "自你上次閱讀後，有 {{count}} 篇新貼文在此討論話題內"
+      likes:
+        other: "此討論話題收到了 {{count}} 個讚"
       back_to_list: "回到討論話題列表"
       options: "討論話題選項"
       show_links: "在討論話題裡顯示連結"
@@ -617,7 +615,7 @@ zh_TW:
       read_more: "要閱讀更多文章嗎? 請按 {{catLink}} 或 {{latestLink}}。"
       read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: 瀏覽所有分類
-      view_latest_topics: 檢視最近的帖子
+      view_latest_topics: 檢視最近的貼文
       suggest_create_topic: 建立一個新討論話題吧?
       read_position_reset: "你的閱讀位置已重設。"
       jump_reply_up: jump to earlier reply
@@ -629,12 +627,12 @@ zh_TW:
       auto_close_remove: "不要自動關閉此討論話題"
       progress:
         title: topic progress
-        jump_top: 跳至第一則帖子
-        jump_bottom: 跳至最後一則帖子
-        jump_bottom_with_number: "跳至第 %{post_number} 則帖子"
-        total: 所有帖子
-        current: 目前的帖子
-        position: "第 %{current}/%{total} 則帖子"
+        jump_top: 跳至第一則貼文 ( Home 鍵 )
+        jump_bottom: 跳至最後一則貼文 ( End 鍵 )
+        jump_bottom_with_number: "跳至第 %{post_number} 則貼文"
+        total: 所有貼文
+        current: 目前的貼文
+        position: "第 %{current}/%{total} 則貼文"
       notifications:
         reasons:
           '3_6': '你將會收到通知，因為你在觀看此分類。'
@@ -645,28 +643,28 @@ zh_TW:
           '2_4': '你將收到關於此討論話題的通知，因為你回覆了此討論話題。'
           '2_2': '你將收到關於此討論話題的通知，因為你正在追蹤此討論話題。'
           '2': '你將收到關於此討論話題的通知，因為你<a href="/users/{{username}}/preferences">看過此討論話題</a>。'
-          '1': '你將在有人以 @用戶名稱 提到你或回覆你的帖子時收到通知。'
-          '1_2': '你將在有人以 @用戶名稱 提到你或回覆你的帖子時收到通知。'
+          '1': '你將在有人以 @用戶名稱 提到你或回覆你的貼文時收到通知。'
+          '1_2': '你將在有人以 @用戶名稱 提到你或回覆你的貼文時收到通知。'
           '0': '你正忽略此討論話題的所有通知。'
           '0_2': '你正忽略此討論話題的所有通知。'
         watching_pm:
           title: "觀看"
-          description: "當此私人信息有新回覆時，你會被通知。討論話題列表上將會顯示未讀及新討論話題數目。"
+          description: "當此私人訊息有新回覆時，你會被通知。討論話題列表上將會顯示未讀及新討論話題數目。"
         watching:
           title: "關注"
-          description: "功能與追蹤相同，並在有新帖子時通知你。"
+          description: "功能與追蹤相同，並在有新貼文時通知你。"
         tracking_pm:
           title: "追蹤"
-          description: "當有人以 @用戶名稱 提到你或回覆你的帖子時通知你，並顯示未讀的新帖子數目。"
+          description: "當有人以 @用戶名稱 提到你或回覆你的貼文時通知你，並顯示未讀的新貼文數目。"
         tracking:
           title: "追蹤"
-          description: "當有人以 @用戶名稱 提到你或回覆你的帖子時通知你，並顯示未讀的新帖子數目。"
+          description: "當有人以 @用戶名稱 提到你或回覆你的貼文時通知你，並顯示未讀的新貼文數目。"
         regular:
           title: "普通"
-          description: "只在有人以 @用戶名稱 提到你或回覆你的帖子時通知你。"
+          description: "只在有人以 @用戶名稱 提到你或回覆你的貼文時通知你。"
         muted_pm:
           title: "消音"
-          description: "你將不會收到任何關於此私人信息的通知，此討論話題也不會出現在你的未讀清單裡。"
+          description: "你將不會收到任何關於此私人訊息的通知，此討論話題也不會出現在你的未讀清單裡。"
         muted:
           title: "消音"
           description: "你將不會收到任何關於此討論話題的通知，此討論話題也不會出現在你的未讀清單裡。"
@@ -678,13 +676,14 @@ zh_TW:
         auto_close: "自動關閉"
         unpin: "復原已置頂的討論話題"
         pin: "置頂討論話題"
+        pin_globally: "全區置頂討論話題"
         unarchive: "復原已封存的討論話題"
         archive: "封存討論話題"
         invisible: "使不可見"
         visible: "使可見"
         reset_read: "重置讀取資料"
-        multi_select: "選取要移動的帖子"
-        convert_to_topic: "轉換為普通帖子"
+        multi_select: "選取要移動的貼文"
+        convert_to_topic: "轉換為普通貼文"
       reply:
         title: '回覆'
         help: '回覆此討論話題'
@@ -715,48 +714,64 @@ zh_TW:
         email_placeholder: '電子郵件地址'
         success: "謝謝! 我們已將邀請寄至 <b>{{email}}</b>，當受邀者接受邀請時我們會再通知你，你也可以在你的用戶頁面的邀請清單查看邀請狀態。"
         error: "抱歉，我們無法邀請此人，他可能已經是此論壇的用戶?"
-      login_reply: '登入回覆'
+      login_reply: '登入以發表回應'
       filters:
         n_posts:
           other: "{{count}} 則文章"
-        cancel: "再次顯示此討論話題的所有帖子。"
+        cancel: "再次顯示此討論話題的所有貼文。"
       split_topic:
         title: "移至新討論話題"
         action: "移至新討論話題"
         topic_name: "新討論話題的名稱"
         error: "將討論話題移至新討論話題時發生錯誤。"
+        instructions:
+          other: "你即將建立一個新討論話題，並填入 <b>{{count}}</b> 篇你已選擇的貼文。"
       merge_topic:
         title: "移至已存在的討論話題"
         action: "移至已存在的討論話題"
         error: "將討論話題移至已存在的討論話題時發生錯誤。"
+        instructions:
+          other: "請選擇你想將那 <b>{{count}}</b> 篇貼文移至哪一個討論話題。"
+      change_owner:
+        title: "更改貼文的擁有者"
+        action: "變更擁有者"
+        error: "修改貼文擁有者時發生錯誤。"
+        label: "貼文的新擁有者"
+        placeholder: "新擁有者的使用者名稱"
       multi_select:
         select: '選取'
         selected: '選取了 ({{count}})'
         select_replies: '選取 + 回覆'
-        delete: 刪除選取的帖子
+        delete: 刪除選取的貼文
         cancel: 取消選取
         select_all: 選擇全部
         deselect_all: 取消選取
+        description:
+          other: 你已選擇了 <b>{{count}}</b> 篇貼文。
     post:
       reply: "回覆由 {{replyAvatar}} {{username}} 發表的 {{link}}"
       reply_topic: "回覆至 {{link}}"
       quote_reply: "引用回覆"
       edit: "編輯由 {{replyAvatar}} {{username}} 發表的 {{link}}"
       edit_reason: "原因: "
-      post_number: "帖子 {{number}}"
+      post_number: "貼文 {{number}}"
       in_reply_to: "回覆給"
-      last_edited_on: "帖子最近編輯的時間"
+      last_edited_on: "貼文最近編輯的時間"
       reply_as_new_topic: "回覆為新討論話題"
       continue_discussion: "繼續 {{postLink}} 的討論:"
-      follow_quote: "跳到引用的帖子"
+      follow_quote: "跳到引用的貼文"
       show_full: "顯示所有文章"
+      deleted_by_author:
+        other: "( 貼文已被作者撤回，除非被檢舉，否則在 %{count} 小時內將自動刪除。)"
       deleted_by: "刪除者"
       expand_collapse: "展開/收合"
+      gap:
+        other: "{{count}} 篇貼文已隱藏"
       has_replies:
         other: "回覆"
       errors:
-        create: "抱歉，建立你的帖子時發生錯誤，請再試一次。"
-        edit: "抱歉，編輯你的帖子時發生錯誤，請再試一次。"
+        create: "抱歉，建立你的貼文時發生錯誤，請再試一次。"
+        edit: "抱歉，編輯你的貼文時發生錯誤，請再試一次。"
         upload: "抱歉，上傳你的檔案時發生錯誤，請再試一次。"
         attachment_too_large: "抱歉，你想上傳的檔案太大 (最大限制為 {{max_size_kb}} kb)。"
         image_too_large: "抱歉，你想上傳的圖片太大 (最大限制為 {{max_size_kb}} kb)，請將圖片縮小後再試一次。"
@@ -765,23 +780,25 @@ zh_TW:
         image_upload_not_allowed_for_new_user: "抱歉，新用戶不可上傳圖片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用戶不可上傳附件。"
       abandon:
-        confirm: "你確定要捨棄你的帖子嗎?"
+        confirm: "你確定要捨棄你的貼文嗎?"
         no_value: "否"
         yes_value: "是"
       archetypes:
         save: '儲存選項'
       controls:
-        reply: "開始編寫對此帖子的回覆"
-        like: "給此帖子按讚"
-        edit: "編輯此帖子"
-        flag: "投訴此帖子或通知管理人員此帖子"
-        delete: "刪除此帖子"
-        undelete: "復原此帖子"
-        share: "分享此帖子的連結"
+        reply: "開始編寫對此貼文的回覆"
+        like: "給此貼文按讚"
+        edit: "編輯此貼文"
+        flag: "投訴此貼文或通知管理人員此貼文"
+        delete: "刪除此貼文"
+        undelete: "復原此貼文"
+        share: "分享此貼文的連結"
         more: "更多"
         delete_replies:
-          yes_value: "是，將回覆的帖子一併刪除"
-          no_value: "否，只刪除此帖子"
+          confirm:
+            other: "你是否要同時刪除 {{count}} 篇針對這則貼文的回應？"
+          yes_value: "是，將回覆的貼文一併刪除"
+          no_value: "否，只刪除此貼文"
       actions:
         flag: '投訴'
         clear_flags:
@@ -803,7 +820,7 @@ zh_TW:
           vote: "撤回投票"
         people:
           off_topic: "{{icons}} 標示為偏離討論話題"
-          spam: "{{icons}} 標示為垃圾帖子"
+          spam: "{{icons}} 標示為垃圾貼文"
           inappropriate: "{{icons}} 標示為內容不妥"
           notify_moderators: "{{icons}} 已通知版主"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>已通知版主</a>"
@@ -813,14 +830,14 @@ zh_TW:
           like: "{{icons}} 已按讚"
           vote: "{{icons}} 已投票支持"
         by_you:
-          off_topic: "你已投訴此帖子偏離討論話題"
-          spam: "你已投訴此帖子為垃圾"
-          inappropriate: "你已投訴此帖子內容不妥"
-          notify_moderators: "你已通知版主此帖子"
+          off_topic: "你已投訴此貼文偏離討論話題"
+          spam: "你已投訴此貼文為垃圾"
+          inappropriate: "你已投訴此貼文內容不妥"
+          notify_moderators: "你已通知版主此貼文"
           notify_user: "你已送出私人訊息給這位用戶"
-          bookmark: "你已在此帖子加上書籤"
-          like: "你已在此帖子按讚"
-          vote: "你已在此帖子投票支持"
+          bookmark: "你已在此貼文加上書籤"
+          like: "你已在此貼文按讚"
+          vote: "你已在此貼文投票支持"
         by_you_and_others:
           off_topic:
             other: "你與 {{count}} 個使用者檢舉了此文章離題"
@@ -835,7 +852,7 @@ zh_TW:
           bookmark:
             other: "你與 {{count}} 個使用者把這個文章加入書籤"
           like:
-            other: "你與 {{count}} 個使用者對此讚好"
+            other: "你與 {{count}} 個使用者對此按讚"
           vote:
             other: "你與 {{count}} 個使用者已在此文章投票"
         by_others:
@@ -852,7 +869,7 @@ zh_TW:
           bookmark:
             other: "{{count}} 個使用者把這個文章加入書籤"
           like:
-            other: "{{count}} 個使用者對此讚好"
+            other: "{{count}} 個使用者對此按讚"
           vote:
             other: "{{count}} 個使用者已在此文章投票"
       edits:
@@ -922,16 +939,16 @@ zh_TW:
       default_position: "預設的位置"
       parent: "父分類"
     flagging:
-      title: '你為什麼要投訴此帖子?'
-      action: '投訴帖子'
+      title: '你為什麼要投訴此貼文?'
+      action: '投訴貼文'
       take_action: "執行動作"
       notify_action: '通知'
-      delete_spammer: "刪除垃圾帖子發送者"
-      delete_confirm: "您將刪除此用戶的 <b>%{posts}</b> 則帖子與 <b>%{topics}</b> 個討論話題、移除他的帳號、封鎖從他使用的 IP <b>%{ip_address}</b> 登入、將他的電子郵件地址 <b>%{email}</b> 加入永久封鎖名稱，你確定此人真的發送垃圾帖子嗎?"
-      yes_delete_spammer: "是的，刪除垃圾帖子發送者"
-      cant: "抱歉，目前無法投訴此帖子。"
-      custom_placeholder_notify_user: "為什麼此帖子需要你以私人訊息與作者直接溝通? 討論請務必討論話題明確、具建設性、態度和善。"
-      custom_placeholder_notify_moderators: "為什麼此帖子需要版主的注意? 請讓我們知道你在意的原因，並請盡量提供相關連結。"
+      delete_spammer: "刪除垃圾貼文發送者"
+      delete_confirm: "您將刪除此用戶的 <b>%{posts}</b> 則貼文與 <b>%{topics}</b> 個討論話題、移除他的帳號、封鎖從他使用的 IP <b>%{ip_address}</b> 登入、將他的電子郵件地址 <b>%{email}</b> 加入永久封鎖名稱，你確定此人真的發送垃圾貼文嗎?"
+      yes_delete_spammer: "是的，刪除垃圾貼文發送者"
+      cant: "抱歉，目前無法投訴此貼文。"
+      custom_placeholder_notify_user: "為什麼此貼文需要你以私人訊息與作者直接溝通? 討論請務必討論話題明確、具建設性、態度和善。"
+      custom_placeholder_notify_moderators: "為什麼此貼文需要版主的注意? 請讓我們知道你在意的原因，並請盡量提供相關連結。"
       custom_message:
         at_least: "請至少輸入 {{n}} 個字"
         more: "還需要 {{n}} 個字..."
@@ -950,6 +967,9 @@ zh_TW:
         help: "此討論話題已關閉，不再接受回覆"
       unpinned:
         title: "取消釘選"
+        help: "此討論話題已取消置頂，將會以預設順序顯示。"
+      pinned_globally:
+        title: "全區置頂"
       pinned:
         title: "已釘選"
         help: "此討論話題已置頂，將顯示在它所屬分類的討論話題列表的最上方"
@@ -957,9 +977,9 @@ zh_TW:
         help: "此討論話題已封存，已被凍結無法再修改"
       invisible:
         help: "此討論話題已隱藏，將不會出現在討論話題列表，只能以它的網址開啟"
-    posts: "帖子"
-    posts_long: "此討論話題有 {{number}} 則帖子"
-    original_post: "原始帖子"
+    posts: "貼文"
+    posts_long: "此討論話題有 {{number}} 則貼文"
+    original_post: "原始貼文"
     views: "觀看"
     replies: "回覆"
     views_long: "此討論話題已被看過 {{number}} 次"
@@ -995,7 +1015,7 @@ zh_TW:
           zero: "未讀"
           one: "未讀 (1)"
           other: "未讀 ({{count}})"
-        help: "追蹤有未讀帖子的討論話題"
+        help: "追蹤有未讀貼文的討論話題"
       new:
         lower_title_with_count:
           one: "1 個新話題"
@@ -1007,7 +1027,7 @@ zh_TW:
           other: "新討論話題 ({{count}})"
         help: "自你上次到訪後建立的討論話題"
       posted:
-        title: "我的帖子"
+        title: "我的貼文"
         help: "你回覆過的討論話題"
       category:
         title:
@@ -1051,7 +1071,7 @@ zh_TW:
         please_upgrade: "請升級!"
         no_check_performed: "從未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
         stale_data: "最近未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
-        version_check_pending: "你最近才更新，非常好!"
+        version_check_pending: "看來你最近升級了，非常好！"
         installed_version: "已安裝"
         latest_version: "最新版本"
         problems_found: "我們在你目前安裝的 Discourse 版本發現這些問題:"
@@ -1082,17 +1102,17 @@ zh_TW:
         title: "投訴"
         old: "舊的"
         active: "待處理"
-        agree_hide: "批准 (隱藏帖子 + 送出私人訊息)"
-        agree_hide_title: "隱藏此帖子，並自動向此用戶送出私人訊息，要求盡快修改帖子"
+        agree_hide: "批准 (隱藏貼文 + 送出私人訊息)"
+        agree_hide_title: "隱藏此貼文，並自動向此用戶送出私人訊息，要求盡快修改貼文"
         defer: "延遲"
         defer_title: "目前不需採取行動， 將此投訴的任何動作延期或永不採取行動"
-        delete_post: "刪除帖子"
-        delete_post_title: "如果刪除的是討論話題的第一則帖子，討論話題也將一併刪除"
-        disagree_unhide: "否絕 (取消帖子的隱藏狀態)"
-        disagree_unhide_title: "移除此帖子的所有投訴，並使帖子可以被看見"
+        delete_post: "刪除貼文"
+        delete_post_title: "如果刪除的是討論話題的第一則貼文，討論話題也將一併刪除"
+        disagree_unhide: "否絕 (取消貼文的隱藏狀態)"
+        disagree_unhide_title: "移除此貼文的所有投訴，並使貼文可以被看見"
         disagree: "否絕"
-        disagree_title: "否絕投訴，從此帖子移除所有投訴"
-        delete_spammer_title: "刪除此用戶與他的所有帖子與討論話題"
+        disagree_title: "否絕投訴，從此貼文移除所有投訴"
+        delete_spammer_title: "刪除此用戶與他的所有貼文與討論話題"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "該討論話題已被調查，問題已經解決。點擊完成以刪除標誌。"
         flagged_by: "投訴者"
@@ -1209,6 +1229,15 @@ zh_TW:
         delete: "刪除"
         delete_confirm: "刪除此樣式?"
         about: "網站客製化可以修改網站的樣式與標頭，請選擇或新增一個樣式進行編輯。"
+        color: "顏色"
+        opacity: "不透明度"
+        copy: "複製"
+        css_html:
+          title: "CSS、HTML"
+          long_title: "CSS 與 HTML 客製化"
+        colors:
+          title: "顏色"
+          delete_confirm: "刪除此顏色樣式？"
       email:
         title: "電郵"
         settings: "設定"
@@ -1288,7 +1317,7 @@ zh_TW:
           email: "電子郵件地址"
         screened_urls:
           title: "過濾的網址"
-          description: "以下是出現在垃圾帖子裡的網址。"
+          description: "以下是出現在垃圾貼文裡的網址。"
           url: "網址"
           domain: "網域"
         screened_ips:
@@ -1341,12 +1370,7 @@ zh_TW:
           blocked: '已封鎖的用戶'
           suspended: '已停權的用戶'
         reject_successful:
-          one: "已拒絕了 1 位用戶。"
-          other: "已拒絕了 %{count} 位用戶。"
-        reject_failures:
-          one: "拒絕 1 位用戶失敗。"
-          other: "拒絕 %{count} 位用戶失敗。"
-
+          other: "成功駁回 %{count} 個使用者。"
       user:
         suspend_failed: "將此用戶停權時發生錯誤 {{error}}"
         unsuspend_failed: "恢復此用戶的權限時發生錯誤 {{error}}"
@@ -1355,8 +1379,8 @@ zh_TW:
         suspend_reason_label: "你為什麼要將此用戶停權? 你輸入的原因將在此用戶登入時顯示，及顯示在此用戶的基本資料頁面，且<b>任何人都可以看見</b>，請簡短說明原因。"
         suspend_reason: "原因"
         suspended_by: "將其停權者"
-        delete_all_posts: "刪除所有帖子"
-        delete_all_posts_confirm: "你確定要刪除 %{posts} 則帖子與 %{topics} 個討論話題嗎?"
+        delete_all_posts: "刪除所有貼文"
+        delete_all_posts_confirm: "你確定要刪除 %{posts} 則貼文與 %{topics} 個討論話題嗎?"
         suspend: "停權"
         unsuspend: "恢復權限"
         suspended: "已停權?"
@@ -1380,9 +1404,9 @@ zh_TW:
         activity: Activity
         like_count: 收到的讚
         private_topics_count: 私人討論話題
-        posts_read_count: 讀取的帖子
-        post_count: 建立的帖子
-        topics_entered: 參與的帖子
+        posts_read_count: 讀取的貼文
+        post_count: 建立的貼文
+        topics_entered: 參與的貼文
         flags_given_count: 投訴
         flags_received_count: 被投訴
         approve: '批准'
@@ -1398,7 +1422,7 @@ zh_TW:
         delete_and_block: "<b>是的</b>，並且<b>封鎖</b>使用此電子郵件地址與 IP 位址登入"
         delete_dont_block: "<b>是的</b>，但<b>允許</b>使用此電子郵件地址與 IP 位址登入"
         deleted: "此用戶已刪除。"
-        delete_failed: "刪除此用戶時發生錯誤，請先刪除此用戶的所有帖子後再試一次。"
+        delete_failed: "刪除此用戶時發生錯誤，請先刪除此用戶的所有貼文後再試一次。"
         send_activation_email: "送出啟用帳號的電子郵件"
         activation_email_sent: "啟用帳號的電子郵件已送出。"
         send_activation_email_failed: "送出啟用帳號的電子郵件時發生錯誤。%{error}"
@@ -1410,7 +1434,7 @@ zh_TW:
         block_failed: '封鎖此用戶時發生錯誤。'
         deactivate_explanation: "帳號的啟用狀態被取消的用戶必需重新啟用帳號。"
         suspended_explanation: "被停權的用戶無法登入。"
-        block_explanation: "被封鎖的用戶無法發表帖子或建立討論話題。"
+        block_explanation: "被封鎖的用戶無法發表貼文或建立討論話題。"
         trust_level_change_failed: "修改用戶的信任等級時發生錯誤。"
         suspend_modal_title: "將用戶停權"
         trust_level_2_users: "信任等級2用戶"
@@ -1427,7 +1451,7 @@ zh_TW:
           quality_content: "內容品質"
           reading: "閱讀"
           site_promotion: "宣傳論壇"
-          flagged_posts: "標記的帖子"
+          flagged_posts: "標記的貼文"
       site_content:
         none: "選擇要編輯的內容類型。"
         title: '內容'
@@ -1444,14 +1468,14 @@ zh_TW:
           required: '必要設定'
           basic: '基本設定'
           users: '用戶'
-          posting: '帖子'
+          posting: '貼文'
           email: '電子郵件'
           files: '檔案'
           trust: '信任等級'
           security: '安全性'
           onebox: "單一框"
           seo: 'SEO'
-          spam: '垃圾帖子'
+          spam: '垃圾貼文'
           rate_limits: '評等限制'
           developer: '開發人員'
           embedding: "嵌入"
@@ -1463,6 +1487,7 @@ zh_TW:
         new_badge: 新徽章
         new: 新
         name: 名稱
+        badge: 徽章
         display_name: 顯示名稱
         description: 簡述
         badge_type: 徽章類型
@@ -1479,6 +1504,7 @@ zh_TW:
         grant: 升級
         no_user_badges: "%{name} 未有任何升級徽章。"
         no_badges: 沒有徽章可供升級
+        allow_title: 允許使用徽章作為稱號
     lightbox:
       download: "下載"
     keyboard_shortcuts_help:
@@ -1507,14 +1533,14 @@ zh_TW:
         title: '行動'
         star: '<b>f</b> 收藏討論話題'
         share_topic: '<b>s</b> 分享討論話題'
-        share_post: '<b>shift s</b> 分享帖子'
+        share_post: '<b>shift s</b> 分享貼文'
         reply_topic: '<b>r</b> 回覆討論話題'
-        reply_post: '<b>shift r</b> 回覆帖子'
-        like: '<b>l</b> 讚好'
-        flag: '<b>!</b> 標籤帖子'
-        bookmark: '<b>b</b> 收藏帖子'
-        edit: '<b>e</b> 編輯帖子'
-        delete: '<b>d</b> 刪除帖子'
+        reply_post: '<b>shift r</b> 回覆貼文'
+        like: '<b>l</b> 按讚'
+        flag: '<b>!</b> 標籤貼文'
+        bookmark: '<b>b</b> 收藏貼文'
+        edit: '<b>e</b> 編輯貼文'
+        delete: '<b>d</b> 刪除貼文'
         mark_muted: '<b>m</b> 之後 <b>m</b> 標籤討論話題被消音'
         mark_regular: '<b>m</b> 之後 <b>r</b> 標籤討論話題回復正常'
         mark_tracking: '<b>m</b> 之後 <b>t</b> 標籤討論話題被追蹤'
@@ -1527,6 +1553,7 @@ zh_TW:
         other: "+%{count} 以上"
       granted:
         other: "%{count} 升級"
+      select_badge_for_title: 選擇一枚徽章作為你的稱號
       example_badge:
         name: 徽章範例
         description: 這是一個徽章範例

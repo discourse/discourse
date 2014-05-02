@@ -50,6 +50,9 @@ zh_TW:
   rss_topics_in_category: "分類'%{category}'中主題的RSS feed"
   author_wrote: "%{author}說:"
   private_message_abbrev: "私人訊息"
+  rss_description:
+    latest: "最新主題"
+    hot: "熱門主題"
   groups:
     default_names:
       admins: "管理員"
@@ -105,21 +108,16 @@ zh_TW:
           attributes:
             archetype:
               cant_send_pm: "抱歉，你不能向該用戶發送私人訊息。"
-
   user_profile:
     no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
-
   category:
     topic_prefix: "對於分類: %{category} 的定義"
     replace_paragraph: "[為分類一段簡單的描述以替換首段內容, 請不要超過200個字。]"
     post_template: "%{replace_paragraph}\n\n在下面的空格輸入分類的詳細描述, 可以包括在此分類下討論的規則、內容主題等等。"
-    this_year: "本年"
-
-
   trust_levels:
     newuser:
-      title: "訪客"
+      title: "新用戶"
     basic:
       title: "初級用戶"
     regular:
@@ -128,92 +126,51 @@ zh_TW:
       title: "領先用戶"
     elder:
       title: "資深用戶"
-
   rate_limiter:
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     hours:
-      one: "1 小時"
       other: "%{count} 小時"
     minutes:
-      one: "1 分鐘"
-      other: "%{count} 分鐘"
+      other: "%{count} 分"
     seconds:
-      one: "1 秒"
       other: "%{count} 秒"
-
   datetime:
     distance_in_words:
       half_a_minute: "< 1分"
       less_than_x_seconds:
-        one:   "< 1秒"
-        other: "< %{count}秒"
+        other: "< %{count} 秒鐘"
       x_seconds:
-        one:   "1秒"
-        other: "%{count}秒"
+        other: "%{count} 秒"
       less_than_x_minutes:
-        one:   "< 1分"
-        other: "< %{count}分"
-      x_minutes:
-        one:   "1分"
-        other: "%{count}分"
-      about_x_hours:
-        one:   "1小時"
-        other: "%{count}小時"
-      x_days:
-        one:   "1天"
-        other: "%{count}天"
-      about_x_months:
-        one:   "1個月"
-        other: "%{count}個月"
-      x_months:
-        one:   "1個月"
-        other: "%{count}個月"
-      about_x_years:
-        one:   "1年"
-        other: "%{count}年"
+        other: "< %{count} 分鐘"
       over_x_years:
-        one:   "> 1年"
-        other: "> %{count}年"
+        other: "> %{count} 年"
       almost_x_years:
-        one:   "1年"
-        other: "%{count}年"
-
+        other: "%{count} 年"
     distance_in_words_verbose:
       half_a_minute: "剛剛"
       less_than_x_seconds:
-        one:   "剛剛"
-        other: "剛剛"
+        other: "剛才"
       x_seconds:
-        one:   "1 秒前"
         other: "%{count} 秒前"
       less_than_x_minutes:
-        one:   "不到 1 分鐘前"
         other: "不到 %{count} 分鐘前"
       x_minutes:
-        one:   "1 分鐘前"
         other: "%{count} 分鐘前"
       about_x_hours:
-        one:   "1 小時前"
         other: "%{count} 小時前"
       x_days:
-        one:   "1 天前"
         other: "%{count} 天前"
       about_x_months:
-        one:   "約 1 個月前"
         other: "約 %{count} 個月前"
       x_months:
-        one:   "1 個月前"
         other: "%{count} 個月前"
       about_x_years:
-        one:   "約 1 年前"
         other: "約 %{count} 年前"
       over_x_years:
-        one:   "1 年之前"
-        other: "%{count} 年之前"
+        other: "超過 %{count} 年前"
       almost_x_years:
-        one:   "近 1 年前"
-        other: "近 %{count} 年前"
-
+        other: "約 %{count} 年前"
   password_reset:
     no_token: "抱歉，你的令牌(Token)已過期，請再嘗試重設你的密碼。"
     choose_new: "請選擇一個新密碼"
@@ -242,32 +199,32 @@ zh_TW:
       long_form: '投訴為垃圾內容'
     inappropriate:
       title: '不當內容'
-      description: '此帖內容包含對他人的攻擊、侮辱或仇視語言。'
+      description: '此貼文內容包含對他人的攻擊、侮辱或仇視語言。'
       long_form: '投訴為不當內容'
     notify_user:
       title: '通知 {{username}}'
-      description: '此帖包含一些我想與該用戶私下討論的內容。'
+      description: '此貼文包含一些我想與該用戶私下討論的內容。'
       long_form: '已通知用戶'
       email_title: '關於 "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '通知版主'
-      description: '此帖依據<a href="/faq">常見問答 FAQ</a>、<a href="/tos">服務條款 TOS</a>或其它原因等, 需要版主關注。'
+      description: '此貼文依據<a href="/faq">常見問答 FAQ</a>、<a href="%{tos_url}">服務條款 TOS</a>或其它原因等, 需要版主關注。'
       long_form: '已通知版主'
       email_title: '關於 "%{title}"'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: '書籤'
-      description: '給本帖加書籤'
-      long_form: '已給本帖加上書籤'
+      description: '將此貼文加上書籤'
+      long_form: '此貼文已加上書籤'
     like:
       title: '讚好'
-      description: '讚好本帖'
-      long_form: '喜歡本帖內容'
+      description: '給此貼文按讚'
+      long_form: '已按讚'
     vote:
       title: '投票'
-      description: '給本帖投票'
-      long_form: '已給本帖投票'
+      description: '投票給此貼文'
+      long_form: '已投票給此貼文'
   flagging:
     you_must_edit: '<p>你的貼文已經達到投訴上限，請查看你的私人訊息。</p>'
     user_must_edit: '<p>投訴的內容已隱藏。</p>'
@@ -392,6 +349,11 @@ zh_TW:
     welcome_invite:
       title: "歡迎: 受邀請用戶"
       description: "當新用戶通過接受用戶邀請加入論壇後, 自動發送給他們的歡迎訊息。"
+    privacy_policy:
+      title: "隱私政策"
+      description: "你的網站的隱私政策. 留白代表預設值"
+    faq:
+      description: "你的網站的FAQ. 留白代表預設值"
     login_required_welcome_message:
       title: "歡迎資訊: 請登入"
       description: "歡迎資訊只會在已啟用'login required'時向未登入的用戶顯示"
@@ -429,7 +391,7 @@ zh_TW:
     exclude_rel_nofollow_domains: "不添加 nofollow 標籤到一列逗號分割的功能變數名稱 （使用父系網域名，例如 tld.com，將自動允許子功能變數名稱，例如 sub.tld.com）"
     post_excerpt_maxlength: "貼文摘要最大的字數長度"
     post_onebox_maxlength: "一個 論壇 - Discourse 單廂帖（Onebox post）最大的字數長度"
-    category_post_template: "當你建立新分類時，分類的定義帖範本（建立新分類時會自動建立一個屬於該分類的新貼文）"
+    category_post_template: "當你建立新分類時，分類的定義貼文範本（建立新分類時會自動建立一個屬於該分類的新貼文）"
     logo_url: "你的網站標誌圖片，例如：http://example.com/logo.png"
     logo_small_url: "你的網站的小號標誌圖片，例如：http://example.com/logo-small.png，用於卷起主題清單時顯示"
     favicon_url: "你的網站圖示（favicon），參考 http://zh.wikipedia.org/wiki/Favicon"
@@ -527,7 +489,7 @@ zh_TW:
     topic_views_heat_high: "多少流覽量後主題的熱度變為高。"
     tos_url: "如果你想要使用一個部署在某個地方的服務條款文檔，那麼請在此填寫其完整URL地址。"
     privacy_policy_url: "如果你想要使用一個部署在某個地方的隱私政策文檔，那麼請在此填寫其完整URL地址。"
-    newuser_spam_host_threshold: "用戶在一篇貼文中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇貼文被認為是垃圾帖。"
+    newuser_spam_host_threshold: "用戶在一篇貼文中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇貼文被認為是垃圾貼文。"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
     liked: "%{display_username} 在 %{link} 讚好了你的貼文 "
@@ -539,38 +501,29 @@ zh_TW:
     private_message: "%{display_username} 發送給你一條訊息：%{link}"
     invited_to_private_message: "%{display_username} 邀請你進行私人通訊：%{link}"
     invitee_accepted: "%{display_username} 接受了你的邀請"
-
   search:
     types:
       category: '分類'
       topic: '主題'
       user: '用戶'
-
   original_poster: "原始作者"
   most_posts: "大部分貼文"
   most_recent_poster: "當前大部分貼文作者"
-  frequent_poster: "頻繁發帖者"
-
+  frequent_poster: "頻繁發文者"
   move_posts:
-    moderator_post:
-      one: "我移動了一個貼文到一個新主題：%{topic_link}"
-      other: "我移動了 %{count} 個貼文到一個新主題：%{topic_link}"
-
+    new_topic_moderator_post:
+      other: "移動了 %{count} 則貼文到新的標題: %{topic_link}"
+    existing_topic_moderator_post:
+      other: "移動了 %{count} 則貼文到已存在的標題: %{topic_link}"
   topic_statuses:
     archived_enabled: "本主題已歸檔，即已經凍結，無法修改。"
     archived_disabled: "本主題已被解除歸檔，即不再凍結，可以修改。"
     closed_enabled: "本主題已關閉，不再接受新的回覆。"
     closed_disabled: "本主題已開放，可以發表新的回覆。"
-    autoclosed_enabled:
-      zero: "本主題為建立一天后自動關閉，不允許添加新的回覆。"
-      one: "本主題為建立一天后自動關閉，不允許添加新的回覆。"
-      other: "本主題為建立{{count}}天自動關閉。不允許添加新回覆。"
     autoclosed_disabled: "本主題是開放的，可以添加新的回覆。"
-    pinned_enabled: "本主題已置頂，它將始終顯示在它所屬分類的頂部。"
     pinned_disabled: "本主題已被解除置頂，它將不再顯示在它所屬分類的頂部。"
     visible_enabled: "本主題可見，它將顯示在主題清單中。"
     visible_disabled: "本主題不可見，它將不被顯示在主題清單中，只能通過一個直接連結來瀏覽。"
-
   login:
     not_approved: "你的帳號尚未獲得批准。一旦你的帳號獲得批准，你會收到一封電子郵件。"
     incorrect_username_email_or_password: "用戶名、電子郵箱或密碼不正確"

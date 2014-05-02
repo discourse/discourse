@@ -140,6 +140,7 @@ zh_CN:
       sent_by_user: "发送人 <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "发送人 <a href='{{userUrl}}'>您</a>"
     groups:
+      visible: "群组对所有用户可见"
       title:
         other: "群组"
       members: "成员"
@@ -440,12 +441,12 @@ zh_CN:
         need_more_for_title: "请给标题再输入至少 {{n}} 个字符"
         need_more_for_reply: "请给正文内容再输入至少 {{n}} 个字符"
       error:
-        title_missing: "缺少标题。"
-        title_too_short: "标题太短，至少 {{min}} 个字符。"
+        title_missing: "缺少标题"
+        title_too_short: "标题太短，至少 {{min}} 个字符"
         title_too_long: "标题太长，至多 {{max}} 个字符。"
-        post_missing: "内容不能为空。"
-        post_length: "内容太少，至少 {{min}} 个字符。"
-        category_missing: "必须要选择一个分类。"
+        post_missing: "帖子不能为空"
+        post_length: "帖子至少应有 {{min}} 个字符"
+        category_missing: "您必须选择一个分类"
       save_edit: "保存编辑"
       reply_original: "回复原始话题"
       reply_here: "在此回复"
@@ -512,6 +513,7 @@ zh_CN:
       moved_post: "<i title='移动帖子' class='fa fa-arrow-right'></i> {{username}} 移动了 {{link}}"
       total_flagged: "被报告帖子的总数"
       linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i> {{username}} {{link}}"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> 您被授予了 {{link}}"
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -522,7 +524,7 @@ zh_CN:
       local_tip: "点击从您的设备中选择一张图片。"
       local_tip_with_attachments: "点击从您的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
       hint: "（您也可以通过拖放至编辑器的方式来上传）"
-      hint_for_supported_browsers: "（您也可以通过拖放或复制粘帖至编辑器的方式来上传）"
+      hint_for_supported_browsers: "（您也可以通过拖放或粘帖图片至编辑器的方式来上传）"
       uploading: "上传中"
       image_link: "链接您的图片到"
     search:
@@ -737,6 +739,7 @@ zh_CN:
         placeholder: "新所有者的用户名"
         instructions:
           other: "请选择<b>{{old_user}}</b>创建的这 {{count}} 个帖子的新所有者。"
+        instructions_warn: "注意所有的关于这个帖子的通知不会被发送到新用户。<br>警告：目前，没有任何与帖子关联的数据会被传递给新用户。谨慎使用。"
       multi_select:
         select: '选择'
         selected: '已选择（{{count}}）'
@@ -1229,12 +1232,25 @@ zh_CN:
         delete: "删除"
         delete_confirm: "删除本定制内容？"
         about: "站点定制允许您修改样式与横幅。选择或者添加一个来开始编辑。"
+        color: "颜色"
+        opacity: "透明度"
+        copy: "复制"
+        css_html:
+          title: "CSS、HTML"
+          long_title: "自定义 CSS 和 HTML"
+        colors:
+          title: "颜色"
+          long_title: "颜色方案"
+          about: "颜色方案让您能够让您在不写 CSS 的情况下更改色彩。从选择或者添加一种颜色开始。"
+          new_name: "新的颜色方案"
+          copy_name_prefix: "复制于"
+          delete_confirm: "删除这个颜色方案？"
       email:
         title: "电子邮件"
         settings: "设置"
         all: "所有"
         sending_test: "发送测试邮件..."
-        test_error: "发送邮件出现问题。请检查您的设置并重试。"
+        test_error: "发送测试邮件时遇到问题。请再检查一遍邮件设置，确认您的主机没有封锁邮件链接，然后重试。"
         sent: "已发送"
         skipped: "跳过"
         sent_at: "发送时间"
@@ -1413,7 +1429,9 @@ zh_CN:
         delete_forbidden:
           other: "用户如果有帖子将不能删除。在试图尝试删除一个用户前删除所有的帖子（%{count} 天前的帖子不能被删除）"
         cant_delete_all_posts:
-          other: "不能删除所有帖子。一些帖子发表于 %{count} 天前。"
+          other: "不能删除所有帖子。一些帖子发表于 %{count} 天前。（设置项：delete_user_max_post_age）"
+        cant_delete_all_too_many_posts:
+          other: "不能删除所有帖子，因为用户有超过 %{count} 帖子。（设置项：delete_all_posts_max）"
         delete_confirm: "您确定要永久地从本站删除此用户？该操作无法撤销！"
         delete_and_block: "<b>确定</b>，并<b>阻止</b>该邮件地址和IP地址再次注册。"
         delete_dont_block: "<b>确定</b>，但<b>允许</b>该邮件地址和IP地址再次注册。"
@@ -1483,6 +1501,7 @@ zh_CN:
         new_badge: 新徽章
         new: 新建
         name: 名称
+        badge: 徽章
         display_name: 显示名称
         description: 描述
         badge_type: 徽章分类
@@ -1540,6 +1559,14 @@ zh_CN:
         mark_tracking: '先按 <b>m</b> 再按 <b>t</b> 追踪主题'
         mark_watching: '先按 <b>m</b> 再按 <b>w</b> 关注主题'
     badges:
+      title: 徽章
+      badge_count:
+        other: "%{count} 个徽章"
+      more_badges:
+        other: "+%{count} 更多"
+      granted:
+        other: "%{count} 个已授予"
+      select_badge_for_title: 选择一个徽章用作您的头衔
       example_badge:
         name: 范例徽章
         description: 这是一枚用作范例的徽章。

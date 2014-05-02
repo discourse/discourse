@@ -185,7 +185,7 @@ zh_CN:
   meta_category_description: "讨论该论坛的站务、组织、如何运作和如何改善它。"
   staff_category_name: "职员"
   staff_category_description: "职员私有的分类。只有管理员和版主才能阅览主题。"
-  assets_topic_body: "这个主题用于存储论坛设计使用的资源。不要删除它！"
+  assets_topic_body: "这是一个永久主题，仅对职员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传您想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交您的回复添加帖子。\n4. 在您的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n另外，如果您需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   category:
     topic_prefix: "关于分类：%{category}"
     replace_paragraph: "[用一段简短的话描述分类，并替换此第一段内容。这段文字将出现在分类选择区域，所有试着不要超过200个字符。只要当您编辑了这段文字或者是创建了一个主题，分类才会出现在分类列表中。]"
@@ -284,11 +284,11 @@ zh_CN:
   post_action_types:
     off_topic:
       title: '题外话'
-      description: '此帖对于当前讨论而言属于题外话，应该移动到其它相关主题下。'
+      description: '此帖对于当前讨论而言严重偏离话题，可能需要被移动。如果这是个需要讨论的主题，可能它不属于这里。'
       long_form: '标记为题外话'
     spam:
       title: '垃圾'
-      description: '此帖为广告，它不包含任何对当前讨论有帮助的内容，只有促销信息。'
+      description: '此帖为广告。它不包含任何对当前讨论有帮助的内容，只有促销信息。'
       long_form: '标记为垃圾'
     inappropriate:
       title: '不当内容'
@@ -522,6 +522,7 @@ zh_CN:
     crawl_images: "允许从第三方获取图片来插入宽、高数值"
     download_remote_images_to_local: "下载一份主题中链接的外部图片到本地"
     download_remote_images_threshold: "本地最小可用下载外部图片到本地的量（百分比）"
+    disabled_image_download_domains: "一个用 | 分割的域名列表，链接到这些站点的图片不会被下载。"
     ninja_edit_window: "在多少秒钟之内，对帖子的多次编辑不生成新版本"
     post_edit_time_limit: "设置分钟数，在这几分钟内作者可以编辑或者删除帖子。设置为 0 则允许在任何时间编辑或者删除帖子。"
     edit_history_visible_to_public: "允许任何人查看以前版本的帖子。当禁用时，只有职员才能查看浏览编辑记录。"
@@ -571,6 +572,7 @@ zh_CN:
     ga_universal_domain_name: "Google 通用分析域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
     enable_escaped_fragments: "如未侦测到爬虫回退到使用 Google Ajax-Crawling API"
     enable_noscript_support: "通过 no script 标签启用对标准爬虫的支持。"
+    allow_moderators_to_create_categories: "允许版主创建新的分类"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|starred|categories|top|read|posted"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     share_links: "确定在分享对话框里显示哪些条目，以及排列顺序。例如：twitter|facebook|google+|email"
@@ -638,7 +640,7 @@ zh_CN:
     clean_orphan_uploads_grace_period_hours: "删除孤立上传资料的宽限期（单位：小时）"
     purge_deleted_uploads_grace_period_days: "移除已删除的孤立上传资料的宽限期（单位：小时）"
     enable_s3_uploads: "上传文件到 Amazon S3"
-    s3_upload_bucket: "Amazon S3 上上传文件保存的 bucket 名字。警告：必须为小写（参考：http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html）"
+    s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点（.）。"
     s3_access_key_id: "将用于上传图片的 Amazon S3 access key"
     s3_secret_access_key: "将用于上传图片的 Amazon S3 secret key"
     s3_region: "将用于上传图片的 Amazon S3 区域名"
@@ -675,9 +677,9 @@ zh_CN:
     category_colors: "设置分类颜色的用'|'分隔的十六进制色彩值列表"
     max_image_size_kb: "允许用户上传的最大文件大小(以kB为单位) - 确保在nginx(client_max_body_size)，apache 或代理中进行限制文件大小的配置."
     max_attachment_size_kb: "允许用户上传的最大文件大小（单位：KB）——同时在 nginx（client_max_body_size）/apache 或代理中配置他们。"
-    authorized_extensions: "用'|'分割的允许上传文件的扩展名列表"
     max_similar_results: "当用户撰写新主题时，显示多少类似主题给用户"
     title_prettify: "防止常见标题里的错别字和错误，包括全部大写，第一个字符小写，多个'！'和'？'，结尾多余的'.'等等。"
+    title_sanitize: "从标题中移除 HTML 标签"
     topic_views_heat_low: "多少浏览量后主题的热度变为低。"
     topic_views_heat_medium: "多少浏览量后主题的热度变为中。"
     topic_views_heat_high: "多少浏览量后主题的热度变为高。"
@@ -707,6 +709,7 @@ zh_CN:
     email_editable: "允许用户在注册后改变他们的邮箱地址。"
     allow_uploaded_avatars: "允许用户上传他们自己的头像。"
     allow_animated_avatars: "允许用户使用 gif 动画头像。警告：强烈建议在更改后运行 avatars:regenerate rake 任务。"
+    digest_topics: "邮件摘要中显示的最大主题数目"
     digest_min_excerpt_length: "在邮件摘要中每个帖子应有多少个字符"
     default_digest_email_frequency: "用户收到摘要邮件的默认间隔。用户可以在参数设置中更改这个设置。"
     default_external_links_in_new_tab: "在新标签页中打开外部链接。用户可以在参数设置中更改这个设置。"
@@ -733,6 +736,8 @@ zh_CN:
     embed_truncate: "截断导入的主题"
     embed_category: "创建主题的分类"
     embed_post_limit: "嵌入帖子的最大数量"
+    embed_whitelist_selector: "在嵌入页面加入元素 CSS 选择器"
+    embed_blacklist_selector: "在嵌入页面移除元素 CSS 选择器"
     tos_accept_required: "如果启用，用户将需要在注册页面选择一个复选框以统一服务条款。在内容标签中编辑'注册表单：服务条款信息'更改消息。"
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
   notification_types:
@@ -747,6 +752,7 @@ zh_CN:
     invited_to_private_message: "%{display_username} 邀请您进行私信：%{link}"
     invitee_accepted: "%{display_username} 接受了您的邀请"
     linked: "%{display_username} 在 %{link} 里链接了您"
+    granted_badge: "您被授予了 %{link}"
   search:
     within_post: "#%{post_number} %{username}： %{excerpt}"
     types:
@@ -785,12 +791,12 @@ zh_CN:
       one: "本主题为创建 1 分钟后自动关闭，不允许添加新的回复。"
       other: "本主题为创建 {{count}} 分钟后自动关闭。不允许添加新回复。"
     autoclosed_disabled: "本主题是开放的，可以添加新的回复。"
-    pinned_enabled: "本主题已置顶，它将始终显示在它所属分类的顶部。可以由版主解除置顶或者点击清除置顶按钮。"
+    pinned_enabled: "本主题已置顶，它将始终显示在它所属分类的顶部。可由职员对所有人解除置顶，或者由用户自己取消置顶。"
     pinned_disabled: "本主题已被解除置顶，它将不再显示在它所属分类的顶部。"
-    pinned_globally_enabled: "本主题已全局置顶，它将始终显示在它所属分类的顶部。可以由版主解除置顶或者点击清除置顶按钮。"
+    pinned_globally_enabled: "本主题已全局置顶，它将始终显示在它所属分类的顶部。可由职员对所有人解除置顶，或者由用户自己取消置顶。"
     pinned_globally_disabled: "本主题已被解除置顶，它将不再显示在它所属分类的顶部。"
     visible_enabled: "本主题可见，它将显示在主题列表中。"
-    visible_disabled: "本主题不可见，它将不被显示在主题列表中，只能通过一个直接链接来访问。"
+    visible_disabled: "本主题不可见，它将不会出现在主题列表中。只有直达链接才可以访问该主题。"
   login:
     not_approved: "您的帐号尚未获得批准。一旦您的帐号获得批准，您会收到一封电子邮件。"
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
@@ -890,9 +896,9 @@ zh_CN:
       您的版本：%{installed_version}
       新版本：**%{new_version}**
 
-      - 在[GitHub 改动日中](https://github.com/discourse/discourse/commits/master)查看更新内容S
+      - 在[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中查看更新内容。
 
-      - 访问 `/admin/docker` 升级，刷新这个页面几次，并且按下“升级 Discourse”按钮。
+      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker) 升级，刷新这个页面几次，然后按下“升级 Discourse”按钮。
 
       - 访问 http://meta.discourse.org 获取 Discourse 的最新资讯、讨论和支持。
   new_version_mailer_with_notes:
@@ -903,9 +909,9 @@ zh_CN:
       您的版本：%{installed_version}
       新版本：**%{new_version}**
 
-      - 在[GitHub 改动日中](https://github.com/discourse/discourse/commits/master)查看更新内容S
+      - 在[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)查看更新内容。
 
-      - 访问 `/admin/docker` 升级，刷新这个页面几次，并且按下“升级 Discourse”按钮。
+      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker) 升级，刷新这个页面几次，并且按下“升级 Discourse”按钮。
 
       - 访问 http://meta.discourse.org 获取 Discourse 的最新资讯、讨论和支持。
 
@@ -1099,6 +1105,9 @@ zh_CN:
         有新注册的用户在访问论坛前需要被确认（或者拒绝）。
 
         [请在管理栏目中审核他们](%{base_url}/admin/users/list/pending)。
+    download_remote_images_disabled:
+      subject_template: "远程图片下载已禁用。"
+      text_body_template: "`download_remote_images_to_local` 设定已被禁用，因为已经达到 ``download_remote_images_threshold` 设定中的磁盘空间限制。"
   unsubscribe_link: "如果您希望取消这些邮件的订阅，请访问您的[用户设置](%{user_preferences_url})。"
   user_notifications:
     previous_discussion: "之前的回复"
@@ -1241,9 +1250,9 @@ zh_CN:
     signup_form_message: '我已经阅读并接受 <a href="/tos" target="_blank">服务条款</a>。'
   deleted: '已删除'
   upload:
-    edit_reason: "我们已经下载了外部图片的副本"
     unauthorized: "抱歉，您没有上传文件的权限（验证扩展：%{authorized_extensions}）。"
     pasted_image_filename: "粘贴的图像"
+    store_failure: "用户#%{user_id} 上传的 #%{upload_id} 保存失败。"
     attachments:
       too_large: "抱歉，您试图上传的文件太大了（最大限制为%{max_size_kb}%kb）。"
     images:
