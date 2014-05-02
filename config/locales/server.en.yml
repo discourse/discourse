@@ -208,7 +208,7 @@ en:
         user:
           attributes:
             password:
-              common: "is one of the 5000 most common passwords. Please use a more secure password."
+              common: "is one of the 10000 most common passwords. Please use a more secure password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
 
@@ -703,7 +703,7 @@ en:
     min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
 
     min_password_length: "Minimum password length."
-    block_common_passwords: "Don't allow passwords that are in the 5000 most common passwords."
+    block_common_passwords: "Don't allow passwords that are in the 10000 most common passwords."
 
     enable_sso: "Enable single sign on via an external site"
     sso_url: "URL of single sign on endpoint"
