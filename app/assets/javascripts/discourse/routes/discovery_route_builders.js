@@ -150,6 +150,12 @@ function buildCategoryRoute(filter, params) {
     deactivate: function() {
       this._super();
       this.controllerFor('search').set('searchContext', null);
+    },
+
+    actions: {
+      setNotification: function(notification_level){
+        this.currentModel.setNotification(notification_level);
+      }
     }
   });
 }

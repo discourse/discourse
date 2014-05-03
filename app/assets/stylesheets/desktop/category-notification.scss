@@ -15,15 +15,16 @@
   box-shadow: 0 1px 5px rgba($primary_shadow_color, .4);
   background-clip: padding-box;
   span {font-size: 12px;}
-.title {font-weight: bold; display: block; font-size: 14px;}
-}
-.notification-dropdown-menu a {
-  display: block;
-  padding: 3px 15px;
-  clear: both;
-  font-weight: normal;
-  line-height: 18px;
-  color: $primary_text_color;
+  .title {font-weight: bold; display: block; font-size: 14px;}
+
+  a {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: $primary_text_color;
+  }
 }
 .notification-dropdown-menu li > a:hover,
 .notification-dropdown-menu .active > a,
