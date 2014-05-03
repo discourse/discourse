@@ -6,13 +6,16 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.CategoryNotificationsButton = Discourse.CategoryNotificationDropdownButtonView.extend({
+Discourse.CategoryNotificationsButton = Discourse.View.extend({
   classNames: ['notification-options'],
-  //title: I18n.t('category.notifications.title'),
-  //longDescriptionBinding: 'topic.details.notificationReasonText',
-  //topic: Em.computed.alias('controller.model'),
   category: Em.computed.alias('controller.model'),
-  hidden: Em.computed.alias('topic.deleted'),
+  hidden: Em.computed.alias('category.deleted'),
+  templateName: 'category_notification_dropdown',
+  
+  init: function() {
+    this._super();
+    this.display();
+  },
 
   dropDownContent: function() {
     var contents = [];
@@ -26,17 +29,20 @@ Discourse.CategoryNotificationsButton = Discourse.CategoryNotificationDropdownBu
 
       if (pair[1] === 'regular') { return; }
 
-      contents.push([
-          Discourse.Category.NotificationLevel[pair[0]],
-          'category.notifications.' + pair[1]
-        ]);
+      contents.push({
+          id: Discourse.Category.NotificationLevel[pair[0]],
+          title: I18n.t('category.notifications.' + pair[1] + '.title'),
+          description: I18n.t('category.notifications.' + pair[1] + '.description')
+      }
+        
+        );
     });
 
     return contents;
   }.property(),
 
   // displayed Button
-  text: function() {
+  display: function() {
     var key = (function() {
       switch (this.get('category.notification_level')) {
         case Discourse.Category.NotificationLevel.WATCHING: return 'watching';
@@ -48,18 +54,17 @@ Discourse.CategoryNotificationsButton = Discourse.CategoryNotificationDropdownBu
 
     var icon = (function() {
       switch (key) {
-        case 'watching': return '<i class="fa fa-circle heatmap-high"></i>&nbsp;';
-        case 'tracking': return '<i class="fa fa-circle heatmap-low"></i>&nbsp;';
-        case 'muted': return '<i class="fa fa-times-circle"></i>&nbsp;';
+        case 'watching': return 'heatmap-high';
+        case 'tracking': return 'fa-circle heatmap-low';
+        case 'muted': return 'fa-times-circle';
         default: return '';
       }
     })();
-    return icon + (I18n.t("category.notifications." + key + ".title")) + "<span class='caret'></span>";
-  }.property('category.notification_level'),
+    this.set("text", I18n.t("category.notifications." + key + ".title"));
+    this.set("icon", icon);
+  },
 
-  clicked: function(id) {
-    return this.get('category').setNotification(id);
-  }
-
+  changeDisplay: function() {
+    this.display();
+  }.observes('category.notification_level')
 });
-
