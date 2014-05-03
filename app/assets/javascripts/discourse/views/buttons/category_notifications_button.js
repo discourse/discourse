@@ -54,9 +54,9 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
 
     var icon = (function() {
       switch (key) {
-        case 'watching': return 'heatmap-high';
-        case 'tracking': return 'fa-circle heatmap-low';
-        case 'muted': return 'fa-times-circle';
+        case 'watching': return 'fa fa-circle heatmap-high';
+        case 'tracking': return 'fa fa-circle heatmap-low';
+        case 'muted': return 'fa fa-times-circle';
         default: return '';
       }
     })();
