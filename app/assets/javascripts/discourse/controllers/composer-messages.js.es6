@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ComposerMessagesController = Ember.ArrayController.extend({
+export default Ember.ArrayController.extend({
   needs: ['composer'],
 
   // Whether we've checked our messages
