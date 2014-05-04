@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ComposerController = Discourse.Controller.extend({
+export default Discourse.Controller.extend({
   needs: ['modal', 'topic', 'composerMessages'],
 
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),
