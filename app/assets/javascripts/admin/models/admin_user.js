@@ -306,7 +306,7 @@ Discourse.AdminUser = Discourse.User.extend({
       }
     }, {
       "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_and_block'),
-      "class": "btn",
+      "class": "btn btn-danger",
       "callback": function(){
         performDestroy(true);
       }
