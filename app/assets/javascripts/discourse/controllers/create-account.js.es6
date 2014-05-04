@@ -7,7 +7,7 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalFunctionality, {
+export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
   uniqueUsernameValidation: null,
   globalNicknameExists: false,
   complete: false,

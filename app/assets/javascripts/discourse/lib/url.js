@@ -52,6 +52,8 @@ Discourse.URL = Em.Object.createWithMixins({
   **/
   routeTo: function(path) {
 
+    if (Em.isEmpty(path)) { return; }
+
     if(Discourse.get("requiresRefresh")){
       document.location.href = path;
       return;

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.BulkNotificationLevelController = Em.Controller.extend({
+export default Em.Controller.extend({
   needs: ['topicBulkActions'],
 
   notificationLevelId: null,
