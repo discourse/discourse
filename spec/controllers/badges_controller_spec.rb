@@ -9,7 +9,7 @@ describe BadgesController do
 
       response.status.should == 200
       parsed = JSON.parse(response.body)
-      parsed["badges"].length.should == 1
+      parsed["badges"].length.should == Badge.count
     end
   end
 

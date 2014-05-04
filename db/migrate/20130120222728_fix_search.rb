@@ -13,6 +13,6 @@ class FixSearch < ActiveRecord::Migration
   end
 
   def down
-    raise ActiveRecord::IrriversableMigration
+    raise ActiveRecord::IrreversibleMigration
   end
 end
