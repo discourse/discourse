@@ -1,4 +1,4 @@
-module("controller:header", "Header Controller");
+module("Discourse.HeaderController");
 
 test("showNotifications action", function() {
   var resolveRequestWith;
@@ -7,7 +7,7 @@ test("showNotifications action", function() {
   });
 
 
-  var controller = controllerFor('header');
+  var controller = Discourse.HeaderController.create();
   var viewSpy = {
     showDropdownBySelector: sinon.spy()
   };

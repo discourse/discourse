@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.Controller.extend({
+Discourse.HeaderController = Discourse.Controller.extend({
   topic: null,
   showExtraInfo: null,
   notifications: null,

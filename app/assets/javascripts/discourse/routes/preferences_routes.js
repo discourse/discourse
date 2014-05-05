@@ -18,17 +18,18 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
 
   actions: {
     showAvatarSelector: function() {
-      Discourse.Route.showModal(this, 'avatar-selector');
+      Discourse.Route.showModal(this, 'avatarSelector');
       // all the properties needed for displaying the avatar selector modal
-      this.controllerFor('avatar-selector').setProperties(this.modelFor('user').getProperties(
+      var avatarSelector = this.modelFor('user').getProperties(
         'username', 'email',
         'has_uploaded_avatar', 'use_uploaded_avatar',
-        'gravatar_template', 'uploaded_avatar_template'));
+        'gravatar_template', 'uploaded_avatar_template');
+      this.controllerFor('avatarSelector').setProperties(avatarSelector);
     },
 
     saveAvatarSelection: function() {
       var user = this.modelFor('user');
-      var avatarSelector = this.controllerFor('avatar-selector');
+      var avatarSelector = this.controllerFor('avatarSelector');
       // sends the information to the server if it has changed
       if (avatarSelector.get('use_uploaded_avatar') !== user.get('use_uploaded_avatar')) {
         user.toggleAvatarSelection(avatarSelector.get('use_uploaded_avatar'));

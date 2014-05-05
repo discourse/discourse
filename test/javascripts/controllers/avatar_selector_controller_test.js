@@ -4,10 +4,10 @@ var avatarSelector = Em.Object.create({
   uploaded_avatar_template: "//cdn.discourse.org/uploads/meta_discourse/avatars/093/607/185cff113e/{size}.jpg"
 });
 
-module("controller:avatar-selector");
+module("Discourse.AvatarSelectorController");
 
 test("avatarTemplate", function() {
-  var avatarSelectorController = controllerFor('avatar-selector');
+  var avatarSelectorController = testController(Discourse.AvatarSelectorController);
   avatarSelectorController.setProperties(avatarSelector);
 
   equal(avatarSelectorController.get("avatarTemplate"),

@@ -14,11 +14,6 @@ function setTemplates(lookupStrings) {
   });
 }
 
-function normalized(input, expected, desc) {
-  var resolver = Discourse.Resolver.create({namespace: Discourse});
-  equal(resolver.normalizeName(input), expected, desc);
-}
-
 module("Discourse.Resolver", {
   setup: function() {
     originalTemplates = Ember.TEMPLATES;
@@ -32,12 +27,6 @@ module("Discourse.Resolver", {
     Ember.TEMPLATES = originalTemplates;
     Discourse.Mobile.mobileView = originalMobileViewFlag;
   }
-});
-
-test("normalizeName", function() {
-  normalized('header', 'header', 'a single word stays the same');
-  normalized('avatarSelector', 'avatar-selector', 'camel case is converted to dashed');
-  normalized('avatar_selector', 'avatar-selector', 'underscores are converted to dashes');
 });
 
 test("finds templates in top level dir", function() {
