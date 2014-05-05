@@ -7,7 +7,7 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   generalSelected:  Ember.computed.equal('selectedTab', 'general'),
   securitySelected: Ember.computed.equal('selectedTab', 'security'),
   settingsSelected: Ember.computed.equal('selectedTab', 'settings'),

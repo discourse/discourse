@@ -18,7 +18,7 @@ Discourse.DiscoveryTopRoute = Discourse.Route.extend(Discourse.OpenComposer, {
   setupController: function(controller, model) {
     var filterText = I18n.t('filters.top.title');
     Discourse.set('title', I18n.t('filters.with_topics', {filter: filterText}));
-    this.controllerFor('discoveryTop').setProperties({ model: model, category: null });
+    this.controllerFor('discovery/top').setProperties({ model: model, category: null });
     this.controllerFor('navigationDefault').set('canCreateTopic', model.get('can_create_topic'));
 
     // If there's a draft, open the create topic composer
@@ -40,7 +40,7 @@ Discourse.DiscoveryTopRoute = Discourse.Route.extend(Discourse.OpenComposer, {
   actions: {
 
     createTopic: function() {
-      this.openComposer(this.controllerFor('discoveryTop'));
+      this.openComposer(this.controllerFor('discovery/top'));
     }
 
   }
@@ -90,7 +90,7 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend(Discourse.OpenCompo
     var filterText = I18n.t('filters.top.title');
     Discourse.set('title', I18n.t('filters.with_category', {filter: filterText, category: model.get('name').capitalize()}));
     this.controllerFor('navigationCategory').set('canCreateTopic', topList.get('can_create_topic'));
-    this.controllerFor('discoveryTop').setProperties({
+    this.controllerFor('discovery/top').setProperties({
       model: topList,
       category: model,
       noSubcategories: this.get('no_subcategories')
@@ -100,7 +100,7 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend(Discourse.OpenCompo
 
   renderTemplate: function() {
     this.render('navigation/category', { outlet: 'navigation-bar' });
-    this.render('discovery/top', { controller: 'discoveryTop', outlet: 'list-container' });
+    this.render('discovery/top', { controller: 'discovery/top', outlet: 'list-container' });
   },
 
   deactivate: function() {
@@ -111,7 +111,7 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend(Discourse.OpenCompo
   actions: {
 
     createTopic: function() {
-      this.openComposer(this.controllerFor('discoveryTop'));
+      this.openComposer(this.controllerFor('discovery/top'));
     }
 
   }
