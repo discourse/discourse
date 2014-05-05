@@ -76,7 +76,7 @@ class ListController < ApplicationController
     define_method("#{filter}_feed") do
       discourse_expires_in 1.minute
 
-      @title = "#{SiteSetting.title} - #{filter.capitalize} #{I18n.t('Topics')}"
+      @title = "#{SiteSetting.title} - #{I18n.t("rss_description.#{filter}")}"
       @link = "#{Discourse.base_url}/#{filter}"
       @description = I18n.t("rss_description.#{filter}")
       @atom_link = "#{Discourse.base_url}/#{filter}.rss"
