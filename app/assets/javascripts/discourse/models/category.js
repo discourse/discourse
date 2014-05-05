@@ -163,7 +163,7 @@ Discourse.Category = Discourse.Model.extend({
 
   setNotification: function(notification_level) {
     var url = "/category/" + this.get('id')+"/notifications";
-    this.set('notification_level', notification_level)
+    this.set('notification_level', notification_level);
     return Discourse.ajax(url, {
       data: {
         notification_level: notification_level
