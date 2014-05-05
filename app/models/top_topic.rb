@@ -97,19 +97,24 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.compute_top_score_for(period)
-    # log(views) + (posts * likes)
-    exec_sql("UPDATE top_topics
-              SET #{period}_score = CASE
-                                      WHEN #{period}_views_count = 0 THEN 0
-                                      ELSE log(#{period}_views_count) + (#{period}_posts_count * #{period}_likes_count)
-                                    END
-             WHERE
-                  #{period}_score <> CASE
-                                      WHEN #{period}_views_count = 0 THEN 0
-                                      ELSE log(#{period}_views_count) + (#{period}_posts_count * #{period}_likes_count)
-                                    END
+    sql = <<-SQL
+      WITH top AS (
+        SELECT CASE
+                 WHEN topics.created_at < :from THEN 0
+                 ELSE log(greatest(#{period}_views_count, 1)) + #{period}_likes_count + #{period}_posts_count * 2
+               END AS score,
+               topic_id
+        FROM top_topics
+        LEFT JOIN topics ON topics.id = top_topics.topic_id
+      )
+      UPDATE top_topics
+      SET #{period}_score = top.score
+      FROM top
+      WHERE top_topics.topic_id = top.topic_id
+        AND #{period}_score <> top.score
+    SQL
 
-               ")
+    exec_sql(sql, from: start_of(period))
   end
 
   def self.start_of(period)
