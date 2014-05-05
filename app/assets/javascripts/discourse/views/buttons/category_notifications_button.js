@@ -12,11 +12,6 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
   hidden: Em.computed.alias('category.deleted'),
   templateName: 'category_notification_dropdown',
   
-  init: function() {
-    this._super();
-    this.display();
-  },
-
   dropDownContent: function() {
     var contents = [];
 
