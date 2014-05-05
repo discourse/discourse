@@ -7,13 +7,13 @@
   @module Discourse
 **/
 Discourse.TopicListItemController = Ember.ObjectController.extend({
-  needs: ['discovery/topics'],
+  needs: ['discoveryTopics'],
 
-  canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),
-  bulkSelectEnabled: Em.computed.alias('controllers.discovery/topics.bulkSelectEnabled'),
+  canStar: Em.computed.alias('controllers.discoveryTopics.currentUser.id'),
+  bulkSelectEnabled: Em.computed.alias('controllers.discoveryTopics.bulkSelectEnabled'),
 
   checked: function(key, value) {
-    var selected = this.get('controllers.discovery/topics.selected'),
+    var selected = this.get('controllers.discoveryTopics.selected'),
         topic = this.get('model');
 
     if (arguments.length > 1) {
@@ -24,17 +24,17 @@ Discourse.TopicListItemController = Ember.ObjectController.extend({
       }
     }
     return selected.contains(topic);
-  }.property('controllers.discovery/topics.selected.length'),
+  }.property('controllers.discoveryTopics.selected.length'),
 
   titleColSpan: function() {
     // Uncategorized pinned topics will span the title and category column in the topic list.
-    return (!this.get('controllers.discovery/topics.hideCategory') &&
+    return (!this.get('controllers.discoveryTopics.hideCategory') &&
              this.get('model.isPinnedUncategorized') ? 2 : 1);
-  }.property('controllers.discovery/topics.hideCategory', 'model.isPinnedUncategorized'),
+  }.property('controllers.discoveryTopics.hideCategory', 'model.isPinnedUncategorized'),
 
   hideCategory: function() {
-    return this.get('controllers.discovery/topics.hideCategory') || this.get('titleColSpan') > 1;
-  }.property('controllers.discovery/topics.hideCategory', 'titleColSpan'),
+    return this.get('controllers.discoveryTopics.hideCategory') || this.get('titleColSpan') > 1;
+  }.property('controllers.discoveryTopics.hideCategory', 'titleColSpan'),
 
   actions: {
     toggleStar: function() {

@@ -7,7 +7,8 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+
   auto_close_valid: true,
   auto_close_invalid: Em.computed.not('auto_close_valid'),
 

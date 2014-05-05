@@ -1,6 +1,6 @@
 Discourse.DiscoverySortableController = Discourse.Controller.extend({
-  needs: ['discovery/topics'],
+  needs: ['discoveryTopics'],
   queryParams: ['order', 'ascending'],
-  order: Em.computed.alias('controllers.discovery/topics.order'),
-  ascending: Em.computed.alias('controllers.discovery/topics.ascending')
+  order: Em.computed.alias('controllers.discoveryTopics.order'),
+  ascending: Em.computed.alias('controllers.discoveryTopics.ascending')
 });

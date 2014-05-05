@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.DiscoveryController.extend({
+Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
   needs: ['discovery'],
   bulkSelectEnabled: false,
   selected: [],
