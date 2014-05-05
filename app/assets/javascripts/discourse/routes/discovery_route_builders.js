@@ -108,6 +108,7 @@ function buildCategoryRoute(filter, params) {
       opts.noSubcategories = params && params.no_subcategories;
       opts.canEditCategory = Discourse.User.currentProp('staff');
       this.controllerFor('navigation/category').setProperties(opts);
+      opts.canChangeCategoryNotificationLevel = Discourse.User.current();
 
       return Discourse.TopicList.list(listFilter, params).then(function(list) {
         var tracking = Discourse.TopicTrackingState.current();
