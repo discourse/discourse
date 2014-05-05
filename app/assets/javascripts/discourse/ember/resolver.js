@@ -1,4 +1,3 @@
-/* global requirejs, require */
 /**
   A custom resolver to allow template names in the format we like.
 
@@ -8,17 +7,6 @@
   @module Discourse
 **/
 Discourse.Resolver = Ember.DefaultResolver.extend({
-
-  resolveController: function(parsedName) {
-    var moduleName = "discourse/controllers/" + parsedName.fullNameWithoutType,
-        module = requirejs.entries[moduleName];
-
-    if (module) {
-      module = require(moduleName, null, null, true /* force sync */);
-      if (module && module['default']) { module = module['default']; }
-    }
-    return module || this._super(parsedName);
-  },
 
   /**
     Attaches a view and wires up the container properly
