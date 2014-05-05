@@ -8,7 +8,7 @@
   @module Discourse
 **/
 Discourse.TopicBulkActionsController = Ember.ArrayController.extend(Discourse.ModalFunctionality, {
-  needs: ['discoveryTopics'],
+  needs: ['discovery/topics'],
 
   onShow: function() {
     this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal small');
@@ -45,7 +45,7 @@ Discourse.TopicBulkActionsController = Ember.ArrayController.extend(Discourse.Mo
   performAndRefresh: function(operation) {
     var self = this;
     return this.perform(operation).then(function() {
-      self.get('controllers.discoveryTopics').send('refresh');
+      self.get('controllers.discovery/topics').send('refresh');
       self.send('closeModal');
     });
   },

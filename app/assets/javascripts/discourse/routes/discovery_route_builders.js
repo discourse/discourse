@@ -53,7 +53,7 @@ function buildTopicRoute(filter) {
         Discourse.set('title', I18n.t('filters.with_topics', {filter: filterText}));
       }
 
-      this.controllerFor('discoveryTopics').setProperties({
+      this.controllerFor('discovery/topics').setProperties({
         model: model,
         category: null,
         period: period,
@@ -78,7 +78,7 @@ function buildTopicRoute(filter) {
 
     renderTemplate: function() {
       this.render('navigation/default', { outlet: 'navigation-bar' });
-      this.render('discovery/topics', { controller: 'discoveryTopics', outlet: 'list-container' });
+      this.render('discovery/topics', { controller: 'discovery/topics', outlet: 'list-container' });
     }
   });
 }
@@ -131,7 +131,7 @@ function buildCategoryRoute(filter, params) {
       Discourse.set('title', I18n.t('filters.with_category', { filter: filterText, category: model.get('name').capitalize() }));
 
       this.controllerFor('navigationCategory').set('canCreateTopic', topics.get('can_create_topic'));
-      this.controllerFor('discoveryTopics').setProperties({
+      this.controllerFor('discovery/topics').setProperties({
         model: topics,
         category: model,
         period: period,
@@ -144,7 +144,7 @@ function buildCategoryRoute(filter, params) {
 
     renderTemplate: function() {
       this.render('navigation/category', { outlet: 'navigation-bar' });
-      this.render('discovery/topics', { controller: 'discoveryTopics', outlet: 'list-container' });
+      this.render('discovery/topics', { controller: 'discovery/topics', outlet: 'list-container' });
     },
 
     deactivate: function() {
