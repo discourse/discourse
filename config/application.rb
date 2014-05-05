@@ -32,6 +32,7 @@ module Discourse
     # -- all .rb files in that directory are automatically loaded.
 
     require 'discourse'
+    require 'es6_module_transpiler/rails'
     require 'js_locale_helper'
 
     # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
