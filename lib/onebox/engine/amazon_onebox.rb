@@ -6,11 +6,15 @@ module Onebox
       include HTML
 
 
-      matches_regexp(/^http:\/\/(?:www)\.amazon\.(com|ca)/)
+      matches_regexp(/^http:\/\/(?:www)\.amazon\.(?<tld>com|ca|de|it|es|fr|co\.jp|co\.uk|cn|in|com\.br)\//)
 
       def url
-        return "http://www.amazon.com/gp/aw/d/" + URI::encode(match[:id]) if match && match[:id]
+        return "http://www.amazon.#{tld}/gp/aw/d/" + URI::encode(match[:id]) if match && match[:id]
         @url
+      end
+
+      def tld
+        @tld || @@matcher.match(@url)["tld"]
       end
 
       def http_params
