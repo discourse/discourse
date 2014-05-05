@@ -12,6 +12,11 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
   hidden: Em.computed.alias('category.deleted'),
   templateName: 'category_notification_dropdown',
   
+  init: function() {
+    this.display();
+    this._super();
+  },
+
   dropDownContent: function() {
     var contents = [];
 
@@ -21,8 +26,6 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
       ['REGULAR', 'regular'],
       ['MUTED', 'muted']
     ], function(pair) {
-
-      if (pair[1] === 'regular') { return; }
 
       contents.push({
           id: Discourse.Category.NotificationLevel[pair[0]],
@@ -39,7 +42,7 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
   // displayed Button
   display: function() {
     var key = (function() {
-      switch (this.get('category.notification_level')) {
+      switch (this.get('category').notification_level) {
         case Discourse.Category.NotificationLevel.WATCHING: return 'watching';
         case Discourse.Category.NotificationLevel.TRACKING: return 'tracking';
         case Discourse.Category.NotificationLevel.MUTED: return 'muted';
@@ -52,10 +55,10 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
         case 'watching': return 'fa fa-circle heatmap-high';
         case 'tracking': return 'fa fa-circle heatmap-low';
         case 'muted': return 'fa fa-times-circle';
-        default: return '';
+        default: return 'fa fa-circle-o';
       }
     })();
-    this.set("text", I18n.t("category.notifications." + key + ".title"));
+
     this.set("icon", icon);
   },
 
