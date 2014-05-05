@@ -31,15 +31,20 @@ class UserDestroyer
           end
         end
       end
+      user.post_actions.each do |post_action|
+        post_action.remove_act!(Discourse.system_user)
+      end
       user.destroy.tap do |u|
         if u
           if opts[:block_email]
             b = ScreenedEmail.block(u.email, ip_address: u.ip_address)
             b.record_match! if b
           end
-          if opts[:block_ip]
-            b = ScreenedIpAddress.watch(u.ip_address)
-            b.record_match! if b
+          if opts[:block_ip] && u.ip_address
+            b.record_match! if b = ScreenedIpAddress.watch(u.ip_address)
+            if u.registration_ip_address && u.ip_address != u.registration_ip_address
+              b.record_match! if b = ScreenedIpAddress.watch(u.registration_ip_address)
+            end
           end
           Post.with_deleted.where(user_id: user.id).update_all("user_id = NULL")
 
@@ -56,7 +61,7 @@ class UserDestroyer
           end
 
           StaffActionLogger.new(@actor == user ? Discourse.system_user : @actor).log_user_deletion(user, opts.slice(:context))
-          DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
+          DiscourseHub.unregister_username(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
         end
       end

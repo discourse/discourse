@@ -173,30 +173,9 @@ describe Invite do
     end
 
     context 'invite trust levels' do
-
       it "returns the trust level in default_invitee_trust_level" do
         SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:leader])
         invite.redeem.trust_level.should == TrustLevel.levels[:leader]
-      end
-
-      context "invited by a trust level 3 user" do
-        let(:leader) { Fabricate(:user, trust_level: TrustLevel.levels[:leader]) }
-        let(:invitation) { Fabricate(:invite, invited_by: leader) }
-
-        it "default_invitee_trust_level is 1, then invited user should be trust level 2" do
-          SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:basic])
-          invitation.redeem.trust_level.should == TrustLevel.levels[:regular]
-        end
-
-        it "default_invitee_trust_level is 2, then invited user should be trust level 2" do
-          SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:regular])
-          invitation.redeem.trust_level.should == TrustLevel.levels[:regular]
-        end
-
-        it "default_invitee_trust_level is 3, then invited user should be trust level 3" do
-          SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:leader])
-          invitation.redeem.trust_level.should == TrustLevel.levels[:leader]
-        end
       end
     end
 

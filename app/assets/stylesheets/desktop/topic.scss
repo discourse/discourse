@@ -1,17 +1,7 @@
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 .post-info a {
   color: lighten($primary_text_color, 50%);
-  padding-right: 5px;
 }
 
-.topic-meta-data-inside {
-  float: right;
-  margin-top: -22px;
-  float: right;
-  font-size: 12px;
-}
 
 .post-actions {
   @include unselectable;
@@ -40,8 +30,8 @@
   margin-bottom: 20px;
   .star {
     font-size: 20px;
-    margin-top: 8px;
-    margin-right: 8px;
+    margin-top: 6px;
+    margin-right: 6px;
   }
   #edit-title { width: 500px; }
   .category-combobox {
@@ -59,12 +49,15 @@
     margin: 0;
     line-height: 1.2em;
     overflow: hidden;
-    a.badge-category { vertical-align: top; }
+    a {color: $primary_text_color;}
+    a.badge-category { vertical-align: top; margin-top: 4px; }
     a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
   }
   .topic-statuses {
     margin-top: -2px;
-    .fa-thumb-tack { margin-top: -1px; }
+    .fa-thumb-tack { padding-left: 3px;
+ }
+
   }
   .chzn-container { vertical-align: middle; }
   .private-message-glyph { display: none; }
@@ -74,7 +67,7 @@
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 #topic-closing-info {
-  border-top: 1px solid lighten($primary_border_color, 10%) ;
+  border-top: 1px solid $primary_border_color;
   padding-top: 10px;
   height: 20px;
 }
@@ -133,7 +126,7 @@ a:hover.reply-new {
     z-index: 1;
   }
   button {
-    padding: 3px 0 0 0;
+    padding: 3px 1px 0 0;
     cursor: pointer;
     z-index: 1000;
     position: absolute;
@@ -183,13 +176,6 @@ a:hover.reply-new {
 
 }
 
-.topic-statuses .topic-status {
-  padding: 0;
-  i {
-    font-size:20px;
-  }
-}
-
 #suggested-topics .topic-statuses .topic-status {
   padding: 0;
   i {
@@ -218,7 +204,16 @@ a:hover.reply-new {
 code,kbd,pre,samp{
   font-family:monospace, serif; font-size:1em;
 }
-pre { white-space:pre-wrap;}
+pre {
+  code {
+  white-space:pre-wrap;
+  display: block;
+  padding: 5px 10px;
+  color: $primary_text_color;
+  background: lighten($secondary_background_color, 76%);
+  max-height: 500px;
+  }
+}
 q{ quotes:"\201C" "\201D" "\2018" "\2019"; }
 small{ font-size:80%; }
 sub,sup{

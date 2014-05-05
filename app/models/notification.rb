@@ -27,7 +27,8 @@ class Notification < ActiveRecord::Base
   def self.types
     @types ||= Enum.new(
       :mentioned, :replied, :quoted, :edited, :liked, :private_message,
-      :invited_to_private_message, :invitee_accepted, :posted, :moved_post
+      :invited_to_private_message, :invitee_accepted, :posted, :moved_post,
+      :linked, :granted_badge
     )
   end
 
@@ -152,4 +153,3 @@ end
 #  index_notifications_on_post_action_id          (post_action_id)
 #  index_notifications_on_user_id_and_created_at  (user_id,created_at)
 #
-

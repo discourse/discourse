@@ -1,8 +1,5 @@
 // styles that apply to the reply pane that slides up to compose replies
 
-@import "../common/foundation/variables";
-@import "../common/foundation/mixins";
-
 // hack, this needs to be done cleaner
 .private-message input.span8 {
   width: 47%;
@@ -18,47 +15,13 @@ display: none;
 
 
 
-
-.autocomplete {
-  z-index: 999999;
-  position: absolute;
-  width: 240px;
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    li {
-      border-bottom: 1px solid $primary_border_color;
-      a[href] {
-        padding: 5px;
-        display: block;
-        span.username {
-          color: lighten($primary_text_color, 20%);
-        }
-        span.name {
-          font-size: 11px;
-        }
-        &.selected {
-          background-color: lighten($secondary_background_color, 60%);
-        }
-        @include hover {
-          background-color: lighten($secondary_background_color, 60%);
-          text-decoration: none;
-        }
-      }
-    }
-  }
-}
-
 #reply-control {
-  .toggle-preview, #draft-status, #file-uploading {
+  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
     position: absolute;
-    bottom: -31px;
+    bottom: -37px;
     margin-top: 0;
   }
-  .toggle-preview {
+  .toggle-preview, .mobile-file-upload {
     right: 5px;
     text-decoration: underline;
   }
@@ -68,7 +31,7 @@ display: none;
     color: darken($tertiary_text_color, 40%);
   }
   #draft-status {
-    right: 0;
+    right: 70px;
     color: lighten($primary_text_color, 60%);
     &.flash {
       color: $warning_text_color;
@@ -78,7 +41,7 @@ display: none;
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: $composer_background;
+  background-color: $composer_background_color;
   bottom: 0;
   font-size: 14px;
   position: fixed;
@@ -117,9 +80,6 @@ display: none;
   // The various states
   &.open {
     height: 300px;
-    .grippie {
-      display: block;
-    }
   }
   &.closed {
     height: 0 !important;
@@ -184,24 +144,25 @@ display: none;
     float: none;
   }
 
-  // When the post is new (new topic) the sizings are different
+  // if this is a new topic, make room for the category field in the editor on
+  // a small screen mobile device
   &.edit-title {
     &.open {
-      height: 400px;
+      height: 280px;
     }
     .contents {
       input#reply-title {
         padding: 7px 10px;
-        margin: 6px 10px 3px 0;
+        margin: 6px 10px 0 0;
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
-        top: 135px;
+        top: 120px;
       }
     }
   }
   .contents {
-    padding: 10px;
+    padding: 10px 10px 0 10px;
     min-width: 1280px;
     .form-element {
       .chzn-container {
@@ -272,7 +233,7 @@ display: none;
     .submit-panel {
       position: absolute;
       display: block;
-      bottom: 8px;
+      bottom: 2px;
     }
   }
   .category-input {
@@ -295,72 +256,14 @@ display: none;
   }
 }
 
-
-
-div.ac-wrap.disabled {
-  input {
-    display:none;
-  }
-  .item a {
-    display:none;
-  }
-}
-
-div.ac-wrap {
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  padding: 5px 10px;
-  @include border-radius-all(3px);
-  div.item {
-    float: left;
-    margin-right: 10px;
-    margin-bottom: 5px;
-    span {
-      padding-left: 5px;
-      height: 22px;
-      display: inline-block;
-      line-height: 22px;
-      vertical-align: bottom;
-    }
-    a {
-      margin-left: 4px;
-      font-size: 10px;
-      line-height: 10px;
-      padding: 2px 1px 1px 3px;
-      border-radius: 10px;
-      width: 10px;
-      display: inline-block;
-      border: 1px solid rgba(255, 255, 255, 0);
-      &:hover {
-        background-color: $warning_background_color;
-        border: 1px solid $warning_border_color;
-        text-decoration: none;
-        color: $emphasis_text_color;
-      }
-    }
-  }
-  input[type="text"] {
-    float: left;
-    margin-top: 5px;
-    border: 0;
-    padding: 0;
-    margin: 4px 0 0;
-    box-shadow: none;
-    font-size: 16px;
-  }
-}
-#reply-control .wmd-controls #wmd-input {font-size: 16px;}
-
 #reply-control.edit-title.private-message {
   .wmd-controls {
     @include transition(top 0.3s ease);
-    top: 140px;
+    top: 120px;
   }
 }
 
 #reply-control {
-
-
   &.hide-preview {
     .wmd-controls {
       #wmd-input {
@@ -378,7 +281,7 @@ div.ac-wrap {
     left: 10px;
     right: 10px;
     position: absolute;
-    top: 60px;
+    top: 40px;
     bottom: 54px;
     display: block;
 
@@ -388,7 +291,7 @@ div.ac-wrap {
       margin-top: 0 !important;
     }
 
-    #wmd-input, #wmd-preview {
+    #wmd-input, #wmd-preview-scroller, #wmd-preview {
       @include box-sizing(border-box);
       width: 100%;
       height: 100%;
@@ -402,8 +305,11 @@ div.ac-wrap {
       h1, h2, h3, h4, h5, h6 {
         margin: 30px 0 10px;
       }
+      p {
+        margin-top: 19px;
+      }
     }
-    #wmd-input {
+    #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
       top: 0;
@@ -414,6 +320,17 @@ div.ac-wrap {
       border-top: 36px solid transparent;
       @include border-radius-all(0);
       transition: none;
+      font-size: 16px;
+    }
+    #wmd-preview-scroller {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: normal;
+      overflow: scroll;
+      visibility: hidden;
+      .marker, .caret {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
     .textarea-wrapper, .preview-wrapper {
       position: relative;
@@ -443,41 +360,5 @@ div.ac-wrap {
     border-bottom: 1px solid $primary_border_color;
     background-color: $primary_background_color;
     z-index: 100;
-  }
-}
-
-@media screen and (min-width: 1550px) {
-  #reply-control {
-    .wmd-controls {
-      width: 1450px;
-      left: auto;
-      right: auto;
-    }
-  }
-}
-
-.admin-options-form {
-  margin-top: 8px;
-  display: none;
-}
-
-.auto-close-fields {
-  input {
-    width: 50px;
-  }
-}
-
-.edit-auto-close-modal {
-  form {
-    margin: 0;
-  }
-  .auto-close-fields {
-    i.fa-clock-o {
-      font-size: 16px;
-      line-height: 8px;
-    }
-    input {
-      margin: 0;
-    }
   }
 }

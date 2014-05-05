@@ -3,7 +3,14 @@
 # to the Javascript app.
 #
 # To work with us on translations, see:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
+#
+# This is a "source" file, which is used by Transifex to get translations for other languages.
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+#
+#   tx push -s
+#
+# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
 #
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
@@ -13,7 +20,7 @@ en:
     number:
       human:
         storage_units:
-          format: ! '%n %u'
+          format: '%n %u'
           units:
             byte:
               one: Byte
@@ -91,7 +98,7 @@ en:
     of_value: "of"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
-    log_in: "Log In"
+    log_in: "Sign In"
     age: "Age"
     last_post: "Last Post"
     joined: "Joined"
@@ -177,6 +184,7 @@ en:
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
 
     groups:
+      visible: "Group is visible to all users"
       title:
         one: "group"
         other: "groups"
@@ -409,6 +417,8 @@ en:
 
       ip_address:
         title: "Last IP Address"
+      registration_ip_address:
+        title: "Registration IP Address"
       avatar:
         title: "Avatar"
       title:
@@ -477,7 +487,7 @@ en:
       complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
 
     login:
-      title: "Log In"
+      title: "Sign In"
       username: "Login"
       password: "Password"
       email_placeholder: "email or username"
@@ -521,12 +531,12 @@ en:
         need_more_for_reply: "{{n}} to go for the post"
 
       error:
-        title_missing: "Title is required."
-        title_too_short: "Title must be at least {{min}} characters long."
-        title_too_long: "Title must be less than {{max}} characters long."
-        post_missing: "Post can't be empty."
-        post_length: "Post must be at least {{min}} characters long."
-        category_missing: "You must choose a category."
+        title_missing: "Title is required"
+        title_too_short: "Title must be at least {{min}} characters"
+        title_too_long: "Title can't be more than {{max}} characters"
+        post_missing: "Post can't be empty"
+        post_length: "Post must be at least {{min}} characters"
+        category_missing: "You must choose a category"
 
       save_edit: "Save Edit"
       reply_original: "Reply on Original Topic"
@@ -579,7 +589,7 @@ en:
       admin_options_title: "Optional staff settings for this topic"
       auto_close_label: "Auto-close topic time:"
       auto_close_units: "(# of hours, a time, or a timestamp)"
-      auto_close_examples: 'Examples: 24, 17:00, 2013-11-22 14:00'
+      auto_close_examples: 'enter absolute time or number of hours — 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Please enter a valid value."
 
     notifications:
@@ -597,19 +607,22 @@ en:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} accepted your invitation"
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} moved {{link}}"
       total_flagged: "total flagged posts"
+      linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> You were granted {{link}}"
 
     upload_selector:
       title: "Add an image"
       title_with_attachments: "Add an image or a file"
       from_my_computer: "From my device"
       from_the_web: "From the web"
-      remote_tip: "enter address of an image in the form http://example.com/image.jpg"
-      remote_tip_with_attachments: "enter address of an image or a file in the form http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
+      remote_tip: "link to image http://example.com/image.jpg"
+      remote_tip_with_attachments: "link to image or file http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
       local_tip: "click to select an image from your device"
       local_tip_with_attachments: "click to select an image or a file from your device (allowed extensions: {{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
-      hint_for_chrome: "(you can also drag and drop or paste images into the editor to upload them)"
+      hint_for_supported_browsers: "(you can also drag and drop or paste images into the editor to upload them)"
       uploading: "Uploading"
+      image_link: "link your image will point to"
 
     search:
       title: "search for topics, posts, users, or categories"
@@ -635,7 +648,7 @@ en:
     topics:
       bulk:
         reset_read: "Reset Read"
-        dismiss_read: "Dismiss Read"
+        dismiss_read: "Dismiss Unread"
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
@@ -668,7 +681,7 @@ en:
         top: "There are no more top topics."
 
     topic:
-      filter_to: "Show {{post_count}} posts in topic"
+      filter_to: "{{post_count}} posts in topic"
       create: 'Create Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a private message'
@@ -681,7 +694,7 @@ en:
         one: '1 unread topic'
         other: '{{count}} unread topics'
       title: 'Topic'
-      loading_more: "Loading more Topics..."
+      loading_more: "Loading more topics..."
       loading: 'Loading topic...'
       invalid_access:
         title: "Topic is private"
@@ -750,7 +763,6 @@ en:
         position: "post %{current} of %{total}"
 
       notifications:
-        title: ''
         reasons:
           "3_6": 'You will receive notifications because you are watching this category.'
           "3_5": 'You will receive notifications because you started watching this topic automatically.'
@@ -794,12 +806,13 @@ en:
         auto_close: "Auto Close"
         unpin: "Un-Pin Topic"
         pin: "Pin Topic"
+        pin_globally: "Pin Topic Globally"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
         invisible: "Make Invisible"
         visible: "Make Visible"
         reset_read: "Reset Read Data"
-        multi_select: "Select Posts to Move"
+        multi_select: "Select Posts"
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
@@ -833,14 +846,14 @@ en:
         title: 'Invite Friends'
         action: 'Email Invite'
         help: 'send invitations to friends so they can reply to this topic with a single click'
-        to_topic: "We'll send your friend a brief email allowing them to immediately reply to this topic by clicking a link, no login required."
-        to_forum: "We'll send your friend a brief email allowing them to join the forum by clicking a link."
+        to_topic: "We'll send a brief email allowing your friend to immediately reply to this topic by clicking a link, no login required."
+        to_forum: "We'll send a brief email allowing your friend to join by clicking a link, no login required."
 
-        email_placeholder: 'email address'
+        email_placeholder: 'name@example.com'
         success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
         error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
 
-      login_reply: 'Log In to Reply'
+      login_reply: 'Sign In to Reply'
 
       filters:
         n_posts:
@@ -865,12 +878,25 @@ en:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
 
+      change_owner:
+        title: "Change Owner of Posts"
+        action: "change ownership"
+        error: "There was an error changing the ownership of the posts."
+        label: "New Owner of Posts"
+        placeholder: "username of new owner"
+        instructions:
+          one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
+          other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
+        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
+
       multi_select:
         select: 'select'
         selected: 'selected ({{count}})'
         select_replies: 'select +replies'
         delete: delete selected
         cancel: cancel selecting
+        select_all: select all
+        deselect_all: deselect all
         description:
           one: You have selected <b>1</b> post.
           other: "You have selected <b>{{count}}</b> posts."
@@ -882,19 +908,20 @@ en:
       edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
-      in_reply_to: "in reply to"
+      in_reply_to: "reply to"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as new Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
+      show_full: "Show Full Post"
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
       gap:
-        one: "1 post omitted"
-        other: "{{count}} posts omitted"
+        one: "1 post hidden"
+        other: "{{count}} posts hidden"
 
       has_replies:
         one: "Reply"
@@ -1042,7 +1069,7 @@ en:
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
-          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> / {{total}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
@@ -1116,7 +1143,7 @@ en:
       title: 'Why are you privately flagging this post?'
       action: 'Flag Post'
       take_action: "Take Action"
-      notify_action: 'Notify'
+      notify_action: 'Private message'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
@@ -1131,7 +1158,7 @@ en:
     flagging_topic:
       title: "Why are you privately flagging this topic?"
       action: "Flag Topic"
-      notify_action: "Notify"
+      notify_action: "Private message"
 
     topic_map:
       title: "Topic Summary"
@@ -1142,13 +1169,22 @@ en:
 
     topic_statuses:
       locked:
-        help: "this topic is closed; it no longer accepts new replies"
-      pinned:
-        help: "this topic is pinned; it will display at the top of its category"
+        help: "This topic is closed; it no longer accepts new replies"
       archived:
-        help: "this topic is archived; it is frozen and cannot be changed"
+        help: "This topic is archived; it no longer accepts new replies"
+      unpinned:
+        title: "Unpinned"
+        help: "This topic is unpinned; it will display in default order"
+      pinned_globally:
+        title: "Pinned Globally"
+        help: "This topic is pinned globally; it will display at the top of all lists"
+      pinned:
+        title: "Pinned"
+        help: "This topic is pinned; it will display at the top of its category"
+      archived:
+        help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
-        help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "This topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
     posts: "Posts"
     posts_long: "there are {{number}} posts in this topic"
@@ -1332,9 +1368,12 @@ en:
         no_primary: "(no primary group)"
         title: "Groups"
         edit: "Edit Groups"
+        refresh: "Refresh"
+        new: "New"
         selector_placeholder: "add users"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
+        group_members: "Group members"
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
@@ -1423,11 +1462,28 @@ en:
         delete: "Delete"
         delete_confirm: "Delete this customization?"
         about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
+        color: "Color"
+        opacity: "Opacity"
+        copy: "Copy"
+        css_html:
+          title: "CSS, HTML"
+          long_title: "CSS and HTML Customizations"
+        colors:
+          title: "Colors"
+          long_title: "Color Schemes"
+          about: "Color schemes allow you to modify the colors used on the site without writing CSS. Choose or add one to start."
+          new_name: "New Color Scheme"
+          copy_name_prefix: "Copy of"
+          delete_confirm: "Delete this color scheme?"
+          under_construction: "NOTE: Changes made here will do nothing! This feature is under construction!"
+
 
       email:
         title: "Email"
         settings: "Settings"
         all: "All"
+        sending_test: "Sending test Email..."
+        test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
         sent_at: "Sent At"
@@ -1496,6 +1552,8 @@ en:
             delete_site_customization: "delete site customization"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
+            grant_badge: "grant badge"
+            revoke_badge: "revoke badge"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -1614,8 +1672,11 @@ en:
           one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"
           other: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} days old can't be deleted.)"
         cant_delete_all_posts:
-          one: "Can't delete all posts. Some posts are older than %{count} day old."
-          other: "Can't delete all posts. Some posts are older than %{count} days old."
+          one: "Can't delete all posts. Some posts are older than %{count} day old. (The delete_user_max_post_age setting.)"
+          other: "Can't delete all posts. Some posts are older than %{count} days old. (The delete_user_max_post_age setting.)"
+        cant_delete_all_too_many_posts:
+          one: "Can't delete all posts because the user has more than 1 post. (The delete_all_posts_max setting.)"
+          other: "Can't delete all posts because the user has more than %{count} posts.  (The delete_all_posts_max setting.)"
         delete_confirm: "Are you SURE you want to delete this user? This action is permanent!"
         delete_and_block: "<b>Yes</b>, and <b>block</b> future signups from this email and IP address"
         delete_dont_block: "<b>Yes</b>, just delete the user"
@@ -1673,6 +1734,7 @@ en:
           files: 'Files'
           trust: 'Trust Levels'
           security: 'Security'
+          onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Rate Limits'
@@ -1680,6 +1742,31 @@ en:
           embedding: "Embedding"
           legal: "Legal"
           uncategorized: 'Uncategorized'
+          backups: "Backups"
+
+      badges:
+        title: Badges
+        new_badge: New Badge
+        new: New
+        name: Name
+        badge: Badge
+        display_name: Display Name
+        description: Description
+        badge_type: Badge Type
+        granted_by: Granted By
+        granted_at: Granted At
+        save: Save
+        delete: Delete
+        delete_confirm: Are you sure you want to delete this badge?
+        revoke: Revoke
+        revoke_confirm: Are you sure you want to revoke this badge?
+        edit_badges: Edit Badges
+        grant_badge: Grant Badge
+        granted_badges: Granted Badges
+        grant: Grant
+        no_user_badges: "%{name} has not been granted any badges."
+        no_badges: There are no badges that can be granted.
+        allow_title: Allow badge to be used as a title
 
     lightbox:
       download: "download"
@@ -1722,3 +1809,19 @@ en:
         mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
         mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
         mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
+
+    badges:
+      title: Badges
+      badge_count:
+        one:   "1 Badge"
+        other: "%{count} Badges"
+      more_badges:
+        one:   "+1 More"
+        other: "+%{count} More"
+      granted:
+        one:   "1 granted"
+        other: "%{count} granted"
+      select_badge_for_title: Select a badge to use as your title
+      example_badge:
+        name: Example Badge
+        description: This is a generic example badge.

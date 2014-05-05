@@ -1,4 +1,5 @@
 require_dependency 'url_helper'
+require_dependency 'file_helper'
 
 module Jobs
 
@@ -20,6 +21,7 @@ module Jobs
       return unless post.present?
 
       raw = post.raw.dup
+      start_raw = raw.dup
       downloaded_urls = {}
 
       extract_images_from(post.cooked).each do |image|
@@ -27,17 +29,20 @@ module Jobs
         src = "http:" + src if src.start_with?("//")
 
         if is_valid_image_url(src)
+          hotlinked = nil
           begin
             # have we already downloaded that file?
-            if !downloaded_urls.include?(src)
-              hotlinked = download(src)
+            unless downloaded_urls.include?(src)
+              begin
+                hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked")
+              rescue Discourse::InvalidParameters
+              end
               if hotlinked.try(:size) <= @max_size
                 filename = File.basename(URI.parse(src).path)
-                file = ActionDispatch::Http::UploadedFile.new(tempfile: hotlinked, filename: filename)
-                upload = Upload.create_for(post.user_id, file, hotlinked.size, src)
+                upload = Upload.create_for(post.user_id, hotlinked, filename, hotlinked.size, { origin: src })
                 downloaded_urls[src] = upload.url
               else
-                puts "Failed to pull hotlinked image: #{src} - Image is bigger than #{@max_size}"
+                Rails.logger.error("Failed to pull hotlinked image: #{src} - Image is bigger than #{@max_size}")
               end
             end
             # have we successfully downloaded that file?
@@ -59,7 +64,7 @@ module Jobs
               raw.gsub!(src, "<img src='#{url}'>")
             end
           rescue => e
-            puts "Failed to pull hotlinked image: #{src}\n" + e.message + "\n" + e.backtrace.join("\n")
+            Rails.logger.error("Failed to pull hotlinked image: #{src}\n" + e.message + "\n" + e.backtrace.join("\n"))
           ensure
             # close & delete the temp file
             hotlinked && hotlinked.close!
@@ -68,10 +73,17 @@ module Jobs
 
       end
 
-      # TODO: make sure the post hasn´t changed while we were downloading remote images
-      if raw != post.raw
-        options = { edit_reason: I18n.t("upload.edit_reason") }
-        options[:bypass_bump] = true if args[:bypass_bump] == true
+      post.reload
+      if start_raw != post.raw
+        # post was edited - start over (after 10 minutes)
+        backoff = args.fetch(:backoff, 1) + 1
+        delay = SiteSetting.ninja_edit_window * args[:backoff]
+        Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, args.merge!(backoff: backoff))
+      elsif raw != post.raw
+        options = {
+          edit_reason: I18n.t("upload.edit_reason"),
+          bypass_bump: true # we never want that job to bump the topic
+        }
         post.revise(Discourse.system_user, raw, options)
       end
     end
@@ -84,23 +96,8 @@ module Jobs
     def is_valid_image_url(src)
       src.present? &&
       !Discourse.store.has_been_uploaded?(src) &&
-      !src.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
-    end
-
-    def download(url)
-      return if @max_size <= 0
-      extension = File.extname(URI.parse(url).path)
-      tmp = Tempfile.new(["discourse-hotlinked", extension])
-
-      File.open(tmp.path, "wb") do |f|
-        hotlinked = open(url, "rb", read_timeout: 5)
-        while f.size <= @max_size && data = hotlinked.read(@max_size)
-          f.write(data)
-        end
-        hotlinked.close!
-      end
-
-      tmp
+      !src.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix) &&
+      SiteSetting.should_download_images?(src)
     end
 
   end

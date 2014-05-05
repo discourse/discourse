@@ -1,4 +1,6 @@
 class Group < ActiveRecord::Base
+  include HasCustomFields
+
   has_many :category_groups
   has_many :group_users, dependent: :destroy
 
@@ -8,6 +10,7 @@ class Group < ActiveRecord::Base
   after_save :destroy_deletions
 
   validate :name_format_validator
+  validates_uniqueness_of :name
 
   AUTO_GROUPS = {
     :everyone => 0,
@@ -34,7 +37,8 @@ class Group < ActiveRecord::Base
   def posts_for(guardian, before_post_id=nil)
     user_ids = group_users.map {|gu| gu.user_id}
     result = Post.where(user_id: user_ids).includes(:user, :topic).references(:posts, :topics)
-    result = result.where('topics.archetype <> ?', Archetype.private_message)
+                 .where('topics.archetype <> ?', Archetype.private_message)
+                 .where(post_type: Post.types[:regular])
 
     unless guardian.is_staff?
       allowed_ids = guardian.allowed_category_ids
@@ -192,7 +196,7 @@ class Group < ActiveRecord::Base
     deletions = Set.new(deletions.map{|d| map[d]})
 
     @deletions = []
-    group_users.delete_if do |gu|
+    group_users.each do |gu|
       @deletions << gu if deletions.include?(gu.user_id)
     end
 
@@ -220,7 +224,7 @@ class Group < ActiveRecord::Base
     if @deletions
       @deletions.each do |gu|
         gu.destroy
-        User.update_all 'primary_group_id = NULL', ['id = ? AND primary_group_id = ?', gu.user_id, gu.group_id]
+        User.where('id = ? AND primary_group_id = ?', gu.user_id, gu.group_id).update_all 'primary_group_id = NULL'
       end
     end
     @deletions = nil

@@ -22,8 +22,11 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
   hint: function() {
     // cf. http://stackoverflow.com/a/9851769/11983
     var isChrome = !!window.chrome && !(!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0);
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+    var isSupported = isChrome || isFirefox;
+
     // chrome is the only browser that support copy & paste of images.
-    return I18n.t("upload_selector.hint" + (isChrome ? "_for_chrome" : ""));
+    return I18n.t("upload_selector.hint" + (isSupported ? "_for_supported_browsers" : ""));
   }.property(),
 
   didInsertElement: function() {
@@ -47,7 +50,14 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
       if (this.get("controller.local")) {
         $('#reply-control').fileupload('add', { fileInput: $('#filename-input') });
       } else {
-        this.get('controller.composerView').addMarkdown($('#fileurl-input').val());
+        var imageUrl = $('#fileurl-input').val();
+        var imageLink = $('#link-input').val();
+        var composerView = this.get('controller.composerView');
+        if (this.get("controller.showMore") && imageLink.length > 3) {
+          composerView.addMarkdown("[![](" + imageUrl +")](" + imageLink + ")");
+        } else {
+          composerView.addMarkdown(imageUrl);
+        }
         this.get('controller').send('closeModal');
       }
     }

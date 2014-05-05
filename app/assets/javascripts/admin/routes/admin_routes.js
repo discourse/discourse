@@ -22,7 +22,10 @@ Discourse.Route.buildRoutes(function() {
       this.route('previewDigest', { path: '/preview-digest' });
     });
 
-    this.route('customize');
+    this.resource('adminCustomize', { path: '/customize' } ,function() {
+      this.route('colors');
+      this.route('css_html');
+    });
     this.route('api');
 
     this.resource('admin.backups', { path: '/backups' }, function() {
@@ -43,19 +46,24 @@ Discourse.Route.buildRoutes(function() {
       this.route('screenedUrls', { path: '/screened_urls' });
     });
 
-    this.route('groups');
+    this.resource('adminGroups', { path: '/groups'}, function() {
+      this.resource('adminGroup', { path: '/:name' });
+    });
 
     this.resource('adminUsers', { path: '/users' }, function() {
       this.resource('adminUser', { path: '/:username' }, function() {
+        this.route('badges');
         this.route('leaderRequirements', { path: '/leader_requirements' });
       });
       this.resource('adminUsersList', { path: '/list' }, function() {
         _.each(['active', 'new', 'pending', 'admins', 'moderators', 'blocked', 'suspended',
-                'newuser', 'basic', 'regular', 'leaders', 'elders'], function(x) {
+                'newuser', 'basicuser', 'regular', 'leaders', 'elders'], function(x) {
           this.route(x, { path: '/' + x });
         }, this);
       });
     });
+
+    this.route('badges');
 
   });
 });

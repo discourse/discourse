@@ -18,4 +18,3 @@ end
 #  index_twitter_user_infos_on_twitter_user_id  (twitter_user_id) UNIQUE
 #  index_twitter_user_infos_on_user_id          (user_id) UNIQUE
 #
-

@@ -91,33 +91,27 @@ qHint.sendRequest = function (url, callback) {
 };
 
 <%
-  def jshint(dir, remove, to_ignore)
+  TO_IGNORE = File.read("#{Rails.root}/.jshintignore").split("\n")
+
+  def jshint(dir, remove)
     result = ""
 
     Dir.glob(dir).each do |f|
-      filename = f.sub("#{Rails.root}#{remove}", "")
+      filename = f.sub("#{Rails.root}/#{remove}", "")
 
       ok = true
-      to_ignore.each do |ig|
-        ok = false if (filename =~ ig)
+      TO_IGNORE.each do |ig|
+        ok = false unless (filename.index(ig.sub(remove, '')).nil?)
       end
 
       depend_on filename
-
       result << "qHint('#{filename}', '/assets/#{filename}', #{File.read(File.join(Rails.root, '.jshintrc'))});\n" if ok
 
     end
     result
   end
-
 %>
 
-<%= jshint("#{Rails.root}/test/**/*.js",
-           "/test/javascripts/",
-           [/helpers\//]) %>
+<%= jshint("#{Rails.root}/test/**/*.js", "test/javascripts/") %>
+<%= jshint("#{Rails.root}/app/assets/javascripts/**/*.js", "app/assets/javascripts/") %>
 
-<%= jshint("#{Rails.root}/app/assets/javascripts/**/*.js",
-           "/app/assets/javascripts/",
-           [/external\//,
-            /defer\//,
-            /locales\//]) %>

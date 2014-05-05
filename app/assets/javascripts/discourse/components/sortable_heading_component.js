@@ -12,23 +12,16 @@ Discourse.SortableHeadingComponent = Ember.Component.extend({
   attributeBindings: ['colspan'],
 
   sortable: function() {
-    return this.get('sortOrder') && this.get('sortBy');
-  }.property('sortOrder', 'sortBy'),
+    return this.get('sortBy');
+  }.property('sortBy'),
 
   iconSortClass: function() {
-    var sortable = this.get('sortable');
-
-    if (sortable && this.get('sortBy') === this.get('sortOrder.order')) {
-      return this.get('sortOrder.descending') ? 'fa fa-chevron-down' : 'fa fa-chevron-up';
+    if (this.get('sortable') && this.get('sortBy') === this.get('order')) {
+      return this.get('ascending') ? 'fa fa-chevron-up' : 'fa fa-chevron-down';
     }
-  }.property('sortable', 'sortOrder.order', 'sortOrder.descending'),
+  }.property('sortable', 'order', 'ascending'),
 
   click: function() {
-    var sortOrder = this.get('sortOrder'),
-        sortBy = this.get('sortBy');
-
-    if (sortBy && sortOrder) {
-      sortOrder.toggle(sortBy);
-    }
+    this.sendAction('action', this.get('sortBy'));
   }
 });

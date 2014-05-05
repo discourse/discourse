@@ -27,11 +27,23 @@ class ListController < ApplicationController
     # anonymous filters
     Discourse.anonymous_filters,
     Discourse.anonymous_filters.map { |f| "#{f}_feed".to_sym },
-    # categories
-    @@categories,
-    # top
+    # anonymous categorized filters
+    Discourse.anonymous_filters.map { |f| "category_#{f}".to_sym },
+    Discourse.anonymous_filters.map { |f| "category_none_#{f}".to_sym },
+    Discourse.anonymous_filters.map { |f| "parent_category_category_#{f}".to_sym },
+    Discourse.anonymous_filters.map { |f| "parent_category_category_none_#{f}".to_sym },
+    # category feeds
+    :category_feed,
+    # top summaries
     :top,
-    TopTopic.periods.map { |p| "top_#{p}".to_sym }
+    :category_top,
+    :category_none_top,
+    :parent_category_category_top,
+    # top pages (ie. with a period)
+    TopTopic.periods.map { |p| "top_#{p}".to_sym },
+    TopTopic.periods.map { |p| "category_top_#{p}".to_sym },
+    TopTopic.periods.map { |p| "category_none_top_#{p}".to_sym },
+    TopTopic.periods.map { |p| "parent_category_category_top_#{p}".to_sym },
   ].flatten
 
   # Create our filters
@@ -80,7 +92,7 @@ class ListController < ApplicationController
       @link = "#{Discourse.base_url}/#{filter}"
       @description = I18n.t("rss_description.#{filter}")
       @atom_link = "#{Discourse.base_url}/#{filter}.rss"
-      @topic_list = TopicQuery.new.public_send("list_#{filter}")
+      @topic_list = TopicQuery.new(nil, order: 'activity').public_send("list_#{filter}")
 
       render 'list', formats: [:rss]
     end
@@ -104,9 +116,9 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = @category.name
-    @link = "#{Discourse.base_url}/category/#{@category.slug}"
+    @link = "#{Discourse.base_url}/category/#{@category.slug_for_url}"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
-    @atom_link = "#{Discourse.base_url}/category/#{@category.slug}.rss"
+    @atom_link = "#{Discourse.base_url}/category/#{@category.slug_for_url}.rss"
     @topic_list = TopicQuery.new.list_new_in_category(@category)
 
     render 'list', formats: [:rss]
@@ -222,10 +234,10 @@ class ListController < ApplicationController
   def page_params(opts = nil)
     opts ||= {}
     route_params = {format: 'json'}
-    route_params[:category]        = @category.slug if @category
-    route_params[:parent_category] = @category.parent_category.slug if @category && @category.parent_category
-    route_params[:sort_order]      = opts[:sort_order] if opts[:sort_order].present?
-    route_params[:sort_descending] = opts[:sort_descending] if opts[:sort_descending].present?
+    route_params[:category]        = @category.slug_for_url if @category
+    route_params[:parent_category] = @category.parent_category.slug_for_url if @category && @category.parent_category
+    route_params[:order]     = opts[:order] if opts[:order].present?
+    route_params[:ascending] = opts[:ascending] if opts[:ascending].present?
     route_params
   end
 
@@ -253,8 +265,8 @@ class ListController < ApplicationController
       topic_ids: param_to_integer_list(:topic_ids),
       exclude_category: (params[:exclude_category] || select_menu_item.try(:filter)),
       category: params[:category],
-      sort_order: params[:sort_order],
-      sort_descending: params[:sort_descending],
+      order: params[:order],
+      ascending: params[:ascending],
       status: params[:status]
     }
     options[:no_subcategories] = true if params[:no_subcategories] == 'true'

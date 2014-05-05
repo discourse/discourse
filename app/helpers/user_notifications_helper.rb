@@ -26,7 +26,8 @@ module UserNotificationsHelper
   end
 
   def logo_url
-    logo_url = SiteSetting.logo_url
+    logo_url = SiteSetting.digest_logo_url
+    logo_url = SiteSetting.logo_url if logo_url.blank?
     if logo_url !~ /http(s)?\:\/\//
       logo_url = "#{Discourse.base_url}#{logo_url}"
     end
@@ -62,5 +63,27 @@ module UserNotificationsHelper
       para = first_paragraph_from(html)
       raw Sanitize.clean(para.to_s, UserNotificationsHelper.sanitize_options)
     end
+  end
+
+  def cooked_post_for_email(post)
+    PrettyText.format_for_email(post.cooked).html_safe
+  end
+
+
+  def email_category(category, opts=nil)
+    opts = opts || {}
+
+    # If there is no category, bail
+    return "" if category.blank?
+
+    # By default hide uncategorized
+    return "" if category.uncategorized? && !opts[:show_uncategorized]
+
+    result = ""
+    if category.parent_category.present?
+      result << "<span style='background-color: ##{category.parent_category.color}; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px;'>&nbsp;</span>"
+    end
+    result << "<span style='background-color: ##{category.color}; color: ##{category.text_color}; font-size: 12px; padding: 4px 6px; font-weight: bold; margin: 0;'>#{category.name}</span>"
+    result.html_safe
   end
 end

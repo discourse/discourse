@@ -36,6 +36,7 @@
   }
 
   table.report {
+    margin-top: 20px;
     tr {
       th:nth-of-type(1) {
         width: 20%;
@@ -51,7 +52,7 @@
 
       .bar {
         margin-top: 5px;
-        background-color: $emphasis_background_color;
+        background-color: $emphasis_text_color;
         display: inline-block;
         text-align: right;
         padding-right: 8px;
@@ -193,10 +194,46 @@
       @include medium-width { width: 314px; }
       @include small-width  { width: 284px; }
     }
+    .input-setting-list {
+      width: 408px;
+      padding: 1px;
+      background-color: white;
+      border: 1px solid #e6e6e6;
+      border-radius: 3px;
+      box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
+      -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+      transition: border linear 0.2s, box-shadow linear 0.2s;
+
+      .list-input-item {
+        width: 90px;
+        margin: 2px 1px;
+        background-color: white;
+        border: 1px solid #e6e6e6;
+        border-radius: 3px;
+        box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
+        -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+        transition: border linear 0.2s, box-shadow linear 0.2s;
+
+        &:focus {
+          border-color: #00aaff;
+          outline: 0;
+          box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3), 0 0 8px #00aaff;
+        }
+      }
+
+      .btn.list-add-value {
+        margin: 0px 3px;
+        padding: 4px 10px;
+        color: $link-color;
+      }
+    }
+
 
     .desc {
       padding-top: 3px;
-      color: darken($secondary_text_color, 40%);
+      color: $secondary_text_color;
+      font-size: 80%;
+      line-height: 1.4em;
     }
 
     h3 {
@@ -276,11 +313,58 @@ section.details {
   }
 
   .controls {
-    width: 600px;
+    width: 480px;
     float: left;
     margin-left: 12px;
     .btn {
       margin-right: 5px;
+    }
+  }
+}
+
+// Badges area
+.badges {
+  .content-list ul {
+    margin-bottom: 10px;
+  }
+
+  .current-badge {
+    margin: 20px;
+  }
+
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
+    & > div {
+      margin-top: 10px;
+    }
+    .delete-link {
+      margin-left: 15px;
+      margin-top: 5px;
+    }
+
+    input, textarea, select {
+      width: 350px;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+    }
+
+    textarea {
+      height: 200px;
+    }
+  }
+
+  .buttons {
+    float: left;
+    width: 200px;
+    .saving {
+      padding: 5px 0 0 0;
+      margin-left: 10px;
+      width: 80px;
+      color: $secondary_text_color;
     }
   }
 }
@@ -339,6 +423,25 @@ section.details {
         width: 80px;
         color: $secondary_text_color;
       }
+    }
+  }
+  .color-scheme {
+    .controls {
+      span, button, a {
+        margin-right: 10px;
+      }
+    }
+  }
+  .colors {
+    thead th       { border: none; }
+    td.hex         { width: 100px; }
+    .hex-input     { width: 80px; }
+    td.opacity     { width: 50px; }
+    .opacity-input { width: 30px; }
+    .hex, .opacity { text-align: center; }
+
+    .changed .name {
+      color: darken($highlight_text_color, 30%);
     }
   }
 }
@@ -539,7 +642,7 @@ table.api-keys {
 
     .look-here {
       float: left;
-      margin: 20px 20px 0 20px;
+      margin: 20px 10px 0 10px;
 
       .fa {
         font-size: 32px;
@@ -550,7 +653,7 @@ table.api-keys {
 
     .problem-messages {
       float: left;
-      width: 355px;
+      width: 395px;
       a {
         text-decoration: underline;
       }
@@ -559,7 +662,10 @@ table.api-keys {
       }
       .btn {
         background-color: lighten($secondary_background_color, 60%);
-    }
+      }
+      ul {
+        margin-left: 0;
+      }
   }
 }
 
@@ -707,12 +813,16 @@ table.api-keys {
     color: $primary_text_color;
     font-size: 15px;
     padding-left: 5px;
+    margin-bottom: 10px;
   }
 
   ul {
     list-style: none;
     margin: 0;
 
+    li:first-of-type {
+      border-top: 1px solid $primary_border_color;
+    }
     li {
       border-bottom: 1px solid $primary_border_color;
     }
@@ -998,4 +1108,8 @@ button.ru {
 
 .is-uploading:hover .ru-progress {
   background: rgba(200, 0, 0, 0.3);
+}
+
+.invisible {
+  visibility: hidden;
 }

@@ -4,6 +4,7 @@ require_dependency 'auth/default_current_user_provider'
 
 module Discourse
 
+  require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
     extend Sidekiq::ExceptionHandler
   end
@@ -232,6 +233,26 @@ module Discourse
 
   def self.readonly_channel
     "/site/read-only"
+  end
+
+  # all forking servers must call this
+  # after fork, otherwise Discourse will be
+  # in a bad state
+  def self.after_fork
+    current_db = RailsMultisite::ConnectionManagement.current_db
+    RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
+    MessageBus.after_fork
+    SiteSetting.after_fork
+    $redis.client.reconnect
+    Rails.cache.reconnect
+    # shuts down all connections in the pool
+    Sidekiq.redis_pool.shutdown{|c| nil}
+    # re-establish
+    Sidekiq.redis = sidekiq_redis_config
+  end
+
+  def self.sidekiq_redis_config
+    { url: $redis.url, namespace: 'sidekiq' }
   end
 
 end

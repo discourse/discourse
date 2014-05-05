@@ -5,10 +5,12 @@ require_dependency 'custom_renderer'
 require_dependency 'archetype'
 require_dependency 'rate_limiter'
 require_dependency 'crawler_detection'
+require_dependency 'json_error'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
   include CanonicalURL::ControllerExtensions
+  include JsonError
 
   serialization_scope :guardian
 
@@ -167,9 +169,9 @@ class ApplicationController < ActionController::Base
   def serialize_data(obj, serializer, opts={})
     # If it's an array, apply the serializer as an each_serializer to the elements
     serializer_opts = {scope: guardian}.merge!(opts)
-    if obj.is_a?(Array) or obj.is_a?(ActiveRecord::Associations::CollectionProxy)
+    if obj.respond_to?(:to_ary)
       serializer_opts[:each_serializer] = serializer
-      ActiveModel::ArraySerializer.new(obj, serializer_opts).as_json
+      ActiveModel::ArraySerializer.new(obj.to_ary, serializer_opts).as_json
     else
       serializer.new(obj, serializer_opts).as_json
     end
@@ -242,11 +244,7 @@ class ApplicationController < ActionController::Base
     end
 
     def render_json_error(obj)
-      if obj.present?
-        render json: MultiJson.dump(errors: obj.errors.full_messages), status: 422
-      else
-        render json: MultiJson.dump(errors: [I18n.t('js.generic_error')]), status: 422
-      end
+      render json: MultiJson.dump(create_errors_json(obj)), status: 422
     end
 
     def success_json

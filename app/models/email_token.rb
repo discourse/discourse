@@ -80,4 +80,3 @@ end
 #
 #  index_email_tokens_on_token  (token) UNIQUE
 #
-

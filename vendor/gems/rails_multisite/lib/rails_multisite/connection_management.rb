@@ -35,12 +35,15 @@ module RailsMultisite
       old = current_db
       connected = ActiveRecord::Base.connection_pool.connected?
 
-      establish_connection(:db => db)
+      establish_connection(:db => db) unless connected && db == old
       rval = yield db
-      ActiveRecord::Base.connection_handler.clear_active_connections!
 
-      establish_connection(:db => old)
-      ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
+      unless connected && db == old
+        ActiveRecord::Base.connection_handler.clear_active_connections!
+
+        establish_connection(:db => old)
+        ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
+      end
 
       rval
     end

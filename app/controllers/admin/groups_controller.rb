@@ -4,6 +4,10 @@ class Admin::GroupsController < Admin::AdminController
     render_serialized(groups, BasicGroupSerializer)
   end
 
+  def show
+    render nothing: true
+  end
+
   def refresh_automatic_groups
     Group.refresh_automatic_groups!
     render json: success_json
@@ -20,6 +24,7 @@ class Admin::GroupsController < Admin::AdminController
       group.alias_level = params[:group][:alias_level]
       group.name = params[:group][:name] if params[:group][:name]
     end
+    group.visible = params[:group][:visible] == "true"
 
     if group.save
       render json: success_json
@@ -30,8 +35,9 @@ class Admin::GroupsController < Admin::AdminController
 
   def create
     group = Group.new
-    group.name = params[:group][:name].strip
+    group.name = (params[:group][:name] || '').strip
     group.usernames = params[:group][:usernames] if params[:group][:usernames]
+    group.visible = params[:group][:visible] == "true"
     if group.save
       render_serialized(group, BasicGroupSerializer)
     else

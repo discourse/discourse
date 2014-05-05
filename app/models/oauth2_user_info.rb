@@ -20,4 +20,3 @@ end
 #
 #  index_oauth2_user_infos_on_uid_and_provider  (uid,provider) UNIQUE
 #
-

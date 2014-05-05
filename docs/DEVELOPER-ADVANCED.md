@@ -13,7 +13,6 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 5. Clone the project and bundle.
 6. Copy `config/database.yml.development-sample` to `config/database.yml`. Copy `config/redis.yml.sample` to `config/redis.yml`. Edit the files to point to your postgres and redis instances.
 7. Create the "vagrant" user and the development and test databases in postgres. See the postgres section in "Building your own Vagrant VM", below.
-8. Install the seed data to set up an admin account and meta topic: `psql DATABASE_NAME < pg_dumps/production-image.sql`
 
 
 ## Before you start Rails
@@ -102,12 +101,6 @@ Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
     host all all 127.0.0.1/32 trust
     host all all ::1/128 trust
     host all all 0.0.0.0/0 trust # wide-open
-
-Load the seed data (as vagrant user):
-
-    psql -d discourse_development < pg_dumps/development-image.sql
-
-(You may wish to try the `production-image.sql` file for a good seed for a production database.)
 
 ## Redis
 

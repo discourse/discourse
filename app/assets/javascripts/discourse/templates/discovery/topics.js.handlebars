@@ -1,10 +1,16 @@
 {{#if selected}}
   <div id='bulk-select'>
-    <button class='btn' {{action showBulkActions}}><i class="fa fa-wrench"></i></button>
+    <button class='btn no-text' {{action showBulkActions}}><i class="fa fa-wrench"></i></button>
   </div>
 {{/if}}
 
 <div class='contents'>
+  {{#if top}}
+    {{#if yearly}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.this_year}}</h2>{{/if}}
+    {{#if monthly}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.this_month}}</h2>{{/if}}
+    {{#if weekly}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.this_week}}</h2>{{/if}}
+    {{#if daily}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.today}}</h2>{{/if}}
+  {{/if}}
   {{#if showTable}}
     <table id='topic-list'>
       <thead>
@@ -16,27 +22,27 @@
           {{/if}}
         </th>
         {{/if}}
-        {{#sortable-heading sortBy="default" sortOrder=sortOrder}}
+        {{#sortable-heading sortBy="default" action="changeSort" order=order ascending=ascending}}
           {{i18n topic.title}}
         {{/sortable-heading}}
         {{#unless controller.hideCategory}}
-          {{#sortable-heading sortBy="category" sortOrder=sortOrder}}
+          {{#sortable-heading sortBy="category" action="changeSort" order=order ascending=ascending}}
             {{i18n category_title}}
           {{/sortable-heading}}
         {{/unless}}
-        {{#sortable-heading sortBy="posters" sortOrder=sortOrder}}
+        {{#sortable-heading sortBy="posters" action="changeSort" order=order ascending=ascending}}
           {{i18n users}}
         {{/sortable-heading}}
-        {{#sortable-heading sortBy="posts" number=true sortOrder=sortOrder}}
+        {{#sortable-heading sortBy="posts" number=true action="changeSort" order=order ascending=ascending}}
           {{i18n posts}}
         {{/sortable-heading}}
-        {{#sortable-heading sortBy="likes" number=true sortOrder=sortOrder}}
+        {{#sortable-heading sortBy="likes" number=true action="changeSort" order=order ascending=ascending}}
           {{i18n likes}}
         {{/sortable-heading}}
-        {{#sortable-heading sortBy="views" number=true sortOrder=sortOrder}}
+        {{#sortable-heading sortBy="views" number=true action="changeSort" order=order ascending=ascending}}
           {{i18n views}}
         {{/sortable-heading}}
-        {{#sortable-heading sortBy="activity" number=true colspan="2" sortOrder=sortOrder}}
+        {{#sortable-heading sortBy="activity" number=true colspan="2" action="changeSort" order=order ascending=ascending}}
           {{i18n activity}}
         {{/sortable-heading}}
       </tr>
@@ -55,7 +61,10 @@
         </tbody>
       {{/if}}
 
-      {{each topics itemController="topicListItem" itemViewClass="Discourse.TopicListItemView"}}
+      <tbody>
+        {{each topics itemController="topicListItem" itemViewClass="Discourse.TopicListItemView"}}
+      </tbody>
+
     </table>
   {{/if}}
 </div>

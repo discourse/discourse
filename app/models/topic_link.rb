@@ -6,6 +6,7 @@ class TopicLink < ActiveRecord::Base
   belongs_to :user
   belongs_to :post
   belongs_to :link_topic, class_name: 'Topic'
+  belongs_to :link_post, class_name: 'Post'
 
   validates_presence_of :url
 
@@ -17,6 +18,8 @@ class TopicLink < ActiveRecord::Base
 
   validate :link_to_self
 
+  after_commit :crawl_link_title
+
   # Make sure a topic can't link to itself
   def link_to_self
     errors.add(:base, "can't link to the same topic") if (topic_id == link_topic_id)
@@ -26,17 +29,18 @@ class TopicLink < ActiveRecord::Base
 
     # Sam: complicated reports are really hard in AR
     builder = SqlBuilder.new("SELECT ftl.url,
-                     ft.title,
+                     COALESCE(ft.title, ftl.title) AS title,
                      ftl.link_topic_id,
                      ftl.reflection,
                      ftl.internal,
+                     ftl.domain,
                      MIN(ftl.user_id) AS user_id,
                      SUM(clicks) AS clicks
               FROM topic_links AS ftl
               LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
               LEFT JOIN categories AS c ON c.id = ft.category_id
               /*where*/
-              GROUP BY ftl.url, ft.title, ftl.link_topic_id, ftl.reflection, ftl.internal
+              GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
               ORDER BY clicks DESC")
 
     builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
@@ -57,9 +61,10 @@ class TopicLink < ActiveRecord::Base
                       l.post_id,
                       l.url,
                       l.clicks,
-                      t.title,
+                      COALESCE(t.title, l.title) AS title,
                       l.internal,
-                      l.reflection
+                      l.reflection,
+                      l.domain
               FROM topic_links l
               LEFT JOIN topics t ON t.id = l.link_topic_id
               LEFT JOIN categories AS c ON c.id = t.category_id
@@ -86,6 +91,7 @@ class TopicLink < ActiveRecord::Base
   def self.extract_from(post)
     return unless post.present?
 
+    added_urls = []
     TopicLink.transaction do
 
       added_urls = []
@@ -129,6 +135,11 @@ class TopicLink < ActiveRecord::Base
           # Skip linking to ourselves
           next if topic_id == post.topic_id
 
+          reflected_post = nil
+          if post_number && topic_id
+            reflected_post = Post.where(topic_id: topic_id, post_number: post_number.to_i).first
+          end
+
           added_urls << url
           TopicLink.create(post_id: post.id,
                            user_id: post.user_id,
@@ -136,7 +147,8 @@ class TopicLink < ActiveRecord::Base
                            url: url,
                            domain: parsed.host || Discourse.current_hostname,
                            internal: internal,
-                           link_topic_id: topic_id)
+                           link_topic_id: topic_id,
+                           link_post_id: reflected_post.try(:id))
 
           # Create the reflection if we can
           if topic_id.present?
@@ -145,11 +157,6 @@ class TopicLink < ActiveRecord::Base
             if topic && post.topic && post.topic.archetype != 'private_message' && topic.archetype != 'private_message'
 
               prefix = Discourse.base_url
-
-              reflected_post = nil
-              if post_number.present?
-                reflected_post = Post.where(topic_id: topic_id, post_number: post_number.to_i).first
-              end
 
               reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
 
@@ -175,12 +182,17 @@ class TopicLink < ActiveRecord::Base
 
       # Remove links that aren't there anymore
       if added_urls.present?
-        TopicLink.delete_all ["(url not in (:urls)) AND (post_id = :post_id)", urls: added_urls, post_id: post.id]
-        TopicLink.delete_all ["(url not in (:urls)) AND (link_post_id = :post_id)", urls: reflected_urls, post_id: post.id]
+        TopicLink.delete_all ["(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)", urls: added_urls, post_id: post.id]
+        TopicLink.delete_all ["(url not in (:urls)) AND (link_post_id = :post_id AND reflection)", urls: reflected_urls, post_id: post.id]
       else
-        TopicLink.delete_all ["post_id = :post_id OR link_post_id = :post_id", post_id: post.id]
+        TopicLink.delete_all ["(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)", post_id: post.id]
       end
     end
+  end
+
+  # Crawl a link's title after it's saved
+  def crawl_link_title
+    Jobs.enqueue(:crawl_topic_link, topic_link_id: id)
   end
 end
 
@@ -201,10 +213,11 @@ end
 #  reflection    :boolean          default(FALSE)
 #  clicks        :integer          default(0), not null
 #  link_post_id  :integer
+#  title         :string(255)
+#  crawled_at    :datetime
 #
 # Indexes
 #
 #  index_forum_thread_links_on_forum_thread_id                      (topic_id)
 #  index_forum_thread_links_on_forum_thread_id_and_post_id_and_url  (topic_id,post_id,url) UNIQUE
 #
-

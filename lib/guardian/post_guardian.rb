@@ -61,15 +61,15 @@ module PostGuardain
   # Creating Method
   def can_create_post?(parent)
     !SpamRule::AutoBlock.block?(@user) && (
-    !parent ||
-    !parent.category ||
-    Category.post_create_allowed(self).where(:id => parent.category.id).count == 1
+      !parent ||
+      !parent.category ||
+      Category.post_create_allowed(self).where(:id => parent.category.id).count == 1
     )
   end
 
   # Editing Method
   def can_edit_post?(post)
-    is_staff? || (!post.topic.archived? && is_my_own?(post) && !post.user_deleted && !post.deleted_at && !post.edit_time_limit_expired?)
+    is_staff? || @user.has_trust_level?(:elder) || (!post.topic.archived? && is_my_own?(post) && !post.user_deleted && !post.deleted_at && !post.edit_time_limit_expired?)
   end
 
   # Deleting Methods
@@ -111,11 +111,22 @@ module PostGuardain
 
   def can_see_post_revision?(post_revision)
     return false if post_revision.nil?
-    return true if SiteSetting.edit_history_visible_to_public
-    authenticated? && (is_staff? || can_see_post?(post_revision.post))
+    can_view_post_revisions?(post_revision.post)
+  end
+
+  def can_view_post_revisions?(post)
+    return false if post.nil?
+    return true if SiteSetting.edit_history_visible_to_public && !post.hidden
+    authenticated? &&
+      (is_staff? || @user.has_trust_level?(:elder) || @user.id == post.user_id) &&
+      can_see_post?(post)
   end
 
   def can_vote?(post, opts={})
     post_can_act?(post,:vote, opts)
+  end
+
+  def can_change_post_owner?
+    is_admin?
   end
 end

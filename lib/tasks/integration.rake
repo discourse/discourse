@@ -14,7 +14,8 @@ task 'integration:create_fixtures' => :environment do
            "/user_actions.json?offset=0&username=eviltrout&filter=1",
            "/user_actions.json?offset=0&username=eviltrout&filter=2",
            "/user_actions.json?offset=0&username=eviltrout&filter=11"],
-    static: ["/faq", '/tos', '/privacy']
+    static: ["/faq", '/tos', '/privacy'],
+    unknown: ['/404-body']
   }
 
   fixtures.each do |type, urls|

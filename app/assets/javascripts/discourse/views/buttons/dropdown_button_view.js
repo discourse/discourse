@@ -11,12 +11,13 @@ Discourse.DropdownButtonView = Discourse.View.extend({
   shouldRerender: Discourse.View.renderIfChanged('text', 'longDescription'),
 
   didInsertElement: function() {
+    var self = this;
     // If there's a click handler, call it
-    if (this.clicked) {
-      var dropDownButtonView = this;
-      this.$('ul li').on('click.dropdown-button', function(e) {
+    if (self.clicked) {
+      self.$('ul li').on('click.dropdown-button', function(e) {
         e.preventDefault();
-        dropDownButtonView.clicked($(e.currentTarget).data('id'));
+        if ($(e.currentTarget).data('id') !== self.get('activeItem'))
+          self.clicked($(e.currentTarget).data('id'));
         return false;
       });
     }
@@ -27,26 +28,33 @@ Discourse.DropdownButtonView = Discourse.View.extend({
   },
 
   render: function(buffer) {
-    buffer.push("<h4 class='title'>" + this.get('title') + "</h4>");
+    var self = this;
+    var descriptionKey = self.get('descriptionKey') || 'description';
+
+    buffer.push("<h4 class='title'>" + self.get('title') + "</h4>");
     buffer.push("<button class='btn standard dropdown-toggle' data-toggle='dropdown'>");
-    buffer.push(this.get('text'));
+    buffer.push(self.get('text'));
     buffer.push("</button>");
     buffer.push("<ul class='dropdown-menu'>");
 
-    _.each(this.get('dropDownContent'), function(row) {
+    _.each(self.get('dropDownContent'), function(row) {
       var id = row[0],
           textKey = row[1],
+          iconClass = row[2],
           title = I18n.t(textKey + ".title"),
-          description = I18n.t(textKey + ".description");
+          description = I18n.t(textKey + "." + descriptionKey),
+          className = (self.get('activeItem') === id? 'disabled': '');
 
-      buffer.push("<li data-id=\"" + id + "\"><a href='#'>");
-      buffer.push("<span class='title'>" + title + "</span>");
-      buffer.push("<span>" + description + "</span>");
+      buffer.push("<li data-id=\"" + id + "\" class=\"" + className + "\"><a href='#'>");
+      buffer.push("<span class='icon " + iconClass + "'></span>");
+      buffer.push("<div><span class='title'>" + title + "</span>");
+      buffer.push("<span>" + description + "</span></div>");
       buffer.push("</a></li>");
     });
+
     buffer.push("</ul>");
 
-    var desc = this.get('longDescription');
+    var desc = self.get('longDescription');
     if (desc) {
       buffer.push("<p>");
       buffer.push(desc);

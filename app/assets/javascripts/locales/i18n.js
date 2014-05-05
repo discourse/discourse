@@ -53,8 +53,17 @@ I18n.PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
 I18n.fallbackRules = {};
 
 I18n.pluralizationRules = {
-  en: function (n) {
+  en: function(n) {
     return n === 0 ? ["zero", "none", "other"] : n === 1 ? "one" : "other";
+  },
+  "zh_CN": function(n) {
+    return n === 0 ? ["zero", "none", "other"] : "other";
+  },
+  "zh_TW": function(n) {
+    return n === 0 ? ["zero", "none", "other"] : "other";
+  },
+  "ko": function(n) {
+    return n === 0 ? ["zero", "none", "other"] : "other";
   }
 };
 

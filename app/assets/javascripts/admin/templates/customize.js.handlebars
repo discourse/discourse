@@ -1,70 +1,12 @@
-<div class='content-list span6'>
-  <h3>{{i18n admin.customize.long_title}}</h3>
-  <ul>
-    {{#each model}}
-    <li><a {{action selectStyle this}} {{bind-attr class="this.selected:active"}}>{{this.description}}</a></li>
-    {{/each}}
-  </ul>
-  <button {{action newCustomization}} class='btn'>{{i18n admin.customize.new}}</button>
+<div class='admin-controls'>
+  <div class='span15'>
+    <ul class="nav nav-pills">
+      <li>{{#link-to 'adminCustomize.colors'}}{{i18n admin.customize.colors.title}}{{/link-to}}</li>
+      <li>{{#link-to 'adminCustomize.css_html'}}{{i18n admin.customize.css_html.title}}{{/link-to}}</li>
+    </ul>
+  </div>
 </div>
 
-
-{{#if selectedItem}}
-<div class='current-style'>
-  {{#with selectedItem}}
-    {{textField class="style-name" value=name}}
-
-    <div class='admin-controls'>
-      <ul class="nav nav-pills">
-        <li>
-          <a {{bind-attr class="view.stylesheetActive:active"}}{{action selectStylesheet href="true" target="view"}}>{{i18n admin.customize.css}}</a>
-        </li>
-        <li>
-          <a {{bind-attr class="view.headerActive:active"}}{{action selectHeader href="true" target="view"}}>{{i18n admin.customize.header}}</a>
-        </li>
-        <li>
-          <a {{bind-attr class="view.mobileStylesheetActive:active"}}{{action selectMobileStylesheet href="true" target="view"}}>{{i18n admin.customize.mobile_css}}</a>
-        </li>
-        <li>
-          <a {{bind-attr class="view.mobileHeaderActive:active"}}{{action selectMobileHeader href="true" target="view"}}>{{i18n admin.customize.mobile_header}}</a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="admin-container">
-      {{#if view.headerActive}}
-        {{aceEditor content=header mode="html"}}
-      {{/if}}
-      {{#if view.stylesheetActive}}
-        {{aceEditor content=stylesheet mode="scss"}}
-      {{/if}}
-      {{#if view.mobileHeaderActive}}
-        {{aceEditor content=mobile_header mode="html"}}
-      {{/if}}
-      {{#if view.mobileStylesheetActive}}
-        {{aceEditor content=mobile_stylesheet mode="scss"}}
-      {{/if}}
-    </div>
-  {{/with}}
-  <br>
-  <div class='status-actions'>
-    <span>{{i18n admin.customize.override_default}} {{view Ember.Checkbox checkedBinding="selectedItem.override_default_style"}}</span>
-    <span>{{i18n admin.customize.enabled}}  {{view Ember.Checkbox checkedBinding="selectedItem.enabled"}}</span>
-    {{#unless selectedItem.changed}}
-    <a class='preview-link' {{bind-attr href="selectedItem.previewUrl"}} target='_blank'>{{i18n admin.customize.preview}}</a>
-    |
-    <a href="/?preview-style=" target='_blank'>{{i18n admin.customize.undo_preview}}</a><br>
-    {{/unless}}
-  </div>
-
-  <div class='buttons'>
-    <button {{action save}} {{bind-attr disabled="selectedItem.disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
-    <span class='saving'>{{selectedItem.savingStatus}}</span>
-    <a {{action destroy}} class='delete-link'>{{i18n admin.customize.delete}}</a>
-  </div>
-
+<div class="admin-container">
+  {{outlet}}
 </div>
-{{else}}
-  <p class="about">{{i18n admin.customize.about}}</p>
-{{/if}}
-<div class='clearfix'></div>

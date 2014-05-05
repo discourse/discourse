@@ -1,8 +1,5 @@
 // styles that apply to the reply pane that slides up to compose replies
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 // hack, this needs to be done cleaner
 #private-message-users {
   width: 400px;
@@ -79,38 +76,7 @@
 }
 
 
-.autocomplete {
-  z-index: 999999;
-  position: absolute;
-  width: 240px;
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    li {
-      border-bottom: 1px solid $primary_border_color;
-      a[href] {
-        padding: 5px;
-        display: block;
-        span.username {
-          color: $primary_text_color;
-        }
-        span.name {
-          font-size: 11px;
-        }
-        &.selected {
-          background-color: lighten($secondary_background_color, 60%);
-        }
-        @include hover {
-          background-color: lighten($secondary_background_color, 60%);
-          text-decoration: none;
-        }
-      }
-    }
-  }
-}
+
 
 #reply-control {
   .toggle-preview, #draft-status, #file-uploading {
@@ -138,7 +104,7 @@
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: rgba($composer_background, 0.96);
+  background-color: rgba($composer_background_color, 0.96);
   bottom: 0;
   font-size: 14px;
   position: fixed;
@@ -384,58 +350,6 @@
   margin-bottom: 10px;
 }
 
-div.ac-wrap.disabled {
-  input {
-    display:none;
-  }
-  .item a {
-    display:none;
-  }
-}
-
-div.ac-wrap {
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  padding: 5px 10px;
-  div.item {
-    float: left;
-    margin-right: 10px;
-    margin-bottom: 5px;
-    span {
-      padding-left: 5px;
-      height: 22px;
-      display: inline-block;
-      line-height: 22px;
-      vertical-align: bottom;
-    }
-    a.remove {
-      margin-left: 4px;
-      font-size: 10px;
-      line-height: 10px;
-      padding: 2px 1px 1px 3px;
-      border-radius: 10px;
-      width: 10px;
-      display: inline-block;
-      border: 1px solid $primary_border_color;
-      &:hover {
-        background-color: $warning_background_color;
-        border: 1px solid $warning_border_color;
-        text-decoration: none;
-        color: $warning_text_color;
-      }
-    }
-  }
-  input[type="text"] {
-    float: left;
-    margin-top: 5px;
-    border: 0;
-    padding: 0;
-    margin: 4px 0 0;
-    box-shadow: none;
-  }
-}
-
-
 #reply-control.edit-title.private-message {
   .wmd-controls {
     @include transition(top 0.3s ease);
@@ -461,8 +375,8 @@ div.ac-wrap {
     left: 30px;
     right: 30px;
     position: absolute;
-    top: 50px;
     bottom: 48px;
+    top: 50px;
 
     // this removes the topmost margin;
     // if we don't have this, all posts would have extra space at the top
@@ -470,7 +384,7 @@ div.ac-wrap {
       margin-top: 0 !important;
     }
 
-    #wmd-input, #wmd-preview {
+    #wmd-input, #wmd-preview-scroller, #wmd-preview {
       @include box-sizing(border-box);
       width: 100%;
       height: 100%;
@@ -484,8 +398,12 @@ div.ac-wrap {
       h1, h2, h3, h4, h5, h6 {
         margin: 30px 0 10px;
       }
+      p {
+        margin-top: 19px;
+      }
+      blockquote p:first-of-type {margin-top: 0px;}
     }
-    #wmd-input {
+    #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
       top: 0;
@@ -497,6 +415,18 @@ div.ac-wrap {
       box-shadow: none;
       @include border-radius-all(0);
       transition: none;
+    }
+    #wmd-preview-scroller {
+      font-size: 13px;
+      line-height: 18px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: normal;
+      overflow: scroll;
+      visibility: hidden;
+      .marker, .caret {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
     .textarea-wrapper, .preview-wrapper {
       position: relative;
@@ -543,35 +473,3 @@ div.ac-wrap {
     }
   }
 }
-
-.admin-options-form {
-  display: none;
-  margin-top: -15px;
-}
-
-.auto-close-fields {
-  input {
-    width: 150px;
-  }
-  .examples {
-    margin: 10px 0 0 0;
-    color: $primary_text_color;
-  }
-}
-
-.edit-auto-close-modal {
-  form {
-    margin: 0;
-  }
-  .auto-close-fields {
-    i.fa-clock-o {
-      font-size: 16px;
-      line-height: 8px;
-    }
-    input {
-      margin: 0;
-    }
-  }
-}
-
-

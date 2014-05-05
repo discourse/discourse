@@ -1,0 +1,71 @@
+<div class='alert alert-error'>{{i18n admin.customize.colors.under_construction}}</div>
+
+<div class='content-list span6'>
+  <h3>{{i18n admin.customize.colors.long_title}}</h3>
+  <ul>
+    {{#each model}}
+      {{#if can_edit}}
+        <li><a {{action selectColorScheme this}} {{bind-attr class="selected:active"}}>{{description}}</a></li>
+      {{/if}}
+    {{/each}}
+  </ul>
+  <button {{action newColorScheme}} class='btn'>{{i18n admin.customize.new}}</button>
+</div>
+
+{{#if selectedItem}}
+  <div class="current-style color-scheme">
+    <div class="admin-container">
+      {{#with selectedItem}}
+        <h1>{{textField class="style-name" value=name}}</h1>
+
+        <div class="controls">
+          <button {{action save}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+          <span {{bind-attr class=":saving savingStatus::hidden" }}>{{savingStatus}}</span>
+          <button {{action copy this}} class='btn'><i class="fa fa-copy"></i> {{i18n admin.customize.copy}}</button>
+          <span>{{view Ember.Checkbox checkedBinding="enabled"}} {{i18n admin.customize.enabled}}</span>
+          <a {{action destroy}} class='delete-link'>{{i18n admin.customize.delete}}</a>
+        </div>
+      {{/with}}
+
+      <br/>
+
+      <div class='admin-controls'>
+        <div class='search controls'>
+          <label>
+            {{input type="checkbox" checked=onlyOverridden}}
+            {{i18n admin.site_settings.show_overriden}}
+          </label>
+        </div>
+        <div class='controls'>
+          {{textField value=filter placeholderKey="type_to_filter"}}
+          <button {{action clearFilter}} class="btn">{{i18n admin.site_settings.clear_filter}}</button>
+        </div>
+      </div>
+
+      <table class="table colors">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="hex">{{i18n admin.customize.color}}</th>
+            <th class="opacity">{{i18n admin.customize.opacity}}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each colors}}
+            <tr {{bind-attr class="changed"}}>
+              <td class="name">{{name}}</td>
+              <td class="hex">{{color-input hexValue=hex brightnessValue=brightness}}</td>
+              <td class="opacity">{{textField class="opacity-input" value=opacity maxlength="3"}}</td>
+              <td class="changed">
+                <button {{bind-attr class=":btn :undo changed::invisible"}} {{action undo this}}>undo</button>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{{else}}
+  <p class="about">{{i18n admin.customize.colors.about}}</p>
+{{/if}}

@@ -1,12 +1,17 @@
 var Poll = Discourse.Model.extend({
   post: null,
   options: [],
+  closed: false,
 
   postObserver: function() {
-    this.updateOptionsFromJson(this.get('post.poll_details'));
+    this.updateFromJson(this.get('post.poll_details'));
   }.observes('post.poll_details'),
 
-  updateOptionsFromJson: function(json) {
+  fetchNewPostDetails: function() {
+    this.get('post.topic.postStream').triggerChangedPost(this.get('post.id'), this.get('post.topic.updated_at'));
+  }.observes('post.topic.title'),
+
+  updateFromJson: function(json) {
     var selectedOption = json["selected"];
 
     var options = [];
@@ -18,6 +23,8 @@ var Poll = Discourse.Model.extend({
       }));
     });
     this.set('options', options);
+
+    this.set('closed', json.closed);
   },
 
   saveVote: function(option) {
@@ -29,17 +36,25 @@ var Poll = Discourse.Model.extend({
       type: "PUT",
       data: {post_id: this.get('post.id'), option: option}
     }).then(function(newJSON) {
-      this.updateOptionsFromJson(newJSON);
+      this.updateFromJson(newJSON);
     }.bind(this));
   }
 });
 
 var PollController = Discourse.Controller.extend({
   poll: null,
-  showResults: false,
+  showResults: Em.computed.oneWay('poll.closed'),
+  disableRadio: Em.computed.any('poll.closed', 'loading'),
+  showToggleClosePoll: function() {
+    return this.get('poll.post.topic.details.can_edit') && !Discourse.SiteSettings.allow_user_locale;
+  }.property('poll.post.topic.details.can_edit'),
 
   actions: {
     selectOption: function(option) {
+      if (this.get('disableRadio')) {
+        return;
+      }
+
       if (!this.get('currentUser.id')) {
         this.get('postController').send('showLogin');
         return;
@@ -54,6 +69,18 @@ var PollController = Discourse.Controller.extend({
 
     toggleShowResults: function() {
       this.set('showResults', !this.get('showResults'));
+    },
+
+    toggleClosePoll: function() {
+      this.set('loading', true);
+      return Discourse.ajax("/poll/toggle_close", {
+        type: "PUT",
+        data: {post_id: this.get('poll.post.id')}
+      }).then(function(topicJson) {
+        this.set('poll.post.topic.title', topicJson.basic_topic.title);
+        this.set('poll.post.topic.fancy_title', topicJson.basic_topic.title);
+        this.set('loading', false);
+      }.bind(this));
     }
   }
 });
@@ -74,7 +101,7 @@ function initializePollView(self) {
   var pollDetails = post.get('poll_details');
 
   var poll = Poll.create({post: post});
-  poll.updateOptionsFromJson(pollDetails);
+  poll.updateFromJson(pollDetails);
 
   var pollController = PollController.create({
     poll: poll,

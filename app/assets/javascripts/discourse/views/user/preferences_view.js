@@ -9,25 +9,27 @@
 Discourse.PreferencesView = Discourse.View.extend({
   templateName: 'user/preferences',
   classNames: ['user-preferences'],
-  
+
   uploading: false,
   uploadProgress: 0,
-  
+
   didInsertElement: function() {
     var self = this;
     var $upload = $("#profile-background-input");
-    
+
     this._super();
-    
+
     $upload.fileupload({
       url: Discourse.getURL("/users/" + this.get('controller.model.username') + "/preferences/user_image"),
       dataType: "json",
       fileInput: $upload,
       formData: { user_image_type: "profile_background" }
     });
-    
-    $upload.on("fileuploadadd", function() {
-      self.set("uploading", true);
+
+    $upload.on('fileuploadsubmit', function (e, data) {
+      var result = Discourse.Utilities.validateUploadedFiles(data.files);
+      self.setProperties({ uploadProgress: 0, uploading: result });
+      return result;
     });
     $upload.on("fileuploadprogressall", function(e, data) {
       var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -51,5 +53,3 @@ Discourse.PreferencesView = Discourse.View.extend({
     $("#profile-background-input").fileupload("destroy");
   }
 });
-
-

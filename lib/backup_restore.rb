@@ -174,14 +174,7 @@ module BackupRestore
   end
 
   def self.after_fork
-    # reconnect to redis
-    $redis.client.reconnect
-    # reconnect the rails cache (uses redis)
-    Rails.cache.reconnect
-    # tells the message we've forked
-    MessageBus.after_fork
-    # /!\ HACK /!\ force sidekiq to create a new connection to redis
-    Sidekiq.instance_variable_set(:@redis, nil)
+    Discourse.after_fork
   end
 
   def self.backup_tables_count

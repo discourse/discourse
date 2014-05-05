@@ -16,7 +16,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   classNameBindings: ['controller.multiSelect:multi-select',
                       'topic.archetype',
                       'topic.category.read_restricted:read_restricted',
-                      'topic.deleted:deleted-topic'],
+                      'topic.deleted:deleted-topic',
+                      'topic.categoryClass'],
   menuVisible: true,
   SHORT_POST: 1200,
 
@@ -49,7 +50,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   _updateTitle: function() {
     var title = this.get('topic.title');
-    if (title) return Discourse.set('title', title);
+    if (title) return Discourse.set('title', _.unescape(title));
   }.observes('topic.loaded', 'topic.title'),
 
   _composeChanged: function() {
@@ -85,7 +86,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.get('controller.streamPercentage');
 
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
-      if ($(e.target).hasClass('mention')) { return false; }
+      var $target = $(e.target);
+      if ($target.hasClass('mention') || $target.parents('.expanded-embed').length) { return false; }
       return Discourse.ClickTrack.trackClick(e);
     });
   }.on('didInsertElement'),
@@ -189,7 +191,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
 
     if (category) {
-      opts.catLink = Discourse.HTML.categoryLink(category);
+      opts.catLink = Discourse.HTML.categoryBadge(category, {showParent: true});
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
     }

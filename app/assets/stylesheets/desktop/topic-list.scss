@@ -1,6 +1,3 @@
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
@@ -11,7 +8,7 @@
 .list-controls {
   .nav {
     float: left;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
 
   .btn {
@@ -58,16 +55,19 @@
 // --------------------------------------------------
 
 #topic-list {
-  border: 1px solid $primary_border_color;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
+  border-top: 1px solid $primary-border-color;
+  .fa-thumb-tack {color: $primary_text_color;}
+  .fa-thumb-tack.unpinned {color: $secondary_text_color;}
+
   a.title {color: $primary_text_color;}
   a.title:visited:not(.badge-notification) {color: lighten($primary_text_color, 35%);}
 
   > tbody > tr {
-    &:nth-child(even) {
+    &:nth-child(odd) {
       background-color: lighten($secondary_background_color, 77%);
     }
     &.archived a {
@@ -83,7 +83,7 @@
       }
     }
     &.highlighted {
-      background-color: $highlight_background_color;
+      background-color: $emphasis_background_color;
     }
   }
   th,
@@ -101,10 +101,9 @@
   }
   th {
     color: $topic-list-th-color;
-    font-weight: bold;
-    font-size: 13px;
-    background: lighten($secondary_background_color, 70%);
-
+    font-weight: normal;
+    font-size: 14px;
+    button i.fa {color: $topic-list-th-color;}
 
   }
   td {
@@ -170,6 +169,7 @@
   .topic-status {
     margin-right: 4px;
     padding: 0;
+    font-size: 15px;
     &:last-of-type {
       margin-right: 0;
     }
@@ -202,11 +202,14 @@
     a:not(.badge-posts) {
       color: inherit;
     }
+    a.badge-posts {
+      font-weight: bold;
+    }
   }
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: lighten($secondary_background_color, 60%);
+      background-color: lighten($secondary_background_color, 76%);
     }
     @include unselectable;
   }
@@ -296,10 +299,6 @@
 
     .subcategories {
       margin-top: 10px;
-      .badge-category {
-        font-size: 12px;
-        padding: 4px;
-      }
     }
     .featured-users {
       float: right;
@@ -308,7 +307,7 @@
     .category-description {
       margin-top: 10px;
     }
-    .badge-category {
+    .badge-category.bigger {
       padding: 6px 10px;
       font-size: 14px;
     }
@@ -433,6 +432,7 @@
 // --------------------------------------------------
 
 .list-controls {
+
   .home {
     background-color: lighten($secondary_background_color, 76%);
     color: $primary_text_color;
@@ -463,7 +463,6 @@
     margin: 20px 0 10px;
   }
 
-.topic-statuses .topic-status i {font-size: 15px;}
 
   .empty-topic-list {
     padding: 10px;
@@ -531,15 +530,11 @@ ol.category-breadcrumb {
     text-transform: none;
     width: 100%;
     min-width: 102px;
-
     text-align: center;
     margin-right: 20px;
+    margin-bottom: 7px;
   }
 
-
-  div {
-    margin-bottom: 10px;
-  }
 }
 
 #bulk-select {
@@ -547,9 +542,6 @@ ol.category-breadcrumb {
   right: 20px;
   padding: 5px;
   background-color: $primary_background_color;
-  button {
-    padding: 3px 0 3px 6px;
-  }
 }
 
 button.dismiss-read {

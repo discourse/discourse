@@ -94,8 +94,8 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        cpp.html.should match_html '<div class="lightbox-wrapper"><a href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="uploaded.jpg"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.jpg" width="690" height="1380"><div class="meta">
-<span class="filename">uploaded.jpg</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
+        cpp.html.should match_html '<div class="lightbox-wrapper"><a href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" width="690" height="1380"><div class="meta">
+<span class="filename">logo.png</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
 </div></a></div>'
         cpp.should be_dirty
       end
@@ -295,30 +295,35 @@ describe CookedPostProcessor do
 
       before { SiteSetting.stubs(:download_remote_images_to_local).returns(true) }
 
-      it "runs only when a user updated the post" do
-        post.last_editor_id = Discourse.system_user.id
+      it "does not run when there is not enough disk space" do
+        cpp.expects(:disable_if_low_on_disk_space).returns(true)
         Jobs.expects(:cancel_scheduled_job).never
         cpp.pull_hotlinked_images
       end
 
-      it "disables download when disk space is low" do
-        SiteSetting.expects(:download_remote_images_threshold).returns(20)
-        cpp.expects(:available_disk_space).returns(10)
-        Jobs.expects(:cancel_scheduled_job).never
-        cpp.pull_hotlinked_images
-      end
+      context "and there is enough disk space" do
 
-      context "and the post has been updated by a user" do
+        before { cpp.expects(:disable_if_low_on_disk_space).returns(false) }
 
-        before { post.id = 42 }
-
-        it "ensures only one job is scheduled right after the ninja_edit_window" do
-          Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
-
-          delay = SiteSetting.ninja_edit_window + 1
-          Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id, bypass_bump: false).once
-
+        it "does not run when the system user updated the post" do
+          post.last_editor_id = Discourse.system_user.id
+          Jobs.expects(:cancel_scheduled_job).never
           cpp.pull_hotlinked_images
+        end
+
+        context "and the post has been updated by an actual user" do
+
+          before { post.id = 42 }
+
+          it "ensures only one job is scheduled right after the ninja_edit_window" do
+            Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
+
+            delay = SiteSetting.ninja_edit_window + 1
+            Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id, bypass_bump: false).once
+
+            cpp.pull_hotlinked_images
+          end
+
         end
 
       end
@@ -340,10 +345,16 @@ describe CookedPostProcessor do
       cpp.disable_if_low_on_disk_space.should == false
     end
 
-    it "disables download_remote_images_threshold when there's not enough disk space" do
-      SiteSetting.expects(:download_remote_images_threshold).returns(75)
-      cpp.disable_if_low_on_disk_space.should == true
-      SiteSetting.download_remote_images_to_local.should == false
+    context "when there's not enough disk space" do
+
+      before { SiteSetting.expects(:download_remote_images_threshold).returns(75) }
+
+      it "disables download_remote_images_threshold and send a notification to the admin" do
+        SystemMessage.expects(:create).with(Discourse.site_contact_user, :download_remote_images_disabled).once
+        cpp.disable_if_low_on_disk_space.should == true
+        SiteSetting.download_remote_images_to_local.should == false
+      end
+
     end
 
   end

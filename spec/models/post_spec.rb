@@ -798,8 +798,7 @@ describe Post do
 
   describe "has_host_spam" do
     it "correctly detects host spam" do
-      post = Fabricate(:post, raw: "hello from my site http://www.somesite.com
-                       http://#{GlobalSetting.hostname} ")
+      post = Fabricate(:post, raw: "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}")
 
       post.total_hosts_usage.should == {"www.somesite.com" => 1}
       post.acting_user.trust_level = 0
@@ -810,9 +809,21 @@ describe Post do
 
       post.has_host_spam?.should == true
 
-      SiteSetting.stubs(:white_listed_spam_host_domains).returns("bla.com,boo.com , somesite.com ")
+      SiteSetting.stubs(:white_listed_spam_host_domains).returns("bla.com|boo.com | somesite.com ")
       post.has_host_spam?.should == false
     end
+  end
+
+  it "has custom fields" do
+    post = Fabricate(:post)
+    post.custom_fields["a"].should == nil
+
+    post.custom_fields["Tommy"] = "Hanks"
+    post.custom_fields["Vincent"] = "Vega"
+    post.save
+
+    post = Post.find(post.id)
+    post.custom_fields.should == {"Tommy" => "Hanks", "Vincent" => "Vega"}
   end
 
 end

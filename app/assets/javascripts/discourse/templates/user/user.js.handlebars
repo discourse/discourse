@@ -1,8 +1,6 @@
 <div class='container'>
   {{customHTML "top"}}
-  {{#if Discourse.isReadOnly}}
-    <div class="alert alert-info">{{i18n "read_only_mode.enabled"}}</div>
-  {{/if}}
+  {{Discourse.globalNotice}}
 </div>
 
 {{#unless loading}}
@@ -15,19 +13,41 @@
         {{#each stat in statsExcludingPms}}
           {{discourse-activity-filter content=stat user=model userActionType=userActionType indexStream=indexStream}}
         {{/each}}
+        {{#if showBadges}}
+          {{#link-to 'user.badges' tagName="li"}}
+            {{#link-to 'user.badges'}}
+              <i class='glyph fa fa-certificate'></i>
+              {{i18n badges.title}}
+              <span class='count'>({{badge_count}})</span>
+              <span class='fa fa-chevron-right'></span>
+            {{/link-to}}
+          {{/link-to}}
+        {{/if}}
       </ul>
 
       {{#if canSeePrivateMessages}}
         <h3><i class='fa fa-envelope'></i> {{i18n user.private_messages}}</h3>
         <ul class='action-list nav-stacked'>
           <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
-            {{#link-to 'userPrivateMessages.index' model}}{{i18n user.messages.all}}<span class='fa fa-chevron-right'></span>{{/link-to}}
+            {{#link-to 'userPrivateMessages.index' model}}
+              {{i18n user.messages.all}}
+              {{#if hasPMs}}<span class='count'>({{private_messages_stats.all}})</span>{{/if}}
+              <span class='fa fa-chevron-right'></span>
+            {{/link-to}}
           </li>
           <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
-            {{#link-to 'userPrivateMessages.mine' model}}{{i18n user.messages.mine}}<span class='fa fa-chevron-right'></span>{{/link-to}}
+            {{#link-to 'userPrivateMessages.mine' model}}
+              {{i18n user.messages.mine}}
+              {{#if hasStartedPMs}}<span class='count'>({{private_messages_stats.mine}})</span>{{/if}}
+              <span class='fa fa-chevron-right'></span>
+            {{/link-to}}
           </li>
           <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
-            {{#link-to 'userPrivateMessages.unread' model}}{{i18n user.messages.unread}}<span class='fa fa-chevron-right'></span>{{/link-to}}
+            {{#link-to 'userPrivateMessages.unread' model}}
+              {{i18n user.messages.unread}}
+              {{#if hasUnreadPMs}}<span class='count'>({{private_messages_stats.unread}})</span>{{/if}}
+              <span class='fa fa-chevron-right'></span>
+            {{/link-to}}
           </li>
         </ul>
       {{/if}}
@@ -45,20 +65,23 @@
         <div class='details'>
           <div class='primary'>
           {{boundAvatar model imageSize="huge"}}
-          <h1>{{username}} {{{statusIcon}}}</h1>
-          <h2>{{name}}</h2>
 
-          <div class='bio'>{{{bio_cooked}}}</div>
+          <div class="primary-textual">
+            <h1>{{username}} {{{statusIcon}}}</h1>
+            <h2>{{name}}</h2>
 
-          {{groups-list groups=custom_groups}}
+            <div class='bio'>{{{bio_cooked}}}</div>
 
-          {{#if isSuspended}}
-            <div class='suspended'>
-              <i class='fa fa-ban'></i>
-              <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
-              <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
+            {{groups-list groups=custom_groups}}
+
+            {{#if isSuspended}}
+              <div class='suspended'>
+                <i class='fa fa-ban'></i>
+                <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
+                <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
+              </div>
+            {{/if}}
             </div>
-          {{/if}}
           </div>
 
           <div class='secondary'>

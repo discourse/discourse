@@ -1,15 +1,18 @@
 var originalTemplates, originalMobileViewFlag;
 
-var lookup = function(lookupString, expectedTemplate, message) {
-  // {singleton: false} prevents Ember from caching lookup results (what would make them persistent across multiple tests, breaking test isolation)
-  equal(Discourse.__container__.lookup(lookupString, {singleton: false}), expectedTemplate, message);
-};
+function lookup(lookupString, expectedTemplate, message) {
+  var container = Discourse.__container__;
+  equal(container.lookup(lookupString), expectedTemplate, message);
 
-var setTemplates = function(lookupStrings) {
+  // Remove any cached results from the container
+  container.unregister(lookupString);
+}
+
+function setTemplates(lookupStrings) {
   lookupStrings.forEach(function(lookupString) {
     Ember.TEMPLATES[lookupString] = lookupString;
   });
-};
+}
 
 module("Discourse.Resolver", {
   setup: function() {

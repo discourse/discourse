@@ -9,6 +9,11 @@
 Discourse.TopicRoute = Discourse.Route.extend({
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
+  queryParams: {
+    filter: { replace: true },
+    username_filters: { replace: true }
+  },
+
   actions: {
     // Modals that can pop up within a topic
     showPosterExpansion: function(post) {
@@ -67,6 +72,10 @@ Discourse.TopicRoute = Discourse.Route.extend({
       Discourse.Route.showModal(this, 'splitTopic', this.modelFor('topic'));
     },
 
+    changeOwner: function() {
+      Discourse.Route.showModal(this, 'changeOwner', this.modelFor('topic'));
+    },
+
     // Use replaceState to update the URL once it changes
     postChangedRoute: Discourse.debounce(function(currentPost) {
       // do nothing if we are transitioning to another route
@@ -84,16 +93,34 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
   },
 
-  model: function(params) {
-    var currentModel = this.modelFor('topic');
-    if (currentModel && (currentModel.get('id') === parseInt(params.id, 10))) {
-      // If we've recovered the currentModel (for example, hitting the forward button and we
-      // popped it off the state), get rid of the `loaded` attribute we set when the back
-      // button was hit.
-      currentModel.set('postStream.loaded', true);
-      return currentModel;
+  setupParams: function(topic, params) {
+    var postStream = topic.get('postStream');
+    postStream.set('summary', Em.get(params, 'filter') === 'summary');
+
+    var usernames = Em.get(params, 'username_filters'),
+        userFilters = postStream.get('userFilters');
+
+    userFilters.clear();
+    if (!Em.isEmpty(usernames) && usernames !== 'undefined') {
+      userFilters.addObjects(usernames.split(','));
     }
-    return Discourse.Topic.create(params);
+
+    return topic;
+  },
+
+  model: function(params, transition) {
+    var queryParams = transition.queryParams;
+
+    var topic = this.modelFor('topic');
+    if (topic && (topic.get('id') === parseInt(params.id, 10))) {
+      this.setupParams(topic, queryParams);
+      // If we have the existing model, refresh it
+      return topic.get('postStream').refresh().then(function() {
+        return topic;
+      });
+    } else {
+      return this.setupParams(Discourse.Topic.create(_.omit(params, 'username_filters', 'filter')), queryParams);
+    }
   },
 
   activate: function() {
@@ -126,9 +153,6 @@ Discourse.TopicRoute = Discourse.Route.extend({
       headerController.set('topic', null);
       headerController.set('showExtraInfo', false);
     }
-
-    // Clear any filters when we leave the route
-    Discourse.URL.set('queryParams', null);
   },
 
   setupController: function(controller, model) {

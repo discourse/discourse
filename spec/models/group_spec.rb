@@ -148,6 +148,19 @@ describe Group do
     GroupUser.count.should == original_count
   end
 
+
+  it "has custom fields" do
+    group = Fabricate(:group)
+    group.custom_fields["a"].should == nil
+
+    group.custom_fields["hugh"] = "jackman"
+    group.custom_fields["jack"] = "black"
+    group.save
+
+    group = Group.find(group.id)
+    group.custom_fields.should == {"hugh" => "jackman", "jack" => "black"}
+  end
+
   it "allows you to lookup a new group by name" do
     group = Fabricate(:group)
     group.id.should == Group[group.name].id

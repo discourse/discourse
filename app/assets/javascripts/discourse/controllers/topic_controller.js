@@ -13,6 +13,16 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   editingTopic: false,
   selectedPosts: null,
   selectedReplies: null,
+  queryParams: ['filter', 'username_filters'],
+
+  filter: function(key, value) {
+    if (arguments.length > 1) {
+      this.set('postStream.summary', value === "summary");
+    }
+    return this.get('postStream.summary') ? "summary" : null;
+  }.property('postStream.summary'),
+
+  username_filters: Discourse.computed.queryAlias('postStream.streamFilters.username_filters'),
 
   init: function() {
     this._super();
@@ -163,7 +173,13 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     },
 
     togglePinned: function() {
-      this.get('content').toggleStatus('pinned');
+      // Note that this is different than clearPin
+      this.get('content').setStatus('pinned', this.get('pinned_at') ? false : true);
+    },
+
+    togglePinnedGlobally: function() {
+      // Note that this is different than clearPin
+      this.get('content').setStatus('pinned_globally', this.get('pinned_at') ? false : true);
     },
 
     toggleArchived: function() {
@@ -215,9 +231,25 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
           }) + "\n\n" + q);
         });
       });
-    }
+    },
 
+    expandFirstPost: function(post) {
+      var self = this;
+      this.set('loadingExpanded', true);
+      post.expand().then(function() {
+        self.set('firstPostExpanded', true);
+      }).catch(function(error) {
+        bootbox.alert($.parseJSON(error.responseText).errors);
+      }).finally(function() {
+        self.set('loadingExpanded', false);
+      });
+    }
   },
+
+  showExpandButton: function() {
+    var post = this.get('post');
+    return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
+  }.property(),
 
   slackRatio: function() {
     return Discourse.Capabilities.currentProp('slackRatio');
@@ -242,6 +274,11 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     if (this.get('allPostsSelected')) return false;
     return (this.get('selectedPostsCount') > 0);
   }.property('selectedPostsCount'),
+
+  canChangeOwner: function() {
+    if (!Discourse.User.current() || !Discourse.User.current().admin) return false;
+    return !!this.get('selectedPostsUsername');
+  }.property('selectedPostsUsername'),
 
   categories: function() {
     return Discourse.Category.list();
@@ -359,8 +396,16 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         return;
       }
 
+      var postStream = topicController.get('postStream');
+      if (data.type === "revised" || data.type === "acted"){
+        // TODO we could update less data for "acted"
+        // (only post actions)
+        postStream.triggerChangedPost(data.id, data.updated_at);
+        return;
+      }
+
       // Add the new post into the stream
-      topicController.get('postStream').triggerNewPostInStream(data.id);
+      postStream.triggerNewPostInStream(data.id);
     });
   },
 
@@ -523,6 +568,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     @params {Discourse.Post} post that is at the top
   **/
   topVisibleChanged: function(post) {
+    if (!post) { return; }
+
     var postStream = this.get('postStream'),
         firstLoadedPost = postStream.get('firstLoadedPost');
 
@@ -554,6 +601,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     @params {Discourse.Post} post that is at the bottom
   **/
   bottomVisibleChanged: function(post) {
+    if (!post) { return; }
+
     var postStream = this.get('postStream'),
         lastLoadedPost = postStream.get('lastLoadedPost'),
         index = postStream.get('stream').indexOf(post.get('id'))+1;

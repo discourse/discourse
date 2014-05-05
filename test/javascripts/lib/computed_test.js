@@ -10,6 +10,17 @@ module("Discourse.Computed", {
   }
 });
 
+test("setting", function() {
+  var t = Em.Object.extend({
+    vehicle: Discourse.computed.setting('vehicle'),
+    missingProp: Discourse.computed.setting('madeUpThing')
+  }).create();
+
+  Discourse.SiteSettings.vehicle = "airplane";
+  equal(t.get('vehicle'), "airplane", "it has the value of the site setting");
+  ok(!t.get('missingProp'), "it is falsy when the site setting is not defined");
+});
+
 test("propertyEqual", function() {
   var t = Em.Object.extend({
     same: Discourse.computed.propertyEqual('cookies', 'biscuits')

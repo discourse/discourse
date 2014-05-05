@@ -66,12 +66,11 @@ class TopicUser < ActiveRecord::Base
       result
     end
 
-    def get(topic,user)
-      topic = topic.id if Topic === topic
-      user = user.id if User === user
-      TopicUser.where('topic_id = ? and user_id = ?', topic, user).first
+    def get(topic, user)
+      topic = topic.id if topic.is_a?(Topic)
+      user = user.id if user.is_a?(User)
+      TopicUser.find_by(topic_id: topic, user_id: user)
     end
-
 
     # Change attributes for a user (creates a record when none is present). First it tries an update
     # since there's more likely to be an existing record than not. If the update returns 0 rows affected
@@ -117,8 +116,8 @@ class TopicUser < ActiveRecord::Base
     end
 
     def track_visit!(topic,user)
-      topic_id = Topic === topic ? topic.id : topic
-      user_id = User === user ? user.id : topic
+      topic_id = topic.is_a?(Topic) ? topic.id : topic
+      user_id = user.is_a?(User) ? user.id : topic
 
       now = DateTime.now
       rows = TopicUser.where({topic_id: topic_id, user_id: user_id}).update_all({last_visited_at: now})

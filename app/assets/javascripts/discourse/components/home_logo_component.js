@@ -9,15 +9,8 @@ Discourse.HomeLogoComponent = Ember.Component.extend({
     return !Discourse.Mobile.mobileView && this.get("minimized");
   }.property("minimized"),
 
-  smallLogoUrl: function() {
-    return Discourse.SiteSettings.logo_small_url;
-  }.property(),
+  smallLogoUrl: Discourse.computed.setting('logo_small_url'),
+  bigLogoUrl: Discourse.computed.setting('logo_url'),
+  title: Discourse.computed.setting('title'),
 
-  bigLogoUrl: function() {
-    return Discourse.SiteSettings.logo_url;
-  }.property(),
-
-  title: function() {
-    return Discourse.SiteSettings.title;
-  }.property()
 });

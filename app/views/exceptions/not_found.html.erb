@@ -21,23 +21,25 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="span10" style='padding-top: 20px'>
-    <h2 class="page-not-found-search"><%= t 'page_not_found.search_title' %></h2>
-    <p>
-      <form action='//google.com' id='google-search' onsubmit="return google_button_clicked()">
-        <input type="text" id='user-query' value="<%= @slug %>">
-        <input type='hidden' id='google-query' name="q">
-        <button class="btn btn-primary"><%= t 'page_not_found.search_google' %></button>
-      </form>
-    </p>
+<%- unless @hide_google %>
+  <div class="row">
+    <div class="span10" style='padding-top: 20px'>
+      <h2 class="page-not-found-search"><%= t 'page_not_found.search_title' %></h2>
+      <p>
+        <form action='//google.com' id='google-search' onsubmit="return google_button_clicked()">
+          <input type="text" id='user-query' value="<%= @slug %>">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary"><%= t 'page_not_found.search_google' %></button>
+        </form>
+      </p>
+    </div>
   </div>
-</div>
 
-<script language="Javascript">
-  function google_button_clicked(e) {
-    var searchValue = document.getElementById('user-query').value;
-    document.getElementById('google-query').value = 'site:<%= local_domain %> ' + searchValue;
-    return true;
-  }
-</script>
+  <script language="Javascript">
+    function google_button_clicked(e) {
+      var searchValue = document.getElementById('user-query').value;
+      document.getElementById('google-query').value = 'site:<%= local_domain %> ' + searchValue;
+      return true;
+    }
+  </script>
+<%- end %>

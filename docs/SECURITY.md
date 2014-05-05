@@ -43,4 +43,4 @@ Discourse extends the built-in Rails CSRF protection in the following ways:
 
 ### Deployment concerns
 
-We strongly recommend that the various Discourse processes (web server, sidekiq) run under a non-elevated account. See [our install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md) for details.
+We strongly recommend that the various Discourse processes (web server, sidekiq) run under a non-elevated account. See [our install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md) for details.

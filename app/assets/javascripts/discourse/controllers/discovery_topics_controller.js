@@ -7,10 +7,24 @@
   @module Discourse
 **/
 Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
+  needs: ['discovery'],
   bulkSelectEnabled: false,
   selected: [],
 
+  order: 'default',
+  ascending: false,
+
   actions: {
+
+    changeSort: function(sortBy) {
+      if (sortBy === this.get('order')) {
+        this.toggleProperty('ascending');
+      } else {
+        this.setProperties({ order: sortBy, ascending: false });
+      }
+      this.get('model').refreshSort(sortBy, this.get('ascending'));
+    },
+
     // Show newly inserted topics
     showInserted: function() {
       var tracker = Discourse.TopicTrackingState.current();
@@ -24,6 +38,9 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
     refresh: function() {
       var filter = this.get('model.filter'),
           self = this;
+
+      // Don't refresh if we're still loading
+      if (this.get('controllers.discovery.loading')) { return; }
 
       this.send('loading');
       Discourse.TopicList.find(filter).then(function(list) {
@@ -64,7 +81,16 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
       } else {
         promise = Discourse.Topic.bulkOperationByFilter(this.get('filter'), operation);
       }
-      promise.then(function() { self.send('refresh'); });
+      promise.then(function(result) {
+        if (result && result.topic_ids) {
+          var tracker = Discourse.TopicTrackingState.current();
+          result.topic_ids.forEach(function(t) {
+            tracker.removeTopic(t);
+          });
+          tracker.incrementMessageCount();
+        }
+        self.send('refresh');
+      });
     }
   },
 
@@ -113,11 +139,6 @@ Discourse.DiscoveryTopicsController = Discourse.DiscoveryController.extend({
   }.property('allLoaded', 'topics.length'),
 
   loadMoreTopics: function() {
-    var topicList = this.get('model');
-    return topicList.loadMore().then(function(moreUrl) {
-      if (!Em.isEmpty(moreUrl)) {
-        Discourse.URL.replaceState(Discourse.getURL("/") + topicList.get('filter') + "/more");
-      }
-    });
+    return this.get('model').loadMore();
   }
 });

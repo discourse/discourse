@@ -53,6 +53,6 @@ class AdminUserIndexQuery
   end
 
   def find_users
-    find_users_query.take(100)
+    find_users_query.includes(:user_stat).take(100)
   end
 end

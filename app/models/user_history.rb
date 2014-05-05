@@ -22,7 +22,10 @@ class UserHistory < ActiveRecord::Base
                            :notified_about_sequential_replies,
                            :notified_about_dominating_topic,
                            :suspend_user,
-                           :unsuspend_user)
+                           :unsuspend_user,
+                           :facebook_no_email,
+                           :grant_badge,
+                           :revoke_badge)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -33,7 +36,9 @@ class UserHistory < ActiveRecord::Base
                         :change_site_customization,
                         :delete_site_customization,
                         :suspend_user,
-                        :unsuspend_user]
+                        :unsuspend_user,
+                        :grant_badge,
+                        :revoke_badge]
   end
 
   def self.staff_action_ids
@@ -108,6 +113,7 @@ end
 #  previous_value :text
 #  new_value      :text
 #  topic_id       :integer
+#  admin_only     :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -116,4 +122,3 @@ end
 #  index_staff_action_logs_on_target_user_id_and_id          (target_user_id,id)
 #  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
 #
-

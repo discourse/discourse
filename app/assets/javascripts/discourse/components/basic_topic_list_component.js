@@ -23,10 +23,7 @@ Discourse.BasicTopicListComponent = Ember.Component.extend({
 
   _initFromTopicList: function(topicList) {
     if (topicList !== null) {
-      this.setProperties({
-        topics: topicList.get('topics'),
-        sortOrder: topicList.get('sortOrder')
-      });
+      this.set('topics', topicList.get('topics'));
       this.rerender();
     }
   },

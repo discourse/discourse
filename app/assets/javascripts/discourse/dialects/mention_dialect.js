@@ -10,9 +10,9 @@ Discourse.Dialect.inlineRegexp({
 
   emitter: function(matches) {
     var username = matches[1],
-        mentionLookup = this.dialect.options.mentionLookup || Discourse.Mention.lookupCache;
+        mentionLookup = this.dialect.options.mentionLookup;
 
-    if (mentionLookup(username.substr(1))) {
+    if (mentionLookup && mentionLookup(username.substr(1))) {
       return ['a', {'class': 'mention', href: Discourse.getURL("/users/") + username.substr(1).toLowerCase()}, username];
     } else {
       return ['span', {'class': 'mention'}, username];

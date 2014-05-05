@@ -44,7 +44,7 @@ class SessionController < ApplicationController
 
   def create
 
-    if SiteSetting.enable_sso
+    unless allow_local_auth?
       render nothing: true, status: 500
       return
     end
@@ -82,13 +82,13 @@ class SessionController < ApplicationController
       return
     end
 
-    user.email_confirmed? ? login(user) : not_activated(user)
+    (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
   def forgot_password
     params.require(:login)
 
-    if SiteSetting.enable_sso
+    unless allow_local_auth?
       render nothing: true, status: 500
       return
     end
@@ -117,6 +117,10 @@ class SessionController < ApplicationController
   end
 
   private
+
+  def allow_local_auth?
+    !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+  end
 
   def login_not_approved_for?(user)
     SiteSetting.must_approve_users? && !user.approved? && !user.admin?

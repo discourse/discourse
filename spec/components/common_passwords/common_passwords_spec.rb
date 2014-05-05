@@ -51,7 +51,7 @@ describe CommonPasswords do
     it "doesn't load the passwords file if redis has it" do
       mock_redis = mock("redis")
       mock_redis.stubs(:exists).returns(true)
-      mock_redis.stubs(:scard).returns(5000)
+      mock_redis.stubs(:scard).returns(10000)
       described_class.stubs(:redis).returns(mock_redis)
       described_class.expects(:load_passwords).never
       list = described_class.password_list

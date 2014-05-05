@@ -7,7 +7,7 @@
   @module Discourse
 **/
 Discourse.DiscoveryCategoriesController = Discourse.DiscoveryController.extend({
-  needs: ['modal'],
+  needs: ['modal', 'discovery'],
 
   actions: {
     toggleOrdering: function(){
@@ -16,6 +16,10 @@ Discourse.DiscoveryCategoriesController = Discourse.DiscoveryController.extend({
 
     refresh: function() {
       var self = this;
+
+      // Don't refresh if we're still loading
+      if (this.get('controllers.discovery.loading')) { return; }
+
       this.send('loading');
       Discourse.CategoryList.list('categories').then(function(list) {
         self.set('model', list);

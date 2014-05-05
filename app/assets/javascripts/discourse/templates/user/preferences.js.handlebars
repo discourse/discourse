@@ -25,10 +25,24 @@
       <div class="control-group">
         <label class="control-label">{{i18n user.name.title}}</label>
         <div class="controls">
-          {{textField value=newNameInput classNames="input-xxlarge"}}
+          {{#if can_edit_name}}
+            {{textField value=newNameInput classNames="input-xxlarge"}}
+          {{else}}
+            <span class='static'>{{name}}</span>
+          {{/if}}
         </div>
         <div class='instructions'>
           {{i18n user.name.instructions}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if canSelectTitle}}
+      <div class="control-group">
+        <label class="control-label">{{i18n user.title.title}}</label>
+        <div class="controls">
+          <span class="static">{{title}}</span>
+          {{#link-to "preferences.badgeTitle" class="btn pad-left"}}<i class="fa fa-pencil"></i>{{/link-to}}
         </div>
       </div>
     {{/if}}
@@ -73,7 +87,7 @@
         {{/if}}
       </div>
     </div>
-    
+
     {{#if Discourse.SiteSettings.allow_profile_backgrounds}}
     <div class="control-group">
       <label class="control-label">{{i18n user.change_profile_background.title}}</label>
@@ -108,7 +122,7 @@
 
     <div class="control-group">
       <label class="control-label">{{i18n user.bio}}</label>
-      <div class="controls">
+      <div class="controls bio-composer">
         {{pagedown value=bio_raw}}
       </div>
     </div>
@@ -183,17 +197,17 @@
       <label class="control-label">{{i18n user.categories_settings}}</label>
       <div class="controls category-controls">
         <label>{{i18n user.watched_categories}}</label>
-        {{category-group categories=watchedCategories}}
+        {{category-group categories=watchedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n user.watched_categories_instructions}}</div>
       <div class="controls category-controls">
         <label>{{i18n user.tracked_categories}}</label>
-        {{category-group categories=trackedCategories}}
+        {{category-group categories=trackedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n user.tracked_categories_instructions}}</div>
       <div class="controls category-controls">
         <label>{{i18n user.muted_categories}}</label>
-        {{category-group categories=mutedCategories}}
+        {{category-group categories=mutedCategories blacklist=selectedCategories}}
       </div>
       <div class="instructions">{{i18n user.muted_categories_instructions}}</div>
     </div>

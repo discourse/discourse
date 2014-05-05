@@ -1,0 +1,10 @@
+//= depend_on 'client.uk.yml'
+//= require locales/i18n
+<%= JsLocaleHelper.output_locale(:uk) %>
+
+I18n.pluralizationRules['uk'] = function (n) {
+  if (n == 0) return ["zero", "none", "other"];
+  if (n % 10 == 1 && n % 100 != 11) return "one";
+  if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return "few";
+  return "many";
+};

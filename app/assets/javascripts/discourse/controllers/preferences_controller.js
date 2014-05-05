@@ -7,13 +7,13 @@
   @module Discourse
 **/
 Discourse.PreferencesController = Discourse.ObjectController.extend({
-  allowAvatarUpload: function() {
-    return Discourse.SiteSettings.allow_uploaded_avatars;
-  }.property(),
 
-  allowUserLocale: function() {
-    return Discourse.SiteSettings.allow_user_locale;
-  }.property(),
+  allowAvatarUpload: Discourse.computed.setting('allow_uploaded_avatars'),
+  allowUserLocale: Discourse.computed.setting('allow_user_locale'),
+
+  selectedCategories: function(){
+    return [].concat(this.get("watchedCategories"), this.get("trackedCategories"), this.get("mutedCategories"));
+  }.property("watchedCategories", "trackedCategories", "mutedCategories"),
 
   // By default we haven't saved anything
   saved: false,
@@ -30,9 +30,11 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
 
-  canEditName: function() {
-    return Discourse.SiteSettings.enable_names;
-  }.property(),
+  canEditName: Discourse.computed.setting('enable_names'),
+
+  canSelectTitle: function() {
+    return Discourse.SiteSettings.enable_badges && this.get('model.badge_count') > 0;
+  }.property('model.badge_count'),
 
   availableLocales: function() {
     return Discourse.SiteSettings.available_locales.split('|').map( function(s) {

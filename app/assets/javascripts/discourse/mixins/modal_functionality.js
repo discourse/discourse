@@ -13,7 +13,8 @@ Discourse.ModalFunctionality = Em.Mixin.create({
     Flash a message at the top of the modal
 
     @method blank
-    @param {String} name the name of the property we want to check
+    @param {String} message I18n name of the message
+    @param {String} messageClass CSS class to apply
     @return {Boolean}
   **/
   flash: function(message, messageClass) {

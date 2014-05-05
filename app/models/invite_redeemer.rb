@@ -12,23 +12,15 @@ InviteRedeemer = Struct.new(:invite) do
   def self.create_user_from_invite(invite)
     username = UserNameSuggester.suggest(invite.email)
 
-    DiscourseHub.nickname_operation do
-      match, available, suggestion = DiscourseHub.nickname_match?(username, invite.email)
+    DiscourseHub.username_operation do
+      match, available, suggestion = DiscourseHub.username_match?(username, invite.email)
       username = suggestion unless match || available
     end
 
-    user = User.new(email: invite.email, username: username, name: username, active: true)
-    if invite.invited_by and invite.invited_by.has_trust_level?(:leader)
-      # People invited by users with trust level 3 will start at the default trust level + 1,
-      # unless the default trust level is 2 or higher.
-      user.trust_level = SiteSetting.default_invitee_trust_level
-      user.trust_level += 1 if user.trust_level < TrustLevel.levels[:regular]
-    else
-      user.trust_level = SiteSetting.default_invitee_trust_level
-    end
+    user = User.new(email: invite.email, username: username, name: username, active: true, trust_level: SiteSetting.default_invitee_trust_level)
     user.save!
 
-    DiscourseHub.nickname_operation { DiscourseHub.register_nickname(username, invite.email) }
+    DiscourseHub.username_operation { DiscourseHub.register_username(username, invite.email) }
 
     user
   end

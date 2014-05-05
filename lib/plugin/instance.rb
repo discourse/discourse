@@ -5,7 +5,7 @@ require_dependency 'plugin/auth_provider'
 
 class Plugin::Instance
 
-  attr_reader :auth_providers, :assets
+  attr_reader :auth_providers, :assets, :styles
   attr_accessor :path, :metadata
 
   def self.find_all(parent_path)
@@ -93,13 +93,9 @@ class Plugin::Instance
     @javascripts << js
   end
 
-  def register_asset(file,opts=nil)
+  def register_asset(file, opts=nil)
     full_path = File.dirname(path) << "/assets/" << file
-    assets << full_path
-    if opts == :server_side
-      @server_side_javascripts ||= []
-      @server_side_javascripts << full_path
-    end
+    assets << [full_path, opts]
   end
 
   def automatic_assets
@@ -143,35 +139,22 @@ class Plugin::Instance
 
   end
 
+
   # note, we need to be able to parse seperately to activation.
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
     self.instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
-      assets.concat auto_assets
+      assets.concat auto_assets.map{|a| [a]}
     end
     unless assets.blank?
-      assets.each do |asset|
-        if asset =~ /\.js$|\.js\.erb$/
-          DiscoursePluginRegistry.javascripts << asset
-        elsif asset =~ /\.css$|\.scss$/
-          DiscoursePluginRegistry.stylesheets << asset
-        elsif asset =~ /\.js\.handlebars$/
-          DiscoursePluginRegistry.handlebars << asset
-        end
-      end
-
+      register_assets!
       # TODO possibly amend this to a rails engine
       Rails.configuration.assets.paths << auto_generated_path
       Rails.configuration.assets.paths << File.dirname(path) + "/assets"
     end
 
-    if @server_side_javascripts
-      @server_side_javascripts.each do |js|
-        DiscoursePluginRegistry.server_side_javascripts << js
-      end
-    end
 
     public_data = File.dirname(path) + "/public"
     if Dir.exists?(public_data)
@@ -183,6 +166,7 @@ class Plugin::Instance
       `ln -s #{public_data} #{target}`
     end
   end
+
 
   def auth_provider(opts)
     @auth_providers ||= []
@@ -221,6 +205,36 @@ class Plugin::Instance
     else
       puts "You are specifying the gem #{name} in #{path}, however it does not exist!"
       exit(-1)
+    end
+  end
+
+  protected
+
+  def register_assets!
+    assets.each do |asset, opts|
+      if asset =~ /\.js$|\.js\.erb$/
+        if opts == :admin
+          DiscoursePluginRegistry.admin_javascripts << asset
+        else
+          if opts == :server_side
+            DiscoursePluginRegistry.server_side_javascripts << asset
+          end
+          DiscoursePluginRegistry.javascripts << asset
+        end
+      elsif asset =~ /\.css$|\.scss$/
+        if opts == :mobile
+          DiscoursePluginRegistry.mobile_stylesheets << asset
+        elsif opts == :desktop
+          DiscoursePluginRegistry.desktop_stylesheets << asset
+        elsif opts == :variables
+          DiscoursePluginRegistry.sass_variables << asset
+        else
+          DiscoursePluginRegistry.stylesheets << asset
+        end
+
+      elsif asset =~ /\.js\.handlebars$/
+        DiscoursePluginRegistry.handlebars << asset
+      end
     end
   end
 

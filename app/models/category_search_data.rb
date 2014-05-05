@@ -15,4 +15,3 @@ end
 #
 #  idx_search_category  (search_data)
 #
-

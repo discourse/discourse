@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-pt-br/
+
+it:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Opzioni sondaggio"
+  poll:
+    must_contain_poll_options: "deve contenere una lista di opzioni per il sondaggio"
+    cannot_have_modified_options: "non possono essere modificate dopo i primi cinque minuti. Contatta un moderatore se hai bisogno di cambiarle."
+    cannot_add_or_remove_options: "non possono essere modificate, aggiunte o rimosse. Se vuoi aggiungere o rimuovere opzioni al sondaggio, devi bloccare questo topice crearne uno nuovo."
+    prefix: "Sondaggio"
+    closed_prefix: "Sondaggio Chiuso"

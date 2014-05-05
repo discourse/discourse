@@ -23,8 +23,9 @@ class Admin::FlagsController < Admin::AdminController
 
   def agree
     p = Post.find(params[:id])
+    post_action_type = PostAction.post_action_type_for_post(p.id)
     PostAction.defer_flags!(p, current_user.id)
-    PostAction.hide_post!(p)
+    PostAction.hide_post!(p, post_action_type)
     render nothing: true
   end
 
@@ -33,4 +34,5 @@ class Admin::FlagsController < Admin::AdminController
     PostAction.defer_flags!(p, current_user.id)
     render nothing: true
   end
+
 end

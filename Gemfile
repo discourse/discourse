@@ -80,7 +80,7 @@ gem 'rails-observers'
 
 #gem 'redis-rails'
 gem 'hiredis'
-gem 'redis', :require => ["redis", "redis/connection/hiredis"]
+gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 
 gem 'active_model_serializers'
 
@@ -88,8 +88,8 @@ gem 'active_model_serializers'
 gem 'onebox'
 
 gem 'ember-rails'
-gem 'ember-source', '~> 1.2.0.1'
-gem 'handlebars-source', '~> 1.1.2'
+gem 'ember-source', '1.6.0.beta.2'
+gem 'handlebars-source', '1.3.0'
 gem 'barber'
 
 gem 'message_bus'
@@ -141,6 +141,7 @@ gem 'sanitize'
 gem 'sass'
 gem 'sidekiq'
 gem 'sidekiq-failures'
+
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 
@@ -153,7 +154,7 @@ gem 'rack-protection' # security
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'sass-rails'
+  gem 'sass-rails', '~> 4.0.2'
   gem 'uglifier'
 end
 
@@ -186,6 +187,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'librarian', '>= 0.0.25', require: false
   gem 'annotate'
+  gem 'foreman', require: false
 end
 
 # Gem that enables support for plugins. It is required.
@@ -214,7 +216,9 @@ gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
 
 # required for feed importing and embedding
+#
 gem 'ruby-readability', require: false
+
 gem 'simple-rss', require: false
 gem 'gctools', require: false, platform: :mri_21
 gem 'stackprof', require: false, platform: :mri_21

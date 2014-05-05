@@ -1,5 +1,11 @@
 <div class='contents'>
   {{#if showTable}}
+    {{#if top}}
+      {{#if yearly}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.this_year}}</h2>{{/if}}
+      {{#if monthly}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.this_month}}</h2>{{/if}}
+      {{#if weekly}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.this_week}}</h2>{{/if}}
+      {{#if daily}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.today}}</h2>{{/if}}
+    {{/if}}
     <table id='topic-list'>
       {{#if topicTrackingState.hasIncoming}}
         <tbody>

@@ -29,10 +29,11 @@
       </li>
 
       <li>
-        {{#if pinned}}
+        {{#if pinned_at}}
           <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.unpin}}</button>
         {{else}}
           <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.pin}}</button>
+          <button {{action togglePinnedGlobally}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.pin_globally}}</button>
         {{/if}}
       </li>
 
@@ -58,9 +59,11 @@
       </li>
       {{/if}}
 
+      {{#if currentUser.staff}}
       <li>
         <button class='btn btn-admin' {{action resetRead}}><i class='fa fa-times'></i> {{i18n topic.actions.reset_read}}</button>
       </li>
+      {{/if}}
     </ul>
   </div>
 {{else}}

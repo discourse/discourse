@@ -8,6 +8,10 @@
 **/
 Discourse.User = Discourse.Model.extend({
 
+  hasPMs: Em.computed.gt("private_messages_stats.all", 0),
+  hasStartedPMs: Em.computed.gt("private_messages_stats.mine", 0),
+  hasUnreadPMs: Em.computed.gt("private_messages_stats.unread", 0),
+
   /**
     The user's stream
 
@@ -75,13 +79,15 @@ Discourse.User = Discourse.Model.extend({
   }.property('profile_background'),
 
   statusIcon: function() {
-    var desc;
+    var name = Handlebars.Utils.escapeExpression(this.get('name')),
+        desc;
+
     if(this.get('admin')) {
-      desc = I18n.t('user.admin', {user: this.get("name")});
+      desc = I18n.t('user.admin', {user: name});
       return '<i class="fa fa-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     if(this.get('moderator')){
-      desc = I18n.t('user.moderator', {user: this.get("name")});
+      desc = I18n.t('user.moderator', {user: name});
       return '<i class="fa fa-magic" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     return null;
@@ -122,6 +128,9 @@ Discourse.User = Discourse.Model.extend({
   trustLevel: function() {
     return Discourse.Site.currentProp('trustLevels').findProperty('id', parseInt(this.get('trust_level'), 10));
   }.property('trust_level'),
+
+  isElder: Em.computed.equal('trust_level', 4),
+  canManageTopic: Em.computed.or('staff', 'isElder'),
 
   isSuspended: Em.computed.equal('suspended', true),
 
@@ -276,17 +285,6 @@ Discourse.User = Discourse.Model.extend({
     return this.get('stats').rejectProperty('isPM');
   }.property('stats.@each.isPM'),
 
-  /**
-  This user's stats, only including PMs.
-
-    @property statsPmsOnly
-    @type {Array}
-  **/
-  statsPmsOnly: function() {
-    if (this.blank('stats')) return [];
-    return this.get('stats').filterProperty('isPM');
-  }.property('stats.@each.isPM'),
-
 
   findDetails: function() {
     var user = this;
@@ -307,8 +305,19 @@ Discourse.User = Discourse.Model.extend({
           return Discourse.Group.create(g);
         });
       }
+
       if (json.user.invited_by) {
         json.user.invited_by = Discourse.User.create(json.user.invited_by);
+      }
+
+      if (!Em.isEmpty(json.user.featured_user_badge_ids)) {
+        var userBadgesMap = {};
+        Discourse.UserBadge.createFromJson(json).forEach(function(userBadge) {
+          userBadgesMap[ userBadge.get('id') ] = userBadge;
+        });
+        json.user.featured_user_badges = json.user.featured_user_badge_ids.map(function(id) {
+          return userBadgesMap[id];
+        });
       }
 
       user.setProperties(json.user);
@@ -372,16 +381,6 @@ Discourse.User = Discourse.Model.extend({
       data: {email: email}
     });
   },
-
-  /**
-    Homepage of the user
-
-    @property homepage
-    @type {String}
-  **/
-  homepage: function() {
-    return this.get("should_be_redirected_to_top") ? "top" : Discourse.Utilities.defaultHomepage();
-  }.property("should_be_redirected_to_top"),
 
   updateMutedCategories: function() {
     this.set("mutedCategories", Discourse.Category.findByIds(this.muted_category_ids));
@@ -458,6 +457,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     @method checkUsername
     @param {String} username A username to check
     @param {String} email An email address to check
+    @param {Number} forUserId user id - provide when changing username
   **/
   checkUsername: function(username, email, forUserId) {
     return Discourse.ajax('/users/check_username', {
@@ -469,7 +469,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     Groups the user's statistics
 
     @method groupStats
-    @param {Array} Given stats
+    @param {Array} stats Given stats
     @returns {Object}
   **/
   groupStats: function(stats) {
@@ -504,6 +504,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     @param {String} name This user's name
     @param {String} email This user's email
     @param {String} password This user's password
+    @param {String} username This user's username
     @param {String} passwordConfirm This user's confirmed password
     @param {String} challenge
     @returns Result of ajax call

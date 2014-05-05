@@ -31,7 +31,7 @@ module TopicQuerySQL
     # If you've clearned the pin, use bumped_at, otherwise put it at the top
     def order_nocategory_with_pinned_sql
       "CASE
-        WHEN topics.category_id = #{SiteSetting.uncategorized_category_id.to_i} and (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
+        WHEN topics.pinned_globally and (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
           THEN '#{highest_date}'
         ELSE topics.bumped_at
        END DESC"
@@ -42,11 +42,11 @@ module TopicQuerySQL
     end
 
     def order_nocategory_basic_bumped
-      "CASE WHEN topics.category_id = #{SiteSetting.uncategorized_category_id.to_i} and (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
+      "CASE WHEN topics.pinned_globally and (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
     end
 
     def order_top_for(score)
-      "top_topics.#{score} DESC, topics.bumped_at DESC"
+      "COALESCE(top_topics.#{score}, 0) DESC, topics.bumped_at DESC"
     end
 
     def order_top_with_pinned_category_for(score)

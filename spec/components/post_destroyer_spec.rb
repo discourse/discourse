@@ -253,13 +253,12 @@ describe PostDestroyer do
   end
 
   context '@mentions' do
-    let!(:evil_trout) { Fabricate(:evil_trout) }
-    let!(:mention_post) { Fabricate(:post, raw: 'Hello @eviltrout')}
-
     it 'removes notifications when deleted' do
+      user = Fabricate(:evil_trout)
+      post = create_post(raw: 'Hello @eviltrout')
       lambda {
-        PostDestroyer.new(Fabricate(:moderator), mention_post).destroy
-      }.should change(evil_trout.notifications, :count).by(-1)
+        PostDestroyer.new(Fabricate(:moderator), post).destroy
+      }.should change(user.notifications, :count).by(-1)
     end
   end
 

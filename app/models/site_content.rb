@@ -44,4 +44,3 @@ end
 #
 #  index_site_contents_on_content_type  (content_type) UNIQUE
 #
-

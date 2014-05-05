@@ -40,38 +40,21 @@ describe UsersController do
   end
 
   describe '.authorize_email' do
-    context 'invalid token' do
-      before do
-        EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
-        get :authorize_email, token: 'asdfasdf'
-      end
-
-      it 'return success' do
-        response.should be_success
-      end
-
-      it 'sets a flash error' do
-        flash[:error].should be_present
-      end
+    it 'errors out for invalid tokens' do
+      get :authorize_email, token: 'asdfasdf'
+      response.should be_success
+      flash[:error].should be_present
     end
 
     context 'valid token' do
-      let(:user) { Fabricate(:user) }
 
-      before do
-        EmailToken.expects(:confirm).with('asdfasdf').returns(user)
-        get :authorize_email, token: 'asdfasdf'
-      end
+      it 'authorizes with a correct token' do
+        user = Fabricate(:user)
+        email_token = user.email_tokens.create(email: user.email)
 
-      it 'returns success' do
+        get :authorize_email, token: email_token.token
         response.should be_success
-      end
-
-      it "doesn't set an error" do
         flash[:error].should be_blank
-      end
-
-      it 'logs in as the user' do
         session[:current_user_id].should be_present
       end
     end
@@ -115,7 +98,7 @@ describe UsersController do
 
       end
 
-      context 'reponse' do
+      context 'response' do
         before do
           Guardian.any_instance.expects(:can_access_forum?).returns(true)
           EmailToken.expects(:confirm).with('asdfasdf').returns(user)
@@ -283,7 +266,7 @@ describe UsersController do
     before do
       @user = Fabricate.build(:user)
       @user.password = "strongpassword"
-      DiscourseHub.stubs(:register_nickname).returns([true, nil])
+      DiscourseHub.stubs(:register_username).returns([true, nil])
     end
 
     def post_user
@@ -295,18 +278,20 @@ describe UsersController do
     end
 
     context 'when creating a non active user (unconfirmed email)' do
-      it 'enqueues a signup email' do
+
+      it 'returns a 500 when local logins are disabled' do
+        SiteSetting.expects(:enable_local_logins).returns(false)
+        post_user
+
+        expect(response.status).to eq(500)
+      end
+
+      it 'creates a user correctly' do
         Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
-        post_user
-      end
-
-      it 'does not enqueue a welcome email' do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
-        post_user
-      end
 
-      it 'indicates the user is not active in the response' do
         post_user
+
         expect(JSON.parse(response.body)['active']).to be_false
       end
 
@@ -471,10 +456,10 @@ describe UsersController do
       include_examples 'failed signup'
     end
 
-    context 'when nickname is unavailable in DiscourseHub' do
+    context 'when username is unavailable in DiscourseHub' do
       before do
         SiteSetting.stubs(:call_discourse_hub?).returns(true)
-        DiscourseHub.stubs(:register_nickname).raises(DiscourseHub::NicknameUnavailable.new(@user.name))
+        DiscourseHub.stubs(:register_username).raises(DiscourseHub::UsernameUnavailable.new(@user.name))
       end
       let(:create_params) {{
         name: @user.name,
@@ -489,7 +474,7 @@ describe UsersController do
     context 'when an Exception is raised' do
 
       [ ActiveRecord::StatementInvalid,
-        DiscourseHub::NicknameUnavailable,
+        DiscourseHub::UsernameUnavailable,
         RestClient::Forbidden ].each do |exception|
         before { User.any_instance.stubs(:save).raises(exception) }
 
@@ -539,7 +524,7 @@ describe UsersController do
 
   context '.check_username' do
     before do
-      DiscourseHub.stubs(:nickname_available?).returns([true, nil])
+      DiscourseHub.stubs(:username_available?).returns([true, nil])
     end
 
     it 'raises an error without any parameters' do
@@ -573,8 +558,8 @@ describe UsersController do
     context 'when call_discourse_hub is disabled' do
       before do
         SiteSetting.stubs(:call_discourse_hub?).returns(false)
-        DiscourseHub.expects(:nickname_available?).never
-        DiscourseHub.expects(:nickname_match?).never
+        DiscourseHub.expects(:username_available?).never
+        DiscourseHub.expects(:username_match?).never
       end
 
       it 'returns nothing when given an email param but no username' do
@@ -641,11 +626,11 @@ describe UsersController do
 
       context 'available locally and globally' do
         before do
-          DiscourseHub.stubs(:nickname_available?).returns([true, nil])
-          DiscourseHub.stubs(:nickname_match?).returns([false, true, nil])  # match = false, available = true, suggestion = nil
+          DiscourseHub.stubs(:username_available?).returns([true, nil])
+          DiscourseHub.stubs(:username_match?).returns([false, true, nil])  # match = false, available = true, suggestion = nil
         end
 
-        shared_examples 'check_username when nickname is available everywhere' do
+        shared_examples 'check_username when username is available everywhere' do
           it 'should return success' do
             response.should be_success
           end
@@ -663,14 +648,14 @@ describe UsersController do
           before do
             xhr :get, :check_username, username: 'BruceWayne'
           end
-          include_examples 'check_username when nickname is available everywhere'
+          include_examples 'check_username when username is available everywhere'
         end
 
         context 'both username and email is given' do
           before do
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@gmail.com'
           end
-          include_examples 'check_username when nickname is available everywhere'
+          include_examples 'check_username when username is available everywhere'
         end
 
         context 'only email is given' do
@@ -682,7 +667,7 @@ describe UsersController do
         end
       end
 
-      shared_examples 'when email is needed to check nickname match' do
+      shared_examples 'when email is needed to check username match' do
         it 'should return success' do
           response.should be_success
         end
@@ -698,26 +683,26 @@ describe UsersController do
 
       context 'available locally but not globally' do
         before do
-          DiscourseHub.stubs(:nickname_available?).returns([false, 'suggestion'])
+          DiscourseHub.stubs(:username_available?).returns([false, 'suggestion'])
         end
 
         context 'email param is not given' do
           before do
             xhr :get, :check_username, username: 'BruceWayne'
           end
-          include_examples 'when email is needed to check nickname match'
+          include_examples 'when email is needed to check username match'
         end
 
         context 'email param is an empty string' do
           before do
             xhr :get, :check_username, username: 'BruceWayne', email: ''
           end
-          include_examples 'when email is needed to check nickname match'
+          include_examples 'when email is needed to check username match'
         end
 
-        context 'email matches global nickname' do
+        context 'email matches global username' do
           before do
-            DiscourseHub.stubs(:nickname_match?).returns([true, false, nil])
+            DiscourseHub.stubs(:username_match?).returns([true, false, nil])
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
           end
           include_examples 'when username is available everywhere'
@@ -727,9 +712,9 @@ describe UsersController do
           end
         end
 
-        context 'email does not match global nickname' do
+        context 'email does not match global username' do
           before do
-            DiscourseHub.stubs(:nickname_match?).returns([false, false, 'suggestion'])
+            DiscourseHub.stubs(:username_match?).returns([false, false, 'suggestion'])
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
           end
           include_examples 'when username is unavailable locally'
@@ -744,7 +729,7 @@ describe UsersController do
         let!(:user) { Fabricate(:user) }
 
         before do
-          DiscourseHub.stubs(:nickname_available?).returns([false, 'suggestion'])
+          DiscourseHub.stubs(:username_available?).returns([false, 'suggestion'])
           xhr :get, :check_username, username: user.username
         end
 
@@ -755,7 +740,7 @@ describe UsersController do
         let!(:user) { Fabricate(:user) }
 
         before do
-          DiscourseHub.stubs(:nickname_available?).returns([true, nil])
+          DiscourseHub.stubs(:username_available?).returns([true, nil])
           xhr :get, :check_username, username: user.username
         end
 
@@ -766,8 +751,8 @@ describe UsersController do
     context 'when discourse_org_access_key is wrong' do
       before do
         SiteSetting.stubs(:call_discourse_hub?).returns(true)
-        DiscourseHub.stubs(:nickname_available?).raises(RestClient::Forbidden)
-        DiscourseHub.stubs(:nickname_match?).raises(RestClient::Forbidden)
+        DiscourseHub.stubs(:username_available?).raises(RestClient::Forbidden)
+        DiscourseHub.stubs(:username_match?).raises(RestClient::Forbidden)
       end
 
       it 'should return an error message' do
@@ -835,7 +820,7 @@ describe UsersController do
 
       xhr :get, :invited, username: inviter.username, filter: 'billybob'
 
-      invites = JSON.parse(response.body)
+      invites = JSON.parse(response.body)['invites']
       expect(invites).to have(1).item
       expect(invites.first).to include('email' => 'billybob@example.com')
     end
@@ -857,7 +842,7 @@ describe UsersController do
 
       xhr :get, :invited, username: inviter.username, filter: 'billybob'
 
-      invites = JSON.parse(response.body)
+      invites = JSON.parse(response.body)['invites']
       expect(invites).to have(1).item
       expect(invites.first).to include('email' => 'billybob@example.com')
     end
@@ -870,7 +855,7 @@ describe UsersController do
 
           xhr :get, :invited, username: inviter.username
 
-          invites = JSON.parse(response.body)
+          invites = JSON.parse(response.body)['invites']
           expect(invites).to be_empty
         end
       end
@@ -883,7 +868,7 @@ describe UsersController do
 
           xhr :get, :invited, username: inviter.username
 
-          invites = JSON.parse(response.body)
+          invites = JSON.parse(response.body)['invites']
           expect(invites).to have(1).item
           expect(invites.first).to include('email' => invite.email)
         end
@@ -898,13 +883,13 @@ describe UsersController do
             inviter = Fabricate(:user)
             invite = Fabricate(:invite, invited_by: inviter)
             stub_guardian(user) do |guardian|
-              guardian.stubs(:can_see_pending_invites_from?).
+              guardian.stubs(:can_see_invite_details?).
                 with(inviter).returns(true)
             end
 
             xhr :get, :invited, username: inviter.username
 
-            invites = JSON.parse(response.body)
+            invites = JSON.parse(response.body)['invites']
             expect(invites).to have(1).item
             expect(invites.first).to include("email" => invite.email)
           end
@@ -917,14 +902,14 @@ describe UsersController do
             invitee = Fabricate(:user)
             Fabricate(:invite, invited_by: inviter)
             stub_guardian(user) do |guardian|
-              guardian.stubs(:can_see_pending_invites_from?).
+              guardian.stubs(:can_see_invite_details?).
                 with(inviter).returns(false)
             end
 
             xhr :get, :invited, username: inviter.username
 
-            invites = JSON.parse(response.body)
-            expect(invites).to be_empty
+            json = JSON.parse(response.body)['invites']
+            expect(json).to be_empty
           end
         end
       end
@@ -938,7 +923,7 @@ describe UsersController do
 
           xhr :get, :invited, username: inviter.username
 
-          invites = JSON.parse(response.body)
+          invites = JSON.parse(response.body)['invites']
           expect(invites).to have(1).item
           expect(invites.first).to include('email' => invite.email)
         end
@@ -991,6 +976,21 @@ describe UsersController do
           expect(user.reload.name).not_to eq 'Jim Tom'
         end
       end
+    end
+  end
+
+  describe "badge_title" do
+    let(:user) { Fabricate(:user) }
+    let(:badge) { Fabricate(:badge) }
+    let(:user_badge) { BadgeGranter.grant(badge, user) }
+
+    it "sets the user's title to the badge name if it is titleable" do
+      log_in_user user
+      xhr :put, :badge_title, user_badge_id: user_badge.id, username: user.username
+      user.reload.title.should_not == badge.name
+      badge.update_attributes allow_title: true
+      xhr :put, :badge_title, user_badge_id: user_badge.id, username: user.username
+      user.reload.title.should == badge.name
     end
   end
 
@@ -1097,25 +1097,23 @@ describe UsersController do
     it 'raises an error when not logged in' do
       lambda { xhr :put, :upload_user_image, username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
     end
-    
 
     context 'while logged in' do
 
       let!(:user) { log_in }
 
+      let(:logo) { File.new("#{Rails.root}/spec/fixtures/images/logo.png") }
+
       let(:user_image) do
-        ActionDispatch::Http::UploadedFile.new({
-          filename: 'logo.png',
-          tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
-        })
+        ActionDispatch::Http::UploadedFile.new({ filename: 'logo.png', tempfile: logo })
       end
-      
+
       it 'raises an error without a user_image_type param' do
         lambda { xhr :put, :upload_user_image, username: user.username }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe "with uploaded file" do
-      
+
         it 'raises an error when you don\'t have permission to upload an user image' do
           Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
           xhr :post, :upload_user_image, username: user.username, user_image_type: "avatar"
@@ -1123,19 +1121,14 @@ describe UsersController do
         end
 
         it 'rejects large images' do
-          AvatarUploadPolicy.any_instance.stubs(:too_big?).returns(true)
-          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "avatar"
-          response.status.should eq 413
-        end
-
-        it 'rejects unauthorized images' do
-          SiteSetting.stubs(:authorized_image?).returns(false)
+          SiteSetting.stubs(:max_image_size_kb).returns(1)
           xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "avatar"
           response.status.should eq 422
         end
-        
-        it 'rejects requests with unknown user_image_type' do
-          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "asdf"
+
+        it 'rejects unauthorized images' do
+          SiteSetting.stubs(:authorized_extensions).returns(".txt")
+          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "avatar"
           response.status.should eq 422
         end
 
@@ -1154,54 +1147,46 @@ describe UsersController do
           user.use_uploaded_avatar.should == true
           # returns the url, width and height of the uploaded image
           json = JSON.parse(response.body)
-          json['url'].should == "/uploads/default/1/1234567890123456.jpg"
+          json['url'].should == "/uploads/default/1/1234567890123456.png"
           json['width'].should == 100
           json['height'].should == 200
         end
-        
+
         it 'is successful for profile backgrounds' do
           upload = Fabricate(:upload)
           Upload.expects(:create_for).returns(upload)
           xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "profile_background"
           user.reload
-          
-          user.profile_background.should == "/uploads/default/1/1234567890123456.jpg"
-          
+
+          user.profile_background.should == "/uploads/default/1/1234567890123456.png"
+
           # returns the url, width and height of the uploaded image
           json = JSON.parse(response.body)
-          json['url'].should == "/uploads/default/1/1234567890123456.jpg"
+          json['url'].should == "/uploads/default/1/1234567890123456.png"
           json['width'].should == 100
           json['height'].should == 200
         end
-        
+
       end
 
       describe "with url" do
         let(:user_image_url) { "http://cdn.discourse.org/assets/logo.png" }
 
-        before :each do
-          UsersController.any_instance.stubs(:is_api?).returns(true)
-        end
+        before { UsersController.any_instance.stubs(:is_api?).returns(true) }
 
         describe "correct urls" do
-          before :each do
-            UriAdapter.any_instance.stubs(:open).returns StringIO.new(fixture_file("images/logo.png"))
-          end
-          
-          it 'rejects large images' do
-            AvatarUploadPolicy.any_instance.stubs(:too_big?).returns(true)
-            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
-            response.status.should eq 413
-          end
 
-          it 'rejects unauthorized images' do
-            SiteSetting.stubs(:authorized_image?).returns(false)
+          before { FileHelper.stubs(:download).returns(logo) }
+
+          it 'rejects large images' do
+            SiteSetting.stubs(:max_image_size_kb).returns(1)
             xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
             response.status.should eq 422
           end
-          
-          it 'rejects requests with unknown user_image_type' do
-            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "asdf"
+
+          it 'rejects unauthorized images' do
+            SiteSetting.stubs(:authorized_extensions).returns(".txt")
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
             response.status.should eq 422
           end
 
@@ -1220,26 +1205,24 @@ describe UsersController do
             user.use_uploaded_avatar.should == true
             # returns the url, width and height of the uploaded image
             json = JSON.parse(response.body)
-            json['url'].should == "/uploads/default/1/1234567890123456.jpg"
+            json['url'].should == "/uploads/default/1/1234567890123456.png"
             json['width'].should == 100
             json['height'].should == 200
           end
-          
+
           it 'is successful for profile backgrounds' do
             upload = Fabricate(:upload)
             Upload.expects(:create_for).returns(upload)
             xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
             user.reload
-            
-            user.profile_background.should == "/uploads/default/1/1234567890123456.jpg"
-            
+            user.profile_background.should == "/uploads/default/1/1234567890123456.png"
+
             # returns the url, width and height of the uploaded image
             json = JSON.parse(response.body)
-            json['url'].should == "/uploads/default/1/1234567890123456.jpg"
+            json['url'].should == "/uploads/default/1/1234567890123456.png"
             json['width'].should == 100
             json['height'].should == 200
           end
-          
         end
 
         it "should handle malformed urls" do
@@ -1282,13 +1265,13 @@ describe UsersController do
     end
 
   end
-  
+
   describe '.clear_profile_background' do
-  
+
     it 'raises an error when not logged in' do
       lambda { xhr :put, :clear_profile_background, username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
     end
-    
+
     context 'while logged in' do
 
       let!(:user) { log_in }
@@ -1306,7 +1289,6 @@ describe UsersController do
       end
 
     end
-    
   end
 
   describe '.destroy' do
@@ -1335,6 +1317,29 @@ describe UsersController do
         UserDestroyer.any_instance.expects(:destroy).with(user, anything).returns(user)
         xhr :delete, :destroy, username: user.username
         response.should be_success
+      end
+    end
+  end
+
+  describe '.my_redirect' do
+
+    it "returns 404 if the user is not logged in" do
+      get :my_redirect, path: "wat"
+      response.should_not be_success
+      response.should_not be_redirect
+    end
+
+    context "when the user is logged in" do
+      let!(:user) { log_in }
+
+      it "will not redirect to an invalid path" do
+        get :my_redirect, path: "wat/..password.txt"
+        response.should_not be_redirect
+      end
+
+      it "will redirect to an valid path" do
+        get :my_redirect, path: "preferences"
+        response.should be_redirect
       end
     end
   end

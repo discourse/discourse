@@ -9,7 +9,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :edit_reason,
              :body_changes,
              :title_changes,
-             :category_changes
+             :category_changes,
+             :user_changes
 
   def include_title_changes?
     object.has_topic_data?
@@ -40,7 +41,27 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def edit_reason
-    object.lookup("edit_reason",1)
+    object.lookup("edit_reason", 1)
+  end
+
+  def user_changes
+    obj = object.user_changes
+    return unless obj
+    # same as below - if stuff is messed up, default to system
+    prev = obj[:previous_user] || Discourse.system_user
+    new = obj[:current_user] || Discourse.system_user
+    {
+        previous: {
+            username: prev.username_lower,
+            display_username: prev.username,
+            avatar_template: prev.avatar_template
+        },
+        current: {
+            username: new.username_lower,
+            display_username: new.username,
+            avatar_template: new.avatar_template
+        }
+    }
   end
 
   def user

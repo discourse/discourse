@@ -6,12 +6,20 @@ class DiscoursePluginRegistry
   class << self
     attr_accessor :javascripts
     attr_accessor :server_side_javascripts
+    attr_accessor :admin_javascripts
     attr_accessor :stylesheets
+    attr_accessor :mobile_stylesheets
+    attr_accessor :desktop_stylesheets
+    attr_accessor :sass_variables
     attr_accessor :handlebars
 
     # Default accessor values
     def javascripts
       @javascripts ||= Set.new
+    end
+
+    def admin_javascripts
+      @admin_javascripts ||= Set.new
     end
 
     def server_side_javascripts
@@ -20,6 +28,18 @@ class DiscoursePluginRegistry
 
     def stylesheets
       @stylesheets ||= Set.new
+    end
+
+    def mobile_stylesheets
+      @mobile_stylesheets ||= Set.new
+    end
+
+    def desktop_stylesheets
+      @desktop_stylesheets ||= Set.new
+    end
+
+    def sass_variables
+      @sass_variables ||= Set.new
     end
 
     def handlebars
@@ -53,6 +73,18 @@ class DiscoursePluginRegistry
     self.class.stylesheets
   end
 
+  def mobile_stylesheets
+    self.class.mobile_stylesheets
+  end
+
+  def desktop_stylesheets
+    self.class.desktop_stylesheets
+  end
+
+  def sass_variables
+    self.class.sass_variables
+  end
+
   def handlebars
     self.class.handlebars
   end
@@ -61,6 +93,9 @@ class DiscoursePluginRegistry
     self.javascripts = nil
     self.server_side_javascripts = nil
     self.stylesheets = nil
+    self.mobile_stylesheets = nil
+    self.desktop_stylesheets = nil
+    self.sass_variables = nil
     self.handlebars = nil
   end
 

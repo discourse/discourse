@@ -112,4 +112,35 @@ Discourse.computed = {
     return computed.property.apply(computed, args);
   },
 
+  /**
+    Creates a one way alias to a computed property, suitable for query params.
+
+    @method queryAlias
+    @param {String} path to the alias
+    @param {String} defaultValue for the variable (omitted if equal)
+  **/
+  queryAlias: function(path, defaultValue) {
+    return Ember.computed(function(key, value) {
+      if (value) {
+        // Annoying but this ensures the parameter is present
+      }
+      var result = this.get(path);
+      if (typeof result !== "undefined" && result.toString() === defaultValue) { return; }
+      return result;
+    }).property(path);
+  },
+
+  /**
+    Creates a property from a SiteSetting. In the future the plan is for them to
+    be able to update when changed.
+
+    @method setting
+    @param {String} name of site setting
+  **/
+  setting: function(name) {
+    return Ember.computed(function() {
+      return Discourse.SiteSettings[name];
+    }).property();
+  }
+
 };

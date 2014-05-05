@@ -24,6 +24,13 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
       FacebookUserInfo.create({user_id: result.user.id}.merge(facebook_hash))
     end
 
+    if email.blank?
+      UserHistory.create(
+        action: UserHistory.actions[:facebook_no_email],
+        details: "name: #{facebook_hash[:name]}, facebook_user_id: #{facebook_hash[:facebook_user_id]}"
+      )
+    end
+
     result
   end
 

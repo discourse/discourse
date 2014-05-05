@@ -11,35 +11,39 @@
         {{#if loadingReplyHistory}}
           {{i18n loading}}
         {{else}}
-          {{i18n post.in_reply_to}}
+          <i class="fa fa-mail-forward"></i>&nbsp;
           {{avatar reply_to_user imageSize="tiny"}}
           {{reply_to_user.username}}
         {{/if}}
       </a>
     {{/if}}
-
     <div class='topic-meta-data span2'>
       {{#unless userDeleted}}
         <div {{bind-attr class=":contents byTopicCreator:topic-creator :trigger-expansion"}}>
-          <a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{avatar this imageSize="large"}}</a>
-          <h3 {{bind-attr class="staff new_user"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{{breakUp username name}}}</a></h3>
+          <a class="main-avatar" href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{avatar this imageSize="large"}}</a>
+          <div class="names">
+            <h3 {{bind-attr class="staff new_user :username"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{{breakUp username name}}}</a></h3>
 
-          {{#if showName}}
-          <h3 class="full-name"><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
-          {{/if}}
-
-          {{#if user_title}}
-            {{#if primary_group_name}}
-              <div class="user-title"><a href='/groups/{{unbound primary_group_name}}' class='user-group'>{{unbound user_title}}</a></div>
-            {{else}}
-              <div class="user-title" {{action showPosterExpansion this}}>{{unbound user_title}}</div>
+            {{#if showName}}
+            <h3 class="full-name"><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
             {{/if}}
-          {{/if}}
+
+            {{#if user_title}}
+              {{#if primary_group_name}}
+                <div class="user-title"><a href='/groups/{{unbound primary_group_name}}' class='user-group'>{{unbound user_title}}</a></div>
+              {{else}}
+                <div class="user-title" {{action showPosterExpansion this}}>{{unbound user_title}}</div>
+              {{/if}}
+            {{/if}}
+
+          </div>
         </div>
       {{else}}
         <div class="contents">
           <i class="fa fa-trash-o deleted-user-avatar"></i>
-          <h3 class="deleted-username">{{i18n user.deleted}}</h3>
+          <div class="names">
+            <h3 class="deleted-username">{{i18n user.deleted}}</h3>
+          </div>
         </div>
       {{/unless}}
     </div>
@@ -55,7 +59,7 @@
           <div class='topic-meta-data-inside'>
             {{#if hasHistory}}
               <div class='post-info edits'>
-                {{#if canViewEditHistory}}
+                {{#if can_view_edit_history}}
                   <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{i18n post.last_edited_on}} {{rawDate updated_at}}">
                     {{editCount}}
                     <i class='fa fa-pencil'></i>
@@ -74,6 +78,13 @@
           </div>
         {{/unless}}
         <div class='cooked'>{{{cooked}}}</div>
+        {{#if view.showExpandButton}}
+          {{#if controller.loadingExpanded}}
+            <button class="btn expand-post" disabled>{{i18n loading}}</button>
+          {{else}}
+            <button {{action expandFirstPost this}} class='btn expand-post'>{{i18n post.show_full}}</button>
+          {{/if}}
+        {{/if}}
         {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
       </div>
       {{view Discourse.RepliesView content=replies postView=view}}

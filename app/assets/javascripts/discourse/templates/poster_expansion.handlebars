@@ -1,16 +1,33 @@
 {{#if model}}
   {{#link-to 'user' user}}{{boundAvatar model imageSize="huge"}}{{/link-to}}
 
-  <h1 {{bind-attr class="staff new_user"}}><a {{bind-attr href="usernameUrl"}}>{{username}}</a></h1>
-  {{#if showName}}
-    <h2><a {{bind-attr href="usernameUrl"}}>{{name}}</a></h2>
-  {{/if}}
+  <div class="names">
+    <h1 {{bind-attr class="staff new_user"}}><a {{bind-attr href="usernameUrl"}}>{{username}}</a></h1>
+    {{#if showName}}
+      <h2><a {{bind-attr href="usernameUrl"}}>{{name}}</a></h2>
+    {{/if}}
+
+    {{#if showBadges}}
+      <div class="badge-section">
+        {{#each user.featured_user_badges}}
+          {{user-badge badge=badge}}
+        {{/each}}
+        {{#if showMoreBadges}}
+          {{#link-to 'user.badges' user class="btn more-user-badges"}}
+            {{i18n badges.more_badges count=moreBadgesCount}}
+          {{/link-to}}
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
 
   {{#if user}}
-    <h3>{{i18n last_post}} {{unboundDate path="user.last_posted_at" leaveAgo="true"}}</h3>
-    <h3>{{i18n joined}} {{unboundDate path="user.created_at" leaveAgo="true"}}</h3>
+    <div class="metadata">
+      <h3>{{i18n last_post}} {{unboundDate path="user.last_posted_at" leaveAgo="true"}}</h3>
+      <h3>{{i18n joined}} {{unboundDate path="user.created_at" leaveAgo="true"}}</h3>
+      {{groups-list groups=user.custom_groups}}
+    </div>
 
-    {{groups-list groups=user.custom_groups}}
 
     <div class='bottom'>
       {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}
@@ -19,7 +36,7 @@
         <button class='btn btn-primary' {{action composePrivateMessage user}}><i class='fa fa-envelope'></i>{{i18n user.private_message}}</button>
       {{/if}}
 
-      {{#link-to 'user' user class="btn"}}<i class='fa fa-user'></i>{{i18n user.show_profile}}{{/link-to}}
+      {{#link-to 'userActivity.index' user class="btn"}}<i class='fa fa-user'></i>{{i18n user.show_profile}}{{/link-to}}
 
       {{#if showFilter}}
         <button class='btn' {{action togglePosts user}}><i class='fa fa-filter'></i>{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</button>

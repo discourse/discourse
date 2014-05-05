@@ -5,7 +5,6 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     this._super();
     this.unreadSequence = [];
     this.newSequence = [];
-
     this.states = {};
   },
 
@@ -13,7 +12,6 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     var tracker = this;
 
     var process = function(data){
-
       if (data.message_type === "delete") {
         tracker.removeTopic(data.topic_id);
         tracker.incrementMessageCount();
@@ -28,7 +26,6 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
           tracker.incrementMessageCount();
         }
       }
-
     };
 
     Discourse.MessageBus.subscribe("/new", process);

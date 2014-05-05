@@ -46,7 +46,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   }.property('nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted', 'tosAccepted'),
 
   passwordRequired: function() {
-    return (this.blank('authOptions.auth_provider') || this.blank('authOptions.email_valid') || !this.get('authOptions.email_valid'));
+    return this.blank('authOptions.auth_provider');
   }.property('authOptions.auth_provider'),
 
   passwordInstructions: function() {
@@ -324,9 +324,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
     });
   },
 
-  tosAcceptRequired: function() {
-    return Discourse.SiteSettings.tos_accept_required;
-  }.property(),
+  tosAcceptRequired: Discourse.computed.setting('tos_accept_required'),
 
   actions: {
     createAccount: function() {
@@ -352,7 +350,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
           }
           self.set('formSubmitted', false);
         }
-        if (result.active) {
+        if (result.active && !Discourse.SiteSettings.must_approve_users) {
           return window.location.reload();
         }
       }, function() {

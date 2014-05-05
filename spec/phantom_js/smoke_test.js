@@ -96,12 +96,16 @@ page.runTests = function(){
   });
 
   test("expect a log in button", function(){
-    return $('.current-username .btn').text() === 'Log In';
+    return $('.current-username .btn').text() === 'Sign In';
   });
 
   navigate("navigate to first topic", function(){
     Em.run.later(function(){
-      $('.main-link a:first').click();
+      if ($('.main-link > a:first').length > 0) {
+        $('.main-link > a:first').click(); // topic list page
+      } else {
+        $('.featured-topic a.title:first').click(); // categories page
+      }
     }, 500);
   });
 

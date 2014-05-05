@@ -50,4 +50,3 @@ end
 #  id         :integer          not null, primary key
 #  position   :integer          default(0), not null
 #
-

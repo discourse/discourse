@@ -45,23 +45,12 @@ Discourse.TopicList = Discourse.Model.extend({
     });
   },
 
-  sortOrder: function() {
-    return Discourse.SortOrder.create();
-  }.property(),
-
-  /**
-    If the sort order changes, replace the topics in the list with the new
-    order.
-
-    @observes sortOrder
-  **/
-  _sortOrderChanged: function() {
+  refreshSort: function(order, ascending) {
     var self = this,
-        sortOrder = this.get('sortOrder'),
         params = this.get('params');
 
-    params.sort_order = sortOrder.get('order');
-    params.sort_descending = sortOrder.get('descending');
+    params.order = order;
+    params.ascending = ascending;
 
     this.set('loaded', false);
     var finder = finderFor(this.get('filter'), params);
@@ -73,8 +62,7 @@ Discourse.TopicList = Discourse.Model.extend({
       topics.pushObjects(newTopics);
       self.setProperties({ loaded: true, more_topics_url: result.topic_list.more_topics_url });
     });
-
-  }.observes('sortOrder.order', 'sortOrder.descending'),
+  },
 
   loadMore: function() {
     if (this.get('loadingMore')) { return Ember.RSVP.resolve(); }
@@ -162,7 +150,7 @@ Discourse.TopicList.reopenClass({
     Stitch together side loaded topic data
 
     @method topicsFrom
-    @param {Object} JSON object with topic data
+    @param {Object} result JSON object with topic data
     @returns {Array} the list of topics
   **/
   topicsFrom: function(result) {
@@ -204,8 +192,8 @@ Discourse.TopicList.reopenClass({
     Lists topics on a given menu item
 
     @method list
-    @param {Object} The menu item to filter to
-    @param {Object} Any additional params
+    @param {Object} filter The menu item to filter to
+    @param {Object} params Any additional params to pass to TopicList.find()
     @returns {Promise} a promise that resolves to the list of topics
   **/
   list: function(filter, params) {

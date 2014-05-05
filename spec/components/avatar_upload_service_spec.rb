@@ -2,11 +2,11 @@ require "spec_helper"
 require "avatar_upload_service"
 
 describe AvatarUploadService do
+
+  let(:logo) { File.new("#{Rails.root}/spec/fixtures/images/logo.png") }
+
   let(:file) do
-    ActionDispatch::Http::UploadedFile.new({
-      filename: 'logo.png',
-      tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
-    })
+    ActionDispatch::Http::UploadedFile.new({ filename: 'logo.png', tempfile: logo })
   end
 
   let(:url) { "http://cdn.discourse.org/assets/logo.png" }
@@ -16,49 +16,41 @@ describe AvatarUploadService do
       let(:avatar_file) { AvatarUploadService.new(file, :image) }
 
       it "should have a filesize" do
-        expect(avatar_file.filesize).to eq(2290)
+        avatar_file.filesize.should == 2290
+      end
+
+      it "should have a filename" do
+        avatar_file.filename.should == "logo.png"
+      end
+
+      it "should have a file" do
+        avatar_file.file.should == file.tempfile
       end
 
       it "should have a source as 'image'" do
-        expect(avatar_file.source).to eq(:image)
-      end
-
-      it "is an instance of File class" do
-        file = avatar_file.file
-        expect(file.tempfile).to be_instance_of File
-      end
-
-      it "returns the file object built from File" do
-        file = avatar_file.file
-        file.should be_instance_of(ActionDispatch::Http::UploadedFile)
-        file.original_filename.should == "logo.png"
+        avatar_file.source.should == :image
       end
     end
 
     context "when file is in the form of a URL" do
       let(:avatar_file) { AvatarUploadService.new(url, :url) }
 
-      before :each do
-        UriAdapter.any_instance.stubs(:open).returns StringIO.new(fixture_file("images/logo.png"))
-      end
+      before { FileHelper.stubs(:download).returns(logo) }
 
       it "should have a filesize" do
-        expect(avatar_file.filesize).to eq(2290)
+        avatar_file.filesize.should == 2290
+      end
+
+      it "should have a filename" do
+        avatar_file.filename.should == "logo.png"
+      end
+
+      it "should have a file" do
+        avatar_file.file.should == logo
       end
 
       it "should have a source as 'url'" do
-        expect(avatar_file.source).to eq(:url)
-      end
-
-      it "is an instance of Tempfile class" do
-        file = avatar_file.file
-        expect(file.tempfile).to be_instance_of Tempfile
-      end
-
-      it "returns the file object built from URL" do
-        file = avatar_file.file
-        file.should be_instance_of(ActionDispatch::Http::UploadedFile)
-        file.original_filename.should == "logo.png"
+        avatar_file.source.should == :url
       end
     end
   end

@@ -71,6 +71,5 @@ Discourse.AdminBackupsIndexController = Ember.ArrayController.extend({
     }).then(function() {
       Discourse.set("isReadOnly", enable);
     });
-  },
-
+  }
 });

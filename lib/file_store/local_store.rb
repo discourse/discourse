@@ -4,7 +4,7 @@ module FileStore
 
   class LocalStore < BaseStore
 
-    def store_upload(file, upload)
+    def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(file, upload)
       store_file(file, path)
     end
@@ -62,8 +62,8 @@ module FileStore
     private
 
     def get_path_for_upload(file, upload)
-      unique_sha1 = Digest::SHA1.hexdigest("#{Time.now.to_s}#{file.original_filename}")[0..15]
-      extension = File.extname(file.original_filename)
+      unique_sha1 = Digest::SHA1.hexdigest("#{Time.now.to_s}#{upload.original_filename}")[0..15]
+      extension = File.extname(upload.original_filename)
       clean_name = "#{unique_sha1}#{extension}"
       # path
       "#{relative_base_url}/#{upload.id}/#{clean_name}"

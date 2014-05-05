@@ -52,6 +52,10 @@ Discourse.Topic = Discourse.Model.extend({
     return null;
   }.property('category_id', 'categoryName'),
 
+  categoryClass: function() {
+    return 'category-' + Discourse.Category.slugFor(this.get('category'));
+  }.property('category'),
+
   shareUrl: function(){
     var user = Discourse.User.current();
     return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
@@ -134,12 +138,24 @@ Discourse.Topic = Discourse.Model.extend({
 
   toggleStatus: function(property) {
     this.toggleProperty(property);
-    if (property === 'closed' && this.get('closed')) {
+    this.saveStatus(property, this.get(property) ? true : false);
+  },
+
+  setStatus: function(property, value) {
+    this.set(property, value);
+    this.saveStatus(property, value);
+  },
+
+  saveStatus: function(property, value) {
+    if (property === 'closed' && value === true) {
       this.set('details.auto_close_at', null);
+    }
+    if (property === 'pinned') {
+      this.set('pinned_at', value ? moment() : null);
     }
     return Discourse.ajax(this.get('url') + "/status", {
       type: 'PUT',
-      data: {status: property, enabled: this.get(property) ? 'true' : 'false' }
+      data: {status: property, enabled: value ? 'true' : 'false' }
     });
   },
 
@@ -156,8 +172,7 @@ Discourse.Topic = Discourse.Model.extend({
     if (!wordCount) return;
 
     // Avg for 500 words per minute when you account for skimming
-    var minutes = Math.floor(wordCount / 500.0);
-    return minutes;
+    return Math.floor(wordCount / 500.0);
   }.property('word_count'),
 
   toggleStar: function() {
@@ -260,12 +275,35 @@ Discourse.Topic = Discourse.Model.extend({
 
     // Clear the pin optimistically from the object
     topic.set('pinned', false);
+    topic.set('unpinned', true);
 
     Discourse.ajax("/t/" + this.get('id') + "/clear-pin", {
       type: 'PUT'
     }).then(null, function() {
       // On error, put the pin back
       topic.set('pinned', true);
+      topic.set('unpinned', false);
+    });
+  },
+
+  /**
+    Re-pins a topic with a cleared pin
+
+    @method rePin
+  **/
+  rePin: function() {
+    var topic = this;
+
+    // Clear the pin optimistically from the object
+    topic.set('pinned', true);
+    topic.set('unpinned', false);
+
+    Discourse.ajax("/t/" + this.get('id') + "/re-pin", {
+      type: 'PUT'
+    }).then(null, function() {
+      // On error, put the pin back
+      topic.set('pinned', true);
+      topic.set('unpinned', false);
     });
   },
 
@@ -394,6 +432,17 @@ Discourse.Topic.reopenClass({
     }).then(function (result) {
       if (result.success) return result;
       promise.reject(new Error("error moving posts topic"));
+    });
+    return promise;
+  },
+
+  changeOwners: function(topicId, opts) {
+    var promise = Discourse.ajax("/t/" + topicId + "/change-owner", {
+      type: 'POST',
+      data: opts
+    }).then(function (result) {
+      if (result.success) return result;
+      promise.reject(new Error("error changing ownership of posts"));
     });
     return promise;
   },

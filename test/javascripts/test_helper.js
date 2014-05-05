@@ -9,7 +9,7 @@
 //= require ../../app/assets/javascripts/discourse/lib/probes.js
 
 // Externals we need to load first
-//= require development/jquery-2.0.3.js
+//= require development/jquery-2.1.0.js
 //= require jquery.ui.widget.js
 //= require handlebars.js
 //= require development/ember.js
@@ -79,11 +79,7 @@ Discourse.setupForTesting();
 Discourse.injectTestHelpers();
 Discourse.runInitializers();
 Discourse.start();
-
-Discourse.Router.map(function() {
-  Discourse.routeBuilder.call(this);
-});
-
+Discourse.Route.mapRoutes();
 
 QUnit.testStart(function() {
   // Allow our tests to change site settings and have them reset before the next test

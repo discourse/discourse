@@ -1,14 +1,10 @@
 <a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
 
-Discourse is the 100% open source, next-generation discussion platform built for the next decade of the Internet.
-
-Whenever you need ...
+Discourse is the 100% open source, next-generation discussion platform built for the next decade of the Internet. It works as:
 
 - a mailing list
-- a forum to discuss something
-- a chat room where you can type paragraphs
-
-... consider Discourse.
+- a discussion forum
+- a long-form chat room
 
 To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
 
@@ -22,9 +18,9 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 [![](https://raw.github.com/discourse/discourse-docimages/master/readme/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
 
 
-## Getting Started
+## Development
 
-1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. 
+1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](docs/VAGRANT.md), which includes a development environment in a virtual machine. 
 
 2. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md). 
 
@@ -42,7 +38,7 @@ Discourse is built for the *next* 10 years of the Internet, so our requirements 
 
 | Browsers | Tablets |  Smartphones |
 | -------- | ------- | ----------- |
-| Safari 5+| iPad 2+ |  iOS 6+ | 
+| Safari 5.1+| iPad 2+ |  iOS 6+ | 
 | Google Chrome 23+ |  Android 4.1+ | Android 4.1+ |
 | Internet Explorer 10+ | Windows 8 | Windows Phone 8 |
 | Firefox 16+ | |
@@ -51,10 +47,10 @@ Internet Explorer 9.0 is technically supported, but it is our absolute minimum s
 
 ## Built With
 
-- [Ruby on Rails](https://github.com/rails/rails) &mdash; Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
+- [Ruby on Rails](https://github.com/rails/rails) &mdash; Our back end API is a Rails app. It responds to requests RESTfully in JSON.
 - [Ember.js](https://github.com/emberjs/ember.js) &mdash; Our front end is an Ember.js app that communicates with the Rails API.
 - [PostgreSQL](http://www.postgresql.org/) &mdash; Our main data store is in Postgres.
-- [Redis](http://redis.io/) &mdash; We use Redis for our job queue, rate limiting, as a cache and for transient data.
+- [Redis](http://redis.io/) &mdash; We use Redis as a cache and for transient data.
 
 Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https://github.com/discourse/discourse/blob/master/Gemfile).
 
@@ -64,7 +60,7 @@ Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https
 [![Code Climate](https://codeclimate.com/github/discourse/discourse.png)](https://codeclimate.com/github/discourse/discourse)
 
 Discourse is **100% free** and **open-source**. We encourage and support an active, healthy community that
-accepts contributions from the public. We'd like you to be a part of that community.
+accepts contributions from the public &ndash; including you!
 
 Before contributing to Discourse:
 
@@ -74,6 +70,10 @@ Before contributing to Discourse:
 4. Not sure what to work on? [**We've got some ideas.**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
 
 We look forward to seeing your pull requests!
+
+## Security
+
+We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.
 
 ## The Discourse Team
 

@@ -10,7 +10,6 @@ module Scheduler
       @klass = klass
       @manager = manager
 
-      key = Manager.schedule_key(klass)
       data = nil
 
       if data = $redis.get(key)
@@ -31,14 +30,22 @@ module Scheduler
 
     def valid?
       return false unless @next_run
-      (!@prev_run && @next_run < Time.now.to_i + 5.minutes) ||
-      ( @prev_run &&
-        @prev_run <= Time.now.to_i &&
-        @next_run < @prev_run + @klass.every * (1 + @manager.random_ratio)
-      )
+      (!@prev_run && @next_run < Time.now.to_i + 5.minutes) || valid_every? || valid_daily?
     end
 
-    def schedule!
+    def valid_every?
+      return false unless @klass.every
+      @prev_run &&
+        @prev_run <= Time.now.to_i &&
+        @next_run < @prev_run + @klass.every * (1 + @manager.random_ratio)
+    end
+
+    def valid_daily?
+      return false unless @klass.daily
+      @prev_run && @prev_run <= Time.now.to_i && @next_run < @prev_run + 1.day
+    end
+
+    def schedule_every!
       if !valid? && @prev_run
         mixup = @klass.every * @manager.random_ratio
         mixup = (mixup * Random.rand - mixup / 2).to_i
@@ -48,12 +55,35 @@ module Scheduler
       if !valid?
         @next_run = Time.now.to_i + 5.minutes * Random.rand
       end
+    end
+
+    def schedule_daily!
+      return if valid?
+
+      at = @klass.daily[:at] || 0
+      today_begin = Time.now.midnight.to_i
+      today_offset = DateTime.now.seconds_since_midnight
+
+      # If it's later today
+      if at > today_offset
+        @next_run = today_begin + at
+      else
+        # Otherwise do it tomorrow
+        @next_run = today_begin + 1.day + at
+      end
+    end
+
+    def schedule!
+      if @klass.every
+        schedule_every!
+      elsif @klass.daily
+        schedule_daily!
+      end
 
       write!
     end
 
     def write!
-      key = Manager.schedule_key(@klass)
       clear!
       redis.set key, {
         next_run: @next_run,
@@ -62,6 +92,7 @@ module Scheduler
         prev_result: @prev_result,
         current_owner: @current_owner
       }.to_json
+
       redis.zadd Manager.queue_key, @next_run , @klass
     end
 
@@ -80,9 +111,8 @@ module Scheduler
 
     private
     def clear!
-      key = Manager.schedule_key(@klass)
       redis.del key
-      redis.zrem Manager.queue_key, key
+      redis.zrem Manager.queue_key, @klass
     end
 
   end

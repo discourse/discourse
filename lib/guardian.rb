@@ -71,6 +71,26 @@ class Guardian
     end
   end
 
+  def can_create?(klass, parent=nil)
+    return false unless authenticated? && klass
+
+    # If no parent is provided, we look for a can_create_klass?
+    # custom method.
+    #
+    # If a parent is provided, we look for a method called
+    # can_create_klass_on_parent?
+    target = klass.name.underscore
+    if parent.present?
+      return false unless can_see?(parent)
+      target << "_on_#{parent.class.name.underscore}"
+    end
+    create_method = :"can_create_#{target}?"
+
+    return send(create_method, parent) if respond_to?(create_method)
+
+    true
+  end
+
   # Can the user edit the obj
   def can_edit?(obj)
     can_do?(:edit, obj)
@@ -82,11 +102,16 @@ class Guardian
   end
 
   def can_moderate?(obj)
-    obj && is_staff?
+    obj && authenticated? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(:elder)))
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
   alias :can_send_activation_email? :can_moderate?
+  alias :can_grant_badges? :can_moderate?
+
+  def can_see_group?(group)
+    group.present? && (is_admin? || group.visible?)
+  end
 
 
 
@@ -109,7 +134,10 @@ class Guardian
   def can_approve?(target)
     is_staff? && target && not(target.approved?)
   end
-  alias :can_activate? :can_approve?
+
+  def can_activate?(target)
+    is_staff? && target && not(target.active?)
+  end
 
   def can_suspend?(user)
     user && is_staff? && user.regular?
@@ -155,12 +183,13 @@ class Guardian
     @user.approved?
   end
 
-  def can_see_pending_invites_from?(user)
+  def can_see_invite_details?(user)
     is_me?(user)
   end
 
   def can_invite_to_forum?
     authenticated? &&
+    !SiteSetting.enable_sso &&
     (
       (!SiteSetting.must_approve_users? && @user.has_trust_level?(:regular)) ||
       is_staff?
@@ -176,7 +205,7 @@ class Guardian
   end
 
   def can_send_private_message?(target)
-    (User === target || Group === target) &&
+    (target.is_a?(Group) || target.is_a?(User)) &&
     # User is authenticated
     authenticated? &&
     # Can't send message to yourself
@@ -184,7 +213,9 @@ class Guardian
     # Have to be a basic level at least
     @user.has_trust_level?(:basic) &&
     # PMs are enabled
-    SiteSetting.enable_private_messages
+    (SiteSetting.enable_private_messages ||
+      @user.username == SiteSetting.site_contact_username ||
+      @user == Discourse.system_user)
   end
 
   private
@@ -200,7 +231,7 @@ class Guardian
   end
 
   def is_me?(other)
-    other && authenticated? && User === other && @user == other
+    other && authenticated? && other.is_a?(User) && @user == other
   end
 
   def is_not_me?(other)

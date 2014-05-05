@@ -1,30 +1,29 @@
 # How Do I Install Discourse?
 
-If you want the easiest possible install:  
+Simple 30 minute basic install:  
 [**Beginner Docker install guide for Digital Ocean**][do]
 
-If you want a powerful, flexible install:  
+Powerful, flexible, large install:  
 [**Advanced Docker install guide**][docker]
 
-The only officially supported installs of Discourse are the [Docker](https://www.docker.io/) based beginner and advanced installs, above. We regret that we cannot directly support any other methods of installation.
+The only officially supported installs of Discourse are the [Docker](https://www.docker.io/) based beginner and advanced installs. We regret that we cannot support any other methods of installation. (Alternately, you can try the [unofficial Heroku install guide][heroku], the [unofficial Ubuntu install guide][ubuntu], the [BitNami Discourse Virtual Machine package][bitnami] or [Cloud66][cloud66].)
 
-Alternately, you can try the [unofficial Heroku install guide][heroku], the [unofficial Ubuntu install guide][ubuntu], the [BitNami Discourse Virtual Machine package][bitnami] or [Cloud66][cloud66].
-
-## Requirements
-
-### Hardware
+### Hardware Requirements
 
 - Dual core CPU recommended
-- 2 GB RAM *strongly* recommended
- 
-We also recommend you [enable swap][swap] for a total of 4 GB, so 2 GB swap with 2 GB RAM, and 3 GB swap with 1 GB ram, etc.
+- 1 GB RAM minimum (with [swap][swap]), 2 GB recommended
 
-### Software
+### Software Requirements
 
 - [Postgres 9.1+](http://www.postgresql.org/download/)
 - [Redis 2.6+](http://redis.io/download)
 - [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/) (we recommend 2.0.0-p353 or higher)
 
+
+
+## Security
+
+We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.
 
 [do]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-digital-ocean.md
 [docker]: https://github.com/discourse/discourse_docker

@@ -103,11 +103,10 @@ Discourse.Post = Discourse.Model.extend({
   }.property('updated_at'),
 
   flagsAvailable: function() {
-    var post = this,
-        flags = Discourse.Site.currentProp('flagTypes').filter(function(item) {
+    var post = this;
+    return Discourse.Site.currentProp('flagTypes').filter(function(item) {
       return post.get("actionByName." + (item.get('name_key')) + ".can_act");
     });
-    return flags;
   }.property('actions_summary.@each.can_act'),
 
   actionsHistory: function() {
@@ -177,6 +176,17 @@ Discourse.Post = Discourse.Model.extend({
     }
   },
 
+  /**
+    Expands the first post's content, if embedded and shortened.
+
+    @method expandFirstPost
+  **/
+  expand: function() {
+    var self = this;
+    return Discourse.ajax("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
+      self.set('cooked', "<section class='expanded-embed'>" + post.cooked + "</section>" );
+    });
+  },
 
   /**
     Recover a deleted post
@@ -274,9 +284,30 @@ Discourse.Post = Discourse.Model.extend({
     var post = this;
     Object.keys(otherPost).forEach(function (key) {
       var value = otherPost[key];
-      if (typeof value !== "function") {
-        post.set(key, value);
+      var oldValue = post.get(key);
+
+      if(!value) {
+        value = null;
       }
+
+      if(!oldValue) {
+        oldValue = null;
+      }
+
+      var skip = false;
+
+      if (typeof value !== "function" && oldValue !== value) {
+
+        // wishing for an identity map
+        if(key === "reply_to_user") {
+          skip = Em.get(value, "username") === Em.get(oldValue, "username");
+        }
+
+        if(!skip) {
+          post.set(key, value);
+        }
+      }
+
     });
   },
 
@@ -350,14 +381,7 @@ Discourse.Post = Discourse.Model.extend({
     var topic = this.get('topic');
     return !topic.isReplyDirectlyBelow(this);
 
-  }.property('reply_count'),
-
-  canViewEditHistory: function() {
-    return (Discourse.SiteSettings.edit_history_visible_to_public ||
-            (Discourse.User.current() &&
-              (Discourse.User.current().get('staff') || Discourse.User.current().get('id') === this.get('user_id'))));
-  }.property()
-
+  }.property('reply_count')
 });
 
 Discourse.Post.reopenClass({
@@ -397,7 +421,7 @@ Discourse.Post.reopenClass({
 
   loadRevision: function(postId, version) {
     return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
-      return Discourse.Post.create(result);
+      return Em.Object.create(result);
     });
   },
 

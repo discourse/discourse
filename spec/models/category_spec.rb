@@ -133,6 +133,18 @@ describe Category do
     Fabricate(:category, name: "  blanks ").name.should == "blanks"
   end
 
+  it "has custom fields" do
+    category = Fabricate(:category, name: " music")
+    category.custom_fields["a"].should == nil
+
+    category.custom_fields["bob"] = "marley"
+    category.custom_fields["jack"] = "black"
+    category.save
+
+    category = Category.find(category.id)
+    category.custom_fields.should == {"bob" => "marley", "jack" => "black"}
+  end
+
   describe "short name" do
     let!(:category) { Fabricate(:category, name: 'xx') }
 
@@ -150,6 +162,7 @@ describe Category do
 
     it "creates a blank slug, this is OK." do
       category.slug.should be_blank
+      category.slug_for_url.should == "#{category.id}-category"
     end
   end
 
@@ -158,6 +171,7 @@ describe Category do
 
     it 'creates a blank slug' do
       category.slug.should be_blank
+      category.slug_for_url.should == "#{category.id}-category"
     end
   end
 
@@ -169,6 +183,7 @@ describe Category do
 
     it 'is created correctly' do
       @category.slug.should == 'amazing-category'
+      @category.slug_for_url.should == @category.slug
 
       @category.description.should be_blank
 
@@ -204,7 +219,9 @@ describe Category do
 
     describe "creating a new category with the same slug" do
       it "should have a blank slug" do
-        Fabricate(:category, name: "Amazing Categóry").slug.should be_blank
+        category = Fabricate(:category, name: "Amazing Categóry")
+        category.slug.should be_blank
+        category.slug_for_url.should == "#{category.id}-category"
       end
     end
 

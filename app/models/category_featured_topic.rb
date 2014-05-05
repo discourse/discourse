@@ -62,4 +62,3 @@ end
 #  cat_featured_threads                                    (category_id,topic_id) UNIQUE
 #  index_category_featured_topics_on_category_id_and_rank  (category_id,rank)
 #
-

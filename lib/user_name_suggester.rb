@@ -19,8 +19,7 @@ module UserNameSuggester
   end
 
   def self.find_available_username_based_on(name)
-    sanitize_username!(name)
-    name = rightsize_username(name)
+    name = rightsize_username(sanitize_username!(name))
     i = 1
     attempt = name
     until User.username_available?(attempt)
@@ -33,8 +32,11 @@ module UserNameSuggester
   end
 
   def self.sanitize_username!(name)
+    name = ActiveSupport::Inflector.transliterate(name)
     name.gsub!(/^[^[:alnum:]]+|\W+$/, "")
     name.gsub!(/\W+/, "_")
+    name.gsub!(/^\_+/, '')
+    name
   end
 
   def self.rightsize_username(name)
