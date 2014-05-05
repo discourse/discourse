@@ -679,7 +679,6 @@ en:
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
     redirect_users_to_top_page: "Automatically redirect new & long-time-no-see users to top page"
-    redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
 
     enable_badges: "Enable the badge system (experimental)"
 

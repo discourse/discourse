@@ -586,12 +586,33 @@ class User < ActiveRecord::Base
     return unless SiteSetting.top_menu =~ /top/i
     # there should be enough topics
     return unless SiteSetting.has_enough_topics_to_redirect_to_top
-    # new users
-    return I18n.t('redirected_to_top_reasons.new_user') if trust_level == 0 &&
-      created_at > SiteSetting.redirect_new_users_to_top_page_duration.days.ago
-    # long-time-no-see user
-    return I18n.t('redirected_to_top_reasons.not_seen_in_a_month') if last_seen_at && last_seen_at < 1.month.ago
+
+    if !seen_before? || (trust_level == 0 && !redirected_to_top_yet?)
+      update_last_redirected_to_top!
+      return I18n.t('redirected_to_top_reasons.new_user')
+    elsif last_seen_at < 1.month.ago
+      update_last_redirected_to_top!
+      return I18n.t('redirected_to_top_reasons.not_seen_in_a_month')
+    end
+
+    # no reason
     nil
+  end
+
+  def redirected_to_top_yet?
+    last_redirected_to_top_at.present?
+  end
+
+  def update_last_redirected_to_top!
+    key = "user:#{id}:update_last_redirected_to_top"
+    delay = SiteSetting.active_user_rate_limit_secs
+
+    # only update last_redirected_to_top_at once every minute
+    return unless $redis.setnx(key, "1")
+    $redis.expire(key, delay)
+
+    # delay the update
+    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.id, redirected_at: Time.zone.now)
   end
 
   protected

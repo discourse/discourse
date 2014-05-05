@@ -75,7 +75,6 @@ basic:
     default: 30
   topics_per_period_in_top_summary: 20
   topics_per_period_in_top_page: 50
-  redirect_new_users_to_top_page_duration: 7
   category_featured_topics:
     client: true
     default: 3
