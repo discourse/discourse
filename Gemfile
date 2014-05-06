@@ -222,6 +222,7 @@ gem 'ruby-readability', require: false
 gem 'simple-rss', require: false
 gem 'gctools', require: false, platform: :mri_21
 gem 'stackprof', require: false, platform: :mri_21
+gem 'logster'
 
 # perftools only works on 1.9 atm
 group :profile do
