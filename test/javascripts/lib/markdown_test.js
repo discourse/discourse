@@ -185,6 +185,14 @@ test("Mentions", function() {
                 "<p>Hello <a class=\"mention\" href=\"/users/sam\">@sam</a></p>",
                 "translates mentions to links");
 
+  cooked("[@codinghorror](https://twitter.com/codinghorror)",
+         "<p><a href=\"https://twitter.com/codinghorror\">@codinghorror</a></p>",
+         "it doesn't do mentions within links");
+
+  cookedOptions("[@codinghorror](https://twitter.com/codinghorror)", alwaysTrue,
+         "<p><a href=\"https://twitter.com/codinghorror\">@codinghorror</a></p>",
+         "it doesn't do link mentions within links");
+
   cooked("Hello @EvilTrout", "<p>Hello <span class=\"mention\">@EvilTrout</span></p>", "adds a mention class");
   cooked("robin@email.host", "<p>robin@email.host</p>", "won't add mention class to an email address");
   cooked("hanzo55@yahoo.com", "<p>hanzo55@yahoo.com</p>", "won't be affected by email addresses that have a number before the @ symbol");

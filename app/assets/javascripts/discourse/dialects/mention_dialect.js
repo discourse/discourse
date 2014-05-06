@@ -20,3 +20,20 @@ Discourse.Dialect.inlineRegexp({
   }
 });
 
+// We have to prune @mentions that are within links.
+Discourse.Dialect.on("parseNode", function(event) {
+  var node = event.node,
+      path = event.path;
+
+  if (node[1] && node[1]["class"] === 'mention')  {
+    var parent = path[path.length - 1];
+    // If the parent is an 'a', remove it
+    if (parent && parent[0] === 'a') {
+      var username = node[2];
+      node.length = 0;
+      node[0] = "__RAW";
+      node[1] = username;
+    }
+  }
+
+});
