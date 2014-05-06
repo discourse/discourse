@@ -203,7 +203,7 @@ class ApplicationController < ActionController::Base
     username_lower = params[:username].downcase
     username_lower.gsub!(/\.json$/, '')
 
-    user = User.where(username_lower: username_lower).first
+    user = User.find_by(username_lower: username_lower)
     raise Discourse::NotFound.new if user.blank?
 
     guardian.ensure_can_see!(user)

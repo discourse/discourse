@@ -53,7 +53,7 @@ class UserDestroyer
           categories.each do |c|
             c.user_id = Discourse.system_user.id
             c.save!
-            if topic = Topic.with_deleted.where(id: c.topic_id).first
+            if topic = Topic.with_deleted.find_by(id: c.topic_id)
               topic.try(:recover!)
               topic.user_id = Discourse.system_user.id
               topic.save!

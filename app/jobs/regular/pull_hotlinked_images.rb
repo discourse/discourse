@@ -17,7 +17,7 @@ module Jobs
       post_id = args[:post_id]
       raise Discourse::InvalidParameters.new(:post_id) unless post_id.present?
 
-      post = Post.where(id: post_id).first
+      post = Post.find_by(id: post_id)
       return unless post.present?
 
       raw = post.raw.dup

@@ -382,7 +382,7 @@ describe UsersController do
       end
 
       it 'should not result in an active account' do
-        User.where(username: @user.username).first.active.should be_false
+        User.find_by(username: @user.username).active.should be_false
       end
     end
 

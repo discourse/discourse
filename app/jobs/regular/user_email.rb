@@ -14,7 +14,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:type) unless args[:type].present?
 
       # Find the user
-      @user = User.where(id: args[:user_id]).first
+      @user = User.find_by(id: args[:user_id])
       return skip(I18n.t("email_log.no_user", user_id: args[:user_id])) unless @user
       return skip(I18n.t("email_log.suspended_not_pm")) if @user.suspended? && args[:type] != :user_private_message
 
@@ -27,7 +27,7 @@ module Jobs
         # Don't email a user about a post when we've seen them recently.
         return skip(I18n.t('email_log.seen_recently')) if seen_recently
 
-        post = Post.where(id: args[:post_id]).first
+        post = Post.find_by(id: args[:post_id])
         return skip(I18n.t('email_log.post_not_found', post_id: args[:post_id])) unless post.present?
 
         email_args[:post] = post
@@ -36,13 +36,13 @@ module Jobs
       email_args[:email_token] = args[:email_token] if args[:email_token].present?
 
       notification = nil
-      notification = Notification.where(id: args[:notification_id]).first if args[:notification_id].present?
+      notification = Notification.find_by(id: args[:notification_id]) if args[:notification_id].present?
       if notification.present?
         # Don't email a user about a post when we've seen them recently.
         return skip(I18n.t('email_log.seen_recently')) if seen_recently && !@user.suspended?
 
         # Load the post if present
-        email_args[:post] ||= Post.where(id: notification.data_hash[:original_post_id].to_i).first
+        email_args[:post] ||= Post.find_by(id: notification.data_hash[:original_post_id].to_i)
         email_args[:post] ||= notification.post
         email_args[:notification] = notification
 

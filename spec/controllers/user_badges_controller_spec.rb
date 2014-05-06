@@ -45,7 +45,7 @@ describe UserBadgesController do
       StaffActionLogger.any_instance.expects(:log_badge_grant).once
       xhr :post, :create, badge_id: badge.id, username: user.username
       response.status.should == 200
-      user_badge = UserBadge.where(user: user, badge: badge).first
+      user_badge = UserBadge.find_by(user: user, badge: badge)
       user_badge.should be_present
       user_badge.granted_by.should eq(admin)
     end
@@ -61,7 +61,7 @@ describe UserBadgesController do
       StaffActionLogger.any_instance.expects(:log_badge_grant).never
       xhr :post, :create, badge_id: badge.id, username: user.username, api_key: api_key.key
       response.status.should == 200
-      user_badge = UserBadge.where(user: user, badge: badge).first
+      user_badge = UserBadge.find_by(user: user, badge: badge)
       user_badge.should be_present
       user_badge.granted_by.should eq(Discourse.system_user)
     end
@@ -80,7 +80,7 @@ describe UserBadgesController do
       StaffActionLogger.any_instance.expects(:log_badge_revoke).once
       xhr :delete, :destroy, id: user_badge.id
       response.status.should == 200
-      UserBadge.where(id: user_badge.id).first.should be_nil
+      UserBadge.find_by(id: user_badge.id).should be_nil
     end
   end
 end

@@ -164,7 +164,7 @@ describe PostDestroyer do
 
     context 'topic_user' do
 
-      let(:topic_user) { second_user.topic_users.where(topic_id: topic.id).first }
+      let(:topic_user) { second_user.topic_users.find_by(topic_id: topic.id) }
 
       it 'clears the posted flag for the second user' do
         topic_user.posted?.should be_false
@@ -275,8 +275,8 @@ describe PostDestroyer do
     it "should delete the post actions" do
       flag = PostAction.act(codinghorror, second_post, PostActionType.types[:off_topic])
       PostDestroyer.new(moderator, second_post).destroy
-      expect(PostAction.where(id: flag.id).first).to be_nil
-      expect(PostAction.where(id: bookmark.id).first).to be_nil
+      expect(PostAction.find_by(id: flag.id)).to be_nil
+      expect(PostAction.find_by(id: bookmark.id)).to be_nil
     end
 
     it 'should update flag counts on the post' do

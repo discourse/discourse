@@ -155,9 +155,9 @@ class Group < ActiveRecord::Base
 
   def self.lookup_group(name)
     if id = AUTO_GROUPS[name]
-      Group.where(id: id).first
+      Group.find_by(id: id)
     else
-      unless group = Group.where(name: name).first
+      unless group = Group.find_by(name: name)
         raise ArgumentError, "unknown group"
       end
       group

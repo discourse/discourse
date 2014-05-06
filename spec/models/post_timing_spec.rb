@@ -48,15 +48,15 @@ describe PostTiming do
       PostTiming.where(topic_id: topic_id, user_id: 2, post_number: 3).count.should == 1
       PostTiming.where(topic_id: topic_id, user_id: 3, post_number: 3).count.should == 1
 
-      tu = TopicUser.where(topic_id: topic_id, user_id: 1).first
+      tu = TopicUser.find_by(topic_id: topic_id, user_id: 1)
       tu.last_read_post_number.should == 1
       tu.seen_post_count.should == 1
 
-      tu = TopicUser.where(topic_id: topic_id, user_id: 2).first
+      tu = TopicUser.find_by(topic_id: topic_id, user_id: 2)
       tu.last_read_post_number.should == 3
       tu.seen_post_count.should == 3
 
-      tu = TopicUser.where(topic_id: topic_id, user_id: 3).first
+      tu = TopicUser.find_by(topic_id: topic_id, user_id: 3)
       tu.last_read_post_number.should == 3
       tu.seen_post_count.should == 3
 
@@ -113,7 +113,7 @@ describe PostTiming do
       before do
         PostTiming.record_timing(@timing_attrs)
         PostTiming.record_timing(@timing_attrs)
-        @timing = PostTiming.where(topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number).first
+        @timing = PostTiming.find_by(topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number)
       end
 
       it 'creates a timing record' do

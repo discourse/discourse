@@ -10,7 +10,7 @@ describe PrettyText do
       before(:each) do
         eviltrout = User.new
         eviltrout.stubs(:avatar_template).returns("http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png")
-        User.expects(:where).with(username_lower: "eviltrout").returns([eviltrout])
+        User.expects(:find_by).with(username_lower: "eviltrout").returns(eviltrout)
       end
 
       it "produces a quote even with new lines in it" do

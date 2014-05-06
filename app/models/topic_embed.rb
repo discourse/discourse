@@ -24,7 +24,7 @@ class TopicEmbed < ActiveRecord::Base
 
     url = normalize_url(url)
 
-    embed = TopicEmbed.where("lower(embed_url) = ?", url).first
+    embed = TopicEmbed.find_by("lower(embed_url) = ?", url)
     content_sha1 = Digest::SHA1.hexdigest(contents)
     post = nil
 

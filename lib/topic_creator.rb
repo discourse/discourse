@@ -72,9 +72,9 @@ class TopicCreator
     # When all clients are updated the category variable should
     # be set directly to the contents of the if statement.
     if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
-      Category.where(id: @opts[:category]).first
+      Category.find_by(id: @opts[:category])
     else
-      Category.where(name: @opts[:category]).first
+      Category.find_by(name: @opts[:category])
     end
   end
 

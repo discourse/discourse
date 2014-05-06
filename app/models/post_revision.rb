@@ -47,8 +47,8 @@ class PostRevision < ActiveRecord::Base
     return if prev == cur
 
     {
-        previous_user: User.where(id: prev).first,
-        current_user: User.where(id: cur).first
+        previous_user: User.find_by(id: prev),
+        current_user: User.find_by(id: cur)
     }
   end
 

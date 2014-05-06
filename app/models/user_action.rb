@@ -155,7 +155,9 @@ LEFT JOIN categories c on c.id = t.category_id
         # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
         # protect against dupes, for some reason this is failing in some cases
-        action = self.where(hash.select{|k,v| required_parameters.include?(k)}).first
+        action = self.find_by(hash.select do |k, v|
+  required_parameters.include?(k)
+end)
         return action if action
 
         action = self.new(hash)
@@ -168,7 +170,7 @@ LEFT JOIN categories c on c.id = t.category_id
         user_id = hash[:user_id]
         update_like_count(user_id, hash[:action_type], 1)
 
-        topic = Topic.includes(:category).where(id: hash[:target_topic_id]).first
+        topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
 
         # move into Topic perhaps
         group_ids = nil
@@ -194,7 +196,7 @@ LEFT JOIN categories c on c.id = t.category_id
 
   def self.remove_action!(hash)
     require_parameters(hash, :action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id)
-    if action = UserAction.where(hash.except(:created_at)).first
+    if action = UserAction.find_by(hash.except(:created_at))
       action.destroy
       MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
     end

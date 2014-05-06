@@ -9,7 +9,7 @@ class ColorScheme < ActiveRecord::Base
   after_destroy :destroy_versions
 
   def self.enabled
-    current_version.where(enabled: true).first || find(1)
+    current_version.find_by(enabled: true) || find(1)
   end
 
   def can_edit?

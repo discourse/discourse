@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   def self.find_by_temporary_key(key)
     user_id = $redis.get("temporary_key:#{key}")
     if user_id.present?
-      where(id: user_id.to_i).first
+      find_by(id: user_id.to_i)
     end
   end
 
@@ -151,11 +151,11 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    where(email: Email.downcase(email)).first
+    find_by(email: Email.downcase(email))
   end
 
   def self.find_by_username(username)
-    where(username_lower: username.downcase).first
+    find_by(username_lower: username.downcase)
   end
 
 
@@ -296,7 +296,7 @@ class User < ActiveRecord::Base
   end
 
   def visit_record_for(date)
-    user_visits.where(visited_at: date).first
+    user_visits.find_by(visited_at: date)
   end
 
   def update_visit_record!(date)
@@ -676,7 +676,7 @@ class User < ActiveRecord::Base
   def username_validator
     username_format_validator || begin
       lower = username.downcase
-      existing = User.where(username_lower: lower).first
+      existing = User.find_by(username_lower: lower)
       if username_changed? && existing && existing.id != self.id
         errors.add(:username, I18n.t(:'user.username.unique'))
       end

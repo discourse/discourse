@@ -1,5 +1,5 @@
 unless Rails.env.test?
-  meta = Category.where(id: SiteSetting.meta_category_id).first
+  meta = Category.find_by(id: SiteSetting.meta_category_id)
   if meta && !meta.topic_id
 
     Category.transaction do

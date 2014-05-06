@@ -50,7 +50,7 @@ class SearchObserver < ActiveRecord::Observer
 
     if obj.class == Topic && obj.title_changed?
       if obj.posts
-        post = obj.posts.where(post_number: 1).first
+        post = obj.posts.find_by(post_number: 1)
         if post
           category_name = obj.category.name if obj.category
           SearchObserver.update_posts_index(post.id, post.cooked, obj.title, category_name)

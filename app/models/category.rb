@@ -306,7 +306,7 @@ SQL
   end
 
   def self.find_by_email(email)
-    self.where(email_in: Email.downcase(email)).first
+    self.find_by(email_in: Email.downcase(email))
   end
 
   def has_children?

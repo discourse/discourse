@@ -171,7 +171,7 @@ describe SessionController do
 
     context 'when email is confirmed' do
       before do
-        token = user.email_tokens.where(email: user.email).first
+        token = user.email_tokens.find_by(email: user.email)
         EmailToken.confirm(token.token)
       end
 

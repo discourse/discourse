@@ -116,20 +116,20 @@ describe UploadsController do
     it "returns 404 when using external storage" do
       store = stub(internal?: false)
       Discourse.stubs(:store).returns(store)
-      Upload.expects(:where).never
+      Upload.expects(:find_by).never
       get :show, site: "default", id: 1, sha: "1234567890abcdef", extension: "pdf"
       response.response_code.should == 404
     end
 
     it "returns 404 when the upload doens't exist" do
-      Upload.expects(:where).with(id: 2, url: "/uploads/default/2/1234567890abcdef.pdf").returns [nil]
+      Upload.expects(:find_by).with(id: 2, url: "/uploads/default/2/1234567890abcdef.pdf").returns(nil)
       get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
       response.response_code.should == 404
     end
 
     it 'uses send_file' do
       upload = build(:upload)
-      Upload.expects(:where).with(id: 42, url: "/uploads/default/42/66b3ed1503efc936.zip").returns([upload])
+      Upload.expects(:find_by).with(id: 42, url: "/uploads/default/42/66b3ed1503efc936.zip").returns(upload)
 
       controller.stubs(:render)
       controller.expects(:send_file)

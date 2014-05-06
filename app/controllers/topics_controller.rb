@@ -43,7 +43,7 @@ class TopicsController < ApplicationController
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound
-      topic = Topic.where(slug: params[:id]).first if params[:id]
+      topic = Topic.find_by(slug: params[:id]) if params[:id]
       raise Discourse::NotFound unless topic
       return redirect_to(topic.relative_url)
     end
@@ -96,7 +96,7 @@ class TopicsController < ApplicationController
   end
 
   def update
-    topic = Topic.where(id: params[:topic_id]).first
+    topic = Topic.find_by(id: params[:topic_id])
     title, archetype = params[:title], params[:archetype]
     guardian.ensure_can_edit!(topic)
 
@@ -134,14 +134,14 @@ class TopicsController < ApplicationController
     enabled = (params[:enabled] == 'true')
 
     check_for_status_presence(:status, status)
-    @topic = Topic.where(id: topic_id).first
+    @topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_moderate!(@topic)
     @topic.update_status(status, enabled, current_user)
     render nothing: true
   end
 
   def star
-    @topic = Topic.where(id: params[:topic_id].to_i).first
+    @topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_see!(@topic)
 
     @topic.toggle_star(current_user, params[:starred] == 'true')
@@ -158,7 +158,7 @@ class TopicsController < ApplicationController
 
   def autoclose
     raise Discourse::InvalidParameters.new(:auto_close_time) unless params.has_key?(:auto_close_time)
-    topic = Topic.where(id: params[:topic_id].to_i).first
+    topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_moderate!(topic)
     topic.set_auto_close(params[:auto_close_time], current_user)
     if topic.save
@@ -169,7 +169,7 @@ class TopicsController < ApplicationController
   end
 
   def destroy
-    topic = Topic.where(id: params[:id]).first
+    topic = Topic.find_by(id: params[:id])
     guardian.ensure_can_delete!(topic)
     topic.trash!(current_user)
     render nothing: true
@@ -188,7 +188,7 @@ class TopicsController < ApplicationController
 
   def remove_allowed_user
     params.require(:username)
-    topic = Topic.where(id: params[:topic_id]).first
+    topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_remove_allowed_users!(topic)
 
     if topic.remove_allowed_user(params[:username])
@@ -201,7 +201,7 @@ class TopicsController < ApplicationController
   def invite
     username_or_email = params[:user] ? fetch_username : fetch_email
 
-    topic = Topic.where(id: params[:topic_id]).first
+    topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_invite_to!(topic)
 
     if topic.invite(current_user, username_or_email)
@@ -225,7 +225,7 @@ class TopicsController < ApplicationController
   def merge_topic
     params.require(:destination_topic_id)
 
-    topic = Topic.where(id: params[:topic_id]).first
+    topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_move_posts!(topic)
 
     dest_topic = topic.move_posts(current_user, topic.posts.pluck(:id), destination_topic_id: params[:destination_topic_id].to_i)
@@ -237,7 +237,7 @@ class TopicsController < ApplicationController
     params.require(:topic_id)
     params.permit(:category_id)
 
-    topic = Topic.where(id: params[:topic_id]).first
+    topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_move_posts!(topic)
 
     dest_topic = move_posts_to_destination(topic)
@@ -276,14 +276,14 @@ class TopicsController < ApplicationController
   end
 
   def clear_pin
-    topic = Topic.where(id: params[:topic_id].to_i).first
+    topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_see!(topic)
     topic.clear_pin_for(current_user)
     render nothing: true
   end
 
   def re_pin
-    topic = Topic.where(id: params[:topic_id].to_i).first
+    topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_see!(topic)
     topic.re_pin_for(current_user)
     render nothing: true
@@ -330,7 +330,7 @@ class TopicsController < ApplicationController
   private
 
   def toggle_mute
-    @topic = Topic.where(id: params[:topic_id].to_i).first
+    @topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_see!(@topic)
 
     @topic.toggle_mute(current_user)

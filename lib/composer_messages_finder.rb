@@ -101,7 +101,7 @@ class ComposerMessagesFinder
                   (@user.post_count >= SiteSetting.educate_until_posts) &&
                   !UserHistory.exists_for_user?(@user, :notified_about_dominating_topic, topic_id: @details[:topic_id])
 
-    topic = Topic.where(id: @details[:topic_id]).first
+    topic = Topic.find_by(id: @details[:topic_id])
     return if topic.blank? ||
               topic.user_id == @user.id ||
               topic.posts_count < SiteSetting.summary_posts_required ||
@@ -127,7 +127,7 @@ class ComposerMessagesFinder
   def check_reviving_old_topic
     return unless @details[:topic_id]
 
-    topic = Topic.where(id: @details[:topic_id]).first
+    topic = Topic.find_by(id: @details[:topic_id])
 
     return unless replying?
 

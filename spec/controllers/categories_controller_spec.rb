@@ -57,7 +57,7 @@ describe CategoriesController do
                               }
 
           response.status.should == 200
-          category = Category.where(name: "hello").first
+          category = Category.find_by(name: "hello")
           category.category_groups.map{|g| [g.group_id, g.permission_type]}.sort.should == [
             [Group[:everyone].id, readonly],[Group[:staff].id,create_post]
           ]

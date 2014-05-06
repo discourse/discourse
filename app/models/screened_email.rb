@@ -17,7 +17,7 @@ class ScreenedEmail < ActiveRecord::Base
   end
 
   def self.should_block?(email)
-    screened_email = ScreenedEmail.where(email: email).first
+    screened_email = ScreenedEmail.find_by(email: email)
     screened_email.record_match! if screened_email
     screened_email && screened_email.action_type == actions[:block]
   end

@@ -23,7 +23,7 @@ module Onebox
           linked = "<a href='#{@url}'>#{@url}</a>"
           if route[:post_number].present? && route[:post_number].to_i > 1
             # Post Link
-            post = Post.where(topic_id: route[:topic_id], post_number: route[:post_number].to_i).first
+            post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number].to_i)
             return linked unless post
             return linked if post.hidden
             return linked unless Guardian.new.can_see?(post)

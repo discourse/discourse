@@ -43,7 +43,7 @@ describe BadgeGranter do
     it 'increments grant_count on the badge and creates a notification' do
       BadgeGranter.grant(badge, user)
       badge.reload.grant_count.should eq(1)
-      user.notifications.where(notification_type: Notification.types[:granted_badge]).first.data_hash["badge_id"].should == badge.id
+      user.notifications.find_by(notification_type: Notification.types[:granted_badge]).data_hash["badge_id"].should == badge.id
     end
 
   end
@@ -58,7 +58,7 @@ describe BadgeGranter do
       badge.reload.grant_count.should eq(1)
       StaffActionLogger.any_instance.expects(:log_badge_revoke).with(user_badge)
       BadgeGranter.revoke(user_badge, revoked_by: admin)
-      UserBadge.where(user: user, badge: badge).first.should_not be_present
+      UserBadge.find_by(user: user, badge: badge).should_not be_present
       badge.reload.grant_count.should eq(0)
       user.notifications.where(notification_type: Notification.types[:granted_badge]).should be_empty
       user.reload.title.should == nil

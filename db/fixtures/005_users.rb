@@ -1,7 +1,7 @@
 # kind of odd, but we need it, we also need to nuke usage of User from inside migrations
 #  very poor form
 User.reset_column_information
-user = User.where("id <> -1 and username_lower = 'system'").first
+user = User.find_by("id <> -1 and username_lower = 'system'")
 if user
   user.username = UserNameSuggester.suggest("system")
   user.save

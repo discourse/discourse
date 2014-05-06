@@ -79,7 +79,7 @@ module Import
     end
 
     def ensure_we_have_a_user
-      user = User.where(id: @user_id).first
+      user = User.find_by(id: @user_id)
       raise Discourse::InvalidParameters.new(:user_id) unless user
       # keep some user data around to check them against the newly restored database
       @user_info = { id: user.id, username: user.username, email: user.email }
@@ -280,7 +280,7 @@ module Import
     end
 
     def notify_user
-      if user = User.where(email: @user_info[:email]).first
+      if user = User.find_by(email: @user_info[:email])
         log "Notifying '#{user.username}' of the end of the restore..."
         # NOTE: will only notify if user != Discourse.site_contact_user
         if @success

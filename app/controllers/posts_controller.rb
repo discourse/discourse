@@ -11,7 +11,7 @@ class PostsController < ApplicationController
   skip_before_filter :check_xhr, only: [:markdown,:short_link]
 
   def markdown
-    post = Post.where(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i).first
+    post = Post.find_by(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i)
     if post && guardian.can_see?(post)
       render text: post.raw, content_type: 'text/plain'
     else
@@ -208,7 +208,7 @@ class PostsController < ApplicationController
     revision = params[:revision].to_i
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
-    post_revision = PostRevision.where(post_id: post_id, number: revision).first
+    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
     post_revision.post = find_post_from_params
 
     guardian.ensure_can_see!(post_revision)

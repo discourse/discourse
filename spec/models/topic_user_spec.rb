@@ -263,7 +263,7 @@ describe TopicUser do
 
     TopicUser.ensure_consistency!
 
-    tu = TopicUser.where(user_id: p1.user_id, topic_id: p1.topic_id).first
+    tu = TopicUser.find_by(user_id: p1.user_id, topic_id: p1.topic_id)
     tu.last_read_post_number.should == p2.post_number
     tu.seen_post_count.should == 2
   end
@@ -278,15 +278,15 @@ describe TopicUser do
       create_post(topic_id: post.topic_id)
 
       # mails posts from earlier topics
-      tu = TopicUser.where(user_id: user3.id, topic_id: post.topic_id).first
+      tu = TopicUser.find_by(user_id: user3.id, topic_id: post.topic_id)
       tu.last_emailed_post_number.should == 2
 
       # mails nothing to random users
-      tu = TopicUser.where(user_id: user1.id, topic_id: post.topic_id).first
+      tu = TopicUser.find_by(user_id: user1.id, topic_id: post.topic_id)
       tu.should be_nil
 
       # mails other user
-      tu = TopicUser.where(user_id: user2.id, topic_id: post.topic_id).first
+      tu = TopicUser.find_by(user_id: user2.id, topic_id: post.topic_id)
       tu.last_emailed_post_number.should == 2
     end
   end

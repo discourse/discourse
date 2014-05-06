@@ -83,7 +83,7 @@ module Jobs
     def execute(args)
       raise Discourse::InvalidParameters.new(:topic_link_id) unless args[:topic_link_id].present?
 
-      topic_link = TopicLink.where(id: args[:topic_link_id], internal: false, crawled_at: nil).first
+      topic_link = TopicLink.find_by(id: args[:topic_link_id], internal: false, crawled_at: nil)
       return if topic_link.blank?
 
       # Look for a topic embed for the URL. If it exists, use its title and don't crawl

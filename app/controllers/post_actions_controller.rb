@@ -35,7 +35,7 @@ class PostActionsController < ApplicationController
   end
 
   def destroy
-    post_action = current_user.post_actions.where(post_id: params[:id].to_i, post_action_type_id: @post_action_type_id, deleted_at: nil).first
+    post_action = current_user.post_actions.find_by(post_id: params[:id].to_i, post_action_type_id: @post_action_type_id, deleted_at: nil)
 
     raise Discourse::NotFound if post_action.blank?
 

@@ -24,7 +24,7 @@ class Auth::DefaultCurrentUserProvider
     current_user = nil
 
     if auth_token && auth_token.length == 32
-      current_user = User.where(auth_token: auth_token).first
+      current_user = User.find_by(auth_token: auth_token)
     end
 
     if current_user && (current_user.suspended? || !current_user.active)
@@ -53,7 +53,7 @@ class Auth::DefaultCurrentUserProvider
             raise Discourse::InvalidAccess.new if api_username && (api_key.user.username_lower != api_username.downcase)
             current_user = api_key.user
           elsif api_username
-            current_user = User.where(username_lower: api_username.downcase).first
+            current_user = User.find_by(username_lower: api_username.downcase)
           end
 
         end
