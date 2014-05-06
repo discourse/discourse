@@ -1,7 +1,7 @@
 .fa.muted {
-  color: $notification_badge_background_color;
+  color: scale-color($primary, $lightness: 40%);
 }
 .fa.tracking, .fa.watching {
-  color: lighten($emphasis_text_color, 20%);
+  color: $tertiary;
   font-weight: normal;
 }

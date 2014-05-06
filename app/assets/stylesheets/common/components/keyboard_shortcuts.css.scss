@@ -4,7 +4,7 @@
 }
 
 .topic-list-item.selected td:first-child, .topic-post.selected {
-  border-left: 1px solid $topic-list-starred-color;
+  border-left: 1px solid $danger;
 }
 
 .topic-list-item.selected {

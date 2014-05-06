@@ -9,8 +9,8 @@
   position: absolute;
   top: 0;
   z-index: 1001;
-  background-color: $primary_background_color;
-  box-shadow: 0 0 3px rgba($primary_shadow_color, .6);
+  background-color: $secondary;
+  box-shadow: 0 0 3px rgba($primary, .6);
 
   .docked & {
     position: fixed;
@@ -47,7 +47,7 @@
     float: left;
     display: none;
     a {
-      color: $primary_text_color;
+      color: darken($primary, 40%);
       font-size: 14px;
       line-height: 40px;
     }
@@ -66,24 +66,24 @@
     .icon {
       display: block;
       padding: 4px;
-      color: $nav-button-color;
+      color: scale-color($primary, $lightness: 50%);
       text-decoration: none;
       cursor: pointer;
       &:hover {
-        color: $nav-button-color-hover;
-        background-color: $nav-button-background-color-hover;
+        color: $primary;
+        background-color: scale-color($primary, $lightness: 75%);
       }
       &:active {
-        color: $nav-button-color-active;
-        background-color: $nav-button-background-color-active;
+        color: $primary;
+        background-color: scale-color($primary, $lightness: 75%);
       }
     }
     .active .icon {
       position: relative;
-      color: lighten($primary_text_color, 60%);
-      background-color: $primary_background_color;
+      color: scale-color($primary, $lightness: 75%);
+      background-color: $secondary;
       cursor: default;
-      @include box-shadow((6px 0 6px -6px rgba($primary_shadow_color, 0.2), -6px 0 6px -6px rgba($primary_shadow_color, 0.2), inset 0 13px 13px -13px rgba($primary_shadow_color, 0.1)));
+      @include box-shadow((6px 0 6px -6px rgba($primary, 0.2), -6px 0 6px -6px rgba($primary, 0.2), inset 0 13px 13px -13px rgba($primary, 0.1)));
       &:after {
         display: block;
         position: absolute;
@@ -93,7 +93,7 @@
         width: 100%;
         height: 0;
         content: "";
-        border-top: 1px solid $primary_border_color;
+        border-top: 1px solid scale-color($primary, $lightness: 90%);
       }
     }
     [class^="fa fa-"] {
@@ -114,16 +114,16 @@
     }
     .unread-notifications {
       right: -4px;
-      background-color: $emphasis_background_color;
-      color: $emphasis_text_color;
+      background-color: scale-color($tertiary, $lightness: 40%);
+      color: $tertiary;
     }
     .unread-private-messages {
       left: -4px;
-      background-color: $success_text_color;
+      background-color: $success;
     }
   }
   .flagged-posts {
-    background-color: $warning_text_color;
+    background-color: $danger;
   }
 }
 
@@ -146,9 +146,9 @@
   right: 0;
   z-index: 1100;
   margin-top: -1px;
-  border: 1px solid $primary_border_color;
-  background-color: $primary_background_color;
-  @include box-shadow(0 1px 1px rgba($primary_shadow_color, 0.2));
+  border: 1px solid scale-color($primary, $lightness: 90%);;
+  background-color: $secondary;
+  @include box-shadow(0 1px 1px rgba($primary, 0.2));
 
   // Common
 
@@ -165,7 +165,7 @@
     }
   }
   .heading {
-    color: $primary_text_color;
+    color: $primary;
     font-weight: bold;
     font-size: 12px;
     line-height: 15px;
@@ -173,7 +173,7 @@
 
   }
   .selected {
-    background-color: $header-item-highlight;
+    background-color: $tertiary;
   }
 
   // Notifications
@@ -183,10 +183,10 @@
       color: #777;
     }
     li {
-      background-color: $header-item-highlight;
+      background-color: $tertiary;
     }
     .read {
-      background-color: $primary_background_color;
+      background-color: $secondary;
     }
     .none {
       padding: 5px;
@@ -202,7 +202,7 @@
     padding: 5px;
     font-size: 16px;
     &:focus {
-      @include box-shadow((inset 0 1px 1px rgba($primary_shadow_color, 0.075), 0 0 4px rgba(82, 168, 236, 0.6)));
+      @include box-shadow((inset 0 1px 1px rgba($primary, 0.075), 0 0 4px rgba(82, 168, 236, 0.6)));
     }
   }
   .searching {

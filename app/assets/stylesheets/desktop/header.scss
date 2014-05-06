@@ -8,8 +8,8 @@
   top: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 2px 4px -2px rgba($primary_text_color, .45);
-  background-color: $primary_background_color;
+  box-shadow: 0 2px 4px -2px rgba($primary, .25);
+  background-color: $secondary;
   padding-top: 3px;
   .docked & {
     position: fixed;
@@ -42,7 +42,7 @@
   .current-username {
     float: left;
     a {
-      color: $secondary_text_color;
+      color: $primary;
       font-size: 14px;
       display:block;
       margin-top: 10px;
@@ -62,7 +62,7 @@
     .icon {
       display: block;
       padding: 3px;
-      color: $nav-button-color;
+      color: scale-color($primary, $lightness: 50%);
       text-decoration: none;
       cursor: pointer;
       border-top: 1px solid transparent;
@@ -71,25 +71,25 @@
 
 
       &:hover {
-        color: $nav-button-color-hover;
-        background-color: $nav-button-background-color-hover;
+        color: $primary;
+        background-color:  scale-color($primary, $lightness: 90%);
         border-top: 1px solid transparent;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
       }
       &:active {
-        color: $nav-button-color-active;
-        background-color: $nav-button-background-color-active;
+        color: $primary;
+        background-color: scale-color($primary, $lightness: 90%);
       }
     }
     .active .icon {
       position: relative;
       color: #7b7b7b;
-      background-color: $primary_background_color;
+      background-color: $secondary;
       cursor: default;
-      border-top: 1px solid $primary_border_color;
-      border-left: 1px solid $primary_border_color;
-      border-right: 1px solid $primary_border_color;
+      border-top: 1px solid scale-color($primary, $lightness: 90%);
+      border-left: 1px solid scale-color($primary, $lightness: 90%);
+      border-right: 1px solid scale-color($primary, $lightness: 90%);
       &:after {
         display: block;
         position: absolute;
@@ -99,7 +99,7 @@
         width: 100%;
         height: 0;
         content: "";
-        border-top: 1px solid $tertiary_border_color;
+        border-top: 1px solid $secondary;
       }
       &:hover {
       border-bottom: none;
@@ -123,15 +123,15 @@
     }
     .unread-notifications {
       right: -4px;
-      background-color: $emphasis_text_color;
+      background-color: $tertiary;
     }
     .unread-private-messages {
       left: -4px;
-      background-color: $success_text_color;
+      background-color: $success;
     }
   }
   .flagged-posts {
-    background-color: $warning_text_color;
+    background-color: $danger;
   }
 }
 
@@ -155,9 +155,9 @@
   right: 0;
   z-index: 1100;
   overflow: auto;
-  border: 1px solid $primary_border_color;
-  background-color: $primary_background_color;
-  @include box-shadow(0 2px 2px rgba($primary_shadow_color, .4));
+  border: 1px solid scale-color($primary, $lightness: 90%);
+  background-color: $secondary;
+  @include box-shadow(0 2px 2px rgba($primary, .4));
 
   // Common
 
@@ -174,29 +174,29 @@
     }
   }
   .heading {
-    border-top: 1px solid $primary_border_color;
+    border-top: 1px solid scale-color($primary, $lightness: 90%);
 
-    border-bottom: 1px solid $primary_border_color;
-    color: $primary_text_color;
+    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    color: darken($primary, 40%);
     font-weight: bold;
     font-size: 12px;
     line-height: 15px;
   }
   .selected {
-    background-color: $header-item-highlight;
+    background-color: $tertiary;
   }
 
   // Notifications
 
   &#notifications-dropdown {
     .fa {
-      color: lighten($primary_text_color, 50%);
+      color: scale-color($primary, $lightness: 50%);
     }
     li {
-      background-color: $header-item-highlight;
+      background-color: $tertiary;
     }
     .read {
-      background-color: $primary_background_color;
+      background-color: $secondary;
     }
     .none {
       padding: 5px;
@@ -216,7 +216,7 @@
     position: absolute;
     top: 13px;
     right: 13px;
-    color: lighten($primary_text_color, 50%);
+    color: scale-color($primary, $lightness: 50%);
     font-size: 18px;
   }
   .no-results {

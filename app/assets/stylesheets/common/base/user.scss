@@ -8,7 +8,7 @@
   .fa {
     width: 15px;
     display: inline-block;
-    color: $secondary_text_color;
+    color: $primary;
   }
   .avatar-wrapper {
     border: none;
@@ -40,7 +40,7 @@
   h2 {
     a {
       font-size: 14px;
-      color: $link_color;
+      color: scale-color($tertiary, $lightness: -10%);;
       cursor: pointer;
     }
   }

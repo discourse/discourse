@@ -1,5 +1,5 @@
 .post-info a {
-  color: lighten($primary_text_color, 50%);
+  color: scale-color($primary, $lightness: 60%);
 }
 
 
@@ -49,7 +49,7 @@
     margin: 0;
     line-height: 1.2em;
     overflow: hidden;
-    a {color: $primary_text_color;}
+    a {color: $primary;}
     a.badge-category { vertical-align: top; margin-top: 4px; }
     a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
   }
@@ -63,11 +63,11 @@
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: lighten($primary_text_color, 60%); }
+.private-message-glyph { color: scale-color($primary, $lightness: 75%); }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 #topic-closing-info {
-  border-top: 1px solid $primary_border_color;
+  border-top: 1px solid scale-color($primary, $lightness: 90%);
   padding-top: 10px;
   height: 20px;
 }
@@ -85,8 +85,8 @@
   i {
     font-size: 12px;
     margin-right: 5px;
-    background: $primary_background_color;
-    border: 1px solid $primary_border_color;
+    background: $secondary;
+    border: 1px solid scale-color($primary, $lightness: 90%);
     padding: 2px 4px;
     border-radius: 20px;
     transition: linear 0.15s;
@@ -96,12 +96,12 @@
 
 a.reply-new {
   position: absolute;
-  color: lighten($primary_text_color, 35%);
+  color: scale-color($primary, $lightness: 50%);
   margin-top: -2px;}
 a:hover.reply-new {
-  color: $link-color;
-  i {background: $emphasis_background_color;
-    border: 1px solid $emphasis_border_color;
+  color: $tertiary;
+  i {background: scale-color($tertiary, $lightness: 75%);
+    border: 1px solid $tertiary;
     padding: 2px 4px;
   }
 }
@@ -113,8 +113,8 @@ a:hover.reply-new {
     display: none;
   }
   border: none;
-  background-color: lighten($primary_text_color, 70%);
-  color: lighten($primary_text_color, 35%);
+  background-color: scale-color($primary, $lightness: 90%);
+  color: scale-color($primary, $lightness: 50%);
   width: 130px;
   height: 34px;
 
@@ -134,7 +134,7 @@ a:hover.reply-new {
     left: 4px;
     border: 0;
     background: none;
-    color: lighten($primary_text_color, 35%);
+    color: scale-color($primary, $lightness: 50%);
     width: 50%;
     text-align: left;
     height: 30px;
@@ -149,7 +149,7 @@ a:hover.reply-new {
     }
     &:disabled {
     cursor: default;
-    color: lighten($primary_text_color, 35%);
+    color: scale-color($primary, $lightness: 50%);
     }
   }
   h4 {
@@ -162,10 +162,10 @@ a:hover.reply-new {
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid  $primary_border_color;
+    border-right: 1px solid  scale-color($primary, $lightness: 90%);
     // background-color: #d4eaf4;
     // background-color: #C5E8F7;
-    background-color: $success_background_color;
+    background-color:  scale-color($success, $lightness: 60%);
     transition: width .75s;
   }
 }
@@ -183,14 +183,14 @@ a:hover.reply-new {
   }
 }
 
-.heatmap-high {color: $heatmap-high !important;}
-.heatmap-med {color: $heatmap-med !important;}
-.heatmap-low {color: $heatmap-low !important;}
+.heatmap-high {color: scale-color($danger, $lightness: 20%) !important;}
+.heatmap-med {color: $danger !important;}
+.heatmap-low {color: scale-color($danger, $lightness: -20%) !important;}
 
 
 
 #topic-filter {
-  background-color: $highlight_background_color;
+  background-color: scale-color($highlight, $lightness: 25%);
   padding: 8px;
   bottom: 0;
   position: fixed;
@@ -209,8 +209,8 @@ pre {
   white-space:pre-wrap;
   display: block;
   padding: 5px 10px;
-  color: $primary_text_color;
-  background: lighten($secondary_background_color, 76%);
+  color: $primary;
+  background: scale-color($primary, $lightness: 90%);
   max-height: 500px;
   }
 }
@@ -226,7 +226,7 @@ sup{top:-0.5em; }
 sub{bottom:-0.25em; }
 figure{margin:0; }
 fieldset{
-  border:1px solid $primary_border_color;
+  border:1px solid scale-color($primary, $lightness: 90%);
   margin:0 2px;
   padding:0.35em 0.625em 0.75em;
 }
@@ -237,11 +237,11 @@ legend{
 
 kbd
 {
-    background-color: $primary_background_color;
-    border:1px solid $primary_border_color;
+    background-color: $secondary;
+    border:1px solid scale-color($primary, $lightness: 90%);
     border-radius: 3px;
-    box-shadow: 0 1px 0 rgba($primary_shadow_color, .9);
-    color: $primary_text_color;
+    box-shadow: 0 1px 0 rgba($primary, .9);
+    color: $primary;
     display: inline-block;
     font-size: 12px;
     line-height: 1.4;

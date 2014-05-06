@@ -1,42 +1,42 @@
-a.no-href {
+    a.no-href {
   cursor: pointer;
 }
 
 body {
     button.ok {
-    background: $btn-success-background;
-    color: $tertiary_text_color;
+    background: $success;
+    color: $secondary;
     @include hover {
-      background: lighten($btn-success-background, 10%);
-      color: $tertiary_text_color;
+      background: lighten($success, 10%);
+      color: $secondary;
     }
   }
   button.cancel {
-    background: $btn-danger-background-color;
-    color: $tertiary_text_color;
+    background: $danger;
+    color: $secondary;
     @include hover {
-      background: lighten($btn-danger-background-color, 10%);
-      color: $tertiary_text_color;
+      background: lighten($danger, 10%);
+      color: $secondary;
     }
   }
 
   .coldmap-high {
-    color: $coldmap-high !important;
+    color: scale-color($tertiary, $lightness: 40%) !important;
   }
   .coldmap-med {
-    color: $coldmap-med !important;
+    color: $tertiary !important;
   }
   .coldmap-low {
-    color: $coldmap-low !important;
+    color: scale-color($tertiary, $lightness: -10%) !important;
   }
   .heatmap-high {
-    color: $heatmap-high !important;
+    color: scale-color($danger, $lightness: 30%) !important;
   }
   .heatmap-med {
-    color: $heatmap-med !important;
+    color: $danger  !important;
   }
   .heatmap-low {
-    color: $heatmap-low !important;
+    color: darken($danger, 10%) !important;
   }
   #loading-message {
     position: absolute;
@@ -44,7 +44,7 @@ body {
     text-align: center;
     top: 120px;
     left: 500px;
-    color: lighten($primary_text_color, 35%);
+    color: $primary;
   }
     .top-space {
     margin-top: 10px;
@@ -54,7 +54,7 @@ body {
   }
 .message {
     @include border-radius-all(8px);
-    background-color: $primary_background_color;
+    background-color: $secondary;
     padding: 14px;
     h2 {
       margin-bottom: 20px;
@@ -69,7 +69,7 @@ body {
       .contents {
         padding-top: 10px;
         a[href] {
-          color: $tertiary_text_color;
+          color: $secondary;
         }
       }
     }
@@ -81,10 +81,10 @@ body {
   .tip {
     display: inline-block;
     &.good {
-      color: $success_text_color;
+      color: $success;
     }
     &.bad {
-      color: $warning_text_color;
+      color: $danger;
     }
   }
 }
@@ -95,12 +95,12 @@ body {
 
 #pagedown-editor {
   width: 540px;
-  background-color: $primary_background_color;
+  background-color: $secondary;
   padding: 0 10px 13px 10px;
-  border: 1px solid $primary_border_color;
+  border: 1px solid scale-color($primary, $lightness: 90%);
   .preview {
     margin-top: 8px;
-    border: 1px dashed $primary_border_color;
+    border: 1px dashed scale-color($primary, $lightness: 90%);
     padding: 8px 8px 0 8px;
     p {
       margin: 0 0 10px 0;
@@ -120,7 +120,7 @@ body {
   font-size: 15px;
   line-height: 23px;
   text-align: center;
-  color: $primary_background_color;
+  color: $secondary;
   background: {
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
@@ -145,9 +145,9 @@ body {
 }
 
 .avatar-wrapper {
-  background-color: $primary_background_color;
+  background-color: $secondary;
   display: inline-block;
-  border: 1px solid $primary_border_color;
+  border: 1px solid scale-color($primary, $lightness: 90%);
   @include border-radius-all(5px);
   img {
     @include border-radius-all(4px);
@@ -157,6 +157,6 @@ body {
 .profiler-results.profiler-left {
   top: 60px !important;
 }
-  
+
 
 }

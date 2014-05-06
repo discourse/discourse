@@ -11,7 +11,7 @@
 
 #login-form {
   a {
-    color: lighten($primary_text_color, 35%);
+    color: scale-color($primary, $lightness: 35%);
     cursor: pointer;
   }
 }
@@ -49,7 +49,7 @@
 
   tr.instructions {
     label {
-      color: $secondary_text_color;
+      color: $primary;
     }
   }
 
