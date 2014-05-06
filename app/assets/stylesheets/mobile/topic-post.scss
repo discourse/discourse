@@ -298,7 +298,7 @@ span.post-count {
     height: auto;
   }
   &.moderator {
-    background-color: scale-color($tertiary, $lightness: 40%);
+    background-color: scale-color($highlight, $lightness: 60%);
   }
 }
 

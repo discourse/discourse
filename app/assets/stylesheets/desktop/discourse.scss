@@ -508,11 +508,11 @@ body {
     line-height: 18px;
   }
   .alert-success {
-    background-color:  scale-color($success, $lightness: 60%);;
+    background-color:  scale-color($success, $lightness: 75%);;
     color: $success;
   }
   .alert-error {
-    background-color:  scale-color($danger, $lightness: 30%);
+    background-color:  scale-color($danger, $lightness: 60%);
     color: $danger;
   }
   .alert-info {

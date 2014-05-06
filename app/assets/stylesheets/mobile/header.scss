@@ -173,7 +173,7 @@
 
   }
   .selected {
-    background-color: $tertiary;
+    background-color: scale-color($tertiary, $lightness: 75%);
   }
 
   // Notifications
@@ -183,7 +183,7 @@
       color: #777;
     }
     li {
-      background-color: $tertiary;
+      background-color: scale-color($tertiary, $lightness: 85%);
     }
     .read {
       background-color: $secondary;
