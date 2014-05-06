@@ -317,7 +317,6 @@ display: none;
       min-height: 100%;
       @include box-sizing(border-box);
       border: 0;
-      border-top: 36px solid transparent;
       @include border-radius-all(0);
       transition: none;
       font-size: 16px;
