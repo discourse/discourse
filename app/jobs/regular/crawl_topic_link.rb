@@ -50,7 +50,7 @@ module Jobs
     def self.max_chunk_size(uri)
       # Amazon leaves the title until very late. Normally it's a bad idea to make an exception for
       # one host but amazon is a big one.
-      return 80 if uri.host =~ /amazon\.(com|ca|co.uk)$/
+      return 80 if uri.host =~ /amazon\.(com|ca|co.uk|es|fr|de|it|com.au|com.br|cn|in|co.jp|com.mx)$/
 
       # Default is 10k
       10
