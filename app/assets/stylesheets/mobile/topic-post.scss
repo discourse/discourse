@@ -18,13 +18,9 @@ nav.post-controls {
   background-color: $secondary;
   padding: 0;
   border-right: 1px solid scale-color($primary, $lightness: 90%);
-  margin-top: 10px;
+  clear: both;
   button {color: scale-color($primary, $lightness: 50%);
-  border-radius: 4px;
-  margin-right: 2px;
-
 }
-
 
 span.badge-posts {
   margin-right: 5px;
@@ -207,6 +203,7 @@ a.star {
   .information {
     padding: 7px 14px;
     color: $primary;
+    overflow: auto;
   }
 
   .information {
