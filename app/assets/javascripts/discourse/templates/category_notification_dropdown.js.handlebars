@@ -1,6 +1,6 @@
 <div>
 <button class='btn standard dropdown-toggle' data-toggle='dropdown'>
-  <i {{bind-attr class=view.icon}}"></i>
+  <i {{bind-attr class=view.icon}}></i>
   <span class='caret'></span>
 </button>
 
@@ -9,7 +9,7 @@
   {{#each level in view.dropDownContent}}
     <li data-id="{{level.id}}">
       <a {{action setNotification level.id}} href="#">
-        <span class='title'>{{level.title}}</span><span>{{level.description}}</span>
+        <span class="title"><i {{bind-attr class=level.styleClasses}}></i>&nbsp;{{level.title}}</span><span>{{level.description}}</span>
       </a>
     </li>
   {{/each}}
