@@ -280,7 +280,7 @@ section.details {
     border-top: 0;
   }
   &.highlight-danger {
-    background-color: $danger;
+    background-color: scale-color($danger, $lightness: 50%);
   }
   border-top: 1px solid scale-color($primary, $lightness: 90%);
   &:before, &:after {
