@@ -92,8 +92,8 @@ body {
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
   padding: 10px 8px 10px 13px;
-  background-color: scale-color($secondary, $lightness: 95%);
-  border-left: 5px solid scale-color($secondary, $lightness: 75%);
+  background-color: scale-color($primary, $lightness: 95%);
+  border-left: 5px solid scale-color($primary, $lightness: 75%);
   p {
     margin: 0 0 10px 0;
   }

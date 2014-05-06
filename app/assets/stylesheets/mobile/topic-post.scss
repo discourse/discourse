@@ -469,9 +469,9 @@ blockquote {
 
 
 .quote .title {
-  border-left: 5px solid scale-color($primary, $lightness: 90%);;
+  border-left: 5px solid scale-color($primary, $lightness: 75%);
   background-color: scale-color($primary, $lightness: 90%);
-  padding: 10px 10px 0 12px;
+  padding: 10px 10px 10px 12px;
   clear: both;
   .avatar { margin-right: 7px; }
 }
