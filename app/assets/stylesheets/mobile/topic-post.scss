@@ -211,7 +211,7 @@ a.star {
   }
 
   .domain {
-    color: scale-color($primary, $lightness: 90%);
+    color: scale-color($primary, $lightness: 75%);
   }
 
   .topic-links {
@@ -251,6 +251,7 @@ a.star {
 /* this is to force the drop-down notification state description para below the button */
 #topic-footer-buttons p {
   clear: both;
+  margin: 0;
 }
 
 #suggested-topics {

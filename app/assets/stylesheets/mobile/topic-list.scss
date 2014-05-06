@@ -44,8 +44,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);;
-  border-bottom: 1px solid scale-color($primary, $lightness: 90%);;
+  border-top: 1px solid scale-color($primary, $lightness: 90%);
 
   > tbody > tr {
     background-color: $secondary;
@@ -146,14 +145,17 @@
     }
   }
 
+  .num.posts {
+    font-weight: bold;
+  }
+
   .num {
     text-align: center;
     a:not(.badge-posts) {
       color: inherit;
     }
+  }
 
-  .num.posts {
-    font-weight: bold;
   }
 
   }
