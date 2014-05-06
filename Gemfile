@@ -188,7 +188,6 @@ group :development do
   gem 'librarian', '>= 0.0.25', require: false
   gem 'annotate'
   gem 'foreman', require: false
-  gem 'metamorpher', '~> 0.1.0'
 end
 
 # Gem that enables support for plugins. It is required.
