@@ -231,7 +231,7 @@
 
       .secondary {
         float: right;
-        background-color: rgba(scale-color($primary, $lightness: 50%), .9);
+        background-color: rgba(scale-color($primary, $lightness: 20%), .9);
         text-align: right;
         padding: 0 20px;
         max-width: 165px;

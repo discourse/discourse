@@ -147,7 +147,7 @@ nav.post-controls {
     }
 
     &:active {
-      background: scale-color($tertiary, $lightness: 40%);
+      background: scale-color($tertiary, $lightness: 50%);
     @include box-shadow(inset 0 1px 3px rgba($primary, .3));
 
     }
@@ -957,7 +957,7 @@ blockquote { /* solo quotes */
   position: fixed;
   z-index: 1000;
   left: 50%;
-  background-color: scale-color($tertiary, $lightness: 40%);
+  background-color: scale-color($tertiary, $lightness: 50%);
   border: 1px solid $tertiary;
   padding: 5px;
   margin-bottom: 5px;
@@ -997,7 +997,7 @@ blockquote { /* solo quotes */
     color: $secondary;
     font-weight: normal;
     margin-bottom: 10px;
-    background: scale-color($tertiary, $lightness: 40%);
+    background: scale-color($tertiary, $lightness: 50%);
 
     &[href] {
       color: $secondary;
@@ -1024,7 +1024,7 @@ blockquote { /* solo quotes */
     article.boxed {
       .select-posts {
         button.select-post {
-          background-color: scale-color($tertiary, $lightness: 40%);
+          background-color: scale-color($tertiary, $lightness: 50%);
           color: $secondary;
         }
       }
