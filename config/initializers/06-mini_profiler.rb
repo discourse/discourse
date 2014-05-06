@@ -24,7 +24,7 @@ if defined?(Rack::MiniProfiler)
     (path !~ /qunit/) &&
     (path !~ /srv\/status/) &&
     (path !~ /commits-widget/) &&
-    (path !~ /^\/logs\/messages/)
+    (path !~ /^\/logs/)
   end
 
   # without a user provider our results will use the ip address for namespacing
