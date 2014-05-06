@@ -823,7 +823,11 @@ blockquote { /* solo quotes */
       margin-bottom: 20px;
       margin-top: 2px;
     }
-    a {color: scale-color($primary, $lightness: 50%);}
+    a.track-link {color: scale-color($primary, $lightness: 50%);}
+    a.toggle-more {
+      display: block;
+      text-align: right;
+    }
     li {margin-bottom: 10px;}
   }
 }

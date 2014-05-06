@@ -923,6 +923,7 @@ en:
       gap:
         one: "1 post hidden"
         other: "{{count}} posts hidden"
+      more_links: "{{count}} more..."
 
       has_replies:
         one: "Reply"
