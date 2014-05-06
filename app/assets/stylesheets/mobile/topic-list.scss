@@ -148,12 +148,14 @@
 
   .num {
     text-align: center;
-    .posts {
-      font-weight: bold;
-    }
     a:not(.badge-posts) {
       color: inherit;
     }
+
+  .num.posts {
+    font-weight: bold;
+  }
+
   }
   .age {
     white-space: nowrap;
