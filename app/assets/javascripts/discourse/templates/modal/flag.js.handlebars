@@ -1,7 +1,7 @@
 <div class="modal-body flag-modal">
 
   <form>
-    {{#each flagsAvailable itemController="flagActionType"}}
+    {{#each flagsAvailable itemController="flag-action-type"}}
       <div class='controls'>
         <label class='radio'>
           <input type='radio' id="radio_{{unbound name_key}}" {{action changePostActionType this}} name='post_action_type_index'> <strong>{{formattedName}}</strong>

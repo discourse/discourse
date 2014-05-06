@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.GroupController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   counts: null,
 
   // It would be nice if bootstrap marked action lists as selected when their links

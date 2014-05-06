@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.FlagActionTypeController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   needs: ['flag'],
 
   message: Em.computed.alias('controllers.flag.message'),
