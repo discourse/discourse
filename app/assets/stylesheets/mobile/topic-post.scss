@@ -9,9 +9,6 @@
 .topic-post {
   border-top: 1px solid scale-color($primary, $lightness: 90%);
   padding: 6px 0 3px 0;
-  &:first-of-type {
-    border-top: none;
-  }
 }
 
 nav.post-controls {
