@@ -24,7 +24,7 @@ article.post {
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
-    background-color: $quote-background;
+    background-color: scale-color($primary, $lightness: 95%);
     border-left: 5px solid scale-color($primary, $lightness: 90%);
     p {
       margin: 0 0 10px 0;
