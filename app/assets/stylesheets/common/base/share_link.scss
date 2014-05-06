@@ -4,8 +4,8 @@
   position: absolute;
   left: 20px;
   z-index: 990;
-  box-shadow: 0 1px 5px rgba($primary_shadow_color, .4);
-  background-color: lighten($secondary_background_color, 60%);
+  box-shadow: 0 1px 5px rgba($primary, .4);
+  background-color: scale-color($primary, $lightness: 90%);
   padding: 6px 10px 10px 10px;
   width: 300px;
   display: none;
@@ -29,7 +29,7 @@
     float: right;
     font-size: 20px;
     a {
-      color: $primary_text_color;
+      color: $primary;
     }
   }
 }

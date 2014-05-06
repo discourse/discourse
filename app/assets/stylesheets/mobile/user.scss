@@ -13,13 +13,13 @@
     height: 100px;
   }
   .static {
-    color: $primary_text_color;
+    color: $primary;
     margin-top: 5px;
     margin-left: 5px;
     display: inline-block;
   }
   .instructions {
-    color: $secondary_text_color;
+    color: $primary;
     margin-top: 5px;
   }
   .category-controls {
@@ -29,13 +29,13 @@
     margin-left: 3px;
   }
   .instructions a[href] {
-    color: $secondary_text_color;
+    color: $primary;
   }
   .warning {
     @include border-radius-all(6px);
-    background-color: $warning_background_color;
+    background-color: $danger;
     padding: 5px 8px;
-    color: $primary_text_color;
+    color: $primary;
     width: 520px;
   }
 
@@ -67,7 +67,7 @@
     height: 150px;
     background-position: center center;
     background-size: cover;
-    background-color: $secondary_background_color;
+    background-color: $primary;
   }
 
   .bio-composer #wmd-quote-post {
@@ -81,15 +81,15 @@
   display: block;
   width: 220px;
   min-height: 200px;
-  background-color: lighten($secondary_background_color, 76%);
-  color: $primary_text_color;
+  background-color: scale-color($primary, $lightness: 90%);
+  color: $primary;
   word-wrap: break-word;
 }
 
 .user-navigation {
 
   h3 {
-    color: lighten($primary_text_color, 35%);
+    color: scale-color($primary, $lightness: 50%);
     padding-left: 5px;
   }
   .nav-stacked {
@@ -104,12 +104,12 @@
   margin-bottom: 50px;
 
   .about {
-    background-color: $secondary_background_color;
+    background-color: scale-color($primary, $lightness: 90%);
     background-position: center center;
     background-size: cover;
     margin-bottom: 10px;
     overflow: hidden;
-    color: $primary_text_color;
+    color: $primary;
 
     .details {
       text-align: center;
@@ -127,32 +127,32 @@
       }
 
       a[href] {
-        color: $primary_text_color;
+        color: $primary;
       }
 
       img.avatar {
-        border: 3px solid $primary_border_color;
+        border: 3px solid scale-color($primary, $lightness: 90%);
         margin-bottom: 4px;
       }
 
       .secondary {
-        background-color: $secondary_background_color;
+        background-color: $primary;
         text-align: left;
         padding: 0 10px;
 
         dd {
-          color: $tertiary_text_color;
+          color: $secondary;
           margin: 0 0 7px 0;
         }
         dt {
-          color: $secondary_text_color;
+          color: $primary;
           margin: 0;
         }
       }
     }
 
     .controls {
-      background-color: lighten($secondary_background_color, 60%);
+      background-color: scale-color($primary, $lightness: 75%);
       margin-top: 0;
       padding: 10px 10px 0 10px;
 
@@ -180,7 +180,7 @@
         .avatar {
           float: left;
           margin-right: 10px;
-          border: 2px solid $tertiary_border_color;
+          border: 2px solid $tertiary;
           width: 45px;
           height: 45px;
         }
@@ -205,14 +205,14 @@
       margin: 5px 0;
       font-size: 13px;
       word-wrap: break-word;
-      color: lighten($primary_text_color, 30%);
+      color: scale-color($primary, $lightness: 50%);
     }
     .item.moderator-action {
-      background-color: $emphasis_background_color;
+      background-color: scale-color($tertiary, $lightness: 40%);
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: $warning_background_color;
+      background-color: scale-color($danger, $lightness: 50%);
     }
     .item.hidden {
       display: block;
@@ -220,19 +220,19 @@
     }
     .item {
       padding: 10px 8px;
-      background-color: $primary_background_color;
-      border-bottom: 1px solid $primary_border_color;
+      background-color: $secondary;
+      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
     }
     .type {
-      color: lighten($primary_text_color, 40%);
+      color: scale-color($primary, $lightness: 50%);
     }
     span.name {
-      color: lighten($primary_text_color, 40%);
+      color: scale-color($primary, $lightness: 50%);
     }
     .time {
       display: block;
       float: right;
-      color: $secondary_text_color;
+      color: $primary;
       margin-right: 8px;
       font-size: 11px;
     }
@@ -246,7 +246,7 @@
       font-size: 14px;
     }
     .edit-reason {
-      background-color: $highlight_background_color;
+      background-color: scale-color($highlight, $lightness: 50%);
       padding: 3px 5px 5px 5px;
     }
   }

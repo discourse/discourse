@@ -15,11 +15,11 @@
   width: 610px;
   height: auto;
   margin: -250px 0 0 -305px;
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  border: 1px solid lighten($primary_border_color, 10%);
+  background-color: $secondary;
+  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color($primary, $lightness: 90%);
 
-  box-shadow: 0 3px 7px rgba($primary_shadow_color, .8);
+  box-shadow: 0 3px 7px rgba($primary, .8);
   background-clip: padding-box;
 
 }
@@ -57,9 +57,9 @@ animation: modal .25s;
   margin-left: -1px;
 }
 .modal-header {
-  border-bottom: 1px solid $primary_border_color;
+  border-bottom: 1px solid scale-color($primary, $lightness: 90%);
   h3 {
-    color: $nav-pills-background-color-active;
+    color: $danger;
     font-size: 20px;
     padding: 10px 15px 7px;
   }
@@ -68,10 +68,10 @@ animation: modal .25s;
     font-size: 20px;
     margin: 10px 10px 0;
     text-decoration: none;
-    color: $modal-close-button-color;
+    color: scale-color($primary, $lightness: 35%);
     cursor: pointer;
     &:hover {
-      color: darken($modal-close-button-color,20);
+      color: $primary;
     }
   }
 }
@@ -122,11 +122,11 @@ animation: modal .25s;
       li {
         margin: 0 4px 8px 0;
         a {
-          color: lighten($primary_text_color, 50%);
+          color: scale-color($primary, $lightness: 50%);
           cursor: pointer;
         }
         a:hover {
-          color: $primary_text_color;
+          color: scale-color($primary, $lightness: 40%);
         }
       }
     }

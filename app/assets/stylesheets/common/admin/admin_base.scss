@@ -8,10 +8,10 @@
   width: 100%;
   tr {text-align: left;}
   td, th {padding: 8px;}
-  th {border-top: 1px solid $primary_border_color;}
-  td {border-bottom: 1px solid $primary_border_color; border-top: 1px solid $primary_border_color;}
-  tr:hover { background-color: darken($primary_background_color, 2.5%); }
-  tr.selected { background-color: lighten($tertiary_background_color, 58%); }
+  th {border-top: 1px solid scale-color($primary, $lightness: 90%);}
+  td {border-bottom: 1px solid scale-color($primary, $lightness: 90%); border-top: 1px solid scale-color($primary, $lightness: 90%);}
+  tr:hover { background-color: darken($secondary, 2.5%); }
+  tr.selected { background-color: lighten($primary, 50%); }
   .filters input { margin-bottom: 0; }
 }
 
@@ -19,10 +19,10 @@
   font-size: 12px;
   float: right;
   margin-right: 10px;
-  background-color: lighten($secondary_background_color, 76%);
+  background-color: scale-color($primary, $lightness: 90%);
   padding: 2px 5px;
   border-radius: 5px;
-  color: $secondary_text_color;
+  color: $primary;
 }
 
 .admin-content {
@@ -52,11 +52,11 @@
 
       .bar {
         margin-top: 5px;
-        background-color: $emphasis_text_color;
+        background-color: $tertiary;
         display: inline-block;
         text-align: right;
         padding-right: 8px;
-        color: $tertiary_text_color;
+        color: $secondary;
       }
     }
   }
@@ -65,13 +65,13 @@
 .admin-loading {
   width: 100px;
   margin: 0 auto 30px auto;
-  background-color: $secondary_background_color;
+  background-color: $primary;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
   font-size: 15px;
   line-height: 23px;
   text-align: center;
-  color: $tertiary_text_color;
+  color: $secondary;
   background: {
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
@@ -85,16 +85,16 @@
 }
 
 .admin-controls {
-  background-color: darken($primary_background_color, 5%);
+  background-color: darken($secondary, 5%);
   padding: 10px 10px 3px 0;
   height: 35px;
   .nav.nav-pills {
     li.active {
       a {
-        border-color: darken($primary_border_color, 10%);
-        background-color: $tertiary_background_color;
+        border-color: scale-color($primary, $lightness: 90%);
+        background-color: lighten($primary, 40%);
         &:hover {
-          background-color: $tertiary_background_color;
+          background-color: lighten($primary, 40%);
         }
       }
     }
@@ -102,7 +102,7 @@
   h1 {
     font-size: 20px;
     line-height: 25px;
-    color: $secondary_text_color;
+    color: $primary;
   }
   .controls {
     margin-left: 10px;
@@ -153,8 +153,8 @@
     border-right: none;
   }
   li a.active {
-    color: $tertiary_text_color;
-    background-color: $nav-stacked-background-color-active;
+    color: $secondary;
+    background-color: $danger;
   }
 }
 
@@ -164,7 +164,7 @@
   @include small-width  { width: 700px; }
   min-height: 800px;
   margin-left: 0;
-  border-left: solid 1px lighten($nav-stacked-border-color, 5%);
+  border-left: solid 1px lighten($primary, 50%);
   padding: 30px 0 30px 30px;
 }
 
@@ -224,14 +224,14 @@
       .btn.list-add-value {
         margin: 0px 3px;
         padding: 4px 10px;
-        color: $link-color;
+        color: $tertiary;
       }
     }
 
 
     .desc {
       padding-top: 3px;
-      color: $secondary_text_color;
+      color: $primary;
       font-size: 80%;
       line-height: 1.4em;
     }
@@ -244,11 +244,11 @@
 
   .setting.overridden {
     input[type=text] {
-      background-color: lighten($highlight_background_color, 40%);
+      background-color: lighten($highlight, 23%);
     }
 
     h3 {
-      color: darken($highlight_text_color, 30%);
+      color: darken($highlight, 30%);
     }
   }
 }
@@ -256,21 +256,21 @@
 section.details {
   h1 {
     font-size: 15px;
-    background-color: lighten($secondary_background_color, 50%);
-    color: $tertiary_text_color;
+    background-color: lighten($primary, 50%);
+    color: $secondary;
     padding: 0 10px;
     margin: 0 0 5px 0;
   }
 }
 
 #selected-controls {
-  background-color: lighten($emphasis_background_color, 50%);
+  background-color: lighten($tertiary, 50%);
   padding: 8px;
   min-height: 27px;
   position: fixed;
   bottom: 0;
   width: 1075px;
-  border: 1px solid lighten($emphasis_border_color, 45%);
+  border: 1px solid lighten($tertiary, 45%);
 }
 
 .display-row {
@@ -280,9 +280,9 @@ section.details {
     border-top: 0;
   }
   &.highlight-danger {
-    background-color: $warning_background_color;
+    background-color: $danger;
   }
-  border-top: 1px solid $primary_border_color;
+  border-top: 1px solid scale-color($primary, $lightness: 90%);
   &:before, &:after {
     display: table;
     content: "";
@@ -364,7 +364,7 @@ section.details {
       padding: 5px 0 0 0;
       margin-left: 10px;
       width: 80px;
-      color: $secondary_text_color;
+      color: $primary;
     }
   }
 }
@@ -421,7 +421,7 @@ section.details {
         padding: 5px 0 0 0;
         margin-left: 10px;
         width: 80px;
-        color: $secondary_text_color;
+        color: $primary;
       }
     }
   }
@@ -441,7 +441,7 @@ section.details {
     .hex, .opacity { text-align: center; }
 
     .changed .name {
-      color: darken($highlight_text_color, 30%);
+      color: darken($highlight, 30%);
     }
   }
 }
@@ -450,10 +450,10 @@ section.details {
 .admin-flags {
 
   tr.hidden-post td.excerpt { opacity: 0.4;  }
-  tr.deleted td.excerpt { opacity: 0.8; background-color: $warning_background_color; }
+  tr.deleted td.excerpt { opacity: 0.8; background-color: scale-color($danger, $lightness: 30%); }
   td.message {
     padding: 4px 8px;
-    background-color: $highlight_background_color;
+    background-color:  lighten($highlight, 23%);
   }
   td { vertical-align: top; }
   th { text-align: left; }
@@ -533,13 +533,13 @@ section.details {
   }
 
   .up-to-date {
-    color: $success_text_color;
+    color: $success;
   }
   .updates-available {
-    color: $warning_text_color;
+    color: $danger;
   }
   .critical-updates-available {
-    color: $warning_text_color;
+    color: $danger;
   }
 }
 
@@ -582,24 +582,24 @@ table.api-keys {
 
     .title {
       i.fa {
-        color: $primary_text_color;
+        color: darken($primary, 40%);
       }
     }
 
     th {
       font-weight: normal;
       text-align: center;
-      background-color: lighten($secondary_background_color, 76%);
+      background-color: lighten($primary, 76%);
     }
     th.title {
       text-align: left;
     }
     thead {
       tr:hover > td {
-        background-color: $primary_background_color;
+        background-color: $secondary;
       }
       tr:hover > th {
-        background-color: lighten($secondary_background_color, 60%);
+        background-color: lighten($primary, 60%);
       }
     }
 
@@ -612,13 +612,13 @@ table.api-keys {
       }
 
       &.trending-up {
-        color: $success_text_color;
+        color: $success;
         i.up {
           display: inline;
         }
       }
       &.trending-down {
-        color: $warning_text_color;
+        color: $danger;
         i.down {
           display: inline;
         }
@@ -634,11 +634,10 @@ table.api-keys {
 
   &.detected-problems {
     @include border-radius-all(5px);
-    background-color: lighten($secondary_background_color, 76%);
-    border: 1px solid $primary_border_color;
+    background-color: scale-color($primary, $lightness: 90%);
     margin-bottom: 20px;
     margin-top: 10px;
-    box-shadow: inset 0 0 10px rgba($primary_border_color, .4);
+    box-shadow: inset 0 0 10px rgba($primary, .1);
 
     .look-here {
       float: left;
@@ -647,7 +646,7 @@ table.api-keys {
       .fa {
         font-size: 32px;
         vertical-align: middle;
-        color: $secondary_text_color
+        color: $primary
       }
     }
 
@@ -661,7 +660,7 @@ table.api-keys {
         text-align: right;
       }
       .btn {
-        background-color: lighten($secondary_background_color, 60%);
+        background-color: lighten($primary, 60%);
       }
       ul {
         margin-left: 0;
@@ -702,7 +701,7 @@ table.api-keys {
 
 
 .commits-widget {
-  border: solid 1px $primary_border_color;
+  border: solid 1px scale-color($primary, $lightness: 90%);
   width: 500px;
   height: 180px;
   margin-bottom: 36px;
@@ -722,7 +721,7 @@ table.api-keys {
     list-style: none;
   }
   a {
-    color: $primary_text_color;
+    color: darken($primary, 40%);
     text-decoration: none;
   }
   a:hover {
@@ -730,11 +729,10 @@ table.api-keys {
   }
 
   .header {
-    color: $primary_text_color;
+    color: darken($primary, 40%);
     font-weight: bold;
     height: 30px;
-    border-bottom: solid 1px $primary_border_color;
-    background-color: lighten($secondary_background_color, 60%);
+    background-color: lighten($primary, 60%);
     cursor: pointer;
 
     h1 {
@@ -746,7 +744,7 @@ table.api-keys {
   }
 
   .header:hover h1 {
-    color: $link-color-hover;
+    color: $tertiary;
   }
 
   .commits-list {
@@ -757,8 +755,7 @@ table.api-keys {
       @extend .clearfix;
       line-height: 1.0em;
       padding: 6px 8px;
-      border-bottom: solid 1px $primary_border_color;
-    background-color: lighten($secondary_background_color, 76%);
+    background-color: scale-color($primary, $lightness: 90%);
       .left {
         float: left;
       }
@@ -768,25 +765,25 @@ table.api-keys {
 
       img {
         margin-top: 2px;
-        border: solid 1px $primary_border_color;
+        border: solid 1px scale-color($primary, $lightness: 90%);
         padding: 2px;
-        background-color: $primary_background_color;
+        background-color: $secondary;
       }
 
       .commit-message {
-        color: $primary_text_color;
+        color: darken($primary, 40%);
         font-size: 12px;
         font-weight: bold;
       }
 
       .commit-meta {
-        color: $secondary_text_color;
+        color: $primary;
         font-size: 12px;
       }
 
       .committer-name {
         font-weight: bold;
-        color: $primary_text_color;
+        color: darken($primary, 40%);
       }
     }
     li:last-child {
@@ -799,18 +796,18 @@ table.api-keys {
     width: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: lighten($secondary_background_color, 60%);
+    background-color: lighten($primary, 60%);
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
-    border-left: solid 1px $primary_border_color;
+    border-left: solid 1px scale-color($primary, $lightness: 90%);
   }
 }
 
 .content-list {
 
   h3 {
-    color: $primary_text_color;
+    color: darken($primary, 40%);
     font-size: 15px;
     padding-left: 5px;
     margin-bottom: 10px;
@@ -821,25 +818,25 @@ table.api-keys {
     margin: 0;
 
     li:first-of-type {
-      border-top: 1px solid $primary_border_color;
+      border-top: 1px solid lighten($primary, 60%);
     }
     li {
-      border-bottom: 1px solid $primary_border_color;
+      border-bottom: 1px solid lighten($primary, 60%);
     }
 
     li a {
       display: block;
       padding: 10px;
-      color: $primary_text_color;
+      color: darken($primary, 40%);
 
       &:hover {
         background-color: #eee;
-        color: $primary_text_color;
+        color: darken($primary, 40%);
       }
 
       &.active {
         font-weight: bold;
-        color: $primary_text_color;
+        color: darken($primary, 40%);
       }
     }
   }
@@ -855,7 +852,7 @@ table.api-keys {
   margin-left: 20px;
 
   p.description {
-    color: $secondary_text_color;
+    color: $primary;
   }
 
   .controls {
@@ -990,14 +987,14 @@ table.api-keys {
   margin: 0 0 20px 6px;
   a.filter {
     display: inline-block;
-    background-color: lighten($secondary_background_color, 60%);
+    background-color: lighten($primary, 60%);
     padding: 3px 10px;
     border-radius: 3px;
 
-    color: $primary_text_color;
+    color: darken($primary, 40%);
     &:hover {
-      color: $primary_text_color;
-      background-color: lighten($secondary_background_color, 76%);
+      color: darken($primary, 40%);
+      background-color: lighten($primary, 76%);
 
 
     }
@@ -1027,11 +1024,11 @@ table.api-keys {
 
 .staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
 
-  border-bottom: dotted 1px $primary_border_color;
+  border-bottom: dotted 1px lighten($primary, 60%);
 
   .heading-container {
     width: 100%;
-    background-color: lighten($secondary_background_color, 76%);
+    background-color: lighten($primary, 60%);
   }
   .col.heading {
     font-weight: bold;
@@ -1047,7 +1044,7 @@ table.api-keys {
 
   .ember-list-item-view {
     width: 100%;
-    border-top: solid 1px $primary_border_color;
+    border-top: solid 1px lighten($primary, 60%);
   }
 }
 
@@ -1059,10 +1056,10 @@ table.api-keys {
 
 .leader-requirements {
   .fa-check {
-    color: $success_text_color;
+    color: $success;
   }
   .fa-times {
-    color: $warning_text_color;
+    color: $danger;
   }
 }
 
@@ -1074,7 +1071,7 @@ $rollback-dark: darken($rollback, 10%) !default;
 $rollback-darker: darken($rollback, 20%) !default;
 
 .btn-rollback {
-  color: $tertiary_text_color;
+  color: $secondary;
   background: $rollback;
   &:hover {
     background: $rollback-dark;
