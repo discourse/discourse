@@ -11,6 +11,13 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
   category: Em.computed.alias('controller.model'),
   hidden: Em.computed.alias('category.deleted'),
   templateName: 'category_notification_dropdown',
+
+  watchingClasses: 'fa fa-circle heatmap-high',
+  trackingClasses: 'fa fa-circle heatmap-low',
+  mutedClasses: 'fa fa-times-circle',
+  regularClasses: 'fa fa-circle-o',
+
+
   
   init: function() {
     this.display();
@@ -21,16 +28,17 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
     var contents = [];
 
     _.each([
-      ['WATCHING', 'watching'],
-      ['TRACKING', 'tracking'],
-      ['REGULAR', 'regular'],
-      ['MUTED', 'muted']
+      ['WATCHING', 'watching', this.watchingClasses],
+      ['TRACKING', 'tracking', this.trackingClasses],
+      ['REGULAR', 'regular', this.regularClasses],
+      ['MUTED', 'muted', this.mutedClasses]
     ], function(pair) {
 
       contents.push({
           id: Discourse.Category.NotificationLevel[pair[0]],
           title: I18n.t('category.notifications.' + pair[1] + '.title'),
-          description: I18n.t('category.notifications.' + pair[1] + '.description')
+          description: I18n.t('category.notifications.' + pair[1] + '.description'),
+          styleClasses: pair[2]
       }
         
         );
@@ -41,24 +49,21 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
 
   // displayed Button
   display: function() {
-    var key = (function() {
-      switch (this.get('category').notification_level) {
-        case Discourse.Category.NotificationLevel.WATCHING: return 'watching';
-        case Discourse.Category.NotificationLevel.TRACKING: return 'tracking';
-        case Discourse.Category.NotificationLevel.MUTED: return 'muted';
-        default: return 'regular';
-      }
-    }).call(this);
-
-    var icon = (function() {
-      switch (key) {
-        case 'watching': return 'fa fa-circle heatmap-high';
-        case 'tracking': return 'fa fa-circle heatmap-low';
-        case 'muted': return 'fa fa-times-circle';
-        default: return 'fa fa-circle-o';
-      }
-    })();
-
+    var icon = "";
+    switch (this.get('category').notification_level) {
+        case Discourse.Category.NotificationLevel.WATCHING:
+          icon = this.watchingClasses;
+          break;
+        case Discourse.Category.NotificationLevel.TRACKING:
+          icon = this.trackingClasses;
+          break;
+        case Discourse.Category.NotificationLevel.MUTED:
+          icon = this.mutedClasses;
+          break;
+        default:
+          icon = this.regularClasses;
+          break;
+    }
     this.set("icon", icon);
   },
 
