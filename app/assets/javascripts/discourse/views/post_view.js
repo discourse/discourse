@@ -36,10 +36,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   // If the cooked content changed, add the quote controls
   cookedChanged: function() {
-    var self = this;
-    Em.run.schedule('afterRender', function() {
-      self.insertQuoteControls();
-    });
+    Em.run.scheduleOnce('afterRender', this, 'insertQuoteControls');
   }.observes('post.cooked'),
 
   mouseUp: function(e) {
@@ -186,8 +183,13 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   // Add the quote controls to a post
   insertQuoteControls: function() {
-    var self = this;
-    return this.$('aside.quote').each(function(i, e) {
+    var self = this,
+        $quotes = this.$('aside.quote');
+
+    // Safety check - in some cases with cloackedView this seems to be `undefined`.
+    if (Em.isEmpty($quotes)) { return; }
+
+    $quotes.each(function(i, e) {
       var $aside = $(e);
       if ($aside.data('post')) {
         self.updateQuoteElements($aside, 'chevron-down');
@@ -242,6 +244,6 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     this.trigger('postViewInserted', $post);
 
     // Find all the quotes
-    this.insertQuoteControls();
+    Em.run.scheduleOnce('afterRender', this, 'insertQuoteControls');
   }
 });
