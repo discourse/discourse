@@ -211,7 +211,7 @@ a.star {
   }
 
   .domain {
-    scale-color($primary, $lightness: 90%);
+    color: scale-color($primary, $lightness: 90%);
   }
 
   .topic-links {
