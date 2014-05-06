@@ -183,7 +183,7 @@
     line-height: 15px;
   }
   .selected {
-    background-color: $tertiary;
+    background-color: scale-color($tertiary, $lightness: 75%);
   }
 
   // Notifications
@@ -193,7 +193,7 @@
       color: scale-color($primary, $lightness: 50%);
     }
     li {
-      background-color: $tertiary;
+      background-color: scale-color($tertiary, $lightness: 75%);
     }
     .read {
       background-color: $secondary;
