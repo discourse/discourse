@@ -176,6 +176,15 @@ describe UserNotifications do
       it "has a from alias" do
         expects_build_with(has_entry(:from_alias, "#{username}"))
       end
+
+      it "should explain how to respond" do
+        expects_build_with(Not(has_entry(:include_respond_instructions, false)))
+      end
+
+      it "should not explain how to respond if the user is suspended" do
+        User.any_instance.stubs(:suspended?).returns(true)
+        expects_build_with(has_entry(:include_respond_instructions, false))
+      end
     end
   end
 
