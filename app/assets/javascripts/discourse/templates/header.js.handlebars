@@ -11,7 +11,7 @@
           {{/if}}
           <h1>
             {{#if topic.isPrivateMessage}}
-              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
+              <span class="private-message-glyph">{{icon envelope}}</span>
             {{/if}}
           {{#if topic.category.parentCategory}}
             {{boundCategoryLink topic.category.parentCategory}}
@@ -42,16 +42,14 @@
       {{/unless}}
       {{#unless currentUser}}
         <button {{action showLogin}} class='btn btn-primary btn-small login-button'>
-          <i class="fa fa-user"></i>
-          {{i18n log_in}}
+          {{icon user}} {{i18n log_in}}
         </button>
       {{/unless}}
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
           <li class='notifications'>
             <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'>
-              <i class='fa fa-comment'></i>
-              <span class='sr-only'>{{i18n notifications.title}}</span>
+              {{icon comment label="notifications.title"}}
             </a>
             {{#if currentUser.unread_notifications}}
               <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
@@ -64,7 +62,7 @@
         <li>
           {{#if Discourse.loginRequired}}
             <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action showLogin}}>
-              <i class='fa fa-search'></i>
+              {{icon search}}
             </a>
           {{else}}
             <a id='search-button'
@@ -72,8 +70,7 @@
                href='#'
                data-dropdown="search-dropdown"
                title='{{i18n search.title}}'>
-               <i class='fa fa-search'></i>
-               <span class="sr-only">{{i18n search.title}}</span>
+               {{icon search label="search.title"}}
             </a>
           {{/if}}
         </li>
@@ -83,7 +80,7 @@
                href="#"
                aria-hidden="true"
                {{action showLogin}}>
-               <i class='fa fa-bars'></i>
+               {{icon bars}}
             </a>
           {{else}}
             <a class='icon'
@@ -92,8 +89,7 @@
                href="#"
                title='{{i18n site_map}}'
                id="site-map">
-               <i class='fa fa-bars'></i>
-               <span class="sr-only">{{i18n site_map}}</span>
+               {{icon bars label="site_map"}}
             </a>
           {{/if}}
           {{#if currentUser.site_flagged_posts_count}}
