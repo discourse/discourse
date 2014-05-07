@@ -21,7 +21,7 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
       twitter_screen_name: screen_name
     }
 
-    user_info = TwitterUserInfo.where(twitter_user_id: twitter_user_id).first
+    user_info = TwitterUserInfo.find_by(twitter_user_id: twitter_user_id)
 
     result.user = user_info.try(:user)
 

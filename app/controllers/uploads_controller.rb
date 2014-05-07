@@ -23,7 +23,7 @@ class UploadsController < ApplicationController
       url = request.fullpath
 
       # the "url" parameter is here to prevent people from scanning the uploads using the id
-      if upload = Upload.where(id: id, url: url).first
+      if upload = Upload.find_by(id: id, url: url)
         send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
       else
         render nothing: true, status: 404

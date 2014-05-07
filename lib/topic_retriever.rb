@@ -46,7 +46,7 @@ class TopicRetriever
     end
 
     def fetch_http
-      user = User.where(username_lower: SiteSetting.embed_by_username.downcase).first
+      user = User.find_by(username_lower: SiteSetting.embed_by_username.downcase)
       return if user.blank?
 
       TopicEmbed.import_remote(user, @embed_url)

@@ -23,7 +23,7 @@ describe TopicStatusUpdate do
 
     post.topic.posts.count.should == 2
 
-    tu = TopicUser.where(user_id: user.id).first
+    tu = TopicUser.find_by(user_id: user.id)
     tu.last_read_post_number.should == 2
   end
 end

@@ -41,7 +41,7 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def lookup_or_create_user
-    sso_record = SingleSignOnRecord.where(external_id: external_id).first
+    sso_record = SingleSignOnRecord.find_by(external_id: external_id)
 
     if sso_record && user = sso_record.user
       sso_record.last_payload = unsigned_payload
@@ -75,7 +75,7 @@ class DiscourseSingleSignOn < SingleSignOn
   private
 
   def match_email_or_create_user
-    user = User.where(email: Email.downcase(email)).first
+    user = User.find_by(email: Email.downcase(email))
 
     user_params = {
         email: email,

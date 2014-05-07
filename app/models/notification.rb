@@ -87,7 +87,7 @@ class Notification < ActiveRecord::Base
   def post
     return if topic_id.blank? || post_number.blank?
 
-    Post.where(topic_id: topic_id, post_number: post_number).first
+    Post.find_by(topic_id: topic_id, post_number: post_number)
   end
 
   def self.recent_report(user, count = nil)

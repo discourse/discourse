@@ -19,7 +19,7 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       github_screen_name: screen_name,
     }
 
-    user_info = GithubUserInfo.where(github_user_id: github_user_id).first
+    user_info = GithubUserInfo.find_by(github_user_id: github_user_id)
 
     if user_info
       user = user_info.user

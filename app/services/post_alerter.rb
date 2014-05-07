@@ -137,7 +137,7 @@ class PostAlerter
   # Returns a list of users who were quoted in the post
   def extract_quoted_users(post)
     post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.map do |m|
-      User.where("username_lower = :username and id != :id", username: m.first.strip.downcase, id: post.user_id).first
+      User.find_by("username_lower = :username and id != :id", username: m.first.strip.downcase, id: post.user_id)
     end.compact
   end
 

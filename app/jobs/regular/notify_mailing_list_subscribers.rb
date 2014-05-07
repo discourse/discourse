@@ -5,7 +5,7 @@ module Jobs
     def execute(args)
       post_id = args[:post_id]
       if post_id
-        post = Post.with_deleted.where(id: post_id).first
+        post = Post.with_deleted.find_by(id: post_id)
         return if post && post.trashed?
       end
 

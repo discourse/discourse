@@ -20,7 +20,7 @@ module SiteContentClassMethods
     replacements = {site_name: SiteSetting.title}.merge!(replacements)
     replacements = SiteSetting.settings_hash.merge!(replacements)
 
-    site_content = SiteContent.select(:content).where(content_type: content_type).first
+    site_content = SiteContent.select(:content).find_by(content_type: content_type)
 
     result = ""
     if site_content.blank?
@@ -39,7 +39,7 @@ module SiteContentClassMethods
 
 
   def find_or_new(content_type)
-    site_content = SiteContent.where(content_type: content_type).first
+    site_content = SiteContent.find_by(content_type: content_type)
     return site_content if site_content.present?
 
     site_content = SiteContent.new

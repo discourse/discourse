@@ -49,7 +49,7 @@ describe Upload do
   context "#create_for" do
 
     it "does not create another upload if it already exists" do
-      Upload.expects(:where).with(sha1: image_sha1).returns([upload])
+      Upload.expects(:find_by).with(sha1: image_sha1).returns(upload)
       Upload.expects(:save).never
       Upload.create_for(user_id, image, image_filename, image_filesize).should == upload
     end
@@ -95,18 +95,18 @@ describe Upload do
   context ".get_from_url" do
 
     it "works when the file has been uploaded" do
-      Upload.expects(:where).returns([]).once
+      Upload.expects(:find_by).returns(nil).once
       Upload.get_from_url("/uploads/default/1/10387531.jpg")
     end
 
     it "works when using a cdn" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      Upload.expects(:where).with(url: "/uploads/default/1/02395732905.jpg").returns([]).once
+      Upload.expects(:find_by).with(url: "/uploads/default/1/02395732905.jpg").returns(nil).once
       Upload.get_from_url("http://my.cdn.com/uploads/default/1/02395732905.jpg")
     end
 
     it "works only when the file has been uploaded" do
-      Upload.expects(:where).never
+      Upload.expects(:find_by).never
       Upload.get_from_url("http://domain.com/my/file.txt")
     end
 

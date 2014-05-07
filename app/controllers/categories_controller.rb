@@ -102,6 +102,6 @@ class CategoriesController < ApplicationController
     end
 
     def fetch_category
-      @category = Category.where(slug: params[:id]).first || Category.where(id: params[:id].to_i).first
+      @category = Category.find_by(slug: params[:id]) || Category.find_by(id: params[:id].to_i)
     end
 end

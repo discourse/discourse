@@ -444,7 +444,7 @@ class Topic < ActiveRecord::Base
   end
 
   def changed_to_category(cat)
-    return true if cat.blank? || Category.where(topic_id: id).first.present?
+    return true if cat.blank? || Category.find_by(topic_id: id).present?
 
     Topic.transaction do
       old_category = category
@@ -499,9 +499,9 @@ class Topic < ActiveRecord::Base
   def change_category(name)
     # If the category name is blank, reset the attribute
     if name.blank?
-      cat = Category.where(id: SiteSetting.uncategorized_category_id).first
+      cat = Category.find_by(id: SiteSetting.uncategorized_category_id)
     else
-      cat = Category.where(name: name).first
+      cat = Category.find_by(name: name)
     end
 
     return true if cat == category
@@ -511,9 +511,9 @@ class Topic < ActiveRecord::Base
 
 
   def remove_allowed_user(username)
-    user = User.where(username: username).first
+    user = User.find_by(username: username)
     if user
-      topic_user = topic_allowed_users.where(user_id: user.id).first
+      topic_user = topic_allowed_users.find_by(user_id: user.id)
       if topic_user
         topic_user.destroy
       else
@@ -556,7 +556,7 @@ class Topic < ActiveRecord::Base
   end
 
   def grant_permission_to_user(lower_email)
-    user = User.where(email: lower_email).first
+    user = User.find_by(email: lower_email)
     topic_allowed_users.create!(user_id: user.id)
   end
 

@@ -61,7 +61,7 @@ describe PostMover do
         let!(:new_topic) { topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id) }
 
         it "works correctly" do
-          TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
+          TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number.should == p3.post_number
 
           new_topic.should be_present
           new_topic.featured_user1_id.should == another_user.id
@@ -93,7 +93,7 @@ describe PostMover do
           topic.highest_post_number.should == p3.post_number
 
           # both the like and was_liked user actions should be correct
-          action = UserAction.where(user_id: another_user.id).first
+          action = UserAction.find_by(user_id: another_user.id)
           action.target_topic_id.should == new_topic.id
         end
       end
@@ -137,7 +137,7 @@ describe PostMover do
           topic.highest_post_number.should == p3.post_number
 
           # Should update last reads
-          TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
+          TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number.should == p3.post_number
         end
       end
 

@@ -25,9 +25,9 @@ class SearchController < ApplicationController
       # A user is found by username
       context_obj = nil
       if search_context[:type] == 'user'
-        context_obj = klass.where(username_lower: params[:search_context][:id].downcase).first
+        context_obj = klass.find_by(username_lower: params[:search_context][:id].downcase)
       else
-        context_obj = klass.where(id: params[:search_context][:id]).first
+        context_obj = klass.find_by(id: params[:search_context][:id])
       end
 
       guardian.ensure_can_see!(context_obj)

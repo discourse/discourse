@@ -56,9 +56,9 @@ class UserBadgesController < ApplicationController
       params.permit(:badge_name)
       if params[:badge_name].nil?
         params.require(:badge_id)
-        badge = Badge.where(id: params[:badge_id]).first
+        badge = Badge.find_by(id: params[:badge_id])
       else
-        badge = Badge.where(name: params[:badge_name]).first
+        badge = Badge.find_by(name: params[:badge_name])
       end
       raise Discourse::NotFound.new if badge.blank?
 

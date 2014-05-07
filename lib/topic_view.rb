@@ -185,7 +185,7 @@ class TopicView
   def topic_user
     @topic_user ||= begin
       return nil if @user.blank?
-      @topic.topic_users.where(user_id: @user.id).first
+      @topic.topic_users.find_by(user_id: @user.id)
     end
   end
 

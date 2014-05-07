@@ -240,7 +240,7 @@ describe Invite do
       end
 
       context 'invited by another user to the same topic' do
-        let(:coding_horror) { User.where(username: 'CodingHorror').first }
+        let(:coding_horror) { User.find_by(username: "CodingHorror") }
         let!(:another_invite) { topic.invite(coding_horror, 'jake@adventuretime.ooo') }
         let!(:user) { invite.redeem }
 
@@ -250,7 +250,7 @@ describe Invite do
       end
 
       context 'invited by another user to a different topic' do
-        let(:coding_horror) { User.where(username: 'CodingHorror').first }
+        let(:coding_horror) { User.find_by(username: "CodingHorror") }
         let(:another_topic) { Fabricate(:topic, archetype: "private_message", user: coding_horror) }
         let!(:another_invite) { another_topic.invite(coding_horror, 'jake@adventuretime.ooo') }
         let!(:user) { invite.redeem }

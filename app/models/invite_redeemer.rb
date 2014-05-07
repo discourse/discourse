@@ -57,7 +57,7 @@ InviteRedeemer = Struct.new(:invite) do
   end
 
   def get_existing_user
-    User.where(email: invite.email).first
+    User.find_by(email: invite.email)
   end
 
 

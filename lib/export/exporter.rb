@@ -65,7 +65,7 @@ module Export
     end
 
     def ensure_we_have_a_user
-      @user = User.where(id: @user_id).first
+      @user = User.find_by(id: @user_id)
       raise Discourse::InvalidParameters.new(:user_id) unless @user
     end
 

@@ -5,7 +5,7 @@ Post.reset_column_information
 if Topic.where('id NOT IN (SELECT topic_id from categories where topic_id is not null)').count == 0 && !Rails.env.test?
   puts "Seeding welcome topics"
 
-  staff = Category.where(id: SiteSetting.staff_category_id).first
+  staff = Category.find_by(id: SiteSetting.staff_category_id)
   welcome = File.read(Rails.root + 'docs/ADMIN-QUICK-START-GUIDE.md')
   PostCreator.create(Discourse.system_user, raw: welcome, title: "READ ME FIRST: Admin Quick Start Guide", skip_validations: true, category: staff ? staff.name : nil)
   PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: "Assets for the forum design", skip_validations: true, category: staff ? staff.name : nil)

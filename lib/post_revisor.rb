@@ -116,7 +116,7 @@ class PostRevisor
     return unless @post.post_number == 1
 
     # Is there a category with our topic id?
-    category = Category.where(topic_id: @post.topic_id).first
+    category = Category.find_by(topic_id: @post.topic_id)
     return unless category.present?
 
     # If found, update its description

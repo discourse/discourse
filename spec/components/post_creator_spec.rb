@@ -167,7 +167,7 @@ describe PostCreator do
         first_post = creator.create
 
         # ensure topic user is correct
-        topic_user = first_post.user.topic_users.where(topic_id: first_post.topic_id).first
+        topic_user = first_post.user.topic_users.find_by(topic_id: first_post.topic_id)
         topic_user.should be_present
         topic_user.should be_posted
         topic_user.last_read_post_number.should == first_post.post_number

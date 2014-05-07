@@ -17,7 +17,7 @@ class Upload < ActiveRecord::Base
   validates_with ::Validators::UploadValidator
 
   def thumbnail(width = self.width, height = self.height)
-    optimized_images.where(width: width, height: height).first
+    optimized_images.find_by(width: width, height: height)
   end
 
   def has_thumbnail?(width, height)
@@ -53,7 +53,7 @@ class Upload < ActiveRecord::Base
     # compute the sha
     sha1 = Digest::SHA1.file(file).hexdigest
     # check if the file has already been uploaded
-    upload = Upload.where(sha1: sha1).first
+    upload = Upload.find_by(sha1: sha1)
     # delete the previously uploaded file if there's been an error
     if upload && upload.url.blank?
       upload.destroy
@@ -112,7 +112,7 @@ class Upload < ActiveRecord::Base
   def self.get_from_url(url)
     # we store relative urls, so we need to remove any host/cdn
     url = url.gsub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
-    Upload.where(url: url).first if Discourse.store.has_been_uploaded?(url)
+    Upload.find_by(url: url) if Discourse.store.has_been_uploaded?(url)
   end
 
 end

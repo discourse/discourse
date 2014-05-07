@@ -99,7 +99,7 @@ class SiteCustomization < ActiveRecord::Base
     return preview_style if preview_style
 
     @lock.synchronize do
-      style = where(enabled: true).first
+      style = find_by(enabled: true)
       if style
         @cache[enabled_key] = style.key
       else
@@ -141,7 +141,7 @@ class SiteCustomization < ActiveRecord::Base
     return style if style
 
     @lock.synchronize do
-      style = where(key: key).first
+      style = find_by(key: key)
       style.ensure_stylesheets_on_disk! if style
       @cache[key] = style
     end

@@ -109,7 +109,7 @@ class Search
 
     # If we're searching for a single topic
     def single_topic(id)
-      topic = Topic.where(id: id).first
+      topic = Topic.find_by(id: id)
       return nil unless @guardian.can_see?(topic)
 
       @results.add_result(SearchResult.from_topic(topic))

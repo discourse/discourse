@@ -143,9 +143,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.remove_act(user, post, post_action_type_id)
-    if action = where(post_id: post.id,
-                      user_id: user.id,
-                      post_action_type_id: post_action_type_id).first
+    if action = find_by(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id)
       action.remove_act!(user)
     end
   end
@@ -319,7 +317,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.post_action_type_for_post(post_id)
-    post_action = PostAction.where(defer: nil, post_id: post_id, post_action_type_id: PostActionType.flag_types.values, deleted_at: nil).first
+    post_action = PostAction.find_by(defer: nil, post_id: post_id, post_action_type_id: PostActionType.flag_types.values, deleted_at: nil)
     PostActionType.types[post_action.post_action_type_id]
   end
 

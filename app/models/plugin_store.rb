@@ -1,14 +1,14 @@
 # API to wrap up plugin store rows
 class PluginStore
   def self.get(plugin_name, key)
-    if row = PluginStoreRow.where(plugin_name: plugin_name, key: key).first
+    if row = PluginStoreRow.find_by(plugin_name: plugin_name, key: key)
       cast_value(row.type_name, row.value)
     end
   end
 
   def self.set(plugin_name, key, value)
     hash = {plugin_name: plugin_name, key: key}
-    row = PluginStoreRow.where(hash).first || row = PluginStoreRow.new(hash)
+    row = PluginStoreRow.find_by(hash) || row = PluginStoreRow.new(hash)
 
     row.type_name = determine_type(value)
     # nil are stored as nil

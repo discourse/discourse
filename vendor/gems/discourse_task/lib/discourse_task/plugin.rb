@@ -59,7 +59,7 @@ module DiscourseTask
     module TopicsControllerMixin
 
       def complete
-        topic = Topic.where(id: params[:topic_id]).first
+        topic = Topic.find_by(id: params[:topic_id])
         guardian.ensure_can_complete_task!(topic)
 
         Topic.transaction do

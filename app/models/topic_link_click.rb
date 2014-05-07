@@ -33,7 +33,7 @@ class TopicLinkClick < ActiveRecord::Base
 
       # If we have it somewhere else on the site, just allow the redirect. This is
       # likely due to a onebox of another topic.
-      link = TopicLink.where(url: args[:url]).first
+      link = TopicLink.find_by(url: args[:url])
       return link.present? ? link.url : nil
     end
 

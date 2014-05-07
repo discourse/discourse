@@ -282,7 +282,7 @@ describe Topic do
 
 
   context 'private message' do
-    let(:coding_horror) { User.where(username: 'CodingHorror').first }
+    let(:coding_horror) { User.find_by(username: "CodingHorror") }
     let(:evil_trout) { Fabricate(:evil_trout) }
     let(:topic) { Fabricate(:private_message_topic) }
 
@@ -670,7 +670,7 @@ describe Topic do
       it 'updates the last_post_user_id to the second_user' do
         @topic.last_post_user_id.should == @second_user.id
         @topic.last_posted_at.to_i.should == @new_post.created_at.to_i
-        topic_user = @second_user.topic_users.where(topic_id: @topic.id).first
+        topic_user = @second_user.topic_users.find_by(topic_id: @topic.id)
         topic_user.posted?.should be_true
       end
 

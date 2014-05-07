@@ -24,7 +24,7 @@ class Invite < ActiveRecord::Base
   def user_doesnt_already_exist
     @email_already_exists = false
     return if email.blank?
-    u = User.where("email = ?", Email.downcase(email)).first
+    u = User.find_by("email = ?", Email.downcase(email))
     if u && u.id != self.user_id
       @email_already_exists = true
       errors.add(:email)
@@ -106,7 +106,7 @@ class Invite < ActiveRecord::Base
   end
 
   def self.invalidate_for_email(email)
-    i = Invite.where(email: Email.downcase(email)).first
+    i = Invite.find_by(email: Email.downcase(email))
     if i
       i.invalidated_at = Time.zone.now
       i.save

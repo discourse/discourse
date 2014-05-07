@@ -56,7 +56,7 @@ describe ColorSchemeRevisor do
             {name: color.name, hex: 'BEEF99', opacity: 99}
           ]))
         }.to change { color_scheme.reload.version }.by(1)
-        old_version = ColorScheme.where(versioned_id: color_scheme.id, version: color_scheme.version - 1).first
+        old_version = ColorScheme.find_by(versioned_id: color_scheme.id, version: (color_scheme.version - 1))
         old_version.should_not be_nil
         old_version.colors.count.should == color_scheme.colors.count
         old_version.colors_by_name[color.name].hex.should == old_hex

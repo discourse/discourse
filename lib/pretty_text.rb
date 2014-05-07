@@ -23,7 +23,7 @@ module PrettyText
     def avatar_template(username)
       return "" unless username
 
-      user = User.where(username_lower: username.downcase).first
+      user = User.find_by(username_lower: username.downcase)
       user.avatar_template if user.present?
     end
 

@@ -24,7 +24,7 @@ class TopicNotifier
   end
 
   def muted?(user_id)
-    tu = @topic.topic_users.where(user_id: user_id).first
+    tu = @topic.topic_users.find_by(user_id: user_id)
     tu && tu.notification_level == levels[:muted]
   end
 

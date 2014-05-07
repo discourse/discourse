@@ -23,7 +23,7 @@ module Jobs
     end
 
     def poll_feed
-      user = User.where(username_lower: SiteSetting.embed_by_username.downcase).first
+      user = User.find_by(username_lower: SiteSetting.embed_by_username.downcase)
       return if user.blank?
 
       require 'simple-rss'

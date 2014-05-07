@@ -105,7 +105,7 @@ class PostCreator
   def self.set_reply_user_id(post)
     return unless post.reply_to_post_number.present?
 
-    post.reply_to_user_id ||= Post.select(:user_id).where(topic_id: post.topic_id, post_number: post.reply_to_post_number).first.try(:user_id)
+    post.reply_to_user_id ||= Post.select(:user_id).find_by(topic_id: post.topic_id, post_number: post.reply_to_post_number).try(:user_id)
   end
 
   protected
@@ -148,15 +148,11 @@ class PostCreator
   def clear_possible_flags(topic)
     # at this point we know the topic is a PM and has been replied to ... check if we need to clear any flags
     #
-    first_post = Post.select(:id).where(topic_id: topic.id).where('post_number = 1').first
+    first_post = Post.select(:id).where(topic_id: topic.id).find_by("post_number = 1")
     post_action = nil
 
     if first_post
-      post_action = PostAction.where(
-        related_post_id: first_post.id,
-        deleted_at: nil,
-        post_action_type_id: PostActionType.types[:notify_moderators]
-      ).first
+      post_action = PostAction.find_by(related_post_id: first_post.id, deleted_at: nil, post_action_type_id: PostActionType.types[:notify_moderators])
     end
 
     if post_action
@@ -179,7 +175,7 @@ class PostCreator
         raise ex
       end
     else
-      topic = Topic.where(id: @opts[:topic_id]).first
+      topic = Topic.find_by(id: @opts[:topic_id])
       guardian.ensure_can_create!(Post, topic)
     end
     @topic = topic

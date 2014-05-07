@@ -11,8 +11,8 @@ module Jobs
       raise Discourse::InvalidParameters.new(:upload_id) if upload_id.blank?
       raise Discourse::InvalidParameters.new(:user_id) if user_id.blank?
 
-      upload = Upload.where(id: upload_id).first
-      user = User.where(id: user_id).first
+      upload = Upload.find_by(id: upload_id)
+      user = User.find_by(id: user_id)
       return if upload.nil? || user.nil?
 
       external_copy = Discourse.store.download(upload) if Discourse.store.external?
