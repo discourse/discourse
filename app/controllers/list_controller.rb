@@ -252,6 +252,7 @@ class ListController < ApplicationController
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
+    @description_meta = @category.description
 
     guardian.ensure_can_see!(@category)
 

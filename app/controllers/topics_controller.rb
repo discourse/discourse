@@ -373,6 +373,7 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
+        @description_meta = @topic_view.topic.excerpt
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
       end
 
