@@ -132,7 +132,7 @@ module Discourse
     # Use redis for our cache
     config.cache_store = DiscourseRedis.new_redis_store
     $redis = DiscourseRedis.new
-    Logster.store = Logster::RedisStore.new($redis)
+    Logster.store = Logster::RedisStore.new(DiscourseRedis.new)
 
     # we configure rack cache on demand in an initializer
     # our setup does not use rack cache and instead defers to nginx

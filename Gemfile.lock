@@ -47,7 +47,6 @@ GEM
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
     arel (4.0.2)
-    atomic (1.1.16)
     barber (0.4.2)
       ember-source
       execjs
@@ -170,7 +169,7 @@ GEM
     mock_redis (0.11.0)
     moneta (0.7.20)
     msgpack (0.5.8)
-    multi_json (1.9.2)
+    multi_json (1.10.0)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     mustache (0.99.5)
@@ -260,7 +259,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     raindrops (0.13.0)
-    rake (10.1.1)
+    rake (10.3.1)
     rake-compiler (0.9.2)
       rake
     rb-fsevent (0.9.4)
@@ -362,9 +361,8 @@ GEM
       daemons (>= 1.0.9)
       eventmachine (>= 1.0.0)
       rack (>= 1.0.0)
-    thor (0.18.1)
-    thread_safe (0.2.0)
-      atomic (>= 1.1.7, < 2)
+    thor (0.19.1)
+    thread_safe (0.3.3)
     tilt (1.4.1)
     timecop (0.7.1)
     timers (1.1.0)
