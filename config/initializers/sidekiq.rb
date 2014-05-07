@@ -42,3 +42,19 @@ if Sidekiq.server?
 end
 
 Sidekiq.logger.level = Logger::WARN
+
+class LogsterErrorHandler
+  def call(ex, hash={})
+    text = "exception: #{ex}\ncontext: #{hash.inspect}\n"
+    if ex.backtrace
+      text << "backtrace: #{ex.backtrace.join("\n")}"
+    end
+    Rails.logger.error(text)
+  rescue => e
+    Rails.logger.fatal("Failed to log exception #{ex} #{hash}\nReason: #{e}\n#{e.backtrace.join("\n")}")
+  end
+end
+
+Sidekiq.error_handlers << LogsterErrorHandler.new
+
+

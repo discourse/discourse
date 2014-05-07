@@ -26,7 +26,7 @@
   height: 20px;
   margin-right: 8px;
   margin-left: 5px;
-  background-color: lighten($primary_background_color, 50%);
+  background-color: scale-color($primary, $lightness: 90%);
   display: inline-block;
   float: left;
 }
@@ -63,7 +63,7 @@
 }
 
 .wmd-button:hover {
-  background-color: lighten($secondary_background_color, 60%);
+  background-color: scale-color($primary, $lightness: 90%);
 }
 
 
@@ -121,12 +121,12 @@
 }
 
 .wmd-prompt-background {
-  background-color: $secondary_background_color;
+  background-color: $primary;
 }
 
 .wmd-prompt-dialog {
-  border: 1px solid $primary_border_color;
-  background-color: lighten($secondary_background_color, 60%);
+  border: 1px solid scale-color($primary, $lightness: 90%);
+  background-color: scale-color($primary, $lightness: 90%);
 }
 
 .wmd-prompt-dialog > div {
@@ -135,12 +135,12 @@
 }
 
 .wmd-prompt-dialog > form > input[type="text"] {
-  border: 1px solid $primary_border_color;
-  color: $primary_text_color;
+  border: 1px solid scale-color($primary, $lightness: 90%);
+  color: $primary;
 }
 
 .wmd-prompt-dialog > form > input[type="button"] {
-  border: 1px solid $primary_border_color;
+  border: 1px solid scale-color($primary, $lightness: 90%);
   font-family: trebuchet MS, helvetica, sans-serif;
   font-size: 0.8em;
   font-weight: bold;

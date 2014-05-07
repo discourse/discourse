@@ -215,7 +215,9 @@ class Guardian
     # PMs are enabled
     (SiteSetting.enable_private_messages ||
       @user.username == SiteSetting.site_contact_username ||
-      @user == Discourse.system_user)
+      @user == Discourse.system_user) &&
+    # Can't send PMs to suspended users
+    (is_staff? || target.is_a?(Group) || !target.suspended?)
   end
 
   private

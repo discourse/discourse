@@ -7,6 +7,6 @@
     line-height: 18px;
   }
   .description {
-    color: lighten($primary_text_color, 35%);
+    color: scale-color($primary, $lightness: 50%);
   }
 }

@@ -16,7 +16,7 @@
 
 #login-form {
   a {
-    color: $secondary_text_color;
+    color: $primary;
     cursor: pointer;
   }
   label {float: left; display: block;}
@@ -33,7 +33,7 @@ a#new-account-link { white-space:nowrap; }
 
 a#forgot-password-link {clear: left; float: left; }
 
-.btn-primary {margin-bottom: 10px; font-size: 15; clear: left; float: left;}
+.btn-primary {margin-bottom: 10px; font-size: 15; float: left;}
 
 .create-account .modal-body {
   input[type=text], input[type=password] {

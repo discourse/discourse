@@ -56,21 +56,21 @@ body {
     height: 100%;
     @include border-radius-all(5px);
     &.white {
-      background-color: $primary_background_color;
+      background-color: $secondary;
     }
   }
   #main {
     .fa-star.starred {
-      color: $warning_text_color;
+      color: $danger;
     }
     a.star {
-      color: lighten($primary_text_color, 60%);
+      color: scale-color($primary, $lightness: 75%);
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
       }
       &.starred {
-        color: $warning_text_color;
+        color: $danger;
         @include hover {
           opacity: 1;
           &:before {
@@ -113,22 +113,22 @@ body {
 
   .grippie {
     width: 100%;
-    border: 1px solid $primary_border_color;
+    border: 1px solid scale-color($primary, $lightness: 90%);
     border-width: 1px 0;
     cursor: row-resize;
     height: 11px;
     overflow: hidden;
-    background-color: lighten($secondary_background_color, 60%);
+    background-color: scale-color($primary, $lightness: 95%);
     display:block;
-    background: image-url("grippie.png") lighten($secondary_background_color, 76%) no-repeat center 3px;
+    background: image-url("grippie.png") scale-color($primary, $lightness: 95%) no-repeat center 3px;
   }
 }
 
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
   padding: 10px 4px 4px 13px;
-  background-color: $quote-background;
-  border-left: 5px solid $primary_border_color;
+  background-color: scale-color($primary, $lightness: 95%);
+  border-left: 5px solid scale-color($primary, $lightness: 75%);
 }
 
 .topic-statuses {
@@ -150,7 +150,7 @@ blockquote {
 body {
 
   input, textarea, select {
-    color: $primary_text_color;
+    color: $primary;
   }
 
   code, pre {
@@ -203,7 +203,7 @@ body {
     margin-bottom: 9px;
     font-size: 13px;
     line-height: 18px;
-    color: $primary_text_color;
+    color: $primary;
   }
   input {
     &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
@@ -213,7 +213,7 @@ body {
       margin-bottom: 9px;
       font-size: 13px;
       line-height: 18px;
-      color: $primary_text_color;
+      color: $primary;
     }
   }
   input {
@@ -222,33 +222,33 @@ body {
   textarea {
     width: 210px;
     height: auto;
-    background-color:$primary_background_color;
-    border: 1px solid $primary_border_color;
+    background-color:$secondary;
+    border: 1px solid scale-color($primary, $lightness: 90%);
     border-radius: 3px;
-    box-shadow: inset 0 1px 1px rgba($primary_shadow_color, .3);
+    box-shadow: inset 0 1px 1px rgba($primary, .3);
     -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
     transition: border linear 0.2s, box-shadow linear 0.2s;
   }
   input {
     &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
-      background-color: $primary_background_color;
-      border: 1px solid $primary_border_color;
+      background-color: $secondary;
+      border: 1px solid scale-color($primary, $lightness: 90%);
       border-radius: 3px;
-    box-shadow: inset 0 1px 1px rgba($primary_shadow_color, .3);
+    box-shadow: inset 0 1px 1px rgba($primary, .3);
       -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
       transition: border linear 0.2s, box-shadow linear 0.2s;
     }
   }
   textarea:focus {
-    border-color: $emphasis_border_color;
+    border-color: $tertiary;
     outline: 0;
-    box-shadow: inset 0 1px 1px rgba($primary_shadow_color, .3), 0 0 8px $emphasis_border_color;
+    box-shadow: inset 0 1px 1px rgba($primary, .3), 0 0 8px $tertiary;
   }
   input {
     &[type="text"]:focus, &[type="password"]:focus, &[type="datetime"]:focus, &[type="datetime-local"]:focus, &[type="date"]:focus, &[type="month"]:focus, &[type="time"]:focus, &[type="week"]:focus, &[type="number"]:focus, &[type="email"]:focus, &[type="url"]:focus, &[type="search"]:focus, &[type="tel"]:focus, &[type="color"]:focus {
-      border-color: $emphasis_border_color;
+      border-color: $tertiary;
       outline: 0;
-      box-shadow: inset 0 1px 1px rgba($primary_shadow_color, .3), 0 0 8px $emphasis_border_color;
+      box-shadow: inset 0 1px 1px rgba($primary, .3), 0 0 8px $tertiary;
     }
   }
 
@@ -269,7 +269,7 @@ body {
 
   select {
     width: 220px;
-    border: 1px solid $primary_border_color;
+    border: 1px solid scale-color($primary, $lightness: 90%);
     &[multiple], &[size] {
       height: auto;
     }
@@ -319,8 +319,8 @@ body {
   }
   input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
     cursor: not-allowed;
-    background-color: lighten($secondary_background_color, 76%);
-    border-color: $primary_border_color;
+    background-color: scale-color($primary, $lightness: 90%);
+    border-color: scale-color($primary, $lightness: 90%);
   }
   input {
     &[type="radio"][disabled], &[type="checkbox"][disabled], &[type="radio"][readonly], &[type="checkbox"][readonly] {
@@ -330,66 +330,66 @@ body {
   .control-group {
     &.warning {
       > label {
-        color: $warning_text_color;
+        color: $danger;
       }
       .checkbox, .radio, input, select, textarea {
-        color: $warning_text_color;
-        border-color: $warning_border_color;
+        color: $danger;
+        border-color: $danger;
       }
       .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: darken($warning_border_color, 25%);
-        box-shadow: 0 0 6px $warning_shadow_color;
+        border-color: scale-color($danger, $lightness: -30%);
+        box-shadow: 0 0 6px $danger;
       }
       .input-prepend .add-on, .input-append .add-on {
-        color: $warning_text_color;
-        background-color: $warning_background_color;
-        border-color: $warning_border_color;
+        color: $danger;
+        background-color: $danger;
+        border-color: $danger;
       }
     }
     &.error {
       > label {
-        color: $warning_text_color;
+        color: $danger;
       }
       .checkbox, .radio, input, select, textarea {
-        color: $warning_text_color;
-        border-color: $warning_border_color;
+        color: $danger;
+        border-color: $danger;
       }
       .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: darken($warning_border_color, 20%);
-        box-shadow: 0 0 6px $warning_shadow_color;
+        border-color: scale-color($danger, $lightness: -30%);
+        box-shadow: 0 0 6px $danger;
       }
       .input-prepend .add-on, .input-append .add-on {
-        color: $warning_text_color;
-        background-color: $warning_background_color;
-        border-color: darken($warning_border_color, 10%);
+        color: $danger;
+        background-color: scale-color($danger, $lightness: 30%);
+        border-color: scale-color($danger, $lightness: -20%);
       }
     }
     &.success {
       > label {
-        color: $success_text_color;
+        color: $success;
       }
       .checkbox, .radio, input, select, textarea {
-        color: $success_text_color;
-        border-color: $success_border_color;
+        color: $success;
+        border-color: $success;
       }
       .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: $success_border_color;
-        box-shadow: 0 0 6px $success_shadow_color;
+        border-color: $success;
+        box-shadow: 0 0 6px $success;
       }
       .input-prepend .add-on, .input-append .add-on {
-        color: $success_text_color;
-        background-color: $success_background_color;
-        border-color: $success_border_color;
+        color: $success;
+        background-color:  scale-color($success, $lightness: 90%);
+        border-color: $success;
       }
     }
   }
   input:focus:required:invalid, textarea:focus:required:invalid, select:focus:required:invalid {
-    color: $warning_text_color;
-    border-color: $warning_border_color;
+    color: $danger;
+    border-color: $danger;
   }
   input:focus:required:invalid:focus, textarea:focus:required:invalid:focus, select:focus:required:invalid:focus {
-    border-color: $warning_border_color;
-    box-shadow: 0 0 6px $warning_shadow_color;
+    border-color: $danger;
+    box-shadow: 0 0 6px $danger;
   }
 
   .input-prepend, .input-append {
@@ -414,16 +414,16 @@ body {
     line-height: 18px;
     text-align: center;
     vertical-align: middle;
-    background-color: $primary_background_color;
-    border: 1px solid $primary_border_color;
+    background-color: $secondary;
+    border: 1px solid scale-color($primary, $lightness: 90%);
   }
   .input-prepend .add-on, .input-append .add-on, .input-prepend .btn, .input-append .btn {
     margin-left: -1px;
     border-radius: 0;
   }
   .input-prepend .active, .input-append .active {
-    background-color: $warning_background_color;
-    border-color: $warning_border_color;
+    background-color: scale-color($danger, $lightness: 30%);
+    border-color: $danger;
   }
   .input-prepend {
     .add-on, .btn {
@@ -498,8 +498,7 @@ body {
   .alert {
     padding: 8px 35px 8px 14px;
     margin-bottom: 18px;
-    background-color: $warning_background_color;
-    border: 1px solid $warning_border_color;
+    background-color: scale-color($danger, $lightness: 75%);
     color: #c09853;
   }
   .alert .close {
@@ -509,19 +508,16 @@ body {
     line-height: 18px;
   }
   .alert-success {
-    background-color: $success_background_color;
-    border-color: $success_border_color;
-    color: $success_text_color;
+    background-color:  scale-color($success, $lightness: 90%);
+    color: $success;
   }
   .alert-error {
-    background-color: $warning_background_color;
-    border-color: $warning_border_color;
-    color: $warning_text_color;
+    background-color:  scale-color($danger, $lightness: 75%);
+    color: $danger;
   }
   .alert-info {
-    background-color: $emphasis_background_color;
-    border-color: $emphasis_background_color;
-    color: $primary_text_color;
+    background-color: scale-color($tertiary, $lightness: 90%);
+    color: $primary;
   }
   .alert {
     .close {
@@ -529,11 +525,11 @@ body {
       font-size: 20px;
       font-weight: bold;
       line-height: 18px;
-      color: $primary_text_color;
+      color: $primary;
       opacity: 0.2;
       filter: alpha(opacity = 20);
       @include hover {
-        color: $primary_text_color;
+        color: $primary;
         text-decoration: none;
         cursor: pointer;
         opacity: 0.4;
@@ -551,7 +547,7 @@ body {
   .bootbox.modal {
     .modal-footer {
       a.btn-primary {
-        color: $tertiary_text_color;
+        color: $secondary;
       }
     }
   }

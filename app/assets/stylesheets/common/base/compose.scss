@@ -2,28 +2,28 @@
   z-index: 999999;
   position: absolute;
   width: 240px;
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
+  background-color: $secondary;
+  border: 1px solid scale-color($primary, $lightness: 90%);
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     li {
-      border-bottom: 1px solid $primary_border_color;
+      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
       a[href] {
         padding: 5px;
         display: block;
         span.username {
-          color: $primary_text_color;
+          color: darken($primary, 40%);
         }
         span.name {
           font-size: 11px;
         }
         &.selected {
-          background-color: lighten($secondary_background_color, 60%);
+          background-color: scale-color($primary, $lightness: 90%);
         }
         @include hover {
-          background-color: lighten($secondary_background_color, 60%);
+          background-color: scale-color($primary, $lightness: 90%);
           text-decoration: none;
         }
       }
@@ -42,8 +42,8 @@ div.ac-wrap.disabled {
 
 
 div.ac-wrap {
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
+  background-color: $secondary;
+  border: 1px solid scale-color($primary, $lightness: 90%);
   padding: 5px 10px;
   div.item {
     float: left;
@@ -64,12 +64,12 @@ div.ac-wrap {
       border-radius: 10px;
       width: 10px;
       display: inline-block;
-      border: 1px solid $primary_border_color;
+      border: 1px solid scale-color($primary, $lightness: 90%);
       &:hover {
-        background-color: $warning_background_color;
-        border: 1px solid $warning_border_color;
+        background-color: scale-color($danger, $lightness: 75%);
+        border: 1px solid scale-color($danger, $lightness: 30%);
         text-decoration: none;
-        color: $warning_text_color;
+        color: $danger;
       }
     }
   }
@@ -94,7 +94,7 @@ div.ac-wrap {
   }
   .examples {
     margin: 10px 0 0 0;
-    color: $secondary_text_color;
+    color: $primary;
   }
 }
 

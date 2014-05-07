@@ -13,14 +13,14 @@ a.loading-onebox {
 .onebox-result {
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid $primary_border_color;
-  background: lighten($secondary_background_color, 76%);
+  border-left: 5px solid scale-color($primary, $lightness: 75%);
+  background: scale-color($primary, $lightness: 95%);
   font-size: 14px;
   > .source {
     margin-bottom: 12px;
     margin-right: 10px;
     display: block;
-    color: $primary_text_color;
+    color: $primary;
     position: relative;
     height: 20px;
     .info {
@@ -91,13 +91,13 @@ a.loading-onebox {
 aside.onebox {
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid $primary_border_color;
-  background: lighten($secondary_background_color, 76%);
+  border-left: 5px solid scale-color($primary, $lightness: 90%);
+  background: scale-color($primary, $lightness: 90%);
   font-size: 14px;
 
   header {
     a[href] {
-      color: $primary_text_color;
+      color: $primary;
       text-decoration: none;
     }
   }
@@ -118,12 +118,12 @@ aside.onebox {
     }
 
     a[href] {
-      color: $link_color;
+      color: scale-color($tertiary, $lightness: -20%);
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: $link_color;
+      color: scale-color($tertiary, $lightness: -20%);
     }
 
     img {

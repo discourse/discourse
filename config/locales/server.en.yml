@@ -679,7 +679,6 @@ en:
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
     redirect_users_to_top_page: "Automatically redirect new & long-time-no-see users to top page"
-    redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
 
     enable_badges: "Enable the badge system (experimental)"
 
@@ -864,7 +863,7 @@ en:
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists"
     min_posts_for_search_in_topic: "Disable search within topic if topics have less than minimum number posts"
 
-    global_notice: "Display a global banner to all users of the site, change to blank to hide it (HTML is allowed)"
+    global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
 
     enable_names: "Allow users to show their full names"
     display_name_on_posts: "Also show a user's full name on their posts"
@@ -1381,8 +1380,8 @@ en:
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"
-      more_topics: "%{new_topics_since_seen} new topics posted since you last visited on %{last_seen_at}."
-      more_topics_category: "%{new_topics_since_seen} new topics posted in these categories since you last visited on %{last_seen_at}:"
+      more_topics: "There were %{new_topics_since_seen} new topics posted since you last visited on %{last_seen_at}."
+      more_topics_category: "There were %{new_topics_since_seen} new topics posted in these categories since you last visited on %{last_seen_at}:"
 
       posts:
         one: "1 post"

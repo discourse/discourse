@@ -57,6 +57,17 @@ Discourse.URL = Em.Object.createWithMixins({
       return;
     }
 
+    // Scroll to the same page, differnt anchor
+    if (path.indexOf('#') === 0) {
+      var $elem = $(path);
+      if ($elem.length > 0) {
+        Em.run.schedule('afterRender', function() {
+          $('html,body').scrollTop($elem.offset().top - $('header').height() - 15);
+        });
+      }
+      return;
+    }
+
     var oldPath = window.location.pathname;
     path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
 

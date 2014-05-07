@@ -1100,59 +1100,67 @@ describe User do
 
   end
 
-  describe "redirected_to_top_reason" do
+  describe ".redirected_to_top_reason" do
     let!(:user) { Fabricate(:user) }
 
-    it "should have no reason when redirect_users_to_top_page is disabled" do
+    it "should have no reason when `SiteSetting.redirect_users_to_top_page` is disabled" do
       SiteSetting.expects(:redirect_users_to_top_page).returns(false)
       user.redirected_to_top_reason.should == nil
     end
 
-    context "redirect_users_to_top_page is enabled" do
-      before { SiteSetting.stubs(:redirect_users_to_top_page).returns(true) }
+    context "when `SiteSetting.redirect_users_to_top_page` is enabled" do
+      before { SiteSetting.expects(:redirect_users_to_top_page).returns(true) }
 
-      it "should have no reason when top is not in the top_menu" do
+      it "should have no reason when top is not in the `SiteSetting.top_menu`" do
         SiteSetting.expects(:top_menu).returns("latest")
         user.redirected_to_top_reason.should == nil
       end
 
-      it "should have no reason when there isn't enough topics" do
-        SiteSetting.expects(:top_menu).returns("latest|top")
-        SiteSetting.expects(:has_enough_topics_to_redirect_to_top).returns(false)
-        user.redirected_to_top_reason.should == nil
-      end
+      context "and when top is in the `SiteSetting.top_menu`" do
+        before { SiteSetting.expects(:top_menu).returns("latest|top") }
 
-      describe "new users" do
-        before do
-          user.expects(:trust_level).returns(0)
-          user.stubs(:last_seen_at).returns(1.day.ago)
-          SiteSetting.expects(:top_menu).returns("latest|top")
-          SiteSetting.expects(:has_enough_topics_to_redirect_to_top).returns(true)
-          SiteSetting.expects(:redirect_new_users_to_top_page_duration).returns(7)
-        end
-
-        it "should have a reason for newly created user" do
-          user.expects(:created_at).returns(5.days.ago)
-          user.redirected_to_top_reason.should == I18n.t('redirected_to_top_reasons.new_user')
-        end
-
-        it "should not have a reason for newly created user" do
-          user.expects(:created_at).returns(10.days.ago)
+        it "should have no reason when there aren't enough topics" do
+          SiteSetting.expects(:has_enough_topics_to_redirect_to_top).returns(false)
           user.redirected_to_top_reason.should == nil
         end
-      end
 
-      describe "old users" do
-        before do
-          user.stubs(:trust_level).returns(1)
-          SiteSetting.expects(:top_menu).returns("latest|top")
-          SiteSetting.expects(:has_enough_topics_to_redirect_to_top).returns(true)
+        context "and when there are enough topics" do
+          before { SiteSetting.expects(:has_enough_topics_to_redirect_to_top).returns(true) }
+
+          describe "a new user" do
+            before do
+              user.stubs(:trust_level).returns(0)
+              user.stubs(:last_seen_at).returns(5.minutes.ago)
+            end
+
+            it "should have a reason for the first visit" do
+              user.expects(:last_redirected_to_top_at).returns(nil)
+              user.expects(:update_last_redirected_to_top!).once
+
+              user.redirected_to_top_reason.should == I18n.t('redirected_to_top_reasons.new_user')
+            end
+
+            it "should not have a reason for next visits" do
+              user.expects(:last_redirected_to_top_at).returns(10.minutes.ago)
+              user.expects(:update_last_redirected_to_top!).never
+
+              user.redirected_to_top_reason.should == nil
+            end
+          end
+
+          describe "an older user" do
+            before { user.stubs(:trust_level).returns(1) }
+
+            it "should have a reason when the user hasn't been seen in a month" do
+              user.last_seen_at = 2.months.ago
+              user.expects(:update_last_redirected_to_top!).once
+
+              user.redirected_to_top_reason.should == I18n.t('redirected_to_top_reasons.not_seen_in_a_month')
+            end
+          end
+
         end
 
-        it "should have a reason for long-time-no-see users" do
-          user.last_seen_at = 2.months.ago
-          user.redirected_to_top_reason.should == I18n.t('redirected_to_top_reasons.not_seen_in_a_month')
-        end
       end
 
     end

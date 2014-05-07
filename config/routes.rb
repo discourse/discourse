@@ -16,6 +16,11 @@ Discourse::Application.routes.draw do
 
   mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
 
+  if Rails.env.production?
+    require 'logster/middleware/viewer'
+    mount Logster::Middleware::Viewer.new(nil) => "/logs", constraints: AdminConstraint.new
+  end
+
   get "site" => "site#index"
 
   resources :forums

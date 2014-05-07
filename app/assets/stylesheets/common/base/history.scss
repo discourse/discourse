@@ -8,7 +8,7 @@
   #revision-controls {
     float: left;
     .btn[disabled]:hover {
-      color: lighten($primary_text_color, 35%);
+      color: $primary;
     }
   }
   #revision-numbers {
@@ -27,7 +27,7 @@
     }
   }
   #revision-details {
-    background-color: lighten($secondary_background_color, 76%);
+    background-color: scale-color($primary, $lightness: 90%);
     padding: 5px;
     margin-top: 10px;
   }
@@ -67,63 +67,63 @@
   }
   ins, .diff-ins {
     code, img {
-      border: 2px solid $success_border_color;
+      border: 2px solid $success;
     }
     img {
       opacity: .75;
       filter: alpha(opacity=75);
     }
     a {
-      color: $success_text_color;
+      color: $success;
       text-decoration: none;
     }
   }
   img.diff-ins, code.diff-ins {
-    border: 2px solid $success_border_color;
+    border: 2px solid $success;
   }
   img.diff-ins {
     opacity: .75;
     filter: alpha(opacity=75);
   }
   .diff-ins {
-    background: $success_background_color;
+    background: scale-color($success, $lightness: 90%);
   }
   ins {
-    color: $success_text_color;
-    background: $success_background_color;
+    color: $success;
+    background: scale-color($success, $lightness: 90%);
   }
   del, .diff-del {
     code, img {
-      border: 2px solid $warning_border_color;
+      border: 2px solid $danger;
     }
     img {
       opacity: .5;
       filter: alpha(opacity=50);
     }
     a {
-      color: $warning_text_color;
+      color: $danger;
       text-decoration: none;
     }
   }
   img.diff-del, code.diff-del {
-    border: 2px solid $warning_border_color;
+    border: 2px solid $danger;
   }
   img.diff-del {
     opacity: .5;
     filter: alpha(opacity=50);
   }
   .diff-del {
-    background: $warning_background_color;
+    background: scale-color($danger, $lightness: 60%);
   }
   del {
-    color: $warning_text_color;
-    background: $warning_background_color;
+    color: $danger;
+    background: scale-color($danger, $lightness: 60%);
   }
   span.date {
     font-weight: bold;
   }
   span.edit-reason {
-    background-color: $highlight_background_color;
+    background-color: lighten($highlight, 23%);
     padding: 3px 5px 5px 5px;
   }
   .modal-header {

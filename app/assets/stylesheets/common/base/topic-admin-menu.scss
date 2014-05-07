@@ -8,10 +8,10 @@
 }
 
 .topic-admin-menu {
-  background-color: $primary_background_color;
+  background-color: $secondary;
   width: 205px;
   padding: 10px;
-  border: 1px solid $primary_border_color;
+  border: 1px solid scale-color($primary, $lightness: 90%);
   position: fixed;
   top: 70px;
   right: 10px;

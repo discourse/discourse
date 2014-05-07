@@ -2,7 +2,6 @@
 // Variables used throughout the theme
 // --------------------------------------------------
 
-
 // Layout dimensions
 // --------------------------------------------------
 
@@ -10,17 +9,8 @@ $small-width: 950px !default;
 $medium-width: 995px !default;
 $large-width: 1110px !default;
 
-// Primary color variables
+// Brand color variables
 // --------------------------------------------------
-
-$black: #333 !default;
-$white: #fff !default;
-
-$blue: #00aaff !default;
-$yellow: lighten(#FFFF00, 15%) !default;
-$red: #e45735 !default;
-$pink: #fa6c8d !default;
-$green: #009900 !default;
 
 $google: #5b76f7 !default;
 $facebook: #3b5998 !default;
@@ -36,154 +26,7 @@ $base-font-size: 14px !default;
 $base-line-height: 19px !default;
 $base-font-family: Helvetica, Arial, sans-serif !default;
 
-// Broad general variables
-// --------------------------------------------------
-
-$primary_border_color: lighten($black, 70%);
-$secondary_border_color: lighten($black, 76%);
-$tertiary_border_color: $white;
-$highlight_border_color: $yellow;
-$emphasis_border_color: $blue;
-$warning_border_color: lighten($red, 20%);
-$success_border_color: $green;
-
-$primary_background_color: $white;
-$secondary_background_color: $black;
-$tertiary_background_color: lighten($black, 10%);
-$moderator_background_color: lighten($yellow, 30%) !default;
-$emphasis_background_color: lighten($blue, 45%);
-$success_background_color: lighten($green, 50%);
-$warning_background_color: lighten($red, 30%);
-$highlight_background_color: lighten($yellow, 23%);
-$like_background_color: lighten($pink, 25%);
-$composer_background_color: lighten($black, 70%);
-$notification_badge_background_color: lighten($black, 35%) !default;
-
-$primary_text_color: $black;
-$secondary_text_color: lighten($black, 40%);
-$tertiary_text_color: $white;
-$warning_text_color: $red;
-$success_text_color: $green;
-$emphasis_text_color: $blue;
-$highlight_text_color: $yellow;
-$like_color: $pink;
-
-$primary_shadow_color: $black;
-$secondary_shadow_color: $white;
-$warning_shadow_color: lighten($red, 20%);
-$success_shadow_color: $green;
-
-$highlight: $yellow;
-$header_item_highlight: lighten($blue, 45%);
-
-$link_color:  darken($blue, 10%);
-$secondary_link_color: $white;
-
-$muted-link-color: lighten($black, 35%);
-$muted-important-link-color: lighten($black, 35%);
-
-$link-color-visited: darken($blue, 10%) !default;
-$link-color-hover: darken($blue, 10%) !default;
-$link-color-active: darken($blue, 10%) !default;
-
-$heatmap_high: lighten($red, 10%);
-$heatmap_med: $red;
-$heatmap_low: darken($red, 10%);
-
-$coldmap_high: lighten($blue, 10%);
-$coldmap_med: $blue;
-$coldmap_low: darken($blue, 10%);
-
-
-
-
-// Specific element variables
-// --------------------------------------------------
-
-// Buttons
-// --------------------------------------------------
-
-// Default button
-
-$btn-default-color: $black !default;
-$btn-default-background-color:  lighten($black, 50%) !default;
-$btn-default-background-color-hover: lighten($black, 76%) !default;
-
-// Primary button
-
-$btn-primary-border-color: darken($blue, 10%) !default;
-$btn-primary-background-color: $blue !default;
-$btn-primary-background-color-dark: $blue !default;
-$btn-primary-background-color-light: lighten($blue, 30%) !default;
-
-// Danger button (delete, etc)
-
-$btn-danger-border-color: darken($red, 10%) !default;
-$btn-danger-background-color: $red !default;
-$btn-danger-background-color-dark: darken($red, 10%) !default;
-$btn-danger-background-color-light: $red !default;
-
-$btn-success-background: lighten($green, 5%);
-
-// Navigation menus
-// --------------------------------------------------
-
-// Pill nav
-
-$nav-pills-color: $black !default;
-$nav-pills-color-hover: $red !default;
-$nav-pills-border-color-hover: lighten($red, 35%) !default;
-$nav-pills-background-color-hover: lighten($red, 35%)  !default;
-$nav-pills-color-active: $red !default;
-$nav-pills-border-color-active: darken($red, 10%) !default;
-$nav-pills-background-color-active: $red !default;
-
-// Stacked nav
-
-$nav-stacked-color: $black !default;
-$nav-stacked-border-color: lighten($black, 60%) !default;
-$nav-stacked-background-color: lighten($black, 76%)  !default;
-$nav-stacked-divider-color: lighten($black, 60%) !default;
-$nav-stacked-chevron-color: lighten($black, 50%) !default;
-$nav-stacked-border-color-active: $red !default;
-$nav-stacked-background-color-active: $red !default;
-
-// Button nav
-
-$nav-button-color: lighten($black, 35%) !default;
-$nav-button-color-hover: $black !default;
-$nav-button-background-color-hover: lighten($black, 60%) !default;
-$nav-button-color-active: $black !default;
-$nav-button-background-color-active: lighten($black, 60%) !default;
-
-// Header
-
-$modal-header-color: $red !default;
-$modal-header-border-color: lighten($black, 50%) !default;
-$modal-close-button-color: lighten($black, 50%);
-
-$nav-like-button-color-hover: $pink !default;
-$nav-like-button-background-color-hover: lighten($pink, 22%) !default;
-$nav-like-button-color-active: darken($pink, 10%) !default;
-$nav-like-button-background-color-active: lighten($pink, 22%) !default;
-
-// Topic list
-// --------------------------------------------------
-
-$topic-list-border-color: lighten($black, 50%) !default;
-$topic-list-th-color: lighten($black, 35%) !default;
-$topic-list-th-border-color: lighten($black, 50%) !default;
-$topic-list-th-background-color: lighten($black, 76%) !default;
-$topic-list-td-color: lighten($black, 35%) !default;
-$topic-list-td-border-color: lighten($black, 60%) !default;
-$topic-list-star-color: lighten($black, 60%) !default;
-$topic-list-starred-color: $red !default;
-
-$quote-background: lighten($black, 76%);
-
-$topicMenuColor: darken($white, 80%);
-$bookmarkColor: $blue;
-
+@import "colors";
 
 /* This file doesn't actually exist, it is injected by DiscourseSassImporter. */
 @import "plugins_variables";

@@ -107,6 +107,7 @@ describe Guardian do
   describe 'can_send_private_message' do
     let(:user) { Fabricate(:user) }
     let(:another_user) { Fabricate(:user) }
+    let(:suspended_user) { Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago) }
 
     it "returns false when the user is nil" do
       Guardian.new(nil).can_send_private_message?(user).should be_false
@@ -140,6 +141,17 @@ describe Guardian do
         SiteSetting.stubs(:site_contact_username).returns(user.username)
         Guardian.new(user).can_send_private_message?(another_user).should be_true
         Guardian.new(Discourse.system_user).can_send_private_message?(another_user).should be_true
+      end
+    end
+
+    context "target user is suspended" do
+      it "returns true for staff" do
+        Guardian.new(admin).can_send_private_message?(suspended_user).should be_true
+        Guardian.new(moderator).can_send_private_message?(suspended_user).should be_true
+      end
+
+      it "returns false for regular users" do
+        Guardian.new(user).can_send_private_message?(suspended_user).should be_false
       end
     end
   end

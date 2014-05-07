@@ -5,9 +5,9 @@
   width: 460px;
   left: 20px;
   z-index: 990;
-  box-shadow: 0 2px 6px $primary_border_color;
+  box-shadow: 0 2px 6px scale-color($primary, $lightness: 90%);
   margin-top: -2px;
-  background-color: $primary_background_color;
+  background-color: $secondary;
   padding: 12px 12px 5px 12px;
 
   h1 {
@@ -18,7 +18,7 @@
     margin-bottom: 8px;
 
     a {
-      color: $primary_text_color;
+      color: $primary;
     }
   }
 
@@ -29,7 +29,7 @@
     margin-bottom: 5px;
 
     a {
-      color: $primary_text_color;
+      color: $primary;
     }
   }
 
@@ -37,16 +37,16 @@
     font-size: 13px;
     font-weight: normal;
     margin-top: 0;
-    color: $secondary_text_color;
+    color: $primary;
   }
   .groups {
     font-size: 13px;
     font-weight: normal;
     margin-top: 0;
-    color: $secondary_text_color;
+    color: $primary;
 
     .group-link {
-      color: $primary_text_color;
+      color: $primary;
     }
   }
 
@@ -66,7 +66,7 @@
 
   p.loading {
     margin-top: 45px;
-    color: $secondary_text_color;
+    color: $primary;
   }
 
   .btn {
@@ -74,7 +74,7 @@
   }
 
   .new-user a {
-    color: $secondary_text_color;
+    color: $primary;
   }
 
   &.show-badges {
@@ -98,7 +98,7 @@
       margin-top: 20px;
       h3 {
         line-height: 43px;
-        color: $primary_text_color;
+        color: $primary;
         font-size: 14px;
         margin-bottom: -8px;
       }
@@ -110,4 +110,3 @@
     }
   }
 }
-

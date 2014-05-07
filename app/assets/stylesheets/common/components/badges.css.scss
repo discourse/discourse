@@ -32,9 +32,9 @@
 
 .badge-category {
   padding: 6px;
-  color: $tertiary_text_color;
+  color: $secondary;
   &[href] {
-  color: $tertiary_text_color;
+  color: $secondary;
   }
 }
 
@@ -66,21 +66,21 @@ h1 a.badge-category div {vertical-align: top;}
 .badge-notification {
   @extend %badge;
   padding: 4px;
-  color: $tertiary_text_color;
+  color: $secondary;
   font-size: 11px;
   line-height: 1;
   min-width: 11px;
   text-align: center;
-  background-color: $notification_badge_background_color;
+  background-color: scale-color($primary, $lightness: 70%);
   &[href] {
-  color: $tertiary_text_color;
+  color: $secondary;
   }
 
   // New posts
 
   &.new-posts, &.unread-posts {
-    background-color: lighten($emphasis_text_color, 20%);
-    color: $tertiary_text_color;
+    background-color: scale-color($tertiary, $lightness: 50%);
+    color: $secondary;
     font-weight: normal;
   }
 
@@ -106,7 +106,7 @@ h1 a.badge-category div {vertical-align: top;}
   font-size: 14px;
   line-height: 1;
   &[href] {
-    color: $topic-list-td-color;
+    color: scale-color($primary, $lightness: 40%);
   }
 }
 
@@ -116,10 +116,10 @@ h1 a.badge-category div {vertical-align: top;}
 .badge-group {
   @extend %badge;
   padding: 3px 5px;
-  color: $primary_text_color;
-  text-shadow: 0 1px 0 rgba($secondary_shadow_color, 0.2);
+  color: $primary;
+  text-shadow: 0 1px 0 rgba($primary, 0.1);
   background-color: #ddd;
   border-color: #aaa;
   font-size: 12px;
-  @include box-shadow(inset 0 1px 0 rgba($secondary_shadow_color, 0.52));
+  @include box-shadow(inset 0 1px 0 rgba($primary, 0.22));
 }

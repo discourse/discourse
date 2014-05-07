@@ -11,8 +11,8 @@ article.post {
   }
 
   .quote .title {
-    border-left: 5px solid $primary_border_color;
-    background-color: lighten($secondary_background_color, 76%);
+    border-left: 5px solid scale-color($primary, $lightness: 90%);
+    background-color: lighten($primary, 76%);
     padding: 10px 10px 0 12px;
     .avatar { margin-right: 7px; }
   }
@@ -24,8 +24,8 @@ article.post {
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
-    background-color: $quote-background;
-    border-left: 5px solid $primary_border_color;
+    background-color: scale-color($primary, $lightness: 95%);
+    border-left: 5px solid scale-color($primary, $lightness: 90%);
     p {
       margin: 0 0 10px 0;
     }
@@ -57,7 +57,7 @@ article.post {
       }
 
       a.new-user {
-        color: lighten($primary_text_color, 35%);
+        color: lighten($primary, 35%);
       }
     }
   }

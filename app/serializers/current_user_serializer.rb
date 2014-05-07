@@ -66,7 +66,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_redirected_to_top_reason?
-    object.should_be_redirected_to_top
+    object.redirected_to_top_reason.present?
   end
 
 end

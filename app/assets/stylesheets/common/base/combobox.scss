@@ -4,11 +4,11 @@
   }
   .topic-count {
     font-size: 11px;
-    color: $secondary_text_color;
+    color: $primary;
     display: inline-block;
   }
   .highlighted .topic-count {
-    color: $tertiary_text_color;
+    color: $secondary;
   }
   .category-desc {
     margin: 6px 0 0 3px;

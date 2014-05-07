@@ -484,7 +484,8 @@ en:
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Reset Password"
-      complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
+      complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
+      complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
 
     login:
       title: "Sign In"
@@ -843,7 +844,7 @@ en:
         error: "Sorry, there was an error inviting that user."
 
       invite_reply:
-        title: 'Invite Friends'
+        title: 'Invite'
         action: 'Email Invite'
         help: 'send invitations to friends so they can reply to this topic with a single click'
         to_topic: "We'll send a brief email allowing your friend to immediately reply to this topic by clicking a link, no login required."
@@ -922,6 +923,7 @@ en:
       gap:
         one: "1 post hidden"
         other: "{{count}} posts hidden"
+      more_links: "{{count}} more..."
 
       has_replies:
         one: "Reply"

@@ -157,7 +157,7 @@ class UserNotifications < ActionMailer::Base
        ["replied", "mentioned", "quoted", "posted"].include?(notification_type)
 
     title = @notification.data_hash[:topic_title]
-    allow_reply_by_email = opts[:allow_reply_by_email]
+    allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
 
     send_notification_email(
       title: title,
@@ -213,6 +213,7 @@ class UserNotifications < ActionMailer::Base
       username: from_alias,
       add_unsubscribe_link: true,
       allow_reply_by_email: allow_reply_by_email,
+      include_respond_instructions: !user.suspended?,
       template: template,
       html_override: html,
       style: :notification

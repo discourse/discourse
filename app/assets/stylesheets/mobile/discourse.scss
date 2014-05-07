@@ -3,7 +3,7 @@
 // throughout the Discourse application
 
 body {
-  background-color: $primary_background_color;
+  background-color: $secondary;
 }
 
 .container {
@@ -25,25 +25,26 @@ body {
       padding: 10px 10px 10px 10px;
     }
     &.white {
-      background-color: $primary_background_color;
+      background-color: $secondary;
     }
   }
   #main {
     .fa-star.starred {
-      color: $highlight_text_color;
+      color: $highlight;
     }
     a.star {
       display: inline-block;
       font-size: 15px;
       line-height: 1;
-      color: $secondary_text_color;
+      color: $primary;
+      margin-right: 5px;
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
       }
       &.starred {
         color: #fe1;
-        text-shadow: 0 0 3px rgba($primary_shadow_color, 0.5);
+        text-shadow: 0 0 3px rgba($primary, 0.5);
         @include hover {
           opacity: 1;
           &:before {
@@ -91,8 +92,8 @@ body {
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
   padding: 10px 8px 10px 13px;
-  background-color: $quote-background;
-  border-left: 5px solid darken($quote-background, 20%);
+  background-color: scale-color($primary, $lightness: 95%);
+  border-left: 5px solid scale-color($primary, $lightness: 75%);
   p {
     margin: 0 0 10px 0;
   }
@@ -108,7 +109,7 @@ blockquote {
     display: inline-block;
     i {
       font-size: 15px;
-      color: darken($tertiary_text_color, 60%);
+      color: darken($secondary, 60%);
     }
   }
 }

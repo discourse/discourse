@@ -43,11 +43,6 @@
                     </a>
                   </div>
                 {{/if}}
-                <div {{bind-attr class=":num :views viewsHeat"}}>
-                  <a href="{{lastUnreadUrl}}">
-                    <i class='fa fa-eye'></i> {{number views numberKey="views_long"}}
-                  </a>
-                </div>
                 {{#if bumped}}
                   <div class='num activity last'>
                     <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{unboundAge bumped_at}}</a>

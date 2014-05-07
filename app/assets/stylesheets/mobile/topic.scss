@@ -35,13 +35,16 @@
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: lighten($primary_text_color, 60%); }
+.private-message-glyph { color: scale-color($primary, $lightness: 75%); }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
-.notification-options {
+
+/* both blocks that appear under the standard post control buttons */
+.notification-options, .pinned-options {
   clear: both;
   float: left;
   margin-top: 0px;
+  padding-top: 1px;
 }
 
 #topic-closing-info {
@@ -49,7 +52,7 @@
 }
 
 .docked #topic-progress {
-  box-shadow: 0 0 3px rbga($primary_shadow_color, .5);
+  box-shadow: 0 0 3px rbga($primary, .5);
 }
 
 #topic-progress-wrapper {
@@ -64,15 +67,15 @@
 
 #topic-progress {
 
-  box-shadow: 0 0 3px rbga($primary_shadow_color, .7);
+  box-shadow: 0 0 3px rbga($primary, .7);
 
   position: relative;
   &.hidden {
     display: none;
   }
   border: none;
-  background-color: lighten($primary_background_color, 60%);
-  color: $primary_text_color;
+  background-color: scale-color($secondary, $lightness: 75%);
+  color: $primary;
   width: 130px;
   height: 34px;
   .nums {
@@ -91,7 +94,7 @@
     left: 4px;
     border: 0;
     background: none;
-    color: lighten($primary_text_color, 35%);
+    color: scale-color($primary, $lightness: 50%);
 
     width: 60px;
     text-align: left;
@@ -108,7 +111,7 @@
     &:disabled {
 
       cursor: default;
-    color: lighten($primary_text_color, 35%);
+    color: scale-color($primary, $lightness: 50%);
     }
   }
   h4 {
@@ -121,10 +124,8 @@
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid $primary_border_color;
-    // background-color: #d4eaf4;
-    // background-color: #C5E8F7;
-    background-color: $success_background_color;
+    border-right: 1px solid scale-color($secondary, $lightness: 90%);
+    background-color: scale-color($success, $lightness: 50%);
   }
 }
 
@@ -134,6 +135,6 @@
 
 .post-cloak:last-of-type {padding-bottom: 40px;}
 
-.heatmap-high {color: $heatmap-high !important;}
-.heatmap-med {color: $heatmap-med !important;}
-.heatmap-low {color: $heatmap-low !important;}
+.heatmap-high {color: scale-color($danger, $lightness: -25%) !important;}
+.heatmap-med {color: $danger !important;}
+.heatmap-low {color: scale-color($danger, $lightness: 25%) !important;}

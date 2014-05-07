@@ -44,13 +44,12 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-top: 1px solid $primary_border_color;
-  border-bottom: 1px solid $primary_border_color;
+  border-top: 1px solid scale-color($primary, $lightness: 90%);
 
   > tbody > tr {
-    background-color: $primary_background_color;
+    background-color: $secondary;
     &:nth-child(even) {
-      background-color: darken($primary_background_color, 4%);
+      background-color: darken($secondary, 4%);
     }
     &.archived a {
       opacity: 0.6;
@@ -61,7 +60,7 @@
       }
     }
     &.highlighted {
-      background-color: $highlight_background_color;
+      background-color: scale-color($tertiary, $lightness: 75%);
     }
   }
   th,
@@ -78,7 +77,7 @@
     }
   }
   th {
-    color: $topic-list-th-color;
+    color: $primary;
     font-weight: bold;
     font-size: 13px;
     &:first-of-type {
@@ -89,14 +88,14 @@
     }
   }
   td {
-    color: $topic-list-td-color;
+    color: $primary;
     font-size: 14px;
   }
   .main-link {
     font-size: 16px;
 
     i.score {
-      color: $success_text_color;
+      color: $success;
       cursor: pointer;
     }
   }
@@ -104,7 +103,7 @@
   .topic-excerpt {
     font-size: 14px;
     margin-top: 8px;
-    color: lighten($primary_text_color, 35%);
+    color: scale-color($primary, $lightness: 50%);
     word-break: break-word;
   }
 
@@ -133,7 +132,7 @@
       margin-right: 14px;
     }
     .fa {
-      color: lighten($black, 50%);
+      color: scale-color($primary, $lightness: 50%);
     }
     .fa-heart{
       position: relative;
@@ -146,12 +145,17 @@
     }
   }
 
+  .num.posts {
+    font-weight: bold;
+  }
+
   .num {
     text-align: center;
     a:not(.badge-posts) {
       color: inherit;
     }
   }
+
   .age {
     white-space: nowrap;
   }
@@ -194,7 +198,7 @@
     .featured-topic {
       margin: 8px 0;
       a.last-posted-at, a.last-posted-at:visited {
-        color: lighten($primary_text_color, 50%);
+        color: scale-color($primary, $lightness: 50%);
       }
     }
   }
@@ -221,7 +225,7 @@
 .category-list-item {
   margin-bottom: 10px;
   #topic-list tbody tr:nth-child(even) {
-    background-color: $primary_background_color;
+    background-color: $secondary;
   }
   .badge-category {
     float: left;
@@ -232,18 +236,16 @@
     display: none;
   }
   > footer {
-    border-bottom: 1px solid $topic-list-border-color;
+    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
     border-top: 0;
     padding: 7px 10px;
-    background-color: lighten($topic-list-th-background-color, 2%);
-    @include box-shadow(0 1px 3px rgba($primary_shadow_color, 0.22));
+    background-color: scale-color($primary, $lightness: 95%);
     figure {
       float: left;
       margin: 3px 7px 0 0;
-      color: lighten($topic-list-th-color, 5%);
+      color: scale-color($primary, $lightness: 10%);
       font-weight: bold;
       font-size: 12px;
-      text-shadow: 0 1px 0 $secondary_shadow_color;
     }
     figcaption {
       display: inline;
@@ -279,11 +281,11 @@
   width: 200px;
   margin: 0 auto;
   padding: 10px 0 10px 43px;
-  color: $tertiary_text_color;
+  color: $secondary;
   font-size: 18px;
   line-height: 25px;
   background: {
-    color: $primary_text_color;
+    color: #000;
     image: image-url("spinner_96_w.gif");
     repeat: no-repeat;
     position: 10px 50%;
@@ -297,8 +299,8 @@
 
 .list-controls {
   .home {
-    color: $primary_text_color;
-    background-color: lighten($secondary_background_color, 76%);
+    color: $primary;
+    background-color: scale-color($primary, $lightness: 90%);
   }
 
   .badge-category {
@@ -331,7 +333,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: lighten($warning_text_color, 10%);
+    color: scale-color($danger, $lightness: 20%);
     font-size: 13px;
     cursor: default;
   }
@@ -373,7 +375,7 @@ span.posted {
   width: 0;
   height: 0;
   vertical-align: middle;
-  border-top: 4px solid $primary_text_color;
+  border-top: 4px solid $primary;
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
@@ -390,8 +392,8 @@ span.posted {
   padding: 4px 0;
   margin: 1px 0 0;
   list-style: none;
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
+  background-color: $secondary;
+  border: 1px solid scale-color($primary, $lightness: 90%);;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -406,14 +408,14 @@ span.posted {
   clear: both;
   font-weight: normal;
   line-height: 18px;
-  color: $primary_text_color;
+  color: $primary;
 }
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: $tertiary_text_color;
+  color: $secondary;
   text-decoration: none;
-  background-color: $emphasis_text_color;
+  background-color: $tertiary;
 }
 .open > .dropdown-menu {
   display: block;
@@ -445,8 +447,8 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid $primary_border_color;
-  background-color: $primary_background_color;
+  border: 1px solid scale-color($primary, $lightness: 90%);;
+  background-color: $secondary;
   width: 200px;
   height: 200px;
   padding: 8px 5px 0 7px;
@@ -464,4 +466,3 @@ ol.category-breadcrumb {
     margin-bottom: 10px;
   }
 }
-

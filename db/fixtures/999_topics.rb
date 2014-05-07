@@ -12,5 +12,5 @@ if Topic.where('id NOT IN (SELECT topic_id from categories where topic_id is not
 
   welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
   post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)
-  post.topic.update_pinned(true)
+  post.topic.update_pinned(true, true)
 end
