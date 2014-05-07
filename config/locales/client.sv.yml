@@ -87,7 +87,6 @@ sv:
     of_value: "av"
     generic_error: "Vi beklagar, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
-    log_in: "Logga in"
     age: "Ålder"
     joined: "Gick med"
     admin_title: "Admin"
@@ -419,9 +418,7 @@ sv:
       action: "Jag har glömt mitt lösenord"
       invite: "Skriv in ditt användarnamn eller e-postadress, så vi skickar dig ett mail om lösenordsåterställning."
       reset: "Återställ Lösenord"
-      complete: "Du borde få ett mail med instruktioner om hur du återställer ditt lösenord inom kort."
     login:
-      title: "Logga In"
       username: "Inloggning"
       password: "Lösenord"
       email_placeholder: "email eller användarnamn"
@@ -461,13 +458,6 @@ sv:
       min_length:
         need_more_for_title: "{{n}} tecken kvar för titeln"
         need_more_for_reply: "{{n}} tecken kvar för svaret"
-      error:
-        title_missing: "Titel krävs."
-        title_too_short: "Titeln måste vara minst {{min}} tecken lång."
-        title_too_long: "Titeln måset vara mindre än {{max}} tecken lång."
-        post_missing: "Inlägg får inte vara tomma."
-        post_length: "Inlägg måste vara minst {{min}} tecken långa."
-        category_missing: "Du måste välja en kategori."
       save_edit: "Spara Ändring"
       reply_original: "Svara på Ursprungstråd"
       reply_here: "Svara Här"
@@ -540,7 +530,6 @@ sv:
       local_tip: "klicka för att välja en bild från din enhet."
       local_tip_with_attachments: "klicka för att välja en bild eller fil från din enhet (tillåtna filtyper: {{authorized_extensions}})"
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
-      hint_for_supported_browsers: "(du kan också dra och släppa eller klistra in bilder i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
     search:
       title: "sök efter trådar, inlägg, användare, eller kategorier"
@@ -716,7 +705,6 @@ sv:
         success: "Tack! Vi har bjudit in den användaren att delta i denna privata konversation."
         error: "Tyvärr det uppstod ett fel under inbjudandet av den användaren."
       invite_reply:
-        title: 'Bjud in vänner'
         action: 'Email-inbjudan'
         help: 'skicka inbjudningar till vänner så de kan svara i den här tråden med ett enda klick'
         to_topic: "Vi kommer att skicka ett kort email som låter din vän svara direkt på denna tråd genom att klicka på en länk, utan att inloggning krävs."
@@ -724,7 +712,6 @@ sv:
         email_placeholder: 'namn@exampel.se'
         success: "Tack! Vi har mailat ut ett inbjudan till <b>{{email}}</b>. Vi låter dig veta när de löst in sin inbjudan. Kolla in fliken med Inbjudningar på din användarsida för att hålla koll på vem du har bjudit in."
         error: "Tyvärr vi kunde inte bjudan in den personen. Kanske är den redan en användare?"
-      login_reply: 'Logga In för att Svara'
       filters:
         n_posts:
           one: "1 inlägg"
@@ -761,7 +748,6 @@ sv:
       edit: "Ändra {{link}} av {{replyAvatar}} {{username}}"
       edit_reason: "Anledning:"
       post_number: "inlägg {{number}}"
-      in_reply_to: "som svar till"
       last_edited_on: "inlägg senast ändrat den"
       reply_as_new_topic: "Svara som ny Tråd"
       continue_discussion: "Fortsätter diskussionen från {{postLink}}:"
@@ -1402,9 +1388,6 @@ sv:
         delete_forbidden:
           one: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dag kan ej raderas.)"
           other: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dagar kan ej raderas.)"
-        cant_delete_all_posts:
-          one: "Kan inte radera alla inlägg. Några inlägg är äldre än %{count} dag gamla."
-          other: "Kan inte radera alla inlägg. Några inlägg är äldre än %{count} dagar gamla."
         delete_confirm: "Är du SÄKER på att du vill radera den här användaren? Denna åtgärd är permanent!"
         delete_and_block: "<b>Ja</b>, och <b>blockera</b> framtida registrationer från denna email- och IP-adress."
         delete_dont_block: "<b>Ja</b>, ta endast bort användaren"

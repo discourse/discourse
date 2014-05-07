@@ -44,7 +44,7 @@ fr:
     loading: "Chargement de la discussion..."
     permalink: "Lien permanent"
     imported_from: "Il s'agit d'un sujet en provenance de l'article %{link}"
-    in_reply_to: "en réponse à %{username}"
+    in_reply_to: "répondre à %{username}"
     replies:
       one: "1 réponse"
       other: "%{count} réponses"
@@ -176,7 +176,7 @@ fr:
         user:
           attributes:
             password:
-              common: "est un des 5000 mots de passe les plus communs. Veuillez utiliser un mot de passe plus sécurisé."
+              common: "fait parti des 10000 mots de passe les plus utilisés. Merci d'en utiliser un plus sûr."
             ip_address:
               signup_not_allowed: "L'inscription n'est pas autorisé à partir de ce compte."
   user_profile:
@@ -312,11 +312,11 @@ fr:
   post_action_types:
     off_topic:
       title: 'Hors-sujet'
-      description: 'Ce message est radicalement hors-sujet, et devrait probablement être déplacé dans une autre sujet. Si c''est un sujet, il n''a peut être pas ça place içi.'
+      description: 'Ce message est radicalement hors-sujet dans ce contexte, et devrait probablement être déplacé. Si c''est un sujet, il n''a peut être pas ça place içi.'
       long_form: 'signalé comme hors-sujet.'
     spam:
       title: 'Spam'
-      description: 'Ce message est une publicité sans information. Elle n''est pas pertinente dans le cadre de cette conversation, mais est uniquement de nature promotionelle.'
+      description: 'Ce message est une publicité. Elle n''est pas utile ou pertinente dans ce sujet, mais est uniquement de nature promotionnelle.'
       long_form: 'signalé comme spam'
     inappropriate:
       title: 'Inapproprié'
@@ -362,7 +362,7 @@ fr:
       email_title: 'Ce message "%{title}" requière l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Votre message a atteint la limite de signalements. Vérifiez vos messages privés.</p>'
+    you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my/private-messages">regarder vos messages privés</a>.</p>'
     user_must_edit: '<p>Contenu signalé temporairement masqué.</p>'
   archetypes:
     regular:
@@ -614,7 +614,6 @@ fr:
     topics_per_period_in_top_summary: "Combien de sujets chargés sur le résumé des meilleures sujets"
     topics_per_period_in_top_page: "Combien de sujets chargés sur la page principale des sujets"
     redirect_users_to_top_page: "Rediriger automatiquement les nouveaux et absents depuis longtemps sur la page Top"
-    redirect_new_users_to_top_page_duration: "Nombre de jours durant lesquels un nouvel utilisateur sera automatiquement redirigé vers la page \"top\""
     enable_badges: "Activer le système de badge (expérimental)"
     allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"
     email_domains_blacklist: "Liste des domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
@@ -628,7 +627,7 @@ fr:
     login_required: "Requière une authentification pour les messages"
     min_username_length: "Taille minimum des pseudos. (Ne s'applique pas si l'unicité des pseudos est forcée)"
     min_password_length: "Longueur minimale du mot de passe."
-    block_common_passwords: "Ne pas autoriser les mots de passe contenus dans la liste des 5000 mots de passe les plus communs."
+    block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10000 les plus utilisés"
     enable_sso: "Activer l'authentification unique via un site externe"
     sso_url: "URL de l'authentification unique"
     sso_secret: "Chaîne de caractères secrète utilisée pour crypter/décrypter les informations SSO, assurez-vous qu'elle est de 10 caractères ou plus"
@@ -750,7 +749,7 @@ fr:
     dominating_topic_minimum_percent: "Quel est le pourcentage de messages d'un utilisateur doit poster dans un sujet avant que nous considérions qu'il est dominant."
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets"
     min_posts_for_search_in_topic: "Désactiver la recherche dans les sujets si les sujets ont moins du minimum de messages"
-    global_notice: "Affiche un bandeau global pour tout les utilisateurs du site, laissez vide pour le caché (HTML autorisé)"
+    global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le caché (HTML autorisé)"
     enable_names: "Autoriser les utilisateurs à afficher leur nom complet"
     display_name_on_posts: "Afficher également le nom complet de l'utilisateur dans ses messages"
     invites_shown: "Nombre maximum d'invitations affichées sur une page utilisateur"
@@ -824,7 +823,7 @@ fr:
     autoclosed_disabled: "Ce sujet est maintenant ouvert. Vous pouvez y participer."
     pinned_enabled: "Ce sujet est maintenant épinglé. Il apparaîtra en haut de sa catégorie jusqu'à ce qu'il soit désépinglé par un modérateur, ou individuellement par les utilisateurs eux-mêmes."
     pinned_disabled: "Ce sujet est maintenant désépinglé. Il n'apparaîtra plus en haut de sa categorie."
-    pinned_globally_enabled: "Ce sujet est maintenant épinglée pour tous. Il apparaîtra en haut de sa catégorie et de chaque liste de sujets jusqu'à ce qu'il soit désépinglé par un modérateur, ou individuellement par les utilisateurs eux-mêmes."
+    pinned_globally_enabled: "Ce sujet est maintenant épinglé pour tous. Il apparaîtra en haut de sa catégorie et de chaque liste de sujets jusqu'à ce qu'il soit désépinglé par un modérateur, ou individuellement par les utilisateurs eux-mêmes."
     pinned_globally_disabled: "Ce sujet est maintenant désépinglé. Il n'apparaîtra plus en haut de sa catégorie."
     visible_enabled: "Ce sujet est maintenant visible. Il sera affiché dans la liste des sujets."
     visible_disabled: "Ce sujet est maintenant invisible. Il ne sera plus affichée dans la liste des sujets. Le seul moyen d'y accéder est par lien direct."
@@ -918,34 +917,8 @@ fr:
             <small>Il devrait toujours y avoir un lien de déinscription dans le pied de page d'un mail. Donc en voici-un. Ce mail a été envoyé par Nom de la Société,  55 Main Street, Anytown, USA 12345. Si vous ne voulez plus recevoir nos e-mails, [cliquez ici pour vous désinscrire][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] mise à jour disponible"
-    text_body_template: |
-      Une nouvelle version de Discourse est disponible.
-
-      Votre version : %{installed_version}
-      Nouvelle version: **%{new_version}**
-
-      - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Mettez à jour en allant sur `/admin/docker`, rafraîchir la page et appuyer sur le bouton "Upgrade Discourse".
-
-      - Visitez http://meta.discourse.org pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
-    text_body_template: |
-      Une nouvelle version de Discourse est disponible.
-
-      Votre version : %{installed_version}
-      Nouvelle version: **%{new_version}**
-
-      - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Mettez à jour en allant sur `/admin/docker`, rafraîchir la page et appuyer sur le bouton "Upgrade Discourse".
-
-      - Visitez http://meta.discourse.org pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
-
-      ### Notes de mise à jour
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Il y a des signalements qui ont été soumis il y a plus de 1 heure."
@@ -956,25 +929,13 @@ fr:
     subject_template:
       one: "%{count} signalement en attente de traitement"
       other: "%{count} signalements en attente de traitement"
+  flag_reasons:
+    off_topic: "Votre message à été signalé comment étant **hors-sujet** : la communauté pense qu'il ne correspond pas au sujet de la discussion."
+    inappropriate: "Votre message à été signalé comment étant **inapproprié** : la communauté pense qu'il est offensant, abusif ou en violation des [règles de la communauté](/faq)."
+    spam: "Votre message a été signalé en tant que **spam** : La communauté pense que c'est une publicité, non utile ou pertinente dans ce sujet, mais de nature promotionnelle."
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que le message suivant a été caché à la suite d'un signalement de la communauté.
-
-        %{base_url}%{url}
-
-        Votre message a été caché car il a été signalé par la communauté.
-
-        Gardez à l'esprit que plusieurs membres ont signalé ce message avant qu'il ne soit caché, veuillez donc prendre en compte leurs remarques pour revoir votre message.
-
-        Vous pouvez modifier le message après %{edit_delay} minutes, et il sera automatiquement ré-affiché. Ceci augmentera votre niveau de confiance sur le forum.
-
-        Cependant, si le message est  signalé par la communauté une seconde fois, les modérateurs seront informés (et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.)
-
-        Pour plus d'informations, merci de vous en référer à la  [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Ce message privé contient quelques astuces pour vous aider à démarrer rapidement :
@@ -1212,8 +1173,8 @@ fr:
       click_here: "cliquez ici"
       from: "Résumé de %{site_name}"
       read_more: "En lire plus"
-      more_topics: "Il y a eu %{new_topics_since_seen} nouvelles discussions postées depuis votre dernière visite le %{last_seen_at}."
-      more_topics_category: "Il y a eu %{new_topics_since_seen} nouvelles discussions postées dans cette catégorie depuis votre dernière visite le %{last_seen_at}."
+      more_topics: "Il y a eu %{new_topics_since_seen} nouveaux sujets postés depuis votre dernière visite le %{last_seen_at}."
+      more_topics_category: "Il y a eu %{new_topics_since_seen} nouveaux sujets postés dans ces catégories depuis votre dernière visite le %{last_seen_at}."
       posts:
         one: "1 message"
         other: "%{count} messages"
@@ -1310,8 +1271,5 @@ fr:
     message_to_blank: "message.to est vide"
     text_part_body_blank: "text_part.body est vide"
     body_blank: "body est vide"
-  badges:
-    types:
-      gold: Or
-      silver: Argent
-      bronze: Bronze
+  color_schemes:
+    base_theme_name: "Base"

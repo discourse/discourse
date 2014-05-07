@@ -87,7 +87,6 @@ pt_BR:
     of_value: "de"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
-    log_in: "Entrar"
     age: "Idade"
     joined: "ingressou"
     admin_title: "Admin"
@@ -425,9 +424,7 @@ pt_BR:
       action: "Esqueci minha senha"
       invite: "Coloque seu nome de usuário ou endereço de email, e nós lhe enviaremos um email para refazer sua senha."
       reset: "Recuperar Senha"
-      complete: "Se uma conta corresponder a este nome de usuário ou endereço de email, você receberá um email com instruções de como reiniciar sua senha rapidamente."
     login:
-      title: "Entrar"
       username: "Usuário"
       password: "Senha"
       email_placeholder: "e-mail ou nome de usuário"
@@ -467,13 +464,6 @@ pt_BR:
       min_length:
         need_more_for_title: "{{n}} no título"
         need_more_for_reply: "{{n}} para chegar à postagem"
-      error:
-        title_missing: "Título é obrigatório"
-        title_too_short: "Título tem que ter no mínimo {{min}} caracteres."
-        title_too_long: "Título pode ter no máximo {{min}} caracteres."
-        post_missing: "A postagem não pode estar vazia."
-        post_length: "A postagem tem que ter no mínimo {{min}} caracteres."
-        category_missing: "Você precisa escolher uma categoria."
       save_edit: "Salvar alterações"
       reply_original: "Responder no Tópico original"
       reply_here: "Responda Aqui"
@@ -547,7 +537,6 @@ pt_BR:
       local_tip: "clique para selecionar um arquivo do seu dispositivo"
       local_tip_with_attachments: "clique para selecionar uma imagem ou arquivo do seu dispositivo (extensões permitidas: {{authorized_extensions}})"
       hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
-      hint_for_supported_browsers: "(você também pode arrastar e soltar ou colar imagens no editor para carregá-las)"
       uploading: "Enviando"
     search:
       title: "procurar por tópicos, posts, usuários, ou categorias"
@@ -731,7 +720,6 @@ pt_BR:
         success: "Obrigado! Convidamos esse usuário para participar nesta conversa privada."
         error: "Desculpe, houve um erro ao convidar esse usuário."
       invite_reply:
-        title: 'Convidar Amigos'
         action: 'Email de Convite'
         help: 'envie convites aos seus amigos para que eles possam responder a este tópico com um simples clique.'
         to_topic: "Enviaremos um breve e-mail permitindo ao seu amigo responder imediatamente este tópico clicando em um link, sem necessidade de login."
@@ -739,7 +727,6 @@ pt_BR:
         email_placeholder: 'name@example.com'
         success: "Obrigado! Enviamos um convite para <b>{{email}}</b>. Você saberá quando eles utilizarem o convite. Você pode ir até a seção de Convites na sua página de usuário para saber quem você já convidou."
         error: "Desculpe não podíamos convidar essa pessoa. Talvez já seja um usuário?"
-      login_reply: 'Entre com sua conta para responder'
       filters:
         n_posts:
           one: "1 postagem"
@@ -778,7 +765,6 @@ pt_BR:
       edit: "Editar {{link}}"
       edit_reason: "Motivo:"
       post_number: "postagem {{number}}"
-      in_reply_to: "Em resposta a"
       last_edited_on: "postagem editada pela última vez em"
       reply_as_new_topic: "Responder como um novo Tópico"
       continue_discussion: "Continuar a discussão desde {{postLink}}:"
@@ -1270,7 +1256,6 @@ pt_BR:
         settings: "Settings"
         all: "Todas"
         sending_test: "Enviando e-mail de teste..."
-        test_error: "Houve um problema de envio de e-mail. Verifique as configurações e tente novamente."
         sent: "Enviado"
         skipped: "Ignorado"
         sent_at: "Enviado para "
@@ -1453,9 +1438,6 @@ pt_BR:
         delete_forbidden:
           one: "Usuários não podem ser excluídos se eles têm mensagens. Excluir todas as mensagens antes de tentar excluir um usuário. (Mensagens mais antigas que %{count} dia não podem ser excluídas.)"
           other: "Usuários não podem ser excluídos se eles têm mensagens. Excluir todas as mensagens antes de tentar excluir um usuário. (Mensagens mais antigas que %{count} dias não podem ser excluídas.)"
-        cant_delete_all_posts:
-          one: "Não é possível excluir todas as mensagens. Algumas mensagens são mais antigas do que %{count} dia."
-          other: "Não é possível excluir todas as mensagens. Algumas mensagens são mais antigas do que %{count} dias."
         delete_confirm: "Tem CERTEZA que você quer apagar este usuário permanentemente do site? Esta ação é definitiva!"
         delete_and_block: "<b>Sim</b>, e <b>bloquear</b> futuros cadastros deste e-mail e endereço IP."
         delete_dont_block: "<b>Sim</b>, apenas excluir o usuário"

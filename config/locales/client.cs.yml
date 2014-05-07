@@ -103,7 +103,6 @@ cs:
     of_value: "z"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
-    log_in: "Přihlásit se"
     age: "Věk"
     joined: "Účet vytvořen"
     admin_title: "Administrace"
@@ -453,9 +452,7 @@ cs:
       action: "Zapomněl jsem své heslo"
       invite: "Vložte svoje uživatelské jméno nebo e-mailovou adresu a my vám zašleme postup pro obnovení hesla."
       reset: "Resetovat heslo"
-      complete: "Měli byste obdržet email s instrukcemi jak obnovit vaše heslo."
     login:
-      title: "Přihlásit se"
       username: "Login"
       password: "Heslo"
       email_placeholder: "emailová adresa nebo uživatelské jméno"
@@ -495,13 +492,6 @@ cs:
       min_length:
         need_more_for_title: "ještě {{n}} znaků nadpisu tématu"
         need_more_for_reply: "ještě {{n}} znaků textu odpovědi"
-      error:
-        title_missing: "Název musí být vyplněn."
-        title_too_short: "Název musí být alespoň {{min}} znaků dlouhý."
-        title_too_long: "Název musí být dlouhý maximálně {{min}} znaků."
-        post_missing: "Příspěvek nesmí být prázdný."
-        post_length: "Příspěvek musí být alespoň {{min}} znaků dlouhý."
-        category_missing: "Musíte vybrat kategorii."
       save_edit: "Uložit změnu"
       reply_original: "Odpovědět na původní téma"
       reply_here: "Odpovědět sem"
@@ -578,7 +568,6 @@ cs:
       local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení."
       local_tip_with_attachments: "klikněte sem pro výběr obrázku nebo souboru z vašeho zařízení."
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
-      hint_for_supported_browsers: "(můžete také rovnou obrázky do editoru přetáhnout nebo vložit)"
       uploading: "Nahrávám"
       image_link: "adresa na kterou má váš obrázek odkazovat"
     search:
@@ -772,7 +761,6 @@ cs:
         success: "Děkujeme! Pozvali jste daného uživatele, aby se účastnil této soukromé konverzace."
         error: "Bohužel nastala chyba při odesílání pozvánky."
       invite_reply:
-        title: 'Přizvat k diskuzi'
         action: 'Odeslat pozvánku'
         help: 'odeslat pozvánku přátelům, aby mohli na toto téma odpovědět jedním kliknutím'
         to_topic: "We'll send a brief email allowing your friend to immediately reply to this topic by clicking a link, no login required."
@@ -780,7 +768,6 @@ cs:
         email_placeholder: 'name@example.com'
         success: "Díky! Odeslali jsme pozvánku na <b>{{email}}</b>. Dáme vám vědět, až bude pozvánka vyzvednuta. Na záložce pozvánek na vaší uživatelské stránce můžete sledovat koho jste pozvali."
         error: "Bohužel se nepodařilo pozvat tuto osobu. Není již registrovaným uživatelem?"
-      login_reply: 'Přihlaste se, chcete-li odpovědět'
       filters:
         n_posts:
           one: "Je zobrazen pouze 1 příspěvek"
@@ -833,7 +820,6 @@ cs:
       edit: "Editujete {{link}} od uživatele {{replyAvatar}} {{username}}"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. {{number}}"
-      in_reply_to: "v odpovědi na"
       last_edited_on: "příspěvek naposledy upraven"
       reply_as_new_topic: "Odpovědět přes nové téma"
       continue_discussion: "Pokračující diskuze z {{postLink}}:"
@@ -1368,7 +1354,6 @@ cs:
         settings: "Nastavení"
         all: "Všechny emaily"
         sending_test: "Zkušební email se odesílá..."
-        test_error: "Chyba při odesílání emailu. Zkontrolujte nastavení a zkuste to znovu."
         sent: "Odeslané"
         skipped: "Přeskočené"
         sent_at: "Odesláno"
@@ -1556,10 +1541,6 @@ cs:
           one: "Uživatelé nemůžou být smazáni pokud mají příspěvky. Před smazáním uživatele smažte všechny jeho příspěvky. (Příspěvky starší než den nemůžou být smazány.)"
           few: "Uživatelé nemůžou být smazáni pokud mají příspěvky. Před smazáním uživatele smažte všechny jeho příspěvky. (Příspěvky starší než %{count} dny nemůžou být smazány.)"
           other: "Uživatelé nemůžou být smazáni pokud mají příspěvky. Před smazáním uživatele smažte všechny jeho příspěvky. (Příspěvky starší než %{count} dnů nemůžou být smazány.)"
-        cant_delete_all_posts:
-          one: "Nelze smazat všechny příspěvky. Některé jsou starší než den."
-          few: "Nelze smazat všechny příspěvky. Některé jsou starší %{count} dny."
-          other: "Nelze smazat všechny příspěvky. Některé jsou starší %{count} dní."
         delete_confirm: "Jste si jistí, že chce permanentně smazat tohoto uživatele z fóra? Tato akce je nevratná!"
         delete_and_block: "<b>Ano</b>, a <b>zakázat</b> registraci z této emailové adresy"
         delete_dont_block: "<b>Ano</b>, a <b>povolit</b> registraci z této emailové adresy"

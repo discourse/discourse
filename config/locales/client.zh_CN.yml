@@ -344,6 +344,8 @@ zh_CN:
         instructions: "至少需要 %{count} 个字符。"
       ip_address:
         title: "最后使用的 IP 地址"
+      registration_ip_address:
+        title: "注册 IP 地址"
       avatar:
         title: "头像"
       title:
@@ -398,7 +400,8 @@ zh_CN:
       action: "我忘记了我的密码"
       invite: "输入您的用户名和电子邮箱地址，我们会发送密码重置邮件给您。"
       reset: "重置密码"
-      complete: "如果输入的帐号和邮箱地址匹配，您就会收到一封电子邮件，告诉您如何重置密码。"
+      complete_username: "如果您的账户名 <b>%{username}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
+      complete_email: "如果您的账户 <b>%{email}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
     login:
       title: "登入"
       username: "登入"
@@ -705,7 +708,7 @@ zh_CN:
         success: "谢谢！我们已经邀请该用户参与此私下交流。"
         error: "抱歉，在邀请该用户时发生了错误。"
       invite_reply:
-        title: '邀请朋友来回复'
+        title: ' 邀请'
         action: '邮件邀请'
         help: '向您的朋友发送邀请，他们只需要一个点击就能回复这个主题'
         to_topic: "我们会给您的朋友发送一封邮件，他/她只需点击其中的一个链接，就可以无需登入直接回复这个主题。"
@@ -1518,6 +1521,7 @@ zh_CN:
         grant: 授予
         no_user_badges: "%{name} 尚未被授予徽章。"
         no_badges: 没有可供授予的徽章。
+        allow_title: 允许将徽章用作头衔
     lightbox:
       download: "下载"
     keyboard_shortcuts_help:

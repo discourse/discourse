@@ -428,7 +428,8 @@ fr:
       action: "J'ai oublié mon mot de passe"
       invite: "Saisir votre pseudo ou votre adresse email, et vous recevrez un nouveau mot de passe par mail."
       reset: "Réinitialiser votre mot de passe"
-      complete: "Si un compte correspond à ce pseudo ou cette adresse mail, vous allez recevoir rapidement un mail contenant les instructions pour réinitialiser votre mot de passe."
+      complete_username: "Si un compte correspond au pseudo <b>%{username}</b>, vous devriez recevoir rapidement un email avec les instructions pour réinitialiser votre mot de passe."
+      complete_email: "Si un compte correspond a l'email <b>%{email}</b>, vous devriez recevoir rapidement un email avec les instructions pour réinitialiser votre mot de passe."
     login:
       title: "Se connecter"
       username: "Pseudo"
@@ -741,14 +742,14 @@ fr:
         success: "Merci ! Vous avez invité cet utilisateur à participer à ce message privé."
         error: "Désolé, il y a eu une erreur lors de l'invitation de cet utilisateur."
       invite_reply:
-        title: 'Inviter des Amis'
+        title: 'Inviter'
         action: 'Envoyer l''invitation'
         help: 'envoyer des invitations à des amis pour qu''ils puissent participer à ce sujet en un simple clic'
         to_topic: "Nous allons envoyer un mail à votre ami pour qu'il réponde à ce sujet en cliquant sur un lien, sans qu'il ait à se connecter."
         to_forum: "Nous allons envoyer un mail à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien, sans qu'il ait à se connecter."
         email_placeholder: 'nom@exemple.com'
         success: "Merci ! Nous avons envoyé un mail à <b>{{email}}</b>. Nous vous informerons lorsqu'ils auront retourné votre invitation. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
-        error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être est -elle déjà un utilisateur ?"
+        error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être a-t-elle déjà un compte utilisateur ?"
       login_reply: 'Se connecter pour répondre'
       filters:
         n_posts:
@@ -798,7 +799,7 @@ fr:
       edit: "Éditer {{link}} par {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
-      in_reply_to: "Réponse courte"
+      in_reply_to: "répondre à"
       last_edited_on: "message dernièrement édité le"
       reply_as_new_topic: "Répondre en créant un nouveau sujet"
       continue_discussion: "Continuer le sujet suivant {{postLink}}:"
@@ -1545,11 +1546,11 @@ fr:
           flagged_posts: "Messages signalés"
       site_content:
         none: "Choisissez un type de contenu afin de commencer l'édition."
-        title: 'Contenu du site'
+        title: 'Contenu'
         edit: "Modifier le contenu du site"
       site_settings:
         show_overriden: 'Ne montrer que ce qui a été changé'
-        title: 'Paramètres du site'
+        title: 'Paramètres'
         reset: 'rétablir par défaut'
         none: 'rien'
         no_results: "Aucun résultat trouvé."

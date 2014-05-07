@@ -127,8 +127,6 @@ de:
               cant_send_pm: "Entschuldige, du kannst keine private Nachricht an diesen Nutzer schicken."
         user:
           attributes:
-            password:
-              common: "ist eines der 5000 meist verwendeten Passwörter. Bitte verwende ein sichereres Passwort."
             ip_address:
               signup_not_allowed: "Anmelden ist von diesem Benutzerkonto nicht erlaubt."
   user_profile:
@@ -255,11 +253,9 @@ de:
   post_action_types:
     off_topic:
       title: 'Am Thema vorbei'
-      description: 'Dieser Beitrag geht komplett am Thema des aktuellen Gesprächs vorbei und sollte möglicherweise in ein anderes Thema verschoben werden.'
       long_form: 'dies als am Thema vorbei gemeldet'
     spam:
       title: 'Werbung'
-      description: 'Dieser Beitrag besteht effektiv nur aus Werbung, die nicht als solche ausgewiesen ist. Er trägt nichts zum aktuellen Gespräch bei.'
       long_form: 'dies als Spam gemeldet'
     inappropriate:
       title: 'Unangemessen'
@@ -302,7 +298,6 @@ de:
       email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Dein Beitrag wurde zu häufig gemeldet. Bitte beachte deine privaten Nachrichten.</p>'
     user_must_edit: '<p>Gemeldete Inhalte versteckt.</p>'
   archetypes:
     regular:
@@ -572,7 +567,6 @@ de:
     max_private_messages_per_day: "Maximale Zahl privater Nachrichten, die ein Nutzer pro Tag verschicken kann."
     suggested_topics: "Zahl der empfohlenen Themen am Ende eines Themas."
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3."
-    s3_upload_bucket: "Der Amazon S3 Bucketname in den hochgeladene Dateien abgelegt werden."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
     s3_secret_access_key: "Der geheime Schlüssel von Amazon S3 welcher für das Hochladen verwendet wird"
     s3_region: "Der Name der Amazon S3 Region welche für das Hochladen verwendet wird"
@@ -594,7 +588,6 @@ de:
     newuser_max_images: "Maximale Zahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_attachments: "Maximale Zahl der Dateien, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die neue Benutzer in Beiträgen nutzen dürfen."
-    newuser_max_replies_per_topic: "Maximale Anzahl an Antworten, die ein neuer Benutzer in einem einzigen Thema geben darf."
     max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die man in einem Beitrag nutzen kann."
     create_thumbnails: "Erstelle Vorschaubilder für Bilder in einer Lightbox"
     email_time_window_mins: "Minuten Wartezeit, bevor eine Mail an Nutzer verschickt wird, um ihnen die Chance zu geben, eine Neuigkeit zuerst zu sehen."
@@ -609,7 +602,6 @@ de:
     category_colors: "Eine durch senkrechte Striche getrennte Liste hexadezimaler Farbwerte, die als Kategoriefarben erlaubt sind."
     max_image_size_kb: "Maximale Größe in Kilobytes (kB), die von Benutzern hochgeladene Bilder groß sein dürfen. Stelle sicher, dass dieser Wert auch in nginx (client_max_body_size) / Apache und Proxies konfiguriert ist."
     max_attachment_size_kb: "Maximale Größe in Kilobytes (kB), die von Benutzern hochgeladenen Dateien groß sein dürfen. Stelle sicher, dass dieser Wert auch in nginx (client_max_body_size) / Apache und Proxies konfiguriert ist."
-    authorized_extensions: "Eine Pipe-getrennte (|) Liste von Dateiendungen welche hochgeladen werden dürfen."
     max_similar_results: "Anzahl ähnlicher Themen, die ein Nutzer sieht, während er ein neues Thema erstellen."
     title_prettify: "Verhindert gängige Fehler im Titel, wie reine Grossschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende, etc."
     topic_views_heat_low: "Die Anzahl der Aufrufe bis die Popularität des Themas niedrig ist."
@@ -677,7 +669,6 @@ de:
     autoclosed_enabled_days:
       zero: "Dieses Thema wurde automatisch nach 1 Tag geschlossen. Neue Antworten sind nicht länger erlaubt."
     autoclosed_disabled: "Dieses Thema ist nun offen. Neue Beiträge werden angenommen."
-    pinned_enabled: "Dieses Thema ist nun angepinnt. In seiner Kategorie wird es nun oben aufgelistet, solange der Pin nicht von einem Moderator gelöst wird, oder nicht jeder Nutzer auf 'Pin lösen' klickt."
     pinned_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
     visible_enabled: "Dieses Thema ist nun sichtbar. Es wird in Themenlisten aufgeführt."
     visible_disabled: "Dieses Thema ist nun unsichtbar. Es wird nicht länger in Themenlisten aufgeführt und kann nur direkt über seinen Link aufgerufen werden."
@@ -764,31 +755,9 @@ de:
       <small>Am Fuß jeder Mail, die Du verschickst, sollte eine Möglichkeit zum Abbestellen gegeben werden. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn Du zukünftig keine weiteren Mail erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] neue Version verfügbar"
-    text_body_template: |
-      Eine neue Version von Discourse ist verfügbar.
-
-      **Neue Version: %{new_version}**
-
-      Deine Version: %{installed_version}
-
-      Bitte aktuallisiere die Installation so bald wie möglich um die neusten Fehlerbehebungen und Funktionen zu erhalten.
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatische Nachricht von %{site_name}, um Dich darüber zu informieren, dass Dein Beitrag
-
-        %{base_url}%{url}
-
-        wegen Meldungen aus der Community versteckt wurde.
-
-        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. **Überlege Dir daher, wie Du deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.** Du kannst deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und deine Stufe erhöht sich.
-
-        Wenn dieser Beitrag ein zweites Mal von der Community versteckt wird, werden die Moderatoren darauf aufmerksam gemacht. Dass kann weitere Konsequenzen haben, unter anderem auch eine Sperrung deines Kontos.
-
-        Weitere Hilfestellung findest Du in unseren [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Diese private Nachricht gibt ein paar Tipps für einen schnellen Start:
@@ -969,10 +938,7 @@ de:
         %{respond_instructions}
     digest:
       why: "Hier eine kurze Zusammenfassung, was auf %{site_link} passiert ist, seit Du das letzte Mal am %{last_seen_at} da warst."
-      subject_template: "[%{site_name}] Forenaktivität für den %{date}"
       new_activity: "Neues in deinen Themen und Beiträgen:"
-      top_topics: "Inhalte die dich vielleicht interessieren:"
-      other_new_topics: "Andere neue Themen:"
       unsubscribe: "Diese Zusammenfassung wurde Dir von %{site_link} geschickt, damit Du auf dem Laufenden bleibst, und weil wir nicht eine Weile nicht begrüßen durften.\nWenn Du diese Benachrichtigungen nicht mehr erhalten möchtest, kannst Du sie in deinen Maileinstellungen abschalten: %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "%{site_name} Übersicht"
@@ -1042,7 +1008,6 @@ de:
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
   deleted: 'gelöscht'
   upload:
-    edit_reason: "Kopien von externen Bildern wurden heruntergeladen"
     unauthorized: "Entschuldige, die Datei die du hochladen möchtest ist nicht erlaubt (Erlaubte Dateiendungen: %{authorized_extensions})."
     pasted_image_filename: "Hinzugefügtes Bild"
     attachments:
@@ -1057,8 +1022,3 @@ de:
     suspended_not_pm: "Benutzer ist gesperrt und Email ist keine private Nachricht"
     notification_already_read: "Die Benachrichtigung dieser Mail wurde bereits gelesen"
     message_blank: "Nachricht ist leer"
-  badges:
-    types:
-      gold: Gold
-      silver: Silber
-      bronze: Bronze

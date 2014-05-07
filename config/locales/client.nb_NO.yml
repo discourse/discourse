@@ -33,7 +33,6 @@ nb_NO:
     yes_value: "Ja"
     of_value: "av"
     generic_error: "Beklager, det har oppstått en feil."
-    log_in: "Logg Inn"
     age: "Alder"
     admin_title: "Admin"
     flags_title: "Flagg"
@@ -260,9 +259,7 @@ nb_NO:
       action: "Jeg glemte mitt passord"
       invite: "Skriv inn ditt brukernavn eller e-postaddresse, så sender vi deg en email for å tilbakestille ditt passord."
       reset: "Tilbakestill Passord"
-      complete: "Du burde snart motta en email med instruksjoner om hvordan du kan tilbakestille ditt passord."
     login:
-      title: "Logg Inn"
       username: "Brukernavn"
       password: "Passord"
       email_placeholder: "email addresse eller brukernavn"
@@ -301,13 +298,6 @@ nb_NO:
       min_length:
         need_more_for_title: "{{n}} igen for tittelen"
         need_more_for_reply: "{{n}} igjen for svaret"
-      error:
-        title_missing: "Tittel er obligatorisk."
-        title_too_short: "Tittelen må være minst {{min}} tegn lang."
-        title_too_long: "Tittelen må være mindre enn {{max}} tegn lang."
-        post_missing: "Innlegget kan ikke være tomt."
-        post_length: "Innlegget må være minst {{min}} tegn langt."
-        category_missing: "Du må velge en kategory."
       save_edit: "Lagre Endring"
       reply_original: "Besvar det Originale Emnet"
       reply_here: "Svar Her"
@@ -511,13 +501,11 @@ nb_NO:
         success: "Takk! Vi har invitert den personen til å delta i denne private meldingen."
         error: "Beklager, det oppstod en feil ved å invitere den brukeren."
       invite_reply:
-        title: 'Inviter Venner til å Svare'
         action: 'Email Invitasjon'
         help: 'send invitasjoner til venner så de kan svare på dette emnet med et enkelt klikk'
         email_placeholder: 'email'
         success: "Takk! Vi har sendt ut en invitasjon til <b>{{email}}</b>. Vi vil varsle deg når de følger opp din invitasjon. Sjekk 'invitasjoner' fanen på brukersiden din for en oversikt over hvem du har invitert."
         error: "Beklager, vi kunne ikke invitere den personen. Kanskje de allerede er en bruker?"
-      login_reply: 'Logg Inn for å Svare'
       filters:
         n_posts:
           one: "1 innlegg"
@@ -552,7 +540,6 @@ nb_NO:
       quote_reply: "siter svar"
       edit: "Redigerer {{link}} av {{replyAvatar}} {{username}}"
       post_number: "post {{number}}"
-      in_reply_to: "i svar til"
       reply_as_new_topic: "Svar som et nytt Emne"
       continue_discussion: "Fortsetter diskusjonen fra {{postLink}}:"
       follow_quote: "gå til det siterte innlegget"

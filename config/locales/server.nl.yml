@@ -20,7 +20,6 @@ nl:
   posts: "berichten"
   loading: "Laden"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, werkt het beste met JavaScript ingeschakeld'
-  log_in: "Inloggen"
   via: "%{username} via %{site_name}"
   is_reserved: "is gereserveerd"
   errors:
@@ -44,7 +43,6 @@ nl:
     loading: "Discussie laden..."
     permalink: "Permalink"
     imported_from: "Deze topic is een voortzetting van de oorspronkelijke topic: %{link}"
-    in_reply_to: "in reactie op %{username}"
     replies:
       one: "1 reactie"
       other: "%{count} reacties"
@@ -176,8 +174,6 @@ nl:
               cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
         user:
           attributes:
-            password:
-              common: "is een van de 5000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
             ip_address:
               signup_not_allowed: "Inschrijven vanaf dit account is niet toegestaan."
   user_profile:
@@ -189,7 +185,6 @@ nl:
   meta_category_description: "Discussies over dit forum, de organisatie, hoe het werk en hoe het verbeterd kan worden."
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor admins en moderatoren."
-  assets_topic_body: "Dit is een topic om forum assets voor het forum design in op te slaan. Verwijder deze niet!"
   category:
     topic_prefix: "Over de categorie %{category}"
     replace_paragraph: "[Vervang deze eerste regel met een korte omschrijving van je nieuwe categorie. Deze regel verschijnt in het selectiemenu als iemand een categorie kiest, dus hou het kort (max. 200 tekens). Deze categorie zal niet in de lijst verschijnen totdat je deze tekst wijzigt of zelf een topic in de categorie plaatst.]"
@@ -313,11 +308,9 @@ nl:
   post_action_types:
     off_topic:
       title: 'Off-topic'
-      description: 'Dit bericht wijkt erg af van het onderwerp van deze discussie, en moet wellicht naar een ander topic worden verplaatst.'
       long_form: 'heeft dit als off-topic gemeld'
     spam:
       title: 'Spam'
-      description: 'Dit bericht is in principe een advertentie zonder dit écht duidelijk te maken aan de leden. Het is niet relevant met betrekking tot de huidige discussie, maar is puur promotioneel in aard.'
       long_form: 'heeft dit als spam gemeld'
     inappropriate:
       title: 'Ongepast'
@@ -363,7 +356,6 @@ nl:
       email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Je bericht heeft het maximaal aantal moderatie-meldingen gekregen. Check je privé-berichten.</p>'
     user_must_edit: '<p>Gemelde inhoud verborgen.</p>'
   archetypes:
     regular:
@@ -610,7 +602,6 @@ nl:
     suppress_reply_directly_above: "Laat geen 'in antwoord op' zien bij een bericht als er maar één reactie boven staat"
     topics_per_period_in_top_summary: "Hoeveel topics moeten er geladen worden op de top-topics samenvatting"
     topics_per_period_in_top_page: "Hoeveel topics moeten er geladen worden op de top-topics pagina"
-    redirect_new_users_to_top_page_duration: "Het aantal dagen dat nieuwe gebruikers automatisch naar de toppagina doorgestuurd worden"
     enable_badges: "Activeer het badgesysteem (experimenteel)"
     allow_index_in_robots_txt: "De site zou geïndexeerd mogen worden door zoekmachines (update robots.txt)"
     email_domains_blacklist: "Een lijst met e-maildomeinen gescheiden door een |-teken van domeinen die niet worden toegestaan. Voorbeeld: mailinator.com|trashmail.net"
@@ -624,7 +615,6 @@ nl:
     login_required: "Inloggen vereist om berichten te kunnen lezen"
     min_username_length: "Minimum lengte gebruikersnaam. (Geldt niet als globaal unieke gebruikersnamen actief is)"
     min_password_length: "Minimum lengte wachtwoord."
-    block_common_passwords: "Weiger wachtwoorden uit de lijst van de 5000 meest gebruikte wachtwoorden."
     enable_sso: "Gebruikers kunnen inloggen via een andere site (Single Sign On)"
     sso_url: "URL van single sign on eindpunt"
     sso_secret: "Geheime tekenreeks voor het encrypten/decrypten van SSO informatie, zorg er voor dat het 10 tekens of langer is"
@@ -686,7 +676,6 @@ nl:
     newuser_max_images: "Hoeveel bestanden een nieuw lid in een bericht kan plaatsen"
     newuser_max_attachments: "Hoeveel bijlagen een nieuwe gebruiker aan een bericht kan toevoegen"
     newuser_max_mentions_per_post: "Maximum aantal @naam notificaties dat een nieuw lid in een bericht kan gebruiken"
-    newuser_max_replies_per_topic: "Maximum aantal reacties dat een nieuw lid in een topic mag plaatsen"
     max_mentions_per_post: "Maximum aantal @naam notificaties dat je in een bericht kan gebruiken"
     create_thumbnails: "Maak thumbnails agbeeldingen in een lightbox"
     email_time_window_mins: "Hoeveel minuten we wachten met het sturen van een e-mail naar een persoon, om ze een kans te geven het eerst op de site te kunnen lezen."
@@ -701,7 +690,6 @@ nl:
     category_colors: "Een lijst, gescheiden door een pipe (|), van hexadecimal kleurwaardes die gebruikt kunnen worden voor categorien"
     max_image_size_kb: "De maximale afbeeldingsgrootte die we toestaan voor uploads, in kB. Zorg er voor dat deze limiet ook ingesteld is in nginx (client_max_body_size) / apache of een proxy."
     max_attachment_size_kb: "De maximale bestandsgrootte die we toestaan voor uploads, in kB. Zorg er voor dat deze limiet ook ingesteld is in nginx (client_max_body_size) / apache of een proxy."
-    authorized_extensions: "Een met pipes (|) gescheiden lijst van bestandsextensies die mogen worden geupload"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
     title_prettify: "Voorkom veel voorkomende fouten in titels (alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
     title_sanitize: "Verwijder html-tags uit de titel"
@@ -809,7 +797,6 @@ nl:
       one: "Deze topic is automatisch na 1 minuut gesloten. Reageren is niet meer mogelijk."
       other: "Deze topic is automatisch na %{count} minuten gesloten. Reageren is niet meer mogelijk."
     autoclosed_disabled: "Deze topic is geopend. Reageren is mogelijk."
-    pinned_enabled: "Deze topic is nu gepind en zal bovenaan de lijst van topics in zijn categorie staan. Wanneer iemand op 'Verwijder pin' drukt, zal de topic voor diegene niet meer bovenaan staan."
     pinned_disabled: "Deze topic is niet langer gepind en zal niet meer bovenaan de lijst van topics in zijn categorie staan."
     visible_enabled: "Deze topic is nu zichtbaar en zal weer worden weergegeven in topiclijsten."
     visible_disabled: "Deze topic is nu onzichtbaar en zal niet worden weergegeven in topiclijsten, en kan alleen via een directe link worden bezocht."
@@ -908,51 +895,13 @@ nl:
       <small>Er zou een unsubscribe footer op elke email die je verstuurt moeten zitten zodat men direct kan afmelden mocht men deze mails niet willen ontvangen. Dus laten we er eentje opzetten!
   new_version_mailer:
     subject_template: "[%{site_name}] Update beschikbaar"
-    text_body_template: |
-      Er is een nieuwe versie van Discourse beschikbaar:
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Kijk wat er nieuw is in de [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Ga naar `/admin/docker`, herlaad de pagina een aantal keren en druk dan op de "Upgrade Discourse" knop.
-
-      - Ga naar http://meta.discourse.org voor nieuws, discussies over en support voor Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update beschikbaar"
-    text_body_template: |
-      Er is een nieuwe versie van Discourse beschikbaar:
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Kijk wat er nieuw is in de [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Ga naar `/admin/docker`, herlaad de pagina een aantal keren en druk dan op de "Upgrade Discourse" knop.
-
-      - Ga naar http://meta.discourse.org voor nieuws, discussies over en support voor Discourse.
-
-      ### Release notes
-
-      %{notes}
+  flags_reminder:
+    post_number: "bericht"
   system_messages:
     post_hidden:
       subject_template: "Bericht van %{site_name}: je bericht is verborgen wegens meldingen uit de community"
-      text_body_template: |
-        Hallo,
-
-        Dit is een geautomatiseerd bericht van %{site_name} om je te laten weten dat het bericht...
-
-        %{base_url}%{url}
-
-        is verborgen omdat het door de community is aangemeld als ongepast.
-
-        Houd er rekening mee dat meerdere leden van de community dit bericht hebben aangemeld voordat deze is verborgen. Denk er daarom goed over na hoe je je bericht aan zal passen om hun feedback zo goed mogelijk in acht te nemen. Je kan je bericht na %{edit_delay} minuten bewerken en het zal automatisch weer zichtbaar worden. Dit zal uiteindelijk je trustlevel verhogen.
-
-        Echter, als het bericht een tweede keer wordt verborgen door de community, wordt er een moderator ingelicht. Zij kunnen verdere actie ondernemen, waaronder een mogelijke schorsing van je account.
-
-        Voor extra duiding verwijzen wij je graag door naar onze [Veel gestelde Vragen](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Dit privé-bericht heeft een paar tips om je een eind op weg te helpen:
@@ -1180,10 +1129,7 @@ nl:
         %{respond_instructions}
     digest:
       why: "Hier is een korte samenvatting van de gesprekken op %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
-      subject_template: "[%{site_name}] Forumactiviteit op %{date}"
       new_activity: "Nieuwe reacties op je topics en berichten:"
-      top_topics: "Veel besproken topics:"
-      other_new_topics: "Andere nieuwe topics:"
       unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je 7 dagen hebben gemist op onze site. Mocht je dit uit willen zetten, of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
       click_here: "klik hier"
       from: "%{site_name} Digest"
@@ -1261,7 +1207,6 @@ nl:
     signup_form_message: 'Ik heb de <a href="/tos" target="_blank">Algemene Voorwaarden</a> gelezen en ga hiermee akkoord.'
   deleted: 'verwijderd'
   upload:
-    edit_reason: "We hebben lokale kopieën van afbeeldingen in dit bericht gedownload"
     unauthorized: "Sorry, je mag dat bestand niet uploaden (toegestane extensies: %{authorized_extensions})."
     pasted_image_filename: "Geplakte afbeelding"
     attachments:
@@ -1288,8 +1233,3 @@ nl:
     message_to_blank: "bericht.aan is leeg"
     text_part_body_blank: "text_part.body is leeg"
     body_blank: "geen tekst"
-  badges:
-    types:
-      gold: Goud
-      silver: Zilver
-      bronze: Brons

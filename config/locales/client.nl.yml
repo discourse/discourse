@@ -87,7 +87,7 @@ nl:
     of_value: "van"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
-    log_in: "Log in"
+    log_in: "Inloggen"
     age: "Leeftijd"
     joined: "Lid sinds"
     admin_title: "Beheer"
@@ -97,6 +97,7 @@ nl:
     faq: "FAQ"
     privacy_policy: "Privacy Policy"
     mobile_view: "Mobiele versie"
+    desktop_view: "Desktop Weergave"
     you: "Jij"
     or: "of"
     now: "zonet"
@@ -371,6 +372,8 @@ nl:
         instructions: "Moet te minste uit %{count} tekens bestaan."
       ip_address:
         title: "Laatste IP-adres"
+      registration_ip_address:
+        title: "Registratie IP-adres"
       avatar:
         title: "Profielfoto"
       title:
@@ -425,9 +428,10 @@ nl:
       action: "Ik ben mijn wachtwoord vergeten"
       invite: "Vul je gebruikersnaam of e-mailadres in en we sturen je een wachtwoord-herstel-mail."
       reset: "Herstel wachtwoord"
-      complete: "Als er een account is met die naam of dat e-mailadres, zou je binnenkort een mail moeten ontvangen met instructies hoe je je wachtwoord kan herstellen."
+      complete_username: "Als er een account gevonden kan worden met gebruikersnaam <b>%{username}<b/> dan zul je in een ogenblik een wachtwoord-herstel-mail ontvangen."
+      complete_email: "Als er een account gevonden kan worden met het emailadres <b>%{email}<b/> dan zul je in een ogenblik een wachtwoord-herstel-mail ontvangen."
     login:
-      title: "Log in"
+      title: "Inloggen"
       username: "Gebruikersnaam"
       password: "Wachtwoord"
       email_placeholder: "e-mail of gebruikersnaam"
@@ -522,6 +526,7 @@ nl:
       admin_options_title: "Optionele stafinstellingen voor deze topic"
       auto_close_label: "Sluit topic automatisch:"
       auto_close_units: "(# uren, een tijd of een volledige datum en tijd)"
+      auto_close_examples: 'voer absoluut tijdstip of aantal uur in — 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Vul een geldige waarde in."
     notifications:
       title: "notificaties van @naam vermeldingen, reacties op je berichten en topics, privé-berichten, etc."
@@ -545,6 +550,7 @@ nl:
       from_my_computer: "Vanaf mijn apparaat"
       from_the_web: "Vanaf het web"
       remote_tip: "link naar afbeelding http://example.com/image.jpg"
+      remote_tip_with_attachments: "vul een url in van een afbeelding of bestand: http://example.com/file.ext (toegestane extensies: {{authorized_extensions}})."
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
       local_tip_with_attachments: "klik om een afbeelding of bestand vanaf je apparaat te selecteren (toegestane extensies: {{authorized_extensions}})."
       hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
@@ -734,7 +740,7 @@ nl:
         success: "Bedankt! We hebben deze persoon dit privé-bericht gestuurd."
         error: "Sorry, er is iets misgegaan bij het uitnodigen van deze persoon"
       invite_reply:
-        title: 'Nodig vrienden uit'
+        title: 'Anderen uitnodigen'
         action: 'Mail uitnodiging'
         help: 'verstuur uitnodigingen naar vrienden zodat zij met één klik kunnen reageren op deze topic'
         to_topic: "We zullen je vriend een korte e-mail sturen waardoor zij op deze topic kunnen reageren door op een link te klikken."
@@ -789,7 +795,7 @@ nl:
       edit: "Bewerken van {{link}} door {{replyAvatar}} {{username}}"
       edit_reason: "Reden: "
       post_number: "bericht {{number}}"
-      in_reply_to: "in reactie op"
+      in_reply_to: "Reageer op"
       last_edited_on: "bericht gewijzig op"
       reply_as_new_topic: "Reageer in een nieuwe topic"
       continue_discussion: "Voortzetting van de discussie {{postLink}}:"
@@ -1163,6 +1169,7 @@ nl:
         disagree_title: "Niet eens met de markering, verwijder elke markering van dit bericht"
         delete_spammer_title: "Verwijder de gebruiker en al hun berichten en topics."
         clear_topic_flags: "Gedaan"
+        clear_topic_flags_title: "Het topic is onderzocht en problemen zijn opgelost. Klik op Gedaan om de meldingen te verwijderen."
         flagged_by: "Gemarkeerd door"
         system: "Systeem"
         error: "Er ging iets mis"
@@ -1282,6 +1289,19 @@ nl:
         delete: "Verwijder"
         delete_confirm: "Verwijder deze aanpassing?"
         about: "Met aanpassingen aan de site kun je stylesheets en headers wijzigen. Kies of voeg een toe om te beginnen."
+        color: "Kleur"
+        opacity: "Doorzichtigheid"
+        copy: "Kopieër"
+        css_html:
+          title: "CSS, HTML"
+          long_title: "CSS en HTML aanpassingen"
+        colors:
+          title: "Kleuren"
+          long_title: "Kleurenschema's"
+          about: "Met kleurenschema's kun je de kleuren in de site aanpassen zonder CSS te hoeven gebruiken. Kies er één of voeg er één to om te beginnen."
+          new_name: "Nieuw kleurenschema"
+          copy_name_prefix: "Kopie van"
+          delete_confirm: "Dit kleurenschema verwijderen?"
       email:
         title: "E-mail"
         settings: "Instellingen"
@@ -1427,6 +1447,7 @@ nl:
         unsuspend_failed: "Er ging iets fout bij het deblokkeren van deze gebruiker: {{error}}"
         suspend_duration: "Hoe lang wil je deze gebruiker blokkeren?"
         suspend_duration_units: "(dagen)"
+        suspend_reason_label: "Waarom schors je deze gebruiker? <b>Iedereen zal deze tekst kunnen zien</b> op de profielpagina van deze gebruiker en zal getoond worden als deze gebruiker probeert in te loggen. Houd het kort en bondig."
         suspend_reason: "Reden"
         suspended_by: "Geschorst door"
         delete_all_posts: "Verwijder alle berichten"
@@ -1541,6 +1562,7 @@ nl:
         new_badge: Nieuwe badge
         new: Nieuw
         name: Naam
+        badge: Embleem
         display_name: Lange naam
         description: Omschrijving
         badge_type: Badgetype
@@ -1557,6 +1579,7 @@ nl:
         grant: Toekennen
         no_user_badges: "%{name} heeft nog geen badges toegekend gekregen."
         no_badges: Er zijn geen badges die toegekend kunnen worden.
+        allow_title: Embleem mag als titel gebruikt worden
     lightbox:
       download: "download"
     keyboard_shortcuts_help:

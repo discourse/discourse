@@ -180,8 +180,6 @@ id:
   user_notifications:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
-    digest:
-      other_new_topics: "Topik Baru Lain:"
   upload:
     attachments:
       too_large: "Maaf, berkas yang Anda unggah terlalu besar (ukuran maksimum adalah %{max_size_kb}%kb)."

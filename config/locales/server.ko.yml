@@ -182,11 +182,9 @@ ko:
   post_action_types:
     off_topic:
       title: '오프 토픽'
-      description: '이 게시물은 이곳의 토픽과 관련된것 같지 않습니다. 다른 토픽으로 옮기거나 새로운 토픽을 시작하는 것이 어떤가요?'
       long_form: '오프 토픽으로 신고하기'
     spam:
       title: '스팸'
-      description: '이 게시물은 광고성으로 판단되어집니다. 이 글은 현재 대화에서 유용하지도, 관련되지 않습니다.'
       long_form: '스팸으로 신고하기'
     inappropriate:
       title: '부적절함'
@@ -217,7 +215,6 @@ ko:
       description: '투표하기'
       long_form: '투표 됨'
   flagging:
-    you_must_edit: '<p>사용자의 게시물이 신고접수 되었습니다. 개인 메세지를 참고하여 주세요.</p>'
     user_must_edit: '<p>신고 접수된 글은 보이지 않습니다.</p>'
   archetypes:
     regular:
@@ -475,7 +472,6 @@ ko:
     clean_up_uploads: "Remove orphaned uploads to prevent illegal hosting. WARNING: you might want to make a backup of your /uploads directory before enabled this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     enable_s3_uploads: "Place uploads on Amazon S3"
-    s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into"
     s3_access_key_id: "이미지 업로드를 위한 아마존 S3 ACCESS KEY"
     s3_secret_access_key: "이미지 업로드를 위한 아마존 S3 SECRET ACCESS KEY"
     s3_region: "이미지 업로드를 위한 아마존 S3 REGION"
@@ -511,7 +507,6 @@ ko:
     category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
     max_image_size_kb: "사용자가 업로드 할 수 있는 이미지 최대 kB 사이즈 - nginx(client_max_body_size), apache, proxy 역시 설정해야함"
     max_attachment_size_kb: "사용자가 업로드 할 수 있는 파일 최대 kB 사이즈 - nginx(client_max_body_size), apache, proxy 역시 설정해야함"
-    authorized_extensions: "(|) 파이프 문자로 나뉜 업로드할 수 있는 파일 확장자 리스트"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     topic_views_heat_low: "The number of views after which a topic's heat level is low."
@@ -572,7 +567,6 @@ ko:
     closed_enabled: "이 토픽은 이제 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     closed_disabled: "이 토픽은 이제 열렸습니다. 새로운 답글을 다실 수 있습니다."
     autoclosed_disabled: "이 토픽은 이제 열렸습니다. 새로운 답글을 허용합니다."
-    pinned_enabled: "이 토픽은 이제 고정되었습니다. 고정 취소 버튼을 누르거나 중간 관리자에게서 고정이 풀릴때까지 카테고리 상단에 보일 것입니다."
     pinned_disabled: "이 토픽은 이제 고정이 풀렸습니다. 더이상 카테고리 상단에 보이지 않을 것입니다."
     visible_enabled: "이 토픽은 이제 다른 사람이 볼 수 있습니다. 토픽 목록에서 찾으실 수 있습니다."
     visible_disabled: "이 토픽은 이제 보이지 않습니다. 더이상 토픽 목록에서 찾을 수 없고 이 토픽은 링크를 통해서만 볼 수 있습니다."
@@ -671,31 +665,9 @@ ko:
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] 는 업데이트 가능합니다."
-    text_body_template: |
-      새로운 버전의 Discourse가 있습니다.
-
-      **새버전: %{new_version}**
-
-      현재버전: %{installed_version}
-
-      새로운 기능과 버그 수정을 위해 업그레이드를 해주세요.
   system_messages:
     post_hidden:
       subject_template: "포럼 신고로 인한 게시글 숨김"
-      text_body_template: |
-        안녕하십니까.
-
-        이 메시지는 %{site_name} 사이트에서 당신의 게시글에 관해 자동 생성된 메시지입니다.
-
-        %{base_url}%{url}
-
-        ... 는 포럼의 신고로 인해서 숨겨졌습니다.
-
-        이 글이 숨겨지기 전에 여러 사용자에 의해서 신고가 되었다는 것을 기억하십시요. so **그들의 의견을 참조해서 당신의 게시글을 재작성 할 것을 고려해주세요.** %{edit_delay} 분 후 당신은 게시글을 수정할 수 있습니다, 그러면 자동으로 숨김 해제 됩니다. 이 작업이 당신의 신뢰도를 올리는데 작용될 것입니다.
-
-        만약 당신의 게시글이 다시한번 더 숨겨진다면, 중간 관리자에게 알려지게 됩니다. -- 계정 삭제를 비롯하여 다양한 조취가 취해질 수 있습니다.
-
-        좀 더 알고 싶으시다면 [FAQ](%{base_url}/faq)를 참조해주세요.
     usage_tips:
       text_body_template: |
         이 개인 메세지에서 몇가지 팁을 알려드리고자 합니다.
@@ -865,10 +837,7 @@ ko:
         %{respond_instructions}
     digest:
       why: "이것은 %{site_link} 사이트에서 %{last_seen_at} 이후 간략하게 정리해놓은 것 입니다."
-      subject_template: "[%{site_name}] 포럼 활동 %{date}"
       new_activity: "당신의 토픽과 게시물에 등록된 새로운 활동:"
-      top_topics: "커뮤니티에서 인기있는 최근 게시물들:"
-      other_new_topics: "다른 새로운 토픽:"
       unsubscribe: "이 이메일은 사용자님께서 한동안 %{site_link}에 방문하지 않아 사이트의 활동들을 요약한것 입니다. 만약 구독 해지를 원하시면 링크를 클릭해주세요. %{unsubscribe_link}"
       click_here: "클릭"
       from: "%{site_name} 요약"

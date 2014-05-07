@@ -39,7 +39,7 @@ ko:
           other: "> %{count}년"
         almost_x_years:
           other: "%{count}년"
-        date_month: "MMM D"
+        date_month: "MMM D일"
         date_year: "'YY M/D"
       medium:
         x_minutes:
@@ -48,7 +48,7 @@ ko:
           other: "%{count}시간"
         x_days:
           other: "%{count}일"
-        date_year: "YYYY D MMM"
+        date_year: "YYYY MMM D"
       medium_with_ago:
         x_minutes:
           other: "%{count}분 전"
@@ -75,7 +75,7 @@ ko:
     age: "생성"
     joined: "가입함"
     admin_title: "운영자"
-    flags_title: "신고"
+    flags_title: "깃발 표시"
     show_more: "더 보기"
     links: 링크
     faq: "FAQ"
@@ -385,7 +385,6 @@ ko:
       action: "비밀번호를 잊어버렸습니다."
       invite: "사용자 이름 또는 이메일 주소를 입력하시면 비밀번호 재설정 이메일을 보내드립니다."
       reset: "암호 재설정"
-      complete: "이메일이 맞다면 곧 암호를 재설정하는 지침 이메일을 수신합니다."
     login:
       title: "회원가입"
       username: "아이디"
@@ -508,7 +507,6 @@ ko:
       local_tip: "내 컴퓨터에서 이미지를 가져오기"
       local_tip_with_attachments: "내 컴퓨터에서 이미지나 파일 가져오기 (사용 가능한 확장자: {{authorized_extensions}})"
       hint: "(드래그&드랍으로 업로드 가능)"
-      hint_for_supported_browsers: "(드래그&드랍으로 이미지 업로드 가능)"
       uploading: "업로드 중입니다..."
     search:
       title: "토픽, 게시물, 사용자, 카테고리를 검색"
@@ -674,7 +672,6 @@ ko:
         success: "감사합니다! 사용자가 개인 메세지에 참여할 수 있도록 초대했습니다."
         error: "죄송합니다. 해당 사용자를 초대하는 도중 오류가 발생했습니다."
       invite_reply:
-        title: '초대 이메일 보내기'
         action: '이메일 초대'
         help: '한 번의 클릭으로 이 토픽에 답글을 추가할 수 있도록 친구에게 초대장을 보낼 수 있습니다.'
         to_topic: "당신의 친구에게 요약 이메일을 보내고 이 글에 답글을 작성할 수 있도록 링크를 제공합니다.(로그인이 필요없습니다)"
@@ -704,8 +701,8 @@ ko:
         select_replies: '선택 + 답글'
         delete: 선택 삭제
         cancel: 선택을 취소
-        select_all: 모두 선택
-        deselect_all: 모두 선택 해제
+        select_all: 전체 선택
+        deselect_all: 전체 선택 해제
         description:
           other: <b>{{count}}</b>개의 개시글을 선택하셨어요.
     post:
@@ -715,7 +712,7 @@ ko:
       edit: "{{replyAvatar}} {{username}}님의 글에 답글 편집"
       edit_reason: "Reason: "
       post_number: "{{number}}번째 게시물"
-      in_reply_to: "답글"
+      in_reply_to: "답글 to"
       last_edited_on: "마지막으로 편집:"
       reply_as_new_topic: "새로운 토픽으로 답글"
       continue_discussion: "{{postLink}}에서 토론을 계속:"
@@ -744,7 +741,7 @@ ko:
         reply: "이 게시물에 대한 답글을 작성합니다."
         like: "이 게시물을 좋아합니다."
         edit: "이 게시물을 편집합니다."
-        flag: "이 게시물을 신고하거나 알림을 보냅니다."
+        flag: "이 게시물을 깃발 표시\x1D하거나 비공개 알림을 보냅니다."
         delete: "이 게시물을 삭제합니다."
         undelete: "이 게시물 삭제를 취소합니다."
         share: "이 게시물에 대한 링크를 공유합니다."
@@ -753,7 +750,7 @@ ko:
           yes_value: "예, 답글도 삭제합니다."
           no_value: "아니오, 게시글만 삭제합니다."
       actions:
-        flag: '신고'
+        flag: '깃발 표시'
         clear_flags:
           other: "깃발 표시 제거"
         it_too:
@@ -772,7 +769,7 @@ ko:
           like: "X"
           vote: "X"
         people:
-          off_topic: "{{icons}}님은 이 게시물을 토픽에서 벗어남으로 신고했습니다."
+          off_topic: "{{icons}}님은 이 게시물을 오프토픽으로 표시했습니다."
           spam: "{{icons}}님은 이 게시물을 스팸으로 신고했습니다."
           inappropriate: "{{icons}}님은 이 게시물을 부적절하다고 신고했습니다."
           notify_moderators: "{{icons}}님은 이 게시물을 중간 관리자에게 보고했습니다."
@@ -874,13 +871,13 @@ ko:
       parent: "부모 카테고리"
     flagging:
       title: '왜 이 게시글을 privately flagging 하나요?'
-      action: '게시물 신고'
+      action: '게시물 깃발 표시'
       take_action: "조치를 취하기"
       notify_action: '알림'
       delete_spammer: "스팸 사용자 삭제"
       delete_confirm: "당신은 이 사용자의 %{posts}개의 게시글과 %{topics}개의 토픽을 삭제하고 IP주소 %{ip_address}와 이메일 %{email}을 영구 블락 합니다. 이 사용자가 진짜 악성 사용자 입니까? "
       yes_delete_spammer: "예, 스팸 사용자 삭제."
-      cant: "죄송합니다, 당신은 지금 이 게시물을 신고 할 수 없습니다."
+      cant: "죄송합니다, 당신은 지금 이 게시물을 깃발 표시 할 수 없습니다."
       custom_placeholder_notify_user: "해당 유저에게 게인 메세지를 보내 이 문제를 해결할 수 있습니다."
       custom_placeholder_notify_moderators: "이 게시물을 중앙 관리자에게 알리겠습니까? 구체적으로 사용자님께서 걱정하는 것과 가능한 모든 관련된 링크를 제공해주세요."
       custom_message:
@@ -1024,16 +1021,16 @@ ko:
           all_time: "모든 시간"
           7_days_ago: "7일"
           30_days_ago: "30일"
-          all: "모두"
+          all: "전체"
           view_table: "테이블로 보기"
           view_chart: "차트로 보기"
       commits:
         latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
         by: "에 의해"
       flags:
-        title: "신고"
-        old: "지난 신고"
-        active: "신고"
+        title: "깃발 표시"
+        old: "지난"
+        active: "활성화된"
         agree_hide: "동의 (게시글 숨기기 + 개인 메시지 보내기)"
         agree_hide_title: "이 게시물을 숨기고 사용자에게 편집하라는 개인 메시지를 보냅니다."
         defer: "연기"
@@ -1046,11 +1043,11 @@ ko:
         disagree_title: "신고에 동의하지 않고, 이 게시글에 달린 신고는 삭제"
         delete_spammer_title: "사용자와 모든 토픽, 게시글 삭제."
         clear_topic_flags: "완료"
-        flagged_by: "신고자"
+        flagged_by: "깃발표시 한 사람"
         system: "System"
         error: "뭔가 잘못 됐어요"
         view_message: "답글"
-        no_results: "신고가 없습니다."
+        no_results: "깃발 표시가 없습니다."
         topic_flagged: "이 <strong>토픽</strong>은 깃발표시 되었습니다."
       groups:
         primary: "주 그룹"
@@ -1149,6 +1146,7 @@ ko:
         title: "이메일"
         settings: "설정"
         all: "전체"
+        sending_test: "테스트 메일 발송중..."
         sent: "보낸 메일"
         skipped: "생략"
         sent_at: "보냄"
@@ -1213,6 +1211,8 @@ ko:
             delete_site_customization: "사이트 커스텀화 삭제"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
+            grant_badge: "배지 부여"
+            revoke_badge: "배지 파기"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
@@ -1314,6 +1314,8 @@ ko:
         time_read: "읽은 시간"
         delete: "사용사 삭제"
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
+        cant_delete_all_too_many_posts:
+          other: "이 사용자는 %{count}개 보다 많은 글을 작성하였기 때문에 모든 글을 삭제 할 수 없습니다. (delete_all_posts_max 설정참고)"
         delete_confirm: "당신은 영구적으로 사이트에서 이 사용자를 삭제 하시겠습니까? 이 조치는 영구적입니다!"
         delete_and_block: "예, 그리고 이메일과 IP주소를 블락합니다."
         delete_dont_block: "예, 그리고 이메일과 IP주소를 허용합니다."
@@ -1374,6 +1376,14 @@ ko:
           backups: "백업"
       badges:
         new: New
+        granted_by: 배지 부여자
+        granted_at: 배지 수여일
+        revoke: 파기
+        revoke_confirm: 정말로 이 배지를 파기하시겠습니까?
+        edit_badges: 배지 수정
+        grant_badge: 배지 부여
+        granted_badges: 부여된 배지
+        grant: 부여
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1413,3 +1423,6 @@ ko:
         mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
         mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
         mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
+    badges:
+      example_badge:
+        description: 이것은 일반적인 배지 예시입니다.

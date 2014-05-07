@@ -173,7 +173,7 @@ zh_CN:
         user:
           attributes:
             password:
-              common: "是 5000 个最常用的密码之一。请用一个更安全的密码。"
+              common: "是 10000 个最常用的密码之一。请用一个更安全的密码。"
             ip_address:
               signup_not_allowed: "不能使用这个账户登入。"
   user_profile:
@@ -334,7 +334,7 @@ zh_CN:
       email_title: '"%{title}" 主题需要您的关注'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>您的帖子已经到达标记阈值，请查看您的私信。</p>'
+    you_must_edit: '<p>您的帖子被社群成员标记了。请<a href="/my/private-messages">查看您的私信</a>。</p>'
     user_must_edit: '<p>标记的内容已隐藏。</p>'
   archetypes:
     regular:
@@ -586,7 +586,6 @@ zh_CN:
     topics_per_period_in_top_summary: "在热门主题列表中显示多少个主题"
     topics_per_period_in_top_page: "在热门主题页面中显示多少个主题"
     redirect_users_to_top_page: "自动重定向至新用户或者长时间未登入的用户至热门页面"
-    redirect_new_users_to_top_page_duration: "新用户被自动重定向至热门页面的天数"
     enable_badges: "启用徽章系统（实验性）"
     allow_index_in_robots_txt: "允许搜索引擎索引站点内容（更新 robots.txt）"
     email_domains_blacklist: "竖线 | 分隔的邮箱域名黑名单，例如：mailinator.com|trashmail.net"
@@ -600,7 +599,7 @@ zh_CN:
     login_required: "需要登入才能阅读帖子"
     min_username_length: "最小用户名长度。（当全局昵称启用无效）"
     min_password_length: "最小密码长度。"
-    block_common_passwords: "不允许使用 5000 个最常用的密码。"
+    block_common_passwords: "不允许使用 10000 个最常用的密码。"
     enable_sso: "启用外部站点单点登录"
     sso_url: "单点登录 URL 入口点"
     sso_secret: "秘密字符串，用于加密/解密 SSO 信息，请保证有 10 个字符或者更长"
@@ -662,7 +661,7 @@ zh_CN:
     newuser_max_images: "一个访问者可以加入到一个帖子里的图片数量"
     newuser_max_attachments: "一个访问者可以加入到一个帖子里的附件数量"
     newuser_max_mentions_per_post: "一个访问者可以在一个帖子里使用 @name 提及的最大数量"
-    newuser_max_replies_per_topic: "一个访问者在一个帖子里的最大回复数量"
+    newuser_max_replies_per_topic: "直至有人回复他们前，新用户在一个帖子里的最大回复数量"
     max_mentions_per_post: "您可以在一个帖子里使用 @name 提及的最大数量"
     create_thumbnails: "为 lightbox 的图片创建缩略图"
     email_time_window_mins: "等待多少分钟才给用户发送通知电子邮件，好让他们有机会自己来浏览"
@@ -677,6 +676,7 @@ zh_CN:
     category_colors: "设置分类颜色的用'|'分隔的十六进制色彩值列表"
     max_image_size_kb: "允许用户上传的最大文件大小(以kB为单位) - 确保在nginx(client_max_body_size)，apache 或代理中进行限制文件大小的配置."
     max_attachment_size_kb: "允许用户上传的最大文件大小（单位：KB）——同时在 nginx（client_max_body_size）/apache 或代理中配置他们。"
+    authorized_extensions: "用'|'分割的允许上传文件的扩展名列表（'*' 表示允许所有文件类型）"
     max_similar_results: "当用户撰写新主题时，显示多少类似主题给用户"
     title_prettify: "防止常见标题里的错别字和错误，包括全部大写，第一个字符小写，多个'！'和'？'，结尾多余的'.'等等。"
     title_sanitize: "从标题中移除 HTML 标签"
@@ -721,7 +721,7 @@ zh_CN:
     dominating_topic_minimum_percent: "用户在主题中的帖子占到多少百分比时使得用户主导话题。"
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章"
     min_posts_for_search_in_topic: "如果主题中的帖子数小于设定值，禁用主题内搜索"
-    global_notice: "为所有用户显示全局横幅，留空隐藏它（可以使用 HTML）"
+    global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
     enable_names: "允许用户显示全名"
     display_name_on_posts: "在用户的帖子中显示他们的全名"
     invites_shown: "用户页上显示的最大邀请数"
@@ -926,21 +926,29 @@ zh_CN:
     how_to_disable: "将 notify_about_flags_after 设为 0 禁用这个通知邮件。"
     subject_template:
       other: "%{count} 个标记需要处理"
+  flag_reasons:
+    off_topic: "您的帖子被标记为**偏离主题**：社群认为它不适合处于这个主题中，主题应与标题和第一个帖子有关。"
+    inappropriate: "您的帖子被标记为**不恰当**：社群认为它有冒犯、侮辱或者违反了[社群指引](/faq)。"
+    spam: "您的帖子被标记为**广告**：社群认为它为广告，不包含任何对当前讨论有帮助的内容，只有促销信息。"
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了您的帖子"
       text_body_template: |
         您好，
 
-        这是一封从 %{site_name} 自动发出的邮件，通知您下面的帖子由于论坛用户的标记而被隐藏不可见。
+        这是一封从 %{site_name} 自动发出的邮件，通知您的帖子...
 
         %{base_url}%{url}
 
-        您的帖子是因为被多个社群成员标记而被隐藏的。请根据他们的反馈考虑如何修改您的帖子。您可以在 %{edit_delay} 分钟后开始编辑您的帖子，然后它会被自动取消隐藏。这将提高您的论坛信任等级。
+        ... 由于论坛用户的标记而被隐藏。
 
-        但是，如果帖子再次被社群标记而隐藏，版主将收到通知，这将可能导致进一步的措施，包括可能禁止您的用户帐号。
+        %{flag_reason}
 
-        需要更多指导，请查看我们的 [FAQ](%{base_url}/faq).
+        请注意您的帖子是因为被多个社群成员标记才被隐藏的。**请根据他们的反馈考虑如何修改您的帖子。**您可以在 %{edit_delay} 分钟后开始编辑您的帖子，然后它会被自动取消隐藏。这将提高您在论坛的信任等级。
+
+        但是，如果帖子再次被社群标记而隐藏，版主将收到通知——并且可能导致进一步的措施，包括可能禁止您的用户帐号。
+
+        需要了解更多指引，请查看我们的 [FAQ](%{base_url}/faq)。
     usage_tips:
       text_body_template: |
         这条私信包含了一些可以让您快速开始的技巧提示：
@@ -1170,10 +1178,10 @@ zh_CN:
         %{respond_instructions}
     digest:
       why: "这里是自从我们在 %{last_seen_at} 最后一次见到您之后，在 %{site_link} 发生的事情的简单汇总。"
-      subject_template: "[%{site_name}] %{date} 的论坛动态"
+      subject_template: "[%{site_name}] %{date} 的摘要"
       new_activity: "在您的主题和帖子里的动态："
-      top_topics: "我们喜欢的新主题："
-      other_new_topics: "其它新主题:"
+      top_topics: "热门帖子"
+      other_new_topics: "热门主题"
       unsubscribe: "这封来自 %{site_link} 的汇总邮件是当我们有一段时间没有见到您之后，作为一个礼貌的通知发送给您的。\n点击 %{unsubscribe_link} 取消订阅。"
       click_here: "点击此处"
       from: "%{site_name} 摘要"
@@ -1250,6 +1258,7 @@ zh_CN:
     signup_form_message: '我已经阅读并接受 <a href="/tos" target="_blank">服务条款</a>。'
   deleted: '已删除'
   upload:
+    edit_reason: "下载外部图片留作副本"
     unauthorized: "抱歉，您没有上传文件的权限（验证扩展：%{authorized_extensions}）。"
     pasted_image_filename: "粘贴的图像"
     store_failure: "用户#%{user_id} 上传的 #%{upload_id} 保存失败。"
@@ -1277,8 +1286,5 @@ zh_CN:
     message_to_blank: "message.to 为空"
     text_part_body_blank: "text_part.body 为空"
     body_blank: "body 为空"
-  badges:
-    types:
-      gold: 金
-      silver: 银
-      bronze: 铜
+  color_schemes:
+    base_theme_name: "基础"

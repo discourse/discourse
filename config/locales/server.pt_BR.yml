@@ -20,7 +20,6 @@ pt_BR:
   posts: "postagens"
   loading: "Carregando"
   powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript ativado'
-  log_in: "Entrar"
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
   errors:
@@ -43,7 +42,6 @@ pt_BR:
       other: "%{count} respostas a mais"
     loading: "Carregando Discussão..."
     permalink: "Permalink"
-    in_reply_to: "em resposta a %{username}"
     replies:
       one: "1 resposta"
       other: "%{count} respostas"
@@ -162,8 +160,6 @@ pt_BR:
               cant_send_pm: "Desculpe, não podes enviar uma mensagem particular para esse utilizador."
         user:
           attributes:
-            password:
-              common: "é uma das 5000 mais comuns senhas. Por favor, use uma senha mais segura."
             ip_address:
               signup_not_allowed: "Cadastro não é permitido a partir desta conta."
   user_profile:
@@ -175,7 +171,6 @@ pt_BR:
   meta_category_description: "Discussão sobre este fórum, sua organização, como ele funciona e como podemos melhorá-lo."
   staff_category_name: "Equipe"
   staff_category_description: "Categoria particular para as discussões da equipe. Tópicos só são visíveis para os administradores e moderadores."
-  assets_topic_body: "Este é um tópico para armazenar recursos do fórum utilizados no design. Não excluí-lo!"
   category:
     topic_prefix: "Sobre a categoria %{category} "
     replace_paragraph: "[Substitua este primeiro parágrafo com uma breve descrição de sua nova categoria. Esta orientação será exibida na área de seleção de categoria, assim, tente mantê-lo abaixo de 200 caracteres. Até que você edite o texto ou crie tópicos, esta categoria não aparecerá na página de categorias.]"
@@ -299,11 +294,9 @@ pt_BR:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'Esta postagem é radicalmente off-topic nesta conversa, e possivelmente deveria ser movida para um tópico diferente.'
       long_form: 'sinalizou isto como off-topic'
     spam:
       title: 'Spam'
-      description: 'Esta postagem é claramente um anúncio sem interesse. Não é util nem relevante para esta conversa, mas é promocional por natureza.'
       long_form: 'sinalizado como spam'
     inappropriate:
       title: 'Inapropriado'
@@ -349,7 +342,6 @@ pt_BR:
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>A sua postagem atingiu o nível máximo de sinalizações. Por favor leia as suas mensagens particulares.</p>'
     user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
   archetypes:
     regular:
@@ -596,7 +588,6 @@ pt_BR:
     suppress_reply_directly_above: "Não exibir \"em resposta a\" numa postagem quando houver apenas uma resposta diretamente a seguir"
     topics_per_period_in_top_summary: "Quantos tópicos carregados no resumo de melhores tópicos"
     topics_per_period_in_top_page: "Quantos tópicos carregado na página de melhores tópicos"
-    redirect_new_users_to_top_page_duration: "Número de dias durante os quais os novos usuários são automaticamente redirecionados para a página Melhores"
     enable_badges: "Habilita o sistema de emblemas (experimental)"
     allow_index_in_robots_txt: "Site deve ser indexado por mecanismos de busca (atualize robots.txt)"
     email_domains_blacklist: "Uma lista delimitada por barras (|) de domínios de email que não são permitidos. Exemplo: mailinator.com|trashmail.net"
@@ -610,7 +601,6 @@ pt_BR:
     login_required: "Exigir autenticação para ler as postagens"
     min_username_length: "Comprimento mínimo do nome de usuário. (Não se aplica caso exclusividade global de apelido está forçada)"
     min_password_length: "Comprimento mínimo da senha."
-    block_common_passwords: "Não permitir senhas que estejam nas 5000 mais comuns senhas."
     enable_sso: "Ativar logon único através de um site externo"
     sso_url: "URL destino do logon único"
     sso_secret: "Cadeia secreta usada para criptografar/descriptografar informações SSO, certifique-se que tenha 10 caracteres ou mais"
@@ -650,7 +640,6 @@ pt_BR:
     clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um upload órfão ser removido."
     purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
     enable_s3_uploads: "Enviar arquivos recebidos para o s3"
-    s3_upload_bucket: "Bucket do s3 para qual enviar"
     s3_access_key_id: "Access key da Amazon S3 que será usada para envio de imagens"
     s3_secret_access_key: "Secret access key da Amazon S3 que será usada para envio de imagens"
     s3_region: "Region name da Amazon S3 que será usada para envio de imagens"
@@ -672,7 +661,6 @@ pt_BR:
     newuser_max_images: "Quantas imagens um usuário novo pode adicionar em uma postagem"
     newuser_max_attachments: "Quantos anexos um novo usuário pode adicionar à sua postagem"
     newuser_max_mentions_per_post: "Número máximo de citações usando @name um usuário novo pode fazer em uma postagem"
-    newuser_max_replies_per_topic: "Número máximo de respostas que um novo usuário pode fazer em um único tópico"
     max_mentions_per_post: "Quantidade máxima de @notifications você pode add to a post"
     create_thumbnails: "Criar miniaturas para imagens no lightbox"
     email_time_window_mins: "Quantos minutos esperar antes de enviar um email para o usuário, para dar a chance a ele de ver antes."
@@ -687,7 +675,6 @@ pt_BR:
     category_colors: "Lista separada por barra (|) das cores em hexadecimal permitidas para as categorias"
     max_image_size_kb: "Tamanho máximo de imagens que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
     max_attachment_size_kb: "Tamanho máximo de arquivos que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
-    authorized_extensions: "Uma lista separada por barras verticais (|) das extensões de arquivo permitidas para envio"
     max_similar_results: "Quantos tópicos similares devem ser exibidos para um usuário enquanto ele está redigindo um novo tópico"
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     topic_views_heat_low: "Número de visualizações a partir da qual o nível de calor de um tópico se torna baixo."
@@ -729,7 +716,6 @@ pt_BR:
     dominating_topic_minimum_percent: "Qual a percentagem de mensagens de um usuário em um tópico antes de considerá-lo dominante."
     suppress_uncategorized_badge: "Não exibir emblema para assuntos não categorizados em listas de tópicos"
     min_posts_for_search_in_topic: "Desativar pesquisa dentro do tópico se tópicos tem um número mínimo de mensagens"
-    global_notice: "Mostrar um banner global para todos os usuários do site, mude para blank para esconder (HTML é permitido)"
     enable_names: "Permitir que usuários exibam seus nomes completos"
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
     invites_shown: "Máximos convites exibidos em uma página de usuário"
@@ -795,7 +781,6 @@ pt_BR:
       one: "Este tópico foi fechado automaticamente após 1 minuto. Novas respostas não são mais permitidas."
       other: "Este tópico foi fechado automaticamente após %{count} minutos. Novas respostas não são mais permitidas."
     autoclosed_disabled: "Este tópico está aberto agora. Novas respostas estão permitidas."
-    pinned_enabled: "Este tópico está agora afixado. Irá aparecer no topo das suas categorias"
     pinned_disabled: "Este tópico deixou de estár afixado. Não irá mais aparecer no topo das suas categorias."
     visible_enabled: "Este tópico está agora visivél. Irá aparecer na lista dos tópicos."
     visible_disabled: "Este tópico está agora invisivel. Não irá mais aparecer em qualquer listagem de tópicos. A única forma de aceder a este tópico é com o link direto."
@@ -856,10 +841,8 @@ pt_BR:
       \ rua Principal 55, QualquerCidade,  BRA 12345. Se você gostaria de optar por cancelar futuros e-mails, [clique aqui para cancelar a inscrição][5]. </ Small> \n\n\n\n\n\n\n\n\n\n"
   new_version_mailer:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: "Uma nova versão do Discourse está disponível. \n \nSua versão: %{installed_version}\n \nNova versão: **%{new_version}**\n \n- Veja o que há de novo no [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\n- Atualize visitando `/admin/docker`, atualize a página algumas vezes e pressione o botão \"Atualizar Discourse\".\n\n - Visite http://meta.discourse.org para notícias, discussão e suporte ao Discourse.\n"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: "Uma nova versão do Discourse está disponível. \n \nSua versão: %{installed_version}\n \nNova versão: **%{new_version}**\n \n- Veja o que há de novo no [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\n- Atualize visitando `/admin/docker`, atualize a página algumas vezes e pressione o botão \"Atualizar Discourse\".\n\n - Visite http://meta.discourse.org para notícias, discussão e suporte ao Discourse.\n\n### Notas da versão\n\n%{notes}\n"
   flags_reminder:
     flags_were_submitted:
       one: "Há sinalizações que foram enviadas a mais de 1 hora."
@@ -868,22 +851,6 @@ pt_BR:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
-      text_body_template: |
-        Olá,
-
-        Está é uma mensagem automática de %{site_name} para informá-lo que o seguinte postagem foi escondido devido a sinalização da comunidade.
-
-        %{base_url}%{url}
-
-        A sua postagem foi escondida porque foi sinalizada pela comunidade.
-
-        Atenção que vários membros da comunidade sinalizaram este postagem antes do mesmo ser escondido, por tanto, por favor, considere rever as suas postagens para refletir o seu feedback.
-
-        Podes editar a postagem após %{edit_delay} minutos, e depois ela será automáticamente tornada visível outra vez. Isto irá aumentar o seu nível de confiança no forum.
-
-        No entanto, caso a postagem seja escondida pela comunidade uma segunda vez, os moderadores serão notificados -- e haverá futuras atuações, incluindo uma possível suspenção da sua conta.
-
-        Para mais ajuda, por favor leia a [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: "Esta mensagem privada tem algumas dicas rápidas para você começar: \n\n### Mantenha rolando \n \nNão há página seguinte, botões ou números de página - para ler mais, basta manter a rolagem para baixo! \n\nÀ medida que novas respostas chegam, eles aparecerão automaticamente na parte inferior do tópico. \n\n### Como posso responder? \n\n- Para responder a uma mensagem específica, use o botão Responder na mensagem.\n \n- Para responder ao *tema* geral do tópico em vez de qualquer pessoa ou mensagem específica no tópico, use o botão Responder na parte inferior do tópico.\n\n- Para levar a conversa em uma direção diferente mas mantê-las ligadas entre si, use Responder Como Novo Tópico na direita da mensagem.\n\n### Quem está falando comigo?\n\nQuando alguém responde a sua mensagem, te citam ou mencionam seu @nome, um número ➀ aparecerá sobre um botão de conversa no topo da página. Use-o para ver quem está falando com você e onde.\n\n- Para citar o nome de alguém, comece digitando `@` e um autocompletar vai aparecer.\n\n- Para citar apenas uma seção de uma mensagem, selecione-a e use o botão de resposta que aparece sobre sua seleção.\n\n- Para citar uma mensagem inteira, use o botão Importar Citações na barra de ferramentas do editor.\n\n### Olhe para esse post!\n\nPara deixar alguém sabendo que você curtiu sua mensagem, use o botão com ♥ na parte inferior da mensagem. Se você ver um problema com uma mensagem, não hesite em usar o botão de bandeira e privativamente deixar nossa equipe sabe sobre ela.\n\n### Quem sou eu? \n\n- Para voltar para a página inicial a qualquer momento, **usar o logotipo no canto superior esquerdo** ou o botão ← voltar do seu navegador.\n\n- Para pesquisar, sua página de usuário ou o mapa do site, use os **botões de ícone na parte superior direita **.\n\n- Durante a leitura de um tópico, ir para o topo ↑ clicando em seu título na parte superior da página, ou pressione a tecla <kbd>HOME</kbd>. Para chegar no *rodapé* ↓, use a seta para baixo no indicador de progresso do tópico na parte inferior da página, ou pressione a tecla <kbd>END</kbd>.\n\n- Use tempo como atalhos de entrada. Você sempre pode entrar no topo de um tópico\
         \ através da primeira data de postagem e na parte inferior por meio da última data de postagem . \n"
@@ -1057,10 +1024,7 @@ pt_BR:
         %{respond_instructions}
     digest:
       why: "Aqui está um pequeno resumo sobre o que se tem passado em %{site_link} desde a última vez que você apareceu em %{last_seen_at}."
-      subject_template: "[%{site_name}] Atividade do Fórum para %{date}"
       new_activity: "Nova atividade nos seus tópicos e postagens:"
-      top_topics: "Postagens recentes que a comunidade recebeu bem:"
-      other_new_topics: "Outros Tópicos Novos:"
       unsubscribe: "Este email resumo é enviado como uma notificação de cortesia de %{site_link} quando não vemos você há mais de 7 dias.\nCaso queira desativá-lo ou alterar as configurações de email, %{unsubscribe_link}."
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
@@ -1132,7 +1096,6 @@ pt_BR:
     signup_form_message: 'Eu li e aceito os <a href="/tos" target="_blank">Termos de Serviço</ a>.'
   deleted: 'removido'
   upload:
-    edit_reason: "Baixamos cópias das imagens remotas"
     unauthorized: "Desculpe-nos, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagem colada"
     attachments:
@@ -1159,8 +1122,3 @@ pt_BR:
     message_to_blank: "message.to está em branco"
     text_part_body_blank: "text_part.body está em branco"
     body_blank: "body está em branco"
-  badges:
-    types:
-      gold: Ouro
-      silver: Prata
-      bronze: Bronze

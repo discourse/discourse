@@ -428,7 +428,8 @@ it:
       action: "Ho dimenticato la mia password"
       invite: "Inserisci il tuo username o l'indirizzo email. Ti manderemo un'email per il reset della password."
       reset: "recupera password"
-      complete: "Se un account corrisponde a questo username o indirizzo email, dovresti ricevere  a breve un'email con le istruzioni su come resettare la tua password."
+      complete_username: "Se un account risulta avere l'username <b>%{username}</b>, dovresti ricevere un'email con le istruzioni per ripristinare la tua password a breve."
+      complete_email: "Se risulterà un account con <b>%{email}</b>, dovresti ricevere un'email contenente le istruzioni per ripristinare la tua password a breve."
     login:
       title: "Accedi"
       username: "Accedi"
@@ -741,7 +742,7 @@ it:
         success: "Grazie! Abbiamo invitato l'utente a partecipare a questo messaggio privato."
         error: "Spiacenti, si è verificato un errore durante l'invito dell'utente."
       invite_reply:
-        title: 'Invita gli amici'
+        title: 'Invita'
         action: 'Invita via email'
         help: 'Invia inviti agli amici. Potranno rispondere a questo topic con un solo click'
         to_topic: "Invieremo al tuo amico una breve email permettendogli di rispondere direttamente a questo topic, senza necessità di registrazione."
@@ -798,7 +799,7 @@ it:
       edit: "Editing {{link}} di {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "post {{number}}"
-      in_reply_to: "in risposta a"
+      in_reply_to: "rispondi a"
       last_edited_on: "Ultima modifica al post:"
       reply_as_new_topic: "Rispondi come nuovo topic"
       continue_discussion: "Continua la discussione da {{postLink}}:"
@@ -812,6 +813,7 @@ it:
       gap:
         one: "1 post nascosto"
         other: "{{count}} post nascosti"
+      more_links: "{{count}} più..."
       has_replies:
         one: "Risposta"
         other: "Risposte"

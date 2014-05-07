@@ -44,7 +44,6 @@ it:
     loading: "Caricamento della discussione..."
     permalink: "Permalink"
     imported_from: "Questo è un topic collegato all'originale su: %{link}"
-    in_reply_to: "in risposta a %{username}"
     replies:
       one: "1 risposta"
       other: "%{count} risposte"
@@ -166,8 +165,6 @@ it:
               cant_send_pm: "Spriacenti, non puoi mandare un messaggio privato a quell'utente."
         user:
           attributes:
-            password:
-              common: "è una delle 5000 password più comuni in assoluto. Usane una più sicura."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa per questo account."
   user_profile:
@@ -303,11 +300,9 @@ it:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'Questo post è totalmente fuori luogo nella conversazione attuale, e dovrebbe essere spostato in un altro topic. Se si tratta di un topic, probabilmente non ha senso che stia qui.'
       long_form: 'segnalato come off-topic'
     spam:
       title: 'Spam'
-      description: 'Questo post è chiaramente un messaggio pubblicitario. Non è utile nè rilevante per la conversazione, ma soltanto promozionale.'
       long_form: 'segnalato come spam'
     inappropriate:
       title: 'Inappropriato'
@@ -353,7 +348,6 @@ it:
       email_title: 'Il topic "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Il tuo post ha raggiunto la soglia per la segnalazione. Per favore controlla i tuoi messaggi privati.</p>'
     user_must_edit: '<p>Contenuto segnalato nascosto.</p>'
   archetypes:
     regular:
@@ -605,7 +599,6 @@ it:
     topics_per_period_in_top_summary: "Numero dei topic caricati nel riassunto dei topic più importanti"
     topics_per_period_in_top_page: "Numero dei topic caricati nella pagina Top"
     redirect_users_to_top_page: "Indirizza automaticamente i nuovi utenti e gli utenti che non si connettono da un bel po' alla pagina top"
-    redirect_new_users_to_top_page_duration: "Numero di giorni in cui i nuovi utenti sono automaticamente reindirizzati alla pagina top"
     enable_badges: "Attiva il sistema targhette (sperimentale)"
     allow_index_in_robots_txt: "Il sito è indicizzabile dai motori di ricerta (aggiorna robots.txt)"
     email_domains_blacklist: "Lista di domini separati da pipe (\\\"|\\\"). Gli indirizzi email appartenenti a questi domini non saranno autorizzati. Esempio mailinator.com|trashmail.net\""
@@ -619,7 +612,6 @@ it:
     login_required: "Autenticazione necessaria per la lettura dei post"
     min_username_length: "Lunghezza minima username. (Non si applica se  è forzata l'unicità globale dei nickname)"
     min_password_length: "Massima lunghezza della password."
-    block_common_passwords: "Non permettere password nell'elenco delle 5000 più comuni."
     enable_sso: "Attiva SSO tramite un sito esterno "
     sso_url: "Indirizzo SSO endpoint"
     sso_secret: "Stringa segreta utilizzata per criptare/decriptare le informazioni SSO, assicurati che sia lungo almeno 10 caratteri"
@@ -741,7 +733,6 @@ it:
     dominating_topic_minimum_percent: "Che percentuale di post un utente deve pubblicare nello stesso post per essere considerato \"dominante\"?"
     suppress_uncategorized_badge: "Non mostrare il badge per i topic senza categoria nella lista dei topic"
     min_posts_for_search_in_topic: "Disabilita la ricerca all'interno dei topic se i topic hanno meno di un certo numero di post"
-    global_notice: "Mostra un banner globale a tutti gli utenti del sito, lascia vuoto per nasconderlo (E' permesso HTML)"
     enable_names: "Permetti agli utenti di mostrare i loro nomi completi"
     display_name_on_posts: "Mostra anche il nome completo dell'utente nei suoi post"
     invites_shown: "Numero massimo di inviti mostrati nella pagina dell'utente"
@@ -945,20 +936,6 @@ it:
   system_messages:
     post_hidden:
       subject_template: "Post nascosto a causa di segnalazioni dalla community"
-      text_body_template: |
-        Ciao,
-
-        Questo è un messaggio automatico da %{site_name} per informarti che il tuo post ...
-
-        %{base_url}%{url}
-
-        ... è stato nascosto a causa di segnalazioni dalla community.
-
-        Molti utenti hanno segnalato questo post prima che venisse nascosto, quindi **quindi perfavore considera come poterlo modificare in base al loro feedback.** Puoi modificare il tuo post dopo %{edit_delay} minuti, e tornerà automaticamente visibile. Questo incrementerà il tuo trust level.
-
-        Ricordati che se il post dovesse venir nascosto dagli utenti una seconda volta, i moderatori verranno notificati -- e potrebbero esserci delle conseguenze, fra cui la possibile sospensione del tuo account.
-
-        Per ulteriori informazioni, fai riferimento alle nostre [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Questo messaggio privato contiene alcuni consigli veloci per iniziare:
@@ -1185,13 +1162,11 @@ it:
       why: "Questo è un breve riassunto di ciò che è successo su %{site_link} da quando ti abbiamo visto l'ultima volta il %{last_seen_at}."
       subject_template: "[%{site_name}] Riepilogo per %{date}"
       new_activity: "Nuove attività nei tuoi topic e post:"
-      top_topics: "Post recenti che sono piaciuti alla community:"
+      other_new_topics: "Topic più attivi"
       unsubscribe: "Questa email di riepilogo è stata inviata da %{site_link} perché non ti abbiamo visto da un pò.\nSe vuoi disabilitare l'invio o cambiare le preferenze email, %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
       read_more: "Leggi altro"
-      more_topics: "Sono stati postati altri **%{new_topics_since_seen}** nuovi topic dall'ultima volta che ti sei connesso il %{last_seen_at}."
-      more_topics_category: "Sono stati postati altri **%{new_topics_since_seen}** nuovi topic in queste categoria dall'ultima volta che ti sei connesso il %{last_seen_at}:"
       posts:
         one: "1 post"
         other: "%{count} post"
@@ -1259,7 +1234,6 @@ it:
     signup_form_message: 'Ho letto e accetto i <a href="/tos" target="_blank">Termini del Servizio</a>.'
   deleted: 'cancellato'
   upload:
-    edit_reason: "Abbiamo scaricato copie locali delle immagini in questo post"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
     pasted_image_filename: "Immagine incollata"
     store_failure: "Upload #%{upload_id} fallito per l'utente #%{user_id}."
@@ -1287,8 +1261,5 @@ it:
     message_to_blank: "message.to è vuoto"
     text_part_body_blank: "text_part.body è vuoto"
     body_blank: "il corpo è vuoto"
-  badges:
-    types:
-      gold: Oro
-      silver: Argento
-      bronze: Bronzo
+  color_schemes:
+    base_theme_name: "Base"

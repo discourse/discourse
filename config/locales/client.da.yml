@@ -86,7 +86,6 @@ da:
     of_value: "af"
     generic_error: "Beklager, der opstod en fejl."
     generic_error_with_reason: "Der opstod en fejl: %{error}"
-    log_in: "Log ind"
     age: "Alder"
     joined: "Tilmeldt"
     admin_title: "Admin"
@@ -389,9 +388,7 @@ da:
       action: "Jeg har glemt min adgangskode"
       invite: "Skriv brugernavn eller e-mail-adresse, så sender vi dig en mail så du kan nulstille din adgangskode."
       reset: "Nulstil adgangskode"
-      complete: "Du burde snart få en e-mail med en forklaring på hvordan du kan nulstille din adgangskode."
     login:
-      title: "Log ind"
       username: "Brugernavn"
       password: "Adgangskode"
       email_placeholder: "e-mail eller brugernavn"
@@ -431,13 +428,6 @@ da:
       min_length:
         need_more_for_title: "der mangler {{n}} tegn i titlen"
         need_more_for_reply: "der mangler {{n}} tegn i svaret"
-      error:
-        title_missing: "Titlen er påkrævet."
-        title_too_short: "Titlen skal være på mindst {{min}} tegn."
-        title_too_long: "Titlen skal være kortere end {{max}} tegn."
-        post_missing: "Indlægget kan ikke være tomt."
-        post_length: "Indlægget skal være på mindst {{min}} tegn."
-        category_missing: "Du skal vælge en kategori."
       save_edit: "Gem ændringer"
       reply_original: "Svar til det oprindelige emne"
       reply_here: "Svar her"
@@ -511,7 +501,6 @@ da:
       local_tip: "klik for at vælge et billede fra din computer."
       local_tip_with_attachments: "klik for at vælge et billede eller en fil fra din computer (tilladte filendelser: {{authorized_extensions}})"
       hint: "(du kan også trække og slippe ind i editoren for at uploade dem)"
-      hint_for_supported_browsers: "(du kan også trække og slippe eller indsætte i editoren for at uploade dem)"
       uploading: "Uploader billede"
     search:
       title: "søg efter emner, indlæg, brugere eller kategorier"
@@ -667,7 +656,6 @@ da:
         success: "Tak! Vi har inviteret brugeren til at deltage i din private samtale."
         error: "Beklager, der skete en fejl, da vi forsøgte at invitere brugeren."
       invite_reply:
-        title: 'Invitér venner til at svare'
         action: 'E-mail-invitation'
         help: 'send invitationer til dine venner, så de kan svare på dette indlæg med et enkelt klik'
         to_topic: "Vi sender din ven en kort e-mail, som gør det muligt at svare på dette emne med et enkelt klik uden at skulle logge ind."
@@ -675,7 +663,6 @@ da:
         email_placeholder: 'e-mail-adresse'
         success: "Tak! Vi har sendt en invitation til <b>{{email}}</b>. Du får besked, når de bruger din invitation. Check invitations-fanen på din brugerside, for at følge med i hvem du har inviteret."
         error: "Beklager, vi kunne ikke invitere den person. Måske er de allerede brugere?"
-      login_reply: 'Log ind for at svare'
       filters:
         n_posts:
           one: "1 indlæg"
@@ -712,7 +699,6 @@ da:
       edit: "Redigerer {{link}} af {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "indlæg {{number}}"
-      in_reply_to: "som svar til"
       last_edited_on: "indlæg sidst redigeret den"
       reply_as_new_topic: "Svar som nyt emne"
       continue_discussion: "Fortsætter debatten fra {{postLink}}:"

@@ -255,11 +255,9 @@ pt:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'Esta postagem é radicalmente off-topic nesta conversa, e possivelmente deveria ser movida para um tópico diferente.'
       long_form: 'sinalizou isto como off-topic'
     spam:
       title: 'Spam'
-      description: 'Esta postagem é claramente um anúncio sem interesse. Não é util nem relevante para esta conversa, mas é promocional por natureza.'
       long_form: 'sinalizado como spam'
     inappropriate:
       title: 'Inapropriado'
@@ -290,7 +288,6 @@ pt:
       description: 'Votar nesta postagem'
       long_form: 'voto computado para esta postagem'
   flagging:
-    you_must_edit: '<p>A sua postagem atingiu o nível máximo de sinalizações. Por favor leia as suas mensagens particulares.</p>'
     user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
   archetypes:
     regular:
@@ -535,7 +532,6 @@ pt:
     suggested_topics: "Quantidade de tópicos sugeridos que você verá na parte debaixo dos tópicos"
     clean_up_uploads: "Proíba o carregamento de ficheiros para novos utiliadores, para prevenir alojamento ilegal. AVISO: queira por favor fazer uma cópia de segurança da pasta de ficheiros alojados, antes de ativar esta funcionalidade."
     enable_s3_uploads: "Enviar arquivos recebidos para o s3"
-    s3_upload_bucket: "Bucket do s3 para qual enviar"
     s3_access_key_id: "Access key da Amazon S3 que será usada para envio de imagens"
     s3_secret_access_key: "Secret access key da Amazon S3 que será usada para envio de imagens"
     s3_region: "Region name da Amazon S3 que será usada para envio de imagens"
@@ -571,7 +567,6 @@ pt:
     category_colors: "Lista separada por barra (|) das cores em hexadecimal permitidas para as categorias"
     max_image_size_kb: "Tamanho máximo de imagens que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
     max_attachment_size_kb: "Tamanho máximo de arquivos que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
-    authorized_extensions: "Uma lista separada por barras verticais (|) das extensões de arquivo permitidas para envio"
     max_similar_results: "Quantos tópicos similares devem ser exibidos para um usuário enquanto ele está redigindo um novo tópico"
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     topic_views_heat_low: "Número de visualizações a partir da qual o nível de calor de um tópico se torna baixo."
@@ -637,7 +632,6 @@ pt:
     closed_enabled: "Este tópico está agora fechado. Novas respostas não são aceites."
     closed_disabled: "Este tópico está agora aberto. Novas respostas serão aceites."
     autoclosed_disabled: "Este tópico está aberto agora. Novas respostas estão permitidas."
-    pinned_enabled: "Este tópico está agora afixado. Irá aparecer no topo das suas categorias"
     pinned_disabled: "Este tópico deixou de estár afixado. Não irá mais aparecer no topo das suas categorias."
     visible_enabled: "Este tópico está agora visivél. Irá aparecer na lista dos tópicos."
     visible_disabled: "Este tópico está agora invisivel. Não irá mais aparecer em qualquer listagem de tópicos. A única forma de aceder a este tópico é com o link direto."
@@ -696,22 +690,6 @@ pt:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
-      text_body_template: |
-        Olá,
-
-        Está é uma mensagem automática de %{site_name} para informá-lo que o seguinte postagem foi escondido devido a sinalização da comunidade.
-
-        %{base_url}%{url}
-
-        A sua postagem foi escondida porque foi sinalizada pela comunidade.
-
-        Atenção que vários membros da comunidade sinalizaram este postagem antes do mesmo ser escondido, por tanto, por favor, considere rever as suas postagens para refletir o seu feedback.
-
-        Podes editar a postagem após %{edit_delay} minutos, e depois ela será automáticamente tornada visível outra vez. Isto irá aumentar o seu nível de confiança no forum.
-
-        No entanto, caso a postagem seja escondida pela comunidade uma segunda vez, os moderadores serão notificados -- e haverá futuras atuações, incluindo uma possível suspenção da sua conta.
-
-        Para mais ajuda, por favor leia a [FAQ](%{base_url}/faq).
     welcome_user:
       subject_template: "Bem-vindo em %{site_name}!"
     welcome_invite:
@@ -813,10 +791,7 @@ pt:
         %{respond_instructions}
     digest:
       why: "Aqui está um pequeno resumo sobre o que se tem passado em %{site_link} desde a última vez que você apareceu em %{last_seen_at}."
-      subject_template: "[%{site_name}] Atividade do Fórum para %{date}"
       new_activity: "Nova atividade nos seus tópicos e postagens:"
-      top_topics: "Postagens recentes que a comunidade recebeu bem:"
-      other_new_topics: "Outros Tópicos Novos:"
       unsubscribe: "Este email resumo é enviado como uma notificação de cortesia de %{site_link} quando não vemos você há mais de 7 dias.\nCaso queira desativá-lo ou alterar as configurações de email, %{unsubscribe_link}."
       click_here: "clique aqui"
       from: "resumo de %{site_name}"

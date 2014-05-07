@@ -232,11 +232,9 @@ sv:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'Detta inlägg är radikalt off-topic i den nuvarande konversationen, och bör troligen flyttas till en annan tråd.'
       long_form: 'flagga detta som off-topic'
     spam:
       title: 'Spam'
-      description: 'Detta inlägg är faktiskt en annons utan något avslöjande. Det är inte användbart eller relevant för den aktuella konversationen, men har en säljfrämjande karaktär.'
       long_form: 'flagga detta som spam'
     inappropriate:
       title: 'Olämpligt'
@@ -266,7 +264,6 @@ sv:
       description: 'Rösta för detta inlägg'
       long_form: 'röstade för detta inlägg'
   flagging:
-    you_must_edit: '<p>Ditt inlägg har nått flaggningssnivån. Var god kolla dina privata meddelanden.</p>'
     user_must_edit: '<p>Flaggat innehåll dolt.</p>'
   archetypes:
     regular:
@@ -492,7 +489,6 @@ sv:
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
     suggested_topics: "The number of suggested topics shown at the bottom of a topic"
     enable_s3_uploads: "Place uploads on Amazon S3"
-    s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into"
     s3_access_key_id: "ID för denåtkomstnyckel till Amazon S3 som kommer att användas för att ladda upp bilder"
     s3_secret_access_key: "Hemlig åtkomstnyckel till Amazon S3 som kommer att användas för att ladda upp bilder"
     s3_region: "Regionsnamn för Amazon S3 som kommer att användas för att ladda upp bilder"
@@ -526,7 +522,6 @@ sv:
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
     category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
     max_image_size_kb: "The maximum size of files we allow users to upload in kB - be sure to configure the limit in nginx (client_max_body_size) / apache or proxy as well."
-    authorized_extensions: "En lista separerad med vertikalstreck (|) över filtyper som är tillåtna att laddas upp"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
     topic_views_heat_low: "Antal visningar efter vilket en tråds värmenivå är låg."
     topic_views_heat_medium: "Antal visningar efter vilket en tråds värmenivå är medium."
@@ -577,7 +572,6 @@ sv:
     closed_enabled: "This topic is now closed. New replies are no longer allowed."
     closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled: "Den här tråden är nu öppen. Nya svar är tillåtna."
-    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
     visible_enabled: "This topic is now visible. It will be displayed in topic lists."
     visible_disabled: "This topic is now invisible. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
@@ -624,20 +618,6 @@ sv:
   system_messages:
     post_hidden:
       subject_template: "Post hidden due to community flagging"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to inform you that your post ...
-
-        %{base_url}%{url}
-
-        ... was hidden due to community flagging.
-
-        Keep in mind that multiple community members flagged this post before it was hidden, so **please consider how you might revise your post to reflect their feedback.** You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your trust level.
-
-        However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
-
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
     welcome_user:
       subject_template: "Välkommen till %{site_name}!"
     welcome_invite:
@@ -721,9 +701,7 @@ sv:
         Please visit this link to respond: %{base_url}%{url}
     digest:
       why: "Here's a brief summary of what happened on %{site_link} since we last saw you on %{last_seen_at}."
-      subject_template: "[%{site_name}] Forum Activity for %{date}"
       new_activity: "New activity on your topics and posts:"
-      other_new_topics: "Andra Nya Trådar:"
       unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"

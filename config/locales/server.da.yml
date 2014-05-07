@@ -36,7 +36,6 @@ da:
     loading: "Indlæser diskussion…"
     permalink: "Permalink"
     imported_from: "Importeret fra: %{link}"
-    in_reply_to: "som svar til %{username}"
     replies:
       one: "1 svar"
       other: "%{count} svar"
@@ -163,8 +162,6 @@ da:
               cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
         user:
           attributes:
-            password:
-              common: "er én af de 5000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
             ip_address:
               signup_not_allowed: "Tilmelding er ikke tilladt fra den aktuelle adresse."
   user_profile:
@@ -291,11 +288,9 @@ da:
   post_action_types:
     off_topic:
       title: 'Uden for emnet'
-      description: 'Dette indlæg ligger langt uden for emnet, og burde flyttes til et andet emne. Hvis det er et emne, hører det nok ikke til her.'
       long_form: 'markerede dette som uden for emnet'
     spam:
       title: 'Spam'
-      description: 'Dette indlæg minder mere om en reklame end et debatindlæg. Det er ikke nyttigt eller relevant for diskussionen.'
       long_form: 'markerede dette som spam'
     inappropriate:
       title: 'Upassende'
@@ -326,7 +321,6 @@ da:
       description: 'Stem for dette indlæg'
       long_form: 'stemte for dette indlæg'
   flagging:
-    you_must_edit: '<p>Dit indlæg er blevet flaget for mange gange. Se venligst dine private beskeder.</p>'
     user_must_edit: '<p>Flaget indhold er skjult.</p>'
   archetypes:
     regular:
@@ -574,7 +568,6 @@ da:
     invite_only: "Offentlig brugeroprettelse er deaktiveret, nye brugere skal inviteres"
     login_required: "Kræv godkendelse for at læse indlæg"
     min_password_length: "Mindste adgangskodelængde."
-    block_common_passwords: "Tillad ikke adgangskoder som er blandt de 5000 med almindelige adgangskoder"
     enable_local_logins: "Aktivér traditionel, lokal godkendelse med brugernavn og adgangskode"
     enable_google_logins: "Aktivér Google-login"
     enable_yahoo_logins: "Aktivér Yahoo-login"
@@ -604,7 +597,6 @@ da:
     clean_orphan_uploads_grace_period_hours: "Grace-periode (i timer) før et forældreløst upload bliver fjernet."
     purge_deleted_uploads_grace_period_days: "Grace-periode (i dage) før et slettet upload bliver fjernet."
     enable_s3_uploads: "Placér uploads på Amazon S3"
-    s3_upload_bucket: "Navn på Amazon S3 bucket som filer uploades til. ADVARSEL: kun små bogstaver (jfr. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)."
     s3_access_key_id: "Amazon S3 access key som bruges til at uploade billeder."
     s3_secret_access_key: "Amazon S3 secret access key som bruges til at uploade billeder."
     s3_region: "Navn på Amazon S3 region som bruges til at uploade billeder."
@@ -626,7 +618,6 @@ da:
     newuser_max_images: "Hvor mange billeder en ny bruger kan tilføje til et indlæg."
     newuser_max_attachments: "Hvor mange vedhæftede filer en ny bruger kan tilføje til et indlæg."
     newuser_max_mentions_per_post: "Maksimalt antal @navne-notifikationer en ny bruger kan bruge i et indlæg."
-    newuser_max_replies_per_topic: "Maksimalt antal svar en ny bruger kan lave i et enkelt emne."
     max_mentions_per_post: "Maksimalt antal @navne-notifikationer du kan bruge i et indlæg."
     create_thumbnails: "Opret thumbnails for billeder i lightboxes"
     email_time_window_mins: "Hvor mange minutter vi venter før vi sender e-mail-notifikationer, for at give brugerne en chance for at redigere og færdiggøre deres indlæg."
@@ -641,7 +632,6 @@ da:
     category_colors: "En pipe-separeret (|) liste af tilladte hexadecimale farveværdier for kategorier."
     max_image_size_kb: "Den maksimale billedstørrelse som vi lader brugerne uploade, i kB - husk at tilpasse den tilsvarende værdi i nginx (client_max_body_size) / apache eller proxy."
     max_attachment_size_kb: "Den maksimale filstørrelse som vi lader brugerne uploade, i kB - husk at tilpasse den tilsvarende værdi i nginx (client_max_body_size) / apache eller proxy."
-    authorized_extensions: "En pipe-separeret (|) liste af tilladte filtyper til upload."
     max_similar_results: "Hvor mange lignende emner der skal vises til brugerne, når de opretter et nyt emne."
     title_prettify: "Undgå hyppige tastefejl i titlen, inklusive overforbrug af store bogstaver, første bogstav med småt, gentagne ! og ?, ekstra . i slutningen, etc."
     topic_views_heat_low: "Antallet af visninger hvorefter emnets temperatur bliver lav."
@@ -730,7 +720,6 @@ da:
       one: "Dette emne blev automatisk lukket efter 1 minut. Nye svar er ikke længere tilladt."
       other: "Dette emne blev automatisk lukket efter %{count} minutter. Nye svar er ikke længere tilladt."
     autoclosed_disabled: "Dette emne er nu åbnet. Nye svar er tilladt."
-    pinned_enabled: "Dette emne er nu fastgjort. Det optræder i toppen af dets kategori indtil det enten bliver frigjort af en moderator, eller ryddes af en bruger med knappen “Frigør”."
     pinned_disabled: "Dette emne er nu frigjort. Det optræder ikke længere i toppen af dets kategori."
     visible_enabled: "Dette emne er nu synligt. Det vises i emnelister."
     visible_disabled: "Dette emne er nu usynligt. Det vises ikke længere på emnelister. Den eneste måde at tilfå dette emne er via et direkte link."
@@ -824,41 +813,11 @@ da:
       <small>Der skal være en footer i hver e-mail du sender, som gør det muligt at afmelde sig, så lad os lave én. Denne e-mail blev sendt af Firmanavn, Algade 42, 9999 Tappernøje. [Klik her hvis du ikke ønsket at modtage flere e-mails][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Opdateringer er tilgængelige"
-    text_body_template: |
-      En ny version af Discourse er tilgængelig.
-
-      Din version: %{installed_version}
-
-      **Ny version: %{new_version}**
-
-      Opgradér venligst så snart som muligt for at få de seneste rettelser og features.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Opdateringer er tilgængelige"
-    text_body_template: |
-      En ny version af Discourse er tilgængelig. Opgradér venligst så snart som muligt for at få de seneste rettelser og features.
-
-      Din version: %{installed_version}
-
-      **Ny version: %{new_version}**
-
-      %{notes}
   system_messages:
     post_hidden:
       subject_template: "Indlæg skjult på grund af feedback fra brugerne"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide at dit indlæg ...
-
-        %{base_url}%{url}
-
-        ... blev skjult på grund af feedback fra de andre brugere.
-
-        Husk på at flere brugere har flaget dette indlæg før det blev skjult, så **overvej venligst hvordan du kan opdatere dit indlæg baseret på deres feedback.** Du kan redigere dit indlæg efter %{edit_delay} minutter, hvorefter det automatisk bliver vist igen. Dette øger dit tillidsniveau på forummet.
-
-        Hvis dit indlæg skjules af de andre brugere endnu en gang bliver moderatorerne underrettet -- de kan vælge at foretage sig yderligere i sagen, inklusiv en mulig suspendering af din konto.
-
-        Se venligst vores [FAQ](%{base_url}/faq) for yderligere vejledning.
     usage_tips:
       text_body_template: |
         Denne private besked har et par tips for at komme godt i gang med vores forum:
@@ -1035,10 +994,7 @@ da:
         %{respond_instructions}
     digest:
       why: "Her er en kort opsummering af hvad der er sket på %{site_link} siden du vi sidst så dig %{last_seen_at}."
-      subject_template: "[%{site_name}] Forumaktivitet for %{date}"
       new_activity: "Ny aktivitet på dine emner og indlæg:"
-      top_topics: "Seneste indlæg som brugerne har været glade for:"
-      other_new_topics: "Andre nye emner:"
       unsubscribe: "Denne opsummering sendes som en høflig notifikation fra %{site_link} når vi ikke har set dig et stykke tid.\nHvis du ønsker at slå den fra, eller ændre dine e-mail-indstillinger, %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} opsummering"
@@ -1106,7 +1062,6 @@ da:
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
   deleted: 'slettet'
   upload:
-    edit_reason: "Vi har downloadet kopier af de eksterne billeder"
     unauthorized: "Beklager, filen, som du forsøger at uploade er ikke autoriseret (autoriserede filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
     attachments:

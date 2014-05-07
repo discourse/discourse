@@ -84,7 +84,6 @@ pt:
     of_value: "de"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
-    log_in: "Entrar"
     age: "Idade"
     joined: "Juntou-se"
     admin_title: "Admin"
@@ -347,9 +346,7 @@ pt:
       action: "Esqueci-me da minha palavra-chave"
       invite: "Coloque seu nome de utilizador ou endereço de email, e enviar-lhe-emos um email para refazer a sua palavra-chave."
       reset: "Recuperar Palavra-chave"
-      complete: "Se uma conta corresponder a este nome de utilizador ou endereço de email, receberá um email com instruções de como reiniciar a sua palavra-chave rapidamente."
     login:
-      title: "Entrar"
       username: "Utilizador"
       password: "Palavra-chave"
       error: "Erro desconhecido"
@@ -388,13 +385,6 @@ pt:
       min_length:
         need_more_for_title: "{{n}} no título"
         need_more_for_reply: "{{n}} para chegar à mensagem"
-      error:
-        title_missing: "O título é obrigatório"
-        title_too_short: "O título tem que ter no mínimo {{min}} caracteres."
-        title_too_long: "O título pode ter no máximo {{min}} caracteres."
-        post_missing: "A mensagem não pode estar vazia."
-        post_length: "A mensagem tem que ter no mínimo {{min}} caracteres."
-        category_missing: "Precisa de escolher uma categoria."
       save_edit: "Guardar alterações"
       reply_original: "Responder no Tópico original"
       reply_here: "Responda Aqui"
@@ -454,7 +444,6 @@ pt:
       local_tip: "Carregue para selecionar um ficheiro do seu dispositivo"
       local_tip_with_attachments: "carregue para selecionar uma imagem ou ficheiro do seu dispositivo (extensões permitidas: {{authorized_extensions}})"
       hint: "(poderá também arrastar o ficheiro para o editor para fazer o upload)"
-      hint_for_supported_browsers: "(poderá também arrastar a imagem ou \"colar\" directamente no editor para fazer o upload)"
       uploading: "A enviar"
     search:
       title: "procurar por tópicos, posts, utilizadores, ou categorias"
@@ -592,7 +581,6 @@ pt:
         help: 'envie convites aos seus amigos para que eles possam responder a este tópico com um simples toque do rato.'
         success: "Obrigado! Enviámos um convite para <b>{{email}}</b>. Saberá quando eles utilizarem o convite. Pode ir até à secção de Convites na sua página de utilizador para saber quem já convidou."
         error: "Desculpe, não podíamos convidar essa pessoa. Talvez já seja um utilizador?"
-      login_reply: 'Entre com sua conta para responder'
       filters:
         n_posts:
           one: "1 postagem"
@@ -629,7 +617,6 @@ pt:
       edit: "Editar {{link}}"
       edit_reason: "Razão:"
       post_number: "mensagem {{number}}"
-      in_reply_to: "Em resposta a"
       last_edited_on: "mensagem editada pela última vez em"
       reply_as_new_topic: "Responder como um novo Tópico"
       continue_discussion: "Continuar a discussão desde {{postLink}}:"

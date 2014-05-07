@@ -20,7 +20,6 @@ cs:
   posts: "příspěvky"
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlepší zážitek je se zapnutým JavaScriptem'
-  log_in: "Přihlásit se"
   via: "%{username} přes %{site_name}"
   is_reserved: "je rezervováno"
   backup:
@@ -43,7 +42,6 @@ cs:
     loading: "Načítám diskuzi..."
     permalink: "Permalink"
     imported_from: "Diskuze k původnímu příspěvku na blogu: %{link}"
-    in_reply_to: "v reakci na %{username}"
     replies:
       one: "1 reakce"
       few: "%{count} reakce"
@@ -171,8 +169,6 @@ cs:
               cant_send_pm: "Bohužel, tomuto uživateli nemůžete poslat soukromou zprávu."
         user:
           attributes:
-            password:
-              common: "je jedno z nejčastějších 5000 hesel. Zkuste vymyslet bezpečnější heslo."
             ip_address:
               signup_not_allowed: "Registrace z této adresy není povolena."
   user_profile:
@@ -332,11 +328,9 @@ cs:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'Tento příspěvek je off-topic (mimo téma) v aktuální konverzaci a měl by být přesunut do jiného tématu.'
       long_form: 'označil příspěvek jako off-topic'
     spam:
       title: 'Spam'
-      description: 'Tento příspěvek je pouze reklama bez informační hodnoty. Není užitečný ani relevantní k současné konverzaci.'
       long_form: 'označeno jako spam'
     inappropriate:
       title: 'Nevhodné'
@@ -382,7 +376,6 @@ cs:
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\\n\\\n%{message}\n"
   flagging:
-    you_must_edit: '<p>Váš příspěvek byl již několikrát nahlášen jako závadný. Další informace najdete v soukromých zprávách.</p>'
     user_must_edit: '<p>Nahlášený obsah je skrytý.</p>'
   archetypes:
     regular:
@@ -628,7 +621,6 @@ cs:
     suppress_reply_directly_above: "Nezobrazovat informaci 'je odpověď na' u příspěvku, jehož odpověď je přímo nad ním"
     topics_per_period_in_top_summary: "Počet témat zobrazených v přehledu populárních témat"
     topics_per_period_in_top_page: "Počet témat zobrazených na stránce populárních témat"
-    redirect_new_users_to_top_page_duration: "Počet dní po které mají noví uživatelé být automaticky přesměrováni na stránku s populárními tématy"
     allow_index_in_robots_txt: "Povolit robotům indexaci tohoto webu (aktualizuje robots.txt)"
     email_domains_blacklist: "Seznam domén, jejichž emailové adresy nebudou přijímány, oddělený znakem '|'. Příklad: mailinator.com|trashmail.net"
     email_domains_whitelist: "Seznam domén, ze kterých bude povolena registrace, oddělený znamek '|'. POZOR: Emailové adresy z jiných než z těchto domén nebudou přijímány."
@@ -641,7 +633,6 @@ cs:
     login_required: "Požadovat autentizaci pro prohlížení příspěvků"
     min_username_length: "Minimální délka uživatelského jména. (Nepoužije se pokud je vynucena unikátnost globálního uživatelského jména)"
     min_password_length: "Minimální povolená délka hesla."
-    block_common_passwords: "Nepovolit heslo pokud je mezi 5000 nejběžnějšími."
     enable_sso: "Povolit jednotné přihlášení přes externí web (single sign on, SSO)"
     sso_url: "URL pro single sign on"
     sso_secret: "Tajný kód pro šifrování a dešifrování informací pro SSO. Chcete zadat minimálně 10 znaků a víc"
@@ -677,7 +668,6 @@ cs:
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     enable_s3_uploads: "Ukládat nahrané soubory na Amazon S3"
-    s3_upload_bucket: "Název 'Amazon S3 bucketu', do kterého se mají soubory nahrávat"
     s3_access_key_id: "Hodnota 'access key id' služby Amazon S3, která se použije pro nahrávání obrázku"
     s3_secret_access_key: "Hodnota 'server access key' služby Amazon S3, která se použije pro nahrávání obrázku"
     s3_region: "Hodnota 'region' služby Amazon S3, která se použije pro nahrávání obrázku"
@@ -699,7 +689,6 @@ cs:
     newuser_max_images: "Kolik obrázků může nový uživatel vložit do příspěvku"
     newuser_max_attachments: "Kolik příloh může nový uživatel vložit do příspěvku"
     newuser_max_mentions_per_post: "Kolik zmínek přes @name může nový uživatel vložit do příspěvku"
-    newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic"
     max_mentions_per_post: "Maximální počet zmínek přes @name, které mohou být použity v jednom příspěvku"
     create_thumbnails: "Vytvářet náhledy pro obrázky v lightboxu"
     email_time_window_mins: "Kolik minut se čeká než se uživateli zašle email, aby měl možnost obsah vidět sám od sebe"
@@ -714,7 +703,6 @@ cs:
     category_colors: "Seznam hexadecimálních barev oddělený svislítkem (|) pro barvy kategorií"
     max_image_size_kb: "Maximální povolená velikost nahrávaných souborů v kB - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
     max_attachment_size_kb: "Maximální povolená velikost příloh souborů v kB - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
-    authorized_extensions: "Seznam povolených přípon souborů pro nahrávání, oddělený svislítkem (|)"
     max_similar_results: "Kolik podobných témat se má zobrazovat uživateli, když vytváří nové téma"
     title_prettify: "Zabrání běžným překlepům a chybám v názvu tématu, včetně psaní velkými písmeny, malé písmeno na začátku, vícenásobné vykřičníky a otazníky, atd."
     topic_views_heat_low: "Počet zobrazení, po nichž bude popularita tématu nízká."
@@ -819,7 +807,6 @@ cs:
       one: "Toto téma bylo po 1 minutě automaticky uzavřeno. Nové odpovědi se už nepřijímají."
       other: "Toto téma bylo po %{count} minutách automaticky uzavřeno. Nové odpovědi se už nepřijímají."
     autoclosed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
-    pinned_enabled: "Toto téma je připevněno. Bude se zobrazovat na vrcholu seznamu témat v kategorii."
     pinned_disabled: "Toto téma již není připevněno. Nebude se zobrazovat na vrcholu seznamu témat v kategorii."
     visible_enabled: "Toto téma je viditelné. Bude se zobrazovat v seznamu témat."
     visible_disabled: "Toto téma je neviditelné. Nebude se zobrazovat v seznamu témat. Je možné ho navštívit pouze přes přímý odkaz."
@@ -913,43 +900,11 @@ cs:
       <small>V každém emailu, který zasíláte, by měl být odkaz na odhlášení příjmu emailů, tak tady je taky takový. Tento email vám zaslala Velká Společnost s.r.o., Hlavní ul. 1337, Kotěhůlky, Česká republika. Pokud již od nás nechcete dostávat další emaily, [klikněte sem pro odhlášení][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Updates Are Available"
-    text_body_template: |
-      A new version of Discourse is available.
-
-      Your version: %{installed_version}
-
-      **New version: %{new_version}**
-
-      Please upgrade as soon as possible to get the latest fixes and new features. Visit http://meta.discourse.org for discussion and news about Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Updates Are Available"
-    text_body_template: |
-      A new version of Discourse is available. Please upgrade as soon as possible to get the latest fixes and new features.
-
-      Your version: %{installed_version}
-
-      **New version: %{new_version}**
-
-      %{notes}
-
-      Visit http://meta.discourse.org for discussion and news about Discourse.
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Oznámení: Příspěvek skryt kvůli hlášením od komunity"
-      text_body_template: |
-        Dobrý den,
-
-        Toto je automatický email z %{site_name}, kterým vás informujeme, že následující příspěvek byl skryt jako důsledek hlášení od komunity.
-
-        %{base_url}%{url}
-
-        Váš příspěvek byl komunitou nahlášen jako závadný.
-
-        Mějte na paměti, že již několik členů komunity označilo tento příspěvek jako závadný (než byl skryt) a zvažte, jak byste mohli svůj příspěvek zrevidovat. Můžete příspěvek upravit za %{edit_delay} minut, a tím bude zase zviditelněn. Zároveň tím zvýšíte svoji věrohodnost na fóru.
-
-        Pokud však bude příspěvek znovu označen komunitou jako závadný, budou informováni moderátoři fóra, kteří mohou vyvodit další důsledky, včetně možného zablokování vašeho účtu.
-
-        Pro další informace si prosím přečtěte naši sekci [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Tato soukromá zpráva vám přináší několik rychlých tipů, jak začít:
@@ -1157,10 +1112,7 @@ cs:
         Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     digest:
       why: "Zde je krátký souhrn toho, co se událo na %{site_link} od vaší poslední návštěvy %{last_seen_at}."
-      subject_template: "[%{site_name}] Aktivita na fóru %{date}"
       new_activity: "Nová aktivita ve vašich tématech a příspěvcích:"
-      top_topics: "Poslední příspěvky, které si komunita oblíbila:"
-      other_new_topics: "Other New Topics:"
       unsubscribe: "Tento souhrnný email je zaslán jako oznámení od %{site_link}, pokud jste se nepřihlásili v poslední době.\\\nPokud nechcete tento souhrn dostávat, navštivte %{unsubscribe_link}.\n"
       click_here: "klikněte zde"
       from: "souhrn z %{site_name}"
@@ -1239,7 +1191,6 @@ cs:
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: 'smazáno'
   upload:
-    edit_reason: "downloaded local copies of images"
     unauthorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázek"
     attachments:

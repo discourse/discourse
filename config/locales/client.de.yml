@@ -87,7 +87,6 @@ de:
     of_value: "von"
     generic_error: "Entschuldigung. Ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
-    log_in: "Einloggen"
     age: "Alter"
     joined: "Beigetreten"
     admin_title: "Administrator"
@@ -425,9 +424,7 @@ de:
       action: "Ich habe mein Passwort vergessen"
       invite: "Gib deinen Nutzernamen oder deine E-Mail-Adresse ein, und wir senden dir eine E-Mail zum Zurücksetzen des Passworts."
       reset: "Passwort zurücksetzen"
-      complete: "Du solltest bald eine E-Mail mit Instruktionen zum Zurücksetzen des Passworts erhalten."
     login:
-      title: "Einloggen"
       username: "Nutzername"
       password: "Passwort"
       email_placeholder: "E-Mailadresse oder Benutzername"
@@ -550,7 +547,6 @@ de:
       local_tip: "Klicke hier, um ein Bild von deinem Gerät zu wählen."
       local_tip_with_attachments: "Klicke hier, um ein Bild oder eine Datei von deinem Gerät zu wählen (Erlaubte Dateiendungen: {{authorized_extensions}})"
       hint: "(du kannst auch drag & drop verwenden, um etwas in den editor hochzuladen)"
-      hint_for_supported_browsers: "(du kannst auch drag & drop oder copy & paste verwenden, um etwas in den editor hochzuladen)"
       uploading: "Hochladen..."
       image_link: "Der Link deines Bildes verweist auf"
     search:
@@ -737,7 +733,6 @@ de:
         success: "Danke! Wir haben den Benutzer eingeladen, an diesem privaten Gespräch teilzunehmen."
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
       invite_reply:
-        title: 'Freunde zum Gespräch einladen'
         action: 'Einladung senden'
         help: 'Sendet Freunden eine Einladung, so dass mit einem Klick auf dieses Thema antworten können.'
         to_topic: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht direkt auf dieses Thema zu antworten. Hierfür ist kein Login erforderlich."
@@ -745,7 +740,6 @@ de:
         email_placeholder: 'Mailadresse'
         success: "Danke! Wir haben deine Einladung an <b>{{email}}</b> verschickt. Wir lassen Dich wissen, sobald die Einladung eingelöst wird. In deinem Nutzerprofil kannst Du alle deine Einladungen überwachen."
         error: "Entschuldige, wir konnten diese Person nicht einladen. Vielleicht ist sie schon ein Nutzer?"
-      login_reply: 'Anmelden, um zu antworten'
       filters:
         n_posts:
           one: "einen Beitrag"
@@ -794,7 +788,6 @@ de:
       edit: "Editing {{link}} von {{replyAvatar}} {{username}}"
       edit_reason: "Grund: "
       post_number: "Beitrag {{number}}"
-      in_reply_to: "Antwort auf"
       last_edited_on: "Antwort zuletzt bearbeitet am"
       reply_as_new_topic: "Mit Themenwechsel antworten"
       continue_discussion: "Fortsetzung des Gesprächs {{postLink}}:"
@@ -1488,9 +1481,6 @@ de:
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn  sie sich vor mehr als %{count} Tag angemeldet oder noch Beiträge haben. Lösche zuerst seine Beträge."
           other: "Benutzer können nicht gelöscht werden, wenn  sie sich vor mehr als %{count} Tagen angemeldet oder noch Beiträge haben. Lösche zuerst seine Beträge."
-        cant_delete_all_posts:
-          one: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tag."
-          other: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tage."
         delete_confirm: "Bist du SICHER das du diesen Benutzer permanent von der Seite entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!"
         delete_and_block: "<b>Ja</b>, und <b>blockiere</b> Anmeldungen von dieser Mail Adresse"
         delete_dont_block: "<b>Ja</b>, aber <b>erlaube</b> Anmeldungen von dieser Mail Adresse"

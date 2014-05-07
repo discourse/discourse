@@ -293,9 +293,7 @@ ja:
       action: "パスワードを忘れました"
       invite: "ユーザ名かメールアドレスを入力してください。パスワードリセット用のメールを送信します。"
       reset: "パスワードをリセット"
-      complete: "パスワードリセット用のメールを送信しました。"
     login:
-      title: "ログイン"
       username: "ログイン名"
       password: "パスワード"
       email_placeholder: "メールアドレスかユーザ名"
@@ -335,13 +333,6 @@ ja:
       min_length:
         need_more_for_title: "タイトルにあと{{n}}文字必要"
         need_more_for_reply: "ポストにあと{{n}}文字必要"
-      error:
-        title_missing: "タイトルを入力してください。"
-        title_too_short: "タイトルは{{min}}文字以上必要です。"
-        title_too_long: "タイトルは最長で{{max}}未満です。"
-        post_missing: "ポスト内容が空です。"
-        post_length: "ポストは{{min}}文字以上必要です。"
-        category_missing: "カテゴリを選択してください。"
       save_edit: "編集内容を保存"
       reply_original: "元のトピックに回答"
       reply_here: "ここに回答"
@@ -415,7 +406,6 @@ ja:
       local_tip: "クリックしてアップロードする画像を選択してください"
       local_tip_with_attachments: "クリックしてアップロードする画像/ファイルを選択してください (使用可能な拡張子: {{authorized_extensions}})"
       hint: "(アップロードする画像をエディタにドラッグ&ドロップすることもできます)"
-      hint_for_supported_browsers: "(アップロードする画像をエディタにドラッグ&ドロップまたは貼り付けることもできます)"
       uploading: "アップロード中"
     search:
       title: "トピック、ポスト、ユーザ、カテゴリを探す"
@@ -547,7 +537,6 @@ ja:
         success: "このプライベートメッセージにユーザを招待しました。"
         error: "申し訳ありませんが、ユーザ招待中にエラーが発生しました。"
       invite_reply:
-        title: '友人を招待して回答してもらう'
         action: 'メールで招待'
         help: 'このトピックにワンクリックで回答ができるように友人を招待メールを送る'
         to_topic: "このトピックに（ログインすることなく）ワンクリックで回答ができるようにあなたの友人にメールを送ります。"
@@ -555,7 +544,6 @@ ja:
         email_placeholder: 'メールアドレス'
         success: "ありがとうございます! <b>{{email}}</b> 宛に招待メールを送信しました。友人により招待が受理されたらお知らせします。招待した友人の一覧は、ユーザページの招待タブにて確認できます。"
         error: "申し訳ありませんが招待に失敗しました。既にユーザ登録済かもしれません。"
-      login_reply: 'ログインして回答'
       filters:
         cancel: "Show all posts in this topic again."
       split_topic:
@@ -580,7 +568,6 @@ ja:
       edit: "{{replyAvatar}} {{username}} による {{link}} を編集"
       edit_reason: "理由: "
       post_number: "ポスト{{number}}"
-      in_reply_to: "こちらへの回答"
       last_edited_on: "ポストの最終編集日"
       reply_as_new_topic: "新規トピックとして回答"
       continue_discussion: "{{postLink}} からの議論を継続:"

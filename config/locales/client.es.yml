@@ -425,7 +425,6 @@ es:
       action: "Olvidé mi contraseña"
       invite: "Introduce tu nombre de usuario o tu dirección de email, y te enviaremos un correo electrónico para cambiar tu contraseña."
       reset: "Cambiar Contraseña"
-      complete: "Dentro de poco deberías recibir un email con las instrucciones para cambiar tu contraseña."
     login:
       title: "Iniciar sesión"
       username: "Nombre de usuario"
@@ -731,7 +730,6 @@ es:
         success: "¡Gracias! Hemos invitado a ese usuario a participar en este mensaje privado."
         error: "Lo sentimos hubo un error invitando a ese usuario."
       invite_reply:
-        title: 'Invitar amigos a responder'
         action: 'Invitar por email'
         help: 'enviar invitaciones a tus amigos para que puedan responder a este tema con un solo click'
         to_topic: "Le enviaremos un breve correo electrónico a su amigo permitiéndole responder inmediatamente a este tema haciendo click en un enlace, no requiere registro."
@@ -782,7 +780,6 @@ es:
       edit: "Edición {{link}} por {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "mensaje {{number}}"
-      in_reply_to: "en respuesta a"
       last_edited_on: "post editado por última ven en"
       reply_as_new_topic: "Responder como nuevo tema"
       continue_discussion: "Continuando la discusión desde {{postLink}}:"

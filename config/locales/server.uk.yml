@@ -20,7 +20,6 @@ uk:
   posts: "дописи"
   loading: "Завантаження"
   powered_by_html: 'Створено за допомогою технології <a href="http://www.discourse.org">Discourse</a>, бажано переглядати з увімкненим JavaScript'
-  log_in: "Sign In"
   via: "%{username} через %{site_name}"
   is_reserved: "is reserved"
   backup:
@@ -35,7 +34,6 @@ uk:
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
-    in_reply_to: "reply to %{username}"
   too_many_mentions:
     one: "Даруйте, Ви можете згадувати у дописі тільки %{count} користувача."
     other: "Даруйте, Ви не можете згадувати інших користувачів."
@@ -156,8 +154,6 @@ uk:
               cant_send_pm: "Даруйте, Ви не можете надіслати приватне повідомлення цьому користувачу."
         user:
           attributes:
-            password:
-              common: "є одним із 5000 найбільш популярних паролів. Будь ласка, оберіть більш безпечний пароль."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
   user_profile:
@@ -169,7 +165,6 @@ uk:
   meta_category_description: "Обговорення цього форуму, його організації, того, як він працює, і того, як ми можемо його покращити."
   staff_category_name: "Staff"
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
-  assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the forum design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nAlso, if you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   category:
     topic_prefix: "Про категорію %{category}"
     replace_paragraph: "[Замініть цей перший абзац коротким описом Вашої нової категорії. Він з'являтиметься в області вибору категорій, тому намагайтеся, щоб він був коротшим за 200 символів. Поки Ви не відредагуєте цей текст або не створите тем, ця категорія не з'явиться на сторінці категорій.]"
@@ -218,11 +213,9 @@ uk:
   post_action_types:
     off_topic:
       title: 'Недотичне до теми'
-      description: 'Цей допис зовсім не стосується теми поточного обговорення, і, можливо, його слід перемістити до іншої теми. Якщо це - тема, можливо, їй тут не місце.'
       long_form: 'flagged this as off-topic'
     spam:
       title: 'Спам'
-      description: 'Цей допис є рекламою. Він не є корисним або доречним для цього обговорення, проте є рекламним за своєю суттю.'
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Неприпустиме'
@@ -268,7 +261,6 @@ uk:
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Ваш допис було оскаржено спільнотою. Будь ласка, перегляньте приватні повідомлення.</p>'
     user_must_edit: '<p>Оскаржений вміст тимчасово приховано.</p>'
   archetypes:
     regular:
@@ -514,7 +506,6 @@ uk:
     suppress_reply_directly_above: "Не показувати \"у-відповідь-на\" на дописі, коли є лише одна відповідь одразу після нього"
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
-    redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
     allow_index_in_robots_txt: "Сайт повинен індексуватися пошуковими системами (оновити robots.txt)"
     email_domains_blacklist: "Список заборонених поштових доменів, розділених вертикальною рискою. Наприклад: mailinator.com|trashmail.net"
     email_domains_whitelist: "Список поштових доменів, розділених вертикальною рискою, з якими користувачі можуть реєструватися. УВАГА: Користувачі з доменами, що відрізняються від перелічених, не дозволятимуться."
@@ -527,7 +518,6 @@ uk:
     login_required: "Для читання дописів потрібен вхід в систему"
     min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
     min_password_length: "Мінімальна довжина пароля."
-    block_common_passwords: "Не дозволяти паролі, що належать до 5000 найбільш популярних паролів."
     enable_sso: "Enable single sign on via an external site"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
@@ -567,7 +557,6 @@ uk:
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     enable_s3_uploads: "Розміщувати завантаження на Amazon S3"
-    s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase (cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
     s3_access_key_id: "Id Ключа доступу Amazon S3, що використовуватиметься для завантаження зображень"
     s3_secret_access_key: "Секретний ключ доступу Amazon S3, що використовуватиметься для завантаження зображень"
     s3_region: "Назва регіону Amazon S3, що використовуватиметься для завантаження зображень"
@@ -589,7 +578,6 @@ uk:
     newuser_max_images: "Скільки зображень новий користувач може додати до допису"
     newuser_max_attachments: "Скільки прикріплень новий користувач може додати до допису"
     newuser_max_mentions_per_post: "Максимальна кількість згадок @Імен користувачів, які новий користувач може використати в дописі"
-    newuser_max_replies_per_topic: "Максимальна кількість відповідей, які новий користувач може опублікувати в одному дописі"
     max_mentions_per_post: "Максимальна кількість згадок @Імен користувачів, які можна використати в дописі"
     create_thumbnails: "Create thumbnails for lightboxed images"
     email_time_window_mins: "Скільки хвилин ми чекаємо перед тим, як надсилати сповіщення про відповідь на електронну скриньку, щоб дати користувачу можливість відредагувати та довершити свій допис"
@@ -604,7 +592,6 @@ uk:
     category_colors: "Список шістнадцяткових значень кольорів, дозволених для категорій та розділених вертикальною рискою (|)"
     max_image_size_kb: "Максимальний розмір зображень, які ми дозволяємо користувачам завантажити, в КБ - налаштуйте обмеження також у nginx (client_max_body_size) / apache або проксі."
     max_attachment_size_kb: "Максимальний розмір файлів, які ми дозволяємо користувачам завантажити, в КБ - налаштуйте обмеження також у nginx (client_max_body_size) / apache або проксі."
-    authorized_extensions: "Список розширень файлів, дозволених до завантаження, розділених вертикальною рискою (|)"
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
     title_prettify: "Запобігати типовим опискам та помилкам, таким як: всі літери - великі, перша літера - мала, багаторазові ! та ?, надлишкові . в кінці, тощо."
     topic_views_heat_low: "The number of views after which a topic's heat level is low."
@@ -698,7 +685,6 @@ uk:
       one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
       other: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
     autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
-    pinned_enabled: "Тепер цю тему закріплено. Вона з'являтиметься вгорі своєї категорії, допоки її не відкріпить модератор, або хтось не натисне кнопку \"Відкріпити\"."
     pinned_disabled: "Тепер цю тему відкріплено. Вона більше не з'являтиметься вгорі своєї категорії."
     visible_enabled: "Тепер ця тема видима. Вона буде відображатися у списках тем."
     visible_disabled: "Тепер ця тема невидима. Вона більше не відображатиметься в жодному списку тем. Єдиний спосіб отримати до неї доступ - це за прямим посиланням."
@@ -795,51 +781,11 @@ uk:
       <small>В кожному листі, який Ви надсилаєте, має бути нижній колонтитул з можливістю відписатися від розсилки, тому змакетуймо його. Цього листа було надіслано ТзОВ Паралелепіпедмоторз, вул. Центральна, 55, Всюдигород, Україна 12345. Якщо Ви бажаєте відмовитися від наших наступних листів, [натисніть, щоб відписатися][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] update available"
-    text_body_template: |
-      A new version of Discourse is available:
-
-      Your version: %{installed_version}
-      New version: **%{new_version}**
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade by visiting `\admin\docker`, refreshing the page a few times, and pressing the "upgrade" button.
-
-      - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
-    text_body_template: |
-      A new version of Discourse is available:
-
-      Your version: %{installed_version}
-      New version: **%{new_version}**
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade by visiting `\admin\docker`, refreshing the page a few times, and pressing the "upgrade" button.
-
-      - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
-
-      ### Release notes
-
-      %{notes}
   system_messages:
     post_hidden:
       subject_template: "Допис приховано через скарги спільноти"
-      text_body_template: |
-        Привіт!
-
-        Цим автоматичним повідомленням %{site_name} повідомляє Вас, що Ваш допис ...
-
-        %{base_url}%{url}
-
-        ... було приховано через скарги спільноти.
-
-        Зверніть увагу, що на цей допис поскаржилося декілька членів спільноти перед тим, як його було приховано, тому **будь ласка, обміркуйте, як Ви могли би змінити свій допис, щоб врахувати їхній зворотній зв'язок**. Ви можете відредагувати свій допис через %{edit_delay} хвилин, і він автоматично з'явиться. Це збільшить Ваш Рівень довіри на форумі.
-
-        Втім, у разі повторних скарг від спільноти на цей допис, про нього буде повідомлено модераторам - і тоді може послідувати жорсткіша реакція, включно із можливим призупиненням дії Вашого облікового запису.
-
-        Для додаткових настанов, будь ласка, зверніться до наших [ЧаПів](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Це приватне повідомлення містить декілька коротких підказок, що допоможуть Вам розпочати:
@@ -1046,10 +992,7 @@ uk:
         %{respond_instructions}
     digest:
       why: "Ось короткий виклад обговорення на %{site_link} відтоді, як ми Вас востаннє бачили %{last_seen_at}."
-      subject_template: "[%{site_name}] Активність на форумі за %{date}"
       new_activity: "New activity on your topics and posts:"
-      top_topics: "Останні дописи, що з'явилися у спільноті:"
-      other_new_topics: "Інші нові теми:"
       unsubscribe: "Цей підсумковий лист надіслано в якості люб'язного сповіщення від %{site_link}, оскільки ми Вас не бачили тривалий час. Щоб відписатися, %{unsubscribe_link}."
       click_here: "натисніть тут"
       from: "Стислий виклад новин від %{site_name}"
@@ -1124,7 +1067,6 @@ uk:
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: 'deleted'
   upload:
-    edit_reason: "Ми звантажили копії віддалених зображень"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Вставлене зображення"
     attachments:

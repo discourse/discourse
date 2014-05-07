@@ -44,7 +44,6 @@ he:
     loading: "טוען דיון..."
     permalink: "קישור"
     imported_from: "זה דיון מלווה לערך המקורי ב- %{link}"
-    in_reply_to: "בתגובה ל %{username}"
     replies:
       one: "תגובה אחת"
       other: "%{count} תגובות"
@@ -176,8 +175,6 @@ he:
               cant_send_pm: "סליחה, אינך יכול לשלוח הודעה פרטית למשתמש הזה."
         user:
           attributes:
-            password:
-              common: "אחד מ-5000 הסיסמאות הנפוצות ביותר. בבקשה בחרו סיסמה אחרת."
             ip_address:
               signup_not_allowed: " הרשמה אינו מורשית מהחשבון הזה."
   user_profile:
@@ -363,7 +360,6 @@ he:
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנהל'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>הודעתך דוגללה על ידי הקהילה. אנא ראה הודעות פרטיות.</p>'
     user_must_edit: '<p>תוכן מדוגלל נסתר זמנים.</p>'
   archetypes:
     regular:
@@ -614,7 +610,6 @@ he:
     topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
     redirect_users_to_top_page: "Automatically redirect new & long-time-no-see users to top page"
-    redirect_new_users_to_top_page_duration: "Number of days during which new users are automatically redirect to the top page"
     enable_badges: "Enable the badge system (experimental)"
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
@@ -628,7 +623,6 @@ he:
     login_required: "Require authentication to read posts"
     min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
     min_password_length: "Minimum password length."
-    block_common_passwords: "Don't allow passwords that are in the 5000 most common passwords."
     enable_sso: "Enable single sign on via an external site"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
@@ -748,7 +742,6 @@ he:
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before we consider it dominating."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists"
     min_posts_for_search_in_topic: "Disable search within topic if topics have less than minimum number posts"
-    global_notice: "Display a global banner to all users of the site, change to blank to hide it (HTML is allowed)"
     enable_names: "Allow users to show their full names"
     display_name_on_posts: "Also show a user's full name on their posts"
     invites_shown: "Maximum invites shown on a user page"
@@ -1309,9 +1302,3 @@ he:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
-
-  badges:
-    types:
-      gold: Gold
-      silver: Silver
-      bronze: Bronze

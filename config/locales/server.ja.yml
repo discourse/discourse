@@ -229,11 +229,9 @@ ja:
   post_action_types:
     off_topic:
       title: 'オフトピック'
-      description: 'このポストは現在の議論から著しく外れており、別トピックに移動すべきである。'
       long_form: 'オフトピックフラグをたてる'
     spam:
       title: 'スパム'
-      description: 'このポストは宣伝であり、現在の議論に一切貢献していない。'
       long_form: 'スパムフラグをたてる'
     inappropriate:
       title: '不適切'
@@ -264,7 +262,6 @@ ja:
       description: 'このポストに投票する'
       long_form: 'このポストに投票'
   flagging:
-    you_must_edit: '<p>あなたのポストにフラグがたちました。プライベートメッセージを確認してください。</p>'
     user_must_edit: '<p>フラグのたった内容は一時的に非表示になります。</p>'
   archetypes:
     regular:
@@ -530,7 +527,6 @@ ja:
     clean_orphan_uploads_grace_period_hours: "どこからもリンクされていないアップロードファイルを削除するまでの猶予期間 (単位：時間)。"
     purge_deleted_uploads_grace_period_days: "削除されたアップロードファイルが完全削除されるまでの猶予期間 (単位：日)。"
     enable_s3_uploads: "Amazon S3 にファイルをアップロードする"
-    s3_upload_bucket: "ファイルをアップロードする Amazon S3 のバケツ名。注意: 小文字指定のみ (cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
     s3_access_key_id: "画像をアップロードする Amazon S3 の access key id"
     s3_secret_access_key: "画像をアップロードする Amazon S3 の secret access key"
     s3_region: "画像をアップロードする Amazon S3 のリージョン名"
@@ -566,7 +562,6 @@ ja:
     category_colors: "カテゴリに利用可能な色 (16進数指定) のリスト。パイプ (|) 区切りで指定"
     max_image_size_kb: "アップロード可能な画像の最大サイズ (kB) - nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行ってください"
     max_attachment_size_kb: "アップロード可能な添付ファイルの最大サイズ (kB) - nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行ってください"
-    authorized_extensions: "アップロード可能なファイルの拡張子のリスト。パイプ (|) 区切りで指定"
     max_similar_results: "新規トピック編集中に類似トピックをいくつ表示するか"
     title_prettify: "よくあるタイトルのミススペルや文法エラー (例: 最初の文字が小文字、文の最後で ! や ? や . などが重複) を防止する"
     topic_views_heat_low: "トピックのヒートレベルを低に設定する閲覧数。"
@@ -640,7 +635,6 @@ ja:
       one: "このトピックは1分が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
       other: "このトピックは%{count}分が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
     autoclosed_disabled: "このトピックは再オープンされました。新しい回答が投稿できるようになりました。。"
-    pinned_enabled: "このトピックはピン留めされました。ピン留めボタンが押されるかモデレータによってピン留めが解除されるまで、カテゴリのトップに表示されます。"
     pinned_disabled: "このトピックのピン留めが解除されました。以後、カテゴリのトップに表示されません。"
     visible_enabled: "このトピックは表示状態になりました。トピックリストに表示されます。"
     visible_disabled: "このトピックは非表示状態になりました。トピックリストには表示されません。直接リンク経由でのみこのトピックにアクセスできます。"
@@ -739,29 +733,9 @@ ja:
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] アップデートがあります"
-    text_body_template: |
-      新しいバージョンの Discourse が利用可能です。
-
-      **新しいバージョン: %{new_version}**
-
-      現在のバージョン: %{installed_version}
-
-      最新のバグフィックスや新機能を適用するために、早めのアップグレードを検討してください。
   system_messages:
     post_hidden:
       subject_template: "コミュニティによるフラグによりポストが非表示になりました"
-      text_body_template: |
-        Hello,
-
-        このメールは、あなたのポスト...
-
-        %{base_url}%{url}
-
-        ... が、コミュニティによってフラグた立てられた結果非表示状態になったことをお知らせする %{site_name} からの自動メッセージです。
-
-        複数のコミュニティメンバーによりこのポストにフラグが立てられた結果としてポストが非表示になったことをご理解ください。**このフィードバックを元に、ポスト内容を修正することを検討してください**。ポスト内容の編集は %{edit_delay}後より行うことができます。編集後、非表示状態は解除されます。
-
-        ただし、再度あなたのポストがコミュニティによってフラグ立てされた場合、モデレータに通知が行われます。この結果アカウントの凍結などの処置が行われる可能性もあります。
     usage_tips:
       text_body_template: |
         このプライベートメッセージでは、初心者向けヒントをいくつかご紹介します。
@@ -931,10 +905,7 @@ ja:
         %{respond_instructions}
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降に %{site_link} で行われた議論のサマリーです。"
-      subject_template: "[%{site_name}] %{date} のフォーラムアクティビティ"
       new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
-      top_topics: "コミュニティで人気のあった新規ポスト:"
-      other_new_topics: "その他の新トピック:"
       unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "ここをクリック"
       from: "%{site_name} ダイジェスト"
@@ -999,7 +970,6 @@ ja:
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
   deleted: 'deleted'
   upload:
-    edit_reason: "リモート画像のコピーをダウンロードしました"
     unauthorized: "申し訳ありません、ファイルのアップロードが拒否されました (サポートするファイルの拡張子: %{authorized_extensions})."
     pasted_image_filename: "貼り付けた画像"
     attachments:
