@@ -54,7 +54,7 @@ h1 .topic-statuses .topic-status i {
   position: absolute;
   right: 330px;
   z-index: 400;
-  padding: 2px 8px 3px;
+  padding: 10px 6px 5px;
   border: 1px solid scale-color($primary, $lightness: 90%);
   font-size: 12px;
   background: $secondary;
@@ -121,7 +121,7 @@ nav.post-controls {
   }
 
   .show-replies {
-    background: scale-color($primary, $lightness: 90%);
+    background: scale-color($primary, $lightness: 95%);
     padding: 8px 15px;
     padding-bottom: 20px;
     margin-left: 0;
@@ -244,9 +244,9 @@ nav.post-controls {
   .row {border-top: 1px solid scale-color($primary, $lightness: 90%); padding-top: 7px;}
   .reply:first-of-type .row {border-top: none;}
 
-  background: scale-color($primary, $lightness: 90%);
+  background: scale-color($primary, $lightness: 95%);
   .quote .title, blockquote, .onebox, .onebox-result {
-    background: scale-color($primary, $lightness: 95%);
+    background: scale-color($primary, $lightness: 90%);
     border-left: 5px solid scale-color($primary, $lightness: 75%);
   }
 
@@ -271,13 +271,15 @@ nav.post-controls {
   }
   .topic-meta-data-inside {
     margin: -15px 0 0 0;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
+    a {color: scale-color($primary, $lightness: 50%);}
   }
   .topic-meta-data {padding-top: 20px;}
+  .arrow {color: scale-color($primary, $lightness: 50%);}
 }
 
 .bottom-round nav.post-controls .show-replies {
-background: scale-color($primary, $lightness: 90%);
+background: scale-color($primary, $lightness: 95%);
 margin-bottom: 0;
 padding-bottom: 8px;
   &:hover {background: scale-color($primary, $lightness: 90%);
@@ -671,19 +673,19 @@ iframe {
   }
 }
 
-.deleted {
-  .topic-body {
-  background-color: scale-color($danger, $lightness: 30%);
-  }
-}
-
 .post-hidden {
   opacity: 0.5;
 }
 
 .moderator {
   .topic-body {
-    background-color: scale-color($highlight, $lightness: 60%);
+    background-color: scale-color($highlight, $lightness: 75%);
+  }
+}
+
+.deleted {
+  .topic-body {
+  background-color: scale-color($danger, $lightness: 75%);
   }
 }
 
@@ -781,7 +783,7 @@ blockquote { /* solo quotes */
 
 .quote-controls {
   float: right;
-  color: $primary;
+  color: scale-color($primary, $lightness: 50%);
   a {
   margin: 0;
   }
@@ -789,7 +791,7 @@ blockquote { /* solo quotes */
     .quote-other-topic:before {
     display: inline-block;
     margin-left: 8px;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;

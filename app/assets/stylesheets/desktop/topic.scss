@@ -163,9 +163,7 @@ a:hover.reply-new {
     bottom: 0;
     width: 0;
     border-right: 1px solid  scale-color($primary, $lightness: 90%);
-    // background-color: #d4eaf4;
-    // background-color: #C5E8F7;
-    background-color:  scale-color($success, $lightness: 60%);
+    background-color:  scale-color($success, $lightness: 70%);
     transition: width .75s;
   }
 }

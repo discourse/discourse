@@ -164,7 +164,7 @@
   @include small-width  { width: 700px; }
   min-height: 800px;
   margin-left: 0;
-  border-left: solid 1px lighten($primary, 50%);
+  border-left: solid 1px scale-color($primary, $lightness: 90%);
   padding: 30px 0 30px 30px;
 }
 
@@ -197,8 +197,8 @@
     .input-setting-list {
       width: 408px;
       padding: 1px;
-      background-color: white;
-      border: 1px solid #e6e6e6;
+      background-color: $secondary;
+      border: 1px solid scale-color($primary, $lightness: 90%);
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -207,17 +207,17 @@
       .list-input-item {
         width: 90px;
         margin: 2px 1px;
-        background-color: white;
-        border: 1px solid #e6e6e6;
+        background-color: $secondary;
+        border: 1px solid scale-color($primary, $lightness: 90%);
         border-radius: 3px;
         box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
         -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
         transition: border linear 0.2s, box-shadow linear 0.2s;
 
         &:focus {
-          border-color: #00aaff;
+          border-color: $tertiary;
           outline: 0;
-          box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3), 0 0 8px #00aaff;
+          box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3), 0 0 8px $tertiary;
         }
       }
 
@@ -244,11 +244,11 @@
 
   .setting.overridden {
     input[type=text] {
-      background-color: lighten($highlight, 23%);
+      background-color: scale-color($highlight, $lightness: 50%);
     }
 
     h3 {
-      color: darken($highlight, 30%);
+      color: scale-color($highlight, $lightness: -50%);
     }
   }
 }
@@ -256,7 +256,7 @@
 section.details {
   h1 {
     font-size: 15px;
-    background-color: lighten($primary, 50%);
+    background-color: scale-color($primary, $lightness: 90%);
     color: $secondary;
     padding: 0 10px;
     margin: 0 0 5px 0;
@@ -264,13 +264,12 @@ section.details {
 }
 
 #selected-controls {
-  background-color: lighten($tertiary, 50%);
+  background-color: scale-color($tertiary, $lightness: 75%);
   padding: 8px;
   min-height: 27px;
   position: fixed;
   bottom: 0;
   width: 1075px;
-  border: 1px solid lighten($tertiary, 45%);
 }
 
 .display-row {
@@ -441,7 +440,7 @@ section.details {
     .hex, .opacity { text-align: center; }
 
     .changed .name {
-      color: darken($highlight, 30%);
+      color: scale-color($highlight, $lightness: -50%);
     }
   }
 }
@@ -453,7 +452,7 @@ section.details {
   tr.deleted td.excerpt { opacity: 0.8; background-color: scale-color($danger, $lightness: 30%); }
   td.message {
     padding: 4px 8px;
-    background-color:  lighten($highlight, 23%);
+    background-color:  scale-color($highlight, $lightness: 30%);
   }
   td { vertical-align: top; }
   th { text-align: left; }
@@ -582,14 +581,14 @@ table.api-keys {
 
     .title {
       i.fa {
-        color: darken($primary, 40%);
+        color: $primary;
       }
     }
 
     th {
       font-weight: normal;
       text-align: center;
-      background-color: lighten($primary, 76%);
+      background-color: scale-color($primary, $lightness: 90%);
     }
     th.title {
       text-align: left;
@@ -599,7 +598,7 @@ table.api-keys {
         background-color: $secondary;
       }
       tr:hover > th {
-        background-color: lighten($primary, 60%);
+        background-color: scale-color($primary, $lightness: 75%);
       }
     }
 
@@ -721,7 +720,7 @@ table.api-keys {
     list-style: none;
   }
   a {
-    color: darken($primary, 40%);
+    color: $primary;
     text-decoration: none;
   }
   a:hover {
@@ -729,10 +728,10 @@ table.api-keys {
   }
 
   .header {
-    color: darken($primary, 40%);
+    color: $primary;
     font-weight: bold;
     height: 30px;
-    background-color: lighten($primary, 60%);
+    background-color: scale-color($primary, $lightness: 75%);
     cursor: pointer;
 
     h1 {
@@ -771,7 +770,7 @@ table.api-keys {
       }
 
       .commit-message {
-        color: darken($primary, 40%);
+        color: $primary;
         font-size: 12px;
         font-weight: bold;
       }
@@ -783,7 +782,7 @@ table.api-keys {
 
       .committer-name {
         font-weight: bold;
-        color: darken($primary, 40%);
+        color: $primary;
       }
     }
     li:last-child {
@@ -796,7 +795,7 @@ table.api-keys {
     width: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: lighten($primary, 60%);
+    background-color: scale-color($primary, $lightness: 75%);
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
@@ -807,7 +806,7 @@ table.api-keys {
 .content-list {
 
   h3 {
-    color: darken($primary, 40%);
+    color: $primary;
     font-size: 15px;
     padding-left: 5px;
     margin-bottom: 10px;
@@ -818,25 +817,25 @@ table.api-keys {
     margin: 0;
 
     li:first-of-type {
-      border-top: 1px solid lighten($primary, 60%);
+      border-top: 1px solid scale-color($primary, $lightness: 90%);
     }
     li {
-      border-bottom: 1px solid lighten($primary, 60%);
+      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
     }
 
     li a {
       display: block;
       padding: 10px;
-      color: darken($primary, 40%);
+      color: $primary;
 
       &:hover {
-        background-color: #eee;
-        color: darken($primary, 40%);
+        background-color: scale-color($primary, $lightness: 90%);
+        color: $primary;
       }
 
       &.active {
         font-weight: bold;
-        color: darken($primary, 40%);
+        color: $primary;
       }
     }
   }
@@ -987,14 +986,14 @@ table.api-keys {
   margin: 0 0 20px 6px;
   a.filter {
     display: inline-block;
-    background-color: lighten($primary, 60%);
+    background-color: scale-color($primary, $lightness: 75%);
     padding: 3px 10px;
     border-radius: 3px;
 
-    color: darken($primary, 40%);
+    color: $primary;
     &:hover {
-      color: darken($primary, 40%);
-      background-color: lighten($primary, 76%);
+      color: $primary;
+      background-color: scale-color($primary, $lightness: 90%);
 
 
     }
@@ -1024,11 +1023,11 @@ table.api-keys {
 
 .staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
 
-  border-bottom: dotted 1px lighten($primary, 60%);
+  border-bottom: dotted 1px scale-color($primary, $lightness: 75%);
 
   .heading-container {
     width: 100%;
-    background-color: lighten($primary, 60%);
+    background-color: scale-color($primary, $lightness: 90%);
   }
   .col.heading {
     font-weight: bold;
@@ -1044,7 +1043,7 @@ table.api-keys {
 
   .ember-list-item-view {
     width: 100%;
-    border-top: solid 1px lighten($primary, 60%);
+    border-top: solid 1px scale-color($primary, $lightness: 90%);
   }
 }
 
