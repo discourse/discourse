@@ -11,7 +11,7 @@
           {{/if}}
           <h1>
             {{#if topic.isPrivateMessage}}
-              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
+              <span class="private-message-glyph">{{icon envelope}}</span>
             {{/if}}
           {{#if topic.category.parentCategory}}
             {{boundCategoryLink topic.category.parentCategory}}
@@ -37,29 +37,32 @@
         <div class='current-username'>
           {{#if currentUser}}
             <span class='username'><a {{bind-attr href="currentUser.path"}}>{{currentUser.displayName}}</a></span>
-          {{else}}
-            <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}
         </div>
       {{/unless}}
-      <ul class='icons clearfix'>
-        <li class='notifications'>
-          {{#if currentUser}}
-            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'><i class='fa fa-comment'></i></a>
+      {{#unless currentUser}}
+        <button {{action showLogin}} class='btn btn-primary btn-small login-button'>
+          {{icon user}} {{i18n log_in}}
+        </button>
+      {{/unless}}
+      <ul class='icons clearfix' role='navigation'>
+        {{#if currentUser}}
+          <li class='notifications'>
+            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'>
+              {{icon comment label="notifications.title"}}
+            </a>
             {{#if currentUser.unread_notifications}}
               <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
             {{/if}}
             {{#if currentUser.unread_private_messages}}
               <a href='#' class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
-          {{else}}
-            <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}'><i class='fa fa-comment'></i></a>
-          {{/if}}
-        </li>
+          </li>
+        {{/if}}
         <li>
           {{#if Discourse.loginRequired}}
-            <a id='search-button' class='icon expand' href='#' {{action showLogin}}>
-              <i class='fa fa-search'></i>
+            <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action showLogin}}>
+              {{icon search}}
             </a>
           {{else}}
             <a id='search-button'
@@ -67,7 +70,7 @@
                href='#'
                data-dropdown="search-dropdown"
                title='{{i18n search.title}}'>
-               <i class='fa fa-search'></i>
+               {{icon search label="search.title"}}
             </a>
           {{/if}}
         </li>
@@ -75,8 +78,9 @@
           {{#if Discourse.loginRequired}}
             <a class='icon'
                href="#"
+               aria-hidden="true"
                {{action showLogin}}>
-               <i class='fa fa-bars'></i>
+               {{icon bars}}
             </a>
           {{else}}
             <a class='icon'
@@ -85,27 +89,25 @@
                href="#"
                title='{{i18n site_map}}'
                id="site-map">
-               <i class='fa fa-bars'></i>
+               {{icon bars label="site_map"}}
             </a>
           {{/if}}
           {{#if currentUser.site_flagged_posts_count}}
             <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
         </li>
-        <li class='current-user dropdown'>
-          {{#if currentUser}}
+        {{#if currentUser}}
+          <li class='current-user dropdown'>
             <a class='icon'
                data-dropdown="user-dropdown"
                data-render="renderUserDropdown"
                href="#"
                title='{{i18n user.avatar.title}}'
                id="current-user">
-                 {{boundAvatar currentUser imageSize="medium" }}
+                 {{boundAvatar currentUser imageSize="medium"}}
             </a>
-          {{else}}
-            <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='fa fa-user' title='{{i18n not_logged_in_user}}'></i></div>
-          {{/if}}
-        </li>
+          </li>
+        {{/if}}
       </ul>
 
       {{render "search"}}
