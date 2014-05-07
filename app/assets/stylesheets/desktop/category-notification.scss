@@ -10,9 +10,9 @@
   padding: 4px 0;
   margin: 32px 560px;
   list-style: none;
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  box-shadow: 0 1px 5px rgba($primary_shadow_color, .4);
+  background-color: $secondary;
+  border: 1px solid $primary;
+  box-shadow: 0 1px 5px rgba($primary, .4);
   background-clip: padding-box;
   span {font-size: 12px;}
   .title {font-weight: bold; display: block; font-size: 14px;}
@@ -23,15 +23,15 @@
     clear: both;
     font-weight: normal;
     line-height: 18px;
-    color: $primary_text_color;
+    color: $primary;
   }
 }
 .notification-dropdown-menu li > a:hover,
 .notification-dropdown-menu .active > a,
 .notification-dropdown-menu .active > a:hover {
-  color: $tertiary_text_color;
+  color: $secondary;
   text-decoration: none;
-  background-color: $emphasis_text_color;
+  background-color: scale-color($tertiary, $lightness: 50%);
 }
 .open > .notification-dropdown-menu {
   display: block;
