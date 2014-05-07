@@ -92,6 +92,8 @@ class TopicViewSerializer < ApplicationSerializer
     if has_topic_user?
       result[:notification_level] = object.topic_user.notification_level
       result[:notifications_reason_id] = object.topic_user.notifications_reason_id
+    else
+      result[:notification_level] = TopicUser.notification_levels[:regular]
     end
 
     result[:can_move_posts] = true if scope.can_move_posts?(object.topic)
