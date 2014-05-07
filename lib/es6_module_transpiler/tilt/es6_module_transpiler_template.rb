@@ -69,10 +69,6 @@ module Tilt
 
     private
 
-    def transpiler_path
-      File.expand_path('../../support/es6-module-transpiler.js', __FILE__)
-    end
-
     def generate_source(scope)
       "new module.exports.Compiler(#{::JSON.generate(data, quirks_mode: true)}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
     end
