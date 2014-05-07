@@ -12,10 +12,10 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
   hidden: Em.computed.alias('category.deleted'),
   templateName: 'category_notification_dropdown',
 
-  watchingClasses: 'fa fa-circle heatmap-high',
-  trackingClasses: 'fa fa-circle heatmap-low',
-  mutedClasses: 'fa fa-times-circle',
-  regularClasses: 'fa fa-circle-o',
+  watchingClasses: 'fa fa-exclamation-circle watching',
+  trackingClasses: 'fa fa-circle tracking',
+  mutedClasses: 'fa fa-times-circle muted',
+  regularClasses: 'fa fa-circle-o regular',
 
 
   
@@ -30,7 +30,7 @@ Discourse.CategoryNotificationsButton = Discourse.View.extend({
     _.each([
       ['WATCHING', 'watching', this.watchingClasses],
       ['TRACKING', 'tracking', this.trackingClasses],
-      ['REGULAR', 'regular', this.regularClasses],
+      ['REGULAR', 'regular', ''],
       ['MUTED', 'muted', this.mutedClasses]
     ], function(pair) {
 
