@@ -94,9 +94,21 @@ module Jobs
     end
 
     def is_valid_image_url(src)
-      src.present? &&
-      !Discourse.store.has_been_uploaded?(src) &&
-      !src.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix) &&
+      # make sure we actually have a url
+      return false unless src.present?
+      # we don't want to pull uploaded images
+      return false if Discourse.store.has_been_uploaded?(src)
+      # parse the src
+      begin
+        uri = URI.parse(src)
+      rescue URI::InvalidURIError
+        return false
+      end
+      # we don't want to pull images hosted on the CDN (if we use one)
+      return false if Discourse.asset_host.present? && URI.parse(Discourse.asset_host).hostname == uri.hostname
+      # we don't want to pull images hosted on the main domain
+      return false if URI.parse(Discourse.base_url_no_prefix).hostname == uri.hostname
+      # check the domains blacklist
       SiteSetting.should_download_images?(src)
     end
 
