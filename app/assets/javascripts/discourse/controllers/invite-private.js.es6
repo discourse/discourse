@@ -7,7 +7,7 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-Discourse.InvitePrivateController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   modalClass: 'invite',
 
   onShow: function(){

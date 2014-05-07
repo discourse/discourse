@@ -7,7 +7,7 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-Discourse.InviteController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
 
   /**
     Can we submit the form?

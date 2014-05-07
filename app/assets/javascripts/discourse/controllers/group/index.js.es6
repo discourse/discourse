@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.GroupIndexController = Ember.ArrayController.extend({
+export default Ember.ArrayController.extend({
   needs: ['group'],
   loading: false,
 

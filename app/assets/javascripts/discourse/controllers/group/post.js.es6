@@ -1,4 +1,4 @@
-Discourse.GroupPostController = Em.ObjectController.extend({
+export default Em.ObjectController.extend({
 
   byName: function() {
     var result = "",
