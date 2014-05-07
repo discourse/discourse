@@ -96,12 +96,6 @@ class TopicQuery
     end
   end
 
-  TopTopic.periods.each do |period|
-    define_method("list_top_#{period}") do
-      list_top_for(period)
-    end
-  end
-
   def list_topics_by(user)
     create_list(:user_topics) do |topics|
       topics.where(user_id: user.id)

@@ -215,28 +215,28 @@ describe ListController do
     end
   end
 
-  describe "best_period_for" do
+  describe "best_periods_for" do
 
     it "returns yearly for more than 180 days" do
-      ListController.best_period_for(nil).should == :yearly
-      ListController.best_period_for(180.days.ago).should == :yearly
+      ListController.best_periods_for(nil).should == [:yearly]
+      ListController.best_periods_for(180.days.ago).should == [:yearly]
     end
 
-    it "returns monthly when less than 180 days and more than 35 days" do
+    it "includes monthly when less than 180 days and more than 35 days" do
       (35...180).each do |date|
-        ListController.best_period_for(date.days.ago).should == :monthly
+        ListController.best_periods_for(date.days.ago).should == [:monthly, :yearly]
       end
     end
 
-    it "returns weekly when less than 35 days and more than 8 days" do
+    it "includes weekly when less than 35 days and more than 8 days" do
       (8...35).each do |date|
-        ListController.best_period_for(date.days.ago).should == :weekly
+        ListController.best_periods_for(date.days.ago).should == [:weekly, :monthly, :yearly]
       end
     end
 
-    it "returns daily when less than 8 days" do
+    it "includes daily when less than 8 days" do
       (0...8).each do |date|
-        ListController.best_period_for(date.days.ago).should == :daily
+        ListController.best_periods_for(date.days.ago).should == [:daily, :weekly, :monthly, :yearly]
       end
     end
 

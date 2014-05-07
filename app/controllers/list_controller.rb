@@ -175,7 +175,7 @@ class ListController < ApplicationController
       top_options.merge!(options) if options
       top_options[:per_page] = SiteSetting.topics_per_period_in_top_page
       user = list_target_user
-      list = TopicQuery.new(user, top_options).public_send("list_top_#{period}")
+      list = TopicQuery.new(user, top_options).list_top_for(period)
       list.more_topics_url = construct_next_url_with(top_options)
       list.prev_topics_url = construct_prev_url_with(top_options)
       respond(list)
@@ -325,12 +325,22 @@ class ListController < ApplicationController
     top
   end
 
-  def self.best_period_for(date)
+  def self.best_period_for(previous_visit_at)
+    ListController.best_periods_for(previous_visit_at).each do |period|
+      return period if TopTopic.where("#{period}_score > 0").count >= SiteSetting.topics_per_period_in_top_page
+    end
+    # default period is yearly
+    :yearly
+  end
+
+  def self.best_periods_for(date)
     date ||= 1.year.ago
-    return :yearly  if date < 180.days.ago
-    return :monthly if date <  35.days.ago
-    return :weekly  if date <   8.days.ago
-    :daily
+    periods = []
+    periods << :daily if date > 8.days.ago
+    periods << :weekly if date > 35.days.ago
+    periods << :monthly if date > 180.days.ago
+    periods << :yearly
+    periods
   end
 
 end

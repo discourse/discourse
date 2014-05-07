@@ -108,14 +108,12 @@ class Topic < ActiveRecord::Base
   attr_accessor :include_last_poster
 
   # The regular order
-  scope :topic_list_order, lambda { order('topics.bumped_at desc') }
+  scope :topic_list_order, -> { order('topics.bumped_at desc') }
 
   # Return private message topics
-  scope :private_messages, lambda {
-    where(archetype: Archetype.private_message)
-  }
+  scope :private_messages, -> { where(archetype: Archetype.private_message) }
 
-  scope :listable_topics, lambda { where('topics.archetype <> ?', [Archetype.private_message]) }
+  scope :listable_topics, -> { where('topics.archetype <> ?', [Archetype.private_message]) }
 
   scope :by_newest, -> { order('topics.created_at desc, topics.id desc') }
 
@@ -123,16 +121,15 @@ class Topic < ActiveRecord::Base
 
   scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
 
-  scope :secured, lambda {|guardian=nil|
+  scope :secured, lambda { |guardian=nil|
     ids = guardian.secure_category_ids if guardian
 
     # Query conditions
-    condition =
-      if ids.present?
-        ["NOT c.read_restricted or c.id in (:cats)", cats: ids]
-      else
-        ["NOT c.read_restricted"]
-      end
+    condition = if ids.present?
+      ["NOT c.read_restricted or c.id in (:cats)", cats: ids]
+    else
+      ["NOT c.read_restricted"]
+    end
 
     where("category_id IS NULL OR category_id IN (
            SELECT c.id FROM categories c
