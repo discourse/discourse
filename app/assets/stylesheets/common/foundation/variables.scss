@@ -2,7 +2,6 @@
 // Variables used throughout the theme
 // --------------------------------------------------
 
-
 // Layout dimensions
 // --------------------------------------------------
 
@@ -10,17 +9,8 @@ $small-width: 950px !default;
 $medium-width: 995px !default;
 $large-width: 1110px !default;
 
-// Primary color variables
+// Brand color variables
 // --------------------------------------------------
-
-$black: #333 !default;
-$white: #fff !default;
-
-$blue: #00aaff !default;
-$yellow: lighten(#FFFF00, 15%) !default;
-$red: #e45735 !default;
-$pink: #fa6c8d !default;
-$green: #009900 !default;
 
 $google: #5b76f7 !default;
 $facebook: #3b5998 !default;
@@ -35,12 +25,6 @@ $github: #6d6d6d !default;
 $base-font-size: 14px !default;
 $base-line-height: 19px !default;
 $base-font-family: Helvetica, Arial, sans-serif !default;
-
-// Broad general variables
-// --------------------------------------------------
-
-
-
 
 @import "colors";
 

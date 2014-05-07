@@ -378,7 +378,7 @@ body {
       }
       .input-prepend .add-on, .input-append .add-on {
         color: $success;
-        background-color:  scale-color($success, $lightness: 60%);
+        background-color:  scale-color($success, $lightness: 90%);
         border-color: $success;
       }
     }
@@ -498,7 +498,7 @@ body {
   .alert {
     padding: 8px 35px 8px 14px;
     margin-bottom: 18px;
-    background-color: scale-color($danger, $lightness: 30%);
+    background-color: scale-color($danger, $lightness: 75%);
     color: #c09853;
   }
   .alert .close {
@@ -508,15 +508,15 @@ body {
     line-height: 18px;
   }
   .alert-success {
-    background-color:  scale-color($success, $lightness: 75%);;
+    background-color:  scale-color($success, $lightness: 90%);
     color: $success;
   }
   .alert-error {
-    background-color:  scale-color($danger, $lightness: 60%);
+    background-color:  scale-color($danger, $lightness: 75%);
     color: $danger;
   }
   .alert-info {
-    background-color: scale-color($tertiary, $lightness: 75%);
+    background-color: scale-color($tertiary, $lightness: 90%);
     color: $primary;
   }
   .alert {

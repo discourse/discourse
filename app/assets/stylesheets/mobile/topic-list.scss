@@ -240,7 +240,6 @@
     border-top: 0;
     padding: 7px 10px;
     background-color: scale-color($primary, $lightness: 95%);
-    @include box-shadow(0 1px 3px rgba($primary, 0.22));
     figure {
       float: left;
       margin: 3px 7px 0 0;

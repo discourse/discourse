@@ -1,5 +1,5 @@
 .gap {
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color($primary, $lightness: 95%);
   padding: 5px 15px;
   color: $primary;
   text-align: center;
@@ -7,14 +7,14 @@
 }
 
 .topic-post {
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color($primary, $lightness: 95%);
   padding: 6px 0 3px 0;
 }
 
 nav.post-controls {
   background-color: $secondary;
   padding: 0;
-  border-right: 1px solid scale-color($primary, $lightness: 90%);
+  border-right: 1px solid scale-color($primary, $lightness: 95%);
   clear: both;
   button {color: scale-color($primary, $lightness: 50%);
 }
@@ -122,7 +122,7 @@ a.star {
 
   border-radius: 5px;
   margin: 15px 10px 20px 10px;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color($primary, $lightness: 95%);
 
   h3 {
     margin-bottom: 4px;
@@ -202,7 +202,7 @@ a.star {
   }
 
   .information {
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 1px solid scale-color($primary, $lightness: 95%);
   }
 
   .domain {
@@ -218,15 +218,15 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);;
-      border-left: 1px solid scale-color($primary, $lightness: 90%);;
+      border-bottom: 1px solid scale-color($primary, $lightness: 95%);;
+      border-left: 1px solid scale-color($primary, $lightness: 95%);;
       padding: 0 23px;
       color: $primary;
       background: scale-color($primary, $lightness: 75%);
       &:hover {
         background: scale-color($primary, $lightness: 75%);
         color: $primary;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid scale-color($primary, $lightness: 95%);
 
       }
       .fa {
@@ -239,7 +239,7 @@ a.star {
 }
 
 #topic-footer-buttons {
-  border-top: 1px solid scale-color($primary, $lightness: 90%);;
+  border-top: 1px solid scale-color($primary, $lightness: 95%);;
   padding: 20px 10px 0 10px;
 }
 
@@ -285,7 +285,7 @@ span.post-count {
 
 #topic-title {
   z-index: 1000;
-  background:scale-color($primary, $lightness: 90%);
+  background-color: scale-color($primary, $lightness: 95%);
   margin: 0 0 0 0 !important;
   padding: 15px 10px 15px 10px;
 }
@@ -394,7 +394,7 @@ iframe {
 }
 
 .deleted {
-  background-color: $danger;
+background-color: scale-color($danger, $lightness: 75%);
 }
 
 #show-topic-admin {
@@ -468,7 +468,7 @@ blockquote {
 
 .quote .title {
   border-left: 5px solid scale-color($primary, $lightness: 75%);
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color($primary, $lightness: 95%);
   padding: 10px 10px 10px 12px;
   clear: both;
   .avatar { margin-right: 7px; }

@@ -66,7 +66,7 @@ div.ac-wrap {
       display: inline-block;
       border: 1px solid scale-color($primary, $lightness: 90%);
       &:hover {
-        background-color: scale-color($danger, $lightness: 30%);
+        background-color: scale-color($danger, $lightness: 75%);
         border: 1px solid scale-color($danger, $lightness: 30%);
         text-decoration: none;
         color: $danger;

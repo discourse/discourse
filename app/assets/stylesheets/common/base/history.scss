@@ -86,11 +86,11 @@
     filter: alpha(opacity=75);
   }
   .diff-ins {
-    background: scale-color($success, $lightness: 60%);;
+    background: scale-color($success, $lightness: 90%);
   }
   ins {
     color: $success;
-    background: scale-color($success, $lightness: 60%);;
+    background: scale-color($success, $lightness: 90%);
   }
   del, .diff-del {
     code, img {
@@ -113,11 +113,11 @@
     filter: alpha(opacity=50);
   }
   .diff-del {
-    background: scale-color($danger, $lightness: 30%);
+    background: scale-color($danger, $lightness: 60%);
   }
   del {
     color: $danger;
-    background: scale-color($danger, $lightness: 30%);
+    background: scale-color($danger, $lightness: 60%);
   }
   span.date {
     font-weight: bold;
