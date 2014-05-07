@@ -37,14 +37,18 @@
         <div class='current-username'>
           {{#if currentUser}}
             <span class='username'><a {{bind-attr href="currentUser.path"}}>{{currentUser.displayName}}</a></span>
-          {{else}}
-            <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}
         </div>
       {{/unless}}
+      {{#unless currentUser}}
+        <button {{action showLogin}} class='btn btn-primary btn-small login-button'>
+          <i class="fa fa-user"></i>
+          {{i18n log_in}}
+        </button>
+      {{/unless}}
       <ul class='icons clearfix' role='navigation'>
-        <li class='notifications'>
-          {{#if currentUser}}
+        {{#if currentUser}}
+          <li class='notifications'>
             <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'>
               <i class='fa fa-comment'></i>
               <span class='sr-only'>{{i18n notifications.title}}</span>
@@ -55,10 +59,8 @@
             {{#if currentUser.unread_private_messages}}
               <a href='#' class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
-          {{else}}
-            <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}' aria-hidden="true"><i class='fa fa-comment'></i></a>
-          {{/if}}
-        </li>
+          </li>
+        {{/if}}
         <li>
           {{#if Discourse.loginRequired}}
             <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action showLogin}}>
@@ -98,8 +100,8 @@
             <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
         </li>
-        <li class='current-user dropdown'>
-          {{#if currentUser}}
+        {{#if currentUser}}
+          <li class='current-user dropdown'>
             <a class='icon'
                data-dropdown="user-dropdown"
                data-render="renderUserDropdown"
@@ -108,10 +110,8 @@
                id="current-user">
                  {{boundAvatar currentUser imageSize="medium"}}
             </a>
-          {{else}}
-            <div class="icon not-logged-in-avatar" aria-hidden="true" {{action showLogin}}><i class='fa fa-user' title='{{i18n not_logged_in_user}}'></i></div>
-          {{/if}}
-        </li>
+          </li>
+        {{/if}}
       </ul>
 
       {{render "search"}}
