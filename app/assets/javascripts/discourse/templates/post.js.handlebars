@@ -92,12 +92,7 @@
       {{view Discourse.TopicMapContainerView post=this topic=controller.model}}
     </div>
 
-    <div class='span5 gutter'>
-      {{post-links links=internalLinks}}
-      {{#if topic.details.can_reply_as_new_topic}}
-        <a href='#' class='reply-new' {{action replyAsNewTopic this}}><i class='fa fa-plus'></i>{{i18n post.reply_as_new_topic}}</a>
-      {{/if}}
-    </div>
+    {{post-gutter links=internalLinks canReplyAsNewTopic=topic.details.can_reply_as_new_topic}}
   </div>
 
 </article>
