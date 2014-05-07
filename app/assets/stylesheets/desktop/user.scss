@@ -173,7 +173,7 @@
 
     margin-bottom: 10px;
     overflow: hidden;
-    color: $primary;
+    color: $secondary;
 
 
     .details {
@@ -199,7 +199,6 @@
 
       img.avatar {
         margin-bottom: 10px;
-        background-color: $primary;
       }
 
       .suspended {
@@ -250,7 +249,7 @@
     }
 
     .controls {
-      background-color: scale-color($primary, $lightness: 50%);
+      background-color: scale-color($primary, $lightness: 30%);
       padding: 12px;
       height: 30px;
 
@@ -339,7 +338,6 @@
     }
     .title {
       display: block;
-      margin-bottom: 4px;
       font-size: 14px;
     }
     .edit-reason {
