@@ -245,10 +245,12 @@ module Discourse
     SiteSetting.after_fork
     $redis.client.reconnect
     Rails.cache.reconnect
+    Logster.store.redis.reconnect
     # shuts down all connections in the pool
     Sidekiq.redis_pool.shutdown{|c| nil}
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
+    nil
   end
 
   def self.sidekiq_redis_config
