@@ -1058,9 +1058,9 @@ en:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
-      - Upgrade by visiting [%{base_url}/admin/docker](%{base_url}/admin/docker), refreshing the page a few times, and pressing the "Upgrade Discourse" button.
+      - Upgrade by visiting [%{base_url}/admin/docker](%{base_url}/admin/docker) and pressing the "Upgrade" button.
 
-      - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
 
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
