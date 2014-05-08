@@ -73,23 +73,30 @@ describe Group do
     user = Fabricate(:user)
     user.change_trust_level!(:basic)
 
+    Group[:trust_level_0].user_ids.should == [user.id]
     Group[:trust_level_1].user_ids.should == [user.id]
+    Group[:trust_level_2].user_ids.should == []
 
     user.change_trust_level!(:regular)
 
-    Group[:trust_level_1].user_ids.should == []
+    Group[:trust_level_1].user_ids.should == [user.id]
     Group[:trust_level_2].user_ids.should == [user.id]
+    Group[:trust_level_3].user_ids.should == []
 
     user2 = Fabricate(:coding_horror)
-    user2.change_trust_level!(:regular)
+    user2.change_trust_level!(:leader)
 
+    Group[:trust_level_0].user_ids.sort.should == [user.id, user2.id].sort
     Group[:trust_level_2].user_ids.sort.should == [user.id, user2.id].sort
+    Group[:trust_level_3].user_ids.should == [user2.id]
   end
 
   it "Correctly updates all automatic groups upon request" do
     Fabricate(:admin)
     user = Fabricate(:user)
     user.change_trust_level!(:regular)
+    user2 = Fabricate(:user)
+    user2.change_trust_level!(:basic)
 
     Group.exec_sql("update groups set user_count=0 where id = #{Group::AUTO_GROUPS[:trust_level_2]}")
 
@@ -106,9 +113,13 @@ describe Group do
     g.users.count.should == 2
     g.user_count.should == 2
 
+    g = groups.find{|g| g.id == Group::AUTO_GROUPS[:trust_level_1]}
+    g.users.count.should == 4
+    g.user_count.should == 4
+
     g = groups.find{|g| g.id == Group::AUTO_GROUPS[:trust_level_2]}
-    g.users.count.should == 1
-    g.user_count.should == 1
+    g.users.count.should == 2
+    g.user_count.should == 2
 
   end
 
