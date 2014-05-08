@@ -92,7 +92,10 @@
       {{view Discourse.TopicMapContainerView post=this topic=controller.model}}
     </div>
 
-    {{post-gutter links=internalLinks canReplyAsNewTopic=topic.details.can_reply_as_new_topic}}
+    {{post-gutter post=this
+                  links=internalLinks
+                  canReplyAsNewTopic=topic.details.can_reply_as_new_topic
+                  newTopicAction="replyAsNewTopic"}}
   </div>
 
 </article>

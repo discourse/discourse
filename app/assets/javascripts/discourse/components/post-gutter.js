@@ -64,8 +64,12 @@ Discourse.PostGutterComponent = Em.Component.extend({
   }.observes('expanded'),
 
   click: function(e) {
-    if ($(e.target).hasClass('toggle-more')) {
+    var $target = $(e.target);
+    if ($target.hasClass('toggle-more')) {
       this.toggleProperty('expanded');
+      return false;
+    } else if ($target.hasClass('reply-new')) {
+      this.sendAction('newTopicAction', this.get('post'));
       return false;
     }
     return true;
