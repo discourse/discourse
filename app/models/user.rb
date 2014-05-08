@@ -777,6 +777,9 @@ end
 #  primary_group_id              :integer
 #  locale                        :string(10)
 #  profile_background            :string(255)
+#  email_hash                    :string(255)
+#  registration_ip_address       :inet
+#  last_redirected_to_top_at     :datetime
 #
 # Indexes
 #

@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe Invite do
 
-  it { should belong_to :user }
-  it { should have_many :topic_invites }
-  it { should belong_to :invited_by }
-  it { should have_many :topics }
   it { should validate_presence_of :email }
   it { should validate_presence_of :invited_by_id }
 
@@ -65,9 +61,6 @@ describe Invite do
 
         it 'belongs to the topic' do
           topic.invites.should == [@invite]
-        end
-
-        it 'has a topic' do
           @invite.topics.should == [topic]
         end
 
@@ -77,27 +70,16 @@ describe Invite do
 
           it 'returns a different invite' do
             new_invite.should_not == @invite
-          end
-
-          it 'has a different key' do
             new_invite.invite_key.should_not == @invite.invite_key
-          end
-
-          it 'has the topic relationship' do
             new_invite.topics.should == [topic]
           end
+
         end
 
         context 'when adding a duplicate' do
           it 'returns the original invite' do
             topic.invite_by_email(inviter, 'iceking@adventuretime.ooo').should == @invite
-          end
-
-          it 'matches case insensitively for the domain part' do
             topic.invite_by_email(inviter, 'iceking@ADVENTURETIME.ooo').should == @invite
-          end
-
-          it 'matches case sensitively for the local part' do
             topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo').should_not == @invite
           end
 
@@ -114,21 +96,13 @@ describe Invite do
         context 'when adding to another topic' do
           let!(:another_topic) { Fabricate(:topic, user: topic.user) }
 
-          before do
-            @new_invite = another_topic.invite_by_email(inviter, iceking)
-          end
-
           it 'should be the same invite' do
+            @new_invite = another_topic.invite_by_email(inviter, iceking)
             @new_invite.should == @invite
-          end
-
-          it 'belongs to the new topic' do
             another_topic.invites.should == [@invite]
-          end
-
-          it 'has references to both topics' do
             @invite.topics.should =~ [topic, another_topic]
           end
+
         end
       end
     end
@@ -172,7 +146,18 @@ describe Invite do
       invite.redeem.should be_blank
     end
 
-    context 'invite trust levels' do
+    context "when inviting to groups" do
+      it "add the user to the correct groups" do
+        group = Fabricate(:group)
+        invite.invited_groups.build(group_id: group.id)
+        invite.save
+
+        user = invite.redeem
+        user.groups.count.should == 1
+      end
+    end
+
+    context "invite trust levels" do
       it "returns the trust level in default_invitee_trust_level" do
         SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:leader])
         invite.redeem.trust_level.should == TrustLevel.levels[:leader]
@@ -183,7 +168,6 @@ describe Invite do
       it 'correctly activates accounts' do
         SiteSetting.stubs(:must_approve_users).returns(true)
         user = invite.redeem
-
         user.approved?.should == true
       end
     end
@@ -257,13 +241,7 @@ describe Invite do
 
         it 'adds the user to the topic_users of the first topic' do
           topic.allowed_users.include?(user).should be_true
-        end
-
-        it 'adds the user to the topic_users of the second topic' do
           another_topic.allowed_users.include?(user).should be_true
-        end
-
-        it 'does not redeem the second invite' do
           another_invite.reload
           another_invite.should_not be_redeemed
         end
@@ -276,9 +254,6 @@ describe Invite do
 
           it 'returns the same user' do
             @result.should == user
-          end
-
-          it 'marks the second invite as redeemed' do
             another_invite.reload
             another_invite.should be_redeemed
           end
@@ -303,7 +278,7 @@ describe Invite do
     context 'with user that has not invited' do
       it 'does not return invites' do
         user = Fabricate(:user)
-        invite = Fabricate(:invite)
+        Fabricate(:invite)
 
         invites = Invite.find_all_invites_from(user)
 
@@ -315,12 +290,13 @@ describe Invite do
   describe '.find_redeemed_invites_from' do
     it 'returns redeemed invites only' do
       inviter = Fabricate(:user)
-      pending_invite = Fabricate(
+      Fabricate(
         :invite,
         invited_by: inviter,
         user_id: nil,
         email: 'pending@example.com'
       )
+
       redeemed_invite = Fabricate(
         :invite,
         invited_by: inviter,

@@ -243,6 +243,7 @@ end
 #  automatic   :boolean          default(FALSE), not null
 #  user_count  :integer          default(0), not null
 #  alias_level :integer          default(0)
+#  visible     :boolean          default(TRUE), not null
 #
 # Indexes
 #

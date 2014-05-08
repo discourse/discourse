@@ -6,12 +6,12 @@ end
 #
 # Table name: post_custom_fields
 #
-#  id           :integer          not null, primary key
-#  post_id      :integer          not null
-#  name         :string(256)      not null
-#  value        :text
-#  created_at   :datetime
-#  updated_at   :datetime
+#  id         :integer          not null, primary key
+#  post_id    :integer          not null
+#  name       :string(256)      not null
+#  value      :text
+#  created_at :datetime
+#  updated_at :datetime
 #
 # Indexes
 #

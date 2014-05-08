@@ -5,6 +5,8 @@ class Invite < ActiveRecord::Base
   belongs_to :topic
   belongs_to :invited_by, class_name: 'User'
 
+  has_many :invited_groups
+  has_many :groups, through: :invited_groups
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
   validates_presence_of :email

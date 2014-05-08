@@ -97,3 +97,20 @@ class ColorSchemeColor < ActiveRecord::Base
     bookmarkColor: "00aaff"
   }
 end
+
+# == Schema Information
+#
+# Table name: color_scheme_colors
+#
+#  id              :integer          not null, primary key
+#  name            :string(255)      not null
+#  hex             :string(255)      not null
+#  opacity         :integer          default(100), not null
+#  color_scheme_id :integer          not null
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+# Indexes
+#
+#  index_color_scheme_colors_on_color_scheme_id  (color_scheme_id)
+#

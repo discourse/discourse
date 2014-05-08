@@ -34,6 +34,7 @@ InviteRedeemer = Struct.new(:invite) do
   def process_invitation
     add_to_private_topics_if_invited
     add_user_to_invited_topics
+    add_user_to_groups
     send_welcome_message
     approve_account_if_needed
     notify_invitee
@@ -72,6 +73,12 @@ InviteRedeemer = Struct.new(:invite) do
       i.topics.each do |t|
         t.topic_allowed_users.create(user_id: invited_user.id)
       end
+    end
+  end
+
+  def add_user_to_groups
+    invite.groups.each do |g|
+      invited_user.group_users.create(group_id: g.id)
     end
   end
 

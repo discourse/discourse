@@ -6,12 +6,12 @@ end
 #
 # Table name: category_custom_fields
 #
-#  id           :integer          not null, primary key
-#  category_id  :integer          not null
-#  name         :string(256)      not null
-#  value        :text
-#  created_at   :datetime
-#  updated_at   :datetime
+#  id          :integer          not null, primary key
+#  category_id :integer          not null
+#  name        :string(256)      not null
+#  value       :text
+#  created_at  :datetime
+#  updated_at  :datetime
 #
 # Indexes
 #

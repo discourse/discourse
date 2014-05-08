@@ -49,3 +49,16 @@ class ColorScheme < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: color_schemes
+#
+#  id           :integer          not null, primary key
+#  name         :string(255)      not null
+#  enabled      :boolean          default(FALSE), not null
+#  versioned_id :integer
+#  version      :integer          default(1), not null
+#  created_at   :datetime
+#  updated_at   :datetime
+#
