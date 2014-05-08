@@ -155,7 +155,7 @@ class Search
 
     def posts_query(limit)
 
-      search_criteria = {:raw_cont => @original_term.downcase}
+      search_criteria = {:raw_or_topic_title_cont => @original_term.downcase}
       search = Post.includes(:post_search_data, {:topic => :category}).search(search_criteria)
       posts = search.result(:distinct => false).where("topics.deleted_at" => nil)
                   .where("topics.visible")
