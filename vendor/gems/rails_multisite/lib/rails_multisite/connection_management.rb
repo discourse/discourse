@@ -101,7 +101,7 @@ module RailsMultisite
       end
 
       @@db_spec_cache = Hash[*configs.map do |k, data|
-        [k, spec_klass::Resolver.new(k, configs).spec]
+        [k, spec_klass::Resolver.new(configs).spec(k)]
       end.flatten]
 
       @@host_spec_cache = {}
@@ -112,7 +112,7 @@ module RailsMultisite
         end
       end
 
-      @@default_spec = spec_klass::Resolver.new(Rails.env, ActiveRecord::Base.configurations).spec
+      @@default_spec = spec_klass::Resolver.new(ActiveRecord::Base.configurations).spec(Rails.env)
       ActiveRecord::Base.configurations[Rails.env]["host_names"].each do |host|
         @@host_spec_cache[host] = @@default_spec
       end
