@@ -2,6 +2,7 @@
 if Rails.configuration.respond_to?(:enable_mini_profiler) && Rails.configuration.enable_mini_profiler
   require 'rack-mini-profiler'
   require 'flamegraph'
+  require 'memory_profiler' if RUBY_VERSION >= "2.1.0"
   # initialization is skipped so trigger it
   Rack::MiniProfilerRails.initialize!(Rails.application)
 end

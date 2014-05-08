@@ -221,6 +221,7 @@ gem 'ruby-readability', require: false
 gem 'simple-rss', require: false
 gem 'gctools', require: false, platform: :mri_21
 gem 'stackprof', require: false, platform: :mri_21
+gem 'memory_profiler', require: false, platform: :mri_21
 
 # This silly path comment just makes it easier for me to do dev
 # will be removed in a few weeks
