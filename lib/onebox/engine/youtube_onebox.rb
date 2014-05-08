@@ -30,7 +30,7 @@ module Onebox
           html = "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/#{video_id}?feature=oembed\" frameborder=\"0\" allowfullscreen></iframe>"
         else
           # Fall back to making HTTP requests.
-          html = raw[:html]
+          html = raw[:html] || ""
         end
 
         rewrite_agnostic(append_params(html))

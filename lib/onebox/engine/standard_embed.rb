@@ -32,7 +32,7 @@ module Onebox
       private
 
       def parse_open_graph(html, url)
-        og = Struct.new(:url, :type, :title, :description, :images, :metadata).new
+        og = Struct.new(:url, :type, :title, :description, :images, :metadata, :html).new
         og.url = url
         og.images = []
         og.metadata = {}
