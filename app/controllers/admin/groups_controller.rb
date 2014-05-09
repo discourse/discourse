@@ -1,6 +1,13 @@
 class Admin::GroupsController < Admin::AdminController
   def index
-    groups = Group.order(:name).to_a
+    groups = Group.order(:name)
+    if search = params[:search]
+      search = search.to_s
+      groups = groups.where("name ilike ?", "%#{search}%")
+    end
+    if params[:ignore_automatic].to_s == "true"
+      groups = groups.where(automatic: false)
+    end
     render_serialized(groups, BasicGroupSerializer)
   end
 

@@ -375,10 +375,10 @@ Discourse.User = Discourse.Model.extend({
     @param {String} email The email address of the user to invite to the site
     @returns {Promise} the result of the server call
   **/
-  createInvite: function(email) {
+  createInvite: function(email, groupNames) {
     return Discourse.ajax('/invites', {
       type: 'POST',
-      data: {email: email}
+      data: {email: email, group_names: groupNames}
     });
   },
 

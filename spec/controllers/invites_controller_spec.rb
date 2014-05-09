@@ -45,21 +45,20 @@ describe InvitesController do
     end
 
     context 'while logged in' do
-      let!(:user) { log_in }
       let(:email) { 'jake@adventuretime.ooo' }
 
       it "fails if you can't invite to the forum" do
-        Guardian.any_instance.stubs(:can_invite_to_forum?).returns(false)
-        Invite.expects(:invite_by_email).never
+        log_in
         post :create, email: email
         response.should_not be_success
       end
 
-      it "delegates to Invite#invite_by_email and returns success if you can invite" do
-        Guardian.any_instance.stubs(:can_invite_to_forum?).returns(true)
-        Invite.expects(:invite_by_email).with(email, user).returns(Invite.new)
-        post :create, email: email
+      it "allows admins to invite to groups" do
+        group = Fabricate(:group)
+        log_in(:admin)
+        post :create, email: email, group_names: group.name
         response.should be_success
+        Invite.find_by(email: email).invited_groups.count.should == 1
       end
     end
 

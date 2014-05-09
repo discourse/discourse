@@ -187,13 +187,14 @@ class Guardian
     is_me?(user)
   end
 
-  def can_invite_to_forum?
+  def can_invite_to_forum?(groups=nil)
     authenticated? &&
     !SiteSetting.enable_sso &&
     (
       (!SiteSetting.must_approve_users? && @user.has_trust_level?(:regular)) ||
       is_staff?
-    )
+    ) &&
+    (groups.blank? || is_admin?)
   end
 
   def can_invite_to?(object, group_ids=nil)

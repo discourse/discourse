@@ -30,9 +30,11 @@ class InvitesController < ApplicationController
   def create
     params.require(:email)
 
-    guardian.ensure_can_invite_to_forum!
+    group_ids = Group.lookup_group_ids(params)
 
-    if Invite.invite_by_email(params[:email], current_user)
+    guardian.ensure_can_invite_to_forum!(group_ids)
+
+    if Invite.invite_by_email(params[:email], current_user, topic=nil,  group_ids)
       render json: success_json
     else
       render json: failed_json, status: 422

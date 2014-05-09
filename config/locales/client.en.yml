@@ -834,6 +834,7 @@ en:
         success_message: 'You successfully flagged this topic.'
 
       inviting: "Inviting..."
+      automatically_add_to_groups: "Upon registration, automatically add user to groups. (optional, admin only)"
 
       invite_private:
         title: 'Invite to Private Message'
@@ -842,6 +843,7 @@ en:
         action: "Invite"
         success: "Thanks! We've invited that user to participate in this private message."
         error: "Sorry, there was an error inviting that user."
+        group_name: "group name"
 
       invite_reply:
         title: 'Invite'

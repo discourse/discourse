@@ -203,11 +203,7 @@ class TopicsController < ApplicationController
 
     topic = Topic.find_by(id: params[:topic_id])
 
-    if group_ids = params[:group_ids]
-      group_ids = group_ids.split(",").map(&:to_i)
-      group_ids = Group.where(id: group_ids).pluck(:id)
-    end
-
+    group_ids = Group.lookup_group_ids(params)
     guardian.ensure_can_invite_to!(topic,group_ids)
 
     if topic.invite(current_user, username_or_email, group_ids)

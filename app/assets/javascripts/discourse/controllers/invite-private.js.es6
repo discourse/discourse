@@ -10,6 +10,10 @@
 export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   modalClass: 'invite',
 
+  isAdmin: function(){
+    return Discourse.User.currentProp("admin");
+  }.property(),
+
   onShow: function(){
     this.set('controllers.modal.modalClass', 'invite-modal');
     this.set('emailOrUsername', '');

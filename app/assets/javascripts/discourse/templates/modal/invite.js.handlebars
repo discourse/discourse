@@ -1,4 +1,4 @@
-<div class="modal-body">
+<div class="modal-body invite-modal">
   {{#if error}}
     <div class="alert alert-error">
       <button class="close" data-dismiss="alert">×</button>
@@ -12,6 +12,11 @@
 
     <label>{{inviteInstructions}}</label>
     {{textField value=email placeholderKey="topic.invite_reply.email_placeholder"}}
+
+    {{#if isAdmin}}
+      <label>{{i18n topic.automatically_add_to_groups}}</label>
+      {{group-selector includeAuto=false groupNames=groupNames placeholderKey="topic.invite_private.group_name"}}
+    {{/if}}
   {{/if}}
 </div>
 <div class="modal-footer">

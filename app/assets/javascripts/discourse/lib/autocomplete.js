@@ -244,7 +244,6 @@ $.fn.autocomplete = function(options) {
     }
   };
 
-
   // chain to allow multiples
   var oldClose = me.data("closeAutocomplete");
   me.data("closeAutocomplete", function() {

@@ -72,8 +72,8 @@ Discourse.Group = Discourse.Model.extend({
 });
 
 Discourse.Group.reopenClass({
-  findAll: function(){
-    return Discourse.ajax("/admin/groups.json").then(function(groups){
+  findAll: function(opts){
+    return Discourse.ajax("/admin/groups.json", { data: opts }).then(function(groups){
       return groups.map(function(g) { return Discourse.Group.create(g); });
     });
   },

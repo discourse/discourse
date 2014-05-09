@@ -217,10 +217,10 @@ Discourse.Topic = Discourse.Model.extend({
     @method createInvite
     @param {String} emailOrUsername The email or username of the user to be invited
   **/
-  createInvite: function(emailOrUsername) {
+  createInvite: function(emailOrUsername, groupNames) {
     return Discourse.ajax("/t/" + this.get('id') + "/invite", {
       type: 'POST',
-      data: { user: emailOrUsername }
+      data: { user: emailOrUsername, group_names: groupNames }
     });
   },
 

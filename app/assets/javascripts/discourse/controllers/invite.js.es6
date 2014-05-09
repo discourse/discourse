@@ -9,6 +9,10 @@
 **/
 export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
 
+  isAdmin: function(){
+    return Discourse.User.currentProp("admin");
+  }.property(),
+
   /**
     Can we submit the form?
 
@@ -89,8 +93,10 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
       if (this.get('disabled')) { return; }
 
       var self = this;
+      var groupNames = this.get("groupNames");
+
       this.setProperties({ saving: true, error: false });
-      this.get('model').createInvite(this.get('email')).then(function() {
+      this.get('model').createInvite(this.get('email'), groupNames).then(function() {
         self.setProperties({ saving: false, finished: true });
       }).catch(function() {
         self.setProperties({ saving: false, error: true });

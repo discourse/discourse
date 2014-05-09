@@ -164,6 +164,24 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.lookup_group_ids(opts)
+    if group_ids = opts[:group_ids]
+      group_ids = group_ids.split(",").map(&:to_i)
+      group_ids = Group.where(id: group_ids).pluck(:id)
+    end
+
+    group_ids ||= []
+
+    if group_names = opts[:group_names]
+      group_names = group_names.split(",")
+      if group_names.present?
+        group_ids += Group.where(name: group_names).pluck(:id)
+      end
+    end
+
+    group_ids
+  end
+
 
   def self.user_trust_level_change!(user_id, trust_level)
     name = "trust_level_#{trust_level}".to_sym
