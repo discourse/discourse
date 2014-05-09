@@ -10,6 +10,15 @@ module Email
       @fragment = Nokogiri::HTML.fragment(@html)
     end
 
+    def add_styles(node, new_styles)
+      existing = node['style']
+      if existing.present?
+        node['style'] = "#{existing}; #{new_styles}"
+      else
+        node['style'] = new_styles
+      end
+    end
+
     def format_basic
       @fragment.css('img').each do |img|
 
@@ -19,7 +28,7 @@ module Email
           img['width'] = 20
           img['height'] = 20
         else
-          img['style'] = "max-width: 694px;"
+          add_styles(img, 'max-width: 694px;')
         end
 
         # ensure all urls are absolute
@@ -48,6 +57,23 @@ module Email
       correct_first_body_margin
       correct_footer_style
       reset_tables
+      onebox_styles
+    end
+
+    def onebox_styles
+      # Links to other topics
+      style('aside.quote', 'border-left: 5px solid #bebebe; background-color: #f1f1f1; padding: 12px;')
+      style('aside.quote blockquote', 'border: 0px; padding: 0; margin: 7px 0')
+      style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
+      style('aside.quote .avatar', 'margin-right: 5px')
+
+      # Oneboxes
+      style('aside.onebox', "padding: 12px 25px 12px 12px; border-left: 5px solid #bebebe; background: #eee;")
+      style('aside.onebox img', "max-height: 80%; max-width: 25%; height: auto; float: left; margin-right: 10px;")
+      style('aside.onebox h3', "border-bottom: 0")
+      style('aside.onebox .source', "margin-bottom: 8px")
+      style('aside.onebox .source a[href]', "color: #333; font-weight: normal")
+      style('aside.clearfix', "clear: both")
     end
 
     def format_html
@@ -65,19 +91,7 @@ module Email
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
       style('.featured-topic a', 'text-decoration: none; font-weight: bold; color: #006699; margin-right: 5px')
 
-      # Links to other topics
-      style('aside.quote', 'border-left: 5px solid #bebebe; background-color: #f1f1f1; padding: 12px;')
-      style('aside.quote blockquote', 'border: 0px; padding: 0')
-      style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
-      style('aside.quote .avatar', 'margin-right: 5px')
-
-      # Oneboxes
-      style('div.onebox-result', "padding: 12px 25px 12px 12px; border-left: 5px solid #bebebe; background: #eee;")
-      style('div.onebox-result img', "max-height: 80%; max-width: 25%; height: auto; float: left; margin-right: 10px;")
-      style('div.onebox-result h3', "border-bottom: 0")
-      style('div.onebox-result .source', "margin-bottom: 8px")
-      style('div.onebox-result .source a[href]', "color: #333; font-weight: normal")
-      style('div.clearfix', "clear: both")
+      onebox_styles
     end
 
     def to_html
@@ -118,7 +132,7 @@ module Email
 
     def style(selector, style, attribs = {})
       @fragment.css(selector).each do |element|
-        element['style'] = style if style
+        add_styles(element, style) if style
         attribs.each do |k,v|
           element[k] = v
         end
