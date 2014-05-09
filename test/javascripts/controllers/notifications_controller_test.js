@@ -17,9 +17,7 @@ module("Discourse.NotificationsController", {
       return [scope, options.username, options.link].join(" ").trim();
     });
 
-    controller = Discourse.NotificationsController.create({
-      container: Discourse.__container__
-    });
+    controller = Discourse.NotificationsController.create();
 
     view = Ember.View.create({
       container: Discourse.__container__,
