@@ -36,6 +36,30 @@ Discourse.UserStream = Discourse.Model.extend({
     return this.findItems();
   },
 
+  remove: function(userAction) {
+    // 1) remove the user action from the child groups
+    this.get("content").forEach(function (ua) {
+      ["likes", "stars", "edits", "bookmarks"].forEach(function (group) {
+        var items = ua.get("childGroups." + group + ".items");
+        if (items) {
+          items.removeObject(userAction);
+        }
+      });
+    });
+
+    // 2) remove the parents that have no children
+    var content = this.get("content").filter(function (ua) {
+      return ["likes", "stars", "edits", "bookmarks"].any(function (group) {
+        return ua.get("childGroups." + group + ".items.length") > 0;
+      });
+    });
+
+    this.setProperties({
+      content: content,
+      itemsLoaded: content.length
+    });
+  },
+
   findItems: function() {
     var userStream = this;
     if(this.get('loading')) { return Ember.RSVP.reject(); }

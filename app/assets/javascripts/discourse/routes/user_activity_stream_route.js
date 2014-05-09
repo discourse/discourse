@@ -24,6 +24,25 @@ Discourse.UserActivityStreamRoute = Discourse.Route.extend({
     this.controllerFor('user_activity').set('userActionType', this.get('userActionType'));
 
     this.controllerFor('user').set('indexStream', !this.get('userActionType'));
+  },
+
+  actions: {
+
+    removeBookmark: function(userAction) {
+      var self = this;
+      Discourse.ajax("/posts/by_number/" + userAction.topic_id + "/" + userAction.post_number + "/bookmarks/remove", { type: "PUT" })
+               .then(function() {
+                  // remove the user action from the stream
+                  self.modelFor("user").get("stream").remove(userAction);
+                  // update the counts
+                  self.modelFor("user").get("stats").forEach(function (stat) {
+                    if (stat.get("action_type") === userAction.action_type) {
+                      stat.decrementProperty("count");
+                    }
+                  })
+                });
+    },
+
   }
 });
 

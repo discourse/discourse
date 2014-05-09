@@ -68,8 +68,12 @@ class UserActionSerializer < ApplicationSerializer
     object.post_type == Post.types[:moderator_action]
   end
 
-  def edit_reason
-    object.edit_reason if object.action_type == UserAction::EDIT
+  def include_reply_to_post_number?
+    object.action_type == UserAction::REPLY
+  end
+
+  def include_edit_reason?
+    object.action_type == UserAction::EDIT
   end
 
   private

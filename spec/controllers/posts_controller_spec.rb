@@ -288,8 +288,12 @@ describe PostsController do
       let(:post) { Fabricate(:post, user: log_in) }
 
       it "raises an error if the user doesn't have permission to see the post" do
-        Guardian.any_instance.expects(:can_see?).with(post).returns(false)
+        Guardian.any_instance.expects(:can_see?).with(post).returns(false).twice
+
         xhr :put, :bookmark, post_id: post.id, bookmarked: 'true'
+        response.should be_forbidden
+
+        xhr :put, :remove_bookmark_by_number, topic_id: post.topic_id, post_number: post.post_number
         response.should be_forbidden
       end
 
@@ -301,6 +305,11 @@ describe PostsController do
       it 'removes a bookmark' do
         PostAction.expects(:remove_act).with(post.user, post, PostActionType.types[:bookmark])
         xhr :put, :bookmark, post_id: post.id
+      end
+
+      it 'removes a bookmark using the topic_id and the post_number' do
+        PostAction.expects(:remove_act).with(post.user, post, PostActionType.types[:bookmark])
+        xhr :put, :remove_bookmark_by_number, topic_id: post.topic_id, post_number: post.post_number
       end
 
     end

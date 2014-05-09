@@ -10,7 +10,7 @@ Discourse.ActivityFilterView = Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['active', 'noGlyph'],
 
-  shouldRerender: Discourse.View.renderIfChanged('count'),
+  shouldRerender: Discourse.View.renderIfChanged('content.count', 'count'),
   noGlyph: Em.computed.empty('icon'),
 
   active: function() {
@@ -23,11 +23,10 @@ Discourse.ActivityFilterView = Ember.Component.extend({
   }.property('userActionType', 'indexStream'),
 
   activityCount: function() {
-    return this.get('content.count') || this.get('count');
+    return this.get('content.count') || this.get('count') || 0;
   }.property('content.count', 'count'),
 
   typeKey: function() {
-
     var actionType = this.get('content.action_type');
     if (actionType === Discourse.UserAction.TYPES.messages_received) { return ""; }
 
@@ -52,23 +51,17 @@ Discourse.ActivityFilterView = Ember.Component.extend({
     if (icon) {
       buffer.push("<i class='glyph fa fa-" + icon + "'></i> ");
     }
-
     buffer.push(this.get('description') + " <span class='count'>(" + this.get('activityCount') + ")</span>");
     buffer.push("<span class='fa fa-chevron-right'></span></a>");
   },
 
-  icon: function(){
-    switch(parseInt(this.get('content.action_type'),10)) {
-      case Discourse.UserAction.TYPES.likes_received:
-        return "heart";
-      case Discourse.UserAction.TYPES.bookmarks:
-        return "bookmark";
-      case Discourse.UserAction.TYPES.edits:
-        return "pencil";
-      case Discourse.UserAction.TYPES.replies:
-        return "reply";
-      case Discourse.UserAction.TYPES.starred:
-        return "star";
+  icon: function() {
+    switch(parseInt(this.get('content.action_type'), 10)) {
+      case Discourse.UserAction.TYPES.likes_received: return "heart";
+      case Discourse.UserAction.TYPES.bookmarks: return "bookmark";
+      case Discourse.UserAction.TYPES.edits: return "pencil";
+      case Discourse.UserAction.TYPES.replies: return "reply";
+      case Discourse.UserAction.TYPES.starred: return "star";
     }
   }.property("content.action_type")
 

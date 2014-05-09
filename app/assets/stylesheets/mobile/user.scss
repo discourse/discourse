@@ -249,5 +249,9 @@
       background-color: scale-color($highlight, $lightness: 50%);
       padding: 3px 5px 5px 5px;
     }
+    .remove-bookmark {
+      float: right !important;
+      margin-top: -8px;
+    }
   }
 }

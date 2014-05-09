@@ -344,5 +344,9 @@
       background-color: scale-color($highlight, $lightness: 25%);
       padding: 3px 5px 5px 5px;
     }
+    .remove-bookmark {
+      float: right;
+      margin-top: -4px;
+    }
   }
 }

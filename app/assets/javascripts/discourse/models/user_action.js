@@ -102,9 +102,8 @@ Discourse.UserAction = Discourse.Model.extend({
   presentName: Em.computed.any('name', 'username'),
   targetDisplayName: Em.computed.any('target_name', 'target_username'),
   actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
-
-
   targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),
+
   usernameLower: function() {
     return this.get('username').toLowerCase();
   }.property('username'),
@@ -122,6 +121,7 @@ Discourse.UserAction = Discourse.Model.extend({
   replyType: Em.computed.equal('action_type', UserActionTypes.replies),
   postType: Em.computed.equal('action_type', UserActionTypes.posts),
   topicType: Em.computed.equal('action_type', UserActionTypes.topics),
+  bookmarkType: Em.computed.equal('action_type', UserActionTypes.bookmarks),
   messageSentType: Em.computed.equal('action_type', UserActionTypes.messages_sent),
   messageReceivedType: Em.computed.equal('action_type', UserActionTypes.messages_received),
   mentionType: Em.computed.equal('action_type', UserActionTypes.mentions),
@@ -168,7 +168,11 @@ Discourse.UserAction = Discourse.Model.extend({
       });
     }
     return rval;
-  }.property("childGroups"),
+  }.property("childGroups",
+    "childGroups.likes.items", "childGroups.likes.items.@each",
+    "childGroups.stars.items", "childGroups.stars.items.@each",
+    "childGroups.edits.items", "childGroups.edits.items.@each",
+    "childGroups.bookmarks.items", "childGroups.bookmarks.items.@each"),
 
   switchToActing: function() {
     this.setProperties({
@@ -193,7 +197,6 @@ Discourse.UserAction.reopenClass({
         var current;
         if (Discourse.UserAction.TO_COLLAPSE.indexOf(item.action_type) >= 0) {
           current = Discourse.UserAction.create(item);
-          current.setProperties({action_type: null, description: null});
           item.switchToActing();
           current.addChild(item);
         } else {
@@ -217,11 +220,13 @@ Discourse.UserAction.reopenClass({
   TYPES: UserActionTypes,
   TYPES_INVERTED: InvertedActionTypes,
 
-  TO_COLLAPSE: [UserActionTypes.likes_given,
-                UserActionTypes.likes_received,
-                UserActionTypes.starred,
-                UserActionTypes.edits,
-                UserActionTypes.bookmarks],
+  TO_COLLAPSE: [
+    UserActionTypes.likes_given,
+    UserActionTypes.likes_received,
+    UserActionTypes.starred,
+    UserActionTypes.edits,
+    UserActionTypes.bookmarks
+  ],
 
   TO_SHOW: [
     UserActionTypes.likes_given,
@@ -234,6 +239,3 @@ Discourse.UserAction.reopenClass({
   ]
 
 });
-
-
-
