@@ -10,6 +10,7 @@ export default Discourse.Controller.extend({
   topic: null,
   showExtraInfo: null,
   notifications: null,
+  loading_notifications: null,
 
   showStarButton: function() {
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');
@@ -25,11 +26,17 @@ export default Discourse.Controller.extend({
     showNotifications: function(headerView) {
       var self = this;
 
-      Discourse.ajax("/notifications").then(function(result) {
-        self.set("notifications", result);
-        self.set("currentUser.unread_notifications", 0);
-        headerView.showDropdownBySelector("#user-notifications");
-      });
+      if (self.get('currentUser.unread_notifications') || self.get('currentUser.unread_private_messages') || !self.get('notifications')) {
+        self.set("loading_notifications", true);
+        Discourse.ajax("/notifications").then(function(result) {
+          self.setProperties({
+            notifications: result,
+            loading_notifications: false,
+            'currentUser.unread_notifications': 0
+          });
+        });
+      }
+      headerView.showDropdownBySelector("#user-notifications");
     },
 
     jumpToTopPost: function () {
@@ -41,5 +48,3 @@ export default Discourse.Controller.extend({
   }
 
 });
-
-
