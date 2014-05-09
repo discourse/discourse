@@ -20,7 +20,7 @@
           console.log(e.message);
           console.log(e.stack);
         } else {
-          console.log("Uncaught promise: " + e.toString());
+          console.log("Uncaught promise: ", e);
         }
       } else {
         console.log("A promise failed but was not caught.");
