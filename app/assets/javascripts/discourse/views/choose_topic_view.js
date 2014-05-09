@@ -25,26 +25,31 @@ Discourse.ChooseTopicView = Discourse.View.extend({
   }.observes('topics'),
 
   search: Discourse.debounce(function(title) {
-    var chooseTopicView = this;
+    var self = this;
+    if (Em.isEmpty(title)) {
+      self.setProperties({ topics: null, loading: false });
+      return;
+    }
     Discourse.Search.forTerm(title, {typeFilter: 'topic'}).then(function (facets) {
       if (facets && facets[0] && facets[0].results) {
-        chooseTopicView.set('topics', facets[0].results);
+        self.set('topics', facets[0].results);
       } else {
-        chooseTopicView.set('topics', null);
-        chooseTopicView.set('loading', false);
+        self.setProperties({ topics: null, loading: false });
       }
     });
   }, 300),
 
-  chooseTopic: function (topic) {
-    var topicId = Em.get(topic, 'id');
-    this.set('selectedTopicId', topicId);
+  actions: {
+    chooseTopic: function (topic) {
+      var topicId = Em.get(topic, 'id');
+      this.set('selectedTopicId', topicId);
 
-    Em.run.next(function () {
-      $('#choose-topic-' + topicId).prop('checked', 'true');
-    });
+      Em.run.next(function () {
+        $('#choose-topic-' + topicId).prop('checked', 'true');
+      });
 
-    return false;
+      return false;
+    }
   }
 
 });

@@ -7,7 +7,7 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctionality, {
+export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
   needs: ['modal', 'createAccount'],
   authenticate: null,
   loggingIn: false,
