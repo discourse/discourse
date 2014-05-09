@@ -74,7 +74,7 @@ article.post {
 
   .cooked {
     padding: 5px 0;
-    margin-left: 70px;
+    margin-left: 65px;
     word-wrap: break-word;
 
     img {
@@ -99,11 +99,13 @@ img.emoji {
 
 .in-reply-to {
   font-size: 13px;
-  margin-left: 15px;
-  margin-top: 4px;
+  width: 200px;
+  text-align: center;
+  margin-top: 2px;
   margin-bottom: 6px;
   display: inline-block;
-  color: #999;
+  float: right;
+  color: #0088cc;
 }
 
 .replies {
