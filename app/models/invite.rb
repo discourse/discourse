@@ -54,31 +54,45 @@ class Invite < ActiveRecord::Base
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.invite_by_email(email, invited_by, topic=nil)
+  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil)
     lower_email = Email.downcase(email)
+    user = User.find_by(email: lower_email)
+
+    if user
+      topic.grant_permission_to_user(lower_email) if topic && topic.private_message?
+      return nil
+    end
+
     invite = Invite.with_deleted
-                   .where('invited_by_id = ? and email = ?', invited_by.id, lower_email)
+                   .where(email: lower_email, invited_by_id: invited_by.id)
                    .order('created_at DESC')
                    .first
 
-    if invite && invite.expired?
+    if invite && (invite.expired? || invite.deleted_at)
       invite.destroy
       invite = nil
     end
 
-    if invite.blank?
-      invite = Invite.create(invited_by: invited_by, email: lower_email)
-      unless invite.valid?
-        topic.grant_permission_to_user(lower_email) if topic.present? && topic.email_already_exists_for?(invite)
-        return
+    if !invite
+      invite = Invite.create!(invited_by: invited_by, email: lower_email)
+    end
+
+    if topic && !invite.topic_invites.pluck(:topic_id).include?(topic.id)
+      invite.topic_invites.create!(invite_id: invite.id, topic_id: topic.id)
+      # to correct association
+      topic.reload
+    end
+
+    if group_ids.present?
+      group_ids = group_ids - invite.invited_groups.pluck(:group_id)
+      group_ids.each do |group_id|
+        invite.invited_groups.create!(group_id: group_id)
       end
     end
 
-    # Recover deleted invites if we invite them again
-    invite.recover! if invite.deleted_at.present?
-
-    topic.topic_invites.create(invite_id: invite.id) if topic.present?
     Jobs.enqueue(:invite_email, invite_id: invite.id)
+
+    invite.reload
     invite
   end
 

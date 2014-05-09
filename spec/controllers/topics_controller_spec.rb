@@ -748,6 +748,24 @@ describe TopicsController do
   end
 
   describe 'invite' do
+
+    describe "group invites" do
+      it "works correctly" do
+        group = Fabricate(:group)
+        topic = Fabricate(:topic)
+        admin = log_in(:admin)
+
+        xhr :post, :invite, topic_id: topic.id, email: 'hiro@from.heros', group_ids: "#{group.id}"
+
+        response.should be_success
+
+        invite = Invite.find_by(email: 'hiro@from.heros')
+        groups = invite.groups.to_a
+        groups.count.should == 1
+        groups[0].id.should == group.id
+      end
+    end
+
     it "won't allow us to invite toa topic when we're not logged in" do
       lambda { xhr :post, :invite, topic_id: 1, email: 'jake@adventuretime.ooo' }.should raise_error(Discourse::NotLoggedIn)
     end
@@ -763,7 +781,6 @@ describe TopicsController do
 
       describe 'without permission' do
         it "raises an exception when the user doesn't have permission to invite to the topic" do
-          Guardian.any_instance.expects(:can_invite_to?).with(@topic).returns(false)
           xhr :post, :invite, topic_id: @topic.id, user: 'jake@adventuretime.ooo'
           response.should be_forbidden
         end
@@ -771,45 +788,24 @@ describe TopicsController do
 
       describe 'with permission' do
 
-        before do
-          Guardian.any_instance.expects(:can_invite_to?).with(@topic).returns(true)
+        let!(:admin) do
+          log_in :admin
         end
 
-        context 'when it returns an invite' do
-          before do
-            Topic.any_instance.expects(:invite_by_email).with(@topic.user, 'jake@adventuretime.ooo').returns(Invite.new)
-            xhr :post, :invite, topic_id: @topic.id, user: 'jake@adventuretime.ooo'
-          end
-
-          it 'should succeed' do
-            response.should be_success
-          end
-
-          it 'returns success JSON' do
-            ::JSON.parse(response.body).should == {'success' => 'OK'}
-          end
+        it 'should work as expected' do
+          xhr :post, :invite, topic_id: @topic.id, user: 'jake@adventuretime.ooo'
+          response.should be_success
+          ::JSON.parse(response.body).should == {'success' => 'OK'}
+          Invite.where(invited_by_id: admin.id).count.should == 1
         end
 
-        context 'when it fails and returns nil' do
-
-          before do
-            Topic.any_instance.expects(:invite_by_email).with(@topic.user, 'jake@adventuretime.ooo').returns(nil)
-            xhr :post, :invite, topic_id: @topic.id, user: 'jake@adventuretime.ooo'
-          end
-
-          it 'should succeed' do
-            response.should_not be_success
-          end
-
-          it 'returns success JSON' do
-            ::JSON.parse(response.body).should == {'failed' => 'FAILED'}
-          end
-
+        it 'should fail on shoddy email' do
+          xhr :post, :invite, topic_id: @topic.id, user: 'i_am_not_an_email'
+          response.should_not be_success
+          ::JSON.parse(response.body).should == {'failed' => 'FAILED'}
         end
 
       end
-
-
 
     end
 

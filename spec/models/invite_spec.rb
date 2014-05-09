@@ -209,18 +209,19 @@ describe Invite do
 
     context 'invited to topics' do
       let!(:topic) { Fabricate(:private_message_topic) }
-      let!(:invite) { topic.invite(topic.user, 'jake@adventuretime.ooo')}
+      let!(:invite) {
+        topic.invite(topic.user, 'jake@adventuretime.ooo')
+      }
 
       context 'redeem topic invite' do
-        let!(:user) { invite.redeem }
 
         it 'adds the user to the topic_users' do
+          user = invite.redeem
+          topic.reload
           topic.allowed_users.include?(user).should be_true
-        end
-
-        it 'can see the private topic' do
           Guardian.new(user).can_see?(topic).should be_true
         end
+
       end
 
       context 'invited by another user to the same topic' do
@@ -229,15 +230,17 @@ describe Invite do
         let!(:user) { invite.redeem }
 
         it 'adds the user to the topic_users' do
+          topic.reload
           topic.allowed_users.include?(user).should be_true
         end
       end
 
       context 'invited by another user to a different topic' do
-        let(:coding_horror) { User.find_by(username: "CodingHorror") }
-        let(:another_topic) { Fabricate(:topic, archetype: "private_message", user: coding_horror) }
         let!(:another_invite) { another_topic.invite(coding_horror, 'jake@adventuretime.ooo') }
         let!(:user) { invite.redeem }
+
+        let(:coding_horror) { User.find_by(username: "CodingHorror") }
+        let(:another_topic) { Fabricate(:topic, archetype: "private_message", user: coding_horror) }
 
         it 'adds the user to the topic_users of the first topic' do
           topic.allowed_users.include?(user).should be_true
@@ -248,12 +251,9 @@ describe Invite do
 
         context 'if they redeem the other invite afterwards' do
 
-          before do
-            @result = another_invite.redeem
-          end
-
           it 'returns the same user' do
-            @result.should == user
+            result = another_invite.redeem
+            result.should == user
             another_invite.reload
             another_invite.should be_redeemed
           end

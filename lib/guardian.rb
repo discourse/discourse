@@ -196,8 +196,10 @@ class Guardian
     )
   end
 
-  def can_invite_to?(object)
-    can_see?(object) && can_invite_to_forum?
+  def can_invite_to?(object, group_ids=nil)
+    can_see?(object) &&
+    can_invite_to_forum? &&
+    ( group_ids.blank? || is_admin? )
   end
 
   def can_see_private_messages?(user_id)
