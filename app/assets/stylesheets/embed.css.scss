@@ -44,6 +44,10 @@ article.post {
     padding: 10px 5px;
     float: left;
     text-align: center;
+
+    img {
+      max-width: 45px;
+    }
   }
 
   h3.username {
@@ -95,7 +99,7 @@ img.emoji {
 
 .in-reply-to {
   font-size: 13px;
-  margin-left: 0px;
+  margin-left: 15px;
   margin-top: 4px;
   margin-bottom: 6px;
   display: inline-block;
