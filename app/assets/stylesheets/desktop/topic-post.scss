@@ -57,7 +57,6 @@ h1 .topic-statuses .topic-status i {
   padding: 10px 6px 5px;
   border-top: 1px solid scale-color($primary, $lightness: 90%);
   font-size: 12px;
-  background: $secondary;
   color: scale-color($primary, $lightness: 50%);
   @include medium-width {
     right: 300px;
