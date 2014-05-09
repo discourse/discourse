@@ -1049,13 +1049,14 @@ en:
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
   new_version_mailer:
-    subject_template: "[%{site_name}] update available"
+    subject_template: "[%{site_name}] New Discourse version, update available"
     text_body_template: |
-      A new version of Discourse is available:
+      A new version of Discourse is available.
 
       Your version: %{installed_version}
       New version: **%{new_version}**
 
+      You may want to:
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
       - Upgrade by visiting [%{base_url}/admin/docker](%{base_url}/admin/docker) and pressing the "Upgrade" button.
@@ -1065,11 +1066,12 @@ en:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
     text_body_template: |
-      A new version of Discourse is available:
+      A new version of Discourse is available.
 
       Your version: %{installed_version}
       New version: **%{new_version}**
 
+      You may want to:
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
       - Upgrade by visiting [%{base_url}/admin/docker](%{base_url}/admin/docker), and pressing the "Upgrade" button.
