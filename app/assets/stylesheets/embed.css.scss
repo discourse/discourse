@@ -2,6 +2,8 @@
 //= require ./common/foundation/base
 
 @import "./common/foundation/variables";
+@import "./common/foundation/colors";
+@import "./common/base/onebox";
 
 article.post {
   border-bottom: 1px solid #ddd;
@@ -39,32 +41,36 @@ article.post {
   }
 
   .author {
-    padding: 20px 0;
-    width: 92px;
+    padding: 10px 5px;
     float: left;
-
     text-align: center;
+  }
 
-    h3 {
-      text-align: center;
-      color: #0088cc;
-      font-size: 13px;
-      margin: 5px 0 0 0;
-      word-wrap: break-word;
+  h3.username {
+    font-size: 13px;
+    margin: 0 0 10px 0;
+    word-wrap: break-word;
 
-      a.staff {
-        background-color: #ffffc2;
-      }
+    a {
+      color: #5c5c5c
+    }
+    a.staff {
+      background-color: #ffffc2;
+    }
 
-      a.new-user {
-        color: lighten($primary, 35%);
-      }
+    a.new-user {
+      color: lighten($primary, 35%);
+    }
+
+    span.title {
+      font-weight: normal;
+      color: #999;
     }
   }
 
   .cooked {
-    padding: 20px 0;
-    margin-left: 100px;
+    padding: 5px 0;
+    margin-left: 70px;
     word-wrap: break-word;
 
     img {
@@ -99,7 +105,7 @@ img.emoji {
   color: #999;
 }
 
-header {
+header.embedded {
   padding: 10px 10px 20px 10px;
   font-size: 18px;
   border-bottom: 1px solid #ddd;
