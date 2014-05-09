@@ -204,6 +204,13 @@
     .none {
       padding: 5px;
     }
+    .loading {
+      padding: 10px;
+      display: block;
+      color: scale-color($primary, $lightness: 50%);
+      font-size: 24px;
+      text-align: center;
+    }
   }
 
   // Search

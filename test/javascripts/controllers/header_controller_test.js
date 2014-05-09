@@ -23,7 +23,7 @@ test("showNotifications action", function() {
 
   equal(controller.get("notifications"), null, "notifications are null before data has finished loading");
   equal(Discourse.User.current().get("unread_notifications"), 1, "current user's unread notifications count is not zeroed before data has finished loading");
-  ok(viewSpy.showDropdownBySelector.notCalled, "dropdown with notifications is not shown before data has finished loading");
+  ok(viewSpy.showDropdownBySelector.calledWith("#user-notifications"), "dropdown with loading glyph is shown before data has finished loading");
 
 
   Ember.run(function() {
