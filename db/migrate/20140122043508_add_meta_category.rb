@@ -9,7 +9,7 @@ class AddMetaCategory < ActiveRecord::Migration
         if Category.exec_sql("SELECT 1 FROM categories where name ilike '#{name}'").count == 0
           result = execute "INSERT INTO categories
                           (name, color, text_color, created_at, updated_at, user_id, slug, description, read_restricted)
-                   VALUES ('#{name}', 'EEEEEE', '652D90', now(), now(), -1, '#{Slug.for(name)}', '#{description}', true)
+                   VALUES ('#{name}', '808281', 'FFFFFF', now(), now(), -1, '#{Slug.for(name)}', '#{description}', true)
                    RETURNING id"
           category_id = result[0]["id"].to_i
 
