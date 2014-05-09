@@ -1465,7 +1465,6 @@ en:
           new_name: "New Color Scheme"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color scheme?"
-          under_construction: "NOTE: Changes made here will do nothing! This feature is under construction!"
           primary: 'primary'
           secondary: 'secondary'
           tertiary: 'tertiary'
