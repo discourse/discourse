@@ -52,8 +52,8 @@ en:
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
 
   embed:
-    start_discussion: "Begin the Discussion"
-    continue: "Continue the Discussion"
+    start_discussion: "Start Discussion"
+    continue: "Continue Discussion"
     more_replies:
       one: "1 more reply"
       other: "%{count} more replies"
@@ -61,7 +61,7 @@ en:
     loading: "Loading Discussion..."
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
-    in_reply_to: "reply to %{username}"
+    in_reply_to: "▶ %{username}"
     replies:
       one: "1 reply"
       other: "%{count} replies"
