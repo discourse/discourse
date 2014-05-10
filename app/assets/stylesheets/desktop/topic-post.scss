@@ -49,12 +49,11 @@ h1 .topic-statuses .topic-status i {
     border-top: none;
   }
 
-
 .reply-to-tab {
   position: absolute;
   right: 330px;
   z-index: 400;
-  padding: 10px 6px 5px;
+  padding: 13px 6px 5px;
   border-top: 1px solid scale-color($primary, $lightness: 90%);
   font-size: 12px;
   color: scale-color($primary, $lightness: 50%);
@@ -64,14 +63,6 @@ h1 .topic-statuses .topic-status i {
   @include small-width {
     right: 230px;
   }
-}
-
-
-.topic-meta-data-inside {
-  float: right;
-  margin-top: -30px;
-  float: right;
-  font-size: 12px;
 }
 
 .gutter {
@@ -218,7 +209,6 @@ nav.post-controls {
   h1, h2, h3 {margin: 10px 0;}
   a.mention {background: scale-color($primary, $lightness: 90%);}
   &.bottom {
-    .topic-meta-data {padding-left: 13px;}
     &.hidden {display: block; opacity: 0; }
 
   }
@@ -227,7 +217,6 @@ nav.post-controls {
 
     margin-left: 66px;
     max-width: 713px;
-    .topic-meta-data {padding-left: 13px;}
 
     @include medium-width {
     margin-left: 59px;
@@ -239,9 +228,12 @@ nav.post-controls {
     }
   }
   &.top.span14 {padding-left: 0;}
-  .topic-body, .topic-meta-data {border: none;}
-  .row {border-top: 1px solid scale-color($primary, $lightness: 90%); padding-top: 7px;}
-  .reply:first-of-type .row {border-top: none;}
+    .topic-body, .topic-avatar {border: none;}
+    .topic-avatar {padding-left: 15px;}
+    .post-date {color: scale-color($primary, $lightness: 50%);}
+    .fa-arrow-up {margin-left: 5px;}
+    .row {border-top: 1px solid scale-color($primary, $lightness: 90%); padding-top: 7px;}
+    .reply:first-of-type .row {border-top: none;}
 
   background: scale-color($primary, $lightness: 95%);
   .quote .title, blockquote, .onebox, .onebox-result {
@@ -252,28 +244,16 @@ nav.post-controls {
   &.bottom { margin-top: -11px;}
   .topic-meta-data {
     position: relative;
-    .avatar {
-      margin-top: -10px;
-    }
   }
   .topic-meta-data h5 {
     position: absolute;
-    left: 70px;
-    top: 4px;
     z-index: 1;
     font-size: 13px;
-    width: 300px;
     a {
       font-weight: bold;
       color: scale-color($primary, $lightness: 30%);
     }
   }
-  .topic-meta-data-inside {
-    margin: -15px 0 0 0;
-    color: scale-color($primary, $lightness: 50%);
-    a {color: scale-color($primary, $lightness: 50%);}
-  }
-  .topic-meta-data {padding-top: 20px;}
   .arrow {color: scale-color($primary, $lightness: 50%);}
 }
 
@@ -382,7 +362,7 @@ a.star {
     .number, i {
       color: $primary;
     }
-    .avatar + a {
+    .avatar  a {
       float: left;
     }
   }
@@ -557,77 +537,6 @@ iframe {
 
 }
 
-.topic-meta-data {
-  margin-bottom: 10px;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
-  padding-top: 30px;
-  width: 92px;
-
-  .names {
-    position: absolute;
-    left: 66px;
-    top: 10px;
-    width: 400px;
-    z-index: 1;
-    @include medium-width {
-      left: 60px;
-    }
-
-    @include small-width {
-      left: 55px;
-    }
-  }
-
-  .names, .user-title {
-    display: inline;
-    font-size: 13px;
-  }
-
-  .main-avatar img {
-    width: 45px;
-    height: 45px;
-    position: absolute;
-    top: 16px;
-  }
-
-  .contents {
-
-    a {
-      font-weight: normal;
-      line-height: 1.3;
-    }
-
-    .username a {
-      font-weight: bold;
-      color: scale-color($primary, $lightness: 20%);
-      font-size: 13px;
-    }
-
-    .new-user a {
-      color: scale-color($primary, $lightness: 60%);
-    }
-
-    a.user-group {
-      color: scale-color($primary, $lightness: 50%);
-      width: 100%;
-    }
-
-    h3 a {
-      width: auto;
-    }
-
-    h3.full-name {
-      font-weight: normal;
-      font-size: 12px;
-      margin-top: 2px;
-      a {color: $primary;}
-    }
-  }
-
-  h3 { display: inline; }
-
-}
-
 .open >.dropdown-menu {
   display: block;
 }
@@ -652,7 +561,6 @@ iframe {
 
 .contents .cooked {
   margin-right: 30px;
-  margin-top: 20px;
   word-wrap: break-word;
 
   h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
@@ -729,16 +637,6 @@ iframe {
   background-color: scale-color($highlight, $lightness: 60%);
 }
 
-.topic-meta-data {
-  h3 {
-    font-size: 15px;
-    margin-top: 5px;
-    overflow: hidden;
-    line-height: 1.2em;
-  }
-}
-
-
 .user-title {
   margin-top: 5px;
   color: $primary;
@@ -805,7 +703,7 @@ blockquote { /* solo quotes */
 
 .gutter {
   float: left;
-  margin-top: 12px;
+  margin-top: 15px;
       ul {margin: 0;}
       padding-left: 10px;
 
@@ -837,13 +735,17 @@ blockquote { /* solo quotes */
   float: left;
   position: relative;
   border-top: 1px solid scale-color($primary, $lightness: 90%);
-  padding: 20px 0 15px 0;
+  padding: 12px 0 15px 0;
   &.highlighted {
     background-color: scale-color($tertiary, $lightness: 85%);
   }
   img, svg {
     max-width: 100%;
   }
+}
+.topic-avatar {
+ border-top: 1px solid scale-color($primary, $lightness: 90%);
+ padding-top: 16px;
 }
 
 .bottom-round.contents.regular {
@@ -1042,7 +944,6 @@ blockquote { /* solo quotes */
   }
   article.boxed {
     position: relative;
-    line-height: 21px;
 
     .select-posts {
       position: absolute;
@@ -1091,3 +992,36 @@ a.attachment:before {
 .private_message .gutter:before {
     content: "\f0e0";
 }
+
+
+ .names {
+   float: left;
+   .username {
+     a {
+       font-size: 13px;
+       color: scale-color($primary, $lightness: 20%);
+     }
+   }
+ }
+
+ .topic-meta-data {
+   margin-bottom: 10px;
+
+   &:after {
+       visibility: hidden;
+      display: block;
+      font-size: 0;
+      content: " ";
+      clear: both;
+      height: 0;
+   }
+
+   .post-info  {
+     display: inline-block;
+     float: right;
+     font-size: 12px;
+     margin-top: 1px;
+     a {color: scale-color($primary, $lightness: 50%);}
+   }
+
+ }
