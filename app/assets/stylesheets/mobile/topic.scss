@@ -1,12 +1,3 @@
-.topic-meta-data {
-  width: 100%;
-  h3 a {margin-left: 10px;}
-  a {float: left;
-  }
-
-}
-
-
 .post-info a {color: #aaa;}
 
 .topic-meta-data-inside {
@@ -31,6 +22,7 @@
     font-size: 1.5em;
     margin:0;
     a.edit-topic {font-size: 15px;}
+    a {color: $primary;}
   }
   .private-message-glyph { display: none; }
 }
@@ -74,7 +66,7 @@
     display: none;
   }
   border: none;
-  background-color: scale-color($secondary, $lightness: 75%);
+  background-color: scale-color($primary, $lightness: 90%);
   color: $primary;
   width: 130px;
   height: 34px;
@@ -124,7 +116,7 @@
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid scale-color($secondary, $lightness: 90%);
+    border-right: 1px solid scale-color($success, $lightness: 50%);
     background-color: scale-color($success, $lightness: 50%);
   }
 }

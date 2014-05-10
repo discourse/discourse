@@ -30,21 +30,20 @@ body {
   }
   #main {
     .fa-star.starred {
-      color: $highlight;
+      color: $danger;
     }
     a.star {
       display: inline-block;
       font-size: 15px;
       line-height: 1;
-      color: $primary;
-      margin-right: 5px;
+      color: scale-color($primary, $lightness: 75%);
+      margin-right: 3px;
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
       }
       &.starred {
-        color: #fe1;
-        text-shadow: 0 0 3px rgba($primary, 0.5);
+        color: $danger;
         @include hover {
           opacity: 1;
           &:before {
@@ -104,7 +103,6 @@ blockquote {
   margin: 0;
   padding: 0;
   .topic-status {
-    padding: 5px 2px 0 0;
     margin: 0;
     display: inline-block;
     i {

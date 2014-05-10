@@ -102,8 +102,8 @@ a.reply-to-tab {
 a.star {
   display: inline-block;
   float: left;
-  font-size: 1.4em !important;
-  margin-top: 3px;
+  font-size: 1.3em;
+  margin-top: 4px;
 }
 
 #main a.star.starred {
@@ -222,7 +222,7 @@ a.star {
       border-left: 1px solid scale-color($primary, $lightness: 95%);;
       padding: 0 23px;
       color: $primary;
-      background: scale-color($primary, $lightness: 75%);
+      background: scale-color($primary, $lightness: 90%);
       &:hover {
         background: scale-color($primary, $lightness: 75%);
         color: $primary;
@@ -258,6 +258,7 @@ a.star {
 
    a.badge-category, a.badge-category-parent {
     font-size: 10px;
+    vertical-align: top;
     }
 
    .title {
@@ -417,6 +418,7 @@ background-color: scale-color($danger, $lightness: 75%);
   background-color: lighten(yellow, 35%);
 }
 
+.username a { color: scale-color($primary, $lightness: 30%); }
 .new-user a {
   color: scale-color($primary, $lightness: 60%);
 }
@@ -480,5 +482,23 @@ blockquote {
 }
 
 .topic-body.highlighted {
-  background-color: scale-color($tertiary, $lightness: 40%);
+  background-color: scale-color($tertiary, $lightness: 75%);
+}
+
+.topic-avatar {
+  width: 100%;
+  float: left;
+  position: relative;
+  z-index: 2;
+}
+
+.topic-meta-data {
+  float: left;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+   .names {margin: 5px 0 0 70px; float: left;}
+   .post-info {float: right; font-size: 12px; margin: 21px 10px 0 0;
+     .edits {margin-right: 5px;}
+   }
 }

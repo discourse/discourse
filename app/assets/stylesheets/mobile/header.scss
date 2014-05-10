@@ -85,8 +85,8 @@
       position: relative;
       color: scale-color($primary, $lightness: 75%);
       background-color: $secondary;
+      border: 1px solid scale-color($primary, $lightness: 90%);
       cursor: default;
-      @include box-shadow((6px 0 6px -6px rgba($primary, 0.2), -6px 0 6px -6px rgba($primary, 0.2), inset 0 13px 13px -13px rgba($primary, 0.1)));
       &:after {
         display: block;
         position: absolute;
@@ -96,7 +96,7 @@
         width: 100%;
         height: 0;
         content: "";
-        border-top: 1px solid scale-color($primary, $lightness: 90%);
+        border-top: 1px solid $secondary;
       }
     }
     [class^="fa fa-"] {

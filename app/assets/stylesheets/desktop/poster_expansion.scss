@@ -50,6 +50,13 @@
     }
   }
 
+  .metadata {
+    float: right;
+    max-width: 180px;
+    text-align: right;
+    margin-top: 5px;
+  }
+
   .bottom {
     clear: both;
     padding-top: 10px;
@@ -85,10 +92,7 @@
       float: left;
     }
 
-    .metadata {
-      float: right;
-      max-width: 180px;
-    }
+
 
     h2 {
       line-height: 12px;

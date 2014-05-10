@@ -69,6 +69,7 @@
     line-height: 1.25;
     text-align: left;
     vertical-align: middle;
+    color: scale-color($primary, $lightness: 50%);
     &:first-of-type {
       padding-left: 5px;
     }
@@ -88,12 +89,12 @@
     }
   }
   td {
-    color: $primary;
     font-size: 14px;
   }
   .main-link {
     font-size: 16px;
-
+      a {color: $primary;}
+      a:visited {color: scale-color($primary, $lightness: 50%);}
     i.score {
       color: $success;
       cursor: pointer;
@@ -311,7 +312,7 @@
     float: left;
   }
   .category-dropdown-button {
-    padding: 4px 10px 3px 8px;
+    padding: 4px 10px 4px 8px;
     border-left: 1px solid rgba(0, 0, 0, 0.15);
     font-size: 16px;
     width: 10px;
@@ -393,7 +394,7 @@ span.posted {
   margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);;
+  border: 1px solid scale-color($primary, $lightness: 90%);
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -413,9 +414,9 @@ span.posted {
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: $secondary;
+  color: $tertiary;
   text-decoration: none;
-  background-color: $tertiary;
+  background-color: scale-color($tertiary, $lightness: 75%);
 }
 .open > .dropdown-menu {
   display: block;
@@ -434,7 +435,7 @@ ol.category-breadcrumb {
   display: block;
   float: left;
   list-style: none;
-  margin: 0 10px 0 0;
+  margin: 5px 10px 0 0;
   padding: 0;
 
   li {
@@ -449,7 +450,6 @@ ol.category-breadcrumb {
   position: absolute;
   border: 1px solid scale-color($primary, $lightness: 90%);;
   background-color: $secondary;
-  width: 200px;
   height: 200px;
   padding: 8px 5px 0 7px;
   z-index: 100;
@@ -464,5 +464,11 @@ ol.category-breadcrumb {
 
   div {
     margin-bottom: 10px;
+  }
+}
+
+.top-lists {margin-left: 15px;
+  #topic-list-bottom {
+    margin: 20px 0 0 0;
   }
 }
