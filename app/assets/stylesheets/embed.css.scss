@@ -31,6 +31,9 @@ article.post {
     p {
       margin: 0 0 10px 0;
     }
+    p:last-of-type {
+      margin-bottom:0;
+    }
   }
 
   .post-date {
