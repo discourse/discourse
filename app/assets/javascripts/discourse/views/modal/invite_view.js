@@ -15,14 +15,7 @@ Discourse.InviteView = Discourse.ModalBodyView.extend({
     } else {
       return I18n.t('user.invited.create');
     }
-  }.property('controller.invitingToTopic'),
-
-  keyUp: function(e) {
-    // Add the invitee if they hit enter
-    if (e.keyCode === 13) { this.get('controller').send('createInvite'); }
-    return false;
-  }
-
+  }.property('controller.invitingToTopic')
 });
 
 
