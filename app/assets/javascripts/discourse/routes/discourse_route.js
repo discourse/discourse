@@ -57,7 +57,7 @@ Discourse.Route.reopenClass({
     $(document.activeElement).blur();
 
     Discourse.set('notifyCount',0);
-
+    $('#discourse-modal').modal('hide');
     var hideDropDownFunction = $('html').data('hide-dropdown');
     if (hideDropDownFunction) { hideDropDownFunction(); }
   },
