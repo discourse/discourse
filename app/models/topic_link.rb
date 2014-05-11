@@ -45,7 +45,7 @@ class TopicLink < ActiveRecord::Base
 
     builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
     builder.where('ft.deleted_at IS NULL')
-    builder.where('ft.archetype <> :archetype', archetype: Archetype.private_message)
+    builder.where("COALESCE(ft.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
 
     builder.secure_category(guardian.secure_category_ids)
 
@@ -73,7 +73,7 @@ class TopicLink < ActiveRecord::Base
               ORDER BY reflection ASC, clicks DESC")
 
     builder.where('t.deleted_at IS NULL')
-    builder.where('t.archetype <> :archetype', archetype: Archetype.private_message)
+    builder.where("COALESCE(t.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
 
     # not certain if pluck is right, cause it may interfere with caching
     builder.where('l.post_id IN (:post_ids)', post_ids: posts.map(&:id))
