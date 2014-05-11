@@ -27,11 +27,11 @@
   #edit-title { width: 500px; }
   .category-combobox {
     width: 250px;
-    .chzn-drop {
+    .select2-drop {
       left: -9000px;
       width: 248px;
     }
-    .chzn-search input {
+    .select2-search input {
       width: 198px;
     }
   }
@@ -50,7 +50,11 @@
  }
 
   }
-  .chzn-container { vertical-align: middle; }
+  .select2-container {
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-bottom: 2px;
+  }
   .private-message-glyph { display: none; }
 }
 

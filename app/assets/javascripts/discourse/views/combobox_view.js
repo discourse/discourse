@@ -66,28 +66,15 @@ Discourse.ComboboxView = Discourse.View.extend({
     var $elem = this.$(),
         self = this;
 
-    $elem.chosen({ template: this.template, disable_search_threshold: 5 });
-    if (this.overrideWidths) {
-      // The Chosen plugin hard-codes the widths in style attrs. :<
-      var $chznContainer = $elem.chosen().next();
-      $chznContainer.removeAttr("style");
-      $chznContainer.find('.chzn-drop').removeAttr("style");
-      $chznContainer.find('.chzn-search input').removeAttr("style");
-    }
-    if (this.classNames && this.classNames.length > 0) {
-      // Apply the classes to Chosen's dropdown div too:
-      _.each(this.classNames,function(c) {
-        $elem.chosen().next().addClass(c);
-      });
-    }
+    $elem.select2({formatResult: this.template, minimumResultsForSearch: 5, width: 'resolve'});
 
-    $elem.chosen().change(function(e) {
+    $elem.on("change", function (e) {
       self.set('value', $(e.target).val());
     });
   },
 
   willClearRender: function() {
-    var chosenId = this.$().attr('id') + "_chzn";
+    var chosenId = "s2id_" + this.$().attr('id');
     Ember.$("#" + chosenId).remove();
   }
 
