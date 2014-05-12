@@ -96,9 +96,15 @@ class PostAction < ActiveRecord::Base
 
     return unless opts[:message] && [:notify_moderators, :notify_user].include?(post_action_type)
 
-    # this is a hack to allow a PM with no reciepients, we should think through
-    # a cleaner technique, a PM with myself is valid for flagging
-    target_usernames = post_action_type == :notify_user ? post.user.username : "x"
+    target_usernames = if post_action_type == :notify_user
+      post.user.username
+    elsif post_action_type == :notify_moderators
+      User.moderators.pluck(:username)
+    else
+      # this is a hack to allow a PM with no reciepients, we should think through
+      # a cleaner technique, a PM with myself is valid for flagging
+      'x'
+    end
 
     title = I18n.t("post_action_types.#{post_action_type}.email_title",
                     title: post.topic.title)

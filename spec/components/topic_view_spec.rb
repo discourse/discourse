@@ -19,10 +19,10 @@ describe TopicView do
   end
 
   it "handles deleted topics" do
-    topic.trash!(coding_horror)
-    lambda { TopicView.new(topic.id, coding_horror) }.should raise_error(Discourse::NotFound)
-    coding_horror.stubs(:staff?).returns(true)
-    lambda { TopicView.new(topic.id, coding_horror) }.should_not raise_error
+    admin = Fabricate(:admin)
+    topic.trash!(admin)
+    lambda { TopicView.new(topic.id, Fabricate(:user)) }.should raise_error(Discourse::NotFound)
+    lambda { TopicView.new(topic.id, admin) }.should_not raise_error
   end
 
 
