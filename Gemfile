@@ -225,7 +225,7 @@ gem 'memory_profiler', require: false, platform: :mri_21
 
 # This silly path comment just makes it easier for me to do dev
 # will be removed in a few weeks
-gem 'logster'#, path: '/home/sam/Source/logster'
+gem 'logster'#, path: '../logster'
 
 # perftools only works on 1.9 atm
 group :profile do
