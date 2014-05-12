@@ -11,13 +11,10 @@ var notificationFixture = {
 };
 var postUrlStub = "post-url-stub";
 
-module("Discourse.NotificationController", {
+module("controller:notification", {
   setup: function() {
     sinon.stub(Discourse.Utilities, "postUrl").returns(postUrlStub);
-
-    controller = Discourse.NotificationController.create({
-      content: notificationFixture
-    });
+    controller = testController('notification', notificationFixture);
   },
 
   teardown: function() {

@@ -1,4 +1,4 @@
-Discourse.NotificationController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   scope: function() {
     return "notifications." + Discourse.Site.currentProp("notificationLookup")[this.get("notification_type")];
   }.property(),

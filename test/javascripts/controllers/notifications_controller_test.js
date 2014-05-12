@@ -10,16 +10,14 @@ var noItemsMessageSelector = "div.none";
 var itemListSelector = "ul";
 var itemSelector = "li";
 
-module("Discourse.NotificationsController", {
+module("controller:notifications", {
   setup: function() {
     sinon.stub(I18n, "t", function (scope, options) {
       options = options || {};
       return [scope, options.username, options.link].join(" ").trim();
     });
 
-    controller = Discourse.NotificationsController.create({
-      container: Discourse.__container__
-    });
+    controller = testController('notifications');
 
     view = Ember.View.create({
       container: Discourse.__container__,
