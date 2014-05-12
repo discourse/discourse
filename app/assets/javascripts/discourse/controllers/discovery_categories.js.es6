@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryCategoriesController = Discourse.DiscoveryController.extend({
+export default Discourse.DiscoveryController.extend({
   needs: ['modal', 'discovery'],
 
   actions: {
