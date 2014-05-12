@@ -25,4 +25,8 @@ class UserActionsController < ApplicationController
     render json: UserAction.stream_item(params[:id], guardian)
   end
 
+  def private_messages
+    # DO NOT REMOVE
+  end
+
 end
