@@ -578,6 +578,9 @@ en:
     tos_signup_form_message:
       title: "Signup Form: Terms of Service Message"
       description: "The message that will appear beside a checkbox on the signup form if the tos_accept_required site setting is enabled."
+    notification_email_top:
+      title: "Notification Email Top"
+      description: "A message that will be displayed at the top of all notification emails."
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"

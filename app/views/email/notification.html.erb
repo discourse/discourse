@@ -1,4 +1,10 @@
 <div id='main'>
+
+<% if top.present? %>
+  <div><%= top %></div>
+  <hr>
+<% end %>
+
 <%= render :partial => 'email/post', :locals => {:post => post} %>
 
 <% if context_posts.present? %>
