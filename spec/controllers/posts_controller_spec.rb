@@ -508,6 +508,20 @@ describe PostsController do
       end
     end
 
+    context "deleted topic" do
+      let(:admin) { log_in(:admin) }
+      let(:deleted_topic) { Fabricate(:topic, user: admin) }
+      let(:post) { Fabricate(:post, user: admin, topic: deleted_topic) }
+      let(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
+
+      before { deleted_topic.trash!(admin) }
+
+      it "also work on deleted topic" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_success
+      end
+    end
+
   end
 
   describe 'expandable embedded posts' do

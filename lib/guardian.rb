@@ -8,7 +8,7 @@ require_dependency 'guardian/user_guardian'
 class Guardian
   include EnsureMagic
   include CategoryGuardian
-  include PostGuardain
+  include PostGuardian
   include TopicGuardian
   include UserGuardian
 
@@ -23,6 +23,7 @@ class Guardian
     def has_trust_level?(level); false; end
     def email; nil; end
   end
+
   def initialize(user=nil)
     @user = user.presence || AnonymousUser.new
   end

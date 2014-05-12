@@ -1,9 +1,8 @@
 #mixin for all guardian methods dealing with post permissions
-module PostGuardain
+module PostGuardian
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts={})
-
     taken = opts[:taken_actions].try(:keys).to_a
     is_flag = PostActionType.is_flag?(action_key)
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
@@ -110,16 +109,17 @@ module PostGuardain
   end
 
   def can_see_post_revision?(post_revision)
-    return false if post_revision.nil?
+    return false unless post_revision
     can_view_post_revisions?(post_revision.post)
   end
 
   def can_view_post_revisions?(post)
-    return false if post.nil?
+    return false unless post
     return true if SiteSetting.edit_history_visible_to_public && !post.hidden
+
     authenticated? &&
-      (is_staff? || @user.has_trust_level?(:elder) || @user.id == post.user_id) &&
-      can_see_post?(post)
+    (is_staff? || @user.has_trust_level?(:elder) || @user.id == post.user_id) &&
+    can_see_post?(post)
   end
 
   def can_vote?(post, opts={})
