@@ -59,6 +59,12 @@ Discourse.URL = Em.Object.createWithMixins({
       return;
     }
 
+    // Protocol relative URLs
+    if (path.indexOf('//') === 0) {
+      document.location = path;
+      return;
+    }
+
     // Scroll to the same page, differnt anchor
     if (path.indexOf('#') === 0) {
       var $elem = $(path);
