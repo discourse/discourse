@@ -252,11 +252,10 @@ class ListController < ApplicationController
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
+    raise Discourse::NotFound.new if !@category
+
     @description_meta = @category.description
-
     guardian.ensure_can_see!(@category)
-
-    raise Discourse::NotFound.new if @category.blank?
   end
 
   def build_topic_list_options
