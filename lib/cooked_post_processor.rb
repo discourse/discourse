@@ -65,7 +65,7 @@ class CookedPostProcessor
 
   def extract_images
     # do not extract images inside oneboxes or quotes
-    @doc.css("img") - @doc.css(".onebox-result img") - @doc.css(".quote img")
+    @doc.css("img") - @doc.css(".onebox-result img, .onebox img") - @doc.css(".quote img")
   end
 
   def limit_size!(img)
