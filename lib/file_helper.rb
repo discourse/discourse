@@ -7,7 +7,7 @@ class FileHelper
   end
 
   def self.download(url, max_file_size, tmp_file_name)
-    raise Discourse::InvalidParameters unless url =~ /^https?:\/\//
+    raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
     uri = URI.parse(url)
     extension = File.extname(uri.path)
