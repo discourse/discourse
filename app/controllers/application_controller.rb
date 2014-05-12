@@ -28,6 +28,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :set_current_user_for_logs
   before_filter :set_locale
   before_filter :set_mobile_view
   before_filter :inject_preview_style
@@ -117,6 +118,12 @@ class ApplicationController < ActionController::Base
       render status: error, layout: false, text: (error == 404) ? build_not_found_page(error) : message
     else
       render text: build_not_found_page(error, include_ember ? 'application' : 'no_js')
+    end
+  end
+
+  def set_current_user_for_logs
+    if current_user
+      Logster.add_to_env(request.env,"username",current_user.username)
     end
   end
 
