@@ -22,7 +22,11 @@ class TopicList
 
     # copy side-loaded data (allowed users) before dumping it with the .to_a
     @topics_input.each do |t|
-      t.allowed_user_ids = t.allowed_users.map { |u| u.id }.to_a
+      t.allowed_user_ids = if @filter == :private_messages
+        t.allowed_users.map { |u| u.id }.to_a
+      else
+        []
+      end
     end
 
     @topics = @topics_input.to_a
