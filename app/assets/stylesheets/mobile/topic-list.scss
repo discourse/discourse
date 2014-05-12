@@ -78,7 +78,7 @@
     }
   }
   th {
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
     font-weight: bold;
     font-size: 13px;
     &:first-of-type {

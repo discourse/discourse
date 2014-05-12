@@ -100,10 +100,10 @@
     }
   }
   th {
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
     font-size: 14px;
-    button i.fa {color: $primary;}
+    button i.fa {color: scale-color($primary, $lightness: 50%);}
 
   }
   td {
