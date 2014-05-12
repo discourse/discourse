@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryTopController = Discourse.DiscoveryController.extend({
+export default Discourse.DiscoveryController.extend({
   needs: ['discovery'],
 
   actions: {
