@@ -39,7 +39,7 @@ Discourse.UserActivityStreamRoute = Discourse.Route.extend({
                     if (stat.get("action_type") === userAction.action_type) {
                       stat.decrementProperty("count");
                     }
-                  })
+                  });
                 });
     },
 
