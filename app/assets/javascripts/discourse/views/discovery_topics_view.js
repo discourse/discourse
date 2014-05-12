@@ -2,7 +2,7 @@
   This view handles rendering of a list of topics under discovery, with support
   for loading more as well as remembering your scroll position.
 
-  @class ComboboxView
+  @class DiscoveryTopicsView
   @extends Discourse.View
   @namespace Discourse
   @module Discourse
