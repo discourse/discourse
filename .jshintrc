@@ -44,6 +44,8 @@
     "parseHTML",
     "deepEqual",
     "notEqual",
+    "require",
+    "requirejs",
     "Blob",
     "File"],
   "node" : false,
