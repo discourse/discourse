@@ -10,6 +10,7 @@ module Jobs
 
       # Find a random sampling of users of trust level 1 or higher who don't have a custom avatar.
       user_stats = UserStat.where('user_stats.has_custom_avatar = false AND users.trust_level > 0')
+                           .references(:user)
                            .includes(:user)
                            .order("random()")
                            .limit(SiteSetting.max_daily_gravatar_crawls)
