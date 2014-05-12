@@ -29,9 +29,6 @@
             {{/if}}
             </div>
             <div class="topic-item-stats clearfix">
-              <div class='category'>
-                {{categoryLink category showParent=true}}
-              </div>
               <div class="pull-right">
                 <div class='num posts'>
                   <a href="{{lastUnreadUrl}}">{{number posts_count numberKey="posts_long"}}</a>
@@ -53,6 +50,18 @@
                   </div>
                 {{/if}}
               </div>
+              {{#unless controller.hideCategory}}
+                <div class='category'>
+                  {{categoryLink category showParent=true}}
+                </div>
+              {{/unless}}
+              {{#if controller.showParticipants}}
+                <div class='participants'>
+                  {{#each topic.participants}}
+                    <a href="{{user.path}}" class="{{extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
+                  {{/each}}
+                </div>
+              {{/if}}
               <div class="clearfix"></div>
             </div>
           </td>

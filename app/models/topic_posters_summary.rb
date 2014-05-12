@@ -49,7 +49,7 @@ class TopicPostersSummary
       :frequent_poster,
       :frequent_poster,
       :frequent_poster
-    ].map { |description| I18n.t(description) })
+      ].map { |description| I18n.t(description) })
   end
 
   def last_poster_is_topic_creator?

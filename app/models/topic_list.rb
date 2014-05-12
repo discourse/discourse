@@ -20,6 +20,11 @@ class TopicList
   def topics
     return @topics if @topics.present?
 
+    # copy side-loaded data (allowed users) before dumping it with the .to_a
+    @topics_input.each do |t|
+      t.allowed_user_ids = t.allowed_users.map { |u| u.id }.to_a
+    end
+
     @topics = @topics_input.to_a
 
     # Attach some data for serialization to each topic
@@ -28,7 +33,7 @@ class TopicList
     # Create a lookup for all the user ids we need
     user_ids = []
     @topics.each do |ft|
-      user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids
+      user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
     end
 
     avatar_lookup = AvatarLookup.new(user_ids)
@@ -36,10 +41,11 @@ class TopicList
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
       ft.posters = ft.posters_summary(avatar_lookup: avatar_lookup)
+      ft.participants = ft.participants_summary(avatar_lookup: avatar_lookup, user: @current_user)
       ft.topic_list = self
     end
 
-    return @topics
+    @topics
   end
 
   def topic_ids

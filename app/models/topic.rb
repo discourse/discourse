@@ -22,6 +22,8 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :muted!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
+  attr_accessor :allowed_user_ids
+
   def self.max_sort_order
     2**31 - 1
   end
@@ -103,6 +105,7 @@ class Topic < ActiveRecord::Base
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
+  attr_accessor :participants
   attr_accessor :topic_list
   attr_accessor :meta_data
   attr_accessor :include_last_poster
@@ -594,9 +597,12 @@ class Topic < ActiveRecord::Base
     end
   end
 
-
   def posters_summary(options = {})
     @posters_summary ||= TopicPostersSummary.new(self, options).summary
+  end
+
+  def participants_summary(options = {})
+    @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
   end
 
   # Enable/disable the star on the topic

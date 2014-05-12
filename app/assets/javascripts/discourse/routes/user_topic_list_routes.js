@@ -8,7 +8,8 @@ Discourse.UserTopicListRoute = Discourse.Route.extend({
     this.controllerFor('user_activity').set('userActionType', this.get('userActionType'));
     this.controllerFor('user_topics_list').setProperties({
       model: model,
-      hideCategory: false
+      hideCategory: false,
+      showParticipants: false
     });
   }
 });
@@ -23,7 +24,10 @@ function createPMRoute(viewName, path) {
 
     setupController: function() {
       this._super.apply(this, arguments);
-      this.controllerFor('user_topics_list').set('hideCategory', true);
+      this.controllerFor('user_topics_list').setProperties({
+        hideCategory: true,
+        showParticipants: true
+      });
       this.controllerFor('user').setProperties({
         pmView: viewName,
         indexStream: false

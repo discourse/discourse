@@ -183,6 +183,11 @@
   }
   .posters {
     min-width: 150px;
+  }
+  .participants {
+    min-width: 85px;
+  }
+  .posters, .participants {
     > a {
       float: left;
       margin-right: 4px;

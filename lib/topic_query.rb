@@ -159,7 +159,8 @@ class TopicQuery
       options.reverse_merge!(per_page: SiteSetting.topics_per_page)
 
       # Start with a list of all topics
-      result = Topic.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
+      result = Topic.includes(:allowed_users)
+                    .where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
                     .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
                     .order(TopicQuerySQL.order_nocategory_basic_bumped)
                     .private_messages

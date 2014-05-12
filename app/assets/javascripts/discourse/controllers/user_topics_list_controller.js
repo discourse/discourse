@@ -8,6 +8,7 @@
 **/
 Discourse.UserTopicsListController = Discourse.ObjectController.extend({
   hideCategory: false,
+  showParticipants: false,
 
   actions: {
     loadMore: function() {

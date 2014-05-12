@@ -3,26 +3,18 @@
     <table id="topic-list">
       <thead>
         <tr>
-          {{#sortable-heading sortBy="default"}}
-            {{i18n topic.title}}
-          {{/sortable-heading}}
+          <th>{{i18n topic.title}}</th>
           {{#unless controller.hideCategory}}
-          {{#sortable-heading sortBy="category"}}
-              {{i18n category_title}}
-            {{/sortable-heading}}
+            <th>{{i18n category_title}}</th>
           {{/unless}}
-          {{#sortable-heading sortBy="posts" number=true}}
-            {{i18n posts}}
-          {{/sortable-heading}}
-          {{#sortable-heading sortBy="likes" number=true}}
-            {{i18n likes}}
-          {{/sortable-heading}}
-          {{#sortable-heading sortBy="views" number=true}}
-            {{i18n views}}
-          {{/sortable-heading}}
-          {{#sortable-heading sortBy="activity" number=true colspan="2"}}
-            {{i18n activity}}
-          {{/sortable-heading}}
+          <th>{{i18n posts}}</th>
+          {{#if controller.showParticipants}}
+            <th>{{i18n users}}</th>
+          {{else}}
+            <th>{{i18n likes}}</th>
+          {{/if}}
+          <th>{{i18n views}}</th>
+          <th>{{i18n activity}}</th>
         </tr>
       </thead>
 
@@ -44,20 +36,33 @@
             </td>
 
             {{#unless controller.hideCategory}}
-            <td class="category">
-              {{categoryLink topic.category showParent=true}}
-            </td>
+              <td class="category">
+                {{categoryLink topic.category showParent=true}}
+              </td>
             {{/unless}}
 
-            <td class='num posts'><a href="{{unbound topic.lastUnreadUrl}}" class='badge-posts'>{{number topic.posts_count numberKey="posts_long"}}</a></td>
-
-            <td class='num likes'>
-              {{#if topic.like_count}}
-                <a href='{{unbound topic.url}}{{#if topic.has_summary}}?filter=summary{{/if}}'>{{unbound topic.like_count}} <i class='fa fa-heart'></i></a>
-              {{/if}}
+            <td class='num posts'>
+              <a href="{{unbound topic.lastUnreadUrl}}" class='badge-posts'>{{number topic.posts_count numberKey="posts_long"}}</a>
             </td>
 
-            <td {{bind-attr class=":num :views topic.viewsHeat"}}>{{number topic.views numberKey="views_long"}}</td>
+            {{#if controller.showParticipants}}
+              <td class='participants'>
+                {{#each topic.participants}}
+                  <a href="{{user.path}}" class="{{extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
+                {{/each}}
+              </td>
+            {{else}}
+              <td class='num likes'>
+                {{#if topic.like_count}}
+                  <a href='{{unbound topic.url}}{{#if topic.has_summary}}?filter=summary{{/if}}'>{{unbound topic.like_count}} <i class='fa fa-heart'></i></a>
+                {{/if}}
+              </td>
+            {{/if}}
+
+            <td {{bind-attr class=":num :views topic.viewsHeat"}}>
+              {{number topic.views numberKey="views_long"}}
+            </td>
+
             {{#if topic.bumped}}
               <td class='num activity'>
                 <a href="{{unbound topic.url}}" class='{{coldAgeClass created_at}}' title='{{i18n first_post}}: {{{rawDate topic.created_at}}}' >{{unboundAge topic.created_at}}</a>
@@ -78,9 +83,11 @@
     </table>
   {{else}}
     <div class='alert alert-info'>
-    {{i18n choose_topic.none_found}}
+      {{i18n choose_topic.none_found}}
     </div>
   {{/if}}
 {{else}}
-  <div class='spinner'>{{i18n loading}}</div>
+  <div class='spinner'>
+    {{i18n loading}}
+  </div>
 {{/if}}
