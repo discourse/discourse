@@ -632,19 +632,6 @@ iframe {
   font-size: 36px;
 }
 
-.staff a {
-  margin: -2px 0 0 0;
-  background-color: scale-color($highlight, $lightness: 60%);
-}
-
-.user-title {
-  margin-top: 5px;
-  color: $primary;
-  overflow: hidden;
-  font-size: 80%;
-  line-height: 13px;
-}
-
 .info-line {
   margin: 10px 0;
   color: $primary;
@@ -992,17 +979,6 @@ a.attachment:before {
 .private_message .gutter:before {
     content: "\f0e0";
 }
-
-
- .names {
-   float: left;
-   .username {
-     a {
-       font-size: 13px;
-       color: scale-color($primary, $lightness: 20%);
-     }
-   }
- }
 
  .topic-meta-data {
    margin-bottom: 10px;

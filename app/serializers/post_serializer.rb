@@ -36,6 +36,7 @@ class PostSerializer < BasicPostSerializer
              :raw,
              :actions_summary,
              :moderator?,
+             :admin?,
              :staff?,
              :user_id,
              :draft_sequence,
@@ -50,11 +51,15 @@ class PostSerializer < BasicPostSerializer
 
 
   def moderator?
-    object.user.try(:moderator?) || false
+    !!(object.user && object.user.moderator?)
+  end
+
+  def admin?
+    !!(object.user && object.user.admin?)
   end
 
   def staff?
-    object.user.try(:staff?) || false
+    !!(object.user && object.user.staff?)
   end
 
   def yours

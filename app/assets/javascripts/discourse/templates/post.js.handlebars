@@ -36,17 +36,18 @@
     <div class='topic-body span14'>
       <div class='topic-meta-data'>
         <div class="names">
-          <h3 {{bind-attr class="staff new_user :username"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{{breakUp username name}}}</a></h3>
+          <span {{bind-attr class="staff new_user :username"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{unbound username}}</a>{{#if admin}}<i class='fa fa-trophy'></i>{{else}}{{#if moderator}}<i class='fa fa-magic'></i>{{/if}}{{/if}}
+          </span>
 
           {{#if showName}}
-          <h3 class="full-name"><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{breakUp name}}</a></h3>
+          <span class="full-name"><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{unbound name}}</a></span>
           {{/if}}
 
           {{#if user_title}}
             {{#if primary_group_name}}
-              <div class="user-title"><a href='/groups/{{unbound primary_group_name}}' class='user-group'>{{unbound user_title}}</a></div>
+              <span class="user-title"><a href='/groups/{{unbound primary_group_name}}' class='user-group'>{{unbound user_title}}</a></span>
             {{else}}
-              <div class="user-title" {{action showPosterExpansion this}}>{{unbound user_title}}</div>
+              <span class="user-title" {{action showPosterExpansion this}}>{{unbound user_title}}</span>
             {{/if}}
           {{/if}}
         </div>
