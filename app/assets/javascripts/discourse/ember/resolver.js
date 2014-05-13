@@ -46,15 +46,23 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
     return this._super(fullName);
   },
 
-  resolveController: function(parsedName) {
-    var moduleName = 'discourse/controllers/' + parsedName.fullNameWithoutType,
+  customResolve: function(parsedName) {
+    var moduleName = 'discourse/' + parsedName.type + 's/' + parsedName.fullNameWithoutType,
         module = requirejs.entries[moduleName];
 
     if (module) {
       module = require(moduleName, null, null, true /* force sync */);
       if (module && module['default']) { module = module['default']; }
     }
-    return module || this._super(parsedName);
+    return module;
+  },
+
+  resolveController: function(parsedName) {
+    return this.customResolve(parsedName) || this._super(parsedName);
+  },
+
+  resolveComponent: function(parsedName) {
+    return this.customResolve(parsedName) || this._super(parsedName);
   },
 
   /**

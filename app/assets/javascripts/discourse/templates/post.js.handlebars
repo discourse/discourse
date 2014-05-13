@@ -38,40 +38,25 @@
 
     <div class='topic-body span14'>
       <div class='topic-meta-data'>
-        <div class="names">
-          <span {{bind-attr class="staff new_user :username"}}><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{unbound username}}</a>{{#if admin}}<i class='fa fa-trophy'></i>{{else}}{{#if moderator}}<i class='fa fa-magic'></i>{{/if}}{{/if}}
-          </span>
-
-          {{#if showName}}
-          <span class="full-name"><a href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{unbound name}}</a></span>
-          {{/if}}
-
-          {{#if user_title}}
-            {{#if primary_group_name}}
-              <span class="user-title"><a href='/groups/{{unbound primary_group_name}}' class='user-group'>{{unbound user_title}}</a></span>
-            {{else}}
-              <span class="user-title" {{action showPosterExpansion this}}>{{unbound user_title}}</span>
-            {{/if}}
-          {{/if}}
+        {{poster-name post=this expandAction="showPosterExpansion"}}
+        <div class='post-info'>
+          <a href='#' class='post-date' {{bind-attr data-share-url="shareUrl"}} {{bind-attr data-post-number="post_number"}}>{{unboundAgeWithTooltip created_at}}</a>
         </div>
-          <div class='post-info'>
-            <a href='#' class='post-date' {{bind-attr data-share-url="shareUrl"}} {{bind-attr data-post-number="post_number"}}>{{unboundAgeWithTooltip created_at}}</a>
-          </div>
-            {{#if hasHistory}}
-              <div class='post-info edits'>
-                {{#if can_view_edit_history}}
-                  <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{i18n post.last_edited_on}} {{rawDate updated_at}}">
-                    {{editCount}}
-                    <i class='fa fa-pencil'></i>
-                  </a>
-                {{else}}
-                  <span class="{{unbound historyHeat}}" title="{{i18n post.last_edited_on}} {{rawDate updated_at}}">
-                    {{editCount}}
-                    <i class='fa fa-pencil'></i>
-                  </span>
-                {{/if}}
-              </div>
+        {{#if hasHistory}}
+          <div class='post-info edits'>
+            {{#if can_view_edit_history}}
+              <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{i18n post.last_edited_on}} {{rawDate updated_at}}">
+                {{editCount}}
+                <i class='fa fa-pencil'></i>
+              </a>
+            {{else}}
+              <span class="{{unbound historyHeat}}" title="{{i18n post.last_edited_on}} {{rawDate updated_at}}">
+                {{editCount}}
+                <i class='fa fa-pencil'></i>
+              </span>
             {{/if}}
+          </div>
+        {{/if}}
       </div>
 
       <div {{bind-attr class=":select-posts controller.multiSelect::hidden"}}>
