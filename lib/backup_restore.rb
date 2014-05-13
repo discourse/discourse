@@ -33,10 +33,10 @@ module BackupRestore
   end
 
   def self.mark_as_running!
-    # TODO: for more safety, it should acquire a lock
-    #       and raise an exception if already running!
+    # TODO: for extra safety, it should acquire a lock and raise an exception if already running
     $redis.set(running_key, "1")
     save_start_logs_message_id
+    keep_it_running
   end
 
   def self.is_operation_running?
@@ -80,14 +80,14 @@ module BackupRestore
     <<-SQL
       DO $$DECLARE row record;
       BEGIN
-        -- create "destination" schema if it does not exists already
-        -- NOTE: DROP & CREATE SCHEMA is easier, but we don't wont to drop the public schema
-        -- ortherwise extensions (like hstore & pg_trgm) won't work anymore
+        -- create <destination> schema if it does not exists already
+        -- NOTE: DROP & CREATE SCHEMA is easier, but we don't want to drop the public schema
+        -- ortherwise extensions (like hstore & pg_trgm) won't work anymore...
         IF NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '#{destination}')
         THEN
           CREATE SCHEMA #{destination};
         END IF;
-        -- move all "source" tables to "destination" schema
+        -- move all <source> tables to <destination> schema
         FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = '#{source}'
         LOOP
           EXECUTE 'DROP TABLE IF EXISTS #{destination}.' || quote_ident(row.tablename) || ' CASCADE;';
@@ -115,6 +115,17 @@ module BackupRestore
 
   def self.running_key
     "backup_restore_operation_is_running"
+  end
+
+  def self.keep_it_running
+    # extend the expiry by 1 minute every 30 seconds
+    Thread.new do
+      # this thread will be killed when the fork dies
+      while true
+        $redis.expire(running_key, 1.minute)
+        sleep 30.seconds
+      end
+    end
   end
 
   def self.shutdown_signal_key

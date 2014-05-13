@@ -63,7 +63,7 @@ module Import
     else
       @success = true
     ensure
-      notify_user
+      notify_user rescue nil
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -312,6 +312,8 @@ module Import
     def unpause_sidekiq
       log "Unpausing sidekiq..."
       Sidekiq.unpause!
+    rescue
+      log "Something went wrong while unpausing Sidekiq."
     end
 
     def disable_readonly_mode

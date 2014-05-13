@@ -53,7 +53,7 @@ module Export
       @success = true
       "#{@archive_basename}.tar.gz"
     ensure
-      notify_user
+      notify_user rescue nil
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -293,6 +293,8 @@ module Export
     def unpause_sidekiq
       log "Unpausing sidekiq..."
       Sidekiq.unpause!
+    rescue
+      log "Something went wrong while unpausing Sidekiq."
     end
 
     def disable_readonly_mode
