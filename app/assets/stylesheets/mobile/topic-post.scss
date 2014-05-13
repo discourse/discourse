@@ -390,6 +390,10 @@ iframe {
   margin-top: -20px;
 }
 
+.post-action {
+  float:right;
+}
+
 .post-action .relative-date {
   margin-left: 5px;
 }
@@ -498,7 +502,7 @@ blockquote {
   z-index: 1;
   width: 100%;
    .names {margin: 5px 0 0 70px; float: left;}
-   .post-info {float: right; font-size: 12px; margin: 21px 10px 0 0;
+   .post-info {float: right; font-size: 12px; margin: 4px 10px 0 0;
      .edits {margin-right: 5px;}
    }
 }
