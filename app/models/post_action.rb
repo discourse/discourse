@@ -96,33 +96,30 @@ class PostAction < ActiveRecord::Base
 
     return unless opts[:message] && [:notify_moderators, :notify_user].include?(post_action_type)
 
-    target_usernames = if post_action_type == :notify_user
-      post.user.username
-    elsif post_action_type == :notify_moderators
-      User.moderators.pluck(:username)
+    title = I18n.t("post_action_types.#{post_action_type}.email_title", title: post.topic.title)
+    body = I18n.t("post_action_types.#{post_action_type}.email_body", message: opts[:message], link: "#{Discourse.base_url}#{post.url}")
+
+    opts = {
+      archetype: Archetype.private_message,
+      title: title,
+      raw: body
+    }
+
+    if post_action_type == :notify_moderators
+      opts[:subtype] = TopicSubtype.notify_moderators
+      opts[:target_group_names] = "moderators"
     else
-      # this is a hack to allow a PM with no reciepients, we should think through
-      # a cleaner technique, a PM with myself is valid for flagging
-      'x'
+      opts[:subtype] = TopicSubtype.notify_user
+      opts[:target_usernames] = if post_action_type == :notify_user
+        post.user.username
+      elsif post_action_type != :notify_moderators
+        # this is a hack to allow a PM with no reciepients, we should think through
+        # a cleaner technique, a PM with myself is valid for flagging
+        'x'
+      end
     end
 
-    title = I18n.t("post_action_types.#{post_action_type}.email_title",
-                    title: post.topic.title)
-    body = I18n.t("post_action_types.#{post_action_type}.email_body",
-                  message: opts[:message],
-                  link: "#{Discourse.base_url}#{post.url}")
-
-    subtype = post_action_type == :notify_moderators ? TopicSubtype.notify_moderators : TopicSubtype.notify_user
-
-    if target_usernames.present?
-      PostCreator.new(user,
-              target_usernames: target_usernames,
-              archetype: Archetype.private_message,
-              subtype: subtype,
-              title: title,
-              raw: body
-       ).create.id
-    end
+    PostCreator.new(user, opts).create.id
   end
 
   def self.act(user, post, post_action_type_id, opts={})

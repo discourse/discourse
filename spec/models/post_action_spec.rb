@@ -32,7 +32,10 @@ describe PostAction do
       # Moderators should be invited to the private topic, otherwise they're not permitted to see it
       topic_user_ids = posts[0].topic.topic_users.map {|x| x.user_id}
       topic_user_ids.should include(codinghorror.id)
-      topic_user_ids.should include(mod.id)
+      topic_user_ids.should_not include(mod.id)
+
+      # invite the moderator
+      posts[0].topic.allowed_users << mod
 
       # reply to PM should clear flag
       p = PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags")
