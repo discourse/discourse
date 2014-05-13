@@ -321,7 +321,6 @@ span.post-count {
 
 #topic-title {
   z-index: 1000;
-  background-color: scale-color($primary, $lightness: 95%);
   margin: 0 0 0 0 !important;
   padding: 15px 10px 15px 10px;
 }
@@ -440,7 +439,7 @@ iframe {
 
 .post-action {
   float:right;
-  margin-right: 5px;
+  margin-right: 10px;
 }
 
 .post-action .relative-date {
@@ -549,7 +548,7 @@ blockquote {
   position: absolute;
   z-index: 1;
   width: 100%;
-   .names {margin: 5px 0 0 70px; float: left;}
+   .names {margin: 5px 0 0 65px; float: left;}
    .post-info {float: right; font-size: 12px; margin: 4px 10px 0 0;
      .edits {margin-right: 5px;}
    }
