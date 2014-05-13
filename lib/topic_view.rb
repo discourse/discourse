@@ -60,7 +60,7 @@ class TopicView
   end
 
   def prev_page
-    if @page && @page > 1
+    if @page && @page > 1 && posts.length > 0
       @page - 1
     else
       nil
