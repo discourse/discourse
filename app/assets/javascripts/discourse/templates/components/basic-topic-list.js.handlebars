@@ -3,18 +3,18 @@
     <table id="topic-list">
       <thead>
         <tr>
-          <th>{{i18n topic.title}}</th>
+          <th class="default">{{i18n topic.title}}</th>
           {{#unless controller.hideCategory}}
-            <th>{{i18n category_title}}</th>
+            <th class="category">{{i18n category_title}}</th>
           {{/unless}}
-          <th>{{i18n posts}}</th>
+          <th class="num posts">{{i18n posts}}</th>
           {{#if controller.showParticipants}}
-            <th>{{i18n users}}</th>
+            <th class="posters">{{i18n users}}</th>
           {{else}}
-            <th>{{i18n likes}}</th>
+            <th class="num likes">{{i18n likes}}</th>
           {{/if}}
-          <th>{{i18n views}}</th>
-          <th>{{i18n activity}}</th>
+          <th class="num views">{{i18n views}}</th>
+          <th class="num activity" colspan="2">{{i18n activity}}</th>
         </tr>
       </thead>
 
