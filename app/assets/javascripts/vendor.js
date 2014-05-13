@@ -1,3 +1,4 @@
+//= require logster
 //= require ./env
 //= require ./discourse/lib/probes.js
 
