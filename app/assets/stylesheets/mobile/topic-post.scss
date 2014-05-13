@@ -121,7 +121,7 @@ a.star {
   }
 
   border-radius: 5px;
-  margin: 15px 10px 20px 10px;
+  margin: 30px 10px 20px 10px;
   border: 1px solid scale-color($primary, $lightness: 95%);
 
   h3 {
@@ -392,6 +392,7 @@ iframe {
 
 .post-action {
   float:right;
+  margin-right: 5px;
 }
 
 .post-action .relative-date {
@@ -419,7 +420,6 @@ background-color: scale-color($danger, $lightness: 75%);
   border-radius: 4px;
   padding: 4px;
   margin: -4px 0 0 -4px;
-  background-color: lighten(yellow, 35%);
 }
 
 .username a { color: scale-color($primary, $lightness: 30%); }
