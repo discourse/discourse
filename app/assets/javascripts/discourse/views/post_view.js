@@ -43,6 +43,12 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
       this.get('controller').toggledSelectedPost(this.get('post'));
     }
+
+    var $adminMenu = this.get('adminMenu');
+    if ($adminMenu && !$(e.target).is($adminMenu) && $adminMenu.has($(e.target)).length === 0) {
+      $adminMenu.hide();
+      this.set('adminMenu', null);
+    }
   },
 
   selected: function() {

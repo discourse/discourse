@@ -58,7 +58,7 @@ basic:
   post_menu:
     client: true
     list: true
-    default: 'like|edit|flag|delete|share|bookmark|reply'
+    default: 'like|edit|flag|delete|share|bookmark|admin|reply'
   share_links:
     client: true
     list: true
@@ -331,6 +331,9 @@ trust:
   default_trust_level: 0
   default_invitee_trust_level: 1
   min_trust_to_create_topic:
+    default: 0
+    enum: 'MinTrustToCreateTopicSetting'
+  min_trust_to_edit_wiki_post:
     default: 0
     enum: 'MinTrustToCreateTopicSetting'
   basic_requires_topics_entered: 5

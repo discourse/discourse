@@ -68,7 +68,23 @@ module PostGuardian
 
   # Editing Method
   def can_edit_post?(post)
-    is_staff? || @user.has_trust_level?(:elder) || (!post.topic.archived? && is_my_own?(post) && !post.user_deleted && !post.deleted_at && !post.edit_time_limit_expired?)
+    if is_staff? || @user.has_trust_level?(:elder)
+      return true
+    end
+
+    if post.topic.archived? || post.user_deleted || post.deleted_at
+      return false
+    end
+
+    if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+      return true
+    end
+
+    if is_my_own?(post) && !post.edit_time_limit_expired?
+      return true
+    end
+
+    false
   end
 
   # Deleting Methods
@@ -128,5 +144,9 @@ module PostGuardian
 
   def can_change_post_owner?
     is_admin?
+  end
+
+  def can_wiki?
+    is_staff? || @user.has_trust_level?(:elder)
   end
 end

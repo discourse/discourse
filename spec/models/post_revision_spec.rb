@@ -62,4 +62,12 @@ describe PostRevision do
 
   end
 
+  it "can find wiki changes" do
+    r = create_rev("wiki" => [false, true])
+
+    changes = r.wiki_changes
+    changes[:previous_wiki].should be_false
+    changes[:current_wiki].should be_true
+  end
+
 end

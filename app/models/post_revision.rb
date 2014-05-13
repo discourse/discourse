@@ -28,6 +28,17 @@ class PostRevision < ActiveRecord::Base
     }
   end
 
+  def wiki_changes
+    prev = lookup("wiki", 0)
+    cur = lookup("wiki", 1)
+    return if prev == cur
+
+    {
+        previous_wiki: prev,
+        current_wiki: cur,
+    }
+  end
+
   def title_changes
     prev = "<div>#{CGI::escapeHTML(previous("title"))}</div>"
     cur = "<div>#{CGI::escapeHTML(current("title"))}</div>"
@@ -79,7 +90,7 @@ class PostRevision < ActiveRecord::Base
     end
 
     unless val
-      if ["cooked","raw"].include?(field)
+      if ["cooked", "raw"].include?(field)
         val = post.send(field)
       else
         val = post.topic.send(field)

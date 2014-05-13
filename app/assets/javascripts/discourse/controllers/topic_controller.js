@@ -243,6 +243,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       }).finally(function() {
         self.set('loadingExpanded', false);
       });
+    },
+
+    toggleWiki: function(post) {
+      post.toggleProperty('wiki');
     }
   },
 

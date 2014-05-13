@@ -54,7 +54,10 @@ button {
   &.hidden {
     display: none;
   }
-  &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
+  &.admin {
+    position: relative;
+  }
+  &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create, &.admin {
     float: right;
   }
   .read-icon {
@@ -77,6 +80,38 @@ button {
   }
 }
 
+.post-admin-menu {
+  background-color: $secondary;
+  width: 205px;
+  padding: 10px;
+  border: 1px solid scale-color($primary, $lightness: 90%);
+  position: absolute;
+  text-align: left;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: none;
+
+  h3 {
+    color: $primary;
+    font-size: 1em;
+  }
+
+  ul {
+    list-style: none;
+    margin: 10px 0 0 0;
+  }
+
+  li {
+    width: 176px;
+    margin-bottom: 5px;
+
+    i.fa {
+      width: 14px;
+      margin-right: 14px;
+    }
+  }
+}
 
 
 .embedded-posts {
@@ -351,6 +386,19 @@ iframe {
 
 .contents .cooked a {
   word-wrap: break-word;
+}
+
+.wiki {
+  float: left;
+  padding: 10px;
+  color: #408040;
+  i {
+    float: left;
+  }
+  h3 {
+    float: left;
+    margin-left: 10px;
+  }
 }
 
 .modal-body {

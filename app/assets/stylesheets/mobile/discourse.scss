@@ -22,7 +22,11 @@ body {
     height: 100%;
     @include border-radius-all(5px);
     .contents {
+      float: left;
       padding: 10px 10px 10px 10px;
+      h3 {
+        float: left;
+      }
     }
     &.white {
       background-color: $secondary;

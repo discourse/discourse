@@ -208,6 +208,17 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def wiki
+    guardian.ensure_can_wiki!
+
+    post = find_post_from_params
+    post.wiki = params[:wiki]
+    post.version += 1
+    post.save
+
+    render nothing: true
+  end
+
   protected
 
   def find_post_revision_from_params

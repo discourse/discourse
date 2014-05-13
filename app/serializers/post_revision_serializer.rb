@@ -10,7 +10,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :body_changes,
              :title_changes,
              :category_changes,
-             :user_changes
+             :user_changes,
+             :wiki_changes
 
   def include_title_changes?
     object.has_topic_data?
