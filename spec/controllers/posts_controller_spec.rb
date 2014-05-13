@@ -316,6 +316,45 @@ describe PostsController do
 
   end
 
+  describe "wiki" do
+
+    include_examples "action requires login", :put, :wiki, post_id: 2
+
+    describe "when logged in" do
+      let(:user) {log_in}
+      let(:post) {Fabricate(:post, user: user)}
+
+      it "raises an error if the user doesn't have permission to see the post" do
+        Guardian.any_instance.expects(:can_wiki?).returns(false)
+
+        xhr :put, :wiki, post_id: post.id, wiki: 'true'
+
+        response.should be_forbidden
+      end
+
+      it "can wiki a post" do
+        Guardian.any_instance.expects(:can_wiki?).returns(true)
+
+        xhr :put, :wiki, post_id: post.id, wiki: 'true'
+
+        post.reload
+        post.wiki.should be_true
+      end
+
+      it "can unwiki a post" do
+        wikied_post = Fabricate(:post, user: user, wiki: true)
+        Guardian.any_instance.expects(:can_wiki?).returns(true)
+
+        xhr :put, :wiki, post_id: wikied_post.id, wiki: 'false'
+
+        wikied_post.reload
+        wikied_post.wiki.should be_false
+      end
+
+    end
+
+  end
+
   describe 'creating a post' do
 
     include_examples 'action requires login', :post, :create

@@ -780,6 +780,8 @@ en:
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
+    min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
+
     newuser_max_links: "How many links a new user can add to a post"
     newuser_max_images: "How many images a new user can add to a post"
     newuser_max_attachments: "How many attachments a new user can add to a post"

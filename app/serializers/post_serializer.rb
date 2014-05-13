@@ -47,7 +47,8 @@ class PostSerializer < BasicPostSerializer
              :deleted_by,
              :user_deleted,
              :edit_reason,
-             :can_view_edit_history
+             :can_view_edit_history,
+             :wiki
 
 
   def moderator?

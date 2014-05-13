@@ -80,6 +80,25 @@ Discourse.Post = Discourse.Model.extend({
 
   }.observes('bookmarked'),
 
+  wikiChanged: function() {
+    var self = this;
+
+    Discourse.ajax('/posts/' + this.get('id') + '/wiki', {
+      type: 'PUT',
+      data: {
+        wiki: this.get('wiki') ? true : false
+      }
+    }).then(function() {
+      self.incrementProperty('version');
+    }, function(error) {
+      if (error && error.responseText) {
+        bootbox.alert($.parseJSON(error.responseText).errors[0]);
+      } else {
+        bootbox.alert(I18n.t('generic_error'));
+      }
+    });
+  }.observes('wiki'),
+
   internalLinks: function() {
     if (this.blank('link_counts')) return null;
     return this.get('link_counts').filterProperty('internal').filterProperty('title');
@@ -439,5 +458,3 @@ Discourse.Post.reopenClass({
   }
 
 });
-
-

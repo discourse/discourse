@@ -60,6 +60,21 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
 
   }.property("viewMode", "category_changes"),
 
+  wiki_diff: function() {
+    var viewMode = this.get("viewMode");
+    var changes = this.get("wiki_changes");
+    if (changes === null) { return; }
+
+    if (viewMode === "inline") {
+      var diff = changes["current_wiki"] ? '<i class="fa fa-pencil-square-o fa-2x"></i>' : '<span class="fa-stack"><i class="fa fa-pencil-square-o fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
+      return "<div class='inline-diff'>" + diff + "</div>";
+    } else {
+      var prev = changes["previous_wiki"] ? '<i class="fa fa-pencil-square-o fa-2x"></i>' : "&nbsp;";
+      var curr = changes["current_wiki"] ? '<i class="fa fa-pencil-square-o fa-2x"></i>' : '<span class="fa-stack"><i class="fa fa-pencil-square-o fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
+      return "<div class='span8'>" + prev + "</div><div class='span8 offset1'>" + curr + "</div>";
+    }
+  }.property("viewMode", "wiki_changes"),
+
   title_diff: function() {
     var viewMode = this.get("viewMode");
     if(viewMode === "side_by_side_markdown") {

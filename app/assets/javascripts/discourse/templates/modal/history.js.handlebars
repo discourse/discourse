@@ -35,6 +35,11 @@
           {{boundAvatar user_changes.previous imageSize="small"}} {{user_changes.previous.username}} → {{boundAvatar user_changes.current imageSize="small"}} {{user_changes.current.username}}
       </div>
     {{/if}}
+    {{#if wiki_changes}}
+      <div class="row">
+        {{{wiki_diff}}}
+      </div>
+    {{/if}}
     {{{body_diff}}}
   </div>
 </div>

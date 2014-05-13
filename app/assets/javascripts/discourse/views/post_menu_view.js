@@ -21,18 +21,17 @@ Discourse.PostMenuView = Discourse.View.extend({
     'post.bookmarked',
     'post.shareUrl',
     'post.topic.deleted_at',
-    'post.replies.length'),
+    'post.replies.length',
+    'post.wiki'),
 
   render: function(buffer) {
     var post = this.get('post');
-    buffer.push("<nav class='post-controls'>");
-    this.renderReplies(post, buffer);
 
-    var postMenuView = this;
-    Discourse.get('postButtons').toArray().reverse().forEach(function(button) {
-      var renderer = "render" + button;
-      if(postMenuView[renderer]) postMenuView[renderer](post, buffer);
-    });
+    buffer.push("<nav class='post-controls'>");
+
+    this.renderReplies(post, buffer);
+    this.renderButtons(post, buffer);
+
     buffer.push("</nav>");
   },
 
@@ -59,6 +58,14 @@ Discourse.PostMenuView = Discourse.View.extend({
 
     var icon = (this.get('post.replies.length') > 0) ? 'fa-chevron-up' : 'fa-chevron-down';
     return buffer.push("<i class='fa " + icon + "'></i></button>");
+  },
+
+  renderButtons: function(post, buffer) {
+    var self = this;
+    Discourse.get('postButtons').toArray().reverse().forEach(function(button) {
+      var renderer = "render" + button;
+      if(self[renderer]) self[renderer](post, buffer);
+    });
   },
 
   clickReplies: function() {
@@ -214,6 +221,34 @@ Discourse.PostMenuView = Discourse.View.extend({
 
   clickBookmark: function() {
     this.get('post').toggleProperty('bookmarked');
+  },
+
+  renderAdmin: function(post, buffer) {
+    var currentUser = Discourse.User.current();
+    if (!currentUser || !currentUser.get('canManageTopic')) {
+      return;
+    }
+
+    buffer.push('<button title="' + I18n.t("post.controls.admin") + '" data-action="admin" class="admin"><i class="fa fa-wrench"></i>');
+
+    this.renderAdminPopup(post, buffer);
+
+    buffer.push('</button>');
+  },
+
+  renderAdminPopup: function(post, buffer) {
+    var wikiText = post.get('wiki') ? I18n.t('post.controls.unwiki') : I18n.t('post.controls.wiki');
+    buffer.push('<div class="post-admin-menu"><h3>' + I18n.t('admin_title') + '</h3><ul><li class="btn btn-admin" data-action="toggleWiki"><i class="fa fa-pencil-square-o"></i>' + wikiText +'</li></ul></div>');
+  },
+
+  clickAdmin: function() {
+    var $adminMenu = this.$('.post-admin-menu');
+    this.set('postView.adminMenu', $adminMenu);
+    $adminMenu.show();
+  },
+
+  clickToggleWiki: function() {
+    this.get('controller').send('toggleWiki', this.get('post'));
   }
 
 });

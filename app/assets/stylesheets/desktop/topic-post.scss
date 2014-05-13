@@ -168,7 +168,10 @@ nav.post-controls {
         &.hidden {
           display: none;
         }
-        &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
+        &.admin {
+          position: relative;
+        }
+        &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create, &.admin {
           float: right;
         }
 
@@ -203,6 +206,40 @@ nav.post-controls {
           }
         }
       }
+
+  .post-admin-menu {
+    background-color: $secondary;
+    width: 205px;
+    padding: 10px;
+    border: 1px solid scale-color($primary, $lightness: 90%);
+    position: absolute;
+    text-align: left;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+    display: none;
+
+    h3 {
+      margin-top: 0;
+      color: $primary;
+      font-size: 1em;
+    }
+
+    ul {
+      list-style: none;
+      margin: 10px 0 0 0;
+    }
+
+    li {
+      width: 176px;
+      margin-bottom: 5px;
+
+      i.fa {
+        width: 14px;
+        margin-right: 14px;
+      }
+    }
+  }
 }
 
 .embedded-posts {
@@ -733,6 +770,11 @@ blockquote { /* solo quotes */
 .topic-avatar {
  border-top: 1px solid scale-color($primary, $lightness: 90%);
  padding-top: 16px;
+
+  .wiki {
+    margin-top: 14px;
+    color: scale-color($primary, $lightness: 60%);
+  }
 }
 
 .bottom-round.contents.regular {
