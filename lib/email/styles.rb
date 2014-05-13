@@ -62,22 +62,28 @@ module Email
 
     def onebox_styles
       # Links to other topics
-      style('aside.quote', 'border-left: 5px solid #bebebe; background-color: #f1f1f1; padding: 12px;')
+      style('aside.quote', 'border-left: 5px solid #bebebe; background-color: #f1f1f1; padding: 12px 25px 2px 12px; margin-bottom: 10px;')
       style('aside.quote blockquote', 'border: 0px; padding: 0; margin: 7px 0')
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
       style('aside.quote .avatar', 'margin-right: 5px')
 
       # Oneboxes
-      style('aside.onebox', "padding: 12px 25px 12px 12px; border-left: 5px solid #bebebe; background: #eee;")
+      style('aside.onebox', "padding: 12px 25px 2px 12px; border-left: 5px solid #bebebe; background: #eee; margin-bottom: 10px;")
       style('aside.onebox img', "max-height: 80%; max-width: 25%; height: auto; float: left; margin-right: 10px;")
       style('aside.onebox h3', "border-bottom: 0")
       style('aside.onebox .source', "margin-bottom: 8px")
       style('aside.onebox .source a[href]', "color: #333; font-weight: normal")
       style('aside.clearfix', "clear: both")
+
+
+      # Finally, convert all `aside` tags to `div`s
+      @fragment.css('aside').each do |n|
+        n.name = "div"
+      end
     end
 
     def format_html
-      style('h3', 'margin: 15px 0 20px 0; border-bottom: 1px solid #ddd;')
+      style('h3', 'margin: 15px 0 20px 0;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('a', 'text-decoration: none; font-weight: bold; color: #006699;')
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
