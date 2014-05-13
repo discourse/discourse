@@ -30,13 +30,13 @@
       font-size: 16px;
       line-height: 20px;
       &:hover {
-        color: $danger;
-        background-color: scale-color($danger, $lightness: 70%);
+        color: $quaternary;
+        background-color: scale-color($quaternary, $lightness: 70%);
       }
     }
     &.active > a, > a.active {
       color: $secondary;
-      background-color: $danger;
+      background-color: $quaternary;
     }
   }
 }
@@ -69,7 +69,7 @@
   .active > a,
   .active .fa-chevron-right {
     color: $secondary;
-    background-color: $danger;
+    background-color: $quaternary;
   }
   .count {
     font-size: 12px;

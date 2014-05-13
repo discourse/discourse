@@ -47,21 +47,25 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
     return (!this.get('id'));
   }.property('id'),
 
-  save: function() {
+  save: function(opts) {
     if (this.get('is_base') || this.get('disableSave')) return;
 
     var self = this;
     this.set('savingStatus', I18n.t('saving'));
     this.set('saving',true);
 
-    var data = { name: this.name, enabled: this.enabled };
+    var data = { enabled: this.enabled };
 
-    data.colors = [];
-    _.each(this.get('colors'), function(c) {
-      if (!self.id || c.get('changed')) {
-        data.colors.pushObject({name: c.get('name'), hex: c.get('hex')});
-      }
-    });
+    if (!opts || !opts.enabledOnly) {
+      data.name = this.name;
+
+      data.colors = [];
+      _.each(this.get('colors'), function(c) {
+        if (!self.id || c.get('changed')) {
+          data.colors.pushObject({name: c.get('name'), hex: c.get('hex')});
+        }
+      });
+    }
 
     return Discourse.ajax("/admin/color_schemes" + (this.id ? '/' + this.id : '') + '.json', {
       data: JSON.stringify({"color_scheme": data}),
@@ -70,10 +74,14 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
       contentType: 'application/json'
     }).then(function(result) {
       if(result.id) { self.set('id', result.id); }
-      self.startTrackingChanges();
-      _.each(self.get('colors'), function(c) {
-        c.startTrackingChanges();
-      });
+      if (!opts || !opts.enabledOnly) {
+        self.startTrackingChanges();
+        _.each(self.get('colors'), function(c) {
+          c.startTrackingChanges();
+        });
+      } else {
+        self.set('originals.enabled', data.enabled);
+      }
       self.set('savingStatus', I18n.t('saved'));
       self.set('saving', false);
       self.notifyPropertyChange('description');
@@ -107,7 +115,7 @@ Discourse.ColorScheme.reopenClass({
           name: colorScheme.name,
           enabled: colorScheme.enabled,
           is_base: colorScheme.is_base,
-          colors: colorScheme.colors.map(function(c) { return Discourse.ColorSchemeColor.create({name: c.name, hex: c.hex}); })
+          colors: colorScheme.colors.map(function(c) { return Discourse.ColorSchemeColor.create({name: c.name, hex: c.hex, default_hex: c.default_hex}); })
         }));
       });
       colorSchemes.set('loading', false);

@@ -35,15 +35,27 @@ Discourse.AdminCustomizeColorsController = Ember.ArrayController.extend({
       return;
     }
 
-    var matches = Em.A(), self = this, baseColor;
+    var matches = Em.A();
 
     _.each(this.get('selectedItem.colors'), function(color){
-      baseColor = self.get('baseColors').get(color.get('name'));
-      if (color.get('hex') !== baseColor.get('hex')) matches.pushObject(color);
+      if (color.get('overridden')) matches.pushObject(color);
     });
 
     this.set('colors', matches);
   }.observes('onlyOverridden'),
+
+  updateEnabled: function() {
+    var selectedItem = this.get('selectedItem');
+    if (selectedItem.get('enabled')) {
+      this.get('model').forEach(function(c) {
+        if (c !== selectedItem) {
+          c.set('enabled', false);
+          c.startTrackingChanges();
+          c.notifyPropertyChange('description');
+        }
+      });
+    }
+  },
 
   actions: {
     selectColorScheme: function(colorScheme) {
@@ -63,22 +75,24 @@ Discourse.AdminCustomizeColorsController = Ember.ArrayController.extend({
       this.set('onlyOverridden', false);
     },
 
+    revert: function(color) {
+      color.revert();
+    },
+
     undo: function(color) {
       color.undo();
     },
 
-    save: function() {
+    toggleEnabled: function() {
       var selectedItem = this.get('selectedItem');
-      selectedItem.save();
-      if (selectedItem.get('enabled')) {
-        this.get('model').forEach(function(c) {
-          if (c !== selectedItem) {
-            c.set('enabled', false);
-            c.startTrackingChanges();
-            c.notifyPropertyChange('description');
-          }
-        });
-      }
+      selectedItem.toggleProperty('enabled');
+      selectedItem.save({enabledOnly: true});
+      this.updateEnabled();
+    },
+
+    save: function() {
+      this.get('selectedItem').save();
+      this.updateEnabled();
     },
 
     copy: function(colorScheme) {

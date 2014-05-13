@@ -161,6 +161,11 @@ en:
     uploading: "Uploading..."
     uploaded: "Uploaded!"
 
+    enable: "Enable"
+    disable: "Disable"
+    undo: "Undo"
+    revert: "Revert"
+
     choose_topic:
       none_found: "No topics found."
       title:
@@ -1465,15 +1470,40 @@ en:
           new_name: "New Color Scheme"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color scheme?"
-          primary: 'primary'
-          secondary: 'secondary'
-          tertiary: 'tertiary'
-          header_background: "header background"
-          header_primary: "header primary"
-          highlight: 'highlight'
-          danger: 'danger'
-          success: 'success'
-          love: 'love'
+          undo: "undo"
+          undo_title: "Undo your changes to this color since the last time it was saved."
+          revert: "revert"
+          revert_title: "Reset this color to Discourse's default color scheme."
+          primary:
+            name: 'primary'
+            description: 'Most text, icons, and borders.'
+          secondary:
+            name: 'secondary'
+            description: 'The main background color, and text color of some buttons.'
+          tertiary:
+            name: 'tertiary'
+            description: 'Links, some buttons, notifications, and accent color.'
+          quaternary:
+            name: "quaternary"
+            description: "Navigation links."
+          header_background:
+            name: "header background"
+            description: "Background color of the site's header."
+          header_primary:
+            name: "header primary"
+            description: "Text and icons in the site's header."
+          highlight:
+            name: 'highlight'
+            description: 'The background color of highlighted elements on the page, such as posts and topics.'
+          danger:
+            name: 'danger'
+            description: 'Highlight color for actions like deleting posts and topics.'
+          success:
+            name: 'success'
+            description: 'Used to indicate an action was successful.'
+          love:
+            name: 'love'
+            description: "The like button's color."
 
 
       email:

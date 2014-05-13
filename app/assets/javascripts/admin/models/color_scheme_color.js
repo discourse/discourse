@@ -19,18 +19,37 @@ Discourse.ColorSchemeColor = Discourse.Model.extend({
     this.notifyPropertyChange('hex'); // force changed property to be recalculated
   },
 
+  // Whether value has changed since it was last saved.
   changed: function() {
     if (!this.originals) return false;
     if (this.get('hex') !== this.originals['hex']) return true;
     return false;
   }.property('hex'),
 
+  // Whether the current value is different than Discourse's default color scheme.
+  overridden: function() {
+    return this.get('hex') !== this.get('default_hex');
+  }.property('hex', 'default_hex'),
+
+  // Whether the saved value is different than Discourse's default color scheme.
+  savedIsOverriden: function() {
+    return this.get('originals').hex !== this.get('default_hex');
+  }.property('hex', 'default_hex'),
+
+  revert: function() {
+    this.set('hex', this.get('default_hex'));
+  },
+
   undo: function() {
     if (this.originals) this.set('hex', this.originals['hex']);
   },
 
   translatedName: function() {
-    return I18n.t('admin.customize.colors.' + this.get('name'));
+    return I18n.t('admin.customize.colors.' + this.get('name') + '.name');
+  }.property('name'),
+
+  description: function() {
+    return I18n.t('admin.customize.colors.' + this.get('name') + '.description');
   }.property('name'),
 
   /**

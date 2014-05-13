@@ -19,8 +19,8 @@ class ColorSchemeRevisor
         ColorScheme.where('id != ?', @color_scheme.id).update_all enabled: false
       end
 
-      @color_scheme.name    = @params[:name]
-      @color_scheme.enabled = @params[:enabled]
+      @color_scheme.name    = @params[:name]    if @params.has_key?(:name)
+      @color_scheme.enabled = @params[:enabled] if @params.has_key?(:enabled)
       new_version = false
 
       if @params[:colors]
