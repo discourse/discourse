@@ -68,7 +68,7 @@ module Tilt
       # For backwards compatibility with plugins, for now export the Global format too.
       # We should eventually have an upgrade system for plugins to use ES6 or some other
       # resolve based API.
-      if scope.logical_path =~ /discourse\/controllers\/(.*)/
+      if ENV['DISCOURSE_NO_CONSTANTS'].nil? && scope.logical_path =~ /discourse\/controllers\/(.*)/
         class_name = Regexp.last_match[1].gsub(/[\-\/]/, '_').classify
         @output << "\n\nDiscourse.#{class_name}Controller = require('#{scope.logical_path}').default"
       end

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.PreferencesAboutController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   saving: false,
 
   saveButtonText: function() {

@@ -86,10 +86,10 @@ Discourse.PreferencesAboutRoute = Discourse.RestrictedUserRoute.extend({
     this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
   },
 
-  events: {
+  actions: {
     changeAbout: function() {
       var route = this;
-      var controller = route.controllerFor('preferencesAbout');
+      var controller = route.controllerFor('preferences/about');
 
       controller.setProperties({ saving: true });
       return controller.get('model').save().then(function() {

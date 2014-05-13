@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.PosterExpansionController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   needs: ['topic'],
   visible: false,
   user: null,
