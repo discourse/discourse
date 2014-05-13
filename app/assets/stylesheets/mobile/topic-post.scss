@@ -60,6 +60,9 @@ button {
   &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create, &.admin {
     float: right;
   }
+  &.expand-post {
+    margin:10px 0 10px 0;
+  }
   .read-icon {
     &:before {
       font-family: "FontAwesome";
