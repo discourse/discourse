@@ -1022,24 +1022,28 @@ a.attachment:before {
     content: "\f0e0";
 }
 
- .topic-meta-data {
-   margin-bottom: 10px;
+.topic-meta-data {
+ margin-bottom: 10px;
 
-   &:after {
-       visibility: hidden;
-      display: block;
-      font-size: 0;
-      content: " ";
-      clear: both;
-      height: 0;
-   }
-
-   .post-info  {
-     display: inline-block;
-     float: right;
-     font-size: 12px;
-     margin-top: 1px;
-     a {color: scale-color($primary, $lightness: 50%);}
-   }
-
+ &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
  }
+
+ .post-info  {
+   display: inline-block;
+   float: right;
+   font-size: 12px;
+   margin-top: 1px;
+   a {color: scale-color($primary, $lightness: 50%);}
+ }
+
+}
+
+span.highlighted {
+  background-color: $highlight;
+}
