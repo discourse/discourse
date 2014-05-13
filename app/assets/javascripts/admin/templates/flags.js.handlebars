@@ -44,19 +44,21 @@
 
             <td class='flaggers'>
               <table>
-                {{#each flaggedPost.flaggers}}
-                <tr>
-                  <td>
-                    {{#link-to 'adminUser' this.user}}{{avatar this.user imageSize="small"}} {{/link-to}}
-                  </td>
-                  <td>
-                    {{unboundDate this.flaggedAt}}
-                  </td>
-                  <td>
-                    {{this.flagType}}
-                  </td>
-                </tr>
-                {{/each}}
+                <tbody>
+                  {{#each flaggedPost.flaggers}}
+                  <tr>
+                    <td>
+                      {{#link-to 'adminUser' this.user}}{{avatar this.user imageSize="small"}} {{/link-to}}
+                    </td>
+                    <td>
+                      {{unboundDate this.flaggedAt}}
+                    </td>
+                    <td>
+                      {{this.flagType}}
+                    </td>
+                  </tr>
+                  {{/each}}
+                </tbody>
               </table>
             </td>
 
