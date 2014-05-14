@@ -126,12 +126,15 @@
     }
     .unread-private-messages {
       left: -4px;
-      background-color: $success;
     }
   }
   .flagged-posts {
     background-color: $danger;
   }
+}
+/* this needs to be global since it is used on the user page, left hand column, messages */
+.unread-private-messages {
+  background-color: $success;
 }
 
 #main {

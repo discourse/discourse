@@ -45,7 +45,7 @@
           <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
             {{#link-to 'userPrivateMessages.unread' model}}
               {{i18n user.messages.unread}}
-              {{#if hasUnreadPMs}}<span class='count'>({{private_messages_stats.unread}})</span>{{/if}}
+              {{#if hasUnreadPMs}}<span class='badge-notification unread-private-messages'>({{private_messages_stats.unread}})</span>{{/if}}
               <span class='fa fa-chevron-right'></span>
             {{/link-to}}
           </li>
