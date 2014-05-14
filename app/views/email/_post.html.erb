@@ -6,7 +6,7 @@
       </td>
       <td>
         <a class="username" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a><br>
-        <span class='date'><%= l post.created_at, format: :short_no_year %></span>
+        <span class='notification-date'><%= l post.created_at, format: :short_no_year %></span>
       </td>
     </tr>
     <tr>

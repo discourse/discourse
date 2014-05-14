@@ -28,7 +28,7 @@ module Email
           img['width'] = 20
           img['height'] = 20
         else
-          add_styles(img, 'max-width: 694px;')
+          add_styles(img, 'max-width: 694px;') if img['style'] !~ /max-width/
         end
 
         # ensure all urls are absolute
@@ -45,7 +45,7 @@ module Email
 
     def format_notification
       style('.previous-discussion', 'font-size: 17px; color: #444;')
-      style('.date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")
+      style('.notification-date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")
       style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#3b5998;text-decoration:none;font-weight:bold")
       style('.post-wrapper', "margin-bottom:25px;max-width:761px")
       style('.user-avatar', 'vertical-align:top;width:55px;')
@@ -69,15 +69,14 @@ module Email
 
       # Oneboxes
       style('aside.onebox', "padding: 12px 25px 2px 12px; border-left: 5px solid #bebebe; background: #eee; margin-bottom: 10px;")
-      style('aside.onebox img', "max-height: 80%; max-width: 25%; height: auto; float: left; margin-right: 10px;")
+      style('aside.onebox img', "max-height: 80%; max-width: 25%; height: auto; float: left; margin-right: 10px; margin-bottom: 10px")
       style('aside.onebox h3', "border-bottom: 0")
       style('aside.onebox .source', "margin-bottom: 8px")
       style('aside.onebox .source a[href]', "color: #333; font-weight: normal")
       style('aside.clearfix', "clear: both")
 
-
       # Finally, convert all `aside` tags to `div`s
-      @fragment.css('aside').each do |n|
+      @fragment.css('aside, article, header').each do |n|
         n.name = "div"
       end
     end
