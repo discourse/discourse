@@ -16,8 +16,10 @@ class UploadsController < ApplicationController
   end
 
   def show
+    return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
+
     RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
-      return render nothing: true, status: 404 unless Discourse.store.internal?
+      return render_404 unless Discourse.store.internal?
 
       id = params[:id].to_i
       url = request.fullpath
@@ -26,9 +28,15 @@ class UploadsController < ApplicationController
       if upload = Upload.find_by(id: id, url: url)
         send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
       else
-        render nothing: true, status: 404
+        render_404
       end
     end
+  end
+
+  protected
+
+  def render_404
+    render nothing: true, status: 404
   end
 
 end
