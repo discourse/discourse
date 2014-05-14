@@ -48,8 +48,8 @@ class PostSerializer < BasicPostSerializer
              :user_deleted,
              :edit_reason,
              :can_view_edit_history,
-             :wiki
-
+             :wiki,
+             :user_custom_fields
 
   def moderator?
     !!(object.user && object.user.moderator?)
@@ -214,6 +214,16 @@ class PostSerializer < BasicPostSerializer
 
   def can_view_edit_history
     scope.can_view_post_revisions?(object)
+  end
+
+  def user_custom_fields
+    @topic_view.user_custom_fields[object.user_id]
+  end
+
+  def include_user_custom_fields?
+    return if @topic_view.blank?
+    custom_fields = @topic_view.user_custom_fields
+    custom_fields && custom_fields[object.user_id]
   end
 
   private

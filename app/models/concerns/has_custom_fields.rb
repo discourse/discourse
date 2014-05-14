@@ -5,6 +5,31 @@ module HasCustomFields
   included do
     has_many :_custom_fields, dependent: :destroy, :class_name => "#{name}CustomField"
     after_save :save_custom_fields
+
+    # To avoid n+1 queries, we have this function to retrieve lots of custom fields in one
+    # go and create a "sideloaded" version for easy querying by id.
+    def self.custom_fields_for_ids(ids, whitelisted_fields)
+      klass = "#{name}CustomField".constantize
+      foreign_key = "#{name.underscore}_id".to_sym
+
+      result = {}
+
+      return result if whitelisted_fields.blank?
+      klass.where(foreign_key => ids, :name => whitelisted_fields).pluck(foreign_key, :name, :value).each do |cf|
+        result[cf[0]] ||= {}
+        unload_field(result[cf[0]], cf[1], cf[2])
+      end
+      result
+    end
+
+    def self.unload_field(target, key, value)
+      if target.has_key?(key)
+        target[key] = [target[key]] if !target[key].is_a? Array
+        target[key] << value
+      else
+        target[key] = value
+      end
+    end
   end
 
   def reload(options = nil)
@@ -32,14 +57,7 @@ module HasCustomFields
   def refresh_custom_fields_from_db
     target = Hash.new
     _custom_fields.pluck(:name,:value).each do |key, value|
-      if target.has_key? key
-        if !target[key].is_a? Array
-          target[key] = [target[key]]
-        end
-        target[key] << value
-      else
-        target[key] = value
-      end
+      self.class.unload_field(target, key, value)
     end
     @custom_fields_orig = target
     @custom_fields = @custom_fields_orig.dup

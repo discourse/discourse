@@ -530,3 +530,7 @@ uncategorized:
     hidden: true
 
   notify_about_flags_after: 48
+
+  public_user_custom_fields:
+    list: true
+    default: ''
