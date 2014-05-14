@@ -152,7 +152,7 @@ Discourse.Utilities = {
     @method validateUploadedFiles
     @param {Array} files The list of files we want to upload
   **/
-  validateUploadedFiles: function(files) {
+  validateUploadedFiles: function(files, bypassNewUserRestriction) {
     if (!files || files.length === 0) { return false; }
 
     // can only upload one file at a time
@@ -162,11 +162,12 @@ Discourse.Utilities = {
     }
 
     var upload = files[0];
+    var type = Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment';
 
     // CHROME ONLY: if the image was pasted, sets its name to a default one
     if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
 
-    return Discourse.Utilities.validateUploadedFile(upload, Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment');
+    return Discourse.Utilities.validateUploadedFile(upload, type, bypassNewUserRestriction);
   },
 
   /**
@@ -175,9 +176,10 @@ Discourse.Utilities = {
     @method validateUploadedFile
     @param {File} file The file to be uploaded
     @param {string} type The type of the upload (image, attachment)
+    @params {bool} bypassNewUserRestriction
     @returns true whenever the upload is valid
   **/
-  validateUploadedFile: function(file, type) {
+  validateUploadedFile: function(file, type, bypassNewUserRestriction) {
     // check that the uploaded file is authorized
     if (!Discourse.Utilities.authorizesAllExtensions() &&
         !Discourse.Utilities.isAuthorizedUpload(file)) {
@@ -186,10 +188,12 @@ Discourse.Utilities = {
       return false;
     }
 
-    // ensures that new users can upload a file
-    if (!Discourse.User.current().isAllowedToUploadAFile(type)) {
-      bootbox.alert(I18n.t('post.errors.' + type + '_upload_not_allowed_for_new_user'));
-      return false;
+    if (!bypassNewUserRestriction) {
+      // ensures that new users can upload a file
+      if (!Discourse.User.current().isAllowedToUploadAFile(type)) {
+        bootbox.alert(I18n.t('post.errors.' + type + '_upload_not_allowed_for_new_user'));
+        return false;
+      }
     }
 
     // check file size

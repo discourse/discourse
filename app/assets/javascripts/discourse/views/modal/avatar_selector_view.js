@@ -41,7 +41,7 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
 
     // when a file has been selected
     $upload.on('fileuploadsubmit', function (e, data) {
-      var result = Discourse.Utilities.validateUploadedFiles(data.files);
+      var result = Discourse.Utilities.validateUploadedFiles(data.files, true);
       self.setProperties({
         uploadProgress: 0,
         uploading: result,
