@@ -247,7 +247,7 @@ class Vanilla < Thor
           SET    views = :views,
                  closed = :closed,
                  pinned_at = :pinned_at,
-                 last_posted_at = (SELECT MAX(created_at) FROM posts WHERE topic_id = :topic_id)
+                 last_posted_at = (SELECT MAX(created_at) FROM posts WHERE topic_id = :topic_id),
                  bumped_at = (SELECT MAX(created_at) FROM posts WHERE topic_id = :topic_id)
           WHERE id = :topic_id
         SQL
