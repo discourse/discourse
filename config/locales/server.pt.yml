@@ -487,7 +487,6 @@ pt:
     flag_sockpuppets: "Se o endereço IP de um novo utilizador (i.e., registado na últimas 24 horas) que iniciou um novo tópico coincidir com o endereço IP de um outro novo utilizador que tenha respondido nesse mesmo tópico, ambas as mensagens serão sinalizadas como sendo spam."
     traditional_markdown_linebreaks: "Usar quebra de linha tradicional no Markdown, que requer dois espaços a direita para uma quebra de linha"
     post_undo_action_window_mins: "A janela na qual alguém pode reverter um ação na postagem (como linkar)"
-    must_approve_users: "Os proprietários do fórum tem que aprovar os usuários antes deles terem acesso."
     enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
     post_menu: "A ordem dos items no menu da postagem."
     share_links: "Determine quais ítens aparecerem no diálogo de compartilhar, e em que ordem. Por exemplo: twitter|facebook|google+|email"

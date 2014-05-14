@@ -123,11 +123,6 @@ da:
       other: "på {{count}} dage"
     suggested_topics:
       title: "Foreslåede emner"
-    bookmarks:
-      not_logged_in: "Beklager, du skal være logget ind for at kunne bogmærke indlæg."
-      created: "Du har bogmærket dette indlæg."
-      not_bookmarked: "Du har læst dette indlæg; klik for at bogmærke det."
-      last_read: "Dette er det sidste indlæg, du har læst."
     new_topics_inserted: "{{count}} nye emner."
     show_new_topics: "Klik for at se."
     preview: "forhåndsvising"

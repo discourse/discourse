@@ -121,11 +121,6 @@ pt:
       other: "em {{count}} dias"
     suggested_topics:
       title: "Tópicos Sugeridos"
-    bookmarks:
-      not_logged_in: "Desculpe, precisa de entrar na sua conta para adicionar um marcador às mensagens."
-      created: "Adicionou um marcador a esta mensagem."
-      not_bookmarked: "Leu esta mensagem, clique para adicionar-lhe um marcador."
-      last_read: "Esta é a última mensagem que leu; selecione para lhe adicionar um marcador."
     new_topics_inserted: "{{count}} novos tópicos."
     show_new_topics: "Selecione para mostrar."
     preview: "prever"

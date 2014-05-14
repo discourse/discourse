@@ -106,10 +106,10 @@ zh_CN:
     suggested_topics:
       title: "推荐主题"
     bookmarks:
-      not_logged_in: "抱歉，要给帖子加书签，您必须先登入。"
-      created: "您已经给此帖加过了书签。"
-      not_bookmarked: "您已经阅读过此帖；点此给它加上书签。"
-      last_read: "这是您阅读过的最后一帖；点此给它加上书签。"
+      not_logged_in: "抱歉，您需要先登入才能给帖子加书签"
+      created: "您给此帖的书签已加上。"
+      not_bookmarked: "您已经阅读过此帖；点此给它加上书签"
+      last_read: "这是您阅读过的最后一帖；点此给它加上书签"
     new_topics_inserted: "{{count}} 个新主题。"
     show_new_topics: "点此显示。"
     preview: "预览"
@@ -217,7 +217,6 @@ zh_CN:
       delete_account_confirm: "您真的要永久删除自己的账号吗？删除之后无法恢复！"
       deleted_yourself: "您的帐号已被成功删除。"
       delete_yourself_not_allowed: "您目前不能删除自己的帐号。联系管理员帮助您删除帐号。"
-      unread_message_count: "消息"
       messages:
         all: "所有"
         mine: "我的"
@@ -697,6 +696,7 @@ zh_CN:
         help: '私下报告本帖以引起注意或者发送一条匿名通知'
         success_message: '您已成功报告本帖。'
       inviting: "邀请中..."
+      automatically_add_to_groups: "注册时，自动添加用户至群组。（可选，仅限管理员）"
       invite_private:
         title: '邀请进行私下交流'
         email_or_username: "受邀人的电子邮箱或用户名"
@@ -704,6 +704,7 @@ zh_CN:
         action: "邀请"
         success: "谢谢！我们已经邀请该用户参与此私下交流。"
         error: "抱歉，在邀请该用户时发生了错误。"
+        group_name: "群组名"
       invite_reply:
         title: ' 邀请'
         action: '邮件邀请'
@@ -769,6 +770,7 @@ zh_CN:
       expand_collapse: "展开/折叠"
       gap:
         other: "{{count}} 主题被隐藏"
+      more_links: "{{count}} 更多..."
       has_replies:
         other: "回复"
       errors:

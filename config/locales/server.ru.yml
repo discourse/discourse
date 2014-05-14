@@ -26,8 +26,6 @@ ru:
     operation_already_running: "Действие уже выполняется. Прямо сейчас невозможно начать новое действие."
   read_only_mode_enabled: "Сайт в режиме только для чтения. Взаимодействия отключены."
   embed:
-    start_discussion: "Начать обсуждение"
-    continue: "Продолжить обсуждение"
     loading: "Загрузка обсуждения..."
     permalink: "Постоянная ссылка"
   too_many_mentions:
@@ -157,9 +155,7 @@ ru:
   user_profile:
     no_info_me: "<div class='missing-profile'>Поле Обо мне в вашем профиле не заполнено, <a href='/users/%{username_lower}/preferences/about-me'>не желаете ли что-нибудь написать в нем?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} еще не заполнил поле «Обо мне» в своём профайле. </div>"
-  vip_category_name: "Фойе"
   vip_category_description: "Категория исключительно для пользователей с уровнем доверия 3 и выше."
-  meta_category_name: "Мета"
   meta_category_description: "Обсуждение об этом форуме, его устройство, как он работает и как мы можем его улучшить. "
   category:
     topic_prefix: "Описание категории %{category}"
@@ -503,7 +499,6 @@ ru:
     flag_sockpuppets: "Если новый пользователь (например, зарегистрированный за последние 24 часа), который начал тему и новый пользователь, который ответил в теме, имеют одинаковые IP адреса, помечать оба сообщения как спам."
     traditional_markdown_linebreaks: "Использовать стандартные разрывы строк в Markdown, вместо двух пробелов"
     post_undo_action_window_mins: "Количество секунд, в течение которых пользователь может отменить действие («Мне нравится», «Жалоба» и т.д.)"
-    must_approve_users: "Администраторы должны одобрять учетные записи всех новых пользователей для того, чтобы они получили доступ"
     ga_tracking_code: "Google analytics (ga.js) tracking code код, например: UA-12345678-9; смотрите http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) доменное имя, например: mysite.com; смотрите http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code код, например: UA-12345678-9; больше информации можно узнать на странице http://google.com/analytics"

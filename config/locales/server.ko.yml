@@ -419,7 +419,6 @@ ko:
     flag_sockpuppets: "If a new user (i.e., registered in the last 24 hours) who started a topic and a new user who replies in that topic are at the same IP address, both their posts will automatically be flagged as spam."
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
-    must_approve_users: "Admins must approve all users before they gain access"
     ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
     enable_escaped_fragments: "당신의 사이트의 오래된 정보를 검색하기 위한 웹크롤러 Workaround 솔루션을 활성"
@@ -663,8 +662,6 @@ ko:
       ----
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
-  new_version_mailer:
-    subject_template: "[%{site_name}] 는 업데이트 가능합니다."
   system_messages:
     post_hidden:
       subject_template: "포럼 신고로 인한 게시글 숨김"

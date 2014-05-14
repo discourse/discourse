@@ -36,15 +36,15 @@ fr:
     one: "Nous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à 1 réponse par sujet."
     other: "Nous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à %{count} réponses par sujet."
   embed:
-    start_discussion: "Démarrer la Discussion"
-    continue: "Continuer la Discussion"
+    start_discussion: "Démarrer la discussion"
+    continue: "Continuer la discussion"
     more_replies:
       one: "1 réponse supplémentaire"
       other: "%{count} réponses supplémentaires"
     loading: "Chargement de la discussion..."
     permalink: "Lien permanent"
     imported_from: "Il s'agit d'un sujet en provenance de l'article %{link}"
-    in_reply_to: "répondre à %{username}"
+    in_reply_to: "▶ %{username}"
     replies:
       one: "1 réponse"
       other: "%{count} réponses"
@@ -182,11 +182,11 @@ fr:
   user_profile:
     no_info_me: "<div class='missing-profile'>Le champs A Propos de moi de votre profil est vide, <a href='/users/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} n'a pas encore renseigné le champ À propos de moi de son profil</div>"
-  vip_category_name: "Salon"
+  vip_category_name: "salon"
   vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
-  meta_category_name: "Meta"
+  meta_category_name: "meta"
   meta_category_description: "Discussion sur ce forum, son organisation, son fonctionnement, et comment nous pouvons l'améliorer."
-  staff_category_name: "Staff"
+  staff_category_name: "staff"
   staff_category_description: "Catégorie privée pour les discussions du staff. Les sujets ne sont visibles que pour les admins et les modérateurs."
   assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du forum. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   category:
@@ -524,6 +524,9 @@ fr:
     tos_signup_form_message:
       title: "Formulaire d'inscription : Message des Conditions d'utilisation"
       description: "Le message qui apparaît à côté d'une case à cocher sur le formulaire d'inscription si le paramètre de site tos_accept_required est activé."
+    notification_email_top:
+      title: "Notification en haut des emails"
+      description: "Un message qui sera affiché en haut de tous les emails de notification."
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leur préférences."
@@ -593,7 +596,7 @@ fr:
     flag_sockpuppets: "Si un nouvel utilisateur (par exemple, enregistré dans les dernières 24 heures) a commencé un sujet et qu'un nouvel utilisateur répond à ce sujet et qu'ils ont tous les deux la même adresse IP, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans markdown, le wrapping est implicite sauf si suivi de 2 espaces"
     post_undo_action_window_mins: "Nombre de secondes pendant lesquelles un utilisateur peut annuler une action sur un message (j'aime, signaler, etc.)"
-    must_approve_users: "Les administrateurs du forum doivent approuver les utilisateurs avant qu'il y aient accès."
+    must_approve_users: "Les administrateurs du forum doivent approuver les nouveaux utilisateurs avant qu'il y aient accès."
     ga_tracking_code: "Google Analytics (ga.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
     ga_domain_name: "Google Analytics (ga.js) de noms de domaine, par exemple: monsite.com; voir http://google.com/analytics"
     ga_universal_tracking_code: "Google Analytics Universal (analytics.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
@@ -685,6 +688,7 @@ fr:
     regular_requires_likes_given: "Combien de j'aime un utilisateur doit donner pour être promu au niveau régulier (2)"
     regular_requires_topic_reply_count: "Combien de réponses un utilisateur doit donner pour être promu au niveau régulier (2)"
     min_trust_to_create_topic: "Le niveau de confiance minimum pour créer un nouveau sujet."
+    min_trust_to_edit_wiki_post: "Le niveau minimum de confiance requis pour modifier les messages de type wiki"
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message"
     newuser_max_images: "Combien d'images un nouvel utilisateur peut-il ajouter à un message"
     newuser_max_attachments: "Combien de fichiers un nouvel utilisateur peut-il ajouter à un message"
@@ -916,9 +920,11 @@ fr:
 
             <small>Il devrait toujours y avoir un lien de déinscription dans le pied de page d'un mail. Donc en voici-un. Ce mail a été envoyé par Nom de la Société,  55 Main Street, Anytown, USA 12345. Si vous ne voulez plus recevoir nos e-mails, [cliquez ici pour vous désinscrire][5].</small>
   new_version_mailer:
-    subject_template: "[%{site_name}] mise à jour disponible"
+    subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
+    text_body_template: "Une nouvelle version de Discourse est disponible.\n\nVotre version : %{installed_version}\nNouvelle version: **%{new_version}** \n\nVous voulez peut-être:\n- Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).\n\n- Mettre à jour en allant sur [%{base_url}/admin/docker](%{base_url}/admin/docker) en appuyant sur le bouton \"Upgrade\".\n\n- Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.\n"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
+    text_body_template: "Une nouvelle version de Discourse est disponible.\n\nVotre version : %{installed_version}\nNouvelle version: **%{new_version}** \n\nVous voulez peut-être:\n- Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).\n\n- Mettre à jour en allant sur [%{base_url}/admin/docker](%{base_url}/admin/docker) et en appuyant sur le bouton \"Upgrade\".\n\n- Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.\n\n### Notes de mise à jour\n\n%{notes}\n"
   flags_reminder:
     flags_were_submitted:
       one: "Il y a des signalements qui ont été soumis il y a plus de 1 heure."
@@ -933,9 +939,11 @@ fr:
     off_topic: "Votre message à été signalé comment étant **hors-sujet** : la communauté pense qu'il ne correspond pas au sujet de la discussion."
     inappropriate: "Votre message à été signalé comment étant **inapproprié** : la communauté pense qu'il est offensant, abusif ou en violation des [règles de la communauté](/faq)."
     spam: "Votre message a été signalé en tant que **spam** : La communauté pense que c'est une publicité, non utile ou pertinente dans ce sujet, mais de nature promotionnelle."
+    notify_moderators: "Votre message a été marqué avec l'étiquette **attention d'un modérateur**: la communauté pense que ce message requiert l'intervention d'un modérateur."
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
+      text_body_template: "Bonjour,\n\nCeci est un message automatique de %{site_name} pour vous informer que le message ...\n\n%{base_url}%{url}\n\n... a été caché à la suite d'un signalement de la communauté. \n\n%{flag_reason}\n\nGardez à l'esprit que plusieurs membres ont signalé ce message avant qu'il ne soit caché, **veuillez donc prendre en compte leurs remarques pour revoir votre message**. Vous pouvez modifier le message après %{edit_delay} minutes, et il sera automatiquement ré-affiché. Ceci augmentera votre niveau de confiance sur le forum.\n\nCependant, si le message est signalé par la communauté une seconde fois, les modérateurs seront informés  -- et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.\n\nPour plus d'informations, merci de vous en référer à la [FAQ](%{base_url}/faq).\n"
     usage_tips:
       text_body_template: |
         Ce message privé contient quelques astuces pour vous aider à démarrer rapidement :

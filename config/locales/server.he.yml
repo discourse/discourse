@@ -36,8 +36,6 @@ he:
     one: "אנחנו מצטערים, אבל משתמשים חדשים מוגבלים זמנים לתגובה אחת לאותו הנושא."
     other: "אנחנו מצטערים, אבל משתמשים חדשים מוגבלים זמנים ל-%{count} תגובות לאותו הנושא."
   embed:
-    start_discussion: "התחלת הדיון"
-    continue: "המשך הדיון"
     more_replies:
       one: "עוד תגובה אחת"
       other: "עוד %{count} תגובות"
@@ -180,11 +178,8 @@ he:
   user_profile:
     no_info_me: "<div class='missing-profile'>שדה האודות של הפרופיל שלך ריק כרגע, <a href='/users/%{username_lower}/preferences/about-me'>תרצה למלא אותו?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} עדיין לא הזין דבר בשדה אודות של הפרופיל שלהם</div>"
-  vip_category_name: "טרקלין"
   vip_category_description: "קטגוריה אקסקלוסיבית למשתמשים עם רמת אמון 3 או יותר."
-  meta_category_name: "מטה"
   meta_category_description: "דיון על הפורום הזה, הארגון שלו, איך שהוא פועל ואיך שניתן לשפר אותו."
-  staff_category_name: "צוות"
   staff_category_description: "קטגוריה פרטית לדיוני הצוות. נושאים נראים רק למנהלים ומנהלים ראשיים."
   assets_topic_body: "זה נושא לאכסון כל מרכיבי הפורום שבשימוש בעיצובו. אל תמחקו את זה!"
   category:
@@ -589,7 +584,6 @@ he:
     flag_sockpuppets: "If a new user (i.e., registered in the last 24 hours) who started a topic and a new user who replies in that topic are at the same IP address, both their posts will automatically be flagged as spam."
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
-    must_approve_users: "Admins must approve all users before they gain access"
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -909,36 +903,8 @@ he:
       ----
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
-  new_version_mailer:
-    subject_template: "[%{site_name}] update available"
-    text_body_template: |
-      A new version of Discourse is available:
-
-      Your version: %{installed_version}
-      New version: **%{new_version}**
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade by visiting `/admin/docker`, refreshing the page a few times, and pressing the "Upgrade Discourse" button.
-
-      - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
-    text_body_template: |
-      A new version of Discourse is available:
-
-      Your version: %{installed_version}
-      New version: **%{new_version}**
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade by visiting `/admin/docker`, refreshing the page a few times, and pressing the "Upgrade Discourse" button.
-
-      - Visit http://meta.discourse.org for news, discussion, and support for Discourse.
-
-      ### Release notes
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "There are flags that were submitted over 1 hour ago."

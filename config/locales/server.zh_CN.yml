@@ -35,14 +35,11 @@ zh_CN:
   too_many_replies:
     other: "我们非常抱歉，但是新用户被临时限制为在同一个主题只能回复 %{count} 次"
   embed:
-    start_discussion: "开始讨论"
-    continue: "继续讨论"
     more_replies:
       other: "%{count} 个更多回复"
     loading: "正在载入讨论中..."
     permalink: "永久链接"
     imported_from: "这是一个已从原 %{link} 中分离的主题"
-    in_reply_to: "回复 %{username}"
     replies:
       other: "%{count} 个回复"
   too_many_mentions:
@@ -179,11 +176,8 @@ zh_CN:
   user_profile:
     no_info_me: "<div class='missing-profile'>您的资料中，关于我部分目前还是空白，<a href='/users/%{username_lower}/preferences/about-me'>您想要写些什么吗？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
-  vip_category_name: "贵宾"
   vip_category_description: "高于信任等级3的用户参与讨论的分类。"
-  meta_category_name: "站务"
   meta_category_description: "讨论该论坛的站务、组织、如何运作和如何改善它。"
-  staff_category_name: "职员"
   staff_category_description: "职员私有的分类。只有管理员和版主才能阅览主题。"
   assets_topic_body: "这是一个永久主题，仅对职员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传您想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交您的回复添加帖子。\n4. 在您的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n另外，如果您需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   category:
@@ -565,7 +559,6 @@ zh_CN:
     flag_sockpuppets: "如果一个新用户（例如，在 24 小时内注册）开始了一个主题并且有一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、投诉等）所需等待的间隔秒数"
-    must_approve_users: "用户必须获得管理员批准方能访问"
     ga_tracking_code: "Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
     ga_domain_name: "Google 分析域名（ga.js），例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用分析追踪代码（analytics.js）追踪代码，例如：UA-12345678-9；参考 http://google.com/analytics"
@@ -888,36 +881,8 @@ zh_CN:
       ----
 
       <small>在每封您发送的邮件底部应该都有取消订阅的链接，让我们模拟一下。这封邮件发送自 中华人民共和国北京市海淀区中关村南大街公司名称，邮编 100081。如果您不希望将来继续收到我们的邮件，[点击此处取消订阅][5]。</small>
-  new_version_mailer:
-    subject_template: "[%{site_name}] 可以升级"
-    text_body_template: |
-      有新版本的 Discourse 可供升级：
-
-      您的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      - 在[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中查看更新内容。
-
-      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker) 升级，刷新这个页面几次，然后按下“升级 Discourse”按钮。
-
-      - 访问 http://meta.discourse.org 获取 Discourse 的最新资讯、讨论和支持。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
-    text_body_template: |
-      有新版本的 Discourse 可供升级：
-
-      您的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      - 在[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)查看更新内容。
-
-      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker) 升级，刷新这个页面几次，并且按下“升级 Discourse”按钮。
-
-      - 访问 http://meta.discourse.org 获取 Discourse 的最新资讯、讨论和支持。
-
-      ### 发行注记
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       other: "在过去的 %{count} 小时内有新的标记。"

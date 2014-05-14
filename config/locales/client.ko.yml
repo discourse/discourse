@@ -105,11 +105,6 @@ ko:
       other: "in {{count}}일"
     suggested_topics:
       title: "추천 토픽"
-    bookmarks:
-      not_logged_in: "죄송합니다. 북마크 된 게시물을 보려면 로그인을 해야합니다."
-      created: "이 게시물을 북마크 했습니다."
-      not_bookmarked: "이 게시물을 읽었습니다. 북마크를 클릭하세요."
-      last_read: "이것이 당신이 읽은 마지막 게시물 입니다. 북마크를 클릭하세요."
     new_topics_inserted: "{{count}}개 토픽."
     show_new_topics: "표시하려면 클릭하세요."
     preview: "미리보기"
@@ -209,7 +204,6 @@ ko:
       delete_account: "내 계정 삭제"
       deleted_yourself: "성공적으로 당신의 계정이 삭제 되었습니다."
       delete_yourself_not_allowed: "지금은 당신의 계정을 삭제할 수 없습니다. 관리자에게 당신의 계정을 삭제해달라고 연락해보세요."
-      unread_message_count: "메시지"
       messages:
         all: "전체"
         mine: "내가 보낸 메세지"
@@ -669,6 +663,7 @@ ko:
         success: "감사합니다! 사용자가 개인 메세지에 참여할 수 있도록 초대했습니다."
         error: "죄송합니다. 해당 사용자를 초대하는 도중 오류가 발생했습니다."
       invite_reply:
+        title: '초대하기'
         action: '이메일 초대'
         help: '한 번의 클릭으로 이 토픽에 답글을 추가할 수 있도록 친구에게 초대장을 보낼 수 있습니다.'
         to_topic: "당신의 친구에게 요약 이메일을 보내고 이 글에 답글을 작성할 수 있도록 링크를 제공합니다.(로그인이 필요없습니다)"
@@ -1078,6 +1073,7 @@ ko:
         title: "백업"
         menu:
           backups: "백업"
+          logs: "로그"
         none: "가능한 백업이 없습니다."
         read_only:
           enable:
@@ -1170,6 +1166,8 @@ ko:
             title: "필터"
             user_placeholder: "사용자명"
             address_placeholder: "em@il.com"
+            type_placeholder: "다이제스트, 가입..."
+            skipped_reason_placeholder: "이유"
       logs:
         title: "기록"
         action: "허용여부"

@@ -56,11 +56,6 @@ ja:
     every_two_weeks: "隔週"
     suggested_topics:
       title: "関連トピック"
-    bookmarks:
-      not_logged_in: "ポストをブックマークするには、ログインする必要があります"
-      created: "このポストをブックマークしました"
-      not_bookmarked: "このポストをブックマークする"
-      last_read: "このポストをブックマークする"
     new_topics_inserted: "新しいトピックが {{count}}個あります"
     show_new_topics: "クリックして表示。"
     preview: "プレビュー"

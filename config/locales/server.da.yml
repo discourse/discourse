@@ -28,8 +28,6 @@ da:
     one: "Beklager, men nye brugere kan kun skrive 1 svar i hvert emne til at starte med."
     other: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
   embed:
-    start_discussion: "Begynd diskussionen"
-    continue: "Fortsæt diskussionen"
     more_replies:
       one: "1 svar til"
       other: "%{count} svar til"
@@ -541,7 +539,6 @@ da:
     flag_sockpuppets: "Hvis en en bruger (dvs. én der har oprettet sig indenfor de sidste 24 timer) som starter et emne og en ny bruger, som svarer i det samme emne, kommer fra den samme IP-adresse, bliver begge deres indlæg automatisk markeret som spam."
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som normalt bruger to mellemrum i slutningen af linjen for at indikere et linjeskift"
     post_undo_action_window_mins: "Antal sekunder en bruger har mulighed for at omgøre handlinger på et indlæg (like, flag, etc.)."
-    must_approve_users: "Admins skal godkende alle brugere før de får adgang"
     ga_tracking_code: "Google analytics sporingskode, f.eks.: UA-12345678-9; se http://google.com/analytics."
     ga_domain_name: "Google analytics domænenavn, f.eks.: example.com; se http://google.com/analytics."
     enable_escaped_fragments: "Aktivér workaround som kan hjælpe ældre webcrawlers med at indeksere sitet."
@@ -811,8 +808,6 @@ da:
       ----
 
       <small>Der skal være en footer i hver e-mail du sender, som gør det muligt at afmelde sig, så lad os lave én. Denne e-mail blev sendt af Firmanavn, Algade 42, 9999 Tappernøje. [Klik her hvis du ikke ønsket at modtage flere e-mails][5].</small>
-  new_version_mailer:
-    subject_template: "[%{site_name}] Opdateringer er tilgængelige"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Opdateringer er tilgængelige"
   system_messages:

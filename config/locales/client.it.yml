@@ -127,10 +127,7 @@ it:
     suggested_topics:
       title: "Discussioni Suggerite"
     bookmarks:
-      not_logged_in: "Spiacenti! Devi essere loggato per inserire post nei preferiti."
-      created: "Hai inserito questo post nei preferiti."
-      not_bookmarked: "Hai letto questo post; clicca per inserirlo nei preferiti."
-      last_read: "Questo è l'ultimo post che hai letto; clicca per inserirlo nei preferiti."
+      not_logged_in: "devi essere connesso per aggiungere post ai segnalibri"
     new_topics_inserted: "{{count}} nuove conversazioni."
     show_new_topics: "Clicca per visualizzare."
     preview: "Anteprima"
@@ -241,7 +238,6 @@ it:
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Non potrai più tornare indietro!"
       deleted_yourself: "Il tuo account è stato eliminato con successo."
       delete_yourself_not_allowed: "Non puoi eliminare il tuo account in questo momento. Contatta un amministratore e chiedigli di cancellarlo per te."
-      unread_message_count: "Messaggi"
       messages:
         all: "Tutti"
         mine: "Miei"
@@ -1313,7 +1309,6 @@ it:
           new_name: "Nuova Combinazione Colori"
           copy_name_prefix: "Copia di"
           delete_confirm: "Eliminare questa combinazione di colori?"
-          under_construction: "AVVISO: I cambiamenti effettuati qui non avranno alcun effetto! Questa funzionalità è in costruzione!"
       email:
         title: "Email"
         settings: "Impostazioni"

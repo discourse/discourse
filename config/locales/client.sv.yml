@@ -125,11 +125,6 @@ sv:
       other: "om {{count}} dagar"
     suggested_topics:
       title: "Föreslagna trådar"
-    bookmarks:
-      not_logged_in: "Vi beklagar, du måste vara inloggad för att bokmärka inlägg."
-      created: "Du har bokmärkt detta inlägg."
-      not_bookmarked: "Du har läst detta inlägg; klicka för att bokmärka det."
-      last_read: "Detta är det sista inlägget du läst."
     new_topics_inserted: "{{count}} nya trådar."
     show_new_topics: "Klicka för att visa."
     preview: "förhandsgranska"
@@ -238,7 +233,6 @@ sv:
       delete_account_confirm: "Är du säkert på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
       deleted_yourself: "Ditt konto har framgångsrikt tagits bort."
       delete_yourself_not_allowed: "Du kan inte ta bort ditt konto just nu. Kontakta en admin och be om att få ditt konto borttaget."
-      unread_message_count: "meddelanden"
       messages:
         all: "Alla"
         mine: "Mina"

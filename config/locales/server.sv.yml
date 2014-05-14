@@ -19,7 +19,7 @@ sv:
   topics: "Trådar"
   posts: "inlägg"
   loading: "Laddar"
-  powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript påslaged'
+  powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript påslaget'
   via: "%{username} via %{site_name}"
   is_reserved: "är reserverat"
   too_many_mentions:
@@ -70,6 +70,9 @@ sv:
       trust_level_4: "trust_level_4"
       trust_level_5: "trust_level_5"
   education:
+    until_posts:
+      one: "1 inlägg"
+      other: "%{count} inlägg"
     new-topic: |
       Välkommen till %{site_name} &mdash; **tack för att du startar en ny konversation!**
 
@@ -217,6 +220,8 @@ sv:
   password_reset:
     no_token: "Tyvärr, din token har gått ut. Var god försök återställa ditt lösenord igen."
     choose_new: "Var god välj ett nytt lösenord"
+    update: 'Uppdatera Lösenord'
+    title: 'Återställ Lösenord'
     success: "Du har lyckats med att byta ditt lösenord och är nu inloggad."
     success_unapproved: "Du lyckades med att byta ditt lösenord."
     continue: "Continue to %{site_name}"
@@ -446,7 +451,6 @@ sv:
     notify_mods_when_user_blocked: "Om en användare blockeras automatiskt, skicka ett meddelande till alla moderatorer."
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
-    must_approve_users: "Admins must approve all users before they gain access"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
@@ -702,6 +706,8 @@ sv:
     digest:
       why: "Here's a brief summary of what happened on %{site_link} since we last saw you on %{last_seen_at}."
       new_activity: "New activity on your topics and posts:"
+      top_topics: "Populära inlägg"
+      other_new_topics: "Populära trådar"
       unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"

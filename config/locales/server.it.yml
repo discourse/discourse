@@ -36,8 +36,6 @@ it:
     one: "Spiacenti, ma i nuovi utenti possono inserire solo 1 risposta nello stesso topic."
     other: "Spiacenti, ma i nuovi utenti possono inserire solo %{count} risposte nello stesso topic."
   embed:
-    start_discussion: "Inizia la discussione"
-    continue: "Continua la discussione"
     more_replies:
       one: "1 ulteriore risposta"
       other: "%{count} risposte ulteriori"
@@ -170,11 +168,8 @@ it:
   user_profile:
     no_info_me: "<div class='missing-profile'>il campo About Me del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences/about-me'>vuoi compilarlo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo About Me del suo profilo.</div>"
-  vip_category_name: "Lounge"
   vip_category_description: "Una categoria esclusiva per i membri di livello 3 o superiori."
-  meta_category_name: "Meta"
   meta_category_description: "Discussioni circa questo forum, la sua organizzazione, come funziona e come migliorarlo."
-  staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni tra lo staff. I topic sono visibili solo agli amministratori e ai moderatori."
   assets_topic_body: "Questo è un topic permanente, visibile solo allo staff, utilizzabile per salvare immagini e files utilizzati nel design del forum. Non eliminarlo!\n\n\nEcco come:\n\n\n1. Rispondi a questo topic.\n2. Carica tutte le immagini che desideri usare per loghi, favicon e così via. (Usa l'icona di upload nell'editor del post o trascina direttamente le immagini.)\n3. Invia la risposta per postarla.\n4. Fai click destro sulle immagini nel tuo nuovo post per ottenere il percorso delle immagini caricate o clicca l'icona di modifica post e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni fondamentali](/admin/site_settings/category/required).\n\nInoltre, se hai bisogno di permettere upload di file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
   category:
@@ -578,7 +573,6 @@ it:
     flag_sockpuppets: "Se un nuovo utente (per esempio registrato nelle ultime 24 ore) apre un topic e un altro nuovo utente risponde ma entrambi i post provengono dallo stesso indirizzo IP, entrambi i loro post verranno contrassegnati come spam."
     traditional_markdown_linebreaks: "Usa linebreak tradizionali in Markdown, piuttosto che richiedere l'inserimento di due spazi al termine di una riga per avere un linebreak"
     post_undo_action_window_mins: "Numero di secondi durante i quali gli utenti sono autorizzati ad annullare le loro azioni su un post (segnalazioni, like, etc)"
-    must_approve_users: "Gli amministratori devono autorizzare ogni utente prima che esso abbia accesso"
     ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; per informazioni http://google.com/analytics"
     ga_domain_name: "Nome del Dominio Google analytics, esempio: miosito.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; leggi http://google.com/analytics"
@@ -892,37 +886,8 @@ it:
       ----
 
       <small>Dovrebbe esserci un footer di rimozione della registrazione su ogni email che invii, quindi simuliamone uno. Questa email è stata inviata da Nome dell'azienda, Via principale, 55, Città, Italia, 12345. Se non vuoi ricevere più email di questo tipo,  [clicca qui][5].</small>
-  new_version_mailer:
-    subject_template: "[%{site_name}] Aggiornamenti disponibili"
-    text_body_template: |
-      E' disponibile una nuova versione di Discourse:
-
-      Versione attuale: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Scopri le novità tramite il [changelog su GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Per aggiornare visita `/admin/docker` e ricarica la pagina un po' di volte finché non apparirà un tasto "Upgrade Discourse". Premilo per avviare l'aggiornamento.
-
-      - Visita http://meta.discourse.org per novità, discussioni e supporto per Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Aggiornamenti disponibili"
-    text_body_template: |
-      E' disponibile una nuova versione di Discourse:
-
-      Versione corrente: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Scopri le novità sul [Changelog GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Per aggiornare visita [%{base_url}/admin/docker](%{base_url}/admin/docker) e ricarica la pagina un po' di volte finché non apparirà un tasto "Upgrade Discourse". Premilo per avviare l'aggiornamento.
-
-
-      - Visita http://meta.discourse.org per novità, discussioni e supporto per Discourse.
-
-      ### Note di Rilascio
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Ci sono segnalazioni che sono state inviate oltre 1 ora fa"

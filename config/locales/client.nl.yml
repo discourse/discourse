@@ -127,10 +127,11 @@ nl:
     suggested_topics:
       title: "Aanbevolen topics"
     bookmarks:
-      not_logged_in: "Sorry, maar je moet ingelogd zijn berichten aan je bladwijzers toe te kunnen voegen."
-      created: "Je hebt dit bericht aan je bladwijzers toegevoegd."
-      not_bookmarked: "Je hebt dit bericht gelezen; klik om deze aan je bladwijzers toe te voegen."
-      last_read: "Dit is het laatste bericht dat je gelezen hebt, klik om aan je bladwijzers toe te voegen."
+      not_logged_in: "sorry, je moet ingelogd zijn om berichten aan je favorieten toe te kunnen voegen"
+      created: "je hebt dit bericht aan je favorieten toegevoegd"
+      not_bookmarked: "je hebt dit bericht gelezen; klik om het aan je favorieten toe te voegen"
+      last_read: "dit is het laatste bericht dat je gelezen hebt; klik om het aan je favorieten toe te voegen"
+      remove: "Verwijder favoriet"
     new_topics_inserted: "{{count}} nieuwe topics."
     show_new_topics: "Klik om te bekijken."
     preview: "voorbeeld"
@@ -213,7 +214,7 @@ nl:
       mute: "Negeer"
       edit: "Wijzig voorkeuren"
       download_archive: "download een archief van mijn berichten"
-      private_message: "Privé-bericht"
+      private_message: "Privébericht"
       private_messages: "Berichten"
       activity_stream: "Activiteit"
       preferences: "Voorkeuren"
@@ -319,7 +320,7 @@ nl:
         weekly: "wekelijks"
         bi_weekly: "elke twee weken"
       email_direct: "Ontvang een mail wanneer iemand je citeert, reageert op je bericht of je @gebruikersnaam noemt."
-      email_private_messages: "Ontvang een mail wanneer iemand je een privé-bericht heeft gestuurd."
+      email_private_messages: "Ontvang een mail wanneer iemand je een privébericht heeft gestuurd."
       email_always: "Ontvang notificaties en topicoverzichten, zelfs als je actief bent op het forum."
       other_settings: "Overige"
       categories_settings: "Categorieën"
@@ -380,7 +381,7 @@ nl:
       stream:
         posted_by: "Geplaatst door"
         sent_by: "Verzonden door"
-        private_message: "privé-bericht"
+        private_message: "privébericht"
         the_topic: "de topic"
     loading: "Laden..."
     close: "Sluit"
@@ -390,9 +391,9 @@ nl:
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
     learn_more: "leer meer..."
     year: 'jaar'
-    year_desc: 'topics die in de afgelopen 365 dagen gepost zijn'
+    year_desc: 'topics die in de afgelopen 365 dagen geplaatst zijn'
     month: 'maand'
-    month_desc: 'topics die in de afgelopen 30 dagen gepost zijn'
+    month_desc: 'topics die in de afgelopen 30 dagen geplaatst zijn'
     week: 'week'
     week_desc: 'topics die in de afgelopen 7 dagen geplaatst zijn'
     day: 'dag'
@@ -407,7 +408,7 @@ nl:
       enable: 'Samenvatting van topic'
       disable: 'Alle berichten'
     private_message_info:
-      title: "Privé-bericht"
+      title: "Privébericht"
       invite: "Nodig anderen uit..."
       remove_allowed_user: "Weet je zeker dat je {{name}} wil verwijderen uit deze priveconversatie?"
     email: 'E-mail'
@@ -417,7 +418,7 @@ nl:
     trust_level: 'Trustlevel'
     create_account:
       title: "Maak een account"
-      action: "Maak er direct een!"
+      action: "Maak er nu een!"
       invite: "Heb je nog geen account?"
       failed: "Er ging iets mis, wellicht is het e-mailadres al geregistreerd. Probeer de 'Wachtwoord vergeten'-link."
     forgot_password:
@@ -440,30 +441,30 @@ nl:
       awaiting_confirmation: "Je account is nog niet geactiveerd. Gebruik de 'Wachtwoord vergeten'-link om een nieuwe activatiemail te ontvangen."
       awaiting_approval: "Je account is nog niet goedgekeurd door iemand van de staf. Je krijgt van ons een mail wanneer dat gebeurd is."
       requires_invite: "Toegang tot dit forum is alleen op uitnodiging."
-      not_activated: "Je kan nog niet inloggen. We hebben je een activatie-mail gestuurd (naar <b>{{currentEmail}}</b>). Het kan een aantal minuten duren voor deze aan komt. Check ook je spamfolder."
+      not_activated: "Je kan nog niet inloggen. We hebben je een activatie-mail gestuurd (naar <b>{{sentTo}}</b>). Volg de instructies in die mail om je account te activeren."
       resend_activation_email: "Klik hier om de activatiemail opnieuw te ontvangen."
       sent_activation_email_again: "We hebben een nieuwe activatiemail gestuurd naar <b>{{currentEmail}}</b>. Het kan een aantal minuten duren voor deze aan komt. Check ook je spamfolder."
       google:
         title: "met Google"
-        message: "Authenticatie met Google (zorg ervoor dat je popup blocker uit staat)"
+        message: "Inloggen met een Google-account (zorg ervoor dat je popup blocker uit staat)"
       twitter:
         title: "met Twitter"
-        message: "Authenticatie met Twitter (zorg ervoor dat je popup blocker uit staat)"
+        message: "Inloggen met een Twitteraccount (zorg ervoor dat je popup blocker uit staat)"
       facebook:
         title: "met Facebook"
-        message: "Authenticatie met Facebook (zorg ervoor dat je popup blocker uit staat)"
+        message: "Inloggen met een Facebookaccount (zorg ervoor dat je popup blocker uit staat)"
       yahoo:
         title: "met Yahoo"
-        message: "Authenticatie met Yahoo (zorg ervoor dat je popup blocker uit staat)"
+        message: "Inloggen met een Yahoo-account (zorg ervoor dat je popup blocker uit staat)"
       github:
         title: "met Github"
-        message: "Authenticatie met Github (zorg ervoor dat je popup blocker uit staat)"
+        message: "Inloggen met een Githubaccount (zorg ervoor dat je popup blocker uit staat)"
     composer:
       posting_not_on_topic: "In welke topic wil je je antwoord plaatsen?"
       saving_draft_tip: "wordt opgeslagen"
       saved_draft_tip: "opgeslagen"
       saved_local_draft_tip: "lokaal opgeslagen"
-      similar_topics: "Jouw topic heeft overeenkomsten met..."
+      similar_topics: "Jouw topic lijkt op..."
       drafts_offline: "concepten offline"
       min_length:
         need_more_for_title: "Nog {{n}} tekens nodig voor de titel"
@@ -481,13 +482,13 @@ nl:
       reply: "Reageer"
       cancel: "Annuleer"
       create_topic: "Maak topic"
-      create_pm: "Maak privé-bericht"
+      create_pm: "Maak privébericht"
       title: "Of druk op Ctrl-Return"
       users_placeholder: "Voeg een lid toe"
-      title_placeholder: "Typ hier je title. Beschrijf in één korte zin waar deze discussie over gaat."
+      title_placeholder: "Schrijf hier je titel. Beschrijf in één korte zin waar deze topic over gaat."
       edit_reason_placeholder: "vanwaar de wijziging?"
       show_edit_reason: "(geef een reden)"
-      reply_placeholder: "Typ hier. Gebruik Markdown of BBCode voor de tekstopmaak. Sleep of plak een afbeelding hierin om deze te uploaden.\""
+      reply_placeholder: "Schrijf hier je bericht. Gebruik Markdown of BBCode voor de tekstopmaak. Sleep of plak een afbeelding hierin om deze te uploaden.\""
       view_new_post: "Bekijk je nieuwe bericht."
       saving: "Opslaan..."
       saved: "Opgeslagen!"
@@ -535,12 +536,13 @@ nl:
       posted: "<i title='beantwoord' class='fa fa-reply'></i> {{username}} {{link}}"
       edited: "<i title='gewijzigd' class='fa fa-pencil'></i> {{username}} {{link}}"
       liked: "<i title='leuk' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='privé-bericht'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='privé-bericht'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='privébericht'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='fa fa-envelope-o' title='privébericht'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='fa fa-sign-in'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
       moved_post: "<i title='bericht verplaatst' class='fa fa-arrow-right'></i> {{username}} verplaatst {{link}}"
       total_flagged: "aantal gemarkeerde berichten"
       linked: "<i title='gelinkt bericht' class='fa fa-arrow-left'></i> {{username}} {{link}}"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Aan jou toegekend {{link}}"
     upload_selector:
       title: "Voeg een afbeelding toe"
       title_with_attachments: "Voeg een afbeelding of bestand toe"
@@ -555,14 +557,14 @@ nl:
       uploading: "Uploaden"
       image_link: "de link waar je afbeelding naar verwijst"
     search:
-      title: "zoek naar topics, posts, leden of categoriëen"
+      title: "zoek naar topics, berichten, leden of categoriën"
       placeholder: "typ je zoekterm hier"
       no_results: "Geen resultaten gevonden."
       searching: "Zoeken..."
       prefer:
         user: "er wordt voornamelijk gezocht naar berichten van @{{username}}"
         category: "er wordt voornamelijk gezocht naar berichten in categorie {{category}}"
-    site_map: "ga naar een andere topic-lijst of categorie"
+    site_map: "ga naar een andere topiclijst of categorie"
     go_back: 'ga terug'
     not_logged_in_user: 'gebruikerspagina met samenvatting van de activiteiten en voorkeuren'
     current_user: 'ga naar je gebruikerspagina'
@@ -592,7 +594,7 @@ nl:
         posted: "Je hebt nog niet in een topic gereageerd."
         latest: "Er zijn geen populaire topics. Dat is jammer."
         hot: "Er zijn geen polulaire topics."
-        category: "Er zijn geen topics in {{category}}"
+        category: "Er zijn geen topics in {{category}}."
         top: "Er zijn geen top-topics."
       bottom:
         latest: "Er zijn geen recente topics."
@@ -608,7 +610,7 @@ nl:
       filter_to: "{{post_count}} berichten in topic"
       create: 'Maak topic'
       create_long: 'Maak een nieuw topic'
-      private_message: 'Stuur een privé-bericht'
+      private_message: 'Stuur een privébericht'
       list: 'Topics'
       new: 'nieuw topic'
       new_topics:
@@ -634,8 +636,8 @@ nl:
         one: "je hebt 1 ongelezen bericht in deze topic"
         other: "je hebt {{count}} ongelezen berichten in deze topic"
       new_posts:
-        one: "er is 1 nieuw bericht in deze topic sinds je dit voor het laatst gelezen hebt"
-        other: "er zijn {{count}} nieuwe berichten in deze topic sinds je dit voor het laatst gelezen hebt"
+        one: "er is 1 nieuw bericht in deze topic sinds je deze voor het laatst gelezen hebt"
+        other: "er zijn {{count}} nieuwe berichten in deze topic sinds je deze voor het laatst gelezen hebt"
       likes:
         one: "er is één waardering in deze topic"
         other: "er zijn {{likes}} waarderingen in deze topic"
@@ -708,6 +710,7 @@ nl:
         auto_close: "Automatisch sluiten"
         unpin: "Ontpin topic"
         pin: "Pin topic"
+        pin_globally: "Pin topic globaal vast"
         unarchive: "De-archiveer topic"
         archive: "Archiveer topic"
         invisible: "Maak onzichtbaar"
@@ -729,13 +732,15 @@ nl:
         help: 'Markeer dit bericht (privé) of zend een privébericht aan de schrijver'
         success_message: 'Je hebt dit topic gemarkeerd'
       inviting: "Uitnodigen..."
+      automatically_add_to_groups: "Voeg gebruikers na registratie automatisch aan deze groepen toe (optioneel, alleen admins kunnen dit)"
       invite_private:
-        title: 'Stuur een privé-bericht'
+        title: 'Stuur een privébericht'
         email_or_username: "E-mail of gebruikersnaam van genodigde"
         email_or_username_placeholder: "e-mailadres of gebruikersnaam"
         action: "Uitnodigen"
-        success: "Bedankt! We hebben deze persoon dit privé-bericht gestuurd."
+        success: "Bedankt! We hebben deze persoon dit privébericht gestuurd."
         error: "Sorry, er is iets misgegaan bij het uitnodigen van deze persoon"
+        group_name: "groepsnaam"
       invite_reply:
         title: 'Anderen uitnodigen'
         action: 'Mail uitnodiging'
@@ -769,6 +774,7 @@ nl:
       change_owner:
         title: "Wijzig eigenaar van berichten"
         action: "verander van eigenaar"
+        error: "Er ging iets mis bij het veranderen van eigendom van dat bericht."
         label: "Nieuwe eigenaar van berichten"
         placeholder: "gebruikersnaam van de nieuwe eigenaar"
         instructions:
@@ -792,7 +798,7 @@ nl:
       edit: "Bewerken van {{link}} door {{replyAvatar}} {{username}}"
       edit_reason: "Reden: "
       post_number: "bericht {{number}}"
-      in_reply_to: "Reageer op"
+      in_reply_to: "reageer op"
       last_edited_on: "bericht gewijzig op"
       reply_as_new_topic: "Reageer in een nieuwe topic"
       continue_discussion: "Voortzetting van de discussie {{postLink}}:"
@@ -806,6 +812,7 @@ nl:
       gap:
         one: "Eén bericht weggelaten."
         other: "{{count}} Berichten weggelaten."
+      more_links: "{{count}} meer..."
       has_replies:
         one: "Reactie"
         other: "Reacties"
@@ -840,6 +847,9 @@ nl:
             other: "Wil je ook de {{count}} directe antwoorden op dit bericht verwijderen?"
           yes_value: "Ja, verwijder deze antwoorden ook"
           no_value: "Nee, alleen dit bericht"
+        admin: "adminacties voor bericht"
+        wiki: "Maak wiki van bericht"
+        unwiki: "Bericht niet meer als wiki gebruiken"
       actions:
         flag: 'Markeer'
         clear_flags:
@@ -1025,6 +1035,15 @@ nl:
     topic_statuses:
       locked:
         help: "Deze topic is gesloten; reageren is niet meer mogelijk"
+      unpinned:
+        title: "Niet vastgepind"
+        help: "Deze topic is niet langer vastgepind en zal weer normaal in de lijst getoond worden"
+      pinned_globally:
+        title: "Globaal vastgepind"
+        help: "Deze topic is globaal vastgepind en zal bovenaan alle topiclijsten getoond worden"
+      pinned:
+        title: "Vastgepind"
+        help: "Deze topic is vastgepind en zal bovenaan de categorie getoond worden"
       archived:
         help: "Deze topic is gearchiveerd en kan niet meer gewijzigd worden"
       invisible:
@@ -1116,7 +1135,7 @@ nl:
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard laatst bijgewerkt:"
-        version: "versie"
+        version: "Versie"
         up_to_date: "Je bent up to date!"
         critical_available: "Er is een belangrijke update beschikbaar"
         updates_available: "Er zijn updates beschikbaar"
@@ -1135,7 +1154,7 @@ nl:
         blocked: 'Geblokkeerd:'
         suspended: 'Geschorst:'
         private_messages_short: "PBs"
-        private_messages_title: "Privé-berichten"
+        private_messages_title: "Privéberichten"
         reports:
           today: "Vandaag"
           yesterday: "Gisteren"
@@ -1328,7 +1347,7 @@ nl:
         logs:
           none: "Geen logs gevonden."
           filters:
-            title: "filter"
+            title: "Filter"
             user_placeholder: "gebruikersnaam"
             address_placeholder: "em@il.com"
             type_placeholder: "digest, inschijving"
@@ -1428,7 +1447,7 @@ nl:
           basic: 'Leden met Trust Level 1 (Lid)'
           regular: 'Leden met Trust Level 2 (Regulier lid)'
           leader: 'Leden met Trust Level 3 (Leider)'
-          elder: 'Leden met Trust Level 4 (Stamoudste)'
+          elder: 'Leden met Trust Level 4 (Ervaren lid)'
           admins: 'Administrators'
           moderators: 'Moderators'
           blocked: 'Geblokkeerde leden'
@@ -1471,7 +1490,7 @@ nl:
         permissions: Toestemmingen
         activity: Activiteit
         like_count: Ontvangen 'Vind ik leuk'
-        private_topics_count: Privé-topics
+        private_topics_count: Privétopics
         posts_read_count: Berichten gelezen
         post_count: Berichten gemaakt
         topics_entered: Topics bekeken
@@ -1490,6 +1509,9 @@ nl:
         cant_delete_all_posts:
           one: "Kan niet alle berichten verwijderen. Sommige berichten zijn ouder dan %{count} dag (de delete_user_max_post_age instelling)."
           other: "Kan niet alle berichten verwijderen. Sommige berichten zijn ouder dan %{count} dagen (de delete_user_max_post_age instelling)."
+        cant_delete_all_too_many_posts:
+          one: "Kan niet alle berichten verwijderen omdat de gebruiker meer dan één bericht heeft (volgens de delete_all_posts_max instelling)."
+          other: "Kan niet alle berichten verwijderen omdat de gebruiker meer dan %{count} berichten heeft (volgens de delete_all_posts_max instelling)."
         delete_confirm: "Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling is permanant!"
         delete_and_block: "<b>Ja</b>, en <b>blokkeer</b> toekomstige registraties met datzelfde e-mail- en IP-adres"
         delete_dont_block: "<b>Ja</b>, verwijder de gebruiker"
@@ -1587,6 +1609,7 @@ nl:
         latest: '<b>g</b> dan <b>l</b> Laatste'
         new: '<b>g</b> dan <b>n</b> Nieuw'
         unread: '<b>g</b> dan <b>u</b> Ongelezen'
+        starred: '<b>g</b> dan <b>f</b> Ster'
         categories: '<b>g</b> dan <b>c</b> Categorieën'
       navigation:
         title: 'Navigatie'

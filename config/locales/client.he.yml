@@ -76,16 +76,16 @@ he:
       topic: 'שתף קישור לנושא הזה'
       post: 'שתף קישור להודעה מספר #%{postNumber}'
       close: 'סגור'
-      twitter: 'שתף קישור זה בטוויטר'
-      facebook: 'שתף קישור זה בפייסבוק'
-      google+: 'שתף קישור זה בגוגל+'
-      email: 'שלח קישור זה בדוא"ל'
-    edit: 'ערוך את הכותרת והקטגוריה של נושא זה'
-    not_implemented: "האפשרות הזו עדיין לא מומשה, סליחה!"
+      twitter: 'שתף קישור בטוויטר'
+      facebook: 'שתף קישור בפייסבוק'
+      google+: 'שתף קישור בגוגל+'
+      email: 'שלח קישור בדוא"ל'
+    edit: 'ערוך את הכותרת והקטגוריה של הנושא'
+    not_implemented: "סליחה, האפשרות הזו עדיין לא מומשה!"
     no_value: "לא"
     yes_value: "כן"
     of_value: "מתוך"
-    generic_error: "סליחה, ארעה שגיאה"
+    generic_error: "סליחה, ארעה שגיאה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
     log_in: "התחבר"
     age: "גיל"
@@ -127,16 +127,17 @@ he:
     suggested_topics:
       title: "נושאים מוצעים"
     bookmarks:
-      not_logged_in: "סליחה, עליך להיות מחובר כדי להעדיף מודעה"
-      created: "כבר העדפת מודעה זו"
-      not_bookmarked: "קראת הודעה זו, לחץ להעדפה"
-      last_read: "זו ההודעה האחרונה שקראת, לחץ להעדפה"
+      not_logged_in: "סליחה, עליך להיות מחובר כדי להוסיף פוסט למועדפים"
+      created: "סימנת הודעה זו כמועדפת"
+      not_bookmarked: "קראת הודעה זו, לחץ להוספה למועדפים"
+      last_read: "זו ההודעה האחרונה שקראת, לחץ להוספה למועדפים"
+      remove: "הסר מהמועדפים"
     new_topics_inserted: "{{count}} נושאים חדשים."
     show_new_topics: "לחץ כדי להציג."
     preview: "תצוגה מקדימה"
     cancel: "ביטול"
     save: "שמור שינויים"
-    saving: "שומר"
+    saving: "שומר..."
     saved: "נשמר!"
     upload: "העלה"
     uploading: "מעלה..."
@@ -161,6 +162,7 @@ he:
       sent_by_user: "נשלח על ידי <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "נשלח על <a href='{{userUrl}}'>ידך</a>"
     groups:
+      visible: "הקבוצה זמינה לכל המשתמשים"
       title:
         one: "קבוצה"
         other: "קבוצות"
@@ -213,7 +215,7 @@ he:
       edit: "ערוך העדפות"
       download_archive: "הורד ארכיון של ההודעות שלי"
       private_message: "הודעה פרטית"
-      private_messages: "הודעות פרטיות"
+      private_messages: "הודעות"
       activity_stream: "פעילות"
       preferences: "העדפות"
       bio: "אודותיי"
@@ -240,7 +242,6 @@ he:
       delete_account_confirm: "אתה בטוח שברצונך למחוק את החשבון? לא ניתן לבטל פעולה זו!"
       deleted_yourself: "חשבונך נמחק בהצלחה."
       delete_yourself_not_allowed: "אתה לא יכול למחוק את חשבונך כרגע. צור קשר עם מנהל כדי שימחק אותו בשבילך."
-      unread_message_count: "הודעות"
       messages:
         all: "הכל"
         mine: "שלי"
@@ -261,7 +262,7 @@ he:
         invalid: "שם המשתמש אינו תקין. עליו לכלול רק אותיות ומספרים."
       change_email:
         title: "שנה דואר אלקטרוני"
-        taken: "סליחה, הכתובת הזו אינה זמינה"
+        taken: "סליחה, הכתובת הזו אינה זמינה."
         error: "הייתה שגיאה בשינוי כתובת הדואר האלקטרוני שלך. אולי היא תפוסה?"
         success: "שלחנו דואר אלקטרוני לכתובת הדואר הזו. בבקשה עקוב אחרי הוראות האישור שם."
       change_avatar:
@@ -283,8 +284,8 @@ he:
         frequency: "נשלח לך דואר אלקטרוני רק אם לא ראינו אותך לאחרונה ועדיין לא ראית את מה שאנחנו רוצים לשלוח"
       name:
         title: "שם"
-        instructions: "הגירסה המלאה של השם, מוצג בפומבי"
-        too_short: "השם שלך קצר מידי"
+        instructions: "הגירסה המלאה של השם, מוצג בפומבי."
+        too_short: "השם שלך קצר מידי."
         ok: "השם נראה טוב."
       username:
         title: "שם משתמש"
@@ -349,7 +350,7 @@ he:
         none: "לא נמצאו הזמנות."
         truncated: "מראה את  {{count}} ההזמנות הראשונות."
         redeemed: "הזמנות נוצלו"
-        redeemed_at: "נוצלו ב"
+        redeemed_at: "נפדו ב"
         pending: "הזמנות ממתינות"
         topics_entered: "נושאים נצפו"
         posts_read_count: "הודעות נקראו"
@@ -357,7 +358,7 @@ he:
         rescind: "הסר הזמנה"
         rescinded: "הזמנה הוסרה"
         time_read: "זמן קריאה"
-        days_visited: "Days Visited"
+        days_visited: "מספר ימי ביקור"
         account_age_days: "גיל החשבון בימים"
         create: "הזמן חברים לפורום הזה"
       password:
@@ -368,6 +369,8 @@ he:
         instructions: "יש להכיל לפחות %{count} תווים."
       ip_address:
         title: "כתובת IP אחרונה"
+      registration_ip_address:
+        title: "כתובת IP בהרשמה"
       avatar:
         title: "אוואטר"
       title:
@@ -422,6 +425,8 @@ he:
       action: "שכחתי את הסיסמה שלי"
       invite: "הזן שם משתמש או כתובת דואר אלקטרוני ונשלח לך קישור לאיפוס סיסמה"
       reset: "איפוס סיסמה"
+      complete_username: "אם קיים חשבון שמתאים לשם המשתמש <b>%{username}</b>, אתה אמור לקבל בקרוב מייל עם הוראות לאיפוס הסיסמא. "
+      complete_email: "אם החשבון מתאים ל <b>%{email}</b>, אתה אמור לקבל בקרוב מעעל עם הוראות לאיפוס הסיסמא."
     login:
       title: "התחבר"
       username: "התחברות"
@@ -442,17 +447,17 @@ he:
         title: "עם גוגל"
         message: "התחברות עם גוגל (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
       twitter:
-        title: "עם טוויטר"
-        message: "התחברות עם טוויטר (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
+        title: "עם Twitter"
+        message: "התחברות עם Twitter (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
       facebook:
-        title: "עם פייסבוק"
-        message: "התחברות עם פייסבוק (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
+        title: "עם Facebook"
+        message: "התחברות עם Facebook (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
       yahoo:
-        title: "עם יאהו"
+        title: "עם Yahoo"
         message: "התחברות עם יאהו (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
       github:
-        title: "עם גיטהאב"
-        message: "התחברות עם גיטהאב (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
+        title: "עם GitHub"
+        message: "התחברות עם GitHub (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
     composer:
       posting_not_on_topic: "לאיזה נושא רצית להגיב?"
       saving_draft_tip: "שומר"
@@ -536,6 +541,7 @@ he:
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} moved {{link}}"
       total_flagged: "סך הכל נושאים מדוגללים"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i>{{link}} הוענק לך"
     upload_selector:
       title: "הוספת תמונה"
       title_with_attachments: "הוספת תמונה או קובץ"
@@ -546,6 +552,7 @@ he:
       local_tip: "לחץ לבחירת תמונה מהמכשיר שלך"
       local_tip_with_attachments: "לחץ לבחירת תמונה או קובץ מהמכשיר שלך (סיומות מותרות: {{authorized_extensions}})"
       hint: "(ניתן גם לגרור לעורך להעלאה)"
+      hint_for_supported_browsers: "(אתה יכול גם לעשות drag and drop או להדביק תמונות אל תוך העורך כדי להעלות אותן)"
       uploading: "מעלה"
       image_link: "קישור לתמונה יצביע ל"
     search:
@@ -724,6 +731,7 @@ he:
         help: 'דגלל נושא זה באופן פרטי לתשומת לב או שלח התרעה פרטית עליו'
         success_message: 'דגללת נושא זה בהצלחה.'
       inviting: "מזמין..."
+      automatically_add_to_groups: "בסיום ההרשמה, הוסף משתמש לקבוצות בצורה אוטומטית (אופציונלי, רק ל-admin)"
       invite_private:
         title: 'הזמן להודעה פרטית'
         email_or_username: "כתובת דואר אלקטרוני או שם משתמש של המוזמן"
@@ -731,7 +739,9 @@ he:
         action: "הזמן"
         success: "תודה! הזמנו את אותו משתמש להשתתף בהודעה פרטית זו."
         error: "סליחה, הייתה שגיאה בהזמנת משתמש זה."
+        group_name: "שם הקבוצה"
       invite_reply:
+        title: 'הזמן'
         action: 'הזמנת דואר אלקטרוני'
         help: 'שלח הזמנה לחברים כדי שהם יוכלו להגיב לנושא בלחיצה אחת'
         to_topic: "אנחנו נשלח דואר אלקטרוני קצר שייתן לחבר שלך להגיב מיידית לנושא הזה על ידי לחיצה על קישור, ללא צורך בהתחברות."
@@ -788,6 +798,7 @@ he:
       edit: "עורך את {{link}} מאת {{replyAvatar}} {{username}}"
       edit_reason: "סיבה: "
       post_number: "הודעה {{number}}"
+      in_reply_to: "השב ל"
       last_edited_on: "הודעה נערכה לאחרונה ב"
       reply_as_new_topic: "הגב כנושא חדש"
       continue_discussion: "ממשיך את הדיון מ {{postLink}}:"
@@ -801,6 +812,7 @@ he:
       gap:
         one: "הודעה אחת נסתרת"
         other: "{{count}} הודעות נסתרות"
+      more_links: "עוד {{count}}..."
       has_replies:
         one: "תגובה"
         other: "תגובות"
@@ -1290,6 +1302,19 @@ he:
         delete: "מחק"
         delete_confirm: "מחק את ההתאמה הזו?"
         about: "התאמות של האתר מאפשרות לך לשנות stylesheets וכותרות באתר. בחר או אסף אחד כדי להתחיל לערוך."
+        color: "צבע"
+        opacity: "טשטוש"
+        copy: "העתק"
+        css_html:
+          title: "CSS, HTML"
+          long_title: "התאמת CSS ו-HTML"
+        colors:
+          title: "צבעים"
+          long_title: "סכמת צבעים"
+          about: "סכמת צבעים מאפשר לך לשנות את הצבעים שבשימוש האתר ללא כתיבת קוד CSS. בחר או הוסף אחד להתחיל."
+          new_name: "סכמת צבעים חדשה"
+          copy_name_prefix: "העתק של"
+          delete_confirm: "מחק את סכמת הצבעים הזאת?"
       email:
         title: "דואר אלקטרוני"
         settings: "הגדרות"
@@ -1553,6 +1578,7 @@ he:
         new_badge: תג חדש
         new: חדש
         name: שם
+        badge: תג
         display_name: שם תצוגה
         description: תיאור
         badge_type: סוג תג
@@ -1569,6 +1595,7 @@ he:
         grant: הענק
         no_user_badges: "ל%{name} לא הוענקו תגים."
         no_badges: אין תגים שניתן להעניק.
+        allow_title: אפשר לתג להיות בשימוש ככותרת.
     lightbox:
       download: "הורד"
     keyboard_shortcuts_help:
@@ -1610,12 +1637,17 @@ he:
         mark_tracking: '<b>m</b> then <b>t</b> סמן נושא כעוקב'
         mark_watching: '<b>m</b> then <b>w</b> סמן נושא כצופה'
     badges:
+      title: תגים
       badge_count:
         one: "תג אחד"
         other: "%{count} תגים"
       more_badges:
         one: "עוד +1"
         other: "עוד +%{count}"
+      granted:
+        one: "1 הוענק"
+        other: "%{count} הוענקו"
+      select_badge_for_title: בחר תג שיופיע בכותרת הפרופיל שלך
       example_badge:
         name: תג לדוגמה
         description: זה תג כללי לדוגמה

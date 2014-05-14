@@ -29,8 +29,6 @@ uk:
   not_logged_in: "You need to be logged in to do that."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
   embed:
-    start_discussion: "Розпочати обговорення"
-    continue: "Продовжити обговорення"
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
@@ -159,11 +157,8 @@ uk:
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
-  vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
-  meta_category_name: "Мета"
   meta_category_description: "Обговорення цього форуму, його організації, того, як він працює, і того, як ми можемо його покращити."
-  staff_category_name: "Staff"
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
   category:
     topic_prefix: "Про категорію %{category}"
@@ -487,7 +482,6 @@ uk:
     flag_sockpuppets: "If a new user (i.e., registered in the last 24 hours) who started a topic and a new user who replies in that topic are at the same IP address, both their posts will automatically be flagged as spam."
     traditional_markdown_linebreaks: "Використовувати звичайний розрив рядка в Markdown, який вимагає двох пробілів в кінці для розриву рядка"
     post_undo_action_window_mins: "Кількість секунд, протягом яких користувачам дозволено скасувати дію над дописом (вподобання, скаргу тощо)"
-    must_approve_users: "Адмін має схвалити користувача перед тим, як той отримає доступ"
     ga_tracking_code: "Код відстеження Google аналітики (ga.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_domain_name: "Доменне ім'я Google аналітики (ga.js), напр.: mysite.com; див. http://google.com/analytics"
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
@@ -779,8 +773,6 @@ uk:
       ----
 
       <small>В кожному листі, який Ви надсилаєте, має бути нижній колонтитул з можливістю відписатися від розсилки, тому змакетуймо його. Цього листа було надіслано ТзОВ Паралелепіпедмоторз, вул. Центральна, 55, Всюдигород, Україна 12345. Якщо Ви бажаєте відмовитися від наших наступних листів, [натисніть, щоб відписатися][5].</small>
-  new_version_mailer:
-    subject_template: "[%{site_name}] update available"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
   system_messages:

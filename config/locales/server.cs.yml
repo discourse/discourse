@@ -33,8 +33,6 @@ cs:
     few: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědi v tématu."
     other: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědí v tématu."
   embed:
-    start_discussion: "Zahájit diskuzi"
-    continue: "Pokračovat v diskuzi"
     more_replies:
       one: "1 další odpověď"
       few: "%{count} další odpověďi"
@@ -174,11 +172,8 @@ cs:
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
-  vip_category_name: "Salónek"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
-  meta_category_name: "Meta"
   meta_category_description: "Diskuze o fóru, organizaci, jak funguje a jak ho můžeme zlepšit."
-  staff_category_name: "Štáb"
   staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
   category:
     topic_prefix: "Definice kategorie pro %{category}"
@@ -602,7 +597,6 @@ cs:
     flag_sockpuppets: "If a new user (i.e., registered in the last 24 hours) who started a topic and a new user who replies in that topic are at the same IP address, both their posts will automatically be flagged as spam."
     traditional_markdown_linebreaks: "Používat tradiční zalamování řádků v Markdownu, jinak vyžaduje dvě mezery pro zalomení"
     post_undo_action_window_mins: "Počet sekund, během kterých smí uživatelé vrátit akce na příspěvcích (líbí se, nahlášení, atd.)"
-    must_approve_users: "Administrátoři musí schválit všechny uživatele, než získají přístup"
     ga_tracking_code: "Kód pro sledování přes 'Google analytics', např. UA-12345678-9; viz http://google.com/analytics"
     ga_domain_name: "Doménové jméno pro Google analytics, např. mysite.com; viz http://google.com/analytics"
     ga_universal_tracking_code: "Kód Google Universal Analytics (analytics.js); například UA–12345678-9; více na http://google.com/analytics"
@@ -898,8 +892,6 @@ cs:
       ----
 
       <small>V každém emailu, který zasíláte, by měl být odkaz na odhlášení příjmu emailů, tak tady je taky takový. Tento email vám zaslala Velká Společnost s.r.o., Hlavní ul. 1337, Kotěhůlky, Česká republika. Pokud již od nás nechcete dostávat další emaily, [klikněte sem pro odhlášení][5].</small>
-  new_version_mailer:
-    subject_template: "[%{site_name}] Updates Are Available"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Updates Are Available"
   system_messages:

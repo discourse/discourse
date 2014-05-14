@@ -128,9 +128,6 @@ es:
       title: "Temas sugeridos"
     bookmarks:
       not_logged_in: "Lo sentimos, debes haber ingresado para marcar publicaciones."
-      created: "Has marcado esta publicación como favorita."
-      not_bookmarked: "Has leído esta publicación, haz click para marcarla como favorita."
-      last_read: "Esta es la última publicación que has leído."
     new_topics_inserted: "{{count}} nuevos temas."
     show_new_topics: "Click para mostrar."
     preview: "vista previa"
@@ -240,7 +237,6 @@ es:
       delete_account_confirm: "Estás seguro que quieres borrar permanentemente tu cuenta? Esta acción no puede ser deshecho!"
       deleted_yourself: "Tu cuenta ha sido borrado con exito."
       delete_yourself_not_allowed: "No puedes borrar tu cuenta en este momento. Contacta un administrador para borrar tu cuenta en tu nombre."
-      unread_message_count: "Mensajes"
       messages:
         all: "Todos"
         mine: "Míos"

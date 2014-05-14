@@ -126,10 +126,11 @@ de:
     suggested_topics:
       title: "Vorgeschlagene Themen"
     bookmarks:
-      not_logged_in: "Entschuldige, du musst angemeldet sein, um Lesezeichen zu setzen."
-      created: "Du hast ein Lesezeichen zu diesem Beitrag hinzugefügt."
-      not_bookmarked: "Du hast diesen Beitrag gelesen. Klicke, um ein Lesezeichen zu setzen."
-      last_read: "Dies ist der letzte Beitrag, den Du gelesen hast."
+      not_logged_in: "Entschuldigung, du musst eingeloggt sein, um ein Lesezeichen zu setzen"
+      created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
+      not_bookmarked: "du hast diesen Beitrag gelesen. Klicke, um ein Lesezeichen zu setzen"
+      last_read: "dies ist der letzte Beitrag, den Du gelesen hast. Klicke, um ein Lesezeichen zu setzen"
+      remove: "Entferne Lesezeichen"
     new_topics_inserted: "{{count}} neue Beiträge."
     show_new_topics: "Klicken zum Anzeigen."
     preview: "Vorschau"
@@ -160,6 +161,7 @@ de:
       sent_by_user: "Gesendet von <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Gesendet von <a href='{{userUrl}}'>dir</a>"
     groups:
+      visible: "Gruppe ist für alle Benutzer sichtbar "
       title:
         one: "Gruppe"
         other: "Gruppen"
@@ -239,7 +241,6 @@ de:
       delete_account_confirm: "Bist du sicher, dass du dein Nutzerkonto permanent löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Nutzerkonto wurde erfolgreich gelöscht."
       delete_yourself_not_allowed: "Du kannst im Moment dein Nutzerkonto nicht löschen. Kontaktiere einen Administrator dein Nutzerkonto für dich zu löschen."
-      unread_message_count: "Nachrichten"
       messages:
         all: "Alle"
         mine: "Meine"
@@ -367,6 +368,8 @@ de:
         instructions: "Muss mindestens %{count} Zeichen haben."
       ip_address:
         title: "Letzte IP-Adresse"
+      registration_ip_address:
+        title: "Registrierungs IP-Adresse"
       avatar:
         title: "Avatar"
       title:
@@ -729,7 +732,9 @@ de:
         action: "Einladen"
         success: "Danke! Wir haben den Benutzer eingeladen, an diesem privaten Gespräch teilzunehmen."
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
+        group_name: "Gruppenname"
       invite_reply:
+        title: 'Einladung'
         action: 'Einladung senden'
         help: 'Sendet Freunden eine Einladung, so dass mit einem Klick auf dieses Thema antworten können.'
         to_topic: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht direkt auf dieses Thema zu antworten. Hierfür ist kein Login erforderlich."
@@ -737,6 +742,7 @@ de:
         email_placeholder: 'Mailadresse'
         success: "Danke! Wir haben deine Einladung an <b>{{email}}</b> verschickt. Wir lassen Dich wissen, sobald die Einladung eingelöst wird. In deinem Nutzerprofil kannst Du alle deine Einladungen überwachen."
         error: "Entschuldige, wir konnten diese Person nicht einladen. Vielleicht ist sie schon ein Nutzer?"
+      login_reply: 'Melde dich an um zu antworten'
       filters:
         n_posts:
           one: "einen Beitrag"
@@ -798,6 +804,7 @@ de:
       gap:
         one: "1 Beitrag ausgelassen"
         other: "{{count}} Beiträge ausgelassen"
+      more_links: "{{count}} mehr..."
       has_replies:
         one: "Antwort"
         other: "Antworten"
@@ -1287,10 +1294,13 @@ de:
         delete: "Löschen"
         delete_confirm: "Diese Anpassung löschen?"
         about: "Seite personalisieren erlaubt dir das Anpassen der Stilvorlagen und des Kopfbereich der Seite. Wähle oder füge eine Anpassung hinzu um mit dem Editieren zu beginnen."
+        opacity: "Transparenz"
         copy: "Kopieren"
         css_html:
           title: "CSS, HTML"
           long_title: "CSS und HTML Anpassungen"
+        colors:
+          long_title: "Farb-Schemata"
       email:
         title: "Mailprotokoll"
         settings: "Einstellungen"

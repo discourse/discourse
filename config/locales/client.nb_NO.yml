@@ -19,6 +19,56 @@ nb_NO:
             kb: kB
             mb: MB
             tb: TB
+    dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one: "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one: "1s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one: "1m"
+          other: "%{count}m"
+        about_x_hours:
+          one: "1t"
+          other: "%{count}t"
+        x_days:
+          one: "1d"
+          other: "%{count}d"
+        about_x_years:
+          one: "1år"
+          other: "%{count}år"
+        over_x_years:
+          one: "> 1år"
+          other: "> %{count}år"
+        almost_x_years:
+          one: "1år"
+          other: "%{count}år"
+      medium:
+        x_minutes:
+          one: "1 minutt"
+          other: "%{count} minutter"
+        x_hours:
+          one: "1 time"
+          other: "%{count} timer"
+        x_days:
+          one: "1 dag"
+          other: "%{count} dager"
+      medium_with_ago:
+        x_minutes:
+          one: "1 minutt siden"
+          other: "%{count} minutter siden"
+        x_hours:
+          one: "1 time siden"
+          other: "%{count} timer siden"
+        x_days:
+          one: "1 dag siden"
+          other: "%{count} dager siden"
     share:
       topic: 'del en link til dette emnet'
       post: 'del en link til dette innlegget'
@@ -33,12 +83,14 @@ nb_NO:
     yes_value: "Ja"
     of_value: "av"
     generic_error: "Beklager, det har oppstått en feil."
+    generic_error_with_reason: "Det oppstod et problem: %{error}"
     age: "Alder"
     admin_title: "Admin"
     flags_title: "Flagg"
     show_more: "vis mer"
     links: Links
     faq: "FAQ"
+    privacy_policy: "Personvern"
     you: "du"
     or: "eller"
     now: "akkurat nå"
@@ -57,11 +109,6 @@ nb_NO:
       other: "på {{count}} dager"
     suggested_topics:
       title: "Anbefalte Emner"
-    bookmarks:
-      not_logged_in: "Beklager, du må være innlogget for å bokmerke innlegg."
-      created: "Du har bokmerket dette innlegget."
-      not_bookmarked: "Du har lest dette innlegget; klikk for å bokmerke det"
-      last_read: "Dette er det siste innlegget du har lest."
     new_topics_inserted: "{{count}} nye innlegg."
     show_new_topics: "Klikk for å vise."
     preview: "forhåndsvisning"
@@ -216,6 +263,8 @@ nb_NO:
         title: "Siste IP Addresse"
       avatar:
         title: "Profilbilde"
+      title:
+        title: "Tittel"
       filters:
         all: "Alle"
       stream:
@@ -811,6 +860,13 @@ nb_NO:
         title: "Markeringer"
         old: "Gamle"
         active: "Aktive"
+        agree_hide: "Bekreft (gjem post + send PM)"
+        agree_hide_title: "Gjem denne posten og automatisk send en privat melding til brukeren med en forespørsel om gjøre endringer."
+        defer: "Utsett"
+        defer_title: "Ingen handling er nødvendig. Utsett all handling på dette flagget til en senere dato, eller aldri."
+        delete_post: "Slett Post"
+        delete_post_title: "Slett post; hvis første post, slett hele emnet"
+        disagree_unhide: "Uenig ("
         flagged_by: "Markert av"
         error: "Noe gikk galt"
         view_message: "Svar"
@@ -845,6 +901,24 @@ nb_NO:
         delete: "Slett"
         delete_confirm: "Slett denne tilpasningen?"
         about: "Sidetilpasning lar deg endre silark og headers på siden. Velg eller legg til en for å starte redigeringen."
+      email:
+        title: "Email"
+        settings: "Instillinger"
+        sent_at: "Sendt"
+        email_type: "Email Type"
+        to_address: "Til Addresse"
+        test_email_address: "email addresse å teste"
+        send_test: "send test email"
+        sent_test: "sendt!"
+        delivery_method: "Leveringsmetode"
+        preview_digest: "Forhåndsvis Oppsummering"
+        preview_digest_desc: "Dette er et verktøy for å forhåndsvise innholdet i oppsummeringsmail sendt fra ditt forum."
+        refresh: "Refresh"
+        format: "Format"
+        html: "html"
+        text: "tekst"
+        last_seen_user: "Sist Sett Bruker:"
+        reply_key: "Svar ID"
       impersonate:
         title: "Gi deg ut for å være en annen Bruker"
         username_or_email: "Brukernavn eller Email til bruker"
@@ -887,6 +961,8 @@ nb_NO:
         moderator: "Moderator?"
         admin: "Admin?"
         show_admin_profile: "Admin"
+        edit_title: "Rediger Tittel"
+        save_title: "Lagre Tittel"
         refresh_browsers: "Tving nettleser refresh"
         show_public_profile: "Vis Offentlig Profil"
         impersonate: 'Gi deg ut for å være en annen'
@@ -894,6 +970,8 @@ nb_NO:
         grant_admin: 'Innfri Admin'
         revoke_moderation: 'Tilbakedra Moderering'
         grant_moderation: 'Innfri Moderering'
+        unblock: 'Opphev blokkering'
+        block: 'Blokker'
         reputation: Rykte
         permissions: Tillatelser
         activity: Aktivitet
@@ -918,6 +996,10 @@ nb_NO:
         activate_failed: "Det oppstod et problem ved aktiveringen av den brukeren."
         deactivate_account: "Deaktiver Konto"
         deactivate_failed: "Det oppstod et problem ved deaktiveringen av den brukeren."
+        unblock_failed: 'Det oppstod et problem med å oppheve blokkeringen av brukeren.'
+        block_failed: 'Det oppstod et problem med blokkeringen av brukeren.'
+        deactivate_explanation: "En deaktivert bruker må re-validere deres email."
+        block_explanation: "En blokkert bruker kan ikke poste eller starte emner."
       site_content:
         none: "Velg et type innhold du vil begynne å redigere."
         title: 'Innhold'
@@ -926,3 +1008,4 @@ nb_NO:
         show_overriden: 'Bare vis overstyrte'
         title: 'Innstillinger'
         reset: 'tilbakestill til standard'
+        none: 'intet'

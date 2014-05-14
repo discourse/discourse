@@ -146,11 +146,6 @@ cs:
       other: "za {{count}} dní"
     suggested_topics:
       title: "Doporučená témata"
-    bookmarks:
-      not_logged_in: "Pro přidání záložky se musíte přihlásit."
-      created: "Záložka byla přidána."
-      not_bookmarked: "Klikněte pro přidání záložky."
-      last_read: "Tohle je váš poslední přečtený příspěvek."
     new_topics_inserted: "{{count}} nových témat."
     show_new_topics: "Klikněte pro zobrazení."
     preview: "ukázka"
@@ -263,7 +258,6 @@ cs:
       delete_account_confirm: "Jste si jisti, že chcete trvale odstranit svůj účet? Tuto akci nelze vrátit zpět!"
       deleted_yourself: "Váš účet byl úspěšně odstraněn."
       delete_yourself_not_allowed: "Váš účet teď nejde odstranit. Obraťte se na správce aby váš účet smazal za vás."
-      unread_message_count: "Zprávy"
       messages:
         all: "Všechny"
         mine: "Moje"

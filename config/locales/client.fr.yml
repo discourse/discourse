@@ -127,10 +127,11 @@ fr:
     suggested_topics:
       title: "Sujets similaires"
     bookmarks:
-      not_logged_in: "Désolé vous devez être connecté pour placer ce message dans vos signets."
-      created: "Vous avez placé ce message dans vos signets."
-      not_bookmarked: "Vous avez lu ce message; Cliquez pour le placer dans vos signets."
-      last_read: "Voici le dernier message que vous avez lu; cliquez pour l'ajouter à vos signets."
+      not_logged_in: "Désolé vous devez être connecté pour placer des message dans vos signets"
+      created: "Vous avez placé ce message dans vos signets"
+      not_bookmarked: "Vous avez lu ce message; cliquez pour le placer dans vos signets"
+      last_read: "Voici le dernier message que vous avez lu; cliquez pour le placer dans vos signets"
+      remove: "Supprimer le signet"
     new_topics_inserted: "{{count}} nouveaux sujets."
     show_new_topics: "Cliquez pour afficher."
     preview: "prévisualiser"
@@ -731,6 +732,7 @@ fr:
         help: 'signaler secrètement ce sujet pour attirer l''attention ou envoyer une notification privée à son propos.'
         success_message: 'Vous avez signalé ce sujet avec succès.'
       inviting: "Inviter..."
+      automatically_add_to_groups: "Durant l'enregistrement, ajoute automatiquement l'utilisateur à des groupes. (optionnel, admin uniquement)"
       invite_private:
         title: 'Inviter au message privé'
         email_or_username: "Adresse email ou @pseudo de l'invité"
@@ -738,6 +740,7 @@ fr:
         action: "Inviter"
         success: "Merci ! Vous avez invité cet utilisateur à participer à ce message privé."
         error: "Désolé, il y a eu une erreur lors de l'invitation de cet utilisateur."
+        group_name: "nom du groupe"
       invite_reply:
         title: 'Inviter'
         action: 'Envoyer l''invitation'
@@ -810,6 +813,7 @@ fr:
       gap:
         one: "1 message caché"
         other: "{{count}} messages cachés"
+      more_links: "{{count}} de plus..."
       has_replies:
         one: "Réponse"
         other: "Réponses"
@@ -844,6 +848,8 @@ fr:
             other: "Voulez-vous aussi supprimer les  {{count}} réponse qui suivent directement ce message ?"
           yes_value: "Oui, supprimer les réponses égalements"
           no_value: "Non, juste ce message"
+        wiki: "Activer le Wiki pour le message"
+        unwiki: "Désactiver le wiki pour le message"
       actions:
         flag: 'Signaler'
         clear_flags:
@@ -1047,7 +1053,7 @@ fr:
     original_post: "Message original"
     views: "Vues"
     replies: "Réponses"
-    views_long: "ce sujet a été vue {{number}} fois"
+    views_long: "ce sujet a été vu {{number}} fois"
     activity: "Activité"
     likes: "J'aime"
     likes_long: "il y a {{number}} j'aime dans ce sujet"
@@ -1161,7 +1167,7 @@ fr:
           view_table: "Tableau"
           view_chart: "Graphique à barre"
       commits:
-        latest_changes: "derniers changements: merci de mettre à jour régulièrement !"
+        latest_changes: "Derniers changements : mettez à jour régulièrement !"
         by: "par"
       flags:
         title: "Signalements"
@@ -1312,7 +1318,6 @@ fr:
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleurs ?"
-          under_construction: "NOTE: Les modifications faites ici n'ont aucun impact ! Cette fonctionnalité est en cours de construction !"
       email:
         title: "Email"
         settings: "Paramètres"
