@@ -240,14 +240,15 @@ class Vanilla < Thor
       @discussions.each do |discussion|
         next unless topic_id = discussion[:new_id]
 
-        # HACK to make sure bumped_at is properly set
+        # HACK: make sure both bumped_at and last_posted_at are properly set
 
         sql = <<-SQL
           UPDATE topics
           SET    views = :views,
                  closed = :closed,
                  pinned_at = :pinned_at,
-                 bumped_at = (SELECT created_at FROM posts WHERE topic_id = :topic_id ORDER BY created_at DESC LIMIT 1)
+                 last_posted_at = (SELECT MAX(created_at) FROM posts WHERE topic_id = :topic_id)
+                 bumped_at = (SELECT MAX(created_at) FROM posts WHERE topic_id = :topic_id)
           WHERE id = :topic_id
         SQL
 
