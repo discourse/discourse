@@ -20,7 +20,7 @@ class Demon::Sidekiq < Demon::Base
     STDERR.puts "Loading Sidekiq in process id #{Process.pid}"
     require 'sidekiq/cli'
     cli = Sidekiq::CLI.instance
-    cli.parse([])
+    cli.parse(["-c", GlobalSetting.sidekiq_workers.to_s])
 
     load Rails.root + "config/initializers/sidekiq.rb"
     cli.run
