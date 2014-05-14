@@ -37,20 +37,22 @@ var PosterNameComponent = Em.Component.extend({
         if (Em.isEmpty(primaryGroupName)) {
           buffer.push(title);
         } else {
-          buffer.push("<a href='#' class='user-group'>" + title + "</a>");
+          buffer.push("<a href='/groups/" + post.get('primary_group_name') + "' class='user-group'>" + title + "</a>");
         }
         buffer.push("</span>");
       }
 
-      PosterNameComponent.trigger('renderedName', buffer);
+      PosterNameComponent.trigger('renderedName', buffer, post);
     }
   },
 
   click: function(e) {
-    var $target = $(e.target);
-    if ($target.hasClass('user-group')) {
-      Discourse.URL.routeTo("/groups/" + this.get('post.primary_group_name'));
-    } else {
+    var $target = $(e.target),
+        href = $target.attr('href');
+
+    if (!Em.isEmpty(href) && href !== '#') {
+      return true;
+    } else  {
       this.sendAction('expandAction', this.get('post'));
     }
     return false;
