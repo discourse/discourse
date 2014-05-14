@@ -11,22 +11,15 @@ if defined?(Bundler)
   Bundler.require(*Rails.groups(assets: %w(development test profile)))
 end
 
-# PATCH DB configuration
-class Rails::Application::Configuration
-
-  def database_configuration_with_global_config
-    if Rails.env == "production"
-      GlobalSetting.database_config
-    else
-      database_configuration_without_global_config
-    end
-  end
-
-  alias_method_chain :database_configuration, :global_config
-end
-
 module Discourse
   class Application < Rails::Application
+    def config.database_configuration
+      if Rails.env == "production"
+        GlobalSetting.database_config
+      else
+        super
+      end
+    end
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
