@@ -8,6 +8,14 @@ Discourse is the 100% open source discussion platform built for the next decade 
 
 To learn more about the philosophy and goals of the project, [visit **discourse.org**](http://www.discourse.org).
 
+## Setting up a Discourse Forum
+
+If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
+
+If you're looking for business class hosting, see [discourse.org/buy](http://www.discourse.org/buy/).
+
+If you want to help out, scroll down to **Development** and **Contributing** below.
+
 ## Screenshots
 
 [![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small2.png)](http://bbs.boingboing.net)
@@ -20,17 +28,11 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 ## Development
 
-1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](docs/VAGRANT.md), which includes a development environment in a virtual machine. 
+1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) and our [**Discourse Vagrant Developer Guide**](docs/VAGRANT.md), which includes a development environment in a virtual machine. 
 
 2. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md). 
 
 Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
-
-## Setting up a Discourse Forum
-
-If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
-
-If you're looking for business class hosting, see [discourse.org/buy](http://www.discourse.org/buy/).
 
 ## Requirements
 
