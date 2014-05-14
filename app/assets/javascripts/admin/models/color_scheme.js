@@ -27,7 +27,7 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   copy: function() {
     var newScheme = Discourse.ColorScheme.create({name: this.get('name'), enabled: false, can_edit: true, colors: Em.A()});
     _.each(this.get('colors'), function(c){
-      newScheme.colors.pushObject(Discourse.ColorSchemeColor.create({name: c.get('name'), hex: c.get('hex')}));
+      newScheme.colors.pushObject(Discourse.ColorSchemeColor.create({name: c.get('name'), hex: c.get('hex'), default_hex: c.get('default_hex')}));
     });
     return newScheme;
   },
