@@ -132,7 +132,7 @@
     background-color: $danger;
   }
 }
-/* this needs to be global since it is used on the user page, left hand column, messages */
+/* needs to be global, used in user-drop down and user page too */
 .unread-private-messages {
   background-color: $success;
 }

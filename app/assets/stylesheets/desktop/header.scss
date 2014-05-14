@@ -130,13 +130,18 @@
     }
     .unread-private-messages {
       left: -4px;
-      background-color: $success;
     }
   }
   .flagged-posts {
     background-color: $danger;
   }
 }
+
+/* needs to be global, used in user-drop down and user page too */
+.unread-private-messages {
+  background-color: $success;
+}
+
 
 #main {
   position: relative;
