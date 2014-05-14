@@ -63,7 +63,7 @@
     display: inline-block;
   }
   .instructions {
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
     margin-left: 160px;
     margin-top: 5px;
     margin-bottom: 10px;
