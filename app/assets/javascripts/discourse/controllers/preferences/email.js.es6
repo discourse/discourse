@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.PreferencesEmailController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   taken: false,
   saving: false,
   error: false,

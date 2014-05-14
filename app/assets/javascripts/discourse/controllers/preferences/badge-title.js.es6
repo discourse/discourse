@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.PreferencesBadgeTitleController = Ember.ArrayController.extend({
+export default Ember.ArrayController.extend({
   saving: false,
   saved: false,
 

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   taken: false,
   saving: false,
   error: false,
