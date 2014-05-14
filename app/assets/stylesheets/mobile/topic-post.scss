@@ -476,9 +476,8 @@ background-color: scale-color($danger, $lightness: 75%);
   margin: -4px 0 0 -4px;
 }
 
-.username a { color: scale-color($primary, $lightness: 30%); }
-.new-user a {
-  color: scale-color($primary, $lightness: 60%);
+.username.new-user a {
+  color: scale-color($primary, $lightness: 70%);
 }
 
 .topic-meta-data {

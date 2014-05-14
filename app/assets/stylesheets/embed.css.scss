@@ -66,7 +66,7 @@ article.post {
     }
 
     a.new-user {
-      color: lighten($primary, 35%);
+      color: scale-color($primary, $lightness: 70%);
     }
 
     span.title {

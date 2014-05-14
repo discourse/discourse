@@ -1047,3 +1047,7 @@ a.attachment:before {
 span.highlighted {
   background-color: scale-color($highlight, $lightness: 70%);
 }
+
+.username.new-user a {
+  color: scale-color($primary, $lightness: 70%);
+}
