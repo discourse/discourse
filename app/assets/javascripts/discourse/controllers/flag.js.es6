@@ -62,9 +62,9 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
 
   submitText: function(){
     if (this.get('selected.is_custom_flag')) {
-      return "<i class="fa fa-envelope"></i>" + (I18n.t(this.get('flagTopic') ? "flagging_topic.notify_action" : "flagging.notify_action"));
+      return "<i class='fa fa-envelope'></i>" + (I18n.t(this.get('flagTopic') ? "flagging_topic.notify_action" : "flagging.notify_action"));
     } else {
-      return "<i class="fa fa-flag"></i>" + (I18n.t(this.get('flagTopic') ? "flagging_topic.action" : "flagging.action"));
+      return "<i class='fa fa-flag'></i>" + (I18n.t(this.get('flagTopic') ? "flagging_topic.action" : "flagging.action"));
     }
   }.property('selected.is_custom_flag'),
 
