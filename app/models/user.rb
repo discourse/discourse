@@ -447,7 +447,7 @@ class User < ActiveRecord::Base
     transaction do
       self.save!
       Group.user_trust_level_change!(self.id, self.trust_level)
-      BadgeGranter.update_trust_level_badges!(self)
+      BadgeGranter.update_badges(self, trust_level: trust_level)
     end
   end
 

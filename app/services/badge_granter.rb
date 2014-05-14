@@ -56,17 +56,20 @@ class BadgeGranter
     end
   end
 
-
-  def self.update_trust_level_badges!(user)
-    Badge.trust_level_badge_ids.each do |badge_id|
-      user_badge = UserBadge.where(user_id: user.id, badge_id: badge_id).first
-      if user_badge
-        # Revoke the badge if the user is not supposed to have it.
-        BadgeGranter.revoke(user_badge) if user.trust_level < badge_id
-      else
-        # Grant the badge if the user is supposed to have it.
-        badge = Badge.find(badge_id)
-        BadgeGranter.grant(badge, user) if user.trust_level >= badge_id
+  def self.update_badges(user, opts={})
+    if opts.has_key?(:trust_level)
+      # Update trust level badges.
+      trust_level = opts[:trust_level]
+      Badge.trust_level_badge_ids.each do |badge_id|
+        user_badge = UserBadge.find_by(user_id: user.id, badge_id: badge_id)
+        if user_badge
+          # Revoke the badge if trust level was lowered.
+          BadgeGranter.revoke(user_badge) if trust_level < badge_id
+        else
+          # Grant the badge if trust level was increased.
+          badge = Badge.find(badge_id)
+          BadgeGranter.grant(badge, user) if trust_level >= badge_id
+        end
       end
     end
   end

@@ -76,12 +76,12 @@ describe BadgeGranter do
     let(:logger) { StaffActionLogger.new(Fabricate(:admin)) }
 
     it "is called by User#change_trust_level!" do
-      BadgeGranter.expects(:update_trust_level_badges!)
+      BadgeGranter.expects(:update_badges)
       user.change_trust_level!(:basic)
     end
 
     it "is called by BoostTrustLevel#save!" do
-      BadgeGranter.expects(:update_trust_level_badges!)
+      BadgeGranter.expects(:update_badges)
       BoostTrustLevel.new(user: user, level: 1, logger: logger).save!
     end
 
