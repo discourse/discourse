@@ -241,10 +241,7 @@ nl:
       delete_account_confirm: "Weet je zeker dat je je account definitief wil verwijderen? Dit kan niet meer ongedaan gemaakt worden!"
       deleted_yourself: "Je account is verwijderd."
       delete_yourself_not_allowed: "Je kan je account nu niet verwijderen. Neem contact op met een admin om je account te laten verwijderen."
-      unread_message_count:
-        one: "Berichten (1)"
-        other: "Berichten ({{count}})"
-        zero: "Berichten"
+      unread_message_count: "Berichten"
       messages:
         all: "Alle"
         mine: "Mijn"

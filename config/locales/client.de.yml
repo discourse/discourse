@@ -239,10 +239,7 @@ de:
       delete_account_confirm: "Bist du sicher, dass du dein Nutzerkonto permanent löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Nutzerkonto wurde erfolgreich gelöscht."
       delete_yourself_not_allowed: "Du kannst im Moment dein Nutzerkonto nicht löschen. Kontaktiere einen Administrator dein Nutzerkonto für dich zu löschen."
-      unread_message_count:
-        one: "Nachrichten (1)"
-        other: "Nachrichten ({{count}})"
-        zero: "Nachrichten"
+      unread_message_count: "Nachrichten"
       messages:
         all: "Alle"
         mine: "Meine"

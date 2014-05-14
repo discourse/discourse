@@ -238,10 +238,7 @@ sv:
       delete_account_confirm: "Är du säkert på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
       deleted_yourself: "Ditt konto har framgångsrikt tagits bort."
       delete_yourself_not_allowed: "Du kan inte ta bort ditt konto just nu. Kontakta en admin och be om att få ditt konto borttaget."
-      unread_message_count:
-        one: "meddelanden (1)"
-        other: "meddelanden ({{count}})"
-        zero: "meddelanden"
+      unread_message_count: "meddelanden"
       messages:
         all: "Alla"
         mine: "Mina"

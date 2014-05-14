@@ -217,10 +217,7 @@ zh_CN:
       delete_account_confirm: "您真的要永久删除自己的账号吗？删除之后无法恢复！"
       deleted_yourself: "您的帐号已被成功删除。"
       delete_yourself_not_allowed: "您目前不能删除自己的帐号。联系管理员帮助您删除帐号。"
-      unread_message_count:
-        one: "消息（1）"
-        other: "消息（{{count}}）"
-        zero: "消息"
+      unread_message_count: "消息"
       messages:
         all: "所有"
         mine: "我的"

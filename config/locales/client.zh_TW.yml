@@ -217,10 +217,7 @@ zh_TW:
       delete_account_confirm: "你真的要刪除帳號嗎?此動作不能被還原!"
       deleted_yourself: "你的帳號已成功刪除"
       delete_yourself_not_allowed: "帳號不能刪除。請聯絡管理人。"
-      unread_message_count:
-        one: "訊息 (1)"
-        other: "訊息 ({{count}})"
-        zero: "訊息"
+      unread_message_count: "訊息"
       messages:
         all: "全部"
         mine: "我的"

@@ -209,10 +209,7 @@ ko:
       delete_account: "내 계정 삭제"
       deleted_yourself: "성공적으로 당신의 계정이 삭제 되었습니다."
       delete_yourself_not_allowed: "지금은 당신의 계정을 삭제할 수 없습니다. 관리자에게 당신의 계정을 삭제해달라고 연락해보세요."
-      unread_message_count:
-        one: "메시지 (1)"
-        other: "메시지 ({{count}})"
-        zero: "메시지"
+      unread_message_count: "메시지"
       messages:
         all: "전체"
         mine: "내가 보낸 메세지"

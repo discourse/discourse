@@ -240,10 +240,7 @@ he:
       delete_account_confirm: "אתה בטוח שברצונך למחוק את החשבון? לא ניתן לבטל פעולה זו!"
       deleted_yourself: "חשבונך נמחק בהצלחה."
       delete_yourself_not_allowed: "אתה לא יכול למחוק את חשבונך כרגע. צור קשר עם מנהל כדי שימחק אותו בשבילך."
-      unread_message_count:
-        one: "הודעות (1)"
-        other: "הודעות ({{count}})"
-        zero: "הודעות"
+      unread_message_count: "הודעות"
       messages:
         all: "הכל"
         mine: "שלי"
