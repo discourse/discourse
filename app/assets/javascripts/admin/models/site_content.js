@@ -8,10 +8,10 @@
 **/
 Discourse.SiteContent = Discourse.Model.extend({
 
-  markdown: Ember.computed.equal('format', 'markdown'),
-  plainText: Ember.computed.equal('format', 'plain'),
-  html: Ember.computed.equal('format', 'html'),
-  css: Ember.computed.equal('format', 'css'),
+  markdown: Em.computed.equal('format', 'markdown'),
+  plainText: Em.computed.equal('format', 'plain'),
+  html: Em.computed.equal('format', 'html'),
+  css: Em.computed.equal('format', 'css'),
 
   /**
     Save the content

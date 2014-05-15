@@ -17,7 +17,7 @@
     <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
 
     <%= script "preload_store" %>
-    <%= script "locales/#{I18n.locale}" %>
+    <%= javascript_include_tag "locales/#{I18n.locale}" %>
     <%= script "vendor" %>
     <%= script "application" %>
     <%- if staff? %>

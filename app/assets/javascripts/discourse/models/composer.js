@@ -415,7 +415,7 @@ Discourse.Composer = Discourse.Model.extend({
     });
     this.set('composeState', CLOSED);
 
-    return Ember.Deferred.promise(function(promise) {
+    return Em.Deferred.promise(function(promise) {
       post.save(function(result) {
         post.updateFromPost(result);
         composer.clearState();
@@ -480,7 +480,7 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     var composer = this;
-    return Ember.Deferred.promise(function(promise) {
+    return Em.Deferred.promise(function(promise) {
 
       composer.set('composeState', SAVING);
       createdPost.save(function(result) {

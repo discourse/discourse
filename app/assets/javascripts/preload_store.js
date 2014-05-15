@@ -32,13 +32,13 @@ window.PreloadStore = {
   **/
   getAndRemove: function(key, finder) {
     if (this.data[key]) {
-      var promise = Ember.RSVP.resolve(this.data[key]);
+      var promise = Em.RSVP.resolve(this.data[key]);
       delete this.data[key];
       return promise;
     }
 
     if (finder) {
-      return Ember.Deferred.promise(function(promise) {
+      return Em.Deferred.promise(function(promise) {
         var result = finder();
 
         // If the finder returns a promise, we support that too
@@ -54,7 +54,7 @@ window.PreloadStore = {
       });
     }
 
-    return Ember.RSVP.resolve(null);
+    return Em.RSVP.resolve(null);
   },
 
   /**
