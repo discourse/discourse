@@ -22,7 +22,9 @@ class TopicQuery
                      ascending
                      no_subcategories
                      no_definitions
-                     status).map(&:to_sym)
+                     status
+                     search
+                     ).map(&:to_sym)
 
   # Maps `order` to a columns in `topics`
   SORTABLE_MAPPING = {
@@ -257,6 +259,10 @@ class TopicQuery
 
       if options[:topic_ids]
         result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
+      end
+
+      if search = options[:search]
+        result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(search.to_s)})")
       end
 
       if status = options[:status]

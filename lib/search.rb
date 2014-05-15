@@ -232,8 +232,18 @@ class Search
       posts.limit(limit)
     end
 
-    def query_locale
+    def self.query_locale
       @query_locale ||= Post.sanitize(Search.long_locale)
+    end
+
+    def query_locale
+      self.class.query_locale
+    end
+
+    def self.ts_query(term)
+      all_terms = term.gsub(/[:()&!'"]/,'').split
+      query = Post.sanitize(all_terms.map {|t| "#{PG::Connection.escape_string(t)}:*"}.join(" & "))
+      "TO_TSQUERY(#{query_locale}, #{query})"
     end
 
     def ts_query
