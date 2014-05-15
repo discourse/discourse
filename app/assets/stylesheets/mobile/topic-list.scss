@@ -47,9 +47,9 @@
   border-top: 1px solid scale-color($primary, $lightness: 90%);
 
   > tbody > tr {
-    background-color: $secondary;
+    background-color: mix($primary, $secondary, 0%);
     &:nth-child(even) {
-      background-color: darken($secondary, 4%);
+      background-color: mix($primary, $secondary, 3%);
     }
     &.archived a {
       opacity: 0.6;
@@ -229,9 +229,6 @@
 
 .category-list-item {
   margin-bottom: 10px;
-  #topic-list tbody tr:nth-child(even) {
-    background-color: $secondary;
-  }
   .badge-category {
     float: left;
     margin: 1px 4px 0 0;
