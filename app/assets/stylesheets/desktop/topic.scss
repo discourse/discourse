@@ -58,7 +58,7 @@
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 #topic-closing-info {
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid $almost-secondary;
   padding-top: 10px;
   height: 20px;
 }
@@ -77,7 +77,7 @@
     font-size: 12px;
     margin-right: 5px;
     background: $secondary;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid $almost-secondary;
     padding: 2px 4px;
     border-radius: 20px;
     transition: linear 0.15s;
@@ -104,7 +104,7 @@ a:hover.reply-new {
     display: none;
   }
   border: none;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: $almost-secondary;
   color: scale-color($primary, $lightness: 50%);
   width: 130px;
   height: 34px;
@@ -153,8 +153,8 @@ a:hover.reply-new {
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid  scale-color($primary, $lightness: 90%);
-    background-color:  scale-color($success, $lightness: 70%);
+    border-right: 1px solid  $almost-secondary;
+    background-color:  mix($success, $secondary, 70%);
     transition: width .75s;
   }
 }
@@ -199,7 +199,7 @@ pre {
   display: block;
   padding: 5px 10px;
   color: $primary;
-  background: scale-color($primary, $lightness: 90%);
+  background: $almost-secondary;
   max-height: 500px;
   }
 }
@@ -215,7 +215,7 @@ sup{top:-0.5em; }
 sub{bottom:-0.25em; }
 figure{margin:0; }
 fieldset{
-  border:1px solid scale-color($primary, $lightness: 90%);
+  border:1px solid $almost-secondary;
   margin:0 2px;
   padding:0.35em 0.625em 0.75em;
 }
@@ -227,7 +227,7 @@ legend{
 kbd
 {
     background-color: $secondary;
-    border:1px solid scale-color($primary, $lightness: 90%);
+    border:1px solid $almost-secondary;
     border-radius: 3px;
     box-shadow: 0 1px 0 rgba($primary, .9);
     color: $primary;

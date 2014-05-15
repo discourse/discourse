@@ -59,7 +59,7 @@
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid $almost-secondary;
   .fa-thumb-tack {color: $primary;}
   .fa-thumb-tack.unpinned {color: $primary;}
 
@@ -67,8 +67,9 @@
   a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
 
   > tbody > tr {
+    background-color: $secondary;
     &:nth-child(even) {
-      background-color: scale-color($primary, $lightness: 96%);
+      background-color: darken($secondary, 4%);
     }
     &.archived a {
       opacity: 0.6;
@@ -115,7 +116,7 @@
     padding: 0;
     background: transparent;
     &:hover {
-      color: scale-color($primary, $lightness: 90%);
+      color: $almost-secondary;
     }
   }
 
@@ -213,7 +214,7 @@
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: scale-color($primary, $lightness: 90%);
+      background-color: $almost-secondary;
     }
     @include unselectable;
   }
@@ -361,9 +362,6 @@
 
 .category-list-item {
   margin-bottom: 10px;
-  #topic-list tbody tr:nth-child(even) {
-    background-color: $secondary;
-  }
   th .badge-category {
     float: left;
     margin: 1px 4px 0 0;
@@ -374,10 +372,10 @@
     width: 165px;
   }
   > footer {
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid $almost-secondary;
     border-top: 0;
     padding: 7px 10px;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
     figure {
       float: left;
       margin: 3px 7px 0 0;
@@ -438,7 +436,7 @@
 .list-controls {
 
   .home {
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
     color: $primary;
   }
 
@@ -516,7 +514,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
   background-color: $secondary;
   max-height: 350px;
   padding: 8px 7px 0 7px;

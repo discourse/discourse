@@ -3,13 +3,13 @@
   position: absolute;
   width: 240px;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     li {
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid $almost-secondary;
       a[href] {
         padding: 5px;
         display: block;
@@ -20,10 +20,10 @@
           font-size: 11px;
         }
         &.selected {
-          background-color: scale-color($primary, $lightness: 90%);
+          background-color: $almost-secondary;
         }
         @include hover {
-          background-color: scale-color($primary, $lightness: 90%);
+          background-color: $almost-secondary;
           text-decoration: none;
         }
       }
@@ -43,7 +43,7 @@ div.ac-wrap.disabled {
 
 div.ac-wrap {
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
   padding: 5px 10px;
   div.item {
     float: left;
@@ -64,7 +64,7 @@ div.ac-wrap {
       border-radius: 10px;
       width: 10px;
       display: inline-block;
-      border: 1px solid scale-color($primary, $lightness: 90%);
+      border: 1px solid $almost-secondary;
       &:hover {
         background-color: scale-color($danger, $lightness: 75%);
         border: 1px solid scale-color($danger, $lightness: 30%);

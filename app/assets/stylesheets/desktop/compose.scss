@@ -101,7 +101,7 @@
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: $almost-secondary;
   bottom: 0;
   font-size: 14px;
   position: fixed;
@@ -148,7 +148,7 @@
   &.draft {
     height: 40px !important;
     cursor: pointer;
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 1px solid $almost-secondary;
     .draft-text {
       display: block;
     }
@@ -161,7 +161,7 @@
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 1px solid $almost-secondary;
     .saving-text {
       display: block;
     }
@@ -277,11 +277,11 @@
       margin-right: 10px;
       float: left;
       &:disabled {
-        background-color: scale-color($primary, $lightness: 90%);
+        background-color: $almost-secondary;
       }
     }
     #wmd-input:disabled {
-      background-color: scale-color($primary, $lightness: 90%);
+      background-color: $almost-secondary;
     }
     #wmd-input, #wmd-preview {
       color: $primary;
@@ -296,7 +296,7 @@
       }
     }
     #wmd-preview {
-      border: 1px dashed scale-color($primary, $lightness: 90%);
+      border: 1px dashed $almost-secondary;
       overflow: auto;
       visibility: visible;
 
@@ -325,7 +325,7 @@
   .show-admin-options {
     vertical-align: top;
     margin-top: 8px;
-    background: scale-color($primary, $lightness: 90%);
+    background: $almost-secondary;
   &:hover {
     color: $secondary;
     background: $primary;
@@ -450,7 +450,7 @@
   #wmd-button-bar {
     top: 0;
     position: absolute;
-    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    border-bottom: 1px solid $almost-secondary;
     background-color: $secondary;
     z-index: 100;
   }

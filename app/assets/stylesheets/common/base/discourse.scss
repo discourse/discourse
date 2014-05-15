@@ -5,19 +5,32 @@
 body {
     button.ok {
     background: $success;
-    color: $secondary;
+    // this honestly looks better if we keep it always white
+    color: #fff;
     @include hover {
       background: lighten($success, 10%);
-      color: $secondary;
+      color: #fff;
     }
   }
   button.cancel {
     background: $danger;
-    color: $secondary;
+    color: #fff;
     @include hover {
       background: lighten($danger, 10%);
-      color: $secondary;
+      color: #fff;
     }
+  }
+
+  textarea {
+    width: 210px;
+    height: auto;
+    color: $primary;
+    background-color: $secondary;
+    border: 1px solid $almost-secondary;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 1px rgba($primary, .3);
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
   }
 
   .coldmap-high {
@@ -97,10 +110,10 @@ body {
   width: 540px;
   background-color: $secondary;
   padding: 0 10px 13px 10px;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
   .preview {
     margin-top: 8px;
-    border: 1px dashed scale-color($primary, $lightness: 90%);
+    border: 1px dashed $almost-secondary;
     padding: 8px 8px 0 8px;
     p {
       margin: 0 0 10px 0;
@@ -147,7 +160,7 @@ body {
 .avatar-wrapper {
   background-color: $secondary;
   display: inline-block;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
   @include border-radius-all(5px);
   img {
     @include border-radius-all(4px);

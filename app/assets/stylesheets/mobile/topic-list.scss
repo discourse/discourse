@@ -44,7 +44,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid $almost-secondary;
 
   > tbody > tr {
     background-color: $secondary;
@@ -79,6 +79,7 @@
   }
   th {
     color: scale-color($primary, $lightness: 50%);
+    background-color: $secondary;
     font-weight: bold;
     font-size: 13px;
     &:first-of-type {
@@ -229,9 +230,6 @@
 
 .category-list-item {
   margin-bottom: 10px;
-  #topic-list tbody tr:nth-child(even) {
-    background-color: $secondary;
-  }
   .badge-category {
     float: left;
     margin: 1px 4px 0 0;
@@ -241,10 +239,10 @@
     display: none;
   }
   > footer {
-    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    border-bottom: 1px solid $almost-secondary;
     border-top: 0;
     padding: 7px 10px;
-    background-color: scale-color($primary, $lightness: 95%);
+    background-color: $almost-secondary-2;
     figure {
       float: left;
       margin: 3px 7px 0 0;
@@ -305,7 +303,7 @@
 .list-controls {
   .home {
     color: $primary;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
   }
 
   .badge-category {
@@ -398,7 +396,7 @@ span.posted {
   margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -452,7 +450,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid scale-color($primary, $lightness: 90%);;
+  border: 1px solid $almost-secondary;;
   background-color: $secondary;
   height: 200px;
   padding: 8px 5px 0 7px;

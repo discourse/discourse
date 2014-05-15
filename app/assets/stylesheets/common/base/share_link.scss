@@ -5,7 +5,7 @@
   left: 20px;
   z-index: 990;
   box-shadow: 0 1px 5px rgba($primary, .4);
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: $almost-secondary;
   padding: 6px 10px 10px 10px;
   width: 300px;
   display: none;
@@ -23,6 +23,9 @@
     margin-right: 8px;
     float: left;
     font-size: 22px;
+  }
+  a {
+    color: mix($tertiary, $primary, 70%);
   }
   .link {
     margin-right: 2px;

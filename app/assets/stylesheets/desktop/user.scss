@@ -138,7 +138,7 @@
   .user-content {
     padding: 10px 8px;
     background-color: $secondary;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid $almost-secondary;
     margin-bottom: 10px;
 
     .btn.right {
@@ -155,13 +155,13 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid $almost-secondary;
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid $almost-secondary;
       }
     }
   }
@@ -317,7 +317,7 @@
     .item {
       padding: 20px 8px 15px 8px;
       background-color: $secondary;
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid $almost-secondary;
     }
     .type {
       color: $primary;
