@@ -8,7 +8,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.QuoteButtonController = Discourse.Controller.extend({
+export default Discourse.Controller.extend({
   needs: ['topic', 'composer'],
 
   init: function() {

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
+export default Em.ArrayController.extend(Discourse.Presence, {
 
   // If we need to perform another search
   newSearchNeeded: function() {
@@ -16,24 +16,19 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
       this.set('loading', true);
       this.searchTerm(term, this.get('typeFilter'));
     } else {
-      this.set('content', Em.A());
-      this.set('resultCount', 0);
-      this.set('urls', []);
+      this.setProperties({ content: [], resultCount: 0, urls: [] });
     }
     this.set('selectedIndex', 0);
   }.observes('term', 'typeFilter'),
 
   searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
     var self = this;
-    self.set('resultCount', 0);
-    self.set('urls', []);
+    this.setProperties({ resultCount: 0, urls: [] });
 
-    var searcher = Discourse.Search.forTerm(term, {
+    return Discourse.Search.forTerm(term, {
       typeFilter: typeFilter,
-      searchContext: self.get('searchContext')
-    });
-
-    return searcher.then(function(results) {
+      searchContext: this.get('searchContext')
+    }).then(function(results) {
       var urls = [];
       if (results) {
         self.set('noResults', results.length === 0);
@@ -52,9 +47,7 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
             })
             .value();
 
-        self.set('resultCount', index);
-        self.set('content', results);
-        self.set('urls', urls);
+        self.setProperties({ resultCount: index, content: results, urls: urls });
       }
 
       self.set('loading', false);

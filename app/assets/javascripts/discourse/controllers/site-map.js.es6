@@ -1,5 +1,5 @@
-Discourse.SiteMapController = Ember.ArrayController.extend(Discourse.HasCurrentUser, {
-  itemController: "siteMapCategory",
+export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
+  itemController: "site-map-category",
 
   showAdminLinks: Em.computed.alias('currentUser.staff'),
   flaggedPostsCount: Em.computed.alias("currentUser.site_flagged_posts_count"),

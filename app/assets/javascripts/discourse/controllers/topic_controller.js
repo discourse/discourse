@@ -8,7 +8,7 @@
 **/
 Discourse.TopicController = Discourse.ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
-  needs: ['header', 'modal', 'composer', 'quoteButton'],
+  needs: ['header', 'modal', 'composer', 'quote-button'],
   allPostsSelected: false,
   editingTopic: false,
   selectedPosts: null,
@@ -424,7 +424,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   // Post related methods
   replyToPost: function(post) {
     var composerController = this.get('controllers.composer');
-    var quoteController = this.get('controllers.quoteButton');
+    var quoteController = this.get('controllers.quote-button');
     var quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer'));
 
     var topic = post ? post.get('topic') : this.get('model');

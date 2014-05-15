@@ -1,6 +1,6 @@
 var controller, searcherStub;
 
-module("Discourse.SearchController", {
+module("controller:search", {
   setup: function() {
     Discourse.SiteSettings.min_search_term_length = 2;
 
@@ -10,7 +10,7 @@ module("Discourse.SearchController", {
     searcherStub = Ember.Deferred.create();
     sinon.stub(Discourse.Search, "forTerm").returns(searcherStub);
 
-    controller = Discourse.SearchController.create();
+    controller = testController('search', []);
   },
 
   teardown: function() {

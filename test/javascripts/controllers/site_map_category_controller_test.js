@@ -1,8 +1,8 @@
 var controller;
 
-module("Discourse.SiteMapCategoryController", {
+module("controller:site-map-category", {
   setup: function() {
-    controller = Discourse.SiteMapCategoryController.create();
+    controller = testController('site-map-category');
   }
 });
 

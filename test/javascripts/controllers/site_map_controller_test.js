@@ -1,10 +1,10 @@
 var controller, oldMobileView;
 
-module("Discourse.SiteMapController", {
+module("controller:site-map", {
   setup: function() {
     oldMobileView = Discourse.Mobile.mobileView;
 
-    controller = Discourse.SiteMapController.create();
+    controller = testController('site-map');
   },
 
   teardown: function() {
@@ -13,7 +13,7 @@ module("Discourse.SiteMapController", {
 });
 
 test("itemController", function() {
-  equal(controller.get("itemController"), "siteMapCategory", "defaults to SiteMapCategoryController");
+  equal(controller.get("itemController"), "site-map-category", "defaults to site-map-category");
 });
 
 test("showAdminLinks", function() {

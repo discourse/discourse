@@ -6,15 +6,18 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ShareController = Discourse.Controller.extend({
-
+export default Discourse.Controller.extend({
   needs: ['topic'],
 
   // Close the share controller
   actions: {
     close: function() {
-      this.set('link', '');
-      this.set('postNumber', '');
+      this.setProperties({ link: '', postNumber: '' });
+      return false;
+    },
+
+    sharePopup: function(target, url) {
+      window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=' + Discourse.ShareLink.popupHeight(target));
       return false;
     }
   },
@@ -27,11 +30,6 @@ Discourse.ShareController = Discourse.Controller.extend({
         return null;
       }
     }, this).compact();
-  }.property('link'),
-
-  sharePopup: function(target, url) {
-    window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=' + Discourse.ShareLink.popupHeight(target));
-    return false;
-  }
+  }.property('link')
 
 });
