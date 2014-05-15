@@ -265,7 +265,7 @@ section.details {
 }
 
 #selected-controls {
-  background-color: scale-color($tertiary, $lightness: 75%);
+  background-color: mix($tertiary, $secondary, 25%);
   padding: 8px;
   min-height: 27px;
   position: fixed;
@@ -280,7 +280,7 @@ section.details {
     border-top: 0;
   }
   &.highlight-danger {
-    background-color: scale-color($danger, $lightness: 50%);
+    background-color: mix($danger, $secondary, 50%);
   }
   border-top: 1px solid $almost-secondary;
   &:before, &:after {
@@ -438,7 +438,7 @@ section.details {
     td.actions     { width: 200px; }
     .hex-input     { width: 80px; margin-bottom: 0; }
     .hex           { text-align: center; }
-    .description   { color: scale-color($primary, $lightness: 50%); }
+    .description   { color: mix($primary, $secondary, 50%); }
 
     .invalid .hex input {
       background-color: white;
@@ -452,10 +452,10 @@ section.details {
 .admin-flags {
 
   tr.hidden-post td.excerpt { opacity: 0.4;  }
-  tr.deleted td.excerpt { opacity: 0.8; background-color: scale-color($danger, $lightness: 30%); }
+  tr.deleted td.excerpt { opacity: 0.8; background-color: mix($danger, $secondary, 70%); }
   td.message {
     padding: 4px 8px;
-    background-color:  scale-color($highlight, $lightness: 30%);
+    background-color:  mix($highlight, $secondary, 70%);
   }
   td { vertical-align: top; }
   th { text-align: left; }
@@ -601,7 +601,7 @@ table.api-keys {
         background-color: $secondary;
       }
       tr:hover > th {
-        background-color: scale-color($primary, $lightness: 75%);
+        background-color: mix($primary, $secondary, 25%);
       }
     }
 
@@ -662,7 +662,7 @@ table.api-keys {
         text-align: right;
       }
       .btn {
-        background-color: lighten($primary, 60%);
+        background-color: mix($primary, $secondary, 40%);
       }
       ul {
         margin-left: 0;
@@ -731,10 +731,10 @@ table.api-keys {
   }
 
   .header {
-    color: $primary;
+    color: $secondary;
     font-weight: bold;
     height: 30px;
-    background-color: scale-color($primary, $lightness: 75%);
+    background-color: mix($primary, $secondary, 25%);
     cursor: pointer;
 
     h1 {
@@ -798,7 +798,7 @@ table.api-keys {
     width: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: scale-color($primary, $lightness: 75%);
+    background-color: mix($primary, $secondary, 25%);
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
@@ -989,7 +989,7 @@ table.api-keys {
   margin: 0 0 20px 6px;
   a.filter {
     display: inline-block;
-    background-color: scale-color($primary, $lightness: 75%);
+    background-color: mix($primary, $secondary, 25%);
     padding: 3px 10px;
     border-radius: 3px;
 
@@ -1026,7 +1026,7 @@ table.api-keys {
 
 .staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
 
-  border-bottom: dotted 1px scale-color($primary, $lightness: 75%);
+  border-bottom: dotted 1px mix($primary, $secondary, 25%);
 
   .heading-container {
     width: 100%;
