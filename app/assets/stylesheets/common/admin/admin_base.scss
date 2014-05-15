@@ -11,8 +11,8 @@
   td, th {padding: 8px;}
   th {border-top: 1px solid $almost-secondary;}
   td {border-bottom: 1px solid $almost-secondary; border-top: 1px solid $almost-secondary;}
-  tr:hover { background-color: darken($secondary, 2.5%); }
-  tr.selected { background-color: lighten($primary, 50%); }
+  tr:hover { background-color: mix($primary, $secondary, 2.5%); }
+  tr.selected { background-color: mix($primary, $secondary, 50%); }
   .filters input { margin-bottom: 0; }
 }
 
@@ -86,16 +86,16 @@
 }
 
 .admin-controls {
-  background-color: darken($secondary, 5%);
+  background-color: mix($primary, $secondary, 5%);
   padding: 10px 10px 3px 0;
   height: 35px;
   .nav.nav-pills {
     li.active {
       a {
         border-color: $almost-secondary;
-        background-color: lighten($primary, 40%);
+        background-color: mix($primary, $secondary, 60%);
         &:hover {
-          background-color: lighten($primary, 40%);
+          background-color: mix($primary, $secondary, 60%);
         }
       }
     }
@@ -438,7 +438,7 @@ section.details {
     td.actions     { width: 200px; }
     .hex-input     { width: 80px; margin-bottom: 0; }
     .hex           { text-align: center; }
-    .description   { color: mix($primary, $secondary, 50%); }
+    .description   { color: $middle-color; }
 
     .invalid .hex input {
       background-color: white;

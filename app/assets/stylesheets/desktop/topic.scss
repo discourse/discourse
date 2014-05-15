@@ -54,7 +54,7 @@
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: scale-color($primary, $lightness: 75%); }
+.private-message-glyph { color: mix($primary, $secondary, 25%); }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 #topic-closing-info {
@@ -87,11 +87,11 @@
 
 a.reply-new {
   position: absolute;
-  color: scale-color($primary, $lightness: 50%);
+  color: $middle-color;
   margin-top: -2px;}
 a:hover.reply-new {
   color: $tertiary;
-  i {background: scale-color($tertiary, $lightness: 75%);
+  i {background: mix($tertiary, $secondary, 25%);
     border: 1px solid $tertiary;
     padding: 2px 4px;
   }
@@ -105,7 +105,7 @@ a:hover.reply-new {
   }
   border: none;
   background-color: $almost-secondary;
-  color: scale-color($primary, $lightness: 50%);
+  color: $middle-color;
   width: 130px;
   height: 34px;
 
@@ -125,7 +125,7 @@ a:hover.reply-new {
     left: 4px;
     border: 0;
     background: none;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     width: 50%;
     text-align: left;
     height: 30px;
@@ -140,7 +140,7 @@ a:hover.reply-new {
     }
     &:disabled {
     cursor: default;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     }
   }
   h4 {
@@ -172,14 +172,14 @@ a:hover.reply-new {
   }
 }
 
-.heatmap-high {color: scale-color($danger, $lightness: 20%) !important;}
+.heatmap-high {color: mix($danger, $secondary, 10%) !important;}
 .heatmap-med {color: $danger !important;}
-.heatmap-low {color: scale-color($danger, $lightness: -20%) !important;}
+.heatmap-low {color: mix($danger, $primary, 10%) !important;}
 
 
 
 #topic-filter {
-  background-color: scale-color($highlight, $lightness: 25%);
+  background-color: mix($highlight, $secondary, 75%);
   padding: 8px;
   bottom: 0;
   position: fixed;

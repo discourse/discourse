@@ -32,5 +32,6 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 
 // Derived colors
 // --------------------------------------------------
+$middle-color: mix($primary, $secondary, 50%);
 $almost-secondary: mix($primary, $secondary, 10%);
 $almost-secondary-2: mix($primary, $secondary, 5%);

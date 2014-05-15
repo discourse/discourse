@@ -40,7 +40,7 @@
   h2 {
     a {
       font-size: 14px;
-      color: scale-color($tertiary, $lightness: -10%);;
+      color: mix($tertiary, $primary, 90%);
       cursor: pointer;
     }
   }

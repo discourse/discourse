@@ -85,9 +85,9 @@
 }
 
 .modal {
-    .nav {
+  .nav {
     padding: 10px 30px;
-    background-color: lighten($secondary, 76%);
+    background-color: rgba(255, 255, 255, 0.1);
     li > a {
       font-size: 14px;
     }
@@ -108,7 +108,7 @@
       color: $primary;
     }
     p {
-      color: darken($primary, 40%);;
+      color: $primary;
       font-size: 13px;
     }
     .archetype-option {

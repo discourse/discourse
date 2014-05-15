@@ -1,7 +1,7 @@
 .gap {
   background-color: $almost-secondary;
   padding: 5px 0;
-  color: lighten($primary, 35%);
+  color: mix($primary, $secondary, 65%);
   cursor: pointer;
   text-align: center;
   width: 80%;
@@ -56,7 +56,7 @@ h1 .topic-statuses .topic-status i {
   padding: 13px 6px 5px;
   border-top: 1px solid $almost-secondary;
   font-size: 12px;
-  color: scale-color($primary, $lightness: 50%);
+  color: $middle-color;
   @include medium-width {
     right: 300px;
   }
@@ -101,7 +101,7 @@ section.post-menu-area, .post-actions {
 nav.post-controls {
     padding: 0;
     button {
-    color: scale-color($primary, $lightness: 60%);
+    color: mix($primary, $secondary, 40%);
     margin-right: 2px;
   }
 
@@ -115,9 +115,9 @@ nav.post-controls {
     padding: 8px 15px;
     padding-bottom: 20px;
     margin-left: 0;
-    span.badge-posts {color: scale-color($primary, $lightness: 60%);}
+    span.badge-posts {color: mix($primary, $secondary, 40%);}
     &:hover {
-      background: lighten($primary, 76%);
+      background: mix($primary, $secondary, 25%);
       span.badge-posts {color: $primary;}
     }
     i {
@@ -268,7 +268,7 @@ nav.post-controls {
   &.top.span14 {padding-left: 0;}
     .topic-body, .topic-avatar {border: none;}
     .topic-avatar {padding-left: 15px;}
-    .post-date {color: scale-color($primary, $lightness: 50%);}
+    .post-date {color: $middle-color;}
     .fa-arrow-up {margin-left: 5px;}
     .row {border-top: 1px solid $almost-secondary; padding-top: 7px;}
     .reply:first-of-type .row {border-top: none;}
@@ -276,7 +276,7 @@ nav.post-controls {
   background: $almost-secondary-2;
   .quote .title, blockquote, .onebox, .onebox-result {
     background: $almost-secondary;
-    border-left: 5px solid scale-color($primary, $lightness: 75%);
+    border-left: 5px solid mix($primary, $secondary, 25%);
   }
 
   &.bottom { margin-top: -11px;}
@@ -289,10 +289,10 @@ nav.post-controls {
     font-size: 13px;
     a {
       font-weight: bold;
-      color: scale-color($primary, $lightness: 30%);
+      color: mix($primary, $secondary, 70%);
     }
   }
-  .arrow {color: scale-color($primary, $lightness: 50%);}
+  .arrow {color: $middle-color;}
 }
 
 .bottom-round nav.post-controls .show-replies {
@@ -435,10 +435,10 @@ a.star {
       color: $primary;
       background: $almost-secondary;
       &:hover {
-        background: scale-color($primary, $lightness: 75%);
+        background: mix($primary, $secondary, 25%);
         color: $primary;
         border: none !important;
-        border-bottom: 1px solid scale-color($primary, $lightness: 75%) !important;
+        border-bottom: 1px solid mix($primary, $secondary, 25%) !important;
         span.badge-posts {color: $primary;}
       }
 
@@ -505,13 +505,13 @@ button.expand-post {
 .quote-button {
   display: none;
   position: absolute;
-  background-color: scale-color($primary, $lightness: 50%);
+  background-color: $middle-color;
   color: $secondary;
   padding: 10px;
   z-index: 401;
 
   &:hover {
-    background-color: scale-color($primary, $lightness: 40%);
+    background-color: mix($primary, $secondary, 60%);
     cursor: pointer;
   }
 }
@@ -692,7 +692,7 @@ blockquote { /* solo quotes */
   }
 
   .title {
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
+  border-left: 5px solid mix($primary, $secondary, 25%);
   background-color: $almost-secondary-2;
   padding: 12px;
   .avatar { margin-right: 7px; }
@@ -703,7 +703,7 @@ blockquote { /* solo quotes */
 
 .quote-controls {
   float: right;
-  color: scale-color($primary, $lightness: 50%);
+  color: $middle-color;
   a {
   margin: 0;
   }
@@ -711,7 +711,7 @@ blockquote { /* solo quotes */
     .quote-other-topic:before {
     display: inline-block;
     margin-left: 8px;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
@@ -745,7 +745,7 @@ blockquote { /* solo quotes */
       margin-bottom: 20px;
       margin-top: 2px;
     }
-    a.track-link {color: scale-color($primary, $lightness: 50%);}
+    a.track-link {color: $middle-color;}
     a.toggle-more {
       display: block;
       text-align: right;
@@ -760,7 +760,7 @@ blockquote { /* solo quotes */
   border-top: 1px solid $almost-secondary;
   padding: 12px 0 15px 0;
   &.highlighted {
-    background-color: scale-color($tertiary, $lightness: 85%);
+    background-color: mix($tertiary, $secondary, 15%);
   }
   img, svg {
     max-width: 100%;
@@ -772,7 +772,7 @@ blockquote { /* solo quotes */
 
   .wiki {
     margin-top: 14px;
-    color: scale-color($primary, $lightness: 60%);
+    color: mix($primary, $secondary, 40%);
   }
 }
 
@@ -852,14 +852,14 @@ blockquote { /* solo quotes */
 .dropdown-menu .active > a:hover {
   color: $secondary;
   text-decoration: none;
-  background-color: scale-color($tertiary, $lightness: 50%);
+  background-color: mix($tertiary, $secondary, 50%);
 }
 
 .dropdown-menu .disabled > a,
 .dropdown-menu .disabled > a:hover {
   text-decoration: none;
   color: $primary;
-  background-color: scale-color($highlight, $lightness: 25%);
+  background-color: mix($highlight, $secondary, 75%);
   cursor: default;
 }
 
@@ -892,7 +892,7 @@ blockquote { /* solo quotes */
   position: fixed;
   z-index: 1000;
   left: 50%;
-  background-color: scale-color($tertiary, $lightness: 50%);
+  background-color: mix($tertiary, $secondary, 50%);
   border: 1px solid $tertiary;
   padding: 5px;
   margin-bottom: 5px;
@@ -932,7 +932,7 @@ blockquote { /* solo quotes */
     color: $secondary;
     font-weight: normal;
     margin-bottom: 10px;
-    background: scale-color($tertiary, $lightness: 50%);
+    background: mix($tertiary, $secondary, 50%);
 
     &[href] {
       color: $secondary;
@@ -940,16 +940,16 @@ blockquote { /* solo quotes */
     &:hover
     {
       color: $secondary;
-      background: scale-color($tertiary, $lightness: 20%);
+      background: mix($tertiary, $secondary, 80%);
     }
     &:active {
-      @include linear-gradient(darken($tertiary, 18%), darken($tertiary, 12%));
+      @include linear-gradient(mix($tertiary, $primary, 82%), mix($tertiary, $primary, 88%));
       @include box-shadow(inset 0 1px 3px rgba($primary, 0.2));
       color: $secondary;
     }
     &[disabled] {
       text-shadow: 0 1px 0 rgba($primary, 0.2);
-      @include linear-gradient($tertiary, darken($tertiary, 20%));
+      @include linear-gradient($tertiary, mix($tertiary, $primary, 80%));
       @include box-shadow((inset 0 1px 0 rgba($primary, 0.33), inset 0 -1px 2px rgba($primary, 0.2)));
     }
   }
@@ -959,7 +959,7 @@ blockquote { /* solo quotes */
     article.boxed {
       .select-posts {
         button.select-post {
-          background-color: scale-color($tertiary, $lightness: 50%);
+          background-color: mix($tertiary, $secondary, 50%);
           color: $secondary;
         }
       }
@@ -980,7 +980,7 @@ blockquote { /* solo quotes */
       top: 4px;
 
       button {
-        background-color: scale-color($primary, $lightness: 70%);
+        background-color: mix($primary, $secondary, 30%);
         border-top: 1px solid $tertiary;
         border-left: 1px solid $tertiary;
         border-bottom: 1px solid $almost-secondary;
@@ -1038,15 +1038,15 @@ a.attachment:before {
    float: right;
    font-size: 12px;
    margin-top: 1px;
-   a {color: scale-color($primary, $lightness: 50%);}
+   a {color: $middle-color;}
  }
 
 }
 
 span.highlighted {
-  background-color: scale-color($highlight, $lightness: 70%);
+  background-color: mix($highlight, $secondary, 30%);
 }
 
 .username.new-user a {
-  color: scale-color($primary, $lightness: 70%);
+  color: mix($primary, $secondary, 30%);
 }

@@ -65,7 +65,7 @@
     .icon {
       display: block;
       padding: 3px;
-      color: scale-color($header_primary, $lightness: 50%);
+      color: mix($header_primary, $header_background, 50%);
       text-decoration: none;
       cursor: pointer;
       border-top: 1px solid transparent;
@@ -126,7 +126,7 @@
     }
     .unread-notifications {
       right: -4px;
-      background-color: scale-color($tertiary, $lightness: 50%);
+      background-color: mix($tertiary, $secondary, 50%);
     }
     .unread-private-messages {
       left: -4px;
@@ -185,23 +185,23 @@
     border-top: 1px solid $almost-secondary;
 
     border-bottom: 1px solid $almost-secondary;
-    color: darken($primary, 40%);
+    color: $primary;
     font-weight: bold;
     font-size: 12px;
     line-height: 15px;
   }
   .selected {
-    background-color: scale-color($tertiary, $lightness: 90%);
+    background-color: mix($tertiary, $secondary, 10%);
   }
 
   // Notifications
 
   &#notifications-dropdown {
     .fa {
-      color: scale-color($primary, $lightness: 50%);
+      color: $middle-color;
     }
     li {
-      background-color: scale-color($tertiary, $lightness: 90%);
+      background-color: mix($tertiary, $secondary, 10%);
     }
     .read {
       background-color: $secondary;
@@ -212,7 +212,7 @@
     .loading {
       padding: 10px;
       display: block;
-      color: scale-color($primary, $lightness: 50%);
+      color: $middle-color;
       font-size: 24px;
       text-align: center;
     }
@@ -231,7 +231,7 @@
     position: absolute;
     top: 13px;
     right: 13px;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     font-size: 18px;
   }
   .no-results {

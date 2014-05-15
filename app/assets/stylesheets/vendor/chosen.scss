@@ -97,7 +97,7 @@
   right: 10px;
   top: 12px;
   z-index: 3;
-  color: mix($primary, $secondary, 50%);
+  color: $middle-color;
 }
 .chzn-container-single-nosearch .chzn-search .chzn-search-icon {
   display: none;

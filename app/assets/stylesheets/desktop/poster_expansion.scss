@@ -81,7 +81,7 @@
   }
 
   .new-user a {
-    color: scale-color($primary, $lightness: 70%);
+    color: mix($primary, $secondary, 30%);
   }
 
   &.show-badges {

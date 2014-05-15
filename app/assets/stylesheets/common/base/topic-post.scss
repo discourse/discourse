@@ -7,15 +7,15 @@
    font-size: 13px;
    padding-right: 4px;
    a {
-     color: scale-color($primary, $lightness: 30%);
+     color: mix($primary, $secondary, 70%);
    }
  }
  .fa {
    font-size: 11px;
    margin-left: 3px;
-   color: scale-color($primary, $lightness: 40%);
+   color: mix($primary, $secondary, 60%);
  }
   .new_user a, .user-title, .user-title a {
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
  }
 }

@@ -86,11 +86,11 @@
     filter: alpha(opacity=75);
   }
   .diff-ins {
-    background: scale-color($success, $lightness: 90%);
+    background: mix($success, $secondary, 10%);
   }
   ins {
     color: $success;
-    background: scale-color($success, $lightness: 90%);
+    background: mix($success, $secondary, 10%);
   }
   del, .diff-del {
     code, img {
@@ -113,17 +113,17 @@
     filter: alpha(opacity=50);
   }
   .diff-del {
-    background: scale-color($danger, $lightness: 60%);
+    background: mix($danger, $secondary, 40%);
   }
   del {
     color: $danger;
-    background: scale-color($danger, $lightness: 60%);
+    background: mix($danger, $secondary, 40%);
   }
   span.date {
     font-weight: bold;
   }
   span.edit-reason {
-    background-color: lighten($highlight, 23%);
+    background-color: mix($highlight, $secondary, 75%);
     padding: 3px 5px 5px 5px;
   }
   .modal-header {

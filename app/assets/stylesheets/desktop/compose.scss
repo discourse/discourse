@@ -14,10 +14,10 @@
 .composer-popup {
 
   @include box-shadow(3px 3px 3px rgba($primary, 0.34));
-  background: scale-color($highlight, $lightness: 50%);
+  background: mix($highlight, $secondary, 50%);
 
   &.urgent {
-    background: scale-color($danger, $lightness: 50%);
+    background: mix($danger, $secondary, 50%);
   }
 
   h3 {
@@ -56,14 +56,14 @@
 }
 
 .similar-topics {
-  background-color: scale-color($tertiary, $lightness: 60%);
+  background-color: mix($tertiary, $secondary, 40%);
 
   a[href] {
     color: #000;
   }
 
   .posts-count {
-    color: scale-color($tertiary, $lightness: -40%);
+    color: mix($tertiary, $primary, 60%);
     font-size: 12px;
   }
 }

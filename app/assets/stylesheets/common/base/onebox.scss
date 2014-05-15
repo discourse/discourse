@@ -13,7 +13,7 @@ a.loading-onebox {
 .onebox-result {
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
+  border-left: 5px solid mix($primary, $secondary, 25%);
   background: $almost-secondary-2;
   font-size: 14px;
   > .source {
@@ -118,12 +118,12 @@ aside.onebox {
     }
 
     a[href] {
-      color: scale-color($tertiary, $lightness: -20%);
+      color: mix($tertiary, $primary, 80%);
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: scale-color($tertiary, $lightness: -20%);
+      color: mix($tertiary, $primary, 80%);
     }
 
     img {

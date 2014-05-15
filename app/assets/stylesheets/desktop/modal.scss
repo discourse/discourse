@@ -68,7 +68,7 @@ animation: modal .25s;
     font-size: 20px;
     margin: 10px 10px 0;
     text-decoration: none;
-    color: scale-color($primary, $lightness: 35%);
+    color: mix($primary, $secondary, 65%);
     cursor: pointer;
     &:hover {
       color: $primary;
@@ -122,11 +122,11 @@ animation: modal .25s;
       li {
         margin: 0 4px 8px 0;
         a {
-          color: scale-color($primary, $lightness: 50%);
+          color: $middle-color;
           cursor: pointer;
         }
         a:hover {
-          color: scale-color($primary, $lightness: 40%);
+          color: mix($primary, $secondary, 60%);
         }
       }
     }

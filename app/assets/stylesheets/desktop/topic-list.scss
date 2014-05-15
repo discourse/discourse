@@ -64,12 +64,12 @@
   .fa-thumb-tack.unpinned {color: $primary;}
 
   a.title {color: $primary;}
-  a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
+  a.title:visited:not(.badge-notification) {color: mix($primary, $secondary, 75%);}
 
   > tbody > tr {
     background-color: $secondary;
     &:nth-child(even) {
-      background-color: darken($secondary, 4%);
+      background-color: mix($primary, $secondary, 4%);
     }
     &.archived a {
       opacity: 0.6;
@@ -84,7 +84,7 @@
       }
     }
     &.highlighted {
-      background-color: scale-color($tertiary, $lightness: 85%);
+      background-color: mix($tertiary, $secondary, 15%);
     }
   }
   th,
@@ -101,14 +101,14 @@
     }
   }
   th {
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     font-weight: normal;
     font-size: 14px;
-    button i.fa {color: scale-color($primary, $lightness: 50%);}
+    button i.fa {color: $middle-color;}
 
   }
   td {
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     font-size: 14px;
   }
 
@@ -143,7 +143,7 @@
   .topic-excerpt {
     font-size: 13px;
     margin-top: 8px;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     word-break: break-word;
     padding-right: 50px;
     line-height: 1.4;
@@ -199,7 +199,7 @@
   }
   .avatar {
     &.latest {
-      @include box-shadow(0 0 6px 1px desaturate(scale-color($tertiary, $lightness: 30%), 35%));
+      @include box-shadow(0 0 6px 1px desaturate(mix($tertiary, $secondary, 70%), 35%));
     }
   }
   .num {
@@ -321,7 +321,7 @@
   .featured-topic {
     margin: 6px 0;
     a.last-posted-at, a.last-posted-at:visited {
-      color: scale-color($primary, $lightness: 50%);
+      color: $middle-color;
     }
   }
 
@@ -379,7 +379,7 @@
     figure {
       float: left;
       margin: 3px 7px 0 0;
-      color: scale-color($primary, $lightness: 10%);
+      color: mix($primary, $secondary, 90%);
       font-weight: bold;
       font-size: 12px;
     }
@@ -473,7 +473,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: scale-color($danger, $lightness: 20%);
+    color: mix($danger, $secondary, 80%);
     font-size: 13px;
     cursor: default;
   }

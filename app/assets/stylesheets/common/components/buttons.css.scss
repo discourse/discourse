@@ -52,7 +52,7 @@
   }
   &[disabled] {
     background: $almost-secondary;
-    &:hover { color: scale-color($primary, $lightness: 70%); }
+    &:hover { color: mix($primary, $secondary, 30%); }
     cursor: not-allowed;
   }
 }
@@ -78,10 +78,10 @@
   }
   &:hover {
     color: #fff;
-    background: scale-color($tertiary, $lightness: -20%);
+    background: mix($tertiary, $primary, 80%);
   }
   &:active {
-    @include linear-gradient(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -10%));
+    @include linear-gradient(mix($tertiary, $primary, 80%), mix($tertiary, $primary, 90%));
     color: #fff;
   }
   &[disabled] {
@@ -100,10 +100,10 @@
     color: $secondary;
   }
   &:hover{
-    background: scale-color($danger, $lightness: -20%);
+    background: mix($danger, $primary, 80%);
   }
   &:active {
-    @include linear-gradient(scale-color($danger, $lightness: -20%), $danger);
+    @include linear-gradient(mix($danger, $primary, 80%), $danger);
   }
   &[disabled] {
     background: $danger;

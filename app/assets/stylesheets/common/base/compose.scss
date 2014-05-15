@@ -14,7 +14,7 @@
         padding: 5px;
         display: block;
         span.username {
-          color: darken($primary, 40%);
+          color: $primary;
         }
         span.name {
           font-size: 11px;
@@ -66,8 +66,8 @@ div.ac-wrap {
       display: inline-block;
       border: 1px solid $almost-secondary;
       &:hover {
-        background-color: scale-color($danger, $lightness: 75%);
-        border: 1px solid scale-color($danger, $lightness: 30%);
+        background-color: mix($danger, $secondary, 25%);
+        border: 1px solid mix($danger, $secondary, 70%);
         text-decoration: none;
         color: $danger;
       }

@@ -5,18 +5,19 @@
 body {
     button.ok {
     background: $success;
-    // this honestly looks better if we keep it always white
+    // Keep it white - looks better
     color: #fff;
     @include hover {
-      background: lighten($success, 10%);
+      background: mix($success, $secondary, 90%);
       color: #fff;
     }
   }
   button.cancel {
     background: $danger;
+    // Keep it white - looks better
     color: #fff;
     @include hover {
-      background: lighten($danger, 10%);
+      background: mix($danger, $secondary, 90%);
       color: #fff;
     }
   }
@@ -34,22 +35,22 @@ body {
   }
 
   .coldmap-high {
-    color: scale-color($tertiary, $lightness: 40%) !important;
+    color: mix($tertiary, $secondary, 70%) !important;
   }
   .coldmap-med {
     color: $tertiary !important;
   }
   .coldmap-low {
-    color: scale-color($tertiary, $lightness: -10%) !important;
+    color: mix($tertiary, $primary, 90%) !important;
   }
   .heatmap-high {
-    color: scale-color($danger, $lightness: 30%) !important;
+    color: mix($danger, $secondary, 70%) !important;
   }
   .heatmap-med {
     color: $danger  !important;
   }
   .heatmap-low {
-    color: darken($danger, 10%) !important;
+    color: mix($danger, $primary, 90%) !important;
   }
   #loading-message {
     position: absolute;

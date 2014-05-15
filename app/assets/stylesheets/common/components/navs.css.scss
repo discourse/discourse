@@ -31,7 +31,7 @@
       line-height: 20px;
       &:hover {
         color: $quaternary;
-        background-color: scale-color($quaternary, $lightness: 70%);
+        background-color: mix($quaternary, $secondary, 30%);
       }
     }
     &.active > a, > a.active {

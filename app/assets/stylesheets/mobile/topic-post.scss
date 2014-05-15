@@ -16,7 +16,7 @@ nav.post-controls {
   padding: 0;
   border-right: 1px solid $almost-secondary-2;
   clear: both;
-  button {color: scale-color($primary, $lightness: 50%);
+  button {color: $middle-color;
 }
 
 span.badge-posts {
@@ -248,7 +248,7 @@ a.star {
   }
 
   .domain {
-    color: scale-color($primary, $lightness: 75%);
+    color: mix($primary, $secondary, 25%);
   }
 
   .topic-links {
@@ -266,7 +266,7 @@ a.star {
       color: $primary;
       background: $almost-secondary;
       &:hover {
-        background: scale-color($primary, $lightness: 75%);
+        background: mix($primary, $secondary, 25%);
         color: $primary;
         border-bottom: 1px solid $almost-secondary-2;
 
@@ -338,20 +338,20 @@ span.post-count {
     height: auto;
   }
   &.moderator {
-    background-color: scale-color($highlight, $lightness: 60%);
+    background-color: mix($highlight, $secondary, 40%);
   }
 }
 
 .quote-button {
   display: none;
   position: absolute;
-  background-color: scale-color($primary, $lightness: 50%);
+  background-color: $middle-color;
   color: $primary;
   padding: 10px;
   width: 90px;
 
   &:hover {
-    background-color: scale-color($primary, $lightness: 50%);
+    background-color: $middle-color;
     cursor: pointer;
   }
 }
@@ -454,11 +454,11 @@ iframe {
 }
 
 .deleted {
-background-color: scale-color($danger, $lightness: 75%);
+  background-color: mix($danger, $secondary, 25%);
 }
 
 #show-topic-admin {
-  color: scale-color($primary, $lightness: 50%);
+  color: $middle-color;
   right: 0;
   border-right: 0;
   padding-right: 4px;
@@ -477,7 +477,7 @@ background-color: scale-color($danger, $lightness: 75%);
 }
 
 .username.new-user a {
-  color: scale-color($primary, $lightness: 70%);
+  color: mix($primary, $secondary, 30%);
 }
 
 .topic-meta-data {
@@ -526,7 +526,7 @@ blockquote {
 
 
 .quote .title {
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
+  border-left: 5px solid mix($primary, $secondary, 25%);
   background-color: $almost-secondary-2;
   padding: 10px 10px 10px 12px;
   clear: both;
@@ -539,7 +539,7 @@ blockquote {
 }
 
 .topic-body.highlighted {
-  background-color: scale-color($tertiary, $lightness: 75%);
+  background-color: mix($tertiary, $secondary, 25%);
 }
 
 .topic-avatar {
