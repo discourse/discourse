@@ -9,6 +9,7 @@ class Admin::ColorSchemesController < Admin::AdminController
   def create
     color_scheme = ColorScheme.create(color_scheme_params)
     if color_scheme.valid?
+      recompile!
       render json: color_scheme, root: false
     else
       render_json_error(color_scheme)
@@ -18,6 +19,7 @@ class Admin::ColorSchemesController < Admin::AdminController
   def update
     color_scheme = ColorSchemeRevisor.revise(@color_scheme, color_scheme_params)
     if color_scheme.valid?
+      recompile!
       render json: color_scheme, root: false
     else
       render_json_error(color_scheme)
@@ -29,8 +31,15 @@ class Admin::ColorSchemesController < Admin::AdminController
     render json: success_json
   end
 
-
   private
+
+  def recompile!
+    # Touch sentry file to trigger recompilation
+    File.open(DiscourseSassCompiler::COLOR_VERSION_SENTRY_FILE, "w") { }
+
+    DiscourseStylesheets.new(:desktop).compile
+    DiscourseStylesheets.new(:mobile).compile
+  end
 
   def fetch_color_scheme
     @color_scheme = ColorScheme.find(params[:id])

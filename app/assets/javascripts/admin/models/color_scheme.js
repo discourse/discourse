@@ -52,7 +52,7 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
 
     var self = this;
     this.set('savingStatus', I18n.t('saving'));
-    this.set('saving',true);
+    this.set('saving', true);
 
     var data = { enabled: this.enabled };
 
@@ -85,6 +85,7 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
       self.set('savingStatus', I18n.t('saved'));
       self.set('saving', false);
       self.notifyPropertyChange('description');
+      window.location.reload();
     });
   },
 

@@ -2,6 +2,8 @@ require_dependency 'sass/discourse_sass_importer'
 
 class DiscourseSassCompiler
 
+  COLOR_VERSION_SENTRY_FILE = "#{Rails.root}/tmp/cache/color_version.discourse"
+
   def self.compile(scss, target, opts={})
     self.new(scss, target).compile(opts)
   end
