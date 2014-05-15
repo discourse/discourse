@@ -359,7 +359,7 @@ a.star {
 
   span.domain {
     font-size: 10px;
-    color: scale-color($primary, $lightness: 50%);
+    color: mix($primary, $secondary, 50%);
   }
 
 
