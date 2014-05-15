@@ -71,21 +71,11 @@ describe BadgeGranter do
 
   end
 
-  context "revoke" do
+  context "update_badges" do
     let(:user) { Fabricate(:user) }
     let(:logger) { StaffActionLogger.new(Fabricate(:admin)) }
 
-    it "is called by User#change_trust_level!" do
-      BadgeGranter.expects(:update_badges)
-      user.change_trust_level!(:basic)
-    end
-
-    it "is called by BoostTrustLevel#save!" do
-      BadgeGranter.expects(:update_badges)
-      BoostTrustLevel.new(user: user, level: 1, logger: logger).save!
-    end
-
-    it "grants and revokes badges" do
+    it "grants and revokes trust level badges" do
       user.change_trust_level!(:elder)
       UserBadge.where(user_id: user.id, badge_id: Badge.trust_level_badge_ids).count.should eq(4)
       BoostTrustLevel.new(user: user, level: 1, logger: logger).save!
