@@ -1850,6 +1850,16 @@ en:
         one:   "1 granted"
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
-      example_badge:
-        name: Example Badge
-        description: This is a generic example badge.
+      badge:
+        basic_user:
+          name: Basic User
+          description: Trusted as a basic user.
+        regular_user:
+          name: Regular User
+          description: Trusted as a regular user.
+        leader:
+          name: Leader
+          description: One of the most active and prolific users.
+        elder:
+          name: Elder
+          description: Long term community leader who has been around and seen everything.

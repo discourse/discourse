@@ -1,9 +1,14 @@
 require 'spec_helper'
+require_dependency 'boost_trust_level'
 
 describe BadgeGranter do
 
   let(:badge) { Fabricate(:badge) }
   let(:user) { Fabricate(:user) }
+
+  before do
+    SiteSetting.enable_badges = true
+  end
 
   describe 'grant' do
 
@@ -64,6 +69,19 @@ describe BadgeGranter do
       user.reload.title.should == nil
     end
 
+  end
+
+  context "update_badges" do
+    let(:user) { Fabricate(:user) }
+    let(:logger) { StaffActionLogger.new(Fabricate(:admin)) }
+
+    it "grants and revokes trust level badges" do
+      user.change_trust_level!(:elder)
+      UserBadge.where(user_id: user.id, badge_id: Badge.trust_level_badge_ids).count.should eq(4)
+      BoostTrustLevel.new(user: user, level: 1, logger: logger).save!
+      UserBadge.where(user_id: user.id, badge_id: 1).first.should_not be_nil
+      UserBadge.where(user_id: user.id, badge_id: 2).first.should be_nil
+    end
   end
 
 end

@@ -18,6 +18,7 @@ class BoostTrustLevel
                 @user.update_attributes!(trust_level: @level)
               end
     @logger.log_trust_level_change(@user, previous_level, @level)
+    BadgeGranter.update_badges(@user, trust_level: @level)
     success
   end
 

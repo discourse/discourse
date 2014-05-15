@@ -35,7 +35,7 @@ Discourse.Badge = Discourse.Model.extend({
     @type {String}
   **/
   displayName: function() {
-    var i18nKey = "badges." + this.get('i18nNameKey') + ".name";
+    var i18nKey = "badges.badge." + this.get('i18nNameKey') + ".name";
     return I18n.t(i18nKey, {defaultValue: this.get('name')});
   }.property('name', 'i18nNameKey'),
 
@@ -46,7 +46,7 @@ Discourse.Badge = Discourse.Model.extend({
     @type {String}
   **/
   translatedDescription: function() {
-    var i18nKey = "badges." + this.get('i18nNameKey') + ".description",
+    var i18nKey = "badges.badge." + this.get('i18nNameKey') + ".description",
         translation = I18n.t(i18nKey);
     if (translation.indexOf(i18nKey) !== -1) {
       translation = null;

@@ -1,6 +1,6 @@
 {{#link-to 'badges.show' badge}}
-  <span {{bind-attr class=":user-badge badgeTypeClassName" data-badge-name="badge.name" title="badge.description"}}>
+  <span {{bind-attr class=":user-badge badgeTypeClassName" data-badge-name="badge.name" title="badge.translatedDescription"}}>
     <i class='fa fa-certificate'></i>
-    {{badge.name}}
+    {{badge.displayName}}
   </span>
 {{/link-to}}

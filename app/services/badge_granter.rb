@@ -24,9 +24,11 @@ class BadgeGranter
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
         end
 
-        @user.notifications.create(notification_type: Notification.types[:granted_badge],
-                                   data: { badge_id: @badge.id,
-                                           badge_name: @badge.name }.to_json)
+        if SiteSetting.enable_badges?
+          @user.notifications.create(notification_type: Notification.types[:granted_badge],
+                                     data: { badge_id: @badge.id,
+                                             badge_name: @badge.name }.to_json)
+        end
       end
     end
 
@@ -51,6 +53,24 @@ class BadgeGranter
       # unless the data hash is converted into a hstore.
       notification = user_badge.user.notifications.where(notification_type: Notification.types[:granted_badge]).where("data LIKE ?", "%" + user_badge.badge_id.to_s + "%").select {|n| n.data_hash["badge_id"] == user_badge.badge_id }.first
       notification && notification.destroy
+    end
+  end
+
+  def self.update_badges(user, opts={})
+    if opts.has_key?(:trust_level)
+      # Update trust level badges.
+      trust_level = opts[:trust_level]
+      Badge.trust_level_badge_ids.each do |badge_id|
+        user_badge = UserBadge.find_by(user_id: user.id, badge_id: badge_id)
+        if user_badge
+          # Revoke the badge if trust level was lowered.
+          BadgeGranter.revoke(user_badge) if trust_level < badge_id
+        else
+          # Grant the badge if trust level was increased.
+          badge = Badge.find(badge_id)
+          BadgeGranter.grant(badge, user) if trust_level >= badge_id
+        end
+      end
     end
   end
 
