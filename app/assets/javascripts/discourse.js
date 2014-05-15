@@ -114,6 +114,16 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     @method start
   **/
   start: function() {
+
+    // Load any ES6 initializers
+    Ember.keys(requirejs._eak_seen).filter(function(key) {
+      return (/\/initializers\//).test(key);
+    }).forEach(function(moduleName) {
+      var module = require(moduleName, null, null, true);
+      if (!module) { throw new Error(moduleName + ' must export an initializer.'); }
+      Discourse.initializer(module.default);
+    });
+
     var initializers = this.initializers;
     if (initializers) {
       var self = this;
@@ -127,6 +137,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
         }
       });
     }
+
   },
 
   requiresRefresh: function(){
@@ -163,11 +174,4 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     }
   }.property("isReadOnly")
 
-});
-
-Discourse.initializer({
-  name: "register-discourse-location",
-  initialize: function(container, application) {
-    application.register('location:discourse-location', Ember.DiscourseLocation);
-  }
 });
