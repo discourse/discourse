@@ -9,7 +9,7 @@
 //= require ../../app/assets/javascripts/discourse/lib/probes.js
 
 // Externals we need to load first
-//= require development/jquery-2.1.0.js
+//= require development/jquery-2.1.1.js
 //= require jquery.ui.widget.js
 //= require handlebars.js
 //= require development/ember.js
