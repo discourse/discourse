@@ -467,10 +467,10 @@ a.star {
   clear: left;
   padding: 20px 0 15px 0;
   #topic-list > tbody > tr:nth-child(even) {
-    background-color: scale-color($primary, $lightness: 97%);
+    background-color: mix($primary, $secondary, 3%);
   }
   #topic-list > tbody > tr:nth-child(odd) {
-    background-color: $secondary;
+    background-color: mix($primary, $secondary, 0%);
   }
   table {
     box-shadow: none;
