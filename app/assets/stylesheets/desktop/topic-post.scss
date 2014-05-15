@@ -358,7 +358,7 @@ a.star {
 
   span.domain {
     font-size: 10px;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
   }
 
 
