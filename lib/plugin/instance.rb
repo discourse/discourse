@@ -212,7 +212,7 @@ class Plugin::Instance
 
   def register_assets!
     assets.each do |asset, opts|
-      if asset =~ /\.js$|\.js\.erb$/
+      if asset =~ /\.js$|\.js\.erb$|\.js\.es6$/
         if opts == :admin
           DiscoursePluginRegistry.admin_javascripts << asset
         else
