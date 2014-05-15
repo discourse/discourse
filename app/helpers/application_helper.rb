@@ -11,6 +11,16 @@ module ApplicationHelper
   include CanonicalURL::Helpers
   include ConfigurableUrls
 
+  def script(*args)
+    # This crazy stuff is needed to get window.onerror working under a CDN
+    # NGINX change is also required and baked into sample config
+    if GlobalSetting.cdn_url
+      javascript_include_tag(*args, "crossorigin" => "anonymous")
+    else
+      javascript_include_tag(*args)
+    end
+  end
+
   def discourse_csrf_tags
     # anon can not have a CSRF token cause these are all pages
     # that may be cached, causing a mismatch between session CSRF
