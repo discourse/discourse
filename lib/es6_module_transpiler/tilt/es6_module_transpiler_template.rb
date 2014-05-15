@@ -83,13 +83,17 @@ module Tilt
     end
 
     def module_name(root_path, logical_path)
-      path = ''
-      if prefix = ES6ModuleTranspiler.lookup_prefix(File.join(root_path, logical_path))
-        path = File.join(prefix, logical_path)
-      else
-        path = logical_path
+      path = nil
+
+      # If the resource is a plugin, use the plugin name as a prefix
+      if root_path =~ /(.*\/discourse\/plugins\/[^\/]+)\//
+        plugin_path = "#{Regexp.last_match[1]}/plugin.rb"
+
+        plugin = Discourse.plugins.find {|p| p.path == plugin_path }
+        path = "discourse/plugins/#{plugin.name}/#{logical_path.sub(/javascripts\//, '')}" if plugin
       end
 
+      path ||= logical_path
       if ES6ModuleTranspiler.transform
         path = ES6ModuleTranspiler.transform.call(path)
       end

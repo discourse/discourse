@@ -41,7 +41,7 @@ var Poll = Discourse.Model.extend({
   }
 });
 
-var PollController = require("javascripts/poll-controller").default;
+var PollController = require("discourse/plugins/poll/controllers/poll").default;
 
 var PollView = Ember.View.extend({
   templateName: "poll",
