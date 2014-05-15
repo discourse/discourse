@@ -43,6 +43,10 @@ Discourse.ColorScheme = Discourse.Model.extend(Ember.Copyable, {
     return !this.get('changed') || this.get('saving') || _.any(this.get('colors'), function(c) { return !c.get('valid'); });
   }.property('changed'),
 
+  disableEnable: function() {
+    return !this.get('id') || this.get('saving');
+  }.property('id', 'saving'),
+
   newRecord: function() {
     return (!this.get('id'));
   }.property('id'),

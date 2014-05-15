@@ -18,7 +18,7 @@
 
         <div class="controls">
           <button {{action save}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
-          <button {{action toggleEnabled}} class="btn">
+          <button {{action toggleEnabled}} {{bind-attr disabled="disableEnable"}} class="btn">
             {{#if enabled}}
               {{i18n disable}}
             {{else}}
