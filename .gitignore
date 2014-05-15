@@ -36,9 +36,13 @@ config/discourse.conf
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
-/plugins
 /logfile
 log/
+
+# Ignore plugins except for the bundled ones.
+/plugins
+!/plugins/emoji
+!/plugins/poll
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 
