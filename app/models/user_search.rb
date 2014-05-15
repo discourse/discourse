@@ -6,10 +6,11 @@ class UserSearch
     @term_like = "#{term.downcase}%"
     @topic_id = opts[:topic_id]
     @searching_user = opts[:searching_user]
+    @limit = opts[:limit] || 20
   end
 
   def search
-    users = User.order(User.sql_fragment("CASE WHEN username_lower = ? THEN 0 ELSE 1 END ASC", :term))
+    users = User.order(User.sql_fragment("CASE WHEN username_lower = ? THEN 0 ELSE 1 END ASC", @term.downcase))
 
     if @term.present?
       if SiteSetting.enable_names?
@@ -37,7 +38,7 @@ class UserSearch
     end
 
     users.order("CASE WHEN last_seen_at IS NULL THEN 0 ELSE 1 END DESC, last_seen_at DESC, username ASC")
-         .limit(20)
+         .limit(@limit)
   end
 
 end

@@ -5,12 +5,12 @@ describe UserSearch do
   let(:topic)     { Fabricate :topic }
   let(:topic2)    { Fabricate :topic }
   let(:topic3)    { Fabricate :topic }
-  let(:user1)     { Fabricate :user, username: "mrblonde", name: "Michael Madsen" }
-  let(:user2)     { Fabricate :user, username: "mrblue",   name: "Eddie Bunker" }
-  let(:user3)     { Fabricate :user, username: "mrorange", name: "Tim Roth" }
-  let(:user4)     { Fabricate :user, username: "mrpink",   name: "Steve Buscemi" }
-  let(:user5)     { Fabricate :user, username: "mrbrown",  name: "Quentin Tarantino" }
-  let(:user6)     { Fabricate :user, username: "mrwhite",  name: "Harvey Keitel" }
+  let(:user1)     { Fabricate :user, username: "mrb", name: "Michael Madsen", last_seen_at: 10.days.ago }
+  let(:user2)     { Fabricate :user, username: "mrblue",   name: "Eddie Bunker", last_seen_at: 9.days.ago  }
+  let(:user3)     { Fabricate :user, username: "mrorange", name: "Tim Roth", last_seen_at: 8.days.ago }
+  let(:user4)     { Fabricate :user, username: "mrpink",   name: "Steve Buscemi",  last_seen_at: 7.days.ago }
+  let(:user5)     { Fabricate :user, username: "mrbrown",  name: "Quentin Tarantino", last_seen_at: 6.days.ago }
+  let(:user6)     { Fabricate :user, username: "mrwhite",  name: "Harvey Keitel",  last_seen_at: 5.days.ago }
   let(:admin)     { Fabricate :admin, username: "theadmin" }
   let(:moderator) { Fabricate :moderator, username: "themod" }
 
@@ -70,8 +70,8 @@ describe UserSearch do
     results = search_for("MR", searching_user: admin)
     results.size.should == 6
 
-    results = search_for("MRB", searching_user: admin)
-    results.size.should == 3
+    results = search_for("MRB", searching_user: admin, limit: 2)
+    results.size.should == 2
 
     # topic priority
     results = search_for("mrb", topic_id: topic.id)
@@ -79,20 +79,25 @@ describe UserSearch do
 
 
     results = search_for("mrb", topic_id: topic2.id)
-    results.first.should == user2
+    results[1].should == user2
 
     results = search_for("mrb", topic_id: topic3.id)
-    results.first.should == user5
+    results[1].should == user5
 
     # When searching by name is enabled, it returns the record
-    SiteSetting.stubs(:enable_names).returns(true)
+    SiteSetting.enable_names = true
     results = search_for("Tarantino")
     results.size.should == 1
 
     # When searching by name is disabled, it will not return the record
-    SiteSetting.stubs(:enable_names).returns(false)
+    SiteSetting.enable_names = false
     results = search_for("Tarantino")
     results.size.should == 0
+
+
+    # find an exact match first
+    results = search_for("mrB")
+    results.first.should == user1
 
   end
 
