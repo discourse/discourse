@@ -154,7 +154,7 @@ a:hover.reply-new {
     bottom: 0;
     width: 0;
     border-right: 1px solid  $almost-secondary;
-    background-color:  mix($success, $secondary, 70%);
+    background-color:  mix($success, $secondary, 40%);
     transition: width .75s;
   }
 }

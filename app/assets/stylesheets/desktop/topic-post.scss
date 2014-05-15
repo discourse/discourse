@@ -622,13 +622,13 @@ iframe {
 
 .moderator {
   .topic-body {
-    background-color: scale-color($highlight, $lightness: 75%);
+    background-color: mix($highlight, $secondary, 25%);
   }
 }
 
 .deleted {
   .topic-body {
-  background-color: scale-color($danger, $lightness: 75%);
+  background-color: mix($danger, $secondary, 25%);
   }
 }
 
