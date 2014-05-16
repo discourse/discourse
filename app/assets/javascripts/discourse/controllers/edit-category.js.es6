@@ -114,9 +114,7 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
     return !this.get('isUncategorized') && this.get('id');
   }.property('isUncategorized', 'id'),
 
-  showPositionInput: function() {
-    return Discourse.SiteSettings.fixed_category_positions;
-  }.property('Discourse.SiteSettings.fixed_category_positions'),
+  showPositionInput: Discourse.computed.setting('fixed_category_positions'),
 
   actions: {
 
