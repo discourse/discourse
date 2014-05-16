@@ -89,29 +89,41 @@ describe CategoryList do
       uncategorized.save
     end
 
-    it "returns topics in specified order" do
-      cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
-      category_ids.should == [cat2.id, cat1.id]
+    context 'fixed_category_positions is enabled' do
+      before do
+        SiteSetting.stubs(:fixed_category_positions).returns(true)
+      end
+
+      it "returns categories in specified order" do
+        cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
+        category_ids.should == [cat2.id, cat1.id]
+      end
+
+      it "handles duplicate position values" do
+        cat1, cat2, cat3, cat4 = Fabricate(:category, position: 0), Fabricate(:category, position: 0), Fabricate(:category, position: nil), Fabricate(:category, position: 0)
+        first_three = category_ids[0,3] # The order is not deterministic
+        first_three.should include(cat1.id)
+        first_three.should include(cat2.id)
+        first_three.should include(cat4.id)
+        category_ids[-1].should == cat3.id
+      end
     end
 
-    it "returns default order categories" do
-      cat1, cat2 = Fabricate(:category, position: nil), Fabricate(:category, position: nil)
-      category_ids.should include(cat1.id)
-      category_ids.should include(cat2.id)
-    end
+    context 'fixed_category_positions is disabled' do
+      before do
+        SiteSetting.stubs(:fixed_category_positions).returns(false)
+      end
 
-    it "default always at the end" do
-      cat1, cat2, cat3 = Fabricate(:category, position: 0), Fabricate(:category, position: 2), Fabricate(:category, position: nil)
-      category_ids.should == [cat1.id, cat2.id, cat3.id]
-    end
+      it "returns categories in order of activity" do
+        cat1 = Fabricate(:category, position: 0, posts_week: 1, posts_month: 1, posts_year: 1)
+        cat2 = Fabricate(:category, position: 1, posts_week: 2, posts_month: 1, posts_year: 1)
+        category_ids.should == [cat2.id, cat1.id]
+      end
 
-    it "handles duplicate position values" do
-      cat1, cat2, cat3, cat4 = Fabricate(:category, position: 0), Fabricate(:category, position: 0), Fabricate(:category, position: nil), Fabricate(:category, position: 0)
-      first_three = category_ids[0,3] # The order is not deterministic
-      first_three.should include(cat1.id)
-      first_three.should include(cat2.id)
-      first_three.should include(cat4.id)
-      category_ids[-1].should == cat3.id
+      it "returns categories in order of id when there's no activity" do
+        cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
+        category_ids.should == [cat1.id, cat2.id]
+      end
     end
   end
 

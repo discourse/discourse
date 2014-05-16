@@ -165,13 +165,6 @@ describe CategoriesController do
           @category.color.should == "ff0"
           @category.auto_close_hours.should == 72
         end
-
-        it "can set category to use default position" do
-          xhr :put, :update, valid_attrs.merge(position: 'default')
-          response.should be_success
-          @category.reload
-          @category.position.should be_nil
-        end
       end
     end
 

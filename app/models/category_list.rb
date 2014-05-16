@@ -57,16 +57,19 @@ class CategoryList
       @categories = Category
                         .includes(:featured_users, subcategories: [:topic_only_relative_url])
                         .secured(@guardian)
-                        .order('position asc')
-                        .order('COALESCE(categories.posts_week, 0) DESC')
-                        .order('COALESCE(categories.posts_month, 0) DESC')
-                        .order('COALESCE(categories.posts_year, 0) DESC')
-                        .to_a
+      if SiteSetting.fixed_category_positions
+        @categories = @categories.order('position ASC').order('id ASC')
+      else
+        @categories = @categories.order('COALESCE(categories.posts_week, 0) DESC')
+                                 .order('COALESCE(categories.posts_month, 0) DESC')
+                                 .order('COALESCE(categories.posts_year, 0) DESC')
+      end
 
       if latest_post_only?
         @categories  = @categories.includes(:latest_post => {:topic => :last_poster} )
       end
 
+      @categories = @categories.to_a
       subcategories = {}
       to_delete = Set.new
       @categories.each do |c|

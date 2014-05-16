@@ -78,6 +78,9 @@ basic:
   category_featured_topics:
     client: true
     default: 3
+  fixed_category_positions:
+    client: true
+    default: false
   topics_per_page: 30
   posts_per_page:
     client: true

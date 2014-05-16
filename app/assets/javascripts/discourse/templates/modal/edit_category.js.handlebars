@@ -123,15 +123,12 @@
           </section>
         {{/if}}
 
-        <section class='field'>
-          <label>{{i18n category.position}}</label>
-          <span {{action disableDefaultPosition}}>{{textField value=position disabled=defaultPosition class="position-input"}}</span>
-          &nbsp;{{i18n or}}&nbsp;
-          <button {{bind-attr class=":btn defaultPosition:btn-primary"}} {{action toggleDefaultPosition}}>
-            <span {{bind-attr class="defaultPosition::hidden"}}><i class="fa fa-check"></i></span>
-            {{i18n category.default_position}}
-          </button>
-        </section>
+        {{#if showPositionInput}}
+          <section class='field'>
+            <label>{{i18n category.position}}</label>
+            {{textField value=position class="position-input"}}
+          </section>
+        {{/if}}
       </div>
     {{/unless}}
   </div>
