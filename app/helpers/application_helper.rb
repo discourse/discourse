@@ -14,11 +14,12 @@ module ApplicationHelper
   def script(*args)
     # This crazy stuff is needed to get window.onerror working under a CDN
     # NGINX change is also required and baked into sample config
-    if GlobalSetting.cdn_url
-      javascript_include_tag(*args, "crossorigin" => "anonymous")
-    else
+    # @sam: disabling this until we update our CDN configuration
+    #if GlobalSetting.cdn_url
+    #  javascript_include_tag(*args, "crossorigin" => "anonymous")
+    #else
       javascript_include_tag(*args)
-    end
+    #end
   end
 
   def discourse_csrf_tags
