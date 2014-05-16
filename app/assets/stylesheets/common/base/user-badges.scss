@@ -79,19 +79,21 @@ table.badges-listing {
 .show-badge {
   .badge-user {
     display: inline-block;
+    text-align: center;
+    width: 100px;
     padding: 5px 10px;
-    border: 1px solid lighten($primary, 60%);
-    margin-bottom: 3px;
+    margin-bottom: 10px;
 
     .details {
-      float: right;
       margin: 0 10px;
       padding-top: 3px;
-      color: darken($primary, 40%);;
+      color: $primary;
     }
+
     .date {
       display: block;
-      color: $primary;
+      color: lighten($primary, 40%);
+      font-size: 10px;
     }
   }
 }

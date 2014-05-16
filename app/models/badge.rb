@@ -9,6 +9,12 @@ class Badge < ActiveRecord::Base
   def self.trust_level_badge_ids
     (1..4).to_a
   end
+
+  def reset_grant_count!
+    self.grant_count = UserBadge.where(badge_id: id).count
+    save!
+  end
+
 end
 
 # == Schema Information
