@@ -40,7 +40,8 @@ Discourse.Badge = Discourse.Model.extend({
   }.property('name', 'i18nNameKey'),
 
   /**
-    The i18n translated description for this badge. `null` if no translation exists.
+    The i18n translated description for this badge. Returns the original
+    description if no translation exists.
 
     @property translatedDescription
     @type {String}
@@ -49,7 +50,7 @@ Discourse.Badge = Discourse.Model.extend({
     var i18nKey = "badges.badge." + this.get('i18nNameKey') + ".description",
         translation = I18n.t(i18nKey);
     if (translation.indexOf(i18nKey) !== -1) {
-      translation = null;
+      translation = this.get('description');
     }
     return translation;
   }.property('i18nNameKey'),
