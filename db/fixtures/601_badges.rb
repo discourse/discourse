@@ -1,27 +1,3 @@
-def reset_badge_grant_count(badge)
-  badge.grant_count = UserBadge.where(badge_id: badge.id).count
-  badge.save!
-end
-
-def grant_trust_level_badges_to_user(user)
-  return if user.id == Discourse.system_user.id
-  Badge.trust_level_badge_ids.each do |badge_id|
-    user_badge = UserBadge.where(user_id: user.id, badge_id: badge_id).first
-    if user_badge
-      # Revoke the badge if the user is not supposed to have it.
-      if user.trust_level < badge_id
-        user_badge.destroy!
-      end
-    else
-      # Grant the badge if the user is supposed to have it.
-      badge = Badge.find(badge_id)
-      if user.trust_level >= badge_id
-        UserBadge.create!(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now)
-      end
-    end
-  end
-end
-
 trust_level_badges = [
   {id: 1, name: "Basic User", type: 3},
   {id: 2, name: "Regular User", type: 3},
@@ -32,7 +8,7 @@ trust_level_badges = [
 backfill_trust_level_badges = false
 
 trust_level_badges.each do |spec|
-  backfill_trust_level_badges ||= Badge.where(id: spec[:id]).first.nil?
+  backfill_trust_level_badges ||= Badge.find_by(id: spec[:id]).nil?
 
   Badge.seed do |b|
     b.id = spec[:id]
@@ -42,6 +18,29 @@ trust_level_badges.each do |spec|
 end
 
 if backfill_trust_level_badges
-  User.find_each {|user| grant_trust_level_badges_to_user(user) }
-  Badge.where(id: Badge.trust_level_badge_ids).each {|badge| reset_badge_grant_count(badge) }
+  puts "Backfilling trust level badges!"
+
+
+  Badge.trust_level_badge_ids.each do |badge_id|
+    sql = <<SQL
+    DELETE FROM user_badges
+    WHERE badge_id = :badge_id AND
+          user_id NOT IN (SELECT id FROM users WHERE trust_level <= :badge_id)
+SQL
+
+    User.exec_sql(sql, badge_id: badge_id)
+
+    sql = <<SQL
+    INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id)
+    SELECT :badge_id, id, :now, :system_id
+    FROM users
+    WHERE trust_level >= :trust_level AND
+          id NOT IN (SELECT user_id FROM user_badges WHERE badge_id = :badge_id) AND
+          id <> :system_id
+SQL
+    User.exec_sql(sql, badge_id: badge_id, now: Time.now, system_id: Discourse.system_user.id, trust_level: badge_id)
+
+  end
+
+  Badge.where(id: Badge.trust_level_badge_ids).each {|badge| badge.reset_grant_count! }
 end
