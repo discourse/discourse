@@ -1,6 +1,6 @@
 var MAX_SHOWN = 5;
 
-Discourse.PostGutterComponent = Em.Component.extend({
+export default Em.Component.extend({
   classNameBindings: [':span5', ':gutter'],
 
   // Roll up links to avoid duplicates
@@ -68,7 +68,7 @@ Discourse.PostGutterComponent = Em.Component.extend({
     if ($target.hasClass('toggle-more')) {
       this.toggleProperty('expanded');
       return false;
-    } else if ($target.hasClass('reply-new')) {
+    } else if ($target.closest('.reply-new').length) {
       this.sendAction('newTopicAction', this.get('post'));
       return false;
     }
