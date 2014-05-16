@@ -1132,6 +1132,7 @@ en:
       this_year: "this year"
       position: "position"
       default_position: "Default Position"
+      position_disabled: 'Categories will be displayed in order of activity. To control the order of categories in lists, enable the "fixed category positions" setting.'
       parent: "Parent Category"
 
     flagging:
