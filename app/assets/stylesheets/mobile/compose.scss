@@ -28,11 +28,11 @@ display: none;
   #file-uploading {
     left: 51%;
     font-size: 12px;
-    color: scale-color($secondary, $lightness: 50%);
+    color: mix($secondary, $primary, 60%);
   }
   #draft-status {
     right: 70px;
-    color: scale-color($primary, $lightness: 75%);
+    color: mix($primary, $secondary, 25%);
     &.flash {
       color: $danger;
     }
@@ -41,7 +41,7 @@ display: none;
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: $almost-secondary;
   bottom: 0;
   font-size: 14px;
   position: fixed;
@@ -52,7 +52,7 @@ display: none;
     right: 13px;
     position: absolute;
     font-size: 15px;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     text-decoration: none;
     &:before {
       font-family: "FontAwesome";
@@ -87,7 +87,7 @@ display: none;
   &.draft {
     height: 60px !important;
     cursor: pointer;
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 1px solid $almost-secondary;
     .draft-text {
       display: block;
           position: absolute;
@@ -102,7 +102,7 @@ display: none;
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 1px solid $almost-secondary;
     .saving-text {
       display: block;
     }
@@ -197,14 +197,14 @@ display: none;
     #reply-title {
       margin-right: 10px;
       &:disabled {
-        background-color: scale-color($primary, $lightness: 75%);
+        background-color: mix($primary, $secondary, 25%);
       }
     }
     #wmd-input:disabled {
-      background-color: scale-color($primary, $lightness: 75%);
+      background-color: mix($primary, $secondary, 25%);
     }
     #wmd-input, #wmd-preview {
-      color: darken($primary, 40%);
+      color: $primary;
 
       video {
         max-width: 100%;
@@ -216,7 +216,7 @@ display: none;
       }
     }
     #wmd-preview {
-      border: 1px dashed scale-color($primary, $lightness: 90%);
+      border: 1px dashed $almost-secondary;
       overflow: auto;
       visibility: visible;
       p {
@@ -356,7 +356,7 @@ display: none;
   #wmd-button-bar {
     top: 0;
     position: absolute;
-    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    border-bottom: 1px solid $almost-secondary;
     background-color: $secondary;
     z-index: 100;
   }

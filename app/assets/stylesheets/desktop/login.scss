@@ -11,7 +11,7 @@
 
 #login-form {
   a {
-    color: scale-color($primary, $lightness: 35%);
+    color: mix($primary, $secondary, 75%);
     cursor: pointer;
   }
 }

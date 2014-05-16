@@ -63,7 +63,7 @@
     display: inline-block;
   }
   .instructions {
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     margin-left: 160px;
     margin-top: 5px;
     margin-bottom: 10px;
@@ -77,7 +77,7 @@
     color: $tertiary;
   }
   .warning {
-    background-color: scale-color($danger, $lightness: 30%);
+    background-color: mix($danger, $secondary, 70%);
     padding: 5px 8px;
     color: $secondary;
     width: 520px;
@@ -138,7 +138,7 @@
   .user-content {
     padding: 10px 8px;
     background-color: $secondary;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid $almost-secondary;
     margin-bottom: 10px;
 
     .btn.right {
@@ -155,13 +155,13 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid $almost-secondary;
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid $almost-secondary;
       }
     }
   }
@@ -230,7 +230,7 @@
 
       .secondary {
         float: right;
-        background-color: rgba(scale-color($primary, $lightness: 20%), .9);
+        background-color: rgba(mix($primary, $secondary, 80%), .9);
         text-align: right;
         padding: 0 20px;
         max-width: 165px;
@@ -249,7 +249,7 @@
     }
 
     .controls {
-      background-color: scale-color($primary, $lightness: 30%);
+      background-color: mix($primary, $secondary, 70%);
       padding: 12px;
       height: 30px;
 
@@ -304,11 +304,11 @@
       color: $primary;
     }
     .item.moderator-action {
-      background-color:  scale-color($highlight, $lightness: 50%);
+      background-color:  mix($highlight, $secondary, 50%);
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: scale-color($danger, $lightness: 50%);
+      background-color: mix($danger, $secondary, 50%);
     }
     .item.hidden {
       display: block;
@@ -317,7 +317,7 @@
     .item {
       padding: 20px 8px 15px 8px;
       background-color: $secondary;
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid $almost-secondary;
     }
     .type {
       color: $primary;
@@ -341,7 +341,7 @@
       font-size: 14px;
     }
     .edit-reason {
-      background-color: scale-color($highlight, $lightness: 25%);
+      background-color: mix($highlight, $secondary, 75%);
       padding: 3px 5px 5px 5px;
     }
     .remove-bookmark {

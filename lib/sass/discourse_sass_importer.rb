@@ -53,6 +53,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
             override = color_scheme.colors_by_name[name]
             contents << "$#{name}: ##{override ? override.hex : base_hex} !default;\n"
           end
+          depend_on DiscourseSassCompiler::COLOR_VERSION_SENTRY_FILE
         else
           special_imports[name].each do |css_file|
             contents << File.read(css_file)

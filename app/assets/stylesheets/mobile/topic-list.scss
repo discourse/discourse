@@ -44,12 +44,12 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid $almost-secondary;
 
   > tbody > tr {
     background-color: $secondary;
     &:nth-child(even) {
-      background-color: darken($secondary, 4%);
+      background-color: mix($primary, $secondary, 4%);
     }
     &.archived a {
       opacity: 0.6;
@@ -60,7 +60,7 @@
       }
     }
     &.highlighted {
-      background-color: scale-color($tertiary, $lightness: 75%);
+      background-color: mix($tertiary, $secondary, 25%);
     }
   }
   th,
@@ -69,7 +69,7 @@
     line-height: 1.25;
     text-align: left;
     vertical-align: middle;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     &:first-of-type {
       padding-left: 5px;
     }
@@ -78,7 +78,8 @@
     }
   }
   th {
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
+    background-color: $secondary;
     font-weight: bold;
     font-size: 13px;
     &:first-of-type {
@@ -94,7 +95,7 @@
   .main-link {
     font-size: 16px;
       a {color: $primary;}
-      a:visited {color: scale-color($primary, $lightness: 50%);}
+      a:visited {color: $middle-color;}
     i.score {
       color: $success;
       cursor: pointer;
@@ -104,7 +105,7 @@
   .topic-excerpt {
     font-size: 14px;
     margin-top: 8px;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     word-break: break-word;
   }
 
@@ -137,7 +138,7 @@
       margin-right: 14px;
     }
     .fa {
-      color: scale-color($primary, $lightness: 50%);
+      color: $middle-color;
     }
     .fa-heart{
       position: relative;
@@ -203,7 +204,7 @@
     .featured-topic {
       margin: 8px 0;
       a.last-posted-at, a.last-posted-at:visited {
-        color: scale-color($primary, $lightness: 50%);
+        color: $middle-color;
       }
     }
   }
@@ -229,9 +230,6 @@
 
 .category-list-item {
   margin-bottom: 10px;
-  #topic-list tbody tr:nth-child(even) {
-    background-color: $secondary;
-  }
   .badge-category {
     float: left;
     margin: 1px 4px 0 0;
@@ -241,14 +239,14 @@
     display: none;
   }
   > footer {
-    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    border-bottom: 1px solid $almost-secondary;
     border-top: 0;
     padding: 7px 10px;
-    background-color: scale-color($primary, $lightness: 95%);
+    background-color: $almost-secondary-2;
     figure {
       float: left;
       margin: 3px 7px 0 0;
-      color: scale-color($primary, $lightness: 10%);
+      color: mix($primary, $secondary, 90%);
       font-weight: bold;
       font-size: 12px;
     }
@@ -305,7 +303,7 @@
 .list-controls {
   .home {
     color: $primary;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
   }
 
   .badge-category {
@@ -338,7 +336,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: scale-color($danger, $lightness: 20%);
+    color: mix($danger, $secondary, 80%);
     font-size: 13px;
     cursor: default;
   }
@@ -398,7 +396,7 @@ span.posted {
   margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -420,7 +418,7 @@ span.posted {
 .dropdown-menu .active > a:hover {
   color: $tertiary;
   text-decoration: none;
-  background-color: scale-color($tertiary, $lightness: 75%);
+  background-color: mix($tertiary, $secondary, 25%);
 }
 .open > .dropdown-menu {
   display: block;
@@ -452,7 +450,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid scale-color($primary, $lightness: 90%);;
+  border: 1px solid $almost-secondary;;
   background-color: $secondary;
   height: 200px;
   padding: 8px 5px 0 7px;

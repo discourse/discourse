@@ -29,3 +29,9 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 /* These files don't actually exist. They're injected by DiscourseSassImporter. */
 @import "theme_variables";
 @import "plugins_variables";
+
+// Derived colors
+// --------------------------------------------------
+$middle-color: mix($primary, $secondary, 50%);
+$almost-secondary: mix($primary, $secondary, 10%);
+$almost-secondary-2: mix($primary, $secondary, 5%);

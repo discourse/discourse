@@ -51,8 +51,8 @@
   max-width: 710px;
   margin: 0 auto;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
+  border: 1px solid $almost-secondary;
 
   box-shadow: 0 3px 7px rgba($primary, .8);
   background-clip: padding-box;
@@ -73,7 +73,7 @@
 .modal-footer {
   margin: 0 15px;
   padding: 14px 0 15px;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid $almost-secondary;
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -85,13 +85,13 @@
 }
 
 .modal {
-    .nav {
+  .nav {
     padding: 10px 30px;
-    background-color: lighten($secondary, 76%);
+    background-color: rgba(255, 255, 255, 0.1);
     li > a {
       font-size: 14px;
     }
-    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    border-bottom: 1px solid $almost-secondary;
 
   }
 
@@ -108,7 +108,7 @@
       color: $primary;
     }
     p {
-      color: darken($primary, 40%);;
+      color: $primary;
       font-size: 13px;
     }
     .archetype-option {
@@ -144,7 +144,7 @@
         font-weight: normal;
       }
       &.btn-reply-here {
-        background: scale-color($primary, $lightness: 90%);
+        background: $almost-secondary;
         text-shadow: none;
         color: $primary;
       }

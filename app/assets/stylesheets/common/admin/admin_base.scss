@@ -9,10 +9,10 @@
   width: 100%;
   tr {text-align: left;}
   td, th {padding: 8px;}
-  th {border-top: 1px solid scale-color($primary, $lightness: 90%);}
-  td {border-bottom: 1px solid scale-color($primary, $lightness: 90%); border-top: 1px solid scale-color($primary, $lightness: 90%);}
-  tr:hover { background-color: darken($secondary, 2.5%); }
-  tr.selected { background-color: lighten($primary, 50%); }
+  th {border-top: 1px solid $almost-secondary;}
+  td {border-bottom: 1px solid $almost-secondary; border-top: 1px solid $almost-secondary;}
+  tr:hover { background-color: mix($primary, $secondary, 2.5%); }
+  tr.selected { background-color: mix($primary, $secondary, 50%); }
   .filters input { margin-bottom: 0; }
 }
 
@@ -20,7 +20,7 @@
   font-size: 12px;
   float: right;
   margin-right: 10px;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: $almost-secondary;
   padding: 2px 5px;
   border-radius: 5px;
   color: $primary;
@@ -86,16 +86,16 @@
 }
 
 .admin-controls {
-  background-color: darken($secondary, 5%);
+  background-color: mix($primary, $secondary, 5%);
   padding: 10px 10px 3px 0;
   height: 35px;
   .nav.nav-pills {
     li.active {
       a {
-        border-color: scale-color($primary, $lightness: 90%);
-        background-color: lighten($primary, 40%);
+        border-color: $almost-secondary;
+        background-color: mix($primary, $secondary, 60%);
         &:hover {
-          background-color: lighten($primary, 40%);
+          background-color: mix($primary, $secondary, 60%);
         }
       }
     }
@@ -165,7 +165,7 @@
   @include small-width  { width: 700px; }
   min-height: 800px;
   margin-left: 0;
-  border-left: solid 1px scale-color($primary, $lightness: 90%);
+  border-left: solid 1px $almost-secondary;
   padding: 30px 0 30px 30px;
 }
 
@@ -199,7 +199,7 @@
       width: 408px;
       padding: 1px;
       background-color: $secondary;
-      border: 1px solid scale-color($primary, $lightness: 90%);
+      border: 1px solid $almost-secondary;
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -209,7 +209,7 @@
         width: 90px;
         margin: 2px 1px;
         background-color: $secondary;
-        border: 1px solid scale-color($primary, $lightness: 90%);
+        border: 1px solid $almost-secondary;
         border-radius: 3px;
         box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
         -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -245,11 +245,11 @@
 
   .setting.overridden {
     input[type=text] {
-      background-color: scale-color($highlight, $lightness: 50%);
+      background-color: mix($highlight, $secondary, 50%);
     }
 
     h3 {
-      color: scale-color($highlight, $lightness: -50%);
+      color: mix($highlight, $secondary, 50%);
     }
   }
 }
@@ -257,7 +257,7 @@
 section.details {
   h1 {
     font-size: 15px;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
     color: $secondary;
     padding: 0 10px;
     margin: 0 0 5px 0;
@@ -265,7 +265,7 @@ section.details {
 }
 
 #selected-controls {
-  background-color: scale-color($tertiary, $lightness: 75%);
+  background-color: mix($tertiary, $secondary, 25%);
   padding: 8px;
   min-height: 27px;
   position: fixed;
@@ -280,9 +280,9 @@ section.details {
     border-top: 0;
   }
   &.highlight-danger {
-    background-color: scale-color($danger, $lightness: 50%);
+    background-color: mix($danger, $secondary, 50%);
   }
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid $almost-secondary;
   &:before, &:after {
     display: table;
     content: "";
@@ -438,7 +438,7 @@ section.details {
     td.actions     { width: 200px; }
     .hex-input     { width: 80px; margin-bottom: 0; }
     .hex           { text-align: center; }
-    .description   { color: scale-color($primary, $lightness: 50%); }
+    .description   { color: $middle-color; }
 
     .invalid .hex input {
       background-color: white;
@@ -452,10 +452,10 @@ section.details {
 .admin-flags {
 
   tr.hidden-post td.excerpt { opacity: 0.4;  }
-  tr.deleted td.excerpt { opacity: 0.8; background-color: scale-color($danger, $lightness: 30%); }
+  tr.deleted td.excerpt { opacity: 0.8; background-color: mix($danger, $secondary, 70%); }
   td.message {
     padding: 4px 8px;
-    background-color:  scale-color($highlight, $lightness: 30%);
+    background-color:  mix($highlight, $secondary, 70%);
   }
   td { vertical-align: top; }
   th { text-align: left; }
@@ -591,7 +591,7 @@ table.api-keys {
     th {
       font-weight: normal;
       text-align: center;
-      background-color: scale-color($primary, $lightness: 90%);
+      background-color: $almost-secondary;
     }
     th.title {
       text-align: left;
@@ -601,7 +601,7 @@ table.api-keys {
         background-color: $secondary;
       }
       tr:hover > th {
-        background-color: scale-color($primary, $lightness: 75%);
+        background-color: mix($primary, $secondary, 25%);
       }
     }
 
@@ -636,7 +636,7 @@ table.api-keys {
 
   &.detected-problems {
     @include border-radius-all(5px);
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
     margin-bottom: 20px;
     margin-top: 10px;
     box-shadow: inset 0 0 10px rgba($primary, .1);
@@ -662,7 +662,7 @@ table.api-keys {
         text-align: right;
       }
       .btn {
-        background-color: lighten($primary, 60%);
+        background-color: mix($primary, $secondary, 40%);
       }
       ul {
         margin-left: 0;
@@ -703,7 +703,7 @@ table.api-keys {
 
 
 .commits-widget {
-  border: solid 1px scale-color($primary, $lightness: 90%);
+  border: solid 1px $almost-secondary;
   width: 500px;
   height: 180px;
   margin-bottom: 36px;
@@ -731,10 +731,10 @@ table.api-keys {
   }
 
   .header {
-    color: $primary;
+    color: $secondary;
     font-weight: bold;
     height: 30px;
-    background-color: scale-color($primary, $lightness: 75%);
+    background-color: mix($primary, $secondary, 25%);
     cursor: pointer;
 
     h1 {
@@ -757,7 +757,7 @@ table.api-keys {
       @extend .clearfix;
       line-height: 1.0em;
       padding: 6px 8px;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
       .left {
         float: left;
       }
@@ -767,7 +767,7 @@ table.api-keys {
 
       img {
         margin-top: 2px;
-        border: solid 1px scale-color($primary, $lightness: 90%);
+        border: solid 1px $almost-secondary;
         padding: 2px;
         background-color: $secondary;
       }
@@ -798,11 +798,11 @@ table.api-keys {
     width: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: scale-color($primary, $lightness: 75%);
+    background-color: mix($primary, $secondary, 25%);
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
-    border-left: solid 1px scale-color($primary, $lightness: 90%);
+    border-left: solid 1px $almost-secondary;
   }
 }
 
@@ -820,10 +820,10 @@ table.api-keys {
     margin: 0;
 
     li:first-of-type {
-      border-top: 1px solid scale-color($primary, $lightness: 90%);
+      border-top: 1px solid $almost-secondary;
     }
     li {
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid $almost-secondary;
     }
 
     li a {
@@ -832,7 +832,7 @@ table.api-keys {
       color: $primary;
 
       &:hover {
-        background-color: scale-color($primary, $lightness: 90%);
+        background-color: $almost-secondary;
         color: $primary;
       }
 
@@ -989,14 +989,14 @@ table.api-keys {
   margin: 0 0 20px 6px;
   a.filter {
     display: inline-block;
-    background-color: scale-color($primary, $lightness: 75%);
+    background-color: mix($primary, $secondary, 25%);
     padding: 3px 10px;
     border-radius: 3px;
 
     color: $primary;
     &:hover {
       color: $primary;
-      background-color: scale-color($primary, $lightness: 90%);
+      background-color: $almost-secondary;
 
 
     }
@@ -1026,11 +1026,11 @@ table.api-keys {
 
 .staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
 
-  border-bottom: dotted 1px scale-color($primary, $lightness: 75%);
+  border-bottom: dotted 1px mix($primary, $secondary, 25%);
 
   .heading-container {
     width: 100%;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
   }
   .col.heading {
     font-weight: bold;
@@ -1046,7 +1046,7 @@ table.api-keys {
 
   .ember-list-item-view {
     width: 100%;
-    border-top: solid 1px scale-color($primary, $lightness: 90%);
+    border-top: solid 1px $almost-secondary;
   }
 }
 

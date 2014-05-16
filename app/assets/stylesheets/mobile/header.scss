@@ -47,7 +47,8 @@
     float: left;
     display: none;
     a {
-      color: darken($header_primary, 40%);
+      // TODO figure out a formula here
+      color: mix($header_primary, invert($header_background), 90%);
       font-size: 14px;
       line-height: 40px;
     }
@@ -69,23 +70,23 @@
     .icon {
       display: block;
       padding: 4px;
-      color: scale-color($header_primary, $lightness: 50%);
+      color: mix($header_primary, $header_background, 50%);
       text-decoration: none;
       cursor: pointer;
       &:hover {
         color: $primary;
-        background-color: scale-color($primary, $lightness: 75%);
+        background-color: mix($primary, $secondary, 25%);
       }
       &:active {
         color: $primary;
-        background-color: scale-color($primary, $lightness: 75%);
+        background-color: mix($primary, $secondary, 25%);
       }
     }
     .active .icon {
       position: relative;
-      color: scale-color($primary, $lightness: 75%);
+      color: mix($primary, $secondary, 25%);
       background-color: $secondary;
-      border: 1px solid scale-color($primary, $lightness: 90%);
+      border: 1px solid $almost-secondary;
       cursor: default;
       &:after {
         display: block;
@@ -114,14 +115,11 @@
       top: -9px;
       z-index: 1;
       margin-left: 0;
-      color: $tertiary !important;
-      /* this !important is a terrible hack but the badge colors are
-      being overridden in a way I can't figure out on mobile, appears
-      to be a CSS precedence problem */
+      color: $primary;
     }
     .unread-notifications {
       right: -4px;
-      background-color: scale-color($tertiary, $lightness: 40%);
+      background-color: mix($tertiary, $secondary, 60%);
       color: $tertiary;
     }
     .unread-private-messages {
@@ -156,7 +154,7 @@
   right: 0;
   z-index: 1100;
   margin-top: -1px;
-  border: 1px solid scale-color($primary, $lightness: 90%);;
+  border: 1px solid $almost-secondary;;
   background-color: $secondary;
   @include box-shadow(0 1px 1px rgba($primary, 0.2));
 
@@ -183,7 +181,7 @@
 
   }
   .selected {
-    background-color: scale-color($tertiary, $lightness: 75%);
+    background-color: mix($tertiary, $secondary, 25%);
   }
 
   // Notifications
@@ -193,7 +191,7 @@
       color: #777;
     }
     li {
-      background-color: scale-color($tertiary, $lightness: 85%);
+      background-color: mix($tertiary, $secondary, 15%);
     }
     .read {
       background-color: $secondary;

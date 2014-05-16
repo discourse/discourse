@@ -64,7 +64,7 @@ body {
       color: $danger;
     }
     a.star {
-      color: scale-color($primary, $lightness: 75%);
+      color: mix($primary, $secondary, 25%);
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
@@ -113,22 +113,22 @@ body {
 
   .grippie {
     width: 100%;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid $almost-secondary;
     border-width: 1px 0;
     cursor: row-resize;
     height: 11px;
     overflow: hidden;
-    background-color: scale-color($primary, $lightness: 95%);
+    background-color: $almost-secondary-2;
     display:block;
-    background: image-url("grippie.png") scale-color($primary, $lightness: 95%) no-repeat center 3px;
+    background: image-url("grippie.png") $almost-secondary-2 no-repeat center 3px;
   }
 }
 
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
   padding: 10px 4px 4px 13px;
-  background-color: scale-color($primary, $lightness: 95%);
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
+  background-color: $almost-secondary-2;
+  border-left: 5px solid mix($primary, $secondary, 25%);
 }
 
 .topic-statuses {
@@ -219,20 +219,10 @@ body {
   input {
     width: 210px;
   }
-  textarea {
-    width: 210px;
-    height: auto;
-    background-color:$secondary;
-    border: 1px solid scale-color($primary, $lightness: 90%);
-    border-radius: 3px;
-    box-shadow: inset 0 1px 1px rgba($primary, .3);
-    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-    transition: border linear 0.2s, box-shadow linear 0.2s;
-  }
   input {
     &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
       background-color: $secondary;
-      border: 1px solid scale-color($primary, $lightness: 90%);
+      border: 1px solid $almost-secondary;
       border-radius: 3px;
     box-shadow: inset 0 1px 1px rgba($primary, .3);
       -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -269,7 +259,7 @@ body {
 
   select {
     width: 220px;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid $almost-secondary;
     &[multiple], &[size] {
       height: auto;
     }
@@ -319,8 +309,8 @@ body {
   }
   input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
     cursor: not-allowed;
-    background-color: scale-color($primary, $lightness: 90%);
-    border-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
+    border-color: $almost-secondary;
   }
   input {
     &[type="radio"][disabled], &[type="checkbox"][disabled], &[type="radio"][readonly], &[type="checkbox"][readonly] {
@@ -337,7 +327,7 @@ body {
         border-color: $danger;
       }
       .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: scale-color($danger, $lightness: -30%);
+        border-color: mix($danger, $primary, 70%);
         box-shadow: 0 0 6px $danger;
       }
       .input-prepend .add-on, .input-append .add-on {
@@ -355,13 +345,13 @@ body {
         border-color: $danger;
       }
       .checkbox:focus, .radio:focus, input:focus, select:focus, textarea:focus {
-        border-color: scale-color($danger, $lightness: -30%);
+        border-color: mix($danger, $primary, 70%);
         box-shadow: 0 0 6px $danger;
       }
       .input-prepend .add-on, .input-append .add-on {
         color: $danger;
-        background-color: scale-color($danger, $lightness: 30%);
-        border-color: scale-color($danger, $lightness: -20%);
+        background-color: mix($danger, $secondary, 70%);
+        border-color: mix($danger, $primary, 80%);
       }
     }
     &.success {
@@ -378,7 +368,7 @@ body {
       }
       .input-prepend .add-on, .input-append .add-on {
         color: $success;
-        background-color:  scale-color($success, $lightness: 90%);
+        background-color: mix($success, $secondary, 10%);
         border-color: $success;
       }
     }
@@ -415,14 +405,14 @@ body {
     text-align: center;
     vertical-align: middle;
     background-color: $secondary;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid $almost-secondary;
   }
   .input-prepend .add-on, .input-append .add-on, .input-prepend .btn, .input-append .btn {
     margin-left: -1px;
     border-radius: 0;
   }
   .input-prepend .active, .input-append .active {
-    background-color: scale-color($danger, $lightness: 30%);
+    background-color: mix($danger, $secondary, 70%);
     border-color: $danger;
   }
   .input-prepend {
@@ -498,7 +488,7 @@ body {
   .alert {
     padding: 8px 35px 8px 14px;
     margin-bottom: 18px;
-    background-color: scale-color($danger, $lightness: 75%);
+    background-color: mix($danger, $secondary, 25%);
     color: #c09853;
   }
   .alert .close {
@@ -508,15 +498,15 @@ body {
     line-height: 18px;
   }
   .alert-success {
-    background-color:  scale-color($success, $lightness: 90%);
+    background-color:  mix($success, $secondary, 10%);
     color: $success;
   }
   .alert-error {
-    background-color:  scale-color($danger, $lightness: 75%);
+    background-color:  mix($danger, $secondary, 25%);
     color: $danger;
   }
   .alert-info {
-    background-color: scale-color($tertiary, $lightness: 90%);
+    background-color: mix($tertiary, $secondary, 30%);
     color: $primary;
   }
   .alert {

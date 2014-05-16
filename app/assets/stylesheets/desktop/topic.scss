@@ -54,11 +54,11 @@
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: scale-color($primary, $lightness: 75%); }
+.private-message-glyph { color: mix($primary, $secondary, 25%); }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 #topic-closing-info {
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid $almost-secondary;
   padding-top: 10px;
   height: 20px;
 }
@@ -77,7 +77,7 @@
     font-size: 12px;
     margin-right: 5px;
     background: $secondary;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid $almost-secondary;
     padding: 2px 4px;
     border-radius: 20px;
     transition: linear 0.15s;
@@ -87,11 +87,11 @@
 
 a.reply-new {
   position: absolute;
-  color: scale-color($primary, $lightness: 50%);
+  color: $middle-color;
   margin-top: -2px;}
 a:hover.reply-new {
   color: $tertiary;
-  i {background: scale-color($tertiary, $lightness: 75%);
+  i {background: mix($tertiary, $secondary, 25%);
     border: 1px solid $tertiary;
     padding: 2px 4px;
   }
@@ -104,8 +104,8 @@ a:hover.reply-new {
     display: none;
   }
   border: none;
-  background-color: scale-color($primary, $lightness: 90%);
-  color: scale-color($primary, $lightness: 50%);
+  background-color: $almost-secondary;
+  color: $middle-color;
   width: 130px;
   height: 34px;
 
@@ -125,7 +125,7 @@ a:hover.reply-new {
     left: 4px;
     border: 0;
     background: none;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     width: 50%;
     text-align: left;
     height: 30px;
@@ -140,7 +140,7 @@ a:hover.reply-new {
     }
     &:disabled {
     cursor: default;
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     }
   }
   h4 {
@@ -153,8 +153,8 @@ a:hover.reply-new {
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid  scale-color($primary, $lightness: 90%);
-    background-color:  scale-color($success, $lightness: 70%);
+    border-right: 1px solid  $almost-secondary;
+    background-color:  mix($success, $secondary, 40%);
     transition: width .75s;
   }
 }
@@ -172,14 +172,14 @@ a:hover.reply-new {
   }
 }
 
-.heatmap-high {color: scale-color($danger, $lightness: 20%) !important;}
+.heatmap-high {color: mix($danger, $secondary, 10%) !important;}
 .heatmap-med {color: $danger !important;}
-.heatmap-low {color: scale-color($danger, $lightness: -20%) !important;}
+.heatmap-low {color: mix($danger, $primary, 10%) !important;}
 
 
 
 #topic-filter {
-  background-color: scale-color($highlight, $lightness: 25%);
+  background-color: mix($highlight, $secondary, 75%);
   padding: 8px;
   bottom: 0;
   position: fixed;
@@ -199,7 +199,7 @@ pre {
   display: block;
   padding: 5px 10px;
   color: $primary;
-  background: scale-color($primary, $lightness: 90%);
+  background: $almost-secondary;
   max-height: 500px;
   }
 }
@@ -215,7 +215,7 @@ sup{top:-0.5em; }
 sub{bottom:-0.25em; }
 figure{margin:0; }
 fieldset{
-  border:1px solid scale-color($primary, $lightness: 90%);
+  border:1px solid $almost-secondary;
   margin:0 2px;
   padding:0.35em 0.625em 0.75em;
 }
@@ -227,7 +227,7 @@ legend{
 kbd
 {
     background-color: $secondary;
-    border:1px solid scale-color($primary, $lightness: 90%);
+    border:1px solid $almost-secondary;
     border-radius: 3px;
     box-shadow: 0 1px 0 rgba($primary, .9);
     color: $primary;

@@ -5,38 +5,52 @@
 body {
     button.ok {
     background: $success;
-    color: $secondary;
+    // Keep it white - looks better
+    color: #fff;
     @include hover {
-      background: lighten($success, 10%);
-      color: $secondary;
+      background: mix($success, $secondary, 90%);
+      color: #fff;
     }
   }
   button.cancel {
     background: $danger;
-    color: $secondary;
+    // Keep it white - looks better
+    color: #fff;
     @include hover {
-      background: lighten($danger, 10%);
-      color: $secondary;
+      background: mix($danger, $secondary, 90%);
+      color: #fff;
     }
   }
 
+  textarea {
+    width: 210px;
+    height: auto;
+    color: $primary;
+    background-color: $secondary;
+    border: 1px solid $almost-secondary;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 1px rgba($primary, .3);
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
+  }
+
   .coldmap-high {
-    color: scale-color($tertiary, $lightness: 40%) !important;
+    color: mix($tertiary, $secondary, 70%) !important;
   }
   .coldmap-med {
     color: $tertiary !important;
   }
   .coldmap-low {
-    color: scale-color($tertiary, $lightness: -10%) !important;
+    color: mix($tertiary, $primary, 90%) !important;
   }
   .heatmap-high {
-    color: scale-color($danger, $lightness: 30%) !important;
+    color: mix($danger, $secondary, 70%) !important;
   }
   .heatmap-med {
     color: $danger  !important;
   }
   .heatmap-low {
-    color: darken($danger, 10%) !important;
+    color: mix($danger, $primary, 90%) !important;
   }
   #loading-message {
     position: absolute;
@@ -97,10 +111,10 @@ body {
   width: 540px;
   background-color: $secondary;
   padding: 0 10px 13px 10px;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
   .preview {
     margin-top: 8px;
-    border: 1px dashed scale-color($primary, $lightness: 90%);
+    border: 1px dashed $almost-secondary;
     padding: 8px 8px 0 8px;
     p {
       margin: 0 0 10px 0;
@@ -147,7 +161,7 @@ body {
 .avatar-wrapper {
   background-color: $secondary;
   display: inline-block;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid $almost-secondary;
   @include border-radius-all(5px);
   img {
     @include border-radius-all(4px);

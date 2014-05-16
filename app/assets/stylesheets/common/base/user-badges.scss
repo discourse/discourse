@@ -1,8 +1,8 @@
 /* Default badge styles. */
 .user-badge {
   padding: 3px 8px;
-  color: darken($primary, 40%);;
-  border: 1px solid lighten($primary, 60%);
+  color: $primary;
+  border: 1px solid mix($primary, $secondary, 40%);
   font-size: $base-font-size * 0.86;
   line-height: 16px;
   margin: 0;
@@ -80,14 +80,14 @@ table.badges-listing {
   .badge-user {
     display: inline-block;
     padding: 5px 10px;
-    border: 1px solid lighten($primary, 60%);
+    border: 1px solid mix($primary, $secondary, 40%);
     margin-bottom: 3px;
 
     .details {
       float: right;
       margin: 0 10px;
       padding-top: 3px;
-      color: darken($primary, 40%);;
+      color: $primary;
     }
     .date {
       display: block;

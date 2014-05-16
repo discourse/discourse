@@ -81,7 +81,7 @@
   display: block;
   width: 220px;
   min-height: 200px;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: $almost-secondary;
   color: $primary;
   word-wrap: break-word;
 }
@@ -89,7 +89,7 @@
 .user-navigation {
 
   h3 {
-    color: scale-color($primary, $lightness: 50%);
+    color: $middle-color;
     padding-left: 5px;
   }
   .nav-stacked {
@@ -104,7 +104,7 @@
   margin-bottom: 50px;
 
   .about {
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: $almost-secondary;
     background-position: center center;
     background-size: cover;
     margin-bottom: 10px;
@@ -131,7 +131,7 @@
       }
 
       img.avatar {
-        border: 3px solid scale-color($primary, $lightness: 90%);
+        border: 3px solid $almost-secondary;
         margin-bottom: 4px;
       }
 
@@ -152,7 +152,7 @@
     }
 
     .controls {
-      background-color: scale-color($primary, $lightness: 75%);
+      background-color: mix($primary, $secondary, 25%);
       margin-top: 0;
       padding: 10px 10px 0 10px;
 
@@ -205,14 +205,14 @@
       margin: 5px 0;
       font-size: 13px;
       word-wrap: break-word;
-      color: scale-color($primary, $lightness: 50%);
+      color: $middle-color;
     }
     .item.moderator-action {
-      background-color: scale-color($tertiary, $lightness: 40%);
+      background-color: mix($tertiary, $secondary, 60%);
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: scale-color($danger, $lightness: 50%);
+      background-color: mix($danger, $secondary, 50%);
     }
     .item.hidden {
       display: block;
@@ -221,13 +221,13 @@
     .item {
       padding: 10px 8px;
       background-color: $secondary;
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid $almost-secondary;
     }
     .type {
-      color: scale-color($primary, $lightness: 50%);
+      color: $middle-color;
     }
     span.name {
-      color: scale-color($primary, $lightness: 50%);
+      color: $middle-color;
     }
     .time {
       display: block;
@@ -246,7 +246,7 @@
       font-size: 14px;
     }
     .edit-reason {
-      background-color: scale-color($highlight, $lightness: 50%);
+      background-color: mix($highlight, $secondary, 50%);
       padding: 3px 5px 5px 5px;
     }
     .remove-bookmark {

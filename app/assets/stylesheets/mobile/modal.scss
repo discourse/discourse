@@ -17,8 +17,7 @@
   width: 100%;
   height: auto;
   background-color: $secondary;
-  border: 1px solid scale-color($secondary, $lightness: 90%);
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba($primary, 0.3);
 
   @include border-radius-all (6px);
   box-shadow: 0 3px 7px rgba($primary, 0.3);

@@ -1,6 +1,7 @@
 /* for the Chosen plugin http://harvesthq.github.com/chosen/ */
 
 /* NOTE THAT ALL VENDOR PREFIX CSS JUNK HAS BEEN REMOVED */
+/* Colors have been converted to variables */
 
 /* @group Base */
 .chzn-container {
@@ -10,13 +11,13 @@
   zoom: 1;
 }
 .chzn-container .chzn-drop {
-  background: #fff;
-  border: 1px solid #aaa;
+  background: $secondary;
+  border: 1px solid mix($primary, $secondary, 35%);
   border-top: 0;
   position: absolute;
   top: 29px;
   left: 0;
-  box-shadow        : 0 4px 5px rgba(0,0,0,.15);
+  box-shadow        : 0 4px 5px rgba($primary, .15);
   z-index: 1010;
 }
 
@@ -24,12 +25,12 @@
 
 /* @group Single Chosen */
 .chzn-container-single .chzn-single {
-  background-color: #ffffff;
-  background-image: linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
+  background-color: $secondary;
+  background-image: linear-gradient(top, $secondary 20%, mix($primary, $secondary, 3.5%) 50%, mix($primary, $secondary, 6.6%) 52%, mix($primary, $secondary, 4.3%) 100%);
   border-radius        : 5px;
   background-clip        : padding-box;
-  border: 1px solid #aaaaaa;
-  box-shadow        : 0 0 3px #ffffff inset, 0 1px 1px rgba(0,0,0,0.1);
+  border: 1px solid mix($primary, $secondary, 33%);
+  box-shadow: 0 0 3px $secondary inset, 0 1px 1px rgba($primary, 0.1);
   display: block;
   overflow: hidden;
   white-space: nowrap;
@@ -37,11 +38,11 @@
   height: 26px;
   line-height: 26px;
   padding: 0 0 0 8px;
-  color: #444444;
+  color: mix($primary, $secondary, 73.3%);
   text-decoration: none;
 }
 .chzn-container-single .chzn-default {
-  color: #999;
+  color: mix($primary, $secondary, 40%);
 }
 .chzn-container-single .chzn-single span {
   margin-right: 26px;
@@ -96,18 +97,18 @@
   right: 10px;
   top: 12px;
   z-index: 3;
-  color: #888;
+  color: $middle-color;
 }
 .chzn-container-single-nosearch .chzn-search .chzn-search-icon {
   display: none;
 }
 .chzn-container-single .chzn-search input {
-  background: #fff;
-  background: linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: $secondary;
+  background: linear-gradient(top, mix($primary, $secondary, 6.6%) 1%, $secondary 15%);
   margin: 1px 0;
   padding: 7px 30px 7px 10px;
   outline: 0;
-  border: 1px solid #aaa;
+  border: 1px solid mix($primary, $secondary, 35%);
   font-family: sans-serif;
   font-size: 1em;
 }
@@ -124,9 +125,9 @@
 
 /* @group Multi Chosen */
 .chzn-container-multi .chzn-choices {
-  background-color: #fff;
-  background-image: linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  border: 1px solid #aaa;
+  background-color: $secondary;
+  background-image: linear-gradient(top, mix($primary, $secondary, 6.6%) 1%, $secondary 15%);
+  border: 1px solid mix($primary, $secondary, 35%);
   margin: 0;
   padding: 0;
   cursor: text;
@@ -145,7 +146,7 @@
   padding: 0;
 }
 .chzn-container-multi .chzn-choices .search-field input {
-  color: #666;
+  color: mix($primary, $secondary, 60%);
   background: transparent !important;
   border: 0 !important;
   font-family: sans-serif;
@@ -157,16 +158,16 @@
   box-shadow        : none;
 }
 .chzn-container-multi .chzn-choices .search-field .default {
-  color: #999;
+  color: mix($primary, $secondary, 40%);
 }
 .chzn-container-multi .chzn-choices .search-choice {
   border-radius        : 3px;
   background-clip        : padding-box;
-  background-color: #e4e4e4;
-  background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-  box-shadow        : 0 0 2px #ffffff inset, 0 1px 0 rgba(0,0,0,0.05);
-  color: #333;
-  border: 1px solid #aaaaaa;
+  background-color: mix($primary, $secondary, 10.8%);
+  background-image: linear-gradient(top, mix($primary, $secondary, 4.3%) 20%, mix($primary, $secondary, 5.8%) 50%, mix($primary, $secondary, 9.0%) 52%, mix($primary, $secondary, 6.6%) 100%);
+  box-shadow        : 0 0 2px $secondary inset, 0 1px 0 rgba(0,0,0,0.05);
+  color: mix($primary, $secondary, 80%);
+  border: 1px solid mix($primary, $secondary, 35%);
   line-height: 13px;
   padding: 3px 20px 3px 5px;
   margin: 3px 0 3px 5px;
@@ -174,7 +175,7 @@
   cursor: default;
 }
 .chzn-container-multi .chzn-choices .search-choice-focus {
-  background: #d4d4d4;
+  background: mix($primary, $secondary, 16.8%);
 }
 .chzn-container-multi .chzn-choices .search-choice .search-choice-close {
   display: block;
@@ -220,24 +221,24 @@
   display: list-item;
 }
 .chzn-container .chzn-results .highlighted {
-  background-color: #3875d7;
-  background-image: linear-gradient(top, #3875d7 20%, #2a62bc 90%);
-  color: #fff;
+  background-color: $tertiary;
+  background-image: linear-gradient(top, $tertiary 20%, mix($tertiary, $primary, 90%) 90%);
+  color: $secondary;
 }
 .chzn-container .chzn-results li em {
-  background: #feffde;
+  background: $highlight;
   font-style: normal;
 }
 .chzn-container .chzn-results .highlighted em {
   background: transparent;
 }
 .chzn-container .chzn-results .no-results {
-  background: #f4f4f4;
+  background: mix($primary, $secondary, 4.3%);
   display: list-item;
 }
 .chzn-container .chzn-results .group-result {
   cursor: default;
-  color: #999;
+  color: mix($primary, $secondary, 40%);
   font-weight: bold;
 }
 .chzn-container .chzn-results .group-option {
@@ -274,13 +275,13 @@
 /* @group Active  */
 .chzn-container-active .chzn-single {
   box-shadow        : 0 0 5px rgba(0,0,0,.3);
-  border: 1px solid #5897fb;
+  border: 1px solid $tertiary;
 }
 .chzn-container-active .chzn-single-with-drop {
-  border: 1px solid #aaa;
-  box-shadow        : 0 1px 0 #fff inset;
-  background-color: #eee;
-  background-image: linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  border: 1px solid mix($primary, $secondary, 35%);
+  box-shadow        : 0 1px 0 $secondary inset;
+  background-color: mix($primary, $secondary, 6.6%);
+  background-image: linear-gradient(top, mix($primary, $secondary, 6.6%) 20%, $secondary 80%);
   border-bottom-left-radius : 0;
   border-bottom-right-radius: 0;
 }
@@ -293,10 +294,10 @@
 }
 .chzn-container-active .chzn-choices {
   box-shadow        : 0 0 5px rgba(0,0,0,.3);
-  border: 1px solid #5897fb;
+  border: 1px solid $tertiary;
 }
 .chzn-container-active .chzn-choices .search-field input {
-  color: #111 !important;
+  color: mix($primary, $secondary, 93.3%) !important;
 }
 /* @end */
 
@@ -330,8 +331,8 @@
 .chzn-rtl .chzn-results .group-option { padding-left: 0; padding-right: 15px; }
 .chzn-rtl.chzn-container-active .chzn-single-with-drop div { border-right: none; }
 .chzn-rtl .chzn-search input {
-  background: #fff;
-  background: linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: $secondary;
+  background: linear-gradient(top, mix($primary, $secondary, 6.6%) 1%, $secondary 15%);
   padding: 4px 5px 4px 20px;
   direction: rtl;
 }
