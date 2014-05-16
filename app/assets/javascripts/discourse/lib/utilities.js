@@ -257,6 +257,8 @@ Discourse.Utilities = {
   getUploadMarkdown: function(upload) {
     if (Discourse.Utilities.isAnImage(upload.original_filename)) {
       return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
+    } else if (Discourse.Utilities.isAVideo(upload.original_filename) || Discourse.Utilities.isAnAudio(upload.original_filename)) {
+      return '<br><br>http:' + upload.url;
     } else {
       return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')';
     }
@@ -270,6 +272,26 @@ Discourse.Utilities = {
   **/
   isAnImage: function(path) {
     return (/\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i).test(path);
+  },
+
+  /**
+    Check whether the path is refering to a video
+
+    @method isAVideo
+    @param {String} path The path
+  **/
+  isAVideo: function(path) {
+    return (/\.(mp4|webm|ogg)$/i).test(path);
+  },
+
+  /**
+    Check whether the path is refering to an audio file
+
+    @method isAnAudio
+    @param {String} path The path
+  **/
+  isAnAudio: function(path) {
+    return (/\.(mp3|wav|ogg)$/i).test(path);
   },
 
   /**
