@@ -1,12 +1,15 @@
 export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
   itemController: "site-map-category",
 
+  showBadgesLink: Discourse.SiteSettings.enable_badges,
   showAdminLinks: Em.computed.alias('currentUser.staff'),
   flaggedPostsCount: Em.computed.alias("currentUser.site_flagged_posts_count"),
 
   faqUrl: function() {
     return Discourse.SiteSettings.faq_url ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq');
   }.property(),
+
+  badgesUrl: Discourse.getURL('/badges'),
 
   showMobileToggle: Discourse.computed.setting('enable_mobile_theme'),
 
