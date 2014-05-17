@@ -1749,7 +1749,7 @@ en:
       site_settings:
         show_overriden: 'Only show overridden'
         title: 'Settings'
-        reset: 'reset to default'
+        reset: 'reset'
         none: 'none'
         no_results: "No results found."
         clear_filter: "Clear"
