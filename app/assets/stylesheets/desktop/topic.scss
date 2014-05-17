@@ -72,28 +72,26 @@
   outline: 1px solid transparent;
 }
 
-.reply-new {
+a.reply-new {
+  position: absolute;
+  margin-top: -2px;
+  color: scale-color($primary, $lightness: 50%);
   i {
-    font-size: 12px;
     margin-right: 5px;
     background: $secondary;
     border: 1px solid scale-color($primary, $lightness: 90%);
-    padding: 2px 4px;
+    padding: 1.5px 3px;
     border-radius: 20px;
     transition: linear 0.15s;
     -webkit-transition: linear 0.15s;
   }
 }
 
-a.reply-new {
-  position: absolute;
-  color: scale-color($primary, $lightness: 50%);
-  margin-top: -2px;}
 a:hover.reply-new {
   color: $tertiary;
-  i {background: scale-color($tertiary, $lightness: 75%);
+  i {
+    background: scale-color($tertiary, $lightness: 75%);
     border: 1px solid $tertiary;
-    padding: 2px 4px;
   }
 }
 
