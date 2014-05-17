@@ -168,15 +168,15 @@
     {{#if api_key}}
       <div class='long-value'>
         {{api_key.key}}
-        <button class='btn' {{action regenerateApiKey}}>{{i18n admin.api.regenerate}}</button>
-        <button {{action revokeApiKey}} class="btn">{{i18n admin.api.revoke}}</button>
+        <button class='btn' {{action regenerateApiKey}}><i class="fa fa-undo"></i>{{i18n admin.api.regenerate}}</button>
+        <button {{action revokeApiKey}} class="btn"><i class="fa fa-times"></i>{{i18n admin.api.revoke}}</button>
       </div>
     {{else}}
       <div class='value'>
       &mdash;
       </div>
       <div class='controls'>
-        <button {{action generateApiKey}} class="btn">{{i18n admin.api.generate}}</button>
+        <button {{action generateApiKey}} class="btn"><i class="fa fa-key"></i>{{i18n admin.api.generate}}</button>
       </div>
     {{/if}}
   </div>
