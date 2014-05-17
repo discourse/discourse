@@ -41,7 +41,7 @@
         <button class='btn' {{action saveTitle}}>{{i18n admin.user.save_title}}</button>
         <a href="#" {{action toggleTitleEdit}}>{{i18n cancel}}</a>
       {{else}}
-        <button class='btn' {{action toggleTitleEdit}}>{{i18n admin.user.edit_title}}</button>
+        <button class='btn' {{action toggleTitleEdit}}><i class="fa fa-pencil"></i>{{i18n admin.user.edit_title}}</button>
       {{/if}}
     </div>
   </div>
