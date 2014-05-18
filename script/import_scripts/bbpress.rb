@@ -40,6 +40,13 @@ def create_user(opts, import_id)
 
   u.save!
   u
+
+rescue
+  # try based on email
+  u = User.find_by(email: opts[:email].downcase)
+  u.custom_fields["import_id"] = import_id
+  u.save!
+  u
 end
 
 
