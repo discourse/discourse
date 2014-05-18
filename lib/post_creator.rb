@@ -18,6 +18,7 @@ class PostCreator
   #                             topic.
   #   created_at              - Post creation time (optional)
   #   auto_track              - Automatically track this topic if needed (default true)
+  #   custom_fields           - Custom fields to be added to the post, Hash (default nil)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -202,6 +203,10 @@ class PostCreator
 
     post.extract_quoted_post_numbers
     post.created_at = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
+
+    if fields = @opts[:custom_fields]
+      post.custom_fields = fields
+    end
 
     @post = post
   end
