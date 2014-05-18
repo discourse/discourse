@@ -365,6 +365,8 @@ Discourse::Application.routes.draw do
   post "draft" => "draft#update"
   delete "draft" => "draft#destroy"
 
+  get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
+
   get "robots.txt" => "robots_txt#index"
 
   Discourse.filters.each do |filter|

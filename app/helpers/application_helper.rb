@@ -12,14 +12,14 @@ module ApplicationHelper
   include ConfigurableUrls
 
   def script(*args)
-    # This crazy stuff is needed to get window.onerror working under a CDN
-    # NGINX change is also required and baked into sample config
-    # @sam: disabling this until we update our CDN configuration
-    #if GlobalSetting.cdn_url
-    #  javascript_include_tag(*args, "crossorigin" => "anonymous")
-    #else
+    if SiteSetting.enable_cdn_js_debugging && GlobalSetting.cdn_url
+      tags = javascript_include_tag(*args, "crossorigin" => "anonymous")
+      tags.gsub!("/assets/", "/cdn_asset/#{Discourse.current_hostname.gsub(".","_")}/")
+      tags.gsub!(".js\"", ".js?origin=#{CGI.escape request.base_url}\"")
+      tags.html_safe
+    else
       javascript_include_tag(*args)
-    #end
+    end
   end
 
   def discourse_csrf_tags

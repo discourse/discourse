@@ -537,3 +537,5 @@ uncategorized:
   public_user_custom_fields:
     list: true
     default: ''
+
+  enable_cdn_js_debugging: true

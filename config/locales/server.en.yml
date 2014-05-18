@@ -895,6 +895,7 @@ en:
     embed_blacklist_selector: "css selector for elements that are removed from embeds"
     tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
+    enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
