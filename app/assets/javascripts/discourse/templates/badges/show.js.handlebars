@@ -27,10 +27,8 @@
         {{/link-to}}
       {{/each}}
     </div>
-    {{#if showMoreUsers}}
-      <button class="btn" {{action loadMore}}>
-        {{countI18n badges.more_badges count=moreUserCount}}
-      </button>
+    {{#if canLoadMore}}
+      <div class='spinner'>{{i18n loading}}</div>
     {{/if}}
   {{else}}
     {{#unless userBadgesLoaded}}
