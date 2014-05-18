@@ -1,7 +1,11 @@
 Discourse.AdminBadgesRoute = Discourse.Route.extend({
 
   model: function() {
-    return Discourse.Badge.findAll();
+    return Discourse.Badge.findAll().then(function(badges) {
+      return badges.filter(function(badge) {
+        return badge.id >= 100;
+      });
+    });
   },
 
   setupController: function(controller, model) {
