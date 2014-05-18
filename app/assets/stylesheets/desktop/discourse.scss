@@ -328,6 +328,7 @@ body {
     }
   }
   .control-group {
+    margin-bottom: 9px;
     &.warning {
       > label {
         color: $danger;
@@ -463,9 +464,6 @@ body {
     display: none;
   }
 
-  .control-group {
-    margin-bottom: 9px;
-  }
   .form-horizontal {
     .control-group {
       margin-bottom: 18px;
@@ -486,7 +484,6 @@ body {
     .control-label {
       float: left;
       width: 140px;
-      padding-top: 5px;
       text-align: right;
       font-weight: bold;
     }
