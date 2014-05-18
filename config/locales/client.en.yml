@@ -1853,14 +1853,14 @@ en:
       select_badge_for_title: Select a badge to use as your title
       badge:
         basic_user:
-          name: Basic User
-          description: Trusted as a basic user.
+          name: Basic
+          description: Granted all essential community functions.
         regular_user:
-          name: Regular User
-          description: Trusted as a regular user.
+          name: Regular
+          description: Granted invitations.
         leader:
           name: Leader
-          description: One of the most active and prolific users.
+          description: Granted recategorize, rename, followed links and lounge.
         elder:
           name: Elder
-          description: Long term community leader who has been around and seen everything.
+          description: Granted global edit, pin, close, archive, split and merge.
