@@ -58,8 +58,6 @@
 
   .static {
     color: $primary;
-    margin-top: 5px;
-    margin-left: 5px;
     display: inline-block;
   }
   .instructions {
@@ -84,7 +82,6 @@
   }
 
   .other .controls {
-    margin-top: 10px;
     select {
       width: 280px;
     }
