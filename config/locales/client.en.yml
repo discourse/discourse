@@ -313,7 +313,7 @@ en:
         image_is_not_a_square: "Warning: we've cropped your image; it is not square."
 
       change_profile_background:
-        title: "Change Profile Background"
+        title: "Profile Background"
 
       email:
         title: "Email"
