@@ -220,8 +220,8 @@ ko:
 
     categories:
       all: "모든 카테고리"
-      all_subcategories: "모든 하위 카테고리들"
-      no_subcategory: "하위 카테고리 없"
+      all_subcategories: "모든 하위 카테고리"
+      no_subcategory: "하위 카테고리 없음"
       category: "카테고리"
       posts: "게시글"
       topics: "토픽"
@@ -1132,6 +1132,7 @@ ko:
       this_year: "올해"
       position: "위치"
       default_position: "기본 위치"
+      position_disabled: '카테고리는 활동이 있는 순서로 표시됩니다. 리스트 상의 카테고리 순서를 원하는 대로 바꾸시려면,  "fixed category positions" 설정을 활성화하세요.'
       parent: "부모 카테고리"
 
     flagging:

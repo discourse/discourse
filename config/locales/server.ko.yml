@@ -620,6 +620,7 @@ ko:
     max_image_width: "글 내의 이미지에 대해서 허용되는 최대 가로 길이"
     max_image_height: "글 내의 이미지에 대해서 허용되는 최대 세로 길이"
     category_featured_topics: "/categories 의 한 페이지당 보여주는 토픽의 수"
+    fixed_category_positions: "체크하면, 카테고리를 고정된 순서로 정렬할 수 있습니다. 체크하지 않으면, 활동이 있는 카테고리 순서대로 보여집니다."
     add_rel_nofollow_to_user_content: "사용자 생성 컨텐츠에 대해서 rel nofollow 를 설정함. parent domain을 포함한 internal link는 예외임. 이 설정을 바꾸려면 모든 baked markdown을  \"rake posts:rebake\" 명령으로 변경해주서야 함"
     exclude_rel_nofollow_domains: "nofollow가 추가되지 않을 domain 리스트(comma로 구분). (tld.com 을 추가하면 자동으로 sub.tld.com도 동일하게 설정됩니다.)"
 
@@ -894,6 +895,7 @@ ko:
     embed_blacklist_selector: "임베드 시 제거될 element를 위한 css selector"
     tos_accept_required: "설정되면 가입 폼에서 이용약관에 동의한다는 체크박스가 나타나며 이를 체크해야지만 가입 가능합니다. 체크박스 옆에 보여줄 메시지를 변경하려면 사이트 콘텐츠 탭의 '가입 폼: 서비스 이용약관 메시지'를 변경하세요."
     notify_about_flags_after: "여기에 지정된 시간(시단위) 뒤에도 신고가 처리되지 않고 있으면, contact_email로 설정된 주소로 이메일을 발송한다. 비활성화하려면 0으로 설정한다."
+    enable_cdn_js_debugging: "include되는 모든 js에 crossorigin 권한을 추가하여 /logs에 적절한 에러가 표시될 수 있도록 허용함."
 
   notification_types:
     mentioned: "%{display_username}님이 %{link}에서 당신을 멘션했습니다."
@@ -1172,7 +1174,7 @@ ko:
         - 표시되는 시간은 단축키 역할을 합니다. 첫 게시 날자를 누르면 토픽의 최상단으로 이동합니다. 마지막 게시 날자를 누르면 최하단으로 이동합니다.
 
     welcome_user:
-      subject_template: "%{site_name} 에 오신 것을 환영합니다!"
+      subject_template: "%{site_name}에 오신 것을 환영합니다!"
       text_body_template: |
         %{site_name}에 참여해 주셔서 감사드립니다.
 
@@ -1183,7 +1185,7 @@ ko:
         감사합니다.
 
     welcome_invite:
-      subject_template: "%{site_name} 에 오신 것을 환영합니다!"
+      subject_template: "%{site_name}에 오신 것을 환영합니다!"
       text_body_template: |
         %{site_name}에 초대를 수락해 주셔서 감사드립니다.
 
