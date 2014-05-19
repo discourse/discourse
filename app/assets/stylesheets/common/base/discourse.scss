@@ -97,10 +97,10 @@ body {
   width: 540px;
   background-color: $secondary;
   padding: 0 10px 13px 10px;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
   .preview {
     margin-top: 8px;
-    border: 1px dashed scale-color($primary, $lightness: 90%);
+    border: 1px dashed scale-color-diff();
     padding: 8px 8px 0 8px;
     p {
       margin: 0 0 10px 0;
@@ -147,7 +147,7 @@ body {
 .avatar-wrapper {
   background-color: $secondary;
   display: inline-block;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
   @include border-radius-all(5px);
   img {
     @include border-radius-all(4px);

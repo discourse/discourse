@@ -29,3 +29,13 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 /* These files don't actually exist. They're injected by DiscourseSassImporter. */
 @import "theme_variables";
 @import "plugins_variables";
+
+
+@function scale-color-diff() {
+    @if lightness($primary) < lightness($secondary) {
+      @return scale-color($primary, $lightness: 95%)
+    }
+    @else {
+      @return scale-color($primary, $lightness: -60%)
+    }
+}

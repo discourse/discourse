@@ -51,8 +51,8 @@
   max-width: 710px;
   margin: 0 auto;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
+  border: 1px solid scale-color-diff();
 
   box-shadow: 0 3px 7px rgba($primary, .8);
   background-clip: padding-box;
@@ -73,7 +73,7 @@
 .modal-footer {
   margin: 0 15px;
   padding: 14px 0 15px;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color-diff();
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -91,7 +91,7 @@
     li > a {
       font-size: 14px;
     }
-    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    border-bottom: 1px solid scale-color-diff();
 
   }
 
@@ -144,7 +144,7 @@
         font-weight: normal;
       }
       &.btn-reply-here {
-        background: scale-color($primary, $lightness: 90%);
+        background: scale-color-diff();
         text-shadow: none;
         color: $primary;
       }

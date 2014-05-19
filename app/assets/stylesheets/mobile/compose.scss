@@ -41,7 +41,7 @@ display: none;
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color-diff();
   bottom: 0;
   font-size: 14px;
   position: fixed;
@@ -87,7 +87,7 @@ display: none;
   &.draft {
     height: 60px !important;
     cursor: pointer;
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 1px solid scale-color-diff();
     .draft-text {
       display: block;
           position: absolute;
@@ -102,7 +102,7 @@ display: none;
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 1px solid scale-color-diff();
     .saving-text {
       display: block;
     }
@@ -216,7 +216,7 @@ display: none;
       }
     }
     #wmd-preview {
-      border: 1px dashed scale-color($primary, $lightness: 90%);
+      border: 1px dashed scale-color-diff();
       overflow: auto;
       visibility: visible;
       p {
@@ -356,7 +356,7 @@ display: none;
   #wmd-button-bar {
     top: 0;
     position: absolute;
-    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    border-bottom: 1px solid scale-color-diff();
     background-color: $secondary;
     z-index: 100;
   }

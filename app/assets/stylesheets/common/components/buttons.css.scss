@@ -39,7 +39,7 @@
   border: none;
   color: $primary;
   font-weight: normal;
-  background: scale-color($primary, $lightness: 90%);
+  background: scale-color-diff();
 
   &[href] {
     color: $primary;
@@ -51,7 +51,7 @@
   &:active {
   }
   &[disabled] {
-    background: scale-color($primary, $lightness: 90%);
+    background: scale-color-diff();
     &:hover { color: scale-color($primary, $lightness: 70%); }
     cursor: not-allowed;
   }

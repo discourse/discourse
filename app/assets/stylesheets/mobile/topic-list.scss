@@ -44,7 +44,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color-diff();
 
   > tbody > tr {
     background-color: $secondary;
@@ -241,7 +241,7 @@
     display: none;
   }
   > footer {
-    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    border-bottom: 1px solid scale-color-diff();
     border-top: 0;
     padding: 7px 10px;
     background-color: scale-color($primary, $lightness: 95%);
@@ -305,7 +305,7 @@
 .list-controls {
   .home {
     color: $primary;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
   }
 
   .badge-category {
@@ -398,7 +398,7 @@ span.posted {
   margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -452,7 +452,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid scale-color($primary, $lightness: 90%);;
+  border: 1px solid scale-color-diff();;
   background-color: $secondary;
   height: 200px;
   padding: 8px 5px 0 7px;

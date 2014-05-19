@@ -16,8 +16,8 @@
   height: auto;
   margin: -250px 0 0 -305px;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
+  border: 1px solid scale-color-diff();
 
   box-shadow: 0 3px 7px rgba($primary, .8);
   background-clip: padding-box;
@@ -57,7 +57,7 @@ animation: modal .25s;
   margin-left: -1px;
 }
 .modal-header {
-  border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+  border-bottom: 1px solid scale-color-diff();
   h3 {
     color: $quaternary;
     font-size: 20px;

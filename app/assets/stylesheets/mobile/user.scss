@@ -81,7 +81,7 @@
   display: block;
   width: 220px;
   min-height: 200px;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color-diff();
   color: $primary;
   word-wrap: break-word;
 }
@@ -104,7 +104,7 @@
   margin-bottom: 50px;
 
   .about {
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
     background-position: center center;
     background-size: cover;
     margin-bottom: 10px;
@@ -131,7 +131,7 @@
       }
 
       img.avatar {
-        border: 3px solid scale-color($primary, $lightness: 90%);
+        border: 3px solid scale-color-diff();
         margin-bottom: 4px;
       }
 
@@ -221,7 +221,7 @@
     .item {
       padding: 10px 8px;
       background-color: $secondary;
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid scale-color-diff();
     }
     .type {
       color: scale-color($primary, $lightness: 50%);

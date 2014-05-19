@@ -1,5 +1,5 @@
 .gap {
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color-diff();
   padding: 5px 0;
   color: lighten($primary, 35%);
   cursor: pointer;
@@ -7,7 +7,7 @@
   width: 80%;
 
   &:hover {
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
   }
 
   @include medium-width {
@@ -54,7 +54,7 @@ h1 .topic-statuses .topic-status i {
   right: 330px;
   z-index: 400;
   padding: 13px 6px 5px;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color-diff();
   font-size: 12px;
   color: scale-color($primary, $lightness: 50%);
   @include medium-width {
@@ -111,13 +111,13 @@ nav.post-controls {
   }
 
   .show-replies {
-    background: scale-color($primary, $lightness: 95%);
+    background: scale-color-diff();
     padding: 8px 15px;
     padding-bottom: 20px;
     margin-left: 0;
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
     &:hover {
-      background: lighten($primary, 76%);
+      background: scale-color-diff();
       span.badge-posts {color: $primary;}
     }
     i {
@@ -157,7 +157,7 @@ nav.post-controls {
     margin-left: 3px;
     transition: all linear 0.15s;
          &:hover {
-          background: scale-color($primary, $lightness: 90%);
+          background: scale-color-diff();
           color: $primary;
         }
 
@@ -211,7 +211,7 @@ nav.post-controls {
     background-color: $secondary;
     width: 205px;
     padding: 10px;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid scale-color-diff();
     position: absolute;
     text-align: left;
     bottom: 0;
@@ -244,7 +244,7 @@ nav.post-controls {
 
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: scale-color($primary, $lightness: 90%);}
+  a.mention {background: scale-color-diff();}
   &.bottom {
     &.hidden {display: block; opacity: 0; }
 
@@ -269,13 +269,13 @@ nav.post-controls {
     .topic-avatar {padding-left: 15px;}
     .post-date {color: scale-color($primary, $lightness: 50%);}
     .fa-arrow-up {margin-left: 5px;}
-    .row {border-top: 1px solid scale-color($primary, $lightness: 90%); padding-top: 7px;}
+    .row {border-top: 1px solid scale-color-diff(); padding-top: 7px;}
     .reply:first-of-type .row {border-top: none;}
 
-  background: scale-color($primary, $lightness: 95%);
+  background: scale-color-diff();
   .quote .title, blockquote, .onebox, .onebox-result {
-    background: scale-color($primary, $lightness: 90%);
-    border-left: 5px solid scale-color($primary, $lightness: 75%);
+    background: scale-color-diff();
+    border-left: 5px solid darken(scale-color-diff(), 10%);
   }
 
   &.bottom { margin-top: -11px;}
@@ -295,10 +295,10 @@ nav.post-controls {
 }
 
 .bottom-round nav.post-controls .show-replies {
-background: scale-color($primary, $lightness: 95%);
+background: scale-color-diff();
 margin-bottom: 0;
 padding-bottom: 8px;
-  &:hover {background: scale-color($primary, $lightness: 90%);
+  &:hover {background: scale-color-diff();
   }
 }
 
@@ -322,7 +322,7 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
 
   .buttons .btn {
     &:hover {border: 1px solid $primary !important;}
@@ -410,7 +410,7 @@ a.star {
     color: $primary;
   }
   .information {
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 1px solid scale-color-diff();
   }
 
 .participants { // PMs //
@@ -429,10 +429,10 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid scale-color-diff();
       padding: 0 23px;
       color: $primary;
-      background: scale-color($primary, $lightness: 90%);
+      background: scale-color-diff();
       &:hover {
         background: scale-color($primary, $lightness: 75%);
         color: $primary;
@@ -467,7 +467,7 @@ a.star {
   clear: left;
   padding: 20px 0 15px 0;
   #topic-list > tbody > tr:nth-child(even) {
-    background-color: scale-color($primary, $lightness: 97%);
+    background-color: rgba($primary, .04);
   }
   #topic-list > tbody > tr:nth-child(odd) {
     background-color: $secondary;
@@ -605,7 +605,7 @@ iframe {
   a.mention {
     padding: 2px 4px;
     color: $primary;
-    background: scale-color($primary, $lightness: 90%);
+    background: scale-color-diff();
   }
 
 
@@ -677,7 +677,7 @@ blockquote { /* solo quotes */
   margin: 14px 0;
   padding: 12px;
 
-    a.mention {background: scale-color($primary, $lightness: 90%);}
+    a.mention {background: scale-color-diff();}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
@@ -685,14 +685,14 @@ blockquote { /* solo quotes */
 .quote { /* quotes with attribution */
   margin-top: 14px;
   blockquote {margin-top: 0; padding-top: 0;
-  .onebox-result {background-color: $primary;}
+  .onebox-result {background-color: scale-color-diff();}
 
 
   }
 
   .title {
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
-  background-color: scale-color($primary, $lightness: 95%);
+  border-left: 5px solid darken(scale-color-diff(), 10%);
+  background-color: scale-color-diff();
   padding: 12px;
   .avatar { margin-right: 7px; }
   img {margin-top: -4px;}
@@ -756,7 +756,7 @@ blockquote { /* solo quotes */
 .topic-body {
   float: left;
   position: relative;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color-diff();
   padding: 12px 0 15px 0;
   &.highlighted {
     background-color: scale-color($tertiary, $lightness: 85%);
@@ -766,7 +766,7 @@ blockquote { /* solo quotes */
   }
 }
 .topic-avatar {
- border-top: 1px solid scale-color($primary, $lightness: 90%);
+ border-top: 1px solid scale-color-diff();
  padding-top: 16px;
 
   .wiki {
@@ -828,7 +828,7 @@ blockquote { /* solo quotes */
   margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
   box-shadow: 0 1px 5px rgba($primary, .4);
   background-clip: padding-box;
   span {font-size: 12px;}
@@ -982,8 +982,8 @@ blockquote { /* solo quotes */
         background-color: scale-color($primary, $lightness: 70%);
         border-top: 1px solid $tertiary;
         border-left: 1px solid $tertiary;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
-        border-right: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid scale-color-diff();
+        border-right: 1px solid scale-color-diff();
         color: $primary;
       }
     }
@@ -1006,7 +1006,7 @@ a.attachment:before {
     position: absolute;
     top: 0;
     left: 10px;
-    color: scale-color($primary, $lightness: 90%);
+    color: scale-color-diff();
     font: 90px/1 FontAwesome;
     content: "\f05c";
     z-index: -5;

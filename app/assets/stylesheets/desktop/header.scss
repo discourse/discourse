@@ -75,14 +75,14 @@
 
       &:hover {
         color: $primary;
-        background-color:  scale-color($primary, $lightness: 90%);
+        background-color:  scale-color-diff();
         border-top: 1px solid transparent;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
       }
       &:active {
         color: $primary;
-        background-color: scale-color($primary, $lightness: 90%);
+        background-color: scale-color-diff();
       }
     }
     .active .icon {
@@ -90,9 +90,9 @@
       color: #7b7b7b;
       background-color: $secondary;
       cursor: default;
-      border-top: 1px solid scale-color($primary, $lightness: 90%);
-      border-left: 1px solid scale-color($primary, $lightness: 90%);
-      border-right: 1px solid scale-color($primary, $lightness: 90%);
+      border-top: 1px solid scale-color-diff();
+      border-left: 1px solid scale-color-diff();
+      border-right: 1px solid scale-color-diff();
       &:after {
         display: block;
         position: absolute;
@@ -163,7 +163,7 @@
   right: 0;
   z-index: 1100;
   overflow: auto;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
   background-color: $secondary;
   @include box-shadow(0 2px 2px rgba($primary, .4));
 
@@ -182,9 +182,9 @@
     }
   }
   .heading {
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 1px solid scale-color-diff();
 
-    border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+    border-bottom: 1px solid scale-color-diff();
     color: darken($primary, 40%);
     font-weight: bold;
     font-size: 12px;

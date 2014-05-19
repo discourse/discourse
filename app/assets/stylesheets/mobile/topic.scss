@@ -65,7 +65,7 @@
     display: none;
   }
   border: none;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color-diff();
   color: $primary;
   width: 130px;
   height: 34px;

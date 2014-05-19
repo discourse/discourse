@@ -87,7 +87,7 @@ button {
   background-color: $secondary;
   width: 205px;
   padding: 10px;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
   position: absolute;
   text-align: left;
   bottom: 0;
@@ -264,7 +264,7 @@ a.star {
       border-left: 1px solid scale-color($primary, $lightness: 95%);;
       padding: 0 23px;
       color: $primary;
-      background: scale-color($primary, $lightness: 90%);
+      background: scale-color-diff();
       &:hover {
         background: scale-color($primary, $lightness: 75%);
         color: $primary;
