@@ -132,6 +132,7 @@ gem 'omniauth-oauth2', require: false
 gem 'oj'
 # while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
 gem 'pg', '0.15.1'
+gem 'pry-rails', require: false
 gem 'rake'
 
 
@@ -176,7 +177,6 @@ group :test, :development do
   gem 'simplecov', require: false
   gem 'timecop'
   gem 'rspec-given'
-  gem 'pry-rails'
   gem 'pry-nav'
   gem 'spork-rails'
 end
