@@ -15,5 +15,10 @@ Discourse.BadgesIndexRoute = Discourse.Route.extend({
     } else {
       return Discourse.Badge.findAll();
     }
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    Discourse.set('title', I18n.t('badges.title'));
   }
 });
