@@ -490,6 +490,9 @@ zh_CN:
     tos_signup_form_message:
       title: "注册表单：服务条款信息"
       description: "如果启用了 tos_accept_required 站点设置，将会出现在注册表单的复选框内的消息。"
+    notification_email_top:
+      title: "通知邮件头部"
+      description: '头部描述'
   site_settings:
     default_locale: "此论坛的缺省语言（ISO 639-1 代码）"
     allow_user_locale: "允许用户选择他们自己的语言界面"
@@ -733,6 +736,11 @@ zh_CN:
     embed_blacklist_selector: "在嵌入页面移除元素 CSS 选择器"
     tos_accept_required: "如果启用，用户将需要在注册页面选择一个复选框以统一服务条款。在内容标签中编辑'注册表单：服务条款信息'更改消息。"
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
+    fixed_category_positions: "如果勾选此项,类别的排序将固定不变;否则,将以类别的活跃程度来排序。"
+    must_approve_users: "必须经过管理员确认，新用户才能真正注册成功。"
+    min_trust_to_edit_wiki_post: "能够编辑wiki帖子所需要的最小权限级别。"
+    public_user_custom_fields: "可以显示的用户信息的白名单字段。"
+    enable_cdn_js_debugging: "能够通过在js文件中添加crossorigin permissions来确保logs是否显示适合的错误信息。"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @ 了您"
     liked: "%{display_username} 在 %{link} 赞了您的帖子 "
