@@ -220,8 +220,8 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all subcategories"
-      no_subcategory: "no subcategory"
+      all_subcategories: "all"
+      no_subcategory: "none"
       category: "Category"
       posts: "New Posts"
       topics: "New Topics"
