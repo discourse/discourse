@@ -1,816 +1,1085 @@
 # encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
 #
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-org/
 #
-# To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# This is a "source" file, which is used by Transifex to get translations for other languages.
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+#
+#   tx push -s
+#
+# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
 
 ko:
   js:
     number:
       human:
         storage_units:
-          format: '%n %u'
+          format: ! '%n %u'
           units:
             byte:
-              other: 바이트
+              one: Byte
+              other: Bytes
             gb: GB
             kb: KB
             mb: MB
             tb: TB
     dates:
       tiny:
-        half_a_minute: "30초"
+        half_a_minute: "< 1분"
         less_than_x_seconds:
+          one:   "< 1초"
           other: "< %{count}초"
         x_seconds:
+          one:   "1초"
           other: "%{count}초"
         less_than_x_minutes:
+          one:   "< 1분"
           other: "< %{count}분"
         x_minutes:
+          one:   "1분"
           other: "%{count}분"
         about_x_hours:
+          one:   "1시간"
           other: "%{count}시간"
         x_days:
-          other: "%{count}d"
+          one:   "1일"
+          other: "%{count}일"
         about_x_years:
+          one:   "1년"
           other: "%{count}년"
         over_x_years:
+          one:   "> 1년"
           other: "> %{count}년"
         almost_x_years:
+          one:   "1년"
           other: "%{count}년"
-        date_month: "MMM D일"
+        date_month: "M/D"
         date_year: "'YY M/D"
       medium:
         x_minutes:
+          one: "1분"
           other: "%{count}분"
         x_hours:
+          one: "1시간"
           other: "%{count}시간"
         x_days:
+          one: "1일"
           other: "%{count}일"
-        date_year: "YYYY MMM D"
+        date_year: "YYYY M/D"
       medium_with_ago:
         x_minutes:
+          one: "1분 전"
           other: "%{count}분 전"
         x_hours:
+          one: "1시간 전"
           other: "%{count}시간 전"
         x_days:
+          one: "1일 전"
           other: "%{count}일 전"
     share:
       topic: '토픽을 공유합니다.'
-      post: '#%{postNumber} 게시물을 공유합니다.'
+      post: '게시글을 공유합니다.'
       close: '닫기'
       twitter: 'twitter로 공유'
       facebook: 'Facebook으로 공유'
       google+: 'Google+로 공유'
       email: '이메일로 공유'
-    edit: '제목과 카테고리를 편집하기'
+
+    edit: "제목과 카테고리를 편집하기"
     not_implemented: "추후 업데이트 예정"
     no_value: "아니오"
     yes_value: "예"
-    of_value: "으로"
+    of_value: "/"
     generic_error: "오류 발생"
-    generic_error_with_reason: "에러 발견: %{error}"
-    log_in: "가입"
-    age: "생성"
-    joined: "가입함"
-    admin_title: "운영자"
-    flags_title: "깃발 표시"
+    generic_error_with_reason: "오류가 발생했습니다: %{error}"
+    log_in: "로그인"
+    age: "나이"
+    last_post: "마지막글"
+    joined: "가입일"
+    admin_title: "어드민"
+    flags_title: "신고하기"
     show_more: "더 보기"
-    links: 링크
-    faq: "FAQ"
-    privacy_policy: "개인보호 정책"
-    mobile_view: "모바일로 보기"
-    desktop_view: "PC로 보기"
+    links: 링크수
+    faq: "자주하는 질문"
+    privacy_policy: "개인정보 보호정책"
+    mobile_view: "모바일 브라우저로 보기"
+    desktop_view: "PC용 브라우저로 보기"
     you: "당신"
     or: "또는"
     now: "방금 전"
-    read_more: '더 읽기'
+    read_more: "더 읽기"
     more: "더 보기"
     less: "덜"
     never: "전혀"
-    daily: "매일"
-    weekly: "매주"
-    every_two_weeks: "격주"
+    daily: "일간"
+    weekly: "주간"
+    every_two_weeks: "격주간"
     max: "최대"
     character_count:
-      other: "{{count}} 자"
+      one: "한 글자"
+      other: "{{count}} 글자"
+
     in_n_seconds:
-      other: "in {{count}}초"
+      one: "1초 후에"
+      other: "{{count}}초 후에"
     in_n_minutes:
-      other: "in {{count}}분"
+      one: "1분 후에"
+      other: "{{count}}분 후에"
     in_n_hours:
-      other: "in {{count}}시간"
+      one: "한 시간 후에"
+      other: "{{count}}시간 후에"
     in_n_days:
-      other: "in {{count}}일"
+      one: "1일 후에"
+      other: "{{count}}일 후에"
+
     suggested_topics:
-      title: "추천 토픽"
-    new_topics_inserted: "{{count}}개 토픽."
-    show_new_topics: "표시하려면 클릭하세요."
+      title: "추천토픽"
+
+    bookmarks:
+      not_logged_in: "죄송합니다. 즐겨찾기한 게시글을 보려면 로그인을 해야합니다."
+      created: "이 게시글을 즐겨찾기했습니다."
+      not_bookmarked: "이 게시글을 읽었습니다. 즐겨찾기하시려면 클릭하세요."
+      last_read: "가장 최근 읽은 게시글입니다. 즐겨찾기하시려면 클릭하세요."
+      remove: "즐겨찾기 취소"
+
+    new_topics_inserted: "{{count}}개의 새로운 토"
+    show_new_topics: "보시려면 클릭하세요."
     preview: "미리보기"
     cancel: "취소"
-    save: "변경사항을 저장"
-    saving: "저장 중..."
+
+    save: "변경사항 저장"
+    saving: "저장중..."
     saved: "저장 완료!"
+    
     upload: "업로드"
     uploading: "업로드 중..."
     uploaded: "업로드 완료!"
+
+    enable: "활성화"
+    disable: "비활성화"
+    undo: "실행취소"
+    revert: "되돌리기"
+
     choose_topic:
-      none_found: "토픽이 없음"
+      none_found: "토픽이 없습니다."
       title:
-        search: "이름, url, ID로 토픽 검색"
-        placeholder: "여기에 토픽 제목을 입력"
+        search: "이름, url, id 등으로 토픽을 검색"
+        placeholder: "토픽 제목을 여기에 입력하세요."
+
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>가 게시한 <a href='{{topicUrl}}'>토픽</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>당신</a>이 게시한 <a href='{{topicUrl}}'>토픽</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a>가 게시한 답글 <a href='{{postUrl}}'>{{post_number}}</a>개"
-      you_replied_to_post: "<a href='{{userUrl}}'>당신</a>이 게시한 답글 <a href='{{postUrl}}'>{{post_number}}</a>개"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a>가 <a href='{{topicUrl}}'>토픽</a>에 게시한 답글"
-      you_replied_to_topic: "<a href='{{userUrl}}'>당신</a>이 <a href='{{topicUrl}}'>토픽</a>에 게시한 답글"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}가</a> <a href='{{user2Url}}'>{{another_user}}</a>를 언급"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}가</a> <a href='{{user2Url}}'>당신</a>을 언급"
-      you_mentioned_user: "<a href='{{user1Url}}'>당신은</a> <a href='{{user2Url}}'>{{another_user}}</a>를 언급"
-      posted_by_user: "<a href='{{userUrl}}'>{{user}}</a>에 의해 게시됨"
-      posted_by_you: "<a href='{{userUrl}}'>당신</a> 게시함"
-      sent_by_user: "<a href='{{userUrl}}'>{{user}}</a>가 보냄"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>님이 <a href='{{topicUrl}}'>토픽</a>을 게시했습니다"
+      you_posted_topic: "<a href='{{userUrl}}'>당신</a>이 <a href='{{topicUrl}}'>토픽</a>을 게시했습니다"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a>님이 <a href='{{postUrl}}'>{{post_number}}</a>에 댓글을 달았습니다"
+      you_replied_to_post: "<a href='{{userUrl}}'>당신</a>이 <a href='{{postUrl}}'>{{post_number}}</a>에 댓글을 달았습니다"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a>님이 <a href='{{topicUrl}}'>토픽</a>에 댓글을 달았습니다"
+      you_replied_to_topic: "<a href='{{userUrl}}'>당신</a>이 <a href='{{topicUrl}}'>토픽</a>에 댓글을 달았습니다"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a>님이 <a href='{{user2Url}}'>{{another_user}}</a>님을 멘션했습니다"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a>님이 <a href='{{user2Url}}'>당신</a>을 멘션했습니다"
+      you_mentioned_user: "<a href='{{user1Url}}'>당신</a>이 <a href='{{user2Url}}'>{{another_user}}</a>님을 멘션했습니다"
+
+      posted_by_user: "<a href='{{userUrl}}'>{{user}}</a>님이 게시함"
+      posted_by_you: "<a href='{{userUrl}}'>당신</a>이 게시함"
+      sent_by_user: "<a href='{{userUrl}}'>{{user}}</a>님이 보냄"
       sent_by_you: "<a href='{{userUrl}}'>당신</a>이 보냄"
+
     groups:
+      visible: "이 그룹은 모든 사용자에게 보여집니다."
       title:
+        one: "그룹"
         other: "그룹"
       members: "멤버"
       posts: "게시글"
       alias_levels:
-        nobody: "0명"
-        only_admins: "관리자만"
-        mods_and_admins: "운영자 및 관리자만"
-        members_mods_and_admins: "그룹 멤버, 운영자, 관리자만"
-        everyone: "모두"
+        title: "누가 이 그룹을 별명으로 사용할 수 있는가?"
+        nobody: "아무도 할 수 없음"
+        only_admins: "어드민만 가능"
+        mods_and_admins: "운영자와 어드민만 가능"
+        members_mods_and_admins: "그룹 멤버, 운영자, 어드민만 가능"
+        everyone: "아무나 가능"
+
     user_action_groups:
-      '1': "좋아함"
-      '2': "내 글을 좋아함"
-      '3': "북마크"
-      '4': "토픽"
-      '5': "게시글"
-      '6': "답글"
-      '7': "언급"
-      '9': "인용"
-      '10': "즐겨찾기"
-      '11': "편집"
-      '12': "보낸 편지함"
-      '13': "받은 편지함"
+      "1": "좋아요 함"
+      "2": "좋아요 받음"
+      "3": "즐겨찾기"
+      "4": "토픽"
+      "5": "게시글"
+      "6": "댓글"
+      "7": "멘션"
+      "9": "인용"
+      "10": "관심 토픽"
+      "11": "편집"
+      "12": "보낸 메시지함"
+      "13": "받은 메시지함"
+
     categories:
-      all: "전체 카테고리"
-      all_subcategories: "all"
-      no_subcategory: "none"
+      all: "모든 카테고리"
+      all_subcategories: "모든 하위 카테고리"
+      no_subcategory: "하위 카테고리 없음"
       category: "카테고리"
       posts: "게시글"
-      topics: "토픽들"
+      topics: "토픽"
       latest: "최신"
-      latest_by: "가장 최근"
-      toggle_ordering: "정렬 컨트롤 토글"
+      latest_by: "최근 카테고리 생성자:"
+      toggle_ordering: "표시 순서 토글"
       subcategories: "하위 카테고리:"
-      topic_stats: "The number of new topics."
-      post_stats: "The number of new posts."
+      topic_stats: "새로운 토픽 수"
+      topic_stat_sentence:
+        one: "이전 %{unit} 동안 새로운 토픽 %{count}개."
+        other: "이전 %{unit} 동안 새로운 토픽 %{count}개."
+      post_stats: "새로운 게시글 수"
+      post_stat_sentence:
+        one: "이전 %{unit} 동안 새로운 게시글 %{count}개."
+        other: "이전 %{unit} 동안 새로운 게시글 %{count}개."
+
     user:
-      said: "{{username}}의 말:"
+      said: "{{username}}님의 글:"
       profile: "프로필"
-      show_profile: "프로필 방문"
-      mute: "음소거"
-      edit: "편집"
-      download_archive: "내 게시물을 아카이브로 다운로드"
+      show_profile: "프로필 보기"
+      mute: "알림 끄기"
+      edit: "환경 설정 편집"
+      download_archive: "내 게시글을 아카이브로 다운로드"
       private_message: "개인 메시지"
       private_messages: "개인 메시지"
-      activity_stream: "활동"
-      preferences: "환경 설정"
-      bio: "프로필"
-      invited_by: "에 의해 초대되었습니다."
-      trust_level: "레벨"
+      activity_stream: "활동 내역"
+      preferences: "개인 환경 설정"
+      bio: "자기 소개"
+      invited_by: "초대한 사람"
+      trust_level: "신뢰 등급"
       notifications: "알림"
-      dynamic_favicon: "Favicon으로 들어온 메시지 알림을 받습니다."
+      dynamic_favicon: "새로운 알림을 favicon(브라우저 아이콘)으로 보여줍니다."
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
-      enable_quoting: "강조 표시된 텍스트에 대한 알림을 사용합니다"
+      enable_quoting: "선택하여 하이라이트된 텍스트에 대해 '인용하여 댓글 달기' 기능을 사용합니다"
       change: "변경"
-      moderator: "{{user}}는 중간 관리자입니다."
-      admin: "{{user}} 는 운영자입니다."
+      moderator: "{{user}}님은 운영자입니다."
+      admin: "{{user}}님은 어드민입니다."
       deleted: "(삭제됨)"
-      suspended_notice: "이 사용자는 {{date}}까지 접근 금지 되었습니다."
-      suspended_reason: "이유: "
-      watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all topics in these categories"
-      tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
-      muted_categories: "Muted"
-      muted_categories_instructions: "You will automatically mute all topics in these categories"
+      suspended_notice: "이 사용자는 {{date}}까지 사용정지되었습니다."
+      suspended_reason: "사유: "
+      mailing_list_mode: "이 포럼에 게시글이 올라올 때마다 이메일 알림을 받습니다.(이 토픽이나 카테고리에 알림끄기를 설정한 경우는 제외)"
+      watched_categories: "지켜보기"
+      watched_categories_instructions: "설정한 카테고리의 모든 토픽을 자동으로 지켜보기합니다."
+      tracked_categories: "추적하기"
+      tracked_categories_instructions: "설정한 카테고리의 모든 토픽에 대해서 자동으로 알림을 받습니다."
+      muted_categories: "알림끄기"
+      muted_categories_instructions: "설정한 카테고리의 모든 토픽에 대해서 자동으로 알림을 끕니다."
       delete_account: "내 계정 삭제"
-      deleted_yourself: "성공적으로 당신의 계정이 삭제 되었습니다."
-      delete_yourself_not_allowed: "지금은 당신의 계정을 삭제할 수 없습니다. 관리자에게 당신의 계정을 삭제해달라고 연락해보세요."
+      delete_account_confirm: "계정을 정말로 영구히 삭제하시겠습니까? 삭제되면 복구가 불가능 합니다!"
+      deleted_yourself: "계정이 성공적으로 삭제되었습니다."
+      delete_yourself_not_allowed: "지금 당장 계정을 삭제할 수 없습니다. 계정을 삭제하시려면 사이트 어드민에게 연락해 주세요."
+      unread_message_count: "메시지"
+
       messages:
-        all: "전체"
-        mine: "내가 보낸 메세지"
-        unread: "읽지 않음"
+        all: "모든 메시지"
+        mine: "내 메시지"
+        unread: "읽지 않은 메시지"
+
       change_password:
         success: "(이메일 전송)"
         in_progress: "(이메일 전송중)"
         error: "(에러)"
-        action: "패스워드 변경 이메일 전송"
+        action: "비밀번호 재설정 이메일 발송"
         set_password: "비밀번호 설정"
+
       change_about:
-        title: "내정보 변경"
+        title: "자기소개 변경"
+
       change_username:
         title: "사용자 이름 변경"
-        confirm: "사용자 이름을 변경합니다. 모든 @사용자이름 언급이 끊어집니다. 사용자 이름을 변경하는게 확실한가요?"
+        confirm: "사용자 이름을 변경하면 기존 인용 시 혹은 @이름 멘션 시에 사용된 이름과 연결이 끊어집니다. 정말로 사용자 이름을 변경하시겠습니까?"
         taken: "죄송합니다. 중복된 사용자 이름입니다."
         error: "사용자 이름을 변경하는 중에 오류가 발생했습니다."
-        invalid: "사용자 이름이 잘못되었습니다. 숫자와 문자를 포함해야합니다."
+        invalid: "사용자 이름이 잘못되었습니다. 숫자와 알파벳 일반 문자만 사용가능합니다."
+
       change_email:
-        title: "이메일 수정"
-        taken: "죄송합니다. 해당 이메일은 사용할 수 없습니다."
-        error: "이메일 변경 중 오류가 발생했습니다. 이미 사용중인 이메일인지 확인해주세요."
-        success: "이메일 발송이 완료되었습니다. 확인하신 후 절차에 따라주세요."
+        title: "이메일 주소 변경"
+        taken: "죄송합니다. 해당 이메일 주소는 사용할 수 없습니다."
+        error: "이메일 주소 변경 중 오류가 발생했습니다. 이미 사용중인 이메일 주소인지 확인해주세요."
+        success: "이메일 발송이 완료되었습니다. 보내드린 내용을 확인하신 후 절차에 따라주세요."
+
       change_avatar:
         title: "아바타 변경"
-        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a> 기반"
-        gravatar_title: "Gravatar 사이트의 아바타 변경하기"
-        uploaded_avatar: "커스텀 사진"
-        uploaded_avatar_empty: "커스텀 사진 추가"
-        upload_title: "프로필 사진 업로드"
-        image_is_not_a_square: "경고: 사진을 정사각형으로 수정하였습니다."
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
+        gravatar_title: "Gravata 사이트에서 아바타를 변경하세요."
+        uploaded_avatar: "사진 업로드"
+        uploaded_avatar_empty: "사진을 업로드하세요."
+        upload_title: "사진 업로드"
+        image_is_not_a_square: "경고: 사진이 정사각형이 아니어서 정사각형으로 잘랐습니다."
+
       change_profile_background:
         title: "프로필 배경 변경"
+
       email:
         title: "이메일"
-        instructions: "당신의 이메일은 노출되지 않습니다."
-        ok: "완료. 확인 이메일을 보냈습니다."
-        invalid: "사용하고 계시는 이메일 주소를 입력해주세요."
+        instructions: "이메일은 다른 사용자에게 노출되지 않습니다."
+        ok: "정상적인 이메일입니다. 해당 주소로 인증 메일을 보내드립니다."
+        invalid: "유효한 이메일주소를 입력해주세요."
         authenticated: "당신의 이메일은 {{provider}}에 의해 인증되었습니다."
-        frequency: "당신의 활동이 뜸해지거나 저희가 보낸 이메일에 포함된 글들을 읽지 못하셨다면 확인 이메일을 보내드립니다."
+        frequency: "당신의 활동이 뜸해지거나 보내드린 이메일에 포함된 글들을 읽지 않으신 경우에 확인 이메일을 보내드립니다."
+
       name:
         title: "별명"
-        instructions: "별명을 정해주세요."
-        too_short: "너무 짧습니다."
-        ok: "사용가능합니다."
+        instructions: "별명을 정해주세요. 중복이 되어도 상관없습니다. 개인 프로필 페이지에서 표시됩니다."
+        too_short: "너무 짧습니다"
+        ok: "사용가능합니다"
       username:
         title: "사용자 이름"
-        instructions: "중복이 안되며 공백이 없어야합니다."
-        short_instructions: "@{{username}}으로 언급이 가능합니다."
+        instructions: "다른 사용자의 이름과 중복이 허용되지 않으며, 공백이 없어야합니다. 다른 사용자가 @사용자이름 형식으로 당신을 멘션할 수 있습니다."
+        short_instructions: "다른 사용자가 글을 쓸 때 @{{username}} 형식으로 당신을 멘션할 수 있습니다."
         available: "사용자 이름으로 사용가능합니다."
-        global_match: "이메일이 등록된 이름과 일치합니다."
-        global_mismatch: "이미 등록된 사용자 이름입니다. 다시 시도해보세요. {{suggestion}}"
-        not_available: "사용할 수 없는 사용자 이름입니다. 다시 시도해보세요. {{suggestion}}"
+        global_match: "이메일에 등록된 사용자 이름과 매치됩니다."
+        global_mismatch: "이미 등록된 이름입니다. 다시 시도해보세요. 추천:{{suggestion}}"
+        not_available: "사용할 수 없는 이름입니다. 다시 시도해보세요. 추천:{{suggestion}}"
         too_short: "사용자 이름이 너무 짧습니다."
         too_long: "사용자 이름이 너무 깁니다."
-        checking: "사용가능한지 확인 중..."
-        enter_email: '사용자 이름을 찾았습니다. 일치하는 이메일을 입력해주세요.'
-        prefilled: "Email matches this registered username."
+        checking: "사용자 이름이 사용가능한지 확인 중..."
+        enter_email: '사용자 이름을 찾았습니다. 매치되는 이메일을 입력해주세요.'
+        prefilled: "이메일이 등록된 사용자 이름과 일치합니다."
+
       locale:
-        title: "인터페이스 언어"
+        title: "포럼 인터페이스 언어"
+        instructions: "이 포럼 인터페이스에서 사용할 언어. 변경 후 페이지를 리프레시하면 적용됩니다."
+        default: "(기본)"
+
       password_confirmation:
-        title: "비밀번호를 재입력해주세요."
+        title: "비밀번호를 재입력"
+
       last_posted: "마지막글"
       last_emailed: "마지막 이메일"
       last_seen: "마지막 접속"
       created: "생성일"
       log_out: "로그아웃"
       website: "웹사이트"
-      email_settings: "이메일"
+      email_settings: "이메일 알림 설정"
       email_digests:
-        title: "새로운 정보를 요약하여 이메일로 보내드립니다."
+        title: "사이트를 방문하지않을 시에 새로운 정보를 요약하여 이메일로 보내주세요."
         daily: "매일"
         weekly: "매주"
         bi_weekly: "격주"
-      email_direct: "누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 이메일을 받습니다."
-      email_private_messages: "누군가 당신에게 메세지를 보낼 때 이메일을 받습니다."
-      email_always: "해당 포럼을 이용중이면 이메일 알림과 이메일 요약을 받습니다."
-      other_settings: "추가 사항"
-      categories_settings: "Categories"
+
+      email_direct: "누군가 당신의 글을 인용하거나, 당신의 게시글에 댓글을 달거나, @사용자이름 형식으로 당신을 멘션하면 이메일로 알림을 받습니다."
+      email_private_messages: "누군가 당신에게 개인 메시지를 보내면 이메일로 알림을 받습니다."
+      email_always: "포럼에서 액티브하게 활동하는 경우에도 알림과 요약 내용을 이메일로 받습니다."
+
+      other_settings: "추가 설정"
+      categories_settings: "카테고리"
+
       new_topic_duration:
-        label: "새글을 정의해주세요."
-        not_viewed: "아직 안본 글"
-        last_here: "내가 마지막으로 작성한 후 게시된 글"
+        label: "다음과 같은 조건을 새 토픽으로 간주합니다."
+        not_viewed: "아직 보지 않았음."
+        last_here: "내가 마지막으로 방문한 이후에 게시됨"
         after_n_days:
-          other: "지난 {{count}}일 사이에 작성된 새로운 글이 있습니다."
+          one: "최근 하루 이내에 게시됨"
+          other: "최근 {{count}}일 이내에 게시됨"
         after_n_weeks:
-          other: "지난 {{count}}주 사이에 작성된 새로운 글이 있습니다."
-      auto_track_topics: "내가 게시한 글을 추적할 수 있습니다."
+          one: "최근 일주일 이내에 게시됨"
+          other: "최근 {{count}}주 이내에 게시됨"
+
+      auto_track_topics: "내가 방문한 토픽을 자동으로 추적합니다."
       auto_track_options:
         never: "하지않음"
         always: "항상"
         after_n_seconds:
-          other: "{{count}}초 후"
+          one: "1초 후에"
+          other: "{{count}}초 후에"
         after_n_minutes:
-          other: "{{count}}분 후"
+          one: "1분 후에"
+          other: "{{count}}분 후에"
+
       invited:
-        search: "검색"
-        title: "초대"
-        user: "사용자 초대"
-        none: "초대 받은 사람을 찾을 수 없습니다."
-        truncated: "처음 {{count}}개 초대장 보여주기"
-        redeemed: "초대를 받았습니다."
-        redeemed_at: "에 초대되었습니다."
-        pending: "초대를 보류합니다."
-        topics_entered: "토픽이 입력되었습니다."
-        posts_read_count: "게시물 읽기"
-        expired: "이 초대장의 기한이 만료되었습니다."
-        rescind: "초대 제거"
-        rescinded: "초대가 제거되었습니다."
+        search: "검색어를 입력하세요..."
+        title: "초대장"
+        user: "초대한 사용자"
+        none: "초대장이 없습니다."
+        truncated: "처음 {{count}}개까지의 초대장 보기"
+        redeemed: "수락한 초대"
+        redeemed_at: "수락"
+        pending: "대기중인 초대"
+        topics_entered: "참여한 토픽"
+        posts_read_count: "읽은 글 수"
+        expired: "이 초대장은 유효 기간이 만료되었습니다."
+        rescind: "초대 취소"
+        rescinded: "취소한 초대"
         time_read: "읽은 시간"
-        days_visited: "일일 방문"
-        account_age_days: "일일 계정 나이"
+        days_visited: "방문 일수"
+        account_age_days: "방문 일수로 본 계정 나이(몇 일)"
         create: "이 포럼에 친구 초대하기"
+
       password:
         title: "비밀번호"
-        too_short: "암호가 너무 짧습니다."
-        common: "That password is too common."
-        ok: "적절한 암호입니다."
-        instructions: "Must be at least %{count} characters."
+        too_short: "너무 짧은 비밀번호입니다."
+        common: "너무 쉬운 비밀번호입니다."
+        ok: "적절한 비밀번호입니다."
+        instructions: "적어도 %{count}글자 이상이어야 합니다."
+
       ip_address:
         title: "마지막 IP 주소"
+      registration_ip_address:
+        title: "가입시 IP 주소"
       avatar:
         title: "아바타"
       title:
         title: "제목"
+
       filters:
-        all: "전체"
+        all: "모두 보기"
+
       stream:
-        posted_by: "에 의해 작성되었습니다"
-        sent_by: "에 의해 전송되었습니다"
-        private_message: "비공개 메시지"
+        posted_by: "게시자:"
+        sent_by: "발송자:"
+        private_message: "개인 메시지"
         the_topic: "토픽"
-    loading: "로딩 중..."
+
+    loading: "로딩중..."
     close: "닫기"
-    assets_changed_confirm: "Discourse가 업데이트 되었습니다. 새로운 버전 사용을 위해 새로고침 하시겠어요?"
-    learn_more: "더 배우기"
+    assets_changed_confirm: "이 포럼의 기능이 업데이트 되었습니다. 페이지를 새로고침하여 최신 버전으로 업데이트하시겠습니가?"
+    read_only_mode:
+      enabled: "포럼 관리자가 읽기 전용 모드를 설정했습니다.이 사이트를 계속해서 사용하실 수 있으나 읽기 이외에는 정상적으로 동작하지 않습니다."
+      login_disabled: "사이트가 읽기 전용 모드일 때는 로그인이 불가능합니다."
+
+    learn_more: "더 보기..."
+
     year: '년'
-    year_desc: '지난 1년 동안 게시된 글'
+    year_desc: '지난 365일 동안 게시된 글'
     month: '월'
-    month_desc: '지난 1달 동안 게시된 글'
+    month_desc: '지난 30일 동안 게시된 글'
     week: '주'
-    week_desc: '지난 1주 동안 게시된 글'
-    day: 'day'
-    first_post: 첫 번째 게시물
-    mute: 음소거
-    unmute: 음소거 해제
-    last_post: 최근 게시물
+    week_desc: '지난 7일 동안 게시된 글'
+    day: '일'
+
+    first_post: 첫 번째 게시글
+    mute: 알림 끄기
+    unmute: 알림 끄기 해제
+    last_post: 마지막 글
+
     summary:
-      enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
-      description: "There are <b>{{count}}</b> replies. Save reading time by displaying only the most relevant replies?"
-      description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>. Save reading time by displaying only the most relevant replies?"
-      enable: 'Summarize This Topic'
-      disable: 'Show All Posts'
+      enabled_description: "이 토픽의 요약본을 보고 있습니다. 모든 글을 보시려면 아래를 클릭하세요."
+      description: "이 토픽에는 <b>{{count}}</b>개의 글이 있습니다. 시간을 아끼기 위해 주제에 알맞은 댓글만 조회하시겠습니까?"
+      description_time: "이 토픽에는 <b>{{count}}</b>개의 글이 있습니다. 읽는데 <b>{{readingTime}}분</b> 정도 걸릴 것으로 예상됩니다. 시간을 아끼기 위해 주제에 알맞은 댓글만 조회하시겠습니까?"
+      enable: '요약본 보기로 전환합니다.'
+      disable: '모든 글 보기로 전환합니다.'
+
     private_message_info:
       title: "개인 메시지"
-      invite: "다른 사람 초대"
-      remove_allowed_user: "{{name}}에게서 온 개인 메시지를 삭제할까요?"
+      invite: "다른 사용자 초대..."
+      remove_allowed_user: "정말로 {{name}}님과 더이상 개인 메시지를 주고 받지 않겠습니까?"
+
     email: '이메일'
-    username: '사용자'
-    last_seen: '마지막 접근'
+    username: '사용자 이름'
+    last_seen: '최종 접속 시각'
     created: '생성'
-    trust_level: '신뢰도'
+    trust_level: '신뢰 등급'
+
     create_account:
       title: "계정만들기"
       action: "지금 계정 만들기!"
       invite: "아직 계정이 없으신가요?"
-      failed: "뭔가 잘못되었습니다. 이 메일은 등록이 되어있습니다. 비밀번호를 잊으셨다면 비밀번호 찾기를 눌러주세요."
+      failed: "계정 생성 중 문제가 발생했습니다. 이미 등록된 이메일일 수도 있습니다. 비밀번호를 잊으셨다면 링크를 눌러주세요."
+
     forgot_password:
-      title: "비밀번호를 찾기"
-      action: "비밀번호를 잊어버렸습니다."
-      invite: "사용자 이름 또는 이메일 주소를 입력하시면 비밀번호 재설정 이메일을 보내드립니다."
-      reset: "암호 재설정"
+      title: "비밀번호 찾기"
+      action: "비밀번호를 잊어버렸습니다"
+      invite: "사용자 이름 또는 이메일 주소를 입력하시면, 비밀번호 재설정 이메일을 보내드립니다."
+      reset: "비밀번호 재설정"
+      complete_username: "입력하신 사용자이름(<b>%{username}</b>) 정확하면, 짧은 시간 내에 비밀번호 재설정 방법을 이메일로 보내드립니다." 
+      complete_email: "입력하신 이메일(<b>%{email}</b>)이 정확하면, 짧은 시간 내에 비밀번호 재설정 방법을 이메일로 보내드립니다."
+
     login:
-      title: "회원가입"
-      username: "아이디"
+      title: "로그인"
+      username: "로그인"
       password: "비밀번호"
       email_placeholder: "이메일 주소 또는 사용자 이름"
-      error: "알 수없는 오류"
-      reset_password: '암호 재설정'
+      error: "알 수 없는 오류"
+      reset_password: '비밀번호 재설정'
       logging_in: "로그인 중..."
       or: "또는"
-      authenticating: "인증 중..."
-      awaiting_confirmation: "계정 활성화를 기다리고 있습니다. 다른 인증 이메일을 받고 싶으면 비밀번호 찾기를 누르세요."
-      awaiting_approval: "당신의 계정은 아직 스태프에 의해 승인되지 않았습니다. 승인되면 이메일을 받게됩니다."
-      requires_invite: "죄송합니다. 초대를 받은 사람만 이용하실 수 있습니다."
-      not_activated: "당신은 아직 로그인 할 수 없습니다. 계정을 만들었을때 <b> {{sentTo}} </b> 주소로 인증 이메일을 보냈습니다. 계정을 활성화하려면 해당 이메일의 지침을 따르십시오."
-      resend_activation_email: "다시 인증 이메일을 보내려면 여기를 클릭하세요."
-      sent_activation_email_again: "<b> {{currentEmail}} </b> 주소로 인증 이메일을 보냈습니다. 이메일이 도착하기까지 몇 분 정도 걸릴 수 있습니다. 또한 스팸 메일을 확인하십시오."
+      authenticating: "인증 작업 진행 중..."
+      awaiting_confirmation: "이메일 인증이 완료되지 않은 계정입니다. 이메일 인증을 다시 하시려면 비밀번호 재설정 링크를 사용하세요."
+      awaiting_approval: "당신의 계정은 아직 운영자에 의해 승인되지 않았습니다. 승인이 완료되면 안내 이메일을 보내드립니다."
+      requires_invite: "죄송합니다. 이 포럼은 초대 받은 사람만 접근가능합니다."
+      not_activated: "아직 로그인 할 수 없습니다. 이전에 <b>{{sentTo}}</b> 주소로 이메일 인증을 위한 안내 메일을 보내드렸습니다. 해당 이메일을 확인하시고 이메일 인증을 완료해 주세요."
+      resend_activation_email: "다시 인증용 이메일을 보내려면 여기를 클릭하세요."
+      sent_activation_email_again: "이메일 인증용 이메일을 <b>{{currentEmail}}</b> 주소로 다시 발송해 드렸습니다. 메일이 도착하는데 몇 분 정도 걸릴 수 있습니다. 스팸 폴더도 꼭 확인해 주세요."
       google:
         title: "Google"
-        message: "Google 인증 중(팝업 차단을 해제 하세요)"
+        message: "Google 인증 중(브라우저의 팝업 방지 기능이 작동하면 정상동작하지 않을 수 있습니다)"
       twitter:
         title: "Twitter"
-        message: "Twitter 인증 중(팝업 차단을 해제 하세요)"
+        message: "Twitter 인증 중(브라우저의 팝업 방지 기능이 작동하면 정상동작하지 않을 수 있습니다)"
       facebook:
         title: "Facebook"
-        message: "Facebook 인증 중(팝업 차단을 해제 하세요)"
+        message: "Facebook 인증 중(브라우저의 팝업 방지 기능이 작동하면 정상동작하지 않을 수 있습니다)"
       yahoo:
         title: "Yahoo"
-        message: "Yahoo 인증 중(팝업 차단을 해제 하세요)"
+        message: "Yahoo 인증 중(브라우저의 팝업 방지 기능이 작동하면 정상동작 하지않을 수 있습니다)"
       github:
         title: "GitHub"
-        message: "GitHub 인증 중(팝업 차단을 해제 하세요)"
+        message: "GitHub 인증 중(브라우저의 팝업 방지 기능이 작동하면 정상동작 하지않을 수 있습니다)"
+
     composer:
-      posting_not_on_topic: "어떤 토픽에 답글을 작성하시겠습니까?"
+      posting_not_on_topic: "어떤 토픽에 댓글을 달려고 하십니까?"
       saving_draft_tip: "저장 중..."
       saved_draft_tip: "저장 완료"
-      saved_local_draft_tip: "로컬로 저장됩니다."
-      similar_topics: "작성하려는 내용과 비슷한 토픽들..."
-      drafts_offline: "초안"
+      saved_local_draft_tip: "로컬로 저장됨"
+      similar_topics: "유사한 토픽이 발견됨..."
+      drafts_offline: "오프라인 초안"
+
       min_length:
-        need_more_for_title: "{{n}} 자 필요"
-        need_more_for_reply: "{{n}} 자 필요"
+        need_more_for_title: "최소 제목 길이에 {{n}}글자 모자람"
+        need_more_for_reply: "최소 글 길이에 {{n}}글자 모자람"
+
       error:
-        title_missing: "제목은 필수 항목입니다"
-        title_too_short: "제목은 최소 {{min}} 글자 이상이어야 합니다."
-        title_too_long: "제목은 {{max}} 글자 이상일 수 없습니다."
-        post_missing: "게시글 내용은 필수 입니다."
-        post_length: "게시글은 최소 {{min}} 글자 이상이어야 합니다."
-        category_missing: "카테고리를 선택해주세요."
-      save_edit: "편집 저장"
-      reply_original: "기존 토픽에 대해 답글을 작성합니다."
-      reply_here: "여기에 답글을 작성하세요."
-      reply: "답글"
+        title_missing: "제목은 필수 입력 사항입니다."
+        title_too_short: "제목이 너무 짧습니다. {{min}}글자 이상이어야만 합니다."
+        title_too_long: "제목이 너무 깁니다. {{max}}글자 미만이어야만 합니다."
+        post_missing: "글 내용을 채워주세요."
+        post_length: "글 내용은 {{min}}글자 이상이야만 합니다."
+        category_missing: "카테고리를 선택하셔야 합니다."
+
+      save_edit: "편집한 내용 저장하기"
+      reply_original: "원본 토픽에 댓글 달기"
+      reply_here: "여기에 댓글을 달아주세요"
+      reply: "댓글 달기"
       cancel: "취소"
       create_topic: "토픽 만들기"
-      create_pm: "개인 메시지를 작성합니다."
-      title: "혹은 Ctrl + Enter 누름"
-      users_placeholder: "사용자 추가"
-      title_placeholder: "여기에 제목을 입력하세요. 토픽은 무엇입니까?"
-      edit_reason_placeholder: "why are you editing?"
-      show_edit_reason: "(add edit reason)"
-      reply_placeholder: "여기에 입력하세요. 마크 다운이나 BBCode 형식을 사용하세요. 드래그&드랍으로 이미지를 넣습니다."
-      view_new_post: "새로운 게시물을 볼 수 있습니다."
+      create_pm: "개인 메시지 작성"
+      title: "또는 Ctrl+Enter를 누르세요."
+
+      users_placeholder: "사용자를 추가해 주세요."
+      title_placeholder: "여기에 제목을 입력하세요. 토론의 주제가 무엇인지 간단하게 한 문장으로 입력해주세요."
+      edit_reason_placeholder: "편집하시는 이유를 짧게..."
+      show_edit_reason: "(편집 사유 추가)"
+      reply_placeholder: "여기에 글을 입력하세요. Markdown이나 BBCode를 사용할 수 있습니다. 이미지를 드래그하거나 붙여넣기하여 업로드할 수 있습니다."
+      view_new_post: "새로운 게시글을 봅니다."
       saving: "저장 중..."
       saved: "저장 완료!"
-      saved_draft: "작성중이던 글이 있어요. 계속해서 글을 작성하시려면 이 영역을 클릭하세요."
+      saved_draft: "당신은 작성중인 게시글 초안이 있습니다. 편집을 다시 시작하려면이 이 상자의 아무 곳이나 클릭합니다."
       uploading: "업로딩 중..."
-      show_preview: '미리보기를 보여줍니다 &laquo;'
-      hide_preview: '&laquo; 미리보기를 숨깁니다'
-      quote_post_title: "전체 게시물을 인용"
+      show_preview: '미리보기 보이기&raquo;'
+      hide_preview: '&laquo;미리보기 숨기기'
+
+      quote_post_title: "전체 게시글을 인용"
       bold_title: "굵게"
       bold_text: "굵게하기"
       italic_title: "강조"
       italic_text: "강조하기"
       link_title: "하이퍼링크"
-      link_description: "링크 설명을 입력"
+      link_description: "링크 설명을 여기에 입력하세요"
       link_dialog_title: "하이퍼링크 삽입"
-      link_optional_text: "옵션 제목"
+      link_optional_text: "링크 제목 입력(선택 사항)"
       quote_title: "인용구"
       quote_text: "인용구"
-      code_title: "코드 샘플"
-      code_text: "여기에 코드를 입력"
+      code_title: "미리 서식이 지정된 텍스트(코드 샘플등)"
+      code_text: "여기에 미리 서식이 지정된 텍스트를 입력하세요"
       upload_title: "업로드"
-      upload_description: "업로드 설명을 입력"
+      upload_description: "여기에 업로드에 대한 설명을 입력하세요."
       olist_title: "번호 매기기 목록"
       ulist_title: "글 머리 기호 목록"
-      list_item: "토픽"
-      heading_title: "표제"
-      heading_text: "표제"
-      hr_title: "수평선"
-      undo_title: "취소"
-      redo_title: "다시"
-      help: "마크다운 편집 도움말"
-      toggler: "작성 패널을 숨기거나 표시"
-      admin_options_title: "이 토픽에 대한 옵션 설정"
-      auto_close_label: "자동 토픽 닫기: "
-      auto_close_units: "일"
-      auto_close_error: "Please enter a valid value."
+      list_item: "목록 아이템"
+      heading_title: "표제(헤딩)"
+      heading_text: "표제(헤딩)"
+      hr_title: "가로 구분선"
+      undo_title: "실행 취소"
+      redo_title: "다시 실행"
+      help: "Markdown 편집 도움말"
+      toggler: "에디터 패널을 숨기거나 표시"
+
+      admin_options_title: "이 토픽에 대한 선택적 관리자 설정"
+      auto_close_label: "다음 기간 뒤에 토픽을 자동으로 닫기:"
+      auto_close_units: "(몇 시간, 시각 또는 타임스탬프)"
+      auto_close_examples: '예: 24, 17:00, 2013-11-22 14:00'
+      auto_close_error: "유효한 값을 입력하세요."
+
     notifications:
-      title: "@사용자이름 언급, 게시글과 토픽에 대한 언급, 개인 메시지 등에 대한 알림"
-      none: "현재 알림이 없습니다."
-      more: "이전 알림을 볼 수 있습니다."
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} 의 초대를 수락했습니다."
-      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} 이동 {{link}}"
-      total_flagged: "관심 표시된 총 게시글"
+      title: "@사용자이름 형식으로 당신을 멘션한 경우, 작성한 토픽이나 글에 댓글이 달린 경우, 메시지 수신 등등에 대한 각종 알림"
+      none: "현재 새로운 알림이 없습니다"
+      more: "이전 알림 보기"
+      mentioned: "<span title='멘션' class='icon'>@</span> {{username}} {{link}}"
+      quoted: "<i title='인용' class='fa fa-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='댓글' class='fa fa-reply'></i> {{username}} {{link}}"
+      posted: "<i title='게시글' class='fa fa-reply'></i> {{username}} {{link}}"
+      edited: "<i title='편집' class='fa fa-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='좋아요' class='fa fa-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='fa fa-envelope-o' title='개인 메시지'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='fa fa-envelope-o' title='개인 메시지'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='초대 수락' class='fa fa-sign-in'></i> {{username}}님이 초대를 수락했습니다."
+      moved_post: "<i title='이동된 게시글' class='fa fa-arrow-right'></i> {{username}} 이동 {{link}}"
+      total_flagged: "신고당한 총 게시글"
+      linked: "<i title='링크된 게시글' class='fa fa-arrow-left'></i> {{username}} {{link}}"
+      granted_badge: "<i title='부여된 배지' class='fa fa-certificate'></i> 배지가 부여됨 {{link}}"
+
     upload_selector:
       title: "이미지 추가하기"
-      title_with_attachments: "이미지 또는 파일 추가하기"
-      from_my_computer: "컴퓨터에서 가져오기"
-      from_the_web: "인터넷에서 가져오기"
-      remote_tip: "http://example.com/image.jpg 형식으로 이미지 주소를 입력"
-      remote_tip_with_attachments: "http://example.com/file.ext 형식으로 이미지나 파일의 주소를 입력 (사용 가능한 확장자: {{authorized_extensions}})"
-      local_tip: "내 컴퓨터에서 이미지를 가져오기"
-      local_tip_with_attachments: "내 컴퓨터에서 이미지나 파일 가져오기 (사용 가능한 확장자: {{authorized_extensions}})"
-      hint: "(드래그&드랍으로 업로드 가능)"
-      uploading: "업로드 중입니다..."
+      title_with_attachments: "이미지 혹은 파일 첨부"
+      from_my_computer: "내 컴퓨터에서 불러오기"
+      from_the_web: "웹에서 가져오기"
+      remote_tip: "이미지 주소를 http://example.com/image.jpg 형식으로 입력하세요"
+      remote_tip_with_attachments: "이미지 혹은 파일에 대한 주소를 다음과 같은 형식으로 입력 http://example.com/file.ext (허용되는 확장자: {{authorized_extensions}})."
+      local_tip: "로컬 디스크로부터 이미지를 선택하여 클릭해주세요"
+      local_tip_with_attachments: "로컬 디스크로부터 이미지를 선택하여 클릭해주세요 (허용되는 확장자: {{authorized_extensions}})"
+      hint: "(업로드할 파일을 에디터로 드래그앤드랍하셔도 됩니다.)"
+      hint_for_supported_browsers: "(업로드할 이미지를 에디터로 드래그앤드랍하시거나 붙여넣기하셔도 됩니다.)"
+      uploading: "이미지 업로드중 ..."
+      image_link: "당신의 이미지가 링크될 곳: "
+
     search:
-      title: "토픽, 게시물, 사용자, 카테고리를 검색"
-      placeholder: "여기에 검색어를 입력하세요"
+      title: "토픽, 게시글, 사용자, 카테고리를 검색합니다"
+      placeholder: "여기에 검색어를 입력합니다"
       no_results: "검색 결과가 없습니다"
-      searching: "검색중..."
+      searching: "검색중 ..."
+
       prefer:
-        user: "@{{username}}님이 쓰신 게시글을 위주로 검색"
-        category: "{{category}}안에 게시글을 위주로 검색"
-    site_map: "다른 토픽이나 카테고리로 이동"
+        user: "@{{username}}가 들어간 경우 더 높은 가중치"
+        category: " {{category}} 카테고리의 경우 더 높은 가중치"
+
+    site_map: "다른 토픽 목록이나 카테고리로 이동합니다"
     go_back: '돌아가기'
-    not_logged_in_user: 'user page with summary of current activity and preferences'
+    not_logged_in_user: '사용자의 현재 활동 내용과 선택사항 설정에 대한 요약본 페이지'
     current_user: '사용자 페이지로 이동'
+
     starred:
-      title: '즐겨찾기'
+      title: '관심 토픽'
       help:
-        star: '즐겨찾기로 이 토픽을 추가'
-        unstar: '즐겨찾기에서 이 토픽을 제거'
+        star: '관심 토픽 목록에 이 토픽을 추가합니다.'
+        unstar: '관심 토픽 목록에서 이 토픽을 제거합니다.'
+
     topics:
       bulk:
-        actions: "일괄 적용"
+        reset_read: "Reset Read"
+        dismiss_read: "Dismiss Read"
+        dismiss_new: "Dismiss New"
+        toggle: "벌크 작업을 위한 선택 기능을 토글"
+        actions: "벌크 작업 목록"
         change_category: "카테고리 변경"
         close_topics: "토픽 닫기"
+        notification_level: "일림설정 수준 변경"
+        selected:
+          one: "<b>1</b>개의 토픽을 선택했습니다."
+          other: "<b>{{count}}</b>개의 토픽을 선택했습니다."
+
       none:
-        starred: "아직 즐겨찾기가 없습니다. 토픽을 즐겨찾기하려면 제목 옆 별표를 눌러주세요."
+        starred: "관심 토픽 목록이 비어있습니다. 관심 토픽으로 등록하려면 제목 옆에 있는 별표를 탭하거나 클릭해 주세요."
         unread: "읽지 않은 토픽이 없습니다."
-        new: "읽을 새로운 토픽이 없습니다."
+        new: "새로운 토픽이 없습니다."
         read: "아직 어떠한 토픽도 읽지 않았습니다."
-        posted: "아직 어떠한 토픽도 작성되지 않았습니다."
+        posted: "아직 어떠한 토픽에도 글을 쓰지 않으셨습니다."
         latest: "최신 토픽이 없습니다."
-        hot: "인기있는 토픽이 없습니다."
-        category: "{{category}}에 토픽이 없습니다."
-        top: "Top 토픽이 없습니다."
+        hot: "인기 토픽이 없습니다."
+        category: "[{{category}}] 카테고리에 토픽이 없습니다."
+        top: "최고의 토픽이 없습니다."
       bottom:
-        latest: "더 이상 읽을 최신 토픽이 없습니다"
-        hot: "더 이상 읽을 인기있는 토픽이 없습니다"
-        posted: "더 이상 작성된 토픽이 없습니다"
-        read: "더 이상 읽을 토픽이 없습니다"
+        latest: "더 이상 읽을 최신 토픽이 없습니다."
+        hot: "더 이상 읽을 인기 토픽이 없습니다."
+        posted: "더 이상 게시글이 있는 토픽이 없습니다."
+        read: "더 이상 읽을 토픽이 없습니다."
         new: "더 이상 읽을 새로운 토픽이 없습니다."
-        unread: "더 이상 읽지 않은 토픽이 없습니다"
-        starred: "더 이상 읽을 즐겨찾기 토픽이 없습니다"
-        category: "더 이상 {{category}}에 토픽이 없습니다"
-        top: "더 이상 인기 토픽이 없습니다."
+        unread: "더 이상 읽지 않은 토픽이 없습니다."
+        starred: "더 이상 읽을 관심 토픽이 없습니다."
+        category: "[{{category}}] 카테고리에 더 이상의 토픽이 없습니다."
+        top: "더 이상 읽을 최고의 토픽이 없습니다."
+
     topic:
-      filter_to: "이 토픽에서 {{username}}님의 {{post_count}}건의 게시물만 보기"
+      filter_to: "이 토픽에서 {{username}}님이 게시한 {{post_count}}개의 글만 봅니다."
       create: '토픽 만들기'
-      create_long: '새로운 토픽을 개설'
-      private_message: '개인 메시지를 작성'
+      create_long: '새로운 토픽을 개설합니다.'
+      private_message: '개인 메시지를 작성합니다.'
       list: '토픽 목록'
       new: '새로운 토픽'
       new_topics:
-        other: '{{count}}개의 새로운 토픽'
+        one: '1개의 새로운 토픽'
+        other: '{{count}} 개의 새로운 토픽'
       unread_topics:
-        other: '{{count}}개의 읽지 않은 토픽'
+        one: '1개의 안 잃은 토픽'
+        other: '{{count}} 개의 안 잃은 토픽'
       title: '토픽'
       loading_more: "더 많은 토픽을 로딩 중..."
-      loading: '토픽을 로딩 중...'
+      loading: '토픽 로딩 중...'
       invalid_access:
-        title: "이 토픽은 비공개입니다"
-        description: "죄송합니다. 그 토픽에 접근 할 수 없습니다!"
+        title: "비공개 토픽"
+        description: "죄송합니다. 당신은 해당 토픽에 액세스 할 수 없습니다!"
+        login_required: "해당 토픽을 보시려면 먼저 로그인하셔야 합니다."
       server_error:
         title: "토픽을 불러오지 못했습니다"
         description: "죄송합니다. 연결 문제로 인해 해당 토픽을 불러올 수 없습니다. 다시 시도하십시오. 문제가 지속되면 문의해 주시기 바랍니다"
       not_found:
         title: "토픽을 찾을 수 없습니다"
-        description: "죄송합니다. 토픽을 찾을 수 없습니다. 아마도 중간 관리자에 의해 삭제된 것 같습니다."
+        description: "죄송합니다. 토픽을 찾을 수 없습니다. 아마도 운영자에 의해 삭제된 것같습니다."
       unread_posts:
-        other: "이 토픽에 {{count}}개의 읽지 않을 게시 글이 있습니다."
+        one: "이 토픽에 읽지 않은 이전 게시글이 1개 있습니다"
+        other: "이 토픽에 읽지 않은 이전 게시글이 {{count}}개 있습니다"
       new_posts:
-        other: "최근 읽은 이후 {{count}}개 글이 이 토픽 작성되었습니다."
+        one: "이 토픽에 마지막으로 읽은 이후에 1개의 새 글이 게시되었습니다"
+        other: "이 토픽에 마지막으로 읽은 이후에 {{count}}개의 새 글이 게시되었습니다"
+
       likes:
-        other: "이 토픽에 {{count}}개의 '좋아요'가 있습니다."
-      back_to_list: "토픽 리스트로 돌아갑니다."
+        one: "이 토픽은 1개의 '좋아요'를 받았습니다"
+        other: "이 토픽은 {{count}}개의 '좋아요'를 받았습니다"
+      back_to_list: "토픽 리스트로 돌아갑니다"
       options: "토픽 옵션"
-      show_links: "이 토픽에서 링크를 표시합니다."
-      toggle_information: "토픽의 세부 정보를 토글합니다."
-      read_more_in_category: "더 많은 토픽들은 {{catLink}} 또는 {{latestLink}}에서 찾으실 수 있습니다"
-      read_more: "{{catLink}} 또는 {{latestLink}}에서 더 많은 토픽들을 찾으실 수 있습니다"
-      read_more_MF: "이 카테고리에 { UNREAD, plural, =0 {} one { is <a href='/unread'>1개의 안 읽은</a> } other { are <a href='/unread'>#개의 안 읽은</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1개의 새로운</a> 토픽이} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># 새로운</a> 토픽이} } 남아 있고, {CATEGORY, select, true {{catLink} 토픽도 확인해보세요.} false {{latestLink}} other {}} "
+      show_links: "이 토픽에서 링크를 표시합니다"
+      toggle_information: "토픽 세부 정보를 토글합니다"
+      read_more_in_category: "더 많은 읽을 거리를 원하세요? {{catLink}} 또는 {{latestLink}}에서 더 많은 읽을 거리를 찾아보세요."
+      read_more: "{{catLink}} 또는 {{latestLink}}에서 더 많은 읽을 거리를 찾아보세요"
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_MF: "{
+        UNREAD, plural,
+        =0 {}
+        one {
+          <a href='/unread'>읽지 않은 토픽 1개</a>
+        } other {
+          <a href='/unread'>읽지 않은 토픽 #개</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{와 } false { } other{}} <a href='/new'>새로운 토픽 1개</a>}
+            other { {BOTH, select, true{와 } false { } other{}} <a href='/new'>새로운 토픽 #개</a>}
+        }가 남았습니다. 또는 {CATEGORY, select, true { {catLink}에 있는 다른 토픽도 확인해 보세요.} false {{latestLink}} other {}} "
+
       browse_all_categories: 모든 카테고리 보기
+
       view_latest_topics: 최신 토픽 보기
-      suggest_create_topic: 토픽(글)을 작성 해 보실래요?
-      read_position_reset: "당신의 읽기 위치가 재설정되었습니다."
-      jump_reply_up: 이전 답글로 이동
-      jump_reply_down: 이후 답글로 이동
-      deleted: "토픽이 삭제되었습니다"
-      auto_close_notice: "이 토픽은 곧 자동으로 닫힙니다. %{timeLeft}."
-      auto_close_title: '자동으로 닫기 설정'
+      suggest_create_topic: 새로운 토픽을 만들어보세요.
+      read_position_reset: "당신의 읽기 위치가 재설정되었습니다"
+      jump_reply_up: 이전에 표시된 동일한 댓글로 이동
+      jump_reply_down: 나중에 표시된 동일한 댓글로 이동
+      deleted: "삭제된 토픽입니다"
+
+      auto_close_notice: "이 토픽은 자동으로 닫힙니다. 남은시간: %{timeLeft}."
+      auto_close_title: '토픽 자동 닫기 설정'
       auto_close_save: "저장"
-      auto_close_remove: "이 토픽을 자동으로 닫지 않기"
+      auto_close_remove: "이 토픽에 대한 자동 닫기 설정 취소"
+
       progress:
-        title: 진행 중인 토픽
+        title: 토픽 진행
         jump_top: 첫 게시글로 이동
         jump_bottom: 마지막 게시글로 이동
-        jump_bottom_with_number: "jump to post %{post_number}"
+        jump_bottom_with_number: "%{post_number}번 게시글로 이동"
         total: 총 게시글
         current: 현재 게시글
-        position: "post %{current} of %{total}"
+        position: "전체 %{total}개 중 %{current}번 게시글"
+
       notifications:
         reasons:
-          '3_2': '이 토픽을 보고있어서 알림을 받게 됩니다.'
-          '3_1': '이 토픽을 생성하여서 알림을 받게 됩니다.'
-          '3': '이 토픽을 보고있어서 알림을 받게 됩니다.'
-          '2_4': '이 토픽에 답글을 게시하여서 알림을 받게 됩니다.'
-          '2_2': '이 토픽을 추척하고 있어서 알림을 받게 됩니다.'
-          '2': '이 토픽을 읽어서 알림을 받게 됩니다. <a href="/users/{{username}}/preferences">(설정)</a>'
-          '1': '누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다.'
-          '1_2': '누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다.'
-          '0': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
-          '0_2': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
+          "3_6": '이 카테고리에 "지켜보기"를 설정했기 때문에 알림을 받습니다.'
+          "3_5": '이 토픽을 자동으로 "지켜보기" 시작했기 때문에 알림을 받습니다.'
+          "3_2": '이 토픽에 "지켜보기"를 설정했기 때문에 알림을 받습니다.'
+          "3_1": '이 토픽을 생성했기 때문에 알림을 받습니다.'
+          "3": '이 토픽에 "지켜보기"를 설정했기 때문에 알림을 받습니다.'
+          "2_4": '이 토픽에 댓글을 달았기 때문에 알림을 받습니다.'
+          "2_2": '이 토픽에 "추적하기"를 설정했기 때문에 알림을 받습니다.'
+          "2": '<a href="/users/{{username}}/preferences"> 이 토픽을 읽었기 때문에</a> 알림을 받을 수 있습니다.'
+          "1": '누군가가 글 내용 안에 @이름으로 당신을 멘션하거나 당신 글에 댓글을 단 경우에만 알림을 받습니다.'
+          "1_2": '누군가가 글 내용 안에 @이름으로 당신을 멘션하거나 당신 글에 댓글을 단 경우에만 알림을 받습니다.'
+          "0": '당신은 이 토픽에 대한 모든 알림을 꺼두셨습니다.'
+          "0_2": '당신은 이 토픽에 대한 모든 알림을 꺼두셨습니다.'
         watching_pm:
-          title: "알림 : 주시 중"
+          title: "지켜보기"
+          description: "추적하기 설정으로 받는 모든 알림을 받고 추가적으로 모든 새 게시글에 대해 알림을 받습니다."
         watching:
-          title: "주시 중"
-          description: "모든 새 게시물 알림을 받게 됩니다."
+          title: "지켜보기"
+          description: "추적하기 설정으로 받는 모든 알림을 받고 추가적으로 모든 새 게시글에 대해 알림을 받습니다."
         tracking_pm:
-          title: "알림 : 추척 중"
+          title: "추적하기"
+          description: "누군가가 글 내용 안에 @이름으로 당신을 멘션하거나 당신이 쓴 글에 댓글을 다는 경우에 알림을 받습니다."
         tracking:
-          title: "추적 중"
-          description: "누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다. '읽지 않은 글' 탭에서 게시물의 수를 볼 수 있습니다."
+          title: "추적하기"
+          description: "누군가가 글 내용 안에 @이름으로 당신을 멘션하거나 당신이 쓴 글에 댓글을 다는 경우에 알림을 받습니다. 또한 읽지 않은 글수, 새로운 글수도 알림을 받습니다."
         regular:
-          title: "보통"
-          description: "누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다."
+          title: "보통알림"
+          description: "누군가가 글 내용 안에 @이름으로 당신을 멘션하거나 당신이 쓴 글에 댓글을 다는 경우에만 알림을 받습니다."
         muted_pm:
-          title: "알림 : 끔"
+          title: "알림끄기"
+          description: "당신은 이 개인 메시지에 대해 어떠한 알림도 받지 않습니다."
         muted:
-          title: "알림 없음"
-          description: "아무 알림도 없습니다. '읽지 않은 글' 탭에 나타나지 않습니다."
+          title: "알림끄기"
+          description: "당신은 이 토픽에 대해 어떠한 알림도 받지 않습니다. 또한 이 토픽은 '읽지 않은 토픽' 탭에도 나타나지 않습니다."
+
       actions:
-        recover: "토픽 다시 복구"
+        recover: "토픽 복구(삭제 취소)"
         delete: "토픽 삭제"
         open: "토픽 열기"
         close: "토픽 닫기"
-        auto_close: "자동으로 닫기"
+        auto_close: "자동 닫기"
         unpin: "토픽 고정 취소"
         pin: "토픽 고정"
-        unarchive: "보관 안된 토픽"
-        archive: "보관된 토픽"
+        pin_globally: "토픽 전체 범위로 고정하기"
+        unarchive: "토픽 아카이브 취소"
+        archive: "토픽 아카이브"
         invisible: "토픽 숨기기"
-        visible: "토픽 보이기"
-        reset_read: "값 재설정"
-        multi_select: "게시글 이동을 위한 다중 선택"
-        convert_to_topic: "정식 토픽으로 변환"
+        visible: "토픽 보이기(숨기기 취소)"
+        reset_read: "읽은 정보 초기화"
+        multi_select: "이동할 게시글 선택"
+        convert_to_topic: "정상 토픽으로 전환"
+
       reply:
-        title: '답글'
-        help: '이 토픽에 대한 답글 구성 시작'
+        title: '댓글 달기'
+        help: '이 토픽에 대한 댓글 작성을 시작합니다.'
+
       clear_pin:
         title: "고정 취소"
-        help: "더 이상 목록의 맨 위에 표시하지 않도록 이 토픽의 고정 상태를 해제합니다."
+        help: "더 이상 토픽 목록의 맨 위에 표시하지 않도록 이 토픽의 고정 상태를 해제합니다."
+
       share:
         title: '공유'
-        help: '이 토픽의 링크를 공유'
+        help: '이 토픽에 대한 링크를 외부로 공유합니다'
+
       flag_topic:
-        title: '깃발 표시'
-        help: 'privately flag this topic for attention or send a private notification about it'
-        success_message: '이 토픽에 깃발표시 하였습니다.'
+        title: '신고'
+        help: '이 토픽에 주의를 요구하는 신고를 하거나 개인적인 알림을 보냅니다.'
+        success_message: '이 토픽을 신고하였습니다.'
+
       inviting: "초대 중..."
+      automatically_add_to_groups: "가입시 자동으로 사용자를 그룹에 추가함. (선택사항, 어드민에게만 허용)"
+
       invite_private:
         title: '개인 메시지에 초대'
-        email_or_username: "초대하려는 이메일 또는 사용자"
-        email_or_username_placeholder: "이메일 또는 사용자"
+        email_or_username: "초대하려는 사람의 이메일 또는 사용자 이름"
+        email_or_username_placeholder: "이메일 주소 또는 사용자 이름"
         action: "초대"
-        success: "감사합니다! 사용자가 개인 메세지에 참여할 수 있도록 초대했습니다."
+        success: "감사합니다! 사용자가 개인 메시지에 참여할 수 있도록 초대했습니다."
         error: "죄송합니다. 해당 사용자를 초대하는 도중 오류가 발생했습니다."
+        group_name: "그룹명"
+
       invite_reply:
-        title: '초대하기'
-        action: '이메일 초대'
-        help: '한 번의 클릭으로 이 토픽에 답글을 추가할 수 있도록 친구에게 초대장을 보낼 수 있습니다.'
-        to_topic: "당신의 친구에게 요약 이메일을 보내고 이 글에 답글을 작성할 수 있도록 링크를 제공합니다.(로그인이 필요없습니다)"
-        to_forum: "당신의 친구에서 요약 이메일을 보내고 이 포럼에 가입할 수 있도록 링크를 보냅니다."
+        title: '댓글  친구 초대'
+        action: '이메일로 초대'
+        help: '이 토픽에 한 번의 클릭만으로 댓글을 달 수 있는 초대장을 친구에게 보냅니다.'
+        to_topic: "링크 클릭만으로 이 토픽에 댓글을 달 수 있는 초대장 이메일을 친구들에게 보내드리겠습니다.(로그인 불필요)"
+        to_forum: "링크 클릭만으로 이 토픽에 참여할 수 있는 초대장 이메일을 친구들에게 보내드리겠습니다."
+
         email_placeholder: '이메일 주소'
-        success: "감사합니다! <b>{{email}}</b>으로 초대장을 발송했습니다. 초대를 수락하면 알려 드리겠습니다. 초대한 사람을 추적하기 위해선 사용자 페이지에서 '초대장' 탭을 선택하세요."
-        error: "죄송합니다. 그 사람을 초대 할 수 없습니다. 혹시 이미 포럼 사용자입니까?"
-      login_reply: '답글 달기 위해 회원 가입하기'
+        success: "감사합니다! <b>{{email}}</b>로 초대장을 발송했습니다. 초대를 수락하면 알려드리겠습니다. 초대 한 사람 목록은 사용자 페이지에서 초대장 탭을 선택하면 확인 가능합니다."
+        error: "죄송합니다. 해당 사용자를 초대할 수 없습니다. 이미 이 사이트 사용자일 수도 있으니 확인해주세요."
+
+      login_reply: '댓글을 달기 위해 로그인합니다.'
+
       filters:
         n_posts:
-          other: "{{count}} 글"
-        cancel: "다시 이 토픽의 모든 게시물을 표시합니다."
+          one: "1개의 게시글"
+          other: "{{count}}개의 게시글"
+        cancel: "다시 이 토픽의 모든 게시글을 표시합니다."
+
       split_topic:
-        title: "새로운 토픽으로 이동"
-        action: "새로운 토픽으로 이동"
-        topic_name: "새로운 토픽 이름"
-        error: "새로운 토픽으로 이동시키는데 문제가 발생하였습니다."
+        title: "새 토픽으로 분리하기"
+        action: "새 토픽으로 분리하기"
+        topic_name: "새 토픽 이름:"
+        error: "죄송합니다. 새 토픽으로 게시글을 이동하는 중에 오류가 발생했습니다."
+        instructions:
+          one: "선택한 1개의 게시글을 분리하여 새로운 토픽을 만들려고 합니다."
+          other: "선택한 <b>{{count}}</b>개의 게시글을 분리하여 새로운 토픽을 만들려고 합니다."
+
       merge_topic:
-        title: "이미 있는 토픽으로 옴기기"
-        action: "이미 있는 토픽으로 옴기기"
-        error: "이 토픽을 이동시키는데 문제가 발생하였습니다."
+        title: "다른 토픽으로 이동하기"
+        action: "다른 토픽으로 이동"
+        error: "게시글을 해당 토픽으로 이동하는 중에 오류가 발생했습니다."
+        instructions:
+          one: "1개의 게시글을 이동할 토픽을 선택해주세요."
+          other: "<b>{{count}}</b>개의 게시글을 이동할 토픽을 선택해주세요."
+
       change_owner:
-        title: "글 소유자 변경"
+        title: "게시글의 소유자 변경"
+        action: "소유자 변경"
+        error: "게시글의 소유자를 변경하는 중 오류가 발생했습니다."
+        label: "게시글의 새로운 소유자"
+        placeholder: "새 소유자의 사용자 이름"
+        instructions:
+          one: "<b>{{old_user}}</b>님이 작성한 글의 새로운 소유자를 선택해 주세요."
+          other: "<b>{{old_user}}</b>님이 작성한 {{count}}개 글의 새로운 소유자를 선택해 주세요."
+        instructions_warn: "이 글에 대한 알림이 소급적으로 새 소유자에게 전달되지는 않습니다. <br>경고: 현재 기능 상으로는, 글에 딸린 데이터까지도 새로운 소유자에게 모두 전달되는 것이 아닙니다. 주의깊게 사용해 주세요."
+
       multi_select:
         select: '선택'
         selected: '({{count}})개가 선택됨'
-        select_replies: '선택 + 답글'
-        delete: 선택 삭제
+        select_replies: '댓글 포함하여 선택'
+        delete: 선택된 내용 삭제
         cancel: 선택을 취소
-        select_all: 전체 선택
-        deselect_all: 전체 선택 해제
+        select_all: 모두 선택
+        deselect_all: 모두 선택 취소
         description:
-          other: <b>{{count}}</b>개의 개시글을 선택하셨어요.
+          one: <b>1</b>개의 게시글을 선택했습니다.
+          other: "<b>{{count}}</b>개의 게시글을 선택했습니다"
+
     post:
-      reply: "{{replyAvatar}} {{username}}님의 글에 답글 작성"
-      reply_topic: "{{link}}에 답글 작성"
-      quote_reply: "답글을 인용"
-      edit: "{{replyAvatar}} {{username}}님의 글에 답글 편집"
-      edit_reason: "Reason: "
-      post_number: "{{number}}번째 게시물"
-      in_reply_to: "답글 to"
-      last_edited_on: "마지막으로 편집:"
-      reply_as_new_topic: "새로운 토픽으로 답글"
-      continue_discussion: "{{postLink}}에서 토론을 계속:"
-      follow_quote: "인용 글로 이동"
-      deleted_by: "삭제됨"
-      expand_collapse: "확장/축소"
+      reply: "{{replyAvatar}} {{username}}님의 {{link}}에 댓글 다는 중"
+      reply_topic: "{{link}}에 댓글 달기"
+      quote_reply: "인용하여 댓글 달기"
+      edit: "{{replyAvatar}} {{username}}님의 {{link}} 글을 편집 중"
+      edit_reason: "사유: "
+      post_number: "게시글 {{number}}"
+      in_reply_to: "이 댓글의 원글"
+      last_edited_on: "최종 편집:"
+      reply_as_new_topic: "새 토픽으로 댓글 달기"
+      continue_discussion: "{{postLink}}에서 논의를 계속:"
+      follow_quote: "인용된 게시글로 이동합니다"
+      show_full: "전체 글 보기"
+      deleted_by_author:
+        one: "(작성자에 의해 취소된 글입니다. 신고당한 글이 아니면 %{count} 시간 뒤에 자동으로 삭제됩니다)"
+        other: "(작성자에 의해 취소된 글입니다. 신고당한 글이 아니면 %{count} 시간 뒤에 자동으로 삭제됩니다)"
+      deleted_by: "삭제자:"
+      expand_collapse: "펼쳐보기/모아보기"
+      gap:
+        one: "1개의 글이 설정하신 필터 때문에 생략되었습니다. 확인하시려면 클릭하세요."
+        other: "{{count}}개의 글이 설정하신 필터 때문에 생략되었습니다. 확인하시려면 클릭하세요."
+      more_links: "{{count}}개 더... "
+
       has_replies:
-        other: "답글"
+        one: "댓글"
+        other: "댓글"
+
       errors:
-        create: "죄송합니다. 게시물을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."
-        edit: "죄송합니다. 게시물을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
-        upload: "죄송합니다. 파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오."
-        attachment_too_large: "업로드하려는 파일의 크기가 너무 큽니다. 최대 크기는 {{max_size_kb}}kb 입니다."
-        image_too_large: "업로드하려는 이미지의 크기가 너무 큽니다. 최대 크기는 {{max_size_kb}}kb 입니다. 사이즈를 조정하고 다시 시도해보세요."
-        too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
-        upload_not_authorized: "업로드 하시려는 파일 확장자는 사용이 불가능합니다 (사용가능 확장자: {{authorized_extensions}})."
-        image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
-        attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
+        create: "죄송합니다. 게시글을 생성하는 중에 오류가 발생했습니다. 다시 시도해주세요."
+        edit: "죄송합니다. 게시글을 수정하는 중에 오류가 발생했습니다. 다시 시도해 주세요."
+        upload: "죄송합니다. 파일을 업로드하는 중에 오류가 발생했습니다. 다시 시도해 주세요."
+        attachment_too_large: "죄송합니다. 업로드하시려는 파일이 너무 큽니다.(최대 크기는 {{max_size_kb}}kb입니다)."
+        image_too_large: "죄송합니다. 업로드하시려는 이미지 파일이 너무 큽니다. (최대 크기는 {{max_size_kb}}kb입니다) 사이즈를 조정하고 다시 시도해보세요"
+        too_many_uploads: "죄송합니다. 파일은 한 번에 하나씩만 업로드하실 수 있습니다."
+        upload_not_authorized: "죄송합니다. 업로드하시려는 파일은 허용되지 않는 종류의 파일입니다. (허용되는 확장자: {{authorized_extensions}})."
+        image_upload_not_allowed_for_new_user: "죄송합니다. 신규 사용자는 이미지를 업로드할 수 없습니다."
+        attachment_upload_not_allowed_for_new_user: "죄송합니다. 신규 사용자는 첨부 파일을 업로드할 수 없습니다."
+
       abandon:
-        confirm: "게시물 작성을 취소 하시겠습니까?"
-        no_value: "아니오"
-        yes_value: "예"
+        confirm: "게시글 작성을 정말로 취소하시겠습니까?"
+        no_value: "아니요, 계속 작성합니다."
+        yes_value: "예, 작성을 취소합니다."
+
       archetypes:
         save: '옵션 저장'
+
       controls:
-        reply: "이 게시물에 대한 답글을 작성합니다."
-        like: "이 게시물을 좋아합니다."
-        edit: "이 게시물을 편집합니다."
-        flag: "이 게시물을 깃발 표시\x1D하거나 비공개 알림을 보냅니다."
-        delete: "이 게시물을 삭제합니다."
-        undelete: "이 게시물 삭제를 취소합니다."
-        share: "이 게시물에 대한 링크를 공유합니다."
-        more: "더"
+        reply: "이 게시글에 대한 댓글 작성을 시작합니다."
+        like: "이 게시글에 '좋아요' 합니다."
+        edit: "이 게시글을 편집합니다"
+        flag: "이 게시글을 신고하고 운영자에게 알림을 보냅니다"
+        delete: "이 게시글을 삭제합니다"
+        undelete: "이 게시글 삭제를 취소합니다"
+        share: "이 게시글에 대한 링크를 외부에 공유합니다"
+        more: "더 보기"
         delete_replies:
-          yes_value: "예, 답글도 삭제합니다."
-          no_value: "아니오, 게시글만 삭제합니다."
+          confirm:
+            one: "이 글에 직접 달린 1개의 댓글도 함께 삭제하시겠습니까?"
+            other: "이 글에 직접 달린 {{count}}개의 댓글도 함께 삭제하시겠습니까?"
+          yes_value: "예, 댓글도 함께 삭제합니다."
+          no_value: "아니오, 이 글만 삭제합니다."
+        admin: "글에 대한 어드민 전용 기능"
+        wiki: "wiki 형식으로 바꾸기"
+        unwiki: "wiki 형식 취소하기"
+
       actions:
-        flag: '깃발 표시'
+        flag: '신고'
         clear_flags:
-          other: "깃발 표시 제거"
+          one: "신고 취소"
+          other: "신고 취소"
         it_too:
-          off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
-          custom_flag: "Flag it too"
-          bookmark: "Bookmark it too"
-          like: "저도 '좋아요' 줄래요"
-          vote: "Vote for it too"
+          off_topic: "이것도 신고"
+          spam: "이것도 신고"
+          inappropriate: "이것도 신고"
+          custom_flag: "이것도 신고"
+          bookmark: "이것도 즐겨찾기"
+          like: "이것도 좋아요"
+          vote: "이것도 투표"
         undo:
-          off_topic: "X"
-          spam: "X"
-          inappropriate: "X"
-          bookmark: "X"
-          like: "X"
-          vote: "X"
+          off_topic: "신고 취소"
+          spam: "신고 취소"
+          inappropriate: "신고 취소"
+          bookmark: "즐겨찾기 취소"
+          like: "좋아요 취소"
+          vote: "투표 취소"
         people:
-          off_topic: "{{icons}}님은 이 게시물을 오프토픽으로 표시했습니다."
-          spam: "{{icons}}님은 이 게시물을 스팸으로 신고했습니다."
-          inappropriate: "{{icons}}님은 이 게시물을 부적절하다고 신고했습니다."
-          notify_moderators: "{{icons}}님은 이 게시물을 중간 관리자에게 보고했습니다."
-          notify_moderators_with_url: "{{icons}}님은 이 <a href='{{postUrl}}'>게시물</a>을 중간 관리자에게 보고했습니다."
-          notify_user: "{{icons}}님은 작성자에게 개인 메시지를 보냈습니다."
-          notify_user_with_url: "{{icons}}님은 작성자에게 <a href='{{postUrl}}'>개인 메세지</a>를 보냈습니다."
-          bookmark: "{{icons}}님이 북마크했습니다."
-          like: "{{icons}}님이 좋아합니다."
+          off_topic: "{{icons}}님이 주제 불일치를 사유로 신고했습니다"
+          spam: "{{icons}}님이 스팸을 사유로 신고했습니다"
+          inappropriate: "{{icons}}님이 부적절한 내용을 사유로 신고했습니다"
+          notify_moderators: "{{icons}}님이 운영자에게 검토를 요청했습니다"
+          notify_moderators_with_url: "{{icons}}님이 <a href='{{postUrl}}'>운영자에게 검토를 요청했습니다</a>"
+          notify_user: "{{icons}}님이 개인 메시지를 보냈습니다"
+          notify_user_with_url: "{{icons}}님이 <a href='{{postUrl}}'>개인 메시지</a>를 보냈습니다"
+          bookmark: "{{icons}}님이 즐겨찾기 했습니다"
+          like: "{{icons}}님이 좋아합니다"
           vote: "{{icons}}님이 투표했습니다."
         by_you:
-          off_topic: "당신은 이 게시물을 토픽에서 벗어남으로 신고했습니다."
-          spam: "당신은 이 게시물을 스팸으로 신고했습니다."
-          inappropriate: "당신은 이 게시물을 부적절하다고 신고했습니다."
-          notify_moderators: "당신은 이 게시물을 중간 관리자에게 보고했습니다."
-          notify_user: "당신은 작성자에게 개인 메시지를 보냈습니다."
-          bookmark: "당신은 이 게시물을 북마크했습니다."
-          like: "당신은 이 게시물을 좋아합니다."
-          vote: "당신은 이 게시물을 위해 투표했습니다."
+          off_topic: "당신이 주제 불일치를 사유로 신고했습니다."
+          spam: "당신이 여기에 스팸 신고했습니다."
+          inappropriate: "당신이 여기에 부적절한 내용을 사유로 신고했습니다."
+          notify_moderators: "당신이 운영자에게 검토를 요청했습니다"
+          notify_user: "당신이 이 사용자에게 개인 메시지를 보냈습니다"
+          bookmark: "당신이 이 게시글을 즐겨찾기했습니다"
+          like: "당신이 이 게시글을 좋아합니다"
+          vote: "당신이 이 게시글에 투표했습니다"
         by_you_and_others:
+          off_topic:
+            one: "당신과 한 명의 사용자가 이 게시글을 주제 불일치를 사유로 신고했습니다."
+            other: "당신과 {{count}} 명의 사용자가 이 게시글을 주제 불일치를 사유로 신고했습니다."
           spam:
-            other: "당신과 {{count}}명의 다른 사람들이 스팸으로 지정했습니다."
+            one: "당신과 한 명의 사용자가 이 게시글을 스팸을 사유로 신고했습니다."
+            other: "당신과 {{count}} 명의 사용자가 이 게시글을 스팸을 사유로 신고했습니다."
           inappropriate:
-            other: "당신과 {{count}}명의 다른 사람들이 신고했습니다."
+            one: "당신과 한 명의 사용자가 이 게시글을 부적절한 내용을 사유로 신고했습니다."
+            other: "당신과 {{count}} 명의 사용자가 이 게시글을 부적절한 내용을 사유로 신고했습니다."
           notify_moderators:
-            other: "당신과 {{count}}명의 다른 사람들이 적당하다고 표시했습니다."
+            one: "당신과 한 명의 사용자가 이 게시글을 운영자에게 검토를 요청했습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시글을 운영자에게 검토를 요청했습니다"
           notify_user:
-            other: "당신과 {{count}}명의 사용자가 작성자에게 개인 메시지를 보냈습니다."
+            one: "당신과 한 명의 사용자가 이 사용자에게 개인 메시지를 보냈습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 사용자에게 개인 메시지를 보냈습니다"
           bookmark:
-            other: "당신과 {{count}}명의 다른 사람들이 북마크 했습니다."
+            one: "당신과 한 명의 사용자가 이 게시글을 즐겨찾기에 추가했습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시글을 즐켜찾기에 추가했습니다"
           like:
-            other: "당신과 {{count}}명의 다른 사람들이 좋아합니다."
+            one: "당신과 한 명의 사용자가 이 게시글을 좋아합니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시글을 좋아합니다"
           vote:
-            other: "당신과 {{count}}명의 다른 사람들이 이 포스트에 투표했습니다."
+            one: "당신과 한 명의 사용자가 이 게시글에 투표했습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시글에 투표했습니다"
         by_others:
+          off_topic:
+            one: "한 명의 사용자가 이 게시글을 주제 불일치를 사유로 신고했습니다."
+            other: "{{count}} 명의 사용자가 이 게시글을 주제 불일치를 사유로 신고했습니다."
+          spam:
+            one: "한 명의 사용자가 이 게시글을 스팸을 사유로 신고했습니다."
+            other: "{{count}} 명의 사용자가 이 게시글을 스팸을 사유로 신고했습니다."
+          inappropriate:
+            one: "한 명의 사용자가 부적절한 내용을 사유로 신고했습니다."
+            other: "{{count}} 명의 사용자가 부적절한 내용을 사유로 신고했습니다."
+          notify_moderators:
+            one: "한 명의 사용자가 운영자에게 검토를 요청했습니다"
+            other: "{{count}} 명의 사용자가 운영자에게 검토를 요청했습니다"
+          notify_user:
+            one: "한 명의 사용자가 이 사용자에게 개인 메시지를 보냈습니다"
+            other: "{{count}} 명의 사용자가 이 사용자에게 개인 메시지를 보냈습니다"
+          bookmark:
+            one: "한 명의 사용자가 이 게시글을 즐겨찾기에 추가했습니다"
+            other: "{{count}} 명의 사용자가 이 게시글을 즐겨찾기에 추가했습니다"
           like:
-            other: "{{count}}명이 이 글을 좋아합니다."
+            one: "한 명의 사용자가 이 게시글을 좋아합니다"
+            other: "{{count}} 명의 사용자가 이 게시글을 좋아합니다"
+          vote:
+            one: "한 명의 사용자가 이 게시글에 투표했습니다"
+            other: "{{count}} 명의 사용자가 이 게시글에 투표했습니다"
+
       edits:
-        one: 하나 편집
-        other: "{{count}}개 편집"
-        zero: 편집 안함
+        one: 한 번의 편집
+        other: "{{count}}번의 편집"
+        zero: 편집 안됨
+
       delete:
         confirm:
-          other: "모든 게시물들을 삭제하시겠습니까?"
+          one: "해당 게시글을 정말로 삭제하시겠습니까?"
+          other: "선택된 모든 게시글을 정말로 삭제하시겠습니까?"
+
       revisions:
         controls:
           first: "First revision"
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
+          comparing_previous_to_current_out_of_total: "<strong>#{{previous}}</strong> vs. <strong>#{{current}}</strong> (out of {{total}})"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
@@ -823,369 +1092,475 @@ ko:
             button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "Edited by"
+
     category:
       can: '허용'
       none: '(카테고리 없음)'
-      choose: '카테고리를 선택하세요&hellip;'
+      choose: '카테고리 선택&hellip;'
       edit: '편집'
       edit_long: "카테고리 편집"
-      view: '카테고리안의 토픽보기'
+      view: '카테고리 내의 토픽보기'
       general: '일반'
       settings: '설정'
       delete: '카테고리 삭제'
-      create: '카테고리 생성'
+      create: '카테고리 만들기'
       save: '카테고리 저장'
       creation_error: 카테고리 생성 중 오류가 발생했습니다.
       save_error: 카테고리 저장 중 오류가 발생했습니다.
-      more_posts: "모든 {{posts}} 보기"
+      more_posts: "모든 {{posts}}개의 게시글 보기..."
       name: "카테고리 이름"
       description: "설명"
       topic: "카테고리 토픽"
-      badge_colors: "뱃지 색상"
+      badge_colors: "배지 색상"
       background_color: "배경 색상"
-      foreground_color: "글씨 색상"
+      foreground_color: "전경 색상"
       name_placeholder: "짧고 간결해야합니다"
       color_placeholder: "웹 색상"
-      delete_confirm: "이 카테고리를 삭제 하시겠습니까?"
+      delete_confirm: "이 카테고리를 삭제하시겠습니까?"
       delete_error: "카테고리를 삭제하는 동안 오류가 발생했습니다."
       list: "카테고리 목록"
-      no_description: "이 카테고리에 대한 설명이 없습니다."
+      no_description: "이 카테고리에 대한 설명이 없습니다. 이 카테고리에 대한 설명 토픽을 수정하세요."
       change_in_category_topic: "설명 편집"
       already_used: '이 색은 다른 카테고리에서 사용되고 있습니다.'
       security: "보안"
-      auto_close_label: "토픽 자동 닫기 :"
-      auto_close_units: "hours"
-      edit_permissions: "권한 수정"
-      add_permission: "권한 추가"
+      auto_close_label: "특정 기간 후에 토픽을 자동으로 닫기. 기간:"
+      auto_close_units: "시간"
+      email_in: "사용자 지정 수신 이메일 주소:"
+      email_in_allow_strangers: "정식 사용자가 보낸 것이 아닌 이메일을 허용"
+      edit_permissions: "허용 권한 편집"
+      add_permission: "허용 권한 추가"
       this_year: "올해"
       position: "위치"
-      default_position: "Default Position"
+      default_position: "기본 위치"
+      position_disabled: '카테고리는 활동이 있는 순서로 표시됩니다. 리스트 상의 카테고리 순서를 원하는 대로 바꾸시려면,  "fixed category positions" 설정을 활성화하세요.'
       parent: "부모 카테고리"
+
     flagging:
-      title: '왜 이 게시글을 privately flagging 하나요?'
-      action: '게시물 깃발 표시'
+      title: '이 게시글을 신고하시는 이유는 무엇인가요?'
+      action: '신고하기'
       take_action: "조치를 취하기"
-      notify_action: '알림'
-      delete_spammer: "스팸 사용자 삭제"
-      delete_confirm: "당신은 이 사용자의 %{posts}개의 게시글과 %{topics}개의 토픽을 삭제하고 IP주소 %{ip_address}와 이메일 %{email}을 영구 블락 합니다. 이 사용자가 진짜 악성 사용자 입니까? "
-      yes_delete_spammer: "예, 스팸 사용자 삭제."
-      cant: "죄송합니다, 당신은 지금 이 게시물을 깃발 표시 할 수 없습니다."
-      custom_placeholder_notify_user: "해당 유저에게 게인 메세지를 보내 이 문제를 해결할 수 있습니다."
-      custom_placeholder_notify_moderators: "이 게시물을 중앙 관리자에게 알리겠습니까? 구체적으로 사용자님께서 걱정하는 것과 가능한 모든 관련된 링크를 제공해주세요."
+      notify_action: '알리기'
+      delete_spammer: "스패머 삭제"
+      delete_confirm: "정말로 스패머라고 확신하십니까? 실행하시면 다음과 같은 초치가 취해집니다. 이 사용자의 <b>%{posts}</b>개의 게시글과 <b>%{topics}</b>개의 토픽을 삭제, 사용자 계정 제거, IP 주소 <b>%{ip_address}</b> 가입 제한, 이메일주소 <b>%{email}</b>를 영구차단"
+      yes_delete_spammer: "예, 스패머를 삭제합니다."
+      cant: "죄송합니다. 지금은 게시글을 신고할 수 없습니다."
+      custom_placeholder_notify_user: "왜 이 게시글을 보고 직접 이 사용자에게 메시지를 보내려고 하시나요? 구체적이고 건설적인 내용으로 친절하게 작성해 주세요."
+      custom_placeholder_notify_moderators: "왜 이 게시글을 운영자가 리뷰해야 하나요? 이 게시글의 문제점을 구체적으로 알려주세요. 가능하다면 관련된 링크들도 알려주시면 감사하겠습니다."
       custom_message:
-        at_least: "최소한 {{n}}자를 입력하세요"
-        more: "{{n}} 이동합니다"
-        left: "{{n}} 나머지"
+        at_least: "최소한 {{n}} 글자 이상으로 입력하셔야 합니다."
+        more: "필요 글자 수: {{n}}"
+        left: "남은 글자 수: {{n}}"
+
     flagging_topic:
-      action: "깃발 표시 토픽"
-      notify_action: "비공개 메시지"
+      title: "왜 이 토픽을 신고하시려고 하십니까?"
+      action: "토픽 신고하기"
+      notify_action: "알리기"
+
     topic_map:
-      title: "Topic Summary"
-      links_shown: "show all {{totalLinks}} links..."
+      title: "토픽 요약"
+      links_shown: "{{totalLinks}} 개의 링크 모두 보기..."
+      clicks:
+        one: "1 클릭"
+        other: "%{count} 클릭"
+
     topic_statuses:
       locked:
-        help: "이 토픽은 폐쇄되었습니다. 더 이상 새 답글을 받을 수 없습니다."
-      unpinned:
-        title: "핀 제거"
-        help: "이 토픽은 핀 제거 되었습니다. 목록에서 기본적인 순서대로 표시됩니다."
-      pinned_globally:
-        title: "핀 지정됨 (전역적)"
-        help: "이 토픽은 전역적으로 핀 지정 되었습니다. 모든 목록의 최상위에 표시됩니다."
-      pinned:
-        title: "핀 지정됨"
-        help: "이 토픽은 고정되었습니다. 카테고리의 상단에 표시됩니다."
+        help: "이 토픽은 닫혔습니다. 더 이상 댓글 달기가 불가능합니다."
       archived:
-        help: "이 토픽은 보관중입니다. 고정되어 변경이 불가능합니다."
+        help: "이 토픽은 보관되었습니다. 더 이상 댓글을 달 수 없습니다."
+      unpinned:
+        title: "고정 취소됨"
+        help: "이 토픽은 고정이 취소되었습니다. 지금부터는 정상적인 순서로 표시됩니다."
+      pinned_globally:
+        title: "전체 범위로 고정됨."
+        help: "이 토픽은 전체 범위로 고정되었습니다. 지금부터는 모든 리스트의 상단에 표시됩니다."
+      pinned:
+        title: "고정됨"
+        help: "이 토픽은 고정되었습니다. 이제 해당 카테고리의 최상단에 표시됩니다."
+      archived:
+        help: "이 토픽은 아카이브되었습니다. 더 이상 변경할 수 없습니다."
       invisible:
-        help: "이 토픽은 보이지 않습니다. 이제 토픽 목록에 표시되지 않습니다. ​​단지 직접적인 링크를 통해서만 접근 할 수 있습니다"
-    posts: "게시물"
-    posts_long: "이 토픽의 게시물 수는 {{number}}개 입니다."
-    original_post: "원본 게시물"
+        help: "이 토픽은 숨겨졌습니다. 이제 토픽 목록에 표시되지 않으며, 직접 걸린 링크를 통해서만 접근 가능합니다."
+
+    posts: "글수"
+    posts_long: "이 토픽의 게시글 수는 {{number}}개입니다 "
+    original_post: "원본 게시글"
     views: "조회수"
-    replies: "답변"
-    views_long: "이 토픽은 {{number}}번 조회 되었습니다."
+    replies: "댓글수"
+    views_long: "이 토픽은 {{number}}번 조회되었습니다"
     activity: "활동"
     likes: "좋아요"
-    likes_long: "이 주제에 {{number}}개의 '좋아요'가 있습니다."
+    likes_long: "이 토픽은 {{number}}개의 '좋아요'를 받았습니다"
     users: "사용자"
     category_title: "카테고리"
-    history: "기록"
-    changed_by: "{{author}}에 의해"
+    history: "히스토리"
+    changed_by: "{{author}}에 의해 변경됨"
+
     categories_list: "카테고리 목록"
+
     filters:
       with_topics: "%{filter} 토픽"
       with_category: "%{filter} %{category} 토픽"
       latest:
-        title: "최신"
-        help: "가장 최근 토픽"
+        title: "최신 토픽"
+        help: "가장 최신 토픽 목록"
       hot:
-        title: "인기 있는 글"
-        help: "가장 인기있는 토픽 중 하나를 선택"
+        title: "인기 토픽"
+        help: "가장 인기있는 토픽 목록"
       starred:
-        title: "즐겨찾기"
-        help: "즐겨찾기로 표시한 게시글"
+        title: "관심 토픽 "
+        help: "당신이 관심 토픽으로 등록한 토픽 목록"
       read:
-        title: "읽기"
-        help: "마지막으로 순서대로 읽은 토픽"
+        title: "읽은 토픽"
+        help: "당신이 이미 읽은 토픽 목록(읽은 순서대로 표시)"
       categories:
         title: "카테고리"
         title_in: "카테고리 - {{categoryName}}"
-        help: "카테고리별로 그룹화 된 모든 토픽"
+        help: "카테고리별로 그룹화한 모든 토픽 목록"
       unread:
         title:
-          zero: "읽지 않은"
-          one: "읽지 않은(1)"
-          other: "읽지 않은({{count}})"
-        help: "추적중이지만 읽지 않은 게시글"
+          zero: "읽지 않은 토픽"
+          one: "읽지 않은 토픽 (1)"
+          other: "읽지 않은 토픽 ({{count}})"
+        help: "읽지 않은 게시글이 있는 추적하기 설정한 토픽 목록"
       new:
         lower_title_with_count:
-          one: "1 new"
-          other: "{{count}} new"
-        lower_title: "new"
+          zero: ""
+          one: "1개의 신규"
+          other: "{{count}}개의 신규"
+        lower_title: "신규"
         title:
-          zero: "새로운"
-          one: "새로운(1)"
-          other: "새로운({{count}})"
-        help: "마지막 방문 이후 새로운 글"
+          zero: "새로운 토픽"
+          one: "새로운 토픽 (1)"
+          other: "새로운 토픽 ({{count}})"
+        help: "마지막 방문 이후 새로운 토픽 목록"
       posted:
-        title: "내 게시물"
-        help: "당신이 게시한 글"
+        title: "내 게시글"
+        help: "당신의 게시글이 있는 토픽 목록"
       category:
         title:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "{{categoryName}}카테고리의 최신 토픽"
+        help: "{{categoryName}} 카테고리의 최신 토픽 목록"
       top:
-        title: "Top"
-        help: "a selection of the best topics"
+        title: "최고의 토픽"
+        help: "최고의 토픽 모음"
         yearly:
-          title: "연간 Top"
+          title: "연간 최고"
         monthly:
-          title: "월간 Top"
+          title: "월간 최고"
         weekly:
-          title: "주간 Top"
+          title: "주간 최고"
         daily:
-          title: "일간 Top"
-        this_year: "This year"
-        this_month: "This month"
-        this_week: "This week"
-        today: "Today"
-        other_periods: "더 많은 인기 토픽 보기"
-    browser_update: '불행하게도, <a href="http://www.discourse.org/faq/#browser">당신의 브라우저는 이 사이트를 이용하기에 어렵습니다.</a>. 브라우저를 업그레이드 하시기 바랍니다.<a href="http://browsehappy.com">.'
+          title: "일간 최고"
+        this_year: "올해"
+        this_month: "이번 달"
+        this_week: "금주"
+        today: "오늘"
+        other_periods: "최고 토픽 더보기"
+
+    browser_update: '죄송합니다. 사용하시는 브라우저가 오래된 구형 버전 같습니다. 이 사이트와 호환되지 않습니다. 브라우저를 업그레이드 해보세요.'
+
     permission_types:
-      full: "생성 / 답글 / 보기"
-      create_post: "답글 / 보기"
-      readonly: "보기"
+      full: "생성 / 댓글 / 읽기"
+      create_post: "댓글 / 읽기"
+      readonly: "읽기"
+
+  # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "필터를 입력하세요"
+    type_to_filter: "필터를 입력하세요..."
+
     admin:
-      title: 'Discourse 운영'
-      moderator: '중간 관리자'
+      title: 'Discourse 어드민'
+      moderator: '운영자'
+
       dashboard:
         title: "대시보드"
-        last_updated: "대시보드 최근 업데이트:"
+        last_updated: "대시보드 최종 업데이트:"
         version: "버전"
         up_to_date: "최신상태입니다!"
         critical_available: "중요 업데이트를 사용할 수 있습니다."
         updates_available: "업데이트를 사용할 수 있습니다."
         please_upgrade: "업그레이드하세요."
-        no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
-        version_check_pending: "최근에 업데이트 되었군요! 환상적입니다!!"
+        no_check_performed: "업데이트 체크가 수행되지 않았습니다. sidekiq이 실행 중인지 확인해 주세요."
+        stale_data: "업데이트 체크가 최근에 수행되지 않았습니다. sidekiq이 실행 중인지 확인해 주세요."
+        version_check_pending: "최근에 업데이트하셨군요. 멋집니다!"
         installed_version: "설치됨"
-        latest_version: "최근"
-        problems_found: "몇몇의 문제들은 Disocouse 설치 과정에서 나타납니다."
+        latest_version: "최신"
+        problems_found: "설치된 Discourse 서버에 몇가지 문제가 발견되었습니다."
         last_checked: "마지막으로 확인"
         refresh_problems: "새로고침"
         no_problems: "아무런 문제가 발견되지 않았습니다."
-        moderators: '중간 관리자:'
-        admins: '운영자:'
-        blocked: '블락됨:'
-        suspended: '접근금지:'
-        private_messages_short: "PMs"
+        moderators: '운영자:'
+        admins: '어드민:'
+        blocked: '게시금지:'
+        suspended: '접속차단:'
+        private_messages_short: "개인 메시지"
         private_messages_title: "개인 메시지"
+
         reports:
           today: "오늘"
           yesterday: "어제"
           last_7_days: "최근 7일"
           last_30_days: "최근 30일"
-          all_time: "모든 시간"
-          7_days_ago: "7일"
-          30_days_ago: "30일"
+          all_time: "전체"
+          7_days_ago: "7일 전"
+          30_days_ago: "30일 전"
           all: "전체"
           view_table: "테이블로 보기"
-          view_chart: "차트로 보기"
+          view_chart: "막대 차트로 보기"
+
       commits:
-        latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
-        by: "에 의해"
+        latest_changes: "최근 변경 사항 : 자주 업데이트하세요!"
+        by: "커미터:"
+
       flags:
-        title: "깃발 표시"
-        old: "지난"
-        active: "활성화된"
+        title: "신고"
+        old: "처리된 신고"
+        active: "진행중인 신고"
+
         agree_hide: "동의 (게시글 숨기기 + 개인 메시지 보내기)"
-        agree_hide_title: "이 게시물을 숨기고 사용자에게 편집하라는 개인 메시지를 보냅니다."
+        agree_hide_title: "이 게시글을 숨기고 사용자에게는 수정을 요구하는 개인 메시지를 자동으로 발송합니다."
         defer: "연기"
-        defer_title: "지금은 조치가 필요하지 않습니다, 이 신고에 대한 조치을 다음으로 연기하세요."
-        delete_post: "게시물 삭제"
-        delete_post_title: "게시글 삭제; 만약 첫 게시글이라면 토픽을 삭제"
-        disagree_unhide: "동의하지 않음 (게시글 보이기)"
-        disagree_unhide_title: "게시글의 신고를 삭제하고 보이는 상태로 변경"
+        defer_title: "지금 당장의 액션이 필요하지는 않습니다. 나중에 검토해도 되거나 검토할 필요가 없는 건으로 일단 액션을 취하지 않고 연기합니다."
+        delete_post: "게시글 삭제"
+        delete_post_title: "게시글 삭제; 만약 토픽 내 첫 게시글이라면 토픽 자체를 삭제"
+        disagree_unhide: "동의하지 않음. (게시글 보이기(숨기기 취소))"
+        disagree_unhide_title: "이 게시글에 대한 신고를 취소하고 해당 게시글이 다시 보이도록 합니다."
         disagree: "동의하지 않음"
-        disagree_title: "신고에 동의하지 않고, 이 게시글에 달린 신고는 삭제"
-        delete_spammer_title: "사용자와 모든 토픽, 게시글 삭제."
+        disagree_title: "신고 내용에 동의하지 않습니다. 이 게시글에 걸린 신고 내용을 삭제합니다."
+        delete_spammer_title: "사용자를 삭제하고 그 사용자의 모든 게시글과 토픽을 삭제합니다."
         clear_topic_flags: "완료"
-        flagged_by: "깃발표시 한 사람"
-        system: "System"
-        error: "뭔가 잘못 됐어요"
-        view_message: "답글"
-        no_results: "깃발 표시가 없습니다."
-        topic_flagged: "이 <strong>토픽</strong>은 깃발표시 되었습니다."
+        clear_topic_flags_title: "이 토픽은 신고 내용에 대해 조사가 완료되었고 이슈가 해결되었습니다. 신고 설정을 없애려면 완료를 클릭하세요."
+
+        flagged_by: "신고한 사용자"
+        system: "시스템"
+        error: "알 수 없는 오류가 발생했습니다"
+        view_message: "댓글"
+        no_results: "신고 내용이 없습니다."
+        topic_flagged: "이 <strong>토픽</strong>은 신고당한 상태입니다."
+        visit_topic: "조사 및 조치를 취하기 위해 해당 토픽을 방문하세요."
+
+        summary:
+          action_type_3:
+            one: "주제 불일치"
+            other: "주제 불일치 x{{count}}"
+          action_type_4:
+            one: "부적절한 내용"
+            other: "부적절한 내용 x{{count}}"
+          action_type_6:
+            one: "사용자정의"
+            other: "사용자정의 x{{count}}"
+          action_type_7:
+            one: "사용자정의"
+            other: "사용자정의 x{{count}}"
+          action_type_8:
+            one: "스팸"
+            other: "스팸 x{{count}}"
+
       groups:
-        primary: "주 그룹"
-        no_primary: "(주 그룹이 없습니다.)"
-        title: "그룹"
-        edit: "그룹 수정"
+        primary: "기본 그룹"
+        no_primary: "(기본 그룹 아님)"
+        title: "그룹 관리"
+        edit: "그룹 편집"
         refresh: "새로고침"
-        new: "새로운"
+        new: "새 그룹"
         selector_placeholder: "사용자 추가"
-        name_placeholder: "그룹 이름, 사용자 이름처럼 빈칸 없이 작성"
-        about: "회원과 이름을 변경"
-        group_members: "그룹 멤버"
-        delete: "삭제"
-        delete_confirm: "이 그룹을 삭제 하시겠습니까?"
-        delete_failed: "이것은 자동으로 생성된 그룹입니다. 삭제할 수 없습니다."
+        name_placeholder: "사용자 이름과 마찬가지로 그룹 이름에는 스페이스가 허용되지 않습니다."
+        about: "그룹의 회원과 이름을 여기에서 편집하세요."
+        group_members: "그룹 회원"
+        delete: "그룹 삭제"
+        delete_confirm: "이 그룹을 삭제하시겠습니까?"
+        delete_failed: "그룹을 삭제할 수 없습니다. 이 그룹이 자동 그룹이면 삭제가 불가합니다."
+
       api:
-        generate_master: "마스터 API 키 생성"
-        none: "지금 활성화된 API 키가 없습니다."
+        generate_master: "Master API Key 생성"
+        none: "현재 활성화된 API 키가 없습니다."
         user: "사용자"
         title: "API"
         key: "API 키"
         generate: "API 키 생성"
         regenerate: "API 키 재생성"
-        revoke: "폐지"
-        confirm_regen: "API 키를 새로 발급 받으시겠습니까?"
-        confirm_revoke: "API 키를 폐지하겠습니까?"
-        info_html: "당신의 API 키는 JSON콜을 이용하여 토픽을 생성하거나 수정할 수 있습니다."
-        all_users: "전체 유저"
-        note_html: "이 <strong>API 키 번호</strong>를 노출하지 마세요. 다른 사용자가 대신 글을 게시하거나 수정할 수 있습니다."
+        revoke: "키 회수"
+        confirm_regen: "정말로  API 키를 새로 발급 받으시겠습니까?"
+        confirm_revoke: "정말로 API 키를 회수하시겠습까?"
+        info_html: "API 키는 JSON Call을 통하여 토픽을 생성하거나 수정하는 것을 가능하게 해줍니다."
+        all_users: "모든 사용자"
+        note_html: "이 키 <strong>secret</strong> 을 잘 보관하세요. 이 키 secret이 노출되면 이를 획득한 사용자는 다른 사람을 사칭하여 글을 쓸 수 있게됩니다."
+
       backups:
         title: "백업"
         menu:
           backups: "백업"
           logs: "로그"
-        none: "가능한 백업이 없습니다."
+        none: "사용가능한 백업이 없습니다."
         read_only:
           enable:
-            title: "읽기 전용 모드 활성화하기"
-            text: "읽기 전용 모드 활성화하기"
-            confirm: "정말로 읽기 전용 모드를 활성화 하시겠습니까?"
+            title: "읽기 전용 모드를 활성화"
+            text: "읽기 전용 모드 활성화"
+            confirm: "정말로 읽기 전용 모드를 활성화하시겠습니까?"
           disable:
-            title: "읽기 전용 모드 비활성화 하기"
-            text: "읽기 전용 모드 비활성화 하기"
+            title: "읽기 전용 모드를 비활성화"
+            text: "읽기 전용 모드 비활성화"
         logs:
-          none: "아직 로그가 없어요."
+          none: "아직 로그가 없습니다..."
         columns:
           filename: "파일명"
-          size: "크기"
+          size: "사이즈"
         upload:
-          text: "업로드"
-          uploading: "업로드 중"
+          text: "UPLOAD"
+          uploading: "UPLOADING"
+          success: "'{{filename}}' 파일이 성공적으로 업로드 되었습니다."
+          error: "'{{filename}}' 파일을 업로드 하는 중에 에러가 발생하였습니다 ({{message}})."
         operations:
-          is_running: "실행 중입니다."
-          failed: "{{operation}} 작업 실행하지 못했습니다. 로그를 확인해 주세요."
+          is_running: "현재 진행 중인 작업이 있습니다..."
+          failed: "{{operation}} 작업이 실패했습니다. 로그를 체크하세요."
           cancel:
             text: "취소"
-            title: "현제 작업 취소하기"
-            confirm: "정말로 현재 작업을 취소하시겠습니까?"
+            title: "현재 진행 중인 작업을 취소"
+            confirm: "현재 진행 중인 작업을 정말로 취소하시겠습니까?"
           backup:
             text: "백업"
             title: "백업 생성"
-            confirm: "정말로 새로운 백업을 생성할까요?"
+            confirm: "정말로 새로운 백업 작업을 시작하시겠습니까?"
           download:
-            text: "다운로드"
-            title: "백업 다운로드"
+            text: "Download"
+            title: "백업 Download"
           destroy:
             text: "삭제"
             title: "백업 삭제"
-            confirm: "정말 이 백업을 삭제할까요?"
+            confirm: "정말로 이 백업을 삭제하시겠습니까?"
           restore:
-            is_disabled: "사이트 설정에서 '복구 기능'이 비활성화 되어있습니다."
-            text: "복구"
-            title: "백업을 이용하여 복구"
-            confirm: "정말 이 백업을 이용하여 복구할까요?"
+            is_disabled: "사이트 설정에서 Restore 기능이 꺼져있습니다."
+            text: "Restore"
+            title: "백업 Restore"
+            confirm: "정말로 이 백업을 restore하시겠습니까?"
           rollback:
-            text: "롤백"
-            title: "데이터베이스를 이전 workiong state로 되돌리기"
-            confirm: "정말로 이전 작업 상태로 데이터베이스를 롤백하시겠습니까?"
+            text: "Rollback"
+            title: "Database를 이전 상태로 rollback합니다."
+            confirm: "정말로 Databaes를 이전 상태로 rollback하시겠습니까?"
+
       customize:
-        title: "사용자 지정"
-        long_title: "사이트 사용자 지정"
-        header: "헤더"
-        css: "스타일"
-        mobile_header: "모바일 헤더"
-        mobile_css: "모바일 스타일시트"
-        override_default: "표준 스타일 시트를 포함하지 마십시오"
-        enabled: "사용가능?"
+        title: "사이트 커스텀화"
+        long_title: "사이트 커스텀화"
+        header: "Header"
+        css: "Stylesheet"
+        mobile_header: "모바일용 Header"
+        mobile_css: "모바일용 Stylesheet"
+        override_default: "기본 스타일 시트를 포함하지 않습니다"
+        enabled: "활성화됨?"
         preview: "미리 보기"
         undo_preview: "미리 보기 취소"
         save: "저장"
-        new: "새 사용자 지정"
+        new: "새로 만들기"
         new_style: "새로운 스타일"
         delete: "삭제"
-        delete_confirm: "이 정의를 삭제 하시겠습니까?"
-        about: "사이트 정의는 사이트의 스타일 시트와 헤더를 수정할 수 있습니다. 선택하거나 편집을 시작하려면 하나를 추가할 수 있습니다."
+        delete_confirm: "이 커스텀화된 내용을 삭제하시겠습니까?"
+        about: "사이트 커스텀화에서는 사이트 내 Stylesheet와 헤더를 수정할 수 있습니다. 기존 항목을 선택하여 편집하시거나 새로운 항목을 추가하세요."
+        color: "색상"
+        opacity: "투명도"
+        copy: "복사"
+        css_html:
+          title: "CSS, HTML"
+          long_title: "CSS, HTML 사용자화"
+        colors:
+          title: "색상"
+          long_title: "색상 스킴"
+          about: "색상 스킴을 사용하여 CSS를 변경없이 사이트에 사용되는 색상을 변경할 수 있습니다. 시작하시려면 스킴을 선택하시거나 추가하세요."
+          new_name: "새로운 색상 스킴"
+          copy_name_prefix: "복사본"
+          delete_confirm: "이 색상 스킴을 삭제하시겠습니까?"
+          undo: "변경 취소"
+          undo_title: "마지막 저장 이후로 변경된 내용을 취소"
+          revert: "기본값으로 되돌리기"
+          revert_title: "이 색상을 Discourse 기본 색상 스킴으로 되돌림."
+          primary:
+            name: '1차 (기본)'
+            description: '대부분의 텍스트, 아이콘, 경계'
+          secondary:
+            name: '2차'
+            description: '메인 백그라운드 색상, 몇몇 버튼의 텍스트 색상'
+          tertiary:
+            name: '3차'
+            description: '링크, 몇몇 버튼, 알림, 강조 색상'
+          quaternary:
+            name: "4차"
+            description: "네비게이션 링크"
+          header_background:
+            name: "헤더 배경"
+            description: "사이트 헤더의 배경 색상"
+          header_primary:
+            name: "헤더 기본"
+            description: "사이트 헤더의 텍스트와 아이콘"
+          highlight:
+            name: '하이라이트 강조'
+            description: '페이지 내에서 글이나 토픽을 하이라이트로 강조할 때 사용할 색상'
+          danger:
+            name: '위험'
+            description: '글이나 토픽의 삭제등 위험한 행동에 대해 하이라이트할 때 사용할 색상'
+          success:
+            name: '성공'
+            description: '행위의 성공을 표시할 때 사용할 색상'
+          love:
+            name: '좋아요'
+            description: "좋아요 버튼의 색상"
+
+
       email:
         title: "이메일"
         settings: "설정"
-        all: "전체"
-        sending_test: "테스트 메일 발송중..."
-        sent: "보낸 메일"
-        skipped: "생략"
-        sent_at: "보냄"
-        time: "시간"
+        all: "모두"
+        sending_test: "테스트 이메일을 보내는 중..."
+        test_error: "테스트 이메일을 보내는 중에 문제가 발생했습니다. 메일 설정을 다시 한 번 체크해 주세요. 또한 관련 서버들이 블럭되어 있는지도 체크해보시고, 다시 시도해 주세요."
+        sent: "보냄"
+        skipped: "건너뜀"
+        sent_at: "전송시각"
+        time: "시각"
         user: "사용자"
-        email_type: "이메일 타입"
+        email_type: "이메일 유형"
         to_address: "받는 주소"
-        test_email_address: "테스트용 이메일 주소"
-        send_test: "테스트 메일 전송"
-        sent_test: "전송됨!"
-        delivery_method: "전달 방법"
-        preview_digest: "요약 미리보기"
-        preview_digest_desc: "포럼에서 전송되는 요약 메일 미리보기 도구"
+        test_email_address: "테스트 할 전자 메일 주소"
+        send_test: "테스트 메일을 보내"
+        sent_test: "전송!"
+        delivery_method: "전송 방법"
+        preview_digest: "요약 메일 미리보기"
+        preview_digest_desc: "이 포럼에서 보내지는 요약 이메일 내용을 미리보기할 수 있는 툴입니다."
         refresh: "새로고침"
         format: "형식"
         html: "html"
-        text: "문장"
-        last_seen_user: "마지막으로 본 사용자"
-        reply_key: "답글 단축키"
-        skipped_reason: "생략 이유"
+        text: "text"
+        last_seen_user: "마지막으로 본 사용자:"
+        reply_key: "회신용 Key"
+        skipped_reason: "건너뛴 사유"
         logs:
-          none: "로그가 없습니다."
+          none: "로그가 없음."
           filters:
             title: "필터"
-            user_placeholder: "사용자명"
+            user_placeholder: "사용자이름"
             address_placeholder: "em@il.com"
-            type_placeholder: "다이제스트, 가입..."
-            skipped_reason_placeholder: "이유"
+            type_placeholder: "요약, 가입..."
+            reply_key_placeholder: ""
+            skipped_reason_placeholder: "사유"
+
       logs:
-        title: "기록"
-        action: "허용여부"
-        created_at: "생성된"
-        last_match_at: "마지막 방문"
-        match_count: "방문"
+        title: "로그"
+        action: "액션"
+        created_at: "생성 시각"
+        last_match_at: "최종 매치 시작"
+        match_count: "매치수"
         ip_address: "IP"
         delete: '삭제'
-        edit: '편집'
+        edit: '수정'
         save: '저장'
         screened_actions:
-          block: "블락"
-          do_nothing: "아무것도 하지 않음"
+          block: "차단"
+          do_nothing: "무시"
         staff_actions:
-          title: "중간 관리자 기록"
-          instructions: "사용자 이름을 클릭하고 리스트를 필터링하세요. 아바타를 클릭하여 사용자 페이지로 이동합니다."
-          clear_filters: "전체 보기"
-          staff_user: "중간 관리 사용자"
+          title: "관리자 액션"
+          instructions: "사용자 이름을 클릭하여 액션 리스트를 고르세요. 사용자 페이지를 가려면 아바타를 클릭하세요."
+          clear_filters: "모두 보기"
+          staff_user: "관리자"
           target_user: "타겟 사용자"
           subject: "제목"
           when: "언제"
@@ -1195,229 +1570,297 @@ ko:
           new_value: "새값"
           diff: "차이점"
           show: "보기"
-          modal_title: "상세"
+          modal_title: "상세 내용"
           no_previous: "이전 값이 없습니다."
-          deleted: "새로운 값이 없습니다. 기록이 삭제되었습니다."
+          deleted: "새로운 값이 없습니다. 해당 레코드는 삭제되었습니다."
           actions:
-            delete_user: "사용사 삭제"
-            change_trust_level: "신뢰도 변경"
+            delete_user: "사용자 삭제"
+            change_trust_level: "신뢰 등급 변경"
             change_site_setting: "사이트 설정 변경"
             change_site_customization: "사이트 커스텀화 변경"
             delete_site_customization: "사이트 커스텀화 삭제"
-            suspend_user: "suspend user"
-            unsuspend_user: "unsuspend user"
+            suspend_user: "접속 차단 설정"
+            unsuspend_user: "접속 차단 설정 취소"
             grant_badge: "배지 부여"
-            revoke_badge: "배지 파기"
+            revoke_badge: "배지 부여 취소"
         screened_emails:
-          title: "블락된 이메일들"
-          description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
+          title: "차단된 이메일"
+          description: "누군가가 새로운 계정을 생성하려고 할 때 아래 이메일 주소는 가입이 거부되거나 특별한 액션이 취해집니다."
           email: "이메일 주소"
         screened_urls:
-          title: "블락된 URL들"
-          description: "이 목록은 사용자에 의해 스팸으로 알려진 URL 목록입니다."
+          title: "차단된 URL"
+          description: "여기에 리스팅된 URL들은 스패머로 분류된 사용자가 게시글에서 사용한 것들 입니다."
           url: "URL"
-          domain: "도메인"
+          domain: "Domain"
         screened_ips:
-          title: "블락된 IP들"
-          description: 'IP 주소는 감시됩니다. "허용"으로 Whitelist에 등록해주세요.'
-          delete_confirm: "%{ip_address}를 규칙에 의해 삭제할까요?"
+          title: "차단된 IP"
+          description: '관리되고 있는 IP 주소 목록. whitelist IP 로 설정하기 위해서는 "허용"을 클릭하세요.'
+          delete_confirm: "정말로 %{ip_address}에 대한 IP 규칙을 삭제하시겠습니까?"
           actions:
-            block: "블락"
+            block: "제한"
             do_nothing: "허용"
           form:
-            label: "새 IP:"
+            label: "신규:"
             ip_address: "IP 주소"
             add: "추가"
+
       impersonate:
-        title: "이 사용자로 로그인"
-        username_or_email: "사용자의 아이디 또는 이메일"
-        help: "디버깅 목적으로 사용자 계정에 로그인하기 위해 이 도구를 사용합니다."
+        title: "사용자 가장하기"
+        username_or_email: "사용자 이름 또는 이메일"
+        help: "디버깅 목적으로 사용자 계정을 가장하여 로그인해보기 위해 이 도구를 사용합니다."
         not_found: "해당 사용자를 찾을 수 없습니다."
-        invalid: "죄송합니다. 해당 사용자로 로그인 할 수 있습니다."
+        invalid: "죄송합니다. 해당 사용자를 가장하여 로그인해볼 수 없습니다."
+
       users:
-        title: '사용자'
-        create: '중간 관리자 추가'
+        title: '사용자 관리'
+        create: '관리자 추가'
         last_emailed: "마지막 이메일"
-        not_found: "죄송합니다, 그 이름은 시스템에 존재하지 않습니다."
-        active: "활동"
+        not_found: "죄송합니다. 해당 사용자는 시스템에 존재하지 않습니다."
+        active: "활성화 사용자"
         nav:
-          new: "새로운 사용자"
-          active: "활성화 사용자"
-          pending: "보류된 사용자"
-          admins: '운영자'
-          moderators: '중간 관리자'
-          suspended: '접근 금지 사용자'
-          blocked: '블락된 사용자'
-        approved: "승인?"
+          new: "신규 사용자"
+          active: "활성화된 사용자"
+          pending: "검토중인 사용자"
+          admins: '어드민'
+          moderators: '운영자'
+          suspended: '접속차단자'
+          blocked: '게시금지자'
+        approved: "사용자 등록 승인?"
+        approved_selected:
+          one: "사용자 등록 승인"
+          other: "사용자 등록 승인({{count}}명)"
+        reject_selected:
+          one: "사용자 등록 거절"
+          other: "사용자 등록 거절 ({{count}}명)"
         titles:
           active: '활성화된 사용자'
-          new: '새로운 사용자'
-          pending: '검토가 필요한 사용자'
-          newuser: '사용자 신뢰도 0 (새로운 사용자)'
-          basic: '사용자 신뢰도 1 (초보 사용자)'
-          regular: '사용자 신뢰도 2 (자주오는 사용자)'
-          leader: '사용자 신뢰도 3 (VIP 사용자)'
-          elder: '사용자 신뢰도 4 (후원자)'
-          admins: '운영자 사용자'
-          moderators: '중간 관리자'
-          blocked: '블락된 사용자들'
-          suspended: '접근 금지된 사용자들'
+          new: '신규 사용자'
+          pending: '검토중인 사용자'
+          newuser: '사용자 신뢰 등급 0 (신규 사용자)'
+          basic: '사용자 신뢰 등급 1 (초보 사용자)'
+          regular: '사용자 신뢰 등급 2 (일반 사용자)'
+          leader: '사용자 신뢰 등급 3 (숙련 사용자)'
+          elder: '사용자 신뢰 등급 4 (고급 사용자)'
+          admins: '어드민'
+          moderators: '운영자'
+          blocked: '게시금지자'
+          suspended: '접속차단자'
         reject_successful:
-          other: "성공적으로 ${count}명의 사용자를 거절하였습니다."
+          one: "한 명의 사용자를 등록 거절하였습니다."
+          other: "%{count}명의 사용자를 등록 거절하였습니다."
+        reject_failures:
+          one: "한 명의 사용자 사용자에 대한 등록 거절이 실패하였습니다."
+          other: "%{count}명의 사용자에 대한 등록 거절이 실패하였습니다."
+
       user:
-        suspend_failed: "이 사용자를 접근 금지하는데 오류 발생 {{error}}"
-        unsuspend_failed: "이 사용자를 접근 허용 하는데 오류 발생 {{error}}"
-        suspend_duration: "사용자를 몇일 접근 금지 하시겠습니까?"
-        suspend_duration_units: "(days)"
-        suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
-        suspend_reason: "Reason"
-        suspended_by: "접근 금지자"
+        suspend_failed: "이 사용자의 접속을 차단하는 동안 문제가 발생했습니다. {{error}}"
+        unsuspend_failed: "이 사용자에 대한 접속 차단을 취소하는 동안 문제가 발생했습니다.{{error}}"
+        suspend_duration: "얼마의 기간 동안 접속을 차단하시겠습니까?"
+        suspend_duration_units: "(일)"
+        suspend_reason_label: "이 사용자의 접속을 차단하는 이유는 무엇인가? 사용자가 로그인을 시도하면 이 텍스트를 보게됩니다. 짧게 입력해 주세요."
+        suspend_reason: "접속 차단 사유"
+        suspended_by: "접속 차단 설정자: "
         delete_all_posts: "모든 글을 삭제합니다"
-        delete_all_posts_confirm: "당신은 %{posts}개의 게시글과 %{topics}개의 토픽을 삭제합니다. 확실합니까?"
-        suspend: "접근 금지"
-        unsuspend: "접근 허용"
-        suspended: "접근 금지?"
-        moderator: "중간 관리자?"
-        admin: "운영자?"
-        blocked: "블락"
-        show_admin_profile: "운영자"
+        delete_all_posts_confirm: "%{posts}개의 게시글과 %{topics}개의 토픽을 삭제하려고 합니다. 정말로 수행할까요?"
+        suspend: "접속 차단"
+        unsuspend: "접속 차단 취소"
+        suspended: "접속차단자?"
+        moderator: "운영자?"
+        admin: "어드민?"
+        blocked: "게시금지자?"
+        show_admin_profile: "어드민"
         edit_title: "제목 수정"
         save_title: "제목 저장"
-        refresh_browsers: "브라우저 새로 고침"
+        refresh_browsers: "강제로 브라우저 새로고침"
         show_public_profile: "공개 프로필 보기"
-        impersonate: '사용자로 로그인하기'
-        revoke_admin: '운영자권한 취소'
-        grant_admin: '운영자권한 주기'
-        revoke_moderation: '중간 관리자 사용 안함'
-        grant_moderation: '중간 관리자 사용'
-        unblock: '언블락'
-        block: '블락'
+        impersonate: '사용자 가장하기'
+        revoke_admin: '어드민 권한 회수'
+        grant_admin: '어드민 권한 부여'
+        revoke_moderation: '운영자 권한 회수'
+        grant_moderation: '운영자 권한 부여'
+        unblock: '게시 금지 취소 '
+        block: '게시 금지'
         reputation: 평판
         permissions: 권한
         activity: 활동
-        like_count: 좋아요
-        private_topics_count: 개인적인 토픽 수
-        posts_read_count: 게시글 읽은 수
+        like_count: 받은 좋아요
+        private_topics_count: 개인 토픽 수
+        posts_read_count: 읽은 게시글 수
         post_count: 게시글 수
-        topics_entered: 토픽 수
-        flags_given_count: 관심 수
-        flags_received_count: 관심 받은 수
+        topics_entered: 참여한 토픽수
+        flags_given_count: 신고한 건수
+        flags_received_count: 신고당한 건수
         approve: '승인'
-        approved_by: "승인자"
-        approve_success: "인증 이메일이 발송되었습니다."
-        approve_bulk_success: "성공! 모든 선택된 사용자는 인증되었고 통보되었습니다."
+        approved_by: "승인자: "
+        approve_success: "사용자 승인이 완료되었습니다. 활성화 방법에 대한 이메일이 발송되었습니다."
+        approve_bulk_success: "성공! 선택된 모든 사용자들이 승인되었고 관련 알림이 발송되었습니다."
         time_read: "읽은 시간"
         delete: "사용사 삭제"
-        delete_forbidden_because_staff: "Admins and moderators can't be deleted."
+        delete_forbidden_because_staff: "어드민과 운영자는 삭제할 수 없습니다."
+        delete_forbidden:
+          one: "가입한지 %{count}일보다 오래되었거나 올린 게시글이 있는 사용자는 삭제할 수 없습니다. 삭제하기 전에 해당 사용자의 게시글을 모두 삭제하세요."
+          other: "가입한지 %{count}일보다 오래되었거나 올린 게시글이 있는 사용자는 삭제할 수 없습니다. 삭제하기 전에 해당 사용자의 게시글을 모두 삭제하세요."
+        cant_delete_all_posts:
+          one: "모든 게시글을 삭제할 수 없습니다. %{count}일 이전에 게시된 글이 포함되어 있습니다."
+          other: "모든 게시글을 삭제할 수 없습니다.%{count}일 이전에 게시된 글이 포함되어 있습니다."
         cant_delete_all_too_many_posts:
-          other: "이 사용자는 %{count}개 보다 많은 글을 작성하였기 때문에 모든 글을 삭제 할 수 없습니다. (delete_all_posts_max 설정참고)"
-        delete_confirm: "당신은 영구적으로 사이트에서 이 사용자를 삭제 하시겠습니까? 이 조치는 영구적입니다!"
-        delete_and_block: "예, 그리고 이메일과 IP주소를 블락합니다."
-        delete_dont_block: "예, 그리고 이메일과 IP주소를 허용합니다."
-        deleted: "사용자가 삭제되었습니다."
-        delete_failed: "해당 사용자를 삭제하는 동안 오류가 발생했습니다. 모든 글은 사용자를 삭제하기 전에 삭제해야합니다."
-        send_activation_email: "인증 메일 보내기"
-        activation_email_sent: "인증 메일을 보냈습니다."
-        send_activation_email_failed: "인증 메일 전송중 오류 %{error}"
+          one: "모든 게시글을 삭제할 수 없습니다. 사용자가 1개 이상의 게시글을 가지고 있습니다. (delete_all_posts_max setting 설정값)"
+          other: "모든 게시글을 삭제할 수 없습니다. 사용자가 %{count}개 이상의 게시글을 가지고 있습니다. (delete_all_posts_max setting 설정값)"
+        delete_confirm: "영구적으로 이 사이트에서 이 사용자를 삭제 하시겠습니까? 이 조치는 영구적입니다!"
+        delete_and_block: "<b>예</b>, 또한 해당 이메일과 IP 주소도 같이 <b>게시 금지 설정</b>합니다."
+        delete_dont_block: "<b>예</b>, 하지만 <b>allow</b> 해당 이메일과 IP주소는 계속 <b>사용가능</b>하게 둡니다."
+        deleted: "사용자가 삭제되었습니다"
+        delete_failed: "해당 사용자를 삭제하는 동안 오류가 발생했습니다. 사용자를 삭제하기 전에 해당 사용자의 모든 글을 삭제해야합니다."
+        send_activation_email: "계정 활성용 이메일 발송"
+        activation_email_sent: "계정 활성용 이메일이 발송되었습니다."
+        send_activation_email_failed: "계정 활성용 이메일 전송이 실패하였습니다. %{error}"
         activate: "계정 활성화"
-        activate_failed: "사용자 활성화에 문제가 있습니다."
-        deactivate_account: "계정 비활성화"
-        deactivate_failed: "사용자 비활성에 문제가 있습니다."
-        unblock_failed: '사용자 언블락에 문제가 있습니다.'
-        block_failed: '사용자 블락에 문제가 있습니다.'
-        deactivate_explanation: "비활성화 사용자는 이메일 인증을 다시 받아야합니다."
-        suspended_explanation: "접근 금지된 유저는 로그인 할 수 없습니다."
-        block_explanation: "블락 사용자는 게시글을 작성하거나 토픽을 작성할 수 없습니다."
-        trust_level_change_failed: "신뢰도 변경에 문제가 있습니다."
-        suspend_modal_title: "Suspend User"
-        trust_level_2_users: "신뢰도 2 사용자들"
-        trust_level_3_requirements: "사용자 신뢰도 3 이상이 필요"
+        activate_failed: "사용자를 활성화하는데 실패하였습니다."
+        deactivate_account: "계정 사용 중지"
+        deactivate_failed: "사용자 계정 사용 중지 작업중에 문제가 발생하였습니다."
+        unblock_failed: '게시금지 취소 처리 작업 중에 문제가 발생하였습니다.'
+        block_failed: '게시금지 처리 작업 중에 문제가 발생하였습니다.'
+        deactivate_explanation: "계정 사용 중지된 사용자는 이메일 인증을 다시 하여야 합니다."
+        suspended_explanation: "접속 차단된 사용자는 로그인할 수 없습니다."
+        block_explanation: "게시 금지된 사용자는 게시글을 올리거나 새로운 토픽을 시작할 수 없습니다."
+        trust_level_change_failed: "사용자의 신뢰 등급을 변경하는 도중 문제가 발생하였습니다."
+        suspend_modal_title: "사용자 접속 차단하기"
+        trust_level_2_users: "신뢰 등급 2인 사용자"
+        trust_level_3_requirements: "신뢰 등급 3의 요구 사항"
         tl3_requirements:
-          table_title: "최근 100일 간:"
+          title: "신뢰등급 3의 요구 사항"
+          table_title: "최근 100일 동안:"
           value_heading: "값"
-          requirement_heading: "필수"
-          visits: "방문수"
-          days: "days"
-          topics_with_replies: "답글 달린 토픽"
+          requirement_heading: "요구 사항"
+          visits: "방문 횟수"
+          days: "일수"
+          topics_with_replies: "댓글이 달린 토픽수"
+          topics_replied_to: "댓글을 단 토픽수"
+          quality_content: "고품질의 콘텐트"
+          reading: "읽기"
+          site_promotion: "사이트 프로모션"
+          flagged_posts: "신고 게시글수"
+
       site_content:
-        none: "편집을 시작하려는 컨텐츠의 타입을 선택하세요."
-        title: '사이트 컨텐츠'
-        edit: "사이트 컨텐츠를 편집"
+        none: "편집하시려는 사이트 콘텐츠의 유형을 선택해 주세요."
+        title: '사이트 콘텐츠'
+        edit: "사이트 콘텐츠 편집"
+
       site_settings:
-        show_overriden: '수정된 것만 표시'
+        show_overriden: '기본값에서 변경된 설정만 표시'
         title: '사이트 설정'
         reset: '기본값으로 재설정'
         none: '없음'
-        no_results: "No results found."
-        clear_filter: "Clear"
+        no_results: "검색된 결과 없음"
+        clear_filter: "지우기"
         categories:
-          all_results: 'All'
+          all_results: '모든 결과'
           required: '필수'
           basic: '기본 설정'
           users: '사용자'
-          posting: '게시물'
+          posting: '글 게시'
           email: '이메일'
           files: '파일'
-          trust: '신뢰도'
+          trust: '신뢰 등급'
           security: '보안'
           onebox: "Onebox"
-          seo: 'SEO'
+          seo: '검색엔진 최적화'
           spam: '스팸'
-          rate_limits: '제한'
+          rate_limits: '게시 빈도 제한'
           developer: '개발자'
           embedding: "Embedding"
-          legal: "합법적인"
-          uncategorized: '카테고리 없음'
-          backups: "백업"
+          legal: "법무"
+          uncategorized: '분류되지 않음'
+          backups: "Backups"
+
       badges:
-        new: New
-        granted_by: 배지 부여자
-        granted_at: 배지 수여일
-        revoke: 파기
-        revoke_confirm: 정말로 이 배지를 파기하시겠습니까?
-        edit_badges: 배지 수정
+        title: 배지
+        new_badge: 새 배지
+        new: 신규
+        name: 이름
+        badge: 배지
+        display_name: 표시될 이름
+        description: 설명
+        badge_type: 배지 유형
+        granted_by: 부여자
+        granted_at: 부여 시점
+        save: 저장
+        delete: 삭제
+        delete_confirm: 정말로 이 배지를 삭제하시겠습니까?
+        revoke: 취소
+        revoke_confirm: 정말로 이 배지를 취소하시겠습니까?
+        edit_badges: 배지 편집
         grant_badge: 배지 부여
         granted_badges: 부여된 배지
         grant: 부여
+        no_user_badges: "%{name}님은 아무 배지도 부여받지 못했습니다."
+        no_badges: 부여할 수 있는 배지가 하나도 없습니다.
+        allow_title: 배지가 사용자의 타이틀로 사용될 수 있도록 허용
+
     lightbox:
-      download: "download"
+      download: "다운로드"
+
     keyboard_shortcuts_help:
-      title: 'Keyboard Shortcuts'
+      title: '키보드 단축키'
       jump_to:
-        title: 'Jump To'
-        home: '<b>g</b> then <b>h</b> Home (Latest)'
-        latest: '<b>g</b> then <b>l</b> Latest'
-        new: '<b>g</b> then <b>n</b> New'
-        unread: '<b>g</b> then <b>u</b> Unread'
-        categories: '<b>g</b> then <b>c</b> Categories'
+        title: '바로 가기'
+        home: '<b>g</b> 누르고 <b>h</b> 홈 (최신토픽)'
+        latest: '<b>g</b> 누르고 <b>l</b> 최신토픽'
+        new: '<b>g</b> 누르고 <b>n</b> 새로운 토픽'
+        unread: '<b>g</b> 누르고 <b>u</b> 읽지 않은 토픽'
+        starred: '<b>g</b> then <b>f</b> 관심 토픽'
+        categories: '<b>g</b> then <b>c</b> 카테고리'
       navigation:
-        title: 'Navigation'
-        back: '<b>u</b> Back'
-        up_down: '<b>k</b>/<b>j</b> Move selection up/down'
-        open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>`</b>/<b>~</b> Next/previous section'
+        title: '이동'
+        back: '<b>u</b> 뒤로'
+        up_down: '<b>k</b>/<b>j</b> 선택된 내용을 위/아래로 이동'
+        open: '<b>o</b> or <b>Enter</b> 선택된 토픽을 열기'
+        next_prev: '<b>`</b>/<b>~</b> 다음/이전 선택'
       application:
-        title: 'Application'
-        create: '<b>c</b> Create a new topic'
-        notifications: '<b>n</b> Open notifications'
-        search: '<b>/</b> Search'
-        help: '<b>?</b> Open keyboard shortcuts help'
+        title: '응용'
+        create: '<b>c</b> 새로운 토픽 만들기'
+        notifications: '<b>n</b> 알림 내용 보기'
+        search: '<b>/</b> 검색'
+        help: '<b>?</b> 키보기 단축키 도움말 열기'
       actions:
-        title: 'Actions'
-        star: '<b>f</b> 별표시 토픽'
-        share_topic: '<b>s</b> Share topic'
-        share_post: '<b>shift s</b> Share post'
-        reply_topic: '<b>r</b> Reply to topic'
-        reply_post: '<b>shift r</b> Reply to post'
-        like: '<b>l</b> Like post'
-        flag: '<b>!</b> Flag post'
-        bookmark: '<b>b</b> Bookmark post'
-        edit: '<b>e</b> Edit post'
-        delete: '<b>d</b> Delete post'
-        mark_muted: '<b>m</b> then <b>m</b> Mark topic as muted'
-        mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
-        mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
-        mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
+        title: '기능'
+        star: '<b>f</b> 관심토픽 설정'
+        share_topic: '<b>s</b> 토픽 공유하기'
+        share_post: '<b>shift s</b> 게시글 공유하기'
+        reply_topic: '<b>r</b> 토픽에 댓글 달기'
+        reply_post: '<b>shift r</b> 게시글에 댓글달기'
+        like: '<b>l</b> 게시글에 좋아요하기'
+        flag: '<b>!</b> 게시글 신고하기'
+        bookmark: '<b>b</b> 게시글 즐겨찾기'
+        edit: '<b>e</b> 게시글 수정하기'
+        delete: '<b>d</b> 게시글 지우기'
+        mark_muted: '<b>m</b> 누르고 <b>m</b> 토픽에 대한 알림끄기'
+        mark_regular: '<b>m</b> 누르고 <b>r</b> 토픽을 일반 토픽으로 설정'
+        mark_tracking: '<b>m</b> 누르고 <b>t</b> 토픽에 추적하기를 설정'
+        mark_watching: '<b>m</b> 누르고 <b>w</b> 토픽에 지켜보기를 설정'
+
     badges:
-      example_badge:
-        description: 이것은 일반적인 배지 예시입니다.
+      title: 배지
+      badge_count:
+        one:   "1개의 배지"
+        other: "%{count}개의 배지"
+      more_badges:
+        one:   "+1개 더"
+        other: "+%{count}개 더"
+      granted:
+        one:   "1개 부여됨"
+        other: "%{count}개 부여됨"
+      select_badge_for_title: 당신의 타이틀로 사용될 배지를 선택하세요
+      badge:
+        basic_user:
+          name: 초보 사용자
+          description: 초보 사용자입니다.
+        regular_user:
+          name: 일반 사용자
+          description: 일반 사용자입니다.
+        leader:
+          name: 숙련 사용자
+          description: 활동성이 높고 많은 글을 쓰는 사용자입니다.
+        elder:
+          name: 고급 사용자
+          description: 오랜 기간동안 활동하였으며 여기저기에 적극적으로 의견을 개진하는 커뮤니티 리더입니다.
