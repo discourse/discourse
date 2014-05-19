@@ -326,6 +326,16 @@ section.details {
 .badges {
   .content-list ul {
     margin-bottom: 10px;
+
+    .list-badge {
+      float: right;
+      font-size: 11px;
+      font-weight: normal;
+      padding: 0 6px;
+      color: $secondary;
+      background-color: scale-color($tertiary, $lightness: 50%);
+      border-radius: 3px;
+    }
   }
 
   .current-badge {

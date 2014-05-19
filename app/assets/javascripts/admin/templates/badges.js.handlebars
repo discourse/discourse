@@ -8,7 +8,7 @@
         <a {{action selectBadge this}} {{bind-attr class="selected:active"}}>
           {{displayName}}
           {{#if newBadge}}
-            ({{i18n filters.new.lower_title}})
+            <span class="list-badge">{{i18n filters.new.lower_title}}</span>
           {{/if}}
         </a>
       </li>
@@ -51,14 +51,14 @@
         {{/if}}
       </div>
 
-      {{#unless readOnly}}
-        <div>
-          <span>
-            {{input type="checkbox" checked=allow_title}}
-            {{i18n admin.badges.allow_title}}
-          </span>
-        </div>
+      <div>
+        <span>
+          {{input type="checkbox" checked=allow_title disabled=readOnly}}
+          {{i18n admin.badges.allow_title}}
+        </span>
+      </div>
 
+      {{#unless readOnly}}
         <div class='buttons'>
           <button {{action save}} {{bind-attr disabled=controller.disableSave}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
           <span class='saving'>{{savingStatus}}</span>
