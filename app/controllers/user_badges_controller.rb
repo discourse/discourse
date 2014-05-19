@@ -7,7 +7,7 @@ class UserBadgesController < ApplicationController
       user_badges = user.user_badges
     else
       badge = fetch_badge_from_params
-      user_badges = badge.user_badges.order('granted_at DESC').limit(100)
+      user_badges = badge.user_badges.order('granted_at DESC').limit(96)
     end
 
     if params[:granted_before]
