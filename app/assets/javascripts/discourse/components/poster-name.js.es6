@@ -24,7 +24,7 @@ var PosterNameComponent = Em.Component.extend({
       buffer.push("</span>");
 
       // Are we showing full names?
-      if (name && (name === username) && this.get('displayNameOnPosts')) {
+      if (name && (name !== username) && this.get('displayNameOnPosts')) {
         buffer.push("<span class='full-name'><a href='#'>" + name + "</a></span>");
       }
 

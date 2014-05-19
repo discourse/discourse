@@ -220,8 +220,8 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all subcategories"
-      no_subcategory: "no subcategory"
+      all_subcategories: "all"
+      no_subcategory: "none"
       category: "Category"
       posts: "New Posts"
       topics: "New Topics"
@@ -1132,6 +1132,7 @@ en:
       this_year: "this year"
       position: "position"
       default_position: "Default Position"
+      position_disabled: 'Categories will be displayed in order of activity. To control the order of categories in lists, enable the "fixed category positions" setting.'
       parent: "Parent Category"
 
     flagging:
@@ -1456,7 +1457,7 @@ en:
         new_style: "New Style"
         delete: "Delete"
         delete_confirm: "Delete this customization?"
-        about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
+        about: "Modify CSS stylesheets and HTML headers on the site. Add a customization to start."
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"
@@ -1466,7 +1467,7 @@ en:
         colors:
           title: "Colors"
           long_title: "Color Schemes"
-          about: "Color schemes allow you to modify the colors used on the site without writing CSS. Choose or add one to start."
+          about: "Modify the colors used on the site without writing CSS. Add a scheme to start."
           new_name: "New Color Scheme"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color scheme?"
@@ -1703,8 +1704,8 @@ en:
           one: "Can't delete all posts. Some posts are older than %{count} day old. (The delete_user_max_post_age setting.)"
           other: "Can't delete all posts. Some posts are older than %{count} days old. (The delete_user_max_post_age setting.)"
         cant_delete_all_too_many_posts:
-          one: "Can't delete all posts because the user has more than 1 post. (The delete_all_posts_max setting.)"
-          other: "Can't delete all posts because the user has more than %{count} posts.  (The delete_all_posts_max setting.)"
+          one: "Can't delete all posts because the user has more than 1 post. (delete_all_posts_max)"
+          other: "Can't delete all posts because the user has more than %{count} posts.  (delete_all_posts_max)"
         delete_confirm: "Are you SURE you want to delete this user? This action is permanent!"
         delete_and_block: "<b>Yes</b>, and <b>block</b> future signups from this email and IP address"
         delete_dont_block: "<b>Yes</b>, just delete the user"
@@ -1748,7 +1749,7 @@ en:
       site_settings:
         show_overriden: 'Only show overridden'
         title: 'Settings'
-        reset: 'reset to default'
+        reset: 'reset'
         none: 'none'
         no_results: "No results found."
         clear_filter: "Clear"
@@ -1852,14 +1853,14 @@ en:
       select_badge_for_title: Select a badge to use as your title
       badge:
         basic_user:
-          name: Basic User
-          description: Trusted as a basic user.
+          name: Basic
+          description: Granted all essential community functions.
         regular_user:
-          name: Regular User
-          description: Trusted as a regular user.
+          name: Regular
+          description: Granted invitations.
         leader:
           name: Leader
-          description: One of the most active and prolific users.
+          description: Granted recategorize, rename, followed links and lounge.
         elder:
           name: Elder
-          description: Long term community leader who has been around and seen everything.
+          description: Granted global edit, pin, close, archive, split and merge.

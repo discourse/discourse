@@ -58,8 +58,6 @@
 
   .static {
     color: $primary;
-    margin-top: 5px;
-    margin-left: 5px;
     display: inline-block;
   }
   .instructions {
@@ -84,7 +82,6 @@
   }
 
   .other .controls {
-    margin-top: 10px;
     select {
       width: 280px;
     }
@@ -138,7 +135,7 @@
   .user-content {
     padding: 10px 8px;
     background-color: $secondary;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid scale-color-diff();
     margin-bottom: 10px;
 
     .btn.right {
@@ -155,13 +152,13 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid scale-color-diff();
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid scale-color-diff();
       }
     }
   }
@@ -317,7 +314,7 @@
     .item {
       padding: 20px 8px 15px 8px;
       background-color: $secondary;
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid scale-color-diff();
     }
     .type {
       color: $primary;

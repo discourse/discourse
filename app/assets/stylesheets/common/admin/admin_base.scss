@@ -9,8 +9,8 @@
   width: 100%;
   tr {text-align: left;}
   td, th {padding: 8px;}
-  th {border-top: 1px solid scale-color($primary, $lightness: 90%);}
-  td {border-bottom: 1px solid scale-color($primary, $lightness: 90%); border-top: 1px solid scale-color($primary, $lightness: 90%);}
+  th {border-top: 1px solid scale-color-diff();}
+  td {border-bottom: 1px solid scale-color-diff(); border-top: 1px solid scale-color-diff();}
   tr:hover { background-color: darken($secondary, 2.5%); }
   tr.selected { background-color: lighten($primary, 50%); }
   .filters input { margin-bottom: 0; }
@@ -20,7 +20,7 @@
   font-size: 12px;
   float: right;
   margin-right: 10px;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color-diff();
   padding: 2px 5px;
   border-radius: 5px;
   color: $primary;
@@ -92,7 +92,7 @@
   .nav.nav-pills {
     li.active {
       a {
-        border-color: scale-color($primary, $lightness: 90%);
+        border-color: scale-color-diff();
         background-color: lighten($primary, 40%);
         &:hover {
           background-color: lighten($primary, 40%);
@@ -165,7 +165,7 @@
   @include small-width  { width: 700px; }
   min-height: 800px;
   margin-left: 0;
-  border-left: solid 1px scale-color($primary, $lightness: 90%);
+  border-left: solid 1px scale-color-diff();
   padding: 30px 0 30px 30px;
 }
 
@@ -199,7 +199,7 @@
       width: 408px;
       padding: 1px;
       background-color: $secondary;
-      border: 1px solid scale-color($primary, $lightness: 90%);
+      border: 1px solid scale-color-diff();
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -209,7 +209,7 @@
         width: 90px;
         margin: 2px 1px;
         background-color: $secondary;
-        border: 1px solid scale-color($primary, $lightness: 90%);
+        border: 1px solid scale-color-diff();
         border-radius: 3px;
         box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
         -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -257,7 +257,7 @@
 section.details {
   h1 {
     font-size: 15px;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
     color: $secondary;
     padding: 0 10px;
     margin: 0 0 5px 0;
@@ -282,7 +282,7 @@ section.details {
   &.highlight-danger {
     background-color: scale-color($danger, $lightness: 50%);
   }
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color-diff();
   &:before, &:after {
     display: table;
     content: "";
@@ -591,7 +591,7 @@ table.api-keys {
     th {
       font-weight: normal;
       text-align: center;
-      background-color: scale-color($primary, $lightness: 90%);
+      background-color: scale-color-diff();
     }
     th.title {
       text-align: left;
@@ -636,7 +636,7 @@ table.api-keys {
 
   &.detected-problems {
     @include border-radius-all(5px);
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
     margin-bottom: 20px;
     margin-top: 10px;
     box-shadow: inset 0 0 10px rgba($primary, .1);
@@ -703,7 +703,7 @@ table.api-keys {
 
 
 .commits-widget {
-  border: solid 1px scale-color($primary, $lightness: 90%);
+  border: solid 1px scale-color-diff();
   width: 500px;
   height: 180px;
   margin-bottom: 36px;
@@ -757,7 +757,7 @@ table.api-keys {
       @extend .clearfix;
       line-height: 1.0em;
       padding: 6px 8px;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
       .left {
         float: left;
       }
@@ -767,7 +767,7 @@ table.api-keys {
 
       img {
         margin-top: 2px;
-        border: solid 1px scale-color($primary, $lightness: 90%);
+        border: solid 1px scale-color-diff();
         padding: 2px;
         background-color: $secondary;
       }
@@ -802,7 +802,7 @@ table.api-keys {
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
-    border-left: solid 1px scale-color($primary, $lightness: 90%);
+    border-left: solid 1px scale-color-diff();
   }
 }
 
@@ -820,10 +820,10 @@ table.api-keys {
     margin: 0;
 
     li:first-of-type {
-      border-top: 1px solid scale-color($primary, $lightness: 90%);
+      border-top: 1px solid scale-color-diff();
     }
     li {
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid scale-color-diff();
     }
 
     li a {
@@ -832,7 +832,7 @@ table.api-keys {
       color: $primary;
 
       &:hover {
-        background-color: scale-color($primary, $lightness: 90%);
+        background-color: scale-color-diff();
         color: $primary;
       }
 
@@ -996,7 +996,7 @@ table.api-keys {
     color: $primary;
     &:hover {
       color: $primary;
-      background-color: scale-color($primary, $lightness: 90%);
+      background-color: scale-color-diff();
 
 
     }
@@ -1030,7 +1030,7 @@ table.api-keys {
 
   .heading-container {
     width: 100%;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
   }
   .col.heading {
     font-weight: bold;
@@ -1046,7 +1046,7 @@ table.api-keys {
 
   .ember-list-item-view {
     width: 100%;
-    border-top: solid 1px scale-color($primary, $lightness: 90%);
+    border-top: solid 1px scale-color-diff();
   }
 }
 

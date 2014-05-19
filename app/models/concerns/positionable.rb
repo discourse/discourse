@@ -1,6 +1,12 @@
 module Positionable
   extend ActiveSupport::Concern
 
+  included do
+    before_save do
+      self.position ||= self.class.count
+    end
+  end
+
   def move_to(position_arg)
 
     position = [[position_arg, 0].max, self.class.count - 1].min
@@ -26,12 +32,5 @@ module Positionable
     UPDATE #{self.class.table_name}
     SET position = :position
     WHERE id = :id", {id: id, position: position}
-  end
-
-  def use_default_position
-    self.exec_sql "
-    UPDATE #{self.class.table_name}
-    SET POSITION = null
-    WHERE id = :id", {id: id}
   end
 end

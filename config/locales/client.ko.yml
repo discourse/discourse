@@ -160,8 +160,8 @@ ko:
       '13': "받은 편지함"
     categories:
       all: "전체 카테고리"
-      all_subcategories: "all subcategories"
-      no_subcategory: "no subcategory"
+      all_subcategories: "all"
+      no_subcategory: "none"
       category: "카테고리"
       posts: "게시글"
       topics: "토픽들"

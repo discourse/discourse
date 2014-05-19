@@ -13,7 +13,7 @@
       <div class="controls">
         <span class='static'>{{username}}</span>
         {{#if can_edit_username}}
-          {{#link-to "preferences.username" class="btn pad-left"}}<i class="fa fa-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.username" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -42,7 +42,7 @@
         <label class="control-label">{{i18n user.title.title}}</label>
         <div class="controls">
           <span class="static">{{title}}</span>
-          {{#link-to "preferences.badgeTitle" class="btn pad-left"}}<i class="fa fa-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
         </div>
       </div>
     {{/if}}
@@ -52,7 +52,7 @@
       <div class="controls">
         <span class='static'>{{email}}</span>
         {{#if can_edit_email}}
-          {{#link-to "preferences.email" class="btn pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>

@@ -32,6 +32,9 @@ export default Discourse.DiscoveryController.extend({
     return Discourse.User.currentProp('staff');
   }.property(),
 
+  fixedCategoryPositions: Discourse.computed.setting('fixed_category_positions'),
+  canOrder: Em.computed.and('fixedCategoryPositions', 'canEdit'),
+
   moveCategory: function(categoryId, position){
     this.get('model.categories').moveCategory(categoryId, position);
   },

@@ -50,8 +50,8 @@
   border: 1px solid scale-color($primary, $lightness: 60%);
   padding: 0;
   overflow: hidden;
-  background-color: scale-color($primary, $lightness: 90%);
-  @include box-shadow(0 1px 0 scale-color($primary, $lightness: 90%));
+  background-color: scale-color-diff();
+  @include box-shadow(0 1px 0 scale-color-diff());
   > li {
     border-bottom: 1px solid scale-color($primary, $lightness: 60%);
     &:last-of-type {

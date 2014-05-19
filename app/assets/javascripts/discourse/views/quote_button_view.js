@@ -46,8 +46,13 @@ Discourse.QuoteButtonView = Discourse.View.extend({
     $(document)
       .on("mousedown.quote-button", function(e) {
         view.set('isMouseDown', true);
-        // we don't want to deselect when we click on the quote button or the reply button
-        if ($(e.target).hasClass('quote-button') || $(e.target).closest('.create').length > 0) return;
+
+        var $target = $(e.target);
+        // we don't want to deselect when we click on buttons that use it
+        if ($target.hasClass('quote-button') ||
+            $target.closest('.create').length ||
+            $target.closest('.reply-new').length) return;
+
         // deselects only when the user left click
         // (allows anyone to `extend` their selection using shift+click)
         if (e.which === 1 && !e.shiftKey) controller.deselectText();

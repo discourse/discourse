@@ -9,7 +9,7 @@ class AddUncategorizedCategory < ActiveRecord::Migration
 
     result = execute "INSERT INTO categories
             (name,color,slug,description,text_color, user_id, created_at, updated_at, position)
-     VALUES ('#{name}', 'AB9364', 'uncategorized', '', 'FFFFFF', -1, now(), now(), 1 )
+     VALUES ('#{name}', 'AB9364', 'uncategorized', '', 'FFFFFF', -1, now(), now(), 0 )
      RETURNING id
     "
     category_id = result[0]["id"].to_i

@@ -85,7 +85,7 @@
       position: relative;
       color: scale-color($primary, $lightness: 75%);
       background-color: $secondary;
-      border: 1px solid scale-color($primary, $lightness: 90%);
+      border: 1px solid scale-color-diff();
       cursor: default;
       &:after {
         display: block;
@@ -156,7 +156,7 @@
   right: 0;
   z-index: 1100;
   margin-top: -1px;
-  border: 1px solid scale-color($primary, $lightness: 90%);;
+  border: 1px solid scale-color-diff();;
   background-color: $secondary;
   @include box-shadow(0 1px 1px rgba($primary, 0.2));
 

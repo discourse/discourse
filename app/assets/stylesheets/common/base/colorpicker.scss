@@ -18,7 +18,7 @@
     max-width: 300px;
 
     .colorpicker {
-      border: 1px solid scale-color($primary, $lightness: 90%);
+      border: 1px solid scale-color-diff();
       margin-right: 2px;
       width: 16px;
       height: 16px;

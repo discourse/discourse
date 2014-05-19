@@ -217,19 +217,21 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
     replyAsNewTopic: function(post) {
       var composerController = this.get('controllers.composer'),
-          promise = composerController.open({
-            action: Discourse.Composer.CREATE_TOPIC,
-            draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
-          }),
-          postUrl = "" + location.protocol + "//" + location.host + (post.get('url')),
-          postLink = "[" + (this.get('title')) + "](" + postUrl + ")";
+          quoteController = this.get('controllers.quote-button'),
+          quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
+          self = this;
 
-      promise.then(function() {
-        Discourse.Post.loadQuote(post.get('id')).then(function(q) {
-          composerController.appendText(I18n.t("post.continue_discussion", {
-            postLink: postLink
-          }) + "\n\n" + q);
-        });
+      quoteController.deselectText();
+
+      composerController.open({
+        action: Discourse.Composer.CREATE_TOPIC,
+        draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
+      }).then(function() {
+        return Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText;
+      }).then(function(q) {
+        var postUrl = "" + location.protocol + "//" + location.host + (post.get('url')),
+            postLink = "[" + self.get('title') + "](" + postUrl + ")";
+        composerController.appendText(I18n.t("post.continue_discussion", { postLink: postLink }) + "\n\n" + q);
       });
     },
 
@@ -423,11 +425,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   // Post related methods
   replyToPost: function(post) {
-    var composerController = this.get('controllers.composer');
-    var quoteController = this.get('controllers.quote-button');
-    var quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer'));
-
-    var topic = post ? post.get('topic') : this.get('model');
+    var composerController = this.get('controllers.composer'),
+        quoteController = this.get('controllers.quote-button'),
+        quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
+        topic = post ? post.get('topic') : this.get('model');
 
     quoteController.set('buffer', '');
 
@@ -450,8 +451,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         opts.topic = topic;
       }
 
-      var promise = composerController.open(opts);
-      promise.then(function() { composerController.appendText(quotedText); });
+      composerController.open(opts).then(function() {
+        composerController.appendText(quotedText);
+      });
     }
     return false;
   },

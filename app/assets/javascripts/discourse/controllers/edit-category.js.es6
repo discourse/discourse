@@ -12,7 +12,6 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   securitySelected: Ember.computed.equal('selectedTab', 'security'),
   settingsSelected: Ember.computed.equal('selectedTab', 'settings'),
   foregroundColors: ['FFFFFF', '000000'],
-  defaultPosition:  false,
 
   parentCategories: function() {
     return Discourse.Category.list().filter(function (c) {
@@ -29,7 +28,6 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   onShow: function() {
     this.changeSize();
     this.titleChanged();
-    this.set('defaultPosition', this.get('position') === null);
   },
 
   changeSize: function() {
@@ -116,6 +114,8 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
     return !this.get('isUncategorized') && this.get('id');
   }.property('isUncategorized', 'id'),
 
+  showPositionInput: Discourse.computed.setting('fixed_category_positions'),
+
   actions: {
 
     selectGeneral: function() {
@@ -148,17 +148,6 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
       this.get('model').removePermission(permission);
     },
 
-    toggleDefaultPosition: function() {
-      this.toggleProperty('defaultPosition');
-    },
-
-    disableDefaultPosition: function() {
-      this.set('defaultPosition', false);
-      Em.run.schedule('afterRender', function() {
-        this.$('.position-input').focus();
-      });
-    },
-
     saveCategory: function() {
       var self = this,
           model = this.get('model'),
@@ -166,7 +155,6 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
 
       this.set('saving', true);
       model.set('parentCategory', parentCategory);
-      if (this.get('defaultPosition')) { model.set('position', 'default'); }
 
       self.set('saving', false);
       this.get('model').save().then(function(result) {

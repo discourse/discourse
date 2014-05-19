@@ -104,6 +104,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
                       Default is false, for next run loop. If unsure, use false.
   **/
   addInitializer: function(init, immediate) {
+    Em.warn("`Discouse.addInitializer` is deprecated. Export an Ember initializer instead.");
     Discourse.initializers = Discourse.initializers || [];
     Discourse.initializers.push({fn: init, immediate: !!immediate});
   },
