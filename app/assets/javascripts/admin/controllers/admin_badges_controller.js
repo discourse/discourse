@@ -10,16 +10,8 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
   itemController: 'adminBadge',
 
   /**
-    Show the displayName only if it is different from the name.
-
-    @property showDisplayName
-    @type {Boolean}
-  **/
-  showDisplayName: Discourse.computed.propertyNotEqual('selectedItem.name', 'selectedItem.displayName'),
-
-  /**
-    We don't allow setting a description if a translation for the given badge name
-    exists.
+    We don't allow setting a description if a translation for the given badge
+    name exists.
 
     @property canEditDescription
     @type {Boolean}
