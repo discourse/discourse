@@ -120,6 +120,10 @@ zh_CN:
     upload: "上传"
     uploading: "上传中..."
     uploaded: "上传完成！"
+    enable: "确认"
+    disable: '取消'
+    undo: "撤销"
+    revert: "恢复默认配置"
     choose_topic:
       none_found: "没有找到主题。"
       title:
@@ -1248,6 +1252,36 @@ zh_CN:
           new_name: "新的颜色方案"
           copy_name_prefix: "复制于"
           delete_confirm: "删除这个颜色方案？"
+          primary:
+            name: '最主要'
+            description: '文本，icons,以及边框'
+          secondary:
+            name: '主要'
+            description: '主要的背景色，文本颜色和部分按钮颜色'
+          tertiary:
+            name: '次要'
+            description: '超链接，一些按钮，消息提示和着重的颜色'
+          quaternary:
+            name: '第4主要'
+            description: '导航栏链接'
+          header_background:
+            name: '头部背景色'
+            description: '网站头部背景色'
+          header_primary:
+            name: '头部主要'
+            description: '网站顶部文本，icons颜色'
+          highlight:
+            name: '高亮'
+            description: '帖子和博客高亮的背景色'
+          danger:
+            name: '危险'
+            description: '高亮的颜色用于一些比较危险的操作，比如删除帖子或博客'
+          success:
+            name: '成功'
+            description: '用于成功的请求'
+          love:
+            name: '喜欢'
+            description: '用于喜欢的颜色 '
       email:
         title: "电子邮件"
         settings: "设置"
