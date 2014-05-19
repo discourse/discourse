@@ -13,8 +13,8 @@ a.loading-onebox {
 .onebox-result {
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
-  background: scale-color($primary, $lightness: 95%);
+  border-left: 5px solid darken(scale-color-diff(), 10%);
+  background: scale-color-diff();
   font-size: 14px;
   > .source {
     margin-bottom: 12px;
@@ -91,8 +91,8 @@ a.loading-onebox {
 aside.onebox {
   margin-top: 15px;
   padding: 12px 25px 12px 12px;
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
-  background: scale-color($primary, $lightness: 95%);
+  border-left: 5px solid darken(scale-color-diff(), 10%);
+  background: scale-color-diff();
   font-size: 14px;
 
   header {

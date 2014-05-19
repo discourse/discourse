@@ -5,7 +5,7 @@
   left: 20px;
   z-index: 990;
   box-shadow: 0 1px 5px rgba($primary, .4);
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color-diff();
   padding: 6px 10px 10px 10px;
   width: 300px;
   display: none;

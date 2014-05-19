@@ -59,7 +59,7 @@
   border-collapse: separate;
   border-spacing: 0;
   margin: 0 0 10px;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color-diff();
   .fa-thumb-tack {color: $primary;}
   .fa-thumb-tack.unpinned {color: $primary;}
 
@@ -68,7 +68,7 @@
 
   > tbody > tr {
     &:nth-child(even) {
-      background-color: scale-color($primary, $lightness: 96%);
+      background-color: rgba($primary, .04);
     }
     &.archived a {
       opacity: 0.6;
@@ -115,7 +115,7 @@
     padding: 0;
     background: transparent;
     &:hover {
-      color: scale-color($primary, $lightness: 90%);
+      color: scale-color-diff();
     }
   }
 
@@ -213,7 +213,7 @@
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: scale-color($primary, $lightness: 90%);
+      background-color: scale-color-diff();
     }
     @include unselectable;
   }
@@ -374,10 +374,10 @@
     width: 165px;
   }
   > footer {
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid scale-color-diff();
     border-top: 0;
     padding: 7px 10px;
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
     figure {
       float: left;
       margin: 3px 7px 0 0;
@@ -438,7 +438,7 @@
 .list-controls {
 
   .home {
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
     color: $primary;
   }
 
@@ -516,7 +516,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
   background-color: $secondary;
   max-height: 350px;
   padding: 8px 7px 0 7px;

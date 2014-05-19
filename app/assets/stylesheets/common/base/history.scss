@@ -27,7 +27,7 @@
     }
   }
   #revision-details {
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
     padding: 5px;
     margin-top: 10px;
   }
