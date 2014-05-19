@@ -15,5 +15,21 @@ Discourse.AdminBadgeController = Discourse.ObjectController.extend({
     @property selected
     @type {Boolean}
   **/
-  selected: Discourse.computed.propertyEqual('model.name', 'parentController.selectedItem.name')
+  selected: Discourse.computed.propertyEqual('model.name', 'parentController.selectedItem.name'),
+
+  /**
+    Show the displayName only if it is different from the name.
+
+    @property showDisplayName
+    @type {Boolean}
+  **/
+  showDisplayName: Discourse.computed.propertyNotEqual('selectedItem.name', 'selectedItem.displayName'),
+
+  /**
+    Don't allow editing if this is a system badge.
+
+    @property readOnly
+    @type {Boolean}
+  **/
+  readOnly: Ember.computed.lt('model.id', 100)
 });

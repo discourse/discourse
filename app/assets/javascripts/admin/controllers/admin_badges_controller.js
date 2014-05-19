@@ -8,18 +8,19 @@
 **/
 Discourse.AdminBadgesController = Ember.ArrayController.extend({
   itemController: 'adminBadge',
+  queryParams: ['badgeId'],
 
   /**
-    Show the displayName only if it is different from the name.
+    ID of the currently selected badge.
 
-    @property showDisplayName
-    @type {Boolean}
+    @property badgeId
+    @type {Integer}
   **/
-  showDisplayName: Discourse.computed.propertyNotEqual('selectedItem.name', 'selectedItem.displayName'),
+  badgeId: Em.computed.alias('selectedItem.id'),
 
   /**
-    We don't allow setting a description if a translation for the given badge name
-    exists.
+    We don't allow setting a description if a translation for the given badge
+    name exists.
 
     @property canEditDescription
     @type {Boolean}
@@ -76,6 +77,13 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
       @method destroy
     **/
     destroy: function() {
+      // Delete immediately if the selected badge is new.
+      if (!this.get('selectedItem.id')) {
+        this.get('model').removeObject(this.get('selectedItem'));
+        this.set('selectedItem', null);
+        return;
+      }
+
       var self = this;
       return bootbox.confirm(I18n.t("admin.badges.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
         if (result) {

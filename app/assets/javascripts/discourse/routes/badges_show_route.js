@@ -27,6 +27,7 @@ Discourse.BadgesShowRoute = Ember.Route.extend({
       controller.set('userBadgesLoaded', true);
     });
     controller.set('model', model);
+    Discourse.set('title', model.get('displayName'));
   },
 
   actions: {
