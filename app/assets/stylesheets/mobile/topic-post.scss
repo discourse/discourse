@@ -1,5 +1,5 @@
 .gap {
-  background-color: scale-color($primary, $lightness: 95%);
+  background-color: scale-color-diff();
   padding: 5px 15px;
   color: $primary;
   text-align: center;
@@ -7,14 +7,14 @@
 }
 
 .topic-post {
-  border-top: 1px solid scale-color($primary, $lightness: 95%);
+  border-top: 1px solid sscale-color-diff();
   padding: 6px 0 3px 0;
 }
 
 nav.post-controls {
   background-color: $secondary;
   padding: 0;
-  border-right: 1px solid scale-color($primary, $lightness: 95%);
+  border-right: 1px solid scale-color-diff();
   clear: both;
   button {color: scale-color($primary, $lightness: 50%);
 }
@@ -164,7 +164,7 @@ a.star {
 
   border-radius: 5px;
   margin: 30px 10px 20px 10px;
-  border: 1px solid scale-color($primary, $lightness: 95%);
+  border: 1px solid scale-color-diff();
 
   h3 {
     margin-bottom: 4px;
@@ -244,7 +244,7 @@ a.star {
   }
 
   .information {
-    border-top: 1px solid scale-color($primary, $lightness: 95%);
+    border-top: 1px solid scale-color-diff();
   }
 
   .domain {
@@ -260,15 +260,15 @@ a.star {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid scale-color($primary, $lightness: 95%);;
-      border-left: 1px solid scale-color($primary, $lightness: 95%);;
+      border-bottom: 1px solid scale-color-diff();
+      border-left: 1px solid scale-color-diff();
       padding: 0 23px;
       color: $primary;
       background: scale-color-diff();
       &:hover {
         background: scale-color($primary, $lightness: 75%);
         color: $primary;
-        border-bottom: 1px solid scale-color($primary, $lightness: 95%);
+        border-bottom: 1px solid scale-color-diff();
 
       }
       .fa {
@@ -281,7 +281,7 @@ a.star {
 }
 
 #topic-footer-buttons {
-  border-top: 1px solid scale-color($primary, $lightness: 95%);;
+  border-top: 1px solid scale-color-diff();
   padding: 20px 10px 0 10px;
 }
 
@@ -527,7 +527,7 @@ blockquote {
 
 .quote .title {
   border-left: 5px solid scale-color($primary, $lightness: 75%);
-  background-color: scale-color($primary, $lightness: 95%);
+  background-color: scale-color-diff();
   padding: 10px 10px 10px 12px;
   clear: both;
   .avatar { margin-right: 7px; }
