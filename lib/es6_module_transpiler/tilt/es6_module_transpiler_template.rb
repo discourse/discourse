@@ -92,8 +92,9 @@ module Tilt
     def module_name(root_path, logical_path)
       path = nil
 
+      root_base = File.basename(Rails.root)
       # If the resource is a plugin, use the plugin name as a prefix
-      if root_path =~ /(.*\/discourse\/plugins\/[^\/]+)\//
+      if root_path =~ /(.*\/#{root_base}\/plugins\/[^\/]+)\//
         plugin_path = "#{Regexp.last_match[1]}/plugin.rb"
 
         plugin = Discourse.plugins.find {|p| p.path == plugin_path }
