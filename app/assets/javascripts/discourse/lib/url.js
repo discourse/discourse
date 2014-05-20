@@ -129,6 +129,7 @@ Discourse.URL = Em.Object.createWithMixins({
   **/
   isInternal: function(url) {
     if (url && url.length) {
+      if (url.indexOf('#') === 0) { return true; }
       if (url.indexOf('/') === 0) { return true; }
       if (url.indexOf(this.origin()) === 0) { return true; }
       if (url.replace(/^http/, 'https').indexOf(this.origin()) === 0) { return true; }
