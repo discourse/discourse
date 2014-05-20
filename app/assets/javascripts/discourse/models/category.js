@@ -157,6 +157,21 @@ Discourse.Category = Discourse.Model.extend({
     return this.countStats('topics');
   }.property('posts_year', 'posts_month', 'posts_week', 'posts_day'),
 
+  notification_level: function() {
+    return this.get('notification_level');
+  }.property('notification_level'),
+
+  setNotification: function(notification_level) {
+    var url = "/category/" + this.get('id')+"/notifications";
+    this.set('notification_level', notification_level);
+    return Discourse.ajax(url, {
+      data: {
+        notification_level: notification_level
+      },
+      type: 'POST'
+    });
+  },
+
   postCountStats: function() {
     return this.countStats('posts');
   }.property('posts_year', 'posts_month', 'posts_week', 'posts_day'),
@@ -177,6 +192,13 @@ Discourse.Category = Discourse.Model.extend({
 });
 
 Discourse.Category.reopenClass({
+
+  NotificationLevel: {
+    WATCHING: 3,
+    TRACKING: 2,
+    REGULAR: 1,
+    MUTED: 0
+  },
 
   slugFor: function(category) {
     if (!category) return "";

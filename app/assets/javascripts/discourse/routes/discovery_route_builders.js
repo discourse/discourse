@@ -107,6 +107,7 @@ function buildCategoryRoute(filter, params) {
       var opts = { category: model, filterMode: filterMode };
       opts.noSubcategories = params && params.no_subcategories;
       opts.canEditCategory = Discourse.User.currentProp('staff');
+      opts.canChangeCategoryNotificationLevel = Discourse.User.current();
       this.controllerFor('navigationCategory').setProperties(opts);
 
       return Discourse.TopicList.list(listFilter, params).then(function(list) {
@@ -150,6 +151,12 @@ function buildCategoryRoute(filter, params) {
     deactivate: function() {
       this._super();
       this.controllerFor('search').set('searchContext', null);
+    },
+
+    actions: {
+      setNotification: function(notification_level){
+        this.currentModel.setNotification(notification_level);
+      }
     }
   });
 }
