@@ -155,12 +155,14 @@ describe SiteCustomization do
 
     it 'should compile scss' do
       c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '$black: #000; #a { color: $black; }', header: '')
-      ["#a{color:#000;}", "#a{color:black;}"].should include(c.stylesheet_baked.gsub(' ', '').gsub("\n", ''))
+      s = c.stylesheet_baked.gsub(' ', '').gsub("\n", '')
+      (s.include?("#a{color:#000;}") || s.include?("#a{color:black;}")).should be_true
     end
 
     it 'should compile mobile scss' do
       c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '', header: '', mobile_stylesheet: '$black: #000; #a { color: $black; }', mobile_header: '')
-      ["#a{color:#000;}", "#a{color:black;}"].should include(c.mobile_stylesheet_baked.gsub(' ', '').gsub("\n", ''))
+      s = c.mobile_stylesheet_baked.gsub(' ', '').gsub("\n", '')
+      (s.include?("#a{color:#000;}") || s.include?("#a{color:black;}")).should be_true
     end
 
     it 'should allow including discourse styles' do
