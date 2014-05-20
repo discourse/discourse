@@ -183,12 +183,6 @@
   }
   .heading {
     border-top: 1px solid scale-color-diff();
-
-    border-bottom: 1px solid scale-color-diff();
-    color: darken($primary, 40%);
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 15px;
   }
   .selected {
     background-color: scale-color($tertiary, $lightness: 90%);
