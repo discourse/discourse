@@ -40,13 +40,14 @@
 
   if (countFor.length > 0) {
     // Send JSONP request for the counts
-    var d = document.createElement('script');
-    d.src = discourseUrl + "embed/count?callback=discourseUpdateCounts";
+    var d = document.createElement('script'),
+        srcUrl = discourseUrl + "embed/count?callback=discourseUpdateCounts";
 
     for (var j=0; j<countFor.length; j++) {
-      d.src += "&" + "embed_url[]=" + encodeURIComponent(countFor[j]);
+      srcUrl += "&" + "embed_url[]=" + encodeURIComponent(countFor[j]);
     }
+    d.src = srcUrl;
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(d);
   }
 
-})(); 
+})();
