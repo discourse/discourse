@@ -70,7 +70,13 @@ module Tilt
       # resolve based API.
       if ENV['DISCOURSE_NO_CONSTANTS'].nil? && scope.logical_path =~ /discourse\/(controllers|components|views)\/(.*)/
         type = Regexp.last_match[1]
-        class_name = Regexp.last_match[2].gsub(/[\-\/]/, '_').classify
+        file_name = Regexp.last_match[2].gsub(/[\-\/]/, '_')
+        class_name = file_name.classify
+
+        # Rails removes pluralization when calling classify
+        if file_name.end_with?('s') && (!class_name.end_with?('s'))
+          class_name << "s"
+        end
         @output << "\n\nDiscourse.#{class_name}#{type.classify} = require('#{scope.logical_path}').default"
       end
 
