@@ -135,6 +135,10 @@ describe PrettyText do
       PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",2).should == "<a href='http://cnn.com'>cn&hellip;</a>"
     end
 
+    it "doesn't extract empty quotes as links" do
+      PrettyText.extract_links("<aside class='quote'>not a linked quote</aside>\n").to_a.should be_empty
+    end
+
     it "should be able to extract links" do
       PrettyText.extract_links("<a href='http://cnn.com'>http://bla.com</a>").to_a.should == ["http://cnn.com"]
     end

@@ -210,7 +210,7 @@ module PrettyText
     # extract all links from the post
     doc.css("a").each { |l| links << l["href"] unless l["href"].blank? }
     # extract links to quotes
-    doc.css("aside.quote").each do |a|
+    doc.css("aside.quote[data-topic]").each do |a|
       topic_id = a['data-topic']
 
       url = "/t/topic/#{topic_id}"
