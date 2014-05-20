@@ -120,11 +120,9 @@
   }
   .badge-notification {
     position: relative;
+    padding: 4px 4px 4px 3px;
     top: -1px;
-    color: $tertiary !important;
-    /* this important is a terrible hack but the badge colors are
-    being overridden in a way I can't figure out on mobile, appears
-    to be a CSS precedence problem */
+      i {color: $secondary;}
   }
 
   .topic-item-stats {
@@ -295,7 +293,7 @@
     repeat: no-repeat;
     position: 10px 50%;
     size: 25px;
-  };
+  }
   @include border-radius-all(12px);
 }
 
@@ -359,7 +357,7 @@ span.posted {
   height: 15px;
   background: {
     image: image-url("posted.png");
-  };
+  }
 }
 
 
@@ -452,7 +450,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  border: 1px solid scale-color-diff();;
+  border: 1px solid scale-color-diff();
   background-color: $secondary;
   height: 200px;
   padding: 8px 5px 0 7px;

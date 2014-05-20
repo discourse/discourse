@@ -1,3 +1,18 @@
+.container {
+  @extend .clearfix;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.full-width {
+  margin-left: 12px;
+}
+
+blockquote {
+  background-color: scale-color-diff();
+  border-left: 5px solid darken(scale-color-diff(), 10%);
+}
+
     a.no-href {
   cursor: pointer;
 }
