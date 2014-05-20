@@ -6,7 +6,7 @@
 <% @topic_view.posts.each do |post| %>
   <% if post.user %>
     <div class='creator'>
-      #<%=post.post_number%> <%= t 'by'%>: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
+      <b><%= post.user.username_lower %></b> <%= "(#{post.user.name})" if SiteSetting.display_name_on_posts %> at <%= post.created_at.to_formatted_s(:long_ordinal) %> — #<%= post.post_number %>
     </div>
     <div class='post'>
       <% if post.hidden %>
@@ -25,7 +25,7 @@
     <%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev' %>
   <% end %>
   <% if @topic_view.next_page %>
-    <b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next'  %></b>
+    <b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next' %></b>
   <% end %>
 </p>
 
