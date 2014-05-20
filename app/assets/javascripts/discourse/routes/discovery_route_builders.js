@@ -12,7 +12,7 @@ function buildTopicRoute(filter) {
     },
 
     beforeModel: function() {
-      this.controllerFor('navigationDefault').set('filterMode', filter);
+      this.controllerFor('navigation/default').set('filterMode', filter);
     },
 
     model: function(data, transaction) {
@@ -73,7 +73,7 @@ function buildTopicRoute(filter) {
         }
       }
 
-      this.controllerFor('navigationDefault').set('canCreateTopic', model.get('can_create_topic'));
+      this.controllerFor('navigation/default').set('canCreateTopic', model.get('can_create_topic'));
     },
 
     renderTemplate: function() {
@@ -107,7 +107,7 @@ function buildCategoryRoute(filter, params) {
       var opts = { category: model, filterMode: filterMode };
       opts.noSubcategories = params && params.no_subcategories;
       opts.canEditCategory = Discourse.User.currentProp('staff');
-      this.controllerFor('navigationCategory').setProperties(opts);
+      this.controllerFor('navigation/category').setProperties(opts);
 
       return Discourse.TopicList.list(listFilter, params).then(function(list) {
         var tracking = Discourse.TopicTrackingState.current();
@@ -130,7 +130,7 @@ function buildCategoryRoute(filter, params) {
 
       Discourse.set('title', I18n.t('filters.with_category', { filter: filterText, category: model.get('name').capitalize() }));
 
-      this.controllerFor('navigationCategory').set('canCreateTopic', topics.get('can_create_topic'));
+      this.controllerFor('navigation/category').set('canCreateTopic', topics.get('can_create_topic'));
       this.controllerFor('discovery/topics').setProperties({
         model: topics,
         category: model,

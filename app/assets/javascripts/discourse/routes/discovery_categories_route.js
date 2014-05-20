@@ -13,7 +13,7 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend({
   },
 
   beforeModel: function() {
-    this.controllerFor('navigationCategories').set('filterMode', 'categories');
+    this.controllerFor('navigation/categories').set('filterMode', 'categories');
   },
 
   model: function() {
@@ -34,7 +34,7 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     Discourse.set('title', I18n.t('filters.categories.title'));
-    this.controllerFor('navigationCategories').set('canCreateCategory', model.get('can_create_category'));
+    this.controllerFor('navigation/categories').set('canCreateCategory', model.get('can_create_category'));
   },
 
   actions: {

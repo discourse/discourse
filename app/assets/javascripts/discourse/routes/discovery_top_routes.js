@@ -8,7 +8,7 @@
 **/
 Discourse.DiscoveryTopRoute = Discourse.Route.extend(Discourse.OpenComposer, {
   beforeModel: function() {
-    this.controllerFor('navigationDefault').set('filterMode', 'top');
+    this.controllerFor('navigation/default').set('filterMode', 'top');
   },
 
   model: function() {
@@ -19,7 +19,7 @@ Discourse.DiscoveryTopRoute = Discourse.Route.extend(Discourse.OpenComposer, {
     var filterText = I18n.t('filters.top.title');
     Discourse.set('title', I18n.t('filters.with_topics', {filter: filterText}));
     this.controllerFor('discovery/top').setProperties({ model: model, category: null });
-    this.controllerFor('navigationDefault').set('canCreateTopic', model.get('can_create_topic'));
+    this.controllerFor('navigation/default').set('canCreateTopic', model.get('can_create_topic'));
 
     // If there's a draft, open the create topic composer
     if (model.draft) {
@@ -70,7 +70,7 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend(Discourse.OpenCompo
     var opts = { category: model, filterMode: filterMode };
     opts.noSubcategories = noSubcategories;
     opts.canEditCategory = Discourse.User.currentProp('staff');
-    this.controllerFor('navigationCategory').setProperties(opts);
+    this.controllerFor('navigation/category').setProperties(opts);
 
     return Discourse.TopList.find(filterMode).then(function(list) {
       // If all the categories are the same, we can hide them
@@ -89,7 +89,7 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend(Discourse.OpenCompo
     var topList = this.get('topList');
     var filterText = I18n.t('filters.top.title');
     Discourse.set('title', I18n.t('filters.with_category', {filter: filterText, category: model.get('name').capitalize()}));
-    this.controllerFor('navigationCategory').set('canCreateTopic', topList.get('can_create_topic'));
+    this.controllerFor('navigation/category').set('canCreateTopic', topList.get('can_create_topic'));
     this.controllerFor('discovery/top').setProperties({
       model: topList,
       category: model,

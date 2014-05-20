@@ -69,7 +69,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     },
 
     splitTopic: function() {
-      Discourse.Route.showModal(this, 'splitTopic', this.modelFor('topic'));
+      Discourse.Route.showModal(this, 'split-topic', this.modelFor('topic'));
     },
 
     changeOwner: function() {
