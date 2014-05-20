@@ -1,3 +1,5 @@
+import PollController from "discourse/plugins/poll/controllers/poll";
+
 var Poll = Discourse.Model.extend({
   post: null,
   options: [],
@@ -41,8 +43,6 @@ var Poll = Discourse.Model.extend({
   }
 });
 
-var PollController = require("discourse/plugins/poll/controllers/poll").default;
-
 var PollView = Ember.View.extend({
   templateName: "poll",
   classNames: ['poll-ui'],
@@ -73,29 +73,36 @@ function initializePollView(self) {
   return pollView;
 }
 
-Discourse.PostView.reopen({
-  createPollUI: function($post) {
-    var post = this.get('post');
 
-    if (!post.get('poll_details')) {
-      return;
-    }
+export default {
+  name: 'poll',
 
-    var view = initializePollView(this);
+  initialize: function() {
+    Discourse.PostView.reopen({
+      createPollUI: function($post) {
+        var post = this.get('post');
 
-    var pollContainer = $post.find(".poll-ui:first");
-    if (pollContainer.length === 0) {
-      pollContainer = $post.find("ul:first");
-    }
+        if (!post.get('poll_details')) {
+          return;
+        }
 
-    view.replaceElement(pollContainer);
-    this.set('pollView', view);
+        var view = initializePollView(this);
 
-  }.on('postViewInserted'),
+        var pollContainer = $post.find(".poll-ui:first");
+        if (pollContainer.length === 0) {
+          pollContainer = $post.find("ul:first");
+        }
 
-  clearPollView: function() {
-    if (this.get('pollView')) {
-      this.get('pollView').destroy();
-    }
-  }.on('willClearRender')
-});
+        view.replaceElement(pollContainer);
+        this.set('pollView', view);
+
+      }.on('postViewInserted'),
+
+      clearPollView: function() {
+        if (this.get('pollView')) {
+          this.get('pollView').destroy();
+        }
+      }.on('willClearRender')
+    });
+  }
+}
