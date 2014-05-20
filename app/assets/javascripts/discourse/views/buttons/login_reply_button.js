@@ -11,5 +11,8 @@ Discourse.LoginReplyButton = Discourse.ButtonView.extend({
   classNames: ['btn', 'btn-primary', 'create'],
   click: function() {
     this.get('controller').send('showLogin');
+  },
+  renderIcon: function(buffer) {
+    buffer.push("<i class='fa fa-user'></i>");
   }
 });
