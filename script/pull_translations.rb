@@ -39,7 +39,7 @@ YML_FILE_COMMENTS = <<END
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 END
 
 ALL_LOCALES = Dir.glob( File.expand_path("../../config/locales/client.*.yml", __FILE__) ).map {|x| x.split('.')[-2]}.sort
