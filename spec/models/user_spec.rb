@@ -144,7 +144,7 @@ describe User do
     describe 'allow custom minimum username length from site settings' do
       before do
         @custom_min = User::GLOBAL_USERNAME_LENGTH_RANGE.begin - 1
-        SiteSetting.stubs("min_username_length").returns(@custom_min)
+        SiteSetting.min_username_length = @custom_min
       end
 
       it 'should allow a shorter username than default' do
@@ -158,15 +158,13 @@ describe User do
       end
 
       it 'should not allow a longer username than limit' do
-        result = user.change_username('a' * (User::GLOBAL_USERNAME_LENGTH_RANGE.end + 1))
+        result = user.change_username('a' * (User.username_length.end + 1))
         result.should be_false
       end
 
       it 'should use default length for validation if enforce_global_nicknames is true' do
-        SiteSetting.stubs('enforce_global_nicknames').returns(true)
-
-        User::username_length.begin.should == User::GLOBAL_USERNAME_LENGTH_RANGE.begin
-        User::username_length.end.should == User::GLOBAL_USERNAME_LENGTH_RANGE.end
+        SiteSetting.enforce_global_nicknames = true
+        User::username_length.should == User::GLOBAL_USERNAME_LENGTH_RANGE
       end
     end
   end
