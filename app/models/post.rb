@@ -550,6 +550,7 @@ end
 #  word_count              :integer
 #  version                 :integer          default(1), not null
 #  cook_method             :integer          default(1), not null
+#  wiki                    :boolean          default(FALSE), not null
 #
 # Indexes
 #

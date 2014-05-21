@@ -11,7 +11,6 @@ end
 #  id              :integer          not null, primary key
 #  name            :string(255)      not null
 #  hex             :string(255)      not null
-#  opacity         :integer          default(100), not null
 #  color_scheme_id :integer          not null
 #  created_at      :datetime
 #  updated_at      :datetime
