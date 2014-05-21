@@ -119,7 +119,7 @@ class AdminDashboardData
   end
 
   def google_oauth2_config_check
-    I18n.t('dashboard.google_oauth2_config_warning') if SiteSetting.enable_google_logins && (SiteSetting.google_oauth2_client_id.blank? || SiteSetting.google_oauth2_client_secret.blank?)
+    I18n.t('dashboard.google_oauth2_config_warning') if SiteSetting.enable_google_oauth2_logins && (SiteSetting.google_oauth2_client_id.blank? || SiteSetting.google_oauth2_client_secret.blank?)
   end
 
   def facebook_config_check
