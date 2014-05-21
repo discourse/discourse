@@ -90,8 +90,12 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
       postAction.act(params).then(function() {
         self.send('closeModal');
       }, function(errors) {
-        self.send('showModal');
-        self.displayErrors(errors);
+        self.send('closeModal');
+        if (errors && errors.responseText) {
+          bootbox.alert($.parseJSON(errors.responseText).errors);
+        } else {
+          bootbox.alert(I18n.t('generic_error'));
+        }
       });
     },
 
