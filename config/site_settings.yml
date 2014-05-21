@@ -115,7 +115,12 @@ users:
   block_common_passwords: true
   enable_google_logins:
     client: true
+    default: false
+  enable_google_oauth2_logins:
+    client: true
     default: true
+  google_oauth2_client_id: ''
+  google_oauth2_client_secret: ''
   enable_yahoo_logins:
     client: true
     default: true

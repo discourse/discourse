@@ -518,6 +518,9 @@ en:
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
+    enable_google_logins_warning: "You are using a deprecated version of Google's OpenID authentication. Google will be ending support for OpenID by April 20, 2015. Start using Google Oauth2 as soon as possible."
+    both_googles_warning: "You have both enable_google_logins and enable_google_oauth2_logins checked in the site settings. Disable enable_google_logins."
+    google_oauth2_config_warning: 'The server is configured to allow signup and log in with Google Oauth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
@@ -720,8 +723,12 @@ en:
     sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
 
     enable_local_logins: "Enable traditional, local username and password authentication"
-    enable_google_logins: "Enable Google authentication"
+    enable_google_logins: "(deprecated) Enable Google authentication. This is the OpenID method of authentication which Google has deprecated. New installs will NOT work with this. Use Google Oauth2 instead. Existing installs must move to Google Oauth2 by April 20, 2015."
     enable_yahoo_logins: "Enable Yahoo authentication"
+
+    enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
+    google_oauth2_client_id: "Client ID of your Google application."
+    google_oauth2_client_secret: "Client secret of your Google application."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"

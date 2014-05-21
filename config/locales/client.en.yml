@@ -509,6 +509,9 @@ en:
       google:
         title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
+      google_oauth2:
+        title: "with Google"
+        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
         title: "with Twitter"
         message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"

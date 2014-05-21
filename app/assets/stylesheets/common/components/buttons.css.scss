@@ -125,7 +125,7 @@
     font-family: zocial;
     line-height: 0.9;
   }
-  &.google {
+  &.google, &.google_oauth2 {
     background: $google;
     &:before {
       content: "G";
