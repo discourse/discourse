@@ -19,7 +19,6 @@ test("newBadge", function() {
   var controller = testController(Discourse.AdminBadgesController, []);
   controller.send('newBadge');
   equal(controller.get('model.length'), 1, "adds a new badge to the list of badges");
-  equal(controller.get('model')[0], controller.get('selectedItem'), "the new badge is selected");
 });
 
 test("selectBadge", function() {

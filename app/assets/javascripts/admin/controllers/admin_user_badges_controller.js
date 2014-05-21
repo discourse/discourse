@@ -27,7 +27,7 @@ Discourse.AdminUserBadgesController = Ember.ArrayController.extend({
 
     var badges = [];
     this.get('badges').forEach(function(badge) {
-      if (!granted[badge.get('id')]) {
+      if (badge.get('multiple_grant') || !granted[badge.get('id')]) {
         badges.push(badge);
       }
     });

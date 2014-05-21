@@ -9,14 +9,27 @@
 Discourse.AdminBadgesController = Ember.ArrayController.extend({
   itemController: 'adminBadge',
   queryParams: ['badgeId'],
+  badgeId: Em.computed.alias('selectedId'),
 
   /**
     ID of the currently selected badge.
 
-    @property badgeId
+    @property selectedId
     @type {Integer}
   **/
-  badgeId: Em.computed.alias('selectedItem.id'),
+  selectedId: null,
+
+  /**
+    Badge that is currently selected.
+    @property selectedItem
+    @type {Discourse.Badge}
+  **/
+  selectedItem: function() {
+    var selectedId = parseInt(this.get('selectedId'));
+    return this.get('model').filter(function(badge) {
+      return badge.get('id') === selectedId;
+    })[0];
+  }.property('selectedId'),
 
   /**
     We don't allow setting a description if a translation for the given badge
@@ -57,7 +70,7 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
       @param {Discourse.Badge} badge The badge to be selected
     **/
     selectBadge: function(badge) {
-      this.set('selectedItem', badge);
+      this.set('selectedId', badge.get('id'));
     },
 
     /**
@@ -80,7 +93,7 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
       // Delete immediately if the selected badge is new.
       if (!this.get('selectedItem.id')) {
         this.get('model').removeObject(this.get('selectedItem'));
-        this.set('selectedItem', null);
+        this.set('selectedId', null);
         return;
       }
 
@@ -90,7 +103,7 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
           var selected = self.get('selectedItem');
           selected.destroy().then(function() {
             // Success.
-            self.set('selectedItem', null);
+            self.set('selectedId', null);
             self.get('model').removeObject(selected);
           }, function() {
             // Failure.

@@ -26,6 +26,14 @@ describe UserBadgesController do
       parsed = JSON.parse(response.body)
       parsed["user_badges"].length.should == 1
     end
+
+    it 'includes counts when passed the aggregate argument' do
+      xhr :get, :index, username: user.username, aggregated: true
+
+      response.status.should == 200
+      parsed = JSON.parse(response.body)
+      parsed["user_badges"].first.has_key?('count').should be_true
+    end
   end
 
   context 'create' do

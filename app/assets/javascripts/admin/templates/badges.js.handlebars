@@ -47,7 +47,7 @@
         {{#if controller.canEditDescription}}
           {{textarea name="description" value=description}}
         {{else}}
-          {{textarea name="description" value=translatedDescription disabled=true}}
+          {{textarea name="description" value=displayDescription disabled=true}}
         {{/if}}
       </div>
 
@@ -55,6 +55,13 @@
         <span>
           {{input type="checkbox" checked=allow_title disabled=readOnly}}
           {{i18n admin.badges.allow_title}}
+        </span>
+      </div>
+
+      <div>
+        <span>
+          {{input type="checkbox" checked=multiple_grant disabled=readOnly}}
+          {{i18n admin.badges.multiple_grant}}
         </span>
       </div>
 

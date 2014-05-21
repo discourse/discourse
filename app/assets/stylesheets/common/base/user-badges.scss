@@ -44,6 +44,12 @@
       font-size: 50px;
       margin-bottom: 5px;
     }
+
+    .count {
+      display: block;
+      font-size: 0.8em;
+      color: scale-color($primary, $lightness: 50%);
+    }
   }
 }
 
