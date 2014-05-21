@@ -113,9 +113,13 @@ users:
     client: true
     default: 8
   block_common_passwords: true
+
+  # The default value of enable_google_logins changed from true to false.
+  # See db/migrate/20140521220115_google_openid_default_has_changed.rb
   enable_google_logins:
     client: true
     default: false
+
   enable_google_oauth2_logins:
     client: true
     default: true
