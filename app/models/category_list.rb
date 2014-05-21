@@ -57,12 +57,14 @@ class CategoryList
       @categories = Category
                         .includes(:featured_users, subcategories: [:topic_only_relative_url])
                         .secured(@guardian)
+
       if SiteSetting.fixed_category_positions
         @categories = @categories.order('position ASC').order('id ASC')
       else
         @categories = @categories.order('COALESCE(categories.posts_week, 0) DESC')
                                  .order('COALESCE(categories.posts_month, 0) DESC')
                                  .order('COALESCE(categories.posts_year, 0) DESC')
+                                 .order('id ASC')
       end
 
       if latest_post_only?
