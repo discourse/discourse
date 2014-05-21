@@ -114,7 +114,13 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
       if ($aside.data('topic')) {
         topic_id = $aside.data('topic');
       }
-      Discourse.ajax("/posts/by_number/" + topic_id + "/" + $aside.data('post')).then(function (result) {
+
+      var post_id = $aside.data('post');
+
+      topic_id = parseInt(topic_id,10);
+      post_id = parseInt(post_id,10);
+
+      Discourse.ajax("/posts/by_number/" + topic_id + "/" + post_id).then(function (result) {
         var parsed = $(result.cooked);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         $blockQuote.showHtml(parsed);
