@@ -67,7 +67,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   _jumpTo: function(direction) {
-    if ($('#topic-title').length) {
+    if ($('.container.posts').length) {
       Discourse.__container__.lookup('controller:topic').send(direction);
     }
   },
