@@ -15,6 +15,7 @@ export default {
       pageTracker.on('change', function() {
         window._gaq.push(['_trackPageview']);
       });
+      return;
     }
 
     // Also use Universal Analytics if it is present
