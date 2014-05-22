@@ -20,12 +20,16 @@ class ColorScheme < ActiveRecord::Base
     @mutex.synchronize do
       return @base_colors if @base_colors
       @base_colors = {}
-      File.readlines(BASE_COLORS_FILE).each do |line|
+      read_colors_file.each do |line|
         matches = /\$([\w]+):\s*#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})(?:[;]|\s)/.match(line.strip)
         @base_colors[matches[1]] = matches[2] if matches
       end
     end
     @base_colors
+  end
+
+  def self.read_colors_file
+    File.readlines(BASE_COLORS_FILE)
   end
 
   def self.enabled

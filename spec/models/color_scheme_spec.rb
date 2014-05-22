@@ -4,7 +4,7 @@ describe ColorScheme do
 
   describe '#base_colors' do
     it 'parses the colors.scss file and returns a hash' do
-      File.stubs(:readlines).with(described_class::BASE_COLORS_FILE).returns([
+      described_class.stubs(:read_colors_file).returns([
         '$primary:   #333333 !default;',
         '$secondary: #ffffff !default;  ',
         '$highlight: #ffff4d;',
