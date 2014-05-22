@@ -12,6 +12,7 @@ dump.rdb
 
 .sass-cache/*
 public/plugins/*
+public/tombstone/*
 
 # Ignore bundler config
 /bin
