@@ -138,7 +138,6 @@ GEM
       in_threads (~> 1.2.0)
       progress (~> 3.0.0)
     image_size (1.1.5)
-    image_sorcery (1.1.0)
     in_threads (1.2.0)
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
@@ -422,7 +421,6 @@ DEPENDENCIES
   highline
   hiredis
   image_optim (= 0.9.1)
-  image_sorcery
   librarian (>= 0.0.25)
   listen (= 0.7.3)
   logster
