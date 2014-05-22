@@ -83,7 +83,7 @@ class DiscourseStylesheets
         0
       else
         [ Dir.glob("#{Rails.root}/app/assets/stylesheets/**/*.*css").map {|x| File.mtime(x) }.max,
-          Dir.glob("#{Rails.root}/plugins/**/assets/stylesheets/**/*.*css").map {|x| File.mtime(x) }.max ].max.to_i
+          Dir.glob("#{Rails.root}/plugins/**/assets/stylesheets/**/*.*css").map {|x| File.mtime(x) }.max ].compact.max.to_i
       end
 
       theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : 0
