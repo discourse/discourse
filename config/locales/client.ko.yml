@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 ko:
   js:
@@ -105,7 +105,6 @@ ko:
       other: "in {{count}}일"
     suggested_topics:
       title: "추천 토픽"
-    new_topics_inserted: "{{count}}개 토픽."
     show_new_topics: "표시하려면 클릭하세요."
     preview: "미리보기"
     cancel: "취소"
@@ -160,8 +159,6 @@ ko:
       '13': "받은 편지함"
     categories:
       all: "전체 카테고리"
-      all_subcategories: "all"
-      no_subcategory: "none"
       category: "카테고리"
       posts: "게시글"
       topics: "토픽들"
@@ -235,8 +232,6 @@ ko:
         uploaded_avatar_empty: "커스텀 사진 추가"
         upload_title: "프로필 사진 업로드"
         image_is_not_a_square: "경고: 사진을 정사각형으로 수정하였습니다."
-      change_profile_background:
-        title: "프로필 배경 변경"
       email:
         title: "이메일"
         instructions: "당신의 이메일은 노출되지 않습니다."
@@ -1134,7 +1129,6 @@ ko:
         new_style: "새로운 스타일"
         delete: "삭제"
         delete_confirm: "이 정의를 삭제 하시겠습니까?"
-        about: "사이트 정의는 사이트의 스타일 시트와 헤더를 수정할 수 있습니다. 선택하거나 편집을 시작하려면 하나를 추가할 수 있습니다."
       email:
         title: "이메일"
         settings: "설정"
@@ -1309,8 +1303,6 @@ ko:
         time_read: "읽은 시간"
         delete: "사용사 삭제"
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
-        cant_delete_all_too_many_posts:
-          other: "이 사용자는 %{count}개 보다 많은 글을 작성하였기 때문에 모든 글을 삭제 할 수 없습니다. (delete_all_posts_max 설정참고)"
         delete_confirm: "당신은 영구적으로 사이트에서 이 사용자를 삭제 하시겠습니까? 이 조치는 영구적입니다!"
         delete_and_block: "예, 그리고 이메일과 IP주소를 블락합니다."
         delete_dont_block: "예, 그리고 이메일과 IP주소를 허용합니다."
@@ -1346,7 +1338,6 @@ ko:
       site_settings:
         show_overriden: '수정된 것만 표시'
         title: '사이트 설정'
-        reset: '기본값으로 재설정'
         none: '없음'
         no_results: "No results found."
         clear_filter: "Clear"
@@ -1418,6 +1409,3 @@ ko:
         mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
         mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
         mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
-    badges:
-      example_badge:
-        description: 이것은 일반적인 배지 예시입니다.

@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 ru:
   dates:
@@ -529,7 +529,6 @@ ru:
     login_required: "Требовать аутентификации для чтения сообщений"
     min_password_length: "Минимальная длина пароля"
     enable_local_logins: "Включить традиционную аутентификацию по имени пользователя и пароля"
-    enable_google_logins: "Разрешить идентификацию с Google"
     enable_yahoo_logins: "Разрешить идентификацию с Yahoo"
     enable_twitter_logins: "Разрешить идентификацию с Twitter, требует twitter_consumer_key и twitter_consumer_secret"
     twitter_consumer_key: "Потребительский ключ для идентификации с Twitter, зарегистрированный на http://dev.twitter.com"
@@ -774,12 +773,6 @@ ru:
         Порог блокировки может быть изменен в настройке сайта `block_new_user`.
     spam_post_blocked:
       subject_template: "Сообщения нового пользователя %{username} блокированы за повторяющиеся ссылки"
-      text_body_template: |
-        Это автоматическое сообщение для информирования вас о том, что новый пользователь [%{username}](%{base_url}%{user_url}) пытался создать множество сообщений с ссылками на %{domains}, однако они были заблокированы для предотвращения спама. Пользователь по прежнему может создавать новые сообщения, которые не ссылаются на %{domains}.
-
-        Пожалуйста [проверьте действия пользователя](%{base_url}%{user_url}).
-
-        Пороговое значение может быть изменено в настройке сайта `newuser_spam_host_threshold`.
     unblocked:
       subject_template: "Учетная запись разблокирована"
       text_body_template: |

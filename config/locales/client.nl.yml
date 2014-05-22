@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 nl:
   js:
@@ -132,7 +132,6 @@ nl:
       not_bookmarked: "je hebt dit bericht gelezen; klik om het aan je favorieten toe te voegen"
       last_read: "dit is het laatste bericht dat je gelezen hebt; klik om het aan je favorieten toe te voegen"
       remove: "Verwijder favoriet"
-    new_topics_inserted: "{{count}} nieuwe topics."
     show_new_topics: "Klik om te bekijken."
     preview: "voorbeeld"
     cancel: "annuleer"
@@ -190,8 +189,6 @@ nl:
       '13': "Inbox"
     categories:
       all: "alle categorieën"
-      all_subcategories: "alle subcategorieën"
-      no_subcategory: "geen subcategorie"
       category: "Categorie"
       posts: "Nieuwe berichten"
       topics: "Nieuwe topics"
@@ -231,7 +228,6 @@ nl:
       deleted: "(verwijderd)"
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_reason: "Reden: "
-      mailing_list_mode: "Ontvang een mail als er een bericht op het forum geplaatst is (tenzij je de betreffende categorie op stil hebt gezet)"
       watched_categories: "In de gaten gehouden"
       watched_categories_instructions: "Je krijgt bericht van alle nieuwe berichten en topics in deze categoriën, daarnaast zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
       tracked_categories: "Gevolgd"
@@ -274,8 +270,6 @@ nl:
         uploaded_avatar_empty: "Voeg een eigen afbeelding toe"
         upload_title: "Upload je afbeelding"
         image_is_not_a_square: "Let op: we hebben je afbeelding bijgesneden; het is geen vierkant."
-      change_profile_background:
-        title: "Wijzig achergrond van profiel"
       email:
         title: "E-mail"
         instructions: "Je e-mail adres zal nooit publieklijk zichtbaar zijn."
@@ -1304,7 +1298,6 @@ nl:
         new_style: "Nieuwe stijl"
         delete: "Verwijder"
         delete_confirm: "Verwijder deze aanpassing?"
-        about: "Met aanpassingen aan de site kun je stylesheets en headers wijzigen. Kies of voeg een toe om te beginnen."
         color: "Kleur"
         opacity: "Doorzichtigheid"
         copy: "Kopieër"
@@ -1314,7 +1307,6 @@ nl:
         colors:
           title: "Kleuren"
           long_title: "Kleurenschema's"
-          about: "Met kleurenschema's kun je de kleuren in de site aanpassen zonder CSS te hoeven gebruiken. Kies er één of voeg er één to om te beginnen."
           new_name: "Nieuw kleurenschema"
           copy_name_prefix: "Kopie van"
           delete_confirm: "Dit kleurenschema verwijderen?"
@@ -1509,9 +1501,6 @@ nl:
         cant_delete_all_posts:
           one: "Kan niet alle berichten verwijderen. Sommige berichten zijn ouder dan %{count} dag (de delete_user_max_post_age instelling)."
           other: "Kan niet alle berichten verwijderen. Sommige berichten zijn ouder dan %{count} dagen (de delete_user_max_post_age instelling)."
-        cant_delete_all_too_many_posts:
-          one: "Kan niet alle berichten verwijderen omdat de gebruiker meer dan één bericht heeft (volgens de delete_all_posts_max instelling)."
-          other: "Kan niet alle berichten verwijderen omdat de gebruiker meer dan %{count} berichten heeft (volgens de delete_all_posts_max instelling)."
         delete_confirm: "Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling is permanant!"
         delete_and_block: "<b>Ja</b>, en <b>blokkeer</b> toekomstige registraties met datzelfde e-mail- en IP-adres"
         delete_dont_block: "<b>Ja</b>, verwijder de gebruiker"
@@ -1553,7 +1542,6 @@ nl:
       site_settings:
         show_overriden: 'Bekijk alleen bewerkte instellingen'
         title: 'Instellingen'
-        reset: 'herstel'
         none: 'geen'
         no_results: "Geen resultaten."
         clear_filter: "Wis"
@@ -1651,6 +1639,3 @@ nl:
         one: "1 toegekend"
         other: "%{count} toegekend"
       select_badge_for_title: Kies een badge om als je titel te gebruiken
-      example_badge:
-        name: Voorbeeldbadge
-        description: Dit is een voorbeeld van een badge.

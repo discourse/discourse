@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 ja:
   js:
@@ -56,7 +56,6 @@ ja:
     every_two_weeks: "隔週"
     suggested_topics:
       title: "関連トピック"
-    new_topics_inserted: "新しいトピックが {{count}}個あります"
     show_new_topics: "クリックして表示。"
     preview: "プレビュー"
     cancel: "キャンセル"
@@ -100,8 +99,6 @@ ja:
       '13': "インボックス"
     categories:
       all: "全てのカテゴリ"
-      all_subcategories: "全てのサブカテゴリ"
-      no_subcategory: "サブカテゴリなし"
       category: "カテゴリ"
       posts: "ポスト"
       topics: "トピック"
@@ -877,7 +874,6 @@ ja:
         new_style: "新規スタイル"
         delete: "削除"
         delete_confirm: "このカスタマイズ設定を削除しますか?"
-        about: "サイトカスタマイズ設定により、サイトのヘッダとスタイルシートを変更できます。設定を選択するか、編集を開始して新たな設定を追加してください。"
       email:
         title: "メール"
         settings: "設定"
@@ -1059,7 +1055,6 @@ ja:
       site_settings:
         show_overriden: '上書き部分のみ表示'
         title: '設定'
-        reset: 'デフォルトに戻す'
         none: 'なし'
         no_results: "何も見つかりませんでした。."
         categories:

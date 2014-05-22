@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 fr:
   dates:
@@ -179,6 +179,10 @@ fr:
               common: "fait parti des 10000 mots de passe les plus utilisés. Merci d'en utiliser un plus sûr."
             ip_address:
               signup_not_allowed: "L'inscription n'est pas autorisé à partir de ce compte."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "n'est pas une couleur valide"
   user_profile:
     no_info_me: "<div class='missing-profile'>Le champs A Propos de moi de votre profil est vide, <a href='/users/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} n'a pas encore renseigné le champ À propos de moi de son profil</div>"
@@ -638,7 +642,6 @@ fr:
     sso_overrides_username: "Surcharger les pseudos avec les pseudos du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les pseudos)"
     sso_overrides_name: "Surcharger les noms locaux avec les noms externes du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les noms)"
     enable_local_logins: "Activer l'authentification traditionnelle, avec pseudo local et mot de passe"
-    enable_google_logins: "Active l'authentification Google"
     enable_yahoo_logins: "Active l'authentification Yahoo"
     enable_twitter_logins: "Active l'authentification Twitter, nécessite twitter_consumer_key et  twitter_consumer_secret"
     twitter_consumer_key: "Clé utilisateur pour l'authentification Twitter, enregistrée sur http://dev.twitter.com"
@@ -796,7 +799,6 @@ fr:
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur fréquent"
   redirected_to_top_reasons:
-    new_user: "Bienvenue! En tant que nouveau visiteur, ceci sera votre page d'accueil jusqu'à ce que vous ayez pris le temps de faire le tour du forum. Retrouvez ici une sélection des sujets les plus populaires."
     not_seen_in_a_month: "Bon retour parmi nous! Nous ne vous avons pas vu depuis un moment, voici les meilleurs sujets de discussions depuis votre absence."
   move_posts:
     new_topic_moderator_post:
@@ -1085,12 +1087,6 @@ fr:
         Cette limite peut être changée par le paramètre du site `block_new_user`.
     spam_post_blocked:
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
-      text_body_template: |
-        Ceci est un message automatique pour vous informer que le nouvel utilisateur [% {username}] (%{base_url}%{user_url}) a essayé de créer plusieurs messages avec des liens vers d'%{domains}, mais ces messages ont été bloqués pour éviter le spam. L'utilisateur est toujours en mesure de créer de nouveaux messages qui ne sont pas liés à %{domains}.
-
-        S'il vous plaît [contrôlez l'utilisateur] (%{base_url}%{user_url}).
-
-        Ce seuil peut être modifié via le paramètre de site du `newuser_spam_host_threshold`.
     unblocked:
       subject_template: "Compte débloqué"
       text_body_template: |
@@ -1181,8 +1177,8 @@ fr:
       click_here: "cliquez ici"
       from: "Résumé de %{site_name}"
       read_more: "En lire plus"
-      more_topics: "Il y a eu %{new_topics_since_seen} nouveaux sujets postés depuis votre dernière visite le %{last_seen_at}."
-      more_topics_category: "Il y a eu %{new_topics_since_seen} nouveaux sujets postés dans ces catégories depuis votre dernière visite le %{last_seen_at}."
+      more_topics: "Il y a eu %{new_topics_since_seen} autres nouveaux sujets postés depuis votre dernière visite le %{last_seen_at}."
+      more_topics_category: "Il y a eu %{new_topics_since_seen} autres nouveaux sujets postés dans ces catégories depuis votre dernière visite le %{last_seen_at}."
       posts:
         one: "1 message"
         other: "%{count} messages"

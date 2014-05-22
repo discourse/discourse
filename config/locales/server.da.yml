@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 da:
   dates:
@@ -566,7 +566,6 @@ da:
     login_required: "Kræv godkendelse for at læse indlæg"
     min_password_length: "Mindste adgangskodelængde."
     enable_local_logins: "Aktivér traditionel, lokal godkendelse med brugernavn og adgangskode"
-    enable_google_logins: "Aktivér Google-login"
     enable_yahoo_logins: "Aktivér Yahoo-login"
     enable_twitter_logins: "Aktivér Twitter-login, kræver twitter_consumer_key og twitter_consumer_secret"
     twitter_consumer_key: "Consumer key til Twitter-login, oprettes på http://dev.twitter.com."
@@ -920,12 +919,6 @@ da:
         Denne grænse kan ændres via indstillingen `block_new_user`.
     spam_post_blocked:
       subject_template: "Ny bruger %{username}'s indlæg blokeret pga. gentagne links"
-      text_body_template: |
-        Dette er en automatisk besked for at informere dig om at den nye bruger [%{username}](%{base_url}%{user_url}) forsøgte at oprette flere indlæg med links til %{domains}, men de pågældende indlæg blev blokeret for at undgå spam. Brugeren kan stadig oprette nye indlæg som ikke linker til %{domains}.
-
-        [Vurdér venligst brugeren](%{base_url}%{user_url}).
-
-        Denne grænse kan ændres via indstillingen `newuser_spam_host_threshold`.
     unblocked:
       subject_template: "Blokering af konto fjernet"
       text_body_template: |

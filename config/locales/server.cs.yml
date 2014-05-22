@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 cs:
   dates:
@@ -634,7 +634,6 @@ cs:
     sso_overrides_username: "Přepisuje místní uživatelské jméno tím z dat SSO (VAROVÁNÍ: kvůli rozdílnostem v požadavcích na uživatelské jméno může dojít k nesrovnalostem)"
     sso_overrides_name: "Přepisuje místní jméno tím z dat SSO (VAROVÁNÍ: kvůli normalizování místního jména může dojít k nesrovnalostem)"
     enable_local_logins: "Povolit lokální autentizaci"
-    enable_google_logins: "Povolit přihlašování přes Google"
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
     enable_twitter_logins: "Povolit přihlašování přes Twitter, vyžaduje správně nastavené 'twitter_consumer_key' a 'twitter_consumer_secret'"
     twitter_consumer_key: "'Consumer key' pro přihlašování přes Twitter, registrace na http://dev.twitter.com"
@@ -772,7 +771,6 @@ cs:
   most_recent_poster: "Poslední zasilatel"
   frequent_poster: "Častý zasilatel"
   redirected_to_top_reasons:
-    new_user: "Welcome to our community! Here are our most popular recent topics."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
   move_posts:
     new_topic_moderator_post:
@@ -1016,10 +1014,6 @@ cs:
         Prosím, [projděte si nahlášení](/admin/flags). Pokud by %{username} neměl být zablokován, klikněte na tlačítko 'odblokovat' na [administrátorské stránce uživatele](%{user_url}).
     spam_post_blocked:
       subject_template: "V příspěvku uživatele %{username} byl detekován spam"
-      text_body_template: |
-        Toto je automatizovaná zpráva, která vás má informovat o tom, že uživatel [%{username}](%{user_url}) se pokusil zasílat odkazy, které ale byly označeny jako spam kvůli nastavení 'newuser_spam_host_threshold'.
-
-        Prosím [zkontrolujte tohoto uživatele](%{user_url}).
     unblocked:
       subject_template: "Účet odblokován"
       text_body_template: |

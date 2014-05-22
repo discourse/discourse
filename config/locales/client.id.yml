@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 id:
   js:
@@ -56,7 +56,6 @@ id:
       other: "dalam {{count}} hari"
     suggested_topics:
       title: "Topik Terpilih"
-    new_topics_inserted: "{{count}} topik baru."
     show_new_topics: "Klik untuk menampilkan"
     cancel: "batal"
     save: "Simpan Perubahan"
@@ -84,8 +83,6 @@ id:
       private_messages: "Pesan"
       activity_stream: "Aktifitas"
       bio: "Tentang saya"
-      change_profile_background:
-        title: "Ganti Latar Profil"
       email:
         invalid: "Masukkan email yang valid."
       name:

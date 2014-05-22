@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 zh_CN:
   js:
@@ -110,7 +110,6 @@ zh_CN:
       created: "您给此帖的书签已加上。"
       not_bookmarked: "您已经阅读过此帖；点此给它加上书签"
       last_read: "这是您阅读过的最后一帖；点此给它加上书签"
-    new_topics_inserted: "{{count}} 个新主题。"
     show_new_topics: "点此显示。"
     preview: "预览"
     cancel: "取消"
@@ -167,8 +166,6 @@ zh_CN:
       '13': "收件箱"
     categories:
       all: "所有分类"
-      all_subcategories: "所有子分类"
-      no_subcategory: "无子分类"
       category: "分类"
       posts: "新帖子"
       topics: "新主题"
@@ -206,7 +203,6 @@ zh_CN:
       deleted: "（已删除）"
       suspended_notice: "该用户将被禁止登入，直至 {{date}}。"
       suspended_reason: "原因："
-      mailing_list_mode: "每次论坛中出现回帖就发送邮件（除非您将其屏蔽）"
       watched_categories: "已关注"
       watched_categories_instructions: "您将自动关注这些分类的所有新主题。您将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
       tracked_categories: "已跟踪"
@@ -248,8 +244,6 @@ zh_CN:
         uploaded_avatar_empty: "添加自定义图片"
         upload_title: "上传图片"
         image_is_not_a_square: "注意：我们已经裁剪了您的图片；它不知正方形的。"
-      change_profile_background:
-        title: "更改个人资料背景"
       email:
         title: "电子邮箱"
         instructions: "您的电子邮箱绝不会被公开显示。"
@@ -1233,7 +1227,6 @@ zh_CN:
         new_style: "新样式"
         delete: "删除"
         delete_confirm: "删除本定制内容？"
-        about: "站点定制允许您修改样式与横幅。选择或者添加一个来开始编辑。"
         color: "颜色"
         opacity: "透明度"
         copy: "复制"
@@ -1243,7 +1236,6 @@ zh_CN:
         colors:
           title: "颜色"
           long_title: "颜色方案"
-          about: "颜色方案让您能够让您在不写 CSS 的情况下更改色彩。从选择或者添加一种颜色开始。"
           new_name: "新的颜色方案"
           copy_name_prefix: "复制于"
           delete_confirm: "删除这个颜色方案？"
@@ -1432,8 +1424,6 @@ zh_CN:
           other: "用户如果有帖子将不能删除。在试图尝试删除一个用户前删除所有的帖子（%{count} 天前的帖子不能被删除）"
         cant_delete_all_posts:
           other: "不能删除所有帖子。一些帖子发表于 %{count} 天前。（设置项：delete_user_max_post_age）"
-        cant_delete_all_too_many_posts:
-          other: "不能删除所有帖子，因为用户有超过 %{count} 帖子。（设置项：delete_all_posts_max）"
         delete_confirm: "您确定要永久地从本站删除此用户？该操作无法撤销！"
         delete_and_block: "<b>确定</b>，并<b>阻止</b>该邮件地址和IP地址再次注册。"
         delete_dont_block: "<b>确定</b>，但<b>允许</b>该邮件地址和IP地址再次注册。"
@@ -1475,7 +1465,6 @@ zh_CN:
       site_settings:
         show_overriden: '只显示被覆盖了缺省值的'
         title: '设置'
-        reset: '重置为缺省值'
         none: '无'
         no_results: "找不到结果。"
         clear_filter: "清除"
@@ -1570,6 +1559,3 @@ zh_CN:
       granted:
         other: "%{count} 个已授予"
       select_badge_for_title: 选择一个徽章用作您的头衔
-      example_badge:
-        name: 范例徽章
-        description: 这是一枚用作范例的徽章。

@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 de:
   dates:
@@ -125,6 +125,14 @@ de:
       - Kritk ist in Ordnung, aber bitte kritisiere nur *Ideen*, nicht Menschen.
 
       Weitere Hilfe findest Du [in unseren FAQ](/faq). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} Beiträgen angezeigt.
+    avatar: |
+      ### Wie stehts mit einem neuen Bild für deinen Zugang?
+
+      Du hast einige Beiträge und Antworten gesendet, aber dein Avatar ist nicht so einzigartig wie du - es ist das gewöhnliche Standard Avatar, dass neue Nutzer haben.
+
+      Hast du darüber nachgedacht **[besuche dein Benutzerprofil](%{profile_path})** und ein eigenes Bild hochzuladen?
+
+      Es ist einfacher gemeinschaftlichen Diskussionen zu folgen und interessante Leute zu finden, wenn jeder ein eigenes Avatar hat.
     sequential_replies: |
       ### Versuche, mehreren Beitragen gleichzeitig zu antworten
 
@@ -568,6 +576,7 @@ de:
     flag_sockpuppets: "Wenn sich ein neuer Nutzer (bspw. registriert in den letzten 24 Stunden), der ein Thema gestartet hat und ein weiterer neuer Benutzer, der auf dieses Thema geantwortet hat, dieselbe IP Adresse teilen werden beide Beiträge automatisch als Spam markiert."
     traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, anstatt zwei nachfolgende Leerzeichen als Zeilenumbruch zu verwenden."
     post_undo_action_window_mins: "Sekunden, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, etc.)."
+    must_approve_users: "Administratoren müssen Nutzer freischalten, bevor sie Zugriff erlangen."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
     ga_domain_name: "Google Analytics Domänenname, zum Beispiel: mysite.com; siehe http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, beispielsweise: UA-12345678-9; Siehe http://google.com/analytics"
@@ -606,7 +615,6 @@ de:
     sso_url: "URL des Single Sign On Endpunkts"
     sso_secret: "Geheimschlüssel, der für die Ver-/Entschlüsselung von SSO Information verwendet wird. Versichere dich, dass er 10 Zeichen oder länger ist."
     enable_local_logins: "Aktiviere lokale Authentisierung"
-    enable_google_logins: "Aktiviere Google Authentisierung."
     enable_yahoo_logins: "Aktiviere Yahoo Authentisierung."
     enable_twitter_logins: "Aktiviere Twitter Authentisierung (benötigt twitter_consumer_key und twitter_consumer_secret)."
     twitter_consumer_key: "Consumer Key für Twitter Authentisierung, registriert auf http://dev.twitter.com"
@@ -885,6 +893,10 @@ de:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
   flags_reminder:
+    flags_were_submitted:
+      one: "Es gibt Markierungen, die vor 1 Stunde gesendet wurden."
+      other: "Es gibt Markierungen, die von %{count} Stunden gesendet wurden."
+    please_review: "Bitte überprüfe sie."
     post_number: "Beitrag"
   flag_reasons:
     off_topic: "Dein Beitrag wurde als **Off-Topic** geflaggt: Die Community denkt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
@@ -893,6 +905,20 @@ de:
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatische Nachricht von %{site_name}, um Dich darüber zu informieren, dass Dein Beitrag
+
+        %{base_url}%{url}
+
+        wegen Meldungen aus der Community versteckt wurde.
+
+        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. **Überlege Dir daher, wie Du deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.** Du kannst deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und deine Stufe erhöht sich.
+
+        Wenn dieser Beitrag ein zweites Mal von der Community versteckt wird, werden die Moderatoren darauf aufmerksam gemacht. Dass kann weitere Konsequenzen haben, unter anderem auch eine Sperrung deines Kontos.
+
+        Weitere Hilfestellung findest Du in unseren [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Diese private Nachricht gibt ein paar Tipps für einen schnellen Start:
@@ -1020,10 +1046,6 @@ de:
         Bitte [überprüfe die Beanstandungen](/admin/flags). Wenn %{username} nicht mehr gesperrt sein soll, schalte den Benutzer in der [Benuzeradministration](%{user_url}) wieder frei.
     spam_post_blocked:
       subject_template: "Spam wirde in einem Beitrag von %{username} entdeckt"
-      text_body_template: |
-        Dies ist eine automatische Nachricht um dich zu informieren, dass [%{username}](%{user_url}) versucht hat einen Beitrag mit Links zu erstellen, was aber basierend auf der Einstellung newuser_spam_host_threshold unterbunden wurde.
-
-        Bitte [überprüfe den Benutzer](%{user_url}).
     unblocked:
       subject_template: "Benutzerkonto entsperrt"
       text_body_template: |

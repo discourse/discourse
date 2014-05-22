@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 uk:
   dates:
@@ -519,7 +519,6 @@ uk:
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
     enable_local_logins: "Увімкнути традиційний вхід за допомогою локальних імені користувача та пароля"
-    enable_google_logins: "Увімкнути вхід через Google"
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
     enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
     twitter_consumer_key: "Consumer key для входу через Twitter, зареєстрований на http://dev.twitter.com"
@@ -662,9 +661,7 @@ uk:
   most_recent_poster: "Автор останнього допису"
   frequent_poster: "Частий дописувач"
   redirected_to_top_reasons:
-    new_user: "Welcome to our community! Here are our most popular recent topics."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
-
   topic_statuses:
     archived_enabled: "Цю тему тепер заархівовано. Вона заморожена і її жодним чином не можна змінити."
     archived_disabled: "Цю тему тепер розархівовано. Вона більше не заморожена, і її можна змінювати."
@@ -904,12 +901,6 @@ uk:
         This threshold can be changed via the `block_new_user` site settings.
     spam_post_blocked:
       subject_template: "New user %{username} posts blocked for repeated links"
-      text_body_template: |
-        This is an automated message to inform you that the new user [%{username}](%{base_url}%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
-
-        Please [review the user](%{base_url}%{user_url}).
-
-        This threshold can be changed via the `newuser_spam_host_threshold` site setting.
     unblocked:
       subject_template: "Account unblocked"
       text_body_template: |

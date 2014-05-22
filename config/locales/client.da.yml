@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 da:
   js:
@@ -123,7 +123,6 @@ da:
       other: "på {{count}} dage"
     suggested_topics:
       title: "Foreslåede emner"
-    new_topics_inserted: "{{count}} nye emner."
     show_new_topics: "Klik for at se."
     preview: "forhåndsvising"
     cancel: "annullér"
@@ -167,8 +166,6 @@ da:
       '13': "Indbakke"
     categories:
       all: "alle kategorier"
-      all_subcategories: "alle underkategorier"
-      no_subcategory: "ingen underkategori"
       category: "Kategori"
       posts: "Nye indlæg"
       topics: "Nye emner"
@@ -1103,7 +1100,6 @@ da:
         new_style: "Ny style"
         delete: "Slet"
         delete_confirm: "Slet denne tilpasning?"
-        about: "Tilpasning af site giver dig mulighed for at modificere sitets stylesheets og headers. Vælg en eksisterende tilpasning eller tilføj en ny for at komme i gang."
       email:
         title: "E-mail"
         settings: "Indstillinger"
@@ -1301,7 +1297,6 @@ da:
       site_settings:
         show_overriden: 'Vis kun tilsidesatte'
         title: 'Indstillinger'
-        reset: 'gendan standard'
         none: 'ingen'
         no_results: "Ingen resultater fundet."
         clear_filter: "Ryd"

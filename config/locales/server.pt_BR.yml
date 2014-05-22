@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 pt_BR:
   dates:
@@ -614,7 +614,6 @@ pt_BR:
     sso_overrides_username: "Substitui nome de usuário local com nome de usuário do site externo do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido a diferenças nos requerimentos de comprimento de nome de usuário)"
     sso_overrides_name: "Substitui nome local com o nome do site externo do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido à normalização de nomes locais)"
     enable_local_logins: "Ativar autenticação local"
-    enable_google_logins: "Ativar autenticação pelo Google"
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
     twitter_consumer_key: "consumer key registrada em dev.twitter.com (usada para fazer autenticação via twitter)"
@@ -764,7 +763,6 @@ pt_BR:
   most_recent_poster: "Maior parte das Postagens Recentes"
   frequent_poster: "Postador frequente"
   redirected_to_top_reasons:
-    new_user: "Bem-vindo! Como um novo visitante, está será sua homepage até que você tenha tempo para se ambientar. Aqui estão alguns dos tópicos mais populares do passado."
     not_seen_in_a_month: "Bem-vindo de volta! Nós não o vemos a um tempo. Estes são os principais tópicos de discussão desde que você foi embora."
   move_posts:
     new_topic_moderator_post:
@@ -974,7 +972,6 @@ pt_BR:
         Por favor [review the flags](/admin/flags). Se %{username} foi bloqueado de postar indevidamente, clique no botão desbloquear em [the admin page for this user](%{user_url}).⏎
     spam_post_blocked:
       subject_template: "Mensagens do novo usuário %{username} bloqueadas por links repetidos"
-      text_body_template: "Esta é uma mensagem automática para informar que o novo usuário [%{username}](%{base_url}%{user_url}) tentou criar várias mensagens com links para %{domains}, mas foram bloqueadas para evitar spam. O usuário ainda é capaz de criar novas mensagens que não apontam para %{domains}.\n \nPor favor [analisar o usuário] (%{base_url}%{user_url}).\n \nEste limite pode ser alterado através da configuração `newuser_spam_host_threshold` do site.\n"
     unblocked:
       subject_template: "Conta desbloqueada"
       text_body_template: |

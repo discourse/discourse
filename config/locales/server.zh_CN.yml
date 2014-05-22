@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 zh_CN:
   dates:
@@ -600,7 +600,6 @@ zh_CN:
     sso_overrides_username: "用 SSO 信息中的外部用户名覆盖用户名（警告：因为对本地用户名的统一处理，用户名的长度或者要求可能不同）"
     sso_overrides_name: "用 SSO 信息中的外部名字覆盖本地名字（警告：因为对本地名字的统一处理，这个名字可能不同）"
     enable_local_logins: "启用传统的、本地的账号和密码验证"
-    enable_google_logins: "启用 Google 帐号验证登入"
     enable_yahoo_logins: "启用 Yahoo 帐号验证登入"
     enable_twitter_logins: "启用 Twitter 帐号验证登入，需要 twitter_consumer_key 和 twitter_consumer_secret"
     twitter_consumer_key: "Twitter 帐号验证的客户密匙（Consumer key），到 http://dev.twitter.com 来注册获取"
@@ -757,7 +756,6 @@ zh_CN:
   most_recent_poster: "当前大部分帖子作者"
   frequent_poster: "频繁发帖者"
   redirected_to_top_reasons:
-    new_user: "欢迎！作为访客，再您花了一些时间浏览前，这将是您的首页。他们是过去最流行的主题。"
     not_seen_in_a_month: "欢迎回来！有段时间不见了。这些是您离开后的一些热门讨论。"
   move_posts:
     new_topic_moderator_post:
@@ -1057,12 +1055,6 @@ zh_CN:
         该阈值可以通过站点设置中的 `block_new_user` 更改。
     spam_post_blocked:
       subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
-      text_body_template: |
-        这是一封自动发出的邮件，以告知您新用户[%{username}](%{base_url}%{user_url})已因闯进多个链接至 %{domains} 的帖子而被禁止发表包含该链接的帖子，但是用户仍能够发表不包含到 %{domains} 的帖子。
-
-        请[审核这些用户](%{base_url}%{user_url})。
-
-        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 更改。
     unblocked:
       subject_template: "账户解封 unblocked"
       text_body_template: |

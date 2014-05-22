@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 ja:
   dates:
@@ -500,7 +500,6 @@ ja:
     invite_only: "一般登録を無効化し、招待されたユーザのみ登録可能にする"
     login_required: "ポストを読むのにログインを必須にする"
     enable_local_logins: "従来型のローカルユーザ名とパスワードによる認証を有効にする"
-    enable_google_logins: "Google 認証を有効にする"
     enable_yahoo_logins: "Yahoo 認証を有効にする"
     enable_twitter_logins: "Twitter 認証を有効にする (twitter_consumer_key と twitter_consumer_secret の設定が必要)"
     twitter_consumer_key: "Twitter 認証用の consumer key。http://dev.twitter.com で入手可能"
@@ -834,12 +833,6 @@ ja:
         なお、しきい値はサイト設定の `block_new_user` で変更可能です。
     spam_post_blocked:
       subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
-      text_body_template: |
-        このメールは、%{domains} へのリンクを含む複数のポストを新規ユーザ [%{username}](%{user_url}) が作成しようとしたため SPAM 防止策としてブロックしたことをお知らせする自動メッセージです。
-
-        詳しくは [このユーザの情報](%{user_url}) を参照してください。
-
-        なお、しきい値はサイト設定の `newuser_spam_host_threshold` で変更可能です。
     unblocked:
       subject_template: "アカウントのブロック解除"
       text_body_template: |

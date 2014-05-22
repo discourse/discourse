@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 nl:
   dates:
@@ -632,7 +632,6 @@ nl:
     sso_overrides_username: "Gebruikt de gebruikersnaam van de SSO service i.p.v. de lokaal gekozen gebruikersnaam. (WAARSCHUWING: er kunnen discrepanties ontstaan door verschillen in eisen aan bijv. de lengte van de gebruikersnaam)"
     sso_overrides_name: "Gebruikt de naam die gebruikt wordt bij de SSO service i.p.v. de lokaal opgegeven naam. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale namen)"
     enable_local_logins: "Zet lokaal inloggen aan"
-    enable_google_logins: "Zet inloggen met Google aan"
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
     enable_twitter_logins: "Zet inloggen met Twitter aan. Hiervoor heb je een twitter_consumer_key en twitter_consumer_secret nodig."
     twitter_consumer_key: "consumer_key (registreer op dev.twitter.com)"
@@ -784,7 +783,6 @@ nl:
   most_recent_poster: "Meest recente schrijver"
   frequent_poster: "Frequente schrijver"
   redirected_to_top_reasons:
-    new_user: "Welkom! Omdat je een nieuwe bezoeker bent zal dit je homepage zijn tot je een tijdje rond hebt kunnen kijken op de site. Hier zijn de meest populaire topics van de afgelopen tijd"
     not_seen_in_a_month: "Welkom terug! We hebben je een tijdje niet gezien. Dit is een overzicht van de topics die zijn gemaakt sinds je weg was."
   move_posts:
     new_topic_moderator_post:
@@ -1088,12 +1086,6 @@ nl:
         De drempel hiervoor kan ingesteld worden met de `block_new_user` instelling.
     spam_post_blocked:
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd door herhaalde links"
-      text_body_template: |
-        Dit is een automatisch bericht van %{site_name} om je te informeren dat de nieuwe gebruiker [%{username}](%{base_url}%{user_url}) probeerde meerdere berichten te plaatsen met links naar %{domains}, maar deze berichten zijn geblokkeerd om spam tegen te gaan. De gebruiker kan nog steeds nieuwe berichten plaatsen die niet linken naar %{domains}.
-
-        Bekijk de gebruiker [hier](%{user_url}).
-
-        De drempel hiervoor kan ingesteld worden met de `newuser_spam_host_threshold` instelling.
     unblocked:
       subject_template: "Account gedeblokkeerd"
       text_body_template: |

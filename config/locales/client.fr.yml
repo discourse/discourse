@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 fr:
   js:
@@ -132,7 +132,6 @@ fr:
       not_bookmarked: "Vous avez lu ce message; cliquez pour le placer dans vos signets"
       last_read: "Voici le dernier message que vous avez lu; cliquez pour le placer dans vos signets"
       remove: "Supprimer le signet"
-    new_topics_inserted: "{{count}} nouveaux sujets."
     show_new_topics: "Cliquez pour afficher."
     preview: "prévisualiser"
     cancel: "annuler"
@@ -190,8 +189,6 @@ fr:
       '13': "Boîte de réception"
     categories:
       all: "toutes les catégories"
-      all_subcategories: "avec sous-catégories"
-      no_subcategory: "sans sous-catégorie"
       category: "Catégorie"
       posts: "Nouveaux messages"
       topics: "Nouveaux sujets"
@@ -231,7 +228,6 @@ fr:
       deleted: "(supprimé)"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
-      mailing_list_mode: "Recevoir un e-mail à chaque fois qu'un message est posté sur le forum (sauf si vous avez rendu silencieuse ce sujet ou cette catégorie)"
       watched_categories: "Surveillés"
       watched_categories_instructions: "Vous pourrez suivre attentivement automatiquement toutes les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, de plus les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
       tracked_categories: "Suivies"
@@ -274,8 +270,6 @@ fr:
         uploaded_avatar_empty: "Ajouter une photo personnalisée"
         upload_title: "Envoyer votre photo"
         image_is_not_a_square: "Attention : nous avons découpé votre image; elle n'est pas carré."
-      change_profile_background:
-        title: "Changer l'arrière plan du profil"
       email:
         title: "Email"
         instructions: "Votre adresse email ne sera jamais communiquée."
@@ -1304,7 +1298,6 @@ fr:
         new_style: "Nouveau style"
         delete: "Supprimer"
         delete_confirm: "Supprimer cette personnalisation"
-        about: "La personnalisation du site vous permet de modifier les feuilles de styles et en-têtes de votre site. Choisissez ou ajouter un style pour commencer l'édition."
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"
@@ -1314,10 +1307,13 @@ fr:
         colors:
           title: "Couleurs"
           long_title: "Palettes de couleurs"
-          about: "Les palettes de couleurs vous permette de modifier les couleurs utilisées par le site sans écrire de CSS. Choisissez ou ajoutez en une pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleurs ?"
+          danger:
+            name: 'danger'
+          success:
+            name: 'succès'
       email:
         title: "Email"
         settings: "Paramètres"
@@ -1509,9 +1505,6 @@ fr:
         cant_delete_all_posts:
           one: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de  %{count} jour. (voir l'option delete_user_max_post_age)"
           other: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de  %{count} jours. (voir l'option delete_user_max_post_age)"
-        cant_delete_all_too_many_posts:
-          one: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus de 1 message. (voir l'option delete_all_posts_max)"
-          other: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus de %{count} messages. (voir l'option delete_all_posts_max)"
         delete_confirm: "Êtes-vous SUR de vouloir supprimer cet utilisateur ? Cette action est définitive !"
         delete_and_block: "<b>Oui</>, et <b>bloquer</b> les inscriptions furures avec cette adresse mail et cette adresse IP"
         delete_dont_block: "<b>Oui</b>, juste supprimer l'utilisateur"
@@ -1553,7 +1546,6 @@ fr:
       site_settings:
         show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres'
-        reset: 'rétablir par défaut'
         none: 'rien'
         no_results: "Aucun résultat trouvé."
         clear_filter: "Effacer"
@@ -1651,6 +1643,3 @@ fr:
         one: "1 décerné"
         other: "%{count} décernés"
       select_badge_for_title: Sélectionner un badge pour l'utiliser comme votre titre
-      example_badge:
-        name: Exemple de badge
-        description: Ceci est un badge d'exemple.

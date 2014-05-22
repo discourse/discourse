@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 de:
   js:
@@ -87,6 +87,7 @@ de:
     of_value: "von"
     generic_error: "Entschuldigung. Ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
+    log_in: "Anmelden"
     age: "Alter"
     joined: "Beigetreten"
     admin_title: "Administrator"
@@ -131,7 +132,6 @@ de:
       not_bookmarked: "du hast diesen Beitrag gelesen. Klicke, um ein Lesezeichen zu setzen"
       last_read: "dies ist der letzte Beitrag, den Du gelesen hast. Klicke, um ein Lesezeichen zu setzen"
       remove: "Entferne Lesezeichen"
-    new_topics_inserted: "{{count}} neue Beiträge."
     show_new_topics: "Klicken zum Anzeigen."
     preview: "Vorschau"
     cancel: "Abbrechen"
@@ -141,6 +141,10 @@ de:
     upload: "Hochladen"
     uploading: "Hochladen..."
     uploaded: "Hochgeladen!"
+    enable: "Aktivieren"
+    disable: "Deaktivieren"
+    undo: "Rückgängig machen"
+    revert: "Verwerfen"
     choose_topic:
       none_found: "Keine Themen gefunden."
       title:
@@ -189,8 +193,8 @@ de:
       '13': "Posteingang"
     categories:
       all: "Alle Kategorien"
-      all_subcategories: "Alle Unterkategorien"
-      no_subcategory: "Keine Unterkategorie"
+      all_subcategories: "alle"
+      no_subcategory: "keiner"
       category: "Kategorie"
       posts: "Neue Beiträge"
       topics: "Neue Themen"
@@ -230,7 +234,6 @@ de:
       deleted: "(gelöscht)"
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
       suspended_reason: "Grund: "
-      mailing_list_mode: "Erhalte eine Email jedes mal wenn ein Beitrag im Forum gepostet wurde (außer du hast das Thema oder die Kategorie ignoriert)"
       watched_categories: "Beobachten"
       watched_categories_instructions: "Das selbe wie 'verfolgen', zusätzlich wirst du über alle neuen Beiträge und Themen informiert."
       tracked_categories: "Verfolgen"
@@ -241,6 +244,7 @@ de:
       delete_account_confirm: "Bist du sicher, dass du dein Nutzerkonto permanent löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Nutzerkonto wurde erfolgreich gelöscht."
       delete_yourself_not_allowed: "Du kannst im Moment dein Nutzerkonto nicht löschen. Kontaktiere einen Administrator dein Nutzerkonto für dich zu löschen."
+      unread_message_count: "Nachrichten"
       messages:
         all: "Alle"
         mine: "Meine"
@@ -272,8 +276,6 @@ de:
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
         upload_title: "Lade dein Bild hoch"
         image_is_not_a_square: "Achtung: wir haben dein Bild zugeschnitten, da es nicht quadratisch war."
-      change_profile_background:
-        title: "Ändere deinen Profilhintergrund"
       email:
         title: "E-Mail"
         instructions: "Deine E-Mailadresse wird niemals öffentlich angezeigt."
@@ -424,7 +426,10 @@ de:
       action: "Ich habe mein Passwort vergessen"
       invite: "Gib deinen Nutzernamen oder deine E-Mail-Adresse ein, und wir senden dir eine E-Mail zum Zurücksetzen des Passworts."
       reset: "Passwort zurücksetzen"
+      complete_username: "Wenn ein Zugang dem Nutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine Email mit Instruktionen zum Zurücksetzen deines Passwortes erhalten."
+      complete_email: "Wenn ein Zugang der Email <b>%{username}</b> entspricht, solltest du in Kürze eine Email mit Instruktionen zum Zurücksetzen deines Passwortes erhalten."
     login:
+      title: "Anmelden"
       username: "Nutzername"
       password: "Passwort"
       email_placeholder: "E-Mailadresse oder Benutzername"
@@ -537,6 +542,7 @@ de:
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} hat einen Beitrag nach {{link}} verschoben"
       total_flagged: "alle gemeldeten Posts"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Wurde dir verliehen. {{link}}"
     upload_selector:
       title: "Bild hochladen"
       title_with_attachments: "Bild oder Datei hochladen"
@@ -547,6 +553,7 @@ de:
       local_tip: "Klicke hier, um ein Bild von deinem Gerät zu wählen."
       local_tip_with_attachments: "Klicke hier, um ein Bild oder eine Datei von deinem Gerät zu wählen (Erlaubte Dateiendungen: {{authorized_extensions}})"
       hint: "(du kannst auch drag & drop verwenden, um etwas in den editor hochzuladen)"
+      hint_for_supported_browsers: "(Du kannst Bilder auch durch Ziehen und im Editor fallen lassen hochladen)"
       uploading: "Hochladen..."
       image_link: "Der Link deines Bildes verweist auf"
     search:
@@ -725,6 +732,7 @@ de:
         help: 'Melde dieses Thema vertraulich zur Kenntnisnahme oder versende eine private Benachrichtigung darüber.'
         success_message: 'Du hast dieses Thema erfolgreich gemeldet.'
       inviting: "Einladung verschicken..."
+      automatically_add_to_groups: "Füge Benutzer nach der Registrierung automatisch zu Gruppen hinzu. (Optional, Nur Admin) "
       invite_private:
         title: 'Zu privatem Gespräch einladen'
         email_or_username: "Einzuladender Nutzer"
@@ -791,6 +799,7 @@ de:
       edit: "Editing {{link}} von {{replyAvatar}} {{username}}"
       edit_reason: "Grund: "
       post_number: "Beitrag {{number}}"
+      in_reply_to: "Antworten"
       last_edited_on: "Antwort zuletzt bearbeitet am"
       reply_as_new_topic: "Mit Themenwechsel antworten"
       continue_discussion: "Fortsetzung des Gesprächs {{postLink}}:"
@@ -839,6 +848,9 @@ de:
             other: "Willst du die {{count}} Direktantworten auch löschen?"
           yes_value: "Ja, auch die Antworten löschen"
           no_value: "Nein, nur diesen Beitrag löschen"
+        admin: "Administrator Aktionen senden"
+        wiki: "Nachricht ins Wiki verschieben"
+        unwiki: "Nachricht aus Wiki entfernen"
       actions:
         flag: 'Melden'
         clear_flags:
@@ -995,6 +1007,7 @@ de:
       this_year: "dieses Jahr"
       position: "Position"
       default_position: "Standardposition"
+      position_disabled: 'Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu kontrollieren, aktivere die "feste Kategorie-Positionen" Einstellung.'
       parent: "Elternkategorie"
     flagging:
       title: 'Aus welchem Grund meldest Du diesen Beitrag?'
@@ -1293,19 +1306,60 @@ de:
         new_style: "Neuer Stil"
         delete: "Löschen"
         delete_confirm: "Diese Anpassung löschen?"
-        about: "Seite personalisieren erlaubt dir das Anpassen der Stilvorlagen und des Kopfbereich der Seite. Wähle oder füge eine Anpassung hinzu um mit dem Editieren zu beginnen."
+        about: "Ändere CSS stylesheets und HTML header auf der Seite. Füge eine Anpassung hinzu um zu starten."
+        color: "Farbe"
         opacity: "Transparenz"
         copy: "Kopieren"
         css_html:
           title: "CSS, HTML"
           long_title: "CSS und HTML Anpassungen"
         colors:
+          title: "Farben"
           long_title: "Farb-Schemata"
+          about: "Farbschemen erlauben dir die auf der Seite benutzen Farben zu ändern ohne CSS schreiben zu müssen. Wähle oder füge eine hinzu, um zu beginnen."
+          new_name: "Neues Farbschema"
+          copy_name_prefix: "Kopie von"
+          delete_confirm: "Dieses Farbschema löschen?"
+          undo: "rückgängig"
+          undo_title: "Änderungen an dieser Farbe bis zum lezten Speichern rückgängig machen"
+          revert: "verwerfen"
+          revert_title: "Diese Farbe auf Discourse Standard Farbschema zurücksetzen."
+          primary:
+            name: 'erste'
+            description: 'Die meisten Texte, Bilder und Ränder.'
+          secondary:
+            name: 'zweite'
+            description: 'Die Haupt Hintergrundfarbe, und Textfarbe einiger Schaltflächen.'
+          tertiary:
+            name: 'tertiär'
+            description: 'Links, einige Schaltflächen, Benachrichtigungen und Akzentfarben'
+          quaternary:
+            name: "quaternären"
+            description: "Navigations-Links"
+          header_background:
+            name: "Hintergrund Kopfbereich"
+            description: "Hintergrundfarbe des Seitenkopfs."
+          header_primary:
+            name: "primärer Kopfbereich"
+            description: "Texte und Bilder im Kopfbereich der Seite."
+          highlight:
+            name: 'hervorheben'
+            description: 'Die Hintergrundfarbe der hervorgehobenen Elemente auf der Seite, so wie Beiträge und Themen.'
+          danger:
+            name: 'Gefahr'
+            description: 'Hervorhebungsfarbe für Aktionen wie Löschen von Beiträgen und Themen.'
+          success:
+            name: 'Erfolg'
+            description: 'Benutzt um anzuzeigen, dass eine Aktion erfolgreich war.'
+          love:
+            name: 'Liebe'
+            description: "Die Farbe des Like-Buttons."
       email:
         title: "Mailprotokoll"
         settings: "Einstellungen"
         all: "Alle"
         sending_test: "Versende Testemail..."
+        test_error: "Es gab ein Problem beim Senden der Test-Email. Bitte überprüfen Sie Ihren Emaileinstellungen, stellen Sie sicher das Ihr Anbieter keine Email Verbindungen blockiert und probieren Sie es erneut."
         sent: "Gesendet"
         skipped: "Übersprungen"
         sent_at: "Gesendet am"
@@ -1488,6 +1542,12 @@ de:
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn  sie sich vor mehr als %{count} Tag angemeldet oder noch Beiträge haben. Lösche zuerst seine Beträge."
           other: "Benutzer können nicht gelöscht werden, wenn  sie sich vor mehr als %{count} Tagen angemeldet oder noch Beiträge haben. Lösche zuerst seine Beträge."
+        cant_delete_all_posts:
+          one: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tag. (Die delete_user_max_post_age Einstellung.)"
+          other: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tage. (Die delete_user_max_post_age Einstellung.)"
+        cant_delete_all_too_many_posts:
+          one: "Nicht alle Beiträge konnten gelöscht werden, da der Anwender mehr als 1 Beitrag hat. (Die delete_all_posts_max Einstellung.)"
+          other: "Nicht alle Beiträge konnten gelöscht werden, da der Anwender mehr als %{count} Beiträge hat. (Die delete_all_posts_max Einstellung.)"
         delete_confirm: "Bist du SICHER das du diesen Benutzer permanent von der Seite entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!"
         delete_and_block: "<b>Ja</b>, und <b>blockiere</b> Anmeldungen von dieser Mail Adresse"
         delete_dont_block: "<b>Ja</b>, aber <b>erlaube</b> Anmeldungen von dieser Mail Adresse"
@@ -1557,6 +1617,7 @@ de:
         new_badge: Neues Abzeichen
         new: Neu
         name: Name
+        badge: Abzeichen
         display_name: Anzeigename
         description: Beschreibung
         badge_type: Abzeichentyp
@@ -1573,6 +1634,7 @@ de:
         grant: Verleihen
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
         no_badges: Es gibt keine Abzeichen die verliehen werden können.
+        allow_title: Abzeichen darf als Titel verwendet werden.
     lightbox:
       download: "Download"
     keyboard_shortcuts_help:
@@ -1618,6 +1680,23 @@ de:
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"
-      example_badge:
-        name: Beispielsabzeichen
-        description: Dies ist ein Beispielabzeichen.
+      more_badges:
+        one: "+1 mehr"
+        other: "+%{count} mehr"
+      granted:
+        one: "1 akzeptiert"
+        other: "%{count} akzeptiert"
+      select_badge_for_title: Wähle ein Abzeichen für deinen Titel aus.
+      badge:
+        basic_user:
+          name: Basis
+          description: Alle grundlegenden Funktionen gewährt.
+        regular_user:
+          name: Einfach
+          description: Einladungen gewährt
+        leader:
+          name: Leiter
+          description: Berechtigung für rekatigorisieren, umbennen, Link-Verfolgung und Lounge gegeben.
+        elder:
+          name: Ältester
+          description: Berechtigung für globales editieren, pinnen, schliessen, archivieren, teilen und zusammenfügen gegeben.

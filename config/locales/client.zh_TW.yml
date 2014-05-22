@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 zh_TW:
   js:
@@ -111,7 +111,7 @@ zh_TW:
       not_bookmarked: "你已閱讀過這篇文章，按此加上書籤"
       last_read: "這是你最後閱讀的文章，按此加上書籤"
       remove: "移除書籤"
-    new_topics_inserted: "有 {{count}} 個新討論話題。"
+    new_topics_inserted: "{{count}} 篇新文章。"
     show_new_topics: "按此顯示。"
     preview: "預覽"
     cancel: "取消"
@@ -172,15 +172,15 @@ zh_TW:
       '13': "收件匣"
     categories:
       all: "所有分類"
-      all_subcategories: "所有次分類"
-      no_subcategory: "無次分類"
+      all_subcategories: "所有"
+      no_subcategory: "無"
       category: "分類"
       posts: "新文章"
       topics: "新討論話題"
       latest: "最近"
       latest_by: "最近由"
       toggle_ordering: "顯示/隱藏排序控制"
-      subcategories: "次分類:"
+      subcategories: "次分類"
       topic_stats: "新討論話題的數目。"
       topic_stat_sentence:
         other: "在過去一%{unit}內有 %{count} 個新討論話題。"
@@ -211,7 +211,7 @@ zh_TW:
       deleted: "( 已刪除 )"
       suspended_notice: "此用戶已被停權至 {{date}}。"
       suspended_reason: "原因: "
-      mailing_list_mode: "在論壇上有新討論話題時將會收到電子郵件。( 除非你將該討論話題或分類設為靜音 )"
+      mailing_list_mode: "每當論壇上有新文章時你都會收到一封電子郵件。( 除非你將該討論話題或分類設為靜音 )"
       watched_categories: "已關注"
       watched_categories_instructions: "你將會自動關注在此分類的新討論話題。你將收到所有新文章和討論話題的通知，未讀和新討論話題的數量也將出現在討論話題的列表旁。"
       tracked_categories: "追蹤"
@@ -255,7 +255,7 @@ zh_TW:
         upload_title: "上傳你的圖片"
         image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
       change_profile_background:
-        title: "設定背景圖案"
+        title: "基本資料背景圖案"
       email:
         title: "電子郵件"
         instructions: "你的電子郵件地址不會被公開。"
@@ -423,6 +423,9 @@ zh_TW:
       google:
         title: "使用 Google 帳號"
         message: "使用 Google 帳號認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
+      google_oauth2:
+        title: "使用 Google 帳號"
+        message: "使用 Google 帳號認證 ( 請確定你的網頁瀏覽器不會阻擋彈出視窗 )"
       twitter:
         title: "使用 Twitter"
         message: "使用 Twitter 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
@@ -950,6 +953,7 @@ zh_TW:
       this_year: "今年"
       position: "位置"
       default_position: "預設的位置"
+      position_disabled: '分類的顯示將會以活躍度為排序依據。請開啟 "fixed category positions" 來手動調整分類排序。'
       parent: "父分類"
     flagging:
       title: '你為什麼要投訴此文章?'
@@ -1242,7 +1246,7 @@ zh_TW:
         new_style: "新增樣式"
         delete: "刪除"
         delete_confirm: "刪除此樣式？"
-        about: "網站客製化可以修改網站的樣式與標頭，請選擇或新增一個樣式進行編輯。"
+        about: "修改網站的 CSS 和 HTML headers。請新增一個自定樣式來開始使用。"
         color: "顏色"
         opacity: "不透明度"
         copy: "複製"
@@ -1252,7 +1256,7 @@ zh_TW:
         colors:
           title: "顏色"
           long_title: "顏色樣式"
-          about: "「顏色樣式」可讓你修改網站的顏色且不需撰寫 CSS。請選擇或者新增一項方案來開始使用。"
+          about: "不需撰寫 CSS 即可修改網站的顏色。請新增一項方案來開始使用。"
           new_name: "新的配色樣式"
           copy_name_prefix: "複製於"
           delete_confirm: "刪除此顏色樣式？"
@@ -1261,11 +1265,35 @@ zh_TW:
           revert: "回復"
           revert_title: "重設此顏色為 Discourse 的預設顏色樣式"
           primary:
-            name: '主要'
+            name: '一級'
             description: '大部分的文字、圖示和邊框'
           secondary:
-            name: '次要'
-            description: '主要的背景顏色和一些按鈕的文字顏色'
+            name: '二級'
+            description: '主要的背景顏色和一些按鈕上的文字顏色'
+          tertiary:
+            name: '三級'
+            description: '連結、一些按鈕、通知和強調顏色'
+          quaternary:
+            name: "四級"
+            description: "導覽連結"
+          header_background:
+            name: "標頭背景"
+            description: "網站標頭的背景顏色"
+          header_primary:
+            name: "標頭主要區域"
+            description: "網站標頭的文字和圖示"
+          highlight:
+            name: '重點'
+            description: '頁面上重點元素的背景顏色，例如文章和討論話題'
+          danger:
+            name: '危險'
+            description: '重要動作例如刪除文章和討論話題的重點顏色'
+          success:
+            name: '成功'
+            description: '用來表示一項動作已順利完成'
+          love:
+            name: '愛'
+            description: "按讚按鈕的顏色"
       email:
         title: "電郵"
         settings: "設定"
@@ -1386,14 +1414,14 @@ zh_TW:
         reject_selected:
           other: "拒絕用戶 ({{count}})"
         titles:
-          active: '啟用的用戶'
+          active: '活躍的用戶'
           new: '新用戶'
           pending: '等待審核的用戶'
-          newuser: '信任等級 0 的用戶 (新用戶)'
-          basic: '信任等級 1 的用戶 (基本用戶)'
-          regular: '信任等級 2 的用戶 (一般用戶)'
-          leader: '信任等級 3 的用戶 (中階用戶)'
-          elder: '信任等級 4 的用戶 (高階用戶)'
+          newuser: '信任等級 0 的用戶 ( 新用戶 )'
+          basic: '信任等級 1 的用戶 ( 初級用戶 )'
+          regular: '信任等級 2 的用戶 ( 一般用戶 )'
+          leader: '信任等級 3 的用戶 ( 領袖 )'
+          elder: '信任等級 4 的用戶 ( 長老 )'
           admins: '管理員'
           moderators: '板主'
           blocked: '已封鎖的用戶'
@@ -1407,7 +1435,7 @@ zh_TW:
         unsuspend_failed: "恢復此用戶的權限時發生錯誤 {{error}}"
         suspend_duration: "你想將此用戶停權多久?"
         suspend_duration_units: "(天)"
-        suspend_reason_label: "你為什麼要將此用戶停權? 你輸入的原因將在此用戶登入時顯示，及顯示在此用戶的基本資料頁面，且<b>任何人都可以看見</b>，請簡短說明原因。"
+        suspend_reason_label: "你為什麼要將此用戶停權？你輸入的原因將在此用戶登入時顯示，及顯示在此用戶的基本資料頁面，且<b>任何人都可以看見</b>，請簡短說明原因。"
         suspend_reason: "原因"
         suspended_by: "將其停權者"
         delete_all_posts: "刪除所有文章"
@@ -1452,7 +1480,7 @@ zh_TW:
         cant_delete_all_posts:
           other: "無法刪除所有的文章。有些文章時間早於 %{count} 天前。 ( 請見 delete_user_max_post_age 設定 )"
         cant_delete_all_too_many_posts:
-          other: "無法刪除所有的文章，因為此用戶擁有超過 %{count} 篇文章。 ( 請見 delete_all_posts_max 設定 )"
+          other: "無法刪除所有文章，因為此用戶擁有超過 %{count} 篇文章。( delete_all_posts_max )"
         delete_confirm: "你確定要刪除此用戶嗎？此動作將不可復原！"
         delete_and_block: "<b>是的</b>，並且<b>封鎖</b>使用此電子郵件地址與 IP 位址登入"
         delete_dont_block: "<b>是的</b>，但<b>允許</b>使用此電子郵件地址與 IP 位址登入"
@@ -1472,10 +1500,10 @@ zh_TW:
         block_explanation: "被封鎖的用戶無法發表文章或建立討論話題。"
         trust_level_change_failed: "修改用戶的信任等級時發生錯誤。"
         suspend_modal_title: "將用戶停權"
-        trust_level_2_users: "信任等級2用戶"
-        trust_level_3_requirements: "信任等級3要求"
+        trust_level_2_users: "信任等級 2 用戶"
+        trust_level_3_requirements: "信任等級 3 之條件"
         tl3_requirements:
-          title: "信任級別3要求"
+          title: "信任等級 3 之條件"
           table_title: "在過去100天內："
           value_heading: "價值"
           requirement_heading: "要求"
@@ -1494,7 +1522,7 @@ zh_TW:
       site_settings:
         show_overriden: '只顯示修改過的項目'
         title: '設定'
-        reset: '重設為預設值'
+        reset: '重設'
         none: '無'
         no_results: "未找到任何結果。"
         clear_filter: "清除"
@@ -1589,6 +1617,16 @@ zh_TW:
       granted:
         other: "%{count} 升級"
       select_badge_for_title: 選擇一枚徽章作為你的稱號
-      example_badge:
-        name: 徽章範例
-        description: 這是一個徽章範例
+      badge:
+        basic_user:
+          name: 初級
+          description: 可使用所有基礎的社群功能。
+        regular_user:
+          name: 一般
+          description: 可使用邀請功能。
+        leader:
+          name: 領袖
+          description: 可重新分類、重新命名討論話題，使用交誼廳，且連結沒有 nofollow 屬性。
+        elder:
+          name: 長老
+          description: 可全區編輯、置頂、關閉、封存、拆開和合併討論話題或文章。
