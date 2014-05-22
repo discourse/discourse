@@ -1298,7 +1298,7 @@ en:
 
         Please [review the user](%{base_url}%{user_url}).
 
-        This threshold can be changed via the `newuser_spam_host_threshold` site setting.
+        This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
 
     unblocked:
       subject_template: "Account unblocked"
