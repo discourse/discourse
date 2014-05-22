@@ -2,24 +2,6 @@ require 'spec_helper'
 
 describe ColorScheme do
 
-  describe '#base_colors' do
-    it 'parses the colors.scss file and returns a hash' do
-      described_class.stubs(:read_colors_file).returns([
-        '$primary:   #333333 !default;',
-        '$secondary: #ffffff !default;  ',
-        '$highlight: #ffff4d;',
-        '  $danger:#e45735    !default;',
-      ])
-
-      colors = described_class.base_colors
-      colors.should be_a(Hash)
-      colors['primary'].should == '333333'
-      colors['secondary'].should == 'ffffff'
-      colors['highlight'].should == 'ffff4d'
-      colors['danger'].should == 'e45735'
-    end
-  end
-
   let(:valid_params) { {name: "Best Colors Evar", enabled: true, colors: valid_colors} }
   let(:valid_colors) { [
     {name: '$primary_background_color', hex: 'FFBB00'},
