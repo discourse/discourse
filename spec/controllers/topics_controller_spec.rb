@@ -638,7 +638,7 @@ describe TopicsController do
     end
 
     context "when 'login required' site setting has been enabled" do
-      before { SiteSetting.stubs(:login_required?).returns(true) }
+      before { SiteSetting.login_required = true }
 
       context 'and the user is logged in' do
         before { log_in(:coding_horror) }
@@ -662,9 +662,9 @@ describe TopicsController do
           expect(response).to be_successful
         end
 
-        it 'redirects to the login page if invalid key is provided' do
+        it 'returns 403 for an invalid key' do
           get :show, topic_id: topic.id, slug: topic.slug, api_key: "bad"
-          expect(response).to redirect_to login_path
+          expect(response.code.to_i).to be(403)
         end
       end
     end
