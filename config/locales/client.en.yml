@@ -307,10 +307,12 @@ en:
       change_avatar:
         title: "Change your avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
-        gravatar_title: "Change your avatar on Gravatar's website"
+        refresh_gravatar_title: "Refresh your Gravatar"
+        letter_based: "System assigned avatar"
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
+        upload_picture: "Upload Picture"
         image_is_not_a_square: "Warning: we've cropped your image; it is not square."
 
       change_profile_background:

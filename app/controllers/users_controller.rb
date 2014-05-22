@@ -422,8 +422,6 @@ class UsersController < ApplicationController
 
     def upload_avatar_for(user, upload)
       user.upload_avatar(upload)
-      Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
-
       render json: { url: upload.url, width: upload.width, height: upload.height }
     end
 

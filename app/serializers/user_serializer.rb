@@ -63,16 +63,27 @@ class UserSerializer < BasicUserSerializer
                      :external_links_in_new_tab,
                      :dynamic_favicon,
                      :enable_quoting,
-                     :use_uploaded_avatar,
-                     :has_uploaded_avatar,
-                     :gravatar_template,
-                     :uploaded_avatar_template,
                      :muted_category_ids,
                      :tracked_category_ids,
                      :watched_category_ids,
                      :private_messages_stats,
-                     :disable_jump_reply
+                     :disable_jump_reply,
+                     :system_avatar_upload_id,
+                     :gravatar_avatar_upload_id,
+                     :custom_avatar_upload_id,
+                     :uploaded_avatar_id
 
+  def system_avatar_upload_id
+    object.user_avatar.try(:system_upload_id)
+  end
+
+  def gravatar_avatar_upload_id
+    object.user_avatar.try(:gravatar_upload_id)
+  end
+
+  def custom_avatar_upload_id
+    object.user_avatar.try(:custom_upload_id)
+  end
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after
@@ -104,10 +115,6 @@ class UserSerializer < BasicUserSerializer
 
   def stats
     UserAction.stats(object.id, scope)
-  end
-
-  def gravatar_template
-    User.gravatar_template(object.email)
   end
 
   def include_suspended?

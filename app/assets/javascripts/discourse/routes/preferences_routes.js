@@ -22,8 +22,11 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
       // all the properties needed for displaying the avatar selector modal
       this.controllerFor('avatar-selector').setProperties(this.modelFor('user').getProperties(
         'username', 'email',
-        'has_uploaded_avatar', 'use_uploaded_avatar',
-        'gravatar_template', 'uploaded_avatar_template'));
+        'system_avatar_upload_id',
+        'gravatr_avatar_upload_id',
+        'custom_avatar_upload_id'
+        )
+      );
     },
 
     saveAvatarSelection: function() {

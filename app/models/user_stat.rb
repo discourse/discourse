@@ -85,7 +85,6 @@ end
 # Table name: user_stats
 #
 #  user_id           :integer          not null, primary key
-#  has_custom_avatar :boolean          default(FALSE), not null
 #  topics_entered    :integer          default(0), not null
 #  time_read         :integer          default(0), not null
 #  days_visited      :integer          default(0), not null

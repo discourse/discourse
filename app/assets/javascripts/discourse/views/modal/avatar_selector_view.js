@@ -105,7 +105,7 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
   }.observes('controller.use_uploaded_avatar'),
 
   uploadButtonText: function() {
-    return this.get("uploading") ? I18n.t("uploading") : I18n.t("upload");
+    return this.get("uploading") ? I18n.t("uploading") : I18n.t("user.change_avatar.upload_picture");
   }.property("uploading")
 
 });

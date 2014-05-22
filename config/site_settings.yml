@@ -329,14 +329,13 @@ files:
   allow_profile_backgrounds:
     client: true
     default: true
+  automatically_download_gravatars: true
   allow_uploaded_avatars:
     client: true
     default: true
   allow_animated_avatars:
     client: true
     default: false
-  detect_custom_avatars: true
-  max_daily_gravatar_crawls: 500
 
 trust:
   default_trust_level: 0
@@ -547,7 +546,11 @@ uncategorized:
     default: ''
 
   enable_cdn_js_debugging: true
+
   show_create_topics_notice:
     client: true
     default: true
 
+  enable_system_avatars:
+    hidden: true
+    default: true

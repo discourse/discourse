@@ -184,7 +184,7 @@ Discourse.UserAction = Discourse.Model.extend({
   switchToActing: function() {
     this.setProperties({
       username: this.get('acting_username'),
-      avatar_template: this.get('acting_avatar_template'),
+      uploaded_avatar_id: this.get('acting_uploaded_avatar_id'),
       name: this.get('actingDisplayName')
     });
   }

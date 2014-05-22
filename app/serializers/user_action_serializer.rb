@@ -23,30 +23,20 @@ class UserActionSerializer < ApplicationSerializer
              :hidden,
              :moderator_action,
              :edit_reason,
-             :category_id
+             :category_id,
+             :uploaded_avatar_id,
+             :acting_uploaded_avatar_id
 
   def excerpt
     PrettyText.excerpt(object.cooked, 300) if object.cooked
   end
 
   def avatar_template
-    avatar_for(
-      object.user_id,
-      object.email,
-      object.use_uploaded_avatar,
-      object.uploaded_avatar_template,
-      object.uploaded_avatar_id
-    )
+    User.avatar_template(object.username, object.uploaded_avatar_id)
   end
 
   def acting_avatar_template
-    avatar_for(
-      object.acting_user_id,
-      object.acting_email,
-      object.acting_use_uploaded_avatar,
-      object.acting_uploaded_avatar_template,
-      object.acting_uploaded_avatar_id
-    )
+    User.avatar_template(object.acting_username, object.acting_uploaded_avatar_id)
   end
 
   def include_name?

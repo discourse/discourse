@@ -366,6 +366,8 @@ Discourse::Application.routes.draw do
   post "draft" => "draft#update"
   delete "draft" => "draft#destroy"
 
+  get "avatar/:username/:size/:version.png" => "avatar#show", format: false
+
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
 
   get "robots.txt" => "robots_txt#index"

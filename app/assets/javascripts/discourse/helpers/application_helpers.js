@@ -183,16 +183,6 @@ Handlebars.registerHelper('avatar', function(user, options) {
     var username = Em.get(user, 'username');
     if (!username) username = Em.get(user, options.hash.usernamePath);
 
-    var avatarTemplate;
-    var template = options.hash.template;
-    if (template && template !== 'avatar_template') {
-      avatarTemplate = Em.get(user, template);
-      if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.' + template);
-    }
-
-    if (!avatarTemplate) avatarTemplate = Em.get(user, 'avatar_template');
-    if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.avatar_template');
-
     var title;
     if (!options.hash.ignoreTitle) {
       // first try to get a title
@@ -208,6 +198,10 @@ Handlebars.registerHelper('avatar', function(user, options) {
         }
       }
     }
+
+    // this is simply done to ensure we cache images correctly
+    var uploadedAvatarId = Em.get(user, 'uploaded_avatar_id') || Em.get(user, 'user.uploaded_avatar_id') || "_1";
+    var avatarTemplate = Discourse.User.avatarTemplate(username,uploadedAvatarId);
 
     return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
       size: options.hash.imageSize,
@@ -228,11 +222,19 @@ Handlebars.registerHelper('avatar', function(user, options) {
   @for Handlebars
 **/
 Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
+
+  var username = Em.get(user, 'username');
+
+  console.log(options.hash);
+
+  var uploadId = (options.hash.uploadId && Em.get(user, options.hash.uploadId)) || Em.get(user, 'uploaded_avatar_id');
+  var avatarTemplate = Discourse.User.avatarTemplate(username,uploadId);
+
   return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
     size: options.hash.imageSize,
-    avatarTemplate: Em.get(user, options.hash.template || 'avatar_template')
+    avatarTemplate: avatarTemplate
   }));
-}, 'avatar_template', 'uploaded_avatar_template', 'gravatar_template');
+}, 'uploadId', 'username', 'uploaded_avatar_id');
 
 /**
   Nicely format a date without binding or returning HTML

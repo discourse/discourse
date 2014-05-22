@@ -33,6 +33,7 @@ class User < ActiveRecord::Base
   has_many :topic_links, dependent: :destroy
   has_many :uploads
 
+  has_one :user_avatar, dependent: :destroy
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
@@ -49,7 +50,7 @@ class User < ActiveRecord::Base
   has_one :user_search_data, dependent: :destroy
   has_one :api_key, dependent: :destroy
 
-  belongs_to :uploaded_avatar, class_name: 'Upload', dependent: :destroy
+  belongs_to :uploaded_avatar, class_name: 'Upload'
 
   delegate :last_sent_email_address, :to => :email_logs
 
@@ -72,6 +73,7 @@ class User < ActiveRecord::Base
 
   after_create :create_email_token
   after_create :create_user_stat
+  after_save :refresh_avatar
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -336,25 +338,27 @@ class User < ActiveRecord::Base
     "//www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
   end
 
+
   # Don't pass this up to the client - it's meant for server side use
   # This is used in
   #   - self oneboxes in open graph data
   #   - emails
   def small_avatar_url
-    template = avatar_template
-    schemaless template.gsub("{size}", "45")
+    avatar_template_url.gsub("{size}", "45")
   end
 
-  # the avatars might take a while to generate
-  # so return the url of the original image in the meantime
-  def uploaded_avatar_path
-    return unless SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
-    avatar_template = uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+  def avatar_template_url
     schemaless absolute avatar_template
   end
 
+  def self.avatar_template(username,uploaded_avatar_id)
+    id = uploaded_avatar_id || -1
+    username ||= ""
+    "/avatar/#{username.downcase}/{size}/#{id}.png"
+  end
+
   def avatar_template
-    uploaded_avatar_path || User.gravatar_template(id != -1 ? email : "team@discourse.org")
+    self.class.avatar_template(username,uploaded_avatar_id)
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
@@ -616,6 +620,20 @@ class User < ActiveRecord::Base
     Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.id, redirected_at: Time.zone.now)
   end
 
+  def refresh_avatar
+    avatar = user_avatar || UserAvatar.create!(user_id: id)
+
+    if SiteSetting.automatically_download_gravatars?
+      avatar.update_gravatar! unless avatar.last_gravatar_download_attempt
+    end
+
+    if SiteSetting.enable_system_avatars?
+      avatar.update_system_avatar! if !avatar.system_upload_id || username_changed?
+    end
+
+    self.uploaded_avatar_id = (avatar.gravatar_upload_id || avatar.system_upload_id) unless uploaded_avatar_id
+  end
+
   protected
 
   def cook
@@ -778,7 +796,6 @@ end
 #  primary_group_id              :integer
 #  locale                        :string(10)
 #  profile_background            :string(255)
-#  email_hash                    :string(255)
 #  registration_ip_address       :inet
 #  last_redirected_to_top_at     :datetime
 #

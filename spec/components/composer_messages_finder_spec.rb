@@ -112,7 +112,7 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't return notifications for users who have custom avatars" do
-        user.user_stat.has_custom_avatar = true
+        user.uploaded_avatar_id = 1
         finder.check_avatar_notification.should be_blank
       end
 

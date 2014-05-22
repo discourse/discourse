@@ -326,6 +326,10 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
+  avatarTemplate: function(){
+    return Discourse.User.avatarTemplate(this.get('username'),this.get('uploaded_avatar_id'));
+  }.property('uploaded_avatar_id', 'username'),
+
   /*
     Change avatar selection
 
@@ -413,6 +417,11 @@ Discourse.User = Discourse.Model.extend({
 });
 
 Discourse.User.reopenClass(Discourse.Singleton, {
+
+  avatarTemplate: function(username, uploadedAvatarId){
+    return Discourse.getURL("/avatar/" + username.toLowerCase() + "/{size}/" + uploadedAvatarId + ".png");
+  },
+
   /**
     Find a `Discourse.User` for a given username.
 
