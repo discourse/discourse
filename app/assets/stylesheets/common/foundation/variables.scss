@@ -33,7 +33,7 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 
 @function scale-color-diff() {
     @if lightness($primary) < lightness($secondary) {
-      @return scale-color($primary, $lightness: 95%)
+      @return scale-color($primary, $lightness: 90%)
     }
     @else {
       @return scale-color($primary, $lightness: -60%)
