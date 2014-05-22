@@ -2,11 +2,9 @@ require_dependency "auth/current_user_provider"
 
 class Auth::DefaultCurrentUserProvider
 
-  CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER".freeze
-  API_KEY ||= "api_key".freeze
-  API_KEY_ENV ||= "_DISCOURSE_API".freeze
-  TOKEN_COOKIE ||= "_t".freeze
-  PATH_INFO ||= "PATH_INFO".freeze
+  CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
+  API_KEY ||= "_DISCOURSE_API"
+  TOKEN_COOKIE ||= "_t"
 
   # do all current user initialization here
   def initialize(env)
@@ -14,11 +12,12 @@ class Auth::DefaultCurrentUserProvider
     @request = Rack::Request.new(env)
   end
 
+
   # our current user, return nil if none is found
   def current_user
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
 
-    request = @request
+    request = Rack::Request.new(@env)
 
     auth_token = request.cookies[TOKEN_COOKIE]
 
@@ -32,19 +31,33 @@ class Auth::DefaultCurrentUserProvider
       current_user = nil
     end
 
-    if current_user && should_update_last_seen?
+    if current_user
+
       u = current_user
       Scheduler::Defer.later do
         u.update_last_seen!
         u.update_ip_address!(request.ip)
       end
+
     end
 
     # possible we have an api call, impersonate
-    if api_key = request[API_KEY]
-      current_user = lookup_api_user(api_key, request)
-      raise Discourse::InvalidAccess unless current_user
-      @env[API_KEY_ENV] = true
+    unless current_user
+      if api_key_value = request["api_key"]
+        api_key = ApiKey.where(key: api_key_value).includes(:user).first
+        if api_key.present?
+          @env[API_KEY] = true
+          api_username = request["api_username"]
+
+          if api_key.user.present?
+            raise Discourse::InvalidAccess.new if api_username && (api_key.user.username_lower != api_username.downcase)
+            current_user = api_key.user
+          elsif api_username
+            current_user = User.find_by(username_lower: api_username.downcase)
+          end
+
+        end
+      end
     end
 
     @env[CURRENT_USER_KEY] = current_user
@@ -82,28 +95,8 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def has_auth_cookie?
-    cookie = @request.cookies[TOKEN_COOKIE]
+    request = Rack::Request.new(@env)
+    cookie = request.cookies[TOKEN_COOKIE]
     !cookie.nil? && cookie.length == 32
   end
-
-  def should_update_last_seen?
-    !(@request.path =~ /^\/message-bus\//)
-  end
-
-  protected
-
-  def lookup_api_user(api_key_value, request)
-    api_key = ApiKey.where(key: api_key_value).includes(:user).first
-    if api_key
-      api_username = request["api_username"]
-      if api_key.user
-        api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
-      elsif api_username
-        User.find_by(username_lower: api_username.downcase)
-      else
-        nil
-      end
-    end
-  end
-
 end

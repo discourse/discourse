@@ -163,14 +163,16 @@ describe 'api' do
 
     it 'disallows phonies to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
-      put :bookmark, bookmarked: "true", post_id: post.id, api_key: SecureRandom.hex(32), api_username: user.username, format: :json
-      response.code.to_i.should == 403
+      lambda do
+        put :bookmark, bookmarked: "true", post_id: post.id, api_key: SecureRandom.hex(32), api_username: user.username, format: :json
+      end.should raise_error Discourse::NotLoggedIn
     end
 
     it 'disallows blank api' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
-      put :bookmark, bookmarked: "true", post_id: post.id, api_key: "", api_username: user.username, format: :json
-      response.code.to_i.should == 403
+      lambda do
+        put :bookmark, bookmarked: "true", post_id: post.id, api_key: "", api_username: user.username, format: :json
+      end.should raise_error Discourse::NotLoggedIn
     end
   end
 end

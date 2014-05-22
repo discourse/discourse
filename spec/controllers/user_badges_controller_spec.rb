@@ -59,7 +59,7 @@ describe UserBadgesController do
     it 'grants badges from master api calls' do
       api_key = Fabricate(:api_key)
       StaffActionLogger.any_instance.expects(:log_badge_grant).never
-      xhr :post, :create, badge_id: badge.id, username: user.username, api_key: api_key.key, api_username: "system"
+      xhr :post, :create, badge_id: badge.id, username: user.username, api_key: api_key.key
       response.status.should == 200
       user_badge = UserBadge.find_by(user: user, badge: badge)
       user_badge.should be_present

@@ -5,9 +5,10 @@ describe CurrentUser do
   it "allows us to lookup a user from our environment" do
     user = Fabricate(:user, auth_token: EmailToken.generate_token, active: true)
     EmailToken.confirm(user.auth_token)
-
-    env = Rack::MockRequest.env_for("/test", "HTTP_COOKIE" => "_t=#{user.auth_token};")
-    CurrentUser.lookup_from_env(env).should == user
+    CurrentUser.lookup_from_env("HTTP_COOKIE" => "_t=#{user.auth_token};").should == user
   end
+
+  # it "allows us to lookup a user from our app" do
+  # end
 
 end
