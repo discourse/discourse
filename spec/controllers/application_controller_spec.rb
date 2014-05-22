@@ -130,6 +130,15 @@ describe TopicsController do
 end
 
 describe 'api' do
+
+  before do
+    ActionController::Base.allow_forgery_protection = true
+  end
+
+  after do
+    ActionController::Base.allow_forgery_protection = false
+  end
+
   describe PostsController do
     let(:user) do
       Fabricate(:user)
