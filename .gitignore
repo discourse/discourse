@@ -23,6 +23,7 @@ public/tombstone/*
 /coverage/*
 
 /public/assets/*
+/public/tombstone/*
 /bundle/*
 
 config/discourse.pill
