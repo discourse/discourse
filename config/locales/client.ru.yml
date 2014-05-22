@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 ru:
   js:
@@ -146,7 +146,6 @@ ru:
       other: "за {{count}} дней"
     suggested_topics:
       title: "Похожие темы"
-    new_topics_inserted: "новых тем: {{count}}"
     show_new_topics: "Показать."
     preview: "предпросмотр"
     cancel: "отмена"
@@ -204,8 +203,6 @@ ru:
       '13': "Входящие"
     categories:
       all: "все категории"
-      all_subcategories: "все подкатегории"
-      no_subcategory: "без подкатегории"
       category: "Категория"
       posts: "Новые сообщения"
       topics: "Новые темы"
@@ -239,7 +236,6 @@ ru:
       deleted: "(удален)"
       suspended_notice: "Пользователь заморожен до {{date}}."
       suspended_reason: "Причина:"
-      mailing_list_mode: "Получать письмо каждый раз, когда появляется сообщение на форуме (кроме тех случаев, когда тема или категория отключены)"
       watched_categories: "Наблюдение"
       watched_categories_instructions: "Вы будете автоматически отслеживать новые темы в этих категориях. Вам будут приходить уведомления о новых сообщениях и темах, плюс рядом со списком тем будет отображено количество непрочитанных и новых сообщений."
       tracked_categories: "Отслеживаемая"
@@ -281,8 +277,6 @@ ru:
         uploaded_avatar_empty: "Добавить собственный аватар"
         upload_title: "Загрузка собственного аватара"
         image_is_not_a_square: "Внимание: мы обрезали ваше изображение; оно не квадратное"
-      change_profile_background:
-        title: "Изменить фон профиля"
       email:
         title: "Email"
         instructions: "Ваш адрес электронной почты всегда скрыт."
@@ -1154,7 +1148,6 @@ ru:
         new_style: "Новый стиль"
         delete: "Удалить"
         delete_confirm: "Удалить настройки?"
-        about: "Настройка сайта позволяет изменять таблицы стилей и заголовки. Выберите или добавьте что-нибудь для начала редактирования."
         colors:
           copy_name_prefix: "Копия"
       email:
@@ -1367,7 +1360,6 @@ ru:
       site_settings:
         show_overriden: 'Показывать только переопределенные'
         title: 'Настройки сайта'
-        reset: 'вернуть по умолчанию'
         none: '(нет)'
         no_results: "Ничего не найдено."
         clear_filter: "Очистить"

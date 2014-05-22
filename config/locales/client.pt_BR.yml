@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 pt_BR:
   js:
@@ -132,7 +132,6 @@ pt_BR:
       not_bookmarked: "você leu esta mensagem; clique para favoritar."
       last_read: "este é o último post que você leu; clique para marcá-lo."
       remove: "Remover Favorito"
-    new_topics_inserted: "{{count}} novos tópicos."
     show_new_topics: "Clique para mostrar."
     preview: "prever"
     cancel: "cancelar"
@@ -142,6 +141,10 @@ pt_BR:
     upload: "Enviar"
     uploading: "Enviando..."
     uploaded: "Enviado!"
+    enable: "Habilitar"
+    disable: "Desabilitar"
+    undo: "Desfazer"
+    revert: "Reverter"
     choose_topic:
       none_found: "Nenhum tópico encontrado."
       title:
@@ -190,8 +193,6 @@ pt_BR:
       '13': "Caixa de Entrada"
     categories:
       all: "todas as categorias"
-      all_subcategories: "todas as subcategorias"
-      no_subcategory: "nenhuma subcategoria"
       category: "Categoria"
       posts: "Novas Mensagens"
       topics: "Novos Tópicos"
@@ -231,7 +232,6 @@ pt_BR:
       deleted: "(removido)"
       suspended_notice: "Esse usuário está suspenso até {{date}}."
       suspended_reason: "Motivo:"
-      mailing_list_mode: "Receba um e-mail cada vez que uma mensagem é feita no fórum (a menos que tenha silenciado o tópico ou categoria)"
       watched_categories: "Acompanhados"
       watched_categories_instructions: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
       tracked_categories: "Monitorado"
@@ -242,6 +242,7 @@ pt_BR:
       delete_account_confirm: "Tem certeza de que deseja excluir permanentemente a sua conta? Essa ação não pode ser desfeita!"
       deleted_yourself: "Sua conta foi excluída com sucesso."
       delete_yourself_not_allowed: "Você não pode excluir a sua conta agora. Contate um administrador para apagar a sua conta para você."
+      unread_message_count: "Mensagens"
       messages:
         all: "Todas"
         mine: "Minha"
@@ -273,8 +274,6 @@ pt_BR:
         uploaded_avatar_empty: "Adicionar foto pessoal"
         upload_title: "Enviar sua foto"
         image_is_not_a_square: "Atenção: nos cortamos sua imagem; não é quadrada."
-      change_profile_background:
-        title: "Mudar plano de fundo do Perfil "
       email:
         title: "Email"
         instructions: "O seu endereço de email não será visível publicamente"
@@ -847,6 +846,9 @@ pt_BR:
             other: "Você também quer remover as {{count}} respostas diretas a esta postagem?"
           yes_value: "Sim, remover as respostas também"
           no_value: "Não, somente esta postagem"
+        admin: "ações de postarem do admin"
+        wiki: "Postagem Wiki"
+        unwiki: "Remover Wiki"
       actions:
         flag: 'Sinalização'
         clear_flags:
@@ -1301,7 +1303,6 @@ pt_BR:
         new_style: "Novo Estilo"
         delete: "Apagar"
         delete_confirm: "Apagar esta personalização?"
-        about: "Personalizações do Site permite que você modifique as folhas de estilo e os cabeçalhos do site. Escolha um ou crie um e comece a editar."
         color: "Cor"
         opacity: "Opacidade"
         copy: "Copiar"
@@ -1311,10 +1312,14 @@ pt_BR:
         colors:
           title: "Cores"
           long_title: "Esquema de Cores"
-          about: "Esquema de cores permitem você modificar as cores usadas no site, sem escrever CSS. Escolha ou adicione uma para começar."
           new_name: "Novo esquema de cor"
           copy_name_prefix: "Cópia de"
           delete_confirm: "Apagar esse esquema de cor?"
+          undo: "desfazer"
+          undo_title: "Desfazer suas mudanças para esta cor desde a última vez que foi salvo."
+          revert: "reverter"
+          primary:
+            name: 'primário'
       email:
         title: "Email"
         settings: "Settings"
@@ -1506,9 +1511,6 @@ pt_BR:
         cant_delete_all_posts:
           one: "Não é possível excluir todas as mensagens. Algumas mensagens são mais antigas do que %{count} dia. (Configuração delete_user_max_post_age.)"
           other: "Não é possível excluir todas as mensagens. Algumas mensagens são mais antigas do que %{count} dias. (Configuração delete_user_max_post_age.)"
-        cant_delete_all_too_many_posts:
-          one: "Não é possível remover todos os posts porque o usuário tem mais de 1 post. (Configuração delete_all_posts_max)"
-          other: "Não é possível remover todos os posts porque o usuário tem mais de %{count} posts. (Configuração delete_all_posts_max)"
         delete_confirm: "Tem CERTEZA que você quer apagar este usuário permanentemente do site? Esta ação é definitiva!"
         delete_and_block: "<b>Sim</b>, e <b>bloquear</b> futuros cadastros deste e-mail e endereço IP."
         delete_dont_block: "<b>Sim</b>, apenas excluir o usuário"
@@ -1550,7 +1552,6 @@ pt_BR:
       site_settings:
         show_overriden: 'Exibir apenas valores alterados'
         title: 'Configurações'
-        reset: 'restaurar valores padrão'
         none: 'nenhum'
         no_results: "Nenhum resultado encontrado."
         clear_filter: "Limpar"
@@ -1648,6 +1649,3 @@ pt_BR:
         one: "1 emblema"
         other: "%{count} emblemas"
       select_badge_for_title: Selecione um complemento para usar como seu título
-      example_badge:
-        name: Emblema de Exemplo
-        description: Este é um exemplo genérico de emblema.

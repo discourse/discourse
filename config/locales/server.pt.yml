@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 pt:
   dates:
@@ -507,7 +507,6 @@ pt:
     invite_only: "Registro público está desativado, usuários novos tem que ser convidados"
     login_required: "Exigir autenticação para ler as postagens"
     enable_local_logins: "Ativar autenticação local"
-    enable_google_logins: "Ativar autenticação pelo Google"
     enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
     twitter_consumer_key: "consumer key registrada em dev.twitter.com (usada para fazer autenticação via twitter)"
@@ -725,12 +724,6 @@ pt:
         Por favor [review the flags](/admin/flags). Se %{username} foi bloqueado de postar indevidamente, clique no botão desbloquear em [the admin page for this user](%{user_url}).⏎
     spam_post_blocked:
       subject_template: "Mensagens do novo utilizador %{username} bloqueadas por repetição de ligações"
-      text_body_template: |
-        Esta é uma mensagem automática para o informar que o novo utilizador [%{username}](%{base_url}%{user_url}) tentou criar várias mensagens com ligações para %{domains}, mas essas mensagens foram bloqueadas para evitar spam. O utilizador em questão pode ainda criar novas mensagens, mas que não tenham ligações para %{domains}.
-
-        Por favor  [review the user](%{base_url}%{user_url})
-
-        Esta anomaila pode ser alterada através de `newuser_spam_host_threshold` nas configurações do sítio.
     unblocked:
       subject_template: "Conta desbloqueada"
       text_body_template: |

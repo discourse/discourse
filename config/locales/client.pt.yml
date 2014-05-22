@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 pt:
   js:
@@ -121,7 +121,6 @@ pt:
       other: "em {{count}} dias"
     suggested_topics:
       title: "Tópicos Sugeridos"
-    new_topics_inserted: "{{count}} novos tópicos."
     show_new_topics: "Selecione para mostrar."
     preview: "prever"
     cancel: "cancelar"
@@ -967,7 +966,6 @@ pt:
         new_style: "Novo Estilo"
         delete: "Apagar"
         delete_confirm: "Apagar esta personalização?"
-        about: "Personalizações do Site permitem que modifique as folhas de estilo e os cabeçalhos do site. Escolha um ou crie um e comece a editar."
       email:
         title: "Email"
         settings: "Configurações"
@@ -1158,7 +1156,6 @@ pt:
       site_settings:
         show_overriden: 'Apenas mostrar valores alterados'
         title: 'Configurações do Site'
-        reset: 'restaurar valores padrão'
         none: 'nenhum'
         no_results: "Não foi encontrado nenhum resultado."
         categories:

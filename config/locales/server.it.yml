@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 it:
   dates:
@@ -295,9 +295,11 @@ it:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
+      description: 'Questo post è completamente off-topic nell''argomento corrente e probabilmente dovrebbe essere spostato. Se questo è un topic forse non deve stare qui.'
       long_form: 'segnalato come off-topic'
     spam:
       title: 'Spam'
+      description: 'Questo post è una pubblicità. Non è né utile né rilevante ai fini di questo topic, ha bensì natura promozionale.'
       long_form: 'segnalato come spam'
     inappropriate:
       title: 'Inappropriato'
@@ -613,7 +615,6 @@ it:
     sso_overrides_username: "Sostituisce gli username locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle differenze dei requisiti di lunghezza)"
     sso_overrides_name: "Sostituisce i nomi locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per i nomi locali)"
     enable_local_logins: "Abilita l'autenticazione locale di username e password"
-    enable_google_logins: "Abilita l'autenticazione via Google"
     enable_yahoo_logins: "Abilita l'autenticazione via Yahoo"
     enable_twitter_logins: "Abilita l'autenticazione via Twitter, richiede twitter_consumer_key e twitter_consumer_secret"
     twitter_consumer_key: "Consumer key per autenticazione via Twitter, ottenibile da http://dev.twitter.com"
@@ -769,7 +770,6 @@ it:
   most_recent_poster: "Ultimo poster"
   frequent_poster: "Utente assiduo"
   redirected_to_top_reasons:
-    new_user: "Benvenuto! Come nuovo utente, questa sarà la tua homepage finché non avrai avuto il tempo di dare un'occhiata in giro. Questa è una selezione dei topic più popolari."
     not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Queste sono le discussioni più importanti da quando te ne sei andato."
   move_posts:
     new_topic_moderator_post:
@@ -1037,12 +1037,6 @@ it:
         La soglia può essere modificata tramite l'impostazione di blocco dei nuovi utenti.
     spam_post_blocked:
       subject_template: "I post del nuovo utente %{username} sono stati bloccati per inserimento di link ripetuti"
-      text_body_template: |
-        Questo è un messaggio automatico per informarti che il nuovo utente [%{username}](%{base_url}%{user_url}) ha creato diversi messaggi con link a %{domains}, ma questi messaggi sono stati bloccati per evitare lo spam. L'utente è ancora in grado di creare post ma senza link verso %{domains}.
-
-        Per favore [controlla questo utente](%{base_url}%{user_url}).
-
-        Questa soglia può essere modificata tramite l'impostazione `newuser_spam_host_threshold`del sito.
     unblocked:
       subject_template: "Account sbloccato"
       text_body_template: |

@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 zh_TW:
   dates:
@@ -32,13 +32,13 @@ zh_TW:
     permalink: "永久連結"
     in_reply_to: "▶ %{username}"
   too_many_mentions:
-    zero: "抱歉, 你無法提及(@)用戶。"
-    one: "抱歉, 你每次只能提及(@)一個用戶。"
-    other: "抱歉, 你每次只能提及(@) %{count} 個用戶。"
+    zero: "抱歉，你無法提及 (@) 其他用戶。"
+    one: "抱歉，你在一篇文章裡只能提及 (@) 一個用戶。"
+    other: "抱歉, 你在一篇文章裡只能提及 (@) %{count} 個用戶。"
   too_many_mentions_newuser:
-    zero: "抱歉, 訪客無法提及(@)用戶。"
-    one: "抱歉, 訪客每次只能提及(@)一個用戶。"
-    other: "抱歉, 訪客每次只能提及(@) %{count} 個用戶。"
+    zero: "抱歉，新用戶無法提及 (@) 其他用戶。"
+    one: "抱歉，新用戶在一篇文章裡只能提及 (@) 一個用戶。"
+    other: "抱歉, 新用戶在一篇文章裡只能提及 (@) %{count} 個用戶。"
   too_many_images:
     zero: "抱歉, 訪客無法貼圖。"
     one: "抱歉, 訪客每次只能張貼一張圖片。"
@@ -121,6 +121,10 @@ zh_TW:
           attributes:
             archetype:
               cant_send_pm: "抱歉，你不能向該用戶發送私人訊息。"
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "不是一個有效顏色"
   user_profile:
     no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
@@ -140,9 +144,9 @@ zh_TW:
     regular:
       title: "一般用戶"
     leader:
-      title: "首席用戶"
+      title: "領袖"
     elder:
-      title: "長老用戶"
+      title: "長老"
   rate_limiter:
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     hours:
@@ -290,7 +294,7 @@ zh_TW:
       xaxis: "天"
       yaxis: "瀏覽量"
     signups:
-      title: "新註冊用戶"
+      title: "用戶"
       xaxis: "天"
       yaxis: "新用戶數量"
     topics:
@@ -367,6 +371,9 @@ zh_TW:
     sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
     queue_size_warning: '排定中的任務數量為%{queue_size}，任務較多。這可能是因為 Sidekiq 程序出現問題, 或者需要更多的 Sidekiq 程序。'
     memory_warning: '伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體'
+    enable_google_logins_warning: "你正在使用已作廢的 Google OpenID 認證方式。 Google 對於 Open ID 的支援將到 2015 年 4 月 20 日 為止。請儘早開始使用 Google Oauth2。"
+    both_googles_warning: "你已將網站設定中 enable_google_logins 和 enable_google_oauth2_logins 兩者皆勾選。請停用 enable_google_logins。"
+    google_oauth2_config_warning: '伺服器設定為允許使用 Google Oauth2 註冊以及登入 (enable_google_oauth2_logins)，但未設定客戶端 id 和客戶端 secret。請至<a href="/admin/site_settings">網站設定</a>裡更改設定。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">參閱教學指南</a>。'
     facebook_config_warning: '伺服器允許使用 Facebook 帳號登入 (enable_facebook_logins), 但未有設定 app id 及 app secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">設定教學指南</a>。'
     twitter_config_warning: '伺服器允許使用 Twitter 帳號登入 (enable_twitter_logins), 但未有設定 key 和 secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">設定教學指南</a>。'
     github_config_warning: '伺服器允許使用 GitHub 帳號登入  (enable_github_logins), 但未有設定 client id 和 secret values。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">設定教學指南</a>。'
@@ -442,6 +449,7 @@ zh_TW:
     max_image_width: "文章內圖片容許的最大寬度"
     max_image_height: "文章內圖片容許的最大高度"
     category_featured_topics: "在分類 /categories 頁面每個分類顯示的討論話題數目。此數值的改變最多需要 15 分鐘才會反應在分類頁面上。"
+    fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 標籤到所有提交的使用者資訊（以防止搜尋引擎搜集），除了內部連結（包括父系網域名）。修改此設置將要求你更新所有已有的 markdown 標籤內容"
     exclude_rel_nofollow_domains: "不添加 nofollow 標籤到一列逗號分割的功能變數名稱 （使用父系網域名，例如 tld.com，將自動允許子功能變數名稱，例如 sub.tld.com）"
     post_excerpt_maxlength: "文章摘要最大字數"
@@ -490,8 +498,11 @@ zh_TW:
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
     invite_only: "公開註冊功能已關閉，新使用者必須透過邀請。"
     login_required: "須通過驗證才能閱讀文章"
-    enable_google_logins: "啟用穀歌（Google）帳號驗證登入"
+    enable_google_logins: "( 已作廢 ) 啟用 Google 認證。這是已經被 Google 作廢的 Open ID 認證方式，新的安裝將無法使用。請改用 Google Oauth2。現有的安裝必須在 2015 年 4 月 20 日以前移轉至 Google Oauth2。"
     enable_yahoo_logins: "啟用雅虎（Yahoo）帳號驗證登入"
+    enable_google_oauth2_logins: "啟用 Google Oauth2 認證。這是目前 Google 支援的認證方式，需要 key 以及 secret。"
+    google_oauth2_client_id: "你的 Google 應用程式的客戶端 ID"
+    google_oauth2_client_secret: "你的 Google 應用程式的客戶端 secret"
     enable_twitter_logins: "啟用推特（Twitter）帳號驗證登入，需要 twitter_consumer_key 和 twitter_consumer_secret"
     twitter_consumer_key: "推特帳號驗證的客戶密匙（Consumer key），到 http://dev.twitter.com 來註冊獲取"
     twitter_consumer_secret: "推特帳號驗證的客戶密碼（Consumer secret），到 http://dev.twitter.com 來註冊獲取"
@@ -555,11 +566,13 @@ zh_TW:
     newuser_spam_host_threshold: "用戶在一篇文章中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇文章被認為是垃圾文章。"
     staff_like_weight: "當工作人員按讚時所給予的額外加權係數。"
     reply_by_email_enabled: "開啟透過電子郵件回覆討論話題的功能"
+    public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單"
     enable_names: "允許用戶顯示他們的全名"
     display_name_on_posts: "在用戶的文章上同時顯示其全名"
     invites_shown: "使用者頁面上顯示的最大邀請數"
     embed_category: "已建立之討論話題的分類"
     embed_post_limit: "最大內嵌文章數"
+    enable_cdn_js_debugging: "對所有 js includes 增加 crossorigin 權限使 /logs 能顯示適當的錯誤訊息"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
     liked: "%{display_username} 在 %{link} 按讚了你的文章 "
@@ -581,7 +594,7 @@ zh_TW:
   most_recent_poster: "當前大部分文章作者"
   frequent_poster: "頻繁發文者"
   redirected_to_top_reasons:
-    new_user: "歡迎！身為一位新訪客，在你花些時間到處看看之前，這裡將會是你的首頁。先來看看這些歷來最熱門的討論話題吧！"
+    new_user: "歡迎加入此社群！請看看我們最近熱門的討論話題。"
   move_posts:
     new_topic_moderator_post:
       other: "移動了 %{count} 篇文章到新的標題: %{topic_link}"
@@ -771,6 +784,12 @@ zh_TW:
       subject_template: "新用戶 %{username} 受到投訴已被封鎖"
     spam_post_blocked:
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
+      text_body_template: |
+        這是一則自動產生的訊息，通知你有一位新用戶 [%{username}](%{base_url}%{user_url}) 曾嘗試發表多篇內含連結至 %{domains} 的文章。為了阻擋垃圾內容，那些文章已被封鎖。該用戶仍然可以發表不含連結至 %{domains} 的新文章。
+
+        請[審查該用戶](%{base_url}%{user_url})。
+
+        相關設定可在 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 網站設定中更改。
     unblocked:
       subject_template: "帳號解除封鎖"
   unsubscribe_link: "如果你希望取消這些郵件的訂閱，請瀏覽 [用戶偏好設定](%{user_preferences_url})。"

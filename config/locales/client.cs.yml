@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 cs:
   js:
@@ -146,7 +146,6 @@ cs:
       other: "za {{count}} dní"
     suggested_topics:
       title: "Doporučená témata"
-    new_topics_inserted: "{{count}} nových témat."
     show_new_topics: "Klikněte pro zobrazení."
     preview: "ukázka"
     cancel: "zrušit"
@@ -204,8 +203,6 @@ cs:
       '13': "Přijaté zprávy"
     categories:
       all: "všechny kategorie"
-      all_subcategories: "všechny podkategorie"
-      no_subcategory: "žádná podkategorie"
       category: "Kategorie"
       posts: "Nové příspěvky"
       topics: "Nová témata"
@@ -247,7 +244,6 @@ cs:
       deleted: "(odstraněno)"
       suspended_notice: "Uživatel je suspendován do {{date}}."
       suspended_reason: "Důvod: "
-      mailing_list_mode: "Obdržet email za každý nový příspěvek ve fóru (pokud nemáte téma nebo kategorii ztišené)"
       watched_categories: "Hlídané"
       watched_categories_instructions: "Nová témata v těchto kategoriích budou hlídaná. Na všechny nové příspěvky budete upozorněni."
       tracked_categories: "Sledované"
@@ -289,8 +285,6 @@ cs:
         uploaded_avatar_empty: "Přidat vlastní obrázek"
         upload_title: "Nahrát obrázek"
         image_is_not_a_square: "Upozornění: ořízli jsem váš obrázek; nebyl to čtverec."
-      change_profile_background:
-        title: "Změnit pozadí profilu"
       email:
         title: "Emailová adresa"
         instructions: "Vaše emailová adresa nikdy nebude veřejně zobrazena."
@@ -1339,7 +1333,6 @@ cs:
         new_style: "Nový styl"
         delete: "Smazat"
         delete_confirm: "Smazat toto přizpůsobení?"
-        about: "Přizpůsobení webu vám umožní si nastavit vlastní styly a nadpisy na webu."
       email:
         title: "Email"
         settings: "Nastavení"
@@ -1573,7 +1566,6 @@ cs:
       site_settings:
         show_overriden: 'Zobrazit pouze změněná nastavení'
         title: 'Nastavení'
-        reset: 'obnovit výchozí'
         none: 'žádné'
         no_results: "Nenalezeny žádné výsledky."
         clear_filter: "Zrušit"
@@ -1665,6 +1657,3 @@ cs:
         one: "+1 další"
         few: "+%{count} další"
         other: "+%{count} dalších"
-      example_badge:
-        name: Ukázkový odznak
-        description: Toto je obecná ukázka odznaku.

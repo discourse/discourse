@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 sv:
   js:
@@ -125,7 +125,6 @@ sv:
       other: "om {{count}} dagar"
     suggested_topics:
       title: "Föreslagna trådar"
-    new_topics_inserted: "{{count}} nya trådar."
     show_new_topics: "Klicka för att visa."
     preview: "förhandsgranska"
     cancel: "avbryt"
@@ -182,8 +181,6 @@ sv:
       '13': "Inkorg"
     categories:
       all: "alla kategorier"
-      all_subcategories: "alla underkategorier"
-      no_subcategory: "ingen subkategori"
       category: "Kategori"
       posts: "Nya inlägg"
       topics: "Nya trådar"
@@ -1194,7 +1191,6 @@ sv:
         new_style: "Ny Stil"
         delete: "Radera"
         delete_confirm: "Radera denna anpassning?"
-        about: "Sidanpassningar låter dig modifiera stylesheets och headers på sidan. Välj eller lägg till en för att börja redigera."
       email:
         title: "E-postloggar"
         settings: "Inställningar"
@@ -1418,7 +1414,6 @@ sv:
       site_settings:
         show_overriden: 'Visa bara överskrivna'
         title: 'Webbplatsinställningar'
-        reset: 'återställ till standard'
         none: 'inget'
         no_results: "Inga resultat hittades."
         clear_filter: "Rensa"

@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 he:
   js:
@@ -132,7 +132,6 @@ he:
       not_bookmarked: "קראת הודעה זו, לחץ להוספה למועדפים"
       last_read: "זו ההודעה האחרונה שקראת, לחץ להוספה למועדפים"
       remove: "הסר מהמועדפים"
-    new_topics_inserted: "{{count}} נושאים חדשים."
     show_new_topics: "לחץ כדי להציג."
     preview: "תצוגה מקדימה"
     cancel: "ביטול"
@@ -190,8 +189,6 @@ he:
       '13': "דואר נכנס"
     categories:
       all: "כל הקטגוריות"
-      all_subcategories: "כל תתי הקטגוריות"
-      no_subcategory: "ללא תת קטגוריה"
       category: "קטגוריה"
       posts: "הודעות חדשות"
       topics: "נושאים חדשים"
@@ -231,7 +228,6 @@ he:
       deleted: "(נמחק)"
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: {{date}}."
       suspended_reason: "הסיבה: "
-      mailing_list_mode: "קבל דואר אלקטרוני כל פעם שמפרסמים הודעה בפורום (אלא אם הוא או הקטגוריה מושתקים)"
       watched_categories: "נצפה"
       watched_categories_instructions: "אתה אוטומטית תצפה בכל הנושאים החדשים בקטגוריות האלה. אתה תקבל התרעות על כל ההודעות והנושאים החדשים, ובנוסף, כמות ההודעות שלא נקראו יופיעו לצד כל נושא."
       tracked_categories: "במעקב"
@@ -273,8 +269,6 @@ he:
         uploaded_avatar_empty: "הוסף תמונה אישית"
         upload_title: "העלה את התמונה שלך"
         image_is_not_a_square: "אזהרה: חתכנו את התמונה שלך, היא לא ריבועית"
-      change_profile_background:
-        title: "שנה רקע פרופיל"
       email:
         title: "דואר אלקטרוני"
         instructions: "כתובת הדואר האלקטרוני שלך לעולם לא תוצג לציבור."
@@ -1301,7 +1295,6 @@ he:
         new_style: "סגנון חדש"
         delete: "מחק"
         delete_confirm: "מחק את ההתאמה הזו?"
-        about: "התאמות של האתר מאפשרות לך לשנות stylesheets וכותרות באתר. בחר או אסף אחד כדי להתחיל לערוך."
         color: "צבע"
         opacity: "טשטוש"
         copy: "העתק"
@@ -1311,7 +1304,6 @@ he:
         colors:
           title: "צבעים"
           long_title: "סכמת צבעים"
-          about: "סכמת צבעים מאפשר לך לשנות את הצבעים שבשימוש האתר ללא כתיבת קוד CSS. בחר או הוסף אחד להתחיל."
           new_name: "סכמת צבעים חדשה"
           copy_name_prefix: "העתק של"
           delete_confirm: "מחק את סכמת הצבעים הזאת?"
@@ -1506,9 +1498,6 @@ he:
         cant_delete_all_posts:
           one: "לא יכול למחוק את כל ההודעות. חלק מההודעות ישנות יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
           other: "לא יכול למחוק את כל ההודעות. חלק מההודעות ישנות יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
-        cant_delete_all_too_many_posts:
-          one: "לא יכול למחוק את כל ההודעות כיוון למשתמש יש יותר מהודעה אחת. (הגדרת delete_all_posts_max.)"
-          other: "לא יכול למחוק את כל ההודעות כיוון שלמשתמש יש יותר מ %{count} הודעות.  (הגדרת delete_all_posts_max.)"
         delete_confirm: "אתה בטוח שברצונך למחוק את המשתמש הזה? הפעולה הזו קבועה!"
         delete_and_block: "<b>כן</b>, <b>וחסום</b> הרשמות עתידיות מכתובת הדואר האלקטרוני וה-IP האלה"
         delete_dont_block: "<b>כן</b>, רק מחק את המשתמש"
@@ -1550,7 +1539,6 @@ he:
       site_settings:
         show_overriden: 'הצג רק הגדרות ששונו'
         title: 'הגדרות'
-        reset: 'שחזר ברירת מחדל'
         none: 'ללא'
         no_results: "לא נמצאו תוצאות."
         clear_filter: "נקה"
@@ -1648,6 +1636,3 @@ he:
         one: "1 הוענק"
         other: "%{count} הוענקו"
       select_badge_for_title: בחר תג שיופיע בכותרת הפרופיל שלך
-      example_badge:
-        name: תג לדוגמה
-        description: זה תג כללי לדוגמה

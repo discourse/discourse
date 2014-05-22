@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 sv:
   dates:
@@ -470,7 +470,6 @@ sv:
     invite_only: "Allmän registrering är avstängt, nya användare måste ha en inbjudan."
     login_required: "Kräv autentisering för att läsa inlägg"
     enable_local_logins: "Aktivera traditionell autentisering med lokala användarnamn och lösenord"
-    enable_google_logins: "Enable Google authentication"
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"

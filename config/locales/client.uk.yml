@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 uk:
   js:
@@ -61,7 +61,6 @@ uk:
     max: "max"
     suggested_topics:
       title: "Пропоновані теми"
-    new_topics_inserted: "{{count}} нових тем."
     show_new_topics: "Натисніть, щоб показати."
     preview: "попередній перегляд"
     cancel: "скасувати"
@@ -115,8 +114,6 @@ uk:
       '13': "Вхідні"
     categories:
       all: "всі категорії"
-      all_subcategories: "всі підкатегорії"
-      no_subcategory: "без підкатегорії"
       category: "Категорія"
       posts: "Нові дописи"
       topics: "Нові теми"
@@ -150,7 +147,6 @@ uk:
       deleted: "(видалено)"
       suspended_notice: "Цього користувача призупинено до {{date}}."
       suspended_reason: "Причина: "
-      mailing_list_mode: "Receive an email every time a post is made on the forum (unless you have muted the topic or category)"
       watched_categories: "Відслідковувані"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Відстежувані"
@@ -192,8 +188,6 @@ uk:
         uploaded_avatar_empty: "Додати інше зображення"
         upload_title: "Завантажити своє зображення"
         image_is_not_a_square: "Попередження: ми обрізали Ваше зображення, оскільки воно не квадратне."
-      change_profile_background:
-        title: "Change Profile Background"
       email:
         title: "Електронна пошта"
         instructions: "Ваша пошта не відображається публічно."
@@ -1038,7 +1032,6 @@ uk:
         new_style: "New Style"
         delete: "Delete"
         delete_confirm: "Delete this customization?"
-        about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
       email:
         title: "Електронна пошта"
         settings: "Налаштування"
@@ -1249,7 +1242,6 @@ uk:
       site_settings:
         show_overriden: 'Показувати тільки перевизначені'
         title: 'Налаштування'
-        reset: 'за замовчуванням'
         none: 'none'
         no_results: "Не знайдено результатів."
         clear_filter: "Очистити"
