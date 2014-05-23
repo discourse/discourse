@@ -51,14 +51,14 @@ h1 .topic-statuses .topic-status i {
 
 .reply-to-tab {
   position: absolute;
-  right: 330px;
+  right: 350px;
   z-index: 400;
   padding: 13px 6px 5px;
   border-top: 1px solid scale-color-diff();
   font-size: 12px;
   color: scale-color($primary, $lightness: 50%);
   @include medium-width {
-    right: 300px;
+    right: 320px;
   }
   @include small-width {
     right: 230px;
