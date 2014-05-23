@@ -183,7 +183,6 @@ group :test, :development do
 end
 
 group :development do
-  gem 'pry-rails'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'librarian', '>= 0.0.25', require: false
