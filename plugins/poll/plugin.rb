@@ -151,11 +151,17 @@ register_css <<CSS
 
 .poll-ui table {
   margin-bottom: 5px;
+  margin-left: 20px;
 }
 
 .poll-ui tr {
   cursor: pointer;
 }
+
+.poll-ui button:first-of-type {
+  margin-left: 20px;
+}
+
 
 .poll-ui td.radio input {
   margin-left: -10px !important;
@@ -178,12 +184,12 @@ register_css <<CSS
   background-color: #FFFFB3;
 }
 
-.poll-ui button {
-  border: none;
-}
-
 .poll-ui button i.fa {
   margin-right: 2px;
+}
+
+.poll-ui .radio {
+  margin-right: 0px;
 }
 
 CSS
