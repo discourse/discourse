@@ -68,7 +68,7 @@
 
   > tbody > tr {
     &:nth-child(even) {
-      background-color: rgba($primary, .04);
+        background-color: darken($secondary, 3%);
     }
     &.archived a {
       opacity: 0.6;
@@ -362,7 +362,7 @@
 .category-list-item {
   margin-bottom: 10px;
   #topic-list tbody tr:nth-child(even) {
-    background-color: $secondary;
+    background-color: darken($secondary, 3%);
   }
   th .badge-category {
     float: left;
