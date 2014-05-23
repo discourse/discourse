@@ -80,7 +80,7 @@ test("notifications dropdown", function() {
 
     ok(exists($items), "is lazily populated after user opens it");
     ok($items.first().hasClass("read"), "correctly binds items' 'read' class");
-    equal($items.first().find('span').html(), 'notifications.replied velesin <a href="/t/a-slug/1234/2">some title</a>', "correctly generates items' content");
+    equal($items.first().find('span').html().trim(), 'notifications.replied velesin <a href="/t/a-slug/1234/2">some title</a>', "correctly generates items' content");
   });
 });
 
