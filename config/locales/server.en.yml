@@ -711,6 +711,7 @@ en:
     login_required: "Require authentication to read posts"
 
     min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
+    max_username_length: "Maximum username length. (Does not apply if global nickname uniqueness is forced)"
 
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10000 most common passwords."

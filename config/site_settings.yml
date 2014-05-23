@@ -108,7 +108,6 @@ users:
   max_username_length:
     client: true
     default: 20
-    hidden: true
   min_password_length:
     client: true
     default: 8
