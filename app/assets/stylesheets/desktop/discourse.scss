@@ -554,46 +554,56 @@ body {
 .row:after {
   clear: both;
 }
-[class*="span"] {
-  float: left;
-}
+
 .span24 {
   width: 1236px;
+  float: left;
 }
 .span15 {
   /* intentionally no width set here, do not add one */
   margin-left: 12px;
+  float: left;
 }
 .span14 {
   width: 716px;
+  float: left;
 }
 .span13 {
   width: 664px;
+  float: left;
 }
 .span11 {
   width: 560px;
+  float: left;
 }
 .span10 {
   width: 508px;
+  float: left;
 }
 .span8 {
   width: 404px;
+  float: left;
 }
 .span6 {
   width: 300px;
+  float: left;
 }
 .span5 {
   width: 248px;
+  float: left;
 }
 .span4 {
   width: 196px;
   margin-right: 12px;
+  float: left;
 }
 .span3 {
   width: 144px;
+  float: left;
 }
 .span2 {
   width: 92px;
+  float: left;
 }
 .offset2 {
   margin-left: 116px;
