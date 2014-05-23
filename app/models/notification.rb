@@ -123,12 +123,7 @@ class Notification < ActiveRecord::Base
   protected
 
   def refresh_notification_count
-    user_id = user.id
-    MessageBus.publish("/notification/#{user_id}",
-      {unread_notifications: user.unread_notifications,
-       unread_private_messages: user.unread_private_messages},
-      user_ids: [user_id] # only publish the notification to this user
-    )
+    user.publish_notifications_state
   end
 
 end

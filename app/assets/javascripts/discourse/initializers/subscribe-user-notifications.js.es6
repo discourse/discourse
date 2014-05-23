@@ -18,8 +18,15 @@ export default {
         });
       }
       bus.subscribe("/notification/" + user.get('id'), (function(data) {
+        var oldUnread = user.get('unread_notifications');
+        var oldPM = user.get('unread_private_messages');
+
         user.set('unread_notifications', data.unread_notifications);
         user.set('unread_private_messages', data.unread_private_messages);
+
+        if(oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
+          user.set('lastNotificationChange', new Date());
+        }
       }), user.notification_channel_position);
 
       bus.subscribe("/categories", function(data){

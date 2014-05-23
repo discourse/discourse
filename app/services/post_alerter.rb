@@ -76,6 +76,8 @@ class PostAlerter
 
     user.notifications.where(notification_type: type,
                              topic_id: topic.id).destroy_all
+    # HACK so notification counts sync up correctly
+    user.reload
   end
 
   def create_notification(user, type, post, opts={})
