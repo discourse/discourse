@@ -2,7 +2,7 @@ class ListController < ApplicationController
 
   skip_before_filter :check_xhr
 
-  @@categories = [
+  @categories = [
     # filtered topics lists
     Discourse.filters.map { |f| "category_#{f}".to_sym },
     Discourse.filters.map { |f| "category_none_#{f}".to_sym },
@@ -17,10 +17,36 @@ class ListController < ApplicationController
     TopTopic.periods.map { |p| "category_none_top_#{p}".to_sym },
     TopTopic.periods.map { |p| "parent_category_category_top_#{p}".to_sym },
     # category feeds
-    :category_feed,
+    :category_feed
   ].flatten
 
-  before_filter :set_category, only: @@categories
+  class << self
+    attr_accessor :categories
+
+    def best_period_for(previous_visit_at, category_id=nil)
+      best_periods_for(previous_visit_at).each do |period|
+        top_topics = TopTopic.where("#{period}_score > 0")
+        if category_id
+          top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id)
+        end
+        return period if top_topics.count >= SiteSetting.topics_per_period_in_top_page
+      end
+      # default period is yearly
+      :yearly
+    end
+
+    def best_periods_for(date)
+      date ||= 1.year.ago
+      periods = []
+      periods << :daily if date > 8.days.ago
+      periods << :weekly if date > 35.days.ago
+      periods << :monthly if date > 180.days.ago
+      periods << :yearly
+      periods
+    end
+  end
+
+  before_filter :set_category, only: ListController.categories
 
   before_filter :ensure_logged_in, except: [
     :topics_by,
@@ -322,28 +348,6 @@ class ListController < ApplicationController
     periods.each { |period| top.send("#{period}=", topic_query.list_top_for(period)) }
 
     top
-  end
-
-  def self.best_period_for(previous_visit_at, category_id=nil)
-    best_periods_for(previous_visit_at).each do |period|
-      top_topics = TopTopic.where("#{period}_score > 0")
-      if category_id
-        top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id)
-      end
-      return period if top_topics.count >= SiteSetting.topics_per_period_in_top_page
-    end
-    # default period is yearly
-    :yearly
-  end
-
-  def self.best_periods_for(date)
-    date ||= 1.year.ago
-    periods = []
-    periods << :daily if date > 8.days.ago
-    periods << :weekly if date > 35.days.ago
-    periods << :monthly if date > 180.days.ago
-    periods << :yearly
-    periods
   end
 
 end
