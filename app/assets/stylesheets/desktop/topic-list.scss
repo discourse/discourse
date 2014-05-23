@@ -322,28 +322,6 @@
 // Category list
 // --------------------------------------------------
 
-.category-column {
-  float: left;
-  width: 550px;
-  &.first {
-    margin-right: 10px;
-  }
-}
-
-@include medium-width {
-  .category-column {
-    width: 493px;
-    &.first {
-      margin-right: 9px;
-    }
-  }
-}
-
-@include small-width {
-  .category-column {
-    width: 470px;
-  }
-}
 
 .category-list-item {
   margin-bottom: 10px;
