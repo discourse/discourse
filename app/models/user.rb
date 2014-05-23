@@ -88,7 +88,7 @@ class User < ActiveRecord::Base
   scope :blocked, -> { where(blocked: true) } # no index
   scope :not_blocked, -> { where(blocked: false) } # no index
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) } # no index
-  scope :not_suspended, -> { where('suspended_till IS NULL') }
+  scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   # excluding fake users like the community user
   scope :real, -> { where('id > 0') }
 
