@@ -148,18 +148,6 @@
     line-height: 1.4;
   }
 
-  @include medium-width {
-    .main-link {
-      max-width: 300px;
-    }
-  }
-
-   @include small-width {
-    .main-link {
-     max-width: 300px;
-
-    }
-
   }
 
   .topic-statuses:empty {
