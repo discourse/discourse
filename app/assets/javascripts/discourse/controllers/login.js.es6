@@ -46,9 +46,19 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
 
   actions: {
     login: function() {
-      this.set('loggingIn', true);
-
       var loginController = this;
+      loginController.set('loggingIn', true);
+
+      // if user is logging with email change loginName to username
+      // first check if loginName is email
+      if (Discourse.Utilities.emailValid(loginController.get('loginName'))) {
+        Discourse.ajax("users/get_username_from_email", {
+          data: { email: loginController.get('loginName')},
+          type: 'GET'
+        }).then(function (result) {
+          loginController.set('loginName', result.username);
+        });
+      }
       Discourse.ajax("/session", {
         data: { login: this.get('loginName'), password: this.get('loginPassword') },
         type: 'POST'
