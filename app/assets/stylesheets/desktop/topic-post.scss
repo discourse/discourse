@@ -271,7 +271,7 @@ nav.post-controls {
     .fa-arrow-up {margin-left: 5px;}
     .row {border-top: 1px solid darken(scale-color-diff(), 10%); padding-top: 7px;}
     .reply:first-of-type .row {border-top: none;}
-
+    .quote {margin-top: 0 !important;}
   background: scale-color-diff();
   .quote .title, blockquote, .onebox, .onebox-result {
     background: darken(scale-color-diff(), 5%);
@@ -467,10 +467,9 @@ a.star {
   clear: left;
   padding: 20px 0 15px 0;
   #topic-list > tbody > tr:nth-child(even) {
-    background-color: rgba($primary, .04);
+    background-color: darken($secondary, 3%);
   }
   #topic-list > tbody > tr:nth-child(odd) {
-    background-color: $secondary;
   }
   table {
     box-shadow: none;
@@ -674,7 +673,7 @@ iframe {
 
 
 blockquote { /* solo quotes */
-  margin: 14px 0;
+  margin: 0;
   padding: 12px;
 
     a.mention {background: scale-color-diff();}
@@ -683,21 +682,30 @@ blockquote { /* solo quotes */
 }
 
 .quote { /* quotes with attribution */
-  margin-top: 14px;
-  blockquote {margin-top: 0; padding-top: 0;
-  .onebox-result {background-color: scale-color-diff();}
-
-
+  blockquote {
+      margin-top: 0;
+      padding-top: 0;
+      p:first-of-type {margin:0;}
+    .onebox-result {
+      background-color: scale-color-diff();
+    }
   }
 
   .title {
-  border-left: 5px solid darken(scale-color-diff(), 10%);
-  background-color: scale-color-diff();
-  padding: 12px;
+    border-left: 5px solid darken(scale-color-diff(), 10%);
+    background-color: scale-color-diff();
+    padding: 12px;
   .avatar { margin-right: 7px; }
-  img {margin-top: -4px;}
+  img { margin-top: -4px; }
+  }
 
-}
+  aside {
+    .quote, .title, blockquote, .onebox, .onebox-result {
+      background: darken(scale-color-diff(), 5%);
+      border-left: 5px solid darken(scale-color-diff(), 12%);
+    }
+  }
+
 }
 
 .quote-controls {
