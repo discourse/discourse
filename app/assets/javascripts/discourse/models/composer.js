@@ -498,6 +498,11 @@ Discourse.Composer = Discourse.Model.extend({
           // We created a new topic, let's show it.
           composer.set('composeState', CLOSED);
           saving = false;
+
+          // Update topic_count for the category
+          var category = Discourse.Site.currentProp('categories').find(function(x) { return x.get('id') === (parseInt(createdPost.get('category'),10) || 1); });
+          if (category) category.incrementProperty('topic_count');
+          Discourse.notifyPropertyChange('globalNotice');
         }
 
         composer.clearState();

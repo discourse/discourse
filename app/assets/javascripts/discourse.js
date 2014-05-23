@@ -164,6 +164,15 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       notices.push(I18n.t("read_only_mode.enabled"));
     }
 
+    if(Discourse.User.currentProp('admin')) {
+      var topic_count = _.reduce(Discourse.Site.currentProp('categories'), function(sum,c) {
+        return sum + (c.get('read_restricted') ? 0 : c.get('topic_count'));
+      }, 0);
+      if (topic_count < 5) {
+        notices.push(I18n.t("too_few_topics_notice"));
+      }
+    }
+
     if(!_.isEmpty(Discourse.SiteSettings.global_notice)){
       notices.push(Discourse.SiteSettings.global_notice);
     }
