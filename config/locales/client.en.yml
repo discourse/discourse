@@ -1102,7 +1102,7 @@ en:
       none: '(no category)'
       choose: 'Select a category&hellip;'
       edit: 'edit'
-      edit_long: "Edit Category"
+      edit_long: "Edit"
       view: 'View Topics in Category'
       general: 'General'
       settings: 'Settings'
