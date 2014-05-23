@@ -489,7 +489,7 @@ es:
     access_password_removal: "Tu sitio estaba usando la access_password configuración, que ha sido removida. Las login_required y must_approve_users configuraciones han sido habilitadas, que deberían ser usadas en su lugar. Las puedes cambiar en la <a href='/admin/site_settings'>Configuración del Sitio</a>. Asegúrate <a href='/admin/users/list/pending'>de aprobar los usuarios en la lista de Usuarios Pendientes</a>. (Este mensaje desaparecerá en 2 días.)"
     site_contact_username_warning: "La site_contact_username configuración está vacía. Por favor actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>. Configúrala al nombre de usuario de un administrador quien debe ser el enviador de mensajes de sistema."
     notification_email_warning: "La configuración notification_email está vacía. Por favor actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
-    enforce_global_nicknames_warning: "La configuración enforce_global_nicknames ha sido chequeada, pero la de discourse_org_access_key está vacía. Una clave de acceso Discourse.org es requerida para usar la configuración enforce_global_nicknames. Por favor actualiza tu <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    enforce_global_nicknames_warning: "Se ha marcado la opción enforce_global_nicknames, pero el valor discourse_org_access_key está vacío. Se requiere una clave de acceso de Discourse.org para utilizar la opción enforce_global_nicknames. Por favor actualiza las <a href='/admin/site_settings'>opciones del sitio</a>."
   content_types:
     education_new_reply:
       title: "Educación de nuevo usuario: primeras respuestas"
@@ -641,7 +641,8 @@ es:
     invite_expiry_days: "Cuanto tiempo son válidas las claves de invitación de usuarios, en días"
     invite_only: "Deshabilitado el registro abierto al público: los nuevos usuarios deben acceder por invitación."
     login_required: "Requerir autenticación para leer posts"
-    min_username_length: "Longitud mínima del nombre de usuario. (No aplica si se fuerza la opción de nombre de usuario único)"
+    min_username_length: "Mínimo número de caracteres para el nombre de usuario. (No se aplica si se fuerza el nombre de usuario único global)"
+    max_username_length: "Máximo número de caracteres para el nombre de usuario. (No se aplica si se fuerza el nombre de usuario único global)"
     min_password_length: "Longitud mínima de contraseña."
     block_common_passwords: "No permitir contraseñas que estén entre las 10000 más comunes."
     enable_sso: "Habilitar el single sign on mediante un sitio externo"

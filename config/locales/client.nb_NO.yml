@@ -306,7 +306,6 @@ nb_NO:
         time_read: "Lesetid"
         days_visited: "Dager Besøkt"
         account_age_days: "Kontoalder i dager"
-        create: "Inviter venner til dette forumet"
       password:
         title: "Passord"
         too_short: "Passordet ditt er for kort"

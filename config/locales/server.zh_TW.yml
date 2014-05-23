@@ -29,6 +29,7 @@ zh_TW:
   embed:
     start_discussion: "開始討論"
     continue: "繼續討論"
+    loading: "討論串載入中⋯"
     permalink: "永久連結"
     in_reply_to: "▶ %{username}"
   too_many_mentions:
@@ -498,6 +499,7 @@ zh_TW:
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
     invite_only: "公開註冊功能已關閉，新使用者必須透過邀請。"
     login_required: "須通過驗證才能閱讀文章"
+    max_username_length: "用戶名稱最大長度。( 當匿稱唯一性被強制時不適用 )"
     enable_google_logins: "( 已作廢 ) 啟用 Google 認證。這是已經被 Google 作廢的 Open ID 認證方式，新的安裝將無法使用。請改用 Google Oauth2。現有的安裝必須在 2015 年 4 月 20 日以前移轉至 Google Oauth2。"
     enable_yahoo_logins: "啟用雅虎（Yahoo）帳號驗證登入"
     enable_google_oauth2_logins: "啟用 Google Oauth2 認證。這是目前 Google 支援的認證方式，需要 key 以及 secret。"
@@ -558,6 +560,7 @@ zh_TW:
     max_image_size_kb: "允許用戶上傳的最大檔大小(以kB為單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制檔大小的配置."
     max_similar_results: "當使用者撰寫新討論話題時，顯示多少類似討論話題給使用者"
     title_prettify: "防止常見標題裡的錯別字和錯誤，包括全部大寫，首字小寫，多個！和？，結尾多餘的. 等等。"
+    title_sanitize: "從標題移除 HTML 標籤"
     topic_views_heat_low: "多少流覽量後討論話題的熱度變為低。"
     topic_views_heat_medium: "多少流覽量後討論話題的熱度變為中。"
     topic_views_heat_high: "多少流覽量後討論話題的熱度變為高。"
@@ -773,9 +776,13 @@ zh_TW:
     export_succeeded:
       subject_template: "匯出成功"
       text_body_template: "匯出操作成功。"
+    export_failed:
+      subject_template: "匯出失敗"
     import_succeeded:
       subject_template: "導入成功"
       text_body_template: "導入操作成功。"
+    import_failed:
+      subject_template: "匯入失敗"
     too_many_spam_flags:
       subject_template: "新帳號已封鎖"
     blocked_by_staff:
@@ -792,6 +799,8 @@ zh_TW:
         相關設定可在 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 網站設定中更改。
     unblocked:
       subject_template: "帳號解除封鎖"
+    download_remote_images_disabled:
+      subject_template: "停用下載遠端圖片"
   unsubscribe_link: "如果你希望取消這些郵件的訂閱，請瀏覽 [用戶偏好設定](%{user_preferences_url})。"
   user_notifications:
     previous_discussion: "之前的回覆"

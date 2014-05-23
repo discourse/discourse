@@ -365,7 +365,6 @@ ru:
         time_read: "Время чтения"
         days_visited: "Дней посещения"
         account_age_days: "Дней с момента регистрации"
-        create: "Пригласить друзей на форум"
       password:
         title: "Пароль"
         too_short: "Пароль слишком короткий."

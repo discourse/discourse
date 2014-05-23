@@ -285,7 +285,6 @@ pt:
         time_read: "Tempo de Leitura"
         days_visited: "Dias Visitados"
         account_age_days: "Idade da conta em dias"
-        create: "Convidar amigos para este Fórum"
       password:
         title: "Palavra-chave"
         too_short: "A sua palavra-chave é muito curta."

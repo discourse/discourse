@@ -354,7 +354,6 @@ he:
         time_read: "זמן קריאה"
         days_visited: "מספר ימי ביקור"
         account_age_days: "גיל החשבון בימים"
-        create: "הזמן חברים לפורום הזה"
       password:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."

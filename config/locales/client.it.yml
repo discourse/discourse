@@ -350,7 +350,6 @@ it:
         time_read: "Tempo di lettura"
         days_visited: "Presenza (giorni)"
         account_age_days: "Età dell'utente in giorni"
-        create: "Invita i tuoi amici al forum"
       password:
         title: "Password"
         too_short: "La password è troppo breve"

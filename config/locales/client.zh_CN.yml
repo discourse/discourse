@@ -110,6 +110,8 @@ zh_CN:
       created: "您给此帖的书签已加上。"
       not_bookmarked: "您已经阅读过此帖；点此给它加上书签"
       last_read: "这是您阅读过的最后一帖；点此给它加上书签"
+      remove: "删除书签"
+    new_topics_inserted: "{{count}} 个新帖子。"
     show_new_topics: "点此显示。"
     preview: "预览"
     cancel: "取消"
@@ -119,6 +121,10 @@ zh_CN:
     upload: "上传"
     uploading: "上传中..."
     uploaded: "上传完成！"
+    enable: "启用"
+    disable: "禁用"
+    undo: "重做"
+    revert: "撤销"
     choose_topic:
       none_found: "没有找到主题。"
       title:
@@ -166,6 +172,8 @@ zh_CN:
       '13': "收件箱"
     categories:
       all: "所有分类"
+      all_subcategories: "全部"
+      no_subcategory: "无"
       category: "分类"
       posts: "新帖子"
       topics: "新主题"
@@ -203,6 +211,7 @@ zh_CN:
       deleted: "（已删除）"
       suspended_notice: "该用户将被禁止登入，直至 {{date}}。"
       suspended_reason: "原因："
+      mailing_list_mode: "每次论坛中出现回帖就发送一封邮件（除非您屏蔽了主题或者分类）"
       watched_categories: "已关注"
       watched_categories_instructions: "您将自动关注这些分类的所有新主题。您将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
       tracked_categories: "已跟踪"
@@ -213,6 +222,7 @@ zh_CN:
       delete_account_confirm: "您真的要永久删除自己的账号吗？删除之后无法恢复！"
       deleted_yourself: "您的帐号已被成功删除。"
       delete_yourself_not_allowed: "您目前不能删除自己的帐号。联系管理员帮助您删除帐号。"
+      unread_message_count: "消息"
       messages:
         all: "所有"
         mine: "我的"
@@ -244,6 +254,8 @@ zh_CN:
         uploaded_avatar_empty: "添加自定义图片"
         upload_title: "上传图片"
         image_is_not_a_square: "注意：我们已经裁剪了您的图片；它不知正方形的。"
+      change_profile_background:
+        title: "个人资料背景"
       email:
         title: "电子邮箱"
         instructions: "您的电子邮箱绝不会被公开显示。"
@@ -325,7 +337,6 @@ zh_CN:
         time_read: "阅读时间"
         days_visited: "访问天数"
         account_age_days: "账号建立天数"
-        create: "邀请朋友到论坛中"
       password:
         title: "密码"
         too_short: "您设置的密码太短了。"
@@ -411,6 +422,9 @@ zh_CN:
       google:
         title: "使用 Google 帐号登入"
         message: "使用 Google 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+      google_oauth2:
+        title: "使用 Google 帐号登录"
+        message: "使用 Google 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       twitter:
         title: "使用 Twitter 帐号登入"
         message: "使用 Twitter 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
@@ -797,6 +811,9 @@ zh_CN:
             other: "您也想要删除 {{count}} 个直接回复这个帖子的回复么？"
           yes_value: "是，删除回复"
           no_value: "否，仅删除该帖"
+        admin: "帖子管理"
+        wiki: "启用维基编辑模式"
+        unwiki: "撤销维基编辑模式"
       actions:
         flag: '报告'
         clear_flags:
@@ -935,6 +952,7 @@ zh_CN:
       this_year: "今年"
       position: "位置"
       default_position: "默认位置"
+      position_disabled: '分类按照其活动显示顺序。要固定分类列表的显示顺序，启用“固定分类位置”设置'
       parent: "上级分类"
     flagging:
       title: '为何要私下报告本帖？'
@@ -1227,6 +1245,7 @@ zh_CN:
         new_style: "新样式"
         delete: "删除"
         delete_confirm: "删除本定制内容？"
+        about: "修改站点的 CSS 样式表和 HTML 头部。添加一个自定义方案开始。"
         color: "颜色"
         opacity: "透明度"
         copy: "复制"
@@ -1236,9 +1255,44 @@ zh_CN:
         colors:
           title: "颜色"
           long_title: "颜色方案"
+          about: "颜色方案让您能够让您在不写 CSS 的情况下更改色彩。添加一种颜色以开始。"
           new_name: "新的颜色方案"
           copy_name_prefix: "复制于"
           delete_confirm: "删除这个颜色方案？"
+          undo: "重做"
+          undo_title: "撤销您对这个颜色的编辑至上一次保存的状态。"
+          revert: "撤销"
+          revert_title: "重置这个颜色至 Discourse 的默认颜色方案"
+          primary:
+            name: '主要'
+            description: '大部分的文字、图标和边框。'
+          secondary:
+            name: '次要的'
+            description: '主要背景颜色和一些按钮的文字颜色。'
+          tertiary:
+            name: '第三的'
+            description: '链接、一些按钮、提示和强调颜色。'
+          quaternary:
+            name: "第四的"
+            description: "导航链接"
+          header_background:
+            name: "顶栏背景"
+            description: "站点顶栏背景颜色"
+          header_primary:
+            name: "顶栏主要"
+            description: "顶栏的文字和图标"
+          highlight:
+            name: '高亮'
+            description: '页面中高亮元素的背景色，如帖子和主题。'
+          danger:
+            name: '危险'
+            description: '危险操作如删除帖子和主题的高亮颜色'
+          success:
+            name: '成功'
+            description: '用于指示操作成功。'
+          love:
+            name: '赞'
+            description: "赞按钮的颜色。"
       email:
         title: "电子邮件"
         settings: "设置"
@@ -1424,6 +1478,8 @@ zh_CN:
           other: "用户如果有帖子将不能删除。在试图尝试删除一个用户前删除所有的帖子（%{count} 天前的帖子不能被删除）"
         cant_delete_all_posts:
           other: "不能删除所有帖子。一些帖子发表于 %{count} 天前。（设置项：delete_user_max_post_age）"
+        cant_delete_all_too_many_posts:
+          other: "不能删除所有帖子，因为用户有超过 %{count} 个帖子。（delete_all_posts_max）"
         delete_confirm: "您确定要永久地从本站删除此用户？该操作无法撤销！"
         delete_and_block: "<b>确定</b>，并<b>阻止</b>该邮件地址和IP地址再次注册。"
         delete_dont_block: "<b>确定</b>，但<b>允许</b>该邮件地址和IP地址再次注册。"
@@ -1465,6 +1521,7 @@ zh_CN:
       site_settings:
         show_overriden: '只显示被覆盖了缺省值的'
         title: '设置'
+        reset: '重置为默认'
         none: '无'
         no_results: "找不到结果。"
         clear_filter: "清除"
@@ -1559,3 +1616,16 @@ zh_CN:
       granted:
         other: "%{count} 个已授予"
       select_badge_for_title: 选择一个徽章用作您的头衔
+      badge:
+        basic_user:
+          name: 基础
+          description: 授予所有的基础社区功能。
+        regular_user:
+          name: 常规
+          description: 授予被邀请者。
+        leader:
+          name: 领先
+          description: 授予重新分类、重命名，跟随链接和贵宾室。
+        elder:
+          name: 长老
+          description: 授予全局编辑、置顶、关闭、存档、分割和合并。

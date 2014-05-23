@@ -355,7 +355,6 @@ fr:
         time_read: "Temps de lecture"
         days_visited: "Ratio de présence"
         account_age_days: "Âge du compte en jours"
-        create: "Inviter des amis sur ce forum"
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."

@@ -227,7 +227,6 @@ ja:
         time_read: "リード時間"
         days_visited: "訪問日数"
         account_age_days: "アカウント有効日数"
-        create: "友人をこのフォーラムに招待"
       password:
         title: "パスワード"
         too_short: "パスワードが短すぎます。"

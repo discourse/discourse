@@ -311,7 +311,6 @@ ko:
         time_read: "읽은 시간"
         days_visited: "일일 방문"
         account_age_days: "일일 계정 나이"
-        create: "이 포럼에 친구 초대하기"
       password:
         title: "비밀번호"
         too_short: "암호가 너무 짧습니다."

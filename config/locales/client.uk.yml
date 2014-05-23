@@ -261,7 +261,6 @@ uk:
         time_read: "Час читання"
         days_visited: "Днів відвідано"
         account_age_days: "Вік облікового запису в днях"
-        create: "Запросити друзів на цей форум"
       password:
         title: "Пароль"
         too_short: "Ваш пароль надто короткий."

@@ -365,7 +365,7 @@ es:
         time_read: "Tiempo de lectura"
         days_visited: "Días visitados"
         account_age_days: "Antigüedad de la cuenta en días"
-        create: "Invitar Amigos a este foro"
+        create: "Enviar una invitación"
       password:
         title: "Contraseña"
         too_short: "Tu contraseña es demasiado corta."

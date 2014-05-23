@@ -355,7 +355,6 @@ nl:
         time_read: "Leestijd"
         days_visited: "Dagen bezocht"
         account_age_days: "leeftijd van account in dagen"
-        create: "Nodig anderen voor dit forum uit"
       password:
         title: "Wachtwoord"
         too_short: "Je wachtwoord is te kort."

@@ -361,7 +361,6 @@ de:
         time_read: "Lesezeit"
         days_visited: "Besuchstage"
         account_age_days: "Konto-Alter in Tagen"
-        create: "Freunde in dieses Forum einladen"
       password:
         title: "Passwort"
         too_short: "Dein Passwort ist zu kurz."

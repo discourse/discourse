@@ -359,7 +359,6 @@ pt_BR:
         time_read: "Tempo de Leitura"
         days_visited: "Dias Visitados"
         account_age_days: "Idade da conta em dias"
-        create: "Convide amigos para esse Fórum"
       password:
         title: "Senha"
         too_short: "A sua senha é muito curta."

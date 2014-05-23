@@ -346,7 +346,6 @@ sv:
         time_read: "Lästid"
         days_visited: "Dagar Besökta"
         account_age_days: "Kontoålder i dagar"
-        create: "Bjud in vänner till detta forum."
       password:
         title: "Lösenord"
         too_short: "Ditt lösenord är för kort."

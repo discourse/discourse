@@ -321,7 +321,6 @@ da:
         time_read: "Læsetid"
         days_visited: "Besøgsdage"
         account_age_days: "Kontoens alder i dage"
-        create: "Invitér venner til dette forum"
       password:
         title: "Adgangskode"
         too_short: "Din adgangskode er for kort."

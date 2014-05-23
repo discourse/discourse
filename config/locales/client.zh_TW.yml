@@ -337,7 +337,7 @@ zh_TW:
         time_read: "閱讀時間"
         days_visited: "到訪天數"
         account_age_days: "帳號已建立 (天)"
-        create: "邀請朋友到這個論壇"
+        create: "送出邀請"
       password:
         title: "密碼"
         too_short: "你的密碼太短。"

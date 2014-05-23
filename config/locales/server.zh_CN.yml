@@ -35,11 +35,14 @@ zh_CN:
   too_many_replies:
     other: "我们非常抱歉，但是新用户被临时限制为在同一个主题只能回复 %{count} 次"
   embed:
+    start_discussion: "开始讨论"
+    continue: "继续讨论"
     more_replies:
       other: "%{count} 个更多回复"
     loading: "正在载入讨论中..."
     permalink: "永久链接"
     imported_from: "这是一个已从原 %{link} 中分离的主题"
+    in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 个回复"
   too_many_mentions:
@@ -173,11 +176,18 @@ zh_CN:
               common: "是 10000 个最常用的密码之一。请用一个更安全的密码。"
             ip_address:
               signup_not_allowed: "不能使用这个账户登入。"
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "不是有效颜色值"
   user_profile:
     no_info_me: "<div class='missing-profile'>您的资料中，关于我部分目前还是空白，<a href='/users/%{username_lower}/preferences/about-me'>您想要写些什么吗？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
+  vip_category_name: "贵宾"
   vip_category_description: "高于信任等级3的用户参与讨论的分类。"
+  meta_category_name: "站务"
   meta_category_description: "讨论该论坛的站务、组织、如何运作和如何改善它。"
+  staff_category_name: "职员"
   staff_category_description: "职员私有的分类。只有管理员和版主才能阅览主题。"
   assets_topic_body: "这是一个永久主题，仅对职员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传您想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交您的回复添加帖子。\n4. 在您的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n另外，如果您需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   category:
@@ -427,6 +437,9 @@ zh_CN:
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
     queue_size_warning: '队列中的任务数为 %{queue_size}，任务较多。这可能因为 Sidekiq 进程出问题导致，或者需要更多的 Sidekiq 进程。'
     memory_warning: '您的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
+    enable_google_logins_warning: "您正在使用已被废弃的 Google OpenID 验证。Google 将在2015年4月20日停止支持 OpenID 登入。尽早开始使用 Google Oauth2。"
+    both_googles_warning: "您在站点设置中同时启用了 enable_google_logins 和 enable_google_oauth2_logins。禁用 enable_google_logins。"
+    google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登入（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
     facebook_config_warning: '服务器允许使用 Facebook 账号登入（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用 Twitter 账号登入（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
     github_config_warning: '服务器允许使用 GitHub 账号登入（enable_github_logins），但是 client id 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
@@ -490,6 +503,9 @@ zh_CN:
     tos_signup_form_message:
       title: "注册表单：服务条款信息"
       description: "如果启用了 tos_accept_required 站点设置，将会出现在注册表单的复选框内的消息。"
+    notification_email_top:
+      title: "通知邮件顶部"
+      description: "将显示于所有通知邮件顶部的消息"
   site_settings:
     default_locale: "此论坛的缺省语言（ISO 639-1 代码）"
     allow_user_locale: "允许用户选择他们自己的语言界面"
@@ -524,6 +540,7 @@ zh_CN:
     max_image_width: "帖子中图片允许的最大宽度"
     max_image_height: "帖子中图片允许的最大高度"
     category_featured_topics: "在分类 /categories 页面中每个分类显示的主题数目。在修改这个值之后，分类页面需要 15 分钟后完成更新。"
+    fixed_category_positions: "如果选择，您将可以设置一个固定的分类顺序。如果不选择，分类将按照活动的顺序显示。"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 标签到所有提交的用户信息（以防止搜索引擎搜集），除了内部链接（包括父域名）。修改此设置将要求您更新所有已有的 markdown 标签内容：\"rake posts:rebuke \""
     exclude_rel_nofollow_domains: "不添加 nofollow 标签到一列逗号分割的域名（使用父域名，例如 tld.com，将自动允许子域名，例如 sub.tld.com）"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
@@ -559,6 +576,7 @@ zh_CN:
     flag_sockpuppets: "如果一个新用户（例如，在 24 小时内注册）开始了一个主题并且有一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、投诉等）所需等待的间隔秒数"
+    must_approve_users: "新注册用户必须获得管理员批准方能访问"
     ga_tracking_code: "Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
     ga_domain_name: "Google 分析域名（ga.js），例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用分析追踪代码（analytics.js）追踪代码，例如：UA-12345678-9；参考 http://google.com/analytics"
@@ -600,7 +618,11 @@ zh_CN:
     sso_overrides_username: "用 SSO 信息中的外部用户名覆盖用户名（警告：因为对本地用户名的统一处理，用户名的长度或者要求可能不同）"
     sso_overrides_name: "用 SSO 信息中的外部名字覆盖本地名字（警告：因为对本地名字的统一处理，这个名字可能不同）"
     enable_local_logins: "启用传统的、本地的账号和密码验证"
+    enable_google_logins: "（废弃）启用 Google 验证。这是 OpenID 的验证方案，已被 Google 废弃。新论坛将无法使用它。使用 Google Oauth2 替代它。现存论坛必须在2015年4月20日前切换至 Google Oauth。"
     enable_yahoo_logins: "启用 Yahoo 帐号验证登入"
+    enable_google_oauth2_logins: "启用 Google Oauth2 验证。这是目前 Google 推荐的验证方案。需要 key 和 secret。"
+    google_oauth2_client_id: "Google 应用的 Client ID"
+    google_oauth2_client_secret: "Google 应用的 Client secret"
     enable_twitter_logins: "启用 Twitter 帐号验证登入，需要 twitter_consumer_key 和 twitter_consumer_secret"
     twitter_consumer_key: "Twitter 帐号验证的客户密匙（Consumer key），到 http://dev.twitter.com 来注册获取"
     twitter_consumer_secret: "Twitter 帐号验证的客户密码（Consumer secret），到 http://dev.twitter.com 来注册获取"
@@ -649,6 +671,7 @@ zh_CN:
     regular_requires_likes_given: "一个初级用户升级到常规用户（2）所需要投出的赞数"
     regular_requires_topic_reply_count: "一个初级用户升级到常规用户（2）所需要回复的主题数量"
     min_trust_to_create_topic: "创建主题所需的最低信任等级。"
+    min_trust_to_edit_wiki_post: "能编辑维基模式帖子的最小信任等级"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量"
     newuser_max_images: "一个访问者可以加入到一个帖子里的图片数量"
     newuser_max_attachments: "一个访问者可以加入到一个帖子里的附件数量"
@@ -707,6 +730,7 @@ zh_CN:
     default_external_links_in_new_tab: "在新标签页中打开外部链接。用户可以在参数设置中更改这个设置。"
     detect_custom_avatars: "是否检测用户上传了自定义头像"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
+    public_user_custom_fields: "可公开显示的用户自定义属性白名单"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片"
     sequential_replies_threshold: "用户可以在一个主题内多次回复而不被提醒的通知"
     enable_mobile_theme: "移动设备使用移动有好的主题，同时也能够切换回完整站点。如果您想要使用自定义的响应式主题请禁用它。"
@@ -732,6 +756,7 @@ zh_CN:
     embed_blacklist_selector: "在嵌入页面移除元素 CSS 选择器"
     tos_accept_required: "如果启用，用户将需要在注册页面选择一个复选框以统一服务条款。在内容标签中编辑'注册表单：服务条款信息'更改消息。"
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
+    enable_cdn_js_debugging: "为包含的 js 启动跨源访问 /logs 权限以显示合适的错误"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @ 了您"
     liked: "%{display_username} 在 %{link} 赞了您的帖子 "
@@ -756,6 +781,7 @@ zh_CN:
   most_recent_poster: "当前大部分帖子作者"
   frequent_poster: "频繁发帖者"
   redirected_to_top_reasons:
+    new_user: "欢迎来到我们的社区！这是我们最近最热门的帖子。"
     not_seen_in_a_month: "欢迎回来！有段时间不见了。这些是您离开后的一些热门讨论。"
   move_posts:
     new_topic_moderator_post:
@@ -879,8 +905,38 @@ zh_CN:
       ----
 
       <small>在每封您发送的邮件底部应该都有取消订阅的链接，让我们模拟一下。这封邮件发送自 中华人民共和国北京市海淀区中关村南大街公司名称，邮编 100081。如果您不希望将来继续收到我们的邮件，[点击此处取消订阅][5]。</small>
+  new_version_mailer:
+    subject_template: "[%{site_name}] 有新的 Discourse，可以升级"
+    text_body_template: |
+      有新版本的 Discourse 可供升级：
+
+      您的版本：%{installed_version}
+      新版本：**%{new_version}**
+
+      您可能想要：
+      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中的更新内容。
+
+      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker) ，然后按下“升级”按钮。
+
+      - 访问 [meta.discourse.org](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
+    text_body_template: |
+      有新版本的 Discourse 可供升级：
+
+      您的版本：%{installed_version}
+      新版本：**%{new_version}**
+
+      您可能想要：
+      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中的更新内容。
+
+      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker) ，然后按下“升级”按钮。
+
+      - 访问 [meta.discourse.org](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。
+
+      ### 发行注记
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       other: "在过去的 %{count} 小时内有新的标记。"
@@ -893,6 +949,7 @@ zh_CN:
     off_topic: "您的帖子被标记为**偏离主题**：社群认为它不适合处于这个主题中，主题应与标题和第一个帖子有关。"
     inappropriate: "您的帖子被标记为**不恰当**：社群认为它有冒犯、侮辱或者违反了[社群指引](/faq)。"
     spam: "您的帖子被标记为**广告**：社群认为它为广告，不包含任何对当前讨论有帮助的内容，只有促销信息。"
+    notify_moderators: "您的帖子被标记为 **需要管理员关注**：社群认为帖子需要版主的干预。"
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了您的帖子"
@@ -1055,6 +1112,12 @@ zh_CN:
         该阈值可以通过站点设置中的 `block_new_user` 更改。
     spam_post_blocked:
       subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
+      text_body_template: |
+        这是一封自动发出的邮件，以告知您新用户[%{username}](%{base_url}%{user_url})已因创建多个链接至 %{domains} 的帖子而被封禁，这是用于反垃圾信息的措施。但是用户仍能够发表不包含到 %{domains} 的帖子。
+
+        请[审核这些用户](%{base_url}%{user_url})。
+
+        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unblocked:
       subject_template: "账户解封 unblocked"
       text_body_template: |
@@ -1143,6 +1206,8 @@ zh_CN:
       click_here: "点击此处"
       from: "%{site_name} 摘要"
       read_more: "阅读更多"
+      more_topics: "在您最后一次于 %{last_seen_at} 访问后有 %{new_topics_since_seen} 个新主题发布了。"
+      more_topics_category: "在您最后一次于 %{last_seen_at} 访问后在这些分类中有 %{new_topics_since_seen} 个新主题发布了。"
       posts:
         other: "%{count} 个帖子"
     forgot_password:
