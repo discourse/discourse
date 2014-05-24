@@ -493,12 +493,12 @@ en:
 
     login:
       title: "Sign In"
-      username: "Login"
+      username: "User"
       password: "Password"
       email_placeholder: "email or username"
       error: "Unknown error"
       reset_password: 'Reset Password'
-      logging_in: "Logging In..."
+      logging_in: "Signing In..."
       or: "Or"
       authenticating: "Authenticating..."
       awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
