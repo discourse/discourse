@@ -14,11 +14,12 @@ Discourse::Application.routes.draw do
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
 
-  mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
-
-  if Rails.env.production?
-    require 'logster/middleware/viewer'
-    mount Logster::Middleware::Viewer.new(nil) => "/logs", constraints: AdminConstraint.new
+  if Rails.env == "development"
+    mount Sidekiq::Web => "/sidekiq"
+    mount Logster::Web => "/logs"
+  else
+    mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
+    mount Logster::Web => "/logs", constraints: AdminConstraint.new
   end
 
   get "site" => "site#index"
