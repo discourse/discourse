@@ -373,13 +373,13 @@ en:
       new_topic_duration:
         label: "Consider topics new when"
         not_viewed: "you haven't viewed them yet"
-        last_here: "they were posted since you were here last"
+        last_here: "they were created since you were here last"
         after_n_days:
-          one: "they were posted in the last day"
-          other: "they were posted in the last {{count}} days"
+          one: "they were created in the last day"
+          other: "they were created in the last {{count}} days"
         after_n_weeks:
-          one: "they were posted in the last week"
-          other: "they were posted in the last {{count}} weeks"
+          one: "they were created in the last week"
+          other: "they were created in the last {{count}} weeks"
 
       auto_track_topics: "Automatically track topics you enter"
       auto_track_options:
@@ -447,11 +447,11 @@ en:
     learn_more: "learn more..."
 
     year: 'year'
-    year_desc: 'topics posted in the last 365 days'
+    year_desc: 'topics created in the last 365 days'
     month: 'month'
-    month_desc: 'topics posted in the last 30 days'
+    month_desc: 'topics created in the last 30 days'
     week: 'week'
-    week_desc: 'topics posted in the last 7 days'
+    week_desc: 'topics created in the last 7 days'
     day: 'day'
 
     first_post: First post
