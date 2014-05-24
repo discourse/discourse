@@ -156,6 +156,8 @@ pl_PL:
     upload: "Wgraj"
     uploading: "Wgrywanie..."
     uploaded: "Wgrano!"
+    enable: "Odblokuj"
+    disable: "Zablokuj"
     undo: "Cofnij"
     revert: "Przywróć"
     choose_topic:
@@ -207,6 +209,8 @@ pl_PL:
       '13': "Skrzynka odbiorcza"
     categories:
       all: "wszystkie kategorie"
+      all_subcategories: "wszystkie"
+      no_subcategory: "żadne"
       category: "Kategoria"
       posts: "Nowe wpisy"
       topics: "Nowe tematy"
@@ -248,6 +252,7 @@ pl_PL:
       deleted: "(usunięty)"
       suspended_notice: "ten użytkownik jest zawieszony do {{date}}."
       suspended_reason: "Powód: "
+      mailing_list_mode: "Otrzymuj email dla każdego wpisu na forum (o ile nie wyciszysz kategorii lub  tematu)"
       watched_categories: "Obserwowane"
       watched_categories_instructions: "Będziesz automatycznie śledził wszystkie nowe tematy w tych kategoriach. Będziesz powiadamiany o wszystkich nowych wpisach i tematach, a liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok listy tematów."
       tracked_categories: "Śledzone"
@@ -290,6 +295,8 @@ pl_PL:
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
         upload_title: "Wgraj swoje zdjęcie"
         image_is_not_a_square: "Ostrzeżenie: przycięliśmy Twój obraz - nie jest kwadratem."
+      change_profile_background:
+        title: "Tło profilu"
       email:
         title: "Email"
         instructions: "Twój adres email nigdy nie będzie wyświetlony publicznie."
@@ -379,6 +386,7 @@ pl_PL:
         time_read: "Czas odczytu"
         days_visited: "Dni odwiedzin"
         account_age_days: "Wiek konta w dniach"
+        create: "Wyślij zaproszenie"
       password:
         title: "Hasło"
         too_short: "Hasło jest za krótkie."
@@ -464,6 +472,9 @@ pl_PL:
       google:
         title: "przez Google"
         message: "Uwierzytelnianie przy pomocy konta Google (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
+      google_oauth2:
+        title: "przez Google"
+        message: "Uwierzytelniam przy pomocy Google (upewnij się wyskakujące okienka nie są blokowane)"
       twitter:
         title: "przez Twitter"
         message: "Uwierzytelnianie przy pomocy konta na Twitterze (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
@@ -880,6 +891,8 @@ pl_PL:
             other: "Czy chcesz usunąć również {{count}} bezpośrednich odpowiedzi na ten wpis?"
           yes_value: "Tak, usuń też odpowiedzi"
           no_value: "Nie, tylko ten wpis"
+        wiki: "Wpis typu wiki"
+        unwiki: "Zwykły wpis"
       actions:
         flag: 'Oflaguj'
         clear_flags:
@@ -1020,6 +1033,7 @@ pl_PL:
       none: '(brak kategorii)'
       choose: 'Wybierz kategorię&hellip;'
       edit: 'edytuj'
+      edit_long: "Edytuj"
       view: 'Pokaż Tematy w Kategorii'
       general: 'Ogólna'
       settings: 'Ustawienia'
@@ -1371,6 +1385,14 @@ pl_PL:
           delete_confirm: "Usunąć ten schemat kolorów?"
           undo: "cofnij"
           revert: "przywróć"
+          primary:
+            name: 'podstawowy'
+          secondary:
+            name: 'drugorzędny'
+          tertiary:
+            name: 'trzeciorzędny'
+          danger:
+            name: 'niebezpieczeństwo'
           success:
             name: 'sukces'
       email:
@@ -1611,6 +1633,7 @@ pl_PL:
       site_settings:
         show_overriden: 'Pokaż tylko nadpisane'
         title: 'Ustawienia'
+        reset: 'przywróć domyślne'
         none: 'żadne'
         no_results: "Brak wyników wyszukiwania"
         clear_filter: "Wyczyść"
@@ -1711,3 +1734,6 @@ pl_PL:
         few: "%{count} przyznanych"
         other: "%{count} przyznanych"
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
+      badge:
+        basic_user:
+          name: Podstawowy
