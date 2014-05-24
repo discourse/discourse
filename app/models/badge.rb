@@ -5,6 +5,7 @@ class Badge < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validates :badge_type, presence: true
   validates :allow_title, inclusion: [true, false]
+  validates :multiple_grant, inclusion: [true, false]
 
   def self.trust_level_badge_ids
     (1..4).to_a
@@ -33,7 +34,7 @@ end
 #  created_at     :datetime
 #  updated_at     :datetime
 #  allow_title    :boolean          default(FALSE), not null
-#  multiple_grant :boolean          default(FALSE)
+#  multiple_grant :boolean          default(FALSE), not null
 #
 # Indexes
 #

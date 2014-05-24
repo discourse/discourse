@@ -1,6 +1,6 @@
 class AddMultipleAwardToBadges < ActiveRecord::Migration
   def change
-    add_column :badges, :multiple_grant, :boolean, default: false
+    add_column :badges, :multiple_grant, :boolean, default: false, null: false
 
     reversible do |dir|
       dir.up do

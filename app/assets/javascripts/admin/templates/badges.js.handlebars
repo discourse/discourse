@@ -14,7 +14,7 @@
       </li>
       {{/each}}
     </ul>
-    <button {{action newBadge}} class='btn'><i class="fa fa-plus"></i>{{i18n admin.badges.new}}</button>
+    <button {{action createNewBadge}} {{bind-attr disabled=newBadgeExists}} class='btn'><i class="fa fa-plus"></i>{{i18n admin.badges.new}}</button>
   </div>
 
   {{#if selectedItem}}

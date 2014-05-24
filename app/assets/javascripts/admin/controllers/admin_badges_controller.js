@@ -21,15 +21,42 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
 
   /**
     Badge that is currently selected.
+
     @property selectedItem
     @type {Discourse.Badge}
   **/
   selectedItem: function() {
-    var selectedId = parseInt(this.get('selectedId'));
+    if (this.get('selectedId') === undefined || this.get('selectedId') === "undefined") {
+      // New Badge
+      return this.get('newBadge');
+    } else {
+      // Existing Badge
+      var selectedId = parseInt(this.get('selectedId'));
+      return this.get('model').filter(function(badge) {
+        return parseInt(badge.get('id')) === selectedId;
+      })[0];
+    }
+  }.property('selectedId', 'newBadge'),
+
+  /**
+    Unsaved badge, if one exists.
+
+    @property newBadge
+    @type {Discourse.Badge}
+  **/
+  newBadge: function() {
     return this.get('model').filter(function(badge) {
-      return badge.get('id') === selectedId;
+      return badge.get('id') === undefined;
     })[0];
-  }.property('selectedId'),
+  }.property('model.@each.id'),
+
+  /**
+    Whether a new unsaved badge exists.
+
+    @property newBadgeExists
+    @type {Discourse.Badge}
+  **/
+  newBadgeExists: Em.computed.notEmpty('newBadge'),
 
   /**
     We don't allow setting a description if a translation for the given badge
@@ -55,7 +82,7 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
 
       @method newBadge
     **/
-    newBadge: function() {
+    createNewBadge: function() {
       var badge = Discourse.Badge.create({
         name: I18n.t('admin.badges.new_badge')
       });

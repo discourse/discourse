@@ -15,9 +15,9 @@ test("canEditDescription", function() {
   ok(!controller.get('canEditDescription'), "shows the displayName when it is different from the name");
 });
 
-test("newBadge", function() {
+test("createNewBadge", function() {
   var controller = testController(Discourse.AdminBadgesController, []);
-  controller.send('newBadge');
+  controller.send('createNewBadge');
   equal(controller.get('model.length'), 1, "adds a new badge to the list of badges");
 });
 
