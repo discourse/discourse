@@ -17,15 +17,15 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   CLICK_BINDINGS: {
-    'b': 'article.selected button.bookmark',                      // bookmark current post
+    'b': '.topic-post.selected button.bookmark',                      // bookmark current post
     'c': '#create-topic',                                         // create new topic
-    'd': 'article.selected button.delete',                        // delete selected post
-    'e': 'article.selected button.edit',                          // edit selected post
+    'd': '.topic-post.selected button.delete',                        // delete selected post
+    'e': '.topic-post.selected button.edit',                          // edit selected post
 
     // star topic
     'f': '#topic-footer-buttons button.star, #topic-list tr.topic-list-item.selected a.star',
 
-    'l': 'article.selected button.like',                          // like selected post
+    'l': '.topic-post.selected button.like',                          // like selected post
     'm m': 'div.notification-options li[data-id="0"] a',          // mark topic as muted
     'm r': 'div.notification-options li[data-id="1"] a',          // mark topic as regular
     'm t': 'div.notification-options li[data-id="2"] a',          // mark topic as tracking
@@ -33,10 +33,10 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'n': '#user-notifications',                                   // open notifictions menu
     'o,enter': '#topic-list tr.topic-list-item.selected a.title', // open selected topic
     'r': '#topic-footer-buttons button.create',                   // reply to topic
-    'R': 'article.selected button.create',                        // reply to selected post
+    'R': '.topic-post.selected button.create',                        // reply to selected post
     's': '#topic-footer-buttons button.share',                    // share topic
-    'S': 'article.selected button.share',                         // share selected post
-    '!': 'article.selected button.flag'                           // flag selected post
+    'S': '.topic-post.selected button.share',                         // share selected post
+    '!': '.topic-post.selected button.flag'                           // flag selected post
   },
 
   FUNCTION_BINDINGS: {
