@@ -5,7 +5,9 @@
 **/
 Discourse.Dialect.inlineRegexp({
   start: '@',
-  matcher: /^(@[A-Za-z0-9][A-Za-z0-9_]{2,14})/m,
+  // NOTE: we really should be using SiteSettings here, but it loads later in process
+  // also, if we do, we must ensure serverside version works as well
+  matcher: /^(@[A-Za-z0-9][A-Za-z0-9_]{1,40})/m,
   wordBoundary: true,
 
   emitter: function(matches) {
