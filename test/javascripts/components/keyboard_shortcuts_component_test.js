@@ -24,7 +24,7 @@ module("Discourse.KeyboardShortcuts", {
     sinon.stub(Discourse.URL, "routeTo");
 
     $("#qunit-fixture").html([
-      "<article class='selected'>",
+      "<article class='topic-post selected'>",
       "  <button class='bookmark'></button>",
       "  <button class='delete'></button>",
       "  <button class='edit'></button>",

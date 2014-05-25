@@ -32,10 +32,10 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'm w': 'div.notification-options li[data-id="3"] a',          // mark topic as watching
     'n': '#user-notifications',                                   // open notifictions menu
     'o,enter': '#topic-list tr.topic-list-item.selected a.title', // open selected topic
-    'r': '#topic-footer-buttons button.create',                   // reply to topic
-    'R': '.topic-post.selected button.create',                        // reply to selected post
-    's': '#topic-footer-buttons button.share',                    // share topic
-    'S': '.topic-post.selected button.share',                         // share selected post
+    'shift+r': '#topic-footer-buttons button.create',                   // reply to topic
+    'r': '.topic-post.selected button.create',                        // reply to selected post
+    'shift+s': '#topic-footer-buttons button.share',                    // share topic
+    's': '.topic-post.selected button.share',                         // share selected post
     '!': '.topic-post.selected button.flag'                           // flag selected post
   },
 
