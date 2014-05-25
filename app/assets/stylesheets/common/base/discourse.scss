@@ -13,12 +13,12 @@ blockquote {
   border-left: 5px solid darken(scale-color-diff(), 10%);
 }
 
-    a.no-href {
+a.no-href {
   cursor: pointer;
 }
 
 body {
-    button.ok {
+  button.ok {
     background: $success;
     color: $secondary;
     @include hover {
@@ -35,6 +35,50 @@ body {
     }
   }
 
+  .alert {
+    .close {
+      position: relative;
+      top: -2px;
+      right: -21px;
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      line-height: 18px;
+      color: $primary;
+      opacity: 0.2;
+      filter: alpha(opacity=20);
+      @include hover {
+        color: $primary;
+        text-decoration: none;
+        cursor: pointer;
+        opacity: 0.4;
+        filter: alpha(opacity=40);
+      }
+    }
+    button.close {
+      padding: 0;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      -webkit-appearance: none;
+    }
+    &.alert-success {
+      background-color: scale-color($success, $lightness: 90%);
+      color: $success;
+      border-left: 5px solid $success;
+    }
+    &.alert-error {
+      background-color: scale-color($danger, $lightness: 75%);
+      color: $danger;
+      border-left: 5px solid $danger;
+    }
+    &.alert-info {
+      background-color: scale-color($tertiary, $lightness: 90%);
+      color: $primary;
+      border-left: 5px solid $tertiary;
+    }
+  }
+
   .coldmap-high {
     color: scale-color($tertiary, $lightness: 40%) !important;
   }
@@ -48,7 +92,7 @@ body {
     color: scale-color($danger, $lightness: 30%) !important;
   }
   .heatmap-med {
-    color: $danger  !important;
+    color: $danger !important;
   }
   .heatmap-low {
     color: darken($danger, 10%) !important;
@@ -61,13 +105,13 @@ body {
     left: 500px;
     color: $primary;
   }
-    .top-space {
+  .top-space {
     margin-top: 10px;
   }
   ul.breadcrumb {
     margin: 0 10px 0 10px;
   }
-.message {
+  .message {
     @include border-radius-all(8px);
     background-color: $secondary;
     padding: 14px;
@@ -78,7 +122,7 @@ body {
       font-size: 20px;
     }
   }
-    #footer {
+  #footer {
     .container {
       height: 50px;
       .contents {
@@ -89,24 +133,62 @@ body {
       }
     }
   }
-    .clear-transitions {
+  .clear-transitions {
     @include transition(none !important);
   }
 
-.tip {
-  display: inline-block;
-  &.good {
-    color: $success;
+  .tip {
+    display: inline-block;
+    &.good {
+      color: $success;
+    }
+    &.bad {
+      color: $danger;
+    }
   }
-  &.bad {
-    color: $danger;
+
+  #wmd-input {
+    resize: none;
   }
-}
 
+  #pagedown-editor {
+    width: 540px;
+    background-color: $secondary;
+    padding: 0 10px 13px 10px;
+    border: 1px solid scale-color($primary, $lightness: 90%);
+    .preview {
+      margin-top: 8px;
+      border: 1px dashed scale-color($primary, $lightness: 90%);
+      padding: 8px 8px 0 8px;
+      p {
+        margin: 0 0 10px 0;
+      }
+    }
+    .preview.hidden {
+      display: none;
+    }
+  }
 
-#wmd-input {
-  resize: none;
-}
+  .spinner {
+    width: 100px;
+    margin: 10px auto 30px auto;
+    background-color: #000;
+    @include border-radius-all(10px);
+    padding: 10px 10px 10px 30px;
+    font-size: 15px;
+    line-height: 23px;
+    text-align: center;
+    color: $secondary;
+    background: {
+      image: image-url("spinner_96_w.gif");
+      repeat: no-repeat;
+      position: 10px 8px;
+      size: 25px;
+    }
+  ;
+    -webkit-animation: spinner .25s;
+    animation: spinner .25s;
+  }
 
 #pagedown-editor {
   width: 540px;
@@ -121,30 +203,14 @@ body {
       margin: 0 0 10px 0;
     }
   }
-  .preview.hidden {
-    display: none;
+  @keyframes fade {
+    from {
+      opacity: 0
+    }
+    to {
+      opacity: 1
+    }
   }
-}
-
-.spinner {
-  width: 100px;
-  margin: 10px auto 30px auto;
-  background-color: #000;
-  @include border-radius-all(10px);
-  padding: 10px 10px 10px 30px;
-  font-size: 15px;
-  line-height: 23px;
-  text-align: center;
-  color: $secondary;
-  background: {
-    image: image-url("spinner_96_w.gif");
-    repeat: no-repeat;
-    position: 10px 8px;
-    size: 25px;
-  };
-  -webkit-animation: spinner .25s;
-  animation: spinner .25s;
-}
 
 //loading spinner fade-in
 @-webkit-keyframes spinner {
@@ -167,11 +233,19 @@ body {
   img {
     @include border-radius-all(4px);
   }
-}
 
-.profiler-results.profiler-left {
-  top: 60px !important;
-}
+  .avatar-wrapper {
+    background-color: $secondary;
+    display: inline-block;
+    border: 1px solid scale-color($primary, $lightness: 90%);
+    @include border-radius-all(5px);
+    img {
+      @include border-radius-all(4px);
+    }
+  }
 
+  .profiler-results.profiler-left {
+    top: 60px !important;
+  }
 
 }
