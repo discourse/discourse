@@ -7,6 +7,8 @@ require_relative '../lib/discourse_plugin_registry'
 # Global config
 require_relative '../app/models/global_setting'
 
+require 'pry-rails' if Rails.env == "development"
+
 if defined?(Bundler)
   Bundler.require(*Rails.groups(assets: %w(development test profile)))
 end
