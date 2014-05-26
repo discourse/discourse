@@ -234,6 +234,12 @@
   th.posts {
     position: relative;
   }
+  tbody tr:nth-child(odd) {
+    background-color: darken($secondary, 3%);
+  }
+  tbody tr:nth-child(even) {
+    background-color: $secondary;
+  }
   th .toggle-admin {
     position: absolute;
     padding: 3px 8px;
