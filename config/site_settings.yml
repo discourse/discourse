@@ -547,3 +547,7 @@ uncategorized:
     default: ''
 
   enable_cdn_js_debugging: true
+  show_create_topics_notice:
+    client: true
+    default: true
+

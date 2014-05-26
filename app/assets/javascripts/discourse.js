@@ -164,7 +164,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       notices.push(I18n.t("read_only_mode.enabled"));
     }
 
-    if(Discourse.User.currentProp('admin')) {
+    if(Discourse.User.currentProp('admin') && Discourse.SiteSettings.show_create_topics_notice) {
       var topic_count = _.reduce(Discourse.Site.currentProp('categories'), function(sum,c) {
         return sum + (c.get('read_restricted') ? 0 : c.get('topic_count'));
       }, 0);
