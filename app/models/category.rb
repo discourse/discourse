@@ -23,7 +23,7 @@ class Category < ActiveRecord::Base
   has_many :groups, through: :category_groups
 
   validates :user_id, presence: true
-  validates :name, presence: true, uniqueness: true, length: { in: 1..50 }
+  validates :name, presence: true, uniqueness: { scope: :parent_category_id }, length: { in: 1..50 }
   validate :parent_category_validator
 
   before_validation :ensure_slug
@@ -161,7 +161,7 @@ SQL
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
     t.auto_close_hours = nil
-    t.save!
+    t.save!(validate: false)
     update_column(:topic_id, t.id)
     t.posts.create(raw: post_template, user: user)
   end
