@@ -40,7 +40,7 @@
       <div class='topic-meta-data'>
         {{poster-name post=this expandAction="showPosterExpansion"}}
         <div class='post-info'>
-          <a {{bind-attr href="shareUrl"}} class='post-date' {{bind-attr data-share-url="shareUrl"}} {{bind-attr data-post-number="post_number"}}>{{unboundAgeWithTooltip created_at}}</a>
+          <a class='post-date' {{bind-attr href="shareUrl" data-share-url="shareUrl" data-post-number="post_number"}}>{{unboundAgeWithTooltip created_at}}</a>
         </div>
         {{#if hasHistory}}
           <div class='post-info edits'>
