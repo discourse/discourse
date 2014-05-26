@@ -1,0 +1,7 @@
+<button id='jump-dialogue' {{action openJumper}}></button>
+<div id="topic-jumper" {{bind-attr class="hidden:jumper-hide"}}>
+    <div class="center">
+      Post: <input type="text" id="jumper-text" name="number" value="{{unbound topic.progressPosition}}" {{bind-attr class="badNumber:bad"}}>
+    </div>
+    <input type="range" id="jumper-slider" min="1" value="{{unbound topic.progressPosition}}" {{bind-attr max=topic.postStream.filteredPostsCount}}>
+</div>
