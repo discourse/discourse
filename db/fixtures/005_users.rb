@@ -23,8 +23,3 @@ User.seed do |u|
   u.email_private_messages = false
   u.trust_level = TrustLevel.levels[:elder]
 end
-
-# download avatars for existing users
-if UserAvatar.count < User.count
-  Jobs.enqueue(:create_missing_avatars)
-end

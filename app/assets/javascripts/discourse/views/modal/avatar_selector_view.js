@@ -12,10 +12,11 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
   title: I18n.t('user.change_avatar.title'),
   uploading: false,
   uploadProgress: 0,
-  useGravatar: Em.computed.not("controller.use_uploaded_avatar"),
-  canSaveAvatarSelection: Em.computed.or("useGravatar", "controller.has_uploaded_avatar"),
-  saveDisabled: Em.computed.not("canSaveAvatarSelection"),
+  saveDisabled: false,
+  gravatarRefreshEnabled: Em.computed.not('controller.gravatarRefreshDisabled'),
   imageIsNotASquare : false,
+
+  hasUploadedAvatar: Em.computed.or('uploadedAvatarTemplate', 'controller.custom_avatar_upload_id'),
 
   didInsertElement: function() {
     var self = this;
@@ -61,10 +62,8 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
       // make sure we have a url
       if (data.result.url) {
         // indicates the users is using an uploaded avatar
-        self.get("controller").setProperties({
-          has_uploaded_avatar: true,
-          use_uploaded_avatar: true
-        });
+        self.set("controller.custom_avatar_upload_id", data.result.upload_id);
+
         // display a warning whenever the image is not a square
         self.set("imageIsNotASquare", data.result.width !== data.result.height);
         // in order to be as much responsive as possible, we're cheating a bit here
@@ -72,7 +71,7 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
         // often, this file is not a square, so we need to crop it properly
         // this will also capture the first frame of animated avatars when they're not allowed
         Discourse.Utilities.cropAvatar(data.result.url, data.files[0].type).then(function(avatarTemplate) {
-          self.get("controller").set("uploaded_avatar_template", avatarTemplate);
+          self.set("uploadedAvatarTemplate", avatarTemplate);
         });
       } else {
         bootbox.alert(I18n.t('post.errors.upload'));
@@ -95,14 +94,15 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
     $("#avatar-input").fileupload("destroy");
   },
 
-  // *HACK* used to select the proper radio button
+  // *HACK* used to select the proper radio button, cause {{action}}
+  //  stops the default behavior
   selectedChanged: function() {
     var self = this;
     Em.run.next(function() {
-      var value = self.get('controller.use_uploaded_avatar') ? 'uploaded_avatar' : 'gravatar';
+      var value = self.get('controller.selected');
       $('input:radio[name="avatar"]').val([value]);
     });
-  }.observes('controller.use_uploaded_avatar'),
+  }.observes('controller.selected'),
 
   uploadButtonText: function() {
     return this.get("uploading") ? I18n.t("uploading") : I18n.t("user.change_avatar.upload_picture");

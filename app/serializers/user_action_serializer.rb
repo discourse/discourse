@@ -67,17 +67,4 @@ class UserActionSerializer < ApplicationSerializer
     object.action_type == UserAction::EDIT
   end
 
-  private
-
-  def avatar_for(user_id, email, use_uploaded_avatar, uploaded_avatar_template, uploaded_avatar_id)
-    # NOTE: id is required for cases where the template is blank (during initial population)
-    User.new(
-      id: user_id,
-      email: email,
-      use_uploaded_avatar: use_uploaded_avatar,
-      uploaded_avatar_template: uploaded_avatar_template,
-      uploaded_avatar_id: uploaded_avatar_id
-    ).avatar_template
-  end
-
 end

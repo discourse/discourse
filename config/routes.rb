@@ -202,7 +202,7 @@ Discourse::Application.routes.draw do
   get "users/:username/avatar(/:size)" => "users#avatar", constraints: {username: USERNAME_ROUTE_FORMAT} # LEGACY ROUTE
   post "users/:username/preferences/avatar" => "users#upload_avatar", constraints: {username: USERNAME_ROUTE_FORMAT} # LEGACY ROUTE
   post "users/:username/preferences/user_image" => "users#upload_user_image", constraints: {username: USERNAME_ROUTE_FORMAT}
-  put "users/:username/preferences/avatar/toggle" => "users#toggle_avatar", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "users/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/profile_background/clear" => "users#clear_profile_background", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/invited" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   post "users/:username/send_activation_email" => "users#send_activation_email", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -210,6 +210,10 @@ Discourse::Application.routes.draw do
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/badges" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
+
+  post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar"
+  get "user_avatar/:username/:size/:version.png" => "user_avatars#show", format: false
+
 
   get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
   post "uploads" => "uploads#create"
@@ -365,8 +369,6 @@ Discourse::Application.routes.draw do
   get "draft" => "draft#show"
   post "draft" => "draft#update"
   delete "draft" => "draft#destroy"
-
-  get "avatar/:username/:size/:version.png" => "avatar#show", format: false
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
 

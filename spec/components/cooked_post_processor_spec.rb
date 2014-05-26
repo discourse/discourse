@@ -89,7 +89,8 @@ describe CookedPostProcessor do
         # optimized_image
         FileUtils.stubs(:mkdir_p)
         File.stubs(:open)
-        ImageSorcery.any_instance.expects(:convert).returns(true)
+        # hmmm this should be done in a cleaner way
+        OptimizedImage.any_instance.expects(:resize).returns(true)
       end
 
       it "generates overlay information" do

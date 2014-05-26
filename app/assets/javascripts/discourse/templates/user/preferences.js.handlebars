@@ -79,7 +79,7 @@
     <div class="control-group">
       <label class="control-label">{{i18n user.avatar.title}}</label>
       <div class="controls">
-        {{boundAvatar model imageSize="large"}}
+        {{boundAvatar model "large"}}
         {{#if allowAvatarUpload}}
           <button {{action showAvatarSelector}} class="btn pad-left no-text"><i class="fa fa-pencil"></i></button>
         {{else}}

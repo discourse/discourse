@@ -2,18 +2,22 @@
   <div>
     <div>
       <input type="radio" id="system-avatar" name="avatar" value="system" {{action useSystem}}>
-      <label class="radio" for="system-avatar">{{boundAvatar controller imageSize="large" uploadId="system_avatar_upload_id"}} {{{i18n user.change_avatar.letter_based}}}</label>
+      <label class="radio" for="system-avatar">{{boundAvatar controller "large" system_avatar_upload_id}} {{{i18n user.change_avatar.letter_based}}}</label>
     </div>
     <div>
       <input type="radio" id="gravatar" name="avatar" value="gravatar" {{action useGravatar}}>
-      <label class="radio" for="gravatar">{{boundAvatar controller imageSize="large" uploadId="gravatar_avatar_upload_id"}} {{{i18n user.change_avatar.gravatar}}} {{email}}</label>
-      <a href="#" {{action refreshGravatar}} title="{{i18n user.change_avatar.refresh_gravatar_title}}" class="btn no-text"><i class="fa fa-refresh"></i></a>
+      <label class="radio" for="gravatar">{{boundAvatar controller "large" gravatar_avatar_upload_id}} {{{i18n user.change_avatar.gravatar}}} {{email}}</label>
+      <button href="#" {{action refreshGravatar}} title="{{i18n user.change_avatar.refresh_gravatar_title}}" {{bind-attr enabled="view.gravatarRefreshEnabled"}} class="btn no-text"><i class="fa fa-refresh"></i></button>
     </div>
     <div>
-      <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded_avatar" {{action useUploadedAvatar}}>
+      <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded" {{action useUploadedAvatar}}>
       <label class="radio" for="uploaded_avatar">
-        {{#if custom_avatar_upload_id}}
-          {{boundAvatar controller imageSize="large" uploadId="custom_avatar_upload_id"}} {{i18n user.change_avatar.uploaded_avatar}}
+        {{#if view.hasUploadedAvatar}}
+          {{#if view.uploadedAvatarTemplate}}
+            {{boundAvatarTemplate view.uploadedAvatarTemplate "large"}}
+          {{else}}
+            {{boundAvatar controller "large" custom_avatar_upload_id}} {{i18n user.change_avatar.uploaded_avatar}}
+          {{/if}}
         {{else}}
           {{i18n user.change_avatar.uploaded_avatar_empty}}
         {{/if}}

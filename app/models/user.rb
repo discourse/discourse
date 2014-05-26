@@ -354,7 +354,7 @@ class User < ActiveRecord::Base
   def self.avatar_template(username,uploaded_avatar_id)
     id = uploaded_avatar_id || -1
     username ||= ""
-    "/avatar/#{username.downcase}/{size}/#{id}.png"
+    "/user_avatar/#{username.downcase}/{size}/#{id}.png"
   end
 
   def avatar_template
@@ -547,13 +547,9 @@ class User < ActiveRecord::Base
     created_at > 1.day.ago
   end
 
-  def upload_avatar(upload)
-    self.uploaded_avatar_template = nil
-    self.uploaded_avatar = upload
-    self.use_uploaded_avatar = true
-    self.save!
-  end
-
+  # TODO this is a MESS
+  # at most user table should have profile_background_upload_id
+  # best case is to move this to another table
   def upload_profile_background(upload)
     self.profile_background = upload.url
     self.save!
@@ -631,7 +627,11 @@ class User < ActiveRecord::Base
       avatar.update_system_avatar! if !avatar.system_upload_id || username_changed?
     end
 
-    self.uploaded_avatar_id = (avatar.gravatar_upload_id || avatar.system_upload_id) unless uploaded_avatar_id
+    desired_avatar_id = avatar.gravatar_upload_id || avatar.system_upload_id
+
+    if !self.uploaded_avatar_id && desired_avatar_id
+      self.update_column(:uploaded_avatar_id, desired_avatar_id)
+    end
   end
 
   protected
@@ -789,7 +789,6 @@ end
 #  dynamic_favicon               :boolean          default(FALSE), not null
 #  title                         :string(255)
 #  use_uploaded_avatar           :boolean          default(FALSE)
-#  uploaded_avatar_template      :string(255)
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
 #  mailing_list_mode             :boolean          default(FALSE), not null

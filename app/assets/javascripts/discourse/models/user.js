@@ -332,15 +332,12 @@ Discourse.User = Discourse.Model.extend({
 
   /*
     Change avatar selection
-
-    @method toggleAvatarSelection
-    @param {Boolean} useUploadedAvatar true if the user is using the uploaded avatar
-    @returns {Promise} the result of the toggle avatar selection
   */
-  toggleAvatarSelection: function(useUploadedAvatar) {
-    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/toggle", {
+  pickAvatar: function(uploadId) {
+    this.set("uploaded_avatar_id", uploadId);
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/pick", {
       type: 'PUT',
-      data: { use_uploaded_avatar: useUploadedAvatar }
+      data: { upload_id: uploadId }
     });
   },
 
@@ -403,7 +400,7 @@ Discourse.User = Discourse.Model.extend({
     return this.get('can_delete_account') && ((this.get('reply_count')||0) + (this.get('topic_count')||0)) <= 1;
   }.property('can_delete_account', 'reply_count', 'topic_count'),
 
-  delete: function() {
+  "delete": function() {
     if (this.get('can_delete_account')) {
       return Discourse.ajax("/users/" + this.get('username'), {
         type: 'DELETE',
@@ -419,7 +416,7 @@ Discourse.User = Discourse.Model.extend({
 Discourse.User.reopenClass(Discourse.Singleton, {
 
   avatarTemplate: function(username, uploadedAvatarId){
-    return Discourse.getURL("/avatar/" + username.toLowerCase() + "/{size}/" + uploadedAvatarId + ".png");
+    return Discourse.getURL("/user_avatar/" + username.toLowerCase() + "/{size}/" + uploadedAvatarId + ".png");
   },
 
   /**

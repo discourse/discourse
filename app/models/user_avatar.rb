@@ -27,10 +27,13 @@ class UserAvatar < ActiveRecord::Base
 
     upload = Upload.create_for(user.id, tempfile, 'gravatar.png', File.size(tempfile.path))
 
-    gravatar_upload.destroy! if gravatar_upload
-    self.gravatar_upload = upload
-    save!
-  rescue OpenURI::HTTPError
+    if gravatar_upload_id != upload.id
+      gravatar_upload.try(:destroy!)
+      self.gravatar_upload = upload
+      save!
+    else
+      gravatar_upload
+    end
     save!
   ensure
     tempfile.unlink if tempfile

@@ -854,15 +854,6 @@ describe User do
     end
   end
 
-  describe "#upload_avatar" do
-    let(:upload) { Fabricate(:upload) }
-    let(:user)   { Fabricate(:user) }
-
-    it "should update user's avatar" do
-      expect(user.upload_avatar(upload)).to be_true
-    end
-  end
-
   describe 'api keys' do
     let(:admin) { Fabricate(:admin) }
     let(:other_admin) { Fabricate(:admin) }
@@ -987,7 +978,7 @@ describe User do
     let(:user) { build(:user, username: 'Sam') }
 
     it "returns a 45-pixel-wide avatar" do
-      user.small_avatar_url.should == "//test.localhost/avatar/sam/45/-1.png"
+      user.small_avatar_url.should == "//test.localhost/user_avatar/sam/45/-1.png"
     end
 
   end
@@ -996,18 +987,13 @@ describe User do
 
     let(:user) { build(:user, uploaded_avatar_id: 99, username: 'Sam') }
 
-    it "returns default when uploaded avatars are not allowed" do
-      SiteSetting.allow_uploaded_avatars = false
-      user.avatar_template_url.should == "//test.localhost/avatar/sam/{size}/-1.png"
-    end
-
     it "returns a schemaless avatar template with correct id" do
-      user.avatar_template_url.should == "//test.localhost/avatar/sam/{size}/99.png"
+      user.avatar_template_url.should == "//test.localhost/user_avatar/sam/{size}/99.png"
     end
 
     it "returns a schemaless cdn-based avatar template" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      user.avatar_template_url.should == "//my.cdn.com/avatar/sam/{size}/99.png"
+      user.avatar_template_url.should == "//my.cdn.com/user_avatar/sam/{size}/99.png"
     end
 
   end
@@ -1146,6 +1132,16 @@ describe User do
 
     end
 
+  end
+
+  describe "automatic avatar creation" do
+    it "sets a system avatar for new users" do
+      SiteSetting.enable_system_avatars = true
+      u = User.create!(username: "bob", email: "bob@bob.com")
+      u.reload
+      u.user_avatar.system_upload_id.should == u.uploaded_avatar_id
+      u.uploaded_avatar_id.should_not == nil
+    end
   end
 
   describe "custom fields" do

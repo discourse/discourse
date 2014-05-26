@@ -216,25 +216,35 @@ Handlebars.registerHelper('avatar', function(user, options) {
 
 /**
   Bound avatar helper.
-  Will rerender whenever the "avatar_template" changes.
 
   @method boundAvatar
   @for Handlebars
 **/
-Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
+Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, size, uploadId) {
 
   var username = Em.get(user, 'username');
 
-  console.log(options.hash);
+  if(arguments.length < 4){
+    uploadId = Em.get(user, 'uploaded_avatar_id');
+  }
 
-  var uploadId = (options.hash.uploadId && Em.get(user, options.hash.uploadId)) || Em.get(user, 'uploaded_avatar_id');
   var avatarTemplate = Discourse.User.avatarTemplate(username,uploadId);
 
   return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
-    size: options.hash.imageSize,
+    size: size,
     avatarTemplate: avatarTemplate
   }));
-}, 'uploadId', 'username', 'uploaded_avatar_id');
+}, 'uploaded_avatar_id');
+
+/*
+ * Used when we only have a template
+ */
+Ember.Handlebars.registerBoundHelper('boundAvatarTemplate', function(avatarTemplate, size) {
+  return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
+    size: size,
+    avatarTemplate: avatarTemplate
+  }));
+});
 
 /**
   Nicely format a date without binding or returning HTML
