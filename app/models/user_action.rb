@@ -116,7 +116,8 @@ SELECT
   CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
   p.hidden,
   p.post_type,
-  p.edit_reason
+  p.edit_reason,
+  t.category_id
 FROM user_actions as a
 JOIN topics t on t.id = a.target_topic_id
 LEFT JOIN posts p on p.id = a.target_post_id

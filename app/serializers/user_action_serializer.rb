@@ -22,7 +22,8 @@ class UserActionSerializer < ApplicationSerializer
              :deleted,
              :hidden,
              :moderator_action,
-             :edit_reason
+             :edit_reason,
+             :category_id
 
   def excerpt
     PrettyText.excerpt(object.cooked, 300) if object.cooked
