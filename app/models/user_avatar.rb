@@ -34,6 +34,7 @@ class UserAvatar < ActiveRecord::Base
     else
       gravatar_upload
     end
+  rescue OpenURI::HTTPError
     save!
   ensure
     tempfile.unlink if tempfile

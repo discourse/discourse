@@ -82,8 +82,9 @@ describe CookedPostProcessor do
       let(:cpp) { CookedPostProcessor.new(post) }
 
       before do
-        SiteSetting.stubs(:max_image_height).returns(2000)
-        SiteSetting.stubs(:create_thumbnails?).returns(true)
+        SiteSetting.max_image_height = 2000
+        SiteSetting.create_thumbnails = true
+
         Upload.expects(:get_from_url).returns(upload)
         FastImage.stubs(:size).returns([1000, 2000])
         # optimized_image
