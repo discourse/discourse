@@ -6,6 +6,6 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.UserActivityController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   needs: ['composer']
 });

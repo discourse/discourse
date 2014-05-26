@@ -39,7 +39,7 @@ Discourse.ApplicationRoute = Em.Route.extend({
 
     showUploadSelector: function(composerView) {
       Discourse.Route.showModal(this, 'uploadSelector');
-      this.controllerFor('uploadSelector').setProperties({ composerView: composerView });
+      this.controllerFor('upload-selector').setProperties({ composerView: composerView });
     },
 
     showKeyboardShortcutsHelp: function() {

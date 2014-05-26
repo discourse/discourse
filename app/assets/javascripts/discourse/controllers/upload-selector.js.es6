@@ -7,7 +7,7 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-Discourse.UploadSelectorController = Discourse.Controller.extend(Discourse.ModalFunctionality, {
+export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
   remote: Em.computed.not("local"),
   local: false,
   showMore: false,
@@ -30,12 +30,4 @@ Discourse.UploadSelectorController = Discourse.Controller.extend(Discourse.Modal
     toggleShowMore: function() { this.toggleProperty("showMore"); }
   }
 
-});
-
-Discourse.UploadSelectorController.reopenClass({
-  translate: function(key, options) {
-    var opts = options || {};
-    if (Discourse.Utilities.allowsAttachments()) { key += "_with_attachments"; }
-    return I18n.t("upload_selector." + key, opts);
-  }
 });

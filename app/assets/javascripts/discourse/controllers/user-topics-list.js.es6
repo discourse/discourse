@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.UserTopicsListController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   hideCategory: false,
   showParticipants: false,
 
