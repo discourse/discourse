@@ -491,27 +491,12 @@ body {
     margin-bottom: 18px;
     background-color: scale-color($danger, $lightness: 75%);
     color: #c09853;
-  }
-  .alert .close {
-    position: relative;
-    top: -2px;
-    right: -21px;
-    line-height: 18px;
-  }
-  .alert-success {
-    background-color:  scale-color($success, $lightness: 90%);
-    color: $success;
-  }
-  .alert-error {
-    background-color:  scale-color($danger, $lightness: 75%);
-    color: $danger;
-  }
-  .alert-info {
-    background-color: scale-color($tertiary, $lightness: 90%);
-    color: $primary;
-  }
-  .alert {
+
     .close {
+      position: relative;
+      top: -2px;
+      right: -21px;
+      line-height: 18px;
       float: right;
       font-size: 20px;
       font-weight: bold;
@@ -534,7 +519,20 @@ body {
       border: 0;
       -webkit-appearance: none;
     }
+    &.alert-success {
+      background-color:  scale-color($success, $lightness: 90%);
+      color: $success;
+    }
+    &.alert-error {
+      background-color:  scale-color($danger, $lightness: 75%);
+      color: $danger;
+    }
+    &.alert-info {
+      background-color: scale-color($tertiary, $lightness: 90%);
+      color: $primary;
+    }
   }
+
   .bootbox.modal {
     .modal-footer {
       a.btn-primary {
