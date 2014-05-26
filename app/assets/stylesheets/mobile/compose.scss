@@ -16,13 +16,20 @@ display: none;
 
 
 #reply-control {
-  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
+  .composer-bottom-right {
     position: absolute;
     bottom: -37px;
+    right: 5px;
     margin-top: 0;
   }
   .toggle-preview, .mobile-file-upload {
-    right: 5px;
+    text-decoration: underline;
+  }
+  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
+    float: right;
+    margin-right: 8px;
+  }
+  .toggle-preview, .mobile-file-upload {
     text-decoration: underline;
   }
   #file-uploading {
@@ -31,7 +38,6 @@ display: none;
     color: scale-color($secondary, $lightness: 50%);
   }
   #draft-status {
-    right: 70px;
     color: scale-color($primary, $lightness: 75%);
     &.flash {
       color: $danger;
@@ -354,10 +360,6 @@ display: none;
     }
   }
   #wmd-button-bar {
-    top: 0;
-    position: absolute;
-    border-bottom: 1px solid scale-color-diff();
-    background-color: $secondary;
-    z-index: 100;
+    display: none;
   }
 }
