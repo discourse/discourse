@@ -98,6 +98,10 @@ section.post-menu-area, .post-actions {
     }
 }
 
+section.post-menu-area {
+  position: relative;
+}
+
 nav.post-controls {
     padding: 0;
     button {
