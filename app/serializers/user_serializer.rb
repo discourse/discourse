@@ -70,7 +70,8 @@ class UserSerializer < BasicUserSerializer
                      :muted_category_ids,
                      :tracked_category_ids,
                      :watched_category_ids,
-                     :private_messages_stats
+                     :private_messages_stats,
+                     :disable_jump_reply
 
 
   def auto_track_topics_after_msecs

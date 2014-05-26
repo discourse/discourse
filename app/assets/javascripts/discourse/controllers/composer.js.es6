@@ -155,8 +155,10 @@ export default Discourse.Controller.extend({
       } else {
         currentUser.set('reply_count', currentUser.get('reply_count') + 1);
       }
-      Discourse.URL.routeTo(opts.post.get('url'));
 
+      if ((!composer.get('replyingToTopic')) || (!Discourse.User.currentProp('disable_jump_reply'))) {
+        Discourse.URL.routeTo(opts.post.get('url'));
+      }
     }, function(error) {
       composer.set('disableDrafts', false);
       bootbox.alert(error);

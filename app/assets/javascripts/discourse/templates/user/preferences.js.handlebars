@@ -136,34 +136,23 @@
 
     <div class="control-group">
       <label class="control-label">{{i18n user.email_settings}}</label>
-      <div class="controls">
+      {{preference-checkbox labelKey="user.email_digests.title" checked=email_digests}}
+      {{#if email_digests}}
+        <div class='controls control-dropdown'>
+          {{combobox valueAttribute="value" content=digestFrequencies value=digest_after_days}}
+        </div>
+      {{/if}}
+      {{preference-checkbox labelKey="user.email_private_messages" checked=email_private_messages}}
+      {{preference-checkbox labelKey="user.email_direct" checked=email_direct}}
+      {{preference-checkbox labelKey="user.mailing_list_mode" checked=mailing_list_mode}}
+      {{preference-checkbox labelKey="user.email_always" checked=email_always}}
 
-        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_digests"}}
-        {{i18n user.email_digests.title}}</label>
-
-        {{#if email_digests}}
-          <div class='control-indent'>
-            {{combobox valueAttribute="value" content=digestFrequencies value=digest_after_days}}
-          </div>
-        {{/if}}
-        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_private_messages"}}
-        {{i18n user.email_private_messages}}</label>
-
-        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_direct"}}
-        {{i18n user.email_direct}}</label>
-        <label class="checkbox-label">
-          {{view Ember.Checkbox checkedBinding="mailing_list_mode"}}
-          {{i18n user.mailing_list_mode}}</label>
-        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="email_always"}}
-        {{i18n user.email_always}}</label>
-      </div>
       <div class='instructions'>
         {{i18n user.email.frequency}}
       </div>
     </div>
 
     <div class="control-group other">
-
       <label class="control-label">{{i18n user.other_settings}}</label>
       <div class="controls controls-dropdown">
         <label>{{i18n user.auto_track_topics}}</label>
@@ -175,22 +164,10 @@
         {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
       </div>
 
-      <div class="controls">
-        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="external_links_in_new_tab"}}
-        {{i18n user.external_links_in_new_tab}}</label>
-      </div>
-      <div class="controls">
-        <label class="checkbox-label">{{view Ember.Checkbox checkedBinding="enable_quoting"}}
-        {{i18n user.enable_quoting}}</label>
-      </div>
-
-      <div class="controls">
-        <label class='checkbox-label'>
-          {{view Ember.Checkbox checkedBinding="dynamic_favicon"}}
-          {{i18n user.dynamic_favicon}}
-        </label>
-      </div>
-
+      {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=external_links_in_new_tab}}
+      {{preference-checkbox labelKey="user.enable_quoting" checked=enable_quoting}}
+      {{preference-checkbox labelKey="user.dynamic_favicon" checked=dynamic_favicon}}
+      {{preference-checkbox labelKey="user.disable_jump_reply" checked=disable_jump_reply}}
     </div>
 
     <div class="control-group category">
