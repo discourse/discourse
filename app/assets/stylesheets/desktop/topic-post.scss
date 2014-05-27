@@ -248,7 +248,7 @@ nav.post-controls {
 
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: scale-color-diff();}
+  a.mention {background: darken(scale-color-diff(), 10%);}
   &.bottom {
     &.hidden {display: block; opacity: 0; }
 
@@ -680,7 +680,7 @@ blockquote { /* solo quotes */
   margin: 0;
   padding: 12px;
 
-    a.mention {background: scale-color-diff();}
+    a.mention {background: darken(scale-color-diff(), 10%);}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
