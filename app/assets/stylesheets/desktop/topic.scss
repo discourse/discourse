@@ -120,25 +120,34 @@ a:hover.reply-new {
     z-index: 1000;
     position: absolute;
     top: 2px;
-    left: 4px;
     border: 0;
     background: none;
     color: scale-color($primary, $lightness: 50%);
-    width: 50%;
-    text-align: left;
+    width: 30%;
     height: 30px;
     margin: 0;
     i {
       font-size: 18px;
     }
-    &:nth-of-type(2) {
+    &#jump-top {
+      left: 4px;
+      right: auto;
+      text-align: left;
+    }
+    &#jump-dialogue {
+      width: calc(40% - 8px);
+      right: calc(30% + 4px);
+      left: calc(30% + 4px);
+      text-align: center;
+    }
+    &#jump-bottom {
       right: 4px;
       left: auto;
       text-align: right;
     }
     &:disabled {
-    cursor: default;
-    color: scale-color($primary, $lightness: 50%);
+      cursor: default;
+      color: scale-color($primary, $lightness: 50%);
     }
   }
   h4 {
@@ -152,8 +161,80 @@ a:hover.reply-new {
     bottom: 0;
     width: 0;
     border-right: 1px solid  scale-color-diff();
-    background-color:  scale-color($success, $lightness: 70%);
+    background-color: scale-color($success, $lightness: 70%);
     transition: width .75s;
+  }
+  #topic-jumper {
+    position: relative;
+    top: -100px;
+    opacity: 1;
+    color: $primary;
+    border: 2px solid scale-color($primary, $lightness: 30%);
+    background-color: scale-color-diff();
+    border-radius: 5px;
+    transition: top 0.6s, opacity 0.4s;
+    &.jumper-hide {
+      top: -85px;
+      opacity: 0;
+    }
+    .center {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    #jumper-slider {
+      width: 120px;
+      margin-left: 3px;
+      height: 4px;
+      margin-bottom: 10px;
+      background-color: scale-color($success, $lightness: 70%);
+
+      // Webkit Style
+      -webkit-appearance: none;
+      &::-webkit-slider-thumb {
+        width: 10px;
+        height: 10px;
+        background-color: scale-color($primary, $lightness: 10%);
+        border-radius: 10px;
+        -webkit-appearance: none;
+      }
+
+      // Firefox Style TODO
+      -moz-apperance: none;
+      &:focus {
+        outline: none;
+      }
+      &::-moz-range-track {
+        background-color: scale-color($success, $lightness: 70%);
+      }
+      &::-moz-range-thumb {
+        -moz-appearance: none;
+        width: 10px;
+        height: 10px;
+        border: scale-color($primary, $lightness: 10%) solid 0;
+        background: scale-color($primary, $lightness: 10%);
+        border-radius: 10px;
+      }
+      &::-moz-focus-inner {
+        border: 0;
+      }
+
+      // IE11 Style
+      padding: 0;
+      &::-ms-fill-upper {
+        background-color: scale-color-diff();
+      }
+      &::-ms-fill-lower {
+        background-color: scale-color($success, $lightness: 70%);
+      }
+    }
+    #jumper-text {
+      width: 30px;
+      &.bad {
+        background-color: scale-color($danger, $lightness: 30%);
+      }
+    }
   }
 }
 

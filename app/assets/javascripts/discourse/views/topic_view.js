@@ -236,7 +236,7 @@ Discourse.TopicView.reopenClass({
         var $header = $('header'),
             $title = $('#topic-title'),
             windowHeight = $(window).height() - $title.height(),
-            expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
+            expectedOffset = $title.height() - $header.height() + (windowHeight / 10);
 
         return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
       }}).lock();
