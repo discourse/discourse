@@ -34,17 +34,22 @@ Discourse.TopicJumperComponent = Ember.Component.extend({
         } else {
           self.move(value);
         }
-      }, 250));
+      }, 500));
+
+      var bounce2 = Discourse.debounce(function() {
+        self.move(self.get('$sliderElement').val());
+      }, 250);
 
       $slider.on("input", Discourse.debounce(function() {
-        self.move($(this).val());
-      }, 250));
+        self.setNumber($(this).val());
+        bounce2();
+      }, 50));
 
       self.setNumber();
     });
   },
 
-  positionObserver: function() {
+  positionObserver: Discourse.debounce(function() {
     this.setNumber();
 
     // Hide the jumper if they scroll around too much without using it
@@ -53,7 +58,7 @@ Discourse.TopicJumperComponent = Ember.Component.extend({
     if (count <= 0) {
       this.set('hidden', true);
     }
-  }.observes('topic.progressPosition'),
+  }, 100).observes('topic.progressPosition'),
 
   setNumber: function(position) {
     if (position === undefined) {
@@ -65,9 +70,14 @@ Discourse.TopicJumperComponent = Ember.Component.extend({
   },
 
   move: function(position) {
+    var topic = this.get('topic.model');
+    if (position > topic.get('highest_post_number')) {
+      position = topic.get('highest_post_number');
+    }
+
     this.setNumber(position);
     this.set('hideCount', 3);
-    Discourse.TopicView.jumpToPost(position);
+    Discourse.URL.routeTo(topic.urlForPostNumber(position));
   },
 
   actions: {
