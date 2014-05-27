@@ -28,8 +28,12 @@ test("isAllowedToUploadAFile", function() {
 
 test("avatarTemplate", function(){
   var oldCDN = Discourse.CDN;
-  equal(Discourse.User.avatarTemplate("sam", 1), "/user_avatar/sam/{size}/1.png");
+  var oldBase = Discourse.BaseUrl;
+  Discourse.BaseUrl = "frogs.com";
+
+  equal(Discourse.User.avatarTemplate("sam", 1), "/user_avatar/frogs.com/sam/{size}/1.png");
   Discourse.CDN = "http://awesome.cdn.com";
-  equal(Discourse.User.avatarTemplate("sam", 1), "http://awesome.cdn.com/user_avatar/sam/{size}/1.png");
+  equal(Discourse.User.avatarTemplate("sam", 1), "http://awesome.cdn.com/user_avatar/frogs.com/sam/{size}/1.png");
   Discourse.CDN = oldCDN;
+  Discourse.BaseUrl = oldBase;
 });
