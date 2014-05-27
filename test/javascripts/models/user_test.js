@@ -31,5 +31,5 @@ test("avatarTemplate", function(){
   equal(Discourse.avatarTemplate("sam", 1), "/user_avatar/sam/{size}/1.png");
   Discourse.CDN = "http://awesome.cdn.com";
   equal(Discourse.avatarTemplate("sam", 1), "http://awesome.cdn.com/user_avatar/sam/{size}/1.png");
-  var Discourse.CDN = oldCDN;
+  Discourse.CDN = oldCDN;
 });
