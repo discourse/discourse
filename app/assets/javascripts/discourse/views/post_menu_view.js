@@ -229,11 +229,9 @@ Discourse.PostMenuView = Discourse.View.extend({
       return;
     }
 
-    buffer.push('<button title="' + I18n.t("post.controls.admin") + '" data-action="admin" class="admin"><i class="fa fa-wrench"></i>');
+    buffer.push('<button title="' + I18n.t("post.controls.admin") + '" data-action="admin" class="admin"><i class="fa fa-wrench"></i></button>');
 
     this.renderAdminPopup(post, buffer);
-
-    buffer.push('</button>');
   },
 
   renderAdminPopup: function(post, buffer) {
