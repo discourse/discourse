@@ -17,7 +17,8 @@ class SilenceLogger < Rails::Rack::Logger
 
     if    env[HTTP_X_SILENCE_LOGGER] ||
           @opts[:silenced].include?(path_info) ||
-          path_info.start_with?('/logs')
+          path_info.start_with?('/logs') ||
+          path_info.start_with?('/user_avatar')
       Rails.logger.level = Logger::WARN
       @app.call(env)
     else
