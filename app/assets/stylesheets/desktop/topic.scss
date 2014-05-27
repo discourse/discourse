@@ -161,7 +161,7 @@ a:hover.reply-new {
     bottom: 0;
     width: 0;
     border-right: 1px solid  scale-color-diff();
-    background-color:  scale-color($success, $lightness: 70%);
+    background-color: scale-color($success, $lightness: 70%);
     transition: width .75s;
   }
   #topic-jumper {
@@ -184,36 +184,49 @@ a:hover.reply-new {
     }
 
     #jumper-slider {
-      color: black;
       width: 120px;
       margin-left: 3px;
       height: 4px;
-      -webkit-appearance: none;
-      -moz-apperance: none;
-      appearance: none;
       margin-bottom: 10px;
-      background-color:  scale-color($success, $lightness: 30%);
-      &:focus {
-        outline: none;
-      }
+      background-color: scale-color($success, $lightness: 70%);
+
+      // Webkit Style
+      -webkit-appearance: none;
       &::-webkit-slider-thumb {
         width: 10px;
         height: 10px;
-        color: black;
         background-color: scale-color($primary, $lightness: 10%);
         border-radius: 10px;
         -webkit-appearance: none;
       }
+
+      // Firefox Style TODO
+      -moz-apperance: none;
+      &:focus {
+        outline: none;
+      }
+      &::-moz-range-track {
+        background-color: scale-color($success, $lightness: 70%);
+      }
       &::-moz-range-thumb {
+        -moz-appearance: none;
         width: 10px;
         height: 10px;
-        color: black;
-        background-color: scale-color($primary, $lightness: 10%);
+        border: scale-color($primary, $lightness: 10%) solid 0;
+        background: scale-color($primary, $lightness: 10%);
         border-radius: 10px;
-        -webkit-appearance: none;
       }
       &::-moz-focus-inner {
         border: 0;
+      }
+
+      // IE11 Style
+      padding: 0;
+      &::-ms-fill-upper {
+        background-color: scale-color-diff();
+      }
+      &::-ms-fill-lower {
+        background-color: scale-color($success, $lightness: 70%);
       }
     }
     #jumper-text {

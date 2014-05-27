@@ -44,6 +44,10 @@ Discourse.TopicJumperComponent = Ember.Component.extend({
         self.setNumber($(this).val());
         bounce2();
       }, 50));
+      $slider.on("change", Discourse.debounce(function() {
+        self.setNumber($(this).val());
+        bounce2();
+      }, 50));
 
       self.setNumber();
     });
