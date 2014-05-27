@@ -204,6 +204,10 @@ class Guardian
     ( group_ids.blank? || is_admin? )
   end
 
+  def can_bulk_invite_to_forum?(user)
+    user.admin?
+  end
+
   def can_see_private_messages?(user_id)
     is_admin? || (authenticated? && @user.id == user_id)
   end

@@ -2,7 +2,7 @@ require_dependency "backup_restore"
 
 class Admin::BackupsController < Admin::AdminController
 
-  skip_before_filter :check_xhr, only: [:index, :show, :logs, :check_chunk, :upload_chunk]
+  skip_before_filter :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
 
   def index
     respond_to do |format|
@@ -87,7 +87,7 @@ class Admin::BackupsController < Admin::AdminController
     render nothing: true
   end
 
-  def check_chunk
+  def check_backup_chunk
     identifier         = params.fetch(:resumableIdentifier)
     filename           = params.fetch(:resumableFilename)
     chunk_number       = params.fetch(:resumableChunkNumber)
@@ -95,15 +95,13 @@ class Admin::BackupsController < Admin::AdminController
 
     # path to chunk file
     chunk = Backup.chunk_path(identifier, filename, chunk_number)
-    # check whether the chunk has already been uploaded
-    has_chunk_been_uploaded = File.exists?(chunk) && File.size(chunk) == current_chunk_size
-    # 200 = exists, 404 = not uploaded yet
-    status = has_chunk_been_uploaded ? 200 : 404
+    # check chunk upload status
+    status = HandleChunkUpload.check_chunk(chunk, current_chunk_size: current_chunk_size)
 
     render nothing: true, status: status
   end
 
-  def upload_chunk
+  def upload_backup_chunk
     filename   = params.fetch(:resumableFilename)
     total_size = params.fetch(:resumableTotalSize).to_i
 
@@ -118,15 +116,10 @@ class Admin::BackupsController < Admin::AdminController
 
     # path to chunk file
     chunk = Backup.chunk_path(identifier, filename, chunk_number)
-    dir = File.dirname(chunk)
-
-    # ensure directory exists
-    FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
-    # save chunk to the directory
-    File.open(chunk, "wb") { |f| f.write(file.tempfile.read) }
+    # upload chunk
+    HandleChunkUpload.upload_chunk(chunk, file: file)
 
     uploaded_file_size = chunk_number * chunk_size
-
     # when all chunks are uploaded
     if uploaded_file_size + current_chunk_size >= total_size
       # merge all the chunks in a background thread

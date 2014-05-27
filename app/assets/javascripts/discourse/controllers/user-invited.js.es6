@@ -14,6 +14,8 @@ export default Ember.ObjectController.extend({
     this.set('searchTerm', '');
   },
 
+  uploadText: function() { return I18n.t("user.invited.bulk_invite.text"); }.property(),
+
   /**
     Observe the search term box with a debouncer and change the results.
 
@@ -40,6 +42,15 @@ export default Ember.ObjectController.extend({
   **/
   canInviteToForum: function() {
     return Discourse.User.currentProp('can_invite_to_forum');
+  }.property(),
+
+  /**
+    Can the currently logged in user bulk invite users to the site (only Admin is allowed to perform this operation)
+
+    @property canBulkInvite
+  **/
+  canBulkInvite: function() {
+    return Discourse.User.currentProp('admin');
   }.property(),
 
   /**
@@ -75,5 +86,3 @@ export default Ember.ObjectController.extend({
   }
 
 });
-
-
