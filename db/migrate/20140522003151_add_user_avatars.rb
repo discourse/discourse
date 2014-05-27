@@ -16,6 +16,13 @@ class AddUserAvatars < ActiveRecord::Migration
    SELECT id, uploaded_avatar_id
    FROM users
 SQL
+
+    execute <<SQL
+    UPDATE users SET uploaded_avatar_id = NULL
+    WHERE NOT use_uploaded_avatar
+SQL
+
+    # NOTE we should nuke use_uploaded_avatar later on
   end
 
   def down
