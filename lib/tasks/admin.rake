@@ -20,4 +20,5 @@ task "admin:create" => :environment do
   admin.grant_admin!
   admin.change_trust_level!(TrustLevel.levels.max_by{|k, v| v}[0])
   admin.email_tokens.update_all  confirmed: true
+  admin.activate
 end
