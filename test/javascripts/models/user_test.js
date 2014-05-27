@@ -25,3 +25,11 @@ test("isAllowedToUploadAFile", function() {
   user.setProperties({ admin: false, moderator: true });
   ok(user.isAllowedToUploadAFile("image"), "moderator can always upload a file");
 });
+
+test("avatarTemplate", function(){
+  var oldCDN = Discourse.CDN;
+  equal(Discourse.avatarTemplate("sam", 1), "/user_avatar/sam/{size}/1.png");
+  Discourse.CDN = "http://awesome.cdn.com";
+  equal(Discourse.avatarTemplate("sam", 1), "http://awesome.cdn.com/user_avatar/sam/{size}/1.png");
+  var Discourse.CDN = oldCDN;
+});

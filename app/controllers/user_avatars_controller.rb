@@ -39,15 +39,15 @@ class UserAvatarsController < ApplicationController
     if user.uploaded_avatar && !upload
       return redirect_to "/avatar/#{user.username_lower}/#{size}/#{user.uploaded_avatar_id}.png"
     elsif upload
-      # TODO broken with S3 (should retrun a permanent redirect)
       original = Discourse.store.path_for(upload)
-      if File.exists?(original)
-        optimized = OptimizedImage.create_for(
-          upload,
-          size,
-          size,
-          allow_animation: SiteSetting.allow_animated_avatars
-        )
+      if Discourse.store.external? || File.exists?(original)
+        optimized = get_optimized_image(upload, size)
+
+        if Discourse.store.external?
+          expires_in 1.day, public: true
+          return redirect_to optimized.url
+        end
+
         image = Discourse.store.path_for(optimized)
       end
     end
@@ -59,4 +59,16 @@ class UserAvatarsController < ApplicationController
       raise Discourse::NotFound
     end
   end
+
+  protected
+
+  def get_optimized_image(upload, size)
+    OptimizedImage.create_for(
+      upload,
+      size,
+      size,
+      allow_animation: SiteSetting.allow_animated_avatars
+    )
+  end
+
 end

@@ -416,7 +416,11 @@ Discourse.User = Discourse.Model.extend({
 Discourse.User.reopenClass(Discourse.Singleton, {
 
   avatarTemplate: function(username, uploadedAvatarId){
-    return Discourse.getURL("/user_avatar/" + username.toLowerCase() + "/{size}/" + uploadedAvatarId + ".png");
+    var url = Discourse.getURL("/user_avatar/" + username.toLowerCase() + "/{size}/" + uploadedAvatarId + ".png");
+    if(Discourse.CDN){
+      url = Discourse.CDN + url;
+    }
+    return url;
   },
 
   /**

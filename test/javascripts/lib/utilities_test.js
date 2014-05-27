@@ -111,26 +111,31 @@ test("isAnImage", function() {
 
 test("avatarUrl", function() {
   blank(Discourse.Utilities.avatarUrl('', 'tiny'), "no template returns blank");
-  equal(Discourse.Utilities.avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/20.png", "simple avatar url");
-  equal(Discourse.Utilities.avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/45.png", "different size");
+  equal(Discourse.Utilities.avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/" + 20*window.devicePixelRatio + ".png", "simple avatar url");
+  equal(Discourse.Utilities.avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/" + 45*window.devicePixelRatio +  ".png", "different size");
 });
 
 test("avatarImg", function() {
+  var oldRatio = window.devicePixelRatio;
+  window.devicePixelRatio = 2;
+
   var avatarTemplate = "/path/to/avatar/{size}.png";
   equal(Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny'}),
-        "<img width='20' height='20' src='/path/to/avatar/20.png' class='avatar'>",
+        "<img width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
         "it returns the avatar html");
 
   equal(Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', title: 'evilest trout'}),
-        "<img width='20' height='20' src='/path/to/avatar/20.png' class='avatar' title='evilest trout'>",
+        "<img width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout'>",
         "it adds a title if supplied");
 
   equal(Discourse.Utilities.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', extraClasses: 'evil fish'}),
-        "<img width='20' height='20' src='/path/to/avatar/20.png' class='avatar evil fish'>",
+        "<img width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
         "it adds extra classes if supplied");
 
   blank(Discourse.Utilities.avatarImg({avatarTemplate: "", size: 'tiny'}),
         "it doesn't render avatars for invalid avatar template");
+
+  window.devicePixelRatio = oldRatio;
 });
 
 test("defaultHomepage", function() {
