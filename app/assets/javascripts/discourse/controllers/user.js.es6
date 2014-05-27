@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.UserController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
 
   viewingSelf: function() {
     return this.get('content.username') === Discourse.User.currentProp('username');
