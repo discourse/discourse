@@ -74,7 +74,7 @@ class OptimizedImage < ActiveRecord::Base
       #{from}
       -resize #{width}x#{height}
       -background transparent
-      -interpolate Catrom
+      -interpolate bicubic
       -unsharp 2x0.5+0.7+0
       -quality 98
       #{to}
