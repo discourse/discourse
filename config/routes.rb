@@ -212,7 +212,7 @@ Discourse::Application.routes.draw do
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar"
-  get "user_avatar/:username/:size/:version.png" => "user_avatars#show", format: false
+  get "user_avatarX/:username/:size/:version.png" => "user_avatars#show", format: false
 
 
   get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
