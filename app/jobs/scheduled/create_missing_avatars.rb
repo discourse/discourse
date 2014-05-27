@@ -9,7 +9,7 @@ module Jobs
       # backfill in batches 1000 an hour
       User.where(uploaded_avatar_id: nil)
           .order("last_posted_at desc")
-          .limit(1000).find_each do |u|
+          .limit(1000).each do |u|
         u.refresh_avatar
         u.save
       end
