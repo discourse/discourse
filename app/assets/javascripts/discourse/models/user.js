@@ -191,6 +191,7 @@ Discourse.User = Discourse.Model.extend({
     var data = this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
+                               'location',
                                'name',
                                'locale',
                                'email_digests',

@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
   has_one :user_stat, dependent: :destroy
+  has_one :user_profile, dependent: :destroy
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
@@ -73,6 +74,7 @@ class User < ActiveRecord::Base
 
   after_create :create_email_token
   after_create :create_user_stat
+  after_create :create_user_profile
   after_save :refresh_avatar
 
   before_destroy do
@@ -654,6 +656,10 @@ class User < ActiveRecord::Base
       SiteSetting.has_login_hint = false
       SiteSetting.global_notice = ""
     end
+  end
+
+  def create_user_profile
+    UserProfile.create(user_id: id)
   end
 
   def create_user_stat

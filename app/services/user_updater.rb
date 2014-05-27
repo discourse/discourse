@@ -18,6 +18,10 @@ class UserUpdater
       :disable_jump_reply
   ]
 
+  PROFILE_ATTR = [
+    :location
+  ]
+
   def initialize(actor, user)
     @user = user
     @guardian = Guardian.new(actor)
@@ -55,7 +59,15 @@ class UserUpdater
       end
     end
 
-    user.save
+    user_profile = user.user_profile
+    PROFILE_ATTR.each do |attribute|
+      user_profile.send("#{attribute.to_s}=", attributes[attribute])
+    end
+
+    User.transaction do
+      user_profile.save
+      user.save
+    end
   end
 
   private

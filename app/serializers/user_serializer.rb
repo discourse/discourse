@@ -9,6 +9,7 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :profile_background,
+             :location,
              :can_edit,
              :can_edit_username,
              :can_edit_email,
@@ -111,6 +112,13 @@ class UserSerializer < BasicUserSerializer
 
   def can_edit_name
     scope.can_edit_name?(object)
+  end
+
+  def location
+    object.user_profile.try(:location)
+  end
+  def include_location?
+    location.present?
   end
 
   def stats

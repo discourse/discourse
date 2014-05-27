@@ -86,6 +86,9 @@
 
           <div class='secondary'>
             <dl>
+              {{#if location}}
+                <dt>{{i18n user.location}}</dt><dd>{{location}}</a></dd>
+              {{/if}}
               {{#if websiteName}}
                 <dt>{{i18n user.website}}</dt><dd><a {{bind-attr href="website"}} target="_blank">{{websiteName}}</a></dd>
               {{/if}}

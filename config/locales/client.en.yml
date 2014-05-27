@@ -358,6 +358,7 @@ en:
       last_seen: "Seen"
       created: "Joined"
       log_out: "Log Out"
+      location: "Location"
       website: "Web Site"
       email_settings: "Email"
       email_digests:
