@@ -21,8 +21,11 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def update_gravatar!
+    # special logic for our system user, we do not want the discourse email there
+    email_hash = user.id == -1 ? User.email_hash("info@discourse.org") : user.email_hash
+
     self.last_gravatar_download_attempt = Time.new
-    gravatar_url = "http://www.gravatar.com/avatar/#{user.email_hash}.png?s=500&d=404"
+    gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=500&d=404"
     tempfile = FileHelper.download(gravatar_url, 1.megabyte, "gravatar")
 
     upload = Upload.create_for(user.id, tempfile, 'gravatar.png', File.size(tempfile.path))
