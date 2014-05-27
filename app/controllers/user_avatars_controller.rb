@@ -1,6 +1,8 @@
 require_dependency 'letter_avatar'
 
 class UserAvatarsController < ApplicationController
+  DOT = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
+
   skip_before_filter :check_xhr, :verify_authenticity_token, only: :show
 
   def refresh_gravatar
@@ -21,17 +23,17 @@ class UserAvatarsController < ApplicationController
 
   def show
     username = params[:username].to_s
-    raise Discourse::NotFound unless user = User.find_by(username_lower: username.downcase)
+    return render_dot unless user = User.find_by(username_lower: username.downcase)
 
     size = params[:size].to_i
     if size > 1000 || size < 1
-      raise Discourse::NotFound
+      return render_dot
     end
 
     image = nil
     version = params[:version].to_i
 
-    raise Discourse::NotFound unless version > 0 && user_avatar = user.user_avatar
+    return render_dot unless version > 0 && user_avatar = user.user_avatar
 
     upload = Upload.find(version) if user_avatar.contains_upload?(version)
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == version
@@ -56,11 +58,17 @@ class UserAvatarsController < ApplicationController
       expires_in 1.year, public: true
       send_file image, disposition: nil
     else
-      raise Discourse::NotFound
+      render_dot
     end
   end
 
   protected
+
+  # this protects us from a DoS
+  def render_dot
+    expires_in 10.minutes, public: true
+    render text: DOT, content_type: "image/png"
+  end
 
   def get_optimized_image(upload, size)
     OptimizedImage.create_for(

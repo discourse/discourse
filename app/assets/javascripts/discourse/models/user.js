@@ -420,7 +420,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     if(Discourse.CDN){
       url = Discourse.CDN + url;
     }
-    return "DISABLED" + url;
+    return url;
   },
 
   /**
