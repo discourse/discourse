@@ -20,8 +20,16 @@ class UserAvatarsController < ApplicationController
     end
   end
 
-
   def show
+    # we need multisite support to keep a single origin pull for CDNs
+    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
+      show_in_site
+    end
+  end
+
+  protected
+
+  def show_in_site
     username = params[:username].to_s
     return render_dot unless user = User.find_by(username_lower: username.downcase)
 
@@ -62,7 +70,6 @@ class UserAvatarsController < ApplicationController
     end
   end
 
-  protected
 
   # this protects us from a DoS
   def render_dot

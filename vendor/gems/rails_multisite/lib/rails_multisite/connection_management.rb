@@ -37,6 +37,30 @@ module RailsMultisite
       end
     end
 
+    def self.with_hostname(hostname)
+
+      unless defined? @@db_spec_cache
+        # just fake it for non multisite
+        yield hostname
+        return
+      end
+
+      old = current_hostname
+      connected = ActiveRecord::Base.connection_pool.connected?
+
+      establish_connection(:hostname => hostname) unless connected && hostname == old
+      rval = yield hostname
+
+      unless connected && hostname == old
+        ActiveRecord::Base.connection_handler.clear_active_connections!
+
+        establish_connection(:hostname => old)
+        ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
+      end
+
+      rval
+    end
+
     def self.with_connection(db = "default")
       old = current_db
       connected = ActiveRecord::Base.connection_pool.connected?
