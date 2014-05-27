@@ -354,7 +354,7 @@ class User < ActiveRecord::Base
   def self.avatar_template(username,uploaded_avatar_id)
     id = uploaded_avatar_id || -1
     username ||= ""
-    "/user_avatar/#{username.downcase}/{size}/#{id}.png"
+    "/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
   end
 
   def avatar_template

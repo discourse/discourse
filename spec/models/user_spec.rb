@@ -978,7 +978,7 @@ describe User do
     let(:user) { build(:user, username: 'Sam') }
 
     it "returns a 45-pixel-wide avatar" do
-      user.small_avatar_url.should == "//test.localhost/user_avatar/sam/45/-1.png"
+      user.small_avatar_url.should == "//test.localhost/user_avatar/test.localhost/sam/45/-1.png"
     end
 
   end
@@ -988,12 +988,12 @@ describe User do
     let(:user) { build(:user, uploaded_avatar_id: 99, username: 'Sam') }
 
     it "returns a schemaless avatar template with correct id" do
-      user.avatar_template_url.should == "//test.localhost/user_avatar/sam/{size}/99.png"
+      user.avatar_template_url.should == "//test.localhost/user_avatar/test.localhost/sam/{size}/99.png"
     end
 
     it "returns a schemaless cdn-based avatar template" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      user.avatar_template_url.should == "//my.cdn.com/user_avatar/sam/{size}/99.png"
+      user.avatar_template_url.should == "//my.cdn.com/user_avatar/test.localhost/sam/{size}/99.png"
     end
 
   end
