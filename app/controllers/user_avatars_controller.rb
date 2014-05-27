@@ -23,13 +23,13 @@ class UserAvatarsController < ApplicationController
   def show
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      show_in_site
+      show_in_site(RailsMultisite::ConnectionManagement.current_hostname)
     end
   end
 
   protected
 
-  def show_in_site
+  def show_in_site(hostname)
     username = params[:username].to_s
     return render_dot unless user = User.find_by(username_lower: username.downcase)
 
@@ -47,7 +47,7 @@ class UserAvatarsController < ApplicationController
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == version
 
     if user.uploaded_avatar && !upload
-      return redirect_to "/avatar/#{user.username_lower}/#{size}/#{user.uploaded_avatar_id}.png"
+      return redirect_to "/avatar/#{hostname}/#{user.username_lower}/#{size}/#{user.uploaded_avatar_id}.png"
     elsif upload
       original = Discourse.store.path_for(upload)
       if Discourse.store.external? || File.exists?(original)

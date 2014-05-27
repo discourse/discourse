@@ -48,13 +48,13 @@ module RailsMultisite
       old = current_hostname
       connected = ActiveRecord::Base.connection_pool.connected?
 
-      establish_connection(:hostname => hostname) unless connected && hostname == old
+      establish_connection(:host => hostname) unless connected && hostname == old
       rval = yield hostname
 
       unless connected && hostname == old
         ActiveRecord::Base.connection_handler.clear_active_connections!
 
-        establish_connection(:hostname => old)
+        establish_connection(:host => old)
         ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
       end
 
