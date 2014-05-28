@@ -128,10 +128,11 @@ class Search
       # the issue while we figure out what is up in Rails
       secure_category_ids
 
-      categories = Category.includes(:category_search_data)
-                           .where("category_search_data.search_data @@ #{ts_query}")
-                           .references(:category_search_data)
-                           .order("topics_month DESC")
+
+      search_criteria = {:name_cont => @original_term.downcase}
+
+      search = Category.search(search_criteria)
+      categories = search.result(:distinct => false).order("topics_month DESC")
                            .secured(@guardian)
                            .limit(@limit)
 
@@ -141,12 +142,11 @@ class Search
     end
 
     def user_search
-      users = User.includes(:user_search_data)
-                  .where("user_search_data.search_data @@ #{ts_query}")
-                  .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
-                  .order("last_posted_at DESC")
-                  .limit(@limit)
-                  .references(:user_search_data)
+
+      search_criteria = {:name_or_email_cont => @original_term.downcase}
+
+      search = User.search(search_criteria)
+      users = search.result(:distinct => false).order("last_posted_at DESC").limit(@limit)
 
       users.each do |u|
         @results.add_result(SearchResult.from_user(u))
@@ -154,9 +154,10 @@ class Search
     end
 
     def posts_query(limit)
-      posts = Post.includes(:post_search_data, {:topic => :category})
-                  .where("post_search_data.search_data @@ #{ts_query}")
-                  .where("topics.deleted_at" => nil)
+
+      search_criteria = {:raw_or_topic_title_cont => @original_term.downcase}
+      search = Post.includes(:post_search_data, {:topic => :category}).search(search_criteria)
+      posts = search.result(:distinct => false).where("topics.deleted_at" => nil)
                   .where("topics.visible")
                   .where("topics.archetype <> ?", Archetype.private_message)
                   .references(:post_search_data, {:topic => :category})

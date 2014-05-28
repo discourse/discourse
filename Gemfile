@@ -134,6 +134,8 @@ gem 'pry-rails', require: false
 gem 'rake'
 
 
+gem "ransack"
+
 gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
