@@ -754,8 +754,8 @@ end
 #
 #  id                            :integer          not null, primary key
 #  username                      :string(60)       not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
+#  created_at                    :datetime
+#  updated_at                    :datetime
 #  name                          :string(255)
 #  bio_raw                       :text
 #  seen_notification_id          :integer          default(0), not null
@@ -803,6 +803,7 @@ end
 #  profile_background            :string(255)
 #  registration_ip_address       :inet
 #  last_redirected_to_top_at     :datetime
+#  disable_jump_reply            :boolean          default(FALSE), not null
 #
 # Indexes
 #

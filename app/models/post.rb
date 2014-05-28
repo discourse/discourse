@@ -516,8 +516,8 @@ end
 #  post_number             :integer          not null
 #  raw                     :text             not null
 #  cooked                  :text             not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
+#  created_at              :datetime
+#  updated_at              :datetime
 #  reply_to_post_number    :integer
 #  reply_count             :integer          default(0), not null
 #  quote_count             :integer          default(0), not null
@@ -557,5 +557,5 @@ end
 #  idx_posts_created_at_topic_id            (created_at,topic_id)
 #  idx_posts_user_id_deleted_at             (user_id)
 #  index_posts_on_reply_to_post_number      (reply_to_post_number)
-#  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
+#  index_posts_on_topic_id_and_post_number  (topic_id,post_number)
 #
