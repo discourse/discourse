@@ -9,6 +9,8 @@
 
     {{#if model.viewOpen}}
       <div class='control-row reply-area'>
+        {{plugin-outlet "composer-open"}}
+
         <div class='reply-to'>
           {{{model.actionTitle}}}:
           {{#if canEdit}}
@@ -57,7 +59,7 @@
           <div class='textarea-wrapper'>
             <div class='wmd-button-bar' id='wmd-button-bar'></div>
             <div id='wmd-preview-scroller'></div>
-            {{view Discourse.NotifyingTextArea parentBinding="view" tabindex="3" valueBinding="model.reply" id="wmd-input" placeholderKey="composer.reply_placeholder"}}
+            {{composer-text-area tabindex="3" value=model.reply id="wmd-input" placeholderKey="composer.reply_placeholder"}}
             {{popupInputTip validation=view.replyValidation shownAt=view.showReplyTip}}
           </div>
           <div class='preview-wrapper'>
@@ -75,7 +77,7 @@
                   <a {{action showUploadSelector view}} class='mobile-file-upload'>{{i18n upload}}</a>
                 {{/if}}
               {{/if}}
-              <div id='draft-status'></div>
+              <div id='draft-status'>{{model.draftStatus}}</div>
             </div>
           {{/if}}
         </div>

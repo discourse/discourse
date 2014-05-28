@@ -26,14 +26,8 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   content: Em.computed.alias('model'),
 
   composeState: function() {
-    var state = this.get('model.composeState');
-    if (state) return state;
-    return Discourse.Composer.CLOSED;
+    return this.get('model.composeState') || Discourse.Composer.CLOSED;
   }.property('model.composeState'),
-
-  draftStatus: function() {
-    $('#draft-status').text(this.get('model.draftStatus') || "");
-  }.observes('model.draftStatus'),
 
   // Disable fields when we're loading
   loadingChanged: function() {
@@ -47,7 +41,6 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   postMade: function() {
     return this.present('controller.createdPost') ? 'created-post' : null;
   }.property('model.createdPost'),
-
 
   refreshPreview: Discourse.debounce(function() {
     if (this.editor) {
@@ -101,7 +94,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   keyDown: function(e) {
     if (e.which === 27) {
       // ESC
-      this.get('controller').hitEsc();
+      this.get('controller').send('hitEsc');
       return false;
     } else if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
       // CTRL+ENTER or CMD+ENTER
@@ -110,12 +103,12 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     }
   },
 
-  didInsertElement: function() {
+  _enableResizing: function() {
     var $replyControl = $('#reply-control');
     $replyControl.DivResizer({ resize: this.resize, onDrag: this.movePanels });
     Discourse.TransitionHelper.after($replyControl, this.resize);
     this.ensureMaximumDimensionForImagesInPreview();
-  },
+  }.on('didInsertElement'),
 
   ensureMaximumDimensionForImagesInPreview: function() {
     // This enforce maximum dimensions of images in the preview according
@@ -132,7 +125,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   click: function() {
-    this.get('controller').openIfDraft();
+    this.get('controller').send('openIfDraft');
   },
 
   // Called after the preview renders. Debounced for performance
@@ -484,21 +477,6 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     var $uploadTarget = $('#reply-control');
     $uploadTarget.fileupload('destroy');
     $uploadTarget.off();
-  }
-});
-
-// not sure if this is the right way, keeping here for now, we could use a mixin perhaps
-Discourse.NotifyingTextArea = Ember.TextArea.extend({
-  placeholder: function() {
-    return I18n.t(this.get('placeholderKey'));
-  }.property('placeholderKey'),
-
-  didInsertElement: function() {
-    return this.get('parent').childDidInsertElement(this);
-  },
-
-  willDestroyElement: function() {
-    return this.get('parent').childWillDestroyElement(this);
   }
 });
 

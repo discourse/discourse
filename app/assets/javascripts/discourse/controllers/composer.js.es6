@@ -15,10 +15,9 @@ export default Discourse.Controller.extend({
   showEditReason: false,
   editReason: null,
 
-  init: function() {
-    this._super();
-    this.set('similarTopics', Em.A());
-  },
+  _initializeSimilar: function() {
+    this.set('similarTopics', []);
+  }.on('init'),
 
   actions: {
     // Toggle the reply view
@@ -45,7 +44,20 @@ export default Discourse.Controller.extend({
 
     displayEditReason: function() {
       this.set("showEditReason", true);
-    }
+    },
+
+    hitEsc: function() {
+      if (this.get('model.viewOpen')) {
+        this.shrink();
+      }
+    },
+
+    openIfDraft: function() {
+      if (this.get('model.viewDraft')) {
+        this.set('model.composeState', Discourse.Composer.OPEN);
+      }
+    },
+
   },
 
   updateDraftStatus: function() {
@@ -233,89 +245,74 @@ export default Discourse.Controller.extend({
   open: function(opts) {
     if (!opts) opts = {};
 
-    this.setProperties({
-      showEditReason: false,
-      editReason: null
-    });
-
-    var composerMessages = this.get('controllers.composerMessages');
-    composerMessages.reset();
-
-    var promise = opts.promise || Ember.Deferred.create();
-    opts.promise = promise;
-
     if (!opts.draftKey) {
       alert("composer was opened without a draft key");
       throw "composer opened without a proper draft key";
     }
 
-    // ensure we have a view now, without it transitions are going to be messed
-    var view = this.get('view');
-    var self = this;
-    if (!view) {
+    var composerMessages = this.get('controllers.composerMessages'),
+        self = this,
+        composerModel = this.get('model');
 
-      // TODO: We should refactor how composer is inserted. It should probably use a
-      // {{render}} and then the controller and view will be wired up automatically.
-      var appView = Discourse.__container__.lookup('view:application');
-      view = appView.createChildView(Discourse.ComposerView, {controller: this});
-      view.appendTo($('#main'));
-      this.set('view', view);
+    this.setProperties({ showEditReason: false, editReason: null });
+    composerMessages.reset();
+    this.set('view', this.container.lookup('view:composer'));
 
-      // the next runloop is too soon, need to get the control rendered and then
-      //  we need to change stuff, otherwise css animations don't kick in
-      Em.run.next(function() {
-        Em.run.next(function() {
-          self.open(opts);
-        });
-      });
-      return promise;
-    }
-
-    var composer = this.get('model');
-    if (composer && opts.draftKey !== composer.draftKey && composer.composeState === Discourse.Composer.DRAFT) {
+    // If we want a different draft than the current composer, close it and clear our model.
+    if (composerModel && opts.draftKey !== composerModel.draftKey &&
+        composerModel.composeState === Discourse.Composer.DRAFT) {
       this.close();
-      composer = null;
+      composerModel = null;
     }
 
-    if (composer && !opts.tested && composer.get('replyDirty')) {
-      if (composer.composeState === Discourse.Composer.DRAFT && composer.draftKey === opts.draftKey && composer.action === opts.action) {
-        composer.set('composeState', Discourse.Composer.OPEN);
-        promise.resolve();
-        return promise;
-      } else {
-        opts.tested = true;
-        if (!opts.ignoreIfChanged) {
-          this.cancelComposer().then(function() { self.open(opts); }).catch(function() { return promise.reject(); });
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      if (composerModel && composerModel.get('replyDirty')) {
+        if (composerModel.get('composeState') === Discourse.Composer.DRAFT &&
+            composerModel.get('draftKey') === opts.draftKey &&
+            composerModel.action === opts.action) {
+
+            // If it's the same draft, just open it up again.
+            composerModel.set('composeState', Discourse.Composer.OPEN);
+            return resolve();
+        } else {
+          // If it's a different draft, cancel it and try opening again.
+          return self.cancelComposer().then(function() {
+            return self.open(opts);
+          }).then(resolve, reject);
         }
-        return promise;
       }
-    }
 
-    // we need a draft sequence, without it drafts are bust
-    if (opts.draftSequence === void 0) {
-      Discourse.Draft.get(opts.draftKey).then(function(data) {
-        opts.draftSequence = data.draft_sequence;
-        opts.draft = data.draft;
-        return self.open(opts);
-      });
-      return promise;
-    }
+      // we need a draft sequence for the composer to work
+      if (opts.draftSequence === void 0) {
+        return Discourse.Draft.get(opts.draftKey).then(function(data) {
+          opts.draftSequence = data.draft_sequence;
+          opts.draft = data.draft;
+          self._setModel(composerModel, opts);
+        }).then(resolve, reject);
+      }
 
+      self._setModel(composerModel, opts);
+      resolve();
+    });
+  },
+
+  // Given a potential instance and options, set the model for this composer.
+  _setModel: function(composerModel, opts) {
     if (opts.draft) {
-      composer = Discourse.Composer.loadDraft(opts.draftKey, opts.draftSequence, opts.draft);
-      if (composer) {
-        composer.set('topic', opts.topic);
+      composerModel = Discourse.Composer.loadDraft(opts.draftKey, opts.draftSequence, opts.draft);
+      if (composerModel) {
+        composerModel.set('topic', opts.topic);
       }
     } else {
-      composer = composer || Discourse.Composer.create();
-      composer.open(opts);
+      composerModel = composerModel || Discourse.Composer.create();
+      composerModel.open(opts);
     }
 
-    this.set('model', composer);
-    composer.set('composeState', Discourse.Composer.OPEN);
-    composerMessages.queryFor(this.get('model'));
-    promise.resolve();
-    return promise;
+    this.set('model', composerModel);
+    composerModel.set('composeState', Discourse.Composer.OPEN);
+
+    var composerMessages = this.get('controllers.composerMessages');
+    composerMessages.queryFor(composerModel);
   },
 
   // View a new reply we've made
@@ -356,11 +353,6 @@ export default Discourse.Controller.extend({
     });
   },
 
-  openIfDraft: function() {
-    if (this.get('model.viewDraft')) {
-      this.set('model.composeState', Discourse.Composer.OPEN);
-    }
-  },
 
   shrink: function() {
     if (this.get('model.replyDirty')) {
@@ -386,13 +378,6 @@ export default Discourse.Controller.extend({
 
   closeAutocomplete: function() {
     $('#wmd-input').autocomplete({ cancel: true });
-  },
-
-  // ESC key hit
-  hitEsc: function() {
-    if (this.get('model.viewOpen')) {
-      this.shrink();
-    }
   },
 
   showOptions: function() {

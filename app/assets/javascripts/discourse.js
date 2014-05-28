@@ -117,12 +117,12 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   start: function() {
 
     // Load any ES6 initializers
-    Ember.keys(requirejs._eak_seen).filter(function(key) {
-      return (/\/initializers\//).test(key);
-    }).forEach(function(moduleName) {
-      var module = require(moduleName, null, null, true);
-      if (!module) { throw new Error(moduleName + ' must export an initializer.'); }
-      Discourse.initializer(module.default);
+    Ember.keys(requirejs._eak_seen).forEach(function(key) {
+      if (/\/initializers\//.test(key)) {
+        var module = require(key, null, null, true);
+        if (!module) { throw new Error(key + ' must export an initializer.'); }
+        Discourse.initializer(module.default);
+      }
     });
 
     var initializers = this.initializers;
