@@ -686,7 +686,7 @@ blockquote { /* solo quotes */
 }
 
 .quote { /* quotes with attribution */
-  blockquote {
+  &>blockquote {
       margin-top: 0;
       padding-top: 0;
       p:first-of-type {margin:0;}
@@ -707,6 +707,10 @@ blockquote { /* solo quotes */
     .quote, .title, blockquote, .onebox, .onebox-result {
       background: darken(scale-color-diff(), 5%);
       border-left: 5px solid darken(scale-color-diff(), 12%);
+    }
+
+    aside.quote>blockquote, aside.quote>.title {
+      border-left: 0;
     }
   }
 
