@@ -86,7 +86,7 @@ Version: @@ver@@ Timestamp: @@timestamp@@
     text-decoration: none;
 
     border: 0;
-    background: image-url('select2.png') right top no-repeat;
+    background: asset-url('select2.png', 'image') right top no-repeat;
     cursor: pointer;
     outline: 0;
 }
@@ -183,7 +183,7 @@ Version: @@ver@@ Timestamp: @@timestamp@@
     display: block;
     width: 100%;
     height: 100%;
-    background: image-url('select2.png') no-repeat 0 1px;
+    background: asset-url('select2.png', 'image') no-repeat 0 1px;
 }
 
 .select2-search {
@@ -217,11 +217,11 @@ Version: @@ver@@ Timestamp: @@timestamp@@
     -webkit-box-shadow: none;
             box-shadow: none;
 
-    background: #fff image-url('select2.png') no-repeat 100% -22px;
-    background: image-url('select2.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
-    background: image-url('select2.png') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: image-url('select2.png') no-repeat 100% -22px, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: image-url('select2.png') no-repeat 100% -22px, linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0;
+    background: #fff asset-url('select2.png', 'image') no-repeat 100% -22px;
+    background: asset-url('select2.png', 'image') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
+    background: asset-url('select2.png', 'image') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
+    background: asset-url('select2.png', 'image') no-repeat 100% -22px, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
+    background: asset-url('select2.png', 'image') no-repeat 100% -22px, linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0;
 }
 
 .select2-drop.select2-drop-above .select2-search input {
@@ -229,11 +229,11 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 }
 
 .select2-search input.select2-active {
-    background: #fff image-url('select2-spinner.gif') no-repeat 100%;
-    background: image-url('select2-spinner.gif') no-repeat 100%, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
-    background: image-url('select2-spinner.gif') no-repeat 100%, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: image-url('select2-spinner.gif') no-repeat 100%, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
-    background: image-url('select2-spinner.gif') no-repeat 100%, linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0;
+    background: #fff asset-url('select2-spinner.gif', 'image') no-repeat 100%;
+    background: asset-url('select2-spinner.gif', 'image') no-repeat 100%, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
+    background: asset-url('select2-spinner.gif', 'image') no-repeat 100%, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
+    background: asset-url('select2-spinner.gif', 'image') no-repeat 100%, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
+    background: asset-url('select2-spinner.gif', 'image') no-repeat 100%, linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0;
 }
 
 .select2-container-active .select2-choice,
@@ -378,7 +378,7 @@ disabled look for disabled choices in the results dropdown
 }
 
 .select2-more-results.select2-active {
-    background: #f4f4f4 image-url('select2-spinner.gif') no-repeat 100%;
+    background: #f4f4f4 asset-url('select2-spinner.gif', 'image') no-repeat 100%;
 }
 
 .select2-more-results {
@@ -466,7 +466,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices li
 }
 
 .select2-container-multi .select2-choices .select2-search-field input.select2-active {
-    background: #fff image-url('select2-spinner.gif') no-repeat 100% !important;
+    background: #fff asset-url('select2-spinner.gif', 'image') no-repeat 100% !important;
 }
 
 .select2-default {
@@ -520,7 +520,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
 
     font-size: 1px;
     outline: none;
-    background: image-url('select2.png') right top no-repeat;
+    background: asset-url('select2.png', 'image') right top no-repeat;
 }
 html[dir="rtl"] .select2-search-choice-close {
     right: auto;
@@ -598,7 +598,7 @@ html[dir="rtl"] .select2-search-choice-close {
     .select2-search-choice-close,
     .select2-container .select2-choice abbr,
     .select2-container .select2-choice .select2-arrow b {
-        background-image: image-url('select2x2.png') !important;
+        background-image: asset-url('select2x2.png', 'image') !important;
         background-repeat: no-repeat !important;
         background-size: 60px 40px !important;
     }
