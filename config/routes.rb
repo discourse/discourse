@@ -213,7 +213,7 @@ Discourse::Application.routes.draw do
 
   post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar"
   get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show",
-      format: false, constraints: {hostname: /[\w\.]+/}
+      format: false, constraints: {hostname: /[\w\.-]+/}
 
 
   get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
