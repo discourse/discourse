@@ -6,15 +6,16 @@ if user
   user.save
 end
 
+I18n.locale = SiteSetting.default_locale || 'en'
+
 User.seed do |u|
   u.id = -1
-  u.name = "system"
-  u.username = "system"
-  u.username_lower = "system"
-  u.email = "no_email"
+  u.name = I18n.t('site_settings.system_user_name', default: I18n.t('site_settings.system_user_name', locale: :en))
+  u.username = 'system'
+  u.username_lower = 'system'
+  u.email = 'no_email'
   u.password = SecureRandom.hex
-  # TODO localize this, its going to require a series of hacks
-  u.bio_raw = "Not a real person. A global user for system notifications and other system tasks."
+  u.bio_raw = I18n.t('site_settings.system_user_bio', default: I18n.t('site_settings.system_user_bio', locale: :en))
   u.active = true
   u.admin = true
   u.moderator = true
