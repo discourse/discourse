@@ -26,6 +26,9 @@ module Jobs
 
       # Automatically close stuff that we missed
       Topic.auto_close
+
+      # Forces rebake of old posts where needed
+      Post.rebake_old(250)
     end
 
   end

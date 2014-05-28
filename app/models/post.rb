@@ -15,6 +15,10 @@ class Post < ActiveRecord::Base
   include Trashable
   include HasCustomFields
 
+  # rebake all posts baked before this date
+  # in our periodical job
+  REBAKE_BEFORE = Time.new(2014,5,27)
+
   rate_limit
   rate_limit :limit_posts_per_day
 
@@ -310,6 +314,35 @@ class Post < ActiveRecord::Base
     PostRevisor.new(self).revise!(updated_by, new_raw, opts)
   end
 
+  def self.rebake_old(limit)
+    Post.where('baked_at IS NULL OR baked_at < ?', REBAKE_BEFORE)
+        .limit(limit).each do |p|
+      begin
+        p.rebake!
+      rescue => e
+        Discourse.handle_exception(e)
+      end
+    end
+  end
+
+  def rebake!(opts={})
+    new_cooked = cook(
+      raw,
+      topic_id: topic_id,
+      invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false)
+    )
+    old_cooked = cooked
+
+    update_columns(cooked: new_cooked, baked_at: Time.new)
+
+    # Extracts urls from the body
+    TopicLink.extract_from self
+    # make sure we trigger the post process
+    trigger_post_process(true)
+
+    new_cooked != old_cooked
+  end
+
   def set_owner(new_user, actor)
     revise(actor, self.raw, {
         new_user: new_user,
@@ -357,6 +390,7 @@ class Post < ActiveRecord::Base
   before_save do
     self.last_editor_id ||= user_id
     self.cooked = cook(raw, topic_id: topic_id) unless new_record?
+    self.baked_at = Time.new
   end
 
   after_save do
