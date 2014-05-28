@@ -134,7 +134,7 @@ gem 'pry-rails', require: false
 gem 'rake'
 
 
-gem "ransack"
+gem 'ransack', github: "activerecord-hackery/ransack", branch: "rails-4.1"
 
 gem 'rest-client'
 gem 'rinku'
