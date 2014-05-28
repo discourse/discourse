@@ -9,11 +9,11 @@ module Jobs
       end
 
       # backfill in batches 5000 an hour
-      User.where(uploaded_avatar_id: nil)
-          .order("last_posted_at desc")
+      UserAvatar.where(last_gravatar_download_attempt: nil).includes(:user)
+          .order("users.last_posted_at desc")
           .limit(5000).each do |u|
-        u.refresh_avatar
-        u.save
+        u.user.refresh_avatar
+        u.user.save
       end
     end
   end
