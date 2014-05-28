@@ -7,17 +7,20 @@ class LetterAvatar
       'tmp/letter_avatars'
     end
 
-    def generate(username, size)
+    def generate(username, size, opts = nil)
+
+      cache = true
+      cache = false if opts && opts[:cache] == false
 
       size = FULLSIZE if size > FULLSIZE
       filename = cached_path(username, size)
 
-      if File.exists?(filename)
+      if cache && File.exists?(filename)
         return filename
       end
 
       fullsize = fullsize_path(username)
-      if !File.exists?(fullsize)
+      if !cache || !File.exists?(fullsize)
         generate_fullsize(username)
       end
 
@@ -49,10 +52,10 @@ class LetterAvatar
       instructions = %W{
         -size 240x240
         xc:#{to_rgb(color)}
-        -pointsize 240
+        -pointsize 200
         -fill white
         -gravity Center
-        -font 'Helvetica-Bold'
+        -font 'Helvetica'
         -stroke #{to_rgb(stroke)}
         -strokewidth 2
         -annotate -5+25 '#{username[0].upcase}'

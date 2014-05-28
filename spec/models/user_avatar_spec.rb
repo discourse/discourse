@@ -11,6 +11,17 @@ describe UserAvatar do
     avatar.system_upload.should_not be_nil
   end
 
+  it 'corrects old system avatars on refresh' do
+    upload = Fabricate(:upload)
+    user = Fabricate(:user, uploaded_avatar_id: upload.id)
+    avatar = UserAvatar.create!(user_id: user.id, system_upload_id: upload.id)
+    avatar.update_system_avatar!
+
+    user.reload
+    user.uploaded_avatar_id.should_not == upload.id
+    avatar.system_upload_id.should == user.uploaded_avatar_id
+  end
+
   it 'can update gravatars' do
     temp = Tempfile.new('test')
     temp.binmode
