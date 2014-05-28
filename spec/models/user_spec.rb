@@ -1169,4 +1169,28 @@ describe User do
     end
   end
 
+  describe "refresh_avatar" do
+    it "picks gravatar if system avatar is picked and gravatar was just downloaded" do
+
+      png = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
+      FakeWeb.register_uri( :get,
+                            "http://www.gravatar.com/avatar/d10ca8d11301c2f4993ac2279ce4b930.png?s=500&d=404",
+                             body: png )
+
+      user = User.create!(username: "bob", name: "bob", email: "a@a.com")
+      user.create_user_avatar
+      user.user_avatar.update_system_avatar!
+      user.save
+      user.reload
+
+      SiteSetting.automatically_download_gravatars = true
+      SiteSetting.enable_system_avatars = true
+
+      user.refresh_avatar
+      user.reload
+
+      user.user_avatar.gravatar_upload_id.should == user.uploaded_avatar_id
+    end
+  end
+
 end

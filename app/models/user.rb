@@ -619,21 +619,26 @@ class User < ActiveRecord::Base
   end
 
   def refresh_avatar
-    avatar = user_avatar || UserAvatar.create!(user_id: id)
+    avatar = user_avatar || create_user_avatar
+    gravatar_downloaded = false
 
-    if SiteSetting.automatically_download_gravatars?
-      avatar.update_gravatar! unless avatar.last_gravatar_download_attempt
+    if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
+      avatar.update_gravatar!
+      gravatar_downloaded = avatar.gravatar_upload_id
     end
 
     if SiteSetting.enable_system_avatars?
-      avatar.update_system_avatar! if !avatar.system_upload_id || username_changed?
+      avatar.update_system_avatar! if !avatar.system_upload_id ||
+                                      username_changed? ||
+                                      avatar.system_avatar_version != UserAvatar::SYSTEM_AVATAR_VERSION
     end
 
     desired_avatar_id = avatar.gravatar_upload_id || avatar.system_upload_id
 
-    if !self.uploaded_avatar_id && desired_avatar_id
+    if (!self.uploaded_avatar_id || gravatar_downloaded) && desired_avatar_id
       self.update_column(:uploaded_avatar_id, desired_avatar_id)
     end
+
   end
 
   protected

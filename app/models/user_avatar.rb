@@ -26,8 +26,7 @@ class UserAvatar < ActiveRecord::Base
     self.system_avatar_version = SYSTEM_AVATAR_VERSION
 
     if old_id == user.uploaded_avatar_id
-      user.uploaded_avatar_id = system_upload_id
-      user.save!
+      user.update_column(:uploaded_avatar_id, system_upload_id)
     end
 
     save!
