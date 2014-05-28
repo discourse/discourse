@@ -165,10 +165,15 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     }
 
     if(Discourse.User.currentProp('admin') && Discourse.SiteSettings.show_create_topics_notice) {
-      var topic_count = _.reduce(Discourse.Site.currentProp('categories'), function(sum,c) {
-        return sum + (c.get('read_restricted') ? 0 : c.get('topic_count'));
-      }, 0);
-      if (topic_count < 5) {
+      var topic_count = 0,
+          post_count = 0;
+      _.each(Discourse.Site.currentProp('categories'), function(c) {
+        if (!c.get('read_restricted')) {
+          topic_count += c.get('topic_count');
+          post_count  += c.get('post_count');
+        }
+      });
+      if (topic_count < 5 || post_count < 50) {
         notices.push(I18n.t("too_few_topics_notice"));
       }
     }
