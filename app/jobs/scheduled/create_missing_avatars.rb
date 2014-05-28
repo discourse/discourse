@@ -5,7 +5,11 @@ module Jobs
       UserAvatar
         .where("system_upload_id IS NULL OR system_avatar_version != ?", UserAvatar::SYSTEM_AVATAR_VERSION)
         .find_each do |a|
-        a.update_system_avatar!
+          if a.user
+            a.update_system_avatar!
+          else
+            Rails.logger.warn("Detected stray avatar for avatar_user_id #{a.id}")
+          end
       end
 
       # backfill in batches 5000 an hour
