@@ -80,16 +80,12 @@ animation: modal .25s;
   .category-combobox {
     width: 430px;
 
-    .chzn-drop {
+    .select2-drop {
       left: -9000px;
       width: 428px;
     }
-    .chzn-search input {
+    .select2-search input {
       width: 378px;
-    }
-
-    .chzn-search-icon {
-      margin-top: 8px;
     }
   }
 }

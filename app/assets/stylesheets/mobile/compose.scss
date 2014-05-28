@@ -171,7 +171,7 @@ display: none;
     padding: 10px 10px 0 10px;
     min-width: 1280px;
     .form-element {
-      .chzn-container {
+      .select2-container {
         width: 400px;
         margin-top: 6px;
         a {
@@ -187,13 +187,13 @@ display: none;
         @include medium-width { width: 285px; }
         @include small-width { width: 220px; }
 
-        .chzn-drop {
+        .select2-drop {
           left: -9000px;
           width: 428px;
           @include medium-width { width: 283px; }
           @include small-width { width: 218px; }
         }
-        .chzn-search input {
+        .select2-search input {
           width: 378px;
           @include medium-width { width: 233px; }
           @include small-width { width: 168px; }
