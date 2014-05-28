@@ -145,7 +145,7 @@
       <label class="control-label">{{i18n user.email_settings}}</label>
       {{preference-checkbox labelKey="user.email_digests.title" checked=email_digests}}
       {{#if email_digests}}
-        <div class='controls control-dropdown'>
+        <div class='controls controls-dropdown'>
           {{combobox valueAttribute="value" content=digestFrequencies value=digest_after_days}}
         </div>
       {{/if}}
