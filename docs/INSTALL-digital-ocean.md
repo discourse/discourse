@@ -24,7 +24,7 @@ Replace `192.168.1.1` with the IP address of your Droplet.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/4442/ab4202454828b167.png" width="586" height="128"> 
 
-You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the Droplet was set up.
+You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the Droplet was set up. You may be prompted to change the root password, too.
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/4443/48cc7135c89768bd.png" width="584" height="300"> 
 
