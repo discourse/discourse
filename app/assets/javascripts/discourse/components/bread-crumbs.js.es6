@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.BreadCrumbsComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   classNames: ['category-breadcrumb'],
   tagName: 'ol',
   parentCategory: Em.computed.alias('category.parentCategory'),

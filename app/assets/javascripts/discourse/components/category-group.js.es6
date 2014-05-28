@@ -1,4 +1,19 @@
-Discourse.CategoryGroupComponent = Ember.Component.extend({
+// Compile and memoize a template
+var compiled;
+function templateFunction() {
+  compiled = compiled || Handlebars.compile("<div class='autocomplete'>" +
+                                "<ul>" +
+                                "{{#each options}}" +
+                                  "<li>" +
+                                      "{{categoryLinkRaw this allowUncategorized=true}}" +
+                                  "</li>" +
+                                  "{{/each}}" +
+                                "</ul>" +
+                              "</div>");
+  return compiled;
+}
+
+export default Ember.Component.extend({
 
   didInsertElement: function(){
     var self = this;
@@ -22,26 +37,10 @@ Discourse.CategoryGroupComponent = Ember.Component.extend({
         });
         self.set("categories", categories);
       },
-      template: Discourse.CategoryGroupComponent.templateFunction(),
+      template: templateFunction(),
       transformComplete: function(category) {
         return Discourse.HTML.categoryBadge(category, {allowUncategorized: true});
       }
     });
   }
-
-});
-
-Discourse.CategoryGroupComponent.reopenClass({
-  templateFunction: function(){
-      this.compiled = this.compiled || Handlebars.compile("<div class='autocomplete'>" +
-                                    "<ul>" +
-                                    "{{#each options}}" +
-                                      "<li>" +
-                                          "{{categoryLinkRaw this allowUncategorized=true}}" +
-                                      "</li>" +
-                                      "{{/each}}" +
-                                    "</ul>" +
-                                  "</div>");
-      return this.compiled;
-    }
 });
