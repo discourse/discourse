@@ -44,6 +44,7 @@ Vagrant.configure("2") do |config|
     chef.add_recipe "recipe[build-essential]"
     chef.add_recipe "recipe[vim]"
     chef.add_recipe "recipe[java]"
+    chef.add_recipe "recipe[imagemagick]"
     chef.add_recipe "discourse"
   end
 end
