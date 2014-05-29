@@ -347,8 +347,8 @@ trust:
     default: 0
     enum: 'MinTrustToCreateTopicSetting'
   basic_requires_topics_entered: 5
-  basic_requires_read_posts: 50
-  basic_requires_time_spent_mins: 15
+  basic_requires_read_posts: 30
+  basic_requires_time_spent_mins: 10
   regular_requires_topics_entered: 20
   regular_requires_read_posts: 100
   regular_requires_time_spent_mins: 60
