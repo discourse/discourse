@@ -3,6 +3,8 @@ require_dependency 'sass/discourse_sass_compiler'
 class DiscourseStylesheets
 
   CACHE_PATH = 'uploads/stylesheet-cache'
+  MANIFEST_DIR = "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
+  MANIFEST_FULL_PATH = "#{MANIFEST_DIR}/stylesheet-manifest"
 
   @lock = Mutex.new
 
@@ -15,13 +17,35 @@ class DiscourseStylesheets
     end
   end
 
-  def self.compile(target = :desktop)
+  def self.compile(target = :desktop, opts={})
     @lock.synchronize do
+      FileUtils.rm(MANIFEST_FULL_PATH, force: true) if opts[:force] # Force a recompile, even in production env
       builder = self.new(target)
       builder.compile
       builder.stylesheet_filename
     end
   end
+
+  def self.last_file_updated
+    if Rails.env.production?
+      @last_file_updated ||= if File.exists?(MANIFEST_FULL_PATH)
+        File.readlines(MANIFEST_FULL_PATH, 'r')[0]
+      else
+        mtime = max_file_mtime
+        FileUtils.mkdir_p(MANIFEST_DIR)
+        File.open(MANIFEST_FULL_PATH, "w") { |f| f.print(mtime) }
+        mtime
+      end
+    else
+      max_file_mtime
+    end
+  end
+
+  def self.max_file_mtime
+    [ Dir.glob("#{Rails.root}/app/assets/stylesheets/**/*.*css").map {|x| File.mtime(x) }.max,
+      Dir.glob("#{Rails.root}/plugins/**/assets/stylesheets/**/*.*css").map {|x| File.mtime(x) }.max ].compact.max.to_i
+  end
+
 
 
   def initialize(target = :desktop)
@@ -76,21 +100,11 @@ class DiscourseStylesheets
     "#{@target}.css"
   end
 
+  # digest encodes the things that trigger a recompile
   def digest
     @digest ||= begin
-      # Watch for file changes unless in production env.
-      # In production, file changes only happen during deploy, followed by assets:precompile.
-      last_file_updated = if Rails.env.production?
-        0
-      else
-        [ Dir.glob("#{Rails.root}/app/assets/stylesheets/**/*.*css").map {|x| File.mtime(x) }.max,
-          Dir.glob("#{Rails.root}/plugins/**/assets/stylesheets/**/*.*css").map {|x| File.mtime(x) }.max ].compact.max.to_i
-      end
-
       theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : 0
-
-      # digest encodes the things that trigger a recompile
-      Digest::SHA1.hexdigest("#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{last_file_updated}")
+      Digest::SHA1.hexdigest("#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}")
     end
   end
 end

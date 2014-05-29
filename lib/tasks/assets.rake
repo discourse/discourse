@@ -50,7 +50,7 @@ task 'assets:precompile:css' => 'environment' do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     puts "Compiling css for #{db}"
     [:desktop, :mobile].each do |target|
-      puts DiscourseStylesheets.compile(target)
+      puts DiscourseStylesheets.compile(target, force: true)
     end
   end
 end
