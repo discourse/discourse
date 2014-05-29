@@ -97,7 +97,7 @@ gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 
 gem 'redcarpet', require: false
 gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
-gem 'eventmachine'
+gem 'eventmachine', github: 'eventmachine/eventmachine', branch: :master
 gem 'fast_xs'
 
 gem 'fast_xor'
