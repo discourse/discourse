@@ -344,10 +344,11 @@ a.star {
 
   h4 {
     margin: 0 0 3px 0;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
+    text-transform: lowercase;
   }
 
   p,
