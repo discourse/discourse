@@ -1,4 +1,21 @@
-Discourse.GroupSelectorComponent = Em.Component.extend({
+var compiled;
+
+function templateFunction() {
+  compiled = compiled || Handlebars.compile(
+    "<div class='autocomplete'>" +
+      "<ul>" +
+      "{{#each options}}" +
+        "<li>" +
+            "<a href=''>{{this.name}}</a>" +
+        "</li>" +
+      "{{/each}}" +
+      "</ul>" +
+      "</div>"
+  );
+  return compiled;
+}
+
+export default Em.Component.extend({
   placeholder: function(){
     return I18n.t(this.get("placeholderKey"));
   }.property("placeholderKey"),
@@ -17,6 +34,7 @@ Discourse.GroupSelectorComponent = Em.Component.extend({
         return g.name;
       },
       dataSource: function(term) {
+        // TODO: Components should definitely not perform queries
         return Discourse.Group.findAll({search: term, ignore_automatic: true}).then(function(groups){
           if(!selectedGroups){
             return groups;
@@ -27,26 +45,7 @@ Discourse.GroupSelectorComponent = Em.Component.extend({
           });
         });
       },
-      template: Discourse.GroupSelectorComponent.templateFunction()
+      template: templateFunction()
     });
-  }
-});
-
-// TODO autocomplete should become an ember component, then we don't need this
-Discourse.GroupSelectorComponent.reopenClass({
-  templateFunction: function() {
-      this.compiled = this.compiled || Handlebars.compile(
-        "<div class='autocomplete'>" +
-          "<ul>" +
-          "{{#each options}}" +
-            "<li>" +
-                "<a href=''>{{this.name}}</a>" +
-            "</li>" +
-          "{{/each}}" +
-          "</ul>" +
-          "</div>"
-      );
-
-      return this.compiled;
   }
 });

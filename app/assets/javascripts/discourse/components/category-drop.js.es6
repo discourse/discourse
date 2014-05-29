@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.CategoryDropComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   classNameBindings: ['category::no-category', 'categories:has-drop'],
   tagName: 'li',
 
