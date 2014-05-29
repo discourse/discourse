@@ -167,6 +167,13 @@ Homebrew loves you.
 
     brew install phantomjs
 
+## ImageMagick
+
+ImageMagick is used for generating avatars (including for test fixtures).
+
+    brew install imagemagick
+
+
 ## Setting up your Discourse
 
 ###  Check out the repository
