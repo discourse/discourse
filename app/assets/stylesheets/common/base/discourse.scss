@@ -166,11 +166,6 @@ body {
 .avatar-wrapper {
   background-color: $secondary;
   display: inline-block;
-  border: 1px solid scale-color-diff();
-  @include border-radius-all(5px);
-  img {
-    @include border-radius-all(4px);
-  }
 }
 
 .profiler-results.profiler-left {
