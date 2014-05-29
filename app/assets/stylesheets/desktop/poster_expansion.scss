@@ -37,7 +37,7 @@
     font-size: 13px;
     font-weight: normal;
     margin-top: 0;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
   }
   .groups {
     font-size: 13px;
