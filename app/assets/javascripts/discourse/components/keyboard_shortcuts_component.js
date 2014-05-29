@@ -133,11 +133,31 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     // loop is not allowed
     if (direction === -1 && index === 0) { return; }
 
+    // if nothing is selected go to the first post on screen
+    if ($selected.length === 0) {
+      var scrollTop = $('body').scrollTop();
+
+      index = 0;
+      $articles.each(function(){
+        var top = $(this).position().top;
+        if(top > scrollTop) {
+          return false;
+        }
+        index += 1;
+      });
+
+      if(index >= $articles.length){
+        index = $articles.length - 1;
+      }
+    }
+
     var $article = $articles.eq(index + direction);
 
     if ($article.size() > 0) {
       $articles.removeClass('selected');
-      $article.addClass('selected');
+      Em.run.next(function(){
+        $article.addClass('selected');
+      });
 
       var rgx = new RegExp("post-cloak-(\\d+)").exec($article.parent()[0].id);
       if (rgx === null || typeof rgx[1] === 'undefined') {
