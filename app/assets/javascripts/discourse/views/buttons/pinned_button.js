@@ -19,6 +19,7 @@ Discourse.PinnedButton = Discourse.DropdownButtonView.extend({
   }.property('topic.pinned'),
 
   topic: Em.computed.alias('controller.model'),
+  target: Em.computed.alias('topic'),
 
   hidden: function(){
     var topic = this.get('topic');
@@ -32,8 +33,14 @@ Discourse.PinnedButton = Discourse.DropdownButtonView.extend({
   dropDownContent: function() {
     var globally = this.get('topic.pinned_globally') ? '_globally' : '';
     return [
-      ['pinned', 'topic_statuses.pinned' + globally, 'fa fa-thumb-tack'],
-      ['unpinned', 'topic_statuses.unpinned', 'fa fa-thumb-tack unpinned']
+      {id: 'pinned',
+       title: I18n.t('topic_statuses.pinned' + globally + '.title'),
+       description: I18n.t('topic_statuses.pinned' + globally + '.help'),
+       styleClasses: 'fa fa-thumb-tack' },
+      {id: 'unpinned',
+       title: I18n.t('topic_statuses.unpinned.title'),
+       description: I18n.t('topic_statuses.unpinned.help'),
+       styleClasses: 'fa fa-thumb-tack unpinned' }
     ];
   }.property(),
 

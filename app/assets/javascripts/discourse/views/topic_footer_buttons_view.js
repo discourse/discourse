@@ -34,7 +34,7 @@ Discourse.TopicFooterButtonsView = Discourse.ContainerView.extend({
         this.attachViewClass(Discourse.ReplyButton);
       }
       this.attachViewClass(Discourse.PinnedButton);
-      this.attachViewClass(Discourse.NotificationsButton);
+      this.attachViewClass(Discourse.TopicNotificationsButton);
 
       this.trigger('additionalButtons', this);
     } else {
