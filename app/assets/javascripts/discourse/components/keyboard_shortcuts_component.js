@@ -48,7 +48,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     '`': 'nextSection',
     '~': 'prevSection',
     '/': 'showSearch',
-    '?': 'showHelpModal'                                          // open keyboard shortcut help
+    '?': 'showHelpModal',                                          // open keyboard shortcut help
+    'q': 'quoteReply'
   },
 
   bindEvents: function(keyTrapper) {
@@ -56,6 +57,14 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     _.each(this.PATH_BINDINGS, this._bindToPath, this);
     _.each(this.CLICK_BINDINGS, this._bindToClick, this);
     _.each(this.FUNCTION_BINDINGS, this._bindToFunction, this);
+  },
+
+  quoteReply: function(){
+    $('.topic-post.selected button.create').click();
+    // lazy but should work for now
+    setTimeout(function(){
+      $('#wmd-quote-post').click();
+    }, 500);
   },
 
   goToFirstPost: function() {

@@ -1837,6 +1837,7 @@ en:
         share_post: '<b>s</b> Share post'
         reply_topic: '<b>shift r</b> Reply to topic'
         reply_post: '<b>r</b> Reply to post'
+        quote_post: '<b>q</b> Quote post'
         like: '<b>l</b> Like post'
         flag: '<b>!</b> Flag post'
         bookmark: '<b>b</b> Bookmark post'
