@@ -585,6 +585,7 @@ end
 #  version                 :integer          default(1), not null
 #  cook_method             :integer          default(1), not null
 #  wiki                    :boolean          default(FALSE), not null
+#  baked_at                :datetime
 #
 # Indexes
 #
