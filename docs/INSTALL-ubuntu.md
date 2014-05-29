@@ -33,6 +33,10 @@ We only support Docker based installs now. Please see [our **official install gu
 >     sudo tasksel install mail-server
 >     sudo tasksel install postgresql-server
 
+> If the above installation is stuck, please use the following method instead ([detail](https://bugs.launchpad.net/ubuntu/+source/debconf/+bug/141601)):
+
+>     apt-get install postgresql-server^
+
 > ### Configure the mail server:
 
 > ![screenshot of mail server type configuration screen](https://raw.github.com/discourse/discourse-docimages/master/install/ubuntu%20-%20install%20-%20mail_1%20system%20type.png)
