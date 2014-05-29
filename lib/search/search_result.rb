@@ -11,7 +11,7 @@ class Search
     attr_accessor :color, :text_color
 
     # User attributes
-    attr_accessor :avatar_template
+    attr_accessor :avatar_template, :uploaded_avatar_id
 
     def initialize(row)
       row.symbolize_keys!
@@ -21,10 +21,15 @@ class Search
 
     def as_json(options = nil)
       json = {id: @id, title: @title, url: @url}
-      json[:avatar_template] = @avatar_template if @avatar_template.present?
-      json[:color] = @color if @color.present?
-      json[:text_color] = @text_color if @text_color.present?
-      json[:blurb] = @blurb if @blurb.present?
+      [ :avatar_template,
+        :uploaded_avatar_id,
+        :color,
+        :text_color,
+        :blurb
+      ].each do |k|
+        val = send(k)
+        json[k] = val if val
+      end
       json
     end
 
@@ -36,8 +41,13 @@ class Search
     end
 
     def self.from_user(u)
-      SearchResult.new(type: :user, id: u.username_lower, title: u.username, url: "/users/#{u.username_lower}").tap do |r|
-        r.avatar_template = u.avatar_template
+      SearchResult.new(
+        type: :user,
+        id: u.username_lower,
+        title: u.username,
+        url: "/users/#{u.username_lower}").tap do |r|
+          r.uploaded_avatar_id = u.uploaded_avatar_id
+          r.avatar_template = u.avatar_template
       end
     end
 
