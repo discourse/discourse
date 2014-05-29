@@ -6,8 +6,8 @@ class TopicViewWordpressSerializer < ApplicationSerializer
              :filtered_posts_count,
              :posts
 
-  has_many :participants, serializer: BasicUserSerializer, embed: :objects
-  has_many :posts, serializer: BasicPostSerializer, embed: :objects
+  has_many :participants, serializer: UserWordpressSerializer, embed: :objects
+  has_many :posts, serializer: PostWordpressSerializer, embed: :objects
 
   def id
     object.topic.id

@@ -24,7 +24,7 @@ describe TopicsController do
       post = json['posts'][0]
       post['id'].should == p2.id
       post['username'].should == user.username
-      post['avatar_template'].should == user.avatar_template
+      post['avatar_template'].should == "#{Discourse.base_url_no_prefix}#{user.avatar_template}"
       post['name'].should == user.name
       post['created_at'].should be_present
       post['cooked'].should == p2.cooked
@@ -34,7 +34,7 @@ describe TopicsController do
       participant = json['participants'][0]
       participant['id'].should == user.id
       participant['username'].should == user.username
-      participant['avatar_template'].should == user.avatar_template
+      participant['avatar_template'].should == "#{Discourse.base_url_no_prefix}#{user.avatar_template}"
     end
   end
 
