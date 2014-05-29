@@ -62,8 +62,8 @@ end
 def prereqs
   puts "Be sure to following packages are installed:
 
+sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev libpq-dev gawk curl pngcrush python-software-properties software-properties-common tasksel
 sudo tasksel install postgresql-server
-sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev libpq-dev gawk curl pngcrush python-software-properties software-properties-common
 
 sudo apt-add-repository -y ppa:rwky/redis
 sudo apt-get update
