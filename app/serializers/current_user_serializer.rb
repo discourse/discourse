@@ -19,7 +19,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account,
              :should_be_redirected_to_top,
-             :redirected_to_top_reason
+             :redirected_to_top_reason,
+             :disable_jump_reply
 
   def include_site_flagged_posts_count?
     object.staff?

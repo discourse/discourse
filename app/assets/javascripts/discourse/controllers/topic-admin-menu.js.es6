@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicAdminMenuController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   menuVisible: false,
   needs: ['modal'],
 
@@ -21,5 +21,4 @@ Discourse.TopicAdminMenuController = Discourse.ObjectController.extend({
   },
 
   showRecover: Em.computed.and('deleted', 'details.can_recover')
-
 });

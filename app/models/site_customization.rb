@@ -202,8 +202,8 @@ end
 #  user_id                 :integer          not null
 #  enabled                 :boolean          not null
 #  key                     :string(255)      not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
+#  created_at              :datetime
+#  updated_at              :datetime
 #  override_default_style  :boolean          default(FALSE), not null
 #  stylesheet_baked        :text             default(""), not null
 #  mobile_stylesheet       :text

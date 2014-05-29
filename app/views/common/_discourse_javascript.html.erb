@@ -11,10 +11,9 @@
   })();
 </script>
 
-<% if Rails.env.development? %>
-  <script>
-    // Don't swallow promises in development mode. Let's fix those.
-    Ember.RSVP.configure('onerror', function(e) {
+<script>
+  Ember.RSVP.configure('onerror', function(e) {
+    <% if Rails.env.development? %>
       if (e) {
         if (e.message || e.stack) {
           console.log(e.message);
@@ -25,9 +24,10 @@
       } else {
         console.log("A promise failed but was not caught.");
       }
-    });
-  </script>
-<% end %>
+    <% end %>
+    window.onerror(e && e.message, null,null,null,e);
+  });
+</script>
 
 <script>
   Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host %>';

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.UserInvitedController = Ember.ObjectController.extend({
+export default Ember.ObjectController.extend({
   user: null,
 
   init: function() {

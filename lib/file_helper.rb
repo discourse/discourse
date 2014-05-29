@@ -18,7 +18,8 @@ class FileHelper
       while f.size <= max_file_size && data = downloaded.read(max_file_size)
         f.write(data)
       end
-      downloaded.close!
+      # tiny files are StringIO, no close! on them
+      downloaded.close! if downloaded.respond_to? :close!
     end
 
     tmp

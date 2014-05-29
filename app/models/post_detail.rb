@@ -14,8 +14,8 @@ end
 #  key        :string(255)
 #  value      :string(255)
 #  extra      :text
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #
 # Indexes
 #

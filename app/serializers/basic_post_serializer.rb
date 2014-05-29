@@ -4,6 +4,7 @@ class BasicPostSerializer < ApplicationSerializer
              :name,
              :username,
              :avatar_template,
+             :uploaded_avatar_id,
              :created_at,
              :cooked
 
@@ -17,6 +18,10 @@ class BasicPostSerializer < ApplicationSerializer
 
   def avatar_template
     object.user.try(:avatar_template)
+  end
+
+  def uploaded_avatar_id
+    object.user.try(:uploaded_avatar_id)
   end
 
   def cooked

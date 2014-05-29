@@ -14,11 +14,12 @@ Discourse::Application.routes.draw do
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
 
-  mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
-
-  if Rails.env.production?
-    require 'logster/middleware/viewer'
-    mount Logster::Middleware::Viewer.new(nil) => "/logs", constraints: AdminConstraint.new
+  if Rails.env == "development"
+    mount Sidekiq::Web => "/sidekiq"
+    mount Logster::Web => "/logs"
+  else
+    mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
+    mount Logster::Web => "/logs", constraints: AdminConstraint.new
   end
 
   get "site" => "site#index"
@@ -201,7 +202,7 @@ Discourse::Application.routes.draw do
   get "users/:username/avatar(/:size)" => "users#avatar", constraints: {username: USERNAME_ROUTE_FORMAT} # LEGACY ROUTE
   post "users/:username/preferences/avatar" => "users#upload_avatar", constraints: {username: USERNAME_ROUTE_FORMAT} # LEGACY ROUTE
   post "users/:username/preferences/user_image" => "users#upload_user_image", constraints: {username: USERNAME_ROUTE_FORMAT}
-  put "users/:username/preferences/avatar/toggle" => "users#toggle_avatar", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "users/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/profile_background/clear" => "users#clear_profile_background", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/invited" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   post "users/:username/send_activation_email" => "users#send_activation_email", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -209,6 +210,11 @@ Discourse::Application.routes.draw do
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/badges" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
+
+  post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar"
+  get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show",
+      format: false, constraints: {hostname: /[\w\.-]+/}
+
 
   get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
   post "uploads" => "uploads#create"

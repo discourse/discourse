@@ -9,7 +9,7 @@ describe Category do
 
   it 'validates uniqueness of name' do
     Fabricate(:category)
-    should validate_uniqueness_of(:name)
+    should validate_uniqueness_of(:name).scoped_to(:parent_category_id)
   end
 
   it { should belong_to :topic }

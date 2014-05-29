@@ -33,6 +33,9 @@ Spork.prefork do
 
   # let's not run seed_fu every test
   SeedFu.quiet = true if SeedFu.respond_to? :quiet
+
+  SiteSetting.enable_system_avatars = false
+  SiteSetting.automatically_download_gravatars = false
   SeedFu.seed
 
   RSpec.configure do |config|
@@ -78,6 +81,10 @@ Spork.prefork do
       SiteSetting.provider.all.each do |setting|
         SiteSetting.remove_override!(setting.name)
       end
+
+      # very expensive IO operations
+      SiteSetting.enable_system_avatars = false
+      SiteSetting.automatically_download_gravatars = false
 
     end
 

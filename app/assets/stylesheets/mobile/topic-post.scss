@@ -83,6 +83,10 @@ button {
   }
 }
 
+nav.post-controls {
+  position: relative;
+}
+
 .post-admin-menu {
   background-color: $secondary;
   width: 205px;
@@ -90,7 +94,7 @@ button {
   border: 1px solid scale-color-diff();
   position: absolute;
   text-align: left;
-  bottom: 0;
+  bottom: -26px;
   left: 0;
   z-index: 1000;
   display: none;

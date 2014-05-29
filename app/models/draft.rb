@@ -46,8 +46,8 @@ end
 #  user_id    :integer          not null
 #  draft_key  :string(255)      not null
 #  data       :text             not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #  sequence   :integer          default(0), not null
 #
 # Indexes

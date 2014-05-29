@@ -36,16 +36,16 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
     }
   }.property(),
 
-  template: function(text, templateData) {
-    var category = Discourse.Category.findById(parseInt(templateData.id,10));
-    if (!category) return text;
+  template: function(item) {
+    var category = Discourse.Category.findById(parseInt(item.id,10));
+    if (!category) return item.text;
 
     var result = Discourse.HTML.categoryBadge(category, {showParent: true, link: false, allowUncategorized: true});
 
-    result += " <div class='topic-count'>&times; " + category.get('topic_count') + "</div>";
+    result += " <span class='topic-count'>&times; " + category.get('topic_count') + "</span>";
 
-    var description = templateData.description_text;
-    // TODO wtf how can this be null?
+    var description = category.get('description');
+    // TODO wtf how can this be null?;
     if (description && description !== 'null') {
 
       result += '<div class="category-desc">' +

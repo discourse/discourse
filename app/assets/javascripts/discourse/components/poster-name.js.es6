@@ -8,11 +8,15 @@ var PosterNameComponent = Em.Component.extend({
     if (post) {
       var name = post.get('name'),
           username = post.get('username'),
-          linkClass = 'username';
+          linkClass = 'username',
+          primaryGroupName = post.get('primary_group_name');
 
       if (post.get('staff')) { linkClass += ' staff'; }
       if (post.get('new_user')) { linkClass += ' new-user'; }
 
+      if (!Em.isEmpty(primaryGroupName)) {
+        linkClass += ' ' + primaryGroupName;
+      }
       // Main link
       buffer.push("<span class='" + linkClass + "'><a href='#'>" + username + "</a>");
 
@@ -31,7 +35,6 @@ var PosterNameComponent = Em.Component.extend({
       // User titles
       var title = post.get('user_title');
       if (!Em.isEmpty(title)) {
-        var primaryGroupName = post.get('primary_group_name');
 
         buffer.push('<span class="user-title">');
         if (Em.isEmpty(primaryGroupName)) {

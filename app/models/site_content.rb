@@ -38,8 +38,8 @@ end
 #
 #  content_type :string(255)      not null, primary key
 #  content      :text             not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  created_at   :datetime
+#  updated_at   :datetime
 #
 # Indexes
 #

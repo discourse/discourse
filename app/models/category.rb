@@ -23,7 +23,7 @@ class Category < ActiveRecord::Base
   has_many :groups, through: :category_groups
 
   validates :user_id, presence: true
-  validates :name, presence: true, uniqueness: true, length: { in: 1..50 }
+  validates :name, presence: true, uniqueness: { scope: :parent_category_id }, length: { in: 1..50 }
   validate :parent_category_validator
 
   before_validation :ensure_slug
@@ -161,7 +161,7 @@ SQL
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
     t.auto_close_hours = nil
-    t.save!
+    t.save!(validate: false)
     update_column(:topic_id, t.id)
     t.posts.create(raw: post_template, user: user)
   end
@@ -333,8 +333,8 @@ end
 #  color                    :string(6)        default("AB9364"), not null
 #  topic_id                 :integer
 #  topic_count              :integer          default(0), not null
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
+#  created_at               :datetime
+#  updated_at               :datetime
 #  user_id                  :integer          not null
 #  topics_year              :integer          default(0)
 #  topics_month             :integer          default(0)
@@ -359,7 +359,7 @@ end
 #
 # Indexes
 #
-#  index_categories_on_email_in            (email_in) UNIQUE
-#  index_categories_on_forum_thread_count  (topic_count)
-#  index_categories_on_name                (name) UNIQUE
+#  index_categories_on_email_in                     (email_in) UNIQUE
+#  index_categories_on_parent_category_id_and_name  (parent_category_id,name) UNIQUE
+#  index_categories_on_topic_count                  (topic_count)
 #
