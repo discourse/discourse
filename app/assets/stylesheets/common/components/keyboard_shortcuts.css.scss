@@ -2,7 +2,7 @@
   border-left: 1px solid transparent;
 }
 
-.topic-list-item.selected td:first-child, .topic-post.selected {
+#topic-list tr.selected td:first-child, .topic-list-item.selected td:first-child, .topic-post.selected {
   border-left: 1px solid $danger;
 }
 
