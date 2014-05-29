@@ -191,6 +191,7 @@ Discourse.User = Discourse.Model.extend({
     var data = this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
+                               'location',
                                'name',
                                'locale',
                                'email_digests',
@@ -202,7 +203,8 @@ Discourse.User = Discourse.Model.extend({
                                'new_topic_duration_minutes',
                                'external_links_in_new_tab',
                                'mailing_list_mode',
-                               'enable_quoting');
+                               'enable_quoting',
+                               'disable_jump_reply');
 
     _.each(['muted','watched','tracked'], function(s){
       var cats = user.get(s + 'Categories').map(function(c){ return c.get('id')});
@@ -325,17 +327,18 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
+  avatarTemplate: function(){
+    return Discourse.User.avatarTemplate(this.get('username'),this.get('uploaded_avatar_id'));
+  }.property('uploaded_avatar_id', 'username'),
+
   /*
     Change avatar selection
-
-    @method toggleAvatarSelection
-    @param {Boolean} useUploadedAvatar true if the user is using the uploaded avatar
-    @returns {Promise} the result of the toggle avatar selection
   */
-  toggleAvatarSelection: function(useUploadedAvatar) {
-    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/toggle", {
+  pickAvatar: function(uploadId) {
+    this.set("uploaded_avatar_id", uploadId);
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/pick", {
       type: 'PUT',
-      data: { use_uploaded_avatar: useUploadedAvatar }
+      data: { upload_id: uploadId }
     });
   },
 
@@ -398,7 +401,7 @@ Discourse.User = Discourse.Model.extend({
     return this.get('can_delete_account') && ((this.get('reply_count')||0) + (this.get('topic_count')||0)) <= 1;
   }.property('can_delete_account', 'reply_count', 'topic_count'),
 
-  delete: function() {
+  "delete": function() {
     if (this.get('can_delete_account')) {
       return Discourse.ajax("/users/" + this.get('username'), {
         type: 'DELETE',
@@ -412,6 +415,15 @@ Discourse.User = Discourse.Model.extend({
 });
 
 Discourse.User.reopenClass(Discourse.Singleton, {
+
+  avatarTemplate: function(username, uploadedAvatarId){
+    var url = Discourse.getURL("/user_avatar/" + Discourse.BaseUrl + "/" + username.toLowerCase() + "/{size}/" + uploadedAvatarId + ".png");
+    if(Discourse.CDN){
+      url = Discourse.CDN + url;
+    }
+    return url;
+  },
+
   /**
     Find a `Discourse.User` for a given username.
 

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.BasicTopicListComponent = Ember.Component.extend({
+export default Ember.Component.extend({
 
   loaded: function() {
     var topicList = this.get('topicList');

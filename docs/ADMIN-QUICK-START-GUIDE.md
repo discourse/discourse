@@ -39,8 +39,9 @@ If you only want some parts to be private, there is a built in Staff category, a
 
 ### Configure Login Methods
 
-By default, users can log in with Google, Yahoo, and traditional local username and password accounts. Want more?
+By default, users can only log in with traditional local username and password accounts. Want more?
 
+- [Configure Google logins](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858)
 - [Configure Twitter logins](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395)
 - [Configure Facebook logins](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
 - [Configure GitHub logins](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745)
@@ -49,7 +50,7 @@ If you want to get extra-fancy you can also [set up single-sign on](https://meta
 
 ### Test Email
 
-Discourse relies heavily on email for signups and conversation notifications. **Test your email to make sure it is working!**  Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
+If email is not working, you have a broken Discourse &ndash; email is required for new account signups and notifications. **Test your email to make sure it is working!**  Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
 
 - You got the test email? Great! **Read that email closely**, it has important email deliverability tips. 
 - You didn't get the test email? This means your users probably aren't getting any signup or notification emails either.
@@ -58,7 +59,7 @@ Email deliverability can be hard. We strongly recommend using dedicated email se
 
 If you'd like to enable *replying* to topics via email, [see this howto](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
-### Edit the Pinned Welcome Topic
+### What and Who is this site for?
 
 One of the default topics is [Welcome to Discourse](/t/welcome/6). This topic is pinned globally, so it will appear on the homepage for all new users. Your welcome topic is important because it is the first thing you visitors will see:
 
@@ -107,7 +108,7 @@ You have three categories out of the box:
 
 To add a category, visit the [categories page](/categories), then click Create Category at the upper right. You can set security per-category so only certain groups of users can see topics in that category.
 
-Every category has an initial "About the {foo} category" topic created alongside it. This topic will be pinned to the top of the category, and the description you enter here for the category will used in a bunch of places. So edit that first post and give your new category a good, clear description!
+Every category has an initial "About the {foo} category" topic created alongside it. This topic will be pinned to the top of the category, and the description you enter here will be used in a bunch of places. So edit that first post and give your new category a good, clear description!
 
 ### File Uploads
 
@@ -117,24 +118,11 @@ Basic image uploads work fine out of the box stored locally, provided you have a
 
 - If you'd rather store your images and files on Amazon S3, [follow this howto](http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229).
 
-### Customize CSS / Headers
+### Customize Colors
 
-You can specify custom CSS and custom HTML headers/footers to give your Discourse forum a unique look.
+To quickly give your Discourse a distinctive look, without having to edit or understand CSS, create a new color scheme via [Customize, Colors](/admin/customize/colors).
 
-1. In the admin console, select "Customize".
-
-2. Create a new site customization.
-
-3. Enter a customization:
-  - Custom CSS styles go in the "Stylesheet" section.
-  - Custom HTML headers go in the "Header" section.
-  - Ditto for mobile, except these only show up on detected mobile devices.
-
-3. **Enable:** If you wish to have your styles and header take effect on the site, check the "Enable" checkbox, then click "Save". This is also known as "live reloading", which will cause your changes to take effect immediately.
-
-4. **Preview:** If you wish to preview your changes before saving them, click the "preview" link at the bottom of the screen. Your changes will be applied to the site as they are currently saved in the "Customize" panel. If you aren't happy with your changes and wish to revert, simply click the "Undo Preview" link.
-
-Here is some example HTML that would go into the "Header" section within "Customize":
+You can also specify custom CSS and custom HTML headers/footers to further customize the look. One common request is a navigation header that takes you back to the parent site. Here is some example HTML to put in [Customize, CSS and HTML Customizations](/admin/customize/css_html) under "Header":
 
 ```
 <div id="top-navbar" class="container">
@@ -171,13 +159,14 @@ Number 3 is the Discourse default &ndash; that's [Creative Commons BY-NC-SA 3.0]
 
 - Hopefully you are running [in our Docker container install](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md); it's the only one we officially support. That will guarantee easy updates, and all recommended optimizations from the Discourse team.
 
-- To upgrade your instance, visit [/admin/docker](/admin/docker). Refresh the page a few times, and you will see an <kbd>upgrade</kbd> button appear. Press it! Then wait for the updating text at the bottom of the browser to know when you're done.
+- To upgrade your instance, visit [/admin/docker](/admin/docker). If there's a new version, an <kbd>upgrade</kbd> button will appear. Press it!
 
 - Some other things you might eventually want to set up:
    - [Automatic daily backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855)
    - [HTTPS support](https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847)
    - [Content Delivery Network support](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857) 
-   -  [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)
+   - [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)
+   - [Import and Export your Discourse data](https://meta.discourse.org/t/move-your-discourse-instance-to-a-different-server/15721)
 
 ### Need more Help?
 

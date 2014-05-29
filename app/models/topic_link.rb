@@ -210,8 +210,8 @@ end
 #  domain        :string(100)      not null
 #  internal      :boolean          default(FALSE), not null
 #  link_topic_id :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  created_at    :datetime
+#  updated_at    :datetime
 #  reflection    :boolean          default(FALSE)
 #  clicks        :integer          default(0), not null
 #  link_post_id  :integer
@@ -220,6 +220,6 @@ end
 #
 # Indexes
 #
-#  index_forum_thread_links_on_forum_thread_id                      (topic_id)
-#  index_forum_thread_links_on_forum_thread_id_and_post_id_and_url  (topic_id,post_id,url) UNIQUE
+#  index_topic_links_on_topic_id  (topic_id)
+#  unique_post_links              (topic_id,post_id,url) UNIQUE
 #

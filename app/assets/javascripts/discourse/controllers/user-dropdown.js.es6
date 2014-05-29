@@ -1,4 +1,4 @@
-Discourse.UserDropdownController = Ember.ArrayController.extend(Discourse.HasCurrentUser, {
+export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
   showAdminLinks: Em.computed.alias("currentUser.staff"),
 
   actions: {

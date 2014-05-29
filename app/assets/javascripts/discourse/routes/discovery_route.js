@@ -53,7 +53,7 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse
       var controllerName = w.replace('modal/', ''),
           factory = this.container.lookupFactory('controller:' + controllerName);
 
-      this.render(w, {into: 'topicBulkActions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topicBulkActions'});
+      this.render(w, {into: 'topicBulkActions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
     },
 
     showBulkActions: function() {

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicListItemController = Ember.ObjectController.extend({
+export default Ember.ObjectController.extend({
   needs: ['discovery/topics'],
 
   canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),

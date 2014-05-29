@@ -183,16 +183,6 @@ Handlebars.registerHelper('avatar', function(user, options) {
     var username = Em.get(user, 'username');
     if (!username) username = Em.get(user, options.hash.usernamePath);
 
-    var avatarTemplate;
-    var template = options.hash.template;
-    if (template && template !== 'avatar_template') {
-      avatarTemplate = Em.get(user, template);
-      if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.' + template);
-    }
-
-    if (!avatarTemplate) avatarTemplate = Em.get(user, 'avatar_template');
-    if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.avatar_template');
-
     var title;
     if (!options.hash.ignoreTitle) {
       // first try to get a title
@@ -209,6 +199,10 @@ Handlebars.registerHelper('avatar', function(user, options) {
       }
     }
 
+    // this is simply done to ensure we cache images correctly
+    var uploadedAvatarId = Em.get(user, 'uploaded_avatar_id') || Em.get(user, 'user.uploaded_avatar_id') || "_1";
+    var avatarTemplate = Discourse.User.avatarTemplate(username,uploadedAvatarId);
+
     return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
       size: options.hash.imageSize,
       extraClasses: Em.get(user, 'extras') || options.hash.extraClasses,
@@ -222,17 +216,35 @@ Handlebars.registerHelper('avatar', function(user, options) {
 
 /**
   Bound avatar helper.
-  Will rerender whenever the "avatar_template" changes.
 
   @method boundAvatar
   @for Handlebars
 **/
-Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
+Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, size, uploadId) {
+
+  var username = Em.get(user, 'username');
+
+  if(arguments.length < 4){
+    uploadId = Em.get(user, 'uploaded_avatar_id');
+  }
+
+  var avatarTemplate = Discourse.User.avatarTemplate(username,uploadId);
+
   return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
-    size: options.hash.imageSize,
-    avatarTemplate: Em.get(user, options.hash.template || 'avatar_template')
+    size: size,
+    avatarTemplate: avatarTemplate
   }));
-}, 'avatar_template', 'uploaded_avatar_template', 'gravatar_template');
+}, 'uploaded_avatar_id');
+
+/*
+ * Used when we only have a template
+ */
+Ember.Handlebars.registerBoundHelper('boundAvatarTemplate', function(avatarTemplate, size) {
+  return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
+    size: size,
+    avatarTemplate: avatarTemplate
+  }));
+});
 
 /**
   Nicely format a date without binding or returning HTML

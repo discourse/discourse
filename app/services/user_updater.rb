@@ -14,7 +14,12 @@ class UserUpdater
       :external_links_in_new_tab,
       :enable_quoting,
       :dynamic_favicon,
-      :mailing_list_mode
+      :mailing_list_mode,
+      :disable_jump_reply
+  ]
+
+  PROFILE_ATTR = [
+    :location
   ]
 
   def initialize(actor, user)
@@ -54,7 +59,15 @@ class UserUpdater
       end
     end
 
-    user.save
+    user_profile = user.user_profile
+    PROFILE_ATTR.each do |attribute|
+      user_profile.send("#{attribute.to_s}=", attributes[attribute])
+    end
+
+    User.transaction do
+      user_profile.save
+      user.save
+    end
   end
 
   private

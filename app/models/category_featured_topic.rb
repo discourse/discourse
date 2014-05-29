@@ -52,8 +52,8 @@ end
 #
 #  category_id :integer          not null
 #  topic_id    :integer          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  created_at  :datetime
+#  updated_at  :datetime
 #  rank        :integer          default(0), not null
 #  id          :integer          not null, primary key
 #

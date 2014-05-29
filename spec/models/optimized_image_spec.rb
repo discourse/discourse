@@ -15,11 +15,10 @@ describe OptimizedImage do
       let(:store) { FakeInternalStore.new }
       before { Discourse.stubs(:store).returns(store) }
 
-      context "when an error happened while generatign the thumbnail" do
-
-        before { ImageSorcery.any_instance.stubs(:convert).returns(false) }
+      context "when an error happened while generating the thumbnail" do
 
         it "returns nil" do
+          OptimizedImage.expects(:resize).returns(false)
           OptimizedImage.create_for(upload, 100, 200).should be_nil
         end
 
@@ -27,7 +26,9 @@ describe OptimizedImage do
 
       context "when the thumbnail is properly generated" do
 
-        before { ImageSorcery.any_instance.stubs(:convert).returns(true) }
+        before do
+          OptimizedImage.expects(:resize).returns(true)
+        end
 
         it "does not download a copy of the original image" do
           store.expects(:download).never
@@ -59,9 +60,8 @@ describe OptimizedImage do
 
       context "when an error happened while generatign the thumbnail" do
 
-        before { ImageSorcery.any_instance.stubs(:convert).returns(false) }
-
         it "returns nil" do
+          OptimizedImage.expects(:resize).returns(false)
           OptimizedImage.create_for(upload, 100, 200).should be_nil
         end
 
@@ -69,7 +69,9 @@ describe OptimizedImage do
 
       context "when the thumbnail is properly generated" do
 
-        before { ImageSorcery.any_instance.stubs(:convert).returns(true) }
+        before do
+          OptimizedImage.expects(:resize).returns(true)
+        end
 
         it "downloads a copy of the original image" do
           Tempfile.any_instance.expects(:close!).twice

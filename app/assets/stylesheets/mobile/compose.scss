@@ -16,13 +16,20 @@ display: none;
 
 
 #reply-control {
-  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
+  .composer-bottom-right {
     position: absolute;
     bottom: -37px;
+    right: 5px;
     margin-top: 0;
   }
   .toggle-preview, .mobile-file-upload {
-    right: 5px;
+    text-decoration: underline;
+  }
+  .toggle-preview, #draft-status, #file-uploading, .mobile-file-upload {
+    float: right;
+    margin-right: 8px;
+  }
+  .toggle-preview, .mobile-file-upload {
     text-decoration: underline;
   }
   #file-uploading {
@@ -31,7 +38,6 @@ display: none;
     color: scale-color($secondary, $lightness: 50%);
   }
   #draft-status {
-    right: 70px;
     color: scale-color($primary, $lightness: 75%);
     &.flash {
       color: $danger;
@@ -165,7 +171,7 @@ display: none;
     padding: 10px 10px 0 10px;
     min-width: 1280px;
     .form-element {
-      .chzn-container {
+      .select2-container {
         width: 400px;
         margin-top: 6px;
         a {
@@ -181,13 +187,13 @@ display: none;
         @include medium-width { width: 285px; }
         @include small-width { width: 220px; }
 
-        .chzn-drop {
+        .select2-drop {
           left: -9000px;
           width: 428px;
           @include medium-width { width: 283px; }
           @include small-width { width: 218px; }
         }
-        .chzn-search input {
+        .select2-search input {
           width: 378px;
           @include medium-width { width: 233px; }
           @include small-width { width: 168px; }
@@ -354,10 +360,6 @@ display: none;
     }
   }
   #wmd-button-bar {
-    top: 0;
-    position: absolute;
-    border-bottom: 1px solid scale-color-diff();
-    background-color: $secondary;
-    z-index: 100;
+    display: none;
   }
 }

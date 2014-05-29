@@ -305,6 +305,7 @@ Discourse.Dialect = {
       Discourse.Dialect.replaceBlock({
         start: /(\[code\])([\s\S]*)/igm,
         stop: '[/code]',
+        rawContents: true,
 
         emitter: function(blockContents) {
           return ['p', ['pre'].concat(blockContents)];
@@ -314,9 +315,10 @@ Discourse.Dialect = {
 
     @method replaceBlock
     @param {Object} args Our replacement options
-      @param {String} [opts.start] The starting regexp we want to find
-      @param {String} [opts.stop] The ending token we want to find
-      @param {Function} [opts.emitter] The emitting function to transform the contents of the block into jsonML
+      @param {RegExp} [args.start] The starting regexp we want to find
+      @param {String} [args.stop] The ending token we want to find
+      @param {Boolean} [args.rawContents] True to skip recursive processing
+      @param {Function} [args.emitter] The emitting function to transform the contents of the block into jsonML
 
   **/
   replaceBlock: function(args) {
@@ -327,7 +329,7 @@ Discourse.Dialect = {
 
       if (!m) { return; }
 
-      var startPos = block.indexOf(m[0]),
+      var startPos = args.start.lastIndex - m[0].length,
           leading,
           blockContents = [],
           result = [],
@@ -351,14 +353,11 @@ Discourse.Dialect = {
 
       lineNumber++;
 
-
       var blockClosed = false;
-      if (next.length > 0) {
-        for (var i=0; i<next.length; i++) {
-          if (next[i].indexOf(args.stop) >= 0) {
-            blockClosed = true;
-            break;
-          }
+      for (var i=0; i<next.length; i++) {
+        if (next[i].indexOf(args.stop) >= 0) {
+          blockClosed = true;
+          break;
         }
       }
 
@@ -367,32 +366,51 @@ Discourse.Dialect = {
         return;
       }
 
+      var numOpen = 1;
       while (next.length > 0) {
         var b = next.shift(),
             blockLine = b.lineNumber,
             diff = ((typeof blockLine === "undefined") ? lineNumber : blockLine) - lineNumber,
             endFound = b.indexOf(args.stop),
             leadingContents = b.slice(0, endFound),
-            trailingContents = b.slice(endFound+args.stop.length);
+            trailingContents = b.slice(endFound+args.stop.length),
+            m2;
 
-        if (endFound >= 0) { blockClosed = true; }
+        if (endFound === -1) {
+          leadingContents = b;
+        }
+
+        args.start.lastIndex = 0;
+        if (m2 = (args.start).exec(leadingContents)) {
+          numOpen++;
+          args.start.lastIndex -= m2[0].length - 1;
+          while (m2 = (args.start).exec(leadingContents)) {
+            numOpen++;
+            args.start.lastIndex -= m2[0].length - 1;
+          }
+        }
+
+        if (endFound >= 0) { numOpen--; }
         for (var j=1; j<diff; j++) {
           blockContents.push("");
         }
         lineNumber = blockLine + b.split("\n").length - 1;
 
-        if (endFound !== -1) {
+        if (endFound >= 0) {
           if (trailingContents) {
             next.unshift(MD.mk_block(trailingContents.replace(/^\s+/, "")));
           }
 
           blockContents.push(leadingContents.replace(/\s+$/, ""));
-          break;
+
+          if (numOpen === 0) {
+            break;
+          }
+          blockContents.push(args.stop);
         } else {
           blockContents.push(b);
         }
       }
-
 
       var emitterResult = args.emitter.call(this, blockContents, m, dialect.options);
       if (emitterResult) {

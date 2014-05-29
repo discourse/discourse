@@ -253,6 +253,7 @@ en:
       invited_by: "Invited By"
       trust_level: "Trust Level"
       notifications: "Notifications"
+      disable_jump_reply: "Don't jump to your new post after replying"
       dynamic_favicon: "Show incoming message notifications on favicon (experimental)"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
@@ -306,10 +307,12 @@ en:
       change_avatar:
         title: "Change your avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
-        gravatar_title: "Change your avatar on Gravatar's website"
+        refresh_gravatar_title: "Refresh your Gravatar"
+        letter_based: "System assigned avatar"
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
+        upload_picture: "Upload Picture"
         image_is_not_a_square: "Warning: we've cropped your image; it is not square."
 
       change_profile_background:
@@ -355,6 +358,7 @@ en:
       last_seen: "Seen"
       created: "Joined"
       log_out: "Log Out"
+      location: "Location"
       website: "Web Site"
       email_settings: "Email"
       email_digests:
@@ -373,13 +377,13 @@ en:
       new_topic_duration:
         label: "Consider topics new when"
         not_viewed: "you haven't viewed them yet"
-        last_here: "they were posted since you were here last"
+        last_here: "they were created since you were here last"
         after_n_days:
-          one: "they were posted in the last day"
-          other: "they were posted in the last {{count}} days"
+          one: "they were created in the last day"
+          other: "they were created in the last {{count}} days"
         after_n_weeks:
-          one: "they were posted in the last week"
-          other: "they were posted in the last {{count}} weeks"
+          one: "they were created in the last week"
+          other: "they were created in the last {{count}} weeks"
 
       auto_track_topics: "Automatically track topics you enter"
       auto_track_options:
@@ -440,18 +444,18 @@ en:
     close: "Close"
     assets_changed_confirm: "Discourse has been updated, would you like to refresh to get the latest version?"
     read_only_mode:
-      enabled: "An administrator has enabled read-only mode. You can continue to browse the site but interactions won't work properly."
+      enabled: "An administrator enabled read-only mode. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
-    too_few_topics_notice: "Create at least 5 topics to get discussion started. New users will not be able to earn trust levels unless there's content for them to read."
+    too_few_topics_notice: "Create at least 5 public topics and 50 public posts to get discussion started. New users will not be able to earn trust levels unless there's content for them to read."
 
     learn_more: "learn more..."
 
     year: 'year'
-    year_desc: 'topics posted in the last 365 days'
+    year_desc: 'topics created in the last 365 days'
     month: 'month'
-    month_desc: 'topics posted in the last 30 days'
+    month_desc: 'topics created in the last 30 days'
     week: 'week'
-    week_desc: 'topics posted in the last 7 days'
+    week_desc: 'topics created in the last 7 days'
     day: 'day'
 
     first_post: First post
@@ -493,12 +497,12 @@ en:
 
     login:
       title: "Sign In"
-      username: "Login"
+      username: "User"
       password: "Password"
       email_placeholder: "email or username"
       error: "Unknown error"
       reset_password: 'Reset Password'
-      logging_in: "Logging In..."
+      logging_in: "Signing In..."
       or: "Or"
       authenticating: "Authenticating..."
       awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
@@ -1829,10 +1833,11 @@ en:
       actions:
         title: 'Actions'
         star: '<b>f</b> Star topic'
-        share_topic: '<b>s</b> Share topic'
-        share_post: '<b>shift s</b> Share post'
-        reply_topic: '<b>r</b> Reply to topic'
-        reply_post: '<b>shift r</b> Reply to post'
+        share_topic: '<b>shift s</b> Share topic'
+        share_post: '<b>s</b> Share post'
+        reply_topic: '<b>shift r</b> Reply to topic'
+        reply_post: '<b>r</b> Reply to post'
+        quote_post: '<b>q</b> Quote post'
         like: '<b>l</b> Like post'
         flag: '<b>!</b> Flag post'
         bookmark: '<b>b</b> Bookmark post'

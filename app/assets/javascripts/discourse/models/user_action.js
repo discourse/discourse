@@ -30,6 +30,13 @@ _.each(UserActionTypes, function (k, v) {
 
 Discourse.UserAction = Discourse.Model.extend({
 
+  _attachCategory: function() {
+    var categoryId = this.get('category_id');
+    if (categoryId) {
+      this.set('category', Discourse.Category.findById(categoryId));
+    }
+  }.on('init'),
+
   /**
     Return an i18n key we will use for the description text of a user action.
 
@@ -177,7 +184,7 @@ Discourse.UserAction = Discourse.Model.extend({
   switchToActing: function() {
     this.setProperties({
       username: this.get('acting_username'),
-      avatar_template: this.get('acting_avatar_template'),
+      uploaded_avatar_id: this.get('acting_uploaded_avatar_id'),
       name: this.get('actingDisplayName')
     });
   }

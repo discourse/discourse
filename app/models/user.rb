@@ -33,11 +33,13 @@ class User < ActiveRecord::Base
   has_many :topic_links, dependent: :destroy
   has_many :uploads
 
+  has_one :user_avatar, dependent: :destroy
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
   has_one :user_stat, dependent: :destroy
+  has_one :user_profile, dependent: :destroy
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
@@ -49,7 +51,7 @@ class User < ActiveRecord::Base
   has_one :user_search_data, dependent: :destroy
   has_one :api_key, dependent: :destroy
 
-  belongs_to :uploaded_avatar, class_name: 'Upload', dependent: :destroy
+  belongs_to :uploaded_avatar, class_name: 'Upload'
 
   delegate :last_sent_email_address, :to => :email_logs
 
@@ -72,6 +74,8 @@ class User < ActiveRecord::Base
 
   after_create :create_email_token
   after_create :create_user_stat
+  after_create :create_user_profile
+  after_save :refresh_avatar
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -336,25 +340,27 @@ class User < ActiveRecord::Base
     "//www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
   end
 
+
   # Don't pass this up to the client - it's meant for server side use
   # This is used in
   #   - self oneboxes in open graph data
   #   - emails
   def small_avatar_url
-    template = avatar_template
-    schemaless template.gsub("{size}", "45")
+    avatar_template_url.gsub("{size}", "45")
   end
 
-  # the avatars might take a while to generate
-  # so return the url of the original image in the meantime
-  def uploaded_avatar_path
-    return unless SiteSetting.allow_uploaded_avatars? && use_uploaded_avatar
-    avatar_template = uploaded_avatar_template.present? ? uploaded_avatar_template : uploaded_avatar.try(:url)
+  def avatar_template_url
     schemaless absolute avatar_template
   end
 
+  def self.avatar_template(username,uploaded_avatar_id)
+    id = uploaded_avatar_id || -1
+    username ||= ""
+    "/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
+  end
+
   def avatar_template
-    uploaded_avatar_path || User.gravatar_template(id != -1 ? email : "team@discourse.org")
+    self.class.avatar_template(username,uploaded_avatar_id)
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
@@ -543,13 +549,9 @@ class User < ActiveRecord::Base
     created_at > 1.day.ago
   end
 
-  def upload_avatar(upload)
-    self.uploaded_avatar_template = nil
-    self.uploaded_avatar = upload
-    self.use_uploaded_avatar = true
-    self.save!
-  end
-
+  # TODO this is a MESS
+  # at most user table should have profile_background_upload_id
+  # best case is to move this to another table
   def upload_profile_background(upload)
     self.profile_background = upload.url
     self.save!
@@ -616,6 +618,29 @@ class User < ActiveRecord::Base
     Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.id, redirected_at: Time.zone.now)
   end
 
+  def refresh_avatar
+    avatar = user_avatar || create_user_avatar
+    gravatar_downloaded = false
+
+    if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
+      avatar.update_gravatar!
+      gravatar_downloaded = avatar.gravatar_upload_id
+    end
+
+    if SiteSetting.enable_system_avatars?
+      avatar.update_system_avatar! if !avatar.system_upload_id ||
+                                      username_changed? ||
+                                      avatar.system_avatar_version != UserAvatar::SYSTEM_AVATAR_VERSION
+    end
+
+    desired_avatar_id = avatar.gravatar_upload_id || avatar.system_upload_id
+
+    if (!self.uploaded_avatar_id || gravatar_downloaded) && desired_avatar_id
+      self.update_column(:uploaded_avatar_id, desired_avatar_id)
+    end
+
+  end
+
   protected
 
   def cook
@@ -636,6 +661,10 @@ class User < ActiveRecord::Base
       SiteSetting.has_login_hint = false
       SiteSetting.global_notice = ""
     end
+  end
+
+  def create_user_profile
+    UserProfile.create(user_id: id)
   end
 
   def create_user_stat
@@ -730,8 +759,8 @@ end
 #
 #  id                            :integer          not null, primary key
 #  username                      :string(60)       not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
+#  created_at                    :datetime
+#  updated_at                    :datetime
 #  name                          :string(255)
 #  bio_raw                       :text
 #  seen_notification_id          :integer          default(0), not null
@@ -770,17 +799,15 @@ end
 #  blocked                       :boolean          default(FALSE)
 #  dynamic_favicon               :boolean          default(FALSE), not null
 #  title                         :string(255)
-#  use_uploaded_avatar           :boolean          default(FALSE)
-#  uploaded_avatar_template      :string(255)
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
 #  mailing_list_mode             :boolean          default(FALSE), not null
 #  primary_group_id              :integer
 #  locale                        :string(10)
 #  profile_background            :string(255)
-#  email_hash                    :string(255)
 #  registration_ip_address       :inet
 #  last_redirected_to_top_at     :datetime
+#  disable_jump_reply            :boolean          default(FALSE), not null
 #
 # Indexes
 #

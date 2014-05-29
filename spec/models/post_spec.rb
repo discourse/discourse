@@ -11,25 +11,12 @@ describe Post do
     Fabricate.build(:post, args)
   end
 
-  it { should belong_to :user }
-  it { should belong_to :topic }
   it { should validate_presence_of :raw }
 
   # Min/max body lengths, respecting padding
   it { should_not allow_value("x").for(:raw) }
   it { should_not allow_value("x" * (SiteSetting.max_post_length + 1)).for(:raw) }
   it { should_not allow_value((" " * SiteSetting.min_post_length) + "x").for(:raw) }
-
-  it { should have_many :post_replies }
-  it { should have_many :replies }
-
-  it { should have_many :post_uploads }
-  it { should have_many :uploads }
-
-  it { should have_many :post_details }
-
-  it { should have_many :post_revisions }
-  it { should have_many :revisions}
 
   it { should rate_limit }
 
@@ -805,11 +792,11 @@ describe Post do
 
       post.has_host_spam?.should == false
 
-      SiteSetting.stubs(:newuser_spam_host_threshold).returns(1)
+      SiteSetting.newuser_spam_host_threshold = 1
 
       post.has_host_spam?.should == true
 
-      SiteSetting.stubs(:white_listed_spam_host_domains).returns("bla.com|boo.com | somesite.com ")
+      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | somesite.com "
       post.has_host_spam?.should == false
     end
   end
@@ -824,6 +811,35 @@ describe Post do
 
     post = Post.find(post.id)
     post.custom_fields.should == {"Tommy" => "Hanks", "Vincent" => "Vega"}
+  end
+
+  describe "#rebake!" do
+    it "will rebake a post correctly" do
+      post = create_post
+      post.baked_at.should_not == nil
+      first_baked = post.baked_at
+      first_cooked = post.cooked
+
+      Post.exec_sql("UPDATE posts SET cooked = 'frogs' WHERE id = ?", post.id)
+      post.reload
+
+      result = post.rebake!
+
+      post.baked_at.should_not == first_baked
+      post.cooked.should == first_cooked
+      result.should == true
+    end
+  end
+
+  describe ".rebake_old" do
+    it "will catch posts it needs to rebake" do
+      post = create_post
+      post.update_column(:baked_at, Time.new(2000,1,1))
+      Post.rebake_old(100)
+
+      post.reload
+      post.baked_at.should > 1.day.ago
+    end
   end
 
 end

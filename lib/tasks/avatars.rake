@@ -1,12 +1,24 @@
-desc "re-generate avatars"
-task "avatars:regenerate" => :environment do
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    puts "Generating avatars for: #{db}"
-    next unless SiteSetting.allow_uploaded_avatars
-    User.where("uploaded_avatar_id IS NOT NULL").find_each do |u|
-      Jobs.enqueue(:generate_avatars, upload_id: u.uploaded_avatar_id, user_id: u.id)
-      putc "."
-    end
+desc "Rebuild all system avatars"
+task "avatars:rebuild_system" => :environment do
+  i = 0
+  puts "Regenerating system avatars"
+  puts
+  UserAvatar.find_each do |a|
+    a.update_system_avatar!
+    putc "." if (i+=1)%10 == 0
   end
-  puts "\ndone."
+  puts
+end
+
+desc "Refresh all avatars (download missing gravatars, refresh system)"
+task "avatars:refresh" => :environment do
+  i = 0
+  puts "Refreshing avatars"
+  puts
+  User.find_each do |user|
+    user.refresh_avatar
+    user.user_avatar.update_system_avatar!
+    putc "." if (i+=1)%10 == 0
+  end
+  puts
 end

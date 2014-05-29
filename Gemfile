@@ -116,9 +116,6 @@ gem 'email_reply_parser-discourse', require: 'email_reply_parser'
 #
 # Sam: held back, getting weird errors in latest
 gem 'image_optim', '0.9.1'
-# note: for image_sorcery to correctly work you need
-# sudo apt-get install -y imagemagick
-gem 'image_sorcery'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'

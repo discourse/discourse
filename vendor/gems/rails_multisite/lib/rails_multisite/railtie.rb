@@ -5,7 +5,9 @@ module RailsMultisite
     end
 
     initializer "RailsMultisite.init" do |app|
+      Rails.configuration.multisite = false
       if File.exists?(ConnectionManagement.config_filename)
+        Rails.configuration.multisite = true
         ConnectionManagement.load_settings!
         app.middleware.insert_after(ActiveRecord::ConnectionAdapters::ConnectionManagement, RailsMultisite::ConnectionManagement)
         app.middleware.delete(ActiveRecord::ConnectionAdapters::ConnectionManagement)

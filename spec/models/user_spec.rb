@@ -854,15 +854,6 @@ describe User do
     end
   end
 
-  describe "#upload_avatar" do
-    let(:upload) { Fabricate(:upload) }
-    let(:user)   { Fabricate(:user) }
-
-    it "should update user's avatar" do
-      expect(user.upload_avatar(upload)).to be_true
-    end
-  end
-
   describe 'api keys' do
     let(:admin) { Fabricate(:admin) }
     let(:other_admin) { Fabricate(:admin) }
@@ -984,47 +975,25 @@ describe User do
 
   describe ".small_avatar_url" do
 
-    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "/uploaded/avatar/template/{size}.png") }
+    let(:user) { build(:user, username: 'Sam') }
 
     it "returns a 45-pixel-wide avatar" do
-      user.small_avatar_url.should == "//test.localhost/uploaded/avatar/template/45.png"
+      user.small_avatar_url.should == "//test.localhost/user_avatar/test.localhost/sam/45/-1.png"
     end
 
   end
 
-  describe ".uploaded_avatar_path" do
+  describe ".avatar_template_url" do
 
-    let(:user) { build(:user, use_uploaded_avatar: true, uploaded_avatar_template: "/uploaded/avatar/template/{size}.png") }
+    let(:user) { build(:user, uploaded_avatar_id: 99, username: 'Sam') }
 
-    it "returns nothing when uploaded avatars are not allowed" do
-      SiteSetting.expects(:allow_uploaded_avatars).returns(false)
-      user.uploaded_avatar_path.should be_nil
-    end
-
-    it "returns a schemaless avatar template" do
-      user.uploaded_avatar_path.should == "//test.localhost/uploaded/avatar/template/{size}.png"
+    it "returns a schemaless avatar template with correct id" do
+      user.avatar_template_url.should == "//test.localhost/user_avatar/test.localhost/sam/{size}/99.png"
     end
 
     it "returns a schemaless cdn-based avatar template" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      user.uploaded_avatar_path.should == "//my.cdn.com/uploaded/avatar/template/{size}.png"
-    end
-
-  end
-
-  describe ".avatar_template" do
-
-    let(:user) { build(:user, email: "em@il.com") }
-
-    it "returns the uploaded_avatar_path by default" do
-      user.expects(:uploaded_avatar_path).returns("//discourse.org/uploaded/avatar.png")
-      user.avatar_template.should == "//discourse.org/uploaded/avatar.png"
-    end
-
-    it "returns the gravatar when no avatar has been uploaded" do
-      user.expects(:uploaded_avatar_path)
-      User.expects(:gravatar_template).with(user.email).returns("//gravatar.com/avatar.png")
-      user.avatar_template.should == "//gravatar.com/avatar.png"
+      user.avatar_template_url.should == "//my.cdn.com/user_avatar/test.localhost/sam/{size}/99.png"
     end
 
   end
@@ -1165,6 +1134,16 @@ describe User do
 
   end
 
+  describe "automatic avatar creation" do
+    it "sets a system avatar for new users" do
+      SiteSetting.enable_system_avatars = true
+      u = User.create!(username: "bob", email: "bob@bob.com")
+      u.reload
+      u.user_avatar.system_upload_id.should == u.uploaded_avatar_id
+      u.uploaded_avatar_id.should_not == nil
+    end
+  end
+
   describe "custom fields" do
     it "allows modification of custom fields" do
       user = Fabricate(:user)
@@ -1187,6 +1166,30 @@ describe User do
       user = User.find(user.id)
 
       user.custom_fields.should == {"jack" => "jill"}
+    end
+  end
+
+  describe "refresh_avatar" do
+    it "picks gravatar if system avatar is picked and gravatar was just downloaded" do
+
+      png = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
+      FakeWeb.register_uri( :get,
+                            "http://www.gravatar.com/avatar/d10ca8d11301c2f4993ac2279ce4b930.png?s=500&d=404",
+                             body: png )
+
+      user = User.create!(username: "bob", name: "bob", email: "a@a.com")
+      user.create_user_avatar
+      user.user_avatar.update_system_avatar!
+      user.save
+      user.reload
+
+      SiteSetting.automatically_download_gravatars = true
+      SiteSetting.enable_system_avatars = true
+
+      user.refresh_avatar
+      user.reload
+
+      user.user_avatar.gravatar_upload_id.should == user.uploaded_avatar_id
     end
   end
 

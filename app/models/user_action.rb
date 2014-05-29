@@ -109,14 +109,15 @@ SELECT
   coalesce(p.post_number, 1) post_number,
   p.reply_to_post_number,
   pu.email, pu.username, pu.name, pu.id user_id,
-  pu.use_uploaded_avatar, pu.uploaded_avatar_template, pu.uploaded_avatar_id,
+  pu.uploaded_avatar_id,
   u.email acting_email, u.username acting_username, u.name acting_name, u.id acting_user_id,
-  u.use_uploaded_avatar acting_use_uploaded_avatar, u.uploaded_avatar_template acting_uploaded_avatar_template, u.uploaded_avatar_id acting_uploaded_avatar_id,
+  u.uploaded_avatar_id acting_uploaded_avatar_id,
   coalesce(p.cooked, p2.cooked) cooked,
   CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
   p.hidden,
   p.post_type,
-  p.edit_reason
+  p.edit_reason,
+  t.category_id
 FROM user_actions as a
 JOIN topics t on t.id = a.target_topic_id
 LEFT JOIN posts p on p.id = a.target_post_id
@@ -333,12 +334,12 @@ end
 #  target_post_id  :integer
 #  target_user_id  :integer
 #  acting_user_id  :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  created_at      :datetime
+#  updated_at      :datetime
 #
 # Indexes
 #
-#  idx_unique_rows                           (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
-#  index_actions_on_acting_user_id           (acting_user_id)
-#  index_actions_on_user_id_and_action_type  (user_id,action_type)
+#  idx_unique_rows                                (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  index_user_actions_on_acting_user_id           (acting_user_id)
+#  index_user_actions_on_user_id_and_action_type  (user_id,action_type)
 #

@@ -1,4 +1,4 @@
-Discourse.HomeLogoComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   classNames: ["title"],
 
   linkUrl: function() {
@@ -12,5 +12,4 @@ Discourse.HomeLogoComponent = Ember.Component.extend({
   smallLogoUrl: Discourse.computed.setting('logo_small_url'),
   bigLogoUrl: Discourse.computed.setting('logo_url'),
   title: Discourse.computed.setting('title'),
-
 });

@@ -61,6 +61,14 @@ class TopicsController < ApplicationController
     perform_show_response
 
     canonical_url absolute_without_cdn(@topic_view.canonical_path)
+  rescue Discourse::InvalidAccess => ex
+
+    if current_user
+      # If the user can't see the topic, clean up notifications for it.
+      Notification.remove_for(current_user.id, params[:topic_id])
+    end
+
+    raise ex
   end
 
   def wordpress

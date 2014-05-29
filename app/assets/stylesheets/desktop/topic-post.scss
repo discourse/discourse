@@ -98,6 +98,10 @@ section.post-menu-area, .post-actions {
     }
 }
 
+section.post-menu-area {
+  position: relative;
+}
+
 nav.post-controls {
     padding: 0;
     button {
@@ -244,7 +248,7 @@ nav.post-controls {
 
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: scale-color-diff();}
+  a.mention {background: darken(scale-color-diff(), 10%);}
   &.bottom {
     &.hidden {display: block; opacity: 0; }
 
@@ -340,10 +344,11 @@ a.star {
 
   h4 {
     margin: 0 0 3px 0;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
+    text-transform: lowercase;
   }
 
   p,
@@ -676,13 +681,13 @@ blockquote { /* solo quotes */
   margin: 0;
   padding: 12px;
 
-    a.mention {background: scale-color-diff();}
+    a.mention {background: darken(scale-color-diff(), 10%);}
     p:first-of-type {margin-top: 0;}
     p:last-of-type {margin-bottom: 0;}
 }
 
 .quote { /* quotes with attribution */
-  blockquote {
+  &>blockquote {
       margin-top: 0;
       padding-top: 0;
       p:first-of-type {margin:0;}
@@ -703,6 +708,10 @@ blockquote { /* solo quotes */
     .quote, .title, blockquote, .onebox, .onebox-result {
       background: darken(scale-color-diff(), 5%);
       border-left: 5px solid darken(scale-color-diff(), 12%);
+    }
+
+    aside.quote>blockquote, aside.quote>.title {
+      border-left: 0;
     }
   }
 

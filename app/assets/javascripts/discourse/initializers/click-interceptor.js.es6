@@ -17,6 +17,7 @@ export default {
           $currentTarget.attr('target') ||
           $currentTarget.data('ember-action') ||
           $currentTarget.data('auto-route') ||
+          $currentTarget.data('share-url') ||
           $currentTarget.hasClass('ember-view') ||
           $currentTarget.hasClass('lightbox') ||
           href.indexOf("mailto:") === 0 ||

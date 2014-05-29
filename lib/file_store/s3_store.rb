@@ -145,6 +145,10 @@ module FileStore
       fog.copy_object(unique_filename, s3_bucket, tombstone_prefix + unique_filename, s3_bucket)
       # delete the file
       fog.delete_object(s3_bucket, unique_filename)
+    rescue Excon::Errors::NotFound
+      # If the file cannot be found, don't raise an error.
+      # I am not certain if this is the right thing to do but we can't deploy
+      # right now. Please review this @ZogStriP
     end
 
     def update_tombstone_lifecycle(grace_period)

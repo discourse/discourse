@@ -6,6 +6,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :text_color,
              :slug,
              :topic_count,
+             :post_count,
              :description,
              :topic_url,
              :read_restricted,

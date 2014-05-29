@@ -65,6 +65,12 @@ class Notification < ActiveRecord::Base
     result
   end
 
+  # Clean up any notifications the user can no longer see. For example, if a topic was previously
+  # public then turns private.
+  def self.remove_for(user_id, topic_id)
+    Notification.where(user_id: user_id, topic_id: topic_id).delete_all
+  end
+
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||= begin
@@ -137,8 +143,8 @@ end
 #  user_id           :integer          not null
 #  data              :string(1000)     not null
 #  read              :boolean          default(FALSE), not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  created_at        :datetime
+#  updated_at        :datetime
 #  topic_id          :integer
 #  post_number       :integer
 #  post_action_id    :integer

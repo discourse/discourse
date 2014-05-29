@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :toggle_avatar, :clear_profile_background, :destroy]
+  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :pick_avatar, :clear_profile_background, :destroy]
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -297,7 +297,7 @@ class UsersController < ApplicationController
 
     results = UserSearch.new(term, topic_id: topic_id, searching_user: current_user).search
 
-    user_fields = [:username, :use_uploaded_avatar, :upload_avatar_template, :uploaded_avatar_id]
+    user_fields = [:username, :upload_avatar_template, :uploaded_avatar_id]
     user_fields << :name if SiteSetting.enable_names?
 
     to_render = { users: results.as_json(only: user_fields, methods: :avatar_template) }
@@ -364,12 +364,18 @@ class UsersController < ApplicationController
     end
   end
 
-  def toggle_avatar
-    params.require(:use_uploaded_avatar)
+  def pick_avatar
+    params.require(:upload_id)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
+    upload_id = params[:upload_id]
 
-    user.use_uploaded_avatar = params[:use_uploaded_avatar]
+    user.uploaded_avatar_id = upload_id
+
+    # ensure we associate the custom avatar properly
+    unless user.user_avatar.contains_upload?(upload_id)
+      user.user_avatar.custom_upload_id = upload_id
+    end
     user.save!
 
     render nothing: true
@@ -421,10 +427,7 @@ class UsersController < ApplicationController
     end
 
     def upload_avatar_for(user, upload)
-      user.upload_avatar(upload)
-      Jobs.enqueue(:generate_avatars, user_id: user.id, upload_id: upload.id)
-
-      render json: { url: upload.url, width: upload.width, height: upload.height }
+      render json: { upload_id: upload.id, url: upload.url, width: upload.width, height: upload.height }
     end
 
     def upload_profile_background_for(user, upload)

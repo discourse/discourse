@@ -6,17 +6,24 @@
   @namespace Discourse
   @module Discourse
 **/
+
+function uploadTranslate(key, options) {
+  var opts = options || {};
+  if (Discourse.Utilities.allowsAttachments()) { key += "_with_attachments"; }
+  return I18n.t("upload_selector." + key, opts);
+}
+
 Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
   templateName: 'modal/upload_selector',
   classNames: ['upload-selector'],
 
-  title: function() { return Discourse.UploadSelectorController.translate("title"); }.property(),
+  title: function() { return uploadTranslate("title"); }.property(),
   uploadIcon: function() { return Discourse.Utilities.allowsAttachments() ? "fa-file-o" : "fa-picture-o"; }.property(),
 
   tip: function() {
     var source = this.get("controller.local") ? "local" : "remote";
     var opts = { authorized_extensions: Discourse.Utilities.authorizedExtensions() };
-    return Discourse.UploadSelectorController.translate(source + "_tip", opts);
+    return uploadTranslate(source + "_tip", opts);
   }.property("controller.local"),
 
   hint: function() {

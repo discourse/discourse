@@ -15,8 +15,6 @@ class AvatarLookup
     @lookup_columns ||= [:id,
                          :email,
                          :username,
-                         :use_uploaded_avatar,
-                         :uploaded_avatar_template,
                          :uploaded_avatar_id]
   end
 

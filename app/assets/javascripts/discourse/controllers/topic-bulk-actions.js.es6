@@ -7,7 +7,7 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-Discourse.TopicBulkActionsController = Ember.ArrayController.extend(Discourse.ModalFunctionality, {
+export default Ember.ArrayController.extend(Discourse.ModalFunctionality, {
   needs: ['discovery/topics'],
 
   onShow: function() {

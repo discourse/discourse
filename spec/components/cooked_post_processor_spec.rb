@@ -47,15 +47,11 @@ describe CookedPostProcessor do
 
       before { cpp.post_process_images }
 
-      it "adds the width from the image sizes provided when no dimension is provided" do
+      it "works" do
+        # adds the width from the image sizes provided when no dimension is provided
         cpp.html.should =~ /src="http:\/\/foo.bar\/image.png" width="111" height="222"/
-      end
-
-      it "adds the width from the image sizes provided" do
+        # adds the width from the image sizes provided
         cpp.html.should =~ /src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/
-      end
-
-      it "should be dirty" do
         cpp.should be_dirty
       end
 
@@ -82,14 +78,14 @@ describe CookedPostProcessor do
       let(:cpp) { CookedPostProcessor.new(post) }
 
       before do
-        SiteSetting.stubs(:max_image_height).returns(2000)
-        SiteSetting.stubs(:create_thumbnails?).returns(true)
+        SiteSetting.max_image_height = 2000
+        SiteSetting.create_thumbnails = true
+
         Upload.expects(:get_from_url).returns(upload)
         FastImage.stubs(:size).returns([1000, 2000])
-        # optimized_image
-        FileUtils.stubs(:mkdir_p)
-        File.stubs(:open)
-        ImageSorcery.any_instance.expects(:convert).returns(true)
+
+        # hmmm this should be done in a cleaner way
+        OptimizedImage.expects(:resize).returns(true)
       end
 
       it "generates overlay information" do

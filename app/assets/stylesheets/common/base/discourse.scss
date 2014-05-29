@@ -8,12 +8,16 @@
   margin-left: 12px;
 }
 
+big {
+  font-size: 28px;
+}
+
 blockquote {
   background-color: scale-color-diff();
   border-left: 5px solid darken(scale-color-diff(), 10%);
 }
 
-    a.no-href {
+a.no-href {
   cursor: pointer;
 }
 
@@ -162,11 +166,6 @@ body {
 .avatar-wrapper {
   background-color: $secondary;
   display: inline-block;
-  border: 1px solid scale-color-diff();
-  @include border-radius-all(5px);
-  img {
-    @include border-radius-all(4px);
-  }
 }
 
 .profiler-results.profiler-left {
