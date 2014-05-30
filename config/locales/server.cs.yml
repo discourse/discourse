@@ -946,26 +946,6 @@ cs:
         Užijte si naše fórum!
     welcome_invite:
       subject_template: "Vítejte na %{site_name}!"
-      text_body_template: |
-        Děkujeme, že jste přijali pozvánku na %{site_name} a vítáme vám na našem diskuzním fóru!
-
-        Automaticky jsme vám vygenerovali uživatelské jméno: **%{username}**, ale je možné si ho kdykoliv změnit návštěvou [vašeho uživatelského profilu][prefs].
-
-        Abyste se znovu přihlásili, můžete:
-
-        1. Použít Facebook, Google, Twitter a řadu dalších přihlašovacích služeb -- ale vaše registraci musí být na **stejnou emailovou adresu**, na kterou jste obdrželi původní pozvánku. Jinak nebudeme moci poznat, že jste to vy!
-
-        2. Vytvořit si nové heslo pro %{site_name} na [vašem uživatelském profilu][prefs] a pak se jím přihlásit.
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        Věříme v [civilizované komunitní chování](%{base_url}/faq) za všech okolností.
-
-        Užijte si naše fórum!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Export úspěšně dokončen"
       text_body_template: "Export proběhl úspěšně."

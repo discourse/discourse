@@ -264,7 +264,6 @@ he:
       change_avatar:
         title: "שנה את האוואטר שלך"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, מבוסס על"
-        gravatar_title: "שנה את האוואטר שלך באתר של Gravatar"
         uploaded_avatar: "תמונה אישית"
         uploaded_avatar_empty: "הוסף תמונה אישית"
         upload_title: "העלה את התמונה שלך"
@@ -320,13 +319,6 @@ he:
       new_topic_duration:
         label: "החשב נושא חדש כאשר"
         not_viewed: "עדיין לא צפית בהם"
-        last_here: "הם פורסמו לאחר שהיית כאן פעם אחרונה"
-        after_n_days:
-          one: "הם פורסמו ביום האחרון"
-          other: "הם פורסמו ב-{{count}} הימים האחרונים"
-        after_n_weeks:
-          one: "הם פורסמו בשבוע האחרונה"
-          other: "הם פורסמו ב-{{count}} השבועות האחרונים"
       auto_track_topics: "אוטומטית עקוב אחרי נושאים אליהם אני נכנס"
       auto_track_options:
         never: "אף פעם"
@@ -379,15 +371,11 @@ he:
     close: "סגור"
     assets_changed_confirm: "Discourse עודכן. תרצה לרענן את העמוד כדי לקבל את הגירסה האחרונה?"
     read_only_mode:
-      enabled: "מנהל ראשי אפשר את מצב קריאה בלבד. ניתן להמשיך לקרוא באתר אבל פעולות לא יעבדו כראוי."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
     learn_more: "למד עוד..."
     year: 'שנה'
-    year_desc: 'נושאים שפורסמו ב-365 הימים האחרונים'
     month: 'חודש'
-    month_desc: 'נושאים שפורסמו ב-30 הימים האחרונים'
     week: 'שבוע'
-    week_desc: 'נושאים שפורסמו ב-7 הימים האחרונים'
     day: 'יום'
     first_post: הודעה ראשונה
     mute: השתק
@@ -422,12 +410,10 @@ he:
       complete_email: "אם החשבון מתאים ל <b>%{email}</b>, אתה אמור לקבל בקרוב מעעל עם הוראות לאיפוס הסיסמא."
     login:
       title: "התחבר"
-      username: "התחברות"
       password: "סיסמה"
       email_placeholder: "דואר אלקטרוני או סיסמה"
       error: "שגיאה לא ידועה"
       reset_password: 'אפס סיסמה'
-      logging_in: "מתחבר..."
       or: "או"
       authenticating: "מאשר..."
       awaiting_confirmation: "החשבון שלך ממתין להפעלה. ניתן להשתמש בקישור \"שכחתי סיסמה\" כדי לשלוח דואר אלקטרוני נוסף."
@@ -962,7 +948,6 @@ he:
       none: '(ללא קטגוריה)'
       choose: 'בחר קטגוריה&hellip;'
       edit: 'ערוך'
-      edit_long: "ערוך קטגוריה"
       view: 'הצג נושאים בקטגוריה'
       general: 'כללי'
       settings: 'הגדרות'
@@ -1610,10 +1595,6 @@ he:
       actions:
         title: 'פעולות'
         star: '<b>f</b> סמן נושא בכוכב'
-        share_topic: '<b>s</b> שתף נושא'
-        share_post: '<b>shift s</b> שתף הודעה'
-        reply_topic: '<b>r</b> הגב לנושא'
-        reply_post: '<b>shift r</b> הגב להודעה'
         like: '<b>l</b> תן לייק להודעה'
         flag: '<b>!</b> דגלל הודעה'
         bookmark: '<b>b</b> הוסף הודעה למועדפים'

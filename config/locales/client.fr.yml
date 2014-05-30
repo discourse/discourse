@@ -132,6 +132,7 @@ fr:
       not_bookmarked: "Vous avez lu ce message; cliquez pour le placer dans vos signets"
       last_read: "Voici le dernier message que vous avez lu; cliquez pour le placer dans vos signets"
       remove: "Supprimer le signet"
+    new_topics_inserted: "{{count}} nouveaux messages."
     show_new_topics: "Cliquez pour afficher."
     preview: "prévisualiser"
     cancel: "annuler"
@@ -141,6 +142,10 @@ fr:
     upload: "Envoyer"
     uploading: "Envoi en cours..."
     uploaded: "Envoyé!"
+    enable: "Activer"
+    disable: "Désactiver"
+    undo: "Annuler"
+    revert: "Rétablir"
     choose_topic:
       none_found: "Aucun sujet trouvé."
       title:
@@ -189,6 +194,8 @@ fr:
       '13': "Boîte de réception"
     categories:
       all: "toutes les catégories"
+      all_subcategories: "toutes"
+      no_subcategory: "aucune"
       category: "Catégorie"
       posts: "Nouveaux messages"
       topics: "Nouveaux sujets"
@@ -219,6 +226,7 @@ fr:
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
       notifications: "Notifications"
+      disable_jump_reply: "Ne pas se déplacer à votre nouveau message après avoir répondu"
       dynamic_favicon: "Afficher les notifications de nouveaux messages sur le favicon (expérimental)"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Activer la citation automatique du texte surligné"
@@ -228,6 +236,7 @@ fr:
       deleted: "(supprimé)"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
+      mailing_list_mode: "Recevoir un e-mail à chaque fois qu'un message est posté sur le forum (sauf si vous avez rendu silencieuse ce sujet ou cette catégorie)"
       watched_categories: "Surveillés"
       watched_categories_instructions: "Vous pourrez suivre attentivement automatiquement toutes les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, de plus les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
       tracked_categories: "Suivies"
@@ -265,11 +274,15 @@ fr:
       change_avatar:
         title: "Changez votre avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
-        gravatar_title: "Changez votre avatar sur le site Gravatar"
+        refresh_gravatar_title: "Actualiser votre Gravatar"
+        letter_based: "Le système a attribué un avatar"
         uploaded_avatar: "Photo personnalisée"
         uploaded_avatar_empty: "Ajouter une photo personnalisée"
         upload_title: "Envoyer votre photo"
+        upload_picture: "Envoyer une image"
         image_is_not_a_square: "Attention : nous avons découpé votre image; elle n'est pas carré."
+      change_profile_background:
+        title: "Arrière plan du profil"
       email:
         title: "Email"
         instructions: "Votre adresse email ne sera jamais communiquée."
@@ -306,6 +319,7 @@ fr:
       last_seen: "Vu"
       created: "Inscrit"
       log_out: "Déconnexion"
+      location: "Localisation"
       website: "Site internet"
       email_settings: "Email"
       email_digests:
@@ -321,13 +335,13 @@ fr:
       new_topic_duration:
         label: "Considérer les sujets comme nouveau quand"
         not_viewed: "vous ne les avez pas encore vus"
-        last_here: "ils ont été publiés depuis votre dernière visite"
+        last_here: "ils ont été créés depuis votre dernière visite"
         after_n_days:
-          one: "ils ont été publiés hier"
-          other: "ils ont été publiés lors des {{count}} derniers jours"
+          one: "ils ont été créés hier"
+          other: "ils ont été créés lors des {{count}} derniers jours"
         after_n_weeks:
-          one: "Ils ont été publiés la semaine dernière."
-          other: "Ils ont été publiés les {{count}} dernières semaines."
+          one: "Ils ont été créés la semaine dernière"
+          other: "Ils ont été créés les {{count}} dernières semaines."
       auto_track_topics: "Suivre automatiquement les sujets que vous consultez"
       auto_track_options:
         never: "jamais"
@@ -355,6 +369,7 @@ fr:
         time_read: "Temps de lecture"
         days_visited: "Ratio de présence"
         account_age_days: "Âge du compte en jours"
+        create: "Envoyer une invitation"
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
@@ -380,15 +395,16 @@ fr:
     close: "Fermer"
     assets_changed_confirm: "Discourse a été mis à jour, voulez-vous rafraîchir pour obtenir la dernière version ?"
     read_only_mode:
-      enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site, mais les interactions ne fonctionneront pas correctement."
+      enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
       login_disabled: "La connexion est désactivée quand le site est en mode lecture seule."
+    too_few_topics_notice: "Créer au moins 5 sujets et 50 messages publiques pour que les discussions commencent. Les nouveaux utilisateurs ne seront pas en mesure de gagner des niveaux de confiance si il n'y a pas de contenu à lire."
     learn_more: "en savoir plus..."
     year: 'an'
-    year_desc: 'sujets des 365 derniers jours'
+    year_desc: 'discussions créées durant les 365 derniers jours'
     month: 'mois'
-    month_desc: 'sujets des 30 derniers jours'
+    month_desc: 'discussions créées durant les 30 derniers jours'
     week: 'semaine'
-    week_desc: 'sujets des 7 derniers jours'
+    week_desc: 'discussions créées durant les 7 derniers jours'
     day: 'jour'
     first_post: Premier message
     mute: Désactiver
@@ -423,7 +439,7 @@ fr:
       complete_email: "Si un compte correspond a l'email <b>%{email}</b>, vous devriez recevoir rapidement un email avec les instructions pour réinitialiser votre mot de passe."
     login:
       title: "Se connecter"
-      username: "Pseudo"
+      username: "Utilisateur"
       password: "Mot de passe"
       email_placeholder: "email ou pseudo"
       error: "Erreur inconnue"
@@ -438,6 +454,9 @@ fr:
       resend_activation_email: "Cliquez ici pour réenvoyer l'email d'activation."
       sent_activation_email_again: "Nous venous de vous envoyer un nouvel email d'activation à <b>{{currentEmail}}</b>. Il peut prendre quelques minutes à arriver; n'oubliez pas de vérifier votre répertoire spam."
       google:
+        title: "via Google"
+        message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
+      google_oauth2:
         title: "via Google"
         message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
       twitter:
@@ -841,6 +860,7 @@ fr:
             other: "Voulez-vous aussi supprimer les  {{count}} réponse qui suivent directement ce message ?"
           yes_value: "Oui, supprimer les réponses égalements"
           no_value: "Non, juste ce message"
+        admin: "action sur message d'administrateur"
         wiki: "Activer le Wiki pour le message"
         unwiki: "Désactiver le wiki pour le message"
       actions:
@@ -965,7 +985,7 @@ fr:
       none: '(pas de catégorie)'
       choose: 'Sélectionner une catégorie&hellip;'
       edit: 'éditer'
-      edit_long: "Editer la catégorie"
+      edit_long: "Modifier"
       view: 'Voir les sujets dans cette catégorie'
       general: 'Général'
       settings: 'Paramètres'
@@ -999,6 +1019,7 @@ fr:
       this_year: "cette année"
       position: "position"
       default_position: "Position par défaut"
+      position_disabled: 'Les catégories seront affichées dans l''ordre d''activité. Pour contrôler l''ordre des catégories dans la liste, activer l''option "fixer la position des catégories".'
       parent: "Catégorie Parent"
     flagging:
       title: 'Pourquoi signalez vous secrètement ce message ?'
@@ -1297,6 +1318,7 @@ fr:
         new_style: "Nouveau style"
         delete: "Supprimer"
         delete_confirm: "Supprimer cette personnalisation"
+        about: "Modification des feuilles de styles et en-têtes de votre site. Ajouter un style personnalisé pour commencer."
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"
@@ -1306,13 +1328,44 @@ fr:
         colors:
           title: "Couleurs"
           long_title: "Palettes de couleurs"
+          about: "Modification des couleurs utilisés par le site sans écrire du CSS. Ajouter une palette pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleurs ?"
+          undo: "annuler"
+          undo_title: "Annuler vos changements sur cette couleur depuis la dernière fois qu'elle a été sauvegarder."
+          revert: "rétablir"
+          revert_title: "Rétablir la couleur de la palette par défaut de Discourse."
+          primary:
+            name: 'primaire'
+            description: 'La plupart des textes, icônes et bordures.'
+          secondary:
+            name: 'secondaire'
+            description: 'Les couleurs principales du fond et des textes de certains boutons.'
+          tertiary:
+            name: 'tertiaire'
+            description: 'Liens, boutons, notifications et couleurs d''accentuation.'
+          quaternary:
+            name: "quaternaire"
+            description: "Liens de navigation."
+          header_background:
+            name: "fond du header"
+            description: "Couleur de fond du header."
+          header_primary:
+            name: "header primaire"
+            description: "Textes et icônes du header. "
+          highlight:
+            name: 'accentuation'
+            description: 'La couleur de fond des éléments accentués sur la page, comme les messages et sujets.'
           danger:
             name: 'danger'
+            description: 'Couleur d''accentuation pour les actions comme les messages et sujets supprimés.'
           success:
             name: 'succès'
+            description: 'Utiliser pour indiquer qu''une action a réussi.'
+          love:
+            name: 'aimer'
+            description: "La couleur du bouton \"J'aime\"."
       email:
         title: "Email"
         settings: "Paramètres"
@@ -1504,6 +1557,9 @@ fr:
         cant_delete_all_posts:
           one: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de  %{count} jour. (voir l'option delete_user_max_post_age)"
           other: "Impossible de supprimer tout les messages. Certains messages sont âgés de plus de  %{count} jours. (voir l'option delete_user_max_post_age)"
+        cant_delete_all_too_many_posts:
+          one: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus d'un message. (delete_all_posts_max)"
+          other: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
         delete_confirm: "Êtes-vous SUR de vouloir supprimer cet utilisateur ? Cette action est définitive !"
         delete_and_block: "<b>Oui</>, et <b>bloquer</b> les inscriptions furures avec cette adresse mail et cette adresse IP"
         delete_dont_block: "<b>Oui</b>, juste supprimer l'utilisateur"
@@ -1545,6 +1601,7 @@ fr:
       site_settings:
         show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres'
+        reset: 'rétablir'
         none: 'rien'
         no_results: "Aucun résultat trouvé."
         clear_filter: "Effacer"
@@ -1617,10 +1674,11 @@ fr:
       actions:
         title: 'Actions'
         star: '<b>f</b> Sujet Favoris'
-        share_topic: '<b>s</b> Partager un sujet'
-        share_post: '<b>Maj s</b> Partager un message '
-        reply_topic: '<b>r</b> Répondre au sujet'
-        reply_post: '<b>Maj r</b> Répondre à un message'
+        share_topic: '<b>shift s</b> Partager un sujet'
+        share_post: '<b>s</b> Partager un message'
+        reply_topic: '<b>shift r</b> Répondre au sujet'
+        reply_post: '<b>r</b> Répondre à un message'
+        quote_post: '<b>q</b> Citer un message'
         like: '<b>l</b> Aimer un message'
         flag: '<b>!</b> Signaler un message'
         bookmark: '<b>b</b> Ajouter ce message à vos signets'
@@ -1642,3 +1700,16 @@ fr:
         one: "1 décerné"
         other: "%{count} décernés"
       select_badge_for_title: Sélectionner un badge pour l'utiliser comme votre titre
+      badge:
+        basic_user:
+          name: Base
+          description: Accorder toutes les fonctions essentiels communautaires.
+        regular_user:
+          name: Régulier
+          description: Accorder les invitations.
+        leader:
+          name: Responsable
+          description: Accorder la re-catégorisation, le renommage, le suivi de lien et le salon
+        elder:
+          name: Ancien
+          description: Accorder l'édition, l'épinglage, la fermeture, l'archivage, la séparation et la fusion.

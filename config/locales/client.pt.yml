@@ -214,7 +214,6 @@ pt:
       change_avatar:
         title: "Alterar o seu avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
-        gravatar_title: "Alterar o seu avatar no Gravatar"
         uploaded_avatar: "Foto pessoal"
         uploaded_avatar_empty: "Adicionar foto pessoal"
         upload_title: "Enviar a sua foto"
@@ -258,9 +257,6 @@ pt:
       other_settings: "Outros"
       new_topic_duration:
         label: "Considerar tópicos como novos quando"
-        after_n_days:
-          one: "foram postados no último dia"
-          other: "foram colocados nos últimos {{count}} dias"
       auto_track_options:
         never: "nunca"
         always: "sempre"
@@ -306,11 +302,8 @@ pt:
     close: "Fechar"
     learn_more: "sabe mais..."
     year: 'ano'
-    year_desc: 'tópicos colocados nos últimos 365 dias'
     month: 'mês'
-    month_desc: 'tópicos colocados nos últimos 30 dias'
     week: 'semana'
-    week_desc: 'tópicos colocados nos últimos 7 dias'
     first_post: Primeira mensagem
     mute: Silenciar
     unmute: Reativar
@@ -340,11 +333,9 @@ pt:
       invite: "Coloque seu nome de utilizador ou endereço de email, e enviar-lhe-emos um email para refazer a sua palavra-chave."
       reset: "Recuperar Palavra-chave"
     login:
-      username: "Utilizador"
       password: "Palavra-chave"
       error: "Erro desconhecido"
       reset_password: 'Recuperar palavra-chave'
-      logging_in: "A Entrar..."
       or: "Ou"
       authenticating: "A autenticar..."
       awaiting_confirmation: "A sua conta está a aguardar ativação. Utilize o link 'Esqueci a Palavra-chave' para pedir um novo link para ativar o email"
@@ -751,7 +742,6 @@ pt:
       none: '(sem categoria)'
       choose: 'Selecione uma category&hellip;'
       edit: 'editar'
-      edit_long: "Editar Categoria"
       view: 'Visualizar Tópicos na Categoria'
       general: 'Geral'
       settings: 'Configurações'

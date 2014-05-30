@@ -711,26 +711,6 @@ ko:
         다시한번 환영합니다!
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
-      text_body_template: |
-        %{site_name} 사이트 초대를 수락해주셔서 감사합니다!
-
-        사용자 이름이 자동 생성되었습니다: **%{username}**, [your user profile][prefs]에 가셔서 언제나 변경하실 수 있습니다.
-
-        다시 로그인을 하시려면:
-
-        1. 페이스북, 구글, 트위터, 등 다른 인증을 사용하세요. **반드시 다른 인증 이메일 주소가** 초대 받음 이메일 주소와 같아야 합니다!
-
-        2. [사용자 프로필][prefs]에 가셔서 %{site_name}에서 사용할 패스워드를 만드신 후 로그인 하세요.
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        저희는 사용자님께서 [커뮤니티 행동 방침](%{base_url}/faq)을 잘 따라주실 것을 믿습니다.
-
-        다시한번 환영합니다!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "내보내기 성공"
       text_body_template: "내보내기가 성공하였습니다."

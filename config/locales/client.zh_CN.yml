@@ -20,25 +20,25 @@ zh_CN:
             tb: TB
     dates:
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1 分钟"
         less_than_x_seconds:
-          other: "< %{count}s"
+          other: "< %{count} 秒钟"
         x_seconds:
-          other: "%{count}s"
+          other: "%{count} 秒钟"
         less_than_x_minutes:
-          other: "< %{count}m"
+          other: "< %{count} 分钟"
         x_minutes:
-          other: "%{count}m"
+          other: "%{count} 分钟"
         about_x_hours:
-          other: "%{count}h"
+          other: "%{count} 小时"
         x_days:
-          other: "%{count}d"
+          other: "%{count} 天"
         about_x_years:
-          other: "%{count}y"
+          other: "%{count} 年"
         over_x_years:
-          other: "> %{count}y"
+          other: "> %{count} 年"
         almost_x_years:
-          other: "%{count}y"
+          other: "%{count} 年"
         date_month: "MMMDo"
         date_year: "YY-MM-D"
       medium:
@@ -96,13 +96,13 @@ zh_CN:
     character_count:
       other: "%{count} 个字符"
     in_n_seconds:
-      other: "在 {{count}} 秒"
+      other: "在 {{count}} 秒钟内"
     in_n_minutes:
-      other: "在 {{count}} 分钟"
+      other: "在 {{count}} 分钟内"
     in_n_hours:
-      other: "在 {{count}} 小时"
+      other: "在 {{count}} 小时内"
     in_n_days:
-      other: "在 {{count}} 天"
+      other: "在 {{count}} 天内"
     suggested_topics:
       title: "推荐主题"
     bookmarks:
@@ -249,7 +249,6 @@ zh_CN:
       change_avatar:
         title: "修改头像"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>头像，基于："
-        gravatar_title: "修改您在 Gravatar 网站的头像"
         uploaded_avatar: "自定义图片"
         uploaded_avatar_empty: "添加自定义图片"
         upload_title: "上传图片"
@@ -307,11 +306,6 @@ zh_CN:
       new_topic_duration:
         label: "认为主题是新主题的条件："
         not_viewed: "我还没有浏览过它们"
-        last_here: "我上次访问后建立的讨论"
-        after_n_days:
-          other: "它们是{{count}}天前发表的"
-        after_n_weeks:
-          other: "它们是{{count}}星期前发表的"
       auto_track_topics: "自动追踪我进入的主题"
       auto_track_options:
         never: "从不"
@@ -362,15 +356,11 @@ zh_CN:
     close: "关闭"
     assets_changed_confirm: "Discourse 已经被更新，您是否想刷新以使用最新版本？"
     read_only_mode:
-      enabled: "一位管理员开启了只读模式，您可以继续浏览但是参与功能不会正常工作。"
       login_disabled: "只读模式下不允许登入。"
     learn_more: "了解更多..."
     year: '年'
-    year_desc: '最近 365 天发表的主题'
     month: '月'
-    month_desc: '最近 30 天发表的主题'
     week: '周'
-    week_desc: '最近 7 天发表的主题'
     day: '天'
     first_post: 第一帖
     mute: 防打扰
@@ -405,12 +395,10 @@ zh_CN:
       complete_email: "如果您的账户 <b>%{email}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
     login:
       title: "登入"
-      username: "登入"
       password: "密码"
       email_placeholder: "电子邮箱地址或用户名"
       error: "未知错误"
       reset_password: '重置密码'
-      logging_in: "登入中..."
       or: "或"
       authenticating: "验证中..."
       awaiting_confirmation: "您的帐号尚未激活，点击忘记密码链接来重新发送激活邮件。"
@@ -421,22 +409,22 @@ zh_CN:
       sent_activation_email_again: "我们在 <b>{{currentEmail}}</b> 又发送了一封激活邮件给您，邮件送达可能需要几分钟；请检查一下您邮箱的垃圾邮件文件夹。"
       google:
         title: "使用 Google 帐号登入"
-        message: "使用 Google 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        message: "正使用 Google 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
       google_oauth2:
         title: "使用 Google 帐号登录"
         message: "使用 Google 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       twitter:
         title: "使用 Twitter 帐号登入"
-        message: "使用 Twitter 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        message: "正使用 Twitter 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
       facebook:
         title: "使用 Facebook 帐号登入"
-        message: "使用 Facebook 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        message: "正使用 Facebook 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
       yahoo:
         title: "使用 Yahoo 帐号登入"
-        message: "使用 Yahoo 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        message: "正使用 Yahoo 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
       github:
         title: "使用 GitHub 帐号登入"
-        message: "使用 GitHub 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        message: "正使用 GitHub 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
     composer:
       posting_not_on_topic: "您想回复哪一个主题？"
       saving_draft_tip: "保存中"
@@ -918,7 +906,6 @@ zh_CN:
       none: '（未分类）'
       choose: '选择分类&hellip;'
       edit: '编辑'
-      edit_long: "编辑分类"
       view: '浏览分类下的主题'
       general: '通常'
       settings: '设置'
@@ -1594,10 +1581,6 @@ zh_CN:
       actions:
         title: '动作'
         star: '<b>f</b> 收藏主题'
-        share_topic: '<b>s</b> 分享主题'
-        share_post: '<b>shift s</b> 分享帖子'
-        reply_topic: '<b>r</b> 回复主题'
-        reply_post: '<b>shift r</b> 回复帖子'
         like: '<b>l</b> 赞帖子'
         flag: '<b>!</b> 报告帖子'
         bookmark: '<b>b</b> 给帖子添加书签'

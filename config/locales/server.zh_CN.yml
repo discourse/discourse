@@ -7,9 +7,9 @@
 
 zh_CN:
   dates:
-    short_date_no_year: "MM月dd日"
-    short_date: "D MMM，YYYY"
-    long_date: "YYYY年MM月DDDD日 h:mma"
+    short_date_no_year: "M月D日"
+    short_date: "L"
+    long_date: "LLLL"
   time:
     formats:
       short: "%Y-%m-%d"
@@ -754,7 +754,7 @@ zh_CN:
     embed_post_limit: "嵌入帖子的最大数量"
     embed_whitelist_selector: "在嵌入页面加入元素 CSS 选择器"
     embed_blacklist_selector: "在嵌入页面移除元素 CSS 选择器"
-    tos_accept_required: "如果启用，用户将需要在注册页面选择一个复选框以统一服务条款。在内容标签中编辑'注册表单：服务条款信息'更改消息。"
+    tos_accept_required: "如果启用，用户将需要在注册页面选择复选框以同意服务条款。在内容标签中编辑“注册表单：服务条款信息”更改条款内容。"
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
     enable_cdn_js_debugging: "为包含的 js 启动跨源访问 /logs 权限以显示合适的错误"
   notification_types:
@@ -1022,26 +1022,6 @@ zh_CN:
         好好享受您在论坛的时光吧！
     welcome_invite:
       subject_template: "欢迎来到 %{site_name}！"
-      text_body_template: |
-        欢迎！感谢您接受邀请到 %{site_name}，欢迎来到我们论坛参与讨论！
-
-        我们为您自动生成了一个用户名：**%{username}**，不过您在任何时候都可以通过访问[您的用户设置][prefs]来修改它。
-
-        要再次登入，或者：
-
-        1. 使用您喜欢的方式登入——但是必须以**同样的邮件地址**，即您收到邀请的邮箱地址登入。否则我们就无法分辨是不是您本人！
-
-        2. 在[您的用户设置][prefs]页面为 %{site_name} 创建一个密码，然后使用该密码来登入。
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        我们始终相信[讨论应该文明](%{base_url}/faq)。
-
-        好好享受您在论坛的时光吧！
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "导出成功"
       text_body_template: "导出操作成功。"

@@ -280,7 +280,6 @@ cs:
       change_avatar:
         title: "Změna avataru"
         gravatar: "Založeno na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>u"
-        gravatar_title: "Změňte svůj avatar na stránkách Gravatar"
         uploaded_avatar: "Vlastní obrázek"
         uploaded_avatar_empty: "Přidat vlastní obrázek"
         upload_title: "Nahrát obrázek"
@@ -336,15 +335,6 @@ cs:
       new_topic_duration:
         label: "Považovat témata za nová, pokud"
         not_viewed: "you haven't viewed them yet"
-        last_here: "they were posted since you were here last"
-        after_n_days:
-          one: "byly zaslány v posledním dni"
-          few: "byly zaslány v posledních {{count}} dnech"
-          other: "byly zaslány v posledních {{count}} dnech"
-        after_n_weeks:
-          one: "byly zaslány v posledním týdnu"
-          few: "byly zaslány v posledních {{count}} týdnech"
-          other: "byly zaslány v posledních {{count}} týdnech"
       auto_track_topics: "Automaticky sledovat navštívená témata"
       auto_track_options:
         never: "nikdy"
@@ -397,15 +387,11 @@ cs:
     close: "Zavřít"
     assets_changed_confirm: "Discourse byl aktualizován, chcete načíst nejnovější verzi hned?"
     read_only_mode:
-      enabled: "Správce fóra zapnul režim jen pro čtení. Můžete pokračovat v procházení webu, ale interakce nebudou fungovat správně."
       login_disabled: "Přihlášení je zakázáno jelikož fórum je v režimu jen pro čtení."
     learn_more: "více informací..."
     year: 'rok'
-    year_desc: 'témata za posledních 365 dní'
     month: 'měsíc'
-    month_desc: 'témata za posledních 30 dní'
     week: 'týden'
-    week_desc: 'témata za posledních 7 dní'
     day: 'den'
     first_post: První příspěvek
     mute: Ignorovat
@@ -437,12 +423,10 @@ cs:
       invite: "Vložte svoje uživatelské jméno nebo e-mailovou adresu a my vám zašleme postup pro obnovení hesla."
       reset: "Resetovat heslo"
     login:
-      username: "Login"
       password: "Heslo"
       email_placeholder: "emailová adresa nebo uživatelské jméno"
       error: "Neznámá chyba"
       reset_password: 'Resetovat heslo'
-      logging_in: "Přihlašuji..."
       or: "Nebo"
       authenticating: "Autorizuji..."
       awaiting_confirmation: "Váš účet nyní čeká na aktivaci, použijte odkaz pro zapomené heslo, jestli chcete, abychom vám zaslali další aktivační email."
@@ -995,7 +979,6 @@ cs:
       none: '(bez kategorie)'
       choose: 'Vyberte kategorii&hellip;'
       edit: 'upravit'
-      edit_long: "Upravit kategorii"
       view: 'Zobrazit témata v kategorii'
       general: 'Základní'
       settings: 'Nastavení'
@@ -1634,10 +1617,6 @@ cs:
       actions:
         title: 'Actions'
         star: '<b>f</b> Star topic'
-        share_topic: '<b>s</b> Share topic'
-        share_post: '<b>shift s</b> Share post'
-        reply_topic: '<b>r</b> Reply to topic'
-        reply_post: '<b>shift r</b> Reply to post'
         like: '<b>l</b> Like post'
         flag: '<b>!</b> Flag post'
         bookmark: '<b>b</b> Bookmark post'

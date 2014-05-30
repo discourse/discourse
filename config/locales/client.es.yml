@@ -226,6 +226,7 @@ es:
       invited_by: "Invitado por"
       trust_level: "Nivel de confianza"
       notifications: "Notificaciones"
+      disable_jump_reply: "No ir directamente a tu nuevo post al responder"
       dynamic_favicon: "Mostrar notificaciones de mensajes de entrada en favicon (experimental)"
       external_links_in_new_tab: "Abrir todos los links externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto resaltado"
@@ -273,10 +274,12 @@ es:
       change_avatar:
         title: "Cambiar tu avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basado en"
-        gravatar_title: "Cambiar tu avatar en la página de Gravatar"
+        refresh_gravatar_title: "Actualizar tu Gravatar"
+        letter_based: "Avatar asignado por el sistema"
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Añade una foto personalizada"
         upload_title: "Sube tu foto"
+        upload_picture: "Subir imagen"
         image_is_not_a_square: "Peligro: hemos recortado su foto; no es cuadrada."
       change_profile_background:
         title: "Fondo de perfil"
@@ -316,6 +319,7 @@ es:
       last_seen: "Último visto"
       created: "Creado el"
       log_out: "Cerrar sesión"
+      location: "Ubicación"
       website: "Sitio Web"
       email_settings: "Email"
       email_digests:
@@ -331,13 +335,13 @@ es:
       new_topic_duration:
         label: "Considerar que los temas son nuevos cuando"
         not_viewed: "Todavía no los he visto"
-        last_here: "han sido publicados después de la última vez que estuve aquí"
+        last_here: "fueron creados desde la última vez que estuviste"
         after_n_days:
-          one: "han sido publicados en el último día"
-          other: "han sido publicados en los últimos {{count}} días"
+          one: "fueron creados en el último día"
+          other: "fueron creados en los últimos {{count}} días"
         after_n_weeks:
-          one: "han sido publicados en la última semana"
-          other: "han sido publicados en las últimas {{count}} semanas"
+          one: "fueron creados en la última semana"
+          other: "fueron creados en las últimas {{count}} semanas"
       auto_track_topics: "Seguir automáticamente los temas que leo"
       auto_track_options:
         never: "nunca"
@@ -391,15 +395,16 @@ es:
     close: "Cerrar"
     assets_changed_confirm: "Discourse se ha actualizado ¿quieres recargar la página para obtener la última versión?"
     read_only_mode:
-      enabled: "Un administrador ha activado el modo solo lectura. Puedes seguir viendo la página pero las interacciones no funcionarán."
+      enabled: "Un administrador ha habilitado el modo sólo-lectura. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Abrir una sesión está desactivado mientras el foro este modo solo lectura."
+    too_few_topics_notice: "Crea al menos 5 temas y 50 posts abiertos al público para empezar la discusión. Los nuevos usuarios no podrán ganar suficiente nivel de confianza a menos que no haya contenido para que lean. "
     learn_more: "saber más..."
     year: 'año'
-    year_desc: 'temas publicados en los últimos 365 días'
+    year_desc: 'temas creados en los últimos 365 días'
     month: 'mes'
-    month_desc: 'temas publicados en los últimos 30 días'
+    month_desc: 'temas creados en los últimos 30 días'
     week: 'semana'
-    week_desc: 'temas publicados en los últimos 7 días'
+    week_desc: 'temas creados en los últimos 7 días'
     day: 'día'
     first_post: Primera publicación
     mute: Silenciar
@@ -434,12 +439,12 @@ es:
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, dentro de poco deberías recibir un email con las instrucciones para cambiar tu contraseña."
     login:
       title: "Iniciar sesión"
-      username: "Nombre de usuario"
+      username: "Usuario"
       password: "Contraseña"
       email_placeholder: "dirección de email o nombre de usuario"
       error: "Error desconocido"
       reset_password: 'Reestabler contraseña'
-      logging_in: "Iniciando sesión..."
+      logging_in: "Iniciando sesión"
       or: "O"
       authenticating: "Autenticando..."
       awaiting_confirmation: "Tu cuenta está pendiente de activación, usa el enlace de 'olvidé contraseña' para recibir otro email de activación."
@@ -980,7 +985,7 @@ es:
       none: '(sin categoría)'
       choose: 'Seleccionar una categoría&hellip;'
       edit: 'editar'
-      edit_long: "Editar categoría"
+      edit_long: "Editar"
       view: 'Ver temas en la categoría'
       general: 'General'
       settings: 'Ajustes'
@@ -1669,10 +1674,11 @@ es:
       actions:
         title: 'Acciones'
         star: '<b>f</b> Poner estrella en este tema'
-        share_topic: '<b>s</b> Compartir tema'
-        share_post: '<b>shift s</b> Compartir post'
-        reply_topic: '<b>r</b> Responder al tema'
-        reply_post: '<b>shift r</b> Responder al post'
+        share_topic: '<b>shift s</b> Compartir tema'
+        share_post: '<b>s</b> Compartir post'
+        reply_topic: '<b>shift r</b> Responder al tema'
+        reply_post: '<b>r</b> Responder al post'
+        quote_post: '<b>q</b> Citar post'
         like: '<b>l</b> Me gusta el post'
         flag: '<b>!</b> Reportar post'
         bookmark: '<b>b</b> Marcar post'

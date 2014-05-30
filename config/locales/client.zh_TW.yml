@@ -202,6 +202,7 @@ zh_TW:
       invited_by: "邀請人"
       trust_level: "信任等級"
       notifications: "通知"
+      disable_jump_reply: "不要在回覆之後直接跳到你的新文章"
       dynamic_favicon: "在 favicon 顯示訊息通知"
       external_links_in_new_tab: "以新分頁開啟所有外部連結"
       enable_quoting: "允許引用已標註的文字"
@@ -249,10 +250,12 @@ zh_TW:
       change_avatar:
         title: "修改你的頭像"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
-        gravatar_title: "在 Gravatar 網站修改你的頭像"
+        refresh_gravatar_title: "重新整理你的 Gravatar 頭像"
+        letter_based: "系統分配的頭像"
         uploaded_avatar: "自訂圖片"
         uploaded_avatar_empty: "新增一張自訂圖片"
         upload_title: "上傳你的圖片"
+        upload_picture: "上傳圖片"
         image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
       change_profile_background:
         title: "基本資料背景圖案"
@@ -292,6 +295,7 @@ zh_TW:
       last_seen: "出現時間"
       created: "建立日期"
       log_out: "登出"
+      location: "位置"
       website: "網站"
       email_settings: "電子郵件"
       email_digests:
@@ -307,11 +311,11 @@ zh_TW:
       new_topic_duration:
         label: "視為新討論話題的條件"
         not_viewed: "你尚未看過它們"
-        last_here: "發表於你上次的造訪之後"
+        last_here: "建立於你上次到訪後"
         after_n_days:
-          other: "發表於最近 {{count}} 天內"
+          other: "建立於最近 {{count}} 天內"
         after_n_weeks:
-          other: "發表於最近 {{count}} 週內"
+          other: "建立於最近 {{count}} 週內"
       auto_track_topics: "自動追蹤你點進的討論話題"
       auto_track_options:
         never: "永不"
@@ -363,15 +367,16 @@ zh_TW:
     close: "關閉"
     assets_changed_confirm: "Discourse 已經更新，你要重整頁面以獲得最新版本嗎？"
     read_only_mode:
-      enabled: "管理人開啟了唯讀模式。你可以繼續瀏覽論壇，可是不能進行交流動作。"
+      enabled: "管理員開啟了唯讀模式。你可以繼續瀏覽網站，但一些互動功能可能無法使用。"
       login_disabled: "在唯讀模式下不能登入"
+    too_few_topics_notice: "請建立至少 5 個公開的討論話題和 50 篇公開文章讓討論得以開始進行。若沒有文章可閱讀，新用戶將無法提升信任等級。"
     learn_more: "進一步了解..."
     year: '年'
-    year_desc: '365 天內建立的討論話題'
+    year_desc: '最近 365 天內建立的討論話題'
     month: '月'
-    month_desc: '30 天內建立的討論話題'
+    month_desc: '最近 30 天內建立的討論話題'
     week: '週'
-    week_desc: '7 天內建立的討論話題'
+    week_desc: '最近 7 天內建立的討論話題'
     day: '天'
     first_post: 第一篇文章
     mute: 靜音
@@ -406,12 +411,12 @@ zh_TW:
       complete_email: "如果有帳號符合你輸入的電子郵件地址 <b>%{email}</b>，你應該很快就會收到重設密碼的電子郵件。"
     login:
       title: "登入"
-      username: "帳號"
+      username: "用戶"
       password: "密碼"
       email_placeholder: "電子郵件地址或用戶名稱"
       error: "未知的錯誤"
       reset_password: '重設密碼'
-      logging_in: "正在登入..."
+      logging_in: "登入中..."
       or: "或"
       authenticating: "正在認證..."
       awaiting_confirmation: "你的帳號尚未啟用，請使用忘記密碼連結重新發出啟用帳號的電子郵件。"
@@ -919,7 +924,7 @@ zh_TW:
       none: '( 無分類 )'
       choose: '選擇一個分類&hellip;'
       edit: '編輯'
-      edit_long: "編輯分類"
+      edit_long: "編輯"
       view: '檢視分類裡的討論話題'
       general: '一般'
       settings: '設定'
@@ -1595,10 +1600,11 @@ zh_TW:
       actions:
         title: '行動'
         star: '<b>f</b> 收藏討論話題'
-        share_topic: '<b>s</b> 分享討論話題'
-        share_post: '<b>shift s</b> 分享文章'
-        reply_topic: '<b>r</b> 回覆討論話題'
-        reply_post: '<b>shift r</b> 回覆文章'
+        share_topic: '<b>shift s</b> 分享討論話題'
+        share_post: '<b>s</b> 分享文章'
+        reply_topic: '<b>shift r</b> 回覆討論話題'
+        reply_post: '<b>r</b> 回覆文章'
+        quote_post: '<b>q</b> 引用文章'
         like: '<b>l</b> 按讚'
         flag: '<b>!</b> 投訴文章'
         bookmark: '<b>b</b> 將文章加上書籤'

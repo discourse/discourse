@@ -783,26 +783,6 @@ ja:
         それではお楽しみください!
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
-      text_body_template: |
-        T%{site_name}への招待の受理、ありがとうございます!
-
-        あなた用のユーザ名 **%{username}** を自動的に作成いたしました。ユーザ名は、[ユーザプロファイル][prefs]ページでいつでも変更することができます。
-
-        再度ログインするには、以下のいずれかの方法をとってください:
-
-        1. Facebook, Google, Twitter, その他サポートされているサービスのアカウントを使ってログイン。ただし、**招待メールを受けたメールアドレスと一致**している必要があります。
-
-        2. %{site_name} on [ユーザプロファイル][prefs]ページにて、%{site_name}用のユニークなパスワードを作成の上、これを使ってログイン。
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        マナーをお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
-
-        それではお楽しみください!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "エクスポートが正しく完了しました"
       text_body_template: "エクスポートに成功しました。"

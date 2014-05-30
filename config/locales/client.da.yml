@@ -236,7 +236,6 @@ da:
       change_avatar:
         title: "Skift din avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseret på"
-        gravatar_title: "Skift din avatar på Gravatar's site"
         uploaded_avatar: "Brugerdefineret billede"
         uploaded_avatar_empty: "Tilføj et brugerdefineret billede"
         upload_title: "Upload dit billede"
@@ -288,13 +287,6 @@ da:
       new_topic_duration:
         label: "Betragt emner som nye når"
         not_viewed: "jeg ikke har set dem endnu"
-        last_here: "de er blevet oprettet efter jeg var her sidst"
-        after_n_days:
-          one: "de er blevet oprettet inden for det sidste døgn"
-          other: "de er blevet oprettet inden for de sidste {{count}} døgn"
-        after_n_weeks:
-          one: "de er blevet oprettet inden for den sidste uge"
-          other: "de er blevet oprettet inden for de sidste {{count}} uger"
       auto_track_topics: "Følg automatisk emner jeg åbner"
       auto_track_options:
         never: "aldrig"
@@ -344,11 +336,8 @@ da:
     close: "Luk"
     learn_more: "Læs mere…"
     year: 'år'
-    year_desc: 'emner oprettet inden for de sidste 365 dage'
     month: 'måned'
-    month_desc: 'emner oprettet inden for de sidste 30 dage'
     week: 'uge'
-    week_desc: 'emner oprettet inden for de sidste 7 dage'
     day: 'day'
     first_post: Første indlæg
     mute: Mute
@@ -380,12 +369,10 @@ da:
       invite: "Skriv brugernavn eller e-mail-adresse, så sender vi dig en mail så du kan nulstille din adgangskode."
       reset: "Nulstil adgangskode"
     login:
-      username: "Brugernavn"
       password: "Adgangskode"
       email_placeholder: "e-mail eller brugernavn"
       error: "Ukendt fejl"
       reset_password: 'Nulstil adgangskode'
-      logging_in: "Logger ind…"
       or: "Eller"
       authenticating: "Logger ind…"
       awaiting_confirmation: "Din konto mangler at blive aktiveret. Brug “Jeg har glemt min adgangskode”-linket for at få en ny aktiverings-mail."
@@ -858,7 +845,6 @@ da:
       none: '(ingen kategori)'
       choose: 'Vælg en kategori&hellip;'
       edit: 'redigér'
-      edit_long: "Redigér kategori"
       view: 'Vis emner i kategori'
       general: 'Overordnet'
       settings: 'Indstillinger'
@@ -1342,10 +1328,6 @@ da:
       actions:
         title: 'Handlinger'
         star: '<b>f</b> Markér emne som favorit'
-        share_topic: '<b>s</b> Del emne'
-        share_post: '<b>shift s</b> Del indlæg'
-        reply_topic: '<b>r</b> Svar på emne'
-        reply_post: '<b>shift r</b> Svar på indlæg'
         like: '<b>l</b> Like indlæg'
         flag: '<b>!</b> Flag indlæg'
         bookmark: '<b>b</b> Bogmærk indlæg'

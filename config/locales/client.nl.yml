@@ -97,7 +97,7 @@ nl:
     faq: "FAQ"
     privacy_policy: "Privacy Policy"
     mobile_view: "Mobiele versie"
-    desktop_view: "Desktop Weergave"
+    desktop_view: "Desktop weergave"
     you: "Jij"
     or: "of"
     now: "zonet"
@@ -132,6 +132,7 @@ nl:
       not_bookmarked: "je hebt dit bericht gelezen; klik om het aan je favorieten toe te voegen"
       last_read: "dit is het laatste bericht dat je gelezen hebt; klik om het aan je favorieten toe te voegen"
       remove: "Verwijder favoriet"
+    new_topics_inserted: "{{count}} nieuwe berichten."
     show_new_topics: "Klik om te bekijken."
     preview: "voorbeeld"
     cancel: "annuleer"
@@ -141,6 +142,8 @@ nl:
     upload: "Upload"
     uploading: "Uploaden..."
     uploaded: "Geupload!"
+    undo: "Herstel"
+    revert: "Zet terug"
     choose_topic:
       none_found: "Geen topics gevonden."
       title:
@@ -189,6 +192,8 @@ nl:
       '13': "Inbox"
     categories:
       all: "alle categorieën"
+      all_subcategories: "alle"
+      no_subcategory: "geen"
       category: "Categorie"
       posts: "Nieuwe berichten"
       topics: "Nieuwe topics"
@@ -265,11 +270,12 @@ nl:
       change_avatar:
         title: "Wijzig je avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, gebaseerd op"
-        gravatar_title: "Verander je avatar op Gravatars website"
         uploaded_avatar: "Eigen afbeelding"
         uploaded_avatar_empty: "Voeg een eigen afbeelding toe"
         upload_title: "Upload je afbeelding"
         image_is_not_a_square: "Let op: we hebben je afbeelding bijgesneden; het is geen vierkant."
+      change_profile_background:
+        title: "Profielachtergrond"
       email:
         title: "E-mail"
         instructions: "Je e-mail adres zal nooit publieklijk zichtbaar zijn."
@@ -321,13 +327,6 @@ nl:
       new_topic_duration:
         label: "Beschouw topics als nieuw wanneer"
         not_viewed: "je hebt ze nog niet bekeken"
-        last_here: "ze geplaatst waren nadat je hier voor het laatst was"
-        after_n_days:
-          one: "ze in de afgelopen dag geplaatst zijn"
-          other: "ze de afgelopen {{count}} dagen geplaatst zijn"
-        after_n_weeks:
-          one: "ze in de afgelopen week geplaatst zijn"
-          other: "ze in de afgelopen {{count}} weken geplaatst zijn"
       auto_track_topics: "Houd automatisch topics bij die je bezoekt"
       auto_track_options:
         never: "nooit"
@@ -355,6 +354,7 @@ nl:
         time_read: "Leestijd"
         days_visited: "Dagen bezocht"
         account_age_days: "leeftijd van account in dagen"
+        create: "Stuur een uitnodiging"
       password:
         title: "Wachtwoord"
         too_short: "Je wachtwoord is te kort."
@@ -380,15 +380,11 @@ nl:
     close: "Sluit"
     assets_changed_confirm: "Discourse is bijgewerkt, will je een refresh doen om de laatste versie te laden?"
     read_only_mode:
-      enabled: "Dit forum is in read-only modus. Je kan rondkijken, maar sommige elementen zullen niet goed werken."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
     learn_more: "leer meer..."
     year: 'jaar'
-    year_desc: 'topics die in de afgelopen 365 dagen geplaatst zijn'
     month: 'maand'
-    month_desc: 'topics die in de afgelopen 30 dagen geplaatst zijn'
     week: 'week'
-    week_desc: 'topics die in de afgelopen 7 dagen geplaatst zijn'
     day: 'dag'
     first_post: Eerste bericht
     mute: Negeer
@@ -423,12 +419,10 @@ nl:
       complete_email: "Als er een account gevonden kan worden met het emailadres <b>%{email}<b/> dan zul je in een ogenblik een wachtwoord-herstel-mail ontvangen."
     login:
       title: "Inloggen"
-      username: "Gebruikersnaam"
       password: "Wachtwoord"
       email_placeholder: "e-mail of gebruikersnaam"
       error: "Er is een onbekende fout opgetreden"
       reset_password: 'Herstel wachtwoord'
-      logging_in: "Inloggen..."
       or: "Of"
       authenticating: "Authenticatie..."
       awaiting_confirmation: "Je account is nog niet geactiveerd. Gebruik de 'Wachtwoord vergeten'-link om een nieuwe activatiemail te ontvangen."
@@ -440,6 +434,8 @@ nl:
       google:
         title: "met Google"
         message: "Inloggen met een Google-account (zorg ervoor dat je popup blocker uit staat)"
+      google_oauth2:
+        title: "met Google"
       twitter:
         title: "met Twitter"
         message: "Inloggen met een Twitteraccount (zorg ervoor dat je popup blocker uit staat)"
@@ -487,7 +483,7 @@ nl:
       saved: "Opgeslagen!"
       saved_draft: "Je hebt nog een conceptbericht open staan. Klik in dit veld om verder te gaan met bewerken."
       uploading: "Uploaden..."
-      show_preview: 'laat voorbeeld zien &raquo;'
+      show_preview: 'toon voorbeeld &raquo;'
       hide_preview: '&laquo; verberg voorbeeld'
       quote_post_title: "Citeer hele bericht"
       bold_title: "Vet"
@@ -963,9 +959,9 @@ nl:
     category:
       can: 'kan...'
       none: '(geen categorie)'
-      choose: 'Selecteer een categorie...'
+      choose: 'Selecteer een categorie&hellip;'
       edit: 'bewerk'
-      edit_long: "Bewerk categorie"
+      edit_long: "Wijzig"
       view: 'Bekijk topics in categorie'
       general: 'Algemeen'
       settings: 'Instellingen'
@@ -1134,8 +1130,8 @@ nl:
         updates_available: "Er zijn updates beschikbaar"
         please_upgrade: "Werk de software bij alsjeblieft"
         no_check_performed: "Er is nog niet op updates gecontroleerd. Zorgen dat sidekiq loopt.\""
-        stale_data: "Er is al een tijdje niet op updates gecontroleerd. Zorgen dat sidekiq loopt.\""
-        version_check_pending: "Het lijkt er op dat je recentelijk hebt bijgewerkt. Fantastisch!"
+        stale_data: "Er is al een tijdje niet op updates gecontroleerd. Zorg dat sidekiq loopt.\""
+        version_check_pending: "Je hebt de software recentelijk bijgewerkt. Mooi!"
         installed_version: "Geïnstalleerd"
         latest_version: "Recent"
         problems_found: "Er zijn een aantal problemen gevonden met je Discourse-installatie:"
@@ -1176,7 +1172,7 @@ nl:
         disagree_unhide_title: "Verwijder elke markering van dit bericht en maak het weer zichtbaar"
         disagree: "Niet mee eens"
         disagree_title: "Niet eens met de markering, verwijder elke markering van dit bericht"
-        delete_spammer_title: "Verwijder de gebruiker en al hun berichten en topics."
+        delete_spammer_title: "Verwijder de gebruiker en al zijn berichten en topics."
         clear_topic_flags: "Gedaan"
         clear_topic_flags_title: "Het topic is onderzocht en problemen zijn opgelost. Klik op Gedaan om de meldingen te verwijderen."
         flagged_by: "Gemarkeerd door"
@@ -1215,7 +1211,7 @@ nl:
         group_members: "Groepsleden"
         delete: "Verwijder"
         delete_confirm: "Verwijder deze groepen?"
-        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet verwijderd worden."
       api:
         generate_master: "Genereer Master API Key"
         none: "Er zijn geen actieve API keys"
@@ -1309,6 +1305,19 @@ nl:
           new_name: "Nieuw kleurenschema"
           copy_name_prefix: "Kopie van"
           delete_confirm: "Dit kleurenschema verwijderen?"
+          undo: "herstel"
+          primary:
+            name: 'primaire'
+          secondary:
+            name: 'secundaire'
+          tertiary:
+            name: 'tertiaire'
+          header_background:
+            name: "headerachtergrond"
+          danger:
+            name: 'gevaar'
+          success:
+            name: 'succes'
       email:
         title: "E-mail"
         settings: "Instellingen"
@@ -1332,7 +1341,7 @@ nl:
         format: "Formaat"
         html: "html"
         text: "text"
-        last_seen_user: "Laatste gebruiker:"
+        last_seen_user: "Laatste online:"
         reply_key: "Reply key"
         skipped_reason: "Reden van overslaan"
         logs:
@@ -1375,7 +1384,7 @@ nl:
           deleted: "Geen nieuwe waarde. De record was verwijderd."
           actions:
             delete_user: "verwijder gebruiker"
-            change_trust_level: "verander trust level"
+            change_trust_level: "verander trustlevel"
             change_site_setting: "verander instellingen"
             change_site_customization: "verander site aanpassingen"
             delete_site_customization: "verwijder site aanpassingen"
@@ -1491,7 +1500,7 @@ nl:
         approved_by: "Geaccepteerd door"
         approve_success: "Gebruiker geaccepteerd en e-mail verzonden met instructies voor activering."
         approve_bulk_success: "Alle geselecteerde gebruikers zijn geaccepteerd en een e-mail met instructies voor activering is verstuurd."
-        time_read: "Tijd gelezen"
+        time_read: "Leestijd"
         delete: "Verwijder gebruiker"
         delete_forbidden_because_staff: "Admins en moderatoren kunnen niet verwijderd worden."
         delete_forbidden:
@@ -1541,6 +1550,7 @@ nl:
       site_settings:
         show_overriden: 'Bekijk alleen bewerkte instellingen'
         title: 'Instellingen'
+        reset: 'herstel'
         none: 'geen'
         no_results: "Geen resultaten."
         clear_filter: "Wis"
@@ -1613,10 +1623,6 @@ nl:
       actions:
         title: 'Acties'
         star: '<b>f</b> Markeer topic met ster'
-        share_topic: '<b>s</b> Deel topic'
-        share_post: '<b>shift s</b> Deel bericht'
-        reply_topic: '<b>r</b> Reageer op topic'
-        reply_post: '<b>shift r</b> Reageer op bericht'
         like: '<b>l</b> Vind bericht leuk'
         flag: '<b>!</b> Markeer bericht'
         bookmark: '<b>b</b> Bookmark bericht'

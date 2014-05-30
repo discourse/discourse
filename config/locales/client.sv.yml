@@ -256,7 +256,6 @@ sv:
       change_avatar:
         title: "Ändra din avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baserat på"
-        gravatar_title: "Ändra din avatar på Gravatars webbsida"
         uploaded_avatar: "Anpassad bild"
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
@@ -312,13 +311,6 @@ sv:
       new_topic_duration:
         label: "Betrakta trådar som nya när"
         not_viewed: "Du inte har tittat på dem än"
-        last_here: "de postades efter du var här sist"
-        after_n_days:
-          one: "de postades det senaste dygnet"
-          other: "de postades inom de senaste {{count}} dagarna"
-        after_n_weeks:
-          one: "de postades under den senaste veckan"
-          other: "de postades under de senaste {{count}} veckorna"
       auto_track_topics: "Spåra automatiskt trådar du öppnar"
       auto_track_options:
         never: "aldrig"
@@ -370,11 +362,8 @@ sv:
     assets_changed_confirm: "Discourse har uppdaterats, vill du ladda om för att få den senaste versionen?"
     learn_more: "lär dig mer..."
     year: 'år'
-    year_desc: 'trådar postade i de senaste 365 dagarna'
     month: 'månad'
-    month_desc: 'trådar postade i de senaste 30 dagarna'
     week: 'vecka'
-    week_desc: 'trådar postade i de senaste 7 dagarna'
     day: 'dag'
     first_post: Första inlägget
     mute: Dämpa
@@ -406,12 +395,10 @@ sv:
       invite: "Skriv in ditt användarnamn eller e-postadress, så vi skickar dig ett mail om lösenordsåterställning."
       reset: "Återställ Lösenord"
     login:
-      username: "Inloggning"
       password: "Lösenord"
       email_placeholder: "email eller användarnamn"
       error: "Okänt fel"
       reset_password: 'Återställ Lösenord'
-      logging_in: "Loggar In..."
       or: "Eller"
       authenticating: "Autentiserar..."
       awaiting_confirmation: "Ditt konto väntar på aktivering, använd glömt lösenordslänken för att skicka ett nytt aktiveringsmail."
@@ -901,7 +888,6 @@ sv:
       none: '(ingen kategori)'
       choose: 'Välj en kategori&hellip;'
       edit: 'ändra'
-      edit_long: "Ändra Kategori"
       view: 'Visa Trådar i Kategori'
       general: 'Allmänt'
       settings: 'Inställningar'
@@ -1461,10 +1447,6 @@ sv:
         help: '<b>?</b> öppna hjälp för kortkommandon'
       actions:
         star: '<b>f</b> stjärnmärk tråd'
-        share_topic: 'Dela tråd'
-        share_post: 'Dela inlägg'
-        reply_topic: 'Svara på tråd'
-        reply_post: 'Svara på inlägg'
         like: 'Gilla inlägg'
         flag: '<b>!</b> flagga inlägg'
         bookmark: '<b>b</b> bokmärk inlägg'

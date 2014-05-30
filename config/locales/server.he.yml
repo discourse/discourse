@@ -983,26 +983,6 @@ he:
         תהנו מהשהייה!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
-      text_body_template: |
-        Thanks for accepting your invitation to %{site_name}, and welcome!
-
-        We've automatically generated a username for you: **%{username}**, but you can change that any time by visiting [your user profile][prefs].
-
-        To log in again, either:
-
-        1. Log in however you like -- but that login must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
-
-        2. Create a unique password for %{site_name} on [your user profile][prefs], then log in with that.
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
-
-        Enjoy your stay!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Export completed successfully"
       text_body_template: "The export was successful."
