@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.GroupsListComponent = Em.Component.extend({
+export default Em.Component.extend({
   classNames: ['groups']
 });
 

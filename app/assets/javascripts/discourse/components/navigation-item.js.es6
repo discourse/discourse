@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.NavigationItemComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['active', 'content.hasIcon:has-icon'],
   attributeBindings: ['title'],

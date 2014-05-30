@@ -71,10 +71,10 @@ test("displays a list of notifications and a 'more' link when there are notifica
   var items = fixture(itemSelector);
   equal(count(items), 3, "number of list items is correct");
 
-  equal(items.eq(0).attr("class"), "", "first (unread) item has proper class");
+  equal(items.eq(0).attr("class"), "ember-view", "first (unread) item has proper class");
   equal(items.eq(0).text().trim(), "scope_1 username_1 link_1", "first item has correct content");
 
-  equal(items.eq(1).attr("class"), "read", "second (read) item has proper class");
+  equal(items.eq(1).attr("class"), "ember-view read", "second (read) item has proper class");
   equal(items.eq(1).text().trim(), "scope_2 username_2 link_2", "second item has correct content");
 
   var moreLink = items.eq(2).find("> a");

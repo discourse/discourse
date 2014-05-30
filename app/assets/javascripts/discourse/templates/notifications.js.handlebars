@@ -3,7 +3,7 @@
     {{#if content}}
       <ul>
         {{#each}}
-        <li {{bind-attr class="read"}}>{{notification-item model=this scope=scope}}</li>
+          {{notification-item notification=this scope=scope}}
         {{/each}}
         <li class="read last">
           <a {{bind-attr href="currentUser.path"}}>{{i18n notifications.more}} &hellip;</a>
