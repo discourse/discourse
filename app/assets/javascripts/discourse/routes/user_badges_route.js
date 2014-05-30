@@ -8,7 +8,7 @@
 **/
 Discourse.UserBadgesRoute = Discourse.Route.extend({
   model: function() {
-    return Discourse.UserBadge.findByUsername(this.modelFor('user').get('username_lower'));
+    return Discourse.UserBadge.findByUsername(this.modelFor('user').get('username_lower'), {aggregated: true});
   },
 
   setupController: function(controller, model) {

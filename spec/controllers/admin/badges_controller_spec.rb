@@ -35,12 +35,12 @@ describe Admin::BadgesController do
 
     context '.update' do
       it 'returns success' do
-        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id, allow_title: false
+        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id, allow_title: false, multiple_grant: false
         response.should be_success
       end
 
       it 'updates the badge' do
-        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id, allow_title: false
+        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id, allow_title: false, multiple_grant: true
         badge.reload.name.should eq('123456')
       end
     end

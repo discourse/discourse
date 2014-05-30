@@ -1,6 +1,9 @@
 {{#link-to 'badges.show' badge}}
-  <span {{bind-attr class=":user-badge badgeTypeClassName" data-badge-name="badge.name" title="badge.translatedDescription"}}>
+  <span {{bind-attr class=":user-badge badgeTypeClassName" data-badge-name="badge.name" title="badge.displayDescription"}}>
     <i class='fa fa-certificate'></i>
     {{badge.displayName}}
+    {{#if showGrantCount}}
+      <span class="count">(&times;&nbsp;{{count}})</span>
+    {{/if}}
   </span>
 {{/link-to}}

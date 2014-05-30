@@ -79,10 +79,15 @@ Discourse.UserBadge.reopenClass({
 
     @method findByUsername
     @param {String} username
+    @param {Object} options
     @returns {Promise} a promise that resolves to an array of `Discourse.UserBadge`.
   **/
-  findByUsername: function(username) {
-    return Discourse.ajax("/user_badges.json?username=" + username).then(function(json) {
+  findByUsername: function(username, options) {
+    var url = "/user_badges.json?username=" + username;
+    if (options && options.aggregated) {
+      url += "&aggregated=true";
+    }
+    return Discourse.ajax(url).then(function(json) {
       return Discourse.UserBadge.createFromJson(json);
     });
   },
