@@ -69,14 +69,9 @@ class UserSerializer < BasicUserSerializer
                      :watched_category_ids,
                      :private_messages_stats,
                      :disable_jump_reply,
-                     :system_avatar_upload_id,
                      :gravatar_avatar_upload_id,
                      :custom_avatar_upload_id,
                      :uploaded_avatar_id
-
-  def system_avatar_upload_id
-    object.user_avatar.try(:system_upload_id)
-  end
 
   def gravatar_avatar_upload_id
     object.user_avatar.try(:gravatar_upload_id)
