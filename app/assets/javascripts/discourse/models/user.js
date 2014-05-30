@@ -417,7 +417,24 @@ Discourse.User = Discourse.Model.extend({
 Discourse.User.reopenClass(Discourse.Singleton, {
 
   avatarTemplate: function(username, uploadedAvatarId){
-    var url = Discourse.getURL("/user_avatar/" + Discourse.BaseUrl + "/" + username.toLowerCase() + "/{size}/" + uploadedAvatarId + ".png");
+    var url;
+    if(uploadedAvatarId){
+      url = "/user_avatar/" +
+            Discourse.BaseUrl +
+            "/" +
+            username.toLowerCase() +
+            "/{size}/" +
+            uploadedAvatarId + ".png";
+
+
+    } else {
+      url = "/letter_avatar/" +
+            username.toLowerCase() +
+            "/{size}/" +
+            Discourse.LetterAvatarVersion + ".png";
+    }
+
+    url = Discourse.getURL(url);
     if(Discourse.CDN){
       url = Discourse.CDN + url;
     }

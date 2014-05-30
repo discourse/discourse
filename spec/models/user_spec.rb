@@ -978,7 +978,7 @@ describe User do
     let(:user) { build(:user, username: 'Sam') }
 
     it "returns a 45-pixel-wide avatar" do
-      user.small_avatar_url.should == "//test.localhost/user_avatar/test.localhost/sam/45/-1.png"
+      user.small_avatar_url.should == "//test.localhost/letter_avatar/sam/45/#{LetterAvatar::VERSION}.png"
     end
 
   end
@@ -1139,8 +1139,8 @@ describe User do
       SiteSetting.enable_system_avatars = true
       u = User.create!(username: "bob", email: "bob@bob.com")
       u.reload
-      u.user_avatar.system_upload_id.should == u.uploaded_avatar_id
-      u.uploaded_avatar_id.should_not == nil
+      u.uploaded_avatar_id.should == nil
+      u.avatar_template.should == "/letter_avatar/bob/{size}/#{LetterAvatar::VERSION}.png"
     end
   end
 
@@ -1178,9 +1178,6 @@ describe User do
                              body: png )
 
       user = User.create!(username: "bob", name: "bob", email: "a@a.com")
-      user.create_user_avatar
-      user.user_avatar.update_system_avatar!
-      user.save
       user.reload
 
       SiteSetting.automatically_download_gravatars = true
@@ -1190,6 +1187,13 @@ describe User do
       user.reload
 
       user.user_avatar.gravatar_upload_id.should == user.uploaded_avatar_id
+
+      user.uploaded_avatar_id = nil
+      user.save
+      user.refresh_avatar
+
+      user.reload
+      user.uploaded_avatar_id.should == nil
     end
   end
 

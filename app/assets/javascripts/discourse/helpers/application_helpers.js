@@ -200,7 +200,7 @@ Handlebars.registerHelper('avatar', function(user, options) {
     }
 
     // this is simply done to ensure we cache images correctly
-    var uploadedAvatarId = Em.get(user, 'uploaded_avatar_id') || Em.get(user, 'user.uploaded_avatar_id') || "_1";
+    var uploadedAvatarId = Em.get(user, 'uploaded_avatar_id') || Em.get(user, 'user.uploaded_avatar_id');
     var avatarTemplate = Discourse.User.avatarTemplate(username,uploadedAvatarId);
 
     return new Handlebars.SafeString(Discourse.Utilities.avatarImg({

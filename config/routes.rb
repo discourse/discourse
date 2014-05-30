@@ -212,6 +212,8 @@ Discourse::Application.routes.draw do
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   post "user_avatar/:username/refresh_gravatar" => "user_avatars#refresh_gravatar"
+  get "letter_avatar/:username/:size/:version.png" => "user_avatars#show_letter",
+      format: false, constraints: {hostname: /[\w\.-]+/}
   get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show",
       format: false, constraints: {hostname: /[\w\.-]+/}
 

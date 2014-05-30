@@ -6,6 +6,7 @@ require_dependency 'archetype'
 require_dependency 'rate_limiter'
 require_dependency 'crawler_detection'
 require_dependency 'json_error'
+require_dependency 'letter_avatar'
 
 class ApplicationController < ActionController::Base
   include CurrentUser

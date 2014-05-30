@@ -3,7 +3,7 @@ require_dependency 'letter_avatar'
 class UserAvatarsController < ApplicationController
   DOT = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
 
-  skip_before_filter :check_xhr, :verify_authenticity_token, only: :show
+  skip_before_filter :check_xhr, :verify_authenticity_token, only: [:show, :show_letter]
 
   def refresh_gravatar
 
@@ -18,6 +18,20 @@ class UserAvatarsController < ApplicationController
     else
       raise Discourse::NotFound
     end
+  end
+
+  def show_letter
+    params.require(:username)
+    params.require(:version)
+    params.require(:size)
+
+    if params[:version].to_i > LetterAvatar::VERSION
+      return render_dot
+    end
+
+    image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
+    expires_in 1.year, public: true
+    send_file image, disposition: nil
   end
 
   def show

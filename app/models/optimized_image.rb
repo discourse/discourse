@@ -67,8 +67,6 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  protected
-
   def self.resize(from, to, width, height)
     instructions = %W{
       #{from}

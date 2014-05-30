@@ -8,6 +8,7 @@ require_dependency 'post_destroyer'
 require_dependency 'user_name_suggester'
 require_dependency 'pretty_text'
 require_dependency 'url_helper'
+require_dependency 'letter_avatar'
 
 class User < ActiveRecord::Base
   include Roleable
@@ -354,9 +355,14 @@ class User < ActiveRecord::Base
   end
 
   def self.avatar_template(username,uploaded_avatar_id)
-    id = uploaded_avatar_id || -1
+    return letter_avatar_template(username) if !uploaded_avatar_id
+    id = uploaded_avatar_id
     username ||= ""
     "/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
+  end
+
+  def self.letter_avatar_template(username)
+    "/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar::VERSION}.png"
   end
 
   def avatar_template
@@ -627,16 +633,8 @@ class User < ActiveRecord::Base
       gravatar_downloaded = avatar.gravatar_upload_id
     end
 
-    if SiteSetting.enable_system_avatars?
-      avatar.update_system_avatar! if !avatar.system_upload_id ||
-                                      username_changed? ||
-                                      avatar.system_avatar_version != UserAvatar::SYSTEM_AVATAR_VERSION
-    end
-
-    desired_avatar_id = avatar.gravatar_upload_id || avatar.system_upload_id
-
-    if (!self.uploaded_avatar_id || gravatar_downloaded) && desired_avatar_id
-      self.update_column(:uploaded_avatar_id, desired_avatar_id)
+    if (!self.uploaded_avatar_id && gravatar_downloaded)
+      self.update_column(:uploaded_avatar_id, avatar.gravatar_upload_id)
     end
 
   end

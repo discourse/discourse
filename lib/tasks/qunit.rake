@@ -25,6 +25,7 @@ task "qunit:test" => :environment do
   end
 
   unless pid = fork
+    Discourse.after_fork
     Rack::Server.start(:config => "config.ru",
                        :AccessLog => [],
                        :Port => port)
