@@ -365,7 +365,6 @@ class UsersController < ApplicationController
   end
 
   def pick_avatar
-    params.require(:upload_id)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
     upload_id = params[:upload_id]
@@ -373,7 +372,7 @@ class UsersController < ApplicationController
     user.uploaded_avatar_id = upload_id
 
     # ensure we associate the custom avatar properly
-    unless user.user_avatar.contains_upload?(upload_id)
+    if upload_id && !user.user_avatar.contains_upload?(upload_id)
       user.user_avatar.custom_upload_id = upload_id
     end
     user.save!
