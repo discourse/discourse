@@ -1231,10 +1231,6 @@ describe UsersController do
 
       let!(:user) { log_in }
 
-      it 'raises an error without an avatar_id param' do
-        lambda { xhr :put, :pick_avatar, username: user.username }.should raise_error(ActionController::ParameterMissing)
-      end
-
       it 'raises an error when you don\'t have permission to toggle the avatar' do
         another_user = Fabricate(:user)
         xhr :put, :pick_avatar, username: another_user.username, upload_id: 1
@@ -1244,6 +1240,10 @@ describe UsersController do
       it 'it successful' do
         xhr :put, :pick_avatar, username: user.username, upload_id: 111
         user.reload.uploaded_avatar_id.should == 111
+        response.should be_success
+
+        xhr :put, :pick_avatar, username: user.username
+        user.reload.uploaded_avatar_id.should == nil
         response.should be_success
       end
 
