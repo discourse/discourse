@@ -834,11 +834,16 @@ describe Post do
   describe ".rebake_old" do
     it "will catch posts it needs to rebake" do
       post = create_post
-      post.update_column(:baked_at, Time.new(2000,1,1))
+      post.update_columns(baked_at: Time.new(2000,1,1), baked_version: -1)
       Post.rebake_old(100)
 
       post.reload
-      post.baked_at.should > 1.day.ago
+      post.baked_at.should be > 1.day.ago
+
+      baked = post.baked_at
+      Post.rebake_old(100)
+      post.reload
+      post.baked_at.should == baked
     end
   end
 

@@ -15,9 +15,8 @@ class Post < ActiveRecord::Base
   include Trashable
   include HasCustomFields
 
-  # rebake all posts baked before this date
-  # in our periodical job
-  REBAKE_BEFORE = Time.new(2014,5,27)
+  # increase this number to force a system wide post rebake
+  BAKED_VERSION = 1
 
   rate_limit
   rate_limit :limit_posts_per_day
@@ -315,7 +314,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.rebake_old(limit)
-    Post.where('baked_at IS NULL OR baked_at < ?', REBAKE_BEFORE)
+    Post.where('baked_version IS NULL OR baked_version < ?', BAKED_VERSION)
         .limit(limit).each do |p|
       begin
         p.rebake!
@@ -333,7 +332,7 @@ class Post < ActiveRecord::Base
     )
     old_cooked = cooked
 
-    update_columns(cooked: new_cooked, baked_at: Time.new)
+    update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
 
     # Extracts urls from the body
     TopicLink.extract_from self
@@ -391,6 +390,7 @@ class Post < ActiveRecord::Base
     self.last_editor_id ||= user_id
     self.cooked = cook(raw, topic_id: topic_id) unless new_record?
     self.baked_at = Time.new
+    self.baked_version = BAKED_VERSION
   end
 
   after_save do
