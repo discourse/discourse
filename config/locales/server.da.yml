@@ -864,26 +864,6 @@ da:
         Nyd dit ophold!
     welcome_invite:
       subject_template: "Velkommen til %{site_name}!"
-      text_body_template: |
-        Du har accepteret en invitation til %{site_name}, velkommen til vores debatforum!
-
-        Vi har automatisk genereret et brugernavn for dig: **%{username}**, men du kan ændre det når som helst ved at gå til [din brugerprofil][prefs].
-
-        For at logge ind igen kan du enten enten:
-
-        1. Bruge Facebook, Google, Twitter eller andre login-metoder -- men den login-metode skal sende **den samme e-mail-adresse**, som den din invitation blev sendt til. Ellers kan vi ikke se, at det er dig!
-
-        2. Lav et unikt kodeord for %{site_name} på [din brugerprofil][prefs], og så logge ind med det.
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        Vi går ind for [civiliseret debatkultur](%{base_url}/faq) til enhver tid.
-
-        Nyd dit ophold!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Eksport lykkedes"
       text_body_template: "Eksporten lykkedes."

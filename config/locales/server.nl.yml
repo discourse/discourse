@@ -36,7 +36,7 @@ nl:
     one: "Sorry, nieuwe gebruikers mogen één reactie plaatsen in hetzelfde topic."
     other: "Sorry, nieuwe gebruikers mogen %{count} reacties plaatsen in hetzelfde topic."
   embed:
-    start_discussion: "Start discussie"
+    start_discussion: "Reageer"
     continue: "Ga verder met de discussie"
     more_replies:
       one: "Nog 1 reactie"
@@ -44,6 +44,7 @@ nl:
     loading: "Discussie laden..."
     permalink: "Permalink"
     imported_from: "Deze topic is een voortzetting van de oorspronkelijke topic: %{link}"
+    in_reply_to: "▶ %{username}"
     replies:
       one: "1 reactie"
       other: "%{count} reacties"
@@ -175,8 +176,14 @@ nl:
               cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
         user:
           attributes:
+            password:
+              common: "is een van de 10000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
             ip_address:
               signup_not_allowed: "Inschrijven vanaf dit account is niet toegestaan."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "is niet een geldige kleur"
   user_profile:
     no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou je deze willen invullen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} heeft nog niks in zijn of haar Over Mij-profielveld ingevuld</div>"
@@ -625,6 +632,7 @@ nl:
     login_required: "Inloggen vereist om berichten te kunnen lezen"
     min_username_length: "Minimum lengte gebruikersnaam. (Geldt niet als globaal unieke gebruikersnamen actief is)"
     min_password_length: "Minimum lengte wachtwoord."
+    block_common_passwords: "Weiger wachtwoorden uit de lijst van 10000 meest gebruikte wachtwoorden."
     enable_sso: "Gebruikers kunnen inloggen via een andere site (Single Sign On)"
     sso_url: "URL van single sign on eindpunt"
     sso_secret: "Geheime tekenreeks voor het encrypten/decrypten van SSO informatie, zorg er voor dat het 10 tekens of langer is"
@@ -633,6 +641,8 @@ nl:
     sso_overrides_name: "Gebruikt de naam die gebruikt wordt bij de SSO service i.p.v. de lokaal opgegeven naam. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale namen)"
     enable_local_logins: "Zet lokaal inloggen aan"
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
+    google_oauth2_client_id: "Client ID van je Google applicatie."
+    google_oauth2_client_secret: "Client secret van je Google applicatie."
     enable_twitter_logins: "Zet inloggen met Twitter aan. Hiervoor heb je een twitter_consumer_key en twitter_consumer_secret nodig."
     twitter_consumer_key: "consumer_key (registreer op dev.twitter.com)"
     twitter_consumer_secret: "consumer secret (registreer op dev.twitter.com)"
@@ -783,6 +793,7 @@ nl:
   most_recent_poster: "Meest recente schrijver"
   frequent_poster: "Frequente schrijver"
   redirected_to_top_reasons:
+    new_user: "Welkom bij deze community! Hier zijn een aantal van de meest populaire topics."
     not_seen_in_a_month: "Welkom terug! We hebben je een tijdje niet gezien. Dit is een overzicht van de topics die zijn gemaakt sinds je weg was."
   move_posts:
     new_topic_moderator_post:
@@ -996,26 +1007,6 @@ nl:
         Geniet van je verblijf!
     welcome_invite:
       subject_template: "Welkom bij %{site_name}!"
-      text_body_template: |
-        Bedankt voor het accepteren van je uitnodiging voor %{site_name} en welkom op ons discussieforum!
-
-        We hebben een automatisch een gebruikersnaam voor je aangemaakt: **%{username}**, maar die kan je altijd nog veranderen door naar [je gebruikersprofiel][prefs] te gaan.
-
-        Om nogmaals in te loggen kan je het volgende doen:
-
-        1. Gebruik de loginmethode die je voorkeur heeft -- let er wel op dat die methode **hetzelfde e-mailadres** gebruikt als waarop je je originele uitnodiging hebt gekregen. Anders weten we niet zeker dat jij het bent!
-
-        2. Maak een uniek wachtwoord voor %{site_name} aan in [je gebruikersprofiel][prefs] en log daarmee in.
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        We geloven altijd in [beschaafd gemeenschappelijk gedrag](%{base_url}/faq).
-
-        Geniet van je verblijf!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Export succesvol uitgevoerd"
       text_body_template: "De export was succesvol uitgevoerd."

@@ -465,6 +465,9 @@ fr:
     sidekiq_warning: 'Sidekiq n''est pas lancé. De nombreuses tâches, comme l''envoie d''e-mails, sont executées de manière asynchrome par sidekiq. Assurez-vous d''avoir au moins un processus sidekiq de lancé. <a href="https://github.com/mperham/sidekiq">En savoir plus sur sidekiq</a>.'
     queue_size_warning: 'Il y a %{queue_size} tâches dans la file d''attente, ce qui est beaucoup. Cela peut provenir d''un problème avec les processus Sidekiq, ou à un manque de processus Sidekiq travailleurs.'
     memory_warning: 'Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé.'
+    enable_google_logins_warning: "Vous utilisez  une version obsolète d'authentification via Google OpenID. Google ne supportera plus cette authentification à partir du 20 avril 2015. Veuillez commencer à utiliser l'authentification via Google Oauth2 le plus tôt possible."
+    both_googles_warning: "Vous avez les options enable_google_logins et enable_google_oauth2_logins d'activer en même temps. Veuillez désactiver l'option enable_google_logins (obsolète)."
+    google_oauth2_config_warning: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les paramètres clientId et client secret ne sont pas renseignés. Allez dans les <a href=\"/admin/site_settings\">Paramètres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voir le guide pour en savoir plus</a>.'
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
     twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramétres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voir le guide pour en savoir plus</a>.'
     github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Allez dans les <a href=\"/admin/site_settings\">Paramètres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voir le guide pour en savoir plus</a>.'
@@ -565,6 +568,7 @@ fr:
     max_image_width: "Largeur maximale des images d'un message"
     max_image_height: "Hauteur maximale autorisée des images dans un message"
     category_featured_topics: "Nombre de sujets affichés par catégorie sur la page /categories. Après avoir modifié cette valeur, il faut jusqu'à 15 minutes pour la page categories soit mise à jour."
+    fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents) Modifier ceci requiert une mise à jour de tout votre markdown commande rake posts:rebake"
     exclude_rel_nofollow_domains: "Une liste contenant les noms de domaines - séparée par des pipes | - pour lesquels l'attribut nofollow ne sera pas ajouté (tld.com autorisera sub.tld.com automatiquement)"
     post_excerpt_maxlength: "Longueur maximale d'un extrait de message"
@@ -633,6 +637,7 @@ fr:
     invite_only: "L'inscription publique est désactivée, les nouveaux utilisateurs doivent être invités."
     login_required: "Requière une authentification pour les messages"
     min_username_length: "Taille minimum des pseudos. (Ne s'applique pas si l'unicité des pseudos est forcée)"
+    max_username_length: "Longueur maximum des pseudos. (N'est pas appliqué si l'unicité global des surnoms est forcée)"
     min_password_length: "Longueur minimale du mot de passe."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10000 les plus utilisés"
     enable_sso: "Activer l'authentification unique via un site externe"
@@ -642,7 +647,11 @@ fr:
     sso_overrides_username: "Surcharger les pseudos avec les pseudos du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les pseudos)"
     sso_overrides_name: "Surcharger les noms locaux avec les noms externes du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les noms)"
     enable_local_logins: "Activer l'authentification traditionnelle, avec pseudo local et mot de passe"
+    enable_google_logins: "(obsolète) Active l'authentification Google. Cette méthode d'authentification par OpenID est obsolète. Les nouvelles installations ne peuvent PAS fonctionnées avec celle-ci. Veuillez utiliser l'authentification Oauth2 de google. Les installations existantes doivent être modifiées avant le 20 avril 2015."
     enable_yahoo_logins: "Active l'authentification Yahoo"
+    enable_google_oauth2_logins: "Activer l'authentification Google Oauth2. C'est la méthode d'authentification que Google supporte désormais. Nécessite une clé et une phrase secrète."
+    google_oauth2_client_id: "Client ID de votre application Google."
+    google_oauth2_client_secret: "Client secret de votre application Google."
     enable_twitter_logins: "Active l'authentification Twitter, nécessite twitter_consumer_key et  twitter_consumer_secret"
     twitter_consumer_key: "Clé utilisateur pour l'authentification Twitter, enregistrée sur http://dev.twitter.com"
     twitter_consumer_secret: "Secret utilisateur pour l'authentification Twitter, enregistré sur http://dev.twitter.com"
@@ -744,12 +753,14 @@ fr:
     email_editable: "Autoriser les utilisateurs à changer leur adresse e-mail après l'inscription."
     allow_uploaded_avatars: "Autoriser les utilisateurs d'envoyer leurs propres avatars."
     allow_animated_avatars: "Autoriser les utilisateurs à utiliser des avatars avec des gif animés. ATTENTION: il est hautement recommandé d'exécuter la tâche rake avatars:regenerate après avoir changé ce paramètre."
+    automatically_download_gravatars: "Télécharger les gravatars pour les utilisateurs lors de la création de compte ou du changement d'email"
     digest_topics: "Le nombre maximum de sujets à afficher dans l'email de résumé"
     digest_min_excerpt_length: "Combien de caractères nous visons pour chaque message dans l'e-mail résumé"
     default_digest_email_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les emails par défaut. Ils peuvent changer ce paramétrage dans leur préférences."
     default_external_links_in_new_tab: "Les liens externes s'ouvrent dans un nouvel onglet. Les utilisateurs peuvent modifier ceci dans leurs préférences."
     detect_custom_avatars: "Vérifier ou pas que les utilisateurs ont envoyés des avatars personnalisés."
     max_daily_gravatar_crawls: "Le nombre maximal de fois que Discourse vérifiera gravatar pour des avatars personnalisés en une journée"
+    public_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur  qui peuvent être affichés publiquement."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil"
     sequential_replies_threshold: "Le nombre de messages qu'un utilisateur doit poster d'affilé dans un sujet avant d'être notifié"
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui réponde à tous les types de clients."
@@ -775,6 +786,8 @@ fr:
     embed_blacklist_selector: "selecteur css pour les éléments qui seront interdits dans les contenus intégrés"
     tos_accept_required: "Si il est activé, les utilisateurs devront cocher une case sur le formulaire d'inscription pour confirmer qu'ils acceptent les conditions de service. Modifier \"Formulaire d'inscription : Message des Conditions d'utilisation» dans l'onglet Contenu pour modifier le message."
     notify_about_flags_after: "Si il y a des signalements qui n'ont pas été traités après ce nombre d'heure, envoyer un email à contact_email.  Désactiver la fonctionnalité en indiquant: 0."
+    enable_cdn_js_debugging: "Autorise /logs a affiché les correctement les erreurs en ajoutant des permissions de crossorigin sur toutes les inclusions de js."
+    show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux admins de creer d'autres sujets."
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
     liked: "%{display_username} a aimé votre message dans %{link}"
@@ -799,6 +812,7 @@ fr:
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur fréquent"
   redirected_to_top_reasons:
+    new_user: "Bienvenue dans notre communauté ! Retrouvez ici une sélection de nos sujets récents."
     not_seen_in_a_month: "Bon retour parmi nous! Nous ne vous avons pas vu depuis un moment, voici les meilleurs sujets de discussions depuis votre absence."
   move_posts:
     new_topic_moderator_post:
@@ -1006,7 +1020,7 @@ fr:
 
         1. Utiliser votre identifiant préféré -- mais votre **adresse email** devra être la même que celle de l'invitation que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.
 
-        2. Créer un mot de passe unique pour %{site_name} sur votre [page de profil utilisateur][prefs], et vous connecter avec
+        2. Créer un mot de passe unique pour %{site_name} sur votre [page de profil utilisateur][prefs], et vous connecter avec.
 
         %{site_password}
 
@@ -1087,6 +1101,12 @@ fr:
         Cette limite peut être changée par le paramètre du site `block_new_user`.
     spam_post_blocked:
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
+      text_body_template: |
+        Ceci est un message automatique pour vous informer qu'un nouvelle utilisateur [%{username}](%{base_url}%{user_url}) tente de créer de multiples messages avec des liens vers %{domains}, mais que ces messages ont été bloqués pour éviter le spam. Cet utilisateur est toujours capable de créer des messages qui ne contiennent pas de liens vers %{domains}.
+
+        Merci de [vérifier cet utilisateur](%{base_url}%{user_url}).
+
+        Ceci peut être modifier via les options  `newuser_spam_host_threshold` et white_listed_spam_host_domains`.
     unblocked:
       subject_template: "Compte débloqué"
       text_body_template: |

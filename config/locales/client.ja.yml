@@ -155,7 +155,6 @@ ja:
       change_avatar:
         title: "アバターの変更"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
-        gravatar_title: "ウェブサイトのアバターを変更"
         uploaded_avatar: "カスタム画像"
         uploaded_avatar_empty: "カスタム画像を追加"
         upload_title: "画像をアップロード"
@@ -206,7 +205,6 @@ ja:
       new_topic_duration:
         label: "以下の条件でトピックを新規と見なす"
         not_viewed: "未読のもの"
-        last_here: "前回ログアウト後に投稿されたもの"
       auto_track_topics: "以下のタイミングで、自分が投稿したトピックを自動的にトラックする"
       auto_track_options:
         never: "トラックしない"
@@ -249,11 +247,8 @@ ja:
     close: "閉じる"
     learn_more: "より詳しく..."
     year: '年'
-    year_desc: '過去365日間に投稿されたトピック'
     month: '月'
-    month_desc: '過去30日間に投稿されたトピック'
     week: '週'
-    week_desc: '過去7日間に投稿されたトピック'
     day: '日'
     first_post: 最初のポスト
     mute: ミュート
@@ -285,12 +280,10 @@ ja:
       invite: "ユーザ名かメールアドレスを入力してください。パスワードリセット用のメールを送信します。"
       reset: "パスワードをリセット"
     login:
-      username: "ログイン名"
       password: "パスワード"
       email_placeholder: "メールアドレスかユーザ名"
       error: "不明なエラー"
       reset_password: 'パスワードをリセット'
-      logging_in: "ログイン中..."
       or: "または"
       authenticating: "認証中..."
       awaiting_confirmation: "アカウントはアクティベーション待ち状態です。もう一度アクティベーションメールを送信するには「パスワードを忘れました」リンクをクリックしてください。"
@@ -658,7 +651,6 @@ ja:
       none: '(カテゴリなし)'
       choose: 'カテゴリを選択&hellip;'
       edit: '編集'
-      edit_long: "カテゴリを編集"
       view: 'カテゴリ内のトピックを見る'
       general: '一般'
       settings: '設定'

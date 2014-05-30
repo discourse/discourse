@@ -273,13 +273,6 @@ nb_NO:
       new_topic_duration:
         label: "Anse emner som nye når"
         not_viewed: "Jeg har ikke sett dem ennå"
-        last_here: "de var postet siden jeg var her sist"
-        after_n_days:
-          one: "de var postet i løpet av dagen"
-          other: "de var postet i de siste {{count}} dagene"
-        after_n_weeks:
-          one: "de var postet i løpet av uken"
-          other: "de vart postet i det siste {{count}} ukene"
       auto_track_topics: "Følg automatisk emner jeg åpner"
       auto_track_options:
         never: "aldri"
@@ -329,11 +322,8 @@ nb_NO:
     close: "Lukk"
     learn_more: "lær mer..."
     year: 'år'
-    year_desc: 'emner postet i de siste 365 dager'
     month: 'måned'
-    month_desc: 'emner postet i de siste 30 dager'
     week: 'uke'
-    week_desc: 'emner postet i de siste 7 dager'
     day: 'dag'
     first_post: Første innlegg
     mute: Demp
@@ -365,12 +355,10 @@ nb_NO:
       reset: "Tilbakestill Passord"
     login:
       title: "Logg inn"
-      username: "Brukernavn"
       password: "Passord"
       email_placeholder: "email addresse eller brukernavn"
       error: "Ukjent feil"
       reset_password: 'Tilbakestill Passord'
-      logging_in: "Logger Inn..."
       or: "Eller"
       authenticating: "Autentiserer..."
       awaiting_confirmation: "Din konto avventer aktivering. Bruk 'Glemt Passord' linken for å sende en ny emailfor aktivering."
@@ -816,7 +804,6 @@ nb_NO:
       none: '(no category)'
       choose: 'Velg en katekori&hellip;'
       edit: 'rediger'
-      edit_long: "Rediger Kategori"
       view: 'Se Emner i Kategori'
       general: 'Generellt'
       settings: 'Innstillinger'

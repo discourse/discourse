@@ -758,6 +758,7 @@ es:
     email_editable: "Permitir a los usuarios cambiar su dirección de email después de registrarse."
     allow_uploaded_avatars: "Permitir a los usuarios subir sus propios avatars"
     allow_animated_avatars: "Permitir a los usuarios usar gif animados para sus avatares. AVISO: es altamente recomendado ejecutar la tarea rake avatars:regenerate después de cambiar esta opción."
+    automatically_download_gravatars: "Descargar gravatars para los usuarios cuando creen una cuenta o cambien el email"
     digest_topics: "La cantidad máxima de temas a mostrar en el email de resumen"
     digest_min_excerpt_length: "Cuántos caracteres debería contener cada post en el email de resumen"
     default_digest_email_frequency: "Cada cuánto tiempo los usuarios recibirán emails con el resumen del sitio por defecto. Cada usuario puede cambiar esta opción para sí en sus preferencias."
@@ -791,6 +792,7 @@ es:
     tos_accept_required: "Si está habilitado, los usuarios necesitarán marcar una casilla en el formulario de registro para confirmar que aceptan las condiciones de servicio. Edita 'Formulario de registro: mensaje de condiciones de servicio' en la pestaña de Contenido para cambiar el mensaje."
     notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un correo electrónico al contact_email. Deshabilita esta opción introduciendo el valor 0."
     enable_cdn_js_debugging: "Permite /logs para mostrar errores propios, añadiendo permisos crossorigin en todos los includes js"
+    show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
   notification_types:
     mentioned: "%{display_username} te ha mencionado en %{link}"
     liked: "%{display_username} le ha gustado tu post en %{link}"
@@ -1060,17 +1062,17 @@ es:
 
         Hemos generado automáticamente un nombre de usuario para ti: **%{username}**, pero puedes cambiarlo en cualquier momento visitando [your user profile][prefs].
 
-        Para volver a hacer log in, puedes:
+        Para volver a iniciar sesión, puedes:
 
-        1. Utilizar Facebook, Google, Twitter, o muchos más proveedores de credenciales -- pero estos credenciales deben coincidir con la **misma dirección de email** con la que recibiste tu invitación original. ¡De otro modo no podremos saber que eres tú!
+        1. Utilizar el proveedor de credenciales que quieras -- pero estas credenciales deben coincidir con la **misma dirección de email** con la que recibiste tu invitación original. ¡De otro modo no podremos saber que eres tú!
 
-        2. Crear un password único para %{site_name} en [your user profile][prefs], luego hacer log in con él.
+        2. Crear una constraseña única para %{site_name} en [your user profile][prefs], luego iniciar sesión con ella.
 
         %{site_password}
 
         %{new_user_tips}
 
-        Creemos en [civilized community behavior](%{base_url}/faq) siempre.
+        Creemos en [un comportamiento de comunidad civilizado](%{base_url}/faq).
 
         ¡Disfruta tu estancia!
 

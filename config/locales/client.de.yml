@@ -132,6 +132,7 @@ de:
       not_bookmarked: "du hast diesen Beitrag gelesen. Klicke, um ein Lesezeichen zu setzen"
       last_read: "dies ist der letzte Beitrag, den Du gelesen hast. Klicke, um ein Lesezeichen zu setzen"
       remove: "Entferne Lesezeichen"
+    new_topics_inserted: "{{count}} neue Beiträge."
     show_new_topics: "Klicken zum Anzeigen."
     preview: "Vorschau"
     cancel: "Abbrechen"
@@ -152,7 +153,7 @@ de:
         placeholder: "Titel des Themas eingeben"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> hat auf <a href='{{topicUrl}}'>das Thema</a> geantwortet"
-      you_posted_topic: "<a href=\"{{userUrl}}\">You</a> hast ein neues Thema geschrieben<a href=\"{{topicUrl}}\"></a>"
+      you_posted_topic: "<a href=\"{{userUrl}}\">Du</a> hast <a href=\"{{topicUrl}}\">ein neues Thema</a> geschrieben"
       user_replied_to_post: "<a href=\"{{userUrl}}\">{{user}}</a> hat auf <a href='{{postUrl}}'>das Thema #{{post_number}}</a> geantwortet."
       you_replied_to_post: "<a href=\"{{userUrl}}\">Du</a> hast auf <a href=\"{{postUrl}}\">das Thema #{{post_number}}</a> geantwortet."
       user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> hat auf <a href='{{topicUrl}}'>das Thema</a> geantwortet"
@@ -225,6 +226,7 @@ de:
       invited_by: "Eingeladen von"
       trust_level: "Vertrauensstufe"
       notifications: "Benachrichtigungen"
+      disable_jump_reply: "Nach Verfassen einer Antwort nicht zum neuen Beitrag springen"
       dynamic_favicon: "Zeige eingehende Nachrichten im Favicon"
       external_links_in_new_tab: "Öffne alle externen Link in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
@@ -234,6 +236,7 @@ de:
       deleted: "(gelöscht)"
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
       suspended_reason: "Grund: "
+      mailing_list_mode: "Erhalte jedes Mal eine Email, wenn ein Beitrag im Forum erstellt wurde (sofern du das Thema oder die Kategorie nicht stumm geschaltet hast)"
       watched_categories: "Beobachten"
       watched_categories_instructions: "Das selbe wie 'verfolgen', zusätzlich wirst du über alle neuen Beiträge und Themen informiert."
       tracked_categories: "Verfolgen"
@@ -271,11 +274,15 @@ de:
       change_avatar:
         title: "Ändere dein Avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
-        gravatar_title: "Wechsle dein Avatar auf der Gravatar Webseite"
+        refresh_gravatar_title: "Gravatar aktualisieren"
+        letter_based: "Automatisch generierter Avatar"
         uploaded_avatar: "Eigenes Bild"
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
         upload_title: "Lade dein Bild hoch"
+        upload_picture: "Bild hochladen"
         image_is_not_a_square: "Achtung: wir haben dein Bild zugeschnitten, da es nicht quadratisch war."
+      change_profile_background:
+        title: "Profilhintergrund"
       email:
         title: "E-Mail"
         instructions: "Deine E-Mailadresse wird niemals öffentlich angezeigt."
@@ -312,6 +319,7 @@ de:
       last_seen: "Zuletzt gesehen"
       created: "Mitglied seit"
       log_out: "Ausloggen"
+      location: "Wohnort"
       website: "Webseite"
       email_settings: "E-Mail"
       email_digests:
@@ -327,14 +335,14 @@ de:
       new_topic_duration:
         label: "Siehe Themen als neu an, wenn"
         not_viewed: "ich sie noch nicht gelesen habe"
-        last_here: "sie seit meiner letzten Anmeldung erstellt wurden"
+        last_here: "sie seit meinem letzten Besuch erstellt wurden"
         after_n_days:
-          one: "sie wurden gestern geschrieben."
-          other: "sie wurden in den letzten {{count}} Tagen geschrieben"
+          one: "sie am vorigen Tag erstellt wurden"
+          other: "sie in den letzten {{count}} Tagen erstellt wurden"
         after_n_weeks:
-          one: "sie letzte Woche erstellt wurden"
+          one: "sie in der letzten Woche erstellt wurden"
           other: "sie in den letzten {{count}} Wochen erstellt wurden"
-      auto_track_topics: "Automatisch Themen folgen, die ich erstellt habe"
+      auto_track_topics: "Gelesenen Themen automatisch folgen"
       auto_track_options:
         never: "niemals"
         always: "immer"
@@ -361,6 +369,7 @@ de:
         time_read: "Lesezeit"
         days_visited: "Besuchstage"
         account_age_days: "Konto-Alter in Tagen"
+        create: "Einladung versenden"
       password:
         title: "Passwort"
         too_short: "Dein Passwort ist zu kurz."
@@ -384,10 +393,11 @@ de:
         the_topic: "das Thema"
     loading: "Lade..."
     close: "Schließen"
-    assets_changed_confirm: "Discourse wurde upgedated, möchten Sie neu laden, um die neueste Version zu bekommen?"
+    assets_changed_confirm: "Discourse wurde aktualisiert, möchtest Du die Seite neu laden, um die neueste Version zu bekommen?"
     read_only_mode:
-      enabled: "Ein Administrator hat den Nur-Lesen Modus aktiviert. Du kannst weiterhin die Webseite durchstöbern, aber Interaktionen werden nicht ordnungsgemäß funktionieren."
+      enabled: "Ein Administrator hat den Nur-Lesen-Modus aktiviert. Du kannst die Seite weiter durchsuchen und lesen, einige Features werden jedoch wahrscheinlich nicht funktionieren."
       login_disabled: "Login ist deaktiviert während sich die Seite im Nur-Lesen Modus befindet."
+    too_few_topics_notice: "Erstelle mindestens 5 öffentlich sichtbare Themen und 50 öffentlich sichtbare Beiträge, um die Unterhaltung ins Rollen zu bringen. Neue Nutzer können ihre Vertrauensstufe nur erhöhen, wenn es für sie etwas zu Lesen gibt."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'neue Themen in den letzten 365 Tagen'
@@ -429,12 +439,12 @@ de:
       complete_email: "Wenn ein Zugang der Email <b>%{username}</b> entspricht, solltest du in Kürze eine Email mit Instruktionen zum Zurücksetzen deines Passwortes erhalten."
     login:
       title: "Anmelden"
-      username: "Nutzername"
+      username: "Benutzername"
       password: "Passwort"
       email_placeholder: "E-Mailadresse oder Benutzername"
       error: "Unbekannter Fehler"
       reset_password: 'Passwort zurücksetzen'
-      logging_in: "Logge ein..."
+      logging_in: "Anmeldung läuft..."
       or: "Oder"
       authenticating: "Authentifiziere..."
       awaiting_confirmation: "Dein Konto ist noch nicht aktiviert; verwende den 'Passwort vergessen'-Link um eine weitere Aktivierungs-Mail zu schicken."
@@ -444,6 +454,9 @@ de:
       resend_activation_email: "Klicke hier um eine neue Aktivierungs-Mail zu schicken."
       sent_activation_email_again: "Wir haben Dir eine weitere Mail an <b>{{currentEmail}}</b> geschickt. Es könnte ein paar Minuten dauern, bis sie ankommt; sieh auch im Spam-Ordner nach."
       google:
+        title: "mit Google"
+        message: "Authentifiziere mit Google (stelle sicher, dass keine PopUp-Blocker aktiviert sind)"
+      google_oauth2:
         title: "mit Google"
         message: "Authentifiziere mit Google (stelle sicher, dass keine PopUp-Blocker aktiviert sind)"
       twitter:
@@ -972,7 +985,7 @@ de:
       none: '(keine Kategorie)'
       choose: 'Kategorie auswählen&hellip;'
       edit: 'Bearbeiten'
-      edit_long: "Kategorie bearbeiten"
+      edit_long: "Bearbeiten"
       view: 'Zeige Themen dieser Kategorie'
       general: 'Generell'
       settings: 'Einstellungen'
@@ -1358,7 +1371,7 @@ de:
         settings: "Einstellungen"
         all: "Alle"
         sending_test: "Versende Testemail..."
-        test_error: "Es gab ein Problem beim Senden der Test-Email. Bitte überprüfen Sie Ihren Emaileinstellungen, stellen Sie sicher das Ihr Anbieter keine Email Verbindungen blockiert und probieren Sie es erneut."
+        test_error: "Es gab ein Problem beim Senden der Test-Email. Bitte überprüfe Deine Email-Einstellungen, stelle sicher dass Dein Anbieter keine Email Verbindungen blockiert und probiere es erneut."
         sent: "Gesendet"
         skipped: "Übersprungen"
         sent_at: "Gesendet am"
@@ -1391,8 +1404,8 @@ de:
         title: "Logs"
         action: "Aktion"
         created_at: "Erstellt"
-        last_match_at: "Letzte Übereinstimmung"
-        match_count: "Übereinstimmungen"
+        last_match_at: "Letzter Treffer"
+        match_count: "Treffer"
         ip_address: "IP"
         delete: 'Löschen'
         edit: 'Editieren'
@@ -1410,7 +1423,7 @@ de:
           when: "Wann"
           context: "Kontext"
           details: "Details"
-          previous_value: "Vorangehend"
+          previous_value: "Alt"
           new_value: "Neu"
           diff: "Diff"
           show: "Anzeigen"
@@ -1661,10 +1674,11 @@ de:
       actions:
         title: 'Aktionen'
         star: '<b>f</b> Thema bewerten'
-        share_topic: '<b>s</b> Thema teilen'
-        share_post: '<b>SHIFT+s</b> Beitrag teilen'
-        reply_topic: '<b>r</b> Auf Thema antworten'
-        reply_post: '<b>SHIFT+r</b> Auf Beitrag antworten'
+        share_topic: '<b>Umschalt + s</b> Thema teilen'
+        share_post: '<b>s</b> Beitrag teilen'
+        reply_topic: '<b>Umschalt + r</b> Auf Thema antworten'
+        reply_post: '<b>r</b> Auf Beitrag antworten'
+        quote_post: '<b>q</b> Beitrag zitieren'
         like: '<b>l</b> Beitrag liken'
         flag: '<b>!</b> Beitrag melden'
         bookmark: '<b>b</b> Lesezeichen auf Beitrag setzen'
@@ -1695,7 +1709,7 @@ de:
           description: Einladungen gewährt
         leader:
           name: Leiter
-          description: Berechtigung für rekatigorisieren, umbennen, Link-Verfolgung und Lounge gegeben.
+          description: Kann Themen verschieben, umbenennen, Links ohne "nofollow" posten und die Lounge sehen.
         elder:
           name: Ältester
           description: Berechtigung für globales editieren, pinnen, schliessen, archivieren, teilen und zusammenfügen gegeben.

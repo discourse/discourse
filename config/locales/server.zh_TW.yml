@@ -569,6 +569,7 @@ zh_TW:
     newuser_spam_host_threshold: "用戶在一篇文章中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇文章被認為是垃圾文章。"
     staff_like_weight: "當工作人員按讚時所給予的額外加權係數。"
     reply_by_email_enabled: "開啟透過電子郵件回覆討論話題的功能"
+    automatically_download_gravatars: "當建立帳號或者更改電子郵件信箱時，自動為用戶下載 gravatar。"
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單"
     enable_names: "允許用戶顯示他們的全名"
     display_name_on_posts: "在用戶的文章上同時顯示其全名"
@@ -576,6 +577,7 @@ zh_TW:
     embed_category: "已建立之討論話題的分類"
     embed_post_limit: "最大內嵌文章數"
     enable_cdn_js_debugging: "對所有 js includes 增加 crossorigin 權限使 /logs 能顯示適當的錯誤訊息"
+    show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
     liked: "%{display_username} 在 %{link} 按讚了你的文章 "
@@ -754,21 +756,21 @@ zh_TW:
     welcome_invite:
       subject_template: "歡迎來到 %{site_name}！"
       text_body_template: |
-        感謝你接受邀請到 %{site_name}，歡迎來到我們論壇參與討論！
+        感謝你接受邀請來到 %{site_name}，歡迎！
 
-        我們為你自動建立了一個用戶名：**%{username}**，不過你在任何時候都可以通過瀏覽 [你的用戶設置][prefs] 來修改它。
+        我們為你自動建立了一個用戶名：**%{username}**，你隨時可以在 [你的用戶基本資料][prefs] 中修改。
 
-        要再次登入，或者：
+        若要再次登入，可以選擇：
 
-        1. 使用臉書（Facebook）、穀歌（Google）、推特（Twitter）或很多其他我們支援的驗證方式——不過你選擇的驗證方式必須指向到和你最初接收邀請的郵箱位址 **相同的郵箱位址**，否則我們就無法確定到底是不是你本人！
+        1. 以任何喜歡的方式登入-- 不過你選擇的驗證方式其所指向的電子郵件，必須與當初收到邀請函時的信箱一樣擁有 **相同的電子郵件地址**，否則我們無法確定到底是不是你本人！
 
-        2. 在 [你的用戶設置][prefs] 頁面為 %{site_name} 建立一個密碼，然後使用該密碼來登入。
+        2. 在 [你的用戶設置][prefs] 頁面為 %{site_name} 建立一個獨一無二的密碼，然後使用該密碼來登入。
 
         %{site_password}
 
         %{new_user_tips}
 
-        我們始終相信 [文明的社會行為](%{base_url}/faq)。
+        我們始終相信 [文明的社群行為](%{base_url}/faq)。
 
         好好享受你在論壇的時光吧！
 

@@ -25,7 +25,7 @@ pt_BR:
   is_reserved: "está reservado"
   errors:
     embed:
-      load_from_remote: "Houve um erro ao carregar esse post."
+      load_from_remote: "Houve um erro ao carregar essa mensagem."
   backup:
     operation_already_running: "Uma operação está sendo executada. Não é possível iniciar um novo trabalho agora."
     backup_file_should_be_tar_gz: "O arquivo de backup deve ser um arquivo .tar.gz."
@@ -36,7 +36,7 @@ pt_BR:
     one: "Lamentamos, mas usuários novos estão temporariamente limitados a 1 resposta no mesmo tópico."
     other: "Lamentamos, mas usuários novos estão temporariamente limitados a %{count} respostas no mesmo tópico."
   embed:
-    start_discussion: "Começar a Discussão"
+    start_discussion: "Começar Discussão"
     continue: "Continuar Discussão"
     more_replies:
       one: "1 resposta a mais"
@@ -297,11 +297,11 @@ pt_BR:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'Este post é radicalmente off-topic nesta conversa, e provavelmente deveria ser movido para um tópico diferente.'
+      description: 'Esta mensagem é radicalmente off-topic e provavelmente deveria ser movido para um tópico diferente.'
       long_form: 'sinalizou isto como off-topic'
     spam:
       title: 'Spam'
-      description: 'Este post é claramente um anúncio. Não é útil nem relevante para esta conversa, mas promocional por natureza.'
+      description: 'Este post é claramente uma propaganda. Não é útil nem relevante para esta conversa, mas promocional por natureza.'
       long_form: 'sinalizado como spam'
     inappropriate:
       title: 'Inapropriado'
@@ -347,7 +347,7 @@ pt_BR:
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>O seu post atingiu o nível máximo de sinalizações. Por favor leia as suas mensagens particulares.</p>'
+    you_must_edit: '<p>A sua mensagem atingiu o nível máximo de sinalizações. Por favor leia as suas mensagens privadas.</p>'
     user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
   archetypes:
     regular:
@@ -446,8 +446,8 @@ pt_BR:
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
     queue_size_warning: 'O número de tarefas agendadas é %{queue_size}, o que é alto. Isto pode indicar um problema com o(s) processo(s) Sidekiq, ou você pode estar precisando de mais Sidekiq workers.'
     memory_warning: 'Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada.'
-    facebook_config_warning: 'O servidor está configurado para permitir o signup e login com Facebook (enable_facebook_logins), mas os valores do App Id e App Secret não estão configurados. Vá para <a href="/admin/site_settings">the Site Settings</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia e aprenda mais</a>.'
-    twitter_config_warning: 'O servidor está configurado para permitir o signup e login com Twitter (enable_twitter_logins), mas os valores de Key e Secret não estão configurados. Vá para <a href="/admin/site_settings">the Site Settings</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia e aprenda mais</a>.'
+    facebook_config_warning: 'O servidor está configurado para permitir o signup e login com Facebook (enable_facebook_logins), mas os valores do App Id e App Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia e aprenda mais</a>.'
+    twitter_config_warning: 'O servidor está configurado para permitir o signup e login com Twitter (enable_twitter_logins), mas os valores de Key e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia e aprenda mais</a>.'
     github_config_warning: 'O servidor está configurado para permitir o signup e login com GitHub (enable_twitter_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="/admin/site_settings">the Site Settings</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Veja este guia e aprenda mais</a>.'
     s3_config_warning: 'O servidor está configurado para fazer upload de arquivos para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_upload_bucket. Vá até as <a href="/admin/site_settings">Configurações do Site</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
     s3_backup_config_warning: 'O servidor está configurado para fazer upload de arquivos para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Vá até as <a href="/admin/site_settings">Configurações</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
@@ -705,7 +705,7 @@ pt_BR:
     email_in_address: "O endereço de e-mail para que os usuários possam publicar novos tópicos. Nenhum significa que os usuários não podem publicar globalmente."
     email_in_min_trust: "O nível mínimo de confiança que os usuários precisam para ter permissão de criar novos tópicos via e-mail"
     email_in_category: "A categoria onde novos e-mails são publicados"
-    email_prefix: "O [rótulo] usado no assunto de e-mails. Será o 'título' se não definido."
+    email_prefix: "O [assunto] usado no assunto de e-mails. Será o 'título' se não definido."
     minimum_topics_similar: "Quantos tópicos precisam existir no banco de dados antes de um tópico similar ser apresentado."
     relative_date_duration: "Número de dias após a postagem a partir de quando as datas das postagens serão exibidas como relativas em vez de absolutas. Exemplos: data relativa: 7D, data absoluta: 20 de fevereiro"
     delete_user_max_post_age: "A idade máxima da primeira mensagem de um usuário, em dias, que permite a um usuário ser excluído."
@@ -739,7 +739,7 @@ pt_BR:
     embed_category: "Categoria de tópicos criados"
     embed_post_limit: "Número máximo de respostas para embutir"
     tos_accept_required: "Se ativado, os usuários terão de verificar uma caixa no formulário de cadastro para confirmar que aceitam os termos do serviço. Editar \"Formulário de Cadastro: Termos do Serviço de Mensagens\" na guia Conteúdo para alterar a mensagem."
-    notify_about_flags_after: "Se houver sinalizações que não tenham sido manipuladas após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desabilitar."
+    notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
   notification_types:
     mentioned: "%{display_username} mencionou-te em %{link}"
     liked: "%{display_username} curtiu sua postagem em %{link}"
@@ -855,7 +855,7 @@ pt_BR:
   flags_reminder:
     flags_were_submitted:
       one: "Há sinalizações que foram enviadas a mais de 1 hora."
-      other: "Há sinalizações que foram enviadas a mais de % {count} horas atrás."
+      other: "Há sinalizações que foram enviadas a mais de %{count} horas atrás."
     post_number: "mensagem"
   system_messages:
     post_hidden:
@@ -893,26 +893,6 @@ pt_BR:
         Desfrute da sua estadia!
     welcome_invite:
       subject_template: "Bem-vindo em %{site_name}!"
-      text_body_template: |
-        Obrigado por aceitar o seu convite para %{site_name}, e bem-vindo ao nosso forum!
-
-        Geramos automaticamente um nome de usuário para você: **%{username}**, mas podes altera-lo quantas vezes quiser, visitando [o seu perfil de usuário][prefs].
-
-        Para entrar outra vez, escolha uma das opções:
-
-        1. Utilize Facebook, Google, Twitter, ou uma das outras credenciais disponivies -- mas essa credencial tem que se traduzir no **mesmo endereço de email** pelo qual você recebeu o convite original. Caso contrário não poderemos saber se é você!
-
-        2. Crie uma senha única para %{site_name} em [your user profile][prefs], depois entre com ela.
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) a toda a hora.
-
-        Divirta-se durante sua estadia!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Exportação completada com sucesso"
       text_body_template: "A exportação foi bem sucedida."
@@ -921,7 +901,7 @@ pt_BR:
       text_body_template: |+
         A exportação falhou.
 
-        Veja aqui o log:
+        Informações do registro:
 
         ```
         %{logs}
@@ -935,7 +915,7 @@ pt_BR:
       text_body_template: |
         A importação falhou.
 
-        Aqui está o log:
+        Informações do registro:
 
         ````
         %{logs}

@@ -105,6 +105,12 @@ ko:
       other: "in {{count}}일"
     suggested_topics:
       title: "추천 토픽"
+    bookmarks:
+      not_logged_in: "죄송합니다. 게시물을 즐겨찾기에 추가하려면 로그인을 해야 합니다."
+      created: "이 게시글을 북마크 하였습니다."
+      not_bookmarked: "이 게시물을 읽으셨습니다. 즐겨찾기에 추가하려면 클릭하세요."
+      last_read: "마지막으로 읽으신 게시물입니다. 즐겨찾기에 추가하려면 클릭하세요."
+    new_topics_inserted: "{{count}}개의 새로운 글이 등록되었어요."
     show_new_topics: "표시하려면 클릭하세요."
     preview: "미리보기"
     cancel: "취소"
@@ -159,6 +165,7 @@ ko:
       '13': "받은 편지함"
     categories:
       all: "전체 카테고리"
+      all_subcategories: "모든 하위 카테고리"
       category: "카테고리"
       posts: "게시글"
       topics: "토픽들"
@@ -201,6 +208,7 @@ ko:
       delete_account: "내 계정 삭제"
       deleted_yourself: "성공적으로 당신의 계정이 삭제 되었습니다."
       delete_yourself_not_allowed: "지금은 당신의 계정을 삭제할 수 없습니다. 관리자에게 당신의 계정을 삭제해달라고 연락해보세요."
+      unread_message_count: "메시지"
       messages:
         all: "전체"
         mine: "내가 보낸 메세지"
@@ -227,7 +235,6 @@ ko:
       change_avatar:
         title: "아바타 변경"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a> 기반"
-        gravatar_title: "Gravatar 사이트의 아바타 변경하기"
         uploaded_avatar: "커스텀 사진"
         uploaded_avatar_empty: "커스텀 사진 추가"
         upload_title: "프로필 사진 업로드"
@@ -281,11 +288,6 @@ ko:
       new_topic_duration:
         label: "새글을 정의해주세요."
         not_viewed: "아직 안본 글"
-        last_here: "내가 마지막으로 작성한 후 게시된 글"
-        after_n_days:
-          other: "지난 {{count}}일 사이에 작성된 새로운 글이 있습니다."
-        after_n_weeks:
-          other: "지난 {{count}}주 사이에 작성된 새로운 글이 있습니다."
       auto_track_topics: "내가 게시한 글을 추적할 수 있습니다."
       auto_track_options:
         never: "하지않음"
@@ -311,6 +313,7 @@ ko:
         time_read: "읽은 시간"
         days_visited: "일일 방문"
         account_age_days: "일일 계정 나이"
+        create: "이 포럼에 친구를 초대하기"
       password:
         title: "비밀번호"
         too_short: "암호가 너무 짧습니다."
@@ -335,11 +338,8 @@ ko:
     assets_changed_confirm: "Discourse가 업데이트 되었습니다. 새로운 버전 사용을 위해 새로고침 하시겠어요?"
     learn_more: "더 배우기"
     year: '년'
-    year_desc: '지난 1년 동안 게시된 글'
     month: '월'
-    month_desc: '지난 1달 동안 게시된 글'
     week: '주'
-    week_desc: '지난 1주 동안 게시된 글'
     day: 'day'
     first_post: 첫 번째 게시물
     mute: 음소거
@@ -372,12 +372,10 @@ ko:
       reset: "암호 재설정"
     login:
       title: "회원가입"
-      username: "아이디"
       password: "비밀번호"
       email_placeholder: "이메일 주소 또는 사용자 이름"
       error: "알 수없는 오류"
       reset_password: '암호 재설정'
-      logging_in: "로그인 중..."
       or: "또는"
       authenticating: "인증 중..."
       awaiting_confirmation: "계정 활성화를 기다리고 있습니다. 다른 인증 이메일을 받고 싶으면 비밀번호 찾기를 누르세요."
@@ -466,6 +464,7 @@ ko:
       admin_options_title: "이 토픽에 대한 옵션 설정"
       auto_close_label: "자동 토픽 닫기: "
       auto_close_units: "일"
+      auto_close_examples: '정확한 시간을 입력하세요. — 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Please enter a valid value."
     notifications:
       title: "@사용자이름 언급, 게시글과 토픽에 대한 언급, 개인 메시지 등에 대한 알림"
@@ -482,6 +481,7 @@ ko:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} 의 초대를 수락했습니다."
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} 이동 {{link}}"
       total_flagged: "관심 표시된 총 게시글"
+      linked: "<i title='링크된 글' class='fa fa-arrow-left'></i> {{username}} {{link}}"
     upload_selector:
       title: "이미지 추가하기"
       title_with_attachments: "이미지 또는 파일 추가하기"
@@ -705,6 +705,9 @@ ko:
       follow_quote: "인용 글로 이동"
       deleted_by: "삭제됨"
       expand_collapse: "확장/축소"
+      gap:
+        other: "{{count}}개의 게시글이 숨겨져있어요."
+      more_links: "{{count}}개 더..."
       has_replies:
         other: "답글"
       errors:
@@ -1128,6 +1131,13 @@ ko:
         new_style: "새로운 스타일"
         delete: "삭제"
         delete_confirm: "이 정의를 삭제 하시겠습니까?"
+        about: "사이트 Customization은 사이트의 스타일시트와 해더를 수정할 수 있게 해줍니다. 새로운 것을 추가하거나 기존 것을 선택해서 편집하세요."
+        css_html:
+          title: "CSS, HTML"
+          long_title: "CSS, HTML 사용자 정의"
+        colors:
+          title: "색상"
+          long_title: "색상 Schemes"
       email:
         title: "이메일"
         settings: "설정"
@@ -1337,6 +1347,7 @@ ko:
       site_settings:
         show_overriden: '수정된 것만 표시'
         title: '사이트 설정'
+        reset: '기본값으로 재설정'
         none: '없음'
         no_results: "No results found."
         clear_filter: "Clear"
@@ -1363,6 +1374,9 @@ ko:
         new: New
         granted_by: 배지 부여자
         granted_at: 배지 수여일
+        save: 저장
+        delete: 삭제
+        delete_confirm: 정말로 이 배지를 삭제하시겠습니까?
         revoke: 파기
         revoke_confirm: 정말로 이 배지를 파기하시겠습니까?
         edit_badges: 배지 수정
@@ -1395,10 +1409,6 @@ ko:
       actions:
         title: 'Actions'
         star: '<b>f</b> 별표시 토픽'
-        share_topic: '<b>s</b> Share topic'
-        share_post: '<b>shift s</b> Share post'
-        reply_topic: '<b>r</b> Reply to topic'
-        reply_post: '<b>shift r</b> Reply to post'
         like: '<b>l</b> Like post'
         flag: '<b>!</b> Flag post'
         bookmark: '<b>b</b> Bookmark post'

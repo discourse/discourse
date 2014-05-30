@@ -183,7 +183,6 @@ uk:
       change_avatar:
         title: "Зміна аватарки"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, враховуючи"
-        gravatar_title: "Змінити аватарку на сайті Gravatar"
         uploaded_avatar: "Інше зображення"
         uploaded_avatar_empty: "Додати інше зображення"
         upload_title: "Завантажити своє зображення"
@@ -239,7 +238,6 @@ uk:
       new_topic_duration:
         label: "Вважати теми новими, якщо"
         not_viewed: "Ви їх ще не переглядали"
-        last_here: "їх було опубліковано після того, як Ви тут були востаннє"
       auto_track_topics: "Автоматично стежити за темами, які Ви відвідуєте"
       auto_track_options:
         never: "ніколи"
@@ -284,15 +282,11 @@ uk:
     close: "Закрити"
     assets_changed_confirm: "Discourse було оновлено, чи хочете Ви отримати останню версію?"
     read_only_mode:
-      enabled: "An administrator has enabled read-only mode. You can continue to browse the site but interactions won't work properly."
       login_disabled: "Login is disabled while the site is in read only mode."
     learn_more: "дізнатися більше..."
     year: 'рік'
-    year_desc: 'тем, опублікованих за останні 365 днів'
     month: 'місяць'
-    month_desc: 'тем, опублікованих за останні 30 днів'
     week: 'тиждень'
-    week_desc: 'тем, опублікованих за останні 7 днів'
     day: 'день'
     first_post: Перший допис
     mute: Mute
@@ -324,12 +318,10 @@ uk:
       invite: "Введіть своє ім'я користувача або адресу електронної скриньки, і ми надішлемо Вам лист для скинення пароля."
       reset: "Скинути пароль"
     login:
-      username: "Ім'я користувача"
       password: "Пароль"
       email_placeholder: "електронна скринька або ім'я користувача"
       error: "Невідома помилка"
       reset_password: 'Скинути пароль'
-      logging_in: "Входимо..."
       or: "Або"
       authenticating: "Автентифікуємося..."
       awaiting_confirmation: "Ваш обліковий запис очікує на активацію. Для отримання ще одного активаційного листа використайте посилання Забув пароль."
@@ -732,7 +724,6 @@ uk:
       none: '(без категорії)'
       choose: 'Select a category&hellip;'
       edit: 'редагувати'
-      edit_long: "Редагувати категорію"
       view: 'Переглянути теми, що належать до категорії'
       general: 'Основне'
       settings: 'Налаштування'
@@ -1289,10 +1280,6 @@ uk:
       actions:
         title: 'Дії'
         star: '<b>f</b> Позначити тему зірочкою'
-        share_topic: '<b>s</b> Поширити тему'
-        share_post: '<b>shift s</b> Поширити допис'
-        reply_topic: '<b>r</b> Відповісти на тему'
-        reply_post: '<b>shift r</b> Відповісти на допис'
         like: '<b>l</b> Вподобати допис'
         flag: '<b>!</b> Поскаржитися на допис'
         bookmark: '<b>b</b> Лишити закладку в дописі'
