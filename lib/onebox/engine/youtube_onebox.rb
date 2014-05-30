@@ -4,15 +4,15 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/.+$/)
+      matches_regexp(/^https?:\/\/(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/.+$/)
 
       # Try to get the video ID. Works for URLs of the form:
       # * https://www.youtube.com/watch?v=Z0UISCEe52Y
       # * http://youtu.be/afyK1HSFfgw
       # * https://www.youtube.com/embed/vsF0K3Ou1v0
       def video_id
-        match = @url.match(/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_\-]{11})$/)
-        match && match[3]
+        match = @url.match(/^https?:\/\/(?:www\.)?(?:m\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_\-]{11})$/)
+        match && match[1]
       end
 
       def placeholder_html
