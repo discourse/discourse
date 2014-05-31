@@ -59,11 +59,58 @@ Discourse.PostMenuView = Discourse.View.extend({
   },
 
   renderButtons: function(post, buffer) {
-    var self = this;
-    Discourse.get('postButtons').toArray().reverse().forEach(function(button) {
+    var self = this,
+        buttons_buffer = [];
+    buffer.push('<div class="actions">');
+    Discourse.get('postButtons').toArray().forEach(function(button) {
       var renderer = "render" + button;
-      if(self[renderer]) self[renderer](post, buffer);
+      if(self[renderer]) self[renderer](post, buttons_buffer);
     });
+    if (Discourse.SiteSettings.post_menu_max_items) {
+      self.renderEllipsis(post, buttons_buffer);
+    }
+    buttons_buffer.forEach(function(item) { buffer.push(item); });
+    buffer.push("</div>");
+  },
+
+  renderEllipsis: function(post, buffer){
+    var replyButtonIndex = -1,
+        replyButton,
+        max = Discourse.SiteSettings.post_menu_max_items;
+
+    buffer.find(function(item, index){
+      if (item.indexOf('data-action=\"reply\"') !== -1){
+        replyButtonIndex = index;
+        max += 1;
+        return true;
+      }
+    });
+    if (buffer.length > max) {
+      if (replyButtonIndex >= (max -2)){
+        // we would hide the reply button
+        // instead pop it and move it to the end after
+        replyButton = buffer.splice(replyButtonIndex, 1)[0];
+      }
+
+      buffer.splice(max - 2, 0, '<button data-action="showMoreActions" class="ellipsis"><i class="fa fa-ellipsis-h"></i></button><div class="more-actions">');
+      buffer.push("</div>");
+
+      if (replyButton) buffer.push(replyButton);
+    }
+  },
+
+  clickShowMoreActions: function() {
+    var moreActions = this.$(".more-actions");
+
+    // show it real quick to learn about its actual dimensions before
+    // sliding it in from the right
+    moreActions.css("display", "inline-block");
+    var width = moreActions.width(),
+        height = moreActions.height();
+
+    moreActions.width(0).height(height);
+    moreActions.animate({"width": width + 3}, 1000);
+    this.$(".ellipsis").hide();
   },
 
   clickReplies: function() {

@@ -84,6 +84,9 @@ basic:
      - bookmark
      - admin
      - reply
+  post_menu_max_items:
+    client: true
+    default: 4
   share_links:
     client: true
     list: true
