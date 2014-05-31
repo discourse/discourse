@@ -85,6 +85,9 @@ basic:
   posts_per_page:
     client: true
     default: 20
+  desktop_post_slack_ratio:
+    default: 2
+    client: true
   enable_badges:
     client: true
     default: false
