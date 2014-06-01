@@ -55,6 +55,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
     raw_info = auth_token["extra"]["raw_info"]
     email = auth_token["info"][:email]
+    access_token = auth_token["credentials"][:token]
 
     {
       facebook: {
@@ -65,7 +66,8 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
         last_name: raw_info["last_name"],
         email: email,
         gender: raw_info["gender"],
-        name: raw_info["name"]
+        name: raw_info["name"],
+        token: access_token
       },
       email: email,
       email_valid: true
