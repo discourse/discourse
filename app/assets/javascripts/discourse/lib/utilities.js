@@ -258,7 +258,7 @@ Discourse.Utilities = {
     if (Discourse.Utilities.isAnImage(upload.original_filename)) {
       return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
     } else if (Discourse.Utilities.isAVideo(upload.original_filename) || Discourse.Utilities.isAnAudio(upload.original_filename)) {
-      return Discourse.getURL(upload.url);
+      return '\n\n' + window.location.protocol + Discourse.getURL(upload.url);
     } else {
       return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')';
     }
