@@ -168,7 +168,7 @@
 
       for (var j=bottomView; j<childViews.length; j++) {
         var checkView = childViews[j];
-        if (!checkView.get('containedView')) {
+        if (!checkView._containedView) {
           if (!checkView.get('loading')) {
             checkView.$().html(this.get('loadingHTML') || "Loading...");
           }
@@ -231,8 +231,7 @@
       @method uncloak
     */
     uncloak: function() {
-      var containedView = this.get('containedView');
-      if (!containedView) {
+      if (!this._containedView) {
         var model = this.get('content'),
             controller = null,
             container = this.get('container');
@@ -271,10 +270,10 @@
         if (controller) { createArgs.controller = controller; }
         this.setProperties({
           style: null,
-          loading: false,
-          containedView: this.createChildView(this.get('cloaks'), createArgs)
+          loading: false
         });
 
+        this._containedView = this.createChildView(this.get('cloaks'), createArgs);
         this.rerender();
       }
     },
@@ -285,10 +284,9 @@
       @method cloak
     */
     cloak: function() {
-      var containedView = this.get('containedView'),
-          self = this;
+      var self = this;
 
-      if (containedView && this.get('state') === 'inDOM') {
+      if (this._containedView && this.get('state') === 'inDOM') {
         var style = 'height: ' + this.$().height() + 'px;';
         this.set('style', style);
         this.$().prop('style', style);
@@ -296,16 +294,24 @@
         // We need to remove the container after the height of the element has taken
         // effect.
         Ember.run.schedule('afterRender', function() {
-          self.set('containedView', null);
-          containedView.willDestroyElement();
-          containedView.remove();
+          if(self._containedView){
+            self._containedView.remove();
+            self._containedView = null;
+          }
         });
       }
     },
 
+    willDestroyElement: function(){
+      if(this._containedView){
+        this._containedView.remove();
+        this._containedView = null;
+      }
+      this._super();
+    },
 
     didInsertElement: function(){
-      if (!this.get('containedView')) {
+      if (!this._containedView) {
         // setting default height
         // but do not touch if height already defined
         if(!this.$().height()){
@@ -325,12 +331,16 @@
       @method render
     */
     render: function(buffer) {
-      var containedView = this.get('containedView');
+      var containedView = this._containedView;
+
       if (containedView && containedView.get('state') !== 'inDOM') {
+        containedView.triggerRecursively('willInsertElement');
         containedView.renderToBuffer(buffer);
         containedView.transitionTo('inDOM');
         Em.run.schedule('afterRender', function() {
-          containedView.didInsertElement();
+          if(this._containedView) {
+            this._containedView.triggerRecursively('didInsertElement');
+          }
         });
       }
     }
