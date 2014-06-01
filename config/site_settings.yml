@@ -55,14 +55,37 @@ basic:
     refresh: true
     list: true
     default: 'latest|new|unread|starred|top|categories'
+    choices:
+     - latest
+     - new
+     - unread
+     - starred
+     - top
+     - categories
+     - read
+     - posted
   post_menu:
     client: true
     list: true
     default: 'like|edit|flag|delete|share|bookmark|admin|reply'
+    choices:
+     - like
+     - edit
+     - flag
+     - delete
+     - share
+     - bookmark
+     - admin
+     - reply
   share_links:
     client: true
     list: true
     default: 'twitter|facebook|google+|email'
+    choices:
+     - twitter
+     - facebook
+     - google+
+     - email
   category_colors:
     client: true
     list: true
