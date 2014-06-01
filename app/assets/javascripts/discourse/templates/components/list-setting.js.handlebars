@@ -1,8 +1,3 @@
-<div class="ac-wrap clearfix input-setting-list">
-    {{#each readValues}}
-      {{list-setting-item parent=view action=update classNames="list-input-item"}}
-    {{/each}}
-    {{#if canAddNew}}
-      <button class="btn no-text list-add-value" {{action addNewItem}}><i class="fa fa-plus"></i></button>
-    {{/if}}
+<div class="input-setting-list">
+    <input type="text" value="{{unbound settingValue}}">
 </div>
