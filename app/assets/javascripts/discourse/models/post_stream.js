@@ -417,6 +417,7 @@ Discourse.PostStream = Em.Object.extend({
     }
     this.get('stream').removeObject(-1);
     this.get('postIdentityMap').set(-1, null);
+    this.get('postIdentityMap').set(post.get('id'), post);
 
     this.get('stream').addObject(post.get('id'));
     this.set('stagingPost', false);

@@ -306,10 +306,9 @@ test("staging and undoing a new post", function() {
 
   equal(stagedPost.get('topic'), topic, "it assigns the topic reference");
   equal(stagedPost.get('post_number'), 2, "it is assigned the probable post_number");
-  equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
   present(stagedPost.get('created_at'), "it is assigned a created date");
   ok(postStream.get('posts').contains(stagedPost), "the post is added to the stream");
-  blank(stagedPost.get('id'), "the post has no id yet");
+  equal(stagedPost.get('id'), -1, "the post has a magical -1 id");
 
   // Undoing a created post (there was an error)
   postStream.undoPost(stagedPost);
@@ -336,7 +335,6 @@ test("staging and committing a post", function() {
 
   ok(postStream.get('loading'), "it is loading while the post is being staged");
   stagedPost.setProperties({ id: 1234, raw: "different raw value" });
-  equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
 
   result = postStream.stagePost(stagedPost, user);
   equal(result, false, "you can't stage a post while it is currently staging");
