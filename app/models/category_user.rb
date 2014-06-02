@@ -15,6 +15,14 @@ class CategoryUser < ActiveRecord::Base
     TopicUser.notification_levels
   end
 
+  def self.auto_track_new_topic(topic)
+    apply_default_to_topic(
+                           topic,
+                           TopicUser.notification_levels[:tracking],
+                           TopicUser.notification_reasons[:auto_track_category]
+                          )
+  end
+
   def self.auto_watch_new_topic(topic)
     apply_default_to_topic(
                            topic,

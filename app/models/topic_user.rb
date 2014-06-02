@@ -27,7 +27,8 @@ class TopicUser < ActiveRecord::Base
         :created_post,
         :auto_watch,
         :auto_watch_category,
-        :auto_mute_category
+        :auto_mute_category,
+        :auto_track_category
       )
     end
 

@@ -40,6 +40,7 @@ class TopicCreator
     end
 
     CategoryUser.auto_watch_new_topic(@topic)
+    CategoryUser.auto_track_new_topic(@topic)
   end
 
   def setup_topic_params
