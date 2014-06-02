@@ -49,7 +49,11 @@ Discourse.TopicDetails = Discourse.Model.extend({
 
     var localeString = "topic.notifications.reasons." + level;
     if (typeof this.get('notifications_reason_id') === 'number') {
-      localeString += "_" + this.get('notifications_reason_id');
+      var tmp = localeString +  "_" + this.get('notifications_reason_id');
+      // some sane protection for missing translations of edge cases
+      if(I18n.lookup(tmp)){
+        localeString = tmp;
+      }
     }
     return I18n.t(localeString, { username: Discourse.User.currentProp('username_lower') });
   }.property('notification_level', 'notifications_reason_id'),
