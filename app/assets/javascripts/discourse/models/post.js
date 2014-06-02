@@ -303,7 +303,8 @@ Discourse.Post = Discourse.Model.extend({
     var post = this;
     Object.keys(otherPost).forEach(function (key) {
       var value = otherPost[key];
-      var oldValue = post.get(key);
+      // optimisation
+      var oldValue = post[key];
 
       if(!value) {
         value = null;
