@@ -23,6 +23,7 @@ class UserSerializer < BasicUserSerializer
              :title,
              :suspend_reason,
              :suspended_till,
+             :uploaded_avatar_id,
              :badge_count
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
@@ -70,8 +71,7 @@ class UserSerializer < BasicUserSerializer
                      :private_messages_stats,
                      :disable_jump_reply,
                      :gravatar_avatar_upload_id,
-                     :custom_avatar_upload_id,
-                     :uploaded_avatar_id
+                     :custom_avatar_upload_id
 
   def gravatar_avatar_upload_id
     object.user_avatar.try(:gravatar_upload_id)
