@@ -286,7 +286,7 @@
     cloak: function() {
       var self = this;
 
-      if (this._containedView && this._state === 'inDOM') {
+      if (this._containedView && (this._state || this.state) === 'inDOM') {
         var style = 'height: ' + this.$().height() + 'px;';
         this.set('style', style);
         this.$().prop('style', style);
@@ -333,7 +333,7 @@
     render: function(buffer) {
       var containedView = this._containedView, self = this;
 
-      if (containedView && containedView._state !== 'inDOM') {
+      if (containedView && (containedView._state || containedView._state) !== 'inDOM') {
         containedView.triggerRecursively('willInsertElement');
         containedView.renderToBuffer(buffer);
         containedView.transitionTo('inDOM');
