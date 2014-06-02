@@ -61,6 +61,10 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
     return module;
   },
 
+  resolveView: function(parsedName) {
+    return this.customResolve(parsedName) || this._super(parsedName);
+  },
+
   resolveController: function(parsedName) {
     return this.customResolve(parsedName) || this._super(parsedName);
   },
