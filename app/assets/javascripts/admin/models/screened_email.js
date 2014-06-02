@@ -10,7 +10,11 @@
 Discourse.ScreenedEmail = Discourse.Model.extend({
   actionName: function() {
     return I18n.t("admin.logs.screened_actions." + this.get('action'));
-  }.property('action')
+  }.property('action'),
+
+  clearBlock: function() {
+    return Discourse.ajax('/admin/logs/screened_emails/' + this.get('id'), {method: 'DELETE'});
+  }
 });
 
 Discourse.ScreenedEmail.reopenClass({

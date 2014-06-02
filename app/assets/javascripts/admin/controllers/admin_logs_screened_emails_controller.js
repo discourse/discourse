@@ -10,6 +10,13 @@ Discourse.AdminLogsScreenedEmailsController = Ember.ArrayController.extend(Disco
   loading: false,
   content: [],
 
+  clearBlock: function(row){
+    row.clearBlock().then(function(){
+      // feeling lazy
+      window.location.reload();
+    });
+  },
+
   show: function() {
     var self = this;
     this.set('loading', true);

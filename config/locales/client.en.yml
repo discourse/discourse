@@ -1613,6 +1613,8 @@ en:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
           email: "Email Address"
+          actions:
+            allow: "Allow"
         screened_urls:
           title: "Screened URLs"
           description: "The URLs listed here were used in posts by users who have been identified as spammers."

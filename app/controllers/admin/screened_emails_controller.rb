@@ -5,4 +5,10 @@ class Admin::ScreenedEmailsController < Admin::AdminController
     render_serialized(screened_emails, ScreenedEmailSerializer)
   end
 
+  def destroy
+    screen = ScreenedEmail.find(params[:id].to_i)
+    screen.destroy!
+    render json: success_json
+  end
+
 end
