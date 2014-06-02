@@ -38,12 +38,13 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       }
       this._topicProgress = $topicProgress;
       // CAREFUL WITH THIS AXE
-      // offsetWidth will cause a reflow
-      this._progressWidth = $topicProgress[0].offsetWidth;
+      // offsetWidth will cause a reflow, this ensures it only happens once
+      // in future it may make sense to move this offscreen to to the measurement
+      Discourse.TopicView._progressWidth = Discourse.TopicView._progressWidth || $topicProgress[0].offsetWidth;
     }
 
     // speeds up stuff, bypass jquery slowness and extra checks
-    var totalWidth = this._progressWidth,
+    var totalWidth = Discourse.TopicView._progressWidth,
         progressWidth = this.get('controller.streamPercentage') * totalWidth;
 
     $topicProgress.find('.bg')

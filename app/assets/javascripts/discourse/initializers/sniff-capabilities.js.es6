@@ -23,6 +23,6 @@ export default {
 
     // We consider high res a device with 1280 horizontal pixels. High DPI tablets like
     // iPads should report as 1024.
-    caps.set('highRes', Modernizr.mq("only screen and (min-width: 1280px)"));
+    caps.set('highRes', window.screen.width >= 1280);
   }
 };
