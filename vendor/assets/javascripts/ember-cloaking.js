@@ -333,7 +333,7 @@
     render: function(buffer) {
       var containedView = this._containedView, self = this;
 
-      if (containedView && (containedView._state || containedView._state) !== 'inDOM') {
+      if (containedView && (containedView._state || containedView.state) !== 'inDOM') {
         containedView.triggerRecursively('willInsertElement');
         containedView.renderToBuffer(buffer);
         containedView.transitionTo('inDOM');
