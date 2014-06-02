@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.PostGapComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   classNameBindings: [':gap', 'gap::hidden'],
 
   init: function() {

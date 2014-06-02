@@ -77,7 +77,7 @@
       </div>
       {{view Discourse.RepliesView content=replies postView=view}}
       {{discourse-action-history post=this}}
-      {{view Discourse.TopicMapContainerView post=this topic=controller.model}}
+      {{view 'topic-map-container' post=this topic=controller.model}}
     </div>
 
     {{post-gutter post=this

@@ -9,7 +9,7 @@
 
 var LINKS_SHOWN = 5;
 
-Discourse.TopicMapComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   mapCollapsed: true,
   layoutName: 'components/topic-map',
   details: Em.computed.alias('topic.details'),
