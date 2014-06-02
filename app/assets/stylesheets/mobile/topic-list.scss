@@ -448,7 +448,7 @@ ol.category-breadcrumb {
 
 .category-dropdown-menu {
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
   border: 1px solid scale-color-diff();
   background-color: $secondary;
