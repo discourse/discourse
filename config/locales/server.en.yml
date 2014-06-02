@@ -844,6 +844,7 @@ en:
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
 
     pop3s_polling_enabled: "Poll via POP3S for email replies"
+    pop3s_polling_insecure: "Poll using plain text POP3 without SSL"
     pop3s_polling_port: "The port to poll a POP3S account on"
     pop3s_polling_host: "The host to poll for email via POP3S"
     pop3s_polling_username: "The username for the POP3S account to poll for email"
