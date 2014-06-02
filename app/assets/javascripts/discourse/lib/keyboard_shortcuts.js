@@ -36,7 +36,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'r': '.topic-post.selected button.create',                        // reply to selected post
     'shift+s': '#topic-footer-buttons button.share',                    // share topic
     's': '.topic-post.selected button.share',                         // share selected post
-    '!': '.topic-post.selected button.flag'                           // flag selected post
+    '!': '.topic-post.selected button.flag'                         // flag selected post
   },
 
   FUNCTION_BINDINGS: {
@@ -48,6 +48,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     '`': 'nextSection',
     '~': 'prevSection',
     '/': 'showSearch',
+    'ctrl+f': 'showSearch',
+    'command+f': 'showSearch',
     '?': 'showHelpModal',                                          // open keyboard shortcut help
     'q': 'quoteReply'
   },
