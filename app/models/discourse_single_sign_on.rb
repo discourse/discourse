@@ -1,6 +1,7 @@
 require_dependency 'single_sign_on'
 
 class DiscourseSingleSignOn < SingleSignOn
+
   def self.sso_url
     SiteSetting.sso_url
   end
@@ -57,7 +58,7 @@ class DiscourseSingleSignOn < SingleSignOn
 
     if sso_record && (user = sso_record.user) && !user.active
       user.active = true
-      user.save
+      user.save!
       user.enqueue_welcome_message('welcome_user')
     end
 
@@ -77,13 +78,16 @@ class DiscourseSingleSignOn < SingleSignOn
   def match_email_or_create_user
     user = User.find_by(email: Email.downcase(email))
 
+    try_name = name.blank? ? nil : name
+    try_username = username.blank? ? nil : username
+
     user_params = {
         email: email,
-        name:  User.suggest_name(name || username || email),
-        username: UserNameSuggester.suggest(username || name || email),
+        name:  User.suggest_name(try_name || try_username || email),
+        username: UserNameSuggester.suggest(try_username || try_name || email),
     }
 
-    if user || user = User.create(user_params)
+    if user || user = User.create!(user_params)
       if sso_record = user.single_sign_on_record
         sso_record.last_payload = unsigned_payload
         sso_record.external_id = external_id
