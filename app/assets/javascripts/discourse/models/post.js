@@ -318,8 +318,8 @@ Discourse.Post = Discourse.Model.extend({
       if (typeof value !== "function" && oldValue !== value) {
 
         // wishing for an identity map
-        if(key === "reply_to_user") {
-          skip = Em.get(value, "username") === Em.get(oldValue, "username");
+        if(key === "reply_to_user" && value && oldValue) {
+          skip = value.username === oldValue.username || Em.get(value, "username") === Em.get(oldValue, "username");
         }
 
         if(!skip) {
