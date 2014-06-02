@@ -446,7 +446,6 @@ Discourse.Composer = Discourse.Model.extend({
       title: this.get('title'),
       category: this.get('categoryId'),
       topic_id: this.get('topic.id'),
-      reply_to_post_number: post ? post.get('post_number') : null,
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,
@@ -465,11 +464,22 @@ Discourse.Composer = Discourse.Model.extend({
       auto_close_time: Discourse.Utilities.timestampFromAutocloseString(this.get('auto_close_time'))
     });
 
+    if(post) {
+      createdPost.setProperties({
+        reply_to_post_number: post.get('post_number'),
+        reply_to_user: {
+          username: post.get('username'),
+          uploaded_avatar_id: post.get('uploaded_avatar_id')
+        }
+      });
+    }
+
     // If we're in a topic, we can append the post instantly.
     if (postStream) {
       // If it's in reply to another post, increase the reply count
       if (post) {
         post.set('reply_count', (post.get('reply_count') || 0) + 1);
+        post.set('replies', []);
       }
       if (!postStream.stagePost(createdPost, currentUser)) {
 

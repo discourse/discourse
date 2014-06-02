@@ -373,7 +373,6 @@ Discourse.PostStream = Em.Object.extend({
 
     // We can't stage two posts simultaneously
     if (this.get('stagingPost')) { return false; }
-
     this.set('stagingPost', true);
 
     var topic = this.get('topic');
@@ -387,12 +386,14 @@ Discourse.PostStream = Em.Object.extend({
     post.setProperties({
       post_number: topic.get('highest_post_number'),
       topic: topic,
-      created_at: new Date()
+      created_at: new Date(),
+      id: -1
     });
 
     // If we're at the end of the stream, add the post
     if (this.get('loadedAllPosts')) {
       this.appendPost(post);
+      this.get('stream').addObject(post.get('id'));
     }
 
     return true;
@@ -408,6 +409,15 @@ Discourse.PostStream = Em.Object.extend({
     if (this.get('loadedAllPosts')) {
       this.appendPost(post);
     }
+    // Correct for a dangling deleted post, if needed
+    // compensating for message bus pumping in new posts while
+    // your post is in transit
+    if(this.get('topic.highest_post_number') < post.get('post_number')){
+      this.set('topic.highest_post_number', post.get('post_number'));
+    }
+    this.get('stream').removeObject(-1);
+    this.get('postIdentityMap').set(-1, null);
+
     this.get('stream').addObject(post.get('id'));
     this.set('stagingPost', false);
   },
@@ -420,16 +430,19 @@ Discourse.PostStream = Em.Object.extend({
     @param {Discourse.Post} the post to undo from the stream
   **/
   undoPost: function(post) {
+    this.get('stream').removeObject(-1);
     this.posts.removeObject(post);
+    this.get('postIdentityMap').set(-1, null);
 
     var topic = this.get('topic');
-
     this.set('stagingPost', false);
 
     topic.setProperties({
       highest_post_number: (topic.get('highest_post_number') || 0) - 1,
       posts_count: (topic.get('posts_count') || 0) - 1
     });
+
+    // TODO unfudge reply count on parent post
   },
 
   /**
