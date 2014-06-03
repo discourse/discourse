@@ -102,7 +102,7 @@
                 <dt>{{i18n user.last_seen}}</dt><dd>{{date last_seen_at}}</dd>
               {{/if}}
               {{#if invited_by}}
-                <dt>{{i18n user.invited_by}}</dt><dd>{{#link-to 'userActivity' invited_by}}{{invited_by.username}}{{/link-to}}</dd>
+                <dt>{{i18n user.invited_by}}</dt><dd>{{#link-to 'user' invited_by}}{{invited_by.username}}{{/link-to}}</dd>
               {{/if}}
               {{#if email}}
                 <dt>{{i18n user.email.title}}</dt><dd {{bind-attr title="email"}}>{{email}}</dd>

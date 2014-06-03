@@ -8,6 +8,6 @@
 **/
 Discourse.UserIndexRoute = Discourse.UserActivityRoute.extend({
   redirect: function() {
-    this.transitionTo('userActivity', this.modelFor('user'));
+    this.replaceWith('userActivity', this.modelFor('user'));
   }
 });
