@@ -19,6 +19,29 @@ describe ColorScheme do
     end
   end
 
+  describe "create_from_base" do
+    let(:base_colors) { {first_one: 'AAAAAA', second_one: '333333', third_one: 'BEEBEE'} }
+    let!(:base) { Fabricate(:color_scheme, name: 'Base', color_scheme_colors: [
+                    Fabricate(:color_scheme_color, name: 'first_one',  hex: base_colors[:first_one]),
+                    Fabricate(:color_scheme_color, name: 'second_one', hex: base_colors[:second_one]),
+                    Fabricate(:color_scheme_color, name: 'third_one', hex: base_colors[:third_one])]) }
+
+    before do
+      described_class.stubs(:base).returns(base)
+    end
+
+    it "creates a new color scheme" do
+      c = described_class.create_from_base(name: 'Yellow', colors: {first_one: 'FFFF00', third_one: 'F00D33'})
+      c.colors.should have(base_colors.size).colors
+      first  = c.colors.find {|x| x.name == 'first_one'}
+      second = c.colors.find {|x| x.name == 'second_one'}
+      third  = c.colors.find {|x| x.name == 'third_one'}
+      first.hex.should == 'FFFF00'
+      second.hex.should == base_colors[:second_one]
+      third.hex.should == 'F00D33'
+    end
+  end
+
   describe "destroy" do
     it "also destroys old versions" do
       c1 = described_class.create(valid_params.merge(version: 2))

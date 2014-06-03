@@ -161,4 +161,24 @@ describe Plugin::Instance do
     end
   end
 
+  context "register_color_scheme" do
+    it "can add a color scheme for the first time" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      expect {
+        plugin.register_color_scheme("Purple", {primary: 'EEE0E5'})
+        plugin.notify_after_initialize
+      }.to change { ColorScheme.count }.by(1)
+      ColorScheme.where(name: "Purple").should be_present
+    end
+
+    it "doesn't add the same color scheme twice" do
+      Fabricate(:color_scheme, name: "Halloween")
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      expect {
+        plugin.register_color_scheme("Halloween", {primary: 'EEE0E5'})
+        plugin.notify_after_initialize
+      }.to_not change { ColorScheme.count }
+    end
+  end
+
 end

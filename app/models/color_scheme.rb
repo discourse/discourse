@@ -37,11 +37,27 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def self.base
-    return @base_color if @base_color
-    @base_color = new(name: I18n.t('color_schemes.base_theme_name'), enabled: false)
-    @base_color.colors = base_colors.map { |name, hex| {name: name, hex: hex} }
-    @base_color.is_base = true
-    @base_color
+    return @base_color_scheme if @base_color_scheme
+    @base_color_scheme = new(name: I18n.t('color_schemes.base_theme_name'), enabled: false)
+    @base_color_scheme.colors = base_colors.map { |name, hex| {name: name, hex: hex} }
+    @base_color_scheme.is_base = true
+    @base_color_scheme
+  end
+
+  # create_from_base will create a new ColorScheme that overrides Discourse's base color scheme with the given colors.
+  def self.create_from_base(params)
+    new_color_scheme = new(name: params[:name])
+    colors = base.colors_hashes
+
+    # Override base values
+    params[:colors].each do |name, hex|
+      c = colors.find {|x| x[:name].to_s == name.to_s}
+      c[:hex] = hex
+    end
+
+    new_color_scheme.colors = colors
+    new_color_scheme.save
+    new_color_scheme
   end
 
 
