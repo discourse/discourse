@@ -1,5 +1,5 @@
 /**
-  If we request /user/eviltrout without a sub route.
+  If we request /users/eviltrout without a sub route.
 
   @class UserIndexRoute
   @extends Discourse.Route
