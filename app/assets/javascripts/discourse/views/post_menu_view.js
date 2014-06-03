@@ -16,8 +16,6 @@ Discourse.PostMenuView = Discourse.View.extend({
     'post.reply_count',
     'post.showRepliesBelow',
     'post.can_delete',
-    'post.read',
-    'post.topic.last_read_post_number',
     'post.bookmarked',
     'post.shareUrl',
     'post.topic.deleted_at',
