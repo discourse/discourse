@@ -198,18 +198,13 @@ Discourse.PostMenuView = Discourse.View.extend({
 
     var iconClass = 'read-icon',
         buttonClass = 'bookmark',
-        topic = post.get('topic'),
         tooltip;
 
     if (post.get('bookmarked')) {
       iconClass += ' bookmarked';
       buttonClass += ' bookmarked';
       tooltip = I18n.t('bookmarks.created');
-    } else if (topic && topic.get('last_read_post_number') === post.get('post_number')) {
-      iconClass += ' last-read';
-      tooltip = I18n.t('bookmarks.last_read');
     } else {
-      iconClass += (post.get('read') ? ' seen' : ' unseen');
       tooltip = I18n.t('bookmarks.not_bookmarked');
     }
 
