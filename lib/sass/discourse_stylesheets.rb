@@ -42,8 +42,11 @@ class DiscourseStylesheets
   end
 
   def self.max_file_mtime
-    [ Dir.glob("#{Rails.root}/app/assets/stylesheets/**/*.*css").map {|x| File.mtime(x) }.max,
-      Dir.glob("#{Rails.root}/plugins/**/assets/stylesheets/**/*.*css").map {|x| File.mtime(x) }.max ].compact.max.to_i
+    [ "#{Rails.root}/app/assets/stylesheets/**/*.*css",
+      "#{Rails.root}/plugins/**/*.*css",
+      "#{Rails.root}/plugins/**/plugin.rb" ].map do |pattern|
+        Dir.glob(pattern).map { |x| File.mtime(x) }.max
+    end.compact.max.to_i
   end
 
 
