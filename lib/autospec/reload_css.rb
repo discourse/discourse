@@ -27,6 +27,7 @@ class Autospec::ReloadCss
     if paths.any? { |p| p =~ /\.(css|s[ac]ss)/ }
       s = DiscourseStylesheets.new(:desktop) # TODO: what about mobile?
       s.compile
+      s.ensure_digestless_file
       paths << "public" + s.stylesheet_relpath_no_digest
     end
     paths.map! do |p|
