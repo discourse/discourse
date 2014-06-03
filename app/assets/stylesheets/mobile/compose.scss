@@ -201,6 +201,14 @@ display: none;
         }
       }
     }
+    .edit-reason-input {
+      display: inline-block;
+      margin-left: 2px;
+      #edit-reason {
+        margin: 0;
+        padding: 2px;
+      }
+    }
     #reply-title {
       margin-right: 10px;
       &:disabled {
