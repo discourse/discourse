@@ -32,7 +32,7 @@
               {{/if}}
               {{boundCategoryLink category}}
               {{#if details.loaded}}
-                {{topicStatus topic=model}}
+                {{topic-status topic=model}}
                 <a href='{{unbound url}}' {{action jumpTop}}>
                   {{#if topicSaving}}
                     {{fancy_title}}

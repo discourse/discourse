@@ -1,4 +1,4 @@
-Discourse.TopicParticipantComponent = Ember.Component.extend({
+export default Ember.Component.extend({
 
   postStream: Em.computed.alias('participant.topic.postStream'),
 

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.SortableHeadingComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   tagName: 'th',
   classNameBindings: ['number:num', 'sortBy', 'iconSortClass:sorting', 'sortable:sortable'],
   attributeBindings: ['colspan'],

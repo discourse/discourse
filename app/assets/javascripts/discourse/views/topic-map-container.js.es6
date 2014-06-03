@@ -9,6 +9,7 @@
 **/
 import PrivateMessageMapComponent from 'discourse/components/private-message-map';
 import TopicMapComponent from 'discourse/components/topic-map';
+import ToggleSummaryComponent from 'discourse/components/toggle-summary';
 
 export default Discourse.ContainerView.extend({
   classNameBindings: ['hidden', ':topic-map'],
@@ -39,7 +40,7 @@ export default Discourse.ContainerView.extend({
       container.attachViewWithArgs({
         topic: topic,
         filterBinding: 'controller.filter'
-      }, Discourse.ToggleSummaryComponent);
+      }, ToggleSummaryComponent);
     }
 
     // If we have a private message

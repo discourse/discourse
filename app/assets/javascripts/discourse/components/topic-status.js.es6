@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicStatusComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   classNames: ['topic-statuses'],
 
   hasDisplayableStatus: Em.computed.or('topic.archived','topic.closed', 'topic.pinned', 'topic.unpinned', 'topic.invisible', 'topic.archetypeObject.notDefault'),

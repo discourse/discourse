@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ToggleSummaryComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   layoutName: 'components/toggle-summary',
   tagName: 'section',
   classNames: ['information'],

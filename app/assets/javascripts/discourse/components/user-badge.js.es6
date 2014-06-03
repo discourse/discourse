@@ -1,4 +1,4 @@
-Discourse.UserBadgeComponent = Ember.Component.extend({
+export default Ember.Component.extend({
   tagName: 'span',
 
   badgeTypeClassName: function() {
