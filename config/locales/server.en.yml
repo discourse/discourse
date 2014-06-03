@@ -765,6 +765,7 @@ en:
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
 
     suggested_topics: "Number of suggested topics shown at the bottom of a topic"
+    limit_suggested_to_category: "Only show topics from the current category in suggested topics"
 
     clean_up_uploads: "Remove orphaned uploads to prevent illegal hosting. WARNING: you might want to make a backup of your /uploads directory before enabled this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
