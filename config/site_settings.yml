@@ -124,7 +124,7 @@ users:
 
   enable_google_oauth2_logins:
     client: true
-    default: false
+    default: true
   google_oauth2_client_id: ''
   google_oauth2_client_secret: ''
   enable_yahoo_logins:
@@ -132,12 +132,12 @@ users:
     default: true
   enable_twitter_logins:
     client: true
-    default: false
+    default: true
   twitter_consumer_key: ''
   twitter_consumer_secret: ''
   enable_facebook_logins:
     client: true
-    default: false
+    default: true
   facebook_app_id: ''
   facebook_app_secret: ''
   enable_github_logins:
