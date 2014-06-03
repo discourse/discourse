@@ -169,8 +169,8 @@ describe TopicView do
 
     context '.read?' do
       it 'tracks correctly' do
-        # anon has nothing
-        TopicView.new(topic.id).read?(1).should be_false
+        # anon is assumed to have read everything
+        TopicView.new(topic.id).read?(1).should be_true
 
         # random user has nothing
         topic_view.read?(1).should be_false

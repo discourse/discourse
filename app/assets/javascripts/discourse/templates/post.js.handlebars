@@ -57,6 +57,7 @@
             {{/if}}
           </div>
         {{/if}}
+        <div {{bind-attr class=":read-state read"}} title="{{i18n post.unread}}"><i class='fa fa-circle'></i></div>
       </div>
 
       <div {{bind-attr class=":select-posts controller.multiSelect::hidden"}}>

@@ -51,7 +51,7 @@ h1 .topic-statuses .topic-status i {
 
 .reply-to-tab {
   position: absolute;
-  right: 350px;
+  right: 375px;
   z-index: 400;
   padding: 13px 6px 5px;
   border-top: 1px solid scale-color-diff();
@@ -1079,4 +1079,18 @@ span.highlighted {
 
 .username.new-user a {
   color: scale-color($primary, $lightness: 70%);
+}
+
+.read-state {
+  color: scale-color($tertiary, $lightness: 50%);
+  float: right;
+  margin-right: 10px;
+  margin-top: 1px;
+  font-size: 10px;
+}
+
+.read-state.read {
+  opacity: 0;
+  -webkit-transition: opacity 1s ease-out;
+  transition: opacity 1s ease-out;
 }

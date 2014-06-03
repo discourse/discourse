@@ -940,6 +940,7 @@ en:
         other: "{{count}} posts hidden"
       more_links: "{{count}} more..."
 
+      unread: "Post is unread"
       has_replies:
         one: "Reply"
         other: "Replies"

@@ -550,20 +550,22 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     }
   }.observes('currentPost'),
 
-  sawObjects: function(posts) {
-    if (posts) {
-      var self = this,
-          lastReadPostNumber = this.get('last_read_post_number');
+  readPosts: function(topicId, postNumbers) {
+    var postStream = this.get('postStream');
 
-      posts.forEach(function(post) {
-        var postNumber = post.get('post_number');
-        if (postNumber > lastReadPostNumber) {
-          lastReadPostNumber = postNumber;
+    if(this.get('postStream.topic.id') === topicId){
+      _.each(postStream.get('posts'), function(post){
+        // optimise heavy loop
+        // TODO identity map for postNumber
+        if(_.include(postNumbers,post.post_number) && !post.read){
+          post.set("read", true);
         }
-        post.set('read', true);
       });
-      self.set('last_read_post_number', lastReadPostNumber);
 
+      var max = _.max(postNumbers);
+      if(max > this.get('last_read_post_number')){
+        this.set('last_read_post_number', max);
+      }
     }
   },
 

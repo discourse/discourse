@@ -183,6 +183,7 @@ class TopicView
   end
 
   def read?(post_number)
+    return true unless @user
     read_posts_set.include?(post_number)
   end
 

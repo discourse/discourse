@@ -180,7 +180,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     controller.subscribe();
 
     // We reset screen tracking every time a topic is entered
-    Discourse.ScreenTrack.current().start(model.get('id'));
+    Discourse.ScreenTrack.current().start(model.get('id'), controller);
   }
 
 });
