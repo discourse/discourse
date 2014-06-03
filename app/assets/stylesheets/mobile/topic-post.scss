@@ -353,6 +353,7 @@ span.post-count {
   color: $primary;
   padding: 10px;
   width: 90px;
+  z-index: 401;
 
   &:hover {
     background-color: scale-color($primary, $lightness: 50%);
