@@ -8,7 +8,8 @@ function buildTopicRoute(filter) {
   return Discourse.Route.extend({
     queryParams: {
       sort: { replace: true },
-      ascending: { replace: true }
+      ascending: { replace: true },
+      status: { replace: true }
     },
 
     beforeModel: function() {
@@ -25,6 +26,7 @@ function buildTopicRoute(filter) {
       var findOpts = {};
       if (params && params.order) { findOpts.order = params.order; }
       if (params && params.ascending) { findOpts.ascending = params.ascending; }
+      if (params && params.status) { findOpts.status = params.status; }
 
 
       return Discourse.TopicList.list(filter, findOpts).then(function(list) {
@@ -96,7 +98,7 @@ function buildCategoryRoute(filter, params) {
       return Discourse.Category.findBySlug(params.slug, params.parentSlug);
     },
 
-    afterModel: function(model) {
+    afterModel: function(model, transaction) {
       var self = this,
           noSubcategories = params && !!params.no_subcategories,
           filterMode = "category/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter,
@@ -110,6 +112,13 @@ function buildCategoryRoute(filter, params) {
 
       opts.canChangeCategoryNotificationLevel = Discourse.User.current();
       this.controllerFor('navigation/category').setProperties(opts);
+
+      var queryParams = transaction.queryParams;
+      params = params || {};
+
+      if (queryParams && queryParams.order) { params.order = queryParams.order; }
+      if (queryParams && queryParams.ascending) { params.ascending = queryParams.ascending; }
+      if (queryParams && queryParams.status) { params.status = queryParams.status; }
 
       return Discourse.TopicList.list(listFilter, params).then(function(list) {
         var tracking = Discourse.TopicTrackingState.current();
