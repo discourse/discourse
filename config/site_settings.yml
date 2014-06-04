@@ -58,15 +58,6 @@ basic:
     refresh: true
     list: true
     default: 'latest|new|unread|starred|top|categories'
-    choices:
-     - latest
-     - new
-     - unread
-     - starred
-     - top
-     - categories
-     - read
-     - posted
   post_menu:
     client: true
     list: true
