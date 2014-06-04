@@ -279,7 +279,7 @@ Discourse.Utilities = {
   **/
   allowsAttachments: function() {
     return Discourse.Utilities.authorizesAllExtensions() ||
-           (/(png|jpg|jpeg|gif|bmp|tif|tiff)/i).test(Discourse.SiteSettings.authorized_extensions);
+           !(/((png|jpg|jpeg|gif|bmp|tif|tiff)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
   },
 
   displayErrorForUpload: function(data) {

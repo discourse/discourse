@@ -202,6 +202,13 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       }
     });
 
+    // HACK to change the upload icon of the composer's toolbar
+    Em.run.scheduleOnce("afterRender", function() {
+      if (!Discourse.Utilities.allowsAttachments()) {
+        $("#wmd-image-button").addClass("image-only");
+      }
+    });
+
     this.editor.hooks.insertImageDialog = function(callback) {
       callback(null);
       self.get('controller').send('showUploadSelector', self);
