@@ -1252,11 +1252,11 @@ en:
     email_error_notification:
       subject_template: "Error parsing email"
       text_body_template: |
-        This is an automated message to inform you that parsing the following incoming email failed.
+        This is an automated message.
 
-        Please review the following message.
+        Parsing an incoming email failed. Please review the following Error:
 
-        Error - %{error}
+        `%{error}`
 
         %{source}
 
@@ -1288,18 +1288,22 @@ en:
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
     user_automatically_blocked:
-      subject_template: "New user %{username} blocked via flags"
+      subject_template: "New user %{username} blocked due to community flags"
       text_body_template: |
-        This is an automated message to inform you that the new user [%{username}](%{base_url}%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
+        This is an automated message.
+
+        The new user [%{username}](%{base_url}%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
 
         Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{base_url}%{user_url}).
 
         This threshold can be changed via the `block_new_user` site settings.
 
     spam_post_blocked:
-      subject_template: "New user %{username} posts blocked for repeated links"
+      subject_template: "New user %{username} posts blocked due to repeated links"
       text_body_template: |
-        This is an automated message to inform you that the new user [%{username}](%{base_url}%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
+        This is an automated message.
+
+        The new user [%{username}](%{base_url}%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
 
         Please [review the user](%{base_url}%{user_url}).
 
