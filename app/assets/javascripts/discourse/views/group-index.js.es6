@@ -6,8 +6,6 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.GroupIndexView = Discourse.View.extend(Discourse.ScrollTop, Discourse.LoadMore, {
-  eyelineSelector: '.user-stream .item'
-
+export default Discourse.View.extend(Discourse.ScrollTop, Discourse.LoadMore, {
+  eyelineSelector: '.user-stream .item',
 });
-

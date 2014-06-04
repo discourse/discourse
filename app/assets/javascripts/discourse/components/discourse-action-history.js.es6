@@ -1,13 +1,13 @@
 /**
-  This view handles rendering of what actions have been taken on a post. It uses
+  This component handles rendering of what actions have been taken on a post. It uses
   buffer rendering for performance rather than a template.
 
   @class ActionsHistoryComponent
-  @extends Discourse.View
+  @extends Em.Component
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ActionsHistoryComponent = Em.Component.extend({
+export default Em.Component.extend({
   tagName: 'section',
   classNameBindings: [':post-actions', 'hidden'],
   actionsHistory: Em.computed.alias('post.actionsHistory'),
@@ -101,6 +101,3 @@ Discourse.ActionsHistoryComponent = Em.Component.extend({
     return false;
   }
 });
-
-
-Discourse.View.registerHelper('discourse-action-history', Discourse.ActionsHistoryComponent);

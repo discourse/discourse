@@ -58,6 +58,3 @@ export default Ember.Component.extend({
     renderIconIf('topic.invisible', 'eye-slash', 'invisible');
   }
 });
-
-
-Discourse.View.registerHelper('topicStatus', Discourse.TopicStatusComponent);

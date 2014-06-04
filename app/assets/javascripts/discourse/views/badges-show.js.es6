@@ -6,6 +6,6 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.BadgesShowView = Discourse.View.extend(Discourse.LoadMore, {
-  eyelineSelector: '.badge-user'
+export default Discourse.View.extend(Discourse.LoadMore, {
+  eyelineSelector: '.badge-user',
 });
