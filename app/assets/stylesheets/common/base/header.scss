@@ -165,7 +165,7 @@
 
     }
 
-    &:hover a {background: scale-color-diff();}
+    &:hover a:not(.badge-notification) {background: scale-color-diff();}
     button {margin-left: 5px;}
 
   }
@@ -187,7 +187,6 @@
     a {
       display: inline;
       padding: 1px;
-      &:hover {background: scale-color-diff();}
       }
     }
     .read {
@@ -207,6 +206,20 @@
 
   .category-links li:not(.heading) a {
     display: inline-block;
+  }
+
+
+  // Site map
+
+  &#site-map-dropdown {
+    .flagged-posts {
+      display: inline-block;
+      position: absolute;
+      padding: 3px;
+      margin-top: -22px;
+      margin-left: 60px;
+    }
+
   }
 
   // Search
