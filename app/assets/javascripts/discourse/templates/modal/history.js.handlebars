@@ -17,7 +17,7 @@
     </div>
   </div>
   <div id="revision-details">
-    {{i18n post.revisions.details.edited_by}} {{boundAvatar content "small"}} {{username}} <span class="date">{{date created_at}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
+    {{i18n post.revisions.details.edited_by}} {{boundAvatarTemplate content.avatar_template "small"}} {{username}} <span class="date">{{date created_at}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
   </div>
   <div id="revisions">
     {{#if title_changes}}
@@ -32,7 +32,7 @@
     {{/if}}
     {{#if user_changes}}
       <div class="row">
-          {{boundAvatar user_changes.previous "small"}} {{user_changes.previous.username}} → {{boundAvatar user_changes.current imageSize="small"}} {{user_changes.current.username}}
+        {{boundAvatarTemplate user_changes.previous.avatar_template "small"}} {{user_changes.previous.username}} → {{boundAvatarTemplate user_changes.current.avatar_template "small"}} {{user_changes.current.username}}
       </div>
     {{/if}}
     {{#if wiki_changes}}

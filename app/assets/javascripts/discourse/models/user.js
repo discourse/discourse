@@ -327,8 +327,8 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
-  avatarTemplate: function(){
-    return Discourse.User.avatarTemplate(this.get('username'),this.get('uploaded_avatar_id'));
+  avatarTemplate: function() {
+    return Discourse.User.avatarTemplate(this.get('username'), this.get('uploaded_avatar_id'));
   }.property('uploaded_avatar_id', 'username'),
 
   /*
@@ -416,17 +416,15 @@ Discourse.User = Discourse.Model.extend({
 
 Discourse.User.reopenClass(Discourse.Singleton, {
 
-  avatarTemplate: function(username, uploadedAvatarId){
+  avatarTemplate: function(username, uploadedAvatarId) {
     var url;
-    if(uploadedAvatarId){
+    if (uploadedAvatarId) {
       url = "/user_avatar/" +
             Discourse.BaseUrl +
             "/" +
             username.toLowerCase() +
             "/{size}/" +
             uploadedAvatarId + ".png";
-
-
     } else {
       url = "/letter_avatar/" +
             username.toLowerCase() +
@@ -435,7 +433,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     }
 
     url = Discourse.getURL(url);
-    if(Discourse.CDN){
+    if (Discourse.CDN) {
       url = Discourse.CDN + url;
     }
     return url;

@@ -228,13 +228,13 @@ Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, size, uploadI
     uploadId = Em.get(user, 'uploaded_avatar_id');
   }
 
-  var avatarTemplate = Discourse.User.avatarTemplate(username,uploadId);
+  var avatarTemplate = Discourse.User.avatarTemplate(username, uploadId);
 
   return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
     size: size,
     avatarTemplate: avatarTemplate
   }));
-}, 'uploaded_avatar_id');
+}, 'username', 'uploaded_avatar_id');
 
 /*
  * Used when we only have a template
