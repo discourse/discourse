@@ -30,7 +30,7 @@ Discourse.UserActivityStreamRoute = Discourse.Route.extend({
 
     removeBookmark: function(userAction) {
       var self = this;
-      Discourse.ajax("/posts/by_number/" + userAction.topic_id + "/" + userAction.post_number + "/bookmarks/remove", { type: "PUT" })
+      Discourse.Post.bookmark(userAction.get('post_id'), false)
                .then(function() {
                   // remove the user action from the stream
                   self.modelFor("user").get("stream").remove(userAction);

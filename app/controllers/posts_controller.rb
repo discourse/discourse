@@ -122,14 +122,6 @@ class PostsController < ApplicationController
     display_post(post)
   end
 
-  def remove_bookmark_by_number
-    if current_user
-      post = find_post_from_params_by_number
-      PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
-    end
-    render nothing: true
-  end
-
   def reply_history
     post = find_post_from_params
     render_serialized(post.reply_history, PostSerializer)

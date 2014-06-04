@@ -63,6 +63,7 @@ class PostDestroyer
         Topic.reset_highest(@post.topic_id)
       end
       trash_post_actions
+      trash_user_actions
       @post.update_flagged_posts_count
       remove_associated_replies
       remove_associated_notifications
@@ -136,6 +137,19 @@ class PostDestroyer
 
     f = PostActionType.types.map{|k,v| ["#{k}_count", 0]}
     Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
+  end
+
+  def trash_user_actions
+    UserAction.where(target_post_id: @post.id).each do |ua|
+      row = {
+        action_type: ua.action_type,
+        user_id: ua.user_id,
+        acting_user_id: ua.acting_user_id,
+        target_topic_id: ua.target_topic_id,
+        target_post_id: ua.target_post_id
+      }
+      UserAction.remove_action!(row)
+    end
   end
 
   def remove_associated_replies

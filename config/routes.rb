@@ -222,7 +222,6 @@ Discourse::Application.routes.draw do
   post "uploads" => "uploads#create"
 
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
-  put "posts/by_number/:topic_id/:post_number/bookmarks/remove" => "posts#remove_bookmark_by_number"
   get "posts/:id/reply-history" => "posts#reply_history"
 
   resources :groups do

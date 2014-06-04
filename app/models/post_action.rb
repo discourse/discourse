@@ -42,10 +42,10 @@ class PostAction < ActiveRecord::Base
   	return {} if collection.blank?
 
     collection_ids = collection.map {|p| p.id}
-
     user_id = user.present? ? user.id : 0
 
     result = PostAction.where(post_id: collection_ids, user_id: user_id)
+
     user_actions = {}
     result.each do |r|
       user_actions[r.post_id] ||= {}
@@ -146,7 +146,9 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.remove_act(user, post, post_action_type_id)
-    if action = find_by(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id)
+    finder = PostAction.where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id)
+    finder = finder.with_deleted if user.try(:staff?)
+    if action = finder.first
       action.remove_act!(user)
     end
   end
@@ -249,8 +251,8 @@ class PostAction < ActiveRecord::Base
       Post.where(id: post_id).update_all ["#{column} = #{column} + ?", delta]
     end
 
+    post = Post.with_deleted.where(id: post_id).first
     Topic.where(id: post.topic_id).update_all ["#{column} = #{column} + ?", delta]
-
 
     if PostActionType.notify_flag_type_ids.include?(post_action_type_id)
       PostAction.update_flagged_posts_count
@@ -259,6 +261,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def enforce_rules
+    post = Post.with_deleted.where(id: post_id).first
     PostAction.auto_hide_if_needed(post, post_action_type_key)
     SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
   end

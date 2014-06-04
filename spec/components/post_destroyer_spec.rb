@@ -288,6 +288,31 @@ describe PostDestroyer do
     end
   end
 
+  describe "user actions" do
+    let(:codinghorror) { Fabricate(:coding_horror) }
+    let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
+
+    def create_user_action(action_type)
+      UserAction.log_action!({
+        action_type: action_type,
+        user_id: codinghorror.id,
+        acting_user_id: codinghorror.id,
+        target_topic_id: second_post.topic_id,
+        target_post_id: second_post.id
+      })
+    end
+
+    it "should delete the user actions" do
+      bookmark = create_user_action(UserAction::BOOKMARK)
+      like = create_user_action(UserAction::LIKE)
+
+      PostDestroyer.new(moderator, second_post).destroy
+
+      expect(UserAction.find_by(id: bookmark.id)).to be_nil
+      expect(UserAction.find_by(id: like.id)).to be_nil
+    end
+  end
+
   describe 'topic links' do
     let!(:first_post)  { Fabricate(:post) }
     let!(:topic)       { first_post.topic }

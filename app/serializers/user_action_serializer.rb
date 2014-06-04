@@ -11,6 +11,7 @@ class UserActionSerializer < ApplicationSerializer
              :target_name,
              :target_username,
              :post_number,
+             :post_id,
              :reply_to_post_number,
              :username,
              :name,

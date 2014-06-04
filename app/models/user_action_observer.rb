@@ -132,12 +132,14 @@ class UserActionObserver < ActiveRecord::Observer
     action = UserAction::BOOKMARK if model.is_bookmark?
     action = UserAction::LIKE if model.is_like?
 
+    post = Post.with_deleted.where(id: model.post_id).first
+
     row = {
       action_type: action,
       user_id: model.user_id,
       acting_user_id: model.user_id,
       target_post_id: model.post_id,
-      target_topic_id: model.post.topic_id,
+      target_topic_id: post.topic_id,
       created_at: model.created_at
     }
 
@@ -149,7 +151,7 @@ class UserActionObserver < ActiveRecord::Observer
 
     if model.is_like?
       row[:action_type] = UserAction::WAS_LIKED
-      row[:user_id] = model.post.user_id
+      row[:user_id] = post.user_id
       if model.deleted_at.nil?
         UserAction.log_action!(row)
       else
