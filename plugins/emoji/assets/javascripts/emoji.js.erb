@@ -37,14 +37,25 @@
     ":-$"   : 'blush'
   };
 
+  function checkPrev(prev) {
+    if (prev && prev.length) {
+      var lastToken = prev[prev.length-1];
+      if (lastToken && lastToken.charAt) {
+        var lastChar = lastToken.charAt(lastToken.length-1);
+        if (lastChar !== ' ') return false;
+      }
+    }
+    return true;
+  }
+
   var translationsWithColon = {};
   Object.keys(translations).forEach(function (t) {
     if (t[0] === ':') {
       translationsWithColon[t] = translations[t];
     } else {
       var replacement = translations[t];
-      Discourse.Dialect.inlineReplace(t, function () {
-        return imageFor(replacement);
+      Discourse.Dialect.inlineReplace(t, function (token, match, prev) {
+        return checkPrev(prev) ? imageFor(replacement) : token;
       });
     }
   });
@@ -64,13 +75,7 @@
         firstSpace = text.search(/\s/),
         contents;
 
-    if (prev && prev.length) {
-      var lastToken = prev[prev.length-1];
-      if (lastToken && lastToken.charAt) {
-        var lastChar = lastToken.charAt(lastToken.length-1);
-        if (lastChar !== ' ') return;
-      }
-    }
+    if (!checkPrev(prev)) { return; }
 
     // If there is no trailing colon, check our translations that begin with colons
     if (endPos === -1 || (firstSpace !== -1 && endPos > firstSpace)) {

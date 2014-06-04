@@ -182,8 +182,8 @@ Discourse.Dialect = {
     @param {Function} emitter A function that emits the JsonML for the replacement.
   **/
   inlineReplace: function(token, emitter) {
-    this.registerInline(token, function() {
-      return [token.length, emitter.call(this, token)];
+    this.registerInline(token, function(text, match, prev) {
+      return [token.length, emitter.call(this, token, match, prev)];
     });
   },
 
