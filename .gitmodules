@@ -1,3 +1,6 @@
 [submodule "plugins/discourse-theme"]
 	path = plugins/discourse-theme
 	url = https://github.com/sitepoint/discourse-theme
+[submodule "plugins/discourse-plugin-profile-notes"]
+	path = plugins/discourse-plugin-profile-notes
+	url = https://github.com/sitepoint/discourse-plugin-profile-notes
