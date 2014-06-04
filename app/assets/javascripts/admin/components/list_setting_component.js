@@ -17,7 +17,7 @@ Discourse.ListSettingComponent = Ember.Component.extend({
     this.$("input").select2({
         multiple: false,
         separator: "|",
-        tokenSeparators: [",", " ", "|"],
+        tokenSeparators: ["|"],
         tags : this.get("choices") || [],
         width: 'off'
       }).on("change", function(obj) {
