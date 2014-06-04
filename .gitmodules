@@ -1,0 +1,3 @@
+[submodule "plugins/discourse-theme"]
+	path = plugins/discourse-theme
+	url = https://github.com/sitepoint/discourse-theme
