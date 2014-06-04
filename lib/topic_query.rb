@@ -259,6 +259,8 @@ class TopicQuery
         case status
         when 'open'
           result = result.where('NOT topics.closed AND NOT topics.archived')
+        when 'unanswered'
+          result = result.where('NOT topics.closed AND NOT topics.archived and topics.posts_count = 1')
         when 'closed'
           result = result.where('topics.closed')
         when 'archived'
