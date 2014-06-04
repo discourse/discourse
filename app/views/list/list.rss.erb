@@ -17,7 +17,7 @@
           <author><%= "no-reply@example.com (@#{topic.user.username}#{" #{topic.user.name}" if topic.user.name.present?})" -%></author>
           <category><%= topic.category.name %></category>
           <description><![CDATA[
-            <p><%= t('author_wrote', author: link_to(topic.user.name, userpage_url(topic.user.username_lower))).html_safe %></p>
+            <p><%= t('author_wrote', author: link_to(topic.user.name, user_url(topic.user.username_lower))).html_safe %></p>
             <blockquote>
               <%= topic.posts.first.cooked.html_safe %>
             </blockquote>

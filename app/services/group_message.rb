@@ -47,7 +47,7 @@ class GroupMessage
       if @opts[:user]
         h.merge!({
           username: @opts[:user].username,
-          user_url: userpage_path(@opts[:user].username)
+          user_url: user_path(@opts[:user].username)
         })
       end
       h
