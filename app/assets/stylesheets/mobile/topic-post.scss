@@ -547,6 +547,10 @@ blockquote {
   background-color: scale-color($tertiary, $lightness: 75%);
 }
 
+span.highlighted {
+  background-color: scale-color($highlight, $lightness: 70%);
+}
+
 .topic-avatar {
   width: 100%;
   float: left;
