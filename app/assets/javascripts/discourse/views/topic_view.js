@@ -25,7 +25,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   updateBar: function() {
     Em.run.scheduleOnce('afterRender', this, '_updateProgressBar');
-  }.observes('controller.streamPercentage'),
+  }.observes('controller.streamPercentage', 'postStream.stream.@each'),
 
   _updateProgressBar: function() {
     var $topicProgress = this._topicProgress;

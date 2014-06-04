@@ -265,6 +265,12 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return (this.get('progressPosition') < 2);
   }.property('progressPosition'),
 
+  filteredPostCountChanged: function(){
+    if(this.get('postStream.filteredPostsCount') < this.get('progressPosition')){
+      this.set('progressPosition', this.get('postStream.filteredPostsCount'));
+    }
+  }.observes('postStream.filteredPostsCount'),
+
   jumpBottomDisabled: function() {
     return this.get('progressPosition') >= this.get('postStream.filteredPostsCount') ||
            this.get('progressPosition') >= this.get('highest_post_number');
@@ -407,6 +413,16 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         // TODO we could update less data for "acted"
         // (only post actions)
         postStream.triggerChangedPost(data.id, data.updated_at);
+        return;
+      }
+
+      if (data.type === "deleted"){
+        postStream.triggerDeletedPost(data.id, data.post_number);
+        return;
+      }
+
+      if (data.type === "recovered"){
+        postStream.triggerRecoveredPost(data.id, data.post_number);
         return;
       }
 

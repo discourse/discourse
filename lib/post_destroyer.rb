@@ -48,6 +48,7 @@ class PostDestroyer
 
   def staff_recovered
     @post.recover!
+    publish("recovered")
   end
 
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
@@ -68,6 +69,21 @@ class PostDestroyer
       @post.topic.trash!(@user) if @post.topic and @post.post_number == 1
       update_associated_category_latest_topic
     end
+    publish("deleted")
+  end
+
+  def publish(message)
+    # edge case, topic is already destroyed
+    return unless @post.topic
+
+    MessageBus.publish("/topic/#{@post.topic_id}",{
+                    id: @post.id,
+                    post_number: @post.post_number,
+                    updated_at: @post.updated_at,
+                    type: message
+                  },
+                  group_ids: @post.topic.secure_group_ids
+    )
   end
 
   # When a user 'deletes' their own post. We just change the text.
