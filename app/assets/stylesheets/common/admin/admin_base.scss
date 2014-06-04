@@ -205,30 +205,29 @@
       -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
       transition: border linear 0.2s, box-shadow linear 0.2s;
 
-      .list-input-item {
-        width: 90px;
-        margin: 2px 1px;
-        background-color: $secondary;
-        border: 1px solid scale-color-diff();
-        border-radius: 3px;
-        box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
-        -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-        transition: border linear 0.2s, box-shadow linear 0.2s;
-
-        &:focus {
-          border-color: $tertiary;
-          outline: 0;
-          box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3), 0 0 8px $tertiary;
+      li.select2-search-choice {
+        cursor: pointer;
+        .select2-search-choice-close {
+          content: "x"
         }
       }
 
-      .btn.list-add-value {
-        margin: 0px 3px;
-        padding: 4px 10px;
-        color: $tertiary;
+      li.sortable-placeholder {
+        padding: 3px 5px 3px 18px;
+        margin: 3px 0px 3px 5px;
+        position: relative;
+        line-height: 13px;
+        cursor: default;
+        border: 1px dashed #AAA;
+        border-radius: 3px;
+        background-clip: padding-box;
+        -moz-user-select: none;
+        background-color: none;
+        width: 3em;
+        height: 1em;
       }
-    }
 
+    }
 
     .desc {
       padding-top: 3px;

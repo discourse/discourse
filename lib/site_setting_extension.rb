@@ -42,6 +42,10 @@ module SiteSettingExtension
     @lists ||= []
   end
 
+  def choices
+    @choices ||= {}
+  end
+
   def hidden_settings
     @hidden_settings ||= []
   end
@@ -59,6 +63,11 @@ module SiteSettingExtension
       if opts[:enum]
         enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
+      end
+      if opts[:choices]
+        choices.has_key?(name) ?
+          choices[name].concat(opts[:choices]) :
+          choices[name] = opts[:choices]
       end
       if opts[:list]
         lists << name
@@ -111,12 +120,16 @@ module SiteSettingExtension
       .map do |s, v|
         value = send(s)
         type = types[get_data_type(s, value)]
-        {setting: s,
+        opts = {setting: s,
          description: description(s),
          default: v,
          type: type.to_s,
          value: value.to_s,
-         category: categories[s]}.merge( type == :enum ? {valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?} : {})
+         category: categories[s]
+        }
+        opts.merge({valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?}) if type == :enum
+        opts[:choices] = choices[s] if choices.has_key? s
+        opts
       end
   end
 
