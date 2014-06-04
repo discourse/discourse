@@ -269,13 +269,21 @@ class PostCreator
   def track_topic
     return if @opts[:auto_track] == false
 
-    TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
-    # Update topic user data
     TopicUser.change(@post.user.id,
                      @post.topic.id,
                      posted: true,
                      last_read_post_number: @post.post_number,
                      seen_post_count: @post.post_number)
+
+
+    # assume it took us 5 seconds of reading time to make a post
+    PostTiming.record_timing(topic_id: @post.topic_id,
+                             user_id: @post.user_id,
+                             post_number: @post.post_number,
+                             msecs: 5000)
+
+
+    TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
   end
 
   def enqueue_jobs

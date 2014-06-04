@@ -429,8 +429,20 @@ describe PostCreator do
                                 embed_url: embed_url,
                                 title: 'Reviews of Science Ovens',
                                 raw: 'Did you know that you can use microwaves to cook your dinner? Science!')
-      post = creator.create
+      creator.create
       TopicEmbed.where(embed_url: embed_url).exists?.should be_true
+    end
+  end
+
+  describe "read credit for creator" do
+    it "should give credit to creator" do
+      post = create_post
+      PostTiming.find_by(topic_id: post.topic_id,
+                         post_number: post.post_number,
+                         user_id: post.user_id).msecs.should be > 0
+
+      TopicUser.find_by(topic_id: post.topic_id,
+                        user_id: post.user_id).last_read_post_number.should == 1
     end
   end
 
