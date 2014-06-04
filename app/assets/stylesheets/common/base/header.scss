@@ -168,17 +168,11 @@
     &:hover a {background: scale-color-diff();}
     button {margin-left: 5px;}
 
-
   }
-
-
-
-
-
+  
   .selected {
     background-color: scale-color($tertiary, $lightness: 90%);
   }
-
 
   // Search
   &#search-dropdown {
@@ -187,15 +181,6 @@
      }
   }
 
-  // Search
-  &#notifications-dropdown {
-    li {padding: 5px;
-    a {
-      display: inline;
-      padding: 1px;
-      }
-    }
-  }
   // Notifications
   &#notifications-dropdown {
     .fa {
@@ -203,6 +188,11 @@
     }
     li {
       background-color: scale-color($tertiary, $lightness: 90%);
+    padding: 5px;
+    a {
+      display: inline;
+      padding: 1px;
+      }
     }
     .read {
       background-color: $secondary;
