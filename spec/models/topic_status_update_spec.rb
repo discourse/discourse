@@ -15,9 +15,6 @@ describe TopicStatusUpdate do
     #   PostCreator really should not give back out-of-date Topic
     post.topic.reload
 
-    # TODO: also annoying PostTiming is not logged
-    PostTiming.create!(topic_id: post.topic_id, user_id: user.id, post_number: 1, msecs: 0)
-
     admin = Fabricate(:admin)
     TopicStatusUpdate.new(post.topic, admin).update!("autoclosed", true)
 
