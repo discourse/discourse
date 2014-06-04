@@ -891,8 +891,9 @@
         };
 
         var setupScrollSync = function() {
+          var sync = _.throttle(syncScroll, 20);
           $(panels.input).scroll(function() {
-            Ember.run.throttle(null, syncScroll, 16);
+            sync();
           });
         };
 
@@ -987,7 +988,6 @@
               currentWait = wait;
             }
 
-            //console.log(currentWait);
             if (timeout) { clearTimeout(timeout); }
             timeout = setTimeout(later, currentWait);
           }
