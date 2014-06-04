@@ -169,17 +169,11 @@
     button {margin-left: 5px;}
 
   }
-  
+
   .selected {
     background-color: scale-color($tertiary, $lightness: 90%);
   }
 
-  // Search
-  &#search-dropdown {
-    .heading {
-      padding: 5px;
-     }
-  }
 
   // Notifications
   &#notifications-dropdown {
@@ -188,10 +182,12 @@
     }
     li {
       background-color: scale-color($tertiary, $lightness: 90%);
-    padding: 5px;
+      padding: 5px;
+      &:hover a {background: transparent;}
     a {
       display: inline;
       padding: 1px;
+      &:hover {background: scale-color-diff();}
       }
     }
     .read {
@@ -209,11 +205,17 @@
     }
   }
 
-
-  .category-links li a {display: inline-block;}
-
+  .category-links li:not(.heading) a {
+    display: inline-block;
+  }
 
   // Search
+
+  &#search-dropdown {
+    .heading {
+      padding: 5px;
+     }
+  }
 
   input[type='text'] {
     width: 298px;
@@ -249,7 +251,6 @@
 
   &#user-dropdown {
     width: 118px;
-
   }
 
   .btn {
