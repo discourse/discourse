@@ -350,7 +350,7 @@ trust:
     default: 0
     enum: 'MinTrustToCreateTopicSetting'
   min_trust_to_edit_wiki_post:
-    default: 0
+    default: 1
     enum: 'MinTrustToCreateTopicSetting'
   basic_requires_topics_entered: 5
   basic_requires_read_posts: 30
