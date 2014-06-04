@@ -330,7 +330,6 @@
     function PanelCollection(postfix) {
         this.buttonBar = doc.getElementById("wmd-button-bar" + postfix);
         this.preview = doc.getElementById("wmd-preview" + postfix);
-        this.previewScroller = doc.getElementById("wmd-preview-scroller" + postfix);
         this.input = doc.getElementById("wmd-input" + postfix);
     };
 
@@ -861,7 +860,6 @@
         var oldInputText;
         var maxDelay = 3000;
         var startType = "delayed"; // The other legal value is "manual"
-        var scrollSyncOn = false && !!panels.previewScroller;
 
         var paneContentHeight = function(pane) {
           var $pane = $(pane);
@@ -870,100 +868,26 @@
           return pane.scrollHeight - paneVerticalPadding;
         };
 
-        if (scrollSyncOn) {
-          var prevScrollPosition = $(panels.input).scrollTop();
-          var caretMarkerPosition = 0;
-          var markerPositions = {
-            scroller: [0, paneContentHeight(panels.previewScroller)],
-            preview: [0, paneContentHeight(panels.preview)]
-          };
-        }
-
-        var getCaretPosition = function() {
-          return Discourse.Utilities.caretPosition(panels.input);
-        };
-
-        var cacheCaretMarkerPosition = function() {
-          caretMarkerPosition = $(panels.previewScroller).find(".caret").position().top;
-        };
-
-        var cachePaneMarkerPositions = function(cacheName, pane) {
-          var $pane = $(pane);
-          var paneScrollPosition = $pane.scrollTop();
-          var panePaddingTop = parseInt($pane.css("padding-top"));
-
-          markerPositions[cacheName] = [0];
-          $(pane).find(".marker").each(function () {
-            var markerPosition = $(this).position().top + paneScrollPosition - panePaddingTop;
-            markerPositions[cacheName].push(markerPosition);
-          });
-          markerPositions[cacheName].push(paneContentHeight(pane));
-        };
-
-        var cacheMarkerPositions = function() {
-          cachePaneMarkerPositions("scroller", panels.previewScroller);
-          cachePaneMarkerPositions("preview", panels.preview);
-        };
-
-        var getMarkerPositions = function(syncPosition) {
-          var startMarkerIndex = 0;
-          var endMarkerIndex = markerPositions.scroller.length - 1;
-
-          for (var index = startMarkerIndex + 1; index < endMarkerIndex; index += 1) {
-            if (markerPositions.scroller[index] > syncPosition) {
-              endMarkerIndex = index;
-              break;
-            }
-            startMarkerIndex = index;
-          }
-
-          return {
-            scrollerStart: markerPositions.scroller[startMarkerIndex],
-            scrollerEnd: markerPositions.scroller[endMarkerIndex],
-            previewStart: markerPositions.preview[startMarkerIndex] || markerPositions.preview[markerPositions.preview.length-1],
-            previewEnd: markerPositions.preview[endMarkerIndex] || markerPositions.preview[markerPositions.preview.length-1]
-          };
-        };
-
-        var detectScrollDown = function(currentPosition, previousPosition) {
-          return (currentPosition - previousPosition >= 0);
-        };
-
-        var getRatio = function(positions) {
-          return (positions.previewEnd - positions.previewStart) / (positions.scrollerEnd - positions.scrollerStart);
-        };
-
         var syncScroll = function(isEdit) {
+          var $preview = $(panels.preview);
+          var $input = $(panels.input);
+
+          if($input.scrollTop() === 0){
+            $preview.scrollTop(0);
+            return;
+          }
+
+          if(($input.height() + $input.scrollTop() + 100) > panels.input.scrollHeight){
+            // cheat, special case for bottom
+            $preview.scrollTop(panels.preview.scrollHeight);
+            return;
+          }
+
           var scrollPosition = $(panels.input).scrollTop();
-          var isScrollDown = (scrollPosition - prevScrollPosition >= 0);
-          prevScrollPosition = scrollPosition;
+          var factor = panels.preview.scrollHeight / panels.input.scrollHeight;
 
-          var inputBaseline;
-          var previewBaseline;
-          var threshold;
-
-          if (isEdit) {
-            inputBaseline = caretMarkerPosition;
-            previewBaseline = ($(panels.preview).height() * (caretMarkerPosition - scrollPosition) / $(panels.input).height());
-            threshold = 20;
-          } else if (isScrollDown) {
-            inputBaseline = scrollPosition + $(panels.input).height();
-            previewBaseline = $(panels.preview).height();
-            threshold = 0;
-          } else {
-            inputBaseline = scrollPosition;
-            previewBaseline = 0;
-            threshold = 0;
-          }
-
-          var positions = getMarkerPositions(inputBaseline);
-          var ratio = getRatio(positions);
-
-          var newPreviewScrollPosition = positions.previewStart - previewBaseline + (inputBaseline - positions.scrollerStart) * ratio;
-
-          if (threshold == 0 || Math.abs(newPreviewScrollPosition - $(panels.preview).scrollTop()) >= threshold) {
-            $(panels.preview).scrollTop(newPreviewScrollPosition);
-          }
+          var desired = scrollPosition * factor;
+          $preview.scrollTop(desired + 50);
         };
 
         var setupScrollSync = function() {
@@ -1020,39 +944,7 @@
             var prevTime = new Date().getTime();
 
             var previewText;
-            var previewScrollerText;
-
-            if (scrollSyncOn) {
-              var caretPosition = getCaretPosition();
-
-              var caret = "465c94fb53b6304c4f57";
-              var marker = "468c94fb53b6304c4f58";
-
-              // add last marker
-              text = text + marker;
-
-              var addMarkers = function(text) {
-                return text.replace(/(\s*)(\n|\n|\r|\r\n)/g, function(m, spaces, newline) {
-                  return marker + spaces + "\n";
-                });
-              }
-
-              previewText = converter.makeHtml(addMarkers(text))
-                .replace(new RegExp(marker, 'g'), '<span class="marker"></span>');
-
-              var withCaret = text.slice(0, caretPosition) + caret + text.slice(caretPosition);
-
-              previewScrollerText = addMarkers(withCaret)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/(\n|\n\r|\r\n)/g, '<br>')
-                .replace(caret, '<span class="caret"></span>')
-                .replace(new RegExp(marker, 'g'), '<span class="marker"></span>');
-
-            } else {
-              previewText = converter.makeHtml(text);
-            }
+            previewText = converter.makeHtml(text);
 
             // Calculate the processing time of the HTML creation.
             // It's used as the delay time in the event listener.
@@ -1060,12 +952,8 @@
             elapsedTime = currTime - prevTime;
 
             Ember.run(function() {
-              pushPreviewHtml(previewText, previewScrollerText);
-              if (scrollSyncOn) {
-                cacheMarkerPositions();
-                cacheCaretMarkerPosition();
-                syncScroll(true);
-              }
+              pushPreviewHtml(previewText);
+              syncScroll(true);
             });
         };
 
@@ -1159,7 +1047,7 @@
         // IE doesn't let you use innerHTML if the element is contained somewhere in a table
         // (which is the case for inline editing) -- in that case, detach the element, set the
         // value, and reattach. Yes, that *is* ridiculous.
-        var ieSafePreviewSet = function (previewText, previewScrollerText) {
+        var ieSafePreviewSet = function (previewText) {
             var ieSafeSet = function(panel, text) {
               var parent = panel.parentNode;
               var sibling = panel.nextSibling;
@@ -1172,40 +1060,34 @@
             };
 
             ieSafeSet(panels.preview, previewText);
-            if (scrollSyncOn) {
-              ieSafeSet(panels.previewScroller, previewScrollerText);
-            }
         }
 
-        var nonSuckyBrowserPreviewSet = function (previewText, previewScrollerText) {
+        var nonSuckyBrowserPreviewSet = function (previewText) {
             panels.preview.innerHTML = previewText;
-            if (scrollSyncOn) {
-              panels.previewScroller.innerHTML = previewScrollerText;
-            }
         }
 
         var previewSetter;
 
-        var previewSet = function (previewText, previewScrollerText) {
+        var previewSet = function (previewText) {
 
             if (previewSetter)
-                return previewSetter(previewText, previewScrollerText);
+                return previewSetter(previewText);
 
             try {
-                nonSuckyBrowserPreviewSet(previewText, previewScrollerText);
+                nonSuckyBrowserPreviewSet(previewText);
                 previewSetter = nonSuckyBrowserPreviewSet;
             } catch (e) {
                 previewSetter = ieSafePreviewSet;
-                previewSetter(previewText, previewScrollerText);
+                previewSetter(previewText);
             }
         };
 
-        var pushPreviewHtml = function (previewText, previewScrollerText) {
+        var pushPreviewHtml = function (previewText) {
 
             var emptyTop = position.getTop(panels.input) - getDocScrollTop();
 
             if (panels.preview) {
-                previewSet(previewText, previewScrollerText);
+                previewSet(previewText);
                 previewRefreshCallback();
             }
 
@@ -1231,12 +1113,8 @@
             // TODO: make option to disable. We don't need this in discourse
             // setupEvents(panels.input, applyTimeout);
 
-            if (scrollSyncOn) {
-              setupScrollSync();
-            }
-
+            setupScrollSync();
             makePreviewHtml();
-
         };
 
         init();

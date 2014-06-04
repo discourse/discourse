@@ -397,6 +397,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     return Em.run.later(jQuery, (function() {
       var replyTitle = $('#reply-title');
       self.resize();
+      self.refreshPreview();
       return replyTitle.length ? replyTitle.putCursorAtEnd() : $wmdInput.putCursorAtEnd();
     }), 300);
   },
