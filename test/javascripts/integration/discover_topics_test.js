@@ -12,8 +12,6 @@ test("Default List", function() {
 test("List one Category", function() {
   expect(2);
 
-  this.stub(Discourse.User, "current").returns(null);
-
   visit("/category/bug").then(function() {
     ok(exists("#topic-list"), "The list of topics was rendered");
     ok(exists('#topic-list .topic-list-item'), "has topics");

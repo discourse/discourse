@@ -157,10 +157,6 @@ Discourse.Category = Discourse.Model.extend({
     return this.countStats('topics');
   }.property('posts_year', 'posts_month', 'posts_week', 'posts_day'),
 
-  notification_level: function() {
-    return this.get('notification_level');
-  }.property('notification_level'),
-
   setNotification: function(notification_level) {
     var url = "/category/" + this.get('id')+"/notifications";
     this.set('notification_level', notification_level);
