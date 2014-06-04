@@ -70,7 +70,9 @@ class OptimizedImage < ActiveRecord::Base
   def self.resize(from, to, width, height)
     instructions = %W{
       #{from}
-      -resize #{width}x#{height}
+      -gravity center
+      -thumbnail #{width}x#{height}^
+      -extent #{width}x#{height}
       -background transparent
       -interpolate bicubic
       -unsharp 2x0.5+0.7+0
