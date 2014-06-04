@@ -292,7 +292,7 @@ Discourse.Composer = Discourse.Model.extend({
      opts:
        action   - The action we're performing: edit, reply or createTopic
        post     - The post we're replying to, if present
-       topic   - The topic we're replying to, if present
+       topic    - The topic we're replying to, if present
        quote    - If we're opening a reply from a quote, the quote we're making
   */
   open: function(opts) {

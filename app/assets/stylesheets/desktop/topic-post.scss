@@ -465,7 +465,11 @@ a.star {
     line-height: 32px;
     color: $primary;
   }
-
+  .btn {
+    margin-bottom: 5px;
+    margin-right: 10px;
+    .fa-star {margin-right: 5px;}
+  }
 }
 
 #suggested-topics {
@@ -495,14 +499,6 @@ span.post-count {
 
 button.expand-post {
   margin-top: 10px;
-}
-
-#topic-footer-buttons {
-  .btn {
-    margin-bottom: 5px;
-    margin-right: 10px;
-    .fa-star {margin-right: 5px;}
-  }
 }
 
 .quote-button {

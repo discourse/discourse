@@ -61,7 +61,8 @@ export default Discourse.Controller.extend({
   },
 
   updateDraftStatus: function() {
-    this.get('model').updateDraftStatus();
+    var c = this.get('model');
+    if (c) { c.updateDraftStatus(); }
   },
 
   appendText: function(text) {

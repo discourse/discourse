@@ -57,9 +57,11 @@
   <div class="container posts">
 
     {{view Discourse.SelectedPostsView}}
+
     <div class="row">
       <section class="topic-area" id='topic' data-topic-id='{{unbound id}}'>
         <div class='posts-wrapper'>
+
           <div id='topic-progress-wrapper' {{bind-attr class="dockedCounter:docked"}}>
             <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bind-attr class="hideProgress:hidden"}}>
               <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{bind-attr disabled="jumpTopDisabled"}} {{action jumpTop}}><i class="fa fa-arrow-circle-up"></i></button>

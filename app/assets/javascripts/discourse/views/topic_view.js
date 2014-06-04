@@ -39,7 +39,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       this._topicProgress = $topicProgress;
       // CAREFUL WITH THIS AXE
       // offsetWidth will cause a reflow, this ensures it only happens once
-      // in future it may make sense to move this offscreen to to the measurement
+      // in future it may make sense to move this offscreen to do the measurement
       Discourse.TopicView._progressWidth = Discourse.TopicView._progressWidth || $topicProgress[0].offsetWidth;
     }
 
@@ -155,7 +155,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     @method scrolled
   **/
   scrolled: function(){
-
     var offset = window.pageYOffset || $('html').scrollTop();
     if (!this.get('docAt')) {
       var title = $('#topic-title');
@@ -172,14 +171,39 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       headerController.set('showExtraInfo', topic.get('postStream.firstPostNotLoaded'));
     }
 
-    // Dock the counter if necessary
-    var $lastPost = $('article[data-post-id=' + topic.get('postStream.lastPostId') + "]");
-    var lastPostOffset = $lastPost.offset();
-    if (!lastPostOffset) {
-      this.set('controller.dockedCounter', false);
-      return;
+    // dock the counter if necessary
+    var maximumOffset = $('#topic-footer-buttons').offset(),
+        composerHeight = $('#reply-control').height() || 0,
+        $topicProgressWrapper = $('#topic-progress-wrapper'),
+        style = $topicProgressWrapper.attr('style') || '',
+        isDocked = false;
+
+    if (maximumOffset) {
+      var threshold = maximumOffset.top,
+          windowHeight = $(window).height(),
+          topicProgressHeight = $('#topic-progress').height();
+
+      isDocked = offset >= threshold - windowHeight + topicProgressHeight + composerHeight;
     }
-    this.set('controller.dockedCounter', (offset >= (lastPostOffset.top + $lastPost.height()) - $(window).height()));
+
+    if (composerHeight > 0) {
+      if (isDocked) {
+        if (style.indexOf('bottom') >= 0) {
+          $topicProgressWrapper.css('bottom', '');
+        }
+      } else {
+        var height = composerHeight + "px";
+        if ($topicProgressWrapper.css('bottom') !== height) {
+          $topicProgressWrapper.css('bottom', height);
+        }
+      }
+    } else {
+      if (style.indexOf('bottom') >= 0) {
+        $topicProgressWrapper.css('bottom', '');
+      }
+    }
+
+    this.set("controller.dockedCounter", isDocked);
   },
 
   topicTrackingState: function() {

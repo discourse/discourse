@@ -61,21 +61,6 @@
 .private-message-glyph { color: scale-color($primary, $lightness: 75%); }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
-#topic-closing-info {
-  border-top: 1px solid scale-color-diff();
-  padding-top: 10px;
-  height: 20px;
-}
-
-#topic-progress-wrapper {
-  position: fixed;
-  right: 50%;
-  width: 0;
-  bottom: 0;
-  z-index: 500;
-  outline: 1px solid transparent;
-}
-
 a.reply-new {
   position: absolute;
   margin-top: -2px;
@@ -96,6 +81,25 @@ a:hover.reply-new {
   i {
     background: scale-color($tertiary, $lightness: 75%);
     border: 1px solid $tertiary;
+  }
+}
+
+#topic-closing-info {
+  border-top: 1px solid scale-color-diff();
+  padding-top: 10px;
+  height: 20px;
+}
+
+#topic-progress-wrapper {
+  position: fixed;
+  right: 50%;
+  width: 0;
+  bottom: 0;
+  z-index: 500;
+  outline: 1px solid transparent;
+  &.docked {
+    position: absolute;
+    bottom: -70px;
   }
 }
 
@@ -159,12 +163,6 @@ a:hover.reply-new {
     background-color:  scale-color($success, $lightness: 70%);
     transition: width .75s;
   }
-}
-
-#topic-progress-wrapper.docked {
-  position: absolute;
-  bottom: -70px;
-
 }
 
 #suggested-topics .topic-statuses .topic-status {

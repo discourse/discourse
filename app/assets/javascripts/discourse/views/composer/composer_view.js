@@ -53,23 +53,26 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     Ember.run.scheduleOnce('afterRender', this, 'refreshPreview');
   }.observes('model.reply', 'model.hidePreview'),
 
-  movePanels: function(sizePx) {
-    $('.composer-popup').css('bottom', sizePx);
-  },
-
   focusIn: function() {
     var controller = this.get('controller');
     if (controller) controller.updateDraftStatus();
   },
 
+  movePanels: function(sizePx) {
+    $('#main-outlet').css('padding-bottom', sizePx);
+    $('.composer-popup').css('bottom', sizePx);
+  },
+
   resize: function() {
-    // this still needs to wait on animations, need a clean way to do that
+    var self = this;
     return Em.run.schedule('afterRender', function() {
-      var replyControl = $('#reply-control');
-      var h = replyControl.height() || 0;
-      var sizePx = "" + h + "px";
-      $('#main-outlet').css('padding-bottom', sizePx);
-      $('.composer-popup').css('bottom', sizePx);
+      var $replyControl = $('#reply-control');
+      // wait for the transitions
+      $replyControl.on("transitionend", function() {
+        var h = $replyControl.height() || 0;
+        var sizePx = "" + h + "px";
+        if (self.movePanels) { self.movePanels(sizePx); }
+      });
     });
   }.observes('model.composeState'),
 
