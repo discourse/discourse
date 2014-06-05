@@ -108,6 +108,11 @@ class Plugin::Instance
     @javascripts << js
   end
 
+  def register_custom_html(hash)
+    DiscoursePluginRegistry.custom_html ||= {}
+    DiscoursePluginRegistry.custom_html.merge!(hash)
+  end
+
   def register_asset(file, opts=nil)
     full_path = File.dirname(path) << "/assets/" << file
     assets << [full_path, opts]

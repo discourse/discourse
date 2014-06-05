@@ -243,12 +243,20 @@ class ApplicationController < ActionController::Base
     end
 
     def custom_html_json
-      MultiJson.dump({
+      data = {
         top: SiteContent.content_for(:top),
         bottom: SiteContent.content_for(:bottom)
-      }.merge(
-        (SiteSetting.tos_accept_required && !current_user) ? {tos_signup_form_message: SiteContent.content_for(:tos_signup_form_message)} : {}
-      ))
+      }
+
+      if SiteSetting.tos_accept_required && !current_user
+        data[:tos_signup_form_message] = SiteContent.content_for(:tos_signup_form_message)
+      end
+
+      if DiscoursePluginRegistry.custom_html
+        data.merge! DiscoursePluginRegistry.custom_html
+      end
+
+      MultiJson.dump(data)
     end
 
     def render_json_error(obj)

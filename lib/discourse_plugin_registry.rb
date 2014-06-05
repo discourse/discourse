@@ -12,6 +12,7 @@ class DiscoursePluginRegistry
     attr_accessor :desktop_stylesheets
     attr_accessor :sass_variables
     attr_accessor :handlebars
+    attr_accessor :custom_html
 
     # Default accessor values
     def javascripts
