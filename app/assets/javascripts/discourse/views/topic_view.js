@@ -94,6 +94,11 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       if ($target.hasClass('mention') || $target.parents('.expanded-embed').length) { return false; }
       return Discourse.ClickTrack.trackClick(e);
     });
+
+    var dockProgressBar = function () { self._dockProgressBar(); };
+    this.appEvents.on("composer:opened", dockProgressBar)
+                  .on("composer:resized", dockProgressBar)
+                  .on("composer:closed", dockProgressBar);
   }.on('didInsertElement'),
 
   // This view is being removed. Shut down operations
@@ -108,6 +113,11 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     // this happens after route exit, stuff could have trickled in
     this.set('controller.controllers.header.showExtraInfo', false);
+
+    // unbind events
+    this.appEvents.off("composer:opened")
+                  .off("composer:resized")
+                  .off("composer:closed");
   }.on('willDestroyElement'),
 
   debounceLoadSuggested: Discourse.debounce(function(){
@@ -172,11 +182,17 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
 
     // dock the counter if necessary
+    this._dockProgressBar(offset);
+  },
+
+  _dockProgressBar: function (offset) {
     var maximumOffset = $('#topic-footer-buttons').offset(),
         composerHeight = $('#reply-control').height() || 0,
         $topicProgressWrapper = $('#topic-progress-wrapper'),
         style = $topicProgressWrapper.attr('style') || '',
         isDocked = false;
+
+    offset = offset || window.pageYOffset || $('html').scrollTop();
 
     if (maximumOffset) {
       var threshold = maximumOffset.top,

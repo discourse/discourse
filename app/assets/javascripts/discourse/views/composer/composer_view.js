@@ -61,18 +61,17 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   movePanels: function(sizePx) {
     $('#main-outlet').css('padding-bottom', sizePx);
     $('.composer-popup').css('bottom', sizePx);
+    // signal the progress bar it should move!
+    this.appEvents.trigger("composer:resized");
   },
 
   resize: function() {
     var self = this;
-    return Em.run.schedule('afterRender', function() {
-      var $replyControl = $('#reply-control');
-      // wait for the transitions
-      $replyControl.on("transitionend", function() {
-        var h = $replyControl.height() || 0;
-        var sizePx = "" + h + "px";
-        if (self.movePanels) { self.movePanels(sizePx); }
-      });
+    Em.run.scheduleOnce('afterRender', function() {
+      if (self.movePanels) {
+        var h = $('#reply-control').height() || 0;
+        self.movePanels.apply(self, [h + "px"]);
+      }
     });
   }.observes('model.composeState'),
 
@@ -107,8 +106,12 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   _enableResizing: function() {
-    var $replyControl = $('#reply-control');
-    $replyControl.DivResizer({ resize: this.resize, onDrag: this.movePanels });
+    var $replyControl = $('#reply-control'),
+        self = this;
+    $replyControl.DivResizer({
+      resize: this.resize,
+      onDrag: function (sizePx) { self.movePanels.apply(self, [sizePx]); }
+    });
     Discourse.TransitionHelper.after($replyControl, this.resize);
     this.ensureMaximumDimensionForImagesInPreview();
   }.on('didInsertElement'),
@@ -203,11 +206,11 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     });
 
     // HACK to change the upload icon of the composer's toolbar
-    Em.run.scheduleOnce("afterRender", function() {
-      if (!Discourse.Utilities.allowsAttachments()) {
+    if (!Discourse.Utilities.allowsAttachments()) {
+      Em.run.scheduleOnce("afterRender", function() {
         $("#wmd-image-button").addClass("image-only");
-      }
-    });
+      });
+    }
 
     this.editor.hooks.insertImageDialog = function(callback) {
       callback(null);
@@ -402,14 +405,18 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       });
     }
 
-    // I hate to use Em.run.later, but I don't think there's a way of waiting for a CSS transition
-    // to finish.
-    Em.run.later(jQuery, (function() {
-      var replyTitle = $('#reply-title');
+    // need to wait a bit for the "slide up" transition of the composer
+    // we could use .on("transitionend") but it's not firing when the transition isn't completed :(
+    Em.run.later(function() {
       self.resize();
       self.refreshPreview();
-      return replyTitle.length ? replyTitle.putCursorAtEnd() : $wmdInput.putCursorAtEnd();
-    }), 300);
+      if ($replyTitle.length) {
+        $replyTitle.putCursorAtEnd();
+      } else {
+        $wmdInput.putCursorAtEnd();
+      }
+      self.appEvents.trigger("composer:opened");
+    }, 400);
   },
 
   addMarkdown: function(text) {
@@ -442,8 +449,17 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   childWillDestroyElement: function() {
-    $('#main-outlet').css('padding-bottom', 0);
+    var self = this;
+
     this._unbindUploadTarget();
+
+    Em.run.next(function() {
+      $('#main-outlet').css('padding-bottom', 0);
+      // need to wait a bit for the "slide down" transition of the composer
+      Em.run.later(function() {
+        self.appEvents.trigger("composer:closed");
+      }, 400);
+    });
   },
 
   titleValidation: function() {
