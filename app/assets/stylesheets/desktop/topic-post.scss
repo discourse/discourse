@@ -268,7 +268,7 @@ nav.post-controls {
     max-width: 720px;
     }
   }
-  &.top.post-column {padding-left: 0;}
+  &.top.topic-body {padding-left: 0;}
     .topic-body, .topic-avatar {border: none;}
     .topic-avatar {padding-left: 15px;}
     .post-date {color: scale-color($primary, $lightness: 50%);}
@@ -764,6 +764,7 @@ blockquote { /* solo quotes */
 }
 
 .topic-body {
+  width: 695px;
   float: left;
   position: relative;
   border-top: 1px solid scale-color-diff();
@@ -793,13 +794,6 @@ blockquote { /* solo quotes */
 }
 
 //columns
-
-.post-column {
-  width: 695px;
-  float: left;
-  padding-left: 10px;
-  padding-right: 10px;
-  }
 
 .span11 {
   width: 84%;
