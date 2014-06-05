@@ -1,6 +1,10 @@
 <div class="topic-list">
 <% @list.topics.each do |t| %>
-  <a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
+  <a href="<%= t.relative_url %>"><%= t.title %></a>
+  <% if !@category && t.category %>
+    [<a href="/category/<%= t.category.slug.blank? ? t.category.id : t.category.slug %>"><%= t.category.name %></a>]
+  <% end %>
+  <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
 <% end %>
 </div>
 

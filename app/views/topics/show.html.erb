@@ -1,6 +1,9 @@
 <h2>
    <%= render_topic_title(@topic_view.topic) %>
 </h2>
+<% if c = @topic_view.topic.category %>
+  <a href="/category/<%= c.slug.blank? ? c.id : c.slug %>"><%= c.name %></a>
+<% end %>
 <hr/>
 
 <% @topic_view.posts.each do |post| %>
