@@ -30,7 +30,14 @@ class ImportScripts::Base
 
   def perform
     Rails.logger.level = 3 # :error, so that we don't create log files that are many GB
+
     SiteSetting.email_domains_blacklist = ''
+    SiteSetting.min_topic_title_length = 1
+    SiteSetting.min_post_length = 1
+    SiteSetting.min_private_message_post_length = 1
+    SiteSetting.min_private_message_title_length = 1
+    SiteSetting.allow_duplicate_topic_titles = true
+
     RateLimiter.disable
 
     execute
