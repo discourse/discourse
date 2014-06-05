@@ -19,28 +19,32 @@ If you haven't already, download Discourse and create a new branch for your Hero
 
         heroku create your-app-name
 
-2. Add a suitable Redis provider from [Heroku add-ons](https://addons.heroku.com/), (this service will cost you money).
+1. Add postgres addon (command below adds the free dev version)
+
+        heroku addons:add heroku-postgresql
+
+1. Add a suitable Redis provider from [Heroku add-ons](https://addons.heroku.com/), (this service will cost you money).
 
         heroku addons:add openredis:micro
 
-3. Point the app at your redis provider's URL
+1. Point the app at your redis provider's URL
 
         heroku config:get OPENREDIS_URL
         heroku config:set REDIS_PROVIDER_URL=<result of above command>
 
-4. Run bundler
+1. Run bundler
 
         bundle install
 
-5. Generate a secret token in the terminal.
+1. Generate a secret token in the terminal.
 
         rake secret
 
-6. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
+1. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
 
         heroku config:add SECRET_TOKEN=<generated secret>
 
-7. Precompile assets.
+1. Precompile assets.
 
     There are two options for precompilation. Either precompile locally, **before each deploy** or enable [Heroku's experimental user-env-compile](https://devcenter.heroku.com/articles/labs-user-env-compile) feature and Heroku will precompile your assets for you.
 
@@ -87,11 +91,11 @@ If you haven't already, download Discourse and create a new branch for your Hero
         git push heroku heroku:master
         ```
 
-8. Push your heroku branch to Heroku.
+1. Push your heroku branch to Heroku.
 
         git push heroku heroku:master
 
-9. Migrate and seed the database.
+1. Migrate and seed the database.
 
         heroku run rake db:migrate db:seed_fu
 
