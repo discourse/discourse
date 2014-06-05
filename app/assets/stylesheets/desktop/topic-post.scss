@@ -738,10 +738,12 @@ blockquote { /* solo quotes */
 
 .gutter {
   float: left;
+  width: 19%;
   margin-top: 15px;
-      ul {margin: 0;}
-      padding-left: 8px;
+  padding-left: 8px;
 
+  ul {margin: 0;}
+  li {margin-bottom: 10px;}
   i {font-size: 12px;}
 
   .post-links {
@@ -762,7 +764,7 @@ blockquote { /* solo quotes */
       display: block;
       text-align: right;
     }
-    li {margin-bottom: 10px;}
+
   }
 }
 
@@ -794,20 +796,6 @@ blockquote { /* solo quotes */
 
 .posts-wrapper {
   position: relative;
-}
-
-//columns
-
-.span5 {
-  width: 19%;
-  padding-left: 1%;
-}
-
-
-@media screen and (max-width: 960px) {
-  .span5 {
-    width: 16%;
-  } // tighten right gutter
 }
 
 .row:before, .row:after {
@@ -1066,7 +1054,7 @@ span.highlighted {
 .read-state {
   color: scale-color($tertiary, $lightness: 50%);
   position: absolute;
-  right: 0px;
+  right: -8px;
   top: 13px;
   font-size: 8px;
 }

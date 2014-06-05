@@ -1,7 +1,7 @@
 var MAX_SHOWN = 5;
 
 export default Em.Component.extend({
-  classNameBindings: [':span5', ':gutter'],
+  classNameBindings: [':gutter'],
 
   // Roll up links to avoid duplicates
   collapsed: function() {
