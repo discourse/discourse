@@ -455,6 +455,7 @@ Discourse.Composer = Discourse.Model.extend({
       username: currentUser.get('username'),
       user_id: currentUser.get('id'),
       uploaded_avatar_id: currentUser.get('uploaded_avatar_id'),
+      user_custom_fields: currentUser.get('custom_fields'),
       archetype: this.get('archetypeId'),
       post_type: Discourse.Site.currentProp('post_types.regular'),
       target_usernames: this.get('targetUsernames'),

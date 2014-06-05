@@ -20,7 +20,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_delete_account,
              :should_be_redirected_to_top,
              :redirected_to_top_reason,
-             :disable_jump_reply
+             :disable_jump_reply,
+             :custom_fields
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -68,6 +69,12 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_redirected_to_top_reason?
     object.redirected_to_top_reason.present?
+  end
+
+  def custom_fields
+    return {} unless SiteSetting.public_user_custom_fields.present?
+    fields = User.custom_fields_for_ids([object.id], SiteSetting.public_user_custom_fields.split('|'))
+    return fields.present? ? fields[object.id] : {}
   end
 
 end
