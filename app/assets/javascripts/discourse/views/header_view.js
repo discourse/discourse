@@ -11,15 +11,16 @@ Discourse.HeaderView = Discourse.View.extend({
   classNames: ['d-header', 'clearfix'],
   classNameBindings: ['editingTopic'],
   templateName: 'header',
-  topicBinding: 'Discourse.router.topicController.content',
 
   showDropdown: function($target) {
     var elementId = $target.data('dropdown') || $target.data('notifications'),
         $dropdown = $("#" + elementId),
         $li = $target.closest('li'),
         $ul = $target.closest('ul'),
-        $html = $('html');
+        $html = $('html'),
+        self = this;
 
+    self.set('controller.visibleDropdown', elementId);
     // we need to ensure we are rendered,
     //  this optimises the speed of the initial render
     var render = $target.data('render');
@@ -27,7 +28,7 @@ Discourse.HeaderView = Discourse.View.extend({
       if(!this.get(render)){
         this.set(render, true);
         Em.run.next(this, function(){
-          this.showDropdown($target);
+          this.showDropdown.apply(self, [$target]);
         });
         return;
       }
@@ -37,6 +38,7 @@ Discourse.HeaderView = Discourse.View.extend({
       $dropdown.fadeOut('fast');
       $li.removeClass('active');
       $html.data('hide-dropdown', null);
+      self.set('controller.visibleDropdown', null);
       return $html.off('click.d-dropdown');
     };
 
@@ -53,7 +55,7 @@ Discourse.HeaderView = Discourse.View.extend({
     $dropdown.find('input[type=text]').focus().select();
 
     $html.on('click.d-dropdown', function(e) {
-      return $(e.target).closest('.d-dropdown').length > 0 ? true : hideDropdown();
+      return $(e.target).closest('.d-dropdown').length > 0 ? true : hideDropdown.apply(self);
     });
 
     $html.data('hide-dropdown', hideDropdown);
@@ -107,36 +109,37 @@ Discourse.HeaderView = Discourse.View.extend({
 
   didInsertElement: function() {
 
-    var headerView = this;
+    var self = this;
+
     this.$('a[data-dropdown]').on('click.dropdown', function(e) {
-      headerView.showDropdown($(e.currentTarget));
+      self.showDropdown.apply(self, [$(e.currentTarget)]);
       return false;
     });
     this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click.notifications', function(e) {
-      headerView.showNotifications(e);
+      self.showNotifications(e);
       return false;
     });
     $(window).bind('scroll.discourse-dock', function() {
-      headerView.examineDockHeader();
+      self.examineDockHeader();
     });
     $(document).bind('touchmove.discourse-dock', function() {
-      headerView.examineDockHeader();
+      self.examineDockHeader();
     });
-    this.examineDockHeader();
+    self.examineDockHeader();
 
     // Delegate ESC to the composer
     $('body').on('keydown.header', function(e) {
       // Hide dropdowns
       if (e.which === 27) {
-        headerView.$('li').removeClass('active');
-        headerView.$('.d-dropdown').fadeOut('fast');
+        self.$('li').removeClass('active');
+        self.$('.d-dropdown').fadeOut('fast');
       }
-      if (headerView.get('editingTopic')) {
+      if (self.get('editingTopic')) {
         if (e.which === 13) {
-          headerView.finishedEdit();
+          self.finishedEdit();
         }
         if (e.which === 27) {
-          return headerView.cancelEdit();
+          return self.cancelEdit();
         }
       }
     });

@@ -19,3 +19,9 @@
     color: scale-color($primary, $lightness: 50%);
  }
 }
+
+.cooked .highlight{
+  background-color: scale-color($highlight, $lightness: 40%);
+  padding: 2px;
+  margin: -2px;
+}

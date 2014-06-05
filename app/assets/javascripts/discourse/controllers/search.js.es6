@@ -8,6 +8,10 @@
 **/
 export default Em.ArrayController.extend(Discourse.Presence, {
 
+  contextChanged: function(){
+    this.setProperties({ term: "", content: [], resultCount: 0, urls: [] });
+  }.observes("searchContext"),
+
   // If we need to perform another search
   newSearchNeeded: function() {
     this.set('noResults', false);

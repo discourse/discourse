@@ -86,8 +86,6 @@ Discourse.URL = Em.Object.createWithMixins({
       path = path.replace(rootURL, '');
     }
 
-    // Schedule a DOM cleanup event
-    Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
 
     // Rewrite /my/* urls
     if (path.indexOf('/my/') === 0) {
@@ -100,9 +98,12 @@ Discourse.URL = Em.Object.createWithMixins({
       }
     }
 
+    if (this.navigatedToPost(oldPath, path)) { return; }
+    // Schedule a DOM cleanup event
+    Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
+
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path)) { return; }
-    if (this.navigatedToPost(oldPath, path)) { return; }
 
     if (path.match(/^\/?users\/[^\/]+$/)) {
       path += "/activity";

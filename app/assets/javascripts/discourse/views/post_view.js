@@ -257,5 +257,26 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
     // Find all the quotes
     Em.run.scheduleOnce('afterRender', this, 'insertQuoteControls');
-  }
+
+    this.applySearchHighlight();
+  },
+
+  applySearchHighlight: function(){
+    var highlight = this.get('controller.searchHighlight');
+    var cooked = this.$('.cooked');
+
+    if(!cooked){ return; }
+
+    if(highlight && highlight.length > 2){
+      if(this._highlighted){
+         cooked.unhighlight();
+      }
+      cooked.highlight(highlight);
+      this._highlighted = true;
+
+    } else if(this._highlighted){
+      cooked.unhighlight();
+      this._highlighted = false;
+    }
+  }.observes('controller.searchHighlight', 'cooked')
 });

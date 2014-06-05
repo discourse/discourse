@@ -8,12 +8,30 @@
 **/
 Discourse.TopicController = Discourse.ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
-  needs: ['header', 'modal', 'composer', 'quote-button'],
+  needs: ['header', 'modal', 'composer', 'quote-button', 'search'],
   allPostsSelected: false,
   editingTopic: false,
   selectedPosts: null,
   selectedReplies: null,
   queryParams: ['filter', 'username_filters'],
+
+  contextChanged: function(){
+    this.set('controllers.search.searchContext', this.get('model.searchContext'));
+  }.observes('topic'),
+
+  termChanged: function(){
+    var dropdown = this.get('controllers.header.visibleDropdown');
+    var term = this.get('controllers.search.term');
+
+    if(dropdown === 'search-dropdown' && term){
+      this.set('searchHighlight', term);
+    } else {
+      if(this.get('searchHighlight')){
+        this.set('searchHighlight', null);
+      }
+    }
+
+  }.observes('controllers.search.term', 'controllers.header.visibleDropdown'),
 
   filter: function(key, value) {
     if (arguments.length > 1) {
