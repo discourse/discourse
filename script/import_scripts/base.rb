@@ -125,7 +125,7 @@ class ImportScripts::Base
     existing = User.where(email: opts[:email].downcase, username: opts[:username]).first
     return existing if existing and existing.custom_fields["import_id"].to_i == import_id.to_i
 
-    opts[:name] = User.suggest_name(opts[:name] || opts[:email])
+    opts[:name] = User.suggest_name(opts[:name]) if opts[:name]
     opts[:username] = UserNameSuggester.suggest((opts[:username].present? ? opts[:username] : nil) || opts[:name] || opts[:email])
     opts[:email] = opts[:email].downcase
     opts[:trust_level] = TrustLevel.levels[:basic] unless opts[:trust_level]
