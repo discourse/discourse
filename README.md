@@ -171,8 +171,8 @@ Installing
 
 Add this line to your application's Gemfile:
 
-    gem "onebox". "~> 1.2"
-
+    gem "onebox", "~> 1.2"
+    
 And then execute:
 
     $ bundle
