@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.InputTipView = Discourse.View.extend({
+export default Discourse.View.extend({
   classNameBindings: [':tip', 'good', 'bad'],
 
   shouldRerender: Discourse.View.renderIfChanged('validation'),
@@ -21,5 +21,3 @@ Discourse.InputTipView = Discourse.View.extend({
     }
   }
 });
-
-Discourse.View.registerHelper('inputTip', Discourse.InputTipView);

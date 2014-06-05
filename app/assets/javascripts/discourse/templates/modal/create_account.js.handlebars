@@ -7,7 +7,7 @@
           <td style="width:80px" class="label"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
           <td style="width:496px">
           {{textField value=accountName id="new-account-name" autofocus="autofocus"}}
-          &nbsp;{{inputTip validation=nameValidation}}
+          &nbsp;{{input-tip validation=nameValidation}}
           </td>
       </tr>
       <tr class="instructions">
@@ -19,7 +19,7 @@
             <td class="label"><label for='new-account-email'>{{i18n user.email.title}}</label></td>
             <td>
             {{input value=accountEmail id="new-account-email" disabled=emailValidated}}
-            &nbsp;{{inputTip validation=emailValidation}}
+            &nbsp;{{input-tip validation=emailValidation}}
             </td>
       </tr>
       <tr class="instructions">
@@ -31,7 +31,7 @@
             <td class="label"><label for='new-account-username'>{{i18n user.username.title}}</label></td>
             <td>
             {{input value=accountUsername id="new-account-username" maxlength="15"}}
-            &nbsp;{{inputTip validation=usernameValidation}}
+            &nbsp;{{input-tip validation=usernameValidation}}
             </td>
       </tr>
       <tr class="instructions">
@@ -44,7 +44,7 @@
           <td class="label"><label for='new-account-password'>{{i18n user.password.title}}</label></td>
           <td>
           {{input type="password" value=accountPassword id="new-account-password"}}
-          &nbsp;{{inputTip validation=passwordValidation}}
+          &nbsp;{{input-tip validation=passwordValidation}}
           </td>
       </tr>
       <tr class="instructions">
