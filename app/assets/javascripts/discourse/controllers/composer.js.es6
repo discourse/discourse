@@ -101,9 +101,9 @@ export default Discourse.Controller.extend({
     if(composer.get('cantSubmitPost')) {
       var now = Date.now();
       this.setProperties({
-        "view.showTitleTip": now,
-        "view.showCategoryTip": now,
-        "view.showReplyTip": now
+        'view.showTitleTip': now,
+        'view.showCategoryTip': now,
+        'view.showReplyTip': now
       });
       return;
     }

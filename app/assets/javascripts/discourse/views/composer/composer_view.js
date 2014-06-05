@@ -404,12 +404,24 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
 
     // I hate to use Em.run.later, but I don't think there's a way of waiting for a CSS transition
     // to finish.
-    return Em.run.later(jQuery, (function() {
+    Em.run.later(jQuery, (function() {
       var replyTitle = $('#reply-title');
       self.resize();
       self.refreshPreview();
       return replyTitle.length ? replyTitle.putCursorAtEnd() : $wmdInput.putCursorAtEnd();
     }), 300);
+
+    $('#reply-title').on('focusout', function(){
+      self.set('showTitleTip', Date.now());
+    });
+
+    $('#wmd-input').on('focusout', function(){
+      self.set('showReplyTip', Date.now());
+    });
+
+    self.$('.category-input').on('focusout', function(){
+      self.set('showCategoryTip', Date.now());
+    });
   },
 
   addMarkdown: function(text) {
