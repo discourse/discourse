@@ -11,14 +11,14 @@ module Onebox
 
     def to_s
       return "" unless engine
-      engine.to_html || ""
+      process_html(engine_html)
     rescue *Onebox::Preview.web_exceptions
       ""
     end
 
     def placeholder_html
       return "" unless engine
-      engine.placeholder_html || ""
+      process_html(engine.placeholder_html)
     rescue *Onebox::Preview.web_exceptions
       ""
     end
@@ -32,6 +32,35 @@ module Onebox
     end
 
     private
+
+    def engine_html
+      engine.to_html
+    end
+
+    def process_html(html)
+      return "" unless html
+
+      if @options[:max_width]
+        doc = Nokogiri::HTML::fragment(html)
+        if doc
+          doc.css('[width]').each do |e|
+            width = e['width'].to_i
+
+            if width > @options[:max_width]
+              height = e['height'].to_i
+              if (height > 0)
+                ratio = (height.to_f / width.to_f)
+                e['height'] = (@options[:max_width] * ratio).floor
+              end
+              e['width'] = @options[:max_width]
+            end
+          end
+          return doc.to_html
+        end
+      end
+
+      html
+    end
 
     def engine
       return nil unless @engine_class

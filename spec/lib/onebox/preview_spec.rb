@@ -12,7 +12,8 @@ describe Onebox::Preview do
     FakeWeb.register_uri(:get, "http://www.amazon.com/error-connecting", exception: Errno::ECONNREFUSED)
   end
 
-  let(:preview) { described_class.new("http://www.amazon.com/product") }
+  let(:preview_url) { "http://www.amazon.com/product" }
+  let(:preview) { described_class.new(preview_url) }
 
   describe "#to_s" do
     it "returns some html if given a valid url" do
@@ -42,6 +43,37 @@ describe Onebox::Preview do
 
     it "returns an empty string if the url is not valid" do
       expect(described_class.new('not a url').to_s).to eq("")
+    end
+  end
+
+  describe "max_width" do
+    let(:iframe_html) { '<iframe src="//player.vimeo.com/video/96017582" width="1280" height="720" frameborder="0" title="GO BIG OR GO HOME" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>' }
+
+    it "doesn't change dimensions without an option" do
+      iframe = described_class.new(preview_url)
+      iframe.expects(:engine_html).returns(iframe_html)
+
+      result = iframe.to_s
+      expect(result).to include("width=\"1280\"")
+      expect(result).to include("height=\"720\"")
+    end
+
+    it "doesn't change dimensions if it is smaller than `max_width`" do
+      iframe = described_class.new(preview_url, max_width: 2000)
+      iframe.expects(:engine_html).returns(iframe_html)
+
+      result = iframe.to_s
+      expect(result).to include("width=\"1280\"")
+      expect(result).to include("height=\"720\"")
+    end
+
+    it "changes dimensions if larger than `max_width`" do
+      iframe = described_class.new(preview_url, max_width: 900)
+      iframe.expects(:engine_html).returns(iframe_html)
+
+      result = iframe.to_s
+      expect(result).to include("width=\"900\"")
+      expect(result).to include("height=\"506\"")
     end
   end
 
