@@ -517,7 +517,7 @@ uncategorized:
     default: true
 
   # Search
-  min_posts_for_search_in_topic: 10
+  min_posts_for_search_in_topic: 0
   min_search_term_length:
     client: true
     default: 3
