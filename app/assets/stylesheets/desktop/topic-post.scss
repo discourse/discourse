@@ -268,7 +268,7 @@ nav.post-controls {
     max-width: 720px;
     }
   }
-  &.top.span14 {padding-left: 0;}
+  &.top.post-column {padding-left: 0;}
     .topic-body, .topic-avatar {border: none;}
     .topic-avatar {padding-left: 15px;}
     .post-date {color: scale-color($primary, $lightness: 50%);}
@@ -737,7 +737,7 @@ blockquote { /* solo quotes */
   float: left;
   margin-top: 15px;
       ul {margin: 0;}
-      padding-left: 10px;
+      padding-left: 8px;
 
   i {font-size: 12px;}
 
@@ -792,10 +792,11 @@ blockquote { /* solo quotes */
 
 //columns
 
-.span14 {
-  width: 68%;
-  padding-left: 1%;
-  padding-right: 1%;
+.post-column {
+  width: 695px;
+  float: left;
+  padding-left: 10px;
+  padding-right: 10px;
   }
 
 .span2 { width: 5%; }
@@ -811,14 +812,10 @@ blockquote { /* solo quotes */
 }
 
 
-@media screen and (max-width: 966px) {
-  .gutter {display: none;}
-  .span14 {
-    width: 78%;
-    padding-left: 1%;
-    padding-right: 1%;
-    max-width: 720px;
-  } //main content
+@media screen and (max-width: 955px) {
+  .span5 {
+    width: 16%;
+  } // tighten right gutter
 }
 
 .row:before, .row:after {

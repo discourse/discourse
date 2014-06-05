@@ -8,7 +8,7 @@
 **/
 Discourse.ReplyHistory = Em.CollectionView.extend({
   tagName: 'section',
-  classNameBindings: [':embedded-posts', ':top', ':span14', ':offset2', 'hidden'],
+  classNameBindings: [':embedded-posts', ':top', ':post-column', ':offset2', 'hidden'],
   itemViewClass: Discourse.EmbeddedPostView,
   hidden: Em.computed.equal('content.length', 0),
   previousPost: true
