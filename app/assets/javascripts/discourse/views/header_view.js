@@ -20,7 +20,10 @@ Discourse.HeaderView = Discourse.View.extend({
         $html = $('html'),
         self = this;
 
-    self.set('controller.visibleDropdown', elementId);
+    var controller = self.get('controller');
+    if(controller && !controller.isDestroyed){
+      controller.set('visibleDropdown', elementId);
+    }
     // we need to ensure we are rendered,
     //  this optimises the speed of the initial render
     var render = $target.data('render');
@@ -38,7 +41,10 @@ Discourse.HeaderView = Discourse.View.extend({
       $dropdown.fadeOut('fast');
       $li.removeClass('active');
       $html.data('hide-dropdown', null);
-      self.set('controller.visibleDropdown', null);
+      var controller = self.get('controller');
+      if(controller && !controller.isDestroyed){
+        controller.set('visibleDropdown', null);
+      }
       return $html.off('click.d-dropdown');
     };
 

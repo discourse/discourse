@@ -90,10 +90,11 @@ test("sitemap dropdown", function() {
   Discourse.SiteSettings.faq_url = "faq-url";
   Discourse.SiteSettings.enable_mobile_theme = true;
 
-  Discourse.User.current.returns({
+  Discourse.User.current.returns(Ember.Object.create({
+    username: 'test',
     staff: true,
     site_flagged_posts_count: 1
-  });
+  }));
 
   Discourse.Category.list.returns([
     Discourse.Category.create({
