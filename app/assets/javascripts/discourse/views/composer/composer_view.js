@@ -410,18 +410,6 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
       self.refreshPreview();
       return replyTitle.length ? replyTitle.putCursorAtEnd() : $wmdInput.putCursorAtEnd();
     }), 300);
-
-    $('#reply-title').on('focusout', function(){
-      self.set('showTitleTip', Date.now());
-    });
-
-    $('#wmd-input').on('focusout', function(){
-      self.set('showReplyTip', Date.now());
-    });
-
-    self.$('.category-input').on('focusout', function(){
-      self.set('showCategoryTip', Date.now());
-    });
   },
 
   addMarkdown: function(text) {
