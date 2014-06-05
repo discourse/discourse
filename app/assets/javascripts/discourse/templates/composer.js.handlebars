@@ -19,7 +19,7 @@
                 {{textField value=editReason tabindex="5" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
               </div>
             {{else}}
-              <a {{action displayEditReason}}>{{i18n composer.show_edit_reason}}</a>
+              <a {{action displayEditReason}} class="display-edit-reason">{{i18n composer.show_edit_reason}}</a>
             {{/if}}
           {{/if}}
         </div>

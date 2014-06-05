@@ -201,6 +201,9 @@ display: none;
         }
       }
     }
+    .edit-reason-input, .display-edit-reason {
+      display: none;
+    }
     .edit-reason-input {
       display: inline-block;
       margin-left: 2px;
