@@ -120,14 +120,15 @@ module SiteSettingExtension
       .map do |s, v|
         value = send(s)
         type = types[get_data_type(s, value)]
-        opts = {setting: s,
-         description: description(s),
-         default: v,
-         type: type.to_s,
-         value: value.to_s,
-         category: categories[s]
+        opts = {
+          setting: s,
+          description: description(s),
+          default: v,
+          type: type.to_s,
+          value: value.to_s,
+          category: categories[s]
         }
-        opts.merge({valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?}) if type == :enum
+        opts.merge!({valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?}) if type == :enum
         opts[:choices] = choices[s] if choices.has_key? s
         opts
       end
