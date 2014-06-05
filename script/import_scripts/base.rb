@@ -43,6 +43,9 @@ class ImportScripts::Base
     execute
 
     update_bumped_at
+    update_feature_topic_users
+
+    puts '', 'Done'
 
   ensure
     RateLimiter.enable
@@ -259,6 +262,19 @@ class ImportScripts::Base
 
   def update_bumped_at
     Post.exec_sql("update topics t set bumped_at = (select max(created_at) from posts where topic_id = t.id and post_type != #{Post.types[:moderator_action]})")
+  end
+
+  def update_feature_topic_users
+    puts '', "updating featured topic users"
+
+    total_count = Topic.count
+    progress_count = 0
+
+    Topic.find_each do |topic|
+      topic.feature_topic_users
+      progress_count += 1
+      print_status(progress_count, total_count)
+    end
   end
 
   def print_status(current, max)

@@ -38,8 +38,6 @@ class ImportScripts::Drupal < ImportScripts::Base
       puts '', "Failed to create admin user"
       puts e.message
     end
-
-    puts '', 'Done'
   end
 
   def create_blog_topics

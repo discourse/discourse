@@ -63,8 +63,6 @@ class ImportScripts::Kunena < ImportScripts::Base
       puts '', "Failed to create admin user"
       puts e.message
     end
-
-    puts '', 'Done'
   end
 
   def check_files_exist
