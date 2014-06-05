@@ -778,12 +778,14 @@ blockquote { /* solo quotes */
 .topic-avatar {
  border-top: 1px solid scale-color-diff();
  padding-top: 16px;
+ width: 55px;
+ float: left;
 
-  .wiki {
-    margin-top: 14px;
-    color: scale-color($primary, $lightness: 60%);
-    margin-left: 5px;
-  }
+ .wiki {
+   margin-top: 14px;
+   color: scale-color($primary, $lightness: 60%);
+   margin-left: 5px;
+ }
 }
 
 .posts-wrapper {
@@ -798,8 +800,6 @@ blockquote { /* solo quotes */
   padding-left: 10px;
   padding-right: 10px;
   }
-
-.span2 { width: 5%; }
 
 .span11 {
   width: 84%;
