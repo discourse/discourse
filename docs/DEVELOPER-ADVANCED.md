@@ -121,6 +121,16 @@ Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
     # Press enter to accept all the defaults
     /etc/init.d/redis_6379 start
 
+## Sending email (SMTP)
+
+By default, development.rb will attempt to connect locally to send email.
+
+```rb
+config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
+```
+
+Set up [MailCatcher](https://github.com/sj26/mailcatcher) so the app can intercept
+outbound email and you can verify what is being sent.
 
 ## Phantomjs
 
