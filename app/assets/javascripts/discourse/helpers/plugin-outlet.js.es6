@@ -75,9 +75,12 @@ function buildConnectorCache() {
 export default function(connectionName, options) {
   if (!_connectorCache) { buildConnectorCache(); }
 
+  var self = this;
   if (_connectorCache[connectionName]) {
     var CustomContainerView = Ember.ContainerView.extend({
-      childViews: _connectorCache[connectionName].map(function(vc) { return vc.create(); })
+      childViews: _connectorCache[connectionName].map(function(vc) {
+        return vc.create({context: self});
+      })
     });
     return Ember.Handlebars.helpers.view.call(this, CustomContainerView, options);
   }
