@@ -23,10 +23,6 @@ Discourse.SiteSetting = Discourse.Model.extend({
     } else {
       // set the boolean value of the setting
       this.set('value', value ? 'true' : 'false');
-
-      // We save booleans right away, it's not like a text field where it makes sense to
-      // undo what you typed in.
-      this.save();
     }
 
   }.property('value'),
