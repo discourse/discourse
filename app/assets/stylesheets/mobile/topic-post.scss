@@ -481,24 +481,6 @@ background-color: scale-color($danger, $lightness: 75%);
   margin: -4px 0 0 -4px;
 }
 
-.username.new-user a {
-  color: scale-color($primary, $lightness: 70%);
-}
-
-.topic-meta-data {
-  white-space: nowrap;
-  float: left;
-}
-
-
-.user-title {
-  color: #aaa;
-  padding-top: 2px;
-  padding-left: 8px;
-  overflow: hidden;
-  margin-right: 50px;
-}
-
 span.btn-text {display: none;}
 
 blockquote {
@@ -559,14 +541,34 @@ span.highlighted {
 }
 
 .topic-meta-data {
-  float: left;
+  white-space: nowrap;
   position: absolute;
   z-index: 1;
   width: 100%;
-   .names {margin: 5px 0 0 65px; float: left;}
-   .post-info {float: right; font-size: 12px; margin: 4px 10px 0 0;
-     .edits {margin-right: 5px;}
-   }
+  .names {
+    margin: 5px 0 0 65px;
+    line-height: 17px;
+    span {
+      display: block;
+    }
+  }
+  .post-info {
+    float: right;
+    font-size: 12px;
+    margin: 4px 10px 0 0;
+    .edits { margin-right: 5px; }
+  }
+}
+
+.username.new-user a {
+  color: scale-color($primary, $lightness: 70%);
+}
+
+.user-title {
+  color: #aaa;
+  padding-top: 2px;
+  overflow: hidden;
+  margin-right: 50px;
 }
 
 .read-state {
