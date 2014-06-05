@@ -114,7 +114,12 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     });
     Discourse.TransitionHelper.after($replyControl, this.resize);
     this.ensureMaximumDimensionForImagesInPreview();
+    this.set('controller.view', this);
   }.on('didInsertElement'),
+
+  _unlinkView: function() {
+    this.set('controller.view', null);
+  }.on('willDestroyElement'),
 
   ensureMaximumDimensionForImagesInPreview: function() {
     // This enforce maximum dimensions of images in the preview according
