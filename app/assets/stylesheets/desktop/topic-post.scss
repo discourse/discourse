@@ -249,40 +249,43 @@ nav.post-controls {
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
   a.mention {background: darken(scale-color-diff(), 10%);}
+
+  .topic-body { width: 610px; border: none; }
+
+  // bottom means "reply expansion" below a post
   &.bottom {
     &.hidden {display: block; opacity: 0; }
-
   }
   &.bottom .arrow {float: right; margin: 0 0 0 0;}
-  &.top {
+  &.bottom { margin-top: -11px;}
 
+  // top means "in reply to expansion" above a post
+  &.top {
     margin-left: 66px;
     max-width: 713px;
-
     @include medium-width {
     margin-left: 59px;
     }
-
     @include small-width {
     margin-left: 57px;
     max-width: 720px;
     }
   }
   &.top.topic-body {padding-left: 0;}
-    .topic-body, .topic-avatar {border: none;}
-    .topic-avatar {padding-left: 15px;}
+    .topic-avatar {border: none; padding-left: 15px;}
     .post-date {color: scale-color($primary, $lightness: 50%);}
     .fa-arrow-up {margin-left: 5px;}
     .row {border-top: 1px solid darken(scale-color-diff(), 10%); padding-top: 7px;}
     .reply:first-of-type .row {border-top: none;}
     .quote {margin-top: 0 !important;}
   background: scale-color-diff();
+
   .quote .title, blockquote, .onebox, .onebox-result {
     background: darken(scale-color-diff(), 5%);
     border-left: 5px solid darken(scale-color-diff(), 12%);
   }
 
-  &.bottom { margin-top: -11px;}
+
   .topic-meta-data {
     position: relative;
   }
@@ -794,11 +797,6 @@ blockquote { /* solo quotes */
 }
 
 //columns
-
-.span11 {
-  width: 84%;
-  padding-left: 4%;
-}
 
 .span5 {
   width: 19%;
