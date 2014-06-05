@@ -13,6 +13,8 @@ class TopicQuery
                      limit
                      page
                      per_page
+                     min_posts
+                     max_posts
                      topic_ids
                      visible
                      category
@@ -265,6 +267,9 @@ class TopicQuery
           result = result.where('topics.archived')
         end
       end
+
+      result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
+      result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
       guardian = Guardian.new(@user)
       if !guardian.is_admin?
