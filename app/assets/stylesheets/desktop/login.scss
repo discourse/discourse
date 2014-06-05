@@ -49,7 +49,7 @@
 
   tr.instructions {
     label {
-      color: $primary;
+      color: scale-color($primary, $lightness: 50%);
     }
   }
 
