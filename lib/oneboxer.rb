@@ -122,7 +122,7 @@ module Oneboxer
       # This might be able to move to whenever the SiteSetting changes?
       Oneboxer.add_discourse_whitelists
 
-      r = Onebox.preview(url, cache: {})
+      r = Onebox.preview(url, cache: {}, max_width: 695)
       {
         onebox: r.to_s,
         preview: r.try(:placeholder_html).to_s
