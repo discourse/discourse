@@ -10,7 +10,8 @@
   Ember.CloakedCollectionView = Ember.CollectionView.extend({
     topVisible: null,
     bottomVisible: null,
-    offsetFixedElement: null,
+    offsetFixedTopElement: null,
+    offsetFixedBottomElement: null,
 
     init: function() {
       var cloakView = this.get('cloakView'),
@@ -119,21 +120,27 @@
           topView = this.findTopView(childViews, viewportTop, 0, childViews.length-1),
           bodyHeight = this.get('wrapperHeight') ? this.$().height() : $('body').height(),
           bottomView = topView,
-          offsetFixedElement = this.get('offsetFixedElement');
+          offsetFixedTopElement = this.get('offsetFixedTopElement'),
+          offsetFixedBottomElement = this.get('offsetFixedBottomElement');
 
       if (windowBottom > bodyHeight) { windowBottom = bodyHeight; }
       if (viewportBottom > bodyHeight) { viewportBottom = bodyHeight; }
 
-      if (offsetFixedElement) {
-        windowTop += (offsetFixedElement.outerHeight(true) || 0);
+      if (offsetFixedTopElement) {
+        windowTop += (offsetFixedTopElement.outerHeight(true) || 0);
       }
+
+      if (offsetFixedBottomElement) {
+        windowBottom -= (offsetFixedBottomElement.outerHeight(true) || 0);
+      }
+
       // Find the bottom view and what's onscreen
       while (bottomView < childViews.length) {
         var view = childViews[bottomView],
           $view = view.$(),
           // in case of not full-window scrolling
-          scrollOffset = this.get('wrapperTop') >> 0,
-          viewTop = $view.position().top + scrollOffset,
+          scrollOffset = this.get('wrapperTop') || 0,
+          viewTop = $view.offset().top + scrollOffset,
           viewBottom = viewTop + $view.height();
 
         if (viewTop > viewportBottom) { break; }
@@ -183,14 +190,23 @@
     },
 
     _startEvents: function() {
+      if (this.get('offsetFixed')) {
+        Em.warn("Cloaked-collection's `offsetFixed` is deprecated. Use `offsetFixedTop` instead.");
+      }
+
       var self = this,
-          offsetFixed = this.get('offsetFixed'),
+          offsetFixedTop = this.get('offsetFixedTop') || this.get('offsetFixed'),
+          offsetFixedBottom = this.get('offsetFixedBottom'),
           onScrollMethod = function() {
             Ember.run.debounce(self, 'scrollTriggered', 10);
           };
 
-      if (offsetFixed) {
-        this.set('offsetFixedElement', $(offsetFixed));
+      if (offsetFixedTop) {
+        this.set('offsetFixedTopElement', $(offsetFixedTop));
+      }
+
+      if (offsetFixedBottom) {
+        this.set('offsetFixedBottomElement', $(offsetFixedBottom));
       }
 
       $(document).bind('touchmove.ember-cloak', onScrollMethod);
