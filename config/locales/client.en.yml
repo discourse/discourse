@@ -1704,6 +1704,8 @@ en:
         refresh_browsers: "Force browser refresh"
         show_public_profile: "Show Public Profile"
         impersonate: 'Impersonate'
+        log_out: "Log Out"
+        logged_out: "User was logged out on all devices"
         revoke_admin: 'Revoke Admin'
         grant_admin: 'Grant Admin'
         revoke_moderation: 'Revoke Moderation'

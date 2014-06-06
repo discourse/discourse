@@ -7,6 +7,7 @@ class Admin::UsersController < Admin::AdminController
   before_filter :fetch_user, only: [:suspend,
                                     :unsuspend,
                                     :refresh_browsers,
+                                    :log_out,
                                     :revoke_admin,
                                     :grant_admin,
                                     :revoke_moderation,
@@ -53,6 +54,12 @@ class Admin::UsersController < Admin::AdminController
     @user.suspended_at = nil
     @user.save!
     StaffActionLogger.new(current_user).log_user_unsuspend(@user)
+    render nothing: true
+  end
+
+  def log_out
+    @user.auth_token = nil
+    @user.save!
     render nothing: true
   end
 

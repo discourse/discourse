@@ -174,6 +174,17 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
+  log_out: function(){
+    Discourse.ajax("/admin/users/" + this.id + "/log_out", {
+      type: 'POST',
+      data: { username_or_email: this.get('username') }
+    }).then(
+      function(){
+        bootbox.alert(I18n.t("admin.user.logged_out"));
+      }
+      );
+  },
+
   impersonate: function() {
     Discourse.ajax("/admin/impersonate", {
       type: 'POST',

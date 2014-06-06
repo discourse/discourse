@@ -14,6 +14,12 @@
             {{i18n admin.user.impersonate}}
           </button>
       {{/if}}
+      {{#if currentUser.admin}}
+      <button class='btn' {{action log_out target="content"}}>
+        <i class='fa fa-power-off'></i>
+        {{i18n admin.user.log_out}}
+      </button>
+      {{/if}}
     </div>
   </div>
 

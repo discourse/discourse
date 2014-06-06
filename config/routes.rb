@@ -62,6 +62,7 @@ Discourse::Application.routes.draw do
       put "grant_moderation", constraints: AdminConstraint.new
       put "approve"
       post "refresh_browsers", constraints: AdminConstraint.new
+      post "log_out", constraints: AdminConstraint.new
       put "activate"
       put "deactivate"
       put "block"
