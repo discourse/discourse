@@ -46,7 +46,7 @@ module Jobs
         email_args[:post] ||= notification.post
         email_args[:notification] = notification
 
-        return skip(I18n.t('email_log.notification_already_read')) if notification.read?
+        return skip(I18n.t('email_log.notification_already_read')) if notification.read? && !@user.email_always
       end
 
       skip_reason = skip_email_for_post(email_args[:post], @user)
