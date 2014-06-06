@@ -39,8 +39,14 @@ module Onebox
       def append_params(html)
         result = html.dup
         result.gsub! /(src="[^"]+)/, '\1&wmode=opaque'
-        if url =~ /t=(\d+)/
-          result.gsub! /(src="[^"]+)/, '\1&start=' + Regexp.last_match[1]
+        if url =~ /t=(\d+h)?(\d+m)?(\d+s?)?/
+          h = Regexp.last_match[1].to_i
+          m = Regexp.last_match[2].to_i
+          s = Regexp.last_match[3].to_i
+
+          total = (h * 60 * 60) + (m * 60) + s
+
+          result.gsub! /(src="[^"]+)/, '\1&start=' + total.to_s
         end
         result
       end
