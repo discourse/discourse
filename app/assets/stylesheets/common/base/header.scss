@@ -239,8 +239,12 @@
   .searching {
     display: block;
     position: absolute;
-    top: 13px;
-    right: 13px;
+    top: 17px;
+    // keep the height here, otherwise
+    // crazy positioning will happen due
+    // to the spinner animation
+    height: 100%;
+    right: 15px;
     color: scale-color($primary, $lightness: 50%);
     font-size: 18px;
   }
