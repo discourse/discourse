@@ -84,7 +84,7 @@
 
     <%= yield :data %>
 
-    <footer id='bottom'></footer>
+    <footer id='bottom'><%= raw SiteContent.content_for(:bottom) %></footer>
 
     <%= render :partial => "common/discourse_javascript" %>
 
