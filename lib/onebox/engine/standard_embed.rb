@@ -45,11 +45,13 @@ module Onebox
             og.metadata[m_name.to_sym] ||= []
             og.metadata[m_name.to_sym].push m_content
             if m_name == "image"
-              image_uri = URI.parse(m_content)
-              if image_uri.host.nil?
-                image_uri.host = URI.parse(url).host
+              image_uri = URI.parse(m_content) rescue nil
+              if image_uri
+                if image_uri.host.nil?
+                  image_uri.host = URI.parse(url).host
+                end
+                og.images.push image_uri.to_s
               end
-              og.images.push image_uri.to_s
             elsif attrs_list.include? m_name
               og.send("#{m_name}=", m_content) unless m_content.empty?
             end
