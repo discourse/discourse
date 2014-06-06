@@ -44,7 +44,7 @@ class TopicTrackingState
 
     TopicUser
         .tracking(post.topic_id)
-        .select([:user_id,:last_read_post_number])
+        .select([:user_id,:last_read_post_number, :notification_level])
         .each do |tu|
 
       message = {
@@ -54,7 +54,8 @@ class TopicTrackingState
           last_read_post_number: tu.last_read_post_number,
           highest_post_number: post.post_number,
           created_at: post.created_at,
-          topic_id: post.topic_id
+          topic_id: post.topic_id,
+          notification_level: tu.notification_level
         }
       }
 

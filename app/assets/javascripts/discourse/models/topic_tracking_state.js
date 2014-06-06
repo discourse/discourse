@@ -134,7 +134,8 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     return _.chain(this.states)
       .where({last_read_post_number: null})
       .where(function(topic) {
-        return topic.notification_level === null ||
+        // !0 is true
+        return (topic.notification_level !== 0 && !topic.notification_level) ||
                topic.notification_level >= Discourse.Topic.NotificationLevel.TRACKING;
       })
       .where(function(topic){ return topic.category_name === category_name || !category_name;})
