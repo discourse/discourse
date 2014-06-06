@@ -36,3 +36,24 @@ def rebake_posts(opts = {})
 
   puts "\n\n#{total} posts done!\n#{'-' * 50}\n"
 end
+
+
+desc 'normalize all markdown so <pre><code> is not used and instead backticks'
+task 'posts:normalize_code' => :environment do
+  lang = ENV['CODE_LANG'] || ''
+  require 'import/normalize'
+
+  puts "Normalizing"
+  i = 0
+  Post.where("raw like '%<pre>%<code>%'").each do |p|
+    normalized = Import::Normalize.normalize_code_blocks(p.raw, lang)
+    if normalized != p.raw
+      p.revise(Discourse.system_user, normalized)
+      putc "."
+      i += 1
+    end
+  end
+
+  puts
+  puts "#{i} posts normalized!"
+end
