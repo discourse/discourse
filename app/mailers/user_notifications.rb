@@ -215,6 +215,7 @@ class UserNotifications < ActionMailer::Base
       username: from_alias,
       add_unsubscribe_link: true,
       allow_reply_by_email: allow_reply_by_email,
+      private_reply: post.topic.private_message?,
       include_respond_instructions: !user.suspended?,
       template: template,
       html_override: html,

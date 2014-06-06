@@ -136,6 +136,13 @@ module Email
       @opts[:allow_reply_by_email]
     end
 
+    def private_reply?
+      SiteSetting.reply_by_email_enabled? &&
+      reply_by_email_address.present? &&
+      @opts[:allow_reply_by_email] &&
+      @opts[:private_reply]
+    end
+
     def from_value
       return @from_value if @from_value
       @from_value = @opts[:from] || SiteSetting.notification_email
@@ -149,7 +156,11 @@ module Email
 
       @reply_by_email_address = SiteSetting.reply_by_email_address.dup
       @reply_by_email_address.gsub!("%{reply_key}", reply_key)
-      @reply_by_email_address = alias_email(@reply_by_email_address)
+      @reply_by_email_address = if private_reply?
+                                  alias_email(@reply_by_email_address)
+                                else
+                                  site_alias_email(@reply_by_email_address)
+                                end
 
       @reply_by_email_address
     end
@@ -157,6 +168,10 @@ module Email
     def alias_email(source)
       return source if @opts[:from_alias].blank?
       "#{@opts[:from_alias]} <#{source}>"
+    end
+
+    def site_alias_email(source)
+      return "#{SiteSetting.title} <#{source}>"
     end
 
   end
