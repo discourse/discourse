@@ -116,6 +116,13 @@ class UserSerializer < BasicUserSerializer
     location.present?
   end
 
+  def website
+    object.user_profile.try(:website)
+  end
+  def include_website?
+    website.present?
+  end
+
   def stats
     UserAction.stats(object.id, scope)
   end

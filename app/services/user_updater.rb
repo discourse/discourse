@@ -28,7 +28,8 @@ class UserUpdater
   end
 
   def update(attributes = {})
-    user.website = format_url(attributes.fetch(:website) { user.website })
+    user_profile = user.user_profile
+    user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
 
     user.bio_raw = attributes.fetch(:bio_raw) { user.bio_raw }
     user.name = attributes.fetch(:name) { user.name }
@@ -59,7 +60,6 @@ class UserUpdater
       end
     end
 
-    user_profile = user.user_profile
     PROFILE_ATTR.each do |attribute|
       user_profile.send("#{attribute.to_s}=", attributes[attribute])
     end

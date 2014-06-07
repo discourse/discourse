@@ -7,4 +7,5 @@ end
 #
 #  user_id  :integer          not null, primary key
 #  location :string(255)
+#  website  :string(255)
 #
