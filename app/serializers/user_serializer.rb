@@ -110,14 +110,14 @@ class UserSerializer < BasicUserSerializer
   end
 
   def location
-    object.user_profile.try(:location)
+    object.user_profile.location
   end
   def include_location?
     location.present?
   end
 
   def website
-    object.user_profile.try(:website)
+    object.user_profile.website
   end
   def include_website?
     website.present?
