@@ -12,9 +12,8 @@ module Jobs
 
       Upload.where("created_at < ?", grace_period.hour.ago)
             .where("id NOT IN (SELECT upload_id from post_uploads)")
-            .where("id NOT IN (SELECT system_upload_id from post_uploads)")
-            .where("id NOT IN (SELECT custom_upload_id from post_uploads)")
-            .where("id NOT IN (SELECT gravatar_upload_id from post_uploads)")
+            .where("id NOT IN (SELECT custom_upload_id from user_avatars)")
+            .where("id NOT IN (SELECT gravatar_upload_id from user_avatars)")
             .where("url NOT IN (?)", uploads_used_as_profile_backgrounds)
             .find_each do |upload|
         upload.destroy
