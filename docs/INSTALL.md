@@ -12,6 +12,7 @@ The only officially supported installs of Discourse are the [Docker](https://www
 
 - Dual core CPU recommended
 - 1 GB RAM minimum (with [swap][swap]), 2 GB recommended
+- 64 bit Linux compatible with Docker
 
 ### Software Requirements
 
