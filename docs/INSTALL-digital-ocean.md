@@ -124,6 +124,8 @@ There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; be sure you r
 
 You should see Staff topics and the Admin Quick Start Guide. Please read it!
 
+(If you *don't* get any email from your install, and are unable to register a new admin account, please see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
+
 # Post-Install Maintenance
 
 To **upgrade Discourse to the latest version**, visit `/admin/docker` and follow the instructions.
