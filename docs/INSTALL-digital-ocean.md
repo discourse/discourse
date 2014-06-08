@@ -48,7 +48,6 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
 FOR THIS WEEK ONLY, temporarily revert to Docker 0.11.1 due to [severe Docker 0.12 bug](https://github.com/dotcloud/docker/issues/6245):
 
-    apt-get update
     apt-get install lxc-docker-0.11.1
 
 # Install Discourse
