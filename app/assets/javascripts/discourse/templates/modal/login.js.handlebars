@@ -42,17 +42,17 @@
 </div>
 <div class="modal-footer">
   {{#if Discourse.SiteSettings.enable_local_logins}}
-    <button class='btn btn-large btn-primary'
+    <button class="btn btn-large btn-primary"
       {{bind-attr disabled="loginDisabled"}}
       {{action login}}>
         <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
     </button>
 
     {{#if showSignupLink}}
-      &nbsp; {{i18n create_account.invite}}
-      <a id="new-account-link" {{action createAccount}}>
-        {{i18n create_account.action}}
-      </a>
+      &nbsp;
+      <button class="btn btn-large" id="new-account-link" {{action createAccount}}>
+        {{i18n create_account.title}}
+      </button>
     {{/if}}
   {{/if}}
 

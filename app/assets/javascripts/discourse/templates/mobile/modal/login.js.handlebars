@@ -55,10 +55,9 @@
     </button>
 
     {{#unless Discourse.SiteSettings.invite_only}}
-      {{i18n create_account.invite}}
-      <a id="new-account-link" {{action showCreateAccount}}>
-        {{i18n create_account.action}}
-      </a>
+      <button class="btn btn-large" id="new-account-link" {{action showCreateAccount}}>
+        {{i18n create_account.title}}
+      </button>
     {{/unless}}
   {{/if}}
 </div>
