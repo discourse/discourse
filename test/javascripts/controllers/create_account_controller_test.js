@@ -10,7 +10,7 @@ test('basicUsernameValidation', function() {
 
   testInvalidUsername('', undefined);
   testInvalidUsername('x', I18n.t('user.username.too_short'));
-  testInvalidUsername('1234567890123456', I18n.t('user.username.too_long'));
+  testInvalidUsername('123456789012345678901', I18n.t('user.username.too_long'));
 
   var controller = controllerFor('create-account');
   controller.set('accountUsername',   'porkchops');

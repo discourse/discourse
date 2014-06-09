@@ -197,7 +197,7 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
     }
 
     // If too long
-    if (this.get('accountUsername').length > 15) {
+    if (this.get('accountUsername').length > 20) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.username.too_long')
