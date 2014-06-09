@@ -414,6 +414,7 @@ describe Guardian do
         SiteSetting.stubs(:min_trust_to_create_topic).returns(1)
         Guardian.new(build(:user, trust_level: 1)).can_create?(Topic,Fabricate(:category)).should be_true
         Guardian.new(build(:user, trust_level: 2)).can_create?(Topic,Fabricate(:category)).should be_true
+        Guardian.new(build(:admin, trust_level: 0)).can_create?(Topic,Fabricate(:category)).should be_true
       end
     end
 
