@@ -7,7 +7,7 @@ module TopicGuardian
 
   # Creating Methods
   def can_create_topic?(parent)
-    is_admin? ||
+    is_staff? ||
     (user &&
       user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
       can_create_post?(parent))
