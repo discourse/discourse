@@ -189,7 +189,7 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
     }
 
     // If too short
-    if (this.get('accountUsername').length < 3) {
+    if (this.get('accountUsername').length < Discourse.SiteSettings.min_username_length) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.username.too_short')
@@ -197,7 +197,7 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
     }
 
     // If too long
-    if (this.get('accountUsername').length > 20) {
+    if (this.get('accountUsername').length > Discourse.SiteSettings.max_username_length) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.username.too_long')
