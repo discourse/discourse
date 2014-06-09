@@ -19,6 +19,7 @@ test("basic cooking", function() {
   cooked("__bold__", "<p><strong>bold</strong></p>", "it bolds text.");
   cooked("*trout*", "<p><em>trout</em></p>", "it italicizes text.");
   cooked("_trout_", "<p><em>trout</em></p>", "it italicizes text.");
+  cooked("*this is italic **with some bold** inside*", "<p><em>this is italic <strong>with some bold</strong> inside</em></p>", "it handles nested bold in italics");
   cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
   cooked("word_with_underscores", "<p>word_with_underscores</p>", "it doesn't do intraword italics");
   cooked("common/_special_font_face.html.erb", "<p>common/_special_font_face.html.erb</p>", "it doesn't intraword with a slash");

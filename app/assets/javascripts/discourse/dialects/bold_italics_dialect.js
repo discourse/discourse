@@ -7,12 +7,14 @@
 Discourse.Dialect.inlineBetween({
   between: '***',
   wordBoundary: true,
+  spaceBoundary: true,
   emitter: function(contents) { return ['strong', ['em'].concat(contents)]; }
 });
 
 Discourse.Dialect.inlineBetween({
   between: '___',
   wordBoundary: true,
+  spaceBoundary: true,
   emitter: function(contents) { return ['strong', ['em'].concat(contents)]; }
 });
 
@@ -21,6 +23,7 @@ var replaceMarkdown = function(match, tag) {
   Discourse.Dialect.inlineBetween({
     between: match,
     wordBoundary: true,
+    spaceBoundary: true,
     emitter: function(contents) { return [tag].concat(contents) }
   });
 };

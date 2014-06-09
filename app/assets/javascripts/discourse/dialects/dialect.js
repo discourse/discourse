@@ -118,7 +118,6 @@ function parseTree(tree, path, insideCounts) {
   @returns {Boolean} whether there is an invalid word boundary
 **/
 function invalidBoundary(args, prev) {
-
   if (!args.wordBoundary && !args.spaceBoundary) { return false; }
 
   var last = prev[prev.length - 1];
@@ -260,14 +259,14 @@ Discourse.Dialect = {
   inlineBetween: function(args) {
     var start = args.start || args.between,
         stop = args.stop || args.between,
-        startLength = start.length;
+        startLength = start.length,
+        self = this;
 
     this.registerInline(start, function(text, match, prev) {
       if (invalidBoundary(args, prev)) { return; }
 
-      var endPos = text.indexOf(stop, startLength);
+      var endPos = self.findEndPos(text, stop, args, startLength);
       if (endPos === -1) { return; }
-
       var between = text.slice(startLength, endPos);
 
       // If rawcontents is set, don't process inline
@@ -280,6 +279,16 @@ Discourse.Dialect = {
         return [endPos+stop.length, contents];
       }
     });
+  },
+
+  findEndPos: function(text, stop, args, start) {
+    var endPos = text.indexOf(stop, start);
+    if (endPos === -1) { return -1; }
+    var after = text.charAt(endPos + stop.length);
+    if (after && after.indexOf(stop) === 0) {
+      return this.findEndPos(text, stop, args, endPos + stop.length + 1);
+    }
+    return endPos;
   },
 
   /**
