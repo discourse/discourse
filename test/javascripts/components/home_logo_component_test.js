@@ -131,9 +131,3 @@ test("dynamically toggles logo size when 'minimized' property changes", function
   setMinimized(false);
   ok(exists(fixture(bigLogoSelector)), "when 'minimized' version is turned off, small logo is replaced with the big one");
 });
-
-test("links logo to the site root", function() {
-  appendView();
-
-  equal(fixture(".title > a").attr("href"), "/");
-});

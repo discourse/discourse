@@ -64,11 +64,9 @@
     return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
   }
 
-  var translationColonRegexp = new RegExp("^" +
-                                           Object.keys(translationsWithColon).map(function (t) {
+  var translationColonRegexp = new RegExp(Object.keys(translationsWithColon).map(function (t) {
                                              return "(" + escapeRegExp(t) + ")";
-                                           }).join("|")
-                                         );
+                                           }).join("|"));
 
   Discourse.Dialect.registerInline(':', function(text, match, prev) {
     var endPos = text.indexOf(':', 1),
@@ -80,11 +78,11 @@
     // If there is no trailing colon, check our translations that begin with colons
     if (endPos === -1 || (firstSpace !== -1 && endPos > firstSpace)) {
       translationColonRegexp.lastIndex = 0;
-      var match = translationColonRegexp.exec(text);
-      if (match && match[0]) {
-        contents = imageFor(translationsWithColon[match[0]]);
+      var m = translationColonRegexp.exec(text);
+      if (m && m[0] && text.indexOf(m[0]) === 0) {
+        contents = imageFor(translationsWithColon[m[0]]);
         if (contents) {
-          return [match[0].length, contents];
+          return [m[0].length, contents];
         }
       }
       return;
