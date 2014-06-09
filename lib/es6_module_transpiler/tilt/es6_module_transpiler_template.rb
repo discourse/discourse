@@ -77,7 +77,8 @@ module Tilt
         if file_name.end_with?('s') && (!class_name.end_with?('s'))
           class_name << "s"
         end
-        @output << "\n\nDiscourse.#{class_name}#{type.classify} = require('#{scope.logical_path}').default"
+        require_name = module_name(scope.root_path, scope.logical_path)
+        @output << "\n\nDiscourse.#{class_name}#{type.classify} = require('#{require_name}').default"
       end
 
       @output
