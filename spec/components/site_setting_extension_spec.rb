@@ -206,36 +206,50 @@ describe SiteSettingExtension do
     end
   end
 
-  # describe 'enum setting' do
-  #   before do
-  #     @enum_class = Enum.new(:test) # not a valid site setting class
-  #     @enum_class.stubs(:translate_names?).returns(false)
-  #     settings.setting(:test_enum, 'en', enum: @enum_class)  # would never do this in practice
-  #     settings.refresh!
-  #   end
+  describe 'enum setting' do
 
-  #   it 'should have the correct default' do
-  #     expect(settings.test_enum).to eq('en')
-  #   end
+    class TestEnumClass
+      def self.valid_value?(v)
+        true
+      end
+      def self.values
+        ['en']
+      end
+      def self.translate_names?
+        false
+      end
+    end
 
-  #   it 'should not hose all_settings' do
-  #     settings.all_settings.detect {|s| s[:setting] == :test_enum }.should be_present
-  #   end
+    let :test_enum_class do
+      TestEnumClass
+    end
 
-  #   context 'when overridden' do
+    before do
+      settings.setting(:test_enum, 'en', enum: test_enum_class)
+      settings.refresh!
+    end
 
-  #     it 'stores valid values' do
-  #       @enum_class.expects(:valid_value?).with('fr').returns(true)
-  #       settings.test_enum = 'fr'
-  #       expect(settings.test_enum).to eq('fr')
-  #     end
+    it 'should have the correct default' do
+      expect(settings.test_enum).to eq('en')
+    end
 
-  #     it 'rejects invalid values' do
-  #       @enum_class.expects(:valid_value?).with('gg').returns(false)
-  #       expect {settings.test_enum = 'gg' }.to raise_error(Discourse::InvalidParameters)
-  #     end
-  #   end
-  # end
+    it 'should not hose all_settings' do
+      settings.all_settings.detect {|s| s[:setting] == :test_enum }.should be_present
+    end
+
+    context 'when overridden' do
+      it 'stores valid values' do
+        test_enum_class.expects(:valid_value?).with('fr').returns(true)
+        settings.test_enum = 'fr'
+        expect(settings.test_enum).to eq('fr')
+      end
+
+      it 'rejects invalid values' do
+        test_enum_class.expects(:valid_value?).with('gg').returns(false)
+        expect {settings.test_enum = 'gg' }.to raise_error(Discourse::InvalidParameters)
+      end
+    end
+  end
 
   describe 'a setting with a category' do
     before do
