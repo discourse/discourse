@@ -111,7 +111,7 @@ module Email
 
     def correct_first_body_margin
       @fragment.css('.body p').each do |element|
-        element['style'] = "margin-top:0;"
+        element['style'] = "margin-top:0; border: 0;"
       end
     end
 
