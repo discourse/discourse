@@ -644,7 +644,6 @@ cs:
     enable_github_logins: "Povolit přihlašování přes Github, vyžaduje správně nastavené 'github_client_id' a 'github_client_secret'"
     github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
     github_client_secret: "'Client secret' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
-    allow_restore: "Povolit import, kterým lze přepsat VŠECHNA data na tomto webu; nechte nastaveno na 'false', pokud neplánujete dělat importy dat"
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
     rate_limit_create_topic: "Počet sekund, které je nutné počkat od vytvoření tématu, než smí uživatel vytvořit další"
@@ -954,14 +953,6 @@ cs:
       text_body_template: "Import proběhl úspěšně."
     email_error_notification:
       subject_template: "Chyba čtení emailu"
-      text_body_template: |
-        Toto je automatická zpráva informující vás, že čtení následujícího emailu selhalo.
-
-        Opravte prosím následující problém:
-
-        Chyba - %{error}
-
-        %{source}
     email_reject_trust_level:
       subject_template: "Zpráva odmítnuta"
       text_body_template: |
@@ -986,14 +977,6 @@ cs:
         Toto je automatizovaná zpráva z %{site_name}, která vás má informovat o tom, že váš účet byl zablokován moderátorem.
 
         Pro další informace se prosím obraťte na naše [FAQ](%{base_url}/faq).
-    user_automatically_blocked:
-      subject_template: "Uživatel %{username} byl automaticky zablokován"
-      text_body_template: |
-        Toto je automatická zpráva, která vás má informovat o tom, že uživatel [%{username}](%{user_url}) byl automaticky zablokován protože příliš mnoho lidí označilo příspěvky uživatele %{username} jako spam.
-
-        Prosím, [projděte si nahlášení](/admin/flags). Pokud by %{username} neměl být zablokován, klikněte na tlačítko 'odblokovat' na [administrátorské stránce uživatele](%{user_url}).
-    spam_post_blocked:
-      subject_template: "V příspěvku uživatele %{username} byl detekován spam"
     unblocked:
       subject_template: "Účet odblokován"
       text_body_template: |
@@ -1168,7 +1151,6 @@ cs:
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
-    spam_hosts: "This user tried to create multiple posts with links to the same domain. See the newuser_spam_host_threshold site setting."
   email_log:
     no_user: "Can't find user with id %{user_id}"
     suspended_not_pm: "User is supsended and email is not a private message"

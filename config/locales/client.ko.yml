@@ -24,15 +24,15 @@ ko:
         less_than_x_seconds:
           other: "< %{count}초"
         x_seconds:
-          other: "%{count}초"
+          other: "%{count}초 전"
         less_than_x_minutes:
           other: "< %{count}분"
         x_minutes:
-          other: "%{count}분"
+          other: "%{count}분 전"
         about_x_hours:
           other: "%{count}시간"
         x_days:
-          other: "%{count}d"
+          other: "%{count}일 전"
         about_x_years:
           other: "%{count}년"
         over_x_years:
@@ -71,7 +71,7 @@ ko:
     of_value: "으로"
     generic_error: "오류 발생"
     generic_error_with_reason: "에러 발견: %{error}"
-    log_in: "가입"
+    log_in: "로그인"
     age: "생성"
     joined: "가입함"
     admin_title: "운영자"
@@ -222,11 +222,11 @@ ko:
       change_about:
         title: "내정보 변경"
       change_username:
-        title: "사용자 이름 변경"
-        confirm: "사용자 이름을 변경합니다. 모든 @사용자이름 언급이 끊어집니다. 사용자 이름을 변경하는게 확실한가요?"
-        taken: "죄송합니다. 중복된 사용자 이름입니다."
-        error: "사용자 이름을 변경하는 중에 오류가 발생했습니다."
-        invalid: "사용자 이름이 잘못되었습니다. 숫자와 문자를 포함해야합니다."
+        title: "아이디 변경"
+        confirm: "아이디을 변경합니다. 모든 @아이디 언급이 끊어집니다. 사용자 이름을 변경하는게 확실한가요?"
+        taken: "죄송합니다. 중복된 아이디입니다."
+        error: "아이디를 변경하는 중에 오류가 발생했습니다."
+        invalid: "아이디가 잘못되었습니다. 숫자와 문자를 포함해야합니다."
       change_email:
         title: "이메일 수정"
         taken: "죄송합니다. 해당 이메일은 사용할 수 없습니다."
@@ -252,18 +252,18 @@ ko:
         too_short: "너무 짧습니다."
         ok: "사용가능합니다."
       username:
-        title: "사용자 이름"
-        instructions: "중복이 안되며 공백이 없어야합니다."
+        title: "아이디"
+        instructions: "중복이 안되며 공백이 없어야합니다. 다른 사용자들이 당신을 @id 형태로 언급할 수 있습니다."
         short_instructions: "@{{username}}으로 언급이 가능합니다."
-        available: "사용자 이름으로 사용가능합니다."
-        global_match: "이메일이 등록된 이름과 일치합니다."
-        global_mismatch: "이미 등록된 사용자 이름입니다. 다시 시도해보세요. {{suggestion}}"
-        not_available: "사용할 수 없는 사용자 이름입니다. 다시 시도해보세요. {{suggestion}}"
-        too_short: "사용자 이름이 너무 짧습니다."
-        too_long: "사용자 이름이 너무 깁니다."
+        available: "아이디\x1D로 사용가능합니다."
+        global_match: "이메일이 등록된 아이디와 일치합니다."
+        global_mismatch: "이미 등록된 아이디입니다. 다시 시도해보세요. {{suggestion}}"
+        not_available: "사용할 수 없는 아이디입니다. 다시 시도해보세요. {{suggestion}}"
+        too_short: "아이디가 너무 짧습니다."
+        too_long: "아이디가 너무 깁니다."
         checking: "사용가능한지 확인 중..."
-        enter_email: '사용자 이름을 찾았습니다. 일치하는 이메일을 입력해주세요.'
-        prefilled: "Email matches this registered username."
+        enter_email: '아이디를 찾았습니다. 일치하는 이메일을 입력해주세요.'
+        prefilled: "이메일이 등록된 아이디와 연결되어 있습니다."
       locale:
         title: "인터페이스 언어"
       password_confirmation:
@@ -338,8 +338,11 @@ ko:
     assets_changed_confirm: "Discourse가 업데이트 되었습니다. 새로운 버전 사용을 위해 새로고침 하시겠어요?"
     learn_more: "더 배우기"
     year: '년'
+    year_desc: '지난 365일간 생성된 토픽'
     month: '월'
+    month_desc: '지난 30일간 생성된 토픽'
     week: '주'
+    week_desc: '지난 7일간 생성된 토픽'
     day: 'day'
     first_post: 첫 번째 게시물
     mute: 음소거
@@ -356,26 +359,26 @@ ko:
       invite: "다른 사람 초대"
       remove_allowed_user: "{{name}}에게서 온 개인 메시지를 삭제할까요?"
     email: '이메일'
-    username: '사용자'
+    username: '아이디'
     last_seen: '마지막 접근'
     created: '생성'
     trust_level: '신뢰도'
     create_account:
-      title: "계정만들기"
-      action: "지금 계정 만들기!"
-      invite: "아직 계정이 없으신가요?"
       failed: "뭔가 잘못되었습니다. 이 메일은 등록이 되어있습니다. 비밀번호를 잊으셨다면 비밀번호 찾기를 눌러주세요."
     forgot_password:
       title: "비밀번호를 찾기"
       action: "비밀번호를 잊어버렸습니다."
       invite: "사용자 이름 또는 이메일 주소를 입력하시면 비밀번호 재설정 이메일을 보내드립니다."
       reset: "암호 재설정"
+      complete_username: "당신의 계정이  <b>%{username}</b>와 일치한다면, 곧 비밀번호 초기화 방법과 관련된 안내 메일을 받게 됩니다."
     login:
-      title: "회원가입"
+      title: "로그인"
+      username: "사용자"
       password: "비밀번호"
       email_placeholder: "이메일 주소 또는 사용자 이름"
       error: "알 수없는 오류"
       reset_password: '암호 재설정'
+      logging_in: "로그인 중.."
       or: "또는"
       authenticating: "인증 중..."
       awaiting_confirmation: "계정 활성화를 기다리고 있습니다. 다른 인증 이메일을 받고 싶으면 비밀번호 찾기를 누르세요."
@@ -387,11 +390,14 @@ ko:
       google:
         title: "Google"
         message: "Google 인증 중(팝업 차단을 해제 하세요)"
+      google_oauth2:
+        title: "with Google"
+        message: "구글을 통해 인증 중 (파업이 허용되어 있는지 확인해주세요.)"
       twitter:
-        title: "Twitter"
+        title: "with Twitter"
         message: "Twitter 인증 중(팝업 차단을 해제 하세요)"
       facebook:
-        title: "Facebook"
+        title: "with Facebook"
         message: "Facebook 인증 중(팝업 차단을 해제 하세요)"
       yahoo:
         title: "Yahoo"
@@ -479,7 +485,7 @@ ko:
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} 의 초대를 수락했습니다."
-      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} 이동 {{link}}"
+      moved_post: "<i title='moved post' class='fa fa-sign-out'></i> {{username}}님이 {{link}}를 옮겼습니다."
       total_flagged: "관심 표시된 총 게시글"
       linked: "<i title='링크된 글' class='fa fa-arrow-left'></i> {{username}} {{link}}"
     upload_selector:
@@ -598,10 +604,10 @@ ko:
           '2_4': '이 토픽에 답글을 게시하여서 알림을 받게 됩니다.'
           '2_2': '이 토픽을 추척하고 있어서 알림을 받게 됩니다.'
           '2': '이 토픽을 읽어서 알림을 받게 됩니다. <a href="/users/{{username}}/preferences">(설정)</a>'
-          '1': '누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다.'
           '1_2': '누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다.'
-          '0': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
+          '1': '누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다.'
           '0_2': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
+          '0': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
         watching_pm:
           title: "알림 : 주시 중"
         watching:
@@ -651,8 +657,8 @@ ko:
       inviting: "초대 중..."
       invite_private:
         title: '개인 메시지에 초대'
-        email_or_username: "초대하려는 이메일 또는 사용자"
-        email_or_username_placeholder: "이메일 또는 사용자"
+        email_or_username: "초대하려는 이메일 또는 아이디"
+        email_or_username_placeholder: "이메일 또는 아이디"
         action: "초대"
         success: "감사합니다! 사용자가 개인 메세지에 참여할 수 있도록 초대했습니다."
         error: "죄송합니다. 해당 사용자를 초대하는 도중 오류가 발생했습니다."
@@ -665,7 +671,7 @@ ko:
         email_placeholder: '이메일 주소'
         success: "감사합니다! <b>{{email}}</b>으로 초대장을 발송했습니다. 초대를 수락하면 알려 드리겠습니다. 초대한 사람을 추적하기 위해선 사용자 페이지에서 '초대장' 탭을 선택하세요."
         error: "죄송합니다. 그 사람을 초대 할 수 없습니다. 혹시 이미 포럼 사용자입니까?"
-      login_reply: '답글 달기 위해 회원 가입하기'
+      login_reply: '로그인하여 답글 달기'
       filters:
         n_posts:
           other: "{{count}} 글"
@@ -755,7 +761,7 @@ ko:
           spam: "X"
           inappropriate: "X"
           bookmark: "X"
-          like: "X"
+          like: "'좋아요' 취소하기"
           vote: "X"
         people:
           off_topic: "{{icons}}님은 이 게시물을 오프토픽으로 표시했습니다."
@@ -794,7 +800,7 @@ ko:
             other: "당신과 {{count}}명의 다른 사람들이 이 포스트에 투표했습니다."
         by_others:
           like:
-            other: "{{count}}명이 이 글을 좋아합니다."
+            other: "{{count}}명이 이 글을 좋아합니다"
       edits:
         one: 하나 편집
         other: "{{count}}개 편집"
@@ -846,7 +852,6 @@ ko:
       delete_confirm: "이 카테고리를 삭제 하시겠습니까?"
       delete_error: "카테고리를 삭제하는 동안 오류가 발생했습니다."
       list: "카테고리 목록"
-      no_description: "이 카테고리에 대한 설명이 없습니다."
       change_in_category_topic: "설명 편집"
       already_used: '이 색은 다른 카테고리에서 사용되고 있습니다.'
       security: "보안"
@@ -1138,6 +1143,7 @@ ko:
         colors:
           title: "색상"
           long_title: "색상 Schemes"
+          about: "CSS 작성 없이 사이트에 사용되는 색을 수정합니다. 시작하려면 Scheme을 추가하세요."
       email:
         title: "이메일"
         settings: "설정"
@@ -1371,7 +1377,9 @@ ko:
           uncategorized: '카테고리 없음'
           backups: "백업"
       badges:
+        new_badge: 새로운 벳지
         new: New
+        badge_type: 벳지 종류
         granted_by: 배지 부여자
         granted_at: 배지 수여일
         save: 저장

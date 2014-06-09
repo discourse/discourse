@@ -456,6 +456,7 @@ it:
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molti task, come l''invio di email, sono eseguiti in maniera asincrona da sidekiq. Perfavore assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq">Leggi di più su sidekiq qui</a>.'
     queue_size_warning: 'Il numero di job in coda è %{queue_size}, che è alto. Questo indica un problema con i processi Sidekiq, oppure dovresti aggiungere altri Sidekiq worker.'
     memory_warning: 'Il tuo server ha meno di 1 GB di memoria. È raccomandato avere a disposizione almeno 1 GB di memoria.'
+    both_googles_warning: "Hai sia enable_google_logins che enable_google_oauth2_login attivati nelle impostazioni del sito. Disabilita enable_google_logins."
     facebook_config_warning: 'Il server è configurato per accettare registrazioni e login con Facebook (enable_facebook_logins), tuttavia i parametri segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
     twitter_config_warning: 'Il server è configurato per accettare registrazioni e login con Twitter (enable_twitter_logins), tuttavia la chiave e i parametri segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Leggi questa guida per saperne di più</a>.'
     github_config_warning: 'Il server è configurato per accettare registrazioni e login con GitHub (enable_github_logins), tuttavia il client id e i valori segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Leggi questa guida per saperne di più</a>.'
@@ -635,6 +636,7 @@ it:
     sso_overrides_username: "Sostituisce gli username locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle differenze dei requisiti di lunghezza)"
     sso_overrides_name: "Sostituisce i nomi locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per i nomi locali)"
     enable_local_logins: "Abilita l'autenticazione locale di username e password"
+    enable_google_logins: "(deprecato) Attiva l'autenticazione Google. Questo è il metodo OpenID che Google ha deprecato. Le nuove installazioni non funzioneranno con questo. Utilizza Google Oauth2 invece. Le installazioni esistenti devono migrare a Google Oauth2 entro il 20 Aprile 2015."
     enable_yahoo_logins: "Abilita l'autenticazione via Yahoo"
     enable_google_oauth2_logins: "Attiva autenticazione Oauth2. Questo è il metodo di autenticazione che Google attualmente supporta. Richiede una chiave e un secret."
     google_oauth2_client_id: "Client ID della tua applicazione Google."
@@ -648,7 +650,6 @@ it:
     enable_github_logins: "Abilita l'autenticazione via Github, richiede github_client_id e github_client_secret"
     github_client_id: "Client id per autenticazione Github, ottenibile da https://github.com/settings/applications"
     github_client_secret: "Client secret per autenticazione Github, ottenibile da https://github.com/settings/applications"
-    allow_restore: "Abilita l'importazione, che può sostituire TUTTI i dati presenti nel sito; non modificare se non hai intenzione di importare dati"
     maximum_backups: "Il numero massimo di backup da tenere sul disco. I backup più vecchi vengono automaticamente cancellati."
     backup_daily: "Crea quotidianamente un backup del forum"
     enable_s3_backups: "Carica i backup su S3 quando completati. Assicurati di aver inserito le tue credenziali S3"
@@ -740,6 +741,7 @@ it:
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione"
     allow_uploaded_avatars: "Permetti agli utenti di caricare il loro avatar custom."
     allow_animated_avatars: "Permetti agli utenti di usare GIF animate come avatar. ATTENZIONE: è fortemente consigliato eseguire il task avatars:regenerate dopo aver modificato questa impostazione."
+    automatically_download_gravatars: "Scarica i Gravatar degli utenti alla creazione dell'account o alla modifica dell'email"
     digest_topics: "Il numero massimo di topic da mostrare in un'email di riepilogo"
     digest_min_excerpt_length: "Numero caratteri ideale per ogni post nel sunto via email"
     default_digest_email_frequency: "Quanto spesso gli utenti ricevono mail di riepilogo. Possono modificare questa impostazione nel loro pannello utente."
@@ -772,6 +774,8 @@ it:
     embed_blacklist_selector: "selettore css per gli elementi che sono rimossi dagli embeds"
     tos_accept_required: "Se abilitato, gli utenti dovranno accettare i Termini del Servizio durante l'iscrizione. Modifica 'Signup Form: Terms of Service Message' nel tab dei contenuti per editare il messaggio."
     notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo molte ore, invia un'email all'email contact_email. Imposta 0 per disattivare."
+    enable_cdn_js_debugging: "Permette /logs per mostrare gli errori aggiungendo permessi crossorigin su tutti gli includes js"
+    show_create_topics_notice: "Se il sito ha meno di 5 topic pubblici, mostra un avviso chiedendo agli admin di creare qualche topic."
   notification_types:
     mentioned: "%{display_username} ti ha menzionato in %{link}"
     liked: "a %{display_username} è piaciuto il tuo post in %{link}"
@@ -1032,6 +1036,26 @@ it:
         Goditi la permanenza!
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
+      text_body_template: |
+        Grazie per aver accettato l'invito a %{site_name}, benvenuto!
+
+        Abbiamo generato un username automaticamente per te: **%{username}**, ma puoi cambiarlo in ogni momento visitando [il tuo profilo][prefs].
+
+        Per fare il login puoi:
+
+        1. Usare Facebook, Google, Twitter, o molti altri sistemi supportati -- nota che l'email utilizzata deve comunque **essere la stessa** dalla quale hai ricevuto il messaggio di invito. Altrimenti non saremmo in grado di stabilire che sei veramente tu!
+
+        2. Creare una password per %{site_name} nel [tuo profilo][prefs], per poi effettuare il log in con quella.
+
+        %{site_password}
+
+        %{new_user_tips}
+
+        Crediamo nel [comportamento civilizzato della community](%{base_url}/faq) in ogni momento.
+
+        Goditi la permanenza!
+
+        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Esportazione completata con successo"
       text_body_template: "L'esportazione è stata eseguita correttamente."
@@ -1060,14 +1084,6 @@ it:
         ```
     email_error_notification:
       subject_template: "Errore nella lettura dell'email"
-      text_body_template: |
-        Questo è un messaggio automatico per informarti che la lettura della seguente email è fallita.
-
-        Per favore, controlla il seguente messaggio.
-
-        Errore - %{error}
-
-        %{source}
     email_reject_trust_level:
       subject_template: "Messaggio rifiutato"
       text_body_template: |
@@ -1085,22 +1101,6 @@ it:
         questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato bloccato da un membro dello staff.
 
         Per ulteriori informazioni, fai riferimento alle nostre [FAQ](%{base_url}/faq).
-    user_automatically_blocked:
-      subject_template: "Nuovo utente %{username} bloccato via flag"
-      text_body_template: |
-        Questo è un messaggio automatico per informarti che il nuovo utente [%{username}](%{base_url}%{user_url}) è stato bloccato in automatico perchè più utenti hanno contrassegnato i post di %{username}'s.
-
-        Per favore [controlla i contrassegni](%{base_url}/admin/flags). Se %{username} è stato bloccato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{base_url}%{user_url}).
-
-        La soglia può essere modificata tramite l'impostazione di blocco dei nuovi utenti.
-    spam_post_blocked:
-      subject_template: "I post del nuovo utente %{username} sono stati bloccati per inserimento di link ripetuti"
-      text_body_template: |
-        Questo è un messaggio automatico per informarti che il nuovo utente [%{username}](%{base_url}%{user_url}) ha creato diversi messaggi con link a %{domains}, ma questi messaggi sono stati bloccati per evitare lo spam. L'utente è ancora in grado di creare post ma senza link verso %{domains}.
-
-        Per favore [controlla questo utente](%{base_url}%{user_url}).
-
-        Questa soglia può essere modificata tramite l'impostazione `newuser_spam_host_threshold`del sito.
     unblocked:
       subject_template: "Account sbloccato"
       text_body_template: |
@@ -1273,7 +1273,6 @@ it:
       size_not_found: "Spiacente, ma non riusciamo a determinare la dimensione dell'immagine. Probabilmente l'immagine è corrotta?"
   flag_reason:
     sockpuppet: "Un nuovo utente ha creato un topic, e un altro nuovo utente ha risposto con lo stesso indirizzo IP. Controlla le impostazioni di flag_sockpuppets"
-    spam_hosts: "Questo utente ha cercato di creare più post con link allo stesso dominio. Controlla le impostazioni di newuser_spam_host_threshold"
   email_log:
     no_user: "Non trovo l'utente con l'id %{user_id}"
     suspended_not_pm: "L'utente è sospeso e l'email non è un messaggio privato"

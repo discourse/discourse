@@ -716,14 +716,6 @@ pt:
         Esta é uma mensagem automática de %{site_name} para informar que sua conta foi bloqueada por um membro da staff.⏎
         ⏎
         Para informações adicionais, por favor, consulte nossa [FAQ](%{base_url}/faq).⏎
-    user_automatically_blocked:
-      subject_template: "Novo usuário %{username} foi automaticamente bloqueado"
-      text_body_template: |
-        Esta é uma mensagem automática para informar que o novo usuário [%{username}](%{user_url}) foi automaticamente bloqueado porque multíplos usuários sinalizaram as postagens dele.
-
-        Por favor [review the flags](/admin/flags). Se %{username} foi bloqueado de postar indevidamente, clique no botão desbloquear em [the admin page for this user](%{user_url}).⏎
-    spam_post_blocked:
-      subject_template: "Mensagens do novo utilizador %{username} bloqueadas por repetição de ligações"
     unblocked:
       subject_template: "Conta desbloqueada"
       text_body_template: |
@@ -843,4 +835,3 @@ pt:
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
   flag_reason:
     sockpuppet: "Um novo utilizador criou um tópico, que um outro novo utilizador com o mesmo IP respondeu. Veja as configurações do sítio em flag_sockpuppets"
-    spam_hosts: "Este utilizador tentou criar várias mensagens com ligações para o mesmo domínio. Veja as configurações em newuser_spam_host_threshold."

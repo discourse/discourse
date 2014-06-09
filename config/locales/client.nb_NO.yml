@@ -344,9 +344,6 @@ nb_NO:
     created: 'Laget'
     trust_level: 'Tillitsnivå'
     create_account:
-      title: "Lag Konto"
-      action: "Lag en nå!"
-      invite: "Har du ikke en konto ennå?"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
     forgot_password:
       title: "Glemt Passord"
@@ -457,7 +454,6 @@ nb_NO:
       private_message: "<i class='fa fa-envelope-o' title='private melding'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='invitert til private melding'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} aksepterte din invitasjon"
-      moved_post: "<i title='flyttet innlegg' class='fa fa-arrow-right'></i> {{username}} flyttet til {{link}}"
       total_flagged: "totalt markerte innlegg"
     upload_selector:
       title: "Legg til Bilde"
@@ -563,10 +559,10 @@ nb_NO:
           '2_4': 'Du vil motta notifikasjoner fordi du svarte på dette emnet.'
           '2_2': 'Du vil motta notifikasjoner fordi følger dette emnet.'
           '2': 'Du vil motta notifikasjoner fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
-          '1': 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg.'
           '1_2': 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg.'
-          '0': 'Du ignorerer alle varslinger på dette emnet.'
+          '1': 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg.'
           '0_2': 'Du ignorerer alle varslinger på dette emnet.'
+          '0': 'Du ignorerer alle varslinger på dette emnet.'
         watching:
           title: "Iaktar"
           description: "samme som å Følge, pluss at du vil bli varslet om alle nye innlegg."
@@ -824,7 +820,6 @@ nb_NO:
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
       delete_error: "Det oppstod en feil ved å slette denne kategorien."
       list: "List Kategorier"
-      no_description: "Det er ingen beskrivelse på denne kategorien."
       change_in_category_topic: "Rediger Beskrivelse"
       already_used: 'Denne fargen er i bruk av en annen kategori'
       security: "Sikkerhet"

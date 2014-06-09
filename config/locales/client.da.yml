@@ -359,9 +359,6 @@ da:
     created: 'Oprettet'
     trust_level: 'Tillidsniveau'
     create_account:
-      title: "Opret konto"
-      action: "Opret en konto nu!"
-      invite: "Har du ikke en konto endnu?"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
     forgot_password:
       title: "Glemt adgangskode"
@@ -467,7 +464,6 @@ da:
       private_message: "<i class='fa fa-lock' title='privat besked'></i> {{username}} har sendt dig en privat besked: {{link}}"
       invited_to_private_message: "{{username}} har inviteret dig til en privat samtale: {{link}}"
       invitee_accepted: "<i title='accepterede din invitation' class='fa fa-sign-in'></i> {{username}} har accepteret din invitation"
-      moved_post: "<i title='indlæg flyttet' class='fa fa-arrow-right'></i> {{username}} flyttede indlæg til {{link}}"
       total_flagged: "total markerede indlæg"
     upload_selector:
       title: "Indsæt billede"
@@ -585,10 +581,10 @@ da:
           '2_4': 'Du får notifikationer fordi du har besvaret dette emne.'
           '2_2': 'Du får notifikationer fordi du følger dette emne.'
           '2': 'Du får notifikationer fordi du <a href="/users/{{username}}/preferences">har læst dette emne</a>.'
-          '1': 'Du får kun notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg.'
           '1_2': 'Du får kun notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg.'
-          '0': 'Du får ingen notifikationer for dette emne.'
+          '1': 'Du får kun notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg.'
           '0_2': 'Du får ingen notifikationer for dette emne.'
+          '0': 'Du får ingen notifikationer for dette emne.'
         watching:
           title: "Overvåger"
           description: "samme som Følger, plus at du får besked om alle nye indlæg."
@@ -865,7 +861,6 @@ da:
       delete_confirm: "Er du sikker på, at du vil slette den kategori?"
       delete_error: "Der opstod en fejl ved sletning af kategorien."
       list: "Kategoriliste"
-      no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "besøg kategoriemnet for at redigere beskrivelsen"
       already_used: 'This color has been used by another category'
       security: "Sikkerhed"

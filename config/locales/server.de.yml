@@ -466,9 +466,7 @@ de:
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von Mails, werden asynchron durch Sidekiq ausgeführt. Stelle sicher, dass mindestens eine Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
     queue_size_warning: 'Es befinden sich sehr viele (%{queue_size}) Jobs in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder Du musst zusätzliche Sidekiq Worker starten.'
     memory_warning: 'Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen.'
-    enable_google_logins_warning: "Du verwendest eine veraltete Version der Google OpenID Authentifikation. Google wird die Unterstützung dafür am 20. April 2015 beenden. Bitte stelle möglichst bald auf Google Oauth2 um."
     both_googles_warning: "Sowohl enable_google_logins als auch enable_google_oauth2_logins sind in den Einstellungen aktiviert. Bitte deaktiviere enable_google_logins."
-    google_oauth2_config_warning: 'Der Server ist für Anmeldung und Login mit Google Oauth2 (enable_google_oauth2_logins)  konfiguriert, aber die Client ID und das Client Gemeheimnis sind nicht gesetzt. Gehe zu <a href="/admin/site_settings">Seiteneinstellung</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Siehe auch diesen Leitfaden um mehr zu erfahren</a>.'
     facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
@@ -662,7 +660,6 @@ de:
     enable_github_logins: "Aktiviere Github Authentisierung (benötigt github_client_id und github_client_secret)."
     github_client_id: "Client-ID für Github Authentisierung, registriert auf https://github.com/settings/applications"
     github_client_secret: "Client Secret für Github Authentisierung, registriert auf https://github.com/settings/applications"
-    allow_restore: "Erlaube Datenimports. (WARNUNG: Hiermit können ALLE vorhandenen Daten überschrieben werden; immer auf 'false' lassen, es sei denn Du planst wirklich Datenimports)."
     maximum_backups: "Maximale Anzahl Backups, die auf dem Server gespeichert werden. Ältere Backups werden automatisch gelöscht."
     backup_daily: "Erstelle jeden Tag automatisch ein Backup"
     enable_s3_backups: "Lade fertige Backups zu S3 hoch. Stelle sicher, dass du deine S3 Kontodaten eingegeben hast. "
@@ -1091,14 +1088,6 @@ de:
         ```
     email_error_notification:
       subject_template: "Fehler beim Parsen der Email"
-      text_body_template: |
-        Dies ist eine automatisch generierte Nachricht um Dich darüber zu informieren, dass die Verarbeitung einer eingehenden Email fehl schlug.
-
-        Bitte prüfe die unten folgende Nachricht.
-
-        Fehler - %{error}
-
-        %{source}
     email_reject_trust_level:
       subject_template: "Nachricht abgelehnt"
       text_body_template: |
@@ -1123,20 +1112,6 @@ de:
         Dies ist eine automatische Nachricht von %{site_name} um dich zu informierenm, dass dein Konto durch einem Moderator gesperrt wurde.
 
         Weitere Hilfe findest du in unserer [FAQ](%{base_url}/faq).
-    user_automatically_blocked:
-      subject_template: "Benutzer %{username} wurde automatisch gesperrt"
-      text_body_template: |
-        Dies ist eine automatische Nachricht um dich zu informieren, dass [%{username}](%{user_url}) automatisch gesperrt wurde, da zu viele Mitglieder %{username}'s Beiträge beanstanded haben.
-
-        Bitte [überprüfe die Beanstandungen](/admin/flags). Wenn %{username} nicht mehr gesperrt sein soll, schalte den Benutzer in der [Benuzeradministration](%{user_url}) wieder frei.
-    spam_post_blocked:
-      subject_template: "Spam wirde in einem Beitrag von %{username} entdeckt"
-      text_body_template: |
-        Dies ist eine automatische Nachricht, um dich darüber zu informieren, dass Benutzer [%{username}](%{base_url}%{user_url}) versucht hat mehrere Beiträge mit Links zu %{domains} zu erstellen, aber die Beiträge wurden blockiert, um spam zu vermeiden. Der Benutzer kann immer noch neue Beiträge erstellen, die nicht auf %{domains} verlinken.
-
-        Bitte [review the user](%{base_url}%{user_url}).
-
-        Dies kann durch die  `newuser_spam_host_threshold` und `white_listed_spam_host_domains` Seiteneinstellungen geändert werden.
     unblocked:
       subject_template: "Benutzerkonto entsperrt"
       text_body_template: |
@@ -1314,7 +1289,6 @@ de:
       size_not_found: "Entschuldige, aber wir konnten die Grösse des Bildes nicht feststellen. Vielleicht ist das Bild defekt?"
   flag_reason:
     sockpuppet: "Ein neuer Benutzer hat ein Thema erstellt und ein anderer neuer Benutzer mit der selben IP Adresse hat darauf geantwortet. Beachte die flag_sockpuppets Einstellung."
-    spam_hosts: "Dieser Benutzer hat versucht mehrere Antworten mit Links zur selben Domain zu posten. Beachte die newuser_spam_host_threshold Einstellung."
   email_log:
     no_user: "Kann Benutzer mit ID %{user_id} nicht finden "
     suspended_not_pm: "Benutzer ist gesperrt und Email ist keine private Nachricht"

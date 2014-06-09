@@ -12,7 +12,7 @@ zh_CN:
     long_date: "LLLL"
   time:
     formats:
-      short: "%Y-%m-%d"
+      short: "%Y年%m月%d日"
       short_no_year: "%B %-d"
       date_only: "%b %-d，%Y"
   title: "Discourse"
@@ -437,9 +437,7 @@ zh_CN:
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
     queue_size_warning: '队列中的任务数为 %{queue_size}，任务较多。这可能因为 Sidekiq 进程出问题导致，或者需要更多的 Sidekiq 进程。'
     memory_warning: '您的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
-    enable_google_logins_warning: "您正在使用已被废弃的 Google OpenID 验证。Google 将在2015年4月20日停止支持 OpenID 登入。尽早开始使用 Google Oauth2。"
     both_googles_warning: "您在站点设置中同时启用了 enable_google_logins 和 enable_google_oauth2_logins。禁用 enable_google_logins。"
-    google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登入（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
     facebook_config_warning: '服务器允许使用 Facebook 账号登入（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用 Twitter 账号登入（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
     github_config_warning: '服务器允许使用 GitHub 账号登入（enable_github_logins），但是 client id 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
@@ -632,7 +630,6 @@ zh_CN:
     enable_github_logins: "启用 Github 帐号验证登入，需要 github_client_id 和 github_client_secret"
     github_client_id: "Github 帐号验证的客户端帐号（Client id），到 https://github.com/settings/applications 来注册获取"
     github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"
-    allow_restore: "允许导入数据，这将替换所有全站数据！除非您计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
     backup_daily: "每天自动创建站点备份"
     enable_s3_backups: "当完成备份时自动上传到 S3。请确定已经填写了 s3 验证资料。"
@@ -906,7 +903,7 @@ zh_CN:
 
       <small>在每封您发送的邮件底部应该都有取消订阅的链接，让我们模拟一下。这封邮件发送自 中华人民共和国北京市海淀区中关村南大街公司名称，邮编 100081。如果您不希望将来继续收到我们的邮件，[点击此处取消订阅][5]。</small>
   new_version_mailer:
-    subject_template: "[%{site_name}] 有新的 Discourse，可以升级"
+    subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
     text_body_template: |
       有新版本的 Discourse 可供升级：
 
@@ -914,9 +911,9 @@ zh_CN:
       新版本：**%{new_version}**
 
       您可能想要：
-      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中的更新内容。
+      - 查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master) 中的更新内容。
 
-      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker) ，然后按下“升级”按钮。
+      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker)，然后按下“升级”按钮。
 
       - 访问 [meta.discourse.org](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。
   new_version_mailer_with_notes:
@@ -1050,14 +1047,6 @@ zh_CN:
         ```
     email_error_notification:
       subject_template: "解析邮件错误"
-      text_body_template: |
-        这是一封自动发出的邮件，通知您解析收到的邮件发生了错误。
-
-        请检查下下列消息。
-
-        错误 —— %{error}
-
-        %{source}
     email_reject_trust_level:
       subject_template: "消息拒绝"
       text_body_template: |
@@ -1082,22 +1071,6 @@ zh_CN:
         这是一封自 %{site_name} 自动发出的邮件，以告知您的账户被职员封禁。
 
         欲查看额外的指导，请查看我们的[FAQ](%{base_url}/faq)。
-    user_automatically_blocked:
-      subject_template: "因标记而被封禁的新用户 %{username}"
-      text_body_template: |
-        这是一封自动发出的邮件，以告知您新用户[%{username}](%{base_url}%{user_url})已因多为用户标记其帖子而被自动封禁。
-
-        请[审核这些标记](%{base_url}/admin/flags)。如果%{username}被不正确地封禁了编辑功能，点击[该用户的管理页面](%{base_url}%{user_url})上的解封按钮。
-
-        该阈值可以通过站点设置中的 `block_new_user` 更改。
-    spam_post_blocked:
-      subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
-      text_body_template: |
-        这是一封自动发出的邮件，以告知您新用户[%{username}](%{base_url}%{user_url})已因创建多个链接至 %{domains} 的帖子而被封禁，这是用于反垃圾信息的措施。但是用户仍能够发表不包含到 %{domains} 的帖子。
-
-        请[审核这些用户](%{base_url}%{user_url})。
-
-        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unblocked:
       subject_template: "账户解封 unblocked"
       text_body_template: |
@@ -1273,7 +1246,6 @@ zh_CN:
       size_not_found: "抱歉，我们无法获取图片大小，请检查您的图片是否已损坏。"
   flag_reason:
     sockpuppet: "新用户创建了主题，而另外一个新用户以同一个 IP 在该主题回复。查看站点设置的 flag_sockpuppets。"
-    spam_hosts: "用户试图创建链接到同一个郁闷的多个回复。查看站点设置的 newuser_spam_host_threshold。"
   email_log:
     no_user: "不能找到用户 ID 为 %{user_id} 的用户"
     suspended_not_pm: "用户被封禁并且邮件不是私信"

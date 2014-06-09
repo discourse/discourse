@@ -226,6 +226,7 @@ it:
       invited_by: "Invitato da"
       trust_level: "Livello"
       notifications: "Notifiche"
+      disable_jump_reply: "Non saltare al tuo nuovo post dopo la risposta"
       dynamic_favicon: "Mostra la notifica dei messaggi in arrivo nella Favicon (funzione sperimentale)"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Cita il testo evidenziato nelle risposte"
@@ -273,9 +274,12 @@ it:
       change_avatar:
         title: "Cambia il tuo avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basato su"
+        refresh_gravatar_title: "Ricarica il tuo Gravatar"
+        letter_based: "Avatar assegnato dal Sistema"
         uploaded_avatar: "Immagine custom"
         uploaded_avatar_empty: "Aggiungi un'immagine custom"
         upload_title: "Carica la tua foto"
+        upload_picture: "Carica Immagine"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato la tua immagine; non è quadrata"
       change_profile_background:
         title: "Sfondo Profilo"
@@ -315,6 +319,7 @@ it:
       last_seen: "Ultima visita"
       created: "Membro da"
       log_out: "Esci"
+      location: "Località"
       website: "Sito Web"
       email_settings: "Email"
       email_digests:
@@ -330,6 +335,13 @@ it:
       new_topic_duration:
         label: "Considera un topic \"nuovo\" se"
         not_viewed: "non li hai ancora letti"
+        last_here: "sono stati creati dalla tua ultima visita"
+        after_n_days:
+          one: "sono stati creati nell'ultima giornata"
+          other: "sono stati creati negli ultimi {{count}} giorni"
+        after_n_weeks:
+          one: "sono stati creati nell'ultima settimana"
+          other: "sono stati creati nelle ultime {{count}} settimane"
       auto_track_topics: "Tieni traccia delle conversazioni lette"
       auto_track_options:
         never: "mai"
@@ -383,11 +395,15 @@ it:
     close: "Chiudi"
     assets_changed_confirm: "Discourse è stato aggiornato, vuoi preparati a passare alla nuova versione?"
     read_only_mode:
+      enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "Il login è disabilitato quando il sito è in modalità di sola lettura."
     learn_more: "per saperne di più..."
     year: 'all''anno'
+    year_desc: 'topic creati negli ultimi 365 giorni'
     month: 'al mese'
+    month_desc: 'topic creati negli ultimi 30 giorni'
     week: 'a settimana'
+    week_desc: 'topic creati negli ultimi 7 giorni'
     day: 'al giorno'
     first_post: Primo post
     mute: Ignora
@@ -409,9 +425,6 @@ it:
     created: 'Creato'
     trust_level: 'Livello'
     create_account:
-      title: "Crea Account"
-      action: "Creane uno ora!"
-      invite: "Non hai ancora un account?"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
     forgot_password:
       title: "Password dimenticata"
@@ -422,10 +435,12 @@ it:
       complete_email: "Se risulterà un account con <b>%{email}</b>, dovresti ricevere un'email contenente le istruzioni per ripristinare la tua password a breve."
     login:
       title: "Accedi"
+      username: "Utente"
       password: "Password"
       email_placeholder: "email o nome utente"
       error: "Errore sconosciuto"
       reset_password: 'recupera password'
+      logging_in: "Connessione in corso..."
       or: "o"
       authenticating: "Autenticazione..."
       awaiting_confirmation: "Il tuo account è in attesa di attivazione, usa il link di recupero password per ottenere una nuova email di attivazione."
@@ -532,7 +547,6 @@ it:
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} ha accettato il tuo invito"
-      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} spostato {{link}}"
       total_flagged: "Numero totale di post segnalati"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Ti è stato assegnato {{link}}"
@@ -670,10 +684,10 @@ it:
           '2_4': 'Riceverai notifiche perché hai pubblicato un messaggio in questo topic'
           '2_2': 'Riceverai notifiche perché stai seguendo questo topic'
           '2': 'Riceverai notifiche perché <a href="/users/{{username}}/preferences">hai letto questo topic</a>.'
-          '1': 'Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde a un tuo post.'
           '1_2': 'Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde a un tuo post.'
-          '0': 'Stai ignorando tutte le notifiche di questo topic.'
+          '1': 'Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde a un tuo post.'
           '0_2': 'Stai ignorando tutte le notifiche di questo topic.'
+          '0': 'Stai ignorando tutte le notifiche di questo topic.'
         watching_pm:
           title: "In osservazione"
           description: "Riceverai notifiche di ogni post nuovo in questo messaggio privato. Il conto dei non letti e dei nuovi post comparirà anche di fianco alla lista dei topic."
@@ -987,7 +1001,6 @@ it:
       delete_confirm: "Sei sicuro di voler cancellare questa categoria?"
       delete_error: "Si è verificato un errore cancellando questa categoria"
       list: "Mostra le categorie"
-      no_description: "Non c'è una descrizione di questa categoria, modifica la definizione del topic"
       change_in_category_topic: "Modifica la descrizione"
       already_used: 'Questo colore è già usato da un''altra categoria'
       security: "Sicurezza"
@@ -1655,6 +1668,11 @@ it:
       actions:
         title: 'Azioni'
         star: '<b>f</b> Metti il topic nei preferiti'
+        share_topic: '<b>shift s</b> Condividi topic'
+        share_post: '<b>s</b> Condividi post'
+        reply_topic: '<b>shift r</b> Rispondi al topic'
+        reply_post: '<b>r</b> Rispondi al post'
+        quote_post: '<b>q</b> Quota post'
         like: '<b>l</b> Mi piace il post'
         flag: '<b>!</b> Contrassegna il post'
         bookmark: '<b>b</b> Aggiungi un segnalibro al post'
@@ -1685,5 +1703,7 @@ it:
           description: Inviti inviati.
         leader:
           name: Leader
+          description: Permette la modifica categoria, la possibilità di rinominare, e lounge.
         elder:
           name: Veterano
+          description: Permette la modifica globale, il pin, la chiusura, l'archiviazione, lo split e il merge.

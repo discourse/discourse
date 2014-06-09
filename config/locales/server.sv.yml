@@ -643,8 +643,6 @@ sv:
         För mer information kring våra riktlinjer, besök vår [FAQ](%{base_url}/faq).⏎
     blocked_by_staff:
       subject_template: "Konto blockerat"
-    spam_post_blocked:
-      subject_template: "Inlägg från ny användare %{username} blockerade pga. upprepade länkar"
     unblocked:
       subject_template: "Konto avblockerat"
       text_body_template: |+

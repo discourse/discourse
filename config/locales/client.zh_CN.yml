@@ -382,9 +382,6 @@ zh_CN:
     created: '创建时间'
     trust_level: '用户级别'
     create_account:
-      title: "创建帐号"
-      action: "立即创建！"
-      invite: "还没有帐号？"
       failed: "出问题了，有可能这个电子邮箱已经被注册了。试试忘记密码链接？"
     forgot_password:
       title: "忘记密码"
@@ -505,7 +502,6 @@ zh_CN:
       private_message: "<i class='fa fa-envelope-o' title='私信'></i> {{username}} {{link}}"
       invited_to_private_message: "{{username}} {{link}}"
       invitee_accepted: "<i title='已接受您的邀请' class='fa fa-sign-in'></i> {{username}} 已接受您的邀请"
-      moved_post: "<i title='移动帖子' class='fa fa-arrow-right'></i> {{username}} 移动了 {{link}}"
       total_flagged: "被报告帖子的总数"
       linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> 您被授予了 {{link}}"
@@ -637,10 +633,10 @@ zh_CN:
           '2_4': '因为您在此主题内发表了回复，所以您将收到相关通知。'
           '2_2': '因为您在追踪此主题，所以您将收到相关通知。'
           '2': '因为您<a href="/users/{{username}}/preferences">阅读了此主题</a>，所以您将收到相关通知。'
-          '1': '因为有人 @name 提及了您或回复了您的帖子，所以您将收到相关通知。'
           '1_2': '仅当有人 @name 提及了您或回复了您的帖子，您才会收到相关通知。'
-          '0': '您将忽略关于此主题的所有通知。'
+          '1': '因为有人 @name 提及了您或回复了您的帖子，所以您将收到相关通知。'
           '0_2': '您将忽略关于此主题的所有通知。'
+          '0': '您将忽略关于此主题的所有通知。'
         watching_pm:
           title: "关注"
           description: "一旦有新私信发表，您都会收到通知。"
@@ -926,7 +922,6 @@ zh_CN:
       delete_confirm: "您确定要删除此分类吗？"
       delete_error: "在删除此分类时发生了错误。"
       list: "列出分类"
-      no_description: "本分类没有描述信息。"
       change_in_category_topic: "访问分类主题来编辑描述信息"
       already_used: '此色彩已经被另一个分类使用'
       security: "安全性"

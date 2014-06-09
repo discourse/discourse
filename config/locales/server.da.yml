@@ -576,7 +576,6 @@ da:
     enable_github_logins: "Aktivér Github-login, kræver github_client_id og github_client_secret"
     github_client_id: "Client id til Github-login, oprettes på https://github.com/settings/applications."
     github_client_secret: "Client secret til Github-login, oprettes på at https://github.com/settings/applications."
-    allow_restore: "Tillad import, som kan erstatte ALLE sitets data; slå fra med mindre du planlægger at importere data"
     active_user_rate_limit_secs: "Hvor ofte vi opdaterer feltet 'last_seen_at', i sekunder."
     previous_visit_timeout_hours: "Hvor lang tid et besøg varer før vi regner det med i det 'forrige' besøg, i timer."
     rate_limit_create_topic: "Efter at have oprettet et emne skal brugerne vente dette antal sekunder før de kan oprette et ny emne."
@@ -889,16 +888,6 @@ da:
         Dette er en automatisk besked fra %{site_name} for at informere dig om at din konto er blevet blokeret af en administrator.
 
         Se venligst vores [FAQ](%{base_url}/faq) for yderligere vejledning.
-    user_automatically_blocked:
-      subject_template: "Ny bruger %{username} blokeret via flag"
-      text_body_template: |
-        Dette er en automatisk besked for at informere dig om at den nye bruger [%{username}](%{base_url}%{user_url}) blev blokeret automatisk fordi flere brugere har flaget %{username}'s indlæg/
-
-        [Gennemse venligst flagene](%{base_url}/admin/flags). Hvis %{username} blev blokeret uretmæssigt kan du klikke på knappen Fjern markering på [brugerens administrationsside](%{base_url}%{user_url}).
-
-        Denne grænse kan ændres via indstillingen `block_new_user`.
-    spam_post_blocked:
-      subject_template: "Ny bruger %{username}'s indlæg blokeret pga. gentagne links"
     unblocked:
       subject_template: "Blokering af konto fjernet"
       text_body_template: |
@@ -1041,4 +1030,3 @@ da:
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"
   flag_reason:
     sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse svarede på det. Se indstillingen af flag_sockpuppets."
-    spam_hosts: "Denne bruger forsøgte at oprette flere indlæg med links til det samme domæne. Se indstillinge af newuser_spam_host_threshold."
