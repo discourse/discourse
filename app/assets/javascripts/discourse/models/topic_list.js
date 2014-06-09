@@ -205,7 +205,7 @@ Discourse.TopicList.reopenClass({
     var session = Discourse.Session.current(),
         list = session.get('topicList');
 
-    if (list && (list.get('filter') === filter) && window.location.pathname.indexOf('more') > 0) {
+    if (list && (list.get('filter') === filter)) {
       list.set('loaded', true);
       return Ember.RSVP.resolve(list);
     }
