@@ -3,8 +3,12 @@ required:
     client: true
     default: 'Discourse'
   site_description: ''
-  contact_email: ''
-  notification_email: 'info@discourse.org'
+  contact_email:
+    default: ''
+    validator: 'EmailSettingValidator'
+  notification_email:
+    default: 'info@discourse.org'
+    validator: 'EmailSettingValidator'
   site_contact_username: ''
   logo_url:
     client: true
@@ -307,7 +311,9 @@ email:
   email_in:
     default: false
     client: true
-  email_in_address: ''
+  email_in_address:
+    default: ''
+    validator: 'EmailSettingValidator'
   email_in_min_trust:
     default: 3
     enum: 'MinTrustToCreateTopicSetting'

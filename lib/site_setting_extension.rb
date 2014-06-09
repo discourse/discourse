@@ -54,6 +54,10 @@ module SiteSettingExtension
     @refresh_settings ||= []
   end
 
+  def validators
+    @validators ||= {}
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
     mutex.synchronize do
@@ -77,6 +81,9 @@ module SiteSettingExtension
       end
       if opts[:refresh]
         refresh_settings << name
+      end
+      if v = opts[:validator]
+        validators[name] = v.is_a?(String) ? v.constantize : v
       end
 
       current[name] = current_value
@@ -230,6 +237,10 @@ module SiteSettingExtension
 
     if type == types[:enum]
       raise Discourse::InvalidParameters.new(:value) unless enum_class(name).valid_value?(val)
+    end
+
+    if v = validators[name] and !v.valid_value?(val)
+      raise Discourse::InvalidParameters.new(v.error_message(val))
     end
 
     provider.save(name, val, type)

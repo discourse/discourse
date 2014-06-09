@@ -238,6 +238,10 @@ describe SiteSettingExtension do
     end
 
     context 'when overridden' do
+      after :each do
+        settings.remove_override!(:validated_setting)
+      end
+
       it 'stores valid values' do
         test_enum_class.expects(:valid_value?).with('fr').returns(true)
         settings.test_enum = 'fr'
@@ -275,6 +279,36 @@ describe SiteSettingExtension do
         settings.test_setting = 102
         settings.all_settings.find {|s| s[:setting] == :test_setting }[:category].should == :tests
       end
+    end
+  end
+
+  describe "setting with a validator" do
+    before do
+      settings.setting(:validated_setting, "info@example.com", {validator: 'EmailSettingValidator'})
+      settings.refresh!
+    end
+
+    after :each do
+      settings.remove_override!(:validated_setting)
+    end
+
+    it "stores valid values" do
+      EmailSettingValidator.expects(:valid_value?).returns(true)
+      settings.validated_setting = 'success@example.com'
+      settings.validated_setting.should == 'success@example.com'
+    end
+
+    it "rejects invalid values" do
+      expect {
+        EmailSettingValidator.expects(:valid_value?).returns(false)
+        settings.validated_setting = 'nope'
+      }.to raise_error(Discourse::InvalidParameters)
+      settings.validated_setting.should == "info@example.com"
+    end
+
+    it "allows blank values" do
+      settings.validated_setting = ''
+      settings.validated_setting.should == ''
     end
   end
 

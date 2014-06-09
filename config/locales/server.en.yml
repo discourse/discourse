@@ -909,6 +909,9 @@ en:
     enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes"
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
+    errors:
+      invalid_email: "Invalid email address."
+
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"

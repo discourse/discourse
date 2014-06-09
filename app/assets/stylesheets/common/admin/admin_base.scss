@@ -229,11 +229,18 @@
 
     }
 
-    .desc {
+    .desc, .validation-error {
       padding-top: 3px;
-      color: scale-color($primary, $lightness: 50%);
       font-size: 80%;
       line-height: 1.4em;
+    }
+
+    .validation-error {
+      color: $danger;
+    }
+
+    .desc {
+      color: scale-color($primary, $lightness: 50%);
     }
 
     h3 {
