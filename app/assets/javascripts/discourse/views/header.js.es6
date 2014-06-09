@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.HeaderView = Discourse.View.extend({
+export default Discourse.View.extend({
   tagName: 'header',
   classNames: ['d-header', 'clearfix'],
   classNameBindings: ['editingTopic'],
