@@ -57,8 +57,9 @@ Discourse.ShareView = Discourse.View.extend({
           $shareLink = $('#share-link');
       var url = $currentTarget.data('share-url');
       var postNumber = $currentTarget.data('post-number');
-      // Relative urls
+      var date = $currentTarget.children().data('time');
 
+      // Relative urls
       if (url.indexOf("/") === 0) {
         url = window.location.protocol + "//" + window.location.host + url;
       }
@@ -82,8 +83,11 @@ Discourse.ShareView = Discourse.View.extend({
         left: "" + x + "px",
         top: "" + y + "px"
       });
+
       shareView.set('controller.link', url);
       shareView.set('controller.postNumber', postNumber);
+      shareView.set('controller.date', date);
+
       return false;
     });
 
@@ -102,5 +106,3 @@ Discourse.ShareView = Discourse.View.extend({
   }
 
 });
-
-
