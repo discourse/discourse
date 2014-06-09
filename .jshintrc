@@ -39,6 +39,7 @@
     "_",
     "alert",
     "controllerFor",
+    "viewClassFor",
     "testController",
     "containsInstance",
     "parseHTML",

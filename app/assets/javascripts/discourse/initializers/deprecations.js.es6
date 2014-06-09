@@ -1,5 +1,6 @@
 var deprecatedViewHelpers = {
-  inputTip: 'input-tip'
+  inputTip: 'input-tip',
+  pagedown: 'pagedown-editor'
 };
 
 export default {

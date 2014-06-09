@@ -43,6 +43,10 @@ function controllerFor(controller, model) {
   return controller;
 }
 
+function viewClassFor(name) {
+  return Discourse.__container__.lookupFactory('view:' + name);
+}
+
 function asyncTestDiscourse(text, func) {
   asyncTest(text, function () {
     var self = this;

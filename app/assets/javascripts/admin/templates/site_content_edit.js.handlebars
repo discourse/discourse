@@ -2,7 +2,7 @@
 <p class='description'>{{model.description}}</p>
 
 {{#if model.markdown}}
-  {{pagedown value=model.content}}
+  {{pagedown-editor value=model.content}}
 {{/if}}
 {{#if model.plainText}}
   {{textarea value=model.content class="plain"}}

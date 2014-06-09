@@ -1,12 +1,10 @@
 module("Discourse.HeaderView");
 
-import HeaderView from 'discourse/views/header';
-
 test("showNotifications", function() {
   var controllerSpy = {
     send: sinon.spy()
   };
-  var view = HeaderView.create({
+  var view = viewClassFor('header').create({
     controller: controllerSpy
   });
 

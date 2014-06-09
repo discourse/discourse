@@ -1,4 +1,4 @@
-var helpers = ['input-tip'];
+var helpers = ['input-tip', 'pagedown-editor'];
 
 /**
   Creates view helpers for some views. Many of these should probably be converted
