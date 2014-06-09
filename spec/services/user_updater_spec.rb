@@ -68,7 +68,7 @@ describe UserUpdater do
 
         updater.update(website: 'http://example.com')
 
-        expect(user.reload.website).to eq 'http://example.com'
+        expect(user.reload.user_profile.website).to eq 'http://example.com'
       end
     end
 
@@ -79,7 +79,7 @@ describe UserUpdater do
 
         updater.update(website: 'example.com')
 
-        expect(user.reload.website).to eq 'http://example.com'
+        expect(user.reload.user_profile.website).to eq 'http://example.com'
       end
     end
   end

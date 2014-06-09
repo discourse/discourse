@@ -770,7 +770,6 @@ end
 #  username_lower                :string(60)       not null
 #  auth_token                    :string(32)
 #  last_seen_at                  :datetime
-#  website                       :string(255)
 #  admin                         :boolean          default(FALSE), not null
 #  last_emailed_at               :datetime
 #  email_digests                 :boolean          not null
