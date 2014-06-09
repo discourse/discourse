@@ -741,7 +741,7 @@ pl_PL:
     text_body_template: |
       %{invitee_name} zaprosił Ciebie do odwiedzenia serwisu %{site_name}.
 
-      Jeśli jesteś zainteresowany, kliknij poniższy odnośnik:
+      Jeśli jesteś zainteresowany(a), kliknij poniższy odnośnik:
 
       [Odwiedź %{site_name}][1]
 
@@ -828,26 +828,6 @@ pl_PL:
         Miłego uczestnictwa!
     welcome_invite:
       subject_template: "Witaj na forum %{site_name}!"
-      text_body_template: |
-        Dziękujemy za przyjęcie zaproszenia do forum %{site_name}, i witamy!
-
-        Automatycznie wygenerowaliśmy Twoją nazwę użytkownika: **%{username}**, ale możesz ją zmienić w każdej chwili w [Twoim profilu][ustawienia].
-
-        By zalogować się ponownie:
-
-        1. Zaloguj się jak chcesz - ale ten login musi odpowiadać **temu samemu adresowi email**, na który dostałeś swoje zaproszenie. Inaczej nie będziemy mogli stwierdzić, że Ty to Ty!
-
-        2. Utwórz unikalne hasło dla forum %{site_name} w [Twoim profilu][ustawienia], a potem zaloguj się nim.
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        Zawsze wierzymy w [cywilizowane zachowanie społeczności](%{base_url}/faq).
-
-        Miłego uczestnictwa!
-
-        [ustawienia]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Eksportowanie zostało zakończone."
       text_body_template: "Eksport się powiódł."
@@ -872,16 +852,6 @@ pl_PL:
         This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
 
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
-    user_automatically_blocked:
-      subject_template: "Nowy użytkownik %{username} zablokowany przez flagi"
-      text_body_template: |
-        Jest to automatyczna wiadomość wysłana by poinformować Cię, że nowy użytkownik [%{username}](%{base_url}%{user_url}) został automatycznie zablokowany ponieważ wielu użytkowników oflagowało jego posty.
-
-        [Przejrzyj flagi](%{base_url}/admin/flags). Jeśli %{username} został mylnie zablokowany, kliknij na przycisk odblokuj na [administracyjnej stronie tego użytkownika](%{base_url}%{user_url}).
-
-        Próg blokowania może być zmieniony przez ustawienie serwisu `block_new_user`.
-    spam_post_blocked:
-      subject_template: "Posty nowego użytkownika %{username} zablokowane za powtarzanie linków"
     unblocked:
       subject_template: "Konto odblokowane"
       text_body_template: |

@@ -189,6 +189,7 @@ pt:
       deleted: "(removido)"
       suspended_notice: "Utilizador suspenso até {{date}}."
       suspended_reason: "Razão: "
+      unread_message_count: "Mensagens"
       messages:
         all: "Todas"
         mine: "Minha"
@@ -281,6 +282,7 @@ pt:
         time_read: "Tempo de Leitura"
         days_visited: "Dias Visitados"
         account_age_days: "Idade da conta em dias"
+        create: "Enviar um Convite"
       password:
         title: "Palavra-chave"
         too_short: "A sua palavra-chave é muito curta."
@@ -300,6 +302,7 @@ pt:
         the_topic: "o tópico"
     loading: "A carregar..."
     close: "Fechar"
+    too_few_topics_notice: "Crie pelo menos 5 tópicos e 30 posts públicos para dar inicio à discussão. Novos utilizadores não poderão ganhar níveis de confiança se não houver conteúdo para lerem."
     learn_more: "sabe mais..."
     year: 'ano'
     month: 'mês'
@@ -323,9 +326,6 @@ pt:
     created: 'Criado'
     trust_level: 'Nível de confiança'
     create_account:
-      title: "Criar Conta"
-      action: "Criar uma agora!"
-      invite: "Ainda sem conta?"
       failed: "Houve um erro, talvez este email já esteja registado, tente usar o link Esqueci-me da Palavra-chave."
     forgot_password:
       title: "Esqueci-me da Palavra-chave"
@@ -333,7 +333,9 @@ pt:
       invite: "Coloque seu nome de utilizador ou endereço de email, e enviar-lhe-emos um email para refazer a sua palavra-chave."
       reset: "Recuperar Palavra-chave"
     login:
+      username: "Utilizador"
       password: "Palavra-chave"
+      email_placeholder: "email ou nome de utilizador"
       error: "Erro desconhecido"
       reset_password: 'Recuperar palavra-chave'
       or: "Ou"
@@ -369,6 +371,8 @@ pt:
       min_length:
         need_more_for_title: "{{n}} no título"
         need_more_for_reply: "{{n}} para chegar à mensagem"
+      error:
+        title_missing: "O Título é obrigatório"
       save_edit: "Guardar alterações"
       reply_original: "Responder no Tópico original"
       reply_here: "Responda Aqui"
@@ -470,6 +474,7 @@ pt:
         one: '1 tópico não lido'
         other: '{{count}} tópicos não lidos'
       title: 'Tópico'
+      loading_more: "Carregando mais tópicos..."
       loading: 'A Carregar tópico...'
       invalid_access:
         title: "Tópico é particular"
@@ -517,10 +522,10 @@ pt:
           '2_4': 'Receberá notificações porque inseriu uma resposta neste tópico.'
           '2_2': 'Receberá notificações porque está a monitorizar este tópico.'
           '2': 'Receberá notificações porque <a href="/users/{{username}}/preferences">leu este tópico</a>.'
-          '1': 'Receberá notificações apenas se alguém mencionar o seu @nome ou responder à sua mensagem.'
           '1_2': 'Receberá notificações apenas se alguém mencionar o seu @nome ou responder à sua mensagem.'
-          '0': 'Está a ignorar todas as notificações para este tópico.'
+          '1': 'Receberá notificações apenas se alguém mencionar o seu @nome ou responder à sua mensagem.'
           '0_2': 'Está a ignorar todas as notificações para este tópico.'
+          '0': 'Está a ignorar todas as notificações para este tópico.'
         watching:
           title: "Observar"
         tracking:
@@ -761,7 +766,6 @@ pt:
       delete_confirm: "Tem certeza que quer apagar esta categoria?"
       delete_error: "Houve um erro ao apagar a categoria."
       list: "Lista de Categorias"
-      no_description: "Não há descrição para esta categoria, edite a definição do tópico."
       change_in_category_topic: "Editar Descrição"
       already_used: 'Esta cor já foi usada para outra categoria'
       security: "Segurança"
@@ -774,6 +778,7 @@ pt:
     flagging:
       action: 'Sinalizar Postagem'
       take_action: "Tomar Atitude"
+      notify_action: 'Mensagem privada'
       delete_spammer: "Apagar Spammer"
       delete_confirm: "Vai apagar <b>%{posts}</b> mensagens e <b>%{topics}</b> tópicos deste utilizador, remover a sua conta, bloquear acessos do seu endereço IP <b>%{ip_address}</b>, e adicionar o seu endereço de email <b>%{email}</b> a uma lista negra. Tem a certeza que este utilizador é de facto um spammer?"
       yes_delete_spammer: "Sim, Apagar Spammer"
@@ -807,6 +812,8 @@ pt:
       hot:
         title: "Quente"
         help: "uma seleção dos tópicos mais quentes"
+      starred:
+        title: "Favoritos"
       read:
         title: "Lido"
         help: "tópicos que leu"
@@ -939,6 +946,11 @@ pt:
         info_html: "A sua chave de API permitirá a criação e edição de tópicos usando requests JSON."
         all_users: "Todos os Utilizadores"
         note_html: "Guarde esta chave <strong>secretamente</strong>, todos os utilizadores que tiverem acesso a ela poderão criar mensagens arbitrárias no fórum como qualquer utilizador."
+      backups:
+        title: "Backups"
+        menu:
+          backups: "Backups"
+          logs: "Logs"
       customize:
         title: "Personalizar"
         long_title: "Personalizações do Site"

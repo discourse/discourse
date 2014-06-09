@@ -406,9 +406,6 @@ nl:
     created: 'Gemaakt'
     trust_level: 'Trustlevel'
     create_account:
-      title: "Maak een account"
-      action: "Maak er nu een!"
-      invite: "Heb je nog geen account?"
       failed: "Er ging iets mis, wellicht is het e-mailadres al geregistreerd. Probeer de 'Wachtwoord vergeten'-link."
     forgot_password:
       title: "Wachtwoord vergeten"
@@ -528,7 +525,6 @@ nl:
       private_message: "<i class='fa fa-envelope-o' title='privébericht'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='privébericht'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='fa fa-sign-in'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
-      moved_post: "<i title='bericht verplaatst' class='fa fa-arrow-right'></i> {{username}} verplaatst {{link}}"
       total_flagged: "aantal gemarkeerde berichten"
       linked: "<i title='gelinkt bericht' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Aan jou toegekend {{link}}"
@@ -666,10 +662,10 @@ nl:
           '2_4': 'Je ontvangt notificaties omdat je een reactie aan deze topic hebt geplaatst.'
           '2_2': 'Je ontvangt notificaties omdat je deze topic volgt.'
           '2': 'Je ontvangt notificaties omdat je <a href="/users/{{username}}/preferences">deze topic hebt gelezen</a>.'
-          '1': 'Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht.'
           '1_2': 'Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht.'
-          '0': 'Je negeert alle notificaties in deze topic.'
+          '1': 'Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht.'
           '0_2': 'Je negeert alle notificaties in deze topic.'
+          '0': 'Je negeert alle notificaties in deze topic.'
         watching_pm:
           title: "In de gaten houden"
           description: "Je krijgt een notificatie voor elk nieuw bericht in deze privéconversatie. Verder zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
@@ -982,7 +978,6 @@ nl:
       delete_confirm: "Weet je zeker dat je deze categorie wil verwijderen?"
       delete_error: "Er ging iets mis bij het verwijderen van deze categorie"
       list: "Lijst van categorieën"
-      no_description: "Er is geen omschrijving voor deze categorie, wijzig het onderwerp"
       change_in_category_topic: "Wijzig omschrijving"
       already_used: 'Deze kleur is al in gebruik door een andere categorie'
       security: "Beveiliging"

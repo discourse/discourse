@@ -369,7 +369,7 @@ zh_TW:
     read_only_mode:
       enabled: "管理員開啟了唯讀模式。你可以繼續瀏覽網站，但一些互動功能可能無法使用。"
       login_disabled: "在唯讀模式下不能登入"
-    too_few_topics_notice: "請建立至少 5 個公開的討論話題和 50 篇公開文章讓討論得以開始進行。若沒有文章可閱讀，新用戶將無法提升信任等級。"
+    too_few_topics_notice: "請建立至少 5 個公開的討論話題和 30 篇公開文章讓討論得以開始進行。若沒有文章可閱讀，新用戶將無法提升信任等級。"
     learn_more: "進一步了解..."
     year: '年'
     year_desc: '最近 365 天內建立的討論話題'
@@ -398,9 +398,6 @@ zh_TW:
     created: '已建立'
     trust_level: '信任等級'
     create_account:
-      title: "建立帳號"
-      action: "立即建立!"
-      invite: "還沒有帳號碼？"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
     forgot_password:
       title: "忘記密碼"
@@ -523,7 +520,7 @@ zh_TW:
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} 已接受你的邀請"
-      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} 移動了 {{link}}"
+      moved_post: "<i title='移動的文章' class='fa fa-sign-out'></i> {{username}} 移動了 {{link}}"
       total_flagged: "所有被投訴的文章"
       linked: "<i title='已連結的文章' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> 你已升級 {{link}}"
@@ -652,13 +649,15 @@ zh_TW:
           '3_2': '你將收到關於此討論話題的通知，因為你正在關注此討論話題。'
           '3_1': '你將收到關於此討論話題的通知，因為你建立了此討論話題。'
           '3': '你將收到關於此討論話題的通知，因為你正在關注此討論話題。'
+          '2_8': '你將會收到通知，因為你在追蹤此分類。'
           '2_4': '你將收到關於此討論話題的通知，因為你回覆了此討論話題。'
           '2_2': '你將收到關於此討論話題的通知，因為你正在追蹤此討論話題。'
           '2': '你將收到關於此討論話題的通知，因為你<a href="/users/{{username}}/preferences">看過此討論話題</a>。'
-          '1': '你將在有人以 @用戶名稱 提到你或回覆你的文章時收到通知。'
           '1_2': '你將在有人以 @用戶名稱 提到你或回覆你的文章時收到通知。'
-          '0': '你正忽略此討論話題的所有通知。'
+          '1': '你將在有人以 @用戶名稱 提到你或回覆你的文章時收到通知。'
+          '0_7': '你正忽略此分類中的所有通知。'
           '0_2': '你正忽略此討論話題的所有通知。'
+          '0': '你正忽略此討論話題的所有通知。'
         watching_pm:
           title: "關注中"
           description: "當此私人訊息有新回覆時，你會被通知。討論話題列表上將會顯示未讀及新討論話題數目。"
@@ -785,6 +784,7 @@ zh_TW:
       gap:
         other: "{{count}} 篇文章已隱藏"
       more_links: "{{count}} 更多..."
+      unread: "文章未讀"
       has_replies:
         other: "回覆"
       errors:
@@ -945,7 +945,7 @@ zh_TW:
       delete_confirm: "你確定要刪除此分類嗎?"
       delete_error: "刪除此分類時發生錯誤。"
       list: "列出分類"
-      no_description: "此分類沒有描述，請編輯討論話題定義。"
+      no_description: "請為此分類新增描述。"
       change_in_category_topic: "編輯描述"
       already_used: '此顏色已經用於其它分類'
       security: "安全性"
@@ -960,6 +960,19 @@ zh_TW:
       default_position: "預設的位置"
       position_disabled: '分類的顯示將會以活躍度為排序依據。請開啟 "fixed category positions" 來手動調整分類排序。'
       parent: "父分類"
+      notifications:
+        watching:
+          title: "關注"
+          description: "你將會自動關注在此分類中的新討論話題。您將收到所有新文章和討論話題的通知，而未讀和新文章的數量也將出現在討論話題的列表旁。"
+        tracking:
+          title: "追蹤"
+          description: "你將會自動關注在這些分類中的新討論話題。未讀和新文章的數量將出現在討論話題的列表旁。"
+        regular:
+          title: "一般"
+          description: "只在有人以 @名稱 提到你或回覆你的文章時通知你。"
+        muted:
+          title: "靜音"
+          description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
     flagging:
       title: '你為什麼要投訴此文章?'
       action: '投訴文章'
@@ -968,6 +981,8 @@ zh_TW:
       delete_spammer: "刪除垃圾文章發送者"
       delete_confirm: "您將刪除此用戶的 <b>%{posts}</b> 則文章與 <b>%{topics}</b> 個討論話題、移除他的帳號、封鎖從他使用的 IP <b>%{ip_address}</b> 登入、將他的電子郵件地址 <b>%{email}</b> 加入永久封鎖名稱，你確定此人真的發送垃圾文章嗎?"
       yes_delete_spammer: "是的，刪除垃圾文章發送者"
+      submit_tooltip: "送出私人投訴"
+      take_action_tooltip: "使其達到投訴門檻"
       cant: "抱歉，你目前無法投訴此文章。"
       custom_placeholder_notify_user: "為什麼此文章需要你以私人訊息與作者直接溝通? 討論請務必討論話題明確、具建設性、態度和善。"
       custom_placeholder_notify_moderators: "為什麼此文章需要板主注意？請讓我們知道你在意的原因，並請盡量提供相關連結。"
@@ -1377,6 +1392,8 @@ zh_TW:
           title: "過濾的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新用戶。"
           email: "電子郵件地址"
+          actions:
+            allow: "允許"
         screened_urls:
           title: "過濾的網址"
           description: "以下是出現在垃圾文章裡的網址。"
@@ -1573,6 +1590,7 @@ zh_TW:
         no_user_badges: "%{name} 未有任何升級徽章。"
         no_badges: 沒有可授予的徽章
         allow_title: 允許使用徽章作為稱號
+        multiple_grant: 可多次授予
     lightbox:
       download: "下載"
     keyboard_shortcuts_help:

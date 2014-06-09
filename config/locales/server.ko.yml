@@ -454,7 +454,6 @@ ko:
     enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
     github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
-    allow_restore: "Allow import, which can replace ALL site data; leave false unless you plan to do data imports"
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
     rate_limit_create_topic: "How many seconds, after creating a topic, before you can create another topic"
@@ -735,16 +734,6 @@ ko:
         이 메시지는 당신의 계정이 블락되었다는 것을 알리기 위해 %{site_name} 에서 자동으로 생성되었습니다.
 
         추가적인 정보를 얻기 위해서는 [FAQ](%{base_url}/faq) 를 방문하세요.
-    user_automatically_blocked:
-      subject_template: "새로운 사용자 %{username}는 신고에 의해 블락되었습니다."
-      text_body_template: |
-        이 메시지는 [%{username}](%{base_url}%{user_url}) 사용자가 블락되었다는 것을 알리기 위해 자동 생성 되었습니다. 다수의 유저가 %{username}의 게시물을 신고하였습니다.
-
-        [신고 리뷰보기](%{base_url}/admin/flags) 를 확인해주세요. 만약 %{username} 사용자 게시물에 의한 블락이 부정확하다면 [이 사용자에 대한 관리 페이지](%{base_url}%{user_url})를 확인해주세요.
-
-        사이트 설정에 `block_new_user` 값으로 임계치를 변경할 수 있습니다.
-    spam_post_blocked:
-      subject_template: "%{username} 사용자는 게시물들에 같은 링크를 반복 사용하여 블락되었습니다."
     unblocked:
       subject_template: "계정 블락 해제"
       text_body_template: |
@@ -881,4 +870,3 @@ ko:
       size_not_found: "죄송합니다. 이미지 사이즈가 잘못 되었습니다. 혹시 깨진 이미지가 아닌가요?"
   flag_reason:
     sockpuppet: "새로운 사용자가 토픽을 만들었습니다. 그리고 같은 IP를 사용하는 새 사용자가 답글을 달았습니다. 사이트 설정의 flag_sockpuppets를 확인하세요."
-    spam_hosts: "이 사용자가 같은 도메인으로 다중 게시을 작성하려고 하였습니다. 사이트 설정의 newuser_spam_host_threshold를 확인하세요."

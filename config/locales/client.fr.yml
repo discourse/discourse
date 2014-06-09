@@ -397,7 +397,6 @@ fr:
     read_only_mode:
       enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
       login_disabled: "La connexion est désactivée quand le site est en mode lecture seule."
-    too_few_topics_notice: "Créer au moins 5 sujets et 50 messages publiques pour que les discussions commencent. Les nouveaux utilisateurs ne seront pas en mesure de gagner des niveaux de confiance si il n'y a pas de contenu à lire."
     learn_more: "en savoir plus..."
     year: 'an'
     year_desc: 'discussions créées durant les 365 derniers jours'
@@ -426,9 +425,6 @@ fr:
     created: 'Créé'
     trust_level: 'Niveau de confiance'
     create_account:
-      title: "Créer un compte"
-      action: "Créer !"
-      invite: "Vous n'avez pas encore de compte ?"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse email est déjà enregistrée, essayez le lien Mot de passe oublié."
     forgot_password:
       title: "Mot de passe oublié ?"
@@ -551,7 +547,6 @@ fr:
       private_message: "<i class='fa fa-envelope-o' title='message privé'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='message privé'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='a accepté votre invitation' class='fa fa-envelope-o'></i> {{username}} a accepté votre invitation"
-      moved_post: "<i title='message déplacé' class='fa fa-arrow-right'></i> {{username}} a déplacé {{link}}"
       total_flagged: "Nombre total de messages signalés"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Vous avez obtenu {{link}}"
@@ -689,10 +684,10 @@ fr:
           '2_4': 'Vous recevrez des notifications car vous avez posté une réponse dans ce sujet.'
           '2_2': 'Vous recevrez des notifications car vous suivez ce sujet.'
           '2': 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu ce sujet</a>.'
-          '1': 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
           '1_2': 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
-          '0': 'Vous ignorez toutes les notifications de ce sujet.'
+          '1': 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
           '0_2': 'Vous ignorez toutes les notifications de ce sujet.'
+          '0': 'Vous ignorez toutes les notifications de ce sujet.'
         watching_pm:
           title: "Suivre attentivement"
           description: "Vous serez averti de chaque nouveau message de cette conversation privée. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
@@ -1006,7 +1001,6 @@ fr:
       delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
       delete_error: "Il y a eu une erreur lors de la suppression."
       list: "Liste des catégories"
-      no_description: "Il n'y a pas de description pour cette catégorie."
       change_in_category_topic: "Editer la description"
       already_used: 'Cette couleur est déjà utilisée par une autre catégorie'
       security: "Sécurité"

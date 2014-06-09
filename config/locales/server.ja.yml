@@ -803,16 +803,6 @@ ja:
         Hello,
 
         このメールは、スタッフメンバーによりあなたのアカウントがブロックされたことをお知らせする %{site_name} からの自動メッセージです。
-    user_automatically_blocked:
-      subject_template: "フラグによる新規ユーザr %{username} のブロック"
-      text_body_template: |
-        このメールは、複数のユーザにより %{username} のポストにフラグが立てられた結果、新規ユーザ [%{username}](%{user_url}) が自動的にブロックされたことをお知らせする自動メッセージです。
-
-        [立てられたフラグの確認をしてください](/admin/flags)。もし %{username} が不正にブロックされている場合は、[このユーザの管理ページ](%{user_url}) にてブロック解除ボタンをクリックしてください。
-
-        なお、しきい値はサイト設定の `block_new_user` で変更可能です。
-    spam_post_blocked:
-      subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
     unblocked:
       subject_template: "アカウントのブロック解除"
       text_body_template: |
@@ -951,4 +941,3 @@ ja:
       size_not_found: "申し訳ありませんが、画像のサイズを判定できませんでした。画像が壊れているかもしれません。"
   flag_reason:
     sockpuppet: "新規ユーザがトピックを作成し、同じ IP アドレスより別の新規ユーザが回答を投稿しました。サイトの flag_sockpuppets 設定を確認してください。"
-    spam_hosts: "このユーザは同一ドメインへのリンクを含むポストを複数作成しようとしました。サイトの newuser_spam_host_threshold 設定を確認してください。"

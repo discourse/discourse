@@ -385,9 +385,6 @@ sv:
     created: 'Skapad'
     trust_level: 'Pålitlighetsnivå'
     create_account:
-      title: "Skapa Konto"
-      action: "Skapa ett nu!"
-      invite: "har du inget konto än?"
       failed: "Något gick fel, kanske är denna e-post redan registrerad, försök glömt lösenordslänken"
     forgot_password:
       title: "Glömt Lösenord"
@@ -494,7 +491,6 @@ sv:
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} accepterade din inbjudan"
-      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} flyttade {{link}}"
       total_flagged: "totalt antal flaggade inlägg"
     upload_selector:
       title: "Lägg till en bild"
@@ -618,10 +614,10 @@ sv:
           '2_4': 'Du kommer ta emot notifikationer för att du postade ett svar till denna tråd.'
           '2_2': 'Du kommer ta emot notifikationer för att du följer denna tråd.'
           '2': 'Du kommer ta emot notifikationer för att du <a href="/users/{{username}}/preferences">läser denna tråd</a>.'
-          '1': 'Du kommer bara meddelandes om någon nämner ditt @namn eller svara på dina inlägg.'
           '1_2': 'Du kommer bara meddelandes om någon nämner ditt @namn eller svara på dina inlägg.'
-          '0': 'Du ignorerar alla notifikationer för denna tråd.'
+          '1': 'Du kommer bara meddelandes om någon nämner ditt @namn eller svara på dina inlägg.'
           '0_2': 'Du ignorerar alla notifikationer för denna tråd.'
+          '0': 'Du ignorerar alla notifikationer för denna tråd.'
         watching_pm:
           title: "följda"
           description: "Du kommer att få notifieringar om varje nytt inlägg i detta privata meddelande. Antalet olästa och nya inlägg kommer också att visas vid sidan av trådens namn."
@@ -908,7 +904,6 @@ sv:
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
       delete_error: "Ett fel inträffade vid borttagning av kategorin."
       list: "Lista Kategorier"
-      no_description: "Det finns ingen beskrivning för denna kategori."
       change_in_category_topic: "besök kategorins tråd för att ändra beskrivning"
       already_used: 'Den här färgen används redan av en annan kategori'
       security: "Säkerhet"

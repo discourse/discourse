@@ -397,7 +397,6 @@ de:
     read_only_mode:
       enabled: "Ein Administrator hat den Nur-Lesen-Modus aktiviert. Du kannst die Seite weiter durchsuchen und lesen, einige Features werden jedoch wahrscheinlich nicht funktionieren."
       login_disabled: "Login ist deaktiviert während sich die Seite im Nur-Lesen Modus befindet."
-    too_few_topics_notice: "Erstelle mindestens 5 öffentlich sichtbare Themen und 50 öffentlich sichtbare Beiträge, um die Unterhaltung ins Rollen zu bringen. Neue Nutzer können ihre Vertrauensstufe nur erhöhen, wenn es für sie etwas zu Lesen gibt."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'neue Themen in den letzten 365 Tagen'
@@ -426,9 +425,6 @@ de:
     created: 'Erstellt'
     trust_level: 'Vertrauensstufe'
     create_account:
-      title: "Konto erstellen"
-      action: "Erstelle jetzt eines!"
-      invite: "Hast du noch kein Konto?"
       failed: "Etwas ist schiefgelaufen, vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
     forgot_password:
       title: "Passwort vergessen"
@@ -686,13 +682,15 @@ de:
           '3_2': 'Du wirst Benachrichtigungen erhalten, weil Du dieses Thema beobachtest.'
           '3_1': 'Du wirst Benachrichtigungen erhalten, weil Du dieses Thema erstellt hast.'
           '3': 'Du wirst Benachrichtigungen erhalten, weil Du dieses Thema beobachtest.'
+          '2_8': 'Du wirst Benachrichtigungen erhalten, da Du diese Kategorie beobachtest.'
           '2_4': 'Du wirst Benachrichtigungen erhalten, weil Du eine Antwort zu diesem Thema verfasst hast.'
           '2_2': 'Du wirst Benachrichtigungen erhalten, weil Du dieses Thema verfolgst.'
           '2': 'Du wirst Benachrichtigungen erhalten, weil Du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
-          '1': 'Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '1_2': 'Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
-          '0': 'Du ignorierst alle Benachrichtigungen bezüglich dieses Themas.'
+          '1': 'Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
           '0_2': 'Du ignorierst alle Benachrichtigungen bezüglich dieses Themas.'
+          '0': 'Du ignorierst alle Benachrichtigungen bezüglich dieses Themas.'
         watching_pm:
           title: "Beobachten"
           description: "Wie 'Verfolgen', zuzüglich Benachrichtigungen über neue Beiträge."
@@ -1006,7 +1004,6 @@ de:
       delete_confirm: "Bist Du sicher, dass Du diese Kategorie löschen willst?"
       delete_error: "Beim Löschen der Kategorie ist ein Fehler aufgetreten."
       list: "Kategorien auflisten"
-      no_description: "Es gibt keine Beschreibung zu dieser Kategorie."
       change_in_category_topic: "Besuche die Themen dieser Kategorie um einen Eindruck für eine gute Beschreibung zu gewinnen."
       already_used: 'Diese Farbe wird bereits für eine andere Kategorie verwendet'
       security: "Sicherheit"
@@ -1021,6 +1018,9 @@ de:
       default_position: "Standardposition"
       position_disabled: 'Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu kontrollieren, aktivere die "feste Kategorie-Positionen" Einstellung.'
       parent: "Elternkategorie"
+      notifications:
+        muted:
+          title: "Stummgeschaltet"
     flagging:
       title: 'Aus welchem Grund meldest Du diesen Beitrag?'
       action: 'Beitrag melden'
@@ -1647,6 +1647,7 @@ de:
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
         no_badges: Es gibt keine Abzeichen die verliehen werden können.
         allow_title: Abzeichen darf als Titel verwendet werden.
+        multiple_grant: Kann mehrfach erteilt werden.
     lightbox:
       download: "Download"
     keyboard_shortcuts_help:

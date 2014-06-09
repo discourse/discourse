@@ -529,7 +529,6 @@ uk:
     enable_github_logins: "Увімкнути вхід через Github; потребує github_client_id та github_client_secret"
     github_client_id: "Client id для входу через Github, зареєстрований на https://github.com/settings/applications"
     github_client_secret: "Client secret для входу через Github, зареєстрований на https://github.com/settings/applications"
-    allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to do restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     backup_daily: "Automatically create a site backup once a day"
     enable_s3_backups: "Upload backups to S3 when complete. Make sure you have filled in your s3 credentials."
@@ -837,14 +836,6 @@ uk:
       text_body_template: "The import was successful."
     email_error_notification:
       subject_template: "Error parsing email"
-      text_body_template: |
-        This is an automated message to inform you that parsing the following incoming email failed.
-
-        Please review the following message.
-
-        Error - %{error}
-
-        %{source}
     email_reject_trust_level:
       subject_template: "Message rejected"
       text_body_template: |
@@ -869,16 +860,6 @@ uk:
         Це - автоматичне повідомлення, надіслане сайтом %{site_name}, щоб повідомити Вас про те, що Ваш обліковий запис було заблоковано членом персоналу.
 
         Для додаткових настанов, будь ласка, зверніться до [Частих питань](%{base_url}/faq).
-    user_automatically_blocked:
-      subject_template: "New user %{username} blocked via flags"
-      text_body_template: |
-        This is an automated message to inform you that the new user [%{username}](%{base_url}%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
-
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{base_url}%{user_url}).
-
-        This threshold can be changed via the `block_new_user` site settings.
-    spam_post_blocked:
-      subject_template: "New user %{username} posts blocked for repeated links"
     unblocked:
       subject_template: "Account unblocked"
       text_body_template: |
@@ -1040,7 +1021,6 @@ uk:
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
-    spam_hosts: "This user tried to create multiple posts with links to the same domain. See the newuser_spam_host_threshold site setting."
   email_log:
     no_user: "Can't find user with id %{user_id}"
     suspended_not_pm: "User is supsended and email is not a private message"

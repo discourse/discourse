@@ -297,10 +297,12 @@ pl_PL:
       change_avatar:
         title: "Zmień swój awatar"
         gravatar: "bazujący na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
-        gravatar_title: "Zmień swój awatar na stronie Gravatar"
+        refresh_gravatar_title: "Zaktualizuj swój Gravatar"
+        letter_based: "Avatar wybrany przez system"
         uploaded_avatar: "Zwyczajny obrazek"
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
         upload_title: "Wgraj swoje zdjęcie"
+        upload_picture: "Wgraj zdjęcie"
         image_is_not_a_square: "Ostrzeżenie: przycięliśmy Twój obraz - nie jest kwadratem."
       change_profile_background:
         title: "Tło profilu"
@@ -340,6 +342,7 @@ pl_PL:
       last_seen: "Ostatnio widziany"
       created: "Dołączył"
       log_out: "Wyloguj się"
+      location: "Położenie"
       website: "Strona internetowa"
       email_settings: "Email"
       email_digests:
@@ -355,15 +358,15 @@ pl_PL:
       new_topic_duration:
         label: "Uznaj, że temat jest nowy, jeśli"
         not_viewed: "jeszcze go nie widziałem"
-        last_here: "opublikowano go po mojej ostatniej wizycie"
+        last_here: "zostały dodane od twojej ostatniej wizyty"
         after_n_days:
-          one: "opublikowano go w przeciągu ostatniego dnia"
-          few: "opublikowano go w przeciągu ostatnich {{count}} dni"
-          other: "opublikowano go w przeciągu ostatnich {{count}} dni"
+          one: "zostały dodane w ciągu ostatniego dnia"
+          few: "zostały dodane w ciągu ostatnich {{count}} dni"
+          other: "zostały dodane w ciągu ostatnich {{count}} dni"
         after_n_weeks:
-          one: "opublikowano go w przeciągu ostatniego tygodnia"
-          few: "opublikowano go w przeciągu ostatnich {{count}} tygodni"
-          other: "opublikowano go w przeciągu ostatnich {{count}} tygodni"
+          one: "zostały dodane w ciągu ostatniego tygodnia"
+          few: "zostały dodane w ciągu ostatnich {{count}} tygodni"
+          other: "zostały dodane w ciągu ostatnich {{count}} tygodni"
       auto_track_topics: "Automatycznie śledź tematy, które odwiedzam"
       auto_track_options:
         never: "nigdy"
@@ -419,15 +422,14 @@ pl_PL:
     close: "Zamknij"
     assets_changed_confirm: "Serwis został zmieniony, czy pozwolisz na przeładowanie strony w celu aktualizacji do najnowszej wersji?"
     read_only_mode:
-      enabled: "Administrator włączył tryb tylko-do-odczytu. Możesz dalej przeglądać serwis, jednak nie interakcja nie będzie możliwa."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
     learn_more: "dowiedz się więcej..."
     year: 'rok'
-    year_desc: 'tematy opublikowane w przeciągu ostatnich 365 dni'
+    year_desc: 'tematy dodane w ciągu ostatnich 365 dni'
     month: 'miesiąc'
-    month_desc: 'tematy opublikowane w przeciągu ostatnich 30 dni'
+    month_desc: 'tematy dodane w ciągu ostatnich 30 dni'
     week: 'tydzień'
-    week_desc: 'tematy opublikowane w przeciągu ostatnich 7 dni'
+    week_desc: 'tematy dodane w ciągu ostatnich 7 dni'
     day: 'dzień'
     first_post: Pierwszy wpis
     mute: Wycisz
@@ -449,9 +451,6 @@ pl_PL:
     created: 'Utworzono'
     trust_level: 'Poziom zaufania'
     create_account:
-      title: "Utwórz konto"
-      action: "Utwórz je teraz!"
-      invite: "Nie masz jeszcze konta?"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
     forgot_password:
       title: "Zapomniane hasło"
@@ -462,12 +461,12 @@ pl_PL:
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
     login:
       title: "Zaloguj się"
-      username: "Login"
+      username: "Użytkownik"
       password: "Hasło"
       email_placeholder: "adres email lub nazwa użytkownika"
       error: "Nieznany błąd"
       reset_password: 'Resetuj hasło'
-      logging_in: "Logowanie..."
+      logging_in: "Uwierzytelnianie…"
       or: "Lub"
       authenticating: "Uwierzytelnianie..."
       awaiting_confirmation: "Twoje konto czeka na aktywację. Użyj odnośnika przypomnienia hasła, aby otrzymać kolejny email aktywujący konta."
@@ -574,7 +573,6 @@ pl_PL:
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} przyjął Twoje zaproszenie"
-      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} przeniósł {{link}}"
       total_flagged: "wszystkie oflagowane wpisy"
       linked: "<i title='Połączony wpis' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='Przyznanie odznaki' class='fa fa-certificate'></i> Przyznano Ci {{link}}"
@@ -718,10 +716,10 @@ pl_PL:
           '2_4': 'Będziesz otrzymywał(-a) powiadomienia, ponieważ odpowiedziałeś(-aś) w tym temacie.'
           '2_2': 'Będziesz otrzymywał(-a) powiadomienia, ponieważ śledzisz ten temat.'
           '2': 'Będziesz otrzymywał(-a) powiadomienia, ponieważ <a href="/users/{{username}}/preferences">przeczytałeś(-aś) ten temat</a>.'
-          '1': 'Będziesz otrzymywał(-a) powiadomienia tylko wtedy, gdy ktoś wspomni o @Tobie lub odpowie na Twój wpis.'
           '1_2': 'Będziesz otrzymywał(a) powiadomienia tylko wtedy, gdy ktoś wspomni o @Tobie lub odpowie na Twój wpis.'
-          '0': 'Ignorujesz wszystkie powiadomienia w tym temacie.'
+          '1': 'Będziesz otrzymywał(-a) powiadomienia tylko wtedy, gdy ktoś wspomni o @Tobie lub odpowie na Twój wpis.'
           '0_2': 'Ignorujesz wszystkie powiadomienia w tym temacie.'
+          '0': 'Ignorujesz wszystkie powiadomienia w tym temacie.'
         watching_pm:
           title: "Obserwowanie"
           description: "Powiadomienie zostanie wysłane o każdym nowym wpisie w tej prywatnej wiadomości. Liczba nieprzeczytanych i nowych wpisów będzie się też wyświetlała na liście tematów."
@@ -1061,7 +1059,6 @@ pl_PL:
       delete_confirm: "Jesteś pewny(-a), że chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
       list: "Pokaż kategorie"
-      no_description: "Nie ma opisu dla tej kategorii, edytuj definicję tematu."
       change_in_category_topic: "Edytuj opis"
       already_used: 'Ten kolor jest używany przez inną kategorię'
       security: "Bezpieczeństwo"
@@ -1402,6 +1399,8 @@ pl_PL:
             name: 'niebezpieczeństwo'
           success:
             name: 'sukces'
+          love:
+            name: 'polubienie'
       email:
         title: "Email"
         settings: "Ustawienia"
@@ -1713,10 +1712,7 @@ pl_PL:
       actions:
         title: 'Operacje'
         star: '<b>f</b> Gwiazdka dla tematu'
-        share_topic: '<b>s</b> Udostępnij temat'
-        share_post: '<b>shift s</b> Udostępnij wpis'
-        reply_topic: '<b>r</b> Odpowiedz w temacie'
-        reply_post: '<b>shift r</b> Odpowiedz na wpis'
+        quote_post: '<b>q</b> Cytuj wpis'
         like: '<b>l</b> Polub wpis'
         flag: '<b>!</b> Oflaguj wpis'
         bookmark: '<b>b</b> Zakładka na wpisie'
@@ -1743,4 +1739,12 @@ pl_PL:
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
       badge:
         basic_user:
-          name: Podstawowy
+          name: Podstawowi
+        regular_user:
+          name: Regularni
+          description: Przyznane zaproszenia
+        leader:
+          name: Liderzy
+          description: Przyznana zmiana kategorii, zmiana nazwy, klub oraz zdjęte no_follow z linków.
+        elder:
+          name: Starszyzna

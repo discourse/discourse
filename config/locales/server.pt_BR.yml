@@ -576,6 +576,7 @@ pt_BR:
     flag_sockpuppets: "Se um novo usuário (ou seja, registrado nas últimas 24 horas) que iniciou um tópico e um novo usuário que responde neste tópico são do mesmo endereço IP, ambas as suas mensagens serão automaticamente marcadas como spam."
     traditional_markdown_linebreaks: "Usar quebra de linha tradicional no Markdown, que requer dois espaços a direita para uma quebra de linha"
     post_undo_action_window_mins: "A janela na qual alguém pode reverter um ação na postagem (como linkar)"
+    must_approve_users: "Administradores precisa aprovar os novos usuários antes deles obterem acesso."
     ga_tracking_code: "Código de monitoramento do Google analytics (ga.js), ex: UA-12345678-9; veja http://google.com/analytics"
     ga_domain_name: "Nome do domínio para o Google analytics (ga.js), ex: mysite.com; veja http://google.com/analytics"
     ga_universal_tracking_code: "Código de monitoramento Google Universal Analytics (analytics.js), ex: UA-12345678-9; veja http://google.com/analytics"
@@ -624,7 +625,6 @@ pt_BR:
     enable_github_logins: "Ativar autenticação via Github, requer github_client_id e github_client_secret"
     github_client_id: "Client id para autenticação via Github, registrado em https://github.com/settings/applications"
     github_client_secret: "Client secret para autenticação via Github, registrado em https://github.com/settings/applications"
-    allow_restore: "Permitir restauração, que pode substituir todos os dados do site! Deixe falso, a menos que você pretenda restaurar um backup"
     maximum_backups: "A quantidade máxima de backups para manter no disco. Backups mais antigos são excluídos automaticamente"
     backup_daily: "Criar automaticamente um backup do site uma vez por dia"
     enable_s3_backups: "Enviar backups para o Amazon S3 quando completos. Certifique-se de ter preenchido as suas credenciais S3."
@@ -641,6 +641,7 @@ pt_BR:
     max_topics_per_day: "Quantidade máxima de tópicos que você pode criar por dia"
     max_private_messages_per_day: "Quantidade máxima de mensagens particulares que você pode enviar por dia"
     suggested_topics: "Quantidade de tópicos sugeridos que você verá na parte debaixo dos tópicos"
+    limit_suggested_to_category: "Mostrar apenas tópicos da categoria atual na sugestão de tópicos"
     clean_up_uploads: "Remover envios órfãs para evitar hospedagem ilegal. AVISO: você pode querer fazer um backup do seu diretório /uploads antes de habilitar essa configuração."
     clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um upload órfão ser removido."
     purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
@@ -922,7 +923,6 @@ pt_BR:
         ```
     email_error_notification:
       subject_template: "Erro ao analisar e-mail"
-      text_body_template: "Esta é uma mensagem automática para informá-lo de que a análise do seguinte e-mail de entrada falhou. \n\nPor favor, revise a seguinte mensagem. \n\nErro - %{error} \n\n%{source}\n"
     email_reject_trust_level:
       subject_template: "Mensagem rejeitada"
       text_body_template: "A mensagem que você enviou para %{to} foi rejeitada pelo sistema. \n \nVocê não tem a confiança necessária para criar novos tópicos para este endereço de e-mail. \n"
@@ -944,14 +944,6 @@ pt_BR:
         Esta é uma mensagem automática de %{site_name} para informar que sua conta foi bloqueada por um membro da staff.⏎
         ⏎
         Para informações adicionais, por favor, consulte nossa [FAQ](%{base_url}/faq).⏎
-    user_automatically_blocked:
-      subject_template: "Novo usuário %{username} foi automaticamente bloqueado"
-      text_body_template: |
-        Esta é uma mensagem automática para informar que o novo usuário [%{username}](%{user_url}) foi automaticamente bloqueado porque multíplos usuários sinalizaram as postagens dele.
-
-        Por favor [review the flags](/admin/flags). Se %{username} foi bloqueado de postar indevidamente, clique no botão desbloquear em [the admin page for this user](%{user_url}).⏎
-    spam_post_blocked:
-      subject_template: "Mensagens do novo usuário %{username} bloqueadas por links repetidos"
     unblocked:
       subject_template: "Conta desbloqueada"
       text_body_template: |
@@ -1115,7 +1107,6 @@ pt_BR:
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
   flag_reason:
     sockpuppet: "Um novo usuário criou um tópico e outro novo usuário no mesmo endereço IP respondeu. Veja a configuração flag_sockpuppets."
-    spam_hosts: "Este usuário tentou criar vários posts com links para o mesmo domínio. Veja a configuração newuser_spam_host_threshold."
   email_log:
     no_user: "Não foi possível encontrar usuário com id %{user_id}"
     suspended_not_pm: "Usuário está suspenso e e-mail não é uma mensagem privada"

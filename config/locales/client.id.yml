@@ -113,10 +113,6 @@ id:
     week: 'minggu'
     last_seen: 'Terlihat'
     created: 'Dibuat'
-    create_account:
-      title: "Buat Akun"
-      action: "Buat sekarang!"
-      invite: "Tidak punya akun?"
     forgot_password:
       title: "Lupa Password"
       action: "Saya lupa password"
