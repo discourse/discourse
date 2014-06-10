@@ -156,6 +156,9 @@ Discourse.TopicRoute = Discourse.Route.extend({
   },
 
   setupController: function(controller, model) {
+    // In case we navigate from one topic directly to another
+    this.set("isTransitioning", false);
+
     if (Discourse.Mobile.mobileView) {
       // close the dropdowns on mobile
       $('.d-dropdown').hide();
