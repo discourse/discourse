@@ -7,7 +7,6 @@ Fabricator(:user) do
   email { sequence(:email) { |i| "bruce#{i}@wayne.com" } }
   password 'myawesomepassword'
   trust_level TrustLevel.levels[:basic]
-  bio_raw "I'm batman!"
   ip_address { sequence(:ip_address) { |i| "99.232.23.#{i%254}"} }
 end
 
@@ -60,7 +59,11 @@ Fabricator(:active_user, from: :user) do
   password 'myawesomepassword'
   trust_level TrustLevel.levels[:basic]
   active true
-  bio_raw "Don't ask me about my dad!"
+
+  after_create do |user|
+    user.user_profile.bio_raw = "Don't ask me about my dad!"
+    user.user_profile.save!
+  end
 end
 
 Fabricator(:leader, from: :user) do

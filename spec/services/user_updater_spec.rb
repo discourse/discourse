@@ -14,6 +14,15 @@ describe UserUpdater do
       expect(user.reload.name).to eq 'Jim Tom'
     end
 
+    it 'updates bio' do
+      user = Fabricate(:user)
+      updater = described_class.new(acting_user, user)
+
+      updater.update(bio_raw: 'my new bio')
+
+      expect(user.reload.user_profile.bio_raw).to eq 'my new bio'
+    end
+
     context 'when update succeeds' do
       it 'returns true' do
         user = Fabricate(:user)
