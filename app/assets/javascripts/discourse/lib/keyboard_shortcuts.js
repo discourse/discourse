@@ -231,9 +231,12 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   _changeSection: function(direction) {
-    var $sections = $('#navigation-bar').find('li'),
-        index = $sections.index('.active');
+    var $sections = $('#navigation-bar li'),
+        active = $('#navigation-bar li.active'),
+        index = $sections.index(active) + direction;
 
-    $sections.eq(index + direction).find('a').click();
+    if(index >= 0 && index < $sections.length){
+      $sections.eq(index).find('a').click();
+    }
   }
 });
