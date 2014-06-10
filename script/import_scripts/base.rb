@@ -229,6 +229,9 @@ class ImportScripts::Base
           skipped += 1
           puts "Error creating post #{import_id}. Skipping."
           puts e.message
+        rescue Discourse::InvalidAccess => e
+          skipped += 1
+          puts "InvalidAccess creating post #{import_id}. Topic is closed? #{e.message}"
         end
       end
 
