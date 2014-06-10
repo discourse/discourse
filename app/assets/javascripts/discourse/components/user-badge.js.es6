@@ -7,5 +7,9 @@ export default Ember.Component.extend({
 
   showGrantCount: function() {
     return this.get('count') && this.get('count') > 1;
-  }.property('count')
+  }.property('count'),
+
+  isIcon: function() {
+    return this.get('badge.icon').match(/^fa-/);
+  }.property('badge.icon')
 });

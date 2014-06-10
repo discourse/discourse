@@ -36,6 +36,7 @@ class Admin::BadgesController < Admin::AdminController
       badge.badge_type = BadgeType.find(params[:badge_type_id])
       badge.allow_title = params[:allow_title]
       badge.multiple_grant = params[:multiple_grant]
+      badge.icon = params[:icon]
       badge
     end
 end

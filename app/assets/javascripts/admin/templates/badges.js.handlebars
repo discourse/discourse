@@ -23,7 +23,7 @@
     <form class="form-horizontal">
       <div>
         <label for="name">{{i18n admin.badges.name}}</label>
-        {{input type="text" name="name" value=name disabled=readOnly}}
+        {{input type="text" name="name" value=name disabled=readonly}}
       </div>
 
       {{#if showDisplayName}}
@@ -32,6 +32,11 @@
           {{displayName}}
         </div>
       {{/if}}
+
+      <div>
+        <label for="name">{{i18n admin.badges.icon}}</label>
+        {{input type="text" name="name" value=icon disabled=readonly}}
+      </div>
 
       <div>
         <label for="badge_type_id">{{i18n admin.badges.badge_type}}</label>
