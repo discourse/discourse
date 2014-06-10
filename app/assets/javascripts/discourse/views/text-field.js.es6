@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TextField = Ember.TextField.extend({
+export default Ember.TextField.extend({
   attributeBindings: ['autocorrect', 'autocapitalize', 'autofocus'],
 
   placeholder: function() {
@@ -16,7 +16,4 @@ Discourse.TextField = Ember.TextField.extend({
       return '';
     }
   }.property('placeholderKey')
-
 });
-
-Discourse.View.registerHelper('textField', Discourse.TextField);

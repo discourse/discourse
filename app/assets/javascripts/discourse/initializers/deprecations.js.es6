@@ -1,6 +1,8 @@
 var deprecatedViewHelpers = {
   inputTip: 'input-tip',
-  pagedown: 'pagedown-editor'
+  pagedown: 'pagedown-editor',
+  textField: 'text-field',
+  userSelector: 'user-selector'
 };
 
 export default {

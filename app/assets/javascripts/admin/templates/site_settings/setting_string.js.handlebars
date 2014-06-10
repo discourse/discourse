@@ -2,7 +2,7 @@
    <h3>{{unbound settingName}}</h3>
 </div>
 <div class="setting-value">
-  {{textField value=value classNames="input-setting-string"}}
+  {{text-field value=value classNames="input-setting-string"}}
   <div {{bind-attr class=":validation-error validationMessage::hidden"}}><i class='fa fa-times'></i> {{validationMessage}}</div>
   <div class='desc'>{{unbound description}}</div>
 </div>

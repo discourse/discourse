@@ -18,7 +18,7 @@
     <div class="control-group">
       <label class="control-label">{{i18n user.username.title}}</label>
       <div class="controls">
-        {{textField value=newUsername id="change_username" classNames="input-xxlarge" maxlengthBinding="Discourse.SiteSettings.max_username_length"}}
+        {{text-field value=newUsername id="change_username" classNames="input-xxlarge" maxlengthBinding="Discourse.SiteSettings.max_username_length"}}
       </div>
       <div class='instructions'>
         {{#if taken}}

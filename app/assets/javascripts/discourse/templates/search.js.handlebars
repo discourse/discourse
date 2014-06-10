@@ -1,4 +1,4 @@
-{{view Discourse.SearchTextField valueBinding="term" searchContextBinding="searchContext" id="search-term"}}
+{{view 'search-text-field' value=term searchContext=searchContext id="search-term"}}
 {{#unless loading}}
   {{#unless noResults}}
     {{#each resultType in content}}

@@ -1,12 +1,12 @@
 <div class="modal-body">
   <form>
     {{i18n admin.user.suspend_duration}}
-    {{textField value=duration maxlength="5" autofocus="autofocus"}}
+    {{text-field value=duration maxlength="5" autofocus="autofocus"}}
     {{i18n admin.user.suspend_duration_units}}<br/>
     <br/>
     {{{i18n admin.user.suspend_reason_label}}}<br/>
     <br/>
-    {{textField value=reason class="span8"}}
+    {{text-field value=reason class="span8"}}
   </form>
 </div>
 <div class="modal-footer">

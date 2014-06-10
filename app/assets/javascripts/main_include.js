@@ -19,6 +19,7 @@
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/object_controller
 //= require ./discourse/controllers/navigation/default
+//= require ./discourse/views/text-field
 //= require ./discourse/views/modal/modal_body_view
 //= require ./discourse/views/modal/flag_view
 //= require ./discourse/views/combobox_view

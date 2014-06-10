@@ -1,13 +1,13 @@
 {{#if automatic}}
   <h3>{{name}}</h3>
 {{else}}
-  {{textField value=name placeholderKey="admin.groups.name_placeholder"}}
+  {{text-field value=name placeholderKey="admin.groups.name_placeholder"}}
 {{/if}}
 
 <div class="control-group">
   <label class="control-label">{{i18n admin.groups.group_members}}</label>
   <div class="controls">
-    {{userSelector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabled=automatic}}
+    {{user-selector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabled=automatic}}
   </div>
 </div>
 <div class="control-group">

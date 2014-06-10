@@ -14,7 +14,7 @@
   <div class="current-style color-scheme">
     <div class="admin-container">
       {{#with selectedItem}}
-        <h1>{{textField class="style-name" value=name}}</h1>
+        <h1>{{text-field class="style-name" value=name}}</h1>
 
         <div class="controls">
           <button {{action save}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>

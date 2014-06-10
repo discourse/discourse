@@ -10,7 +10,7 @@
     {{i18n topic.invite_private.success}}
   {{else}}
     <label>{{i18n topic.invite_private.email_or_username}}</label>
-    {{userSelector single=true allowAny=true usernames=emailOrUsername include_groups="true" placeholderKey="topic.invite_private.email_or_username_placeholder"}}
+    {{user-selector single=true allowAny=true usernames=emailOrUsername include_groups="true" placeholderKey="topic.invite_private.email_or_username_placeholder"}}
   {{/if}}
 </div>
 <div class="modal-footer">

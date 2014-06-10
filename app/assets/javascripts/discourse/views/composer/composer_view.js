@@ -176,8 +176,8 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
 
     $LAB.script(assetPath('defer/html-sanitizer-bundle'));
     Discourse.ComposerView.trigger("initWmdEditor");
-    var template = Discourse.UserSelector.templateFunction();
 
+    var template = this.container.lookupFactory('view:user-selector').templateFunction();
     $wmdInput.data('init', true);
     $wmdInput.autocomplete({
       template: template,

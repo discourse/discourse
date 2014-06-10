@@ -1,4 +1,4 @@
-var helpers = ['input-tip', 'pagedown-editor'];
+var helpers = ['input-tip', 'pagedown-editor', 'text-field', 'user-selector'];
 
 /**
   Creates view helpers for some views. Many of these should probably be converted
@@ -9,8 +9,8 @@ export default {
   initialize: function(container) {
     helpers.forEach(function(h) {
       Ember.Handlebars.registerHelper(h, function(options) {
-        var helper = container.lookupFactory('view:' + h);
-        var hash = options.hash,
+        var helper = container.lookupFactory('view:' + h),
+            hash = options.hash,
             types = options.hashTypes;
 
         Discourse.Utilities.normalizeHash(hash, types);

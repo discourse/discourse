@@ -1,5 +1,5 @@
 var appendTextFieldWithProperties = function(properties) {
-  var view = Discourse.TextField.create(properties);
+  var view = viewClassFor('text-field').create(properties);
   Ember.run(function() {
     view.appendTo(fixture());
   });
@@ -13,7 +13,7 @@ var hasNoAttr = function($element, attrName) {
   equal($element.attr(attrName), undefined, "'" + attrName + "' attribute is not rendered");
 };
 
-module("Discourse.TextField");
+module("view:text-field");
 
 test("renders correctly with no properties set", function() {
   appendTextFieldWithProperties({});

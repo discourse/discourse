@@ -18,7 +18,7 @@
       <form>
         <section class='field'>
           <label>{{i18n category.name}}</label>
-          {{textField value=name placeholderKey="category.name_placeholder" maxlength="50"}}
+          {{text-field value=name placeholderKey="category.name_placeholder" maxlength="50"}}
         </section>
 
         <section class='field'>
@@ -56,13 +56,13 @@
 
             <div class='input-prepend input-append' style="margin-top: 10px;">
               <span class='color-title'>{{i18n category.background_color}}:</span>
-              <span class='add-on'>#</span>{{textField value=color placeholderKey="category.color_placeholder" maxlength="6"}}
+              <span class='add-on'>#</span>{{text-field value=color placeholderKey="category.color_placeholder" maxlength="6"}}
               {{colorPicker colors=backgroundColors usedColors=usedBackgroundColors value=color}}
             </div>
 
             <div class='input-prepend input-append'>
               <span class='color-title'>{{i18n category.foreground_color}}:</span>
-              <span class='add-on'>#</span>{{textField value=text_color placeholderKey="category.color_placeholder" maxlength="6"}}
+              <span class='add-on'>#</span>{{text-field value=text_color placeholderKey="category.color_placeholder" maxlength="6"}}
               {{colorPicker colors=foregroundColors value=text_color}}
             </div>
           </div>
@@ -99,7 +99,7 @@
             <div>
               <i class="fa fa-clock-o"></i>
               {{i18n category.auto_close_label}}
-              {{textField value=auto_close_hours}}
+              {{text-field value=auto_close_hours}}
               {{i18n category.auto_close_units}}
             </div>
           </div>
@@ -111,7 +111,7 @@
               <div>
                 <i class="fa fa-envelope-o"></i>
                 {{i18n category.email_in}}
-                {{textField value=email_in}}
+                {{text-field value=email_in}}
               </div>
               <div>
                 <label class="checkbox-label">
@@ -126,7 +126,7 @@
         {{#if showPositionInput}}
           <section class='field'>
             <label>{{i18n category.position}}</label>
-            {{textField value=position class="position-input"}}
+            {{text-field value=position class="position-input"}}
           </section>
         {{else}}
           <p>{{i18n category.position_disabled}}</p>

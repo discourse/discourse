@@ -6,13 +6,13 @@ var placeholderUsesKeyAndContext = function(key, context) {
   deepEqual(placeholder.context, context, "correct parameters are passed to the message");
 };
 
-module("Discourse.SearchTextField", {
+module("view:search-text-field", {
   setup: function() {
     sinon.stub(I18n, "t", function(key, context) {
       return {key: key, context: context};
     });
 
-    view = Discourse.SearchTextField.create();
+    view = viewClassFor('search-text-field').create();
   },
 
   teardown: function() {

@@ -6,7 +6,10 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.SearchTextField = Discourse.TextField.extend({
+
+import TextField from 'discourse/views/text-field';
+
+export default TextField.extend({
 
   /**
     A dynamic placeholder for the search field based on our context
@@ -27,7 +30,4 @@ Discourse.SearchTextField = Discourse.TextField.extend({
 
     return I18n.t('search.placeholder');
   }.property('searchContext')
-
 });
-
-

@@ -16,7 +16,7 @@
           {{#if canEdit}}
             {{#if showEditReason}}
               <div class="edit-reason-input">
-                {{textField value=editReason tabindex="5" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                {{text-field value=editReason tabindex="5" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
               </div>
             {{else}}
               <a {{action displayEditReason}} class="display-edit-reason">{{i18n composer.show_edit_reason}}</a>
@@ -27,18 +27,18 @@
         {{#if model.canEditTitle}}
           <div class='form-element clearfix'>
             {{#if model.creatingPrivateMessage}}
-              {{userSelector topicId=controller.controllers.topic.model.id
-                             excludeCurrentUser="true"
-                             id="private-message-users"
-                             include_groups="true"
-                             class="span8"
-                             placeholderKey="composer.users_placeholder"
-                             tabindex="1"
-                             usernames=model.targetUsernames}}
+              {{user-selector topicId=controller.controllers.topic.model.id
+                              excludeCurrentUser="true"
+                              id="private-message-users"
+                              include_groups="true"
+                              class="span8"
+                              placeholderKey="composer.users_placeholder"
+                              tabindex="1"
+                              usernames=model.targetUsernames}}
             {{/if}}
 
             <div class="title-input">
-              {{textField value=model.title tabindex="2" id="reply-title" maxlength="255" placeholderKey="composer.title_placeholder"}}
+              {{text-field value=model.title tabindex="2" id="reply-title" maxlength="255" placeholderKey="composer.title_placeholder"}}
               {{popupInputTip validation=view.titleValidation shownAt=view.showTitleTip}}
             </div>
 
