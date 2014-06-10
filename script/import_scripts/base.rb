@@ -140,6 +140,7 @@ class ImportScripts::Base
     existing = User.where(email: opts[:email].downcase, username: opts[:username]).first
     return existing if existing and existing.custom_fields["import_id"].to_i == import_id.to_i
 
+    bio_raw = opts.delete(:bio_raw)
     opts[:name] = User.suggest_name(opts[:name]) if opts[:name]
     opts[:username] = UserNameSuggester.suggest((opts[:username].present? ? opts[:username] : nil) || opts[:name] || opts[:email])
     opts[:email] = opts[:email].downcase
@@ -150,7 +151,13 @@ class ImportScripts::Base
     u.custom_fields["import_username"] = opts[:username] if opts[:username].present?
 
     begin
-      u.save!
+      User.transaction do
+        u.save!
+        if bio_raw.present?
+          u.user_profile.bio_raw = bio_raw
+          u.user_profile.save!
+        end
+      end
     rescue
       # try based on email
       existing = User.find_by(email: opts[:email].downcase)
