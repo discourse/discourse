@@ -41,7 +41,7 @@ class UserSerializer < BasicUserSerializer
 
   def bio_excerpt
     # If they have a bio return it
-    excerpt = object.bio_excerpt
+    excerpt = object.user_profile.bio_excerpt
     return excerpt if excerpt.present?
 
     # Without a bio, determine what message to show
@@ -124,6 +124,17 @@ class UserSerializer < BasicUserSerializer
     website.present?
   end
 
+  def include_bio_raw?
+    bio_raw.present?
+  end
+  def bio_raw
+    object.user_profile.bio_raw
+  end
+
+  def bio_cooked
+    object.user_profile.bio_processed
+  end
+
   def stats
     UserAction.stats(object.id, scope)
   end
@@ -154,9 +165,4 @@ class UserSerializer < BasicUserSerializer
   def private_messages_stats
     UserAction.private_messages_stats(object.id, scope)
   end
-
-  def bio_cooked
-    object.bio_processed
-  end
-
 end

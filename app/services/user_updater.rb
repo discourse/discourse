@@ -30,8 +30,8 @@ class UserUpdater
   def update(attributes = {})
     user_profile = user.user_profile
     user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
+    user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
 
-    user.bio_raw = attributes.fetch(:bio_raw) { user.bio_raw }
     user.name = attributes.fetch(:name) { user.name }
     user.locale = attributes.fetch(:locale) { user.locale }
     user.digest_after_days = attributes.fetch(:digest_after_days) { user.digest_after_days }

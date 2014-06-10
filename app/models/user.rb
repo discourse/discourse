@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
   has_one :user_stat, dependent: :destroy
-  has_one :user_profile, dependent: :destroy
+  has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
@@ -63,7 +63,6 @@ class User < ActiveRecord::Base
   validate :password_validator
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
 
-  before_save :cook
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
   after_initialize :add_trust_level
@@ -409,17 +408,6 @@ class User < ActiveRecord::Base
     (since_reply.count >= SiteSetting.newuser_max_replies_per_topic)
   end
 
-  def bio_excerpt
-    excerpt = PrettyText.excerpt(bio_cooked, 350)
-    return excerpt if excerpt.blank? || has_trust_level?(:basic)
-    PrettyText.strip_links(excerpt)
-  end
-
-  def bio_processed
-    return bio_cooked if bio_cooked.blank? || has_trust_level?(:basic)
-    PrettyText.strip_links(bio_cooked)
-  end
-
   def delete_all_posts!(guardian)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
@@ -455,9 +443,10 @@ class User < ActiveRecord::Base
   def change_trust_level!(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
     self.trust_level = TrustLevel.levels[level]
-    self.bio_raw_will_change! # So it can get re-cooked based on the new trust level
     transaction do
       self.save!
+      self.user_profile.recook_bio
+      self.user_profile.save!
       Group.user_trust_level_change!(self.id, self.trust_level)
       BadgeGranter.update_badges(self, trust_level: trust_level)
     end
@@ -505,11 +494,6 @@ class User < ActiveRecord::Base
   def readable_name
     return "#{name} (#{username})" if name.present? && name != username
     username
-  end
-
-  def bio_summary
-    return nil unless bio_cooked.present?
-    Summarize.new(bio_cooked).summary
   end
 
   def badge_count
@@ -641,14 +625,6 @@ class User < ActiveRecord::Base
 
   protected
 
-  def cook
-    if bio_raw.present?
-      self.bio_cooked = PrettyText.cook(bio_raw, omit_nofollow: self.has_trust_level?(:leader)) if bio_raw_changed?
-    else
-      self.bio_cooked = nil
-    end
-  end
-
   def update_tracked_topics
     return unless auto_track_topics_after_msecs_changed?
     TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
@@ -760,7 +736,6 @@ end
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  name                          :string(255)
-#  bio_raw                       :text
 #  seen_notification_id          :integer          default(0), not null
 #  last_posted_at                :datetime
 #  email                         :string(256)      not null
@@ -774,7 +749,6 @@ end
 #  last_emailed_at               :datetime
 #  email_digests                 :boolean          not null
 #  trust_level                   :integer          not null
-#  bio_cooked                    :text
 #  email_private_messages        :boolean          default(TRUE)
 #  email_direct                  :boolean          default(TRUE), not null
 #  approved                      :boolean          default(FALSE), not null

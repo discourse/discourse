@@ -41,5 +41,20 @@ describe UserSerializer do
         expect(json[:website]).to eq 'http://example.com'
       end
     end
+
+    context "with filled out bio" do
+      before do
+        user.user_profile.bio_raw = 'my raw bio'
+        user.user_profile.bio_cooked = 'my cooked bio'
+      end
+
+      it "has a bio" do
+        expect(json[:bio_raw]).to eq 'my raw bio'
+      end
+
+      it "has a cooked bio" do
+        expect(json[:bio_cooked]).to eq 'my cooked bio'
+      end
+    end
   end
 end
