@@ -91,10 +91,12 @@
   td {
     font-size: 14px;
   }
+
+  a.title {color: $primary;}
+  a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
+
   .main-link {
     font-size: 16px;
-      a {color: $primary;}
-      a:visited {color: scale-color($primary, $lightness: 50%);}
     i.score {
       color: $success;
       cursor: pointer;

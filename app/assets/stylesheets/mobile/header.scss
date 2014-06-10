@@ -24,10 +24,7 @@
 
   .icons {
     .badge-notification {
-      color: $tertiary !important;
-      /* this !important is a terrible hack but the badge colors are
-      being overridden in a way I can't figure out on mobile, appears
-      to be a CSS precedence problem */
+      color: $secondary;
     }
 
     .active .icon {
