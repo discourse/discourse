@@ -275,10 +275,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
   }.property(),
 
-  slackRatio: function() {
-    return Discourse.Capabilities.currentProp('slackRatio');
-  }.property(),
-
   jumpTopDisabled: function() {
     return (this.get('progressPosition') < 2);
   }.property('progressPosition'),
