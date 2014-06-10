@@ -114,6 +114,16 @@ nav.post-controls {
     transition: all linear 0.15s;
   }
 
+  .actions {
+    text-align: right;
+    float: right;
+    display: inline-block;
+    .more-actions {
+      display: none;
+      overflow: hidden;
+    }
+  }
+
   .show-replies {
     background: scale-color-diff();
     padding: 8px 15px;
@@ -174,9 +184,6 @@ nav.post-controls {
         }
         &.admin {
           position: relative;
-        }
-        &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create, &.admin {
-          float: right;
         }
 
         &.delete:hover {
