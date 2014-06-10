@@ -404,11 +404,12 @@ Discourse.Post.reopenClass({
   createActionSummary: function(result) {
     if (result.actions_summary) {
       var lookup = Em.Object.create();
+      // this area should be optimized, it is creating way too many objects per post
       result.actions_summary = result.actions_summary.map(function(a) {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
         var actionSummary = Discourse.ActionSummary.create(a);
-        lookup.set(a.actionType.get('name_key'), actionSummary);
+        lookup[a.actionType.name_key] = actionSummary;
         return actionSummary;
       });
       result.set('actionByName', lookup);
