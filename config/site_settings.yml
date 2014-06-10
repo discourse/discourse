@@ -74,7 +74,7 @@ basic:
   post_menu:
     client: true
     list: true
-    default: 'like|edit|flag|delete|share|bookmark|admin|reply'
+    default: 'like|share|flag|edit|bookmark|delete|admin|reply'
     choices:
      - like
      - edit
@@ -84,9 +84,19 @@ basic:
      - bookmark
      - admin
      - reply
-  post_menu_max_items:
+  post_menu_hidden_items:
     client: true
-    default: 4
+    list: true
+    default: 'edit|bookmark|delete|admin'
+    choices:
+     - like
+     - edit
+     - flag
+     - delete
+     - share
+     - bookmark
+     - admin
+     - reply
   share_links:
     client: true
     list: true

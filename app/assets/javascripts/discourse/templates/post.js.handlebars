@@ -74,7 +74,7 @@
             <button {{action expandFirstPost this}} class='btn expand-post'>{{i18n post.show_full}}</button>
           {{/if}}
         {{/if}}
-        {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
+        {{view 'post-menu' post=this postView=view}}
       </div>
       {{view Discourse.RepliesView content=replies postView=view}}
       {{discourse-action-history post=this}}
