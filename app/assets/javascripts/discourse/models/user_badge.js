@@ -84,8 +84,8 @@ Discourse.UserBadge.reopenClass({
   **/
   findByUsername: function(username, options) {
     var url = "/user_badges.json?username=" + username;
-    if (options && options.aggregated) {
-      url += "&aggregated=true";
+    if (options && options.grouped) {
+      url += "&grouped=true";
     }
     return Discourse.ajax(url).then(function(json) {
       return Discourse.UserBadge.createFromJson(json);
