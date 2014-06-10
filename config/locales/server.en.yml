@@ -928,7 +928,7 @@ en:
     within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Categories'
-      topic: 'Topics'
+      topic: 'Results'
       user: 'Users'
 
   original_poster: "Original Poster"
