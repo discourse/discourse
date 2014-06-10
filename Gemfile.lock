@@ -1,3 +1,15 @@
+GIT
+  remote: git://github.com/activerecord-hackery/ransack.git
+  revision: 79fe700bca7d69f30a44898635fdddd3a8ef486d
+  branch: rails-4.1
+  specs:
+    ransack (1.2.4)
+      actionpack (>= 4.0)
+      activerecord (>= 4.0)
+      activesupport (>= 4.0)
+      i18n
+      polyamorous (~> 1.0.0)
+
 PATH
   remote: vendor/gems/discourse_plugin
   specs:
@@ -224,6 +236,8 @@ GEM
       redis
       ruby-openid
     pg (0.15.1)
+    polyamorous (1.0.0)
+      activerecord (>= 3.0)
     polyglot (0.3.4)
     progress (3.0.0)
     pry (0.9.12.6)
@@ -457,6 +471,7 @@ DEPENDENCIES
   rails-observers
   rails_multisite!
   rake
+  ransack!
   rb-fsevent
   rb-inotify (~> 0.9)
   rbtrace

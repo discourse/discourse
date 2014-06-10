@@ -239,14 +239,28 @@ describe Search do
 
   context 'cyrillic topic' do
     let!(:cyrillic_topic) { Fabricate(:topic) do
-                                                user
-                                                title { sequence(:title) { |i| "Тестовая запись #{i}" } }
-                                              end
+      user
+      title { sequence(:title) { |i| "Тестовая запись #{i}" } }
+    end
     }
     let!(:post) {Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user)}
     let(:result) { first_of_type(Search.new('запись').execute, 'topic') }
 
     it 'finds something when given cyrillic query' do
+      result.should be_present
+    end
+  end
+
+  context 'Chinese topic' do
+    let!(:chinese_topic) { Fabricate(:topic) do
+      user
+      title { sequence(:title) { |i| "吴黎明是个民警，看矛盾看问题的眼光完全不一样的 #{i}" } }
+    end
+    }
+    let!(:post) {Fabricate(:post, topic: chinese_topic, user: chinese_topic.user)}
+    let(:result) { first_of_type(Search.new('吴黎明是个民警').execute, 'topic') }
+
+    it 'finds something when given chinese query' do
       result.should be_present
     end
   end
