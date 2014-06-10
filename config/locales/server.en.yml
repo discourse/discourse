@@ -996,8 +996,8 @@ en:
 
   user:
     username:
-      short: "must be longer than %{min} characters"
-      long: "must be shorter than %{max} characters"
+      short: "must be at least %{min} characters"
+      long: "must be no more than %{max} characters"
       characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
