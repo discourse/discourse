@@ -735,7 +735,6 @@ cs:
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zruště pokud chcete používat vlastní plně responzivní kaskádový styl."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before we consider it dominating."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists"
-    min_posts_for_search_in_topic: "Disable search within topic if topics have less than minimum number posts"
     enable_names: "Povolit uživatelům zobrazovat celé jméno"
     display_name_on_posts: "Also show a user's full name on their posts"
     invites_shown: "Maximální počet pozvánek zobrazený na uživatelově stránce"

@@ -733,7 +733,6 @@ zh_CN:
     enable_mobile_theme: "移动设备使用移动有好的主题，同时也能够切换回完整站点。如果您想要使用自定义的响应式主题请禁用它。"
     dominating_topic_minimum_percent: "用户在主题中的帖子占到多少百分比时使得用户主导话题。"
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章"
-    min_posts_for_search_in_topic: "如果主题中的帖子数小于设定值，禁用主题内搜索"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
     enable_names: "允许用户显示全名"
     display_name_on_posts: "在用户的帖子中显示他们的全名"

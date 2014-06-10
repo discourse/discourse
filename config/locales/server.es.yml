@@ -771,7 +771,6 @@ es:
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Deshabilita esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
     dominating_topic_minimum_percent: "Qué porcentaje de posts tiene que crear un usuario en un tema para considerarlo dominante."
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas"
-    min_posts_for_search_in_topic: "Deshabilitar la búsqueda dentro del tema si los temas tienen menos del número mínimo de posts"
     global_notice: "Mostrar una noticia de URGENCIA o EMERGENCIA para todos los visitantes, deja este campo en blanco para ocultarla (se puede utilizar código HTML)"
     enable_names: "Permitir a los usuarios mostrar su nombre completo"
     display_name_on_posts: "Mostrar también el nombre completo del usuario en sus posts"

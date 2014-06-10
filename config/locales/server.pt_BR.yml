@@ -725,7 +725,6 @@ pt_BR:
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o site completo. Desative isso se você quiser usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Qual a percentagem de mensagens de um usuário em um tópico antes de considerá-lo dominante."
     suppress_uncategorized_badge: "Não exibir emblema para assuntos não categorizados em listas de tópicos"
-    min_posts_for_search_in_topic: "Desativar pesquisa dentro do tópico se tópicos tem um número mínimo de mensagens"
     enable_names: "Permitir que usuários exibam seus nomes completos"
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
     invites_shown: "Máximos convites exibidos em uma página de usuário"

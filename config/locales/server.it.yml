@@ -754,7 +754,6 @@ it:
     enable_mobile_theme: "I dispositivi mobile usano un tema apposito, con possibilità di passare alla visualizzazione desktop. Disabilita questa opzione se vuoi usare un foglio di stile custom e completamente responsive."
     dominating_topic_minimum_percent: "Che percentuale di post un utente deve pubblicare nello stesso post per essere considerato \"dominante\"?"
     suppress_uncategorized_badge: "Non mostrare il badge per i topic senza categoria nella lista dei topic"
-    min_posts_for_search_in_topic: "Disabilita la ricerca all'interno dei topic se i topic hanno meno di un certo numero di post"
     global_notice: "Mostra un banner globale di EMERGENZA a tutti i visitatori, lascia vuoto per nasconderlo (HTML consentito)."
     enable_names: "Permetti agli utenti di mostrare i loro nomi completi"
     display_name_on_posts: "Mostra anche il nome completo dell'utente nei suoi post"

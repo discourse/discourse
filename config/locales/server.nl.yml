@@ -752,7 +752,6 @@ nl:
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
     dominating_topic_minimum_percent: "Vanaf welk percentage berichten dat een gebruiker plaatst in een topic vinden we de gebruiker dominant?"
     suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie"
-    min_posts_for_search_in_topic: "Als topics minder dan minimum aantal berichten hebben, is zoeken niet mogelijk"
     global_notice: "Laat een LET OP, BELANGRIJK-banner zien aan alle gebruikers. Laat leeg om niet te tonen (HTML is toegestaan)."
     enable_names: "Gebruikers mogen hun volledige naam laten zien"
     display_name_on_posts: "Laat de volledige naam van een gebruiker ook bij zijn berichten zien"

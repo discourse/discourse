@@ -47,10 +47,6 @@ class Search
     @include_blurbs = @opts[:include_blurbs] || false
     @limit = Search.per_facet * Search.facets.size
     @results = GroupedSearchResults.new(@opts[:type_filter])
-
-    if @search_context.is_a?(Topic) && @search_context.posts_count < SiteSetting.min_posts_for_search_in_topic
-      @search_context = nil
-    end
   end
 
   # Query a term

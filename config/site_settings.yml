@@ -115,9 +115,6 @@ basic:
   posts_per_page:
     client: true
     default: 20
-  desktop_post_slack_ratio:
-    default: 2
-    client: true
   enable_badges:
     client: true
     default: false
@@ -523,7 +520,6 @@ uncategorized:
     default: true
 
   # Search
-  min_posts_for_search_in_topic: 0
   min_search_term_length:
     client: true
     default: 3

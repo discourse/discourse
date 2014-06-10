@@ -624,7 +624,6 @@ uk:
     enable_mobile_theme: "Мобільні пристрої використовуватимуть тему, дружню для них, з можливістю перемикатися на повний сайт. Відключіть це, якщо хочете використовувати власну, повністю чутливу, таблицю стилів."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before we consider it dominating."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists"
-    min_posts_for_search_in_topic: "Disable search within topic if topics have less than minimum number posts"
     enable_names: "Дозволити користувачам показувати свої повні імена"
     display_name_on_posts: "Показувати також повне ім'я користувача в його дописах"
     invites_shown: "Максимум запрошень, показуваних на сторінці користувача"
