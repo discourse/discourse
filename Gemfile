@@ -140,7 +140,6 @@ gem 'sanitize'
 gem 'sass'
 gem 'sidekiq'
 
-gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 
 gem 'therubyracer'
