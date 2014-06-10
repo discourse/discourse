@@ -149,7 +149,6 @@ Discourse.ScreenTrack = Ember.Object.extend({
     // If the user hasn't scrolled the browser in a long time, stop tracking time read
     var sinceScrolled = new Date().getTime() - this.get('lastScrolled');
     if (sinceScrolled > PAUSE_UNLESS_SCROLLED) {
-      this.reset();
       return;
     }
 
