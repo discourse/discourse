@@ -12,7 +12,7 @@
   {{#each backup in model}}
     <tr>
       <td>{{backup.filename}}</td>
-      <td>{{humanSize backup.size}}</td>
+      <td>{{human-size backup.size}}</td>
       <td>
         <div class="pull-right">
           <a {{bind-attr href="backup.link"}} class="btn download" title="{{i18n admin.backups.operations.download.title}}"><i class="fa fa-download"></i>{{i18n admin.backups.operations.download.text}}</a>

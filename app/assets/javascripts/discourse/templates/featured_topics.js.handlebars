@@ -1,7 +1,7 @@
 <table id='topic-list'>
   <tr>
     <th class="main-link">
-      {{categoryLink this allowUncategorized=true}}
+      {{category-link this allowUncategorized=true}}
 
       <div class='posters'>
       {{#each featured_users}}
@@ -26,7 +26,7 @@
       <td class='main-link'>
         <div class='topic-inset'>
           {{topic-status topic=this}}
-          {{{topicLink this}}}
+          {{{topic-link this}}}
 
           {{#if unread}}
             <a href="{{unbound lastUnreadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unbound unread}}</a>
@@ -52,7 +52,7 @@
         </div>
       </td>
       <td class='num posts'><span class='badge-posts'>{{number posts_count}}</span></td>
-      <td class='num age'><span class="{{coldAgeClass created_at}}" title='{{rawDate created_at}}'>{{{unboundAge created_at}}}</span></td>
+      <td class='num age'><span class="{{cold-age-class created_at}}" title='{{raw-date created_at}}'>{{{age created_at}}}</span></td>
     </tr>
   {{/each}}
 
@@ -62,7 +62,7 @@
         <div class='subcategories'>
           {{i18n categories.subcategories}}
           {{#each subcategory in subcategories}}
-            {{categoryLink subcategory showParent=true}}
+            {{category-link subcategory showParent=true}}
           {{/each}}
         </div>
       </td>

@@ -14,9 +14,9 @@
               <span class="private-message-glyph">{{icon envelope}}</span>
             {{/if}}
           {{#if topic.category.parentCategory}}
-            {{boundCategoryLink topic.category.parentCategory}}
+            {{bound-category-link topic.category.parentCategory}}
           {{/if}}
-          {{boundCategoryLink topic.category}}
+          {{bound-category-link topic.category}}
           {{#if topic.details.loaded}}
             {{topic-status topic=topic}}
             <a class='topic-link' href='{{unbound topic.url}}' {{action jumpToTopPost}}>{{{topic.fancy_title}}}</a>
@@ -104,7 +104,7 @@
                href="#"
                title='{{i18n user.avatar.title}}'
                id="current-user">
-                 {{boundAvatar currentUser "medium"}}
+                 {{bound-avatar currentUser "medium"}}
             </a>
           </li>
         {{/if}}

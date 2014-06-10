@@ -18,7 +18,7 @@
             <div>
               <div class="pull-left">
                 {{#if controller.ordering}}<i class="fa fa-bars"></i>{{/if}}
-                {{categoryLink this allowUncategorized=true extraClasses="bigger"}}
+                {{category-link this allowUncategorized=true extraClasses="bigger"}}
                 {{#if unreadTopics}}
                   <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                 {{/if}}
@@ -41,7 +41,7 @@
             {{#if subcategories}}
               <div class='subcategories'>
                 {{#each subcategories}}
-                  {{categoryLink this showParent=true}}
+                  {{category-link this showParent=true}}
                   {{#if unreadTopics}}
                     <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                   {{/if}}
@@ -70,11 +70,11 @@
                 {{#if controller.latestTopicOnly}}
                   <div class='last-user-info'>
                     {{i18n categories.latest_by}} <a href="{{{unbound lastPosterUrl}}}">{{unbound last_poster.username}}</a>
-                    <a href="{{unbound lastPostUrl}}">{{unboundAge last_posted_at}}</a>
+                    <a href="{{unbound lastPostUrl}}">{{age last_posted_at}}</a>
                   </div>
                 {{else}}
                   &nbsp;
-                  <a href="{{unbound lastPostUrl}}" class="last-posted-at">{{unboundAge last_posted_at}}</a>
+                  <a href="{{unbound lastPostUrl}}" class="last-posted-at">{{age last_posted_at}}</a>
                 {{/if}}
               </div>
             {{/each}}

@@ -3,7 +3,7 @@
     <div class='item'>
       <div class='clearfix info'>
         {{#link-to 'user' user class="avatar-link"}}<div class='avatar-wrapper'>{{avatar user imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div>{{/link-to}}
-        <span class='time'>{{unboundDate path="created_at" leaveAgo="true"}}</span>
+        <span class='time'>{{date path="created_at" leaveAgo="true"}}</span>
         <span class="title">
           <a href="{{unbound url}}">{{unbound title}}</a>
         </span>

@@ -1,5 +1,5 @@
 <div class='container'>
-  {{customHTML "top"}}
+  {{custom-html "top"}}
   {{Discourse.globalNotice}}
 </div>
 
@@ -64,7 +64,7 @@
 
         <div class='details'>
           <div class='primary'>
-          {{boundAvatar model "huge"}}
+          {{bound-avatar model "huge"}}
 
           <div class="primary-textual">
             <h1>{{username}} {{{statusIcon}}}</h1>
@@ -93,13 +93,13 @@
                 <dt>{{i18n user.website}}</dt><dd><a {{bind-attr href="website"}} target="_blank">{{websiteName}}</a></dd>
               {{/if}}
               {{#if created_at}}
-                <dt>{{i18n user.created}}</dt><dd>{{date created_at}}</dd>
+                <dt>{{i18n user.created}}</dt><dd>{{bound-date created_at}}</dd>
               {{/if}}
               {{#if last_posted_at}}
-                <dt>{{i18n user.last_posted}}</dt><dd>{{date last_posted_at}}</dd>
+                <dt>{{i18n user.last_posted}}</dt><dd>{{bound-date last_posted_at}}</dd>
               {{/if}}
               {{#if last_seen_at}}
-                <dt>{{i18n user.last_seen}}</dt><dd>{{date last_seen_at}}</dd>
+                <dt>{{i18n user.last_seen}}</dt><dd>{{bound-date last_seen_at}}</dd>
               {{/if}}
               {{#if invited_by}}
                 <dt>{{i18n user.invited_by}}</dt><dd>{{#link-to 'user' invited_by}}{{invited_by.username}}{{/link-to}}</dd>

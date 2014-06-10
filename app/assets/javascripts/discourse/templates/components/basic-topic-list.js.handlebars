@@ -37,7 +37,7 @@
 
             {{#unless controller.hideCategory}}
               <td class="category">
-                {{categoryLink topic.category showParent=true}}
+                {{category-link topic.category showParent=true}}
               </td>
             {{/unless}}
 
@@ -65,14 +65,14 @@
 
             {{#if topic.bumped}}
               <td class='num activity'>
-                <a href="{{unbound topic.url}}" class='{{coldAgeClass created_at}}' title='{{i18n first_post}}: {{{rawDate topic.created_at}}}' >{{unboundAge topic.created_at}}</a>
+                <a href="{{unbound topic.url}}" class='{{cold-age-class created_at}}' title='{{i18n first_post}}: {{{raw-date topic.created_at}}}' >{{age topic.created_at}}</a>
               </td>
               <td class='num activity last'>
-                <a href="{{unbound topic.lastPostUrl}}" class='{{coldAgeClass bumped_at}}' title='{{i18n last_post}}: {{{rawDate topic.bumped_at}}}'>{{unboundAge topic.bumped_at}}</a>
+                <a href="{{unbound topic.lastPostUrl}}" class='{{cold-age-class bumped_at}}' title='{{i18n last_post}}: {{{raw-date topic.bumped_at}}}'>{{age topic.bumped_at}}</a>
               </td>
             {{else}}
               <td class='num activity'>
-                <a href="{{unbound topic.url}}" class='age' title='{{i18n first_post}}: {{{rawDate topic.created_at}}}'>{{unboundAge topic.created_at}}</a>
+                <a href="{{unbound topic.url}}" class='age' title='{{i18n first_post}}: {{{raw-date topic.created_at}}}'>{{age topic.created_at}}</a>
               </td>
               <td class="activity"></td>
             {{/if}}

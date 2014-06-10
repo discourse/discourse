@@ -1,5 +1,5 @@
 <div class='container'>
-  {{customHTML "top"}}
+  {{custom-html "top"}}
   {{Discourse.globalNotice}}
 </div>
 
@@ -28,9 +28,9 @@
             <h1>
               <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
               {{#if category.parentCategory}}
-                {{boundCategoryLink category.parentCategory}}
+                {{bound-category-link category.parentCategory}}
               {{/if}}
-              {{boundCategoryLink category}}
+              {{bound-category-link category}}
               {{#if details.loaded}}
                 {{topic-status topic=model}}
                 <a href='{{unbound url}}' {{action jumpTop}}>

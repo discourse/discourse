@@ -2,10 +2,10 @@
   <div {{bind-attr class=":item hidden deleted moderator_action"}}>
     <div class='clearfix info'>
       <a href="{{unbound userUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
-      <span class='time'>{{unboundDate path="created_at" leaveAgo="true"}}</span>
+      <span class='time'>{{date path="created_at" leaveAgo="true"}}</span>
       <span class="title">
         <a href="{{unbound postUrl}}">{{unbound title}}</a>
-        {{categoryLink category}}
+        {{category-link category}}
       </span>
       <span class="type">{{unbound descriptionHtml}}</span>
     </div>

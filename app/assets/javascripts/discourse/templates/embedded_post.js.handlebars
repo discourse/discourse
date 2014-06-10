@@ -10,7 +10,7 @@
     <div class="topic-meta-data">
       <h5 {{bind-attr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{{unbound username}}}</a></h5>
       {{#if view.parentView.previousPost}}<a href='{{unbound url}}' class="post-info arrow" title="{{i18n topic.jump_reply_up}}"><i class='fa fa-arrow-up'></i></a>{{/if}}
-      <div class='post-info post-date'>{{unboundAgeWithTooltip created_at}}</div>
+      <div class='post-info post-date'>{{age-with-tooltip created_at}}</div>
     </div>
     {{{unbound cooked}}}
     {{#unless view.parentView.previousPost}}<a href='{{unbound url}}' class="arrow" title="{{i18n topic.jump_reply_down}}"><i class='fa fa-arrow-down'></i></a>{{/unless}}

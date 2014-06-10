@@ -7,17 +7,17 @@
 <section {{bind-attr class=":map mapCollapsed"}}>
   <ul class="clearfix">
     <li>
-      <a href='{{unbound topic.url}}' class='{{coldAgeClass topic.created_at}}'>
+      <a href='{{unbound topic.url}}' class='{{cold-age-class topic.created_at}}'>
       <h4>{{i18n created}}</h4>
       {{avatar details.created_by imageSize="tiny"}}
-      {{unboundDate topic.created_at}}
+      {{date topic.created_at}}
       </a>
     </li>
     <li>
       <a {{bind-attr href="topic.lastPostUrl"}}>
       <h4>{{i18n last_post}}</h4>
       {{avatar details.last_poster imageSize="tiny"}}
-      {{unboundDate topic.last_posted_at}}
+      {{date topic.last_posted_at}}
       </a>
     </li>
     <li>
@@ -62,7 +62,7 @@
             <li>
               <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks count=clicks}}'>{{clicks}}</span>
               <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
-                {{#if title}}{{title}}{{else}}{{shortenUrl url}}{{/if}}
+                {{#if title}}{{title}}{{else}}{{shorten-url url}}{{/if}}
               </a>
               {{link-domain this}}
             </li>

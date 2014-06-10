@@ -1,5 +1,5 @@
 {{#if model}}
-  {{#link-to 'user' user}}{{boundAvatar model "huge"}}{{/link-to}}
+  {{#link-to 'user' user}}{{bound-avatar model "huge"}}{{/link-to}}
 
   <div class="names">
     <h1 {{bind-attr class="staff new_user"}}><a {{bind-attr href="usernameUrl"}}>{{username}}</a></h1>
@@ -24,8 +24,8 @@
   {{#if user}}
     <div class="metadata">
       {{#if user.location}}<h3><i class="fa fa-map-marker"></i> {{{user.location}}}</h3>{{/if}}
-      <h3>{{i18n last_post}} {{unboundDate path="user.last_posted_at" leaveAgo="true"}}</h3>
-      <h3>{{i18n joined}} {{unboundDate path="user.created_at" leaveAgo="true"}}</h3>
+      <h3>{{i18n last_post}} {{date path="user.last_posted_at" leaveAgo="true"}}</h3>
+      <h3>{{i18n joined}} {{date path="user.created_at" leaveAgo="true"}}</h3>
       {{groups-list groups=user.custom_groups}}
     </div>
 

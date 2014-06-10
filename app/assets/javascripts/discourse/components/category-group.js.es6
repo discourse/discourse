@@ -5,7 +5,7 @@ function templateFunction() {
                                 "<ul>" +
                                 "{{#each options}}" +
                                   "<li>" +
-                                      "{{categoryLinkRaw this allowUncategorized=true}}" +
+                                      "{{category-link-raw this allowUncategorized=true}}" +
                                   "</li>" +
                                   "{{/each}}" +
                                 "</ul>" +

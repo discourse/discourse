@@ -1,7 +1,7 @@
 <td>
 <div class='main-link clearfix'>
   {{topic-status topic=this}}
-  {{{topicLink this}}}
+  {{{topic-link this}}}
   {{#if unread}}
     <a href="{{lastUnreadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unread}}</a>
   {{/if}}
@@ -28,7 +28,7 @@
 <div class="topic-item-stats clearfix">
   {{#unless controller.hideCategory}}
     <div class='category'>
-      {{categoryLink category showParent=true}}
+      {{category-link category showParent=true}}
     </div>
   {{/unless}}
 
@@ -41,13 +41,13 @@
 
     {{#if bumped}}
       <div class='num activity last'>
-        <a href="{{lastPostUrl}}" title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{last_poster_username}}</a>
-        <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
+        <a href="{{lastPostUrl}}" title='{{i18n last_post}}: {{{raw-date bumped_at}}}'>{{last_poster_username}}</a>
+        <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{raw-date bumped_at}}}'>{{age bumped_at}}</a>
       </div>
     {{else}}
       <div class='num activity last'>
-        <a href="{{url}}" title='{{i18n last_post}}: {{{rawDate bumped_at}}}'>{{last_poster_username}}</a>
-        <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{rawDate created_at}}}'>{{unboundAge created_at}}</a>
+        <a href="{{url}}" title='{{i18n last_post}}: {{{raw-date bumped_at}}}'>{{last_poster_username}}</a>
+        <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{raw-date created_at}}}'>{{age created_at}}</a>
       </div>
     {{/if}}
   </div>
