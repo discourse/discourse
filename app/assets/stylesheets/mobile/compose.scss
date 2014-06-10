@@ -86,7 +86,7 @@ display: none;
   }
   // The various states
   &.open {
-    height: 300px;
+    height: 270px;
   }
   &.closed {
     height: 0 !important;
@@ -155,7 +155,7 @@ display: none;
   // a small screen mobile device
   &.edit-title {
     &.open {
-      height: 280px;
+      height: 250px;
     }
     .contents {
       input#reply-title {
