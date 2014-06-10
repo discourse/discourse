@@ -426,6 +426,7 @@ pt_BR:
     created: 'Criado'
     trust_level: 'Nível de confiança'
     create_account:
+      title: "Criar nova conta"
       failed: "Alguma coisa deu errado, talvez este email já esteja registrado, tente usar o Esqueci a Senha."
     forgot_password:
       title: "Esqueci a senha"
@@ -1545,6 +1546,8 @@ pt_BR:
         refresh_browsers: "Forçar atualização da página no browser"
         show_public_profile: "Mostrar Perfil Público"
         impersonate: 'Personificar'
+        log_out: "Sair"
+        logged_out: "Usuário foi desconectado em todos os dipositivos"
         revoke_admin: 'Revogar Admin'
         grant_admin: 'Conceder Admin'
         revoke_moderation: 'Revogar Moderação'

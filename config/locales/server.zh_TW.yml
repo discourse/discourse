@@ -515,6 +515,7 @@ zh_TW:
     enable_github_logins: "啟用 Github 帳號驗證登入，需要 github_client_id 和 github_client_secret"
     github_client_id: "Github 帳號驗證的用戶端帳號（Client id），到 https://github.com/settings/applications 來註冊獲取"
     github_client_secret: "Github 帳號驗證的用戶端密碼（Client secret），到 https://github.com/settings/applications 來註冊獲取"
+    allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"
     previous_visit_timeout_hours: "系統判斷一次瀏覽之後多少小時後為“上一次”瀏覽"
     rate_limit_create_topic: "在建立一個討論話題之後間隔多少秒你才能建立另一個討論話題"
@@ -579,6 +580,8 @@ zh_TW:
     embed_post_limit: "最大內嵌文章數"
     enable_cdn_js_debugging: "對所有 js includes 增加 crossorigin 權限使 /logs 能顯示適當的錯誤訊息"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
+    errors:
+      invalid_email: "無效的電子郵件地址"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
     liked: "%{display_username} 在 %{link} 按讚了你的文章 "
@@ -787,10 +790,39 @@ zh_TW:
       text_body_template: "導入操作成功。"
     import_failed:
       subject_template: "匯入失敗"
+    email_error_notification:
+      text_body_template: |
+        這是一則自動產生的訊息。
+
+        收到一封無法分析的電子郵件。請審查以下錯誤：
+
+        `%{error}`
+
+        %{source}
     too_many_spam_flags:
       subject_template: "新帳號已封鎖"
     blocked_by_staff:
       subject_template: "帳號已被封鎖"
+    user_automatically_blocked:
+      subject_template: "新用戶 %{username} 由於社群的投訴已被封鎖"
+      text_body_template: |
+        這是一則自動產生的訊息。
+
+        由於文章受到多位用戶的投訴，新用戶 [%{username}](%{base_url}%{user_url}) 已被自動封鎖。
+
+        請[審查那些投訴](%{base_url}/admin/flags)。如果 %{username} 是被錯誤地封鎖，請在[該用戶的管理頁面](%{base_url}%{user_url})中點擊解鎖按鈕。
+
+        此門檻可在 `block_new_user` 網站設定中更改。
+    spam_post_blocked:
+      subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
+      text_body_template: |
+        這是一則自動產生的訊息。
+
+        新用戶 [%{username}](%{base_url}%{user_url}) 曾嘗試發表多篇內含連結至 %{domains} 的文章。為避免垃圾內容，那些文章已被封鎖。該用戶仍然可以發表不含連結至 %{domains} 的新文章。
+
+        請[審查該用戶](%{base_url}%{user_url})。
+
+        相關設定可在 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 網站設定中更改。
     unblocked:
       subject_template: "帳號解除封鎖"
     download_remote_images_disabled:

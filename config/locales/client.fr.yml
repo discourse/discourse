@@ -425,6 +425,7 @@ fr:
     created: 'Créé'
     trust_level: 'Niveau de confiance'
     create_account:
+      title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse email est déjà enregistrée, essayez le lien Mot de passe oublié."
     forgot_password:
       title: "Mot de passe oublié ?"
@@ -1001,6 +1002,7 @@ fr:
       delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
       delete_error: "Il y a eu une erreur lors de la suppression."
       list: "Liste des catégories"
+      no_description: "Veuillez ajouter une description pour cette catégorie"
       change_in_category_topic: "Editer la description"
       already_used: 'Cette couleur est déjà utilisée par une autre catégorie'
       security: "Sécurité"
@@ -1438,6 +1440,8 @@ fr:
           title: "Emails affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses mail suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
           email: "Adresse mail"
+          actions:
+            allow: "Autoriser"
         screened_urls:
           title: "URL affichées"
           description: "Les URL listées ici ont été utilisées dans des messages émis par des utilisateurs ayant été identifié comme spammeur."
@@ -1522,6 +1526,8 @@ fr:
         refresh_browsers: "Forcer le rafraîchissement du navigateur"
         show_public_profile: "Afficher le profil public"
         impersonate: 'Incarner'
+        log_out: "Déconnexion"
+        logged_out: "L'utilisateur s'est déconnecté de tous les appareils"
         revoke_admin: 'Révoquer les droits d''admin'
         grant_admin: 'Accorder les droits d''admin'
         revoke_moderation: 'Révoquer les droits de modération'
@@ -1641,6 +1647,7 @@ fr:
         no_user_badges: "%{name} ne s'est vu accordé aucun badge."
         no_badges: Il n'y a aucun badge qui peuvent être accorder.
         allow_title: Autoriser l'utilisation d'un badge comme titre
+        multiple_grant: Peut être décerné plusieurs fois
     lightbox:
       download: "télécharger"
     keyboard_shortcuts_help:

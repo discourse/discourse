@@ -331,6 +331,7 @@ zh_CN:
         time_read: "阅读时间"
         days_visited: "访问天数"
         account_age_days: "账号建立天数"
+        create: "发送邀请"
       password:
         title: "密码"
         too_short: "您设置的密码太短了。"
@@ -382,6 +383,7 @@ zh_CN:
     created: '创建时间'
     trust_level: '用户级别'
     create_account:
+      title: "创建新帐号"
       failed: "出问题了，有可能这个电子邮箱已经被注册了。试试忘记密码链接？"
     forgot_password:
       title: "忘记密码"
@@ -392,6 +394,7 @@ zh_CN:
       complete_email: "如果您的账户 <b>%{email}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
     login:
       title: "登入"
+      username: "用户"
       password: "密码"
       email_placeholder: "电子邮箱地址或用户名"
       error: "未知错误"
@@ -902,6 +905,7 @@ zh_CN:
       none: '（未分类）'
       choose: '选择分类&hellip;'
       edit: '编辑'
+      edit_long: "编辑"
       view: '浏览分类下的主题'
       general: '通常'
       settings: '设置'

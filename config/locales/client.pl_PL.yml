@@ -451,6 +451,7 @@ pl_PL:
     created: 'Utworzono'
     trust_level: 'Poziom zaufania'
     create_account:
+      title: "Utwórz Konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
     forgot_password:
       title: "Zapomniane hasło"
@@ -1072,6 +1073,11 @@ pl_PL:
       position: "pozycja"
       default_position: "Domyślna pozycja"
       parent: "Kategoria rodzica"
+      notifications:
+        watching:
+          title: "Obserwowany"
+        tracking:
+          title: "Śledzony"
     flagging:
       title: 'Dlaczego chcesz oflagować ten wpis?'
       action: 'Oflaguj wpis'
@@ -1479,6 +1485,8 @@ pl_PL:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
           email: "Adres email"
+          actions:
+            allow: "Zezwalaj"
         screened_urls:
           title: "Ekranowane URLe"
           description: "URLe wypisane tutaj były używane we wpisach przez użytkowników wykrytych jako spamerzy."
@@ -1567,6 +1575,7 @@ pl_PL:
         refresh_browsers: "Wymuś odświeżenie przeglądarki"
         show_public_profile: "Pokaż profil publiczny"
         impersonate: 'Podszyj się'
+        log_out: "Wyloguj"
         revoke_admin: 'Odbierz status admina'
         grant_admin: 'Przyznaj status admina'
         revoke_moderation: 'Odbierz status moderatora'
