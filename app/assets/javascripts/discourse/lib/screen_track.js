@@ -31,6 +31,8 @@ Discourse.ScreenTrack = Ember.Object.extend({
       this.set('interval', setInterval(function () {
         self.tick();
       }, 1000));
+
+      $(window).on('scroll.screentrack', function(){self.scrolled()});
     }
 
     this.set('topicId', topicId);
@@ -42,7 +44,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
       // already stopped no need to "extra stop"
       return;
     }
-
+    $(window).off('scroll.screentrack');
     this.tick();
     this.flush();
     this.reset();
