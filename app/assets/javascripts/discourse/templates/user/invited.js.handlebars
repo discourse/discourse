@@ -2,9 +2,14 @@
 
   <h2>{{i18n user.invited.title}}</h2>
 
-  {{#if canInviteToForum}}
-    <button {{action showInvite}} class='btn right'>{{i18n user.invited.create}}</button>
-  {{/if}}
+  <div class="pull-right">
+    {{#if canInviteToForum}}
+      <button {{action showInvite}} class='btn'>{{i18n user.invited.create}}</button>
+    {{/if}}
+    {{#if canBulkInvite}}
+      {{resumable-upload target="/invites/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
+    {{/if}}
+  </div>
 
   {{#if showSearch}}
   <form>

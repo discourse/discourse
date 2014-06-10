@@ -14,27 +14,11 @@ module Jobs
 
       backup_path = "#{Backup.base_directory}/#{filename}"
       tmp_backup_path = "#{backup_path}.tmp"
-
-      # delete destination files
-      File.delete(backup_path) rescue nil
-      File.delete(tmp_backup_path) rescue nil
-
-      # merge all the chunks
-      File.open(tmp_backup_path, "a") do |backup|
-        (1..chunks).each do |chunk_number|
-          # path to chunk
-          chunk_path = Backup.chunk_path(identifier, filename, chunk_number)
-          # add chunk to backup
-          backup << File.open(chunk_path).read
-        end
-      end
-      
-      # rename tmp backup to final backup name
-      FileUtils.mv(tmp_backup_path, backup_path, force: true)
-
-      # remove tmp directory
+      # path to tmp directory
       tmp_directory = File.dirname(Backup.chunk_path(identifier, filename, 0))
-      FileUtils.rm_rf(tmp_directory) rescue nil
+
+      # merge all chunks
+      HandleChunkUpload.merge_chunks(chunks, upload_path: backup_path, tmp_upload_path: tmp_backup_path, model: Backup, identifier: identifier, filename: filename, tmp_directory: tmp_directory)
     end
 
   end

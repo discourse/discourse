@@ -39,6 +39,9 @@ en:
     embed:
       load_from_remote: "There was an error loading that post."
 
+  bulk_invite:
+    file_should_be_csv: "The uploaded file should be of csv format."
+
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -1244,6 +1247,21 @@ en:
       subject_template: "Import failed"
       text_body_template: |
         The import has failed.
+
+        Here's the log:
+
+        ```
+        %{logs}
+        ```
+
+    bulk_invite_succeeded:
+      subject_template: "Bulk Invite processed successfully!"
+      text_body_template: "The bulk invite has been processed, %{sent} invites sent."
+
+    bulk_invite_failed:
+      subject_template: "Bulk Invite processed with some errors!"
+      text_body_template: |
+        The bulk invite has been processed, %{sent} invites sent and %{failed} invites failed.
 
         Here's the log:
 

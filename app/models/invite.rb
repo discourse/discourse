@@ -129,6 +129,14 @@ class Invite < ActiveRecord::Base
     end
     i
   end
+
+  def self.base_directory
+    File.join(Rails.root, "public", "csv", RailsMultisite::ConnectionManagement.current_db)
+  end
+
+  def self.chunk_path(identifier, filename, chunk_number)
+    File.join(Invite.base_directory, "tmp", identifier, "#{filename}.part#{chunk_number}")
+  end
 end
 
 # == Schema Information
