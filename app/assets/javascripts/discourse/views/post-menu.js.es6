@@ -102,13 +102,14 @@ export default Discourse.View.extend({
       }
     }
 
+    var yours = post.get('yours');
     Discourse.SiteSettings.post_menu.split("|").forEach(function(i) {
       var creator = self["buttonFor" + i.replace(/\+/, '').capitalize()];
       if (creator) {
         var button = creator.call(self, post);
         if (button) {
           allButtons.push(button);
-          if (hiddenButtons.indexOf(i) === -1) {
+          if ((yours && button.opts.alwaysShowYours) || (hiddenButtons.indexOf(i) === -1)) {
             visibleButtons.push(button);
           }
         }
@@ -201,7 +202,7 @@ export default Discourse.View.extend({
   // Edit button
   buttonForEdit: function(post) {
     if (!post.get('can_edit')) return;
-    return new Button('edit', 'post.controls.edit', 'pencil');
+    return new Button('edit', 'post.controls.edit', 'pencil', {alwaysShowYours: true});
   },
 
   clickEdit: function(post) {
