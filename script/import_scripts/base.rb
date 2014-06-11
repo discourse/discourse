@@ -70,7 +70,11 @@ class ImportScripts::Base
 
   # Get the Discourse User id based on the id of the source user
   def user_id_from_imported_user_id(import_id)
-    @existing_users[import_id] || @existing_users[import_id.to_s]
+    @existing_users[import_id] || @existing_users[import_id.to_s] || find_user_by_import_id(import_id)
+  end
+
+  def find_user_by_import_id(import_id)
+    UserCustomField.where(name: 'import_id', value: import_id.to_s).first.try(:user)
   end
 
   # Get the Discourse Category id based on the id of the source category
@@ -98,6 +102,7 @@ class ImportScripts::Base
   # create the Discourse user record.
   def create_users(results)
     puts "creating users"
+    num_users_before = User.count
     users_created = 0
     users_skipped = 0
     progress = 0
@@ -126,7 +131,7 @@ class ImportScripts::Base
     end
 
     puts ''
-    puts "created: #{users_created} users"
+    puts "created: #{User.count - num_users_before} users"
     puts " failed: #{@failed_users.size}" if @failed_users.size > 0
   end
 
@@ -157,10 +162,6 @@ class ImportScripts::Base
     end
 
     u # If there was an error creating the user, u.errors has the messages
-  end
-
-  def find_user_by_import_id(import_id)
-    UserCustomField.where(name: 'import_id', value: import_id.to_s).first.try(:user)
   end
 
   # Iterates through a collection to create categories.
