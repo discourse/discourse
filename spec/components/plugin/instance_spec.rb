@@ -11,6 +11,7 @@ describe Plugin::Instance do
     DiscoursePluginRegistry.mobile_stylesheets.clear
     DiscoursePluginRegistry.desktop_stylesheets.clear
     DiscoursePluginRegistry.sass_variables.clear
+    DiscoursePluginRegistry.serialized_current_user_fields
   end
 
   context "find_all" do
