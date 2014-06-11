@@ -72,9 +72,20 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def custom_fields
-    return {} unless SiteSetting.public_user_custom_fields.present?
-    fields = User.custom_fields_for_ids([object.id], SiteSetting.public_user_custom_fields.split('|'))
-    return fields.present? ? fields[object.id] : {}
+    fields = nil
+    if SiteSetting.public_user_custom_fields.present?
+      fields = SiteSetting.public_user_custom_fields.split('|')
+    end
+    DiscoursePluginRegistry.serialized_current_user_fields.each do |f|
+      fields ||= []
+      fields << f
+    end
+
+    if fields.present?
+      User.custom_fields_for_ids([object.id], fields)[object.id]
+    else
+      {}
+    end
   end
 
 end

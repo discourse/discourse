@@ -13,6 +13,8 @@ class DiscoursePluginRegistry
     attr_accessor :sass_variables
     attr_accessor :handlebars
     attr_accessor :custom_html
+    attr_accessor :serialized_current_user_fields
+
 
     # Default accessor values
     def javascripts
@@ -45,6 +47,10 @@ class DiscoursePluginRegistry
 
     def handlebars
       @handlebars ||= Set.new
+    end
+
+    def serialized_current_user_fields
+      @serialized_current_user_fields ||= Set.new
     end
   end
 

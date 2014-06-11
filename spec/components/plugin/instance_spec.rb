@@ -161,6 +161,18 @@ describe Plugin::Instance do
     end
   end
 
+  context "serialized_current_user_fields" do
+    it "correctly serializes custom user fields" do
+      DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
+      user = Fabricate(:user)
+      user.custom_fields["has_car"] = "true"
+      user.save!
+
+      payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      payload["current_user"]["custom_fields"]["has_car"].should == "true"
+    end
+  end
+
   context "register_color_scheme" do
     it "can add a color scheme for the first time" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
