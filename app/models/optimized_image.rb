@@ -68,12 +68,13 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize(from, to, width, height)
+    # NOTE: ORDER is important!
     instructions = %W{
       #{from}
+      -background transparent
       -gravity center
       -thumbnail #{width}x#{height}^
       -extent #{width}x#{height}
-      -background transparent
       -interpolate bicubic
       -unsharp 2x0.5+0.7+0
       -quality 98
