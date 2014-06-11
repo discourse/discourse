@@ -46,10 +46,6 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
 <img src="https://meta-discourse.r.worldssl.net/uploads/default/4445/35af9b94d045c691.png" width="586" height="452"> 
 
-FOR THIS WEEK ONLY, temporarily revert to Docker 0.11.1 due to [severe Docker 0.12 bug](https://github.com/dotcloud/docker/issues/6245):
-
-    apt-get install lxc-docker-0.11.1
-
 # Install Discourse
 
 Create a `/var/docker` folder:
