@@ -23,7 +23,7 @@ Discourse.ReplyButton = Discourse.ButtonView.extend({
   },
 
   click: function() {
-    this.get('controller').reply();
+    this.get('controller').send('replyToPost');
   }
 });
 
