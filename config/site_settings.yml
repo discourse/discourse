@@ -9,7 +9,9 @@ required:
   notification_email:
     default: 'info@discourse.org'
     validator: 'EmailSettingValidator'
-  site_contact_username: ''
+  site_contact_username:
+    default: ''
+    validator: 'UsernameSettingValidator'
   logo_url:
     client: true
     default: '/images/d-logo-sketch.png'
@@ -316,7 +318,9 @@ email:
   pop3s_polling_enabled: false
   pop3s_polling_host: ''
   pop3s_polling_port: 995
-  pop3s_polling_username: ''
+  pop3s_polling_username:
+    default: ''
+    validator: 'UsernameSettingValidator'
   pop3s_polling_password: ''
   email_in:
     default: false
@@ -484,7 +488,9 @@ embedding:
   embeddable_host: ''
   feed_polling_enabled: false
   feed_polling_url: ''
-  embed_by_username: ''
+  embed_by_username:
+    default: ''
+    validator: 'UsernameSettingValidator'
   embed_category: ''
   embed_post_limit: 100
   embed_truncate: false

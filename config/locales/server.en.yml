@@ -915,6 +915,7 @@ en:
 
     errors:
       invalid_email: "Invalid email address."
+      invalid_username: "There's no user with that username."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

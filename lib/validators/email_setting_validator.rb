@@ -1,6 +1,6 @@
 class EmailSettingValidator
   def self.valid_value?(val)
-    val == '' || EmailValidator.email_regex =~ val
+    !val.present? || !!(EmailValidator.email_regex =~ val)
   end
 
   def self.error_message(val)
