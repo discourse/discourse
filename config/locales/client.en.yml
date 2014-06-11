@@ -470,8 +470,8 @@ en:
 
     summary:
       enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
-      description: "There are <b>{{count}}</b> replies. Save reading time by displaying only the most relevant replies?"
-      description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>. Save reading time by displaying only the most relevant replies?"
+      description: "There are <b>{{count}}</b> replies."
+      description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
       enable: 'Summarize This Topic'
       disable: 'Show All Posts'
 
