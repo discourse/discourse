@@ -598,3 +598,5 @@ uncategorized:
   enable_system_avatars:
     hidden: true
     default: true
+
+  disable_edit_notifications: false
