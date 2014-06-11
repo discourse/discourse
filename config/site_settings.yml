@@ -87,7 +87,7 @@ basic:
   post_menu_hidden_items:
     client: true
     list: true
-    default: ''
+    default: 'edit|bookmark|delete|admin'
     choices:
      - like
      - edit
