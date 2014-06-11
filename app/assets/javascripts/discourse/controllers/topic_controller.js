@@ -49,6 +49,122 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   actions: {
+    // Post related methods
+    replyToPost: function(post) {
+      var composerController = this.get('controllers.composer'),
+          quoteController = this.get('controllers.quote-button'),
+          quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
+          topic = post ? post.get('topic') : this.get('model');
+
+      quoteController.set('buffer', '');
+
+      if (composerController.get('content.topic.id') === topic.get('id') &&
+          composerController.get('content.action') === Discourse.Composer.REPLY) {
+        composerController.set('content.post', post);
+        composerController.set('content.composeState', Discourse.Composer.OPEN);
+        composerController.appendText(quotedText);
+      } else {
+
+        var opts = {
+          action: Discourse.Composer.REPLY,
+          draftKey: topic.get('draft_key'),
+          draftSequence: topic.get('draft_sequence')
+        };
+
+        if(post && post.get("post_number") !== 1){
+          opts.post = post;
+        } else {
+          opts.topic = topic;
+        }
+
+        composerController.open(opts).then(function() {
+          composerController.appendText(quotedText);
+        });
+      }
+      return false;
+    },
+
+    likePost: function(post) {
+      var likeAction = post.get('actionByName.like');
+      if (likeAction && likeAction.get('can_act')) {
+        likeAction.act();
+      }
+    },
+
+    recoverPost: function(post) {
+      // Recovering the first post recovers the topic instead
+      if (post.get('post_number') === 1) {
+        this.recoverTopic();
+        return;
+      }
+      post.recover();
+    },
+
+    deletePost: function(post) {
+
+      // Deleting the first post deletes the topic
+      if (post.get('post_number') === 1) {
+        this.deleteTopic();
+        return;
+      }
+
+      var user = Discourse.User.current(),
+          replyCount = post.get('reply_count'),
+          self = this;
+
+      // If the user is staff and the post has replies, ask if they want to delete replies too.
+      if (user.get('staff') && replyCount > 0) {
+        bootbox.dialog(I18n.t("post.controls.delete_replies.confirm", {count: replyCount}), [
+          {label: I18n.t("cancel"),
+           'class': 'btn-danger rightg'},
+          {label: I18n.t("post.controls.delete_replies.no_value"),
+            callback: function() {
+              post.destroy(user);
+            }
+          },
+          {label: I18n.t("post.controls.delete_replies.yes_value"),
+           'class': 'btn-primary',
+            callback: function() {
+              Discourse.Post.deleteMany([post], [post]);
+              self.get('postStream.posts').forEach(function (p) {
+                if (p === post || p.get('reply_to_post_number') === post.get('post_number')) {
+                  p.setDeletedState(user);
+                }
+              });
+            }
+          }
+        ]);
+      } else {
+        post.destroy(user).then(null, function(e) {
+          post.undoDeleteState();
+          var response = $.parseJSON(e.responseText);
+          if (response && response.errors) {
+            bootbox.alert(response.errors[0]);
+          } else {
+            bootbox.alert(I18n.t('generic_error'));
+          }
+        });
+      }
+    },
+
+    editPost: function(post) {
+      this.get('controllers.composer').open({
+        post: post,
+        action: Discourse.Composer.EDIT,
+        draftKey: post.get('topic.draft_key'),
+        draftSequence: post.get('topic.draft_sequence')
+      });
+    },
+
+    toggleBookmark: function(post) {
+      if (!Discourse.User.current()) {
+        alert(I18n.t("bookmarks.not_bookmarked"));
+        return;
+      }
+      post.toggleProperty('bookmarked');
+      return false;
+    },
+
     jumpTop: function() {
       Discourse.URL.routeTo(this.get('firstPostUrl'));
     },
@@ -453,107 +569,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     Discourse.MessageBus.unsubscribe('/topic/*');
   },
 
-  // Post related methods
-  replyToPost: function(post) {
-    var composerController = this.get('controllers.composer'),
-        quoteController = this.get('controllers.quote-button'),
-        quotedText = Discourse.Quote.build(quoteController.get('post'), quoteController.get('buffer')),
-        topic = post ? post.get('topic') : this.get('model');
-
-    quoteController.set('buffer', '');
-
-    if (composerController.get('content.topic.id') === topic.get('id') &&
-        composerController.get('content.action') === Discourse.Composer.REPLY) {
-      composerController.set('content.post', post);
-      composerController.set('content.composeState', Discourse.Composer.OPEN);
-      composerController.appendText(quotedText);
-    } else {
-
-      var opts = {
-        action: Discourse.Composer.REPLY,
-        draftKey: topic.get('draft_key'),
-        draftSequence: topic.get('draft_sequence')
-      };
-
-      if(post && post.get("post_number") !== 1){
-        opts.post = post;
-      } else {
-        opts.topic = topic;
-      }
-
-      composerController.open(opts).then(function() {
-        composerController.appendText(quotedText);
-      });
-    }
-    return false;
-  },
-
   // Topic related
   reply: function() {
     this.replyToPost();
-  },
-
-  // Edits a post
-  editPost: function(post) {
-    this.get('controllers.composer').open({
-      post: post,
-      action: Discourse.Composer.EDIT,
-      draftKey: post.get('topic.draft_key'),
-      draftSequence: post.get('topic.draft_sequence')
-    });
-  },
-
-  toggleBookmark: function(post) {
-    if (!Discourse.User.current()) {
-      alert(I18n.t("bookmarks.not_bookmarked"));
-      return;
-    }
-    post.toggleProperty('bookmarked');
-    return false;
-  },
-
-  recoverPost: function(post) {
-    post.recover();
-  },
-
-  deletePost: function(post) {
-    var user = Discourse.User.current(),
-        replyCount = post.get('reply_count'),
-        self = this;
-
-    // If the user is staff and the post has replies, ask if they want to delete replies too.
-    if (user.get('staff') && replyCount > 0) {
-      bootbox.dialog(I18n.t("post.controls.delete_replies.confirm", {count: replyCount}), [
-        {label: I18n.t("cancel"),
-         'class': 'btn-danger rightg'},
-        {label: I18n.t("post.controls.delete_replies.no_value"),
-          callback: function() {
-            post.destroy(user);
-          }
-        },
-        {label: I18n.t("post.controls.delete_replies.yes_value"),
-         'class': 'btn-primary',
-          callback: function() {
-            Discourse.Post.deleteMany([post], [post]);
-            self.get('postStream.posts').forEach(function (p) {
-              if (p === post || p.get('reply_to_post_number') === post.get('post_number')) {
-                p.setDeletedState(user);
-              }
-            });
-          }
-        }
-      ]);
-    } else {
-      post.destroy(user).then(null, function(e) {
-        post.undoDeleteState();
-        var response = $.parseJSON(e.responseText);
-        if (response && response.errors) {
-          bootbox.alert(response.errors[0]);
-        } else {
-          bootbox.alert(I18n.t('generic_error'));
-        }
-      });
-    }
   },
 
   performTogglePost: function(post) {

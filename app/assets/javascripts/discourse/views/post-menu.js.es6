@@ -73,7 +73,7 @@ export default Discourse.View.extend({
     var handler = this["click" + action.capitalize()];
     if (!handler) return;
 
-    handler.call(this);
+    handler.call(this, this.get('post'));
   },
 
   // Replies Button
@@ -109,7 +109,7 @@ export default Discourse.View.extend({
 
   // Delete button
   renderDelete: function(post, buffer) {
-    var label, action, icon;
+    var label, icon;
 
     if (post.get('post_number') === 1) {
       // If it's the first post, the delete/undo actions are related to the topic
@@ -117,12 +117,10 @@ export default Discourse.View.extend({
       if (topic.get('deleted_at')) {
         if (!topic.get('details.can_recover')) { return; }
         label = "topic.actions.recover";
-        action = "recoverTopic";
         icon = "undo";
       } else {
         if (!topic.get('details.can_delete')) { return; }
         label = "topic.actions.delete";
-        action = "deleteTopic";
         icon = "trash-o";
       }
 
@@ -131,35 +129,26 @@ export default Discourse.View.extend({
       if (post.get('deleted_at') || post.get('user_deleted')) {
         if (!post.get('can_recover')) { return; }
         label = "post.controls.undelete";
-        action = "recover";
         icon = "undo";
       } else {
         if (!post.get('can_delete')) { return; }
         label = "post.controls.delete";
-        action = "delete";
         icon = "trash-o";
       }
     }
 
+    var action = (icon === 'trash-o') ? 'delete' : 'recover';
     buffer.push("<button title=\"" +
                 I18n.t(label) +
                 "\" data-action=\"" + action + "\" class=\"delete\"><i class=\"fa fa-" + icon + "\"></i></button>");
   },
 
-  clickDeleteTopic: function() {
-    this.get('controller').deleteTopic();
+  clickRecover: function(post) {
+    this.get('controller').send('recoverPost', post);
   },
 
-  clickRecoverTopic: function() {
-    this.get('controller').recoverTopic();
-  },
-
-  clickRecover: function() {
-    this.get('controller').recoverPost(this.get('post'));
-  },
-
-  clickDelete: function() {
-    this.get('controller').deletePost(this.get('post'));
+  clickDelete: function(post) {
+    this.get('controller').send('deletePost', post);
   },
 
   // Like button
@@ -170,9 +159,8 @@ export default Discourse.View.extend({
                 "\" data-action=\"like\" class='like'><i class=\"fa fa-heart\"></i></button>");
   },
 
-  clickLike: function() {
-    var likeAction = this.get('post.actionByName.like');
-    if (likeAction) likeAction.act();
+  clickLike: function(post) {
+    this.get('controller').send('likePost', post);
   },
 
   // Flag button
@@ -183,8 +171,8 @@ export default Discourse.View.extend({
                 "\" data-action=\"flag\" class='flag'><i class=\"fa fa-flag\"></i></button>");
   },
 
-  clickFlag: function() {
-    this.get('controller').send('showFlags', this.get('post'));
+  clickFlag: function(post) {
+    this.get('controller').send('showFlags', post);
   },
 
   // Edit button
@@ -195,8 +183,8 @@ export default Discourse.View.extend({
                  "\" data-action=\"edit\" class='edit'><i class=\"fa fa-pencil\"></i></button>");
   },
 
-  clickEdit: function() {
-    this.get('controller').editPost(this.get('post'));
+  clickEdit: function(post) {
+    this.get('controller').send('editPost', post);
   },
 
   // Share button
@@ -216,8 +204,8 @@ export default Discourse.View.extend({
                  (I18n.t("topic.reply.title")) + "</span></button>");
   },
 
-  clickReply: function() {
-    this.get('controller').replyToPost(this.get('post'));
+  clickReply: function(post) {
+    this.get('controller').send('replyToPost', post);
   },
 
   // Bookmark button
@@ -242,8 +230,8 @@ export default Discourse.View.extend({
                 "'></div></button>");
   },
 
-  clickBookmark: function() {
-    this.get('post').toggleProperty('bookmarked');
+  clickBookmark: function(post) {
+    this.get('controller').send('toggleBookmark', post);
   },
 
   renderAdmin: function(post, buffer) {

@@ -5,7 +5,7 @@
 **/
 export default {
   name: "keyboard-shortcuts",
-  initialize: function() {
-    Discourse.KeyboardShortcuts.bindEvents(Mousetrap);
+  initialize: function(container) {
+    Discourse.KeyboardShortcuts.bindEvents(Mousetrap, container);
   }
 };

@@ -25,13 +25,7 @@ module("Discourse.KeyboardShortcuts", {
 
     $("#qunit-fixture").html([
       "<article class='topic-post selected'>",
-      "  <button class='bookmark'></button>",
-      "  <button class='delete'></button>",
-      "  <button class='edit'></button>",
-      "  <button class='like'></button>",
-      "  <button class='create'></button>",
-      "  <button class='share'></button>",
-      "  <button class='flag'></button>",
+      "<a class='post-date'></a>" +
       "</article>",
       "<div class='notification-options'>",
       "  <ul>",

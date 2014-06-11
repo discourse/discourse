@@ -16,27 +16,30 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'g t': '/top'
   },
 
+  SELECTED_POST_BINDINGS: {
+    'b': 'toggleBookmark',
+    'd': 'deletePost',
+    'e': 'editPost',
+    'l': 'likePost',
+    'r': 'replyToPost',
+    '!': 'showFlags'
+  },
+
   CLICK_BINDINGS: {
-    'b': '.topic-post.selected button.bookmark',                      // bookmark current post
     'c': '#create-topic',                                         // create new topic
-    'd': '.topic-post.selected button.delete',                        // delete selected post
-    'e': '.topic-post.selected button.edit',                          // edit selected post
 
     // star topic
     'f': '#topic-footer-buttons button.star, #topic-list tr.topic-list-item.selected a.star',
 
-    'l': '.topic-post.selected button.like',                          // like selected post
     'm m': 'div.notification-options li[data-id="0"] a',          // mark topic as muted
     'm r': 'div.notification-options li[data-id="1"] a',          // mark topic as regular
     'm t': 'div.notification-options li[data-id="2"] a',          // mark topic as tracking
     'm w': 'div.notification-options li[data-id="3"] a',          // mark topic as watching
     'n': '#user-notifications',                                   // open notifictions menu
-    'o,enter': '#topic-list tr.selected a.title', // open selected topic
-    'shift+r': '#topic-footer-buttons button.create',                   // reply to topic
-    'r': '.topic-post.selected button.create',                        // reply to selected post
-    'shift+s': '#topic-footer-buttons button.share',                    // share topic
-    's': '.topic-post.selected button.share',                         // share selected post
-    '!': '.topic-post.selected button.flag'                         // flag selected post
+    'o,enter': '#topic-list tr.selected a.title',                 // open selected topic
+    'shift+r': '#topic-footer-buttons button.create',             // reply to topic
+    'shift+s': '#topic-footer-buttons button.share',              // share topic
+    's': '.topic-post.selected a.post-date'                       // share post
   },
 
   FUNCTION_BINDINGS: {
@@ -54,10 +57,12 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'q': 'quoteReply'
   },
 
-  bindEvents: function(keyTrapper) {
+  bindEvents: function(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
+    this.container = container;
     _.each(this.PATH_BINDINGS, this._bindToPath, this);
     _.each(this.CLICK_BINDINGS, this._bindToClick, this);
+    _.each(this.SELECTED_POST_BINDINGS, this._bindToSelectedPost, this);
     _.each(this.FUNCTION_BINDINGS, this._bindToFunction, this);
   },
 
@@ -79,7 +84,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
   _jumpTo: function(direction) {
     if ($('.container.posts').length) {
-      Discourse.__container__.lookup('controller:topic').send(direction);
+      this.container.lookup('controller:topic').send(direction);
     }
   },
 
@@ -134,6 +139,22 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
   showHelpModal: function() {
     Discourse.__container__.lookup('controller:application').send('showKeyboardShortcutsHelp');
+  },
+
+  _bindToSelectedPost: function(action, binding) {
+    var container = this.container;
+
+    this.keyTrapper.bind(binding, function() {
+      // TODO: We should keep track of the post without a CSS class
+      var selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
+      if (selectedPostId) {
+        var topicController = container.lookup('controller:topic'),
+            post = topicController.get('postStream.posts').findBy('id', selectedPostId);
+        if (post) {
+          topicController.send(action, post);
+        }
+      }
+    });
   },
 
   _bindToPath: function(path, binding) {
