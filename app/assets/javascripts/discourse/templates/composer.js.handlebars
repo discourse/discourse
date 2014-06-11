@@ -44,7 +44,7 @@
 
             {{#unless model.privateMessage}}
               <div class="category-input">
-                {{categoryChooser valueAttribute="id" value=model.categoryId}}
+                {{category-chooser valueAttribute="id" value=model.categoryId}}
                 {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
               </div>
               {{#if model.archetype.hasOptions}}

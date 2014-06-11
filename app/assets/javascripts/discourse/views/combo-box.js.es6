@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ComboboxView = Discourse.View.extend({
+export default Discourse.View.extend({
   tagName: 'select',
   classNames: ['combobox'],
   valueAttribute: 'id',
@@ -79,5 +79,3 @@ Discourse.ComboboxView = Discourse.View.extend({
   }
 
 });
-
-Discourse.View.registerHelper('combobox', Discourse.ComboboxView);

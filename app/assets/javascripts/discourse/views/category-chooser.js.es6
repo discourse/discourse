@@ -6,7 +6,9 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
+import ComboboxView from 'discourse/views/combo-box';
+
+export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
   overrideWidths: true,
   dataAttributes: ['id', 'description_text'],
@@ -57,5 +59,3 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   }
 
 });
-
-Discourse.View.registerHelper('categoryChooser', Discourse.CategoryChooserView);

@@ -2,7 +2,9 @@ var deprecatedViewHelpers = {
   inputTip: 'input-tip',
   pagedown: 'pagedown-editor',
   textField: 'text-field',
-  userSelector: 'user-selector'
+  userSelector: 'user-selector',
+  combobox: 'combo-box',
+  categoryChooser: 'category-chooser'
 };
 
 export default {

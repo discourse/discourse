@@ -112,7 +112,7 @@
       <div class="control-group">
         <label class="control-label">{{i18n user.locale.title}}</label>
         <div class="controls">
-          {{combobox valueAttribute="value" content=availableLocales value=locale none="user.locale.default"}}
+          {{combo-box valueAttribute="value" content=availableLocales value=locale none="user.locale.default"}}
         </div>
         <div class='instructions'>
           {{i18n user.locale.instructions}}
@@ -146,7 +146,7 @@
       {{preference-checkbox labelKey="user.email_digests.title" checked=email_digests}}
       {{#if email_digests}}
         <div class='controls controls-dropdown'>
-          {{combobox valueAttribute="value" content=digestFrequencies value=digest_after_days}}
+          {{combo-box valueAttribute="value" content=digestFrequencies value=digest_after_days}}
         </div>
       {{/if}}
       {{preference-checkbox labelKey="user.email_private_messages" checked=email_private_messages}}
@@ -163,12 +163,12 @@
       <label class="control-label">{{i18n user.other_settings}}</label>
       <div class="controls controls-dropdown">
         <label>{{i18n user.auto_track_topics}}</label>
-        {{combobox valueAttribute="value" content=autoTrackDurations value=auto_track_topics_after_msecs}}
+        {{combo-box valueAttribute="value" content=autoTrackDurations value=auto_track_topics_after_msecs}}
       </div>
 
       <div class="controls controls-dropdown">
         <label>{{i18n user.new_topic_duration.label}}</label>
-        {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
+        {{combo-box valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
       </div>
 
       {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=external_links_in_new_tab}}

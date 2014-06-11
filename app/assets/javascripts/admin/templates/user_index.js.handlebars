@@ -56,7 +56,7 @@
     <div class='field'>{{i18n admin.groups.primary}}</div>
     <div class='value'>
       {{#if custom_groups}}
-        {{combobox content=custom_groups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
+        {{combo-box content=custom_groups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
       {{else}}
         &mdash;
       {{/if}}
@@ -229,7 +229,7 @@
   <div class='display-row'>
     <div class='field'>{{i18n trust_level}}</div>
     <div class="value">
-      {{combobox content=trustLevels value=trust_level nameProperty="detailedName"}}
+      {{combo-box content=trustLevels value=trust_level nameProperty="detailedName"}}
     </div>
     <div class="controls">
       {{#if leaderRequirements}}
