@@ -64,6 +64,10 @@ class UserUpdater
       user_profile.send("#{attribute.to_s}=", attributes[attribute])
     end
 
+    if fields = attributes[:custom_fields]
+      user.custom_fields = fields
+    end
+
     User.transaction do
       user_profile.save
       user.save

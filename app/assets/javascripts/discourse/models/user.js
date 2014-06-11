@@ -204,7 +204,8 @@ Discourse.User = Discourse.Model.extend({
                                'external_links_in_new_tab',
                                'mailing_list_mode',
                                'enable_quoting',
-                               'disable_jump_reply');
+                               'disable_jump_reply',
+                               'custom_fields');
 
     _.each(['muted','watched','tracked'], function(s){
       var cats = user.get(s + 'Categories').map(function(c){ return c.get('id')});

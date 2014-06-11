@@ -946,10 +946,14 @@ describe UsersController do
           user = Fabricate(:user, name: 'Billy Bob')
           log_in_user(user)
 
-          put :update, username: user.username, name: 'Jim Tom'
+          put :update, username: user.username, name: 'Jim Tom', custom_fields: {test: :it}
 
           expect(response).to be_success
-          expect(user.reload.name).to eq 'Jim Tom'
+
+          user.reload
+
+          expect(user.name).to eq 'Jim Tom'
+          expect(user.custom_fields['test']).to eq 'it'
         end
 
         it 'returns user JSON' do

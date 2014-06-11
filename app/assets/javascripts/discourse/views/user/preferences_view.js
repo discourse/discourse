@@ -13,6 +13,9 @@ Discourse.PreferencesView = Discourse.View.extend({
   uploading: false,
   uploadProgress: 0,
 
+  customPreferences: function(){
+  }.property(),
+
   didInsertElement: function() {
     var self = this;
     var $upload = $("#profile-background-input");
@@ -51,5 +54,31 @@ Discourse.PreferencesView = Discourse.View.extend({
   },
   willDestroyElement: function() {
     $("#profile-background-input").fileupload("destroy");
+  }
+});
+
+Discourse.PreferencesView.reopenClass({
+  registerCustomSection: function(viewClass){
+    var customSections = this.customSections;
+    if(!customSections){
+      customSections = Em.A();
+      this.customSections = customSections;
+    }
+
+    customSections.addObject(viewClass);
+  }
+});
+
+Discourse.CustomPreferences = Discourse.ContainerView.extend({
+  init: function(){
+    this._super();
+    var self = this;
+
+    var sections = Discourse.PreferencesView.customSections;
+    if(sections){
+      sections.forEach(function(view){
+        self.pushObject(view.create({user: self.get('controller.model')}));
+      });
+    }
   }
 });
