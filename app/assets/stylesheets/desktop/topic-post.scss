@@ -336,7 +336,7 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  border: 1px solid scale-color-diff();
+  background: scale-color(scale-color-diff(), $lightness: 40%);
 
   .buttons .btn {
     &:hover {border: 1px solid $primary !important;}
@@ -425,7 +425,7 @@ a.star {
     color: $primary;
   }
   .information {
-    border-top: 1px solid scale-color-diff();
+    border-top: 2px solid scale-color-diff();
   }
 
 .participants { // PMs //
