@@ -16,6 +16,11 @@
     vertical-align: bottom;
   }
 
+  img {
+    height: 16px;
+    width: 16px;
+  }
+
   &.badge-type-gold .fa {
     color: #ffd700;
   }
@@ -44,6 +49,12 @@
       display: block;
       font-size: 50px;
       margin-bottom: 5px;
+    }
+
+    img {
+      display: inline-block;
+      width: 55px;
+      height: 55px;
     }
 
     .count {

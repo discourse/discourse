@@ -2,6 +2,8 @@
   <span {{bind-attr class=":user-badge badgeTypeClassName" data-badge-name="badge.name" title="badge.displayDescription"}}>
     {{#if isIcon}}
       <i {{bind-attr class=":fa badge.icon"}}></i>
+    {{else}}
+      <img {{bind-attr src="badge.icon"}}>
     {{/if}}
     {{badge.displayName}}
     {{#if showGrantCount}}
