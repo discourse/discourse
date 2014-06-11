@@ -422,18 +422,23 @@ iframe {
 
 
 #share-link {
-  width: 265px;
+  width: 300px;
   margin-left: -4px;
 
-    h3 {
-      margin: 5px 0;
-    }
+  h3 {
+    margin: 5px 0;
+    float: left;
+  }
 
-    input[type=text] {
-      font-size: 16px;
-      width: 92%;
-      margin-bottom: 10px;
-    }
+  .date {
+    float: right;
+    margin: 5px;
+  }
+
+  input[type=text] {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
 }
 
 #selected-posts {
@@ -534,7 +539,6 @@ span.highlighted {
 }
 
 .topic-avatar {
-  width: 100%;
   float: left;
   position: relative;
   z-index: 2;
