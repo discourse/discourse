@@ -31,7 +31,10 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
         highlightOnInsert: closest
       });
 
-      topicProgressController.set('progressPosition', closest);
+      topicProgressController.setProperties({
+        progressPosition: closest,
+        expanded: false
+      });
       Discourse.TopicView.jumpToPost(closest);
 
       if (topic.present('draft')) {

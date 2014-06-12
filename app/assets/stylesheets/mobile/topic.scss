@@ -56,10 +56,41 @@
   outline: 1px solid transparent;
 }
 
+#topic-progress-expanded {
+  border: 1px solid scale-color-diff();
+  padding: 5px;
+  background: $secondary;
+  @include box-shadow(0 0px 2px rgba($primary, .2));
+
+  position: absolute;
+  bottom: 34px;
+  width: 118px;
+  padding: 5px;
+
+  button.full {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  .jump-form {
+    input[type="text"] {
+      float: left;
+      width: 45px;
+      height: 20px;
+      text-align: center;
+    }
+    button.btn {
+      float: right !important;
+      width: 55px;
+    }
+  }
+  button.btn.jump-bottom {
+    margin-top: 5px;
+    margin-bottom: 0;
+  }
+}
+
 #topic-progress {
-
   box-shadow: 0 0 3px rbga($primary, .7);
-
   position: relative;
   &.hidden {
     display: none;
@@ -76,39 +107,16 @@
     text-align: center;
     z-index: 1;
   }
-  button {
-    padding: 0 1px;
-    cursor: pointer;
-    z-index: 1000;
-    position: absolute;
-    top: 8px;
-    left: 4px;
-    border: 0;
-    background: none;
-    color: scale-color($primary, $lightness: 50%);
-
-    width: 60px;
-    text-align: left;
-    i {
-      font-size: 18px;
-    }
-    &:nth-of-type(2) {
-      right: 4px;
-      left: auto;
-      text-align: right;
-    }
-
-
-    &:disabled {
-
-      cursor: default;
-    color: scale-color($primary, $lightness: 50%);
-    }
-  }
   h4 {
     display: inline;
     font-size: 18px;
     line-height: 15px;
+  }
+  i.fa {
+    position: absolute;
+    right: 8px;
+    bottom: 9px;
+    z-index: 1;
   }
   .bg {
     position: absolute;

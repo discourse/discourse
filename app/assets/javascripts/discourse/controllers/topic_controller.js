@@ -166,11 +166,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     },
 
     jumpTop: function() {
-      Discourse.URL.routeTo(this.get('firstPostUrl'));
-    },
-
-    jumpBottom: function() {
-      Discourse.URL.routeTo(this.get('lastPostUrl'));
+      this.get('controllers.topic-progress').send('jumpTop');
     },
 
     selectAll: function() {

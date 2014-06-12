@@ -771,8 +771,9 @@ en:
 
       progress:
         title: topic progress
-        jump_top: jump to first post (home key)
-        jump_bottom: jump to last post (end key)
+        go_top: "go top"
+        go_bottom: "go bottom"
+        go: "go"
         jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
         current: current post

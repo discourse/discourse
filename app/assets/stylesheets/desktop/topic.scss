@@ -103,6 +103,39 @@ a:hover.reply-new {
   }
 }
 
+#topic-progress-expanded {
+  border: 1px solid scale-color-diff();
+  padding: 5px;
+  background: $secondary;
+  @include box-shadow(0 0px 2px rgba($primary, .2));
+
+  position: relative;
+  left: 345px;
+  width: 118px;
+  padding: 5px;
+
+  button.full {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  .jump-form {
+    input[type="text"] {
+      float: left;
+      width: 45px;
+      height: 20px;
+      text-align: center;
+      margin-bottom: 0;
+    }
+    button.btn {
+      float: right;
+      width: 55px;
+    }
+  }
+  button.btn.jump-bottom {
+    margin: 5px 0 0 0;
+  }
+}
+
 #topic-progress {
   position: relative;
   left: 345px;
@@ -115,6 +148,9 @@ a:hover.reply-new {
   width: 130px;
   height: 34px;
 
+  &:hover {
+    cursor: pointer;
+  }
   .nums {
     position: relative;
     top: 9px;
@@ -122,32 +158,11 @@ a:hover.reply-new {
     text-align: center;
     z-index: 1;
   }
-  button {
-    padding: 3px 1px 0 0;
-    cursor: pointer;
-    z-index: 1000;
+  i.fa {
     position: absolute;
-    top: 2px;
-    left: 4px;
-    border: 0;
-    background: none;
-    color: scale-color($primary, $lightness: 50%);
-    width: 50%;
-    text-align: left;
-    height: 30px;
-    margin: 0;
-    i {
-      font-size: 18px;
-    }
-    &:nth-of-type(2) {
-      right: 4px;
-      left: auto;
-      text-align: right;
-    }
-    &:disabled {
-    cursor: default;
-    color: scale-color($primary, $lightness: 50%);
-    }
+    right: 8px;
+    bottom: 9px;
+    z-index: 1;
   }
   h4 {
     display: inline;

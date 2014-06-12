@@ -1,5 +1,7 @@
 export default Ember.View.extend({
   elementId: 'topic-progress-wrapper',
+  docked: false,
+  classNameBindings: ['docked'],
 
   _inserted: function() {
     // This get seems counter intuitive, but it's to trigger the observer on
@@ -70,6 +72,13 @@ export default Ember.View.extend({
       if (style.indexOf('bottom') >= 0) {
         $topicProgressWrapper.css('bottom', '');
       }
+    }
+    this.set('docked', isDocked);
+  },
+
+  click: function(e) {
+    if ($(e.target).parents('#topic-progress').length) {
+      this.get('controller').send('toggleExpansion');
     }
   }
 

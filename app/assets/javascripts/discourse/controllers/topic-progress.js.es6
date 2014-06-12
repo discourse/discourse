@@ -1,6 +1,48 @@
 export default Ember.ObjectController.extend({
   needs: ['topic'],
   progressPosition: null,
+  expanded: false,
+
+  actions: {
+    toggleExpansion: function() {
+      this.toggleProperty('expanded');
+      if (this.get('expanded')) {
+        this.set('toPostNumber', this.get('progressPosition'));
+      }
+    },
+
+    jumpPost: function() {
+      var postNumber = parseInt(this.get('toPostNumber'), 10);
+
+      // Validate the post number first
+      if (isNaN(postNumber) || postNumber < 1) {
+        postNumber = 1;
+      }
+      if (postNumber > this.get('highest_post_number')) {
+        postNumber = this.get('highest_post_number');
+      }
+      this.set('toPostNumber', postNumber);
+      this.jumpTo(this.get('model').urlForPostNumber(postNumber));
+    },
+
+    jumpTop: function() {
+      this.jumpTo(this.get('firstPostUrl'));
+    },
+
+    jumpBottom: function() {
+      this.jumpTo(this.get('lastPostUrl'));
+    }
+  },
+
+  // Route and close the expansion
+  jumpTo: function(url) {
+    this.set('expanded', false);
+    Discourse.URL.routeTo(url);
+  },
+
+  chevronClass: function() {
+    return this.get('expanded') ? 'fa-chevron-down' : 'fa-chevron-up';
+  }.property('expanded'),
 
   streamPercentage: function() {
     if (!this.get('postStream.loaded')) { return 0; }
@@ -10,7 +52,7 @@ export default Ember.ObjectController.extend({
   }.property('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount'),
 
   jumpTopDisabled: function() {
-    return (this.get('progressPosition') < 2);
+    return this.get('progressPosition') <= 3;
   }.property('progressPosition'),
 
   filteredPostCountChanged: function(){
