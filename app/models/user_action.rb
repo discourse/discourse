@@ -85,6 +85,10 @@ SQL
     { all: all, mine: mine, unread: unread }
   end
 
+  def self.bookmarks_stats(user_id)
+    UserAction.where(action_type: BOOKMARK, user_id: user_id).count
+  end
+
   def self.stream_item(action_id, guardian)
     stream(action_id: action_id, guardian: guardian).first
   end

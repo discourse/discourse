@@ -249,6 +249,7 @@ en:
       private_messages: "Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
+      bookmarks: "Bookmarks"
       bio: "About me"
       invited_by: "Invited By"
       trust_level: "Trust Level"

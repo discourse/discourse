@@ -9,6 +9,9 @@
       {{#if currentUser.unread_private_messages}}<span class="badge-notification unread-private-messages">{{currentUser.unread_private_messages}}</span>{{/if}}{{i18n user.unread_message_count}}
     {{/link-to}}
     </li>
+    {{#if showBookmarksLink}}
+      <li>{{#link-to 'userActivity.bookmarks' currentUser}}{{i18n user.bookmarks}}{{/link-to}}</li>
+    {{/if}}
     <li>{{#link-to 'preferences' currentUser}}{{i18n user.preferences}}{{/link-to}}</li>
     <li><button {{action "logout"}} class='btn btn-danger right logout'><i class='fa fa-sign-out'></i>{{i18n user.log_out}}</button></li>
   </ul>

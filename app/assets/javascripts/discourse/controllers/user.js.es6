@@ -32,5 +32,3 @@ export default Discourse.ObjectController.extend({
   privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread')
 
 });
-
-
