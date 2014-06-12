@@ -7,7 +7,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryTopicsView = Discourse.View.extend(Discourse.LoadMore, {
+export default Discourse.View.extend(Discourse.LoadMore, {
   eyelineSelector: '.topic-list-item',
 
   actions: {

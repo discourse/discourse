@@ -3,7 +3,8 @@ var helpers = ['input-tip',
                'text-field',
                'user-selector',
                'category-chooser',
-               'combo-box'];
+               'combo-box',
+               'choose-topic'];
 
 /**
   Creates view helpers for some views. Many of these should probably be converted

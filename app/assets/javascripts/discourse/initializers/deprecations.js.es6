@@ -4,7 +4,8 @@ var deprecatedViewHelpers = {
   textField: 'text-field',
   userSelector: 'user-selector',
   combobox: 'combo-box',
-  categoryChooser: 'category-chooser'
+  categoryChooser: 'category-chooser',
+  chooseTopic: 'choose-topic'
 };
 
 export default {

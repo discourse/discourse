@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ChooseTopicView = Discourse.View.extend({
+export default Discourse.View.extend({
   templateName: 'choose_topic',
 
   topicTitleChanged: function() {
@@ -53,6 +53,3 @@ Discourse.ChooseTopicView = Discourse.View.extend({
   }
 
 });
-
-
-Discourse.View.registerHelper('chooseTopic', Discourse.ChooseTopicView);
