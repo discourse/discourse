@@ -6,7 +6,7 @@ module Jobs
     def execute(args)
       return unless SiteSetting.clean_up_uploads?
 
-      uploads_used_as_profile_backgrounds = User.uniq.where("profile_background IS NOT NULL AND profile_background != ''").pluck(:profile_background)
+      uploads_used_as_profile_backgrounds = UserProfile.uniq.where("profile_background IS NOT NULL AND profile_background != ''").pluck(:profile_background)
 
       grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
 

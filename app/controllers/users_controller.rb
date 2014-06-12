@@ -357,7 +357,7 @@ class UsersController < ApplicationController
       when "avatar"
         upload_avatar_for(user, upload)
       when "profile_background"
-        upload_profile_background_for(user, upload)
+        upload_profile_background_for(user.user_profile, upload)
       end
     else
       render status: 422, text: upload.errors.full_messages
@@ -384,8 +384,7 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    user.profile_background = ""
-    user.save!
+    user.user_profile.clear_profile_background
 
     render nothing: true
   end
@@ -429,8 +428,8 @@ class UsersController < ApplicationController
       render json: { upload_id: upload.id, url: upload.url, width: upload.width, height: upload.height }
     end
 
-    def upload_profile_background_for(user, upload)
-      user.upload_profile_background(upload)
+    def upload_profile_background_for(user_profile, upload)
+      user_profile.upload_profile_background(upload)
       # TODO: add a resize job here
 
       render json: { url: upload.url, width: upload.width, height: upload.height }

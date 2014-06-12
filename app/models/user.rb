@@ -533,14 +533,6 @@ class User < ActiveRecord::Base
     created_at > 1.day.ago
   end
 
-  # TODO this is a MESS
-  # at most user table should have profile_background_upload_id
-  # best case is to move this to another table
-  def upload_profile_background(upload)
-    self.profile_background = upload.url
-    self.save!
-  end
-
   def generate_api_key(created_by)
     if api_key.present?
       api_key.regenerate!(created_by)
@@ -773,7 +765,6 @@ end
 #  mailing_list_mode             :boolean          default(FALSE), not null
 #  primary_group_id              :integer
 #  locale                        :string(10)
-#  profile_background            :string(255)
 #  registration_ip_address       :inet
 #  last_redirected_to_top_at     :datetime
 #  disable_jump_reply            :boolean          default(FALSE), not null
