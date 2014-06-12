@@ -365,12 +365,17 @@ class TopicsController < ApplicationController
   end
 
   def track_visit_to_topic
-    Jobs.enqueue(:view_tracker,
-                    topic_id: @topic_view.topic.id,
-                    ip: request.remote_ip,
-                    user_id: (current_user.id if current_user),
-                    track_visit: should_track_visit_to_topic?
-                )
+    topic_id =  @topic_view.topic.id
+    ip = request.remote_ip
+    user_id = (current_user.id if current_user)
+    track_visit = should_track_visit_to_topic?
+
+    Scheduler::Defer.later do
+      View.create_for_parent(Topic, topic_id, ip, user_id)
+      if track_visit
+        TopicUser.track_visit! topic_id, user_id
+      end
+    end
 
   end
 

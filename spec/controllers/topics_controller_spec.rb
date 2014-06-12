@@ -660,6 +660,9 @@ describe TopicsController do
         it 'shows the topic if valid api key is provided' do
           get :show, topic_id: topic.id, slug: topic.slug, api_key: api_key.key
           expect(response).to be_successful
+          topic.reload
+          # free test, only costs a reload
+          topic.views.should == 1
         end
 
         it 'returns 403 for an invalid key' do
