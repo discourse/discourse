@@ -48,9 +48,13 @@ end
 
 task 'assets:precompile:css' => 'environment' do
   RailsMultisite::ConnectionManagement.each_connection do |db|
-    puts "Compiling css for #{db}"
-    [:desktop, :mobile].each do |target|
-      puts DiscourseStylesheets.compile(target, force: true)
+    # Heroku precompiles assets before db migration, so tables may not exist.
+    # css will get precompiled during first request instead in that case.
+    if ActiveRecord::Base.connection.table_exists?(ColorScheme.table_name)
+      puts "Compiling css for #{db}"
+      [:desktop, :mobile].each do |target|
+        puts DiscourseStylesheets.compile(target, force: true)
+      end
     end
   end
 end
