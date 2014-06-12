@@ -117,6 +117,12 @@ a:hover.reply-new {
   button.full {
     width: 100%;
     margin-bottom: 5px;
+    i {
+      display: block;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      font-size: 18px;
+    }
   }
   .jump-form {
     input[type="text"] {
