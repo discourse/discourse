@@ -5,7 +5,11 @@ class NotificationsController < ApplicationController
   def index
     notifications = Notification.recent_report(current_user, 10)
 
-    current_user.saw_notification_id(notifications.first.id) if notifications.present?
+    if notifications.present?
+      # ordering can be off due to PMs
+      max_id = notifications.map(&:id).max
+      current_user.saw_notification_id(max_id)
+    end
     current_user.reload
     current_user.publish_notifications_state
 
