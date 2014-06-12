@@ -32,6 +32,16 @@ describe UserSerializer do
       end
     end
 
+    context "with filled out profile background" do
+      before do
+        user.user_profile.profile_background = 'http://background.com'
+      end
+
+      it "has a profile background" do
+        expect(json[:profile_background]).to eq 'http://background.com'
+      end
+    end
+
     context "with filled out website" do
       before do
         user.user_profile.website = 'http://example.com'

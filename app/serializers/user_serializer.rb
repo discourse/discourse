@@ -124,6 +124,13 @@ class UserSerializer < BasicUserSerializer
     website.present?
   end
 
+  def profile_background
+    object.user_profile.profile_background
+  end
+  def include_profile_background?
+    profile_background.present?
+  end
+
   def stats
     UserAction.stats(object.id, scope)
   end
