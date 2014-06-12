@@ -401,7 +401,7 @@ en:
         search: "type to search invites..."
         title: "Invites"
         user: "Invited User"
-        none: "No invites were found."
+        none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed"
@@ -416,10 +416,10 @@ en:
         account_age_days: "Account age in days"
         create: "Send an Invite"
         bulk_invite:
-          text: "Batch Invite from File"
+          text: "Bulk Invite from File"
           uploading: "UPLOADING"
-          success: "File has been uploaded successfully, you will be notified shortly with progress."
-          error: "There has been an error while uploading '{{filename}}': {{message}}"
+          success: "File uploaded successfully, you will be notified shortly with progress."
+          error: "There was an error uploading '{{filename}}': {{message}}"
 
       password:
         title: "Password"

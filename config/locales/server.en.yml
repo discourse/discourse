@@ -1089,6 +1089,7 @@ en:
       New version: **%{new_version}**
 
       You may want to:
+
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
       - Upgrade by visiting [%{base_url}/admin/docker](%{base_url}/admin/docker) and pressing the "Upgrade" button.
@@ -1104,6 +1105,7 @@ en:
       New version: **%{new_version}**
 
       You may want to:
+
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
       - Upgrade by visiting [%{base_url}/admin/docker](%{base_url}/admin/docker), and pressing the "Upgrade" button.
