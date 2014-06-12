@@ -146,12 +146,12 @@ basic:
   topics_per_page:
     default: 30
     type: integer
-    min: 10
+    min: 1
   posts_per_page:
     client: true
     default: 20
     type: integer
-    min: 10
+    min: 1
   enable_badges:
     client: true
     default: false
@@ -347,9 +347,7 @@ email:
   pop3s_polling_enabled: false
   pop3s_polling_host: ''
   pop3s_polling_port: 995
-  pop3s_polling_username:
-    default: ''
-    type: username
+  pop3s_polling_username: ''
   pop3s_polling_password: ''
   email_in:
     default: false
