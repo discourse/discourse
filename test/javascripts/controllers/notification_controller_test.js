@@ -9,16 +9,10 @@ var notificationFixture = {
     display_username: "velesin"
   }
 };
-var postUrlStub = "post-url-stub";
 
 module("controller:notification", {
   setup: function() {
-    sinon.stub(Discourse.Utilities, "postUrl").returns(postUrlStub);
     controller = testController('notification', notificationFixture);
-  },
-
-  teardown: function() {
-    Discourse.Utilities.postUrl.restore();
   }
 });
 
@@ -42,7 +36,6 @@ test("link property returns empty string when there is no topic title", function
 test("link property returns correctly built link when there is a topic title", function() {
   var $link = $(controller.get("link"));
 
-  ok(Discourse.Utilities.postUrl.calledWithExactly("a-slug", 1234, 1), "URL is generated with the correct slug, topic ID and post number");
-  equal($link.attr("href"), postUrlStub, "generated link points to a correct URL");
+  equal($link.attr("href"), "/t/a-slug/1234", "generated link points to a correct URL");
   equal($link.text(), "some title", "generated link has correct text");
 });
