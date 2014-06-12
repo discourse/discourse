@@ -916,6 +916,10 @@ en:
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
+      invalid_integer_min_max: "Value must be between %{min} and %{max}."
+      invalid_integer_min: "Value must be %{min} or greater."
+      invalid_integer_max: "Value cannot be higher than %{max}."
+      invalid_integer: "Value must be an integer."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

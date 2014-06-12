@@ -284,7 +284,7 @@ describe SiteSettingExtension do
 
   describe "setting with a validator" do
     before do
-      settings.setting(:validated_setting, "info@example.com", {validator: 'EmailSettingValidator'})
+      settings.setting(:validated_setting, "info@example.com", {type: 'email'})
       settings.refresh!
     end
 
@@ -293,14 +293,14 @@ describe SiteSettingExtension do
     end
 
     it "stores valid values" do
-      EmailSettingValidator.expects(:valid_value?).returns(true)
+      EmailSettingValidator.any_instance.expects(:valid_value?).returns(true)
       settings.validated_setting = 'success@example.com'
       settings.validated_setting.should == 'success@example.com'
     end
 
     it "rejects invalid values" do
       expect {
-        EmailSettingValidator.expects(:valid_value?).returns(false)
+        EmailSettingValidator.any_instance.expects(:valid_value?).returns(false)
         settings.validated_setting = 'nope'
       }.to raise_error(Discourse::InvalidParameters)
       settings.validated_setting.should == "info@example.com"
