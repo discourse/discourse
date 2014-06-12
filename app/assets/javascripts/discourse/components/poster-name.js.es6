@@ -23,7 +23,7 @@ var PosterNameComponent = Em.Component.extend({
       // Add a glyph if we have one
       var glyph = this.posterGlyph(post);
       if (!Em.isEmpty(glyph)) {
-        buffer.push("<i class='fa fa-" + glyph + "'></i>");
+        buffer.push(glyph);
       }
       buffer.push("</span>");
 
@@ -69,10 +69,14 @@ var PosterNameComponent = Em.Component.extend({
     @return {String} the glyph to render (or null for none)
   **/
   posterGlyph: function(post) {
-    if (post.get('admin')) {
-      return 'trophy';
-    } else if (post.get('moderator')) {
-      return 'magic';
+    var desc;
+
+    if(post.get('admin')) {
+      desc = I18n.t('user.admin_tooltip');
+      return '<i class="fa fa-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
+    } else if(post.get('moderator')) {
+      desc = I18n.t('user.moderator_tooltip');
+      return '<i class="fa fa-magic" title="' + desc +  '" alt="' + desc + '"></i>';
     }
   }
 });

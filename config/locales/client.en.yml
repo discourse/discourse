@@ -261,6 +261,8 @@ en:
       change: "change"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
+      moderator_tooltip: "This user is a moderator"
+      admin_tooltip: "This user is an admin"
       deleted: "(deleted)"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
