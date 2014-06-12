@@ -23,35 +23,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   postStream: Em.computed.alias('controller.postStream'),
 
-  updateBar: function() {
-    Em.run.scheduleOnce('afterRender', this, '_updateProgressBar');
-  }.observes('controller.streamPercentage', 'postStream.stream.@each'),
-
-  _updateProgressBar: function() {
-    var $topicProgress = this._topicProgress;
-
-    // cache lookup
-    if (!$topicProgress) {
-      $topicProgress = $('#topic-progress');
-      if (!$topicProgress.length) {
-        return;
-      }
-      this._topicProgress = $topicProgress;
-      // CAREFUL WITH THIS AXE
-      // offsetWidth will cause a reflow, this ensures it only happens once
-      // in future it may make sense to move this offscreen to do the measurement
-      Discourse.TopicView._progressWidth = Discourse.TopicView._progressWidth || $topicProgress[0].offsetWidth;
-    }
-
-    // speeds up stuff, bypass jquery slowness and extra checks
-    var totalWidth = Discourse.TopicView._progressWidth,
-        progressWidth = this.get('controller.streamPercentage') * totalWidth;
-
-    $topicProgress.find('.bg')
-                  .css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
-                  .width(progressWidth);
-  },
-
   _updateTitle: function() {
     var title = this.get('topic.title');
     if (title) return Discourse.set('title', _.unescape(title));
@@ -64,8 +35,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   }.observes('composer'),
 
   _enteredTopic: function() {
-    this._topicProgress = undefined;
-
     // Ember is supposed to only call observers when values change but something
     // in our view set up is firing this observer with the same value. This check
     // prevents scrolled from being called twice.
@@ -84,21 +53,12 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       self.scrolled();
     });
 
-    // This get seems counter intuitive, but it's to trigger the observer on
-    // the streamPercentage for this view. Otherwise the process bar does not
-    // update.
-    this.get('controller.streamPercentage');
-
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
       var $target = $(e.target);
       if ($target.hasClass('mention') || $target.parents('.expanded-embed').length) { return false; }
       return Discourse.ClickTrack.trackClick(e);
     });
 
-    var dockProgressBar = function () { self._dockProgressBar(); };
-    this.appEvents.on("composer:opened", dockProgressBar)
-                  .on("composer:resized", dockProgressBar)
-                  .on("composer:closed", dockProgressBar);
   }.on('didInsertElement'),
 
   // This view is being removed. Shut down operations
@@ -114,10 +74,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     // this happens after route exit, stuff could have trickled in
     this.set('controller.controllers.header.showExtraInfo', false);
 
-    // unbind events
-    this.appEvents.off("composer:opened")
-                  .off("composer:resized")
-                  .off("composer:closed");
   }.on('willDestroyElement'),
 
   debounceLoadSuggested: Discourse.debounce(function(){
@@ -181,45 +137,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       headerController.set('showExtraInfo', topic.get('postStream.firstPostNotLoaded'));
     }
 
-    // dock the counter if necessary
-    this._dockProgressBar(offset);
-  },
-
-  _dockProgressBar: function (offset) {
-    var maximumOffset = $('#topic-footer-buttons').offset(),
-        composerHeight = $('#reply-control').height() || 0,
-        $topicProgressWrapper = $('#topic-progress-wrapper'),
-        style = $topicProgressWrapper.attr('style') || '',
-        isDocked = false;
-
-    offset = offset || window.pageYOffset || $('html').scrollTop();
-
-    if (maximumOffset) {
-      var threshold = maximumOffset.top,
-          windowHeight = $(window).height(),
-          topicProgressHeight = $('#topic-progress').height();
-
-      isDocked = offset >= threshold - windowHeight + topicProgressHeight + composerHeight;
-    }
-
-    if (composerHeight > 0) {
-      if (isDocked) {
-        if (style.indexOf('bottom') >= 0) {
-          $topicProgressWrapper.css('bottom', '');
-        }
-      } else {
-        var height = composerHeight + "px";
-        if ($topicProgressWrapper.css('bottom') !== height) {
-          $topicProgressWrapper.css('bottom', height);
-        }
-      }
-    } else {
-      if (style.indexOf('bottom') >= 0) {
-        $topicProgressWrapper.css('bottom', '');
-      }
-    }
-
-    this.set("controller.dockedCounter", isDocked);
+    // Trigger a scrolled event
+    this.appEvents.trigger('topic:scrolled');
   },
 
   topicTrackingState: function() {

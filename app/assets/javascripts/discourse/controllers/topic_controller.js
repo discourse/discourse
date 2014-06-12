@@ -8,7 +8,7 @@
 **/
 Discourse.TopicController = Discourse.ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
-  needs: ['header', 'modal', 'composer', 'quote-button', 'search'],
+  needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress'],
   allPostsSelected: false,
   editingTopic: false,
   selectedPosts: null,
@@ -391,21 +391,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
   }.property(),
 
-  jumpTopDisabled: function() {
-    return (this.get('progressPosition') < 2);
-  }.property('progressPosition'),
-
-  filteredPostCountChanged: function(){
-    if(this.get('postStream.filteredPostsCount') < this.get('progressPosition')){
-      this.set('progressPosition', this.get('postStream.filteredPostsCount'));
-    }
-  }.observes('postStream.filteredPostsCount'),
-
-  jumpBottomDisabled: function() {
-    return this.get('progressPosition') >= this.get('postStream.filteredPostsCount') ||
-           this.get('progressPosition') >= this.get('highest_post_number');
-  }.property('postStream.filteredPostsCount', 'highest_post_number', 'progressPosition'),
-
   canMergeTopic: function() {
     if (!this.get('details.can_move_posts')) return false;
     return (this.get('selectedPostsCount') > 0);
@@ -451,38 +436,12 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   hasError: Ember.computed.or('errorBodyHtml', 'message'),
 
-  streamPercentage: function() {
-    if (!this.get('postStream.loaded')) { return 0; }
-    if (this.get('postStream.highest_post_number') === 0) { return 0; }
-    var perc = this.get('progressPosition') / this.get('postStream.filteredPostsCount');
-    return (perc > 1.0) ? 1.0 : perc;
-  }.property('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount'),
-
   multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off
     if (!this.get('multiSelect')) {
       this.send('deselectAll');
     }
   }.observes('multiSelect'),
-
-  hideProgress: function() {
-    if (!this.get('postStream.loaded')) return true;
-    if (!this.get('currentPost')) return true;
-    if (this.get('postStream.filteredPostsCount') < 2) return true;
-    return false;
-  }.property('postStream.loaded', 'currentPost', 'postStream.filteredPostsCount'),
-
-  hugeNumberOfPosts: function() {
-    return (this.get('postStream.filteredPostsCount') >= Discourse.SiteSettings.short_progress_text_threshold);
-  }.property('highest_post_number'),
-
-  jumpToBottomTitle: function() {
-    if (this.get('hugeNumberOfPosts')) {
-      return I18n.t('topic.progress.jump_bottom_with_number', {post_number: this.get('highest_post_number')});
-    } else {
-      return I18n.t('topic.progress.jump_bottom');
-    }
-  }.property('hugeNumberOfPosts', 'highest_post_number'),
 
   deselectPost: function(post) {
     this.get('selectedPosts').removeObject(post);
@@ -663,7 +622,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         lastLoadedPost = postStream.get('lastLoadedPost'),
         index = postStream.get('stream').indexOf(post.get('id'))+1;
 
-    this.set('progressPosition', index);
+    this.set('controllers.topic-progress.progressPosition', index);
 
     if (lastLoadedPost && lastLoadedPost === post) {
       postStream.appendMore();

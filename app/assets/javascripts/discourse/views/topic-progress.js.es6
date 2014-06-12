@@ -1,0 +1,76 @@
+export default Ember.View.extend({
+  elementId: 'topic-progress-wrapper',
+
+  _inserted: function() {
+    // This get seems counter intuitive, but it's to trigger the observer on
+    // the streamPercentage for this view. Otherwise the process bar does not
+    // update.
+    this.get('controller.streamPercentage');
+
+    this.appEvents.on("composer:opened", this, '_dock')
+                  .on("composer:resized", this, '_dock')
+                  .on("composer:closed", this, '_dock')
+                  .on("topic:scrolled", this, '_dock');
+
+    // Reflows are expensive. Cache the jQuery selector
+    // and the width when inserted into the DOM
+    this._$topicProgress = this.$('#topic-progress');
+    this._progressWidth = this._$topicProgress[0].offsetWidth;
+  }.on('didInsertElement'),
+
+  _unbindEvents: function() {
+    this.appEvents.off("composer:opened", this, '_dock')
+                  .off("composer:resized", this, '_dock')
+                  .off("composer:closed", this, '_dock')
+                  .off('topic:scrolled', this, '_dock');
+  }.on('willDestroyElement'),
+
+  _updateBar: function() {
+    Em.run.scheduleOnce('afterRender', this, '_updateProgressBar');
+  }.observes('controller.streamPercentage', 'postStream.stream.@each'),
+
+  _updateProgressBar: function() {
+    // speeds up stuff, bypass jquery slowness and extra checks
+    var totalWidth = this._progressWidth,
+        progressWidth = this.get('controller.streamPercentage') * totalWidth;
+
+    this._$topicProgress.find('.bg')
+      .css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
+      .width(progressWidth);
+  },
+
+  _dock: function () {
+    var maximumOffset = $('#topic-footer-buttons').offset(),
+        composerHeight = $('#reply-control').height() || 0,
+        $topicProgressWrapper = this.$(),
+        style = $topicProgressWrapper.attr('style') || '',
+        isDocked = false,
+        offset = window.pageYOffset || $('html').scrollTop();
+
+    if (maximumOffset) {
+      var threshold = maximumOffset.top,
+          windowHeight = $(window).height(),
+          topicProgressHeight = $('#topic-progress').height();
+
+      isDocked = offset >= threshold - windowHeight + topicProgressHeight + composerHeight;
+    }
+
+    if (composerHeight > 0) {
+      if (isDocked) {
+        if (style.indexOf('bottom') >= 0) {
+          $topicProgressWrapper.css('bottom', '');
+        }
+      } else {
+        var height = composerHeight + "px";
+        if ($topicProgressWrapper.css('bottom') !== height) {
+          $topicProgressWrapper.css('bottom', height);
+        }
+      }
+    } else {
+      if (style.indexOf('bottom') >= 0) {
+        $topicProgressWrapper.css('bottom', '');
+      }
+    }
+  }
+
+});

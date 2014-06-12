@@ -162,7 +162,9 @@ Discourse.URL = Em.Object.createWithMixins({
       if (oldTopicId === newTopicId) {
         Discourse.URL.replaceState(path);
 
-        var topicController = Discourse.__container__.lookup('controller:topic'),
+        var container = Discourse.__container__,
+            topicController = container.lookup('controller:topic'),
+            topicProgressController = container.lookup('controller:topic-progress'),
             opts = {},
             postStream = topicController.get('postStream');
 
@@ -173,10 +175,10 @@ Discourse.URL = Em.Object.createWithMixins({
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
             currentPost: closest,
-            progressPosition: closest,
             highlightOnInsert: closest,
             enteredAt: new Date().getTime().toString()
           });
+          topicProgressController.set('progressPosition', closest);
         }).then(function() {
           Discourse.TopicView.jumpToPost(closest);
         });

@@ -182,6 +182,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     Discourse.TopicTrackingState.current().trackIncoming('all');
     controller.subscribe();
 
+    this.controllerFor('topic-progress').set('model', model);
     // We reset screen tracking every time a topic is entered
     Discourse.ScreenTrack.current().start(model.get('id'), controller);
   }
