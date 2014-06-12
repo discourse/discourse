@@ -121,7 +121,7 @@ export default Discourse.View.extend({
       self.showDropdown.apply(self, [$(e.currentTarget)]);
       return false;
     });
-    this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click.notifications', function(e) {
+    this.$().on('click.notifications','a.unread-private-messages, a.unread-notifications, a[data-notifications]', function(e) {
       self.showNotifications(e);
       return false;
     });
