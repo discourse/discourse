@@ -59,7 +59,7 @@ describe Email::Sender do
 
     it "adds a List-Id header to identify the forum" do
       email_sender.send
-      message.header['List-Id'].should be_present
+      message.header['List-ID'].should be_present
     end
 
     context 'email logs' do
