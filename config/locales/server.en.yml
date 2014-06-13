@@ -595,6 +595,8 @@ en:
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
+    system_user_name: "system"
+    system_user_bio: "**Not a real person. A global user for system notifications and other system tasks.**"
     min_post_length: "Minimum post length in characters"
     min_private_message_post_length: "Minimum post length in characters for private messages"
     max_post_length: "Maximum post length in characters"
