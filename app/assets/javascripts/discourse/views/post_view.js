@@ -226,28 +226,17 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   didInsertElement: function() {
     var $post = this.$(),
         post = this.get('post'),
-        postNumber = post.get('post_number'),
-        highlightNumber = this.get('controller.highlightOnInsert');
-
-    // If we're meant to highlight a post
-    if ((highlightNumber > 1) && (highlightNumber === postNumber)) {
-      this.set('controller.highlightOnInsert', null);
-      var $contents = $('#post_' + postNumber +' .topic-body', $post),
-          origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
-
-      $contents.data("orig-color", origColor);
-      $contents
-        .addClass('highlighted')
-        .stop()
-        .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
-          $contents.removeClass('highlighted');
-        });
-    }
+        postNumber = post.get('post_number');
 
     this.showLinkCounts();
 
     // Track this post
     Discourse.ScreenTrack.current().track(this.$().prop('id'), postNumber);
+
+    // Highlight the post if required
+    if (postNumber > 1) {
+      Discourse.PostView.considerHighlighting(this.get('controller'), postNumber);
+    }
 
     // Add syntax highlighting
     Discourse.SyntaxHighlighting.apply($post);
@@ -279,4 +268,25 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
       this._highlighted = false;
     }
   }.observes('controller.searchHighlight', 'cooked')
+});
+
+Discourse.PostView.reopenClass({
+  considerHighlighting: function(controller, postNumber) {
+    var highlightNumber = controller.get('highlightOnInsert');
+
+    // If we're meant to highlight a post
+    if (highlightNumber === postNumber) {
+      controller.set('highlightOnInsert', null);
+      var $contents = $('#post_' + postNumber +' .topic-body'),
+          origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
+
+      $contents.data("orig-color", origColor);
+      $contents
+        .addClass('highlighted')
+        .stop()
+        .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
+          $contents.removeClass('highlighted');
+        });
+    }
+  }
 });

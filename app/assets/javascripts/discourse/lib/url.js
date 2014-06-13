@@ -179,6 +179,7 @@ Discourse.URL = Em.Object.createWithMixins({
             enteredAt: new Date().getTime().toString()
           });
           topicProgressController.set('progressPosition', closest);
+          Discourse.PostView.considerHighlighting(topicController, closest);
         }).then(function() {
           Discourse.TopicView.jumpToPost(closest);
         });
