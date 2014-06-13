@@ -153,7 +153,7 @@ class UserNotifications < ActionMailer::Base
     username = @notification.data_hash[:original_username]
     notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
-    return if user.mailing_list_mode &&
+    return if user.mailing_list_mode && !@post.topic.private_message? &&
        ["replied", "mentioned", "quoted", "posted"].include?(notification_type)
 
     title = @notification.data_hash[:topic_title]
