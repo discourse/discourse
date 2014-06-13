@@ -39,20 +39,6 @@ describe Email::Sender do
 
   end
 
-  context "list_id_for" do
-    it "joins the host and forum name" do
-      Email::Sender.list_id_for("myforum", "mysite.com").should == '"myforum" <discourse.forum.myforum.mysite.com>'
-    end
-
-    it "removes double quotes from names" do
-      Email::Sender.list_id_for('Quoted "Forum"', 'quoted.com').should == '"Quoted \'Forum\'" <discourse.forum.quoted-forum.quoted.com>'
-    end
-
-    it "converts the site name to lower case and removes spaces" do
-      Email::Sender.list_id_for("Robin's cool Forum!", "robin.com").should == '"Robin\'s cool Forum!" <discourse.forum.robins-cool-forum.robin.com>'
-    end
-  end
-
   context 'with a valid message' do
 
     let(:reply_key) { "abcd" * 8 }

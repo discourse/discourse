@@ -58,8 +58,6 @@ module Email
 
       host = Email::Sender.host_for(Discourse.base_url)
 
-      @message.header['List-Id'] = Email::Sender.list_id_for(SiteSetting.title, host)
-
       topic_id = header_value('X-Discourse-Topic-Id')
       post_id = header_value('X-Discourse-Post-Id')
       reply_key = header_value('X-Discourse-Reply-Key')
@@ -67,9 +65,16 @@ module Email
       if topic_id.present?
         email_log.topic_id = topic_id
 
-        topic_identitfier = "<topic/#{topic_id}@#{host}>"
-        @message.header['In-Reply-To'] = topic_identitfier
-        @message.header['References'] = topic_identitfier
+        topic_identifier = "<topic/#{topic_id}@#{host}>"
+        @message.header['In-Reply-To'] = topic_identifier
+        @message.header['References'] = topic_identifier
+
+        # http://www.ietf.org/rfc/rfc2919.txt
+        @message.header['List-ID'] = "<topic.#{topic_id}.#{host}>"
+        # can't figure out how to get the current URL of the topic here
+        #@message.header['List-Archive'] =
+        # in github notifications, these fields are identical
+        @message.header['List-Post'] = @message.header['Reply-To']
       end
 
       email_log.post_id = post_id if post_id.present?
@@ -109,12 +114,6 @@ module Email
       end
       host
     end
-
-    def self.list_id_for(site_name, host)
-      "\"#{site_name.gsub(/\"/, "'")}\" <discourse.forum.#{Slug.for(site_name)}.#{host}>"
-    end
-
-
 
     private
 
