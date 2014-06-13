@@ -23,7 +23,7 @@
 
   {{#if user}}
     <div class="metadata">
-      {{#if user.location}}<h3><i class="fa fa-map-marker"></i> {{{user.location}}}</h3>{{/if}}
+      {{#if user.location}}<h3><i class="fa fa-map-marker"></i> {{user.location}}</h3>{{/if}}
       <h3>{{i18n last_post}} {{date path="user.last_posted_at" leaveAgo="true"}}</h3>
       <h3>{{i18n joined}} {{date path="user.created_at" leaveAgo="true"}}</h3>
       {{groups-list groups=user.custom_groups}}
