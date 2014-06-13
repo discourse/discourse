@@ -41,7 +41,10 @@ module Email
 
     def subject
       subject = @opts[:subject]
-      subject = I18n.t("#{@opts[:template]}.subject_template", template_args) if @opts[:template]
+      if @opts[:template]
+        subject_template = @opts[:use_reply_subject] ? "reply_subject_template" : "subject_template"
+        subject = I18n.t("#{@opts[:template]}." + subject_template, template_args)
+      end
       subject
     end
 

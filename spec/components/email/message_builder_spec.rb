@@ -180,6 +180,18 @@ describe Email::MessageBuilder do
 
   end
 
+  context "reply_subject_template" do
+
+    let(:templated_builder) { Email::MessageBuilder.new(to_address, template: 'mystery', use_reply_subject:true) }
+    let(:rendered_template) { "rendered template" }
+
+    it "has the reply subject rendered from a template" do
+      I18n.expects(:t).with("mystery.reply_subject_template", templated_builder.template_args).returns(rendered_template)
+      expect(templated_builder.subject).to eq(rendered_template)
+    end
+
+  end
+
   context "from field" do
 
     it "has the default from" do

@@ -1378,6 +1378,7 @@ en:
 
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      reply_subject_template: "Re: [%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -1388,6 +1389,7 @@ en:
 
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
+      reply_subject_template: "Re: [%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{message}
 

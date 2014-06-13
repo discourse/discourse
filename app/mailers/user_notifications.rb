@@ -93,11 +93,13 @@ class UserNotifications < ActionMailer::Base
 
   def user_posted(user, opts)
     opts[:allow_reply_by_email] = true
+    opts[:use_reply_subject] = true
     notification_email(user, opts)
   end
 
   def user_private_message(user, opts)
     opts[:allow_reply_by_email] = true
+    opts[:use_reply_subject] = true
 
     # We use the 'user_posted' event when you are emailed a post in a PM.
     opts[:notification_type] = 'posted'
@@ -158,12 +160,14 @@ class UserNotifications < ActionMailer::Base
 
     title = @notification.data_hash[:topic_title]
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
+    use_reply_subject = opts[:use_reply_subject] && @post.post_number > 1
 
     send_notification_email(
       title: title,
       post: @post,
       from_alias: username,
       allow_reply_by_email: allow_reply_by_email,
+      use_reply_subject: use_reply_subject,
       notification_type: notification_type,
       user: user
     )
@@ -174,6 +178,7 @@ class UserNotifications < ActionMailer::Base
     post = opts[:post]
     title = opts[:title]
     allow_reply_by_email = opts[:allow_reply_by_email]
+    use_reply_subject = opts[:use_reply_subject]
     from_alias = opts[:from_alias]
     notification_type = opts[:notification_type]
     user = opts[:user]
@@ -215,6 +220,7 @@ class UserNotifications < ActionMailer::Base
       username: from_alias,
       add_unsubscribe_link: true,
       allow_reply_by_email: allow_reply_by_email,
+      use_reply_subject: use_reply_subject,
       include_respond_instructions: !user.suspended?,
       template: template,
       html_override: html,
