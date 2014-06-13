@@ -20,6 +20,8 @@ module Email
     end
 
     def format_basic
+      uri = URI(Discourse.base_url)
+
       @fragment.css('img').each do |img|
 
         next if img['class'] == 'site-logo'
@@ -38,7 +40,7 @@ module Email
 
         # ensure no schemaless urls
         if img['src'] && img['src'].starts_with?("//")
-          img['src'] = "http:" + img['src']
+          img['src'] = "#{uri.scheme}:#{img['src']}"
         end
       end
     end
@@ -101,6 +103,7 @@ module Email
 
     def to_html
       strip_classes_and_ids
+      replace_relative_urls
       @fragment.to_html.tap do |result|
         result.gsub!(/\[email-indent\]/, "<div style='margin-left: 15px'>")
         result.gsub!(/\[\/email-indent\]/, "</div>")
@@ -108,6 +111,19 @@ module Email
     end
 
     private
+
+    def replace_relative_urls
+      forum_uri = URI(Discourse.base_url)
+      host = forum_uri.host
+      scheme = forum_uri.scheme
+
+      @fragment.css('[href]').each do |element|
+        href = element['href']
+        if href =~ /^\/\/#{host}/
+          element['href'] = "#{scheme}:#{href}"
+        end
+      end
+    end
 
     def correct_first_body_margin
       @fragment.css('.body p').each do |element|

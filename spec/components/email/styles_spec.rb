@@ -40,11 +40,6 @@ describe Email::Styles do
       expect(frag.at("img")["src"]).to eq("#{Discourse.base_url}/some-image.png")
     end
 
-    it "prefixes schemaless image urls with http:" do
-      frag = basic_fragment("<img src='//www.discourse.com/some-image.gif'>")
-      expect(frag.at("img")["src"]).to eq("http://www.discourse.com/some-image.gif")
-    end
-
     it "strips classes and ids" do
       frag = basic_fragment("<div class='foo' id='bar'><div class='foo' id='bar'></div></div>")
       expect(frag.to_html).to eq("<div><div></div></div>")
@@ -83,6 +78,45 @@ describe Email::Styles do
       frag = html_fragment("<ul><li>hello</li></ul>")
       expect(frag.at('ul')['style']).to be_present
       expect(frag.at('li')['style']).to be_present
+    end
+  end
+
+  context "rewriting protocol relative URLs to the forum" do
+    it "doesn't rewrite a url to another site" do
+      frag = html_fragment('<a href="//youtube.com/discourse">hello</a>')
+      frag.at('a')['href'].should == "//youtube.com/discourse"
+    end
+
+    context "without https" do
+      before do
+        SiteSetting.stubs(:use_https).returns(false)
+      end
+
+      it "rewrites the href to have http" do
+        frag = html_fragment('<a href="//test.localhost/discourse">hello</a>')
+        frag.at('a')['href'].should == "http://test.localhost/discourse"
+      end
+
+      it "rewrites the src to have http" do
+        frag = html_fragment('<img src="//test.localhost/blah.jpg">')
+        frag.at('img')['src'].should == "http://test.localhost/blah.jpg"
+      end
+    end
+
+    context "with https" do
+      before do
+        SiteSetting.stubs(:use_https).returns(true)
+      end
+
+      it "rewrites the forum URL to have http" do
+        frag = html_fragment('<a href="//test.localhost/discourse">hello</a>')
+        frag.at('a')['href'].should == "https://test.localhost/discourse"
+      end
+
+      it "rewrites the src to have https" do
+        frag = html_fragment('<img src="//test.localhost/blah.jpg">')
+        frag.at('img')['src'].should == "https://test.localhost/blah.jpg"
+      end
     end
 
   end
