@@ -257,7 +257,6 @@ export default Discourse.Controller.extend({
 
     this.setProperties({ showEditReason: false, editReason: null });
     composerMessages.reset();
-    this.set('view', this.container.lookup('view:composer'));
 
     // If we want a different draft than the current composer, close it and clear our model.
     if (composerModel && opts.draftKey !== composerModel.draftKey &&
