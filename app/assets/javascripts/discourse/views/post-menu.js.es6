@@ -222,7 +222,13 @@ export default Discourse.View.extend({
   // Reply button
   buttonForReply: function() {
     if (!this.get('controller.model.details.can_create_post')) return;
-    return new Button('reply', 'post.controls.reply', 'reply', {className: 'create', textLabel: 'topic.reply.title'});
+    var options = {className: 'create'};
+
+    if(!Discourse.Mobile.mobileView) {
+      options.textLabel = 'topic.reply.title'
+    }
+
+    return new Button('reply', 'post.controls.reply', 'reply', options);
   },
 
   clickReply: function(post) {
