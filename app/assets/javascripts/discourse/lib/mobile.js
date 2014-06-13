@@ -13,17 +13,26 @@ Discourse.Mobile = {
     this.isMobileDevice = $html.hasClass('mobile-device');
     this.mobileView = $html.hasClass('mobile-view');
 
-    if (localStorage && localStorage.mobileView) {
-      var savedValue = (localStorage.mobileView === 'true');
-      if (savedValue !== this.mobileView) {
-        this.reloadPage(savedValue);
+    try{
+      if (localStorage && localStorage.mobileView) {
+        var savedValue = (localStorage.mobileView === 'true');
+        if (savedValue !== this.mobileView) {
+          this.reloadPage(savedValue);
+        }
       }
+    } catch(err) {
+      // localStorage may be disabled, just skip this
+      // you get security errors if it is disabled
     }
   },
 
   toggleMobileView: function() {
-    if (localStorage) {
-      localStorage.mobileView = !this.mobileView;
+    try{
+      if (localStorage) {
+        localStorage.mobileView = !this.mobileView;
+      }
+    } catch(err) {
+      // localStorage may be disabled, skip
     }
     this.reloadPage(!this.mobileView);
   },
