@@ -73,6 +73,9 @@ module Email
         @message.header['List-ID'] = "<topic.#{topic_id}.#{host}>"
         # can't figure out how to get the current URL of the topic here
         #@message.header['List-Archive'] =
+      end
+
+      if reply_key.present?
         # in github notifications, these fields are identical
         @message.header['List-Post'] = @message.header['Reply-To']
       end
