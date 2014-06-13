@@ -507,6 +507,7 @@ en:
       password: "Password"
       email_placeholder: "email or username"
       error: "Unknown error"
+      blank_username_or_password: "Please enter your email or username, and password."
       reset_password: 'Reset Password'
       logging_in: "Signing In..."
       or: "Or"
