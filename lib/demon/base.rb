@@ -121,7 +121,9 @@ class Demon::Base
     Thread.new do
       while true
         unless alive?(@parent_pid)
-          Process.kill "QUIT", Process.pid
+          Process.kill "TERM", Process.pid
+          sleep 10
+          Process.kill "KILL", Process.pid
         end
         sleep 1
       end
