@@ -76,9 +76,29 @@ export default Ember.View.extend({
     this.set('docked', isDocked);
   },
 
+  _focusWhenOpened: function() {
+    if (this.get('controller.expanded')) {
+      var self = this;
+      Em.run.schedule('afterRender', function() {
+        self.$('input').focus();
+      });
+    }
+  }.observes('controller.expanded'),
+
   click: function(e) {
     if ($(e.target).parents('#topic-progress').length) {
       this.get('controller').send('toggleExpansion');
+    }
+  },
+
+  keyDown: function(e) {
+    var controller = this.get('controller');
+    if (controller.get('expanded')) {
+      if (e.keyCode === 13) {
+        controller.send('jumpPost');
+      } else if (e.keyCode === 27) {
+        controller.send('toggleExpansion');
+      }
     }
   }
 

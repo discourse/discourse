@@ -1850,6 +1850,7 @@ en:
         categories: '<b>g</b> then <b>c</b> Categories'
       navigation:
         title: 'Navigation'
+        jump: '<b>#</b> Go to post number'
         back: '<b>u</b> Back'
         up_down: '<b>k</b>/<b>j</b> Move selection up/down'
         open: '<b>o</b> or <b>Enter</b> Open selected topic'
