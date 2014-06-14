@@ -70,7 +70,8 @@ module Email
         @message.header['References'] = topic_identifier
 
         # http://www.ietf.org/rfc/rfc2919.txt
-        @message.header['List-ID'] = "<topic.#{topic_id}.#{host}>"
+        list_id = "<topic.#{topic_id}.#{host}>"
+        @message.header['List-ID'] = list_id
         # can't figure out how to get the current URL of the topic here
         #@message.header['List-Archive'] =
       end
