@@ -1330,6 +1330,11 @@ describe UsersController do
         get :my_redirect, path: "preferences"
         response.should be_redirect
       end
+
+      it "permits forward slashes" do
+        get :my_redirect, path: "activity/posts"
+        response.should be_redirect
+      end
     end
   end
 
