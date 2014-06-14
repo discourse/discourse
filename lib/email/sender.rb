@@ -78,7 +78,7 @@ module Email
 
       if reply_key.present?
         # in github notifications, these fields are identical
-        @message.header['List-Post'] = @message.header['Reply-To']
+        #@message.header['List-Post'] = @message.header['Reply-To']
       end
 
       email_log.post_id = post_id if post_id.present?
