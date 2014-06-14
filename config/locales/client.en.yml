@@ -411,7 +411,7 @@ en:
         topics_entered: "Topics Viewed"
         posts_read_count: "Posts Read"
         expired: "This invite has expired."
-        rescind: "Remove Invitation"
+        rescind: "Remove"
         rescinded: "Invite removed"
         time_read: "Read Time"
         days_visited: "Days Visited"

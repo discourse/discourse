@@ -56,7 +56,7 @@
               {{#if invite.rescinded}}
                 {{i18n user.invited.rescinded}}
               {{else}}
-                <button class='btn' {{action rescind invite}}>{{i18n user.invited.rescind}}</button>
+                <button class='btn' {{action rescind invite}}><i class="fa fa-times"></i>{{i18n user.invited.rescind}}</button>
               {{/if}}
             </td>
           {{/if}}
