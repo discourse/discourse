@@ -9,7 +9,5 @@ export default Ember.Component.extend({
     return this.get('count') && this.get('count') > 1;
   }.property('count'),
 
-  isIcon: function() {
-    return this.get('badge.icon').match(/^fa-/);
-  }.property('badge.icon')
+  isIcon: Em.computed.match('badge.icon', /^fa-/)
 });
