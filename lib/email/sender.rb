@@ -72,13 +72,17 @@ module Email
         # http://www.ietf.org/rfc/rfc2919.txt
         list_id = "<topic.#{topic_id}.#{host}>"
         @message.header['List-ID'] = list_id
-        # can't figure out how to get the current URL of the topic here
-        #@message.header['List-Archive'] =
+
+        topic = Topic.where(id: topic_id).first
+        @message.header['List-Archive'] = topic.url if topic
       end
 
       if reply_key.present?
-        # in github notifications, these fields are identical
-        #@message.header['List-Post'] = @message.header['Reply-To']
+
+        if @message.header['Reply-To'] =~ /\<([^\>]+)\>/
+          email = Regexp.last_match[1]
+          @message.header['List-Post'] = "<mailto:#{email}>"
+        end
       end
 
       email_log.post_id = post_id if post_id.present?
