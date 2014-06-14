@@ -49,10 +49,7 @@ class BadgeGranter
         user_badge.user.save!
       end
 
-      # Delete notification -- This is inefficient, but not very easy to optimize
-      # unless the data hash is converted into a hstore.
-      notification = user_badge.user.notifications.where(notification_type: Notification.types[:granted_badge]).where("data LIKE ?", "%" + user_badge.badge_id.to_s + "%").select {|n| n.data_hash["badge_id"] == user_badge.badge_id }.first
-      notification && notification.destroy
+      user_badge.notification && user_badge.notification.destroy!
     end
   end
 
