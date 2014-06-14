@@ -77,6 +77,9 @@ export default Ember.View.extend({
   },
 
   _focusWhenOpened: function() {
+    // Don't focus on mobile
+    if (Discourse.Mobile.mobileView) { return; }
+
     if (this.get('controller.expanded')) {
       var self = this;
       Em.run.schedule('afterRender', function() {
