@@ -403,7 +403,7 @@ Discourse.Composer = Discourse.Model.extend({
       var topic = this.get('topic');
       topic.setProperties({
         title: this.get('title'),
-        fancy_title: this.get('title'),
+        fancy_title: Handlebars.Utils.escapeExpression(this.get('title')),
         category_id: parseInt(this.get('categoryId'), 10)
       });
       topic.save();
