@@ -1020,13 +1020,14 @@ en:
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion"
     text_body_template: |
-      %{invitee_name} invited you to discuss
+      %{invitee_name} invited you to a discussion
 
       > %{topic_title}
 
       at
 
       > **%{site_title}**
+      >
       > %{site_description}
 
       If you're interested, click the link below:
@@ -1041,6 +1042,7 @@ en:
       %{invitee_name} invited you to join
 
       > **%{site_title}**
+      >
       > %{site_description}
 
       If you're interested, click the link below:
