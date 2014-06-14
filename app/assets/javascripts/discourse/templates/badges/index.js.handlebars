@@ -2,12 +2,14 @@
   <h1>{{i18n badges.title}}</h1>
 
   <table class='badges-listing'>
-    {{#each}}
-      <tr>
-        <td class='badge'>{{user-badge badge=this}}</td>
-        <td class='description'>{{displayDescription}}</td>
-        <td class='grant-count'>{{i18n badges.granted count=grant_count}}</td>
-      </tr>
-    {{/each}}
+    <tbody>
+      {{#each}}
+        <tr>
+          <td class='badge'>{{user-badge badge=this}}</td>
+          <td class='description'>{{displayDescription}}</td>
+          <td class='grant-count'>{{i18n badges.granted count=grant_count}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
   </table>
 </div>
