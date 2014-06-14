@@ -13,12 +13,16 @@ class InviteMailer < ActionMailer::Base
                   template: 'invite_mailer',
                   invitee_name: invite.invited_by.username,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
-                  topic_title: first_topic.try(:title))
+                  topic_title: first_topic.try(:title),
+                  site_description: SiteSetting.site_description,
+                  site_title: SiteSetting.title)
     else
       build_email(invite.email,
                   template: 'invite_forum_mailer',
                   invitee_name: invite.invited_by.username,
-                  invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}")
+                  invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
+                  site_description: SiteSetting.site_description,
+                  site_title: SiteSetting.title)
     end
 
   end

@@ -1018,30 +1018,36 @@ en:
       blocked: "is blocked."
 
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion on %{site_name}"
+    subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion"
     text_body_template: |
-      %{invitee_name} invited you to the topic "%{topic_title}" at %{site_name}.
+      %{invitee_name} invited you to discuss
 
-      If you're interested, click the link below to visit the discussion:
+      > %{topic_title}
 
-      [Visit %{site_name}][1]
+      at
 
-      You were invited by a trusted user, so you'll be able to post a reply immediately, without needing to log in.
+      > **%{site_title}**
+      > %{site_description}
 
-      [1]: %{invite_link}
+      If you're interested, click the link below:
+
+      %{invite_link}
+
+      This is an invitation from a trusted user, so you can reply to the discussion immediately.
 
   invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join %{site_name}"
+    subject_template: "[%{site_name}] %{invitee_name} invited you to join"
     text_body_template: |
-      %{invitee_name} invited you to %{site_name}.
+      %{invitee_name} invited you to join
 
-      If you're interested, click the link below to join:
+      > **%{site_title}**
+      > %{site_description}
 
-      [Visit %{site_name}][1]
+      If you're interested, click the link below:
 
-      You were invited by a trusted user, so you'll be able to join immediately, without needing to log in.
+      %{invite_link}
 
-      [1]: %{invite_link}
+      This invitation is from a trusted user, so you won't need to log in.
 
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
