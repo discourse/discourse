@@ -263,7 +263,6 @@ en:
       admin: "{{user}} is an admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
-      deleted: "(deleted)"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
       mailing_list_mode: "Receive an email every time a post is made on the forum (unless you mute the topic or category)"
