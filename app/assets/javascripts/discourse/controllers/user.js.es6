@@ -27,6 +27,15 @@ export default Discourse.ObjectController.extend({
            (this.get('userActionType') === Discourse.UserAction.TYPES.messages_received);
   }.property('userActionType'),
 
+  /**
+    Can the currently logged in user invite users to the site
+
+    @property canInviteToForum
+  **/
+  canInviteToForum: function() {
+    return Discourse.User.currentProp('can_invite_to_forum');
+  }.property(),
+
   privateMessagesActive: Em.computed.equal('pmView', 'index'),
   privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
   privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread')
