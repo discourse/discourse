@@ -40,6 +40,19 @@ class AdminUserIndexQuery
     end
   end
 
+
+  def filter_by_ip
+    if params[:ip].present?
+      @query.where('ip_address = :ip or registration_ip_address = :ip', ip: params[:ip])
+    end
+  end
+
+  def filter_exclude
+    if params[:exclude].present?
+      @query.where('id != ?', params[:exclude])
+    end
+  end
+
   # this might not be needed in rails 4 ?
   def append(active_relation)
     @query = active_relation if active_relation
@@ -48,6 +61,8 @@ class AdminUserIndexQuery
   def find_users_query
     append filter_by_trust
     append filter_by_query_classification
+    append filter_by_ip
+    append filter_exclude
     append filter_by_search
     @query
   end

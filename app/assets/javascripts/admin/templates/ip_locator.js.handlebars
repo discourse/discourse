@@ -1,0 +1,54 @@
+{{#if view.ip}}
+<button class='btn' {{action lookup target="view"}}>
+  <span class="fa fa-globe"></span> {{i18n admin.user.ip_lookup}}
+</button>
+{{/if}}
+{{#if view.showBox }}
+  <div class="location-box">
+    <h4>{{i18n ip_info.title}}</h4>
+    <dl>
+      {{#if view.location}}
+        {{#if view.location.hostname}}
+          <dt>{{i18n ip_info.hostname}}</dt>
+          <dd>{{view.location.hostname}}</dd>
+        {{/if}}
+
+        <dt>{{i18n ip_info.location}}</dt>
+        <dd>
+          {{#if view.location.loc}}
+            <a href="https://maps.google.com/maps?q={{unbound view.location.loc}}" target="_blank">{{view.location.loc}}</a><br>
+            {{view.location.city}}, {{view.location.region}}, {{view.location.country}}
+          {{else}}
+            {{i18n ip_info.location_not_found}}
+          {{/if}}
+        </dd>
+
+        {{#if view.location.org}}
+          <dt>{{i18n ip_info.organisation}}</dt>
+          <dd>{{view.location.org}}</dd>
+        {{/if}}
+
+        {{#if view.location.phone}}
+          <dt>{{i18n ip_info.phone}}</dt>
+          <dd>{{view.location.phone}}</dd>
+        {{/if}}
+      {{else}}
+        <div class='spinner'>{{i18n loading}}</div>
+      {{/if}}
+
+      <dt>{{i18n ip_info.other_accounts}}</dt>
+      <dd>
+        {{#if view.other_accounts_loading}}
+          {{i18n loading}}
+        {{else}}
+          {{#each view.other_accounts}}
+              {{#link-to 'adminUser' this}}{{avatar this usernamePath="user.username" imageSize="small"}}{{/link-to}}
+          {{else}}
+            {{i18n ip_info.no_other_accounts}}
+          {{/each}}
+        {{/if}}
+      <dd>
+    </dl>
+    <button class='btn close' {{action hideBox target="view" }}>{{i18n close}}</button>
+  </div>
+{{/if}}

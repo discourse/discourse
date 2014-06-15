@@ -79,6 +79,7 @@
       <button class='btn' {{action refreshBrowsers target="content"}}>
         {{i18n admin.user.refresh_browsers}}
       </button>
+        {{view Discourse.AdminIpLocatorView ipBinding="ip_address"}}
       {{/if}}
     </div>
   </div>
@@ -86,7 +87,11 @@
   <div class='display-row'>
     <div class='field'>{{i18n user.registration_ip_address.title}}</div>
     <div class='value'>{{registration_ip_address}}</div>
-    <div class='controls'></div>
+    <div class='controls'>
+      {{#if currentUser.admin}}
+        {{view Discourse.AdminIpLocatorView ipBinding="registration_ip_address"}}
+      {{/if}}
+    </div>
   </div>
 
   {{#if showBadges}}

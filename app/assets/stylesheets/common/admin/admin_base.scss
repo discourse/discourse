@@ -81,6 +81,25 @@
   };
 }
 
+.iplocator {
+  position: relative;
+  display: inline-block;
+
+  .location-box {
+    position: absolute;
+    width: 460px;
+    right: 0px;
+    z-index: 990;
+    box-shadow: 0 2px 6px scale-color-diff();
+    margin-top: -2px;
+    background-color: $secondary;
+    padding: 12px 12px 5px;
+    .close {
+      float: right;
+    }
+  }
+}
+
 .admin-container {
   margin-top: 20px;
 }
