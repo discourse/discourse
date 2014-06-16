@@ -46,10 +46,6 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
 
   actions: {
     login: function() {
-      if (this.blank('loginName') || this.blank('loginPassword')) {
-        this.flash(I18n.t('login.blank_username_or_password'), 'error');
-        return false;
-      }
       this.set('loggingIn', true);
 
       var self = this;
