@@ -17,11 +17,11 @@ class Group < ActiveRecord::Base
     :admins => 1,
     :moderators => 2,
     :staff => 3,
+    :trust_level_0 => 10, # all users except anonymous
     :trust_level_1 => 11,
     :trust_level_2 => 12,
     :trust_level_3 => 13,
     :trust_level_4 => 14,
-    :trust_level_5 => 15
   }
 
   ALIAS_LEVELS = {
@@ -54,7 +54,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.trust_group_ids
-    (10..19).to_a
+    (10..14).to_a
   end
 
   def self.refresh_automatic_group!(name)
@@ -87,8 +87,8 @@ class Group < ActiveRecord::Base
                  "SELECT u.id FROM users u WHERE u.moderator"
                when :staff
                  "SELECT u.id FROM users u WHERE u.moderator OR u.admin"
-               when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4, :trust_level_5
-                 "SELECT u.id FROM users u WHERE u.trust_level = #{id-10}"
+               when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+                 "SELECT u.id FROM users u WHERE u.trust_level >= #{id-10}"
                end
 
 
@@ -184,15 +184,17 @@ class Group < ActiveRecord::Base
 
 
   def self.user_trust_level_change!(user_id, trust_level)
-    name = "trust_level_#{trust_level}".to_sym
-
     GroupUser.where(group_id: trust_group_ids, user_id: user_id).delete_all
 
-    if group = lookup_group(name)
-      group.group_users.build(user_id: user_id)
-      group.save!
-    else
-      refresh_automatic_group!(name)
+    (0..trust_level).each do |level|
+      name = "trust_level_#{level}".to_sym
+
+      if group = lookup_group(name)
+        group.group_users.build(user_id: user_id)
+        group.save!
+      else
+        refresh_automatic_group!(name)
+      end
     end
   end
 
