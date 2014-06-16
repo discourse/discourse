@@ -518,6 +518,7 @@ embedding:
   embed_by_username:
     default: ''
     type: username
+  embed_username_key_from_feed: ''
   embed_category: ''
   embed_post_limit: 100
   embed_truncate: false

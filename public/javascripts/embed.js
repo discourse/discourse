@@ -1,10 +1,24 @@
 /* global discourseUrl */
+/* global discourseUserName */
 /* global discourseEmbedUrl */
 (function() {
-
   var comments = document.getElementById('discourse-comments'),
-      iframe = document.createElement('iframe');
-  iframe.src = discourseUrl + "embed/comments?embed_url=" + encodeURIComponent(discourseEmbedUrl);
+  iframe = document.createElement('iframe');
+  if (typeof discourseUserName === 'undefined') {
+    iframe.src =
+      [ discourseUrl,
+        'embed/comments?embed_url=',
+        encodeURIComponent(discourseEmbedUrl)
+      ].join('');
+  } else {
+    iframe.src =
+      [ discourseUrl,
+        'embed/comments?embed_url=',
+        encodeURIComponent(discourseEmbedUrl),
+        '&discourse_username=',
+        discourseUserName
+      ].join('');
+  }
   iframe.id = 'discourse-embed-frame';
   iframe.width = "100%";
   iframe.frameBorder = "0";

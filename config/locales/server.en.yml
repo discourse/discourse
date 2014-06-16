@@ -903,6 +903,7 @@ en:
     feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
     feed_polling_url: "URL of RSS/ATOM feed to import"
     embed_by_username: "Discourse username of the user who creates the topics"
+    embed_username_key_from_feed: "Key to pull discourse username from feed"
     embed_truncate: "Truncate the imported posts"
     embed_category: "Category of created topics"
     embed_post_limit: "Maximum number of posts to embed"
