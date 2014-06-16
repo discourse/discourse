@@ -185,7 +185,7 @@ Discourse::Application.routes.draw do
   get "users/activate-account/:token" => "users#activate_account"
   get "users/authorize-email/:token" => "users#authorize_email"
   get "users/hp" => "users#get_honeypot_value"
-  get "my/:path", to: 'users#my_redirect'
+  get "my/*path", to: 'users#my_redirect'
 
   get "user_preferences" => "users#user_preferences_redirect"
   get "users/:username/private-messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
