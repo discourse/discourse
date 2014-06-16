@@ -30,6 +30,9 @@ class UserAvatar < ActiveRecord::Base
     end
   rescue OpenURI::HTTPError
     save!
+  rescue SocketError
+    # skip saving, we are not connected to the net
+    Rails.logger.warn "Failed to download gravatar, socket error - user id #{ user.id }"
   ensure
     tempfile.unlink if tempfile
   end
