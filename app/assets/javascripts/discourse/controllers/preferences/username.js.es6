@@ -21,16 +21,16 @@ export default Discourse.ObjectController.extend({
     if( this.get('newUsername') && this.get('newUsername').length < 3 ) {
       this.set('errorMessage', I18n.t('user.name.too_short'));
     } else {
-      var preferencesUsernameController = this;
+      var self = this;
       this.set('taken', false);
       this.set('errorMessage', null);
       if (this.blank('newUsername')) return;
       if (this.get('unchanged')) return;
       Discourse.User.checkUsername(this.get('newUsername'), undefined, this.get('content.id')).then(function(result) {
         if (result.errors) {
-          preferencesUsernameController.set('errorMessage', result.errors.join(' '));
+          self.set('errorMessage', result.errors.join(' '));
         } else if (result.available === false) {
-          preferencesUsernameController.set('taken', true);
+          self.set('taken', true);
         }
       });
     }
@@ -43,16 +43,16 @@ export default Discourse.ObjectController.extend({
 
   actions: {
     changeUsername: function() {
-      var preferencesUsernameController = this;
+      var self = this;
       return bootbox.confirm(I18n.t("user.change_username.confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
         if (result) {
-          preferencesUsernameController.set('saving', true);
-          preferencesUsernameController.get('content').changeUsername(preferencesUsernameController.get('newUsername')).then(function() {
-            Discourse.URL.redirectTo("/users/" + preferencesUsernameController.get('newUsername').toLowerCase() + "/preferences");
+          self.set('saving', true);
+          self.get('content').changeUsername(self.get('newUsername')).then(function() {
+            Discourse.URL.redirectTo("/users/" + self.get('newUsername').toLowerCase() + "/preferences");
           }, function() {
             // error
-            preferencesUsernameController.set('error', true);
-            preferencesUsernameController.set('saving', false);
+            self.set('error', true);
+            self.set('saving', false);
           });
         }
       });

@@ -71,10 +71,6 @@ Discourse.UserStream = Discourse.Model.extend({
       url += "&filter=" + this.get('filterParam');
     }
 
-    var loadingFinished = function() {
-      userStream.set('loading', false);
-    };
-
     return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
       if (result && result.user_actions) {
         var copy = Em.A();
@@ -88,8 +84,9 @@ Discourse.UserStream = Discourse.Model.extend({
           itemsLoaded: userStream.get('itemsLoaded') + result.user_actions.length
         });
       }
-      loadingFinished();
-    }, loadingFinished);
+    }).finally(function() {
+      userStream.set('loading', false);
+    });
   }
 
 });

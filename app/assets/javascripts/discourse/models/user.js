@@ -257,8 +257,8 @@ Discourse.User = Discourse.Model.extend({
       if (result) {
         if ((user.get('streamFilter') || result.action_type) !== result.action_type) return;
         var action = Discourse.UserAction.collapseStream([Discourse.UserAction.create(result)]);
-        stream.set('itemsLoaded', user.get('itemsLoaded') + 1);
-        stream.insertAt(0, action[0]);
+        stream.set('itemsLoaded', stream.get('itemsLoaded') + 1);
+        stream.get('content').insertAt(0, action[0]);
       }
     });
   },

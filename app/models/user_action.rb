@@ -39,6 +39,10 @@ class UserAction < ActiveRecord::Base
   #  having strings where you would expect bools
   class UserActionRow < OpenStruct
     include ActiveModel::SerializerSupport
+
+    def as_json(options = nil)
+      @table.as_json(options)
+    end
   end
 
   def self.last_action_in_topic(user_id, topic_id)

@@ -21,6 +21,8 @@ Discourse.UserStreamView = Discourse.View.extend(Discourse.LoadMore, {
       stream.findItems().then(function() {
         self.set('loading', false);
         self.get('eyeline').flushRest();
+      }).catch(function() {
+        // If we were already loading...
       });
     }
   }
