@@ -1,4 +1,4 @@
-Discourse.UnknownView = Em.View.extend({
+export default Em.View.extend({
   classNameBindings: [':container'],
 
   render: function(buffer) {

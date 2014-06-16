@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicAdminMenuView = Discourse.View.extend({
+export default Discourse.View.extend({
 
   willDestroyElement: function() {
     $('html').off('mouseup.discourse-topic-admin-menu');
