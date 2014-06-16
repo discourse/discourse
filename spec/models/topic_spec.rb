@@ -638,6 +638,44 @@ describe Topic do
     end
   end
 
+  describe "make_banner!" do
+
+    before do
+      @topic = Fabricate(:topic)
+      @user = @topic.user
+    end
+
+    it "changes the topic archetype to 'banner'" do
+      @topic.expects(:add_moderator_post)
+      @topic.make_banner!(@user)
+      @topic.archetype.should == Archetype.banner
+    end
+
+    it "ensures only one banner topic at all time" do
+      banner_topic = Fabricate(:banner_topic)
+      Topic.where(archetype: Archetype.banner).count.should == 1
+
+      @topic.make_banner!(@user)
+      Topic.where(archetype: Archetype.banner).count.should == 1
+    end
+
+  end
+
+  describe "remove_banner!" do
+
+    before do
+      @topic = Fabricate(:topic)
+      @user = @topic.user
+    end
+
+    it "resets the topic archetype" do
+      @topic.expects(:add_moderator_post)
+      @topic.remove_banner!(@user)
+      @topic.archetype.should == Archetype.default
+    end
+
+  end
+
   context 'last_poster info' do
 
     before do

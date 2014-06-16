@@ -857,15 +857,11 @@ describe TopicsController do
 
     describe 'when logged in' do
 
-      before do
-        @admin = log_in(:admin)
-        @topic = Fabricate(:topic, user: @admin)
-      end
-
       it "changes the topic archetype to 'banner'" do
-        Topic.any_instance.expects(:archetype=).with(Archetype.banner)
-        Topic.any_instance.expects(:add_moderator_post)
-        xhr :put, :make_banner, topic_id: @topic.id
+        topic = Fabricate(:topic, user: log_in(:admin))
+        Topic.any_instance.expects(:make_banner!)
+
+        xhr :put, :make_banner, topic_id: topic.id
         response.should be_success
       end
 
@@ -883,15 +879,11 @@ describe TopicsController do
 
     describe 'when logged in' do
 
-      before do
-        @admin = log_in(:admin)
-        @topic = Fabricate(:topic, user: @admin)
-      end
-
       it "resets the topic archetype" do
-        Topic.any_instance.expects(:archetype=).with(Archetype.default)
-        Topic.any_instance.expects(:add_moderator_post)
-        xhr :put, :remove_banner, topic_id: @topic.id
+        topic = Fabricate(:topic, user: log_in(:admin))
+        Topic.any_instance.expects(:remove_banner!)
+
+        xhr :put, :remove_banner, topic_id: topic.id
         response.should be_success
       end
 

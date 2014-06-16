@@ -177,12 +177,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_moderate!(topic)
 
-    # TODO: only one banner at the same time
-
-    topic.archetype = Archetype.banner
-    topic.add_moderator_post(current_user, I18n.t("archetypes.banner.message.make"))
-
-    topic.save
+    topic.make_banner!(current_user)
 
     render nothing: true
   end
@@ -191,10 +186,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_moderate!(topic)
 
-    topic.archetype = Archetype.default
-    topic.add_moderator_post(current_user, I18n.t("archetypes.banner.message.remove"))
-
-    topic.save
+    topic.remove_banner!(current_user)
 
     render nothing: true
   end
