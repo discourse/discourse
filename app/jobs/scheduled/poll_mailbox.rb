@@ -39,7 +39,9 @@ module Jobs
     end
 
     def poll_pop3s
-      Net::POP3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
+      if !SiteSetting.pop3s_polling_insecure
+        Net::POP3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
+      end
       Net::POP3.start(SiteSetting.pop3s_polling_host,
                       SiteSetting.pop3s_polling_port,
                       SiteSetting.pop3s_polling_username,
