@@ -488,6 +488,7 @@ en:
     last_seen: 'Seen'
     created: 'Created'
     trust_level: 'Trust Level'
+    search_hint: 'Username or email'
 
     create_account:
       title: "Create New Account"
