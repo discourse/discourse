@@ -84,6 +84,23 @@ a:hover.reply-new {
   }
 }
 
+.topic-error {
+  padding: 18px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 24px;
+  text-align: center;
+  line-height: 1.1em;
+
+  .topic-retry {
+    display: block;
+    margin-top: 28px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 #topic-closing-info {
   border-top: 1px solid scale-color-diff();
   padding-top: 10px;

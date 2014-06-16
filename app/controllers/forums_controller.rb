@@ -16,4 +16,8 @@ class ForumsController < ApplicationController
     raise "WAT - #{Time.now.to_s}"
   end
 
+  def home_redirect
+    redirect_to '/'
+  end
+
 end

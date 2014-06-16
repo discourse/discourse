@@ -117,17 +117,19 @@
 {{else}}
   {{#if hasError}}
     <div class='container'>
-      {{#if errorBodyHtml}}
+      <div class="topic-error">
         {{{errorBodyHtml}}}
-      {{/if}}
 
-      {{#if message}}
-        <div class="message">
-          <h2>{{message}}</h2>
+        {{#if message}}
+          {{message}}
           {{#unless currentUser}}
             <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/unless}}
-        </div>
+        {{/if}}
+        <button class="btn btn-primary topic-retry" {{action retryLoading}}>{{i18n errors.buttons.again}}</button>
+      </div>
+      {{#if retrying}}
+        <div class='spinner'>{{i18n loading}}</div>
       {{/if}}
     </div>
   {{else}}

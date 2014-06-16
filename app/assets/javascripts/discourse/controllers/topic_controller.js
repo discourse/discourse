@@ -385,6 +385,16 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       });
     },
 
+    retryLoading: function() {
+      var self = this;
+      self.set('retrying', true);
+      this.get('postStream').refresh().then(function() {
+        self.set('retrying', false);
+      }, function() {
+        self.set('retrying', false);
+      });
+    },
+
     toggleWiki: function(post) {
       post.toggleProperty('wiki');
     }
