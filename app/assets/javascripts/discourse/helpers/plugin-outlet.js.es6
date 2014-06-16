@@ -83,5 +83,15 @@ export default function(connectionName, options) {
       })
     });
     return Ember.Handlebars.helpers.view.call(this, CustomContainerView, options);
+  } else {
+    return Ember.Handlebars.helpers.view.call(this,
+              Ember.View.extend({
+                isVirtual: true,
+                tagName: '',
+                template: function() {
+                  return options.hash.template;
+                }.property()
+              }),
+            options);
   }
 }
