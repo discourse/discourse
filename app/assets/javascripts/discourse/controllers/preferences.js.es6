@@ -22,10 +22,9 @@ export default Discourse.ObjectController.extend({
 
   saveDisabled: function() {
     if (this.get('saving')) return true;
-    if (Discourse.SiteSettings.enable_names && this.blank('newNameInput')) return true;
     if (this.blank('email')) return true;
     return false;
-  }.property('saving', 'newNameInput', 'email'),
+  }.property('saving', 'email'),
 
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
