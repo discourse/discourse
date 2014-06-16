@@ -488,7 +488,7 @@ en:
     last_seen: 'Seen'
     created: 'Created'
     trust_level: 'Trust Level'
-    search_hint: 'Username or email'
+    search_hint: 'username or email'
 
     create_account:
       title: "Create New Account"
@@ -645,8 +645,7 @@ en:
       image_link: "link your image will point to"
 
     search:
-      title: "search for topics, posts, users, or categories"
-      placeholder: "type your search terms here"
+      title: "search topics, posts, users, or categories"
       no_results: "No results found."
       searching: "Searching ..."
 

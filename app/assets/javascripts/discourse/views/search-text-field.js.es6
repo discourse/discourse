@@ -28,6 +28,6 @@ export default TextField.extend({
       }
     }
 
-    return I18n.t('search.placeholder');
+    return I18n.t('search.title');
   }.property('searchContext')
 });

@@ -21,7 +21,7 @@ module("view:search-text-field", {
 });
 
 test("formats placeholder correctly when no searchContext is provided", function() {
-  placeholderUsesKeyAndContext("search.placeholder", undefined);
+  placeholderUsesKeyAndContext("search.title", undefined);
 });
 
 test("formats placeholder correctly when user searchContext is provided", function() {
