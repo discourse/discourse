@@ -14,40 +14,25 @@ describe PostRevisor do
     subject { described_class.new(post) }
 
     describe 'with the same body' do
-
-      it 'returns false' do
-        subject.revise!(post.user, post.raw).should be_false
-      end
-
       it "doesn't change version" do
-        lambda { subject.revise!(post.user, post.raw); post.reload }.should_not change(post, :version)
+        lambda {
+          subject.revise!(post.user, post.raw).should be_false
+          post.reload
+        }.should_not change(post, :version)
       end
-
     end
 
     describe 'ninja editing' do
-      before do
-        SiteSetting.expects(:ninja_edit_window).returns(1.minute.to_i)
+      it 'correctly applies edits' do
+        SiteSetting.ninja_edit_window = 1.minute.to_i
         subject.revise!(post.user, 'updated body', revised_at: post.updated_at + 10.seconds)
         post.reload
-      end
 
-      it 'does not update version' do
         post.version.should == 1
-      end
-
-      it 'does not create a new revision' do
         post.revisions.size.should == 0
-      end
-
-      it "doesn't change the last_version_at" do
         post.last_version_at.should == first_version_at
-      end
-
-      it "doesn't update a category" do
         subject.category_changed.should be_blank
       end
-
     end
 
     describe 'revision much later' do
