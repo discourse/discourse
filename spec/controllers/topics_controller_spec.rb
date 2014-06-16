@@ -847,6 +847,58 @@ describe TopicsController do
 
   end
 
+  describe 'make_banner' do
+
+    it 'needs you to be a staff member' do
+      log_in
+      xhr :put, :make_banner, topic_id: 99
+      response.should be_forbidden
+    end
+
+    describe 'when logged in' do
+
+      before do
+        @admin = log_in(:admin)
+        @topic = Fabricate(:topic, user: @admin)
+      end
+
+      it "changes the topic archetype to 'banner'" do
+        Topic.any_instance.expects(:archetype=).with(Archetype.banner)
+        Topic.any_instance.expects(:add_moderator_post)
+        xhr :put, :make_banner, topic_id: @topic.id
+        response.should be_success
+      end
+
+    end
+
+  end
+
+  describe 'remove_banner' do
+
+    it 'needs you to be a staff member' do
+      log_in
+      xhr :put, :remove_banner, topic_id: 99
+      response.should be_forbidden
+    end
+
+    describe 'when logged in' do
+
+      before do
+        @admin = log_in(:admin)
+        @topic = Fabricate(:topic, user: @admin)
+      end
+
+      it "resets the topic archetype" do
+        Topic.any_instance.expects(:archetype=).with(Archetype.default)
+        Topic.any_instance.expects(:add_moderator_post)
+        xhr :put, :remove_banner, topic_id: @topic.id
+        response.should be_success
+      end
+
+    end
+
+  end
+
   describe "bulk" do
     it 'needs you to be logged in' do
       lambda { xhr :put, :bulk }.should raise_error(Discourse::NotLoggedIn)

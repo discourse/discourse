@@ -75,6 +75,7 @@ class TopicsController < ApplicationController
     params.require(:best)
     params.require(:topic_id)
     params.permit(:min_trust_level, :min_score, :min_replies, :bypass_trust_level_score, :only_moderator_liked)
+
     opts = { best: params[:best].to_i,
       min_trust_level: params[:min_trust_level] ? 1 : params[:min_trust_level].to_i,
       min_score: params[:min_score].to_i,
@@ -105,13 +106,9 @@ class TopicsController < ApplicationController
 
   def update
     topic = Topic.find_by(id: params[:topic_id])
-    title, archetype = params[:title], params[:archetype]
     guardian.ensure_can_edit!(topic)
 
-    topic.title = params[:title] if title.present?
-    # TODO: we may need smarter rules about converting archetypes
-    topic.archetype = "regular" if current_user.admin? && archetype == 'regular'
-
+    topic.title = params[:title] if params[:title].present?
     topic.acting_user = current_user
 
     success = false
@@ -174,6 +171,32 @@ class TopicsController < ApplicationController
     else
       render_json_error(topic)
     end
+  end
+
+  def make_banner
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    guardian.ensure_can_moderate!(topic)
+
+    # TODO: only one banner at the same time
+
+    topic.archetype = Archetype.banner
+    topic.add_moderator_post(current_user, I18n.t("archetypes.banner.message.make"))
+
+    topic.save
+
+    render nothing: true
+  end
+
+  def remove_banner
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    guardian.ensure_can_moderate!(topic)
+
+    topic.archetype = Archetype.default
+    topic.add_moderator_post(current_user, I18n.t("archetypes.banner.message.remove"))
+
+    topic.save
+
+    render nothing: true
   end
 
   def destroy

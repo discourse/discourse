@@ -19,22 +19,6 @@ Discourse.Topic = Discourse.Model.extend({
   invisible: Em.computed.not('visible'),
   deleted: Em.computed.notEmpty('deleted_at'),
 
-  canConvertToRegular: function() {
-    var a = this.get('archetype');
-    return a !== 'regular' && a !== 'private_message';
-  }.property('archetype'),
-
-  convertArchetype: function() {
-    var a = this.get('archetype');
-    if (a !== 'regular' && a !== 'private_message') {
-      this.set('archetype', 'regular');
-      return Discourse.ajax(this.get('url'), {
-        type: 'PUT',
-        data: {archetype: 'regular'}
-      });
-    }
-  },
-
   searchContext: function() {
     return ({ type: 'topic', id: this.get('id') });
   }.property('id'),
@@ -131,6 +115,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('archetype'),
 
   isPrivateMessage: Em.computed.equal('archetype', 'private_message'),
+  isBanner: Em.computed.equal('archetype', 'banner'),
 
   toggleStatus: function(property) {
     this.toggleProperty(property);
@@ -153,6 +138,18 @@ Discourse.Topic = Discourse.Model.extend({
       type: 'PUT',
       data: {status: property, enabled: value ? 'true' : 'false' }
     });
+  },
+
+  makeBanner: function() {
+    var self = this;
+    return Discourse.ajax('/t/' + this.get('id') + '/make-banner', { type: 'PUT' })
+           .then(function () { self.set('archetype', 'banner'); })
+  },
+
+  removeBanner: function() {
+    var self = this;
+    return Discourse.ajax('/t/' + this.get('id') + '/remove-banner', { type: 'PUT' })
+           .then(function () { self.set('archetype', 'regular'); })
   },
 
   starTooltipKey: function() {

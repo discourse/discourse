@@ -837,6 +837,8 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         auto_close: "Auto Close"
+        make_banner: "Banner Topic"
+        remove_banner: "Remove Banner Topic"
         unpin: "Un-Pin Topic"
         pin: "Pin Topic"
         pin_globally: "Pin Topic Globally"
@@ -846,7 +848,6 @@ en:
         visible: "Make Visible"
         reset_read: "Reset Read Data"
         multi_select: "Select Posts"
-        convert_to_topic: "Convert to Regular Topic"
 
       reply:
         title: 'Reply'

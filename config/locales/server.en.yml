@@ -423,6 +423,10 @@ en:
   archetypes:
     regular:
       title: "Regular Topic"
+    banner:
+      message:
+        make: "This topic is now a banner topic. It will appear at the top of every pages until it is dismissed by the users."
+        remove: "This topic is not a banner topic anymore. It will no longer appear at the top of every pages."
 
   unsubscribed:
     title: 'Unsubscribed'
@@ -989,7 +993,6 @@ en:
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-
     pinned_globally_enabled: "This topic is now pinned globally. It will appear at the top of its category and all topic lists until it is unpinned by staff for everyone, or by individual users for themselves."
     pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
     visible_enabled: "This topic is now visible. It will be displayed in topic lists."

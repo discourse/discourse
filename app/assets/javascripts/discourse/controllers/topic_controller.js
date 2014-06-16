@@ -302,6 +302,14 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       this.get('content').toggleStatus('closed');
     },
 
+    makeBanner: function() {
+      this.get('content').makeBanner();
+    },
+
+    removeBanner: function() {
+      this.get('content').removeBanner();
+    },
+
     togglePinned: function() {
       // Note that this is different than clearPin
       this.get('content').setStatus('pinned', this.get('pinned_at') ? false : true);
@@ -314,10 +322,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
     toggleArchived: function() {
       this.get('content').toggleStatus('archived');
-    },
-
-    convertToRegular: function() {
-      this.get('content').convertArchetype('regular');
     },
 
     // Toggle the star on the topic
