@@ -100,8 +100,7 @@ class UserNotifications < ActionMailer::Base
     opts[:allow_reply_by_email] = true
 
     # We use the 'user_posted' event when you are emailed a post in a PM.
-    # but it must get through to email in mailing list mode
-    opts[:notification_type] = 'postedprivate'
+    opts[:notification_type] = 'posted'
 
     notification_email(user, opts)
   end
@@ -156,12 +155,6 @@ class UserNotifications < ActionMailer::Base
 
     return if user.mailing_list_mode && !@post.topic.private_message? &&
        ["replied", "mentioned", "quoted", "posted"].include?(notification_type)
-
-    # We use the 'user_posted' event when you are emailed a post in a PM.
-    # but it must get through to email in mailing list mode
-    if notification_type == 'postedprivate'
-      notification_type = 'posted'
-    end
 
     title = @notification.data_hash[:topic_title]
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
