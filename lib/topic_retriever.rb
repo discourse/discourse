@@ -2,6 +2,7 @@ class TopicRetriever
 
   def initialize(embed_url, opts=nil)
     @embed_url = embed_url
+    @author_username = opts[:author_username]
     @opts = opts || {}
   end
 
@@ -46,7 +47,13 @@ class TopicRetriever
     end
 
     def fetch_http
-      user = User.find_by(username_lower: SiteSetting.embed_by_username.downcase)
+      if @author_username.nil?
+        username = SiteSetting.embed_by_username.downcase
+      else
+        username = @author_username
+      end
+
+      user = User.where(username_lower: username.downcase).first
       return if user.blank?
 
       TopicEmbed.import_remote(user, @embed_url)
