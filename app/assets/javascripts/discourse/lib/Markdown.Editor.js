@@ -156,7 +156,7 @@
             var previewManager = new PreviewManager(markdownConverter, panels, function () { hooks.onPreviewRefresh(); });
             var undoManager, uiManager;
 
-            if (!/\?noundo/.test(doc.location.href)) {
+            if (false && !/\?noundo/.test(doc.location.href)) {
                 undoManager = new UndoManager(function () {
                     previewManager.refresh();
                     if (uiManager) // not available on the first call
@@ -1587,16 +1587,16 @@
             }));
             buttons.heading = makeButton("wmd-heading-button", getString("heading"), bindCommand("doHeading"));
             buttons.hr = makeButton("wmd-hr-button", getString("hr"), bindCommand("doHorizontalRule"));
-            makeSpacer(3);
-            buttons.undo = makeButton("wmd-undo-button", getString("undo"), null);
-            buttons.undo.execute = function (manager) { if (manager) manager.undo(); };
+            //makeSpacer(3);
+            //buttons.undo = makeButton("wmd-undo-button", getString("undo"), null);
+            //buttons.undo.execute = function (manager) { if (manager) manager.undo(); };
 
-            var redoTitle = /win/.test(nav.platform.toLowerCase()) ?
-                getString("redo") :
-                getString("redomac"); // mac and other non-Windows platforms
+            // var redoTitle = /win/.test(nav.platform.toLowerCase()) ?
+            //     getString("redo") :
+            //     getString("redomac"); // mac and other non-Windows platforms
 
-            buttons.redo = makeButton("wmd-redo-button", redoTitle, null);
-            buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
+            //buttons.redo = makeButton("wmd-redo-button", redoTitle, null);
+            //buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
 
             if (helpOptions) {
                 var helpButton = document.createElement("li");
