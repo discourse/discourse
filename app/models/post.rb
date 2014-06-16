@@ -115,7 +115,7 @@ class Post < ActiveRecord::Base
 
   def raw_hash
     return if raw.blank?
-    Digest::SHA1.hexdigest(raw.gsub(/\s+/, ""))
+    Digest::SHA1.hexdigest(raw)
   end
 
   def self.white_listed_image_classes

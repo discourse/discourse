@@ -455,10 +455,6 @@ describe Post do
       post.raw_hash.should_not == post_with_body("something else").raw_hash
     end
 
-    it "returns the same hash even with different white space" do
-      post.raw_hash.should == post_with_body(" thisis ourt est postbody").raw_hash
-    end
-
     it "returns a different value with different text case" do
       post.raw_hash.should_not == post_with_body("THIS is OUR TEST post BODy").raw_hash
     end
