@@ -84,7 +84,7 @@
 
         {{#if currentUser}}
           <div class='submit-panel'>
-            <button {{action save}} tabindex="4" {{bind-attr class=":btn :btn-primary :create model.cantSubmitPost:disabled"}} title="{{i18n composer.title}}">{{model.saveText}}</button>
+            <button {{action save}} tabindex="4" {{bind-attr class=":btn :btn-primary :create disableSubmit:disabled"}} title="{{i18n composer.title}}">{{model.saveText}}</button>
             <a href='#' {{action cancel}} class='cancel' tabindex="4">{{i18n cancel}}</a>
           </div>
         {{/if}}

@@ -94,6 +94,10 @@ export default Discourse.Controller.extend({
     return false;
   },
 
+  disableSubmit: function() {
+    return this.get('model.loading');
+  }.property('model.loading'),
+
   save: function(force) {
     var composer = this.get('model'),
         self = this;
