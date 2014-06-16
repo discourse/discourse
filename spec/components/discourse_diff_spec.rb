@@ -5,7 +5,7 @@ describe DiscourseDiff do
 
   describe "inline_html" do
 
-    it "doest not lead to XSS" do
+    it "does not lead to XSS" do
       a = "<test>start</test>"
       b = "<test>end</test>"
       prev = "<div>#{CGI::escapeHTML(a)}</div>"
@@ -132,4 +132,3 @@ describe DiscourseDiff do
   end
 
 end
-
