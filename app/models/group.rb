@@ -17,7 +17,7 @@ class Group < ActiveRecord::Base
     :admins => 1,
     :moderators => 2,
     :staff => 3,
-    :registered_users => 10,
+    :trust_level_0 => 10,
     :trust_level_1 => 11,
     :trust_level_2 => 12,
     :trust_level_3 => 13,
@@ -92,7 +92,7 @@ class Group < ActiveRecord::Base
                  "SELECT u.id FROM users u WHERE u.moderator OR u.admin"
                when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4, :trust_level_5
                  "SELECT u.id FROM users u WHERE u.trust_level >= #{id-10}"
-               when :registered_users
+               when :trust_level_0
                  "SELECT u.id FROM users u"
                end
 
@@ -189,7 +189,7 @@ class Group < ActiveRecord::Base
 
   def self.desired_trust_level_groups(trust_level)
     trust_group_ids.keep_if do |id|
-      id == AUTO_GROUPS[:registered_users] || (trust_level + 10) >= id
+      id == AUTO_GROUPS[:trust_level_0] || (trust_level + 10) >= id
     end
   end
 
