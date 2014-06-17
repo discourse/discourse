@@ -79,7 +79,7 @@ describe Group do
 
   it "Correctly updates automatic trust level groups" do
     user = Fabricate(:user)
-    Group[:registered_users].user_ids.should include user.id
+    Group[:trust_level_0].user_ids.should include user.id
 
     user.change_trust_level!(:basic)
 
@@ -192,11 +192,11 @@ describe Group do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)
 
-    user.groups.map(&:name).sort.should == ["registered_users","trust_level_1", "trust_level_2"]
+    user.groups.map(&:name).sort.should == ["trust_level_0","trust_level_1", "trust_level_2"]
 
     Group.user_trust_level_change!(user.id, 0)
     user.reload
-    user.groups.map(&:name).sort.should == ["registered_users"]
+    user.groups.map(&:name).sort.should == ["trust_level_0"]
   end
 
 end
