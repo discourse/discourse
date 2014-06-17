@@ -3,6 +3,7 @@ class BadgeGranter
   def initialize(badge, user, opts={})
     @badge, @user, @opts = badge, user, opts
     @granted_by = opts[:granted_by] || Discourse.system_user
+    @post_id = opts[:post_id]
   end
 
   def self.grant(badge, user, opts={})
@@ -12,12 +13,14 @@ class BadgeGranter
   def grant
     return if @granted_by and !Guardian.new(@granted_by).can_grant_badges?(@user)
 
-    user_badge = UserBadge.find_by(badge_id: @badge.id, user_id: @user.id)
+    user_badge = UserBadge.find_by(badge_id: @badge.id, user_id: @user.id, post_id: @post_id)
 
     if user_badge.nil? || @badge.multiple_grant?
       UserBadge.transaction do
         user_badge = UserBadge.create!(badge: @badge, user: @user,
-                                       granted_by: @granted_by, granted_at: Time.now)
+                                       granted_by: @granted_by,
+                                       granted_at: Time.now,
+                                       post_id: @post_id)
 
         if @granted_by != Discourse.system_user
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)

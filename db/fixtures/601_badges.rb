@@ -1,3 +1,4 @@
+# Trust level system badges.
 trust_level_badges = [
   {id: 1, name: "Basic User", type: 3},
   {id: 2, name: "Regular User", type: 3},
@@ -43,4 +44,30 @@ SQL
   end
 
   Badge.where(id: Badge.trust_level_badge_ids).each {|badge| badge.reset_grant_count! }
+end
+#
+# Like system badges.
+like_badges = [
+  {id: 5, name: "Welcome", type: 3, multiple: false},
+  {id: 6, name: "Nice Post", type: 3, multiple: true},
+  {id: 7, name: "Good Post", type: 2, multiple: true},
+  {id: 8, name: "Great Post", type: 1, multiple: true}
+]
+
+like_badges.each do |spec|
+  Badge.seed do |b|
+    b.id = spec[:id]
+    b.name = spec[:name]
+    b.badge_type_id = spec[:type]
+    b.multiple_grant = spec[:multiple]
+  end
+end
+
+# Create an example badge if one does not already exist.
+if Badge.find_by(id: 101).nil?
+  Badge.seed do |b|
+    b.id = 101
+    b.name = "Example Badge"
+    b.badge_type_id = 3
+  end
 end

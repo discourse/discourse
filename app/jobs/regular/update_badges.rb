@@ -21,5 +21,22 @@ module Jobs
       end
     end
 
+    def post_like(args)
+      post = Post.find(args[:post_id])
+      user = post.user
+
+      # Grant "Welcome" badge to the user if they do not already have it.
+      BadgeGranter.grant(Badge.find(5), user)
+
+      [{id: 6, count: 10}, {id: 7, count: 25}, {id: 8, count: 100}].each do |b|
+        if post.like_count >= b[:count]
+          BadgeGranter.grant(Badge.find(b[:id]), user, post_id: post.id)
+        else
+          user_badge = UserBadge.find_by(badge_id: b[:id], user_id: user.id, post_id: post.id)
+          user_badge && BadgeGranter.revoke(user_badge)
+        end
+      end
+    end
+
   end
 end
