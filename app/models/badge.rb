@@ -35,6 +35,7 @@ end
 #  updated_at     :datetime
 #  allow_title    :boolean          default(FALSE), not null
 #  multiple_grant :boolean          default(FALSE), not null
+#  icon           :string(255)      default("fa-certificate")
 #
 # Indexes
 #

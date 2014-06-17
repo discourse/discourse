@@ -25,9 +25,8 @@ class BadgeGranter
         end
 
         if SiteSetting.enable_badges?
-          @user.notifications.create(notification_type: Notification.types[:granted_badge],
-                                     data: { badge_id: @badge.id,
-                                             badge_name: @badge.name }.to_json)
+          notification = @user.notifications.create(notification_type: Notification.types[:granted_badge], data: { badge_id: @badge.id, badge_name: @badge.name }.to_json)
+          user_badge.update_attributes notification_id: notification.id
         end
       end
     end
@@ -48,8 +47,6 @@ class BadgeGranter
         user_badge.user.title = nil
         user_badge.user.save!
       end
-
-      user_badge.notification && user_badge.notification.destroy!
     end
   end
 
