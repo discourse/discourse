@@ -19,7 +19,6 @@ class BadgeGranter
         user_badge = UserBadge.create!(badge: @badge, user: @user,
                                        granted_by: @granted_by, granted_at: Time.now)
 
-        Badge.increment_counter 'grant_count', @badge.id
         if @granted_by != Discourse.system_user
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
         end
@@ -37,7 +36,6 @@ class BadgeGranter
   def self.revoke(user_badge, options={})
     UserBadge.transaction do
       user_badge.destroy!
-      Badge.decrement_counter 'grant_count', user_badge.badge_id
       if options[:revoked_by]
         StaffActionLogger.new(options[:revoked_by]).log_badge_revoke(user_badge)
       end

@@ -8,6 +8,14 @@ class UserBadge < ActiveRecord::Base
   validates :user_id, presence: true
   validates :granted_at, presence: true
   validates :granted_by, presence: true
+
+  after_create do
+    Badge.increment_counter 'grant_count', self.badge_id
+  end
+
+  after_destroy do
+    Badge.decrement_counter 'grant_count', self.badge_id
+  end
 end
 
 # == Schema Information
