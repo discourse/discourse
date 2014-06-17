@@ -235,6 +235,7 @@ test("selecting a highlighted item", function() {
 test("search query / the flow of the search", function() {
   Ember.run(function() {
     controller.set("searchContext", "context");
+    controller.set("searchContextEnabled", true);
     controller.set("term", "ab");
   });
   ok(Discourse.Search.forTerm.calledWithExactly(

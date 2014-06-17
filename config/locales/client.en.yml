@@ -649,9 +649,10 @@ en:
       no_results: "No results found."
       searching: "Searching ..."
 
-      prefer:
-        user: "search will prefer results by @{{username}}"
-        category: "search will prefer results in {{category}}"
+      context:
+        user: "Search posts by @{{username}}"
+        category: "Search the \"{{category}}\" category"
+        topic: "Search this topic"
 
     site_map: "go to another topic list or category"
     go_back: 'go back'

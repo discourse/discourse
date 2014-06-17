@@ -162,8 +162,7 @@ describe Search do
           post1.topic_id,
           "_#{post2.id}",
           "_#{post3.id}",
-          "_#{post4.id}",
-          topic2.id]
+          "_#{post4.id}"]
 
       end
     end
@@ -312,8 +311,6 @@ describe Search do
 
       # should find topic created by searched user first
       Then          { first_of_type(search_user, 'topic')[:id].should == post.topic_id }
-      # results should also include topic by coding_horror
-      And           { result_ids_for_type(search_user, 'topic').should include coding_horror_post.topic_id }
     end
 
     context 'category as a search context' do
@@ -326,9 +323,6 @@ describe Search do
       When(:search_cat) { Search.new('hello', search_context: category).execute }
       # should find topic in searched category first
       Then          { first_of_type(search_cat, 'topic')[:id].should == topic.id }
-      # results should also include topic without category
-      And          { result_ids_for_type(search_cat, 'topic').should include topic_no_cat.id }
-
     end
 
   end

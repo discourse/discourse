@@ -76,8 +76,10 @@ class Search
         send("#{@results.type_filter}_search")
       else
         @limit = Search.per_facet + 1
-        user_search
-        category_search
+        unless @search_context
+          user_search
+          category_search
+        end
         topic_search
       end
 
@@ -161,14 +163,12 @@ class Search
       if @search_context.present?
 
         if @search_context.is_a?(User)
-          # If the context is a user, prioritize that user's posts
-          posts = posts.order("CASE WHEN posts.user_id = #{@search_context.id} THEN 0 ELSE 1 END")
+          posts = posts.where("posts.user_id = #{@search_context.id}")
         elsif @search_context.is_a?(Category)
-          # If the context is a category, restrict posts to that category
-          posts = posts.order("CASE WHEN topics.category_id = #{@search_context.id} THEN 0 ELSE 1 END")
+          posts = posts.where("topics.category_id = #{@search_context.id}")
         elsif @search_context.is_a?(Topic)
-          posts = posts.order("CASE WHEN topics.id = #{@search_context.id} THEN 0 ELSE 1 END,
-                               CASE WHEN topics.id = #{@search_context.id} THEN posts.post_number ELSE 999999 END")
+          posts = posts.where("topics.id = #{@search_context.id}")
+                       .order("posts.post_number")
         end
 
       end

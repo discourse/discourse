@@ -18,16 +18,10 @@ export default TextField.extend({
   **/
   placeholder: function() {
 
-    var ctx = this.get('searchContext');
-    if (ctx) {
-      switch(Em.get(ctx, 'type')) {
-        case 'user':
-          return I18n.t('search.prefer.user', {username: Em.get(ctx, 'user.username')});
-        case 'category':
-          return I18n.t('search.prefer.category', {category: Em.get(ctx, 'category.name')});
-      }
+    if(this.get('searchContextEnabled')){
+      return "";
     }
 
     return I18n.t('search.title');
-  }.property('searchContext')
+  }.property('searchContextEnabled')
 });

@@ -1,5 +1,14 @@
-{{view 'search-text-field' value=term searchContext=searchContext id="search-term"}}
-{{#unless loading}}
+{{view 'search-text-field' value=term searchContextEnabled=searchContextEnabled searchContext=searchContext id="search-term"}}
+{{#if searchContext}}
+<div>
+  <label>
+  {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
+  </label>
+</div>
+{{/if}}
+{{#if loading}}
+  <div class='searching'></div>
+{{else}}
   {{#unless noResults}}
     {{#each resultType in content}}
       <ul>
@@ -21,6 +30,4 @@
       {{i18n search.no_results}}
     </div>
   {{/unless}}
-{{else}}
-<div class='searching'><i class='fa fa-spinner fa-spin'></i></div>
-{{/unless}}
+{{/if}}

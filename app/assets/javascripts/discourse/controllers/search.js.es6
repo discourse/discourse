@@ -9,8 +9,31 @@
 export default Em.ArrayController.extend(Discourse.Presence, {
 
   contextChanged: function(){
-    this.setProperties({ term: "", content: [], resultCount: 0, urls: [] });
+    if(this.get('searchContextEnabled')){
+      this._dontSearch = true;
+      this.set('searchContextEnabled', false);
+      this._dontSearch = false;
+    }
   }.observes("searchContext"),
+
+  searchContextDescription: function(){
+    var ctx = this.get('searchContext');
+    if (ctx) {
+      switch(Em.get(ctx, 'type')) {
+        case 'topic':
+          return I18n.t('search.context.topic');
+        case 'user':
+          return I18n.t('search.context.user', {username: Em.get(ctx, 'user.username')});
+        case 'category':
+          return I18n.t('search.context.category', {category: Em.get(ctx, 'category.name')});
+      }
+    }
+  }.property('searchContext'),
+
+  searchContextEnabledChanged: function(){
+    if(this._dontSearch){ return; }
+    this.newSearchNeeded();
+  }.observes('searchContextEnabled'),
 
   // If we need to perform another search
   newSearchNeeded: function() {
@@ -29,9 +52,14 @@ export default Em.ArrayController.extend(Discourse.Presence, {
     var self = this;
     this.setProperties({ resultCount: 0, urls: [] });
 
+    var context;
+    if(this.get('searchContextEnabled')){
+      context = this.get('searchContext');
+    }
+
     return Discourse.Search.forTerm(term, {
       typeFilter: typeFilter,
-      searchContext: this.get('searchContext')
+      searchContext: context
     }).then(function(results) {
       var urls = [];
       if (results) {
