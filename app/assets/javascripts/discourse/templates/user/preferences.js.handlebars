@@ -175,7 +175,7 @@
       {{preference-checkbox labelKey="user.enable_quoting" checked=enable_quoting}}
       {{preference-checkbox labelKey="user.dynamic_favicon" checked=dynamic_favicon}}
       {{preference-checkbox labelKey="user.disable_jump_reply" checked=disable_jump_reply}}
-      {{view Discourse.CustomPreferences}}
+      {{plugin-outlet "user_custom_preferences"}}
     </div>
 
     <div class="control-group category">
