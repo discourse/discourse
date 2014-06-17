@@ -50,7 +50,7 @@ class Promotion
     admin = opts && opts[:log_action_for]
 
     @user.trust_level = new_level
-    @user.bio_raw_will_change! # So it can get re-cooked based on the new trust level
+    @user.user_profile.bio_raw_will_change! # So it can get re-cooked based on the new trust level
 
     @user.transaction do
       if admin
