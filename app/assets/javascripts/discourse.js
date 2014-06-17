@@ -33,7 +33,12 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       title += "" + (this.get('title')) + " - ";
     }
     title += Discourse.SiteSettings.title;
-    $('title').text(title);
+
+    // if we change this we can trigger changes on document.title
+    // only set if changed.
+    if($('title').text() !== title) {
+      $('title').text(title);
+    }
 
     var notifyCount = this.get('notifyCount');
     if (notifyCount > 0 && !Discourse.User.currentProp('dynamic_favicon')) {
