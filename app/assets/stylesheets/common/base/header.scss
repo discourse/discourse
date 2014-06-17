@@ -240,13 +240,15 @@
     display: block;
     position: absolute;
     top: 17px;
-    // keep the height here, otherwise
-    // crazy positioning will happen due
-    // to the spinner animation
-    height: 100%;
     right: 15px;
-    color: scale-color($primary, $lightness: 50%);
-    font-size: 18px;
+    width: 22px;
+    height: 22px;
+    background: {
+      image: image-url("spinner_96.gif");
+      repeat: no-repeat;
+      position: 0px 50%;
+      size: 18px;
+    };
   }
   .no-results {
     padding: 5px;
