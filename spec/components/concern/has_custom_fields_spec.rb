@@ -129,6 +129,18 @@ describe HasCustomFields do
 
     end
 
+    it "supportes type coersion" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
+      CustomFieldsTestItem.register_custom_field_type("int", :integer)
+
+      test_item.custom_fields = {"bool" => true, "int" => 1}
+      test_item.save
+      test_item.reload
+
+      test_item.custom_fields.should == {"bool" => true, "int" => 1}
+    end
+
     it "simple modifications don't interfere" do
       test_item = CustomFieldsTestItem.new
 

@@ -1,6 +1,28 @@
-
 module HasCustomFields
   extend ActiveSupport::Concern
+  module Helpers
+    def self.append_field(target, key, value, types)
+      if target.has_key?(key)
+        target[key] = [target[key]] if !target[key].is_a? Array
+        target[key] << cast_custom_field(key, value, types)
+      else
+        target[key] = cast_custom_field(key, value, types)
+      end
+    end
+
+    CUSTOM_FIELD_TRUE = ['t','true', 'T', 'True', 'TRUE'].freeze unless defined? CUSTOM_FIELD_TRUE
+
+    def self.cast_custom_field(key, value, types)
+      return value unless types && type = types[key]
+
+      case type
+        when :boolean then !!CUSTOM_FIELD_TRUE.include?(value)
+        when :integer then value.to_i
+      else
+        value
+      end
+    end
+  end
 
   included do
     has_many :_custom_fields, dependent: :destroy, :class_name => "#{name}CustomField"
@@ -17,19 +39,21 @@ module HasCustomFields
       return result if whitelisted_fields.blank?
       klass.where(foreign_key => ids, :name => whitelisted_fields).pluck(foreign_key, :name, :value).each do |cf|
         result[cf[0]] ||= {}
-        unload_field(result[cf[0]], cf[1], cf[2])
+        append_custom_field(result[cf[0]], cf[1], cf[2])
       end
       result
     end
 
-    def self.unload_field(target, key, value)
-      if target.has_key?(key)
-        target[key] = [target[key]] if !target[key].is_a? Array
-        target[key] << value
-      else
-        target[key] = value
-      end
+    def self.append_custom_field(target, key, value)
+      HasCustomFields::Helpers.append_field(target,key,value,@custom_field_types)
     end
+
+
+    def self.register_custom_field_type(name, type)
+      @custom_field_types ||= {}
+      @custom_field_types[name] = type
+    end
+
   end
 
   def reload(options = nil)
@@ -37,6 +61,7 @@ module HasCustomFields
     @custom_fields_orig = nil
     super
   end
+
 
   def custom_fields
     @custom_fields ||= refresh_custom_fields_from_db.dup
@@ -57,7 +82,7 @@ module HasCustomFields
   def refresh_custom_fields_from_db
     target = Hash.new
     _custom_fields.pluck(:name,:value).each do |key, value|
-      self.class.unload_field(target, key, value)
+      self.class.append_custom_field(target, key, value)
     end
     @custom_fields_orig = target
     @custom_fields = @custom_fields_orig.dup
