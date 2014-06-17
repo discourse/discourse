@@ -24,7 +24,7 @@ Button.prototype.render = function(buffer) {
   buffer.push("<button title=\"" + I18n.t(this.label) + "\"");
   if (this.opts.className) { buffer.push(" class=\"" + this.opts.className + "\""); }
   if (this.opts.shareUrl) { buffer.push(" data-share-url=\"" + this.opts.shareUrl + "\""); }
-  buffer.push(" data-action=\"" + this.action + "\" class=\"delete\">");
+  buffer.push(" data-action=\"" + this.action + "\">");
   if (this.icon) { buffer.push("<i class=\"fa fa-" + this.icon + "\"></i>"); }
   if (this.opts.textLabel) { buffer.push(I18n.t(this.opts.textLabel)); }
   if (this.opts.innerHTML) { buffer.push(this.opts.innerHTML); }
@@ -170,7 +170,11 @@ export default Discourse.View.extend({
       }
     }
     var action = (icon === 'trash-o') ? 'delete' : 'recover';
-    return new Button(action, label, icon);
+    var opts;
+    if (icon === "trash-o"){
+      opts = {className: 'delete'};
+    }
+    return new Button(action, label, icon, opts);
   },
 
   clickRecover: function(post) {
