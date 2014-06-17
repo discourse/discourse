@@ -8,7 +8,7 @@ class NotificationsController < ApplicationController
     if notifications.present?
       # ordering can be off due to PMs
       max_id = notifications.map(&:id).max
-      current_user.saw_notification_id(max_id)
+      current_user.saw_notification_id(max_id) unless params.has_key?(:silent)
     end
     current_user.reload
     current_user.publish_notifications_state
