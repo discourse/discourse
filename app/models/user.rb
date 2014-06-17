@@ -9,6 +9,7 @@ require_dependency 'user_name_suggester'
 require_dependency 'pretty_text'
 require_dependency 'url_helper'
 require_dependency 'letter_avatar'
+require_dependency 'promotion'
 
 class User < ActiveRecord::Base
   include Roleable
@@ -75,6 +76,7 @@ class User < ActiveRecord::Base
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_profile
+  after_create :ensure_in_trust_level_group
   after_save :refresh_avatar
 
   before_destroy do
@@ -440,18 +442,6 @@ class User < ActiveRecord::Base
     admin
   end
 
-  def change_trust_level!(level)
-    raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
-    self.trust_level = TrustLevel.levels[level]
-    transaction do
-      self.save!
-      self.user_profile.recook_bio
-      self.user_profile.save!
-      Group.user_trust_level_change!(self.id, self.trust_level)
-      BadgeGranter.update_badges(self, trust_level: trust_level)
-    end
-  end
-
   def guardian
     Guardian.new(self)
   end
@@ -477,6 +467,10 @@ class User < ActiveRecord::Base
   def deactivate
     self.active = false
     save
+  end
+
+  def change_trust_level!(level, opts=nil)
+    Promotion.new(self).change_trust_level!(level, opts)
   end
 
   def treat_as_new_topic_start_date
@@ -639,6 +633,10 @@ class User < ActiveRecord::Base
 
   def create_user_profile
     UserProfile.create(user_id: id)
+  end
+
+  def ensure_in_trust_level_group
+    Group.user_trust_level_change!(id, trust_level)
   end
 
   def create_user_stat

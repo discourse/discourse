@@ -21,3 +21,5 @@ User.seed do |u|
   u.email_private_messages = false
   u.trust_level = TrustLevel.levels[:elder]
 end
+
+Group.user_trust_level_change!(-1 ,TrustLevel.levels[:elder])

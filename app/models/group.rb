@@ -17,12 +17,15 @@ class Group < ActiveRecord::Base
     :admins => 1,
     :moderators => 2,
     :staff => 3,
+    :registered_users => 10,
     :trust_level_1 => 11,
     :trust_level_2 => 12,
     :trust_level_3 => 13,
     :trust_level_4 => 14,
     :trust_level_5 => 15
   }
+
+  AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.reverse]
 
   ALIAS_LEVELS = {
     :nobody => 0,
@@ -88,7 +91,9 @@ class Group < ActiveRecord::Base
                when :staff
                  "SELECT u.id FROM users u WHERE u.moderator OR u.admin"
                when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4, :trust_level_5
-                 "SELECT u.id FROM users u WHERE u.trust_level = #{id-10}"
+                 "SELECT u.id FROM users u WHERE u.trust_level >= #{id-10}"
+               when :registered_users
+                 "SELECT u.id FROM users u"
                end
 
 
@@ -182,17 +187,27 @@ class Group < ActiveRecord::Base
     group_ids
   end
 
+  def self.desired_trust_level_groups(trust_level)
+    trust_group_ids.keep_if do |id|
+      id == AUTO_GROUPS[:registered_users] || (trust_level + 10) >= id
+    end
+  end
 
   def self.user_trust_level_change!(user_id, trust_level)
-    name = "trust_level_#{trust_level}".to_sym
+    desired = desired_trust_level_groups(trust_level)
+    undesired = trust_group_ids - desired
 
-    GroupUser.where(group_id: trust_group_ids, user_id: user_id).delete_all
+    GroupUser.where(group_id: undesired, user_id: user_id).delete_all
 
-    if group = lookup_group(name)
-      group.group_users.build(user_id: user_id)
-      group.save!
-    else
-      refresh_automatic_group!(name)
+    desired.each do |id|
+      if group = find_by(id: id)
+        unless GroupUser.where(group_id: id, user_id: user_id).exists?
+          group.group_users.create!(user_id: user_id)
+        end
+      else
+        name = AUTO_GROUP_IDS[trust_level]
+        refresh_automatic_group!(name)
+      end
     end
   end
 
