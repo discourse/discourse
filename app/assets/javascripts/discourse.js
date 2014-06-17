@@ -116,6 +116,8 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   **/
   start: function() {
 
+    $('noscript').remove();
+
     // Load any ES6 initializers
     Ember.keys(requirejs._eak_seen).forEach(function(key) {
       if (/\/initializers\//.test(key)) {
