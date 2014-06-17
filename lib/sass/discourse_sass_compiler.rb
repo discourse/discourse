@@ -21,6 +21,10 @@ class DiscourseSassCompiler
   def initialize(scss, target)
     @scss = scss
     @target = target
+
+    unless Sass::Script::Functions < Sprockets::SassFunctions
+      Sass::Script::Functions.send :include, Sprockets::SassFunctions
+    end
   end
 
   # Compiles the given scss and output the css as a string.
