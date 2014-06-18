@@ -210,6 +210,13 @@ class TopicQuery
       result.order("topics.#{sort_column} #{sort_dir}")
     end
 
+    def get_category_id(category_id_or_slug)
+      return nil unless category_id_or_slug
+      category_id = category_id_or_slug.to_i
+      category_id = Category.where(slug: category_id_or_slug).pluck(:id).first if category_id == 0
+      category_id
+    end
+
 
     # Create results based on a bunch of default options
     def default_results(options={})
@@ -224,19 +231,14 @@ class TopicQuery
                        .references('tu')
       end
 
-      category_id = nil
-      if options[:category].present?
-        category_id  = options[:category].to_i
-        category_id = Category.where(slug: options[:category]).pluck(:id).first if category_id == 0
-
-        if category_id
-          if options[:no_subcategories]
-            result = result.where('categories.id = ?', category_id)
-          else
-            result = result.where('categories.id = ? or categories.parent_category_id = ?', category_id, category_id)
-          end
-          result = result.references(:categories)
+      category_id = get_category_id(options[:category])
+      if category_id
+        if options[:no_subcategories]
+          result = result.where('categories.id = ?', category_id)
+        else
+          result = result.where('categories.id = ? or categories.parent_category_id = ?', category_id, category_id)
         end
+        result = result.references(:categories)
       end
 
       result = apply_ordering(result, options)
@@ -287,18 +289,25 @@ class TopicQuery
 
     def latest_results(options={})
       result = default_results(options)
-      result = remove_muted_categories(result, @user) unless options[:category].present?
+      result = remove_muted_categories(result, @user, exclude: options[:category])
       result
     end
 
-    def remove_muted_categories(list, user)
+    def remove_muted_categories(list, user, opts)
+      category_id = get_category_id(opts[:exclude]) if opts
       if user
         list = list.where("NOT EXISTS(
                          SELECT 1 FROM category_users cu
                          WHERE cu.user_id = ? AND
                                cu.category_id = topics.category_id AND
-                               cu.notification_level = ?
-                         )", user.id, CategoryUser.notification_levels[:muted]).references('cu')
+                               cu.notification_level = ? AND
+                               cu.category_id <> ?
+                         )",
+                          user.id,
+                          CategoryUser.notification_levels[:muted],
+                          category_id || -1
+                         )
+                      .references('cu')
       end
 
       list
@@ -314,7 +323,7 @@ class TopicQuery
 
     def new_results(options={})
       result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
-      result = remove_muted_categories(result, @user) unless options[:category].present?
+      result = remove_muted_categories(result, @user, exclude: options[:category])
       suggested_ordering(result, options)
     end
 

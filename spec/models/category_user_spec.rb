@@ -50,9 +50,6 @@ describe CategoryUser do
       tu.notification_level.should == TopicUser.notification_levels[:tracking]
       tu.notifications_reason_id.should == TopicUser.notification_reasons[:auto_track_category]
 
-      tu = TopicUser.get(muted_post.topic, user)
-      tu.notification_level.should == TopicUser.notification_levels[:muted]
-      tu.notifications_reason_id.should == TopicUser.notification_reasons[:auto_mute_category]
     end
 
   end

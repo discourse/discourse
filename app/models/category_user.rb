@@ -60,15 +60,6 @@ class CategoryUser < ActiveRecord::Base
     end
   end
 
-
-  def self.auto_mute_new_topic(topic)
-    apply_default_to_topic(
-                           topic,
-                           TopicUser.notification_levels[:muted],
-                           TopicUser.notification_reasons[:auto_mute_category]
-                          )
-  end
-
   private
 
   def self.apply_default_to_topic(topic, level, reason)
