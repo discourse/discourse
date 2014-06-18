@@ -82,8 +82,9 @@ module SiteSettingExtension
       if opts[:refresh]
         refresh_settings << name
       end
-      if validator_type = opts[:type]
-        validators[name] = {class: validator_for(validator_type), opts: opts}
+
+      if validator_type = validator_for(opts[:type] || get_data_type(name, defaults[name]))
+        validators[name] = {class: validator_type, opts: opts}
       end
 
       current[name] = current_value
@@ -242,7 +243,7 @@ module SiteSettingExtension
     if v = validators[name]
       validator = v[:class].new(v[:opts])
       unless validator.valid_value?(val)
-        raise Discourse::InvalidParameters.new(validator.error_message(val))
+        raise Discourse::InvalidParameters.new(validator.error_message)
       end
     end
 
@@ -327,9 +328,10 @@ module SiteSettingExtension
 
   def validator_for(type_name)
     @validator_mapping ||= {
-      'email'    => EmailSettingValidator,
-      'username' => UsernameSettingValidator,
-      'integer'  => IntegerSettingValidator
+      'email'        => EmailSettingValidator,
+      'username'     => UsernameSettingValidator,
+      types[:fixnum] => IntegerSettingValidator,
+      types[:string] => StringSettingValidator
     }
     @validator_mapping[type_name]
   end

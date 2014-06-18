@@ -1,13 +1,21 @@
-# Possible types:
+# Available options:
 #
-# email    - Must be a valid email address
-# username - Must match the username of an existing user
-# integer  - Must be an integer. Can also provide max and min options to limit the range of values.
+# default - The default value of the setting.
+# client  - Set to true if the javascript should have access to this setting's value.
+# refresh - Set to true if clients should refresh when the setting is changed.
+# min     - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max     - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex   - A regex that the value must match.
+# enum    - The setting has a fixed set of allowed values, and only one can be chosen.
+#           Set to the class name that defines the set.
+# type: email    - Must be a valid email address.
+# type: username - Must match the username of an existing user.
 required:
   title:
     client: true
     default: 'Discourse'
-  site_description: ''
+  site_description:
+    default: ''
   contact_email:
     default: ''
     type: email
@@ -45,7 +53,6 @@ basic:
   suggested_topics:
     client: true
     default: 5
-    type: integer
     min: 0
   limit_suggested_to_category:
     client: false
@@ -125,32 +132,26 @@ basic:
   relative_date_duration:
     client: true
     default: 30
-    type: integer
     min: 0
   topics_per_period_in_top_summary:
     default: 20
-    type: integer
     min: 1
   topics_per_period_in_top_page:
     default: 50
-    type: integer
     min: 1
   category_featured_topics:
     client: true
     default: 3
-    type: integer
     min: 1
   fixed_category_positions:
     client: true
     default: false
   topics_per_page:
     default: 30
-    type: integer
     min: 1
   posts_per_page:
     client: true
     default: 20
-    type: integer
     min: 1
   enable_badges:
     client: true
@@ -172,18 +173,15 @@ users:
   min_username_length:
     client: true
     default: 3
-    type: integer
     min: 1
   max_username_length:
     client: true
     default: 20
-    type: integer
     min: 8
     max: 60
   min_password_length:
     client: true
     default: 8
-    type: integer
     min: 1
   block_common_passwords: true
 

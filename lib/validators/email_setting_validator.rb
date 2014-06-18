@@ -7,7 +7,7 @@ class EmailSettingValidator
     !val.present? || !!(EmailValidator.email_regex =~ val)
   end
 
-  def error_message(val)
+  def error_message
     I18n.t('site_settings.errors.invalid_email')
   end
 end

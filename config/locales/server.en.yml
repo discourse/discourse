@@ -922,6 +922,11 @@ en:
       invalid_integer_min: "Value must be %{min} or greater."
       invalid_integer_max: "Value cannot be higher than %{max}."
       invalid_integer: "Value must be an integer."
+      regex_mismatch: "Value doesn't match the required format."
+      invalid_string: "Invalid value."
+      invalid_string_min_max: "Must be between %{min} and %{max} characters."
+      invalid_string_min: "Must be at least %{min} characters."
+      invalid_string_max: "Must be no more than %{max} characters."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

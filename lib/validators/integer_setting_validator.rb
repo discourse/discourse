@@ -10,7 +10,7 @@ class IntegerSettingValidator
     true
   end
 
-  def error_message(val)
+  def error_message
     if @opts[:min] && @opts[:max]
       I18n.t('site_settings.errors.invalid_integer_min_max', {min: @opts[:min], max: @opts[:max]})
     elsif @opts[:min]
