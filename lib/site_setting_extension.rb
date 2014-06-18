@@ -73,7 +73,7 @@ module SiteSettingExtension
           choices[name].concat(opts[:choices]) :
           choices[name] = opts[:choices]
       end
-      if opts[:list]
+      if opts[:type] == 'list'
         lists << name
       end
       if opts[:hidden]

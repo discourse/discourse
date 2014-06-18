@@ -76,7 +76,7 @@ basic:
   top_menu:
     client: true
     refresh: true
-    list: true
+    type: list
     default: 'latest|new|unread|starred|top|categories'
     choices:
      - latest
@@ -89,7 +89,7 @@ basic:
      - posted
   post_menu:
     client: true
-    list: true
+    type: list
     default: 'like|share|flag|edit|bookmark|delete|admin|reply'
     choices:
      - like
@@ -102,7 +102,7 @@ basic:
      - reply
   post_menu_hidden_items:
     client: true
-    list: true
+    type: list
     default: 'edit|delete|admin'
     choices:
      - like
@@ -115,7 +115,7 @@ basic:
      - reply
   share_links:
     client: true
-    list: true
+    type: list
     default: 'twitter|facebook|google+|email'
     choices:
      - twitter
@@ -124,7 +124,7 @@ basic:
      - email
   category_colors:
     client: true
-    list: true
+    type: list
     default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890'
   enable_mobile_theme:
     client: true
@@ -371,7 +371,7 @@ files:
     client: true
     default: 'jpg|jpeg|png|gif'
     refresh: true
-    list: true
+    type: list
   crawl_images:
     default:
       test: false
@@ -388,7 +388,7 @@ files:
       default: true
   download_remote_images_threshold: 20
   disabled_image_download_domains:
-    list: true
+    type: list
     default: ''
   create_thumbnails: true
   clean_up_uploads: false
@@ -444,19 +444,19 @@ onebox:
   post_onebox_maxlength: 500
   onebox_domains_whitelist:
     default: ''
-    list: true
+    type: list
 
 spam:
   add_rel_nofollow_to_user_content: true
   exclude_rel_nofollow_domains:
     default: ''
-    list: true
+    type: list
   email_domains_blacklist:
     default: 'mailinator.com'
-    list: true
+    type: list
   email_domains_whitelist:
     default: ''
-    list: true
+    type: list
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
   num_flags_to_block_new_user: 3
@@ -466,7 +466,7 @@ spam:
   newuser_spam_host_threshold: 3
   white_listed_spam_host_domains:
     default: ''
-    list: true
+    type: list
 
 rate_limits:
   unique_posts_mins:
@@ -619,7 +619,7 @@ uncategorized:
   notify_about_flags_after: 48
 
   public_user_custom_fields:
-    list: true
+    type: list
     default: ''
 
   enable_cdn_js_debugging: true
