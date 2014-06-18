@@ -18,7 +18,6 @@ class EmbedController < ApplicationController
                                   limit: SiteSetting.embed_post_limit,
                                   exclude_first: true,
                                   exclude_deleted_users: true)
-      @topic_view.posts.reject! {|p| p.user.blank?}
 
       @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
       @posts_left = 0
