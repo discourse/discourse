@@ -143,13 +143,13 @@ Discourse.Topic = Discourse.Model.extend({
   makeBanner: function() {
     var self = this;
     return Discourse.ajax('/t/' + this.get('id') + '/make-banner', { type: 'PUT' })
-           .then(function () { self.set('archetype', 'banner'); })
+           .then(function () { self.set('archetype', 'banner'); });
   },
 
   removeBanner: function() {
     var self = this;
     return Discourse.ajax('/t/' + this.get('id') + '/remove-banner', { type: 'PUT' })
-           .then(function () { self.set('archetype', 'regular'); })
+           .then(function () { self.set('archetype', 'regular'); });
   },
 
   starTooltipKey: function() {
