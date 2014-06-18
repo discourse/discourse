@@ -6,11 +6,9 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.RepliesView = Ember.CollectionView.extend({
+export default Ember.CollectionView.extend({
   tagName: 'section',
   classNameBindings: [':embedded-posts', ':bottom', 'hidden'],
-  itemViewClass: Discourse.EmbeddedPostView,
+  itemViewClass: 'embedded-post',
   hidden: Em.computed.equal('content.length', 0)
 });
-
-

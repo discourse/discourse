@@ -2,14 +2,13 @@
   Lists previous posts in the history of a post.
 
   @class ReplyHistory
-  @extends Discourse.EmbeddedPostView
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ReplyHistory = Em.CollectionView.extend({
+export default Em.CollectionView.extend({
   tagName: 'section',
   classNameBindings: [':embedded-posts', ':top', ':topic-body', ':offset2', 'hidden'],
-  itemViewClass: Discourse.EmbeddedPostView,
+  itemViewClass: 'embedded-post',
   hidden: Em.computed.equal('content.length', 0),
   previousPost: true
 });

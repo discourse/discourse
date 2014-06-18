@@ -1,7 +1,7 @@
 {{post-gap post=this postStream=controller.postStream before="true"}}
 
 <div class='row'>
-  {{view Discourse.ReplyHistory contentBinding="replyHistory"}}
+  {{view 'reply-history' content=replyHistory}}
 </div>
 
 <article class='boxed' {{bind-attr id="postElementId"}} {{bind-attr data-post-id="id"}} data-user-id="{{unbound user_id}}">
@@ -71,9 +71,9 @@
             <button {{action expandFirstPost this}} class='btn expand-post'>{{i18n post.show_full}}</button>
           {{/if}}
         {{/if}}
-        {{view 'post-menu' post=this postView=view}}
+        {{view 'post-menu' post=this adminMenu=view.adminMenu}}
       </div>
-      {{view Discourse.RepliesView content=replies postView=view}}
+      {{view 'replies' content=replies}}
       {{discourse-action-history post=this}}
       {{view 'topic-map-container' post=this topic=controller.model}}
     </div>

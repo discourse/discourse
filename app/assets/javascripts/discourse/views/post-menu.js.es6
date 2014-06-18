@@ -229,7 +229,7 @@ export default Discourse.View.extend({
     var options = {className: 'create'};
 
     if(!Discourse.Mobile.mobileView) {
-      options.textLabel = 'topic.reply.title'
+      options.textLabel = 'topic.reply.title';
     }
 
     return new Button('reply', 'post.controls.reply', 'reply', options);
@@ -273,7 +273,7 @@ export default Discourse.View.extend({
 
   clickAdmin: function() {
     var $adminMenu = this.$('.post-admin-menu');
-    this.set('postView.adminMenu', $adminMenu);
+    this.set('adminMenu', $adminMenu);
     $adminMenu.show();
   },
 
