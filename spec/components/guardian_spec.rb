@@ -232,6 +232,12 @@ describe Guardian do
       Guardian.new(user).can_invite_to_forum?.should be_false
     end
 
+    it 'returns false when the local logins are disabled' do
+      SiteSetting.stubs(:enable_local_logins).returns(false)
+      Guardian.new(user).can_invite_to_forum?.should be_false
+      Guardian.new(moderator).can_invite_to_forum?.should be_false
+    end
+
   end
 
   describe 'can_invite_to?' do
@@ -254,6 +260,12 @@ describe Guardian do
     it 'returns false when the site requires approving users and is regular' do
       SiteSetting.expects(:must_approve_users?).returns(true)
       Guardian.new(coding_horror).can_invite_to?(topic).should be_false
+    end
+
+    it 'returns false when local logins are disabled' do
+      SiteSetting.stubs(:enable_local_logins).returns(false)
+      Guardian.new(moderator).can_invite_to?(topic).should be_false
+      Guardian.new(user).can_invite_to?(topic).should be_false
     end
 
   end

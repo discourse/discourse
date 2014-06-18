@@ -191,6 +191,7 @@ class Guardian
   def can_invite_to_forum?(groups=nil)
     authenticated? &&
     !SiteSetting.enable_sso &&
+    SiteSetting.enable_local_logins &&
     (
       (!SiteSetting.must_approve_users? && @user.has_trust_level?(:regular)) ||
       is_staff?
