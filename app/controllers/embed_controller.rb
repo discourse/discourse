@@ -13,7 +13,13 @@ class EmbedController < ApplicationController
     topic_id = TopicEmbed.topic_id_for_embed(embed_url)
 
     if topic_id
-      @topic_view = TopicView.new(topic_id, current_user, limit: SiteSetting.embed_post_limit, exclude_first: true)
+      @topic_view = TopicView.new(topic_id,
+                                  current_user,
+                                  limit: SiteSetting.embed_post_limit,
+                                  exclude_first: true,
+                                  exclude_deleted_users: true)
+      @topic_view.posts.reject! {|p| p.user.blank?}
+
       @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
       @posts_left = 0
       if @topic_view && @topic_view.posts.size == SiteSetting.embed_post_limit

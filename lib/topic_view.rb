@@ -307,6 +307,7 @@ class TopicView
   def unfiltered_posts
     result = @topic.posts
     result = result.with_deleted if @user.try(:staff?)
+    result = @topic.posts.where("user_id IS NOT NULL") if @exclude_deleted_users
     result
   end
 
