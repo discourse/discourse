@@ -1,6 +1,7 @@
 <div class='container'>
   {{custom-html "top"}}
   {{Discourse.globalNotice}}
+  {{discourse-banner user=currentUser banner=Discourse.banner}}
 </div>
 
 {{#if postStream.loaded}}

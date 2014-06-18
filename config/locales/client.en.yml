@@ -166,6 +166,12 @@ en:
     undo: "Undo"
     revert: "Revert"
 
+    banner:
+      close: "Dismiss this banner."
+      read_more:
+        title: "Click to go to the topic."
+        text: "Read more"
+
     choose_topic:
       none_found: "No topics found."
       title:

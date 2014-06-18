@@ -19,7 +19,8 @@ class UserUpdater
   ]
 
   PROFILE_ATTR = [
-    :location
+    :location,
+    :dismissed_banner_key
   ]
 
   def initialize(actor, user)

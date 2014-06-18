@@ -234,6 +234,7 @@ class ApplicationController < ActionController::Base
       store_preloaded("site", Site.json_for(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
       store_preloaded("customHTML", custom_html_json)
+      store_preloaded("banner", banner_json)
     end
 
     def preload_current_user_data
@@ -259,16 +260,23 @@ class ApplicationController < ActionController::Base
       MultiJson.dump(data)
     end
 
+    def banner_json
+      topic = Topic.where(archetype: Archetype.banner).limit(1).first
+      banner = topic.present? ? topic.banner : {}
+
+      MultiJson.dump(banner)
+    end
+
     def render_json_error(obj)
       render json: MultiJson.dump(create_errors_json(obj)), status: 422
     end
 
     def success_json
-      {success: 'OK'}
+      { success: 'OK' }
     end
 
     def failed_json
-      {failed: 'FAILED'}
+      { failed: 'FAILED' }
     end
 
     def json_result(obj, opts={})

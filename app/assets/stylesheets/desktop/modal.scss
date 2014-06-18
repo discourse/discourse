@@ -63,16 +63,16 @@ animation: modal .25s;
     font-size: 20px;
     padding: 10px 15px 7px;
   }
-  .close {
-    float: right;
-    font-size: 20px;
-    margin: 10px 10px 0;
-    text-decoration: none;
-    color: scale-color($primary, $lightness: 35%);
-    cursor: pointer;
-    &:hover {
-      color: $primary;
-    }
+}
+.close {
+  float: right;
+  font-size: 20px;
+  margin: 10px 10px 0;
+  text-decoration: none;
+  color: scale-color($primary, $lightness: 35%);
+  cursor: pointer;
+  &:hover {
+    color: $primary;
   }
 }
 

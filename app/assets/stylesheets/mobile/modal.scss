@@ -54,18 +54,16 @@
     font-size: 15px;
     padding: 0 0 0 20px;
   }
-  .close {
-    float: right;
-    font-size: 24px;
-    padding: 15px; // more pixels to touch
-    margin: -15px 0 0 0;
-    text-decoration: none;
-    color: $primary;
-    cursor: pointer;
-  }
 }
-
-
+.close {
+  float: right;
+  font-size: 24px;
+  padding: 15px; // more pixels to touch
+  margin: -15px 0 0 0;
+  text-decoration: none;
+  color: $primary;
+  cursor: pointer;
+}
 
 #move-selected {
   p {

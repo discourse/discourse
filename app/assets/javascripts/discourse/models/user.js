@@ -411,6 +411,14 @@ Discourse.User = Discourse.Model.extend({
     } else {
       return Ember.RSVP.reject(I18n.t('user.delete_yourself_not_allowed'));
     }
+  },
+
+  dismissBanner: function (bannerKey) {
+    this.set("dismissed_banner_key", bannerKey);
+    Discourse.ajax("/users/" + this.get('username'), {
+      type: 'PUT',
+      data: { dismissed_banner_key: bannerKey }
+    });
   }
 
 });
