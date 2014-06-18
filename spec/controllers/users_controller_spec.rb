@@ -25,6 +25,20 @@ describe UsersController do
       xhr :get, :show, username: user.username
       response.should be_forbidden
     end
+
+    context "fetching a user by external_id" do
+      before { user.create_single_sign_on_record(external_id: '997', last_payload: '') }
+
+      it "returns fetch for a matching external_id" do
+        xhr :get, :show, external_id: '997'
+        response.should be_success
+      end
+
+      it "returns not found when external_id doesn't match" do
+        xhr :get, :show, external_id: '99'
+        response.should_not be_success
+      end
+    end
   end
 
   describe '.user_preferences_redirect' do

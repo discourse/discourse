@@ -208,10 +208,13 @@ class ApplicationController < ActionController::Base
   end
 
   def fetch_user_from_params
-    username_lower = params[:username].downcase
-    username_lower.gsub!(/\.json$/, '')
-
-    user = User.find_by(username_lower: username_lower)
+    user = if params[:username]
+      username_lower = params[:username].downcase
+      username_lower.gsub!(/\.json$/, '')
+      User.find_by(username_lower: username_lower)
+    elsif params[:external_id]
+      SingleSignOnRecord.find_by(external_id: params[:external_id]).try(:user)
+    end
     raise Discourse::NotFound.new if user.blank?
 
     guardian.ensure_can_see!(user)
