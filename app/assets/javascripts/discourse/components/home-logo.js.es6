@@ -14,6 +14,9 @@ export default Ember.Component.extend({
   title: Discourse.computed.setting('title'),
 
   click: function(e) {
+    // if they want to open in a new tab, let it so
+    if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) { return true; }
+
     e.preventDefault();
 
     // When you click the logo, never use a cached list
