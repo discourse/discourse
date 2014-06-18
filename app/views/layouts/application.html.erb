@@ -43,7 +43,7 @@
           <div class="contents">
             <div class="row">
               <div class="title span13">
-                <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
+                <a href="/"><img src="<%= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url %>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
               </div>
             </div>
           </div>

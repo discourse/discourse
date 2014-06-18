@@ -35,6 +35,9 @@ required:
   digest_logo_url:
     client: false
     default: ''
+  mobile_logo_url:
+    client: true
+    default: ''
   favicon_url:
     client: true
     default: '/images/default-favicon.ico'
