@@ -41,7 +41,7 @@ export default Ember.ObjectController.extend({
   },
 
   chevronClass: function() {
-    return this.get('expanded') ? 'fa-chevron-down' : 'fa-sort';
+    return this.get('expanded') ? '' : 'fa-sort';
   }.property('expanded'),
 
   streamPercentage: function() {
