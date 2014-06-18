@@ -40,10 +40,6 @@ export default Ember.ObjectController.extend({
     Discourse.URL.routeTo(url);
   },
 
-  chevronClass: function() {
-    return this.get('expanded') ? '' : 'fa-sort';
-  }.property('expanded'),
-
   streamPercentage: function() {
     if (!this.get('postStream.loaded')) { return 0; }
     if (this.get('postStream.highest_post_number') === 0) { return 0; }
