@@ -19,6 +19,10 @@ getCaret = function(el) {
 
 clone = null;
 
+$.fn.caret = function(){
+  return getCaret(this[0]);
+};
+
 /**
   This is a jQuery plugin to retrieve the caret position in a textarea
 

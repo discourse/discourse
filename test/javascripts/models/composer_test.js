@@ -57,6 +57,23 @@ test("appendText", function() {
   composer.appendText(" world");
   equal(composer.get('reply'), "hello world", "it appends text to existing text");
 
+  composer.clearState();
+  composer.appendText("a\n\n\n\nb");
+  composer.appendText("c",3,{block: true});
+
+  equal(composer.get("reply"), "a\n\nc\n\nb");
+
+  composer.clearState();
+  composer.appendText("ab");
+  composer.appendText("c",1,{block: true});
+
+  equal(composer.get("reply"), "a\n\nc\n\nb");
+
+  composer.clearState();
+  composer.appendText("\nab");
+  composer.appendText("c",0,{block: true});
+
+  equal(composer.get("reply"), "c\n\nab");
 });
 
 test("Title length for regular topics", function() {

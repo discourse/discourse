@@ -70,6 +70,11 @@ export default Discourse.Controller.extend({
     if (c) { c.appendText(text); }
   },
 
+  appendBlockAtCursor: function(text) {
+    var c = this.get('model');
+    if (c) { c.appendText(text, $('#wmd-input').caret(), {block: true}); }
+  },
+
   categories: function() {
     return Discourse.Category.list();
   }.property(),

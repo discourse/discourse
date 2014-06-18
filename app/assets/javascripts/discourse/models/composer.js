@@ -266,8 +266,36 @@ Discourse.Composer = Discourse.Model.extend({
     @method appendText
     @param {String} text the text to append
   **/
-  appendText: function(text) {
-    this.set('reply', (this.get('reply') || '') + text);
+  appendText: function(text,position,opts) {
+    var reply = (this.get('reply') || '');
+    position = typeof(position) === "number" ? position : reply.length;
+
+    var before = reply.slice(0, position) || '';
+    var after = reply.slice(position) || '';
+
+    var stripped, i;
+
+    if(opts && opts.block){
+      if(before.trim() !== ""){
+        stripped = before.replace(/\r/g, "");
+        for(i=0; i<2; i++){
+          if(stripped[stripped.length - 1 - i] !== "\n"){
+            before += "\n";
+            position++;
+          }
+        }
+      }
+      if(after.trim() !== ""){
+        stripped = after.replace(/\r/g, "");
+        for(i=0; i<2; i++){
+          if(stripped[i] !== "\n"){
+            after = "\n" + after;
+          }
+        }
+      }
+    }
+
+    this.set('reply', before + text + after);
   },
 
   togglePreview: function() {

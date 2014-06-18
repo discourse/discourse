@@ -119,7 +119,7 @@ export default Discourse.Controller.extend({
     var quotedText = Discourse.Quote.build(post, buffer);
     composerOpts.quote = quotedText;
     if (composerController.get('content.viewOpen') || composerController.get('content.viewDraft')) {
-      composerController.appendText(quotedText);
+      composerController.appendBlockAtCursor(quotedText.trim());
     } else {
       composerController.open(composerOpts);
     }
