@@ -238,6 +238,16 @@ en:
         one: "%{count} new post in the past %{unit}."
         other: "%{count} new posts in the past %{unit}."
 
+    ip_info:
+      title: ip_info_title
+      hostname: ip_info_hostname
+      location: ip_info_location
+      location_not_found: ip_info_location_not_found
+      organisation: ip_info_organisation
+      phone: ip_info_phone
+      other_accounts: ip_info_other_accounts
+      no_other_accounts: ip_info_no_other_accounts
+
     user:
       said: "{{username}} said:"
       profile: "Profile"
@@ -1713,6 +1723,7 @@ en:
         refresh_browsers: "Force browser refresh"
         show_public_profile: "Show Public Profile"
         impersonate: 'Impersonate'
+        ip_lookup: "ip_lookup"
         log_out: "Sign Out"
         logged_out: "User was logged out on all devices"
         revoke_admin: 'Revoke Admin'
