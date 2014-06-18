@@ -17,6 +17,13 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
         tracker.incrementMessageCount();
       }
 
+      if (data.message_type === "new_topic"){
+        var ignored_categories = Discourse.User.currentProp("muted_category_ids");
+        if(_.include(ignored_categories, data.payload.category_id)){
+          return;
+        }
+      }
+
       if (data.message_type === "new_topic" || data.message_type === "unread" || data.message_type === "read") {
         tracker.notify(data);
         var old = tracker.states["t" + data.topic_id];

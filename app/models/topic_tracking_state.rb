@@ -26,7 +26,8 @@ class TopicTrackingState
         last_read_post_number: nil,
         highest_post_number: 1,
         created_at: topic.created_at,
-        topic_id: topic.id
+        topic_id: topic.id,
+        category_id: topic.category_id
       }
     }
 
