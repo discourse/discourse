@@ -44,11 +44,14 @@ class Site
       allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
 
       by_id = {}
-      categories.each do |category|
-        unless @guardian.anonymous?
-          category.notification_level = CategoryUser.lookup_by_category(@guardian.user, category).pluck(:notification_level)[0]
-        end
 
+      category_user = {}
+      unless @guardian.anonymous?
+        category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
+      end
+
+      categories.each do |category|
+        category.notification_level = category_user[category.id]
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
         by_id[category.id] = category
       end
