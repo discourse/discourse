@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ShareView = Discourse.View.extend({
+export default Discourse.View.extend({
   templateName: 'share',
   elementId: 'share-link',
   classNameBindings: ['hasLink'],

@@ -7,7 +7,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicClosingView = Discourse.View.extend({
+export default Discourse.View.extend({
   elementId: 'topic-closing-info',
   delayedRerender: null,
 

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ComposerMessagesView = Ember.CollectionView.extend({
+export default Ember.CollectionView.extend({
   classNameBindings: [':composer-popup-container', 'hidden'],
   content: Em.computed.alias('controller.content'),
 

@@ -93,7 +93,7 @@
         {{else}}
           {{#if postStream.loadedAllPosts}}
 
-            {{view Discourse.TopicClosingView topicBinding="model"}}
+            {{view 'topic-closing' topic=model}}
             {{view Discourse.TopicFooterButtonsView topicBinding="model"}}
 
             {{#if details.suggested_topics.length}}
