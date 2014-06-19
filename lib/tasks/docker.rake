@@ -9,14 +9,6 @@ desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
 
-    unless ENV['NO_UPDATE']
-      exit 1 unless run_or_fail("git remote update")
-
-      checkout = ENV['COMMIT_HASH'] || "HEAD"
-      exit 1 unless run_or_fail("git checkout #{checkout}")
-      exit 1 unless run_or_fail("bundle")
-    end
-
     puts "Cleaning up old test tmp data in tmp/test_data"
     `rm -fr tmp/test_data && mkdir -p tmp/test_data/redis && mkdir tmp/test_data/pg`
 
@@ -31,7 +23,6 @@ task 'docker:test' do
     `echo full_page_writes = off >> tmp/test_data/pg/postgresql.conf`
     `echo shared_buffers = 500MB >> tmp/test_data/pg/postgresql.conf`
 
-
     puts "Starting postgres"
     @pg_pid = Process.spawn("#{@postgres_bin}postmaster -D tmp/test_data/pg")
 
@@ -39,8 +30,12 @@ task 'docker:test' do
     ENV["RAILS_ENV"] = "test"
 
     @good = run_or_fail("bundle exec rake db:create db:migrate")
-    @good &&= run_or_fail("bundle exec rspec")
-    @good &&= run_or_fail("bundle exec rake qunit:test")
+    unless ENV["JS_ONLY"]
+      @good &&= run_or_fail("bundle exec rspec")
+    end
+    unless ENV["RUBY_ONLY"]
+      @good &&= run_or_fail("bundle exec rake qunit:test")
+    end
 
   ensure
     puts "Terminating"
