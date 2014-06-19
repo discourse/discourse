@@ -8,6 +8,16 @@ end
 desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
+
+    exit 1 unless run_or_fail("git remote update")
+
+    checkout = "master"
+    if hash = ENV['COMMIT_HASH']
+       checkout = hash
+    end
+    exit 1 unless run_or_fail("git checkout #{checkout}")
+    exit 1 unless run_or_fail("bundle")
+
     puts "Cleaning up old test tmp data in tmp/test_data"
     `rm -fr tmp/test_data && mkdir -p tmp/test_data/redis && mkdir tmp/test_data/pg`
 
