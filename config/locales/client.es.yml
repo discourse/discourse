@@ -211,6 +211,15 @@ es:
       post_stat_sentence:
         one: "%{count} nuevo comentario en los pasados %{unit}"
         other: "%{count} nuevos comentarios en los pasados %{unit}"
+    ip_info:
+      title: Búsqueda de direcciones IP
+      hostname: Nombre del host
+      location: Ubicación
+      location_not_found: (desconocido)
+      organisation: Organización
+      phone: Teléfono
+      other_accounts: Otras cuentas con esta dirección IP
+      no_other_accounts: (nada)
     user:
       said: "{{username}} dice:"
       profile: "Perfil"
@@ -222,6 +231,7 @@ es:
       private_messages: "Mensajes"
       activity_stream: "Actividad"
       preferences: "Preferencias"
+      bookmarks: "Marcadores"
       bio: "Acerca de mí"
       invited_by: "Invitado por"
       trust_level: "Nivel de confianza"
@@ -233,7 +243,8 @@ es:
       change: "cambio"
       moderator: "{{user} es un moderador"
       admin: "{{user}} es un administrador"
-      deleted: "(borrado)"
+      moderator_tooltip: "Este usuario es moderador"
+      admin_tooltip: "Este usuario es administrador"
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_reason: "Causa: "
       mailing_list_mode: "Recibir un email cada vez que se crea un nuevo post en el foro (a menos que el tema o la categoría esté silenciado)"
@@ -318,7 +329,7 @@ es:
       last_emailed: "Último Enviado por email"
       last_seen: "Último visto"
       created: "Creado el"
-      log_out: "Cerrar sesión"
+      log_out: "Cerrar Sesión"
       location: "Ubicación"
       website: "Sitio Web"
       email_settings: "Email"
@@ -356,7 +367,7 @@ es:
         search: "escribe para buscar invitaciones..."
         title: "Invitaciones"
         user: "Invitar usuario"
-        none: "Ningún usuario ha sido invitado al sitio."
+        none: "No has invitado a nadie todavía."
         truncated: "Mostrando las primeras {{count}} invitaciones."
         redeemed: "Invitaciones aceptadas"
         redeemed_at: "Aceptada el"
@@ -364,12 +375,18 @@ es:
         topics_entered: "temas vistos"
         posts_read_count: "Publicaciones leídas"
         expired: "Esta invitación ha vencido."
-        rescind: "Eliminar invitación"
+        rescind: "Remover"
         rescinded: "Invitación eliminada"
         time_read: "Tiempo de lectura"
         days_visited: "Días visitados"
         account_age_days: "Antigüedad de la cuenta en días"
         create: "Enviar una invitación"
+        bulk_invite:
+          none: "No has invitado a nadie todavía. Puedes enviar invitaciones Puede enviar invitaciones individuales o invitar a un grupo de personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo para invitaciones en masa</a>."
+          text: "Archivo de invitación en masa"
+          uploading: "SUBIR"
+          success: "Archivo subido satisfactoriamente, se te notificará en breve con los avances."
+          error: "Hubo un error al subir '{{filename}}': {{message}}"
       password:
         title: "Contraseña"
         too_short: "Tu contraseña es demasiado corta."
@@ -412,8 +429,8 @@ es:
     last_post: Última publicación
     summary:
       enabled_description: "Estás viendo un resumen de este tema. Para ver todos los posts otra vez, haz clic más abajo."
-      description: "Hay <b>{{count}}</b> publicaciones en este tema. ¡Son muchas! ¿Te gustaría ahorrar algo de tiempo viendo sólo las publicaciones con más interacciones y respuestas?"
-      description_time: "Hay <b>{{count}}</b> respuestas con un tiempo estimado de lectura de <b>{{readingTime}} minutes</b>. ¿Quieres ahorrar tiempo y ver solo las respuestas más relevantes?"
+      description: "Hay <b>{{count}}</b> respuestas."
+      description_time: "Hay <b>{{count}}</b> respuestas con un tiempo de lectura estimado de <b>{{readingTime}} minutos</b>."
       enable: 'Resumir el tema'
       disable: 'Ver todos los posts'
     private_message_info:
@@ -425,7 +442,9 @@ es:
     last_seen: 'Visto por última vez'
     created: 'Creado'
     trust_level: 'Nivel de confianza'
+    search_hint: 'usuario o email'
     create_account:
+      title: "Crear nueva cuenta"
       failed: "Algo ha salido mal, tal vez este email ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
     forgot_password:
       title: "Olvidé mi contraseña"
@@ -440,6 +459,7 @@ es:
       password: "Contraseña"
       email_placeholder: "dirección de email o nombre de usuario"
       error: "Error desconocido"
+      blank_username_or_password: "Por favor, introducir tu email o usuario y tu contraseña"
       reset_password: 'Restablecer contraseña'
       logging_in: "Iniciando sesión"
       or: "O"
@@ -547,7 +567,7 @@ es:
       liked: "<i title='gustaron' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='mensaje privado'></i> Tienes un mensaje privado de {{username}}: {{link}}"
       invited_to_private_message: "{{username}} te ha invitado a una conversación privada: {{link}}"
-      invitee_accepted: "<i title='aceptó tu invitación' class='fa fa-sign-in'></i> {{username}} ha aceptado tu invitación"
+      invitee_accepted: "<i title='ha aceptado tu invitación' class='fa fa-user'></i> {{username}} ha aceptado tu invitación"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i> {{username}} movió {{link}}"
       total_flagged: "total de posts reportados"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
@@ -566,13 +586,13 @@ es:
       uploading: "Subiendo imagen"
       image_link: "el link de tu imagen apuntará a"
     search:
-      title: "buscar por temas, publicaciones, usuarios o categorías"
-      placeholder: "escribe tu búsqueda aquí"
+      title: "buscar tópicos, publicaciones, usuarios o categorías"
       no_results: "No se ha encontrado ningún resultado."
       searching: "Buscando ..."
-      prefer:
-        user: "la búsqueda preferirá resultados por @{{username}}"
-        category: "la búsqueda preferirá resultados en {{category}}"
+      context:
+        user: "Buscar posts por @{{username}}"
+        category: "Buscar la categoría \"{{category}}\""
+        topic: "Buscar este tema"
     site_map: "ir a otra lista de temas o categoría"
     go_back: 'volver'
     not_logged_in_user: 'página con el resumen de actividad y preferencias'
@@ -634,7 +654,7 @@ es:
       invalid_access:
         title: "Este tema es privado"
         description: "Lo sentimos, ¡no tienes acceso a este tema!"
-        login_required: "Tienes que iniciar sesión para poder ver este tema."
+        login_required: "Tienes que iniciar sesión para ver este tema"
       server_error:
         title: "El tema falló al intentar ser cargado"
         description: "Lo sentimos, no pudimos cargar el tema, posiblemente debido a problemas de conexión. Por favor, inténtalo nuevamente. Si el problema persiste, por favor contacta con soporte."
@@ -670,8 +690,9 @@ es:
       auto_close_remove: "No auto-cerrar este tema"
       progress:
         title: avances
-        jump_top: saltar al primer mensaje
-        jump_bottom: saltar al último mensaje
+        go_top: "arriba"
+        go_bottom: "abajo"
+        go: "ir"
         jump_bottom_with_number: "saltar al post %{post_number}"
         total: total
         current: mensaje actual
@@ -728,7 +749,6 @@ es:
         visible: "Hacer visible"
         reset_read: "Restablecer datos de lectura"
         multi_select: "Selecciona los mensajes a mover"
-        convert_to_topic: "Convertir en tema normal"
       reply:
         title: 'Responder'
         help: 'comienza a escribir una respuesta a este tema'
@@ -757,7 +777,7 @@ es:
         action: 'Invitar por email'
         help: 'enviar invitaciones a tus amigos para que puedan responder a este tema con un solo clic'
         to_topic: "Le enviaremos un breve correo electrónico a tu amigo permitiéndole responder inmediatamente a este tema haciendo clic en un enlace, no requiere registro."
-        to_forum: "Le enviaremos un breve correo electrónico a tu amigo para unirse clicando un enlace, no hace falta registrarse."
+        to_forum: "Le enviaremos un breve correo electrónico a tu amigo que le permitirá participar haciendo clic a un enlace, sin necesidad de registrarse."
         email_placeholder: 'dirección de email'
         success: "¡Gracias! Hemos enviado una invitación a <b>{{email}}</b>. Te avisaremos cuando la acepte. Comprueba la pestaña de invitaciones en tu página de usuario para llevar el seguimiento de quién has invitado."
         error: "Lo sentimos, no podemos invitar a esa persona. ¿Tal vez ya es un usuario?"
@@ -1545,6 +1565,9 @@ es:
         refresh_browsers: "Forzar recarga del navegador"
         show_public_profile: "Ver perfil público"
         impersonate: 'Impersonar a'
+        ip_lookup: "Búsqueda de IP"
+        log_out: "Cerrar Sesión"
+        logged_out: "El usuario ha cerrado sesión desde todos los dispositivos"
         revoke_admin: 'Revocar administrador'
         grant_admin: 'Conceder administración'
         revoke_moderation: 'Revocar moderación'
@@ -1679,6 +1702,7 @@ es:
         categories: '<b>g</b> y después <b>c</b> Categorías'
       navigation:
         title: 'Navegación'
+        jump: '<b>#</b> Ir a la publicación numero'
         back: '<b>u</b> Atrás'
         up_down: '<b>k</b>/<b>j</b> Mover la selección arriba/abajo'
         open: '<b>o</b> or <b>Entrar</b> Abrir tema seleccionado'

@@ -233,7 +233,6 @@ he:
       change: "שנה"
       moderator: "{{user}} הוא מנהל"
       admin: "{{user}} הוא מנהל ראשי"
-      deleted: "(נמחק)"
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: {{date}}."
       suspended_reason: "הסיבה: "
       mailing_list_mode: "קבלו דואר אלקטרוני כל פעם שמפרסמים הודעה בפורום (אלא אם הוא או הקטגוריה מושתקים)"
@@ -318,7 +317,6 @@ he:
       last_emailed: "נשלח לאחרונה בדואר אלקטרוני"
       last_seen: "נראה"
       created: "הצטרף"
-      log_out: "התנתק"
       location: "מיקום"
       website: "אתר"
       email_settings: "דואר אלקטרוני"
@@ -356,7 +354,6 @@ he:
         search: "הקלד כדי לחפש הזמנות..."
         title: "הזמנות"
         user: "משתמש שהוזמן"
-        none: "לא נמצאו הזמנות."
         truncated: "מראה את  {{count}} ההזמנות הראשונות."
         redeemed: "הזמנות נוצלו"
         redeemed_at: "נפדו ב"
@@ -364,7 +361,6 @@ he:
         topics_entered: "נושאים נצפו"
         posts_read_count: "הודעות נקראו"
         expired: "פג תוקף ההזמנה."
-        rescind: "הסר הזמנה"
         rescinded: "הזמנה הוסרה"
         time_read: "זמן קריאה"
         days_visited: "מספר ימי ביקור"
@@ -412,8 +408,6 @@ he:
     last_post: הודעה אחרונה
     summary:
       enabled_description: "אתה צופה בתקציר של הנושא הזה. כדי לראות את כל ההודעות שוב, הקלק מטה."
-      description: "יש <b>{{count}}</b> תגובות. לחסוך זמן קריאה על ידי הצגת התגובות הרלוונטיות ביותר?"
-      description_time: "יש <b>{{count}}</b> תגובות עם זמן קריאה מוערך של <b>{{readingTime}} דקות</b>. לחסוך זמן קריאה על ידי הצגת התגובות הרלוונטיות ביותר?"
       enable: 'סכם נושא זה'
       disable: 'הצג את כל ההודעות'
     private_message_info:
@@ -547,7 +541,6 @@ he:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} accepted your invitation"
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} הועבר {{link}}"
       total_flagged: "סך הכל נושאים מדוגללים"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
@@ -566,13 +559,8 @@ he:
       uploading: "מעלה"
       image_link: "קישור לתמונה יצביע ל"
     search:
-      title: "חיפוש נושאים, הודעות, משתמשים או קטגוריות"
-      placeholder: "הזן את תנאי החיפוש שלך כאן"
       no_results: "אין תוצאות."
       searching: "מחפש ..."
-      prefer:
-        user: "החיפוש יתעדף תוצואות מאת @{{username}}"
-        category: "החיפוש יתעדף תוצאות מתוך {{category}}"
     site_map: "לך לרשימת נושאים או קטגוריה אחרת"
     go_back: 'חזור אחורה'
     not_logged_in_user: 'עמוד משתמש עם סיכום פעילות נוכחית והעדפות'
@@ -634,7 +622,6 @@ he:
       invalid_access:
         title: "הנושא פרטי"
         description: "סליחה, איך אין לך גישה לנושא הזה!"
-        login_required: "עליך להתחבר כדי לראות את הנושא הזה."
       server_error:
         title: "שגיאה בטעינת נושא"
         description: "סליחה, לא יכולנו לטעון את הנושא הזה, ייתכן שבשל תקלת תקשורת. אנא נסי שוב. אם הבעיה נמשכת, הודיעו לנו."
@@ -670,8 +657,6 @@ he:
       auto_close_remove: "אל תנעל נושא זה אוטומטית"
       progress:
         title: התקדמות נושא
-        jump_top: קפיצה להודעה ראשונה (מקש home)
-        jump_bottom: קפיצה להודעה אחרונה (מקש end)
         jump_bottom_with_number: "קפיצה להודעה %{post_number}"
         total: סך הכל הודעות
         current: הודעה נוכחית
@@ -728,7 +713,6 @@ he:
         visible: "הפוך נראה"
         reset_read: "אפס מידע שנקרא"
         multi_select: "בחר הודעות"
-        convert_to_topic: "המר לנושא רגיל"
       reply:
         title: 'תגובה'
         help: 'החל בכתיבת הודעה לנושא זה'

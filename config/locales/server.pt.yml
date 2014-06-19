@@ -489,7 +489,6 @@ pt:
     post_undo_action_window_mins: "A janela na qual alguém pode reverter um ação na postagem (como linkar)"
     enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
     post_menu: "A ordem dos items no menu da postagem."
-    share_links: "Determine quais ítens aparecerem no diálogo de compartilhar, e em que ordem. Por exemplo: twitter|facebook|google+|email"
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
     posts_per_page: "Quantas postagens são requisitados numa página de tópico"
     site_contact_username: "Nome do Usuário que envia as mensagens do sistema"
@@ -611,7 +610,6 @@ pt:
   search:
     types:
       category: 'Categorias'
-      topic: 'Tópicos'
       user: 'Utilizadores'
   original_poster: "Postador original"
   most_posts: "Maior parte das postagens"
@@ -649,8 +647,6 @@ pt:
     omniauth_error_unknown: "Algo deu errado no processamento do seu login, por favor tente novamente."
   user:
     username:
-      short: "tem que conter mais de %{min} caracteres"
-      long: "tem que conter menos de %{max} caracteres"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
       must_begin_with_alphanumeric: "tem de começar com uma letra ou um número"
@@ -659,30 +655,6 @@ pt:
       blocked: "não é permitido."
     ip_address:
       blocked: "está bloqueado."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} convidou-te para participares numa conversa em %{site_name}"
-    text_body_template: |
-      %{invitee_name} convidou-te para o tópico "%{topic_title}" em %{site_name}.
-
-      Se estiveres interessado, clica no link em baxio para visitares a conversa:
-
-      [Visitar %{site_name}][1]
-
-      Foste convidado por um utilizador de confiança, por isso poderás responder imediátamente, sem ter que fazer log in.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} fez-lhe um convite para se juntar a %{site_name}"
-    text_body_template: |
-      %{invitee_name} fez-lhe um convite para se juntar a %{site_name}.
-
-      Caso seja do seu interesse, por favor clique na seguinte ligação:
-
-      [Visit %{site_name}][1]
-
-      Este convite foi feito por um utilizador autenticado, assim sendo, poderá juntar-se imediatamente sem a necessidade de iniciar sessão.
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
   system_messages:

@@ -120,6 +120,9 @@ ko:
     upload: "업로드"
     uploading: "업로드 중..."
     uploaded: "업로드 완료!"
+    enable: "활성화"
+    disable: "비활성화"
+    undo: "실행 복귀"
     choose_topic:
       none_found: "토픽이 없음"
       title:
@@ -186,6 +189,7 @@ ko:
       private_messages: "개인 메시지"
       activity_stream: "활동"
       preferences: "환경 설정"
+      bookmarks: "북마크"
       bio: "프로필"
       invited_by: "에 의해 초대되었습니다."
       trust_level: "레벨"
@@ -196,7 +200,6 @@ ko:
       change: "변경"
       moderator: "{{user}}는 중간 관리자입니다."
       admin: "{{user}} 는 운영자입니다."
-      deleted: "(삭제됨)"
       suspended_notice: "이 사용자는 {{date}}까지 접근 금지 되었습니다."
       suspended_reason: "이유: "
       watched_categories: "Watched"
@@ -238,6 +241,7 @@ ko:
         uploaded_avatar: "커스텀 사진"
         uploaded_avatar_empty: "커스텀 사진 추가"
         upload_title: "프로필 사진 업로드"
+        upload_picture: "사진 업로드"
         image_is_not_a_square: "경고: 사진을 정사각형으로 수정하였습니다."
       email:
         title: "이메일"
@@ -272,7 +276,7 @@ ko:
       last_emailed: "마지막 이메일"
       last_seen: "마지막 접속"
       created: "생성일"
-      log_out: "로그아웃"
+      location: "위치"
       website: "웹사이트"
       email_settings: "이메일"
       email_digests:
@@ -300,7 +304,6 @@ ko:
         search: "검색"
         title: "초대"
         user: "사용자 초대"
-        none: "초대 받은 사람을 찾을 수 없습니다."
         truncated: "처음 {{count}}개 초대장 보여주기"
         redeemed: "초대를 받았습니다."
         redeemed_at: "에 초대되었습니다."
@@ -308,12 +311,14 @@ ko:
         topics_entered: "토픽이 입력되었습니다."
         posts_read_count: "게시물 읽기"
         expired: "이 초대장의 기한이 만료되었습니다."
-        rescind: "초대 제거"
         rescinded: "초대가 제거되었습니다."
         time_read: "읽은 시간"
         days_visited: "일일 방문"
         account_age_days: "일일 계정 나이"
         create: "이 포럼에 친구를 초대하기"
+        bulk_invite:
+          text: "파일로 대량 초대하기"
+          uploading: "업로드 중"
       password:
         title: "비밀번호"
         too_short: "암호가 너무 짧습니다."
@@ -350,8 +355,6 @@ ko:
     last_post: 최근 게시물
     summary:
       enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
-      description: "There are <b>{{count}}</b> replies. Save reading time by displaying only the most relevant replies?"
-      description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>. Save reading time by displaying only the most relevant replies?"
       enable: 'Summarize This Topic'
       disable: 'Show All Posts'
     private_message_info:
@@ -364,6 +367,7 @@ ko:
     created: '생성'
     trust_level: '신뢰도'
     create_account:
+      title: "회원 가입"
       failed: "뭔가 잘못되었습니다. 이 메일은 등록이 되어있습니다. 비밀번호를 잊으셨다면 비밀번호 찾기를 눌러주세요."
     forgot_password:
       title: "비밀번호를 찾기"
@@ -484,7 +488,6 @@ ko:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} 의 초대를 수락했습니다."
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i> {{username}}님이 {{link}}를 옮겼습니다."
       total_flagged: "관심 표시된 총 게시글"
       linked: "<i title='링크된 글' class='fa fa-arrow-left'></i> {{username}} {{link}}"
@@ -500,13 +503,8 @@ ko:
       hint: "(드래그&드랍으로 업로드 가능)"
       uploading: "업로드 중입니다..."
     search:
-      title: "토픽, 게시물, 사용자, 카테고리를 검색"
-      placeholder: "여기에 검색어를 입력하세요"
       no_results: "검색 결과가 없습니다"
       searching: "검색중..."
-      prefer:
-        user: "@{{username}}님이 쓰신 게시글을 위주로 검색"
-        category: "{{category}}안에 게시글을 위주로 검색"
     site_map: "다른 토픽이나 카테고리로 이동"
     go_back: '돌아가기'
     not_logged_in_user: 'user page with summary of current activity and preferences'
@@ -590,8 +588,6 @@ ko:
       auto_close_remove: "이 토픽을 자동으로 닫지 않기"
       progress:
         title: 진행 중인 토픽
-        jump_top: 첫 게시글로 이동
-        jump_bottom: 마지막 게시글로 이동
         jump_bottom_with_number: "jump to post %{post_number}"
         total: 총 게시글
         current: 현재 게시글
@@ -640,7 +636,6 @@ ko:
         visible: "토픽 보이기"
         reset_read: "값 재설정"
         multi_select: "게시글 이동을 위한 다중 선택"
-        convert_to_topic: "정식 토픽으로 변환"
       reply:
         title: '답글'
         help: '이 토픽에 대한 답글 구성 시작'
@@ -863,6 +858,15 @@ ko:
       position: "위치"
       default_position: "Default Position"
       parent: "부모 카테고리"
+      notifications:
+        watching:
+          title: "주시 중"
+        tracking:
+          title: "추적 중"
+        regular:
+          title: "보통"
+        muted:
+          title: "알림 꺼짐"
     flagging:
       title: '왜 이 게시글을 privately flagging 하나요?'
       action: '게시물 깃발 표시'
@@ -1144,6 +1148,8 @@ ko:
           title: "색상"
           long_title: "색상 Schemes"
           about: "CSS 작성 없이 사이트에 사용되는 색을 수정합니다. 시작하려면 Scheme을 추가하세요."
+          undo: "실행 복귀"
+          revert: "되돌리기"
       email:
         title: "이메일"
         settings: "설정"
@@ -1221,6 +1227,8 @@ ko:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
           email: "이메일 주소"
+          actions:
+            allow: "허용"
         screened_urls:
           title: "블락된 URL들"
           description: "이 목록은 사용자에 의해 스팸으로 알려진 URL 목록입니다."
@@ -1295,6 +1303,7 @@ ko:
         refresh_browsers: "브라우저 새로 고침"
         show_public_profile: "공개 프로필 보기"
         impersonate: '사용자로 로그인하기'
+        logged_out: "사용자가 모든 디바이스에서 로그아웃 되었습니다."
         revoke_admin: '운영자권한 취소'
         grant_admin: '운영자권한 주기'
         revoke_moderation: '중간 관리자 사용 안함'

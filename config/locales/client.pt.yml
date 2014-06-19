@@ -186,7 +186,6 @@ pt:
       change: "alterar"
       moderator: "{{user}} é um moderador"
       admin: "{{user}} é um administrador"
-      deleted: "(removido)"
       suspended_notice: "Utilizador suspenso até {{date}}."
       suspended_reason: "Razão: "
       unread_message_count: "Mensagens"
@@ -246,7 +245,6 @@ pt:
       last_posted: "Última Entrada"
       last_emailed: "Último Email"
       last_seen: "Visto"
-      log_out: "Sair"
       website: "Site"
       email_settings: "Email"
       email_digests:
@@ -271,13 +269,11 @@ pt:
         search: "escreva para procurar convites..."
         title: "Convites"
         user: "Utilizadores convidados"
-        none: "Não foi encontrado nenhum convite."
         truncated: "Mostra os primeiros {{count}} convites."
         redeemed: "Convites usados"
         redeemed_at: "Compensado"
         pending: "Convites Pendentes"
         posts_read_count: "Entradas Vistas"
-        rescind: "Remover Convite"
         rescinded: "Convite Removido"
         time_read: "Tempo de Leitura"
         days_visited: "Dias Visitados"
@@ -313,7 +309,6 @@ pt:
     last_post: Última mensagem
     summary:
       enabled_description: "Está a ver um sumário deste tópico. Para ver todos as mensagens, clique em baixo."
-      description: "Existem <b>{{count}}</b> respostas. Poupe tempo lendo apenas as respostas consideradas mais relevantes?"
       enable: 'Sumarize este tópico'
       disable: 'Mostrar todas as mensagens'
     private_message_info:
@@ -434,13 +429,8 @@ pt:
       hint: "(poderá também arrastar o ficheiro para o editor para fazer o upload)"
       uploading: "A enviar"
     search:
-      title: "procurar por tópicos, posts, utilizadores, ou categorias"
-      placeholder: "escreva aqui o seu termo de busca"
       no_results: "Não foi encontrado nenhum resultado."
       searching: "A procurar..."
-      prefer:
-        user: "a busca vai dar preferência a resultados de @{{username}}"
-        category: "a busca vai dar preferência a resultados de {{category}}"
     site_map: "ir para outra lista de tópicos ou categorias"
     go_back: 'voltar atrás'
     current_user: 'ir para a sua página de utilizador'
@@ -547,7 +537,6 @@ pt:
         invisible: "Tornar Invisível"
         visible: "Tornar Visível"
         reset_read: "Repor Data de Leitura"
-        convert_to_topic: "Converter para Tópico Regular"
       reply:
         title: 'Responder'
         help: 'começa a compor uma resposta a este tópico'

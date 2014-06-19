@@ -20,14 +20,27 @@ ru:
   posts: "сообщения"
   loading: "Загружается..."
   powered_by_html: 'При поддержке <a href="http://www.discourse.org">Discourse</a>, лучше всего использовать с включенным JavaScript'
+  log_in: "Вход"
   via: "%{username} на %{site_name}"
   is_reserved: "зарезервировано"
   backup:
     operation_already_running: "Действие уже выполняется. Прямо сейчас невозможно начать новое действие."
+  not_logged_in: "Для этого действия, пожалуйста авторизуйтесь."
   read_only_mode_enabled: "Сайт в режиме только для чтения. Взаимодействия отключены."
+  too_many_replies:
+    one: "Извините, новые пользователи могут оставлять только один ответ к теме."
+    few: "Извините, новые пользователи могут оставлять только %{count} ответов к одной теме."
+    other: "Извините, новые пользователи могут оставлять только %{count} ответов к одной теме."
   embed:
+    start_discussion: "Начать обсуждение"
+    continue: "Продолжать обсуждение"
     loading: "Загрузка обсуждения..."
     permalink: "Постоянная ссылка"
+    in_reply_to: "▶ %{username}"
+    replies:
+      one: "1 ответ"
+      few: "%{count} ответов"
+      other: "%{count} ответов"
   too_many_mentions:
     zero: "Извините, но вы не можете упоминать других пользователей."
     one: "Извините, но вы можете упоминать только одного пользователя в сообщении."
@@ -54,6 +67,7 @@ ru:
   invalid_characters: "содержит недопустимые символы"
   is_invalid: "слишком короткий"
   next_page: "следующая страница →"
+  prev_page: "← предыдущая страница"
   page_num: "Страница %{num}"
   by: "От"
   topics_in_category: "Темы в категории «%{category}»"
@@ -150,13 +164,19 @@ ru:
               cant_send_pm: "Извините, вы не можете посылать личные сообщения данному пользователю."
         user:
           attributes:
+            password:
+              common: "Вы пытаетесь использовать один из 10000 самых распространенных паролей. Используйте более сложный пароль. "
             ip_address:
               signup_not_allowed: "Регистрация с данной учетной записью запрещена."
   user_profile:
     no_info_me: "<div class='missing-profile'>Поле Обо мне в вашем профиле не заполнено, <a href='/users/%{username_lower}/preferences/about-me'>не желаете ли что-нибудь написать в нем?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} еще не заполнил поле «Обо мне» в своём профайле. </div>"
+  vip_category_name: "Лаунж"
   vip_category_description: "Категория исключительно для пользователей с уровнем доверия 3 и выше."
+  meta_category_name: "Обсуждения работы форума"
   meta_category_description: "Обсуждение об этом форуме, его устройство, как он работает и как мы можем его улучшить. "
+  staff_category_name: "администраторы"
+  staff_category_description: "Частная вечеринка администраторов и модераторов, темы видны только им."
   category:
     topic_prefix: "Описание категории %{category}"
     replace_paragraph: "[Замените данный текст кратким описанием новой категории. Это описание будет отображаться в списке категорий, поэтому постарайтесь сделать его коротким (не более 200 символов).]"
@@ -205,12 +225,68 @@ ru:
         one: "< 1м"
         few: "< %{count}м"
         other: "< %{count}м"
+      x_minutes:
+        one: "%{count}м"
+        few: "%{count}м"
+        other: "%{count}м"
+      about_x_hours:
+        one: "%{count}м"
+        few: "%{count}м"
+        other: "%{count}ч"
+      x_days:
+        one: "1д"
+        few: "%{count}д"
+        other: "%{count}д"
+      about_x_years:
+        one: "1г"
+        few: "1г"
+        other: "%{count}г"
+      over_x_years:
+        one: "> 1г"
+        few: "> 1г"
+        other: "> %{count}г"
+      almost_x_years:
+        one: "1г"
+        few: "1г"
+        other: "%{count}г"
     distance_in_words_verbose:
       half_a_minute: "только что"
       less_than_x_seconds:
         one: "только что"
         few: "только что"
         other: "только что"
+      x_seconds:
+        one: "1 секунда назад"
+        few: "1 секунда назад"
+        other: "%{count} секунд назад"
+      less_than_x_minutes:
+        one: "менее 1 минуты назад"
+        few: "менее 1 минуты назад"
+        other: "менее %{count} минут назад"
+      x_minutes:
+        one: "1 минута назад"
+        few: "1 минута назад"
+        other: "%{count} минут назад"
+      about_x_hours:
+        one: "1 час назад"
+        few: "1 час(а) назад"
+        other: "%{count} часов назад"
+      x_days:
+        one: "1 день назад"
+        few: "1 день назад"
+        other: "%{count} дня назад"
+      about_x_months:
+        one: "около 1 месяца назад"
+        few: "около 1 месяца назад"
+        other: "около %{count} месяцев назад"
+      x_months:
+        one: "1 месяц назад"
+        few: "1 месяц назад"
+        other: "%{count} месяцев назад"
+      about_x_years:
+        one: "около 1 года назад"
+        few: "около %{count} лет назад"
+        other: "около %{count} лет назад"
   password_reset:
     no_token: "Извините, время вышло. Попробуйте сбросить пароль заново."
     choose_new: "Пожалуйста, введите новый пароль"
@@ -236,6 +312,7 @@ ru:
       long_form: 'отметить как оффтопик'
     spam:
       title: 'СПАМ'
+      description: 'Это реклама! Данное сообщение не представляет особого интереса или не относится к начальной теме. '
       long_form: 'отмечено как СПАМ'
     inappropriate:
       title: 'Неуместно'
@@ -448,6 +525,7 @@ ru:
     max_topic_title_length: "Максимальная длина названия темы в символах"
     min_private_message_title_length: "Минимальная длина заголовка для личного сообщения"
     min_search_term_length: "Минимальная длина слова для поиска в символах"
+    allow_uncategorized_topics: "Разрешить создание постов без категории."
     allow_duplicate_topic_titles: "Разрешить создание тем с одинаковыми названиями"
     unique_posts_mins: "Количество минут до того, как пользователь сможет разместить сообщение с тем же содержанием."
     educate_until_posts: "Показывать всплывающие подсказки для обучения нового пользователя, пока он не разместил такое количество сообщений:"
@@ -507,7 +585,6 @@ ru:
     enable_noscript_support: "Включить поддержку тэга noscript для поисковых роботов"
     top_menu: "Определите, какие элементы должны располагаться в навигации на главной странице, и в каком порядке. Пример: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Определите, какие элементы должны отображаться в меню у сообщения и в какой последовательности.  Пример: like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Определите, какие элементы должны отображаться в меню «Поделиться» и в какой последовательности. Пример: twitter|facebook|google+"
     track_external_right_clicks: "Отслеживать внешние ссылки, открытые правой кнопкой мыши (например: открыть в новой вкладке), по умолчанию отключено, так как это перезаписывает пути"
     topics_per_page: "Количество тем, подгружаемых по умолчанию на странице, и при ее пролистывании"
     posts_per_page: "Количество сообщений, по умолчанию подгружаемых на странице темы и при ее пролистывании"
@@ -650,12 +727,23 @@ ru:
     within_post: "#%{post_number} от %{username}: %{excerpt}"
     types:
       category: 'Категории'
-      topic: 'Темы'
+      topic: 'Результаты'
       user: 'Пользователи'
   original_poster: "Автор"
   most_posts: "Большинство сообщений"
   most_recent_poster: "Последний автор"
   frequent_poster: "Частый автор"
+  redirected_to_top_reasons:
+    new_user: "Добро пожаловать в наше сообщество! Здесь находятся самые популярные темы."
+  move_posts:
+    new_topic_moderator_post:
+      one: "Сообщение перенесено в новую тему: %{topic_link}"
+      few: "%{count} сообщений перенесены в новую тему: %{topic_link}"
+      other: "%{count} сообщений перенесены в новую тему: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "Сообщение перенесено в уже существующую тему: %{topic_link}"
+      few: "%{count} сообщений перенесены в уже существующую тему: %{topic_link}"
+      other: "%{count} сообщений перенесены в уже существующую тему: %{topic_link}"
   topic_statuses:
     archived_enabled: "Эта тема отправлена в Архив. Она заморожена и не может быть изменена."
     archived_disabled: "Эта тема разархивирована. Она более не заморожена, и может быть изменена."
@@ -674,6 +762,7 @@ ru:
       one: "Эта тема была автоматически закрыта через 1 минуту. В ней больше нельзя отвечать."
       other: "Эта тема была автоматически закрыта спустя %{count} минут. В ней больше нельзя отвечать."
     autoclosed_disabled: "Эта тема открыта. В ней можно отвечать."
+    pinned_enabled: "Данная тема закреплена. Тема будет находиться в начале категории, пока кто нибудь из администраторов не открепит ее."
     pinned_disabled: "Эта тема отлеплена. Она больше не будет отображаться наверху списка тем категории."
     visible_enabled: "Эта тема видима. Она будет отображаться в списке тем."
     visible_disabled: "Эта тема невидима. Она более не отображается в списках тем. Получить доступ к теме можно только по прямой ссылке."
@@ -693,8 +782,8 @@ ru:
     omniauth_error_unknown: "В процессе входа на сайт произошла ошибка. Пожалуйста, повторите попытку."
   user:
     username:
-      short: "должно быть длиннее %{min} символов"
-      long: "должно быть короче %{max} символов"
+      short: "минимум %{min} знаков"
+      long: "должно быть более %{max} знаков"
       characters: "должно состоять только из цифр и латинских букв"
       unique: "должно быть уникально"
       blank: "необходимо заполнить"
@@ -705,31 +794,31 @@ ru:
     ip_address:
       blocked: "блокирован."
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} пригласил вас присоединиться к обсуждению на  сайте %{site_name}"
+    subject_template: "[%{site_name}] %{invitee_name} приглашает вас учавствовать в обсуждении"
     text_body_template: |
-      %{invitee_name} пригласил вас в тему "%{topic_title}" на сайте %{site_name}.
+      %{invitee_name} пригласил вас учавствовать в обсужденииi
 
-      Если вам интересно, пройдите по ссылке ниже, чтобы попасть в обсуждение:
+      > %{topic_title}
 
-      [%{site_name}][1]
+      на сайте
 
-      Вы приглашены доверенным пользователем, поэтому сразу сможете разместить свой ответ без входа на сайт.
+      > **%{site_title}**
+      >
+      > %{site_description}
 
-      [1]: %{invite_link}
+      Если вы заинтересованы, перейдите по ссылке:
+
+      %{invite_link}
+
+      Это персональное приглашение от зарегистрированного пользователя. Вы можете приступить к обсуждению прямо сейчас.
   invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} приглашает вас присоединиться к %{site_name}"
-    text_body_template: |
-      %{invitee_name} приглашает вас на %{site_name}.
-
-      Если вы заинтересованы в этом, кликните по ссылке ниже для регистрации:
-
-      [Посетите %{site_name}][1]
-
-      Вы приглашены доверенным пользователем, поэтому сразу сможете разместить свой ответ без входа на сайт.
-
-      [1]: %{invite_link}
+    subject_template: "%{invitee_name} пригласил вас вступить в сообщество [%{site_name}] "
   test_mailer:
     subject_template: "[%{site_name}] Проверка доставки писем"
+  new_version_mailer:
+    subject_template: "[%{site_name}] Ихууу, доступна новая версия Discourse!"
+  new_version_mailer_with_notes:
+    subject_template: "[%{site_name}] новые обновления"
   system_messages:
     post_hidden:
       subject_template: "Сообщение скрыто по причине поступления множественных жалоб"
@@ -761,6 +850,16 @@ ru:
         Это автоматическое сообщение с сайта %{site_name} для информирования вас о том, что ваша учетная запись заблокирована администратором или модератором.
 
         Получить дополнительную информацию вы можете в нашем разделе [часто задаваемых вопросов](%{base_url}/faq).
+    user_automatically_blocked:
+      subject_template: "Пользователь %{username} заблокирован участниками сообщества"
+      text_body_template: |
+        This is an automated message.
+
+        The new user [%{username}](%{base_url}%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
+
+        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{base_url}%{user_url}).
+
+        This threshold can be changed via the `block_new_user` site settings.
     unblocked:
       subject_template: "Учетная запись разблокирована"
       text_body_template: |
@@ -834,7 +933,10 @@ ru:
         %{respond_instructions}
     digest:
       why: "Ниже краткое содержание обсуждений на сайте %{site_link} с момента вашего последнего посещения %{last_seen_at}."
+      subject_template: "[%{site_name}] Новые сообщения от %{date}"
       new_activity: "Новая активность в ваших темах и сообщениях:"
+      top_topics: "Популярные темы"
+      other_new_topics: "Популярные темы"
       unsubscribe: "Данное письмо отправлено с сайта %{site_link}, т.к. вы давно не посещали его. Для того, чтобы отписаться, пройдите по ссылке %{unsubscribe_link}."
       click_here: "нажмите здесь"
       from: "Cводка новостей сайта %{site_name}"

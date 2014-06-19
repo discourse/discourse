@@ -233,7 +233,6 @@ it:
       change: "cambia"
       moderator: "{{user}} modera questo sito"
       admin: "{{user}} amministra questo sito"
-      deleted: "(eliminato)"
       suspended_notice: "Questo utente è sospeso fino a {{date}}."
       suspended_reason: "Motivo: "
       mailing_list_mode: "Ricevi una mail tutte le volte che viene aggiunto un post al forum (a meno che tu non abbia silenziato il topic o la categoria)"
@@ -318,7 +317,6 @@ it:
       last_emailed: "Ultima email inviatagli"
       last_seen: "Ultima visita"
       created: "Membro da"
-      log_out: "Esci"
       location: "Località"
       website: "Sito Web"
       email_settings: "Email"
@@ -356,7 +354,6 @@ it:
         search: "Cerca negli inviti..."
         title: "Inviti"
         user: "Utente invitato"
-        none: "Nessun invito trovato"
         truncated: "Primi {{count}} inviti"
         redeemed: "Inviti accettati"
         redeemed_at: "Iscritto da"
@@ -364,7 +361,6 @@ it:
         topics_entered: "Topic letti"
         posts_read_count: "Post letti"
         expired: "L'invito è scaduto."
-        rescind: "Revoca invito"
         rescinded: "Invito revocato"
         time_read: "Tempo di lettura"
         days_visited: "Presenza (giorni)"
@@ -411,8 +407,6 @@ it:
     last_post: Ultimo post
     summary:
       enabled_description: "Stai osservando un sunto del post. Per vedere nuovamente tutti i post, clicca sotto."
-      description: "Ci sono <b>{{count}}</b> risposte. Vuoi vedere solo quelle più rilevanti?"
-      description_time: "Ci sono <b>{{count}}</b> risposte con un tempo stimato di lettura di <b>{{readingTime}} minuti</b>. Vuoi metterci di meno leggendo solo le risposte più rilevanti?"
       enable: 'Riassumi questo topic'
       disable: 'Mostra tutti i post'
     private_message_info:
@@ -546,7 +540,6 @@ it:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} ha accettato il tuo invito"
       total_flagged: "Numero totale di post segnalati"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Ti è stato assegnato {{link}}"
@@ -564,13 +557,8 @@ it:
       uploading: "In caricamento"
       image_link: "Il link a cui la tua immagine punterà"
     search:
-      title: "Cerca per discussioni, post, utenti o categorie"
-      placeholder: "Digita qui il testo da cercare"
       no_results: "Nessun risultato trovato."
       searching: "Ricerca in corso..."
-      prefer:
-        user: "La ricerca darà precedenza ai risultati di @{{username}}"
-        category: "La ricerca darà precedenza ai risultati in {{category}}"
     site_map: "Vai a un'altra discussione, lista o categoria"
     go_back: 'Torna indietro'
     not_logged_in_user: 'Pagina utente con riassunto delle attività correnti e delle impostazioni'
@@ -632,7 +620,6 @@ it:
       invalid_access:
         title: "Il topic è privato"
         description: "Spiacenti, non puoi accedere a questo topic!"
-        login_required: "Devi effettuare il login per vedere questo topic."
       server_error:
         title: "Errore di caricamento del topic"
         description: "Spiacenti, non puoi caricare questo topic, probabilmente per un errore di connessione. Se il problema persiste, facci sapere."
@@ -668,8 +655,6 @@ it:
       auto_close_remove: "Non chiudere automaticamente questo topic"
       progress:
         title: Avanzamento del topic
-        jump_top: vai al primo post (tasto home)
-        jump_bottom: vai all'ultimo post (tasto Fine)
         jump_bottom_with_number: "Passa al post %{post_number}"
         total: Post totali
         current: Post corrente
@@ -724,7 +709,6 @@ it:
         visible: "Rendi visibile"
         reset_read: "Cancella i dati già letti"
         multi_select: "Seleziona Post"
-        convert_to_topic: "Converti in un topic regolare"
       reply:
         title: 'Rispondi'
         help: 'Inserisci il tuo messaggio in questo topic'

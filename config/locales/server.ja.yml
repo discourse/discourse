@@ -481,7 +481,6 @@ ja:
     enable_noscript_support: "noscript タグ経由でアクセスしてきた標準サーチエンジンクローラのサポートを有効にする"
     top_menu: "ホームページナビゲーションに表示する項目を指定。例 latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "ポストメニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
-    share_links: "シェアダイアログに表示する項目を指定。例 twitter|facebook|google+|email"
     track_external_right_clicks: "右クリックされた外部リンクをトラックする (例: 新しいタブで開く)。URL のリライトを要するためデフォルトでは無効化されています"
     topics_per_page: "トピックリストページに表示されるトピック数のデフォルト"
     posts_per_page: "トピックページに表示されるポスト数のデフォルト (さらにポストを読み込んだ際にもこの数を適用)"
@@ -609,7 +608,6 @@ ja:
   search:
     types:
       category: 'カテゴリ'
-      topic: 'トピック'
       user: 'ユーザ'
   original_poster: "Original Poster"
   most_posts: "Most Posts"
@@ -652,8 +650,6 @@ ja:
     omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
   user:
     username:
-      short: "は %{min} 文字より長い必要があります"
-      long: "は %{max} 文字より短い必要があります"
       characters: "は英数字のみである必要があります"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
@@ -663,30 +659,6 @@ ja:
       blocked: "は許可されていません。"
     ip_address:
       blocked: "はブロックされてます。"
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} が %{site_name} のディスカッションにあなたを招待しています"
-    text_body_template: |
-      %{invitee_name} が %{site_name} の "%{topic_title}" トピックにあなたを招待しています。
-
-      もしよろしければ、以下のリンクよりディスカッションをご確認ください:
-
-      [Visit %{site_name}][1]
-
-      もしトラステッドユーザより招待された場合は、ログインすることなくすぐに回答を投稿することができます。
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} が %{site_name} にあたなを招待しています"
-    text_body_template: |
-      %{invitee_name} が %{site_name} にあなたを招待しています。
-
-      もしよろしければ、以下のリンクをクリックして参加してください:
-
-      [Visit %{site_name}][1]
-
-      もしトラステッドユーザより招待された場合は、ログインすることなくすぐに参加することができます。
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
     text_body_template: |

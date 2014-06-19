@@ -613,7 +613,6 @@ de:
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
     top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen. Beispiel: twitter|facebook|google+|email"
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die standardmäßig auf die Themenübersichtsseite geladen werden."
     posts_per_page: "Zahl der Beiträge, die auf einer Themenseite gezeigt werden."
@@ -802,7 +801,6 @@ de:
     within_post: "#%{post_number} von %{username}: %{excerpt}"
     types:
       category: 'Kategorien'
-      topic: 'Themen'
       user: 'Benutzer'
   original_poster: "Autor des ersten Beitrags"
   most_posts: "Autor der meisten Beiträge"
@@ -860,8 +858,6 @@ de:
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
   user:
     username:
-      short: "muss längere als %{min} Zeichen sein"
-      long: "muss kürzer als %{max} Zeichen sein"
       characters: "darf nur aus Zahlen und Buchstaben bestehen"
       unique: "muss eindeutig sein"
       blank: "muss angegeben werden"
@@ -871,30 +867,6 @@ de:
       blocked: "ist nicht erlaubt."
     ip_address:
       blocked: "ist blockiert."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} lädt Dich ein, an einer Diskussion auf %{site_name} teilzunehmen"
-    text_body_template: |
-      %{invitee_name} lädt Dich zum Thema "%{topic_title}" auf %{site_name} ein.
-
-      Wenn Dich das interessiert, dann klicke bitte auf den folgenden Link, um die Diskussion zu besuchen:
-
-      [%{site_name}][1]
-
-      Du wurdest von einem vertrauenswürdigen Nutzer eingeladen, so dass Du direkt und ohne vorherige Anmeldung antworten kannst.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} hat dich eingeladen %{site_name} beizutreten"
-    text_body_template: |
-      %{invitee_name} hat Dich eingeladen zu %{site_name}.
-
-      Wenn Du interessiert bist, klicke auf den Link unten um beizutreten:
-
-      [Visit %{site_name}][1]
-
-      Du wurdest von einem vertrauenswürdigen Benutzer eingeladen, daher kannst Du sofort beitreten, ohne dich anzumelden.
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
     text_body_template: |
@@ -939,21 +911,8 @@ de:
       <small>Am Fuß jeder Mail, die Du verschickst, sollte eine Möglichkeit zum Abbestellen gegeben werden. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn Du zukünftig keine weiteren Mail erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
-    text_body_template: |
-      Eine neue Version von Discourse ist verfügbar.
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      Dies könnte interessant sein:
-      - Erkundige dich über Neues im [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade deine Version auf [%{base_url}/admin/docker](%{base_url}/admin/docker) mit dem "Upgrade" Button.
-
-      - Besuche [meta.discourse.org](http://meta.discourse.org) für Neuigkeiten, Diskussionen und Support für Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
-    text_body_template: "Eine neue Version von Discourse ist verfügbar.\n\nDeine Version: %{installed_version}\nNeue Version: **%{new_version}**\n\nVielleicht möchtest du: \n- Sehen was neu ist in [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\n- Aktualisieren, in dem du [%{base_url}/admin/docker](%{base_url}/admin/docker) besuchst, und dort den \"Aktualisieren\" Button anklickst.\n\n- Besuche [meta.discourse.org](http://meta.discourse.org) für Neuigkeiten, Diskussionen, und Unterstützung für Discourse.\n\n### Release notes\n\n%{notes}\n"
   flags_reminder:
     flags_were_submitted:
       one: "Es gibt Markierungen, die vor 1 Stunde gesendet wurden."

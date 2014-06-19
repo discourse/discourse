@@ -142,7 +142,6 @@ id:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} telah menerima undanganmu"
     topic:
       invalid_access:
         description: "Maaf,  kamu tidak berhak mengakses topik tersebut."

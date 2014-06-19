@@ -255,7 +255,6 @@ cs:
       change: "změnit"
       moderator: "{{user}} je moderátor"
       admin: "{{user}} je administrátor"
-      deleted: "(odstraněno)"
       suspended_notice: "Uživatel je suspendován do {{date}}."
       suspended_reason: "Důvod: "
       mailing_list_mode: "Obdržet email za každý nový příspěvek ve fóru (pokud nemáte téma nebo kategorii ztišené)"
@@ -338,7 +337,6 @@ cs:
       last_emailed: "Email naposledy zaslán"
       last_seen: "Naposledy viděn"
       created: "Účet vytvořen"
-      log_out: "Odhlásit se"
       website: "Webová stránka"
       email_settings: "Emailová upozornění"
       email_digests:
@@ -371,7 +369,6 @@ cs:
         search: "pište pro hledání v pozvánkách..."
         title: "Pozvánky"
         user: "Pozvaný uživatel"
-        none: "Žádné pozvánky nerozeslány."
         truncated: "Showing the first {{count}} invites."
         redeemed: "Uplatněné pozvánky"
         redeemed_at: "Uplatněno"
@@ -379,7 +376,6 @@ cs:
         topics_entered: "Zobrazil témat"
         posts_read_count: "Přečteno příspěvků"
         expired: "Poznávka je už prošlá."
-        rescind: "Odstranit pozvánku"
         rescinded: "Pozvánka odstraněna"
         time_read: "Čas čtení"
         days_visited: "Přítomen dnů"
@@ -424,8 +420,6 @@ cs:
     last_post: Poslední příspěvek
     summary:
       enabled_description: "Právě máte zobrazeny \"nejlepší příspěvky\" tohoto tématu."
-      description: "V tomto tématu je <b>{{count}}</b> příspěvků. A to už je hodně! Nechcete ušetřit čas při čtení tím, že zobrazíte pouze příspěvky, které mají nejvíce interakcí a odpovědí?"
-      description_time: "Je tu <b>{{count}}</b> odpovědí s přibližnou délkou čtení <b>{{readingTime}} minut</b>. Chcete ušetřit čas zobrazením pouze nejdůležitějších odpovědí?"
       enable: 'Přepnout na "nejlepší příspěvky"'
       disable: 'Přepnout na normální zobrazení'
     private_message_info:
@@ -556,7 +550,6 @@ cs:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "{{username}} vás pozval do soukromé konverzace: {{link}}"
-      invitee_accepted: "<i title='přijetí pozvánky' class='fa fa-sign-in'></i> {{username}} přijal vaši pozvánku"
       moved_post: "<i title='příspěvek přesunut' class='fa fa-sign-out'></i> {{username}} přesunul {{link}}"
       total_flagged: "celkem nahlášeno příspěvků"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
@@ -575,13 +568,8 @@ cs:
       uploading: "Nahrávám"
       image_link: "adresa na kterou má váš obrázek odkazovat"
     search:
-      title: "hledání témat, příspěvků, uživatelů a kategorií"
-      placeholder: "zadejte hledaný výraz"
       no_results: "Nenalezeny žádné výsledky."
       searching: "Hledám ..."
-      prefer:
-        user: "hledání preferuje výsledky s @{{username}}"
-        category: "hledání preferuje výsledky s {{category}}"
     site_map: "přejít na jiný seznam témat nebo kategorii"
     go_back: 'jít zpět'
     not_logged_in_user: 'stránka uživatele s přehledem o aktuální činnosti a nastavení'
@@ -646,7 +634,6 @@ cs:
       invalid_access:
         title: "Téma je soukromé"
         description: "Bohužel nemáte přístup k tomuto tématu."
-        login_required: "Musíte být přihlášení abyste viděli toto téma."
       server_error:
         title: "Téma se nepodařilo načíst"
         description: "Bohužel není možné načíst toto téma, může to být způsobeno problémem s vaším připojením. Prosím, zkuste stránku načíst znovu. Pokud bude problém přetrvávat, dejte nám vědět."
@@ -686,8 +673,6 @@ cs:
       auto_close_remove: "Nezavírat téma automaticky"
       progress:
         title: pozice v tématu
-        jump_top: přejít na první příspěvek
-        jump_bottom: přejít na poslední příspěvek
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         total: celkem příspěvků
         current: aktuální příspěvek
@@ -744,7 +729,6 @@ cs:
         visible: "Zviditelnit"
         reset_read: "Vynulovat počet čtení"
         multi_select: "Výběr více příspěvků"
-        convert_to_topic: "Převést na běžné téma"
       reply:
         title: 'Odpovědět'
         help: 'začněte psát odpověď na toto téma'

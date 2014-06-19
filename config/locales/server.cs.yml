@@ -605,7 +605,6 @@ cs:
     enable_noscript_support: "Povolit podporu &lt;noscript&gt; tagu"
     top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Určuje, které položky se zobrazí ve sdílecím dialogu a v jakém pořadí. Příklad: twitter|facebook|google+"
     track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
     topics_per_page: "Kolik témat je načteno do seznamu témat"
     posts_per_page: "Kolik příspěvků je zobrazeno ve stránce tématu"
@@ -762,7 +761,6 @@ cs:
     within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Kategorie'
-      topic: 'Témata'
       user: 'Uživatelé'
   original_poster: "Původní zasilatel"
   most_posts: "Více příspěvků"
@@ -816,8 +814,6 @@ cs:
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
   user:
     username:
-      short: "musí být delší než %{min} znaků"
-      long: "mustí být kratší než %{max} znaků"
       characters: "musí obsahovat pouze písmena a číslice"
       unique: "musí být unikátní"
       blank: "nesmí být prázdný"
@@ -827,30 +823,6 @@ cs:
       blocked: "není povolen."
     ip_address:
       blocked: "is blocked."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} vás pozval do diskuze na %{site_name}"
-    text_body_template: |
-      %{invitee_name} vás pozval, abyste se připojili k diskuznímu tématu "%{topic_title}" na %{site_name}.
-
-      Pokud vás to zajímá, klikněte na odkaz níže a tím navštívíte tuto diskuzi:
-
-      [Navštívit %{site_name}][1]
-
-      Byl jste pozván věrohodným uživatelem, takže budete moci přímo odpovědět, bez nutnosti se přihlašovat.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join %{site_name}"
-    text_body_template: |
-      %{invitee_name} invited you to %{site_name}.
-
-      If you're interested, click the link below to join:
-
-      [Visit %{site_name}][1]
-
-      You were invited by a trusted user, so you'll be able to join immediately, without needing to log in.
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] Zkušební email"
     text_body_template: |

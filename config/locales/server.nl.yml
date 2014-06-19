@@ -608,7 +608,6 @@ nl:
     allow_moderators_to_create_categories: "Moderators mogen nieuwe categorieën maken"
     top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|new|unread|starred|categories|top|read|posted"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
-    share_links: "De volgorde en selectie van items in het deelmenu. Bijvoorbeeld twitter|facebook|google+"
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
     topics_per_page: "Hoeveel topics er standaard worden weergegeven in de topiclijst en hoeveel er geladen worden."
     posts_per_page: "Hoeveel berichten er worden weergeven op een topic-pagina"
@@ -784,7 +783,6 @@ nl:
     within_post: "#%{post_number} door %{username}: %{excerpt}"
     types:
       category: 'Categorien'
-      topic: 'Topics'
       user: 'Leden'
   original_poster: "Oorspronkelijk geplaatst door"
   most_posts: "Meer berichten"
@@ -842,8 +840,6 @@ nl:
     omniauth_error_unknown: "Er is iets misgegaan bij het inloggen. Probeer het opnieuw."
   user:
     username:
-      short: "moet langer zijn dan %{min} tekens"
-      long: "moet korter zijn dan %{max} tekens"
       characters: "mag alleen nummers, letters en underscores bevatten"
       unique: "moet uniek zijn"
       blank: "mag niet leeg zijn"
@@ -853,30 +849,6 @@ nl:
       blocked: "is niet toegestaan."
     ip_address:
       blocked: "is geblokkeerd."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} heeft je uitgenodigd om op een privé-bericht te reageren op %{site_name}"
-    text_body_template: |
-      %{invitee_name} heeft je uitgenodigd voor dit bericht: "%{topic_title}" op %{site_name}.
-
-      Mocht je geïnteresseerd zijn, klik dan op de link hieronder om naar de discussie te gaan:
-
-      [Bezoek %{site_name}][1]
-
-      Je bent uitgenodigd door een regulier lid, dus je kan direct een reactie achterlaten zonder in te hoeven loggen.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} heeft je uitgenodigd voor %{site_name}"
-    text_body_template: |
-      %{invitee_name} heeft je uitgenodigd voor %{site_name}.
-
-      Klik op onderstaande link om op de uitnodiging in te gaan als je geïnteresseerd bent:
-
-      [Bezoek %{site_name}][1]
-
-      Je bent uitgenodigd door een vertrouwde gebruiker, daarom kun je je direct inschrijven zonder in te hoeven loggen.
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] E-mail Bezorgtest"
     text_body_template: |

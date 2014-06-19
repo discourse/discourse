@@ -490,7 +490,6 @@ uk:
     enable_noscript_support: "Увімкнути стандартну підтримку пошукових роботів через теґ noscript"
     top_menu: "Визначає, які елементи з'являються в навігації головної сторінки, та в якому порядку. Наприклад, latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Визначає, які елементи з'являються в діалозі поширення, та в якому порядку. Наприклад, twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "Скільки тем за замовчуванням завантажується на сторінці з переліком тем, а також під час підвантаження решти тем"
     posts_per_page: "Скільки дописів завантажується за замовчуванням на сторінці теми, а також під час підвантаження решти дописів"
@@ -652,7 +651,6 @@ uk:
     within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Categories'
-      topic: 'Topics'
       user: 'Users'
   original_poster: "Перший дописувач"
   most_posts: "Найбільше дописів"
@@ -694,8 +692,6 @@ uk:
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
   user:
     username:
-      short: "must be longer than %{min} characters"
-      long: "must be shorter than %{max} characters"
       characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
@@ -705,30 +701,6 @@ uk:
       blocked: "is not allowed."
     ip_address:
       blocked: "is blocked."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion on %{site_name}"
-    text_body_template: |
-      %{invitee_name} invited you to the topic "%{topic_title}" at %{site_name}.
-
-      If you're interested, click the link below to visit the discussion:
-
-      [Visit %{site_name}][1]
-
-      You were invited by a trusted user, so you'll be able to post a reply immediately, without needing to log in.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} запросив(ла) Вас приєднатися до %{site_name}"
-    text_body_template: |
-      %{invitee_name} запросив(ла) Вас до сайта %{site_name}.
-
-      Якщо Вас це цікавить, перейдіть за посиланням, щоб приєднатися:
-
-      [Завітати до сайта %{site_name}][1]
-
-      Вас запросив довірений користувач, тому Ви матимете можливість приєднатися одразу, без входу до системи.
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] Тест доставки електронної пошти"
     text_body_template: |
