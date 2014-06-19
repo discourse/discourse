@@ -18,8 +18,6 @@
   </p>
 <% end %>
 
-<p><%= t 'powered_by_html' %></p>
-
 <% if @rss %>
   <% content_for :head do %>
     <%= auto_discovery_link_tag(:rss, {action: "#{@rss}_feed"}, title: I18n.t("rss_description.#{@rss}")) %>
