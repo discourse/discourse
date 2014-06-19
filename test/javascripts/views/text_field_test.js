@@ -46,7 +46,7 @@ test("renders correctly with all allowed properties set", function() {
 
 test("is registered as helper", function() {
   var view = Ember.View.create({
-    template: Ember.Handlebars.compile("{{textField}}")
+    template: Ember.Handlebars.compile("{{text-field}}")
   });
 
   Ember.run(function() {

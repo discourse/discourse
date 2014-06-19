@@ -1,7 +1,7 @@
 module("Discourse.HasCurrentUser");
 
 test("adds `currentUser` property to an object and ensures it is not cached", function() {
-  sinon.stub(Discourse.User, "current");
+  this.stub(Discourse.User, "current");
   var testObj = Ember.Object.createWithMixins(Discourse.HasCurrentUser, {});
 
   Discourse.User.current.returns("first user");
