@@ -222,6 +222,7 @@ fr:
       private_messages: "Messages privés"
       activity_stream: "Activité"
       preferences: "Préférences"
+      bookmarks: "Favoris"
       bio: "À propos de moi"
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
@@ -233,7 +234,6 @@ fr:
       change: "modifier"
       moderator: "{{user}} est un modérateur"
       admin: "{{user}} est un administrateur"
-      deleted: "(supprimé)"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
       mailing_list_mode: "Recevoir un e-mail à chaque fois qu'un message est posté sur le forum (sauf si vous avez rendu silencieuse ce sujet ou cette catégorie)"
@@ -318,7 +318,6 @@ fr:
       last_emailed: "Dernier email"
       last_seen: "Vu"
       created: "Inscrit"
-      log_out: "Déconnexion"
       location: "Localisation"
       website: "Site internet"
       email_settings: "Email"
@@ -356,7 +355,6 @@ fr:
         search: "commencer à saisir pour rechercher vos invitations..."
         title: "Invitations"
         user: "Utilisateurs"
-        none: "Aucune invitation trouvée."
         truncated: "Affichage des {{count}} premières invitations."
         redeemed: "Invitations acceptées"
         redeemed_at: "Acceptée le"
@@ -364,12 +362,14 @@ fr:
         topics_entered: "Sujets consultés"
         posts_read_count: "Messages lus"
         expired: "Cette invitation a expirée."
-        rescind: "Annuler l'invitation"
         rescinded: "Invitation annulée"
         time_read: "Temps de lecture"
         days_visited: "Ratio de présence"
         account_age_days: "Âge du compte en jours"
         create: "Envoyer une invitation"
+        bulk_invite:
+          uploading: "ENVOI EN COURS"
+          error: "Il y a eu une erreur lors de l'envoi de '{{filename}}': {{message}}"
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
@@ -411,8 +411,7 @@ fr:
     last_post: Dernier message
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet. Pour voir tous les messages à nouveau, cliquez ci-dessous."
-      description: "Il y a <b>{{count}}</ b> réponses. Gagnez du temps de lecture en affichant uniquement les réponses les plus pertinentes?"
-      description_time: "Il y a <b>{{count}}</ b> réponses avec un temps estimé de lecture de <b>{{readingTime}} minutes</b>. Gagnez du temps de lecture en affichant uniquement les réponses les plus pertinentes?"
+      description: "Il y a <b>{{count}}</b> réponses."
       enable: 'Résumer Ce Sujet'
       disable: 'Afficher tous les messages'
     private_message_info:
@@ -547,7 +546,7 @@ fr:
       liked: "<i title='aimé' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='message privé'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='message privé'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='a accepté votre invitation' class='fa fa-envelope-o'></i> {{username}} a accepté votre invitation"
+      moved_post: "<i title='moved post' class='fa fa-sign-out'></i> {{username}} a déplacé {{link}}"
       total_flagged: "Nombre total de messages signalés"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Vous avez obtenu {{link}}"
@@ -565,13 +564,8 @@ fr:
       uploading: "Fichier en cours d'envoi"
       image_link: "lien vers lequel pointe l'image"
     search:
-      title: "rechercher les sujets, messages, utilisateurs ou catégories"
-      placeholder: "saisir votre requête ici"
       no_results: "Aucun résultat."
       searching: "Recherche en cours ..."
-      prefer:
-        user: "La recherche priorisera les résultats de @{{username}}"
-        category: "La recherche priorisera les résultats de la catégorie : {{category}}"
     site_map: "aller à une autre liste de sujet ou catégorie"
     go_back: 'retour'
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
@@ -633,7 +627,6 @@ fr:
       invalid_access:
         title: "Ce sujet est privé"
         description: "Désolé, vous n'avez pas accès à ce sujet !"
-        login_required: "Vous devez vous connecter pour voir ce sujet."
       server_error:
         title: "Sujet impossible à charger"
         description: "Désolé, nous n'avons pu charger ce sujet, probablement du à un problème de connexion. Merci de réessayer à nouveau. Si le problème persiste, merci de nous le faire savoir."
@@ -669,8 +662,7 @@ fr:
       auto_close_remove: "Ne pas fermer automatiquement ce sujet"
       progress:
         title: progression dans le sujet
-        jump_top: aller au premier message (touche Orig)
-        jump_bottom: aller au dernier message (touche fin)
+        go: "aller"
         jump_bottom_with_number: "aller au message %{post_number}"
         total: total messages
         current: message courant
@@ -682,11 +674,13 @@ fr:
           '3_2': 'Vous recevrez des notifications car vous surveillez ce sujet.'
           '3_1': 'Vous recevrez des notifications car vous avez créé ce sujet.'
           '3': 'Vous recevrez des notifications car vous surveillez ce sujet.'
+          '2_8': 'Vous recevrez des notifications parce que vous suivez cette catégorie.'
           '2_4': 'Vous recevrez des notifications car vous avez posté une réponse dans ce sujet.'
           '2_2': 'Vous recevrez des notifications car vous suivez ce sujet.'
           '2': 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu ce sujet</a>.'
           '1_2': 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
           '1': 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
+          '0_7': 'Vous ignorez toutes les notifications de cette discussion.'
           '0_2': 'Vous ignorez toutes les notifications de ce sujet.'
           '0': 'Vous ignorez toutes les notifications de ce sujet.'
         watching_pm:
@@ -725,7 +719,6 @@ fr:
         visible: "Rendre visible"
         reset_read: "Réinitialiser les lectures"
         multi_select: "Sélectionner les messages"
-        convert_to_topic: "Convertir en sujet régulier"
       reply:
         title: 'Répondre'
         help: 'commencez à répondre à ce sujet'
@@ -822,6 +815,7 @@ fr:
         one: "1 message caché"
         other: "{{count}} messages cachés"
       more_links: "{{count}} de plus..."
+      unread: "Ce sujet est non lu"
       has_replies:
         one: "Réponse"
         other: "Réponses"
@@ -1017,6 +1011,13 @@ fr:
       default_position: "Position par défaut"
       position_disabled: 'Les catégories seront affichées dans l''ordre d''activité. Pour contrôler l''ordre des catégories dans la liste, activer l''option "fixer la position des catégories".'
       parent: "Catégorie Parent"
+      notifications:
+        tracking:
+          title: "Suivi"
+        regular:
+          title: "Normal"
+        muted:
+          title: "Silencieux"
     flagging:
       title: 'Pourquoi signalez vous secrètement ce message ?'
       action: 'Signaler ce message'
@@ -1526,7 +1527,6 @@ fr:
         refresh_browsers: "Forcer le rafraîchissement du navigateur"
         show_public_profile: "Afficher le profil public"
         impersonate: 'Incarner'
-        log_out: "Déconnexion"
         logged_out: "L'utilisateur s'est déconnecté de tous les appareils"
         revoke_admin: 'Révoquer les droits d''admin'
         grant_admin: 'Accorder les droits d''admin'

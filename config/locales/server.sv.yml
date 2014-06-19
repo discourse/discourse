@@ -452,7 +452,6 @@ sv:
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     posts_per_page: "How many posts are returned on a topic page"
     site_contact_username: "Username for the author of automated private messages sent by the forum"
@@ -559,7 +558,6 @@ sv:
   search:
     types:
       category: 'Categories'
-      topic: 'Topics'
       user: 'Users'
   original_poster: "Original Poster"
   most_posts: "Most Posts"
@@ -594,8 +592,6 @@ sv:
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
   user:
     username:
-      short: "must be longer than %{min} characters"
-      long: "must be shorter than %{max} characters"
       unique: "must be unique"
       blank: "must be present"
       must_begin_with_alphanumeric: "must begin with a letter or number"
@@ -604,18 +600,6 @@ sv:
       blocked: "är inte tillåtet."
     ip_address:
       blocked: "är blockerad."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion on %{site_name}"
-    text_body_template: |
-      %{invitee_name} invited you to the topic "%{topic_title}" at %{site_name}.
-
-      If you're interested, click the link below to visit the discussion:
-
-      [Visit %{site_name}][1]
-
-      You were invited by a trusted user, so you'll be able to post a reply immediately, without needing to log in.
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
   system_messages:

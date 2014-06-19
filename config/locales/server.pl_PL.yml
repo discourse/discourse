@@ -561,7 +561,6 @@ pl_PL:
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics loaded by default on the topics list page, and when loading more topics"
     posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
@@ -686,7 +685,6 @@ pl_PL:
   search:
     types:
       category: 'Kategorie'
-      topic: 'Tematy'
       user: 'Użytkownicy'
   original_poster: "Autor pierwszego wpisu"
   most_posts: "Większość postów"
@@ -716,8 +714,6 @@ pl_PL:
     omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
   user:
     username:
-      short: "musi być dłuższa niż %{min} znaków"
-      long: "musi być krótsza niż %{max} znaków"
       characters: "może zawierać tylko litery, cyfry i podkreślenia"
       unique: "musi być unikalna"
       blank: "musi zostać podana"
@@ -725,29 +721,6 @@ pl_PL:
     email:
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
       blocked: "is not allowed."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} zaprosił Cię byś dołączył do dyskusji na %{site_name}"
-    text_body_template: |
-      %{invitee_name} zaprosił Cię do tematu "%{topic_title}" na forum %{site_name}.
-
-      Jeśli jesteś zainteresowany, kliknij na poniższy link by odwiedzić dyskusję:
-
-      [Visit %{site_name}][1]
-
-      Zostałeś zaproszony przez zaufanego użytkownika, więc będziesz mógł natychmiast odpowiedzieć, bez potrzeby logowania.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    text_body_template: |
-      %{invitee_name} zaprosił Ciebie do odwiedzenia serwisu %{site_name}.
-
-      Jeśli jesteś zainteresowany(a), kliknij poniższy odnośnik:
-
-      [Odwiedź %{site_name}][1]
-
-      Zaproszenie zostało wysłane przez zaufanego użytkownika, nie musisz się logować by dołączyć:
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   flags_reminder:

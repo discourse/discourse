@@ -545,7 +545,6 @@ da:
     enable_noscript_support: "Aktivér standard webcrawler søgemaskineunderstøttelse vha. noscript-tagget"
     top_menu: "Angiv hvilke elementer der skal vises i hjemmesidenavigationen, og i hvilken rækkefølge. Eksempel: latest|new|unread|starred|categories|top|read|posted."
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
-    share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge. Eksempel twitter|facebook|google+|email."
     track_external_right_clicks: "Spor højreklik på eksterne links (f.eks.: åbn i ny tab); deaktiveret som standard fordi den omskriver URLer"
     topics_per_page: "Hvor mange emner der automatisk indlæses på emneoversigten."
     posts_per_page: "Hvor mange indlæg der indlæses som standard på en emneside og når der indlæses flere indlæg."
@@ -684,7 +683,6 @@ da:
   search:
     types:
       category: 'Kategorier'
-      topic: 'Emner'
       user: 'Brugere'
   original_poster: "Oprindelig forfatter"
   most_posts: "Flest indlæg"
@@ -734,8 +732,6 @@ da:
     omniauth_error_unknown: "Noget gik galt ved behandlingen af dit login, prøv venligst igen."
   user:
     username:
-      short: "skal være længere end %{min} tegn"
-      long: "skal være kortere end %{max} tegn"
       characters: "må kun indeholde bogstaver og tal"
       unique: "skal være unik"
       blank: "skal udfyldes"
@@ -745,30 +741,6 @@ da:
       blocked: "er ikke tilladt."
     ip_address:
       blocked: "er blokeret."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} inviterede dig til at deltage i en debat på %{site_name}"
-    text_body_template: |
-      %{invitee_name} inviterede dig til emnet "%{topic_title}" på %{site_name}.
-
-      Hvis du er interesseret, så klik på linket herunder for at se debatten:
-
-      [Besøg %{site_name}][1]
-
-      Du blev inviteret af en bruger vi har tillid til, så du kan svare med det samme, uden at skulle logge ind.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} inviterede dig til %{site_name}"
-    text_body_template: |
-      %{invitee_name} inviterede dig til  %{site_name}.
-
-      Hvis du er interesseret, så klik på linket herunder for at tilmelde dig:
-
-      [Visit %{site_name}][1]
-
-      Du blev inviteret af en bruger vi har tillid til, så du kan tilmelde dig med det samme, uden at skulle logge ind.
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] test af e-mail-udsendelse"
     text_body_template: |

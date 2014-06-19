@@ -187,6 +187,15 @@ zh_TW:
       post_stats: "新文章的數目。"
       post_stat_sentence:
         other: "在過去一%{unit}內有 %{count} 篇新文章。"
+    ip_info:
+      title: 反查 IP 位址
+      hostname: 伺服器名稱
+      location: 位置
+      location_not_found: ( 未知 )
+      organisation: 組織
+      phone: 電話
+      other_accounts: 擁有相同 IP 位址的其他帳號
+      no_other_accounts: ( 無 )
     user:
       said: "{{username}} 說了："
       profile: "基本資料"
@@ -198,6 +207,7 @@ zh_TW:
       private_messages: "訊息"
       activity_stream: "活動"
       preferences: "偏好設定"
+      bookmarks: "書籤"
       bio: "關於我"
       invited_by: "邀請人"
       trust_level: "信任等級"
@@ -209,7 +219,8 @@ zh_TW:
       change: "修改"
       moderator: "{{user}} 是板主"
       admin: "{{user}} 是管理員"
-      deleted: "( 已刪除 )"
+      moderator_tooltip: "此用戶為板主"
+      admin_tooltip: "此用戶為管理員"
       suspended_notice: "此用戶已被停權至 {{date}}。"
       suspended_reason: "原因: "
       mailing_list_mode: "每當論壇上有新文章時你都會收到一封電子郵件。( 除非你將該討論話題或分類設為靜音 )"
@@ -328,7 +339,7 @@ zh_TW:
         search: "輸入要搜尋邀請的文字..."
         title: "邀請"
         user: "受邀請的用戶"
-        none: "未找到邀請。"
+        none: "你尚未邀請任何人。"
         truncated: "顯示前 {{count}} 個邀請。"
         redeemed: "已接受的邀請"
         redeemed_at: "接受日期"
@@ -336,12 +347,18 @@ zh_TW:
         topics_entered: "參與的討論話題"
         posts_read_count: "已讀的文章"
         expired: "此邀請已過期"
-        rescind: "刪除邀請"
+        rescind: "移除"
         rescinded: "邀請已刪除"
         time_read: "閱讀時間"
         days_visited: "到訪天數"
         account_age_days: "帳號已建立 (天)"
         create: "送出邀請"
+        bulk_invite:
+          none: "你尚未邀請任何人。你可以發送個別邀請，或者透過<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上傳邀請名單</a>一次邀請一群人。"
+          text: "從檔案大量邀請"
+          uploading: "上傳中"
+          success: "檔案已成功上傳，你很快就會收到進度通知。"
+          error: "上傳 '{{filename}}' 時發生問題：{{message}}"
       password:
         title: "密碼"
         too_short: "你的密碼太短。"
@@ -384,8 +401,8 @@ zh_TW:
     last_post: 最後一篇文章
     summary:
       enabled_description: "你正在檢視此討論話題的摘要，按下方再次檢視所有文章。"
-      description: "總共有 <b>{{count}}</b> 篇回覆，僅顯示最相關的回覆節省閱讀時間？"
-      description_time: "總共有 <b>{{count}}</b> 篇回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀，僅顯示最相關的回覆節省閱讀時間?"
+      description: "共有 <b>{{count}}</b> 個回覆。"
+      description_time: "共有 <b>{{count}}</b> 個回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀。"
       enable: '以摘要檢視此討論話題'
       disable: '顯示所有文章'
     private_message_info:
@@ -397,6 +414,7 @@ zh_TW:
     last_seen: '出現時間'
     created: '已建立'
     trust_level: '信任等級'
+    search_hint: '用戶名稱或電子郵件'
     create_account:
       title: "建立新帳號"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
@@ -413,6 +431,7 @@ zh_TW:
       password: "密碼"
       email_placeholder: "電子郵件地址或用戶名稱"
       error: "未知的錯誤"
+      blank_username_or_password: "請輸入你的電子郵件或者用戶名稱，以及密碼。"
       reset_password: '重設密碼'
       logging_in: "登入中..."
       or: "或"
@@ -520,7 +539,7 @@ zh_TW:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} 已接受你的邀請"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i> {{username}} 已接受你的邀請"
       moved_post: "<i title='移動的文章' class='fa fa-sign-out'></i> {{username}} 移動了 {{link}}"
       total_flagged: "所有被投訴的文章"
       linked: "<i title='已連結的文章' class='fa fa-arrow-left'></i> {{username}} {{link}}"
@@ -540,12 +559,12 @@ zh_TW:
       image_link: "連結你的圖片將指向"
     search:
       title: "搜尋討論話題、文章、用戶或分類"
-      placeholder: "在此輸入你想搜尋的文字"
       no_results: "未找到任何結果。"
       searching: "正在搜尋..."
-      prefer:
-        user: "搜尋結果以 @{{username}} 優先"
-        category: "搜尋結果以 {{category}} 優先"
+      context:
+        user: "搜尋 @{{username}} 的文章"
+        category: "搜尋 \"{{category}}\" 分類"
+        topic: "搜尋此討論話題"
     site_map: "到另一個討論話題列表或分類"
     go_back: '返回'
     not_logged_in_user: '用戶頁面包含目前活動及喜好的總結'
@@ -604,7 +623,7 @@ zh_TW:
       invalid_access:
         title: "私人討論話題"
         description: "抱歉，你沒有進入此討論話題的權限！"
-        login_required: "你需要登入才能看見討論話題。"
+        login_required: "你必須登入才能看見該討論話題。"
       server_error:
         title: "討論話題載入失敗"
         description: "抱歉，可能因為連線有問題而無法載入此討論話題，請再試一次，如果這個問題持續發生，請讓我們知道。"
@@ -637,8 +656,9 @@ zh_TW:
       auto_close_remove: "不要自動關閉此討論話題"
       progress:
         title: topic progress
-        jump_top: 跳至第一篇文章 ( Home 鍵 )
-        jump_bottom: 跳至最後一篇文章 ( End 鍵 )
+        go_top: "頂部"
+        go_bottom: "底部"
+        go: "前往"
         jump_bottom_with_number: "跳至第 %{post_number} 篇文章"
         total: 所有文章
         current: 目前的文章
@@ -695,7 +715,6 @@ zh_TW:
         visible: "使可見"
         reset_read: "重置讀取資料"
         multi_select: "選取要移動的文章"
-        convert_to_topic: "轉換為普通文章"
       reply:
         title: '回覆'
         help: '回覆此討論話題'
@@ -1475,6 +1494,7 @@ zh_TW:
         refresh_browsers: "強制瀏覽器重新整理"
         show_public_profile: "顯示公開的基本資料"
         impersonate: '檢視角度'
+        ip_lookup: "IP 反查"
         log_out: "登出"
         logged_out: "用戶已從所有裝置中登出"
         revoke_admin: '撤銷管理員權限'
@@ -1608,6 +1628,7 @@ zh_TW:
         categories: '<b>g</b> 之後 <b>c</b> 分類'
       navigation:
         title: '導航'
+        jump: '<b>#</b> 前往文章編號'
         back: '<b>u</b> 返回'
         up_down: '<b>k</b>/<b>j</b> 移動選擇向上/向下'
         open: '<b>o</b> 或 <b>Enter</b> 開啟已選擇討論話題'

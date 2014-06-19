@@ -202,7 +202,6 @@ da:
       change: "skift"
       moderator: "{{user}} er moderator"
       admin: "{{user}} er admin"
-      deleted: "(slettet)"
       suspended_notice: "Denne bruger er suspenderet indtil {{date}}."
       suspended_reason: "Begrundelse: "
       watched_categories: "Overvåget"
@@ -271,7 +270,6 @@ da:
       last_emailed: "Sidste e-mail"
       last_seen: "Sidst set"
       created: "Oprettet"
-      log_out: "Log ud"
       website: "Site"
       email_settings: "E-mail"
       email_digests:
@@ -301,14 +299,12 @@ da:
         search: "tast for at søge invitationer…"
         title: "Invitationer"
         user: "Inviteret bruger"
-        none: "{{username}} har ikke inviteret nogen brugere til dette site."
         truncated: "Viser de første {{count}} invitationer."
         redeemed: "Brugte invitationer"
         redeemed_at: "Invitation brugt"
         pending: "Udestående invitationer"
         topics_entered: "Emner åbnet"
         posts_read_count: "Indlæg læst"
-        rescind: "Fjern invitation"
         rescinded: "Invitation fjernet"
         time_read: "Læsetid"
         days_visited: "Besøgsdage"
@@ -345,8 +341,6 @@ da:
     last_post: Sidste indlæg
     summary:
       enabled_description: "Du ser et sammendrag af dette emne. Klik nedenfor at se alle indlæg igen."
-      description: "Der er <b>{{count}}</b> indlæg i dette emne. Det er mange! Vil du gerne spare lidt tid, ved kun at se de indlæg der har flest interaktioner og svar?"
-      description_time: "Der er <b>{{count}}</b> svar med en estimeret læsetid på <b>{{readingTime}} minutes</b>. Spar læsetid ved kun at vise de mest relevante svar?"
       enable: 'Opsummér dette emne'
       disable: 'Vis alle indlæg'
     private_message_info:
@@ -463,7 +457,6 @@ da:
       liked: "<i title='syntes om' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-lock' title='privat besked'></i> {{username}} har sendt dig en privat besked: {{link}}"
       invited_to_private_message: "{{username}} har inviteret dig til en privat samtale: {{link}}"
-      invitee_accepted: "<i title='accepterede din invitation' class='fa fa-sign-in'></i> {{username}} har accepteret din invitation"
       total_flagged: "total markerede indlæg"
     upload_selector:
       title: "Indsæt billede"
@@ -477,13 +470,8 @@ da:
       hint: "(du kan også trække og slippe ind i editoren for at uploade dem)"
       uploading: "Uploader billede"
     search:
-      title: "søg efter emner, indlæg, brugere eller kategorier"
-      placeholder: "skriv søgeord her"
       no_results: "Ingen resultater fundet."
       searching: "Søger…"
-      prefer:
-        user: "søgning vil foretrække resultater fra @{{username}}"
-        category: "søgning vil foretrække resultater i {{category}}"
     site_map: "gå til en anden emneoversigt eller kategori"
     go_back: 'gå tilbage'
     current_user: 'gå til brugerside'
@@ -565,8 +553,6 @@ da:
       auto_close_remove: "Luk ikke dette emne automatisk"
       progress:
         title: emnestatus
-        jump_top: hop til første indlæg
-        jump_bottom: hop til sidste indlæg
         jump_bottom_with_number: "hop til indlæg %{post_number}"
         total: antal indlæg
         current: nuværende indlæg
@@ -611,7 +597,6 @@ da:
         visible: "Gør synlig"
         reset_read: "Glem hvilke emner jeg har læst"
         multi_select: "Vælg emner der skal flyttes"
-        convert_to_topic: "Konvertér til normalt emne"
       reply:
         title: 'Svar'
         help: 'begynd at skrive et svar til dette emne'

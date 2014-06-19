@@ -217,7 +217,6 @@ sv:
       change: "ändra"
       moderator: "{{user}} är en moderator"
       admin: "{{user}} är en admin"
-      deleted: "(raderad)"
       suspended_notice: "Den här användaren är avstängd till {{date}}."
       suspended_reason: "Anledning:"
       watched_categories: "Tittade på"
@@ -295,7 +294,6 @@ sv:
       last_emailed: "Senast Mailad"
       last_seen: "Sedd"
       created: "Gick med"
-      log_out: "Logga Ut"
       website: "Webbplats"
       email_settings: "E-post"
       email_digests:
@@ -325,7 +323,6 @@ sv:
         search: "sök efter inbjudningar..."
         title: "Inbjudningar"
         user: "Inbjuden Användare"
-        none: "Inga inbjudningar hittades."
         truncated: "Visar de första {{count}} inbjudningarna."
         redeemed: "Inlösta Inbjudnignar"
         redeemed_at: "Inlöst"
@@ -333,7 +330,6 @@ sv:
         topics_entered: "Besökta trådar"
         posts_read_count: "Inlägg Lästa"
         expired: "Denna inbjudan har gått ut."
-        rescind: "Ta Bort Inbjudan"
         rescinded: "Inbjudan borttagen"
         time_read: "Lästid"
         days_visited: "Dagar Besökta"
@@ -371,8 +367,6 @@ sv:
     last_post: Sista inlägget
     summary:
       enabled_description: "Detta är en sammanfattning av tråden. För att se alla inlägg igen, klicka nedan."
-      description: "Det finns <b>{{count}}</b> svar. Spara tid genom att bara visa de mest relevanta svaren?"
-      description_time: "Det finns <b>{{count}}</b> svar med en uppskattad lästid på <b>{{readingTime}} minuter</b>. Spara lästid genom att bara visa de mest relevanta svaren?"
       enable: 'Sammanfatta denna tråd'
       disable: 'Visa alla inlägg'
     private_message_info:
@@ -490,7 +484,6 @@ sv:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} accepterade din inbjudan"
       total_flagged: "totalt antal flaggade inlägg"
     upload_selector:
       title: "Lägg till en bild"
@@ -502,13 +495,8 @@ sv:
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
     search:
-      title: "sök efter trådar, inlägg, användare, eller kategorier"
-      placeholder: "skriv din sökterm här"
       no_results: "Inga resultat hittades."
       searching: "Söker ..."
-      prefer:
-        user: "Sökningen kommer att föredra resultat av @{{username}}"
-        category: "Sökningen kommer att föredra resultat i {{category}}"
     site_map: "gå till en annan trådlista eller kategori"
     go_back: 'gå tillbaka'
     not_logged_in_user: 'användarsida med sammanställning av aktuell aktivitet och inställningar'
@@ -598,8 +586,6 @@ sv:
       auto_close_remove: "Stäng inte den här tråden automatiskt"
       progress:
         title: trådplacering
-        jump_top: hoppa till det första inlägget (home-tangenten)
-        jump_bottom: hoppa till det sista inlägget (end-tangenten)
         jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         total: antal inlägg
         current: nuvarande inlägg
@@ -652,7 +638,6 @@ sv:
         invisible: "Gör Osynlig"
         visible: "Gör Synlig"
         reset_read: "Återställ Läsdata"
-        convert_to_topic: "Konvertera till Vanlig Tråd"
       reply:
         title: 'Svara'
         help: 'börja komponera ett svar till denna tråd'

@@ -144,7 +144,6 @@ uk:
       change: "змінити"
       moderator: "{{user}} є модератором"
       admin: "{{user}} є адміном"
-      deleted: "(видалено)"
       suspended_notice: "Цього користувача призупинено до {{date}}."
       suspended_reason: "Причина: "
       watched_categories: "Відслідковувані"
@@ -222,7 +221,6 @@ uk:
       last_emailed: "Останній електронний лист"
       last_seen: "Помічено востаннє"
       created: "Приєднався(лась)"
-      log_out: "Вийти"
       website: "Вебсайт"
       email_settings: "Електронна пошта"
       email_digests:
@@ -246,7 +244,6 @@ uk:
         search: "шукати запрошення..."
         title: "Запрошення"
         user: "Запрошений користувач"
-        none: "Запрошень не знайдено."
         truncated: "Показано перші {{count}} запрошень."
         redeemed: "Прийняті запрошення"
         redeemed_at: "Прийнято"
@@ -254,7 +251,6 @@ uk:
         topics_entered: "Тем переглянуто"
         posts_read_count: "Прочитано дописів"
         expired: "Термін дії цього запрошення сплив."
-        rescind: "Видалити запрошення"
         rescinded: "Запрошення видалено"
         time_read: "Час читання"
         days_visited: "Днів відвідано"
@@ -294,8 +290,6 @@ uk:
     last_post: Останній допис
     summary:
       enabled_description: "Ви переглядаєте підсумок цієї теми. Щоб знову побачити всі дописи, натисніть знизу."
-      description: "Є <b>{{count}}</b> відповідей. Заощадити час на читання, показавши тільки найбільш релевантні відповіді?"
-      description_time: "Є <b>{{count}}</b> відповідей, читання яких займе близько <b>{{readingTime}} хвилин</b>. Заощадити час на читання, показавши тільки найбільш релевантні відповіді?"
       enable: 'Підсумувати цю тему'
       disable: 'Показати всі дописи'
     private_message_info:
@@ -413,7 +407,6 @@ uk:
       liked: "<i title='вподобав(ла)' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='приватне повідомлення'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='приватне повідомлення'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='прийняв(ла) Ваше запрошення' class='fa fa-sign-in'></i> {{username}} прийняв(ла) Ваше запрошення"
       total_flagged: "всього дописів, на які поскаржилися"
     upload_selector:
       title: "Додати зображення"
@@ -427,13 +420,8 @@ uk:
       hint: "(Ви також можете перетягувати зображення в редактор, щоб їх завантажити)"
       uploading: "Завантаження"
     search:
-      title: "шукати в темах, дописах, користувачах та категоріях"
-      placeholder: "введіть слова для пошуку"
       no_results: "Нічого не знайдено."
       searching: "Пошук ..."
-      prefer:
-        user: "search will prefer results by @{{username}}"
-        category: "search will prefer results in {{category}}"
     site_map: "перейти до іншого переліку або категорії тем"
     go_back: 'повернутися назад'
     not_logged_in_user: 'сторінка користувача з підсумком поточної діяльності та налаштуваннями'
@@ -486,7 +474,6 @@ uk:
       invalid_access:
         title: "Тема є приватною."
         description: "Вибачте, у Вас немає доступу до цієї теми!"
-        login_required: "You need to log in to see that topic."
       server_error:
         title: "Тему не вдалося завантажити"
         description: "Даруйте, ми не змогли завантажити цю тему, ймовірно, через проблему зі з'єднанням. Будь ласка, спробуйте ще раз. Якщо проблема залишається, дайте нам знати."
@@ -513,8 +500,6 @@ uk:
       auto_close_remove: "Не закривати цю тему автоматично"
       progress:
         title: просування по темі
-        jump_top: перейти до першого допису (клавіша home)
-        jump_bottom: перейти до останнього допису (клавіша end)
         jump_bottom_with_number: "перейти до допису %{post_number}"
         total: всього дописів
         current: поточний допис
@@ -568,7 +553,6 @@ uk:
         visible: "Зробити видимою"
         reset_read: "Скинути дані про прочитаність"
         multi_select: "Перемістити дописи"
-        convert_to_topic: "Перетворити на звичайну тему"
       reply:
         title: 'Відповісти'
         help: 'почати складати відповідь на цю тему'

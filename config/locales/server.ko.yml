@@ -425,7 +425,6 @@ ko:
     enable_noscript_support: "당신의 사이트를 검색하기 위한 noscript 테그를 이용한 일반적인 웹 크롤러를 활성화"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "게시물 메뉴에 어떤 사항들이 무슨 순서로 올라올지 결정합니다. 예: 좋아요|수정|신고|삭제|공유|북마크|답글"
-    share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics are loaded by default on the topics list page"
     posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
@@ -552,7 +551,6 @@ ko:
   search:
     types:
       category: '카테고리들'
-      topic: '토픽들'
       user: '사용자들'
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
@@ -583,8 +581,6 @@ ko:
     omniauth_error_unknown: "로그인에 문제가 있습니다. 다시 시도해주세요."
   user:
     username:
-      short: "%{min} 자보다 길어야 합니다."
-      long: "%{max} 자보다 짧아야합니다."
       characters: "문자나 숫자만 사용해야 합니다."
       unique: "이미 사용중입니다."
       blank: "공백이 없어야 합니다."
@@ -594,30 +590,6 @@ ko:
       blocked: "는 허용되지 않습니다"
     ip_address:
       blocked: "는 블락되었습니다."
-  invite_mailer:
-    subject_template: "[%{site_name}]의 %{invitee_name}님께서 당신을 초대하였습니다."
-    text_body_template: |
-      %{invitee_name}님께서 당신을 %{topic_title} 토픽에 초대하였습니다.
-
-      초대를 허락하시려면 아래 링크를 클릭하여 주세요.
-
-      [%{site_name} 방문하기][1]
-
-      당신은 %{site_name}에서 신뢰받는 사용자로부터 초대를 받으셨습니다. 그리하여 로그인이 필요없이 바로 답글을 게시하실 수 있습니다.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] 의 %{invitee_name} 사용자가 %{site_name} 사이트에 가입하도록 초대하였습니다."
-    text_body_template: |
-      %{invitee_name} 사용자가 당신을 %{site_name} 에 초대하였습니다.
-
-      초대를 허락하시려면 아래 링크를 클릭하여 주세요.
-
-      [%{site_name} 방문하기][1]
-
-      당신은 %{site_name}에서 신뢰받는 사용자로부터 초대를 받으셨습니다. 그래서 로그인 필요없이 바로 로그인 하실 수 있습니다.
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
     text_body_template: |

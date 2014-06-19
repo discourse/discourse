@@ -23,6 +23,8 @@ zh_TW:
   log_in: "登入"
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留權利"
+  bulk_invite:
+    file_should_be_csv: "上傳的檔案必須是 csv 格式。"
   backup:
     operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
   not_logged_in: "你需要先登入才能那樣做。"
@@ -483,11 +485,11 @@ zh_TW:
     allow_moderators_to_create_categories: "允許板主建立新分類"
     top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：latest|hot|read|starred|unread|new|posted|categories"
     post_menu: "確定在文章功能表條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
-    share_links: "確定在分享對話方塊裡顯示哪些條目、以什麼順序顯示。例如 twitter|facebook|google+"
+    post_menu_hidden_items: "預設會在文章選單中隱藏的選項，需點擊省略符號（...）才會顯示。"
+    share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     track_external_right_clicks: "追蹤外部連結的右鍵點擊 ( 例如：開啟於瀏覽器的新頁面 )，預設是關閉的，因為它會重寫URLs"
     topics_per_page: "在討論話題清單頁面以及當載入更多討論話題時，預設載入多少個討論話題"
     posts_per_page: "在討論話題頁面或者載入更多文章時，預設載入多少篇文章"
-    desktop_post_slack_ratio: "在桌上型電腦中顯示的文章畫面數量"
     site_contact_username: "論壇給用戶發送自動訊息時使用的用戶名"
     send_welcome_message: "給新用戶發送歡迎訊息？"
     suppress_reply_directly_below: "當一篇文章只有一個回覆時，不顯示文章回覆數量"
@@ -571,17 +573,24 @@ zh_TW:
     newuser_spam_host_threshold: "用戶在一篇文章中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇文章被認為是垃圾文章。"
     staff_like_weight: "當工作人員按讚時所給予的額外加權係數。"
     reply_by_email_enabled: "開啟透過電子郵件回覆討論話題的功能"
+    pop3s_polling_insecure: "使用無 SSL 的純文字 POP3 進行投票"
     automatically_download_gravatars: "當建立帳號或者更改電子郵件信箱時，自動為用戶下載 gravatar。"
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單"
     enable_names: "允許用戶顯示他們的全名"
     display_name_on_posts: "在用戶的文章上同時顯示其全名"
     invites_shown: "使用者頁面上顯示的最大邀請數"
+    embed_username_key_from_feed: "用以抓取 discourse 用戶名稱的 key \n(Key to pull discourse username from feed)"
     embed_category: "已建立之討論話題的分類"
     embed_post_limit: "最大內嵌文章數"
     enable_cdn_js_debugging: "對所有 js includes 增加 crossorigin 權限使 /logs 能顯示適當的錯誤訊息"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     errors:
       invalid_email: "無效的電子郵件地址"
+      regex_mismatch: "內容值不符合要求的格式。"
+      invalid_string: "無效的值。"
+      invalid_string_min_max: "必須介於 %{min} 到 %{max} 字之間。"
+      invalid_string_min: "必須至少 %{min} 個字。"
+      invalid_string_max: "不能超過 %{max} 個字。"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
     liked: "%{display_username} 在 %{link} 按讚了你的文章 "
@@ -596,7 +605,7 @@ zh_TW:
   search:
     types:
       category: '分類'
-      topic: '討論話題'
+      topic: '結果'
       user: '用戶'
   original_poster: "原始作者"
   most_posts: "大部分文章"
@@ -634,8 +643,8 @@ zh_TW:
     omniauth_error_unknown: "在處理你的登入過程中發生了錯誤，請重試。"
   user:
     username:
-      short: "必須超過 %{min} 字"
-      long: "必須少於 %{max} 字"
+      short: "必須至少 %{min} 個字"
+      long: "不能超過 %{max} 個字"
       characters: "必須只包含字母和數位"
       unique: "必須是唯一的"
       blank: "必須存在"
@@ -646,17 +655,37 @@ zh_TW:
     ip_address:
       blocked: "被封鎖。"
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} 邀請你參與 %{site_name} 上的一個討論"
+    subject_template: "[%{site_name}] %{invitee_name} 邀請你參與討論"
     text_body_template: |
-      %{invitee_name} 邀請你加入 %{site_name} 網站上的討論話題 "%{topic_title}"。
+      %{invitee_name} 邀請你參與討論
 
-      如果你感興趣，請點擊下面的連結來瀏覽該討論：
+      > %{topic_title}
 
-      [瀏覽 %{site_name}][1]
+      at
 
-      你是被一個受信任的用戶邀請的，所以你可以不用登入就直接發表回覆。
+      > **%{site_title}**
+      >
+      > %{site_description}
 
-      [1]: %{invite_link}
+      如果你感興趣，請點擊以下連結：
+
+      %{invite_link}
+
+      此邀請是由一位受信任的用戶所發出，所以你可以立即對此討論發表回覆。
+  invite_forum_mailer:
+    subject_template: "[%{site_name}] %{invitee_name} 邀請你加入"
+    text_body_template: |
+      %{invitee_name} 邀請你加入
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      如果你感興趣，請點擊以下連結：
+
+      %{invite_link}
+
+      此邀請是由一位受信任的用戶所發出，所以你不需要登入。
   test_mailer:
     subject_template: "[%{site_name}] 電子郵件發送測試"
     text_body_template: |

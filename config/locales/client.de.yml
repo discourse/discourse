@@ -233,7 +233,6 @@ de:
       change: "ändern"
       moderator: "{{user}} ist ein Moderator"
       admin: "{{user}} ist ein Administrator"
-      deleted: "(gelöscht)"
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
       suspended_reason: "Grund: "
       mailing_list_mode: "Erhalte jedes Mal eine Email, wenn ein Beitrag im Forum erstellt wurde (sofern du das Thema oder die Kategorie nicht stumm geschaltet hast)"
@@ -318,7 +317,6 @@ de:
       last_emailed: "Letzte E-Mail"
       last_seen: "Zuletzt gesehen"
       created: "Mitglied seit"
-      log_out: "Ausloggen"
       location: "Wohnort"
       website: "Webseite"
       email_settings: "E-Mail"
@@ -356,7 +354,6 @@ de:
         search: "Tippen, um nach Einladungen zu suchen..."
         title: "Einladungen"
         user: "Eingeladener Benutzer"
-        none: "{{username}} hat keine Nutzer eingeladen."
         truncated: "Zeige die ersten {{count}} Einladungen."
         redeemed: "Angenommene Einladungen"
         redeemed_at: "Angenommen vor"
@@ -364,7 +361,6 @@ de:
         topics_entered: "Beigesteuerte Themen"
         posts_read_count: "Gelesene Beiträge"
         expired: "Diese Einladung ist abgelaufen."
-        rescind: "Entferne Einladung"
         rescinded: "Einladung entfernt"
         time_read: "Lesezeit"
         days_visited: "Besuchstage"
@@ -411,8 +407,6 @@ de:
     last_post: Letzter Beitrag
     summary:
       enabled_description: "Du siehst gerade die Top-Beiträge dieses Themas."
-      description: "Es gibt <b>{{count}}</b> Beiträge zu diesem Thema. Das sind eine Menge! Möchtest Du Zeit sparen und nur die Beiträge mit den meisten Antworten und Nutzerreaktionen betrachten?"
-      description_time: "Es gibt <b>{{count}}</b> mit einer durchschnittlichen Lesezeit von <b>{{readingTime}} Minuten.</b>. Möchtest Du Zeit sparen und nur die Beiträge mit den meisten Antworten und Nutzerreaktionen betrachten?"
       enable: 'Nur die Top-Beiträge anzeigen'
       disable: 'Alle Beiträge anzeigen'
     private_message_info:
@@ -546,7 +540,6 @@ de:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} hat Dir eine private Nachricht geschickt: {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} hat sich zu einem privaten Gespräch eingeladen: {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} hat deine Einladung akzeptiert"
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} hat einen Beitrag nach {{link}} verschoben"
       total_flagged: "alle gemeldeten Posts"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
@@ -565,13 +558,8 @@ de:
       uploading: "Hochladen..."
       image_link: "Der Link deines Bildes verweist auf"
     search:
-      title: "nach Themen, Beiträgen, Nutzern oder Kategorien suchen"
-      placeholder: "gib deine Suchbegriffe hier ein"
       no_results: "Keine Ergebnisse gefunden."
       searching: "Suche ..."
-      prefer:
-        user: "die Suche wird Ergebnisse von @{{username}} priorisieren"
-        category: "die Suche wird Ergebnisse in {{category}} priorisieren"
     site_map: "zu einer anderen Themenliste oder Kategorie wechseln"
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen.'
@@ -633,7 +621,6 @@ de:
       invalid_access:
         title: "Thema ist privat"
         description: "Entschuldige, Du hast keinen Zugriff auf dieses Thema!"
-        login_required: "Du musst eingeloggt sein um dieses Thema zu sehen."
       server_error:
         title: "Thema konnte nicht geladen werden"
         description: "Entschuldige, wir konnten das Thema nicht laden, wahrscheinlich wegen eines Verbindungsfehlers. Bitte versuche es erneut. Wenn das Problem bestehen bleibt, gib uns Bescheid."
@@ -669,8 +656,6 @@ de:
       auto_close_remove: "Dieses Thema nicht automatisch schließen"
       progress:
         title: Themen-Fortschritt
-        jump_top: Springe zum ersten Beitrag
-        jump_bottom: Springe zum letzten Beitrag
         jump_bottom_with_number: "Springe zum Beitrag %{post_number}"
         total: Beiträge insgesamt
         current: momentaner Beitrag
@@ -727,7 +712,6 @@ de:
         visible: "Sichtbar machen"
         reset_read: "Gelesene Daten zurücksetzen"
         multi_select: "Beiträge auswählen"
-        convert_to_topic: "Thema auf normal setzen"
       reply:
         title: 'Antworten'
         help: 'beginne damit eine Antwort auf dieses Thema zu verfassen'

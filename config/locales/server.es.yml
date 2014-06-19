@@ -619,7 +619,7 @@ es:
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
     top_menu: "Determinar qué elementos aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Determina qué elementos aparecen en el apartado para compartir posts y en qué orden. Ejemplo: twitter|facebook|google+|email"
+    share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "Cuántos topics son cargados por defecto en la página de lista de topics"
     posts_per_page: "Cuántos posts son devueltos en una página de topic"
@@ -809,7 +809,7 @@ es:
     within_post: "#%{post_number} por %{username}: %{excerpt}"
     types:
       category: 'Categorías'
-      topic: 'Topics'
+      topic: 'Resultados'
       user: 'Usuarios'
   original_poster: "Posteador original"
   most_posts: "Con más posts"
@@ -867,8 +867,8 @@ es:
     omniauth_error_unknown: "Algo ha salido mal procesando tu log in, por favor vuelve a intentarlo."
   user:
     username:
-      short: "debe tener más de %{min} caracteres"
-      long: "debe tener menos de %{max} caracteres"
+      short: "debe contener al menos %{min} caracteres"
+      long: "debe contener no más de %{max} caracteres"
       characters: "solo debe incluir números y letras"
       unique: "debe ser único"
       blank: "debe estar presente"
@@ -879,29 +879,23 @@ es:
     ip_address:
       blocked: "está bloqueado."
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} te ha invitado a unirte a una discusión en %{site_name}"
+    subject_template: "[%{site_name}] %{invitee_name} te ha invitado participar en una discusión"
     text_body_template: |
-      %{invitee_name} te ha invitado al topic "%{topic_title}" en %{site_name}.
+      %{invitee_name} te ha invitado participar en una discusión
 
-      Si estás interesado, clica el link debajo de esta discusión:
+      > %{topic_title}
 
-      [Visita %{site_name}][1]
+      en
 
-      Has sido invitado por un usario de confianza, por lo que podrás contestar inmediatamente, sin necesidad de hacer log in.
+      > **%{site_title}**
+      >
+      > %{site_description}
 
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} te invitó a unirte a %{site_name}"
-    text_body_template: |
-      %{invitee_name} te invitó a %{site_name}.
+      Si estás interesado, haz clic al enlace de más abajo:
 
-      Si estás interesado, haz click en el enlace siguiente para unirte:
+      %{invite_link}
 
-      [Visita %{site_name}][1]
-
-      Fuiste invitado por un usuario de confianza, por lo que podrás unirte inmediatamente, sin necesidad de iniciar sesión.
-
-      [1]: %{invite_link}
+      Esta es una invitación de un usuario de confianza, así que puedes responder en la discusión de inmediato.
   test_mailer:
     subject_template: "[%{site_name}] Prueba de envío de email"
     text_body_template: |
@@ -941,36 +935,8 @@ es:
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Nueva versión de Discourse, actualización disponible"
-    text_body_template: |
-      Una nueva versión de Discourse está disponible.
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      Podrías:
-      - Ver qué es lo nuevo en el [historial de cambios de GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Actualizar la versión visitando [%{base_url}/admin/docker](%{base_url}/admin/docker) y presionar el botón "Upgrade".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para ver las noticias, debates o el soporte ofrecido por Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] actualización disponible"
-    text_body_template: |
-      Una nueva versión de Discourse está disponible.
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      Podrías:
-      - Ver qué es lo nuevo en el [historial de cambios de GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Actualizar la versión visitando [%{base_url}/admin/docker](%{base_url}/admin/docker) y presionar el botón "Upgrade".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para ver las noticias, debates o el soporte ofrecido por Discourse.
-
-      ### Notas de la versión
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Hay reportes enviados de hace 1 hora."
@@ -1128,6 +1094,18 @@ es:
         Esto es un mensaje automático desde %{site_name} para informarte de que tu cuenta ha sido bloqueada por un moderador.
 
         Para más información, visita nuestras [Preguntas Frecuentes](%{base_url}/faq).
+    user_automatically_blocked:
+      subject_template: "El nuevo usuario %{username} ha sido bloqueado tras ser reportado por la comunidad"
+      text_body_template: |
+        Éste es un mensaje automático.
+
+        El nuevo usuario [%{username}](%{base_url}%{user_url}) ha sido bloqueado automáticamente porque múltiples usuarios han reportado el/los post(s) de %{username}.
+
+        Por favor, [revisa los informes](%{base_url}/admin/flags). Si %{username} ha sido bloqueado incorrectamente, clica el botón de desbloquear en [la página de administración para este usuario](%{base_url}%{user_url}).
+
+        El umbral puede ser cambiado vía configuración del sitio en `block_new_user`.
+    spam_post_blocked:
+      subject_template: "El nuevo usuario %{username} tiene posts bloqueados debido a repetición de enlaces."
     unblocked:
       subject_template: "Cuenta desbloqueada"
       text_body_template: |

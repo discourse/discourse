@@ -603,7 +603,6 @@ it:
     allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
     top_menu: "Determina quali elementi vengono mostrati nella navigazione in homepage, ed in quale ordine. Esempio latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determina quali elementi vengono mostrati nel menù del post, ed in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Determina quali elementi vengono mostrati nella dialog di condivisione e in quale ordine. Esempio twitter|facebook|google+"
     track_external_right_clicks: "Traccia i link esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché viene fatto il rewrite delle URL"
     topics_per_page: "Quanti topic vengono caricati di default nella pagina di lista topic"
     posts_per_page: "Quanti post vengono restituiti in una pagina di un topic"
@@ -792,7 +791,6 @@ it:
     within_post: "#%{post_number} di %{username}: %{excerpt}"
     types:
       category: 'Categorie'
-      topic: 'Topic'
       user: 'Utenti'
   original_poster: "Autore Originale"
   most_posts: "Molti Post"
@@ -850,8 +848,6 @@ it:
     omniauth_error_unknown: "Qualcosa è andato storto tentando di loggarti, riprova."
   user:
     username:
-      short: "dev'essere più lungo di %{min} caratteri"
-      long: "dev'essere più corto di %{max} caratteri"
       characters: "deve includere solo lettere e numeri"
       unique: "dev'essere unico"
       blank: "dev'essere presente"
@@ -861,21 +857,6 @@ it:
       blocked: "non è permesso."
     ip_address:
       blocked: "è bloccato."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} ti ha invitato ad unirti alla conversazione su %{site_name}"
-    text_body_template: |
-      %{invitee_name} ti ha invitato al topic "%{topic_title}" a %{site_name}.
-
-      Se sei interessato, clicca il link sotto per leggere la discussione:
-
-      [Visita %{site_name}][1]
-
-      Sei stato invitato da un utente attendibile, quindi potrai postare una risposta immediatamente, senza effettuare il log in.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} ti ha invitato a partecipare a %{site_name}"
-    text_body_template: "%{invitee_name} ti ha invitato a %{site_name}.\n\nSe sei interessato, clicca sul link più in basso.\n\n[Visita %{site_name}][1]\n\nSei stato invitato da un utente meritevole di fiducia, per cui puoi partecipare immediatamente, anche senza login. \n\n[1]: %{invite_link}\n\n"
   test_mailer:
     subject_template: "[%{site_name}] Test Invio Email"
     text_body_template: |
@@ -918,36 +899,8 @@ it:
       <small>Dovrebbe esserci un footer di rimozione della registrazione su ogni email che invii, quindi simuliamone uno. Questa email è stata inviata da Nome dell'azienda, Via principale, 55, Città, Italia, 12345. Se non vuoi ricevere più email di questo tipo,  [clicca qui][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Nuova versione di Discourse, aggiornamento disponibile"
-    text_body_template: |
-      E' disponibile una nuova versione di Discourse:
-
-      Versione attuale: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      Potresti volere:
-      - Scoprire le novità tramite il [changelog su GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Aggiornare visitando [%{base_url}/admin/docker](%{base_url}/admin/docker) e ricaricando la pagina un po' di volte finché non apparirà un tasto "Upgrade".
-
-      - Visitare [meta.discourse.org](http://meta.discourse.org) per novità, discussioni e supporto per Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Aggiornamenti disponibili"
-    text_body_template: |
-      E' disponibile una nuova versione di Discourse:
-
-      Versione corrente: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      Potresti volere:
-      - Scoprire le novità sul [Changelog GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Aggiornare visitando [%{base_url}/admin/docker](%{base_url}/admin/docker) e ricaricando la pagina un po' di volte finché non apparirà un tasto "Upgrade".
-
-      - Visitare [meta.discourse.org](http://meta.discourse.org) per novità, discussioni e supporto per Discourse.
-
-      ### Note di Rilascio
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Ci sono segnalazioni che sono state inviate oltre 1 ora fa"

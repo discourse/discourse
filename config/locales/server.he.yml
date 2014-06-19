@@ -600,7 +600,6 @@ he:
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics loaded by default on the topics list page, and when loading more topics"
     posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
@@ -623,6 +622,7 @@ he:
     invite_only: "Public registration is disabled, new users must be invited"
     login_required: "Require authentication to read posts"
     min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
+    max_username_length: "אורך מקסימלי של שם המשתמש. (לא תקף אם יש הכרח בשם משתמש גלובאלי ייחודי)"
     min_password_length: "Minimum password length."
     enable_sso: "Enable single sign on via an external site"
     sso_url: "URL of single sign on endpoint"
@@ -633,6 +633,8 @@ he:
     enable_local_logins: "Enable traditional, local username and password authentication"
     enable_google_logins: "(מיושן). אפשר/י אימות באמצעות Google. זוהי שיטת ה-OpenID לאימות שגוגל הכריזה ככזה שהתיישן. התקנות חדשות לא יעבדו עם זה. השתמשו ב-Google Oauth2 במקום. התקנות קיימות חייבות לעבור ל-Google Oauth2 עד ל-20 באפריל, 2015."
     enable_yahoo_logins: "Enable Yahoo authentication"
+    google_oauth2_client_id: "זהות לקוח (Client ID) של אפליקציית ה-Google שלך."
+    google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
     twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
@@ -658,6 +660,7 @@ he:
     max_topics_per_day: "Maximum number of topics a user can create per day"
     max_private_messages_per_day: "The maximum amount of private messages users can create per day"
     suggested_topics: "Number of suggested topics shown at the bottom of a topic"
+    limit_suggested_to_category: "ברשימת הנושאים המומלצים הצג רק הודעות מהקטגוריה הנוכחית."
     clean_up_uploads: "Remove orphaned uploads to prevent illegal hosting. WARNING: you might want to make a backup of your /uploads directory before enabled this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
@@ -731,6 +734,7 @@ he:
     email_editable: "Allow users to change their e-mail address after registration."
     allow_uploaded_avatars: "Allow users to upload their custom avatars"
     allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:regenerate rake task after changing that setting."
+    automatically_download_gravatars: "הורדת gravatars ממשתמשים בנוגע לירת חשבון או שינוי דוא\"ל."
     digest_min_excerpt_length: "How many characters we're aiming for for each post in the email digest"
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
     default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
@@ -759,6 +763,9 @@ he:
     embed_blacklist_selector: "css selector for elements that are removed from embeds"
     tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
+    show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו הודעה המבקשת מן המנהלים/מנהלות ליצור עוד נושאים."
+    errors:
+      invalid_email: "כתובת דוא\"ל לא קיימת."
   notification_types:
     mentioned: "%{display_username} אזכר אותך ב %{link}"
     liked: "%{display_username} נתן לייק להודעה שלך ב %{link}"
@@ -775,7 +782,6 @@ he:
     within_post: "#%{post_number} מאת %{username}: %{excerpt}"
     types:
       category: 'קטגוריות'
-      topic: 'נושאים'
       user: 'משתמשים'
   original_poster: "מפרסם מקורים"
   most_posts: "מירב ההודעות"
@@ -832,8 +838,6 @@ he:
     omniauth_error_unknown: "משהו השתבש במהלך עיבוד ההתחברות שלך, אנא נסה שנית."
   user:
     username:
-      short: "חייב להיות יותר מ-%{min} תווים"
-      long: "חייב להיות פחות מ-%{max} תווים"
       characters: "חייב לכלול מספרים, אותיות ומקפים תחתונים בלבד."
       unique: "חייב להיות ייחודי"
       blank: "חייב להיות מלא"
@@ -843,30 +847,6 @@ he:
       blocked: "לא מורשה."
     ip_address:
       blocked: "חסום."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} הזמין אותך להשתתף בדיון באתר %{site_name}"
-    text_body_template: |
-      %{invitee_name} הזמין אותך להשתתף בדיון "%{topic_title}" באתר %{site_name}.
-
-      אם אתה מעוניין, לחץ על הקשירו מטה כדי לבקר בדיון:
-
-      [בקר ב- %{site_name}][1]
-
-      הוזמנת על ידי משתמש אמין, כך שתוכל לפרסם תגובה מיידית, ללא צורך להתחבר.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} הזמין אותך להצטרף %{site_name}"
-    text_body_template: |
-      %{invitee_name} הזמין אותך ל- %{site_name}.
-
-      אם אתה מעוניין, לחץ על הקישור הבא כדי להצטרף:
-
-      [בקר ב- %{site_name}][1]
-
-      הוזמנת על ידי משתמש אמין, כך שתוכל לפרסם תגובה מיידית, ללא צורך להתחבר.
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
     text_body_template: |
@@ -907,6 +887,8 @@ he:
       ----
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
+  new_version_mailer:
+    subject_template: "[%{site_name}] גרסת Discourse חדשה, עדכון זמין."
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
   flags_reminder:
@@ -989,6 +971,24 @@ he:
         תהנו מהשהייה!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
+      text_body_template: |
+        תודה על אישור הזמנך ל-%{site_name}, וברוך/ברוכה הבאים.
+
+        יצרנו עבורך את שם המשתמש **%{username}**, אבל ניתן לשנות אותו בכל שם באמצעות ביקור ב-[הפרופיל שלך][העדפות].
+
+        כדי להתחבר שוב, ניתן לבצע את אחת הפעולה:
+        1. התחברו בדרך הנוחה לכם -- אבל עליכם התחברות זו חייבת להיות באמצעות *** אותה כתובת מייל *** בה קיבלת את ההזמנה המקורית. אחרת, לא נוכל לדעת שאת/ה באמת אתם...
+
+        2. צרו סיסמא יחודית עבור %{site_name} על [הפרופיל שלך][העדפות] ואז התחברו עם אותו אותו
+        %{site_password}
+
+        %{new_user_tips}
+
+        אנחנו מאמינים [התנהגות קהילתית מתורבתת](%{base_url}/faq) בכל זמן.
+
+        בהצלחה ותהנו!
+
+        [העדפות]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Export completed successfully"
       text_body_template: "The export was successful."
@@ -1041,6 +1041,18 @@ he:
         This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
 
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+    user_automatically_blocked:
+      subject_template: "המשתמש/ת החדשים %{username} נחסמו בשל התראות מהקהילה."
+      text_body_template: |
+        זהו מסר שנשלח בצורה אוטמטית.
+        המשתמש/ת החדש/ה [%{username}](%{base_url}%{user_url}) נחסמו באופן אוטומטי בשל כמה התראות בנוגע להודעה/הודעות שפרסמ/ה.
+
+        אנא [סרקו את ההתראות] (%{base_url}/admin/flags). אם %{username נחסם בטעות מפרסום הודעות, הקישו על הכפתור "ביטול חסימה" ש[בעמוד האדמין עבור משתמש/ת אלה](%{base_url}%{user_url}).
+
+        ניתן לשנות את המנגנון הזה דרך הגדרות 'חסימת_משתמש_חדש' שבאתר.
+    spam_post_blocked:
+      subject_template: "הודעות של המשתמש/ת החדש/ה %{username} נחסמו בשל קישורים חוזרים."
+      text_body_template: "זוהי הודעה שנשלחה באופן אוטומטי.\nהמשתמש/ת החדש/ה  [%{username}](%{base_url}%{user_url}) ניסו ליצור כמה הודעות עם קישור ל-%{domains}, אבל הודעות אלו נחסמו כדי למנוע דואר זבל (spam). המשתמש/ת עדיין יכול/ה ליצור הודעות חדשות שלא מקשרות ל-%{domains}.\n\nאנא [סקרו את המשתמש/ת] (%{base_url}%{user_url}). \nהגדרות אלו ניתנו שינוי דרך ההגדרות 'משתמשיםחדשים_ספאם_סף'.\n"
     unblocked:
       subject_template: "Account unblocked"
       text_body_template: |

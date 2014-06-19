@@ -26,6 +26,8 @@ zh_CN:
   errors:
     embed:
       load_from_remote: "载入帖子时遇到错误。"
+  bulk_invite:
+    file_should_be_csv: "上传的文件应为 csv 格式。"
   backup:
     operation_already_running: "一个操作正在运行。目前无法开始新的操作。"
     backup_file_should_be_tar_gz: "备份文件应为 .tar.gz 存档文件。"
@@ -437,7 +439,9 @@ zh_CN:
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
     queue_size_warning: '队列中的任务数为 %{queue_size}，任务较多。这可能因为 Sidekiq 进程出问题导致，或者需要更多的 Sidekiq 进程。'
     memory_warning: '您的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
+    enable_google_logins_warning: "您正在使用已被废弃的 Google OpenID 验证方式。Google 将在2015年4月20日停止支持 OpenID 登入。尽早开始使用 Google Oauth2。<a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>点击了解更多</a>"
     both_googles_warning: "您在站点设置中同时启用了 enable_google_logins 和 enable_google_oauth2_logins。禁用 enable_google_logins。"
+    google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登入（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
     facebook_config_warning: '服务器允许使用 Facebook 账号登入（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用 Twitter 账号登入（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
     github_config_warning: '服务器允许使用 GitHub 账号登入（enable_github_logins），但是 client id 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
@@ -584,7 +588,8 @@ zh_CN:
     allow_moderators_to_create_categories: "允许版主创建新的分类"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|starred|categories|top|read|posted"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
-    share_links: "确定在分享对话框里显示哪些条目，以及排列顺序。例如：twitter|facebook|google+|email"
+    post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
+    share_links: "决定分享对话框中出现的按钮及显示顺序。"
     track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
     topics_per_page: "在主题列表页面，缺省载入多少个主题，以及合适载入更多主题"
     posts_per_page: "在主题页面，返回多少个帖子，以及合适载入更多帖子"
@@ -607,6 +612,7 @@ zh_CN:
     invite_only: "公开注册已禁用，新用户必须被邀请"
     login_required: "需要登入才能阅读帖子"
     min_username_length: "最小用户名长度。（当全局昵称启用无效）"
+    max_username_length: "最小用户名长度。（当全局唯一昵称启用时无效）"
     min_password_length: "最小密码长度。"
     block_common_passwords: "不允许使用 10000 个最常用的密码。"
     enable_sso: "启用外部站点单点登录"
@@ -630,6 +636,7 @@ zh_CN:
     enable_github_logins: "启用 Github 帐号验证登入，需要 github_client_id 和 github_client_secret"
     github_client_id: "Github 帐号验证的客户端帐号（Client id），到 https://github.com/settings/applications 来注册获取"
     github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"
+    allow_restore: "允许导入数据，这将能替换所有全站数据！除非您计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
     backup_daily: "每天自动创建站点备份"
     enable_s3_backups: "当完成备份时自动上传到 S3。请确定已经填写了 s3 验证资料。"
@@ -646,6 +653,7 @@ zh_CN:
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值"
     max_private_messages_per_day: "每个用户每天能发私信数量的最大值"
     suggested_topics: "在一个主题底部显示的推荐主题的数量"
+    limit_suggested_to_category: "只在当前分类的推荐帖子列表中显示帖子"
     clean_up_uploads: "移除孤立的已上传资料。警告：您可能想要在启用这个设定前备份一下 /uploads 目录"
     clean_orphan_uploads_grace_period_hours: "删除孤立上传资料的宽限期（单位：小时）"
     purge_deleted_uploads_grace_period_days: "移除已删除的孤立上传资料的宽限期（单位：小时）"
@@ -721,6 +729,7 @@ zh_CN:
     email_editable: "允许用户在注册后改变他们的邮箱地址。"
     allow_uploaded_avatars: "允许用户上传他们自己的头像。"
     allow_animated_avatars: "允许用户使用 gif 动画头像。警告：强烈建议在更改后运行 avatars:regenerate rake 任务。"
+    automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像"
     digest_topics: "邮件摘要中显示的最大主题数目"
     digest_min_excerpt_length: "在邮件摘要中每个帖子应有多少个字符"
     default_digest_email_frequency: "用户收到摘要邮件的默认间隔。用户可以在参数设置中更改这个设置。"
@@ -734,6 +743,7 @@ zh_CN:
     dominating_topic_minimum_percent: "用户在主题中的帖子占到多少百分比时使得用户主导话题。"
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
+    disable_edit_notifications: "当您激活 'download_remote_images_to_local' 站点设置时禁用编辑提示。"
     enable_names: "允许用户显示全名"
     display_name_on_posts: "在用户的帖子中显示他们的全名"
     invites_shown: "用户页上显示的最大邀请数"
@@ -753,6 +763,14 @@ zh_CN:
     tos_accept_required: "如果启用，用户将需要在注册页面选择复选框以同意服务条款。在内容标签中编辑“注册表单：服务条款信息”更改条款内容。"
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
     enable_cdn_js_debugging: "为包含的 js 启动跨源访问 /logs 权限以显示合适的错误"
+    show_create_topics_notice: "如果站点有少于 5 篇公开的帖子时，显示一条请管理员创建一些帖子时提示。"
+    errors:
+      invalid_email: "电子邮箱地址无效。"
+      invalid_username: "没有这个用户名的用户。"
+      invalid_integer_min_max: "值必须在 %{min} 和 %{max} 的范围内。"
+      invalid_integer_min: "值必须为 %{min} 或更大。"
+      invalid_integer_max: "值不能大于 %{max}。"
+      invalid_integer: "值必须是整数。"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @ 了您"
     liked: "%{display_username} 在 %{link} 赞了您的帖子 "
@@ -770,7 +788,7 @@ zh_CN:
     within_post: "#%{post_number} %{username}： %{excerpt}"
     types:
       category: '分类'
-      topic: '主题'
+      topic: '结果'
       user: '用户'
   original_poster: "原始作者"
   most_posts: "大部分帖子"
@@ -827,7 +845,7 @@ zh_CN:
   user:
     username:
       short: "必须超过 %{min} 个字符"
-      long: "必须少于 %{max} 个字符"
+      long: "必须不超过 %{max} 个字符"
       characters: "必须只包含字母、数字和下划线"
       unique: "必须是唯一的"
       blank: "必须存在"
@@ -837,30 +855,6 @@ zh_CN:
       blocked: "不被允许。"
     ip_address:
       blocked: "被封禁。"
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} 邀请您参与 %{site_name} 上的一个讨论"
-    text_body_template: |
-      %{invitee_name} 邀请您加入 %{site_name} 网站上的讨论主题“%{topic_title}”。
-
-      如果您感兴趣，请点击下面的链接来访问该讨论：
-
-      [访问 %{site_name}][1]
-
-      您是被一个受信任的用户邀请的，所以您可以不用登入就直接发表回复。
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[[%{site_name}] %{invitee_name} 邀请您参与 %{site_name} 上的一个讨论"
-    text_body_template: |
-      %{invitee_name} 邀请您加入 %{site_name} 网站
-
-      如果您感兴趣，请点击下面的链接加入：
-
-      [访问 %{site_name}][1]
-
-      您是被一个受信任的用户邀请的，所以您可以不用登入就直接加入。
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] 电子邮件发送测试"
     text_body_template: |
@@ -904,12 +898,13 @@ zh_CN:
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
     text_body_template: |
-      有新版本的 Discourse 可供升级：
+      有新版本的 Discourse 可供升级。
 
       您的版本：%{installed_version}
       新版本：**%{new_version}**
 
       您可能想要：
+
       - 查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master) 中的更新内容。
 
       - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker)，然后按下“升级”按钮。
@@ -918,12 +913,13 @@ zh_CN:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
     text_body_template: |
-      有新版本的 Discourse 可供升级：
+      有新版本的 Discourse 可供升级。
 
       您的版本：%{installed_version}
       新版本：**%{new_version}**
 
       您可能想要：
+
       - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中的更新内容。
 
       - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker) ，然后按下“升级”按钮。
@@ -1018,6 +1014,7 @@ zh_CN:
         好好享受您在论坛的时光吧！
     welcome_invite:
       subject_template: "欢迎来到 %{site_name}！"
+      text_body_template: "感谢您接受邀请加入 %{site_name}，欢迎！\n\n\n我们为您自动生成了一个用户名：**%{username}**，但是您在任何时候都可以访问[您的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 使用您喜欢的方式登入——但是必须以**同样的邮件地址**，即您收到邀请的邮箱地址登入。否则我们就无法分辨是不是您本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{site_password}\n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/faq)。\n\n好好享受您在论坛的时光吧！\n\n[prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "导出成功"
       text_body_template: "导出操作成功。"
@@ -1044,8 +1041,29 @@ zh_CN:
         ```
         %{logs}
         ```
+    bulk_invite_succeeded:
+      subject_template: "批量邀请成功完成！"
+      text_body_template: "批量邀请成功完成，%{sent} 邀请已发出。"
+    bulk_invite_failed:
+      subject_template: "批量邀请完成，并有一些错误！"
+      text_body_template: |
+        批量邀请已经完成，发出了 %{sent} 个邀请并且 %{failed} 个失败。
+
+        查看日志：
+
+        ```
+        %{logs}
+        ```
     email_error_notification:
       subject_template: "解析邮件错误"
+      text_body_template: |
+        这是一封自动发出的邮件。
+
+        解析收到的邮件时发生了错误。请检查下列消息：
+
+        `%{error}`
+
+        %{source}
     email_reject_trust_level:
       subject_template: "消息拒绝"
       text_body_template: |
@@ -1070,6 +1088,26 @@ zh_CN:
         这是一封自 %{site_name} 自动发出的邮件，以告知您的账户被职员封禁。
 
         欲查看额外的指导，请查看我们的[FAQ](%{base_url}/faq)。
+    user_automatically_blocked:
+      subject_template: "因标记而被封禁的新用户 %{username}"
+      text_body_template: |
+        这是一封自动发出的邮件。
+
+        新用户 [%{username}](%{base_url}%{user_url}) 已因多位用户标记 %{username} 的帖子而被自动封禁。
+
+        请[审核这些标记](%{base_url}/admin/flags)。如果 %{username} 被不正确地封禁了编辑功能，点击[该用户的管理页面](%{base_url}%{user_url})上的解封按钮。
+
+        该阈值可以通过站点设置中的 `block_new_user` 更改。
+    spam_post_blocked:
+      subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
+      text_body_template: |
+        这是一封自动发出的邮件。
+
+        新用户 [%{username}](%{base_url}%{user_url}) 已因创建多个链接至 %{domains} 的帖子而被封禁以防止垃圾信息。但是用户仍能够发表不包含到 %{domains} 的帖子。
+
+        请[审核这些用户](%{base_url}%{user_url})。
+
+        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unblocked:
       subject_template: "账户解封 unblocked"
       text_body_template: |
@@ -1245,6 +1283,7 @@ zh_CN:
       size_not_found: "抱歉，我们无法获取图片大小，请检查您的图片是否已损坏。"
   flag_reason:
     sockpuppet: "新用户创建了主题，而另外一个新用户以同一个 IP 在该主题回复。查看站点设置的 flag_sockpuppets。"
+    spam_hosts: "新用户试图创建链接到同一个域名的多个帖子。查看站点设置的 newuser_spam_host_threshold。"
   email_log:
     no_user: "不能找到用户 ID 为 %{user_id} 的用户"
     suspended_not_pm: "用户被封禁并且邮件不是私信"

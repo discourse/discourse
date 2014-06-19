@@ -256,7 +256,6 @@ pl_PL:
       change: "zmień"
       moderator: "{{user}} jest moderatorem"
       admin: "{{user}} jest adminem"
-      deleted: "(usunięty)"
       suspended_notice: "ten użytkownik jest zawieszony do {{date}}."
       suspended_reason: "Powód: "
       mailing_list_mode: "Otrzymuj email dla każdego wpisu na forum (o ile nie wyciszysz kategorii lub  tematu)"
@@ -341,7 +340,6 @@ pl_PL:
       last_emailed: "Ostatnio otrzymał email"
       last_seen: "Ostatnio widziany"
       created: "Dołączył"
-      log_out: "Wyloguj się"
       location: "Położenie"
       website: "Strona internetowa"
       email_settings: "Email"
@@ -383,7 +381,6 @@ pl_PL:
         search: "wpisz aby szukać zaproszeń..."
         title: "Zaproszenia"
         user: "Zaproszony(-a) użytkownik(-czka)"
-        none: "Nie znaleziono zaproszeń."
         truncated: "Pokaż pierwsze {{count}} zaproszeń."
         redeemed: "Cofnięte zaproszenia"
         redeemed_at: "Przyjęte"
@@ -391,7 +388,6 @@ pl_PL:
         topics_entered: "Widziane tematy"
         posts_read_count: "Przeczytane wpisy"
         expired: "To zaproszenie wygasło."
-        rescind: "Usuń zaproszenie"
         rescinded: "Zaproszenie usunięte"
         time_read: "Czas odczytu"
         days_visited: "Dni odwiedzin"
@@ -437,8 +433,6 @@ pl_PL:
     last_post: Ostatni wpis
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu. Kliknij poniżej by zobaczyć wszystkie wpisy."
-      description: "Jest <b>{{count}}</b> odpowiedzi. Czy oszczędzić czas wyświetlając tylko  najistotniejsze odpowiedzi?"
-      description_time: "Jest <b>{{count}}</b> odpowiedzi, czas na przeczytanie szacujemy na <b>{{readingTime}} minut</b>. Czy oszczędzić czas wyświetlając tylko  najistotniejsze odpowiedzi?"
       enable: 'Podsumuj ten temat'
       disable: 'Pokaż wszystkie wpisy'
     private_message_info:
@@ -573,7 +567,6 @@ pl_PL:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} przyjął Twoje zaproszenie"
       total_flagged: "wszystkie oflagowane wpisy"
       linked: "<i title='Połączony wpis' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='Przyznanie odznaki' class='fa fa-certificate'></i> Przyznano Ci {{link}}"
@@ -591,13 +584,8 @@ pl_PL:
       uploading: "Wgrywanie"
       image_link: "odnośnik do którego Twój obraz będzie kierował"
     search:
-      title: "szukaj tematów, wpisów, użytkowników i kategorii"
-      placeholder: "wpisz tu swoje zapytanie"
       no_results: "Brak wyników wyszukiwania"
       searching: "Wyszukiwanie ..."
-      prefer:
-        user: "wyszukiwarka powinna sugerować się @{{username}}"
-        category: "wyszukiwarka powinna sugerować się {{category}}"
     site_map: "przejdź do innej listy tematów lub kategorii"
     go_back: 'wróć'
     not_logged_in_user: 'strona użytkownika z podsumowaniem bieżących działań i ustawień'
@@ -662,7 +650,6 @@ pl_PL:
       invalid_access:
         title: "Temat jest prywatny"
         description: "Przepraszamy, nie masz dostępu do tego tematu!"
-        login_required: "Musisz się zalogować, aby zobaczyć ten temat."
       server_error:
         title: "Wystąpił błąd przy wczytywaniu Tematu"
         description: "Przepraszamy, nie możliwe było wczytanie tematu, możliwe że wystąpił problem z połączeniem. Prosimy, spróbuj ponownie. Jeżeli problem wystąpi ponownie, powiadom administrację."
@@ -701,8 +688,6 @@ pl_PL:
       auto_close_remove: "Nie zamykaj automatycznie tego tematu"
       progress:
         title: postęp tematu
-        jump_top: skocz do pierwszego wpisu (klawisz Home)
-        jump_bottom: skocz do ostatniego wpisu (klawisz End)
         jump_bottom_with_number: "przeskocz do wpisu %{post_number}"
         total: w sumie wpisów
         current: obecny wpis
@@ -757,7 +742,6 @@ pl_PL:
         visible: "Pokaż"
         reset_read: "Zresetuj Przeczytane Dane"
         multi_select: "Wybierz wpisy"
-        convert_to_topic: "Przerób na Zwyczajny Temat"
       reply:
         title: 'Odpowiedz'
         help: 'zacznij pisać odpowiedź'
@@ -1575,7 +1559,6 @@ pl_PL:
         refresh_browsers: "Wymuś odświeżenie przeglądarki"
         show_public_profile: "Pokaż profil publiczny"
         impersonate: 'Podszyj się'
-        log_out: "Wyloguj"
         revoke_admin: 'Odbierz status admina'
         grant_admin: 'Przyznaj status admina'
         revoke_moderation: 'Odbierz status moderatora'
