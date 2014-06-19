@@ -253,6 +253,7 @@ ru:
       delete_account_confirm: "Вы уверены, что хотите удалить свою учётную запись? Отменить удаление будет невозможно!"
       deleted_yourself: "Ваша учётная запись была успешно удалена."
       delete_yourself_not_allowed: "Вы не можете сейчас удалить свою учётную запись. Попросите администратора удалить вашу учётную запись."
+      unread_message_count: "Messages"
       messages:
         all: "Все"
         mine: "Мои"
@@ -1421,10 +1422,12 @@ ru:
           reading: "Читают"
           site_promotion: "Продвижение сайта"
           flagged_posts: "Сообщения с жалобами"
+
       site_content:
         none: "Выберите тип контента, чтобы начать редактирование."
         title: 'Контент сайта'
         edit: "Изменить контент сайта"
+
       site_settings:
         show_overriden: 'Показывать только переопределенные'
         title: 'Настройки сайта'
@@ -1432,6 +1435,7 @@ ru:
         none: '(нет)'
         no_results: "Ничего не найдено."
         clear_filter: "Очистить"
+
         categories:
           all_results: 'Всего'
           required: 'Обязательные'
@@ -1449,12 +1453,35 @@ ru:
           embedding: "Встраиваемая"
           legal: "Правила"
           uncategorized: 'Без категории'
+
       badges:
+        title: Жетоны
+        new_badge: Новый знак
+        new: Новый
+        name: Имя
+        badge: Жетон
+        display_name: Показать имя
+        description: Описание
+        badge_type: Тип жетона
+        granted_by: Вручить при
+        granted_at: Вручить за
+        save: Сохранить
         delete: Удалить
-        revoke: Отозвать
-        grant: Выдать
+        delete_confirm: Вы уверены, что хотите удалить этот жетон?
+        revoke: Вернуть
+        revoke_confirm: Вы уверены, что хотите отозвать этот жетон?
+        edit_badges: Редактировать жетоны
+        grant_badge: Предоставить жетон
+        granted_badges: Вручённые жетоны
+        grant: Предоставить
+        no_user_badges: "%{name} не было предоставлено никаких значков."
+        no_badges: Отсутствуют значки, которые можно предоставлять.
+        allow_title: Разрешить знак, который будет использоваться в качестве заголовка.
+        multiple_grant: Может быть предоставлено несколько раз.
+
     lightbox:
       download: "загрузить"
+
     keyboard_shortcuts_help:
       title: 'Быстрые вызовы с клавиатуры (экспериментальная функция)'
       jump_to:
