@@ -1,8 +1,7 @@
-import AppEvents from 'discourse/lib/app-events';
-
 export default {
   name: "inject-app-events",
   initialize: function(container, application) {
+    var AppEvents = Ember.Object.extend(Ember.Evented);
     application.register('app-events:main', AppEvents, { singleton: true });
 
     application.inject('controller', 'appEvents', 'app-events:main');
