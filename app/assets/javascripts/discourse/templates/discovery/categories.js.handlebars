@@ -14,22 +14,18 @@
       <tbody>
         {{#each model.categories}}
         <tr data-category_id='{{unbound id}}' {{bind-attr class="description_excerpt:has-description:no-description"}}>
-          <td class='category'>
+          <td class='category' style="border-left: 6px solid #{{unbound color}}">
             <div>
               <div class="pull-left">
                 {{#if controller.ordering}}<i class="fa fa-bars"></i>{{/if}}
-                {{category-link this allowUncategorized=true extraClasses="bigger"}}
+
+                <h3>{{#link-to 'discovery.parentCategory' this}}{{unbound name}}{{/link-to}}</h3>
                 {{#if unreadTopics}}
                   <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                 {{/if}}
                 {{#if newTopics}}
                   <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{i18n filters.new.lower_title_with_count count="newTopics"}}</a>
                 {{/if}}
-              </div>
-              <div class='featured-users'>
-                {{#each featured_users}}
-                  <a href="/users/{{unbound username_lower}}">{{avatar this imageSize="small"}}</a>
-                {{/each}}
               </div>
               <div class="clearfix"></div>
             </div>
@@ -41,7 +37,7 @@
             {{#if subcategories}}
               <div class='subcategories'>
                 {{#each subcategories}}
-                  {{category-link this showParent=true}}
+                  {{category-link this showParent=true clearChildColor=true}}
                   {{#if unreadTopics}}
                     <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                   {{/if}}

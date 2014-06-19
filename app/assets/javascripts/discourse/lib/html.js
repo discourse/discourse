@@ -92,14 +92,17 @@ Discourse.HTML = {
         html = "<" + elem + " href=\"" + (opts.link === false ? '' : url) + "\" ";
 
     html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) +
+            (opts.clearChildColor ? ' clear-badge' : '') +
             extraClasses + "\" ";
     name = Handlebars.Utils.escapeExpression(name);
     // Add description if we have it
     if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
 
-    var categoryStyle = Discourse.HTML.categoryStyle(category);
-    if (categoryStyle) {
-      html += "style=\"" + categoryStyle + "\" ";
+    if (!opts.clearChildColor) {
+      var categoryStyle = Discourse.HTML.categoryStyle(category);
+      if (categoryStyle) {
+        html += "style=\"" + categoryStyle + "\" ";
+      }
     }
 
     if (restricted) {

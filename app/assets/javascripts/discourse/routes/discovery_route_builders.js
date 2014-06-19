@@ -179,6 +179,7 @@ function buildCategoryRoute(filter, params) {
 // Finally, build all the routes with the helpers we created
 Discourse.addInitializer(function() {
   Discourse.DiscoveryCategoryRoute = buildCategoryRoute('latest');
+  Discourse.DiscoveryParentCategoryRoute = buildCategoryRoute('latest');
   Discourse.DiscoveryCategoryNoneRoute = buildCategoryRoute('latest', {no_subcategories: true});
 
   Discourse.Site.currentProp('filters').forEach(function(filter) {

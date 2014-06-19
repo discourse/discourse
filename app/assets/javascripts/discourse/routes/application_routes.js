@@ -48,7 +48,7 @@ Discourse.Route.buildRoutes(function() {
     this.route('categories');
 
     // default filter for a category
-    this.route('category', { path: '/category/:slug' });
+    this.route('parentCategory', { path: '/category/:slug' });
     this.route('categoryNone', { path: '/category/:slug/none' });
     this.route('category', { path: '/category/:parentSlug/:slug' });
 

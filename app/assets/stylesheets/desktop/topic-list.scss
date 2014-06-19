@@ -63,9 +63,6 @@
   .fa-thumb-tack {color: $primary;}
   .fa-thumb-tack.unpinned {color: $primary;}
 
-  a.title {color: $primary;}
-  a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
-
   > tbody > tr {
     &:nth-child(even) {
         background-color: darken($secondary, 3%);
@@ -292,6 +289,13 @@
     position: relative;
     width: 45%;
 
+    h3 {
+      display: inline-block;
+      font-size: 18px;
+      a[href] {
+        color: $primary;
+      }
+    }
     .subcategories {
       margin-top: 10px;
     }
@@ -301,6 +305,9 @@
     }
     .category-description {
       margin-top: 10px;
+    }
+    .clear-badge {
+      color: $primary;
     }
     .badge-category.bigger {
       padding: 6px 10px;
