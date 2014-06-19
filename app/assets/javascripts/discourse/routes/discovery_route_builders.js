@@ -99,6 +99,11 @@ function buildCategoryRoute(filter, params) {
     },
 
     afterModel: function(model, transaction) {
+      if (!model) {
+        this.replaceWith('/404');
+        return;
+      }
+
       var self = this,
           noSubcategories = params && !!params.no_subcategories,
           filterMode = "category/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter,
