@@ -6,4 +6,4 @@
 	url = https://github.com/sitepoint/discourse-plugin-profile-notes
 [submodule "plugins/create-profile-note"]
 	path = plugins/create-profile-note
-	url = git@github.com:sitepoint/discourse-create-profile-note.git
+	url = https://github.com/sitepoint/discourse-create-profile-note
