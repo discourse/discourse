@@ -12,7 +12,7 @@ task 'docker:test' do
     unless ENV['NO_UPDATE']
       exit 1 unless run_or_fail("git remote update")
 
-      checkout = ENV['COMMIT_HASH'] || "master"
+      checkout = ENV['COMMIT_HASH'] || "HEAD"
       exit 1 unless run_or_fail("git checkout #{checkout}")
       exit 1 unless run_or_fail("bundle")
     end
