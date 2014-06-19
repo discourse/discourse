@@ -6,10 +6,14 @@
       <i class="fa fa-home"></i>
     {{/if}}
   {{else}}
-    {{#if bigLogoUrl}}
-      <img id="site-logo" class="logo-big" src="{{unbound bigLogoUrl}}" alt="{{unbound title}}">
+    {{#if showMobileLogo}}
+      <img id="site-logo" class="logo-big" src="{{unbound mobileBigLogoUrl}}" alt="{{unbound title}}">
     {{else}}
-      <h2 id="site-text-logo" class="text-logo">{{unbound title}}</h2>
+      {{#if bigLogoUrl}}
+        <img id="site-logo" class="logo-big" src="{{unbound bigLogoUrl}}" alt="{{unbound title}}">
+      {{else}}
+        <h2 id="site-text-logo" class="text-logo">{{unbound title}}</h2>
+      {{/if}}
     {{/if}}
   {{/if}}
 </a>

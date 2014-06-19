@@ -9,8 +9,13 @@ export default Ember.Component.extend({
     return !Discourse.Mobile.mobileView && this.get("minimized");
   }.property("minimized"),
 
+  showMobileLogo: function() {
+    return Discourse.Mobile.mobileView && !Ember.isBlank(this.get('mobileBigLogoUrl'));
+  }.property(),
+
   smallLogoUrl: Discourse.computed.setting('logo_small_url'),
   bigLogoUrl: Discourse.computed.setting('logo_url'),
+  mobileBigLogoUrl: Discourse.computed.setting('mobile_logo_url'),
   title: Discourse.computed.setting('title'),
 
   click: function(e) {
