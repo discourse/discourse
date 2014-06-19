@@ -16,7 +16,7 @@ class UserBadgesController < ApplicationController
 
     user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type)
 
-    if params[:aggregated]
+    if params[:grouped]
       user_badges = user_badges.group(:badge_id).select(UserBadge.attribute_names.map {|x| "MAX(#{x}) as #{x}" }, 'COUNT(*) as count')
     end
 

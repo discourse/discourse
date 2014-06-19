@@ -16,6 +16,14 @@ class BadgesController < ApplicationController
   def show
     params.require(:id)
     badge = Badge.find(params[:id])
+
+    if current_user
+      user_badge = UserBadge.find_by(user_id: current_user.id, badge_id: badge.id)
+      if user_badge && user_badge.notification
+        user_badge.notification.update_attributes read: true
+      end
+    end
+
     serialized = MultiJson.dump(serialize_data(badge, BadgeSerializer, root: "badge"))
     respond_to do |format|
       format.html do

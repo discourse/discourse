@@ -1856,6 +1856,7 @@ en:
         no_badges: There are no badges that can be granted.
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
+        icon: Icon
 
     lightbox:
       download: "download"
@@ -1926,3 +1927,15 @@ en:
         elder:
           name: Elder
           description: Granted global edit, pin, close, archive, split and merge.
+        welcome:
+          name: Welcome
+          description: Received a like.
+        nice_post:
+          name: Nice Post
+          description: Received 10 likes on a post.
+        good_post:
+          name: Good Post
+          description: Received 25 likes on a post.
+        great_post:
+          name: Great Post
+          description: Received 100 likes on a post.
