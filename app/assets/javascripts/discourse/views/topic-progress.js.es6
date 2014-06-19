@@ -77,8 +77,11 @@ export default Ember.View.extend({
   },
 
   _focusWhenOpened: function() {
-    // Don't focus on mobile
-    if (Discourse.Mobile.mobileView) { return; }
+
+    // Don't focus on mobile or touch
+    if (Discourse.Mobile.mobileView || this.capabilities.get('touch')) {
+      return;
+    }
 
     if (this.get('controller.expanded')) {
       var self = this;
