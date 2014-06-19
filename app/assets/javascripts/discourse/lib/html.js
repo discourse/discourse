@@ -95,8 +95,9 @@ Discourse.HTML = {
             (opts.clearChildColor ? ' clear-badge' : '') +
             extraClasses + "\" ";
     name = Handlebars.Utils.escapeExpression(name);
-    // Add description if we have it
-    if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
+
+    // Add description if we have it, without tags. Server has sanitized the description value.
+    if (description) html += "title=\"" + $("<div/>").html(description).text() + "\" ";
 
     if (!opts.clearChildColor) {
       var categoryStyle = Discourse.HTML.categoryStyle(category);
