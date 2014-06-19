@@ -1,6 +1,6 @@
 {{view 'search-text-field' value=term searchContextEnabled=searchContextEnabled searchContext=searchContext id="search-term"}}
 {{#if searchContext}}
-<div>
+<div class='search-context'>
   <label>
   {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
   </label>

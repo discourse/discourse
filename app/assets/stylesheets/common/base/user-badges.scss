@@ -4,7 +4,7 @@
   color: darken($primary, 40%);;
   border: 1px solid lighten($primary, 60%);
   font-size: $base-font-size * 0.86;
-  line-height: 16px;
+  line-height: 19px;
   margin: 0;
   display: inline-block;
   background-color: $secondary;
@@ -57,7 +57,7 @@
 /* Badge listing in /badges. */
 table.badges-listing {
   margin: 20px 0;
-  border-bottom: 1px solid $primary;
+  border-bottom: 1px solid scale-color-diff();
 
   .user-badge {
     font-size: $base-font-size;
@@ -78,7 +78,7 @@ table.badges-listing {
   }
 
   tr {
-    border-top: 1px solid $primary;
+    border-top: 1px solid scale-color-diff();
   }
 }
 
