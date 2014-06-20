@@ -7,7 +7,7 @@ module Onebox
 
       def to_html
         # Fix Dropbox image links
-        if /^https:\/\/www.dropbox.com/.match @url
+        if /^https:\/\/www.dropbox.com\/s\//.match @url
           @url.gsub!("https://www.dropbox.com","https://dl.dropboxusercontent.com")
         end
 
