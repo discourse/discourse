@@ -124,6 +124,13 @@ describe Jobs::UserEmail do
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
+      it "does send the email if the notification has been seen but the user is set for email_always" do
+        Email::Sender.any_instance.expects(:send)
+        notification.update_column(:read, true)
+        user.update_column(:email_always, true)
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
+      end
+
       it "doesn't send the email if the post has been user deleted" do
         Email::Sender.any_instance.expects(:send).never
         post.update_column(:user_deleted, true)
