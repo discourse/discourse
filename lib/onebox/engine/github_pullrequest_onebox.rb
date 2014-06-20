@@ -5,14 +5,7 @@ module Onebox
       include LayoutSupport
       include JSON
 
-      matches do
-        http
-        maybe("www.")
-        domain("github")
-        tld("com")
-        anything
-        with("/pull/")
-      end
+      matches_regexp Regexp.new("^http(?:s)?://(?:www\\.)?(?:(?:\\w)+\\.)?(github)\\.com(?:/)?(?:.)*/pull/")
 
       def url
         "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/pulls/#{match[:number]}"

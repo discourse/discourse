@@ -66,21 +66,6 @@ describe Onebox::Engine do
     end
   end
 
-  describe ".matches" do
-    class OneboxEngineMatches
-      include Onebox::Engine
-
-      matches do
-        find "foo.com"
-      end
-    end
-
-    it "sets @@matcher to a regular expression" do
-      regex = OneboxEngineMatches.class_variable_get(:@@matcher)
-      expect(regex).to be_a(Regexp)
-    end
-  end
-
 end
 
 describe ".onebox_name" do

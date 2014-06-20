@@ -5,13 +5,7 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches do
-        http
-        with("play.")
-        domain("google")
-        tld("com")
-        with("/store/apps/")
-      end
+      matches_regexp Regexp.new("^http(?:s)?://play\\.(?:(?:\\w)+\\.)?(google)\\.com(?:/)?/store/apps/")
 
       private
 

@@ -81,10 +81,6 @@ module Onebox
         100
       end
 
-      def matches(&block)
-        matches_regexp(Hexpress.new(&block).to_r)
-      end
-
       def matches_regexp(r)
         class_variable_set :@@matcher, r
       end

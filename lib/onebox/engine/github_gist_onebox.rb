@@ -5,12 +5,7 @@ module Onebox
     class GithubGistOnebox
       include Engine
 
-      matches do
-        http
-        with("gist.")
-        domain("github")
-        tld("com")
-      end
+      matches_regexp Regexp.new("^http(?:s)?://gist\\.(?:(?:\\w)+\\.)?(github)\\.com(?:/)?")
 
       def url
         "https://api.github.com/gists/#{match[:sha]}"

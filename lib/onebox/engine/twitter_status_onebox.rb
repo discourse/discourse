@@ -5,14 +5,7 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches do
-        http
-        maybe("www.")
-        domain("twitter")
-        tld("com")
-        anything
-        has("/status/")
-      end
+      matches_regexp Regexp.new("^http(?:s)?://(?:www\\.)?(?:(?:\\w)+\\.)?(twitter)\\.com(?:/)?(?:.)*/status/")
 
       private
 

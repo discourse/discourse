@@ -4,12 +4,7 @@ module Onebox
       include Engine
       include LayoutSupport
 
-      matches do
-        http
-        domain("www.ncbi.nlm.nih")
-        tld("gov")
-        has("/pubmed/")
-      end
+      matches_regexp Regexp.new("^http(?:s)?://(?:(?:\\w)+\\.)?(www.ncbi.nlm.nih)\\.gov(?:/)?/pubmed/")
 
       private
 
