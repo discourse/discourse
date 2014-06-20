@@ -115,6 +115,9 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.set('docAt', false);
   },
 
+  offset: 0,
+  hasScrolled: Em.computed.gt("offset", 0),
+
   /**
     The user has scrolled the window, or it is finished rendering and ready for processing.
 
@@ -129,6 +132,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       }
     }
 
+    this.set("offset", offset);
+
     var headerController = this.get('controller.controllers.header'),
         topic = this.get('controller.model');
     if (this.get('docAt')) {
@@ -138,7 +143,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
 
     // Trigger a scrolled event
-    this.appEvents.trigger('topic:scrolled');
+    this.appEvents.trigger('topic:scrolled', offset);
   },
 
   topicTrackingState: function() {

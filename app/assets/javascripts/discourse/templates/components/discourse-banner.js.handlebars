@@ -1,5 +1,5 @@
 {{#if visible}}
-  <div id="banner">
+  <div id="banner" {{bind-attr class="overlay"}}>
     <div id="banner-content">
       <div class="close" {{action dismiss}}><i class="fa fa-times" title="{{i18n banner.close}}"></i></div>
       {{{banner.html}}}
