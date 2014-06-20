@@ -6,9 +6,7 @@
 
 <div><input type='text' /></div>
 
-{{#each shareLinks}}
-  {{view Discourse.ShareLinkView contentBinding="this"}}
-{{/each}}
+{{each shareLinks itemView='share-link'}}
 
 <div class='link'>
   <a href='#' {{action close}} title='{{i18n share.close}}'><i class="fa fa-times-circle"></i></a>

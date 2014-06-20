@@ -7,7 +7,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ShareLinkView = Discourse.View.extend({
+export default Ember.View.extend({
   templateName: 'share_link',
   tagName: 'div',
   classNameBindings: [':social-link']

@@ -8,7 +8,7 @@
 
 var clickOutsideEventName = "mousedown.outside-poster-expansion";
 
-Discourse.PosterExpansionView = Discourse.View.extend({
+export default Discourse.View.extend({
   elementId: 'poster-expansion',
   classNameBindings: ['controller.visible::hidden', 'controller.showBadges'],
 
@@ -29,7 +29,6 @@ Discourse.PosterExpansionView = Discourse.View.extend({
         }
       }
     });
-
   }.observes('controller.model'),
 
   didInsertElement: function() {
