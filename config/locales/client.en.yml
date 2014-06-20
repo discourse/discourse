@@ -581,7 +581,7 @@ en:
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
-      title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
+      title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
       reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
