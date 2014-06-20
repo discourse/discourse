@@ -89,18 +89,19 @@ Discourse.HTML = {
         url = Discourse.getURL("/category/") + Discourse.Category.slugFor(category),
         elem = (opts.link === false ? 'span' : 'a'),
         extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : ''),
-        html = "<" + elem + " href=\"" + (opts.link === false ? '' : url) + "\" ";
+        html = "<" + elem + " href=\"" + (opts.link === false ? '' : url) + "\" ",
+        categoryStyle;
 
     html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) +
-            (opts.clearChildColor ? ' clear-badge' : '') +
+            (opts.onlyStripe ? ' clear-badge' : '') +
             extraClasses + "\" ";
     name = Handlebars.Utils.escapeExpression(name);
 
     // Add description if we have it, without tags. Server has sanitized the description value.
     if (description) html += "title=\"" + $("<div/>").html(description).text() + "\" ";
 
-    if (!opts.clearChildColor) {
-      var categoryStyle = Discourse.HTML.categoryStyle(category);
+    if (!opts.onlyStripe) {
+      categoryStyle = Discourse.HTML.categoryStyle(category);
       if (categoryStyle) {
         html += "style=\"" + categoryStyle + "\" ";
       }
@@ -114,7 +115,8 @@ Discourse.HTML = {
 
     if (opts.showParent && category.get('parent_category_id')) {
       var parent = Discourse.Category.findById(category.get('parent_category_id'));
-      html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent" + extraClasses + "' style=\"" + (Discourse.HTML.categoryStyle(parent)||'') +
+      categoryStyle = Discourse.HTML.categoryStyle(opts.onlyStripe ? category : parent) || '';
+      html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent" + extraClasses + "' style=\"" + categoryStyle + 
              "\" href=\"" + (opts.link === false ? '' : url) + "\"><span class='category-name'>" +
              (Em.get(parent, 'read_restricted') ? "<i class='fa fa-group'></i> " : "") +
              Em.get(parent, 'name') + "</span></" + elem + ">" +

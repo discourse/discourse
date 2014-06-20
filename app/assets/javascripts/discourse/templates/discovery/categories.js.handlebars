@@ -37,7 +37,7 @@
             {{#if subcategories}}
               <div class='subcategories'>
                 {{#each subcategories}}
-                  {{category-link this showParent=true clearChildColor=true}}
+                  {{category-link this showParent=true onlyStripe=true}}
                   {{#if unreadTopics}}
                     <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                   {{/if}}
