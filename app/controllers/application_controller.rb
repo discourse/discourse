@@ -163,7 +163,13 @@ class ApplicationController < ActionController::Base
 
   def inject_preview_style
     style = request['preview-style']
-    session[:preview_style] = style if style
+    if style.blank?
+      session[:preview_style] = nil
+    elsif style == "default"
+      session[:preview_style] = ""
+    else
+      session[:preview_style] = style
+    end
   end
 
   def disable_customization
