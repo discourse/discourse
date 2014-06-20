@@ -57,6 +57,21 @@ describe PostsController do
     end
   end
 
+  describe 'cooked' do
+    before do
+      post = Post.new(cooked: 'wat')
+      PostsController.any_instance.expects(:find_post_from_params).returns(post)
+    end
+
+    it 'returns the cooked conent' do
+      xhr :get, :cooked, id: 1234
+      response.should be_success
+      json = ::JSON.parse(response.body)
+      json.should be_present
+      json['cooked'].should == 'wat'
+    end
+  end
+
   describe 'show' do
     include_examples 'finding and showing post' do
       let(:action) { :show }

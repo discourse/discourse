@@ -6,7 +6,8 @@ class BasicPostSerializer < ApplicationSerializer
              :avatar_template,
              :uploaded_avatar_id,
              :created_at,
-             :cooked
+             :cooked,
+             :cooked_hidden
 
   def name
     object.user.try(:name)
@@ -24,8 +25,15 @@ class BasicPostSerializer < ApplicationSerializer
     object.user.try(:uploaded_avatar_id)
   end
 
+  def cooked_hidden
+    object.hidden && !scope.is_staff?
+  end
+  def include_cooked_hidden?
+    cooked_hidden
+  end
+
   def cooked
-    if object.hidden && !scope.is_staff?
+    if cooked_hidden
       if scope.current_user && object.user_id == scope.current_user.id
         I18n.t('flagging.you_must_edit')
       else

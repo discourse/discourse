@@ -396,7 +396,17 @@ Discourse.Post = Discourse.Model.extend({
     var topic = this.get('topic');
     return !topic.isReplyDirectlyBelow(this);
 
-  }.property('reply_count')
+  }.property('reply_count'),
+
+  expandHidden: function() {
+    var self = this;
+    return Discourse.ajax("/posts/" + this.get('id') + "/cooked.json").then(function (result) {
+      self.setProperties({
+        cooked: result.cooked,
+        cooked_hidden: false
+      });
+    });
+  }
 });
 
 Discourse.Post.reopenClass({

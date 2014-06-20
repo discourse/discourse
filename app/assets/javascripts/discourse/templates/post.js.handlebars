@@ -63,7 +63,12 @@
       </div>
 
       <div {{bind-attr class="showUserReplyTab:avoid-tab view.repliesShown::bottom-round :contents :regular view.extraClass"}}>
-        <div class='cooked'>{{{cooked}}}</div>
+        <div class='cooked'>
+          {{{cooked}}}
+        </div>
+        {{#if cooked_hidden}}
+          <a href {{action expandHidden this}}>{{i18n post.show_hidden}}</a>
+        {{/if}}
         {{#if view.showExpandButton}}
           {{#if controller.loadingExpanded}}
             <button class="btn expand-post" disabled>{{i18n loading}}</button>

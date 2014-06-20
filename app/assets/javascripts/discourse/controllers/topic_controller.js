@@ -294,6 +294,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       });
     },
 
+    expandHidden: function(post) {
+      post.expandHidden();
+    },
+
     toggleVisibility: function() {
       this.get('content').toggleStatus('visible');
     },
