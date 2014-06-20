@@ -651,7 +651,6 @@ class Topic < ActiveRecord::Base
 
     {
       html: post.cooked,
-      url: self.url,
       key: self.id
     }
   end
