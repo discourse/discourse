@@ -204,6 +204,12 @@
       width: 450px;
       @include medium-width { width: 360px; }
       @include small-width  { width: 330px; }
+      .select2-container {
+        width: 100%;
+      }
+      .select2-container-multi .select2-choices {
+        border: none;
+      }
     }
     .setting-controls {
       float: left;
