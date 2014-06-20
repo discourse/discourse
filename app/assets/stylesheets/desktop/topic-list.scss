@@ -63,6 +63,9 @@
   .fa-thumb-tack {color: $primary;}
   .fa-thumb-tack.unpinned {color: $primary;}
 
+  a.title {color: $primary;}
+  a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
+
   > tbody > tr {
     &:nth-child(even) {
         background-color: darken($secondary, 3%);
@@ -227,6 +230,9 @@
 }
 
 #topic-list.categories {
+  a.title {color: $tertiary;}
+  a.title:visited:not(.badge-notification) {color: scale-color($tertiary, $lightness: 35%);}
+
   th.posts {
     position: relative;
   }
