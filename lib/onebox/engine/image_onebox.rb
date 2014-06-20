@@ -6,6 +6,11 @@ module Onebox
       matches_regexp /^(https?:)?\/\/.+\.(png|jpg|jpeg|gif|bmp|tif|tiff)(\?.*)?$/i
 
       def to_html
+        # Fix Dropbox image links
+        if /^https:\/\/www.dropbox.com/.match @url
+          @url.gsub!("https://www.dropbox.com","https://dl.dropboxusercontent.com")
+        end
+
         "<a href='#{@url}' target='_blank'><img src='#{@url}'></a>"
       end
     end
