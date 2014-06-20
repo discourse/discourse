@@ -153,11 +153,16 @@ class Search
 
     def posts_query(limit)
       posts = Post.includes(:post_search_data, {:topic => :category})
-                  .where("post_search_data.search_data @@ #{ts_query}")
                   .where("topics.deleted_at" => nil)
                   .where("topics.visible")
                   .where("topics.archetype <> ?", Archetype.private_message)
                   .references(:post_search_data, {:topic => :category})
+
+      if @search_context.present? && @search_context.is_a?(Topic)
+        posts = posts.where("posts.raw ilike ?", "%#{@term}%")
+      else
+        posts = posts.where("post_search_data.search_data @@ #{ts_query}")
+      end
 
       # If we have a search context, prioritize those posts first
       if @search_context.present?

@@ -142,12 +142,13 @@ describe Search do
         topic2 = Fabricate(:topic)
 
         new_post('this is the other post I am posting', topic2)
+        new_post('this is my fifth post I am posting', topic2)
+
         post1 = new_post('this is the other post I am posting', topic)
         post2 = new_post('this is my first post I am posting', topic)
         post3 = new_post('this is a real long and complicated bla this is my second post I am Posting birds
                          with more stuff bla bla', topic)
         post4 = new_post('this is my fourth post I am posting', topic)
-        new_post('this is my fifth post I am posting', topic2)
 
         # update posts_count
         topic.reload
@@ -163,6 +164,13 @@ describe Search do
           "_#{post2.id}",
           "_#{post3.id}",
           "_#{post4.id}"]
+
+        # stop words should work
+        results = Search.new('this', search_context: post1.topic).execute.find do |r|
+          r[:type] == "topic"
+        end[:results]
+
+        results.length.should == 4
 
       end
     end
