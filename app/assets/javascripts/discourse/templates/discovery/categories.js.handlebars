@@ -19,7 +19,12 @@
               <div class="pull-left">
                 {{#if controller.ordering}}<i class="fa fa-bars"></i>{{/if}}
 
-                <h3>{{#link-to 'discovery.parentCategory' this}}{{unbound name}}{{/link-to}}</h3>
+                <h3>
+                  {{#if read_restricted}}<i class='fa fa-group'></i>{{/if}}
+                  {{#link-to 'discovery.parentCategory' this}}
+                    {{unbound name}}
+                  {{/link-to}}
+                </h3>
                 {{#if unreadTopics}}
                   <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                 {{/if}}
