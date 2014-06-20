@@ -17,7 +17,7 @@
     </div>
   </div>
   <div id="revision-details">
-    {{i18n post.revisions.details.edited_by}} {{bound-avatar-template content.avatar_template "small"}} {{username}} <span class="date">{{bound-date created_at}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
+    {{i18n post.revisions.details.edited_by}} {{#link-to 'user' username}}{{bound-avatar-template content.avatar_template "small"}} {{username}}{{/link-to}} <span class="date">{{bound-date created_at}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
   </div>
   <div id="revisions">
     {{#if title_changes}}
