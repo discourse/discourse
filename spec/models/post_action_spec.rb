@@ -98,14 +98,17 @@ describe PostAction do
       admin = Fabricate(:admin)
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       post.hidden.should be_false
+      post.hidden_at.should be_blank
       PostAction.defer_flags!(post, admin.id)
       PostAction.flagged_posts_count.should == 0
       post.reload
       post.hidden.should be_false
+      post.hidden_at.should be_blank
 
       PostAction.hide_post!(post, PostActionType.types[:off_topic])
       post.reload
       post.hidden.should be_true
+      post.hidden_at.should be_present
     end
 
   end
@@ -253,6 +256,7 @@ describe PostAction do
 
       post.hidden.should.should be_true
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached]
+      post.hidden_at.should be_present
       post.topic.visible.should be_false
 
       post.revise(post.user, post.raw + " ha I edited it ")
@@ -260,6 +264,7 @@ describe PostAction do
 
       post.hidden.should be_false
       post.hidden_reason_id.should be_nil
+      post.hidden_at.should be_blank
       post.topic.visible.should be_true
 
       PostAction.act(u1, post, PostActionType.types[:spam])
@@ -269,12 +274,14 @@ describe PostAction do
 
       post.hidden.should be_true
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached_again]
+      post.hidden_at.should be_true
 
       post.revise(post.user, post.raw + " ha I edited it again ")
 
       post.reload
 
       post.hidden.should be_true
+      post.hidden_at.should be_true
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached_again]
     end
 
