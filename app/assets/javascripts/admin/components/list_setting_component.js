@@ -19,7 +19,8 @@ Discourse.ListSettingComponent = Ember.Component.extend({
         separator: "|",
         tokenSeparators: ["|"],
         tags : this.get("choices") || [],
-        width: 'off'
+        width: 'off',
+        dropdownCss: this.get("choices") ? {} : {display: 'none'}
       }).on("change", function(obj) {
         this.set("settingValue", obj.val.join("|"));
         this.refreshSortables();
