@@ -80,8 +80,12 @@ module PostGuardian
       return true
     end
 
-    if is_my_own?(post) && !post.edit_time_limit_expired?
-      return true
+    if is_my_own?(post)
+      return false if post.hidden? &&
+                      post.hidden_at.present? &&
+                      post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
+
+      return !post.edit_time_limit_expired?
     end
 
     false

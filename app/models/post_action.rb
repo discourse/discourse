@@ -309,7 +309,7 @@ class PostAction < ActiveRecord::Base
 
     Post.where(id: post.id).update_all(["hidden = true, hidden_at = CURRENT_TIMESTAMP, hidden_reason_id = COALESCE(hidden_reason_id, ?)", reason])
     Topic.where(["id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
-                      topic_id: post.topic_id]).update_all({ visible: false })
+                      topic_id: post.topic_id]).update_all(visible: false)
 
     # inform user
     if post.user

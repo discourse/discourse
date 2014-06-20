@@ -640,6 +640,24 @@ describe Guardian do
         Guardian.new(post.user).can_edit?(post).should be_true
       end
 
+      it "returns false if the post is hidden due to flagging and it's too soon" do
+        post.hidden = true
+        post.hidden_at = Time.now
+        Guardian.new(post.user).can_edit?(post).should be_false
+      end
+
+      it "returns true if the post is hidden due to flagging and it been enough time" do
+        post.hidden = true
+        post.hidden_at = (SiteSetting.cooldown_minutes_after_hiding_posts + 1).minutes.ago
+        Guardian.new(post.user).can_edit?(post).should be_true
+      end
+
+      it "returns true if the post is hidden due to flagging and it's got a nil `hidden_at`" do
+        post.hidden = true
+        post.hidden_at = nil
+        Guardian.new(post.user).can_edit?(post).should be_true
+      end
+
       it 'returns false if you are trying to edit a post you soft deleted' do
         post.user_deleted = true
         Guardian.new(post.user).can_edit?(post).should be_false
