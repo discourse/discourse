@@ -136,7 +136,7 @@
       float: left;
       margin-right: 14px;
     }
-    .fa {
+    .num .fa {
       color: scale-color($primary, $lightness: 50%);
     }
     .fa-heart{
@@ -233,7 +233,6 @@
     background-color: $secondary;
   }
   .badge-category {
-    float: left;
     margin: 1px 4px 0 0;
   }
   .posters {

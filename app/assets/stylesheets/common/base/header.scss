@@ -154,7 +154,7 @@
     margin: 0;
     list-style: none;
   }
-  li {
+  li:not(.category) {
     font-size: 13px;
     line-height: 16px;
     .fa {
