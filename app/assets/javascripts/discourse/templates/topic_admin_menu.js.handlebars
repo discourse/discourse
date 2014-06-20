@@ -29,22 +29,26 @@
       </li>
 
       {{#unless isPrivateMessage}}
-        <li>
-          {{#if isBanner}}
-            <button {{action removeBanner}} class='btn btn-admin'><i class='fa fa-bullhorn'></i> {{i18n topic.actions.remove_banner}}</button>
-          {{else}}
-            <button {{action makeBanner}} class='btn btn-admin'><i class='fa fa-bullhorn'></i> {{i18n topic.actions.make_banner}}</button>
-          {{/if}}
-        </li>
+          <li>
+            {{#if isBanner}}
+              <button {{action removeBanner}} class='btn btn-admin'><i class='fa fa-bullhorn'></i> {{i18n topic.actions.remove_banner}}</button>
+            {{else}}
+              {{#if visible}}
+                <button {{action makeBanner}} class='btn btn-admin'><i class='fa fa-bullhorn'></i> {{i18n topic.actions.make_banner}}</button>
+              {{/if}}
+            {{/if}}
+          </li>
 
-        <li>
-          {{#if pinned_at}}
-            <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.unpin}}</button>
-          {{else}}
-            <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.pin}}</button>
-            <button {{action togglePinnedGlobally}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.pin_globally}}</button>
-          {{/if}}
-        </li>
+          <li>
+            {{#if pinned_at}}
+              <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.unpin}}</button>
+            {{else}}
+              {{#if visible}}
+                <button {{action togglePinned}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.pin}}</button>
+                <button {{action togglePinnedGlobally}} class='btn btn-admin'><i class='fa fa-thumb-tack'></i> {{i18n topic.actions.pin_globally}}</button>
+              {{/if}}
+            {{/if}}
+          </li>
       {{/unless}}
 
       <li>
