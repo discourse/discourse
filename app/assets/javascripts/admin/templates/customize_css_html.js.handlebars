@@ -51,9 +51,11 @@
     <span>{{i18n admin.customize.override_default}} {{view Ember.Checkbox checkedBinding="selectedItem.override_default_style"}}</span>
     <span>{{i18n admin.customize.enabled}}  {{view Ember.Checkbox checkedBinding="selectedItem.enabled"}}</span>
     {{#unless selectedItem.changed}}
-    <a class='preview-link' {{bind-attr href="selectedItem.previewUrl"}} target='_blank'>{{i18n admin.customize.preview}}</a>
+    <a class='preview-link' {{bind-attr href="selectedItem.previewUrl"}} target='_blank' title="{{i18n admin.customize.explain_preview}}">{{i18n admin.customize.preview}}</a>
     |
-    <a href="/?preview-style=" target='_blank'>{{i18n admin.customize.undo_preview}}</a><br>
+    <a href="/?preview-style=" target='_blank' title="{{i18n admin.customize.explain_undo_preview}}">{{i18n admin.customize.undo_preview}}</a>
+    |
+    <a href="/?preview-style=default" target='_blank' title="{{i18n admin.customize.explain_rescue_preview}}">{{i18n admin.customize.rescue_preview}}</a><br>
     {{/unless}}
   </div>
 
