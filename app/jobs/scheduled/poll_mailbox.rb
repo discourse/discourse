@@ -28,6 +28,10 @@ module Jobs
         client_message = RejectionMailer.send_trust_level(message.from, message.body)
         Email::Sender.new(client_message, :email_reject_trust_level).send
       rescue Email::Receiver::ProcessingError => e
+        Rails.logger.error e
+        message = Mail::Message.new(mail_string)
+        client_message = RejectionMailer.send_rejection(message.from, message.body, e.message)
+
         # inform admins about the error
         data = { limit_once_per: false, message_params: { source: mail, error: e }}
         GroupMessage.create(Group[:admins].name, :email_error_notification, data)
