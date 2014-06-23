@@ -128,11 +128,12 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     // of the post into the stream when the user hits reply. We therefore also
     // need to enforce these rules on the .cooked version.
     // Meanwhile, the server is busy post-processing the post and generating thumbnails.
-    $('<style>#wmd-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' +
-      'max-width:' + Discourse.SiteSettings.max_image_width + 'px;' +
-      'max-height:' + Discourse.SiteSettings.max_image_height + 'px;' +
-      '}</style>'
-     ).appendTo('head');
+    var style = Discourse.Mobile.mobileView ?
+                'max-width: 100%; height: auto;' :
+                'max-width:' + Discourse.SiteSettings.max_image_width + 'px;' +
+                'max-height:' + Discourse.SiteSettings.max_image_height + 'px;';
+
+    $('<style>#wmd-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' + style + '}</style>').appendTo('head');
   },
 
   click: function() {
