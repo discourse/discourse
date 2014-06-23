@@ -8,7 +8,7 @@ require_dependency 'email/message_builder'
 
 module Jobs
   class PollMailbox < Jobs::Scheduled
-    every 5.minutes
+    every SiteSetting.pop3s_polling_period_mins.minutes
     sidekiq_options retry: false
     include Email::BuildEmailHelper
 
