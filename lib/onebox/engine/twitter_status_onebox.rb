@@ -5,12 +5,12 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches_regexp Regexp.new("^http(?:s)?://(?:www\\.)?(?:(?:\\w)+\\.)?(twitter)\\.com(?:/)?(?:.)*/status/")
+      matches_regexp Regexp.new("^http(?:s)?://(?:www\\.)?(?:(?:\\w)+\\.)?(twitter)\\.com(?:/)?(?:.)*/status(es)?/")
 
       private
 
       def match
-        @match ||= @url.match(%r{twitter\.com/.+?/status/(?<id>\d+)})
+        @match ||= @url.match(%r{twitter\.com/.+?/status(es)?/(?<id>\d+)})
       end
 
       def client
