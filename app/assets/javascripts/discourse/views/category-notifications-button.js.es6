@@ -1,12 +1,6 @@
-/**
-  A button to display notification options for categories.
+import NotificationsButton from 'discourse/views/notifications-button';
 
-  @class NotificationsButton
-  @extends Discourse.DropdownButtonView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.CategoryNotificationsButton = Discourse.NotificationsButton.extend({
+export default NotificationsButton.extend({
   classNames: ['notification-options', 'category-notification-menu'],
   buttonIncludesText: false,
   longDescriptionBinding: null,

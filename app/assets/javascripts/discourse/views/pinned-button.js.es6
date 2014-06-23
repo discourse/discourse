@@ -1,12 +1,6 @@
-/**
-  A button to display pinned options.
+import DropdownButtonView from 'discourse/views/dropdown-button';
 
-  @class PinnedButton
-  @extends Discourse.DropdownButtonView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.PinnedButton = Discourse.DropdownButtonView.extend({
+export default DropdownButtonView.extend({
   descriptionKey: 'help',
   classNames: ['pinned-options'],
   title: '',
@@ -62,4 +56,3 @@ Discourse.PinnedButton = Discourse.DropdownButtonView.extend({
   }
 
 });
-

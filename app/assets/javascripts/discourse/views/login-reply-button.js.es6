@@ -1,12 +1,6 @@
-/**
-  A button prompting users to login to reply to a topic
+import ButtonView from 'discourse/views/button';
 
-  @class LoginReplyButton
-  @extends Discourse.ButtonView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.LoginReplyButton = Discourse.ButtonView.extend({
+export default ButtonView.extend({
   textKey: 'topic.login_reply',
   classNames: ['btn', 'btn-primary', 'create'],
   click: function() {

@@ -1,12 +1,6 @@
-/**
-  A button for replying to a topic
+import ButtonView from 'discourse/views/button';
 
-  @class ReplyButton
-  @extends Discourse.ButtonView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.ReplyButton = Discourse.ButtonView.extend({
+export default ButtonView.extend({
   classNames: ['btn', 'btn-primary', 'create'],
   helpKey: 'topic.reply.help',
 

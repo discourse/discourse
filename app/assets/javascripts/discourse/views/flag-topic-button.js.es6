@@ -1,12 +1,6 @@
-/**
-  A button for flagging a topic
+import ButtonView from 'discourse/views/button';
 
-  @class FlagTopicButton
-  @extends Discourse.ButtonView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.FlagTopicButton = Discourse.ButtonView.extend({
+export default ButtonView.extend({
   classNames: ['flag-topic'],
   textKey: 'topic.flag_topic.title',
   helpKey: 'topic.flag_topic.help',
@@ -19,4 +13,3 @@ Discourse.FlagTopicButton = Discourse.ButtonView.extend({
     buffer.push("<i class='fa fa-flag'></i>");
   }
 });
-

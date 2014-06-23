@@ -23,9 +23,9 @@
 //= require ./discourse/views/modal/modal_body_view
 //= require ./discourse/views/modal/flag_view
 //= require ./discourse/views/combo-box
-//= require ./discourse/views/buttons/button_view
-//= require ./discourse/views/buttons/dropdown_button_view
-//= require ./discourse/views/buttons/notifications_button
+//= require ./discourse/views/button
+//= require ./discourse/views/dropdown-button
+//= require ./discourse/views/notifications-button
 //= require ./discourse/views/pagedown-preview
 //= require ./discourse/routes/discourse_route
 //= require ./discourse/routes/discourse_restricted_user_route

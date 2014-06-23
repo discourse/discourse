@@ -1,12 +1,6 @@
-/**
-  A button to display notification options.
+import DropdownButtonView from 'discourse/views/dropdown-button';
 
-  @class NotificationsButton
-  @extends Discourse.DropdownButtonView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
+export default DropdownButtonView.extend({
   classNames: ['notification-options'],
   title: '',
   buttonIncludesText: true,
@@ -76,4 +70,3 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
   }
 
 });
-

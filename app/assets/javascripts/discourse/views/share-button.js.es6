@@ -1,12 +1,6 @@
-/**
-  A button for sharing a link to a topic
+import ButtonView from 'discourse/views/button';
 
-  @class ShareButton
-  @extends Discourse.ButtonView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.ShareButton = Discourse.ButtonView.extend({
+export default ButtonView.extend({
   classNames: ['share'],
   textKey: 'topic.share.title',
   helpKey: 'topic.share.help',

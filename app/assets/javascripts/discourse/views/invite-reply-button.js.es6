@@ -1,12 +1,6 @@
-/**
-  A button for inviting users to reply to a topic
+import ButtonView from 'discourse/views/button';
 
-  @class InviteReplyButton
-  @extends Discourse.ButtonView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.InviteReplyButton = Discourse.ButtonView.extend({
+export default ButtonView.extend({
   textKey: 'topic.invite_reply.title',
   helpKey: 'topic.invite_reply.help',
   attributeBindings: ['disabled'],

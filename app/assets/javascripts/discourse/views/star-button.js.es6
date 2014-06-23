@@ -1,12 +1,6 @@
-/**
-  A button for starring a topic
+import ButtonView from 'discourse/views/button';
 
-  @class StarButton
-  @extends Discourse.ButtonView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.StarButton = Discourse.ButtonView.extend({
+export default ButtonView.extend({
   classNames: ['star'],
   textKey: 'starred.title',
   helpKeyBinding: 'controller.starTooltipKey',

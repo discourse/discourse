@@ -1,12 +1,4 @@
-/**
-  This view handles rendering of a button with an associated drop down
-
-  @class DropdownButtonView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.DropdownButtonView = Discourse.View.extend({
+export default Discourse.View.extend({
   classNameBindings: [':btn-group', 'hidden'],
   shouldRerender: Discourse.View.renderIfChanged('text', 'longDescription'),
 

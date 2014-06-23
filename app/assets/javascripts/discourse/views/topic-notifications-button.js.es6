@@ -1,12 +1,6 @@
-/**
-  A button to display topic notification options.
+import NotificationsButton from 'discourse/views/notifications-button';
 
-  @class TopicNotificationsButton
-  @extends Discourse.NotificationsButton
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.TopicNotificationsButton = Discourse.NotificationsButton.extend({
+export default NotificationsButton.extend({
   longDescriptionBinding: 'topic.details.notificationReasonText',
   topic: Em.computed.alias('controller.model'),
   target: Em.computed.alias('topic'),
@@ -24,4 +18,3 @@ Discourse.TopicNotificationsButton = Discourse.NotificationsButton.extend({
     this.get('topic.details').updateNotifications(id);
   }
 });
-

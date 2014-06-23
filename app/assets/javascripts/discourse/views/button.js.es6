@@ -1,12 +1,4 @@
-/**
-  This view handles rendering of a button
-
-  @class ButtonView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.ButtonView = Discourse.View.extend({
+export default Discourse.View.extend({
   tagName: 'button',
   classNameBindings: [':btn', ':standard', 'dropDownToggle'],
   attributeBindings: ['title', 'data-toggle', 'data-share-url'],
@@ -25,7 +17,4 @@ Discourse.ButtonView = Discourse.View.extend({
     }
     buffer.push(this.get('text'));
   }
-
 });
-
-

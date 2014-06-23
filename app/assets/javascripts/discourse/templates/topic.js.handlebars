@@ -94,7 +94,7 @@
           {{#if postStream.loadedAllPosts}}
 
             {{view 'topic-closing' topic=model}}
-            {{view Discourse.TopicFooterButtonsView topicBinding="model"}}
+            {{view 'topic-footer-buttons' topic=model}}
 
             {{#if details.suggested_topics.length}}
               <div id='suggested-topics'>
