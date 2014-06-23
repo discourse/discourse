@@ -333,6 +333,12 @@ Discourse.Dialect = {
   replaceBlock: function(args) {
     this.registerBlock(args.start.toString(), function(block, next) {
 
+      var linebreaks = dialect.options.traditional_markdown_linebreaks ||
+          Discourse.SiteSettings.traditional_markdown_linebreaks;
+
+      // Some replacers should not be run with traditional linebreaks
+      if (linebreaks && args.skipIfTradtionalLinebreaks) { return; }
+
       args.start.lastIndex = 0;
       var m = (args.start).exec(block);
 

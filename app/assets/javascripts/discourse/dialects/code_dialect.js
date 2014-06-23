@@ -1,9 +1,5 @@
 /**
-  Support for github style code blocks, here you begin with three backticks and supply a language,
-  The language is made into a class on the resulting `<code>` element.
-
-  @event register
-  @namespace Discourse.Dialect
+  Support for various code blocks
 **/
 
 var acceptableCodeClasses =
@@ -44,5 +40,16 @@ Discourse.Dialect.on('parseNode', function (event) {
       regexp = /^ +| +$/g;
     }
     node[node.length-1] = Handlebars.Utils.escapeExpression(contents.replace(regexp,''));
+  }
+});
+
+Discourse.Dialect.replaceBlock({
+  start: /(<pre[^\>]*\>)([\s\S]*)/igm,
+  stop: '</pre>',
+  rawContents: true,
+  skipIfTradtionalLinebreaks: true,
+
+  emitter: function(blockContents) {
+    return ['p', ['pre', blockContents.join("\n")]];
   }
 });
