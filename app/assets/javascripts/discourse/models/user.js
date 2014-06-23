@@ -11,7 +11,6 @@ Discourse.User = Discourse.Model.extend({
   hasPMs: Em.computed.gt("private_messages_stats.all", 0),
   hasStartedPMs: Em.computed.gt("private_messages_stats.mine", 0),
   hasUnreadPMs: Em.computed.gt("private_messages_stats.unread", 0),
-  hasBookmark: Em.computed.gt('bookmarks_count', 0),
 
   /**
     The user's stream
