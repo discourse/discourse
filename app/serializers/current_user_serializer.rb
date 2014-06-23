@@ -10,7 +10,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :staff?,
              :reply_count,
              :topic_count,
-             :bookmarks_count,
              :enable_quoting,
              :external_links_in_new_tab,
              :dynamic_favicon,
@@ -36,10 +35,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def reply_count
     object.user_stat.topic_reply_count
-  end
-
-  def bookmarks_count
-    UserAction.bookmarks_stats(object.id)
   end
 
   def site_flagged_posts_count

@@ -26,14 +26,3 @@ test("showAdminLinks", function() {
   currentUserStub.set("staff", false);
   equal(controller.get("showAdminLinks"), false, "is false when current user is not a staff member");
 });
-
-test("showBookmarksLink", function() {
-  var currentUserStub = Ember.Object.create();
-  this.stub(Discourse.User, "current").returns(currentUserStub);
-
-  currentUserStub.set("hasBookmark", true);
-  equal(controller.get("showBookmarksLink"), true, "is true when current user have bookmarks");
-
-  currentUserStub.set("hasBookmark", false);
-  equal(controller.get("showBookmarksLink"), false, "is false when current user does not have bookmarks");
-});
