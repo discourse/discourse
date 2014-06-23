@@ -863,9 +863,9 @@ blockquote { /* solo quotes */
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: $secondary;
+  color: $tertiary;
   text-decoration: none;
-  background-color: scale-color($tertiary, $lightness: 50%);
+  background-color: scale-color($tertiary, $lightness: 90%);
 }
 
 .dropdown-menu .disabled > a,
