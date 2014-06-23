@@ -605,7 +605,7 @@ en:
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
-      code_text: "enter preformatted text here"
+      code_text: "indent preformatted text by 4 spaces"
       upload_title: "Upload"
       upload_description: "enter upload description here"
       olist_title: "Numbered List"
