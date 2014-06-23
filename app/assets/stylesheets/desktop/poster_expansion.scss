@@ -99,7 +99,7 @@
     }
 
     .badge-section {
-      margin-top: 20px;
+      margin-top: 10px;
       h3 {
         line-height: 43px;
         color: $primary;
@@ -110,7 +110,9 @@
 
     .more-user-badges {
       @extend .user-badge;
-      padding: 4px 8px;
+      padding: 3px 8px;
+      line-height: 19px;
+      font-size: 13px;
     }
   }
 }
