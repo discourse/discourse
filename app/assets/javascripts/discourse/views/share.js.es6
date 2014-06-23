@@ -51,6 +51,9 @@ export default Discourse.View.extend({
     });
 
     $html.on('click.discoure-share-link', '[data-share-url]', function(e) {
+      // if they want to open in a new tab, let it so
+      if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) { return true; }
+
       e.preventDefault();
       var $currentTarget = $(e.currentTarget),
           $currentTargetOffset = $currentTarget.offset(),
