@@ -343,12 +343,12 @@ en:
 
       name:
         title: "Name"
-        instructions: "The long version of your name; publicly visible."
+        instructions: "The long version of your name."
         too_short: "Your name is too short."
         ok: "Your name looks good."
       username:
         title: "Username"
-        instructions: "Must be unique, no spaces, short. People can mention you as @username."
+        instructions: "Your @username must be unique, no spaces, short."
         short_instructions: "People can mention you as @{{username}}."
         available: "Your username is available."
         global_match: "Email matches the registered username."
