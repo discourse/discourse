@@ -25,9 +25,9 @@ test('invalid bbcode', function() {
 });
 
 test('code', function() {
-  format("[code]\nx++\n[/code]", "<pre>\nx++</pre>", "makes code into pre");
-  format("[code]\nx++\ny++\nz++\n[/code]", "<pre>\nx++\ny++\nz++</pre>", "makes code into pre");
-  format("[code]abc\n#def\n[/code]", '<pre>abc\n#def</pre>', 'it handles headings in a [code] block');
+  format("[code]\nx++\n[/code]", "<pre><code class=\"lang-auto\">x++</code></pre>", "makes code into pre");
+  format("[code]\nx++\ny++\nz++\n[/code]", "<pre><code class=\"lang-auto\">x++\ny++\nz++</code></pre>", "makes code into pre");
+  format("[code]abc\n#def\n[/code]", '<pre><code class=\"lang-auto\">abc\n#def</code></pre>', 'it handles headings in a [code] block');
 });
 
 test('spoiler', function() {
