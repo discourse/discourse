@@ -133,7 +133,8 @@ class ComposerMessagesFinder
 
     return if topic.nil? ||
               SiteSetting.warn_reviving_old_topic_age < 1 ||
-              (topic.last_posted_at && topic.last_posted_at > SiteSetting.warn_reviving_old_topic_age.days.ago)
+              topic.last_posted_at.nil? ||
+              topic.last_posted_at > SiteSetting.warn_reviving_old_topic_age.days.ago
 
     {templateName: 'composer/education',
      wait_for_typing: false,
