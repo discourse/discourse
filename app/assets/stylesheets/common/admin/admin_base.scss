@@ -16,6 +16,11 @@
   .filters input { margin-bottom: 0; }
 }
 
+td.flaggers td {
+  border-bottom: none;
+  border-top: none;
+}
+
 .content-list li a span.count {
   font-size: 12px;
   float: right;
