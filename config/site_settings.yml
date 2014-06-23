@@ -65,18 +65,19 @@ basic:
   track_external_right_clicks:
     client: true
     default: false
+  ga_universal_tracking_code:
+    client: true
+    default: ''
+    regex: "^UA-\\d+-\\d+$"
+  ga_universal_domain_name:
+    client: true
+    default: 'auto'
   ga_tracking_code:
     client: true
     default: ''
   ga_domain_name:
     client: true
     default: ''
-  ga_universal_tracking_code:
-    client: true
-    default: ''
-  ga_universal_domain_name:
-    client: true
-    default: 'auto'
   top_menu:
     client: true
     refresh: true
@@ -206,18 +207,30 @@ users:
   enable_twitter_logins:
     client: true
     default: false
-  twitter_consumer_key: ''
-  twitter_consumer_secret: ''
+  twitter_consumer_key:
+    default: ''
+    regex: "^\\w*$"
+  twitter_consumer_secret:
+    default: ''
+    regex: "^\\w*$"
   enable_facebook_logins:
     client: true
     default: false
-  facebook_app_id: ''
-  facebook_app_secret: ''
+  facebook_app_id:
+    default: ''
+    regex: "^\\d+$"
+  facebook_app_secret:
+    default: ''
+    regex: "^[a-f0-9]*$"
   enable_github_logins:
     client: true
     default: false
-  github_client_id: ''
-  github_client_secret: ''
+  github_client_id:
+    default: ''
+    regex: "^[a-f0-9]*$"
+  github_client_secret:
+    default: ''
+    regex: "^[a-f0-9]*$"
   enable_sso:
     client: true
     default: false
@@ -404,7 +417,9 @@ files:
   s3_region:
     default: ''
     enum: 'S3RegionSiteSetting'
-  s3_upload_bucket: ''
+  s3_upload_bucket:
+    default: ''
+    regex: "^[^\\.]*$"
   allow_profile_backgrounds:
     client: true
     default: true
@@ -557,6 +572,8 @@ backups:
     default: false
   s3_backup_bucket:
     client: false
+    default: ''
+    regex: "^[^\\.]*$"
 
 uncategorized:
   version_checks:
