@@ -340,10 +340,6 @@ span.post-count {
 }
 
 .topic-post {
-  article.boxed img {
-    max-width: 100%;
-    height: auto;
-  }
   &.moderator {
     background-color: scale-color($highlight, $lightness: 60%);
   }

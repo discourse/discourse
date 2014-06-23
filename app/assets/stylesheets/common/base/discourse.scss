@@ -159,10 +159,6 @@ body {
     to {opacity: 1}
 }
 
-.avatar {
-  @include border-radius-all(2px);
-}
-
 .avatar-wrapper {
   background-color: $secondary;
   display: inline-block;
