@@ -43,11 +43,6 @@ header {
 
 body {
 
-  // tab focus in firefox
-  button:focus::-moz-focus-inner {
-  border: 1px dotted;
-  }
-
   .boxed {
     height: 100%;
     @include border-radius-all(5px);
