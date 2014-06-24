@@ -17,4 +17,8 @@ class BasicCategorySerializer < ApplicationSerializer
   def include_parent_category_id?
     parent_category_id
   end
+
+  def description
+    object.uncategorized? ? SiteSetting.uncategorized_description : object.description
+  end
 end

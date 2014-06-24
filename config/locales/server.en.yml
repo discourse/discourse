@@ -607,6 +607,7 @@ en:
     min_private_message_title_length: "Minimum title length for a private message in characters"
     min_search_term_length: "Minimum search term length in characters"
     allow_uncategorized_topics: "Allow topics to be created without a category."
+    uncategorized_description: "The description of the uncategorized category. Leave blank if you don't want a description."
     allow_duplicate_topic_titles: "Allow topics with identical titles"
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     enforce_global_nicknames: "Enforce global username uniqueness (WARNING: only change this during initial setup)"

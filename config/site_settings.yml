@@ -293,6 +293,7 @@ posting:
     client: true
     default: true
     refresh: true
+  uncategorized_description: ''
   allow_duplicate_topic_titles: false
   min_title_similar_length:
     client: true
