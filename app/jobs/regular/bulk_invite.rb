@@ -34,9 +34,29 @@ module Jobs
       CSV.foreach(csv_path) do |csv_info|
         if !csv_info[0].nil?
           if validate_email(csv_info[0])
-            Invite.invite_by_email(csv_info[0], current_user, topic=nil)
+            # email is valid, now check for groups
+            if !csv_info[1].nil?
+              # group(s) present
+              group_names = csv_info[1].split(';')
+              valid_group_ids = []
+              group_names.each { |group_name|
+                group_detail = Group.find_by_name(group_name)
+                if !group_detail.nil?
+                  # valid group
+                  valid_group_ids.push(group_detail.id)
+                else
+                  # invalid group
+                  log "Invalid group '#{group_name}' at line number '#{$INPUT_LINE_NUMBER}'"
+                end
+              }
+              Invite.invite_by_email(csv_info[0], current_user, topic=nil, valid_group_ids)
+            else
+              # no group present
+              Invite.invite_by_email(csv_info[0], current_user, topic=nil)
+            end
             @sent += 1
           else
+            # invalid email
             log "Invalid email '#{csv_info[0]}' at line number '#{$INPUT_LINE_NUMBER}'"
             @failed += 1
           end
