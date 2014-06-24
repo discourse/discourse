@@ -18,3 +18,64 @@ task "uploads:backfill_shas" => :environment do
   end
   puts "done"
 end
+
+task "uploads:migrate_from_s3" => :environment do
+  return unless SiteSetting.enable_s3_uploads?
+
+  require 'file_store/local_store'
+  require 'file_helper'
+
+  local_store = FileStore::LocalStore.new
+  max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+
+  puts "Migrating uploads from S3 to local storage"
+  puts
+
+  Upload.order(:id).find_each do |upload|
+
+    # remove invalid uploads
+    if upload.url.blank?
+      upload.destroy!
+      next
+    end
+
+    # no need to download an upload twice
+    if local_store.has_been_uploaded?(upload.url)
+      putc '.'
+      next
+    end
+
+    # try to download the upload
+    begin
+      # keep track of the previous url
+      previous_url = upload.url
+      # fix the name of pasted images
+      upload.original_filename = "blob.png" if upload.original_filename == "blob"
+      # download the file (in a temp file)
+      temp_file = FileHelper.download("http:" + previous_url, max_file_size, "from_s3")
+      # store the file locally
+      upload.url = local_store.store_upload(temp_file, upload)
+      # save the new url
+      if upload.save
+        # update & rebake the posts (if any)
+        Post.where("raw ILIKE ?", "%#{previous_url}%").find_each do |post|
+          post.raw.gsub!(previous_url, upload.url)
+          post.rebake!
+        end
+
+        putc '#'
+      else
+        putc 'X'
+      end
+
+      # close the temp_file
+      temp_file.close! if temp_file.respond_to? :close!
+    rescue
+      putc 'X'
+    end
+
+  end
+
+  puts
+
+end
