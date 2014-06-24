@@ -607,7 +607,12 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       postStream.prependMore().then(function() {
         Em.run.next(function () {
           $elem = $('#post-cloak-' + post.get('post_number'));
-          $('html, body').scrollTop($elem.position().top + distToElement);
+
+          // Quickly going back might mean the element is destroyed
+          var position = $elem.position();
+          if (position && position.top) {
+            $('html, body').scrollTop(position.top + distToElement);
+          }
         });
       });
     }

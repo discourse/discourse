@@ -186,7 +186,7 @@
 
       Em.run.schedule('afterRender', this, function() {
         onscreenCloaks.forEach(function (v) {
-          if(v && v.uncloak && (v._state || v.state) === 'inDOM') {
+          if(v && v.uncloak) {
             v.uncloak();
           }
         });
@@ -298,6 +298,9 @@
       @method uncloak
     */
     uncloak: function() {
+      var state = this._state || this.state;
+      if (state !== 'inDOM' && state !== 'preRender') { return; }
+
       if (!this._containedView) {
         var model = this.get('content'),
             controller = null,
