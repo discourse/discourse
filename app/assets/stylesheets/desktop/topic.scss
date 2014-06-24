@@ -193,6 +193,10 @@ a:hover.reply-new {
   }
 }
 
+#suggested-topics .topics {
+  padding-bottom: 15px;
+}
+
 .heatmap-high {color: scale-color($danger, $lightness: 20%) !important;}
 .heatmap-med {color: $danger !important;}
 .heatmap-low {color: scale-color($danger, $lightness: -20%) !important;}
