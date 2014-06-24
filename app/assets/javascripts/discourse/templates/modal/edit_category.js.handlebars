@@ -3,7 +3,7 @@
     <li {{bind-attr class="generalSelected:active"}}>
       <a href="#" {{action selectGeneral}}>{{i18n category.general}}</a>
     </li>
-    {{#unless isUncategorized}}
+    {{#unless isUncategorizedCategory}}
       <li {{bind-attr class="securitySelected:active"}}>
         <a href="#" {{action selectSecurity}}>{{i18n category.security}}</a>
       </li>
@@ -69,7 +69,7 @@
         </section>
       </form>
     </div>
-    {{#unless isUncategorized}}
+    {{#unless isUncategorizedCategory}}
       <div {{bind-attr class=":modal-tab :options-tab securitySelected::invisible"}}>
         <section class='field'>
           <ul class='permission-list'>

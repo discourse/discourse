@@ -102,7 +102,7 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
 
   buttonTitle: function() {
     if (this.get('saving')) return I18n.t("saving");
-    if (this.get('isUncategorized')) return I18n.t("save");
+    if (this.get('isUncategorizedCategory')) return I18n.t("save");
     return (this.get('id') ? I18n.t("category.save") : I18n.t("category.create"));
   }.property('saving', 'id'),
 
@@ -111,8 +111,8 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   }.property(),
 
   showDescription: function() {
-    return !this.get('isUncategorized') && this.get('id');
-  }.property('isUncategorized', 'id'),
+    return !this.get('isUncategorizedCategory') && this.get('id');
+  }.property('isUncategorizedCategory', 'id'),
 
   showPositionInput: Discourse.computed.setting('fixed_category_positions'),
 

@@ -79,7 +79,7 @@ Discourse.ApplicationRoute = Em.Route.extend({
     editCategory: function(category) {
       var router = this;
 
-      if (category.get('isUncategorized')) {
+      if (category.get('isUncategorizedCategory')) {
         Discourse.Route.showModal(router, 'editCategory', category);
         router.controllerFor('editCategory').set('selectedTab', 'general');
       } else {
