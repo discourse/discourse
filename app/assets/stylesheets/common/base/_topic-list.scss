@@ -72,7 +72,7 @@
     font-size: 13px;
     margin-top: 8px;
     color: scale-color($primary, $lightness: 50%);
-    word-break: break-word;
+    word-wrap: break-word;
     line-height: 1.4;
   }
   .topic-statuses:empty {
