@@ -20,8 +20,16 @@
  }
 }
 
-.cooked .highlight{
+.cooked .highlight {
   background-color: scale-color($highlight, $lightness: 40%);
   padding: 2px;
   margin: -2px;
+}
+
+.contents .cooked a {
+  word-wrap: break-word;
+}
+
+.contents .cooked {
+  word-wrap: break-word;
 }
