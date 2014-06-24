@@ -1,12 +1,16 @@
 # How Do I Install Discourse?
 
-Simple 30 minute basic install:  
+Simple 30 minute basic install:
 [**Beginner Docker install guide for Digital Ocean**][do]
 
-Powerful, flexible, large or multiple server install:  
+Powerful, flexible, large or multiple server install:
 [**Advanced Docker install guide**][docker]
 
 The only officially supported installs of Discourse are the [Docker](https://www.docker.io/) based beginner and advanced installs. We regret that we cannot support any other methods of installation. (Alternately, you can try the [unofficial Heroku install guide][heroku], the [unofficial Ubuntu install guide][ubuntu], the [BitNami Discourse Virtual Machine package][bitnami] or [Cloud66][cloud66].)
+
+### Why do you only officially support Docker?
+
+Hosting Rails applications is complicated. Even if you already have Postgres, Redis and Ruby installed on your server, you still need to worry about running and monitoring your Sidekiq and Rails processes. Additionally, our Docker install comes bundled with a web-based GUI that makes upgrading to new versions of Discourse as easy as clicking a button.
 
 ### Hardware Requirements
 
