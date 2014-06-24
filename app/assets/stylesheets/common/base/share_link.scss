@@ -32,4 +32,20 @@
       color: $primary;
     }
   }
+
+  h3 {
+    margin: 5px 0;
+    float: left;
+  }
+
+  .date {
+    float: right;
+    margin: 5px;
+    color: scale-color($primary, $lightness: 50%);
+  }
+
+  input[type=text] {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
 }
