@@ -169,9 +169,8 @@ a.star {
     word-wrap: break-word;
   }
 
-  border-radius: 5px;
-  margin: 30px 10px 20px 10px;
-  border: 1px solid scale-color-diff();
+  margin: 30px 10px 10px 10px;
+  background: scale-color(scale-color-diff(), $lightness: 40%);
 
   h3 {
     margin-bottom: 4px;
@@ -251,7 +250,7 @@ a.star {
   }
 
   .information {
-    border-top: 1px solid scale-color-diff();
+    border-top: 2px solid scale-color-diff();
   }
 
   .domain {
