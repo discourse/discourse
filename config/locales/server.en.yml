@@ -1302,9 +1302,13 @@ en:
       text_body_template: |
         This is an automated message.
 
-        Parsing an incoming email failed. Please review the following Error:
+        Parsing an incoming email from `%{from}` failed. Please review the following Error:
 
-        `%{error}`
+        ---
+
+        %{error}
+
+        ---
 
         The original message follows.
 
@@ -1313,11 +1317,39 @@ en:
         %{source}
 
     email_reject_trust_level:
-      subject_template: "Message rejected"
+      subject_template: "Message rejected: Insufficient Trust Level"
       text_body_template: |
         The message you've send to %{to} was rejected by the system.
 
         You do not have the required trust to post new topics to this email address.
+
+    email_reject_no_account:
+      subject_template: "Message rejected: No Account"
+      text_body_template: |
+        The message you've send to %{to} was rejected by the system.
+
+        You do not have an account on the forum with this email address.
+
+    email_reject_empty:
+      subject_template: "Message rejected: No Content"
+      text_body_template: |
+        The message you've send to %{to} was rejected by the system.
+
+        There was no recognized content in the email.
+
+    email_reject_parsing:
+      subject_template: "Message rejected: Unparsable"
+      text_body_template: |
+        The message you've send to %{to} was rejected by the system.
+
+        The encoding was unknown or not supported. Try sending in UTF-8 plain text.
+
+    email_reject_post_error:
+      subject_template: "Message rejected: Posting error"
+      text_body_template: |
+        The message you've send to %{to} was rejected by the system.
+
+        The Markdown could not be processed.
 
     too_many_spam_flags:
       subject_template: "New account blocked"
