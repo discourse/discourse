@@ -35,6 +35,8 @@ module Jobs
             message_template = :email_reject_empty
           when Email::Receiver::EmailUnparsableError
             message_template = :email_reject_parsing
+          when Email::Receiver::EmailLogNotFound
+            message_template = :email_reject_reply_key
           when ActiveRecord::Rollback
             message_template = :email_reject_post_error
           else

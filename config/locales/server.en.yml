@@ -1351,6 +1351,13 @@ en:
 
         The Markdown could not be processed.
 
+    email_reject_reply_key:
+      subject_template: "Message rejected: Bad Reply Key"
+      text_body_template: |
+        The message you've send to %{to} was rejected by the system.
+
+        The provided reply key is invalid.
+
     too_many_spam_flags:
       subject_template: "New account blocked"
       text_body_template: |
