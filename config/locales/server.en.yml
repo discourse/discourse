@@ -1527,10 +1527,10 @@ en:
 
   page_not_found:
     title: "The page you requested doesn't exist or is private."
-    popular_topics: "Popular topics"
-    recent_topics: "Recent topics"
-    see_more: "See More"
-    search_title: "Search for this topic"
+    popular_topics: "Popular"
+    recent_topics: "Recent"
+    see_more: "More"
+    search_title: "Search this site"
     search_google: "Search Google"
 
   login_required:
