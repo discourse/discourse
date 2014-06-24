@@ -8,7 +8,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
+var ComposerView = Discourse.View.extend(Ember.Evented, {
   templateName: 'composer',
   elementId: 'reply-control',
   classNameBindings: ['model.creatingPrivateMessage:private-message',
@@ -176,7 +176,7 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
     if ($wmdInput.length === 0 || $wmdInput.data('init') === true) return;
 
     $LAB.script(assetPath('defer/html-sanitizer-bundle'));
-    Discourse.ComposerView.trigger("initWmdEditor");
+    ComposerView.trigger("initWmdEditor");
 
     var template = this.container.lookupFactory('view:user-selector').templateFunction();
     $wmdInput.data('init', true);
@@ -513,4 +513,6 @@ Discourse.ComposerView = Discourse.View.extend(Ember.Evented, {
   }
 });
 
-RSVP.EventTarget.mixin(Discourse.ComposerView);
+RSVP.EventTarget.mixin(ComposerView);
+
+export default ComposerView;

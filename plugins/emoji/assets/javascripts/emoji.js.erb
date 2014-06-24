@@ -96,8 +96,10 @@
     }
   });
 
-  if (Discourse && Discourse.ComposerView) {
-    Discourse.ComposerView.on("initWmdEditor", function(event){
+  // TODO: Make this a proper ES6 import
+  var ComposerView = (Discourse && Discourse.ComposerView) || (typeof require !== "undefined" && require('discourse/views/composer').default);
+  if (ComposerView) {
+    ComposerView.on("initWmdEditor", function(event){
 
       var baseUrl = Discourse.getURL("/");
 

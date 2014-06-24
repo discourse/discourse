@@ -93,7 +93,7 @@ Discourse.computed = {
   /**
     Returns whether properties end with a string
 
-    @method i18n
+    @method endWith
     @params {String} properties* to check
     @params {String} substring the substring
     @return {Function} computedProperty function

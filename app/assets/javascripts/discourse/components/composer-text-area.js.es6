@@ -1,6 +1,8 @@
 export default Ember.TextArea.extend({
+  elementId: 'wmd-input',
+
   placeholder: function() {
-    return I18n.t(this.get('placeholderKey'));
+    return I18n.t('composer.reply_placeholder');
   }.property('placeholderKey'),
 
   _signalParentInsert: function() {
