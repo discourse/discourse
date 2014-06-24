@@ -186,12 +186,12 @@
 
       Em.run.schedule('afterRender', this, function() {
         onscreenCloaks.forEach(function (v) {
-          if(v && v.uncloak) {
+          if(v && v.uncloak && (v._state || v.state) === 'inDOM') {
             v.uncloak();
           }
         });
         toCloak.forEach(function (v) { v.cloak(); });
-        if(self._nextUncloak){Em.run.cancel(self._nextUncloak)}
+        if (self._nextUncloak) { Em.run.cancel(self._nextUncloak); }
         self._nextUncloak = Em.run.later(self, self.uncloakQueue,50);
       });
 
@@ -369,15 +369,15 @@
       }
     },
 
-    willDestroyElement: function(){
+    _removeContainedView: function(){
       if(this._containedView){
         this._containedView.remove();
         this._containedView = null;
       }
       this._super();
-    },
+    }.on('willDestroyElement'),
 
-    didInsertElement: function(){
+    _setHeights: function(){
       if (!this._containedView) {
         // setting default height
         // but do not touch if height already defined
@@ -390,7 +390,7 @@
           this.$().css('height', defaultHeight);
         }
       }
-     },
+     }.on('didInsertElement'),
 
     /**
       Render the cloaked view if applicable.
