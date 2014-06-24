@@ -1387,6 +1387,7 @@ en:
         clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
 
         flagged_by: "Flagged by"
+        resolved_by: "Resolved by"
         system: "System"
         error: "Something went wrong"
         view_message: "Reply"

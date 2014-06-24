@@ -57,6 +57,7 @@ module FlagQuery
       end
       post.post_actions << action
       users << pa.user_id
+      users << pa.deleted_by_id if pa.deleted_by_id
     end
 
     # TODO add serializer so we can skip this

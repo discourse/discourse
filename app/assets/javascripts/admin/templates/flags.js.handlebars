@@ -18,6 +18,7 @@
             <th class='user'></th>
             <th class='excerpt'></th>
             <th class='flaggers'>{{i18n admin.flags.flagged_by}}</th>
+            <th class='flaggers'>{{#if adminOldFlagsView}}{{i18n admin.flags.resolved_by}}{{/if}}</th>
             <th class='last-flagged'></th>
             <th class='action'></th>
           </tr>
@@ -62,6 +63,29 @@
               </table>
             </td>
 
+            <td class='flaggers result'>
+              <table>
+                <tbody>
+                  {{#each flaggedPost.flaggers}}
+                  <tr>
+                    {{#if deletedBy}}
+                    <td>
+                      {{#link-to 'adminUser' this.deletedBy}}{{avatar this.deletedBy imageSize="small"}} {{/link-to}}
+                    </td>
+                    <td>
+                      {{#if this.tookAction}}
+                        <i class='fa fa-gavel'></i>
+                      {{/if}}
+                    </td>
+                    <td>
+                      {{date this.deletedAt}}
+                    </td>
+                    {{/if}}
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </td>
           </tr>
 
             {{#if flaggedPost.topicFlagged}}

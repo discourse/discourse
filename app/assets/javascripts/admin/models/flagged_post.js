@@ -23,8 +23,17 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     r = [];
     _.each(this.post_actions, function(action) {
       var user = _this.userLookup[action.user_id];
+      var deletedBy = null;
+      if(action.deleted_by_id){
+        deletedBy = _this.userLookup[action.deleted_by_id];
+      }
+
       var flagType = I18n.t('admin.flags.summary.action_type_' + action.post_action_type_id, {count: 1});
-      r.push({user: user, flagType: flagType, flaggedAt: action.created_at});
+
+      r.push({
+        user: user, flagType: flagType, flaggedAt: action.created_at, deletedBy: deletedBy,
+        tookAction: action.staff_took_action, deletedAt: action.deleted_at
+      });
     });
     return r;
   }.property(),
