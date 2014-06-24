@@ -40,7 +40,7 @@ module Jobs
           when ActiveRecord::Rollback
             message_template = :email_reject_post_error
           else
-            nil
+            message_template = nil
         end
 
         if message_template
@@ -51,6 +51,7 @@ module Jobs
           Rails.logger.error e
 
           # If not known type, inform admins about the error
+          # (Add to above case with a good error message!)
           data = { limit_once_per: false, message_params: { from: message.from, source: message.body, error: "#{e.message}\n\n#{e.backtrace.join("\n")}" }}
           GroupMessage.create(Group[:admins].name, :email_error_notification, data)
         end

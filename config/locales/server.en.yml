@@ -1351,6 +1351,8 @@ en:
 
         The Markdown could not be processed.
 
+        %{error}
+
     email_reject_reply_key:
       subject_template: "Message rejected: Bad Reply Key"
       text_body_template: |
