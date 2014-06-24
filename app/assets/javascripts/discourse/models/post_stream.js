@@ -662,6 +662,7 @@ Discourse.PostStream = Em.Object.extend({
         posts = this.get('posts');
 
     posts.clear();
+    this.set('gaps', null);
     if (postStreamData) {
       // Load posts if present
       postStreamData.posts.forEach(function(p) {

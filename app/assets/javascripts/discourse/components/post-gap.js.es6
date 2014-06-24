@@ -9,8 +9,7 @@
 export default Ember.Component.extend({
   classNameBindings: [':gap', 'gap::hidden'],
 
-  init: function() {
-    this._super();
+  _setup: function() {
     this.set('loading', false);
 
     var before = this.get('before') === 'true',
@@ -19,7 +18,7 @@ export default Ember.Component.extend({
     if (gaps) {
       this.set('gap', gaps[this.get('post.id')]);
     }
-  },
+  }.on('init'),
 
   render: function(buffer) {
     if (this.get('loading')) {
