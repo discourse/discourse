@@ -283,6 +283,7 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rinku (1.7.3)
+    rmmseg-cpp (0.2.9)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -462,6 +463,7 @@ DEPENDENCIES
   redis
   rest-client
   rinku
+  rmmseg-cpp
   rspec-given
   rspec-rails
   ruby-readability

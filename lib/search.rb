@@ -19,25 +19,67 @@ class Search
   end
 
   def self.long_locale
-    case I18n.locale         # Currently-present in /conf/locales/* only, sorry :-( Add as needed
-      when :da then 'danish'
-      when :de then 'german'
-      when :en then 'english'
-      when :es then 'spanish'
-      when :fr then 'french'
-      when :it then 'italian'
-      when :ja then 'japanese'
-      when :nl then 'dutch'
-      when :pt then 'portuguese'
-      when :sv then 'swedish'
-      when :ru then 'russian'
+    # if adding a language see:
+    # /usr/share/postgresql/9.3/tsearch_data for possible options
+    # Do not add languages that are missing without amending the
+    # base docker config
+    #
+    case SiteSetting.default_locale.to_sym
+      when :da     then 'danish'
+      when :de     then 'german'
+      when :en     then 'english'
+      when :es     then 'spanish'
+      when :fr     then 'french'
+      when :it     then 'italian'
+      when :nl     then 'dutch'
+      when :nb_NO  then 'norwegian'
+      when :pt     then 'portuguese'
+      when :pt_BR  then 'portuguese'
+      when :sv     then 'swedish'
+      when :ru     then 'russian'
       else 'simple' # use the 'simple' stemmer for other languages
     end
   end
 
+  def self.rebuild_problem_posts(limit = 10000)
+    posts = Post.joins(:topic)
+            .where('posts.id NOT IN (
+               SELECT post_id from post_search_data
+                WHERE locale = ?
+              )', SiteSetting.default_locale).limit(10000)
+
+    posts.each do |post|
+      post.cooked += " "
+      SearchObserver.index(post)
+    end
+
+    nil
+  end
+
+  def self.prepare_data(search_data)
+    data = search_data.squish
+    # TODO rmmseg is designed for chinese, we need something else for Korean / Japanese
+    if ['zh_TW', 'zh_CN', 'ja', 'ko'].include?(SiteSetting.default_locale)
+      unless defined? RMMSeg
+        require 'rmmseg'
+        RMMSeg::Dictionary.load_dictionaries
+      end
+
+      algo = RMMSeg::Algorithm.new(search_data)
+
+      data = ""
+      while token = algo.next_token
+        data << token.text << " "
+      end
+    end
+
+    data.force_encoding("UTF-8")
+    data
+  end
+
   def initialize(term, opts=nil)
     if term.present?
-      @term = term.to_s
+      @term = Search.prepare_data(term.to_s)
       @original_term = PG::Connection.escape_string(@term)
     end
 

@@ -31,6 +31,8 @@ module Jobs
       unless UserAvatar.where("last_gravatar_download_attempt IS NULL").limit(1).first
         Post.rebake_old(250)
       end
+
+      Search.rebuild_problem_posts
     end
 
   end

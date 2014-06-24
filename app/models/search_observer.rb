@@ -8,6 +8,8 @@ class SearchObserver < ActiveRecord::Observer
   end
 
   def self.update_index(table, id, search_data)
+    search_data = Search.prepare_data(search_data)
+
     table_name = "#{table}_search_data"
     foreign_key = "#{table}_id"
 
@@ -16,9 +18,18 @@ class SearchObserver < ActiveRecord::Observer
 
     # Would be nice to use AR here but not sure how to execut Postgres functions
     # when inserting data like this.
-    rows = Post.exec_sql_row_count("UPDATE #{table_name} SET search_data = TO_TSVECTOR('#{stemmer}', ?) WHERE #{foreign_key} = ?", search_data, id)
+    rows = Post.exec_sql_row_count("UPDATE #{table_name}
+                                   SET
+                                      raw_data = :search_data,
+                                      locale = :locale,
+                                      search_data = TO_TSVECTOR('#{stemmer}', :search_data)
+                                   WHERE #{foreign_key} = :id",
+                                    search_data: search_data, id: id, locale: SiteSetting.default_locale)
     if rows == 0
-      Post.exec_sql("INSERT INTO #{table_name} (#{foreign_key}, search_data) VALUES (?, TO_TSVECTOR('#{stemmer}', ?))", id, search_data)
+      Post.exec_sql("INSERT INTO #{table_name}
+                    (#{foreign_key}, search_data, locale, raw_data)
+                    VALUES (:id, TO_TSVECTOR('#{stemmer}', :search_data), :locale, :search_data)",
+                                    search_data: search_data, id: id, locale: SiteSetting.default_locale)
     end
   rescue
     # don't allow concurrency to mess up saving a post
@@ -39,7 +50,7 @@ class SearchObserver < ActiveRecord::Observer
     update_index('category', category_id, name)
   end
 
-  def after_save(obj)
+  def self.index(obj)
     if obj.class == Post && obj.cooked_changed?
       if obj.topic
         category_name = obj.topic.category.name if obj.topic.category
@@ -65,6 +76,10 @@ class SearchObserver < ActiveRecord::Observer
     if obj.class == Category && obj.name_changed?
       SearchObserver.update_categories_index(obj.id, obj.name)
     end
+  end
+
+  def after_save(object)
+    SearchObserver.index(object)
   end
 
 
