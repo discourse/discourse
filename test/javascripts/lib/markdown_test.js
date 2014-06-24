@@ -365,6 +365,8 @@ test("sanitize", function() {
   equal(sanitize("<textarea>hullo</textarea>"), "hullo");
   equal(sanitize("<button>press me!</button>"), "press me!");
   equal(sanitize("<canvas>draw me!</canvas>"), "draw me!");
+  equal(sanitize("<progress>hello"), "hello");
+  equal(sanitize("<mark>highlight</mark>"), "highlight");
 
   cooked("[the answer](javascript:alert(42))", "<p><a>the answer</a></p>", "it prevents XSS");
 
