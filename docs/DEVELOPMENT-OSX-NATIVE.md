@@ -201,6 +201,7 @@ If you've stuck to all the defaults above, the default `discourse.conf` and `red
 
 ### Prepare your database
 
+    rake db:setup
     rake db:migrate
     rake db:test:prepare
     rake db:seed_fu
