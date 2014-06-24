@@ -18,6 +18,8 @@ describe PostAction do
     it "notify moderators integration test" do
       post = create_post
       mod = moderator
+      Group.refresh_automatic_groups!
+
       action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message");
 
       posts = Post.joins(:topic)
@@ -29,13 +31,15 @@ describe PostAction do
       action.related_post_id.should == posts[0].id.to_i
       posts[0].subtype.should == TopicSubtype.notify_moderators
 
-      # Moderators should be invited to the private topic, otherwise they're not permitted to see it
-      topic_user_ids = posts[0].topic.topic_users.map {|x| x.user_id}
-      topic_user_ids.should include(codinghorror.id)
-      topic_user_ids.should_not include(mod.id)
+      topic = posts[0].topic
 
-      # invite the moderator
-      posts[0].topic.allowed_users << mod
+      # Moderators should be invited to the private topic, otherwise they're not permitted to see it
+      topic_user_ids = topic.topic_users(true).map {|x| x.user_id}
+      topic_user_ids.should include(codinghorror.id)
+      topic_user_ids.should include(mod.id)
+
+      # Notification level should be "Watching" for everyone
+      topic.topic_users(true).map(&:notification_level).uniq.should == [TopicUser.notification_levels[:watching]]
 
       # reply to PM should clear flag
       p = PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags")

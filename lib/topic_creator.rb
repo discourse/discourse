@@ -30,8 +30,11 @@ class TopicCreator
       @topic.notifier.watch_topic!(@topic.user_id)
     end
 
-    @topic.topic_allowed_users.pluck(:user_id).reject{|id| id == @topic.user_id}.each do |id|
-      @topic.notifier.watch_topic!(id, nil)
+    user_ids = @topic.topic_allowed_users(true).pluck(:user_id)
+    user_ids += @topic.topic_allowed_groups(true).map { |t| t.group.users.pluck(:id) }.flatten
+
+    user_ids.uniq.reject{ |id| id == @topic.user_id }.each do |user_id|
+      @topic.notifier.watch_topic!(user_id, nil) unless user_id == -1
     end
 
     CategoryUser.auto_watch_new_topic(@topic)
