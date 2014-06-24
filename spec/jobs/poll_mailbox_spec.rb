@@ -75,7 +75,7 @@ describe Jobs::PollMailbox do
         client_message = mock
         sender = mock
 
-        RejectionMailer.expects(:send_trust_level).returns(client_message)
+        RejectionMailer.expects(:send_rejection).returns(client_message)
         Email::Sender.expects(:new).with(client_message, :email_reject_trust_level).returns(sender)
         sender.expects(:send)
 
@@ -90,6 +90,8 @@ describe Jobs::PollMailbox do
         Email::Receiver::EmptyEmailError,
         Email::Receiver::UserNotFoundError,
         Email::Receiver::EmailLogNotFound,
+        ActiveRecord::Rollback,
+        TypeError
       ].each do |exception|
 
         it "deletes email on #{exception}" do
@@ -103,10 +105,16 @@ describe Jobs::PollMailbox do
 
       it "informs admins on any other error" do
         error = TypeError.new
-        data = { limit_once_per: false, message_params: { source: email, error: error }}
-
+        error.set_backtrace(["Hi", "Bye"])
         receiver.expects(:process).raises(error)
         email.expects(:delete)
+
+        Mail::Message.expects(:new).with(email_string).returns(email)
+        email.expects(:from).twice
+        email.expects(:body).twice
+
+        data = { limit_once_per: false, message_params: { from: email.from, source: email.body, error: "#{error.message}\n\n#{error.backtrace.join("\n")}" }}
+
         GroupMessage.expects(:create).with("admins", :email_error_notification, data)
 
         poller.handle_mail(email)
