@@ -37,11 +37,10 @@ module Jobs
             # email is valid, now check for groups
             if !csv_info[1].nil?
               # group(s) present
-              group_ids = get_group_ids(csv_info[1], $INPUT_LINE_NUMBER)
-              Invite.invite_by_email(csv_info[0], current_user, topic=nil, group_ids)
+              send_invite_with_groups(csv_info[0], csv_info[1], current_user, $INPUT_LINE_NUMBER)
             else
               # no group present
-              Invite.invite_by_email(csv_info[0], current_user, topic=nil)
+              send_invite_without_group(csv_info[0], current_user)
             end
             @sent += 1
           else
@@ -63,7 +62,7 @@ module Jobs
       /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/.match(email)
     end
 
-    def get_group_ids(group_names, csv_line_number)
+    def send_invite_with_groups(email, group_names, current_user, csv_line_number)
       group_ids = []
       group_names = group_names.split(';')
       group_names.each { |group_name|
@@ -76,7 +75,11 @@ module Jobs
           log "Invalid group '#{group_name}' at line number '#{csv_line_number}'"
         end
       }
-      return group_ids
+      Invite.invite_by_email(email, current_user, topic=nil, group_ids)
+    end
+
+    def send_invite_without_group(email, current_user)
+      Invite.invite_by_email(email, current_user, topic=nil)
     end
 
     def log(message)
