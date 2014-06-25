@@ -22,7 +22,7 @@
             {{/if}}
           {{/if}}
         </li>
-        {{view Discourse.SearchResultsTypeView typeBinding="resultType.type" contentBinding="resultType.results"}}
+        {{view 'search-results-type' type=resultType.type content=resultType.results}}
       </ul>
     {{/each}}
   {{else}}

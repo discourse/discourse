@@ -1,12 +1,4 @@
-/**
-  This view handles the rendering of search results
-
-  @class SearchResultsTypeView
-  @extends Ember.CollectionView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.SearchResultsTypeView = Ember.CollectionView.extend({
+export default Ember.CollectionView.extend({
   tagName: 'ul',
   itemViewClass: Discourse.GroupedView.extend({
     tagName: 'li',
@@ -15,5 +7,3 @@ Discourse.SearchResultsTypeView = Ember.CollectionView.extend({
     selected: Discourse.computed.propertyEqual('content.index', 'controller.selectedIndex')
   })
 });
-
-

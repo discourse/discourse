@@ -1,12 +1,4 @@
-/**
-  This view handles search facilities of Discourse
-
-  @class SearchView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.SearchView = Discourse.View.extend({
+export default Discourse.View.extend({
   tagName: 'div',
   classNames: ['d-dropdown'],
   elementId: 'search-dropdown',
@@ -34,7 +26,4 @@ Discourse.SearchView = Discourse.View.extend({
       }
     });
   }
-
 });
-
-
