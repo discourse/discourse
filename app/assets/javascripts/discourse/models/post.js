@@ -364,18 +364,25 @@ Discourse.Post = Discourse.Model.extend({
 
   // Load replies to this post
   loadReplies: function() {
+    if(this.get('loadingReplies')){
+      return;
+    }
+
     this.set('loadingReplies', true);
     this.set('replies', []);
 
-    var parent = this;
-    return Discourse.ajax("/posts/" + (this.get('id')) + "/replies").then(function(loaded) {
-      var replies = parent.get('replies');
-      _.each(loaded,function(reply) {
-        var post = Discourse.Post.create(reply);
-        post.set('topic', parent.get('topic'));
-        replies.pushObject(post);
-      });
-      parent.set('loadingReplies', false);
+    var self = this;
+    return Discourse.ajax("/posts/" + (this.get('id')) + "/replies")
+      .then(function(loaded) {
+        var replies = self.get('replies');
+        _.each(loaded,function(reply) {
+          var post = Discourse.Post.create(reply);
+          post.set('topic', self.get('topic'));
+          replies.pushObject(post);
+        });
+      })
+      ['finally'](function(){
+        self.set('loadingReplies', false);
     });
   },
 
