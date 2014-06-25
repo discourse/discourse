@@ -74,6 +74,8 @@
 
             {{groups-list groups=custom_groups}}
 
+            {{plugin-outlet "user-profile-primary"}}
+
             {{#if isSuspended}}
               <div class='suspended'>
                 <i class='fa fa-ban'></i>
@@ -109,6 +111,7 @@
               {{/if}}
               <dt>{{i18n user.trust_level}}</dt><dd>{{trustLevel.name}}</dd>
             </dl>
+            {{plugin-outlet "user-profile-secondary"}}
           </div>
 
           <div style='clear: both'></div>

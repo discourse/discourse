@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group pref-username">
       <label class="control-label">{{i18n user.username.title}}</label>
       <div class="controls">
         <span class='static'>{{username}}</span>
@@ -22,7 +22,7 @@
     </div>
 
     {{#if canEditName}}
-      <div class="control-group">
+      <div class="control-group pref-name">
         <label class="control-label">{{i18n user.name.title}}</label>
         <div class="controls">
           {{#if can_edit_name}}
@@ -38,7 +38,7 @@
     {{/if}}
 
     {{#if canSelectTitle}}
-      <div class="control-group">
+      <div class="control-group pref-title">
         <label class="control-label">{{i18n user.title.title}}</label>
         <div class="controls">
           <span class="static">{{title}}</span>
@@ -47,7 +47,7 @@
       </div>
     {{/if}}
 
-    <div class="control-group">
+    <div class="control-group pref-email">
       <label class="control-label">{{i18n user.email.title}}</label>
       <div class="controls">
         <span class='static'>{{email}}</span>
@@ -61,7 +61,7 @@
     </div>
 
     {{#unless Discourse.SiteSettings.enable_sso }}
-    <div class="control-group">
+    <div class="control-group pref-password">
       <label class="control-label">{{i18n user.password.title}}</label>
       <div class="controls">
         <a href="#" {{action changePassword}} class='btn'><i class="fa fa-envelope"></i>
@@ -76,7 +76,7 @@
     </div>
     {{/unless}}
 
-    <div class="control-group">
+    <div class="control-group pref-avatar">
       <label class="control-label">{{i18n user.avatar.title}}</label>
       <div class="controls">
         {{bound-avatar model "large"}}
@@ -89,7 +89,7 @@
     </div>
 
     {{#if Discourse.SiteSettings.allow_profile_backgrounds}}
-    <div class="control-group">
+    <div class="control-group pref-profile-bg">
       <label class="control-label">{{i18n user.change_profile_background.title}}</label>
       <div class="controls">
         <input type="file" id="profile-background-input" accept="image/*" style="display:none" />
@@ -109,7 +109,7 @@
     {{/if}}
 
     {{#if allowUserLocale}}
-      <div class="control-group">
+      <div class="control-group pref-locale">
         <label class="control-label">{{i18n user.locale.title}}</label>
         <div class="controls">
           {{combo-box valueAttribute="value" content=availableLocales value=locale none="user.locale.default"}}
@@ -120,28 +120,28 @@
       </div>
     {{/if}}
 
-    <div class="control-group">
+    <div class="control-group pref-bio">
       <label class="control-label">{{i18n user.bio}}</label>
       <div class="controls bio-composer">
         {{pagedown-editor value=bio_raw}}
       </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group pref-location">
       <label class="control-label">{{i18n user.location}}</label>
       <div class="controls">
         {{input type="text" value=location class="input-xxlarge"}}
       </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group pref-website">
       <label class="control-label">{{i18n user.website}}</label>
       <div class="controls">
         {{input type="text" value=website class="input-xxlarge"}}
       </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group pref-email-settings">
       <label class="control-label">{{i18n user.email_settings}}</label>
       {{preference-checkbox labelKey="user.email_digests.title" checked=email_digests}}
       {{#if email_digests}}
