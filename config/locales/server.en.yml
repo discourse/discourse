@@ -1077,7 +1077,7 @@ en:
 
       - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
 
-      - Is your domain's SPF record correct? [Test your SPF record][1] here.
+      - Is your domain's SPF record correct? [Test your SPF record][1] here. Note that you need to enter both SPF and TXT versions of this record for maximum compatibility.
 
       - Check to make sure the IPs of your mail server are [not on any email blacklists][4].
 
