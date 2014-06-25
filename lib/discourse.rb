@@ -201,8 +201,10 @@ module Discourse
     user ||= User.admins.real.order(:id).first
   end
 
+  SYSTEM_USER_ID = -1
+
   def self.system_user
-    User.find_by(id: -1)
+    User.find_by(id: SYSTEM_USER_ID)
   end
 
   def self.store
