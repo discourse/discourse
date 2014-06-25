@@ -20,8 +20,6 @@ task "uploads:backfill_shas" => :environment do
 end
 
 task "uploads:migrate_from_s3" => :environment do
-  return unless SiteSetting.enable_s3_uploads?
-
   require 'file_store/local_store'
   require 'file_helper'
 
