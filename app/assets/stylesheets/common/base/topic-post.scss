@@ -33,3 +33,9 @@
 .contents .cooked {
   word-wrap: break-word;
 }
+
+.post-action {
+  .undo-action, .act-action{
+    margin-left: 5px;
+  }
+}

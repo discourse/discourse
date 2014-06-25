@@ -24,7 +24,7 @@ export default Em.Component.extend({
 
         var renderActionIf = function(property, dataAttribute, text) {
           if (!c.get(property)) { return; }
-          buffer.push(" <a href='#' data-" + dataAttribute + "='" + c.get('id') + "'>" + text + "</a>.");
+          buffer.push(" <span class='action-link " + dataAttribute  +"-action'><a href='#' data-" + dataAttribute + "='" + c.get('id') + "'>" + text + "</a>.</span>");
         };
 
         // TODO multi line expansion for flags
