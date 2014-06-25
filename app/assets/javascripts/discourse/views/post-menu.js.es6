@@ -24,6 +24,7 @@ Button.prototype.render = function(buffer) {
   buffer.push("<button title=\"" + I18n.t(this.label) + "\"");
   if (this.opts.className) { buffer.push(" class=\"" + this.opts.className + "\""); }
   if (this.opts.shareUrl) { buffer.push(" data-share-url=\"" + this.opts.shareUrl + "\""); }
+  if (this.opts.postNumber) { debugger; buffer.push(" data-post-number=\"" + this.opts.postNumber + "\""); }
   buffer.push(" data-action=\"" + this.action + "\">");
   if (this.icon) { buffer.push("<i class=\"fa fa-" + this.icon + "\"></i>"); }
   if (this.opts.textLabel) { buffer.push(I18n.t(this.opts.textLabel)); }
@@ -220,7 +221,11 @@ export default Discourse.View.extend({
 
   // Share button
   buttonForShare: function(post) {
-    return new Button('share', 'post.controls.share', 'link', {shareUrl: post.get('shareUrl')});
+    var options = {
+      shareUrl: post.get('shareUrl'),
+      postNumber: post.get('post_number')
+    };
+    return new Button('share', 'post.controls.share', 'link', options);
   },
 
   // Reply button

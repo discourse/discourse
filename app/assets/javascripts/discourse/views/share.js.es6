@@ -41,6 +41,7 @@ export default Discourse.View.extend({
   didInsertElement: function() {
     var shareView = this,
         $html = $('html');
+
     $html.on('mousedown.outside-share-link', function(e) {
       // Use mousedown instead of click so this event is handled before routing occurs when a
       // link is clicked (which is a click event) while the share dialog is showing.
@@ -55,12 +56,13 @@ export default Discourse.View.extend({
       if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) { return true; }
 
       e.preventDefault();
+
       var $currentTarget = $(e.currentTarget),
           $currentTargetOffset = $currentTarget.offset(),
-          $shareLink = $('#share-link');
-      var url = $currentTarget.data('share-url');
-      var postNumber = $currentTarget.data('post-number');
-      var date = $currentTarget.children().data('time');
+          $shareLink = $('#share-link'),
+          url = $currentTarget.data('share-url'),
+          postNumber = $currentTarget.data('post-number'),
+          date = $currentTarget.children().data('time');
 
       // Relative urls
       if (url.indexOf("/") === 0) {
@@ -102,10 +104,9 @@ export default Discourse.View.extend({
   },
 
   willDestroyElement: function() {
-    var $html = $('html');
-    $html.off('click.discoure-share-link');
-    $html.off('mousedown.outside-share-link');
-    $html.off('keydown.share-view');
+    $('html').off('click.discoure-share-link')
+             .off('mousedown.outside-share-link')
+             .off('keydown.share-view');
   }
 
 });
