@@ -203,7 +203,7 @@ Discourse.URL = Em.Object.createWithMixins({
   navigatedToHome: function(oldPath, path) {
     var homepage = Discourse.Utilities.defaultHomepage();
 
-    if (path === "/" && (oldPath === "/" || oldPath === "/" + homepage)) {
+    if (window.history && window.history.pushState && path === "/" && (oldPath === "/" || oldPath === "/" + homepage)) {
       // refresh the list
       switch (homepage) {
         case "top" :       { this.controllerFor('discovery/top').send('refresh'); break; }
