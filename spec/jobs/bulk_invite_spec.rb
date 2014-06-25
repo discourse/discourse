@@ -17,12 +17,14 @@ describe Jobs::BulkInvite do
     end
 
     context '.read_csv_file' do
+      let(:user) { Fabricate(:user) }
       let(:bulk_invite) { Jobs::BulkInvite.new }
       let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/discourse.csv") }
-      let(:user) { Fabricate(:user) }
 
       it 'reads csv file' do
-        bulk_invite.read_csv_file(csv_file, user)
+        bulk_invite.current_user = user
+        bulk_invite.read_csv_file(csv_file)
+        Invite.where(email: 'robin@outlook.com').exists?.should be_true
       end
     end
 
@@ -33,7 +35,8 @@ describe Jobs::BulkInvite do
       let(:email) { "evil@trout.com" }
 
       it 'creates an invite to the group' do
-        bulk_invite.send_invite_with_groups(email, group.name, user, 1)
+        bulk_invite.current_user = user
+        bulk_invite.send_invite_with_groups(email, group.name, 1)
         invite = Invite.where(email: email).first
         invite.should be_present
         InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?.should be_true
@@ -46,7 +49,8 @@ describe Jobs::BulkInvite do
       let(:email) { "evil@trout.com" }
 
       it 'creates an invite' do
-        bulk_invite.send_invite_without_group(email, user)
+        bulk_invite.current_user = user
+        bulk_invite.send_invite_without_group(email)
         Invite.where(email: email).exists?.should be_true
       end
     end

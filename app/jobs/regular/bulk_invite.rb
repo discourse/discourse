@@ -5,6 +5,7 @@ module Jobs
 
   class BulkInvite < Jobs::Base
     sidekiq_options retry: false
+    attr_accessor :current_user
 
     def initialize
       @logs    = []
@@ -16,7 +17,7 @@ module Jobs
       filename     = args[:filename]
       identifier   = args[:identifier]
       chunks       = args[:chunks].to_i
-      current_user = User.find_by(id: args[:current_user_id])
+      @current_user = User.find_by(id: args[:current_user_id])
 
       raise Discourse::InvalidParameters.new(:filename)   if filename.blank?
       raise Discourse::InvalidParameters.new(:identifier) if identifier.blank?
@@ -26,10 +27,10 @@ module Jobs
       csv_path = get_csv_path(filename, identifier, chunks)
 
       # read csv file, and send out invitations
-      read_csv_file(csv_path, current_user)
+      read_csv_file(csv_path)
 
       # send notification to user regarding progress
-      notify_user(current_user)
+      notify_user
 
       # since emails have already been sent out, delete the uploaded csv file
       FileUtils.rm_rf(csv_path) rescue nil
@@ -46,17 +47,17 @@ module Jobs
       return csv_path
     end
 
-    def read_csv_file(csv_path, current_user)
+    def read_csv_file(csv_path)
       CSV.foreach(csv_path) do |csv_info|
         if !csv_info[0].nil?
           if validate_email(csv_info[0])
             # email is valid, now check for groups
             if !csv_info[1].nil?
               # group(s) present
-              send_invite_with_groups(csv_info[0], csv_info[1], current_user, $INPUT_LINE_NUMBER)
+              send_invite_with_groups(csv_info[0], csv_info[1], $INPUT_LINE_NUMBER)
             else
               # no group present
-              send_invite_without_group(csv_info[0], current_user)
+              send_invite_without_group(csv_info[0])
             end
             @sent += 1
           else
@@ -72,7 +73,7 @@ module Jobs
       /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/.match(email)
     end
 
-    def send_invite_with_groups(email, group_names, current_user, csv_line_number)
+    def send_invite_with_groups(email, group_names, csv_line_number)
       group_ids = []
       group_names = group_names.split(';')
       group_names.each { |group_name|
@@ -85,11 +86,11 @@ module Jobs
           log "Invalid group '#{group_name}' at line number '#{csv_line_number}'"
         end
       }
-      Invite.invite_by_email(email, current_user, topic=nil, group_ids)
+      Invite.invite_by_email(email, @current_user, topic=nil, group_ids)
     end
 
-    def send_invite_without_group(email, current_user)
-      Invite.invite_by_email(email, current_user, topic=nil)
+    def send_invite_without_group(email)
+      Invite.invite_by_email(email, @current_user, topic=nil)
     end
 
     def log(message)
@@ -101,12 +102,12 @@ module Jobs
       @logs << "[#{Time.now}] #{message}"
     end
 
-    def notify_user(current_user)
-      if current_user
+    def notify_user
+      if @current_user
         if (@sent > 0 && @failed == 0)
-          SystemMessage.create(current_user, :bulk_invite_succeeded, sent: @sent)
+          SystemMessage.create(@current_user, :bulk_invite_succeeded, sent: @sent)
         else
-          SystemMessage.create(current_user, :bulk_invite_failed, sent: @sent, failed: @failed, logs: @logs.join("\n"))
+          SystemMessage.create(@current_user, :bulk_invite_failed, sent: @sent, failed: @failed, logs: @logs.join("\n"))
         end
       end
     end
