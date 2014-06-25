@@ -18,8 +18,7 @@ describe Jobs::BulkInvite do
     end
 
     context 'read csv file' do
-      Jobs::BulkInvite.any_instance.stubs(:get_csv_path).with(filename: 'discourse.csv', identifier: '46-discoursecsv', chunks: '1')
-      Jobs::BulkInvite.new.execute(filename: 'discourse.csv', identifier: '46-discoursecsv', chunks: '1')
+
 
     end
 
