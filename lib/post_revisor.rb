@@ -25,7 +25,7 @@ class PostRevisor
     update_topic_excerpt
     post_process_post
     update_topic_word_counts
-    @post.advance_draft_sequence unless editor.id == Discourse::SYSTEM_USER_ID
+    @post.advance_draft_sequence
     PostAlerter.new.after_save_post(@post)
     publish_revision
 

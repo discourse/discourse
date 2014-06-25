@@ -2,6 +2,9 @@ class DraftSequence < ActiveRecord::Base
   def self.next!(user,key)
     user_id = user
     user_id = user.id unless user.class == Fixnum
+
+    return 0 if user_id == Discourse::SYSTEM_USER_ID
+
     h = { user_id: user_id, draft_key: key }
     c = DraftSequence.find_by(h)
     c ||= DraftSequence.new(h)
