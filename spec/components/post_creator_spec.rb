@@ -91,11 +91,13 @@ describe PostCreator do
         end
 
 
+        # 2 for topic, one to notify of new topic another for tracking state
         messages.map{|m| m.channel}.sort.should == [ "/new",
                                                      "/users/#{admin.username}",
                                                      "/users/#{admin.username}",
                                                      "/unread/#{admin.id}",
                                                      "/unread/#{admin.id}",
+                                                     "/topic/#{created_post.topic_id}",
                                                      "/topic/#{created_post.topic_id}"
                                                    ].sort
         admin_ids = [Group[:admins].id]
@@ -119,7 +121,7 @@ describe PostCreator do
         user_action = messages.find{|m| m.channel == "/users/#{p.user.username}"}
         user_action.should_not be_nil
 
-        messages.length.should == 3
+        messages.length.should == 4
       end
 
       it 'extracts links from the post' do
