@@ -335,5 +335,22 @@ describe Search do
 
   end
 
+  describe 'Chinese search' do
+    it 'splits English / Chinese' do
+      SiteSetting.default_locale = 'zh_CN'
+      data = Search.prepare_data('Discourse社区指南').split(' ')
+      data.should == ['Discourse', '社区','指南']
+    end
+
+    it 'finds chinese topic based on title' do
+      SiteSetting.default_locale = 'zh_TW'
+      topic = Fabricate(:topic, title: 'My Title Discourse社区指南')
+      Fabricate(:post, topic: topic)
+
+      Search.new('社区指南').execute[0][:results][0][:id].should == topic.id
+      Search.new('指南').execute[0][:results][0][:id].should == topic.id
+    end
+  end
+
 end
 
