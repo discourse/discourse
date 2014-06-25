@@ -8,12 +8,11 @@
   </ul>
 
   <div class="modal-body">
-    {{view 'edit-category-panel' tab="general" className="general-tab"}}
-    {{#unless isUncategorizedCategory}}
-      {{view 'edit-category-panel' tab="security" className="options-tab"}}
-      {{view 'edit-category-panel' tab="settings" className="options-tab"}}
-    {{/unless}}
+    {{#each tab in view.panels}}
+      {{view 'edit-category-panel' tab=tab}}
+    {{/each}}
   </div>
+
   <div class="modal-footer">
     <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
     {{#if can_delete}}
