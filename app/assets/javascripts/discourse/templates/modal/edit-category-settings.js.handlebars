@@ -1,0 +1,37 @@
+<section class='field'>
+  <div class="auto-close-fields">
+    <div>
+      <i class="fa fa-clock-o"></i>
+      {{i18n category.auto_close_label}}
+      {{text-field value=auto_close_hours}}
+      {{i18n category.auto_close_units}}
+    </div>
+  </div>
+</section>
+
+{{#if emailInEnabled}}
+  <section class='field'>
+    <div class="email-in-fields">
+      <div>
+        <i class="fa fa-envelope-o"></i>
+        {{i18n category.email_in}}
+        {{text-field value=email_in}}
+      </div>
+      <div>
+        <label class="checkbox-label">
+          {{input type="checkbox" checked=email_in_allow_strangers}}
+          {{i18n category.email_in_allow_strangers}}
+        </label>
+      </div>
+    </div>
+  </section>
+{{/if}}
+
+{{#if showPositionInput}}
+  <section class='field'>
+    <label>{{i18n category.position}}</label>
+    {{text-field value=position class="position-input"}}
+  </section>
+{{else}}
+  <p>{{i18n category.position_disabled}}</p>
+{{/if}}

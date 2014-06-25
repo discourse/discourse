@@ -1,0 +1,23 @@
+<div {{bind-attr class="loading:invisible"}}>
+  <ul class="nav nav-pills">
+    {{edit-category-tab selectedTab=selectedTab tab="general"}}
+    {{#unless isUncategorizedCategory}}
+      {{edit-category-tab selectedTab=selectedTab tab="security"}}
+      {{edit-category-tab selectedTab=selectedTab tab="settings"}}
+    {{/unless}}
+  </ul>
+
+  <div class="modal-body">
+    {{view 'edit-category-panel' tab="general" className="general-tab"}}
+    {{#unless isUncategorizedCategory}}
+      {{view 'edit-category-panel' tab="security" className="options-tab"}}
+      {{view 'edit-category-panel' tab="settings" className="options-tab"}}
+    {{/unless}}
+  </div>
+  <div class="modal-footer">
+    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
+    {{#if can_delete}}
+      <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
+    {{/if}}
+  </div>
+</div>
