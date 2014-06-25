@@ -22,13 +22,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:identifier) if identifier.blank?
       raise Discourse::InvalidParameters.new(:chunks)     if chunks <= 0
 
-      csv_path = "#{Invite.base_directory}/#{filename}"
-      tmp_csv_path = "#{csv_path}.tmp"
-      # path to tmp directory
-      tmp_directory = File.dirname(Invite.chunk_path(identifier, filename, 0))
-
-      # merge all chunks
-      HandleChunkUpload.merge_chunks(chunks, upload_path: csv_path, tmp_upload_path: tmp_csv_path, model: Invite, identifier: identifier, filename: filename, tmp_directory: tmp_directory)
+      csv_path = get_csv_path(filename, identifier, chunks)
 
       # read csv file, and send out invitations
       CSV.foreach(csv_path) do |csv_info|
@@ -56,6 +50,17 @@ module Jobs
 
       # since emails have already been sent out, delete the uploaded csv file
       FileUtils.rm_rf(csv_path) rescue nil
+    end
+
+    def get_csv_path(filename, identifier, chunks)
+      csv_path = "#{Invite.base_directory}/#{filename}"
+      tmp_csv_path = "#{csv_path}.tmp"
+      # path to tmp directory
+      tmp_directory = File.dirname(Invite.chunk_path(identifier, filename, 0))
+      # merge all chunks
+      HandleChunkUpload.merge_chunks(chunks, upload_path: csv_path, tmp_upload_path: tmp_csv_path, model: Invite, identifier: identifier, filename: filename, tmp_directory: tmp_directory)
+
+      return csv_path
     end
 
     def validate_email(email)

@@ -1,5 +1,5 @@
+require 'spec_helper'
 require 'csv'
-require_dependency 'jobs/base'
 
 describe Jobs::BulkInvite do
 
@@ -18,10 +18,8 @@ describe Jobs::BulkInvite do
     end
 
     context 'read csv file' do
-      let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/discourse.csv") }
-      let(:file) do
-        ActionDispatch::Http::UploadedFile.new({ filename: 'discourse.csv', tempfile: csv_file })
-      end
+      Jobs::BulkInvite.any_instance.stubs(:get_csv_path).with(filename: 'discourse.csv', identifier: '46-discoursecsv', chunks: '1')
+      lambda { Jobs::InviteEmail.new.execute(filename: 'discourse.csv', identifier: '46-discoursecsv', chunks: '1') }
 
     end
 
