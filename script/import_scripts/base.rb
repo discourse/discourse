@@ -228,7 +228,7 @@ class ImportScripts::Base
         skipped += 1 # already imported this post
       else
         begin
-          new_post = create_post(params)
+          new_post = create_post(params, import_id)
           @posts[import_id] = new_post.id
           @topic_lookup[new_post.id] = {post_number: new_post.post_number, topic_id: new_post.topic_id}
 
@@ -249,9 +249,11 @@ class ImportScripts::Base
     return [created, skipped]
   end
 
-  def create_post(opts)
+  def create_post(opts, import_id)
     user = User.find(opts[:user_id])
     opts = opts.merge(skip_validations: true)
+    opts[:custom_fields] ||= {}
+    opts[:custom_fields]['import_id'] = import_id
 
     PostCreator.create(user, opts)
   end
