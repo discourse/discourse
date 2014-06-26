@@ -350,7 +350,6 @@ Discourse.User = Discourse.Model.extend({
     @returns {Promise} the result of the clear profile background request
   */
   clearProfileBackground: function() {
-    var user = this;
     return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/profile_background/clear", {
       type: 'PUT',
       data: { }
