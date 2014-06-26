@@ -57,6 +57,11 @@ class EmailToken < ActiveRecord::Base
         user.save!
       end
     end
+    
+    # Expire the token now that it's been used
+    email_token.expired = true
+    email_token.save!
+    
     user
   rescue ActiveRecord::RecordInvalid
     # If the user's email is already taken, just return nil (failure)
