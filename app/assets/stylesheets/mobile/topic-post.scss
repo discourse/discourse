@@ -207,6 +207,10 @@ a.star {
       font-size: 11px;
       line-height: 14px;
     }
+
+    /* limit to one line of avatars for now */
+    height:30px;
+    overflow:hidden;
   }
 
   .avatar {
@@ -240,7 +244,7 @@ a.star {
   .avatars,
   .links,
   .information {
-    padding: 7px 14px;
+    padding: 7px 10px;
     color: $primary;
     overflow: auto;
   }
@@ -255,9 +259,14 @@ a.star {
 
   .topic-links {
     .badge-notification {
-      margin-right: 5px;
+      margin-right: 1px 5px 2px 0;
     }
   }
+
+  td {
+    vertical-align: top;
+  }
+
   .buttons {
     float: right;
     .btn {
