@@ -603,7 +603,7 @@ class User < ActiveRecord::Base
       gravatar_downloaded = avatar.gravatar_upload_id
     end
 
-    if (!self.uploaded_avatar_id && gravatar_downloaded)
+    if !self.uploaded_avatar_id && gravatar_downloaded
       self.update_column(:uploaded_avatar_id, avatar.gravatar_upload_id)
     end
 

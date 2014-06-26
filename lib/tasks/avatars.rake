@@ -1,19 +1,23 @@
 desc "Refresh all avatars (download missing gravatars, refresh system)"
 task "avatars:refresh" => :environment do
   i = 0
+
   puts "Refreshing avatars"
   puts
+
   User.find_each do |user|
     user.refresh_avatar
     user.user_avatar.update_gravatar!
     putc "." if (i += 1) % 10 == 0
   end
+
   puts
 end
 
 desc "Clean up all avatar thumbnails (use this when the thumbnail algorithm changes)"
 task "avatars:clean" => :environment do
   i = 0
+
   puts "Cleaning up avatar thumbnails"
   puts
 
@@ -24,5 +28,6 @@ task "avatars:clean" => :environment do
     optimized_image.destroy!
     putc "." if (i += 1) % 10 == 0
   end
+
   puts
 end

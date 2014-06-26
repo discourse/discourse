@@ -48,9 +48,7 @@ class UserAvatarsController < ApplicationController
     return render_dot unless user = User.find_by(username_lower: username.downcase)
 
     size = params[:size].to_i
-    if size > 1000 || size < 1
-      return render_dot
-    end
+    return render_dot if size > 1000 || size < 1
 
     image = nil
     version = params[:version].to_i
