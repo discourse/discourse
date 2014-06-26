@@ -4,10 +4,10 @@ require_dependency 'post_action'
 describe PostSerializer do
 
   context "a post with lots of actions" do
-    let(:post){Fabricate(:post)}
-    let(:actor){Fabricate(:user)}
-    let(:admin){Fabricate(:admin)}
-    let(:acted_ids){
+    let(:post) { Fabricate(:post) }
+    let(:actor) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
+    let(:acted_ids) {
       PostActionType.public_types.values
         .concat([:notify_user,:spam]
         .map{|k| PostActionType.types[k]})
@@ -89,11 +89,9 @@ describe PostSerializer do
       let(:post) { Fabricate.build(:post, raw: raw, user: user) }
 
       it "includes the raw post for everyone" do
-        serialized_post_for_user(user)[:raw].should == raw
-        serialized_post_for_user(nil)[:raw].should == raw
-        serialized_post_for_user(Fabricate(:user))[:raw].should == raw
-        serialized_post_for_user(Fabricate(:moderator))[:raw].should == raw
-        serialized_post_for_user(Fabricate(:admin))[:raw].should == raw
+        [nil, user, Fabricate(:user), Fabricate(:moderator), Fabricate(:admin)].each do |user|
+          serialized_post_for_user(user)[:raw].should == raw
+        end
       end
     end
 
@@ -101,21 +99,48 @@ describe PostSerializer do
       let(:post) { Fabricate.build(:post, raw: raw, user: user, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
 
       it "shows the raw post only if authorized to see it" do
-        serialized_post_for_user(user)[:raw].should == raw
         serialized_post_for_user(nil)[:raw].should be_nil
         serialized_post_for_user(Fabricate(:user))[:raw].should be_nil
+
+        serialized_post_for_user(user)[:raw].should == raw
         serialized_post_for_user(Fabricate(:moderator))[:raw].should == raw
         serialized_post_for_user(Fabricate(:admin))[:raw].should == raw
       end
 
       it "can view edit history only if authorized" do
-        serialized_post_for_user(user)[:can_view_edit_history].should == true
         serialized_post_for_user(nil)[:can_view_edit_history].should == false
         serialized_post_for_user(Fabricate(:user))[:can_view_edit_history].should == false
+
+        serialized_post_for_user(user)[:can_view_edit_history].should == true
         serialized_post_for_user(Fabricate(:moderator))[:can_view_edit_history].should == true
         serialized_post_for_user(Fabricate(:admin))[:can_view_edit_history].should == true
       end
     end
+
+    context "a public wiki post" do
+      let(:post) { Fabricate.build(:post, raw: raw, user: user, wiki: true) }
+
+      it "can view edit history" do
+        [nil, user, Fabricate(:user), Fabricate(:moderator), Fabricate(:admin)].each do |user|
+          serialized_post_for_user(user)[:can_view_edit_history].should == true
+        end
+      end
+    end
+
+    context "a hidden wiki post" do
+      let(:post) { Fabricate.build(:post, raw: raw, user: user, wiki: true, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
+
+      it "can view edit history only if authorized" do
+        serialized_post_for_user(nil)[:can_view_edit_history].should == false
+        serialized_post_for_user(Fabricate(:user))[:can_view_edit_history].should == false
+
+        serialized_post_for_user(user)[:can_view_edit_history].should == true
+        serialized_post_for_user(Fabricate(:moderator))[:can_view_edit_history].should == true
+        serialized_post_for_user(Fabricate(:admin))[:can_view_edit_history].should == true
+      end
+    end
+
+
   end
 
 end
