@@ -103,23 +103,6 @@ describe Jobs::PollMailbox do
 
       end
 
-      it "informs admins on any other error" do
-        error = TypeError.new
-        error.set_backtrace(["Hi", "Bye"])
-        receiver.expects(:process).raises(error)
-        email.expects(:delete)
-
-        Mail::Message.expects(:new).with(email_string).returns(email)
-        email.expects(:from).twice
-        email.expects(:body).twice
-
-        data = { limit_once_per: false, message_params: { from: email.from, source: email.body, error: "#{error.message}\n\n#{error.backtrace.join("\n")}" }}
-
-        GroupMessage.expects(:create).with("admins", :email_error_notification, data)
-
-        poller.handle_mail(email)
-      end
-
     end
   end
 
