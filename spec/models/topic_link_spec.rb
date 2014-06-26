@@ -26,19 +26,25 @@ describe TopicLink do
 
   describe 'external links' do
     before do
-      @post = Fabricate(:post_with_external_links, user: @user, topic: @topic)
+      @post = Fabricate(:post, raw: "
+http://a.com/
+http://b.com/b
+http://#{'a'*200}.com/invalid
+http://b.com/#{'a'*500}
+                        ", user: @user, topic: @topic)
+
       TopicLink.extract_from(@post)
     end
 
     it 'works' do
       # has the forum topic links
-      @topic.topic_links.count.should == 4
+      @topic.topic_links.count.should == 2
 
       # works with markdown links
-      @topic.topic_links.exists?(url: "http://forumwarz.com").should be_true
+      @topic.topic_links.exists?(url: "http://a.com/").should be_true
 
       #works with markdown links followed by a period
-      @topic.topic_links.exists?(url: "http://www.codinghorror.com/blog").should be_true
+      @topic.topic_links.exists?(url: "http://b.com/b").should be_true
     end
 
   end
@@ -53,9 +59,10 @@ describe TopicLink do
         @other_post = @other_topic.posts.create(user: @user, raw: "some content for the second post")
 
         @url = "http://#{test_uri.host}/t/#{@other_topic.slug}/#{@other_topic.id}/#{@other_post.post_number}"
+        @invalid_url = "http://#{test_uri.host}/t/#{@other_topic.slug}/9999999999999999999999999999999"
 
         @topic.posts.create(user: @user, raw: 'initial post')
-        @post = @topic.posts.create(user: @user, raw: "Link to another topic:\n\n#{@url}\n\n")
+        @post = @topic.posts.create(user: @user, raw: "Link to another topic:\n\n#{@url}\n\n#{@invalid_url}")
         @post.reload
 
         TopicLink.extract_from(@post)
