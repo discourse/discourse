@@ -1126,7 +1126,7 @@ describe UsersController do
         ActionDispatch::Http::UploadedFile.new({ filename: 'logo.png', tempfile: logo })
       end
 
-      it 'raises an error without a user_image_type param' do
+      it 'raises an error without a image_type param' do
         lambda { xhr :put, :upload_user_image, username: user.username }.should raise_error(ActionController::ParameterMissing)
       end
 
@@ -1134,19 +1134,19 @@ describe UsersController do
 
         it 'raises an error when you don\'t have permission to upload an user image' do
           Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
-          xhr :post, :upload_user_image, username: user.username, user_image_type: "avatar"
+          xhr :post, :upload_user_image, username: user.username, image_type: "avatar"
           response.should be_forbidden
         end
 
         it 'rejects large images' do
           SiteSetting.stubs(:max_image_size_kb).returns(1)
-          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "avatar"
+          xhr :post, :upload_user_image, username: user.username, file: user_image, image_type: "avatar"
           response.status.should eq 422
         end
 
         it 'rejects unauthorized images' do
           SiteSetting.stubs(:authorized_extensions).returns(".txt")
-          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "avatar"
+          xhr :post, :upload_user_image, username: user.username, file: user_image, image_type: "avatar"
           response.status.should eq 422
         end
 
@@ -1154,7 +1154,7 @@ describe UsersController do
           upload = Fabricate(:upload)
           Upload.expects(:create_for).returns(upload)
           # enqueues the user_image generator job
-          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "avatar"
+          xhr :post, :upload_user_image, username: user.username, file: user_image, image_type: "avatar"
           # returns the url, width and height of the uploaded image
           json = JSON.parse(response.body)
           json['url'].should == "/uploads/default/1/1234567890123456.png"
@@ -1166,7 +1166,7 @@ describe UsersController do
         it 'is successful for profile backgrounds' do
           upload = Fabricate(:upload)
           Upload.expects(:create_for).returns(upload)
-          xhr :post, :upload_user_image, username: user.username, file: user_image, user_image_type: "profile_background"
+          xhr :post, :upload_user_image, username: user.username, file: user_image, image_type: "profile_background"
           user.reload
 
           user.user_profile.profile_background.should == "/uploads/default/1/1234567890123456.png"
@@ -1191,13 +1191,13 @@ describe UsersController do
 
           it 'rejects large images' do
             SiteSetting.stubs(:max_image_size_kb).returns(1)
-            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, image_type: "profile_background"
             response.status.should eq 422
           end
 
           it 'rejects unauthorized images' do
             SiteSetting.stubs(:authorized_extensions).returns(".txt")
-            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, image_type: "profile_background"
             response.status.should eq 422
           end
 
@@ -1205,7 +1205,7 @@ describe UsersController do
             upload = Fabricate(:upload)
             Upload.expects(:create_for).returns(upload)
             # enqueues the user_image generator job
-            xhr :post, :upload_avatar, username: user.username, file: user_image_url, user_image_type: "avatar"
+            xhr :post, :upload_avatar, username: user.username, file: user_image_url, image_type: "avatar"
             json = JSON.parse(response.body)
             json['url'].should == "/uploads/default/1/1234567890123456.png"
             json['width'].should == 100
@@ -1216,7 +1216,7 @@ describe UsersController do
           it 'is successful for profile backgrounds' do
             upload = Fabricate(:upload)
             Upload.expects(:create_for).returns(upload)
-            xhr :post, :upload_user_image, username: user.username, file: user_image_url, user_image_type: "profile_background"
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, image_type: "profile_background"
             user.reload
             user.user_profile.profile_background.should == "/uploads/default/1/1234567890123456.png"
 
@@ -1229,7 +1229,7 @@ describe UsersController do
         end
 
         it "should handle malformed urls" do
-          xhr :post, :upload_user_image, username: user.username, file: "foobar", user_image_type: "profile_background"
+          xhr :post, :upload_user_image, username: user.username, file: "foobar", image_type: "profile_background"
           response.status.should eq 422
         end
 

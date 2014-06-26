@@ -37,7 +37,7 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
       url: Discourse.getURL("/users/" + this.get("controller.username") + "/preferences/user_image"),
       dataType: "json",
       fileInput: $upload,
-      formData: { user_image_type: "avatar" }
+      formData: { image_type: "avatar" }
     });
 
     // when a file has been selected

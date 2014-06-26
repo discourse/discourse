@@ -333,12 +333,12 @@ class UsersController < ApplicationController
 
   # LEGACY: used by the API
   def upload_avatar
-    params[:user_image_type] = "avatar"
+    params[:image_type] = "avatar"
     upload_user_image
   end
 
   def upload_user_image
-    params.require(:user_image_type)
+    params.require(:image_type)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
@@ -353,7 +353,7 @@ class UsersController < ApplicationController
     upload = Upload.create_for(user.id, image.file, image.filename, image.filesize)
 
     if upload.errors.empty?
-      case params[:user_image_type]
+      case params[:image_type]
       when "avatar"
         upload_avatar_for(user, upload)
       when "profile_background"

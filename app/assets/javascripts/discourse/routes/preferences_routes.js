@@ -63,12 +63,6 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
       avatarSelector.send('closeModal');
     },
 
-    showProfileBackgroundFileSelector: function() {
-      $("#profile-background-input").click();
-    },
-    clearProfileBackground: function() {
-      this.modelFor('user').clearProfileBackground();
-    }
   }
 });
 

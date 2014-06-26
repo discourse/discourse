@@ -1158,6 +1158,7 @@ en:
       change_in_category_topic: "Edit Description"
       already_used: 'This color has been used by another category'
       security: "Security"
+      images: "Images"
       auto_close_label: "Auto-close topics after:"
       auto_close_units: "hours"
       email_in: "Custom incoming email address:"

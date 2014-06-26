@@ -92,18 +92,10 @@
     <div class="control-group pref-profile-bg">
       <label class="control-label">{{i18n user.change_profile_background.title}}</label>
       <div class="controls">
-        <input type="file" id="profile-background-input" accept="image/*" style="display:none" />
-        <div id="profile-background-preview" class="input-xxlarge" {{bind-attr style="profileBackground"}}>
-          <div id="profile-background-controls">
-          <button {{action showProfileBackgroundFileSelector}} class="btn pad-left no-text"><i class="fa fa-picture-o"></i></button>
-          {{#if profileBackground}}
-          <button {{action clearProfileBackground}} class="btn btn-danger pad-left no-text"><i class="fa fa-trash-o"></i></button>
-          {{/if}}
-          {{#if view.uploading}}
-          <span class="btn">{{i18n upload_selector.uploading}} {{view.uploadProgress}}%</span>
-          {{/if}}
-          </div>
-        </div>
+        {{image-uploader uploadUrl=imageUploadUrl
+                         imageUrl=profile_background
+                         type="profile_background"
+                         clear="clearProfileBackground"}}
       </div>
     </div>
     {{/if}}

@@ -43,19 +43,6 @@
     display: none;
   }
 
-  #profile-background-preview {
-    height: 270px;
-
-    background-position: center center;
-    background-size: cover;
-
-    background-color: $primary;
-  }
-
-  #profile-background-controls {
-    padding: 10px;
-  }
-
   .static {
     color: $primary;
     display: inline-block;

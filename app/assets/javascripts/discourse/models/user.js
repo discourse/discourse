@@ -354,8 +354,6 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/profile_background/clear", {
       type: 'PUT',
       data: { }
-    }).then(function() {
-      user.set('profile_background', null);
     });
   },
 

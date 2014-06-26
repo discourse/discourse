@@ -1,0 +1,10 @@
+<input type="file" accept="image/*" style="display:none" />
+<div class="uploaded-image-preview" class="input-xxlarge" {{bind-attr style="backgroundStyle"}}>
+  <div class="image-upload-controls">
+  <button {{action selectFile}} class="btn pad-left no-text"><i class="fa fa-picture-o"></i></button>
+  {{#if backgroundStyle}}
+    <button {{action trash}} class="btn btn-danger pad-left no-text"><i class="fa fa-trash-o"></i></button>
+  {{/if}}
+  <span {{bind-attr class=":btn uploading::hidden"}}>{{i18n upload_selector.uploading}} {{uploadProgress}}%</span>
+  </div>
+</div>
