@@ -1319,48 +1319,48 @@ en:
         %{source}
 
     email_reject_trust_level:
-      subject_template: "Message rejected: Insufficient Trust Level"
+      subject_template: "Email issue -- Insufficient Trust Level"
       text_body_template: |
-        The message you've send to %{to} was rejected by the system.
+        We're sorry, but your email message to %{to} didn't work.
 
-        You do not have the required trust to post new topics to this email address.
+        Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
 
     email_reject_no_account:
-      subject_template: "Message rejected: No Account"
+      subject_template: "Email issue -- No Account"
       text_body_template: |
-        The message you've send to %{to} was rejected by the system.
+        We're sorry, but your email message to %{to} didn't work.
 
-        You do not have an account on the forum with this email address.
+        There is no known account with this email address. Try sending from a different email address, or contact a staff member.
 
     email_reject_empty:
-      subject_template: "Message rejected: No Content"
+      subject_template: "Email issue -- No Content"
       text_body_template: |
-        The message you've send to %{to} was rejected by the system.
+        We're sorry, but your email message to %{to} didn't work.
 
-        There was no recognized content in the email.
+        We couldn't find any content in the email.
 
     email_reject_parsing:
-      subject_template: "Message rejected: Unparsable"
+      subject_template: "Email issue -- Content unrecognized"
       text_body_template: |
-        The message you've send to %{to} was rejected by the system.
+        We're sorry, but your email message to %{to} didn't work.
 
-        The encoding was unknown or not supported. Try sending in UTF-8 plain text.
+        The email encoding was unknown or not supported. Try again with UTF-8 plain text.
 
     email_reject_post_error:
-      subject_template: "Message rejected: Posting error"
+      subject_template: "Email issue -- posting error"
       text_body_template: |
-        The message you've send to %{to} was rejected by the system.
+        We're sorry, but your email message to %{to} didn't work.
 
-        The Markdown could not be processed.
+        There was a problem with the formatting. Try again with less formatting, or no formatting.
 
         %{error}
 
     email_reject_reply_key:
-      subject_template: "Message rejected: Bad Reply Key"
+      subject_template: "Email issue -- Bad Reply Key"
       text_body_template: |
-        The message you've send to %{to} was rejected by the system.
+        We're sorry, but your email message to %{to} didn't work.
 
-        The provided reply key is invalid.
+        The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
 
     too_many_spam_flags:
       subject_template: "New account blocked"
