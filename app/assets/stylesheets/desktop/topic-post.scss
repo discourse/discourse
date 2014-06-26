@@ -342,10 +342,6 @@ a.star {
     &:hover {border: 1px solid $primary !important;}
   }
 
-  .topic-links li {
-    word-wrap: break-word;
-  }
-
   h3 {
     margin-bottom: 4px;
     color: $primary;
@@ -428,16 +424,13 @@ a.star {
     border-top: 2px solid scale-color-diff();
   }
 
-.participants { // PMs //
-  .user {float: left; margin: 7px 20px 7px 0;}
-}
+  .participants { // PMs //
+    .user {float: left; margin: 7px 20px 7px 0;}
+  }
 
   .topic-links {
-    li > a {
-      margin-left: 5px;
-    }
     .badge-notification {
-      margin: 0 0 4px;
+      margin-right: 5px;
     }
   }
   .buttons {

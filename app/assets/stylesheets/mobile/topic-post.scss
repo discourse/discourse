@@ -165,10 +165,6 @@ a.star {
     border-radius: 0 4px 0 4px;
   }
 
-  .topic-links li {
-    word-wrap: break-word;
-  }
-
   margin: 30px 10px 10px 10px;
   background: scale-color(scale-color-diff(), $lightness: 40%);
 
@@ -259,7 +255,7 @@ a.star {
 
   .topic-links {
     .badge-notification {
-      margin: 0 0 4px;
+      margin-right: 5px;
     }
   }
   .buttons {
