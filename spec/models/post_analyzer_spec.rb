@@ -5,11 +5,11 @@ describe PostAnalyzer do
   let(:default_topic_id) { 12 }
 
   describe '#cook' do
-    let(:post_analyzer) { described_class.new nil, nil  }
+    let(:post_analyzer) {PostAnalyzer.new nil, nil  }
 
-    let(:args) { [raw, options] }
     let(:raw) { "Here's a tweet:\n#{url}" }
     let(:options) { {} }
+    let(:args) { [raw, options] }
 
     let(:url) {
       'https://twitter.com/evil_trout/status/345954894420787200'

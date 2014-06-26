@@ -21,10 +21,8 @@ Discourse.Dialect.postProcessText(function (text, event) {
     if (split.length) {
       var replacement = [];
       for (var i=0; i<split.length; i++) {
-        if (split[i].length > 0) {
-          replacement.push(split[i]);
-          if (i !== split.length-1) { replacement.push(['br']); }
-        }
+        if (split[i].length > 0) { replacement.push(split[i]); }
+        if (i !== split.length-1) { replacement.push(['br']); }
       }
 
       return replacement;
