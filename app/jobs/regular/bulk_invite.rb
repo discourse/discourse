@@ -47,14 +47,10 @@ module Jobs
       return csv_path
     end
 
-    def validate_email(email)
-      /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/.match(email)
-    end
-
     def read_csv_file(csv_path)
       CSV.foreach(csv_path) do |csv_info|
-        if !csv_info[0].nil?
-          if validate_email(csv_info[0])
+        if csv_info[0]
+          if (EmailValidator.email_regex =~ csv_info[0])
             # email is valid
             send_invite(csv_info, $INPUT_LINE_NUMBER)
             @sent += 1
@@ -69,16 +65,17 @@ module Jobs
 
     def get_group_ids(group_names, csv_line_number)
       group_ids = []
-      if !group_names.nil?
+      if group_names
         group_names = group_names.split(';')
         group_names.each { |group_name|
           group_detail = Group.find_by_name(group_name)
-          if !group_detail.nil?
+          if group_detail
             # valid group
             group_ids.push(group_detail.id)
           else
             # invalid group
             log "Invalid Group '#{group_name}' at line number '#{csv_line_number}'"
+            @failed += 1
           end
         }
       end
@@ -87,10 +84,11 @@ module Jobs
 
     def get_topic(topic_id, csv_line_number)
       topic = nil
-      if !topic_id.nil?
+      if topic_id
         topic = Topic.find_by_id(topic_id)
         if topic.nil?
           log "Invalid Topic ID '#{topic_id}' at line number '#{csv_line_number}'"
+          @failed += 1
         end
       end
       return topic

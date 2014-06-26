@@ -1291,7 +1291,7 @@ en:
     bulk_invite_failed:
       subject_template: "Bulk Invite processed with some errors!"
       text_body_template: |
-        The bulk invite has been processed, %{sent} invites sent and %{failed} invites failed.
+        The bulk invite has been processed, %{sent} invites sent with %{failed} error(s).
 
         Here's the log:
 
