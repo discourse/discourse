@@ -23,8 +23,6 @@ module Jobs
         mail_string = mail.pop
         Email::Receiver.new(mail_string).process
       rescue => e
-        # inform the user about the rejection
-        message = Mail::Message.new(mail_string)
         message_template = nil
         case e
           when Email::Receiver::UserNotSufficientTrustLevelError
@@ -44,12 +42,12 @@ module Jobs
         end
 
         if message_template
-          # Send message to the user
+          # inform the user about the rejection
+          message = Mail::Message.new(mail_string)
           client_message = RejectionMailer.send_rejection(message.from, message.body, message_template.to_s, "#{e.message}\n\n#{e.backtrace.join("\n")}")
           Email::Sender.new(client_message, message_template).send
         else
-          data = { limit_once_per: false, message_params: { from: message.from, source: message.body } }
-          Discourse.handle_exception(e, data)
+          Discourse.handle_exception(e, { context: "incoming email", mail: mail_string })
         end
       ensure
         mail.delete
