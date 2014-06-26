@@ -242,11 +242,20 @@ describe PrettyText do
 
 
   describe "markdown quirks" do
+    it "bolds stuff in parens" do
+      PrettyText.cook("a \"**hello**\"").should match_html "<p>a &quot;<strong>hello</strong>&quot;</p>"
+      PrettyText.cook("(**hello**)").should match_html "<p>(<strong>hello</strong>)</p>"
+      #           is it me your looking for?
+    end
     it "allows for newline after bold" do
       PrettyText.cook("**hello**\nworld").should match_html "<p><strong>hello</strong><br />world</p>"
     end
     it "allows for newline for 2 bolds" do
       PrettyText.cook("**hello**\n**world**").should match_html "<p><strong>hello</strong><br /><strong>world</strong></p>"
+    end
+
+    pending "allows does not bold chinese intra word" do
+      PrettyText.cook("你**hello**").should match_html "<p>你**hello**</p>"
     end
 
     pending "does not break a streak for mentions" do

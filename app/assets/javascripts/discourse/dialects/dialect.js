@@ -254,7 +254,7 @@ Discourse.Dialect = {
       @param {String} [opts.between] A shortcut for when the `start` and `stop` are the same.
       @param {Boolean} [opts.rawContents] If true, the contents between the tokens will not be parsed.
       @param {Boolean} [opts.wordBoundary] If true, the match must be on a word boundary
-      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
+      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a space boundary
   **/
   inlineBetween: function(args) {
     var start = args.start || args.between,
