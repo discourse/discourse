@@ -1796,11 +1796,9 @@ en:
           requirement_heading: "Requirement"
           visits: "Visits"
           days: "days"
-          topics_with_replies: "Topics with Replies"
           topics_replied_to: "Topics Replied To"
-          quality_content: "Quality Content"
-          reading: "Reading"
-          site_promotion: "Site Promotion"
+          topics_viewed: "Topics Viewed"
+          posts_read: "Posts Read"
           flagged_posts: "Flagged Posts"
 
       site_content:

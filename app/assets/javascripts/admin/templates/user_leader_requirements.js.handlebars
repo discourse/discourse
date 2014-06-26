@@ -32,40 +32,22 @@
           <td>{{min_days_visited_percent}}%</td>
         </tr>
         <tr>
-          <th>{{i18n admin.user.tl3_requirements.topics_with_replies}}</th>
-          <td><i {{bindAttr class=":fa met.topics_with_replies:fa-check:fa-times"}}></i></td>
-          <td>{{num_topics_with_replies}}</td>
-          <td>{{min_topics_with_replies}}</td>
-        </tr>
-        <tr>
           <th>{{i18n admin.user.tl3_requirements.topics_replied_to}}</th>
           <td><i {{bindAttr class=":fa met.topics_replied_to:fa-check:fa-times"}}></i></td>
           <td>{{num_topics_replied_to}}</td>
           <td>{{min_topics_replied_to}}</td>
         </tr>
         <tr>
-          <th>{{i18n admin.user.tl3_requirements.quality_content}}</th>
-          <td></td>
-          <td style="color: #ccc;">
-            TODO
-          </td>
-          <td></td>
+          <th>{{i18n admin.user.tl3_requirements.topics_viewed}}</th>
+          <td><i {{bindAttr class=":fa met.topics_viewed:fa-check:fa-times"}}></i></td>
+          <td>{{topics_viewed}}</td>
+          <td>{{min_topics_viewed}}</td>
         </tr>
         <tr>
-          <th>{{i18n admin.user.tl3_requirements.reading}}</th>
-          <td></td>
-          <td  style="color: #ccc;">
-            TODO
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <th>{{i18n admin.user.tl3_requirements.site_promotion}}</th>
-          <td></td>
-          <td  style="color: #ccc;">
-            TODO
-          </td>
-          <td></td>
+          <th>{{i18n admin.user.tl3_requirements.posts_read}}</th>
+          <td><i {{bindAttr class=":fa met.posts_read:fa-check:fa-times"}}></i></td>
+          <td>{{posts_read}}</td>
+          <td>{{min_posts_read}}</td>
         </tr>
         <tr>
           <th>{{i18n admin.user.tl3_requirements.flagged_posts}}</th>
@@ -75,6 +57,15 @@
         </tr>
       </tbody>
     </table>
+
+    <br/>
+    <p>
+      {{#if requirements_met}}
+        <i class="fa fa-check"></i> Qualifies for trust level 3
+      {{else}}
+        <i class="fa fa-times"></i> Doesn't qualify for trust level 3
+      {{/if}}
+    </p>
   {{/with}}
 </div>
 

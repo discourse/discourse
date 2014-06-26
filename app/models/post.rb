@@ -54,6 +54,7 @@ class Post < ActiveRecord::Base
   scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
   scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
+  scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
 
   delegate :username, to: :user
 

@@ -6,18 +6,22 @@ class LeaderRequirements
 
   attr_accessor :time_period,
                 :days_visited, :min_days_visited,
-                :num_topics_with_replies, :min_topics_with_replies,
                 :num_topics_replied_to, :min_topics_replied_to,
+                :topics_viewed, :min_topics_viewed,
+                :posts_read, :min_posts_read,
                 :num_flagged_posts, :max_flagged_posts
 
   def initialize(user)
     @user = user
   end
 
-  # TODO
-  # def requirements_met?
-  #   false
-  # end
+  def requirements_met?
+    days_visited >= min_days_visited &&
+      num_topics_replied_to >= min_topics_replied_to &&
+      topics_viewed >= min_topics_viewed &&
+      posts_read >= min_posts_read &&
+      num_flagged_posts <= max_flagged_posts
+  end
 
   def time_period
     100 # days
@@ -31,14 +35,6 @@ class LeaderRequirements
     time_period * 0.5
   end
 
-  def num_topics_with_replies
-    @user.topics.where('posts_count > 1 AND participant_count > 1 AND created_at > ?', time_period.days.ago).count
-  end
-
-  def min_topics_with_replies
-    5
-  end
-
   def num_topics_replied_to
     @user.posts.select('distinct topic_id').where('created_at > ? AND post_number > 1', time_period.days.ago).count
   end
@@ -47,11 +43,31 @@ class LeaderRequirements
     10
   end
 
+  def topics_viewed
+    View.where('viewed_at > ?', time_period.days.ago).where(user_id: @user.id, parent_type: 'Topic').select('distinct(parent_id)').count
+  end
+
+  def min_topics_viewed
+    (Topic.listable_topics.visible.created_since(time_period.days.ago).count * 0.25).round
+  end
+
+  def posts_read
+    @user.user_visits.where('visited_at > ?', time_period.days.ago).pluck(:posts_read).sum
+  end
+
+  def min_posts_read
+    (Post.public_posts.visible.created_since(time_period.days.ago).count * 0.25).round
+  end
+
   def num_flagged_posts
-    @user.posts.where('created_at > ? AND (off_topic_count > 0 OR spam_count > 0 OR illegal_count > 0 OR inappropriate_count > 0 OR notify_moderators_count > 0)', time_period.days.ago).count
+    # Count the number of posts that were flagged, and moderators explicitly agreed with the flags
+    # by clicking the "Agree (hide post + send PM)" or "Defer" (on an automatically hidden post) buttons.
+    # In both cases, the defer flag is set to true.
+    post_ids = @user.posts.with_deleted.where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', time_period.days.ago).pluck(:id)
+    PostAction.with_deleted.where(post_id: post_ids).where(defer: true).pluck(:post_id).uniq.count
   end
 
   def max_flagged_posts
-    5 # TODO what should it be?
+    5
   end
 end

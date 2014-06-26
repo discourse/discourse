@@ -10,12 +10,14 @@ Discourse.LeaderRequirements = Discourse.Model.extend({
   met: function() {
     return {
       days_visited: this.get('days_visited') >= this.get('min_days_visited'),
-      topics_with_replies: this.get('num_topics_with_replies') >= this.get('min_topics_with_replies'),
       topics_replied_to: this.get('num_topics_replied_to') >= this.get('min_topics_replied_to'),
+      topics_viewed: this.get('topics_viewed') >= this.get('min_topics_viewed'),
+      posts_read: this.get('posts_read') >= this.get('min_posts_read'),
       flagged_posts: this.get('num_flagged_posts') < this.get('max_flagged_posts')
     };
   }.property('days_visited', 'min_days_visited',
-             'num_topics_with_replies', 'min_topics_with_replies',
              'num_topics_replied_to', 'min_topics_replied_to',
+             'topics_viewed', 'min_topics_viewed',
+             'posts_read', 'min_posts_read',
              'num_flagged_posts', 'max_flagged_posts')
 });
