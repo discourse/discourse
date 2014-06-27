@@ -20,6 +20,14 @@ describe Category do
   it { should have_many :featured_topics }
   it { should belong_to :parent_category}
 
+  describe "last_updated_at" do
+    it "returns a number value of when the category was last updated" do
+      last = Category.last_updated_at
+      last.should be_present
+      last.to_i.should == last
+    end
+  end
+
   describe "resolve_permissions" do
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(:everyone => :full)

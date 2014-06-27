@@ -45,6 +45,21 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
   end
 
   def find(name, options)
+
+    if name == "category_backgrounds"
+      contents = ""
+      Category.where('background_url IS NOT NULL').each do |c|
+        if c.background_url.present?
+          contents << "#main-outlet.category-#{c.id} { background-image: url(#{c.background_url}) }\n"
+        end
+      end
+      return Sass::Engine.new(contents, options.merge(
+        filename: "#{name}.scss",
+        importer: self,
+        syntax: :scss
+      ))
+    end
+
     if special_imports.has_key? name
       if name == "theme_variables"
         contents = ""

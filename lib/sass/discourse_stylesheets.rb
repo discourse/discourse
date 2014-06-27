@@ -107,7 +107,8 @@ class DiscourseStylesheets
   def digest
     @digest ||= begin
       theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : 0
-      Digest::SHA1.hexdigest("#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}")
+      category_updated = Category.last_updated_at
+      Digest::SHA1.hexdigest("#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}-#{category_updated}")
     end
   end
 end

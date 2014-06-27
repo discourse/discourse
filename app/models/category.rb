@@ -68,6 +68,9 @@ class Category < ActiveRecord::Base
   # we may consider wrapping this in another spot
   attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level
 
+  def self.last_updated_at
+    order('updated_at desc').limit(1).pluck(:updated_at).first.to_i
+  end
 
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian && guardian.is_staff?

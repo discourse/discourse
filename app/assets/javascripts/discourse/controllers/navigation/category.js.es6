@@ -5,4 +5,3 @@ export default NavigationDefaultController.extend({
     return Discourse.NavItem.buildList(this.get('category'), { noSubcategories: this.get('noSubcategories') });
   }.property('category', 'noSubcategories')
 });
-
