@@ -1933,10 +1933,10 @@ en:
           description: Received a like.
         nice_post:
           name: Nice Post
-          description: Received 10 likes on a post.
+          description: Received 10 likes on a post. This badge can be granted multiple times.
         good_post:
           name: Good Post
-          description: Received 25 likes on a post.
+          description: Received 25 likes on a post. This badge can be granted multiple times.
         great_post:
           name: Great Post
-          description: Received 100 likes on a post.
+          description: Received 100 likes on a post. This badge can be granted multiple times.
