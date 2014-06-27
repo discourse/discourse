@@ -13,10 +13,7 @@ export default Em.Component.extend(UploadMixin, {
     this.set('imageUrl', data.result.url);
   },
 
-  actions: {
-    trash: function() {
-      this.set('imageUrl', null);
-      this.sendAction('clear');
-    }
+  deleteDone: function() {
+    this.set('imageUrl', null);
   }
 });

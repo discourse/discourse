@@ -1269,10 +1269,10 @@ describe UsersController do
 
   end
 
-  describe '.clear_profile_background' do
+  describe '.destroy_user_image' do
 
     it 'raises an error when not logged in' do
-      lambda { xhr :put, :clear_profile_background, username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
+      lambda { xhr :put, :destroy_user_image, type: 'profile_background', username: 'asdf' }.should raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
@@ -1281,12 +1281,20 @@ describe UsersController do
 
       it 'raises an error when you don\'t have permission to clear the profile background' do
         Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
-        xhr :put, :clear_profile_background, username: user.username
+        xhr :put, :destroy_user_image, username: user.username, image_type: 'profile_background'
         response.should be_forbidden
       end
 
-      it 'it successful' do
-        xhr :put, :clear_profile_background, username: user.username
+      it "requires the `image_type` param" do
+        -> { xhr :put, :destroy_user_image, username: user.username }.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "only allows certain `image_types`" do
+        -> { xhr :put, :destroy_user_image, username: user.username, image_type: 'wat' }.should raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'can clear the profile background' do
+        xhr :put, :destroy_user_image, image_type: 'profile_background', username: user.username
         user.reload.user_profile.profile_background.should == ""
         response.should be_success
       end

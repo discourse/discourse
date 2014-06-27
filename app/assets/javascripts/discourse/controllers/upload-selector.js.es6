@@ -12,17 +12,15 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
   local: false,
   showMore: false,
 
-  init: function() {
-    this._super();
+  _initialize: function() {
     this.setProperties({
       local: this.get("allowLocal"),
       showMore: false
     });
-  },
+  }.on('init'),
 
-  allowLocal: function() {
-    return Discourse.SiteSettings.max_attachment_size_kb > 0;
-  }.property(),
+  maxSize: Discourse.computed.setting('max_attachment_size_kb'),
+  allowLocal: Em.computed.gt('maxSize', 0),
 
   actions: {
     useLocal: function() { this.setProperties({ local: true, showMore: false}); },

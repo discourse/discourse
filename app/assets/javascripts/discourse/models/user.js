@@ -343,19 +343,6 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
-  /*
-    Clear profile background
-
-    @method clearProfileBackground
-    @returns {Promise} the result of the clear profile background request
-  */
-  clearProfileBackground: function() {
-    return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/profile_background/clear", {
-      type: 'PUT',
-      data: { }
-    });
-  },
-
   /**
     Determines whether the current user is allowed to upload a file.
 

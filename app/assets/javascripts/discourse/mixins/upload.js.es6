@@ -6,6 +6,10 @@ export default Em.Mixin.create({
     Em.warn("You should implement `uploadDone`");
   },
 
+  deleteDone: function() {
+    Em.warn("You should implement `deleteDone`");
+  },
+
   _initializeUploader: function() {
     var $upload = this.$('input[type=file]'),   // note: we can't cache this as fileupload replaces the input after upload
        self = this;
@@ -49,6 +53,18 @@ export default Em.Mixin.create({
   actions: {
     selectFile: function() {
       this.$('input[type=file]').click();
+    },
+
+    trash: function() {
+      var self = this;
+      Discourse.ajax(this.get('uploadUrl'), {
+        type: 'DELETE',
+        data: { image_type: this.get('type') }
+      }).then(function() {
+        self.deleteDone();
+      }).catch(function() {
+        bootbox.alert(I18n.t('generic_error'));
+      });
     }
   }
 });

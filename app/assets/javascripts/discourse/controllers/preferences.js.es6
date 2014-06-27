@@ -70,10 +70,6 @@ export default Discourse.ObjectController.extend({
 
   actions: {
 
-    clearProfileBackground: function() {
-      this.get('model').clearProfileBackground();
-    },
-
     save: function() {
       var self = this;
       this.setProperties({ saving: true, saved: false });
