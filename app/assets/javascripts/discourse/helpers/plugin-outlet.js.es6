@@ -103,6 +103,7 @@ export default function(connectionName, options) {
     } else {
       view = childViews[0];
     }
+    delete options.fn;  // we don't need the default template since we have a connector
     return Ember.Handlebars.helpers.view.call(this, view, options);
   } else if (options.fn) {
 
