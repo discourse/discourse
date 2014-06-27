@@ -53,18 +53,6 @@ export default Em.Mixin.create({
   actions: {
     selectFile: function() {
       this.$('input[type=file]').click();
-    },
-
-    trash: function() {
-      var self = this;
-      Discourse.ajax(this.get('uploadUrl'), {
-        type: 'DELETE',
-        data: { image_type: this.get('type') }
-      }).then(function() {
-        self.deleteDone();
-      }).catch(function() {
-        bootbox.alert(I18n.t('generic_error'));
-      });
     }
   }
 });

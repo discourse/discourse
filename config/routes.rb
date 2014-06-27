@@ -275,6 +275,7 @@ Discourse::Application.routes.draw do
 
   resources :categories, :except => :show
   get "category/:id/show" => "categories#show"
+  post "category/uploads" => "categories#upload"
   post "category/:category_id/move" => "categories#move"
   get "category/:category.rss" => "list#category_feed", format: :rss
   get "category/:parent_category/:category.rss" => "list#category_feed", format: :rss

@@ -9,6 +9,7 @@
 **/
 export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   foregroundColors: ['FFFFFF', '000000'],
+  categoryUploadUrl: '/category/uploads',
 
   parentCategories: function() {
     return Discourse.Category.list().filter(function (c) {

@@ -12,7 +12,9 @@ class BasicCategorySerializer < ApplicationSerializer
              :read_restricted,
              :permission,
              :parent_category_id,
-             :notification_level
+             :notification_level,
+             :logo_url,
+             :background_url
 
   def include_parent_category_id?
     parent_category_id

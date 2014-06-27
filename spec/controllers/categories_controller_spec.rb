@@ -95,6 +95,37 @@ describe CategoriesController do
 
   end
 
+  describe "upload" do
+    it "requires the user to be logged in" do
+      lambda { xhr :post, :upload, image_type: 'logo'}.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    describe "logged in" do
+      let!(:user) { log_in(:admin) }
+
+      let(:logo) { File.new("#{Rails.root}/spec/fixtures/images/logo.png") }
+      let(:upload) do
+        ActionDispatch::Http::UploadedFile.new({ filename: 'logo.png', tempfile: logo })
+      end
+
+      it "raises an error when you don't have permission to upload" do
+        Guardian.any_instance.expects(:can_create?).with(Category).returns(false)
+        xhr :post, :upload, image_type: 'logo', file: upload
+        response.should be_forbidden
+      end
+
+      it "requires the `image_type` param" do
+        -> { xhr :post, :upload }.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "calls Upload.create_for" do
+        Upload.expects(:create_for).returns(Upload.new)
+        xhr :post, :upload, image_type: 'logo', file: upload
+        response.should be_success
+      end
+    end
+  end
+
   describe "update" do
 
     it "requires the user to be logged in" do

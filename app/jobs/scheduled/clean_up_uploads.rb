@@ -6,7 +6,11 @@ module Jobs
     def execute(args)
       return unless SiteSetting.clean_up_uploads?
 
-      uploads_used_as_profile_backgrounds = UserProfile.uniq.where("profile_background IS NOT NULL AND profile_background != ''").pluck(:profile_background)
+      ignore_urls = []
+      ignore_urls << UserProfile.uniq.where("profile_background IS NOT NULL AND profile_background != ''").pluck(:profile_background)
+      ignore_urls << Category.uniq.where("logo_url IS NOT NULL AND logo_url != ''").pluck(:logo_url)
+      ignore_urls << Category.uniq.where("background_url IS NOT NULL AND background_url != ''").pluck(:background_url)
+      ignore_urls.flatten!
 
       grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
 
@@ -14,7 +18,7 @@ module Jobs
             .where("id NOT IN (SELECT upload_id from post_uploads)")
             .where("id NOT IN (SELECT custom_upload_id from user_avatars)")
             .where("id NOT IN (SELECT gravatar_upload_id from user_avatars)")
-            .where("url NOT IN (?)", uploads_used_as_profile_backgrounds)
+            .where("url NOT IN (?)", ignore_urls)
             .find_each do |upload|
         upload.destroy
       end

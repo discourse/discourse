@@ -13,7 +13,19 @@ export default Em.Component.extend(UploadMixin, {
     this.set('imageUrl', data.result.url);
   },
 
-  deleteDone: function() {
-    this.set('imageUrl', null);
+  actions: {
+    trash: function() {
+      this.set('imageUrl', null);
+
+      // Do we want to signal the delete to the server right away?
+      if (this.get('instantDelete')) {
+        Discourse.ajax(this.get('uploadUrl'), {
+          type: 'DELETE',
+          data: { image_type: this.get('type') }
+        }).then(null, function() {
+          bootbox.alert(I18n.t('generic_error'));
+        });
+      }
+    }
   }
 });

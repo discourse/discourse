@@ -26,6 +26,19 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def upload
+    params.require(:image_type)
+    guardian.ensure_can_create!(Category)
+
+    file = params[:file] || params[:files].first
+    upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, File.size(file.tempfile))
+    if upload.errors.blank?
+      render json: { url: upload.url, width: upload.width, height: upload.height }
+    else
+      render status: 422, text: upload.errors.full_messages
+    end
+  end
+
   def move
     guardian.ensure_can_create!(Category)
 
@@ -105,7 +118,7 @@ class CategoriesController < ApplicationController
           end
         end
 
-        params.permit(*required_param_keys, :position, :email_in, :email_in_allow_strangers, :parent_category_id, :auto_close_hours, :permissions => [*p.try(:keys)])
+        params.permit(*required_param_keys, :position, :email_in, :email_in_allow_strangers, :parent_category_id, :auto_close_hours, :logo_url, :background_url, :permissions => [*p.try(:keys)])
       end
     end
 
