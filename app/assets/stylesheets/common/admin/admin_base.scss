@@ -403,6 +403,12 @@ section.details {
     }
   }
 
+  .current-badge-actions {
+    margin: 10px;
+    padding: 10px;
+    border-top: 1px solid scale-color($primary, $lightness: 80%);
+  }
+
   .buttons {
     float: left;
     width: 200px;

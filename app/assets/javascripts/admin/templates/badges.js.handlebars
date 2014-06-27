@@ -79,6 +79,12 @@
       {{/unless}}
     </form>
   </div>
+
+  <div class="span13 current-badge-actions">
+    <div>
+      {{#link-to 'badges.show' this classNames="btn btn-primary"}}{{i18n badges.granted count=grant_count}}{{/link-to}}
+    </div>
+  </div>
   {{/with}}
   {{/if}}
 
