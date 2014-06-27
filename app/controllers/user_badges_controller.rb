@@ -14,7 +14,7 @@ class UserBadgesController < ApplicationController
       user_badges = user_badges.where('granted_at < ?', Time.at(params[:granted_before].to_f))
     end
 
-    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type)
+    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic)
 
     if params[:grouped]
       user_badges = user_badges.group(:badge_id).select(UserBadge.attribute_names.map {|x| "MAX(#{x}) as #{x}" }, 'COUNT(*) as count')

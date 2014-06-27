@@ -3,6 +3,7 @@ class UserBadge < ActiveRecord::Base
   belongs_to :user
   belongs_to :granted_by, class_name: 'User'
   belongs_to :notification, dependent: :destroy
+  belongs_to :post
 
   validates :badge_id, presence: true, uniqueness: {scope: :user_id}, if: 'badge.single_grant?'
   validates :user_id, presence: true
