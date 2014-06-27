@@ -20,10 +20,10 @@
           font-size: 11px;
         }
         &.selected {
-          background-color: lighten($highlight, 23%);
+          background-color: scale-color($tertiary, $lightness: 90%);
         }
         @include hover {
-          background-color: lighten($highlight, 23%);
+          background-color: scale-color($highlight, $lightness: 60%);
           text-decoration: none;
         }
       }
