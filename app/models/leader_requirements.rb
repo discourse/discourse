@@ -4,8 +4,9 @@ class LeaderRequirements
 
   include ActiveModel::Serialization
 
-  attr_accessor :time_period,
-                :days_visited, :min_days_visited,
+  TIME_PERIOD = 100 # days
+
+  attr_accessor :days_visited, :min_days_visited,
                 :num_topics_replied_to, :min_topics_replied_to,
                 :topics_viewed, :min_topics_viewed,
                 :posts_read, :min_posts_read,
@@ -20,54 +21,86 @@ class LeaderRequirements
       num_topics_replied_to >= min_topics_replied_to &&
       topics_viewed >= min_topics_viewed &&
       posts_read >= min_posts_read &&
-      num_flagged_posts <= max_flagged_posts
-  end
-
-  def time_period
-    100 # days
+      num_flagged_posts <= max_flagged_posts &&
+      num_flagged_by_users <= max_flagged_by_users
   end
 
   def days_visited
-    @user.user_visits.where("visited_at > ? and posts_read > 0", time_period.days.ago).count
+    @user.user_visits.where("visited_at > ? and posts_read > 0", TIME_PERIOD.days.ago).count
   end
 
   def min_days_visited
-    time_period * 0.5
+    (TIME_PERIOD * (SiteSetting.leader_requires_days_visited.to_f / 100.0)).to_i
   end
 
   def num_topics_replied_to
-    @user.posts.select('distinct topic_id').where('created_at > ? AND post_number > 1', time_period.days.ago).count
+    @user.posts.select('distinct topic_id').where('created_at > ? AND post_number > 1', TIME_PERIOD.days.ago).count
   end
 
   def min_topics_replied_to
-    10
+    SiteSetting.leader_requires_topics_replied_to
   end
 
   def topics_viewed
-    View.where('viewed_at > ?', time_period.days.ago).where(user_id: @user.id, parent_type: 'Topic').select('distinct(parent_id)').count
+    View.where('viewed_at > ?', TIME_PERIOD.days.ago).where(user_id: @user.id, parent_type: 'Topic').select('distinct(parent_id)').count
   end
 
   def min_topics_viewed
-    (Topic.listable_topics.visible.created_since(time_period.days.ago).count * 0.25).round
+    (LeaderRequirements.num_topics_in_time_period.to_i * (SiteSetting.leader_requires_topics_viewed.to_f / 100.0)).round
   end
 
   def posts_read
-    @user.user_visits.where('visited_at > ?', time_period.days.ago).pluck(:posts_read).sum
+    @user.user_visits.where('visited_at > ?', TIME_PERIOD.days.ago).pluck(:posts_read).sum
   end
 
   def min_posts_read
-    (Post.public_posts.visible.created_since(time_period.days.ago).count * 0.25).round
+    (LeaderRequirements.num_posts_in_time_period.to_i * (SiteSetting.leader_requires_posts_read.to_f / 100.0)).round
   end
 
   def num_flagged_posts
-    # Count the number of posts that were flagged, and moderators explicitly agreed with the flags
-    # by clicking the "Agree (hide post + send PM)" or "Defer" (on an automatically hidden post) buttons.
-    # In both cases, the defer flag is set to true.
-    post_ids = @user.posts.with_deleted.where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', time_period.days.ago).pluck(:id)
-    PostAction.with_deleted.where(post_id: post_ids).where(defer: true).pluck(:post_id).uniq.count
+    PostAction.with_deleted.where(post_id: flagged_post_ids).where.not(user_id: @user.id).pluck(:post_id).uniq.count
   end
 
   def max_flagged_posts
-    5
+    SiteSetting.leader_requires_max_flagged
+  end
+
+  def num_flagged_by_users
+    PostAction.with_deleted.where(post_id: flagged_post_ids).where.not(user_id: @user.id).pluck(:user_id).uniq.count
+  end
+
+  def max_flagged_by_users
+    SiteSetting.leader_requires_max_flagged
+  end
+
+  def self.clear_cache
+    $redis.del NUM_TOPICS_KEY
+    $redis.del NUM_POSTS_KEY
+  end
+
+
+  CACHE_DURATION = 1.day.seconds - 60
+  NUM_TOPICS_KEY = "tl3_num_topics"
+  NUM_POSTS_KEY  = "tl3_num_posts"
+
+  def self.num_topics_in_time_period
+    $redis.get(NUM_TOPICS_KEY) || begin
+      count = Topic.listable_topics.visible.created_since(TIME_PERIOD.days.ago).count
+      $redis.setex NUM_TOPICS_KEY, CACHE_DURATION, count
+      count
+    end
+  end
+
+  def self.num_posts_in_time_period
+    $redis.get(NUM_POSTS_KEY) || begin
+      count = Post.public_posts.visible.created_since(TIME_PERIOD.days.ago).count
+      $redis.setex NUM_POSTS_KEY, CACHE_DURATION, count
+      count
+    end
+  end
+
+  def flagged_post_ids
+    # (TODO? and moderators explicitly agreed with the flags)
+    @user.posts.with_deleted.where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', TIME_PERIOD.days.ago).pluck(:id)
   end
 end

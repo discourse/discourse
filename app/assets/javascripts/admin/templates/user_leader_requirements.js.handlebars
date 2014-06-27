@@ -55,18 +55,30 @@
           <td>{{num_flagged_posts}}</td>
           <td>{{max_flagged_posts}} {{i18n max}}</td>
         </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.flagged_by_users}}</th>
+          <td><i {{bindAttr class=":fa met.flagged_by_users:fa-check:fa-times"}}></i></td>
+          <td>{{num_flagged_by_users}}</td>
+          <td>{{max_flagged_by_users}} {{i18n max}}</td>
+        </tr>
       </tbody>
     </table>
-
-    <br/>
-    <p>
-      {{#if requirements_met}}
-        <i class="fa fa-check"></i> Qualifies for trust level 3
-      {{else}}
-        <i class="fa fa-times"></i> Doesn't qualify for trust level 3
-      {{/if}}
-    </p>
   {{/with}}
+
+  <br/>
+  <p>
+    {{#if leaderRequirements.requirements_met}}
+      <i class="fa fa-check"></i> {{i18n admin.user.tl3_requirements.qualifies}}
+      {{#unless isLeader}}
+        {{i18n admin.user.tl3_requirements.will_be_promoted}}
+      {{/unless}}
+    {{else}}
+      <i class="fa fa-times"></i> {{i18n admin.user.tl3_requirements.does_not_qualify}}
+      {{#if isLeader}}
+        {{i18n admin.user.tl3_requirements.will_be_demoted}}
+      {{/if}}
+    {{/if}}
+  </p>
 </div>
 
 

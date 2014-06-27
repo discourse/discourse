@@ -5,7 +5,12 @@ class LeaderRequirementsSerializer < ApplicationSerializer
              :num_topics_replied_to, :min_topics_replied_to,
              :topics_viewed, :min_topics_viewed,
              :posts_read, :min_posts_read,
-             :num_flagged_posts, :max_flagged_posts
+             :num_flagged_posts, :max_flagged_posts,
+             :num_flagged_by_users, :max_flagged_by_users
+
+  def time_period
+    LeaderRequirements::TIME_PERIOD
+  end
 
   def requirements_met
     object.requirements_met?

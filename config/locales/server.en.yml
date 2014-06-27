@@ -802,6 +802,12 @@ en:
     regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level"
     regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level"
 
+    leader_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to leader (3) trust level. (0 to 100)"
+    leader_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to leader (3) trust level. (0 or higher)"
+    leader_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to leader (3) trust level. (0 to 100)"
+    leader_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to leader (3) trust level. (0 to 100)"
+    leader_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last 100 days to qualify for promotion to leader (3) trust level, where x is this setting's value. (0 or higher)"
+
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
