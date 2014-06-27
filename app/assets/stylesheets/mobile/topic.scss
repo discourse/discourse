@@ -108,10 +108,7 @@
   height: 34px;
 
   /* as a big ol' click target, don't let text inside be selected */
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  @include unselectable;
 
   .nums {
     position: relative;
