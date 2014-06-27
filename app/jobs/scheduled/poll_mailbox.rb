@@ -44,7 +44,7 @@ module Jobs
         if message_template
           # inform the user about the rejection
           message = Mail::Message.new(mail_string)
-          client_message = RejectionMailer.send_rejection(message.from, message.body, message_template.to_s, "#{e.message}\n\n#{e.backtrace.join("\n")}")
+          client_message = RejectionMailer.send_rejection(message.from, message.body, message.to, message_template)
           Email::Sender.new(client_message, message_template).send
         else
           Discourse.handle_exception(e, { context: "incoming email", mail: mail_string })
