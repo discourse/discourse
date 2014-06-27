@@ -15,7 +15,7 @@ class BadgeGranter
 
     user_badge = UserBadge.find_by(badge_id: @badge.id, user_id: @user.id, post_id: @post_id)
 
-    if user_badge.nil? || @badge.multiple_grant?
+    if user_badge.nil? || (@badge.multiple_grant? && @post_id.nil?)
       UserBadge.transaction do
         user_badge = UserBadge.create!(badge: @badge, user: @user,
                                        granted_by: @granted_by,
