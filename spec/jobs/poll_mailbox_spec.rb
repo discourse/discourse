@@ -43,7 +43,14 @@ describe Jobs::PollMailbox do
   describe "processing email" do
 
     let!(:receiver) { mock }
-    let!(:email_string) { "EMAIL AS A STRING" }
+    let!(:email_string) { <<MAIL
+From: user@example.com
+To: reply+32@discourse.example.net
+Subject: Hi
+
+Email As a String
+MAIL
+    }
     let!(:email) { mock }
 
     before do
@@ -67,17 +74,17 @@ describe Jobs::PollMailbox do
         receiver.expects(:process).raises(Email::Receiver::UserNotSufficientTrustLevelError)
         email.expects(:delete)
 
-        Mail::Message.expects(:new).with(email_string).returns(email)
-
-        email.expects(:from)
-        email.expects(:body)
+        message = Mail::Message.new(email_string)
+        Mail::Message.expects(:new).with(email_string).returns(message)
 
         client_message = mock
-        sender = mock
+        sender_object = mock
 
-        RejectionMailer.expects(:send_rejection).returns(client_message)
-        Email::Sender.expects(:new).with(client_message, :email_reject_trust_level).returns(sender)
-        sender.expects(:send)
+        RejectionMailer.expects(:send_rejection).with(
+            message.from, message.body, message.to, :email_reject_trust_level
+        ).returns(client_message)
+        Email::Sender.expects(:new).with(client_message, :email_reject_trust_level).returns(sender_object)
+        sender_object.expects(:send)
 
         poller.handle_mail(email)
       end
@@ -97,6 +104,8 @@ describe Jobs::PollMailbox do
         it "deletes email on #{exception}" do
           receiver.expects(:process).raises(exception)
           email.expects(:delete)
+
+          Discourse.stubs(:handle_exception)
 
           poller.handle_mail(email)
         end

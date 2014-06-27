@@ -3,8 +3,8 @@ require_dependency 'email/message_builder'
 class RejectionMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
-  def send_rejection(from, body, template, error)
-    build_email(from, from: from, template: template, error: error, source: body)
+  def send_rejection(from, body, to_address, template)
+    build_email(from, template: "system_messages.#{template}", source: body, destination: to_address)
   end
 
   def send_trust_level(from, template)
