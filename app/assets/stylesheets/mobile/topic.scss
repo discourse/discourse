@@ -106,6 +106,14 @@
   color: $primary;
   width: 130px;
   height: 34px;
+
+  /* as a big ol' click target, don't let text inside be selected */
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+
   .nums {
     position: relative;
     top: 9px;
