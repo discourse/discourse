@@ -9,6 +9,7 @@ module Jobs
       Group.refresh_automatic_groups!
       Notification.ensure_consistency!
       UserAction.ensure_consistency!
+      UserBadge.ensure_consistency!
     end
   end
 end
