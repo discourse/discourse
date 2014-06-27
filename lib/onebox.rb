@@ -1,3 +1,4 @@
+require "openssl"
 require "open-uri"
 require "multi_json"
 require "nokogiri"
