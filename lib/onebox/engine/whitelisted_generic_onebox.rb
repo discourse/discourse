@@ -14,7 +14,8 @@ module Onebox
       end
 
       def self.default_whitelist
-        %w(500px.com
+        %w(23hq.com
+          500px.com
           about.com
           answers.com
           ask.com
@@ -63,6 +64,7 @@ module Onebox
           instagr.am
           instagram.com
           itunes.apple.com
+          justin.tv
           khanacademy.org
           kickstarter.com
           kinomap.com
@@ -70,6 +72,7 @@ module Onebox
           lessonplanet.com
           mashable.com
           meetup.com
+          mixcloud.com
           mlb.com
           myspace.com
           nba.com
@@ -100,6 +103,7 @@ module Onebox
           tumblr.com
           twitpic.com
           usatoday.com
+          videojug.com
           vimeo.com
           walmart.com
           washingtonpost.com
