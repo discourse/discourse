@@ -88,6 +88,7 @@ module Onebox
           slideshare.net
           soundcloud.com
           sourceforge.net
+          speakerdeck.com
           spotify.com
           squidoo.com
           techcrunch.com
