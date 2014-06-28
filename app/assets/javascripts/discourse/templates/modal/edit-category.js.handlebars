@@ -1,0 +1,22 @@
+<div {{bind-attr class="loading:invisible"}}>
+  <ul class="nav nav-pills">
+    {{edit-category-tab selectedTab=selectedTab tab="general"}}
+    {{#unless isUncategorizedCategory}}
+      {{edit-category-tab selectedTab=selectedTab tab="security"}}
+      {{edit-category-tab selectedTab=selectedTab tab="settings"}}
+    {{/unless}}
+  </ul>
+
+  <div class="modal-body">
+    {{#each tab in view.panels}}
+      {{view 'edit-category-panel' tab=tab}}
+    {{/each}}
+  </div>
+
+  <div class="modal-footer">
+    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
+    {{#if can_delete}}
+      <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
+    {{/if}}
+  </div>
+</div>

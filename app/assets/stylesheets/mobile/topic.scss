@@ -106,6 +106,10 @@
   color: $primary;
   width: 130px;
   height: 34px;
+
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
+
   .nums {
     position: relative;
     top: 9px;

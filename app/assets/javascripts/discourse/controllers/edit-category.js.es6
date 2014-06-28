@@ -8,9 +8,6 @@
   @module Discourse
 **/
 export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
-  generalSelected:  Ember.computed.equal('selectedTab', 'general'),
-  securitySelected: Ember.computed.equal('selectedTab', 'security'),
-  settingsSelected: Ember.computed.equal('selectedTab', 'settings'),
   foregroundColors: ['FFFFFF', '000000'],
 
   parentCategories: function() {
@@ -117,19 +114,6 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   showPositionInput: Discourse.computed.setting('fixed_category_positions'),
 
   actions: {
-
-    selectGeneral: function() {
-      this.set('selectedTab', 'general');
-    },
-
-    selectSecurity: function() {
-      this.set('selectedTab', 'security');
-    },
-
-    selectSettings: function() {
-      this.set('selectedTab', 'settings');
-    },
-
     showCategoryTopic: function() {
       this.send('closeModal');
       Discourse.URL.routeTo(this.get('topic_url'));

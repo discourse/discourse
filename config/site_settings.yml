@@ -452,6 +452,24 @@ trust:
   regular_requires_likes_received: 1
   regular_requires_likes_given: 1
   regular_requires_topic_reply_count: 3
+  leader_requires_days_visited:
+    default: 50
+    min: 1
+    max: 100
+  leader_requires_topics_replied_to:
+    default: 10
+    min: 0
+  leader_requires_topics_viewed:
+    default: 25
+    min: 0
+    max: 100
+  leader_requires_posts_read:
+    default: 25
+    min: 0
+    max: 100
+  leader_requires_max_flagged:
+    default: 5
+    min: 0
 
 security:
   use_https: false

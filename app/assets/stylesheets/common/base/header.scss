@@ -165,7 +165,9 @@
 
     }
 
-    &:hover a:not(.badge-notification) {background: scale-color-diff();}
+    &:hover a:not(.badge-notification) {
+      background-color: scale-color($highlight, $lightness: 60%);
+      }
     button {margin-left: 5px;}
 
   }

@@ -25,6 +25,16 @@ class UserProfile < ActiveRecord::Base
     cook
   end
 
+  def upload_profile_background(upload)
+    self.profile_background = upload.url
+    self.save!
+  end
+
+  def clear_profile_background
+    self.profile_background = ""
+    self.save!
+  end
+
   private
 
   def cook
@@ -46,4 +56,5 @@ end
 #  bio_raw                       :text
 #  location :string(255)
 #  website  :string(255)
+#  profile_background       :string(255)
 #

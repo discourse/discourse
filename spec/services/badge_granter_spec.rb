@@ -90,7 +90,9 @@ describe BadgeGranter do
       # Nice post badge
       post.update_attributes like_count: 10
       BadgeGranter.update_badges(action: :post_like, post_id: post.id)
+      BadgeGranter.update_badges(action: :post_like, post_id: post.id)
       UserBadge.find_by(user_id: user.id, badge_id: 6).should_not be_nil
+      UserBadge.where(user_id: user.id, badge_id: 6).count.should == 1
       # Good post badge
       post.update_attributes like_count: 25
       BadgeGranter.update_badges(action: :post_like, post_id: post.id)

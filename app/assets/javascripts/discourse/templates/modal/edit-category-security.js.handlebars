@@ -1,0 +1,21 @@
+<section class='field'>
+  <ul class='permission-list'>
+    {{#each permissions}}
+      <li>
+        <span class="name"><span class="badge-group">{{group_name}}</span></span>
+        {{{i18n "category.can"}}}
+        <span class="permission">{{permission.description}}</span>
+        {{#if controller.editingPermissions}}
+          <a {{action removePermission this}}><i class="fa fa-times-circle"></i></a>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+  {{#if controller.editingPermissions}}
+    {{view Ember.Select content=availableGroups value=selectedGroup}}
+    {{view Ember.Select class="permission-selector" optionValuePath="content.id" optionLabelPath="content.description" content=availablePermissions value=selectedPermission}}
+    <button {{action addPermission selectedGroup selectedPermission}} class="btn btn-small">{{i18n category.add_permission}}</button>
+  {{else}}
+    <button {{action editPermissions}} class="btn btn-small">{{i18n category.edit_permissions}}</button>
+  {{/if}}
+</section>

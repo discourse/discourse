@@ -1796,12 +1796,15 @@ en:
           requirement_heading: "Requirement"
           visits: "Visits"
           days: "days"
-          topics_with_replies: "Topics with Replies"
           topics_replied_to: "Topics Replied To"
-          quality_content: "Quality Content"
-          reading: "Reading"
-          site_promotion: "Site Promotion"
+          topics_viewed: "Topics Viewed"
+          posts_read: "Posts Read"
           flagged_posts: "Flagged Posts"
+          flagged_by_users: "Users Who Flagged"
+          qualifies: "Qualifies for trust level 3."
+          will_be_promoted: "Will be promoted within 24 hours."
+          does_not_qualify: "Doesn't qualify for trust level 3."
+          will_be_demoted: "Will be demoted within 24 hours."
 
       site_content:
         none: "Choose a type of content to begin editing."
@@ -1935,10 +1938,10 @@ en:
           description: Received a like.
         nice_post:
           name: Nice Post
-          description: Received 10 likes on a post.
+          description: Received 10 likes on a post. This badge can be granted multiple times.
         good_post:
           name: Good Post
-          description: Received 25 likes on a post.
+          description: Received 25 likes on a post. This badge can be granted multiple times.
         great_post:
           name: Great Post
-          description: Received 100 likes on a post.
+          description: Received 100 likes on a post. This badge can be granted multiple times.

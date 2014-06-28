@@ -32,40 +32,22 @@
           <td>{{min_days_visited_percent}}%</td>
         </tr>
         <tr>
-          <th>{{i18n admin.user.tl3_requirements.topics_with_replies}}</th>
-          <td><i {{bindAttr class=":fa met.topics_with_replies:fa-check:fa-times"}}></i></td>
-          <td>{{num_topics_with_replies}}</td>
-          <td>{{min_topics_with_replies}}</td>
-        </tr>
-        <tr>
           <th>{{i18n admin.user.tl3_requirements.topics_replied_to}}</th>
           <td><i {{bindAttr class=":fa met.topics_replied_to:fa-check:fa-times"}}></i></td>
           <td>{{num_topics_replied_to}}</td>
           <td>{{min_topics_replied_to}}</td>
         </tr>
         <tr>
-          <th>{{i18n admin.user.tl3_requirements.quality_content}}</th>
-          <td></td>
-          <td style="color: #ccc;">
-            TODO
-          </td>
-          <td></td>
+          <th>{{i18n admin.user.tl3_requirements.topics_viewed}}</th>
+          <td><i {{bindAttr class=":fa met.topics_viewed:fa-check:fa-times"}}></i></td>
+          <td>{{topics_viewed}}</td>
+          <td>{{min_topics_viewed}}</td>
         </tr>
         <tr>
-          <th>{{i18n admin.user.tl3_requirements.reading}}</th>
-          <td></td>
-          <td  style="color: #ccc;">
-            TODO
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <th>{{i18n admin.user.tl3_requirements.site_promotion}}</th>
-          <td></td>
-          <td  style="color: #ccc;">
-            TODO
-          </td>
-          <td></td>
+          <th>{{i18n admin.user.tl3_requirements.posts_read}}</th>
+          <td><i {{bindAttr class=":fa met.posts_read:fa-check:fa-times"}}></i></td>
+          <td>{{posts_read}}</td>
+          <td>{{min_posts_read}}</td>
         </tr>
         <tr>
           <th>{{i18n admin.user.tl3_requirements.flagged_posts}}</th>
@@ -73,9 +55,30 @@
           <td>{{num_flagged_posts}}</td>
           <td>{{max_flagged_posts}} {{i18n max}}</td>
         </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.flagged_by_users}}</th>
+          <td><i {{bindAttr class=":fa met.flagged_by_users:fa-check:fa-times"}}></i></td>
+          <td>{{num_flagged_by_users}}</td>
+          <td>{{max_flagged_by_users}} {{i18n max}}</td>
+        </tr>
       </tbody>
     </table>
   {{/with}}
+
+  <br/>
+  <p>
+    {{#if leaderRequirements.requirements_met}}
+      <i class="fa fa-check"></i> {{i18n admin.user.tl3_requirements.qualifies}}
+      {{#unless isLeader}}
+        {{i18n admin.user.tl3_requirements.will_be_promoted}}
+      {{/unless}}
+    {{else}}
+      <i class="fa fa-times"></i> {{i18n admin.user.tl3_requirements.does_not_qualify}}
+      {{#if isLeader}}
+        {{i18n admin.user.tl3_requirements.will_be_demoted}}
+      {{/if}}
+    {{/if}}
+  </p>
 </div>
 
 

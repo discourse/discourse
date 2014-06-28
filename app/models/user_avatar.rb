@@ -34,7 +34,7 @@ class UserAvatar < ActiveRecord::Base
     # skip saving, we are not connected to the net
     Rails.logger.warn "Failed to download gravatar, socket error - user id #{ user.id }"
   ensure
-    tempfile.unlink if tempfile
+    tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end
 
 end

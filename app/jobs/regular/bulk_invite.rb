@@ -49,52 +49,59 @@ module Jobs
 
     def read_csv_file(csv_path)
       CSV.foreach(csv_path) do |csv_info|
-        if !csv_info[0].nil?
-          if validate_email(csv_info[0])
-            # email is valid, now check for groups
-            if !csv_info[1].nil?
-              # group(s) present
-              send_invite_with_groups(csv_info[0], csv_info[1], $INPUT_LINE_NUMBER)
-            else
-              # no group present
-              send_invite_without_group(csv_info[0])
-            end
+        if csv_info[0]
+          if (EmailValidator.email_regex =~ csv_info[0])
+            # email is valid
+            send_invite(csv_info, $INPUT_LINE_NUMBER)
             @sent += 1
           else
             # invalid email
-            log "Invalid email '#{csv_info[0]}' at line number '#{$INPUT_LINE_NUMBER}'"
+            log "Invalid Email '#{csv_info[0]}' at line number '#{$INPUT_LINE_NUMBER}'"
             @failed += 1
           end
         end
       end
     end
 
-    def validate_email(email)
-      /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/.match(email)
-    end
-
-    def send_invite_with_groups(email, group_names, csv_line_number)
+    def get_group_ids(group_names, csv_line_number)
       group_ids = []
-      group_names = group_names.split(';')
-      group_names.each { |group_name|
-        group_detail = Group.find_by_name(group_name)
-        if !group_detail.nil?
-          # valid group
-          group_ids.push(group_detail.id)
-        else
-          # invalid group
-          log "Invalid group '#{group_name}' at line number '#{csv_line_number}'"
-        end
-      }
-      Invite.invite_by_email(email, @current_user, topic=nil, group_ids)
+      if group_names
+        group_names = group_names.split(';')
+        group_names.each { |group_name|
+          group_detail = Group.find_by_name(group_name)
+          if group_detail
+            # valid group
+            group_ids.push(group_detail.id)
+          else
+            # invalid group
+            log "Invalid Group '#{group_name}' at line number '#{csv_line_number}'"
+            @failed += 1
+          end
+        }
+      end
+      return group_ids
     end
 
-    def send_invite_without_group(email)
-      Invite.invite_by_email(email, @current_user, topic=nil)
+    def get_topic(topic_id, csv_line_number)
+      topic = nil
+      if topic_id
+        topic = Topic.find_by_id(topic_id)
+        if topic.nil?
+          log "Invalid Topic ID '#{topic_id}' at line number '#{csv_line_number}'"
+          @failed += 1
+        end
+      end
+      return topic
+    end
+
+    def send_invite(csv_info, csv_line_number)
+      email = csv_info[0]
+      group_ids = get_group_ids(csv_info[1], csv_line_number)
+      topic = get_topic(csv_info[2], csv_line_number)
+      Invite.invite_by_email(email, @current_user, topic, group_ids)
     end
 
     def log(message)
-      puts(message) rescue nil
       save_log(message)
     end
 

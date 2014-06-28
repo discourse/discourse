@@ -14,6 +14,9 @@ class Promotion
     # nil users are never promoted
     return false if @user.blank?
 
+    # Promotion beyond basic requires some expensive queries, so don't do that here.
+    return false if @user.trust_level >= TrustLevel.levels[:regular]
+
     trust_key = TrustLevel.levels[@user.trust_level]
 
     review_method = :"review_#{trust_key.to_s}"
@@ -28,6 +31,10 @@ class Promotion
 
   def review_basic
     Promotion.regular_met?(@user) && change_trust_level!(:regular)
+  end
+
+  def review_regular
+    Promotion.leader_met?(@user) && change_trust_level!(:leader)
   end
 
   def change_trust_level!(level, opts = {})
@@ -86,6 +93,10 @@ class Promotion
     return false if stat.posts_read_count < SiteSetting.basic_requires_read_posts
     return false if (stat.time_read / 60) < SiteSetting.basic_requires_time_spent_mins
     return true
+  end
+
+  def self.leader_met?(user)
+    LeaderRequirements.new(user).requirements_met?
   end
 
 end

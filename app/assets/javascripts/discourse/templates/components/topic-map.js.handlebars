@@ -57,17 +57,22 @@
 
   {{#if infoLinks}}
     <section class='links'>
-        <ul class='topic-links'>
+
+        <table class='topic-links'>
           {{#groupedEach infoLinks}}
-            <li>
+            <tr>
+            <td>
               <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks count=clicks}}'>{{clicks}}</span>
+            </td>
+            <td>
               <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
                 {{#if title}}{{title}}{{else}}{{shorten-url url}}{{/if}}
               </a>
               {{link-domain this}}
-            </li>
+            </td>
+            </tr>
           {{/groupedEach}}
-        </ul>
+        </table>
 
         {{#if showAllLinksControls}}
           <div class='link-summary'>

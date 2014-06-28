@@ -3,6 +3,16 @@ require 'promotion'
 
 describe Promotion do
 
+  describe "review" do
+    it "skips regular users" do
+      # Reviewing users at higher trust levels is expensive, so trigger those reviews in a background job.
+      regular = Fabricate.build(:user, trust_level: TrustLevel.levels[:regular])
+      promotion = described_class.new(regular)
+      promotion.expects(:review_regular).never
+      promotion.review
+    end
+  end
+
   context "newuser" do
 
     let(:user) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser])}
@@ -86,6 +96,44 @@ describe Promotion do
       end
     end
 
+  end
+
+  context "regular" do
+    let(:user) { Fabricate(:user, trust_level: TrustLevel.levels[:regular])}
+    let(:promotion) { Promotion.new(user) }
+
+    context "doesn't qualify for promotion" do
+      before do
+        LeaderRequirements.any_instance.expects(:requirements_met?).at_least_once.returns(false)
+      end
+
+      it "review_regular returns false" do
+        expect {
+          promotion.review_regular.should == false
+        }.to_not change { user.reload.trust_level }
+      end
+
+      it "doesn't promote" do
+        expect {
+          promotion.review_regular
+        }.to_not change { user.reload.trust_level }
+      end
+    end
+
+    context "qualifies for promotion" do
+      before do
+        LeaderRequirements.any_instance.expects(:requirements_met?).at_least_once.returns(true)
+      end
+
+      it "review_regular returns true" do
+        promotion.review_regular.should == true
+      end
+
+      it "promotes to leader" do
+        promotion.review_regular.should == true
+        user.reload.trust_level.should == TrustLevel.levels[:leader]
+      end
+    end
   end
 
 end
