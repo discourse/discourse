@@ -563,6 +563,10 @@ iframe {
     margin: 5px 0 0 0;
     font-size: 1.8em;
     line-height: 1.2em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
   }
 
   a.star {
@@ -584,10 +588,6 @@ iframe {
 
 .open >.dropdown-menu {
   display: block;
-}
-
-.dropdown-menu li  {
-  margin: 5px 0;
 }
 
 .btn-group {
@@ -818,7 +818,6 @@ blockquote { /* solo quotes */
   display: none;
   float: left;
   width: 550px;
-  padding: 4px 0;
   margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
@@ -826,11 +825,11 @@ blockquote { /* solo quotes */
   box-shadow: 0 1px 5px rgba($primary, .4);
   background-clip: padding-box;
   span {font-size: 12px;}
-.title {font-weight: bold; display: block; font-size: 14px;}
+  .title {font-weight: bold; display: block; font-size: 14px;}
 }
 .dropdown-menu a {
   display: block;
-  padding: 3px 9px;
+  padding: 9px;
   clear: both;
   font-weight: normal;
   line-height: 18px;
@@ -843,16 +842,17 @@ blockquote { /* solo quotes */
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: $tertiary;
+  color: $primary;
   text-decoration: none;
-  background-color: scale-color($tertiary, $lightness: 90%);
+  background-color: scale-color($highlight, $lightness: 60%);
+
 }
 
 .dropdown-menu .disabled > a,
 .dropdown-menu .disabled > a:hover {
   text-decoration: none;
   color: $primary;
-  background-color: scale-color($highlight, $lightness: 25%);
+  background-color: scale-color($tertiary, $lightness: 90%);
   cursor: default;
 }
 
