@@ -38,7 +38,7 @@ Discourse.Lightbox = {
             titleSrc: function(item) {
               return [
                 item.el.attr("title"),
-                $("span.informations", item.el).text(),
+                $("span.informations", item.el).text().replace('x', '&times;'),
                 '<a class="image-source-link" href="' + item.src + '" target="_blank">' + I18n.t("lightbox.download") + '</a>'
               ].join(' &middot; ');
             }
