@@ -136,3 +136,17 @@
 .modal-tab {
   position: absolute;
 }
+
+/* fixes for the new account confirm dialog on mobile */
+
+.modal-inner-container {
+  margin-bottom: 20px;
+}
+
+.alert {
+  padding: 5px;
+  &.alert-success {
+    background-color:  scale-color($success, $lightness: 90%);
+    color: $success;
+  }
+}
