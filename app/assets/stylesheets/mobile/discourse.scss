@@ -101,3 +101,10 @@ blockquote {
     }
   }
 }
+
+// Styles used before the user is logged into discourse. For example, activating their
+// account or changing their email.
+
+#simple-container {
+  width: 90%;
+}
