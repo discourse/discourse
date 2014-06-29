@@ -1000,7 +1000,7 @@ a.attachment:before {
 .private_message .gutter:before, .deleted-topic .gutter:before, .read_restricted .gutter:before {
     display: block;
     position: absolute;
-    top: 0;
+    top: -10px;
     left: 10px;
     color: scale-color-diff();
     font: 90px/1 FontAwesome;
