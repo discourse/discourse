@@ -349,7 +349,7 @@ a.star {
   }
 
   h4 {
-    margin: 0 0 3px 0;
+    margin: 1px 0 2px 0;
     color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
     font-size: 12px;
@@ -399,12 +399,14 @@ a.star {
   }
 
   .map {
+    .secondary {text-align: center;}
     li {
       float: left;
       padding: 7px 11px;
       &:last-of-type {
         border-right: 0;
       }
+      &:nth-child(3) { text-align:center; }
     }
     a, .number {
       line-height: 20px;
