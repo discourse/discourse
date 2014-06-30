@@ -47,9 +47,9 @@ class PostAnalyzer
 
     # strip quotes and code blocks
     cooked_stripped = cooked_document
-    cooked_stripped.search("aside.quote").remove
-    cooked_stripped.search("pre").remove
-    cooked_stripped.search("code").remove
+    cooked_stripped.css("aside.quote").remove
+    cooked_stripped.css("pre").remove
+    cooked_stripped.css("code").remove
 
     results = cooked_stripped.to_html.scan(PrettyText.mention_matcher)
     @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }

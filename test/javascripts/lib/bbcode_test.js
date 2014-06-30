@@ -5,6 +5,11 @@ var format = function(input, expected, text) {
   equal(cooked, "<p>" + expected + "</p>", text);
 };
 
+var formatQ = function(input, expected, text) {
+  var cooked = Discourse.Markdown.cook(input, {lookupAvatar: false});
+  equal(cooked, expected, text);
+};
+
 test('basic bbcode', function() {
   format("[b]strong[/b]", "<span class=\"bbcode-b\">strong</span>", "bolds text");
   format("[i]emphasis[/i]", "<span class=\"bbcode-i\">emphasis</span>", "italics text");
@@ -106,19 +111,19 @@ test("quotes", function() {
 
 test("quote formatting", function() {
 
-  format("[quote=\"EvilTrout, post:123, topic:456, full:true\"][sam][/quote]",
+  formatQ("[quote=\"EvilTrout, post:123, topic:456, full:true\"][sam][/quote]",
           "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
           "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote><p>[sam]</p></blockquote></aside>",
           "it allows quotes with [] inside");
 
-  format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]",
+  formatQ("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]",
          "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
          "</div><blockquote><p>abc</p></blockquote></aside>",
          "renders quotes properly");
 
-  format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]\nhello",
+  formatQ("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]\nhello",
          "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
-         "</div><blockquote><p>abc</p></blockquote></aside></p>\n\n<p>hello",
+         "</div><blockquote><p>abc</p></blockquote></aside>\n\n<p>hello</p>",
          "handles new lines properly");
 
 });
@@ -126,8 +131,8 @@ test("quote formatting", function() {
 test("quotes with trailing formatting", function() {
   var cooked = Discourse.Markdown.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]\nhello\n[/quote]\n*Test*", {lookupAvatar: false});
   equal(cooked,
-        "<p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
-        "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote><p>hello</p></blockquote></aside></p>\n\n<p><em>Test</em></p>",
+        "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
+        "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote><p>hello</p></blockquote></aside>\n\n<p><em>Test</em></p>",
         "it allows trailing formatting");
 });
 

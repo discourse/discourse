@@ -71,31 +71,13 @@ Discourse.Dialect.replaceBlock({
       return ['p', ['aside', params, contents]];
     }
 
-    return ['p', ['aside', params,
-                   ['div', {'class': 'title'},
-                     ['div', {'class': 'quote-controls'}],
-                     avatarImg ? ['__RAW', avatarImg] : "",
-                     username ? I18n.t('user.said', {username: username}) : ""
-                   ],
-                   contents
-                ]];
+    return ['aside', params,
+               ['div', {'class': 'title'},
+                 ['div', {'class': 'quote-controls'}],
+                 avatarImg ? ['__RAW', avatarImg] : "",
+                 username ? I18n.t('user.said', {username: username}) : ""
+               ],
+               contents
+            ];
   }
 });
-
-Discourse.Dialect.on("parseNode", function(event) {
-  var node = event.node,
-      path = event.path;
-
-  // Make sure any quotes are followed by a <br>. The formatting looks weird otherwise.
-  if (node[0] === 'aside' && node[1] && node[1]['class'] === 'quote') {
-    var parent = path[path.length - 1],
-        location = parent.indexOf(node)+1,
-        trailing = parent.slice(location);
-
-    if (trailing.length) {
-      parent.splice(location, 0, ['br']);
-    }
-  }
-
-});
-
