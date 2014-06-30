@@ -665,7 +665,7 @@ iframe {
 
 /* solo quotes */
 blockquote {
-  /* inherit only the default top and bottom margins here */
+  /* leave browser defaults for top and bottom here */
   margin-left: 0;
   margin-right: 0;
   padding: 12px;
@@ -675,10 +675,10 @@ blockquote {
 // we assume blockquotes have their own margins, so all blockquotes
 // will remove margins from first (top) and last (bottom) child elements
 blockquote > *:first-child {
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 blockquote > *:last-child {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 
