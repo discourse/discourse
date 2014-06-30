@@ -254,8 +254,30 @@ describe PrettyText do
       PrettyText.cook("**hello**\n**world**").should match_html "<p><strong>hello</strong><br /><strong>world</strong></p>"
     end
 
-    pending "allows does not bold chinese intra word" do
+    it "allows for * and _  in bold" do
+      PrettyText.cook("**a*_b**").should match_html "<p><strong>a*_b</strong></p>"
+    end
+
+    pending "small links" do
+      PrettyText.cook("<small>\nhttp://a.com\n<small>").should match_html "<p><small><br><a href=\"http://a.com\" rel=\"nofollow\">http://a.com</a><br></small></p>"
+    end
+
+
+    it "does not apply italics when there is a space inside" do
+      PrettyText.cook("** hello**").should match_html "<p>** hello**</p>"
+      PrettyText.cook("**hello **").should match_html "<p>**hello **</p>"
+    end
+
+    pending "allows comments through" do
+      PrettyText.cook("boom <!--comment-->").should match_html "<p>boom <!--comment--></p>"
+    end
+
+    it "allows does not bold chinese intra word" do
       PrettyText.cook("你**hello**").should match_html "<p>你**hello**</p>"
+    end
+
+    it "allows bold chinese" do
+      PrettyText.cook("**你hello**").should match_html "<p><strong>你hello</strong></p>"
     end
 
     pending "does not break a streak for mentions" do
