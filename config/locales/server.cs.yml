@@ -740,10 +740,6 @@ cs:
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     embeddable_host: "Host that can embed the comments from this Discourse forum"
-    feed_polling_enabled: "Whether to import a RSS/ATOM feed as posts"
-    feed_polling_url: "URL of RSS/ATOM feed to import"
-    embed_by_username: "Discourse username of the user who creates the topics"
-    embed_category: "Category of created topics"
     embed_post_limit: "Maximum number of posts to embed"
     tos_accept_required: "Uživatelé budou muset při registraci zaškrtnout, že souhlasí s Podmínkami používání. Zprávu můžete upravit v záložce Obsah webu změnou „Registrace: Zpráva s podmínkami používání“."
   notification_types:
@@ -825,41 +821,6 @@ cs:
       blocked: "is blocked."
   test_mailer:
     subject_template: "[%{site_name}] Zkušební email"
-    text_body_template: |
-      Tohle je testovací email z fóra na %{site_name}. Toto fórum můžete navštívit ve vašem prohlížeči na
-
-      [**%{base_url}**][0]
-
-      Doručování emailu je komplexní operace, zde je pár věcí, které byste měli zkontrolovat:
-
-      - Ujistěte, že si prohlížíte *čistý zdrojový kód emailu* ve vašem emailovém klientovi, abyste si mohli prohlédnout hlavičky emailu.
-
-      - **DŮLEŽITÉ:** Má váš poskytovatel připojení reverzní DNS záznam, aby byla přiřazena doména, ze které odesíláte emaily, s IP adresou, kterou k odesílání používáte? Můžete si [otestovat reverzní PTR záznam][2]. Pokud váš poskytovatel nemá správně nastavený reverzní DNS záznam, je pravděpodobné, že vám nebudou správně doručovány emaily.
-
-      - Máte správně nastavený SPF záznam u domény? Můžete si [otestovat SPF záznam][1].
-
-      - Nastavili jste si [podepisování emailů DKIM klíčem][3] ve vašem emailovém softwaru a vložili DKIM klíč do DNS záznamů?
-
-      - Zkontrolovali jste, že IP adresa server, odkud odesíláte emaily, není na [žádném blacklistu][4]?
-
-      - Ověřili jste, že váš emailový server *opravdu* zasílá plně kvalifikovaný název serveru, který se správně překládá v systému DNS při HELO zprávě? Pokud ne, budou vaše emaily odmítány řadou emailových služeb.
-
-      Doufáme, že vám tento testovací email v pořádku dorazil!
-
-      Hodně štěstí,
-
-      Vaši přátelé na %{site_name}.
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/SuperTool.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-
-      ----
-
-      <small>V každém emailu, který zasíláte, by měl být odkaz na odhlášení příjmu emailů, tak tady je taky takový. Tento email vám zaslala Velká Společnost s.r.o., Hlavní ul. 1337, Kotěhůlky, Česká republika. Pokud již od nás nechcete dostávat další emaily, [klikněte sem pro odhlášení][5].</small>
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Updates Are Available"
   system_messages:
@@ -922,14 +883,6 @@ cs:
     import_succeeded:
       subject_template: "Import úspěšně dokončen"
       text_body_template: "Import proběhl úspěšně."
-    email_error_notification:
-      subject_template: "Chyba čtení emailu"
-    email_reject_trust_level:
-      subject_template: "Zpráva odmítnuta"
-      text_body_template: |
-        Zpráva kterou jste poslali na %{to} byla systémem odmítnuta.
-
-        Nemáte dostatečnou důvěryhodnost k posílání příspěvků na tuhle emailovou adresu.
     too_many_spam_flags:
       subject_template: "Účet zablokován"
       text_body_template: |
@@ -1095,10 +1048,6 @@ cs:
     access_token_problem: "Kontaktujte administrátora: Prosím aktualizuje nastavení webu, aby mělo správný klíč 'discourse_org_access_key'."
   page_not_found:
     title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
-    popular_topics: "Populární témata"
-    recent_topics: "Témata z poslední doby"
-    see_more: "Více"
-    search_title: "Hledat toto téma"
     search_google: "Hledat Googlem"
   login_required:
     welcome_message: |

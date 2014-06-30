@@ -592,46 +592,6 @@ ko:
       blocked: "는 블락되었습니다."
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
-    text_body_template: |
-      This is a test email sent from your %{site_name} forum at:
-
-      [**%{base_url}**][0]
-
-      Email deliverability is complicated. Here are a few important things you should check first:
-
-      - Know how to view the *raw source of the email* in your mail client, so you can examine the email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu on each mail.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's SPF record correct? [Test your SPF record][1] here.
-
-      - Check to make sure the IPs of your mail server are [not on any email blacklists][4].
-
-      - Verify that your email server is *definitely* sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-      - Configure [DKIM email key signing][3] in your email software, and place the public DKIM key in your DNS records. This is not required, but will significantly improve email deliverability.
-
-      (The *easy* way is to [sign up for Mandrill][6], which has a generous free mailing plan and will be fine for small forums. You'll still need to set up the SPF and DKIM records in your DNS, though!)
-
-      We hope you received this email deliverability test OK!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-
-      :smile:
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-
-      ----
-
-      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
   system_messages:
     post_hidden:
       subject_template: "포럼 신고로 인한 게시글 숨김"
@@ -816,10 +776,6 @@ ko:
     access_token_problem: "관리자에게 올바른 discourse_org_access_key를 포함할 수 있도록 사이트 세팅을 업데이트하도록 요청하세요."
   page_not_found:
     title: "당신이 요청한 페이지를 찾을 수 없습니다. 혹시 아래와 같은 토픽을 찾으신 것은 아닌가요?"
-    popular_topics: "인기 토픽들"
-    recent_topics: "최근 토픽들"
-    see_more: "더보기"
-    search_title: "이 토픽을 검색하기"
     search_google: "구글 검색"
   login_required:
     welcome_message: |

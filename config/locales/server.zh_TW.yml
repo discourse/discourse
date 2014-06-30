@@ -281,6 +281,10 @@ zh_TW:
   archetypes:
     regular:
       title: "一般討論話題"
+    banner:
+      message:
+        make: "此討論話題已成為橫幅討論話題，它將顯示於每頁的正上方，直到用戶將其關閉。"
+        remove: "此討論話題不再是橫幅討論話題，它將不再顯示於每頁的正上方。"
   unsubscribed:
     title: '取消訂閱'
     description: "你已經取消訂閱，我們不會再聯絡你。"
@@ -580,7 +584,6 @@ zh_TW:
     display_name_on_posts: "在用戶的文章上同時顯示其全名"
     invites_shown: "使用者頁面上顯示的最大邀請數"
     embed_username_key_from_feed: "用以抓取 discourse 用戶名稱的 key \n(Key to pull discourse username from feed)"
-    embed_category: "已建立之討論話題的分類"
     embed_post_limit: "最大內嵌文章數"
     enable_cdn_js_debugging: "對所有 js includes 增加 crossorigin 權限使 /logs 能顯示適當的錯誤訊息"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
@@ -688,41 +691,6 @@ zh_TW:
       此邀請是由一位受信任的用戶所發出，所以你不需要登入。
   test_mailer:
     subject_template: "[%{site_name}] 電子郵件發送測試"
-    text_body_template: |
-      這是一封來自 %{site_name} 論壇的測試郵件。你可以通過瀏覽器瀏覽該論壇：
-
-      [*%{base_url}*][0]
-
-      電子郵件分發可能會很複雜，但是你可以快速檢查如下幾點：
-
-      - 確定你會使用你的郵件用戶端查看 *電子郵件原始程式碼*，這樣你可以通過查看郵件頭來獲取重要線索。
-
-      - **重要：** 你的ISP是否對你發送郵件的功能變數名稱和IP作了反向DNS解析？你可以在此 [測試你的反向枚舉指標（PTR）記錄][2]。如果你的ISP沒有正確的反向DNS記錄，那麼很可能你的任何電子郵件都不會被成功發送。
-
-      - 你的功能變數名稱的寄件者策略框架（SPF）記錄是否正確？你可以在此 [測試你的SPF記錄][1]。
-
-      - 你是否在你的電子郵件軟體中配置了 [功能變數名稱金鑰身份識別郵件（DKIM）的電子郵件金鑰簽名][3]，並且把DKIM公匙輸入到了DNS記錄中？
-
-      - 你是否檢查過你發送電子郵件的伺服器IP [不在任何郵件黑名單中][4]？
-
-      - 你是否確認過你的郵件伺服器 *確定無疑的* 在它的 HELO 消息中送出了完整的主機名稱？如果沒有，那麼會導致很多郵件服務商拒絕你的郵件。
-
-      我們衷心希望你收到這封郵件，發送測試成功！
-
-      祝好運！
-
-      你的來自 %{site_name} 的朋友。
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/SuperTool.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-
-      ----
-
-      <small>在每封你發送的郵件底部應該都有取消訂閱的連結，讓我們類比一下。這封郵件發送自 中華人民共和國 北京市海澱區中關村南大街3號 海澱資本中心 14層 公司名稱，郵編 100081。如果你不希望將來繼續收到我們的郵件，[點擊此處取消訂閱][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] 有可用的新版 Discourse 更新"
   flags_reminder:
@@ -819,15 +787,6 @@ zh_TW:
       text_body_template: "導入操作成功。"
     import_failed:
       subject_template: "匯入失敗"
-    email_error_notification:
-      text_body_template: |
-        這是一則自動產生的訊息。
-
-        收到一封無法分析的電子郵件。請審查以下錯誤：
-
-        `%{error}`
-
-        %{source}
     too_many_spam_flags:
       subject_template: "新帳號已封鎖"
     blocked_by_staff:
@@ -948,10 +907,6 @@ zh_TW:
     access_token_problem: "告訴一個管理員：請更新網站設定以包含正確的 discourse_org_access_key。"
   page_not_found:
     title: "你請求的頁面在本論壇不存在。可能我們能幫助你找到它，或者類似的其它討論話題："
-    popular_topics: "熱門討論話題"
-    recent_topics: "近期討論話題"
-    see_more: "檢視更多"
-    search_title: "搜索該討論話題"
     search_google: "以 Google 搜尋"
   terms_of_service:
     user_content_license: |

@@ -146,6 +146,8 @@ pt_BR:
     disable: "Desligar"
     undo: "Desfazer"
     revert: "Reverter"
+    banner:
+      close: "Ignorar este banner."
     choose_topic:
       none_found: "Nenhum tópico encontrado."
       title:
@@ -211,6 +213,13 @@ pt_BR:
       post_stat_sentence:
         one: "%{count} nova mensagem nos últimos %{unit}."
         other: "%{count} novas mensagens nos últimos %{unit}."
+    ip_info:
+      location: localização
+      location_not_found: (desconhecido)
+      organisation: Organização
+      phone: Telefone
+      other_accounts: Outras contas com este endereço IP
+      no_other_accounts: (nenhum)
     user:
       said: "{{username}} postou:"
       profile: "Perfil"
@@ -294,12 +303,10 @@ pt_BR:
         frequency: "Vamos lhe enviar emails apenas quando não o virmos há algum tempo e você não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
-        instructions: "O seu nome completo; visível publicamente."
         too_short: "O seu nome é muito curto."
         ok: "O seu nome parece ok."
       username:
         title: "Nome de Usuário"
-        instructions: "Deve ser único, sem espaços e curto. As pessoas podem mencionar você como @seunome."
         short_instructions: "As pessoas podem mencionar você usando @{{username}}."
         available: "O seu Nome de Usuário está disponível."
         global_match: "O email corresponde ao Nome de Usuário registado."
@@ -505,7 +512,6 @@ pt_BR:
       create_pm: "Criar uma Mensagem Privada"
       title: "Ou pressione Ctrl+Enter"
       users_placeholder: "Adicionar um usuário"
-      title_placeholder: "Escreva seu título aqui. Sobre o que é esta discussão numa pequena frase?"
       edit_reason_placeholder: "por que você está editando?"
       show_edit_reason: "(adicione motivo da edição)"
       reply_placeholder: "Escreva sua resposta aqui. Utilize Markdown ou BBCode para formatar. Arraste ou cole aqui uma imagem para enviar."
@@ -528,7 +534,6 @@ pt_BR:
       quote_title: "Bloco de citação"
       quote_text: "Bloco de citação"
       code_title: "Texto pré-formatado"
-      code_text: "digite o texto pré-formatado aqui"
       upload_title: "Enviar"
       upload_description: "digite aqui a descrição do arquivo enviado"
       olist_title: "Lista numerada"
@@ -1054,7 +1059,6 @@ pt_BR:
       delete_confirm: "Você está prestes a excluir <b>%{posts}</b> mensagens e <b>%{topics}</b> tópicos deste usuário, removendo a conta, bloqueando cadastro a partir do endereço IP <b>%{ip_address}</b> e adicionando o e-mail dele <b>%{email}</b> em uma lista de bloqueio permanente. Você tem certeza que este usuário é realmente um spammer?"
       yes_delete_spammer: "Sim, Apagar Spammer"
       submit_tooltip: "Enviar uma sinalização privada"
-      take_action_tooltip: "Atingiu o limite de sinalização"
       cant: "Desculpe, não é possível colocar uma sinalização neste momento."
       custom_placeholder_notify_user: "Porque esta postagem requer que você fale diretamente e privativamente com este usuário? Seja específico, construtivo e sempre gentil."
       custom_placeholder_notify_moderators: "Porque esta postagem requer atenção do moderador? Diga especificamente como isto te preocupou e forneça links relevantes se possível."
@@ -1232,7 +1236,6 @@ pt_BR:
         view_message: "Responder"
         no_results: "Não há sinalizações."
         topic_flagged: "Este <strong>tópico</strong> foi sinalizado."
-        visit_topic: "Visite o tópico para investigar e tomar medidas."
         summary:
           action_type_3:
             one: "off-topic"
@@ -1338,7 +1341,6 @@ pt_BR:
         override_default: "Sobrepor padrão?"
         enabled: "Habilitado?"
         preview: "pré-visualização"
-        undo_preview: "desfazer pré-visualização"
         save: "Guardar"
         new: "Novo"
         new_style: "Novo Estilo"
@@ -1618,11 +1620,7 @@ pt_BR:
           requirement_heading: "Requisito"
           visits: "Visitas"
           days: "dias"
-          topics_with_replies: "Tópicos com Respostas"
           topics_replied_to: "Tópicos Respondidos"
-          quality_content: "Qualidade de Conteúdo"
-          reading: "Leitura"
-          site_promotion: "Promoção do Site"
           flagged_posts: "Mensagens Sinalizadas"
       site_content:
         none: "Escolhar um tipo de conteúdo para começar a editar."

@@ -721,6 +721,8 @@ pl_PL:
     email:
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
       blocked: "is not allowed."
+  invite_mailer:
+    text_body_template: "%{invitee_name} zaprosił ciebie do dyskusji \n\n> %{topic_title}\n\nw\n\n> **%{site_title}**\n>\n> %{site_description}\n\nKliknij link poniżej, by przeczytać więcej: \n\n%{invite_link}\n\nTo zaproszenie zostało wysłane przez zaufanego użytkownika. Możesz od razu dołączyć od razu dołączyć do dyskusji. \n"
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   flags_reminder:
@@ -732,22 +734,6 @@ pl_PL:
   system_messages:
     post_hidden:
       subject_template: "Wpis ukryty z powodu oflagowania przez społeczność"
-      text_body_template: |
-        Witaj,
-
-        Jest to automatyczna wiadomość z forum %{site_name} wysłana by poinformować Cię że Twój wpis...
-
-        %{base_url}%{url}
-
-        ...został ukryty z powodu oflagowania przez społeczność.
-
-        %{flag_reason}
-
-        Przed jego ukryciem, wielu członków społeczności go oflagowało, więc **zastanów się jak możesz go zmienić by uwzględnić ich wkład.** Możesz zmodyfikować swój wpis po %{edit_delay} minutach, i zostanie automatycznie ujawniony ponownie. Zwiększy to Twój poziom zaufania.
-
-        Jednak jeśli wpis zostanie ukryty przez społeczność po raz drugi, moderatorzy zostaną powiadomieni - i mogą wyciągnąć dalsze konsekwencje, włącznie z możliwym zawieszeniem Twojego konta.
-
-        Dodatkowe wskazówki możesz znaleźć w naszym [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Ta wiadomość zawiera kilka szybkich porad na początek:
@@ -957,10 +943,6 @@ pl_PL:
     access_token_problem: "Powiedz administratorowi: Proszę zmienić ustawienia serwisu by dołączyć prawidłowy discourse_org_access_key."
   page_not_found:
     title: "Strona, którą chciałeś odwiedzić, nie istnieje lub jest prywatna."
-    popular_topics: "Popularne tematy"
-    recent_topics: "Świeże tematy"
-    see_more: "Zobacz więcej"
-    search_title: "Szukaj tego tematu"
     search_google: "Szukaj w Google"
   login_required:
     welcome_message: |

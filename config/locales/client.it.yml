@@ -291,12 +291,10 @@ it:
         frequency: "Ti invieremo mail solo se è un po' che non ti si vede; le email riguarderanno solo le conversazioni che non hai letto."
       name:
         title: "Nome"
-        instructions: "La versione completa del tuo nome; visibile a tutti."
         too_short: "Il tuo nome è troppo breve."
         ok: "Il tuo nome è adeguato."
       username:
         title: "Nome utente"
-        instructions: "Deve essere unico, senza spazi, corto. Gli altri si possono riferire a te come @username."
         short_instructions: "Gli utenti possono citarti scrivendo \"@{{username}}\"."
         available: "Il tuo nome utente è disponibile."
         global_match: "L'email corrisponde allo username registrato."
@@ -487,7 +485,6 @@ it:
       create_pm: "Crea un messaggio privato"
       title: "O premi Ctrl+Enter"
       users_placeholder: "Aggiunti un utente"
-      title_placeholder: "Digita qui il titolo. Riassumi l'argomento del topic in poche parole."
       edit_reason_placeholder: "Perchè stai scrivendo?"
       show_edit_reason: "(aggiungi motivo della modifica)"
       reply_placeholder: "Scrivi qui. Per formattare il testo, usa Markdown o BBCode. Trascina o incolla un'immagine per caricarla."
@@ -510,7 +507,6 @@ it:
       quote_title: "Citazione"
       quote_text: "Citazione"
       code_title: "Testo preformattato"
-      code_text: "Inserisci qui il testo già formattato"
       upload_title: "Carica"
       upload_description: "Inserisci la descrizione dell'upload qui"
       olist_title: "Lista numerica"
@@ -1184,7 +1180,6 @@ it:
         view_message: "Rispondi"
         no_results: "Non ci sono contrassegni"
         topic_flagged: "Questo <strong>topic</strong> è stato contrassegnato."
-        visit_topic: "Visita il topic per approfondire e fare un'azione"
         summary:
           action_type_3:
             one: "off-topic "
@@ -1290,7 +1285,6 @@ it:
         override_default: "Non includere fogli di stile standard"
         enabled: "Attivo?"
         preview: "anteprima"
-        undo_preview: "Rifai la preview"
         save: "Salva"
         new: "Nuovo"
         new_style: "Nuovo stile"
@@ -1566,11 +1560,7 @@ it:
           requirement_heading: "Requisito"
           visits: "Visite"
           days: "giorni"
-          topics_with_replies: "Topic con risposte"
           topics_replied_to: "Topic risposti a"
-          quality_content: "Contenuto di qualità"
-          reading: "In lettura"
-          site_promotion: "Promozione del sito"
           flagged_posts: "Post segnalati"
       site_content:
         none: "Scegli un tipo di contenuto per iniziare"

@@ -26,6 +26,8 @@ es:
   errors:
     embed:
       load_from_remote: "Hubo un error al cargar ese post."
+  bulk_invite:
+    file_should_be_csv: "El archivo subido debe tener formato csv. "
   backup:
     operation_already_running: "Actualmente se está ejecutando una operación. No se puede iniciar un nuevo trabajo justo ahora."
     backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser del tipo .tar.gz"
@@ -376,6 +378,10 @@ es:
   archetypes:
     regular:
       title: "Tema normal"
+    banner:
+      message:
+        make: "Este tema es ahora un tema de encabezado . Aparecera en la parte superior de cada página hasta que el usuario lo cierre. "
+        remove: "Este tema ya no es un tema de encabezado y dejara de aparecer en la parte superior de cada página."
   unsubscribed:
     title: 'Dado de bajada'
     description: "Has sido dado de baja. ¡No te contactaremos de nuevo!"
@@ -619,6 +625,7 @@ es:
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
     top_menu: "Determinar qué elementos aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
+    post_menu_hidden_items: "Los items del menu a ocultarse por defecto en el menu del post a menos que se haga click en los puntos suspensivos. "
     share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "Cuántos topics son cargados por defecto en la página de lista de topics"
@@ -666,6 +673,7 @@ es:
     enable_github_logins: "Activar autenticación por Github, requiere una github_client_id y un github_client_secret"
     github_client_id: "Client id para la autenticación por Github, registrado en https://github.com/settings/applications"
     github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
+    allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     backup_daily: "Crear automáticamente una copia de seguridad del sitio una vez al día"
     enable_s3_backups: "Subir las copias de seguridad a S3 cuando se completen. Asegúrate de haber introducido tus credenciales del S3."
@@ -741,6 +749,7 @@ es:
     reply_by_email_enabled: "Activar permitir responder a temas por e-mail"
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     pop3s_polling_enabled: "Poll vía POP3S para respuestas por email"
+    pop3s_polling_insecure: "Encuesta utilizando texto sin formato POP3 sin incluir SSL"
     pop3s_polling_port: "El puerto para habilitar una cuenta vía POP3S"
     pop3s_polling_host: "El host donde irá el poll para el email vía POP3S"
     pop3s_polling_username: "El usuario de la cuenta para el poll por email vía POP3S"
@@ -772,6 +781,7 @@ es:
     dominating_topic_minimum_percent: "Qué porcentaje de posts tiene que crear un usuario en un tema para considerarlo dominante."
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas"
     global_notice: "Mostrar una noticia de URGENCIA o EMERGENCIA para todos los visitantes, deja este campo en blanco para ocultarla (se puede utilizar código HTML)"
+    disable_edit_notifications: "Usado para desabilitar las notificaciones de edición cuando se activa la opcion de configuración  'download_remote_images_to_local'. "
     enable_names: "Permitir a los usuarios mostrar su nombre completo"
     display_name_on_posts: "Mostrar también el nombre completo del usuario en sus posts"
     invites_shown: "Máximo de invitaciones mostradas en la página de usuario"
@@ -780,11 +790,7 @@ es:
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema de este número de días de antigüedad, se le mostrará un aviso para desalentar el hecho de resucitar una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
     autohighlight_all_code: "Resaltar la sintaxis de código a todos los bloques de código preformateado incluso cuando no se especificó el lenguaje"
     embeddable_host: "Host que puede incrustar comentarios de este foro Discourse"
-    feed_polling_enabled: "Importar feed RSS/ATOM como posts"
-    feed_polling_url: "URL del feed RSS/ATOM a importar"
-    embed_by_username: "Nombre de usuario perteneciente a este foro que crea los temas"
-    embed_truncate: "Truncar los posts importados"
-    embed_category: "Categoría de los temas creados"
+    embed_username_key_from_feed: "Clave para obtener el username de discourse desde un feed. "
     embed_post_limit: "Máximo número de posts a incrustar"
     embed_whitelist_selector: "selector de CSS para definir los elementos que estarán permitidos en los embed"
     embed_blacklist_selector: "selector de CSS para definir los elementos que serán eliminados en los embed"
@@ -792,6 +798,18 @@ es:
     notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un correo electrónico al contact_email. Deshabilita esta opción introduciendo el valor 0."
     enable_cdn_js_debugging: "Permite /logs para mostrar errores propios, añadiendo permisos crossorigin en todos los includes js"
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
+    errors:
+      invalid_email: "Dirección de correo electrónico inválida. "
+      invalid_username: "No existe ningún usuario con ese nombre de usuario. "
+      invalid_integer_min_max: "El valor debe estar entre %{min} y %{max}."
+      invalid_integer_min: "El valor debe ser igual o mayor que  %{min}. "
+      invalid_integer_max: "El valor no puede ser mayor que %{max}."
+      invalid_integer: "El valor debe ser un entero. "
+      regex_mismatch: "El valor introducido no tiene el formato requerido. "
+      invalid_string: "Valor inválido. "
+      invalid_string_min_max: "Debe contener entre %{min}  y  %{max} caracteres."
+      invalid_string_min: "Debe contener como mínimo %{min} caracteres. "
+      invalid_string_max: "No debe exceder los %{max} caracteres. "
   notification_types:
     mentioned: "%{display_username} te ha mencionado en %{link}"
     liked: "%{display_username} le ha gustado tu post en %{link}"
@@ -896,47 +914,27 @@ es:
       %{invite_link}
 
       Esta es una invitación de un usuario de confianza, así que puedes responder en la discusión de inmediato.
+  invite_forum_mailer:
+    subject_template: "[%{site_name}] %{invitee_name} lo ha invitado a unirse. "
+    text_body_template: "%{invitee_name} lo ha invitado a unirse a\n\n > **%{site_title}**\n\n > %{site_description}\n\n Si esta interesado, haga click en el link de abajo: \n\n %{invite_link}\n\nEsta invitación proviene de un usuario de confianza, por lo cual no necesitara autenticarse.\n"
   test_mailer:
     subject_template: "[%{site_name}] Prueba de envío de email"
-    text_body_template: |
-      Este es un email enviado de foro %{site_name} en:
-
-      [**%{base_url}**][0]
-
-      El envío de email es complicado. Aquí te exponemos algunas cosas importantes que deberías comprobar primero:
-
-      - Conoce como ver el *contenido raw del email* en tu cliente de correo, de modo que puedas examinar las cabeceras para importantes pistas. En Gmail, es la opción "show original" en el menú desplegable de cada email.
-
-      - **IMPORTANTE:** tiene tu ISP un "reverse DNS record" para asociar los nombres de dominio y direcciones IP desde las que envías el mail [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's SPF record correct? [Test your SPF record][1] here.
-
-      - Check to make sure the IPs of your mail server are [not on any email blacklists][4].
-
-      - Verify that your email server is *definitely* sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-       - Configure [DKIM email key signing][3] in your email software, and place the public DKIM key in your DNS records. This is not required, but will significantly improve email deliverability.
-
-      We hope you received this email deliverability test OK!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-
-      ----
-
-      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Nueva versión de Discourse, actualización disponible"
+    text_body_template: |
+      Una nueva version de Discourse esta disponible.
+
+      Version actual: %{installed_version}
+      Nueva version: **%{new_version}**
+
+      Tal vez te interese:
+
+      - Ver las novedades en el [Historial de cambos de Github] (https://github.com/discourse/discourse/commits/master).
+      - Actualizarla visitando [%{base_url}/admin/docker](%{base_url}/admin/docker) y presionando el boton de "Actualizar".
+      - Visitar [meta.discourse.org](http://meta.discourse.org) para encontrar novedades, discusión y soporte para Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] actualización disponible"
+    text_body_template: "Esta disponible una nueva version de Discourse\n\nVersion actual: %{installed_version}\nNueva version: **%{new_version}**\n\nTal vez le interese: \n\n-  Ver los cambios en el [ historial de cambios de GitHub]  (https://github.com/discourse/discourse/commits/master).\n\n-  Actualizar visitando el sitio  [%{base_url}/admin/docker](%{base_url}/admin/docker), y presionando el boton de \"Upgrade\".\n\n-  Visitar [meta.discourse.org](http://meta.discourse.org)  para encontrar novedades, debates y soporte para Discourse. \n\n### Notas de la version\n\n%{notes}\n"
   flags_reminder:
     flags_were_submitted:
       one: "Hay reportes enviados de hace 1 hora."
@@ -955,22 +953,6 @@ es:
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático desde %{site_name} para informarte que tu post ...
-
-        %{base_url}%{url}
-
-        ... se ha ocultado porque ha sido reportado por la comunidad.
-
-        %{flag_reason}
-
-        Ten en cuenta que los múltiples miembros de la comunidad reportaron tu post antes de que estuviera oculto, por lo que **por favor, considera cómo podrías revisar tu post para reflejar su feedback.** Puedes editar tu post después de %{edit_delay} minutos y se mostrará automáticamente. Esto incrementará tu nivel de confianza.
-
-        Sin embargo, si el post es ocultado una segunda vez por la comunidad, se le notificará a los moderadores -- y habrá posibles consecuencias, como una posible suspensión de tu cuenta.
-
-        Para más consejos, por favor revisa nuestras [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Este mensaje privado tiene unos pocos consejos para iniciarte:
@@ -1068,14 +1050,11 @@ es:
         ```
         %{logs}
         ```
-    email_error_notification:
-      subject_template: "Error analizando email"
-    email_reject_trust_level:
-      subject_template: "Mensaje rechazado"
-      text_body_template: |
-        El mensaje que has enviado %{to} fue rechazado por el sistema.
-
-        No dispones del nivel de confianza requerido para publicar nuevos temas vía esta dirección de email.
+    bulk_invite_succeeded:
+      subject_template: "¡Invitación masiva procesada con éxito!"
+      text_body_template: "La invitación masiva ha sido procesada, se han enviado %{sent} invitaciones. "
+    bulk_invite_failed:
+      subject_template: "¡Invitación masiva procesada con algunos errores!"
     too_many_spam_flags:
       subject_template: "Cuenta nueva bloqueada"
       text_body_template: |
@@ -1106,6 +1085,7 @@ es:
         El umbral puede ser cambiado vía configuración del sitio en `block_new_user`.
     spam_post_blocked:
       subject_template: "El nuevo usuario %{username} tiene posts bloqueados debido a repetición de enlaces."
+      text_body_template: "Este es un mensaje automático. \n\nEl usuario [%{username}](%{base_url}%{user_url}) intento crear multiples posts con links hacia %{domains}, pero dichos posts fueron bloqueados para evitar el spam. El usuario aun esta habilitado para crear nuevos posts que no contengan links hacia %{domains}.\n\nPor favor [revise el usuario] (%{base_url}%{user_url}).\n\nEsto puede ser modificado por medio de las opciones de configuración `newuser_spam_host_threshold` y `white_listed_spam_host_domains`.\n"
     unblocked:
       subject_template: "Cuenta desbloqueada"
       text_body_template: |
@@ -1258,10 +1238,6 @@ es:
     access_token_problem: "Díselo a un administrador: Por favor actualiza la configuración del sitio para incluir la discourse_org_access_key correcta."
   page_not_found:
     title: "La página que deseas ver no existe en este foro de discusión. Quizás podemos ayudarte a encontrara, u otro topic como ella:"
-    popular_topics: "Temas populares"
-    recent_topics: "Temas recientes"
-    see_more: "Ver Más"
-    search_title: "Buscar por este tema"
     search_google: "Buscar en Google"
   login_required:
     welcome_message: |

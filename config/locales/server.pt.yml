@@ -781,10 +781,6 @@ pt:
   discourse_hub:
     access_token_problem: "Conta para um admin: Por favor atualize as configurações do site para incluir o discourse_org_access_key correto."
   page_not_found:
-    popular_topics: "Tópicos populares"
-    recent_topics: "Tópicos Recentes"
-    see_more: "Veja Mais"
-    search_title: "Procurar por este tópico"
     search_google: "Procurar no Google"
   login_required:
     welcome_message: |

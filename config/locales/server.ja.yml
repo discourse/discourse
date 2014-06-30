@@ -661,46 +661,6 @@ ja:
       blocked: "はブロックされてます。"
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
-    text_body_template: |
-      これは、あなたの %{site_name} フォーラムより送信されたテストメールです:
-
-      [**%{base_url}**][0]
-
-      メール到達性の担保は複雑です。チェックする必要があるいくつかのポイントを以下にまとめます:
-
-      - メールクライアントで*メールの raw ソース*を見る方法を確認する。これはメールヘッダより重要なヒントを得るために必要です。Gmail の場合、メールのドロップダウンリストより "メッセージのソースを表示" オプションを選択することで確認ができます。
-
-      - **重要:** ISP が、メール送信元のドメイン名と IP アドレスを関連付けるリバース DNS レコードを正しく管理しているか確認してください。[こちらでリバース PTR レコードの確認ができます][2]。ISP が正しいリバース DNS ポインタレコードを管理していない場合、メール送信が失敗する可能性が非常に高くなります。
-
-      - ドメインの SPF レコードは正確ですか? [こちらで SPF レコードの確認ができます][1]。
-
-      - メールサーバの IP アドレスが[こちらのブラックリストに掲載されていないこと][4]を確認してください。
-
-      - メールサーバが HELO メッセージにおいて、DNS が解決する fully-qualified hostname を*確実に*送信していることを確認してください。送信されていない場合、多くのメールサービスによってメールが拒否される可能性があります。
-
-      - メールソフトウェアの [DKIM email key signing][3]を設定して、DNS レコードに public DKIM キーを追記してください。これは必須ではありませんが、メール到達性を大きく改善します。
-
-      (*簡単な*方法は[Mandrillへのサインアップ][6]です。小さなフォーラムであればカバー可能な無料のメールプランを提供しています。この場合も SPF と DKIM レコードを DNS に設定する必要がある点には注意してください!)
-
-      このメールを受信し、到達性テストに成功することを祈ります!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-
-      :smile:
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/SuperTool.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-
-      ----
-
-      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
   system_messages:
     post_hidden:
       subject_template: "コミュニティによるフラグによりポストが非表示になりました"
@@ -887,10 +847,6 @@ ja:
     access_token_problem: "管理者に通知: サイト設定を更新して正しい discourse_org_access_key を設定してください。"
   page_not_found:
     title: "リクエストしたページは存在しないかモデレータによって削除されました。"
-    popular_topics: "人気のトピック"
-    recent_topics: "最近のトピック"
-    see_more: "もっと読む"
-    search_title: "このトピックを検索"
     search_google: "Google で検索"
   login_required:
     welcome_message: |

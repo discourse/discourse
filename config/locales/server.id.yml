@@ -170,10 +170,6 @@ id:
     email:
       blocked: "tidak diperbolehkan."
   system_messages:
-    email_error_notification:
-      subject_template: "Gagal membaca email"
-    email_reject_trust_level:
-      subject_template: "Pesan ditolak"
     pending_users_reminder:
       subject_template:
         other: "%{count} pengguna sedang menunggu persetujuan"
