@@ -288,21 +288,19 @@
     }
     #wmd-input, #wmd-preview {
       color: $primary;
-
-      video {
-        max-width: 100%;
-        height: auto;
-      }
-
-      audio {
-        max-width: 100%;
-      }
     }
+
     #wmd-preview {
       border: 1px dashed scale-color-diff();
       overflow: auto;
       visibility: visible;
-
+      video {
+        max-width: 100%;
+        height: auto;
+      }
+      audio {
+        max-width: 100%;
+      }
       &.hidden {
         width: 0;
         visibility: hidden;
@@ -311,6 +309,7 @@
     #wmd-input {
       bottom: 35px;
     }
+
     .submit-panel {
       position: absolute;
       display: block;
@@ -393,34 +392,17 @@
       margin: 0;
       background-color: $secondary;
       word-wrap: break-word;
-
-      // set up proper header margins in post preview
-      h1, h2, h3, h4, h5, h6 {
-        margin: 30px 0 10px;
-      }
-      p {
-        margin-top: 19px;
-      }
-      blockquote p:first-of-type {margin-top: 0px;}
     }
     #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
       top: 0;
-      height: 100%;
-      min-height: 100%;
-      @include box-sizing(border-box);
-      border: 0;
       border-top: 30px solid transparent;
-      box-shadow: none;
-      @include border-radius-all(0);
-      transition: none;
     }
     #wmd-preview-scroller {
       font-size: 13px;
       line-height: 18px;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-weight: normal;
       overflow: scroll;
       visibility: hidden;
       .marker, .caret {
