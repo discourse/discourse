@@ -9,4 +9,4 @@
 	url = https://github.com/sitepoint/discourse-create-profile-note
 [submodule "plugins/discourse-plugin-tagger"]
 	path = plugins/discourse-plugin-tagger
-	url = git@github.com:sitepoint/discourse-plugin-tagger.git
+	url = https://github.com/sitepoint/discourse-plugin-tagger
