@@ -664,7 +664,9 @@ iframe {
 
 
 blockquote { /* solo quotes */
-  margin: 0;
+  /* inherit only the default top and bottom margins here */
+  margin-left: 0;
+  margin-right: 0;
   padding: 12px;
 
     a.mention {background: darken(scale-color-diff(), 10%);}

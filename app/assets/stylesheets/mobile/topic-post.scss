@@ -474,7 +474,9 @@ span.btn-text {display: none;}
 
 blockquote {
   clear:both;
-  margin: 0;
+  /* leave browser defaults for top and bottom here */
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .quote-controls {
