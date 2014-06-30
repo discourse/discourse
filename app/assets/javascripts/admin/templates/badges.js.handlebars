@@ -23,7 +23,7 @@
     <form class="form-horizontal">
       <div>
         <label for="name">{{i18n admin.badges.name}}</label>
-        {{input type="text" name="name" value=name disabled=readonly}}
+        {{input type="text" name="name" value=name disabled=readOnly}}
       </div>
 
       {{#if showDisplayName}}
@@ -35,7 +35,7 @@
 
       <div>
         <label for="name">{{i18n admin.badges.icon}}</label>
-        {{input type="text" name="name" value=icon disabled=readonly}}
+        {{input type="text" name="name" value=icon disabled=readOnly}}
       </div>
 
       <div>
@@ -78,6 +78,12 @@
         </div>
       {{/unless}}
     </form>
+  </div>
+
+  <div class="span13 current-badge-actions">
+    <div>
+      {{#link-to 'badges.show' this classNames="btn btn-primary"}}{{i18n badges.granted count=grant_count}}{{/link-to}}
+    </div>
   </div>
   {{/with}}
   {{/if}}
