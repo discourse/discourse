@@ -61,7 +61,7 @@ describe TopicQuery do
       let!(:subcategory) { Fabricate(:category, parent_category_id: category.id)}
 
       it "works with subcategories" do
-        TopicQuery.new(moderator, category: category.id).list_latest.topics.size.should == 2
+        TopicQuery.new(moderator, category: category.id).list_latest.topics.size.should == 1
         TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size.should == 1
         TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size.should == 1
       end

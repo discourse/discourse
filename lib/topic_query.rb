@@ -238,7 +238,7 @@ class TopicQuery
         if options[:no_subcategories]
           result = result.where('categories.id = ?', category_id)
         else
-          result = result.where('categories.id = ? or categories.parent_category_id = ?', category_id, category_id)
+          result = result.where('categories.id = ? or (categories.parent_category_id = ? AND categories.topic_id <> topics.id)', category_id, category_id)
         end
         result = result.references(:categories)
       end
