@@ -70,9 +70,7 @@ module Jobs
         pop.finish
       end
     rescue Net::POPAuthenticationError => e
-      # inform admins about the error (1 message per hour to prevent too much SPAM)
-      data = { limit_once_per: 1.hour, message_params: { error: e }}
-      GroupMessage.create(Group[:admins].name, :email_error_notification, data)
+      Discourse.handle_exception(e, { context: "signing in for incoming email" })
     end
 
   end
