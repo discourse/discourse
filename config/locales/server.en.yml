@@ -1334,7 +1334,7 @@ en:
         The email encoding was unknown or not supported. Try again with UTF-8 plain text.
 
     email_reject_post_error:
-      subject_template: "Email issue -- posting error"
+      subject_template: "Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} didn't work.
 
@@ -1346,6 +1346,13 @@ en:
         We're sorry, but your email message to %{destination} didn't work.
 
         The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
+
+    email_error_notification:
+      subject_template: "Email issue -- POP authentication error"
+      text_body_template: |
+        There has been an authentication error while polling mails from the POP server.
+
+        Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
 
     too_many_spam_flags:
       subject_template: "New account blocked"
