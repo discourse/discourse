@@ -193,7 +193,7 @@
         position: relative;
         margin-top: 20px;
         float: left;
-        width: 78%;
+        width: 75%;
         color: $secondary;
         text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
@@ -209,7 +209,6 @@
             color: $secondary;
             text-decoration: underline;
             text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
-
           }
         }
 
@@ -350,14 +349,13 @@
   }
 
   .pill {
-    font-size: 2em;
-    border-radius: 100%;
+    border-radius: 15px;
     display: inline-block;
     height: 30px;
-    width: 40px;
+    width: 30px;
     text-align: center;
     vertical-align: middle;
-    padding-top: 10px;
+    line-height: 30px;
   }
   .helpful-flags {
     background-color: green;
