@@ -20,18 +20,17 @@
  }
 }
 
-.cooked .highlight {
-  background-color: scale-color($highlight, $lightness: 40%);
-  padding: 2px;
-  margin: -2px;
-}
-
-.contents .cooked a {
+/* global styles for the cooked HTML content in posts */
+.cooked {
   word-wrap: break-word;
-}
-
-.contents .cooked {
-  word-wrap: break-word;
+  h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
+  h1 { line-height: 1em; } /* normalize.css sets h1 font size but not line height */
+  a { word-wrap: break-word; }
+  .highlight {
+    background-color: scale-color($highlight, $lightness: 40%);
+    padding: 2px;
+    margin: -2px;
+  }
 }
 
 .post-action {
