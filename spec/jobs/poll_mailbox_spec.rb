@@ -28,12 +28,13 @@ describe Jobs::PollMailbox do
 
   describe ".poll_pop3s" do
 
-    it "informs admins on pop authentication error" do
+    it "logs an error on pop authentication error" do
       error = Net::POPAuthenticationError.new
       data = { limit_once_per: 1.hour, message_params: { error: error }}
 
       Net::POP3.expects(:start).raises(error)
-      GroupMessage.expects(:create).with("admins", :email_error_notification, data)
+
+      Discourse.expects(:handle_exception)
 
       poller.poll_pop3s
     end
