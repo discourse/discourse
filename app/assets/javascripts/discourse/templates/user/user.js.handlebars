@@ -64,25 +64,40 @@
 
         <div class='details'>
           <div class='primary'>
-          {{bound-avatar model "huge"}}
+            <div class='staff-counters'>
+              {{#if number_of_flags_given}}
+                <div><span class="pill helpful-flags">{{number_of_flags_given}}</span>&nbsp;{{i18n user.staff_counters.flags_given}}</div>
+              {{/if}}
+              {{#if number_of_flagged_posts}}
+                <div><span class="pill flagged-posts">{{number_of_flagged_posts}}</span>&nbsp;{{i18n user.staff_counters.flagged_posts}}</div>
+              {{/if}}
+              {{#if number_of_deleted_posts}}
+                <div><span class="pill deleted-posts">{{number_of_deleted_posts}}</span>&nbsp;{{i18n user.staff_counters.deleted_posts}}</div>
+              {{/if}}
+              {{#if number_of_suspensions}}
+                <div><span class="pill suspensions">{{number_of_suspensions}}</span>&nbsp;{{i18n user.staff_counters.suspensions}}</div>
+              {{/if}}
+            </div>
 
-          <div class="primary-textual">
-            <h1>{{username}} {{{statusIcon}}}</h1>
-            <h2>{{name}}</h2>
+            {{bound-avatar model "huge"}}
 
-            <div class='bio'>{{{bio_cooked}}}</div>
+            <div class="primary-textual">
+              <h1>{{username}} {{{statusIcon}}}</h1>
+              <h2>{{name}}</h2>
 
-            {{groups-list groups=custom_groups}}
+              <div class='bio'>{{{bio_cooked}}}</div>
 
-            {{plugin-outlet "user-profile-primary"}}
+              {{groups-list groups=custom_groups}}
 
-            {{#if isSuspended}}
-              <div class='suspended'>
-                <i class='fa fa-ban'></i>
-                <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
-                <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
-              </div>
-            {{/if}}
+              {{plugin-outlet "user-profile-primary"}}
+
+              {{#if isSuspended}}
+                <div class='suspended'>
+                  <i class='fa fa-ban'></i>
+                  <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
+                  <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
+                </div>
+              {{/if}}
             </div>
           </div>
 

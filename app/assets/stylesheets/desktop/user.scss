@@ -190,6 +190,7 @@
       }
 
       .primary {
+        position: relative;
         margin-top: 20px;
         float: left;
         width: 65%;
@@ -246,6 +247,10 @@
   .about.collapsed-info {
     .controls {
       margin-top: 0;
+    }
+
+    .staff-counters {
+      display: none;
     }
 
     .details {
@@ -331,5 +336,37 @@
       float: right;
       margin-top: -4px;
     }
+  }
+
+  .staff-counters {
+    text-align: left;
+    position: absolute;
+    top: -20px;
+    > div {
+      margin-bottom: 10px;
+    }
+  }
+
+  .pill {
+    font-size: 2em;
+    border-radius: 100%;
+    display: inline-block;
+    height: 30px;
+    width: 40px;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 10px;
+  }
+  .helpful-flags {
+    background-color: green;
+  }
+  .flagged-posts {
+    background-color: #E49735;
+  }
+  .deleted-posts {
+    background-color: #EC441B;
+  }
+  .suspensions {
+    background-color: #c22020;
   }
 }

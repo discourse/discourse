@@ -291,6 +291,12 @@ en:
       delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
       unread_message_count: "Messages"
 
+      staff_counters:
+        flags_given: "helpful flags cast"
+        flagged_posts: "flagged posts"
+        deleted_posts: "deleted posts"
+        suspensions: "suspensions"
+
       messages:
         all: "All"
         mine: "Mine"
