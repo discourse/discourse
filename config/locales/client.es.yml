@@ -146,6 +146,8 @@ es:
     disable: "Desactivar"
     undo: "Deshacer"
     revert: "Revertir"
+    banner:
+      close: "Eliminar este encabezado. "
     choose_topic:
       none_found: "Ningún tema encontrado."
       title:
@@ -303,12 +305,10 @@ es:
         frequency: "Sólo te enviaremos emails si no te hemos visto recientemente y todavía no has visto lo que te estamos enviando."
       name:
         title: "Nombre"
-        instructions: "La versión larga de tu nombre; no tiene por qué ser único. Usado para coincidir con @nombre y mostrado sólo en tu página de usuario."
         too_short: "Tu nombre es demasiado corto."
         ok: "Tu nombre es válido."
       username:
         title: "Nombre de usuario"
-        instructions: "Debe ser único, sin espacios. La gente puede mencionarte como @{{username}}."
         short_instructions: "La gente puede mencionarte como @{{username}}."
         available: "Tu nombre de usuario está disponible."
         global_match: "El email coincide con el nombre de usuario registrado."
@@ -514,7 +514,6 @@ es:
       create_pm: "Crear mensaje privado"
       title: "O pulsa Ctrl+Intro"
       users_placeholder: "Añadir usuario"
-      title_placeholder: "Escribe tu título aquí. Explica en pocas palabras sobre qué trata esta discusión."
       edit_reason_placeholder: "¿Por que lo editas?"
       show_edit_reason: "(añadir motivo de edición)"
       reply_placeholder: "Escribe tu respuesta aquí. Puedes usar Markdown o BBCode para dar formato. Arrastra o pega una imagen aquí para subirla."
@@ -537,7 +536,6 @@ es:
       quote_title: "Cita"
       quote_text: "Cita"
       code_title: "Código de muestra"
-      code_text: "introduce código aquí"
       upload_title: "Imagen"
       upload_description: "introduce una descripción de la imagen aquí"
       olist_title: "Lista numerada"
@@ -740,6 +738,8 @@ es:
         open: "Abrir tema"
         close: "Cerrar tema"
         auto_close: "Auto-cierre"
+        make_banner: "Tema de encabezado. "
+        remove_banner: "Remover tema de encabezado. "
         unpin: "Dejar de destacar"
         pin: "Destacar tema"
         pin_globally: "Destacar tema globalmente"
@@ -1063,7 +1063,6 @@ es:
       delete_confirm: "Está a punto de eliminar <b>%{posts}</b> publicaciones y <b>%{topics}</b> temas de este usuario, borar su cuenta, bloquear sus inicios de sesión de su dirección IP <b>%{ip_address}</b>, y añadir su dirección de email <b>%{email}</b> en una lista de bloqueo permanente. ¿Está seguro de que este usuario es realmente un spammer?"
       yes_delete_spammer: "Sí, borrar spammer"
       submit_tooltip: "Enviar el reporte privado"
-      take_action_tooltip: "Hace saltar el umbral de reportes"
       cant: "Lo sentimos, no puedes reportar este post en este momento."
       custom_placeholder_notify_user: "¿Por qué esta publicación requiere hablarle a este usuario directamente y por privado? Sé específico, constructivo y siempre amable."
       custom_placeholder_notify_moderators: "¿Por qué esta publicación requiere la atención de un moderador? Haznos saber qué te preocupa específicamente y añade los enlaces relevantes dónde sea posible."
@@ -1241,7 +1240,6 @@ es:
         view_message: "Responder"
         no_results: "No hay reportes."
         topic_flagged: "Este <strong>tema</strong> ha sido reportado."
-        visit_topic: "Visita el tema para investigar y tomar una acción."
         summary:
           action_type_3:
             one: "fuera de tema"
@@ -1347,7 +1345,6 @@ es:
         override_default: "No incluir hoja de estilo estándar"
         enabled: "Activado?"
         preview: "vista previa"
-        undo_preview: "deshacer vista previa"
         save: "Guardar"
         new: "Nuevo"
         new_style: "Nuevo Estilo"
@@ -1628,11 +1625,7 @@ es:
           requirement_heading: "Requerimiento"
           visits: "Visitas"
           days: "días"
-          topics_with_replies: "Temas con respuestas"
           topics_replied_to: "Temas respondidos A"
-          quality_content: "Contenido de calidad"
-          reading: "Leyendo"
-          site_promotion: "Promoción del sitio"
           flagged_posts: "Posts reportados"
       site_content:
         none: "Elige un tipo de contenido para empezar a editar."

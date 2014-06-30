@@ -26,6 +26,8 @@ de:
   errors:
     embed:
       load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
+  bulk_invite:
+    file_should_be_csv: "Die hochgeladene Datei sollte im CSV Format vorliegen."
   backup:
     operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
     backup_file_should_be_tar_gz: "Die Backupdatei sollte ein .tar.gz Archiv sein."
@@ -613,6 +615,7 @@ de:
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
     top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
+    share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die standardmäßig auf die Themenübersichtsseite geladen werden."
     posts_per_page: "Zahl der Beiträge, die auf einer Themenseite gezeigt werden."
@@ -675,6 +678,7 @@ de:
     max_topics_per_day: "Maximale Zahl der Themen, die ein Nutzer pro Tag erstellen kann."
     max_private_messages_per_day: "Maximale Zahl privater Nachrichten, die ein Nutzer pro Tag verschicken kann."
     suggested_topics: "Zahl der empfohlenen Themen am Ende eines Themas."
+    limit_suggested_to_category: "Zeige nur Themen der aktuellen Kategorie in vorgeschlagenen Themen."
     clean_up_uploads: "Entferne verwaiste Uploads um illegales Hosting zu vermeiden. WARNUNG: Du solltest ein Backup von deinem /uploads Verzeichnis erstellen bevor du diese Einstellung aktivierst."
     clean_orphan_uploads_grace_period_hours: "Frist (in Stunden) bevor ein verwaister Upload entfernt wird."
     purge_deleted_uploads_grace_period_days: "Frist (in Tagen) bevor ein entfernter Upload endgültig gelöscht wird."
@@ -732,7 +736,8 @@ de:
     staff_like_weight: "Zusätzlicher Gewichtungsfaktor wenn Mitglieder „Gefällt mir“ verteilen."
     reply_by_email_enabled: "Erlaube das Antworten auf Themen via Mail"
     reply_by_email_address: "Vorgabe der Antwort-Mail Adresse in der Form von: %{reply_key}@reply.myforum.com"
-    pop3s_polling_enabled: "Antworten via POP3S anfragen"
+    pop3s_polling_enabled: "Abfragen über POP3S nach Email-Antworten"
+    pop3s_polling_insecure: "Abfragen mit Klartext-POP3 ohne SSL."
     pop3s_polling_port: "Der Port für die POP3S Anfrage"
     pop3s_polling_host: "Der Host für die POP3S Anfrage"
     pop3s_polling_username: "Der Benutzername für die POP3S Anfrage"
@@ -772,11 +777,7 @@ de:
     warn_reviving_old_topic_age: "Wenn jemand auf eine Thema antwortet, dass älter als diese Anzahl Tage ist, wird eine Warnung angezeigt, um den Nutzer davon abzuraten eine alte Diskussion wieder zu beleben. Deaktiviere dies durch setzen auf 0."
     autohighlight_all_code: "Syntaxhervorhebung auf alle Quellcode-Blöcke anwenden, auch dann wenn keine Sprache angeben wurde."
     embeddable_host: "Host der Kommentare aus diesem Discourse Forum einbetten kann"
-    feed_polling_enabled: "Ob ein RSS/ATOM Feed als Beiträge importiert wird"
-    feed_polling_url: "URL des RSS/ATOM Feeds für den Import"
-    embed_by_username: "Discourse Benutzername des Benutzers, der Themen erstellt"
-    embed_truncate: "Lösche die importieren Beiträge"
-    embed_category: "Kategorie der erstellten Themen"
+    embed_username_key_from_feed: "Schlüsse, um Discourse-Benutzernamen aus Feed zu ziehen."
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden"
     embed_whitelist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind"
     embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden"
@@ -784,6 +785,18 @@ de:
     notify_about_flags_after: "Wenn es Markierungen gibt, dich nach nach dieser Anzahl von Stunden behandelt wurden, sende eine Email an den contact_email. Setze dies auf 0 um es zu deaktivieren."
     enable_cdn_js_debugging: "Ermöglicht die Anzeige vollständiger Fehler auf /logs, indem alle eingebetteten JavaScripts Cross-Origin Zugriffsberechtigungen erhalten."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
+    errors:
+      invalid_email: "Ungültige E-Mail-Ad­res­se"
+      invalid_username: "Es gibt keinen Benutzer mit diesem Nutzernamen."
+      invalid_integer_min_max: "Der Wert muss zwischen %{min} und %{max} sein."
+      invalid_integer_min: "Der Wert muss %{min} oder größer sein."
+      invalid_integer_max: "Der Wert kann nicht höher als %{max} sein."
+      invalid_integer: "Der Wert muss eine Ganzzahl sein."
+      regex_mismatch: "Wert entspricht nicht dem erforderlichen Muster."
+      invalid_string: "Ungültiger Wert."
+      invalid_string_min_max: "Anzahl der Zeichen muss zwischen %{min} und %{max} liegen."
+      invalid_string_min: "Muss mindestens %{min} Zeichen lang sein."
+      invalid_string_max: "Darf nicht länger als %{max} Zeichen sein."
   notification_types:
     mentioned: "%{display_username} hat Dich in %{link} erwähnt."
     liked: "%{display_username} gefällt deinen Beitrag in %{link}."
@@ -801,6 +814,7 @@ de:
     within_post: "#%{post_number} von %{username}: %{excerpt}"
     types:
       category: 'Kategorien'
+      topic: 'Ergebnisse'
       user: 'Benutzer'
   original_poster: "Autor des ersten Beitrags"
   most_posts: "Autor der meisten Beiträge"
@@ -858,6 +872,8 @@ de:
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
   user:
     username:
+      short: "muss mindestens %{min} Zeichen lang sein"
+      long: "darf nicht länger als %{max} Zeichen sein"
       characters: "darf nur aus Zahlen und Buchstaben bestehen"
       unique: "muss eindeutig sein"
       blank: "muss angegeben werden"
@@ -867,48 +883,12 @@ de:
       blocked: "ist nicht erlaubt."
     ip_address:
       blocked: "ist blockiert."
+  invite_mailer:
+    subject_template: "[%{site_name}] %{invitee_name} lädt Dich ein, an einer Diskussion teilzunehmen"
+  invite_forum_mailer:
+    subject_template: "[%{site_name}] %{invitee_name} hat dich eingeladen"
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
-    text_body_template: |
-      Dies ist eine Testmail vom %{site_name} Forum. Du kannst das Forum per Web-Browser unter folgender Adresse aufrufen:
-
-      [*%{base_url}*][0]
-
-      Mailzustellbarkeitstests können komplex sein, aber einige Dinge solltest Du sofort prüfen:
-
-      - Stelle sicher, dass Du den *Quelltext der Mail* in deinem Mailprogramm betrachten kannst, um die Mailheader auf Hinweise zu untersuchen.
-
-      - **WICHTIG:** Hat Dein Internetprovider einen Reverse-DNS-Eintrag eingetragen, um den Domainnamen, die Du als Absender angibst, mit den IPs von denen die Mails verschickt werden zu verknüpfen? Du kannst [den Reverse-PTR-Eintrag hier testen][2]. Wenn Dein Internetprovider keinen passenden Reverse-DNS-Eintrag eingetragen hat, ist sehr unwahrscheinlich, dass Mails tatsächlich versendet werden.
-
-      - Ist der SPF-Eintrag deiner Domain korrekt? Du kannst [den SPF-Eintrag hier testen][1].
-
-      - Hast Du [DKIM-Mailsignierung][3] in deiner Mailsoftware konfiguriert und den öffentlichen DKIM-Schlüssel deinen DNS-Einträge hinzugefügt?
-
-      - Hast Du sichergestellt, dass die IPs der Server von denen Mails verschickt werden [nicht auf einer schwarzen Liste stehen][4]?
-
-      - Hast Du sichergestellt, dass dein Mailserver *definitiv* einen voll qualifizierten Hostnamen in ihre HELO-Nachrichten angeben, der per DNS aufgelöst werden kann? Falls das nicht der Fall ist, werden Deine Mails von vielen Mailprovidern abgelehnt.
-
-      (Der *einfache* Weg ist [sich für Mandrill anmelden][6], welche ein grosszügiges Mail-Abo gratis anbieten, welche für kleine Foren ausreicht. Du musst allerdings trotzdem die SPF und DKIM Einträge in deinem DNS machen)
-
-      Wir hoffen, dass der Mail Zustelltest erfolgreich war!
-
-      Viel Erfolg,
-
-      Deine Freunde von %{site_name}.
-
-      :smile:
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/SuperTool.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-
-      ----
-
-      <small>Am Fuß jeder Mail, die Du verschickst, sollte eine Möglichkeit zum Abbestellen gegeben werden. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn Du zukünftig keine weiteren Mail erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
   new_version_mailer_with_notes:
@@ -931,22 +911,6 @@ de:
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatische Nachricht von %{site_name}, um Dich darüber zu informieren, dass Dein Beitrag
-
-        %{base_url}%{url}
-
-        wegen Meldungen aus der Community versteckt wurde.
-
-        %{flag_reason}
-
-        Beachte dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. **Du solltest in Betracht ziehen, den Beitrag unter Berücksichtigung dieses Feedbacks zu überarbeiten.** Du kannst den Beitrag in %{edit_delay} Minuten bearbeiten und ihn dadurch automatisch wieder sichtbar machen. Dies erhöht auch Deine Vertrauensstufe.
-
-        Sollte dieser Beitrag allerdings ein weiteres Mal von der Community versteckt werden, dann werden automatisch unsere Moderatoren benachrichtigt -- dies kann weitere Konsequenzen nach sich ziehen, unter anderem auch eine Sperrung Deines Kontos.
-
-        Weitere Tips und Hilfen findest Du in unseren [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Diese private Nachricht enthält ein paar Tipps für einen reibungslosen Start:
@@ -1044,14 +1008,6 @@ de:
         ```
         %{logs}
         ```
-    email_error_notification:
-      subject_template: "Fehler beim Parsen der Email"
-    email_reject_trust_level:
-      subject_template: "Nachricht abgelehnt"
-      text_body_template: |
-        Die Nachricht, die du an %{to} gesendet hast, wurde vom System zurückgewiesen.
-
-        Du hast nicht das erforderliche Vertrauenslevel um neue Themen an diese Emailadresse zu senden.
     too_many_spam_flags:
       subject_template: "Benutzerkonto gesperrt"
       text_body_template: |
@@ -1070,6 +1026,10 @@ de:
         Dies ist eine automatische Nachricht von %{site_name} um dich zu informierenm, dass dein Konto durch einem Moderator gesperrt wurde.
 
         Weitere Hilfe findest du in unserer [FAQ](%{base_url}/faq).
+    user_automatically_blocked:
+      subject_template: "Neuer Benutzer %{username} wegen Gemeinschaftsrichtlinien blockiert."
+    spam_post_blocked:
+      subject_template: "Posts des neuen Benutzers ${username} wurden wegen mehrfacher Verlinkung gesperrt"
     unblocked:
       subject_template: "Benutzerkonto entsperrt"
       text_body_template: |
@@ -1218,10 +1178,6 @@ de:
     access_token_problem: "Gib das hier an einen Administrator weiter: Bitte aktualisiere die Einstellungen mit dem korrekten discourse_org_access_key."
   page_not_found:
     title: "Die angefragte Seite, gibt es in diesem Forum nicht. Vielleicht können wir aber dabei behilflich sein, sie oder ein ähnliches Thema zu finden:"
-    popular_topics: "Beliebte Themen"
-    recent_topics: "Aktuelle Themen"
-    see_more: "Mehr ansehen"
-    search_title: "Suche nach diesem Thema"
     search_google: "Suche auf Google"
   login_required:
     welcome_message: |

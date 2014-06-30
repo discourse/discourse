@@ -311,12 +311,10 @@ cs:
         frequency: "Budeme vás informovat emailem pouze pokud jste se na našem webu dlouho neukázali a pokud jste obsah, o kterém vás chceme informovat, doposud neviděli."
       name:
         title: "Jméno"
-        instructions: "Celé vaše jméno. Nemusí být unikátní."
         too_short: "Vaše jméno je příliš krátké."
         ok: "Vaše jméno vypadá dobře"
       username:
         title: "Uživatelské jméno"
-        instructions: "Musí být unikátní a bez mezer. Ostatní vás mohou zmínit jako @username."
         short_instructions: "Ostatní vás mohou zmínit pomocí @{{username}}."
         available: "Toto uživatelské jméno je volné."
         global_match: "Emailová adresa odpovídá registrovaného uživatelskému jménu."
@@ -497,7 +495,6 @@ cs:
       create_pm: "Vytvořit soukromou zprávu"
       title: "Nebo zmáčkněte Ctrl+Enter"
       users_placeholder: "Přidat uživatele"
-      title_placeholder: "Název. V jedné větě napište, o čem chcete diskutovat."
       edit_reason_placeholder: "proč byla nutná úprava?"
       show_edit_reason: "(přidat důvod úpravy)"
       reply_placeholder: "Sem napište svou odpověď. Pro formátování použijte Markdown nebo BBCode. Obrázky sem můžete rovnou přetáhnout."
@@ -520,7 +517,6 @@ cs:
       quote_title: "Bloková citace"
       quote_text: "Bloková citace"
       code_title: "Ukázka kódu"
-      code_text: "sem vložte kód"
       upload_title: "Obrázek"
       upload_description: "sem vložek popis obrázku"
       olist_title: "Číslovaný seznam"
@@ -1237,7 +1233,6 @@ cs:
         view_message: "Odpovědět"
         no_results: "Nejsou zde žádná nahlášení."
         topic_flagged: "Tohle <strong>téma</strong> bylo označeno."
-        visit_topic: "Zobrazte téma, prozkoumejte a případně jednejte."
         summary:
           action_type_3:
             one: "off-topic"
@@ -1348,7 +1343,6 @@ cs:
         override_default: "Přetížit výchozí?"
         enabled: "Zapnuto?"
         preview: "náhled"
-        undo_preview: "zrušit náhled"
         save: "Uložit"
         new: "Nové"
         new_style: "Nový styl"
@@ -1532,6 +1526,8 @@ cs:
         refresh_browsers: "Vynutit obnovení prohlížeče"
         show_public_profile: "Zobrazit veřejný profil"
         impersonate: 'Vydávat se za uživatele'
+        log_out: "Odhlásit"
+        logged_out: "Uživatel byl odhlášen na všech zařízeních."
         revoke_admin: 'Odebrat administrátorská práva'
         grant_admin: 'Udělit administrátorská práva'
         revoke_moderation: 'Odebrat moderátorská práva'
@@ -1587,11 +1583,7 @@ cs:
           requirement_heading: "Požadavek"
           visits: "Návštěv"
           days: "dní"
-          topics_with_replies: "Témat s odpověďmi"
           topics_replied_to: "Odpovědí na témata"
-          quality_content: "Kvalitní obsah"
-          reading: "Čtení"
-          site_promotion: "Propagace fóra"
           flagged_posts: "Nahlášené příspěvky"
       site_content:
         none: "Zvolte typ obsahu a můžete začít editovat."

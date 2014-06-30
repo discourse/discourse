@@ -759,13 +759,13 @@ nl:
     default_code_lang: "Standaard programmeertaal die gebruikt wordt voor syntax highlighting van GitHub codeblokken (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Als iemand wil reageren in een topic van meer dan dit aantal dagen oud, geef dan een waarschuwing om de gebruiker te ontmoedigen de reactie te plaatsen. Zet op 0 om deze waarschuwing uit te zetten."
     embeddable_host: "Welke hostmag reacties van dit forum embedden"
-    feed_polling_enabled: "Importeer RSS/ATOM feed als berichten"
-    feed_polling_url: "URL van RSS/ATOM te importere feed"
-    embed_by_username: "Discourse gebruikersnaam van de gebruiker die de topics maakt"
-    embed_truncate: "Kort de geïmporteerde berichten in"
-    embed_category: "Categorie van gemaakte topics"
     embed_post_limit: "Maximum aantal berichten op te embedden"
     tos_accept_required: "Gebruikers moeten een vinkje zetten bij het inschrijven om aan te geven dat ze akkoord gaan met de algemene voorwaarden als deze optie actief is. Ga naar 'Inschijfformulier: Algemene Voorwaarden' in de Inhoud tab om het bericht te wijzigen."
+    errors:
+      invalid_email: "Ongeldig e-mailadres."
+      invalid_username: "Er is geen gebruiker met die gebruikersnaam."
+      invalid_integer: "Waarde moet een integer zijn."
+      invalid_string: "Ongeldige waarde."
   notification_types:
     mentioned: "%{display_username} heeft je genoemd in %{link}"
     liked: "%{display_username} vond je bericht in %{link} leuk"
@@ -783,6 +783,7 @@ nl:
     within_post: "#%{post_number} door %{username}: %{excerpt}"
     types:
       category: 'Categorien'
+      topic: 'Resultaten'
       user: 'Leden'
   original_poster: "Oorspronkelijk geplaatst door"
   most_posts: "Meer berichten"
@@ -851,46 +852,6 @@ nl:
       blocked: "is geblokkeerd."
   test_mailer:
     subject_template: "[%{site_name}] E-mail Bezorgtest"
-    text_body_template: |
-      Dit is een testmail van het %{site_name} forum. Je kan het forum bereiken via je web browser op
-
-      [*%{base_url}*][0]
-
-      Het correct afleveren van e-mails kan erg complex zijn, maar een paar dingen die je direct kan nagaan zijn:
-
-      - Wees er zeker van dat je de *ruwe broncode* van de e-mail in je mailprogramma bekijkt, zodat je de e-mailheaders kan bestuderen op belangrijke hints.
-
-      - **BELANGRIJK:** Heeft je Internet Service Provider (ISP) een reverse DNS record ingevuld om het domeinnaam waar vanaf je mailt? Je kan je Reverse PTR Record [hier testen][2]. Als de juiste DNS pointer record niet is ingevuld door je ISP, is het erg onwaarschijnlijk dat je mail bezorgd wordt.
-
-      - Is het SPF-record van je domain correct ingesteld? Je kan je SPF record [hier testen][1].
-
-      - Ben je er zeker van dat je de IP-adressen van de server waar de mail vandaan komt [niet op een e-mail blacklist staan][4]?
-
-      - Zorg er voor dat je mailserver *absoluut* een fully-qualified hostname resolved in DNS in het HELO bericht. Zo niet, dan wordt de mail zeer waarschijnlijk geblokkeerd door de meeste mail services.
-
-      - Heb je [DKIM email key signing][3] in je e-mail programma ingesteld en de publieke DKIM-key in je DNS-records gestopt?
-
-      (De *makkelijke* manier is om [je in te schrijven voor Mandrill][6], zij hebben een gratis abonnement waarmee je genoeg kan mailen voor kleine fora. Je moet nog wel je SPF en DKIM instellen!)
-
-      We hopen dat je deze e-mail bezorgtest goed hebt ontvangen!
-
-      Veel succes,
-
-      Je vrienden van [Discourse](http://www.discourse.org).
-
-      :smile:
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-
-      ----
-
-      <small>Er zou een unsubscribe footer op elke email die je verstuurt moeten zitten zodat men direct kan afmelden mocht men deze mails niet willen ontvangen. Dus laten we er eentje opzetten!
   new_version_mailer:
     subject_template: "[%{site_name}] Nieuwe Discourse-versie, update beschikbaar"
   new_version_mailer_with_notes:
@@ -908,22 +869,6 @@ nl:
   system_messages:
     post_hidden:
       subject_template: "Bericht van %{site_name}: je bericht is verborgen wegens meldingen uit de community"
-      text_body_template: |
-        Hallo,
-
-        Dit is een geautomatiseerd bericht van %{site_name} om je te laten weten dat het bericht...
-
-        %{base_url}%{url}
-
-        is verborgen omdat het door de community is gemarkeerd.
-
-        %{flag_reason}
-
-        Houd er rekening mee dat meerdere leden van de community dit bericht hebben aangemeld voordat deze verborgen werd. Denk er daarom goed over na ** hoe je je bericht aan kan passen om hun feedback zo goed mogelijk in acht te nemen**. Je kan je bericht na %{edit_delay} minuten bewerken en het zal automatisch weer zichtbaar worden. Dit zal uiteindelijk je trustlevel verhogen.
-
-        Echter, als het bericht een tweede keer wordt verborgen door de community, wordt er een moderator ingelicht. Zij kunnen verdere actie ondernemen, waaronder een mogelijke schorsing van je account.
-
-        Voor extra uitleg verwijzen wij je graag door naar onze [Veel gestelde Vragen](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Dit privé-bericht heeft een paar tips om je een eind op weg te helpen:
@@ -1003,14 +948,6 @@ nl:
         ```
         %{logs}
         ```
-    email_error_notification:
-      subject_template: "Fout bij verwerking mail"
-    email_reject_trust_level:
-      subject_template: "Bericht geweigerd"
-      text_body_template: |
-        Het bericht dat je naar %{to} hebt verzonden is door het systeem geweigerd.
-
-        Je hebt (nog) niet het vereiste vertrouwenslevel om nieuwe topics naar dit adres te kunnen mailen.
     too_many_spam_flags:
       subject_template: "Account geblokkeerd"
       text_body_template: |
@@ -1029,6 +966,8 @@ nl:
         Dit is een automatisch bericht van %{site_name} om je te informeren dat je account geblokkeerd is door de staf.
 
         Kijk voor verdere uitleg in de [FAQ](%{base_url}/faq).
+    user_automatically_blocked:
+      subject_template: "Nieuwe gebruiker %{username} geblokkeerd wegens meldingen van andere gebruikers"
     unblocked:
       subject_template: "Account gedeblokkeerd"
       text_body_template: |
@@ -1174,10 +1113,6 @@ nl:
     access_token_problem: "Zeg dit tegen een beheerder: Zou je de Instellingen kunnen updaten zodat de juiste discourse_org_access_key is inbegrepen?"
   page_not_found:
     title: "De opgevraagde pagina bestaat niet op dit forum of is privé."
-    popular_topics: "Populaire topics"
-    recent_topics: "Recente topics"
-    see_more: "Meer"
-    search_title: "Zoek deze topic"
     search_google: "Zoek met Google"
   login_required:
     welcome_message: |

@@ -762,11 +762,6 @@ it:
     warn_reviving_old_topic_age: "Quando qualcuno inizia a rispondere ad un topic più vecchio di questo numero di giorni, verrà mostrato un avviso che scoraggerà l'utente dal resuscitare una vecchia discussione. Disabilita impostando 0"
     autohighlight_all_code: "Colora la sintassi del codice nei blocchi di testo preformattato, anche se non è stato specificato il linguaggio di programmazione."
     embeddable_host: "Host che possono integrare i commenti da questo forum di Discourse"
-    feed_polling_enabled: "Se importare un feed RSS/ATOM come post"
-    feed_polling_url: "URL dei feed RSS/ATOM da importare"
-    embed_by_username: "Username Discourse dell'utente che crea i topic"
-    embed_truncate: "Tronca i post importati"
-    embed_category: "Categoria dei topic creati"
     embed_post_limit: "Numero massimo di post da incorporare"
     embed_whitelist_selector: "selettore css per gli elementi permessi negli embeds"
     embed_blacklist_selector: "selettore css per gli elementi che sono rimossi dagli embeds"
@@ -859,44 +854,6 @@ it:
       blocked: "è bloccato."
   test_mailer:
     subject_template: "[%{site_name}] Test Invio Email"
-    text_body_template: |
-      Questa è un'email di prova inviata dal tuo forum %{site_name} su:
-
-      [**%{base_url}**][0]
-
-      Il recapito di email è complesso. Ecco alcune cose importanti che dovresti controllare prima:
-
-      - Impara a visualizzare il *contenuto originale delle email* nel tuo client email, in questo modo potrai controllare la presenza di eventuali errori. In Gmail puoi usare il tasto "Mostra Originale" presente nel menù a tendina di ogni email.
-
-      - **IMPORTANTE:** Il tuo ISP ha un record DNS inverso per associare il nome del dominio e l'indirizzo ip dal quale invii le email? [Controlla il tuo record inverso PTR][2] qui. Se il tuo ISP non inserisce il record DNS inverso appropriato è molto improbabile che le tue email verranno recapitate.
-
-      - Il record SPF del tuo dominio è corretto? [Controlla il tuo record SPF][1] qui.
-
-      - Controlla che gli IP del tuo server mail [non siano su qualche blacklist][4].
-
-      - Controlla che il tuo server email stia *effettivamente* inviando un hostname che abbia una risoluzione nel DNS nel suo messaggio HELO. Se questo non avviene, è molto provabile che le tue email verranno scartate da molte caselle email.
-
-      - Configura la [firma delle email via DKIM][3] nel tuo software email e inserisci la tua chiave pubblica DKIM nei tuoi record DNS. Questa non è una condizione richiesta, ma migliorerà significativamente il recapito di email.
-
-      (Il modo *semplice* è quello di [registrarsi su Mandrill][6], che ha un generoso piano gratuito che andrà bene per i forum più piccoli. Attenzione che dovrai comunque impostare i tuoi record SPF e DKIM nel DNS!)
-
-      Speriamo tu abbia ricevuto questo test di recapito email!
-
-      Buona fortuna,
-
-      I tuoi amici di [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-
-      ----
-
-      <small>Dovrebbe esserci un footer di rimozione della registrazione su ogni email che invii, quindi simuliamone uno. Questa email è stata inviata da Nome dell'azienda, Via principale, 55, Città, Italia, 12345. Se non vuoi ricevere più email di questo tipo,  [clicca qui][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Nuova versione di Discourse, aggiornamento disponibile"
   new_version_mailer_with_notes:
@@ -919,22 +876,6 @@ it:
   system_messages:
     post_hidden:
       subject_template: "Post nascosto a causa di segnalazioni dalla community"
-      text_body_template: |
-        Ciao,
-
-        Questo è un messaggio automatico da %{site_name} per informarti che il tuo post...
-
-        %{base_url}%{url}
-
-        ... è stato nascosto a causa di segnalazioni dalla community.
-
-        %{flag_reason}
-
-        Molti utenti hanno segnalato questo post prima che venisse nascosto, quindi per favore considera di modificarlo in base al loro feedback. Puoi modificare il tuo post dopo %{edit_delay} minuti, e tornerà automaticamente visibile. Questo incrementerà il tuo livello.
-
-        Ricordati che se il post dovesse venir nascosto dagli utenti una seconda volta, i moderatori verranno notificati e potrebbero esserci delle conseguenze, fra cui la possibile sospensione del tuo account.
-
-        Per ulteriori informazioni, fai riferimento alle nostre [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Questo messaggio privato contiene alcuni consigli veloci per iniziare:
@@ -1034,14 +975,6 @@ it:
         ```
         %{logs}
         ```
-    email_error_notification:
-      subject_template: "Errore nella lettura dell'email"
-    email_reject_trust_level:
-      subject_template: "Messaggio rifiutato"
-      text_body_template: |
-        Il messaggio che hai inviato a %{to} è stato rifiutato dal sistema.
-
-        Non hai i permessi necessari per postare nuovi topic su questo indirizzo email.
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
       text_body_template: "Ciao,\n\nquesto è un messaggio automatico da %{site_name} per informarti che i tuoi post sono stati automaticamente nascosti perché contrassegnati dalla community. \n\nCome misura precauzionale, il tuo nuovo account non può creare nuove risposte o topic finché non viene abilitato da un membro dello staff.\n\nPer ulteriori informazioni, ti rimandiamo a  [FAQ](%{base_url}/faq).\n"
@@ -1196,10 +1129,6 @@ it:
     access_token_problem: "Dillo ad un admin: Per favore aggiorna le impostazioni del sito ed inserisci la chiave discourse_org_access_key corretta."
   page_not_found:
     title: "La pagina richiesta non esiste in questo forum. Forse possiamo aiutarti a trovarla, o un topic simile:"
-    popular_topics: "Topic più popolari"
-    recent_topics: "Topic recenti"
-    see_more: "Di più"
-    search_title: "Cerca per questo topic"
     search_google: "Cerca in Google"
   login_required:
     welcome_message: |

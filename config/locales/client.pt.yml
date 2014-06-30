@@ -376,7 +376,6 @@ pt:
       create_topic: "Criar um Tópico"
       create_pm: "Criar uma Mensagem Particular"
       users_placeholder: "Adicionar um utilizador"
-      title_placeholder: "Escreva o seu título aqui. Sobre o que é esta discussão numa pequena frase?"
       edit_reason_placeholder: "Porque está a editar?"
       show_edit_reason: "(adicione a razão para a edição)"
       reply_placeholder: "Escreva a sua resposta aqui. Utilize Markdown ou BBCode para formatar. Arraste ou cole aqui uma imagem para enviar."
@@ -399,7 +398,6 @@ pt:
       quote_title: "Bloco de Citação"
       quote_text: "Bloco de Citação"
       code_title: "Texto pré-formatado"
-      code_text: "inserir aqui o texto pré-formatado"
       upload_title: "Enviar"
       upload_description: "digite aqui a descrição do ficheiro enviado"
       olist_title: "Lista numerada"
@@ -829,6 +827,9 @@ pt:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "tópicos populares na categoria {{categoryName}}"
+      top:
+        title: "Top"
+        help: "Seleção dos melhores tópicos no último ano, mês, semana ou dia."
     browser_update: 'Infelizmente, <a href="http://www.discourse.org/faq/#browser">o seu navegador é muito antigo para ser utilizado num fórum Discours</a>. Por favor <a href="http://browsehappy.com">atualize seu navegador</a>.'
     permission_types:
       full: "Criar / Responder / Ver"
@@ -950,7 +951,6 @@ pt:
         override_default: "Sobrepor padrão?"
         enabled: "Habilitado?"
         preview: "pré-visualização"
-        undo_preview: "desfazer pré-visualização"
         save: "Guardar"
         new: "Novo"
         new_style: "Novo Estilo"

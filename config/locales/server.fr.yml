@@ -612,7 +612,7 @@ fr:
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|starred|categories|top|read|posted"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
-    share_links: "Liste ordonnée des boutons de partage. Exemple : twitter|facebook|google+|email"
+    share_links: "Choix des éléments qui doivent apparaître dans la fenêtre de partage, et leur ordre."
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écrite de toutes les urls"
     topics_per_page: "Combien de sujets chargés par défaut sur la page de la liste des sujets et lors du chargement des sujets supplémentaires"
     posts_per_page: "Combien de messages chargés par défaut sur la page d'un sujet, et combien lors du chargement des messages supplémentaires"
@@ -733,6 +733,7 @@ fr:
     reply_by_email_enabled: "Activer répondre aux sujets via email"
     reply_by_email_address: "Modèle pour la réponse par adresse email entrante; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     pop3s_polling_enabled: "Utiliser le polling via POP3S pour les réponses par email"
+    pop3s_polling_insecure: "Les sondages utilisent le texte brut POP3 sans SSL"
     pop3s_polling_port: "Le port à utiliser pour le polling sur le POPS3"
     pop3s_polling_host: "L'hôte utilisé pour le polling pour l'email via POP3S"
     pop3s_polling_username: "Le nom d'utilisateur pour le polling POPS3 par email"
@@ -763,7 +764,6 @@ fr:
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui réponde à tous les types de clients."
     dominating_topic_minimum_percent: "Quel est le pourcentage de messages d'un utilisateur doit poster dans un sujet avant que nous considérions qu'il est dominant."
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets"
-    min_posts_for_search_in_topic: "Désactiver la recherche dans les sujets si les sujets ont moins du minimum de messages"
     global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le caché (HTML autorisé)"
     enable_names: "Autoriser les utilisateurs à afficher leur nom complet"
     display_name_on_posts: "Afficher également le nom complet de l'utilisateur dans ses messages"
@@ -773,11 +773,6 @@ fr:
     warn_reviving_old_topic_age: "Lorsqu'un utilisateur répond à un sujet vieux de plusieurs jours, un avertissement est affiché pour le décourager de déterrer ce dernier. Désactiver la fonctionnalité en indiquant: 0."
     autohighlight_all_code: "Mettre en évidence tout les textes dans les balises code, même si ils ne correspondent à aucun langage de programmation."
     embeddable_host: "Hôte pouvant intégrer les commentaires de ce forum Discourse"
-    feed_polling_enabled: "Si vous souhaitez importer un flux RSS/ATOM en tant que messages"
-    feed_polling_url: "URL du flux RSS/ATOM à importer"
-    embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets"
-    embed_truncate: "Tronquer les messages importés"
-    embed_category: "Catégorie des sujets créés"
     embed_post_limit: "Le nombre maximum de messages à incorporer"
     embed_whitelist_selector: "selecteur css pour les éléments qui seront autorisés dans les contenus intégrés"
     embed_blacklist_selector: "selecteur css pour les éléments qui seront interdits dans les contenus intégrés"
@@ -787,6 +782,14 @@ fr:
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux admins de creer d'autres sujets."
     errors:
       invalid_email: "Adresse email invalide."
+      invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo"
+      invalid_integer_min_max: "La valeur doit être comprise entre %{min} et %{max}."
+      invalid_integer_min: "La valeur doit être de %{min} ou plus."
+      invalid_integer_max: "La valeur ne peut pas être supérieur à %{max}."
+      invalid_integer: "La valeur doit être un entier."
+      invalid_string: "Valeur invalide."
+      invalid_string_min: "Doit être d'au moins %{count} caractères."
+      invalid_string_max: "Doit avoir moins de %{max} caractères."
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
     liked: "%{display_username} a aimé votre message dans %{link}"
@@ -804,7 +807,7 @@ fr:
     within_post: "#%{post_number} par %{username}: %{excerpt}"
     types:
       category: 'Catégories'
-      topic: 'Sujets'
+      topic: 'Résultats'
       user: 'Utilisateurs'
   original_poster: "Auteur originel"
   most_posts: "Le plus de messages"
@@ -874,72 +877,13 @@ fr:
     ip_address:
       blocked: "est bloqué."
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} vous a invité(e) à participer à un sujet sur %{site_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) dans le sujet "%{topic_title}" sur %{site_name}.
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous pour suivre la conversation :
-
-      [Visiter %{site_name}][1]
-
-      Vous avez été invité(e) par un utilisateur de confiance, donc vous avez la possibilité de répondre sans même avoir besoin de vous connecter.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} vous a invité(e) à rejoindre %{site_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) sur %{site_name}.
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous pour le/la rejoindre :
-
-      [Visiter %{site_name}][1]
-
-      Vous avez été invité(e) par un utilisateur de confiance, donc vous avez la possibilité de répondre sans même avoir besoin de vous connecter.
-
-      [1]: %{invite_link}
+    subject_template: "%{site_name}] %{invitee_name} vous a invité(e) à rejoindre une discussion"
   test_mailer:
     subject_template: "[%{site_name}] Test de délivrabilité d'email"
-    text_body_template: |
-      Ceci est un mail de test envoyé depuis le forum %{site_name} disponible à l'adresse suivante :
-
-            [**%{base_url}**][0]
-
-            La délivrabilité d'email est complexe. Voici les points importants que vous devez vérifier immédiatement :
-
-            - Soyez sûr de savoir comment voir la *source brute de l'email* dans votre client mail, afin que vous puissiez examiner l'entête de l'email contenant des indices importants.
-
-            - **IMPORTANT** : Votre FAI a-t-elle effectué un enregistrement reverse DNS pour associer le nom de domaine depuis lequel vous envoyez les mails avec les IPs que vous utilisez pour emailer ? [Testez votre enregistrement Reverse PTR][2] ici. Si l'enregistrement du reverse DNS pointer approprié n'est pas effectué par votre FAI, il est peu probable que vos mails soient délivrés.
-
-            - L'enregistrement SPF de votre domaine est-il correct ? [Testez votre enregistrement SPF][1] ici.
-
-            - Assurez-vous que les IPs du serveur d'où proviennent les mails [ne sont sur aucune liste noire d'emails][4].
-
-            - Vérifiez que votre serveur de messagerie envoi *vraiment* un nom d'hôte pleinement qualifié présent dans le message HELO lors d'une résolution DNS. Si ce n'est pas le cas, cela augmentera les chances que votre adresse email soit rejetée par de nombreux services de messagerie.
-
-            - Configurez la [signature de clé DKIM][3] dans votre client mail, et ajoutez la clé publique DKIM dans vos enregistrements DNS. Ce n'est pas obligatoire, mais augmentera grandement votre délivrabilité.
-
-            Nous esperons que vous avez correctement reçu ce mail de test de délivrabilité !
-
-            Bonne chance,
-
-            Vos amis de %{site_name}.
-
-            [0]: %{base_url}
-            [1]: http://www.kitterman.com/spf/validate.html
-            [2]: http://mxtoolbox.com/SuperTool.aspx
-            [3]: http://www.dkim.org/
-            [4]: http://whatismyipaddress.com/blacklist-check
-            [5]: %{base_url}/unsubscribe
-
-            ----
-
-            <small>Il devrait toujours y avoir un lien de déinscription dans le pied de page d'un mail. Donc en voici-un. Ce mail a été envoyé par Nom de la Société,  55 Main Street, Anytown, USA 12345. Si vous ne voulez plus recevoir nos e-mails, [cliquez ici pour vous désinscrire][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: "Une nouvelle version de Discourse est disponible.\n\nVotre version : %{installed_version}\nNouvelle version: **%{new_version}** \n\nVous voulez peut-être:\n- Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).\n\n- Mettre à jour en allant sur [%{base_url}/admin/docker](%{base_url}/admin/docker) en appuyant sur le bouton \"Upgrade\".\n\n- Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.\n"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
-    text_body_template: "Une nouvelle version de Discourse est disponible.\n\nVotre version : %{installed_version}\nNouvelle version: **%{new_version}** \n\nVous voulez peut-être:\n- Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).\n\n- Mettre à jour en allant sur [%{base_url}/admin/docker](%{base_url}/admin/docker) et en appuyant sur le bouton \"Upgrade\".\n\n- Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.\n\n### Notes de mise à jour\n\n%{notes}\n"
   flags_reminder:
     flags_were_submitted:
       one: "Il y a des signalements qui ont été soumis il y a plus de 1 heure."
@@ -958,7 +902,6 @@ fr:
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
-      text_body_template: "Bonjour,\n\nCeci est un message automatique de %{site_name} pour vous informer que le message ...\n\n%{base_url}%{url}\n\n... a été caché à la suite d'un signalement de la communauté. \n\n%{flag_reason}\n\nGardez à l'esprit que plusieurs membres ont signalé ce message avant qu'il ne soit caché, **veuillez donc prendre en compte leurs remarques pour revoir votre message**. Vous pouvez modifier le message après %{edit_delay} minutes, et il sera automatiquement ré-affiché. Ceci augmentera votre niveau de confiance sur le forum.\n\nCependant, si le message est signalé par la communauté une seconde fois, les modérateurs seront informés  -- et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.\n\nPour plus d'informations, merci de vous en référer à la [FAQ](%{base_url}/faq).\n"
     usage_tips:
       text_body_template: |
         Ce message privé contient quelques astuces pour vous aider à démarrer rapidement :
@@ -1056,14 +999,11 @@ fr:
         ```
         %{logs}
         ```
-    email_error_notification:
-      subject_template: "Erreur d'analyse de l'email"
-    email_reject_trust_level:
-      subject_template: "Message rejeté"
-      text_body_template: |
-        Le message que vous avez envoyé à %{to} a été rejeté par le système.
-
-        Vous n'avez pas le niveau de confiance requis pour envoyer des réponses à cette adresse mail.
+    bulk_invite_succeeded:
+      subject_template: "Envoi des invitations en masse réussi !"
+      text_body_template: "L'envoi des invitations en masse a été effectué. %{sent} invitations envoyées."
+    bulk_invite_failed:
+      subject_template: "Envoi des invitations en masse effectué avec des erreurs !"
     too_many_spam_flags:
       subject_template: "Nouveau compte bloqué"
       text_body_template: |
@@ -1084,6 +1024,8 @@ fr:
         Pour plus d'informations, merci de vous en référer à la [FAQ](%{base_url}/faq).
     user_automatically_blocked:
       subject_template: "Nouvel utilisateur %{username} bloqué à cause de signalements de la communauté"
+    spam_post_blocked:
+      subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
     unblocked:
       subject_template: "Compte débloqué"
       text_body_template: |
@@ -1227,10 +1169,6 @@ fr:
     access_token_problem: "Informer un administateur : Veuillez mettre à jour les paramètres du site pour inclure la discourse_org_access_key correcte."
   page_not_found:
     title: "La page que vous avez demandé n'existe pas ou est privée."
-    popular_topics: "Sujets populaires"
-    recent_topics: "Sujets récents"
-    see_more: "Voir plus"
-    search_title: "Rechercher un autre sujet"
     search_google: "Rechercher avec Google"
   login_required:
     welcome_message: |

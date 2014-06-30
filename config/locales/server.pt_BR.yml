@@ -602,11 +602,10 @@ pt_BR:
     allow_moderators_to_create_categories: "Permitir a criação de categorias por moderadores"
     top_menu: "Determine quais itens aparecem na navegação da homepage e em que ordem. Exemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "A ordem dos items no menu da postagem."
-    share_links: "Determine quais ítens aparecerem no diálogo de compartilhar, e em que ordem. Por exemplo: twitter|facebook|google+|email"
+    share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento, e em qual ordem."
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
     topics_per_page: "Quantos tópicos carregados por padrão na página da lista de tópicos e quando carregar mais tópicos"
     posts_per_page: "Quantas postagens são requisitados numa página de tópico"
-    desktop_post_slack_ratio: "Número de telas de mensagens processados no DOM no Desktop"
     site_contact_username: "Nome do Usuário que envia as mensagens do sistema"
     send_welcome_message: "Novos usuários recebem mensagem particular de boas-vindas?"
     suppress_reply_directly_below: "Não exibir contagem do número de respostas na postagem quando houver apenas uma resposta diretamente abaixo"
@@ -756,7 +755,6 @@ pt_BR:
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o site completo. Desative isso se você quiser usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Qual a percentagem de mensagens de um usuário em um tópico antes de considerá-lo dominante."
     suppress_uncategorized_badge: "Não exibir emblema para assuntos não categorizados em listas de tópicos"
-    min_posts_for_search_in_topic: "Desativar pesquisa dentro do tópico se tópicos tem um número mínimo de mensagens"
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     enable_names: "Permitir que usuários exibam seus nomes completos"
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
@@ -766,11 +764,6 @@ pt_BR:
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não for específica o idioma"
     embeddable_host: "Host que pode incorporar os comentários deste fórum do Discourse"
-    feed_polling_enabled: "Se um feed RSS/ATOM são importados como mensagens"
-    feed_polling_url: "URL do feed RSS/ATOM para importar"
-    embed_by_username: "Nome de usuário Discourse para o usuário que cria os tópicos"
-    embed_truncate: "Truncar as mensagens importadas"
-    embed_category: "Categoria de tópicos criados"
     embed_post_limit: "Número máximo de respostas para embutir"
     embed_whitelist_selector: "seletor css para elementos que são permitidos em incorporações"
     embed_blacklist_selector: "seletor css para elementos que são removidos a partir de incorporações"
@@ -797,7 +790,7 @@ pt_BR:
     within_post: "#%{post_number} por %{username}: %{excerpt}"
     types:
       category: 'Categorias'
-      topic: 'Tópicos'
+      topic: 'Resultados'
       user: 'Utilizadores'
   original_poster: "Postador original"
   most_posts: "Maior parte das postagens"
@@ -855,8 +848,7 @@ pt_BR:
     omniauth_error_unknown: "Algo deu errado no processamento do seu login, por favor tente novamente."
   user:
     username:
-      short: "tem que conter mais de %{min} caracteres"
-      long: "tem que conter menos de %{max} caracteres"
+      short: "deve ter no mínimo %{min} caracteres"
       characters: "deve incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
@@ -866,66 +858,12 @@ pt_BR:
       blocked: "não é permitido."
     ip_address:
       blocked: "está bloqueado."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} convidou-te para participares numa conversa em %{site_name}"
-    text_body_template: |
-      %{invitee_name} convidou-te para o tópico "%{topic_title}" em %{site_name}.
-
-      Se estiveres interessado, clica no link em baxio para visitares a conversa:
-
-      [Visitar %{site_name}][1]
-
-      Foste convidado por um utilizador de confiança, por isso poderás responder imediátamente, sem ter que fazer log in.
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} convidou você para participar de %{site_name}"
-    text_body_template: |
-      %{invitee_name} convidou você para %{site_name}.
-
-      Se você está interessado, clique no link abaixo para participar:
-
-      [Visite %{site_name}][1]
-
-      Você foi convidado por um usuário confiável, então você vai ser capaz de participar imediatamente, sem a necessidade de login
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
-    text_body_template: "Este é um e-mail de teste enviado a partir de seu fórum %{site_name} em:\n\n[** %{base_url} **] [0] \n\nEnvio de e-mail é complicado. Aqui estão algumas coisas importantes que você deve verificar primeiro: \n\n- Saiba como ver a *fonte do e-mail* em seu cliente de e-mail, para que você possa examinar os cabeçalhos de e-mail em busca de pistas importantes. No Gmail é a opção \"exibir original\" no menu de cada e-mail. \n\n- **IMPORTANTE:** Será que o seu ISP tem uma entrada de registro DNS reverso associados aos nomes de domínio e endereços IP dos quais você envia e-mails? [ Teste seu registro PTR reverso ][2] aqui. Se o seu ISP não tem entradas de registro de ponteiro DNS reverso adequadas é muito improvável que qualquer de seus e-mails sejam entregues.\n\n- Seu registro SPF do seu domínio está correto? [Teste seu registro SPF][1] aqui. \n\n- Verifique se os IPs de seu servidor de correio [não estão em alguma lista negra de e-mail][4].\n\n- Verifique se o seu servidor de e-mail está *definitivamente* enviando de um nome de host totalmente qualificado que resolve no DNS sua mensagem HELO . Se não, isso fará com que seu e-mail seja rejeitado por muitos serviços de correio.\n\n- Configure a [chave de assinatura de e-mail DKIM][3] em seu software de e-mail e coloque a chave pública DKIM nos seus registros DNS. Isso não é necessário mas irá melhorar significativamente a capacidade de entrega de e-mail.\n\n(A maneira *fácil* é [se inscrever no Mandrill][6], que tem um plano de e-mail gratuito e generoso que é bom para pequenos fóruns. Embora, você ainda precisará configurar os registros SPF e DKIM no seu DNS!).\n\nNós esperamos que você tenha recebido este teste de envio de e-mail OK!\n\nBoa sorte,\n\nSeus amigos do [Discourse] (http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[5]: %{base_url}/unsubscribe\n[6]: http://mandrill.com\n\n<small>Deve haver um rodapé de cancelamento em cada e-mail que você envia, então vamos zombar um pouco. Este e-mail foi enviado por Nome da empresa,\
-      \ rua Principal 55, QualquerCidade,  BRA 12345. Se você gostaria de optar por cancelar futuros e-mails, [clique aqui para cancelar a inscrição][5]. </ Small> \n\n\n\n\n\n\n\n\n\n"
   new_version_mailer:
     subject_template: "[%{site_name}] Nova versão do Discourse, atualização disponível"
-    text_body_template: |
-      Uma nova versão do Discourse está disponível.
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      Você talvez queira:
-      - Ver o que há de novo nas [mudanças do GitHub] (https://github.com/discourse/discourse/commits/master)
-
-      - Atualizar visitando  [%{base_url}/admin/docker](%{base_url}/admin/docker) e pressionando o botão de "Atualizar".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, discussões e suporte para o Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: |
-      Uma nova versão do Discourse está disponível.
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      Você talvez queira:
-      - Ver o que há de novo nas [mudanças do GitHub] (https://github.com/discourse/discourse/commits/master)
-
-      - Atualizar visitando  [%{base_url}/admin/docker](%{base_url}/admin/docker) e pressionando o botão de "Atualizar".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, discussões e suporte para o Discourse.
-
-      ### Notas de lançamento
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Há sinalizações que foram enviadas a mais de 1 hora."
@@ -944,22 +882,6 @@ pt_BR:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
-      text_body_template: |
-        Olá,
-
-        Está é uma mensagem automática de %{site_name} para informá-lo que o seguinte post foi escondido devido a sinalização da comunidade:
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Vários membros da comunidade sinalizaram este post antes do mesmo ser escondido, portanto, por-favor considere como deves rever seus posts para refletir o seu feedback.
-
-        Você pode editar seu post após %{edit_delay} minutos, e depois ele será automaticamente tornado visível outra vez. Isto irá aumentar o seu nível de confiança no fórum.
-
-        No entanto, caso o post for escondido pela comunidade uma segunda vez, os moderadores serão notificados -- e haverá futuras atuações, incluindo uma possível suspensão da sua conta.
-
-        Para mais ajuda, por-favor consulte a [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: "Esta mensagem privada tem algumas dicas rápidas para você começar: \n\n### Mantenha rolando \n \nNão há página seguinte, botões ou números de página - para ler mais, basta manter a rolagem para baixo! \n\nÀ medida que novas respostas chegam, eles aparecerão automaticamente na parte inferior do tópico. \n\n### Como posso responder? \n\n- Para responder a uma mensagem específica, use o botão Responder na mensagem.\n \n- Para responder ao *tema* geral do tópico em vez de qualquer pessoa ou mensagem específica no tópico, use o botão Responder na parte inferior do tópico.\n\n- Para levar a conversa em uma direção diferente mas mantê-las ligadas entre si, use Responder Como Novo Tópico na direita da mensagem.\n\n### Quem está falando comigo?\n\nQuando alguém responde a sua mensagem, te citam ou mencionam seu @nome, um número ➀ aparecerá sobre um botão de conversa no topo da página. Use-o para ver quem está falando com você e onde.\n\n- Para citar o nome de alguém, comece digitando `@` e um autocompletar vai aparecer.\n\n- Para citar apenas uma seção de uma mensagem, selecione-a e use o botão de resposta que aparece sobre sua seleção.\n\n- Para citar uma mensagem inteira, use o botão Importar Citações na barra de ferramentas do editor.\n\n### Olhe para esse post!\n\nPara deixar alguém sabendo que você curtiu sua mensagem, use o botão com ♥ na parte inferior da mensagem. Se você ver um problema com uma mensagem, não hesite em usar o botão de bandeira e privativamente deixar nossa equipe sabe sobre ela.\n\n### Quem sou eu? \n\n- Para voltar para a página inicial a qualquer momento, **usar o logotipo no canto superior esquerdo** ou o botão ← voltar do seu navegador.\n\n- Para pesquisar, sua página de usuário ou o mapa do site, use os **botões de ícone na parte superior direita **.\n\n- Durante a leitura de um tópico, ir para o topo ↑ clicando em seu título na parte superior da página, ou pressione a tecla <kbd>HOME</kbd>. Para chegar no *rodapé* ↓, use a seta para baixo no indicador de progresso do tópico na parte inferior da página, ou pressione a tecla <kbd>END</kbd>.\n\n- Use tempo como atalhos de entrada. Você sempre pode entrar no topo de um tópico\
         \ através da primeira data de postagem e na parte inferior por meio da última data de postagem . \n"
@@ -1024,19 +946,6 @@ pt_BR:
         ````
         %{logs}
         ```
-    email_error_notification:
-      subject_template: "Erro ao analisar e-mail"
-      text_body_template: |
-        Isso é uma mensagem automática.
-
-        Analisando o-mail de entrada falhou. Por favor, verifique o seguinte erro:
-
-        `%{error}`
-
-        %{source}
-    email_reject_trust_level:
-      subject_template: "Mensagem rejeitada"
-      text_body_template: "A mensagem que você enviou para %{to} foi rejeitada pelo sistema. \n \nVocê não tem a confiança necessária para criar novos tópicos para este endereço de e-mail. \n"
     too_many_spam_flags:
       subject_template: "Nova conta bloqueada"
       text_body_template: |
@@ -1215,10 +1124,6 @@ pt_BR:
     access_token_problem: "Conta para um admin: Por favor atualize as configurações do site para incluir o discourse_org_access_key correto."
   page_not_found:
     title: "A página solicitada não existe ou é privativa."
-    popular_topics: "Tópicos populares"
-    recent_topics: "Tópicos Recentes"
-    see_more: "Veja Mais"
-    search_title: "Procurar por este tópico"
     search_google: "Procurar no Google"
   login_required:
     welcome_message: |

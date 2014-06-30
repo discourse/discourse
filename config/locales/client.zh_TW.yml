@@ -125,6 +125,8 @@ zh_TW:
     disable: "停用"
     undo: "復原"
     revert: "回復"
+    banner:
+      close: "關閉此橫幅"
     choose_topic:
       none_found: "未找到任何討論話題。"
       title:
@@ -224,7 +226,7 @@ zh_TW:
       suspended_notice: "此用戶已被停權至 {{date}}。"
       suspended_reason: "原因: "
       mailing_list_mode: "每當論壇上有新文章時你都會收到一封電子郵件。( 除非你將該討論話題或分類設為靜音 )"
-      watched_categories: "已關注"
+      watched_categories: "關注"
       watched_categories_instructions: "你將會自動關注在此分類的新討論話題。你將收到所有新文章和討論話題的通知，未讀和新討論話題的數量也將出現在討論話題的列表旁。"
       tracked_categories: "追蹤"
       tracked_categories_instructions: "你將追蹤所有在此分類的新討論話題。討論話題列表上將會出現未讀及新討論話題數。"
@@ -279,12 +281,10 @@ zh_TW:
         frequency: "我們只會在一段時間未看到你及你尚未看過我們通知你的事物時才會寄信給你。"
       name:
         title: "名稱"
-        instructions: "完整的名稱，此為公開的資訊，並用於輸入 @用戶名稱 時輔助識別。"
         too_short: "你的名稱太短。"
         ok: "你的名稱符合要求。"
       username:
         title: "用戶名稱"
-        instructions: "必需是獨一無二，且不含空格，其他人提到你時可以輸入 @用戶名稱。"
         short_instructions: "其他人可以輸入 @{{username}} 提到你。"
         available: "你的用戶名稱可以使用。"
         global_match: "電子郵件地址與註冊的用戶名稱相符。"
@@ -486,7 +486,6 @@ zh_TW:
       create_pm: "建立私人訊息"
       title: "或者按 Ctrl+Enter"
       users_placeholder: "新增用戶"
-      title_placeholder: "請在此輸入標題，用一個簡單的句子描述想討論的內容。"
       edit_reason_placeholder: "你為什麼做編輯?"
       show_edit_reason: "(請加入編輯原因)"
       reply_placeholder: "在此輸入。請使用 Markdown (http://markdown.tw/) 與 BBCode (http://www.bbcode.org/reference.php) 調整格式，拖曳或貼上圖片可以直接上傳。"
@@ -509,7 +508,6 @@ zh_TW:
       quote_title: "引用"
       quote_text: "引用"
       code_title: "預先格式化文字"
-      code_text: "在此輸入預先格式化的文字"
       upload_title: "上傳"
       upload_description: "在此輸入上傳的描述"
       olist_title: "編號清單"
@@ -695,10 +693,10 @@ zh_TW:
           title: "普通"
           description: "只在有人以 @用戶名稱 提到你或回覆你的文章時通知你。"
         muted_pm:
-          title: "已靜音"
+          title: "靜音"
           description: "你將不會收到任何關於此私人訊息的通知，此討論話題也不會出現在你的未讀清單裡。"
         muted:
-          title: "已靜音"
+          title: "靜音"
           description: "你將不會收到任何關於此討論話題的通知，此討論話題也不會出現在你的未讀分頁裡。"
       actions:
         recover: "復原已刪除的討論話題"
@@ -706,6 +704,8 @@ zh_TW:
         open: "開放討論話題"
         close: "關閉討論話題"
         auto_close: "自動關閉"
+        make_banner: "橫幅討論話題"
+        remove_banner: "移除橫幅討論話題"
         unpin: "復原已置頂的討論話題"
         pin: "置頂討論話題"
         pin_globally: "全區置頂討論話題"
@@ -1002,7 +1002,6 @@ zh_TW:
       delete_confirm: "您將刪除此用戶的 <b>%{posts}</b> 則文章與 <b>%{topics}</b> 個討論話題、移除他的帳號、封鎖從他使用的 IP <b>%{ip_address}</b> 登入、將他的電子郵件地址 <b>%{email}</b> 加入永久封鎖名稱，你確定此人真的發送垃圾文章嗎?"
       yes_delete_spammer: "是的，刪除垃圾文章發送者"
       submit_tooltip: "送出私人投訴"
-      take_action_tooltip: "使其達到投訴門檻"
       cant: "抱歉，你目前無法投訴此文章。"
       custom_placeholder_notify_user: "為什麼此文章需要你以私人訊息與作者直接溝通? 討論請務必討論話題明確、具建設性、態度和善。"
       custom_placeholder_notify_moderators: "為什麼此文章需要板主注意？請讓我們知道你在意的原因，並請盡量提供相關連結。"
@@ -1179,7 +1178,6 @@ zh_TW:
         view_message: "回覆"
         no_results: "沒有投訴。"
         topic_flagged: "此 <strong>討論話題</strong> 已被投訴。"
-        visit_topic: "瀏覽討論話題以作調查及作出行動。"
         summary:
           action_type_3:
             other: "離題 x{{count}}"
@@ -1280,7 +1278,6 @@ zh_TW:
         override_default: "不要保含標準樣式"
         enabled: "已啟用?"
         preview: "預覽"
-        undo_preview: "復原預覽"
         save: "儲存"
         new: "新增"
         new_style: "新增樣式"
@@ -1554,11 +1551,7 @@ zh_TW:
           requirement_heading: "要求"
           visits: "訪問"
           days: "天"
-          topics_with_replies: "討論話題與回覆"
           topics_replied_to: "討論話題回覆"
-          quality_content: "內容品質"
-          reading: "閱讀"
-          site_promotion: "宣傳論壇"
           flagged_posts: "被投訴的文章"
       site_content:
         none: "選擇要編輯的內容類型。"

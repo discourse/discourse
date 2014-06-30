@@ -291,12 +291,10 @@ he:
         frequency: "נשלח לך דואר אלקטרוני רק אם לא ראינו אותך לאחרונה ועדיין לא ראית את מה שאנחנו רוצים לשלוח"
       name:
         title: "שם"
-        instructions: "הגירסה המלאה של השם, מוצג בפומבי."
         too_short: "השם שלך קצר מידי."
         ok: "השם נראה טוב."
       username:
         title: "שם משתמש"
-        instructions: "חייב להיות ייחודי, ללא רווחים, קצר. אנשים יכולים לאזכר אותך בעזרת @שם"
         short_instructions: "אנשים יכולים לאזכר אותך כ @{{username}}."
         available: "שם המשתמש שלך פנוי."
         global_match: "הדואר האלקטרוני תואם את שם המשתמש הרשום"
@@ -488,7 +486,6 @@ he:
       create_pm: "יצירת הודעה פרטית"
       title: "או לחץ Ctrl+Enter"
       users_placeholder: "הוספת משתמש"
-      title_placeholder: "יש לכתוב כאן את הכותרת. על מה הדיון, במשפט קצר?"
       edit_reason_placeholder: "מדוע ערכת?"
       show_edit_reason: "(הוספת סיבת עריכה)"
       reply_placeholder: "יש להקליד כאן. ניתן להשתמש ב Markdown או BBCode כדי להתאים את הטקסט. גרירת או הדבקת תמונה תעלה אותה."
@@ -511,7 +508,6 @@ he:
       quote_title: "ציטוט"
       quote_text: "ציטוט"
       code_title: "טקסט מעוצב"
-      code_text: "הכנס טקסט מעוצה כאן"
       upload_title: "העלאה"
       upload_description: "הזן תיאור העלאה כאן"
       olist_title: "רשימה ממוספרת"
@@ -1203,7 +1199,6 @@ he:
         view_message: "תגובה"
         no_results: "אין דגלים."
         topic_flagged: "<strong>הנושא</strong> הזה דוגלל."
-        visit_topic: "בקר בנושא לביצוע בדיקה ופעולות נחוצות."
         summary:
           action_type_3:
             one: "אוף-טופיק"
@@ -1309,7 +1304,6 @@ he:
         override_default: "אל תכלול את ה-Stylesheet הסטנדרטי"
         enabled: "מאופשר?"
         preview: "תצוגה מקדימה"
-        undo_preview: "בטל תצוגה מקדימה"
         save: "שמור"
         new: "חדש"
         new_style: "סגנון חדש"
@@ -1587,11 +1581,7 @@ he:
           requirement_heading: "דרישה"
           visits: "ביקורים"
           days: "ימים"
-          topics_with_replies: "נושאים עם תגובות"
           topics_replied_to: "נושאים להם הגיבו"
-          quality_content: "תוכן איכותי"
-          reading: "קריאה"
-          site_promotion: "קידום אתר"
           flagged_posts: "הודעות מדוגללות"
       site_content:
         none: "בחר סוג תוכן לפני תחילת העריכה."

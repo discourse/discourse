@@ -345,6 +345,10 @@ zh_CN:
   archetypes:
     regular:
       title: "常规主题"
+    banner:
+      message:
+        make: "本主题已经是一个横幅主题。它将出现在每一页的顶部，除非用户将其隐藏。"
+        remove: "本主题已经被解决横幅主题。它将不再显示在每一页的顶部。"
   unsubscribed:
     title: '取消订阅'
     description: "您已经取消订阅，我们不会再发送邮件给您！"
@@ -712,6 +716,7 @@ zh_CN:
     reply_by_email_enabled: "启用通过邮件回复"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     pop3s_polling_enabled: "轮训 POP3S 收取邮件回复"
+    pop3s_polling_insecure: "Poll 使用 POP3 经纯文本传输而没有使用 SSL"
     pop3s_polling_port: "POP3S 轮训账户端口"
     pop3s_polling_host: "POP3S 轮训主机"
     pop3s_polling_username: "轮训 POP3S 账户"
@@ -752,11 +757,7 @@ zh_CN:
     warn_reviving_old_topic_age: "当有人开始回复超过一定天数前的主题时，将有一个警告提示用户他们在复活一个老的讨论。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式设定语言，仍为所有预编排代码块应用语法高亮。"
     embeddable_host: "能从这个 Discourse 论坛嵌入评论的主机"
-    feed_polling_enabled: "是否导入 RSS/ATOM 订阅为帖子"
-    feed_polling_url: "用于导入 RSS/ATOM 订阅的 URL"
-    embed_by_username: "创建该主题的 Discourse 的用户名"
-    embed_truncate: "截断导入的主题"
-    embed_category: "创建主题的分类"
+    embed_username_key_from_feed: "从流中获取 discourse 用户名的 Key"
     embed_post_limit: "嵌入帖子的最大数量"
     embed_whitelist_selector: "在嵌入页面加入元素 CSS 选择器"
     embed_blacklist_selector: "在嵌入页面移除元素 CSS 选择器"
@@ -771,6 +772,11 @@ zh_CN:
       invalid_integer_min: "值必须为 %{min} 或更大。"
       invalid_integer_max: "值不能大于 %{max}。"
       invalid_integer: "值必须是整数。"
+      regex_mismatch: "值不符合需要的格式。"
+      invalid_string: "无效值。"
+      invalid_string_min_max: "必须在 %{min} 和 %{max} 字符内。"
+      invalid_string_min: "必须超过 %{min} 个字符。"
+      invalid_string_max: "必须不超过 %{max} 个字符。"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @ 了您"
     liked: "%{display_username} 在 %{link} 赞了您的帖子 "
@@ -855,46 +861,40 @@ zh_CN:
       blocked: "不被允许。"
     ip_address:
       blocked: "被封禁。"
+  invite_mailer:
+    subject_template: "[%{site_name}] %{invitee_name} 邀请您参与讨论"
+    text_body_template: |
+      %{invitee_name} 邀请您参与讨论
+
+      > %{topic_title}
+
+      位于：
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      如果您感兴趣，请点击下面的链接来访问该讨论：
+
+      %{invite_link}
+
+      您是被一个受信任的用户邀请的，所以您可以直接发表回复。
+  invite_forum_mailer:
+    subject_template: "[%{site_name}] 上的 %{invitee_name} 邀请您加入"
+    text_body_template: |
+      %{invitee_name} 邀请您加入
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      如果您感兴趣，请点击下面的链接加入：
+
+      %{invite_link}
+
+      您是被一个受信任的用户邀请的，所以您可以不用登入。
   test_mailer:
     subject_template: "[%{site_name}] 电子邮件发送测试"
-    text_body_template: |
-      这是一封来自 %{site_name} 论坛的测试邮件。您可以通过浏览器访问该论坛：
-
-      [*%{base_url}*][0]
-
-      电子邮件分发可能会很复杂，但是您可以快速检查如下几点：
-
-      - 确定您会使用您的邮件客户端查看*电子邮件源代码*，这样您可以通过查看邮件头来获取重要线索。在 Gmail 中，可以通过每一封邮件下拉菜单中的“显示原始消息”来查看。
-
-      - **重要：** 您的 ISP 是否对您发送邮件的域名和IP作了反向DNS解析？您可以在此[测试您的反向枚举指针（PTR）记录][2]。如果您的 ISP 没有正确的反向 DNS 记录，那么很可能您的任何电子邮件都不会被成功发送。
-
-      - 您的域名的发件人策略框架（SPF）记录是否正确？您可以在此[测试您的SPF记录][1]。
-
-      - 您是否检查过您发送电子邮件的服务器IP [不在任何邮件黑名单中][4]？
-
-      - 您是否确认过您的邮件服务器*确定无疑的*在它的 HELO 消息中送出了完整的主机名？如果没有，那么会导致很多邮件服务商拒绝您的邮件。
-
-      - 您是否在您的电子邮件软件中配置了[域名密钥身份识别邮件（DKIM）的电子邮件密钥签名][3]，并且把DKIM公匙输入到了DNS记录中？这不是必须的，但是将显著提高邮件分发的成功率。
-
-      （最简单的方法是[注册 Mandrill 账户][6]，它有一个几乎不用付费的邮件方案并且适合小论坛。您仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录。）
-
-      我们衷心希望您收到这封邮件，发送测试成功！
-
-      祝好运！
-
-      您的朋友，[Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-
-      ----
-
-      <small>在每封您发送的邮件底部应该都有取消订阅的链接，让我们模拟一下。这封邮件发送自 中华人民共和国北京市海淀区中关村南大街公司名称，邮编 100081。如果您不希望将来继续收到我们的邮件，[点击此处取消订阅][5]。</small>
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
     text_body_template: |
@@ -945,22 +945,6 @@ zh_CN:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了您的帖子"
-      text_body_template: |
-        您好，
-
-        这是一封从 %{site_name} 自动发出的邮件，通知您的帖子...
-
-        %{base_url}%{url}
-
-        ... 由于论坛用户的标记而被隐藏。
-
-        %{flag_reason}
-
-        请注意您的帖子是因为被多个社群成员标记才被隐藏的。**请根据他们的反馈考虑如何修改您的帖子。**您可以在 %{edit_delay} 分钟后开始编辑您的帖子，然后它会被自动取消隐藏。这将提高您在论坛的信任等级。
-
-        但是，如果帖子再次被社群标记而隐藏，版主将收到通知——并且可能导致进一步的措施，包括可能禁止您的用户帐号。
-
-        需要了解更多指引，请查看我们的 [FAQ](%{base_url}/faq)。
     usage_tips:
       text_body_template: |
         这条私信包含了一些可以让您快速开始的技巧提示：
@@ -1046,30 +1030,6 @@ zh_CN:
       text_body_template: "批量邀请成功完成，%{sent} 邀请已发出。"
     bulk_invite_failed:
       subject_template: "批量邀请完成，并有一些错误！"
-      text_body_template: |
-        批量邀请已经完成，发出了 %{sent} 个邀请并且 %{failed} 个失败。
-
-        查看日志：
-
-        ```
-        %{logs}
-        ```
-    email_error_notification:
-      subject_template: "解析邮件错误"
-      text_body_template: |
-        这是一封自动发出的邮件。
-
-        解析收到的邮件时发生了错误。请检查下列消息：
-
-        `%{error}`
-
-        %{source}
-    email_reject_trust_level:
-      subject_template: "消息拒绝"
-      text_body_template: |
-        您发送给 %{to} 的消息被系统拒绝。
-
-        您没有足够的信任等级发送新的主题给这个邮件地址。
     too_many_spam_flags:
       subject_template: "新账号被封禁"
       text_body_template: |
@@ -1132,7 +1092,7 @@ zh_CN:
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
-    reply_by_email: "通过邮件回复或者在浏览器中访问 %{base_url}%{url}。"
+    reply_by_email: "通过邮件回复或者在浏览器中访问 %{base_url}%{url} 。"
     visit_link_to_respond: "在浏览器中访问 %{base_url}%{url} 回复。"
     posted_by: "%{username}发表于%{post_date}"
     user_invited_to_private_message_pm:
@@ -1254,10 +1214,6 @@ zh_CN:
     access_token_problem: "告诉一个管理员：请更新站点设置以包含正确的 discourse_org_access_key。"
   page_not_found:
     title: "您请求的页面不存在或者是私密的。"
-    popular_topics: "热门主题"
-    recent_topics: "近期主题"
-    see_more: "查看更多"
-    search_title: "搜索该主题"
     search_google: "用 Google 搜索"
   login_required:
     welcome_message: |

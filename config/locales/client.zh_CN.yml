@@ -43,7 +43,7 @@ zh_CN:
         date_year: "YY-MM-D"
       medium:
         x_minutes:
-          other: "%{count} 分"
+          other: "%{count} 分钟"
         x_hours:
           other: "%{count} 小时"
         x_days:
@@ -107,7 +107,7 @@ zh_CN:
       title: "推荐主题"
     bookmarks:
       not_logged_in: "抱歉，您需要先登入才能给帖子加书签"
-      created: "您给此帖的书签已加上。"
+      created: "您给此帖的书签已加上"
       not_bookmarked: "您已经阅读过此帖；点此给它加上书签"
       last_read: "这是您阅读过的最后一帖；点此给它加上书签"
       remove: "删除书签"
@@ -125,6 +125,8 @@ zh_CN:
     disable: "禁用"
     undo: "重做"
     revert: "撤销"
+    banner:
+      close: "隐藏横幅。"
     choose_topic:
       none_found: "没有找到主题。"
       title:
@@ -187,6 +189,15 @@ zh_CN:
       post_stats: "新帖子的数量。"
       post_stat_sentence:
         other: "在过去的 %{unit} 中有 %{count} 个新帖子"
+    ip_info:
+      title: IP 地址查询
+      hostname: 主机名
+      location: 地址
+      location_not_found: （未知）
+      organisation: 组织
+      phone: 电话
+      other_accounts: 其他使用该 IP 地址的账号
+      no_other_accounts: （无）
     user:
       said: "{{username}}说："
       profile: "个人资料"
@@ -210,6 +221,8 @@ zh_CN:
       change: "修改"
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理员"
+      moderator_tooltip: "用户是版主"
+      admin_tooltip: "用户是管理员"
       suspended_notice: "该用户将被禁止登入，直至 {{date}}。"
       suspended_reason: "原因："
       mailing_list_mode: "每次论坛中出现回帖就发送一封邮件（除非您屏蔽了主题或者分类）"
@@ -268,12 +281,10 @@ zh_CN:
         frequency: "只有当您最近一段时间没有访问时，我们才会把您未读过的内容发送到您的电子邮箱。"
       name:
         title: "名字"
-        instructions: "您的名字的长版本；公开可见。"
         too_short: "您设置的名字太短了。"
         ok: "您的名字符合要求。"
       username:
         title: "用户名"
-        instructions: "必须是独一无二的，中间不能有空格。其他人可以使用 @username 来提及您。"
         short_instructions: "其他人可以用 @{{username}} 来提及您。"
         available: "您的用户名可用。"
         global_match: "电子邮箱与注册用户名相匹配。"
@@ -294,6 +305,7 @@ zh_CN:
       last_emailed: "最后一次邮寄"
       last_seen: "最后一次活动"
       created: "加入时间"
+      log_out: "登出"
       location: "地址"
       website: "网站"
       email_settings: "电子邮箱"
@@ -327,6 +339,7 @@ zh_CN:
         search: "输入以搜索邀请..."
         title: "邀请"
         user: "邀请用户"
+        none: "您还没有邀请过任何人。"
         truncated: "只显示前 {{count}} 个邀请。"
         redeemed: "确认邀请"
         redeemed_at: "已确认"
@@ -334,12 +347,14 @@ zh_CN:
         topics_entered: "已查看的主题"
         posts_read_count: "已读的帖子"
         expired: "该邀请已过期。"
+        rescind: "移除"
         rescinded: "邀请已删除"
         time_read: "阅读时间"
         days_visited: "访问天数"
         account_age_days: "账号建立天数"
         create: "发送邀请"
         bulk_invite:
+          none: "您没有邀请过任何人。您可以发送个人邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传一个批量邀请文件</a>一次性邀请一批人。"
           text: "通过文件批量邀请"
           uploading: "正在上传"
           success: "文件上传成功，您将很快被通知状态。"
@@ -399,6 +414,7 @@ zh_CN:
     last_seen: '最后一次活动时间'
     created: '创建时间'
     trust_level: '用户级别'
+    search_hint: '用户名或用户电子邮件'
     create_account:
       title: "创建新帐号"
       failed: "出问题了，有可能这个电子邮箱已经被注册了。试试忘记密码链接？"
@@ -415,6 +431,7 @@ zh_CN:
       password: "密码"
       email_placeholder: "电子邮箱地址或用户名"
       error: "未知错误"
+      blank_username_or_password: "请输入您的邮件地址或用户名，以及密码。"
       reset_password: '重置密码'
       logging_in: "登入中..."
       or: "或"
@@ -469,7 +486,6 @@ zh_CN:
       create_pm: "创建私信"
       title: "或者按下 Ctrl + 回车"
       users_placeholder: "添加一个用户"
-      title_placeholder: "在这儿输入标题。简要地用一句话解释要讨论什么。"
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "（添加编辑理由）"
       reply_placeholder: "在此输入您的内容。您可以使用 Markdown 或 BBCode 来格式化内容。拖拽或粘贴一幅图片到这儿即可将它上传。"
@@ -492,7 +508,6 @@ zh_CN:
       quote_title: "引用"
       quote_text: "引用"
       code_title: "预格式化文本"
-      code_text: "在此输入预格式化文本"
       upload_title: "上传"
       upload_description: "在此输入上传资料的描述"
       olist_title: "数字列表"
@@ -522,6 +537,7 @@ zh_CN:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='私信'></i> {{username}} {{link}}"
       invited_to_private_message: "{{username}} {{link}}"
+      invitee_accepted: "<i title='已接受您的邀请' class='fa fa-sign-in'></i> {{username}} 已接受您的邀请"
       moved_post: "<i title='移动帖子' class='fa fa--sign-out'></i> {{username}} 移动了  {{link}}"
       total_flagged: "被报告帖子的总数"
       linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i> {{username}} {{link}}"
@@ -540,8 +556,13 @@ zh_CN:
       uploading: "上传中"
       image_link: "链接您的图片到"
     search:
+      title: "搜索主题、帖子、用户或分类"
       no_results: "没有找到结果。"
       searching: "搜索中..."
+      context:
+        user: "搜索 @{{username}} 的帖子"
+        category: "搜索“{{category}}”分类"
+        topic: "搜索本主题"
     site_map: "去另一个主题列表或分类"
     go_back: '返回'
     not_logged_in_user: '显示当前活动和设置的用户页面'
@@ -600,6 +621,7 @@ zh_CN:
       invalid_access:
         title: "这是私密主题"
         description: "抱歉，您没有访问此主题的权限！"
+        login_required: "您需要登入才能阅读此主题。"
       server_error:
         title: "载入主题失败"
         description: "抱歉，无法载入此主题。有可能是网络连接问题导致的，请重试。如果问题始终存在，请告诉我们。"
@@ -632,7 +654,9 @@ zh_CN:
       auto_close_remove: "不要自动关闭该主题"
       progress:
         title: 主题进度
-        go: "跳转"
+        go_top: "顶部"
+        go_bottom: "底部"
+        go: "前往"
         jump_bottom_with_number: "跳转到第 %{post_number} 帖"
         total: 全部帖子
         current: 当前帖
@@ -680,6 +704,8 @@ zh_CN:
         open: "打开主题"
         close: "关闭主题"
         auto_close: "自动关闭"
+        make_banner: "横幅主题"
+        remove_banner: "移除横幅主题"
         unpin: "解除主题置顶"
         pin: "置顶主题"
         pin_globally: "全局置顶主题"
@@ -976,7 +1002,6 @@ zh_CN:
       delete_confirm: "您将删除该用户的 <b>%{posts}</b> 个帖子和 <b>%{topics}</b> 个主题，删除该账户，阻止其IP地址 <b>%{ip_address}</b> 再次注册，并将其邮件地址 <b>%{email}</b> 加入黑名单。确定吗？"
       yes_delete_spammer: "确定"
       submit_tooltip: "提交私有标记"
-      take_action_tooltip: "触发标记提示门槛"
       cant: "抱歉，当前您不能报告本帖。"
       custom_placeholder_notify_user: "为何您要私下联系该用户？"
       custom_placeholder_notify_moderators: "为何本帖需要论坛版主的关注？为何本帖需要论坛版主的注意？"
@@ -1153,7 +1178,6 @@ zh_CN:
         view_message: "查看消息"
         no_results: "没有报告"
         topic_flagged: "这个<strong>主题</strong>已被报告。"
-        visit_topic: "进入主题以展开和组织紧张而有序的调查和行动。"
         summary:
           action_type_3:
             other: "偏离主题 x{{count}}"
@@ -1254,7 +1278,6 @@ zh_CN:
         override_default: "覆盖缺省值？"
         enabled: "启用？"
         preview: "预览"
-        undo_preview: "撤销预览"
         save: "保存"
         new: "新建"
         new_style: "新样式"
@@ -1468,6 +1491,8 @@ zh_CN:
         refresh_browsers: "强制浏览器刷新"
         show_public_profile: "显示公开介绍"
         impersonate: '检视角度'
+        ip_lookup: "IP 查询"
+        log_out: "登出"
         logged_out: "用户在所有设备都已登出"
         revoke_admin: '吊销管理员资格'
         grant_admin: '赋予管理员资格'
@@ -1526,11 +1551,7 @@ zh_CN:
           requirement_heading: "需求"
           visits: "访问"
           days: "天数"
-          topics_with_replies: "有回复的帖子"
           topics_replied_to: "回复的主题"
-          quality_content: "有质量内容"
-          reading: "阅读"
-          site_promotion: "网站建设"
           flagged_posts: "旗标帖子"
       site_content:
         none: "选择内容类型以开始编辑。"
@@ -1600,6 +1621,7 @@ zh_CN:
         categories: '先按 <b>g</b> 再按 <b>c</b> 查看分类列表'
       navigation:
         title: '导航'
+        jump: '<b>#</b> 跳转到帖子标号'
         back: '<b>u</b> 返回'
         up_down: '<b>k</b> 和 <b>j</b> 上/下移动'
         open: '<b>o</b> 或者 <b>Enter</b> 打开选中的主题'

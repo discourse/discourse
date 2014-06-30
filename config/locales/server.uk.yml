@@ -630,10 +630,6 @@ uk:
     default_code_lang: "Мова програмування для підсвітки синтаксису, що за замовчуванням застосовуватиметься для блоків коду GitHub (lang-auto, ruby, python і т. ін.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic older than this many days, a warning will be displayed to discourage the user from reviving an old discussion. Disable by setting to 0."
     embeddable_host: "Хост, що може вбудовувати коментарі з цього форуму Discourse"
-    feed_polling_enabled: "Чи імпортувати RSS/ATOM-стрічку в якості дописів"
-    feed_polling_url: "URL RSS/ATOM-стрічки для імпорту"
-    embed_by_username: "Ім'я користувача Discourse, який створює теми"
-    embed_category: "Категорія створених тем"
     embed_post_limit: "Максимальна кількість дописів для вставки"
     tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
   notification_types:
@@ -703,44 +699,6 @@ uk:
       blocked: "is blocked."
   test_mailer:
     subject_template: "[%{site_name}] Тест доставки електронної пошти"
-    text_body_template: |
-      Це - тестовий лист, надісланий з Вашого форуму %{site_name} за адресою:
-
-      [**%{base_url}**][0]
-
-      Доставка електронної пошти - складна штука. Ось декілька важливих моментів, які спершу необхідно перевірити:
-
-      - Дізнайтесь, як переглянути *сире джерело електронного листа* у Вашому поштовому клієнті, щоб Ви могли знайти в заголовках листа важливі підказки. В Gmail це - опція "Показати оригінал" у спадному меню будь-якого листа.
-
-      - **ВАЖЛИВО:** Чи має Ваш інтернет-провайдер зворотній DNS-запис для сполучення доменних імен та IP-адрес, з яких Ви надсилаєте листи? [Перевірте свій запис про зворотній вказівник на DNS-адресу][2]. Якщо Ваш провайдер не має правильного запису про зворотній DNS-вказівник, навряд чи Ваші листи буде доставлено.
-
-      - Чи правильний SPF-запис Вашого домену? [Перевірте свій SPF-запис][1].
-
-      - Перевірте, чи немає IP-адрес Ваших поштових серверів [у чорних списках][4].
-
-      - Перевірте, що Ваш поштовий сервер *точно* надсилає повне ім'я хосту, що проектується на DNS в його HELO-повідомленні. Якщо це не так, Ваші листи будуть відкидатися багатьма поштовими сервісами.
-
-      - Налаштуйте [DKIM-підпис електронних листів][3] у своєму поштовому програному забезпеченні, і розмістіть публічний DKIM-ключ у Ваших DNS-записах. Це не обов'язково, але суттєво покращить шанси на успішну доставку листів.
-
-      (*Простий* спосіб полягає в тому, щоб [зареєструватися на Mandrill][6], який щедро пропонує безкоштовний поштовий тариф, що підійде для малих форумів. Втім, Вам все одно доведеться налаштувати SPF- і DKIM-записи у своєму DNS!)
-
-      Ми сподіваємося, що Ви отримали цього листа для перевірки доставки електронної пошти без проблем!
-
-      Успіхів,
-
-      Ваші друзі в [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-
-      ----
-
-      <small>В кожному листі, який Ви надсилаєте, має бути нижній колонтитул з можливістю відписатися від розсилки, тому змакетуймо його. Цього листа було надіслано ТзОВ Паралелепіпедмоторз, вул. Центральна, 55, Всюдигород, Україна 12345. Якщо Ви бажаєте відмовитися від наших наступних листів, [натисніть, щоб відписатися][5].</small>
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
   system_messages:
@@ -805,14 +763,6 @@ uk:
     import_succeeded:
       subject_template: "Import completed successfully"
       text_body_template: "The import was successful."
-    email_error_notification:
-      subject_template: "Error parsing email"
-    email_reject_trust_level:
-      subject_template: "Message rejected"
-      text_body_template: |
-        The message you've send to %{to} was rejected by the system.
-
-        You do not have the required trust to post new topics to this email address.
     too_many_spam_flags:
       subject_template: "New account blocked"
       text_body_template: |
@@ -965,10 +915,6 @@ uk:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
   page_not_found:
     title: "Сторінка, яку Ви запитали, не існує або є приватною."
-    popular_topics: "Популярні теми"
-    recent_topics: "Останні теми"
-    see_more: "Більше"
-    search_title: "Шукати цю тему"
     search_google: "Шукати через Google"
   login_required:
     welcome_message: |

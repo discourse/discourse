@@ -106,7 +106,7 @@ ja:
     suggested_topics:
       title: "関連トピック"
     bookmarks:
-      not_logged_in: "ポストをブックマークするには、ログインする必要がありま"
+      not_logged_in: "ポストをブックマークするには、ログインする必要があります"
       created: "このポストをブックマークしました"
       not_bookmarked: "このポストをブックマークする"
       last_read: "このポストをブックマークする"
@@ -186,7 +186,11 @@ ja:
         other: "過去 %{unit} 間 %{count}つ 新しいトピック。"
       post_stats: "新しいトピック数："
       post_stat_sentence:
-        other: "過去一%{unit}間%{count}つ新しいポスト。"
+        other: "過去一%{unit}間%{count}つ新しい投稿。"
+    ip_info:
+      location: 所在地
+      organisation: 組織
+      phone: 電話
     user:
       said: "{{username}} のコメント:"
       profile: "プロフィール"
@@ -198,6 +202,7 @@ ja:
       private_messages: "メッセージ"
       activity_stream: "アクティビティ"
       preferences: "設定"
+      bookmarks: "ブックマーク"
       bio: "自己紹介"
       invited_by: "招待者"
       trust_level: "トラストレベル"
@@ -209,7 +214,6 @@ ja:
       change: "変更"
       moderator: "{{user}} はモデレータです"
       admin: "{{user}} は管理者です"
-      deleted: "(削除済)"
       suspended_notice: "このユーザは {{date}} までサスペンド状態です。"
       suspended_reason: "理由: "
       mailing_list_mode: "フォーラムに投稿がされる度にメールで通知を受け取る(ミュートしているトピックやカテゴリ以外)"
@@ -268,12 +272,10 @@ ja:
         frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
       name:
         title: "名前"
-        instructions: "フルネーム。ユニークである必要はありません。@ユーザ名 によるマッチングの代わりに利用可能であり、あなたのページのみに表示されます。"
         too_short: "名前が短すぎます。"
         ok: "名前 OK。"
       username:
         title: "ユーザ名"
-        instructions: "空白を含まないユニークな名前を入力してください。他のユーザはあなたを @ユーザ名 でメンションできます。"
         short_instructions: "他のユーザはあなたを @ユーザ名 でメンションできます。"
         available: "ユーザ名は利用可能です。"
         global_match: "メールアドレスが登録済のユーザ名と一致しました。"
@@ -283,7 +285,7 @@ ja:
         too_long: "ユーザ名が長すぎます。"
         checking: "ユーザ名が利用可能か確認しています..."
         enter_email: 'ユーザ名が見つかりました。メールアドレスを入力してください。'
-        prefilled: "この登録ユーザにマッチするメールアドレスが見つかりました。"
+        prefilled: "この登録ユーザが使用するメールアドレスが見つかりました。"
       locale:
         title: "表示言語"
         instructions: "フォーラム表示言語。ページを更新する際には、表示言語を更新されます。"
@@ -295,7 +297,7 @@ ja:
       last_seen: "最終アクティビティ"
       created: "作成"
       log_out: "ログアウト"
-      location: "場所"
+      location: "所在地"
       website: "ウェブサイト"
       email_settings: "メール"
       email_digests:
@@ -328,7 +330,6 @@ ja:
         search: "招待履歴を検索するためにキーワードを入力してください..."
         title: "招待"
         user: "招待したユーザ"
-        none: "誰も招待していません。"
         truncated: "最初の {{count}} 個の招待履歴を表示しています。"
         redeemed: "受理された招待"
         redeemed_at: "受理日"
@@ -336,16 +337,17 @@ ja:
         topics_entered: "参加したトピック"
         posts_read_count: "読んだポスト"
         expired: "この招待の有効期限が切れました。"
-        rescind: "招待の取り消し"
         rescinded: "取り消された招待"
         time_read: "リード時間"
         days_visited: "訪問日数"
         account_age_days: "アカウント有効日数"
         create: "友人をこのフォーラムに招待"
+        bulk_invite:
+          uploading: "アップロード中"
       password:
         title: "パスワード"
         too_short: "パスワードが短すぎます。"
-        common: "パースワードは一般的過ぎる。"
+        common: "このパスワードは他の人が使用している可能性があります。"
         ok: "パスワード OK。"
         instructions: "%{count} 文字以上の長さにしてください。"
       ip_address:
@@ -384,10 +386,9 @@ ja:
     last_post: 最終ポスト
     summary:
       enabled_description: "このトピックのサマリーを表示しています。全てのポストを見るには、下をクリックしてください。"
-      description: "<b>{{count}}</b> 個の回答があります。関連性の高い回答のみ表示しますか?"
-      description_time: "全てを確認するのに <b>{{readingTime}} 分</b> 前後を要する <b>{{count}}</b> 個の回答があります。関連性の高い回答のみを表示します?"
+      description: "<b>{{count}}</b> 返信があります。"
       enable: 'このトピックを要訳する'
-      disable: '全てのポストを表示する'
+      disable: '全ての投稿を表示する'
     private_message_info:
       title: "プライベートメッセージ"
       invite: "友人を招待..."
@@ -397,6 +398,7 @@ ja:
     last_seen: '最終アクティビティ'
     created: '作成'
     trust_level: 'トラストレベル'
+    search_hint: 'ユーザーメールかEメールアドレス'
     create_account:
       title: "アカウントの作成"
       failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
@@ -411,6 +413,7 @@ ja:
       password: "パスワード"
       email_placeholder: "メールアドレスかユーザ名"
       error: "不明なエラー"
+      blank_username_or_password: "あなたのEメールアドレスかユーザーネーム、そしてパスワードを入力して下さい"
       reset_password: 'パスワードをリセット'
       logging_in: "サインイン中..."
       or: "または"
@@ -462,11 +465,10 @@ ja:
       reply: "回答"
       cancel: "キャンセル"
       create_topic: "トピックを作成"
-      create_pm: "プライベートメッセージの作成"
+      create_pm: "送信"
       title: "またはCtrl+Enter"
       users_placeholder: "ユーザの追加"
-      title_placeholder: "トピックのタイトルをここに入力してください。"
-      edit_reason_placeholder: "編集理由は何ですか?"
+      edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
       reply_placeholder: "本文をここに入力してください。Markdown や BBCode を利用することもできます。画像をアップロードするにはドラッグまたはペーストしてください。"
       view_new_post: "新規ポストを見る。"
@@ -488,7 +490,6 @@ ja:
       quote_title: "ブロック引用"
       quote_text: "ブロック引用"
       code_title: "コードサンプル"
-      code_text: "コードサンプルをここに入力"
       upload_title: "アップロード"
       upload_description: "アップロード内容の説明文をここに入力"
       olist_title: "番号付きリスト"
@@ -518,7 +519,6 @@ ja:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} が招待を受理しました"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i> {{username}} が {{link}}を移動しました"
       total_flagged: "フラグがたったポストの総数"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
@@ -538,21 +538,20 @@ ja:
       image_link: "イメージのリンク先"
     search:
       title: "トピック、ポスト、ユーザ、カテゴリを探す"
-      placeholder: "検索ワードを入力してください"
       no_results: "何も見つかりませんでした。"
       searching: "検索中..."
-      prefer:
-        user: "検索結果は @{{username}} を優先します"
-        category: "検索結果は {{category}} を優先します"
+      context:
+        user: "@{{username}}のポストを検索"
+        topic: "このトピックを探す"
     site_map: "別のトピックリストやカテゴリに移動"
     go_back: '戻る'
     not_logged_in_user: 'ユーザアクチビティと設定ページ'
     current_user: 'ユーザページに移動'
     starred:
-      title: '気に入り'
+      title: 'お気に入り'
       help:
-        star: 'このトピックを気に入りリストに追加する'
-        unstar: 'このトピックを気に入りリストから削除'
+        star: 'このトピックをお気に入りリストに追加する'
+        unstar: 'このトピックをお気に入りリストから削除'
     topics:
       bulk:
         reset_read: "未読に設定"
@@ -566,7 +565,7 @@ ja:
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
       none:
-        starred: "まだどのトピックも気に入りにしてません。トピックを気に入りリストに追加するには、タイトルの横にある☆をクリック（タップ）してください。"
+        starred: "まだどのトピックもお気に入りにしていません。トピックをお気に入りリストに追加するには、タイトルの横にある☆をクリックしてください。"
         unread: "未読トピックはありません。"
         new: "新着トピックはありません。"
         read: "またトピックを一つも読んでいません。"
@@ -582,7 +581,7 @@ ja:
         read: "未読トピックは以上です。"
         new: "新規トピックは以上です。"
         unread: "未読のトピックは以上です。"
-        starred: "気に入りトピックはありません。"
+        starred: "お気に入りトピックはありません。"
         category: "{{category}} トピックは以上です。"
         top: "トップトピックはありません。"
     topic:
@@ -601,8 +600,7 @@ ja:
       loading: 'トピックを読み込み中...'
       invalid_access:
         title: "トピックはプライベートです"
-        description: "申し訳ありませんが、このトピックへのアクセスは許可されていません!"
-        login_required: "ポストを閲覧するには、サインインする必要があります"
+        description: "申し訳ありませんが、このトピックへのアクセスは許可されていません。"
       server_error:
         title: "トピックの読み込みに失敗しました"
         description: "申し訳ありませんが、トピックの読み込みに失敗しました。もう一度試してください。もし問題が継続する場合はお知らせください。"
@@ -635,12 +633,13 @@ ja:
       auto_close_remove: "このトピックを自動終了しない"
       progress:
         title: トピック進捗
-        jump_top: 最初のポストにジャンプ
-        jump_bottom: 最後のポストにジャンプ
-        jump_bottom_with_number: "ポスト%{post_number}にジャンプ"
+        go_top: "上"
+        go_bottom: "下"
+        go: "へ"
+        jump_bottom_with_number: "投稿%{post_number}にジャンプ"
         total: ポスト総数
         current: 現在のポスト
-        position: "ポスト%{current}/%{total}"
+        position: "投稿%{current}/%{total}"
       notifications:
         reasons:
           '3_6': 'このカテゴリを監視中のため通知されます'
@@ -684,6 +683,7 @@ ja:
         open: "トピックを開く"
         close: "トピックを終了する"
         auto_close: "自動終了"
+        make_banner: "バナートピック"
         unpin: "トピックのピン留め解除"
         pin: "トピックのピン留め"
         pin_globally: "トピックを全サイト的にピン留めする"
@@ -693,7 +693,6 @@ ja:
         visible: "非表示を解除"
         reset_read: "読み込みデータをリセット"
         multi_select: "移動するポストを選択"
-        convert_to_topic: "通常トピックに変換"
       reply:
         title: '回答'
         help: 'このトピックに回答する'
@@ -705,7 +704,7 @@ ja:
         help: 'このトピックへのリンクをシェアする'
       flag_topic:
         title: 'フラグ'
-        help: '密かに注目したいトピックにフラグを立てることで、それについての通知をプライベートに受け取ることが出来ます'
+        help: '注目したいトピックにフラグを立てることで、それについての通知をプライベートに受け取ることが出来ます'
         success_message: 'このトピックをフラグしました。'
       inviting: "招待中..."
       invite_private:
@@ -725,7 +724,7 @@ ja:
         email_placeholder: 'メールアドレス'
         success: "ありがとうございます! <b>{{email}}</b> 宛に招待メールを送信しました。友人により招待が受理されたらお知らせします。招待した友人の一覧は、ユーザページの招待タブにて確認できます。"
         error: "申し訳ありませんが招待に失敗しました。既にユーザ登録済かもしれません。"
-      login_reply: 'サイインして回答'
+      login_reply: 'サインインして回答'
       filters:
         n_posts:
           other: "{{count}} ポスト"
@@ -779,7 +778,7 @@ ja:
       deleted_by: "削除者"
       expand_collapse: "展開/折りたたみ"
       gap:
-        other: "{{count}}個のポストを除外"
+        other: "{{count}}個の投稿を除外"
       more_links: "{{count}} つリンク..."
       unread: "未読ポスト"
       has_replies:
@@ -806,7 +805,7 @@ ja:
         edit: "このポストを編集"
         flag: "このポストにフラグをつける、または通知を送る"
         delete: "このポストを削除する"
-        undelete: "このポストを復帰する"
+        undelete: "このポストを元に戻す"
         share: "このポストのリンクをシェアする"
         more: "もっと読む"
         delete_replies:
@@ -848,23 +847,23 @@ ja:
           like: "{{icons}} が「いいね！」しています"
           vote: "{{icons}} が投票しました"
         by_you:
-          off_topic: "あなたがオフトピックであるとフラグをたてました"
-          spam: "あなたがスパムであるとフラグを立てています"
-          inappropriate: "あなたが不適切であるとフラグをたてました"
-          notify_moderators: "あなたがモデレータ確認を要するとフラグをたてました"
-          notify_user: "あなたがこのユーザにプライベートメッセージを送信しました"
-          bookmark: "あなたがこのポストをブックマークしました"
+          off_topic: "オフトピックのフラグを立てました"
+          spam: "スパムを報告するフラグを立てました"
+          inappropriate: "不適切であると報告するフラグを立てました"
+          notify_moderators: "モデレータ確認を必要とするというフラグを立てました"
+          notify_user: "このユーザにプライベートメッセージを送信しました"
+          bookmark: "このポストをブックマークしました"
           like: "あなたが「いいね！」しました"
           vote: "あなたがこのポストに投票しました"
         by_you_and_others:
           off_topic:
-            other: "あなたと他{{count}}人がオフトピックであるとフラグをたてました"
+            other: "あなたと他{{count}}人がオフトピックであるとフラグを立てました"
           spam:
-            other: "あなたと他{{count}}人がスパムであるとフラグをたてました"
+            other: "あなたと他{{count}}人がスパムであるとフラグを立てました"
           inappropriate:
-            other: "あなたと他{{count}}人が不適切であるとフラグをたてました"
+            other: "あなたと他{{count}}人が不適切であるとフラグを立てました"
           notify_moderators:
-            other: "あなたと他{{count}}人がモデレータ確認を要するとフラグをたてました"
+            other: "あなたと他{{count}}人がモデレータ確認を要するとフラグを立てました"
           notify_user:
             other: "あなたと他{{count}}人がこのユーザにプライベートメッセージを送信しました"
           bookmark:
@@ -875,13 +874,13 @@ ja:
             other: "あなたと他{{count}}人がこのポストに投票しました"
         by_others:
           off_topic:
-            other: "{{count}}人のユーザがオフトピックであるとフラグをたてました"
+            other: "{{count}}人のユーザがオフトピックであるとフラグを立てました"
           spam:
-            other: "{{count}}人のユーザがスパムであるとフラグをたてました"
+            other: "{{count}}人のユーザがスパムであるとフラグを立てました"
           inappropriate:
-            other: "{{count}}人のユーザが不適切であるとフラグをたてました"
+            other: "{{count}}人のユーザが不適切であるとフラグを立てました"
           notify_moderators:
-            other: "{{count}}人のユーザがモデレータ確認を要するとフラグをたてました"
+            other: "{{count}}人のユーザがモデレータ確認を要するとフラグを立てました"
           notify_user:
             other: "{{count}}人のユーザがこのユーザにプライベートメッセージを送信しました"
           bookmark:
@@ -972,12 +971,12 @@ ja:
     flagging:
       title: 'このポストにフラグをつける理由は何ですか?'
       action: 'フラグをつける'
-      take_action: "アクションを取る"
+      take_action: "アクションをする"
       notify_action: '通知する'
       delete_spammer: "スパマーの削除"
       delete_confirm: "このユーザによる<b>%{posts}</b>個のポストと<b>%{topics}</b>個のトピックを削除し、アカウントを削除し、このユーザのメールアドレス <b>%{email}</b> をブロックリストに追加しようとしています。本当にこのユーザをスマパー認定してもよいですか?"
       yes_delete_spammer: "はい、スパマーを削除する"
-      cant: "申し訳ありませんが、現在このポストにフラグをたてることはできません。"
+      cant: "申し訳ありませんが、現在このポストにフラグを立てることはできません。"
       custom_placeholder_notify_user: "ポストについて、このユーザに個人的に直接確認する必要がある内容を書いてください。詳細かつ建設的に、そして何よりマナーを守った内容にしてください。"
       custom_placeholder_notify_moderators: "ポストについて、モデレータの確認が必要な理由を書いてください。問題の詳細を書くとともに、可能であれば参照リンクなども加えてください。"
       custom_message:
@@ -985,7 +984,7 @@ ja:
         more: "あと{{n}}文字..."
         left: "残り{{n}}文字"
     flagging_topic:
-      title: "このトピックに密かにフラグを立てる理由は何ですか？"
+      title: "このトピックにあなたがフラグを立てる理由は何ですか？"
       action: "トピックにフラグを立てる"
       notify_action: "プライベートメッセージ"
     topic_map:
@@ -1004,7 +1003,7 @@ ja:
         help: "このトピックは全サイト的にピン留めされました；全てのリストのトップに表示されます。"
       pinned:
         title: "ピン留め"
-        help: "このトピックはピン留めされています。常にカテゴリのトップに表示されます"
+        help: "このトピックは固定されています。常にカテゴリのトップに表示されます"
       archived:
         help: "このトピックはアーカイブされています。凍結状態のため一切の変更ができません"
       invisible:
@@ -1033,8 +1032,8 @@ ja:
         title: "ホット"
         help: "話題のトピック"
       starred:
-        title: "気に入り"
-        help: "気に入りトピック"
+        title: "お気に入り"
+        help: "お気に入りトピック"
       read:
         title: "既読"
         help: "既読のトピックを、最後に読んだ順に表示"
@@ -1103,7 +1102,7 @@ ja:
         please_upgrade: "今すぐアップデートしてください!"
         no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         stale_data: "最近アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
-        version_check_pending: "アップデートした直後のようですね。素晴らしい!"
+        version_check_pending: "まるでアップデート直後のようです。素晴らしい！"
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Discourse のインストールにいくつか問題が発見されました:"
@@ -1147,13 +1146,12 @@ ja:
         delete_spammer_title: "ユーザを削除し、全てのポストとトピックを削除。"
         clear_topic_flags: "トピックのフラグをクリアしました"
         clear_topic_flags_title: "このトピックについての問題が解決されました。「完了」をクリックしてフラグを外します。"
-        flagged_by: "フラグをたてた人"
+        flagged_by: "フラグを立てた人"
         system: "システム"
-        error: "何かがうまくいきませんでした"
+        error: "何らかの理由でうまくいきませんでした"
         view_message: "回答"
         no_results: "フラグはありません。"
         topic_flagged: "この <strong>トピック</strong> はフラグされました。"
-        visit_topic: "トピックを閲覧して問題を調査してくさだい"
         summary:
           action_type_3:
             other: "オフトピック x{{count}}"
@@ -1236,7 +1234,7 @@ ja:
             title: "バックアップを削除"
             confirm: "このバックアップを削除しますか？"
           restore:
-            is_disabled: "バックアップ復元を無効されています。"
+            is_disabled: "バックアップ復元を無効にされています。"
             text: "復元"
             title: "バックアップを復元"
             confirm: "本当にバックアップを復元しますか？"
@@ -1254,7 +1252,6 @@ ja:
         override_default: "標準のスタイルシートを読み込まない"
         enabled: "有効にする"
         preview: "プレビュー"
-        undo_preview: "プレビューをundo"
         save: "保存"
         new: "新規"
         new_style: "新規スタイル"
@@ -1270,7 +1267,7 @@ ja:
         colors:
           title: "色"
           long_title: "色スキーマ"
-          new_name: "新しい色スキーマ"
+          new_name: "新しい色スキーム"
           copy_name_prefix: "のコピー"
           delete_confirm: "このカラースキームを削除しますか？"
           undo: "取り消す"
@@ -1287,6 +1284,12 @@ ja:
           header_background:
             name: "ヘッダー背景"
             description: "ヘッダー背景色"
+          danger:
+            name: '危険'
+          success:
+            name: '成功'
+          love:
+            description: "ライクボタンの色"
       email:
         title: "メール"
         settings: "設定"
@@ -1336,7 +1339,7 @@ ja:
           do_nothing: "何もしない"
         staff_actions:
           title: "スタッフ操作"
-          instructions: "ユーザ名やアクションをクリックするとリストをフィルタできます。アバターをクリックするとユーザページに遷移します。"
+          instructions: "ユーザ名やアクションをクリックするとリストをフィルタできます。アバターをクリックするとユーザページに移動します。"
           clear_filters: "全てを表示する"
           staff_user: "スタッフユーザ"
           target_user: "対象ユーザ"
@@ -1359,7 +1362,7 @@ ja:
             delete_site_customization: "サイトのカスタマイズ設定を削除"
             suspend_user: "ユーザをサスペンドにする"
             unsuspend_user: "ユーザのサスペンドを解除する"
-            grant_badge: "バッジを付与する"
+            grant_badge: "バッジを付ける"
             revoke_badge: "バッジを取り消す"
         screened_emails:
           title: "ブロック対象アドレス"
@@ -1388,7 +1391,7 @@ ja:
         username_or_email: "ユーザ名かメールアドレス"
         help: "デバッグ用途でユーザアカウントになりすますためのツールです。"
         not_found: "ユーザが見つかりませんでした。"
-        invalid: "申し訳ありませんがこのユーザにはなりすませません。"
+        invalid: "申し訳ありませんがこのユーザとして使えません。"
       users:
         title: 'ユーザ'
         create: '管理者を追加'
@@ -1447,7 +1450,7 @@ ja:
         refresh_browsers: "ブラウザを強制リフレッシュ"
         show_public_profile: "一般プロファイルを表示"
         impersonate: 'このユーザになりすます'
-        log_out: "ログアウト"
+        log_out: "サインアウト"
         logged_out: "すべてのデバイスでログアウトしました"
         revoke_admin: '管理者権限を剥奪'
         grant_admin: '管理者権限を付与'
@@ -1468,14 +1471,14 @@ ja:
         approve: '承認'
         approved_by: "承認したユーザ"
         approve_success: "ユーザが承認され、アクティベーション方法を記載したメールが送信されました。"
-        approve_bulk_success: "成功! 選択したユーザ全員が承認され、メールが送信されました。"
+        approve_bulk_success: "成功!！選択したユーザ全員が承認され、メールが送信されました。"
         time_read: "リード時間"
         delete: "ユーザを削除"
-        delete_forbidden_because_staff: "アドミンおよびもモデレータアカウントは削除できません。"
+        delete_forbidden_because_staff: "アドミンおよびモデレータアカウントは削除できません。"
         delete_forbidden:
           other: "ポスト投稿済のユーザは削除できません。ユーザ削除の前に全てのポストを削除してください。（投稿後%{count}日以上が経過したポストは削除できません ）"
         cant_delete_all_posts:
-          other: "全てのポストを削除できませんでした。%{count}日以上が経過したポストがあります。（設定：delete_user_max_post_age）"
+          other: "全ての投稿を削除できませんでした。%{count}日以上が経過した投稿があります。（設定：delete_user_max_post_age）"
         cant_delete_all_too_many_posts:
           other: "全てのポストを削除できませんでした。ユーザは%{count} つ以上のポストを投稿しています。(delete_all_posts_max)"
         delete_confirm: "本当にこのユーザを削除しますか? この操作はやり直しできません!"
@@ -1506,11 +1509,7 @@ ja:
           requirement_heading: "条件"
           visits: "訪問"
           days: "日"
-          topics_with_replies: "回答されたトピック"
           topics_replied_to: "回答したトピック"
-          quality_content: "良いコンテンツ"
-          reading: "閲覧中"
-          site_promotion: "サイトプロモーション"
           flagged_posts: "フラグ付きのポスト"
       site_content:
         none: "編集するコンテンツのタイプを選択してください。"
@@ -1521,7 +1520,7 @@ ja:
         title: '設定'
         reset: 'デフォルトに戻す'
         none: 'なし'
-        no_results: "何も見つかりませんでした。."
+        no_results: "何も見つかりませんでした。"
         clear_filter: "クリア"
         categories:
           all_results: '全て'
@@ -1548,9 +1547,9 @@ ja:
         new: 新規
         name: バッジ名
         badge: バッジ
-        display_name: バッジ表示名
-        description: バッジ説明
-        badge_type: バッジ種類
+        display_name: バッジの表示名
+        description: バッジの説明
+        badge_type: バッジの種類
         granted_by: バッジ付与者
         save: バッジを保存する
         delete: バッジを削除する
@@ -1558,11 +1557,11 @@ ja:
         revoke: 取り消す
         revoke_confirm: このバッジを取り消しますか？
         edit_badges: バッジを編集する
-        grant_badge: バッジを付与
-        granted_badges: 付与されたバッジ
-        grant: 付与する
-        no_user_badges: "%{name} はバッジを付与されていません。"
-        no_badges: 付与できるバッジがありません
+        grant_badge: バッジを付ける
+        granted_badges: 付けられたバッジ
+        grant: 付ける
+        no_user_badges: "%{name} はバッジを付けられていません。"
+        no_badges: 付けられるバッジがありません
         allow_title: バッジは、タイトルとして使用されることを許可する
         multiple_grant: 複数回付与することができます
     lightbox:
@@ -1579,14 +1578,14 @@ ja:
         search: '<b>/</b> 検索'
       actions:
         share_topic: '<b>shift s</b> トピックをシェアする'
-        share_post: '<b>s</b> ポストをシェアする'
+        share_post: '<b>s</b> 投稿をシェアする'
         reply_topic: '<b>shift r</b> トピックに返信'
-        reply_post: '<b>r</b> ポストに返信'
-        like: '<b>l</b> ポストを「いいね！」する'
-        flag: '<b>!</b> ポストをフラグする'
-        bookmark: '<b>b</b> ポストをブックマークする'
-        edit: '<b>e</b> ポストを編集'
-        delete: '<b>d</b> ポストを削除する'
+        reply_post: '<b>r</b> 投稿に返信'
+        like: '<b>l</b> 投稿を「いいね！」する'
+        flag: '<b>!</b> 投稿をフラグする'
+        bookmark: '<b>b</b> 投稿をブックマークする'
+        edit: '<b>e</b> 投稿を編集'
+        delete: '<b>d</b> 投稿を削除する'
         mark_muted: '<b>m</b> 後 <b>m</b> ミュートトピックにマークする'
     badges:
       title: バッジ

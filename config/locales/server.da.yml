@@ -665,9 +665,6 @@ da:
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
     embeddable_host: "Host som kan indlejre kommentarer fra dette Discourse-forum."
-    feed_polling_enabled: "Hvorvidt et RSS/ATOM-feed skal importeres som indlæg"
-    feed_polling_url: "URL på RSS/ATOM-feed som skal importeres."
-    embed_by_username: "Discourse brugernavn på brugeren som opretter emnerne."
     embed_post_limit: "Maksimalt antal indlæg der kan indlejres."
   notification_types:
     mentioned: "%{display_username} nævnte dig i %{link}"
@@ -743,41 +740,6 @@ da:
       blocked: "er blokeret."
   test_mailer:
     subject_template: "[%{site_name}] test af e-mail-udsendelse"
-    text_body_template: |
-      Dette er en test-e-mail sendt fra dit %{site_name}-forum på:
-
-      [**%{base_url}**][0]
-
-      Levering af e-mail er kompliceret. Her er et par vigtige ting, som du bør starte med at undersøge:
-
-      - Lær hvordan du kan se den *beskedens rå kilde* i din e-mail-klient, så du kan undersøge de forskellige headers. I GMail hedder funktionen "vis original" og findes i dropdown-menuen på hver meddelelse.
-
-      - **VIGTIGT:** Har din udbyder en *reverse DNS record* som forbinder de domænenavn og IP-adresser, som du sender mail fra? [Test din Reverse PTR record][2] her. Hvis din udbyder ikke har oprettet den korrekte reverse DNS record er det meget usandsynligt at din mail bliver leveret.
-
-      - Er domænets SPF record korrekt? [Test din SPF record][1] her.
-
-      - Kontrollér at ingen af din e-mail-servers IP-adresser [findes på en e-mail blacklist][4].
-
-      - Kontrollér om din e-mail-server *rent faktisk* sender et komplet værtsnavn, som kan resolves i DNS, i dens HELO-besked. Hvis det ikke er tilfældet bliver din e-mail afvist af mange mail-tjenester.
-
-      - Konfigurér [DKIM e-mail key signing][3] i din e-mail-software, og placér den offentlige DKIM-nøgle i dine DNS records. Dette er ikke påkrævet men øger chancen for at din mail bliver leveret betydeligt.
-
-      Vi håber, at denne test-e-mail nåede frem til dig!
-
-      Held og lykke,
-
-      Dine venner fra [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/SuperTool.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-
-      ----
-
-      <small>Der skal være en footer i hver e-mail du sender, som gør det muligt at afmelde sig, så lad os lave én. Denne e-mail blev sendt af Firmanavn, Algade 42, 9999 Tappernøje. [Klik her hvis du ikke ønsket at modtage flere e-mails][5].</small>
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Opdateringer er tilgængelige"
   system_messages:
@@ -976,10 +938,6 @@ da:
     access_token_problem: "Fortæl en admin: Opdatér venligst sitets indstillinger, så de bruger den korrekte discourse_org_access_key."
   page_not_found:
     title: "Den side du efterspurgte findes ikke. Måske kan vi hjælpe dig med at finde den, eller et andet lignende emne:"
-    popular_topics: "Populære emner"
-    recent_topics: "Nyeste emner"
-    see_more: "Se mere"
-    search_title: "Søg efter dette emne"
     search_google: "Søg Google"
   login_required:
     welcome_message: |

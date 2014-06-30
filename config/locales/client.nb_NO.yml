@@ -156,6 +156,9 @@ nb_NO:
       posted_by_you: "Postet av <a href='{{userUrl}}'>deg</a>"
       sent_by_user: "Sendt av <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Sendt av <a href='{{userUrl}}'>deg</a>"
+    groups:
+      alias_levels:
+        nobody: "Ingen"
     user_action_groups:
       '1': "Likes Gitt"
       '2': "Likes Mottatt"
@@ -179,8 +182,15 @@ nb_NO:
       subcategories: "Underkategorier"
       topic_stats: "Antall nye emner."
       post_stats: "Antall nye innlegg."
+    ip_info:
+      location: Posisjon
+      location_not_found: (ukjent)
+      organisation: Organisasjon
+      phone: Telefon
     user:
+      said: "{{username}} sa:"
       profile: "Profile"
+      show_profile: "Besøk profil"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive: "last ned arkiv av mine innlegg"
@@ -195,12 +205,19 @@ nb_NO:
       dynamic_favicon: "Vis innkommende meldingsvarsler på favicon (eksperimentel)"
       external_links_in_new_tab: "Åpne alle eksterne linker i ny fane"
       enable_quoting: "Aktiver siter svar for uthevet tekst"
+      change: "Endre"
       moderator: "{{user}} er en moderator"
       admin: "{{user}} er en admin"
+      admin_tooltip: "Denne brukeren er en administrator"
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_reason: "Begrunnelse:"
+      watched_categories: "Så"
       tracked_categories: "Sporet"
       muted_categories: "Dempet"
+      delete_account: "Slett kontoen min"
+      delete_account_confirm: "Er du sikker på at du vil slette kontoen din permanent? Denne handlingen kan ikke angres!"
+      deleted_yourself: "Beslettingen av din konto har vært vellykket."
+      delete_yourself_not_allowed: "Kontoen din kan ikke slettes akkurat nå. Kontakt en administrator til å slette kontoen for deg."
       messages:
         all: "Alle"
         mine: "Mine"
@@ -237,12 +254,10 @@ nb_NO:
         frequency: "Vi sender deg bare en email om vi ikke har sett deg nylig og du har ikke allerede sett tingen vi varslet deg om."
       name:
         title: "Naavn"
-        instructions: "Den lange versjonen av ditt navn;  trenger ikke å være unik. Brukt for alternativ @brukernavn matching og vist bare på brukersiden din."
         too_short: "Navnet ditt er for kort."
         ok: "Navnet ditt ser bra ut."
       username:
         title: "Brukernavn"
-        instructions: "Må være unikt, uten mellomrom. Folk kan nevne deg som @brukernavn."
         short_instructions: "Folk kan nevne deg som @{{username}}."
         available: "Ditt brukernavn er tilgjengelig."
         global_match: "Email matcher det registrerte brukernavnet."
@@ -354,6 +369,7 @@ nb_NO:
     last_seen: 'Sist Sett'
     created: 'Laget'
     trust_level: 'Tillitsnivå'
+    search_hint: 'brukernavn eller e-mail'
     create_account:
       title: "Opprett ny konto"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
@@ -381,6 +397,8 @@ nb_NO:
       google:
         title: "med Google"
         message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
+      google_oauth2:
+        title: "med Google"
       twitter:
         title: "med Twitter"
         message: "Autentiserer med Twitter (sørg for at du tillater pop-up vindu)"
@@ -418,7 +436,6 @@ nb_NO:
       create_topic: "Lag Emne"
       create_pm: "Lag Privat Melding"
       users_placeholder: "Legg til en bruker"
-      title_placeholder: "Skriv tittelen din her. I en kort setning, hva handler denne diskusjonen om?"
       edit_reason_placeholder: "hvorfor endrer du?"
       show_edit_reason: "(legg till endringsbegrunnelse)"
       reply_placeholder: "Skriv her. Bruk Markdown eller BBCode for formatering. Dra eller lim inn et bilde for å laste det opp."
@@ -441,7 +458,6 @@ nb_NO:
       quote_title: "Sitatramme"
       quote_text: "Sitatramme"
       code_title: "Kode Utsnitt"
-      code_text: "Legg inn kode her"
       upload_title: "Bilde"
       upload_description: "beskriv bildet her"
       olist_title: "Nummerert Liste"
@@ -476,6 +492,7 @@ nb_NO:
       total_flagged: "totalt markerte innlegg"
     upload_selector:
       title: "Legg til Bilde"
+      title_with_attachments: "Legg til et bilde eller en fil"
       from_my_computer: "Fra Min Enhet"
       from_the_web: "Fra Nettet"
       remote_tip: "skriv inn addressen til et bilde, f.eks. http://example.com/image.jpg"
@@ -566,6 +583,9 @@ nb_NO:
       auto_close_remove: "Ikke Auto-Lukk Dette Emnet"
       progress:
         title: emnefrangang
+        go_top: "topp"
+        go_bottom: "bunn"
+        go: "Gå"
         jump_bottom_with_number: "hopp til innlegg %{post_number}"
         total: innlegg totalt
         current: gjeldende innlegg
@@ -673,9 +693,11 @@ nb_NO:
       reply_as_new_topic: "Svar som et nytt Emne"
       continue_discussion: "Fortsetter diskusjonen fra {{postLink}}:"
       follow_quote: "gå til det siterte innlegget"
+      show_full: "Vis hele posten"
       deleted_by_author:
         one: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)"
         other: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} timer, med mindre de blir flagget)"
+      deleted_by: "Slettet av"
       expand_collapse: "utvid/vis"
       gap:
         one: "Ett innlegg skjult"
@@ -689,6 +711,7 @@ nb_NO:
         upload: "Sorry, there was an error uploading that file. Please try again."
         image_too_large: "Beklager, filen du prøve å laste opp er for stor (maks størrelse er {{max_size_kb}}kb), vennligst reduser størrelsen og prøv igjen."
         too_many_uploads: "Beklager, du kan bare laste opp ett bilde om gangen."
+        image_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp bilder"
       abandon:
         confirm: "Er du sikker på at du vil forlate innlegget ditt?"
         no_value: "Nei"
@@ -865,6 +888,8 @@ nb_NO:
         at_least: "skriv minst {{n}} bokstaver"
         more: "{{n}} igjen..."
         left: "{{n}} gjenstående"
+    flagging_topic:
+      notify_action: "Privat melding"
     topic_map:
       title: "Emneoppsummering"
       links_shown: "vis alle {{totalLinks}} linker..."
@@ -914,6 +939,9 @@ nb_NO:
           other: "Ulest ({{count}})"
         help: "følgte emner med uleste innlegg"
       new:
+        lower_title_with_count:
+          one: "1 ny"
+        lower_title: "ny"
         title:
           zero: "Ny"
           one: "Ny (1)"
@@ -936,6 +964,10 @@ nb_NO:
         this_week: "Denne uken"
         today: "I dag"
     browser_update: 'Desverre,<a href="http://www.discourse.org/faq/#browser">nettleseren din er for gammel for  å fungere med Discourse</a>. Vennligst <a href="http://browsehappy.com">oppgrader</a>.'
+    permission_types:
+      full: "Opprett / Svar / Se"
+      create_post: "Svar / Se"
+      readonly: "Se"
   admin_js:
     type_to_filter: "skriv for å filtrere..."
     admin:
@@ -943,6 +975,7 @@ nb_NO:
       moderator: 'Moderator'
       dashboard:
         title: "Dashbord"
+        last_updated: "Dashboardet var sist oppdatert:"
         version: "Versjon"
         up_to_date: "Du har den seneste versjonen!"
         critical_available: "En kritisk oppdatering er tilgjengelig."
@@ -987,16 +1020,21 @@ nb_NO:
         delete_post_title: "Slett post; hvis første post, slett hele emnet"
         disagree_unhide: "Uenig ("
         disagree_unhide_title: "Fjern eventuelle flagg fra dette innlegget og gjøre det synlig igjen"
+        clear_topic_flags: "Ferdig"
+        clear_topic_flags_title: "Emnet har blitt undersøkt og problemer har blitt løst. Klikk Ferdig for å fjerne flaggene."
         flagged_by: "Markert av"
         system: "System"
         error: "Noe gikk galt"
         view_message: "Svar"
+        no_results: "Det er ingen flagg"
       groups:
         title: "Grupper"
         edit: "Rediger Grupper"
+        new: "Ny"
         selector_placeholder: "legg til brukere"
         name_placeholder: "Gruppenavn, ingen mellomrom, samme som reglene for brukernavn"
         about: "Edit your group membership and names here"
+        group_members: "Gruppemedlemmer"
         delete: "Slett"
         delete_confirm: "Slette denne grupper?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
@@ -1009,6 +1047,20 @@ nb_NO:
         info_html: "Din API nøkkel vil tillate deg å lage og oppdatere emner ved å bruke JSON samteler."
         all_users: "Alle brukere"
         note_html: "Bevar denne nøkkelen <strong>hemmelig</strong>. Alle brukere som har den kan lage nye innlegg som hvilken som helst bruker på forumet."
+      backups:
+        columns:
+          filename: "Filnavn"
+          size: "Størrelse"
+        operations:
+          cancel:
+            text: "Avbryt"
+            title: "Avbryt den nåværende handlingen"
+          backup:
+            confirm: "Er du sikkert på at du vil starte en ny backup?"
+          download:
+            text: "Last ned"
+          destroy:
+            text: "Slett"
       customize:
         title: "Tilpasse"
         long_title: "Sidetilpassninger"
@@ -1017,16 +1069,24 @@ nb_NO:
         override_default: "Ikke inkluder standard stilark"
         enabled: "Aktivert?"
         preview: "forhåndsvisning"
-        undo_preview: "avbryt forhåndsvisning"
         save: "Lagre"
         new: "Ny"
         new_style: "Ny Stil"
         delete: "Slett"
         delete_confirm: "Slett denne tilpasningen?"
+        colors:
+          title: "Farger"
+          long_title: "Fargepanel"
+          copy_name_prefix: "Kopi av"
+          danger:
+            name: 'fare'
+          success:
+            name: 'suksess'
       email:
         title: "Email"
         settings: "Instillinger"
         sent_at: "Sendt"
+        user: "Bruker"
         email_type: "Email Type"
         to_address: "Til Addresse"
         test_email_address: "email addresse å teste"
@@ -1056,6 +1116,7 @@ nb_NO:
           instructions: "Trykk på brukernavn og handlinger for å filtrere. Trykk på profilbilder for å gå til brukersider."
           clear_filters: "Vis alt"
           subject: "Emne"
+          when: "Når"
           details: "Detaljer"
           previous_value: "Forrige"
           new_value: "Ny"
@@ -1099,7 +1160,9 @@ nb_NO:
           new: "Ny"
           active: "Aktiv"
           pending: "Ventende"
+          admins: 'Administratorer'
           suspended: 'Bannlyst'
+          blocked: 'Blokkert'
         approved: "Godkjent?"
         approved_selected:
           one: "godkjenn bruker"
@@ -1115,6 +1178,7 @@ nb_NO:
           elder: 'Brukere på tillitsnivå 4 (Eldre)'
           admins: 'Admins'
           moderators: 'Moderatorer'
+          blocked: 'Blokkerte brukere'
           suspended: 'Bannlyste brukere'
       user:
         suspend_failed: "Noe gikk galt ved å bannlyse denne brukeren {{error}}"
@@ -1131,6 +1195,7 @@ nb_NO:
         suspended: "Bannlyst?"
         moderator: "Moderator?"
         admin: "Admin?"
+        blocked: "Blokkert?"
         show_admin_profile: "Admin"
         edit_title: "Rediger Tittel"
         save_title: "Lagre Tittel"
@@ -1175,6 +1240,8 @@ nb_NO:
         suspended_explanation: "En bannlyst bruker kan ikke logge inn."
         block_explanation: "En blokkert bruker kan ikke poste eller starte emner."
         suspend_modal_title: "Bannlys bruker"
+        tl3_requirements:
+          value_heading: "Verdi"
       site_content:
         none: "Velg et type innhold du vil begynne å redigere."
         title: 'Innhold'
@@ -1198,6 +1265,10 @@ nb_NO:
           spam: 'Spam'
           developer: 'Utvikler'
           uncategorized: 'Ukategorisert'
+      badges:
+        name: Navn
+        save: Lagre
+        delete: Slett
     lightbox:
       download: "last ned"
     keyboard_shortcuts_help:
