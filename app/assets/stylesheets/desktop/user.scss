@@ -193,7 +193,7 @@
         position: relative;
         margin-top: 20px;
         float: left;
-        width: 65%;
+        width: 78%;
         color: $secondary;
         text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
@@ -202,6 +202,8 @@
         .bio {
           color: $secondary;
           text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+          max-height: 300px;
+          overflow: auto;
 
           a[href] {
             color: $secondary;

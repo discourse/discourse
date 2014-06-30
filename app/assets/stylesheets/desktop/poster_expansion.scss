@@ -62,6 +62,12 @@
     padding-top: 10px;
   }
 
+  .bio {
+    max-height: 100px;
+    overflow: auto;
+    margin-bottom: 10px;
+  }
+
   img.avatar {
     float: left;
     padding-right: 10px;
