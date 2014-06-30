@@ -663,22 +663,25 @@ iframe {
 }
 
 
-blockquote { /* solo quotes */
+/* solo quotes */
+blockquote {
   /* inherit only the default top and bottom margins here */
   margin-left: 0;
   margin-right: 0;
   padding: 12px;
-
-    a.mention {background: darken(scale-color-diff(), 10%);}
-    p:first-of-type {margin-top: 0;}
-    p:last-of-type {margin-bottom: 0;}
+  a.mention {background: darken(scale-color-diff(), 10%);}
+  p:first-of-type {margin-top: 0;}
+  p:last-of-type {margin-bottom: 0;}
+  h1:first-of-type, h2:first-of-type, h3:first-of-type { margin-top: 0;}
 }
 
-.quote { /* quotes with attribution */
+/* quotes with attribution */
+.quote {
   &>blockquote {
-      margin-top: 0;
-      padding-top: 0;
-      p:first-of-type {margin:0;}
+    margin-top: 0;
+    padding-top: 0;
+    p:first-of-type {margin:0;}
+    h1:first-of-type, h2:first-of-type, h3:first-of-type { margin-top: 0;}
     .onebox-result {
       background-color: scale-color-diff();
     }
