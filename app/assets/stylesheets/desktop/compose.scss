@@ -397,7 +397,9 @@
       position: absolute;
       left: 0;
       top: 0;
+      border: 0px;
       border-top: 30px solid transparent;
+      @include border-radius-all(0);
     }
     #wmd-preview-scroller {
       font-size: 13px;
