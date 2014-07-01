@@ -21,7 +21,10 @@
     font-size: 1.5em;
     margin:0;
     a.edit-topic {font-size: 15px;}
-    a {color: $primary;}
+    a {
+      color: $primary;
+      vertical-align: middle;
+    }
   }
   .private-message-glyph { display: none; }
 }
