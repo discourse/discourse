@@ -1342,7 +1342,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} didn't work.
 
-        There was a problem with the formatting. Try again with less formatting, or no formatting.
+        Some possible causes are: complex formatting, message too large, message too small. Please try again.
 
     email_reject_reply_key:
       subject_template: "Email issue -- Bad Reply Key"
