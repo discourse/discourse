@@ -1,12 +1,4 @@
-/**
-  This view handles the rendering of a topic in a list
-
-  @class TopicListItemView
-  @extends Discourse.GroupedView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.TopicListItemView = Discourse.GroupedView.extend({
+export default Discourse.GroupedView.extend({
   tagName: 'tr',
   templateName: 'list/topic_list_item',
   classNameBindings: ['controller.checked', 'content.archived', ':topic-list-item', 'content.hasExcerpt:has-excerpt'],
@@ -27,7 +19,7 @@ Discourse.TopicListItemView = Discourse.GroupedView.extend({
   _highlightIfNeeded: function() {
     var session = Discourse.Session.current();
 
-    // highligth the last topic viewed
+    // highlight the last topic viewed
     if (session.get('lastTopicIdViewed') === this.get('content.id')) {
       session.set('lastTopicIdViewed', null);
       this.highlight();

@@ -1,4 +1,4 @@
-Discourse.DiscoveryCategoriesView = Discourse.View.extend({
+export default Discourse.View.extend({
 
   orderingChanged: function(){
     if (this.get("controller.ordering")) {
