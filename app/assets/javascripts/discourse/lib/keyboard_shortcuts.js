@@ -224,7 +224,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
       if (rgx === null || typeof rgx[1] === 'undefined') {
           this._scrollList($article, direction);
       } else {
-          Discourse.TopicView.jumpToPost(rgx[1]);
+          Discourse.URL.jumpToPost(rgx[1]);
       }
     }
   },

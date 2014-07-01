@@ -1,15 +1,6 @@
-/*global LockOn:true*/
+import AddCategoryClass from 'discourse/mixins/add-category-class';
 
-/**
-  This view is for rendering an icon representing the status of a topic
-
-  @class TopicView
-  @extends Discourse.View
-  @namespace Discourse
-  @uses Discourse.Scrolling
-  @module Discourse
-**/
-Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
+export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
   templateName: 'topic',
   topicBinding: 'controller.model',
   userFiltersBinding: 'controller.userFilters',
@@ -20,6 +11,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
                       'topic.categoryClass'],
   menuVisible: true,
   SHORT_POST: 1200,
+
+  categoryId: Em.computed.alias('topic.category.id'),
 
   postStream: Em.computed.alias('controller.postStream'),
 
@@ -186,29 +179,4 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       return I18n.t("topic.read_more", opts);
     }
   }.property('topicTrackingState.messageCount')
-
-});
-
-Discourse.TopicView.reopenClass({
-
-  jumpToPost: function(postNumber) {
-    var holderId = '#post-cloak-' + postNumber;
-
-    Em.run.schedule('afterRender', function() {
-      if (postNumber === 1) {
-        $(window).scrollTop(0);
-        return;
-      }
-
-      new LockOn(holderId, {offsetCalculator: function() {
-        var $header = $('header'),
-            $title = $('#topic-title'),
-            windowHeight = $(window).height() - $title.height(),
-            expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
-
-        return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
-      }}).lock();
-    });
-  }
-
 });

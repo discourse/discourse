@@ -1,3 +1,4 @@
+/*global LockOn:true*/
 /**
   URL related functions.
 
@@ -9,6 +10,29 @@ Discourse.URL = Em.Object.createWithMixins({
 
   // Used for matching a topic
   TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
+
+  /**
+    Jumps to a particular post in the stream
+  **/
+  jumpToPost: function(postNumber) {
+    var holderId = '#post-cloak-' + postNumber;
+
+    Em.run.schedule('afterRender', function() {
+      if (postNumber === 1) {
+        $(window).scrollTop(0);
+        return;
+      }
+
+      new LockOn(holderId, {offsetCalculator: function() {
+        var $header = $('header'),
+            $title = $('#topic-title'),
+            windowHeight = $(window).height() - $title.height(),
+            expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
+
+        return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
+      }}).lock();
+    });
+  },
 
   /**
     Browser aware replaceState. Will only be invoked if the browser supports it.
@@ -181,7 +205,7 @@ Discourse.URL = Em.Object.createWithMixins({
           topicProgressController.set('progressPosition', closest);
           Discourse.PostView.considerHighlighting(topicController, closest);
         }).then(function() {
-          Discourse.TopicView.jumpToPost(closest);
+          Discourse.URL.jumpToPost(closest);
         });
 
         // Abort routing, we have replaced our state.

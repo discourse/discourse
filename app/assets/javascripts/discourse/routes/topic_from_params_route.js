@@ -35,7 +35,7 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
         progressPosition: closest,
         expanded: false
       });
-      Discourse.TopicView.jumpToPost(closest);
+      Discourse.URL.jumpToPost(closest);
 
       if (topic.present('draft')) {
         composerController.open({
