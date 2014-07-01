@@ -103,7 +103,6 @@ function buildCategoryRoute(filter, params) {
         this.replaceWith('/404');
         return;
       }
-      this.controllerFor('application').set('styleCategory', model);
 
       var self = this,
           noSubcategories = params && !!params.no_subcategories,
@@ -167,7 +166,6 @@ function buildCategoryRoute(filter, params) {
     deactivate: function() {
       this._super();
       this.controllerFor('search').set('searchContext', null);
-      this.controllerFor('application').set('styleCategory', null);
     },
 
     actions: {

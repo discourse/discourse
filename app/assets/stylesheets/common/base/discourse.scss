@@ -21,9 +21,14 @@ a.no-href {
   cursor: pointer;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   background-attachment: fixed;
   background-size: cover;
+  min-height: 100%;
 
   button.ok {
     background: $success;
