@@ -57,7 +57,7 @@ Vagrant version 1.1.2. With this Vagrantfile:
     ln -sf /usr/share/zoneinfo/Canada/Eastern /etc/localtime
     apt-get -yqq update
     apt-get -yqq install python-software-properties
-    apt-get -yqq install vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev
+    apt-get -yqq install vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev imagemagick
 
 ## Unicode
 
