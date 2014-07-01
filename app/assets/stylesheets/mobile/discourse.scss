@@ -24,10 +24,11 @@ body {
     }
     a.star {
       display: inline-block;
-      font-size: 15px;
-      line-height: 1;
+      font-size: 20px;
+      line-height: 1.2em;
       color: scale-color($primary, $lightness: 75%);
-      margin-right: 3px;
+      margin-right: 5px;
+      margin-top: 6px;
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
