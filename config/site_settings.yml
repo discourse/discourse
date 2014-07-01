@@ -154,6 +154,9 @@ basic:
   topics_per_page:
     default: 30
     min: 1
+  show_subcategory_list:
+    default: false
+    client: true
   posts_per_page:
     client: true
     default: 20
