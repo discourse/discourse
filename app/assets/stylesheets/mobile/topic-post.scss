@@ -210,7 +210,7 @@ a.star {
 
     /* limit to one line of avatars for now */
     height:30px;
-    overflow:hidden;
+    overflow:hidden !important; // otherwise parent mobile styles conflict
   }
 
   .avatar {
@@ -259,7 +259,7 @@ a.star {
 
   .topic-links {
     .badge-notification {
-      margin-right: 1px 5px 2px 0;
+      margin: 1px 5px 2px 0;
     }
   }
 
