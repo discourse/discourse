@@ -96,11 +96,11 @@ table.badges-listing {
 /* /badges/:id/:slug page styling. */
 .show-badge {
   .badge-user {
-    display: inline-block;
     text-align: center;
     width: 100px;
     padding: 5px 10px;
     margin-bottom: 10px;
+    display: inline-block;
 
     .details {
       margin: 0 10px;
@@ -113,5 +113,24 @@ table.badges-listing {
       color: lighten($primary, 40%);
       font-size: 10px;
     }
+  }
+}
+
+.show-badge .user-badge-with-posts .badge-user {
+  width: 400px;
+
+  .badge-info {
+    width: 100px;
+    display: block;
+    float: left;
+  }
+
+  .post-link {
+    width: 250px;
+    display: block;
+    float: left;
+    margin-top: 67px;
+    margin-left: 18px;
+    text-align: left;
   }
 }

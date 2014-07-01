@@ -16,18 +16,21 @@
   </table>
 
   {{#if userBadges}}
-    <div>
+    <div class={{unbound layoutClass}}>
     {{#each userBadges}}
-        {{#link-to 'user' user}}
-          <div class="badge-user">
-            {{avatar user imageSize="large"}}
-            <div class="details">
-              <span class="username">{{user.username}}</span>
-              {{date granted_at}}
-            </div>
-          </div>
-        {{/link-to}}
-        <!-- <a href="{{unbound topic.url}}/{{unbound post_number}}"><span class="post-number">#{{post_number}}</span> {{topic.title}}</a> -->
+        <div class="badge-user">
+          {{#link-to 'user' user classNames="badge-info"}}
+              {{avatar user imageSize="large"}}
+              <div class="details">
+                <span class="username">{{user.username}}</span>
+                {{date granted_at}}
+              </div>
+          {{/link-to}}
+
+          {{#if post_number}}
+            <a class="post-link" href="{{unbound topic.url}}/{{unbound post_number}}"><span class="post-number">#{{post_number}}</span> {{topic.title}}</a>
+          {{/if}}
+        </div>
       {{/each}}
     </div>
     {{#if canLoadMore}}
