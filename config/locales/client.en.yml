@@ -1034,9 +1034,9 @@ en:
           like: "Undo like"
           vote: "Undo vote"
         people:
-          off_topic: "{{icons}} marked this as off-topic"
-          spam: "{{icons}} marked this as spam"
-          inappropriate: "{{icons}} marked this as inappropriate"
+          off_topic: "{{icons}} flagged this as off-topic"
+          spam: "{{icons}} flagged this as spam"
+          inappropriate: "{{icons}} flagged this as inappropriate"
           notify_moderators: "{{icons}} notified moderators"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
           notify_user: "{{icons}} sent a private message"
