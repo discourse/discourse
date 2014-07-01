@@ -132,6 +132,12 @@ config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 Set up [MailCatcher](https://github.com/sj26/mailcatcher) so the app can intercept
 outbound email and you can verify what is being sent.
 
+Note also that mail is sent asynchronously by Sidekiq, so you'll need to have it running to process jobs. Run it with this command:
+
+```
+bundle exec sidekiq
+```
+
 ## Phantomjs
 
 Needed to run javascript tests.
