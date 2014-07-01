@@ -2,10 +2,19 @@ InviteRedeemer = Struct.new(:invite) do
 
   def redeem
     Invite.transaction do
-      process_invitation if invite_was_redeemed?
+      if invite_was_redeemed?
+        process_invitation
+        return invited_user
+      end
     end
 
-    invited_user
+    # If `invite_passthrough_hours` is defined, allow them to re-use the invite link
+    # to login again.
+    if invite.redeemed_at >= SiteSetting.invite_passthrough_hours.hours.ago
+      return invited_user
+    end
+
+    nil
   end
 
   # extracted from User cause it is very specific to invites

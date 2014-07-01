@@ -197,11 +197,26 @@ describe Invite do
 
 
         context 'again' do
-          it 'will not redeem twice' do
-            invite.redeem.should == user
-            invite.redeem.send_welcome_message.should be_false
+          context "without a passthrough" do
+            before do
+              SiteSetting.invite_passthrough_hours = 0
+            end
+
+            it 'will not redeem twice' do
+              invite.redeem.should be_blank
+            end
           end
 
+          context "with a passthrough" do
+            before do
+              SiteSetting.invite_passthrough_hours = 1
+            end
+
+            it 'will not redeem twice' do
+              invite.redeem.should be_present
+              invite.redeem.send_welcome_message.should be_false
+            end
+          end
         end
       end
 

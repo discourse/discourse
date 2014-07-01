@@ -247,7 +247,8 @@ users:
   enable_names:
     client: true
     default: true
-  invite_expiry_days: 4
+  invite_expiry_days: 1
+  invite_passthrough_hours: 0
   invites_shown:
     client: true
     default: 30
