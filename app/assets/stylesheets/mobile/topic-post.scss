@@ -386,6 +386,11 @@ iframe {
 
 .dropdown-menu li  {
   margin: 5px 0;
+  .fa {
+    float: left;
+    margin-right: 5px;
+    padding-top: 1px;
+  }
 }
 
 .btn-group {
