@@ -10,6 +10,8 @@ class LeaderRequirements
                 :num_topics_replied_to, :min_topics_replied_to,
                 :topics_viewed, :min_topics_viewed,
                 :posts_read, :min_posts_read,
+                :topics_viewed_all_time, :min_topics_viewed_all_time,
+                :posts_read_all_time, :min_posts_read_all_time,
                 :num_flagged_posts, :max_flagged_posts
 
   def initialize(user)
@@ -22,6 +24,8 @@ class LeaderRequirements
       topics_viewed >= min_topics_viewed &&
       posts_read >= min_posts_read &&
       num_flagged_posts <= max_flagged_posts &&
+      topics_viewed_all_time >= min_topics_viewed_all_time &&
+      posts_read_all_time >= min_posts_read_all_time &&
       num_flagged_by_users <= max_flagged_by_users
   end
 
@@ -41,8 +45,12 @@ class LeaderRequirements
     SiteSetting.leader_requires_topics_replied_to
   end
 
+  def topics_viewed_query
+    View.where(user_id: @user.id, parent_type: 'Topic').select('distinct(parent_id)')
+  end
+
   def topics_viewed
-    View.where('viewed_at > ?', TIME_PERIOD.days.ago).where(user_id: @user.id, parent_type: 'Topic').select('distinct(parent_id)').count
+    topics_viewed_query.where('viewed_at > ?', TIME_PERIOD.days.ago).count
   end
 
   def min_topics_viewed
@@ -55,6 +63,22 @@ class LeaderRequirements
 
   def min_posts_read
     (LeaderRequirements.num_posts_in_time_period.to_i * (SiteSetting.leader_requires_posts_read.to_f / 100.0)).round
+  end
+
+  def topics_viewed_all_time
+    topics_viewed_query.count
+  end
+
+  def min_topics_viewed_all_time
+    SiteSetting.leader_requires_topics_viewed_all_time
+  end
+
+  def posts_read_all_time
+    @user.user_visits.pluck(:posts_read).sum
+  end
+
+  def min_posts_read_all_time
+    SiteSetting.leader_requires_posts_read_all_time
   end
 
   def num_flagged_posts

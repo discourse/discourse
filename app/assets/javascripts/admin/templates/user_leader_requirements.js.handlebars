@@ -25,7 +25,7 @@
       <tbody>
         <tr>
           <th>{{i18n admin.user.tl3_requirements.visits}}</th>
-          <td><i {{bindAttr class=":fa met.days_visited:fa-check:fa-times"}}></i></td>
+          <td><i {{bind-attr class=":fa met.days_visited:fa-check:fa-times"}}></i></td>
           <td>
             {{days_visited_percent}}% ({{days_visited}} / {{time_period}} {{i18n admin.user.tl3_requirements.days}})
           </td>
@@ -33,31 +33,43 @@
         </tr>
         <tr>
           <th>{{i18n admin.user.tl3_requirements.topics_replied_to}}</th>
-          <td><i {{bindAttr class=":fa met.topics_replied_to:fa-check:fa-times"}}></i></td>
+          <td><i {{bind-attr class=":fa met.topics_replied_to:fa-check:fa-times"}}></i></td>
           <td>{{num_topics_replied_to}}</td>
           <td>{{min_topics_replied_to}}</td>
         </tr>
         <tr>
           <th>{{i18n admin.user.tl3_requirements.topics_viewed}}</th>
-          <td><i {{bindAttr class=":fa met.topics_viewed:fa-check:fa-times"}}></i></td>
+          <td><i {{bind-attr class=":fa met.topics_viewed:fa-check:fa-times"}}></i></td>
           <td>{{topics_viewed}}</td>
           <td>{{min_topics_viewed}}</td>
         </tr>
         <tr>
+          <th>{{i18n admin.user.tl3_requirements.topics_viewed_all_time}}</th>
+          <td><i {{bind-attr class=":fa met.topics_viewed_all_time:fa-check:fa-times"}}></i></td>
+          <td>{{topics_viewed_all_time}}</td>
+          <td>{{min_topics_viewed_all_time}}</td>
+        </tr>
+        <tr>
           <th>{{i18n admin.user.tl3_requirements.posts_read}}</th>
-          <td><i {{bindAttr class=":fa met.posts_read:fa-check:fa-times"}}></i></td>
+          <td><i {{bind-attr class=":fa met.posts_read:fa-check:fa-times"}}></i></td>
           <td>{{posts_read}}</td>
           <td>{{min_posts_read}}</td>
         </tr>
         <tr>
+          <th>{{i18n admin.user.tl3_requirements.posts_read_all_time}}</th>
+          <td><i {{bind-attr class=":fa met.posts_read_all_time:fa-check:fa-times"}}></i></td>
+          <td>{{posts_read_all_time}}</td>
+          <td>{{min_posts_read_all_time}}</td>
+        </tr>
+        <tr>
           <th>{{i18n admin.user.tl3_requirements.flagged_posts}}</th>
-          <td><i {{bindAttr class=":fa met.flagged_posts:fa-check:fa-times"}}></i></td>
+          <td><i {{bind-attr class=":fa met.flagged_posts:fa-check:fa-times"}}></i></td>
           <td>{{num_flagged_posts}}</td>
           <td>{{max_flagged_posts}} {{i18n max}}</td>
         </tr>
         <tr>
           <th>{{i18n admin.user.tl3_requirements.flagged_by_users}}</th>
-          <td><i {{bindAttr class=":fa met.flagged_by_users:fa-check:fa-times"}}></i></td>
+          <td><i {{bind-attr class=":fa met.flagged_by_users:fa-check:fa-times"}}></i></td>
           <td>{{num_flagged_by_users}}</td>
           <td>{{max_flagged_by_users}} {{i18n max}}</td>
         </tr>

@@ -13,6 +13,8 @@ Discourse.LeaderRequirements = Discourse.Model.extend({
       topics_replied_to: this.get('num_topics_replied_to') >= this.get('min_topics_replied_to'),
       topics_viewed: this.get('topics_viewed') >= this.get('min_topics_viewed'),
       posts_read: this.get('posts_read') >= this.get('min_posts_read'),
+      topics_viewed_all_time: this.get('topics_viewed_all_time') >= this.get('min_topics_viewed_all_time'),
+      posts_read_all_time: this.get('posts_read_all_time') >= this.get('min_posts_read_all_time'),
       flagged_posts: this.get('num_flagged_posts') <= this.get('max_flagged_posts'),
       flagged_by_users: this.get('num_flagged_by_users') <= this.get('max_flagged_by_users')
     };
@@ -21,5 +23,7 @@ Discourse.LeaderRequirements = Discourse.Model.extend({
              'topics_viewed', 'min_topics_viewed',
              'posts_read', 'min_posts_read',
              'num_flagged_posts', 'max_flagged_posts',
+             'topics_viewed_all_time', 'min_topics_viewed_all_time',
+             'posts_read_all_time', 'min_posts_read_all_time',
              'num_flagged_by_users', 'max_flagged_by_users')
 });

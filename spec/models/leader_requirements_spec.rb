@@ -9,6 +9,10 @@ describe LeaderRequirements do
     described_class.clear_cache
   end
 
+  def make_view(id, at, user_id)
+    View.create!(parent_id: id, parent_type: 'Topic', ip_address: '11.22.33.44', viewed_at: at, user_id: user_id)
+  end
+
   describe "requirements" do
     it "min_days_visited uses site setting" do
       SiteSetting.stubs(:leader_requires_days_visited).returns(66)
@@ -30,6 +34,16 @@ describe LeaderRequirements do
       SiteSetting.stubs(:leader_requires_posts_read).returns(66)
       described_class.stubs(:num_posts_in_time_period).returns(1234)
       leader_requirements.min_posts_read.should == 814
+    end
+
+    it "min_topics_viewed_all_time depends on site setting" do
+      SiteSetting.stubs(:leader_requires_topics_viewed_all_time).returns(75)
+      leader_requirements.min_topics_viewed_all_time.should == 75
+    end
+
+    it "min_posts_read_all_time depends on site setting" do
+      SiteSetting.stubs(:leader_requires_posts_read_all_time).returns(1001)
+      leader_requirements.min_posts_read_all_time.should == 1001
     end
 
     it "max_flagged_posts depends on site setting" do
@@ -67,10 +81,6 @@ describe LeaderRequirements do
   end
 
   describe "topics_viewed" do
-    def make_view(id, at, user_id)
-      View.create!(parent_id: id, parent_type: 'Topic', ip_address: '11.22.33.44', viewed_at: at, user_id: user_id)
-    end
-
     it "counts topics views within last 100 days, not counting a topic more than once" do
       user.save
       make_view(9, 1.day.ago,    user.id)
@@ -89,6 +99,25 @@ describe LeaderRequirements do
       user.update_posts_read!(0, 4.days.ago)
       user.update_posts_read!(5, 101.days.ago)
       leader_requirements.posts_read.should == 4
+    end
+  end
+
+  describe "topics_viewed_all_time" do
+    it "counts topics viewed at any time" do
+      user.save
+      make_view(10, 1.day.ago,    user.id)
+      make_view(9,  100.days.ago, user.id)
+      make_view(8,  101.days.ago, user.id)
+      leader_requirements.topics_viewed_all_time.should == 3
+    end
+  end
+
+  describe "posts_read_all_time" do
+    it "counts posts read at any time" do
+      user.save
+      user.update_posts_read!(3, 2.days.ago)
+      user.update_posts_read!(1, 101.days.ago)
+      leader_requirements.posts_read_all_time.should == 4
     end
   end
 

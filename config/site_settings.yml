@@ -468,6 +468,12 @@ trust:
     default: 25
     min: 0
     max: 100
+  leader_requires_topics_viewed_all_time:
+    default: 200
+    min: 0
+  leader_requires_posts_read_all_time:
+    default: 500
+    min: 0
   leader_requires_max_flagged:
     default: 5
     min: 0
