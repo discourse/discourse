@@ -10,6 +10,11 @@ describe Jobs do
         SiteSetting.expects(:queue_jobs?).at_least_once.returns(true)
       end
 
+      it 'fails' do
+        break_build
+        # temporarily break build to ensure docker process does not pull this change
+      end
+
       it 'enqueues a job in sidekiq' do
         Sidekiq::Client.expects(:enqueue).with(Jobs::ProcessPost, post_id: 1, current_site_id: 'default')
         Jobs.enqueue(:process_post, post_id: 1)
