@@ -32,7 +32,6 @@ module Jobs
         Post.rebake_old(250)
       end
 
-      Search.rebuild_problem_posts
     end
 
   end

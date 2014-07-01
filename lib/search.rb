@@ -49,6 +49,7 @@ class Search
               )', SiteSetting.default_locale).limit(10000)
 
     posts.each do |post|
+      # force indexing
       post.cooked += " "
       SearchObserver.index(post)
     end
