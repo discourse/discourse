@@ -43,9 +43,10 @@ class Search
 
   def self.rebuild_problem_posts(limit = 10000)
     posts = Post.joins(:topic)
-            .where('posts.id NOT IN (
-               SELECT post_id from post_search_data
-                WHERE locale = ?
+            .where('posts.id IN (
+               SELECT p2.id FROM posts p2
+               LEFT JOIN post_search_data pd ON locale = ? AND p2.id = pd.post_id
+               WHERE pd.post_id IS NULL
               )', SiteSetting.default_locale).limit(10000)
 
     posts.each do |post|
