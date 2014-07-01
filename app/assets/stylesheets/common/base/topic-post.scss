@@ -32,6 +32,10 @@
 aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
+  // blockquote is docked within aside for content
+  blockquote {
+    margin-top: 0;
+  }
 }
 
 .cooked .highlight {
