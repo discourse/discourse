@@ -19,11 +19,11 @@ class EmailToken < ActiveRecord::Base
   end
 
   def self.valid_after
-    1.week.ago
+    SiteSetting.email_token_valid_hours.hours.ago
   end
 
   def self.confirm_valid_after
-    1.day.ago
+    SiteSetting.email_token_grace_period_hours.ago
   end
 
   def self.unconfirmed

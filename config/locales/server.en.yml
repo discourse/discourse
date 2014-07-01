@@ -702,6 +702,9 @@ en:
     topics_per_period_in_top_page: "How many topics loaded on the top topics page"
     redirect_users_to_top_page: "Automatically redirect new & long-time-no-see users to top page"
 
+    email_token_valid_hours: "How long are 'forgot password' / 'activate account' tokens valid for"
+    email_token_grace_period_hours: "How long are 'forgot password' / 'activate account' tokens valid for, after being redeemed"
+
     enable_badges: "Enable the badge system (experimental)"
 
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"

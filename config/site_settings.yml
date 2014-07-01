@@ -263,6 +263,9 @@ users:
     default: 15
   redirect_users_to_top_page: true
 
+  email_token_valid_hours: 24
+  email_token_grace_period_hours: 0
+
 posting:
   min_post_length:
     client: true
