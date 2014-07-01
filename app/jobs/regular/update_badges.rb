@@ -28,7 +28,7 @@ module Jobs
       # Grant "Welcome" badge to the user if they do not already have it.
       BadgeGranter.grant(Badge.find(5), user)
 
-      [{id: 6, count: 10}, {id: 7, count: 25}, {id: 8, count: 100}].each do |b|
+      Badge.like_badge_info.each do |b|
         if post.like_count >= b[:count]
           BadgeGranter.grant(Badge.find(b[:id]), user, post_id: post.id)
         else

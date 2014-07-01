@@ -55,4 +55,49 @@ class BadgeGranter
     Jobs.enqueue(:update_badges, args)
   end
 
+
+  def self.backfill_like_badges
+    Badge.like_badge_info.each do |info|
+      sql = "
+      DELETE FROM user_badges
+      WHERE badge_id = :id AND
+      NOT EXISTS (SELECT 1 FROM posts p
+                  JOIN topics t on p.topic_id = t.id
+                  WHERE p.deleted_at IS NULL AND
+                        t.deleted_at IS NULL AND
+                        t.visible AND
+                        post_id = p.id AND
+                        p.like_count >= :count
+                  )
+      "
+
+      Badge.exec_sql(sql, info)
+
+      sql = "
+      INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, post_id)
+      SELECT :id, p.user_id, :now, -1, p.id
+      FROM posts p
+      JOIN topics t on p.topic_id = t.id
+      WHERE p.deleted_at IS NULL AND
+            t.deleted_at IS NULL AND
+            t.visible AND
+            p.like_count >= :count AND
+            NOT EXISTS (SELECT 1 FROM user_badges ub
+                        WHERE ub.post_id = p.id AND
+                        ub.badge_id = :id AND
+                        ub.user_id = p.user_id)
+      "
+
+      Badge.exec_sql(sql, info.merge(now: Time.now))
+
+      sql = "
+      UPDATE badges b
+      SET grant_count = (SELECT COUNT(*) FROM user_badges WHERE badge_id = :id)
+      WHERE b.id = :id
+      "
+
+      Badge.exec_sql(sql, info)
+    end
+  end
+
 end

@@ -9,6 +9,19 @@ describe BadgeGranter do
     SiteSetting.enable_badges = true
   end
 
+  describe 'backfill like badges' do
+    it 'should grant missing badges' do
+      post = Fabricate(:post, like_count: 30)
+      BadgeGranter.backfill_like_badges
+
+      # TODO add welcome
+      post.user.user_badges.pluck(:badge_id).sort.should == [Badge::NicePost,Badge::GoodPost]
+
+      Badge.find(Badge::NicePost).grant_count.should == 1
+      Badge.find(Badge::GoodPost).grant_count.should == 1
+    end
+  end
+
   describe 'grant' do
 
     it 'grants a badge' do

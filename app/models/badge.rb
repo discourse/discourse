@@ -7,6 +7,11 @@ class Badge < ActiveRecord::Base
   validates :allow_title, inclusion: [true, false]
   validates :multiple_grant, inclusion: [true, false]
 
+  Welcome = 5
+  NicePost = 6
+  GoodPost = 7
+  GreatPost = 8
+
   def self.trust_level_badge_ids
     (1..4).to_a
   end
@@ -18,6 +23,14 @@ class Badge < ActiveRecord::Base
 
   def single_grant?
     !self.multiple_grant?
+  end
+
+  def self.like_badge_info
+    [
+      {id: NicePost, count: 10},
+      {id: GoodPost, count: 25},
+      {id: GreatPost, count: 100}
+    ]
   end
 
 end
