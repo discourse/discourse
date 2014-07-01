@@ -22,7 +22,10 @@ a.no-href {
 }
 
 body {
-    button.ok {
+  background-attachment: fixed;
+  background-size: cover;
+
+  button.ok {
     background: $success;
     color: $secondary;
     @include hover {
