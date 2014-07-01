@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend({
+Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenComposer, {
   renderTemplate: function() {
     this.render('navigation/categories', { outlet: 'navigation-bar' });
     this.render('discovery/categories', { outlet: 'list-container' });
@@ -34,7 +34,10 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     Discourse.set('title', I18n.t('filters.categories.title'));
+
+    // Only show either the Create Category or Create Topic button
     this.controllerFor('navigation/categories').set('canCreateCategory', model.get('can_create_category'));
+    this.controllerFor('navigation/categories').set('canCreateTopic', model.get('can_create_topic') && !model.get('can_create_category'));
   },
 
   actions: {
@@ -44,6 +47,10 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend({
         available_groups: Discourse.Site.current().group_names
       }));
       this.controllerFor('editCategory').set('selectedTab', 'general');
+    },
+
+    createTopic: function() {
+      this.openComposer(this.controllerFor('discovery/categories'));
     }
   }
 });
