@@ -1,4 +1,4 @@
-{{#if model.categories}}
+{{#if categories}}
   <div class='contents'>
     <table id='topic-list' class='categories'>
       <thead>
@@ -6,23 +6,28 @@
           <th class='category'>{{i18n categories.category}}</th>
           <th class='latest'>{{i18n categories.latest}}</th>
           <th class='stats topics'>{{i18n categories.topics}}</th>
+          {{#if showPostsColumn}}
           <th class='stats posts'>{{i18n categories.posts}}
             {{#if canOrder}}<button title='{{i18n categories.toggle_ordering}}' class='btn toggle-admin no-text' {{action toggleOrdering}}><i class='fa fa-wrench'></i></button>{{/if}}
           </th>
+          {{/if}}
         </tr>
       </thead>
       <tbody>
-        {{#each model.categories}}
+        {{#each categories}}
         <tr data-category_id='{{unbound id}}' {{bind-attr class="description_excerpt:has-description:no-description"}}>
           <td class='category' style="border-color: #{{unbound color}}">
             <div>
               <div class="pull-left">
                 {{#if controller.ordering}}<i class="fa fa-bars"></i>{{/if}}
-
                 <h3>
                   {{#if read_restricted}}<i class='fa fa-group'></i>{{/if}}
                   {{#link-to 'discovery.parentCategory' this}}
-                    {{unbound name}}
+                    {{#if logo_url}}
+                      <img src="{{unbound logo_url}}" class='category-logo'>
+                    {{else}}
+                      {{unbound name}}
+                    {{/if}}
                   {{/link-to}}
                 </h3>
                 {{#if unreadTopics}}
@@ -92,18 +97,20 @@
               </tbody>
             </table>
           </td>
-          <td class='stats' {{bind-attr title="postStatsTitle"}}>
-            <table class="categoryStats">
-              <tbody>
-              {{#each postCountStats}}
-                <tr>
-                  <td class="value">{{value}}</td>
-                  <td class="unit"> / {{unit}}</td>
-                </tr>
-              {{/each}}
-              </tbody>
-            </table>
-          </td>
+          {{#if controller.showPostsColumn}}
+            <td class='stats' {{bind-attr title="postStatsTitle"}}>
+              <table class="categoryStats">
+                <tbody>
+                {{#each postCountStats}}
+                  <tr>
+                    <td class="value">{{value}}</td>
+                    <td class="unit"> / {{unit}}</td>
+                  </tr>
+                {{/each}}
+                </tbody>
+              </table>
+            </td>
+          {{/if}}
         </tr>
         {{/each}}
       </tbody>

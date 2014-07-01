@@ -1,13 +1,8 @@
-/**
-  This controller supports actions when listing categories
-
-  @class DiscoveryCategoriesController
-  @extends Discourse.ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
 export default Discourse.DiscoveryController.extend({
   needs: ['modal', 'discovery'],
+
+  withLogo: Em.computed.filterBy('categories', 'logo_url'),
+  showPostsColumn: Em.computed.empty('withLogo'),
 
   actions: {
     toggleOrdering: function(){
