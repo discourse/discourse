@@ -77,6 +77,10 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
     return this.customResolve(parsedName) || this._super(parsedName);
   },
 
+  resolveRoute: function(parsedName) {
+    return this.customResolve(parsedName) || this._super(parsedName);
+  },
+
   /**
     Attaches a view and wires up the container properly
 

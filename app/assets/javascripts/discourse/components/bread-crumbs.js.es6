@@ -29,12 +29,13 @@ export default Ember.Component.extend({
   }.property('category', 'parentCategory'),
 
   childCategories: function() {
+    if (this.get('hideSubcategories')) { return []; }
     var firstCategory = this.get('firstCategory');
-    if (!firstCategory) { return; }
+    if (!firstCategory) { return []; }
 
     return this.get('categories').filter(function (c) {
       return c.get('parentCategory') === firstCategory;
     });
-  }.property('firstCategory')
+  }.property('firstCategory', 'hideSubcategories')
 
 });

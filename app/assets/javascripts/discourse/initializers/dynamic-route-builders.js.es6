@@ -3,6 +3,7 @@ import buildTopicRoute from 'discourse/routes/build-topic-route';
 
 export default {
   name: 'dynamic-route-builders',
+  after: 'register-discourse-location',
 
   initialize: function(container, app) {
     app.DiscoveryCategoryRoute = buildCategoryRoute('latest');

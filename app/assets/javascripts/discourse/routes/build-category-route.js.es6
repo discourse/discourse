@@ -1,8 +1,8 @@
 // A helper function to create a category route with parameters
 export default function(filter, params) {
   return Discourse.Route.extend({
-    model: function(params) {
-      return Discourse.Category.findBySlug(params.slug, params.parentSlug);
+    model: function(modelParams) {
+      return Discourse.Category.findBySlug(modelParams.slug, modelParams.parentSlug);
     },
 
     afterModel: function(model, transaction) {
@@ -11,21 +11,44 @@ export default function(filter, params) {
         return;
       }
 
-      var self = this,
-          noSubcategories = params && !!params.no_subcategories,
-          filterMode = "category/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter,
-          listFilter = "category/" + Discourse.Category.slugFor(model) + "/l/" + filter;
-
       this.controllerFor('search').set('searchContext', model.get('searchContext'));
+      this._setupNavigation(model);
+      return Em.RSVP.all([this._createSubcategoryList(model),
+                          this._retrieveTopicList(model, transaction)]);
+    },
 
-      var opts = { category: model, filterMode: filterMode };
-      opts.noSubcategories = params && params.no_subcategories;
-      opts.canEditCategory = Discourse.User.currentProp('staff');
+    _setupNavigation: function(model) {
+      var noSubcategories = params && !!params.no_subcategories,
+          filterMode = "category/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter;
 
-      opts.canChangeCategoryNotificationLevel = Discourse.User.current();
-      this.controllerFor('navigation/category').setProperties(opts);
+      this.controllerFor('navigation/category').setProperties({
+        category: model,
+        filterMode: filterMode,
+        noSubcategories: params && params.no_subcategories,
+        canEditCategory: Discourse.User.currentProp('staff'),
+        canChangeCategoryNotificationLevel: Discourse.User.current()
+      });
+    },
 
-      var queryParams = transaction.queryParams;
+    _createSubcategoryList: function(model) {
+      this._categoryList = null;
+      if (Em.isNone(model.get('parentCategory')) && Discourse.SiteSettings.show_subcategory_list) {
+        var self = this;
+        return Discourse.CategoryList.listForParent(model).then(function(list) {
+          console.log('loaded list');
+          self._categoryList = list;
+        });
+      }
+
+      // If we're not loading a subcategory list just resolve
+      return Em.RSVP.resolve();
+    },
+
+    _retrieveTopicList: function(model, transaction) {
+      var queryParams = transaction.queryParams,
+          listFilter = "category/" + Discourse.Category.slugFor(model) + "/l/" + filter,
+          self = this;
+
       params = params || {};
 
       if (queryParams && queryParams.order) { params.order = queryParams.order; }
@@ -67,6 +90,10 @@ export default function(filter, params) {
 
     renderTemplate: function() {
       this.render('navigation/category', { outlet: 'navigation-bar' });
+
+      if (this._categoryList) {
+        this.render('discovery/categories', { outlet: 'header-list-container', model: this._categoryList });
+      }
       this.render('discovery/topics', { controller: 'discovery/topics', outlet: 'list-container' });
     },
 

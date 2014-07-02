@@ -14,7 +14,16 @@
   <div class='spinner'>{{i18n loading}}</div>
 </div>
 
+
 <div {{bind-attr class=":container :list-container loadingSpinner:hidden"}}>
+  <div class="row">
+    <div class="full-width">
+      <div id='header-list-area'>
+        {{outlet header-list-container}}
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="full-width">
       <div id='list-area'>
