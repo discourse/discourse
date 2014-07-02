@@ -36,7 +36,7 @@
     <div class='num posts'><a href="{{lastUnreadUrl}}">{{number posts_count numberKey="posts_long"}}</a></div>
 
     {{#if like_count}}
-      <div class='num likes'><a href='{{url}}{{#if has_summary}}{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{number like_count numberKey="likes_long"}} <i class='fa fa-heart'></i></a></div>
+      <div class='num likes'><a href='{{url}}' title='{{i18n topic.likes count="like_count"}}'>{{number like_count numberKey="likes_long"}} <i class='fa fa-heart'></i></a></div>
     {{/if}}
 
     {{#if bumped}}
