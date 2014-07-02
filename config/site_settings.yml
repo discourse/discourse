@@ -163,7 +163,7 @@ basic:
     min: 1
   enable_badges:
     client: true
-    default: false
+    default: true
 
 users:
   invite_only:
