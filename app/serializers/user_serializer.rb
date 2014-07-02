@@ -170,20 +170,23 @@ class UserSerializer < BasicUserSerializer
     Post.with_deleted
         .where(user_id: object.id)
         .where(user_deleted: false)
-        .where.not(deleted_by: object.id)
+        .where.not(deleted_by_id: object.id)
         .count
   end
 
   def number_of_flagged_posts
     Post.with_deleted
         .where(user_id: object.id)
-        .where(hidden: true)
+        .where(id: PostAction.with_deleted
+                             .where(post_action_type_id: PostActionType.notify_flag_type_ids)
+                             .select(:post_id))
         .count
   end
 
   def number_of_flags_given
-    PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
+    PostAction.with_deleted
               .where(user_id: object.id)
+              .where(post_action_type_id: PostActionType.notify_flag_type_ids)
               .count
   end
 
