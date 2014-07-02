@@ -214,46 +214,34 @@ describe UsersController do
     let(:user) { Fabricate(:user) }
 
     context "you can view it even if login is required" do
-      before do
-        SiteSetting.stubs(:login_required).returns(true)
-        get :password_reset, token: 'asdfasdf'
-      end
-
       it "returns success" do
+        SiteSetting.login_required = true
+        get :password_reset, token: 'asdfasdf'
         response.should be_success
       end
     end
 
     context 'invalid token' do
       before do
-        EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
-        get :password_reset, token: 'asdfasdf'
+        get :password_reset, token: SecureRandom.hex
       end
 
-      it 'return success' do
+      it 'disallows login' do
+        flash[:error].should be_present
+        session[:current_user_id].should be_blank
         response.should be_success
       end
 
-      it 'sets a flash error' do
-        flash[:error].should be_present
-      end
-
-      it "doesn't log in the user" do
-        session[:current_user_id].should be_blank
-      end
     end
 
     context 'valid token' do
-      before do
-        EmailToken.expects(:confirm).with('asdfasdf').returns(user)
-        put :password_reset, token: 'asdfasdf', password: 'newpassword'
-      end
-
       it 'returns success' do
-        response.should be_success
-      end
+        user = Fabricate(:user)
+        token = user.email_tokens.create(email: user.email).token
 
-      it "doesn't set an error" do
+        get :password_reset, token: token
+        put :password_reset, token: token, password: 'newpassword'
+        response.should be_success
         flash[:error].should be_blank
       end
     end

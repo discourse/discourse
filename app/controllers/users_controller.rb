@@ -200,7 +200,15 @@ class UsersController < ApplicationController
     expires_now()
 
     @user = EmailToken.confirm(params[:token])
-    if @user.blank?
+
+    if @user
+      session[params[:token]] = @user.id
+    else
+      user_id = session[params[:token]]
+      @user = User.find(user_id) if user_id
+    end
+
+    if !@user
       flash[:error] = I18n.t('password_reset.no_token')
     elsif request.put?
       raise Discourse::InvalidParameters.new(:password) unless params[:password].present?
