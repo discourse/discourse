@@ -538,10 +538,9 @@ iframe {
 
 .extra-info-wrapper {
   float: left;
-  width: 78%;
-  max-width: 800px;
+  max-width: 875px;
   .topic-statuses {
-    i         { color: $header_primary; }
+            i { color: $header_primary; }
     .unpinned { color: $header_primary; }
   }
   .topic-link { color: $header_primary; }
@@ -550,14 +549,14 @@ iframe {
 
 @include medium-width {
   .extra-info-wrapper {
-  max-width: 740px;
+  max-width: 770px;
 }
 }
 
 
 @include small-width {
     .extra-info-wrapper {
-  max-width: 680px;
+  max-width: 720px;
 }
 }
 
@@ -565,7 +564,7 @@ iframe {
   h1 {
     margin: 5px 0 0 0;
     font-size: 1.6em;
-    line-height: 1.2em;
+    line-height: 1.3em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
