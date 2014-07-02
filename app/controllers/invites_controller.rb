@@ -71,7 +71,7 @@ class InvitesController < ApplicationController
     guardian.ensure_can_bulk_invite_to_forum!(current_user)
 
     filename = params.fetch(:resumableFilename)
-    return render status: 415, text: I18n.t("bulk_invite.file_should_be_csv") unless filename.to_s.end_with?(".csv")
+    return render status: 415, text: I18n.t("bulk_invite.file_should_be_csv") unless (filename.to_s.end_with?(".csv") || filename.to_s.end_with?(".txt"))
 
     file               = params.fetch(:file)
     identifier         = params.fetch(:resumableIdentifier)
