@@ -1,3 +1,16 @@
+if ARGV.include?('bbcode-to-md')
+  # Replace (most) bbcode with markdown before creating posts.
+  # This will dramatically clean up the final posts in Discourse.
+  #
+  # In a temp dir:
+  #
+  # git clone git@github.com:nlalonde/ruby-bbcode-to-md.git
+  # cd ruby-bbcode-to-md
+  # gem build ruby-bbcode-to-md.gemspec
+  # gem install ruby-bbcode-to-md-0.0.13.gem
+  require 'ruby-bbcode-to-md'
+end
+
 module ImportScripts; end
 
 class ImportScripts::Base
@@ -5,6 +18,7 @@ class ImportScripts::Base
   def initialize
     require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 
+    @bbcode_to_md = true if ARGV.include?('bbcode-to-md')
     @existing_users = {}
     @failed_users = []
     @categories = {}
@@ -252,6 +266,10 @@ class ImportScripts::Base
   def create_post(opts)
     user = User.find(opts[:user_id])
     opts = opts.merge(skip_validations: true)
+
+    if @bbcode_to_md
+      opts[:raw] = opts[:raw].bbcode_to_md rescue opts[:raw]
+    end
 
     PostCreator.create(user, opts)
   end
