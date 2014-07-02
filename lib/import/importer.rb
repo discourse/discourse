@@ -282,7 +282,6 @@ module Import
     def notify_user
       if user = User.find_by(email: @user_info[:email])
         log "Notifying '#{user.username}' of the end of the restore..."
-        # NOTE: will only notify if user != Discourse.site_contact_user
         if @success
           SystemMessage.create_from_system_user(user, :import_succeeded)
         else
