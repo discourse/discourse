@@ -76,14 +76,14 @@ describe PostTiming do
 
       PostAction.act(user2, post, PostActionType.types[:like])
 
-      post.user.unread_notifications.should == 1
-      post.user.unread_notifications_by_type.should == { Notification.types[:liked] => 1 }
+      post.user.unread_notifications.should == 2
+      post.user.unread_notifications_by_type.should == {Notification.types[:granted_badge] => 1, Notification.types[:liked] => 1 }
 
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
 
       post.user.reload
-      post.user.unread_notifications_by_type.should == {}
-      post.user.unread_notifications.should == 0
+      post.user.unread_notifications_by_type.should == {Notification.types[:granted_badge] => 1}
+      post.user.unread_notifications.should == 1
 
     end
   end
