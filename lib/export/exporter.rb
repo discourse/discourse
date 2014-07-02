@@ -266,7 +266,6 @@ module Export
 
     def notify_user
       log "Notifying '#{@user.username}' of the end of the backup..."
-      # NOTE: will only notify if @user != Discourse.site_contact_user
       if @success
         SystemMessage.create_from_system_user(@user, :export_succeeded)
       else
