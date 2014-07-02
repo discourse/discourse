@@ -883,7 +883,7 @@ en:
         email_or_username: "Invitee's Email or Username"
         email_or_username_placeholder: "email address or username"
         action: "Invite"
-        success: "Thanks! We've invited that user to participate in this private message."
+        success: "We've invited that user to participate in this private message."
         error: "Sorry, there was an error inviting that user."
         group_name: "group name"
 
@@ -895,7 +895,7 @@ en:
         to_forum: "We'll send a brief email allowing your friend to join by clicking a link, no login required."
 
         email_placeholder: 'name@example.com'
-        success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
+        success: "We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
         error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
 
       login_reply: 'Sign In to Reply'
