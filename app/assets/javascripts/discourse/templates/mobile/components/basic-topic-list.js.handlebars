@@ -35,7 +35,7 @@
                 </div>
                 {{#if like_count}}
                   <div class='num likes'>
-                    <a href='{{url}}{{#if has_summary}}?filter=summary{{/if}}' title='{{i18n topic.likes count="like_count"}}'>
+                    <a href='{{url}}{{#if has_summary}}{{/if}}' title='{{i18n topic.likes count="like_count"}}'>
                       <i class='fa fa-heart'></i> {{number like_count numberKey="likes_long"}}
                     </a>
                   </div>
