@@ -607,7 +607,6 @@ nb_NO:
           description: "samme som å Følge, pluss at du vil bli varslet om alle nye innlegg."
         tracking:
           title: "Følger"
-          description: "du vil bli varslet om @brukernavn henvendelser svar til dine innlegg, pluss at du vil se et antall uleste og nye innlegg."
         regular:
           title: "Vanlig"
           description: "du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg."
@@ -754,9 +753,6 @@ nb_NO:
           like: "Angre like"
           vote: "Angre stemme"
         people:
-          off_topic: "{{icons}} markerte dette som urelevant"
-          spam: "{{icons}} markerte dette som spam"
-          inappropriate: "{{icons}} markerte dette som upassende"
           notify_moderators: "{{icons}} varslet moderatorene"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>varslet moderatorene</a>"
           notify_user: "{{icons}} send en private melding"

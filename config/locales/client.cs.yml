@@ -400,7 +400,6 @@ cs:
         the_topic: "téma"
     loading: "Načítám..."
     close: "Zavřít"
-    assets_changed_confirm: "Discourse byl aktualizován, chcete načíst nejnovější verzi hned?"
     read_only_mode:
       enabled: "Správce fóra zapnul režim jen pro čtení. Můžete pokračovat v procházení webu, ale interakce nemusí fungovat správně."
       login_disabled: "Přihlášení je zakázáno jelikož fórum je v režimu jen pro čtení."
@@ -697,10 +696,8 @@ cs:
           description: "stejné jako 'Sledování' a navíc dostanete upozornění o všech nových příspěvcích."
         tracking_pm:
           title: "Sledování"
-          description: "dostanete oznámení o nepřečtených příspěvcích, zmínkách přes @name a odpovědích na váš příspěvek."
         tracking:
           title: "Sledované"
-          description: "dostanete oznámení o nepřečtených příspěvcích, zmínkách přes @jméno a odpovědích na váš příspěvek."
         regular:
           title: "Klasicky"
           description: "Dostanete oznámení na nové odpovědi k vašim příspěvkům a na zmínky přes @jméno."
@@ -885,9 +882,6 @@ cs:
           like: "Už se mi to nelíbí"
           vote: "Zrušit hlas"
         people:
-          off_topic: "{{icons}} označili tento příspěvek jako off-topic"
-          spam: "{{icons}} označili tento příspěvek jako spam"
-          inappropriate: "{{icons}} označili tento příspěvek jako nevhodný"
           notify_moderators: "{{icons}} nahlásili tento příspěvek"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>nahlásili tento příspěvek</a>"
           notify_user: "{{icons}} zahájili soukromou konverzaci"

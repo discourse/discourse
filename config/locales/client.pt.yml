@@ -652,9 +652,6 @@ pt:
           like: "Retirar gosto"
           vote: "Retirar votar"
         people:
-          off_topic: "{{icons}} sinalizaram isto como off-topic"
-          spam: "{{icons}} sinalizaram isto como spam"
-          inappropriate: "{{icons}} sinalizaram isto como inapropriado"
           notify_moderators: "{{icons}} notificaram os moderadores"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notificaram os moderadores</a>"
           notify_user: "{{icons}} enviou uma mensagem particular"

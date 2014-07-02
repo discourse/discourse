@@ -600,6 +600,7 @@ he:
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
+    share_links: "החלט אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics loaded by default on the topics list page, and when loading more topics"
     posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
@@ -777,6 +778,7 @@ he:
     within_post: "#%{post_number} מאת %{username}: %{excerpt}"
     types:
       category: 'קטגוריות'
+      topic: 'תוצאות'
       user: 'משתמשים'
   original_poster: "מפרסם מקורים"
   most_posts: "מירב ההודעות"
@@ -833,6 +835,7 @@ he:
     omniauth_error_unknown: "משהו השתבש במהלך עיבוד ההתחברות שלך, אנא נסה שנית."
   user:
     username:
+      short: "חייבים להיות לפחות %{min} תווים"
       characters: "חייב לכלול מספרים, אותיות ומקפים תחתונים בלבד."
       unique: "חייב להיות ייחודי"
       blank: "חייב להיות מלא"
@@ -1131,6 +1134,10 @@ he:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
   page_not_found:
     title: "The page you requested doesn't exist or is private."
+    popular_topics: "פופלארי"
+    recent_topics: "לאחרונה"
+    see_more: "עוד"
+    search_title: "חיפוש באתר זה"
     search_google: "Search Google"
   login_required:
     welcome_message: |

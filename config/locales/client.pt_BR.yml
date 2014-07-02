@@ -408,7 +408,6 @@ pt_BR:
         the_topic: "o tópico"
     loading: "Carregando..."
     close: "Fechar"
-    assets_changed_confirm: "Discourse foi atualizado, gostaria de atualizar para obter a versão mais recente?"
     read_only_mode:
       enabled: "Um modo somente de leitura. Você pode continuar a navegar no site, mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
@@ -717,10 +716,8 @@ pt_BR:
           description: "Você será notificado de cada nova mensagem neste tópico. A contagem de mensagens não lidas e novas também aparecerá ao lado da lista do tópico."
         tracking_pm:
           title: "Monitorando"
-          description: "Você será notificado se alguém mencionar o @seunome ou respostas para a sua mensagem. A contagem de mensagens não lidas e novas também aparecerá ao lado da lista do tópico."
         tracking:
           title: "Monitorar"
-          description: "Você será notificado apenas se alguém mencionar seu @nome ou responder sua mensagem. A contagem de mensagens não lidas e novas também aparecerá ao lado na listagem de tópicos."
         regular:
           title: "Normal"
           description: "Você será notificado apenas se alguém mencionar seu @nome ou responder sua postagem."
@@ -900,9 +897,6 @@ pt_BR:
           like: "Descurtir"
           vote: "Desfazer voto"
         people:
-          off_topic: "{{icons}} sinalizaram isto como off-topic"
-          spam: "{{icons}} sinalizaram isto como spam"
-          inappropriate: "{{icons}} sinalizaram isto como inapropriado"
           notify_moderators: "{{icons}} notificaram os moderadores"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notificaram os moderadores</a>"
           notify_user: "{{icons}} enviou uma mensagem privada"

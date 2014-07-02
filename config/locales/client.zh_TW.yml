@@ -382,7 +382,6 @@ zh_TW:
         the_topic: "討論話題"
     loading: "正在載入"
     close: "關閉"
-    assets_changed_confirm: "Discourse 已經更新，你要重整頁面以獲得最新版本嗎？"
     read_only_mode:
       enabled: "管理員開啟了唯讀模式。你可以繼續瀏覽網站，但一些互動功能可能無法使用。"
       login_disabled: "在唯讀模式下不能登入"
@@ -685,10 +684,8 @@ zh_TW:
           description: "每篇新文章出現都會通知你。未讀文章以及新文章的數目將顯示在討論話題清單旁。"
         tracking_pm:
           title: "追蹤"
-          description: "當有人以 @用戶名稱 提到你或回覆你的文章時通知你，並顯示未讀的新文章數目。"
         tracking:
           title: "追蹤"
-          description: "只在有人以 @用戶名稱 提到你或回覆你的文章時通知你。未讀文章以及新文章的數目將顯示在討論話題清單旁。"
         regular:
           title: "普通"
           description: "只在有人以 @用戶名稱 提到你或回覆你的文章時通知你。"
@@ -860,9 +857,6 @@ zh_TW:
           like: "撤回讚"
           vote: "撤回投票"
         people:
-          off_topic: "{{icons}} 標示為偏離討論話題"
-          spam: "{{icons}} 標示為垃圾文章"
-          inappropriate: "{{icons}} 標示為內容不妥"
           notify_moderators: "{{icons}} 已通知板主"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>已通知板主</a>"
           notify_user: "{{icons}} 已送出私人訊息"

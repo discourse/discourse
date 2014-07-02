@@ -387,7 +387,6 @@ it:
         the_topic: "il topic"
     loading: " Caricamento..."
     close: "Chiudi"
-    assets_changed_confirm: "Discourse è stato aggiornato, vuoi preparati a passare alla nuova versione?"
     read_only_mode:
       enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "Il login è disabilitato quando il sito è in modalità di sola lettura."
@@ -677,10 +676,8 @@ it:
           description: "Riceverai notifiche di ogni post nuovo in questo topic. Il conto dei non letti e dei nuovi post comparirà anche di fianco alla lista dei topic."
         tracking_pm:
           title: "Seguito"
-          description: "Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde a un tuo post. Il conto dei non letti e dei nuovi post comparirà anche di fianco alla lista dei topic."
         tracking:
           title: "Seguito"
-          description: "Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde a un tuo post. Il conto dei non letti e dei nuovi post comparirà anche di fianco alla lista dei topic."
         regular:
           title: "Normale"
           description: "Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde a un tuo post."
@@ -859,9 +856,6 @@ it:
           like: "Rimuovi il \"mi piace\""
           vote: "Rimuovi voto"
         people:
-          off_topic: "{{icons}} l'ha contrassegnato come off-topic"
-          spam: "{{icons}} l'hanno contrassegnato come spam"
-          inappropriate: "{{icons}} l'hanno contrassegnato come inappropriato"
           notify_moderators: "{{icons}} hanno informato i moderatori"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>hanno informato i moderatori</a>"
           notify_user: "{{icons}} hanno inviato un messaggio privato"

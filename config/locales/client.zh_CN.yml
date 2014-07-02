@@ -382,7 +382,6 @@ zh_CN:
         the_topic: "本主题"
     loading: "载入中..."
     close: "关闭"
-    assets_changed_confirm: "Discourse 已经被更新，您是否想刷新以使用最新版本？"
     read_only_mode:
       enabled: "一个管理员启用了只读模式。您可以继续浏览这个站点但是无法进行交互。"
       login_disabled: "只读模式下不允许登入。"
@@ -685,10 +684,8 @@ zh_CN:
           description: "与追踪一样，额外的是一旦有新帖子发表，您都会收到通知。"
         tracking_pm:
           title: "追踪"
-          description: "关于您的未阅帖子、@name 提及与对您的私信的回复，您都会收到通知。"
         tracking:
           title: "追踪"
-          description: "关于您的未阅帖子、@name 提及与对您的帖子的回复，您都会收到通知。"
         regular:
           title: "常规"
           description: "只有当有人 @name 提及您或者回复您的帖子时，您才会收到通知。"
@@ -860,9 +857,6 @@ zh_CN:
           like: "撤销赞"
           vote: "撤销投票"
         people:
-          off_topic: "{{icons}} 报告它偏离主题"
-          spam: "{{icons}} 报告它为垃圾信息"
-          inappropriate: "{{icons}} 报告它为不当内容"
           notify_moderators: "{{icons}} 向版主报告它"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知了版主</a>"
           notify_user: "{{icons}} 发起了一个私下交流"

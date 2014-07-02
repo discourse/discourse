@@ -21,22 +21,22 @@ de:
             tb: TB
     dates:
       tiny:
-        half_a_minute: "< 1Min"
+        half_a_minute: "< 1min"
         less_than_x_seconds:
-          one: "< 1Sek"
-          other: "< %{count}Sek"
+          one: "< 1s"
+          other: "< %{count}s"
         x_seconds:
-          one: "1Sek"
-          other: "%{count}Sek"
+          one: "1s"
+          other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1Min"
-          other: "< %{count}Min"
+          one: "< 1m"
+          other: "< %{count}m"
         x_minutes:
-          one: "1Min"
-          other: "%{count}Min"
+          one: "1m"
+          other: "%{count}m"
         about_x_hours:
-          one: "1Std"
-          other: "%{count}Std"
+          one: "1h"
+          other: "%{count}h"
         x_days:
           one: "1T"
           other: "%{count}T"
@@ -91,7 +91,7 @@ de:
     age: "Alter"
     joined: "Beigetreten"
     admin_title: "Administrator"
-    flags_title: "Flaggen"
+    flags_title: "Meldungen"
     show_more: "Mehr anzeigen"
     links: Links
     faq: "FAQ"
@@ -261,6 +261,11 @@ de:
       deleted_yourself: "Dein Nutzerkonto wurde erfolgreich gelöscht."
       delete_yourself_not_allowed: "Du kannst im Moment dein Nutzerkonto nicht löschen. Kontaktiere einen Administrator dein Nutzerkonto für dich zu löschen."
       unread_message_count: "Nachrichten"
+      staff_counters:
+        flags_given: "hilfreiche Meldungen abgegeben"
+        flagged_posts: "gemeldete Beiträge"
+        deleted_posts: "gelöschte Beiträge"
+        suspensions: "Sperren"
       messages:
         all: "Alle"
         mine: "Meine"
@@ -305,10 +310,12 @@ de:
         frequency: "Wir werden Dir nur E-Mails senden, wenn wir Dich kürzlich nicht gesehen haben und wenn Du die betroffenen Inhalte nicht schon gesehen hast."
       name:
         title: "Name"
+        instructions: "Die lange Version deines Namens."
         too_short: "Dein Name ist zu kurz."
         ok: "Dein Name schaut gut aus."
       username:
         title: "Benutzernamen"
+        instructions: "Dein @Benutzername muss eindeutig, ohne Leerzeichen und kurz sein."
         short_instructions: "Andere Benutzer können dich mit @{{username}} erwähnen."
         available: "Dein Benutzername ist verfügbar."
         global_match: "Die E-Mail-Adresse stimmt mit dem registrierten Nutzernamen überein."
@@ -383,6 +390,7 @@ de:
         create: "Einladung versenden"
         bulk_invite:
           none: "Du hast noch niemanden hierher eingeladen. Du kannst individuelle Einladungen verschicken oder eine Masseneinladung an eine Gruppe von Leuten verschicken indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine Datei für Masseneinladung</a> hochlädst."
+          text: "Masseneinladung aus Datei"
           uploading: "LÄDT HOCH"
           success: "Datei erfolgreich hochgeladen, du wirst in Kürze über den Fortschritt benachrichtigt."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
@@ -409,7 +417,7 @@ de:
         the_topic: "das Thema"
     loading: "Lade..."
     close: "Schließen"
-    assets_changed_confirm: "Discourse wurde aktualisiert, möchtest Du die Seite neu laden, um die neueste Version zu bekommen?"
+    assets_changed_confirm: "Diese Seite wurde gerade geupdatet. Neu laden für die neuste Version?"
     read_only_mode:
       enabled: "Ein Administrator hat den Nur-Lesen-Modus aktiviert. Du kannst die Seite weiter durchsuchen und lesen, einige Features werden jedoch wahrscheinlich nicht funktionieren."
       login_disabled: "Login ist deaktiviert während sich die Seite im Nur-Lesen Modus befindet."
@@ -513,6 +521,7 @@ de:
       create_pm: "Private Nachricht erstellen"
       title: "Oder drücke Strg+Eingabe"
       users_placeholder: "Nutzer hinzufügen"
+      title_placeholder: "Um was geht es in dieser Diskussion in einem kurzen Satz zusammengefasst?"
       edit_reason_placeholder: "warum editierst du?"
       show_edit_reason: "(Editiergrund hinzufügen)"
       reply_placeholder: "Tippe hier. Verwende Markdown oder BBCode zur Formatierung. Füge ein Bild ein oder ziehe es herein um es hochzuladen."
@@ -535,6 +544,7 @@ de:
       quote_title: "Blockzitat"
       quote_text: "Blockzitat"
       code_title: "Code"
+      code_text: "Vorformatierten Text mit 4 Leerzeichen einrücken"
       upload_title: "Bild"
       upload_description: "Gib hier eine Bildbeschreibung ein"
       olist_title: "Nummerierte Liste"
@@ -566,7 +576,7 @@ de:
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} hat sich zu einem privaten Gespräch eingeladen: {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} hat deine Einladung akzeptiert"
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} hat einen Beitrag nach {{link}} verschoben"
-      total_flagged: "alle gemeldeten Posts"
+      total_flagged: "alle gemeldeten Beiträge"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Wurde dir verliehen. {{link}}"
     upload_selector:
@@ -718,10 +728,10 @@ de:
           description: "Wie 'Verfolgen', zuzüglich Benachrichtigungen über neue Beiträge."
         tracking_pm:
           title: "Verfolgen"
-          description: "Du wirst über ungelesene Beiträge, Erwähnungen deines @Namens oder Antworten auf deine Beiträge benachrichtigt."
+          description: "Die Anzahl von ungelesenen und neuen Beiträgen wird neben der privaten Nachricht erscheinen. Du wirst nur benachrichtigt, wenn jemand deinen @Namen erwähnt oder deinen Beitrag beantwortet."
         tracking:
           title: "Mitverfolgt"
-          description: "Du wirst über ungelesene Beiträge, Erwähnungen deines @Namens oder Antworten auf deine Beiträge benachrichtigt."
+          description: "Die Anzahl von ungelesenen und neuen Beiträgen wird neben der Auflisting des Themas erscheinen. Du wirst nur benachrichtigt, wenn jemand deinen @Namen erwähnt oder deinen Beitrag beantwortet."
         regular:
           title: "Normal"
           description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deine Beiträge antwortet."
@@ -835,6 +845,7 @@ de:
       continue_discussion: "Fortsetzung des Gesprächs {{postLink}}:"
       follow_quote: "Springe zu dem zitiertem Beitrag"
       show_full: "Zeige ganzen Beitrag"
+      show_hidden: 'Versteckte Inhalte anzeigen.'
       deleted_by_author:
         one: "(Antwort vom Autor zurückgezogen, wird automatisch in %{count} Stunde gelöscht falls nicht gemeldet)"
         other: "(Antwort vom Autor zurückgezogen, wird automatisch in %{count} Stunden gelöscht falls nicht gemeldet)"
@@ -904,8 +915,8 @@ de:
           vote: "Stimme widerrufen"
         people:
           off_topic: "{{icons}} haben es als am Thema vorbei gemeldet"
-          spam: "{{icons}} haben es als Werbung gemeldet"
-          inappropriate: "{{icons}} haben es als Unangemessen gemeldet"
+          spam: "{{icons}} haben das als Spam gemeldet"
+          inappropriate: "{{icons}} haben das als unangemessen gemeldet"
           notify_moderators: "{{icons}} haben es den Moderatoren gemeldet"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>haben es den Moderatoren gemeldet</a>"
           notify_user: "{{icons}} haben eine private Nachricht gesendet"
@@ -1017,6 +1028,8 @@ de:
       name: "Name der Kategorie"
       description: "Beschreibung"
       topic: "Kategorie des Themas"
+      logo: "Logo für Kategorie"
+      background_image: "Hintergundbild für Kategorie"
       badge_colors: "Plakettenfarben"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
@@ -1029,6 +1042,7 @@ de:
       change_in_category_topic: "Besuche die Themen dieser Kategorie um einen Eindruck für eine gute Beschreibung zu gewinnen."
       already_used: 'Diese Farbe wird bereits für eine andere Kategorie verwendet'
       security: "Sicherheit"
+      images: "Bilder"
       auto_close_label: "Thema automatisch schließen nach:"
       auto_close_units: "Stunden"
       email_in: "Benutzerdefinierte Email Adresse:"
@@ -1061,6 +1075,8 @@ de:
       delete_spammer: "Spammer löschen"
       delete_confirm: "Du wirst <b>%{posts}</b> Beiträge und <b>%{topics}</b> Themen von diesem Benutzer löschen, das Konto entfernen und die Mail <b>%{email}</b> permanent blockieren. Bist du sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
+      submit_tooltip: "Private Meldung abschicken"
+      take_action_tooltip: "Den Meldungsschwellwert direkt erreichen, statt auf mehr Meldungen aus der Gemeinschaft zu warten."
       cant: "Entschuldige, Du kannst diesen Beitrag augenblicklich nicht melden."
       custom_placeholder_notify_user: "Weshalb erfordert der Beitrag, dass du den Benutzer direkt und privat kontaktieren möchtest? Sei spezifisch, konstruktiv und immer freundlich."
       custom_placeholder_notify_moderators: "Warum soll ein Moderator sich diesen Beitrag ansehen? Bitte lass uns wissen, was genau Dich beunruhigt, und wenn möglich dafür relevante Links."
@@ -1233,11 +1249,13 @@ de:
         clear_topic_flags: "Erledigt"
         clear_topic_flags_title: "Das Thema wurde untersucht und Probleme beseitigt. Klicke auf 'Erledigt' um die Markierungen zu entfernen."
         flagged_by: "Gemeldet von"
+        resolved_by: "Geklärt durch"
         system: "System"
         error: "Etwas ist schief gelaufen"
         view_message: "Nachricht zeigen"
         no_results: "Es gibt keine Meldungen."
         topic_flagged: "Dieses <strong>Thema</strong> wurde gemeldet."
+        visit_topic: "Besuche das Thema, um zu reagieren"
         summary:
           action_type_3:
             one: "Passt nicht zum Thema"
@@ -1343,6 +1361,11 @@ de:
         override_default: "Standard überschreiben?"
         enabled: "Aktiviert?"
         preview: "Vorschau"
+        undo_preview: "Vorschau entfernen"
+        rescue_preview: "Standardstil"
+        explain_preview: "Zeige die Seite mit benutzerdefiniertem Stylesheet"
+        explain_undo_preview: "Gehe zurück zum aktuell aktivierten benutzerdefinierten Stylesheet"
+        explain_rescue_preview: "Zeige die Seite mit dem Standard-Stylesheet"
         save: "Speichern"
         new: "Neu"
         new_style: "Neuer Stil"
@@ -1624,7 +1647,16 @@ de:
           visits: "Visits"
           days: "Tage"
           topics_replied_to: "Auf Themen geantwortet"
+          topics_viewed: "Betrachtete Themen"
+          topics_viewed_all_time: "Betrachtete Themen (Gesamte Zeit)"
+          posts_read: "Gelesene Beiträge"
+          posts_read_all_time: "Gelesene Beiträge (Gesamte Zeit)"
           flagged_posts: "Beiträge gemeldet"
+          flagged_by_users: "Meldende Benutzer"
+          qualifies: "Berechtigt für Vetrauensstufe 3."
+          will_be_promoted: "Wird innerhalb der nächsten 24 Stunden befördert."
+          does_not_qualify: "Nicht berechtigt für Vetrauensstufe 3."
+          will_be_demoted: "Wird innerhalb der nächsten 24 Stunden degradiert."
       site_content:
         none: "Wähle einen Inhaltstyp um mit dem Bearbeiten zu beginnen."
         title: 'Inhalt'
@@ -1679,6 +1711,7 @@ de:
         no_badges: Es gibt keine Abzeichen die verliehen werden können.
         allow_title: Abzeichen darf als Titel verwendet werden.
         multiple_grant: Kann mehrfach erteilt werden.
+        icon: Icon
     lightbox:
       download: "Download"
     keyboard_shortcuts_help:
@@ -1746,3 +1779,15 @@ de:
         elder:
           name: Ältester
           description: Berechtigung für globales editieren, pinnen, schliessen, archivieren, teilen und zusammenfügen gegeben.
+        welcome:
+          name: Willkommen
+          description: Hat einen Like erhalten.
+        nice_post:
+          name: Netter Post
+          description: Hat 10 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.
+        good_post:
+          name: Guter Post
+          description: Hat 25 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.
+        great_post:
+          name: Großartiger Post
+          description: Hat 100 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.

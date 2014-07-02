@@ -291,10 +291,12 @@ he:
         frequency: "נשלח לך דואר אלקטרוני רק אם לא ראינו אותך לאחרונה ועדיין לא ראית את מה שאנחנו רוצים לשלוח"
       name:
         title: "שם"
+        instructions: "הגרסא הארוכה של שמכם"
         too_short: "השם שלך קצר מידי."
         ok: "השם נראה טוב."
       username:
         title: "שם משתמש"
+        instructions: "שם המשתמש שלכם חייב להיות ייחודי, ללא רווחים וקצר."
         short_instructions: "אנשים יכולים לאזכר אותך כ @{{username}}."
         available: "שם המשתמש שלך פנוי."
         global_match: "הדואר האלקטרוני תואם את שם המשתמש הרשום"
@@ -315,6 +317,7 @@ he:
       last_emailed: "נשלח לאחרונה בדואר אלקטרוני"
       last_seen: "נראה"
       created: "הצטרף"
+      log_out: "התנתקות"
       location: "מיקום"
       website: "אתר"
       email_settings: "דואר אלקטרוני"
@@ -352,6 +355,7 @@ he:
         search: "הקלד כדי לחפש הזמנות..."
         title: "הזמנות"
         user: "משתמש שהוזמן"
+        none: "עוד לא הזמנת לכאן אף אחד."
         truncated: "מראה את  {{count}} ההזמנות הראשונות."
         redeemed: "הזמנות נוצלו"
         redeemed_at: "נפדו ב"
@@ -359,6 +363,7 @@ he:
         topics_entered: "נושאים נצפו"
         posts_read_count: "הודעות נקראו"
         expired: "פג תוקף ההזמנה."
+        rescind: "הסרה"
         rescinded: "הזמנה הוסרה"
         time_read: "זמן קריאה"
         days_visited: "מספר ימי ביקור"
@@ -387,7 +392,6 @@ he:
         the_topic: "הנושא"
     loading: "טוען..."
     close: "סגור"
-    assets_changed_confirm: "Discourse עודכן. תרצה לרענן את העמוד כדי לקבל את הגירסה האחרונה?"
     read_only_mode:
       enabled: "מצב קריאה בלבד למנהל ראשי. ניתן להמשיך לקרוא באתר אבל פעולות לא יעבדו כראוי."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
@@ -418,6 +422,7 @@ he:
     created: 'נוצר'
     trust_level: 'רמת אמון'
     create_account:
+      title: "יצירת חשבון חדש"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסה את קישור שכחתי סיסמה."
     forgot_password:
       title: "שכחתי סיסמה"
@@ -486,6 +491,7 @@ he:
       create_pm: "יצירת הודעה פרטית"
       title: "או לחץ Ctrl+Enter"
       users_placeholder: "הוספת משתמש"
+      title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       edit_reason_placeholder: "מדוע ערכת?"
       show_edit_reason: "(הוספת סיבת עריכה)"
       reply_placeholder: "יש להקליד כאן. ניתן להשתמש ב Markdown או BBCode כדי להתאים את הטקסט. גרירת או הדבקת תמונה תעלה אותה."
@@ -508,6 +514,7 @@ he:
       quote_title: "ציטוט"
       quote_text: "ציטוט"
       code_title: "טקסט מעוצב"
+      code_text: "הזחה של הטקסט ב-4 רווחים"
       upload_title: "העלאה"
       upload_description: "הזן תיאור העלאה כאן"
       olist_title: "רשימה ממוספרת"
@@ -537,6 +544,7 @@ he:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i>אישר/ה את הזמנתך {{username}} "
       moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} הועבר {{link}}"
       total_flagged: "סך הכל נושאים מדוגללים"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
@@ -555,6 +563,7 @@ he:
       uploading: "מעלה"
       image_link: "קישור לתמונה יצביע ל"
     search:
+      title: "חיפוש נושאים, פרסומים, משתמשים או קטגוריות"
       no_results: "אין תוצאות."
       searching: "מחפש ..."
     site_map: "לך לרשימת נושאים או קטגוריה אחרת"
@@ -681,10 +690,9 @@ he:
           description: "תקבל התרעה על כל הודעה חדשה בנושא זה. מספר ההודעות שלא נקראו ושנקראו יופיעו ליד הנושא."
         tracking_pm:
           title: "עוקב"
-          description: "תקבל התרעה רק אם מישהו מזכיר אותך עם @שם או מגיב להודעה שלך. מספר ההודעות שלא נקראו ושנקראו יופיעו ליד הנושא."
         tracking:
           title: "עוקב"
-          description: "תקבל התרעה רק אם מישהו מזכיר אותך עם @שם או מגיב להודעה שלך. מספר ההודעות שלא נקראו ושנקראו יופיעו ליד הנושא."
+          description: "מספר ההודעות החדשות ושלא נקראו יופיעו לצד רשימת הנושאים. תוכלו לקבל על כך התראה רק אם מישהו יזכיר את @שםהמשתמש שלכם או ישיב להודעה שפרסמתם."
         regular:
           title: "רגיל"
           description: "תקבל הודעה רק אם מישהו מזכיר אותך עם @שם או מגיב להודעה שלך."
@@ -864,9 +872,9 @@ he:
           like: "בטל לייק"
           vote: "בטל הצבעה"
         people:
-          off_topic: "{{icons}} סימנו את זה כאוף-טופיק"
-          spam: "{{icons}} סימנו את זה כספאם"
-          inappropriate: "{{icons}} סימנו את זה כלא ראוי"
+          off_topic: "{{icons}} סומן כמחוץ לנושא"
+          spam: "{{icons}} סומן כספאם"
+          inappropriate: "{{icons}} סומן בלתי ראוי"
           notify_moderators: "{{icons}} הודיעו למנהלים"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>הודיעו למנהלים</a>"
           notify_user: "{{icons}} שלחו הודעה פרטית"
@@ -1304,6 +1312,7 @@ he:
         override_default: "אל תכלול את ה-Stylesheet הסטנדרטי"
         enabled: "מאופשר?"
         preview: "תצוגה מקדימה"
+        undo_preview: "הסרת התצוגה המקדימה"
         save: "שמור"
         new: "חדש"
         new_style: "סגנון חדש"

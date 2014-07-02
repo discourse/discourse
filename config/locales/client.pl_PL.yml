@@ -431,7 +431,6 @@ pl_PL:
         the_topic: "temat"
     loading: "Wczytywanie..."
     close: "Zamknij"
-    assets_changed_confirm: "Serwis został zmieniony, czy pozwolisz na przeładowanie strony w celu aktualizacji do najnowszej wersji?"
     read_only_mode:
       enabled: "Administrator włączył tryb tylko do odczytu. Możesz przeglądać serwis, jednak zmiany nie będą możliwe."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
@@ -742,10 +741,8 @@ pl_PL:
           description: "Będziesz powiadamiany(-a) o każdym nowym wpisie w tym temacie. Liczba nieprzeczytanych i nowych wpisów będzie się też wyświetlała na liście tematów."
         tracking_pm:
           title: "Śledzenie"
-          description: "Powiadomienie zostanie wysłane tylko jeśli ktoś wspomni o @Tobie lub odpowie na Twój wpis. Liczba nieprzeczytanych i nowych wpisów będzie się też wyświetlała na liście tematów."
         tracking:
           title: "Śledzenie"
-          description: "Będziesz powiadamiany(-a) tylko jeśli ktoś wspomni o @Tobie lub odpowie na Twój wpis. Liczba nieprzeczytanych i nowych wpisów będzie się też wyświetlała na liście tematów."
         regular:
           title: "Zwyczajne"
           description: "Będziesz powiadamiany(-a) tylko jeśli ktoś wspomni o @Tobie lub odpowie na Twój wpis."
@@ -934,9 +931,6 @@ pl_PL:
           like: "Cofnij polubienie"
           vote: "Cofnij głos"
         people:
-          off_topic: "{{icons}} oznaczyło jako off-topic"
-          spam: "{{icons}} oznaczyło jako spam"
-          inappropriate: "{{icons}} oznaczyło jako niewłaściwe"
           notify_moderators: "{{icons}} powiadomiło moderatorów"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>powiadomiło moderatorów</a>"
           notify_user: "{{icons}} wysłało prywatną wiadomość"

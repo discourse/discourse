@@ -305,10 +305,12 @@ es:
         frequency: "Sólo te enviaremos emails si no te hemos visto recientemente y todavía no has visto lo que te estamos enviando."
       name:
         title: "Nombre"
+        instructions: "Tu nombre completo."
         too_short: "Tu nombre es demasiado corto."
         ok: "Tu nombre es válido."
       username:
         title: "Nombre de usuario"
+        instructions: "Tu @usuario debe ser único, sin espacios y conciso."
         short_instructions: "La gente puede mencionarte como @{{username}}."
         available: "Tu nombre de usuario está disponible."
         global_match: "El email coincide con el nombre de usuario registrado."
@@ -410,7 +412,6 @@ es:
         the_topic: "el tema"
     loading: "Cargando..."
     close: "Cerrar"
-    assets_changed_confirm: "Discourse ha sido actualizado ¿quieres recargar la página para obtener la última versión?"
     read_only_mode:
       enabled: "Un administrador ha habilitado el modo sólo-lectura. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Abrir una sesión está desactivado mientras el foro este modo solo lectura."
@@ -514,6 +515,7 @@ es:
       create_pm: "Crear mensaje privado"
       title: "O pulsa Ctrl+Intro"
       users_placeholder: "Añadir usuario"
+      title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       edit_reason_placeholder: "¿Por que lo editas?"
       show_edit_reason: "(añadir motivo de edición)"
       reply_placeholder: "Escribe tu respuesta aquí. Puedes usar Markdown o BBCode para dar formato. Arrastra o pega una imagen aquí para subirla."
@@ -536,6 +538,7 @@ es:
       quote_title: "Cita"
       quote_text: "Cita"
       code_title: "Código de muestra"
+      code_text: "texto preformateado precedido por 4 espacios"
       upload_title: "Imagen"
       upload_description: "introduce una descripción de la imagen aquí"
       olist_title: "Lista numerada"
@@ -719,10 +722,8 @@ es:
           description: "igual que Siguiendo, además serás notificado de todos los nuevos posts."
         tracking_pm:
           title: "Seguir"
-          description: "Le notificaremos solo los casos en los que alguien mencione su @nombre o responda a su publicación. Los no leídos y las publicaciones nuevas apareceran al lado de la lista de temas."
         tracking:
           title: "Seguir"
-          description: "serás notificado de los mensajes sin leer, menciones a tu @nombre y respuestas a tus posts."
         regular:
           title: "Normal"
           description: "serás notificado solo si alguien menciona tu @nombre o responde a tus posts."
@@ -904,9 +905,6 @@ es:
           like: "Deshacer me gusta"
           vote: "Deshacer voto"
         people:
-          off_topic: "{{icons}} ha marcado esto como off-topic"
-          spam: "{{icons}} ha marcado esto como spam"
-          inappropriate: "{{icons}} ha marcado esto como inapropiado"
           notify_moderators: "{{icons}} ha notificado a los moderadores"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>moderadores notificados</a>"
           notify_user: "{{icons}} ha enviado un mensaje privado"

@@ -353,7 +353,6 @@ sv:
         the_topic: "tråden"
     loading: "Laddar..."
     close: "Stäng"
-    assets_changed_confirm: "Discourse har uppdaterats, vill du ladda om för att få den senaste versionen?"
     learn_more: "lär dig mer..."
     year: 'år'
     month: 'månad'
@@ -608,10 +607,8 @@ sv:
           description: "Du kommer att få notfieringar om varje nytt inlägg i denna tråd. Antalet olästa och nya inlägg kommer även att visas vid sidan av trådens namn."
         tracking_pm:
           title: "bevakade"
-          description: "Du kommer endast att få notifieringar om någon nämner ditt @namn eller svarar på ditt inlägg. Antalet olästa och nya inlägg kommer även att visas vid sidan av trådens namn."
         tracking:
           title: "Följer"
-          description: "Du kommer endast att få notifieringar om någon nämner ditt @namn eller svarar på ditt inlägg. Antalet olästa och nya inlägg kommer även att visas vid sidan av trådens namn."
         regular:
           title: "Vanlig"
           description: "Du kommer endast att få notifieringar om någon nämner ditt @namn eller svarar på ditt inlägg."
@@ -764,9 +761,6 @@ sv:
           like: "Ångra gillning"
           vote: "Ångra röstning"
         people:
-          off_topic: "{{icons}} markerade detta som off-topic"
-          spam: "{{icons}} markerade detta som spam"
-          inappropriate: "{{icons}} markerade detta som olämpligt"
           notify_moderators: "{{icons}} notifierade moderatorer"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notifierade moderatorer</a>"
           notify_user: "{{icons}} skicka ett privat meddelande"

@@ -75,7 +75,7 @@ ko:
     age: "생성"
     joined: "가입함"
     admin_title: "운영자"
-    flags_title: "깃발 표시"
+    flags_title: "신고"
     show_more: "더 보기"
     links: 링크
     faq: "FAQ"
@@ -250,11 +250,14 @@ ko:
       change_avatar:
         title: "아바타 변경"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a> 기반"
+        refresh_gravatar_title: "Gravatar 새로고침"
         uploaded_avatar: "커스텀 사진"
         uploaded_avatar_empty: "커스텀 사진 추가"
         upload_title: "프로필 사진 업로드"
         upload_picture: "사진 업로드"
         image_is_not_a_square: "경고: 사진을 정사각형으로 수정하였습니다."
+      change_profile_background:
+        title: "프로필 배경"
       email:
         title: "이메일"
         instructions: "당신의 이메일은 노출되지 않습니다."
@@ -264,10 +267,12 @@ ko:
         frequency: "당신의 활동이 뜸해지거나 저희가 보낸 이메일에 포함된 글들을 읽지 못하셨다면 확인 이메일을 보내드립니다."
       name:
         title: "별명"
+        instructions: "당신 이름의 긴 버전"
         too_short: "너무 짧습니다."
         ok: "사용가능합니다."
       username:
         title: "아이디"
+        instructions: "@username 은 중복될 수 없으며, 스페이스가 포함될 수 없고 짧아야합니다."
         short_instructions: "@{{username}}으로 언급이 가능합니다."
         available: "아이디\x1D로 사용가능합니다."
         global_match: "이메일이 등록된 아이디와 일치합니다."
@@ -345,6 +350,8 @@ ko:
         instructions: "Must be at least %{count} characters."
       ip_address:
         title: "마지막 IP 주소"
+      registration_ip_address:
+        title: "IP Address 등록"
       avatar:
         title: "아바타"
       title:
@@ -358,7 +365,6 @@ ko:
         the_topic: "토픽"
     loading: "로딩 중..."
     close: "닫기"
-    assets_changed_confirm: "Discourse가 업데이트 되었습니다. 새로운 버전 사용을 위해 새로고침 하시겠어요?"
     learn_more: "더 배우기"
     year: '년'
     year_desc: '지난 365일간 생성된 토픽'
@@ -454,6 +460,7 @@ ko:
       create_pm: "개인 메시지를 작성합니다."
       title: "혹은 Ctrl + Enter 누름"
       users_placeholder: "사용자 추가"
+      title_placeholder: "이야기 나누고자 하는 내용을 한문장으로 적는다면?"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
       reply_placeholder: "여기에 입력하세요. 마크 다운이나 BBCode 형식을 사용하세요. 드래그&드랍으로 이미지를 넣습니다."
@@ -463,7 +470,7 @@ ko:
       saved_draft: "작성중이던 글이 있어요. 계속해서 글을 작성하시려면 이 영역을 클릭하세요."
       uploading: "업로딩 중..."
       show_preview: '미리보기를 보여줍니다 &laquo;'
-      hide_preview: '&laquo; 미리보기를 숨깁니다'
+      hide_preview: '&laquo; 미리보기를 숨기기'
       quote_post_title: "전체 게시물을 인용"
       bold_title: "굵게"
       bold_text: "굵게하기"
@@ -476,6 +483,7 @@ ko:
       quote_title: "인용구"
       quote_text: "인용구"
       code_title: "코드 샘플"
+      code_text: "미리 지정된 양식 사용은 4개의 띄어쓰기로 들여쓰세요."
       upload_title: "업로드"
       upload_description: "업로드 설명을 입력"
       olist_title: "번호 매기기 목록"
@@ -637,7 +645,6 @@ ko:
           title: "알림 : 추척 중"
         tracking:
           title: "추적 중"
-          description: "누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다. '읽지 않은 글' 탭에서 게시물의 수를 볼 수 있습니다."
         regular:
           title: "보통"
           description: "누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다."
@@ -727,7 +734,7 @@ ko:
       post_number: "{{number}}번째 게시물"
       in_reply_to: "답글 to"
       last_edited_on: "마지막으로 편집:"
-      reply_as_new_topic: "새로운 토픽으로 답글"
+      reply_as_new_topic: "새로운 토픽으로 답글 달기"
       continue_discussion: "{{postLink}}에서 토론을 계속:"
       follow_quote: "인용 글로 이동"
       deleted_by: "삭제됨"
@@ -768,7 +775,7 @@ ko:
       actions:
         flag: '깃발 표시'
         clear_flags:
-          other: "깃발 표시 제거"
+          other: "신고 제거"
         it_too:
           off_topic: "Flag it too"
           spam: "Flag it too"
@@ -785,9 +792,6 @@ ko:
           like: "'좋아요' 취소하기"
           vote: "X"
         people:
-          off_topic: "{{icons}}님은 이 게시물을 오프토픽으로 표시했습니다."
-          spam: "{{icons}}님은 이 게시물을 스팸으로 신고했습니다."
-          inappropriate: "{{icons}}님은 이 게시물을 부적절하다고 신고했습니다."
           notify_moderators: "{{icons}}님은 이 게시물을 중간 관리자에게 보고했습니다."
           notify_moderators_with_url: "{{icons}}님은 이 <a href='{{postUrl}}'>게시물</a>을 중간 관리자에게 보고했습니다."
           notify_user: "{{icons}}님은 작성자에게 개인 메시지를 보냈습니다."
@@ -909,6 +913,7 @@ ko:
         more: "{{n}} 이동합니다"
         left: "{{n}} 나머지"
     flagging_topic:
+      title: "왜 이 토픽을 신고하시나요?"
       action: "깃발 표시 토픽"
       notify_action: "비공개 메시지"
     topic_map:
@@ -1052,7 +1057,7 @@ ko:
         latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
         by: "에 의해"
       flags:
-        title: "깃발 표시"
+        title: "신고"
         old: "지난"
         active: "활성화된"
         agree_hide: "동의 (게시글 숨기기 + 개인 메시지 보내기)"
@@ -1064,15 +1069,28 @@ ko:
         disagree_unhide: "동의하지 않음 (게시글 보이기)"
         disagree_unhide_title: "게시글의 신고를 삭제하고 보이는 상태로 변경"
         disagree: "동의하지 않음"
-        disagree_title: "신고에 동의하지 않고, 이 게시글에 달린 신고는 삭제"
+        disagree_title: "신고에 동의하지 않고, 이 게시글에 달린 모든 신고는 삭제"
         delete_spammer_title: "사용자와 모든 토픽, 게시글 삭제."
         clear_topic_flags: "완료"
-        flagged_by: "깃발표시 한 사람"
+        flagged_by: "신고 한 사람"
+        resolved_by: "해결 by"
         system: "System"
         error: "뭔가 잘못 됐어요"
         view_message: "답글"
         no_results: "깃발 표시가 없습니다."
         topic_flagged: "이 <strong>토픽</strong>은 깃발표시 되었습니다."
+        visit_topic: "처리하기 위해 토픽으로 이동"
+        summary:
+          action_type_3:
+            other: "off-topic x{{count}}"
+          action_type_4:
+            other: "부적절한 x{{count}}"
+          action_type_6:
+            other: "custom x{{count}}"
+          action_type_7:
+            other: "custom x{{count}}"
+          action_type_8:
+            other: "스팸 x{{count}}"
       groups:
         primary: "주 그룹"
         no_primary: "(주 그룹이 없습니다.)"
@@ -1174,7 +1192,13 @@ ko:
           long_title: "색상 Schemes"
           about: "CSS 작성 없이 사이트에 사용되는 색을 수정합니다. 시작하려면 Scheme을 추가하세요."
           undo: "실행 복귀"
+          undo_title: "마지막 저장 상태로 색상 변경상태를 되돌리기"
           revert: "되돌리기"
+          revert_title: "이 색상을 Dicsourse의 기본 색 스키마로 초기화"
+          success:
+            name: '성공'
+          love:
+            name: '사랑'
       email:
         title: "이메일"
         settings: "설정"
@@ -1345,8 +1369,8 @@ ko:
         posts_read_count: 게시글 읽은 수
         post_count: 게시글 수
         topics_entered: 토픽 수
-        flags_given_count: 관심 수
-        flags_received_count: 관심 받은 수
+        flags_given_count: 작성한 신고
+        flags_received_count: 받은 신고
         approve: '승인'
         approved_by: "승인자"
         approve_success: "인증 이메일이 발송되었습니다."
@@ -1412,6 +1436,7 @@ ko:
           uncategorized: '카테고리 없음'
           backups: "백업"
       badges:
+        title: 배지
         new_badge: 새로운 벳지
         new: New
         badge_type: 벳지 종류
@@ -1426,6 +1451,7 @@ ko:
         grant_badge: 배지 부여
         granted_badges: 부여된 배지
         grant: 부여
+        allow_title: 배지를 제목으로 사용가능하도록 허용
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1466,3 +1492,11 @@ ko:
         mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
         mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
         mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
+    badges:
+      title: 배지
+      select_badge_for_title: 제목으로 사용할 배지를
+      badge:
+        basic_user:
+          name: 기본
+        regular_user:
+          name: 일반

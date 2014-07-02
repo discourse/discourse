@@ -374,6 +374,10 @@ de:
   archetypes:
     regular:
       title: "Normales Thema"
+    banner:
+      message:
+        make: "Dieses Thema ist jetzt ein Banner-Thema. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird."
+        remove: "Dieses Thema ist jetzt kein Banner-Thema mehr. Es wird nicht länger oberhalb jeder Seite angezeigt."
   unsubscribed:
     title: 'Abo abbestellt'
     description: "Dein Abo wurde abbestellt. Wir werden Dich nicht wieder kontaktieren!"
@@ -468,7 +472,9 @@ de:
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von Mails, werden asynchron durch Sidekiq ausgeführt. Stelle sicher, dass mindestens eine Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
     queue_size_warning: 'Es befinden sich sehr viele (%{queue_size}) Jobs in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder Du musst zusätzliche Sidekiq Worker starten.'
     memory_warning: 'Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen.'
+    enable_google_logins_warning: "Du verwendest eine veraltete Version der Google OpenID Authentifikation. Google wird die Unterstützung dafür am 20. April 2015 beenden. Bitte stelle möglichst bald auf Google Oauth2 um. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Eine Anleitung zu diesem Thema findet sich hier</a>."
     both_googles_warning: "Sowohl enable_google_logins als auch enable_google_oauth2_logins sind in den Einstellungen aktiviert. Bitte deaktiviere enable_google_logins."
+    google_oauth2_config_warning: 'Der Server ist für Anmeldung und Login mit Google OAuth2 (enable_google_oauth2_logins)  konfiguriert, aber die Client ID und das Client Gemeheimnis sind nicht gesetzt. Trage diese in den <a href="/admin/site_settings">Einstellung</a> ein. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Eine Anleitung zu diesem Thema findet sich hier</a>.'
     facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
@@ -546,6 +552,7 @@ de:
     min_private_message_title_length: "Minimale Länge von privaten Nachrichten in Zeichen."
     min_search_term_length: "Minimale Länge der Suche in Zeichen."
     allow_uncategorized_topics: "Erlaube Themen ohne Kategorie"
+    uncategorized_description: "Beschreibung der Kategorie für unkategorisierte Themen. Leer lassen, wenn keine Beschreibung erwünscht ist."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen Titeln."
     unique_posts_mins: "Minuten, nach denen ein Nutzer denselben Inhalt noch einmal posten kann."
     enforce_global_nicknames: "Erzwinge global eindeutige Benutzernamen (WARNUNG: Ändere dies nur während des initialen Setups)."
@@ -557,18 +564,19 @@ de:
     company_full_name: "Voller Name des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_short_name: "Kurzname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_domain: "Domainname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
-    queue_jobs: "Benutze die Sidekiq-Queue, falls falsche Queues inline sind."
+    queue_jobs: "NUR FÜR ENTWICKLER! ACHTUNG! Benutze Sidekiq zur Ausführung von Jobs. Wenn dies abgeschaltet wird, dann wird die Seite nicht mehr richtig funktionieren!"
     crawl_images: "Lade Bilder von Dritten herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Lade eine Kopie von externen gehotlinkten Bildern in Beiträgen herunter"
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher um externe Bilder lokal herunterzuladen (in Prozent)"
     disabled_image_download_domains: "Eine mit Senkrecht-Strich getrennte Liste von Domänen, von denen verlinkte Bilder niemals geladen werden."
     ninja_edit_window: "Sekunden nach Empfang eines Beitrag, in denen Bearbeitungen nicht als neue Version gelten."
     post_edit_time_limit: "Zeitrahmen, in dem Beiträge vom Verfasser bearbeitet oder gelöscht werden können. Setze ihn auf 0 um das Bearbeiten und Löschen immer zu erlauben."
-    edit_history_visible_to_public: "Erlaube jedem vorherige Versionen eines beitrages zu sehen. Wenn deaktiviert, konnen nur Mitarbeiter die Bearbeitungshistorie anschauen."
+    edit_history_visible_to_public: "Erlaube allen Nutzern, alte Versionen eines Beitrags anzuschauen. Andernfalls können nur Mitarbeiter den Bearbeitungsverlauf einsehen."
     delete_removed_posts_after: "Anzahl Stunden nach welchem Beiträge die von ihrem Author entfernt wurden endgültig gelöscht werden."
     max_image_width: "Maximalbreite von Bildern in einem Beitrag."
     max_image_height: "Maximalhöhe von Bildern in einem Beitrag."
     category_featured_topics: "Zahl der angezeigten Themen je Kategorie auf der Kategorieseite /categories."
+    show_subcategory_list: "Zeige Lister von Uterkategorien statt einer Liste von Themen wenn eine Kategorie ausgewählt wird."
     fixed_category_positions: "Falls aktiviert können Kategorien in einer fest vorgegebenen Reihenfolge angeordnet werden. Andernfalls werden Kategorien nach Aktivität sortiert aufgelistet."
     add_rel_nofollow_to_user_content: "Füge mit Ausnahme interner Links allen nutzergenerierten Inhalten \"rel nofollow\" hinzu (schließt übergeordnete Domains ein). Die Änderung dieser Einstellung erfordert, dass der Inhalt sämtlicher Beiträge neu verarbeitet wird: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Liste aller Domains, durch senkrechte Striche getrennt, bei denen 'nofollow' nicht hinzugefügt wird (tld.com erlaubt auch sub.tld.com)."
@@ -580,6 +588,7 @@ de:
     digest_logo_url: "Dieses Logo wird in der Email Kurzfassung verwendet. Wenn leer gelassen, wird `logo_url` verwendet. Beispiel: http://example.com/logo.png "
     logo_small_url: "Kleines Logo deiner Seite, das beim Herunterscrollen in einem Thema gezeigt wird, zum Beispiel: http://example.com/logo-small.png"
     favicon_url: "Das Favicon Deiner Seite, siehe http://de.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "Das Logo, das für Webbrowser auf Mobilgeräten benutzt werden soll. Wenn leer wird das Standard-Logo verwendet. Beispiel: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die Antwortadresse, die in Systemmails (zum Beispiel zur Passwortwiederherstellung, neuen Konten, etc.) eingetragen wird."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
@@ -588,7 +597,7 @@ de:
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, damit der Zusammenfassungs-Modus aktiviert wird"
     summary_likes_required: "Mindestanzahl an „Gefällt mir“ in einem Thema, bevor der Zusammenfassungs-Modus aktiviert wird."
     summary_percent_filter: "Prozentzahl der Top Beiträge, die gezeigt werden, wenn eine Nutzer in diese Ansicht wechselt."
-    enable_private_messages: "Erlaube Nutzern mit Stufe 1, private Nachrichten zu Gespräche."
+    enable_private_messages: "Erlaube Nutzern der Stufe Anfänger (1), private Nachrichten zu erstellen und auf private Nachrichten zu antworten."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_interval: "Intervall in Millisekunden bevor ein neues Long-Poll initiiert wird."
     polling_interval: "Pollingintervall in Millisekunden für angemeldete Nutzer-Clients."
@@ -615,6 +624,7 @@ de:
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
     top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
+    post_menu_hidden_items: "Die Menüeinträge, die standardmäßig im Beitragsmenü versteckt werden, außer man klickt auf eine Ellipse."
     share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die standardmäßig auf die Themenübersichtsseite geladen werden."
@@ -635,6 +645,7 @@ de:
     port: "NUR FÜR ENTWICKLER! ACHTUNG! Benutze diesen HTTP-Port anstatt den Standardport 80. Diese Feld leer lassen heißt 'keinen'. Dient hauptsächlich Entwicklungszwecken."
     force_hostname: "NUR FÜR ENTWICKLER! ACHTUNG! Spezifiziere einen Hostnamen in der URL. Dieses Feld leer lassen heißt 'keinen'. Dient hauptsächlich Entwicklungszwecken."
     invite_expiry_days: "Tage, die Nutzereinladungen gültig bleiben."
+    invite_passthrough_hours: "Wie lange, in Stunden, ein Benutzer einen bereits eingelösten Einladungsschlüssel zum einloggen verwenden kann."
     invite_only: "Die öffentliche Registrierung wurde deaktiviert, neue Nutzer müssen eingeladen werden."
     login_required: "Um Beiträge zu lesen musst Du angemeldet sein"
     min_username_length: "Minimale Länge des Benutzernamens. (Findet keine Anwendung, wenn die globale Eindeutigkeit des Benutzernamens forciert wird)"
@@ -643,7 +654,7 @@ de:
     block_common_passwords: "Erlaube kein Passwort unter den 10000 meist verwendeten Passwörter."
     enable_sso: "Aktiviere Single Sign On mittels einer externen Seite"
     sso_url: "URL des Single Sign On Endpunkts"
-    sso_secret: "Geheimschlüssel, der für die Ver-/Entschlüsselung von SSO Information verwendet wird. Versichere dich, dass er 10 Zeichen oder länger ist."
+    sso_secret: "Geheime Zeichenkette, die für die Ver-/Entschlüsselung von SSO-Informationen verwendet wird. Stell sicher, dass er 10 Zeichen oder länger ist."
     sso_overrides_email: "Überschreibt lokale Email mit externe Site-Email aus SSO Daten (WARNUNG: Diskrepanzen können durch Normalisierung von lokalen Emails auftreten)"
     sso_overrides_username: "Überschreibt lokale Benutzernamen mit externen Seiten-Usernamen von SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Unterschieden in Benutzernamenlängen/-anforderungen, auftreten)"
     sso_overrides_name: "Überschreibt lokalen Namen mit Namen der externen Seite aus SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Normalisierung von lokalen Namen auftreten)"
@@ -662,6 +673,7 @@ de:
     enable_github_logins: "Aktiviere Github Authentisierung (benötigt github_client_id und github_client_secret)."
     github_client_id: "Client-ID für Github Authentisierung, registriert auf https://github.com/settings/applications"
     github_client_secret: "Client Secret für Github Authentisierung, registriert auf https://github.com/settings/applications"
+    allow_restore: "Wiederherstellung zulassen, welche ALLE vorhandenen Daten überschreiben kann! Auf 'false' lassen, sofern du nicht planst eine Sicherung wiederherzustellen."
     maximum_backups: "Maximale Anzahl Backups, die auf dem Server gespeichert werden. Ältere Backups werden automatisch gelöscht."
     backup_daily: "Erstelle jeden Tag automatisch ein Backup"
     enable_s3_backups: "Lade fertige Backups zu S3 hoch. Stelle sicher, dass du deine S3 Kontodaten eingegeben hast. "
@@ -700,6 +712,13 @@ de:
     regular_requires_likes_received: "Zahl der „Gefällt mir“ die ein Anfänger die Seite erhalten muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
     regular_requires_likes_given: "Zahl der „Gefällt mir“ die ein Anfänger die Seite verteilen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
     regular_requires_topic_reply_count: "Zahl der Themen an denen ein Anfänger teilnehmen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
+    leader_requires_days_visited: "Mindestanzahl Tage, an denen ein Nutzer während der letzten 100 Tage aktiv gewesen sein muss, um die Vertrauensstufe Anführer (3) erhalten zu können. (0 bis 100)"
+    leader_requires_topics_replied_to: "Mindestanzahl Themen, auf die ein Nutzer in den letzten 100 Tagen geantwortet haben muss, um die Vertrauensstufe Anführer (3) erhalten zu können. (0 oder mehr)"
+    leader_requires_topics_viewed: "Anteil in Prozent der in den letzten 100 Tagen neu erstellten Themen, die ein Nutzer mindestens angesehen haben muss, um die Vertrauensstufe Anführer (3) erhalten zu können. (0 bis 100)"
+    leader_requires_posts_read: "Anteil in Prozent aller in den letzten 100 Tagen geschriebenen Beiträge, die ein Nutzer mindestens gelesen haben muss, um die Vertrauensstufe Anführer (3) erhalten zu können. (0 bis 100)"
+    leader_requires_topics_viewed_all_time: "Die kleine Gesamtanzahl an Themen, die ein Benutzer betrachtet haben muss, um sich für die Vertrauensstufe 'Anführer' (3) zu qualifizieren."
+    leader_requires_posts_read_all_time: "Die kleine Gesamtanzahl an Beiträgen, die ein Benutzer gelesen haben muss, um sich für die Vertrauensstufe 'Anführer' (3) zu qualifizieren."
+    leader_requires_max_flagged: "Um die Vertrauensstufe Anführer (3) erhalten zu können dürfen in den letzten 100 Tagen höchstens X Beiträge eines Nutzers von X verschiedenen Nutzern gemeldet worden sein, wobei X dem Wert dieser Einstellung entspricht. (0 oder mehr)"
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
     newuser_max_links: "Maximale Zahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -738,6 +757,7 @@ de:
     reply_by_email_address: "Vorgabe der Antwort-Mail Adresse in der Form von: %{reply_key}@reply.myforum.com"
     pop3s_polling_enabled: "Abfragen über POP3S nach Email-Antworten"
     pop3s_polling_insecure: "Abfragen mit Klartext-POP3 ohne SSL."
+    pop3s_polling_period_mins: "Intervall in Minuten zum Abholen neuer Emails vom POP3S-Konto. Hinweis: Änderung wird erst nach Neustart wirksam."
     pop3s_polling_port: "Der Port für die POP3S Anfrage"
     pop3s_polling_host: "Der Host für die POP3S Anfrage"
     pop3s_polling_username: "Der Benutzername für die POP3S Anfrage"
@@ -769,6 +789,7 @@ de:
     dominating_topic_minimum_percent: "Ab welcher Prozentzahl an Beiträgen ein Nutzer in einem Thema als dominierend gilt."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste"
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-NACHRICHT als global sichtbares Banner an. Deaktiviert bei leerer Nachricht. (HTML ist erlaubt.)"
+    disable_edit_notifications: "Unterdrücke Bearbeitungshinweise durch den System-Nutzer, wenn die 'download_remote_images_to_local' Einstellung aktiviert ist."
     enable_names: "Erlaube Benutzern ihren vollen Namen zu zeigen"
     display_name_on_posts: "Zeige auch den vollen Namen eines Benutzers bei seinen Beiträgen"
     invites_shown: "Maximale Anzahl an Einladungen, die auf der Benutzerseite angezeigt werden"
@@ -777,7 +798,12 @@ de:
     warn_reviving_old_topic_age: "Wenn jemand auf eine Thema antwortet, dass älter als diese Anzahl Tage ist, wird eine Warnung angezeigt, um den Nutzer davon abzuraten eine alte Diskussion wieder zu beleben. Deaktiviere dies durch setzen auf 0."
     autohighlight_all_code: "Syntaxhervorhebung auf alle Quellcode-Blöcke anwenden, auch dann wenn keine Sprache angeben wurde."
     embeddable_host: "Host der Kommentare aus diesem Discourse Forum einbetten kann"
-    embed_username_key_from_feed: "Schlüsse, um Discourse-Benutzernamen aus Feed zu ziehen."
+    feed_polling_enabled: "NUR WENN EINGEBETTET: Bestimmt, ob Inhalte eines RSS-/ATOM-Feeds als zusätzliche Beiträge dargestellt werden."
+    feed_polling_url: "NUR WENN EINGEBETTET: URL des einzubettenden RSS-/ATOM-Feeds."
+    embed_by_username: "Discourse-Benutzername des Benutzers, der die eingebetteten Themen erstellt"
+    embed_username_key_from_feed: "Schlüssel, um Discourse-Benutzernamen aus Feed zu extrahieren."
+    embed_truncate: "Kürze die eingebetteten Beiträge"
+    embed_category: "Kategorie für eingebettete Themen"
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden"
     embed_whitelist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind"
     embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden"
@@ -885,14 +911,110 @@ de:
       blocked: "ist blockiert."
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} lädt Dich ein, an einer Diskussion teilzunehmen"
+    text_body_template: |
+      %{invitee_name} hat dazu eingeladen an der Diskussion
+
+      > %{topic_title}
+
+      auf
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      teilzunehmen. Falls du Interesse hast, klicke auf den nachfolgenden Link:
+
+      %{invite_link}
+
+      Dies ist eine EInladung von einem vertrautem Benutzer. Du kannst deshalb sofort auf die Diskussion antworten.
   invite_forum_mailer:
     subject_template: "[%{site_name}] %{invitee_name} hat dich eingeladen"
+    text_body_template: |
+      %{invitee_name} hat dich eingeladen zu:
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Falls du interessiert bis, klicke auf den nachfolgenden Link:
+
+      %{invite_link}
+
+      Die Einladung ist von einem vertrautem Benutzer, du musst dich daher nicht einloggen.
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
+    text_body_template: |
+      Das ist eine Testmail vom %{site_name} Forum. Du kannst das Forum per Web-Browser unter folgender Adresse aufrufen:
+
+      [*%{base_url}*][0]
+
+      Mailzustellbarkeitstests können komplex sein, aber einige Dinge solltest Du sofort prüfen:
+
+      - Stelle sicher, dass Du den *Quelltext der Mail* in deinem Mailprogramm betrachten kannst, um die Mailheader auf Hinweise zu untersuchen.
+
+      - **WICHTIG:** Hat Dein Internetprovider einen Reverse-DNS-Eintrag eingetragen, um den Domainnamen, die Du als Absender angibst, mit den IPs von denen die Mails verschickt werden zu verknüpfen? Du kannst [den Reverse-PTR-Eintrag hier testen][2]. Wenn Dein Internetprovider keinen passenden Reverse-DNS-Eintrag eingetragen hat, ist sehr unwahrscheinlich, dass Mails tatsächlich versendet werden.
+
+      - Ist der SPF-Eintrag deiner Domain korrekt? Du kannst [den SPF-Eintrag hier testen][1]. Beachte, dass du sowohl die SPF- als auch die TXT-Version dieses Eintrages eingeben musst für höchstmögliche Kompatibilität.
+
+      - Hast Du [DKIM-Mailsignierung][3] in deiner Mailsoftware konfiguriert und den öffentlichen DKIM-Schlüssel deinen DNS-Einträge hinzugefügt?
+
+      - Hast Du sichergestellt, dass die IPs der Server von denen Mails verschickt werden [nicht auf einer schwarzen Liste stehen][4]?
+
+      - Hast Du sichergestellt, dass dein Mailserver *definitiv* einen voll qualifizierten Hostnamen in ihre HELO-Nachrichten angeben, der per DNS aufgelöst werden kann? Falls das nicht der Fall ist, werden Deine Mails von vielen Mailprovidern abgelehnt.
+
+      (Der *einfache* Weg ist [sich für Mandrill anmelden][6], welche ein grosszügiges Mail-Abo gratis anbieten, welche für kleine Foren ausreicht. Du musst allerdings trotzdem die SPF und DKIM Einträge in deinem DNS machen)
+
+      Wir hoffen, dass der Mail-Zustelltest erfolgreich war!
+
+      Viel Erfolg,
+
+      Deine Freunde von [Discourse](http://www.discourse.org).
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [5]: %{base_url}/unsubscribe
+      [6]: http://mandrill.com
+
+      ----
+
+      <small>Am Fuß jeder Mail, die Du verschickst, sollte eine Möglichkeit zum Abbestellen gegeben werden. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn Du zukünftig keine weiteren Mail erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
+    text_body_template: |
+      Eine neue Version von Discourse ist verfügbar.
+
+      Deine Version: %{installed_version}
+      Neue Version: **%{new_version}**
+
+      Dies könnte interessant sein:
+
+      - Erkundige dich über Neues im [GitHub Changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Upgrade deine Version unter [%{base_url}/admin/docker](%{base_url}/admin/docker) mit dem "Upgrade"-Knopf.
+
+      - Besuche [meta.discourse.org](http://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung für Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
+    text_body_template: |
+      Eine neue Version von Discourse ist verfügbar.
+
+      Deine Version: %{installed_version}
+      Neue Version: **%{new_version}**
+
+      So geht's weiter:
+
+      - Lies nach, was sich in der neuen Version [geändert hat](https://github.com/discourse/discourse/commits/master).
+
+      - Aktualisiere dein Forum mit dem "Upgrade" Knopf auf [%{base_url}/admin/docker](%{base_url}/admin/docker).
+
+      - Besuche [meta.discourse.org](http://meta.discourse.org) für weitere Neuigkeiten, Diskussionen und Hilfestellungen rund um Discourse.
+
+      ### Versionshinweise
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Es gibt Markierungen, die vor 1 Stunde gesendet wurden."
@@ -911,6 +1033,22 @@ de:
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatische Nachricht von %{site_name}, um Dich darüber zu informieren, dass Dein Beitrag ...
+
+        %{base_url}%{url}
+
+        ... wegen Meldungen aus der Gemeinschaft versteckt wurde.
+
+        %{flag_reason}
+
+        Beachte, dass mehrere Mitglieder der Gemeinschaft diesen Beitrag gemeldet haben, bevor er versteckt wurde. **Überlege Dir daher, wie Du deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.** Du kannst deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und deine Stufe erhöht sich.
+
+        Wenn dieser Beitrag jedoch ein zweites Mal von der Gemeinschaft versteckt wird, werden die Moderatoren darauf aufmerksam gemacht. Dass kann weitere Konsequenzen haben, unter anderem auch eine Sperrung deines Kontos.
+
+        Weitere Hilfestellung findest Du in unseren [FAQ](%{base_url}/faq).
     usage_tips:
       text_body_template: |
         Diese private Nachricht enthält ein paar Tipps für einen reibungslosen Start:
@@ -1008,6 +1146,61 @@ de:
         ```
         %{logs}
         ```
+    bulk_invite_succeeded:
+      subject_template: "Masseneinladung erfolgreich verarbeitet!"
+      text_body_template: "Die Masseneinladung wurde erfolgreich verarbeitet, insgesamt wurden %{sent} Einladungen verschickt."
+    bulk_invite_failed:
+      subject_template: "Bei der Verarbeitung der Masseneinladung sind ein oder mehr Fehler aufgetreten!"
+      text_body_template: |
+        Die Masseneinladung wurde verarbeitet, insgesamt wurden %{sent} Einladungen verschickt und dabei traten %{failed} Fehler auf.
+
+        Dies ist das Fehlerprotokoll:
+
+        ```
+        %{logs}
+        ```
+    email_reject_trust_level:
+      subject_template: "E-Mail-Problem -- Ungenügende Vertrauensstufe"
+      text_body_template: |
+        Es tut uns Leid, aber die E-Mail-Nachricht an %{destination} hat nicht geklappt.
+
+        Dein Account hat nicht die nötige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu posten. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
+    email_reject_no_account:
+      subject_template: "E-Mail-Problem -- Kein Account"
+      text_body_template: |
+        Es tut uns Leid, aber die E-Mail-Nachricht an %{destination} hat nicht geklappt.
+
+        Es ist kein Account mit dieser E-Mail-Adresse bekannt. Versuch die Nachricht von einer anderen E-Mail-Adresse zu verschicken oder setz dich mit einem Mitarbeiter in Verbindung.
+    email_reject_empty:
+      subject_template: "E-Mail-Problem -- Kein Inhalt"
+      text_body_template: |
+        Es tut uns Leid, aber die E-Mail-Nachricht an %{destination} hat nicht geklappt.
+
+        Wir konnten keinen Inhalt in der E-Mail finden.
+    email_reject_parsing:
+      subject_template: "E-Mail-Problem -- Inhalt nicht erkannt"
+      text_body_template: |
+        Es tut uns Leid, aber die E-Mail-Nachricht an %{destination} hat nicht geklappt.
+
+        Die E-Mail-Kodierung ist unbekannt oder nicht unterstützt. Versuch es nochmal mit UTF-8 Klartext.
+    email_reject_post_error:
+      subject_template: "E-Mail-Problem -- Fehler beim Posten."
+      text_body_template: |
+        Es tut uns Leid, aber die E-Mail-Nachricht an %{destination} hat nicht geklappt.
+
+        Es gab ein Problem mit der Formatierung. Probier es nochmal mit weniger oder ohne Formatierungen.
+    email_reject_reply_key:
+      subject_template: "E-Mail-Problem -- Ungültiger Antwort-Schlüssel"
+      text_body_template: |
+        Es tut uns Leid, aber die E-Mail-Nachricht an %{destination} hat nicht geklappt.
+
+        Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Kontaktiere einen Mitarbeiter.
+    email_error_notification:
+      subject_template: "E-Mail-Problem -- POP-Authentifizierungsfehler"
+      text_body_template: |
+        Es gab einen Authentifizierungsfehler beim Abrufen von Mails vom POP-Server.
+
+        Bitte stell' sicher, dass du die POP-Zugangsdaten in [den Seiteneinstellungen](%{base_url}/admin/site_settings/category/email) korrekt konfiguriert hast.
     too_many_spam_flags:
       subject_template: "Benutzerkonto gesperrt"
       text_body_template: |
@@ -1028,8 +1221,24 @@ de:
         Weitere Hilfe findest du in unserer [FAQ](%{base_url}/faq).
     user_automatically_blocked:
       subject_template: "Neuer Benutzer %{username} wegen Gemeinschaftsrichtlinien blockiert."
+      text_body_template: |
+        Dies ist eine automatische Nachricht.
+
+        Der neue Benutzer [%{username}](%{base_url}%{user_url}) wurde automatisch gesperrt, da mehrere Benutzer %{username}s Beitrag/Beiträge gemeldet haben.
+
+        Bitte [überprüfe die Meldungen](%{base_url}/admin/flags). Falls %{username} fälschlicherweise gesperrt wurde, drücke den 'Entsperren'-Knopf auf der [Administrationsseite für den Benutzer](%{base_url}%{user_url}).
+
+        Der Schwellwert kann über die Seiteneinstellung  `block_new_user` angepasst werden.
     spam_post_blocked:
       subject_template: "Posts des neuen Benutzers ${username} wurden wegen mehrfacher Verlinkung gesperrt"
+      text_body_template: |
+        Dies ist eine automatische Nachricht.
+
+        Der neue Benutzer [%{username}](%{base_url}%{user_url}) hat versucht mehrere Beiträge mit Links zu %{domains} zu erstellen. Diese Beiträge wurden aber blockiert, um Spam zu vermeiden. Der Benutzer kann immer noch neue Beiträge erstellen, die nicht auf %{domains} verlinken.
+
+        Bitte [überprüfe den Benutzer](%{base_url}%{user_url}).
+
+        Dieses Verhalten kann durch die Seiteneinstellungen `newuser_spam_host_threshold` und `white_listed_spam_host_domains` geändert werden.
     unblocked:
       subject_template: "Benutzerkonto entsperrt"
       text_body_template: |
@@ -1178,6 +1387,10 @@ de:
     access_token_problem: "Gib das hier an einen Administrator weiter: Bitte aktualisiere die Einstellungen mit dem korrekten discourse_org_access_key."
   page_not_found:
     title: "Die angefragte Seite, gibt es in diesem Forum nicht. Vielleicht können wir aber dabei behilflich sein, sie oder ein ähnliches Thema zu finden:"
+    popular_topics: "Beliebt"
+    recent_topics: "Aktuell"
+    see_more: "Mehr"
+    search_title: "Diese Seite durchsuchen"
     search_google: "Suche auf Google"
   login_required:
     welcome_message: |
@@ -1203,6 +1416,7 @@ de:
       size_not_found: "Entschuldige, aber wir konnten die Grösse des Bildes nicht feststellen. Vielleicht ist das Bild defekt?"
   flag_reason:
     sockpuppet: "Ein neuer Benutzer hat ein Thema erstellt und ein anderer neuer Benutzer mit der selben IP Adresse hat darauf geantwortet. Beachte die flag_sockpuppets Einstellung."
+    spam_hosts: "Dieser Benutzer hat versucht mehrere Antworten mit Links zur selben Domain zu posten. Beachte die newuser_spam_host_threshold Einstellung."
   email_log:
     no_user: "Kann Benutzer mit ID %{user_id} nicht finden "
     suspended_not_pm: "Benutzer ist gesperrt und Email ist keine private Nachricht"

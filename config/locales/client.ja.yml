@@ -367,7 +367,6 @@ ja:
         the_topic: "トピック"
     loading: "読み込み中..."
     close: "閉じる"
-    assets_changed_confirm: "Discourseはアップデートされました。ページ更新して最新バージョンを導入しますか？"
     read_only_mode:
       enabled: "読み取り専用モードにされています。サイトインターアクションを無効されています。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
@@ -664,10 +663,8 @@ ja:
           description: "トラック中と同様です。加えて、新規ポストが投稿されるたびに通知されます。"
         tracking_pm:
           title: "トラック中"
-          description: "誰かから @ユーザ名 でメンションを受けた際と、あなたのポストに回答がついた際に通知されます。"
         tracking:
           title: "トラック中"
-          description: "誰かから @ユーザ名 でメンションを受けた際と、あなたのポストに回答がついた際に通知されます。これに加えて、未読および新規ポストの数を確認します。"
         regular:
           title: "通常"
           description: "誰かから @ユーザ名 でメンションを受けた際と、あなたのポストに回答がついた際に通知されます。"
@@ -836,9 +833,6 @@ ja:
           like: "「いいね！」を取り消す"
           vote: "投票を取り消す"
         people:
-          off_topic: "{{icons}} がオフトピックであるとマークしました"
-          spam: "{{icons}} がスパムであるとマークしました"
-          inappropriate: "{{icons}} が不適切であるとマークしました"
           notify_moderators: "{{icons}} がモデレータに通報しました"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知されたモデレータ</a>"
           notify_user: "{{icons}} がプライベートメッセージを送信しました"

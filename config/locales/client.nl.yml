@@ -397,7 +397,6 @@ nl:
         the_topic: "de topic"
     loading: "Laden..."
     close: "Sluit"
-    assets_changed_confirm: "Discourse is bijgewerkt, will je een refresh doen om de laatste versie te laden?"
     read_only_mode:
       enabled: "Dit forum is in read-only modus. Je kan rondkijken, maar sommige elementen zullen mogelijk niet goed werken."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
@@ -696,10 +695,8 @@ nl:
           description: "Je krijgt een notificatie voor elk nieuw bericht in deze topic. Verder zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
         tracking_pm:
           title: "Volgen"
-          description: "Je krijgt een notificatie als je @naam genoemd wordt en wanneer er gereageerd wordt op je berichten. Daarnaast zie je een teller met ongelezen en nieuwe berichten."
         tracking:
           title: "Volgen"
-          description: "Je krijgt een notificatie als je @naam genoemd wordt en wanneer er gereageerd wordt op je berichten. Daarnaast zie je een teller met ongelezen en nieuwe berichten."
         regular:
           title: "Normaal"
           description: "Je zal alleen een notificatie krijgen als iemand je @naam vermeldt of een reactie geeft op je berichten."
@@ -879,9 +876,6 @@ nl:
           like: "Vind het niet meer leuk"
           vote: "Stem niet meer"
         people:
-          off_topic: "{{icons}} markeerden dit als off-topic"
-          spam: "{{icons}} markeerden dit als spam"
-          inappropriate: "{{icons}} markeerden dit als ongepast"
           notify_moderators: "{{icons}} lichtte moderators in"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>lichtte moderators in</a>"
           notify_user: "{{icons}} verstuurde een privé-bericht"

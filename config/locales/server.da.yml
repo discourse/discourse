@@ -20,6 +20,7 @@ da:
   posts: "indlæg"
   loading: "Indlæser"
   powered_by_html: 'Siden er lavet med <a href="http://www.discourse.org">Discourse</a>, opleves bedst med JavaScript slået til'
+  log_in: "Log på"
   via: "%{username} via %{site_name}"
   is_reserved: "er reservet"
   backup:
@@ -28,12 +29,15 @@ da:
     one: "Beklager, men nye brugere kan kun skrive 1 svar i hvert emne til at starte med."
     other: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
   embed:
+    start_discussion: "Start diskussion"
+    continue: "Fortsæt diskussion"
     more_replies:
       one: "1 svar til"
       other: "%{count} svar til"
     loading: "Indlæser diskussion…"
     permalink: "Permalink"
     imported_from: "Importeret fra: %{link}"
+    in_reply_to: "▶ %{username}"
     replies:
       one: "1 svar"
       other: "%{count} svar"
@@ -63,6 +67,8 @@ da:
   invalid_characters: "indeholder ugyldige tegn"
   is_invalid: "er ugyldig; prøv at være mere beskrivende"
   next_page: "næste side →"
+  prev_page: "← forrige side"
+  page_num: "Side %{num}"
   by: "Af"
   topics_in_category: "Emner i kategorien '%{category}'"
   rss_posts_in_topic: "RSS-feed for emnet '%{topic}'"
@@ -165,6 +171,8 @@ da:
   user_profile:
     no_info_me: "<div class='missing-profile'>“Om mig” feltet på din profil er pt. tomt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du at udfylde det</a>?</div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
+  vip_category_name: "lounge"
+  meta_category_name: "meta"
   category:
     topic_prefix: "Kategoridefinition for %{category}"
     replace_paragraph: "[Erstat det første afsnit med en kort beskrivelse af din nye kategori. Denne tekst vises i området til valg af kategori, så prøv at holde den på under 200 tegn. Indtil du redigerer denne tekst eller opretter emner vil denne kategori ikke optræde på kategorisiden.]"
@@ -269,7 +277,9 @@ da:
   password_reset:
     no_token: "Beklager, dit token er udløbet. Prøv at nulstille dit kodeord igen."
     choose_new: "Vælg et nyt kodeord"
+    choose: "Vælg et kodeord"
     update: 'opdatér kodeord'
+    save: 'Set kodeord'
     title: 'nulstil kodeord'
     success: "Dit kodeord er ændret og du er nu logget ind."
     success_unapproved: "Dit kodeord er ændret."
@@ -318,6 +328,12 @@ da:
       title: 'Stem'
       description: 'Stem for dette indlæg'
       long_form: 'stemte for dette indlæg'
+  topic_flag_types:
+    spam:
+      title: 'Spam'
+    inappropriate:
+      title: 'Upassende'
+      long_form: 'markeret upassende'
   flagging:
     user_must_edit: '<p>Flaget indhold er skjult.</p>'
   archetypes:
@@ -680,6 +696,7 @@ da:
   search:
     types:
       category: 'Kategorier'
+      topic: 'Resultater'
       user: 'Brugere'
   original_poster: "Oprindelig forfatter"
   most_posts: "Flest indlæg"
@@ -742,6 +759,8 @@ da:
     subject_template: "[%{site_name}] test af e-mail-udsendelse"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Opdateringer er tilgængelige"
+  flags_reminder:
+    post_number: "indlæg"
   system_messages:
     post_hidden:
       subject_template: "Indlæg skjult på grund af feedback fra brugerne"
@@ -886,6 +905,8 @@ da:
     digest:
       why: "Her er en kort opsummering af hvad der er sket på %{site_link} siden du vi sidst så dig %{last_seen_at}."
       new_activity: "Ny aktivitet på dine emner og indlæg:"
+      top_topics: "Populære emner"
+      other_new_topics: "Populære emner"
       unsubscribe: "Denne opsummering sendes som en høflig notifikation fra %{site_link} når vi ikke har set dig et stykke tid.\nHvis du ønsker at slå den fra, eller ændre dine e-mail-indstillinger, %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} opsummering"
@@ -902,6 +923,8 @@ da:
 
         Klik her for at vælge et nyt kodeord:
         %{base_url}/users/password-reset/%{email_token}
+    set_password:
+      subject_template: "[%{site_name}] Sæt kodeord"
     authorize_email:
       subject_template: "[%{site_name}] Bekræft din nye e-mail-adresse"
       text_body_template: |
@@ -938,6 +961,10 @@ da:
     access_token_problem: "Fortæl en admin: Opdatér venligst sitets indstillinger, så de bruger den korrekte discourse_org_access_key."
   page_not_found:
     title: "Den side du efterspurgte findes ikke. Måske kan vi hjælpe dig med at finde den, eller et andet lignende emne:"
+    popular_topics: "Populære"
+    recent_topics: "Nye"
+    see_more: "Flere"
+    search_title: "Søg på denne side"
     search_google: "Søg Google"
   login_required:
     welcome_message: |
@@ -960,3 +987,5 @@ da:
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"
   flag_reason:
     sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse svarede på det. Se indstillingen af flag_sockpuppets."
+  email_log:
+    seen_recently: "Bruger har været logget på for nyligt"

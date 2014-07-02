@@ -305,10 +305,12 @@ fr:
         frequency: "Nous vous envoyons des mails contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
       name:
         title: "Nom"
+        instructions: "Votre nom complet."
         too_short: "Votre nom est trop court."
         ok: "Votre nom semble correct."
       username:
         title: "Pseudo"
+        instructions: "Votre @username doit être unique, court et sans espace."
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @{{username}}."
         available: "Votre pseudo est disponible."
         global_match: "L'adresse email correspond au pseudo enregistré."
@@ -410,7 +412,6 @@ fr:
         the_topic: "le sujet"
     loading: "Chargement..."
     close: "Fermer"
-    assets_changed_confirm: "Discourse a été mis à jour, voulez-vous rafraîchir pour obtenir la dernière version ?"
     read_only_mode:
       enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
       login_disabled: "La connexion est désactivée quand le site est en mode lecture seule."
@@ -719,10 +720,8 @@ fr:
           description: "Vous serez averti de chaque nouveau message de ce sujet. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
         tracking_pm:
           title: "Suivi simple"
-          description: "Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
         tracking:
           title: "Suivi"
-          description: "Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
         regular:
           title: "Normal"
           description: "Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message. "
@@ -904,9 +903,6 @@ fr:
           like: "Annuler j'aime"
           vote: "Retirer votre vote"
         people:
-          off_topic: "{{icons}} l'ont signalé comme étant hors-sujet"
-          spam: "{{icons}} l'ont signalé comme étant du spam"
-          inappropriate: "{{icons}} l'ont signalé comme inapproprié"
           notify_moderators: "{{icons}} l'ont signalé pour modération"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>l'ont signalé pour modération</a>"
           notify_user: "{{icons}} ont démarré une conversation privée"
@@ -1030,6 +1026,7 @@ fr:
       change_in_category_topic: "Editer la description"
       already_used: 'Cette couleur est déjà utilisée par une autre catégorie'
       security: "Sécurité"
+      images: "Images"
       auto_close_label: "Fermer automatiquement après :"
       auto_close_units: "heures"
       email_in: "Adresse email entrante personnalisée :"
