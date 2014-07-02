@@ -268,9 +268,9 @@ module Export
       log "Notifying '#{@user.username}' of the end of the backup..."
       # NOTE: will only notify if @user != Discourse.site_contact_user
       if @success
-        SystemMessage.create(@user, :export_succeeded)
+        SystemMessage.create_from_system_user(@user, :export_succeeded)
       else
-        SystemMessage.create(@user, :export_failed, logs: @logs.join("\n"))
+        SystemMessage.create_from_system_user(@user, :export_failed, logs: @logs.join("\n"))
       end
     end
 
