@@ -101,20 +101,6 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   },
 
   /**
-    Add an initializer hook for after the Discourse Application starts up.
-
-    @method addInitializer
-    @param {Function} init the initializer to add.
-    @param {Boolean} immediate whether to execute the function right away.
-                      Default is false, for next run loop. If unsure, use false.
-  **/
-  addInitializer: function(init, immediate) {
-    Em.warn("`Discouse.addInitializer` is deprecated. Export an Ember initializer instead.");
-    Discourse.initializers = Discourse.initializers || [];
-    Discourse.initializers.push({fn: init, immediate: !!immediate});
-  },
-
-  /**
     Start up the Discourse application by running all the initializers we've defined.
 
     @method start
@@ -131,20 +117,6 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
         Discourse.initializer(module.default);
       }
     });
-
-    var initializers = this.initializers;
-    if (initializers) {
-      var self = this;
-      initializers.forEach(function (init) {
-        if (init.immediate) {
-          init.fn.call(self);
-        } else {
-          Em.run.next(function() {
-            init.fn.call(self);
-          });
-        }
-      });
-    }
 
   },
 
