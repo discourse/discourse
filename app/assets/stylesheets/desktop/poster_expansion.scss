@@ -66,6 +66,9 @@
     max-height: 100px;
     overflow: auto;
     margin-bottom: 10px;
+    img {
+      max-width: 100%;
+    }
   }
 
   img.avatar {
