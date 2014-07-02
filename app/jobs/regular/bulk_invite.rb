@@ -112,9 +112,9 @@ module Jobs
     def notify_user
       if @current_user
         if (@sent > 0 && @failed == 0)
-          SystemMessage.create(@current_user, :bulk_invite_succeeded, sent: @sent)
+          SystemMessage.create_from_system_user(@current_user, :bulk_invite_succeeded, sent: @sent)
         else
-          SystemMessage.create(@current_user, :bulk_invite_failed, sent: @sent, failed: @failed, logs: @logs.join("\n"))
+          SystemMessage.create_from_system_user(@current_user, :bulk_invite_failed, sent: @sent, failed: @failed, logs: @logs.join("\n"))
         end
       end
     end
