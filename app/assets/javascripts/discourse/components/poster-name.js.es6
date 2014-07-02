@@ -37,6 +37,7 @@ var PosterNameComponent = Em.Component.extend({
       var title = post.get('user_title');
       if (!Em.isEmpty(title)) {
 
+        title = Handlebars.Utils.escapeExpression(title);
         buffer.push('<span class="user-title">');
         if (Em.isEmpty(primaryGroupName)) {
           buffer.push(title);
