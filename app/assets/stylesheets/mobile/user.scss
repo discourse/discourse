@@ -138,7 +138,7 @@
           margin: 0 0 7px 0;
         }
         dt {
-          color: $primary;
+          color: scale-color($primary, $lightness: 75%);
           margin: 0;
         }
       }
