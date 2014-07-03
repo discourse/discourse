@@ -1873,6 +1873,7 @@ en:
         no_badges: There are no badges that can be granted.
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
+        listable: Show badge on the public badges page
         icon: Icon
 
     lightbox:

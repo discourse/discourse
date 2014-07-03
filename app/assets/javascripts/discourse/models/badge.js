@@ -117,6 +117,7 @@ Discourse.Badge = Discourse.Model.extend({
         badge_type_id: this.get('badge_type_id'),
         allow_title: !!this.get('allow_title'),
         multiple_grant: !!this.get('multiple_grant'),
+        listable: !!this.get('listable'),
         icon: this.get('icon')
       }
     }).then(function(json) {

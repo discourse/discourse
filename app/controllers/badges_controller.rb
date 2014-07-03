@@ -2,7 +2,7 @@ class BadgesController < ApplicationController
   skip_before_filter :check_xhr, only: [:index, :show]
 
   def index
-    badges = Badge.all.to_a
+    badges = Badge.where(listable: true).all.to_a
     serialized = MultiJson.dump(serialize_data(badges, BadgeSerializer, root: "badges"))
     respond_to do |format|
       format.html do

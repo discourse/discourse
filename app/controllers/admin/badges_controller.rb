@@ -30,13 +30,14 @@ class Admin::BadgesController < Admin::AdminController
     end
 
     def update_badge_from_params(badge)
-      params.permit(:name, :description, :badge_type_id, :allow_title, :multiple_grant)
+      params.permit(:name, :description, :badge_type_id, :allow_title, :multiple_grant, :listable)
       badge.name = params[:name]
       badge.description = params[:description]
       badge.badge_type = BadgeType.find(params[:badge_type_id])
       badge.allow_title = params[:allow_title]
       badge.multiple_grant = params[:multiple_grant]
       badge.icon = params[:icon]
+      badge.listable = params[:listable]
       badge
     end
 end
