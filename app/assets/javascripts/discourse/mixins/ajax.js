@@ -54,7 +54,7 @@ Discourse.Ajax = Em.Mixin.create({
       };
 
       var oldError = args.error;
-      args.error = function(xhr) {
+      args.error = function(xhr, textStatus) {
 
         // note: for bad CSRF we don't loop an extra request right away.
         //  this allows us to eliminate the possibility of having a loop.
@@ -62,8 +62,12 @@ Discourse.Ajax = Em.Mixin.create({
           Discourse.Session.current().set('csrfToken', null);
         }
 
-        // If it's a parseerror, don't reject
+        // If it's a parsererror, don't reject
         if (xhr.status === 200) return args.success(xhr);
+
+        // Fill in some extra info
+        xhr.jqTextStatus = textStatus;
+        xhr.requestedUrl = url;
 
         Ember.run(promise, promise.reject, xhr);
         if (oldError) oldError(xhr);

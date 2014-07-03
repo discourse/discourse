@@ -10,6 +10,19 @@ Discourse.ApplicationRoute = Em.Route.extend({
 
   actions: {
 
+    error: function(err, transition) {
+      if (err.status === 404) {
+        // 404
+        this.intermediateTransitionTo('unknown');
+        return;
+      }
+
+      var exceptionController = this.controllerFor('exception');
+      exceptionController.setProperties({ lastTransition: transition, thrown: err });
+
+      this.intermediateTransitionTo('exception');
+    },
+
     showLogin: function() {
       if (Discourse.get("isReadOnly")) {
         bootbox.alert(I18n.t("read_only_mode.login_disabled"));

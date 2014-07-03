@@ -146,6 +146,22 @@
   }
 }
 
+.topic-error {
+  padding: 18px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 24px;
+  line-height: 1.1em;
+
+  .topic-retry {
+    display: block;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 #topic-progress-wrapper.docked {
   position: absolute;
 }

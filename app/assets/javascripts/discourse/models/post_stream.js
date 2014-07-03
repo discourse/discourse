@@ -249,6 +249,7 @@ Discourse.PostStream = Em.Object.extend({
       self.setProperties({ loadingFilter: false, loaded: true });
     }).catch(function(result) {
       self.errorLoading(result);
+      throw result;
     });
   },
   hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),

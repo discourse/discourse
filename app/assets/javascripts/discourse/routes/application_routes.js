@@ -13,6 +13,9 @@ Discourse.Route.buildRoutes(function() {
     router.route(page, { path: '/' + page });
   });
 
+  // Error page
+  this.route('exception', { path: '/exception' });
+
   // Topic routes
   this.resource('topic', { path: '/t/:slug/:id' }, function() {
     this.route('fromParams', { path: '/' });

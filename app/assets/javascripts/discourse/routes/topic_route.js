@@ -89,7 +89,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
       }
     }, 150),
 
-    willTransition: function() { this.set("isTransitioning", true); }
+    willTransition: function() { this.set("isTransitioning", true); return true; }
 
   },
 

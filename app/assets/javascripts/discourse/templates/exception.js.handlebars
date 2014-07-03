@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="error-page">
+    <div class="face">:(</div>
+    <div class="reason">{{reason}}</div>
+    <div class="url">
+      {{i18n errors.prev_page}} <a {{bind-attr href=requestUrl}} data-auto-route="true">{{requestUrl}}</a>
+    </div>
+    <div class="desc">
+      {{#if networkFixed}}
+        <i class="fa fa-check-circle"></i>
+      {{/if}}
+
+      {{desc}}
+    </div>
+    <div class="buttons">
+      {{#each buttonData in enabledButtons}}
+        <button class="btn {{unbound buttonData.classes}}" {{action buttonData.action}}>{{boundI18n buttonData.key}}</button>
+      {{/each}}
+      {{#if loading}}
+        <i class="fa fa-spin fa-spinner"></i>
+      {{/if}}
+    </div>
+  </div>
+</div>
