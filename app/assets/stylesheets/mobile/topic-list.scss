@@ -236,12 +236,11 @@ ol.category-breadcrumb {
 
 .category-dropdown-menu {
   height: 200px;
-  padding: 8px 5px 0 7px;
   margin-top: 31px;
 
   a.badge-category {
-    line-height: 26px;
-    padding: 0 8px;
+    line-height: 26px !important;
+    margin-bottom: 0 !important;
   }
 
   div {
