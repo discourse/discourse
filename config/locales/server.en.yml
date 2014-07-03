@@ -1060,7 +1060,7 @@ en:
 
       %{invite_link}
 
-      This is an invitation from a trusted user, so you can reply to the discussion immediately.
+      This invitation is from a trusted user, so you can reply to the discussion immediately.
 
   invite_forum_mailer:
     subject_template: "[%{site_name}] %{invitee_name} invited you to join"
