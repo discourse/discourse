@@ -28,7 +28,7 @@ var PosterNameComponent = Em.Component.extend({
       buffer.push("</span>");
 
       // Are we showing full names?
-      if (name && (name !== username) && this.get('displayNameOnPosts')) {
+      if (name && (name.toLowerCase().trim() !== username.toLowerCase().trim()) && this.get('displayNameOnPosts')) {
         name = Handlebars.Utils.escapeExpression(name);
         buffer.push("<span class='full-name'><a href='#'>" + name + "</a></span>");
       }
