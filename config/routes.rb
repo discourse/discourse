@@ -175,6 +175,7 @@ Discourse::Application.routes.draw do
   post "login" => "static#enter"
   get "login" => "static#show", id: "login"
   get "faq" => "static#show", id: "faq"
+  get "guidelines" => "static#show", id: "faq"
   get "tos" => "static#show", id: "tos"
   get "privacy" => "static#show", id: "privacy"
   get "signup" => "list#latest"
