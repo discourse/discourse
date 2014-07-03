@@ -35,7 +35,6 @@ export default function(filter, params) {
       if (Em.isNone(model.get('parentCategory')) && Discourse.SiteSettings.show_subcategory_list) {
         var self = this;
         return Discourse.CategoryList.listForParent(model).then(function(list) {
-          console.log('loaded list');
           self._categoryList = list;
         });
       }
