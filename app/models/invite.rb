@@ -130,6 +130,14 @@ class Invite < ActiveRecord::Base
     i
   end
 
+  def self.redeem_from_email(email)
+    invite = Invite.find_by(email: Email.downcase(email))
+    if invite
+      InviteRedeemer.new(invite).redeem
+    end
+    invite
+  end
+
   def self.base_directory
     File.join(Rails.root, "public", "csv", RailsMultisite::ConnectionManagement.current_db)
   end
