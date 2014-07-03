@@ -587,6 +587,8 @@ end
 #  cook_method             :integer          default(1), not null
 #  wiki                    :boolean          default(FALSE), not null
 #  baked_at                :datetime
+#  baked_version           :integer
+#  hidden_at               :datetime
 #
 # Indexes
 #

@@ -5,20 +5,52 @@ describe BadgeGranter do
   let(:badge) { Fabricate(:badge) }
   let(:user) { Fabricate(:user) }
 
-  before do
-    SiteSetting.enable_badges = true
-  end
+  describe 'backfill' do
 
-  describe 'backfill like badges' do
+    it 'has no broken badge queries' do
+      Badge.all.each do |b|
+        BadgeGranter.backfill(b)
+      end
+    end
+
+    it 'can backfill the welcome badge' do
+      post = Fabricate(:post)
+      user2 = Fabricate(:user)
+      PostAction.act(user2, post, PostActionType.types[:like])
+
+      UserBadge.destroy_all
+      BadgeGranter.backfill(Badge.find(Badge::Welcome))
+
+      b = UserBadge.first
+      b.user_id.should == post.user_id
+      b.post_id.should == post.id
+    end
+
     it 'should grant missing badges' do
       post = Fabricate(:post, like_count: 30)
-      BadgeGranter.backfill_like_badges
+      BadgeGranter.backfill(Badge.find(Badge::NicePost))
+      BadgeGranter.backfill(Badge.find(Badge::GoodPost))
 
       # TODO add welcome
       post.user.user_badges.pluck(:badge_id).sort.should == [Badge::NicePost,Badge::GoodPost]
 
       Badge.find(Badge::NicePost).grant_count.should == 1
       Badge.find(Badge::GoodPost).grant_count.should == 1
+    end
+  end
+
+  describe 'autobiographer' do
+    it 'grants autobiographer correctly' do
+      user = Fabricate(:user)
+      user.user_profile.bio_raw = "I filled my bio"
+      user.user_profile.save!
+
+      Badge.find(Badge::Autobiographer).grant_count.should == 0
+
+      user.uploaded_avatar_id = 100
+      user.save
+
+      Badge.find(Badge::Autobiographer).grant_count.should == 1
     end
   end
 
@@ -111,11 +143,11 @@ describe BadgeGranter do
       BadgeGranter.update_badges(action: :post_like, post_id: post.id)
       UserBadge.find_by(user_id: user.id, badge_id: 7).should_not be_nil
       # Great post badge
-      post.update_attributes like_count: 100
+      post.update_attributes like_count: 50
       BadgeGranter.update_badges(action: :post_like, post_id: post.id)
       UserBadge.find_by(user_id: user.id, badge_id: 8).should_not be_nil
       # Revoke badges on unlike
-      post.update_attributes like_count: 99
+      post.update_attributes like_count: 49
       BadgeGranter.update_badges(action: :post_like, post_id: post.id)
       UserBadge.find_by(user_id: user.id, badge_id: 8).should be_nil
     end

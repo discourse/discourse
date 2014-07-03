@@ -1947,6 +1947,9 @@ en:
         welcome:
           name: Welcome
           description: Received a like.
+        autobiographer:
+          name: Autobiographer
+          description: Filled user profile information.
         nice_post:
           name: Nice Post
           description: Received 10 likes on a post. This badge can be granted multiple times.

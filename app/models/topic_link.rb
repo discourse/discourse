@@ -227,6 +227,7 @@ end
 #
 # Indexes
 #
+#  index_topic_links_on_post_id   (post_id)
 #  index_topic_links_on_topic_id  (topic_id)
 #  unique_post_links              (topic_id,post_id,url) UNIQUE
 #

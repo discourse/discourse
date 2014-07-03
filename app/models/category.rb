@@ -359,10 +359,12 @@ end
 #  email_in_allow_strangers :boolean          default(FALSE)
 #  topics_day               :integer          default(0)
 #  posts_day                :integer          default(0)
+#  logo_url                 :string(255)
+#  background_url           :string(255)
 #
 # Indexes
 #
-#  index_categories_on_email_in                     (email_in) UNIQUE
-#  index_categories_on_parent_category_id_and_name  (parent_category_id,name) UNIQUE
-#  index_categories_on_topic_count                  (topic_count)
+#  index_categories_on_email_in     (email_in) UNIQUE
+#  index_categories_on_topic_count  (topic_count)
+#  unique_index_categories_on_name  (name) UNIQUE
 #

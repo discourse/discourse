@@ -4,7 +4,9 @@ module Jobs
     every 1.day
 
     def execute(args)
-      BadgeGranter.backfill_like_badges
+      Badge.all.each do |b|
+        BadgeGranter.backfill(b)
+      end
     end
 
   end

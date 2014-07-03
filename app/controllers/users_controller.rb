@@ -233,7 +233,7 @@ class UsersController < ApplicationController
               end
 
     flash[:success] = I18n.t(message)
-   end
+  end
 
   def change_email
     params.require(:email)

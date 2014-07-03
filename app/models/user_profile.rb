@@ -3,6 +3,7 @@ class UserProfile < ActiveRecord::Base
 
   validates :user, presence: true
   before_save :cook
+  after_save :assign_autobiographer
 
   def bio_excerpt
     excerpt = PrettyText.excerpt(bio_cooked, 350)
@@ -35,6 +36,14 @@ class UserProfile < ActiveRecord::Base
     self.save!
   end
 
+  protected
+
+  def assign_autobiographer
+    if bio_raw_changed?
+      user.grant_autobiographer
+    end
+  end
+
   private
 
   def cook
@@ -51,10 +60,11 @@ end
 #
 # Table name: user_profiles
 #
-#  user_id  :integer          not null, primary key
-#  bio_cooked                    :text
-#  bio_raw                       :text
-#  location :string(255)
-#  website  :string(255)
-#  profile_background       :string(255)
+#  user_id              :integer          not null, primary key
+#  location             :string(255)
+#  website              :string(255)
+#  bio_raw              :text
+#  bio_cooked           :text
+#  dismissed_banner_key :integer
+#  profile_background   :string(255)
 #

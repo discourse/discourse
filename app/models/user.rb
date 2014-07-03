@@ -495,7 +495,13 @@ class User < ActiveRecord::Base
   end
 
   def featured_user_badges
-    user_badges.joins(:badge).order('badges.badge_type_id ASC, badges.grant_count ASC').includes(:user, :granted_by, badge: :badge_type).limit(3)
+    user_badges
+        .joins(:badge)
+        .order('badges.badge_type_id ASC, badges.grant_count ASC')
+        .includes(:user, :granted_by, badge: :badge_type)
+        .where("user_badges.id in (select min(u2.id)
+                  from user_badges u2 where u2.user_id = ? group by u2.badge_id)", id)
+        .limit(3)
   end
 
   def self.count_by_signup_date(sinceDaysAgo=30)
@@ -605,8 +611,21 @@ class User < ActiveRecord::Base
 
     if !self.uploaded_avatar_id && gravatar_downloaded
       self.update_column(:uploaded_avatar_id, avatar.gravatar_upload_id)
+      grant_autobiographer
+    else
+      if uploaded_avatar_id_changed?
+        grant_autobiographer
+      end
     end
 
+  end
+
+  def grant_autobiographer
+    if self.user_profile.bio_raw &&
+          self.user_profile.bio_raw.strip.length > Badge::AutobiographerMinBioLength &&
+          uploaded_avatar_id
+       BadgeGranter.grant(Badge.find(Badge::Autobiographer), self)
+    end
   end
 
   protected
