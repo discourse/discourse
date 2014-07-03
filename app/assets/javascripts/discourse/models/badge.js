@@ -184,8 +184,12 @@ Discourse.Badge.reopenClass({
     @method findAll
     @returns {Promise} a promise that resolves to an array of `Discourse.Badge`
   **/
-  findAll: function() {
-    return Discourse.ajax('/badges.json').then(function(badgesJson) {
+  findAll: function(opts) {
+    var listable = "";
+    if(opts && opts.onlyListable){
+      listable = "?only_listable=true";
+    }
+    return Discourse.ajax('/badges.json' + listable).then(function(badgesJson) {
       return Discourse.Badge.createFromJson(badgesJson);
     });
   },

@@ -13,7 +13,7 @@ Discourse.BadgesIndexRoute = Discourse.Route.extend({
         return Discourse.Badge.createFromJson(json);
       });
     } else {
-      return Discourse.Badge.findAll();
+      return Discourse.Badge.findAll({onlyListable: true});
     }
   },
 
