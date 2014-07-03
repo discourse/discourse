@@ -58,6 +58,8 @@ class ImportScripts::Base
 
     update_bumped_at
     update_feature_topic_users
+    update_category_featured_topics
+    update_topic_count_replies
 
     puts '', 'Done'
 
@@ -266,6 +268,7 @@ class ImportScripts::Base
   def create_post(opts, import_id)
     user = User.find(opts[:user_id])
     opts = opts.merge(skip_validations: true)
+    opts[:import_mode] = true
     opts[:custom_fields] ||= {}
     opts[:custom_fields]['import_id'] = import_id
 
@@ -292,17 +295,39 @@ class ImportScripts::Base
   end
 
   def update_bumped_at
+    puts '', "updating bumped_at on topics"
     Post.exec_sql("update topics t set bumped_at = (select max(created_at) from posts where topic_id = t.id and post_type != #{Post.types[:moderator_action]})")
   end
 
   def update_feature_topic_users
-    puts '', "updating featured topic users"
+    puts "updating featured topic users"
 
     total_count = Topic.count
     progress_count = 0
 
     Topic.find_each do |topic|
       topic.feature_topic_users
+      progress_count += 1
+      print_status(progress_count, total_count)
+    end
+  end
+
+  def update_category_featured_topics
+    puts '', "updating featured topics in categories"
+    Category.find_each do |category|
+      CategoryFeaturedTopic.feature_topics_for(category)
+    end
+  end
+
+  def update_topic_count_replies
+    puts "updating user topic reply counts"
+
+    total_count = User.real.count
+    progress_count = 0
+
+    User.real.find_each do |u|
+      u.user_stat.update_topic_reply_count
+      u.user_stat.save!
       progress_count += 1
       print_status(progress_count, total_count)
     end

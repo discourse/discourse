@@ -74,9 +74,9 @@ class PostCreator
     end
 
     if @post
-      PostAlerter.post_created(@post)
+      PostAlerter.post_created(@post) unless @opts[:import_mode]
 
-      handle_spam
+      handle_spam unless @opts[:import_mode]
       track_latest_on_category
       enqueue_jobs
     end
@@ -233,6 +233,7 @@ class PostCreator
   end
 
   def consider_clearing_flags
+    return if @opts[:import_mode]
     return unless @topic.private_message? && @post.post_number > 1 && @topic.user_id != @post.user_id
 
     clear_possible_flags(@topic)
@@ -240,7 +241,7 @@ class PostCreator
 
   def update_user_counts
     # We don't count replies to your own topics
-    if @user.id != @topic.user_id
+    if !@opts[:import_mode] && @user.id != @topic.user_id
       @user.user_stat.update_topic_reply_count
       @user.user_stat.save!
     end
@@ -250,6 +251,7 @@ class PostCreator
   end
 
   def publish
+    return if @opts[:import_mode]
     return unless @post.post_number > 1
 
     MessageBus.publish("/topic/#{@post.topic_id}",{
@@ -288,7 +290,7 @@ class PostCreator
 
   def enqueue_jobs
     return unless @post && !@post.errors.present?
-    PostJobsEnqueuer.new(@post, @topic, new_topic?).enqueue_jobs
+    PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
   end
 
   def new_topic?

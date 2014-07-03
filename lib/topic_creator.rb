@@ -48,7 +48,7 @@ class TopicCreator
       last_post_user_id: @user.id
     }
 
-    [:subtype, :archetype, :meta_data].each do |key|
+    [:subtype, :archetype, :meta_data, :import_mode].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 

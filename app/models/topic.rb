@@ -109,6 +109,7 @@ class Topic < ActiveRecord::Base
   attr_accessor :topic_list
   attr_accessor :meta_data
   attr_accessor :include_last_poster
+  attr_accessor :import_mode # set to true to optimize creation and save for imports
 
   # The regular order
   scope :topic_list_order, -> { order('topics.bumped_at desc') }
@@ -463,9 +464,9 @@ class Topic < ActiveRecord::Base
       end
 
       if success
-        CategoryFeaturedTopic.feature_topics_for(old_category)
+        CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
         Category.where(id: cat.id).update_all 'topic_count = topic_count + 1'
-        CategoryFeaturedTopic.feature_topics_for(cat) unless old_category.try(:id) == cat.try(:id)
+        CategoryFeaturedTopic.feature_topics_for(cat) unless @import_mode || old_category.try(:id) == cat.try(:id)
       else
         return false
       end
