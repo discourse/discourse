@@ -1,7 +1,7 @@
 class String
   # A poor man's scrub, Ruby 2.1 has a much better implementation, but this will do
   unless method_defined? :scrub
-    def scrub
+    def scrub(replace_char=nil)
       str = dup.force_encoding("utf-8")
 
       unless str.valid_encoding?
