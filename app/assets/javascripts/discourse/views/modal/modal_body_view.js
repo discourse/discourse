@@ -8,11 +8,9 @@
 **/
 Discourse.ModalBodyView = Discourse.View.extend({
 
-  // Focus on first element
-  didInsertElement: function() {
-    var self = this;
-
-    var $discourseModal = $('#discourse-modal');
+  _setupModal: function() {
+    var self = this,
+        $discourseModal = $('#discourse-modal');
 
     $discourseModal.modal('show');
     $discourseModal.one("hide", function () {
@@ -21,6 +19,7 @@ Discourse.ModalBodyView = Discourse.View.extend({
 
     $('#modal-alert').hide();
 
+    // Focus on first element
     if (!Discourse.Mobile.mobileView) {
       Em.run.schedule('afterRender', function() {
         self.$('input:first').focus();
@@ -31,7 +30,7 @@ Discourse.ModalBodyView = Discourse.View.extend({
     if (title) {
       this.set('controller.controllers.modal.title', title);
     }
-  },
+  }.on('didInsertElement'),
 
   flashMessageChanged: function() {
     var flashMessage = this.get('controller.flashMessage');

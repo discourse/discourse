@@ -1,20 +1,9 @@
-/**
-  This view handles the create account modal
-
-  @class CreateAccountView
-  @extends Discourse.ModalBodyView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
+export default Discourse.ModalBodyView.extend({
   templateName: 'modal/create_account',
   title: I18n.t('create_account.title'),
   classNames: ['create-account'],
 
-  didInsertElement: function() {
-
-    this._super();
-
+  _setup: function() {
     // allows the submission the form when pressing 'ENTER' on *any* text input field
     // but only when the submit button is enabled
     var createAccountController = this.get('controller');
@@ -25,6 +14,5 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
         }
       });
     });
-  }
-
+  }.on('didInsertElement')
 });

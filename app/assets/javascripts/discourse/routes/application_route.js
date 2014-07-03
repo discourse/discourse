@@ -66,7 +66,7 @@ Discourse.ApplicationRoute = Em.Route.extend({
       @method closeModal
     **/
     closeModal: function() {
-      this.render('hide_modal', {into: 'modal', outlet: 'modalBody'});
+      this.render('hide-modal', {into: 'modal', outlet: 'modalBody'});
     },
 
     /**
