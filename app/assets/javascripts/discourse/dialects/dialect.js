@@ -42,10 +42,6 @@ function processTextNodes(node, event, emitter) {
   for (var j=1; j<node.length; j++) {
     var textContent = node[j];
     if (typeof textContent === "string") {
-      if (dialect.options.sanitize && !skipSanitize[textContent]) {
-        textContent = Discourse.Markdown.sanitize(textContent);
-      }
-
       var result = emitter(textContent, event);
       if (result) {
         if (result instanceof Array) {
@@ -118,13 +114,14 @@ function parseTree(tree, path, insideCounts) {
   @returns {Boolean} whether there is an invalid word boundary
 **/
 function invalidBoundary(args, prev) {
-  if (!args.wordBoundary && !args.spaceBoundary) { return false; }
+  if (!(args.wordBoundary || args.spaceBoundary || args.spaceOrTagBoundary)) { return false; }
 
   var last = prev[prev.length - 1];
   if (typeof last !== "string") { return false; }
 
   if (args.wordBoundary && (last.match(/(\w|\/)$/))) { return true; }
   if (args.spaceBoundary && (!last.match(/\s$/))) { return true; }
+  if (args.spaceOrTagBoundary && (!last.match(/(\s|\>)$/))) { return true; }
 }
 
 /**
@@ -147,9 +144,19 @@ Discourse.Dialect = {
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
     dialect.options = opts;
-    var tree = parser.toHTMLTree(text, 'Discourse');
+    var tree = parser.toHTMLTree(text, 'Discourse'),
+        result = parser.renderJsonML(parseTree(tree));
 
-    return parser.renderJsonML(parseTree(tree));
+    // This feature is largely for MDTest. We prefer to strip comments
+    // in Discourse
+
+    if (opts.sanitize) {
+      result = Discourse.Markdown.sanitize(result);
+    } else if (opts.sanitizerFunction) {
+      result = opts.sanitizerFunction(result);
+    }
+
+    return result.trim();
   },
 
   /**

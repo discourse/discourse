@@ -6,6 +6,8 @@ module("Discourse.Markdown", {
 
 var cooked = function(input, expected, text) {
   var result = Discourse.Markdown.cook(input, {sanitize: true});
+  expected = expected.replace(/\/>/g, ">");
+  // result = result.replace("/>", ">");
   equal(result, expected, text);
 };
 
@@ -138,6 +140,8 @@ test("Links", function() {
   cooked("User [MOD]: Hello!",
          "<p>User [MOD]: Hello!</p>",
          "It does not consider references that are obviously not URLs");
+
+  cooked("<small>http://eviltrout.com</small>", "<p><small><a href=\"http://eviltrout.com\">http://eviltrout.com</a></small></p>", "Links within HTML tags");
 });
 
 test("simple quotes", function() {
@@ -240,6 +244,9 @@ test("Mentions", function() {
                 "<p><a class=\"mention\" href=\"/users/eviltrout\">@eviltrout</a></p>",
                 "it doesn't onebox mentions");
 
+  cookedOptions("<small>a @sam c</small>", alwaysTrue,
+                "<p><small>a <a class=\"mention\" href=\"/users/sam\">@sam</a> c</small></p>",
+                "it allows mentions within HTML tags");
 });
 
 
@@ -370,7 +377,7 @@ test("sanitize", function() {
 
   cooked("[the answer](javascript:alert(42))", "<p><a>the answer</a></p>", "it prevents XSS");
 
-  cooked("<i class=\"fa fa-bug fa-spin\" style=\"font-size:600%\"></i>\n<!-- -->", "<p><i></i><br/>&lt;!-- --&gt;</p>", "it doesn't circumvent XSS with comments");
+  cooked("<i class=\"fa fa-bug fa-spin\" style=\"font-size:600%\"></i>\n<!-- -->", "<p><i></i><br/></p>", "it doesn't circumvent XSS with comments");
 });
 
 test("URLs in BBCode tags", function() {

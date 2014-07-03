@@ -8,13 +8,42 @@ module("MDTest", {
 // do not affect formatting. 
 function normalize(str) {
   return str.replace(/\n\s*/g, '').
-             replace(/ \/\>/g, '/>').
+             replace(/ \/\>/g, '>').
              replace(/    ?/g, "\t").
              replace(/&#34;/g, '&quot;');
 }
 
+// We use a custom sanitizer for MD test that hoists out comments. In Discourse
+// they are stripped, but to be compliant with the spec they should not be.
+function hoistingSanitizer(result) {
+  var hoisted,
+      m = result.match(/<!--[\s\S]*?-->/g);
+  if (m && m.length) {
+    hoisted = [];
+    for (var i=0; i<m.length; i++) {
+      var c = m[i],
+          id = "discourse:hoisted-comment:" + i;
+      result = result.replace(c, id);
+      hoisted.push([c, id]);
+    }
+  }
+
+  result = Discourse.Markdown.sanitize(result);
+
+  if (hoisted) {
+    hoisted.forEach(function(tuple) {
+      result = result.replace(tuple[1], tuple[0]);
+    });
+  }
+
+  return result;
+}
+
 var md = function(input, expected, text) {
-  var result = Discourse.Markdown.cook(input, {sanitize: true, traditional_markdown_linebreaks: true}),
+  var result = Discourse.Markdown.cook(input, {
+        sanitizerFunction: hoistingSanitizer,
+        traditional_markdown_linebreaks: true
+      }),
       resultNorm = normalize(result),
       expectedNorm = normalize(expected),
       same = (result === expected) || (resultNorm === expectedNorm);
