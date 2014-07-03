@@ -11,9 +11,16 @@ export default Em.Component.extend({
 
     buffer.push("<a href='" + Discourse.getURL('/category/') + Discourse.Category.slugFor(category) + "'>");
 
-    if (Em.isEmpty(logoUrl)) {
+    var noLogo = Em.isEmpty(logoUrl);
+    if (noLogo || (!Em.isEmpty(category.get('parentCategory')))) {
       buffer.push(Handlebars.Utils.escapeExpression(category.get('name')));
-    } else {
+
+      if (!noLogo) {
+        buffer.push("<br>");
+      }
+    }
+
+    if (!noLogo) {
       buffer.push("<img src='" + logoUrl + "' class='category-logo'>");
     }
     buffer.push("</a>");
