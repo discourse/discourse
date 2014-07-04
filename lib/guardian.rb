@@ -200,9 +200,9 @@ class Guardian
   end
 
   def can_invite_to?(object, group_ids=nil)
-    can_see?(object) &&
-    can_invite_to_forum? &&
-    ( group_ids.blank? || is_admin? )
+    can_invite = can_see?(object) && can_invite_to_forum? && ( group_ids.blank? || is_admin? )
+    can_invite = can_invite && ( !object.category.read_restricted || is_admin? ) if object.is_a?(Topic)
+    can_invite
   end
 
   def can_bulk_invite_to_forum?(user)

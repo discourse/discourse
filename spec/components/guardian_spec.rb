@@ -241,9 +241,13 @@ describe Guardian do
   end
 
   describe 'can_invite_to?' do
+    let(:group) { Fabricate(:group) }
+    let(:category) { Fabricate(:category, read_restricted: true) }
     let(:topic) { Fabricate(:topic) }
+    let(:private_topic) { Fabricate(:topic, category: category) }
     let(:user) { topic.user }
     let(:moderator) { Fabricate(:moderator) }
+    let(:admin) { Fabricate(:admin) }
 
     it 'handles invitation correctly' do
       Guardian.new(nil).can_invite_to?(topic).should be_false
@@ -266,6 +270,14 @@ describe Guardian do
       SiteSetting.stubs(:enable_local_logins).returns(false)
       Guardian.new(moderator).can_invite_to?(topic).should be_false
       Guardian.new(user).can_invite_to?(topic).should be_false
+    end
+
+    it 'returns false for normal user on private topic' do
+      Guardian.new(user).can_invite_to?(private_topic).should be_false
+    end
+
+    it 'returns true for admin on private topic' do
+      Guardian.new(admin).can_invite_to?(private_topic).should be_true
     end
 
   end
@@ -1757,4 +1769,3 @@ describe Guardian do
     end
   end
 end
-
