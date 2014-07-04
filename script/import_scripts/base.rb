@@ -37,8 +37,8 @@ class ImportScripts::Base
       @posts[import_id] = post_id
     end
 
-    Post.pluck(:id, :topic_id, :post_number).each do |p,t,n|
-      @topic_lookup[p] = {topic_id: t, post_number: n}
+    Post.pluck(:id, :topic_id, :post_number).each do |post_id,t,n|
+      @topic_lookup[post_id] = {topic_id: t, post_number: n}
     end
   end
 
@@ -86,7 +86,7 @@ class ImportScripts::Base
 
   # Get the Discourse User id based on the id of the source user
   def user_id_from_imported_user_id(import_id)
-    @existing_users[import_id] || @existing_users[import_id.to_s] || find_user_by_import_id(import_id)
+    @existing_users[import_id] || @existing_users[import_id.to_s] || find_user_by_import_id(import_id).try(:id)
   end
 
   def find_user_by_import_id(import_id)
@@ -116,12 +116,12 @@ class ImportScripts::Base
   # Required fields are :id and :email, where :id is the id of the
   # user in the original datasource. The given id will not be used to
   # create the Discourse user record.
-  def create_users(results)
-    puts "creating users"
+  def create_users(results, opts={})
     num_users_before = User.count
     users_created = 0
     users_skipped = 0
     progress = 0
+    total = opts[:total] || results.size
 
     results.each do |result|
       u = yield(result)
@@ -143,12 +143,10 @@ class ImportScripts::Base
         puts "Skipping user id #{u[:id]} because email is blank"
       end
 
-      print_status users_created + users_skipped + @failed_users.length, results.size
+      print_status users_created + users_skipped + @failed_users.length + (opts[:offset] || 0), total
     end
 
-    puts ''
-    puts "created: #{User.count - num_users_before} users"
-    puts " failed: #{@failed_users.size}" if @failed_users.size > 0
+    return [users_created, users_skipped]
   end
 
   def create_user(opts, import_id)
@@ -194,11 +192,19 @@ class ImportScripts::Base
   # create the Discourse category record.
   # Optional attributes are position, description, and parent_category_id.
   def create_categories(results)
-    puts "creating categories"
+    puts "", "creating categories"
 
     results.each do |c|
       params = yield(c)
       puts "    #{params[:name]}"
+
+      # make sure categories don't go more than 2 levels deep
+      if params[:parent_category_id]
+        top = Category.find_by_id(params[:parent_category_id])
+        top = top.parent_category while top && !top.parent_category.nil?
+        params[:parent_category_id] = top.id if top
+      end
+
       new_category = create_category(params, params[:id])
       @categories[params[:id]] = new_category
     end
@@ -245,10 +251,16 @@ class ImportScripts::Base
       else
         begin
           new_post = create_post(params, import_id)
-          @posts[import_id] = new_post.id
-          @topic_lookup[new_post.id] = {post_number: new_post.post_number, topic_id: new_post.topic_id}
+          if new_post.is_a?(Post)
+            @posts[import_id] = new_post.id
+            @topic_lookup[new_post.id] = {post_number: new_post.post_number, topic_id: new_post.topic_id}
 
-          created += 1
+            created += 1
+          else
+            skipped += 1
+            puts "Error creating post #{import_id}. Skipping."
+            puts new_post.inspect
+          end
         rescue => e
           skipped += 1
           puts "Error creating post #{import_id}. Skipping."
@@ -276,7 +288,9 @@ class ImportScripts::Base
       opts[:raw] = opts[:raw].bbcode_to_md rescue opts[:raw]
     end
 
-    PostCreator.create(user, opts)
+    post_creator = PostCreator.new(user, opts)
+    post = post_creator.create
+    post ? post : post_creator.errors.full_messages
   end
 
   def close_inactive_topics(opts={})

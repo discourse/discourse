@@ -35,6 +35,8 @@ class ImportScripts::Kunena < ImportScripts::Base
 
     parse_users
 
+    puts "creating users"
+
     create_users(@users) do |id, user|
       { id: id,
         email: user[:email],
@@ -42,6 +44,7 @@ class ImportScripts::Kunena < ImportScripts::Base
         created_at: user[:created_at],
         bio_raw: user[:bio],
         moderator: user[:moderator] ? true : false,
+        admin: user[:admin] ? true : false,
         suspended_at: user[:suspended] ? Time.zone.now : nil,
         suspended_till: user[:suspended] ? 100.years.from_now : nil }
     end
@@ -135,10 +138,9 @@ class ImportScripts::Kunena < ImportScripts::Base
         mapped = {}
 
         mapped[:id] = m['id']
-        mapped[:user_id] = user_id_from_imported_user_id(m['userid']) || find_user_by_import_id(m['userid']).try(:id) || -1
+        mapped[:user_id] = user_id_from_imported_user_id(m['userid']) || -1
         mapped[:raw] = m["message"]
         mapped[:created_at] = Time.zone.at(m['time'])
-        mapped[:custom_fields] = {import_id: m['id']}
 
         if m['id'] == m['thread']
           mapped[:category] = category_from_imported_category_id(m['catid']).try(:name)

@@ -115,8 +115,7 @@ class ImportScripts::Drupal < ImportScripts::Base
           raw: row['body'],
           created_at: Time.zone.at(row['created']),
           pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,
-          title: row['title'].try(:strip),
-          custom_fields: {import_id: "nid:#{row['nid']}"}
+          title: row['title'].try(:strip)
         }
       end
     end
@@ -163,7 +162,6 @@ class ImportScripts::Drupal < ImportScripts::Base
             user_id: user_id_from_imported_user_id(row['uid']) || -1,
             raw: row['body'],
             created_at: Time.zone.at(row['created']),
-            custom_fields: {import_id: "cid:#{row['cid']}"}
           }
           if row['pid']
             parent = topic_lookup_from_imported_post_id("cid:#{row['pid']}")
