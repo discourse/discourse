@@ -7,20 +7,21 @@
       <h2><a {{bind-attr href="usernameUrl"}}>{{name}}</a></h2>
     {{/if}}
 
-    {{#if showBadges}}
-      <div class="badge-section">
-        {{#each user.featured_user_badges}}
-          {{user-badge badge=badge}}
-        {{/each}}
-        {{#if showMoreBadges}}
-          {{#link-to 'user.badges' user class="btn more-user-badges"}}
-            {{i18n badges.more_badges count=moreBadgesCount}}
-          {{/link-to}}
-        {{/if}}
-      </div>
-    {{/if}}
+
   </div>
 
+  {{#if showBadges}}
+    <div class="badge-section">
+      {{#each user.featured_user_badges}}
+        {{user-badge badge=badge}}
+      {{/each}}
+      {{#if showMoreBadges}}
+        {{#link-to 'user.badges' user class="btn more-user-badges"}}
+          {{i18n badges.more_badges count=moreBadgesCount}}
+        {{/link-to}}
+      {{/if}}
+    </div>
+  {{/if}}
   {{#if user}}
     <div class="metadata">
       {{#if user.location}}<h3><i class="fa fa-map-marker"></i> {{user.location}}</h3>{{/if}}

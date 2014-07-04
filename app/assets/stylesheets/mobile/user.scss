@@ -117,6 +117,10 @@
         font-size: 20px;
         margin-bottom: 6px;
         font-weight: normal;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       a[href] {

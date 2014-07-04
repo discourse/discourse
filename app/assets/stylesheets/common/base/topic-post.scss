@@ -6,6 +6,11 @@
  span {
    font-size: 13px;
    padding-right: 8px;
+   display: inline-block;
+   max-width: 280px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
    a {
      color: scale-color($primary, $lightness: 30%);
    }

@@ -13,20 +13,27 @@
   h1 {
     display: inline-block;
     min-width: 120px;
-    font-size: 30px;
-    line-height: 33px;
-    margin-bottom: 8px;
-
+    font-size: 25px;
+    line-height: 1.25;
+    display: block;
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     a {
       color: $primary;
     }
   }
 
   h2 {
-    font-size: 20px;
-    line-height: 22px;
+    font-size: 15px;
+    line-height: 1.25;
     font-weight: normal;
-    margin-bottom: 5px;
+    display: block;
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     a {
       color: $primary;
@@ -51,10 +58,11 @@
   }
 
   .metadata {
-    float: right;
+    position: absolute;
+    right: 20px;
+    top: 10px;
     max-width: 180px;
     text-align: right;
-    margin-top: 5px;
   }
 
   .bottom {
@@ -101,16 +109,12 @@
       float: left;
     }
 
-
-
-    h2 {
-      line-height: 12px;
-    }
-
     .badge-section {
       margin-top: 10px;
+      float: left;
+      width: 300px;
+
       h3 {
-        line-height: 43px;
         color: $primary;
         font-size: 14px;
         margin-bottom: -8px;
@@ -120,7 +124,6 @@
     .more-user-badges {
       @extend .user-badge;
       padding: 3px 8px;
-      line-height: 19px;
       font-size: 13px;
     }
   }
