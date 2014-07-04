@@ -101,6 +101,14 @@ function parseTree(tree, path, insideCounts) {
 
       insideCounts[tagName] = insideCounts[tagName] - 1;
     }
+
+    // If raw nodes are in paragraphs, pull them up
+    if (tree.length === 2 && tree[0] === 'p' && tree[1] instanceof Array && tree[1][0] === "__RAW") {
+      var text = tree[1][1];
+      tree[0] = "__RAW";
+      tree[1] = text;
+    }
+
     path.pop();
   }
   return tree;
@@ -148,9 +156,6 @@ Discourse.Dialect = {
     dialect.options = opts;
     var tree = parser.toHTMLTree(text, 'Discourse'),
         result = parser.renderJsonML(parseTree(tree));
-
-    // This feature is largely for MDTest. We prefer to strip comments
-    // in Discourse
 
     if (opts.sanitize) {
       result = Discourse.Markdown.sanitize(result);
