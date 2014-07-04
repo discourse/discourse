@@ -25,5 +25,8 @@
 <section class='category-heading'>
   {{#if category.logo_url}}
     <img {{bind-attr src=category.logo_url}} class="category-logo">
+    {{#if category.description}}
+      <p>{{category.description}}</p>
+    {{/if}}
   {{/if}}
 </section>

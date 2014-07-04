@@ -285,9 +285,14 @@ button.dismiss-read {
 
 .category-heading {
   clear: both;
+  p {
+    line-height: 1.5em;
+    font-size: 1.5em;
+  }
 }
 .category-logo {
   max-height: 150px;
   float: left;
   margin-bottom: 15px;
+  margin-right: 15px;
 }
