@@ -26,7 +26,7 @@ module Jobs
       user = post.user
 
       # Grant "Welcome" badge to the user if they do not already have it.
-      BadgeGranter.grant(Badge.find(5), user)
+      BadgeGranter.grant(Badge.find(Badge::Welcome), user)
 
       Badge.like_badge_counts.each do |badge_id, count|
         if post.like_count >= count

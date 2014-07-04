@@ -13,7 +13,13 @@ class BadgeGranter
   def grant
     return if @granted_by and !Guardian.new(@granted_by).can_grant_badges?(@user)
 
-    user_badge = UserBadge.find_by(badge_id: @badge.id, user_id: @user.id, post_id: @post_id)
+    find_by = { badge_id: @badge.id, user_id: @user.id }
+
+    if @badge.multiple_grant?
+      find_by[:post_id] = @post_id
+    end
+
+    user_badge = UserBadge.find_by(find_by)
 
     if user_badge.nil? || (@badge.multiple_grant? && @post_id.nil?)
       UserBadge.transaction do
