@@ -25,12 +25,15 @@ var blockTags = ['address', 'article', 'aside', 'audio', 'blockquote', 'canvas',
     };
 
 Discourse.Dialect.registerBlock('html', function(block, next) {
-  var split;
+  var split, pos;
 
   // Fix manual blockquote paragraphing even though it's not strictly correct
-  if (block.search(/[^\s]+<blockquote/) === 0) {
-    split = splitAtLast('blockquote', block, next, true);
-    if (split) { return this.processInline(split[0]); }
+  // PERF NOTE: /\S+<blockquote/ is a perf hog for search, try on huge string
+  if (pos = block.search(/<blockquote/) >= 0) {
+    if(block.substring(0, pos).search(/\s/) === -1) {
+      split = splitAtLast('blockquote', block, next, true);
+      if (split) { return this.processInline(split[0]); }
+    }
   }
 
   var m = /^<([^>]+)\>/.exec(block);
