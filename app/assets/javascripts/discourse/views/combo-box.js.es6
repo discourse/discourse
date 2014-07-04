@@ -33,7 +33,7 @@ export default Discourse.View.extend({
     }
 
     var selected = this.get('value');
-    if (selected) { selected = selected.toString(); }
+    if (!Em.isNone(selected)) { selected = selected.toString(); }
 
     if (this.get('content')) {
       var self = this;
