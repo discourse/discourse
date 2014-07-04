@@ -1006,6 +1006,7 @@ describe UsersController do
     let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
 
     before do
+      ActiveRecord::Base.observers.enable :all
       Fabricate :post, user: user, topic: topic
     end
 
@@ -1032,7 +1033,7 @@ describe UsersController do
 
     context "when `enable_names` is true" do
       before do
-        SiteSetting.stubs(:enable_names?).returns(true)
+        SiteSetting.enable_names = true
       end
 
       it "returns names" do
