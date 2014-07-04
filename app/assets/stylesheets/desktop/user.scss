@@ -102,6 +102,12 @@
 
   table.group-members {
     width: 100%;
+    p {
+      max-width: 600px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     th.seen {
       text-align: right;
     }
@@ -175,6 +181,10 @@
         margin-bottom: 6px;
         font-weight: normal;
         margin-top: 5px;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       a[href] {
@@ -331,6 +341,18 @@
     .title {
       display: block;
       font-size: 14px;
+      max-width: 80%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .name {
+      display: block;
+      font-size: 14px;
+      max-width: 400px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .edit-reason {
       background-color: scale-color($highlight, $lightness: 25%);
