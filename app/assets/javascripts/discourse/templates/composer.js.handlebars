@@ -65,21 +65,19 @@
           <div class='preview-wrapper'>
             <div id='wmd-preview' {{bind-attr class="hidePreview:hidden"}}></div>
           </div>
-          {{#if currentUser}}
-            <div class="composer-bottom-right">
-              <a href="#" {{action togglePreview}} class='toggle-preview'>{{{model.toggleText}}}</a>
-              {{#if view.isUploading}}
-                <div id="file-uploading">
-                  {{i18n upload_selector.uploading}} {{view.uploadProgress}}% <a id="cancel-file-upload">{{i18n cancel}}</a>
-                </div>
-              {{else}}
-                {{#if Discourse.Mobile.mobileView}}
-                  <a {{action showUploadSelector view}} class='mobile-file-upload'>{{i18n upload}}</a>
-                {{/if}}
+          <div class="composer-bottom-right">
+            <a href="#" {{action togglePreview}} class='toggle-preview'>{{{model.toggleText}}}</a>
+            {{#if view.isUploading}}
+              <div id="file-uploading">
+                {{i18n upload_selector.uploading}} {{view.uploadProgress}}% <a id="cancel-file-upload">{{i18n cancel}}</a>
+              </div>
+            {{else}}
+              {{#if Discourse.Mobile.mobileView}}
+                <a {{action showUploadSelector view}} class='mobile-file-upload'>{{i18n upload}}</a>
               {{/if}}
-              <div id='draft-status'>{{model.draftStatus}}</div>
-            </div>
-          {{/if}}
+            {{/if}}
+            <div id='draft-status'>{{model.draftStatus}}</div>
+          </div>
         </div>
 
         {{#if currentUser}}
