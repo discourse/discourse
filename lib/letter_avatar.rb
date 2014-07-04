@@ -29,7 +29,6 @@ class LetterAvatar
     end
 
     def generate(username, size, opts = nil)
-
       identity = Identity.from_username(username)
 
       cache = true
@@ -38,14 +37,10 @@ class LetterAvatar
       size = FULLSIZE if size > FULLSIZE
       filename = cached_path(identity, size)
 
-      if cache && File.exists?(filename)
-        return filename
-      end
+      return filename if cache && File.exists?(filename)
 
       fullsize = fullsize_path(identity)
-      if !cache || !File.exists?(fullsize)
-        generate_fullsize(identity)
-      end
+      generate_fullsize(identity) if !cache || !File.exists?(fullsize)
 
       OptimizedImage.resize(fullsize, filename, size, size)
       filename
@@ -63,7 +58,6 @@ class LetterAvatar
     end
 
     def generate_fullsize(identity)
-
       color = identity.color
       letter = identity.letter
 
@@ -84,6 +78,8 @@ class LetterAvatar
       }
 
       `convert #{instructions.join(" ")}`
+
+      ImageOptim.new.optimize_image(filename) rescue nil
 
       filename
     end

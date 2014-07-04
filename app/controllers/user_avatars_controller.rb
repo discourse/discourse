@@ -6,7 +6,6 @@ class UserAvatarsController < ApplicationController
   skip_before_filter :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter]
 
   def refresh_gravatar
-
     user = User.find_by(username_lower: params[:username].downcase)
     guardian.ensure_can_edit!(user)
 

@@ -82,7 +82,8 @@ class OptimizedImage < ActiveRecord::Base
     }.join(" ")
 
     `convert #{instructions}`
-    $?.exitstatus == 0
+
+    ImageOptim.new.optimize_image(to) rescue nil if $?.exitstatus == 0
   end
 
 end
