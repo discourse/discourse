@@ -36,6 +36,8 @@ en:
   is_reserved: "is reserved"
 
   errors:
+    messages:
+      too_long_validation: "is limited to %{max} characters; you entered %{length}."
     embed:
       load_from_remote: "There was an error loading that post."
 
