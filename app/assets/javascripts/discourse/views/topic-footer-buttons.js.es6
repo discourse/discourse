@@ -22,7 +22,7 @@ export default Discourse.ContainerView.extend({
     if (Discourse.User.current()) {
       if (!topic.get('isPrivateMessage')) {
         // We hide some controls from private messages
-        if (this.get('topic.details.can_invite_to') && (!this.get('topic.category.read_restricted') || Discourse.User.currentProp('admin'))) {
+        if (this.get('topic.details.can_invite_to')) {
           this.attachViewClass(InviteReplyButton);
         }
         this.attachViewClass(StarButton);
