@@ -1,3 +1,4 @@
+/*global md5:true */
 /**
 
   Discourse uses the Markdown.js as its main parser. `Discourse.Dialect` is the framework
@@ -9,7 +10,8 @@ var parser = window.BetterMarkdown,
     DialectHelpers = parser.DialectHelpers,
     dialect = MD.dialects.Discourse = DialectHelpers.subclassDialect( MD.dialects.Gruber ),
     initialized = false,
-    emitters = [];
+    emitters = [],
+    hoisted;
 
 /**
   Initialize our dialects for processing.
@@ -35,19 +37,18 @@ function processTextNodes(node, event, emitter) {
   if (node.length < 2) { return; }
 
   if (node[0] === '__RAW') {
+    var hash = md5(node[1]);
+    hoisted[hash] = node[1];
+    node[1] = hash;
     return;
   }
 
-  var skipSanitize = [];
   for (var j=1; j<node.length; j++) {
     var textContent = node[j];
     if (typeof textContent === "string") {
       var result = emitter(textContent, event);
       if (result) {
         if (result instanceof Array) {
-          for (var i=0; i<result.length; i++) {
-            skipSanitize[result[i]] = true;
-          }
           node.splice.apply(node, [j, 1].concat(result));
         } else {
           node[j] = result;
@@ -143,6 +144,7 @@ Discourse.Dialect = {
   **/
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
+    hoisted = {};
     dialect.options = opts;
     var tree = parser.toHTMLTree(text, 'Discourse'),
         result = parser.renderJsonML(parseTree(tree));
@@ -156,6 +158,15 @@ Discourse.Dialect = {
       result = opts.sanitizerFunction(result);
     }
 
+    // If we hoisted out anything, put it back
+    var keys = Object.keys(hoisted);
+    if (keys.length) {
+      keys.forEach(function(k) {
+        result = result.replace(k, hoisted[k]);
+      });
+    }
+
+    hoisted = {};
     return result.trim();
   },
 

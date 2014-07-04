@@ -22,7 +22,7 @@ function hoistingSanitizer(result) {
     hoisted = [];
     for (var i=0; i<m.length; i++) {
       var c = m[i],
-          id = "discourse:hoisted-comment:" + i;
+          id = md5("discourse:hoisted-comment:" + i);
       result = result.replace(c, id);
       hoisted.push([c, id]);
     }
