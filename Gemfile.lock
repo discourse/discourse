@@ -9,7 +9,7 @@ PATH
     rails_multisite (0.0.1)
 
 GEM
-  remote: https://rubygems.org/
+  remote: https://ruby.taobao.org/
   specs:
     actionmailer (4.1.4)
       actionpack (= 4.1.4)
