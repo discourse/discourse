@@ -14,15 +14,12 @@ class UserSearch
 
     if @term.present?
       if SiteSetting.enable_names?
-        users = users.where("username_lower LIKE :term_like OR
-                            TO_TSVECTOR('simple', name) @@
-                            TO_TSQUERY('simple',
-                              REGEXP_REPLACE(
-                                REGEXP_REPLACE(
-                                  CAST(PLAINTO_TSQUERY(:term) AS TEXT)
-                                  ,'\''(?: |$)', ':*''', 'g'),
-                              '''', '', 'g')
-                            )", term: @term, term_like: @term_like)
+        query = Search.ts_query(@term, "simple")
+        users = users.includes(:user_search_data)
+                     .references(:user_search_data)
+                     .where("username_lower LIKE :term_like OR user_search_data.search_data @@ #{query}",
+                            term: @term, term_like: @term_like)
+                     .order(User.sql_fragment("CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC", @term_like))
       else
         users = users.where("username_lower LIKE :term_like", term_like: @term_like)
       end

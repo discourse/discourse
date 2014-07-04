@@ -6,7 +6,7 @@ describe UserSearch do
   let(:topic2)    { Fabricate :topic }
   let(:topic3)    { Fabricate :topic }
   let(:user1)     { Fabricate :user, username: "mrb", name: "Michael Madsen", last_seen_at: 10.days.ago }
-  let(:user2)     { Fabricate :user, username: "mrblue",   name: "Eddie Bunker", last_seen_at: 9.days.ago  }
+  let(:user2)     { Fabricate :user, username: "mrblue",   name: "Eddie Code", last_seen_at: 9.days.ago  }
   let(:user3)     { Fabricate :user, username: "mrorange", name: "Tim Roth", last_seen_at: 8.days.ago }
   let(:user4)     { Fabricate :user, username: "mrpink",   name: "Steve Buscemi",  last_seen_at: 7.days.ago }
   let(:user5)     { Fabricate :user, username: "mrbrown",  name: "Quentin Tarantino", last_seen_at: 6.days.ago }
@@ -15,6 +15,8 @@ describe UserSearch do
   let(:moderator) { Fabricate :moderator, username: "themod" }
 
   before do
+    ActiveRecord::Base.observers.enable :all
+
     Fabricate :post, user: user1, topic: topic
     Fabricate :post, user: user2, topic: topic2
     Fabricate :post, user: user3, topic: topic
@@ -31,6 +33,7 @@ describe UserSearch do
   # this is a seriously expensive integration test, re-creating this entire test db is too expensive
   # reuse
   it "operates correctly" do
+
     # normal search
     results = search_for(user1.name.split(" ").first)
     results.size.should == 1
@@ -89,6 +92,12 @@ describe UserSearch do
     results = search_for("Tarantino")
     results.size.should == 1
 
+    results = search_for("coding")
+    results.size.should == 0
+
+    results = search_for("z")
+    results.size.should == 0
+
     # When searching by name is disabled, it will not return the record
     SiteSetting.enable_names = false
     results = search_for("Tarantino")
@@ -98,6 +107,7 @@ describe UserSearch do
     # find an exact match first
     results = search_for("mrB")
     results.first.should == user1
+
 
   end
 
