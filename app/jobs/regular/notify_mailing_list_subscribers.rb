@@ -8,6 +8,9 @@ module Jobs
         post = Post.with_deleted.find_by(id: post_id)
         # our topic can be deleted as well
         return if (post && post.trashed?) || !post.topic
+
+        # don't send emails for imported posts
+        return if post.custom_fields['import_id'].present?
       end
 
       raise Discourse::InvalidParameters.new(:post_id) unless post
