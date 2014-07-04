@@ -40,13 +40,13 @@
       <div class='input-prepend input-append' style="margin-top: 10px;">
         <span class='color-title'>{{i18n category.background_color}}:</span>
         <span class='add-on'>#</span>{{text-field value=color placeholderKey="category.color_placeholder" maxlength="6"}}
-        {{colorPicker colors=backgroundColors usedColors=usedBackgroundColors value=color}}
+        {{color-picker colors=backgroundColors usedColors=usedBackgroundColors value=color}}
       </div>
 
       <div class='input-prepend input-append'>
         <span class='color-title'>{{i18n category.foreground_color}}:</span>
         <span class='add-on'>#</span>{{text-field value=text_color placeholderKey="category.color_placeholder" maxlength="6"}}
-        {{colorPicker colors=foregroundColors value=text_color}}
+        {{color-picker colors=foregroundColors value=text_color}}
       </div>
     </div>
   </section>

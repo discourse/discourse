@@ -22,7 +22,7 @@
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/views/text-field
 //= require ./discourse/views/modal/modal_body_view
-//= require ./discourse/views/modal/flag_view
+//= require ./discourse/views/flag
 //= require ./discourse/views/combo-box
 //= require ./discourse/views/button
 //= require ./discourse/views/dropdown-button

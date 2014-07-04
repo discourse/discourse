@@ -1,12 +1,4 @@
-/**
-  This view handles the rendering of an archetype as an option
-
-  @class ArchetypeOptionsView
-  @extends Discourse.ContainerView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.ArchetypeOptionsView = Discourse.ContainerView.extend({
+export default Discourse.ContainerView.extend({
   metaDataBinding: 'parentView.metaData',
 
   init: function() {
@@ -23,5 +15,4 @@ Discourse.ArchetypeOptionsView = Discourse.ContainerView.extend({
 
     });
   }
-
 });
