@@ -41,13 +41,16 @@
     line-height: 1.2em;
     overflow: hidden;
     a {color: $primary;}
-    a.badge-category { vertical-align: top; margin-top: 2px; }
+    a.badge-category {
+      float: left;
+      vertical-align: top;
+      margin-top: 2px;
+      margin-right: 5px;
+      }
     a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
   }
   .topic-statuses {
     margin-top: -2px;
-    .fa-thumb-tack { padding-left: 3px;
- }
 
   }
   .select2-container {
