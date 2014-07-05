@@ -201,7 +201,8 @@ class Guardian
 
   def can_invite_to?(object, group_ids=nil)
     can_invite = can_see?(object) && can_invite_to_forum? && ( group_ids.blank? || is_admin? )
-    can_invite = can_invite && ( !object.category.read_restricted || is_admin? ) if object.is_a?(Topic)
+    #TODO how should invite to PM work?
+    can_invite = can_invite && ( !object.category.read_restricted || is_admin? ) if object.is_a?(Topic) && object.category
     can_invite
   end
 
