@@ -15,9 +15,16 @@
         display: block;
         span.username {
           color: darken($primary, 40%);
+          display: inline-block;
         }
         span.name {
           font-size: 11px;
+          display: inline-block;
+          width: 90px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          vertical-align: middle;
         }
         &.selected {
           background-color: scale-color($tertiary, $lightness: 90%);
