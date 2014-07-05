@@ -18,6 +18,11 @@
         }
         span.name {
           font-size: 11px;
+          display: block;
+          width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         &.selected {
           background-color: scale-color($tertiary, $lightness: 90%);
