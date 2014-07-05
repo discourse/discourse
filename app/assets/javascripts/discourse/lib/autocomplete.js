@@ -232,6 +232,9 @@ $.fn.autocomplete = function(options) {
     if (completeStart === null) return;
 
     if (r && r.then && typeof(r.then) === "function") {
+      if (div) {
+        div.hide().remove();
+      }
       r.then(updateAutoComplete);
       return;
     }
