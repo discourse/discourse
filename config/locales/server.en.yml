@@ -733,14 +733,14 @@ en:
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10000 most common passwords."
 
-    enable_sso: "Enable single sign on via an external site"
+    enable_sso: "Enable single sign on via an external site (Note: Disables invites)"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
 
-    enable_local_logins: "Enable traditional, local username and password authentication"
+    enable_local_logins: "Enable traditional, local username and password authentication. (Note: Required for invites)"
     enable_google_logins: "(deprecated) Enable Google authentication. This is the OpenID method of authentication which Google has deprecated. New installs will NOT work with this. Use Google Oauth2 instead. Existing installs must move to Google Oauth2 by April 20, 2015."
     enable_yahoo_logins: "Enable Yahoo authentication"
 
