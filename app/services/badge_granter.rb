@@ -74,7 +74,7 @@ class BadgeGranter
              LEFT JOIN ( #{badge.query} ) q
              ON q.user_id = ub.user_id
               #{post_clause}
-             WHERE ub.id = :id AND q.user_id IS NULL
+             WHERE ub.badge_id = :id AND q.user_id IS NULL
            )"
 
     Badge.exec_sql(sql, id: badge.id)
@@ -83,9 +83,9 @@ class BadgeGranter
             SELECT :id, q.user_id, q.granted_at, -1, #{post_id_field}
             FROM ( #{badge.query} ) q
             LEFT JOIN user_badges ub ON
-              ub.id = :id AND ub.user_id = q.user_id
+              ub.badge_id = :id AND ub.user_id = q.user_id
               #{post_clause}
-            WHERE ub.id IS NULL"
+            WHERE ub.badge_id IS NULL"
 
     Badge.exec_sql(sql, id: badge.id)
 

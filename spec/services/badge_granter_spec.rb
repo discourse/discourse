@@ -28,8 +28,10 @@ describe BadgeGranter do
 
     it 'should grant missing badges' do
       post = Fabricate(:post, like_count: 30)
-      BadgeGranter.backfill(Badge.find(Badge::NicePost))
-      BadgeGranter.backfill(Badge.find(Badge::GoodPost))
+      2.times {
+        BadgeGranter.backfill(Badge.find(Badge::NicePost))
+        BadgeGranter.backfill(Badge.find(Badge::GoodPost))
+      }
 
       # TODO add welcome
       post.user.user_badges.pluck(:badge_id).sort.should == [Badge::NicePost,Badge::GoodPost]
