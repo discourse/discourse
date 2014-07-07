@@ -10,8 +10,8 @@ task "admin:create" => :environment do
     if existing_user
       # user already exists, ask for password reset
       admin = existing_user
-      reset_password = ask("User with this email already exists! Do you want to reset the password for this email? (y/n)  ")
-      if (reset_password.downcase == 'y')
+      reset_password = ask("User with this email already exists! Do you want to reset the password for this email? (Y/n)  ")
+      if (reset_password == "" || reset_password.downcase == 'y')
         begin
           password = ask("Password:  ") {|q| q.echo = false}
           password_confirmation = ask("Repeat password:  ") {|q| q.echo = false}
@@ -46,8 +46,8 @@ task "admin:create" => :environment do
   end
 
   # grant admin privileges
-  grant_admin = ask("Do you want to grant Admin privileges to this account? (y/n)  ")
-  if (grant_admin.downcase == 'y')
+  grant_admin = ask("Do you want to grant Admin privileges to this account? (Y/n)  ")
+  if (grant_admin == "" || grant_admin.downcase == 'y')
     admin.grant_admin!
     admin.change_trust_level!(TrustLevel.levels.max_by{|k, v| v}[0])
     admin.email_tokens.update_all  confirmed: true
