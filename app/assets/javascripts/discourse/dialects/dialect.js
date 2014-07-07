@@ -167,7 +167,7 @@ Discourse.Dialect = {
     var keys = Object.keys(hoisted);
     if (keys.length) {
       keys.forEach(function(k) {
-        result = result.replace(k, hoisted[k]);
+        result = result.replace(new RegExp(k,"g"), hoisted[k]);
       });
     }
 
