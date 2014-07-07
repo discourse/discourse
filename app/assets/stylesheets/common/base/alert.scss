@@ -1,0 +1,45 @@
+.alert {
+  padding: 8px 35px 8px 14px;
+  background-color: scale-color($danger, $lightness: 75%);
+  color: #c09853;
+
+  .close {
+    position: relative;
+    top: -2px;
+    right: -21px;
+    line-height: 18px;
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 18px;
+    color: $primary;
+    opacity: 0.2;
+    filter: alpha(opacity = 20);
+    @include hover {
+      color: $primary;
+      text-decoration: none;
+      cursor: pointer;
+      opacity: 0.4;
+      filter: alpha(opacity = 40);
+    }
+  }
+  button.close {
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-appearance: none;
+  }
+  &.alert-success {
+    background-color:  scale-color($success, $lightness: 90%);
+    color: $success;
+  }
+  &.alert-error {
+    background-color:  scale-color($danger, $lightness: 75%);
+    color: $danger;
+  }
+  &.alert-info {
+    background-color: scale-color($tertiary, $lightness: 90%);
+    color: $primary;
+  }
+}
