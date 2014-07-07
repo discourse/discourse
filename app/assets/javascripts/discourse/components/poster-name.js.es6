@@ -17,6 +17,8 @@ var PosterNameComponent = Em.Component.extend({
           primaryGroupName = post.get('primary_group_name');
 
       if (post.get('staff')) { linkClass += ' staff'; }
+      if (post.get('admin')) { linkClass += ' admin'; }
+      if (post.get('moderator')) { linkClass += ' moderator'; }
       if (post.get('new_user')) { linkClass += ' new-user'; }
 
       if (!Em.isEmpty(primaryGroupName)) {
