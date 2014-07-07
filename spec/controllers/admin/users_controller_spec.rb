@@ -371,6 +371,15 @@ describe Admin::UsersController do
       end
     end
 
+    context 'ip-info' do
+
+      it "uses ipinfo.io webservice to retrieve the info" do
+        Excon.expects(:get).with("http://ipinfo.io/123.123.123.123/json", read_timeout: 30, connect_timeout: 30)
+        xhr :get, :ip_info, ip: "123.123.123.123"
+      end
+
+    end
+
   end
 
 end

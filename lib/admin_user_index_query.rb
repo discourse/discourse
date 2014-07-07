@@ -40,7 +40,6 @@ class AdminUserIndexQuery
     end
   end
 
-
   def filter_by_ip
     if params[:ip].present?
       @query.where('ip_address = :ip or registration_ip_address = :ip', ip: params[:ip])

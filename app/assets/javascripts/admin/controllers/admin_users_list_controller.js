@@ -91,7 +91,7 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
     var adminUsersListController = this;
     adminUsersListController.set('loading', true);
 
-    Discourse.AdminUser.findAll(this.get('query'), this.get('username')).then(function (result) {
+    Discourse.AdminUser.findAll(this.get('query'), { filter: this.get('username') }).then(function (result) {
       adminUsersListController.set('content', result);
       adminUsersListController.set('loading', false);
     });

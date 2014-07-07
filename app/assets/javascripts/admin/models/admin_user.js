@@ -431,7 +431,7 @@ Discourse.AdminUser.reopenClass({
 
   findAll: function(query, filter) {
     return Discourse.ajax("/admin/users/list/" + query + ".json", {
-      data: { filter: filter }
+      data: filter
     }).then(function(users) {
       return users.map(function(u) {
         return Discourse.AdminUser.create(u);

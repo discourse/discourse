@@ -76,10 +76,10 @@
     <div class='value'>{{ip_address}}</div>
     <div class='controls'>
       {{#if currentUser.admin}}
-      <button class='btn' {{action refreshBrowsers target="content"}}>
-        {{i18n admin.user.refresh_browsers}}
-      </button>
-        {{view Discourse.AdminIpLocatorView ipBinding="ip_address"}}
+        <button class='btn' {{action refreshBrowsers target="content"}}>
+          {{i18n admin.user.refresh_browsers}}
+        </button>
+        {{ip-lookup ip=ip_address user_id=id}}
       {{/if}}
     </div>
   </div>
@@ -89,7 +89,7 @@
     <div class='value'>{{registration_ip_address}}</div>
     <div class='controls'>
       {{#if currentUser.admin}}
-        {{view Discourse.AdminIpLocatorView ipBinding="registration_ip_address"}}
+        {{ip-lookup ip=registration_ip_address user_id=id}}
       {{/if}}
     </div>
   </div>

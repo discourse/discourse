@@ -48,6 +48,7 @@ Discourse::Application.routes.draw do
     resources :users, id: USERNAME_ROUTE_FORMAT do
       collection do
         get "list/:query" => "users#index"
+        get "ip-info" => "users#ip_info"
         put "approve-bulk" => "users#approve_bulk"
         delete "reject-bulk" => "users#reject_bulk"
       end

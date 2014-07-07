@@ -183,6 +183,15 @@ class Admin::UsersController < Admin::AdminController
   def leader_requirements
   end
 
+  def ip_info
+    params.require(:ip)
+    ip = params[:ip]
+
+    # should we cache results in redis?
+    location = Excon.get("http://ipinfo.io/#{ip}/json", read_timeout: 30, connect_timeout: 30).body rescue nil
+
+    render json: location
+  end
 
   private
 

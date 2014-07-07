@@ -240,7 +240,7 @@ en:
         one: "%{count} new post in the past %{unit}."
         other: "%{count} new posts in the past %{unit}."
 
-    ip_info:
+    ip_lookup:
       title: IP Address Lookup
       hostname: Hostname
       location: Location
