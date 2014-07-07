@@ -86,6 +86,7 @@ display: none;
   }
   // The various states
   &.open {
+    max-height: 100%; // ensure no overflow e.g. on small Android
     height: 270px;
   }
   &.closed {
@@ -155,6 +156,7 @@ display: none;
   // a small screen mobile device
   &.edit-title {
     &.open {
+      max-height: 100%; // ensure no overflow e.g. on small Android
       height: 250px;
     }
     .contents {
