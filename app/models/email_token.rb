@@ -57,6 +57,8 @@ class EmailToken < ActiveRecord::Base
         user.save!
       end
     end
+    # redeem invite, if available
+    Invite.redeem_from_email(user.email)
     user
   rescue ActiveRecord::RecordInvalid
     # If the user's email is already taken, just return nil (failure)

@@ -19,6 +19,10 @@ InviteRedeemer = Struct.new(:invite) do
 
   # extracted from User cause it is very specific to invites
   def self.create_user_from_invite(invite)
+
+    user_exists = User.find_by_email(invite.email)
+    return user if user_exists
+
     username = UserNameSuggester.suggest(invite.email)
 
     DiscourseHub.username_operation do
