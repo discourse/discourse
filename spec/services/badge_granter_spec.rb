@@ -36,6 +36,8 @@ describe BadgeGranter do
       # TODO add welcome
       post.user.user_badges.pluck(:badge_id).sort.should == [Badge::NicePost,Badge::GoodPost]
 
+      post.user.notifications.count.should == 2
+
       Badge.find(Badge::NicePost).grant_count.should == 1
       Badge.find(Badge::GoodPost).grant_count.should == 1
     end

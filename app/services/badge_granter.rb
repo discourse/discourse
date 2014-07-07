@@ -85,9 +85,26 @@ class BadgeGranter
             LEFT JOIN user_badges ub ON
               ub.badge_id = :id AND ub.user_id = q.user_id
               #{post_clause}
-            WHERE ub.badge_id IS NULL"
+            WHERE ub.badge_id IS NULL AND q.user_id <> -1
+            RETURNING id, user_id, granted_at
+            "
 
-    Badge.exec_sql(sql, id: badge.id)
+    builder = SqlBuilder.new(sql)
+    builder.map_exec(OpenStruct, id: badge.id).each do |row|
+
+      # old bronze badges do not matter
+      next if badge.badge_type_id == BadgeType::Bronze and row.granted_at < 2.days.ago
+
+      notification = Notification.create!(
+                        user_id: row.user_id,
+                        notification_type: Notification.types[:granted_badge],
+                        data: { badge_id: badge.id, badge_name: badge.name }.to_json )
+
+      Badge.exec_sql("UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
+                      notification_id: notification.id,
+                      id: row.id
+                    )
+    end
 
     badge.reset_grant_count!
 

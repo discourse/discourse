@@ -6,12 +6,25 @@ class Badge < ActiveRecord::Base
   GoodPost = 7
   GreatPost = 8
   Autobiographer = 9
+  Editor = 10
 
   # other consts
   AutobiographerMinBioLength = 10
 
 
   module Queries
+
+    Editor = <<SQL
+    SELECT p.user_id, min(p.id) post_id, min(p.created_at) granted_at
+    FROM posts p
+    JOIN topics t on t.id = p.topic_id
+    WHERE p.deleted_at IS NULL AND
+          t.deleted_at IS NULL AND
+          t.visible AND
+          p.self_edits > 0
+    GROUP BY p.user_id
+SQL
+
     Welcome = <<SQL
     SELECT p.user_id, min(post_id) post_id, min(pa.created_at) granted_at
     FROM post_actions pa

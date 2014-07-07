@@ -1947,6 +1947,9 @@ en:
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
       badge:
+        editor:
+          name: Editor
+          description: First post edit.
         basic_user:
           name: Basic
           description: Granted all essential community functions.
