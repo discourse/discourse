@@ -1,5 +1,5 @@
 module UserNotificationsHelper
-  
+
   def self.sanitize_options
     return @sanitize_options if @sanitize_options
     @sanitize_options = Sanitize::Config::RELAXED.deep_dup
