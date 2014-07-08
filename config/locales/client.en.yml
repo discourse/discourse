@@ -1184,7 +1184,7 @@ en:
       auto_close_label: "Auto-close topics after:"
       auto_close_units: "hours"
       email_in: "Custom incoming email address:"
-      email_in_allow_strangers: "Accept emails from non-users (aka strangers)"
+      email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"
