@@ -58,7 +58,9 @@ export default Ember.ObjectController.extend({
 
     @property showSearch
   **/
-  showSearch: Em.computed.gte('invites.length', 10),
+  showSearch: function() {
+    return this.get('invites.length') > 9;
+  }.property(),
 
   /**
     Were the results limited by our `maxInvites`
