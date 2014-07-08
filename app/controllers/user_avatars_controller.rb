@@ -74,6 +74,7 @@ class UserAvatarsController < ApplicationController
     end
 
     if image
+      response.headers["Last-Modified"] = File.ctime(image).httpdate
       expires_in 1.year, public: true
       send_file image, disposition: nil
     else
