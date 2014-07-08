@@ -127,7 +127,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     var blacklisted = _.any(blacklist, check);
 
     if(whitelisted && !blacklisted){
-      return this.showSearch();
+      return this.showSearch(true);
     } else {
       return true;
     }
@@ -137,8 +137,11 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     Discourse.__container__.lookup('controller:topic-progress').send('toggleExpansion');
   },
 
-  showSearch: function() {
+  showSearch: function(selectContext) {
     $('#search-button').click();
+    if(selectContext) {
+      Discourse.__container__.lookup('controller:search').set('searchContextEnabled', true);
+    }
     return false;
   },
 
