@@ -34,7 +34,10 @@ function validateAttribute(tagName, attribName, value) {
 
   if (tag) {
     var attrs = tag[attribName];
-    if (attrs && (attrs.indexOf(value) !== -1 || attrs.indexOf('*') !== -1)) { return value; }
+    if (attrs && (attrs.indexOf(value) !== -1 ||
+                  attrs.indexOf('*') !== -1) ||
+                  _.any(attrs,function(r){return (r instanceof RegExp) && value.search(r) >= 0;})
+        ) { return value; }
   }
 }
 
@@ -229,10 +232,23 @@ Discourse.Markdown.whiteListTag('a', 'class', 'attachment');
 Discourse.Markdown.whiteListTag('a', 'target', '_blank');
 Discourse.Markdown.whiteListTag('a', 'class', 'onebox');
 Discourse.Markdown.whiteListTag('a', 'class', 'mention');
+
+Discourse.Markdown.whiteListTag('a', 'data-bbcode');
+
 Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
 Discourse.Markdown.whiteListTag('code', 'class', '*');
 Discourse.Markdown.whiteListTag('span', 'class', 'mention');
+Discourse.Markdown.whiteListTag('span', 'class', 'spoiler');
+Discourse.Markdown.whiteListTag('div', 'class', 'spoiler');
 Discourse.Markdown.whiteListTag('aside', 'class', 'quote');
 Discourse.Markdown.whiteListTag('aside', 'data-*');
+
+Discourse.Markdown.whiteListTag('span', 'bbcode-b');
+Discourse.Markdown.whiteListTag('span', 'bbcode-i');
+Discourse.Markdown.whiteListTag('span', 'bbcode-u');
+Discourse.Markdown.whiteListTag('span', 'bbcode-s');
+
+Discourse.Markdown.whiteListTag('span', 'class', /bbcode-size-\d+/);
+
 Discourse.Markdown.whiteListIframe(/^(https?:)?\/\/www\.google\.com\/maps\/embed\?.+/i);
