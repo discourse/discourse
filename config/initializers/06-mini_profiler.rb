@@ -27,6 +27,7 @@ if defined?(Rack::MiniProfiler)
     (path !~ /qunit/) &&
     (path !~ /srv\/status/) &&
     (path !~ /commits-widget/) &&
+    (path !~ /^\/cdn_asset/) &&
     (path !~ /^\/logs/)
   end
 

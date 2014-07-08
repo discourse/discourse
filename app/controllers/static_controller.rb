@@ -64,6 +64,11 @@ class StaticController < ApplicationController
     path = (Rails.root + "public/assets/" + path).to_s
     expires_in 1.year, public: true
     response.headers["Access-Control-Allow-Origin"] = params[:origin]
+    begin
+      response.headers["Last-Modified"] = File.ctime(path).httpdate
+    rescue Errno::ENOENT
+      raise Discourse::NotFound
+    end
     opts = {
       disposition: nil
     }
