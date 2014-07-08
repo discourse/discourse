@@ -816,6 +816,7 @@ en:
     leader_requires_topics_viewed_all_time: "The minimum total number of topics a user must have viewed to qualify for leader (3) trust level."
     leader_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for leader (3) trust level."
     leader_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last 100 days to qualify for promotion to leader (3) trust level, where x is this setting's value. (0 or higher)"
+    leader_promotion_min_duration: "The minimum number of days that a promotion to leader lasts before a user can be demoted."
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 

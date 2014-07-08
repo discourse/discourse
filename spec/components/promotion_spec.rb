@@ -118,6 +118,12 @@ describe Promotion do
           promotion.review_regular
         }.to_not change { user.reload.trust_level }
       end
+
+      it "doesn't log a trust level change" do
+        expect {
+          promotion.review_regular
+        }.to_not change { UserHistory.count }
+      end
     end
 
     context "qualifies for promotion" do
@@ -132,6 +138,12 @@ describe Promotion do
       it "promotes to leader" do
         promotion.review_regular.should == true
         user.reload.trust_level.should == TrustLevel.levels[:leader]
+      end
+
+      it "logs a trust level change" do
+        expect {
+          promotion.review_regular
+        }.to change { UserHistory.where(action: UserHistory.actions[:auto_trust_level_change]).count }.by(1)
       end
     end
   end

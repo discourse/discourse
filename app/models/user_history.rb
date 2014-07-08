@@ -25,7 +25,8 @@ class UserHistory < ActiveRecord::Base
                            :unsuspend_user,
                            :facebook_no_email,
                            :grant_badge,
-                           :revoke_badge)
+                           :revoke_badge,
+                           :auto_trust_level_change)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.

@@ -483,6 +483,9 @@ trust:
   leader_requires_max_flagged:
     default: 5
     min: 0
+  leader_promotion_min_duration:
+    default: 14
+    min: 0
 
 security:
   use_https: false

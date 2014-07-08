@@ -62,6 +62,11 @@ class Promotion
     @user.transaction do
       if admin
         StaffActionLogger.new(admin).log_trust_level_change(@user, old_level, new_level)
+      else
+        UserHistory.create!( action: UserHistory.actions[:auto_trust_level_change],
+                             target_user_id: @user.id,
+                             previous_value: old_level,
+                             new_value: new_level)
       end
       @user.save!
       @user.user_profile.recook_bio

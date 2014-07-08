@@ -19,10 +19,38 @@ describe Jobs::LeaderPromotions do
     run_job
   end
 
-  it "demotes tl3 user who doesn't qualify for tl3 anymore" do
-    tl3_user = Fabricate(:user, trust_level: TrustLevel.levels[:leader])
-    LeaderRequirements.any_instance.stubs(:requirements_met?).returns(false)
-    Promotion.any_instance.expects(:change_trust_level!).with(:regular, anything).once
-    run_job
+  context "tl3 user who doesn't qualify for tl3 anymore" do
+    def create_leader_user
+      user = Fabricate(:user, trust_level: TrustLevel.levels[:regular])
+      LeaderRequirements.any_instance.stubs(:requirements_met?).returns(true)
+      Promotion.new(user).review_regular.should == true
+      user
+    end
+
+    before do
+      SiteSetting.stubs(:leader_promotion_min_duration).returns(3)
+    end
+
+    it "demotes if was promoted more than X days ago" do
+      user = nil
+      Timecop.freeze(4.days.ago) do
+        user = create_leader_user
+      end
+
+      LeaderRequirements.any_instance.stubs(:requirements_met?).returns(false)
+      run_job
+      user.reload.trust_level.should == TrustLevel.levels[:regular]
+    end
+
+    it "doesn't demote if user was promoted recently" do
+      user = nil
+      Timecop.freeze(1.day.ago) do
+        user = create_leader_user
+      end
+
+      LeaderRequirements.any_instance.stubs(:requirements_met?).returns(false)
+      run_job
+      user.reload.trust_level.should == TrustLevel.levels[:leader]
+    end
   end
 end
