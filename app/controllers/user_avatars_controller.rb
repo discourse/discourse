@@ -29,6 +29,7 @@ class UserAvatarsController < ApplicationController
     end
 
     image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
+    response.headers["Last-Modified"] = File.ctime(image).httpdate
     expires_in 1.year, public: true
     send_file image, disposition: nil
   end
