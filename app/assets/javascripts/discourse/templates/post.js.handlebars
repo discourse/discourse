@@ -73,7 +73,7 @@
           {{#if controller.loadingExpanded}}
             <button class="btn expand-post" disabled>{{i18n loading}}</button>
           {{else}}
-            <button {{action expandFirstPost this}} class='btn expand-post'>{{i18n post.show_full}}</button>
+            <button {{action expandFirstPost this}} class='btn expand-post'>{{i18n post.show_full}}&hellip;</button>
           {{/if}}
         {{/if}}
         {{view 'post-menu' post=this adminMenu=view.adminMenu}}
