@@ -77,7 +77,7 @@ h1 .topic-statuses .topic-status i {
   }
 }
 
-section.post-menu-area, .post-actions {
+div.actions, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
        transition: opacity linear 0.4s;
@@ -86,7 +86,7 @@ section.post-menu-area, .post-actions {
     .discourse-touch & {opacity: 1;}
   }
 
-  &:hover section.post-menu-area, &:hover .post-actions {
+  &:hover div.actions, &:hover .post-actions {
     opacity: 1;
 
   }
