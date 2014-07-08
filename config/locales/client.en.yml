@@ -1618,7 +1618,7 @@ en:
           filters:
             title: "Filter"
             user_placeholder: "username"
-            address_placeholder: "em@il.com"
+            address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             reply_key_placeholder: ""
             skipped_reason_placeholder: "reason"
