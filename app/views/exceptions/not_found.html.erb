@@ -3,7 +3,7 @@
 <h1 class="page-not-found"><%= t 'page_not_found.title' %></h1>
 
 <div class="row page-not-found-topics">
-  <div class="span8 pupular-topics">
+  <div class="span8 popular-topics">
     <h2 class="popular-topics-title"><%= t 'page_not_found.popular_topics' %></h2>
     <% @top_viewed.each do |t| %>
       <%= link_to t.title, t.relative_url %><br/>
@@ -26,7 +26,7 @@
     <div class="span10" style='padding-top: 20px'>
       <h2 class="page-not-found-search"><%= t 'page_not_found.search_title' %></h2>
       <p>
-        <form action='//google.com' id='google-search' onsubmit="return google_button_clicked()">
+        <form action='//google.com/search' id='google-search' onsubmit="return google_button_clicked()">
           <input type="text" id='user-query' value="<%= @slug %>">
           <input type='hidden' id='google-query' name="q">
           <button class="btn btn-primary"><%= t 'page_not_found.search_google' %></button>
