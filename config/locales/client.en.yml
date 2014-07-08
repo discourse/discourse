@@ -1977,3 +1977,6 @@ en:
         great_post:
           name: Great Post
           description: Received 50 likes on a post. This badge can be granted multiple times.
+        paying_it_forward:
+          name: Paying It Forward
+          description: Liked a post

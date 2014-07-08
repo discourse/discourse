@@ -20,10 +20,15 @@ describe BadgeGranter do
 
       UserBadge.destroy_all
       BadgeGranter.backfill(Badge.find(Badge::Welcome))
+      BadgeGranter.backfill(Badge.find(Badge::PayingItForward))
 
-      b = UserBadge.first
-      b.user_id.should == post.user_id
+      b = UserBadge.find_by(user_id: post.user_id)
       b.post_id.should == post.id
+      b.badge_id = Badge::Welcome
+
+      b = UserBadge.find_by(user_id: user2.id)
+      b.post_id.should == post.id
+      b.badge_id = Badge::PayingItForward
     end
 
     it 'should grant missing badges' do

@@ -16,6 +16,15 @@ trust_level_badges.each do |spec|
 end
 
 Badge.seed do |b|
+  b.id = Badge::PayingItForward
+  b.name = "Paying It Forward"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.query = Badge::Queries::PayingItForward
+end
+
+Badge.seed do |b|
   b.id = Badge::Welcome
   b.name = "Welcome"
   b.badge_type_id = BadgeType::Bronze

@@ -7,12 +7,24 @@ class Badge < ActiveRecord::Base
   GreatPost = 8
   Autobiographer = 9
   Editor = 10
+  PayingItForward = 11
 
   # other consts
   AutobiographerMinBioLength = 10
 
 
   module Queries
+    PayingItForward = <<SQL
+    SELECT pa.user_id, min(post_id) post_id, min(pa.created_at) granted_at
+    FROM post_actions pa
+    JOIN posts p on p.id = pa.post_id
+    JOIN topics t on t.id = p.topic_id
+    WHERE p.deleted_at IS NULL AND
+          t.deleted_at IS NULL AND
+          t.visible AND
+          post_action_type_id = 2
+    GROUP BY pa.user_id
+SQL
 
     Editor = <<SQL
     SELECT p.user_id, min(p.id) post_id, min(p.created_at) granted_at
