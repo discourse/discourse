@@ -184,7 +184,7 @@ class Search
 
     def user_search
       users = User.includes(:user_search_data)
-                  .where("user_search_data.search_data @@ #{ts_query}")
+                  .where("user_search_data.search_data @@ #{ts_query("simple")}")
                   .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
                   .order("last_posted_at DESC")
                   .limit(@limit)
@@ -249,11 +249,13 @@ class Search
       "TO_TSQUERY(#{locale || query_locale}, #{query})"
     end
 
-    def ts_query
-      @ts_query ||= begin
-        all_terms = @term.gsub(/[:()&!'"]/,'').split
-        query = Post.sanitize(all_terms.map {|t| "#{PG::Connection.escape_string(t)}:*"}.join(" & "))
-        "TO_TSQUERY(#{query_locale}, #{query})"
+    def ts_query(locale=nil)
+      if !locale
+        @ts_query ||= begin
+          Search.ts_query(@term, locale)
+        end
+      else
+        Search.ts_query(@term, locale)
       end
     end
 
