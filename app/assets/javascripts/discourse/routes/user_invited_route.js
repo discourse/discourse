@@ -19,7 +19,8 @@ Discourse.UserInvitedRoute = Discourse.Route.extend({
     controller.setProperties({
       model: model,
       user: this.controllerFor('user').get('model'),
-      searchTerm: ''
+      searchTerm: '',
+      totalInvites: model.invites.length
     });
     this.controllerFor('user').set('indexStream', false);
   },

@@ -12,6 +12,7 @@ export default Ember.ObjectController.extend({
   init: function() {
     this._super();
     this.set('searchTerm', '');
+    this.set('totalInvites', '');
   },
 
   uploadText: function() { return I18n.t("user.invited.bulk_invite.text"); }.property(),
@@ -59,8 +60,8 @@ export default Ember.ObjectController.extend({
     @property showSearch
   **/
   showSearch: function() {
-    return this.get('invites.length') > 9;
-  }.property(),
+    return this.get('totalInvites') > 9;
+  }.property('totalInvites'),
 
   /**
     Were the results limited by our `maxInvites`
