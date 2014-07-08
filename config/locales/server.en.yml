@@ -1304,13 +1304,13 @@ en:
         ```
 
     bulk_invite_succeeded:
-      subject_template: "Bulk Invite processed successfully!"
-      text_body_template: "The bulk invite has been processed, %{sent} invites sent."
+      subject_template: "Bulk user invite processed successfully"
+      text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
 
     bulk_invite_failed:
-      subject_template: "Bulk Invite processed with some errors!"
+      subject_template: "Bulk user invite processed with errors"
       text_body_template: |
-        The bulk invite has been processed, %{sent} invites sent with %{failed} error(s).
+        Your bulk user invite file was processed, %{sent} invites mailed with %{failed} error(s).
 
         Here's the log:
 
