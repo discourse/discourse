@@ -739,7 +739,7 @@ it:
     username_change_period: "Numero di giorni (dall'iscrizione) dopo i quali è possibile modificare lo username. Digita 0 per non permettere cambi di username"
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione"
     allow_uploaded_avatars: "Permetti agli utenti di caricare il loro avatar custom."
-    allow_animated_avatars: "Permetti agli utenti di usare GIF animate come avatar. ATTENZIONE: è fortemente consigliato eseguire il task avatars:regenerate dopo aver modificato questa impostazione."
+    allow_animated_avatars: "Permetti agli utenti di usare GIF animate come avatar. ATTENZIONE: è fortemente consigliato eseguire il task avatars:refresh dopo aver modificato questa impostazione."
     automatically_download_gravatars: "Scarica i Gravatar degli utenti alla creazione dell'account o alla modifica dell'email"
     digest_topics: "Il numero massimo di topic da mostrare in un'email di riepilogo"
     digest_min_excerpt_length: "Numero caratteri ideale per ogni post nel sunto via email"

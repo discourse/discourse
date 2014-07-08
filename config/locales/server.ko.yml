@@ -527,7 +527,7 @@ ko:
     username_change_period: "등록 후 사용자 이름 최소 유지 기간(0은 사용자 이름 변경을 막음)"
     email_editable: "등록 후 이메일 주소를 바꿀수 있는 있음"
     allow_uploaded_avatars: "사용자가 커스텀 아바타를 올릴 수 있음"
-    allow_animated_avatars: "사용자가 움직이는 애니메이션으로 아바타를 이용할 수 있음. 경고: 설정 후 avatars:regenerate rake task 할 것"
+    allow_animated_avatars: "사용자가 움직이는 애니메이션으로 아바타를 이용할 수 있음. 경고: 설정 후 avatars:refresh rake task 할 것"
     default_digest_email_frequency: "사용자가 요약 이메일을 받는 횟수 기본값. 사용자는 그들의 환경설정에서 변경할 수 있음"
     detect_custom_avatars: "사용자가 커스텀 아바타를 올리던지 말던지 신경안씀"
     max_daily_gravatar_crawls: "하루에 커스텀 아바타로 gravatar를 사용하는지에 대해 체크하는 최대 횟수"

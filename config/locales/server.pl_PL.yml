@@ -663,7 +663,7 @@ pl_PL:
     username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     allow_uploaded_avatars: "Allow users to upload their custom avatars"
-    allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:regenerate rake task after changing that setting."
+    allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:refresh rake task after changing that setting."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
     max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"

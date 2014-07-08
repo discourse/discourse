@@ -890,7 +890,7 @@ en:
     email_editable: "Allow users to change their e-mail address after registration."
 
     allow_uploaded_avatars: "Allow users to upload their custom avatars"
-    allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:regenerate rake task after changing that setting."
+    allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:refresh rake task after changing that setting."
     automatically_download_gravatars: "Download gravatars for users upon account creation or email change"
     digest_topics: "The maximum amount of topics to display in an email digest"
     digest_min_excerpt_length: "How many characters we're aiming for for each post in the email digest"

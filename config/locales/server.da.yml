@@ -666,7 +666,7 @@ da:
     username_change_period: "Antal dage efter oprettelsen hvor brugere kan ændre deres brugernavn (0 for ikke at tillade skift af brugernavn)."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
     allow_uploaded_avatars: "Lad brugerne uploade deres egne avatarer"
-    allow_animated_avatars: "Lad brugerne anvende animerede GIFer som avatarer. ADVARSEL: det anbefales kraftigt at køre avatars:regenerate rake-jobbet når du har ændret denne indstilling."
+    allow_animated_avatars: "Lad brugerne anvende animerede GIFer som avatarer. ADVARSEL: det anbefales kraftigt at køre avatars:refresh rake-jobbet når du har ændret denne indstilling."
     default_digest_email_frequency: "Hvor ofte brugerne som standard modtager e-mail-sammendrag. De kan ændre indstillingen på deres profil."
     default_external_links_in_new_tab: "Åbn eksterne links i en nu fane; brugerne kan ændre dette på deres profil"
     detect_custom_avatars: "Hvorvidt det skal kontrolleres om brugerne har uploadet deres egne avatarer"

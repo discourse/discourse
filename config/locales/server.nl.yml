@@ -739,7 +739,7 @@ nl:
     username_change_period: "The number of days after registration that accounts can change their username (0 om wijziging niet toe te staan)."
     email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
     allow_uploaded_avatars: "Sta toe dat avatars geupload kunnen worden"
-    allow_animated_avatars: "Gebruikers mogen een animated GIF gebruiken als avatar. LET OP: draai de rake task avatars:regenerate nadat je deze instelling hebt geactiveerd."
+    allow_animated_avatars: "Gebruikers mogen een animated GIF gebruiken als avatar. LET OP: draai de rake task avatars:refresh nadat je deze instelling hebt geactiveerd."
     digest_topics: "Het maximum aantal topics dat in de e-maildigest opgenomen wordt"
     digest_min_excerpt_length: "Hoeveel karakters er ongeveer per bericht getoond worden in de mail digest"
     default_digest_email_frequency: "Hoe vaak ontvangen gebruikers standaard de digestmails. Ze kunnen dit in hun eigen instellingen nog aanpassen."
