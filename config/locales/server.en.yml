@@ -1254,17 +1254,15 @@ en:
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
-        Thanks for accepting your invitation to %{site_name}, and welcome!
+        Thanks for accepting your invitation to %{site_name} -- welcome!
 
-        We've automatically generated a username for you: **%{username}**, but you can change that any time by visiting [your user profile][prefs].
+        We've automatically generated a username for you: **%{username}**, but you can change it any time by visiting [your user profile][prefs].
 
-        To sign in again, either:
+        To log in again, either:
 
-        1. Sign in however you like -- but that login must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+        1. Sign in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
 
-        2. Create a unique password for %{site_name} on [your user profile][prefs], then log in with that.
-
-        %{site_password}
+        2. Create a unique password for on [your user profile][prefs], and use it to sign in.
 
         %{new_user_tips}
 
