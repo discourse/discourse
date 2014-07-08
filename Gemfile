@@ -102,7 +102,7 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 gem 'fastimage'
-gem 'fog', '1.18.0', require: false
+gem 'fog', '1.22.1', require: false
 gem 'unf', require: false
 
 # see: https://twitter.com/samsaffron/status/412360162297393152
