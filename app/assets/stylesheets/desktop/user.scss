@@ -76,8 +76,8 @@
 }
 
 .user-navigation {
-  width: 240px;
-  margin-right: 20px;
+  width: 21.62%;
+  margin-right: 1.8018%;
   float: left;
 
   h3 {
@@ -88,17 +88,11 @@
 }
 
 .user-main {
-  width: 850px;
+
+  width: 76.5765%;
   float: left;
   margin-bottom: 50px;
 
-  @include medium-width {
-    width: 735px;
-  }
-
-  @include small-width {
-    width: 680px;
-  }
 
   table.group-members {
     width: 100%;
@@ -231,8 +225,8 @@
         float: right;
         background-color: rgba(scale-color($primary, $lightness: 20%), .9);
         text-align: right;
-        padding: 0 20px;
-        max-width: 165px;
+        padding: 0 10px;
+        max-width: 20%;
 
         dd {
           margin: 0 0 7px 0;

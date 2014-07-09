@@ -536,10 +536,7 @@ iframe {
 
 .extra-info-wrapper {
   float: left;
-  width: 76%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  width: 46%;
 
   .topic-statuses {
     i         { color: $header_primary; }
@@ -555,24 +552,14 @@ text-overflow: ellipsis;
 }
 
 
-@include medium-width {
-  .extra-info-wrapper {
-  width: 73%;
-}
-}
 
-
-@include small-width {
-    .extra-info-wrapper {
-  width: 70%;
-}
-}
 
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
     font-size: 1.6em;
     line-height: 1.3em;
+    width: 820px;
 
   }
 
@@ -744,7 +731,6 @@ blockquote > *:last-child {
 
 .gutter {
   float: left;
-  width: 19%;
   margin-top: 15px;
   padding-left: 15px;
 
@@ -1068,4 +1054,35 @@ span.highlighted {
   opacity: 0;
   -webkit-transition: opacity 1s ease-out;
   transition: opacity 1s ease-out;
+}
+
+
+/* Tablet (portrait) ----------- */
+
+@media only screen
+and (max-width : 1150px) {
+  .extra-info {
+    h1 {
+      width: 720px;
+    }
+  }
+}
+
+
+@media only screen
+and (max-width : 975px) {
+  .extra-info {
+    h1 {
+      width: 650px;
+    }
+  }
+}
+
+@media only screen
+and (max-width : 870px) {
+  .extra-info {
+    h1 {
+      width: 520px;
+    }
+  }
 }

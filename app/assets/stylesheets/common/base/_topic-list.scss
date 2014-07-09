@@ -75,6 +75,7 @@
     color: scale-color($primary, $lightness: 50%);
     word-wrap: break-word;
     line-height: 1.4;
+    padding-right: 20px;
   }
   .topic-statuses:empty {
     display: none;
@@ -103,27 +104,27 @@
 
 #topic-list.categories {
 
-td.category {
-  vertical-align: top;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  border-left: 6px solid;
-}
-td.stats {
-  .unit {
-    font-size: 11px;
+  td.category {
+    vertical-align: top;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-left: 6px solid;
   }
-}
-
-  table.categoryStats {
-    td {
-      padding: 2px;
-      vertical-align: bottom;
-      line-height: 24px;
-      &.value { text-align: right; font-size: 20px; }
-      &.unit  { text-align: left; }
+  td.stats {
+    .unit {
+      font-size: 11px;
     }
   }
+
+    table.categoryStats {
+      td {
+        padding: 2px;
+        vertical-align: bottom;
+        line-height: 24px;
+        &.value { text-align: right; font-size: 20px; }
+        &.unit  { text-align: left; }
+      }
+    }
 
 }
 

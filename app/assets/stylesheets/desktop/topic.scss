@@ -64,7 +64,7 @@
 .private-message-glyph {
   color: scale-color($primary, $lightness: 75%);
   float: left;
-  margin: 0 5px 0 0;  
+  margin: 0 5px 0 0;
   }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
@@ -289,4 +289,17 @@ kbd
     line-height: 1.4;
     margin: 0 .1em;
     padding: .1em .6em;
+}
+
+
+@media only screen
+and (max-width : 850px) {
+
+  .gutter {
+    display: none;
+    }
+  #topic-progress, #topic-progress-expanded {
+    left: 210px;
+    }
+
 }

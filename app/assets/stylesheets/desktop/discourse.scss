@@ -4,18 +4,6 @@
 
 html {font-size: 14px/19px;}
 
-body {
-  min-width: $large-width;
-}
-
-.container {
-  max-width: $large-width;
-}
-
-.full-width {
-  width: $large-width;
-}
-
 @include medium-width {
   body {
     min-width: $medium-width;
@@ -26,14 +14,13 @@ body {
   }
 }
 
-
 @include small-width {
   body {
-    min-width: $small-width;
+    min-width: 760px;
   }
   .container,
   .full-width {
-    width: $small-width;
+    min-width: 760px;
   }
 }
 
@@ -484,7 +471,7 @@ body {
   }
 }
 
-/* bootstrap colums */
+/* bootstrap columns */
 
 .row:before,
 .row:after {
@@ -505,7 +492,7 @@ body {
   float: left;
 }
 .span13 {
-  width: 664px;
+  width: 59.8198%;
   float: left;
 }
 .span10 {
@@ -517,7 +504,7 @@ body {
   float: left;
 }
 .span6 {
-  width: 300px;
+  width: 27.027%;
   float: left;
 }
 .span4 {

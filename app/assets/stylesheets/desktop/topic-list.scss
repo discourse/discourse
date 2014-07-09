@@ -296,3 +296,87 @@ button.dismiss-read {
   margin-bottom: 15px;
   margin-right: 15px;
 }
+
+/* Tablet (portrait) ----------- */
+
+@media only screen
+and (max-width : 850px) {
+
+  .nav-pills {
+    > li > a {
+      font-size: 14px;
+      padding: 5px 10px ;
+      }
+  }
+
+  .list-controls {
+    padding: 0 5px;
+
+    .btn {
+        font-size: 14px
+      }
+
+    .category-dropdown-menu {
+        min-width: 139px;
+      }
+
+    a.badge-category {
+        font-size: 14px;
+      }
+
+  }
+
+  #topic-list {
+    .categories td.category {
+      padding-left: 10px;
+      }
+   td:first-of-type {
+     padding: 0;
+     }
+   th:first-of-type {
+     padding: 12px 5px;
+     }
+   th {
+     .btn .fa {
+       margin-right: 2px;
+       }
+     }
+   th, td {
+      padding: 12px 2px;
+      font-size: 13px;
+     }
+    .star {
+      padding: 12px 5px;
+      width: auto;
+      }
+    .main-link {
+      font-size: 15px;
+      padding: 12px 8px 12px 0px;
+      }
+
+    .likes {
+      width: auto;
+      }
+    .category {
+      min-width: 0;
+      padding: 0;
+      }
+    .topic-excerpt {
+      padding-right: 20px;
+      }
+  th.posters {
+    text-align: center;
+    }
+     .posters {
+
+       min-width: 0;
+       width: 50px;
+       a:not(.latest) {
+         display: none;
+         }
+       a.latest {
+         padding: 0 8px;
+         }
+       }
+  }
+}
