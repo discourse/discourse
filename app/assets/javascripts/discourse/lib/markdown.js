@@ -258,6 +258,6 @@ Discourse.Markdown.whiteListTag('span', 'bbcode-i');
 Discourse.Markdown.whiteListTag('span', 'bbcode-u');
 Discourse.Markdown.whiteListTag('span', 'bbcode-s');
 
-Discourse.Markdown.whiteListTag('span', 'class', /bbcode-size-\d+/);
+Discourse.Markdown.whiteListTag('span', 'class', /bbcode-size-\d+$/);
 
 Discourse.Markdown.whiteListIframe(/^(https?:)?\/\/www\.google\.com\/maps\/embed\?.+/i);

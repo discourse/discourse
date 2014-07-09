@@ -240,8 +240,12 @@ describe PrettyText do
     end
   end
 
-
   describe "markdown quirks" do
+
+    it "sanitizes spans" do
+      PrettyText.cook("<span class=\"-bbcode-size-0 fa fa-spin\">a</span>").should match_html "<p><span>a</span></p>"
+    end
+
     it "bolds stuff in parens" do
       PrettyText.cook("a \"**hello**\"").should match_html "<p>a &quot;<strong>hello</strong>&quot;</p>"
       PrettyText.cook("(**hello**)").should match_html "<p>(<strong>hello</strong>)</p>"
