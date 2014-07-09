@@ -11,8 +11,12 @@ describe UsersController do
     let!(:user) { log_in }
 
     it 'returns success' do
-      xhr :get, :show, username: user.username
+      xhr :get, :show, username: user.username, format: :json
       response.should be_success
+      json = JSON.parse(response.body)
+
+      json["user"]["has_title_badges"].should == false
+
     end
 
     it "returns not found when the username doesn't exist" do

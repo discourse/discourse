@@ -32,7 +32,7 @@ export default Discourse.ObjectController.extend({
   canEditName: Discourse.computed.setting('enable_names'),
 
   canSelectTitle: function() {
-    return Discourse.SiteSettings.enable_badges && this.get('model.badge_count') > 0;
+    return Discourse.SiteSettings.enable_badges && this.get('model.has_title_badges');
   }.property('model.badge_count'),
 
   availableLocales: function() {

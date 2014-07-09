@@ -42,7 +42,8 @@ class UserSerializer < BasicUserSerializer
              :suspend_reason,
              :suspended_till,
              :uploaded_avatar_id,
-             :badge_count
+             :badge_count,
+             :has_title_badges
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
@@ -75,7 +76,8 @@ class UserSerializer < BasicUserSerializer
                      :disable_jump_reply,
                      :gravatar_avatar_upload_id,
                      :custom_avatar_upload_id,
-                     :custom_fields
+                     :custom_fields,
+                     :has_title_badges
 
   ###
   ### ATTRIBUTES
@@ -228,6 +230,10 @@ class UserSerializer < BasicUserSerializer
 
   def custom_avatar_upload_id
     object.user_avatar.try(:custom_upload_id)
+  end
+
+  def has_title_badges
+    object.badges.where(allow_title: true).count > 0
   end
 
 end
