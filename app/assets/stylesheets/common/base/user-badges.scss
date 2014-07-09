@@ -69,6 +69,7 @@
 table.badges-listing {
   margin: 20px 0;
   border-bottom: 1px solid scale-color-diff();
+  width: 90%;
 
   .user-badge {
     font-size: $base-font-size;
@@ -79,13 +80,19 @@ table.badges-listing {
   }
 
   td.grant-count {
-    font-size: 0.8em;
-    color: $primary;
     text-align: right;
   }
 
   td.badge, td.grant-count {
     white-space: nowrap;
+  }
+
+  td.info {
+    font-size: 0.9em;
+    text-align: right;
+  }
+
+  td.description {
   }
 
   tr {

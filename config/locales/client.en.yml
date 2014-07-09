@@ -1935,6 +1935,8 @@ en:
 
     badges:
       title: Badges
+      allow_title: "allow badge as title?"
+      multiple_grant: "awarded multiple times?"
       badge_count:
         one:   "1 Badge"
         other: "%{count} Badges"
