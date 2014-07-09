@@ -48,10 +48,17 @@ describe Upload do
 
   context "#create_for" do
 
+    before { Upload.stubs(:fix_image_orientation) }
+
     it "does not create another upload if it already exists" do
       Upload.expects(:find_by).with(sha1: image_sha1).returns(upload)
       Upload.expects(:save).never
       Upload.create_for(user_id, image, image_filename, image_filesize).should == upload
+    end
+
+    it "fix image orientation" do
+      Upload.expects(:fix_image_orientation).with(image.path)
+      Upload.create_for(user_id, image, image_filename, image_filesize)
     end
 
     it "computes width & height for images" do
