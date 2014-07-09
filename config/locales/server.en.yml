@@ -1581,7 +1581,7 @@ en:
     recent_topics: "Recent"
     see_more: "More"
     search_title: "Search this site"
-    search_google: "Search Google"
+    search_google: "Google"
 
   login_required:
     welcome_message: |
