@@ -237,7 +237,15 @@ Discourse.Markdown.whiteListTag('a', 'data-bbcode');
 
 Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
-Discourse.Markdown.whiteListTag('code', 'class', '*');
+
+// FIXME: explicitly whitelist classes we need allowed through for
+//  syntax highlighting, grab from highlight.js
+Discourse.Markdown.whiteListTag('code', 'class', 'text');
+Discourse.Markdown.whiteListTag('code', 'class', 'ruby');
+Discourse.Markdown.whiteListTag('code', 'class', 'json');
+Discourse.Markdown.whiteListTag('code', 'class', 'lang-auto');
+// Discourse.Markdown.whiteListTag('code', 'class', '*');
+
 Discourse.Markdown.whiteListTag('span', 'class', 'mention');
 Discourse.Markdown.whiteListTag('span', 'class', 'spoiler');
 Discourse.Markdown.whiteListTag('div', 'class', 'spoiler');
