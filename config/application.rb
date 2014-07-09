@@ -49,7 +49,7 @@ module Discourse
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
-    config.assets.paths += %W(#{config.root}/config/locales)
+    config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
 
     # explicitly precompile any images in plugins ( /assets/images ) path
     config.assets.precompile += [lambda do |filename, path|

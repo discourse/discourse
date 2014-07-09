@@ -5,6 +5,8 @@
 // Pagedown customizations
 //= require ./pagedown_custom.js
 
+//= require highlight.pack.js
+
 // Stuff we need to load first
 //= require ./discourse/mixins/scrolling
 //= require_tree ./discourse/mixins

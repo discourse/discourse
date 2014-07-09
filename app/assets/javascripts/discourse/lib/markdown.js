@@ -1,4 +1,4 @@
-/*global Markdown:true BetterMarkdown:true */
+/*global Markdown:true, hljs:true */
 
 /**
   Contains methods to help us with markdown formatting.
@@ -226,6 +226,7 @@ Discourse.Markdown = {
   }
 
 };
+
 RSVP.EventTarget.mixin(Discourse.Markdown);
 
 Discourse.Markdown.whiteListTag('a', 'class', 'attachment');
@@ -238,13 +239,13 @@ Discourse.Markdown.whiteListTag('a', 'data-bbcode');
 Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
 
-// FIXME: explicitly whitelist classes we need allowed through for
-//  syntax highlighting, grab from highlight.js
+// explicitly whitelist classes we need allowed through for
+// syntax highlighting, grabbed from highlight.js
+hljs.listLanguages().forEach(function (language) {
+  Discourse.Markdown.whiteListTag('code', 'class', language);
+});
 Discourse.Markdown.whiteListTag('code', 'class', 'text');
-Discourse.Markdown.whiteListTag('code', 'class', 'ruby');
-Discourse.Markdown.whiteListTag('code', 'class', 'json');
 Discourse.Markdown.whiteListTag('code', 'class', 'lang-auto');
-// Discourse.Markdown.whiteListTag('code', 'class', '*');
 
 Discourse.Markdown.whiteListTag('span', 'class', 'mention');
 Discourse.Markdown.whiteListTag('span', 'class', 'spoiler');
