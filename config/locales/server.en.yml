@@ -1051,7 +1051,9 @@ en:
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
-      > %{topic_title}
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
 
       at
 
