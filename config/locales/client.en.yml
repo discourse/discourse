@@ -1976,6 +1976,12 @@ en:
         great_post:
           name: Great Post
           description: Received 50 likes on a post. This badge can be granted multiple times.
-        paying_it_forward:
-          name: Paying It Forward
+        first_like:
+          name: First Like
           description: Liked a post
+        first_flag:
+          name: First Flag
+          description: Flagged a post
+        first_share:
+          name: First Share
+          description: Shared a post

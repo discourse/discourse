@@ -20,7 +20,7 @@ describe BadgeGranter do
 
       UserBadge.destroy_all
       BadgeGranter.backfill(Badge.find(Badge::Welcome))
-      BadgeGranter.backfill(Badge.find(Badge::PayingItForward))
+      BadgeGranter.backfill(Badge.find(Badge::FirstLike))
 
       b = UserBadge.find_by(user_id: post.user_id)
       b.post_id.should == post.id
@@ -28,7 +28,7 @@ describe BadgeGranter do
 
       b = UserBadge.find_by(user_id: user2.id)
       b.post_id.should == post.id
-      b.badge_id = Badge::PayingItForward
+      b.badge_id = Badge::FirstLike
     end
 
     it 'should grant missing badges' do

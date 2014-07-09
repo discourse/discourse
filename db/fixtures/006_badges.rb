@@ -12,16 +12,37 @@ trust_level_badges.each do |spec|
     b.name = spec[:name]
     b.badge_type_id = spec[:type]
     b.query = Badge::Queries.trust_level(spec[:id])
+
+    # allow title for leader and elder
+    b.allow_title = spec[:id] > 2
   end
 end
 
 Badge.seed do |b|
-  b.id = Badge::PayingItForward
-  b.name = "Paying It Forward"
+  b.id = Badge::FirstLike
+  b.name = "First Like"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
-  b.query = Badge::Queries::PayingItForward
+  b.query = Badge::Queries::FirstLike
+end
+
+Badge.seed do |b|
+  b.id = Badge::FirstFlag
+  b.name = "First Flag"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = false
+  b.query = Badge::Queries::FirstFlag
+end
+
+Badge.seed do |b|
+  b.id = Badge::FirstShare
+  b.name = "First Share"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.query = Badge::Queries::FirstShare
 end
 
 Badge.seed do |b|

@@ -7,14 +7,47 @@ class Badge < ActiveRecord::Base
   GreatPost = 8
   Autobiographer = 9
   Editor = 10
-  PayingItForward = 11
+  FirstLike = 11
+  FirstShare = 12
+  FirstFlag = 13
 
   # other consts
   AutobiographerMinBioLength = 10
 
 
   module Queries
-    PayingItForward = <<SQL
+
+    FirstShare = <<SQL
+    SELECT views.user_id, p2.id post_id, i2.created_at granted_at
+    FROM
+    (
+      SELECT i.user_id, MIN(i.id) i_id
+      FROM incoming_links i
+      JOIN topics t on t.id = i.topic_id
+      JOIN posts p on p.topic_id = t.id AND p.post_number = i.post_number
+      WHERE i.user_id IS NOT NULL AND
+            p.deleted_at IS NULL AND
+            t.deleted_at IS NULL AND
+            t.visible
+      GROUP BY i.user_id
+    ) as views
+    JOIN incoming_links i2 ON i2.id = views.i_id
+    JOIN posts p2 on p2.topic_id = i2.topic_id AND p2.post_number = i2.post_number
+SQL
+
+    FirstFlag = <<SQL
+    SELECT pa.user_id, min(pa.created_at) granted_at
+    FROM post_actions pa
+    JOIN posts p on p.id = pa.post_id
+    JOIN topics t on t.id = p.topic_id
+    WHERE p.deleted_at IS NULL AND
+          t.deleted_at IS NULL AND
+          t.visible AND
+          post_action_type_id IN (#{PostActionType.flag_types.values.join(",")})
+    GROUP BY pa.user_id
+SQL
+
+    FirstLike = <<SQL
     SELECT pa.user_id, min(post_id) post_id, min(pa.created_at) granted_at
     FROM post_actions pa
     JOIN posts p on p.id = pa.post_id
