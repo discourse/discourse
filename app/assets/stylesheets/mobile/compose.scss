@@ -24,12 +24,10 @@ display: none;
   .mobile-file-upload {
     text-decoration: underline;
   }
+  #mobile-uploader { display: none; }
   #draft-status, #file-uploading, .mobile-file-upload {
     float: right;
     margin-right: 8px;
-  }
-  .mobile-file-upload {
-    text-decoration: underline;
   }
   #file-uploading {
     left: 51%;
