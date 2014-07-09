@@ -6,12 +6,13 @@ export default {
   after: "message-bus",
 
   initialize: function () {
+    var timeoutIsSet = false;
     if (!Discourse.MessageBus) { return; }
 
     Discourse.MessageBus.subscribe("/global/asset-version", function (version) {
       Discourse.set("assetVersion", version);
 
-      if (Discourse.get("requiresRefresh")) {
+      if (!timeoutIsSet && Discourse.get("requiresRefresh")) {
         // since we can do this transparently for people browsing the forum
         //  hold back the message a couple of hours
         setTimeout(function () {
@@ -19,6 +20,7 @@ export default {
             if (result) { document.location.reload(); }
           });
         }, 1000 * 60 * 120);
+        timeoutIsSet = true;
       }
 
     });
