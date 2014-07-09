@@ -890,7 +890,7 @@ en:
         success_message: 'You successfully flagged this topic.'
 
       inviting: "Inviting..."
-      automatically_add_to_groups: "Upon registration, automatically add user to groups. (optional, admin only)"
+      automatically_add_to_groups: "This invite also includes access to these groups: (optional, admin only)"
 
       invite_private:
         title: 'Invite to Private Message'
@@ -905,8 +905,8 @@ en:
         title: 'Invite'
         action: 'Email Invite'
         help: 'send invitations to friends so they can reply to this topic with a single click'
-        to_topic: "We'll send a brief email allowing your friend to immediately reply to this topic by clicking a link, no login required."
-        to_forum: "We'll send a brief email allowing your friend to join by clicking a link, no login required."
+        to_topic: "We'll send a brief email allowing your friend to immediately join and reply to this topic by clicking a link, no login required."
+        to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
 
         email_placeholder: 'name@example.com'
         success: "We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
