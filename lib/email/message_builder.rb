@@ -168,7 +168,7 @@ module Email
     end
 
     def site_alias_email(source)
-      "#{SiteSetting.title} <#{source}>"
+      "#{SiteSetting.email_site_title.presence || SiteSetting.title} <#{source}>"
     end
 
   end
