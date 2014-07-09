@@ -1047,7 +1047,7 @@ en:
       blocked: "is blocked."
 
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion"
+    subject_template: "%{invitee_name} invited you to a discussion at %{site_name}"
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
@@ -1057,9 +1057,7 @@ en:
 
       at
 
-      > **%{site_title}**
-      >
-      > %{site_description}
+      > %{site_title} -- %{site_description}
 
       If you're interested, click the link below:
 
