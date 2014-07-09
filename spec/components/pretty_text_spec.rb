@@ -244,6 +244,8 @@ describe PrettyText do
 
     it "sanitizes spans" do
       PrettyText.cook("<span class=\"-bbcode-size-0 fa fa-spin\">a</span>").should match_html "<p><span>a</span></p>"
+      PrettyText.cook("<span class=\"fa fa-spin -bbcode-size-0\">a</span>").should match_html "<p><span>a</span></p>"
+      PrettyText.cook("<span class=\"bbcode-size-10\">a</span>").should match_html "<p><span class=\"bbcode-size-10\">a</span></p>"
     end
 
     it "bolds stuff in parens" do
