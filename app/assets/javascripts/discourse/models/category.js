@@ -10,9 +10,11 @@ Discourse.Category = Discourse.Model.extend({
 
   init: function() {
     this._super();
-    this.set("availableGroups", Em.A(this.get("available_groups")));
+    var availableGroups = Em.A(this.get("available_groups"));
 
+    this.set("availableGroups", availableGroups);
     this.set("permissions", Em.A(_.map(this.group_permissions, function(elem){
+      availableGroups.removeObject(elem.group_name);
       return {
                 group_name: elem.group_name,
                 permission: Discourse.PermissionType.create({id: elem.permission_type})
@@ -70,7 +72,8 @@ Discourse.Category = Discourse.Model.extend({
         email_in_allow_strangers: this.get('email_in_allow_strangers'),
         parent_category_id: this.get('parent_category_id'),
         logo_url: this.get('logo_url'),
-        background_url: this.get('background_url')
+        background_url: this.get('background_url'),
+        allow_badges: this.get('allow_badges')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });

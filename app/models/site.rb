@@ -30,7 +30,7 @@ class Site
   end
 
   def group_names
-    @group_name ||= Group.pluck(:name)
+    @group_name ||= Group.order(:name).pluck(:name)
   end
 
   def categories

@@ -1185,6 +1185,7 @@ en:
       auto_close_units: "hours"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
+      allow_badges_label: "Allow badges"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"

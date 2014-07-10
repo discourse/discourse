@@ -119,7 +119,16 @@ class CategoriesController < ApplicationController
           end
         end
 
-        params.permit(*required_param_keys, :position, :email_in, :email_in_allow_strangers, :parent_category_id, :auto_close_hours, :logo_url, :background_url, :permissions => [*p.try(:keys)])
+        params.permit(*required_param_keys,
+                        :position,
+                        :email_in,
+                        :email_in_allow_strangers,
+                        :parent_category_id,
+                        :auto_close_hours,
+                        :logo_url,
+                        :background_url,
+                        :allow_badges,
+                        :permissions => [*p.try(:keys)])
       end
     end
 
