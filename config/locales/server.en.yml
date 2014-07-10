@@ -1067,7 +1067,7 @@ en:
       This invitation is from a trusted user, so you can reply to the discussion immediately.
 
   invite_forum_mailer:
-    subject_template: "%{invitee_name} invited you to join %{site_name}"
+    subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to join
 
