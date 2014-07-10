@@ -33,6 +33,8 @@ class SingleSignOn
       sso.send("#{k}=", val)
     end
 
+    sso.register_nonce(decoded_hash['return_path'])
+
     decoded_hash.each do |k,v|
       # 1234567
       # custom.
