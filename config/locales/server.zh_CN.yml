@@ -733,7 +733,7 @@ zh_CN:
     username_change_period: "用户在注册多少天内可以更改他们的用户名（0 表示禁用用户名更改）"
     email_editable: "允许用户在注册后改变他们的邮箱地址。"
     allow_uploaded_avatars: "允许用户上传他们自己的头像。"
-    allow_animated_avatars: "允许用户使用 gif 动画头像。警告：强烈建议在更改后运行 avatars:regenerate rake 任务。"
+    allow_animated_avatars: "允许用户使用 gif 动画头像。警告：强烈建议在更改后运行 avatars:refresh rake 任务。"
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像"
     digest_topics: "邮件摘要中显示的最大主题数目"
     digest_min_excerpt_length: "在邮件摘要中每个帖子应有多少个字符"
