@@ -19,6 +19,15 @@ trust_level_badges.each do |spec|
 end
 
 Badge.seed do |b|
+  b.id = Badge::FirstLink
+  b.name = "First Link"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.query = Badge::Queries::FirstLink
+end
+
+Badge.seed do |b|
   b.id = Badge::FirstLike
   b.name = "First Like"
   b.badge_type_id = BadgeType::Bronze

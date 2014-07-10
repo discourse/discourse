@@ -1987,3 +1987,6 @@ en:
         first_share:
           name: First Share
           description: Shared a post
+        first_link:
+          name: First Link
+          description: Added an internal link to another topic
