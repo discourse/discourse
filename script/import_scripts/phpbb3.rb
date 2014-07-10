@@ -7,6 +7,9 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
   PHPBB_DB   = "phpbb"
   BATCH_SIZE = 1000
 
+  ORIGINAL_SITE_PREFIX = "oldsite.example.com/forums" # without http(s)://
+  NEW_SITE_PREFIX      = "http://discourse.example.com"  # with http:// or https://
+
   def initialize
     super
 
@@ -94,6 +97,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
           FROM phpbb_posts p,
                phpbb_topics t
          WHERE p.topic_id = t.topic_id
+      ORDER BY id
          LIMIT #{BATCH_SIZE}
         OFFSET #{offset};
       ")
@@ -106,7 +110,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
         mapped[:id] = m['id']
         mapped[:user_id] = user_id_from_imported_user_id(m['user_id']) || -1
-        mapped[:raw] = decode_phpbb_post(m['raw'])
+        mapped[:raw] = process_phpbb_post(m['raw'], m['id'])
         mapped[:created_at] = Time.zone.at(m['post_time'])
 
         if m['id'] == m['first_post_id']
@@ -154,7 +158,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
         mapped[:id] = "pm:#{m['id']}"
         mapped[:user_id] = user_id_from_imported_user_id(m['user_id']) || -1
-        mapped[:raw] = decode_phpbb_post(m['message_text'])
+        mapped[:raw] = process_phpbb_post(m['message_text'], m['id'])
         mapped[:created_at] = Time.zone.at(m['message_time'])
 
         if m['root_level'] == 0
@@ -226,15 +230,16 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     end
   end
 
-  def mysql_query(sql)
-    @client.query(sql, cache_rows: false)
-  end
-
-  def decode_phpbb_post(raw)
+  def process_phpbb_post(raw, import_id)
     s = raw.dup
 
     # :) is encoded as <!-- s:) --><img src="{SMILIES_PATH}/icon_e_smile.gif" alt=":)" title="Smile" /><!-- s:) -->
     s.gsub!(/<!-- s(\S+) -->(?:.*)<!-- s(?:\S+) -->/, '\1')
+
+    # Internal forum links of this form: <!-- l --><a class="postlink-local" href="https://example.com/forums/viewtopic.php?f=26&amp;t=3412">viewtopic.php?f=26&amp;t=3412</a><!-- l -->
+    s.gsub!(/<!-- l --><a(?:.+)href="(?:\S+)"(?:.*)>viewtopic(?:.*)t=(\d+)<\/a><!-- l -->/) do |phpbb_link|
+      replace_internal_link(phpbb_link, $1, import_id)
+    end
 
     # Some links look like this: <!-- m --><a class="postlink" href="http://www.onegameamonth.com">http://www.onegameamonth.com</a><!-- m -->
     s.gsub!(/<!-- \w --><a(?:.+)href="(\S+)"(?:.*)>(.+)<\/a><!-- \w -->/, '[\2](\1)')
@@ -244,7 +249,46 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     #   [quote=&quot;cybereality&quot;:b0wtlzex]Some text.[/quote:b0wtlzex]
     s.gsub!(/:(?:\w{8})\]/, ']')
 
-    CGI.unescapeHTML(s)
+    s = CGI.unescapeHTML(s)
+
+    # phpBB shortens link text like this, which breaks our markdown processing:
+    #   [http://answers.yahoo.com/question/index ... 223AAkkPli](http://answers.yahoo.com/question/index?qid=20070920134223AAkkPli)
+    #
+    # Work around it for now:
+    s.gsub!(/\[http(s)?:\/\/(www\.)?/, '[')
+
+    # Replace internal forum links that aren't in the <!-- l --> format
+    s.gsub!(internal_url_regexp) do |phpbb_link|
+      replace_internal_link(phpbb_link, $1, import_id)
+    end
+
+    s
+  end
+
+  def replace_internal_link(phpbb_link, import_topic_id, from_import_post_id)
+    results = mysql_query("select topic_first_post_id from phpbb_topics where topic_id = #{import_topic_id}")
+
+    return phpbb_link unless results.size > 0
+
+    linked_topic_id = results.first['topic_first_post_id']
+    lookup = topic_lookup_from_imported_post_id(linked_topic_id)
+
+    return phpbb_link unless lookup
+
+    t = Topic.find_by_id(lookup[:topic_id])
+    if t
+      "#{NEW_SITE_PREFIX}/t/#{t.slug}/#{t.id}"
+    else
+      phpbb_link
+    end
+  end
+
+  def internal_url_regexp
+    @internal_url_regexp ||= Regexp.new("http(?:s)?://#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}/viewtopic\\.php?(?:\\S*)t=(\\d+)")
+  end
+
+  def mysql_query(sql)
+    @client.query(sql, cache_rows: false)
   end
 end
 
