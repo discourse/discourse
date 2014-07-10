@@ -13,4 +13,10 @@ if Topic.where('id NOT IN (SELECT topic_id from categories where topic_id is not
   welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
   post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)
   post.topic.update_pinned(true, true)
+
+  lounge = Category.find_by(id: SiteSetting.lounge_category_id)
+  if lounge
+    post = PostCreator.create(Discourse.system_user, raw: I18n.t('lounge_welcome.body'), title: I18n.t('lounge_welcome.title'), skip_validations: true, category: lounge.name)
+    post.topic.update_pinned(true)
+  end
 end

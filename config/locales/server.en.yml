@@ -236,6 +236,16 @@ en:
 
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the forum design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nAlso, if you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
 
+  lounge_welcome:
+    title: "Welcome to the Lounge"
+    body: |
+      Thanks to your activity on the site, you have been granted the Leader trust level. As a leader you can:
+
+      * access topics in the Lounge category
+      * recategorize and change the title of topics
+      * have all your links followed (we remove [automatic nofollow](http://en.wikipedia.org/wiki/Nofollow))
+
+
   category:
     topic_prefix: "About the %{category} category"
     replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. Until you edit this text or create topics, this category won't appear on the categories page.]"
