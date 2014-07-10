@@ -60,8 +60,13 @@ class StaticController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, only: [:cdn_asset]
   def cdn_asset
-    path = params[:path].gsub(/[^a-zA-Z0-9_\-\.]/, "")
-    path = (Rails.root + "public/assets/" + path).to_s
+    path = File.expand_path(Rails.root + "public/assets/" + params[:path])
+
+    # SECURITY what if path has /../
+    unless path.start_with?(Rails.root.to_s + "/public/assets")
+      raise Discourse::NotFound
+    end
+
     expires_in 1.year, public: true
     response.headers["Access-Control-Allow-Origin"] = params[:origin]
     begin
