@@ -732,6 +732,8 @@ blockquote > *:last-child {
   float: left;
   margin-top: 15px;
   padding-left: 15px;
+  /* urgent fix, must set max width or long gutter width float flows under posts */
+  max-width: 215px;
 
   ul {margin: 0;}
   li {margin-bottom: 10px;}
