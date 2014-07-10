@@ -24,6 +24,7 @@ class InviteMailer < ActionMailer::Base
       build_email(invite.email,
                   template: 'invite_mailer',
                   invitee_name: invitee_name,
+                  site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   topic_title: first_topic.try(:title),
                   topic_excerpt: topic_excerpt,
