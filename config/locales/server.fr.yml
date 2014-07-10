@@ -750,7 +750,7 @@ fr:
     username_change_period: "Le nombre de jours après l'enregistrement que les comptes peuvent changer leur nom d'utilisateur (0 pour empêcher le changement de pseudo)."
     email_editable: "Autoriser les utilisateurs à changer leur adresse e-mail après l'inscription."
     allow_uploaded_avatars: "Autoriser les utilisateurs d'envoyer leurs propres avatars."
-    allow_animated_avatars: "Autoriser les utilisateurs à utiliser des avatars avec des gif animés. ATTENTION: il est hautement recommandé d'exécuter la tâche rake avatars:regenerate après avoir changé ce paramètre."
+    allow_animated_avatars: "Autoriser les utilisateurs à utiliser des avatars avec des gif animés. ATTENTION: il est hautement recommandé d'exécuter la tâche rake avatars:refresh après avoir changé ce paramètre."
     automatically_download_gravatars: "Télécharger les gravatars pour les utilisateurs lors de la création de compte ou du changement d'email"
     digest_topics: "Le nombre maximum de sujets à afficher dans l'email de résumé"
     digest_min_excerpt_length: "Combien de caractères nous visons pour chaque message dans l'e-mail résumé"

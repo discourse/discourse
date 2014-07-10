@@ -225,13 +225,13 @@ en:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
 
-  vip_category_name: "lounge"
+  vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
 
-  meta_category_name: "meta"
+  meta_category_name: "Meta"
   meta_category_description: "Discussion about this forum, its organization, how it works, and how we can improve it."
 
-  staff_category_name: "staff"
+  staff_category_name: "Staff"
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
 
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the forum design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nAlso, if you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
@@ -695,7 +695,7 @@ en:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics loaded by default on the topics list page, and when loading more topics"
     posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
-    site_contact_username: "Username for the author of automated private messages sent by the forum"
+    site_contact_username: "Username for the author of automated private messages sent by the forum; if left blank the default System account will be used."
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
     suppress_reply_directly_above: "Don't show in-reply-to on a post when there is a single reply directly above"
@@ -892,7 +892,7 @@ en:
     email_editable: "Allow users to change their e-mail address after registration."
 
     allow_uploaded_avatars: "Allow users to upload their custom avatars"
-    allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:regenerate rake task after changing that setting."
+    allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:refresh rake task after changing that setting."
     automatically_download_gravatars: "Download gravatars for users upon account creation or email change"
     digest_topics: "The maximum amount of topics to display in an email digest"
     digest_min_excerpt_length: "How many characters we're aiming for for each post in the email digest"
@@ -1048,7 +1048,7 @@ en:
       blocked: "is blocked."
 
   invite_mailer:
-    subject_template: "%{invitee_name} invited you to a discussion at %{site_name}"
+    subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to a discussion
 
@@ -1067,7 +1067,7 @@ en:
       This invitation is from a trusted user, so you can reply to the discussion immediately.
 
   invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join"
+    subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to join
 
@@ -1502,7 +1502,7 @@ en:
         %{respond_instructions}
 
     digest:
-      why: "Here's a brief summary of the discussion on %{site_link} since we last saw you on %{last_seen_at}."
+      why: "Here's a brief summary of %{site_link} since we last saw you on %{last_seen_at}."
       subject_template: "[%{site_name}] Digest for %{date}"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Popular posts"

@@ -582,7 +582,7 @@ ja:
     username_change_period: "ユーザ名の変更が可能になるまでの登録日からの日数 (0を指定でユーザ名の変更自体を無効化)。"
     email_editable: "登録後、ユーザによるメールアドレスの変更を許可する。"
     allow_uploaded_avatars: "ユーザがカスタムアバターをアップロードするのを許可する"
-    allow_animated_avatars: "ユーザがアニメ gif をアバターとしてアップロードするのを許可する。注意: この設定を変更した場合 avatars:regenerate rake タスクを走らせることを強く推奨します。"
+    allow_animated_avatars: "ユーザがアニメ gif をアバターとしてアップロードするのを許可する。注意: この設定を変更した場合 avatars:refresh rake タスクを走らせることを強く推奨します。"
     default_digest_email_frequency: "ユーザがダイジェストメールを受け取る頻度のデフォルト値。ユーザは設定画面でこの値をカスタマイズできます。"
     detect_custom_avatars: "ユーザがカスタムアバターをアップロードしたか確認する"
     max_daily_gravatar_crawls: "一日に、Discourse がカスタムアバターの確認を gravatar に行う最大回数"

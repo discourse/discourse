@@ -31,11 +31,6 @@
       vertical-align: top;
       margin-top: 2px;
     }
-    &.category-description {
-      td {
-        color: $danger;
-      }
-    }
     &.highlighted {
       background-color: scale-color($tertiary, $lightness: 85%);
     }

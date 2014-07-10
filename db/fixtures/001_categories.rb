@@ -5,8 +5,8 @@ SiteSetting.refresh!
 if SiteSetting.uncategorized_category_id == -1 || !Category.exists?(SiteSetting.uncategorized_category_id)
   puts "Seeding uncategorized category!"
 
-  result = Category.exec_sql "SELECT 1 FROM categories WHERE name = 'uncategorized'"
-  name = 'uncategorized'
+  result = Category.exec_sql "SELECT 1 FROM categories WHERE lower(name) = 'uncategorized'"
+  name = 'Uncategorized'
   if result.count > 0
     name << SecureRandom.hex
   end

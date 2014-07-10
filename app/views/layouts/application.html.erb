@@ -11,7 +11,7 @@
     <%- end %>
 
     <%= script "preload_store" %>
-    <%= javascript_include_tag "locales/#{I18n.locale}" %>
+    <%= script "locales/#{I18n.locale}" %>
     <%= script "vendor" %>
     <%= script "application" %>
     <%- if staff? %>
