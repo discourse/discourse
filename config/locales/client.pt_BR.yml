@@ -84,7 +84,6 @@ pt_BR:
     not_implemented: "Esse recurso ainda não foi implementado, desculpe!"
     no_value: "Não"
     yes_value: "Sim"
-    of_value: "de"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
     log_in: "Entrar"
@@ -213,13 +212,6 @@ pt_BR:
       post_stat_sentence:
         one: "%{count} nova mensagem nos últimos %{unit}."
         other: "%{count} novas mensagens nos últimos %{unit}."
-    ip_info:
-      location: localização
-      location_not_found: (desconhecido)
-      organisation: Organização
-      phone: Telefone
-      other_accounts: Outras contas com este endereço IP
-      no_other_accounts: (nenhum)
     user:
       said: "{{username}} postou:"
       profile: "Perfil"
@@ -251,7 +243,6 @@ pt_BR:
       watched_categories: "Acompanhados"
       watched_categories_instructions: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
       tracked_categories: "Monitorado"
-      tracked_categories_instructions: "Você vai monitorar automaticamente todos os novos tópicos dessas categorias. A contagem de mensagens não lidas e novas aparecerá ao lado a lista do tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
       delete_account: "Excluir Minha Conta"
@@ -425,7 +416,6 @@ pt_BR:
     unmute: Reativar
     last_post: Última postagem
     summary:
-      enabled_description: "Você está vendo um resumo deste tópico. Para ver todas as mensagens novamente, clique abaixo."
       description: "Há <b>{{count}}</b> respostas."
       description_time: "Há <b>{{count}}</b> respostas com um tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
       enable: 'Resumir Este Tópico'
@@ -710,10 +700,8 @@ pt_BR:
           '0': 'Você está ignorando todas as notificações deste tópico.'
         watching_pm:
           title: "Acompanhando"
-          description: "Você será notificado de cada nova mensagem para esta mensagem privada. A contagem de mensagens não lidas e novas também aparecerá ao lado da lista do tópico."
         watching:
           title: "Observar"
-          description: "Você será notificado de cada nova mensagem neste tópico. A contagem de mensagens não lidas e novas também aparecerá ao lado da lista do tópico."
         tracking_pm:
           title: "Monitorando"
         tracking:
@@ -756,23 +744,18 @@ pt_BR:
         help: 'sinaliza privativamente este tópico para chamar atenção ou notificar privativamente sobre isso'
         success_message: 'Você sinalizou com sucesso este tópico.'
       inviting: "Convidando..."
-      automatically_add_to_groups: "Depois do registo, automaticamente adicionar o usuário nos grupos. (opcional, administradores apenas)"
       invite_private:
         title: 'Convidar para Conversa Privada'
         email_or_username: "Email ou Nome de Usuário do convidado"
         email_or_username_placeholder: "email ou Nome de Usuário"
         action: "Convite"
-        success: "Obrigado! Convidamos esse usuário para participar nesta conversa privada."
         error: "Desculpe, houve um erro ao convidar esse usuário."
         group_name: "nome do grupo"
       invite_reply:
         title: 'Convite'
         action: 'Email de convite'
         help: 'envie convites aos seus amigos para que eles possam responder a este tópico com um único clique.'
-        to_topic: "Enviaremos um breve e-mail permitindo ao seu amigo responder imediatamente este tópico clicando em um link, sem necessidade de login."
-        to_forum: "Enviaremos um e-mail breve permitindo que o seu amigo participe clicando em um link, sem necessidade de login."
         email_placeholder: 'nome@exemplo.com'
-        success: "Obrigado! Enviamos um convite para <b>{{email}}</b>. Você saberá quando eles utilizarem o convite. Você pode ir até a seção de Convites na sua página de usuário para saber quem você já convidou."
         error: "Desculpe não podemos convidar essa pessoa. Talvez já seja um usuário?"
       login_reply: 'Entre para responder'
       filters:
@@ -1023,7 +1006,6 @@ pt_BR:
       auto_close_label: "Fechar automaticamente tópicos depois de:"
       auto_close_units: "horas"
       email_in: "Endereço de e-mail personalizado de entrada:"
-      email_in_allow_strangers: "Recebe e-mails de não-usuários (aka estranhos)"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
       this_year: "este ano"
@@ -1037,7 +1019,6 @@ pt_BR:
           description: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
         tracking:
           title: "Monitorar"
-          description: "Você vai monitorar automaticamente todos os novos tópicos dessas categorias. A contagem de mensagens não lidas e novas aparecerá ao lado a lista do tópico."
         regular:
           title: "Normal"
           description: "Você receberá notificações apenas se alguém mencionar o seu @nome ou responder ao seu post."
@@ -1345,7 +1326,6 @@ pt_BR:
         opacity: "Opacidade"
         copy: "Copiar"
         css_html:
-          title: "CSS, HTML"
           long_title: "Customizações CSS e HTML"
         colors:
           title: "Cores"
@@ -1419,7 +1399,6 @@ pt_BR:
           filters:
             title: "Filtro"
             user_placeholder: "Nome de usuário"
-            address_placeholder: "em@il.com"
             type_placeholder: "resenha, cadastro..."
             skipped_reason_placeholder: "motivo"
       logs:

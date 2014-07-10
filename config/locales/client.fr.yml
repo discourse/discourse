@@ -84,7 +84,6 @@ fr:
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
     no_value: "Non"
     yes_value: "Oui"
-    of_value: "de"
     generic_error: "Désolé, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue: %{error}"
     log_in: "Se connecter"
@@ -213,15 +212,6 @@ fr:
       post_stat_sentence:
         one: "%{count} nouveau message depuis %{unit}."
         other: "%{count} nouveaux messages depuis %{unit}."
-    ip_info:
-      title: Adresse IP de consultation
-      hostname: Nom d'hôte
-      location: Localisation
-      location_not_found: (inconnu)
-      organisation: Rattachement
-      phone: Téléphone
-      other_accounts: Autres comptes utilisant cette adresse IP
-      no_other_accounts: (aucun)
     user:
       said: "{{username}} a dit :"
       profile: "Profil"
@@ -253,7 +243,6 @@ fr:
       watched_categories: "Surveillés"
       watched_categories_instructions: "Vous pourrez suivre attentivement automatiquement toutes les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, de plus les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
       tracked_categories: "Suivies"
-      tracked_categories_instructions: "Vous pourrez suivre attentivement automatiquement tous les nouveaux sujets dans ces catégories. Les nombres de messages non lus et de nouveaux messages apparaîtront à côté de la liste des sujets."
       muted_categories: "Désactivés"
       muted_categories_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets de ces catégories, et ils n'apparaitront pas dans votre onglet non lu."
       delete_account: "Supprimer mon compte"
@@ -412,6 +401,7 @@ fr:
         the_topic: "le sujet"
     loading: "Chargement..."
     close: "Fermer"
+    assets_changed_confirm: "Ce site vient d'être mis à jour. Rafraîchir maintenant pour accéder à la nouvelle version ?"
     read_only_mode:
       enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
       login_disabled: "La connexion est désactivée quand le site est en mode lecture seule."
@@ -429,7 +419,6 @@ fr:
     unmute: Activer
     last_post: Dernier message
     summary:
-      enabled_description: "Vous visualisez un résumé de ce sujet. Pour voir tous les messages à nouveau, cliquez ci-dessous."
       description: "Il y a <b>{{count}}</b> réponses."
       description_time: "Il y a <b>{{count}}</b> réponses avec un temps estimé de lecture de <b>{{readingTime}} minutes</b>."
       enable: 'Résumer Ce Sujet'
@@ -714,10 +703,8 @@ fr:
           '0': 'Vous ignorez toutes les notifications de ce sujet.'
         watching_pm:
           title: "Suivre attentivement"
-          description: "Vous serez averti de chaque nouveau message de cette conversation privée. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
         watching:
           title: "Surveiller"
-          description: "Vous serez averti de chaque nouveau message de ce sujet. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
         tracking_pm:
           title: "Suivi simple"
         tracking:
@@ -762,23 +749,18 @@ fr:
         help: 'signaler secrètement ce sujet pour attirer l''attention ou envoyer une notification privée à son propos.'
         success_message: 'Vous avez signalé ce sujet avec succès.'
       inviting: "Inviter..."
-      automatically_add_to_groups: "Durant l'enregistrement, ajoute automatiquement l'utilisateur à des groupes. (optionnel, admin uniquement)"
       invite_private:
         title: 'Inviter au message privé'
         email_or_username: "Adresse email ou @pseudo de l'invité"
         email_or_username_placeholder: "Adresse email ou @pseudo"
         action: "Inviter"
-        success: "Merci ! Vous avez invité cet utilisateur à participer à ce message privé."
         error: "Désolé, il y a eu une erreur lors de l'invitation de cet utilisateur."
         group_name: "nom du groupe"
       invite_reply:
         title: 'Inviter'
         action: 'Envoyer l''invitation'
         help: 'envoyer des invitations à des amis pour qu''ils puissent participer à ce sujet en un simple clic'
-        to_topic: "Nous allons envoyer un mail à votre ami pour qu'il réponde à ce sujet en cliquant sur un lien, sans qu'il ait à se connecter."
-        to_forum: "Nous allons envoyer un mail à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien, sans qu'il ait à se connecter."
         email_placeholder: 'nom@exemple.com'
-        success: "Merci ! Nous avons envoyé un mail à <b>{{email}}</b>. Nous vous informerons lorsqu'ils auront retourné votre invitation. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être a-t-elle déjà un compte utilisateur ?"
       login_reply: 'Se connecter pour répondre'
       filters:
@@ -835,6 +817,7 @@ fr:
       continue_discussion: "Continuer le sujet suivant {{postLink}}:"
       follow_quote: "Voir le message cité"
       show_full: "Voir le message en entier"
+      show_hidden: 'Afficher le contenu caché.'
       deleted_by_author:
         one: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
         other: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
@@ -1030,7 +1013,6 @@ fr:
       auto_close_label: "Fermer automatiquement après :"
       auto_close_units: "heures"
       email_in: "Adresse email entrante personnalisée :"
-      email_in_allow_strangers: "Recevoir des emails de non-utilisateurs (alias inconnus)"
       edit_permissions: "Editer les Permissions"
       add_permission: "Ajouter une Permission"
       this_year: "cette année"
@@ -1044,7 +1026,6 @@ fr:
           description: "Vous serez automatiquement abonnés aux nouveaux sujets de ces catégories. Vous serez notifié de tous les nouveaux articles et sujets, en plus du décompte des articles non-lus, et les nouveaux articles apparaîtront aussi à côté de la liste des sujets."
         tracking:
           title: "Suivi"
-          description: "Vous suivrez automatiquement tous les nouveaux sujets de ces catégories. Le décompte des articles non-lus et des nouveaux articles apparaîtra à côté de la liste des sujets."
         regular:
           title: "Normal"
           description: "Vous recevrez une notification seulement si quelqu'un mentionne votre @nom ou répond à votre article."
@@ -1342,6 +1323,7 @@ fr:
         override_default: "Ne pas inclure la feuille de style par défaut"
         enabled: "Activé ?"
         preview: "prévisualiser"
+        undo_preview: "supprimer l'aperçu"
         save: "Sauvegarder"
         new: "Nouveau"
         new_style: "Nouveau style"
@@ -1352,7 +1334,6 @@ fr:
         opacity: "Opacité"
         copy: "Copier"
         css_html:
-          title: "CSS, HTML"
           long_title: "Personnalisation du CSS et HTML"
         colors:
           title: "Couleurs"
@@ -1426,7 +1407,6 @@ fr:
           filters:
             title: "Filtrer"
             user_placeholder: "pseudo"
-            address_placeholder: "em@il.com"
             type_placeholder: "résumé, inscription..."
             skipped_reason_placeholder: "raison"
       logs:
@@ -1678,6 +1658,7 @@ fr:
         no_badges: Il n'y a aucun badge qui peuvent être accorder.
         allow_title: Autoriser l'utilisation d'un badge comme titre
         multiple_grant: Peut être décerné plusieurs fois
+        icon: Icône
     lightbox:
       download: "télécharger"
     keyboard_shortcuts_help:
@@ -1735,13 +1716,24 @@ fr:
       badge:
         basic_user:
           name: Base
-          description: Accorder toutes les fonctions essentiels communautaires.
+          description: Toutes les fonctions communautaires essentielles sont accessibles.
         regular_user:
           name: Régulier
-          description: Accorder les invitations.
+          description: Il est possible d'envoyer des invitations.
         leader:
           name: Responsable
-          description: Accorder la re-catégorisation, le renommage, le suivi de lien et le salon
+          description: La re-catégorisation, le renommage, le suivi de lien et le salon sont accessibles.
         elder:
           name: Ancien
-          description: Accorder l'édition, l'épinglage, la fermeture, l'archivage, la séparation et la fusion.
+          description: L'édition, l'épinglage, la fermeture, l'archivage, la séparation et la fusion sont accessibles.
+        welcome:
+          name: Bienvenue
+          description: A reçu un j'aime.
+        nice_post:
+          name: Joli message
+          description: A reçu 10 j'aime sur un message. Ce badge peut être donné plusieurs fois.
+        good_post:
+          name: Excellent message
+          description: A reçu 25 j'aime sur un message. Ce badge peut être donné plusieurs fois.
+        great_post:
+          name: Bon message

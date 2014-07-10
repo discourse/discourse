@@ -73,18 +73,17 @@ de:
           one: "vor einem Tag"
           other: "vor %{count} Tagen"
     share:
-      topic: 'Teile den Link zum Thema'
-      post: 'Teile einen Link zu diesem Beitrag'
+      topic: 'Teile einen Link zu diesem Thema'
+      post: 'Teile einen Link zu Beitrag Nr. %{postNumber}'
       close: 'Schließen'
       twitter: 'Diesen Link auf Twitter teilen'
       facebook: 'Diesen Link auf Facebook teilen'
       google+: 'Diesen Link auf Google+ teilen'
       email: 'Diesen Link per E-Mail senden'
     edit: 'Titel und Kategorie dieses Themas ändern'
-    not_implemented: "Diese Erweiterung ist noch nicht verfügbar."
+    not_implemented: "Tut uns Leid, diese Funktion wurde noch nicht implementiert."
     no_value: "Nein"
     yes_value: "Ja"
-    of_value: "von"
     generic_error: "Entschuldigung. Ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
     log_in: "Anmelden"
@@ -129,8 +128,8 @@ de:
     bookmarks:
       not_logged_in: "Entschuldigung, du musst eingeloggt sein, um ein Lesezeichen zu setzen"
       created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
-      not_bookmarked: "du hast diesen Beitrag gelesen. Klicke, um ein Lesezeichen zu setzen"
-      last_read: "dies ist der letzte Beitrag, den Du gelesen hast. Klicke, um ein Lesezeichen zu setzen"
+      not_bookmarked: "Du hast diesen Beitrag gelesen. Klicke, um ein Lesezeichen zu setzen"
+      last_read: "Das ist der letzte Beitrag, den Du gelesen hast. Klicke, um ein Lesezeichen zu setzen"
       remove: "Entferne Lesezeichen"
     new_topics_inserted: "{{count}} neue Beiträge."
     show_new_topics: "Klicken zum Anzeigen."
@@ -152,7 +151,7 @@ de:
       none_found: "Keine Themen gefunden."
       title:
         search: "Suche nach Thema anhand Name, URL oder ID:"
-        placeholder: "Titel des Themas eingeben"
+        placeholder: "Gib hier den Titel des Themas ein"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> hat auf <a href='{{topicUrl}}'>das Thema</a> geantwortet"
       you_posted_topic: "<a href=\"{{userUrl}}\">Du</a> hast <a href=\"{{topicUrl}}\">ein neues Thema</a> geschrieben"
@@ -186,7 +185,7 @@ de:
       '2': "Erhaltene Likes"
       '3': "Lesezeichen"
       '4': "Themen"
-      '5': "Rückmeldungen"
+      '5': "Beiträge"
       '6': "Antworten"
       '7': "Erwähnungen"
       '9': "Zitate"
@@ -213,25 +212,16 @@ de:
       post_stat_sentence:
         one: "%{count} neue Beitrag in den letzten %{unit}."
         other: "%{count} neue Beiträge in den letzten %{unit}."
-    ip_info:
-      title: IP-Adressen-Abfrage
-      hostname: Hostname
-      location: Aufenthaltsort
-      location_not_found: (unbekannt)
-      organisation: Organisation
-      phone: Telefon
-      other_accounts: Andere Benutzerkonten mit dieser IP-Adresse
-      no_other_accounts: (Keine)
     user:
       said: "{{username}} sagte:"
       profile: "Profil"
       show_profile: "Profil ansehen"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
-      download_archive: "Ein Archiv aller meiner Beiträge herunterladen"
+      download_archive: "Ein Archiv meiner Beiträge herunterladen"
       private_message: "Private Nachrichten"
       private_messages: "Nachrichten"
-      activity_stream: "Aktivitäten"
+      activity_stream: "Aktivität"
       preferences: "Einstellungen"
       bookmarks: "Lesezeichen"
       bio: "Über mich"
@@ -253,7 +243,6 @@ de:
       watched_categories: "Beobachten"
       watched_categories_instructions: "Das selbe wie 'verfolgen', zusätzlich wirst du über alle neuen Beiträge und Themen informiert."
       tracked_categories: "Verfolgen"
-      tracked_categories_instructions: "Du verfolgst alle bereits bestehenden und neuen Themen. Hierdurch kann dir die Anzahl der ungelesenen Beiträge angezeigt werden"
       muted_categories: "Ignorieren"
       muted_categories_instructions: "Du wirst über nichts mehr in diesem Thema informiert, und er wird nicht auf deinem Ungelesen-Tab angezeigt werden."
       delete_account: "Loesche mein Nutzerkonto"
@@ -435,7 +424,6 @@ de:
     unmute: Stummschaltung deaktivieren
     last_post: Letzter Beitrag
     summary:
-      enabled_description: "Du siehst gerade die Top-Beiträge dieses Themas."
       description: "Es gibt <b>{{count}}</b> Beiträge."
       description_time: "Es gibt <b>{{count}}</b> Antworten mit einer geschätzten Lesezeit <b>{{readingTime}} Minuten</b>."
       enable: 'Nur die Top-Beiträge anzeigen'
@@ -722,16 +710,12 @@ de:
           '0': 'Du ignorierst alle Benachrichtigungen bezüglich dieses Themas.'
         watching_pm:
           title: "Beobachten"
-          description: "Wie 'Verfolgen', zuzüglich Benachrichtigungen über neue Beiträge."
         watching:
           title: "Beobachtet"
-          description: "Wie 'Verfolgen', zuzüglich Benachrichtigungen über neue Beiträge."
         tracking_pm:
           title: "Verfolgen"
-          description: "Die Anzahl von ungelesenen und neuen Beiträgen wird neben der privaten Nachricht erscheinen. Du wirst nur benachrichtigt, wenn jemand deinen @Namen erwähnt oder deinen Beitrag beantwortet."
         tracking:
           title: "Mitverfolgt"
-          description: "Die Anzahl von ungelesenen und neuen Beiträgen wird neben der Auflisting des Themas erscheinen. Du wirst nur benachrichtigt, wenn jemand deinen @Namen erwähnt oder deinen Beitrag beantwortet."
         regular:
           title: "Normal"
           description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deine Beiträge antwortet."
@@ -772,23 +756,18 @@ de:
         help: 'Melde dieses Thema vertraulich zur Kenntnisnahme oder versende eine private Benachrichtigung darüber.'
         success_message: 'Du hast dieses Thema erfolgreich gemeldet.'
       inviting: "Einladung verschicken..."
-      automatically_add_to_groups: "Füge Benutzer nach der Registrierung automatisch zu Gruppen hinzu. (Optional, Nur Admin) "
       invite_private:
         title: 'Zu privatem Gespräch einladen'
         email_or_username: "Einzuladender Nutzer"
         email_or_username_placeholder: "Mailadresse oder Benutzername"
         action: "Einladen"
-        success: "Danke! Wir haben den Benutzer eingeladen, an diesem privaten Gespräch teilzunehmen."
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
         group_name: "Gruppenname"
       invite_reply:
         title: 'Einladung'
         action: 'Einladung senden'
         help: 'Sendet Freunden eine Einladung, so dass mit einem Klick auf dieses Thema antworten können.'
-        to_topic: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht direkt auf dieses Thema zu antworten. Hierfür ist kein Login erforderlich."
-        to_forum: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht dem Forum beizutreten"
         email_placeholder: 'Mailadresse'
-        success: "Danke! Wir haben deine Einladung an <b>{{email}}</b> verschickt. Wir lassen Dich wissen, sobald die Einladung eingelöst wird. In deinem Nutzerprofil kannst Du alle deine Einladungen überwachen."
         error: "Entschuldige, wir konnten diese Person nicht einladen. Vielleicht ist sie schon ein Nutzer?"
       login_reply: 'Melde dich an um zu antworten'
       filters:
@@ -1046,7 +1025,6 @@ de:
       auto_close_label: "Thema automatisch schließen nach:"
       auto_close_units: "Stunden"
       email_in: "Benutzerdefinierte Email Adresse:"
-      email_in_allow_strangers: "Akzeptiere Emails von nicht registrierten Nutzern (aka Fremde)"
       edit_permissions: "Berechtigung bearbeiten"
       add_permission: "Berechtigung hinzufügen"
       this_year: "dieses Jahr"
@@ -1060,7 +1038,6 @@ de:
           description: "Du wirst automatisch allen neuen Themen dieser Kategorie folgen. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Ausserdem wird die Anzahl der ungelesenen und neuen Beiträge neben der Themenliste angezeigt."
         tracking:
           title: "Verfolgen"
-          description: "Nachschlagen von IP-Adressen"
         regular:
           title: "Normal"
           description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
@@ -1209,7 +1186,7 @@ de:
         latest_version: "Jüngste"
         problems_found: "Es gibt Probleme mit deiner Discourse-Installation:"
         last_checked: "Zuletzt geprüft"
-        refresh_problems: "Neu Laden"
+        refresh_problems: "Aktualisieren"
         no_problems: "Keine Probleme gefunden."
         moderators: 'Moderatoren:'
         admins: 'Administratoren:'
@@ -1376,7 +1353,6 @@ de:
         opacity: "Transparenz"
         copy: "Kopieren"
         css_html:
-          title: "CSS, HTML"
           long_title: "CSS und HTML Anpassungen"
         colors:
           title: "Farben"
@@ -1450,7 +1426,6 @@ de:
           filters:
             title: "Filter"
             user_placeholder: "Benutzername"
-            address_placeholder: "em@il.com"
             type_placeholder: "authentifizieren, registrieren..."
             skipped_reason_placeholder: "Grund"
       logs:
@@ -1656,7 +1631,6 @@ de:
           qualifies: "Berechtigt für Vetrauensstufe 3."
           will_be_promoted: "Wird innerhalb der nächsten 24 Stunden befördert."
           does_not_qualify: "Nicht berechtigt für Vetrauensstufe 3."
-          will_be_demoted: "Wird innerhalb der nächsten 24 Stunden degradiert."
       site_content:
         none: "Wähle einen Inhaltstyp um mit dem Bearbeiten zu beginnen."
         title: 'Inhalt'
@@ -1711,7 +1685,7 @@ de:
         no_badges: Es gibt keine Abzeichen die verliehen werden können.
         allow_title: Abzeichen darf als Titel verwendet werden.
         multiple_grant: Kann mehrfach erteilt werden.
-        icon: Icon
+        icon: Symbol
     lightbox:
       download: "Download"
     keyboard_shortcuts_help:
@@ -1790,4 +1764,3 @@ de:
           description: Hat 25 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.
         great_post:
           name: Großartiger Post
-          description: Hat 100 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.

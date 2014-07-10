@@ -81,7 +81,6 @@ pt:
     not_implemented: "Essa característica ainda não foi implementada, desculpe!"
     no_value: "Não"
     yes_value: "Sim"
-    of_value: "de"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
     age: "Idade"
@@ -308,7 +307,6 @@ pt:
     unmute: Reativar
     last_post: Última mensagem
     summary:
-      enabled_description: "Está a ver um sumário deste tópico. Para ver todos as mensagens, clique em baixo."
       enable: 'Sumarize este tópico'
       disable: 'Mostrar todas as mensagens'
     private_message_info:
@@ -550,12 +548,10 @@ pt:
         email_or_username: "Email ou Nome de Utilizador do Convidado"
         email_or_username_placeholder: "endereço de email ou username"
         action: "Convite"
-        success: "Obrigado! Convidámos esse utilizador para participar nesta conversa privada."
         error: "Desculpe, houve um erro ao convidar esse utilizador."
       invite_reply:
         action: 'Email de Convite'
         help: 'envie convites aos seus amigos para que eles possam responder a este tópico com um simples toque do rato.'
-        success: "Obrigado! Enviámos um convite para <b>{{email}}</b>. Saberá quando eles utilizarem o convite. Pode ir até à secção de Convites na sua página de utilizador para saber quem já convidou."
         error: "Desculpe, não podíamos convidar essa pessoa. Talvez já seja um utilizador?"
       filters:
         n_posts:

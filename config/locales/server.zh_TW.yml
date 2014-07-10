@@ -23,8 +23,6 @@ zh_TW:
   log_in: "登入"
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留權利"
-  bulk_invite:
-    file_should_be_csv: "上傳的檔案必須是 csv 格式。"
   backup:
     operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
   not_logged_in: "你需要先登入才能那樣做。"
@@ -131,9 +129,6 @@ zh_TW:
   user_profile:
     no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
-  vip_category_name: "交誼廳"
-  meta_category_name: "meta"
-  staff_category_name: "工作人員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
   category:
     topic_prefix: "對於分類：%{category} 的定義"
@@ -465,7 +460,6 @@ zh_TW:
     logo_url: "你的網站標誌圖片，例如：http://example.com/logo.png"
     logo_small_url: "你的網站的小號標誌圖片，例如：http://example.com/logo-small.png，用於卷起討論話題清單時顯示"
     favicon_url: "你的網站圖示 (favicon)，參考 http://zh.wikipedia.org/wiki/Favicon"
-    notification_email: "郵件回覆位址，當發送系統郵件，例如通知使用者找回密碼、新使用者註冊等等時，所使用的發信人位址"
     use_https: "使用 SSL 安全套接層來瀏覽本站嗎？"
     summary_score_threshold: "將一篇文章包含到“優秀”文章中所需的最小分值"
     summary_posts_required: "在一個討論話題中啟用“優秀”模式所要求的最小文章數量"
@@ -494,7 +488,6 @@ zh_TW:
     track_external_right_clicks: "追蹤外部連結的右鍵點擊 ( 例如：開啟於瀏覽器的新頁面 )，預設是關閉的，因為它會重寫URLs"
     topics_per_page: "在討論話題清單頁面以及當載入更多討論話題時，預設載入多少個討論話題"
     posts_per_page: "在討論話題頁面或者載入更多文章時，預設載入多少篇文章"
-    site_contact_username: "論壇給用戶發送自動訊息時使用的用戶名"
     send_welcome_message: "給新用戶發送歡迎訊息？"
     suppress_reply_directly_below: "當一篇文章只有一個回覆時，不顯示文章回覆數量"
     allow_index_in_robots_txt: "允許搜尋引擎索引網站內容（更新 robots.txt）"
@@ -589,6 +582,8 @@ zh_TW:
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     errors:
       invalid_email: "無效的電子郵件地址"
+      invalid_username: "沒有用戶使用該用戶名稱。"
+      invalid_integer: "值必須為整數。"
       regex_mismatch: "內容值不符合要求的格式。"
       invalid_string: "無效的值。"
       invalid_string_min_max: "必須介於 %{min} 到 %{max} 字之間。"
@@ -657,26 +652,7 @@ zh_TW:
       blocked: "不被允許。"
     ip_address:
       blocked: "被封鎖。"
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} 邀請你參與討論"
-    text_body_template: |
-      %{invitee_name} 邀請你參與討論
-
-      > %{topic_title}
-
-      at
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      如果你感興趣，請點擊以下連結：
-
-      %{invite_link}
-
-      此邀請是由一位受信任的用戶所發出，所以你可以立即對此討論發表回覆。
   invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} 邀請你加入"
     text_body_template: |
       %{invitee_name} 邀請你加入
 
@@ -757,26 +733,6 @@ zh_TW:
         好好享受你在論壇的時光吧！
     welcome_invite:
       subject_template: "歡迎來到 %{site_name}！"
-      text_body_template: |
-        感謝你接受邀請來到 %{site_name}，歡迎！
-
-        我們為你自動建立了一個用戶名：**%{username}**，你隨時可以在 [你的用戶基本資料][prefs] 中修改。
-
-        若要再次登入，可以選擇：
-
-        1. 以任何喜歡的方式登入-- 不過你選擇的驗證方式其所指向的電子郵件，必須與當初收到邀請函時的信箱一樣擁有 **相同的電子郵件地址**，否則我們無法確定到底是不是你本人！
-
-        2. 在 [你的用戶設置][prefs] 頁面為 %{site_name} 建立一個獨一無二的密碼，然後使用該密碼來登入。
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        我們始終相信 [文明的社群行為](%{base_url}/faq)。
-
-        好好享受你在論壇的時光吧！
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "匯出成功"
       text_body_template: "匯出操作成功。"
@@ -862,12 +818,10 @@ zh_TW:
         ---
         請瀏覽 %{base_url}%{url} 來回覆。
     digest:
-      why: "這裡是自從我們在 %{last_seen_at} 最後一次見到你之後，在 %{site_link} 發生的事情的簡單匯總。"
       subject_template: "[%{site_name}] 於 %{date} 的摘要"
       new_activity: "在你的討論話題和文章裡的動態："
       top_topics: "熱門文章"
       other_new_topics: "熱門討論話題"
-      unsubscribe: "這封來自 %{site_link} 的匯總郵件是當我們有一段時間沒有見到你之後，作為一個禮貌的通知發送給你的。\n如果你希望關閉它或者修改你的郵件設置，請瀏覽 %{unsubscribe_link}。"
       click_here: "點擊此處"
       from: "%{site_name} 摘要"
       read_more: "閱讀更多"
@@ -907,7 +861,6 @@ zh_TW:
     access_token_problem: "告訴一個管理員：請更新網站設定以包含正確的 discourse_org_access_key。"
   page_not_found:
     title: "你請求的頁面在本論壇不存在。可能我們能幫助你找到它，或者類似的其它討論話題："
-    search_google: "以 Google 搜尋"
   terms_of_service:
     user_content_license: |
       使用者的內容基於 [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US) 授權。. Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.

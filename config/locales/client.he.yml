@@ -84,7 +84,6 @@ he:
     not_implemented: "סליחה, האפשרות הזו עדיין לא מומשה!"
     no_value: "לא"
     yes_value: "כן"
-    of_value: "מתוך"
     generic_error: "סליחה, ארעה שגיאה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
     log_in: "התחבר"
@@ -222,6 +221,7 @@ he:
       private_messages: "הודעות"
       activity_stream: "פעילות"
       preferences: "העדפות"
+      bookmarks: "מועדפים"
       bio: "אודותיי"
       invited_by: "הוזמן על ידי"
       trust_level: "רמת אמון"
@@ -239,7 +239,6 @@ he:
       watched_categories: "נצפה"
       watched_categories_instructions: "אתה אוטומטית תצפה בכל הנושאים החדשים בקטגוריות האלה. אתה תקבל התרעות על כל ההודעות והנושאים החדשים, ובנוסף, כמות ההודעות שלא נקראו יופיעו לצד כל נושא."
       tracked_categories: "במעקב"
-      tracked_categories_instructions: "אתה אוטומטית תעקוב אחר כל הנושאים בקטגוריות האלה. הכמות של הודעות חדשות ושלא נקראו יופיעו ליד הנושא."
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבל התרעות בנוגע לנושאים חדשים בקטגוריות האלה, והם לא יופיעו בעמוד הלא נקראו שלך."
       delete_account: "מחק את החשבון שלי"
@@ -369,6 +368,10 @@ he:
         days_visited: "מספר ימי ביקור"
         account_age_days: "גיל החשבון בימים"
         create: "שליחת הזמנה"
+        bulk_invite:
+          uploading: "מעלה נתונים"
+          success: "הקובץ הועלה בהצלחה, תקבל/י התראה תוך זמן קצר בנוגע להתקדמות."
+          error: "חלה תקלה בהעלאת \"'{{filename}}': \n{{message}}"
       password:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."
@@ -392,6 +395,7 @@ he:
         the_topic: "הנושא"
     loading: "טוען..."
     close: "סגור"
+    assets_changed_confirm: "האתר עבר עדכון. תרצו לרענן לגרסא המתקדמת ביותר?"
     read_only_mode:
       enabled: "מצב קריאה בלבד למנהל ראשי. ניתן להמשיך לקרוא באתר אבל פעולות לא יעבדו כראוי."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
@@ -409,7 +413,8 @@ he:
     unmute: בטל השתקה
     last_post: הודעה אחרונה
     summary:
-      enabled_description: "אתה צופה בתקציר של הנושא הזה. כדי לראות את כל ההודעות שוב, הקלק מטה."
+      description: "ישנן <b> {{count}}</b> תגובות"
+      description_time: "ישנן  <b>{{count}}</b> תגובות, עם הערכת זמן קריאה של כ- <b>{{readingTime}}  דקות </b>."
       enable: 'סכם נושא זה'
       disable: 'הצג את כל ההודעות'
     private_message_info:
@@ -597,7 +602,7 @@ he:
         latest: "אין נושאים מדוברים. זה עצוב."
         hot: "אין נושאים חמים."
         category: "אין נושאים בקטגוריה {{category}}."
-        top: "אין נושאי עלית."
+        top: "אין נושאים מובילים."
       bottom:
         latest: "אין עוד נושאים מדוברים."
         hot: "אין עוד נושאים חמים."
@@ -607,7 +612,7 @@ he:
         unread: "אין עוד נושאים שלא נקראו."
         starred: "אין עוד נושאים עם כוכבים."
         category: "אין עוד נושאים בקטגוריה {{category}}."
-        top: "אין עוד נושאי עלית."
+        top: "אין עוד נושאים מובילים."
     topic:
       filter_to: "{{post_count}} הודעות בנושא"
       create: 'יצירת נושא'
@@ -627,6 +632,7 @@ he:
       invalid_access:
         title: "הנושא פרטי"
         description: "סליחה, איך אין לך גישה לנושא הזה!"
+        login_required: "עליך להתחבר כדי לצפות בנושא זה."
       server_error:
         title: "שגיאה בטעינת נושא"
         description: "סליחה, לא יכולנו לטעון את הנושא הזה, ייתכן שבשל תקלת תקשורת. אנא נסי שוב. אם הבעיה נמשכת, הודיעו לנו."
@@ -684,15 +690,12 @@ he:
           '0': 'אתה מתעלם מכל ההתרעות בנושא זה.'
         watching_pm:
           title: "צופה"
-          description: "תקבל התרעה על כל הודעה חדשה בהודעה פרטית זו. מספר ההודעות שלא נקראו ושנקראו יופיעו ליד הנושא."
         watching:
           title: "צופה"
-          description: "תקבל התרעה על כל הודעה חדשה בנושא זה. מספר ההודעות שלא נקראו ושנקראו יופיעו ליד הנושא."
         tracking_pm:
           title: "עוקב"
         tracking:
           title: "עוקב"
-          description: "מספר ההודעות החדשות ושלא נקראו יופיעו לצד רשימת הנושאים. תוכלו לקבל על כך התראה רק אם מישהו יזכיר את @שםהמשתמש שלכם או ישיב להודעה שפרסמתם."
         regular:
           title: "רגיל"
           description: "תקבל הודעה רק אם מישהו מזכיר אותך עם @שם או מגיב להודעה שלך."
@@ -731,23 +734,18 @@ he:
         help: 'דגלל נושא זה באופן פרטי לתשומת לב או שלח התרעה פרטית עליו'
         success_message: 'דגללת נושא זה בהצלחה.'
       inviting: "מזמין..."
-      automatically_add_to_groups: "בסיום ההרשמה, הוסף משתמש לקבוצות בצורה אוטומטית (אופציונלי, רק ל-admin)"
       invite_private:
         title: 'הזמן להודעה פרטית'
         email_or_username: "כתובת דואר אלקטרוני או שם משתמש של המוזמן"
         email_or_username_placeholder: "כתובת דואר אלקטרוני או שם משתמש"
         action: "הזמן"
-        success: "תודה! הזמנו את אותו משתמש להשתתף בהודעה פרטית זו."
         error: "סליחה, הייתה שגיאה בהזמנת משתמש זה."
         group_name: "שם הקבוצה"
       invite_reply:
         title: 'הזמן'
         action: 'הזמנת דואר אלקטרוני'
         help: 'שלח הזמנה לחברים כדי שהם יוכלו להגיב לנושא בלחיצה אחת'
-        to_topic: "אנחנו נשלח דואר אלקטרוני קצר שייתן לחבר שלך להגיב מיידית לנושא הזה על ידי לחיצה על קישור, ללא צורך בהתחברות."
-        to_forum: "נשלח לחבר שלך דואר אלקטרוני קצר שייתן לו להצטרף על ידי לחיצה על קישור, ללא צורך בהתחברות."
         email_placeholder: 'name@example.com'
-        success: "תודה, שלחנו הזמנה לכתובת <b>{{email}}</b>. נודיע לך כשהם ינצלו את ההזמנה שלך. בדוק את עמוד ההזמנות בלוח המשתמש שלך כדי לעקוב אחרי האנשים שהזמנת."
         error: "סליחה, לא יכולנו להזמין את האדם הזה, אולי הוא כבר רשום?"
       login_reply: 'התחבר כדי להגיב'
       filters:
@@ -1001,7 +999,6 @@ he:
       auto_close_label: "נעל נושאים אוטומטית אחרי:"
       auto_close_units: "שעות"
       email_in: "כתובת דואר נכנס מותאמת אישית:"
-      email_in_allow_strangers: "קבל הודעות דואר אלקטרוני מלא משתמשים (ידועים גם כזרים)"
       edit_permissions: "ערוך הרשאות"
       add_permission: "הוסף הרשאה"
       this_year: "השנה"
@@ -1012,9 +1009,9 @@ he:
       notifications:
         watching:
           title: "צופה"
+          description: "את/ה תצפו באופן אוטומטי בכל הנושאים שיפורסמו בקטגריות אלו. תקבלו התראה על נושאים חדשים וסך ההודעות החדשות ואלו שלא נקראו יופיע לצד רשימת הנושאים."
         tracking:
           title: "במעקב"
-          description: "את/ה תעקבו באופן אוטומטי אחרי נושאים חדשים בקטגוריות אלו. מספרי ההודעות שטרם נקרא וההודעות החדשות יופיעו לצד רשימת הנושאים."
         regular:
           title: "רגיל"
           description: "תקבל הודעה רק אם מישהו/מישהי יזכירו את @השם-שלך או ישיבו להודעתך"
@@ -1122,21 +1119,21 @@ he:
           other: "{{categoryName}} ({{count}})"
         help: "נושאים מדוברים בקטגוריה {{categoryName}}"
       top:
-        title: "עלית"
+        title: "מובילים"
         help: "אוסף הנושאים הטובים ביותר בשנה, חודש שבוע או יום האחרונים"
         yearly:
-          title: "עלית שנתי"
+          title: "מובילים שנתי"
         monthly:
-          title: "עלית חודשי"
+          title: "מובילים חודשי"
         weekly:
-          title: "עלית שבועי"
+          title: "המיטב השבועי"
         daily:
-          title: "עלית יומי"
+          title: "המיטב היומי"
         this_year: "השנה"
         this_month: "החודש"
         this_week: "השבוע"
         today: "היום"
-        other_periods: "ראה עוד נושאי עלית"
+        other_periods: "ראו עוד נושאים מובילים."
     browser_update: 'לצערנו, <a href="http://www.discourse.org/faq/#browser">הדפדפן שלך ישן מכדי לעבוד עם הפורום</a>. Please <a href="http://browsehappy.com">שדרג את הדפדפן שלך</a>.'
     permission_types:
       full: "צור / הגב/ צפה"
@@ -1207,6 +1204,7 @@ he:
         view_message: "תגובה"
         no_results: "אין דגלים."
         topic_flagged: "<strong>הנושא</strong> הזה דוגלל."
+        visit_topic: "בקרו בנושא כדי לנקוט פעולה"
         summary:
           action_type_3:
             one: "אוף-טופיק"
@@ -1323,7 +1321,6 @@ he:
         opacity: "טשטוש"
         copy: "העתק"
         css_html:
-          title: "CSS, HTML"
           long_title: "התאמת CSS ו-HTML"
         colors:
           title: "צבעים"
@@ -1397,7 +1394,6 @@ he:
           filters:
             title: "סינון"
             user_placeholder: "username"
-            address_placeholder: "em@il.com"
             type_placeholder: "digest, signup..."
             skipped_reason_placeholder: "סיבה"
       logs:
@@ -1530,6 +1526,8 @@ he:
         refresh_browsers: "הכרח רענון דפדפן"
         show_public_profile: "הצג פרופיל פומבי"
         impersonate: 'התחזה'
+        log_out: "התנתקות"
+        logged_out: "המשתמש/ת התנתקו בכל המכשירים"
         revoke_admin: 'שלול ניהול ראשי'
         grant_admin: 'הענק ניהול ראשי'
         revoke_moderation: 'שלול ניהול'
@@ -1708,5 +1706,7 @@ he:
           description: הזמנות שהוענקו
         leader:
           name: מוביל/ה
+          description: קטגוריזציה שהוענקה, שינויי שם, קישורים נעקבים וטרקלין (lounge)
         elder:
+          name: זקן/זקנת השבט
           description: עריכה גלובלית, הצמדה, סגירה, אכסון בארכיון, פיצול ומיזוג.

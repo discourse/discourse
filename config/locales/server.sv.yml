@@ -435,7 +435,6 @@ sv:
     logo_small_url: "Den lilla logotypen för din webbplats som används när man bläddrar ner i trådar t.ex.: http://xyz.com/x-small.png"
     favicon_url: "En favicon för till webbplats, se http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Ikon som används för Apples touch-enheter. Rekommenderad storlek är 144*144 pixlar."
-    notification_email: "Avsändaradressen som används vid utskick av systemmail som t.ex. glömt lösenord, nya konton etc"
     summary_score_threshold: "Minsta poäng ett inlägg ska ha för att inkluderas i 'sammanfattningen'"
     enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -454,7 +453,6 @@ sv:
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     posts_per_page: "How many posts are returned on a topic page"
-    site_contact_username: "Username for the author of automated private messages sent by the forum"
     send_welcome_message: "Får nya användare ett privat meddelande?"
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
     suppress_reply_directly_above: "Visa inte svar-till för inlägg där det finns ett enskilt svar direkt ovanför"
@@ -468,7 +466,6 @@ sv:
     invite_expiry_days: "How long user invitation keys are valid, in days"
     invite_only: "Allmän registrering är avstängt, nya användare måste ha en inbjudan."
     login_required: "Kräv autentisering för att läsa inlägg"
-    enable_local_logins: "Aktivera traditionell autentisering med lokala användarnamn och lösenord"
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
@@ -685,11 +682,9 @@ sv:
         ---
         Please visit this link to respond: %{base_url}%{url}
     digest:
-      why: "Here's a brief summary of what happened on %{site_link} since we last saw you on %{last_seen_at}."
       new_activity: "New activity on your topics and posts:"
       top_topics: "Populära inlägg"
       other_new_topics: "Populära trådar"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Läs Mer"
@@ -715,8 +710,6 @@ sv:
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
   discourse_hub:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
-  page_not_found:
-    search_google: "Search Google"
   deleted: 'raderad'
   upload:
     pasted_image_filename: "Inklistrad bild"
