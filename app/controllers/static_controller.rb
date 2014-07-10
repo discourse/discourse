@@ -73,6 +73,10 @@ class StaticController < ApplicationController
       disposition: nil
     }
     opts[:type] = "application/x-javascript" if path =~ /\.js$/
+
+    # we must disable acceleration otherwise NGINX strips
+    # access control headers
+    request.env['_disable_accl'] = true
     send_file(path, opts)
   end
 end
