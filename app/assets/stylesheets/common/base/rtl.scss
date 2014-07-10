@@ -1,0 +1,393 @@
+.rtl {
+
+  #main {
+    direction: rtl;
+  }
+
+  .btn .fa {
+    margin-left: 7px;
+    margin-right: 0;
+  }
+
+  #topic-footer-buttons .btn {
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 0;
+  }
+
+  .caret {
+    display: inline-block;
+    width: 0px;
+    height: 0px;
+    vertical-align: middle;
+    border-top: 4px solid #333;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    content: "";
+    margin-right: 5px;
+    margin-left: 0;
+  }
+
+  #topic-title h1 a.edit-topic {
+    font-size: 15px;
+    position: absolute;
+    margin-right: 8px;
+    margin-left: 0;
+  }
+
+  nav.post-controls .create i {
+    margin-left: 5px;
+    margin-right: 0;
+  }
+
+  .btn.no-text .fa {
+    margin-left: 0px;
+    line-height: 10px;
+  }
+
+  #show-topic-admin {
+    padding: 5px 8px;
+    margin-top: 5px;
+    left: 20px;
+  }
+
+  #topic-title .star {
+    font-size: 20px;
+    margin-top: 6px;
+    margin-left: 6px;
+  }
+
+  a.star {
+    display: inline-block;
+    float: right;
+  }
+
+  .topic-meta-data-inside {
+    margin-top: -22px;
+    float: left;
+    font-size: 12px;
+  }
+  .post-info a {
+    color: #B3B3B3;
+    padding-left: 5px;
+  }
+
+
+  .topic-meta-data {
+    float: right;
+    position: relative;
+  }
+
+
+  .span14 {
+    width: 70%;
+    padding-right: 1%;
+  }
+  .topic-body {
+    border-top: 1px solid #E6E6E6;
+    float: right;
+    position: relative;
+    padding: 10px 0px 15px;
+  }
+
+  a.reply-new {
+    position: absolute;
+    color: #8C8C8C;
+    margin-top: -2px;
+    left: 0;
+  }
+
+  .reply-new i {
+    font-size: 12px;
+    margin-left: 5px;
+    background: none repeat scroll 0% 0% #FFF;
+    border: 1px solid #E6E6E6;
+    padding: 2px 4px;
+    border-radius: 20px;
+    transition: all 0.15s linear 0s;
+  }
+
+  .gutter .post-links {
+    list-style-type: none;
+    padding-right: 19px;
+    position: relative;
+    margin-right: 5px;
+    line-height: 18px;
+  }
+
+
+  .dropdown-menu a > div {
+    margin-right: 26px;
+  }
+
+  .dropdown-menu .icon {
+    margin-top: 3px;
+    float: right;
+    font-size: 18px;
+  }
+
+  #topic-list th, #topic-list td {
+    padding: 12px 5px;
+    line-height: 1.25;
+    text-align: right;
+    vertical-align: middle;
+  }
+
+  .topic-admin-menu {
+    background-color: #FFF;
+    width: 205px;
+    padding: 10px;
+    border: 1px solid #E6E6E6;
+    position: fixed;
+    top: 70px;
+    z-index: 1000;
+    left: 10px;
+  }
+
+  .btn-admin {
+    text-align: right;
+  }
+
+  #share-link .link {
+    margin-right: 2px;
+    float: left;
+    font-size: 20px;
+  }
+
+  #share-link .social-link {
+    margin-right: 2px;
+    margin-left: 8px;
+    float: right;
+    font-size: 22px;
+  }
+
+  body .radio input[type="radio"], body .checkbox input[type="checkbox"] {
+    float: right;
+    margin-right: -18px;
+  }
+
+  body .radio, body .checkbox {
+    min-height: 18px;
+    padding-right: 18px;
+  }
+
+  .modal-header .close {
+    float: left;
+    font-size: 20px;
+    margin: 10px 10px 0px;
+    text-decoration: none;
+    color: #B3B3B3;
+    cursor: pointer;
+  }
+
+  #reply-control .wmd-controls .textarea-wrapper {
+    padding-left: 5px;
+    float: right;
+  }
+
+  #reply-control .wmd-controls .preview-wrapper {
+    padding-right: 5px;
+    float: left;
+  }
+
+  #reply-control #wmd-button-bar {
+    top: 0px;
+    position: absolute;
+    border-bottom: 1px solid #E6E6E6;
+    background-color: #FFF;
+    z-index: 100;
+    right: 0;
+  }
+
+  #reply-control .toggle-preview {
+    right: auto;
+    left: 5px;
+    text-decoration: underline;
+  }
+
+  #reply-control a.cancel {
+    text-decoration: underline;
+    padding-right: 7px;
+  }
+
+  #reply-control .toggler {
+    display: block;
+    width: 13px;
+    height: 13px;
+    left: 13px;
+    position: absolute;
+    font-size: 15px;
+    color: #333;
+    text-decoration: none;
+    right: auto;
+  }
+
+  .d-header .title {
+    display: table;
+    float: right;
+    height: 40px;
+  }
+
+  .d-header .panel {
+    float: left;
+    position: relative;
+  }
+
+
+  .d-header .current-username {
+    float: right;
+  }
+
+  .d-header .icons > li {
+    float: right;
+  }
+
+  .d-header .icons {
+    float: right;
+    text-align: center;
+    margin: 0px 0px 0px 5px;
+    list-style: none outside none;
+  }
+
+  .nav-pills > li {
+    float: right;
+    margin-left: 5px;
+  }
+
+  #navigation-bar .has-icon span:before {
+    margin-left: 4px;
+    font: 15px/0.9 "FontAwesome";
+  }
+
+  .list-controls .btn {
+    float: left;
+    margin-right: 8px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: normal;
+  }
+
+  ol.category-breadcrumb {
+    display: block;
+    float: right;
+    list-style: none outside none;
+    margin: 0px 0px 0px 10px;
+    padding: 0px;
+  }
+
+  .list-controls .nav {
+    float: right;
+    margin-bottom: 18px;
+  }
+
+  .d-dropdown {
+    display: none;
+    width: 320px;
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    z-index: 1100;
+    border: 1px solid #E6E6E6;
+    background-color: #FFF;
+    box-shadow: 0px 2px 2px rgba(51, 51, 51, 0.4);
+    right: auto;
+  }
+
+  .category-dropdown-menu a.badge-category {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px 0px;
+    float: none;
+    line-height: 19px;
+    text-transform: none;
+    width: 100%;
+    min-width: 102px;
+    text-align: center;
+    margin-left: 20px;
+    margin-bottom: 7px;
+    margin-right: 0px;
+  }
+
+  .composer-popup a.close {
+    float: left;
+    color: #333;
+    opacity: 0.5;
+    font-size: 15px;
+  }
+
+  #topic-progress {
+    position: relative;
+    right: 345px;
+    border: medium none;
+    background-color: #E6E6E6;
+    color: #8C8C8C;
+    width: 130px;
+    height: 34px;
+    left: auto;
+  }
+
+  .topic-map .map li {
+    float: right;
+    padding: 7px 11px;
+  }
+
+  .topic-map .buttons {
+    float: left;
+  }
+
+  nav.post-controls button.like, nav.post-controls button.edit, nav.post-controls button.flag, nav.post-controls button.delete, nav.post-controls button.share, nav.post-controls button.bookmark, nav.post-controls button.create {
+    float: left;
+  }
+
+  button.create {
+    float: left;
+  }
+
+  #topic-list .star {
+    width: 20px;
+    padding-left: 0px;
+  }
+
+  #topic-list th:first-of-type, #topic-list td:first-of-type {
+    padding-right: 10px;
+  }
+
+  button.create {
+    float: right;
+  }
+
+  .extra-info-wrapper {
+    float: right;
+    width: 78%;
+    max-width: 800px;
+  }
+
+  body .form-horizontal .controls {
+    margin-right: 160px;
+  }
+
+  body .form-horizontal .control-label {
+    float: right;
+    width: 140px;
+    padding-top: 5px;
+    text-align: right;
+    font-weight: bold;
+  }
+
+  .cooked {
+    margin-top: 40px;
+  }
+
+  .logo-small {
+    margin-right: 0px;
+  }
+
+  .d-dropdown .category {
+    float: right;
+  }
+
+  #topic-list .pull-left {
+    float: right;
+  }
+
+}

@@ -32,7 +32,7 @@ module ApplicationHelper
   end
 
   def html_classes
-    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'}"
+    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_view? ? 'rtl' : ''}"
   end
 
   def escape_unicode(javascript)
@@ -122,6 +122,22 @@ module ApplicationHelper
 
   def mobile_device?
     MobileDetection.mobile_device?(request.user_agent)
+  end
+
+  def rtl_view?
+     site_default_rtl? || current_user_rtl?
+  end
+
+  def current_user_rtl?
+    SiteSetting.allow_user_locale && current_user.try(:locale).in?(rtl_locales)
+  end
+
+  def site_default_rtl?
+    !SiteSetting.allow_user_locale && SiteSetting.default_locale.in?(rtl_locales)
+  end
+
+  def rtl_locales
+    %w(he ar)
   end
 
   def customization_disabled?
