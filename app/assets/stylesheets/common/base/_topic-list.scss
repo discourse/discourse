@@ -123,39 +123,6 @@
 
 }
 
-.category-list-item {
-  margin-bottom: 10px;
-  #topic-list tbody tr:nth-child(even) {
-    background-color: darken($secondary, 3%);
-  }
-  th .badge-category {
-    float: left;
-    margin: 1px 4px 0 0;
-  }
-  .posters {
-    float: left;
-  }
-  > footer {
-    border-top: 0;
-    padding: 7px 10px;
-    figure {
-      float: left;
-      margin: 3px 7px 0 0;
-      color: scale-color($primary, $lightness: 10%);
-      font-weight: bold;
-      font-size: 12px;
-    }
-    figcaption {
-      display: inline;
-      font-weight: normal;
-    }
-    .btn {
-      float: right;
-      margin-left: 7px;
-    }
-  }
-}
-
 .loading #topic-list {
   border: 0;
   @include box-shadow(none);
