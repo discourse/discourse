@@ -239,11 +239,25 @@ en:
   lounge_welcome:
     title: "Welcome to the Lounge"
     body: |
-      Thanks to your activity on the site, you have been granted the Leader trust level. As a leader you can:
 
-      * access topics in the Lounge category
-      * recategorize and change the title of topics
-      * have all your links followed (we remove [automatic nofollow](http://en.wikipedia.org/wiki/Nofollow))
+      Congratulations! :confetti_ball:
+
+      If you can see this topic, you were recently promoted to [trust level 3 (leader)][trust].
+
+      > Leaders are some of the most active and prolific contributors. They set a positive example for the community through their actions and their posts.
+
+      You can now &hellip;
+
+      * Edit the title of any topic
+      * Change the category of any topic
+      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+      * Access a private Lounge category only visible to users at trust level 3 and higher
+
+      Here's the [current list of users who made it to trust level 3](/badges/3/leader). Be sure to say hi!
+
+      Thanks for being an important part of this community -- and for more information on trust levels, [see this topic][trust].
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
 
 
   category:
