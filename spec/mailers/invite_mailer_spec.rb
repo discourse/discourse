@@ -42,6 +42,14 @@ describe InviteMailer do
         expect(invite_mail.subject).to be_present
       end
 
+      it 'renders topic title in subject' do
+        expect(invite_mail.subject).to match(topic.title)
+      end
+
+      it 'renders site domain name in subject' do
+        expect(invite_mail.subject).to match(Discourse.current_hostname)
+      end
+
       it 'renders the body' do
         expect(invite_mail.body).to be_present
       end
