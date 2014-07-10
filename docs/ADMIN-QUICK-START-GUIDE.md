@@ -12,7 +12,9 @@ You'll want to come back and spend time exploring your admin dashboard. But firs
 
 ### Enter Required Settings
 
-Go to the [Required tab](/admin/site_settings/category/required) of the site settings and enter all the required fields. **Until you set these required fields, _your Discourse is broken!_**
+Go to the [Required tab](/admin/site_settings/category/required) of the site settings and enter all the required fields. **Until you set these required fields, _your Discourse is broken!_** Go ahead and do that now.
+
+We'll wait.
 
 ### Customize Logos and Colors
 
@@ -92,26 +94,21 @@ Note that pinning topics works a little differently in Discourse:
 - Users can hide pins on topics once they have read them via the controls at the bottom of the topic, so they don't stay pinned forever for everyone.
 - When you pin a topic, you can choose to pin it globally to all topic lists, or pin it only within its category.
 
-### New User Sandbox and the Trust System
+### Build Your Own FAQ
 
-Discourse is designed to offer safe defaults for communities, even with no active moderation. There is a [trust system in Discourse](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) where regular users automatically earn abilities to assist in governing the community.
+Right now [your FAQ](/faq) is the same Creative Commons [universal rules of civilized discourse](http://blog.discourse.org/2013/03/the-universal-rules-of-civilized-discourse/) we provide to all Discourse installs. These built-in community guidelines are referenced a bunch of places; please *do* use them and refer to them often -- they really work!
 
-All new users start out at trust level zero, in a sandbox with restrictions for everyone's safety. **Trust level zero users _cannot_** &hellip;
+However, if you want to set up a more detailed FAQ dealing with the specifics of *your* community, here's how:
 
-- post more than 2 hyperlinks
-- post any images or file attachments
-- send private messages
-- flag posts or topics
-- have actual links in the "about me" field of their profile
-- @name mention more than 2 users in a post
+1. Create a new [meta topic](category/meta), titled "Frequently Asked Questions (FAQ)" or similar.
 
-There are also a lot of rate limits around how many actions new users can take. Of course, new users don't stay new users forever; reading a variety of topics is enough to [transition to trust level 1](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) in about 15 minutes.
+2. Use the admin wrench icon below the post to make it a wiki post. This means the post is now editable to any user with a trust level of 1 or higher.
 
-These defaults are safe, but they may be too conservative for your site:
+3. Note the URL to that topic.
 
-- If you are pre-vetting users, or your site is private and you approve all new users manually, you can set everyone's `default trust level` to 1.
+4. Paste that URL into the `faq url` setting in the admin site settings. This links your topic from the hamburger FAQ menu entry at the top right of every page.
 
-- You can individually adjust these conservative default new user restrictions. Search the settings for `newuser`. Two settings we see commonly adjusted are `newuser max images` and `newuser max replies per topic`.
+Done -- now you have a community FAQ for your site that is collaboratively editable, and linked from every page on the site. 
 
 ### Categories
 
@@ -134,6 +131,33 @@ Basic image uploads work fine out of the box stored locally, provided you have a
 - If you'd like other sorts of files to be uploaded beyond just images, modify the [file settings](/admin/site_settings/category/files).
 
 - If you'd rather store your images and files on Amazon S3, [follow this howto](http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229).
+
+
+### New User Sandbox and the Trust System
+
+If your discussion area is be open to the public, new visitors will arrive that are initially strangers to the community.
+
+Discourse is designed to offer safe defaults for public communities, even with no active moderation. There is a [trust system in Discourse](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) where regular users automatically earn abilities to assist in governing the community.
+
+> **0 (new) &rarr; 1 (basic) &rarr; 2 (regular) &rarr; 3 (leader) &rarr; 4 (elder)**
+
+All new users start out at trust level zero, in a sandbox with restrictions for everyone's safety. **Trust level zero users _cannot_** &hellip;
+
+- post more than 2 hyperlinks
+- post any images or file attachments
+- send private messages
+- flag posts or topics
+- have actual links in the "about me" field of their profile
+- @name mention more than 2 users in a post
+
+There are also a lot of rate limits around how many actions new users can take. Of course, new users don't stay new users forever; reading a variety of topics is enough to [transition to trust level 1](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) in about 15 minutes.
+
+These defaults are safe, but they may be too conservative for your site:
+
+- If you are pre-vetting users, or your site is private and you approve all new users manually, you can set everyone's `default trust level` to 1.
+
+- You can individually adjust these default new user restrictions. Search the settings for `newuser`. Two settings we see commonly adjusted are `newuser max images` and `newuser max replies per topic`.
+
 
 ### User Content Licensing
 
