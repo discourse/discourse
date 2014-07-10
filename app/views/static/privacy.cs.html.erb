@@ -1,5 +1,8 @@
 <ul class="nav-pills">
-  <li><a href="<%=faq_path%>">FAQ</a></li>
+  <% if @faq_overriden %>
+    <li><a href="<%=guidelines_path%>"><%=t "guidelines" %></a></li>
+  <% end %>
+  <li><a href="<%=faq_path%>"><%=t "js.faq" %></a></li>
   <li><a href="<%=tos_path%>">Podmínky používání</a></li>
   <li><a class="active" href="<%=privacy_path%>">Ochrana soukromí</a></li>
 </ul>

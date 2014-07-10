@@ -20,6 +20,9 @@ class StaticController < ApplicationController
       return redirect_to(url) unless url.blank?
     end
 
+    # The /guidelines route ALWAYS shows our FAQ, ignoring the faq_url site setting.
+    page = 'faq' if page == 'guidelines'
+
     # Don't allow paths like ".." or "/" or anything hacky like that
     page.gsub!(/[^a-z0-9\_\-]/, '')
 
@@ -35,6 +38,7 @@ class StaticController < ApplicationController
     end
 
     if lookup_context.find_all("#{file}.html").any?
+      @faq_overriden = !SiteSetting.faq_url.blank?
       render file, layout: !request.xhr?, formats: [:html]
       return
     end

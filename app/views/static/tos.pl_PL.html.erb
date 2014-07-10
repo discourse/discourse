@@ -1,6 +1,9 @@
 <div>
 <ul class="tx_dqsymbolnav-pillstx_dqsymbol">
-<li><a href="&quot;FAQ&lt;/a"></a></li>
+  <% if @faq_overriden %>
+    <li><a href="<%=guidelines_path%>"><%=t "guidelines" %></a></li>
+  <% end %>
+  <li><a href="<%=faq_path%>"><%=t "js.faq" %></a></li>
   <li><a class="active" href="&quot;Terms" of service></a></li>
   <li><a href="&quot;Privacy&lt;/a"></a></li>
 </ul>
