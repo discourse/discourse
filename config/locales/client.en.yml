@@ -1543,7 +1543,7 @@ en:
         opacity: "Opacity"
         copy: "Copy"
         css_html:
-          title: "CSS, HTML"
+          title: "CSS/HTML"
           long_title: "CSS and HTML Customizations"
         colors:
           title: "Colors"

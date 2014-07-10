@@ -695,7 +695,7 @@ en:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics loaded by default on the topics list page, and when loading more topics"
     posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
-    site_contact_username: "Username for the author of automated private messages sent by the forum"
+    site_contact_username: "Username for the author of automated private messages sent by the forum; if left blank the default System account will be used."
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
     suppress_reply_directly_above: "Don't show in-reply-to on a post when there is a single reply directly above"
