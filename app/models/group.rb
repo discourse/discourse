@@ -21,11 +21,10 @@ class Group < ActiveRecord::Base
     :trust_level_1 => 11,
     :trust_level_2 => 12,
     :trust_level_3 => 13,
-    :trust_level_4 => 14,
-    :trust_level_5 => 15
+    :trust_level_4 => 14
   }
 
-  AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.reverse]
+  AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
 
   ALIAS_LEVELS = {
     :nobody => 0,
@@ -90,7 +89,7 @@ class Group < ActiveRecord::Base
                  "SELECT u.id FROM users u WHERE u.moderator"
                when :staff
                  "SELECT u.id FROM users u WHERE u.moderator OR u.admin"
-               when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4, :trust_level_5
+               when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
                  "SELECT u.id FROM users u WHERE u.trust_level >= #{id-10}"
                when :trust_level_0
                  "SELECT u.id FROM users u"
