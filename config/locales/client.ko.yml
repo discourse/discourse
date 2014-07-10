@@ -68,7 +68,6 @@ ko:
     not_implemented: "추후 업데이트 예정"
     no_value: "아니오"
     yes_value: "예"
-    of_value: "으로"
     generic_error: "오류 발생"
     generic_error_with_reason: "에러 발견: %{error}"
     log_in: "로그인"
@@ -181,15 +180,6 @@ ko:
       subcategories: "하위 카테고리:"
       topic_stats: "The number of new topics."
       post_stats: "The number of new posts."
-    ip_info:
-      title: IP Address Lookup
-      hostname: Hostname
-      location: 장소
-      location_not_found: (알려지지 않음)
-      organisation: 소속
-      phone: 전화
-      other_accounts: 이 IP 주소로 접속한 다른 계정
-      no_other_accounts: (없음)
     user:
       said: "{{username}}의 말:"
       profile: "프로필"
@@ -210,14 +200,14 @@ ko:
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "강조 표시된 텍스트에 대한 알림을 사용합니다"
       change: "변경"
-      moderator: "{{user}}는 중간 관리자입니다."
+      moderator: "{{user}}는 운영자입니다."
       admin: "{{user}} 는 운영자입니다."
+      moderator_tooltip: "이 사용자는 운영자 입니다"
       suspended_notice: "이 사용자는 {{date}}까지 접근 금지 되었습니다."
       suspended_reason: "이유: "
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all topics in these categories"
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically receive notifications for topics in these categories"
       muted_categories: "Muted"
       muted_categories_instructions: "You will automatically mute all topics in these categories"
       delete_account: "내 계정 삭제"
@@ -378,7 +368,6 @@ ko:
     unmute: 음소거 해제
     last_post: 최근 게시물
     summary:
-      enabled_description: "You're viewing a summary of this topic. To see all posts again, click below."
       enable: 'Summarize This Topic'
       disable: 'Show All Posts'
     private_message_info:
@@ -442,8 +431,8 @@ ko:
       similar_topics: "작성하려는 내용과 비슷한 토픽들..."
       drafts_offline: "초안"
       min_length:
-        need_more_for_title: "{{n}} 자 필요"
-        need_more_for_reply: "{{n}} 자 필요"
+        need_more_for_title: "제목을 {{n}}글자 더 입력해주세요"
+        need_more_for_reply: "내용을 {{n}}글자 더 입력해주세요"
       error:
         title_missing: "제목은 필수 항목입니다"
         title_too_short: "제목은 최소 {{min}} 글자 이상이어야 합니다."
@@ -454,7 +443,7 @@ ko:
       save_edit: "편집 저장"
       reply_original: "기존 토픽에 대해 답글을 작성합니다."
       reply_here: "여기에 답글을 작성하세요."
-      reply: "답글"
+      reply: "답글 전송"
       cancel: "취소"
       create_topic: "토픽 만들기"
       create_pm: "개인 메시지를 작성합니다."
@@ -640,7 +629,6 @@ ko:
           title: "알림 : 주시 중"
         watching:
           title: "주시 중"
-          description: "모든 새 게시물 알림을 받게 됩니다."
         tracking_pm:
           title: "알림 : 추척 중"
         tracking:
@@ -679,25 +667,21 @@ ko:
         title: '공유'
         help: '이 토픽의 링크를 공유'
       flag_topic:
-        title: '깃발 표시'
+        title: '신고'
         help: 'privately flag this topic for attention or send a private notification about it'
-        success_message: '이 토픽에 깃발표시 하였습니다.'
+        success_message: '성공적으로 토픽을 신고 하였습니다.'
       inviting: "초대 중..."
       invite_private:
         title: '개인 메시지에 초대'
         email_or_username: "초대하려는 이메일 또는 아이디"
         email_or_username_placeholder: "이메일 또는 아이디"
         action: "초대"
-        success: "감사합니다! 사용자가 개인 메세지에 참여할 수 있도록 초대했습니다."
         error: "죄송합니다. 해당 사용자를 초대하는 도중 오류가 발생했습니다."
       invite_reply:
         title: '초대하기'
         action: '이메일 초대'
         help: '한 번의 클릭으로 이 토픽에 답글을 추가할 수 있도록 친구에게 초대장을 보낼 수 있습니다.'
-        to_topic: "당신의 친구에게 요약 이메일을 보내고 이 글에 답글을 작성할 수 있도록 링크를 제공합니다.(로그인이 필요없습니다)"
-        to_forum: "당신의 친구에서 요약 이메일을 보내고 이 포럼에 가입할 수 있도록 링크를 보냅니다."
         email_placeholder: '이메일 주소'
-        success: "감사합니다! <b>{{email}}</b>으로 초대장을 발송했습니다. 초대를 수락하면 알려 드리겠습니다. 초대한 사람을 추적하기 위해선 사용자 페이지에서 '초대장' 탭을 선택하세요."
         error: "죄송합니다. 그 사람을 초대 할 수 없습니다. 혹시 이미 포럼 사용자입니까?"
       login_reply: '로그인하여 답글 달기'
       filters:
@@ -773,27 +757,29 @@ ko:
           yes_value: "예, 답글도 삭제합니다."
           no_value: "아니오, 게시글만 삭제합니다."
       actions:
-        flag: '깃발 표시'
+        flag: '신고'
         clear_flags:
           other: "신고 제거"
         it_too:
           off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
+          spam: "저도 신고합니다"
+          inappropriate: "저도 신고합니다"
           custom_flag: "Flag it too"
           bookmark: "Bookmark it too"
           like: "저도 '좋아요' 줄래요"
           vote: "Vote for it too"
         undo:
           off_topic: "X"
-          spam: "X"
-          inappropriate: "X"
+          spam: "신고 취소"
+          inappropriate: "신고 취소"
           bookmark: "X"
           like: "'좋아요' 취소하기"
           vote: "X"
         people:
-          notify_moderators: "{{icons}}님은 이 게시물을 중간 관리자에게 보고했습니다."
-          notify_moderators_with_url: "{{icons}}님은 이 <a href='{{postUrl}}'>게시물</a>을 중간 관리자에게 보고했습니다."
+          spam: "{{icons}} 스팸으로 신고되었습니다"
+          inappropriate: "{{icons}} 부적절하다고 신고했습니다"
+          notify_moderators: "{{icons}}님은 이 게시물을 운영자에게 보고했습니다."
+          notify_moderators_with_url: "{{icons}}님은 이 <a href='{{postUrl}}'>게시물</a>을 운영자에게 보고했습니다."
           notify_user: "{{icons}}님은 작성자에게 개인 메시지를 보냈습니다."
           notify_user_with_url: "{{icons}}님은 작성자에게 <a href='{{postUrl}}'>개인 메세지</a>를 보냈습니다."
           bookmark: "{{icons}}님이 북마크했습니다."
@@ -802,17 +788,17 @@ ko:
         by_you:
           off_topic: "당신은 이 게시물을 토픽에서 벗어남으로 신고했습니다."
           spam: "당신은 이 게시물을 스팸으로 신고했습니다."
-          inappropriate: "당신은 이 게시물을 부적절하다고 신고했습니다."
-          notify_moderators: "당신은 이 게시물을 중간 관리자에게 보고했습니다."
+          inappropriate: "당신은 이 게시물을 부적절하다고 신고했습니다"
+          notify_moderators: "당신은 이 게시물을 운영자에게 보고했습니다."
           notify_user: "당신은 작성자에게 개인 메시지를 보냈습니다."
           bookmark: "당신은 이 게시물을 북마크했습니다."
           like: "당신은 이 게시물을 좋아합니다."
           vote: "당신은 이 게시물을 위해 투표했습니다."
         by_you_and_others:
           spam:
-            other: "당신과 {{count}}명의 다른 사람들이 스팸으로 지정했습니다."
+            other: "당신과 {{count}}명의 다른 사람들이 스팸이라고 신고했습니다"
           inappropriate:
-            other: "당신과 {{count}}명의 다른 사람들이 신고했습니다."
+            other: "당신과 {{count}}명의 다른 사람들이 부적절하다고 신고했습니다"
           notify_moderators:
             other: "당신과 {{count}}명의 다른 사람들이 적당하다고 표시했습니다."
           notify_user:
@@ -824,6 +810,12 @@ ko:
           vote:
             other: "당신과 {{count}}명의 다른 사람들이 이 포스트에 투표했습니다."
         by_others:
+          spam:
+            other: "{{count}}명의 사람들이 스팸이라고 신고했습니다"
+          inappropriate:
+            other: "{{count}}명의 사람들이 부적절하다고 신고했습니다"
+          notify_moderators:
+            other: "{{count}}명의 사람들이 이 게시물을 운영자에게 신고했습니다"
           like:
             other: "{{count}}명이 이 글을 좋아합니다"
       edits:
@@ -899,13 +891,13 @@ ko:
           title: "알림 꺼짐"
     flagging:
       title: '왜 이 게시글을 privately flagging 하나요?'
-      action: '게시물 깃발 표시'
+      action: '게시물 신고하기'
       take_action: "조치를 취하기"
       notify_action: '알림'
       delete_spammer: "스팸 사용자 삭제"
       delete_confirm: "당신은 이 사용자의 %{posts}개의 게시글과 %{topics}개의 토픽을 삭제하고 IP주소 %{ip_address}와 이메일 %{email}을 영구 블락 합니다. 이 사용자가 진짜 악성 사용자 입니까? "
       yes_delete_spammer: "예, 스팸 사용자 삭제."
-      cant: "죄송합니다, 당신은 지금 이 게시물을 깃발 표시 할 수 없습니다."
+      cant: "죄송합니다, 당신은 지금 이 게시물을 신고 할 수 없습니다."
       custom_placeholder_notify_user: "해당 유저에게 게인 메세지를 보내 이 문제를 해결할 수 있습니다."
       custom_placeholder_notify_moderators: "이 게시물을 중앙 관리자에게 알리겠습니까? 구체적으로 사용자님께서 걱정하는 것과 가능한 모든 관련된 링크를 제공해주세요."
       custom_message:
@@ -914,7 +906,7 @@ ko:
         left: "{{n}} 나머지"
     flagging_topic:
       title: "왜 이 토픽을 신고하시나요?"
-      action: "깃발 표시 토픽"
+      action: "신고된 토픽"
       notify_action: "비공개 메시지"
     topic_map:
       title: "Topic Summary"
@@ -1018,7 +1010,7 @@ ko:
     type_to_filter: "필터를 입력하세요"
     admin:
       title: 'Discourse 운영'
-      moderator: '중간 관리자'
+      moderator: '운영자'
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 최근 업데이트:"
@@ -1036,7 +1028,7 @@ ko:
         last_checked: "마지막으로 확인"
         refresh_problems: "새로고침"
         no_problems: "아무런 문제가 발견되지 않았습니다."
-        moderators: '중간 관리자:'
+        moderators: '운영자:'
         admins: '운영자:'
         blocked: '블락됨:'
         suspended: '접근금지:'
@@ -1077,8 +1069,8 @@ ko:
         system: "System"
         error: "뭔가 잘못 됐어요"
         view_message: "답글"
-        no_results: "깃발 표시가 없습니다."
-        topic_flagged: "이 <strong>토픽</strong>은 깃발표시 되었습니다."
+        no_results: "신고가 없습니다."
+        topic_flagged: "이 <strong>토픽</strong>은 신고 되었습니다."
         visit_topic: "처리하기 위해 토픽으로 이동"
         summary:
           action_type_3:
@@ -1185,7 +1177,6 @@ ko:
         delete_confirm: "이 정의를 삭제 하시겠습니까?"
         about: "사이트 Customization은 사이트의 스타일시트와 해더를 수정할 수 있게 해줍니다. 새로운 것을 추가하거나 기존 것을 선택해서 편집하세요."
         css_html:
-          title: "CSS, HTML"
           long_title: "CSS, HTML 사용자 정의"
         colors:
           title: "색상"
@@ -1229,7 +1220,6 @@ ko:
           filters:
             title: "필터"
             user_placeholder: "사용자명"
-            address_placeholder: "em@il.com"
             type_placeholder: "다이제스트, 가입..."
             skipped_reason_placeholder: "이유"
       logs:
@@ -1311,7 +1301,7 @@ ko:
           active: "활성화 사용자"
           pending: "보류된 사용자"
           admins: '운영자'
-          moderators: '중간 관리자'
+          moderators: '운영자'
           suspended: '접근 금지 사용자'
           blocked: '블락된 사용자'
         approved: "승인?"
@@ -1325,7 +1315,7 @@ ko:
           leader: '사용자 신뢰도 3 (VIP 사용자)'
           elder: '사용자 신뢰도 4 (후원자)'
           admins: '운영자 사용자'
-          moderators: '중간 관리자'
+          moderators: '운영자'
           blocked: '블락된 사용자들'
           suspended: '접근 금지된 사용자들'
         reject_successful:
@@ -1343,7 +1333,7 @@ ko:
         suspend: "접근 금지"
         unsuspend: "접근 허용"
         suspended: "접근 금지?"
-        moderator: "중간 관리자?"
+        moderator: "운영자?"
         admin: "운영자?"
         blocked: "블락"
         show_admin_profile: "운영자"

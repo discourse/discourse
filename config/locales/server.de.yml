@@ -26,8 +26,6 @@ de:
   errors:
     embed:
       load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
-  bulk_invite:
-    file_should_be_csv: "Die hochgeladene Datei sollte im CSV Format vorliegen."
   backup:
     operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
     backup_file_should_be_tar_gz: "Die Backupdatei sollte ein .tar.gz Archiv sein."
@@ -189,11 +187,8 @@ de:
   user_profile:
     no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld Deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest Du es ausfüllen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Nutzerprofils eingetragen</div>"
-  vip_category_name: "Lounge"
   vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit einer Vertrauensstufe Level 3 oder höher."
-  meta_category_name: "Meta"
   meta_category_description: "Diskussion über dieses Forum, die Organisation, wie es funktioniert und wie wir es verbessern können."
-  staff_category_name: "Mitarbeiter"
   staff_category_description: "Geschützte Kategorie für Mitarbeiter. Themen sind nur für Administratoren und Moderatoren sichtbar."
   assets_topic_body: "Dies ist ein fester Beitrag, der nur für Mitarbeiter sichtbar ist, um Bilder und Dateien, die im Forum benutzt werden zu speichern. Lösche diese nicht!\n\n\nAnleitung:\n\n\n1. Antworte auf dieses Thema.\n2. Lade alle Bilder, die du für Logos, Favicons und usw. nutzen willst, hier hoch. (Nutze dazu das Symbol für Lade-Symbolleiste im Beitrags-Editor oder ziehe und lasse die Bilder hier fallen oder füge sie eins.)\n3. Sende deine Antwort. \n4. Klicke mit der rechten Maustaste auf die Bilder in deinem neuen Beitrag, um die den Pfad zu bekommen oder klicke das Editier-Symbol, um deinen Beitrag zu editieren und dadurch den Pfad zu den Bildern zu bekommen. Kopiere die Bild-Pfade.\n5. Füge die Bild-Pfade in [basic settings](/admin/site_settings/category/required) ein.\n\n\nWenn du andere Dateityp-Uploads aktivieren willst, editiere `authorized_extensions` in [file settings](/admin/site_settings/category/files)."
   category:
@@ -590,7 +585,6 @@ de:
     favicon_url: "Das Favicon Deiner Seite, siehe http://de.wikipedia.org/wiki/Favicon"
     mobile_logo_url: "Das Logo, das für Webbrowser auf Mobilgeräten benutzt werden soll. Wenn leer wird das Standard-Logo verwendet. Beispiel: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
-    notification_email: "Die Antwortadresse, die in Systemmails (zum Beispiel zur Passwortwiederherstellung, neuen Konten, etc.) eingetragen wird."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
     use_https: "Soll die volle URL der Seite (Discourse.base_url) mit http oder https beginnen? AKTIVIERE DIES NICHT BIS HTTPS AUFGESETZT IST UND BEREITS FUNKTIONIERT!"
     summary_score_threshold: "Der Minimalscore eines Beitrags, um zu den Top Beiträgen zu zählen."
@@ -629,7 +623,6 @@ de:
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die standardmäßig auf die Themenübersichtsseite geladen werden."
     posts_per_page: "Zahl der Beiträge, die auf einer Themenseite gezeigt werden."
-    site_contact_username: "Benutzername des Autors für automatisch vom Forum versendete private Nachrichten."
     send_welcome_message: "Bekommen neue Nutzer eine Willkommensnachricht?"
     suppress_reply_directly_below: "Zeige die Zahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Zeige 'In Antwort auf' nicht, falls der Beitrag direkt über der einzigen Antwort folgt."
@@ -652,13 +645,11 @@ de:
     max_username_length: "Maximale Länge des Benutzernamens. (Gilt nicht, wenn global eindeutige Benutzernamen aktiviert sind.)"
     min_password_length: "Minimale Länge des Passworts."
     block_common_passwords: "Erlaube kein Passwort unter den 10000 meist verwendeten Passwörter."
-    enable_sso: "Aktiviere Single Sign On mittels einer externen Seite"
     sso_url: "URL des Single Sign On Endpunkts"
     sso_secret: "Geheime Zeichenkette, die für die Ver-/Entschlüsselung von SSO-Informationen verwendet wird. Stell sicher, dass er 10 Zeichen oder länger ist."
     sso_overrides_email: "Überschreibt lokale Email mit externe Site-Email aus SSO Daten (WARNUNG: Diskrepanzen können durch Normalisierung von lokalen Emails auftreten)"
     sso_overrides_username: "Überschreibt lokale Benutzernamen mit externen Seiten-Usernamen von SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Unterschieden in Benutzernamenlängen/-anforderungen, auftreten)"
     sso_overrides_name: "Überschreibt lokalen Namen mit Namen der externen Seite aus SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Normalisierung von lokalen Namen auftreten)"
-    enable_local_logins: "Aktiviere lokale Authentisierung"
     enable_google_logins: "(Veraltet) Google-Authentifikation aktivieren. Dies verwendet OpenID zur Authentifikation und wurde von Google für veraltet erklärt. Neue Installationen werden hiermit NICHT funktionieren; benutze statt dessen Google Oauth2. Existierende Installationen müssen bis 20. April 2015 auf Google Oauth2 umsteigen."
     enable_yahoo_logins: "Aktiviere Yahoo Authentisierung."
     enable_google_oauth2_logins: "Google Oauth2-Authentifikation aktivieren. Dies ist der momentan von Google unterstützte Authentifikations-Mechanismus. Benötigt Client-ID und Secret."
@@ -774,7 +765,6 @@ de:
     username_change_period: "Wie lange neu registrierte Benutzer ihren Benutzernamen ändern können."
     email_editable: "Erlaube Benutzern ihre Emailadresse nach der Registrierung zu ändern."
     allow_uploaded_avatars: "Erlaube das Hochladen eines eigenen Avatars"
-    allow_animated_avatars: "Erlaube den Benutzern animierte GIFs als Avatar zu benutzen"
     automatically_download_gravatars: "Avatare von Gravatar herunterladen, wenn ein Nutzer sich registriert oder seine Email-Adresse ändert."
     digest_topics: "Maximale Anzahl von Themen, die in einem Email-Bericht angezeigt werden"
     digest_min_excerpt_length: "Minimale Anzahl an Zeichen für jeden Beitrag in der Email Kurzfassung"
@@ -909,26 +899,7 @@ de:
       blocked: "ist nicht erlaubt."
     ip_address:
       blocked: "ist blockiert."
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} lädt Dich ein, an einer Diskussion teilzunehmen"
-    text_body_template: |
-      %{invitee_name} hat dazu eingeladen an der Diskussion
-
-      > %{topic_title}
-
-      auf
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      teilzunehmen. Falls du Interesse hast, klicke auf den nachfolgenden Link:
-
-      %{invite_link}
-
-      Dies ist eine EInladung von einem vertrautem Benutzer. Du kannst deshalb sofort auf die Diskussion antworten.
   invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} hat dich eingeladen"
     text_body_template: |
       %{invitee_name} hat dich eingeladen zu:
 
@@ -943,78 +914,10 @@ de:
       Die Einladung ist von einem vertrautem Benutzer, du musst dich daher nicht einloggen.
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
-    text_body_template: |
-      Das ist eine Testmail vom %{site_name} Forum. Du kannst das Forum per Web-Browser unter folgender Adresse aufrufen:
-
-      [*%{base_url}*][0]
-
-      Mailzustellbarkeitstests können komplex sein, aber einige Dinge solltest Du sofort prüfen:
-
-      - Stelle sicher, dass Du den *Quelltext der Mail* in deinem Mailprogramm betrachten kannst, um die Mailheader auf Hinweise zu untersuchen.
-
-      - **WICHTIG:** Hat Dein Internetprovider einen Reverse-DNS-Eintrag eingetragen, um den Domainnamen, die Du als Absender angibst, mit den IPs von denen die Mails verschickt werden zu verknüpfen? Du kannst [den Reverse-PTR-Eintrag hier testen][2]. Wenn Dein Internetprovider keinen passenden Reverse-DNS-Eintrag eingetragen hat, ist sehr unwahrscheinlich, dass Mails tatsächlich versendet werden.
-
-      - Ist der SPF-Eintrag deiner Domain korrekt? Du kannst [den SPF-Eintrag hier testen][1]. Beachte, dass du sowohl die SPF- als auch die TXT-Version dieses Eintrages eingeben musst für höchstmögliche Kompatibilität.
-
-      - Hast Du [DKIM-Mailsignierung][3] in deiner Mailsoftware konfiguriert und den öffentlichen DKIM-Schlüssel deinen DNS-Einträge hinzugefügt?
-
-      - Hast Du sichergestellt, dass die IPs der Server von denen Mails verschickt werden [nicht auf einer schwarzen Liste stehen][4]?
-
-      - Hast Du sichergestellt, dass dein Mailserver *definitiv* einen voll qualifizierten Hostnamen in ihre HELO-Nachrichten angeben, der per DNS aufgelöst werden kann? Falls das nicht der Fall ist, werden Deine Mails von vielen Mailprovidern abgelehnt.
-
-      (Der *einfache* Weg ist [sich für Mandrill anmelden][6], welche ein grosszügiges Mail-Abo gratis anbieten, welche für kleine Foren ausreicht. Du musst allerdings trotzdem die SPF und DKIM Einträge in deinem DNS machen)
-
-      Wir hoffen, dass der Mail-Zustelltest erfolgreich war!
-
-      Viel Erfolg,
-
-      Deine Freunde von [Discourse](http://www.discourse.org).
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-
-      ----
-
-      <small>Am Fuß jeder Mail, die Du verschickst, sollte eine Möglichkeit zum Abbestellen gegeben werden. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn Du zukünftig keine weiteren Mail erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
-    text_body_template: |
-      Eine neue Version von Discourse ist verfügbar.
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      Dies könnte interessant sein:
-
-      - Erkundige dich über Neues im [GitHub Changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade deine Version unter [%{base_url}/admin/docker](%{base_url}/admin/docker) mit dem "Upgrade"-Knopf.
-
-      - Besuche [meta.discourse.org](http://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung für Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
-    text_body_template: |
-      Eine neue Version von Discourse ist verfügbar.
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      So geht's weiter:
-
-      - Lies nach, was sich in der neuen Version [geändert hat](https://github.com/discourse/discourse/commits/master).
-
-      - Aktualisiere dein Forum mit dem "Upgrade" Knopf auf [%{base_url}/admin/docker](%{base_url}/admin/docker).
-
-      - Besuche [meta.discourse.org](http://meta.discourse.org) für weitere Neuigkeiten, Diskussionen und Hilfestellungen rund um Discourse.
-
-      ### Versionshinweise
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Es gibt Markierungen, die vor 1 Stunde gesendet wurden."
@@ -1100,26 +1003,6 @@ de:
         Viel Vergnügen!
     welcome_invite:
       subject_template: "Willkommen auf %{site_name}!"
-      text_body_template: |
-        Danke dass du der Einladung zu %{site_name} gefolgt bist. Willkommen!
-
-        Wir haben automatisch diesen Benutzernamen für Dich gewählt: **%{username}**. Sollte er Dir nicht gefallen, kannst diesen Namen in [Deinem Profil][prefs] noch ändern.
-
-        Um Dich anzumelden kannst Du entweder:
-
-        1. Dich mit einem beliebigen Anbieter anmelden -- dieser muss allerdings die **gleiche Email-Adresse** verwenden wie die, unter der Du Deine Einladung erhalten hast. Ansonsten können wir Dich nicht korrekt identifizieren.
-
-        2. in [Deinem Profil][prefs] ein neues Passwort für %{site_name} vergeben und Dich damit direkt hier anmelden.
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        Wir stehen für [zivilisiertes Verhalten in Online-Communitys](%{base_url}/faq).
-
-        Viel Spaß!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Export erfolgreich abgeschlossen"
       text_body_template: "Der Export war erfolgreich."
@@ -1142,19 +1025,6 @@ de:
         Der Import ist fehlgeschlagen.
 
         Hier ist der Log Auszug:
-
-        ```
-        %{logs}
-        ```
-    bulk_invite_succeeded:
-      subject_template: "Masseneinladung erfolgreich verarbeitet!"
-      text_body_template: "Die Masseneinladung wurde erfolgreich verarbeitet, insgesamt wurden %{sent} Einladungen verschickt."
-    bulk_invite_failed:
-      subject_template: "Bei der Verarbeitung der Masseneinladung sind ein oder mehr Fehler aufgetreten!"
-      text_body_template: |
-        Die Masseneinladung wurde verarbeitet, insgesamt wurden %{sent} Einladungen verschickt und dabei traten %{failed} Fehler auf.
-
-        Dies ist das Fehlerprotokoll:
 
         ```
         %{logs}
@@ -1185,10 +1055,6 @@ de:
         Die E-Mail-Kodierung ist unbekannt oder nicht unterstützt. Versuch es nochmal mit UTF-8 Klartext.
     email_reject_post_error:
       subject_template: "E-Mail-Problem -- Fehler beim Posten."
-      text_body_template: |
-        Es tut uns Leid, aber die E-Mail-Nachricht an %{destination} hat nicht geklappt.
-
-        Es gab ein Problem mit der Formatierung. Probier es nochmal mit weniger oder ohne Formatierungen.
     email_reject_reply_key:
       subject_template: "E-Mail-Problem -- Ungültiger Antwort-Schlüssel"
       text_body_template: |
@@ -1319,12 +1185,10 @@ de:
         ---
         %{respond_instructions}
     digest:
-      why: "Hier eine kurze Zusammenfassung, was auf %{site_link} passiert ist, seit Du das letzte Mal am %{last_seen_at} da warst."
       subject_template: "[%{site_name}] Kurzfassung für %{date}"
       new_activity: "Neues in deinen Themen und Beiträgen:"
       top_topics: "Beliebte Beiträge"
       other_new_topics: "Beliebte Themen"
-      unsubscribe: "Diese Zusammenfassung wurde Dir von %{site_link} geschickt, damit Du auf dem Laufenden bleibst, und weil wir nicht eine Weile nicht begrüßen durften.\nWenn Du diese Benachrichtigungen nicht mehr erhalten möchtest, kannst Du sie in deinen Maileinstellungen abschalten: %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "%{site_name} Übersicht"
       read_more: "Weiterlesen"
@@ -1391,7 +1255,6 @@ de:
     recent_topics: "Aktuell"
     see_more: "Mehr"
     search_title: "Diese Seite durchsuchen"
-    search_google: "Suche auf Google"
   login_required:
     welcome_message: |
       #[Willkommen zu %{title}](#welcome)

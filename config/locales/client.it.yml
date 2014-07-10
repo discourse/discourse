@@ -84,7 +84,6 @@ it:
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
     yes_value: "Sì"
-    of_value: "di"
     generic_error: "Spiacenti! C'è stato un problema."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
     log_in: "Accedi"
@@ -222,6 +221,7 @@ it:
       private_messages: "Messaggi"
       activity_stream: "Attività"
       preferences: "Opzioni"
+      bookmarks: "Segnalibri"
       bio: "Su di me"
       invited_by: "Invitato da"
       trust_level: "Livello"
@@ -233,13 +233,14 @@ it:
       change: "cambia"
       moderator: "{{user}} modera questo sito"
       admin: "{{user}} amministra questo sito"
+      moderator_tooltip: "Questo utente è un moderatore"
+      admin_tooltip: "Questo utente è un admin"
       suspended_notice: "Questo utente è sospeso fino a {{date}}."
       suspended_reason: "Motivo: "
       mailing_list_mode: "Ricevi una mail tutte le volte che viene aggiunto un post al forum (a meno che tu non abbia silenziato il topic o la categoria)"
       watched_categories: "Osservata/e"
       watched_categories_instructions: "Seguirai automaticamente tutti i nuovi topic in queste categorie. Riceverai notifiche su tutti i nuovi post e topic. In più, il conto di quelli non letti e di quelli nuovi apparirà di fianco all'elenco dei topic. "
       tracked_categories: "Seguita/e"
-      tracked_categories_instructions: "Seguirai automaticamente tutti i topic nuovi in queste categorie. L'indicazione di quanti ne devi ancora leggere e quanti sono nuovi comparirà di fianco all'elenco dei topic."
       muted_categories: "Ignorato"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi topic di queste categorie, e non compariranno nel tab dei non letti."
       delete_account: "Cancella il mio account"
@@ -247,6 +248,8 @@ it:
       deleted_yourself: "Il tuo account è stato eliminato con successo."
       delete_yourself_not_allowed: "Non puoi eliminare il tuo account in questo momento. Contatta un amministratore e chiedigli di cancellarlo per te."
       unread_message_count: "Messaggi"
+      staff_counters:
+        suspensions: "sospensioni"
       messages:
         all: "Tutti"
         mine: "Miei"
@@ -291,10 +294,12 @@ it:
         frequency: "Ti invieremo mail solo se è un po' che non ti si vede; le email riguarderanno solo le conversazioni che non hai letto."
       name:
         title: "Nome"
+        instructions: "La versione completa del tuo nome."
         too_short: "Il tuo nome è troppo breve."
         ok: "Il tuo nome è adeguato."
       username:
         title: "Nome utente"
+        instructions: "Il tuo @username deve essere unico, senza spazi, corto."
         short_instructions: "Gli utenti possono citarti scrivendo \"@{{username}}\"."
         available: "Il tuo nome utente è disponibile."
         global_match: "L'email corrisponde allo username registrato."
@@ -315,6 +320,7 @@ it:
       last_emailed: "Ultima email inviatagli"
       last_seen: "Ultima visita"
       created: "Membro da"
+      log_out: "Logout"
       location: "Località"
       website: "Sito Web"
       email_settings: "Email"
@@ -352,6 +358,7 @@ it:
         search: "Cerca negli inviti..."
         title: "Inviti"
         user: "Utente invitato"
+        none: "Non hai ancora invitato nessuno qui."
         truncated: "Primi {{count}} inviti"
         redeemed: "Inviti accettati"
         redeemed_at: "Iscritto da"
@@ -359,11 +366,16 @@ it:
         topics_entered: "Topic letti"
         posts_read_count: "Post letti"
         expired: "L'invito è scaduto."
+        rescind: "Rimuovi"
         rescinded: "Invito revocato"
         time_read: "Tempo di lettura"
         days_visited: "Presenza (giorni)"
         account_age_days: "Età dell'utente in giorni"
         create: "Invia un Invito"
+        bulk_invite:
+          uploading: "CARICANDO"
+          success: "Il file è stato caricato correttamente, verrai notificato a breve con i progressi."
+          error: "Si è verificato un errore caricando {{filename}}': {{message}}"
       password:
         title: "Password"
         too_short: "La password è troppo breve"
@@ -387,6 +399,7 @@ it:
         the_topic: "il topic"
     loading: " Caricamento..."
     close: "Chiudi"
+    assets_changed_confirm: "Questo sito è stato aggiornato. Aggiornare ora alla nuova versione?"
     read_only_mode:
       enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "Il login è disabilitato quando il sito è in modalità di sola lettura."
@@ -403,7 +416,8 @@ it:
     unmute: Attiva
     last_post: Ultimo post
     summary:
-      enabled_description: "Stai osservando un sunto del post. Per vedere nuovamente tutti i post, clicca sotto."
+      description: "Ci sono <b>{{count}}</b> risposte."
+      description_time: "Ci sono <b>{{count}}</b> risposte con un tempo stimato di lettura di  <b>{{readingTime}} minuti</b>."
       enable: 'Riassumi questo topic'
       disable: 'Mostra tutti i post'
     private_message_info:
@@ -415,7 +429,9 @@ it:
     last_seen: 'Ultima visita'
     created: 'Creato'
     trust_level: 'Livello'
+    search_hint: 'username o email'
     create_account:
+      title: "Crea un nuovo account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
     forgot_password:
       title: "Password dimenticata"
@@ -430,6 +446,7 @@ it:
       password: "Password"
       email_placeholder: "email o nome utente"
       error: "Errore sconosciuto"
+      blank_username_or_password: "Per favore inserisci la tua email o il tuo username e la password."
       reset_password: 'recupera password'
       logging_in: "Connessione in corso..."
       or: "o"
@@ -535,6 +552,7 @@ it:
       liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
       private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} ha accettato il tuo invito"
       total_flagged: "Numero totale di post segnalati"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Ti è stato assegnato {{link}}"
@@ -552,8 +570,12 @@ it:
       uploading: "In caricamento"
       image_link: "Il link a cui la tua immagine punterà"
     search:
+      title: "cerca topic, post, utenti o categorie"
       no_results: "Nessun risultato trovato."
       searching: "Ricerca in corso..."
+      context:
+        user: "Cerca post di @{{username}}"
+        topic: "Cerca in questo topic"
     site_map: "Vai a un'altra discussione, lista o categoria"
     go_back: 'Torna indietro'
     not_logged_in_user: 'Pagina utente con riassunto delle attività correnti e delle impostazioni'
@@ -615,6 +637,7 @@ it:
       invalid_access:
         title: "Il topic è privato"
         description: "Spiacenti, non puoi accedere a questo topic!"
+        login_required: "Devi effettuare il login per vedere questo topic."
       server_error:
         title: "Errore di caricamento del topic"
         description: "Spiacenti, non puoi caricare questo topic, probabilmente per un errore di connessione. Se il problema persiste, facci sapere."
@@ -650,6 +673,8 @@ it:
       auto_close_remove: "Non chiudere automaticamente questo topic"
       progress:
         title: Avanzamento del topic
+        go_top: "In alto"
+        go: "Vai"
         jump_bottom_with_number: "Passa al post %{post_number}"
         total: Post totali
         current: Post corrente
@@ -661,19 +686,19 @@ it:
           '3_2': 'Riceverai notifiche perché stai leggendo questo topic'
           '3_1': 'Riceverai notifiche perché hai creato questo topic'
           '3': 'Riceverai notifiche perché stai leggendo questo topic'
+          '2_8': 'Riceverai notifiche perché stai seguendo questa conversazione.'
           '2_4': 'Riceverai notifiche perché hai pubblicato un messaggio in questo topic'
           '2_2': 'Riceverai notifiche perché stai seguendo questo topic'
           '2': 'Riceverai notifiche perché <a href="/users/{{username}}/preferences">hai letto questo topic</a>.'
           '1_2': 'Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde a un tuo post.'
           '1': 'Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde a un tuo post.'
+          '0_7': 'Riceverai notifiche perchè stai monitorando questa categoria.'
           '0_2': 'Stai ignorando tutte le notifiche di questo topic.'
           '0': 'Stai ignorando tutte le notifiche di questo topic.'
         watching_pm:
           title: "In osservazione"
-          description: "Riceverai notifiche di ogni post nuovo in questo messaggio privato. Il conto dei non letti e dei nuovi post comparirà anche di fianco alla lista dei topic."
         watching:
           title: "In osservazione"
-          description: "Riceverai notifiche di ogni post nuovo in questo topic. Il conto dei non letti e dei nuovi post comparirà anche di fianco alla lista dei topic."
         tracking_pm:
           title: "Seguito"
         tracking:
@@ -716,23 +741,18 @@ it:
         help: 'Contrassegna questo topic o invia una notifica'
         success_message: 'Hai contrassegnato questo topic con successo'
       inviting: "Sto invitando..."
-      automatically_add_to_groups: "Alla registrazione, aggiungi automaticamente l'utente ai gruppi (opzionale, solo admin)"
       invite_private:
         title: 'Richiedi un messaggio privato'
         email_or_username: "Email o username di chi invita"
         email_or_username_placeholder: "Indirizzo email o nome utente"
         action: "Invita"
-        success: "Grazie! Abbiamo invitato l'utente a partecipare a questo messaggio privato."
         error: "Spiacenti, si è verificato un errore durante l'invito dell'utente."
         group_name: "nome gruppo"
       invite_reply:
         title: 'Invita'
         action: 'Invita via email'
         help: 'Invia inviti agli amici. Potranno rispondere a questo topic con un solo click'
-        to_topic: "Invieremo al tuo amico una breve email permettendogli di rispondere direttamente a questo topic, senza necessità di registrazione."
-        to_forum: "Invieremo al tuo amico un'email permettendogli di partecipare cliccando un link senza necessità di registrazione."
         email_placeholder: 'nome@esempio.com'
-        success: "Grazie! Abbiamo invitato <b>{{email}}</b>. Ti faremo sapere quando l'invito verrà accettato. Controlla la tab Inviti nella tua pagina personale per tener traccia delle persone che inviti. "
         error: "Spiacenti, non possiamo invitare quella persona. Forse è già un utente?"
       login_reply: 'Accedi per rispondere'
       filters:
@@ -789,6 +809,7 @@ it:
       continue_discussion: "Continua la discussione da {{postLink}}:"
       follow_quote: "Vai alla risposta evidenziata"
       show_full: "Mostra Post Completo"
+      show_hidden: 'Visualizza contenuti nascosti.'
       deleted_by_author:
         one: "(post eliminato dall'autore, sarà automaticamente cancellato in %{count} ore se non contrassegnato)"
         other: "(post eliminato dall'autore, verrà automaticamente cancellato in %{count} ore se non contrassegnato)"
@@ -798,6 +819,7 @@ it:
         one: "1 post nascosto"
         other: "{{count}} post nascosti"
       more_links: "{{count}} più..."
+      unread: "Post non letto"
       has_replies:
         one: "Risposta"
         other: "Risposte"
@@ -967,6 +989,8 @@ it:
       name: "Nome della categoria"
       description: "Descrizione"
       topic: "Topic sulla categoria"
+      logo: "Immagine della categoria"
+      background_image: "Immagine di sfondo della categoria"
       badge_colors: "Colori dei badge"
       background_color: "Colore di sfondo"
       foreground_color: "Colore in primo piano"
@@ -975,13 +999,14 @@ it:
       delete_confirm: "Sei sicuro di voler cancellare questa categoria?"
       delete_error: "Si è verificato un errore cancellando questa categoria"
       list: "Mostra le categorie"
+      no_description: "Aggiungi una descrizione a questa categoria."
       change_in_category_topic: "Modifica la descrizione"
       already_used: 'Questo colore è già usato da un''altra categoria'
       security: "Sicurezza"
+      images: "Immagini"
       auto_close_label: "Chiudi automaticamente il topic dopo:"
       auto_close_units: "ore"
       email_in: "Indirizzo email personalizzato:"
-      email_in_allow_strangers: "Accetta email anche da non utenti (sconosciuti)"
       edit_permissions: "Modifica i permessi"
       add_permission: "Aggiungi un permesso"
       this_year: "Quest'anno"
@@ -989,6 +1014,15 @@ it:
       default_position: "Posizione di default"
       position_disabled: 'Le categorie verranno mostrate in ordine d''attività. Per controllare l''ordine delle categorie nella lista, attiva l''opzione "fixed category positions".'
       parent: "Categoria superiore"
+      notifications:
+        watching:
+          title: "In osservazione"
+        tracking:
+          title: "Seguendo"
+        regular:
+          title: "Normale"
+        muted:
+          title: "Mutato"
     flagging:
       title: 'Perchè vuoi contrassegnare questo post?'
       action: 'Contrassegna il post'
@@ -1169,11 +1203,13 @@ it:
         clear_topic_flags: "Fatto"
         clear_topic_flags_title: "Il topic è stato esaminato e i problemi risolti. Clicca Fatto per rimuovere i contrassegni."
         flagged_by: "Segnalato da"
+        resolved_by: "Risolto da"
         system: "sistema"
         error: "Qualcosa non ha funzionato"
         view_message: "Rispondi"
         no_results: "Non ci sono contrassegni"
         topic_flagged: "Questo <strong>topic</strong> è stato contrassegnato."
+        visit_topic: "Visita il topic per effettuare un'azione"
         summary:
           action_type_3:
             one: "off-topic "
@@ -1279,6 +1315,9 @@ it:
         override_default: "Non includere fogli di stile standard"
         enabled: "Attivo?"
         preview: "anteprima"
+        undo_preview: "rimuovi anteprima"
+        explain_preview: "Visualizza il sito con questo foglio di stile personalizzato"
+        explain_rescue_preview: "Visualizza il sito con il foglio di stile predefinito"
         save: "Salva"
         new: "Nuovo"
         new_style: "Nuovo stile"
@@ -1289,7 +1328,6 @@ it:
         opacity: "Opacità"
         copy: "Copia"
         css_html:
-          title: "CSS, HTML"
           long_title: "Personalizzazioni CSS e HTML"
         colors:
           title: "Colori"
@@ -1363,7 +1401,6 @@ it:
           filters:
             title: "Filtro"
             user_placeholder: "nome utente"
-            address_placeholder: "em@il.com"
             type_placeholder: "sunto, iscrizione..."
             skipped_reason_placeholder: "motivo"
       logs:
@@ -1410,6 +1447,8 @@ it:
           title: "Email scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, i seguenti indirizzi email vengono controllati e la registrazione viene bloccata, o eseguita qualche altra azione."
           email: "Indirizzo email"
+          actions:
+            allow: "Permetti"
         screened_urls:
           title: "URL scansionati"
           description: "Gli URL seguenti sono stati usati da utenti identificati come spammer"
@@ -1494,6 +1533,9 @@ it:
         refresh_browsers: "Forza il refresh del browser"
         show_public_profile: "Mostra il profilo pubblico"
         impersonate: 'Impersona'
+        ip_lookup: "IP Lookup"
+        log_out: "Logout"
+        logged_out: "L'utente ha effettuato il logout da tutti i device"
         revoke_admin: 'Revoca privilegi di amministrazione'
         grant_admin: 'Garantisci privilegi di amministrazione'
         revoke_moderation: 'Revoca la moderazione'
@@ -1555,7 +1597,13 @@ it:
           visits: "Visite"
           days: "giorni"
           topics_replied_to: "Topic risposti a"
+          topics_viewed: "Topic visualizzati"
+          topics_viewed_all_time: "Topic visualizzati (sempre)"
+          posts_read: "Post letti"
+          posts_read_all_time: "Posti letti (sempre)"
           flagged_posts: "Post segnalati"
+          qualifies: "Requisiti per il livello 3"
+          will_be_promoted: "Verrà promosso entro 24 ore."
       site_content:
         none: "Scegli un tipo di contenuto per iniziare"
         title: 'Contenuto'
@@ -1609,6 +1657,7 @@ it:
         no_user_badges: "%{name} non ha ricevuto alcuna targhetta."
         no_badges: Non ci sono targhette da assegnare.
         allow_title: Permetti di utilizzare le targhette come titoli
+        icon: Icona
     lightbox:
       download: "Scaricamento"
     keyboard_shortcuts_help:
@@ -1623,6 +1672,7 @@ it:
         categories: '<b>g</b> then <b>c</b> Categorie'
       navigation:
         title: 'Navigazione'
+        jump: '<b>e</b> Vai al post numero'
         back: '<b>u</b> Indietro'
         up_down: '<b>k</b>/<b>j</b> Sposta la selezione su/giù'
         open: '<b>o</b> o <b>Enter</b> Apri il topic selezionato'
@@ -1675,3 +1725,6 @@ it:
         elder:
           name: Veterano
           description: Permette la modifica globale, il pin, la chiusura, l'archiviazione, lo split e il merge.
+        welcome:
+          name: Benvenuto
+          description: Ricevuto un like.

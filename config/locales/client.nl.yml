@@ -84,7 +84,6 @@ nl:
     not_implemented: "Die functie is helaas nog niet beschikbaar. Sorry!"
     no_value: "Nee"
     yes_value: "Ja"
-    of_value: "van"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
     log_in: "Inloggen"
@@ -213,14 +212,6 @@ nl:
       post_stat_sentence:
         one: "%{count} nieuw bericht in de afgelopen %{unit}."
         other: "%{count} nieuwe berichten in de afgelopen %{unit}."
-    ip_info:
-      hostname: Hostnaam
-      location: Locatie
-      location_not_found: (onbekend)
-      organisation: Organisatie
-      phone: Telefoon
-      other_accounts: Andere accounts met dit IP-adres
-      no_other_accounts: (geen)
     user:
       said: "{{username}} zei:"
       profile: "Profiel"
@@ -251,7 +242,6 @@ nl:
       watched_categories: "In de gaten gehouden"
       watched_categories_instructions: "Je krijgt bericht van alle nieuwe berichten en topics in deze categoriën, daarnaast zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
       tracked_categories: "Gevolgd"
-      tracked_categories_instructions: "Het aantal ongelezen en nieuwe berichten in deze categoriën zal naast de topiclijst verschijnen"
       muted_categories: "Genegeerd"
       muted_categories_instructions: "Je zal geen notificaties krijgen over nieuwe topics en berichten in deze categoriën"
       delete_account: "Verwijder mijn account"
@@ -302,10 +292,12 @@ nl:
         frequency: "We zullen je alleen maar mailen als we je een tijd niet gezien hebben, en als je toevallig hetgeen waarover we je mailen nog niet hebt gezien op onze site."
       name:
         title: "Naam"
+        instructions: "Je volledige naam."
         too_short: "Je naam is te kort."
         ok: "Je naam ziet er prima uit."
       username:
         title: "Gebruikersnaam"
+        instructions: "Je gebruikersnaam moet uniek zijn en mag geen spaties bevatten."
         short_instructions: "Mensen kunnen naar je verwijzen als @{{username}}."
         available: "Je gebruikersnaam is beschikbaar."
         global_match: "Je e-mailadres komt overeen met je geregistreerde gebruikersnaam."
@@ -397,6 +389,7 @@ nl:
         the_topic: "de topic"
     loading: "Laden..."
     close: "Sluit"
+    assets_changed_confirm: "Discourse is bijgewerkt, will je een refresh doen om de laatste versie te laden?"
     read_only_mode:
       enabled: "Dit forum is in read-only modus. Je kan rondkijken, maar sommige elementen zullen mogelijk niet goed werken."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
@@ -413,7 +406,6 @@ nl:
     unmute: Tonen
     last_post: Laatste bericht
     summary:
-      enabled_description: "Je kijkt nu naar een samenvatting van deze topic. Klik hieronder om alle berichten te zien."
       description: "Er zijn <b>{{count}}</b> reacties."
       description_time: "Er zijn <b>{{count}}</b> reacties met een gemiddelde leestijd van <b>{{readingTime}} minuten</b>."
       enable: 'Samenvatting van topic'
@@ -444,6 +436,7 @@ nl:
       password: "Wachtwoord"
       email_placeholder: "e-mail of gebruikersnaam"
       error: "Er is een onbekende fout opgetreden"
+      blank_username_or_password: "Vul je email of gebruikersnaam in en je wachtwoord."
       reset_password: 'Herstel wachtwoord'
       logging_in: "Inloggen..."
       or: "Of"
@@ -497,6 +490,7 @@ nl:
       create_pm: "Maak privébericht"
       title: "Of druk op Ctrl-Return"
       users_placeholder: "Voeg een lid toe"
+      title_placeholder: "Waar gaat de discussie over in één korte zin?"
       edit_reason_placeholder: "vanwaar de wijziging?"
       show_edit_reason: "(geef een reden)"
       reply_placeholder: "Schrijf hier je bericht. Gebruik Markdown of BBCode voor de tekstopmaak. Sleep of plak een afbeelding hierin om deze te uploaden.\""
@@ -519,6 +513,7 @@ nl:
       quote_title: "Citaat"
       quote_text: "Citaat"
       code_title: "Opgemaakte tekst"
+      code_text: "zet 4 spaties voor opgemaakte tekst"
       upload_title: "Afbeelding"
       upload_description: "geef een omschrijving voor de afbeelding op"
       olist_title: "Genummerde lijst"
@@ -570,6 +565,8 @@ nl:
       title: "zoek naar topics, berichten, gebruikers of categorieën"
       no_results: "Geen resultaten gevonden."
       searching: "Zoeken..."
+      context:
+        topic: "Zoek in deze topic"
     site_map: "ga naar een andere topiclijst of categorie"
     go_back: 'ga terug'
     not_logged_in_user: 'gebruikerspagina met samenvatting van de activiteiten en voorkeuren'
@@ -689,10 +686,8 @@ nl:
           '0': 'Je negeert alle notificaties in deze topic.'
         watching_pm:
           title: "In de gaten houden"
-          description: "Je krijgt een notificatie voor elk nieuw bericht in deze privéconversatie. Verder zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
         watching:
           title: "In de gaten houden"
-          description: "Je krijgt een notificatie voor elk nieuw bericht in deze topic. Verder zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
         tracking_pm:
           title: "Volgen"
         tracking:
@@ -736,23 +731,18 @@ nl:
         help: 'Markeer dit bericht (privé) of zend een privébericht aan de schrijver'
         success_message: 'Je hebt dit topic gemarkeerd'
       inviting: "Uitnodigen..."
-      automatically_add_to_groups: "Voeg gebruikers na registratie automatisch aan deze groepen toe (optioneel, alleen admins kunnen dit)"
       invite_private:
         title: 'Stuur een privébericht'
         email_or_username: "E-mail of gebruikersnaam van genodigde"
         email_or_username_placeholder: "e-mailadres of gebruikersnaam"
         action: "Uitnodigen"
-        success: "Bedankt! We hebben deze persoon dit privébericht gestuurd."
         error: "Sorry, er is iets misgegaan bij het uitnodigen van deze persoon"
         group_name: "groepsnaam"
       invite_reply:
         title: 'Anderen uitnodigen'
         action: 'Mail uitnodiging'
         help: 'verstuur uitnodigingen naar vrienden zodat zij met één klik kunnen reageren op deze topic'
-        to_topic: "We zullen je vriend een korte e-mail sturen waardoor zij op deze topic kunnen reageren door op een link te klikken."
-        to_forum: "We zullen je vriend een korte e-mail sturen waardoor zij het forum op kunnen door op een link te klikken."
         email_placeholder: 'naam@voorbeeld.nl'
-        success: "Bedankt! We hebben een uitnodiging verstuurd naar <b>{{email}}</b>. We laten je direct weten wanneer ze je uitnodiging hebben geaccepteerd. Check de \"Uitnodigingen\"-tab op je gebruikerspagina om bij te houden wie je hebt uitgenodigd."
         error: "Sorry, we kunnen deze persoon niet uitnodigen. Wellicht is deze al een lid op onze site?"
       login_reply: 'Log in om te reageren'
       filters:
@@ -876,6 +866,9 @@ nl:
           like: "Vind het niet meer leuk"
           vote: "Stem niet meer"
         people:
+          off_topic: "{{icons}} markeerden dit als off-topic"
+          spam: "{{icons}} markeerden dit als spam"
+          inappropriate: "{{icons}} markeerden dit als ongepast"
           notify_moderators: "{{icons}} lichtte moderators in"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>lichtte moderators in</a>"
           notify_user: "{{icons}} verstuurde een privé-bericht"
@@ -1002,7 +995,6 @@ nl:
       auto_close_label: "Sluit topics automatisch na:"
       auto_close_units: "uren"
       email_in: "Adres voor inkomende mail:"
-      email_in_allow_strangers: "Accepteer mails van niet-gebruikers (ofwel: vreemden)"
       edit_permissions: "Wijzig permissies"
       add_permission: "Nieuwe permissie"
       this_year: "dit jaar"
@@ -1194,11 +1186,13 @@ nl:
         clear_topic_flags: "Gedaan"
         clear_topic_flags_title: "Het topic is onderzocht en problemen zijn opgelost. Klik op Gedaan om de meldingen te verwijderen."
         flagged_by: "Gemarkeerd door"
+        resolved_by: "Opgelost door"
         system: "Systeem"
         error: "Er ging iets mis"
         view_message: "Reageer"
         no_results: "Er zijn geen markeringen"
         topic_flagged: "Deze <strong>topic</strong> is gemarkeerd."
+        visit_topic: "Ga naar de topic om te zien wat er aan de hand is en om actie te ondernemen"
         summary:
           action_type_3:
             one: "off-topic"
@@ -1304,6 +1298,7 @@ nl:
         override_default: "Sluit de standaard stylesheet uit"
         enabled: "Ingeschakeld?"
         preview: "voorbeeld"
+        undo_preview: "verwijder voorbeeld"
         save: "Opslaan"
         new: "Nieuw"
         new_style: "Nieuwe stijl"
@@ -1314,11 +1309,11 @@ nl:
         opacity: "Doorzichtigheid"
         copy: "Kopieër"
         css_html:
-          title: "CSS, HTML"
           long_title: "CSS en HTML aanpassingen"
         colors:
           title: "Kleuren"
           long_title: "Kleurenschema's"
+          about: "Met kleurenschema's kun je de kleuren in de site aanpassen zonder CSS te hoeven gebruiken. Kies er één of voeg er één to om te beginnen."
           new_name: "Nieuw kleurenschema"
           copy_name_prefix: "Kopie van"
           delete_confirm: "Dit kleurenschema verwijderen?"
@@ -1331,14 +1326,26 @@ nl:
             description: 'Meeste teksten, iconen en randen.'
           secondary:
             name: 'secundaire'
+            description: 'De achtergrondkleur, tekst en knoppen.'
           tertiary:
             name: 'tertiaire'
+            description: 'Links, knoppen, notificaties en accentkleur.'
+          quaternary:
+            description: "Navigatie."
           header_background:
             name: "headerachtergrond"
+            description: "Achtergrondkleur van de header."
+          header_primary:
+            name: "eerste header"
+            description: "Tekst en iconen in de header."
+          highlight:
+            description: 'De achtergrondkleur van '
           danger:
             name: 'gevaar'
           success:
             name: 'succes'
+          love:
+            description: "De like knop kleur."
       email:
         title: "E-mail"
         settings: "Instellingen"
@@ -1370,7 +1377,6 @@ nl:
           filters:
             title: "Filter"
             user_placeholder: "gebruikersnaam"
-            address_placeholder: "em@il.com"
             type_placeholder: "digest, inschijving"
             skipped_reason_placeholder: "reden"
       logs:
@@ -1563,6 +1569,8 @@ nl:
           visits: "Bezoeken"
           days: "dagen"
           topics_replied_to: "Topics waarin gereageerd is"
+          topics_viewed: "Bekeken topics"
+          posts_read: "Gelezen berichten"
           flagged_posts: "Gemarkeerde berichten"
       site_content:
         none: "Selecteer een tekst om deze te bewerken"
@@ -1631,6 +1639,7 @@ nl:
         categories: '<b>g</b> dan <b>c</b> Categorieën'
       navigation:
         title: 'Navigatie'
+        jump: '<b>#</b> Ga naar post nummer'
         back: '<b>u</b> Terug'
         up_down: '<b>k</b>/<b>j</b> Verplaats selectie omhoog/omlaag'
         open: '<b>o</b> of <b>Enter</b> Open geselecteerde topic'
@@ -1672,3 +1681,5 @@ nl:
       badge:
         leader:
           name: Leider
+        welcome:
+          name: Welkom

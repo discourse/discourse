@@ -68,7 +68,6 @@ zh_TW:
     not_implemented: "抱歉，此功能尚未開放。"
     no_value: "否"
     yes_value: "是"
-    of_value: "/"
     generic_error: "抱歉，發生錯誤。"
     generic_error_with_reason: "發生錯誤: %{error}"
     log_in: "登入"
@@ -189,15 +188,6 @@ zh_TW:
       post_stats: "新文章的數目。"
       post_stat_sentence:
         other: "在過去一%{unit}內有 %{count} 篇新文章。"
-    ip_info:
-      title: 反查 IP 位址
-      hostname: 伺服器名稱
-      location: 位置
-      location_not_found: ( 未知 )
-      organisation: 組織
-      phone: 電話
-      other_accounts: 擁有相同 IP 位址的其他帳號
-      no_other_accounts: ( 無 )
     user:
       said: "{{username}} 說了："
       profile: "基本資料"
@@ -229,7 +219,6 @@ zh_TW:
       watched_categories: "關注"
       watched_categories_instructions: "你將會自動關注在此分類的新討論話題。你將收到所有新文章和討論話題的通知，未讀和新討論話題的數量也將出現在討論話題的列表旁。"
       tracked_categories: "追蹤"
-      tracked_categories_instructions: "你將追蹤所有在此分類的新討論話題。討論話題列表上將會出現未讀及新討論話題數。"
       muted_categories: "靜音"
       muted_categories_instructions: "你將不會收到此分類的新討論話題通知，以及不會出現在未讀欄內。"
       delete_account: "刪除我的帳號"
@@ -237,6 +226,10 @@ zh_TW:
       deleted_yourself: "你的帳號已成功刪除"
       delete_yourself_not_allowed: "帳號不能刪除。請聯絡管理人。"
       unread_message_count: "訊息"
+      staff_counters:
+        flagged_posts: "已投訴的文章"
+        deleted_posts: "已刪除的文章"
+        suspensions: "停權"
       messages:
         all: "全部"
         mine: "我的"
@@ -281,10 +274,12 @@ zh_TW:
         frequency: "我們只會在一段時間未看到你及你尚未看過我們通知你的事物時才會寄信給你。"
       name:
         title: "名稱"
+        instructions: "長名稱"
         too_short: "你的名稱太短。"
         ok: "你的名稱符合要求。"
       username:
         title: "用戶名稱"
+        instructions: "你的 @用戶名稱 必須是獨一無二、不含空白、且簡短的。"
         short_instructions: "其他人可以輸入 @{{username}} 提到你。"
         available: "你的用戶名稱可以使用。"
         global_match: "電子郵件地址與註冊的用戶名稱相符。"
@@ -382,6 +377,7 @@ zh_TW:
         the_topic: "討論話題"
     loading: "正在載入"
     close: "關閉"
+    assets_changed_confirm: "此網站剛剛已更新，你要重整頁面以獲得最新版本嗎？"
     read_only_mode:
       enabled: "管理員開啟了唯讀模式。你可以繼續瀏覽網站，但一些互動功能可能無法使用。"
       login_disabled: "在唯讀模式下不能登入"
@@ -399,7 +395,6 @@ zh_TW:
     unmute: 取消靜音
     last_post: 最後一篇文章
     summary:
-      enabled_description: "你正在檢視此討論話題的摘要，按下方再次檢視所有文章。"
       description: "共有 <b>{{count}}</b> 個回覆。"
       description_time: "共有 <b>{{count}}</b> 個回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀。"
       enable: '以摘要檢視此討論話題'
@@ -485,6 +480,7 @@ zh_TW:
       create_pm: "建立私人訊息"
       title: "或者按 Ctrl+Enter"
       users_placeholder: "新增用戶"
+      title_placeholder: "用一個簡短的句子來描述想討論的內容。"
       edit_reason_placeholder: "你為什麼做編輯?"
       show_edit_reason: "(請加入編輯原因)"
       reply_placeholder: "在此輸入。請使用 Markdown (http://markdown.tw/) 與 BBCode (http://www.bbcode.org/reference.php) 調整格式，拖曳或貼上圖片可以直接上傳。"
@@ -507,6 +503,7 @@ zh_TW:
       quote_title: "引用"
       quote_text: "引用"
       code_title: "預先格式化文字"
+      code_text: "以 4 格空白將預先格式的化文字縮排"
       upload_title: "上傳"
       upload_description: "在此輸入上傳的描述"
       olist_title: "編號清單"
@@ -678,10 +675,8 @@ zh_TW:
           '0': '你正忽略此討論話題的所有通知。'
         watching_pm:
           title: "關注中"
-          description: "當此私人訊息有新回覆時，你會被通知。討論話題列表上將會顯示未讀及新討論話題數目。"
         watching:
           title: "關注"
-          description: "每篇新文章出現都會通知你。未讀文章以及新文章的數目將顯示在討論話題清單旁。"
         tracking_pm:
           title: "追蹤"
         tracking:
@@ -726,23 +721,18 @@ zh_TW:
         help: '投訴此討論話題，或以私訊通知管理員'
         success_message: '已投訴此討論話題。'
       inviting: "正在邀請..."
-      automatically_add_to_groups: "註冊時自動將用戶加入群組。( 選用，只有管理員可設定 )"
       invite_private:
         title: '邀請參與私人訊息'
         email_or_username: "受邀請者的電子郵件地址或用戶名稱"
         email_or_username_placeholder: "電子郵件地址或用戶名稱"
         action: "邀請"
-        success: "謝謝! 我們已經向此用戶發出邀請，請他參與此私人訊息的討論。"
         error: "抱歉，向此用戶發出邀請時發生錯誤。"
         group_name: "群組名稱"
       invite_reply:
         title: '邀請'
         action: '送出邀請'
         help: '送出邀請給朋友，他們可以按信裡的連結直接回覆'
-        to_topic: "我們將向你的朋友發出一封電子郵件，他不必登入，只要按電子郵件裡的連結就可以快速回覆此討論話題。"
-        to_forum: "我們將向你的朋友發出一封電子郵件，他只要按電子郵件裡的連結就可以加入此論壇。"
         email_placeholder: '電子郵件地址'
-        success: "謝謝! 我們已將邀請寄至 <b>{{email}}</b>，當受邀者接受邀請時我們會再通知你，你也可以在你的用戶頁面的邀請清單查看邀請狀態。"
         error: "抱歉，我們無法邀請此人，他可能已經是此論壇的用戶?"
       login_reply: '登入以發表回覆'
       filters:
@@ -794,6 +784,7 @@ zh_TW:
       continue_discussion: "繼續 {{postLink}} 的討論:"
       follow_quote: "跳到引用的文章"
       show_full: "顯示所有文章"
+      show_hidden: '觀看隱藏內容'
       deleted_by_author:
         other: "( 文章已被作者撤回，除非被投訴，否則在 %{count} 小時內將自動刪除。)"
       deleted_by: "刪除者"
@@ -857,6 +848,9 @@ zh_TW:
           like: "撤回讚"
           vote: "撤回投票"
         people:
+          off_topic: "{{icons}} 標示為偏離主題"
+          spam: "{{icons}} 標示為垃圾文章"
+          inappropriate: "{{icons}} 標示為不適內容"
           notify_moderators: "{{icons}} 已通知板主"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>已通知板主</a>"
           notify_user: "{{icons}} 已送出私人訊息"
@@ -963,10 +957,10 @@ zh_TW:
       change_in_category_topic: "編輯描述"
       already_used: '此顏色已經用於其它分類'
       security: "安全性"
+      images: "圖片"
       auto_close_label: "自動關閉討論話題的期限:"
       auto_close_units: "小時"
       email_in: "自訂外來電郵地址:"
-      email_in_allow_strangers: "接受來自非用戶 (陌生人) 的電郵"
       edit_permissions: "編輯權限"
       add_permission: "新增權限"
       this_year: "今年"
@@ -980,7 +974,6 @@ zh_TW:
           description: "你將會自動關注在此分類中的新討論話題。您將收到所有新文章和討論話題的通知，而未讀和新文章的數量也將出現在討論話題的列表旁。"
         tracking:
           title: "追蹤"
-          description: "你將會自動關注在這些分類中的新討論話題。未讀和新文章的數量將出現在討論話題的列表旁。"
         regular:
           title: "一般"
           description: "只在有人以 @名稱 提到你或回覆你的文章時通知你。"
@@ -996,6 +989,7 @@ zh_TW:
       delete_confirm: "您將刪除此用戶的 <b>%{posts}</b> 則文章與 <b>%{topics}</b> 個討論話題、移除他的帳號、封鎖從他使用的 IP <b>%{ip_address}</b> 登入、將他的電子郵件地址 <b>%{email}</b> 加入永久封鎖名稱，你確定此人真的發送垃圾文章嗎?"
       yes_delete_spammer: "是的，刪除垃圾文章發送者"
       submit_tooltip: "送出私人投訴"
+      take_action_tooltip: "使其立刻達到投訴門檻，不用等待更多社群投訴"
       cant: "抱歉，你目前無法投訴此文章。"
       custom_placeholder_notify_user: "為什麼此文章需要你以私人訊息與作者直接溝通? 討論請務必討論話題明確、具建設性、態度和善。"
       custom_placeholder_notify_moderators: "為什麼此文章需要板主注意？請讓我們知道你在意的原因，並請盡量提供相關連結。"
@@ -1167,11 +1161,13 @@ zh_TW:
         clear_topic_flags: "完成"
         clear_topic_flags_title: "該討論話題已被調查，問題已經解決。點擊完成以移除投訴。"
         flagged_by: "投訴者"
+        resolved_by: "處理為"
         system: "系統"
         error: "發生了某些錯誤"
         view_message: "回覆"
         no_results: "沒有投訴。"
         topic_flagged: "此 <strong>討論話題</strong> 已被投訴。"
+        visit_topic: "瀏覽討論話題以採取行動"
         summary:
           action_type_3:
             other: "離題 x{{count}}"
@@ -1272,6 +1268,8 @@ zh_TW:
         override_default: "不要保含標準樣式"
         enabled: "已啟用?"
         preview: "預覽"
+        undo_preview: "移除預覽"
+        rescue_preview: "預設風格"
         save: "儲存"
         new: "新增"
         new_style: "新增樣式"
@@ -1282,7 +1280,6 @@ zh_TW:
         opacity: "不透明度"
         copy: "複製"
         css_html:
-          title: "CSS、HTML"
           long_title: "CSS 與 HTML 客製化"
         colors:
           title: "顏色"
@@ -1356,7 +1353,6 @@ zh_TW:
           filters:
             title: "過濾"
             user_placeholder: "username"
-            address_placeholder: "em@il.com"
             type_placeholder: "digest, signup..."
             skipped_reason_placeholder: "原因"
       logs:
@@ -1546,7 +1542,12 @@ zh_TW:
           visits: "訪問"
           days: "天"
           topics_replied_to: "討論話題回覆"
+          topics_viewed: "已讀討論話題"
+          posts_read: "已讀文章"
           flagged_posts: "被投訴的文章"
+          flagged_by_users: "投訴之用戶"
+          qualifies: "符合信任等級 3 的條件。"
+          does_not_qualify: "不符合信任等級 3 的條件。"
       site_content:
         none: "選擇要編輯的內容類型。"
         title: '內容'
@@ -1601,6 +1602,7 @@ zh_TW:
         no_badges: 沒有可授予的徽章
         allow_title: 允許使用徽章作為稱號
         multiple_grant: 可多次授予
+        icon: 圖示
     lightbox:
       download: "下載"
     keyboard_shortcuts_help:
@@ -1665,3 +1667,14 @@ zh_TW:
         elder:
           name: 長老
           description: 可全區編輯、置頂、關閉、封存、拆開和合併討論話題或文章。
+        welcome:
+          name: 歡迎
+          description: 收到一個讚。
+        nice_post:
+          name: 好文章
+          description: 一篇文章收到 10 個讚。此徽章可多次獲得。
+        good_post:
+          name: 棒文章
+          description: 一篇文章收到 25 個讚。此徽章可多次獲得。
+        great_post:
+          name: 神文章

@@ -35,7 +35,6 @@ uk:
     not_implemented: "Цей функціонал ще не реалізовано, даруйте!"
     no_value: "Ні"
     yes_value: "Так"
-    of_value: "із"
     generic_error: "Даруйте, виникла помилка."
     generic_error_with_reason: "Виникла помилка: %{error}"
     age: "Вік"
@@ -149,7 +148,6 @@ uk:
       watched_categories: "Відслідковувані"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Відстежувані"
-      tracked_categories_instructions: "Ви будете автоматично відстежувати всі нові теми у цих категоріях. Число непрочитаних та нових дописів з'являтиметься навпроти теми."
       muted_categories: "Ігноровані"
       muted_categories_instructions: "Ви не будете отримувати жодних сповіщень про нові теми у цих категоріях, і вони не з'являтимуться у вкладці Непрочитані."
       delete_account: "Delete My Account"
@@ -286,7 +284,6 @@ uk:
     unmute: Unmute
     last_post: Останній допис
     summary:
-      enabled_description: "Ви переглядаєте підсумок цієї теми. Щоб знову побачити всі дописи, натисніть знизу."
       enable: 'Підсумувати цю тему'
       disable: 'Показати всі дописи'
     private_message_info:
@@ -515,10 +512,8 @@ uk:
           '0': 'Ви ігноруєте всі сповіщення з цієї теми.'
         watching_pm:
           title: "Слідкувати"
-          description: "Ви будете отримувати сповіщення про кожен новий допис у цій приватній переписці. Кількість непрочитаних та нових дописів буде відображатися навпроти теми."
         watching:
           title: "Слідкувати"
-          description: "Ви будете отримувати сповіщення про кожен новий допис у цій темі. Кількість непрочитаних та нових дописів буде відображатися навпроти теми."
         tracking_pm:
           title: "Стежити"
         tracking:
@@ -565,15 +560,11 @@ uk:
         email_or_username: "Електронна скринька або ім'я запрошуваного користувача"
         email_or_username_placeholder: "електронна скринька або ім'я користувача"
         action: "Запросити"
-        success: "Дякуємо! Ми запросили цього користувача до участі у цьому приватному повідомленні."
         error: "Даруйте, під час запрошення цього користувача сталася помилка."
       invite_reply:
         action: 'Надіслати запрошення'
         help: 'надіслати запрошення друзям, щоб вони могли відповісти на цю тему в один клац'
-        to_topic: "Ми надішлемо Вашому другові короткого листа, що міститиме посилання, яке дозволить йому одразу відповісти на цю тему без входу до системи."
-        to_forum: "Ми надішлемо Вашому другові короткого листа, що міститиме посилання, яке дозволить йому приєднатися до форуму."
         email_placeholder: 'електронна скринька'
-        success: "Дякуємо! Ми надіслали запрошення на <b>{{email}}</b>. Ми дамо Вам знати, коли адресат прийме Ваше запрошення. Завітайте на вкладку Запрошення Вашого профілю, щоб відстежувати, кого Ви запросили."
         error: "Вибачте, ми не змогли запросити цю особу. Можливо, вона вже є користувачем?"
       filters:
         cancel: "Знову показати всі дописи в цій темі."
@@ -720,7 +711,6 @@ uk:
       auto_close_label: "Автоматично закривати теми після:"
       auto_close_units: "годин"
       email_in: "Custom incoming email address:"
-      email_in_allow_strangers: "Accept emails from non-users (aka strangers)"
       edit_permissions: "Редагувати дозволи"
       add_permission: "Додати дозвіл"
       this_year: "цього року"
@@ -1018,7 +1008,6 @@ uk:
           filters:
             title: "Filter"
             user_placeholder: "username"
-            address_placeholder: "em@il.com"
             type_placeholder: "digest, signup..."
             skipped_reason_placeholder: "reason"
       logs:

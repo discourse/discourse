@@ -81,7 +81,6 @@ nb_NO:
     not_implemented: "Den funksjonen har ikke blitt implementert enda, beklager!"
     no_value: "Nei"
     yes_value: "Ja"
-    of_value: "av"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
     log_in: "Logg inn"
@@ -182,11 +181,6 @@ nb_NO:
       subcategories: "Underkategorier"
       topic_stats: "Antall nye emner."
       post_stats: "Antall nye innlegg."
-    ip_info:
-      location: Posisjon
-      location_not_found: (ukjent)
-      organisation: Organisasjon
-      phone: Telefon
     user:
       said: "{{username}} sa:"
       profile: "Profile"
@@ -357,7 +351,6 @@ nb_NO:
     unmute: Udemp
     last_post: Siste Innlegg
     summary:
-      enabled_description: "Du er for øyeblikket i De Beste modus i dette emnet."
       enable: 'Bytt til "De Beste" modus'
       disable: 'Avslutt "De Beste"'
     private_message_info:
@@ -604,7 +597,6 @@ nb_NO:
           '0': 'Du ignorerer alle varslinger på dette emnet.'
         watching:
           title: "Iaktar"
-          description: "samme som å Følge, pluss at du vil bli varslet om alle nye innlegg."
         tracking:
           title: "Følger"
         regular:
@@ -641,14 +633,12 @@ nb_NO:
         email_or_username: "Invitertes email eller brukernavn."
         email_or_username_placeholder: "email eller brukernavn."
         action: "Inviter"
-        success: "Takk! Vi har invitert den personen til å delta i denne private meldingen."
         error: "Beklager, det oppstod en feil ved å invitere den brukeren."
       invite_reply:
         title: 'Inviter'
         action: 'Email Invitasjon'
         help: 'send invitasjoner til venner så de kan svare på dette emnet med et enkelt klikk'
         email_placeholder: 'email'
-        success: "Takk! Vi har sendt ut en invitasjon til <b>{{email}}</b>. Vi vil varsle deg når de følger opp din invitasjon. Sjekk 'invitasjoner' fanen på brukersiden din for en oversikt over hvem du har invitert."
         error: "Beklager, vi kunne ikke invitere den personen. Kanskje de allerede er en bruker?"
       login_reply: 'Logg inn for å svare'
       filters:

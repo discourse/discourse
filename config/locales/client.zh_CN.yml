@@ -68,10 +68,9 @@ zh_CN:
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
     yes_value: "是"
-    of_value: "/"
     generic_error: "抱歉，发生了一个错误。"
     generic_error_with_reason: "发生了一个错误：%{error}"
-    log_in: "登入"
+    log_in: "登录"
     age: "时间"
     joined: "加入时间："
     admin_title: "管理员"
@@ -106,7 +105,7 @@ zh_CN:
     suggested_topics:
       title: "推荐主题"
     bookmarks:
-      not_logged_in: "抱歉，您需要先登入才能给帖子加书签"
+      not_logged_in: "抱歉，您需要先登录才能给帖子加书签"
       created: "您给此帖的书签已加上"
       not_bookmarked: "您已经阅读过此帖；点此给它加上书签"
       last_read: "这是您阅读过的最后一帖；点此给它加上书签"
@@ -189,15 +188,6 @@ zh_CN:
       post_stats: "新帖子的数量。"
       post_stat_sentence:
         other: "在过去的 %{unit} 中有 %{count} 个新帖子"
-    ip_info:
-      title: IP 地址查询
-      hostname: 主机名
-      location: 地址
-      location_not_found: （未知）
-      organisation: 组织
-      phone: 电话
-      other_accounts: 其他使用该 IP 地址的账号
-      no_other_accounts: （无）
     user:
       said: "{{username}}说："
       profile: "个人资料"
@@ -223,13 +213,12 @@ zh_CN:
       admin: "{{user}} 是管理员"
       moderator_tooltip: "用户是版主"
       admin_tooltip: "用户是管理员"
-      suspended_notice: "该用户将被禁止登入，直至 {{date}}。"
+      suspended_notice: "该用户将被禁止登录，直至 {{date}}。"
       suspended_reason: "原因："
       mailing_list_mode: "每次论坛中出现回帖就发送一封邮件（除非您屏蔽了主题或者分类）"
       watched_categories: "已关注"
       watched_categories_instructions: "您将自动关注这些分类的所有新主题。您将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
       tracked_categories: "已跟踪"
-      tracked_categories_instructions: "您将自动跟踪这些分类的所有新主题，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
       muted_categories: "已屏蔽"
       muted_categories_instructions: "您不会收到这些分类的新主题的任何通知，他们也不会出现在您的未读标签中。"
       delete_account: "删除我的帐号"
@@ -237,6 +226,11 @@ zh_CN:
       deleted_yourself: "您的帐号已被成功删除。"
       delete_yourself_not_allowed: "您目前不能删除自己的帐号。联系管理员帮助您删除帐号。"
       unread_message_count: "消息"
+      staff_counters:
+        flags_given: "树立有用标志"
+        flagged_posts: "标志的帖子"
+        deleted_posts: "删除的帖子"
+        suspensions: "禁止的"
       messages:
         all: "所有"
         mine: "我的"
@@ -281,10 +275,12 @@ zh_CN:
         frequency: "只有当您最近一段时间没有访问时，我们才会把您未读过的内容发送到您的电子邮箱。"
       name:
         title: "名字"
+        instructions: "名字全称"
         too_short: "您设置的名字太短了。"
         ok: "您的名字符合要求。"
       username:
         title: "用户名"
+        instructions: "您的@username 必须是唯一，没有空格，简短的."
         short_instructions: "其他人可以用 @{{username}} 来提及您。"
         available: "您的用户名可用。"
         global_match: "电子邮箱与注册用户名相匹配。"
@@ -382,9 +378,10 @@ zh_CN:
         the_topic: "本主题"
     loading: "载入中..."
     close: "关闭"
+    assets_changed_confirm: "此网页刚刚更新. 刷新查看新版本?"
     read_only_mode:
       enabled: "一个管理员启用了只读模式。您可以继续浏览这个站点但是无法进行交互。"
-      login_disabled: "只读模式下不允许登入。"
+      login_disabled: "只读模式下不允许登录。"
     too_few_topics_notice: "创建至少 5 个公开主题和 30 个公开帖子以开始讨论。新用户无法得到信任等级除非已经有内容让用户阅读。"
     learn_more: "了解更多..."
     year: '年'
@@ -399,7 +396,6 @@ zh_CN:
     unmute: 解除防打扰
     last_post: 最后一帖
     summary:
-      enabled_description: "您现在正在浏览本主题的“概括”视图。要查看所有帖子，请点击下方。"
       description: "有 <b>{{count}}</b> 个回复。"
       description_time: "有 <b>{{count}}</b> 个回复，大约需要 <b>{{readingTime}} 分钟</b>阅读。"
       enable: '概括本主题'
@@ -425,40 +421,40 @@ zh_CN:
       complete_username: "如果您的账户名 <b>%{username}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
       complete_email: "如果您的账户 <b>%{email}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
     login:
-      title: "登入"
+      title: "登录"
       username: "用户"
       password: "密码"
       email_placeholder: "电子邮箱地址或用户名"
       error: "未知错误"
       blank_username_or_password: "请输入您的邮件地址或用户名，以及密码。"
       reset_password: '重置密码'
-      logging_in: "登入中..."
+      logging_in: "登录中..."
       or: "或"
       authenticating: "验证中..."
       awaiting_confirmation: "您的帐号尚未激活，点击忘记密码链接来重新发送激活邮件。"
       awaiting_approval: "您的帐号尚未被论坛版主批准。一旦您的帐号获得批准，您会收到一封电子邮件。"
       requires_invite: "抱歉，本论坛仅接受邀请注册。"
-      not_activated: "您还不能登入。我们之前在 <b>{{sentTo}}</b> 发送了一封激活邮件给您。请按照邮件中的介绍来激活您的帐号。"
+      not_activated: "您还不能登录。我们之前在 <b>{{sentTo}}</b> 发送了一封激活邮件给您。请按照邮件中的介绍来激活您的帐号。"
       resend_activation_email: "点击此处重新发送激活邮件。"
       sent_activation_email_again: "我们在 <b>{{currentEmail}}</b> 又发送了一封激活邮件给您，邮件送达可能需要几分钟；请检查一下您邮箱的垃圾邮件文件夹。"
       google:
-        title: "使用 Google 帐号登入"
-        message: "正使用 Google 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        title: "使用 Google 帐号登录"
+        message: "正使用 Google 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       google_oauth2:
         title: "使用 Google 帐号登录"
         message: "使用 Google 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       twitter:
-        title: "使用 Twitter 帐号登入"
-        message: "正使用 Twitter 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        title: "使用 Twitter 帐号登录"
+        message: "正使用 Twitter 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       facebook:
-        title: "使用 Facebook 帐号登入"
-        message: "正使用 Facebook 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        title: "使用 Facebook 帐号登录"
+        message: "正使用 Facebook 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       yahoo:
-        title: "使用 Yahoo 帐号登入"
-        message: "正使用 Yahoo 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        title: "使用 Yahoo 帐号登录"
+        message: "正使用 Yahoo 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       github:
-        title: "使用 GitHub 帐号登入"
-        message: "正使用 GitHub 帐号验证登入（请确保没有禁止浏览器弹出对话框）"
+        title: "使用 GitHub 帐号登录"
+        message: "正使用 GitHub 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
     composer:
       posting_not_on_topic: "您想回复哪一个主题？"
       saving_draft_tip: "保存中"
@@ -485,6 +481,7 @@ zh_CN:
       create_pm: "创建私信"
       title: "或者按下 Ctrl + 回车"
       users_placeholder: "添加一个用户"
+      title_placeholder: "简述此讨论内容是关于什么？"
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "（添加编辑理由）"
       reply_placeholder: "在此输入您的内容。您可以使用 Markdown 或 BBCode 来格式化内容。拖拽或粘贴一幅图片到这儿即可将它上传。"
@@ -507,6 +504,7 @@ zh_CN:
       quote_title: "引用"
       quote_text: "引用"
       code_title: "预格式化文本"
+      code_text: "文字缩进4格"
       upload_title: "上传"
       upload_description: "在此输入上传资料的描述"
       olist_title: "数字列表"
@@ -620,7 +618,7 @@ zh_CN:
       invalid_access:
         title: "这是私密主题"
         description: "抱歉，您没有访问此主题的权限！"
-        login_required: "您需要登入才能阅读此主题。"
+        login_required: "您需要登录才能阅读此主题。"
       server_error:
         title: "载入主题失败"
         description: "抱歉，无法载入此主题。有可能是网络连接问题导致的，请重试。如果问题始终存在，请告诉我们。"
@@ -678,10 +676,8 @@ zh_CN:
           '0': '您将忽略关于此主题的所有通知。'
         watching_pm:
           title: "关注"
-          description: "一旦有新私信发表，您都会收到通知。"
         watching:
           title: "关注"
-          description: "与追踪一样，额外的是一旦有新帖子发表，您都会收到通知。"
         tracking_pm:
           title: "追踪"
         tracking:
@@ -726,25 +722,20 @@ zh_CN:
         help: '私下报告本帖以引起注意或者发送一条匿名通知'
         success_message: '您已成功报告本帖。'
       inviting: "邀请中..."
-      automatically_add_to_groups: "注册时，自动添加用户至群组。（可选，仅限管理员）"
       invite_private:
         title: '邀请进行私下交流'
         email_or_username: "受邀人的电子邮箱或用户名"
         email_or_username_placeholder: "电子邮箱地址或用户名"
         action: "邀请"
-        success: "谢谢！我们已经邀请该用户参与此私下交流。"
         error: "抱歉，在邀请该用户时发生了错误。"
         group_name: "群组名"
       invite_reply:
         title: ' 邀请'
         action: '邮件邀请'
         help: '向您的朋友发送邀请，他们只需要一个点击就能回复这个主题'
-        to_topic: "我们会给您的朋友发送一封邮件，他/她只需点击其中的一个链接，就可以无需登入直接回复这个主题。"
-        to_forum: "我们会给您的朋友发送一封邮件，他/她只需点击其中的链接，就可以注册加入这个论坛。"
         email_placeholder: '电子邮箱地址'
-        success: "谢谢！我们已发送一个邀请邮件到 <b>{{email}}</b>。当他们确认的时候我们会通知您。您也可以在您的用户页面的邀请选项卡下查看邀请状态。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
-      login_reply: '登入后回复'
+      login_reply: '登录后回复'
       filters:
         n_posts:
           other: "{{count}} 个帖子"
@@ -794,6 +785,7 @@ zh_CN:
       continue_discussion: "从 {{postLink}} 继续讨论："
       follow_quote: "跳转至所引用的帖子"
       show_full: "显示所有帖子"
+      show_hidden: '查看隐蔽内容'
       deleted_by_author:
         other: "（帖子被作者撤销，如无标记，将在 %{count} 小时后被自动删除）"
       deleted_by: "删除者为"
@@ -857,6 +849,9 @@ zh_CN:
           like: "撤销赞"
           vote: "撤销投票"
         people:
+          off_topic: "{{icons}} 标记为偏离主题"
+          spam: "{{icons}} 标记为垃圾"
+          inappropriate: "{{icons}} 标记此为不当内容"
           notify_moderators: "{{icons}} 向版主报告它"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知了版主</a>"
           notify_user: "{{icons}} 发起了一个私下交流"
@@ -951,6 +946,8 @@ zh_CN:
       name: "分类名称"
       description: "描述"
       topic: "分类主题"
+      logo: "分类标志图片"
+      background_image: "分类背景图片"
       badge_colors: "徽章颜色"
       background_color: "背景色"
       foreground_color: "前景色"
@@ -963,10 +960,10 @@ zh_CN:
       change_in_category_topic: "访问分类主题来编辑描述信息"
       already_used: '此色彩已经被另一个分类使用'
       security: "安全性"
+      images: "图片"
       auto_close_label: "该时间段后自动关闭主题："
       auto_close_units: "小时"
       email_in: "自定义外来电子邮件地址:"
-      email_in_allow_strangers: "接受来自非用户（陌生人）的电子邮件"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
       this_year: "今年"
@@ -980,7 +977,6 @@ zh_CN:
           description: "您将自动关注这些分类中的所有新主题。您收到新的帖子和主题的通知，以及未读和新帖子数量将显示在靠近帖子主题列表旁。"
         tracking:
           title: "追踪"
-          description: "你将自动追踪这些分类中的所有新主题。未读和新帖子的数量将会显示在主题列表旁边。"
         regular:
           title: "常规"
           description: "只有当有人 @name 提及你或者回复你的帖子时，你才会收到通知。"
@@ -996,6 +992,7 @@ zh_CN:
       delete_confirm: "您将删除该用户的 <b>%{posts}</b> 个帖子和 <b>%{topics}</b> 个主题，删除该账户，阻止其IP地址 <b>%{ip_address}</b> 再次注册，并将其邮件地址 <b>%{email}</b> 加入黑名单。确定吗？"
       yes_delete_spammer: "确定"
       submit_tooltip: "提交私有标记"
+      take_action_tooltip: "与其等待更多的社区的标志, 不如立刻到达标志."
       cant: "抱歉，当前您不能报告本帖。"
       custom_placeholder_notify_user: "为何您要私下联系该用户？"
       custom_placeholder_notify_moderators: "为何本帖需要论坛版主的关注？为何本帖需要论坛版主的注意？"
@@ -1132,7 +1129,7 @@ zh_CN:
         moderators: '版主：'
         admins: '管理员：'
         blocked: '禁止参与讨论:'
-        suspended: '禁止登入'
+        suspended: '禁止登录'
         private_messages_short: "私信"
         private_messages_title: "私密信息"
         reports:
@@ -1167,11 +1164,13 @@ zh_CN:
         clear_topic_flags: "完成"
         clear_topic_flags_title: "这个主题已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
         flagged_by: "报告者为"
+        resolved_by: "已解决，被"
         system: "系统"
         error: "出错了"
         view_message: "查看消息"
         no_results: "没有报告"
         topic_flagged: "这个<strong>主题</strong>已被报告。"
+        visit_topic: "浏览主题才能操作"
         summary:
           action_type_3:
             other: "偏离主题 x{{count}}"
@@ -1272,6 +1271,11 @@ zh_CN:
         override_default: "覆盖缺省值？"
         enabled: "启用？"
         preview: "预览"
+        undo_preview: "移除预览"
+        rescue_preview: "默认样式"
+        explain_preview: "以自定义样式浏览此网页"
+        explain_undo_preview: "返回目前使用中的自定义样式"
+        explain_rescue_preview: "以默认样式浏览此网页"
         save: "保存"
         new: "新建"
         new_style: "新样式"
@@ -1282,7 +1286,6 @@ zh_CN:
         opacity: "透明度"
         copy: "复制"
         css_html:
-          title: "CSS、HTML"
           long_title: "自定义 CSS 和 HTML"
         colors:
           title: "颜色"
@@ -1348,7 +1351,7 @@ zh_CN:
         format: "格式"
         html: "html"
         text: "text"
-        last_seen_user: "用户最后登入时间:"
+        last_seen_user: "用户最后登录时间:"
         reply_key: "回复关键字"
         skipped_reason: "跳过理由"
         logs:
@@ -1356,7 +1359,6 @@ zh_CN:
           filters:
             title: "过滤器"
             user_placeholder: "username"
-            address_placeholder: "em@il.com"
             type_placeholder: "digest, signup..."
             skipped_reason_placeholder: "原因"
       logs:
@@ -1439,7 +1441,7 @@ zh_CN:
           pending: "待定"
           admins: '管理员'
           moderators: '版主'
-          suspended: '禁止登入'
+          suspended: '禁止登录'
           blocked: '禁止参与讨论'
         approved: "已批准？"
         approved_selected:
@@ -1468,7 +1470,7 @@ zh_CN:
         unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
         suspend_duration: "该用户将被封禁多久？"
         suspend_duration_units: "（天）"
-        suspend_reason_label: "为什么封禁该用户？该理由将公开显示在用户个人页面上，当其尝试登入时，也看到这条理由。尽量简洁。"
+        suspend_reason_label: "为什么封禁该用户？该理由将公开显示在用户个人页面上，当其尝试登录时，也看到这条理由。尽量简洁。"
         suspend_reason: "封禁的理由"
         suspended_by: "封禁操作者："
         delete_all_posts: "删除所有帖子"
@@ -1532,7 +1534,7 @@ zh_CN:
         unblock_failed: '在解除用户帐号封禁时发生了错误。'
         block_failed: '在封禁用户帐号时发生了错误。'
         deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
-        suspended_explanation: "一个被封禁的用户不能登入。"
+        suspended_explanation: "一个被封禁的用户不能登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
         suspend_modal_title: "被禁用户"
@@ -1546,7 +1548,15 @@ zh_CN:
           visits: "访问"
           days: "天数"
           topics_replied_to: "回复的主题"
+          topics_viewed: "已读主题"
+          topics_viewed_all_time: "已阅的主题 (全部)"
+          posts_read: "已读帖子"
+          posts_read_all_time: "已读的帖子 (全部)"
           flagged_posts: "旗标帖子"
+          flagged_by_users: "标记的用户"
+          qualifies: "符合等级3的信用度"
+          will_be_promoted: "在24小时后升级"
+          does_not_qualify: "未符合等级3的信用度"
       site_content:
         none: "选择内容类型以开始编辑。"
         title: '内容'
@@ -1601,6 +1611,7 @@ zh_CN:
         no_badges: 没有可供授予的徽章。
         allow_title: 允许将徽章用作头衔
         multiple_grant: 能被授予多次
+        icon: 图标
     lightbox:
       download: "下载"
     keyboard_shortcuts_help:
@@ -1665,3 +1676,14 @@ zh_CN:
         elder:
           name: 长老
           description: 授予全局编辑、置顶、关闭、存档、分割和合并。
+        welcome:
+          name: 欢迎
+          description: 得到一个赞
+        nice_post:
+          name: 不错的帖子
+          description: 一个帖子得到10个赞. 此徽章可重复得到.
+        good_post:
+          name: 实用的帖子
+          description: 一个帖子得到25个赞. 此徽章可重复得到.
+        great_post:
+          name: 非常棒的帖子

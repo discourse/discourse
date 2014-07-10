@@ -34,7 +34,6 @@ id:
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
     no_value: "Tidak"
     yes_value: "Ya"
-    of_value: "dari"
     generic_error: "Maaf, terjadi kesalahan."
     age: "Umur"
     admin_title: "Admin"

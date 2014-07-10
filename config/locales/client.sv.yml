@@ -84,7 +84,6 @@ sv:
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
     no_value: "Nej"
     yes_value: "Ja"
-    of_value: "av"
     generic_error: "Vi beklagar, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
     age: "Ålder"
@@ -222,7 +221,6 @@ sv:
       watched_categories: "Tittade på"
       watched_categories_instructions: "Du kommer automatiskt att följa alla nya trådar inom dessa kategorier. Du kommer att få notifieringar om alla nya inlägg och trådar; antalet olästa och nya inlägg kommer även att visas vid sidan av trådens namn."
       tracked_categories: "Bevakad"
-      tracked_categories_instructions: "Du kommer automatiskt att följa alla nya trådar inom dessa kategorier. Antalet olästa och nya inlägg kommer att visas vid sidan av trådens namn."
       muted_categories: "Tystad"
       muted_categories_instructions: "Du kommer inte att få notifieringar om nya trådar inom dessa kategorier, och de kommer inte att visas under din \"oläst\"-tab."
       delete_account: "Ta bort mitt konto"
@@ -363,7 +361,6 @@ sv:
     unmute: Avdämpa
     last_post: Sista inlägget
     summary:
-      enabled_description: "Detta är en sammanfattning av tråden. För att se alla inlägg igen, klicka nedan."
       enable: 'Sammanfatta denna tråd'
       disable: 'Visa alla inlägg'
     private_message_info:
@@ -601,10 +598,8 @@ sv:
           '0': 'Du ignorerar alla notifikationer för denna tråd.'
         watching_pm:
           title: "följda"
-          description: "Du kommer att få notifieringar om varje nytt inlägg i detta privata meddelande. Antalet olästa och nya inlägg kommer också att visas vid sidan av trådens namn."
         watching:
           title: "Kollar"
-          description: "Du kommer att få notfieringar om varje nytt inlägg i denna tråd. Antalet olästa och nya inlägg kommer även att visas vid sidan av trådens namn."
         tracking_pm:
           title: "bevakade"
         tracking:
@@ -650,15 +645,11 @@ sv:
         email_or_username: "Den Inbjudnas E-post eller Användarnamn"
         email_or_username_placeholder: "e-postadress eller användarnamn"
         action: "Bjud In"
-        success: "Tack! Vi har bjudit in den användaren att delta i denna privata konversation."
         error: "Tyvärr det uppstod ett fel under inbjudandet av den användaren."
       invite_reply:
         action: 'Email-inbjudan'
         help: 'skicka inbjudningar till vänner så de kan svara i den här tråden med ett enda klick'
-        to_topic: "Vi kommer att skicka ett kort email som låter din vän svara direkt på denna tråd genom att klicka på en länk, utan att inloggning krävs."
-        to_forum: "Vi kommer att skicka ett kort email som låter din vän gå med genom att klicka på en länk, utan att inloggning krävs."
         email_placeholder: 'namn@exampel.se'
-        success: "Tack! Vi har mailat ut ett inbjudan till <b>{{email}}</b>. Vi låter dig veta när de löst in sin inbjudan. Kolla in fliken med Inbjudningar på din användarsida för att hålla koll på vem du har bjudit in."
         error: "Tyvärr vi kunde inte bjudan in den personen. Kanske är den redan en användare?"
       filters:
         n_posts:
@@ -1174,7 +1165,6 @@ sv:
           filters:
             title: "filter"
             user_placeholder: "användarnamn"
-            address_placeholder: "em@il.com"
             skipped_reason_placeholder: "anledning"
       logs:
         title: "Loggar"

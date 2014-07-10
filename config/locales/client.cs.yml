@@ -100,7 +100,6 @@ cs:
     not_implemented: "Tato fičura ještě není implementovaná"
     no_value: "Ne"
     yes_value: "Ano"
-    of_value: "z"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
     log_in: "Přihlásit se"
@@ -261,7 +260,6 @@ cs:
       watched_categories: "Hlídané"
       watched_categories_instructions: "Nová témata v těchto kategoriích budou hlídaná. Na všechny nové příspěvky budete upozorněni."
       tracked_categories: "Sledované"
-      tracked_categories_instructions: "Nová témata v těchto kategoriích budou sledovaná. U výpisu témat uvidíte počet nepřečtených a nových příspěvků."
       muted_categories: "Ztišené"
       muted_categories_instructions: "Nebudete upozorněni na žádná nová témata v těchto kategoriích a ani se nebudou zobrazovat jako nepřečtené."
       delete_account: "Smazat můj účet"
@@ -416,7 +414,6 @@ cs:
     unmute: Zrušit ignorování
     last_post: Poslední příspěvek
     summary:
-      enabled_description: "Právě máte zobrazeny \"nejlepší příspěvky\" tohoto tématu."
       enable: 'Přepnout na "nejlepší příspěvky"'
       disable: 'Přepnout na normální zobrazení'
     private_message_info:
@@ -690,10 +687,8 @@ cs:
           '0': 'Ignorujete všechna oznámení z tohoto tématu.'
         watching_pm:
           title: "Hlídání"
-          description: "Na každý nový příspěvek v téhle soukromé zprávě budete upozorněni. Kromě toho uvidíte ve výpisu počet nových a nepřečtených příspěvků."
         watching:
           title: "Hlídané"
-          description: "stejné jako 'Sledování' a navíc dostanete upozornění o všech nových příspěvcích."
         tracking_pm:
           title: "Sledování"
         tracking:
@@ -741,17 +736,13 @@ cs:
         email_or_username: "Email nebo uživatelské jméno pozvaného"
         email_or_username_placeholder: "emailová adresa nebo uživatelské jméno"
         action: "Pozvat"
-        success: "Děkujeme! Pozvali jste daného uživatele, aby se účastnil této soukromé konverzace."
         error: "Bohužel nastala chyba při odesílání pozvánky."
         group_name: "název skupiny"
       invite_reply:
         title: 'Pozvat k diskuzi'
         action: 'Odeslat pozvánku'
         help: 'odeslat pozvánku přátelům, aby mohli na toto téma odpovědět jedním kliknutím'
-        to_topic: "We'll send a brief email allowing your friend to immediately reply to this topic by clicking a link, no login required."
-        to_forum: "We'll send a brief email allowing your friend to join by clicking a link, no login required."
         email_placeholder: 'name@example.com'
-        success: "Díky! Odeslali jsme pozvánku na <b>{{email}}</b>. Dáme vám vědět, až bude pozvánka vyzvednuta. Na záložce pozvánek na vaší uživatelské stránce můžete sledovat koho jste pozvali."
         error: "Bohužel se nepodařilo pozvat tuto osobu. Není již registrovaným uživatelem?"
       login_reply: 'Přihlaste se, chcete-li odpovědět'
       filters:
@@ -1025,7 +1016,6 @@ cs:
       auto_close_label: "Automaticky zavírat témata po:"
       auto_close_units: "hodinách"
       email_in: "Vlastní příchozí emailová adresa:"
-      email_in_allow_strangers: "Přijímat emaily i od neregistrovaných uživatelů"
       edit_permissions: "Upravit oprávnění"
       add_permission: "Přidat oprávnění"
       this_year: "letos"
@@ -1346,7 +1336,6 @@ cs:
         opacity: "Neprůhlednost"
         copy: "Kopírovat"
         css_html:
-          title: "CSS, HTML"
           long_title: "Přizpůsobení CSS a HTML"
         colors:
           title: "Barvy"
@@ -1383,7 +1372,6 @@ cs:
           filters:
             title: "Filtr"
             user_placeholder: "uživatelské jméno"
-            address_placeholder: "em@ail.cz"
             type_placeholder: "souhrn, registrace..."
             skipped_reason_placeholder: "důvod"
       logs:
