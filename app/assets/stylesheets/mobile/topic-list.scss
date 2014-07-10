@@ -245,10 +245,10 @@ ol.category-breadcrumb {
   }
 }
 
-.top-lists {margin-left: 15px;
-  #topic-list-bottom {
-    margin: 20px 0 0 0;
-  }
+.top-lists {
+  h2 { margin-left: 10px; }
+  #topic-list { padding-bottom: 10px; }
+  .btn-default.pull-right { margin-right: 10px; }
 }
 
 .category-notification-menu {
