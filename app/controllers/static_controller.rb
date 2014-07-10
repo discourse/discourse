@@ -76,7 +76,7 @@ class StaticController < ApplicationController
 
     # we must disable acceleration otherwise NGINX strips
     # access control headers
-    request.env['_disable_accl'] = true
+    request.env['sendfile.type'] = ''
     send_file(path, opts)
   end
 end

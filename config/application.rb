@@ -122,13 +122,6 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
-    # We need to be able to disable for cdn assets
-    # x-accl-redirect strips headers we need to forward
-    # issue open since 2008
-    require 'middleware/optional_sendfile'
-    config.middleware.insert_after Rack::Sendfile, Middleware::OptionalSendfile, config.action_dispatch.x_sendfile_header
-    config.middleware.delete Rack::Sendfile
-
     # route all exceptions via our router
     config.exceptions_app = self.routes
 
