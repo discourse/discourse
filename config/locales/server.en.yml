@@ -141,7 +141,7 @@ en:
 
       - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
 
     'new-reply': |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
@@ -152,7 +152,7 @@ en:
 
       - Constructive criticism is welcome, but criticize *ideas*, not people.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
 
     avatar: |
       ### How about a new picture for your account?
@@ -399,7 +399,7 @@ en:
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Inappropriate'
-      description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/faq">our community guidelines</a>.'
+      description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Notify {{username}}'
@@ -409,7 +409,7 @@ en:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notify moderators'
-      description: 'This post requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
+      description: 'This post requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
       long_form: 'notified moderators'
       email_title: 'A post in "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
@@ -433,11 +433,11 @@ en:
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Inappropriate'
-      description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/faq">our community guidelines</a>.'
+      description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_moderators:
       title: 'Notify moderators'
-      description: 'This topic requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
+      description: 'This topic requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
       long_form: 'notified moderators'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
@@ -1199,7 +1199,7 @@ en:
 
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
-    inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](/faq)."
+    inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](/guidelines)."
     spam: "Your post was flagged as **spam**: the community thinks it is an advertisement, not useful or relevant to the topic, but promotional in nature."
     notify_moderators: "Your post was flagged **for moderator attention**: the community thinks something about the post requires moderator intervention."
 
@@ -1221,7 +1221,7 @@ en:
 
         However, if the post is hidden by the community a second time, the moderators will be notified – and there may be further action, including the possible suspension of your account.
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     usage_tips:
       text_body_template: |
@@ -1272,7 +1272,7 @@ en:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
         Enjoy your stay!
 
@@ -1291,7 +1291,7 @@ en:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
         Enjoy your stay!
 
@@ -1400,7 +1400,7 @@ en:
 
         As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     blocked_by_staff:
       subject_template: "Account blocked"
@@ -1409,7 +1409,7 @@ en:
 
         This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     user_automatically_blocked:
       subject_template: "New user %{username} blocked due to community flags"
@@ -1583,7 +1583,7 @@ en:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
         Enjoy your stay!
 
