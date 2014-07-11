@@ -4,7 +4,7 @@ if ARGV.include?('bbcode-to-md')
   #
   # In a temp dir:
   #
-  # git clone git@github.com:nlalonde/ruby-bbcode-to-md.git
+  # git clone https://github.com/nlalonde/ruby-bbcode-to-md.git
   # cd ruby-bbcode-to-md
   # gem build ruby-bbcode-to-md.gemspec
   # gem install ruby-bbcode-to-md-0.0.13.gem
