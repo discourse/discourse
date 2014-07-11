@@ -246,8 +246,6 @@ Discourse::Application.routes.draw do
     end
   end
 
-  get "p/:post_id/:user_id" => "posts#short_link"
-
   resources :notifications
 
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: [:get, :post]
@@ -365,9 +363,11 @@ Discourse::Application.routes.draw do
 
   post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: {topic_id: /\d+/}
 
+  get "p/:post_id(/:user_id)" => "posts#short_link"
   get "/posts/:id/cooked" => "posts#cooked"
   get "/posts/:id/expand-embed" => "posts#expand_embed"
-  get "raw/:topic_id(/:post_number)" => "posts#markdown"
+  get "/posts/:id/raw" => "posts#markdown_id"
+  get "raw/:topic_id(/:post_number)" => "posts#markdown_num"
 
   resources :invites do
     collection do

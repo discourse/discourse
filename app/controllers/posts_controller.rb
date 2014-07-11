@@ -8,10 +8,17 @@ class PostsController < ApplicationController
   before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :expand_embed, :markdown, :raw, :cooked]
 
   skip_before_filter :store_incoming_links, only: [:short_link]
-  skip_before_filter :check_xhr, only: [:markdown,:short_link]
+  skip_before_filter :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
 
-  def markdown
-    post = Post.find_by(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i)
+  def markdown_id
+    markdown Post.find(params[:id].to_i)
+  end
+
+  def markdown_num
+    markdown Post.find_by(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i)
+  end
+
+  def markdown(post)
     if post && guardian.can_see?(post)
       render text: post.raw, content_type: 'text/plain'
     else
@@ -26,7 +33,13 @@ class PostsController < ApplicationController
 
   def short_link
     post = Post.find(params[:post_id].to_i)
-    IncomingLink.add(request,current_user)
+    # Stuff the user in the request object, because that's what IncomingLink wants
+    if params[:user_id]
+      user = User.find(params[:user_id].to_i)
+      request['u'] = user.username_lower if user
+    end
+    IncomingLink.add(request, current_user)
+
     redirect_to post.url
   end
 
