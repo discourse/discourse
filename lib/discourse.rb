@@ -9,7 +9,8 @@ module Discourse
     extend Sidekiq::ExceptionHandler
   end
 
-  def self.handle_exception(ex, context=nil, parent_logger = nil)
+  # Responsible for exceptions in Sidekiq jobs - not requests!
+  def self.handle_exception(ex, context = nil, parent_logger = nil)
     context ||= {}
     parent_logger ||= SidekiqExceptionHandler
 
