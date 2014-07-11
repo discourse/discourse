@@ -1996,3 +1996,6 @@ en:
         first_quote:
           name: First Quote
           description: Quoted a user
+        read_faq:
+          name: Read Faq
+          description: Read the community guidelines

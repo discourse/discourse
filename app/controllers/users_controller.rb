@@ -411,6 +411,15 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def read_faq
+    if(user = current_user)
+      user.user_stat.read_faq = 1.second.ago
+      user.user_stat.save
+    end
+
+    render json: success_json
+  end
+
   private
 
     def honeypot_value

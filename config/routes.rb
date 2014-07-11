@@ -181,6 +181,7 @@ Discourse::Application.routes.draw do
   get "privacy" => "static#show", id: "privacy"
   get "signup" => "list#latest"
 
+  post "users/read-faq" => "users#read_faq"
   get "users/search/users" => "users#search_users"
   get "users/password-reset/:token" => "users#password_reset"
   put "users/password-reset/:token" => "users#password_reset"

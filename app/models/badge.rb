@@ -12,12 +12,19 @@ class Badge < ActiveRecord::Base
   FirstFlag = 13
   FirstLink = 14
   FirstQuote = 15
+  ReadFaq = 16
 
   # other consts
   AutobiographerMinBioLength = 10
 
 
   module Queries
+
+    ReadFaq = <<SQL
+    SELECT user_id, read_faq
+    WHERE read_faq IS NOT NULL
+SQL
+
     FirstQuote = <<SQL
     SELECT l.user_id, l.post_id, l.created_at granted_at
     FROM
