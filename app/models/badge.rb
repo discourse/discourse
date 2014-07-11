@@ -21,7 +21,8 @@ class Badge < ActiveRecord::Base
   module Queries
 
     ReadFaq = <<SQL
-    SELECT user_id, read_faq
+    SELECT user_id, read_faq granted_at
+    FROM user_stats
     WHERE read_faq IS NOT NULL
 SQL
 
