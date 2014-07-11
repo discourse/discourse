@@ -76,22 +76,24 @@ module BackupRestore
   end
 
   def self.move_tables_between_schemas_sql(source, destination)
-    # TODO: Postgres 9.3 has "CREATE SCHEMA schema IF NOT EXISTS;"
     <<-SQL
       DO $$DECLARE row record;
       BEGIN
         -- create <destination> schema if it does not exists already
         -- NOTE: DROP & CREATE SCHEMA is easier, but we don't want to drop the public schema
         -- ortherwise extensions (like hstore & pg_trgm) won't work anymore...
-        IF NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '#{destination}')
-        THEN
-          CREATE SCHEMA #{destination};
-        END IF;
+        CREATE SCHEMA IF NOT EXISTS #{destination};
         -- move all <source> tables to <destination> schema
         FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = '#{source}'
         LOOP
           EXECUTE 'DROP TABLE IF EXISTS #{destination}.' || quote_ident(row.tablename) || ' CASCADE;';
           EXECUTE 'ALTER TABLE #{source}.' || quote_ident(row.tablename) || ' SET SCHEMA #{destination};';
+        END LOOP;
+        -- move all <source> views to <destination> schema
+        FOR row IN SELECT viewname FROM pg_views WHERE schemaname = '#{source}'
+        LOOP
+          EXECUTE 'DROP VIEW IF EXISTS #{destination}.' || quote_ident(row.viewname) || ' CASCADE;';
+          EXECUTE 'ALTER VIEW #{source}.' || quote_ident(row.viewname) || ' SET SCHEMA #{destination};';
         END LOOP;
       END$$;
     SQL
