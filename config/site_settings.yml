@@ -381,8 +381,8 @@ email:
     default: ''
     type: email
   email_in_min_trust:
-    default: 3
-    enum: 'MinTrustToCreateTopicSetting'
+    default: 2
+    enum: 'TrustLevelSetting'
   email_in_category: -1
   email_prefix: ''
   email_site_title: ''
@@ -442,14 +442,18 @@ files:
     default: false
 
 trust:
-  default_trust_level: 0
-  default_invitee_trust_level: 1
+  default_trust_level:
+    default: 0
+    enum: 'TrustLevelSetting'
+  default_invitee_trust_level:
+    default: 1
+    enum: 'TrustLevelSetting'
   min_trust_to_create_topic:
     default: 0
-    enum: 'MinTrustToCreateTopicSetting'
+    enum: 'TrustLevelSetting'
   min_trust_to_edit_wiki_post:
     default: 1
-    enum: 'MinTrustToCreateTopicSetting'
+    enum: 'TrustLevelSetting'
   basic_requires_topics_entered: 5
   basic_requires_read_posts: 30
   basic_requires_time_spent_mins: 10
