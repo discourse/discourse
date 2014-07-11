@@ -9,15 +9,15 @@ class Invite < ActiveRecord::Base
   has_many :groups, through: :invited_groups
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
-  validates_presence_of :email
   validates_presence_of :invited_by_id
+  validates :email, uniqueness: true, unless: Proc.new { |i| i.email.nil? }
 
   before_create do
     self.invite_key ||= SecureRandom.hex
   end
 
-  before_save do
-    self.email = Email.downcase(email)
+  before_validation do
+    self.email = Email.downcase(email) unless email.nil?
   end
 
   validate :user_doesnt_already_exist
@@ -96,6 +96,19 @@ class Invite < ActiveRecord::Base
     invite
   end
 
+
+  # generate invite tokens without email
+  def self.generate_email_less_invite_tokens(invited_by, quantity=1)
+    invite_tokens = []
+
+    quantity.to_i.times do
+      invite = Invite.create!(invited_by: invited_by)
+      invite_tokens.push(invite.invite_key)
+    end
+
+    invite_tokens
+  end
+
   def self.find_all_invites_from(inviter)
     Invite.where(invited_by_id: inviter.id)
           .includes(:user => :user_stat)
@@ -138,6 +151,16 @@ class Invite < ActiveRecord::Base
     invite
   end
 
+  def self.redeem_from_token(token, email, username=nil, name=nil)
+    invite = Invite.find_by(invite_key: token)
+    invite.update_column(:email, email)
+
+    if invite
+      user = InviteRedeemer.new(invite, username, name).redeem
+    end
+    user
+  end
+
   def self.base_directory
     File.join(Rails.root, "public", "csv", RailsMultisite::ConnectionManagement.current_db)
   end
@@ -153,7 +176,7 @@ end
 #
 #  id             :integer          not null, primary key
 #  invite_key     :string(32)       not null
-#  email          :string(255)      not null
+#  email          :string(255)
 #  invited_by_id  :integer          not null
 #  user_id        :integer
 #  redeemed_at    :datetime

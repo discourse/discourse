@@ -375,6 +375,8 @@ Discourse::Application.routes.draw do
       post "upload" => "invites#upload_csv_chunk"
     end
   end
+  post "invites/email-less" => "invites#create_email_less_invite"
+  get "invites/redeem/:token" => "invites#redeem_email_less_invite"
   delete "invites" => "invites#destroy"
 
   get "onebox" => "onebox#show"
