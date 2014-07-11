@@ -15,17 +15,21 @@ describe Email::Receiver do
       expect { Email::Receiver.new("").process }.to raise_error(Email::Receiver::EmptyEmailError)
     end
 
-    it "raises EmailUnparsableError if the message is not an email" do
+    it "raises EmptyEmailError if the message is not an email" do
       expect { Email::Receiver.new("asdf" * 30).process}.to raise_error(Email::Receiver::EmptyEmailError)
+    end
+
+    pending "raises EmailUnparsableError in some situation" do
+      expect { Email::Receiver.new("something").process}.to raise_error(Email::Receiver::EmailUnparsableError)
     end
   end
 
   describe "with multipart" do
-    let(:reply_below) { File.read("#{Rails.root}/spec/fixtures/emails/multipart.eml") }
+    let(:reply_below) { fixture_file("emails/multipart.eml") }
     let(:receiver) { Email::Receiver.new(reply_below) }
 
     it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
+      expect { receiver.process}.to raise_error(Email::Receiver::EmailLogNotFound)
       expect(receiver.body).to eq(
 "So presumably all the quoted garbage and my (proper) signature will get
 stripped from my reply?")
@@ -33,84 +37,84 @@ stripped from my reply?")
   end
 
   describe "html only" do
-    let(:reply_below) { File.read("#{Rails.root}/spec/fixtures/emails/html_only.eml") }
+    let(:reply_below) { fixture_file("emails/html_only.eml") }
     let(:receiver) { Email::Receiver.new(reply_below) }
 
     it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
+      expect { receiver.process}.to raise_error(Email::Receiver::EmailLogNotFound)
       expect(receiver.body).to eq("The EC2 instance - I've seen that there tends to be odd and " +
                                   "unrecommended settings on the Bitnami installs that I've checked out.")
     end
   end
 
   describe "it supports a dutch reply" do
-    let(:dutch) { File.read("#{Rails.root}/spec/fixtures/emails/dutch.eml") }
+    let(:dutch) { fixture_file("emails/dutch.eml") }
     let(:receiver) { Email::Receiver.new(dutch) }
 
     it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
+      expect { receiver.process}.to raise_error(Email::Receiver::EmailLogNotFound)
       expect(receiver.body).to eq("Dit is een antwoord in het Nederlands.")
     end
   end
 
   describe "It supports a non english reply" do
-    let(:hebrew) { File.read("#{Rails.root}/spec/fixtures/emails/hebrew.eml") }
+    let(:hebrew) { fixture_file("emails/hebrew.eml") }
     let(:receiver) { Email::Receiver.new(hebrew) }
 
     it "processes correctly" do
       I18n.expects(:t).with('user_notifications.previous_discussion').returns('כלטוב')
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
+      expect { receiver.process}.to raise_error(Email::Receiver::EmailLogNotFound)
       expect(receiver.body).to eq("שלום")
     end
   end
 
   describe "It supports a non UTF-8 reply" do
-    let(:big5) { File.read("#{Rails.root}/spec/fixtures/emails/big5.eml") }
+    let(:big5) { fixture_file("emails/big5.eml") }
     let(:receiver) { Email::Receiver.new(big5) }
 
     it "processes correctly" do
       I18n.expects(:t).with('user_notifications.previous_discussion').returns('媽！我上電視了！')
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
+      expect { receiver.process}.to raise_error(Email::Receiver::EmailLogNotFound)
       expect(receiver.body).to eq("媽！我上電視了！")
     end
   end
 
   describe "via" do
-    let(:wrote) { File.read("#{Rails.root}/spec/fixtures/emails/via_line.eml") }
+    let(:wrote) { fixture_file("emails/via_line.eml") }
     let(:receiver) { Email::Receiver.new(wrote) }
 
     it "removes via lines if we know them" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
+      expect { receiver.process}.to raise_error(Email::Receiver::EmailLogNotFound)
       expect(receiver.body).to eq("Hello this email has content!")
     end
   end
 
   describe "if wrote is on a second line" do
-    let(:wrote) { File.read("#{Rails.root}/spec/fixtures/emails/multiline_wrote.eml") }
+    let(:wrote) { fixture_file("emails/multiline_wrote.eml") }
     let(:receiver) { Email::Receiver.new(wrote) }
 
     it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
+      expect { receiver.process}.to raise_error(Email::Receiver::EmailLogNotFound)
       expect(receiver.body).to eq("Thanks!")
     end
   end
 
   describe "remove previous discussion" do
-    let(:previous) { File.read("#{Rails.root}/spec/fixtures/emails/previous.eml") }
+    let(:previous) { fixture_file("emails/previous.eml") }
     let(:receiver) { Email::Receiver.new(previous) }
 
     it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
+      expect { receiver.process}.to raise_error(Email::Receiver::EmailLogNotFound)
       expect(receiver.body).to eq("This will not include the previous discussion that is present in this email.")
     end
   end
 
   describe "multiple paragraphs" do
-    let(:paragraphs) { File.read("#{Rails.root}/spec/fixtures/emails/paragraphs.eml") }
+    let(:paragraphs) { fixture_file("emails/paragraphs.eml") }
     let(:receiver) { Email::Receiver.new(paragraphs) }
 
     it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
+      expect { receiver.process}.to raise_error(Email::Receiver::EmailLogNotFound)
       expect(receiver.body).to eq(
 "Is there any reason the *old* candy can't be be kept in silos while the new candy
 is imported into *new* silos?
@@ -124,7 +128,7 @@ Thanks for listening.")
 
   describe "with a valid email" do
     let(:reply_key) { "59d8df8370b7e95c5a49fbf86aeb2c93" }
-    let(:valid_reply) { File.read("#{Rails.root}/spec/fixtures/emails/valid_reply.eml") }
+    let(:valid_reply) { fixture_file("emails/valid_reply.eml") }
     let(:receiver) { Email::Receiver.new(valid_reply) }
     let(:post) { Fabricate.build(:post) }
     let(:user) { Fabricate.build(:user) }
@@ -183,7 +187,7 @@ greatest show ever created. Everyone should watch it.
         user.id = -1
         User.stubs(:find_by_email).returns(user)
         EmailLog.stubs(:for).returns(email_log)
-        attachment_email = File.read("#{Rails.root}/spec/fixtures/emails/attachment.eml")
+        attachment_email = fixture_file("emails/attachment.eml")
         r = Email::Receiver.new(attachment_email)
         r.expects(:create_post)
         expect { r.process }.to_not raise_error
@@ -201,7 +205,7 @@ greatest show ever created. Everyone should watch it.
       SiteSetting.stubs(:email_in).returns(true)
     end
 
-    let(:incoming_email) { File.read("#{Rails.root}/spec/fixtures/emails/valid_incoming.eml") }
+    let(:incoming_email) { fixture_file("emails/valid_incoming.eml") }
     let(:receiver) { Email::Receiver.new(incoming_email) }
     let(:user) { Fabricate.build(:user, id: 3456) }
     let(:subject) { "We should have a post-by-email-feature." }
@@ -290,7 +294,7 @@ Jakie" }
       SiteSetting.stubs(:email_in).returns(true)
     end
 
-    let(:incoming_email) { File.read("#{Rails.root}/spec/fixtures/emails/valid_incoming.eml") }
+    let(:incoming_email) { fixture_file("emails/valid_incoming.eml") }
     let(:receiver) { Email::Receiver.new(incoming_email) }
     let(:user) { Fabricate.build(:user, id: 3456) }
     let(:category) { Fabricate.build(:category, id: 10) }
@@ -399,7 +403,7 @@ Jakie" }
       SiteSetting.stubs(:email_in).returns(true)
     end
 
-    let(:incoming_email) { File.read("#{Rails.root}/spec/fixtures/emails/valid_incoming.eml") }
+    let(:incoming_email) { fixture_file("emails/valid_incoming.eml") }
     let(:receiver) { Email::Receiver.new(incoming_email) }
     let(:non_inbox_email_category) { Fabricate.build(:category, id: 20, email_in_allow_strangers: false) }
     let(:public_inbox_email_category) { Fabricate.build(:category, id: 25, email_in_allow_strangers: true) }
