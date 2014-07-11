@@ -1993,3 +1993,6 @@ en:
         first_link:
           name: First Link
           description: Added an internal link to another topic
+        first_quote:
+          name: First Quote
+          description: Quoted a user

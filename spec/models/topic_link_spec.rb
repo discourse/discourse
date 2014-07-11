@@ -2,194 +2,187 @@ require 'spec_helper'
 
 describe TopicLink do
 
-  it { should belong_to :topic }
-  it { should belong_to :post }
-  it { should belong_to :user }
-  it { should have_many :topic_link_clicks }
   it { should validate_presence_of :url }
 
   def test_uri
     URI.parse(Discourse.base_url)
   end
 
-  before do
-    @topic = Fabricate(:topic, title: 'unique topic name')
-    @user = @topic.user
+  let(:topic) do
+    Fabricate(:topic, title: 'unique topic name')
+  end
+
+  let(:user) do
+    topic.user
   end
 
   it "can't link to the same topic" do
-    ftl = TopicLink.new(url: "/t/#{@topic.id}",
-                              topic_id: @topic.id,
-                              link_topic_id: @topic.id)
+    ftl = TopicLink.new(url: "/t/#{topic.id}",
+                              topic_id: topic.id,
+                              link_topic_id: topic.id)
     ftl.valid?.should be_false
   end
 
   describe 'external links' do
     before do
-      @post = Fabricate(:post, raw: "
+      post = Fabricate(:post, raw: "
 http://a.com/
 http://b.com/b
 http://#{'a'*200}.com/invalid
 http://b.com/#{'a'*500}
-                        ", user: @user, topic: @topic)
+                        ", user: user, topic: topic)
 
-      TopicLink.extract_from(@post)
+      TopicLink.extract_from(post)
     end
 
     it 'works' do
       # has the forum topic links
-      @topic.topic_links.count.should == 2
+      topic.topic_links.count.should == 2
 
       # works with markdown links
-      @topic.topic_links.exists?(url: "http://a.com/").should be_true
+      topic.topic_links.exists?(url: "http://a.com/").should be_true
 
       #works with markdown links followed by a period
-      @topic.topic_links.exists?(url: "http://b.com/b").should be_true
+      topic.topic_links.exists?(url: "http://b.com/b").should be_true
     end
 
   end
 
   describe 'internal links' do
 
-    context "rendered onebox" do
+    it "extracts onebox" do
+      other_topic = Fabricate(:topic, user: user)
+      other_topic.posts.create(user: user, raw: "some content for the first post")
+      other_post = other_topic.posts.create(user: user, raw: "some content for the second post")
 
-      before do
-        @other_topic = Fabricate(:topic, user: @user)
-        @other_topic.posts.create(user: @user, raw: "some content for the first post")
-        @other_post = @other_topic.posts.create(user: @user, raw: "some content for the second post")
+      url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}/#{other_post.post_number}"
+      invalid_url = "http://#{test_uri.host}/t/#{other_topic.slug}/9999999999999999999999999999999"
 
-        @url = "http://#{test_uri.host}/t/#{@other_topic.slug}/#{@other_topic.id}/#{@other_post.post_number}"
-        @invalid_url = "http://#{test_uri.host}/t/#{@other_topic.slug}/9999999999999999999999999999999"
+      topic.posts.create(user: user, raw: 'initial post')
+      post = topic.posts.create(user: user, raw: "Link to another topic:\n\n#{url}\n\n#{invalid_url}")
+      post.reload
 
-        @topic.posts.create(user: @user, raw: 'initial post')
-        @post = @topic.posts.create(user: @user, raw: "Link to another topic:\n\n#{@url}\n\n#{@invalid_url}")
-        @post.reload
+      TopicLink.extract_from(post)
 
-        TopicLink.extract_from(@post)
-
-        @link = @topic.topic_links.first
-      end
-
-      it 'works' do
-        # should have a link
-        @link.should be_present
-        # should be the canonical URL
-        @link.url.should == @url
-      end
-
+      link = topic.topic_links.first
+      # should have a link
+      link.should be_present
+      # should be the canonical URL
+      link.url.should == url
     end
 
+
     context 'topic link' do
-      before do
-        @other_topic = Fabricate(:topic, user: @user)
-        @other_post = @other_topic.posts.create(user: @user, raw: "some content")
 
-        @url = "http://#{test_uri.host}/t/#{@other_topic.slug}/#{@other_topic.id}"
+      let(:other_topic) do
+        Fabricate(:topic, user: user)
+      end
 
-        @topic.posts.create(user: @user, raw: 'initial post')
-        @post = @topic.posts.create(user: @user, raw: "Link to another topic: #{@url}")
-
-        TopicLink.extract_from(@post)
-
-        @link = @topic.topic_links.first
+      let(:post) do
+        other_topic.posts.create(user: user, raw: "some content")
       end
 
       it 'works' do
-        # extracted the link
-        @link.should be_present
 
-        # is set to internal
-        @link.should be_internal
+        # ensure other_topic has a post
+        post
 
-        # has the correct url
-        @link.url.should == @url
+        url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}"
 
-        # has the extracted domain
-        @link.domain.should == test_uri.host
+        topic.posts.create(user: user, raw: 'initial post')
+        linked_post = topic.posts.create(user: user, raw: "Link to another topic: #{url}")
 
-        # should have the id of the linked forum
-        @link.link_topic_id == @other_topic.id
+        TopicLink.extract_from(linked_post)
 
-        # should not be the reflection
-        @link.should_not be_reflection
-      end
+        link = topic.topic_links.first
+        link.should be_present
+        link.should be_internal
+        link.url.should == url
+        link.domain.should == test_uri.host
+        link.link_topic_id == other_topic.id
+        link.should_not be_reflection
 
-      describe 'reflection in the other topic' do
+        reflection = other_topic.topic_links.first
 
-        before do
-          @reflection = @other_topic.topic_links.first
-        end
+        reflection.should be_present
+        reflection.should be_reflection
+        reflection.post_id.should be_present
+        reflection.domain.should == test_uri.host
+        reflection.url.should == "http://#{test_uri.host}/t/unique-topic-name/#{topic.id}/#{linked_post.post_number}"
+        reflection.link_topic_id.should == topic.id
+        reflection.link_post_id.should == linked_post.id
 
-        it 'works' do
-          # exists
-          @reflection.should be_present
-          @reflection.should be_reflection
-          @reflection.post_id.should be_present
-          @reflection.domain.should == test_uri.host
-          @reflection.url.should == "http://#{test_uri.host}/t/unique-topic-name/#{@topic.id}/#{@post.post_number}"
-          @reflection.link_topic_id.should == @topic.id
-          @reflection.link_post_id.should == @post.id
-
-          #has the user id of the original link
-          @reflection.user_id.should == @link.user_id
-        end
+        reflection.user_id.should == link.user_id
       end
 
       context 'removing a link' do
 
         before do
-          @post.revise(@post.user, "no more linkies")
-          TopicLink.extract_from(@post)
+          post.revise(post.user, "no more linkies")
+          TopicLink.extract_from(post)
         end
 
         it 'should remove the link' do
-          @topic.topic_links.where(post_id: @post.id).should be_blank
+          topic.topic_links.where(post_id: post.id).should be_blank
           # should remove the reflected link
-          @reflection = @other_topic.topic_links.should be_blank
+          other_topic.topic_links.should be_blank
         end
       end
     end
 
     context "link to a user on discourse" do
-      let(:post) { @topic.posts.create(user: @user, raw: "<a href='/users/#{@user.username_lower}'>user</a>") }
+      let(:post) { topic.posts.create(user: user, raw: "<a href='/users/#{user.username_lower}'>user</a>") }
       before do
         TopicLink.extract_from(post)
       end
 
       it 'does not extract a link' do
-        @topic.topic_links.should be_blank
+        topic.topic_links.should be_blank
       end
     end
 
     context "link to a discourse resource like a FAQ" do
-      let(:post) { @topic.posts.create(user: @user, raw: "<a href='/faq'>faq link here</a>") }
+      let(:post) { topic.posts.create(user: user, raw: "<a href='/faq'>faq link here</a>") }
       before do
         TopicLink.extract_from(post)
       end
 
       it 'does not extract a link' do
-        @topic.topic_links.should be_present
+        topic.topic_links.should be_present
       end
     end
 
-    context "@mention links" do
-      let(:post) { @topic.posts.create(user: @user, raw: "Hey @#{@user.username_lower}") }
+    context "mention links" do
+      let(:post) { topic.posts.create(user: user, raw: "Hey #{user.username_lower}") }
 
       before do
         TopicLink.extract_from(post)
       end
 
       it 'does not extract a link' do
-        @topic.topic_links.should be_blank
+        topic.topic_links.should be_blank
+      end
+    end
+
+    context "quote links" do
+      it "sets quote correctly" do
+        linked_post = topic.posts.create(user: user, raw: "my test post")
+        quoting_post = Fabricate(:post, raw: "[quote=\"#{user.username}, post: #{linked_post.post_number}, topic: #{topic.id}\"]\nquote\n[/quote]")
+
+        TopicLink.extract_from(quoting_post)
+        link = quoting_post.topic.topic_links.first
+
+        link.link_post_id.should == linked_post.id
+        link.quote.should == true
       end
     end
 
     context "link to a local attachments" do
-      let(:post) { @topic.posts.create(user: @user, raw: '<a class="attachment" href="/uploads/default/208/87bb3d8428eb4783.rb">ruby.rb</a>') }
+      let(:post) { topic.posts.create(user: user, raw: '<a class="attachment" href="/uploads/default/208/87bb3d8428eb4783.rb">ruby.rb</a>') }
 
       it "extracts the link" do
         TopicLink.extract_from(post)
-        link = @topic.topic_links.first
+        link = topic.topic_links.first
         # extracted the link
         link.should be_present
         # is set to internal
@@ -203,11 +196,11 @@ http://b.com/#{'a'*500}
     end
 
     context "link to an attachments uploaded on S3" do
-      let(:post) { @topic.posts.create(user: @user, raw: '<a class="attachment" href="//s3.amazonaws.com/bucket/2104a0211c9ce41ed67989a1ed62e9a394c1fbd1446.rb">ruby.rb</a>') }
+      let(:post) { topic.posts.create(user: user, raw: '<a class="attachment" href="//s3.amazonaws.com/bucket/2104a0211c9ce41ed67989a1ed62e9a394c1fbd1446.rb">ruby.rb</a>') }
 
       it "extracts the link" do
         TopicLink.extract_from(post)
-        link = @topic.topic_links.first
+        link = topic.topic_links.first
         # extracted the link
         link.should be_present
         # is not internal
@@ -223,40 +216,36 @@ http://b.com/#{'a'*500}
   end
 
   describe 'internal link from pm' do
-    before do
-      @pm = Fabricate(:topic, user: @user, archetype: 'private_message')
-      @other_post = @pm.posts.create(user: @user, raw: "some content")
+    it 'works' do
+      pm = Fabricate(:topic, user: user, archetype: 'private_message')
+      pm.posts.create(user: user, raw: "some content")
 
-      @url = "http://#{test_uri.host}/t/topic-slug/#{@topic.id}"
+      url = "http://#{test_uri.host}/t/topic-slug/#{topic.id}"
 
-      @pm.posts.create(user: @user, raw: 'initial post')
-      @linked_post = @pm.posts.create(user: @user, raw: "Link to another topic: #{@url}")
+      pm.posts.create(user: user, raw: 'initial post')
+      linked_post = pm.posts.create(user: user, raw: "Link to another topic: #{url}")
 
-      TopicLink.extract_from(@linked_post)
+      TopicLink.extract_from(linked_post)
 
-      @link = @topic.topic_links.first
+      topic.topic_links.first.should be_nil
+      pm.topic_links.first.should_not be_nil
     end
 
-    it 'should not create a reflection' do
-      @topic.topic_links.first.should be_nil
-    end
-
-    it 'should not create a normal link' do
-      @pm.topic_links.first.should_not be_nil
-    end
   end
 
   describe 'internal link with non-standard port' do
     it 'includes the non standard port if present' do
-      @other_topic = Fabricate(:topic, user: @user)
-      SiteSetting.stubs(:port).returns(5678)
+      other_topic = Fabricate(:topic, user: user)
+      SiteSetting.port = 5678
       alternate_uri = URI.parse(Discourse.base_url)
-      @url = "http://#{alternate_uri.host}:5678/t/topic-slug/#{@other_topic.id}"
-      @post = @topic.posts.create(user: @user,
-                                         raw: "Link to another topic: #{@url}")
-      TopicLink.extract_from(@post)
-      @reflection = @other_topic.topic_links.first
-      @reflection.url.should == "http://#{alternate_uri.host}:5678/t/unique-topic-name/#{@topic.id}"
+
+      url = "http://#{alternate_uri.host}:5678/t/topic-slug/#{other_topic.id}"
+      post = topic.posts.create(user: user,
+                                raw: "Link to another topic: #{url}")
+      TopicLink.extract_from(post)
+      reflection = other_topic.topic_links.first
+
+      reflection.url.should == "http://#{alternate_uri.host}:5678/t/unique-topic-name/#{topic.id}"
     end
   end
 

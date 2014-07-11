@@ -139,27 +139,37 @@ describe PrettyText do
       PrettyText.extract_links("<aside class='quote'>not a linked quote</aside>\n").to_a.should be_empty
     end
 
+    def extract_urls(text)
+      PrettyText.extract_links(text).map(&:url).to_a
+    end
+
     it "should be able to extract links" do
-      PrettyText.extract_links("<a href='http://cnn.com'>http://bla.com</a>").to_a.should == ["http://cnn.com"]
+      extract_urls("<a href='http://cnn.com'>http://bla.com</a>").should == ["http://cnn.com"]
     end
 
     it "should extract links to topics" do
-      PrettyText.extract_links("<aside class=\"quote\" data-topic=\"321\">aside</aside>").to_a.should == ["/t/topic/321"]
+      extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>").should == ["/t/topic/321"]
     end
 
     it "should extract links to posts" do
-      PrettyText.extract_links("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>").to_a.should == ["/t/topic/1234/4567"]
+      extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>").should == ["/t/topic/1234/4567"]
     end
 
     it "should not extract links inside quotes" do
-      PrettyText.extract_links("
+      links = PrettyText.extract_links("
         <a href='http://body_only.com'>http://useless1.com</a>
         <aside class=\"quote\" data-topic=\"1234\">
           <a href='http://body_and_quote.com'>http://useless3.com</a>
           <a href='http://quote_only.com'>http://useless4.com</a>
         </aside>
         <a href='http://body_and_quote.com'>http://useless2.com</a>
-        ").to_a.should == ["http://body_only.com", "http://body_and_quote.com", "/t/topic/1234"]
+        ")
+
+      links.map{|l| [l.url, l.is_quote]}.to_a.sort.should ==
+        [["http://body_only.com",false],
+         ["http://body_and_quote.com", false],
+         ["/t/topic/1234",true]
+        ].sort
     end
 
     it "should not preserve tags in code blocks" do

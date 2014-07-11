@@ -28,6 +28,15 @@ Badge.seed do |b|
 end
 
 Badge.seed do |b|
+  b.id = Badge::FirstQuote
+  b.name = "First Quote"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.query = Badge::Queries::FirstQuote
+end
+
+Badge.seed do |b|
   b.id = Badge::FirstLike
   b.name = "First Like"
   b.badge_type_id = BadgeType::Bronze

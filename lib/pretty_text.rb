@@ -203,13 +203,29 @@ module PrettyText
     doc.to_html
   end
 
+  class DetectedLink
+    attr_accessor :is_quote, :url
+
+    def initialize(url, is_quote=false)
+      @url = url
+      @is_quote = is_quote
+    end
+  end
+
+
   def self.extract_links(html)
     links = []
     doc = Nokogiri::HTML.fragment(html)
     # remove href inside quotes
     doc.css("aside.quote a").each { |l| l["href"] = "" }
+
     # extract all links from the post
-    doc.css("a").each { |l| links << l["href"] unless l["href"].blank? }
+    doc.css("a").each { |l|
+      unless l["href"].blank?
+        links << DetectedLink.new(l["href"])
+      end
+    }
+
     # extract links to quotes
     doc.css("aside.quote[data-topic]").each do |a|
       topic_id = a['data-topic']
@@ -219,7 +235,7 @@ module PrettyText
         url << "/#{post_number}"
       end
 
-      links << url
+      links << DetectedLink.new(url, true)
     end
 
     links

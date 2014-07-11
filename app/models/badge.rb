@@ -11,12 +11,26 @@ class Badge < ActiveRecord::Base
   FirstShare = 12
   FirstFlag = 13
   FirstLink = 14
+  FirstQuote = 15
 
   # other consts
   AutobiographerMinBioLength = 10
 
 
   module Queries
+    FirstQuote = <<SQL
+    SELECT l.user_id, l.post_id, l.created_at granted_at
+    FROM
+    (
+      SELECT MIN(l1.id) id
+      FROM topic_links l1
+      JOIN badge_posts p1 ON p1.id = l1.post_id
+      JOIN badge_posts p2 ON p2.id = l1.link_post_id
+      WHERE NOT reflection AND quote
+      GROUP BY l1.user_id
+    ) ids
+    JOIN topic_links l ON l.id = ids.id
+SQL
 
     FirstLink = <<SQL
     SELECT l.user_id, l.post_id, l.created_at granted_at
@@ -26,7 +40,7 @@ class Badge < ActiveRecord::Base
       FROM topic_links l1
       JOIN badge_posts p1 ON p1.id = l1.post_id
       JOIN badge_posts p2 ON p2.id = l1.link_post_id
-      WHERE NOT reflection AND p1.topic_id <> p2.topic_id
+      WHERE NOT reflection AND p1.topic_id <> p2.topic_id AND not quote
       GROUP BY l1.user_id
     ) ids
     JOIN topic_links l ON l.id = ids.id
