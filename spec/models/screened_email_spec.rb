@@ -60,7 +60,7 @@ describe ScreenedEmail do
       ScreenedEmail.should_block?(email).should be_true
     end
 
-    it "returns true when there is a record with a simiral email" do
+    it "returns true when there is a record with a similar email" do
       ScreenedEmail.should_block?(email).should be_false
       ScreenedEmail.create(email: similar_email).save
       ScreenedEmail.should_block?(email).should be_true

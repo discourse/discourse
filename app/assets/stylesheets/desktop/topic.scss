@@ -266,6 +266,7 @@ sub,sup{
 }
 sup{top:-0.5em; }
 sub{bottom:-0.25em; }
+sup sup, sub sup, sup sub, sub sub { top: 0; }
 figure{margin:0; }
 fieldset{
   border:1px solid scale-color-diff();
