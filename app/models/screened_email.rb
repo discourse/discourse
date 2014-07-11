@@ -17,8 +17,27 @@ class ScreenedEmail < ActiveRecord::Base
   end
 
   def self.should_block?(email)
-    screened_email = ScreenedEmail.find_by(email: email)
+    levenshtein_distance = SiteSetting.levenshtein_distance_spammer_emails
+
+    sql = <<-SQL
+      JOIN (
+        SELECT email, levenshtein_less_equal(email, :email, :levenshtein_distance) AS distance
+        FROM screened_emails
+        ORDER BY created_at DESC
+        LIMIT 100
+      ) AS sed ON sed.email = screened_emails.email
+    SQL
+
+    screened_emails_distance = ScreenedEmail.sql_fragment(sql, email: email, levenshtein_distance: levenshtein_distance)
+
+    screened_email = ScreenedEmail.joins(screened_emails_distance)
+                                  .where("sed.distance <= ?", levenshtein_distance)
+                                  .order("sed.distance ASC")
+                                  .limit(1)
+                                  .first
+
     screened_email.record_match! if screened_email
+
     screened_email && screened_email.action_type == actions[:block]
   end
 

@@ -3,33 +3,34 @@ require 'spec_helper'
 describe ScreenedEmail do
 
   let(:email) { 'block@spamfromhome.org' }
+  let(:similar_email) { 'bl0ck@spamfromhome.org' }
 
   describe "new record" do
     it "sets a default action_type" do
-      described_class.create(email: email).action_type.should == described_class.actions[:block]
+      ScreenedEmail.create(email: email).action_type.should == ScreenedEmail.actions[:block]
     end
 
     it "last_match_at is null" do
       # If we manually load the table with some emails, we can see whether those emails
       # have ever been blocked by looking at last_match_at.
-      described_class.create(email: email).last_match_at.should be_nil
+      ScreenedEmail.create(email: email).last_match_at.should be_nil
     end
   end
 
   describe '#block' do
     context 'email is not being blocked' do
       it 'creates a new record with default action of :block' do
-        record = described_class.block(email)
+        record = ScreenedEmail.block(email)
         record.should_not be_new_record
         record.email.should == email
-        record.action_type.should == described_class.actions[:block]
+        record.action_type.should == ScreenedEmail.actions[:block]
       end
 
       it 'lets action_type be overriden' do
-        record = described_class.block(email, action_type: described_class.actions[:do_nothing])
+        record = ScreenedEmail.block(email, action_type: ScreenedEmail.actions[:do_nothing])
         record.should_not be_new_record
         record.email.should == email
-        record.action_type.should == described_class.actions[:do_nothing]
+        record.action_type.should == ScreenedEmail.actions[:do_nothing]
       end
     end
 
@@ -37,20 +38,32 @@ describe ScreenedEmail do
       let!(:existing) { Fabricate(:screened_email, email: email) }
 
       it "doesn't create a new record" do
-        expect { described_class.block(email) }.to_not change { described_class.count }
+        expect { ScreenedEmail.block(email) }.to_not change { ScreenedEmail.count }
       end
 
       it "returns the existing record" do
-        described_class.block(email).should == existing
+        ScreenedEmail.block(email).should == existing
       end
     end
   end
 
   describe '#should_block?' do
-    subject { described_class.should_block?(email) }
+    subject { ScreenedEmail.should_block?(email) }
 
-    it "returns false if a record with the email doesn't exist" do
+    it "returns false when there are no record with a similar email" do
       subject.should be_false
+    end
+
+    it "returns true when there is a record with the email" do
+      ScreenedEmail.should_block?(email).should be_false
+      ScreenedEmail.create(email: email).save
+      ScreenedEmail.should_block?(email).should be_true
+    end
+
+    it "returns true when there is a record with a simiral email" do
+      ScreenedEmail.should_block?(email).should be_false
+      ScreenedEmail.create(email: similar_email).save
+      ScreenedEmail.should_block?(email).should be_true
     end
 
     shared_examples "when a ScreenedEmail record matches" do
@@ -63,13 +76,13 @@ describe ScreenedEmail do
     end
 
     context "action_type is :block" do
-      let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: described_class.actions[:block]) }
+      let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:block]) }
       it { should be_true }
       include_examples "when a ScreenedEmail record matches"
     end
 
     context "action_type is :do_nothing" do
-      let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: described_class.actions[:do_nothing]) }
+      let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:do_nothing]) }
       it { should be_false }
       include_examples "when a ScreenedEmail record matches"
     end
