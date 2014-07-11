@@ -314,7 +314,7 @@ class ApplicationController < ActionController::Base
     end
 
     def store_incoming_links
-      IncomingLink.add(request,current_user) unless request.xhr?
+      IncomingLink.add(request, current_user) unless request.xhr?
     end
 
     def check_xhr

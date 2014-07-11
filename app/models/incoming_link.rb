@@ -27,7 +27,7 @@ class IncomingLink < ActiveRecord::Base
     end
 
     if host != request.host && (user_id || referer)
-      cid = current_user.id if current_user
+      cid = current_user ? (current_user.id) : (nil)
       unless cid && cid == user_id
         IncomingLink.create(url: request.url,
                             referer: referer,
