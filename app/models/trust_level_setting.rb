@@ -1,6 +1,6 @@
 require_dependency 'enum_site_setting'
 
-class MinTrustToCreateTopicSetting < EnumSiteSetting
+class TrustLevelSetting < EnumSiteSetting
 
   def self.valid_value?(val)
     valid_values.any? { |v| v.to_s == val.to_s }
