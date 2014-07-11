@@ -329,10 +329,6 @@ a.star {
   float: left;
 }
 
-#main a.star.starred {
-  text-shadow: none !important;
-}
-
 .topic-map {
   margin: 20px 0 0 0;
   background: scale-color(scale-color-diff(), $lightness: 40%);
@@ -767,9 +763,9 @@ blockquote > *:last-child {
   &.highlighted {
     background-color: scale-color($tertiary, $lightness: 85%);
   }
-  img:not(.avatar), svg {
-    max-width: 100% !important;
-    height: auto !important;
+  .cooked p img, .cooked p svg {
+    max-width: 100%;
+    height: auto;
   }
 }
 .topic-avatar {
