@@ -36,4 +36,4 @@ We take security very seriously at Discourse, and all our code is 100% open sour
 [cloud66]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud66.md
 [heroku]: https://github.com/discourse/discourse/blob/master/docs/install-HEROKU.md
 [ubuntu]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md
-[swap]: https://www.digitalocean.com/community/articles/how-to-add-swap-on-ubuntu-12-04
+[swap]: https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880
