@@ -124,8 +124,10 @@ table.badges-listing {
 }
 
 .show-badge .user-badge-with-posts .badge-user {
-  width: 400px;
-
+  width: 45%;
+  padding: 0 0 0 4%;
+  margin-bottom: 20px;
+  
   .badge-info {
     width: 100px;
     display: block;
@@ -136,7 +138,6 @@ table.badges-listing {
     width: 250px;
     display: block;
     float: left;
-    margin-top: 67px;
     margin-left: 18px;
     text-align: left;
   }
