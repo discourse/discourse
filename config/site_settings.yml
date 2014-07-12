@@ -527,7 +527,10 @@ spam:
   white_listed_spam_host_domains:
     default: ''
     type: list
-  levenshtein_distance_spammer_emails: 2
+  levenshtein_distance_spammer_emails:
+      default: 2
+      min: 0
+      max: 3
 
 rate_limits:
   unique_posts_mins:
