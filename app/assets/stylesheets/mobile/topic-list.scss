@@ -70,15 +70,6 @@
     .num .fa {
       color: scale-color($primary, $lightness: 50%);
     }
-    .fa-heart{
-      position: relative;
-      left: -1px;
-    }
-    .fa-comment{
-      position: relative;
-      top: -1px;
-      left: 1px;
-    }
   }
 
   .num.posts {
@@ -87,6 +78,7 @@
 
   .age {
     white-space: nowrap;
+    margin-left: 5px;
   }
 }
 
