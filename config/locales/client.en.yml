@@ -1863,8 +1863,9 @@ en:
           developer: 'Developer'
           embedding: "Embedding"
           legal: "Legal"
-          uncategorized: 'Uncategorized'
+          uncategorized: 'Other'
           backups: "Backups"
+          login: "Login"
 
       badges:
         title: Badges
