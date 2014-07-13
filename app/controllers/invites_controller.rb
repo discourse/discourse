@@ -41,6 +41,34 @@ class InvitesController < ApplicationController
     end
   end
 
+  def create_email_less_invite
+    username_or_email = params[:username] ? fetch_username : fetch_email
+    quantity = params[:quantity] || 1
+
+    # generate invite tokens
+    invite_tokens = Invite.generate_email_less_invite_tokens(current_user, quantity)
+
+    render_json_dump(invite_tokens)
+  end
+
+  def redeem_email_less_invite
+    params.require(:token)
+
+    invite = Invite.find_by(invite_key: params[:token])
+
+    if invite.present?
+      user = Invite.redeem_from_token(params[:token], params[:email], params[:username], params[:name])
+      if user.present?
+        log_on_user(user)
+
+        # Send a welcome message if required
+        user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+      end
+    end
+
+    redirect_to "/"
+  end
+
   def destroy
     params.require(:email)
 
@@ -93,6 +121,16 @@ class InvitesController < ApplicationController
     end
 
     render nothing: true
+  end
+
+  def fetch_username
+    params.require(:username)
+    params[:username]
+  end
+
+  def fetch_email
+    params.require(:email)
+    params[:email]
   end
 
 end
