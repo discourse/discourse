@@ -221,6 +221,10 @@
 
   .featured-topic {
     margin: 6px 0;
+    /* topic status glyphs */
+    i {
+      color: scale-color($primary, $lightness: 50%) !important;
+    }
     a.last-posted-at, a.last-posted-at:visited {
       color: scale-color($primary, $lightness: 50%);
     }
