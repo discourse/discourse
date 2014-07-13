@@ -165,7 +165,7 @@ basic:
     client: true
     default: true
 
-users:
+login:
   invite_only:
     client: true
     default: false
@@ -178,27 +178,11 @@ users:
   enable_local_logins:
     client: true
     default: true
-  min_username_length:
-    client: true
-    default: 3
-    min: 1
-  max_username_length:
-    client: true
-    default: 20
-    min: 8
-    max: 60
-  min_password_length:
-    client: true
-    default: 8
-    min: 1
-  block_common_passwords: true
-
   # The default value of enable_google_logins changed from true to false.
   # See db/migrate/20140521220115_google_openid_default_has_changed.rb
   enable_google_logins:
     client: true
     default: false
-
   enable_google_oauth2_logins:
     client: true
     default: false
@@ -242,6 +226,23 @@ users:
   sso_overrides_email: false
   sso_overrides_username: false
   sso_overrides_name: false
+
+
+users:
+  min_username_length:
+    client: true
+    default: 3
+    min: 1
+  max_username_length:
+    client: true
+    default: 20
+    min: 8
+    max: 60
+  min_password_length:
+    client: true
+    default: 8
+    min: 1
+  block_common_passwords: true
   enforce_global_nicknames: false
   discourse_org_access_key: ''
   username_change_period: 3
