@@ -19,7 +19,7 @@ class DiscourseCLI < Thor
 
     sql = "SELECT table_name, column_name
 FROM information_schema.columns
-WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%')"
+WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%') and is_updatable = 'YES'"
 
     cnn = ActiveRecord::Base.connection.raw_connection
 
