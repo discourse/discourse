@@ -53,20 +53,18 @@
   </div>
 
   <div class='display-row'>
-    <div class='field'>{{i18n admin.groups.primary}}</div>
+    <div class='field'>{{i18n admin.groups.title}}</div>
     <div class='value'>
-      {{#if custom_groups}}
-        {{combo-box content=custom_groups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
-      {{else}}
-        &mdash;
-      {{/if}}
+      {{admin-group-selector selected=model.groups }}
     </div>
     <div class='controls'>
+      {{#if custom_groups}}
+        {{i18n admin.groups.primary}}
+        {{combo-box content=custom_groups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
+      {{/if}}
       {{#if primaryGroupDirty}}
-        <div>
         <button class='btn ok no-text' {{action savePrimaryGroup}}><i class='fa fa-check'></i></button>
         <button class='btn cancel no-text' {{action resetPrimaryGroup}}><i class='fa fa-times'></i></button>
-        </div>
       {{/if}}
     </div>
   </div>

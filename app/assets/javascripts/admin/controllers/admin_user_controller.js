@@ -25,6 +25,12 @@ Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
 
   primaryGroupDirty: Discourse.computed.propertyNotEqual('originalPrimaryGroupId', 'primary_group_id'),
 
+  custom_groups: function(){
+    return this.get("model.groups").filter(function(g){
+      return (!g.automatic && g.visible);
+    });
+  }.property("model.groups.[]"),
+
   actions: {
     toggleTitleEdit: function() {
       this.toggleProperty('editingTitle');
@@ -43,6 +49,28 @@ Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
 
     generateApiKey: function() {
       this.get('model').generateApiKey();
+    },
+
+    groupAdded: function(added){
+      var self = this;
+      Discourse.ajax("/admin/users/" + this.get('id') + "/groups", {
+        type: 'POST',
+        data: {group_id: added.id}
+      }).then(function () {
+        self.get('model.groups').pushObject(added);
+      }).catch(function() {
+        bootbox.alert(I18n.t('generic_error'));
+      });
+    },
+    groupRemoved: function(removed){
+      var self = this;
+      Discourse.ajax("/admin/users/" + this.get('id') + "/groups/" + removed.id, {
+        type: 'DELETE'
+      }).then(function () {
+        self.set('model.groups.[]', self.get('model.groups').rejectBy("id", removed.id));
+      }).catch(function() {
+        bootbox.alert(I18n.t('generic_error'));
+      });
     },
 
     savePrimaryGroup: function() {
