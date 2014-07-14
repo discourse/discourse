@@ -49,22 +49,20 @@ class PostsController < ApplicationController
     key = params_key(params)
     error_json = nil
 
-    payload = DistributedMemoizer.memoize(key, 120) do
-      post_creator = PostCreator.new(current_user, params)
-      post = post_creator.create
-      if post_creator.errors.present?
-
-        # If the post was spam, flag all the user's posts as spam
-        current_user.flag_linked_posts_as_spam if post_creator.spam?
-
-        error_json = MultiJson.dump(errors: post_creator.errors.full_messages)
+    if (is_api?)
+      payload = DistributedMemoizer.memoize(key, 120) do
+        success, json = create_post(params)
+        unless success
+          error_json = json
+          raise Discourse::InvalidPost
+        end
+        json
+      end
+    else
+      success, payload = create_post(params)
+      unless success
+        error_json = payload
         raise Discourse::InvalidPost
-
-      else
-        post_serializer = PostSerializer.new(post, scope: guardian, root: false)
-        post_serializer.topic_slug = post.topic.slug if post.topic.present?
-        post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
-        MultiJson.dump(post_serializer)
       end
     end
 
@@ -72,6 +70,22 @@ class PostsController < ApplicationController
 
   rescue Discourse::InvalidPost
     render json: error_json, status: 422
+  end
+
+  def create_post(params)
+    post_creator = PostCreator.new(current_user, params)
+    post = post_creator.create
+    if post_creator.errors.present?
+      # If the post was spam, flag all the user's posts as spam
+      current_user.flag_linked_posts_as_spam if post_creator.spam?
+      [false, MultiJson.dump(errors: post_creator.errors.full_messages)]
+
+    else
+      post_serializer = PostSerializer.new(post, scope: guardian, root: false)
+      post_serializer.topic_slug = post.topic.slug if post.topic.present?
+      post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
+      [true, MultiJson.dump(post_serializer)]
+    end
   end
 
   def update

@@ -215,7 +215,7 @@ describe PostCreator do
 
     context "disabled" do
       before do
-        SiteSetting.stubs(:unique_posts_mins).returns(0)
+        SiteSetting.unique_posts_mins = 0
         creator.create
       end
 
@@ -229,22 +229,37 @@ describe PostCreator do
       let(:new_post_creator) { PostCreator.new(user, basic_topic_params) }
 
       before do
-        SiteSetting.stubs(:unique_posts_mins).returns(10)
-        creator.create
+        SiteSetting.unique_posts_mins = 10
+      end
+
+      it "fails for dupe post accross topic" do
+        first = create_post
+        second = create_post
+
+        dupe = "hello 123 test #{SecureRandom.hex}"
+
+        response_1 = create_post(raw: dupe, user: first.user, topic_id: first.topic_id)
+        response_2 = create_post(raw: dupe, user: first.user, topic_id: second.topic_id)
+
+        response_1.errors.count.should == 0
+        response_2.errors.count.should == 1
       end
 
       it "returns blank for another post with the same content" do
+        creator.create
         new_post_creator.create
         new_post_creator.errors.should be_present
       end
 
       it "returns a post for admins" do
+        creator.create
         user.admin = true
         new_post_creator.create
         new_post_creator.errors.should be_blank
       end
 
       it "returns a post for moderators" do
+        creator.create
         user.moderator = true
         new_post_creator.create
         new_post_creator.errors.should be_blank

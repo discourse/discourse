@@ -367,6 +367,25 @@ describe PostsController do
 
     include_examples 'action requires login', :post, :create
 
+    context 'api' do
+      it 'allows dupes through' do
+        raw = "this is a test post 123 #{SecureRandom.hash}"
+        title = "this is a title #{SecureRandom.hash}"
+
+        user = Fabricate(:user)
+        master_key = ApiKey.create_master_key.key
+
+        xhr :post, :create, {api_username: user.username, api_key: master_key, raw: raw, title: title, wpid: 1}
+        response.should be_success
+        original = response.body
+
+        xhr :post, :create, {api_username: user.username_lower, api_key: master_key, raw: raw, title: title, wpid: 2}
+        response.should be_success
+
+        response.body.should == original
+      end
+    end
+
     describe 'when logged in' do
 
       let!(:user) { log_in }
@@ -389,15 +408,14 @@ describe PostsController do
       end
 
       it 'protects against dupes' do
-        # TODO we really should be using a mock redis here
-        xhr :post, :create, {raw: 'this is a test post 123', title: 'this is a test title 123', wpid: 1}
-        response.should be_success
-        original = response.body
+        raw = "this is a test post 123 #{SecureRandom.hash}"
+        title = "this is a title #{SecureRandom.hash}"
 
-        xhr :post, :create, {raw: 'this is a test post 123', title: 'this is a test title 123', wpid: 2}
+        xhr :post, :create, {raw: raw, title: title, wpid: 1}
         response.should be_success
 
-        response.body.should == original
+        xhr :post, :create, {raw: raw, title: title, wpid: 2}
+        response.should_not be_success
       end
 
       context "errors" do
