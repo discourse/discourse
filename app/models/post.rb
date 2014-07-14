@@ -140,7 +140,7 @@ class Post < ActiveRecord::Base
     return raw if cook_method == Post.cook_methods[:raw_html]
 
     # Default is to cook posts
-    cooked = if !self.user || !self.user.has_trust_level?(:leader)
+    cooked = if !self.user || SiteSetting.leader_links_no_follow || !self.user.has_trust_level?(:leader)
       post_analyzer.cook(*args)
     else
       # At trust level 3, we don't apply nofollow to links

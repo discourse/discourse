@@ -491,6 +491,7 @@ trust:
   leader_promotion_min_duration:
     default: 14
     min: 0
+  leader_links_no_follow: false
 
 security:
   use_https: false

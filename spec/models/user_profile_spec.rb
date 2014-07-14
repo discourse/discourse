@@ -84,25 +84,40 @@ describe UserProfile do
         expect(user_profile.bio_processed).to eq("<p>im sissy and i love http://ponycorns.com</p>")
       end
 
-      it 'includes the link without nofollow if the user is trust level 3 or higher' do
-        user.trust_level = TrustLevel.levels[:leader]
-        user_profile.send(:cook)
-        expect(user_profile.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com'>http://ponycorns.com</a>")
-        expect(user_profile.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\">http://ponycorns.com</a></p>")
+      context 'leader_links_no_follow is false' do
+        before { SiteSetting.stubs(:leader_links_no_follow).returns(false) }
+
+        it 'includes the link without nofollow if the user is trust level 3 or higher' do
+          user.trust_level = TrustLevel.levels[:leader]
+          user_profile.send(:cook)
+          expect(user_profile.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com'>http://ponycorns.com</a>")
+          expect(user_profile.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\">http://ponycorns.com</a></p>")
+        end
+
+        it 'removes nofollow from links in bio when trust level is increased' do
+          created_user.change_trust_level!(:leader)
+          expect(created_user.user_profile.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com'>http://ponycorns.com</a>")
+          expect(created_user.user_profile.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\">http://ponycorns.com</a></p>")
+        end
+
+        it 'adds nofollow to links in bio when trust level is decreased' do
+          created_user.trust_level = TrustLevel.levels[:leader]
+          created_user.save
+          created_user.change_trust_level!(:regular)
+          expect(created_user.user_profile.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com' rel='nofollow'>http://ponycorns.com</a>")
+          expect(created_user.user_profile.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\" rel=\"nofollow\">http://ponycorns.com</a></p>")
+        end
       end
 
-      it 'removes nofollow from links in bio when trust level is increased' do
-        created_user.change_trust_level!(:leader)
-        expect(created_user.user_profile.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com'>http://ponycorns.com</a>")
-        expect(created_user.user_profile.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\">http://ponycorns.com</a></p>")
-      end
+      context 'leader_links_no_follow is true' do
+        before { SiteSetting.stubs(:leader_links_no_follow).returns(true) }
 
-      it 'adds nofollow to links in bio when trust level is decreased' do
-        created_user.trust_level = TrustLevel.levels[:leader]
-        created_user.save
-        created_user.change_trust_level!(:regular)
-        expect(created_user.user_profile.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com' rel='nofollow'>http://ponycorns.com</a>")
-        expect(created_user.user_profile.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\" rel=\"nofollow\">http://ponycorns.com</a></p>")
+        it 'includes the link with nofollow if the user is trust level 3 or higher' do
+          user.trust_level = TrustLevel.levels[:leader]
+          user_profile.send(:cook)
+          expect(user_profile.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com' rel='nofollow'>http://ponycorns.com</a>")
+          expect(user_profile.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\" rel=\"nofollow\">http://ponycorns.com</a></p>")
+        end
       end
     end
   end

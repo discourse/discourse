@@ -48,7 +48,7 @@ class UserProfile < ActiveRecord::Base
 
   def cook
     if self.bio_raw.present?
-      self.bio_cooked = PrettyText.cook(self.bio_raw, omit_nofollow: user.has_trust_level?(:leader)) if bio_raw_changed?
+      self.bio_cooked = PrettyText.cook(self.bio_raw, omit_nofollow: user.has_trust_level?(:leader) && !SiteSetting.leader_links_no_follow) if bio_raw_changed?
     else
       self.bio_cooked = nil
     end
