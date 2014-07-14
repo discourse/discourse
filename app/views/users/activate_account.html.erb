@@ -1,19 +1,27 @@
 <div id='simple-container'>
 
-  <%if flash[:error]%>
-    <div class='alert alert-error'>
-      <%=flash[:error]%>
-    </div>
-  <%else%>
     <h2><%= t 'activation.welcome_to', site_name: SiteSetting.title %></h2>
-    <p>
-    <% if @needs_approval %>
-      <%= t 'activation.approval_required' %>
-    <% else %>
-      <%= raw t('activation.please_continue', link: link_to(SiteSetting.title, '/')) %></a>.
+    <br/>
+    <button class='btn' id='activate-account-button'><%= t 'activation.action' %></button>
+
+    <%= form_tag(perform_activate_account_path, method: :put, id: 'activate-account-form') do %>
     <% end %>
-    </p>
-
-  <%end%>
-
 </div>
+
+<script language="javascript">
+  (function() {
+   var t1 = new Date().getTime(),
+       button = document.getElementById('activate-account-button'),
+       form = document.getElementById('activate-account-form');
+
+    button.addEventListener('click', function() {
+      var diff = new Date().getTime() - t1;
+
+      // Ensure the form has been visible for a few ms before allowing the
+      // user to submit.
+      if (diff > 50) {
+        form.submit();
+      }
+    });
+  })();
+</script>

@@ -383,6 +383,7 @@ en:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
 
   activation:
+    action: "Activate your account"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
     please_continue: "Your new account is confirmed, and you are now logged in. Continue to %{link}"
     welcome_to: "Welcome to %{site_name}!"

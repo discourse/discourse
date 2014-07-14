@@ -65,7 +65,6 @@ describe UsersController do
     end
 
     context 'valid token' do
-
       it 'authorizes with a correct token' do
         user = Fabricate(:user)
         email_token = user.email_tokens.create(email: user.email)
@@ -82,7 +81,7 @@ describe UsersController do
     context 'invalid token' do
       before do
         EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
-        get :activate_account, token: 'asdfasdf'
+        put :perform_account_activation, token: 'asdfasdf'
       end
 
       it 'return success' do
@@ -105,13 +104,13 @@ describe UsersController do
         it 'enqueues a welcome message if the user object indicates so' do
           user.send_welcome_message = true
           user.expects(:enqueue_welcome_message).with('welcome_user')
-          get :activate_account, token: 'asdfasdf'
+          put :perform_account_activation, token: 'asdfasdf'
         end
 
         it "doesn't enqueue the welcome message if the object returns false" do
           user.send_welcome_message = false
           user.expects(:enqueue_welcome_message).with('welcome_user').never
-          get :activate_account, token: 'asdfasdf'
+          put :perform_account_activation, token: 'asdfasdf'
         end
 
       end
@@ -120,7 +119,7 @@ describe UsersController do
         before do
           Guardian.any_instance.expects(:can_access_forum?).returns(true)
           EmailToken.expects(:confirm).with('asdfasdf').returns(user)
-          get :activate_account, token: 'asdfasdf'
+          put :perform_account_activation, token: 'asdfasdf'
         end
 
         it 'returns success' do
@@ -145,7 +144,7 @@ describe UsersController do
         before do
           Guardian.any_instance.expects(:can_access_forum?).returns(false)
           EmailToken.expects(:confirm).with('asdfasdf').returns(user)
-          get :activate_account, token: 'asdfasdf'
+          put :perform_account_activation, token: 'asdfasdf'
         end
 
         it 'returns success' do
