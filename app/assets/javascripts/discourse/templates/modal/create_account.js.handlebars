@@ -18,7 +18,7 @@
       <tr class="input">
             <td class="label"><label for='new-account-email'>{{i18n user.email.title}}</label></td>
             <td>
-            {{input value=accountEmail id="new-account-email" disabled=emailValidated}}
+            {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated}}
             &nbsp;{{input-tip validation=emailValidation}}
             </td>
       </tr>
