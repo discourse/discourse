@@ -1,4 +1,4 @@
-InviteRedeemer = Struct.new(:invite) do
+InviteRedeemer = Struct.new(:invite, :username, :name) do
 
   def redeem
     Invite.transaction do
@@ -18,19 +18,23 @@ InviteRedeemer = Struct.new(:invite) do
   end
 
   # extracted from User cause it is very specific to invites
-  def self.create_user_from_invite(invite)
-
+  def self.create_user_from_invite(invite, username, name)
     user_exists = User.find_by_email(invite.email)
     return user if user_exists
 
-    username = UserNameSuggester.suggest(invite.email)
+    if username && User.username_available?(username)
+      available_username = username
+    else
+      available_username = UserNameSuggester.suggest(invite.email)
+    end
+    available_name = name || available_username
 
     DiscourseHub.username_operation do
-      match, available, suggestion = DiscourseHub.username_match?(username, invite.email)
-      username = suggestion unless match || available
+      match, available, suggestion = DiscourseHub.username_match?(available_username, invite.email)
+      available_username = suggestion unless match || available
     end
 
-    user = User.new(email: invite.email, username: username, name: username, active: true, trust_level: SiteSetting.default_invitee_trust_level)
+    user = User.new(email: invite.email, username: available_username, name: available_name, active: true, trust_level: SiteSetting.default_invitee_trust_level)
     user.save!
 
     DiscourseHub.username_operation { DiscourseHub.register_username(username, invite.email) }
@@ -65,7 +69,7 @@ InviteRedeemer = Struct.new(:invite) do
 
   def get_invited_user
     result = get_existing_user
-    result ||= InviteRedeemer.create_user_from_invite(invite)
+    result ||= InviteRedeemer.create_user_from_invite(invite, username, name)
     result.send_welcome_message = false
     result
   end

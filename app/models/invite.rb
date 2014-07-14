@@ -9,15 +9,14 @@ class Invite < ActiveRecord::Base
   has_many :groups, through: :invited_groups
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
-  validates_presence_of :email
   validates_presence_of :invited_by_id
 
   before_create do
     self.invite_key ||= SecureRandom.hex
   end
 
-  before_save do
-    self.email = Email.downcase(email)
+  before_validation do
+    self.email = Email.downcase(email) unless email.nil?
   end
 
   validate :user_doesnt_already_exist
@@ -96,6 +95,37 @@ class Invite < ActiveRecord::Base
     invite
   end
 
+
+  # generate invite tokens without email
+  def self.generate_disposable_tokens(invited_by, quantity=nil, group_names=nil)
+    invite_tokens = []
+    quantity ||= 1
+    group_ids = get_group_ids(group_names)
+
+    quantity.to_i.times do
+      invite = Invite.create!(invited_by: invited_by)
+      group_ids = group_ids - invite.invited_groups.pluck(:group_id)
+      group_ids.each do |group_id|
+        invite.invited_groups.create!(group_id: group_id)
+      end
+      invite_tokens.push(invite.invite_key)
+    end
+
+    invite_tokens
+  end
+
+  def self.get_group_ids(group_names)
+    group_ids = []
+    if group_names
+      group_names = group_names.split(',')
+      group_names.each { |group_name|
+        group_detail = Group.find_by_name(group_name)
+        group_ids.push(group_detail.id) if group_detail
+      }
+    end
+    group_ids
+  end
+
   def self.find_all_invites_from(inviter)
     Invite.where(invited_by_id: inviter.id)
           .includes(:user => :user_stat)
@@ -138,6 +168,15 @@ class Invite < ActiveRecord::Base
     invite
   end
 
+  def self.redeem_from_token(token, email, username=nil, name=nil)
+    invite = Invite.find_by(invite_key: token)
+    if invite
+      invite.update_column(:email, email)
+      user = InviteRedeemer.new(invite, username, name).redeem
+    end
+    user
+  end
+
   def self.base_directory
     File.join(Rails.root, "public", "csv", RailsMultisite::ConnectionManagement.current_db)
   end
@@ -153,7 +192,7 @@ end
 #
 #  id             :integer          not null, primary key
 #  invite_key     :string(32)       not null
-#  email          :string(255)      not null
+#  email          :string(255)
 #  invited_by_id  :integer          not null
 #  user_id        :integer
 #  redeemed_at    :datetime
