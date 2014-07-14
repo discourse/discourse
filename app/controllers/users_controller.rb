@@ -67,9 +67,12 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    user_badge = UserBadge.find(params[:user_badge_id])
-    if user_badge.user == user && user_badge.badge.allow_title?
+    user_badge = UserBadge.find_by(id: params[:user_badge_id])
+    if user_badge && user_badge.user == user && user_badge.badge.allow_title?
       user.title = user_badge.badge.name
+      user.save!
+    else
+      user.title = ''
       user.save!
     end
 
