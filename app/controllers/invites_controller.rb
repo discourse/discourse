@@ -41,6 +41,38 @@ class InvitesController < ApplicationController
     end
   end
 
+  def create_disposable_invite
+    guardian.ensure_can_create_disposable_invite!(current_user)
+    params.permit(:username, :email, :quantity, :group_names)
+
+    username_or_email = params[:username] ? fetch_username : fetch_email
+    user = User.find_by_username_or_email(username_or_email)
+
+    # generate invite tokens
+    invite_tokens = Invite.generate_disposable_tokens(user, params[:quantity], params[:group_names])
+
+    render_json_dump(invite_tokens)
+  end
+
+  def redeem_disposable_invite
+    params.require(:email)
+    params.permit(:username, :name)
+
+    invite = Invite.find_by(invite_key: params[:token])
+
+    if invite.present?
+      user = Invite.redeem_from_token(params[:token], params[:email], params[:username], params[:name])
+      if user.present?
+        log_on_user(user)
+
+        # Send a welcome message if required
+        user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+      end
+    end
+
+    redirect_to "/"
+  end
+
   def destroy
     params.require(:email)
 
@@ -93,6 +125,16 @@ class InvitesController < ApplicationController
     end
 
     render nothing: true
+  end
+
+  def fetch_username
+    params.require(:username)
+    params[:username]
+  end
+
+  def fetch_email
+    params.require(:email)
+    params[:email]
   end
 
 end

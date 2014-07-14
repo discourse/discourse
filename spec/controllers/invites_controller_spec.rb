@@ -150,6 +150,60 @@ describe InvitesController do
 
   end
 
+  context '.create_disposable_invite' do
+    it 'requires you to be logged in' do
+      lambda {
+        post :create, email: 'jake@adventuretime.ooo'
+      }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'while logged in as normal user' do
+      let(:user) { Fabricate(:user) }
+
+      it "does not create disposable invitation" do
+        log_in
+        post :create_disposable_invite, email: user.email
+        response.should_not be_success
+      end
+    end
+
+    context 'while logged in as admin' do
+      before do
+        log_in(:admin)
+      end
+      let(:user) { Fabricate(:user) }
+
+      it "creates disposable invitation" do
+        post :create_disposable_invite, email: user.email
+        response.should be_success
+        Invite.where(invited_by_id: user.id).count.should == 1
+      end
+
+      it "creates multiple disposable invitations" do
+        post :create_disposable_invite, email: user.email, quantity: 10
+        response.should be_success
+        Invite.where(invited_by_id: user.id).count.should == 10
+      end
+
+      it "allows group invite" do
+        group = Fabricate(:group)
+        post :create_disposable_invite, email: user.email, group_names: group.name
+        response.should be_success
+        Invite.find_by(invited_by_id: user.id).invited_groups.count.should == 1
+      end
+
+      it "allows multiple group invite" do
+        group_1 = Fabricate(:group, name: "security")
+        group_2 = Fabricate(:group, name: "support")
+        post :create_disposable_invite, email: user.email, group_names: "security,support"
+        response.should be_success
+        Invite.find_by(invited_by_id: user.id).invited_groups.count.should == 2
+      end
+
+    end
+
+  end
+
   context '.check_csv_chunk' do
     it 'requires you to be logged in' do
       lambda {

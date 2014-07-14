@@ -210,6 +210,10 @@ class Guardian
     user.admin?
   end
 
+  def can_create_disposable_invite?(user)
+    user.admin?
+  end
+
   def can_see_private_messages?(user_id)
     is_admin? || (authenticated? && @user.id == user_id)
   end
