@@ -251,7 +251,7 @@ class UsersController < ApplicationController
     lower_email = Email.downcase(params[:email]).strip
 
     # Raise an error if the email is already in use
-    if User.where("email = ?", lower_email).exists?
+    if User.find_by_email(lower_email)
       raise Discourse::InvalidParameters.new(:email)
     end
 

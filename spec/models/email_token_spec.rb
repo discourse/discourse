@@ -16,6 +16,11 @@ describe EmailToken do
       email_token.should be_present
     end
 
+    it 'should downcase the email' do
+      token = user.email_tokens.create(email: "UpperCaseSoWoW@GMail.com")
+      token.email.should == "uppercasesowow@gmail.com"
+    end
+
     it 'is valid' do
       email_token.should be_valid
     end

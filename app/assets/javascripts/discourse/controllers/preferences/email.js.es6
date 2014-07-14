@@ -15,7 +15,11 @@ export default Discourse.ObjectController.extend({
 
   newEmailEmpty: Em.computed.empty('newEmail'),
   saveDisabled: Em.computed.or('saving', 'newEmailEmpty', 'taken', 'unchanged'),
-  unchanged: Discourse.computed.propertyEqual('newEmail', 'email'),
+  unchanged: Discourse.computed.propertyEqual('newEmailLower', 'email'),
+
+  newEmailLower: function() {
+    return this.get('newEmail').toLowerCase();
+  }.property('newEmail'),
 
   saveButtonText: function() {
     if (this.get('saving')) return I18n.t("saving");

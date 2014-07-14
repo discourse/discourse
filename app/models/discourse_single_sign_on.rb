@@ -76,7 +76,7 @@ class DiscourseSingleSignOn < SingleSignOn
   private
 
   def match_email_or_create_user
-    user = User.find_by(email: Email.downcase(email))
+    user = User.find_by_email(email)
 
     try_name = name.blank? ? nil : name
     try_username = username.blank? ? nil : username

@@ -242,6 +242,12 @@ describe User do
 
       its(:email_tokens) { should be_present }
     end
+
+    it "downcases email addresses" do
+      user = Fabricate.build(:user, email: 'Fancy.Caps.4.U@gmail.com')
+      user.save
+      user.reload.email.should == 'fancy.caps.4.u@gmail.com'
+    end
   end
 
   describe 'ip address validation' do
@@ -755,12 +761,15 @@ describe User do
       expect(found_user).to eq bob
 
       found_user = User.find_by_username_or_email('Bob@Example.com')
-      expect(found_user).to be_nil
+      expect(found_user).to eq bob
 
       found_user = User.find_by_username_or_email('bob1')
       expect(found_user).to be_nil
 
       found_user = User.find_by_email('bob@Example.com')
+      expect(found_user).to eq bob
+
+      found_user = User.find_by_email('BOB@Example.com')
       expect(found_user).to eq bob
 
       found_user = User.find_by_email('bob')

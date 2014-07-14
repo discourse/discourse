@@ -18,7 +18,7 @@ module Email
 
   def self.downcase(email)
     return email unless Email.is_valid?(email)
-    email.gsub(/^(.+@{1})([^@]+)$/) { $1 + $2.downcase }
+    email.downcase
   end
 
 end

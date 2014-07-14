@@ -79,7 +79,7 @@ describe Invite do
           it 'returns the original invite' do
             topic.invite_by_email(inviter, 'iceking@adventuretime.ooo').should == @invite
             topic.invite_by_email(inviter, 'iceking@ADVENTURETIME.ooo').should == @invite
-            topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo').should_not == @invite
+            topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo').should == @invite
           end
 
           it 'returns a new invite if the other has expired' do

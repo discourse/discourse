@@ -423,4 +423,16 @@ describe Category do
 
   end
 
+  describe "find_by_email" do
+    it "is case insensitive" do
+      c1 = Fabricate(:category, email_in: 'lower@example.com')
+      c2 = Fabricate(:category, email_in: 'UPPER@EXAMPLE.COM')
+      c3 = Fabricate(:category, email_in: 'Mixed.Case@Example.COM')
+      Category.find_by_email('LOWER@EXAMPLE.COM').should == c1
+      Category.find_by_email('upper@example.com').should == c2
+      Category.find_by_email('mixed.case@example.com').should == c3
+      Category.find_by_email('MIXED.CASE@EXAMPLE.COM').should == c3
+    end
+  end
+
 end

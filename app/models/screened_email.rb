@@ -12,15 +12,21 @@ class ScreenedEmail < ActiveRecord::Base
 
   validates :email, presence: true, uniqueness: true
 
+  before_save :downcase_email
+
+  def downcase_email
+    self.email = email.downcase
+  end
+
   def self.block(email, opts={})
-    find_by_email(email) || create(opts.slice(:action_type, :ip_address).merge({email: email}))
+    find_by_email(Email.downcase(email)) || create(opts.slice(:action_type, :ip_address).merge({email: email}))
   end
 
   def self.should_block?(email)
     screened_emails = ScreenedEmail.order(created_at: :desc).limit(100)
 
     distances = {}
-    screened_emails.each { |se| distances[se.email] = levenshtein(se.email, email) }
+    screened_emails.each { |se| distances[se.email] = levenshtein(se.email.downcase, email.downcase) }
 
     max_distance = SiteSetting.levenshtein_distance_spammer_emails
     screened_email = screened_emails.select { |se| distances[se.email] <= max_distance }

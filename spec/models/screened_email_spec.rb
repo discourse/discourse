@@ -15,6 +15,11 @@ describe ScreenedEmail do
       # have ever been blocked by looking at last_match_at.
       ScreenedEmail.create(email: email).last_match_at.should be_nil
     end
+
+    it "downcases the email" do
+      s = ScreenedEmail.create(email: 'SPAMZ@EXAMPLE.COM')
+      s.email.should == 'spamz@example.com'
+    end
   end
 
   describe '#block' do
@@ -64,6 +69,11 @@ describe ScreenedEmail do
       ScreenedEmail.should_block?(email).should be_false
       ScreenedEmail.create(email: similar_email).save
       ScreenedEmail.should_block?(email).should be_true
+    end
+
+    it "returns true when it's same email, but all caps" do
+      ScreenedEmail.create(email: email).save
+      ScreenedEmail.should_block?(email.upcase).should be_true
     end
 
     shared_examples "when a ScreenedEmail record matches" do

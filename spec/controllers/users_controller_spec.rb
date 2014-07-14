@@ -203,6 +203,14 @@ describe UsersController do
         end
       end
 
+      context 'when new email is different case of existing email' do
+        let!(:other_user) { Fabricate(:user, email: 'case.insensitive@gmail.com')}
+
+        it 'raises an error' do
+          lambda { xhr :put, :change_email, username: user.username, email: other_user.email.upcase }.should raise_error(Discourse::InvalidParameters)
+        end
+      end
+
       context 'success' do
 
         it 'has an email token' do

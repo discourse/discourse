@@ -18,7 +18,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
     user_info = GoogleUserInfo.find_by(google_user_id: google_hash[:google_user_id])
     result.user = user_info.try(:user)
 
-    if !result.user && !result.email.blank? && result.user = User.find_by(email: Email.downcase(result.email))
+    if !result.user && !result.email.blank? && result.user = User.find_by_email(result.email)
       GoogleUserInfo.create({user_id: result.user.id}.merge(google_hash))
     end
 

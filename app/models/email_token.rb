@@ -7,6 +7,7 @@ class EmailToken < ActiveRecord::Base
 
   before_validation(on: :create) do
     self.token = EmailToken.generate_token
+    self.email = self.email.downcase if self.email
   end
 
   after_create do

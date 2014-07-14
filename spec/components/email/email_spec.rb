@@ -25,9 +25,9 @@ describe Email do
 
   describe "downcase" do
 
-    it 'downcases only the host part' do
-      Email.downcase('SAM@GMAIL.COM').should == 'SAM@gmail.com'
-      Email.downcase('sam@GMAIL.COM').should_not == 'SAM@gmail.com'
+    it 'downcases local and host part' do
+      Email.downcase('SAM@GMAIL.COM').should == 'sam@gmail.com'
+      Email.downcase('sam@GMAIL.COM').should == 'sam@gmail.com'
     end
 
     it 'leaves invalid emails untouched' do
