@@ -39,7 +39,7 @@ export default Discourse.View.extend({
       var self = this;
       this.get('content').forEach(function(o) {
         var val = o[self.get('valueAttribute')];
-        if (val) { val = val.toString(); }
+        if (!Em.isNone(val)) { val = val.toString(); }
 
         var selectedText = (val === selected) ? "selected" : "";
         buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Handlebars.Utils.escapeExpression(Em.get(o, nameProperty)) + "</option>");
