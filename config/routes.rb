@@ -93,6 +93,8 @@ Discourse::Application.routes.draw do
       resources :screened_urls,         only: [:index]
     end
 
+    get "/logs" => "staff_action_logs#index"
+
     get "customize" => "color_schemes#index", constraints: AdminConstraint.new
     get "customize/css_html" => "site_customizations#index", constraints: AdminConstraint.new
     get "customize/colors" => "color_schemes#index", constraints: AdminConstraint.new
