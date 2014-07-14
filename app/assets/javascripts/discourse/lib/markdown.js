@@ -183,16 +183,6 @@ Discourse.Markdown = {
   },
 
   /**
-    Checks to see if a name, class or id is allowed in the cooked content
-
-    @method nameIdClassAllowed
-    @param {String} tagName to check
-    @param {String} attribName to check
-    @param {String} value to check
-  **/
-
-
-  /**
     Sanitize text using the sanitizer
 
     @method sanitize

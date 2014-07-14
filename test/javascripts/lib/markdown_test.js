@@ -142,6 +142,10 @@ test("Links", function() {
          "It does not consider references that are obviously not URLs");
 
   cooked("<small>http://eviltrout.com</small>", "<p><small><a href=\"http://eviltrout.com\">http://eviltrout.com</a></small></p>", "Links within HTML tags");
+
+  cooked("[http://google.com ... wat](http://discourse.org)",
+         "<p><a href=\"http://discourse.org\">http://google.com ... wat</a></p>",
+         "it supports linkins within links");
 });
 
 test("simple quotes", function() {
