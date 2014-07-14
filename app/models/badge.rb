@@ -134,6 +134,8 @@ SQL
   validates :allow_title, inclusion: [true, false]
   validates :multiple_grant, inclusion: [true, false]
 
+  scope :enabled, ->{ where(enabled: true) }
+
 
   def self.trust_level_badge_ids
     (1..4).to_a

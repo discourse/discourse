@@ -62,7 +62,7 @@ class BadgeGranter
   end
 
   def self.backfill(badge)
-    return unless badge.query.present?
+    return unless badge.query.present? && badge.enabled
 
     post_clause = badge.target_posts ? "AND q.post_id = ub.post_id" : ""
     post_id_field = badge.target_posts ? "q.post_id" : "NULL"

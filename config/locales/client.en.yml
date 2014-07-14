@@ -1892,6 +1892,7 @@ en:
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
         listable: Show badge on the public badges page
+        enabled: Enable badge
         icon: Icon
 
     lightbox:

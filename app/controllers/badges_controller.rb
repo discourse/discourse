@@ -3,7 +3,7 @@ class BadgesController < ApplicationController
 
   def index
     badges = Badge.all
-    badges = badges.where(listable: true) if(params[:only_listable] == "true") || !request.xhr?
+    badges = badges.where(enabled: true, listable: true) if(params[:only_listable] == "true") || !request.xhr?
     badges = badges.to_a
     serialized = MultiJson.dump(serialize_data(badges, BadgeSerializer, root: "badges"))
     respond_to do |format|
@@ -17,7 +17,7 @@ class BadgesController < ApplicationController
 
   def show
     params.require(:id)
-    badge = Badge.find(params[:id])
+    badge = Badge.enabled.find(params[:id])
 
     if current_user
       user_badge = UserBadge.find_by(user_id: current_user.id, badge_id: badge.id)

@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :user_open_ids, dependent: :destroy
   has_many :user_actions, dependent: :destroy
   has_many :post_actions, dependent: :destroy
-  has_many :user_badges, dependent: :destroy
+  has_many :user_badges, -> {where('user_badges.badge_id IN (SELECT id FROM badges where enabled)')}, dependent: :destroy
   has_many :badges, through: :user_badges
   has_many :email_logs, dependent: :destroy
   has_many :post_timings

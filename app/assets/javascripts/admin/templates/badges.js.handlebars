@@ -77,13 +77,20 @@
         </span>
       </div>
 
-      {{#unless readOnly}}
-        <div class='buttons'>
-          <button {{action save}} {{bind-attr disabled=controller.disableSave}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
-          <span class='saving'>{{savingStatus}}</span>
+      <div>
+        <span>
+          {{input type="checkbox" checked=enabled}}
+          {{i18n admin.badges.enabled}}
+        </span>
+      </div>
+
+      <div class='buttons'>
+        <button {{action save}} {{bind-attr disabled=controller.disableSave}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
+        <span class='saving'>{{savingStatus}}</span>
+        {{#unless readOnly}}
           <a {{action destroy}} class='delete-link'>{{i18n admin.badges.delete}}</a>
-        </div>
-      {{/unless}}
+        {{/unless}}
+      </div>
     </form>
   </div>
 
