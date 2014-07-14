@@ -1605,7 +1605,7 @@ en:
         email_type: "Email Type"
         to_address: "To Address"
         test_email_address: "email address to test"
-        send_test: "send test email"
+        send_test: "Send Test Email"
         sent_test: "sent!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
