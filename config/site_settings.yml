@@ -178,6 +178,9 @@ login:
   enable_local_logins:
     client: true
     default: true
+  allow_new_registrations:
+    client: true
+    default: true
   # The default value of enable_google_logins changed from true to false.
   # See db/migrate/20140521220115_google_openid_default_has_changed.rb
   enable_google_logins:

@@ -37,7 +37,10 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
   }.property('loggingIn'),
 
   showSignupLink: function() {
-    return !Discourse.SiteSettings.invite_only && !this.get('loggingIn') && this.blank('authenticate');
+    return !Discourse.SiteSettings.invite_only &&
+           Discourse.SiteSettings.allow_new_registrations &&
+           !this.get('loggingIn') &&
+           this.blank('authenticate');
   }.property('loggingIn', 'authenticate'),
 
   showSpinner: function() {

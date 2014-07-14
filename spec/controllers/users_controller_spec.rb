@@ -269,6 +269,7 @@ describe UsersController do
 
   describe '#create' do
     before do
+      SiteSetting.stubs(:allow_new_registrations).returns(true)
       @user = Fabricate.build(:user)
       @user.password = "strongpassword"
       DiscourseHub.stubs(:register_username).returns([true, nil])
@@ -289,6 +290,14 @@ describe UsersController do
         post_user
 
         expect(response.status).to eq(500)
+      end
+
+      it 'returns an error when new registrations are disabled' do
+        SiteSetting.stubs(:allow_new_registrations).returns(false)
+        post_user
+        json = JSON.parse(response.body)
+        json['success'].should be_false
+        json['message'].should be_present
       end
 
       it 'creates a user correctly' do
@@ -353,6 +362,14 @@ describe UsersController do
         User.any_instance.expects(:enqueue_welcome_message)
         post_user
         expect(JSON.parse(response.body)['active']).to be_true
+      end
+
+      it 'returns 500 status when new registrations are disabled' do
+        SiteSetting.stubs(:allow_new_registrations).returns(false)
+        post_user
+        json = JSON.parse(response.body)
+        json['success'].should be_false
+        json['message'].should be_present
       end
 
       context 'authentication records for' do

@@ -765,6 +765,7 @@ en:
     sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
+    allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_google_logins: "(deprecated) Enable Google authentication. This is the OpenID method of authentication which Google has deprecated. New installs will NOT work with this. Use Google Oauth2 instead. Existing installs must move to Google Oauth2 by April 20, 2015."
     enable_yahoo_logins: "Enable Yahoo authentication"
 
@@ -1058,6 +1059,7 @@ en:
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
     omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+    new_registrations_disabled: "New account registrations are not allowed at this time."
 
   user:
     username:

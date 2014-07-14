@@ -148,6 +148,17 @@ describe InvitesController do
 
     end
 
+    context 'new registrations are disabled' do
+      let(:topic) { Fabricate(:topic) }
+      let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
+      before { SiteSetting.stubs(:allow_new_registrations).returns(false) }
+
+      it "doesn't redeem the invite" do
+        Invite.any_instance.stubs(:redeem).never
+        get :show, id: invite.invite_key
+      end
+    end
+
   end
 
   context '.create_disposable_invite' do

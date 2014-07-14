@@ -146,6 +146,11 @@ class UsersController < ApplicationController
   end
 
   def create
+    unless SiteSetting.allow_new_registrations
+      render json: { success: false, message: I18n.t("login.new_registrations_disabled") }
+      return
+    end
+
     user = User.new(user_params)
 
     authentication = UserAuthenticator.new(user, session)
