@@ -736,7 +736,6 @@ es:
     authorized_extensions: "Una lista de extensiones de archivo permitidas, separadas por barras (|)  ('*' para permitir todos los tipos de archivo)"
     max_similar_results: "Cuántos temas similares se muestran al usuario mientras está escribiendo un nuevo tema"
     title_prettify: "Prevenir errores comunes en el título, incluyendo \"todo mayúsculas\", primera letra minúscula, multiples signos ! o ?, . extra al final, etc."
-    title_sanitize: "Eliminar etiquetas html del título"
     topic_views_heat_low: "El número de visitas a partir de las cuales el tema es popular, a nivel bajo."
     topic_views_heat_medium: "El número de visitas a partir de las cuales el tema es popular, a nivel medio."
     topic_views_heat_high: "El número de visitas a partir de las cuales el tema es popular, a nivel alto."

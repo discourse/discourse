@@ -720,7 +720,6 @@ fr:
     authorized_extensions: "Une liste de pipes (|) des extensions de fichier autorisées pour les envois sur le serveur ('*' pour autoriser tout les types)"
     max_similar_results: "Nombre de sujets similaires à afficher lorsqu'un utilisateur est en train de créer un nouveau sujet"
     title_prettify: "Corrige les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples ! et ?, un . inutile à la fin, etc.)"
-    title_sanitize: "Supprimer les éléments html des titres"
     topic_views_heat_low: "Le nombre de vues à partir duquel le niveau d'intensité du sujet est : faible."
     topic_views_heat_medium: "Le nombre de vues à partir duquel le niveau d'intensité du sujet est : moyen."
     topic_views_heat_high: "Le nombre de vues à partir duquel le niveau d'intensité du sujet est : élevé."

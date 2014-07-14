@@ -734,7 +734,6 @@ de:
     authorized_extensions: "Eine durch Verkettungszeichen (|) verbundene Liste von Dateiendungen, die zum Hochladen gültig sind ('*' um alle Dateiendungen zu erlauben)"
     max_similar_results: "Anzahl ähnlicher Themen, die ein Nutzer sieht, während er ein neues Thema erstellen."
     title_prettify: "Verhindert gängige Fehler im Titel, wie reine Grossschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende, etc."
-    title_sanitize: "Entferne HTML Tags vom Titel"
     topic_views_heat_low: "Die Anzahl der Aufrufe bis die Popularität des Themas niedrig ist."
     topic_views_heat_medium: "Die Anzahl der Aufrufe bis die Popularität des Themas mittel ist."
     topic_views_heat_high: "Die Anzahl der Aufrufe bis die Popularität des Themas hoch ist."

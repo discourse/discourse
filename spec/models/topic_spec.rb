@@ -120,40 +120,16 @@ describe Topic do
     let(:topic_image) { build_topic_with_title("Topic with <img src='something'> image in its title" ) }
     let(:topic_script) { build_topic_with_title("Topic with <script>alert('title')</script> script in its title" ) }
 
-    context "title_sanitize disabled" do
-
-      before { SiteSetting.stubs(:title_sanitize).returns(false) }
-
-      it "escapes script contents" do
-        topic_script.fancy_title.should == "Topic with &lt;script&gt;alert(&lsquo;title&rsquo;)&lt;/script&gt; script in its title"
-      end
-
-      it "escapes bold contents" do
-        topic_bold.fancy_title.should == "Topic with &lt;b&gt;bold&lt;/b&gt; text in its title"
-      end
-
-      it "escapes image contents" do
-        topic_image.fancy_title.should == "Topic with &lt;img src=&lsquo;something&rsquo;&gt; image in its title"
-      end
-
+    it "escapes script contents" do
+      topic_script.fancy_title.should == "Topic with &lt;script&gt;alert(&lsquo;title&rsquo;)&lt;/script&gt; script in its title"
     end
 
-    context "title_sanitize enabled" do
+    it "escapes bold contents" do
+      topic_bold.fancy_title.should == "Topic with &lt;b&gt;bold&lt;/b&gt; text in its title"
+    end
 
-      before { SiteSetting.stubs(:title_sanitize).returns(true) }
-
-      it "removes script contents" do
-        topic_script.fancy_title.should == "Topic with script in its title"
-      end
-
-      it "removes bold contents" do
-        topic_bold.fancy_title.should == "Topic with bold text in its title"
-      end
-
-      it "removes image contents" do
-        topic_image.fancy_title.should == "Topic with image in its title"
-      end
-
+    it "escapes image contents" do
+      topic_image.fancy_title.should == "Topic with &lt;img src=&lsquo;something&rsquo;&gt; image in its title"
     end
 
   end

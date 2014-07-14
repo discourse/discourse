@@ -561,7 +561,6 @@ zh_TW:
     max_image_size_kb: "允許用戶上傳的最大檔大小(以kB為單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制檔大小的配置."
     max_similar_results: "當使用者撰寫新討論話題時，顯示多少類似討論話題給使用者"
     title_prettify: "防止常見標題裡的錯別字和錯誤，包括全部大寫，首字小寫，多個！和？，結尾多餘的. 等等。"
-    title_sanitize: "從標題移除 HTML 標籤"
     topic_views_heat_low: "多少流覽量後討論話題的熱度變為低。"
     topic_views_heat_medium: "多少流覽量後討論話題的熱度變為中。"
     topic_views_heat_high: "多少流覽量後討論話題的熱度變為高。"

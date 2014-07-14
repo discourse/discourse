@@ -711,7 +711,6 @@ nl:
     max_attachment_size_kb: "De maximale bestandsgrootte die we toestaan voor uploads, in kB. Zorg er voor dat deze limiet ook ingesteld is in nginx (client_max_body_size) / apache of een proxy."
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
     title_prettify: "Voorkom veel voorkomende fouten in titels (alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
-    title_sanitize: "Verwijder html-tags uit de titel"
     topic_views_heat_low: "Het aantal keer dat een topic bekeken moet zijn om een laag 'heat' level te hebben."
     topic_views_heat_medium: "Het aantal keer dat een topic bekeken moet zijn om een medium 'heat' level te hebben."
     topic_views_heat_high: "Het aantal keer dat een topic bekeken moet zijn om een hoog 'heat' level te hebben."

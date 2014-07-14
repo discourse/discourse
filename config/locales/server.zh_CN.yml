@@ -703,7 +703,6 @@ zh_CN:
     authorized_extensions: "用'|'分割的允许上传文件的扩展名列表（'*' 表示允许所有文件类型）"
     max_similar_results: "当用户撰写新主题时，显示多少类似主题给用户"
     title_prettify: "防止常见标题里的错别字和错误，包括全部大写，第一个字符小写，多个'！'和'？'，结尾多余的'.'等等。"
-    title_sanitize: "从标题中移除 HTML 标签"
     topic_views_heat_low: "多少浏览量后主题的热度变为低。"
     topic_views_heat_medium: "多少浏览量后主题的热度变为中。"
     topic_views_heat_high: "多少浏览量后主题的热度变为高。"

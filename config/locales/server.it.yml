@@ -710,7 +710,6 @@ it:
     authorized_extensions: "Una lista (separata) di estensioni permesse per l'upload ('*' per permettere tutti i tipi di files)"
     max_similar_results: "Numero di topic simili da mostrare all'utente durante la creazione di un nuovo topic"
     title_prettify: "Previeni refusi ed errori comuni nei titoli, inclusi Tutto maiuscolo, Primo carattere minuscolo, ! e ? ripetuti, . aggiuntivi alla fine, etc etc."
-    title_sanitize: "Rimuovi tag html dal titolo"
     topic_views_heat_low: "Il numero di visite affinché il livello di heat di un topic è basso."
     topic_views_heat_medium: "Il numero di visite affinché il livello di heat di un topic è medio."
     topic_views_heat_high: "Il numero di visite affinché il livello di heat di un topic è alto."

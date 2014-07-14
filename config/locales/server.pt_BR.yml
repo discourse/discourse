@@ -712,7 +712,6 @@ pt_BR:
     authorized_extensions: "Uma lista separada por barras verticais (|) das extensões de arquivo permitidas para envio (use '*' para permitir todos os tipos de arquivo)"
     max_similar_results: "Quantos tópicos similares devem ser exibidos para um usuário enquanto ele está redigindo um novo tópico"
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
-    title_sanitize: "Remover tags html do título"
     topic_views_heat_low: "Número de visualizações a partir da qual o nível de calor de um tópico se torna baixo."
     topic_views_heat_medium: "Número de visualizações a partir da qual o nível de calor de um tópico se torna médio."
     topic_views_heat_high: "Número de visualizações a partir da qual o nível de calor de um tópico se torna alto."
