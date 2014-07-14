@@ -79,6 +79,21 @@ describe Email::Styles do
       expect(frag.at('ul')['style']).to be_present
       expect(frag.at('li')['style']).to be_present
     end
+
+    it "converts iframes to links" do
+      iframe_url = "http://www.youtube.com/embed/7twifrxOTQY?feature=oembed&wmode=opaque"
+      frag = html_fragment("<iframe src=\"#{iframe_url}\"></iframe>")
+      expect(frag.at('iframe')).to be_blank
+      expect(frag.at('a')).to be_present
+      expect(frag.at('a')['href']).to eq(iframe_url)
+    end
+
+    it "won't allow non URLs in iframe src, strips them with no link" do
+      iframe_url = "alert('xss hole')"
+      frag = html_fragment("<iframe src=\"#{iframe_url}\"></iframe>")
+      expect(frag.at('iframe')).to be_blank
+      expect(frag.at('a')).to be_blank
+    end
   end
 
   context "rewriting protocol relative URLs to the forum" do

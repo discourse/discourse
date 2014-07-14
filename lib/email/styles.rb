@@ -81,6 +81,20 @@ module Email
       @fragment.css('aside, article, header').each do |n|
         n.name = "div"
       end
+
+      # iframes can't go in emails, so replace them with clickable links
+      @fragment.css('iframe').each do |i|
+        begin
+          src_uri = URI(i['src'])
+
+          # If an iframe is protocol relative, use SSL when displaying it
+          display_src = "#{src_uri.scheme || 'https://'}#{src_uri.host}#{src_uri.path}"
+          i.replace "<p><a href='#{src_uri.to_s}'>#{display_src}</a><p>"
+        rescue URI::InvalidURIError
+          # If the URL is weird, remove it
+          i.remove
+        end
+      end
     end
 
     def format_html
