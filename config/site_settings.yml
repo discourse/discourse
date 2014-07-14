@@ -538,7 +538,7 @@ rate_limits:
     default:
       test: 0
       default: 5
-  rate_limit_create_topic: 5
+  rate_limit_create_topic: 15
   rate_limit_create_post: 5
   max_topics_per_day: 20
   max_private_messages_per_day: 20
