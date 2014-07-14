@@ -1,12 +1,12 @@
 module("Discourse.BBCode");
 
 var format = function(input, expected, text) {
-  var cooked = Discourse.Markdown.cook(input, {lookupAvatar: false});
+  var cooked = Discourse.Markdown.cook(input, {lookupAvatar: false, sanitize: true});
   equal(cooked, "<p>" + expected + "</p>", text);
 };
 
 var formatQ = function(input, expected, text) {
-  var cooked = Discourse.Markdown.cook(input, {lookupAvatar: false});
+  var cooked = Discourse.Markdown.cook(input, {lookupAvatar: false, sanitize: true});
   equal(cooked, expected, text);
 };
 
@@ -15,7 +15,7 @@ test('basic bbcode', function() {
   format("[i]emphasis[/i]", "<span class=\"bbcode-i\">emphasis</span>", "italics text");
   format("[u]underlined[/u]", "<span class=\"bbcode-u\">underlined</span>", "underlines text");
   format("[s]strikethrough[/s]", "<span class=\"bbcode-s\">strikethrough</span>", "strikes-through text");
-  format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\"/>", "links images");
+  format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\">", "links images");
   format("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without a title");
   format("[email]eviltrout@mailinator.com[/email]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports [email] without a title");
   format("[b]evil [i]trout[/i][/b]",
@@ -37,7 +37,8 @@ test('code', function() {
 
 test('spoiler', function() {
   format("[spoiler]it's a sled[/spoiler]", "<span class=\"spoiler\">it's a sled</span>", "supports spoiler tags on text");
-  format("[spoiler]<img src='http://eviltrout.com/eviltrout.png' width='50' height='50'>[/spoiler]", "<div class=\"spoiler\"><img src='http://eviltrout.com/eviltrout.png' width='50' height='50'></div>", "supports spoiler tags on images");
+  format("[spoiler]<img src='http://eviltrout.com/eviltrout.png' width='50' height='50'>[/spoiler]",
+         "<div class=\"spoiler\"><img src=\"http://eviltrout.com/eviltrout.png\" width=\"50\" height=\"50\"></div>", "supports spoiler tags on images");
 });
 
 test('lists', function() {
@@ -105,7 +106,7 @@ test("quotes", function() {
          "it doesn't insert a new line for italics");
 
   format("[quote=,script='a'><script>alert('test');//':a][/quote]",
-         "<aside class=\"quote\" data-script=&#x27;a&#x27;&gt;&lt;script&gt;alert(&#x27;test&#x27;);//&#x27;=\"a\"><blockquote></blockquote></aside>",
+         "<aside class=\"quote\" data-script=\"'a'&gt;&lt;script&gt;alert('test');//'=\"><blockquote></blockquote></aside>",
          "It will not create a script tag within an attribute");
 });
 

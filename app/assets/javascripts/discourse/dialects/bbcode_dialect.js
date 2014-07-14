@@ -73,6 +73,7 @@ replaceBBCode('b', function(contents) { return ['span', {'class': 'bbcode-b'}].c
 replaceBBCode('i', function(contents) { return ['span', {'class': 'bbcode-i'}].concat(contents); });
 replaceBBCode('u', function(contents) { return ['span', {'class': 'bbcode-u'}].concat(contents); });
 replaceBBCode('s', function(contents) { return ['span', {'class': 'bbcode-s'}].concat(contents); });
+Discourse.Markdown.whiteListTag('span', 'class', /^bbcode-[bius]$/);
 
 replaceBBCode('ul', function(contents) { return ['ul'].concat(contents); });
 replaceBBCode('ol', function(contents) { return ['ol'].concat(contents); });
@@ -100,6 +101,7 @@ replaceBBCodeParamsRaw("email", function(param, contents) {
 replaceBBCodeParams("size", function(param, contents) {
   return ['span', {'class': "bbcode-size-" + (parseInt(param, 10) || 1)}].concat(contents);
 });
+Discourse.Markdown.whiteListTag('span', 'class', /^bbcode-size-\d+$/);
 
 // Handles `[code] ... [/code]` blocks
 Discourse.Dialect.replaceBlock({
@@ -112,3 +114,4 @@ Discourse.Dialect.replaceBlock({
     return ['p', ['pre', ['code', {'class': Discourse.SiteSettings.default_code_lang}, inner]]];
   }
 });
+
