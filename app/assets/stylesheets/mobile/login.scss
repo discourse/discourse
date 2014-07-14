@@ -37,7 +37,7 @@ a#forgot-password-link {clear: left; float: left; }
 .btn-primary {margin-bottom: 10px; font-size: 15; float: left;}
 
 .create-account .modal-body {
-  input[type=text], input[type=password] {
+  input[type=text], input[type=email], input[type=password] {
     display: inline-block;
   }
   tr.input {
