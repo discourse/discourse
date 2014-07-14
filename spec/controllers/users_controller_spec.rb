@@ -1113,7 +1113,7 @@ describe UsersController do
 
       let!(:user) { log_in }
 
-      let(:logo) { File.new("#{Rails.root}/spec/fixtures/images/logo.png") }
+      let(:logo) { file_from_fixtures("logo.png") }
 
       let(:user_image) do
         ActionDispatch::Http::UploadedFile.new({ filename: 'logo.png', tempfile: logo })

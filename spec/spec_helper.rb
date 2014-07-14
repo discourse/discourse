@@ -110,6 +110,12 @@ Spork.prefork do
     Time.stubs(:now).returns(Time.parse(now.to_s))
   end
 
+  def file_from_fixtures(filename)
+    FileUtils.mkdir_p("#{Rails.root}/tmp/spec") unless Dir.exists?("#{Rails.root}/tmp/spec")
+    FileUtils.cp("#{Rails.root}/spec/fixtures/images/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
+    File.new("#{Rails.root}/tmp/spec/#{filename}")
+  end
+
 end
 
 Spork.each_run do

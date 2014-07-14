@@ -3,7 +3,7 @@ require "avatar_upload_service"
 
 describe AvatarUploadService do
 
-  let(:logo) { File.new("#{Rails.root}/spec/fixtures/images/logo.png") }
+  let(:logo) { file_from_fixtures("logo.png") }
 
   let(:file) do
     ActionDispatch::Http::UploadedFile.new({ filename: 'logo.png', tempfile: logo })

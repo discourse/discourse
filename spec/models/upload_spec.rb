@@ -15,10 +15,9 @@ describe Upload do
   let(:user_id) { 1 }
   let(:url) { "http://domain.com" }
 
-  let(:image_path) { "#{Rails.root}/spec/fixtures/images/logo.png" }
-  let(:image) { File.new(image_path) }
-  let(:image_filename) { File.basename(image_path) }
-  let(:image_filesize) { File.size(image_path) }
+  let(:image) { file_from_fixtures("logo.png") }
+  let(:image_filename) { "logo.png" }
+  let(:image_filesize) { File.size(image) }
   let(:image_sha1) { Digest::SHA1.file(image).hexdigest }
 
   let(:attachment_path) { __FILE__ }

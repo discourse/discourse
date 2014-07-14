@@ -15,14 +15,14 @@ describe UploadsController do
       let(:logo) do
         ActionDispatch::Http::UploadedFile.new({
           filename: 'logo.png',
-          tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
+          tempfile: file_from_fixtures("logo.png")
         })
       end
 
       let(:logo_dev) do
         ActionDispatch::Http::UploadedFile.new({
           filename: 'logo-dev.png',
-          tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo-dev.png")
+          tempfile: file_from_fixtures("logo-dev.png")
         })
       end
 

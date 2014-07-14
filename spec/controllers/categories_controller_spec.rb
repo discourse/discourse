@@ -103,7 +103,7 @@ describe CategoriesController do
     describe "logged in" do
       let!(:user) { log_in(:admin) }
 
-      let(:logo) { File.new("#{Rails.root}/spec/fixtures/images/logo.png") }
+      let(:logo) { file_from_fixtures("logo.png") }
       let(:upload) do
         ActionDispatch::Http::UploadedFile.new({ filename: 'logo.png', tempfile: logo })
       end

@@ -6,7 +6,7 @@ describe FileStore::LocalStore do
   let(:store) { FileStore::LocalStore.new }
 
   let(:upload) { build(:upload) }
-  let(:uploaded_file) { File.new("#{Rails.root}/spec/fixtures/images/logo.png") }
+  let(:uploaded_file) { file_from_fixtures("logo.png") }
 
   let(:optimized_image) { build(:optimized_image) }
   let(:avatar) { build(:upload) }
