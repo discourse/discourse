@@ -796,6 +796,8 @@ en:
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
+    rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."
+    rate_limit_new_user_create_post: "After posting, new users must wait (n) seconds before creating another post."
 
     max_likes_per_day: "Maximum number of likes per user per day."
     max_flags_per_day: "Maximum number of flags per user per day."

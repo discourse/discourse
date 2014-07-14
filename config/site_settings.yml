@@ -543,6 +543,8 @@ rate_limits:
       default: 5
   rate_limit_create_topic: 15
   rate_limit_create_post: 5
+  rate_limit_new_user_create_topic: 60
+  rate_limit_new_user_create_post: 30
   max_topics_per_day: 20
   max_private_messages_per_day: 20
   max_likes_per_day: 50
