@@ -25,11 +25,9 @@ Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
 
   primaryGroupDirty: Discourse.computed.propertyNotEqual('originalPrimaryGroupId', 'primary_group_id'),
 
-  custom_groups: function(){
-    return this.get("model.groups").filter(function(g){
-      return (!g.automatic && g.visible);
-    });
-  }.property("model.groups.[]"),
+  custom_groups: Ember.computed.filter("model.groups", function(g){
+    return (!g.automatic && g.visible);
+  }),
 
   actions: {
     toggleTitleEdit: function() {
