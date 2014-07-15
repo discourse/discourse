@@ -55,7 +55,7 @@
   <div class='display-row'>
     <div class='field'>{{i18n admin.groups.title}}</div>
     <div class='value'>
-      {{admin-group-selector selected=model.groups }}
+      {{admin-group-selector selected=model.groups available=availableGroups}}
     </div>
     <div class='controls'>
       {{#if custom_groups}}

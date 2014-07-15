@@ -21,11 +21,6 @@ export default Ember.Component.extend({
                                     ).findBy("id", evt.removed.id)});
         }
       }.bind(this));
-
-    Discourse.Group.findAll().then(function(groups){
-      this.set("available", groups.filterBy("automatic", false));
-    }.bind(this));
-
     this._refreshOnReset();
   },
 

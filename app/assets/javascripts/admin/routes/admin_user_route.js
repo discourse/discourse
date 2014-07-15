@@ -23,6 +23,11 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
   afterModel: function(adminUser) {
     var controller = this.controllerFor('adminUser');
 
+    Discourse.Group.findAll().then(function(groups){
+      controller.set("availableGroups", groups.filterBy("automatic", false));
+    }.bind(this));
+
+
     return adminUser.loadDetails().then(function () {
       adminUser.setOriginalTrustLevel();
       controller.set('model', adminUser);
