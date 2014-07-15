@@ -22,7 +22,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
     user_exists = User.find_by_email(invite.email)
     return user if user_exists
 
-    if username && User.username_available?(username)
+    if username && UsernameValidator.new(username).valid_format? && User.username_available?(username)
       available_username = username
     else
       available_username = UserNameSuggester.suggest(invite.email)
