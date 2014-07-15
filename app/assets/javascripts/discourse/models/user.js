@@ -53,19 +53,6 @@ Discourse.User = Discourse.Model.extend({
   }.property('username', 'name'),
 
   /**
-    This user's website.
-
-    @property websiteName
-    @type {String}
-  **/
-  websiteName: function() {
-    var website = this.get('website');
-    if (Em.isEmpty(website)) { return; }
-
-    return this.get('website').split("/")[2];
-  }.property('website'),
-
-  /**
     This user's profile background(in CSS).
 
     @property websiteName
@@ -129,6 +116,7 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.Site.currentProp('trustLevels').findProperty('id', parseInt(this.get('trust_level'), 10));
   }.property('trust_level'),
 
+  isBasic: Em.computed.equal('trust_level', 0),
   isLeader: Em.computed.equal('trust_level', 3),
   isElder: Em.computed.equal('trust_level', 4),
   canManageTopic: Em.computed.or('staff', 'isElder'),

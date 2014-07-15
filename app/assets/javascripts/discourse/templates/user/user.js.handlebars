@@ -107,7 +107,14 @@
                 <dd><i class="fa fa-map-marker"></i> {{location}}</dd>
               {{/if}}
               {{#if websiteName}}
-                <dt>{{i18n user.website}}</dt><dd><a {{bind-attr href="website"}} target="_blank">{{websiteName}}</a></dd>
+                <dt>{{i18n user.website}}</dt>
+                <dd>
+                  {{#if linkWebsite}}
+                    <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
+                  {{else}}
+                    <span {{bind-attr title="website"}}>{{websiteName}}</span>
+                  {{/if}}
+                </dd>
               {{/if}}
               {{#if created_at}}
                 <dt>{{i18n user.created}}</dt><dd>{{bound-date created_at}}</dd>
