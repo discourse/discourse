@@ -26,14 +26,14 @@ export default Ember.Component.extend({
       this.set("available", groups.filterBy("automatic", false));
     }.bind(this));
 
-    this.refreshOnReset();
+    this._refreshOnReset();
   },
 
   _format: function(item){
     return {"text": item.name, "id": item.id, "locked": item.automatic};
   },
 
-  refreshOnReset: function() {
+  _refreshOnReset: function() {
     this.$("input").select2("data", this.get("selected").map(this._format));
   }.observes("selected")
 });
