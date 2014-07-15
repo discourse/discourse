@@ -283,6 +283,7 @@ class UsersController < ApplicationController
   end
 
   def perform_account_activation
+    raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
     if @user = EmailToken.confirm(params[:token])
 
       # Log in the user unless they need to be approved

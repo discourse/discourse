@@ -6,6 +6,7 @@
     <meta name="description" content="">
     <%= render partial: "layouts/head" %>
     <%= raw SiteContent.content_for(:head) %>
+    <%= yield(:no_js_head) %>
   </head>
   <body>
     <%- unless customization_disabled? %>

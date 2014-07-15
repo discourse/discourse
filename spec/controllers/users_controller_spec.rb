@@ -2,11 +2,6 @@ require 'spec_helper'
 
 describe UsersController do
 
-  before do
-    UsersController.any_instance.stubs(:honeypot_value).returns(nil)
-    UsersController.any_instance.stubs(:challenge_value).returns(nil)
-  end
-
   describe '.show' do
     let!(:user) { log_in }
 
@@ -78,6 +73,10 @@ describe UsersController do
   end
 
   describe '.activate_account' do
+    before do
+      UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(false)
+    end
+
     context 'invalid token' do
       before do
         EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
@@ -112,7 +111,14 @@ describe UsersController do
           user.expects(:enqueue_welcome_message).with('welcome_user').never
           put :perform_account_activation, token: 'asdfasdf'
         end
+      end
 
+      context "honeypot" do
+        it "raises an error if the honeypot is invalid" do
+          UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(true)
+          put :perform_account_activation, token: 'asdfasdf'
+          response.should_not be_success
+        end
       end
 
       context 'response' do
@@ -137,7 +143,6 @@ describe UsersController do
         it "doesn't set @needs_approval" do
           assigns[:needs_approval].should be_blank
         end
-
       end
 
       context 'user is not approved' do
@@ -268,7 +273,10 @@ describe UsersController do
   end
 
   describe '#create' do
+
     before do
+      UsersController.any_instance.stubs(:honeypot_value).returns(nil)
+      UsersController.any_instance.stubs(:challenge_value).returns(nil)
       SiteSetting.stubs(:allow_new_registrations).returns(true)
       @user = Fabricate.build(:user)
       @user.password = "strongpassword"
