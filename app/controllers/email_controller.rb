@@ -3,6 +3,7 @@ class EmailController < ApplicationController
   layout 'no_js'
 
   before_filter :ensure_logged_in, only: :preferences_redirect
+  skip_before_filter :redirect_to_login_if_required
 
   def preferences_redirect
     redirect_to(email_preferences_path(current_user.username_lower))
