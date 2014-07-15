@@ -326,10 +326,30 @@ describe Guardian do
         Guardian.new(user).can_see?(topic).should be_true
       end
 
+      it "restricts deleted topics" do
+        topic = Fabricate(:topic)
+        topic.trash!(moderator)
+
+        Guardian.new(build(:user)).can_see?(topic).should be_false
+        Guardian.new(moderator).can_see?(topic).should be_true
+        Guardian.new(admin).can_see?(topic).should be_true
+      end
+
       it "restricts private topics" do
         user.save!
         private_topic = Fabricate(:private_message_topic, user: user)
         Guardian.new(private_topic.user).can_see?(private_topic).should be_true
+        Guardian.new(build(:user)).can_see?(private_topic).should be_false
+        Guardian.new(moderator).can_see?(private_topic).should be_false
+        Guardian.new(admin).can_see?(private_topic).should be_true
+      end
+
+      it "restricts private deleted topics" do
+        user.save!
+        private_topic = Fabricate(:private_message_topic, user: user)
+        private_topic.trash!(admin)
+
+        Guardian.new(private_topic.user).can_see?(private_topic).should be_false
         Guardian.new(build(:user)).can_see?(private_topic).should be_false
         Guardian.new(moderator).can_see?(private_topic).should be_false
         Guardian.new(admin).can_see?(private_topic).should be_true

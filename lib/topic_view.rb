@@ -11,8 +11,8 @@ class TopicView
 
   def initialize(topic_id, user=nil, options={})
     @user = user
-    @topic = find_topic(topic_id)
     @guardian = Guardian.new(@user)
+    @topic = find_topic(topic_id)
     check_and_raise_exceptions
 
     options.each do |key, value|
@@ -187,6 +187,10 @@ class TopicView
     read_posts_set.include?(post_number)
   end
 
+  def has_deleted?
+    @predelete_filtered_posts.with_deleted.where("deleted_at IS NOT NULL").exists?
+  end
+
   def topic_user
     @topic_user ||= begin
       return nil if @user.blank?
@@ -281,7 +285,7 @@ class TopicView
                  .includes(:user)
                  .includes(:reply_to_user)
                  .order('sort_order')
-    @posts = @posts.with_deleted if @user.try(:staff?)
+    @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?
     @posts
   end
 
@@ -300,13 +304,13 @@ class TopicView
 
   def find_topic(topic_id)
     finder = Topic.where(id: topic_id).includes(:category)
-    finder = finder.with_deleted if @user.try(:staff?)
+    finder = finder.with_deleted if @guardian.can_see_deleted_topics?
     finder.first
   end
 
   def unfiltered_posts
     result = @topic.posts
-    result = result.with_deleted if @user.try(:staff?)
+    result = result.with_deleted if @guardian.can_see_deleted_posts?
     result = @topic.posts.where("user_id IS NOT NULL") if @exclude_deleted_users
     result
   end
@@ -316,7 +320,6 @@ class TopicView
     # Certain filters might leave gaps between posts. If that's true, we can return a gap structure
     @contains_gaps = false
     @filtered_posts = unfiltered_posts
-    @filtered_posts = @filtered_posts.with_deleted if @user.try(:staff?)
 
     # Filters
     if @filter == 'summary'
@@ -329,9 +332,19 @@ class TopicView
       @contains_gaps = true
     end
 
+    # Username filters
     if @username_filters.present?
       usernames = @username_filters.map{|u| u.downcase}
       @filtered_posts = @filtered_posts.where('post_number = 1 or user_id in (select u.id from users u where username_lower in (?))', usernames)
+      @contains_gaps = true
+    end
+
+    # Deleted
+    # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
+    # copy the filter for has_deleted? method
+    @predelete_filtered_posts = @filtered_posts.spawn
+    if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
+      @filtered_posts = @filtered_posts.where(deleted_at: nil)
       @contains_gaps = true
     end
 

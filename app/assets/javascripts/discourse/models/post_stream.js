@@ -120,6 +120,7 @@ Discourse.PostStream = Em.Object.extend({
   streamFilters: function() {
     var result = {};
     if (this.get('summary')) { result.filter = "summary"; }
+    if (this.get('show_deleted')) { result.show_deleted = true; }
 
     var userFilters = this.get('userFilters');
     if (!Em.isEmpty(userFilters)) {
@@ -128,7 +129,7 @@ Discourse.PostStream = Em.Object.extend({
     }
 
     return result;
-  }.property('userFilters.[]', 'summary'),
+  }.property('userFilters.[]', 'summary', 'show_deleted'),
 
   hasNoFilters: function() {
     var streamFilters = this.get('streamFilters');
@@ -186,6 +187,7 @@ Discourse.PostStream = Em.Object.extend({
   **/
   cancelFilter: function() {
     this.set('summary', false);
+    this.set('show_deleted', false);
     this.get('userFilters').clear();
   },
 
@@ -200,6 +202,11 @@ Discourse.PostStream = Em.Object.extend({
     return this.refresh();
   },
 
+  toggleDeleted: function() {
+    this.toggleProperty('show_deleted');
+    return this.refresh();
+  },
+
   /**
     Filter the stream to a particular user.
 
@@ -208,6 +215,7 @@ Discourse.PostStream = Em.Object.extend({
   toggleParticipant: function(username) {
     var userFilters = this.get('userFilters');
     this.set('summary', false);
+    this.set('show_deleted', true);
     if (userFilters.contains(username)) {
       userFilters.remove(username);
     } else {

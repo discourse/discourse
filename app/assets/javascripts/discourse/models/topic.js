@@ -396,6 +396,7 @@ Discourse.Topic.reopenClass({
       opts.userFilters.forEach(function(username) {
         data.username_filters.push(username);
       });
+      data.show_deleted = true;
     }
 
     // Add the summary of filter if we have it
