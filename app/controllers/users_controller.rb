@@ -18,6 +18,7 @@ class UsersController < ApplicationController
                                                             :create,
                                                             :get_honeypot_value,
                                                             :activate_account,
+                                                            :perform_account_activation,
                                                             :send_activation_email,
                                                             :authorize_email,
                                                             :password_reset]
@@ -277,7 +278,7 @@ class UsersController < ApplicationController
   end
 
   def activate_account
-    expires_now()
+    expires_now
     render layout: 'no_js'
   end
 
