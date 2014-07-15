@@ -168,10 +168,11 @@ class Invite < ActiveRecord::Base
     invite
   end
 
-  def self.redeem_from_token(token, email, username=nil, name=nil)
+  def self.redeem_from_token(token, email, username=nil, name=nil, topic_id=nil)
     invite = Invite.find_by(invite_key: token)
     if invite
       invite.update_column(:email, email)
+      invite.topic_invites.create!(invite_id: invite.id, topic_id: topic_id) if topic_id && Topic.find_by_id(topic_id)
       user = InviteRedeemer.new(invite, username, name).redeem
     end
     user

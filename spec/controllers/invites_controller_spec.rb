@@ -215,6 +215,50 @@ describe InvitesController do
 
   end
 
+  context '.redeem_disposable_invite' do
+
+    context 'with an invalid invite token' do
+      before do
+        get :redeem_disposable_invite, email: "name@example.com", token: "doesn't exist"
+      end
+
+      it "redirects to the root" do
+        response.should redirect_to("/")
+      end
+
+      it "should not change the session" do
+        session[:current_user_id].should be_blank
+      end
+    end
+
+    context 'with a valid invite token' do
+      let(:topic) { Fabricate(:topic) }
+      let(:invitee) { Fabricate(:user) }
+      let(:invite) { Invite.create!(invited_by: invitee) }
+
+      it 'redeems the invite' do
+        Invite.expects(:redeem_from_token).with(invite.invite_key, "name@example.com", nil, nil, topic.id)
+        get :redeem_disposable_invite, email: "name@example.com", token: invite.invite_key, topic: topic.id
+      end
+
+      context 'when redeem returns a user' do
+        let(:user) { Fabricate(:user) }
+
+        before do
+          Invite.expects(:redeem_from_token).with(invite.invite_key, user.email, nil, nil, topic.id).returns(user)
+          get :redeem_disposable_invite, email: user.email, token: invite.invite_key, topic: topic.id
+        end
+
+        it 'logs in user' do
+          session[:current_user_id].should == user.id
+        end
+
+      end
+
+    end
+
+  end
+
   context '.check_csv_chunk' do
     it 'requires you to be logged in' do
       lambda {
