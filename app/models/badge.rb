@@ -13,12 +13,30 @@ class Badge < ActiveRecord::Base
   FirstLink = 14
   FirstQuote = 15
   ReadFaq = 16
+  Reader = 17
 
   # other consts
   AutobiographerMinBioLength = 10
 
 
   module Queries
+
+    Reader = <<SQL
+    SELECT id user_id, current_timestamp granted_at
+    FROM users
+    WHERE id IN
+    (
+      SELECT pt.user_id
+      FROM post_timings pt
+      JOIN badge_posts b ON b.post_number = pt.post_number AND
+                            b.topic_id = pt.topic_id
+      JOIN topics t ON t.id = pt.topic_id
+      LEFT JOIN user_badges ub ON ub.badge_id = 17 AND ub.user_id = pt.user_id
+      WHERE ub.id IS NULL AND t.posts_count > 50
+      GROUP BY pt.user_id, pt.topic_id, t.posts_count
+      HAVING count(*) = t.posts_count
+    )
+SQL
 
     ReadFaq = <<SQL
     SELECT user_id, read_faq granted_at

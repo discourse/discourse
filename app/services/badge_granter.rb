@@ -77,7 +77,7 @@ class BadgeGranter
              WHERE ub.badge_id = :id AND q.user_id IS NULL
            )"
 
-    Badge.exec_sql(sql, id: badge.id)
+    Badge.exec_sql(sql, id: badge.id) if badge.auto_revoke
 
     sql = "INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, post_id)
             SELECT :id, q.user_id, q.granted_at, -1, #{post_id_field}

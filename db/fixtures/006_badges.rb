@@ -19,6 +19,16 @@ trust_level_badges.each do |spec|
 end
 
 Badge.seed do |b|
+  b.id = Badge::Reader
+  b.name = "Reader"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = false
+  b.query = Badge::Queries::Reader
+  b.auto_revoke = false
+end
+
+Badge.seed do |b|
   b.id = Badge::ReadFaq
   b.name = "Read Faq"
   b.badge_type_id = BadgeType::Bronze

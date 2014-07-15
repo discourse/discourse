@@ -2003,3 +2003,6 @@ en:
         read_faq:
           name: Read Faq
           description: Read the community guidelines
+        reader:
+          name: Reader
+          description: Read every post in a topic with more than 50 posts
