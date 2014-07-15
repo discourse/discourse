@@ -50,23 +50,13 @@ Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
     },
 
     groupAdded: function(added){
-      var self = this;
-      Discourse.ajax("/admin/users/" + this.get('id') + "/groups", {
-        type: 'POST',
-        data: {group_id: added.id}
-      }).then(function () {
-        self.get('model.groups').pushObject(added);
-      }).catch(function() {
+      this.get('model').groupAdded(added).catch(function() {
         bootbox.alert(I18n.t('generic_error'));
       });
     },
+
     groupRemoved: function(removed){
-      var self = this;
-      Discourse.ajax("/admin/users/" + this.get('id') + "/groups/" + removed.id, {
-        type: 'DELETE'
-      }).then(function () {
-        self.set('model.groups.[]', self.get('model.groups').rejectBy("id", removed.id));
-      }).catch(function() {
+      this.get('model').groupRemoved(removed).catch(function() {
         bootbox.alert(I18n.t('generic_error'));
       });
     },

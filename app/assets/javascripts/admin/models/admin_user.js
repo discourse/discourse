@@ -23,6 +23,25 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
+  groupAdded: function(added){
+    var self = this;
+    return Discourse.ajax("/admin/users/" + this.get('id') + "/groups", {
+      type: 'POST',
+      data: {group_id: added.id}
+    }).then(function () {
+      self.get('groups').pushObject(added);
+    });
+  },
+
+  groupRemoved: function(removed){
+    var self = this;
+    return Discourse.ajax("/admin/users/" + this.get('id') + "/groups/" + removed.id, {
+      type: 'DELETE'
+    }).then(function () {
+      self.set('groups.[]', self.get('groups').rejectBy("id", removed.id));
+    })
+  },
+
   /**
     Revokes a user's current API key
 
