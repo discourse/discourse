@@ -23,6 +23,8 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
     return Discourse.Category.list().filterBy('parent_category_id', this.get('id'));
   }.property('model.id'),
 
+  canSelectParentCategory: Em.computed.not('isUncategorizedCategory'),
+
   onShow: function() {
     this.changeSize();
     this.titleChanged();

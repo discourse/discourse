@@ -4,17 +4,19 @@
     {{text-field value=name placeholderKey="category.name_placeholder" maxlength="50"}}
   </section>
 
-  <section class='field'>
-    {{#if subCategories}}
-      <label>{{i18n categories.subcategories}}</label>
-      {{#each subCategories}}
-        {{category-badge this}}
-      {{/each}}
-    {{else}}
-      <label>{{i18n category.parent}}</label>
-      {{category-chooser valueAttribute="id" value=parent_category_id categories=parentCategories rootNone=true}}
-    {{/if}}
-  </section>
+  {{#if canSelectParentCategory}}
+    <section class='field'>
+      {{#if subCategories}}
+        <label>{{i18n categories.subcategories}}</label>
+        {{#each subCategories}}
+          {{category-badge this}}
+        {{/each}}
+      {{else}}
+        <label>{{i18n category.parent}}</label>
+        {{category-chooser valueAttribute="id" value=parent_category_id categories=parentCategories rootNone=true}}
+      {{/if}}
+    </section>
+  {{/if}}
 
   {{#if showDescription}}
     <section class='field'>

@@ -116,7 +116,7 @@ describe Category do
     end
 
     it "lists all secured categories correctly" do
-      uncategorized = Category.first
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
 
       group.add(user)
       category.set_permissions(group.id => :full)
@@ -367,6 +367,19 @@ describe Category do
                                 parent_category_id: parent_category.id)
         expect(subcategory.url).to eq "/category/parent/child"
       end
+    end
+  end
+
+  describe "uncategorized" do
+    let(:cat) { Category.where(id: SiteSetting.uncategorized_category_id).first }
+
+    it "reports as `uncategorized?`" do
+      cat.should be_uncategorized
+    end
+
+    it "cannot have a parent category" do
+      cat.parent_category_id = Fabricate(:category).id
+      cat.should_not be_valid
     end
   end
 
