@@ -57,17 +57,23 @@ class InvitesController < ApplicationController
 
   def redeem_disposable_invite
     params.require(:email)
-    params.permit(:username, :name)
+    params.permit(:username, :name, :topic)
 
     invite = Invite.find_by(invite_key: params[:token])
 
     if invite.present?
-      user = Invite.redeem_from_token(params[:token], params[:email], params[:username], params[:name])
+      user = Invite.redeem_from_token(params[:token], params[:email], params[:username], params[:name], params[:topic].to_i)
       if user.present?
         log_on_user(user)
 
         # Send a welcome message if required
         user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
+
+        topic = invite.topics.first
+        if topic.present?
+          redirect_to "#{Discourse.base_uri}#{topic.relative_url}"
+          return
+        end
       end
     end
 
