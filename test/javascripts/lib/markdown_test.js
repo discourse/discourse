@@ -401,14 +401,20 @@ test("URLs in BBCode tags", function() {
 });
 
 test("urlAllowed", function() {
+  var urlAllowed = Discourse.Markdown.urlAllowed;
+
   var allowed = function(url, msg) {
-    equal(Discourse.Markdown.urlAllowed(url), url, msg);
+    equal(urlAllowed(url), url, msg);
   };
 
   allowed("/foo/bar.html", "allows relative urls");
   allowed("http://eviltrout.com/evil/trout", "allows full urls");
   allowed("https://eviltrout.com/evil/trout", "allows https urls");
   allowed("//eviltrout.com/evil/trout", "allows protocol relative urls");
+
+  equal(urlAllowed("http://google.com/test'onmouseover=alert('XSS!');//.swf"),
+        "http://google.com/test&#39;onmouseover=alert(&#39;XSS!&#39;);//.swf",
+        "escape single quotes");
 });
 
 test("images", function() {

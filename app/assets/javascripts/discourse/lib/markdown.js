@@ -164,6 +164,9 @@ Discourse.Markdown = {
   urlAllowed: function (uri, effect, ltype, hints) {
     var url = typeof(uri) === "string" ? uri : uri.toString();
 
+    // escape single quotes
+    url = url.replace(/'/g, "&#39;");
+
     // whitelist some iframe only
     if (hints && hints.XML_TAG === "iframe" && hints.XML_ATTR === "src") {
       for (var i = 0, length = _validIframes.length; i < length; i++) {
