@@ -24,10 +24,11 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
       });
 
       // don't tell people what happened, this keeps it more secure (ensure same on server)
+      var escaped = Handlebars.Utils.escapeExpression(this.get('accountEmailOrUsername'));
       if (this.get('accountEmailOrUsername').match(/@/)) {
-        this.flash(I18n.t('forgot_password.complete_email', {email: this.get('accountEmailOrUsername')}));
+        this.flash(I18n.t('forgot_password.complete_email', {email: escaped}));
       } else {
-        this.flash(I18n.t('forgot_password.complete_username', {username: this.get('accountEmailOrUsername')}));
+        this.flash(I18n.t('forgot_password.complete_username', {username: escaped}));
       }
       return false;
     }
