@@ -1012,7 +1012,8 @@
                   firstBlock = contents[0];
 
               if (firstBlock) {
-                firstBlock.shift();
+
+                if (isArray(firstBlock)) { firstBlock.shift(); }
                 contents.splice.apply(contents, [0, 1].concat(firstBlock));
                 add( last_li, loose, contents, nl );
 
