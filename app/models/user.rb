@@ -185,7 +185,7 @@ class User < ActiveRecord::Base
   # Use a temporary key to find this user, store it in redis with an expiry
   def temporary_key
     key = SecureRandom.hex(32)
-    $redis.setex "temporary_key:#{key}", 1.week, id.to_s
+    $redis.setex "temporary_key:#{key}", 2.months, id.to_s
     key
   end
 

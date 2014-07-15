@@ -460,7 +460,9 @@ en:
     title: 'Unsubscribed'
     description: "You have been unsubscribed. We won't contact you again!"
     oops: "In case you didn't mean to do this, click below."
-    not_found: "Error Unsubscribing"
+    error: "Error Unsubscribing"
+    preferences_link: "You can also unsubscribe from digest emails on your <a href='/my/preferences'>preferences page</a>"
+    different_user_description: "You are currently logged in as a different user than the one who the digest was mailed to. Please log out and try again."
     not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
 
   resubscribe:

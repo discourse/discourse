@@ -50,8 +50,18 @@ describe EmailController do
         user.email_digests.should be_false
       end
 
-      it "does not set the not_found instance variable" do
-        assigns(:not_found).should be_blank
+      it "sets the appropriate instance variables" do
+        assigns(:success).should be_present
+      end
+    end
+
+    context "with an expired key or invalid key" do
+      before do
+        get :unsubscribe, key: 'watwatwat'
+      end
+
+      it "sets the appropriate instance variables" do
+        assigns(:success).should be_blank
       end
     end
 
@@ -67,8 +77,9 @@ describe EmailController do
         user.email_digests.should be_true
       end
 
-      it 'sets not found' do
-        assigns(:not_found).should be_true
+      it 'sets the appropriate instance variables' do
+        assigns(:success).should be_blank
+        assigns(:different_user).should be_present
       end
     end
 
@@ -84,8 +95,8 @@ describe EmailController do
         user.email_digests.should be_false
       end
 
-      it "doesn't set not found" do
-        assigns(:not_found).should be_blank
+      it 'sets the appropriate instance variables' do
+        assigns(:success).should be_present
       end
     end
 
