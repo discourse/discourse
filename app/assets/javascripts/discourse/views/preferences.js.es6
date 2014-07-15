@@ -1,4 +1,4 @@
-Discourse.PreferencesView = Discourse.View.extend({
+export default Ember.View.extend({
   templateName: 'user/preferences',
   classNames: ['user-preferences']
 });

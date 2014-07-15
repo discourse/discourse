@@ -1,18 +1,12 @@
-/**
-  This view handles rendering of a user's username preferences
-
-  @class PreferencesUsernameView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.PreferencesUsernameView = Discourse.View.extend({
+export default Ember.View.extend({
   templateName: 'user/username',
   classNames: ['user-preferences'],
 
-  didInsertElement: function() {
-    return $('#change_username').focus();
-  },
+  _focusUsername: function() {
+    Em.run.schedule('afterRender', function() {
+      $('#change_username').focus();
+    });
+  }.on('didInsertElement'),
 
   keyDown: function(e) {
     if (e.keyCode === 13) {
@@ -24,7 +18,4 @@ Discourse.PreferencesUsernameView = Discourse.View.extend({
       }
     }
   }
-
 });
-
-

@@ -7,7 +7,6 @@
   @module Discourse
 **/
 Discourse.ScrollTop = Em.Mixin.create({
-
   _scrollTop: function() {
     Em.run.schedule('afterRender', function() {
       $(document).scrollTop(0);
