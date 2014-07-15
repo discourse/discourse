@@ -123,6 +123,7 @@ class PostsController < ApplicationController
     revisor = PostRevisor.new(post)
     if revisor.revise!(current_user, params[:post][:raw], edit_reason: params[:post][:edit_reason])
       TopicLink.extract_from(post)
+      QuotedPost.extract_from(post)
     end
 
     if post.errors.present?

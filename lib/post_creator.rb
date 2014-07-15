@@ -266,6 +266,7 @@ class PostCreator
 
   def extract_links
     TopicLink.extract_from(@post)
+    QuotedPost.extract_from(@post)
   end
 
   def track_topic

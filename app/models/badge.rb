@@ -45,17 +45,16 @@ SQL
 SQL
 
     FirstQuote = <<SQL
-    SELECT l.user_id, l.post_id, l.created_at granted_at
+    SELECT ids.user_id, q.post_id, q.created_at granted_at
     FROM
     (
-      SELECT MIN(l1.id) id
-      FROM topic_links l1
-      JOIN badge_posts p1 ON p1.id = l1.post_id
-      JOIN badge_posts p2 ON p2.id = l1.link_post_id
-      WHERE NOT reflection AND quote
-      GROUP BY l1.user_id
+      SELECT p1.user_id, MIN(q1.id) id
+      FROM quoted_posts q1
+      JOIN badge_posts p1 ON p1.id = q1.post_id
+      JOIN badge_posts p2 ON p2.id = q1.quoted_post_id
+      GROUP BY p1.user_id
     ) ids
-    JOIN topic_links l ON l.id = ids.id
+    JOIN quoted_posts q ON q.id = ids.id
 SQL
 
     FirstLink = <<SQL

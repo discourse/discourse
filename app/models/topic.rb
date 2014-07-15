@@ -487,6 +487,7 @@ class Topic < ActiveRecord::Base
 
       # Grab any links that are present
       TopicLink.extract_from(new_post)
+      QuotedPost.extract_from(new_post)
     end
 
     new_post

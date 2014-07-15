@@ -93,6 +93,7 @@ class Post < ActiveRecord::Base
     super
     update_flagged_posts_count
     TopicLink.extract_from(self)
+    QuotedPost.extract_from(self)
     if topic && topic.category_id && topic.category
       topic.category.update_latest
     end
@@ -336,7 +337,9 @@ class Post < ActiveRecord::Base
     update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
 
     # Extracts urls from the body
-    TopicLink.extract_from self
+    TopicLink.extract_from(self)
+    QuotedPost.extract_from(self)
+
     # make sure we trigger the post process
     trigger_post_process(true)
 
