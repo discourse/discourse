@@ -28,7 +28,7 @@ function validateAttribute(tagName, attribName, value) {
     // data-* attributes
     if (tag) {
       var allowed = tag[attribName] || tag['data-*'];
-      if (allowed === value || allowed.indexOf('*') !== -1) { return value; }
+      if (allowed && (allowed === value || allowed.indexOf('*') !== -1)) { return value; }
     }
   }
 
