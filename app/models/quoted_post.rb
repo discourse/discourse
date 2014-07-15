@@ -23,10 +23,12 @@ class QuotedPost < ActiveRecord::Base
 
       # It would be so much nicer if we used post_id in quotes
       results = exec_sql "INSERT INTO quoted_posts(post_id, quoted_post_id, created_at, updated_at)
-               SELECT :post_id, id, current_timestamp, current_timestamp
-               FROM posts
+               SELECT :post_id, p.id, current_timestamp, current_timestamp
+               FROM posts p
+               LEFT JOIN quoted_posts q on q.post_id = :post_id AND q.quoted_post_id = p.id
                WHERE post_number = :post_number AND
-                     topic_id = :topic_id
+                     topic_id = :topic_id AND
+                     q.id IS NULL
                RETURNING quoted_post_id
       ", post_id: post.id, post_number: post_number, topic_id: topic_id
 
