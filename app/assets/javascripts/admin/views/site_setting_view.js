@@ -24,19 +24,20 @@ Discourse.SiteSettingView = Discourse.View.extend(Discourse.ScrollTop, {
 
   }.property('content.type'),
 
-  didInsertElement: function() {
+  _watchEnterKey: function() {
     var self = this;
-    this._super();
-    Em.run.schedule('afterRender', function() {
-      self.$('.input-setting-string').keydown(function(e) {
-        if (e.keyCode === 13) { // enter key
-          var setting = self.get('content');
-          if (setting.get('dirty')) {
-            setting.save();
-          }
+    this.$().on("keydown.site-setting-enter", ".input-setting-string", function (e) {
+      if (e.keyCode === 13) { // enter key
+        var setting = self.get('content');
+        if (setting.get('dirty')) {
+          setting.save();
         }
-      });
+      }
     });
-  }
+  }.on('didInsertElement'),
+
+  _removeBindings: function() {
+    this.$().off("keydown.site-setting-enter");
+  }.on("willDestroyElement")
 
 });
