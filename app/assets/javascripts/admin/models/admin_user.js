@@ -39,7 +39,7 @@ Discourse.AdminUser = Discourse.User.extend({
       type: 'DELETE'
     }).then(function () {
       self.set('groups.[]', self.get('groups').rejectBy("id", removed.id));
-    })
+    });
   },
 
   /**
