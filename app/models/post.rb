@@ -589,6 +589,7 @@ end
 #  baked_at                :datetime
 #  baked_version           :integer
 #  hidden_at               :datetime
+#  self_edits              :integer          default(0), not null
 #
 # Indexes
 #

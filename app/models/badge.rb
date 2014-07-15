@@ -177,6 +177,7 @@ end
 #  listable       :boolean          default(TRUE)
 #  target_posts   :boolean          default(FALSE)
 #  query          :text
+#  enabled        :boolean          default(TRUE), not null
 #
 # Indexes
 #

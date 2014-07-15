@@ -227,6 +227,7 @@ end
 #  link_post_id  :integer
 #  title         :string(255)
 #  crawled_at    :datetime
+#  quote         :boolean          default(FALSE), not null
 #
 # Indexes
 #

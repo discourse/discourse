@@ -361,6 +361,7 @@ end
 #  posts_day                :integer          default(0)
 #  logo_url                 :string(255)
 #  background_url           :string(255)
+#  allow_badges             :boolean          default(TRUE), not null
 #
 # Indexes
 #
