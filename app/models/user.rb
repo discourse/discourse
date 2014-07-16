@@ -492,7 +492,7 @@ class User < ActiveRecord::Base
   end
 
   def badge_count
-    user_badges.count
+    user_badges.select('distinct badge_id').count
   end
 
   def featured_user_badges
