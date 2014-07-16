@@ -268,6 +268,13 @@ en:
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
+    cannot_delete:
+      uncategorized: "Can't delete Uncategorized"
+      has_subcategories: "Can't delete this category because it has sub-categories."
+      topic_exists:
+        one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
+        other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
+      topic_exists_no_oldest: "Can't delete this category because topic count is #{category.topic_count}."
   trust_levels:
     newuser:
       title: "new user"

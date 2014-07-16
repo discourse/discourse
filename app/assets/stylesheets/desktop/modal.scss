@@ -127,6 +127,13 @@ animation: modal .25s;
       }
     }
   }
+
+  .cannot_delete_reason {
+    float: right;
+    text-align: right;
+    max-width: 380px;
+    color: scale-color($primary, $lightness: 60%);
+  }
 }
 
 .topic-bulk-actions-modal {
