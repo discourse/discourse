@@ -37,7 +37,7 @@ module Email
       raise EmailUnparsableError if @body.blank?
 
       if is_in_email?
-        @user = User.find_by_email(@message.from.first)
+        @user = User.find_by_email(@message.from.first.downcase)
         if @user.blank? && @allow_strangers
           wrap_body_in_quote
           @user = Discourse.system_user
