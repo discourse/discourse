@@ -698,7 +698,7 @@ uncategorized:
     type: list
     default: ''
 
-  enable_cdn_js_debugging: true
+  enable_cdn_js_debugging: false
 
   show_create_topics_notice:
     client: true
