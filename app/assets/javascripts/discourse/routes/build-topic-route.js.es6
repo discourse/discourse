@@ -4,7 +4,9 @@ export default function(filter) {
     queryParams: {
       sort: { replace: true },
       ascending: { replace: true },
-      status: { replace: true }
+      status: { replace: true },
+      state: { replace: true },
+      search: { replace: true }
     },
 
     beforeModel: function() {
@@ -19,10 +21,11 @@ export default function(filter) {
       Discourse.ScreenTrack.current().stop();
 
       var findOpts = {};
-      if (params && params.order) { findOpts.order = params.order; }
-      if (params && params.ascending) { findOpts.ascending = params.ascending; }
-      if (params && params.status) { findOpts.status = params.status; }
-
+      if(params){
+        _.keys(this.queryParams).forEach(function(opt) {
+          if (params[opt]) { findOpts[opt] = params[opt]; }
+        });
+      }
 
       return Discourse.TopicList.list(filter, findOpts).then(function(list) {
         var tracking = Discourse.TopicTrackingState.current();
@@ -36,10 +39,9 @@ export default function(filter) {
 
     setupController: function(controller, model, trans) {
 
-      controller.setProperties({
-        order: Em.get(trans, 'queryParams.order'),
-        ascending: Em.get(trans, 'queryParams.ascending')
-      });
+      controller.setProperties(Em.getProperties(trans, _.keys(this.queryParams).map(function(v){
+        return 'queryParams.' + v;
+      })));
 
       var period = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
           filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});

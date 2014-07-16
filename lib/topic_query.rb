@@ -23,6 +23,7 @@ class TopicQuery
                      no_subcategories
                      no_definitions
                      status
+                     state
                      search
                      ).map(&:to_sym)
 
@@ -263,6 +264,19 @@ class TopicQuery
 
       if search = options[:search]
         result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(search.to_s)})")
+      end
+
+      # NOTE protect against SYM attack can be removed with Ruby 2.2
+      #
+      state = options[:state]
+      if @user && state &&
+          TopicUser.notification_levels.keys.map(&:to_s).include?(state)
+        level = TopicUser.notification_levels[state.to_sym]
+        result = result.where('topics.id IN (
+                                  SELECT topic_id
+                                  FROM topic_users
+                                  WHERE user_id = ? AND
+                                        notification_level = ?)', @user.id, level)
       end
 
       if status = options[:status]
