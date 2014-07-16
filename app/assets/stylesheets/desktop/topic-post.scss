@@ -251,6 +251,9 @@ nav.post-controls {
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
   a.mention {background: darken(scale-color-diff(), 10%);}
+  /* this 100% stuff is normally VERY dangerous because we're overriding
+  painstakingly calculated exact image widths, but in expanded replies, we may
+  be below minimum width, and expanded replies are loaded on demand anyway */
   p img {
     width: 100%;
     height: 100%;
