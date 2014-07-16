@@ -1,16 +1,13 @@
-/**
-  This view handles rendering of a user's stream
-
-  @class UserStreamView
-  @extends Discourse.View
-  @namespace Discourse
-  @uses Discourse.LoadMore
-  @module Discourse
-**/
-Discourse.UserStreamView = Discourse.View.extend(Discourse.LoadMore, {
+export default Ember.View.extend(Discourse.LoadMore, {
   loading: false,
   eyelineSelector: '.user-stream .item',
   classNames: ['user-stream'],
+
+  _scrollTopOnModelChange: function() {
+    Em.run.schedule('afterRender', function() {
+      $(document).scrollTop(0);
+    });
+  }.observes('controller.model.user.id'),
 
   actions: {
     loadMore: function() {

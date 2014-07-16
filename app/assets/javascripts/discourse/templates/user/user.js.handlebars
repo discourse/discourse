@@ -9,9 +9,9 @@
     <section class='user-navigation'>
 
       <ul class='action-list nav-stacked'>
-        {{discourse-activity-filter count=statsCountNonPM user=model userActionType=userActionType indexStream=indexStream}}
+        {{activity-filter count=statsCountNonPM user=model userActionType=userActionType indexStream=indexStream}}
         {{#each stat in statsExcludingPms}}
-          {{discourse-activity-filter content=stat user=model userActionType=userActionType indexStream=indexStream}}
+          {{activity-filter content=stat user=model userActionType=userActionType indexStream=indexStream}}
         {{/each}}
         {{#if showBadges}}
           {{#link-to 'user.badges' tagName="li"}}

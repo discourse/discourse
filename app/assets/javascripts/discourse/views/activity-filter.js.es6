@@ -1,12 +1,4 @@
-/**
-  This view handles rendering of an activity in a user's profile
-
-  @class ActivityFilterView
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.ActivityFilterView = Ember.Component.extend({
+export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['active', 'noGlyph'],
 
@@ -64,7 +56,4 @@ Discourse.ActivityFilterView = Ember.Component.extend({
       case Discourse.UserAction.TYPES.starred: return "star";
     }
   }.property("content.action_type")
-
 });
-
-Discourse.View.registerHelper('discourse-activity-filter', Discourse.ActivityFilterView);

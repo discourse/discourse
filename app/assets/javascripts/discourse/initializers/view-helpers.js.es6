@@ -4,7 +4,8 @@ var helpers = ['input-tip',
                'user-selector',
                'category-chooser',
                'combo-box',
-               'choose-topic'];
+               'choose-topic',
+               'activity-filter'];
 
 /**
   Creates view helpers for some views. Many of these should probably be converted

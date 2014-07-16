@@ -5,7 +5,8 @@ var deprecatedViewHelpers = {
   userSelector: 'user-selector',
   combobox: 'combo-box',
   categoryChooser: 'category-chooser',
-  chooseTopic: 'choose-topic'
+  chooseTopic: 'choose-topic',
+  'discourse-activity-filter': 'activity-filter'
 };
 
 export default {
