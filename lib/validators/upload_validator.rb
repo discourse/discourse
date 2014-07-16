@@ -5,7 +5,7 @@ module Validators; end
 class Validators::UploadValidator < ActiveModel::Validator
 
   def validate(upload)
-    extension = File.extname(upload.original_filename)[1..-1]
+    extension = File.extname(upload.original_filename)[1..-1] || ""
 
     if is_authorized?(upload, extension)
       if FileHelper.is_image?(upload.original_filename)
