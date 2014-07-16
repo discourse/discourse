@@ -6,6 +6,7 @@ require 'htmlentities'
 require 'tsort'
 require 'set'
 require 'optparse'
+require 'etc'
 
 class ImportScripts::Smf2 < ImportScripts::Base
 
@@ -13,8 +14,12 @@ class ImportScripts::Smf2 < ImportScripts::Base
     options = Options.new
     begin
       options.parse!
+    rescue Options::SettingsError => err
+      $stderr.puts "Cannot load SMF settings: #{err.message}"
+      exit 1
     rescue Options::Error => err
       $stderr.puts err.to_s.capitalize
+      $stderr.puts options.usage
       exit 1
     end
     new(options).perform
@@ -24,10 +29,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
   def initialize(options)
     super()
-
     @options = options
-    options.host ||= 'localhost'
-    options.prefix ||= 'smf_'
 
     begin
       timezone = `php -i`.lines.each do |line|
@@ -401,12 +403,16 @@ class ImportScripts::Smf2 < ImportScripts::Base
   class Options
 
     class Error < StandardError ; end
+    class SettingsError < Error ; end
 
-    def self.parse!(args = ARGV)
-      new.tap {|options| options.parse!(args) }
+    def initialize
+      self.host = 'localhost'
+      self.username = Etc.getlogin
+      self.prefix = 'smf_'
     end
 
     def parse!(args = ARGV)
+      raise Error, 'not enough arguments' if ARGV.empty?
       begin
         parser.parse!(args)
       rescue OptionParser::ParseError => err
@@ -443,17 +449,18 @@ class ImportScripts::Smf2 < ImportScripts::Base
         end
       end
     rescue => err
-      raise Error, "#{settings}: failed reading SMF settings, #{err.message}"
+      raise SettingsError, err.message unless self.database
     end
 
     def parser
-      @parser ||= OptionParser.new do |o|
-        o.banner = "Usage:\t#{File.basename($0)} [options] [SMFROOT]"
-        o.on('-h', '--host=HOST', 'MySQL server hostname') {|s| self.host = s }
-        o.on('-u', '--username=USER', 'MySQL username') {|s| self.username = s }
-        o.on('-p', '--password[=PASS]', 'MySQL password') {|s| self.password = s || :ask }
-        o.on('-d', '--database=DB', 'Name of SMF database') {|s| self.database = s }
-        o.on('-f', '--prefix=PREFIX', 'Table names prefix') {|s| self.prefix = s }
+      @parser ||= OptionParser.new(nil, 12) do |o|
+        o.banner = "Usage:\t#{File.basename($0)} <SMFROOT> [options]\n"
+        o.banner << "\t#{File.basename($0)} -d <DATABASE> [options]"
+        o.on('-h HOST', :REQUIRED, "MySQL server hostname [\"#{self.host}\"]") {|s| self.host = s }
+        o.on('-u USER', :REQUIRED, "MySQL username [\"#{self.username}\"]") {|s| self.username = s }
+        o.on('-p [PASS]', :OPTIONAL, 'MySQL password. Without argument, reads password from STDIN.') {|s| self.password = s || :ask }
+        o.on('-d DBNAME', :REQUIRED, 'Name of SMF database') {|s| self.database = s }
+        o.on('-f PREFIX', :REQUIRED, "Table names prefix [\"#{self.prefix}\"]") {|s| self.prefix = s }
       end
     end
 
