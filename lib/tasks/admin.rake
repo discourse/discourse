@@ -22,8 +22,7 @@ task "admin:create" => :environment do
       # create new user
       admin = User.new
       admin.email = email
-      username_random = Random.new()
-      admin.username = "admin_#{username_random.rand(9999)}"
+      admin.username = UserNameSuggester.suggest(admin.email)
       begin
         password = ask("Password:  ") {|q| q.echo = false}
         password_confirmation = ask("Repeat password:  ") {|q| q.echo = false}
@@ -38,6 +37,10 @@ task "admin:create" => :environment do
       next
     end
   end while !saved
+
+  say "\nEnsuring account is active!"
+  admin.active = true
+  admin.save
 
   if existing_user
     say("\nAccount updated successfully!")
