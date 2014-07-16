@@ -23,6 +23,7 @@ class Post < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
+
   belongs_to :reply_to_user, class_name: "User"
 
   has_many :post_replies
@@ -39,6 +40,8 @@ class Post < ActiveRecord::Base
 
   has_many :post_revisions
   has_many :revisions, foreign_key: :post_id, class_name: 'PostRevision'
+
+  has_many :user_actions, foreign_key: :target_post_id
 
   validates_with ::Validators::PostValidator
 

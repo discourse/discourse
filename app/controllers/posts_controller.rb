@@ -244,6 +244,37 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def flagged_posts
+    params.permit(:offset, :limit)
+    guardian.ensure_can_see_flagged_posts!
+
+    user = fetch_user_from_params
+    offset = [params[:offset].to_i, 0].max
+    limit = [(params[:limit] || 60).to_i, 100].min
+
+    posts = user_posts(user.id, offset, limit)
+              .where(id: PostAction.with_deleted
+                                   .where(post_action_type_id: PostActionType.notify_flag_type_ids)
+                                   .select(:post_id))
+
+    render_serialized(posts, AdminPostSerializer)
+  end
+
+  def deleted_posts
+    params.permit(:offset, :limit)
+    guardian.ensure_can_see_deleted_posts!
+
+    user = fetch_user_from_params
+    offset = [params[:offset].to_i, 0].max
+    limit = [(params[:limit] || 60).to_i, 100].min
+
+    posts = user_posts(user.id, offset, limit)
+              .where(user_deleted: false)
+              .where.not(deleted_by_id: user.id)
+
+    render_serialized(posts, AdminPostSerializer)
+  end
+
   protected
 
   def find_post_revision_from_params
@@ -271,6 +302,15 @@ class PostsController < ApplicationController
   end
 
   private
+
+  def user_posts(user_id, offset=0, limit=60)
+    Post.includes(:user, :topic, :deleted_by, :user_actions)
+        .with_deleted
+        .where(user_id: user_id)
+        .order(created_at: :desc)
+        .offset(offset)
+        .limit(limit)
+  end
 
   def params_key(params)
     "post##" << Digest::SHA1.hexdigest(params

@@ -606,4 +606,51 @@ describe PostsController do
       ::JSON.parse(response.body)['cooked'].should == "full content"
     end
   end
+
+  describe "flagged posts" do
+
+    include_examples "action requires login", :get, :flagged_posts, username: "system"
+
+    describe "when logged in" do
+      before { log_in }
+
+      it "raises an error if the user doesn't have permission to see the flagged posts" do
+        Guardian.any_instance.expects(:can_see_flagged_posts?).returns(false)
+        xhr :get, :flagged_posts, username: "system"
+        response.should be_forbidden
+      end
+
+      it "can see the flagged posts when authorized" do
+        Guardian.any_instance.expects(:can_see_flagged_posts?).returns(true)
+        xhr :get, :flagged_posts, username: "system"
+        response.should be_success
+      end
+
+    end
+
+  end
+
+  describe "deleted posts" do
+
+    include_examples "action requires login", :get, :deleted_posts, username: "system"
+
+    describe "when logged in" do
+      before { log_in }
+
+      it "raises an error if the user doesn't have permission to see the deleted posts" do
+        Guardian.any_instance.expects(:can_see_deleted_posts?).returns(false)
+        xhr :get, :deleted_posts, username: "system"
+        response.should be_forbidden
+      end
+
+      it "can see the deleted posts when authorized" do
+        Guardian.any_instance.expects(:can_see_deleted_posts?).returns(true)
+        xhr :get, :deleted_posts, username: "system"
+        response.should be_success
+      end
+
+    end
+
+  end
+
 end

@@ -9,9 +9,12 @@
 Discourse.UserStream = Discourse.Model.extend({
   loaded: false,
 
-  init: function() {
-    this.setProperties({ itemsLoaded: 0, content: [] });
-  },
+  _initialize: function() {
+    this.setProperties({
+      itemsLoaded: 0,
+      content: []
+    });
+  }.on("init"),
 
   filterParam: function() {
     var filter = this.get('filter');
@@ -33,6 +36,7 @@ Discourse.UserStream = Discourse.Model.extend({
       itemsLoaded: 0,
       content: []
     });
+
     return this.findItems();
   },
 

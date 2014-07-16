@@ -23,6 +23,16 @@ Discourse.User = Discourse.Model.extend({
   }.property(),
 
   /**
+    The user's posts stream
+
+    @property postsStream
+    @type {Discourse.UserPostsStream}
+  **/
+  postsStream: function() {
+    return Discourse.UserPostsStream.create({ user: this });
+  }.property(),
+
+  /**
     Is this user a member of staff?
 
     @property staff

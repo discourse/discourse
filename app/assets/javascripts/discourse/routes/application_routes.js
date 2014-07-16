@@ -73,6 +73,8 @@ Discourse.Route.buildRoutes(function() {
     });
 
     this.route('badges');
+    this.route('flaggedPosts', { path: '/flagged-posts' });
+    this.route('deletedPosts', { path: '/deleted-posts' });
 
     this.resource('userPrivateMessages', { path: '/private-messages' }, function() {
       this.route('mine');

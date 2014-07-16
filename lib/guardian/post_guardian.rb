@@ -156,4 +156,12 @@ module PostGuardian
   def can_wiki?
     is_staff? || @user.has_trust_level?(:elder)
   end
+
+  def can_see_flagged_posts?
+    is_staff?
+  end
+
+  def can_see_deleted_posts?
+    is_staff?
+  end
 end
