@@ -6,10 +6,17 @@
   @namespace Discourse
   @module Discourse
 **/
+
+var jumpScheduled = false;
+
 Discourse.URL = Em.Object.createWithMixins({
 
   // Used for matching a topic
   TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
+
+  isJumpScheduled: function() {
+    return jumpScheduled;
+  },
 
   /**
     Jumps to a particular post in the stream
@@ -89,7 +96,7 @@ Discourse.URL = Em.Object.createWithMixins({
       return;
     }
 
-    // Scroll to the same page, differnt anchor
+    // Scroll to the same page, different anchor
     if (path.indexOf('#') === 0) {
       var $elem = $(path);
       if ($elem.length > 0) {
@@ -301,10 +308,13 @@ Discourse.URL = Em.Object.createWithMixins({
     var transition = router.handleURL(path);
     transition.promise.then(function() {
       if (elementId) {
+
+        jumpScheduled = true;
         Em.run.next('afterRender', function() {
           var offset = $('#' + elementId).offset();
           if (offset && offset.top) {
             $('html, body').scrollTop(offset.top - $('header').height() - 10);
+            jumpScheduled = false;
           }
         });
       }
