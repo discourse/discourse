@@ -305,7 +305,7 @@ class ApplicationController < ActionController::Base
     end
 
     def mini_profiler_enabled?
-      defined?(Rack::MiniProfiler) && current_user.try(:admin?)
+      defined?(Rack::MiniProfiler) && guardian.is_developer?
     end
 
     def authorize_mini_profiler

@@ -1,5 +1,5 @@
 # If Mini Profiler is included via gem
-if Rails.configuration.respond_to?(:enable_mini_profiler) && Rails.configuration.enable_mini_profiler
+if Rails.configuration.respond_to?(:load_mini_profiler) && Rails.configuration.load_mini_profiler
   require 'rack-mini-profiler'
   require 'flamegraph'
   require 'memory_profiler' if RUBY_VERSION >= "2.1.0"

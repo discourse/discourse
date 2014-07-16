@@ -41,7 +41,7 @@ Discourse::Application.configure do
   config.handlebars.precompile = true
 
   # allows users to use mini profiler
-  config.enable_mini_profiler = false
+  config.load_mini_profiler = false
 
   # for profiling with perftools
   # config.middleware.use ::Rack::PerftoolsProfiler, default_printer: 'gif'

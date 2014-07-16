@@ -36,7 +36,7 @@ Discourse::Application.configure do
 
   BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 
-  config.enable_mini_profiler = true
+  config.load_mini_profiler = true
 
   require 'middleware/turbo_dev'
   require 'middleware/missing_avatars'

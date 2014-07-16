@@ -50,8 +50,8 @@ Discourse::Application.configure do
   # this will cause all handlebars templates to be pre-compiles, making your page faster
   config.handlebars.precompile = true
 
-  # allows admins to use mini profiler
-  config.enable_mini_profiler = GlobalSetting.enable_mini_profiler
+  # allows developers to use mini profiler
+  config.load_mini_profiler = GlobalSetting.load_mini_profiler
 
   # Discourse strongly recommend you use a CDN.
   # For origin pull cdns all you need to do is register an account and configure
