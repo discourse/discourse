@@ -2000,8 +2000,8 @@ en:
         first_quote:
           name: First Quote
           description: Quoted a user
-        read_faq:
-          name: Read Faq
+        read_guidelines:
+          name: Read Guidelines
           description: Read the community guidelines
         reader:
           name: Reader

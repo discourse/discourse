@@ -29,12 +29,12 @@ Badge.seed do |b|
 end
 
 Badge.seed do |b|
-  b.id = Badge::ReadFaq
-  b.name = "Read Faq"
+  b.id = Badge::ReadGuidelines
+  b.name = "Read Guidelines"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
-  b.query = Badge::Queries::ReadFaq
+  b.query = Badge::Queries::ReadGuidelines
 end
 
 Badge.seed do |b|

@@ -12,7 +12,7 @@ class Badge < ActiveRecord::Base
   FirstFlag = 13
   FirstLink = 14
   FirstQuote = 15
-  ReadFaq = 16
+  ReadGuidelines = 16
   Reader = 17
 
   # other consts
@@ -38,7 +38,7 @@ class Badge < ActiveRecord::Base
     )
 SQL
 
-    ReadFaq = <<SQL
+    ReadGuidelines = <<SQL
     SELECT user_id, read_faq granted_at
     FROM user_stats
     WHERE read_faq IS NOT NULL
