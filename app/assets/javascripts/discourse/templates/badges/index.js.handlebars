@@ -5,6 +5,7 @@
     <tbody>
       {{#each}}
         <tr>
+          <td class='granted'>{{#if this.has_badge}}<i class='fa fa-check'></i>{{/if}}</td>
           <td class='badge'>{{user-badge badge=this}}</td>
           <td class='description'>{{displayDescription}}</td>
           <td class='grant-count'>{{i18n badges.granted count=grant_count}}</td>
