@@ -61,6 +61,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     import_users
     import_categories
     import_posts
+    postprocess_posts
   end
 
   def import_groups
@@ -224,7 +225,6 @@ class ImportScripts::Smf2 < ImportScripts::Base
       print "\r#{spinner.next}"
     end
 
-    postprocess = []
     create_posts(query(<<-SQL), total: total) do |message|
       SELECT m.id_msg, m.id_topic, m.id_member, m.poster_time, m.body, o.ignore_quotes,
              m.subject, t.id_board, t.id_first_msg
@@ -234,12 +234,16 @@ class ImportScripts::Smf2 < ImportScripts::Base
       ORDER BY o.message_order ASC
     SQL
       skip = false
+      ignore_quotes = (message[:ignore_quotes] == 1)
       post = {
         id: message[:id_msg],
         user_id: user_id_from_imported_user_id(message[:id_member]) || -1,
-        raw: convert_message_body(message[:body], ignore_quotes: message[:ignore_quotes] == 1),
+        raw: convert_message_body(message[:body], ignore_quotes: ignore_quotes),
         created_at: Time.zone.at(message[:poster_time]),
-        post_create_action: proc {|post| postprocess << post }
+        post_create_action: ignore_quotes && proc do |post|
+          post.custom_fields['import_rebake'] = 't'
+          post.save
+        end
       }
       if message[:id_msg] == message[:id_first_msg]
         post[:category] = category_from_imported_category_id(message[:id_board]).try(:name)
@@ -255,11 +259,24 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
       skip ? nil : post
     end
+  end
 
-    postprocess.each do |post|
-      post.raw = convert_quotes(post.raw)
-      post.rebake!
-      post.save!(validate: false)
+  def postprocess_posts
+    puts '', 'rebaking posts'
+
+    tags = PostCustomField.where(name: 'import_rebake', value: 't')
+    tags_total = tags.count
+    tags_done = 0
+
+    tags.each do |tag|
+      post = tag.post
+      Post.transaction do
+        post.raw = convert_quotes(post.raw)
+        post.rebake!
+        post.save
+        tag.destroy!
+      end
+      print_status(tags_done += 1, tags_total)
     end
   end
 
