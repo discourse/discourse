@@ -18,7 +18,7 @@ describe TopicsBulkAction do
 
     context "when the user can edit the topic" do
       it "changes the category and returns the topic_id" do
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_name: category.name)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: category.id)
         topic_ids = tba.perform!
         topic_ids.should == [topic.id]
         topic.reload
@@ -29,7 +29,7 @@ describe TopicsBulkAction do
     context "when the user can't edit the topic" do
       it "doesn't change the category" do
         Guardian.any_instance.expects(:can_edit?).returns(false)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_name: category.name)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: category.id)
         topic_ids = tba.perform!
         topic_ids.should == []
         topic.reload

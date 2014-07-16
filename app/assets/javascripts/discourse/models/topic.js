@@ -193,7 +193,7 @@ Discourse.Topic = Discourse.Model.extend({
 
     return Discourse.ajax(this.get('url'), {
       type: 'PUT',
-      data: { title: this.get('title'), category: this.get('category.name') }
+      data: { title: this.get('title'), category_id: this.get('category.id') }
     });
   },
 

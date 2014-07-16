@@ -802,7 +802,7 @@ describe Topic do
       let(:category) { Fabricate(:category) }
 
       before do
-        topic.change_category(category.name)
+        topic.change_category_to_id(category.id)
       end
 
       it "creates a new revision" do
@@ -811,7 +811,7 @@ describe Topic do
 
       context "removing a category" do
         before do
-          topic.change_category(nil)
+          topic.change_category_to_id(nil)
         end
 
         it "creates a new revision" do
@@ -850,12 +850,12 @@ describe Topic do
     describe 'without a previous category' do
 
       it 'should not change the topic_count when not changed' do
-       lambda { @topic.change_category(@topic.category.name); @category.reload }.should_not change(@category, :topic_count)
+       lambda { @topic.change_category_to_id(@topic.category.id); @category.reload }.should_not change(@category, :topic_count)
       end
 
       describe 'changed category' do
         before do
-          @topic.change_category(@category.name)
+          @topic.change_category_to_id(@category.id)
           @category.reload
         end
 
@@ -867,14 +867,14 @@ describe Topic do
       end
 
       it "doesn't change the category when it can't be found" do
-        @topic.change_category('made up')
+        @topic.change_category_to_id(12312312)
         @topic.category_id.should == SiteSetting.uncategorized_category_id
       end
     end
 
     describe 'with a previous category' do
       before do
-        @topic.change_category(@category.name)
+        @topic.change_category_to_id(@category.id)
         @topic.reload
         @category.reload
       end
@@ -884,18 +884,18 @@ describe Topic do
       end
 
       it "doesn't change the topic_count when the value doesn't change" do
-        lambda { @topic.change_category(@category.name); @category.reload }.should_not change(@category, :topic_count)
+        lambda { @topic.change_category_to_id(@category.id); @category.reload }.should_not change(@category, :topic_count)
       end
 
       it "doesn't reset the category when given a name that doesn't exist" do
-        @topic.change_category('made up')
+        @topic.change_category_to_id(55556)
         @topic.category_id.should be_present
       end
 
       describe 'to a different category' do
         before do
           @new_category = Fabricate(:category, user: @user, name: '2nd category')
-          @topic.change_category(@new_category.name)
+          @topic.change_category_to_id(@new_category.id)
           @topic.reload
           @new_category.reload
           @category.reload
@@ -918,13 +918,13 @@ describe Topic do
         let!(:topic) { Fabricate(:topic, category: Fabricate(:category)) }
 
         it 'returns false' do
-          topic.change_category('').should eq(false) # don't use "be_false" here because it would also match nil
+          topic.change_category_to_id(nil).should eq(false) # don't use "be_false" here because it would also match nil
         end
       end
 
       describe 'when the category exists' do
         before do
-          @topic.change_category(nil)
+          @topic.change_category_to_id(nil)
           @category.reload
         end
 

@@ -113,7 +113,7 @@ class TopicsController < ApplicationController
 
     success = false
     Topic.transaction do
-      success = topic.save && topic.change_category(params[:category])
+      success = topic.save && topic.change_category_to_id(params[:category_id].to_i)
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"

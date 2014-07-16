@@ -719,8 +719,8 @@ describe TopicsController do
         end
 
         it 'triggers a change of category' do
-          Topic.any_instance.expects(:change_category).with('incredible').returns(true)
-          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: 'incredible'
+          Topic.any_instance.expects(:change_category_to_id).with(123).returns(true)
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category_id: 123
         end
 
         it "returns errors with invalid titles" do
@@ -729,8 +729,8 @@ describe TopicsController do
         end
 
         it "returns errors with invalid categories" do
-          Topic.any_instance.expects(:change_category).returns(false)
-          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: ''
+          Topic.any_instance.expects(:change_category_to_id).returns(false)
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title
           expect(response).not_to be_success
         end
 
@@ -740,8 +740,8 @@ describe TopicsController do
           end
 
           it "can add a category to an uncategorized topic" do
-            Topic.any_instance.expects(:change_category).with('incredible').returns(true)
-            xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: 'incredible'
+            Topic.any_instance.expects(:change_category_to_id).with(456).returns(true)
+            xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category_id: 456
             response.should be_success
           end
         end

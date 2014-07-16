@@ -214,7 +214,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     },
 
     finishedEditingTopic: function() {
-      var topicController = this;
       if (this.get('editingTopic')) {
 
         var topic = this.get('model');
@@ -230,6 +229,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         });
 
         // save the modifications
+        var self = this;
         topic.save().then(function(result){
           // update the title if it has been changed (cleaned up) server-side
           var title       = result.basic_topic.title;
@@ -238,10 +238,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
             title: title,
             fancy_title: fancy_title
           });
-          topicController.set('topicSaving', false);
+          self.set('topicSaving', false);
         }, function(error) {
-          topicController.set('editingTopic', true);
-          topicController.set('topicSaving', false);
+          self.set('editingTopic', true);
+          self.set('topicSaving', false);
           if (error && error.responseText) {
             bootbox.alert($.parseJSON(error.responseText).errors[0]);
           } else {
@@ -250,7 +250,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         });
 
         // close editing mode
-        topicController.set('editingTopic', false);
+        self.set('editingTopic', false);
       }
     },
 

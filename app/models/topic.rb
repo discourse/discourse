@@ -493,20 +493,18 @@ class Topic < ActiveRecord::Base
     new_post
   end
 
-  # Changes the category to a new name
-  def change_category(name)
+  def change_category_to_id(category_id)
     # If the category name is blank, reset the attribute
-    if name.blank?
+    if (category_id.nil? || category_id.to_i == 0)
       cat = Category.find_by(id: SiteSetting.uncategorized_category_id)
     else
-      cat = Category.find_by(name: name)
+      cat = Category.where(id: category_id).first
     end
 
     return true if cat == category
     return false unless cat
     changed_to_category(cat)
   end
-
 
   def remove_allowed_user(username)
     user = User.find_by(username: username)

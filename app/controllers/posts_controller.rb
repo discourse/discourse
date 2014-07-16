@@ -106,11 +106,11 @@ class PostsController < ApplicationController
     # to stay consistent with the create api,
     #  we should allow for title changes and category changes here
     #  we should also move all of this to a post updater.
-    if post.post_number == 1 && (params[:title] || params[:post][:category])
+    if post.post_number == 1 && (params[:title] || params[:post][:category_id])
       post.topic.acting_user = current_user
       post.topic.title = params[:title] if params[:title]
       Topic.transaction do
-        post.topic.change_category(params[:post][:category])
+        post.topic.change_category_to_id(params[:post][:category_id].to_i)
         post.topic.save
       end
 

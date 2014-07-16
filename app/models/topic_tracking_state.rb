@@ -14,7 +14,7 @@ class TopicTrackingState
                 :highest_post_number,
                 :last_read_post_number,
                 :created_at,
-                :category_name,
+                :category_id,
                 :notification_level
 
   def self.publish_new(topic)
@@ -118,7 +118,7 @@ class TopicTrackingState
            topics.created_at,
            highest_post_number,
            last_read_post_number,
-           c.name AS category_name,
+           c.id AS category_id,
            tu.notification_level
     FROM users u
     INNER JOIN user_stats AS us ON us.user_id = u.id

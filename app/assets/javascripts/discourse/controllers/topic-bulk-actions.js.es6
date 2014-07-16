@@ -67,10 +67,10 @@ export default Ember.ArrayController.extend(Discourse.ModalFunctionality, {
     },
 
     changeCategory: function() {
-      var category = Discourse.Category.findById(parseInt(this.get('newCategoryId'), 10)),
-          categoryName = (category ? category.get('name') : null),
+      var categoryId = parseInt(this.get('newCategoryId'), 10) || 0,
+          category = Discourse.Category.findById(categoryId),
           self = this;
-      this.perform({type: 'change_category', category_name: categoryName}).then(function(topics) {
+      this.perform({type: 'change_category', category_id: categoryId}).then(function(topics) {
         topics.forEach(function(t) {
           t.set('category', category);
         });

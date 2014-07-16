@@ -236,7 +236,7 @@ describe Category do
     describe "trying to change the category topic's category" do
       before do
         @new_cat = Fabricate(:category, name: '2nd Category', user: @category.user)
-        @topic.change_category(@new_cat.name)
+        @topic.change_category_to_id(@new_cat.id)
         @topic.reload
         @category.reload
       end
