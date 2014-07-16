@@ -93,8 +93,7 @@ module Discourse
         :s3_secret_access_key,
         :twitter_consumer_secret,
         :facebook_app_secret,
-        :github_client_secret,
-        :discourse_org_access_key,
+        :github_client_secret
     ]
 
     # Enable the asset pipeline

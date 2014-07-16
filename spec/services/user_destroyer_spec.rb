@@ -50,18 +50,6 @@ describe UserDestroyer do
         StaffActionLogger.any_instance.expects(:log_user_deletion).with(@user, anything).once
         destroy
       end
-
-      it 'should unregister the nickname as the discourse hub if hub integration is enabled' do
-        SiteSetting.stubs(:call_discourse_hub?).returns(true)
-        DiscourseHub.expects(:unregister_username).with(@user.username)
-        destroy
-      end
-
-      it 'should not try to unregister the nickname as the discourse hub if hub integration is disabled' do
-        SiteSetting.stubs(:call_discourse_hub?).returns(false)
-        DiscourseHub.expects(:unregister_username).never
-        destroy
-      end
     end
 
     shared_examples "email block list" do
@@ -104,11 +92,6 @@ describe UserDestroyer do
 
         it 'should not log the action' do
           StaffActionLogger.any_instance.expects(:log_user_deletion).never
-          destroy rescue nil
-        end
-
-        it 'should not unregister the user at the discourse hub' do
-          DiscourseHub.expects(:unregister_username).never
           destroy rescue nil
         end
       end
@@ -189,11 +172,6 @@ describe UserDestroyer do
         it 'should not log the action' do
           StaffActionLogger.any_instance.expects(:log_user_deletion).never
           destroy
-        end
-
-        it 'should not unregister the user at the discourse hub' do
-          DiscourseHub.expects(:unregister_username).never
-          destroy rescue nil
         end
       end
     end

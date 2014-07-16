@@ -3,63 +3,6 @@ require_dependency 'version'
 
 module DiscourseHub
 
-  class UsernameUnavailable < RuntimeError
-    def initialize(username)
-      @username = username
-    end
-
-    def response_message
-      {
-        success: false,
-        message: I18n.t(
-          "login.errors",
-          errors:I18n.t(
-            "login.not_available", suggestion: UserNameSuggester.suggest(@username)
-          )
-        )
-      }
-    end
-
-  end
-
-  def self.username_available?(username)
-    json = get('/users/username_available', {username: username})
-    [json['available'], json['suggestion']]
-  end
-
-  def self.username_match?(username, email)
-    json = get('/users/username_match', {username: username, email: email})
-    [json['match'], json['available'] || false, json['suggestion']]
-  end
-
-  def self.username_for_email(email)
-    json = get('/users/username_match', {email: email})
-    json['suggestion']
-  end
-
-  def self.register_username(username, email)
-    json = post('/users', {username: username, email: email})
-    if json.has_key?('success')
-      true
-    else
-      raise UsernameUnavailable.new(username)  # TODO: report ALL the errors
-    end
-  end
-
-  def self.unregister_username(username)
-    json = delete('/memberships/' + username)
-    json.has_key?('success')
-  end
-
-  def self.change_username(current_username, new_username)
-    json = put("/users/#{current_username}/username", {username: new_username})
-    if json.has_key?('success')
-      true
-    else
-      raise UsernameUnavailable.new(new_username)  # TODO: report ALL the errors
-    end
-  end
-
   def self.version_check_payload
     {
       installed_version: Discourse::VERSION::STRING,
@@ -103,11 +46,11 @@ module DiscourseHub
   end
 
   def self.singular_action(action, rel_url, params={})
-    JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", {params: {access_token: access_token}.merge(params), accept: accepts } )
+    JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", {params: params, accept: accepts } )
   end
 
   def self.collection_action(action, rel_url, params={})
-    JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", {access_token: access_token}.merge(params), content_type: :json, accept: accepts )
+    JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", params, content_type: :json, accept: accepts )
   end
 
   def self.hub_base_url
@@ -118,23 +61,8 @@ module DiscourseHub
     end
   end
 
-  def self.access_token
-    SiteSetting.discourse_org_access_key
-  end
-
   def self.accepts
     [:json, 'application/vnd.discoursehub.v1']
   end
 
-  def self.username_operation
-    if SiteSetting.call_discourse_hub?
-      begin
-        yield
-      rescue DiscourseHub::UsernameUnavailable
-        false
-      rescue => e
-        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
-      end
-    end
-  end
 end

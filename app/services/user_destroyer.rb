@@ -61,7 +61,6 @@ class UserDestroyer
           end
 
           StaffActionLogger.new(@actor == user ? Discourse.system_user : @actor).log_user_deletion(user, opts.slice(:context))
-          DiscourseHub.unregister_username(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
         end
       end

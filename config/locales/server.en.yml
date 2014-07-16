@@ -574,7 +574,6 @@ en:
     access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
     site_contact_username_warning: "The site_contact_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
     notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
-    enforce_global_nicknames_warning: "The enforce_global_nicknames setting is checked, but the discourse_org_access_key is blank. A Discourse.org access key is required to use the enforce_global_nicknames setting. Please update your <a href='/admin/site_settings'>Site Settings</a>."
 
   content_types:
     education_new_reply:
@@ -640,8 +639,6 @@ en:
     uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
-    enforce_global_nicknames: "Enforce global username uniqueness (WARNING: only change this during initial setup)"
-    discourse_org_access_key: "The access key used to access the Discourse Hub username registry at discourse.org"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "Brief title of this site, used in the title tag."
     site_description: "Describe this site in one sentence, used in the meta description tag."
@@ -1605,9 +1602,6 @@ en:
         %{base_url}/users/activate-account/%{email_token}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
-
-  discourse_hub:
-    access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
 
   page_not_found:
     title: "The page you requested doesn't exist or is private."

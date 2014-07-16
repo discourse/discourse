@@ -106,14 +106,8 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
-  GLOBAL_USERNAME_LENGTH_RANGE = 3..15
-
   def self.username_length
-    if SiteSetting.enforce_global_nicknames
-      GLOBAL_USERNAME_LENGTH_RANGE
-    else
-      SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
-    end
+    SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
   end
 
   def custom_groups
@@ -176,11 +170,6 @@ class User < ActiveRecord::Base
   def change_username(new_username)
     current_username = self.username
     self.username = new_username
-
-    if current_username.downcase != new_username.downcase && valid?
-      DiscourseHub.username_operation { DiscourseHub.change_username(current_username, new_username) }
-    end
-
     save
   end
 

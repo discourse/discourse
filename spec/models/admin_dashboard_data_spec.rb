@@ -244,26 +244,4 @@ describe AdminDashboardData do
     end
   end
 
-  describe "enforce_global_nicknames_check" do
-    subject { described_class.new.enforce_global_nicknames_check }
-
-    it 'returns nil when enforce_global_nicknames and discourse_org_access_key are set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
-      SiteSetting.stubs(:discourse_org_access_key).returns('123')
-      subject.should be_nil
-    end
-
-    it 'returns a string when enforce_global_nicknames is true but discourse_org_access_key is not' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
-      SiteSetting.stubs(:discourse_org_access_key).returns('')
-      subject.should_not be_nil
-    end
-
-    it 'returns nil when enforce_global_nicknames is false and discourse_org_access_key is set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(false)
-      SiteSetting.stubs(:discourse_org_access_key).returns('123')
-      subject.should be_nil
-    end
-  end
-
 end

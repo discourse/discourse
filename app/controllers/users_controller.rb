@@ -126,7 +126,7 @@ class UsersController < ApplicationController
   def check_username
     if !params[:username].present?
       params.require(:username) if !params[:email].present?
-      return render(json: success_json) unless SiteSetting.call_discourse_hub?
+      return render(json: success_json)
     end
     username = params[:username]
 
@@ -138,8 +138,6 @@ class UsersController < ApplicationController
     checker = UsernameCheckerService.new
     email = params[:email] || target_user.try(:email)
     render json: checker.check_username(username, email)
-  rescue RestClient::Forbidden
-    render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
   end
 
   def user_from_params_or_current_user
@@ -195,8 +193,6 @@ class UsersController < ApplicationController
       success: false,
       message: I18n.t("login.something_already_taken")
     }
-  rescue DiscourseHub::UsernameUnavailable => e
-    render json: e.response_message
   rescue RestClient::Forbidden
     render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }
   end

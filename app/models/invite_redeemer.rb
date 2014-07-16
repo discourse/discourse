@@ -29,15 +29,8 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
     end
     available_name = name || available_username
 
-    DiscourseHub.username_operation do
-      match, available, suggestion = DiscourseHub.username_match?(available_username, invite.email)
-      available_username = suggestion unless match || available
-    end
-
     user = User.new(email: invite.email, username: available_username, name: available_name, active: true, trust_level: SiteSetting.default_invitee_trust_level)
     user.save!
-
-    DiscourseHub.username_operation { DiscourseHub.register_username(username, invite.email) }
 
     user
   end

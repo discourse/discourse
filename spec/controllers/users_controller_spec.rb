@@ -288,7 +288,6 @@ describe UsersController do
       SiteSetting.stubs(:allow_new_registrations).returns(true)
       @user = Fabricate.build(:user)
       @user.password = "strongpassword"
-      DiscourseHub.stubs(:register_username).returns([true, nil])
     end
 
     def post_user
@@ -494,25 +493,9 @@ describe UsersController do
       include_examples 'failed signup'
     end
 
-    context 'when username is unavailable in DiscourseHub' do
-      before do
-        SiteSetting.stubs(:call_discourse_hub?).returns(true)
-        DiscourseHub.stubs(:register_username).raises(DiscourseHub::UsernameUnavailable.new(@user.name))
-      end
-      let(:create_params) {{
-        name: @user.name,
-        username: @user.username,
-        password: 'strongpassword',
-        email: @user.email
-      }}
-
-      include_examples 'failed signup'
-    end
-
     context 'when an Exception is raised' do
 
       [ ActiveRecord::StatementInvalid,
-        DiscourseHub::UsernameUnavailable,
         RestClient::Forbidden ].each do |exception|
         before { User.any_instance.stubs(:save).raises(exception) }
 
@@ -561,15 +544,11 @@ describe UsersController do
   end
 
   context '.check_username' do
-    before do
-      DiscourseHub.stubs(:username_available?).returns([true, nil])
-    end
-
     it 'raises an error without any parameters' do
       lambda { xhr :get, :check_username }.should raise_error(ActionController::ParameterMissing)
     end
 
-    shared_examples 'when username is unavailable locally' do
+    shared_examples 'when username is unavailable' do
       it 'should return success' do
         response.should be_success
       end
@@ -583,7 +562,7 @@ describe UsersController do
       end
     end
 
-    shared_examples 'when username is available everywhere' do
+    shared_examples 'when username is available' do
       it 'should return success' do
         response.should be_success
       end
@@ -593,211 +572,59 @@ describe UsersController do
       end
     end
 
-    context 'when call_discourse_hub is disabled' do
-      before do
-        SiteSetting.stubs(:call_discourse_hub?).returns(false)
-        DiscourseHub.expects(:username_available?).never
-        DiscourseHub.expects(:username_match?).never
-      end
+    it 'returns nothing when given an email param but no username' do
+      xhr :get, :check_username, email: 'dood@example.com'
+      response.should be_success
+    end
 
-      it 'returns nothing when given an email param but no username' do
-        xhr :get, :check_username, email: 'dood@example.com'
+    context 'username is available' do
+      before do
+        xhr :get, :check_username, username: 'BruceWayne'
+      end
+      include_examples 'when username is available'
+    end
+
+    context 'username is unavailable' do
+      let!(:user) { Fabricate(:user) }
+      before do
+        xhr :get, :check_username, username: user.username
+      end
+      include_examples 'when username is unavailable'
+    end
+
+    shared_examples 'checking an invalid username' do
+      it 'should return success' do
         response.should be_success
       end
 
-      context 'username is available' do
-        before do
-          xhr :get, :check_username, username: 'BruceWayne'
-        end
-        include_examples 'when username is available everywhere'
-      end
-
-      context 'username is unavailable' do
-        let!(:user) { Fabricate(:user) }
-        before do
-          xhr :get, :check_username, username: user.username
-        end
-        include_examples 'when username is unavailable locally'
-      end
-
-      shared_examples 'checking an invalid username' do
-        it 'should return success' do
-          response.should be_success
-        end
-
-        it 'should not return an available key' do
-          ::JSON.parse(response.body)['available'].should be_nil
-        end
-
-        it 'should return an error message' do
-          ::JSON.parse(response.body)['errors'].should_not be_empty
-        end
-      end
-
-      context 'has invalid characters' do
-        before do
-          xhr :get, :check_username, username: 'bad username'
-        end
-        include_examples 'checking an invalid username'
-
-        it 'should return the invalid characters message' do
-          ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.characters'))
-        end
-      end
-
-      context 'is too long' do
-        before do
-          xhr :get, :check_username, username: generate_username(User.username_length.last + 1)
-        end
-        include_examples 'checking an invalid username'
-
-        it 'should return the "too long" message' do
-          ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.long', max: User.username_length.end))
-        end
-      end
-    end
-
-    context 'when call_discourse_hub is enabled' do
-      before do
-        SiteSetting.stubs(:call_discourse_hub?).returns(true)
-      end
-
-      context 'available locally and globally' do
-        before do
-          DiscourseHub.stubs(:username_available?).returns([true, nil])
-          DiscourseHub.stubs(:username_match?).returns([false, true, nil])  # match = false, available = true, suggestion = nil
-        end
-
-        shared_examples 'check_username when username is available everywhere' do
-          it 'should return success' do
-            response.should be_success
-          end
-
-          it 'should return available in the JSON' do
-            ::JSON.parse(response.body)['available'].should be_true
-          end
-
-          it 'should return global_match false in the JSON' do
-            ::JSON.parse(response.body)['global_match'].should be_false
-          end
-        end
-
-        context 'and email is not given' do
-          before do
-            xhr :get, :check_username, username: 'BruceWayne'
-          end
-          include_examples 'check_username when username is available everywhere'
-        end
-
-        context 'both username and email is given' do
-          before do
-            xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@gmail.com'
-          end
-          include_examples 'check_username when username is available everywhere'
-        end
-
-        context 'only email is given' do
-          it "should check for a matching username" do
-            UsernameCheckerService.any_instance.expects(:check_username).with(nil, 'brucie@gmail.com').returns({json: 'blah'})
-            xhr :get, :check_username, email: 'brucie@gmail.com'
-            response.should be_success
-          end
-        end
-      end
-
-      shared_examples 'when email is needed to check username match' do
-        it 'should return success' do
-          response.should be_success
-        end
-
-        it 'should return available as false in the JSON' do
-          ::JSON.parse(response.body)['available'].should be_false
-        end
-
-        it 'should not return a suggested username' do
-          ::JSON.parse(response.body)['suggestion'].should_not be_present
-        end
-      end
-
-      context 'available locally but not globally' do
-        before do
-          DiscourseHub.stubs(:username_available?).returns([false, 'suggestion'])
-        end
-
-        context 'email param is not given' do
-          before do
-            xhr :get, :check_username, username: 'BruceWayne'
-          end
-          include_examples 'when email is needed to check username match'
-        end
-
-        context 'email param is an empty string' do
-          before do
-            xhr :get, :check_username, username: 'BruceWayne', email: ''
-          end
-          include_examples 'when email is needed to check username match'
-        end
-
-        context 'email matches global username' do
-          before do
-            DiscourseHub.stubs(:username_match?).returns([true, false, nil])
-            xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
-          end
-          include_examples 'when username is available everywhere'
-
-          it 'should indicate a global match' do
-            ::JSON.parse(response.body)['global_match'].should be_true
-          end
-        end
-
-        context 'email does not match global username' do
-          before do
-            DiscourseHub.stubs(:username_match?).returns([false, false, 'suggestion'])
-            xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
-          end
-          include_examples 'when username is unavailable locally'
-
-          it 'should not indicate a global match' do
-            ::JSON.parse(response.body)['global_match'].should be_false
-          end
-        end
-      end
-
-      context 'unavailable locally and globally' do
-        let!(:user) { Fabricate(:user) }
-
-        before do
-          DiscourseHub.stubs(:username_available?).returns([false, 'suggestion'])
-          xhr :get, :check_username, username: user.username
-        end
-
-        include_examples 'when username is unavailable locally'
-      end
-
-      context 'unavailable locally and available globally' do
-        let!(:user) { Fabricate(:user) }
-
-        before do
-          DiscourseHub.stubs(:username_available?).returns([true, nil])
-          xhr :get, :check_username, username: user.username
-        end
-
-        include_examples 'when username is unavailable locally'
-      end
-    end
-
-    context 'when discourse_org_access_key is wrong' do
-      before do
-        SiteSetting.stubs(:call_discourse_hub?).returns(true)
-        DiscourseHub.stubs(:username_available?).raises(RestClient::Forbidden)
-        DiscourseHub.stubs(:username_match?).raises(RestClient::Forbidden)
+      it 'should not return an available key' do
+        ::JSON.parse(response.body)['available'].should be_nil
       end
 
       it 'should return an error message' do
-        xhr :get, :check_username, username: 'horsie'
-        json = JSON.parse(response.body)
-        json['errors'].should_not be_nil
-        json['errors'][0].should_not be_nil
+        ::JSON.parse(response.body)['errors'].should_not be_empty
+      end
+    end
+
+    context 'has invalid characters' do
+      before do
+        xhr :get, :check_username, username: 'bad username'
+      end
+      include_examples 'checking an invalid username'
+
+      it 'should return the invalid characters message' do
+        ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.characters'))
+      end
+    end
+
+    context 'is too long' do
+      before do
+        xhr :get, :check_username, username: generate_username(User.username_length.last + 1)
+      end
+      include_examples 'checking an invalid username'
+
+      it 'should return the "too long" message' do
+        ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.long', max: User.username_length.end))
       end
     end
 
@@ -808,7 +635,7 @@ describe UsersController do
           log_in_user(user)
           xhr :get, :check_username, username: 'HanSolo'
         end
-        include_examples 'when username is available everywhere'
+        include_examples 'when username is available'
       end
 
       context "it's someone else's username" do
@@ -817,7 +644,7 @@ describe UsersController do
           log_in
           xhr :get, :check_username, username: 'HanSolo'
         end
-        include_examples 'when username is unavailable locally'
+        include_examples 'when username is unavailable'
       end
 
       context "an admin changing it for someone else" do
@@ -826,7 +653,7 @@ describe UsersController do
           log_in_user(Fabricate(:admin))
           xhr :get, :check_username, username: 'HanSolo', for_user_id: user.id
         end
-        include_examples 'when username is available everywhere'
+        include_examples 'when username is available'
       end
     end
   end

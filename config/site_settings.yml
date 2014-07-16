@@ -246,8 +246,12 @@ users:
     default: 8
     min: 1
   block_common_passwords: true
-  enforce_global_nicknames: false
-  discourse_org_access_key: ''
+  enforce_global_nicknames:
+    default: false
+    hidden: true
+  discourse_org_access_key:
+    default: ''
+    hidden: true
   username_change_period: 3
   auto_track_topics_after: 240000
   email_editable: true

@@ -4,32 +4,6 @@ require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 
-  describe 'call_discourse_hub?' do
-    it 'should be true when enforce_global_nicknames is true and discourse_org_access_key is set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
-      SiteSetting.stubs(:discourse_org_access_key).returns('asdfasfsafd')
-      SiteSetting.call_discourse_hub?.should == true
-    end
-
-    it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(false)
-      SiteSetting.stubs(:discourse_org_access_key).returns('asdfasfsafd')
-      SiteSetting.call_discourse_hub?.should == false
-    end
-
-    it 'should be false when enforce_global_nicknames is true and discourse_org_access_key is not set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
-      SiteSetting.stubs(:discourse_org_access_key).returns('')
-      SiteSetting.call_discourse_hub?.should == false
-    end
-
-    it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is not set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(false)
-      SiteSetting.stubs(:discourse_org_access_key).returns('')
-      SiteSetting.call_discourse_hub?.should == false
-    end
-  end
-
   describe "normalized_embeddable_host" do
     it 'returns the `embeddable_host` value' do
       SiteSetting.stubs(:embeddable_host).returns("eviltrout.com")
