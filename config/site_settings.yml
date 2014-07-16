@@ -397,7 +397,7 @@ email:
 files:
   max_image_size_kb:
     client: true
-    default: 2048
+    default: 3072
   max_attachment_size_kb:
     client: true
     default: 1024
