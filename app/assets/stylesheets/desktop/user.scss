@@ -321,12 +321,15 @@
     span.name {
       color: $primary;
     }
-    .time {
+    .time, .delete-info {
       display: block;
       float: right;
       color: $primary;
       margin-right: 8px;
       font-size: 11px;
+    }
+    .delete-info i {
+      font-size: 14px;
     }
     .avatar-link {
       float: left;

@@ -62,7 +62,7 @@ export default Em.Component.extend({
     var post = this.get('post');
     if (post.get('deleted')) {
       buffer.push("<div class='post-action'>" +
-                  I18n.t("post.deleted_by") + " " +
+                  "<i class='fa fa-trash-o'></i>&nbsp;" +
                   Discourse.Utilities.tinyAvatar(post.get('postDeletedBy.avatar_template'), {title: post.get('postDeletedBy.username')}) +
                   Discourse.Formatter.autoUpdatingRelativeAge(new Date(post.get('postDeletedAt'))) +
                   "</div>");
