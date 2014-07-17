@@ -22,9 +22,37 @@ Discourse.Site = Discourse.Model.extend({
     return postActionTypes.filterProperty('is_flag', true);
   }.property('post_action_types.@each'),
 
-  sortedCategories: Em.computed.sort('categories', function(a, b) {
+  categoriesByCount: Em.computed.sort('categories', function(a, b) {
     return (b.get('topic_count') || 0) - (a.get('topic_count') || 0);
   }),
+
+  // Sort subcategories under parents
+  sortedCategories: function() {
+    var cats = this.get('categoriesByCount'),
+        result = [],
+        remaining = {};
+
+    cats.forEach(function(c) {
+      var parentCategoryId = parseInt(c.get('parent_category_id'), 10);
+      if (!parentCategoryId) {
+        result.pushObject(c);
+      } else {
+        remaining[parentCategoryId] = remaining[parentCategoryId] || [];
+        remaining[parentCategoryId].pushObject(c);
+      }
+    });
+
+    Ember.keys(remaining).forEach(function(parentCategoryId) {
+      var category = result.findBy('id', parseInt(parentCategoryId, 10)),
+          index = result.indexOf(category);
+
+      if (index !== -1) {
+        result.replace(index+1, 0, remaining[parentCategoryId]);
+      }
+    });
+
+    return result;
+  }.property(),
 
   postActionTypeById: function(id) {
     return this.get("postActionByIdLookup.action" + id);

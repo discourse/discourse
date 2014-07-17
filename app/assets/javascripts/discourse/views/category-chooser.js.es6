@@ -1,12 +1,6 @@
-/**
-  This view handles rendering of a combobox that can view a category
-
-  @class CategoryChooserView
-  @extends Discourse.ComboboxView
-  @namespace Discourse
-  @module Discourse
-**/
 import ComboboxView from 'discourse/views/combo-box';
+
+var badgeHtml = Discourse.HTML.categoryBadge;
 
 export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
@@ -19,12 +13,11 @@ export default ComboboxView.extend({
     return c.get('permission') === Discourse.PermissionType.FULL && c.get('id') !== uncategorized_id;
   }),
 
-  init: function() {
-    this._super();
+  _setCategories: function() {
     if (!this.get('categories')) {
       this.set('categories', Discourse.Category.list());
     }
-  },
+  }.on('init'),
 
   none: function() {
     if (Discourse.User.currentProp('staff') || Discourse.SiteSettings.allow_uncategorized_topics) {
@@ -42,7 +35,11 @@ export default ComboboxView.extend({
     var category = Discourse.Category.findById(parseInt(item.id,10));
     if (!category) return item.text;
 
-    var result = Discourse.HTML.categoryBadge(category, {showParent: true, link: false, allowUncategorized: true});
+    var result = badgeHtml(category, {showParent: false, link: false, allowUncategorized: true}),
+        parentCategoryId = category.get('parent_category_id');
+    if (parentCategoryId) {
+      result = badgeHtml(Discourse.Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
+    }
 
     result += " <span class='topic-count'>&times; " + category.get('topic_count') + "</span>";
 
