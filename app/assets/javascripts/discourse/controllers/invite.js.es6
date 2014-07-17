@@ -8,6 +8,7 @@
   @module Discourse
 **/
 export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+  needs: ['user-invited'],
 
   isAdmin: function(){
     return Discourse.User.currentProp("admin");
@@ -93,11 +94,18 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
       if (this.get('disabled')) { return; }
 
       var self = this;
-      var groupNames = this.get("groupNames");
+      var groupNames = this.get('groupNames');
+      var userInvitedController = this.get('controllers.user-invited');
 
       this.setProperties({ saving: true, error: false });
       this.get('model').createInvite(this.get('email'), groupNames).then(function() {
         self.setProperties({ saving: false, finished: true });
+        if (!self.get('invitingToTopic')) {
+          Discourse.Invite.findInvitedBy(Discourse.User.current()).then(function (invite_model) {
+            userInvitedController.set('model', invite_model);
+            userInvitedController.set('totalInvites', invite_model.invites.length);
+          });
+        }
       }).catch(function() {
         self.setProperties({ saving: false, error: true });
       });
