@@ -1,11 +1,3 @@
-/**
-  A data model that represents a category
-
-  @class Category
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.Category = Discourse.Model.extend({
 
   init: function() {
@@ -135,11 +127,11 @@ Discourse.Category = Discourse.Model.extend({
   }.property(),
 
   unreadTopics: function(){
-    return this.get('topicTrackingState').countUnread(this.get('name'));
+    return this.get('topicTrackingState').countUnread(this.get('id'));
   }.property('topicTrackingState.messageCount'),
 
   newTopics: function(){
-    return this.get('topicTrackingState').countNew(this.get('name'));
+    return this.get('topicTrackingState').countNew(this.get('id'));
   }.property('topicTrackingState.messageCount'),
 
   topicStatsTitle: function() {
