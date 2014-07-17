@@ -106,7 +106,7 @@ test("quotes", function() {
          "it doesn't insert a new line for italics");
 
   format("[quote=,script='a'><script>alert('test');//':a][/quote]",
-         "<aside class=\"quote\" data-script=\"'a'&gt;&lt;script&gt;alert('test');//'=\"><blockquote></blockquote></aside>",
+         "<aside class=\"quote\"><blockquote></blockquote></aside>",
          "It will not create a script tag within an attribute");
 });
 
