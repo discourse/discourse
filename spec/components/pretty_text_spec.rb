@@ -76,6 +76,7 @@ describe PrettyText do
   describe "Excerpt" do
 
     context "images" do
+
       it "should dump images" do
         PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100).should == "[image]"
       end
@@ -285,6 +286,10 @@ describe PrettyText do
 
     it "allows bold chinese" do
       PrettyText.cook("**你hello**").should match_html "<p><strong>你hello</strong></p>"
+    end
+
+    it "sanitizes attempts to inject invalid attributes" do
+      PrettyText.cook("<a href=\"http://thedailywtf.com/\" data-bbcode=\"' class='fa fa-spin\">WTF</a>").should == "<p><a href=\"http://thedailywtf.com/\" rel=\"nofollow\">WTF</a></p>"
     end
   end
 

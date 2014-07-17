@@ -14,6 +14,16 @@ var _validClasses = {},
 function validateAttribute(tagName, attribName, value) {
   var tag = _validTags[tagName];
 
+  // Handle possible attacks
+  // if you include html in your markdown, it better be valid
+  //
+  // We are SUPER strict cause nokogiri will sometimes "correct"
+  //  this stuff "incorrectly"
+  var escaped = Handlebars.Utils.escapeExpression(value);
+  if(escaped !== value){
+    return;
+  }
+
   // Handle classes
   if (attribName === "class") {
     if (_validClasses[value]) { return value; }
