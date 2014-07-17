@@ -45,14 +45,16 @@ module TopicGuardian
     authenticated? && topic && not(topic.private_message?) && @user.has_trust_level?(:basic)
   end
 
+  def can_see_deleted_topics?
+    is_staff?
+  end
+
   def can_see_topic?(topic)
     return false unless topic
+    # Admins can see everything
     return true if is_admin?
-    return false if topic.deleted_at
-
-    # NOTE
-    # At the moment staff can see PMs, there is some talk of restricting this, however
-    # we still need to allow staff to join PMs for the case of flagging ones
+    # Deleted topics
+    return false if topic.deleted_at && !can_see_deleted_topics?
 
     # not secure, or I can see it
     (not(topic.read_restricted_category?) || can_see_category?(topic.category)) &&

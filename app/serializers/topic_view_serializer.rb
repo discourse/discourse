@@ -39,6 +39,7 @@ class TopicViewSerializer < ApplicationSerializer
              :highest_post_number,
              :last_read_post_number,
              :deleted_by,
+             :has_deleted,
              :actions_summary,
              :expandable_first_post
 
@@ -175,6 +176,14 @@ class TopicViewSerializer < ApplicationSerializer
       # TODO: other keys? :can_clear_flags, :acted, :can_undo
     end
     result
+  end
+
+  def has_deleted
+    object.has_deleted?
+  end
+
+  def include_has_deleted?
+    object.guardian.can_see_deleted_posts?
   end
 
   def expandable_first_post

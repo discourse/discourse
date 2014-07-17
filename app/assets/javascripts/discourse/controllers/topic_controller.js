@@ -13,7 +13,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   editingTopic: false,
   selectedPosts: null,
   selectedReplies: null,
-  queryParams: ['filter', 'username_filters'],
+  queryParams: ['filter', 'username_filters', 'show_deleted'],
 
   contextChanged: function(){
     this.set('controllers.search.searchContext', this.get('model.searchContext'));

@@ -11,7 +11,8 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
   queryParams: {
     filter: { replace: true },
-    username_filters: { replace: true }
+    username_filters: { replace: true },
+    show_deleted: { replace: true }
   },
 
   actions: {
@@ -96,6 +97,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
   setupParams: function(topic, params) {
     var postStream = topic.get('postStream');
     postStream.set('summary', Em.get(params, 'filter') === 'summary');
+    postStream.set('show_deleted', !!Em.get(params, 'show_deleted'));
 
     var usernames = Em.get(params, 'username_filters'),
         userFilters = postStream.get('userFilters');

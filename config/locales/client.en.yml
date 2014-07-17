@@ -514,6 +514,12 @@ en:
       enable: 'Summarize This Topic'
       disable: 'Show All Posts'
 
+    deleted_filter:
+      enabled_description: "This topic contains deleted posts, which have been hidden. To see all posts again, click below."
+      disabled_description: "Deleted posts in the topic are shown. To hide them again, click below."
+      enable: "Hide Deleted Posts"
+      disable: "Unhide Deleted Posts"
+
     private_message_info:
       title: "Private Message"
       invite: "Invite Others..."

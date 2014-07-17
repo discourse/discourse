@@ -35,7 +35,7 @@ class TopicsController < ApplicationController
     # existing installs.
     return wordpress if params[:best].present?
 
-    opts = params.slice(:username_filters, :filter, :page, :post_number)
+    opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted)
     username_filters = opts[:username_filters]
 
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)

@@ -10,6 +10,7 @@
 import PrivateMessageMapComponent from 'discourse/components/private-message-map';
 import TopicMapComponent from 'discourse/components/topic-map';
 import ToggleSummaryComponent from 'discourse/components/toggle-summary';
+import ToggleDeletedComponent from 'discourse/components/toggle-deleted';
 
 export default Discourse.ContainerView.extend({
   classNameBindings: ['hidden', ':topic-map'],
@@ -41,6 +42,16 @@ export default Discourse.ContainerView.extend({
         topic: topic,
         filterBinding: 'controller.filter'
       }, ToggleSummaryComponent);
+    }
+
+    if (Discourse.User.currentProp('staff')) {
+      // If we have deleted post filtering
+      if (topic.get('has_deleted')) {
+        container.attachViewWithArgs({
+          topic: topic,
+          filterBinding: 'controller.filter'
+        }, ToggleDeletedComponent);
+      }
     }
 
     // If we have a private message

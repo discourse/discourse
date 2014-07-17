@@ -1,24 +1,3 @@
-.gap {
-  background-color: scale-color-diff();
-  padding: 5px 0;
-  color: lighten($primary, 35%);
-  cursor: pointer;
-  text-align: center;
-  width: 80%;
-
-  &:hover {
-    background-color: scale-color-diff();
-  }
-
-  @include medium-width {
-    width: 795px;
-  }
-
-  @include small-width {
-    width: 815px;
-  }
-}
-
 .container {
   @extend .clearfix;
   max-width: $large-width;
@@ -759,12 +738,16 @@ blockquote > *:last-child {
   }
 }
 
+// variables are used to calculate the width of .gap
+$topic-body-width: 690px;
+$topic-body-width-padding: 11px;
+$topic-avatar-width: 45px;
 .topic-body {
-  width: 690px;
+  width: $topic-body-width;
   float: left;
   position: relative;
   border-top: 1px solid scale-color-diff();
-  padding: 12px 11px 15px 11px;
+  padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
   &.highlighted {
     background-color: scale-color($tertiary, $lightness: 85%);
   }
@@ -776,7 +759,7 @@ blockquote > *:last-child {
 .topic-avatar {
  border-top: 1px solid scale-color-diff();
  padding-top: 16px;
- width: 45px;
+ width: $topic-avatar-width;
  float: left;
 
  .wiki {
@@ -784,6 +767,15 @@ blockquote > *:last-child {
    color: scale-color($primary, $lightness: 60%);
    margin-left: 5px;
  }
+}
+
+.gap {
+  background-color: scale-color-diff();
+  padding: 5px 0;
+  color: lighten($primary, 30%);
+  cursor: pointer;
+  text-align: center;
+  width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
 }
 
 .posts-wrapper {
