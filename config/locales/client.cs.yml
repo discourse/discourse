@@ -217,8 +217,6 @@ cs:
       all_subcategories: "vše"
       no_subcategory: "žádné"
       category: "Kategorie"
-      posts: "Nové příspěvky"
-      topics: "Nová témata"
       latest: "Aktuální"
       latest_by: "latest by"
       toggle_ordering: "Přepnout editaci pořadí"
@@ -497,7 +495,6 @@ cs:
       view_new_post: "Zobrazit váš nový příspěvek."
       saving: "Ukládám..."
       saved: "Uloženo!"
-      saved_draft: "Máte rozepsaný příspěvek. Klikněte sem pro pokračování v úpravách."
       uploading: "Nahrávám..."
       show_preview: 'zobrazit náhled &raquo;'
       hide_preview: '&laquo; skrýt náhled'
@@ -807,7 +804,6 @@ cs:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         few: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
-      deleted_by: "odstranil"
       expand_collapse: "rozbalit/sbalit"
       gap:
         one: "1 příspěvek schován"
@@ -1355,7 +1351,6 @@ cs:
         email_type: "Typ emailu"
         to_address: "Komu"
         test_email_address: "testovací emailová adresa"
-        send_test: "odeslat testovací email"
         sent_test: "odesláno!"
         delivery_method: "Způsob doručení"
         preview_digest: "Náhled souhrnu"
@@ -1594,7 +1589,6 @@ cs:
           developer: 'Vývojáři'
           embedding: "Embedding"
           legal: "Právní záležitosti"
-          uncategorized: 'Nezařazené'
           backups: "Zálohy"
       badges:
         title: Odznaky

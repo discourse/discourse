@@ -95,6 +95,7 @@ pt_BR:
     links: Links
     faq: "FAQ"
     privacy_policy: "Política de Privacidade"
+    privacy: "Privacidade"
     mobile_view: "VIsualização Mobile"
     desktop_view: "Visualização Desktop"
     you: "Você"
@@ -198,8 +199,6 @@ pt_BR:
       all_subcategories: "todos"
       no_subcategory: "nenhum"
       category: "Categoria"
-      posts: "Novas Mensagens"
-      topics: "Novos Tópicos"
       latest: "Recentes"
       latest_by: "recentes por"
       toggle_ordering: "alternar controle de ordenação"
@@ -212,6 +211,8 @@ pt_BR:
       post_stat_sentence:
         one: "%{count} nova mensagem nos últimos %{unit}."
         other: "%{count} novas mensagens nos últimos %{unit}."
+    ip_lookup:
+      organisation: Organização
     user:
       said: "{{username}} postou:"
       profile: "Perfil"
@@ -250,6 +251,10 @@ pt_BR:
       deleted_yourself: "Sua conta foi excluída com sucesso."
       delete_yourself_not_allowed: "Você não pode excluir a sua conta agora. Contate um administrador para apagar a sua conta para você."
       unread_message_count: "Mensagens Privadas"
+      staff_counters:
+        flagged_posts: "posts marcados"
+        deleted_posts: "posts apagados"
+        suspensions: "suspensões"
       messages:
         all: "Todas"
         mine: "Minha"
@@ -294,10 +299,12 @@ pt_BR:
         frequency: "Vamos lhe enviar emails apenas quando não o virmos há algum tempo e você não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
+        instructions: "Seu nome completo."
         too_short: "O seu nome é muito curto."
         ok: "O seu nome parece ok."
       username:
         title: "Nome de Usuário"
+        instructions: "Seu @username deve ser único, curto e não deve conter espaços."
         short_instructions: "As pessoas podem mencionar você usando @{{username}}."
         available: "O seu Nome de Usuário está disponível."
         global_match: "O email corresponde ao Nome de Usuário registado."
@@ -398,7 +405,18 @@ pt_BR:
         private_message: "mensagem privada"
         the_topic: "o tópico"
     loading: "Carregando..."
+    errors:
+      reasons:
+        network: "Erro de Rede"
+        unknown: "Erro"
+      desc:
+        network: "Por favor verifique sua conexão."
+        server: "Algo deu errado."
+        unknown: "Algo deu errado."
+      buttons:
+        fixed: "Carregar Página"
     close: "Fechar"
+    assets_changed_confirm: "Este site foi atualizado. Obter a última versão?"
     read_only_mode:
       enabled: "Um modo somente de leitura. Você pode continuar a navegar no site, mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
@@ -501,13 +519,13 @@ pt_BR:
       create_pm: "Criar uma Mensagem Privada"
       title: "Ou pressione Ctrl+Enter"
       users_placeholder: "Adicionar um usuário"
+      title_placeholder: "Sobre o que é esta discussão em uma pequena frase?"
       edit_reason_placeholder: "por que você está editando?"
       show_edit_reason: "(adicione motivo da edição)"
       reply_placeholder: "Escreva sua resposta aqui. Utilize Markdown ou BBCode para formatar. Arraste ou cole aqui uma imagem para enviar."
       view_new_post: "Ver sua nova postagem."
       saving: "Salvando..."
       saved: "Salvo!"
-      saved_draft: "Você tem um rascunho da postagem em progresso. Clique em qualquer local nesta caixa para continuar a edição."
       uploading: "Enviando..."
       show_preview: 'mostrar pré-visualização &raquo;'
       hide_preview: '&laquo; esconder pré-visualização'
@@ -523,6 +541,7 @@ pt_BR:
       quote_title: "Bloco de citação"
       quote_text: "Bloco de citação"
       code_title: "Texto pré-formatado"
+      code_text: "identar texto pre-formatado em 4 espaços"
       upload_title: "Enviar"
       upload_description: "digite aqui a descrição do arquivo enviado"
       olist_title: "Lista numerada"
@@ -702,6 +721,7 @@ pt_BR:
           title: "Acompanhando"
         watching:
           title: "Observar"
+          description: "Você será notificado de todos os novos posts neste tópico. A contagem dos posts não lidos e dos novos posts aparecerá próxima ao lado da lista de tópicos."
         tracking_pm:
           title: "Monitorando"
         tracking:
@@ -721,6 +741,8 @@ pt_BR:
         open: "Abrir tópico"
         close: "Fechar tópico"
         auto_close: "Fechar automaticamente"
+        make_banner: "Banner do Tópico"
+        remove_banner: "Remover Banner do Tópico"
         unpin: "Remover destaque do tópico"
         pin: "Destacar tópico"
         pin_globally: "Fixar Tópico Globalmente"
@@ -749,6 +771,7 @@ pt_BR:
         email_or_username: "Email ou Nome de Usuário do convidado"
         email_or_username_placeholder: "email ou Nome de Usuário"
         action: "Convite"
+        success: "Nós convidamos aquele usuário para participar desta mensagem privada."
         error: "Desculpe, houve um erro ao convidar esse usuário."
         group_name: "nome do grupo"
       invite_reply:
@@ -812,10 +835,10 @@ pt_BR:
       continue_discussion: "Continuando a discussão do {{postLink}}:"
       follow_quote: "ir para a postagem citada"
       show_full: "Exibir mensagem completa"
+      show_hidden: 'Ver conteúdo escondido'
       deleted_by_author:
         one: "(postagens abandonadas pelo autor, serão removidas automaticamente em %{count} hora a menos que forem sinalizadas)"
         other: "(postagens abandonadas pelo autor, serão removidas automaticamente em %{count} horas a menos que forem sinalizadas)"
-      deleted_by: "apagado por"
       expand_collapse: "expandir/encolher"
       gap:
         one: "1 mensagem oculta"
@@ -880,6 +903,9 @@ pt_BR:
           like: "Descurtir"
           vote: "Desfazer voto"
         people:
+          off_topic: "{{icons}} marcado como off-topic"
+          spam: "{{icons}} marcado como spam"
+          inappropriate: "{{icons}} marcado como inapropriado"
           notify_moderators: "{{icons}} notificaram os moderadores"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notificaram os moderadores</a>"
           notify_user: "{{icons}} enviou uma mensagem privada"
@@ -1003,6 +1029,7 @@ pt_BR:
       change_in_category_topic: "Editar Descrição"
       already_used: 'Esta cor já foi usada para outra categoria'
       security: "Segurança"
+      images: "Imagens"
       auto_close_label: "Fechar automaticamente tópicos depois de:"
       auto_close_units: "horas"
       email_in: "Endereço de e-mail personalizado de entrada:"
@@ -1206,6 +1233,7 @@ pt_BR:
         clear_topic_flags: "Concluído"
         clear_topic_flags_title: "O tópico foi investigado e as questões foram resolvidas. Clique em Concluído para remover as sinalizações."
         flagged_by: "Sinalizado por"
+        resolved_by: "Resolvido por"
         system: "Sistema"
         error: "Algo deu errado"
         view_message: "Responder"
@@ -1316,6 +1344,8 @@ pt_BR:
         override_default: "Sobrepor padrão?"
         enabled: "Habilitado?"
         preview: "pré-visualização"
+        undo_preview: "remover preview"
+        rescue_preview: "estilo padrão"
         save: "Guardar"
         new: "Novo"
         new_style: "Novo Estilo"
@@ -1382,7 +1412,6 @@ pt_BR:
         email_type: "Tipo de Email"
         to_address: "Para (endereço)"
         test_email_address: "endereço de email para testar"
-        send_test: "enviar email de teste"
         sent_test: "enviado!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
@@ -1399,6 +1428,7 @@ pt_BR:
           filters:
             title: "Filtro"
             user_placeholder: "Nome de usuário"
+            address_placeholder: "nome@exemplo.com"
             type_placeholder: "resenha, cadastro..."
             skipped_reason_placeholder: "motivo"
       logs:
@@ -1594,6 +1624,9 @@ pt_BR:
           visits: "Visitas"
           days: "dias"
           topics_replied_to: "Tópicos Respondidos"
+          topics_viewed: "Tópicos Visualizados"
+          posts_read: "Posts Lidos"
+          posts_read_all_time: "Posts Lidos (todo o período)"
           flagged_posts: "Mensagens Sinalizadas"
       site_content:
         none: "Escolhar um tipo de conteúdo para começar a editar."
@@ -1623,7 +1656,6 @@ pt_BR:
           developer: 'Desenvolvedor'
           embedding: "Incorporação"
           legal: "Jurídico"
-          uncategorized: 'Sem categoria'
           backups: "Backups"
       badges:
         title: Emblemas
@@ -1649,6 +1681,7 @@ pt_BR:
         no_badges: Não há emblemas que podem ser concedidos.
         allow_title: Permitir ao emblema ser usado como título
         multiple_grant: Pode ser concedido várias vezes
+        icon: Ícone
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1704,6 +1737,8 @@ pt_BR:
         other: "%{count} emblemas condedidos"
       select_badge_for_title: Selecione um emblema para usar como título
       badge:
+        editor:
+          name: Editor
         basic_user:
           name: Básico
           description: Acesso a todas as funções essenciais da comunidade.
@@ -1716,3 +1751,20 @@ pt_BR:
         elder:
           name: Ancião
           description: Acesso a editar, fixar, fechar, arquivar, separar e unir tópicos globalmente.
+        welcome:
+          name: Bem-Vindo
+          description: Recebeu um like.
+        nice_post:
+          name: Post Legal
+        good_post:
+          name: Bom Post
+        great_post:
+          name: Ótimo Post
+        first_like:
+          name: Primeiro Like
+        first_flag:
+          name: Primeira Marcação
+        first_share:
+          name: Primeiro Compartilhamento
+        first_link:
+          name: Primeiro Link

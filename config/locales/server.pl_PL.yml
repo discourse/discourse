@@ -92,26 +92,6 @@ pl_PL:
       one: "Twojego pierwszego wpisu"
       few: "Twoich pierwszych %{count} wpisów"
       other: "Twoich pierwszych %{count} wpisów"
-    new-topic: |
-      Witaj na forum %{site_name} &mdash; **dziękujemy za założenie nowego wątku!**
-
-      - Czy tytuł dobrze opisuje temat? Czy brzmi interesująco?
-
-      - O czym jest ten wpis? Kogo zainteresuje? Dlaczego ma znaczenie? Jaki rodzaj odpowiedzi masz zamiar otrzymać od społeczności?
-
-      - W tytule tematu umieść słowa, po których inni będą mogli go znaleźć. Aby zgrupować temat z podobnymi wybierz kategorię.
-
-      Aby dowiedzieć się więcej, [przeczytaj nasz FAQ](/faq). Ten panel pokaże się tylko podczas tworzenia %{education_posts_text}.
-    new-reply: |
-      Witaj na forum %{site_name} &mdash; **dziękujemy za rozwinięcie tematu!**
-
-      - Czy Twoja odpowiedź wzbogaca w jakiś sposób dyskusję?
-
-      - Bądź uprzejmy dla innych członków społeczności.
-
-      - Konstruktywna krytyka jest mile widziana ale krytykuj *idee*, nie ludzi.
-
-      Aby dowiedzieć się więcej, [przeczytaj nasz FAQ](/faq). Ten panel pokaże się tylko podczas  tworzenia %{education_posts_text}.
     avatar: |
       ### Co powiesz na zmianę swojego zdjęcia?
 
@@ -319,7 +299,6 @@ pl_PL:
       long_form: 'oznaczono to jako spam'
     inappropriate:
       title: 'Niewłaściwe'
-      description: 'Ten wpis zawiera treści, które rozsądna osoba uznałaby za ofensywne, obraźliwe lub za złamanie <a href="/faq">zasad naszej społeczności</a>.'
       long_form: 'oznaczono to jako niewłaściwe'
     notify_user:
       title: 'Powiadom {{username}}'
@@ -329,7 +308,6 @@ pl_PL:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Powiadom moderatorów'
-      description: 'Ten wpis wymaga uwagi moderatorów na podstawie <a href="/faq">FAQ</a>, <a href="%{tos_url}">warunków serwisu</a>, lub z innego powodu nie wymienionego powyżej.'
       long_form: 'powiadomiono moderatorów'
       email_title: 'Wpis w "%{title}" wymaga uwagi moderatorów'
       email_body: "%{link}\n\n%{message}"
@@ -363,7 +341,6 @@ pl_PL:
     title: 'Wypisano'
     description: "Zostałeś wypisany. Nie skontaktujemy się z Tobą więcej!"
     oops: "Jeśli nie chciałeś tego zrobić, kliknij poniżej."
-    not_found: "Błąd wypisywania"
     not_found_description: "Przepraszamy, nie mogliśmy Cię wypisać. Możliwe że link, który dostałeś w emailu, wygasł."
   resubscribe:
     action: "Zapisz ponownie"
@@ -503,43 +480,13 @@ pl_PL:
       description: "The text displayed for unauthorized users when login is required on the site."
   site_settings:
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
-    min_post_length: "Minimalna długość wpisu w znakach"
-    min_private_message_post_length: "Minimalna długość wpisu w znakach dla prywatnych wiadomości"
-    max_post_length: "Maksymalna długość wpisu w znakach"
-    min_topic_title_length: "Minimalna długość tytułu tematu w znakach"
-    max_topic_title_length: "Maksymalna długość tytułu tematu w znakach"
-    min_private_message_title_length: "Minimalna długość tytułu prywatnej wiadomości w znakach"
-    min_search_term_length: "Minimalna długość wyszukiwanego wyrażenia w znakach"
     allow_uncategorized_topics: "Pozwól na tworzenie tematów bez kategorii"
-    allow_duplicate_topic_titles: "Pozwól na tematy o identycznych tytułach"
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
-    enforce_global_nicknames: "Wymuś globalną unikalność nazw użytkowników (UWAGA: zmieniaj tylko w czasie wstępnej konfiguracji)"
-    discourse_org_access_key: "Klucz dostępu do rejestru nazw użytkowników Discourse Hub na discourse.org"
-    educate_until_posts: "Wyświetlaj okno edukacyjne póki użytkownik napisze tyle wpisów"
-    title: "Tytuł strony, będzie używany w tagu title i innych miejscach."
-    site_description: "Describe this forum in one sentence. This description will be used in the meta description tag."
-    contact_email: "Adres email kogoś, z kim należy się kontaktować w kwestii serwisu. Istotne informacje od Discourse.org dotyczące krytycznych aktualizacji mogą być wysyłane pod ten adres."
-    company_full_name: "Pełna nazwa firmy, która prowadzi ten serwis, używana w prawnych dokumentach jak np. /tos"
-    company_short_name: "Krótka nazwa firmy, która prowadzi ten serwis, używana w prawnych dokumentacj jak np. /tos"
-    company_domain: "Domena używana przez firmę, która prowadzi ten serwis, używana w prawnych dokumentacj jak np. /tos"
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
-    crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
-    ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
-    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view edit history."
-    delete_removed_posts_after: "Number of hours after which posts removed by the author will be deleted."
-    max_image_width: "Maximum allowed width of images in a post"
-    max_image_height: "Maximum allowed height of images in a post"
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
-    add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
-    post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
-    post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
-    category_post_template: "The post template used when you create a new category"
-    logo_url: "The logo for your site eg: http://example.com/logo.png"
-    logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://example.com/logo-small.png"
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
-    notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
     email_custom_headers: "A pipe-delimited list of custom email headers"
     enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -549,37 +496,18 @@ pl_PL:
     auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
-    cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via flagging"
-    num_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 disables this feature."
-    num_users_to_block_new_user: "If a new user's posts get num_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 disables this feature."
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
-    flag_sockpuppets: "If a new user (i.e., registered in the last 24 hours) who started a topic and a new user who replies in that topic are at the same IP address, both their posts will automatically be flagged as spam."
-    traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
-    post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "How many topics loaded by default on the topics list page, and when loading more topics"
-    posts_per_page: "How many posts loaded by default on a topic page, and when loading more posts"
-    site_contact_username: "Username for the author of automated private messages sent by the forum"
-    send_welcome_message: "Do new users get a welcome private message?"
-    suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
-    suppress_reply_directly_above: "Don't show in-reply-to on a post when there is a single reply directly above"
-    allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
-    email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
-    email_domains_whitelist: "A pipe-delimited list of email domains that users may register with. WARNING: Users with email domains other than those listed will not be allowed."
     version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
-    new_version_emails: "Send an email to the contact_email address when a new version is available."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
-    invite_only: "Public registration is disabled, new users must be invited"
-    login_required: "Require authentication to read posts"
     min_password_length: "Minimalna długość hasła."
-    enable_local_logins: "Enable traditional, local username and password authentication"
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
@@ -592,84 +520,20 @@ pl_PL:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
-    rate_limit_create_topic: "After creating a topic, users must wait this many seconds before they can create another topic"
-    rate_limit_create_post: "After posting, users must wait this many seconds before they can create another post"
-    max_likes_per_day: "Maximum number of likes per user per day"
-    max_flags_per_day: "Maximum number of flags per user per day"
-    max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
-    max_edits_per_day: "Maximum number of edits per user per day"
-    max_topics_per_day: "Maximum number of topics a user can create per day"
-    max_private_messages_per_day: "The maximum amount of private messages users can create per day"
-    suggested_topics: "Number of suggested topics shown at the bottom of a topic"
-    clean_up_uploads: "Remove orphaned uploads to prevent illegal hosting. WARNING: you might want to make a backup of your /uploads directory before enabled this setting."
-    enable_s3_uploads: "Place uploads on Amazon S3"
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods."
-    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
-    s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images"
-    s3_region: "The Amazon S3 region name that will be used to upload images"
-    enable_flash_video_onebox: "Enable embedding of swf and flv links in oneboxes. WARNING: may introduce a security risk"
-    default_invitee_trust_level: "Default trust level (0-4) for invited users"
-    default_trust_level: "Default trust level (0-4) for users"
-    basic_requires_topics_entered: "How many topics a new user must enter before promotion to basic (1) trust level"
-    basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"
-    basic_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to basic (1) trust level"
-    regular_requires_topics_entered: "How many topics a basic user must enter before promotion to regular (2) trust level"
-    regular_requires_read_posts: "How many posts a basic user must read before promotion to regular (2) trust level"
-    regular_requires_time_spent_mins: "How many minutes a basic user must read posts before promotion to regular (2) trust level"
-    regular_requires_days_visited: "How many days a basic user must visit the site before promotion to regular (2) trust level"
-    regular_requires_likes_received: "How many likes a basic user must receive before promotion to regular (2) trust level"
-    regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level"
-    regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level"
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
-    newuser_max_links: "How many links a new user can add to a post"
-    newuser_max_images: "How many images a new user can add to a post"
-    newuser_max_attachments: "Ile załączników może dodać nowy użytkownik do wpisu"
-    newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post"
-    max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
-    create_thumbnails: "Create thumbnails for lightboxed images"
-    email_time_window_mins: "How many minutes we wait before sending reply notification emails, to give users a chance to edit and finalize their posts"
-    email_posts_context: "How many prior replies to include as context in notification emails"
-    flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
-    max_word_length: "The maximum allowed word length, in characters, in a topic title"
-    title_min_entropy: "The minimum allowed entropy (unique characters, non-english count for more) required for a topic title"
-    body_min_entropy: "The minimum allowed entropy (unique characters, non-english count for more) required for a post body"
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
-    min_title_similar_length: "The minimum length of a title before it will be checked for similar topics"
-    min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
-    category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
-    max_image_size_kb: "The maximum size of images we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
-    max_attachment_size_kb: "The maximum size of files we allow users to upload in kB - configure the limit in nginx (client_max_body_size) / apache or proxy as well."
-    max_similar_results: "How many similar topics to show a user while they are composing a new topic"
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
-    topic_views_heat_low: "The number of views after which a topic's heat level is low."
-    topic_views_heat_medium: "The number of views after which a topic's heat level is medium."
-    topic_views_heat_high: "The number of views after which a topic's heat level is high."
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
-    staff_like_weight: "Extra weighting factor given to likes when performed by staff."
-    reply_by_email_enabled: "Enable replying to topics via email"
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    pop3s_polling_enabled: "Poll via POP3S for email replies"
-    pop3s_polling_port: "The port to poll a POP3S account on"
-    pop3s_polling_host: "The host to poll for email via POP3S"
-    pop3s_polling_username: "The username for the POP3S account to poll for email"
-    pop3s_polling_password: "The password for the POP3S account to poll for email"
-    email_in: "Pozwól użytkownikom rozpoczynać nowe tematy przez email."
-    minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
-    relative_date_duration: "Number of days after posting where post dates will be shown as relative instead of absolute. Examples: relative date: 7d, absolute date: 20 Feb"
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
-    allow_uploaded_avatars: "Allow users to upload their custom avatars"
-    allow_animated_avatars: "Allow users to use animated gif for avatars. WARNING: it is highly recommended to run the avatars:refresh rake task after changing that setting."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
-    detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars"
-    max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"
-    sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
-    dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before we consider it dominating."
   notification_types:
     mentioned: "%{display_username} wspomniał(-a) o Tobie w %{link}"
     liked: "%{display_username} polubił(-a) Twój wpis w %{link}"
@@ -714,6 +578,7 @@ pl_PL:
     omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
   user:
     username:
+      short: "Musi zawierać przynajmniej %{min} znaków."
       characters: "może zawierać tylko litery, cyfry i podkreślenia"
       unique: "musi być unikalna"
       blank: "musi zostać podana"
@@ -721,15 +586,25 @@ pl_PL:
     email:
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
       blocked: "is not allowed."
-  invite_mailer:
-    text_body_template: "%{invitee_name} zaprosił ciebie do dyskusji \n\n> %{topic_title}\n\nw\n\n> **%{site_title}**\n>\n> %{site_description}\n\nKliknij link poniżej, by przeczytać więcej: \n\n%{invite_link}\n\nTo zaproszenie zostało wysłane przez zaufanego użytkownika. Możesz od razu dołączyć od razu dołączyć do dyskusji. \n"
+  invite_forum_mailer:
+    text_body_template: |
+      %{invitee_name} wysłał Tobie zaproszenie
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Kliknij link poniżej by dowiedzieć się więcej:
+
+      %{invite_link}
+
+      To zaproszenie zostało wysłane przez zaufanego użytkownika, nie musisz się logować.
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   flags_reminder:
     post_number: "wpis"
   flag_reasons:
     off_topic: "Twój wpis został oznaczony jako **off-topic** (nie na temat): społeczność uważa, że nie pasuje to tematu zdefiniowanego przez tytuł i treść pierwszego wpisu w wątku."
-    inappropriate: "Twój wpis został oznaczony jako **nieodpowiedni**: społeczność uważa, że agresywny, napastliwy lub w inny sposób niezgodny z [wytycznymi tej społeczności](/faq)."
     spam: "Twój wpis został oznaczony jako **spam**: społeczność uważa, że to jest nie przydatna reklama nie mająca związku z tematem."
   system_messages:
     post_hidden:
@@ -777,14 +652,6 @@ pl_PL:
         - Użyj czasów jako skrótów przy otwieraniu tematu. Możesz zawsze znaleźć się na górze tematu klikając datę pierwszego wpisu, i na dole - przez datę ostatniego.
     welcome_user:
       subject_template: "Witaj na forum %{site_name}!"
-      text_body_template: |
-        Dziękujemy za dołączenie do forum %{site_name}, i witamy!
-
-        %{new_user_tips}
-
-        Zawsze wierzymy w [cywilizowane zachowanie społeczności](%{base_url}/faq).
-
-        Miłego uczestnictwa!
     welcome_invite:
       subject_template: "Witaj na forum %{site_name}!"
     export_succeeded:
@@ -795,22 +662,8 @@ pl_PL:
       text_body_template: "Import się powiódł."
     too_many_spam_flags:
       subject_template: "Nowe konto zablokowane"
-      text_body_template: |
-        Witaj,
-
-        Jest to automatyczna wiadomość z forum %{site_name} wysłana by poinformować Cię że Twoje wpisy zostały automatycznie ukryte z powodu oflagowania przez społeczność.
-
-        Jako środek zapobiegawczy, na Twoim nowym koncie zablokowano tworzenie nowych odpowiedzi i tematów do momentu gdy członek zespołu będzie mógł zweryfikować Twoje konto.
-
-        Dodatkowe wskazówki możesz znaleźć w naszym [FAQ](%{base_url}/faq).
     blocked_by_staff:
       subject_template: "Account blocked"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
-
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
     unblocked:
       subject_template: "Konto odblokowane"
       text_body_template: |
@@ -876,12 +729,10 @@ pl_PL:
         ---
         %{respond_instructions}
     digest:
-      why: "Oto krótkie podsumowanie dyskusji na forum %{site_link} od Twojej ostatniej wizyty %{last_seen_at}."
       subject_template: "[%{site_name}] Streszczenie dla %{date}"
       new_activity: "Nowa aktywność w Twoich tematach i wpisach:"
       top_topics: "Najpopularniejsze wpisy"
       other_new_topics: "Popularne wątki"
-      unsubscribe: "Streszczenie to jest wysyłane jako kurtuazyjne powiadomienie z forum %{site_link} po tym jak nie widzimeliśmy Cię od jakiegoś czasu. By się z niego wypisać %{unsubscribe_link}."
       click_here: "kliknij tutaj"
       from: "%{site_name} streszczenie"
       read_more: "Czytaj więcej"
@@ -915,21 +766,6 @@ pl_PL:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
-      text_body_template: |
-        Witaj na forum %{site_name}!
-
-        Członek zespołu zaakceptował Twoje konto na forum %{site_name}.
-
-        Kliknij na poniższy link by zatwierdzić i aktywować Twoje nowe konto:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Jeśli powyższy link nie jest klikalny, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
-
-        %{new_user_tips}
-
-        Zawsze wierzymy w [cywilizowane zachowanie społeczności](%{base_url}/faq).
-
-        Miłego uczestnictwa!
     signup:
       subject_template: "[%{site_name}] Aktywuj Twoje nowe konto"
       text_body_template: |
@@ -939,11 +775,8 @@ pl_PL:
         %{base_url}/users/activate-account/%{email_token}
 
         Jeśli powyższy link nie jest klikalny, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
-  discourse_hub:
-    access_token_problem: "Powiedz administratorowi: Proszę zmienić ustawienia serwisu by dołączyć prawidłowy discourse_org_access_key."
   page_not_found:
     title: "Strona, którą chciałeś odwiedzić, nie istnieje lub jest prywatna."
-    search_google: "Szukaj w Google"
   login_required:
     welcome_message: |
       #[Witaj na %{title}](#welcome)

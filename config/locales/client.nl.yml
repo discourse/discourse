@@ -198,8 +198,6 @@ nl:
       all_subcategories: "alle"
       no_subcategory: "geen"
       category: "Categorie"
-      posts: "Nieuwe berichten"
-      topics: "Nieuwe topics"
       latest: "Laatste"
       latest_by: "Laatste door"
       toggle_ordering: "schakel sorteermethode"
@@ -497,7 +495,6 @@ nl:
       view_new_post: "Bekijk je nieuwe bericht."
       saving: "Opslaan..."
       saved: "Opgeslagen!"
-      saved_draft: "Je hebt nog een conceptbericht open staan. Klik in dit veld om verder te gaan met bewerken."
       uploading: "Uploaden..."
       show_preview: 'toon voorbeeld &raquo;'
       hide_preview: '&laquo; verberg voorbeeld'
@@ -736,6 +733,7 @@ nl:
         email_or_username: "E-mail of gebruikersnaam van genodigde"
         email_or_username_placeholder: "e-mailadres of gebruikersnaam"
         action: "Uitnodigen"
+        success: "Deze gebruiker is uitgenodigd om in de privé-conversatie deel te nemen"
         error: "Sorry, er is iets misgegaan bij het uitnodigen van deze persoon"
         group_name: "groepsnaam"
       invite_reply:
@@ -801,7 +799,6 @@ nl:
       deleted_by_author:
         one: "(bericht ingetrokken door de schrijver), wordt automatisch verwijderd over %{count} uur, tenzij gemarkeerd."
         other: "(berichten ingetrokken door de schrijver), worden automatisch verwijderd over %{count} uur, tenzij gemarkeerd."
-      deleted_by: "verwijderd door"
       expand_collapse: "in-/uitvouwen"
       gap:
         one: "Eén bericht weggelaten."
@@ -995,6 +992,7 @@ nl:
       auto_close_label: "Sluit topics automatisch na:"
       auto_close_units: "uren"
       email_in: "Adres voor inkomende mail:"
+      allow_badges_label: "Badges toestaan"
       edit_permissions: "Wijzig permissies"
       add_permission: "Nieuwe permissie"
       this_year: "dit jaar"
@@ -1360,7 +1358,6 @@ nl:
         email_type: "E-mailtype"
         to_address: "Ontvangeradres"
         test_email_address: "e-mailadres om te testen"
-        send_test: "verstuur test e-mail"
         sent_test: "verzonden!"
         delivery_method: "Verzendmethode"
         preview_digest: "Voorbeeld digestmail"
@@ -1377,6 +1374,7 @@ nl:
           filters:
             title: "Filter"
             user_placeholder: "gebruikersnaam"
+            address_placeholder: "naam@voorbeeld.nl"
             type_placeholder: "digest, inschijving"
             skipped_reason_placeholder: "reden"
       logs:
@@ -1600,7 +1598,6 @@ nl:
           developer: 'Ontwikkelaar'
           embedding: "Embedden"
           legal: "Juridisch"
-          uncategorized: 'Ongecategoriseerd'
           backups: "Backups"
       badges:
         title: Badges
@@ -1625,6 +1622,8 @@ nl:
         no_user_badges: "%{name} heeft nog geen badges toegekend gekregen."
         no_badges: Er zijn geen badges die toegekend kunnen worden.
         allow_title: Embleem mag als titel gebruikt worden
+        multiple_grant: Kan meerdere malen worden toegekend
+        listable: Badge op de publieke badges pagina tonen
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1668,6 +1667,7 @@ nl:
         mark_watching: '<b>m</b> dan <b>w</b> Markeer topic als in de gaten houden'
     badges:
       title: Badges
+      allow_title: "badge als titel toestaan"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"
@@ -1683,3 +1683,9 @@ nl:
           name: Leider
         welcome:
           name: Welkom
+        nice_post:
+          description: 10 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
+        good_post:
+          description: 25 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
+        great_post:
+          description: 50 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.

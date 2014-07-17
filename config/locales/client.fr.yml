@@ -198,8 +198,6 @@ fr:
       all_subcategories: "toutes"
       no_subcategory: "aucune"
       category: "Catégorie"
-      posts: "Nouveaux messages"
-      topics: "Nouveaux sujets"
       latest: "Sujets récents"
       latest_by: "dernièr sujet de"
       toggle_ordering: "modifier le mode du tri"
@@ -504,13 +502,13 @@ fr:
       create_pm: "Créer un Message Privé"
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
+      title_placeholder: "Quel est votre sujet en une phrase descriptive ?"
       edit_reason_placeholder: "pourquoi éditez vous ?"
       show_edit_reason: "(ajouter la raison de l'édition)"
       reply_placeholder: "Saisissez votre réponse ici. Utilisez le Markdown ou le BBCode pour le formatage. Vous pouvez déposer ou coller une image ici."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde..."
       saved: "Sauvegardé !"
-      saved_draft: "Vous avez un brouillon en attente. Cliquez n'importe où pour en reprendre l'édition"
       uploading: "Envoi en cours..."
       show_preview: 'afficher la prévisualisation &raquo;'
       hide_preview: '&laquo; cacher la prévisualisation'
@@ -526,6 +524,7 @@ fr:
       quote_title: "Citation"
       quote_text: "Citation"
       code_title: "Texte préformaté"
+      code_text: "texte préformaté indenté par 4 espaces"
       upload_title: "Envois de fichier"
       upload_description: "saisir ici la description de votre fichier"
       olist_title: "Liste numérotée"
@@ -705,6 +704,7 @@ fr:
           title: "Suivre attentivement"
         watching:
           title: "Surveiller"
+          description: "Vous serez notifier de chaque nouveau message de ce sujet. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
         tracking_pm:
           title: "Suivi simple"
         tracking:
@@ -821,7 +821,6 @@ fr:
       deleted_by_author:
         one: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
         other: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
-      deleted_by: "supprimé par"
       expand_collapse: "étendre/réduire"
       gap:
         one: "1 message caché"
@@ -1390,7 +1389,6 @@ fr:
         email_type: "Type d'email"
         to_address: "À l'adresse"
         test_email_address: "Adresse mail à tester"
-        send_test: "Envoyer le mail de test"
         sent_test: "Envoyé !"
         delivery_method: "Moyen d'envoi"
         preview_digest: "Prévisualisation de l'email"
@@ -1632,7 +1630,6 @@ fr:
           developer: 'Développeur'
           embedding: "Incorporer"
           legal: "Légal"
-          uncategorized: 'Sans catégorie'
           backups: "Sauvegardes"
       badges:
         title: Badges

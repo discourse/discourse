@@ -205,7 +205,6 @@ id:
         delete: "Hapus"
       email:
         test_email_address: "alamat email uji coba"
-        send_test: "kirim email ujicoba"
         sent_test: "terkirim!"
         delivery_method: "Metode Pengiriman"
         html: "html"

@@ -114,8 +114,6 @@ uk:
     categories:
       all: "всі категорії"
       category: "Категорія"
-      posts: "Нові дописи"
-      topics: "Нові теми"
       latest: "Останні"
       latest_by: "latest by"
       toggle_ordering: "показати/сховати елемент керування для впорядкування"
@@ -355,7 +353,6 @@ uk:
       view_new_post: "Перегляньте свій новий допис."
       saving: "Збереження..."
       saved: "Збережено!"
-      saved_draft: "У Вас є незавершена чернетка допису. Натисніть будь-де в цьому прямокутнику, щоб продовжити редагування."
       uploading: "Завантаження..."
       show_preview: 'попередній перегляд &raquo;'
       hide_preview: '&laquo; сховати попередній перегляд'
@@ -594,7 +591,6 @@ uk:
       reply_as_new_topic: "Відповісти у новій Темі"
       continue_discussion: "В продовження дискусії {{postLink}}:"
       follow_quote: "перейти до цитованого допису"
-      deleted_by: "видалено"
       expand_collapse: "розгорнути/згорнути"
       errors:
         create: "Даруйте, під час створення допису трапилася помилка. Будь ласка, спробуйте ще раз."
@@ -991,7 +987,6 @@ uk:
         email_type: "Тип листа"
         to_address: "Скринька отримувача"
         test_email_address: "електронна скринька для перевірки"
-        send_test: "надіслати тестовий лист"
         sent_test: "надіслано!"
         delivery_method: "Спосіб доставки"
         preview_digest: "Стислий виклад новин"
@@ -1203,7 +1198,6 @@ uk:
           developer: 'Для розробників'
           embedding: "Взаємодія"
           legal: "Legal"
-          uncategorized: 'Без категорій'
           backups: "Backups"
     lightbox:
       download: "звантажити"

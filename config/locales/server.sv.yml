@@ -73,30 +73,6 @@ sv:
     until_posts:
       one: "1 inlägg"
       other: "%{count} inlägg"
-    new-topic: |
-      Välkommen till %{site_name} &mdash; **tack för att du startar en ny konversation!**
-
-      Tänk på följande när du skapar en ny tråd:
-
-      - Beskriver titeln vad din tråd handlar om? Låter det intressant?
-
-      - Det första inlägget definierar din tråd: Vad handlar den om? Vem skulle vara intresserad av den? Är ämnet viktigt? Vilken typ av svar hoppas du på från andra användare?
-
-      - Försök att skriva en tydlig titel så att andra kan *söka efter* din tråd. Försök att placera din tråd i en lämplig kategori.
-
-      För mer vägledning, [se vår FAQ](/faq). Detta meddelande visas bara för dina första %{education_posts_text}.
-    new-reply: |
-      Välkommen till %{site_name} &mdash; **tack för att du bidrar till konversationen!**
-
-      Tänk på följande när du svarar:
-
-      - Förbättrar ditt svar konversationen på något sätt, om än litet?
-
-      - Bemöt andra medlemmar med samma respekt som du själv vill bli bemött.
-
-      - Det är okej att vara kritisk, men kom ihåg att kritisera *idéer*, inte personer.
-
-      För mer vägledning, [se vår FAQ](/faq). Detta meddelande visas bara för dina första %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -121,9 +97,6 @@ sv:
     no_info_other: "<div class='missing-profile'>%{name} har inte skrivit någonting i dess profils Om Mig-fält ännu</div>"
   category:
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
-    errors:
-      self_parent: "En underkategori kan inte ha sig själv som förälder."
-      depth: "Du kan inte ha flera nivåer av subkategorier."
   trust_levels:
     newuser:
       title: "besökare"
@@ -252,7 +225,6 @@ sv:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notifiera moderatorer'
-      description: 'Det här inlägget kräver generell uppmärksamhet från en moderator baserat på <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, eller på grund av en annan anledning som inte finns med ovan.'
       long_form: 'notifierade moderatorer'
       email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från en moderator'
       email_body: "%{link}\n\n%{message}"
@@ -277,7 +249,6 @@ sv:
     title: 'Avprenumererad'
     description: "Du har blivit avprenumererad. Vi kommer inte att kontakta dig igen!"
     oops: "Om du inte menade att göra detta, klicka nedan."
-    not_found: "Fel vid Avprenumerering"
     not_found_description: "Tyvärr, vi kunde inte avprenumerera dig. Det är möjligt att länken i ditt mail har löpt ut."
   resubscribe:
     action: "Återprenumerera"
@@ -408,34 +379,10 @@ sv:
       title: "Botten av sidorna"
   site_settings:
     default_locale: "Standardspråk för den här instansen av Discourse (ISO 639-1-kod)"
-    min_post_length: "Minimumlängd på inlägg i tecken"
-    min_private_message_post_length: "Minsta längd i tecken för privata meddelanden"
-    max_post_length: "Maxlängd på inlägg i tecken"
-    min_topic_title_length: "Minimumlängd på trådrubrik i tecken"
-    max_topic_title_length: "Maxlängd på trådrubrik i tecken"
-    min_private_message_title_length: "Minsta titellängd i tecken för privata meddelanden"
-    min_search_term_length: "Minimumlängd på sökterm i tecken"
-    allow_duplicate_topic_titles: "Tillåt trådar med identiska rubriker"
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
-    educate_until_posts: "Visa hjälppanelen för komponering tills dess att användaren har gjort så här många inlägg"
-    title: "Titeln för denna webbplats, används i titel-taggar och på annat håll"
-    company_full_name: "Det fullständiga namnet för företaget som driver denna webbplats, används i juridiska dokument så som /tos"
-    company_short_name: "Det korta namnet för företaget som driver denna webbplats, används i juridiska dokument så som /tos"
-    company_domain: "Domännamnet som ägs av företaget som driver denna webbplats, används i juridiska dokument så som /tos"
     queue_jobs: "Köa diverse jobb i sidekiq, om urkryssat så körs köer infogat"
-    crawl_images: "Aktivera hämtning av bilder från tredjepartskällor för att infoga bredd och höjd"
-    download_remote_images_to_local: "Ladda hem en kopia av länkade bilder i inlägg"
-    ninja_edit_window: "Antal sekunder efter ett inlägg när en ändring inte skapar en ny version"
-    max_image_width: "Maxbredd för bilder i ett inlägg"
-    max_image_height: "Maximal tillåten höjd hos bilder i ett inlägg"
-    add_rel_nofollow_to_user_content: "Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inkluderat förälderdomäner) så kräver en ändring av detta att du uppdaterar all bakad markdown"
-    post_excerpt_maxlength: "Maxlängd på ett inläggs utdrag i tecken"
-    post_onebox_maxlength: "Maxlängd på ett onebox:at Discourse-inlägg"
-    logo_url: "Logotypen för din webbplats t.ex.: http://xyz.com/x.png"
-    logo_small_url: "Den lilla logotypen för din webbplats som används när man bläddrar ner i trådar t.ex.: http://xyz.com/x-small.png"
     favicon_url: "En favicon för till webbplats, se http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Ikon som används för Apples touch-enheter. Rekommenderad storlek är 144*144 pixlar."
-    summary_score_threshold: "Minsta poäng ett inlägg ska ha för att inkluderas i 'sammanfattningen'"
     enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
@@ -444,28 +391,15 @@ sv:
     auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
-    cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit the post that was hidden due to flagging"
     max_topics_in_first_day: "Maximalt antal trådar en användare får skapa under sin första dag på sidan"
     max_replies_in_first_day: "Maximalt antal svar en användare får skapa under sin första dag på sidan"
     notify_mods_when_user_blocked: "Om en användare blockeras automatiskt, skicka ett meddelande till alla moderatorer."
-    traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
-    post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    posts_per_page: "How many posts are returned on a topic page"
-    send_welcome_message: "Får nya användare ett privat meddelande?"
-    suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
-    suppress_reply_directly_above: "Visa inte svar-till för inlägg där det finns ett enskilt svar direkt ovanför"
-    allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
-    email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
-    email_domains_whitelist: "A pipe-delimited list of email domains that users may register with. WARNING: Users with email domains other than those listed will not be allowed."
     version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
-    new_version_emails: "Skicka ett email till adressen kontakt_adress när en ny version finns tillgänglig."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
-    invite_only: "Allmän registrering är avstängt, nya användare måste ha en inbjudan."
-    login_required: "Kräv autentisering för att läsa inlägg"
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
@@ -478,69 +412,11 @@ sv:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
-    rate_limit_create_topic: "How many seconds, after creating a topic, before you can create another topic"
-    rate_limit_create_post: "How many seconds, after creating a post, before you can create another post"
-    max_likes_per_day: "Maximum number of likes per user per day"
-    max_flags_per_day: "Maximum number of flags per user per day"
-    max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
-    max_edits_per_day: "Maximum number of edits per user per day"
-    max_topics_per_day: "Maximum number of topics a user can create per day"
-    max_private_messages_per_day: "The maximum amount of private messages users can create per day"
-    suggested_topics: "The number of suggested topics shown at the bottom of a topic"
-    enable_s3_uploads: "Place uploads on Amazon S3"
-    s3_access_key_id: "ID för denåtkomstnyckel till Amazon S3 som kommer att användas för att ladda upp bilder"
-    s3_secret_access_key: "Hemlig åtkomstnyckel till Amazon S3 som kommer att användas för att ladda upp bilder"
-    s3_region: "Regionsnamn för Amazon S3 som kommer att användas för att ladda upp bilder"
-    enable_flash_video_onebox: "Aktivera inbäddning av swf- eller flv-länkar i oneboxes. VARNING: kan medföra en säkerhetsrisk"
-    default_invitee_trust_level: "Default trust level (0-4) for invited users"
-    default_trust_level: "Default trust level (0-4) for users"
-    basic_requires_topics_entered: "How many a topics a new user must enter before promotion to basic (1) trust level"
-    basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"
-    basic_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to basic (1) trust level"
-    regular_requires_topics_entered: "How many a topics a basic user must enter before promotion to regular (2) trust level"
-    regular_requires_read_posts: "How many posts a basic user must read before promotion to regular (2) trust level"
-    regular_requires_time_spent_mins: "How many minutes a basic user must read posts before promotion to regular (2) trust level"
-    regular_requires_days_visited: "How many days a basic user must visit the site before promotion to regular (2) trust level"
-    regular_requires_likes_received: "How many likes a basic user must receive before promotion to regular (2) trust level"
-    regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level"
-    regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level"
     min_trust_to_create_topic: "Minsta förtroendenivå som krävs för att skapa en ny tråd"
-    newuser_max_links: "How many links a new user can add to a post"
-    newuser_max_images: "How many images a new user can add to a post"
-    newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post"
-    max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
-    create_thumbnails: "Skapa miniatyrer för lightbox:ade bilder"
-    email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first"
-    email_posts_context: "Hur många tidigare svar som ska inkluderas som kontext i notifikationsemail"
-    flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
-    max_word_length: "The maximum allowed word length, in characters, in a topic title"
-    title_min_entropy: "The minimum allowed entropy (unique characters) required for a topic title"
-    body_min_entropy: "The minimum allowed entropy (unique characters) required for a post body"
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
-    min_title_similar_length: "The minimum length of a title before it will be checked for similar topics"
-    min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
-    category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
-    max_image_size_kb: "The maximum size of files we allow users to upload in kB - be sure to configure the limit in nginx (client_max_body_size) / apache or proxy as well."
-    max_similar_results: "How many similar topics to show a user while they are composing a new topic"
-    topic_views_heat_low: "Antal visningar efter vilket en tråds värmenivå är låg."
-    topic_views_heat_medium: "Antal visningar efter vilket en tråds värmenivå är medium."
-    topic_views_heat_high: "Antal visningar efter vilket en tråds värmenivå är hög."
     faq_url: "Om du har en FAQ någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     privacy_policy_url: "Om du har ett dokument med en integritetspolicy någon annanstans som du vill använda, skriv den fullständiga URL:en här."
-    reply_by_email_enabled: "Aktivera svar på trådar via email"
-    pop3s_polling_enabled: "Polla via POP3S för emailsvar"
-    pop3s_polling_port: "Port att söka efter ett POP3S-konto på"
-    pop3s_polling_host: "Värden som ska sökas efter email via POP3S"
-    pop3s_polling_username: "Användarnamn för POP3S-kontot som ska sökas efter email"
-    pop3s_polling_password: "Lösenord för POP3S-kontot som ska sökas efter email"
-    minimum_topics_similar: "Hur många trådar som behöver finnas i databasen innan liknande trådar presenteras."
-    allow_uploaded_avatars: "Tillåt att användare laddar upp egna avatarer"
     default_digest_email_frequency: "Hur ofta användare får emailutskick som standard. De kan ändra detta val under sina inställningar."
-    detect_custom_avatars: "Huruvida det ska kontrolleras att användare har laddat upp egna avatarer"
-    max_daily_gravatar_crawls: "Maximalt antal gånger Discourse kollar efter avatarer hos gravatar, per dag"
-    enable_names: "Tillåt användare att visa sina fullständiga namn"
-    display_name_on_posts: "Visa även användares fullständiga namn i deras inlägg"
-    invites_shown: "Maximalt antal inbjudningar att visa på användarsidor"
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
@@ -614,14 +490,6 @@ sv:
       text_body_template: "The import was successful."
     too_many_spam_flags:
       subject_template: "Nytt konto blockerat"
-      text_body_template: |
-        Hej,⏎
-        ⏎
-        Det här är ett automatiskt meddelande från %{site_name}. Ditt inlägg har automatiskt blivit dolt för att det har flaggats av andra användare.⏎
-        ⏎
-        Som en säkerhetsåtgärd har ditt nya konto blockerats från att skapa nya svar eller trådar innan en moderator kan gå igenom ditt konto.⏎
-        ⏎
-        För mer information kring våra riktlinjer, besök vår [FAQ](%{base_url}/faq).⏎
     blocked_by_staff:
       subject_template: "Konto blockerat"
     unblocked:
@@ -708,8 +576,6 @@ sv:
     signup:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
-  discourse_hub:
-    access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
   deleted: 'raderad'
   upload:
     pasted_image_filename: "Inklistrad bild"

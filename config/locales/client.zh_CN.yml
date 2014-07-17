@@ -79,6 +79,8 @@ zh_CN:
     links: 链接
     faq: "常见问题（FAQ）"
     privacy_policy: "隐私政策"
+    privacy: "隐私"
+    terms_of_service: "服务条款"
     mobile_view: "移动版"
     desktop_view: "桌面版"
     you: "您"
@@ -176,8 +178,6 @@ zh_CN:
       all_subcategories: "全部"
       no_subcategory: "无"
       category: "分类"
-      posts: "新帖子"
-      topics: "新主题"
       latest: "最新"
       latest_by: "最新发表："
       toggle_ordering: "排序控制"
@@ -188,6 +188,15 @@ zh_CN:
       post_stats: "新帖子的数量。"
       post_stat_sentence:
         other: "在过去的 %{unit} 中有 %{count} 个新帖子"
+    ip_lookup:
+      title: IP 地址查询
+      hostname: 主机名
+      location: 位置
+      location_not_found: (未知)
+      organisation: 组织
+      phone: 电话
+      other_accounts: 其他使用该 IP 地址的账户
+      no_other_accounts: (无)
     user:
       said: "{{username}}说："
       profile: "个人资料"
@@ -219,6 +228,7 @@ zh_CN:
       watched_categories: "已关注"
       watched_categories_instructions: "您将自动关注这些分类的所有新主题。您将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
       tracked_categories: "已跟踪"
+      tracked_categories_instructions: "您将会自动追踪这些分类中的所有新主题。未读和新帖子数量将出现在主题列表中每个主题后。"
       muted_categories: "已屏蔽"
       muted_categories_instructions: "您不会收到这些分类的新主题的任何通知，他们也不会出现在您的未读标签中。"
       delete_account: "删除我的帐号"
@@ -377,12 +387,27 @@ zh_CN:
         private_message: "私信"
         the_topic: "本主题"
     loading: "载入中..."
+    errors:
+      prev_page: "当尝试载入时"
+      reasons:
+        network: "网络错误"
+        server: "服务器错误：{{code}}"
+        unknown: "错误"
+      desc:
+        network: "请检查您的网络连接。"
+        network_fixed: "似乎恢复正常了。"
+        server: "出错了。"
+        unknown: "出错了。"
+      buttons:
+        back: "返回"
+        again: "再试一次"
+        fixed: "载入页面"
     close: "关闭"
     assets_changed_confirm: "此网页刚刚更新. 刷新查看新版本?"
     read_only_mode:
       enabled: "一个管理员启用了只读模式。您可以继续浏览这个站点但是无法进行交互。"
       login_disabled: "只读模式下不允许登录。"
-    too_few_topics_notice: "创建至少 5 个公开主题和 30 个公开帖子以开始讨论。新用户无法得到信任等级除非已经有内容让用户阅读。"
+    too_few_topics_notice: "至少创建 5 个公开主题和 30 个公开帖子以开始讨论。除非有内容让新用户开始阅读，否则他们无法提高信任等级。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -396,6 +421,7 @@ zh_CN:
     unmute: 解除防打扰
     last_post: 最后一帖
     summary:
+      enabled_description: "您正在查看这个主题的概括版本：这些是由社群决定的最有意思的帖子。要查看所有帖子，请点击下方。"
       description: "有 <b>{{count}}</b> 个回复。"
       description_time: "有 <b>{{count}}</b> 个回复，大约需要 <b>{{readingTime}} 分钟</b>阅读。"
       enable: '概括本主题'
@@ -488,7 +514,6 @@ zh_CN:
       view_new_post: "浏览您的新帖子。"
       saving: "保存中..."
       saved: "已保存！"
-      saved_draft: "您有一个帖子草稿尚未发表。在框中任意处点击即可继续编辑。"
       uploading: "上传中..."
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
@@ -676,12 +701,16 @@ zh_CN:
           '0': '您将忽略关于此主题的所有通知。'
         watching_pm:
           title: "关注"
+          description: "一旦私信中有新消息，您都会收到通知。未读和新帖子的数量将显示在主题列表的每个主题后。"
         watching:
           title: "关注"
+          description: "一旦有关于这个主题的新帖子发表，您都会收到通知。未读贴的数量将出现在主题列表中每个主题的标题后。"
         tracking_pm:
           title: "追踪"
+          description: "未读和新帖子的数量将出现在私信旁。您只会在别人 @name 或回复您的主题时才会被提醒。"
         tracking:
           title: "追踪"
+          description: "未读贴和新帖的数量将出现在主题列表中每个主题的标题后。您只会在被人 @name 或有人回复了您的帖子时才会收到通知。"
         regular:
           title: "常规"
           description: "只有当有人 @name 提及您或者回复您的帖子时，您才会收到通知。"
@@ -722,18 +751,23 @@ zh_CN:
         help: '私下报告本帖以引起注意或者发送一条匿名通知'
         success_message: '您已成功报告本帖。'
       inviting: "邀请中..."
+      automatically_add_to_groups: "这个邀请也包括了这些群组的权限：（可选，仅管理员）"
       invite_private:
         title: '邀请进行私下交流'
         email_or_username: "受邀人的电子邮箱或用户名"
         email_or_username_placeholder: "电子邮箱地址或用户名"
         action: "邀请"
+        success: "我们已经邀请用户加入这个私聊。"
         error: "抱歉，在邀请该用户时发生了错误。"
         group_name: "群组名"
       invite_reply:
         title: ' 邀请'
         action: '邮件邀请'
         help: '向您的朋友发送邀请，他们只需要一个点击就能回复这个主题'
+        to_topic: "我们将发送一封简洁的邮件。您的朋友可以立即加入并通过点击一个链接回复这个主题，不需要登录。"
+        to_forum: "我们将发送一封简洁的邮件让您的朋友通过点击一个链接参与讨论，不需要登陆。"
         email_placeholder: '电子邮箱地址'
+        success: "我们发了一封邀请邮件给 <b>{{email}}</b>。我们将在邀请被接受后通知您。检查您的用户中的邀请标签页来追踪您的邀请。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
       login_reply: '登录后回复'
       filters:
@@ -788,7 +822,6 @@ zh_CN:
       show_hidden: '查看隐蔽内容'
       deleted_by_author:
         other: "（帖子被作者撤销，如无标记，将在 %{count} 小时后被自动删除）"
-      deleted_by: "删除者为"
       expand_collapse: "展开/折叠"
       gap:
         other: "{{count}} 主题被隐藏"
@@ -964,6 +997,8 @@ zh_CN:
       auto_close_label: "该时间段后自动关闭主题："
       auto_close_units: "小时"
       email_in: "自定义外来电子邮件地址:"
+      email_in_allow_strangers: "接受无账号的匿名用户的邮件"
+      allow_badges_label: "启用徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
       this_year: "今年"
@@ -977,6 +1012,7 @@ zh_CN:
           description: "您将自动关注这些分类中的所有新主题。您收到新的帖子和主题的通知，以及未读和新帖子数量将显示在靠近帖子主题列表旁。"
         tracking:
           title: "追踪"
+          description: "您将会自动追踪这些分类的所有新主题。未读和新主题数量将出现在主题列表的每个主题后面。"
         regular:
           title: "常规"
           description: "只有当有人 @name 提及你或者回复你的帖子时，你才会收到通知。"
@@ -1286,6 +1322,7 @@ zh_CN:
         opacity: "透明度"
         copy: "复制"
         css_html:
+          title: "CSS/HTML"
           long_title: "自定义 CSS 和 HTML"
         colors:
           title: "颜色"
@@ -1342,7 +1379,6 @@ zh_CN:
         email_type: "邮件类型"
         to_address: "目的地址"
         test_email_address: "测试电子邮件地址"
-        send_test: "发送测试电子邮件"
         sent_test: "已发送！"
         delivery_method: "发送方式"
         preview_digest: "预览"
@@ -1359,6 +1395,7 @@ zh_CN:
           filters:
             title: "过滤器"
             user_placeholder: "username"
+            address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             skipped_reason_placeholder: "原因"
       logs:
@@ -1585,7 +1622,6 @@ zh_CN:
           developer: '开发者'
           embedding: "嵌入"
           legal: "合法"
-          uncategorized: '未分类'
           backups: "备份"
       badges:
         title: 徽章
@@ -1611,6 +1647,7 @@ zh_CN:
         no_badges: 没有可供授予的徽章。
         allow_title: 允许将徽章用作头衔
         multiple_grant: 能被授予多次
+        listable: 在公共徽章页面显示徽章
         icon: 图标
     lightbox:
       download: "下载"
@@ -1656,6 +1693,8 @@ zh_CN:
         mark_watching: '先按 <b>m</b> 再按 <b>w</b> 关注主题'
     badges:
       title: 徽章
+      allow_title: "允许使用徽章作为头衔？"
+      multiple_grant: "可以被奖励多次？"
       badge_count:
         other: "%{count} 个徽章"
       more_badges:
@@ -1664,6 +1703,9 @@ zh_CN:
         other: "%{count} 个已授予"
       select_badge_for_title: 选择一个徽章用作您的头衔
       badge:
+        editor:
+          name: 编辑
+          description: 首个帖子编辑。
         basic_user:
           name: 基础
           description: 授予所有的基础社区功能。
@@ -1679,6 +1721,9 @@ zh_CN:
         welcome:
           name: 欢迎
           description: 得到一个赞
+        autobiographer:
+          name: 自传作者
+          description: 已填写用户资料信息
         nice_post:
           name: 不错的帖子
           description: 一个帖子得到10个赞. 此徽章可重复得到.
@@ -1687,3 +1732,16 @@ zh_CN:
           description: 一个帖子得到25个赞. 此徽章可重复得到.
         great_post:
           name: 非常棒的帖子
+          description: 一个帖子收到 50 个赞。这个徽章可以被授予多次。
+        first_like:
+          name: 首个赞
+          description: 已赞了一个帖子
+        first_flag:
+          name: 首个标记
+          description: 标记帖子
+        first_share:
+          name: 首次分享
+          description: 已分享了一个帖子
+        first_link:
+          name: 首个链接
+          description: 已经添加了一个内部链接至另一个主题

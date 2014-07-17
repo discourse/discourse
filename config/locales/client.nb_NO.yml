@@ -174,8 +174,6 @@ nb_NO:
     categories:
       all: "alle kategorier"
       category: "Kategori"
-      posts: "Nye innlegg"
-      topics: "Nye emner"
       latest: "Siste"
       latest_by: "siste av"
       subcategories: "Underkategorier"
@@ -435,7 +433,6 @@ nb_NO:
       view_new_post: "Set ditt nye innlegg."
       saving: "Lagrer..."
       saved: "Lagret!"
-      saved_draft: "Du har et innleggsutlegg i utvikling. Klikk et sted i denne boksen for å gjenoppta redigering."
       uploading: "Laster opp..."
       show_preview: 'se forhånsvisning &raquo;'
       hide_preview: '&laquo; skjul forhåndsvisning'
@@ -686,7 +683,6 @@ nb_NO:
       deleted_by_author:
         one: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)"
         other: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} timer, med mindre de blir flagget)"
-      deleted_by: "Slettet av"
       expand_collapse: "utvid/vis"
       gap:
         one: "Ett innlegg skjult"
@@ -1076,7 +1072,6 @@ nb_NO:
         email_type: "Email Type"
         to_address: "Til Addresse"
         test_email_address: "email addresse å teste"
-        send_test: "send test email"
         sent_test: "sendt!"
         delivery_method: "Leveringsmetode"
         preview_digest: "Forhåndsvis Oppsummering"
@@ -1250,7 +1245,6 @@ nb_NO:
           seo: 'SEO'
           spam: 'Spam'
           developer: 'Utvikler'
-          uncategorized: 'Ukategorisert'
       badges:
         name: Navn
         save: Lagre
