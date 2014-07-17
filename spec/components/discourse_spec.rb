@@ -144,9 +144,9 @@ describe Discourse do
     it "correctly passes extra context" do
       exception = StandardError.new
 
-      Discourse.handle_exception(exception, {code: "Doing a test", post_id: 31}, nil)
+      Discourse.handle_exception(exception, {message: "Doing a test", post_id: 31}, nil)
       logger.exception.should == exception
-      logger.context.keys.sort.should == [:current_db, :current_hostname, :code, :post_id].sort
+      logger.context.keys.sort.should == [:current_db, :current_hostname, :message, :post_id].sort
     end
   end
 

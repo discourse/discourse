@@ -48,7 +48,7 @@ module Jobs
           client_message = RejectionMailer.send_rejection(message.from, message.body, message.to, message_template)
           Email::Sender.new(client_message, message_template).send
         else
-          Discourse.handle_exception(e, error_context(@args, "unknown error when processing incoming email", mail: mail_string))
+          Discourse.handle_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))
         end
       ensure
         mail.delete

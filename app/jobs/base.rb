@@ -67,7 +67,7 @@ module Jobs
       ctx = {}
       ctx[:opts] = opts
       ctx[:job] = self.class
-      ctx[:code] = code_desc if code_desc
+      ctx[:message] = code_desc if code_desc
       ctx.merge!(extra) if extra != nil
       ctx
     end
@@ -157,7 +157,7 @@ module Jobs
               end
             rescue => e
               thread_exception[:ex] = e
-              thread_exception[:code] = "establishing database connection to #{db}"
+              thread_exception[:message] = "While establishing database connection to #{db}"
               thread_exception[:other] = { problem_db: db }
             ensure
               ActiveRecord::Base.connection_handler.clear_active_connections!

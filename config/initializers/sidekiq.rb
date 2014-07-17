@@ -33,7 +33,7 @@ if Sidekiq.server?
           manager.tick
         rescue => e
           # the show must go on
-          Discourse.handle_exception(e, {code: "Ticking scheduling manager"})
+          Discourse.handle_exception(e, {message: "While ticking scheduling manager"})
         end
         sleep 1
       end
