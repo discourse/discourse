@@ -292,13 +292,18 @@ kbd
     padding: .1em .6em;
 }
 
+@media only screen
+and (max-width : 940px) {
+  
+  #topic-progress, #topic-progress-expanded {
+    left: 295px;
+    }
+}
+
 
 @media only screen
-and (max-width : 850px) {
+and (max-width : 870px) {
 
-  .gutter {
-    display: none;
-    }
   #topic-progress, #topic-progress-expanded {
     left: 210px;
     }

@@ -52,7 +52,7 @@ h1 .topic-statuses .topic-status i {
 
 .reply-to-tab {
   position: absolute;
-  right: 40%;
+  right: 420px;
   z-index: 400;
   padding: 13px 6px 5px;
   font-size: 12px;
@@ -278,8 +278,8 @@ nav.post-controls {
 
   // top means "in reply to expansion" above a post
   &.top {
-    margin-left: 5.4594229%;
-    width: 62.6690712%;
+    margin-left: 56px;
+    width: 690px;
 
   }
   &.top.topic-body {padding-left: 0;}
@@ -726,8 +726,8 @@ blockquote > *:last-child {
 .gutter {
   float: left;
   margin-top: 15px;
-  padding-left: 01.3525699%;
-  width: 28%;
+  padding-left: 11px;
+  width: 341px;
 
   ul {margin: 0;}
   li {margin-bottom: 10px;}
@@ -739,6 +739,7 @@ blockquote > *:last-child {
     position: relative;
     margin-left: 5px;
     line-height: 18px;
+    word-wrap: break-word;
     a i {
       position: absolute;
       left: 0;
@@ -756,11 +757,11 @@ blockquote > *:last-child {
 }
 
 .topic-body {
-  width: 62.6690712%;
+  width: 690px;
   float: left;
   position: relative;
   border-top: 1px solid scale-color-diff();
-  padding: 12px .5% 15px .5%;
+  padding: 12px 11px 15px 11px;
   &.highlighted {
     background-color: scale-color($tertiary, $lightness: 85%);
   }
@@ -772,8 +773,7 @@ blockquote > *:last-child {
 .topic-avatar {
  border-top: 1px solid scale-color-diff();
  padding-top: 16px;
- width: 04.9594229%;
- min-width: 45px;
+ width: 45px;
  float: left;
 
  .wiki {
@@ -1057,11 +1057,17 @@ span.highlighted {
 /* Tablet (portrait) ----------- */
 
 @media only screen
-and (max-width : 1150px) {
+and (max-width : 1140px) {
   .extra-info {
     h1 {
       width: 720px;
     }
+  }
+  .gutter {
+    width: 200px;
+  }
+  .post-cloak .reply-to-tab {
+    right: 320px;
   }
 }
 
@@ -1073,6 +1079,22 @@ and (max-width : 975px) {
       width: 650px;
     }
   }
+  .gutter {
+    width: 150px;
+  }
+  .post-cloak .reply-to-tab {
+    right: 300px;
+  }
+}
+
+@media only screen
+and (max-width : 940px) {
+  .gutter {
+    width: 100px;
+  }
+  .post-cloak .reply-to-tab {
+    right: 250px;
+  }
 }
 
 @media only screen
@@ -1082,17 +1104,9 @@ and (max-width : 870px) {
       width: 520px;
     }
   }
-}
-
-@media only screen
-and (max-width : 850px) {
-
   .gutter {
     display: none;
     }
-  #topic-progress, #topic-progress-expanded {
-    left: 210px;
-  }
 
   .topic-avatar {
     width: 5%;
@@ -1103,15 +1117,15 @@ and (max-width : 850px) {
     }
 
   .topic-body {
-      width: 92%;
-      padding-left: 1%;
+      width: 91%;
+      padding-left: 2%;
     }
 
   .embedded-posts {
     // top means "in reply to expansion" above a post
     &.top {
       margin-left: 6%;
-      width: 93%;
+      width: 91%;
 
     }
   }
