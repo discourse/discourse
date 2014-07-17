@@ -44,7 +44,7 @@ module Email
         end
 
         raise UserNotFoundError if @user.blank?
-        raise UserNotSufficientTrustLevelError.new @user unless @user.has_trust_level?(TrustLevel.levels[SiteSetting.email_in_min_trust.to_i])
+        raise UserNotSufficientTrustLevelError.new @user unless @allow_strangers || @user.has_trust_level?(TrustLevel.levels[SiteSetting.email_in_min_trust.to_i])
 
         create_new_topic
       else
@@ -134,11 +134,7 @@ module Email
 
     def is_in_email?
       @allow_strangers = false
-
-      if SiteSetting.email_in && SiteSetting.email_in_address == @message.to.first
-        @category_id = SiteSetting.email_in_category.to_i
-        return true
-      end
+      return false unless SiteSetting.email_in
 
       category = Category.find_by_email(@message.to.first)
       return false unless category

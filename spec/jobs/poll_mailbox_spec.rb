@@ -44,14 +44,7 @@ describe Jobs::PollMailbox do
   describe "processing email" do
 
     let!(:receiver) { mock }
-    let!(:email_string) { <<MAIL
-From: user@example.com
-To: reply+32@discourse.example.net
-Subject: Hi
-
-Email As a String
-MAIL
-    }
+    let!(:email_string) { fixture_file("emails/valid_incoming.eml") }
     let!(:email) { mock }
 
     before do
@@ -82,7 +75,7 @@ MAIL
         sender_object = mock
 
         RejectionMailer.expects(:send_rejection).with(
-            message.from, message.body, message.to, :email_reject_trust_level
+            message.from, message.body, message.subject, message.to, :email_reject_trust_level
         ).returns(client_message)
         Email::Sender.expects(:new).with(client_message, :email_reject_trust_level).returns(sender_object)
         sender_object.expects(:send)

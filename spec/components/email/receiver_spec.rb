@@ -19,8 +19,8 @@ describe Email::Receiver do
       expect { Email::Receiver.new("asdf" * 30).process}.to raise_error(Email::Receiver::EmptyEmailError)
     end
 
-    pending "raises EmailUnparsableError in some situation" do
-      expect { Email::Receiver.new("something").process}.to raise_error(Email::Receiver::EmailUnparsableError)
+    it "raises EmailUnparsableError if there is no reply content" do
+      expect { Email::Receiver.new(fixture_file("emails/no_content_reply.eml")).process}.to raise_error(Email::Receiver::EmailUnparsableError)
     end
   end
 
@@ -198,99 +198,8 @@ greatest show ever created. Everyone should watch it.
 
   end
 
-  describe "processes a valid incoming email" do
-    before do
-      SiteSetting.stubs(:email_in_address).returns("discourse-in@appmail.adventuretime.ooo")
-      SiteSetting.stubs(:email_in_category).returns("42")
-      SiteSetting.stubs(:email_in).returns(true)
-    end
-
-    let(:incoming_email) { fixture_file("emails/valid_incoming.eml") }
-    let(:receiver) { Email::Receiver.new(incoming_email) }
-    let(:user) { Fabricate.build(:user, id: 3456) }
-    let(:subject) { "We should have a post-by-email-feature." }
-    let(:email_body) {
-"Hey folks,
-
-I was thinking. Wouldn't it be great if we could post topics via email? Yes it would!
-
-Jakie" }
-
-    describe "email from non user" do
-
-      before do
-        User.expects(:find_by_email).returns(nil)
-      end
-
-      it "raises user not found error" do
-        expect { receiver.process }.to raise_error(Email::Receiver::UserNotFoundError)
-      end
-
-    end
-
-    describe "email from untrusted user" do
-      before do
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(user)
-        SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:elder].to_s)
-      end
-
-      it "raises untrusted user error" do
-        expect { receiver.process }.to raise_error(Email::Receiver::UserNotSufficientTrustLevelError)
-      end
-
-    end
-
-    describe "with proper user" do
-
-      before do
-        SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:newuser].to_s)
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(user)
-
-        topic_creator = mock()
-        TopicCreator.expects(:new).with(instance_of(User),
-                                        instance_of(Guardian),
-                                        has_entries(title: subject,
-                                                    category: 42))
-                                 .returns(topic_creator)
-
-        topic_creator.expects(:create).returns(topic_creator)
-        topic_creator.expects(:id).twice.returns(12345)
-
-
-        post_creator = mock
-        PostCreator.expects(:new).with(instance_of(User),
-                                       has_entries(raw: email_body,
-                                                   topic_id: 12345,
-                                                   cooking_options: {traditional_markdown_linebreaks: true}))
-                                 .returns(post_creator)
-
-        post_creator.expects(:create)
-
-        EmailLog.expects(:create).with(has_entries(
-                              email_type: 'topic_via_incoming_email',
-                              to_address: "discourse-in@appmail.adventuretime.ooo",
-                              user_id: 3456,
-                              topic_id: 12345
-                              ))
-      end
-
-      let!(:result) { receiver.process }
-
-      it "extracts the body" do
-        expect(receiver.body).to eq(email_body)
-      end
-
-    end
-
-  end
-
-
   describe "processes an email to a category" do
     before do
-      SiteSetting.stubs(:email_in_address).returns("")
-      SiteSetting.stubs(:email_in_category).returns("42")
       SiteSetting.stubs(:email_in).returns(true)
     end
 
@@ -398,8 +307,6 @@ Jakie" }
 
   describe "processes an unknown email sender to category" do
     before do
-      SiteSetting.stubs(:email_in_address).returns("")
-      SiteSetting.stubs(:email_in_category).returns("42")
       SiteSetting.stubs(:email_in).returns(true)
     end
 
