@@ -260,4 +260,7 @@ Discourse.Markdown.whiteListTag('span', 'bbcode-i');
 Discourse.Markdown.whiteListTag('span', 'bbcode-u');
 Discourse.Markdown.whiteListTag('span', 'bbcode-s');
 
+// used for pinned topics
+Discourse.Markdown.whiteListTag('span', 'class', 'excerpt');
+
 Discourse.Markdown.whiteListIframe(/^(https?:)?\/\/www\.google\.com\/maps\/embed\?.+/i);

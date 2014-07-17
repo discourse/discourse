@@ -181,6 +181,12 @@ describe PrettyText do
       PrettyText.excerpt(nil,100).should == ''
     end
 
+    it "handles span excerpt" do
+      PrettyText.excerpt("<span class='excerpt'>hi</span> test",100).should == 'hi'
+      post = Fabricate(:post, raw: "<span class='excerpt'>hi</span> test")
+      post.excerpt.should == "hi"
+    end
+
   end
 
   describe "strip links" do
