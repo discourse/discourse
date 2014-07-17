@@ -19,8 +19,8 @@ describe Email::Receiver do
       expect { Email::Receiver.new("asdf" * 30).process}.to raise_error(Email::Receiver::EmptyEmailError)
     end
 
-    pending "raises EmailUnparsableError in some situation" do
-      expect { Email::Receiver.new("something").process}.to raise_error(Email::Receiver::EmailUnparsableError)
+    it "raises EmailUnparsableError if there is no reply content" do
+      expect { Email::Receiver.new(fixture_file("emails/no_content_reply.eml")).process}.to raise_error(Email::Receiver::EmailUnparsableError)
     end
   end
 

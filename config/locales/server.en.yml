@@ -1372,14 +1372,15 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} didn't work.
 
-        We couldn't find any content in the email.
+        We couldn't find any content in the email. Make sure that you wrote something at the top of the email - we can't parse inline replies.
+        If you're getting this and you did include content, try again in UTF-8 plain text (no HTML).
 
     email_reject_parsing:
       subject_template: "Email issue -- Content unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} didn't work.
 
-        The email encoding was unknown or not supported. Try again with UTF-8 plain text.
+        We couldn't find where your reply was in the email. **Make sure to write your entire reply at the top of the email** -- everything below the start of the replied-to message is discarded.
 
     email_reject_post_error:
       subject_template: "Email issue -- Posting error"
