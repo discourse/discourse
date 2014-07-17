@@ -81,26 +81,6 @@ uk:
       trust_level_4: "trust_level_4"
       trust_level_5: "trust_level_5"
   education:
-    new-topic: |
-      Ласкаво просимо до сайта %{site_name} &mdash; **дякуємо за те, що Ви розпочали нове обговорення!**
-
-      - Чи точно назва описує Вашу тему? Чи є Ваша назва цікавою?
-
-      - Про що вона? Кому вона буде цікавою? Чому вона важлива? Які віповіді Ви хочете отримати від спільноти?
-
-      - Включіть до своєї теми добрі ключові слова для пошуку, щоб її могли *знайти* інші. Щоб згрупувати її з іншими подібними темами, оберіть категорію.
-
-      Для додаткових настанов, [перегляньте Часті Питання](/faq). Ця панель з'являтиметься тільки для %{education_posts_text}.
-    new-reply: |
-      Ласкаво просимо до сайта %{site_name} &mdash; **дякуємо за долучення!**
-
-      - Чи покращує Ваша відповідь обговорення у якийсь спосіб?
-
-      - Будьте ласкавими до своїх товаришів по спільноті.
-
-      - Конструктивна критика вітається, але критикуйте *ідеї*, а не людей.
-
-      Для додаткових настанов, [перегляньте Часті Питання](/faq). Ця панель з'являтиметься тільки для %{education_posts_text}.
     avatar: |
       ### Як щодо нового зображення для Вашого профілю?
 
@@ -164,9 +144,6 @@ uk:
     topic_prefix: "Про категорію %{category}"
     replace_paragraph: "[Замініть цей перший абзац коротким описом Вашої нової категорії. Він з'являтиметься в області вибору категорій, тому намагайтеся, щоб він був коротшим за 200 символів. Поки Ви не відредагуєте цей текст або не створите тем, ця категорія не з'явиться на сторінці категорій.]"
     post_template: "%{replace_paragraph}\n\nВикористовуйте наступні абзаци для довшого опису, а також для того, щоб встановити якісь правила категорії.\n\nДеякі речі, які можна обговорити у відповідях на цей допис:\n\n- Для чого потрібна ця категорія? Чому людям слід обирати цю категорію для своїх тем?\n\n- Чим вона відрізняється від інших категорій, що в нас є?\n\n- Чи потрібна нам ця категорія?\n\n- Чи потрібно об'єднати цю категорію з якоюсь іншою, або розбити її на декілька?\n"
-    errors:
-      self_parent: "A subcategory's parent cannot be itself."
-      depth: "You can't nest a subcategory under another."
   trust_levels:
     newuser:
       title: "новий користувач"
@@ -214,7 +191,6 @@ uk:
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Неприпустиме'
-      description: 'Цей допис має вміст, який адекватна людина вважатиме непристойним, образливим, або таким, що порушує <a href="/faq">правила нашої спільноти</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Сповістити {{username}}'
@@ -224,7 +200,6 @@ uk:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Звернути увагу модераторів'
-      description: 'Цей допис загалом потребує уваги модераторів згідно із <a href="/faq">Частими запитаннями</a>, <a href="%{tos_url}">Умовами використання</a>, або з іншої причини, не зазначеної вище.'
       long_form: 'notified moderators'
       email_title: 'Допис у темі "%{title}" потребує уваги модератора'
       email_body: "%{link}\n\n%{message}"
@@ -247,11 +222,9 @@ uk:
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Inappropriate'
-      description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/faq">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_moderators:
       title: 'Notify moderators'
-      description: 'This topic requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
       long_form: 'notified moderators'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
@@ -264,7 +237,6 @@ uk:
     title: 'Unsubscribed'
     description: "You have been unsubscribed. We won't contact you again!"
     oops: "In case you didn't mean to do this, click below."
-    not_found: "Error Unsubscribing"
     not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
   resubscribe:
     action: "Re-Subscribe"
@@ -369,7 +341,6 @@ uk:
     access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
     site_contact_username_warning: "The site_contact_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
     notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
-    enforce_global_nicknames_warning: "The enforce_global_nicknames setting is checked, but the discourse_org_access_key is blank. A Discourse.org access key is required to use the enforce_global_nicknames setting. Please update your <a href='/admin/site_settings'>Site Settings</a>."
   content_types:
     education_new_reply:
       title: "Навчання новачка: Перші відповіді"
@@ -419,52 +390,15 @@ uk:
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
-    min_post_length: "Мінімальна довжина допису (в символах)"
-    min_private_message_post_length: "Мінімальна довжина допису (в символах) для приватних повідомлень"
-    max_post_length: "Максимальна довжина допису (в символах)"
-    min_topic_title_length: "Мінімальна довжина назви теми (в символах)"
-    max_topic_title_length: "Максимальна довжина назви теми (в символах)"
-    min_private_message_title_length: "Мінімальна довжина назви теми для приватних повідомлень (в символах)"
-    min_search_term_length: "Minimum search term length in characters"
     allow_uncategorized_topics: "Дозволити створювати теми без категорії."
-    allow_duplicate_topic_titles: "Дозволити теми з однаковими назвами"
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
-    enforce_global_nicknames: "Забезпечити глобальну унікальність псевдонімів (ПОПЕРЕДЖЕННЯ: змінюйте це тільки під час початкового налаштування)"
-    discourse_org_access_key: "Ключ доступу, що використовується для доступу до глобального реєстру псевдонімів на discourse.org"
-    educate_until_posts: "Show pop-up composer education panel until the user has made this many posts"
-    title: "Назва цього сайта, буде використовуватися в теґові title та інших місцях"
-    site_description: "Опишіть цей форум в одному реченні. Цей опис буде використано у теґові meta description."
-    contact_email: "Електронна скринька когось, з ким можна сконтактувати щодо сайта. Важливі повідомлення від Discourse.org, що стосуються критичних оновлень, можуть надсилатися на цю адресу."
-    company_full_name: "Повна назва компанії, що володіє сайтом; використовується у документах на кшталт Умов Використання"
-    company_short_name: "Скорочена назва компанії, що володіє сайтом; використовується у документах на кшталт Умов Використання"
-    company_domain: "Доменне ім'я, власником якого є компанія, що володіє сайтом; використовується у документах на кшталт Умов Використання"
     queue_jobs: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! За замовчуванням, додавати завдання до черги в sidekiq. Якщо вимкнути, Ваш сайт зламається."
-    crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
-    download_remote_images_to_local: "Download a copy of remote images hotlinked in posts"
-    download_remote_images_threshold: "Обсяг мінімального доступного місця на диску, необхідного для локального звантаження віддалених зображень (у відсотках)"
-    ninja_edit_window: "Кількість секунд після публікації, протягом яких редагування не створює нової версії"
-    post_edit_time_limit: "Кількість часу в хвилинах, протягом якого автор може редагувати та видаляти свої дописи. Встановіть 0, щоб дозволити редагування та видалення дописів в будь-який час."
-    edit_history_visible_to_public: "Дозволити всім переглядати попередні версії редагованого допису. Якщо вимкнено, тільки члени персоналу можуть переглядати історію редагувань."
-    delete_removed_posts_after: "Кількість годин, після яких дописи, позначені на видалення автором, будуть видалені."
-    max_image_width: "Максимальна дозволена ширина зображень у дописі"
-    max_image_height: "Максимальна дозволена висота зображень у дописі"
     category_featured_topics: "Кількість тем на одну категорію, що показуються на сторінці /categories. Після зміни цього значення, оновлення категорій займе до 15 хвилин."
-    add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
-    post_excerpt_maxlength: "Максимальна довжина витягу із допису (у символах)"
-    post_onebox_maxlength: "Максимальна довжина допису Discourse, що з'явиться в onebox"
-    category_post_template: "The post template used when you create a new category"
-    logo_url: "Логотип Вашого сайта, наприклад: http://example.com/logo.png"
-    logo_small_url: "Маленький логотип для Вашого сайта, який використовується при прокручуванні тем вниз, наприклад: http://example.com/logo-small.png"
     favicon_url: "Піктограма Вашого сайта, див. http://uk.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
-    notification_email: "Адреса зворотньої електронної скриньки, що буде використовуватися при надсиланні системних повідомлень на кшталт сповіщень користувачів про загублені паролі, нові облікові записи і т. ін."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     use_https: "Чи повинна повна адреса сайта (Discourse.base_url) використовувати https (чи просто http)? ВМИКАЙТЕ ЦЕ ТІЛЬКИ ЯКЩО HTTPS ВЖЕ НАЛАШТОВАНО І ВІН ПРАЦЮЄ!"
-    summary_score_threshold: "The minimum score of a post to be included in the 'summary'"
-    summary_posts_required: "Minimum posts in a topic before 'summary' mode is enabled"
-    summary_likes_required: "Minimum likes in a topic before the 'summary' mode will be enabled"
-    summary_percent_filter: "When a user clicks summary, show the top % of posts"
     enable_private_messages: "Дозволити Базовим користувам (Рівень довіри 1) створювати приватні повідомлення та відповідати на приватні повідомлення"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
@@ -473,51 +407,27 @@ uk:
     auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
     flags_required_to_hide_post: "Кількість скарг, необхідних для того, щоб допис було автоматично приховано, а його авторові було надіслано приватне повідомлення (0, щоб вимкнути)"
-    cooldown_minutes_after_hiding_posts: "Скільки хвилин має зачекати користувач перед тим, як зможе відредагувати допис, прихований через скаргу"
     max_topics_in_first_day: "Максимальна кількість тем, які користувач може створити на сайті в перший день"
     max_replies_in_first_day: "Максимальна кільість відповідей, які користувач може створити на сайті в перший день"
-    num_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 disables this feature."
-    num_users_to_block_new_user: "If a new user's posts get num_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 disables this feature."
     notify_mods_when_user_blocked: "Якщо користувача автоматично заблоковано, надіслати повідомлення всім модераторам."
-    flag_sockpuppets: "If a new user (i.e., registered in the last 24 hours) who started a topic and a new user who replies in that topic are at the same IP address, both their posts will automatically be flagged as spam."
-    traditional_markdown_linebreaks: "Використовувати звичайний розрив рядка в Markdown, який вимагає двох пробілів в кінці для розриву рядка"
-    post_undo_action_window_mins: "Кількість секунд, протягом яких користувачам дозволено скасувати дію над дописом (вподобання, скаргу тощо)"
     ga_tracking_code: "Код відстеження Google аналітики (ga.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_domain_name: "Доменне ім'я Google аналітики (ga.js), напр.: mysite.com; див. http://google.com/analytics"
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
-    enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if a crawler is not detected."
     enable_noscript_support: "Увімкнути стандартну підтримку пошукових роботів через теґ noscript"
     top_menu: "Визначає, які елементи з'являються в навігації головної сторінки, та в якому порядку. Наприклад, latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "Скільки тем за замовчуванням завантажується на сторінці з переліком тем, а також під час підвантаження решти тем"
-    posts_per_page: "Скільки дописів завантажується за замовчуванням на сторінці теми, а також під час підвантаження решти дописів"
-    site_contact_username: "Ім'я користувача для автора автоматизованих приватних повідомлень, що надсилаються форумом"
-    send_welcome_message: "Do new users get a welcome private message?"
-    suppress_reply_directly_below: "Не показувати кількість відповідей на дописі, коли є лише одна відповідь одразу після нього"
-    suppress_reply_directly_above: "Не показувати \"у-відповідь-на\" на дописі, коли є лише одна відповідь одразу після нього"
-    topics_per_period_in_top_summary: "How many topics loaded on the top topics summary"
-    topics_per_period_in_top_page: "How many topics loaded on the top topics page"
-    allow_index_in_robots_txt: "Сайт повинен індексуватися пошуковими системами (оновити robots.txt)"
-    email_domains_blacklist: "Список заборонених поштових доменів, розділених вертикальною рискою. Наприклад: mailinator.com|trashmail.net"
-    email_domains_whitelist: "Список поштових доменів, розділених вертикальною рискою, з якими користувачі можуть реєструватися. УВАГА: Користувачі з доменами, що відрізняються від перелічених, не дозволятимуться."
     version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
-    new_version_emails: "Send an email to the contact_email address when a new version is available."
     port: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Використовувати цей HTTP-порт замість звичайного порту 80. Лишіть порожнім, щоб використовувати значення за замовчуванням 80."
     force_hostname: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Вкажіть ім'я хосту в URL. Лишіть порожнім, щоб використовувати значення за замовчуванням."
     invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
-    invite_only: "Публічна реєстрація вимкнена, нові користувачі мають бути запрошені"
-    login_required: "Для читання дописів потрібен вхід в систему"
-    min_username_length: "Minimum username length. (Does not apply if global nickname uniqueness is forced)"
     min_password_length: "Мінімальна довжина пароля."
-    enable_sso: "Enable single sign on via an external site"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
-    enable_local_logins: "Увімкнути традиційний вхід за допомогою локальних імені користувача та пароля"
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
     enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
     twitter_consumer_key: "Consumer key для входу через Twitter, зареєстрований на http://dev.twitter.com"
@@ -529,108 +439,30 @@ uk:
     github_client_id: "Client id для входу через Github, зареєстрований на https://github.com/settings/applications"
     github_client_secret: "Client secret для входу через Github, зареєстрований на https://github.com/settings/applications"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
-    backup_daily: "Automatically create a site backup once a day"
     enable_s3_backups: "Upload backups to S3 when complete. Make sure you have filled in your s3 credentials."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
-    rate_limit_create_topic: "After creating a topic, users must wait this many seconds before they can create another topic"
-    rate_limit_create_post: "After posting, users must wait this many seconds before they can create another post"
-    max_likes_per_day: "Maximum number of likes per user per day"
-    max_flags_per_day: "Maximum number of flags per user per day"
-    max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
-    max_edits_per_day: "Maximum number of edits per user per day"
-    max_stars_per_day: "Maximum number of topics that can be starred per user per day"
-    max_topics_per_day: "Maximum number of topics a user can create per day"
-    max_private_messages_per_day: "The maximum amount of private messages users can create per day"
-    suggested_topics: "Кількість пропонованих тем, що показуються внизу теми"
-    clean_up_uploads: "Remove orphaned uploads to prevent illegal hosting. WARNING: you might want to make a backup of your /uploads directory before enabled this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
-    enable_s3_uploads: "Розміщувати завантаження на Amazon S3"
-    s3_access_key_id: "Id Ключа доступу Amazon S3, що використовуватиметься для завантаження зображень"
-    s3_secret_access_key: "Секретний ключ доступу Amazon S3, що використовуватиметься для завантаження зображень"
-    s3_region: "Назва регіону Amazon S3, що використовуватиметься для завантаження зображень"
-    enable_flash_video_onebox: "Увімкнути вбудовування swf- та flv-посилань в onebox. УВАГА: це може запровадити ризики для безпеки"
-    default_invitee_trust_level: "Рівень довіри (0-4) для запрошених користувачів за замовчуванням"
-    default_trust_level: "Рівень довіри (0-4) для користувачів за замовчуванням"
-    basic_requires_topics_entered: "Скільки тем має відвідати новий користувач перед тим, як просунутися до базового (1) рівня довіри"
-    basic_requires_read_posts: "Скільки дописів має прочитати новий користувач перед тим, як просунутися до базового (1) рівня довіри"
-    basic_requires_time_spent_mins: "Скільки хвилин має витратити новий користувач на читання дописів перед тим, як просунутися до базового (1) рівня довіри"
-    regular_requires_topics_entered: "Скільки тем має відвідати базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
-    regular_requires_read_posts: "Скільки дописів має прочитати базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
-    regular_requires_time_spent_mins: "Скільки хвилин має витратити базовий користувач на читання дописів перед тим, як просунутися до звичайного (2) рівня довіри"
-    regular_requires_days_visited: "Скільки днів має відвідувати сайт базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
-    regular_requires_likes_received: "Скільки вподобань має отримати базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
-    regular_requires_likes_given: "Скільки дописів має вподобати базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
-    regular_requires_topic_reply_count: "У скількох темах має відповісти базовий користувач перед тим, як просунутися до звичайного (2) рівня довіри"
     min_trust_to_create_topic: "Мінімальний рівень довіри, необхідний для створення нової теми."
-    newuser_max_links: "Скільки посилань новий користувач може додати до допису"
-    newuser_max_images: "Скільки зображень новий користувач може додати до допису"
-    newuser_max_attachments: "Скільки прикріплень новий користувач може додати до допису"
-    newuser_max_mentions_per_post: "Максимальна кількість згадок @Імен користувачів, які новий користувач може використати в дописі"
-    max_mentions_per_post: "Максимальна кількість згадок @Імен користувачів, які можна використати в дописі"
-    create_thumbnails: "Create thumbnails for lightboxed images"
-    email_time_window_mins: "Скільки хвилин ми чекаємо перед тим, як надсилати сповіщення про відповідь на електронну скриньку, щоб дати користувачу можливість відредагувати та довершити свій допис"
-    email_posts_context: "Скільки попередніх відповідей включати в якості контексту в листи-сповіщення"
-    flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
-    max_word_length: "Максимальна довжина назви теми (у символах)"
-    title_min_entropy: "Мінімальна дозволена ентропія (унікальні символи, неанглійські рахуються за декілька) для назви теми"
-    body_min_entropy: "Мінімальна дозволена ентропія (унікальні символи, неанглійські рахуються за декілька) для тіла допису"
     title_fancy_entities: "Перетворювати звичайні ASCII-символи на примхливі HTML-сутності у назвах тем, на кшталт SmartyPants http://daringfireball.net/projects/smartypants/"
-    min_title_similar_length: "Мінімальна довжина назви до того, як її буде перевірено на схожість з іншими темами"
-    min_body_similar_length: "Мінімальна довжина тіла допису до того, як його буде перевірено на схожість з іншими темами"
-    category_colors: "Список шістнадцяткових значень кольорів, дозволених для категорій та розділених вертикальною рискою (|)"
-    max_image_size_kb: "Максимальний розмір зображень, які ми дозволяємо користувачам завантажити, в КБ - налаштуйте обмеження також у nginx (client_max_body_size) / apache або проксі."
-    max_attachment_size_kb: "Максимальний розмір файлів, які ми дозволяємо користувачам завантажити, в КБ - налаштуйте обмеження також у nginx (client_max_body_size) / apache або проксі."
-    max_similar_results: "How many similar topics to show a user while they are composing a new topic"
     title_prettify: "Запобігати типовим опискам та помилкам, таким як: всі літери - великі, перша літера - мала, багаторазові ! та ?, надлишкові . в кінці, тощо."
-    topic_views_heat_low: "The number of views after which a topic's heat level is low."
-    topic_views_heat_medium: "The number of views after which a topic's heat level is medium."
-    topic_views_heat_high: "The number of views after which a topic's heat level is high."
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
-    white_listed_spam_host_domains: "A comma delimited list of domains excluded from spam host testing, new users will be able to create an unrestricted count of posts with links to this domain"
-    staff_like_weight: "Extra weighting factor given to likes when performed by staff."
-    reply_by_email_enabled: "Увімкнути відповідь на теми через електронну пошту"
     reply_by_email_address: "Шаблон адреси електронної скриньки у формі для відповідей через електронну пошту, наприклад: %{reply_key}@reply.myforum.com"
-    pop3s_polling_enabled: "Poll via POP3S for email replies"
-    pop3s_polling_port: "The port to poll a POP3S account on"
-    pop3s_polling_host: "The host to poll for email via POP3S"
-    pop3s_polling_username: "The username for the POP3S account to poll for email"
-    pop3s_polling_password: "The password for the POP3S account to poll for email"
-    email_in: "Allow users to post new topics via email"
     email_in_address: "The email address the users can post new topics to. None means users can't post globally."
-    email_in_min_trust: "The minimum trust level an users needs to have to be allowed to post new topics via email"
-    email_in_category: "The category new emails are posted into"
-    minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
-    relative_date_duration: "Кількість днів після публікації, коли дати дописів будуть показуватися як відносні, а не абсолютні. Приклади: відносна дата: 7 д, абсолютна дата: 20 лют"
-    delete_user_max_post_age: "The maximum age of a user's first post, in days, which allows a user to be deleted."
     delete_all_posts_max: "Максимальне число дописів, які можна видалити за один раз кнопкою \"Видалити всі дописи\". Якщо користувач має більше дописів, ніж це число, їх не можна буде видалити за один раз, і користувача також."
     username_change_period: "Кількість днів після реєстрації, протягом яких новим обліковим записам можна змінювати своє ім'я користувача (0 щоб заборонити зміну імені користувача)."
     email_editable: "Дозволити користувачам змінювати свою електронну скриньку після реєстрації."
-    allow_uploaded_avatars: "Дозволити користувачам завантажувати свої власні аватарки"
-    allow_animated_avatars: "Дозволити користувачам використовувати анімовані gif в якості аватарок. УВАГА: Ми дуже радимо запустити завдання rake avatars:refresh після зміни цього налаштування."
-    digest_min_excerpt_length: "How many characters we're aiming for for each post in the email digest"
     default_digest_email_frequency: "Як часто користувачі отримують листи зі стислим викладом новин за замовчуванням. Вони можуть змінити це у своїх налаштуваннях."
     default_external_links_in_new_tab: "Відкривати нові посилання у новій вкладці. Користувачі можуть змінити це у своїх налаштуваннях."
-    detect_custom_avatars: "Перевіряти чи ні наявність завантаженої користувачем власної аватарки"
-    max_daily_gravatar_crawls: "The maximum amount of times Discourse will check gravatar for custom avatars in a day"
-    allow_profile_backgrounds: "Allows users to upload profile backgrounds"
-    sequential_replies_threshold: "The amount of posts a user has to make in a row in a topic before being notified"
     enable_mobile_theme: "Мобільні пристрої використовуватимуть тему, дружню для них, з можливістю перемикатися на повний сайт. Відключіть це, якщо хочете використовувати власну, повністю чутливу, таблицю стилів."
-    dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before we consider it dominating."
-    suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists"
-    enable_names: "Дозволити користувачам показувати свої повні імена"
-    display_name_on_posts: "Показувати також повне ім'я користувача в його дописах"
-    invites_shown: "Максимум запрошень, показуваних на сторінці користувача"
     short_progress_text_threshold: "Після того, як кількість дописів в темі перевищить це число, індикатор просування по темі показуватиме тільки номер поточного допису. Якщо Ви зміните ширину індикатора, Вам, ймовірно, знадобиться змінити це значення."
     default_code_lang: "Мова програмування для підсвітки синтаксису, що за замовчуванням застосовуватиметься для блоків коду GitHub (lang-auto, ruby, python і т. ін.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic older than this many days, a warning will be displayed to discourage the user from reviving an old discussion. Disable by setting to 0."
-    embeddable_host: "Хост, що може вбудовувати коментарі з цього форуму Discourse"
-    embed_post_limit: "Максимальна кількість дописів для вставки"
     tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -747,14 +579,6 @@ uk:
         - Use times as entry shortcuts. You can always enter at the top of a topic via the first post date, and the bottom via the last post date.
     welcome_user:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
-      text_body_template: |
-        Дякуємо за приєднання до %{site_name}, і вітаємо у нашому дискусійному форумі!
-
-        %{new_user_tips}
-
-        Ми завжди віримо у [цивілізовану поведінку у спільноті](%{base_url}/faq).
-
-        Бажаємо приємного перебування на форумі!
     welcome_invite:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
     export_succeeded:
@@ -765,22 +589,8 @@ uk:
       text_body_template: "The import was successful."
     too_many_spam_flags:
       subject_template: "New account blocked"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
-
-        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
-
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
     blocked_by_staff:
       subject_template: "Обліковий запис заблоковано"
-      text_body_template: |
-        Вітаємо!
-
-        Це - автоматичне повідомлення, надіслане сайтом %{site_name}, щоб повідомити Вас про те, що Ваш обліковий запис було заблоковано членом персоналу.
-
-        Для додаткових настанов, будь ласка, зверніться до [Частих питань](%{base_url}/faq).
     unblocked:
       subject_template: "Account unblocked"
       text_body_template: |
@@ -855,9 +665,7 @@ uk:
         ---
         %{respond_instructions}
     digest:
-      why: "Ось короткий виклад обговорення на %{site_link} відтоді, як ми Вас востаннє бачили %{last_seen_at}."
       new_activity: "New activity on your topics and posts:"
-      unsubscribe: "Цей підсумковий лист надіслано в якості люб'язного сповіщення від %{site_link}, оскільки ми Вас не бачили тривалий час. Щоб відписатися, %{unsubscribe_link}."
       click_here: "натисніть тут"
       from: "Стислий виклад новин від %{site_name}"
       read_more: "Читати більше"
@@ -887,21 +695,6 @@ uk:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Вас було схвалено на сайті %{site_name}!"
-      text_body_template: |
-        Ласкаво просимо до сайта %{site_name}!
-
-        Ваше приєднання до сайта %{site_name} схвалено, вітаємо у нашому дискусійному форумі!
-
-        Натисніть посилання, щоб підтвердити та активувати свій новий обліковий запис:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Якщо наведене посилання не є клікабельним, спробуйте скопіювати та вставити його в адресний рядок Вашого веб-оглядача.
-
-        %{new_user_tips}
-
-        Ми завжди віримо у [цивілізовану поведінку у спільноті](%{base_url}/faq).
-
-        Бажаємо приємного перебування на форумі!
     signup:
       subject_template: "[%{site_name}] Активуйте свій новий обліковий запис"
       text_body_template: |
@@ -911,11 +704,8 @@ uk:
         %{base_url}/users/activate-account/%{email_token}
 
         Якщо наведене посилання не є клікабельним, спробуйте скопіювати та вставити його в адресний рядок Вашого веб-оглядача.
-  discourse_hub:
-    access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
   page_not_found:
     title: "Сторінка, яку Ви запитали, не існує або є приватною."
-    search_google: "Шукати через Google"
   login_required:
     welcome_message: |
       #[Ласкаво просимо до %{title}](#welcome)

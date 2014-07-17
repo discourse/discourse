@@ -198,8 +198,6 @@ da:
       all_subcategories: "Alle"
       no_subcategory: "ingen"
       category: "Kategori"
-      posts: "Nye indlæg"
-      topics: "Nye emner"
       latest: "Seneste"
       latest_by: "seneste af"
       toggle_ordering: "vis/skjul rækkefølgeskifter"
@@ -516,7 +514,6 @@ da:
       view_new_post: "Se dit nye indlæg."
       saving: "Gemmer…"
       saved: "Gemt!"
-      saved_draft: "Du har en kladde i gang. Klik hvorsomhelst i denne kasse for at forsætte med at redigere den."
       uploading: "Uploader…"
       show_preview: 'forhåndsvisning &raquo;'
       hide_preview: '&laquo; skjul forhåndsvisning'
@@ -828,7 +825,6 @@ da:
       deleted_by_author:
         one: "(indlæg trukket tilbage af forfatteren, slettes automatisk om %{count} time med mindre det bliver flaget)"
         other: "(indlæg trukket tilbage af forfatteren, slettes automatisk om %{count} timer med mindre det bliver flaget)"
-      deleted_by: "slettet af"
       expand_collapse: "fold ud/ind"
       gap:
         one: "1 indlæg udeladt"
@@ -1409,7 +1405,6 @@ da:
         email_type: "E-mail-type"
         to_address: "Modtager"
         test_email_address: "e-mail-adress der skal testes"
-        send_test: "send test-e-mail"
         sent_test: "sednt!"
         delivery_method: "Leveringsmetode"
         preview_digest: "Forhåndsvisning af sammendrag"
@@ -1659,7 +1654,6 @@ da:
           developer: 'Udvikler'
           embedding: "Indlejring"
           legal: "Jura"
-          uncategorized: 'Andet'
           backups: "Backups"
       badges:
         title: Badges

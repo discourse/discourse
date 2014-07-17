@@ -218,8 +218,6 @@ pl_PL:
       all_subcategories: "wszystkie"
       no_subcategory: "żadne"
       category: "Kategoria"
-      posts: "Nowe wpisy"
-      topics: "Nowe tematy"
       latest: "Najnowsze"
       latest_by: "najnowsze przez"
       toggle_ordering: "przełącz kolejność kontroli"
@@ -535,7 +533,6 @@ pl_PL:
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisywanie..."
       saved: "Zapisano!"
-      saved_draft: "Masz zapisany szkic wpisu. Kliknij gdziekolwiek w tym okienku aby wznowić edycję."
       uploading: "Ładowanie..."
       show_preview: 'pokaż podgląd &raquo;'
       hide_preview: '&laquo; schowaj podgląd'
@@ -788,6 +785,7 @@ pl_PL:
         action: 'Zaproś przez e-mail'
         help: 'wyślij zaproszenia do znajomych by mogli odpowiedzieć na ten temat jednym kliknięciem'
         email_placeholder: 'nazwa@example.com'
+        success: "Wysłaliśmy zaproszenie do <b>{{email}}</b>. Powiadomimy Ciebie jeśli zaproszenie zostanie przyjęte. Sprawdzaj zakładkę zaproszenia na Twoim profilu użytkownika by śledzić swoje zaproszenia."
         error: "Przepraszamy, nie mogliśmy zaprosić tej osoby. Być może jest już na forum?"
       login_reply: 'Zaloguj się by odpowiedzieć'
       filters:
@@ -854,7 +852,6 @@ pl_PL:
         one: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzinę, chyba że zostanie oflagowany) "
         few: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godziny, chyba że zostanie oflagowany) "
         other: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostanie oflagowany) "
-      deleted_by: "usunięty przez"
       expand_collapse: "rozwiń/zwiń"
       gap:
         one: "1 ukryty wpis"
@@ -1437,7 +1434,6 @@ pl_PL:
         email_type: "Typ Emaila"
         to_address: "Na Adres"
         test_email_address: "adres email do testu"
-        send_test: "wyślij ten email testowy"
         sent_test: "wysłany!"
         delivery_method: "Metoda Dostarczenia"
         preview_digest: "Pokaż Wyciąg"
@@ -1690,7 +1686,6 @@ pl_PL:
           developer: 'Developer'
           embedding: "Osadzanie"
           legal: "Prawne"
-          uncategorized: 'Bez kategorii'
           backups: "Kopie zapasowe"
       badges:
         title: Odznaki

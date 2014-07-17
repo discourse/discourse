@@ -79,6 +79,8 @@ zh_TW:
     links: 連結
     faq: "常見問答集"
     privacy_policy: "隱私政策"
+    privacy: "隱私政策"
+    terms_of_service: "服務條款"
     mobile_view: "手機版網站"
     desktop_view: "電腦版網站"
     you: "你"
@@ -176,8 +178,6 @@ zh_TW:
       all_subcategories: "所有"
       no_subcategory: "無"
       category: "分類"
-      posts: "新文章"
-      topics: "新討論話題"
       latest: "最近"
       latest_by: "最近由"
       toggle_ordering: "顯示/隱藏排序控制"
@@ -188,10 +188,19 @@ zh_TW:
       post_stats: "新文章的數目。"
       post_stat_sentence:
         other: "在過去一%{unit}內有 %{count} 篇新文章。"
+    ip_lookup:
+      title: 最近的 IP 位址
+      hostname: 伺服器名稱
+      location: 位置
+      location_not_found: (unknown)
+      organisation: 組織
+      phone: 電話
+      other_accounts: 其他帳號正在使用相同 IP 地址
+      no_other_accounts: (none)
     user:
       said: "{{username}} 說了："
       profile: "基本資料"
-      show_profile: "查看基本資料"
+      show_profile: "檢視基本資料"
       mute: "靜音"
       edit: "編輯喜好設定"
       download_archive: "下載我的文章存檔"
@@ -376,6 +385,21 @@ zh_TW:
         private_message: "私人訊息"
         the_topic: "討論話題"
     loading: "正在載入"
+    errors:
+      prev_page: "當嘗試載入"
+      reasons:
+        network: "網絡錯誤"
+        server: "伺服器錯誤: {{code}}"
+        unknown: "錯誤"
+      desc:
+        network: "請檢查你的網絡連線。"
+        network_fixed: "似乎沒有問題了"
+        server: "發生錯誤。"
+        unknown: "發生錯誤。"
+      buttons:
+        back: "返回"
+        again: "請再試一次"
+        fixed: "載入頁面"
     close: "關閉"
     assets_changed_confirm: "此網站剛剛已更新，你要重整頁面以獲得最新版本嗎？"
     read_only_mode:
@@ -487,7 +511,6 @@ zh_TW:
       view_new_post: "檢視你的新文章。"
       saving: "正在儲存..."
       saved: "儲存完畢!"
-      saved_draft: "你有一篇文章的草稿尚未完成，按這裡可以繼續編輯。"
       uploading: "正在上傳..."
       show_preview: '顯示預覽 &raquo;'
       hide_preview: '&laquo; 隱藏預覽'
@@ -677,6 +700,7 @@ zh_TW:
           title: "關注中"
         watching:
           title: "關注"
+          description: "當討論話題有新回覆時會通知你。討論話題列表上將會顯示未讀及新討論話題量。"
         tracking_pm:
           title: "追蹤"
         tracking:
@@ -721,11 +745,13 @@ zh_TW:
         help: '投訴此討論話題，或以私訊通知管理員'
         success_message: '已投訴此討論話題。'
       inviting: "正在邀請..."
+      automatically_add_to_groups: "邀請時同時加入以下群組: (選填, 此為管理員設定)"
       invite_private:
         title: '邀請參與私人訊息'
         email_or_username: "受邀請者的電子郵件地址或用戶名稱"
         email_or_username_placeholder: "電子郵件地址或用戶名稱"
         action: "邀請"
+        success: "我們已經向該用戶發出邀請，請他參與此私人訊息的討論。"
         error: "抱歉，向此用戶發出邀請時發生錯誤。"
         group_name: "群組名稱"
       invite_reply:
@@ -787,7 +813,6 @@ zh_TW:
       show_hidden: '觀看隱藏內容'
       deleted_by_author:
         other: "( 文章已被作者撤回，除非被投訴，否則在 %{count} 小時內將自動刪除。)"
-      deleted_by: "刪除者"
       expand_collapse: "展開/收合"
       gap:
         other: "{{count}} 篇文章已隱藏"
@@ -945,6 +970,8 @@ zh_TW:
       name: "分類名稱"
       description: "描述"
       topic: "分類討論話題"
+      logo: "分類圖示"
+      background_image: "分類背景圖片"
       badge_colors: "識別顏色"
       background_color: "背景色"
       foreground_color: "前景色"
@@ -961,6 +988,8 @@ zh_TW:
       auto_close_label: "自動關閉討論話題的期限:"
       auto_close_units: "小時"
       email_in: "自訂外來電郵地址:"
+      email_in_allow_strangers: "接受非用戶的電郵"
+      allow_badges_label: "允許使用徽章"
       edit_permissions: "編輯權限"
       add_permission: "新增權限"
       this_year: "今年"
@@ -1270,6 +1299,9 @@ zh_TW:
         preview: "預覽"
         undo_preview: "移除預覽"
         rescue_preview: "預設風格"
+        explain_preview: "以此自訂樣式預覽網頁"
+        explain_undo_preview: "還原現時的自訂樣式"
+        explain_rescue_preview: "以預設樣式預覽網頁"
         save: "儲存"
         new: "新增"
         new_style: "新增樣式"
@@ -1280,6 +1312,7 @@ zh_TW:
         opacity: "不透明度"
         copy: "複製"
         css_html:
+          title: "CSS/HTML"
           long_title: "CSS 與 HTML 客製化"
         colors:
           title: "顏色"
@@ -1336,7 +1369,6 @@ zh_TW:
         email_type: "電子郵件類型"
         to_address: "目的地址"
         test_email_address: "要測試的電子郵件地址"
-        send_test: "送出測試郵件"
         sent_test: "已送出!"
         delivery_method: "傳送方式"
         preview_digest: "預覽文摘"
@@ -1353,6 +1385,7 @@ zh_TW:
           filters:
             title: "過濾"
             user_placeholder: "username"
+            address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             skipped_reason_placeholder: "原因"
       logs:
@@ -1543,10 +1576,13 @@ zh_TW:
           days: "天"
           topics_replied_to: "討論話題回覆"
           topics_viewed: "已讀討論話題"
+          topics_viewed_all_time: "已瀏覽的討論話題 (任何時間)"
           posts_read: "已讀文章"
+          posts_read_all_time: "已讀的文章 (任何時間)"
           flagged_posts: "被投訴的文章"
           flagged_by_users: "投訴之用戶"
           qualifies: "符合信任等級 3 的條件。"
+          will_be_promoted: "將在 24 小時內升級。"
           does_not_qualify: "不符合信任等級 3 的條件。"
       site_content:
         none: "選擇要編輯的內容類型。"
@@ -1576,7 +1612,6 @@ zh_TW:
           developer: '開發人員'
           embedding: "嵌入"
           legal: "法律"
-          uncategorized: '未分類'
           backups: "備份"
       badges:
         title: 徽章
@@ -1602,6 +1637,7 @@ zh_TW:
         no_badges: 沒有可授予的徽章
         allow_title: 允許使用徽章作為稱號
         multiple_grant: 可多次授予
+        listable: 在徽章頁面上顯示徽章
         icon: 圖示
     lightbox:
       download: "下載"
@@ -1647,6 +1683,7 @@ zh_TW:
         mark_watching: '<b>m</b> 之後 <b>w</b> 標記討論話題為關注中'
     badges:
       title: 徽章
+      multiple_grant: "可多次授予"
       badge_count:
         other: "%{count} 徽章"
       more_badges:
@@ -1655,6 +1692,9 @@ zh_TW:
         other: "%{count} 升級"
       select_badge_for_title: 選擇一枚徽章作為你的稱號
       badge:
+        editor:
+          name: 編輯
+          description: 首篇編輯文章
         basic_user:
           name: 初級
           description: 可使用所有基礎的社群功能。
@@ -1670,6 +1710,9 @@ zh_TW:
         welcome:
           name: 歡迎
           description: 收到一個讚。
+        autobiographer:
+          name: 自我介紹
+          description: 填寫用戶個人資料
         nice_post:
           name: 好文章
           description: 一篇文章收到 10 個讚。此徽章可多次獲得。
@@ -1678,3 +1721,15 @@ zh_TW:
           description: 一篇文章收到 25 個讚。此徽章可多次獲得。
         great_post:
           name: 神文章
+          description: 當一篇文章達到 50 個讚好。此徽章可多次獲得。
+        first_like:
+          name: 首次讚好
+        first_flag:
+          name: 首次標記
+          description: 標記文章
+        first_share:
+          name: 首個分享
+          description: 分享文章
+        first_link:
+          name: 首次連結
+          description: 其他討論話題含內部連結

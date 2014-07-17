@@ -196,8 +196,6 @@ it:
       all_subcategories: "tutte"
       no_subcategory: "nessuno"
       category: "Categoria"
-      posts: "Nuovi post"
-      topics: "Nuovi topic"
       latest: "Più recenti"
       latest_by: "I più recenti di"
       toggle_ordering: "Modifica il controllo dell'ordinamento"
@@ -507,7 +505,6 @@ it:
       view_new_post: "Visualizza i tuoi nuovi post."
       saving: "Sto salvando..."
       saved: "Salvato!"
-      saved_draft: "Hai una bozza in lavorazione. Clicca ovunque in questo box per aggiornarla."
       uploading: "In caricamento..."
       show_preview: 'Visualizza l''anteprima &raquo;'
       hide_preview: '&laquo; nascondi l''anteprima'
@@ -813,7 +810,6 @@ it:
       deleted_by_author:
         one: "(post eliminato dall'autore, sarà automaticamente cancellato in %{count} ore se non contrassegnato)"
         other: "(post eliminato dall'autore, verrà automaticamente cancellato in %{count} ore se non contrassegnato)"
-      deleted_by: "cancellato da"
       expand_collapse: "Espandi/Raggruppa"
       gap:
         one: "1 post nascosto"
@@ -1384,7 +1380,6 @@ it:
         email_type: "Tipo di Email"
         to_address: "All'indirizzo"
         test_email_address: "Indirizzo email da testare"
-        send_test: "Invia una email di prova"
         sent_test: "Inviata!"
         delivery_method: "Metodo di consegna"
         preview_digest: "Anteprima Riassunto"
@@ -1632,7 +1627,6 @@ it:
           developer: 'Sviluppatore'
           embedding: "Incorporo"
           legal: "Legale"
-          uncategorized: 'Non categorizzato'
           backups: "Backup"
       badges:
         title: Targhette

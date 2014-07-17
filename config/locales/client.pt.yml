@@ -380,7 +380,6 @@ pt:
       view_new_post: "Ver as suas novas mensagens."
       saving: "A Gravar..."
       saved: "Gravado!"
-      saved_draft: "Tem um rascunho da mensagem em progresso. selecione qualquer ponto nesta caixa para continuar a edição."
       uploading: "A enviar..."
       show_preview: 'mostrar pré-visualização &raquo;'
       hide_preview: '&laquo; esconder pré-visualização'
@@ -596,7 +595,6 @@ pt:
       deleted_by_author:
         one: "(postagens abandonadas pelo autor, serão removidas automaticamente em %{count} hora a menos que forem sinalizadas)"
         other: "(mensagens abandonadas pelo autor, serão removidas automaticamente em %{count} horas a menos que sejam sinalizadas)"
-      deleted_by: "apagado por"
       expand_collapse: "expandir/encolher"
       has_replies:
         one: "Resposta"
@@ -957,7 +955,6 @@ pt:
         email_type: "Tipo de Email"
         to_address: "Para (endereço)"
         test_email_address: "endereço de email para testar"
-        send_test: "enviar email de teste"
         sent_test: "enviado!"
         delivery_method: "Método de Entrega"
         preview_digest: "Pré-vizualizar modo Digest"
@@ -1155,4 +1152,3 @@ pt:
           spam: 'Spam'
           rate_limits: 'Limites de classificação'
           developer: 'Programador'
-          uncategorized: 'Sem categoria'

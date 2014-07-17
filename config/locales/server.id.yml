@@ -64,16 +64,6 @@ id:
   education:
     until_posts:
       other: "%{count} post"
-    new-topic: |
-      Selamat datang di %{site_name} &mdash; **terima kasih telah memulai diskusi baru!**
-
-      - Apa judul topik Anda cukup mendeskripsikan isinya? Apa judulnya cukup menarik?
-
-      - Apa yang Anda bicarakan? Siapa saja yang akan tertarik? Kenapa hal ini penting? Reaksi apa yang Anda harapkan dari komunitas?
-
-      - Masukkan kata-kata yang bagus untuk digunakan dalam pencarian agar pengguna lain dapat *menemukan* topik Anda. Untuk mengelompokkan topik Anda dengan topik-topik lain yang sejenis, pilihlah kategori yang tepat.
-
-      Untuk panduan selebihnya, [silakan lihat FAQ](/faq). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
   activerecord:
     attributes:
       category:
@@ -154,17 +144,8 @@ id:
     host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
     memory_warning: 'Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB.'
   site_settings:
-    min_post_length: "Jumlah karakter minimum per post dalam pesan"
-    max_post_length: "Jumlah karakter maksimum per post"
-    min_topic_title_length: "Jumlah karakter minimum untuk judul topik"
-    max_topic_title_length: "Jumlah karakter maksimum untuk judul topik"
-    max_image_height: "Maksimum tinggi gambar yang diperbolehkan dalam post"
     notify_mods_when_user_blocked: "Jika pengguna diblokir secara otomatis, kirimkan pesan kepada semua moderator."
     maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
-    backup_daily: "Membuat backup dari situs secara otomatis sekali per hari"
-    newuser_max_attachments: "Berapa lampiran yang bisa ditambahkan pengguna baru ke dalam satu post"
-    allow_uploaded_avatars: "Memperbolehkan pengguna untuk mengunggah avatar"
-    allow_animated_avatars: "Mengijinkan pengguna untuk menggunakan avatar gif dengan animasi. PERINGATAN: setelah mengubah pengaturan ini disarankan untuk menjalankan rake avatars:refresh."
     warn_reviving_old_topic_age: "Saat seseorang menjawab topik yang telah berusia lebih dari hari yang ditentukan, sebuah peringatan akan ditampilkan untuk mencegah pengguna tersebut menghidupkan kembali diskusi lama. Untuk menonaktifkan fitur ini, set nilainya menjadi 0."
   user:
     email:

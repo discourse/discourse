@@ -172,8 +172,6 @@ ko:
       all_subcategories: "모든 하위 카테고리"
       no_subcategory: "없음"
       category: "카테고리"
-      posts: "게시글"
-      topics: "토픽들"
       latest: "최신"
       latest_by: "가장 최근"
       toggle_ordering: "정렬 컨트롤 토글"
@@ -456,7 +454,6 @@ ko:
       view_new_post: "새로운 게시물을 볼 수 있습니다."
       saving: "저장 중..."
       saved: "저장 완료!"
-      saved_draft: "작성중이던 글이 있어요. 계속해서 글을 작성하시려면 이 영역을 클릭하세요."
       uploading: "업로딩 중..."
       show_preview: '미리보기를 보여줍니다 &laquo;'
       hide_preview: '&laquo; 미리보기를 숨기기'
@@ -721,7 +718,6 @@ ko:
       reply_as_new_topic: "새로운 토픽으로 답글 달기"
       continue_discussion: "{{postLink}}에서 토론을 계속:"
       follow_quote: "인용 글로 이동"
-      deleted_by: "삭제됨"
       expand_collapse: "확장/축소"
       gap:
         other: "{{count}}개의 게시글이 숨겨져있어요."
@@ -1203,7 +1199,6 @@ ko:
         email_type: "이메일 타입"
         to_address: "받는 주소"
         test_email_address: "테스트용 이메일 주소"
-        send_test: "테스트 메일 전송"
         sent_test: "전송됨!"
         delivery_method: "전달 방법"
         preview_digest: "요약 미리보기"
@@ -1423,7 +1418,6 @@ ko:
           developer: '개발자'
           embedding: "Embedding"
           legal: "합법적인"
-          uncategorized: '카테고리 없음'
           backups: "백업"
       badges:
         title: 배지

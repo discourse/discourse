@@ -95,6 +95,8 @@ de:
     links: Links
     faq: "FAQ"
     privacy_policy: "Datenschutzrichtlinie"
+    privacy: "Privatsphäre"
+    terms_of_service: "Nutzungsbedingungen"
     mobile_view: "Mobile Ansicht"
     desktop_view: "Desktop Ansicht"
     you: "Du"
@@ -198,8 +200,6 @@ de:
       all_subcategories: "alle"
       no_subcategory: "keiner"
       category: "Kategorie"
-      posts: "Neue Beiträge"
-      topics: "Neue Themen"
       latest: "Neueste"
       latest_by: "latest by"
       toggle_ordering: "Reihenfolge ändern"
@@ -212,6 +212,15 @@ de:
       post_stat_sentence:
         one: "%{count} neue Beitrag in den letzten %{unit}."
         other: "%{count} neue Beiträge in den letzten %{unit}."
+    ip_lookup:
+      title: IP-Adressen-Abfrage
+      hostname: Hostname
+      location: Ort
+      location_not_found: (unbekannt)
+      organisation: Organisation
+      phone: Telefon
+      other_accounts: Andere Konten mit dieser IP-Adresse.
+      no_other_accounts: (keine)
     user:
       said: "{{username}} sagte:"
       profile: "Profil"
@@ -243,6 +252,7 @@ de:
       watched_categories: "Beobachten"
       watched_categories_instructions: "Das selbe wie 'verfolgen', zusätzlich wirst du über alle neuen Beiträge und Themen informiert."
       tracked_categories: "Verfolgen"
+      tracked_categories_instructions: "Du wirst automatisch allen neuen Themen dieser Kategorie folgen. Die Anzahl der ungelesenen und neuen Beiträgen wird neben der Themenliste angezeigt."
       muted_categories: "Ignorieren"
       muted_categories_instructions: "Du wirst über nichts mehr in diesem Thema informiert, und er wird nicht auf deinem Ungelesen-Tab angezeigt werden."
       delete_account: "Loesche mein Nutzerkonto"
@@ -405,6 +415,21 @@ de:
         private_message: "Private Nachricht"
         the_topic: "das Thema"
     loading: "Lade..."
+    errors:
+      prev_page: "während des Ladens"
+      reasons:
+        network: "Netzwerkfehler"
+        server: "Server Error: {{code}}"
+        unknown: "Fehler"
+      desc:
+        network: "Bitte überprüfe deine Netzwerkverbindung."
+        network_fixed: "Sieht aus als wäre es wieder da."
+        server: "Etwas ist schief gelaufen"
+        unknown: "Etwas ist schief gelaufen"
+      buttons:
+        back: "Zurückgehen"
+        again: "Nochmal versuchen"
+        fixed: "Lade Seite"
     close: "Schließen"
     assets_changed_confirm: "Diese Seite wurde gerade geupdatet. Neu laden für die neuste Version?"
     read_only_mode:
@@ -424,6 +449,7 @@ de:
     unmute: Stummschaltung deaktivieren
     last_post: Letzter Beitrag
     summary:
+      enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: nur die interessantesten Beiträge die von der Gemeinschaft bestimmt wurden. Um wieder alle Beiträge zu sehen, klicke unten."
       description: "Es gibt <b>{{count}}</b> Beiträge."
       description_time: "Es gibt <b>{{count}}</b> Antworten mit einer geschätzten Lesezeit <b>{{readingTime}} Minuten</b>."
       enable: 'Nur die Top-Beiträge anzeigen'
@@ -516,7 +542,6 @@ de:
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
-      saved_draft: "Du hast einen Entwurf im Gange. Klicke irgendwo in diese Box um den Entwurf fortzusetzen."
       uploading: "Lade hoch..."
       show_preview: 'Vorschau zeigen &raquo;'
       hide_preview: '&laquo; Vorschau verstecken'
@@ -710,12 +735,16 @@ de:
           '0': 'Du ignorierst alle Benachrichtigungen bezüglich dieses Themas.'
         watching_pm:
           title: "Beobachten"
+          description: "Du wirst über jede neue Nachricht in dieser privaten Nachricht benachrichtigt werden. Die Anzahl der ungelesenen und neuen Beiträgen wird außerdem neben der Themenliste angezeigt."
         watching:
           title: "Beobachtet"
+          description: "Du wirst über jede neue Nachricht in diesem Thema benachrichtigt werden. Die Anzahl der ungelesenen und neuen Beiträgen wird außerdem neben der Themenliste angezeigt."
         tracking_pm:
           title: "Verfolgen"
+          description: "Die Anzahl von ungelesenen und neuen Beiträgen wird neben der privaten Nachricht erscheinen. Du wirst nur benachrichtigt, wenn jemand deinen @Namen erwähnt oder deinen Beitrag beantwortet."
         tracking:
           title: "Mitverfolgt"
+          description: "Die Anzahl der ungelesenen und neuen Beiträgen wird neben der Themenliste angezeigt.. Du wirst nur benachrichtigt, wenn jemand deinen @Namen erwähnt oder deinen Beitrag beantwortet."
         regular:
           title: "Normal"
           description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deine Beiträge antwortet."
@@ -756,18 +785,23 @@ de:
         help: 'Melde dieses Thema vertraulich zur Kenntnisnahme oder versende eine private Benachrichtigung darüber.'
         success_message: 'Du hast dieses Thema erfolgreich gemeldet.'
       inviting: "Einladung verschicken..."
+      automatically_add_to_groups: "Füge Benutzer nach der Registrierung automatisch zu Gruppen hinzu. (Optional, Nur Admin) "
       invite_private:
         title: 'Zu privatem Gespräch einladen'
         email_or_username: "Einzuladender Nutzer"
         email_or_username_placeholder: "Mailadresse oder Benutzername"
         action: "Einladen"
+        success: "Wir haben den Benutzer eingeladen, an diesem privaten Gespräch teilzunehmen."
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
         group_name: "Gruppenname"
       invite_reply:
         title: 'Einladung'
         action: 'Einladung senden'
         help: 'Sendet Freunden eine Einladung, so dass mit einem Klick auf dieses Thema antworten können.'
+        to_topic: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht direkt auf dieses Thema zu antworten. Hierfür ist kein Login erforderlich."
+        to_forum: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht dem Forum beizutreten. Hierfür ist kein Login erforderlich."
         email_placeholder: 'Mailadresse'
+        success: "Wir haben deine Einladung an <b>{{email}}</b> verschickt. Wir lassen Dich wissen, sobald die Einladung eingelöst wird. In deinem Nutzerprofil kannst Du alle deine Einladungen überwachen."
         error: "Entschuldige, wir konnten diese Person nicht einladen. Vielleicht ist sie schon ein Nutzer?"
       login_reply: 'Melde dich an um zu antworten'
       filters:
@@ -828,7 +862,6 @@ de:
       deleted_by_author:
         one: "(Antwort vom Autor zurückgezogen, wird automatisch in %{count} Stunde gelöscht falls nicht gemeldet)"
         other: "(Antwort vom Autor zurückgezogen, wird automatisch in %{count} Stunden gelöscht falls nicht gemeldet)"
-      deleted_by: "Entfernt von"
       expand_collapse: "mehr/weniger"
       gap:
         one: "1 Beitrag ausgelassen"
@@ -1025,6 +1058,8 @@ de:
       auto_close_label: "Thema automatisch schließen nach:"
       auto_close_units: "Stunden"
       email_in: "Benutzerdefinierte Email Adresse:"
+      email_in_allow_strangers: "Akzeptiere E-Mails von nicht registrierten, anonymen Benutzern"
+      allow_badges_label: "Abzeichen erlauben"
       edit_permissions: "Berechtigung bearbeiten"
       add_permission: "Berechtigung hinzufügen"
       this_year: "dieses Jahr"
@@ -1038,6 +1073,7 @@ de:
           description: "Du wirst automatisch allen neuen Themen dieser Kategorie folgen. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Ausserdem wird die Anzahl der ungelesenen und neuen Beiträge neben der Themenliste angezeigt."
         tracking:
           title: "Verfolgen"
+          description: "Du wirst automatisch allen neuen Themen dieser Kategorie folgen. Die Anzahl der ungelesenen und neuen Beiträgen wird neben der Themenliste angezeigt."
         regular:
           title: "Normal"
           description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
@@ -1353,6 +1389,7 @@ de:
         opacity: "Transparenz"
         copy: "Kopieren"
         css_html:
+          title: "CSS, HTML"
           long_title: "CSS und HTML Anpassungen"
         colors:
           title: "Farben"
@@ -1409,7 +1446,6 @@ de:
         email_type: "Mailtyp"
         to_address: "Empfänger"
         test_email_address: "Mailadresse zum Testen"
-        send_test: "Testmail senden"
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
         preview_digest: "Vorschau der Übersicht"
@@ -1426,6 +1462,7 @@ de:
           filters:
             title: "Filter"
             user_placeholder: "Benutzername"
+            address_placeholder: "name@example.com"
             type_placeholder: "authentifizieren, registrieren..."
             skipped_reason_placeholder: "Grund"
       logs:
@@ -1659,7 +1696,6 @@ de:
           developer: 'Entwickler'
           embedding: "Einbetten"
           legal: "Rechtliches"
-          uncategorized: 'Unkategorisiert'
           backups: "Backups"
       badges:
         title: Abzeichen
@@ -1685,6 +1721,7 @@ de:
         no_badges: Es gibt keine Abzeichen die verliehen werden können.
         allow_title: Abzeichen darf als Titel verwendet werden.
         multiple_grant: Kann mehrfach erteilt werden.
+        listable: Zeige Abzeichen auf der öffentlichen Abzeichenseite.
         icon: Symbol
     lightbox:
       download: "Download"
@@ -1730,6 +1767,8 @@ de:
         mark_watching: '<b>m</b> dann <b>w</b> Thema auf beobachten setzen'
     badges:
       title: Abzeichen
+      allow_title: "Abzeichen als Titel erlauben?"
+      multiple_grant: "Kann mehrfach erteilt werden?"
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"
@@ -1741,6 +1780,9 @@ de:
         other: "%{count} akzeptiert"
       select_badge_for_title: Wähle ein Abzeichen für deinen Titel aus.
       badge:
+        editor:
+          name: Redakteur
+          description: Erste Bearbeitung.
         basic_user:
           name: Basis
           description: Alle grundlegenden Funktionen gewährt.
@@ -1756,6 +1798,9 @@ de:
         welcome:
           name: Willkommen
           description: Hat einen Like erhalten.
+        autobiographer:
+          name: Autobiograf
+          description: Hat Benutzerprofil Informationen ausgefüllt.
         nice_post:
           name: Netter Post
           description: Hat 10 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.
@@ -1764,3 +1809,16 @@ de:
           description: Hat 25 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.
         great_post:
           name: Großartiger Post
+          description: Hat 50 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.
+        first_like:
+          name: Erster Like.
+          description: Hat einen Beitrag gelikt.
+        first_flag:
+          name: Erste Meldung.
+          description: Einen Beitrag gemeldet.
+        first_share:
+          name: Zum ersten mal geteilt.
+          description: Teilte einen Beitrag.
+        first_link:
+          name: Erster Link.
+          description: Hat einen internen Link auf einen anderen Beitrag hinzugefügt.

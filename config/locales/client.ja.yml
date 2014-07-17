@@ -159,7 +159,7 @@ ja:
         members_mods_and_admins: "アドミン、モデレータとグループメンバーのみ"
         everyone: "だれでも"
     user_action_groups:
-      '1': "「いいね！」 した"
+      '1': "「いいね！」 "
       '2': "「いいね！」 された"
       '3': "ブックマーク"
       '4': "トピック"
@@ -176,8 +176,6 @@ ja:
       all_subcategories: "全てのサブカテゴリ"
       no_subcategory: "サブカテゴリなし"
       category: "カテゴリ"
-      posts: "ポスト"
-      topics: "トピック"
       latest: "最新ポスト"
       latest_by: "最新投稿： "
       toggle_ordering: "カテゴリ並び替えモードをトグル"
@@ -231,7 +229,7 @@ ja:
         deleted_posts: "削除したポスト"
       messages:
         all: "すべて"
-        mine: "私の"
+        mine: "マイボックス"
         unread: "未読"
       change_password:
         success: "(メールを送信しました)"
@@ -479,7 +477,6 @@ ja:
       view_new_post: "新規ポストを見る。"
       saving: "保存中..."
       saved: "保存完了!"
-      saved_draft: "編集中のポストがあります。このボックス内をクリックすると編集を再開できます。"
       uploading: "アップロード中..."
       show_preview: 'プレビューを表示する &raquo;'
       hide_preview: '&laquo; プレビューを隠す'
@@ -650,11 +647,11 @@ ja:
         position: "投稿%{current}/%{total}"
       notifications:
         reasons:
-          '3_6': 'このカテゴリを監視中のため通知されます'
-          '3_5': 'このトピックを監視中のため通知されます'
-          '3_2': 'このトピックを監視中のため通知されます。'
+          '3_6': 'このカテゴリを参加中のため通知されます'
+          '3_5': 'このトピックを参加中のため通知されます'
+          '3_2': 'このトピックを参加中のため通知されます。'
           '3_1': 'このトピックを作成したため通知されます。'
-          '3': 'このトピックを監視中のため通知されます。'
+          '3': 'このトピックを参加中のため通知されます。'
           '2_8': 'このカテゴリをトラック中のため通知されます。'
           '2_4': 'このトピックに回答したため通知されます。'
           '2_2': 'このトピックをトラック中のため通知されます。'
@@ -665,9 +662,9 @@ ja:
           '0_2': 'このトピックに関して一切通知を受けません。'
           '0': 'このトピックに関して一切通知を受けません。'
         watching_pm:
-          title: "監視中"
+          title: "参加中"
         watching:
-          title: "監視中"
+          title: "参加中"
         tracking_pm:
           title: "トラック中"
         tracking:
@@ -777,7 +774,6 @@ ja:
       show_hidden: '隠されたコンテンツを表示する'
       deleted_by_author:
         other: "(ポストは執筆者により取り下げられました。フラグがつかない場合%{count}時間後に自動的に削除されます)"
-      deleted_by: "削除者"
       expand_collapse: "展開/折りたたみ"
       gap:
         other: "{{count}}個の投稿を除外"
@@ -961,10 +957,10 @@ ja:
       parent: "親カテゴリ"
       notifications:
         watching:
-          title: "カテゴリ監視中"
-          description: "このカテゴリ中の最新トピックを自動的に監視します。新規ポスト及びトピックが投稿されるたびに通知されます。"
+          title: "カテゴリ参加中"
+          description: "このカテゴリ中の最新トピックを自動的に参加します。新規ポスト及びトピックが投稿されるたびに通知されます。"
         tracking:
-          title: "監視中"
+          title: "トラック中"
         regular:
           title: "レギュラー"
           description: "誰かから @ユーザ名 でメンションを受けた際と、あなたのポストに回答がついた際に通知されます。"
@@ -1311,7 +1307,6 @@ ja:
         email_type: "メールタイプ"
         to_address: "送信先アドレス"
         test_email_address: "テスト用メールアドレス"
-        send_test: "テストメール送信"
         sent_test: "送信完了!"
         delivery_method: "送信方法"
         preview_digest: "ダイジェストのプレビュー"
@@ -1383,7 +1378,7 @@ ja:
           domain: "ドメイン"
         screened_ips:
           title: "スクリーン対象IP"
-          description: '監視中のIPアドレス。IPアドレスをホワイトリストに追加するには "許可" を利用してください。'
+          description: '参加中のIPアドレス。IPアドレスをホワイトリストに追加するには "許可" を利用してください。'
           delete_confirm: "%{ip_address} のルールを本当に削除しますか?"
           actions:
             block: "ブロック"
@@ -1553,7 +1548,6 @@ ja:
           developer: '開発者向け'
           embedding: "埋め込む"
           legal: "法律に基づく情報"
-          uncategorized: 'その他'
           backups: "バックアップ"
       badges:
         title: バッジ

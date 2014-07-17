@@ -86,6 +86,7 @@ sv:
     yes_value: "Ja"
     generic_error: "Vi beklagar, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
+    log_in: "Logga in"
     age: "Ålder"
     joined: "Gick med"
     admin_title: "Admin"
@@ -181,8 +182,6 @@ sv:
     categories:
       all: "alla kategorier"
       category: "Kategori"
-      posts: "Nya inlägg"
-      topics: "Nya trådar"
       latest: "Senaste"
       latest_by: "senast av"
       toggle_ordering: "slå av/på sorteringskontroll"
@@ -373,6 +372,7 @@ sv:
     created: 'Skapad'
     trust_level: 'Pålitlighetsnivå'
     create_account:
+      title: "Registrera nytt konto"
       failed: "Något gick fel, kanske är denna e-post redan registrerad, försök glömt lösenordslänken"
     forgot_password:
       title: "Glömt Lösenord"
@@ -380,6 +380,7 @@ sv:
       invite: "Skriv in ditt användarnamn eller e-postadress, så vi skickar dig ett mail om lösenordsåterställning."
       reset: "Återställ Lösenord"
     login:
+      title: "Logga in"
       password: "Lösenord"
       email_placeholder: "email eller användarnamn"
       error: "Okänt fel"
@@ -432,7 +433,6 @@ sv:
       view_new_post: "Visa ditt nya inlägg."
       saving: "Sparar..."
       saved: "Sparat!"
-      saved_draft: "Du har ett pågående inläggsutkast. Klicka någonstans i denna ruta för att fortsätta redigera."
       uploading: "Laddar upp..."
       show_preview: 'visa förhandsgranskning &raquo;'
       hide_preview: '&laquo; dölj förhandsgranskning'
@@ -694,7 +694,6 @@ sv:
       deleted_by_author:
         one: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om 1 timme om det inte flaggas)"
         other: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timmar om det inte flaggas)"
-      deleted_by: "raderad av"
       expand_collapse: "expandera/förminska"
       gap:
         one: "1 dolt inlägg"
@@ -1148,7 +1147,6 @@ sv:
         email_type: "E-posttyp"
         to_address: "Till adress"
         test_email_address: "e-postadress att testa"
-        send_test: "skicka testmail"
         sent_test: "skickat!"
         delivery_method: "Leveransmetod"
         preview_digest: "Sammandrag"
@@ -1373,7 +1371,6 @@ sv:
           rate_limits: 'Begränsningar'
           developer: 'Utvecklare'
           embedding: "Inbäddning"
-          uncategorized: 'Ej kategoriserad'
       badges:
         description: beskrivning
         save: spara
