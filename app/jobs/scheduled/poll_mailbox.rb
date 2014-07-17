@@ -13,6 +13,7 @@ module Jobs
     include Email::BuildEmailHelper
 
     def execute(args)
+      @args = args
       if SiteSetting.pop3s_polling_enabled?
         poll_pop3s
       end
@@ -47,7 +48,7 @@ module Jobs
           client_message = RejectionMailer.send_rejection(message.from, message.body, message.to, message_template)
           Email::Sender.new(client_message, message_template).send
         else
-          Discourse.handle_exception(e, { code: "unknown error for incoming email", mail: mail_string} )
+          Discourse.handle_exception(e, error_context(@args, "unknown error when processing incoming email", mail: mail_string))
         end
       ensure
         mail.delete
@@ -70,7 +71,7 @@ module Jobs
         pop.finish
       end
     rescue Net::POPAuthenticationError => e
-      Discourse.handle_exception(e, { code: "signing in for incoming email" } )
+      Discourse.handle_exception(e, error_context(@args, "Signing in to poll incoming email"))
     end
 
   end

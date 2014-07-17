@@ -33,7 +33,7 @@ if Sidekiq.server?
           manager.tick
         rescue => e
           # the show must go on
-          Discourse.handle_exception(e)
+          Discourse.handle_exception(e, {code: "Ticking scheduling manager"})
         end
         sleep 1
       end
@@ -43,7 +43,7 @@ end
 
 Sidekiq.logger.level = Logger::WARN
 
-class SidekiqLogsterReporter
+class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
   def call(ex, context = {})
     # Pass context to Logster
     fake_env = {}
@@ -65,6 +65,7 @@ class SidekiqLogsterReporter
   end
 end
 
+Sidekiq.error_handlers.clear
 Sidekiq.error_handlers << SidekiqLogsterReporter.new
 
 
