@@ -8,11 +8,12 @@
 **/
 export default Ember.ObjectController.extend({
   user: null,
+  model: null,
+  totalInvites: null,
 
   init: function() {
     this._super();
     this.set('searchTerm', '');
-    this.set('totalInvites', '');
   },
 
   uploadText: function() { return I18n.t("user.invited.bulk_invite.text"); }.property(),
