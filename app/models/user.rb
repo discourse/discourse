@@ -787,7 +787,6 @@ end
 # Indexes
 #
 #  index_users_on_auth_token      (auth_token)
-#  index_users_on_email           (email) UNIQUE
 #  index_users_on_last_posted_at  (last_posted_at)
 #  index_users_on_username        (username) UNIQUE
 #  index_users_on_username_lower  (username_lower) UNIQUE

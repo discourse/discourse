@@ -1,3 +1,34 @@
+
+BadgeGrouping.seed do |g|
+  g.id = 1
+  g.name = "Getting Started"
+  g.position = BadgeGrouping::Position::GettingStarted
+end
+
+BadgeGrouping.seed do |g|
+  g.id = 2
+  g.name = "Community"
+  g.position = BadgeGrouping::Position::Community
+end
+
+BadgeGrouping.seed do |g|
+  g.id = 3
+  g.name = "Posting"
+  g.position = BadgeGrouping::Position::Posting
+end
+
+BadgeGrouping.seed do |g|
+  g.id = 4
+  g.name = "Trust Level"
+  g.position = BadgeGrouping::Position::TrustLevel
+end
+
+BadgeGrouping.seed do |g|
+  g.id = 5
+  g.name = "Other"
+  g.position = BadgeGrouping::Position::Other
+end
+
 # Trust level system badges.
 trust_level_badges = [
   {id: 1, name: "Basic User", type: BadgeType::Bronze},
@@ -12,6 +43,7 @@ trust_level_badges.each do |spec|
     b.default_name = spec[:name]
     b.badge_type_id = spec[:type]
     b.query = Badge::Queries.trust_level(spec[:id])
+    b.default_badge_grouping_id = BadgeGrouping::Position::TrustLevel
 
     # allow title for leader and elder
     b.allow_title = spec[:id] > 2
@@ -25,6 +57,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = false
   b.query = Badge::Queries::Reader
+  b.default_badge_grouping_id = BadgeGrouping::Position::GettingStarted
   b.auto_revoke = false
 end
 
@@ -35,6 +68,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = false
   b.query = Badge::Queries::ReadGuidelines
+  b.default_badge_grouping_id = BadgeGrouping::Position::GettingStarted
 end
 
 Badge.seed do |b|
@@ -44,6 +78,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.query = Badge::Queries::FirstLink
+  b.default_badge_grouping_id = BadgeGrouping::Position::GettingStarted
 end
 
 Badge.seed do |b|
@@ -53,6 +88,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.query = Badge::Queries::FirstQuote
+  b.default_badge_grouping_id = BadgeGrouping::Position::GettingStarted
 end
 
 Badge.seed do |b|
@@ -62,6 +98,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.query = Badge::Queries::FirstLike
+  b.default_badge_grouping_id = BadgeGrouping::Position::GettingStarted
 end
 
 Badge.seed do |b|
@@ -71,6 +108,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = false
   b.query = Badge::Queries::FirstFlag
+  b.default_badge_grouping_id = BadgeGrouping::Position::Community
 end
 
 Badge.seed do |b|
@@ -80,6 +118,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.query = Badge::Queries::FirstShare
+  b.default_badge_grouping_id = BadgeGrouping::Position::GettingStarted
 end
 
 Badge.seed do |b|
@@ -89,6 +128,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.query = Badge::Queries::Welcome
+  b.default_badge_grouping_id = BadgeGrouping::Position::Community
 end
 
 Badge.seed do |b|
@@ -97,6 +137,7 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = Badge::Queries::Autobiographer
+  b.default_badge_grouping_id = BadgeGrouping::Position::GettingStarted
 end
 
 Badge.seed do |b|
@@ -105,6 +146,7 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = Badge::Queries::Editor
+  b.default_badge_grouping_id = BadgeGrouping::Position::Community
 end
 
 #
@@ -123,5 +165,6 @@ like_badges.each do |spec|
     b.multiple_grant = spec[:multiple]
     b.target_posts = true
     b.query = Badge::Queries.like_badge(Badge.like_badge_counts[spec[:id]])
+    b.default_badge_grouping_id = BadgeGrouping::Position::Posting
   end
 end

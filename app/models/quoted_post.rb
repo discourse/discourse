@@ -46,3 +46,19 @@ class QuotedPost < ActiveRecord::Base
 
   end
 end
+
+# == Schema Information
+#
+# Table name: quoted_posts
+#
+#  id             :integer          not null, primary key
+#  post_id        :integer          not null
+#  quoted_post_id :integer          not null
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+# Indexes
+#
+#  index_quoted_posts_on_post_id_and_quoted_post_id  (post_id,quoted_post_id) UNIQUE
+#  index_quoted_posts_on_quoted_post_id_and_post_id  (quoted_post_id,post_id) UNIQUE
+#

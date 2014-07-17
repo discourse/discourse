@@ -1,4 +1,5 @@
 class Badge < ActiveRecord::Base
+  belongs_to :badge_grouping
 
   # badge ids
   Welcome = 5
@@ -178,26 +179,32 @@ SQL
   def default_name=(val)
     self.name ||= val
   end
+
+  def default_badge_grouping_id=(val)
+    self.badge_grouping_id ||= val
+  end
 end
 
 # == Schema Information
 #
 # Table name: badges
 #
-#  id             :integer          not null, primary key
-#  name           :string(255)      not null
-#  description    :text
-#  badge_type_id  :integer          not null
-#  grant_count    :integer          default(0), not null
-#  created_at     :datetime
-#  updated_at     :datetime
-#  allow_title    :boolean          default(FALSE), not null
-#  multiple_grant :boolean          default(FALSE), not null
-#  icon           :string(255)      default("fa-certificate")
-#  listable       :boolean          default(TRUE)
-#  target_posts   :boolean          default(FALSE)
-#  query          :text
-#  enabled        :boolean          default(TRUE), not null
+#  id                :integer          not null, primary key
+#  name              :string(255)      not null
+#  description       :text
+#  badge_type_id     :integer          not null
+#  grant_count       :integer          default(0), not null
+#  created_at        :datetime
+#  updated_at        :datetime
+#  allow_title       :boolean          default(FALSE), not null
+#  multiple_grant    :boolean          default(FALSE), not null
+#  icon              :string(255)      default("fa-certificate")
+#  listable          :boolean          default(TRUE)
+#  target_posts      :boolean          default(FALSE)
+#  query             :text
+#  enabled           :boolean          default(TRUE), not null
+#  auto_revoke       :boolean          default(TRUE), not null
+#  badge_grouping_id :integer
 #
 # Indexes
 #
