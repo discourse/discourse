@@ -175,6 +175,9 @@ SQL
     !self.multiple_grant?
   end
 
+  def default_name=(val)
+    self.name ||= val
+  end
 end
 
 # == Schema Information

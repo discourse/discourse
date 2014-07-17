@@ -9,7 +9,7 @@ trust_level_badges = [
 trust_level_badges.each do |spec|
   Badge.seed do |b|
     b.id = spec[:id]
-    b.name = spec[:name]
+    b.default_name = spec[:name]
     b.badge_type_id = spec[:type]
     b.query = Badge::Queries.trust_level(spec[:id])
 
@@ -20,7 +20,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::Reader
-  b.name = "Reader"
+  b.default_name = "Reader"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -30,7 +30,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::ReadGuidelines
-  b.name = "Read Guidelines"
+  b.default_name = "Read Guidelines"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -39,7 +39,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstLink
-  b.name = "First Link"
+  b.default_name = "First Link"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -48,7 +48,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstQuote
-  b.name = "First Quote"
+  b.default_name = "First Quote"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -57,7 +57,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstLike
-  b.name = "First Like"
+  b.default_name = "First Like"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -66,7 +66,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstFlag
-  b.name = "First Flag"
+  b.default_name = "First Flag"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -75,7 +75,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstShare
-  b.name = "First Share"
+  b.default_name = "First Share"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -84,7 +84,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::Welcome
-  b.name = "Welcome"
+  b.default_name = "Welcome"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -93,7 +93,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::Autobiographer
-  b.name = "Autobiographer"
+  b.default_name = "Autobiographer"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = Badge::Queries::Autobiographer
@@ -101,7 +101,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::Editor
-  b.name = "Editor"
+  b.default_name = "Editor"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = Badge::Queries::Editor
@@ -118,7 +118,7 @@ like_badges = [
 like_badges.each do |spec|
   Badge.seed do |b|
     b.id = spec[:id]
-    b.name = spec[:name]
+    b.default_name = spec[:name]
     b.badge_type_id = spec[:type]
     b.multiple_grant = spec[:multiple]
     b.target_posts = true

@@ -55,6 +55,11 @@ Discourse.Badge = Discourse.Model.extend({
     return translation;
   }.property('i18nNameKey'),
 
+  displayDescription: function(){
+    // we support html in description but in most places do not need it
+    return this.get('displayDescriptionHtml').replace(/<[^>]*>/g, "");
+  }.property('displayDescriptionHtml'),
+
   /**
     Display-friendly description string. Returns either a translation or the
     original description string.
@@ -62,9 +67,9 @@ Discourse.Badge = Discourse.Model.extend({
     @property displayDescription
     @type {String}
   **/
-  displayDescription: function() {
+  displayDescriptionHtml: function() {
     var translated = this.get('translatedDescription');
-    return translated === null ? this.get('description') : translated;
+    return (translated === null ? this.get('description') : translated) || "";
   }.property('description', 'translatedDescription'),
 
   /**

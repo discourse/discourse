@@ -2001,7 +2001,7 @@ en:
           description: Quoted a user
         read_guidelines:
           name: Read Guidelines
-          description: Read the community guidelines
+          description: Read the <a href="/guidelines">community guidelines</a>
         reader:
           name: Reader
           description: Read every post in a topic with more than 50 posts
