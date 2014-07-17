@@ -70,6 +70,8 @@ Discourse::Application.routes.draw do
       put "unblock"
       put "trust_level"
       put "primary_group"
+      post "groups" => "users#add_group", constraints: AdminConstraint.new
+      delete "groups/:group_id" => "users#remove_group", constraints: AdminConstraint.new
       get "badges"
       get "leader_requirements"
     end

@@ -25,6 +25,10 @@ Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
 
   primaryGroupDirty: Discourse.computed.propertyNotEqual('originalPrimaryGroupId', 'primary_group_id'),
 
+  custom_groups: Ember.computed.filter("model.groups", function(g){
+    return (!g.automatic && g.visible);
+  }),
+
   actions: {
     toggleTitleEdit: function() {
       this.toggleProperty('editingTitle');
@@ -43,6 +47,18 @@ Discourse.AdminUserIndexController = Discourse.ObjectController.extend({
 
     generateApiKey: function() {
       this.get('model').generateApiKey();
+    },
+
+    groupAdded: function(added){
+      this.get('model').groupAdded(added).catch(function() {
+        bootbox.alert(I18n.t('generic_error'));
+      });
+    },
+
+    groupRemoved: function(removed){
+      this.get('model').groupRemoved(removed).catch(function() {
+        bootbox.alert(I18n.t('generic_error'));
+      });
     },
 
     savePrimaryGroup: function() {
