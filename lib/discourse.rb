@@ -11,7 +11,9 @@ module Discourse
 
   # Log an exception.
   #
-  # If your code is in a scheduled job, it is recommended to use the error_context() function to pass the context.
+  # If your code is in a scheduled job, it is recommended to use the
+  # error_context() method in Jobs::Base to pass the job arguments and any
+  # other desired context.
   # See app/jobs/base.rb for the error_context function.
   def self.handle_exception(ex, context = {}, parent_logger = nil)
     context ||= {}
