@@ -850,6 +850,9 @@ en:
         regular:
           title: "Regular"
           description: "You will be notified only if someone mentions your @name or replies to your post."
+        regular_pm:
+          title: "Regular"
+          description: "You will be notified only if someone mentions your @name or replies to your post in the private message."
         muted_pm:
           title: "Muted"
           description: "You will never be notified of anything about this private message."
