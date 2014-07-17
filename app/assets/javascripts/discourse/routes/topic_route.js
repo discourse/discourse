@@ -1,11 +1,8 @@
-/**
-  This route handles requests for topics
+var isTransitioning = false,
+    scheduledReplace = null,
+    lastScrollPos = null,
+    SCROLL_DELAY = 500;
 
-  @class TopicRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.TopicRoute = Discourse.Route.extend({
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
@@ -78,20 +75,35 @@ Discourse.TopicRoute = Discourse.Route.extend({
     },
 
     // Use replaceState to update the URL once it changes
-    postChangedRoute: Discourse.debounce(function(currentPost) {
+    postChangedRoute: function(currentPost) {
+
       // do nothing if we are transitioning to another route
-      if (this.get("isTransitioning") || Discourse.TopicRoute.disableReplaceState) { return; }
+      if (isTransitioning || Discourse.TopicRoute.disableReplaceState) { return; }
 
       var topic = this.modelFor('topic');
       if (topic && currentPost) {
         var postUrl = topic.get('url');
         if (currentPost > 1) { postUrl += "/" + currentPost; }
-        Discourse.URL.replaceState(postUrl);
+
+        Em.run.cancel(scheduledReplace);
+        lastScrollPos = parseInt($(document).scrollTop(), 10);
+        scheduledReplace = Em.run.later(this, '_replaceUnlessScrolling', postUrl, SCROLL_DELAY);
       }
-    }, 150),
+    },
 
-    willTransition: function() { this.set("isTransitioning", true); return true; }
+    willTransition: function() { isTransitioning = true; return true; }
+  },
 
+  // replaceState can be very slow on Android Chrome. This function debounces replaceState
+  // within a topic until scrolling stops
+  _replaceUnlessScrolling: function(url) {
+    var currentPos = parseInt($(document).scrollTop(), 10);
+    if (currentPos === lastScrollPos) {
+      Discourse.URL.replaceState(url);
+      return;
+    }
+    lastScrollPos = currentPos;
+    scheduledReplace = Em.run.later(this, '_replaceUnlessScrolling', url, SCROLL_DELAY);
   },
 
   setupParams: function(topic, params) {
@@ -127,7 +139,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
   activate: function() {
     this._super();
-    this.set("isTransitioning", false);
+    isTransitioning = false;
 
     var topic = this.modelFor('topic');
     Discourse.Session.currentProp('lastTopicIdViewed', parseInt(topic.get('id'), 10));
@@ -159,7 +171,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
   setupController: function(controller, model) {
     // In case we navigate from one topic directly to another
-    this.set("isTransitioning", false);
+    isTransitioning = false;
 
     if (Discourse.Mobile.mobileView) {
       // close the dropdowns on mobile
