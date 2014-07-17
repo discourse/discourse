@@ -1,19 +1,10 @@
-/**
-  This view handles the upload interface
-
-  @class UploadSelectorView
-  @extends Discourse.ModalBodyView
-  @namespace Discourse
-  @module Discourse
-**/
-
 function uploadTranslate(key, options) {
   var opts = options || {};
   if (Discourse.Utilities.allowsAttachments()) { key += "_with_attachments"; }
   return I18n.t("upload_selector." + key, opts);
 }
 
-Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
+export default Discourse.ModalBodyView.extend({
   templateName: 'modal/upload_selector',
   classNames: ['upload-selector'],
 
@@ -36,10 +27,9 @@ Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
     return I18n.t("upload_selector.hint" + (isSupported ? "_for_supported_browsers" : ""));
   }.property(),
 
-  didInsertElement: function() {
-    this._super();
+  _selectOnInsert: function() {
     this.selectedChanged();
-  },
+  }.on('didInsertElement'),
 
   selectedChanged: function() {
     var self = this;

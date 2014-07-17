@@ -1,14 +1,5 @@
-/**
-  A modal view for inviting a user to Discourse
-
-  @class InviteView
-  @extends Discourse.ModalBodyView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.InviteView = Discourse.ModalBodyView.extend({
+export default Discourse.ModalBodyView.extend({
   templateName: 'modal/invite',
-
   title: function() {
     if (this.get('controller.invitingToTopic')) {
       return I18n.t('topic.invite_reply.title');
@@ -17,5 +8,3 @@ Discourse.InviteView = Discourse.ModalBodyView.extend({
     }
   }.property('controller.invitingToTopic')
 });
-
-

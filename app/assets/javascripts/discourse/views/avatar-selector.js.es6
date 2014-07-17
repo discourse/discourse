@@ -1,12 +1,4 @@
-/**
-  This view handles the avatar selection interface
-
-  @class AvatarSelectorView
-  @extends Discourse.ModalBodyView
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
+export default Discourse.ModalBodyView.extend({
   templateName: 'modal/avatar_selector',
   classNames: ['avatar-selector'],
   title: I18n.t('user.change_avatar.title'),
@@ -22,6 +14,5 @@ Discourse.AvatarSelectorView = Discourse.ModalBodyView.extend({
       var value = self.get('controller.selected');
       $('input:radio[name="avatar"]').val([value]);
     });
-  }.observes('controller.selected'),
-
+  }.observes('controller.selected')
 });
