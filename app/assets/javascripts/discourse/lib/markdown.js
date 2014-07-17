@@ -19,8 +19,7 @@ function validateAttribute(tagName, attribName, value) {
   //
   // We are SUPER strict cause nokogiri will sometimes "correct"
   //  this stuff "incorrectly"
-  var escaped = Handlebars.Utils.escapeExpression(value);
-  if(escaped !== value){
+  if(/[<>"'`]/.test(value)){
     return;
   }
 

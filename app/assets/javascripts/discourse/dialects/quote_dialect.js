@@ -22,7 +22,11 @@ Discourse.Dialect.replaceBlock({
         if (i > 0) {
           var assignment = p.split(':');
           if (assignment[0] && assignment[1]) {
-            params['data-' + esc(assignment[0])] = esc(assignment[1].trim());
+            var escaped = esc(assignment[0]);
+            // don't escape attributes, makes no sense
+            if(escaped === assignment[0]) {
+              params['data-' + assignment[0]] = esc(assignment[1].trim());
+            }
           }
         }
       });
