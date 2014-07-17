@@ -39,6 +39,7 @@ class UserNotifications < ActionMailer::Base
 
     @site_name = SiteSetting.title
 
+    @header_color = ColorScheme.hex_for_name('header_background')
     @last_seen_at = I18n.l(@user.last_seen_at || @user.created_at, format: :short)
 
     # A list of topics to show the user

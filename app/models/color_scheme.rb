@@ -60,6 +60,10 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme
   end
 
+  def self.hex_for_name(name)
+    # Can't use `where` here because base doesn't allow it
+    (enabled || base).colors.find {|c| c.name == name }.try(:hex)
+  end
 
   def colors=(arr)
     @colors_by_name = nil
