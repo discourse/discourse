@@ -33,7 +33,7 @@ if Sidekiq.server?
           manager.tick
         rescue => e
           # the show must go on
-          Discourse.handle_exception(e)
+          Discourse.handle_exception(e, {message: "While ticking scheduling manager"})
         end
         sleep 1
       end
@@ -43,18 +43,29 @@ end
 
 Sidekiq.logger.level = Logger::WARN
 
-class LogsterErrorHandler
-  def call(ex, hash={})
-    text = "exception: #{ex}\ncontext: #{hash.inspect}\n"
-    if ex.backtrace
-      text << "backtrace: #{ex.backtrace.join("\n")}"
+class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
+  def call(ex, context = {})
+    # Pass context to Logster
+    fake_env = {}
+    context.each do |key, value|
+      Logster.add_to_env(fake_env, key, value)
     end
-    Rails.logger.error(text)
+
+    text = "Job exception: #{ex}\n"
+    if ex.backtrace
+      Logster.add_to_env(fake_env, :backtrace, ex.backtrace)
+    end
+
+    Thread.current[Logster::Logger::LOGSTER_ENV] = fake_env
+    Logster.logger.error(text)
   rescue => e
-    Rails.logger.fatal("Failed to log exception #{ex} #{hash}\nReason: #{e}\n#{e.backtrace.join("\n")}")
+    Logster.logger.fatal("Failed to log exception #{ex} #{hash}\nReason: #{e.class} #{e}\n#{e.backtrace.join("\n")}")
+  ensure
+    Thread.current[Logster::Logger::LOGSTER_ENV] = nil
   end
 end
 
-Sidekiq.error_handlers << LogsterErrorHandler.new
+Sidekiq.error_handlers.clear
+Sidekiq.error_handlers << SidekiqLogsterReporter.new
 
 

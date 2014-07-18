@@ -9,7 +9,13 @@ module Discourse
     extend Sidekiq::ExceptionHandler
   end
 
-  def self.handle_exception(ex, context=nil, parent_logger = nil)
+  # Log an exception.
+  #
+  # If your code is in a scheduled job, it is recommended to use the
+  # error_context() method in Jobs::Base to pass the job arguments and any
+  # other desired context.
+  # See app/jobs/base.rb for the error_context function.
+  def self.handle_exception(ex, context = {}, parent_logger = nil)
     context ||= {}
     parent_logger ||= SidekiqExceptionHandler
 

@@ -117,21 +117,36 @@ describe Discourse do
   end
 
   context "#handle_exception" do
-    class TempLogger
+
+    class TempSidekiqLogger < Sidekiq::ExceptionHandler::Logger
       attr_accessor :exception, :context
-      def handle_exception(exception, context)
-        self.exception = exception
-        self.context = context
+      def call(ex, ctx)
+        self.exception = ex
+        self.context = ctx
       end
+    end
+
+    let!(:logger) { TempSidekiqLogger.new }
+
+    before do
+      Sidekiq.error_handlers.clear
+      Sidekiq.error_handlers << logger
     end
     
     it "should not fail when called" do
-      logger = TempLogger.new
       exception = StandardError.new
 
-      Discourse.handle_exception(exception, nil, logger)
+      Discourse.handle_exception(exception, nil, nil)
       logger.exception.should == exception
       logger.context.keys.should == [:current_db, :current_hostname]
+    end
+
+    it "correctly passes extra context" do
+      exception = StandardError.new
+
+      Discourse.handle_exception(exception, {message: "Doing a test", post_id: 31}, nil)
+      logger.exception.should == exception
+      logger.context.keys.sort.should == [:current_db, :current_hostname, :message, :post_id].sort
     end
   end
 

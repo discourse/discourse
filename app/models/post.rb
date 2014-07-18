@@ -319,14 +319,16 @@ class Post < ActiveRecord::Base
   end
 
   def self.rebake_old(limit)
+    problems = []
     Post.where('baked_version IS NULL OR baked_version < ?', BAKED_VERSION)
         .limit(limit).each do |p|
       begin
         p.rebake!
       rescue => e
-        Discourse.handle_exception(e)
+        problems << {post: p, ex: e}
       end
     end
+    problems
   end
 
   def rebake!(opts={})

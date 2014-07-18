@@ -385,7 +385,7 @@ class TopicsController < ApplicationController
     user_id = (current_user.id if current_user)
     track_visit = should_track_visit_to_topic?
 
-    Scheduler::Defer.later do
+    Scheduler::Defer.later "Track Visit" do
       View.create_for_parent(Topic, topic_id, ip, user_id)
       if track_visit
         TopicUser.track_visit! topic_id, user_id
