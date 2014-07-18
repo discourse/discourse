@@ -1,12 +1,10 @@
 class BadgeGrouping < ActiveRecord::Base
 
-  module Position
-    GettingStarted = 10
-    Community = 11
-    Posting = 12
-    TrustLevel = 13
-    Other = 14
-  end
+  GettingStarted = 1
+  Community = 2
+  Posting = 3
+  TrustLevel = 4
+  Other = 5
 
   has_many :badges
 end

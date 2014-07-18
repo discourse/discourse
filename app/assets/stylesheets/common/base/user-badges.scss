@@ -75,6 +75,15 @@ table.badges-listing {
     font-size: $base-font-size;
   }
 
+  tr.title td {
+    padding-top: 30px;
+    padding-bottom: 15px;
+  }
+
+  tr.title {
+    border-top: 0px solid;
+  }
+
   td {
     padding: 10px 0px;
   }

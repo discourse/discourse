@@ -165,6 +165,13 @@ Discourse.Badge.reopenClass({
       });
     }
 
+    var badgeGroupings = {};
+    if ('badge_groupings' in json) {
+      json.badge_groupings.forEach(function(badgeGroupingJson) {
+        badgeGroupings[badgeGroupingJson.id] = Discourse.BadgeGrouping.create(badgeGroupingJson);
+      });
+    }
+
     // Create Badge objects.
     var badges = [];
     if ("badge" in json) {
@@ -175,8 +182,10 @@ Discourse.Badge.reopenClass({
     badges = badges.map(function(badgeJson) {
       var badge = Discourse.Badge.create(badgeJson);
       badge.set('badge_type', badgeTypes[badge.get('badge_type_id')]);
+      badge.set('badge_grouping', badgeGroupings[badge.get('badge_grouping_id')]);
       return badge;
     });
+
     if ("badge" in json) {
       return badges[0];
     } else {

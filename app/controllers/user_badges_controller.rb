@@ -7,11 +7,11 @@ class UserBadgesController < ApplicationController
       user_badges = user.user_badges
     else
       badge = fetch_badge_from_params
-      user_badges = badge.user_badges.order('granted_at DESC').limit(96)
+      user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(96)
     end
 
-    if params[:granted_before]
-      user_badges = user_badges.where('granted_at < ?', Time.at(params[:granted_before].to_f))
+    if offset = params[:offset]
+      user_badges = user_badges.offset(offset.to_i)
     end
 
     user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic)

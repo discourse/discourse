@@ -1,6 +1,4 @@
 class Badge < ActiveRecord::Base
-  belongs_to :badge_grouping
-
   # badge ids
   Welcome = 5
   NicePost = 6
@@ -145,6 +143,8 @@ SQL
   end
 
   belongs_to :badge_type
+  belongs_to :badge_grouping
+
   has_many :user_badges, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true

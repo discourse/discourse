@@ -1962,6 +1962,17 @@ en:
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
       no_title: "<no title>"
+      badge_grouping:
+        getting_started:
+          name: Getting Started
+        community:
+          name: Community
+        trust_level:
+          name: Trust Level
+        other:
+          name: Other
+        posting:
+          name: Posting
       badge:
         editor:
           name: Editor

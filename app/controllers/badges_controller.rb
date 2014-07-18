@@ -3,13 +3,21 @@ class BadgesController < ApplicationController
 
   def index
     badges = Badge.all
-    badges = badges.where(enabled: true, listable: true) if(params[:only_listable] == "true") || !request.xhr?
-    badges = badges.includes(:badge_grouping).to_a
+
+    if (params[:only_listable] == "true") || !request.xhr?
+      # NOTE: this is sorted client side if needed
+      badges = badges.includes(:badge_grouping)
+                     .where(enabled: true, listable: true)
+
+    end
+
+    badges = badges.to_a
+
     user_badges = nil
     if current_user
       user_badges = Set.new(current_user.user_badges.select('distinct badge_id').pluck(:badge_id))
     end
-    serialized = MultiJson.dump(serialize_data(badges, BadgeSerializer, root: "badges", user_badges: user_badges, include_grouping: true))
+    serialized = MultiJson.dump(serialize_data(badges, BadgeIndexSerializer, root: "badges", user_badges: user_badges))
     respond_to do |format|
       format.html do
         store_preloaded "badges", serialized

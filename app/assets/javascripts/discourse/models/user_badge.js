@@ -111,11 +111,11 @@ Discourse.UserBadge.reopenClass({
   **/
   findByBadgeId: function(badgeId, options) {
     if (!options) { options = {}; }
-    var url = "/user_badges.json?badge_id=" + badgeId;
-    if (options.granted_before) {
-      url = url + "&granted_before=" + encodeURIComponent(options.granted_before);
-    }
-    return Discourse.ajax(url).then(function(json) {
+    options.badge_id = badgeId;
+
+    return Discourse.ajax("/user_badges.json", {
+      data: options
+    }).then(function(json) {
       return Discourse.UserBadge.createFromJson(json);
     });
   },

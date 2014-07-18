@@ -3,13 +3,18 @@
 
   <table class='badges-listing'>
     <tbody>
-      {{#each}}
-        <tr>
-          <td class='granted'>{{#if this.has_badge}}<i class='fa fa-check'></i>{{/if}}</td>
-          <td class='badge'>{{user-badge badge=this}}</td>
-          <td class='description'>{{{displayDescriptionHtml}}}</td>
-          <td class='grant-count'>{{i18n badges.granted count=grant_count}}</td>
+      {{#each badgeGroups}}
+        <tr class='title'>
+          <td colspan=4><h3>{{this.badgeGrouping.displayName}}</h3></td>
         </tr>
+        {{#each this.badges}}
+          <tr>
+            <td class='granted'>{{#if this.has_badge}}<i class='fa fa-check'></i>{{/if}}</td>
+            <td class='badge'>{{user-badge badge=this}}</td>
+            <td class='description'>{{{displayDescriptionHtml}}}</td>
+            <td class='grant-count'>{{i18n badges.granted count=grant_count}}</td>
+          </tr>
+        {{/each}}
       {{/each}}
     </tbody>
   </table>
