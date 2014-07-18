@@ -1,16 +1,9 @@
 /*global assetPath:true */
 
-/**
-  A control to support using PageDown as an Ember view.
-
-  @class PagedownEditor
-  @extends Discourse.ContainerView
-  @namespace Discourse
-  @module Discourse
-**/
 import PagedownPreviewView from 'discourse/views/pagedown-preview';
+import DiscourseContainerView from 'discourse/views/container';
 
-export default Discourse.ContainerView.extend({
+export default DiscourseContainerView.extend({
   elementId: 'pagedown-editor',
 
   init: function() {

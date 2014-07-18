@@ -1,18 +1,10 @@
-/**
-  This view contains the topic map as well as other relevant information underneath the
-  first post.
-
-  @class TopicMapContainerView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
 import PrivateMessageMapComponent from 'discourse/components/private-message-map';
 import TopicMapComponent from 'discourse/components/topic-map';
 import ToggleSummaryComponent from 'discourse/components/toggle-summary';
 import ToggleDeletedComponent from 'discourse/components/toggle-deleted';
+import DiscourseContainerView from 'discourse/views/container';
 
-export default Discourse.ContainerView.extend({
+export default DiscourseContainerView.extend({
   classNameBindings: ['hidden', ':topic-map'],
   shouldRerender: Discourse.View.renderIfChanged('topic.posts_count'),
 

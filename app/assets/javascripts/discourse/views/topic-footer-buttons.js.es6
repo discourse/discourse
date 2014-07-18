@@ -6,8 +6,9 @@ import InviteReplyButton from 'discourse/views/invite-reply-button';
 import ReplyButton from 'discourse/views/reply-button';
 import PinnedButton from 'discourse/views/pinned-button';
 import TopicNotificationsButton from 'discourse/views/topic-notifications-button';
+import DiscourseContainerView from 'discourse/views/container';
 
-export default Discourse.ContainerView.extend({
+export default DiscourseContainerView.extend({
   elementId: 'topic-footer-buttons',
   topicBinding: 'controller.content',
 

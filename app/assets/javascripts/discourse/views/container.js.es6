@@ -1,13 +1,4 @@
-/**
-  Our own containerView with a helper method for attaching views
-
-  @class ContainerView
-  @extends Ember.ContainerView
-  @namespace Discourse
-  @uses Discourse.Presence
-  @module Discourse
-**/
-Discourse.ContainerView = Ember.ContainerView.extend(Discourse.Presence, {
+export default Ember.ContainerView.extend(Discourse.Presence, {
 
   /**
     Attaches a view and wires up the container properly

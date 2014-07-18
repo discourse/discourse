@@ -1,4 +1,6 @@
-export default Discourse.ContainerView.extend({
+import DiscourseContainerView from 'discourse/views/container';
+
+export default DiscourseContainerView.extend({
   metaDataBinding: 'parentView.metaData',
 
   init: function() {

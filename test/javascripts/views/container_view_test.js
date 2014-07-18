@@ -1,53 +1,53 @@
-var SomeViewClass = Ember.View.extend();
-var container = Discourse.ContainerView.create();
+var SomeViewClass = Ember.View.extend(),
+    containerView;
 
-var containerHasOnlyOneChild = function(klass) {
-  equal(container.get('childViews').length, 1, "container has no other children than the one created by method");
-  ok(container.objectAt(0) instanceof klass, "container's child created by method is an instance of a correct class");
-};
+function containerHasOnlyOneChild(klass) {
+  equal(containerView.get('childViews').length, 1, "container has no other children than the one created by method");
+  ok(containerView.objectAt(0) instanceof klass, "container's child created by method is an instance of a correct class");
+}
 
-var containerHasTwoChildren = function(klass1, klass2) {
-  equal(container.get('childViews').length, 2, "container has both already existing and newly created children");
-  ok(container.objectAt(0) instanceof klass1, "already existing child's class is correct");
-  ok(container.objectAt(1) instanceof klass2, "newly created child's class is correct");
-};
+function containerHasTwoChildren(klass1, klass2) {
+  equal(containerView.get('childViews').length, 2, "container has both already existing and newly created children");
+  ok(containerView.objectAt(0) instanceof klass1, "already existing child's class is correct");
+  ok(containerView.objectAt(1) instanceof klass2, "newly created child's class is correct");
+}
 
 var childHasProperty = function(name) {
-  equal(container.objectAt(0).get(name), name, "method passes properties to the container's child it creates");
+  equal(containerView.objectAt(0).get(name), name, "method passes properties to the container's child it creates");
 };
 
-module("Discourse.ContainerView", {
+module("view:container", {
   setup: function() {
-    container.removeAllChildren();
+    containerView = Discourse.__container__.lookup('view:container');
   }
 });
 
 test("mixes in Discourse.Presence", function() {
-  ok(Discourse.Presence.detect(container));
+  ok(Discourse.Presence.detect(containerView));
 });
 
 test("attachViewWithArgs: creates a view of a given class with given properties and appends it to the container", function() {
-  container.attachViewWithArgs({foo: "foo"}, SomeViewClass);
+  containerView.attachViewWithArgs({foo: "foo"}, SomeViewClass);
 
   containerHasOnlyOneChild(SomeViewClass);
   childHasProperty("foo");
 });
 
 test("attachViewWithArgs: creates a view of a given class without any properties and appends it to the container", function() {
-  container.attachViewWithArgs(null, SomeViewClass);
+  containerView.attachViewWithArgs(null, SomeViewClass);
 
   containerHasOnlyOneChild(SomeViewClass);
 });
 
 test("attachViewWithArgs: creates a view without class specified (Ember.View is used by default) with given properties and appends it to the container", function() {
-  container.attachViewWithArgs({foo: "foo"});
+  containerView.attachViewWithArgs({foo: "foo"});
 
   containerHasOnlyOneChild(Ember.View);
   childHasProperty("foo");
 });
 
 test("attachViewWithArgs: creates a view without class specified (Ember.View is used by default) without any properties and appends it to the container", function() {
-  container.attachViewWithArgs();
+  containerView.attachViewWithArgs();
 
   containerHasOnlyOneChild(Ember.View);
 });
@@ -55,21 +55,21 @@ test("attachViewWithArgs: creates a view without class specified (Ember.View is 
 test("attachViewWithArgs: appends a view to a container already containing other views", function() {
   var AlreadyContainedViewClass = Ember.View.extend();
   var alreadyContainedView = AlreadyContainedViewClass.create();
-  container.pushObject(alreadyContainedView);
+  containerView.pushObject(alreadyContainedView);
 
-  container.attachViewWithArgs(null, SomeViewClass);
+  containerView.attachViewWithArgs(null, SomeViewClass);
 
   containerHasTwoChildren(AlreadyContainedViewClass, SomeViewClass);
 });
 
 test("attachViewClass: creates a view of a given class without any properties and appends it to the container", function() {
-  container.attachViewClass(SomeViewClass);
+  containerView.attachViewClass(SomeViewClass);
 
   containerHasOnlyOneChild(SomeViewClass);
 });
 
 test("attachViewClass: creates a view without class specified (Ember.View is used by default) without any properties and appends it to the container", function() {
-  container.attachViewClass();
+  containerView.attachViewClass();
 
   containerHasOnlyOneChild(Ember.View);
 });
@@ -77,9 +77,9 @@ test("attachViewClass: creates a view without class specified (Ember.View is use
 test("attachViewClass: appends a view to a container already containing other views", function() {
   var AlreadyContainedViewClass = Ember.View.extend();
   var alreadyContainedView = AlreadyContainedViewClass.create();
-  container.pushObject(alreadyContainedView);
+  containerView.pushObject(alreadyContainedView);
 
-  container.attachViewClass(SomeViewClass);
+  containerView.attachViewClass(SomeViewClass);
 
   containerHasTwoChildren(AlreadyContainedViewClass, SomeViewClass);
 });
