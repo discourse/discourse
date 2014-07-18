@@ -1420,7 +1420,7 @@
 
             inputBox.focus();
 
-            if (button.textOp) {
+            if (button && button.textOp) {
 
                 if (undoManager) {
                     undoManager.setCommandMode();
