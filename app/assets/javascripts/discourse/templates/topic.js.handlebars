@@ -122,11 +122,14 @@
 
         {{#if message}}
           {{message}}
-          {{#unless currentUser}}
-            <button {{action showLogin}} class='btn btn-primary btn-small'><i class="fa fa-user"></i>{{i18n log_in}}</button>
-          {{/unless}}
         {{/if}}
-        <button class="btn btn-primary topic-retry" {{action retryLoading}}>{{i18n errors.buttons.again}}</button>
+        {{#if noRetry}}
+          {{#unless currentUser}}
+              <button {{action showLogin}} class='btn btn-primary topic-retry'><i class="fa fa-user"></i>{{i18n log_in}}</button>
+          {{/unless}}
+        {{else}}
+          <button class="btn btn-primary topic-retry" {{action retryLoading}}>{{i18n errors.buttons.again}}</button>
+        {{/if}}
       </div>
       {{#if retrying}}
         <div class='spinner'>{{i18n loading}}</div>
