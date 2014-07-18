@@ -31,7 +31,7 @@ end
 
 # BUGFIX
 Badge.exec_sql 'UPDATE badges
-                SET badge_grouping_id = NULL
+                SET badge_grouping_id = -1
                 WHERE NOT EXISTS (
                   SELECT 1 FROM badge_groupings g
                   WHERE g.id = badge_grouping_id
