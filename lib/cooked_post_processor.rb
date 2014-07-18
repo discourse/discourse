@@ -89,7 +89,7 @@ class CookedPostProcessor
     return unless image_sizes.present?
     image_sizes.each do |image_size|
       url, size = image_size[0], image_size[1]
-      return [size["width"], size["height"]] if url.include?(src)
+      return [size["width"], size["height"]] if url && size && url.include?(src)
     end
   end
 
