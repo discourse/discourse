@@ -20,7 +20,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'b': 'toggleBookmark',
     'd': 'deletePost',
     'e': 'editPost',
-    'l': 'likePost',
+    'l': 'toggleLike',
     'r': 'replyToPost',
     '!': 'showFlags'
   },

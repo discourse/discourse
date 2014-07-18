@@ -169,6 +169,11 @@ nav.post-controls {
           background: scale-color($love, $lightness: 75%);
         }
 
+        &.has-like {color: $love;}
+        &.has-like[disabled]:hover {
+          background: transparent;
+        }
+
         &.bookmark {padding: 8px 11px; }
 
         .read-icon {

@@ -1,12 +1,3 @@
-/**
-  This view renders a menu below a post. It uses buffered rendering for performance.
-
-  @class PostMenuView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-
 // Helper class for rendering a button
 var Button = function(action, label, icon, opts) {
   this.action = action;
@@ -21,14 +12,17 @@ var Button = function(action, label, icon, opts) {
 };
 
 Button.prototype.render = function(buffer) {
+  var opts = this.opts;
+
   buffer.push("<button title=\"" + I18n.t(this.label) + "\"");
-  if (this.opts.className) { buffer.push(" class=\"" + this.opts.className + "\""); }
-  if (this.opts.shareUrl) { buffer.push(" data-share-url=\"" + this.opts.shareUrl + "\""); }
-  if (this.opts.postNumber) { buffer.push(" data-post-number=\"" + this.opts.postNumber + "\""); }
+  if (opts.disabled) { buffer.push(" disabled"); }
+  if (opts.className) { buffer.push(" class=\"" + opts.className + "\""); }
+  if (opts.shareUrl) { buffer.push(" data-share-url=\"" + opts.shareUrl + "\""); }
+  if (opts.postNumber) { buffer.push(" data-post-number=\"" + opts.postNumber + "\""); }
   buffer.push(" data-action=\"" + this.action + "\">");
   if (this.icon) { buffer.push("<i class=\"fa fa-" + this.icon + "\"></i>"); }
-  if (this.opts.textLabel) { buffer.push(I18n.t(this.opts.textLabel)); }
-  if (this.opts.innerHTML) { buffer.push(this.opts.innerHTML); }
+  if (opts.textLabel) { buffer.push(I18n.t(opts.textLabel)); }
+  if (opts.innerHTML) { buffer.push(opts.innerHTML); }
   buffer.push("</button>");
 };
 
@@ -188,12 +182,20 @@ export default Discourse.View.extend({
 
   // Like button
   buttonForLike: function(post) {
-    if (!post.get('actionByName.like.can_act')) return;
-    return new Button('like', 'post.controls.like', 'heart', {className: 'like'});
+    var likeAction = post.get('actionByName.like');
+    if (!likeAction) { return; }
+
+    var className = likeAction.get('acted') ? 'has-like' : 'like';
+    if (likeAction.get('canToggle')) {
+      var descKey = likeAction.get('acted') ? 'post.controls.undo_like' : 'post.controls.like';
+      return new Button('like', descKey, 'heart', {className: className});
+    } else if (likeAction.get('acted')) {
+      return new Button('like', 'post.controls.has_liked', 'heart', {className: className, disabled: true});
+    }
   },
 
   clickLike: function(post) {
-    this.get('controller').send('likePost', post);
+    this.get('controller').send('toggleLike', post);
   },
 
   // Flag button

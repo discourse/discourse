@@ -1,11 +1,3 @@
-/**
-  This controller supports all actions related to a topic
-
-  @class TopicController
-  @extends Discourse.ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.TopicController = Discourse.ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
   needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress'],
@@ -84,10 +76,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       return false;
     },
 
-    likePost: function(post) {
+    toggleLike: function(post) {
       var likeAction = post.get('actionByName.like');
-      if (likeAction && likeAction.get('can_act')) {
-        likeAction.act();
+      if (likeAction && likeAction.get('canToggle')) {
+        likeAction.toggle();
       }
     },
 

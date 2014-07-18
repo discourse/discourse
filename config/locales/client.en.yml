@@ -1022,6 +1022,8 @@ en:
       controls:
         reply: "begin composing a reply to this post"
         like: "like this post"
+        has_liked: "you've liked this post"
+        undo_like: "undo like"
         edit: "edit this post"
         flag: "privately flag this post for attention or send a private notification about it"
         delete: "delete this post"

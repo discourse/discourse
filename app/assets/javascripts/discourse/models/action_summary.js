@@ -26,6 +26,10 @@ Discourse.ActionSummary = Discourse.Model.extend({
   usersCollapsed: Em.computed.not('usersExpanded'),
   usersExpanded: Em.computed.gt('users.length', 0),
 
+  canToggle: function() {
+    return this.get('can_undo') || this.get('can_act');
+  }.property('can_undo', 'can_act'),
+
   // Remove it
   removeAction: function() {
     this.setProperties({
@@ -37,6 +41,14 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
     if (this.get('usersExpanded')) {
       this.get('users').removeObject(Discourse.User.current());
+    }
+  },
+
+  toggle: function() {
+    if (!this.get('acted')) {
+      this.act();
+    } else {
+      this.undo();
     }
   },
 
