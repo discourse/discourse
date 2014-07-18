@@ -220,6 +220,12 @@ describe Category do
       @category.topics_year.should  == 0
     end
 
+    it "renames the definition when renamed" do
+      @category.update_attributes(name: 'Troutfishing')
+      @topic.reload
+      @topic.title.should =~ /Troutfishing/
+    end
+
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
       category.topic.auto_close_at.should be_nil

@@ -32,6 +32,7 @@ class Category < ActiveRecord::Base
   after_create :create_category_definition
   after_create :publish_categories_list
   after_destroy :publish_categories_list
+  after_update :rename_category_definition, if: :name_changed?
 
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
@@ -330,6 +331,15 @@ SQL
     url = "/category"
     url << "/#{parent_category.slug}" if parent_category_id
     url << "/#{slug}"
+  end
+
+  # If the name changes, try and update the category definition topic too if it's
+  # an exact match
+  def rename_category_definition
+    old_name = changed_attributes["name"]
+    if topic.title == I18n.t("category.topic_prefix", category: old_name)
+      topic.update_column(:title, I18n.t("category.topic_prefix", category: name))
+    end
   end
 end
 
