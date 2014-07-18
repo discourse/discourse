@@ -131,20 +131,36 @@ class PostAction < ActiveRecord::Base
       post.topic.posts_count != 1
     end
 
-    post_action = create( post_id: post.id,
-                          user_id: user.id,
-                          post_action_type_id: post_action_type_id,
-                          message: opts[:message],
-                          staff_took_action: opts[:take_action] || false,
-                          related_post_id: related_post_id,
-                          targets_topic: !!targets_topic )
+    where_attrs = {
+      post_id: post.id,
+      user_id: user.id,
+      post_action_type_id: post_action_type_id
+    }
 
-    if post_action && post_action.is_like?
-      BadgeGranter.update_badges(action: :post_like, post_id: post.id)
+    action_attributes = {
+      message: opts[:message],
+      staff_took_action: opts[:take_action] || false,
+      related_post_id: related_post_id,
+      targets_topic: !!targets_topic
+    }
+
+    # First try to revive a trashed record
+    row_count = PostAction.where(where_attrs)
+      .with_deleted
+      .where("deleted_at IS NOT NULL")
+      .update_all(action_attributes.merge(deleted_at: nil))
+
+    if row_count == 0
+      post_action = create(where_attrs.merge(action_attributes))
+      if post_action && post_action.is_like?
+        BadgeGranter.update_badges(action: :post_like, post_id: post.id)
+      end
+    else
+      post_action = PostAction.where(where_attrs).first
+      post_action.update_counters
     end
 
     post_action
-
   rescue ActiveRecord::RecordNotUnique
     # can happen despite being .create
     # since already bookmarked

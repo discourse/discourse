@@ -175,6 +175,19 @@ describe PostAction do
     end
   end
 
+  describe "undo/redo repeatedly" do
+    it "doesn't create a second action for the same user/type" do
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      PostAction.where(post: post).with_deleted.count.should == 1
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+
+      # Check that we don't lose consistency into negatives
+      post.reload.like_count.should == 0
+    end
+  end
+
   describe 'when a user votes for something' do
     it 'should increase the vote counts when a user votes' do
       lambda {
