@@ -238,6 +238,8 @@ Discourse.Markdown.whiteListTag('a', 'class', 'mention');
 
 Discourse.Markdown.whiteListTag('a', 'data-bbcode');
 
+Discourse.Markdown.whiteListTag('img', 'src', /^data:image.*/i);
+
 Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
 

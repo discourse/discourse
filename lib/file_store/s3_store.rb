@@ -30,7 +30,7 @@ module FileStore
     end
 
     def has_been_uploaded?(url)
-      url.start_with?(absolute_base_url)
+      url.present? && url.start_with?(absolute_base_url)
     end
 
     def absolute_base_url

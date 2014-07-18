@@ -90,7 +90,7 @@ module Jobs
 
     def extract_images_from(html)
       doc = Nokogiri::HTML::fragment(html)
-      doc.css("img") - doc.css(".onebox-result img") - doc.css("img.avatar")
+      doc.css("img[src]") - doc.css(".onebox-result img") - doc.css("img.avatar")
     end
 
     def is_valid_image_url(src)

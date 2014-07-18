@@ -27,14 +27,14 @@ class CookedPostProcessor
   def keep_reverse_index_up_to_date
     upload_ids = Set.new
 
-    @doc.search("a").each do |a|
+    @doc.css("a[href]").each do |a|
       href = a["href"].to_s
       if upload = Upload.get_from_url(href)
         upload_ids << upload.id
       end
     end
 
-    @doc.search("img").each do |img|
+    @doc.css("img[src]").each do |img|
       src = img["src"].to_s
       if upload = Upload.get_from_url(src)
         upload_ids << upload.id
@@ -64,8 +64,14 @@ class CookedPostProcessor
   end
 
   def extract_images
-    # do not extract images inside oneboxes or quotes
-    @doc.css("img") - @doc.css(".onebox-result img, .onebox img") - @doc.css(".quote img")
+    # all image with a src attribute
+    @doc.css("img[src]") -
+    # minus, data images
+    @doc.css("img[src^='data']") -
+    # minus, image inside oneboxes
+    @doc.css(".onebox-result img, .onebox img") -
+    # minux, images inside quotes
+    @doc.css(".quote img")
   end
 
   def limit_size!(img)
@@ -207,12 +213,12 @@ class CookedPostProcessor
   end
 
   def optimize_urls
-    @doc.search("a").each do |a|
+    @doc.css("a[href]").each do |a|
       href = a["href"].to_s
       a["href"] = schemaless absolute(href) if is_local(href)
     end
 
-    @doc.search("img").each do |img|
+    @doc.css("img[src]").each do |img|
       src = img["src"].to_s
       img["src"] = schemaless absolute(src) if is_local(src)
     end

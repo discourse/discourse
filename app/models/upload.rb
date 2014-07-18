@@ -112,6 +112,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.get_from_url(url)
+    return if url.blank?
     # we store relative urls, so we need to remove any host/cdn
     url = url.gsub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
     Upload.find_by(url: url) if Discourse.store.has_been_uploaded?(url)
