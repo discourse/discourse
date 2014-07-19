@@ -756,10 +756,6 @@ $topic-avatar-width: 45px;
   &.highlighted {
     background-color: scale-color($tertiary, $lightness: 85%);
   }
-  .cooked p img, .cooked p svg {
-    max-width: 100%;
-    height: auto;
-  }
 }
 .topic-avatar {
  border-top: 1px solid scale-color-diff();
