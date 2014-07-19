@@ -964,6 +964,8 @@ en:
         select: 'select'
         selected: 'selected ({{count}})'
         select_replies: 'select +replies'
+        bulk_select_start: 'bulk select(begin)'
+        bulk_select_end: 'bulk select(end)'
         delete: delete selected
         cancel: cancel selecting
         select_all: select all

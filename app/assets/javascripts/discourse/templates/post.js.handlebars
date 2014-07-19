@@ -58,6 +58,11 @@
       </div>
 
       <div {{bind-attr class=":select-posts controller.multiSelect::hidden"}}>
+        {{#unless controller.bulkSelectionOn}}
+          <button {{action toggledBulkSelectionStart this}} {{bind-attr class="controller.bulkSelectionOn:selected"}}>{{i18n topic.multi_select.bulk_select_start}}</button>
+        {{else}}
+          <button {{action toggledBulkSelectionEnd this}}>{{i18n topic.multi_select.bulk_select_end}}</button>
+        {{/unless}}
         <button {{action toggledSelectedPostReplies this}} {{bind-attr class="view.canSelectReplies::hidden"}}>{{i18n topic.multi_select.select_replies}}</button>
         <button {{action toggledSelectedPost this}} class="select-post">{{view.selectPostText}}</button>
       </div>
