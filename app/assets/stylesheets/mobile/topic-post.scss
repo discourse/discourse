@@ -11,14 +11,6 @@
   padding: 6px 0 3px 0;
 }
 
-nav.post-controls {
-  background-color: $secondary;
-  padding: 0;
-  border-right: 1px solid scale-color-diff();
-  clear: both;
-  button {color: scale-color($primary, $lightness: 50%);
-}
-
 span.badge-posts {
   margin-right: 5px;
 }
@@ -31,18 +23,12 @@ span.badge-posts {
 }
 
 
-
 button.create {
   float: right !important;
   margin-right: 0;
   color: $primary;
-  padding-right: 7px;}
+  padding-right: 7px;
 }
-
-.create i {
-  margin-right: 5px;
-}
-
 
 button {
   border: none;
@@ -80,8 +66,10 @@ button {
 }
 
 nav.post-controls {
-  position: relative;
+  clear: both;
+  button {color: scale-color($primary, $lightness: 50%);
 }
+
 
 .post-admin-menu {
   background-color: $secondary;
