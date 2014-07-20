@@ -5,8 +5,8 @@
         <th class="main-link">
           {{category-link this allowUncategorized=true}}
         </th>
-        <th class='num posts'>{{i18n posts}}</th>
-        <th class='num age'>{{i18n age}}</th>
+        <th class='num'>{{i18n posts}}</th>
+        <th class='num'>{{i18n age}}</th>
       </tr>
 
       {{#if description_excerpt}}
@@ -47,7 +47,7 @@
               {{/if}}
             </div>
           </td>
-          <td class='num posts'><span class='badge-posts'>{{number posts_count}}</span></td>
+          <td class='num posts'>{{number posts_count}}</td>
           <td class='num age'><span class="{{cold-age-class created_at}}" title='{{raw-date created_at}}'>{{{age created_at}}}</span></td>
         </tr>
       {{/each}}
