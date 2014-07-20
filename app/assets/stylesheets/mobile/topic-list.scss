@@ -32,20 +32,6 @@
   td {
     padding: 7px 5px;
     color: scale-color($primary, $lightness: 50%);
-    &:first-of-type {
-      padding-left: 5px;
-    }
-    &:last-of-type {
-      padding-right: 5px;
-    }
-  }
-  th {
-    &:first-of-type {
-      @include border-radius-all(4px 0 0 0);
-    }
-    &:last-of-type {
-      @include border-radius-all(0 4px 0 0);
-    }
   }
 
   a.title {color: $primary;}
