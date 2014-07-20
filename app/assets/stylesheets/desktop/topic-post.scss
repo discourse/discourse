@@ -186,9 +186,6 @@ nav.post-controls {
               content: "\f097";
             }
           }
-          &.last-read {
-            color: $danger;
-          }
           &.bookmarked {
             &:before {
               color: $tertiary;

@@ -57,9 +57,6 @@ button {
   &.admin {
     position: relative;
   }
-  &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create, &.admin {
-    float: right;
-  }
   &.expand-post {
     margin:10px 0 10px 0;
   }
@@ -73,8 +70,7 @@ button {
         content: "\f097";
       }
     }
-    &.last-read {
-      color: $danger;}
+    &.has-like {color: $love;}
     &.bookmarked {
       &:before {
         color: $tertiary;
