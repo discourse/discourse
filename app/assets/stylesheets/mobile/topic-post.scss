@@ -60,6 +60,7 @@ button {
   &.expand-post {
     margin:10px 0 10px 0;
   }
+  &.has-like {color: $love;}
   .read-icon {
     &:before {
       font-family: "FontAwesome";
@@ -70,7 +71,6 @@ button {
         content: "\f097";
       }
     }
-    &.has-like {color: $love;}
     &.bookmarked {
       &:before {
         color: $tertiary;
