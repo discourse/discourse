@@ -44,12 +44,6 @@ button {
     margin:10px 0 10px 0;
   }
   &.has-like {color: $love;}
-  &.create {
-    float: right;
-    margin-right: 0;
-    color: $primary;
-    padding-right: 7px;
-  }
   .read-icon {
     &:before {
       font-family: "FontAwesome";
@@ -66,6 +60,13 @@ button {
       }
     }
   }
+}
+
+
+/* shift post reply button to the right and make it black */
+.post-controls button.create {
+  float: right;
+  color: $primary;
 }
 
 
