@@ -150,7 +150,7 @@ Commands:
     rebuild:    Rebuild a container (destroy old, bootstrap, start new)
 ```
 
-# Other Awesome Stuff
+# Add More Discourse Features
 
 Do you want...
 
