@@ -19,9 +19,8 @@
     {{/if}}
     <div class='topic-avatar'>
       {{#unless userDeleted}}
-        <div {{bind-attr class=":contents byTopicCreator:topic-creator :trigger-expansion"}}>
-          <a class="main-avatar" href='{{unbound usernameUrl}}' {{action showPosterExpansion this}}>{{avatar this imageSize="large"}}</a>
-
+        <div {{bind-attr class=":contents byTopicCreator:topic-creator"}}>
+          {{poster-avatar action="showPosterExpansion" post=this classNames="main-avatar"}}
         </div>
       {{else}}
         <div class="contents">

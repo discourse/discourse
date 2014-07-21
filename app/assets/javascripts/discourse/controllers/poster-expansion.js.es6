@@ -1,11 +1,3 @@
-/**
-  A controller for expanding information about a poster.
-
-  @class PosterExpansion
-  @extends Discourse.ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
 export default Discourse.ObjectController.extend({
   needs: ['topic'],
   visible: false,

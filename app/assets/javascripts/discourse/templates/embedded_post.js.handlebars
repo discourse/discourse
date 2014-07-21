@@ -2,13 +2,13 @@
   <div class='topic-avatar'>
     <div class='contents'>
       <div>
-        <a href='/users/{{unbound username}}'>{{avatar this imageSize="large"}}</a>
+        {{poster-avatar action="showPosterExpansion" post=this classNames="main-avatar"}}
       </div>
     </div>
   </div>
   <div class='topic-body'>
     <div class="topic-meta-data">
-      <h5 {{bind-attr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{{unbound username}}}</a></h5>
+      {{poster-name post=this expandAction="showPosterExpansion"}}
       {{#if view.parentView.previousPost}}<a href='{{unbound url}}' class="post-info arrow" title="{{i18n topic.jump_reply_up}}"><i class='fa fa-arrow-up'></i></a>{{/if}}
       <div class='post-info post-date'>{{age-with-tooltip created_at}}</div>
     </div>

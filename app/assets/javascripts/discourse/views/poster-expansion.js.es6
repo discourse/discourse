@@ -1,40 +1,25 @@
-/**
-  Shows expanded details for a poster
-
-  @class PosterExpansionView
-  @namespace Discourse
-  @module Discourse
-**/
-
 var clickOutsideEventName = "mousedown.outside-poster-expansion";
 
 export default Discourse.View.extend({
   elementId: 'poster-expansion',
   classNameBindings: ['controller.visible::hidden', 'controller.showBadges'],
 
-  // Position the expansion when the post changes
-  _visibleChanged: function() {
-    var post = this.get('controller.model'),
-        div = this.$();
-
-    Em.run.schedule('afterRender', function() {
-      if (post) {
-        var $post = $('#' + post.get('postElementId')),
-            $avatar = $('.topic-avatar img.avatar', $post),
-            position = $avatar.offset();
-
-        if (position) {
-          position.left += $avatar.width() + 5;
-          div.css(position);
-        }
-      }
-    });
-  }.observes('controller.model'),
-
-  didInsertElement: function() {
+  _setup: function() {
     var self = this;
-    $('html').off(clickOutsideEventName).on(clickOutsideEventName, function(e) {
+    this.appEvents.on('poster:expand', function(target) {
+      if (!target) { return; }
+      Em.run.schedule('afterRender', function() {
+        if (target) {
+          var position = target.offset();
+          if (position) {
+            position.left += target.width() + 5;
+            self.$().css(position);
+          }
+        }
+      });
+    });
 
+    $('html').off(clickOutsideEventName).on(clickOutsideEventName, function(e) {
       if (self.get('controller.visible')) {
         var $target = $(e.target);
         if ($target.closest('.trigger-expansion').length > 0) { return; }
@@ -45,10 +30,11 @@ export default Discourse.View.extend({
 
       return true;
     });
-  },
+  }.on('didInsertElement'),
 
-  willDestroyElement: function() {
+  _removeEvents: function() {
     $('html').off(clickOutsideEventName);
-  }
+    this.appEvents.off('poster:expand');
+  }.on('willDestroyElement')
 
 });

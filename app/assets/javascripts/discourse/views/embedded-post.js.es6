@@ -1,11 +1,3 @@
-/**
-  This view handles rendering of post within another (such as a collapsed reply)
-
-  @class EmbeddedPostView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
 export default Discourse.GroupedView.extend({
   templateName: 'embedded_post',
   classNames: ['reply'],
@@ -18,5 +10,4 @@ export default Discourse.GroupedView.extend({
   _stopTracking: function() {
     Discourse.ScreenTrack.current().stopTracking(this.get('elementId'));
   }.on('willDestroyElement')
-
 });

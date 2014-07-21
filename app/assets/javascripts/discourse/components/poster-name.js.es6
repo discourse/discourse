@@ -1,5 +1,5 @@
 var PosterNameComponent = Em.Component.extend({
-  classNames: ['names'],
+  classNames: ['names', 'trigger-expansion'],
   displayNameOnPosts: Discourse.computed.setting('display_name_on_posts'),
 
   // sanitize name for comparison
@@ -67,6 +67,7 @@ var PosterNameComponent = Em.Component.extend({
     if (!Em.isEmpty(href) && href !== '#') {
       return true;
     } else  {
+      this.appEvents.trigger('poster:expand', $target);
       this.sendAction('expandAction', this.get('post'));
     }
     return false;
