@@ -172,6 +172,8 @@ Do you want...
 
 - A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857).
 
+- Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers.](https://github.com/discourse/discourse/tree/master/script/import_scripts)?
+
 If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][meta], or even better, submit a pull request.
 
    [dd]: https://github.com/discourse/discourse_docker
