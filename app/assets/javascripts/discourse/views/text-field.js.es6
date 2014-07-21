@@ -7,7 +7,7 @@
   @module Discourse
 **/
 export default Ember.TextField.extend({
-  attributeBindings: ['autocorrect', 'autocapitalize', 'autofocus'],
+  attributeBindings: ['autocorrect', 'autocapitalize', 'autofocus', 'maxLength'],
 
   placeholder: function() {
     if (this.get('placeholderKey')) {

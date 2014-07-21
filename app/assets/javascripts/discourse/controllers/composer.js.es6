@@ -14,6 +14,7 @@ export default Discourse.Controller.extend({
 
   showEditReason: false,
   editReason: null,
+  maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
 
   _initializeSimilar: function() {
     this.set('similarTopics', []);

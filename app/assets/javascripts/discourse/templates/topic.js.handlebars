@@ -21,7 +21,7 @@
             {{else}}
               {{category-chooser valueAttribute="id" value=newCategoryId source=category_id}}
             {{/if}}
-            {{text-field id='edit-title' value=newTitle}}
+            {{text-field id='edit-title' value=newTitle maxLength=maxTitleLength}}
 
             <button class='btn btn-primary btn-small no-text' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
             <button class='btn btn-small no-text' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>

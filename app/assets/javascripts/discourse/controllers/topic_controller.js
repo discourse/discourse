@@ -7,6 +7,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   selectedReplies: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
 
+  maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
+
   contextChanged: function(){
     this.set('controllers.search.searchContext', this.get('model.searchContext'));
   }.observes('topic'),
