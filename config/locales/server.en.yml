@@ -1248,8 +1248,6 @@ en:
 
         ## How do I reply?
 
-        <img src="http://www.discourse.org/images/welcome/three-reply-buttons.png" width="690" height="233">
-
         - To reply to a specific post, use the Reply button <img src="http://www.discourse.org/images/welcome/reply-post.png" width="29" height="25">   on that post.
 
         - To reply to the overall *theme* of the topic, rather than any specific person or post in the topic, use the Reply button <img src="http://www.discourse.org/images/welcome/reply-topic.png" width="29" height="25">  at the very bottom of the topic.
