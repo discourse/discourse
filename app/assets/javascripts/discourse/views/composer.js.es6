@@ -290,7 +290,8 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
         // bind on the click event on the cancel link
         $('#cancel-file-upload').on('click', function() {
           // cancel the upload
-          // NOTE: this will trigger a 'fileuploadfail' event with status = 0
+          self.set('isUploading', false);
+          // NOTE: this might trigger a 'fileuploadfail' event with status = 0
           if (jqXHR) jqXHR.abort();
           // unbind
           $(this).off('click');
