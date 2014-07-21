@@ -274,7 +274,7 @@ en:
       topic_exists:
         one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
-      topic_exists_no_oldest: "Can't delete this category because topic count is #{category.topic_count}."
+      topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
   trust_levels:
     newuser:
       title: "new user"
