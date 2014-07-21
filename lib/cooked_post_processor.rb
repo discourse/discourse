@@ -55,7 +55,6 @@ class CookedPostProcessor
     return if images.blank?
 
     images.each do |img|
-      src, width, height = img["src"], img["width"], img["height"]
       limit_size!(img)
       convert_to_link!(img)
     end
@@ -69,9 +68,13 @@ class CookedPostProcessor
     # minus, data images
     @doc.css("img[src^='data']") -
     # minus, image inside oneboxes
-    @doc.css(".onebox-result img, .onebox img") -
+    oneboxed_images -
     # minux, images inside quotes
     @doc.css(".quote img")
+  end
+
+  def oneboxed_images
+    @doc.css(".onebox-result img, .onebox img")
   end
 
   def limit_size!(img)
@@ -131,7 +134,6 @@ class CookedPostProcessor
 
     if upload = Upload.get_from_url(src)
       upload.create_thumbnail!(width, height)
-      # TODO: optimize_image!(img)
     end
 
     add_lightbox!(img, original_width, original_height, upload)
@@ -207,9 +209,11 @@ class CookedPostProcessor
       invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
     }
 
-    result = Oneboxer.apply(@doc) do |url, element|
-      Oneboxer.onebox(url, args)
-    end
+    # apply oneboxes
+    Oneboxer.apply(@doc) { |url| Oneboxer.onebox(url, args) }
+
+    # make sure we grab dimensions for oneboxed images
+    oneboxed_images.each { |img| puts "image: #{img["src"]}"; limit_size!(img) }
   end
 
   def optimize_urls
@@ -223,7 +227,6 @@ class CookedPostProcessor
       img["src"] = schemaless absolute(src) if is_local(src)
     end
   end
-
 
   def pull_hotlinked_images(bypass_bump = false)
     # is the job enabled?
