@@ -1,15 +1,6 @@
-/**
-  Application route for Discourse
-
-  @class ApplicationRoute
-  @extends Ember.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.ApplicationRoute = Em.Route.extend({
+var ApplicationRoute = Em.Route.extend({
 
   actions: {
-
     error: function(err, transition) {
       if (err.status === 404) {
         // 404
@@ -106,14 +97,15 @@ Discourse.ApplicationRoute = Em.Route.extend({
     }
   },
 
-  activate: function() {
+  _activate: function() {
     this._super();
     Em.run.next(function() {
       // Support for callbacks once the application has activated
-      Discourse.ApplicationRoute.trigger('activate');
+      ApplicationRoute.trigger('activate');
     });
   }
 
 });
 
-RSVP.EventTarget.mixin(Discourse.ApplicationRoute);
+RSVP.EventTarget.mixin(ApplicationRoute);
+export default ApplicationRoute;

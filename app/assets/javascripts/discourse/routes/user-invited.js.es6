@@ -1,12 +1,4 @@
-/**
-  This route shows who a user has invited
-
-  @class UserInvitedRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.UserInvitedRoute = Discourse.Route.extend({
+export default Discourse.Route.extend({
   renderTemplate: function() {
     this.render({ into: 'user', outlet: 'userOutlet' });
   },
@@ -26,12 +18,6 @@ Discourse.UserInvitedRoute = Discourse.Route.extend({
   },
 
   actions: {
-
-    /**
-      Shows the invite modal to invite users to the forum.
-
-      @method showInvite
-    **/
     showInvite: function() {
       Discourse.Route.showModal(this, 'invite', Discourse.User.current());
       this.controllerFor('invite').reset();
@@ -45,5 +31,4 @@ Discourse.UserInvitedRoute = Discourse.Route.extend({
       bootbox.alert(I18n.t("user.invited.bulk_invite.error", { filename: filename, message: message }));
     }
   }
-
 });

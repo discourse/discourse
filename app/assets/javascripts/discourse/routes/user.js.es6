@@ -1,12 +1,4 @@
-/**
-  Handles routes related to users.
-
-  @class UserRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.UserRoute = Discourse.Route.extend({
+export default Discourse.Route.extend({
 
   actions: {
     logout: function() {

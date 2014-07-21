@@ -1,19 +1,9 @@
-/**
-  The base route for showing a user's activity
-
-  @class UserActivityRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.UserActivityRoute = Discourse.Route.extend({
-
+export default Discourse.Route.extend({
   model: function() {
     return this.modelFor('user');
   },
 
   setupController: function(controller, user) {
-
     this.controllerFor('user-activity').set('model', user);
     this.controllerFor('user').set('pmView', null);
 
@@ -33,7 +23,4 @@ Discourse.UserActivityRoute = Discourse.Route.extend({
       });
     }
   }
-
 });
-
-Discourse.UserPrivateMessagesRoute = Discourse.UserActivityRoute.extend({});

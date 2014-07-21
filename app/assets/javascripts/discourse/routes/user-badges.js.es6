@@ -1,11 +1,3 @@
-/**
-  This route shows a user's badges.
-
-  @class UserBadgesRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.UserBadgesRoute = Discourse.Route.extend({
   model: function() {
     return Discourse.UserBadge.findByUsername(this.modelFor('user').get('username_lower'), {grouped: true});
