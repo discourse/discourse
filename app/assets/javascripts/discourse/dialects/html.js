@@ -41,7 +41,10 @@ Discourse.Dialect.registerBlock('html', function(block, next) {
     var tag = m[1].split(/\s/);
     if (tag && tag[0] && blockTags.indexOf(tag[0]) !== -1) {
       split = splitAtLast(tag[0], block, next);
-      if (split) { return split; }
+      if (split) {
+        if (split.length === 1 && split[0] === block) { return; }
+        return split;
+      }
       return [ block.toString() ];
     }
   }

@@ -1013,7 +1013,7 @@
 
               if (firstBlock) {
 
-                if (isArray(firstBlock)) { firstBlock.shift(); }
+                firstBlock.shift();
                 contents.splice.apply(contents, [0, 1].concat(firstBlock));
                 add( last_li, loose, contents, nl );
 
