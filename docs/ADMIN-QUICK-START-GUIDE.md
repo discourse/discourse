@@ -195,6 +195,7 @@ Number 3 is the Discourse default &ndash; that's [Creative Commons BY-NC-SA 3.0]
    - [Import and Export your data](https://meta.discourse.org/t/move-your-discourse-instance-to-a-different-server/15721)
    - [Change the domain name](https://meta.discourse.org/t/how-do-i-change-the-domain-name/16098)
    - [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)
+   - [Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc?](https://github.com/discourse/discourse/tree/master/script/import_scripts)?
 
 ### Need more Help?
 
