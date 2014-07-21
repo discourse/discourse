@@ -153,7 +153,7 @@ Discourse.Report.reopenClass({
           row.percentage = Math.round((row.y / maxY) * 100);
         });
       }
-      model.mergeAttributes(json.report);
+      model.setProperties(json.report);
       model.set('loaded', true);
     });
     return(model);

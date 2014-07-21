@@ -64,7 +64,7 @@ Discourse.Site = Discourse.Model.extend({
 
   updateCategory: function(newCategory) {
     var existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
-    if (existingCategory) existingCategory.mergeAttributes(newCategory);
+    if (existingCategory) existingCategory.setProperties(newCategory);
   }
 });
 

@@ -214,7 +214,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         this.set('topicSaving', true);
 
         // manually update the titles & category
-        topic.setProperties({
+        var backup = topic.setPropertiesBackup({
           title: this.get('newTitle'),
           category_id: parseInt(this.get('newCategoryId'), 10),
           fancy_title: this.get('newTitle')
@@ -224,16 +224,11 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         var self = this;
         topic.save().then(function(result){
           // update the title if it has been changed (cleaned up) server-side
-          var title       = result.basic_topic.title;
-          var fancy_title = result.basic_topic.fancy_title;
-          topic.setProperties({
-            title: title,
-            fancy_title: fancy_title
-          });
+          topic.setProperties(Em.getProperties(result.basic_topic, 'title', 'fancy_title'));
           self.set('topicSaving', false);
         }, function(error) {
-          self.set('editingTopic', true);
-          self.set('topicSaving', false);
+          self.setProperties({ editingTopic: true, topicSaving: false });
+          topic.setProperties(backup);
           if (error && error.responseText) {
             bootbox.alert($.parseJSON(error.responseText).errors[0]);
           } else {

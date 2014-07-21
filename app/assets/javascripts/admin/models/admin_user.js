@@ -313,11 +313,11 @@ Discourse.AdminUser = Discourse.User.extend({
         } else {
           bootbox.alert(I18n.t("admin.user.delete_failed"));
           if (data.user) {
-            user.mergeAttributes(data.user);
+            user.setProperties(data.user);
           }
         }
       }, function() {
-        Discourse.AdminUser.find( user.get('username') ).then(function(u){ user.mergeAttributes(u); });
+        Discourse.AdminUser.find( user.get('username') ).then(function(u){ user.setProperties(u); });
         bootbox.alert(I18n.t("admin.user.delete_failed"));
       });
     };
