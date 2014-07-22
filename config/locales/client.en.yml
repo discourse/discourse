@@ -902,7 +902,8 @@ en:
         success_message: 'You successfully flagged this topic.'
 
       inviting: "Inviting..."
-      automatically_add_to_groups: "This invite also includes access to these groups: (optional, admin only)"
+      automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
+      automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
 
       invite_private:
         title: 'Invite to Private Message'
