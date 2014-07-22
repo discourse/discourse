@@ -23,8 +23,9 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
     if (this.get('saving')) return true;
     if (this.blank('email')) return true;
     if (!Discourse.Utilities.emailValid(this.get('email'))) return true;
+    if (this.get('isPrivateTopic') && this.blank('groupNames')) return true;
     return false;
-  }.property('email', 'saving'),
+  }.property('email', 'isPrivateTopic', 'groupNames', 'saving'),
 
   /**
     The current text for the invite button
@@ -47,6 +48,13 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   }.property('model'),
 
   /**
+    Is Private Topic? (i.e. visible only to specific group members) 
+
+    @property isPrivateTopic
+  **/
+  isPrivateTopic: Em.computed.and('invitingToTopic', 'model.category.read_restricted'),
+
+  /**
     Instructional text for the modal.
 
     @property inviteInstructions
@@ -58,6 +66,19 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
       return I18n.t('topic.invite_reply.to_forum');
     }
   }.property('invitingToTopic'),
+
+  /**
+    Instructional text for the group selection.
+
+    @property groupInstructions
+  **/
+  groupInstructions: function() {
+    if (this.get('isPrivateTopic')) {
+      return I18n.t('topic.automatically_add_to_groups_required');
+    } else {
+      return I18n.t('topic.automatically_add_to_groups_optional');
+    }
+  }.property('isPrivateTopic'),
 
   /**
     The "success" text for when the invite was created.
@@ -76,6 +97,7 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   reset: function() {
     this.setProperties({
       email: null,
+      groupNames: null,
       error: false,
       saving: false,
       finished: false

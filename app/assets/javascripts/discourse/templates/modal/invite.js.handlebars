@@ -14,7 +14,7 @@
     {{text-field value=email placeholderKey="topic.invite_reply.email_placeholder"}}
 
     {{#if isAdmin}}
-      <label>{{i18n topic.automatically_add_to_groups}}</label>
+      <label>{{{groupInstructions}}}</label>
       {{group-selector includeAuto=false groupNames=groupNames placeholderKey="topic.invite_private.group_name"}}
     {{/if}}
   {{/if}}
