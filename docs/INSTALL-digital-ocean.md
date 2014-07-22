@@ -6,7 +6,7 @@
 
 Use the URL of your new site as the Droplet hostname, e.g. `discourse.example.com`. Discourse requires a minimum of **1 GB RAM** for small communities; we recommend 2 GB RAM for medium communities.
 
-<img src="//www.discourse.org/images/install/droplet-step-1.png" width="670" height="489">
+<img src="http://www.discourse.org/images/install/droplet-step-1.png" width="670" height="489">
 
 Install Discourse on Ubuntu 14.04 LTS x64. Always select [the latest LTS distribution][lts].
 
