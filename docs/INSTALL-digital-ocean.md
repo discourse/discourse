@@ -6,11 +6,11 @@
 
 Use the URL of your new site as the Droplet hostname, e.g. `discourse.example.com`. Discourse requires a minimum of **1 GB RAM** for small communities; we recommend 2 GB RAM for medium communities.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4425/0c25b42ee3d35636.png" width="670" height="489">
+<img src="//www.discourse.org/images/install/droplet-step-1.png" width="670" height="489">
 
 Install Discourse on Ubuntu 14.04 LTS x64. Always select [the latest LTS distribution][lts].
 
-<img src="https://meta.discourse.org/uploads/default/4426/9f3bf74726a3384f.png" width="540" height="478">
+<img src="//www.discourse.org/images/install/droplet-step-2.png" width="540" height="478">
 
 You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
@@ -22,11 +22,11 @@ Connect to your Droplet via SSH, or use [Putty][put] on Windows:
 
 Replace `192.168.1.1` with the IP address of your Droplet.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4442/ab4202454828b167.png" width="586" height="128">
+<img src="//www.discourse.org/images/install/ssh-login-start.png" width="586" height="128">
 
 You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the Droplet was set up. You may be prompted to change the root password, too.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4443/48cc7135c89768bd.png" width="584" height="300">
+<img src="//www.discourse.org/images/install/ssh-login.png" width="584" height="300">
 
 # Set up Swap (if needed)
 
@@ -38,13 +38,13 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
     apt-get install git
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4444/fdddb36daf2e9b69.png" width="586" height="293">
+<img src="//www.discourse.org/images/install/install-git.png" width="586" height="293">
 
 # Install Docker
 
     wget -qO- https://get.docker.io/ | sh
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4445/35af9b94d045c691.png" width="586" height="452">
+<img src="//www.discourse.org/images/install/wget-docker.png" width="586" height="452">
 
 # Install Discourse
 
@@ -64,7 +64,7 @@ Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`
 
     cp samples/standalone.yml containers/app.yml
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4446/5f28af7f5b345823.png" width="586" height="246">
+<img src="//www.discourse.org/images/install/mkdir-var-docker.png" width="586" height="246">
 
 # Edit Discourse Configuration
 
@@ -82,7 +82,7 @@ We recommend Nano because it works like a typical GUI text editor, just use your
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 so you have more memory room.
 
-<img src="https://meta.discourse.org/uploads/default/4435/67807de39c6bbc61.png" width="578" height="407">
+<img src="//www.discourse.org/images/install/nano-screenshot" width="578" height="407">
 
 After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
@@ -102,9 +102,9 @@ Save the `app.yml` file, and begin bootstrapping Discourse:
 
     ./launcher bootstrap app
 
-This command can take up to 8 minutes. It is automagically configuring your Discourse environment.
+This command takes about 8 minutes. It is automagically configuring your Discourse environment.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4448/55b88822f00fa505.png" width="593" height="229">
+<img src="//www.discourse.org/images/install/launcher-start-app.png" width="593" height="229">
 
 After that completes, start Discourse:
 
@@ -114,7 +114,7 @@ Congratulations! You now have your own instance of Discourse!
 
 It should be accessible via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can also visit the server IP directly, e.g. `http://192.168.1.1`.
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4512/56d0c013a24981cd.png" width="690" height="342">
+<img src="//www.discourse.org/images/install/congratulations-on-installing-discourse.png" width="690" height="342">
 
 # Register New Account and Become Admin
 
@@ -122,7 +122,7 @@ There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; register a ne
 
 (If you *don't* get any email from your install, and are unable to register a new admin account, please see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
-<img src="https://meta-discourse.r.worldssl.net/uploads/default/4513/459a7df42fb9ee83.png" width="690" height="350">
+<img src="//www.discourse.org/images/install/discourse-installed.png" width="690" height="350">
 
 You should see Staff topics and the [Admin Quick Start Guide](https://github.com/discourse/discourse/blob/master/docs/ADMIN-QUICK-START-GUIDE.md). It contains the next steps for further configuring and customizing your Discourse install.
 
@@ -172,7 +172,7 @@ Do you want...
 
 - A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857).
 
-- Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers.](https://github.com/discourse/discourse/tree/master/script/import_scripts)?
+- Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/master/script/import_scripts)
 
 If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][meta], or even better, submit a pull request.
 
