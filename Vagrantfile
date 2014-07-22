@@ -19,6 +19,21 @@ Vagrant.configure("2") do |config|
     # This setting gives the VM 1024MB of RAM instead of the default 384.
     v.customize ["modifyvm", :id, "--memory", [ENV['DISCOURSE_VM_MEM'].to_i, 1024].max]
 
+    # Who has a single core cpu these days anyways?
+    cpu_count = 2
+
+    # Determine the available cores in host system.
+    # This mostly helps on linux, but it couldn't hurt on MacOSX.
+    if RUBY_PLATFORM =~ /linux/
+      cpu_count = `nproc`.to_i
+    elsif RUBY_PLATFORM =~ /darwin/
+      cpu_count = `sysctl -n hw.ncpu`.to_i
+    end
+
+    # Assign additional cores to the guest OS.
+    v.customize ["modifyvm", :id, "--cpus", cpu_count]
+    v.customize ["modifyvm", :id, "--ioapic", "on"]
+
     # This setting makes it so that network access from inside the vagrant guest
     # is able to resolve DNS using the hosts VPN connection.
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
