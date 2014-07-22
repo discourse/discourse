@@ -1,4 +1,4 @@
-Discourse.UserBadgesRoute = Discourse.Route.extend({
+export default Discourse.Route.extend({
   model: function() {
     return Discourse.UserBadge.findByUsername(this.modelFor('user').get('username_lower'), {grouped: true});
   },
