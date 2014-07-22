@@ -1,6 +1,5 @@
 require 'spec_helper'
-require 'discourse_event'
-require 'ostruct'
+require_dependency 'discourse_event'
 
 describe DiscourseEvent do
 

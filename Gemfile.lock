@@ -1,9 +1,4 @@
 PATH
-  remote: vendor/gems/discourse_plugin
-  specs:
-    discourse_plugin (0.0.1)
-
-PATH
   remote: vendor/gems/rails_multisite
   specs:
     rails_multisite (0.0.1)
@@ -408,7 +403,6 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   certified
-  discourse_plugin!
   email_reply_parser-discourse
   ember-rails
   ember-source (= 1.6.0.beta.2)
