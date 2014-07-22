@@ -22,7 +22,6 @@
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/object_controller
 //= require ./discourse/controllers/navigation/default
-//= require ./discourse/views/text-field
 //= require ./discourse/views/modal_body_view
 //= require ./discourse/views/flag
 //= require ./discourse/views/combo-box
@@ -33,6 +32,7 @@
 //= require ./discourse/views/pagedown-preview
 //= require ./discourse/routes/discourse_route
 //= require ./discourse/routes/discourse_restricted_user_route
+//= require ./discourse/components/text-field
 
 //= require ./discourse/dialects/dialect
 //= require_tree ./discourse/dialects

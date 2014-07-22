@@ -1,4 +1,4 @@
-import TextField from 'discourse/views/text-field';
+import TextField from 'discourse/components/text-field';
 
 var compiled;
 function templateFunction() {

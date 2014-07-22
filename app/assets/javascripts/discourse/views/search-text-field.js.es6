@@ -7,7 +7,7 @@
   @module Discourse
 **/
 
-import TextField from 'discourse/views/text-field';
+import TextField from 'discourse/components/text-field';
 
 export default TextField.extend({
 

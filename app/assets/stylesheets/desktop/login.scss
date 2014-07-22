@@ -16,6 +16,19 @@
   }
 }
 
+.caps-lock-warning {
+  color: $danger;
+  font-size: 12px;
+}
+
+.discourse-no-touch #login-form {
+  margin: 0;
+}
+
+.discourse-touch .caps-lock-warning {
+  display: none;
+}
+
 .login-modal {
   .fa-spinner {
     font-size: 18px;

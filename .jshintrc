@@ -40,6 +40,7 @@
     "alert",
     "controllerFor",
     "viewClassFor",
+    "componentClassFor",
     "testController",
     "containsInstance",
     "parseHTML",

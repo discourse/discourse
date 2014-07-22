@@ -43,13 +43,16 @@
       <tr class="input">
           <td class="label"><label for='new-account-password'>{{i18n user.password.title}}</label></td>
           <td>
-          {{input type="password" value=accountPassword id="new-account-password"}}
+          {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
           &nbsp;{{input-tip validation=passwordValidation}}
           </td>
       </tr>
       <tr class="instructions">
         <td></td>
-        <td><label>{{passwordInstructions}}</label></td>
+        <td>
+          <label>{{passwordInstructions}}</label>
+          <div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}>{{i18n login.caps_lock_warning}}</div>
+        </td>
       </tr>
       {{/if}}
 

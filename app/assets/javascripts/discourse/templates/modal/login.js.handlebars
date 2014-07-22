@@ -27,11 +27,16 @@
                 <label for='login-account-password'>{{i18n login.password}}&nbsp;</label>
             </td>
             <td>
-                {{text-field value=loginPassword type="password" id="login-account-password"}} &nbsp;
+                {{password-field value=loginPassword type="password" id="login-account-password" capsLockOn=capsLockOn}} &nbsp;
             </td>
             <td>
               <a id="forgot-password-link" {{action showForgotPassword}}>{{i18n forgot_password.action}}</a>
             </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}>{{i18n login.caps_lock_warning}}</div></td>
+            <td></td>
           </tr>
         </table>
       </div>

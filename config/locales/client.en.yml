@@ -549,6 +549,7 @@ en:
       username: "User"
       password: "Password"
       email_placeholder: "email or username"
+      caps_lock_warning: "Caps lock is on"
       error: "Unknown error"
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: 'Reset Password'

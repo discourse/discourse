@@ -47,6 +47,10 @@ function viewClassFor(name) {
   return Discourse.__container__.lookupFactory('view:' + name);
 }
 
+function componentClassFor(name) {
+  return Discourse.__container__.lookupFactory('component:' + name);
+}
+
 function asyncTestDiscourse(text, func) {
   asyncTest(text, function () {
     var self = this;
