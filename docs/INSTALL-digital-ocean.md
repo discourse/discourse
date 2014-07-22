@@ -82,7 +82,7 @@ We recommend Nano because it works like a typical GUI text editor, just use your
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 so you have more memory room.
 
-<img src="http://www.discourse.org/images/install/nano-screenshot" width="578" height="407">
+<img src="http://www.discourse.org/images/install/nano-screenshot.png" width="578" height="407">
 
 After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
