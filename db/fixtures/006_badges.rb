@@ -52,6 +52,7 @@ trust_level_badges.each do |spec|
     b.badge_type_id = spec[:type]
     b.query = Badge::Queries.trust_level(spec[:id])
     b.default_badge_grouping_id = BadgeGrouping::TrustLevel
+    b.trigger = Badge::Trigger::TrustLevelChange
 
     # allow title for leader and elder
     b.allow_title = spec[:id] > 2
@@ -77,6 +78,7 @@ Badge.seed do |b|
   b.target_posts = false
   b.query = Badge::Queries::ReadGuidelines
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::ReadGuidelines
 end
 
 Badge.seed do |b|
@@ -87,6 +89,7 @@ Badge.seed do |b|
   b.target_posts = true
   b.query = Badge::Queries::FirstLink
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostRevision
 end
 
 Badge.seed do |b|
@@ -97,6 +100,7 @@ Badge.seed do |b|
   b.target_posts = true
   b.query = Badge::Queries::FirstQuote
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostRevision
 end
 
 Badge.seed do |b|
@@ -107,6 +111,7 @@ Badge.seed do |b|
   b.target_posts = true
   b.query = Badge::Queries::FirstLike
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostAction
 end
 
 Badge.seed do |b|
@@ -117,6 +122,7 @@ Badge.seed do |b|
   b.target_posts = false
   b.query = Badge::Queries::FirstFlag
   b.default_badge_grouping_id = BadgeGrouping::Community
+  b.trigger = Badge::Trigger::PostAction
 end
 
 Badge.seed do |b|
@@ -127,6 +133,7 @@ Badge.seed do |b|
   b.target_posts = true
   b.query = Badge::Queries::FirstShare
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostRevision
 end
 
 Badge.seed do |b|
@@ -137,6 +144,7 @@ Badge.seed do |b|
   b.target_posts = true
   b.query = Badge::Queries::Welcome
   b.default_badge_grouping_id = BadgeGrouping::Community
+  b.trigger = Badge::Trigger::PostAction
 end
 
 Badge.seed do |b|
@@ -146,6 +154,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.query = Badge::Queries::Autobiographer
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::UserChange
 end
 
 Badge.seed do |b|
@@ -155,6 +164,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.query = Badge::Queries::Editor
   b.default_badge_grouping_id = BadgeGrouping::Community
+  b.trigger = Badge::Trigger::PostRevision
 end
 
 #
@@ -174,5 +184,6 @@ like_badges.each do |spec|
     b.target_posts = true
     b.query = Badge::Queries.like_badge(Badge.like_badge_counts[spec[:id]])
     b.default_badge_grouping_id = BadgeGrouping::Posting
+    b.trigger = Badge::Trigger::PostAction
   end
 end

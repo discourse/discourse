@@ -17,11 +17,12 @@ class Badge < ActiveRecord::Base
   # other consts
   AutobiographerMinBioLength = 10
 
-  module Triggers
+  module Trigger
     PostAction = 1
     ReadGuidelines = 2
     PostRevision = 4
     TrustLevelChange = 8
+    UserChange = 16
   end
 
   module Queries
@@ -213,7 +214,8 @@ end
 #  query             :text
 #  enabled           :boolean          default(TRUE), not null
 #  auto_revoke       :boolean          default(TRUE), not null
-#  badge_grouping_id :integer
+#  badge_grouping_id :integer          default(5), not null
+#  trigger           :integer
 #
 # Indexes
 #

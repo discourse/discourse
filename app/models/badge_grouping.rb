@@ -15,7 +15,7 @@ end
 #
 #  id          :integer          not null, primary key
 #  name        :string(255)      not null
-#  description :string(255)      not null
+#  description :text
 #  position    :integer          not null
 #  created_at  :datetime
 #  updated_at  :datetime
