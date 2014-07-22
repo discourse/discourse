@@ -72,7 +72,7 @@ test("categories", function() {
   var categoryListStub = ["category1", "category2"];
   this.stub(Discourse.Category, "list").returns(categoryListStub);
 
-  equal(controller.get("categories"), categoryListStub, "returns the list of categories");
+  deepEqual(controller.get("categories"), categoryListStub, "returns the list of categories");
 });
 
 test("toggleMobleView", function() {

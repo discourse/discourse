@@ -18,14 +18,14 @@ export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
   }.property(),
 
   categories: function() {
-    if (Discourse.SiteSettings.allow_uncategorized_topics) {
-      return Discourse.Category.list();
-    } else {
-      // Exclude the uncategorized category if it's empty
-      return Discourse.Category.list().reject(function(c) {
-        return c.get('isUncategorizedCategory') && !Discourse.User.currentProp('staff');
-      });
-    }
+    var hideUncategorized = !Discourse.SiteSettings.allow_uncategorized_topics,
+        showSubcatList = Discourse.SiteSettings.show_subcategory_list,
+        isStaff = Discourse.User.currentProp('staff');
+    return Discourse.Category.list().reject(function(c) {
+      if (showSubcatList && c.get('parent_category_id')) { return true; }
+      if (hideUncategorized && c.get('isUncategorizedCategory') && !isStaff) { return true; }
+      return false;
+    });
   }.property(),
 
   actions: {
