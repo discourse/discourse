@@ -44,6 +44,7 @@ log/
 # Ignore plugins except for the bundled ones.
 /plugins/*
 !/plugins/emoji/
+!/plugins/lazyYT/
 !/plugins/poll/
 /plugins/*/auto_generated/
 
