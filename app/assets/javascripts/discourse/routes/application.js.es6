@@ -97,7 +97,7 @@ var ApplicationRoute = Em.Route.extend({
     }
   },
 
-  _activate: function() {
+  activate: function() {
     this._super();
     Em.run.next(function() {
       // Support for callbacks once the application has activated
