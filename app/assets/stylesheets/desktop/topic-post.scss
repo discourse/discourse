@@ -232,15 +232,12 @@ nav.post-controls {
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
   a.mention {background: darken(scale-color-diff(), 10%);}
-  /* this 100% stuff is normally VERY dangerous because we're overriding
-  painstakingly calculated exact image widths, but in expanded replies, we may
-  be below minimum width, and expanded replies are loaded on demand anyway */
+
   p img {
-    width: 100%;
-    height: 100%;
+    max-width: 579px;
     }
   .topic-body {
-     width: 84%;
+     width: 86%;
      padding-left: 1%;
      padding-right: 1%;
      }
@@ -263,10 +260,10 @@ nav.post-controls {
   // top means "in reply to expansion" above a post
   &.top {
     margin-left: 56px;
-    width: 690px;
+    width: 701px;
 
   }
-  &.top.topic-body {padding-left: 0;}
+  &.top.topic-body {padding-left: 0; padding-right: 0;}
     .post-date {color: scale-color($primary, $lightness: 50%);}
     .fa-arrow-up {margin-left: 5px;}
     .row {border-top: 1px solid darken(scale-color-diff(), 10%); padding-top: 7px;}
