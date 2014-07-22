@@ -1143,3 +1143,65 @@ and (max-width : 850px) {
     > li > a {padding: 13px}
   }
 }
+
+@media only screen
+and (min-width : 320px)
+and (max-width : 500px) {
+
+.full-width { margin: 0; }
+.site-settings-nav { width: 100%; }
+.site-settings-detail {
+  width: 100%;
+  padding: 0;
+  border: none;
+
+  .settings .setting {
+      .setting-label {
+      float: left;
+      width: 100%;
+      h3 {
+        margin-bottom: 5px;
+        font-weight: bold;
+        margin-top: 25px;
+        }
+      }
+      .setting-value {
+        width: 100%;
+        }
+      label {
+        font-size: 13px;
+        }
+    }
+  }
+
+  .content-editor {
+    width: 100%;
+      #pagedown-editor {
+        box-sizing: border-box;
+      }
+  }
+
+  div.ac-wrap {
+    width: 100% !important;
+    box-sizing: border-box;
+    }
+
+  .admin-container {
+    h2 {
+      float: left;
+      }
+  }
+
+  .dashboard-left, .dashboard-right { width: 100%; }
+  .dashboard-stats { margin: 0; }
+
+  .badges {
+    .current-badge {margin: 70px 0 0 0;}
+    .current-badge-actions {padding: 0;}
+  }
+
+  .customize .content-list, .customize .current-style {
+    width: 100%;
+
+  }
+}
