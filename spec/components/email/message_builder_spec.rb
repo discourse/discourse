@@ -242,6 +242,11 @@ describe Email::MessageBuilder do
       expect(custom_aliased_from.build_args[:from]).to eq("Finn the Dog <#{finn_email}>")
     end
 
+    it "email_site_title will be added if it's set" do
+      SiteSetting.stubs(:email_site_title).returns("The Forum")
+      expect(build_args[:from]).to eq("The Forum <#{SiteSetting.notification_email}>")
+    end
+
   end
 
 end
