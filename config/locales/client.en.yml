@@ -1888,6 +1888,7 @@ en:
         display_name: Display Name
         description: Description
         badge_type: Badge Type
+        badge_grouping: Group
         granted_by: Granted By
         granted_at: Granted At
         save: Save

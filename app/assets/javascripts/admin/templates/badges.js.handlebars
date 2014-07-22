@@ -48,6 +48,15 @@
       </div>
 
       <div>
+        <label for="badge_grouping_id">{{i18n admin.badges.badge_grouping}}</label>
+        {{view Ember.Select name="badge_grouping_id" value=badge_grouping_id
+                            content=controller.badgeGroupings
+                            optionValuePath="content.id"
+                            optionLabelPath="content.name"
+                            disabled=readOnly}}
+      </div>
+
+      <div>
         <label for="description">{{i18n admin.badges.description}}</label>
         {{#if controller.canEditDescription}}
           {{textarea name="description" value=description}}

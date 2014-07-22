@@ -17,6 +17,12 @@ class Badge < ActiveRecord::Base
   # other consts
   AutobiographerMinBioLength = 10
 
+  module Triggers
+    PostAction = 1
+    ReadGuidelines = 2
+    PostRevision = 4
+    TrustLevelChange = 8
+  end
 
   module Queries
 

@@ -146,6 +146,7 @@ Discourse::Application.routes.draw do
     resources :badges, constraints: AdminConstraint.new do
       collection do
         get "types" => "badges#badge_types"
+        get "groupings" => "badges#badge_groupings"
       end
     end
 
