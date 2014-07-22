@@ -1258,13 +1258,13 @@ en:
 
         ## How do I reply?
 
-        - To reply to a specific post, use its Reply button <img src="http://www.discourse.org/images/welcome/reply-post.png" width="29" height="25">.
+        - To reply to the overall topic, use the Reply button <img src="http://www.discourse.org/images/welcome/reply-topic.png" width="29" height="25">  at the very bottom of the page.
 
-        - To reply to the overall *theme* of the topic, rather than any specific person or post in the topic, use the Reply button <img src="http://www.discourse.org/images/welcome/reply-topic.png" width="29" height="25">  at the bottom of the topic.
+        - To reply to a specific post, use the Reply button <img src="http://www.discourse.org/images/welcome/reply-post.png" width="29" height="25"> on that post.
 
         - To take the conversation in a different direction, but keep them linked together, use Reply as New Topic <img src="http://www.discourse.org/images/welcome/reply-as-new-topic.png" width="33" height="25">   to the right of the post.
 
-        To quote someone in your reply, select the text you wish to quote, then use one of the regular Reply buttons, or the Quote Reply button that appears over your selection.
+        To quote someone in your reply, select the text you wish to quote, then press any Reply button.
 
         <img src="http://www.discourse.org/images/welcome/quote-reply.png" width="467" height="172">
 
