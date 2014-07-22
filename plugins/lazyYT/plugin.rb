@@ -5,7 +5,6 @@
 
 # javascript
 register_asset "javascripts/lazyYT.js"
-register_asset "javascripts/initializers/lazyYT.js.es6"
 
 # stylesheet
 register_asset "stylesheets/lazyYT.css"
