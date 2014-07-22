@@ -24,19 +24,6 @@
   td { padding: 4px; }
 }
 
-.caps-lock-warning {
-  color: $danger;
-  font-size: 12px;
-}
-
-.discourse-no-touch #login-form {
-  margin: 0;
-}
-
-.discourse-touch .caps-lock-warning {
-  display: none;
-}
-
 a#new-account-link { white-space:nowrap; }
 
 // Create account

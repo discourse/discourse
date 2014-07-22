@@ -1,0 +1,13 @@
+.caps-lock-warning {
+  color: $danger;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.discourse-no-touch #login-form {
+  margin: 0;
+}
+
+.discourse-touch .caps-lock-warning {
+  display: none;
+}
