@@ -52,9 +52,7 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
 
     @property isPrivateTopic
   **/
-  isPrivateTopic: function() {    
-    return this.get('invitingToTopic') && this.get('model.category.read_restricted');
-  }.property('model'),
+  isPrivateTopic: Em.computed.and('invitingToTopic', 'model.category.read_restricted'),
 
   /**
     Instructional text for the modal.
