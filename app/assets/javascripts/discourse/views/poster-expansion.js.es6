@@ -5,14 +5,22 @@ export default Discourse.View.extend({
   classNameBindings: ['controller.visible::hidden', 'controller.showBadges'],
 
   _setup: function() {
-    var self = this;
+    var self = this,
+        width = this.$().width();
+
     this.appEvents.on('poster:expand', function(target) {
       if (!target) { return; }
       Em.run.schedule('afterRender', function() {
         if (target) {
           var position = target.offset();
           if (position) {
-            position.left += target.width() + 5;
+            position.left += target.width() + 10;
+
+            var overage = ($(window).width() - 50) - (position.left + width);
+            if (overage < 0) {
+              position.left += overage;
+              position.top += target.height() + 5;
+            }
             self.$().css(position);
           }
         }

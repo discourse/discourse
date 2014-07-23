@@ -20,7 +20,7 @@
     <div class='topic-avatar'>
       {{#unless userDeleted}}
         <div {{bind-attr class=":contents byTopicCreator:topic-creator"}}>
-          {{poster-avatar action="showPosterExpansion" post=this classNames="main-avatar"}}
+          {{poster-avatar action="expandPostUser" post=this classNames="main-avatar"}}
         </div>
       {{else}}
         <div class="contents">
@@ -34,7 +34,7 @@
 
     <div class='topic-body'>
       <div class='topic-meta-data'>
-        {{poster-name post=this expandAction="showPosterExpansion"}}
+        {{poster-name post=this expandAction="expandPostUser"}}
         <div class='post-info'>
           <a class='post-date' {{bind-attr href="shareUrl" data-share-url="shareUrl" data-post-number="post_number"}}>{{age-with-tooltip created_at}}</a>
         </div>

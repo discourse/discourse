@@ -14,8 +14,15 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
   actions: {
     // Modals that can pop up within a topic
-    showPosterExpansion: function(post) {
-      this.controllerFor('poster-expansion').show(post);
+    expandPostUser: function(post) {
+      this.controllerFor('poster-expansion').show(post.get('username'), post.get('uploaded_avatar_id'));
+    },
+
+    expandPostUsername: function(username) {
+      username = username.replace(/^@/, '');
+      if (!Em.isEmpty(username)) {
+        this.controllerFor('poster-expansion').show(username);
+      }
     },
 
     composePrivateMessage: function(user) {

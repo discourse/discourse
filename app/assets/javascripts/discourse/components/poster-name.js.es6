@@ -34,8 +34,6 @@ var PosterNameComponent = Em.Component.extend({
       }
       buffer.push("</span>");
 
-
-
       // Are we showing full names?
       if (name && this.get('displayNameOnPosts') && (this.sanitizeName(name) !== this.sanitizeName(username))) {
         name = Handlebars.Utils.escapeExpression(name);

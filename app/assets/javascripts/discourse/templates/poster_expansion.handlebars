@@ -1,13 +1,13 @@
-{{#if model}}
-  {{#link-to 'user' user}}{{bound-avatar model "huge"}}{{/link-to}}
+{{#if username}}
+  {{#link-to 'user' user}}{{bound-avatar avatar "huge"}}{{/link-to}}
 
   <div class="names">
-    <h1 {{bind-attr class="staff new_user"}}><a {{bind-attr href="usernameUrl"}}>{{username}}</a></h1>
+    <h1 {{bind-attr class="staff new_user"}}>
+      {{#link-to 'user' user}}{{username}}{{/link-to}}
+    </h1>
     {{#if showName}}
-      <h2><a {{bind-attr href="usernameUrl"}}>{{name}}</a></h2>
+      <h2>{{#link-to 'user' user}}{{name}}{{/link-to}}</h2>
     {{/if}}
-
-
   </div>
 
   {{#if showBadges}}
@@ -22,6 +22,7 @@
       {{/if}}
     </div>
   {{/if}}
+
   {{#if user}}
     <div class="metadata">
       {{#if user.location}}<h3><i class="fa fa-map-marker"></i> {{user.location}}</h3>{{/if}}
@@ -29,7 +30,6 @@
       <h3>{{i18n joined}} {{date path="user.created_at" leaveAgo="true"}}</h3>
       {{groups-list groups=user.custom_groups}}
     </div>
-
 
     <div class='bottom'>
       {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}

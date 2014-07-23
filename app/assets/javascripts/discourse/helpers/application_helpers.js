@@ -189,7 +189,7 @@ Handlebars.registerHelper('avatar', function(user, options) {
   @for Handlebars
 **/
 Em.Handlebars.helper('bound-avatar', function(user, size, uploadId) {
-
+  if (Em.isEmpty(user)) { return; }
   var username = Em.get(user, 'username');
 
   if(arguments.length < 4){
