@@ -1,6 +1,5 @@
 require 'spec_helper'
-require 'discourse_plugin'
-require 'ostruct'
+require_dependency 'discourse_plugin'
 
 describe DiscoursePlugin do
 

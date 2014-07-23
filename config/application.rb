@@ -2,6 +2,8 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 # Plugin related stuff
+require_relative '../lib/discourse_event'
+require_relative '../lib/discourse_plugin'
 require_relative '../lib/discourse_plugin_registry'
 
 # Global config
