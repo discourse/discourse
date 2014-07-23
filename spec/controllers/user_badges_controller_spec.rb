@@ -5,6 +5,20 @@ describe UserBadgesController do
   let(:badge) { Fabricate(:badge) }
 
   context 'index' do
+    it 'doest not leak private info' do
+      badge = Fabricate(:badge, target_posts: true, show_posts: false)
+      p = create_post
+      UserBadge.create(badge: badge, user: user, post_id: p.id, granted_by_id: -1, granted_at: Time.now)
+
+      xhr :get, :index, badge_id: badge.id
+      response.status.should == 200
+      parsed = JSON.parse(response.body)
+      parsed["topics"].should be_nil
+      parsed["user_badges"][0]["post_id"].should == nil
+    end
+  end
+
+  context 'index' do
     let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
     it 'requires username or badge_id to be specified' do

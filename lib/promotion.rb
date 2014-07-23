@@ -72,7 +72,7 @@ class Promotion
       @user.user_profile.recook_bio
       @user.user_profile.save!
       Group.user_trust_level_change!(@user.id, @user.trust_level)
-      BadgeGranter.update_badges(action: :trust_level_change, user_id: @user.id)
+      BadgeGranter.queue_badge_grant(Badge::Trigger::TrustLevelChange, user: @user)
     end
 
     true

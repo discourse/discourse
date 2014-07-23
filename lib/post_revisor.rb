@@ -28,6 +28,7 @@ class PostRevisor
     @post.advance_draft_sequence
     PostAlerter.new.after_save_post(@post)
     publish_revision
+    BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
 
     true
   end

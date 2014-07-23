@@ -65,6 +65,7 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
+  b.show_posts = false
   b.query = Badge::Queries::Reader
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.auto_revoke = false
@@ -76,9 +77,10 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
+  b.show_posts = false
   b.query = Badge::Queries::ReadGuidelines
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
-  b.trigger = Badge::Trigger::ReadGuidelines
+  b.trigger = Badge::Trigger::UserChange
 end
 
 Badge.seed do |b|
@@ -87,6 +89,7 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
+  b.show_posts = true
   b.query = Badge::Queries::FirstLink
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
@@ -98,6 +101,7 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
+  b.show_posts = true
   b.query = Badge::Queries::FirstQuote
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
@@ -109,6 +113,7 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
+  b.show_posts = true
   b.query = Badge::Queries::FirstLike
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostAction
@@ -119,7 +124,8 @@ Badge.seed do |b|
   b.default_name = "First Flag"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
-  b.target_posts = false
+  b.target_posts = true
+  b.show_posts = false
   b.query = Badge::Queries::FirstFlag
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::PostAction
@@ -131,6 +137,7 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
+  b.show_posts = true
   b.query = Badge::Queries::FirstShare
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
@@ -142,6 +149,7 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
+  b.show_posts = true
   b.query = Badge::Queries::Welcome
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::PostAction
@@ -182,6 +190,7 @@ like_badges.each do |spec|
     b.badge_type_id = spec[:type]
     b.multiple_grant = spec[:multiple]
     b.target_posts = true
+    b.show_posts = true
     b.query = Badge::Queries.like_badge(Badge.like_badge_counts[spec[:id]])
     b.default_badge_grouping_id = BadgeGrouping::Posting
     b.trigger = Badge::Trigger::PostAction

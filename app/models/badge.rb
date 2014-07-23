@@ -19,16 +19,15 @@ class Badge < ActiveRecord::Base
 
   module Trigger
     PostAction = 1
-    ReadGuidelines = 2
-    PostRevision = 4
-    TrustLevelChange = 8
-    UserChange = 16
+    PostRevision = 2
+    TrustLevelChange = 4
+    UserChange = 8
   end
 
   module Queries
 
     Reader = <<SQL
-    SELECT id user_id, current_timestamp granted_at
+    SELECT id user_id, current_timestamp granted_at, NULL post_id
     FROM users
     WHERE id IN
     (
@@ -45,7 +44,7 @@ class Badge < ActiveRecord::Base
 SQL
 
     ReadGuidelines = <<SQL
-    SELECT user_id, read_faq granted_at
+    SELECT user_id, read_faq granted_at, NULL post_id
     FROM user_stats
     WHERE read_faq IS NOT NULL
 SQL
@@ -93,21 +92,30 @@ SQL
 SQL
 
     FirstFlag = <<SQL
-    SELECT pa.user_id, min(pa.created_at) granted_at
-    FROM post_actions pa
-    JOIN badge_posts p on p.id = pa.post_id
-    WHERE post_action_type_id IN (#{PostActionType.flag_types.values.join(",")})
-    GROUP BY pa.user_id
+    SELECT pa1.user_id, pa1.created_at granted_at, pa1.post_id
+    FROM (
+      SELECT pa.user_id, min(pa.id) id
+      FROM post_actions pa
+      JOIN badge_posts p on p.id = pa.post_id
+      WHERE post_action_type_id IN (#{PostActionType.flag_types.values.join(",")})
+      GROUP BY pa.user_id
+    ) x
+    JOIN post_actions pa1 on pa1.id = x.id
 SQL
 
     FirstLike = <<SQL
-    SELECT pa.user_id, min(post_id) post_id, min(pa.created_at) granted_at
-    FROM post_actions pa
-    JOIN badge_posts p on p.id = pa.post_id
-    WHERE post_action_type_id = 2
-    GROUP BY pa.user_id
+    SELECT pa1.user_id, pa1.created_at granted_at, pa1.post_id
+    FROM (
+      SELECT pa.user_id, min(pa.id) id
+      FROM post_actions pa
+      JOIN badge_posts p on p.id = pa.post_id
+      WHERE post_action_type_id = 2
+      GROUP BY pa.user_id
+    ) x
+    JOIN post_actions pa1 on pa1.id = x.id
 SQL
 
+    # Incorrect, but good enough - (earlies post edited vs first edit)
     Editor = <<SQL
     SELECT p.user_id, min(p.id) post_id, min(p.created_at) granted_at
     FROM badge_posts p
@@ -124,7 +132,7 @@ SQL
 SQL
 
     Autobiographer = <<SQL
-    SELECT u.id user_id, current_timestamp granted_at
+    SELECT u.id user_id, current_timestamp granted_at, NULL post_id
     FROM users u
     JOIN user_profiles up on u.id = up.user_id
     WHERE bio_raw IS NOT NULL AND LENGTH(TRIM(bio_raw)) > #{Badge::AutobiographerMinBioLength} AND
@@ -143,7 +151,7 @@ SQL
     def self.trust_level(level)
       # we can do better with dates, but its hard work figuring this out historically
 "
-    SELECT u.id user_id, current_timestamp granted_at FROM users u
+    SELECT u.id user_id, current_timestamp granted_at, NULL post_id FROM users u
     WHERE trust_level >= #{level.to_i}
 "
     end

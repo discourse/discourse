@@ -152,8 +152,8 @@ class PostAction < ActiveRecord::Base
 
     if row_count == 0
       post_action = create(where_attrs.merge(action_attributes))
-      if post_action && post_action.is_like?
-        BadgeGranter.update_badges(action: :post_like, post_id: post.id)
+      if post_action && post_action.errors.count == 0
+        BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: post_action)
       end
     else
       post_action = PostAction.where(where_attrs).first

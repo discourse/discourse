@@ -79,6 +79,7 @@ class PostCreator
       handle_spam unless @opts[:import_mode]
       track_latest_on_category
       enqueue_jobs
+      BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
     end
 
     @post

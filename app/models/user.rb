@@ -81,6 +81,7 @@ class User < ActiveRecord::Base
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
   after_save :refresh_avatar
+  after_save :badge_grant
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -603,24 +604,14 @@ class User < ActiveRecord::Base
 
     if !self.uploaded_avatar_id && gravatar_downloaded
       self.update_column(:uploaded_avatar_id, avatar.gravatar_upload_id)
-      grant_autobiographer
-    else
-      if uploaded_avatar_id_changed?
-        grant_autobiographer
-      end
-    end
-
-  end
-
-  def grant_autobiographer
-    if self.user_profile.bio_raw &&
-          self.user_profile.bio_raw.strip.length > Badge::AutobiographerMinBioLength &&
-          uploaded_avatar_id
-       BadgeGranter.grant(Badge.find(Badge::Autobiographer), self)
     end
   end
 
   protected
+
+  def badge_grant
+    BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
+  end
 
   def update_tracked_topics
     return unless auto_track_topics_after_msecs_changed?

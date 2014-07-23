@@ -15,8 +15,8 @@ describe PostAlertObserver do
       it 'creates a notification' do
         lambda {
           PostAction.act(evil_trout, post, PostActionType.types[:like])
-          # one like and one welcome badge
-        }.should change(Notification, :count).by(2)
+          # one like (welcome badge deferred)
+        }.should change(Notification, :count).by(1)
       end
     end
 

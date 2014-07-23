@@ -3,7 +3,7 @@ class UserProfile < ActiveRecord::Base
 
   validates :user, presence: true
   before_save :cook
-  after_save :assign_autobiographer
+  after_save :trigger_badges
 
   def bio_excerpt
     excerpt = PrettyText.excerpt(bio_cooked, 350)
@@ -38,10 +38,8 @@ class UserProfile < ActiveRecord::Base
 
   protected
 
-  def assign_autobiographer
-    if bio_raw_changed?
-      user.grant_autobiographer
-    end
+  def trigger_badges
+    BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
   end
 
   private

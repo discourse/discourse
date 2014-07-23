@@ -57,12 +57,76 @@ class BadgeGranter
     end
   end
 
-  def self.update_badges(args)
-    Jobs.enqueue(:update_badges, args)
+  def self.queue_badge_grant(type,opt)
+    payload = nil
+
+    case type
+    when Badge::Trigger::PostRevision
+      post = opt[:post]
+      payload = {
+        type: "PostRevision",
+        post_ids: [post.id]
+      }
+    when Badge::Trigger::UserChange
+      user = opt[:user]
+      payload = {
+        type: "UserChange",
+        user_ids: [user.id]
+      }
+    when Badge::Trigger::TrustLevelChange
+      user = opt[:user]
+      payload = {
+        type: "TrustLevelChange",
+        user_ids: [user.id]
+      }
+    when Badge::Trigger::PostAction
+      action = opt[:post_action]
+      payload = {
+        type: "PostAction",
+        post_ids: [action.post_id, action.related_post_id].compact!
+      }
+    end
+
+    $redis.lpush queue_key, payload.to_json if payload
   end
 
-  def self.backfill(badge)
+  def self.clear_queue!
+    $redis.del queue_key
+  end
+
+  def self.process_queue!
+    limit = 1000
+    items = []
+    while limit > 0 && item = $redis.lpop(queue_key)
+      items << JSON.parse(item)
+      limit -= 1
+    end
+
+    items = items.group_by{|i| i["type"]}
+
+    items.each do |type, list|
+      post_ids = list.map{|i| i["post_ids"]}.flatten.compact.uniq
+      user_ids = list.map{|i| i["user_ids"]}.flatten.compact.uniq
+
+      next unless post_ids.present? || user_ids.present?
+      find_by_type(type).each{|badge| backfill(badge, post_ids: post_ids, user_ids: user_ids)}
+    end
+  end
+
+  def self.find_by_type(type)
+    id = "Badge::Trigger::#{type}".constantize
+    Badge.where(trigger: id)
+  end
+
+  def self.queue_key
+    "badge_queue".freeze
+  end
+
+  def self.backfill(badge, opts=nil)
     return unless badge.query.present? && badge.enabled
+
+    post_ids = opts[:post_ids] if opts
+    user_ids = opts[:user_ids] if opts
 
     post_clause = badge.target_posts ? "AND q.post_id = ub.post_id" : ""
     post_id_field = badge.target_posts ? "q.post_id" : "NULL"
@@ -77,7 +141,7 @@ class BadgeGranter
              WHERE ub.badge_id = :id AND q.user_id IS NULL
            )"
 
-    Badge.exec_sql(sql, id: badge.id) if badge.auto_revoke
+    Badge.exec_sql(sql, id: badge.id) if badge.auto_revoke && !post_ids && !user_ids
 
     sql = "INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, post_id)
             SELECT :id, q.user_id, q.granted_at, -1, #{post_id_field}
@@ -85,11 +149,15 @@ class BadgeGranter
             LEFT JOIN user_badges ub ON
               ub.badge_id = :id AND ub.user_id = q.user_id
               #{post_clause}
-            WHERE ub.badge_id IS NULL AND q.user_id <> -1
+            /*where*/
             RETURNING id, user_id, granted_at
             "
 
     builder = SqlBuilder.new(sql)
+    builder.where("ub.badge_id IS NULL AND q.user_id <> -1")
+    builder.where("q.post_id in (:post_ids)", post_ids: post_ids) if post_ids.present?
+    builder.where("q.user_id in (:user_ids)", user_ids: user_ids) if user_ids.present?
+
     builder.map_exec(OpenStruct, id: badge.id).each do |row|
 
       # old bronze badges do not matter

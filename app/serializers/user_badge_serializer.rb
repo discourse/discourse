@@ -11,10 +11,11 @@ class UserBadgeSerializer < ApplicationSerializer
   end
 
   def include_post_id?
-    object.post_id && object.post
+    object.badge.show_posts && object.post_id && object.post
   end
 
   alias :include_topic? :include_post_id?
+  alias :include_post_number? :include_post_id?
 
   def post_number
     object.post && object.post.post_number
