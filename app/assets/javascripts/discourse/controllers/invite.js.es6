@@ -48,7 +48,7 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   }.property('model'),
 
   /**
-    Is Private Topic? (i.e. visible only to specific group members) 
+    Is Private Topic? (i.e. visible only to specific group members)
 
     @property isPrivateTopic
   **/
@@ -79,6 +79,13 @@ export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
       return I18n.t('topic.automatically_add_to_groups_optional');
     }
   }.property('isPrivateTopic'),
+
+  /**
+    Function to find groups.
+  **/
+  groupFinder: function(term) {
+    return Discourse.Group.findAll({search: term, ignore_automatic: true});
+  },
 
   /**
     The "success" text for when the invite was created.

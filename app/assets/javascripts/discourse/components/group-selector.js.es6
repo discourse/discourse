@@ -34,8 +34,8 @@ export default Em.Component.extend({
         return g.name;
       },
       dataSource: function(term) {
-        // TODO: Components should definitely not perform queries
-        return Discourse.Group.findAll({search: term, ignore_automatic: true}).then(function(groups){
+        return self.get("groupFinder")(term).then(function(groups){
+
           if(!selectedGroups){
             return groups;
           }
