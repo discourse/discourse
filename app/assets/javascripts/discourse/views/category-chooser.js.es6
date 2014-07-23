@@ -8,15 +8,25 @@ export default ComboboxView.extend({
   dataAttributes: ['id', 'description_text'],
   valueBinding: Ember.Binding.oneWay('source'),
 
-  content: Em.computed.filter('categories', function(c) {
-    var uncategorized_id = Discourse.Site.currentProp("uncategorized_category_id");
-    return c.get('permission') === Discourse.PermissionType.FULL && c.get('id') !== uncategorized_id;
-  }),
+  content: function() {
+    var scopedCategoryId = this.get('scopedCategoryId');
+
+    // Always scope to the parent of a category, if present
+    if (scopedCategoryId) {
+      var scopedCat = Discourse.Category.findById(scopedCategoryId);
+      scopedCategoryId = scopedCat.get('parent_category_id') || scopedCat.get('id');
+    }
+
+    return this.get('categories').filter(function(c) {
+      if (scopedCategoryId && (c.get('id') !== scopedCategoryId) && (c.get('parent_category_id') !== scopedCategoryId)) {
+        return false;
+      }
+      return c.get('permission') === Discourse.PermissionType.FULL && !c.get('isUncategorizedCategory');
+    });
+  }.property('scopedCategoryId', 'categories'),
 
   _setCategories: function() {
-    if (!this.get('categories')) {
-      this.set('categories', Discourse.Category.list());
-    }
+    this.set('categories', this.get('categories') || Discourse.Category.list());
   }.on('init'),
 
   none: function() {

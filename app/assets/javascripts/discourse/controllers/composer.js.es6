@@ -15,6 +15,7 @@ export default Discourse.Controller.extend({
   showEditReason: false,
   editReason: null,
   maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
+  scopedCategoryId: null,
 
   _initializeSimilar: function() {
     this.set('similarTopics', []);
@@ -254,11 +255,17 @@ export default Discourse.Controller.extend({
       @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
   **/
   open: function(opts) {
-    if (!opts) opts = {};
+    opts = opts || {};
 
     if (!opts.draftKey) {
       alert("composer was opened without a draft key");
       throw "composer opened without a proper draft key";
+    }
+
+    // If we show the subcategory list, scope the categories drop down to
+    // the category we opened the composer with.
+    if (Discourse.SiteSettings.show_subcategory_list) {
+      this.set('scopedCategoryId', opts.categoryId);
     }
 
     var composerMessages = this.get('controllers.composer-messages'),
