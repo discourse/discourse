@@ -37,16 +37,20 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
   normalize: function(fullName) {
     var split = fullName.split(':');
     if (split.length > 1) {
+      var discourseBase = 'discourse/' + split[0] + 's/';
+      var adminBase = 'admin/' + split[0] + 's/';
 
       // Try slashes
-      var dashed = Ember.String.dasherize(split[1].replace(/\./g, '/')),
-          moduleName = 'discourse/' + split[0] + 's/' + dashed;
-      if (requirejs.entries[moduleName]) { return split[0] + ":" + dashed; }
+      var dashed = Ember.String.dasherize(split[1].replace(/\./g, '/'));
+      if (requirejs.entries[discourseBase + dashed] || requirejs.entries[adminBase + dashed]) {
+        return split[0] + ":" + dashed;
+      }
 
       // Try with dashes instead of slashes
       dashed = Ember.String.dasherize(split[1].replace(/\./g, '-'));
-      moduleName = 'discourse/' + split[0] + 's/' + dashed;
-      if (requirejs.entries[moduleName]) { return split[0] + ":" + dashed; }
+      if (requirejs.entries[discourseBase + dashed] || requirejs.entries[adminBase + dashed]) {
+        return split[0] + ":" + dashed;
+      }
     }
     return this._super(fullName);
   },
