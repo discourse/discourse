@@ -45,7 +45,7 @@ test('findByIds', function() {
     2: Discourse.Category.create({id: 2})
   };
 
-  this.stub(Discourse.Category, 'map').returns(categories);
+  this.stub(Discourse.Category, 'idMap').returns(categories);
   deepEqual(Discourse.Category.findByIds([1,2,3]), _.values(categories));
 });
 
