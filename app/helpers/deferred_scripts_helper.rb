@@ -1,7 +1,7 @@
-module DeferredJavascriptsHelper
+module DeferredScriptsHelper
 
   # Provides a javascript map of the files in the 'defer' directory
-  def deferred_javascripts
+  def deferred_scripts
     files = {}
 
     Dir.glob("#{Rails.root}/app/assets/javascripts/defer/*.js").each do |file|
@@ -13,8 +13,4 @@ module DeferredJavascriptsHelper
     return files.to_json.html_safe
   end
 
-end
-
-module Sprockets::Rails::Helper
-  include DeferredJavascriptsHelper
 end
