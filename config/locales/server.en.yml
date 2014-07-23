@@ -899,7 +899,7 @@ en:
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
 
-    white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
+    white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains. Example: discourse.org (don't include \"http://\" or trailing \"/\" in domain)"
     staff_like_weight: "How much extra weighting factor to give staff likes."
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
