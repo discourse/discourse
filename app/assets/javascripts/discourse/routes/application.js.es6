@@ -9,6 +9,7 @@ var ApplicationRoute = Em.Route.extend({
       }
 
       var exceptionController = this.controllerFor('exception');
+      Em.warn(err);
       exceptionController.setProperties({ lastTransition: transition, thrown: err });
 
       this.intermediateTransitionTo('exception');

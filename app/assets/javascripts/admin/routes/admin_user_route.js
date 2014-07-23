@@ -1,13 +1,4 @@
-/**
-  Handles routes related to users in the admin section.
-
-  @class AdminUserRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.AdminUserRoute = Discourse.Route.extend({
-
   serialize: function(model) {
     return { username: model.get('username').toLowerCase() };
   },
@@ -21,22 +12,30 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
   },
 
   afterModel: function(adminUser) {
-    var controller = this.controllerFor('adminUser');
-
-    Discourse.Group.findAll().then(function(groups){
-      controller.set("availableGroups", groups.filterBy("automatic", false));
-    }.bind(this));
-
-
     return adminUser.loadDetails().then(function () {
       adminUser.setOriginalTrustLevel();
-      controller.set('model', adminUser);
+      return adminUser;
+    });
+  }
+});
+
+Discourse.AdminUserIndexRoute = Discourse.Route.extend({
+  model: function() {
+    return this.modelFor('adminUser');
+  },
+
+  afterModel: function(model) {
+    var self = this;
+    return Discourse.Group.findAll().then(function(groups){
+      self._availableGroups = groups.filterBy('automatic', false);
+      return model;
     });
   },
 
   setupController: function(controller, model) {
     controller.setProperties({
       originalPrimaryGroupId: model.get('primary_group_id'),
+      availableGroups: this._availableGroups,
       model: model
     });
   },
@@ -46,12 +45,5 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
       Discourse.Route.showModal(this, 'admin_suspend_user', user);
       this.controllerFor('modal').set('modalClass', 'suspend-user-modal');
     }
-  }
-
-});
-
-Discourse.AdminUserIndexRoute = Discourse.Route.extend({
-  setupController: function(c) {
-    c.set('model', this.controllerFor('adminUser').get('model'));
   }
 });
