@@ -69,17 +69,17 @@
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 a.reply-new {
-  position: absolute;
-  margin-top: -2px;
+  margin-top: 3px;
   color: scale-color($primary, $lightness: 50%);
   i {
-    margin-right: 5px;
+    margin-right: 3px;
     background: $secondary;
     border: 1px solid scale-color-diff();
     padding: 1.5px 3px;
     border-radius: 20px;
     transition: linear 0.15s;
     -webkit-transition: linear 0.15s;
+    margin-left: -20px;
   }
 }
 
@@ -294,7 +294,7 @@ kbd
 
 @media only screen
 and (max-width : 940px) {
-  
+
   #topic-progress, #topic-progress-expanded {
     left: 295px;
     }
