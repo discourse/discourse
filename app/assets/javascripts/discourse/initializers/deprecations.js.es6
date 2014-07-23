@@ -16,7 +16,7 @@ export default {
       var newName = deprecatedViewHelpers[old];
       Ember.Handlebars.registerHelper(old, function(options) {
         Em.warn("The `" + old +"` helper is deprecated. Use `" + newName + "` instead.");
-        var helper = container.lookupFactory('view:' + newName);
+        var helper = container.lookupFactory('view:' + newName) || container.lookupFactory('component:' + newName);
         var hash = options.hash,
             types = options.hashTypes;
 
