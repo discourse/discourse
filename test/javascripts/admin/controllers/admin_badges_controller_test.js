@@ -1,29 +1,29 @@
-module("Discourse.AdminBadgesController");
+module("controller:admin-badges");
 
 test("canEditDescription", function() {
   var badge, controller;
 
   badge = Discourse.Badge.create({id: 101, name: "Test Badge"});
-  controller = testController(Discourse.AdminBadgesController, [badge]);
+  controller = testController("admin-badges", [badge]);
   controller.send('selectBadge', badge);
   ok(controller.get('canEditDescription'), "allows editing description when a translation exists for the badge name");
 
   this.stub(I18n, "t").returns("translated string");
   badge = Discourse.Badge.create({id: 102, name: "Test Badge"});
-  controller = testController(Discourse.AdminBadgesController, [badge]);
+  controller = testController("admin-badges", [badge]);
   controller.send('selectBadge', badge);
   ok(!controller.get('canEditDescription'), "shows the displayName when it is different from the name");
 });
 
 test("createNewBadge", function() {
-  var controller = testController(Discourse.AdminBadgesController, []);
+  var controller = testController("admin-badges", []);
   controller.send('createNewBadge');
   equal(controller.get('model.length'), 1, "adds a new badge to the list of badges");
 });
 
 test("selectBadge", function() {
   var badge = Discourse.Badge.create({id: 101, name: "Test Badge"}),
-      controller = testController(Discourse.AdminBadgesController, [badge]);
+      controller = testController("admin-badges", [badge]);
 
   controller.send('selectBadge', badge);
   equal(controller.get('selectedItem'), badge, "the badge is selected");
@@ -32,7 +32,7 @@ test("selectBadge", function() {
 test("save", function() {
   var badge = Discourse.Badge.create({id: 101, name: "Test Badge"}),
       otherBadge = Discourse.Badge.create({id: 102, name: "Other Badge"}),
-      controller = testController(Discourse.AdminBadgesController, [badge, otherBadge]);
+      controller = testController("admin-badges", [badge, otherBadge]);
 
   controller.send('selectBadge', badge);
   this.stub(badge, "save").returns(Ember.RSVP.resolve({}));
@@ -43,7 +43,7 @@ test("save", function() {
 test("destroy", function() {
   var badge = Discourse.Badge.create({id: 101, name: "Test Badge"}),
       otherBadge = Discourse.Badge.create({id: 102, name: "Other Badge"}),
-      controller = testController(Discourse.AdminBadgesController, [badge, otherBadge]);
+      controller = testController("admin-badges", [badge, otherBadge]);
 
   this.stub(badge, 'destroy').returns(Ember.RSVP.resolve({}));
 
