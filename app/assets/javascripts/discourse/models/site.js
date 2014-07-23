@@ -84,16 +84,17 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     var result = this._super.apply(this, arguments);
 
     if (result.categories) {
-      var byId = {};
+      result.categoriesById = {};
       result.categories = _.map(result.categories, function(c) {
-        byId[c.id] = Discourse.Category.create(c);
-        return byId[c.id];
+        result.categoriesById[c.id] = Discourse.Category.create(c);
+        return result.categoriesById[c.id];
       });
 
       // Associate the categories with their parents
       result.categories.forEach(function (c) {
         if (c.get('parent_category_id')) {
-          c.set('parentCategory', byId[c.get('parent_category_id')]);
+          c.set('parentCategory',
+            result.categoriesById[c.get('parent_category_id')]);
         }
       });
     }

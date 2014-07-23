@@ -214,15 +214,18 @@ Discourse.Category.reopenClass({
     return Discourse.Site.currentProp('sortedCategories');
   },
 
+  map: function() {
+    return Discourse.Site.currentProp('categoriesById');
+  },
+
   findSingleBySlug: function(slug) {
     return Discourse.Category.list().find(function(c) {
       return Discourse.Category.slugFor(c) === slug;
     });
   },
 
-  // TODO: optimise, slow for no real reason
-  findById: function(id){
-    return Discourse.Category.list().findBy('id', id);
+  findById: function(id) {
+    return Discourse.Category.map()[id];
   },
 
   findByIds: function(ids){
