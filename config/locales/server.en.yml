@@ -609,12 +609,9 @@ en:
     login_required_welcome_message:
       title: "Login Required: Welcome Message"
       description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
-    tos_user_content_license:
-      title: "Terms of Service: Content License"
-      description: "The text for the Content License section of the Terms of Service."
-    tos_miscellaneous:
-      title: "Terms of Service: Miscellaneous"
-      description: "The text for the Miscellaneous section of the Terms of Service."
+    tos_content:
+      title: "Terms of Service"
+      description: "The text for the Terms of Service. Leave blank for the default TOS."
     login_required:
       title: "Login Required: Homepage"
       description: "The text displayed for unauthorized users when login is required on the site."
