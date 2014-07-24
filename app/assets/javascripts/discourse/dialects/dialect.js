@@ -307,8 +307,8 @@ Discourse.Dialect = {
   findEndPos: function(text, stop, args, start) {
     var endPos = text.indexOf(stop, start);
     if (endPos === -1) { return -1; }
-    var after = text.charAt(endPos + stop.length);
-    if (after && after.indexOf(stop) === 0) {
+    var after = text.slice(endPos + stop.length);
+    if (after && after.indexOf(stop) !== -1) {
       return this.findEndPos(text, stop, args, endPos + stop.length + 1);
     }
     return endPos;
@@ -419,10 +419,10 @@ Discourse.Dialect = {
         }
 
         args.start.lastIndex = 0;
-        if (m2 = (args.start).exec(leadingContents)) {
+        if ((m2 = (args.start).exec(leadingContents)) && m2[2] && m2[2].indexOf(args.stop) !== -1) {
           numOpen++;
           args.start.lastIndex -= m2[0].length - 1;
-          while (m2 = (args.start).exec(leadingContents)) {
+          while ((m2 = (args.start).exec(leadingContents)) && m2[2] && m2[2].indexOf(args.stop) !== -1) {
             numOpen++;
             args.start.lastIndex -= m2[0].length - 1;
           }
