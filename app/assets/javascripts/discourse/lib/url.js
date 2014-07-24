@@ -145,8 +145,10 @@ Discourse.URL = Em.Object.createWithMixins({
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path)) { return; }
 
-    if (path.match(/^\/?users\/[^\/]+$/)) {
-      path += "/activity";
+    if (oldPath === path) {
+      // If navigating to the same path send an app event. Views can watch it
+      // and tell their controllers to refresh
+      this.appEvents.trigger('url:refresh');
     }
 
     return this.handleURL(path);
@@ -244,12 +246,7 @@ Discourse.URL = Em.Object.createWithMixins({
     var homepage = Discourse.Utilities.defaultHomepage();
 
     if (window.history && window.history.pushState && path === "/" && (oldPath === "/" || oldPath === "/" + homepage)) {
-      // refresh the list
-      switch (homepage) {
-        case "top" :       { this.controllerFor('discovery/top').send('refresh'); break; }
-        case "categories": { this.controllerFor('discovery/categories').send('refresh'); break; }
-        default:           { this.controllerFor('discovery/topics').send('refresh'); break; }
-      }
+      this.appEvents.trigger('url:refresh');
       return true;
     }
 
