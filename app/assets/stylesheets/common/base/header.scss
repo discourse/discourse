@@ -128,14 +128,16 @@
       }
       .unread-notifications {
         right: -4px;
-        background-color: scale-color($tertiary, $lightness: 50%);
+        background-color: $secondary;
       }
       .unread-private-messages {
         left: -4px;
       }
     }
     .flagged-posts {
-      background-color: $danger;
+      border-color: $danger;
+      color: $danger;
+      background: $secondary;
     }
 
 }
@@ -231,6 +233,7 @@
       padding: 3px;
       margin-top: -22px;
       margin-left: 60px;
+      background: transparent;
     }
     .heading {
       padding: 5px 5px 5px 0;

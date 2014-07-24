@@ -1135,7 +1135,7 @@ button.ru {
   visibility: hidden;
 }
 
-@media only screen
+@media all
 and (max-width : 850px) {
   .nav-stacked {
     .glyph {width: auto; position: relative;}
@@ -1144,7 +1144,7 @@ and (max-width : 850px) {
   }
 }
 
-@media only screen
+@media all
 and (min-width : 320px)
 and (max-width : 500px) {
 

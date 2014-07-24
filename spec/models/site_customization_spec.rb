@@ -68,7 +68,7 @@ describe SiteCustomization do
     context '#custom_stylesheet' do
       it 'should allow me to lookup a filename containing my preview stylesheet' do
         SiteCustomization.custom_stylesheet(customization.key).should ==
-          "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/uploads/stylesheet-cache/#{customization.key}.css?#{customization.stylesheet_hash}\" type=\"text/css\" media=\"screen\">"
+          "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/uploads/stylesheet-cache/#{customization.key}.css?#{customization.stylesheet_hash}\" type=\"text/css\" media=\"all\">"
       end
 
       it "should return blank link tag for mobile if mobile_stylesheet is blank" do
@@ -77,7 +77,7 @@ describe SiteCustomization do
 
       it "should return link tag for mobile custom stylesheet" do
         SiteCustomization.custom_stylesheet(customization_with_mobile.key, :mobile).should ==
-          "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/uploads/stylesheet-cache/mobile_#{customization_with_mobile.key}.css?#{customization_with_mobile.stylesheet_hash(:mobile)}\" type=\"text/css\" media=\"screen\">"
+          "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/uploads/stylesheet-cache/mobile_#{customization_with_mobile.key}.css?#{customization_with_mobile.stylesheet_hash(:mobile)}\" type=\"text/css\" media=\"all\">"
       end
     end
 

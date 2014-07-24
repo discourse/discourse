@@ -1048,7 +1048,7 @@ span.highlighted {
 
 /* Tablet (portrait) ----------- */
 
-@media only screen
+@media all
 and (max-width : 1140px) {
   .extra-info {
     h1 {
@@ -1061,7 +1061,7 @@ and (max-width : 1140px) {
 }
 
 
-@media only screen
+@media all
 and (max-width : 975px) {
   .extra-info {
     h1 {
@@ -1073,14 +1073,14 @@ and (max-width : 975px) {
   }
 }
 
-@media only screen
+@media all
 and (max-width : 940px) {
   .post-cloak .reply-to-tab {
     right: 250px;
   }
 }
 
-@media only screen
+@media all
 and (max-width : 870px) {
   .extra-info {
     h1 {

@@ -13,7 +13,7 @@ class DiscourseStylesheets
     @lock.synchronize do
       builder.compile unless File.exists?(builder.stylesheet_fullpath)
       builder.ensure_digestless_file
-      %[<link href="#{Rails.env.production? ? builder.stylesheet_relpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="screen" rel="stylesheet" />].html_safe
+      %[<link href="#{Rails.env.production? ? builder.stylesheet_relpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />].html_safe
     end
   end
 
