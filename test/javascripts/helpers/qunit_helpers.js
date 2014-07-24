@@ -27,8 +27,18 @@ function integration(name, lifecycle) {
 function testController(klass, model) {
   // HAX until we get ES6 everywhere:
   if (typeof klass === "string") {
-    var moduleName = 'discourse/controllers/' + klass,
-        module = requirejs.entries[moduleName];
+    var base = "discourse",
+        moduleName,
+        module;
+
+    // maybe a bit too hacky? (all of the "admin-*" controllers are in the "admin" directory)
+    if (klass.indexOf("admin") == 0) {
+      base = "admin";
+    }
+
+    moduleName = base + '/controllers/' + klass;
+    module = requirejs.entries[moduleName];
+
     if (module) {
       klass = require(moduleName, null, null, true).default;
     }

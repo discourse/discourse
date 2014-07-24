@@ -1,4 +1,4 @@
-module("Discourse.AdminSiteSettingsController", {
+module("controller:admin-site-settings", {
   setup: function() {
     sinon.stub(Ember.run, "debounce").callsArg(1);
   },
@@ -16,7 +16,7 @@ test("filter", function() {
     nameKey: 'posting', name: 'posting',
     siteSettings: [Discourse.SiteSetting.create({"setting":"display_name_on_posts","description":"x","default":false,"type":"bool","value":"true","category":"posting"})]
   })]);
-  var adminSiteSettingsController = testController(Discourse.AdminSiteSettingsController, allSettings);
+  var adminSiteSettingsController = testController("admin-site-settings", allSettings);
   adminSiteSettingsController.set('allSiteSettings', allSettings);
 
   equal(adminSiteSettingsController.get('content')[0].nameKey, 'users', "Can get first site setting category's name key.");
