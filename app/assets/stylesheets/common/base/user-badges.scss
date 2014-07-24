@@ -94,9 +94,9 @@ table.badges-listing {
   }
 
   td.grant-count {
-    text-align: right;
+    text-align: center;
     color: scale-color($primary, $lightness: 40%);
-    font-size: 90%;
+    font-size: 120%;
   }
 
   td.badge, td.grant-count {

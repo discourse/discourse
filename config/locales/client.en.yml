@@ -1981,34 +1981,34 @@ en:
       badge:
         editor:
           name: Editor
-          description: First post edit.
+          description: First post edit
         basic_user:
           name: Basic
-          description: Granted all essential community functions.
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
         regular_user:
           name: Regular
-          description: Granted invitations.
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations
         leader:
           name: Leader
-          description: Granted recategorize, rename, followed links and lounge.
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
         elder:
           name: Elder
-          description: Granted global edit, pin, close, archive, split and merge.
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
         welcome:
           name: Welcome
-          description: Received a like.
+          description: Received a like
         autobiographer:
           name: Autobiographer
-          description: Filled user profile information.
+          description: Filled user <a href="/my/preferences">profile</a> information
         nice_post:
           name: Nice Post
-          description: Received 10 likes on a post. This badge can be granted multiple times.
+          description: Received 10 likes on a post. This badge can be granted multiple times
         good_post:
           name: Good Post
-          description: Received 25 likes on a post. This badge can be granted multiple times.
+          description: Received 25 likes on a post. This badge can be granted multiple times
         great_post:
           name: Great Post
-          description: Received 50 likes on a post. This badge can be granted multiple times.
+          description: Received 50 likes on a post. This badge can be granted multiple times
         first_like:
           name: First Like
           description: Liked a post
