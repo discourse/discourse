@@ -132,7 +132,7 @@ class BadgeGranter
     FROM(#{sql}) q
     JOIN users u on u.id = q.user_id
     LEFT JOIN badge_posts p on p.id = q.post_id
-    LEFT JOIN topics t on t.id = q.topic_id
+    LEFT JOIN topics t on t.id = p.topic_id
     LIMIT 10"
      else
       "SELECT u.id, u.username, q.granted_at
