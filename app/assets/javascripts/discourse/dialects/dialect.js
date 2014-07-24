@@ -288,7 +288,7 @@ Discourse.Dialect = {
     this.registerInline(start, function(text, match, prev) {
       if (invalidBoundary(args, prev)) { return; }
 
-      var endPos = self.findEndPos(text, stop, args, startLength);
+      var endPos = self.findEndPos(text, start, stop, args, startLength);
       if (endPos === -1) { return; }
       var between = text.slice(startLength, endPos);
 
@@ -304,13 +304,14 @@ Discourse.Dialect = {
     });
   },
 
-  findEndPos: function(text, stop, args, start) {
-    var endPos = text.indexOf(stop, start);
-    if (endPos === -1) { return -1; }
-    var after = text.charAt(endPos + stop.length);
-    if (after && after.indexOf(stop) === 0) {
-      return this.findEndPos(text, stop, args, endPos + stop.length + 1);
-    }
+  findEndPos: function(text, start, stop, args, offset) {
+    var endPos, nextStart;
+    do {
+      endPos = text.indexOf(stop, offset);
+      if (endPos === -1) { return -1; }
+      nextStart = text.indexOf(start, offset);
+      offset = endPos + stop.length;
+    } while (nextStart !== -1 && nextStart < endPos);
     return endPos;
   },
 

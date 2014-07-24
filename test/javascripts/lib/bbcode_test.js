@@ -22,6 +22,7 @@ test('basic bbcode', function() {
          "<span class=\"bbcode-b\">evil <span class=\"bbcode-i\">trout</span></span>",
          "allows embedding of tags");
   format("[EMAIL]eviltrout@mailinator.com[/EMAIL]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports upper case bbcode");
+  format("[b]strong [b]stronger[/b][/b]", "<span class=\"bbcode-b\">strong <span class=\"bbcode-b\">stronger</span></span>", "accepts nested bbcode tags");
 });
 
 test('invalid bbcode', function() {
