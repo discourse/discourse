@@ -77,6 +77,21 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
 
   actions: {
 
+    preview: function(badge) {
+      // TODO wire modal and localize
+      Discourse.ajax('/admin/badges/preview.json', {
+        method: 'post',
+        data: {sql: badge.query, target_posts: !!badge.target_posts}
+      }).then(function(json){
+        if(json.error){
+          bootbox.alert(json.error);
+        } else {
+          bootbox.alert(json.grant_count + " badges to be assigned");
+        }
+      });
+
+    },
+
     /**
       Create a new badge and select it.
 
@@ -107,7 +122,21 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
     **/
     save: function() {
       if (!this.get('disableSave')) {
-        this.get('selectedItem').save();
+        var fields = ['allow_title', 'multiple_grant',
+                     'listable', 'auto_revoke',
+                     'enabled', 'show_posts',
+                     'target_posts', 'name', 'description',
+                     'icon', 'query', 'badge_grouping_id',
+                     'trigger'];
+
+        if(this.get('selectedItem.system')){
+          var protectedFields = this.get('protectedSystemFields');
+          fields = _.filter(fields, function(f){
+            return !_.include(protectedFields,f);
+          });
+        }
+
+        this.get('selectedItem').save(fields);
       }
     },
 

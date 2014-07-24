@@ -52,9 +52,9 @@
         {{view Ember.Select name="badge_grouping_id" value=badge_grouping_id
                             content=controller.badgeGroupings
                             optionValuePath="content.id"
-                            optionLabelPath="content.name"
-                            disabled=readOnly}}
+                            optionLabelPath="content.name"}}
       </div>
+
 
       <div>
         <label for="description">{{i18n admin.badges.description}}</label>
@@ -64,6 +64,40 @@
           {{textarea name="description" value=displayDescription disabled=true}}
         {{/if}}
       </div>
+
+      <div>
+        <label for="query">{{i18n admin.badges.query}}</label>
+        {{textarea name="query" value=query disabled=readOnly}}
+      </div>
+
+      {{#if hasQuery}}
+
+      <a href="/admin/badges/preview" {{action preview this}}>{{i18n admin.badges.preview}}</a>
+
+      <div>
+        <span>
+          {{input type="checkbox" checked=auto_revoke disabled=readOnly}}
+          {{i18n admin.badges.auto_revoke}}
+        </span>
+      </div>
+
+      <div>
+        <span>
+          {{input type="checkbox" checked=target_posts disabled=readOnly}}
+          {{i18n admin.badges.target_posts}}
+        </span>
+      </div>
+
+      <div>
+        <label for="trigger">{{i18n admin.badges.trigger}}</label>
+        {{view Ember.Select name="trigger" value=trigger
+                            content=controller.badgeTriggers
+                            optionValuePath="content.id"
+                            optionLabelPath="content.name"
+                            disabled=readOnly}}
+      </div>
+
+      {{/if}}
 
       <div>
         <span>
@@ -83,6 +117,13 @@
         <span>
           {{input type="checkbox" checked=listable disabled=readOnly}}
           {{i18n admin.badges.listable}}
+        </span>
+      </div>
+
+      <div>
+        <span>
+          {{input type="checkbox" checked=show_posts disabled=readOnly}}
+          {{i18n admin.badges.show_posts}}
         </span>
       </div>
 

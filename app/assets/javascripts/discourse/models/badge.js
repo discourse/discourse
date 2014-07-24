@@ -15,6 +15,11 @@ Discourse.Badge = Discourse.Model.extend({
   **/
   newBadge: Em.computed.none('id'),
 
+  hasQuery: function(){
+    var query = this.get('query');
+    return query && query.trim().length > 0;
+  }.property('query'),
+
   /**
     @private
 
@@ -100,7 +105,7 @@ Discourse.Badge = Discourse.Model.extend({
     @method save
     @returns {Promise} A promise that resolves to the updated `Discourse.Badge`
   **/
-  save: function() {
+  save: function(fields) {
     this.set('savingStatus', I18n.t('saving'));
     this.set('saving', true);
 
@@ -114,19 +119,23 @@ Discourse.Badge = Discourse.Model.extend({
       requestType = "PUT";
     }
 
+    var boolFields = ['allow_title', 'multiple_grant',
+                      'listable', 'auto_revoke',
+                      'enabled', 'show_posts',
+                      'target_posts' ];
+
+    var data = {};
+    fields.forEach(function(field){
+      var d = self.get(field);
+      if(_.include(boolFields, field)) {
+        d = !!d;
+      }
+      data[field] = d;
+    });
+
     return Discourse.ajax(url, {
       type: requestType,
-      data: {
-        name: this.get('name'),
-        description: this.get('description'),
-        badge_type_id: this.get('badge_type_id'),
-        allow_title: !!this.get('allow_title'),
-        multiple_grant: !!this.get('multiple_grant'),
-        listable: !!this.get('listable'),
-        enabled: !!this.get('enabled'),
-        icon: this.get('icon'),
-        badge_grouping_id: this.get('badge_grouping_id')
-      }
+      data: data
     }).then(function(json) {
       self.updateFromJson(json);
       self.set('savingStatus', I18n.t('saved'));

@@ -1907,6 +1907,18 @@ en:
         listable: Show badge on the public badges page
         enabled: Enable badge
         icon: Icon
+        query: Badge Query (SQL)
+        target_posts: Query targets posts
+        auto_revoke: Run revocation query daily
+        show_posts: Show post granting badge on badge page
+        preview: Preview badge
+        trigger: Trigger
+        trigger_type:
+          none: "Update daily"
+          post_action: "When a user acts on post"
+          post_revision: "When a user edits or creates a post"
+          trust_level_change: "When a user changes trust level"
+          user_change: "When a user is edited or created"
 
     lightbox:
       download: "download"

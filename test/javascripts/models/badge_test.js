@@ -63,7 +63,8 @@ test('updateFromJson', function() {
 test('save', function() {
   this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve({}));
   var badge = Discourse.Badge.create({name: "New Badge", description: "This is a new badge.", badge_type_id: 1});
-  badge.save();
+  // TODO: clean API
+  badge.save(["name", "description", "badge_type_id"]);
   ok(Discourse.ajax.calledOnce, "saved badge");
 });
 

@@ -122,6 +122,32 @@ class BadgeGranter
     "badge_queue".freeze
   end
 
+  def self.preview(sql, opts = {})
+    count_sql = "SELECT COUNT(*) count FROM (#{sql}) q"
+    grant_count = SqlBuilder.map_exec(OpenStruct, count_sql).first.count
+
+    grants_sql =
+     if opts[:target_posts]
+      "SELECT u.id, u.username, q.post_id, t.title, q.granted_at
+    FROM(#{sql}) q
+    JOIN users u on u.id = q.user_id
+    LEFT JOIN badge_posts p on p.id = q.post_id
+    LEFT JOIN topics t on t.id = q.topic_id
+    LIMIT 10"
+     else
+      "SELECT u.id, u.username, q.granted_at
+    FROM(#{sql}) q
+    JOIN users u on u.id = q.user_id
+    LIMIT 10"
+     end
+
+    sample = SqlBuilder.map_exec(OpenStruct, grants_sql).map(&:to_h)
+
+    {grant_count: grant_count, sample: sample}
+  rescue => e
+    {error: e.to_s}
+  end
+
   def self.backfill(badge, opts=nil)
     return unless badge.query.present? && badge.enabled
 

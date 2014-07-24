@@ -17,7 +17,16 @@ class Badge < ActiveRecord::Base
   # other consts
   AutobiographerMinBioLength = 10
 
+  def self.trigger_hash
+    Hash[*(
+      Badge::Trigger.constants.map{|k|
+        [k.to_s.underscore, Badge::Trigger.const_get(k)]
+      }.flatten
+    )]
+  end
+
   module Trigger
+    None = 0
     PostAction = 1
     PostRevision = 2
     TrustLevelChange = 4
@@ -169,6 +178,11 @@ SQL
 
   scope :enabled, ->{ where(enabled: true) }
 
+  # fields that can not be edited on system badges
+  def self.protected_system_fields
+    [:badge_type_id, :multiple_grant, :target_posts, :show_posts, :query, :trigger, :auto_revoke, :listable]
+  end
+
 
   def self.trust_level_badge_ids
     (1..4).to_a
@@ -189,6 +203,10 @@ SQL
 
   def single_grant?
     !self.multiple_grant?
+  end
+
+  def system?
+    id < 100
   end
 
   def default_name=(val)
@@ -224,6 +242,7 @@ end
 #  auto_revoke       :boolean          default(TRUE), not null
 #  badge_grouping_id :integer          default(5), not null
 #  trigger           :integer
+#  show_posts        :boolean          default(FALSE), not null
 #
 # Indexes
 #

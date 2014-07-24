@@ -1,18 +1,16 @@
 Discourse.AdminBadgesRoute = Discourse.Route.extend({
-
-  model: function() {
-    return Discourse.Badge.findAll();
-  },
-
-  setupController: function(controller, model) {
-    // TODO build into findAll
-    Discourse.ajax('/admin/badges/groupings').then(function(json) {
+  setupController: function(controller) {
+    Discourse.ajax('/admin/badges.json').then(function(json){
       controller.set('badgeGroupings', json.badge_groupings);
-    });
-    Discourse.ajax('/admin/badges/types').then(function(json) {
       controller.set('badgeTypes', json.badge_types);
+      controller.set('protectedSystemFields', json.admin_badges.protected_system_fields);
+      var triggers = [];
+      _.each(json.admin_badges.triggers,function(v,k){
+        triggers.push({id: v, name: I18n.t('admin.badges.trigger_type.'+k)});
+      });
+      controller.set('badgeTriggers', triggers);
+      controller.set('model', Discourse.Badge.createFromJson(json));
     });
-    controller.set('model', model);
   }
 
 });

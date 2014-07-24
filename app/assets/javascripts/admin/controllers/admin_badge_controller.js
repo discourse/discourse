@@ -8,8 +8,6 @@
   @module Discourse
 **/
 
-var RESERVED_BADGE_COUNT = 100;
-
 Discourse.AdminBadgeController = Discourse.ObjectController.extend({
   /**
     Whether this badge has been selected.
@@ -33,5 +31,5 @@ Discourse.AdminBadgeController = Discourse.ObjectController.extend({
     @property readOnly
     @type {Boolean}
   **/
-  readOnly: Ember.computed.lt('model.id', RESERVED_BADGE_COUNT)
+  readOnly: Ember.computed.alias('model.system')
 });
