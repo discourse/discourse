@@ -228,6 +228,7 @@ Discourse.Markdown.whiteListTag('a', 'class', 'onebox');
 Discourse.Markdown.whiteListTag('a', 'class', 'mention');
 
 Discourse.Markdown.whiteListTag('a', 'data-bbcode');
+Discourse.Markdown.whiteListTag('a', 'name');
 
 Discourse.Markdown.whiteListTag('img', 'src', /^data:image.*/i);
 

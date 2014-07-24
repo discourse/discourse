@@ -14,7 +14,6 @@ describe SystemMessage do
     let(:topic) { post.topic }
 
     it 'should create a post correctly' do
-      SiteSetting.stubs(:max_post_length).returns(100_000)
       post.should be_present
       post.should be_valid
       topic.should be_private_message

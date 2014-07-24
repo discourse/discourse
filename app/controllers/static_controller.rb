@@ -8,38 +8,31 @@ class StaticController < ApplicationController
     return redirect_to('/') if current_user && params[:id] == 'login'
 
     map = {
-      "faq" => "faq_url",
-      "tos" => "tos_url",
-      "privacy" =>  "privacy_policy_url"
+      "faq" => {redirect: "faq_url", topic_id: "guidelines_topic_id"},
+      "tos" => {redirect: "tos_url", topic_id: "tos_topic_id"},
+      "privacy" => {redirect: "privacy_policy_url", topic_id: "privacy_topic_id"}
     }
 
-    page = params[:id]
+    @page = params[:id]
 
-    if site_setting_key = map[page]
+    if map.has_key?(@page)
+      site_setting_key = map[@page][:redirect]
       url = SiteSetting.send(site_setting_key)
       return redirect_to(url) unless url.blank?
     end
 
     # The /guidelines route ALWAYS shows our FAQ, ignoring the faq_url site setting.
-    page = 'faq' if page == 'guidelines'
+    @page = 'faq' if @page == 'guidelines'
 
     # Don't allow paths like ".." or "/" or anything hacky like that
-    page.gsub!(/[^a-z0-9\_\-]/, '')
+    @page.gsub!(/[^a-z0-9\_\-]/, '')
 
-    file = "static/#{page}.#{I18n.locale}"
-
-    # if we don't have a localized version, try the English one
-    if not lookup_context.find_all("#{file}.html").any?
-      file = "static/#{page}.en"
-    end
-
-    if not lookup_context.find_all("#{file}.html").any?
-      file = "static/#{page}"
-    end
-
-    if lookup_context.find_all("#{file}.html").any?
+    if map.has_key?(@page)
+      @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
+      raise Discourse::NotFound unless @topic
+      @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
-      render file, layout: !request.xhr?, formats: [:html]
+      render :show, layout: !request.xhr?, formats: [:html]
       return
     end
 

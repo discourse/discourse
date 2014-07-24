@@ -42,9 +42,6 @@ required:
     client: true
     default: '/images/default-favicon.ico'
   apple_touch_icon_url: '/images/default-apple-touch-icon.png'
-  company_full_name: 'My Unconfigured Forum Ltd.'
-  company_short_name: 'Unconfigured Forum'
-  company_domain: 'www.example.com'
 
 basic:
   default_locale:
@@ -287,9 +284,7 @@ posting:
       default: 10
   max_post_length:
     client: true
-    default:
-      test: 4000
-      default: 32000
+    default: 32000
   body_min_entropy: 7
   min_topic_title_length:
     client: true
@@ -705,3 +700,17 @@ uncategorized:
     default: true
 
   disable_edit_notifications: false
+
+  company_full_name: 'My Unconfigured Forum Ltd.'
+  company_short_name: 'Unconfigured Forum'
+  company_domain: 'www.example.com'
+
+  tos_topic_id:
+    default: -1
+    hidden: true
+  guidelines_topic_id:
+    default: -1
+    hidden: true
+  privacy_topic_id:
+    default: -1
+    hidden: true
