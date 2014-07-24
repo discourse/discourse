@@ -322,4 +322,21 @@ describe SiteSettingExtension do
     end
   end
 
+  describe "filter domain name" do
+    before do
+      settings.setting(:white_listed_spam_host_domains, "www.example.com")
+      settings.refresh!
+    end
+
+    it "filters domain" do
+      settings.set("white_listed_spam_host_domains", "http://www.discourse.org/")
+      settings.white_listed_spam_host_domains.should == "www.discourse.org"
+    end
+
+    it "returns invalid domain as is, without throwing exception" do
+      settings.set("white_listed_spam_host_domains", "test!url")
+      settings.white_listed_spam_host_domains.should == "test!url"
+    end
+  end
+
 end
