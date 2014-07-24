@@ -56,6 +56,20 @@ function replaceBBCodeParamsRaw(tag, emitter) {
 }
 
 /**
+  Filters an array of JSON-ML nodes, removing nodes that represent empty lines ("\n").
+
+  @method removeEmptyLines
+  @param {Array} [contents] Array of JSON-ML nodes
+**/
+function removeEmptyLines(contents) {
+  var result = [];
+  for (var i=0; i < contents.length; i++) {
+    if (contents[i] !== "\n") { result.push(contents[i]); }
+  }
+  return result;
+}
+
+/**
   Creates a BBCode handler that accepts parameters. Passes them to the emitter.
   Processes the inside recursively so it can be nested.
 
@@ -75,9 +89,9 @@ replaceBBCode('u', function(contents) { return ['span', {'class': 'bbcode-u'}].c
 replaceBBCode('s', function(contents) { return ['span', {'class': 'bbcode-s'}].concat(contents); });
 Discourse.Markdown.whiteListTag('span', 'class', /^bbcode-[bius]$/);
 
-replaceBBCode('ul', function(contents) { return ['ul'].concat(contents); });
-replaceBBCode('ol', function(contents) { return ['ol'].concat(contents); });
-replaceBBCode('li', function(contents) { return ['li'].concat(contents); });
+replaceBBCode('ul', function(contents) { return ['ul'].concat(removeEmptyLines(contents)); });
+replaceBBCode('ol', function(contents) { return ['ol'].concat(removeEmptyLines(contents)); });
+replaceBBCode('li', function(contents) { return ['li'].concat(removeEmptyLines(contents)); });
 
 rawBBCode('img', function(contents) { return ['img', {href: contents}]; });
 rawBBCode('email', function(contents) { return ['a', {href: "mailto:" + contents, 'data-bbcode': true}, contents]; });

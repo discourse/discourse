@@ -45,6 +45,7 @@ test('spoiler', function() {
 test('lists', function() {
   format("[ul][li]option one[/li][/ul]", "<ul><li>option one</li></ul>", "creates an ul");
   format("[ol][li]option one[/li][/ol]", "<ol><li>option one</li></ol>", "creates an ol");
+  format("[ul]\n[li]option one[/li]\n[li]option two[/li]\n[/ul]", "<ul><li>option one</li><li>option two</li></ul>", "suppresses empty lines in lists");
 });
 
 test('tags with arguments', function() {
