@@ -98,7 +98,11 @@ Discourse.TopicRoute = Discourse.Route.extend({
       }
     },
 
-    willTransition: function() { isTransitioning = true; return true; }
+    willTransition: function() {
+      Em.run.cancel(scheduledReplace);
+      isTransitioning = true;
+      return true;
+    }
   },
 
   // replaceState can be very slow on Android Chrome. This function debounces replaceState
