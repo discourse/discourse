@@ -71,6 +71,20 @@ Discourse.URL = Em.Object.createWithMixins({
     }
   },
 
+  // Scroll to the same page, different anchor
+  scrollToId: function(id) {
+    if (Em.isEmpty(id)) { return; }
+
+    jumpScheduled = true;
+    Em.run.schedule('afterRender', function() {
+      var $elem = $(id);
+      if ($elem.length > 0) {
+        $('html,body').scrollTop($elem.offset().top - $('header').height() - 15);
+        jumpScheduled = false;
+      }
+    });
+  },
+
   /**
     Our custom routeTo method is used to intelligently overwrite default routing
     behavior.
@@ -98,12 +112,7 @@ Discourse.URL = Em.Object.createWithMixins({
 
     // Scroll to the same page, different anchor
     if (path.indexOf('#') === 0) {
-      var $elem = $(path);
-      if ($elem.length > 0) {
-        Em.run.schedule('afterRender', function() {
-          $('html,body').scrollTop($elem.offset().top - $('header').height() - 15);
-        });
-      }
+      this.scrollToId(path);
       return;
     }
 

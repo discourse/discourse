@@ -32,7 +32,15 @@ Ember.DiscourseLocation = Ember.Object.extend({
   */
   initState: function() {
     set(this, 'history', get(this, 'history') || window.history);
-    this.replaceState(this.formatURL(this.getURL()));
+
+    var url = this.formatURL(this.getURL()),
+        loc = get(this, 'location');
+
+    if (loc && loc.hash) {
+      url += loc.hash;
+    }
+
+    this.replaceState(url);
   },
 
   /**

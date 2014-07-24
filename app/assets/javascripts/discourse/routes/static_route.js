@@ -21,6 +21,13 @@ Discourse.StaticController.PAGES.forEach(function(page) {
       }
     },
 
+    activate: function() {
+      this._super();
+
+      // Scroll to an element if exists
+      Discourse.URL.scrollToId(document.location.hash);
+    },
+
     model: function() {
       return Discourse.StaticPage.find(page);
     },
