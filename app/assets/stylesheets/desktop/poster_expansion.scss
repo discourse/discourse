@@ -10,6 +10,13 @@
   background-color: $secondary;
   padding: 12px 12px 5px 12px;
 
+  .avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    float: left;
+    padding-right: 10px;
+  }
+
   h1 {
     display: inline-block;
     min-width: 120px;
