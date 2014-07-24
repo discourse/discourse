@@ -103,11 +103,13 @@
     </form>
   </div>
 
+  {{#if grant_count}}
   <div class="span13 current-badge-actions">
     <div>
-      {{#link-to 'badges.show' this classNames="btn btn-primary"}}{{i18n badges.granted count=grant_count}}{{/link-to}}
+      {{#link-to 'badges.show' this}}{{i18n badges.granted count=grant_count}}{{/link-to}}
     </div>
   </div>
+  {{/if}}
   {{/with}}
   {{/if}}
 
