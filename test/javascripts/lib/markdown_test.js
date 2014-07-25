@@ -276,6 +276,10 @@ test("bold and italics", function() {
   cooked("**你hello**", "<p><strong>你hello</strong></p>", "allows bolded chinese");
 });
 
+test("New Lines", function() {
+  cooked("_abc\ndef_", "<p><em>abc<br>def</em></p>", "it allows markup to span new lines");
+});
+
 test("Oneboxing", function() {
 
   var matches = function(input, regexp) {
