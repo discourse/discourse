@@ -55,7 +55,7 @@ class UserAvatarsController < ApplicationController
 
     return render_dot unless version > 0 && user_avatar = user.user_avatar
 
-    upload = Upload.find(version) if user_avatar.contains_upload?(version)
+    upload = Upload.find_by(id: version) if user_avatar.contains_upload?(version)
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == version
 
     if user.uploaded_avatar && !upload
