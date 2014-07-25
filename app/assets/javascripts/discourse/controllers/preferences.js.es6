@@ -35,6 +35,10 @@ export default Discourse.ObjectController.extend({
     return Discourse.SiteSettings.enable_badges && this.get('model.has_title_badges');
   }.property('model.badge_count'),
 
+  canChangePassword: function() {
+    return !Discourse.SiteSettings.enable_sso && Discourse.SiteSettings.enable_local_logins;
+  }.property(),
+
   availableLocales: function() {
     return Discourse.SiteSettings.available_locales.split('|').map( function(s) {
       return {name: s, value: s};
