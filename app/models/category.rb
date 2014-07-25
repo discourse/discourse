@@ -337,6 +337,7 @@ SQL
   # an exact match
   def rename_category_definition
     old_name = changed_attributes["name"]
+    return unless topic.present?
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
       topic.update_column(:title, I18n.t("category.topic_prefix", category: name))
     end

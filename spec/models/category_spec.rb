@@ -226,6 +226,10 @@ describe Category do
       @topic.title.should =~ /Troutfishing/
     end
 
+    it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
+      -> { @category.update_attributes(name: 'Troutfishing', topic_id: nil) }.should_not raise_error
+    end
+
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
       category.topic.auto_close_at.should be_nil
