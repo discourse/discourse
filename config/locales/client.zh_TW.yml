@@ -78,6 +78,7 @@ zh_TW:
     show_more: "顯示更多"
     links: 連結
     faq: "常見問答集"
+    guidelines: "守則"
     privacy_policy: "隱私政策"
     privacy: "隱私政策"
     terms_of_service: "服務條款"
@@ -178,6 +179,8 @@ zh_TW:
       all_subcategories: "所有"
       no_subcategory: "無"
       category: "分類"
+      posts: "貼文"
+      topics: "標題"
       latest: "最近"
       latest_by: "最近由"
       toggle_ordering: "顯示/隱藏排序控制"
@@ -228,6 +231,7 @@ zh_TW:
       watched_categories: "關注"
       watched_categories_instructions: "你將會自動關注在此分類的新討論話題。你將收到所有新文章和討論話題的通知，未讀和新討論話題的數量也將出現在討論話題的列表旁。"
       tracked_categories: "追蹤"
+      tracked_categories_instructions: "你將自動追蹤這些分類的新話題，未讀和新文章的數量會出現在話題的列表旁"
       muted_categories: "靜音"
       muted_categories_instructions: "你將不會收到此分類的新討論話題通知，以及不會出現在未讀欄內。"
       delete_account: "刪除我的帳號"
@@ -419,6 +423,7 @@ zh_TW:
     unmute: 取消靜音
     last_post: 最後一篇文章
     summary:
+      enabled_description: "你正在檢視此討論話題的摘要：最熱門的文章在這個社群裡，按下方再次檢視所有文章。"
       description: "共有 <b>{{count}}</b> 個回覆。"
       description_time: "共有 <b>{{count}}</b> 個回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀。"
       enable: '以摘要檢視此討論話題'
@@ -511,6 +516,7 @@ zh_TW:
       view_new_post: "檢視你的新文章。"
       saving: "正在儲存..."
       saved: "儲存完畢!"
+      saved_draft: "你目前有個正在編輯的慘考，點擊這邊來繼續編輯"
       uploading: "正在上傳..."
       show_preview: '顯示預覽 &raquo;'
       hide_preview: '&laquo; 隱藏預覽'
@@ -698,13 +704,16 @@ zh_TW:
           '0': '你正忽略此討論話題的所有通知。'
         watching_pm:
           title: "關注中"
+          description: "當此私人信息有新回覆時，你會被通知。討論話題列表上將會顯示未讀及新討論話題數目。"
         watching:
           title: "關注"
           description: "當討論話題有新回覆時會通知你。討論話題列表上將會顯示未讀及新討論話題量。"
         tracking_pm:
           title: "追蹤"
+          description: "只在有人以 @名稱 提到你或回覆你的文章時通知你，未讀文章以及新文章的數目將顯示在私人訊息旁"
         tracking:
           title: "追蹤"
+          description: "未讀文章以及新文章的數目將顯示在討論話題清單旁。只在有人以 @名稱 提到你或回覆你的文章時通知你。"
         regular:
           title: "普通"
           description: "只在有人以 @用戶名稱 提到你或回覆你的文章時通知你。"
@@ -745,7 +754,6 @@ zh_TW:
         help: '投訴此討論話題，或以私訊通知管理員'
         success_message: '已投訴此討論話題。'
       inviting: "正在邀請..."
-      automatically_add_to_groups: "邀請時同時加入以下群組: (選填, 此為管理員設定)"
       invite_private:
         title: '邀請參與私人訊息'
         email_or_username: "受邀請者的電子郵件地址或用戶名稱"
@@ -758,7 +766,10 @@ zh_TW:
         title: '邀請'
         action: '送出邀請'
         help: '送出邀請給朋友，他們可以按信裡的連結直接回覆'
+        to_topic: "我們將向你的朋友發出一封電子郵件，他不必登入，只要按電子郵件裡的連結就可以快速回覆此討論話題。"
+        to_forum: "我們將向你的朋友發出一封電子郵件，他不必登入，他只要按電子郵件裡的連結就可以加入此論壇。"
         email_placeholder: '電子郵件地址'
+        success: "我們已將邀請寄至 <b>{{email}}</b>，當受邀者接受邀請時我們會再通知你，你也可以在你的用戶頁面的邀請清單查看邀請狀態。"
         error: "抱歉，我們無法邀請此人，他可能已經是此論壇的用戶?"
       login_reply: '登入以發表回覆'
       filters:
@@ -1003,6 +1014,7 @@ zh_TW:
           description: "你將會自動關注在此分類中的新討論話題。您將收到所有新文章和討論話題的通知，而未讀和新文章的數量也將出現在討論話題的列表旁。"
         tracking:
           title: "追蹤"
+          description: "你將自動追蹤這些分類的新話題，未讀和新文章的數量會出現在話題的列表旁"
         regular:
           title: "一般"
           description: "只在有人以 @名稱 提到你或回覆你的文章時通知你。"
@@ -1369,6 +1381,7 @@ zh_TW:
         email_type: "電子郵件類型"
         to_address: "目的地址"
         test_email_address: "要測試的電子郵件地址"
+        send_test: "送出測試Email"
         sent_test: "已送出!"
         delivery_method: "傳送方式"
         preview_digest: "預覽文摘"
@@ -1612,7 +1625,9 @@ zh_TW:
           developer: '開發人員'
           embedding: "嵌入"
           legal: "法律"
+          uncategorized: '其他'
           backups: "備份"
+          login: "登入"
       badges:
         title: 徽章
         new_badge: 新徽章
@@ -1638,6 +1653,7 @@ zh_TW:
         allow_title: 允許使用徽章作為稱號
         multiple_grant: 可多次授予
         listable: 在徽章頁面上顯示徽章
+        enabled: 啟用徽章
         icon: 圖示
     lightbox:
       download: "下載"
@@ -1683,6 +1699,7 @@ zh_TW:
         mark_watching: '<b>m</b> 之後 <b>w</b> 標記討論話題為關注中'
     badges:
       title: 徽章
+      allow_title: "允許徽章做為標題？"
       multiple_grant: "可多次授予"
       badge_count:
         other: "%{count} 徽章"
@@ -1694,36 +1711,27 @@ zh_TW:
       badge:
         editor:
           name: 編輯
-          description: 首篇編輯文章
         basic_user:
           name: 初級
-          description: 可使用所有基礎的社群功能。
         regular_user:
           name: 一般
-          description: 可使用邀請功能。
         leader:
           name: 領袖
-          description: 可重新分類、重新命名討論話題，使用交誼廳，且連結沒有 nofollow 屬性。
         elder:
           name: 長老
-          description: 可全區編輯、置頂、關閉、封存、拆開和合併討論話題或文章。
         welcome:
           name: 歡迎
-          description: 收到一個讚。
         autobiographer:
           name: 自我介紹
-          description: 填寫用戶個人資料
         nice_post:
           name: 好文章
-          description: 一篇文章收到 10 個讚。此徽章可多次獲得。
         good_post:
           name: 棒文章
-          description: 一篇文章收到 25 個讚。此徽章可多次獲得。
         great_post:
           name: 神文章
-          description: 當一篇文章達到 50 個讚好。此徽章可多次獲得。
         first_like:
           name: 首次讚好
+          description: 給此貼文按讚
         first_flag:
           name: 首次標記
           description: 標記文章
@@ -1733,3 +1741,8 @@ zh_TW:
         first_link:
           name: 首次連結
           description: 其他討論話題含內部連結
+        first_quote:
+          name: 首先引用
+          description: 標記使用者
+        read_guidelines:
+          name: 觀看守則

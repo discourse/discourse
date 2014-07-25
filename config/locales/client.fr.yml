@@ -94,7 +94,10 @@ fr:
     show_more: "afficher plus"
     links: Liens
     faq: "FAQ"
+    guidelines: "Directives"
     privacy_policy: "Politique de confidentialité"
+    privacy: "Confidentialité"
+    terms_of_service: "Conditions Générales d'Utilisation"
     mobile_view: "Vue mode Mobile"
     desktop_view: "Vue mode Bureau"
     you: "Vous"
@@ -198,6 +201,8 @@ fr:
       all_subcategories: "toutes"
       no_subcategory: "aucune"
       category: "Catégorie"
+      posts: "Messages"
+      topics: "Sujets"
       latest: "Sujets récents"
       latest_by: "dernièr sujet de"
       toggle_ordering: "modifier le mode du tri"
@@ -210,6 +215,14 @@ fr:
       post_stat_sentence:
         one: "%{count} nouveau message depuis %{unit}."
         other: "%{count} nouveaux messages depuis %{unit}."
+    ip_lookup:
+      hostname: Nom de l'hôte
+      location: Localisation
+      location_not_found: (inconnu)
+      organisation: Société
+      phone: Téléphone
+      other_accounts: Autres comptes utilisant cette adresse IP
+      no_other_accounts: (aucun)
     user:
       said: "{{username}} a dit :"
       profile: "Profil"
@@ -248,6 +261,11 @@ fr:
       deleted_yourself: "Votre compte a été supprimé avec succès."
       delete_yourself_not_allowed: "Vous ne pouvez pas supprimer votre compte maintenant. Contactez un administrateur pour faire supprimer votre compte pour vous."
       unread_message_count: "Messages"
+      staff_counters:
+        flags_given: "signalements utiles"
+        flagged_posts: "messages signalés"
+        deleted_posts: "messages supprimés"
+        suspensions: "suspensions"
       messages:
         all: "Tous"
         mine: "Envoyés"
@@ -398,6 +416,21 @@ fr:
         private_message: "message privé"
         the_topic: "le sujet"
     loading: "Chargement..."
+    errors:
+      prev_page: "chargement en cours"
+      reasons:
+        network: "Erreur réseau"
+        server: "Erreur serveur : {{code}}"
+        unknown: "Erreur"
+      desc:
+        network: "Veuillez vérifier votre connexion, merci."
+        network_fixed: "On dirait que c'est revenu."
+        server: "Une erreur est survenue."
+        unknown: "Une erreur est survenue."
+      buttons:
+        back: "Retour"
+        again: "Ressayer"
+        fixed: "Charger la page"
     close: "Fermer"
     assets_changed_confirm: "Ce site vient d'être mis à jour. Rafraîchir maintenant pour accéder à la nouvelle version ?"
     read_only_mode:
@@ -509,6 +542,7 @@ fr:
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde..."
       saved: "Sauvegardé !"
+      saved_draft: "Vous avez un brouillon de message en cours. Cliquez n'importe où sur cette barre pour reprendre l'édition."
       uploading: "Envoi en cours..."
       show_preview: 'afficher la prévisualisation &raquo;'
       hide_preview: '&laquo; cacher la prévisualisation'
@@ -760,6 +794,7 @@ fr:
         title: 'Inviter'
         action: 'Envoyer l''invitation'
         help: 'envoyer des invitations à des amis pour qu''ils puissent participer à ce sujet en un simple clic'
+        to_forum: "Nous allons envoyer un mail à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien, sans qu'il ait à se connecter."
         email_placeholder: 'nom@exemple.com'
         error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être a-t-elle déjà un compte utilisateur ?"
       login_reply: 'Se connecter pour répondre'
@@ -814,7 +849,7 @@ fr:
       in_reply_to: "répondre à"
       last_edited_on: "message dernièrement édité le"
       reply_as_new_topic: "Répondre en créant un nouveau sujet"
-      continue_discussion: "Continuer le sujet suivant {{postLink}}:"
+      continue_discussion: "Suite du sujet {{postLink}}:"
       follow_quote: "Voir le message cité"
       show_full: "Voir le message en entier"
       show_hidden: 'Afficher le contenu caché.'
@@ -996,6 +1031,8 @@ fr:
       name: "Nom de la catégorie"
       description: "Description"
       topic: "catégorie du sujet"
+      logo: "Logo de la catégorie"
+      background_image: "Image de fond de la catégorie"
       badge_colors: "Couleurs du badge"
       background_color: "Couleur du fond"
       foreground_color: "Couleur du texte"
@@ -1012,6 +1049,8 @@ fr:
       auto_close_label: "Fermer automatiquement après :"
       auto_close_units: "heures"
       email_in: "Adresse email entrante personnalisée :"
+      email_in_allow_strangers: "Accepter les emails d'utilisateurs anonymes sans compte"
+      allow_badges_label: "Autoriser les badges"
       edit_permissions: "Editer les Permissions"
       add_permission: "Ajouter une Permission"
       this_year: "cette année"
@@ -1212,6 +1251,7 @@ fr:
         clear_topic_flags: "Terminer"
         clear_topic_flags_title: "Ce sujet a été étudié et les problèmes ont été résolus. Cliquez sur Terminer pour enlever les signalements."
         flagged_by: "Signalé par"
+        resolved_by: "Résolu par"
         system: "Système"
         error: "Quelque chose s'est mal passé"
         view_message: "Voir le message"
@@ -1323,6 +1363,7 @@ fr:
         enabled: "Activé ?"
         preview: "prévisualiser"
         undo_preview: "supprimer l'aperçu"
+        rescue_preview: "style par défaut"
         save: "Sauvegarder"
         new: "Nouveau"
         new_style: "Nouveau style"
@@ -1333,6 +1374,7 @@ fr:
         opacity: "Opacité"
         copy: "Copier"
         css_html:
+          title: "CSS/HTML"
           long_title: "Personnalisation du CSS et HTML"
         colors:
           title: "Couleurs"
@@ -1389,6 +1431,7 @@ fr:
         email_type: "Type d'email"
         to_address: "À l'adresse"
         test_email_address: "Adresse mail à tester"
+        send_test: "Envoyer un email de test"
         sent_test: "Envoyé !"
         delivery_method: "Moyen d'envoi"
         preview_digest: "Prévisualisation de l'email"
@@ -1405,6 +1448,7 @@ fr:
           filters:
             title: "Filtrer"
             user_placeholder: "pseudo"
+            address_placeholder: "nom@exemple.com"
             type_placeholder: "résumé, inscription..."
             skipped_reason_placeholder: "raison"
       logs:
@@ -1601,6 +1645,10 @@ fr:
           visits: "Visites"
           days: "jours"
           topics_replied_to: "Sujets auquels l'utilisateur a répondu"
+          topics_viewed: "Sujets vus"
+          topics_viewed_all_time: "Sujets vus (depuis le début)"
+          posts_read: "Messages lus"
+          posts_read_all_time: "Messages lus (depuis le début)"
           flagged_posts: "Messages signalés"
       site_content:
         none: "Choisissez un type de contenu afin de commencer l'édition."
@@ -1630,6 +1678,7 @@ fr:
           developer: 'Développeur'
           embedding: "Incorporer"
           legal: "Légal"
+          uncategorized: 'Autre'
           backups: "Sauvegardes"
       badges:
         title: Badges
@@ -1655,6 +1704,7 @@ fr:
         no_badges: Il n'y a aucun badge qui peuvent être accorder.
         allow_title: Autoriser l'utilisation d'un badge comme titre
         multiple_grant: Peut être décerné plusieurs fois
+        enabled: Activer les badges
         icon: Icône
     lightbox:
       download: "télécharger"
@@ -1710,27 +1760,42 @@ fr:
         one: "1 décerné"
         other: "%{count} décernés"
       select_badge_for_title: Sélectionner un badge pour l'utiliser comme votre titre
+      no_title: "<pas de titre>"
       badge:
+        editor:
+          name: Editeur
         basic_user:
           name: Base
-          description: Toutes les fonctions communautaires essentielles sont accessibles.
         regular_user:
           name: Régulier
-          description: Il est possible d'envoyer des invitations.
         leader:
           name: Responsable
-          description: La re-catégorisation, le renommage, le suivi de lien et le salon sont accessibles.
         elder:
           name: Ancien
-          description: L'édition, l'épinglage, la fermeture, l'archivage, la séparation et la fusion sont accessibles.
         welcome:
           name: Bienvenue
-          description: A reçu un j'aime.
+        autobiographer:
+          name: Autobiographe
         nice_post:
           name: Joli message
-          description: A reçu 10 j'aime sur un message. Ce badge peut être donné plusieurs fois.
         good_post:
           name: Excellent message
-          description: A reçu 25 j'aime sur un message. Ce badge peut être donné plusieurs fois.
         great_post:
           name: Bon message
+        first_like:
+          name: Premier j'aime
+          description: A aimé un message
+        first_flag:
+          name: Premier signalement
+          description: A signalé un message
+        first_share:
+          name: Premier partage
+          description: A partagé un message
+        first_link:
+          name: Premier lien
+          description: A ajouté un lien interne vers un autre sujet
+        first_quote:
+          name: Première citation
+          description: A cité un utilisateur
+        reader:
+          name: Lecteur

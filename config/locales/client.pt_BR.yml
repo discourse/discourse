@@ -199,6 +199,8 @@ pt_BR:
       all_subcategories: "todos"
       no_subcategory: "nenhum"
       category: "Categoria"
+      posts: "Postagens"
+      topics: "Tópicos"
       latest: "Recentes"
       latest_by: "recentes por"
       toggle_ordering: "alternar controle de ordenação"
@@ -526,6 +528,7 @@ pt_BR:
       view_new_post: "Ver sua nova postagem."
       saving: "Salvando..."
       saved: "Salvo!"
+      saved_draft: "Você tem um rascunho em progresso. Clique em qualquer lugar nessa barra para voltar a editar."
       uploading: "Enviando..."
       show_preview: 'mostrar pré-visualização &raquo;'
       hide_preview: '&laquo; esconder pré-visualização'
@@ -778,6 +781,8 @@ pt_BR:
         title: 'Convite'
         action: 'Email de convite'
         help: 'envie convites aos seus amigos para que eles possam responder a este tópico com um único clique.'
+        to_topic: "Nós vamos mandar um email curto permitindo seu amigo a entrar e responder a esse tópico clicando em um link, sem necessidade de entrar."
+        to_forum: "Nós vamos mandar um email curto permitindo seu amigo a entrar e responder a esse tópico clicando em um link, sem necessidade de entrar."
         email_placeholder: 'nome@exemplo.com'
         error: "Desculpe não podemos convidar essa pessoa. Talvez já seja um usuário?"
       login_reply: 'Entre para responder'
@@ -1412,6 +1417,7 @@ pt_BR:
         email_type: "Tipo de Email"
         to_address: "Para (endereço)"
         test_email_address: "endereço de email para testar"
+        send_test: "Enviar email de teste"
         sent_test: "enviado!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
@@ -1656,6 +1662,7 @@ pt_BR:
           developer: 'Desenvolvedor'
           embedding: "Incorporação"
           legal: "Jurídico"
+          uncategorized: 'Outros'
           backups: "Backups"
       badges:
         title: Emblemas
@@ -1741,19 +1748,14 @@ pt_BR:
           name: Editor
         basic_user:
           name: Básico
-          description: Acesso a todas as funções essenciais da comunidade.
         regular_user:
           name: Médio
-          description: Acesso a convidar outros.
         leader:
           name: Líder
-          description: Acesso a recategorizar, renomear, seguir links e ao lounge.
         elder:
           name: Ancião
-          description: Acesso a editar, fixar, fechar, arquivar, separar e unir tópicos globalmente.
         welcome:
           name: Bem-Vindo
-          description: Recebeu um like.
         nice_post:
           name: Post Legal
         good_post:

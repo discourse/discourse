@@ -514,6 +514,7 @@ da:
       view_new_post: "Se dit nye indlæg."
       saving: "Gemmer…"
       saved: "Gemt!"
+      saved_draft: "Du har en kladde i gang. Klik hvorsomhelst i denne kasse for at forsætte med at redigere den."
       uploading: "Uploader…"
       show_preview: 'forhåndsvisning &raquo;'
       hide_preview: '&laquo; skjul forhåndsvisning'
@@ -709,6 +710,7 @@ da:
           title: "Følger"
         watching:
           title: "Overvåger"
+          description: "Du vil blive underrettet for hvert nyt indlæg i denne tråd. En optælling af nye indlæg vil blive vist ved siden af tråden."
         tracking_pm:
           title: "Følger"
         tracking:
@@ -1737,24 +1739,17 @@ da:
       badge:
         basic_user:
           name: Basic
-          description: Givet alle essentielle fællesskabs funktioner.
         regular_user:
           name: Standard
-          description: Givet invitationer.
         leader:
           name: Leder
-          description: Givet omkategorisering, omdøbning, fulgte links og lounge.
         elder:
           name: advanceret bruger
-          description: Givet global redigering, hæftning, arkivering, deling sammensætning af emner.
         welcome:
           name: Velkommen
-          description: Modtog et like
         nice_post:
           name: Fint indlæg
-          description: Har modtaget 10 "likes" på et indlæg. Denne badge kan modtages flere gange.
         good_post:
           name: Godt indlæg
-          description: Har modtaget 25 "likes" på et indlæg. Denne badge kan modtages flere gange.
         great_post:
           name: Rigtig godt indlæg
