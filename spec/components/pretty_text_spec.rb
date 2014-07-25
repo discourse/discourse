@@ -266,43 +266,4 @@ describe PrettyText do
     end
   end
 
-  describe "markdown quirks" do
-
-    it "sanitizes spans" do
-      PrettyText.cook("<span class=\"-bbcode-size-0 fa fa-spin\">a</span>").should match_html "<p><span>a</span></p>"
-      PrettyText.cook("<span class=\"fa fa-spin -bbcode-size-0\">a</span>").should match_html "<p><span>a</span></p>"
-      PrettyText.cook("<span class=\"bbcode-size-10\">a</span>").should match_html "<p><span class=\"bbcode-size-10\">a</span></p>"
-    end
-
-    it "bolds stuff in parens" do
-      PrettyText.cook("a \"**hello**\"").should match_html "<p>a &quot;<strong>hello</strong>&quot;</p>"
-      PrettyText.cook("(**hello**)").should match_html "<p>(<strong>hello</strong>)</p>"
-      #           is it me your looking for?
-    end
-    it "allows for newline after bold" do
-      PrettyText.cook("**hello**\nworld").should match_html "<p><strong>hello</strong><br />world</p>"
-    end
-    it "allows for newline for 2 bolds" do
-      PrettyText.cook("**hello**\n**world**").should match_html "<p><strong>hello</strong><br /><strong>world</strong></p>"
-    end
-
-    it "allows for * and _  in bold" do
-      PrettyText.cook("**a*_b**").should match_html "<p><strong>a*_b</strong></p>"
-    end
-
-    it "does not apply italics when there is a space inside" do
-      PrettyText.cook("** hello**").should match_html "<p>** hello**</p>"
-      PrettyText.cook("**hello **").should match_html "<p>**hello **</p>"
-    end
-
-    it "allows does not bold chinese intra word" do
-      PrettyText.cook("你**hello**").should match_html "<p>你**hello**</p>"
-    end
-
-    it "allows bold chinese" do
-      PrettyText.cook("**你hello**").should match_html "<p><strong>你hello</strong></p>"
-    end
-
-  end
-
 end

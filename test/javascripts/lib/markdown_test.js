@@ -261,9 +261,19 @@ test("Mentions", function() {
 
 
 test("Heading", function() {
-    cooked("**Bold**\n----------",
-           "<h2><strong>Bold</strong></h2>",
-           "It will bold the heading");
+  cooked("**Bold**\n----------", "<h2><strong>Bold</strong></h2>", "It will bold the heading");
+});
+
+test("bold and italics", function() {
+  cooked("a \"**hello**\"", "<p>a \"<strong>hello</strong>\"</p>", "bolds in quotes");
+  cooked("(**hello**)", "<p>(<strong>hello</strong>)</p>", "bolds in parens");
+  cooked("**hello**\nworld", "<p><strong>hello</strong><br>world</p>", "allows newline after bold");
+  cooked("**hello**\n**world**", "<p><strong>hello</strong><br><strong>world</strong></p>", "newline between two bolds");
+  cooked("**a*_b**", "<p><strong>a*_b</strong></p>", "allows for characters within bold");
+  cooked("** hello**", "<p>** hello**</p>", "does not bold on a space boundary");
+  cooked("**hello **", "<p>**hello **</p>", "does not bold on a space boundary");
+  cooked("你**hello**", "<p>你**hello**</p>", "does not bold chinese intra word");
+  cooked("**你hello**", "<p><strong>你hello</strong></p>", "allows bolded chinese");
 });
 
 test("Oneboxing", function() {
@@ -388,6 +398,10 @@ test("sanitize", function() {
   cooked("[the answer](javascript:alert(42))", "<p><a>the answer</a></p>", "it prevents XSS");
 
   cooked("<i class=\"fa fa-bug fa-spin\" style=\"font-size:600%\"></i>\n<!-- -->", "<p><i></i><br/></p>", "it doesn't circumvent XSS with comments");
+
+  cooked("<span class=\"-bbcode-size-0 fa fa-spin\">a</span>", "<p><span>a</span></p>", "it sanitizes spans");
+  cooked("<span class=\"fa fa-spin -bbcode-size-0\">a</span>", "<p><span>a</span></p>", "it sanitizes spans");
+  cooked("<span class=\"bbcode-size-10\">a</span>", "<p><span class=\"bbcode-size-10\">a</span></p>", "it sanitizes spans");
 });
 
 test("URLs in BBCode tags", function() {
