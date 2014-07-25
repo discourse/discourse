@@ -292,7 +292,7 @@ kbd
     padding: .1em .6em;
 }
 
-@media only screen
+@media all
 and (max-width : 940px) {
 
   #topic-progress, #topic-progress-expanded {
@@ -301,7 +301,7 @@ and (max-width : 940px) {
 }
 
 
-@media only screen
+@media all
 and (max-width : 870px) {
 
   #topic-progress, #topic-progress-expanded {

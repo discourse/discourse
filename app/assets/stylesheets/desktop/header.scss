@@ -21,7 +21,10 @@
 
 /* needs to be global, used in user-drop down and user page too */
 .unread-private-messages {
-  background-color: $success;
+  border-color: $success;
+  color: $success;
+  background: $secondary;
+  &.badge-notification[href] {color: $success;}
 }
 
 #main {
