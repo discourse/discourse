@@ -127,7 +127,7 @@ Discourse.AdminBadgesController = Ember.ArrayController.extend({
                      'enabled', 'show_posts',
                      'target_posts', 'name', 'description',
                      'icon', 'query', 'badge_grouping_id',
-                     'trigger'];
+                     'trigger', 'badge_type_id'];
 
         if(this.get('selectedItem.system')){
           var protectedFields = this.get('protectedSystemFields');
