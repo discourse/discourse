@@ -1,6 +1,5 @@
 export default Ember.ObjectController.extend({
   viewMode: 'table',
-
   viewingTable: Em.computed.equal('viewMode', 'table'),
   viewingBarChart: Em.computed.equal('viewMode', 'barChart'),
 

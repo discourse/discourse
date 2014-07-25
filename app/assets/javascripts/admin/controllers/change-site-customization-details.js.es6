@@ -1,13 +1,3 @@
-/**
-  The modal for viewing the details of a staff action log record
-  for when a site customization is created or changed.
-
-  @class ChangeSiteCustomizationDetailsController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
 export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   previousSelected: Ember.computed.equal('selectedTab', 'previous'),
   newSelected:      Ember.computed.equal('selectedTab', 'new'),

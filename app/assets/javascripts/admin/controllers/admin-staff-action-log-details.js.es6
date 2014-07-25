@@ -7,4 +7,4 @@
   @uses Discourse.ModalFunctionality
   @module Discourse
 **/
-export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {});
+export default Discourse.ObjectController.extend(Discourse.ModalFunctionality);

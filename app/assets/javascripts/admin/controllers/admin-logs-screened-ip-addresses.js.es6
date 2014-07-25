@@ -9,7 +9,7 @@
 export default Ember.ArrayController.extend(Discourse.Presence, {
   loading: false,
   content: [],
-  itemController: 'adminLogsScreenedIpAddress',
+  itemController: 'admin-log-screened-ip-address',
 
   show: function() {
     var self = this;

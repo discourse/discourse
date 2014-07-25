@@ -1,3 +1,3 @@
-import AdminEmailSkippedController from "admin/controllers/admin-email-skipped"
+import AdminEmailSkippedController from "admin/controllers/admin-email-skipped";
 
-export default AdminEmailSkippedController.extend({});
+export default AdminEmailSkippedController.extend();

@@ -12,22 +12,22 @@ var classify = Ember.String.classify;
 var get = Ember.get;
 
 function parseName(fullName) {
-    /*jshint validthis:true */
+  /*jshint validthis:true */
 
-    var nameParts = fullName.split(":"),
-        type = nameParts[0], fullNameWithoutType = nameParts[1],
-        name = fullNameWithoutType,
-        namespace = get(this, 'namespace'),
-        root = namespace;
+  var nameParts = fullName.split(":"),
+      type = nameParts[0], fullNameWithoutType = nameParts[1],
+      name = fullNameWithoutType,
+      namespace = get(this, 'namespace'),
+      root = namespace;
 
-    return {
-      fullName: fullName,
-      type: type,
-      fullNameWithoutType: fullNameWithoutType,
-      name: name,
-      root: root,
-      resolveMethodName: "resolve" + classify(type)
-    };
+  return {
+    fullName: fullName,
+    type: type,
+    fullNameWithoutType: fullNameWithoutType,
+    name: name,
+    root: root,
+    resolveMethodName: "resolve" + classify(type)
+  };
 }
 
 Discourse.Resolver = Ember.DefaultResolver.extend({
@@ -39,6 +39,9 @@ Discourse.Resolver = Ember.DefaultResolver.extend({
     if (split.length > 1) {
       var discourseBase = 'discourse/' + split[0] + 's/';
       var adminBase = 'admin/' + split[0] + 's/';
+
+      // Allow render 'admin/templates/xyz' too
+      split[1] = split[1].replace('.templates', '').replace('/templates', '');
 
       // Try slashes
       var dashed = Ember.String.dasherize(split[1].replace(/\./g, '/'));

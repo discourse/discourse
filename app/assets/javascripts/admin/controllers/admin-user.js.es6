@@ -7,4 +7,4 @@
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.ObjectController.extend({});
+export default Discourse.ObjectController.extend();

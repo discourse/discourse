@@ -70,9 +70,9 @@ module Tilt
       # For backwards compatibility with plugins, for now export the Global format too.
       # We should eventually have an upgrade system for plugins to use ES6 or some other
       # resolve based API.
-      if ENV['DISCOURSE_NO_CONSTANTS'].nil? && scope.logical_path =~ /discourse\/(controllers|components|views|routes)\/(.*)/
-        type = Regexp.last_match[1]
-        file_name = Regexp.last_match[2].gsub(/[\-\/]/, '_')
+      if ENV['DISCOURSE_NO_CONSTANTS'].nil? && scope.logical_path =~ /(discourse|admin)\/(controllers|components|views|routes)\/(.*)/
+        type = Regexp.last_match[2]
+        file_name = Regexp.last_match[3].gsub(/[\-\/]/, '_')
         class_name = file_name.classify
 
         # Rails removes pluralization when calling classify
