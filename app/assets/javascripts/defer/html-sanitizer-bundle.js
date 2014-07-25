@@ -2057,7 +2057,13 @@ var html = (function(html4) {
       }
 
       // Discourse modification: give us more flexibility with whitelists
-      if (opt_nmTokenPolicy && opt_nmTokenPolicy(tagName, attribName, value)) { continue; }
+      if (opt_nmTokenPolicy) {
+        var newValue = opt_nmTokenPolicy(tagName, attribName, value);
+        if (newValue) {
+          attribs[i + 1] = newValue;
+          continue;
+        }
+      }
 
       if (atype !== null) {
         switch (atype) {
