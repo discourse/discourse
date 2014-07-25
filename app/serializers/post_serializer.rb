@@ -158,6 +158,10 @@ class PostSerializer < BasicPostSerializer
                         hidden: (sym == :vote),
                         can_act: scope.post_can_act?(object, sym, taken_actions: post_actions)}
 
+      if sym == :notify_user && scope.current_user.present? && scope.current_user == object.user
+        action_summary[:can_act] = false # Don't send a pm to yourself about your own post, silly
+      end
+
       # The following only applies if you're logged in
       if action_summary[:can_act] && scope.current_user.present?
         action_summary[:can_clear_flags] = scope.is_staff? && PostActionType.flag_types.values.include?(id)

@@ -36,6 +36,11 @@ describe PostSerializer do
       visible_actions_for(admin).sort.should == [:like,:notify_user,:spam,:vote]
     end
 
+    it "can't flag your own post to notify yourself" do
+      serializer = PostSerializer.new(post, scope: Guardian.new(post.user), root: false)
+      notify_user_action = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:notify_user] }
+      notify_user_action[:can_act].should == false
+    end
   end
 
   context "a post by a nuked user" do
