@@ -290,6 +290,8 @@ kbd
     line-height: 1.4;
     margin: 0 .1em;
     padding: .1em .6em;
+
+    * * { display: none; }
 }
 
 @media all

@@ -23,6 +23,10 @@ Discourse.ClickTrack = {
         topicId = $('#topic').data('topic-id'),
         userId = $link.data('user-id');
 
+    if (!href || href.trim().length === 0){
+      return;
+    }
+
     if (!userId) userId = $article.data('user-id');
 
     var ownLink = userId && (userId === Discourse.User.currentProp('id')),

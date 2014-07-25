@@ -141,6 +141,10 @@ Discourse.Badge = Discourse.Model.extend({
       self.set('savingStatus', I18n.t('saved'));
       self.set('saving', false);
       return self;
+    }, function(error){
+      self.set('savingStatus', '');
+      self.set('saving', false);
+      bootbox.alert(error.responseText);
     });
   },
 

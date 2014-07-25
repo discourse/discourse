@@ -924,7 +924,7 @@ pl_PL:
           notify_user: "{{icons}} wysłało prywatną wiadomość"
           notify_user_with_url: "{{icons}} wysłało <a href='{{postUrl}}'>prywatną wiadmość</a>"
           bookmark: "{{icons}} dodało to do zakładek"
-          like: "{{icons}} polubiło to"
+          like: "{{icons}} lubi to"
           vote: "{{icons}} zagłosowało za tym"
         by_you:
           off_topic: "Oflagowałeś(-aś) to jako nie na temat"
@@ -1773,10 +1773,8 @@ pl_PL:
           name: Podstawowi
         regular_user:
           name: Regularni
-          description: Przyznane zaproszenia
         leader:
           name: Liderzy
-          description: Przyznana zmiana kategorii, zmiana nazwy, klub oraz zdjęte no_follow z linków.
         elder:
           name: Starszyzna
         welcome:

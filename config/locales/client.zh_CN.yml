@@ -73,11 +73,12 @@ zh_CN:
     log_in: "登录"
     age: "时间"
     joined: "加入时间："
-    admin_title: "管理员"
+    admin_title: "管理"
     flags_title: "报告"
     show_more: "显示更多"
     links: 链接
     faq: "常见问题（FAQ）"
+    guidelines: "指引"
     privacy_policy: "隐私政策"
     privacy: "隐私"
     terms_of_service: "服务条款"
@@ -178,6 +179,8 @@ zh_CN:
       all_subcategories: "全部"
       no_subcategory: "无"
       category: "分类"
+      posts: "新帖子"
+      topics: "新主题"
       latest: "最新"
       latest_by: "最新发表："
       toggle_ordering: "排序控制"
@@ -514,6 +517,7 @@ zh_CN:
       view_new_post: "浏览您的新帖子。"
       saving: "保存中..."
       saved: "已保存！"
+      saved_draft: "您有一个帖子草稿尚未发表。点击该栏任意位置即可继续编辑。"
       uploading: "上传中..."
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
@@ -612,7 +616,7 @@ zh_CN:
         new: "您没有新主题可读。"
         read: "您尚未阅读任何主题。"
         posted: "您尚未在任何主题中发帖。"
-        latest: "没有最近的讨论主题。"
+        latest: "没有最新的讨论主题。"
         hot: "没有热门主题。"
         category: "没有 {{category}} 分类的主题。"
         top: "没有最佳主题。"
@@ -664,7 +668,7 @@ zh_CN:
       read_more: "想阅读更多内容？{{catLink}} 或 {{latestLink}}。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 条未读</a> } other { <a href='/unread'># 条未读</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 新的</a>话题} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># 新的</a>话题} } 或者{CATEGORY, select, true {浏览{catLink}中的话题} false {{latestLink}} other {}}。"
       browse_all_categories: 浏览所有分类
-      view_latest_topics: 浏览最新主题。
+      view_latest_topics: 浏览最新主题
       suggest_create_topic: 马上创建一个主题吧！
       read_position_reset: "您的阅读位置已经被重置。"
       jump_reply_up: 跳转至更早的回复
@@ -751,7 +755,6 @@ zh_CN:
         help: '私下报告本帖以引起注意或者发送一条匿名通知'
         success_message: '您已成功报告本帖。'
       inviting: "邀请中..."
-      automatically_add_to_groups: "这个邀请也包括了这些群组的权限：（可选，仅管理员）"
       invite_private:
         title: '邀请进行私下交流'
         email_or_username: "受邀人的电子邮箱或用户名"
@@ -799,7 +802,7 @@ zh_CN:
       multi_select:
         select: '选择'
         selected: '已选择（{{count}}）'
-        select_replies: '选择并回复'
+        select_replies: '选择以及回复其的帖子'
         delete: 删除所选
         cancel: 取消选择
         select_all: 全选
@@ -1143,7 +1146,7 @@ zh_CN:
   admin_js:
     type_to_filter: "输入过滤条件..."
     admin:
-      title: '管理员'
+      title: 'Discourse 管理员'
       moderator: '版主'
       dashboard:
         title: "管理面板"
@@ -1379,6 +1382,7 @@ zh_CN:
         email_type: "邮件类型"
         to_address: "目的地址"
         test_email_address: "测试电子邮件地址"
+        send_test: "发送测试电子邮件"
         sent_test: "已发送！"
         delivery_method: "发送方式"
         preview_digest: "预览"
@@ -1622,7 +1626,9 @@ zh_CN:
           developer: '开发者'
           embedding: "嵌入"
           legal: "合法"
+          uncategorized: '未分类'
           backups: "备份"
+          login: "登录"
       badges:
         title: 徽章
         new_badge: 新徽章
@@ -1648,6 +1654,7 @@ zh_CN:
         allow_title: 允许将徽章用作头衔
         multiple_grant: 能被授予多次
         listable: 在公共徽章页面显示徽章
+        enabled: 启用徽章系统
         icon: 图标
     lightbox:
       download: "下载"
@@ -1702,37 +1709,28 @@ zh_CN:
       granted:
         other: "%{count} 个已授予"
       select_badge_for_title: 选择一个徽章用作您的头衔
+      no_title: "<无标题>"
       badge:
         editor:
           name: 编辑
-          description: 首个帖子编辑。
         basic_user:
           name: 基础
-          description: 授予所有的基础社区功能。
         regular_user:
           name: 常规
-          description: 授予被邀请者。
         leader:
           name: 领先
-          description: 授予重新分类、重命名，跟随链接和贵宾室。
         elder:
           name: 长老
-          description: 授予全局编辑、置顶、关闭、存档、分割和合并。
         welcome:
           name: 欢迎
-          description: 得到一个赞
         autobiographer:
           name: 自传作者
-          description: 已填写用户资料信息
         nice_post:
           name: 不错的帖子
-          description: 一个帖子得到10个赞. 此徽章可重复得到.
         good_post:
           name: 实用的帖子
-          description: 一个帖子得到25个赞. 此徽章可重复得到.
         great_post:
           name: 非常棒的帖子
-          description: 一个帖子收到 50 个赞。这个徽章可以被授予多次。
         first_like:
           name: 首个赞
           description: 已赞了一个帖子
@@ -1745,3 +1743,10 @@ zh_CN:
         first_link:
           name: 首个链接
           description: 已经添加了一个内部链接至另一个主题
+        first_quote:
+          name: 第一次引用
+          description: 引用了一个用户
+        read_guidelines:
+          name: 阅读指引
+        reader:
+          name: 读者

@@ -206,7 +206,7 @@ SQL
   end
 
   def system?
-    id < 100
+    id && id < 100
   end
 
   def default_name=(val)

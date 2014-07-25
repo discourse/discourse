@@ -23,6 +23,8 @@ export default Discourse.ObjectController.extend({
   showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
 
   show: function(username, uploadedAvatarId) {
+    // XSS protection (should be encapsulated)
+    username = username.replace(/[^A-Za-z0-9_]/g, "");
     var url = "/users/" + username;
 
     // Don't show on mobile

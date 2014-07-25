@@ -94,6 +94,7 @@ es:
     show_more: "ver más"
     links: Enlaces
     faq: "FAQ"
+    guidelines: "Directrices"
     privacy_policy: "Política de privacidad"
     privacy: "Privacidad"
     terms_of_service: "Condiciones Generales de Uso"
@@ -200,6 +201,8 @@ es:
       all_subcategories: "todas"
       no_subcategory: "ninguna"
       category: "Categoría"
+      posts: "Posts"
+      topics: "Temas"
       latest: "Recientes"
       latest_by: "recientes por"
       toggle_ordering: "activar orden"
@@ -542,6 +545,7 @@ es:
       view_new_post: "Ver tu nueva publicación."
       saving: "Guardando..."
       saved: "¡Guardado!"
+      saved_draft: "Tienes el borrador de un post sin terminar. Haz clic en esta barra para seguir editando."
       uploading: "Subiendo..."
       show_preview: 'mostrar vista previa &raquo;'
       hide_preview: '&laquo; ocultar vista previa'
@@ -785,7 +789,6 @@ es:
         help: 'reportar de forma privada para atención de los moderadores o enviar una notificación privada sobre él'
         success_message: 'Has reportado este tema correctamente.'
       inviting: "Invitando..."
-      automatically_add_to_groups: "Esta invitación también incluye el acceso a estos grupos: (opcional, solo administradores)"
       invite_private:
         title: 'Invitar por mensaje Privado'
         email_or_username: "Invitación por email o nombre de usuario"
@@ -1446,6 +1449,7 @@ es:
         email_type: "Email"
         to_address: "A dirección"
         test_email_address: "dirección de email de prueba"
+        send_test: "Enviar email de prueba"
         sent_test: "enviado!"
         delivery_method: "Método de entrega"
         preview_digest: "Vista previa de Resumen"
@@ -1696,7 +1700,9 @@ es:
           developer: 'Desarrollador'
           embedding: "Embebido"
           legal: "Legal"
+          uncategorized: 'Otros'
           backups: "Copias de seguridad"
+          login: "Login"
       badges:
         title: Distintivos
         new_badge: Nuevo distintivo
@@ -1722,6 +1728,7 @@ es:
         allow_title: Permitir usar distintivo como título
         multiple_grant: Puede ser concedido varias veces
         listable: Mostrar distintivo en la página pública de distintivos
+        enabled: Activar distintivo
         icon: Icono
     lightbox:
       download: "descargar"
@@ -1779,37 +1786,28 @@ es:
         one: "1 concedido"
         other: "%{count} concedido"
       select_badge_for_title: Seleccionar un distintivo para utilizar como tu título
+      no_title: "<no title>"
       badge:
         editor:
           name: Editor
-          description: Editó un post por primera vez.
         basic_user:
           name: Básico
-          description: Dispone de todas las funciones esenciales de la comunidad.
         regular_user:
           name: Normal
-          description: Dispone de invitaciones para el foro.
         leader:
           name: Líder
-          description: Puede recategorizar y renombrar. Sus enlaces no llevan la etiqueta "nofollow" y puede pasar al salón privado.
         elder:
           name: Sabio
-          description: Tiene la posibilidad de editar, destacar, cerrar, archivar, dividir y combinar temas o posts.
         welcome:
           name: ¡Bienvenido/a!
-          description: Recibió un "me gusta".
         autobiographer:
           name: Autobiógrafo
-          description: Completó información en el perfil de usuario.
         nice_post:
           name: Buen post
-          description: Recibió 10 "me gusta" en un post. Este distintivo puede ser concedido varias veces.
         good_post:
           name: Muy buen post
-          description: Recibió 25 "me gusta" en un post. Este distintivo puede ser concedido varias veces.
         great_post:
           name: Excelente post
-          description: Recibió 50 "me gusta" en un post. Este distintivo puede ser concedido varias veces.
         first_like:
           name: Primer "me gusta"
           description: Le dio a "me gusta" a un post
@@ -1822,3 +1820,10 @@ es:
         first_link:
           name: Primer enlace
           description: Añadió un enlace interno a otro tema
+        first_quote:
+          name: Primera cita
+          description: Citó a un usuario
+        read_guidelines:
+          name: Directrices leídas
+        reader:
+          name: Lector
