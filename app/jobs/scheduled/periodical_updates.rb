@@ -8,9 +8,6 @@ module Jobs
     every 15.minutes
 
     def execute(args)
-      # Update the average times
-      Post.calculate_avg_time(1.day.ago)
-      Topic.calculate_avg_time(1.day.ago)
 
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics
