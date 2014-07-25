@@ -278,6 +278,7 @@ test("bold and italics", function() {
 
 test("New Lines", function() {
   cooked("_abc\ndef_", "<p><em>abc<br>def</em></p>", "it allows markup to span new lines");
+  cooked("_abc\n\ndef_", "<p>_abc</p>\n\n<p>def_</p>", "it does not allow markup to span new paragraphs");
 });
 
 test("Oneboxing", function() {
