@@ -19,14 +19,6 @@
   }
 }
 
-/* needs to be global, used in user-drop down and user page too */
-.unread-private-messages {
-  border-color: $success;
-  color: $success;
-  background: $secondary;
-  &.badge-notification[href] {color: $success;}
-}
-
 #main {
   position: relative;
 }
