@@ -94,6 +94,7 @@ de:
     show_more: "Mehr anzeigen"
     links: Links
     faq: "FAQ"
+    guidelines: "Richtlinien"
     privacy_policy: "Datenschutzrichtlinie"
     privacy: "Privatsphäre"
     terms_of_service: "Nutzungsbedingungen"
@@ -200,6 +201,8 @@ de:
       all_subcategories: "alle"
       no_subcategory: "keiner"
       category: "Kategorie"
+      posts: "Beiträge"
+      topics: "Themen"
       latest: "Neueste"
       latest_by: "latest by"
       toggle_ordering: "Reihenfolge ändern"
@@ -454,6 +457,11 @@ de:
       description_time: "Es gibt <b>{{count}}</b> Antworten mit einer geschätzten Lesezeit <b>{{readingTime}} Minuten</b>."
       enable: 'Nur die Top-Beiträge anzeigen'
       disable: 'Alle Beiträge anzeigen'
+    deleted_filter:
+      enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit ausgeblendet sind. Klicke unten, um alle Beiträge zu sehen."
+      disabled_description: "Gelöschte Beiträge werden in diesem Thema angezeigt. Klicke unten, um diese auszublenden."
+      enable: "Gelöschte Beiträge ausblenden"
+      disable: "Gelöschte Beiträge einblenden"
     private_message_info:
       title: "Private Nachricht"
       invite: "Andere einladen..."
@@ -479,6 +487,7 @@ de:
       username: "Benutzername"
       password: "Passwort"
       email_placeholder: "E-Mailadresse oder Benutzername"
+      caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
       blank_username_or_password: "Bitte gebe deine E-Mail oder Benutzernamen, und dein Passwort ein."
       reset_password: 'Passwort zurücksetzen'
@@ -542,6 +551,7 @@ de:
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
+      saved_draft: "Du hast einen Entwurf im Gange. Klicke irgendwo auf diese Leiste, um den Entwurf fortzusetzen."
       uploading: "Lade hoch..."
       show_preview: 'Vorschau zeigen &raquo;'
       hide_preview: '&laquo; Vorschau verstecken'
@@ -785,7 +795,6 @@ de:
         help: 'Melde dieses Thema vertraulich zur Kenntnisnahme oder versende eine private Benachrichtigung darüber.'
         success_message: 'Du hast dieses Thema erfolgreich gemeldet.'
       inviting: "Einladung verschicken..."
-      automatically_add_to_groups: "Füge Benutzer nach der Registrierung automatisch zu Gruppen hinzu. (Optional, Nur Admin) "
       invite_private:
         title: 'Zu privatem Gespräch einladen'
         email_or_username: "Einzuladender Nutzer"
@@ -890,6 +899,7 @@ de:
       controls:
         reply: "Fange eine Antwort auf diesen Beitrag an"
         like: "Dieser Beitrag gefällt mir"
+        has_liked: "dir gefällt dieser Beitrag"
         edit: "Diesen Beitrag bearbeiten"
         flag: "Diesen Beitrag den Moderatoren melden"
         delete: "Diesen Beitrag löschen"
@@ -1446,6 +1456,7 @@ de:
         email_type: "Mailtyp"
         to_address: "Empfänger"
         test_email_address: "Mailadresse zum Testen"
+        send_test: "Testmail senden"
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
         preview_digest: "Vorschau der Übersicht"
@@ -1687,7 +1698,7 @@ de:
           posting: 'Beiträge'
           email: 'E-Mail'
           files: 'Dateien'
-          trust: 'Vertrauensstufe'
+          trust: 'Vertrauensstufen'
           security: 'Sicherheit'
           onebox: "Onebox"
           seo: 'SEO'
@@ -1696,7 +1707,9 @@ de:
           developer: 'Entwickler'
           embedding: "Einbetten"
           legal: "Rechtliches"
+          uncategorized: 'Andere'
           backups: "Backups"
+          login: "Benutzername"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen
@@ -1706,6 +1719,7 @@ de:
         display_name: Anzeigename
         description: Beschreibung
         badge_type: Abzeichentyp
+        badge_grouping: Gruppe
         granted_by: Verliehen von
         granted_at: Verliehen am
         save: Speichern
@@ -1722,6 +1736,7 @@ de:
         allow_title: Abzeichen darf als Titel verwendet werden.
         multiple_grant: Kann mehrfach erteilt werden.
         listable: Zeige Abzeichen auf der öffentlichen Abzeichenseite.
+        enabled: Abzeichen aktivieren
         icon: Symbol
     lightbox:
       download: "Download"
@@ -1779,37 +1794,35 @@ de:
         one: "1 akzeptiert"
         other: "%{count} akzeptiert"
       select_badge_for_title: Wähle ein Abzeichen für deinen Titel aus.
+      no_title: "<Kein Titel>"
+      badge_grouping:
+        getting_started:
+          name: Erste Schritte
+        trust_level:
+          name: Vertrauensstufe
+        posting:
+          name: Beiträge
       badge:
         editor:
           name: Redakteur
-          description: Erste Bearbeitung.
         basic_user:
           name: Basis
-          description: Alle grundlegenden Funktionen gewährt.
         regular_user:
           name: Einfach
-          description: Einladungen gewährt
         leader:
           name: Leiter
-          description: Kann Themen verschieben, umbenennen, Links ohne "nofollow" posten und die Lounge sehen.
         elder:
           name: Ältester
-          description: Berechtigung für globales editieren, pinnen, schliessen, archivieren, teilen und zusammenfügen gegeben.
         welcome:
           name: Willkommen
-          description: Hat einen Like erhalten.
         autobiographer:
           name: Autobiograf
-          description: Hat Benutzerprofil Informationen ausgefüllt.
         nice_post:
           name: Netter Post
-          description: Hat 10 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.
         good_post:
           name: Guter Post
-          description: Hat 25 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.
         great_post:
           name: Großartiger Post
-          description: Hat 50 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach vergeben werden.
         first_like:
           name: Erster Like.
           description: Hat einen Beitrag gelikt.
@@ -1822,3 +1835,11 @@ de:
         first_link:
           name: Erster Link.
           description: Hat einen internen Link auf einen anderen Beitrag hinzugefügt.
+        first_quote:
+          name: Erstes Zitat
+          description: Hat einen Benutzer zitiert
+        read_guidelines:
+          name: Hat die Richtlinien gelesen
+        reader:
+          name: Leser
+          description: Hat jeden Beitrag in einem Thema mit mehr als 100 Beiträgen gelesen

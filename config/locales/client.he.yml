@@ -89,11 +89,12 @@ he:
     log_in: "התחבר"
     age: "גיל"
     joined: "הצטרף"
-    admin_title: "מנהל ראשי"
+    admin_title: "ניהול"
     flags_title: "דגלים"
     show_more: "הראה עוד"
     links: קישורים
     faq: "שאלות נפוצות"
+    guidelines: "כללי התנהלות"
     privacy_policy: "מדיניות פרטיות"
     privacy: "פרטיות"
     terms_of_service: "תנאי השירות"
@@ -200,6 +201,8 @@ he:
       all_subcategories: "הכל"
       no_subcategory: "ללא"
       category: "קטגוריה"
+      posts: "פרסומים"
+      topics: "נושאים"
       latest: "לאחרונה"
       latest_by: "לאחרונה על ידי"
       toggle_ordering: "שנה בקר סדר"
@@ -261,6 +264,7 @@ he:
       delete_yourself_not_allowed: "אתה לא יכול למחוק את חשבונך כרגע. צור קשר עם מנהל כדי שימחק אותו בשבילך."
       unread_message_count: "הודעות"
       staff_counters:
+        flags_given: "סימונים שימושיים מוגדרים"
         flagged_posts: "הודעות מסומנות"
         deleted_posts: "הודעות שנמחקו"
         suspensions: "השעיות"
@@ -541,6 +545,7 @@ he:
       view_new_post: "הצגת את ההודעה החדשה שלך."
       saving: "שומר..."
       saved: "נשמר!"
+      saved_draft: "יש לך טיוטאת פרסום בתהליך. הקישו איפהשהו בבר זה כדי להמשיך לערוך."
       uploading: "מעלה..."
       show_preview: 'הראה תצוגה מקדימה &raquo;'
       hide_preview: '&laquo; הסתר תצוגה מקדימה'
@@ -784,7 +789,6 @@ he:
         help: 'דגלל נושא זה באופן פרטי לתשומת לב או שלח התרעה פרטית עליו'
         success_message: 'דגללת נושא זה בהצלחה.'
       inviting: "מזמין..."
-      automatically_add_to_groups: "הודעה זו כוללת גם גישה לקבוצות הבאות: (אופצניאנלי, למנהלי מערכת בלבד)"
       invite_private:
         title: 'הזמן להודעה פרטית'
         email_or_username: "כתובת דואר אלקטרוני או שם משתמש של המוזמן"
@@ -1445,6 +1449,7 @@ he:
         email_type: "סוג דואר אלקטרוני"
         to_address: "לכתובת"
         test_email_address: "כתובת דואר אלקטרוני לבדיקה"
+        send_test: "שליחת מייל בדיקה"
         sent_test: "נשלח!"
         delivery_method: "שיטת העברה"
         preview_digest: "תצוגה מקדימה של סיכום"
@@ -1695,7 +1700,9 @@ he:
           developer: 'מפתח'
           embedding: "הטמעה"
           legal: "משפטי"
+          uncategorized: 'אחר'
           backups: "גיבויים"
+          login: "התחברות"
       badges:
         title: תגים
         new_badge: תג חדש
@@ -1721,6 +1728,7 @@ he:
         allow_title: אפשר לתג להיות בשימוש ככותרת.
         multiple_grant: יכול/ה להינתן מספר פעמים
         listable: הצגת תגים בעמוד התגים הפומבי
+        enabled: אפשר תג
         icon: סמליל
     lightbox:
       download: "הורד"
@@ -1778,37 +1786,28 @@ he:
         one: "1 הוענק"
         other: "%{count} הוענקו"
       select_badge_for_title: בחר תג שיופיע בכותרת הפרופיל שלך
+      no_title: "<no title>"
       badge:
         editor:
           name: עורך
-          description: עריכת הפרסום הראשון.
         basic_user:
           name: בסיסי
-          description: בהינתן כל פונקציות הקילתיות ההכרחיות.
         regular_user:
           name: קבוע
-          description: הזמנות שהוענקו
         leader:
           name: מוביל/ה
-          description: קטגוריזציה שהוענקה, שינויי שם, קישורים נעקבים וטרקלין (lounge)
         elder:
           name: זקן/זקנת השבט
-          description: עריכה גלובלית, הצמדה, סגירה, אכסון בארכיון, פיצול ומיזוג.
         welcome:
           name: ברוכים הבאים
-          description: זכה בלייק
         autobiographer:
           name: אוטוביוגרפר/ית?
-          description: מידע שמולא בפרופיל המשתמש/ת.
         nice_post:
           name: פרסום נחמד
-          description: קיבל/ה 10 לייקים על פרסום. תג זה יכול להיות מוענק כמה פעמים.
         good_post:
           name: פרסום מוצלח
-          description: קיבל/ה 25 לייקים על פרסום. תג זה יכול להיות מוענק כמה פעמים.
         great_post:
           name: פרסום מצויין
-          description: קיבל/ה 50 לייקים על פרסום. תג זה יכול להיות מוענק כמה פעמים.
         first_like:
           name: לייק ראשון
           description: חיבב/ה פרסום
@@ -1821,3 +1820,10 @@ he:
         first_link:
           name: קישור (link) ראשון
           description: הוסיף/הוסיפה קישור פנימי לנושא אחר
+        first_quote:
+          name: ציטוט ראשון
+          description: ציטוט משתמש
+        read_guidelines:
+          name: קריאת כללים מנחים
+        reader:
+          name: מקראה
