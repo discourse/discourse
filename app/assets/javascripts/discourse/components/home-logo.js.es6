@@ -26,7 +26,7 @@ export default Ember.Component.extend({
 
     // When you click the logo, never use a cached list
     var session = Discourse.Session.current();
-    session.setProperties({topicList: null, topicListScrollPos: null});
+    session.setProperties({topicList: null, topicListScrollPosition: null});
 
     Discourse.URL.routeTo('/');
     return false;

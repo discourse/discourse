@@ -8,7 +8,6 @@
 **/
 
 function finderFor(filter, params) {
-
   return function() {
     var url = Discourse.getURL("/") + filter + ".json";
 
@@ -209,7 +208,7 @@ Discourse.TopicList.reopenClass({
       list.set('loaded', true);
       return Ember.RSVP.resolve(list);
     }
-    session.setProperties({topicList: null, topicListScrollPos: null});
+    session.setProperties({topicList: null, topicListScrollPosition: null});
 
     var findParams = {};
     Discourse.SiteSettings.top_menu.split('|').forEach(function (i) {
