@@ -1,13 +1,6 @@
-/**
-  This view handles rendering of a list of topics under discovery, with support
-  for loading more as well as remembering your scroll position.
+import UrlRefresh from 'discourse/mixins/url-refresh';
 
-  @class DiscoveryTopicsView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.View.extend(Discourse.LoadMore, {
+export default Discourse.View.extend(Discourse.LoadMore, UrlRefresh, {
   eyelineSelector: '.topic-list-item',
 
   actions: {

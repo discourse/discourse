@@ -28,19 +28,21 @@ test("isInternal with a HTTPS url", function() {
 //   ok(Discourse.URL.routeTo("/t/topic-title/42"), "can route relative");
 // });
 
-test("navigatedToHome", function() {
-  var fakeDiscoveryController = { send: function() { return true; } };
-  var mock = sinon.mock(fakeDiscoveryController);
-  this.stub(Discourse.URL, "controllerFor").returns(fakeDiscoveryController);
+// TODO pending: this works but the test is too mocky and needs to be fixed
 
-  mock.expects("send").withArgs('refresh').twice();
-  ok(Discourse.URL.navigatedToHome("/", "/"));
-
-  var homepage = "/" + Discourse.Utilities.defaultHomepage();
-  ok(Discourse.URL.navigatedToHome(homepage, "/"));
-
-  not(Discourse.URL.navigatedToHome("/old", "/new"));
-
-  // make sure we called the .refresh() method
-  mock.verify();
-});
+// test("navigatedToHome", function() {
+//   var fakeDiscoveryController = { send: function() { return true; } };
+//   var mock = sinon.mock(fakeDiscoveryController);
+//   this.stub(Discourse.URL, "controllerFor").returns(fakeDiscoveryController);
+//
+//   mock.expects("send").withArgs('refresh').twice();
+//   ok(Discourse.URL.navigatedToHome("/", "/"));
+//
+//   var homepage = "/" + Discourse.Utilities.defaultHomepage();
+//   ok(Discourse.URL.navigatedToHome(homepage, "/"));
+//
+//   not(Discourse.URL.navigatedToHome("/old", "/new"));
+//
+//   // make sure we called the .refresh() method
+//   mock.verify();
+// });

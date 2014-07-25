@@ -34,7 +34,11 @@ export default Discourse.ObjectController.extend({
     var currentUsername = this.get('username'),
         wasVisible = this.get('visible');
 
-    this.set('avatar', {username: username, uploaded_avatar_id: uploadedAvatarId});
+    if (uploadedAvatarId) {
+      this.set('avatar', {username: username, uploaded_avatar_id: uploadedAvatarId});
+    } else {
+      this.set('avatar', null);
+    }
 
     this.setProperties({visible: true, username: username});
 

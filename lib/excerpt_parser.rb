@@ -23,8 +23,15 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     me.excerpt
   end
 
+  def escape_attribute(v)
+    v.gsub("&", "&amp;")
+     .gsub("\"", "&#34;")
+     .gsub("<", "&lt;")
+     .gsub(">", "&gt;")
+  end
+
   def include_tag(name, attributes)
-    characters("<#{name} #{attributes.map{|k,v| "#{k}='#{v}'"}.join(' ')}>", false, false, false)
+    characters("<#{name} #{attributes.map{|k,v| "#{k}=\"#{escape_attribute(v)}\""}.join(' ')}>", false, false, false)
   end
 
   def start_element(name, attributes=[])

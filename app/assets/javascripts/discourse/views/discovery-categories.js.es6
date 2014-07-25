@@ -1,4 +1,6 @@
-export default Discourse.View.extend({
+import UrlRefresh from 'discourse/mixins/url-refresh';
+
+export default Discourse.View.extend(UrlRefresh, {
 
   orderingChanged: function(){
     if (this.get("controller.ordering")) {

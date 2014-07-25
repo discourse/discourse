@@ -264,8 +264,21 @@ module SiteSettingExtension
     refresh_settings.include?(name.to_sym)
   end
 
+  def filter_value(name, value)
+    # filter domain name
+    if %w[disabled_image_download_domains onebox_domains_whitelist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
+      domain_array = []
+      value.split('|').each { |url|
+        domain_array.push(get_hostname(url))
+      }
+      value = domain_array.join("|")
+    end
+    return value
+  end
+
   def set(name, value)
     if has_setting?(name)
+      value = filter_value(name, value)
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
@@ -363,6 +376,14 @@ module SiteSettingExtension
 
   def enum_class(name)
     enums[name]
+  end
+
+  def get_hostname(url)
+    unless (URI.parse(url).scheme rescue nil).nil?
+      url = "http://#{url}" if URI.parse(url).scheme.nil?
+      url = URI.parse(url).host
+    end
+    return url
   end
 
 end

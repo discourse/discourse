@@ -14,7 +14,8 @@ var PosterNameComponent = Em.Component.extend({
       var name = post.get('name'),
           username = post.get('username'),
           linkClass = 'username',
-          primaryGroupName = post.get('primary_group_name');
+          primaryGroupName = post.get('primary_group_name'),
+          url = post.get('usernameUrl');
 
       if (post.get('staff')) { linkClass += ' staff'; }
       if (post.get('admin')) { linkClass += ' admin'; }
@@ -25,7 +26,7 @@ var PosterNameComponent = Em.Component.extend({
         linkClass += ' ' + primaryGroupName;
       }
       // Main link
-      buffer.push("<span class='" + linkClass + "'><a href='#'>" + username + "</a>");
+      buffer.push("<span class='" + linkClass + "'><a href='" + url + "' data-auto-route='true'>" + username + "</a>");
 
       // Add a glyph if we have one
       var glyph = this.posterGlyph(post);
@@ -37,7 +38,7 @@ var PosterNameComponent = Em.Component.extend({
       // Are we showing full names?
       if (name && this.get('displayNameOnPosts') && (this.sanitizeName(name) !== this.sanitizeName(username))) {
         name = Handlebars.Utils.escapeExpression(name);
-        buffer.push("<span class='full-name'><a href='#'>" + name + "</a></span>");
+        buffer.push("<span class='full-name'><a href='" + url + "' data-auto-route='true'>" + name + "</a></span>");
       }
 
       // User titles
@@ -60,9 +61,10 @@ var PosterNameComponent = Em.Component.extend({
 
   click: function(e) {
     var $target = $(e.target),
-        href = $target.attr('href');
+        href = $target.attr('href'),
+        url = this.get('post.usernameUrl');
 
-    if (!Em.isEmpty(href) && href !== '#') {
+    if (!Em.isEmpty(href) && href !== url) {
       return true;
     } else  {
       this.appEvents.trigger('poster:expand', $target);
