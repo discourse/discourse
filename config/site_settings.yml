@@ -453,7 +453,9 @@ trust:
     default: 1
     enum: 'TrustLevelSetting'
   basic_requires_topics_entered: 5
-  basic_requires_read_posts: 30
+  basic_requires_read_posts:
+    default: 30
+    client: true
   basic_requires_time_spent_mins: 10
   regular_requires_topics_entered: 20
   regular_requires_read_posts: 100
