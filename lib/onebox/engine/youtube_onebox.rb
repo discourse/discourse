@@ -11,7 +11,7 @@ module Onebox
       # * http://youtu.be/afyK1HSFfgw
       # * https://www.youtube.com/embed/vsF0K3Ou1v0
       def video_id
-        match = @url.match(/^https?:\/\/(?:www\.)?(?:m\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_\-]{11})(?:\?.*)?$/)
+        match = @url.match(/^https?:\/\/(?:www\.)?(?:m\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_\-]{11})(?:[#&\?]t=(([0-9]+[smh]?)+))?$/)
         match && match[1]
       end
 
