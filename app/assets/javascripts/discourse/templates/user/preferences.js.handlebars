@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    {{#unless Discourse.SiteSettings.enable_sso }}
+    {{#if canChangePassword}}
     <div class="control-group pref-password">
       <label class="control-label">{{i18n user.password.title}}</label>
       <div class="controls">
@@ -74,7 +74,7 @@
         {{passwordProgress}}
       </div>
     </div>
-    {{/unless}}
+    {{/if}}
 
     <div class="control-group pref-avatar">
       <label class="control-label">{{i18n user.avatar.title}}</label>
