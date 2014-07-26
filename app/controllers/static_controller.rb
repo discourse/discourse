@@ -4,7 +4,6 @@ class StaticController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: [:enter]
 
   def show
-
     return redirect_to('/') if current_user && params[:id] == 'login'
 
     map = {
@@ -33,6 +32,15 @@ class StaticController < ApplicationController
       @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
       render :show, layout: !request.xhr?, formats: [:html]
+      return
+    end
+
+    file = "static/#{@page}.#{I18n.locale}"
+    file = "static/#{@page}.en" if lookup_context.find_all("#{file}.html").empty?
+    file = "static/#{@page}"    if lookup_context.find_all("#{file}.html").empty?
+
+    if lookup_context.find_all("#{file}.html").any?
+      render file, layout: !request.xhr?, formats: [:html]
       return
     end
 

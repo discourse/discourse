@@ -59,8 +59,13 @@ describe StaticController do
       xhr :get, :show, id: 'login'
       response.should redirect_to '/'
     end
-  end
 
+    it "should display the login template when login is required" do
+      SiteSetting.stubs(:login_required).returns(true)
+      xhr :get, :show, id: 'login'
+      response.should be_success
+    end
+  end
 
   describe '#enter' do
     context 'without a redirect path' do
