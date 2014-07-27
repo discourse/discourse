@@ -77,7 +77,8 @@ class UserSerializer < BasicUserSerializer
                      :gravatar_avatar_upload_id,
                      :custom_avatar_upload_id,
                      :custom_fields,
-                     :has_title_badges
+                     :has_title_badges,
+                     :edit_history_public
 
   ###
   ### ATTRIBUTES

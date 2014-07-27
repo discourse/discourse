@@ -15,7 +15,8 @@ class UserUpdater
       :enable_quoting,
       :dynamic_favicon,
       :mailing_list_mode,
-      :disable_jump_reply
+      :disable_jump_reply,
+      :edit_history_public
   ]
 
   PROFILE_ATTR = [
