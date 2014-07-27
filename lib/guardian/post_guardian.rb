@@ -137,7 +137,7 @@ module PostGuardian
     return false unless post
 
     if !post.hidden
-      return true if post.wiki || SiteSetting.edit_history_visible_to_public || post.user.edit_history_public
+      return true if post.wiki || SiteSetting.edit_history_visible_to_public || post.user.try(:edit_history_public)
     end
 
     authenticated? &&
