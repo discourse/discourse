@@ -36,6 +36,7 @@ test("Auto quoting", function() {
          "it converts single line quotes to blockquotes");
   cooked('"hello\nworld"', "<p>\"hello<br/>world\"</p>", "It doesn't convert multi line quotes");
   cooked('"hello "evil" trout"', '<p>"hello "evil" trout"</p>', "it doesn't format quotes in the middle of a line");
+  cooked('["text"', '<p>["text"</p>', "it recognizes leading tag-like text");
 });
 
 test("Traditional Line Breaks", function() {
