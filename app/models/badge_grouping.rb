@@ -13,7 +13,7 @@ class BadgeGrouping < ActiveRecord::Base
   end
 
   def default_position=(pos)
-    position ||= pos
+    self.position ||= pos
   end
 end
 
