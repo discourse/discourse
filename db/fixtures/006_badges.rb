@@ -30,12 +30,12 @@ BadgeGrouping.seed do |g|
 end
 
 # BUGFIX
-Badge.exec_sql 'UPDATE badges
+Badge.exec_sql "UPDATE badges
                 SET badge_grouping_id = -1
                 WHERE NOT EXISTS (
                   SELECT 1 FROM badge_groupings g
                   WHERE g.id = badge_grouping_id
-                )'
+                ) OR (id < 100 AND badge_grouping_id = #{BadgeGrouping::Other} )"
 
 # Trust level system badges.
 trust_level_badges = [
