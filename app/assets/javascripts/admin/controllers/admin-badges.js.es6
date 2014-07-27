@@ -7,6 +7,7 @@
   @module Discourse
 **/
 export default Ember.ArrayController.extend({
+  needs: ['modal'],
   itemController: 'admin-badge',
   queryParams: ['badgeId'],
   badgeId: Em.computed.alias('selectedId'),

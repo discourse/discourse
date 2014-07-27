@@ -1889,6 +1889,8 @@ en:
         description: Description
         badge_type: Badge Type
         badge_grouping: Group
+        badge_groupings:
+          modal_title: Badge Groupings
         granted_by: Granted By
         granted_at: Granted At
         save: Save

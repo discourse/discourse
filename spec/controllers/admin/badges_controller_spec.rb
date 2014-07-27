@@ -1,13 +1,34 @@
 require 'spec_helper'
 
 describe Admin::BadgesController do
-  it "is a subclass of AdminController" do
-    (Admin::BadgesController < Admin::AdminController).should be_true
-  end
 
   context "while logged in as an admin" do
     let!(:user) { log_in(:admin) }
     let!(:badge) { Fabricate(:badge) }
+
+    context '.save_badge_groupings' do
+
+      it 'can save badge groupings' do
+        groupings = BadgeGrouping.all.order(:position).to_a
+        groupings << BadgeGrouping.new(name: 'Test 1')
+        groupings << BadgeGrouping.new(name: 'Test 2')
+
+        groupings.shuffle!
+
+        names = groupings.map{|g| g.name}
+        ids = groupings.map{|g| g.id.to_s}
+
+
+        xhr :post, :save_badge_groupings, ids: ids, names: names
+
+        groupings2 = BadgeGrouping.all.order(:position).to_a
+
+        groupings2.map{|g| g.name}.should == names
+        (groupings.map(&:id) - groupings2.map{|g| g.id}).compact.should be_blank
+
+        ::JSON.parse(response.body)["badge_groupings"].length.should == groupings2.length
+      end
+    end
 
     context '.badge_types' do
       it 'returns success' do

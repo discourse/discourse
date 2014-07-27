@@ -1205,3 +1205,21 @@ and (max-width : 500px) {
 
   }
 }
+
+.badge-groupings {
+  list-style: none;
+  margin: 0;
+  padding: 10px 3px;
+  li {
+    padding: 6px 0;
+    width: 600px;
+    border-bottom: 1px solid #dfdfdf;
+  }
+  .actions {
+    font-size: 17px;
+    float: right;
+    a {
+      margin-left: 5px;
+    }
+  }
+}

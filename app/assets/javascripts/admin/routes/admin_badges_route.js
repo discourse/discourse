@@ -1,7 +1,8 @@
 Discourse.AdminBadgesRoute = Discourse.Route.extend({
   setupController: function(controller) {
     Discourse.ajax('/admin/badges.json').then(function(json){
-      controller.set('badgeGroupings', json.badge_groupings);
+
+      controller.set('badgeGroupings', Em.A(json.badge_groupings));
       controller.set('badgeTypes', json.badge_types);
       controller.set('protectedSystemFields', json.admin_badges.protected_system_fields);
       var triggers = [];
@@ -11,6 +12,12 @@ Discourse.AdminBadgesRoute = Discourse.Route.extend({
       controller.set('badgeTriggers', triggers);
       controller.set('model', Discourse.Badge.createFromJson(json));
     });
+  },
+
+  actions: {
+    editGroupings: function(model){
+      Discourse.Route.showModal(this, 'admin_edit_badge_groupings', model);
+    }
   }
 
 });

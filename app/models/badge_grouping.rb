@@ -8,6 +8,10 @@ class BadgeGrouping < ActiveRecord::Base
 
   has_many :badges
 
+  def system?
+    id && id < 5
+  end
+
   def default_position=(pos)
     position ||= pos
   end
