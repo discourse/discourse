@@ -301,7 +301,7 @@ test("links with full urls", function() {
 test("Code Blocks", function() {
 
   cooked("<pre>\nhello\n</pre>\n",
-         "<p><pre>\nhello</pre></p>",
+         "<p><pre>hello</pre></p>",
          "pre blocks don't include extra lines");
 
   cooked("```\na\nb\nc\n\nd\n```",

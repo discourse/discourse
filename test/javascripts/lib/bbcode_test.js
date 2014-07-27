@@ -129,6 +129,16 @@ test("quote formatting", function() {
          "</div><blockquote><p>abc</p></blockquote></aside>\n\n<p>hello</p>",
          "handles new lines properly");
 
+  formatQ("[quote=\"Alice, post:1, topic:1\"]\n[quote=\"Bob, post:2, topic:1\"]\n[/quote]\n[/quote]",
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Alice said:" +
+         "</div><blockquote><aside class=\"quote\" data-post=\"2\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Bob said:" +
+         "</div><blockquote></blockquote></aside></blockquote></aside>",
+         "quotes can be nested");
+
+  formatQ("[quote=\"Alice, post:1, topic:1\"]\n[quote=\"Bob, post:2, topic:1\"]\n[/quote]",
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Alice said:" +
+         "</div><blockquote><p>[quote=\"Bob, post:2, topic:1\"]</p></blockquote></aside>",
+         "handles mismatched nested quote tags");
 });
 
 test("quotes with trailing formatting", function() {
