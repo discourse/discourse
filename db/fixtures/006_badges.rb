@@ -2,31 +2,31 @@
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::GettingStarted
   g.name = "Getting Started"
-  g.position = 10
+  g.default_position = 10
 end
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::Community
   g.name = "Community"
-  g.position = 11
+  g.default_position = 11
 end
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::Posting
   g.name = "Posting"
-  g.position = 12
+  g.default_position = 12
 end
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::TrustLevel
   g.name = "Trust Level"
-  g.position = 13
+  g.default_position = 13
 end
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::Other
   g.name = "Other"
-  g.position = 14
+  g.default_position = 14
 end
 
 # BUGFIX
