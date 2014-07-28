@@ -1,11 +1,11 @@
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => 'environment' do
-  I18n.locale = SiteSetting.default_locale
+  I18n.locale = SiteSetting.default_locale rescue :en
   SeedFu.seed
 end
 
 task 'test:prepare' => 'environment' do
-  I18n.locale = SiteSetting.default_locale
+  I18n.locale = SiteSetting.default_locale rescue :en
   SeedFu.seed
 end
 
