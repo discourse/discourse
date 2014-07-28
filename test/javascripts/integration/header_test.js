@@ -85,7 +85,7 @@ test("notifications dropdown", function() {
 });
 
 test("sitemap dropdown", function() {
-  expect(8);
+  expect(7);
 
   Discourse.SiteSettings.faq_url = "faq-url";
   Discourse.SiteSettings.enable_mobile_theme = true;
@@ -117,7 +117,6 @@ test("sitemap dropdown", function() {
     ok(exists($siteMapDropdown.find(".admin-link")), "has showing / hiding admin links correctly bound");
     ok(exists($siteMapDropdown.find(".flagged-posts.badge-notification")), "has displaying flagged posts badge correctly bound");
     equal($siteMapDropdown.find(".faq-link").attr("href"), "faq-url", "is correctly bound to the FAQ url site config");
-    notEqual($siteMapDropdown.find(".mobile-toggle-link").text().indexOf("mobile_view"), -1, "has displaying mobile theme toggle link correctly bound");
 
     ok(exists($siteMapDropdown.find(".category-links")), "has categories correctly bound");
     ok(exists($siteMapDropdown.find(".new-posts")), "has displaying category badges correctly bound");

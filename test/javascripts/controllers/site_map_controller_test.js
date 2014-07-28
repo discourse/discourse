@@ -50,11 +50,13 @@ test("faqUrl returns default '/faq' url when there is no corresponding site sett
 
 test("showMoblieToggle returns true when mobile theme is enabled in site settings", function() {
   Discourse.SiteSettings.enable_mobile_theme = true;
+  Discourse.Mobile.isMobileDevice = true;
   equal(controller.get("showMobileToggle"), true);
 });
 
 test("showMoblieToggle returns false when mobile theme is disabled in site settings", function() {
   Discourse.SiteSettings.enable_mobile_theme = false;
+  Discourse.Mobile.isMobileDevice = true;
   equal(controller.get("showMobileToggle"), false);
 });
 
