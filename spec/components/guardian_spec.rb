@@ -395,6 +395,12 @@ describe Guardian do
         it 'is true when logged in' do
           Guardian.new(Fabricate(:user)).can_see?(post_revision).should == true
         end
+
+        it 'is true if the author has public edit history' do
+          public_post_revision = Fabricate(:post_revision)
+          public_post_revision.post.user.edit_history_public = true
+          Guardian.new.can_see?(public_post_revision).should == true
+        end
       end
 
       context 'edit_history_visible_to_public is false' do
@@ -411,6 +417,12 @@ describe Guardian do
 
         it 'is false for trust level lower than 4' do
           Guardian.new(Fabricate(:leader)).can_see?(post_revision).should == false
+        end
+
+        it 'is true if the author has public edit history' do
+          public_post_revision = Fabricate(:post_revision)
+          public_post_revision.post.user.edit_history_public = true
+          Guardian.new.can_see?(public_post_revision).should == true
         end
       end
     end
