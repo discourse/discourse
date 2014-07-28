@@ -22,6 +22,7 @@ test('basic bbcode', function() {
          "<span class=\"bbcode-b\">evil <span class=\"bbcode-i\">trout</span></span>",
          "allows embedding of tags");
   format("[EMAIL]eviltrout@mailinator.com[/EMAIL]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports upper case bbcode");
+  format("[b]strong [b]stronger[/b][/b]", "<span class=\"bbcode-b\">strong <span class=\"bbcode-b\">stronger</span></span>", "accepts nested bbcode tags");
 });
 
 test('invalid bbcode', function() {
@@ -44,6 +45,7 @@ test('spoiler', function() {
 test('lists', function() {
   format("[ul][li]option one[/li][/ul]", "<ul><li>option one</li></ul>", "creates an ul");
   format("[ol][li]option one[/li][/ol]", "<ol><li>option one</li></ol>", "creates an ol");
+  format("[ul]\n[li]option one[/li]\n[li]option two[/li]\n[/ul]", "<ul><li>option one</li><li>option two</li></ul>", "suppresses empty lines in lists");
 });
 
 test('tags with arguments', function() {
@@ -127,6 +129,16 @@ test("quote formatting", function() {
          "</div><blockquote><p>abc</p></blockquote></aside>\n\n<p>hello</p>",
          "handles new lines properly");
 
+  formatQ("[quote=\"Alice, post:1, topic:1\"]\n[quote=\"Bob, post:2, topic:1\"]\n[/quote]\n[/quote]",
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Alice said:" +
+         "</div><blockquote><aside class=\"quote\" data-post=\"2\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Bob said:" +
+         "</div><blockquote></blockquote></aside></blockquote></aside>",
+         "quotes can be nested");
+
+  formatQ("[quote=\"Alice, post:1, topic:1\"]\n[quote=\"Bob, post:2, topic:1\"]\n[/quote]",
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Alice said:" +
+         "</div><blockquote><p>[quote=\"Bob, post:2, topic:1\"]</p></blockquote></aside>",
+         "handles mismatched nested quote tags");
 });
 
 test("quotes with trailing formatting", function() {

@@ -134,6 +134,19 @@ function invalidBoundary(args, prev) {
 }
 
 /**
+  Returns the number of (terminated) lines in a string.
+
+  @method countLines
+  @param {string} str the string.
+  @returns {Integer} number of terminated lines in str
+**/
+function countLines(str) {
+  var index = -1, count = 0;
+  while ((index = str.indexOf("\n", index + 1)) !== -1) { count++; }
+  return count;
+}
+
+/**
   An object used for rendering our dialects.
 
   @class Dialect
@@ -288,7 +301,7 @@ Discourse.Dialect = {
     this.registerInline(start, function(text, match, prev) {
       if (invalidBoundary(args, prev)) { return; }
 
-      var endPos = self.findEndPos(text, stop, args, startLength);
+      var endPos = self.findEndPos(text, start, stop, args, startLength);
       if (endPos === -1) { return; }
       var between = text.slice(startLength, endPos);
 
@@ -304,13 +317,14 @@ Discourse.Dialect = {
     });
   },
 
-  findEndPos: function(text, stop, args, start) {
-    var endPos = text.indexOf(stop, start);
-    if (endPos === -1) { return -1; }
-    var after = text.charAt(endPos + stop.length);
-    if (after && after.indexOf(stop) === 0) {
-      return this.findEndPos(text, stop, args, endPos + stop.length + 1);
-    }
+  findEndPos: function(text, start, stop, args, offset) {
+    var endPos, nextStart;
+    do {
+      endPos = text.indexOf(stop, offset);
+      if (endPos === -1) { return -1; }
+      nextStart = text.indexOf(start, offset);
+      offset = endPos + stop.length;
+    } while (nextStart !== -1 && nextStart < endPos);
     return endPos;
   },
 
@@ -358,102 +372,83 @@ Discourse.Dialect = {
 
       var linebreaks = dialect.options.traditional_markdown_linebreaks ||
           Discourse.SiteSettings.traditional_markdown_linebreaks;
-
-      // Some replacers should not be run with traditional linebreaks
       if (linebreaks && args.skipIfTradtionalLinebreaks) { return; }
 
       args.start.lastIndex = 0;
-      var m = (args.start).exec(block);
+      var result = [], match = (args.start).exec(block);
+      if (!match) { return; }
 
-      if (!m) { return; }
+      var lastChance = function() {
+        return !next.some(function(e) { return e.indexOf(args.stop) !== -1; });
+      };
 
-      var startPos = args.start.lastIndex - m[0].length,
-          leading,
-          blockContents = [],
-          result = [],
-          lineNumber = block.lineNumber;
-
-      if (startPos > 0) {
-        leading = block.slice(0, startPos);
-        lineNumber += (leading.split("\n").length - 1);
-
-        var para = ['p'];
-        this.processInline(leading).forEach(function (l) {
-          para.push(l);
-        });
-
-        result.push(para);
+      // shave off start tag and leading text, if any.
+      var pos = args.start.lastIndex - match[0].length,
+          leading = block.slice(0, pos),
+          trailing = match[2] ? match[2].replace(/^\n*/, "") : "";
+      // just give up if there's no stop tag in this or any next block
+      if (block.indexOf(args.stop, pos + args.stop.length) === -1 && lastChance()) { return; }
+      if (leading.length > 0) { result.push(['p'].concat(this.processInline(leading))); }
+      if (trailing.length > 0) {
+        next.unshift(MD.mk_block(trailing, block.trailing,
+          block.lineNumber + countLines(leading) + (match[2] ? match[2].length : 0) - trailing.length));
       }
 
-      if (m[2]) {
-        next.unshift(MD.mk_block(m[2], null, lineNumber + 1));
-      }
+      // go through the available blocks to find the matching stop tag.
+      var contentBlocks = [], nesting = 0, actualEndPos = -1, currentBlock;
+      blockloop:
+      while (currentBlock = next.shift()) {
+        // collect all the start and stop tags in the current block
+        args.start.lastIndex = 0;
+        var startPos = [], m;
+        while (m = (args.start).exec(currentBlock)) {
+          startPos.push(args.start.lastIndex - m[0].length);
+          args.start.lastIndex = args.start.lastIndex - (m[2] ? m[2].length : 0);
+        }
+        var endPos = [], offset = 0;
+        while ((pos = currentBlock.indexOf(args.stop, offset)) !== -1) {
+          endPos.push(pos);
+          offset += (pos + args.stop.length);
+        }
 
-      lineNumber++;
+        // go through the available end tags:
+        var ep = 0, sp = 0; // array indices
+        while (ep < endPos.length) {
+          if (sp < startPos.length && startPos[sp] < endPos[ep]) {
+            // there's an end tag, but there's also another start tag first. we need to go deeper.
+            sp++; nesting++;
+          } else if (nesting > 0) {
+            // found an end tag, but we must go up a level first.
+            ep++; nesting--;
+          } else {
+            // found an end tag and we're at the top: done!
+            actualEndPos = endPos[ep];
+            break blockloop;
+          }
+        }
 
-      var blockClosed = false;
-      for (var i=0; i<next.length; i++) {
-        if (next[i].indexOf(args.stop) >= 0) {
-          blockClosed = true;
+        if (lastChance()) {
+          // when lastChance() becomes true the first time, currentBlock contains the last
+          // end tag available in the input blocks but it's not on the right nesting level
+          // or we would have terminated the loop already. the only thing we can do is to
+          // treat the last available end tag as tho it were matched with our start tag
+          // and let the emitter figure out how to render the garbage inside.
+          actualEndPos = endPos[endPos.length - 1];
           break;
         }
+
+        // any left-over start tags still increase the nesting level
+        nesting += startPos.length - sp;
+        contentBlocks.push(currentBlock);
       }
 
-      if (!blockClosed) {
-        if (m[2]) { next.shift(); }
-        return;
-      }
+      var before = currentBlock.slice(0, actualEndPos).replace(/\n*$/, ""),
+          after = currentBlock.slice(actualEndPos + args.stop.length).replace(/^\n*/, "");
+      if (before.length > 0) contentBlocks.push(MD.mk_block(before, "", currentBlock.lineNumber));
+      if (after.length > 0) next.unshift(MD.mk_block(after, "", currentBlock.lineNumber + countLines(before)));
 
-      var numOpen = 1;
-      while (next.length > 0) {
-        var b = next.shift(),
-            blockLine = b.lineNumber,
-            diff = ((typeof blockLine === "undefined") ? lineNumber : blockLine) - lineNumber,
-            endFound = b.indexOf(args.stop),
-            leadingContents = b.slice(0, endFound),
-            trailingContents = b.slice(endFound+args.stop.length),
-            m2;
-
-        if (endFound === -1) {
-          leadingContents = b;
-        }
-
-        args.start.lastIndex = 0;
-        if (m2 = (args.start).exec(leadingContents)) {
-          numOpen++;
-          args.start.lastIndex -= m2[0].length - 1;
-          while (m2 = (args.start).exec(leadingContents)) {
-            numOpen++;
-            args.start.lastIndex -= m2[0].length - 1;
-          }
-        }
-
-        if (endFound >= 0) { numOpen--; }
-        for (var j=1; j<diff; j++) {
-          blockContents.push("");
-        }
-        lineNumber = blockLine + b.split("\n").length - 1;
-
-        if (endFound >= 0) {
-          if (trailingContents) {
-            next.unshift(MD.mk_block(trailingContents.replace(/^\s+/, "")));
-          }
-
-          blockContents.push(leadingContents.replace(/\s+$/, ""));
-
-          if (numOpen === 0) {
-            break;
-          }
-          blockContents.push(args.stop);
-        } else {
-          blockContents.push(b);
-        }
-      }
-
-      var emitterResult = args.emitter.call(this, blockContents, m, dialect.options);
-      if (emitterResult) {
-        result.push(emitterResult);
-      }
+      var emitterResult = args.emitter.call(this, contentBlocks, match, dialect.options);
+      if (emitterResult) { result.push(emitterResult); }
       return result;
     });
   },

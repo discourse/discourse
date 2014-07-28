@@ -662,7 +662,7 @@
         return [consumed, null, nodes];
       }
 
-      var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ), patterns );
+      var res = this.dialect.inline.__oneElement__.call(this, text.substr( consumed ), patterns, [text.substr(0, consumed)]);
       consumed += res[ 0 ];
       // Add any returned nodes.
       nodes.push.apply( nodes, res.slice( 1 ) );

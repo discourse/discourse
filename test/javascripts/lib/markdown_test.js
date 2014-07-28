@@ -36,6 +36,7 @@ test("Auto quoting", function() {
          "it converts single line quotes to blockquotes");
   cooked('"hello\nworld"', "<p>\"hello<br/>world\"</p>", "It doesn't convert multi line quotes");
   cooked('"hello "evil" trout"', '<p>"hello "evil" trout"</p>', "it doesn't format quotes in the middle of a line");
+  cooked('["text"', '<p>["text"</p>', "it recognizes leading tag-like text");
 });
 
 test("Traditional Line Breaks", function() {
@@ -315,7 +316,7 @@ test("links with full urls", function() {
 test("Code Blocks", function() {
 
   cooked("<pre>\nhello\n</pre>\n",
-         "<p><pre>\nhello</pre></p>",
+         "<p><pre>hello</pre></p>",
          "pre blocks don't include extra lines");
 
   cooked("```\na\nb\nc\n\nd\n```",
