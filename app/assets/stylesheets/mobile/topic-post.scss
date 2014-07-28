@@ -562,3 +562,8 @@ span.highlighted {
 .read-state {
   display: none;
 }
+
+// fixes youtube embed width for lazyYT plugin
+.lazyYT {
+  max-width: 100%;
+}
