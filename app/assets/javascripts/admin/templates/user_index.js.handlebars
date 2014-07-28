@@ -52,6 +52,8 @@
     </div>
   </div>
 
+
+  {{#if currentUser.admin}}
   <div class='display-row'>
     <div class='field'>{{i18n admin.groups.title}}</div>
     <div class='value'>
@@ -68,6 +70,7 @@
       {{/if}}
     </div>
   </div>
+  {{/if}}
 
   <div class='display-row'>
     <div class='field'>{{i18n user.ip_address.title}}</div>

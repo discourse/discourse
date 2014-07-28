@@ -25,11 +25,13 @@ Discourse.AdminUserIndexRoute = Discourse.Route.extend({
   },
 
   afterModel: function(model) {
-    var self = this;
-    return Discourse.Group.findAll().then(function(groups){
-      self._availableGroups = groups.filterBy('automatic', false);
-      return model;
-    });
+    if(Discourse.User.currentProp('admin')) {
+      var self = this;
+      return Discourse.Group.findAll().then(function(groups){
+        self._availableGroups = groups.filterBy('automatic', false);
+        return model;
+      });
+    }
   },
 
   setupController: function(controller, model) {
