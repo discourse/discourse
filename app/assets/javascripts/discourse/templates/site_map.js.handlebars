@@ -12,7 +12,7 @@
       </li>
     {{/if}}
     <li>
-      {{#titled-link-to "discovery.latest" titleKey="filters.latest.help" class="latest-topics-link"}}{{i18n filters.latest.title}}{{/titled-link-to}}
+      <a href="/" title="{{i18n filters.latest.help}}" class="latest-topics-link">{{i18n filters.latest.title}}</a>
     </li>
     {{#if showBadgesLink}}
       <li>
@@ -37,17 +37,19 @@
       </li>
 
       {{#each categories itemController=itemController}}
-        {{category-link this allowUncategorized=true showParent=true}}
-        {{#if showBadges}}
-          {{#if unreadTopics}}
-            <a href={{unbound unreadUrl}} class='badge unread-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unreadTopics}}</a>
+        <li class="category">
+          {{category-link this allowUncategorized=true showParent=true}}
+          {{#if showBadges}}
+            {{#if unreadTopics}}
+              <a href={{unbound unreadUrl}} class='badge unread-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unreadTopics}}</a>
+            {{/if}}
+            {{#if newTopics}}
+              <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{newTopics}} {{i18n filters.new.title.zero}}</a>
+            {{/if}}
+          {{else}}
+            <b class="topics-count">{{unbound topic_count}}</b>
           {{/if}}
-          {{#if newTopics}}
-            <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{newTopics}} {{i18n filters.new.title.zero}}</a>
-          {{/if}}
-        {{else}}
-          <b class="topics-count">{{unbound topic_count}}</b>
-        {{/if}}
+        </li>
       {{/each}}
     </ul>
   {{/if}}
