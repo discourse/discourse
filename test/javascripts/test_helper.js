@@ -83,6 +83,13 @@ Discourse.runInitializers();
 Discourse.start();
 Discourse.Route.mapRoutes();
 
+// disable logster error reporting
+if (window.Logster) {
+  Logster.enabled = false;
+} else {
+  window.Logster = { enabled: false };
+}
+
 QUnit.testStart(function() {
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
