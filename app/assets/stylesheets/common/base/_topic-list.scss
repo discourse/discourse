@@ -21,9 +21,7 @@
   background: rgba($secondary, .8);
 
   > tbody > tr {
-    &:nth-child(even) {
-        background-color: darken($secondary, 3%);
-    }
+  
     &.archived a {
       opacity: 0.6;
     }

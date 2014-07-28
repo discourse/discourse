@@ -464,10 +464,15 @@ a.star {
 #suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
-  #topic-list > tbody > tr:nth-child(even) {
-    background-color: darken($secondary, 3%);
-  }
-  #topic-list > tbody > tr:nth-child(odd) {
+  #topic-list {
+    > tbody > tr {
+      &:nth-child(odd) {
+          background-color: darken($secondary, 3%);
+      }
+      &:nth-child(even) {
+          background-color: $secondary;
+      }
+    }
   }
   table {
     box-shadow: none;
