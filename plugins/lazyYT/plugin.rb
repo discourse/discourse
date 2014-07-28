@@ -8,6 +8,7 @@ register_asset "javascripts/lazyYT.js"
 
 # stylesheet
 register_asset "stylesheets/lazyYT.css"
+register_asset "stylesheets/lazyYT_mobile.scss", :mobile
 
 # freedom patch YouTube Onebox
 class Onebox::Engine::YoutubeOnebox
