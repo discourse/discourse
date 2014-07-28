@@ -26,6 +26,7 @@
             'position': 'relative',
             'height': height,
             'width': width,
+            'max-width': '100%',
             'padding-top': paddingTop,
             'background': 'url(http://img.youtube.com/vi/' + id + '/hqdefault.jpg) center center no-repeat',
             'cursor': 'pointer',
