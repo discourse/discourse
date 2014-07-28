@@ -12,16 +12,9 @@ export default Em.Component.extend({
     buffer.push("<a href='" + Discourse.getURL('/category/') + Discourse.Category.slugFor(category) + "'>");
 
     var noLogo = Em.isEmpty(logoUrl);
-    if (noLogo || (!Em.isEmpty(category.get('parentCategory')))) {
-      buffer.push(Handlebars.Utils.escapeExpression(category.get('name')));
-
-      if (!noLogo) {
-        buffer.push("<br>");
-      }
-    }
-
+    buffer.push(Handlebars.Utils.escapeExpression(category.get('name')));
     if (!noLogo) {
-      buffer.push("<img src='" + logoUrl + "' class='category-logo'>");
+      buffer.push("<br><img src='" + logoUrl + "' class='category-logo'>");
     }
     buffer.push("</a>");
   }
