@@ -1,12 +1,4 @@
-/**
-  The route for the index of a Group
-
-  @class GroupIndexRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.GroupIndexRoute = Discourse.Route.extend({
+export default Discourse.Route.extend({
   model: function() {
     return this.modelFor('group').findPosts();
   },

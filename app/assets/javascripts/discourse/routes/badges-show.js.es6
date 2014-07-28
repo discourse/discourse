@@ -1,12 +1,4 @@
-/**
-  Shows a particular badge.
-
-  @class BadgesShowRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.BadgesShowRoute = Ember.Route.extend({
+export default Ember.Route.extend({
   serialize: function(model) {
     return {id: model.get('id'), slug: model.get('name').replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase()};
   },

@@ -1,12 +1,5 @@
-/**
-  Shows a list of all badges.
+export default Discourse.Route.extend({
 
-  @class BadgesIndexRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.BadgesIndexRoute = Discourse.Route.extend({
   model: function() {
     if (PreloadStore.get('badges')) {
       return PreloadStore.getAndRemove('badges').then(function(json) {

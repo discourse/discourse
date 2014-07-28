@@ -1,12 +1,4 @@
-/**
-  Set things up to display the members of a group
-
-  @class GroupMembersRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.GroupMembersRoute = Discourse.Route.extend({
+export default Discourse.Route.extend({
   model: function() {
     return this.modelFor('group');
   },
