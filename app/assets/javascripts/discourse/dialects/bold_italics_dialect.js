@@ -23,7 +23,7 @@ var replaceMarkdown = function(match, tag) {
     }
 
     var endText = new RegExp("[^\\s|" + match[0] + "]" + match.replace(/\*/g,"\\*") + "([^" + match[0] + "]|$)");
-    var finish = text.search(endText);
+    var finish = text.split("\n")[0].search(endText);
     if(finish && finish >= 0) {
       var newText = text.substring(match.length,finish+1);
       newText = this.processInline(newText);

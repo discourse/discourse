@@ -278,7 +278,9 @@ test("bold and italics", function() {
 });
 
 test("New Lines", function() {
-  cooked("_abc\ndef_", "<p><em>abc<br>def</em></p>", "it allows markup to span new lines");
+  // Note: This behavior was discussed and we determined it does not make sense to do this
+  // unless you're using traditional line breaks
+  cooked("_abc\ndef_", "<p>_abc<br>def_</p>", "it does not allow markup to span new lines");
   cooked("_abc\n\ndef_", "<p>_abc</p>\n\n<p>def_</p>", "it does not allow markup to span new paragraphs");
 });
 
