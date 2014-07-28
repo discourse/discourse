@@ -42,7 +42,7 @@ module FlagQuery
     end
 
     post_actions = actions.order('post_actions.created_at DESC')
-                          .includes(related_post: { topic: { posts: :user }})
+                          .includes(related_post: { topic: { ordered_posts: :user }})
                           .where(post_id: post_ids)
 
     post_actions.each do |pa|
@@ -67,13 +67,13 @@ module FlagQuery
       if pa.related_post && pa.related_post.topic
         conversation = {}
         related_topic = pa.related_post.topic
-        if response = related_topic.posts[0]
+        if response = related_topic.ordered_posts[0]
           conversation[:response] = {
             excerpt: excerpt(response.cooked),
             user_id: response.user_id
           }
           user_ids << response.user_id
-          if reply = related_topic.posts[1]
+          if reply = related_topic.ordered_posts[1]
             conversation[:reply] = {
               excerpt: excerpt(reply.cooked),
               user_id: reply.user_id
