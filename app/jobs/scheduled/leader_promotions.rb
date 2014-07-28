@@ -14,7 +14,7 @@ module Jobs
                            .where(new_value: TrustLevel.levels[:leader].to_s)
                            .exists?
 
-        unless Promotion.leader_met?(u)
+        if Promotion.leader_lost?(u)
           demoted_user_ids << u.id
           Promotion.new(u).change_trust_level!(:regular)
         end

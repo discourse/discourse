@@ -104,4 +104,8 @@ class Promotion
     LeaderRequirements.new(user).requirements_met?
   end
 
+  def self.leader_lost?(user)
+    LeaderRequirements.new(user).requirements_lost?
+  end
+
 end

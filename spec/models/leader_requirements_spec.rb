@@ -144,4 +144,65 @@ describe LeaderRequirements do
     end
   end
 
+  describe "requirements" do
+
+    before do
+      leader_requirements.stubs(:min_days_visited).returns(50)
+      leader_requirements.stubs(:min_topics_replied_to).returns(10)
+      leader_requirements.stubs(:min_topics_viewed).returns(25)
+      leader_requirements.stubs(:min_posts_read).returns(25)
+      leader_requirements.stubs(:min_topics_viewed_all_time).returns(200)
+      leader_requirements.stubs(:min_posts_read_all_time).returns(500)
+      leader_requirements.stubs(:max_flagged_posts).returns(5)
+      leader_requirements.stubs(:max_flagged_by_users).returns(5)
+
+      leader_requirements.stubs(:days_visited).returns(50)
+      leader_requirements.stubs(:num_topics_replied_to).returns(10)
+      leader_requirements.stubs(:topics_viewed).returns(25)
+      leader_requirements.stubs(:posts_read).returns(25)
+      leader_requirements.stubs(:topics_viewed_all_time).returns(200)
+      leader_requirements.stubs(:posts_read_all_time).returns(500)
+      leader_requirements.stubs(:num_flagged_posts).returns(0)
+      leader_requirements.stubs(:num_flagged_by_users).returns(0)
+    end
+
+    it "are met when all requirements are met" do
+      leader_requirements.requirements_met?.should == true
+    end
+
+    it "are not met if too few days visited" do
+      leader_requirements.stubs(:days_visited).returns(49)
+      leader_requirements.requirements_met?.should == false
+    end
+
+    it "are not lost if requirements are close" do
+      leader_requirements.stubs(:days_visited).returns(45)
+      leader_requirements.stubs(:num_topics_replied_to).returns(9)
+      leader_requirements.stubs(:topics_viewed).returns(23)
+      leader_requirements.stubs(:posts_read).returns(23)
+      leader_requirements.requirements_lost?.should == false
+    end
+
+    it "are lost if not enough visited" do
+      leader_requirements.stubs(:days_visited).returns(44)
+      leader_requirements.requirements_lost?.should == true
+    end
+
+    it "are lost if not enough topics replied to" do
+      leader_requirements.stubs(:num_topics_replied_to).returns(8)
+      leader_requirements.requirements_lost?.should == true
+    end
+
+    it "are lost if not enough topics viewed" do
+      leader_requirements.stubs(:topics_viewed).returns(22)
+      leader_requirements.requirements_lost?.should == true
+    end
+
+    it "are lost if not enough posts read" do
+      leader_requirements.stubs(:posts_read).returns(22)
+      leader_requirements.requirements_lost?.should == true
+    end
+
+  end
+
 end

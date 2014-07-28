@@ -38,6 +38,7 @@ describe Jobs::LeaderPromotions do
       end
 
       LeaderRequirements.any_instance.stubs(:requirements_met?).returns(false)
+      LeaderRequirements.any_instance.stubs(:requirements_lost?).returns(true)
       run_job
       user.reload.trust_level.should == TrustLevel.levels[:regular]
     end
@@ -49,8 +50,22 @@ describe Jobs::LeaderPromotions do
       end
 
       LeaderRequirements.any_instance.stubs(:requirements_met?).returns(false)
+      LeaderRequirements.any_instance.stubs(:requirements_lost?).returns(true)
       run_job
       user.reload.trust_level.should == TrustLevel.levels[:leader]
     end
+
+    it "doesn't demote if user hasn't lost requirements (low water mark)" do
+      user = nil
+      Timecop.freeze(4.days.ago) do
+        user = create_leader_user
+      end
+
+      LeaderRequirements.any_instance.stubs(:requirements_met?).returns(false)
+      LeaderRequirements.any_instance.stubs(:requirements_lost?).returns(false)
+      run_job
+      user.reload.trust_level.should == TrustLevel.levels[:leader]
+    end
+
   end
 end
