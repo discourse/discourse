@@ -28,6 +28,16 @@
 // --------------------------------------------------
 
 #topic-list {
+
+  > tbody > tr {
+    &:nth-child(odd) {
+      background-color: darken($secondary, 3%);
+      }
+    &:nth-child(even) {
+      background-color: $secondary;
+      }
+    }
+
   th,
   td {
     padding: 7px 5px;
@@ -71,6 +81,8 @@
 // Category list
 // --------------------------------------------------
 
+
+
 #topic-list.categories {
   td.latest {
     vertical-align: top;
@@ -112,15 +124,25 @@
 }
 
 .category-list-item {
+
+  #topic-list > tbody > tr {
+    &:nth-child(odd) {
+      background-color: $secondary;
+      }
+      &:nth-child(even) {
+        background-color: $secondary;
+      }
+    }
+
   margin-bottom: 10px;
-  #topic-list tbody tr:nth-child(even) {
-    background-color: darken($secondary, 3%);
-  }
+
   th .badge-category {
     float: left;
     margin: 1px 4px 0 0;
     font-size: 110%;
   }
+
+
   .posters {
     float: left;
   }
