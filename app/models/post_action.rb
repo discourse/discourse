@@ -331,7 +331,8 @@ class PostAction < ActiveRecord::Base
     end
 
     topic_id = Post.with_deleted.where(id: post_id).pluck(:topic_id).first
-    Topic.where(id: topic_id).update_all ["#{column} = ?", count]
+    topic_count = Post.where(topic_id: topic_id).sum(column)
+    Topic.where(id: topic_id).update_all ["#{column} = ?", topic_count]
 
     if PostActionType.notify_flag_type_ids.include?(post_action_type_id)
       PostAction.update_flagged_posts_count

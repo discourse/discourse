@@ -10,6 +10,7 @@ describe PostAction do
   let(:moderator) { Fabricate(:moderator) }
   let(:codinghorror) { Fabricate(:coding_horror) }
   let(:post) { Fabricate(:post) }
+  let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
   describe "messaging" do
@@ -111,6 +112,17 @@ describe PostAction do
       post.reload
       post.hidden.should be_true
       post.hidden_at.should be_present
+    end
+
+  end
+
+  describe "update_counters" do
+
+    it "properly updates topic counters" do
+      PostAction.act(moderator, post, PostActionType.types[:like])
+      PostAction.act(codinghorror, second_post, PostActionType.types[:like])
+      post.topic.reload
+      post.topic.like_count.should == 2
     end
 
   end
