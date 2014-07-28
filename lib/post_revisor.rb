@@ -105,7 +105,7 @@ class PostRevisor
       @post.hidden_at = nil
       @post.topic.update_attributes(visible: true)
 
-      PostAction.clear_flags!(@post, -1)
+      PostAction.clear_flags!(@post, Discourse.system_user)
     end
 
     @post.extract_quoted_post_numbers

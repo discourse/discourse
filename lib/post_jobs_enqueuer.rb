@@ -29,9 +29,7 @@ class PostJobsEnqueuer
   end
 
   def after_post_create
-    if @post.post_number > 1
-      TopicTrackingState.publish_unread(@post)
-    end
+    TopicTrackingState.publish_unread(@post) if @post.post_number > 1
 
     Jobs.enqueue_in(
         SiteSetting.email_time_window_mins.minutes,

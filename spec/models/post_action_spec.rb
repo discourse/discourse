@@ -12,7 +12,6 @@ describe PostAction do
   let(:post) { Fabricate(:post) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
-
   describe "messaging" do
 
     it "notify moderators integration test" do
@@ -41,13 +40,12 @@ describe PostAction do
       # Notification level should be "Watching" for everyone
       topic.topic_users(true).map(&:notification_level).uniq.should == [TopicUser.notification_levels[:watching]]
 
-      # reply to PM should clear flag
+      # reply to PM should not clear flag
       p = PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags")
       p.create
 
       action.reload
-      action.deleted_at.should_not be_nil
-
+      action.deleted_at.should be_nil
     end
 
     describe 'notify_moderators' do
@@ -87,7 +85,7 @@ describe PostAction do
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       PostAction.flagged_posts_count.should == 1
 
-      PostAction.clear_flags!(post, -1)
+      PostAction.clear_flags!(post, Discourse.system_user)
       PostAction.flagged_posts_count.should == 0
     end
 
@@ -103,7 +101,7 @@ describe PostAction do
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       post.hidden.should be_false
       post.hidden_at.should be_blank
-      PostAction.defer_flags!(post, admin.id)
+      PostAction.defer_flags!(post, admin)
       PostAction.flagged_posts_count.should == 0
       post.reload
       post.hidden.should be_false
@@ -220,7 +218,7 @@ describe PostAction do
 
         # If staff takes action, it is ranked higher
         admin = Fabricate(:admin)
-        pa = PostAction.act(admin, post, PostActionType.types[:spam], take_action: true)
+        PostAction.act(admin, post, PostActionType.types[:spam], take_action: true)
         PostAction.flag_counts_for(post.id).should == [0, 8]
 
         # If a flag is dismissed
@@ -252,7 +250,7 @@ describe PostAction do
       post.reload
       post.spam_count.should == 1
 
-      PostAction.clear_flags!(post, -1)
+      PostAction.clear_flags!(post, Discourse.system_user)
       post.reload
 
       post.spam_count.should == 0

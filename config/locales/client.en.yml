@@ -1044,9 +1044,9 @@ en:
 
       actions:
         flag: 'Flag'
-        clear_flags:
-          one: "Clear flag"
-          other: "Clear flags"
+        defer_flags:
+          one: "Defer flag"
+          other: "Defer flags"
         it_too:
           off_topic: "Flag it too"
           spam: "Flag it too"
@@ -1411,25 +1411,37 @@ en:
         old: "Old"
         active: "Active"
 
-        agree_hide: "Agree (hide post + send PM)"
-        agree_hide_title: "Hide this post and automatically send the user a private message urging them to edit it"
-        defer: "Defer"
-        defer_title: "No action is necessary at this time, defer any action on this flag until a later date, or never"
-        delete_post: "Delete Post"
-        delete_post_title: "Delete post; if the first post, delete the topic"
-        disagree_unhide: "Disagree (unhide post)"
-        disagree_unhide_title: "Remove any flags from this post and make the post visible again"
-        disagree: "Disagree"
-        disagree_title: "Disagree with flag, remove any flags from this post"
+        agree_flag_hide_post: "Agree (hide post + send PM)"
+        agree_flag_hide_post_title: "Hide this post and automatically send the user a private message urging them to edit it"
+        defer_flag: "Defer"
+        defer_flag_title: "No action is necessary at this time, defer any action on this flag until a later date, or never"
+        delete: "Delete"
+        delete_title: "Delete"
+        delete_post_defer_flag: "Delete Post and defer flag"
+        delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
+        delete_post_agree_flag: "Delete Post and agree with flag"
+        delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
+        delete_flag_modal_title: "Choose the delete action"
+        delete_spammer: "Delete Spammer"
         delete_spammer_title: "Delete the user and all its posts and topics."
+        disagree_flag_unhide_post: "Disagree (unhide post)"
+        disagree_flag_unhide_post_title: "Remove any flags from this post and make the post visible again"
+        disagree_flag: "Disagree"
+        disagree_flag_title: "Disagree with flag, remove any flags from this post"
         clear_topic_flags: "Done"
         clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
+        more: "(more...)"
+
+        dispositions:
+          agreed: "agreed"
+          disagreed: "disagreed"
+          defered: "defered"
 
         flagged_by: "Flagged by"
         resolved_by: "Resolved by"
         system: "System"
         error: "Something went wrong"
-        view_message: "Reply"
+        reply_message: "Reply"
         no_results: "There are no flags."
         topic_flagged: "This <strong>topic</strong> has been flagged."
         visit_topic: "Visit the topic to take action"

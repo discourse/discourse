@@ -16,17 +16,35 @@ class PostAction < ActiveRecord::Base
   rate_limit :post_action_rate_limiter
 
   scope :spam_flags, -> { where(post_action_type_id: PostActionType.types[:spam]) }
+  scope :flags, -> { where(post_action_type_id: PostActionType.notify_flag_type_ids) }
+  scope :publics, -> { where(post_action_type_id: PostActionType.public_type_ids) }
+  scope :active, -> { where(defered_at: nil, agreed_at: nil, deleted_at: nil) }
 
   after_save :update_counters
   after_save :enforce_rules
   after_commit :notify_subscribers
 
+  def disposed_by_id
+    deleted_by_id || agreed_by_id || defered_by_id
+  end
+
+  def disposed_at
+    deleted_at || agreed_at || defered_at
+  end
+
+  def disposition
+    return :disagreed if deleted_at
+    return :agreed if agreed_at
+    return :defered if defered_at
+    nil
+  end
+
   def self.update_flagged_posts_count
-    posts_flagged_count = PostAction.joins(post: :topic)
-                                    .where('defer = false or defer IS NULL')
-                                    .where('post_actions.post_action_type_id' => PostActionType.notify_flag_type_ids,
-                                           'posts.deleted_at' => nil,
-                                           'topics.deleted_at' => nil)
+    posts_flagged_count = PostAction.active
+                                    .flags
+                                    .joins(post: :topic)
+                                    .where('posts.deleted_at' => nil)
+                                    .where('topics.deleted_at' => nil)
                                     .count('DISTINCT posts.id')
 
     $redis.set('posts_flagged_count', posts_flagged_count)
@@ -39,56 +57,91 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.counts_for(collection, user)
-  	return {} if collection.blank?
+    return {} if collection.blank?
 
-    collection_ids = collection.map {|p| p.id}
+    collection_ids = collection.map(&:id)
     user_id = user.present? ? user.id : 0
 
-    result = PostAction.where(post_id: collection_ids, user_id: user_id)
+    post_actions = PostAction.where(post_id: collection_ids, user_id: user_id)
 
     user_actions = {}
-    result.each do |r|
-      user_actions[r.post_id] ||= {}
-      user_actions[r.post_id][r.post_action_type_id] = r
+    post_actions.each do |post_action|
+      user_actions[post_action.post_id] ||= {}
+      user_actions[post_action.post_id][post_action.post_action_type_id] = post_action
     end
 
     user_actions
   end
 
-  def self.count_per_day_for_type(sinceDaysAgo = 30, post_action_type)
-    unscoped.where(post_action_type_id: post_action_type).where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
+  def self.count_per_day_for_type(post_action_type, since_days_ago=30)
+    unscoped.where(post_action_type_id: post_action_type)
+            .where('created_at > ?', since_days_ago.days.ago)
+            .group('date(created_at)')
+            .order('date(created_at)')
+            .count
   end
 
-  def self.clear_flags!(post, moderator_id, action_type_id = nil)
-    # -1 is the automatic system cleary
-    actions = if action_type_id
-      [action_type_id]
-    else
-      moderator_id == -1 ? PostActionType.auto_action_flag_types.values : PostActionType.flag_types.values
-    end
+  def self.agree_flags!(post, moderator, delete_post=false)
+    actions = PostAction.active
+                        .where(post_id: post.id)
+                        .where(post_action_type_id: PostActionType.flag_types.values)
 
-    PostAction.where({ post_id: post.id, post_action_type_id: actions }).update_all({ deleted_at: Time.zone.now, deleted_by_id: moderator_id })
-    f = actions.map{|t| ["#{PostActionType.types[t]}_count", 0]}
-    Post.where(id: post.id).with_deleted.update_all(Hash[*f.flatten])
-    update_flagged_posts_count
-  end
-
-  def self.defer_flags!(post, moderator_id)
-    actions = PostAction.where(
-      defer: nil,
-      post_id: post.id,
-      post_action_type_id: PostActionType.flag_types.values,
-      deleted_at: nil
-    )
-
-    actions.each do |a|
-      a.defer = true
-      a.defer_by = moderator_id
+    actions.each do |action|
+      action.agreed_at = Time.zone.now
+      action.agreed_by_id = moderator.id
       # so callback is called
-      a.save
+      action.save
+      action.add_moderator_post_if_needed(moderator, :agreed, delete_post)
     end
 
     update_flagged_posts_count
+  end
+
+  def self.clear_flags!(post, moderator)
+    # -1 is the automatic system cleary
+    action_type_ids = moderator.id == -1 ?
+        PostActionType.auto_action_flag_types.values :
+        PostActionType.flag_types.values
+
+    actions = PostAction.where(post_id: post.id)
+                        .where(post_action_type_id: action_type_ids)
+
+    actions.each do |action|
+      action.deleted_at = Time.zone.now
+      action.deleted_by_id = moderator.id
+      # so callback is called
+      action.save
+      action.add_moderator_post_if_needed(moderator, :disagreed)
+    end
+
+    # reset all cached counters
+    f = action_type_ids.map { |t| ["#{PostActionType.types[t]}_count", 0] }
+    Post.with_deleted.where(id: post.id).update_all(Hash[*f.flatten])
+
+    update_flagged_posts_count
+  end
+
+  def self.defer_flags!(post, moderator, delete_post=false)
+    actions = PostAction.active
+                        .where(post_id: post.id)
+                        .where(post_action_type_id: PostActionType.flag_types.values)
+
+    actions.each do |action|
+      action.defered_at = Time.zone.now
+      action.defered_by_id = moderator.id
+      # so callback is called
+      action.save
+      action.add_moderator_post_if_needed(moderator, :defered, delete_post)
+    end
+
+    update_flagged_posts_count
+  end
+
+  def add_moderator_post_if_needed(moderator, disposition, delete_post=false)
+    return unless related_post
+    message_key = "flags_dispositions.#{disposition}"
+    message_key << "_and_deleted" if delete_post
+    related_post.topic.add_moderator_post(moderator, I18n.t(message_key))
   end
 
   def self.create_message_for_post_action(user, post, post_action_type_id, opts)
@@ -123,10 +176,10 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.act(user, post, post_action_type_id, opts={})
+    related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)
+    staff_took_action = opts[:take_action] || false
 
-    related_post_id = create_message_for_post_action(user,post,post_action_type_id,opts)
-
-    targets_topic = if opts[:flag_topic] and post.topic
+    targets_topic = if opts[:flag_topic] && post.topic
       post.topic.reload
       post.topic.posts_count != 1
     end
@@ -138,17 +191,16 @@ class PostAction < ActiveRecord::Base
     }
 
     action_attributes = {
-      message: opts[:message],
-      staff_took_action: opts[:take_action] || false,
+      staff_took_action: staff_took_action,
       related_post_id: related_post_id,
       targets_topic: !!targets_topic
     }
 
     # First try to revive a trashed record
     row_count = PostAction.where(where_attrs)
-      .with_deleted
-      .where("deleted_at IS NOT NULL")
-      .update_all(action_attributes.merge(deleted_at: nil))
+                          .with_deleted
+                          .where("deleted_at IS NOT NULL")
+                          .update_all(action_attributes.merge(deleted_at: nil))
 
     if row_count == 0
       post_action = create(where_attrs.merge(action_attributes))
@@ -157,8 +209,12 @@ class PostAction < ActiveRecord::Base
       end
     else
       post_action = PostAction.where(where_attrs).first
-      post_action.update_counters
     end
+
+    # agree with other flags
+    PostAction.agree_flags!(post, user) if staff_took_action
+    # update counters
+    post_action.try(:update_counters)
 
     post_action
   rescue ActiveRecord::RecordNotUnique
@@ -216,10 +272,11 @@ class PostAction < ActiveRecord::Base
 
   before_create do
     post_action_type_ids = is_flag? ? PostActionType.flag_types.values : post_action_type_id
-    raise AlreadyActed if PostAction.where(user_id: user_id,
-                                           post_id: post_id,
-                                           post_action_type_id: post_action_type_ids,
-                                           deleted_at: nil)
+    raise AlreadyActed if PostAction.where(user_id: user_id)
+                                    .where(post_id: post_id)
+                                    .where(post_action_type_id: post_action_type_ids)
+                                    .where(deleted_at: nil)
+                                    .where(targets_topic: targets_topic)
                                     .exists?
   end
 
@@ -251,30 +308,30 @@ class PostAction < ActiveRecord::Base
     PostActionType.types[post_action_type_id]
   end
 
-
   def update_counters
     # Update denormalized counts
     column = "#{post_action_type_key.to_s}_count"
-    delta = deleted_at.nil? ? 1 : -1
+    count = PostAction.where(post_id: post_id)
+                      .where(post_action_type_id: post_action_type_id)
+                      .count
 
     # We probably want to refactor this method to something cleaner.
     case post_action_type_key
     when :vote
       # Voting also changes the sort_order
-      Post.where(id: post_id).update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)",
-                        delta: delta,
-                        max: Topic.max_sort_order]
+      Post.where(id: post_id).update_all ["vote_count = :count, sort_order = :max - :count", count: count, max: Topic.max_sort_order]
     when :like
       # `like_score` is weighted higher for staff accounts
-      Post.where(id: post_id).update_all ["like_count = like_count + :delta, like_score = like_score + :score_delta",
-                        delta: delta,
-                        score_delta: user.staff? ? delta * SiteSetting.staff_like_weight : delta]
+      score = PostAction.joins(:user)
+                        .where(post_id: post_id)
+                        .sum("CASE WHEN users.moderator OR users.admin THEN #{SiteSetting.staff_like_weight} ELSE 1 END")
+      Post.where(id: post_id).update_all ["like_count = :count, like_score = :score", count: count, score: score]
     else
-      Post.where(id: post_id).update_all ["#{column} = #{column} + ?", delta]
+      Post.where(id: post_id).update_all ["#{column} = ?", count]
     end
 
-    post = Post.with_deleted.where(id: post_id).first
-    Topic.where(id: post.topic_id).update_all ["#{column} = #{column} + ?", delta]
+    topic_id = Post.with_deleted.where(id: post_id).pluck(:topic_id).first
+    Topic.where(id: topic_id).update_all ["#{column} = ?", count]
 
     if PostActionType.notify_flag_type_ids.include?(post_action_type_id)
       PostAction.update_flagged_posts_count
@@ -314,7 +371,6 @@ class PostAction < ActiveRecord::Base
     end
   end
 
-
   def self.hide_post!(post, post_action_type, reason=nil)
     return if post.hidden
 
@@ -324,8 +380,7 @@ class PostAction < ActiveRecord::Base
     end
 
     Post.where(id: post.id).update_all(["hidden = true, hidden_at = CURRENT_TIMESTAMP, hidden_reason_id = COALESCE(hidden_reason_id, ?)", reason])
-    Topic.where(["id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
-                      topic_id: post.topic_id]).update_all(visible: false)
+    Topic.where(["id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)", topic_id: post.topic_id]).update_all(visible: false)
 
     # inform user
     if post.user
@@ -345,7 +400,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.post_action_type_for_post(post_id)
-    post_action = PostAction.find_by(defer: nil, post_id: post_id, post_action_type_id: PostActionType.flag_types.values, deleted_at: nil)
+    post_action = PostAction.find_by(defered_at: nil, post_id: post_id, post_action_type_id: PostActionType.flag_types.values, deleted_at: nil)
     PostActionType.types[post_action.post_action_type_id]
   end
 
@@ -366,15 +421,17 @@ end
 #  user_id             :integer          not null
 #  post_action_type_id :integer          not null
 #  deleted_at          :datetime
-#  created_at          :datetime
-#  updated_at          :datetime
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
 #  deleted_by_id       :integer
 #  message             :text
 #  related_post_id     :integer
 #  staff_took_action   :boolean          default(FALSE), not null
-#  defer               :boolean
-#  defer_by            :integer
+#  defered_at          :datetime
+#  defer_by_id         :integer
 #  targets_topic       :boolean          default(FALSE)
+#  agreed_at           :datetime
+#  agreed_by_id        :integer
 #
 # Indexes
 #

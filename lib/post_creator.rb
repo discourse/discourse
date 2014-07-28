@@ -61,7 +61,6 @@ class PostCreator
       save_post
       extract_links
       store_unique_post_key
-      consider_clearing_flags
       track_topic
       update_topic_stats
       update_user_counts
@@ -147,21 +146,6 @@ class PostCreator
     end
   end
 
-  def clear_possible_flags(topic)
-    # at this point we know the topic is a PM and has been replied to ... check if we need to clear any flags
-    #
-    first_post = Post.select(:id).where(topic_id: topic.id).find_by("post_number = 1")
-    post_action = nil
-
-    if first_post
-      post_action = PostAction.find_by(related_post_id: first_post.id, deleted_at: nil, post_action_type_id: PostActionType.types[:notify_moderators])
-    end
-
-    if post_action
-      post_action.remove_act!(@user)
-    end
-  end
-
   private
 
   def setup_topic
@@ -233,19 +217,22 @@ class PostCreator
     @post.store_unique_post_key
   end
 
-  def consider_clearing_flags
-    return if @opts[:import_mode]
-    return unless @topic.private_message? && @post.post_number > 1 && @topic.user_id != @post.user_id
-
-    clear_possible_flags(@topic)
-  end
-
   def update_user_counts
+    @user.create_user_stat if @user.user_stat.nil?
+
+    if @user.user_stat.first_post_created_at.nil?
+      @user.user_stat.first_post_created_at = @post.created_at
+    end
+
+    @user.user_stat.post_count += 1
+    @user.user_stat.topic_count += 1 if @post.post_number == 1
+
     # We don't count replies to your own topics
     if !@opts[:import_mode] && @user.id != @topic.user_id
       @user.user_stat.update_topic_reply_count
-      @user.user_stat.save!
     end
+
+    @user.user_stat.save!
 
     @user.last_posted_at = @post.created_at
     @user.save!

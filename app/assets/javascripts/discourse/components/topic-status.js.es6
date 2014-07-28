@@ -47,9 +47,7 @@ export default Ember.Component.extend({
     // Allow a plugin to add a custom icon to a topic
     this.trigger('addCustomIcon', buffer);
 
-    var togglePin = function(){
-
-    };
+    var togglePin = function () {};
 
     renderIconIf('topic.closed', 'lock', 'locked');
     renderIconIf('topic.archived', 'lock', 'archived');

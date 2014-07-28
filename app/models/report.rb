@@ -115,8 +115,8 @@ class Report
 
   def self.post_action_report(report, post_action_type)
     report.data = []
-    PostAction.count_per_day_for_type(30, post_action_type).each do |date, count|
-      report.data << {x: date, y: count}
+    PostAction.count_per_day_for_type(post_action_type).each do |date, count|
+      report.data << { x: date, y: count }
     end
     query = PostAction.unscoped.where(post_action_type_id: post_action_type)
     report.total = query.count

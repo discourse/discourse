@@ -19,6 +19,10 @@ class PostActionType < ActiveRecord::Base
       @public_types ||= types.except(*flag_types.keys << :notify_user)
     end
 
+    def public_type_ids
+      @public_type_ids ||= public_types.values
+    end
+
     def flag_types
       @flag_types ||= types.only(:off_topic, :spam, :inappropriate, :notify_moderators)
     end

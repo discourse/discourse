@@ -81,25 +81,25 @@ describe Guardian do
   end
 
 
-  describe "can_clear_flags" do
+  describe "can_defer_flags" do
     let(:post) { Fabricate(:post) }
     let(:user) { post.user }
     let(:moderator) { Fabricate(:moderator) }
 
     it "returns false when the user is nil" do
-      Guardian.new(nil).can_clear_flags?(post).should be_false
+      Guardian.new(nil).can_defer_flags?(post).should be_false
     end
 
     it "returns false when the post is nil" do
-      Guardian.new(moderator).can_clear_flags?(nil).should be_false
+      Guardian.new(moderator).can_defer_flags?(nil).should be_false
     end
 
     it "returns false when the user is not a moderator" do
-      Guardian.new(user).can_clear_flags?(post).should be_false
+      Guardian.new(user).can_defer_flags?(post).should be_false
     end
 
     it "returns true when the user is a moderator" do
-      Guardian.new(moderator).can_clear_flags?(post).should be_true
+      Guardian.new(moderator).can_defer_flags?(post).should be_true
     end
 
   end
@@ -1350,7 +1350,7 @@ describe Guardian do
     end
 
     context "delete myself" do
-      let(:myself) { Fabricate.build(:user, created_at: 6.months.ago) }
+      let(:myself) { Fabricate(:user, created_at: 6.months.ago) }
       subject      { Guardian.new(myself).can_delete_user?(myself) }
 
       it "is true to delete myself and I have never made a post" do
@@ -1375,7 +1375,7 @@ describe Guardian do
 
       it "is true if user is not an admin and first post is not too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
-        user.stubs(:first_post).returns(Fabricate.build(:post, created_at: 9.days.ago))
+        user.stubs(:first_post_created_at).returns(9.days.ago)
         SiteSetting.stubs(:delete_user_max_post_age).returns(10)
         Guardian.new(actor).can_delete_user?(user).should == true
       end
@@ -1386,7 +1386,7 @@ describe Guardian do
 
       it "is false if user's first post is too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
-        user.stubs(:first_post).returns(Fabricate.build(:post, created_at: 11.days.ago))
+        user.stubs(:first_post_created_at).returns(11.days.ago)
         SiteSetting.stubs(:delete_user_max_post_age).returns(10)
         Guardian.new(actor).can_delete_user?(user).should == false
       end
@@ -1419,19 +1419,19 @@ describe Guardian do
     shared_examples "can_delete_all_posts examples" do
       it "is true if user has no posts" do
         SiteSetting.stubs(:delete_user_max_post_age).returns(10)
-        Guardian.new(actor).can_delete_all_posts?(Fabricate.build(:user, created_at: 100.days.ago)).should be_true
+        Guardian.new(actor).can_delete_all_posts?(Fabricate(:user, created_at: 100.days.ago)).should be_true
       end
 
       it "is true if user's first post is newer than delete_user_max_post_age days old" do
-        user = Fabricate.build(:user, created_at: 100.days.ago)
-        user.stubs(:first_post).returns(Fabricate.build(:post, created_at: 9.days.ago))
+        user = Fabricate(:user, created_at: 100.days.ago)
+        user.stubs(:first_post_created_at).returns(9.days.ago)
         SiteSetting.stubs(:delete_user_max_post_age).returns(10)
         Guardian.new(actor).can_delete_all_posts?(user).should be_true
       end
 
       it "is false if user's first post is older than delete_user_max_post_age days old" do
-        user = Fabricate.build(:user, created_at: 100.days.ago)
-        user.stubs(:first_post).returns(Fabricate.build(:post, created_at: 11.days.ago))
+        user = Fabricate(:user, created_at: 100.days.ago)
+        user.stubs(:first_post_created_at).returns(11.days.ago)
         SiteSetting.stubs(:delete_user_max_post_age).returns(10)
         Guardian.new(actor).can_delete_all_posts?(user).should be_false
       end
@@ -1441,14 +1441,14 @@ describe Guardian do
       end
 
       it "is true if number of posts is small" do
-        u = Fabricate.build(:user, created_at: 1.day.ago)
+        u = Fabricate(:user, created_at: 1.day.ago)
         u.stubs(:post_count).returns(1)
         SiteSetting.stubs(:delete_all_posts_max).returns(10)
         Guardian.new(actor).can_delete_all_posts?(u).should be_true
       end
 
       it "is false if number of posts is not small" do
-        u = Fabricate.build(:user, created_at: 1.day.ago)
+        u = Fabricate(:user, created_at: 1.day.ago)
         u.stubs(:post_count).returns(11)
         SiteSetting.stubs(:delete_all_posts_max).returns(10)
         Guardian.new(actor).can_delete_all_posts?(u).should be_false
@@ -1528,7 +1528,7 @@ describe Guardian do
     end
 
     context 'for a new user' do
-      let(:target_user) { build(:user, created_at: 1.minute.ago) }
+      let(:target_user) { Fabricate(:user, created_at: 1.minute.ago) }
       include_examples "staff can always change usernames"
 
       it "is true for the user to change their own username" do
@@ -1541,7 +1541,7 @@ describe Guardian do
         SiteSetting.stubs(:username_change_period).returns(3)
       end
 
-      let(:target_user) { build(:user, created_at: 4.days.ago) }
+      let(:target_user) { Fabricate(:user, created_at: 4.days.ago) }
 
       context 'with no posts' do
         include_examples "staff can always change usernames"

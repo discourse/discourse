@@ -494,25 +494,30 @@ section.details {
 
 .admin-flags {
 
-  tr.hidden-post td.excerpt { opacity: 0.4;  }
-  tr.deleted td.excerpt { opacity: 0.8; background-color: scale-color($danger, $lightness: 30%); }
-  td.message {
-    padding: 4px 8px;
-    background-color:  scale-color($highlight, $lightness: 30%);
-  }
+  .hidden-post td.excerpt { opacity: 0.5; }
+  .deleted td.excerpt { background-color: scale-color($danger, $lightness: 70%); }
+  .message { background-color: scale-color($highlight, $lightness: 70%); }
+  .message:hover { background-color: scale-color($highlight, $lightness: 30%); }
   td { vertical-align: top; }
   th { text-align: left; }
-  .user { width: 40px; padding-top: 12px; }
+  .user {
+    width: 20px;
+    padding-top: 8px;
+  }
   .excerpt {
-    max-width: 740px;
-    width: 740px;
+    max-width: 720px;
+    width: 720px;
     padding: 8px;
     word-wrap: break-word;
-    .fa,h3 { display: inline-block; }
-
+    .fa { display: inline-block; }
+    h3 {
+      max-height: 1.2em;
+      overflow: hidden;
+    }
   }
   .flaggers {
     font-size: 11px;
+    padding: 8px 0 0 5px;
     td {
       vertical-align: middle;
       padding: 3px;
@@ -522,6 +527,10 @@ section.details {
      button { margin: 4px; }
      text-align: right;
      padding-bottom: 20px;
+  }
+  td p {
+    font-size: 13px;
+    margin: 0 0 5px 0;
   }
 }
 
@@ -1135,6 +1144,17 @@ button.ru {
   visibility: hidden;
 }
 
+.delete-flag-modal {
+  .modal-inner-container {
+    width: 400px;
+  }
+  button {
+    display: block;
+    margin: 10px 0 10px 10px;
+    padding: 10px 15px;
+  }
+}
+
 @media all
 and (max-width : 850px) {
   .nav-stacked {
@@ -1202,7 +1222,6 @@ and (max-width : 500px) {
 
   .customize .content-list, .customize .current-style {
     width: 100%;
-
   }
 }
 

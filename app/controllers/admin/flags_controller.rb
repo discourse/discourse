@@ -1,37 +1,50 @@
 require 'flag_query'
 
 class Admin::FlagsController < Admin::AdminController
+
   def index
     # we may get out of sync, fix it here
     PostAction.update_flagged_posts_count
-    posts, users = FlagQuery.flagged_posts_report(current_user, params[:filter], params[:offset].to_i, 10)
+    posts, topics, users = FlagQuery.flagged_posts_report(current_user, params[:filter], params[:offset].to_i, 10)
 
     if posts.blank?
-      render json: {users: [], posts: []}
+      render json: { posts: [], topics: [], users: [] }
     else
-      render json: MultiJson.dump({users: serialize_data(users, AdminDetailedUserSerializer), posts: posts})
+      render json: MultiJson.dump({
+        posts: posts,
+        topics: serialize_data(topics, FlaggedTopicSerializer),
+        users: serialize_data(users, FlaggedUserSerializer)
+      })
     end
   end
 
-  def disagree
-    p = Post.find(params[:id])
-    PostAction.clear_flags!(p, current_user.id)
-    p.reload
-    p.unhide!
+  def agree
+    params.permit(:id, :delete_post)
+    post = Post.find(params[:id])
+    post_action_type = PostAction.post_action_type_for_post(post.id)
+    PostAction.agree_flags!(post, current_user, params[:delete_post])
+    if params[:delete_post]
+      PostDestroyer.new(current_user, post).destroy
+    else
+      PostAction.hide_post!(post, post_action_type)
+    end
     render nothing: true
   end
 
-  def agree
-    p = Post.find(params[:id])
-    post_action_type = PostAction.post_action_type_for_post(p.id)
-    PostAction.defer_flags!(p, current_user.id)
-    PostAction.hide_post!(p, post_action_type)
+  def disagree
+    params.permit(:id)
+    post = Post.find(params[:id])
+    PostAction.clear_flags!(post, current_user)
+    post.reload
+    post.unhide!
     render nothing: true
   end
 
   def defer
-    p = Post.find(params[:id])
-    PostAction.defer_flags!(p, current_user.id)
+    params.permit(:id, :delete_post)
+    post = Post.find(params[:id])
+    PostAction.defer_flags!(post, current_user, params[:delete_post])
+    PostDestroyer.new(current_user, post).destroy if params[:delete_post]
     render nothing: true
   end
 

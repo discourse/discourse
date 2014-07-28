@@ -18,7 +18,16 @@ Discourse.AdminFlagsRouteType = Discourse.Route.extend({
 });
 
 Discourse.AdminFlagsActiveRoute = Discourse.AdminFlagsRouteType.extend({
-  filter: 'active'
+  filter: 'active',
+
+  actions: {
+
+    showDeleteFlagModal: function(flaggedPost) {
+      Discourse.Route.showModal(this, 'admin_delete_flag', flaggedPost);
+      this.controllerFor('modal').set('modalClass', 'delete-flag-modal');
+    }
+
+  }
 });
 
 

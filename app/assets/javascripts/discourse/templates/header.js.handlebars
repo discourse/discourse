@@ -13,20 +13,20 @@
             {{#if topic.isPrivateMessage}}
               <span class="private-message-glyph">{{icon envelope}}</span>
             {{/if}}
-          {{#if topic.category.parentCategory}}
-            {{bound-category-link topic.category.parentCategory}}
-          {{/if}}
-          {{bound-category-link topic.category}}
-          {{#if topic.details.loaded}}
-            {{topic-status topic=topic}}
-            <a class='topic-link' href='{{unbound topic.url}}' {{action jumpToTopPost}}>{{{topic.fancy_title}}}</a>
-          {{else}}
-            {{#if topic.errorLoading}}
-              {{topic.errorTitle}}
-            {{else}}
-              {{i18n topic.loading}}
+            {{#if topic.category.parentCategory}}
+              {{bound-category-link topic.category.parentCategory}}
             {{/if}}
-          {{/if}}
+            {{bound-category-link topic.category}}
+            {{#if topic.details.loaded}}
+              {{topic-status topic=topic}}
+              <a class='topic-link' href='{{unbound topic.url}}' {{action jumpToTopPost}}>{{{topic.fancy_title}}}</a>
+            {{else}}
+              {{#if topic.errorLoading}}
+                {{topic.errorTitle}}
+              {{else}}
+                {{i18n topic.loading}}
+              {{/if}}
+            {{/if}}
           </h1>
         </div>
       </div>

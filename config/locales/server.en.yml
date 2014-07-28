@@ -1211,6 +1211,13 @@ en:
     spam: "Your post was flagged as **spam**: the community thinks it is an advertisement, not useful or relevant to the topic, but promotional in nature."
     notify_moderators: "Your post was flagged **for moderator attention**: the community thinks something about the post requires moderator intervention."
 
+  flags_dispositions:
+    agreed: "Thanks for your reporting this post. We've agreed with your flag."
+    agreed_and_deleted: "Thanks for your reporting this post. We've agreed with your flag and deleted the post."
+    disagreed: "Thanks for your reporting this post. Unfortunately, we've agreed with your flag."
+    defered: "Thanks for your reporting this post. We're looking into handling this post."
+    defered_and_deleted: "Thanks for your reporting this post. We've agreed with your flag and deleted the post."
+
   system_messages:
     post_hidden:
       subject_template: "Post hidden due to community flagging"

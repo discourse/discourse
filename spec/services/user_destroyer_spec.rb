@@ -81,6 +81,10 @@ describe UserDestroyer do
 
       context "delete_posts is false" do
         subject(:destroy) { UserDestroyer.new(@admin).destroy(@user) }
+        before do
+          @user.stubs(:post_count).returns(1)
+          @user.stubs(:first_post_created_at).returns(Time.zone.now)
+        end
 
         it 'should not delete the user' do
           expect { destroy rescue nil }.to_not change { User.count }

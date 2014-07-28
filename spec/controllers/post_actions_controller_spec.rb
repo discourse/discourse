@@ -102,13 +102,13 @@ describe PostActionsController do
 
   end
 
-  context 'clear_flags' do
+  context 'defer_flags' do
 
     let(:flagged_post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
 
     context "not logged in" do
       it "should not allow them to clear flags" do
-        lambda { xhr :post, :clear_flags }.should raise_error(Discourse::NotLoggedIn)
+        lambda { xhr :post, :defer_flags }.should raise_error(Discourse::NotLoggedIn)
       end
     end
 
@@ -116,42 +116,37 @@ describe PostActionsController do
       let!(:user) { log_in(:moderator) }
 
       it "raises an error without a post_action_type_id" do
-        -> { xhr :post, :clear_flags, id: flagged_post.id }.should raise_error(ActionController::ParameterMissing)
+        -> { xhr :post, :defer_flags, id: flagged_post.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have access" do
-        Guardian.any_instance.expects(:can_clear_flags?).returns(false)
-        xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
+        Guardian.any_instance.expects(:can_defer_flags?).returns(false)
+        xhr :post, :defer_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
         response.should be_forbidden
       end
 
       context "success" do
         before do
-          Guardian.any_instance.expects(:can_clear_flags?).returns(true)
-          PostAction.expects(:clear_flags!).with(flagged_post, user.id, PostActionType.types[:spam])
+          Guardian.any_instance.expects(:can_defer_flags?).returns(true)
+          PostAction.expects(:defer_flags!).with(flagged_post, user)
         end
 
-        it "delegates to clear_flags" do
-          xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
+        it "delegates to defer_flags" do
+          xhr :post, :defer_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           response.should be_success
         end
 
         it "works with a deleted post" do
           flagged_post.trash!(user)
-          xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
+          xhr :post, :defer_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           response.should be_success
         end
-
 
       end
 
     end
 
-
-
   end
-
-
 
   describe 'users' do
 
@@ -187,7 +182,5 @@ describe PostActionsController do
     end
 
   end
-
-
 
 end

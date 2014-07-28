@@ -53,7 +53,7 @@ export default Em.Component.extend({
         renderActionIf('usersCollapsed', 'who-acted', c.get('description'));
         renderActionIf('canAlsoAction', 'act', I18n.t("post.actions.it_too." + c.get('actionType.name_key')));
         renderActionIf('can_undo', 'undo', I18n.t("post.actions.undo." + c.get('actionType.name_key')));
-        renderActionIf('can_clear_flags', 'clear-flags', I18n.t("post.actions.clear_flags", { count: c.count }));
+        renderActionIf('can_defer_flags', 'defer-flags', I18n.t("post.actions.defer_flags", { count: c.count }));
 
         buffer.push("</div>");
       });
@@ -77,8 +77,8 @@ export default Em.Component.extend({
     var $target = $(e.target),
         actionTypeId;
 
-    if (actionTypeId = $target.data('clear-flags')) {
-      this.actionTypeById(actionTypeId).clearFlags();
+    if (actionTypeId = $target.data('defer-flags')) {
+      this.actionTypeById(actionTypeId).deferFlags();
       return false;
     }
 

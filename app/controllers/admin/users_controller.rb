@@ -181,7 +181,7 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def destroy
-    user = User.find_by(id: params[:id])
+    user = User.find_by(id: params[:id].to_i)
     guardian.ensure_can_delete_user!(user)
     begin
       if UserDestroyer.new(current_user).destroy(user, params.slice(:delete_posts, :block_email, :block_urls, :block_ip, :context))

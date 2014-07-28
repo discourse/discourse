@@ -273,7 +273,7 @@ Discourse::Application.routes.draw do
   resources :post_actions do
     collection do
       get "users"
-      post "clear_flags"
+      post "defer_flags"
     end
   end
   resources :user_actions

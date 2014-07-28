@@ -173,7 +173,7 @@ class TopicViewSerializer < ApplicationSerializer
                   count: 0,
                   hidden: false,
                   can_act: scope.post_can_act?(post, sym)}
-      # TODO: other keys? :can_clear_flags, :acted, :can_undo
+      # TODO: other keys? :can_defer_flags, :acted, :can_undo
     end
     result
   end

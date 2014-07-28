@@ -164,7 +164,7 @@ class PostSerializer < BasicPostSerializer
 
       # The following only applies if you're logged in
       if action_summary[:can_act] && scope.current_user.present?
-        action_summary[:can_clear_flags] = scope.is_staff? && PostActionType.flag_types.values.include?(id)
+        action_summary[:can_defer_flags] = scope.is_staff? && PostActionType.flag_types.values.include?(id)
       end
 
       if post_actions.present? && post_actions.has_key?(id)

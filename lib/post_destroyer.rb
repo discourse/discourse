@@ -62,7 +62,8 @@ class PostDestroyer
         feature_users_in_the_topic
         Topic.reset_highest(@post.topic_id)
       end
-      trash_post_actions
+      trash_public_post_actions
+      agree_with_flags
       trash_user_actions
       @post.update_flagged_posts_count
       remove_associated_replies
@@ -130,13 +131,16 @@ class PostDestroyer
     Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id, except_post_id: @post.id)
   end
 
-  def trash_post_actions
-    @post.post_actions.each do |pa|
-      pa.trash!(@user)
-    end
+  def trash_public_post_actions
+    public_post_actions = PostAction.publics.where(post_id: @post.id)
+    public_post_actions.each { |pa| pa.trash!(@user) }
 
-    f = PostActionType.types.map{|k,v| ["#{k}_count", 0]}
+    f = PostActionType.public_types.map { |k,v| ["#{k}_count", 0] }
     Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
+  end
+
+  def agree_with_flags
+    PostAction.agree_flags!(@post, @user, delete_post: true)
   end
 
   def trash_user_actions

@@ -307,17 +307,26 @@ describe Admin::UsersController do
         response.should be_forbidden
       end
 
-      it "returns an error if the user has posts" do
-        Fabricate(:post, user: @delete_me)
-        xhr :delete, :destroy, id: @delete_me.id
-        response.should be_forbidden
-      end
+      context "user has post" do
 
-      it "doesn't return an error if the user has posts and delete_posts == true" do
-        Fabricate(:post, user: @delete_me)
-        UserDestroyer.any_instance.expects(:destroy).with(@delete_me, has_entry('delete_posts' => true)).returns(true)
-        xhr :delete, :destroy, id: @delete_me.id, delete_posts: true
-        response.should be_success
+        before do
+          @user = build(:user)
+          @user.stubs(:post_count).returns(1)
+          @user.stubs(:first_post_created_at).returns(Time.zone.now)
+          User.expects(:find_by).with(id: @delete_me.id).returns(@user)
+        end
+
+        it "returns an error" do
+          xhr :delete, :destroy, id: @delete_me.id
+          response.should be_forbidden
+        end
+
+        it "doesn't return an error if delete_posts == true" do
+          UserDestroyer.any_instance.expects(:destroy).with(@user, has_entry('delete_posts' => true)).returns(true)
+          xhr :delete, :destroy, id: @delete_me.id, delete_posts: true
+          response.should be_success
+        end
+
       end
 
       it "deletes the user record" do

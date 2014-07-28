@@ -68,7 +68,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
     if(action === 'notify_moderators' || action === 'notify_user') {
       this.set('can_undo',false);
-      this.set('can_clear_flags',false);
+      this.set('can_defer_flags',false);
     }
 
     // Add ourselves to the users who liked it if present
@@ -108,9 +108,9 @@ Discourse.ActionSummary = Discourse.Model.extend({
     });
   },
 
-  clearFlags: function() {
+  deferFlags: function() {
     var actionSummary = this;
-    return Discourse.ajax("/post_actions/clear_flags", {
+    return Discourse.ajax("/post_actions/defer_flags", {
       type: "POST",
       data: {
         post_action_type_id: this.get('id'),
