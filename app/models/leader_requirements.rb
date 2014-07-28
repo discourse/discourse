@@ -6,6 +6,8 @@ class LeaderRequirements
 
   TIME_PERIOD = 100 # days
 
+  LOW_WATER_MARK = 0.9
+
   attr_accessor :days_visited, :min_days_visited,
                 :num_topics_replied_to, :min_topics_replied_to,
                 :topics_viewed, :min_topics_viewed,
@@ -24,9 +26,20 @@ class LeaderRequirements
       topics_viewed >= min_topics_viewed &&
       posts_read >= min_posts_read &&
       num_flagged_posts <= max_flagged_posts &&
+      num_flagged_by_users <= max_flagged_by_users &&
       topics_viewed_all_time >= min_topics_viewed_all_time &&
-      posts_read_all_time >= min_posts_read_all_time &&
-      num_flagged_by_users <= max_flagged_by_users
+      posts_read_all_time >= min_posts_read_all_time
+  end
+
+  def requirements_lost?
+    days_visited < min_days_visited * LOW_WATER_MARK ||
+    num_topics_replied_to < min_topics_replied_to * LOW_WATER_MARK ||
+    topics_viewed < min_topics_viewed * LOW_WATER_MARK ||
+    posts_read < min_posts_read * LOW_WATER_MARK ||
+    num_flagged_posts > max_flagged_posts ||
+    num_flagged_by_users > max_flagged_by_users ||
+    topics_viewed_all_time < min_topics_viewed_all_time ||
+    posts_read_all_time < min_posts_read_all_time
   end
 
   def days_visited
@@ -34,7 +47,7 @@ class LeaderRequirements
   end
 
   def min_days_visited
-    (TIME_PERIOD * (SiteSetting.leader_requires_days_visited.to_f / 100.0)).to_i
+    SiteSetting.leader_requires_days_visited
   end
 
   def num_topics_replied_to
