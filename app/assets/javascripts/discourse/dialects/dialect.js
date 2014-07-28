@@ -386,6 +386,7 @@ Discourse.Dialect = {
       var pos = args.start.lastIndex - match[0].length,
           leading = block.slice(0, pos),
           trailing = match[2] ? match[2].replace(/^\n*/, "") : "";
+      // just give up if there's no stop tag in this or any next block
       if (block.indexOf(args.stop, pos + args.stop.length) === -1 && lastChance()) { return; }
       if (leading.length > 0) { result.push(['p'].concat(this.processInline(leading))); }
       if (trailing.length > 0) {
@@ -393,47 +394,58 @@ Discourse.Dialect = {
           block.lineNumber + countLines(leading) + (match[2] ? match[2].length : 0) - trailing.length));
       }
 
-      // find matching stop tag in blocks.
-      var contentBlocks = [], nesting = 0, endPos, ep, offset, startPos, sp, m, b;
+      // go through the available blocks to find the matching stop tag.
+      var contentBlocks = [], nesting = 0, actualEndPos = -1, currentBlock;
       blockloop:
-      while (b = next.shift()) {
+      while (currentBlock = next.shift()) {
+        // collect all the start and stop tags in the current block
         args.start.lastIndex = 0;
-        startPos = []; sp = 0;
-        while (m = (args.start).exec(b)) {
+        var startPos = [], m;
+        while (m = (args.start).exec(currentBlock)) {
           startPos.push(args.start.lastIndex - m[0].length);
           args.start.lastIndex = args.start.lastIndex - (m[2] ? m[2].length : 0);
         }
-        endPos = []; ep = 0; offset = 0;
-        while ((pos = b.indexOf(args.stop, offset)) !== -1) {
+        var endPos = [], offset = 0;
+        while ((pos = currentBlock.indexOf(args.stop, offset)) !== -1) {
           endPos.push(pos);
           offset += (pos + args.stop.length);
         }
 
+        // go through the available end tags:
+        var ep = 0, sp = 0; // array indices
         while (ep < endPos.length) {
           if (sp < startPos.length && startPos[sp] < endPos[ep]) {
+            // there's an end tag, but there's also another start tag first. we need to go deeper.
             sp++; nesting++;
           } else if (nesting > 0) {
+            // found an end tag, but we must go up a level first.
             ep++; nesting--;
           } else {
+            // found an end tag and we're at the top: done!
+            actualEndPos = endPos[ep];
             break blockloop;
           }
         }
 
         if (lastChance()) {
-          ep = endPos.length - 1;
+          // when lastChance() becomes true the first time, currentBlock contains the last
+          // end tag available in the input blocks but it's not on the right nesting level
+          // or we would have terminated the loop already. the only thing we can do is to
+          // treat the last available end tag as tho it were matched with our start tag
+          // and let the emitter figure out how to render the garbage inside.
+          actualEndPos = endPos[endPos.length - 1];
           break;
         }
 
+        // any left-over start tags still increase the nesting level
         nesting += startPos.length - sp;
-        contentBlocks.push(b);
+        contentBlocks.push(currentBlock);
       }
 
-      if (ep < endPos.length) {
-        var before = b.slice(0, endPos[ep]).replace(/\n*$/, ""),
-            after = b.slice(endPos[ep] + args.stop.length).replace(/^\n*/, "");
-        if (before.length > 0) contentBlocks.push(MD.mk_block(before, "", b.lineNumber));
-        if (after.length > 0) next.unshift(MD.mk_block(after, "", b.lineNumber + countLines(before)));
-      }
+      var before = currentBlock.slice(0, actualEndPos).replace(/\n*$/, ""),
+          after = currentBlock.slice(actualEndPos + args.stop.length).replace(/^\n*/, "");
+      if (before.length > 0) contentBlocks.push(MD.mk_block(before, "", currentBlock.lineNumber));
+      if (after.length > 0) next.unshift(MD.mk_block(after, "", currentBlock.lineNumber + countLines(before)));
 
       var emitterResult = args.emitter.call(this, contentBlocks, match, dialect.options);
       if (emitterResult) { result.push(emitterResult); }
