@@ -11,7 +11,13 @@ export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
 
   badgesUrl: Discourse.getURL('/badges'),
 
-  showMobileToggle: Discourse.computed.setting('enable_mobile_theme'),
+  showKeyboardShortcuts: function(){
+    return !Discourse.Mobile.mobileView && !Discourse.Mobile.isMobileDevice;
+  }.property(),
+
+  showMobileToggle: function(){
+    return Discourse.SiteSettings.enable_mobile_theme && Discourse.Mobile.isMobileDevice;
+  }.property(),
 
   mobileViewLinkTextKey: function() {
     return Discourse.Mobile.mobileView ? "desktop_view" : "mobile_view";
@@ -29,6 +35,9 @@ export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
   }.property(),
 
   actions: {
+    keyboardShortcuts: function(){
+      Discourse.__container__.lookup('controller:application').send('showKeyboardShortcutsHelp');
+    },
     toggleMobileView: function() {
       Discourse.Mobile.toggleMobileView();
     }

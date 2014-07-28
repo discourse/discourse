@@ -8,6 +8,9 @@
     {{#if showBadgesLink}}
       <li>{{partial "siteMap/badges"}}</li>
     {{/if}}
+    {{#if showKeyboardShortcuts}}
+      <li><a href="#" {{action keyboardShortcuts}} class="keyboard-shortcuts-link">{{i18n keyboard_shortcuts_help.title}}</a>
+    {{/if}}
     <li>{{partial "siteMap/faqLink"}}</li>
     {{#if showMobileToggle}}
       <li>{{partial "siteMap/mobileToggleLink"}}</li>
