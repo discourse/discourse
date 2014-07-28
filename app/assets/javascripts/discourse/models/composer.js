@@ -135,6 +135,7 @@ Discourse.Composer = Discourse.Model.extend({
     @property titleLengthValid
   **/
   titleLengthValid: function() {
+    if (Discourse.User.currentProp('admin') && this.get('titleLength') > 0) return true;
     if (this.get('titleLength') < this.get('minimumTitleLength')) return false;
     return (this.get('titleLength') <= Discourse.SiteSettings.max_topic_title_length);
   }.property('minimumTitleLength', 'titleLength'),

@@ -86,4 +86,22 @@ describe Validators::PostValidator do
     end
   end
 
+  context "acting_user is an admin" do
+    before do
+      post.acting_user = Fabricate(:admin)
+    end
+
+    it "skips most validations" do
+      validator.expects(:stripped_length).never
+      validator.expects(:raw_quality).never
+      validator.expects(:max_posts_validator).never
+      validator.expects(:max_mention_validator).never
+      validator.expects(:max_images_validator).never
+      validator.expects(:max_attachments_validator).never
+      validator.expects(:max_links_validator).never
+      validator.expects(:unique_post_validator).never
+      validator.validate(post)
+    end
+  end
+
 end

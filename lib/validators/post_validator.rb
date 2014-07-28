@@ -3,14 +3,16 @@ module Validators; end
 class Validators::PostValidator < ActiveModel::Validator
   def validate(record)
     presence(record)
-    stripped_length(record)
-    raw_quality(record)
-    max_posts_validator(record)
-    max_mention_validator(record)
-    max_images_validator(record)
-    max_attachments_validator(record)
-    max_links_validator(record)
-    unique_post_validator(record)
+    unless record.acting_user.try(:admin?)
+      stripped_length(record)
+      raw_quality(record)
+      max_posts_validator(record)
+      max_mention_validator(record)
+      max_images_validator(record)
+      max_attachments_validator(record)
+      max_links_validator(record)
+      unique_post_validator(record)
+    end
   end
 
   def presence(post)
