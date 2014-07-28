@@ -25,13 +25,14 @@ end
 unless Rails.env.test?
   def create_static_page_topic(site_setting_key, title_key, body_key, body_override, category, description, params={})
     unless SiteSetting.send(site_setting_key) > 0
-      post = PostCreator.create( Discourse.system_user,
+      creator = PostCreator.new( Discourse.system_user,
                                  title: I18n.t(title_key, default: I18n.t(title_key, locale: :en)),
                                  raw: body_override.present? ? body_override : I18n.t(body_key, params.merge(default: I18n.t(body_key, params.merge(locale: :en)))),
                                  skip_validations: true,
                                  category: category ? category.name : nil)
+      post = creator.create
 
-      raise "Failed to create the #{description} topic! #{post.errors.full_messages.join('. ')}" unless post.valid?
+      raise "Failed to create the #{description} topic! #{creator.errors.full_messages.join('. ')}" if creator.errors.present?
 
       SiteSetting.send("#{site_setting_key}=", post.topic_id)
 
