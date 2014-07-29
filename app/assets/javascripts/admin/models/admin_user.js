@@ -155,7 +155,11 @@ Discourse.AdminUser = Discourse.User.extend({
       window.location.reload();
     }, function(e) {
       // failure
-      var error = I18n.t('admin.user.trust_level_change_failed', { error: "http: " + e.status + " - " + e.body });
+      var error;
+      if (e.responseJSON && e.responseJSON.errors) {
+        error = e.responseJSON.errors[0];
+      }
+      error = error || I18n.t('admin.user.trust_level_change_failed', { error: "http: " + e.status + " - " + e.body });
       bootbox.alert(error);
     });
   },
