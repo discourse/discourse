@@ -1,5 +1,5 @@
 // Helper class for rendering a button
-var Button = function(action, label, icon, opts) {
+export var Button = function(action, label, icon, opts) {
   this.action = action;
   this.label = label;
 
