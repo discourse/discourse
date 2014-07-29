@@ -1162,36 +1162,30 @@
     inline: {
 
       __oneElement__: function oneElement( text, patterns_or_re, previous_nodes ) {
-        var m, res, pos, search_re, match_re;
 
         // PERF NOTE: rewritten to avoid greedy match regex \([\s\S]*?)(...)\
         // greedy match performs horribly with large inline blocks, it can be so
         // slow it will crash chrome
-
         patterns_or_re = patterns_or_re || this.dialect.inline.__patterns__;
-        search_re = new RegExp(patterns_or_re.source || patterns_or_re);
 
-        pos = text.search(search_re);
+        var search_re = new RegExp(patterns_or_re.source || patterns_or_re);
+        var pos = text.search(search_re);
 
-        // Just boring text
         if (pos === -1) {
           return [ text.length, text ];
-        }
-
-        if (pos !== 0) {
+        } else if (pos !== 0) {
           // Some un-interesting text matched. Return that first
           return [pos, text.substring(0,pos)];
         }
 
-        match_re = new RegExp( "^(" + (patterns_or_re.source || patterns_or_re) + ")" );
-        m = match_re.exec( text );
-
+        var match_re = new RegExp( "^(" + (patterns_or_re.source || patterns_or_re) + ")" );
+        var m = match_re.exec( text );
+        var res;
         if ( m[1] in this.dialect.inline ) {
           res = this.dialect.inline[ m[1] ].call(
                     this,
                     text.substr( m.index ), m, previous_nodes || [] );
         }
-
         // Default for now to make dev easier. just slurp special and output it.
         res = res || [ m[1].length, m[1] ];
         return res;
