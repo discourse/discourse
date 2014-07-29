@@ -405,12 +405,6 @@ class ImportScripts::Smf2 < ImportScripts::Base
     class Error < StandardError ; end
     class SettingsError < Error ; end
 
-    def initialize
-      self.host = 'localhost'
-      self.username = Etc.getlogin
-      self.prefix = 'smf_'
-    end
-
     def parse!(args = ARGV)
       raise Error, 'not enough arguments' if ARGV.empty?
       begin
@@ -421,6 +415,10 @@ class ImportScripts::Smf2 < ImportScripts::Base
       raise Error, 'too many arguments' if args.length > 1
       self.smfroot = args.first
       read_smf_settings if self.smfroot
+
+      self.host ||= 'localhost'
+      self.username ||= Etc.getlogin
+      self.prefix ||= 'smf_'
     end
 
     def usage
