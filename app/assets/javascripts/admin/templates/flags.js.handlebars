@@ -100,7 +100,7 @@
                 <td></td>
                 <td colspan="3">
                   <div>
-                    {{{i18n admin.flags.topic_flagged}}}
+                    {{{i18n admin.flags.topic_flagged}}}&nbsp;<a href='{{unbound flaggedPost.url}}' class="btn">{{i18n admin.flags.visit_topic}}</a>
                   </div>
                 </td>
               </tr>
@@ -135,22 +135,14 @@
             <tr>
               <td colspan="4" class="action">
                 {{#if adminActiveFlagsView}}
-                  {{#if flaggedPost.topicFlagged}}
-                    <a href='{{unbound flaggedPost.url}}' class="btn">{{i18n admin.flags.visit_topic}}</a>
-                  {{/if}}
-
-                  {{#if flaggedPost.postAuthorFlagged}}
-                    {{#if flaggedPost.postHidden}}
-                      <button title='{{i18n admin.flags.disagree_flag_unhide_post_title}}' class='btn' {{action disagreeFlags flaggedPost}}><i class="fa fa-thumbs-o-down"></i>&nbsp;{{i18n admin.flags.disagree_flag_unhide_post}}</button>
-                    {{else}}
-                      <button title='{{i18n admin.flags.agree_flag_hide_post_title}}' class='btn btn-primary' {{action agreeFlags flaggedPost}}><i class="fa fa-thumbs-o-up"></i>&nbsp;{{i18n admin.flags.agree_flag_hide_post}}</button>
-                      <button title='{{i18n admin.flags.disagree_flag_title}}' class='btn' {{action disagreeFlags flaggedPost}}><i class="fa fa-thumbs-o-down"></i>&nbsp;{{i18n admin.flags.disagree_flag}}</button>
-                    {{/if}}
-                    <button title='{{i18n admin.flags.defer_flag_title}}' class='btn' {{action deferFlags flaggedPost}}><i class="fa fa-external-link"></i>&nbsp;{{i18n admin.flags.defer_flag}}</button>
-                    <button title='{{i18n admin.flags.delete_title}}' class='btn btn-danger' {{action showDeleteFlagModal flaggedPost}}><i class="fa fa-trash-o"></i>&nbsp;{{i18n admin.flags.delete}}</button>
+                  {{#if flaggedPost.postHidden}}
+                    <button title='{{i18n admin.flags.disagree_flag_unhide_post_title}}' class='btn' {{action disagreeFlags flaggedPost}}><i class="fa fa-thumbs-o-down"></i>&nbsp;{{i18n admin.flags.disagree_flag_unhide_post}}</button>
                   {{else}}
-                    <button title='{{i18n admin.flags.clear_topic_flags_title}}' class='btn' {{action doneTopicFlags flaggedPost}}>{{i18n admin.flags.clear_topic_flags}}</button>
+                    <button title='{{i18n admin.flags.agree_flag_hide_post_title}}' class='btn btn-primary' {{action agreeFlags flaggedPost}}><i class="fa fa-thumbs-o-up"></i>&nbsp;{{i18n admin.flags.agree_flag_hide_post}}</button>
+                    <button title='{{i18n admin.flags.disagree_flag_title}}' class='btn' {{action disagreeFlags flaggedPost}}><i class="fa fa-thumbs-o-down"></i>&nbsp;{{i18n admin.flags.disagree_flag}}</button>
                   {{/if}}
+                  <button title='{{i18n admin.flags.defer_flag_title}}' class='btn' {{action deferFlags flaggedPost}}><i class="fa fa-external-link"></i>&nbsp;{{i18n admin.flags.defer_flag}}</button>
+                  <button title='{{i18n admin.flags.delete_title}}' class='btn btn-danger' {{action showDeleteFlagModal flaggedPost}}><i class="fa fa-trash-o"></i>&nbsp;{{i18n admin.flags.delete}}</button>
                 {{/if}}
               </td>
             </tr>
