@@ -50,7 +50,7 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    redirect_to_correct_topic && return if slugs_do_not_match
+    redirect_to_correct_topic && return if slugs_do_not_match || (!request.xhr? && params[:slug].nil?)
 
     track_visit_to_topic
 
