@@ -11,7 +11,7 @@ export default Discourse.View.extend(UrlRefresh, {
   }.observes("controller.ordering"),
 
   rows: function() {
-    return $('#topic-list tbody');
+    return $('.topic-list tbody');
   },
 
   enableOrdering: function(){

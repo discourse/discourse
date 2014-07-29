@@ -27,7 +27,7 @@
 // Base list
 // --------------------------------------------------
 
-#topic-list {
+.topic-list {
 
   > tbody > tr {
     &:nth-child(odd) {
@@ -85,7 +85,7 @@ tr.category-topic-link:nth-of-type(odd) {
     background-color: darken($secondary, 3%) !important;
     }
 
-#topic-list.categories {
+.topic-list.categories {
   td.latest {
     vertical-align: top;
     padding: 5px;
@@ -127,7 +127,7 @@ tr.category-topic-link:nth-of-type(odd) {
 
 .category-list-item {
 
-  #topic-list > tbody > tr {
+  .topic-list > tbody > tr {
     &:nth-child(odd) {
       background-color: $secondary;
       }
@@ -170,7 +170,7 @@ tr.category-topic-link:nth-of-type(odd) {
 }
 
 
-#topic-list-bottom {
+.topic-list-bottom {
   margin: 20px 12px 0 12px;
 }
 
@@ -278,7 +278,7 @@ ol.category-breadcrumb {
 
 .top-lists {
   h2 { margin-left: 10px; }
-  #topic-list { padding-bottom: 10px; }
+  .topic-list { padding-bottom: 10px; }
   .btn-default.pull-right { margin-right: 10px; }
 }
 
@@ -286,7 +286,7 @@ ol.category-breadcrumb {
   display: none;
 }
 
-#topic-list-bottom h3 {
+.topic-list-bottom h3 {
   clear:both;
   padding-top:10px;
 }

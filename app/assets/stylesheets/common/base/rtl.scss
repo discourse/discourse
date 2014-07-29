@@ -126,7 +126,7 @@
     font-size: 18px;
   }
 
-  #topic-list th, #topic-list td {
+  .topic-list th, .topic-list td {
     padding: 12px 5px;
     line-height: 1.25;
     text-align: right;
@@ -343,12 +343,12 @@
     float: left;
   }
 
-  #topic-list .star {
+  .topic-list .star {
     width: 20px;
     padding-left: 0px;
   }
 
-  #topic-list th:first-of-type, #topic-list td:first-of-type {
+  .topic-list th:first-of-type, .topic-list td:first-of-type {
     padding-right: 10px;
   }
 
@@ -386,7 +386,7 @@
     float: right;
   }
 
-  #topic-list .pull-left {
+  .topic-list .pull-left {
     float: right;
   }
 

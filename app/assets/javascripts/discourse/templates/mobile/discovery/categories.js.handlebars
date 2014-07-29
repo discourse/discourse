@@ -1,6 +1,6 @@
 {{#each categories}}
   <div class='category-list-item'>
-    <table id='topic-list'>
+    <table class='topic-list'>
       <tr>
         <th class="main-link">
           {{category-link this allowUncategorized=true}}
@@ -14,7 +14,7 @@
           </td>
         </tr>
       {{/if}}
-      
+
       {{#each topics}}
         <tr {{bind-attr class="archived :category-topic-link"}}>
           <td class='main-link'>

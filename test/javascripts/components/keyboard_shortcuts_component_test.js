@@ -35,7 +35,7 @@ module("Discourse.KeyboardShortcuts", {
       "    <li data-id='3'><a></a></li>",
       "  </ul>",
       "</div>",
-      "<table id='topic-list'>",
+      "<table class='topic-list'>",
       "  <tr class='topic-list-item selected'><td>",
       "    <a class='title'></a>",
       "  </td></tr>",

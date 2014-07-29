@@ -6,7 +6,7 @@
       {{#if weekly}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.this_week}}</h2>{{/if}}
       {{#if daily}}<h2><i class="fa fa-calendar-o"></i>&nbsp;{{i18n filters.top.today}}</h2>{{/if}}
     {{/if}}
-    <table id='topic-list'>
+    <table class='topic-list'>
       {{#if topicTrackingState.hasIncoming}}
         <tbody>
           <tr>
@@ -24,7 +24,7 @@
   {{/if}}
 </div>
 
-<footer id='topic-list-bottom'>
+<footer class='topic-list-bottom'>
   {{#if loadingMore}}
     <div class='topics-loading'>{{i18n topic.loading_more}}</div>
   {{/if}}

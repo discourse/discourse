@@ -41,7 +41,7 @@
 // Base list
 // --------------------------------------------------
 
-#topic-list {
+.topic-list {
   margin: 0 0 10px;
   .fa-thumb-tack {color: $primary;}
   .fa-thumb-tack.unpinned {color: $primary;}
@@ -149,12 +149,12 @@
 
 #list-area .top-lists h2 { margin: 5px 0 10px; }
 
-#topic-list tbody tr.has-excerpt .star {
+.topic-list tbody tr.has-excerpt .star {
   vertical-align: top;
   margin-top: 3px;
 }
 
-#topic-list.categories {
+.topic-list.categories {
   a.title {color: $tertiary;}
   a.title:visited:not(.badge-notification) {color: scale-color($tertiary, $lightness: 35%);}
 
@@ -244,7 +244,7 @@
   }
 }
 
-#topic-list-bottom {
+.topic-list-bottom {
   margin: 20px 0;
 }
 
@@ -325,7 +325,7 @@ and (max-width : 850px) {
 
   }
 
-  #topic-list {
+  .topic-list {
     .categories td.category {
       padding-left: 10px;
       }

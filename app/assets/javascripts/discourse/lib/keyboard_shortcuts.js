@@ -29,14 +29,14 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'c': '#create-topic',                                         // create new topic
 
     // star topic
-    'f': '#topic-footer-buttons button.star, #topic-list tr.topic-list-item.selected a.star',
+    'f': '#topic-footer-buttons button.star, .topic-list tr.topic-list-item.selected a.star',
 
     'm m': 'div.notification-options li[data-id="0"] a',          // mark topic as muted
     'm r': 'div.notification-options li[data-id="1"] a',          // mark topic as regular
     'm t': 'div.notification-options li[data-id="2"] a',          // mark topic as tracking
     'm w': 'div.notification-options li[data-id="3"] a',          // mark topic as watching
     'n': '#user-notifications',                                   // open notifictions menu
-    'o,enter': '#topic-list tr.selected a.title',                 // open selected topic
+    'o,enter': '.topic-list tr.selected a.title',                 // open selected topic
     'shift+r': '#topic-footer-buttons button.create',             // reply to topic
     'shift+s': '#topic-footer-buttons button.share',              // share topic
     's': '.topic-post.selected a.post-date'                       // share post
@@ -248,11 +248,11 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   _findArticles: function() {
-    var $topicList = $('#topic-list'),
+    var $topicList = $('.topic-list'),
         $topicArea = $('.posts-wrapper');
 
     if ($topicArea.size() > 0) {
-      return $('.posts-wrapper .topic-post, #topic-list tbody tr');
+      return $('.posts-wrapper .topic-post, .topic-list tbody tr');
     }
     else if ($topicList.size() > 0) {
       return $topicList.find('.topic-list-item');
