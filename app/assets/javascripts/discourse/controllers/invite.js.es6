@@ -10,6 +10,10 @@
 export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
   needs: ['user-invited'],
 
+  // If this isn't defined, it will proxy to the user model on the preferences
+  // page which is wrong.
+  email: null,
+
   isAdmin: function(){
     return Discourse.User.currentProp("admin");
   }.property(),
