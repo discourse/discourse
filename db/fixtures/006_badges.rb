@@ -55,7 +55,7 @@ trust_level_badges.each do |spec|
     b.trigger = Badge::Trigger::TrustLevelChange
 
     # allow title for leader and elder
-    b.allow_title = spec[:id] > 2
+    b.default_allow_title = spec[:id] > 2
   end
 end
 

@@ -213,6 +213,10 @@ SQL
     self.name ||= val
   end
 
+  def default_allow_title=(val)
+    self.allow_title ||= val
+  end
+
   def default_badge_grouping_id=(val)
     # allow to correct orphans
     if !self.badge_grouping_id || self.badge_grouping_id < 0
