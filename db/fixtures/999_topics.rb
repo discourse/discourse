@@ -3,24 +3,7 @@ Topic.reset_column_information
 Post.reset_column_information
 
 staff = Category.find_by(id: SiteSetting.staff_category_id)
-
-if Topic.where('id NOT IN (SELECT topic_id from categories where topic_id is not null)').count == 0 && !Rails.env.test?
-  puts "Seeding welcome topics"
-
-  welcome = File.read(Rails.root + 'docs/ADMIN-QUICK-START-GUIDE.md')
-  PostCreator.create(Discourse.system_user, raw: welcome, title: "READ ME FIRST: Admin Quick Start Guide", skip_validations: true, category: staff ? staff.name : nil)
-  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: "Assets for the forum design", skip_validations: true, category: staff ? staff.name : nil)
-
-  welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
-  post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)
-  post.topic.update_pinned(true, true)
-
-  lounge = Category.find_by(id: SiteSetting.lounge_category_id)
-  if lounge
-    post = PostCreator.create(Discourse.system_user, raw: I18n.t('lounge_welcome.body'), title: I18n.t('lounge_welcome.title'), skip_validations: true, category: lounge.name)
-    post.topic.update_pinned(true)
-  end
-end
+seed_welcome_topics = (Topic.where('id NOT IN (SELECT topic_id from categories where topic_id is not null)').count == 0 && !Rails.env.test?)
 
 unless Rails.env.test?
   def create_static_page_topic(site_setting_key, title_key, body_key, body_override, category, description, params={})
@@ -54,4 +37,23 @@ unless Rails.env.test?
 
   create_static_page_topic('privacy_topic_id', 'privacy_topic.title', "privacy_topic.body",
                            (SiteContent.content_for(:privacy_policy) rescue nil), staff, "privacy policy")
+end
+
+if seed_welcome_topics
+  puts "Seeding welcome topics"
+
+  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: "Assets for the forum design", skip_validations: true, category: staff ? staff.name : nil)
+
+  welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
+  post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)
+  post.topic.update_pinned(true, true)
+
+  lounge = Category.find_by(id: SiteSetting.lounge_category_id)
+  if lounge
+    post = PostCreator.create(Discourse.system_user, raw: I18n.t('lounge_welcome.body'), title: I18n.t('lounge_welcome.title'), skip_validations: true, category: lounge.name)
+    post.topic.update_pinned(true)
+  end
+
+  welcome = File.read(Rails.root + 'docs/ADMIN-QUICK-START-GUIDE.md')
+  PostCreator.create(Discourse.system_user, raw: welcome, title: "READ ME FIRST: Admin Quick Start Guide", skip_validations: true, category: staff ? staff.name : nil)
 end
