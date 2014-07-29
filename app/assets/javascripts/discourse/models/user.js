@@ -249,11 +249,11 @@ Discourse.User = Discourse.Model.extend({
     @returns A stream of the user's actions containing the action of id
   **/
   loadUserAction: function(id) {
-    var user = this;
-    var stream = this.get('stream');
+    var self = this,
+        stream = this.get('stream');
     return Discourse.ajax("/user_actions/" + id + ".json", { cache: 'false' }).then(function(result) {
       if (result) {
-        if ((user.get('streamFilter') || result.action_type) !== result.action_type) return;
+        if ((self.get('stream.filter') || result.action_type) !== result.action_type) return;
         var action = Discourse.UserAction.collapseStream([Discourse.UserAction.create(result)]);
         stream.set('itemsLoaded', stream.get('itemsLoaded') + 1);
         stream.get('content').insertAt(0, action[0]);
