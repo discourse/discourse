@@ -58,15 +58,14 @@ export default Discourse.Controller.extend({
     this.set('post', postStream.findLoadedPost(postId));
     this.set('buffer', selectedText);
 
-    // collapse the range at the beginning of the selection
-    // (ie. moves the end point to the start point)
-    range.collapse(true);
-
     // create a marker element
     var markerElement = document.createElement("span");
     // containing a single invisible character
     markerElement.appendChild(document.createTextNode("\ufeff"));
-    // and insert it at the beginning of our selection range
+
+    // collapse the range at the beginning/end of the selection
+    range.collapse(!Discourse.Mobile.isMobileDevice);
+    // and insert it at the start of our selection range
     range.insertNode(markerElement);
 
     // retrieve the position of the market
@@ -83,10 +82,17 @@ export default Discourse.Controller.extend({
 
     // move the quote button above the marker
     Em.run.schedule('afterRender', function() {
-      $quoteButton.offset({
-        top: markerOffset.top - $quoteButton.outerHeight() - 5,
-        left: markerOffset.left
-      });
+      var top = markerOffset.top;
+      var left = markerOffset.left;
+
+      if (Discourse.Mobile.isMobileDevice) {
+        top = top + 20;
+        left = left + 10;
+      } else {
+        top = top - $quoteButton.outerHeight() - 5;
+      }
+
+      $quoteButton.offset({ top: top, left: left });
     });
   },
 
