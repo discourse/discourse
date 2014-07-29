@@ -15,6 +15,7 @@ if GlobalSetting.enable_cors && GlobalSetting.cors_origin.present?
       end
 
       headers['Access-Control-Allow-Origin'] = origin || @origins[0]
+      headers['Access-Control-Allow-Credentials'] = "true"
       [status,headers,body]
     end
   end
