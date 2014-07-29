@@ -53,12 +53,28 @@ describe InvitesController do
         response.should_not be_success
       end
 
+      it "fails for normal user if invite email already exists" do
+        user = log_in(:elder)
+        invite = Invite.invite_by_email("invite@example.com", user)
+        invite.reload
+        post :create, email: invite.email
+        response.should_not be_success
+      end
+
       it "allows admins to invite to groups" do
         group = Fabricate(:group)
         log_in(:admin)
         post :create, email: email, group_names: group.name
         response.should be_success
         Invite.find_by(email: email).invited_groups.count.should == 1
+      end
+
+      it "allows admin to send multiple invites to same email" do
+        user = log_in(:admin)
+        invite = Invite.invite_by_email("invite@example.com", user)
+        invite.reload
+        post :create, email: invite.email
+        response.should be_success
       end
     end
 
