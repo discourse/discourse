@@ -14,9 +14,9 @@
           </td>
         </tr>
       {{/if}}
-
+      
       {{#each topics}}
-        <tr {{bind-attr class="archived"}}>
+        <tr class="category-topic-link" {{bind-attr class="archived"}}>
           <td class='main-link'>
             <div class='topic-inset'>
               {{topic-status topic=this}}
@@ -48,8 +48,8 @@
           <td class='num posts'>{{number posts_count}}</td>
           <td class='num age'><span class="{{cold-age-class created_at}}" title='{{raw-date created_at}}'>{{{age created_at}}}</span></td>
         </tr>
-      {{/each}}
 
+      {{/each}}
       {{#if subcategories}}
         <tr>
           <td>
