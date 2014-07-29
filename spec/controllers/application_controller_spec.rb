@@ -40,7 +40,7 @@ describe TopicsController do
       end
 
       it "uses the application layout even with an escaped fragment param" do
-        get :show, {'id' => topic.id, '_escaped_fragment_' => 'true'}
+        get :show, {'topic_id' => topic.id, 'slug' => topic.slug,  '_escaped_fragment_' => 'true'}
         response.should render_template(layout: 'application')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
@@ -52,13 +52,13 @@ describe TopicsController do
       end
 
       it "uses the application layout when there's no param" do
-        get :show, {'id' => topic.id}
+        get :show, topic_id: topic.id, slug: topic.slug
         response.should render_template(layout: 'application')
         assert_select "meta[name=fragment]", true, "it has the meta tag"
       end
 
       it "uses the crawler layout when there's an _escaped_fragment_ param" do
-        get :show, {'id' => topic.id, '_escaped_fragment_' => 'true'}
+        get :show, topic_id: topic.id, slug: topic.slug,  _escaped_fragment_: 'true'
         response.should render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
@@ -73,7 +73,7 @@ describe TopicsController do
         CrawlerDetection.expects(:crawler?).returns(false)
       end
       it "renders with the application layout" do
-        get :show, {'id' => topic.id}
+        get :show, topic_id: topic.id, slug: topic.slug
         response.should render_template(layout: 'application')
         assert_select "meta[name=fragment]", true, "it has the meta tag"
       end
@@ -84,7 +84,7 @@ describe TopicsController do
         CrawlerDetection.expects(:crawler?).returns(true)
       end
       it "renders with the crawler layout" do
-        get :show, {'id' => topic.id}
+        get :show, topic_id: topic.id, slug: topic.slug
         response.should render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
