@@ -9,6 +9,8 @@
 **/
 Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse.OpenComposer, {
 
+  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+
   beforeModel: function(transition) {
     if (transition.targetName.indexOf("discovery.top") === -1 &&
         Discourse.User.currentProp("should_be_redirected_to_top")) {
