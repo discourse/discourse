@@ -1,20 +1,17 @@
-/**
-  The routes used for rendering static content
+var configs = {
+  'faq': 'faq_url',
+  'tos': 'tos_url',
+  'privacy': 'privacy_policy_url'
+};
 
-  @class StaticRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.StaticController.PAGES.forEach(function(page) {
-  Discourse[page.capitalize() + "Route"] = Discourse.Route.extend({
-
+export default function(page) {
+  return Discourse.Route.extend({
     renderTemplate: function() {
       this.render('static');
     },
 
     beforeModel: function(transition) {
-      var configKey = Discourse.StaticController.CONFIGS[page];
+      var configKey = configs[page];
       if (configKey && Discourse.SiteSettings[configKey].length > 0) {
         transition.abort();
         Discourse.URL.redirectTo(Discourse.SiteSettings[configKey]);
@@ -36,4 +33,5 @@ Discourse.StaticController.PAGES.forEach(function(page) {
       this.controllerFor('static').set('model', model);
     }
   });
-});
+}
+

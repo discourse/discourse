@@ -1,13 +1,4 @@
-/**
-  A model that repreesnts a static page in Discourse
-
-  @class StaticPage
-  @extends Em.Object
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.StaticPage = Em.Object.extend({
-});
+Discourse.StaticPage = Em.Object.extend();
 
 Discourse.StaticPage.reopenClass({
   find: function(path) {
@@ -27,4 +18,3 @@ Discourse.StaticPage.reopenClass({
     });
   }
 });
-
