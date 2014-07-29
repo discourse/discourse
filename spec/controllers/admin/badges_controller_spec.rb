@@ -6,6 +6,13 @@ describe Admin::BadgesController do
     let!(:user) { log_in(:admin) }
     let!(:badge) { Fabricate(:badge) }
 
+    context 'index' do
+      it 'returns badge index' do
+        xhr :get, :index
+        response.should be_success
+      end
+    end
+
     context '.save_badge_groupings' do
 
       it 'can save badge groupings' do

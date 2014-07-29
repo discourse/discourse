@@ -4,7 +4,9 @@ class Admin::BadgesController < Admin::AdminController
     data = {
       badge_types: BadgeType.all.order(:id).to_a,
       badge_groupings: BadgeGrouping.all.order(:position).to_a,
-      badges: Badge.all.to_a,
+      badges: Badge.includes(:badge_grouping)
+                    .references(:badge_grouping)
+                    .order('badge_groupings.position, badge_type_id, badges.name').to_a,
       protected_system_fields: Badge.protected_system_fields,
       triggers: Badge.trigger_hash
     }
