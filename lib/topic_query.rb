@@ -313,7 +313,7 @@ class TopicQuery
       result
     end
 
-    def remove_muted_categories(list, user, opts)
+    def remove_muted_categories(list, user, opts=nil)
       category_id = get_category_id(opts[:exclude]) if opts
       if user
         list = list.where("NOT EXISTS(
@@ -351,6 +351,8 @@ class TopicQuery
       result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
       excluded_topic_ids += Category.pluck(:topic_id).compact
       result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
+
+      result = remove_muted_categories(result, @user)
 
       # If we are in a category, prefer it for the random results
       if topic.category_id
