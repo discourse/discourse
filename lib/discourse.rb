@@ -265,4 +265,8 @@ module Discourse
     { url: $redis.url, namespace: 'sidekiq' }
   end
 
+  def self.static_doc_topic_ids
+    [SiteSetting.tos_topic_id, SiteSetting.guidelines_topic_id, SiteSetting.privacy_topic_id]
+  end
+
 end

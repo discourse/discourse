@@ -27,7 +27,10 @@ module TopicGuardian
 
   # Editing Method
   def can_edit_topic?(topic)
-    !topic.archived && (is_staff? || is_my_own?(topic) || user.has_trust_level?(:leader))
+    return false if topic.archived
+    return true if is_my_own?(topic)
+    return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
+    is_staff? || user.has_trust_level?(:leader)
   end
 
   # Recovery Method

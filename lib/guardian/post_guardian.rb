@@ -72,6 +72,10 @@ module PostGuardian
 
   # Editing Method
   def can_edit_post?(post)
+    if Discourse.static_doc_topic_ids.include?(post.topic_id) && !is_admin?
+      return false
+    end
+
     if is_staff? || @user.has_trust_level?(:elder)
       return true
     end

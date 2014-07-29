@@ -354,6 +354,15 @@ describe Guardian do
         Guardian.new(moderator).can_see?(private_topic).should be_false
         Guardian.new(admin).can_see?(private_topic).should be_true
       end
+
+      it "restricts static doc topics" do
+        tos_topic = Fabricate(:topic, user: Discourse.system_user)
+        SiteSetting.stubs(:tos_topic_id).returns(tos_topic.id)
+
+        Guardian.new(build(:user)).can_edit?(tos_topic).should be_false
+        Guardian.new(moderator).can_edit?(tos_topic).should be_false
+        Guardian.new(admin).can_edit?(tos_topic).should be_true
+      end
     end
 
     describe 'a Post' do
@@ -782,6 +791,18 @@ describe Guardian do
           post.user.trust_level = 1
 
           Guardian.new(post.user).can_edit?(post).should be_true
+        end
+      end
+
+      context "first post of a static page doc" do
+        let!(:tos_topic) { Fabricate(:topic, user: Discourse.system_user) }
+        let!(:tos_first_post) { build(:post, topic: tos_topic, user: tos_topic.user) }
+        before { SiteSetting.stubs(:tos_topic_id).returns(tos_topic.id) }
+
+        it "restricts static doc posts" do
+          Guardian.new(build(:user)).can_edit?(tos_first_post).should be_false
+          Guardian.new(moderator).can_edit?(tos_first_post).should be_false
+          Guardian.new(admin).can_edit?(tos_first_post).should be_true
         end
       end
     end
