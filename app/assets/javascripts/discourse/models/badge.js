@@ -99,6 +99,10 @@ Discourse.Badge = Discourse.Model.extend({
     }
   },
 
+  badgeTypeClassName: function() {
+    return "badge-type-" + this.get('badge_type.name').toLowerCase();
+  }.property('badge_type.name'),
+
   /**
     Save and update the badge from the server's response.
 
