@@ -18,7 +18,7 @@ Discourse.StaticController = Em.ObjectController.extend({
 });
 
 Discourse.StaticController.reopenClass({
-  PAGES: ['faq', 'tos', 'privacy', 'login', 'guidelines'],
+  PAGES: ['faq', 'tos', 'privacy', 'guidelines'],
   CONFIGS: {
     'faq': 'faq_url',
     'tos': 'tos_url',
