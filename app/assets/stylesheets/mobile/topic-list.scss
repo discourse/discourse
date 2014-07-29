@@ -81,7 +81,9 @@
 // Category list
 // --------------------------------------------------
 
-
+tr.category-topic-link:nth-of-type(odd) {
+    background-color: darken($secondary, 3%) !important;
+    }
 
 #topic-list.categories {
   td.latest {
