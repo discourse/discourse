@@ -104,8 +104,6 @@ class Search
         return single_topic(route[:topic_id]).as_json if route[:topic_id].present?
       rescue ActionController::RoutingError
       end
-
-      return single_topic(@term.to_i).as_json if @term =~ /^\d+$/
     end
 
     find_grouped_results.as_json
