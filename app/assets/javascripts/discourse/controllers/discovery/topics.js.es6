@@ -108,6 +108,12 @@ export default Discourse.DiscoveryController.extend({
     return this.get('filter') === 'new' && this.get('topics.length') > 0;
   }.property('filter', 'topics.length'),
 
+  showDismissAtTop: function() {
+    return (this.get('filter') === 'new' ||
+           this.get('filter') === 'unread') &&
+           this.get('topics.length') >= 30;
+  }.property('filter', 'topics.length'),
+
   canBulkSelect: Em.computed.alias('currentUser.staff'),
   hasTopics: Em.computed.gt('topics.length', 0),
   showTable: Em.computed.or('hasTopics', 'topicTrackingState.hasIncoming'),
