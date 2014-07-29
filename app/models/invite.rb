@@ -205,6 +205,6 @@ end
 #
 # Indexes
 #
-#  index_invites_on_email_and_invited_by_id  (email,invited_by_id) UNIQUE
+#  index_invites_on_email_and_invited_by_id  (email,invited_by_id)
 #  index_invites_on_invite_key               (invite_key) UNIQUE
 #
