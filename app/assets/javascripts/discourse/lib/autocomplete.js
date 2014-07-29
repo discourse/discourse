@@ -282,7 +282,7 @@ $.fn.autocomplete = function(options) {
           inputSelectedItems.push("");
         }
 
-        if(_.isString(inputSelectedItems[0])) {
+        if(_.isString(inputSelectedItems[0]) && me.val().length > 0) {
           inputSelectedItems.pop();
           inputSelectedItems.push(me.val());
           if (options.onChangeItems) {
