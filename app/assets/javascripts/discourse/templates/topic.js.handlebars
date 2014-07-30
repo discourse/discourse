@@ -28,10 +28,12 @@
           {{else}}
             <h1>
               <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
-              {{#if category.parentCategory}}
-                {{bound-category-link category.parentCategory}}
-              {{/if}}
-              {{bound-category-link category}}
+              {{#unless isPrivateMessage}}
+                {{#if category.parentCategory}}
+                  {{bound-category-link category.parentCategory}}
+                {{/if}}
+                {{bound-category-link category}}
+              {{/unless}}
               {{#if details.loaded}}
                 {{topic-status topic=model}}
                 <a href='{{unbound url}}' {{action jumpTop}}>
