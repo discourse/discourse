@@ -58,11 +58,15 @@ class ImportScripts::Smf2 < ImportScripts::Base
   end
 
   def execute
+    authorized_extensions = SiteSetting.authorized_extensions
+    SiteSetting.authorized_extensions = "*"
     import_groups
     import_users
     import_categories
     import_posts
     postprocess_posts
+  ensure
+    SiteSetting.authorized_extensions = authorized_extensions
   end
 
   def import_groups
@@ -226,12 +230,16 @@ class ImportScripts::Smf2 < ImportScripts::Base
       print "\r#{spinner.next}"
     end
 
+    db2 = create_db_connection
+
     create_posts(query(<<-SQL), total: total) do |message|
       SELECT m.id_msg, m.id_topic, m.id_member, m.poster_time, m.body, o.ignore_quotes,
-             m.subject, t.id_board, t.id_first_msg
+             m.subject, t.id_board, t.id_first_msg, COUNT(a.id_attach) AS attachment_count
       FROM {prefix}messages AS m
       LEFT JOIN {prefix}import_message_order AS o ON o.message_id = m.id_msg
       LEFT JOIN {prefix}topics AS t ON t.id_topic = m.id_topic
+      LEFT JOIN {prefix}attachments AS a ON a.id_msg = m.id_msg AND a.attachment_type = 0
+      GROUP BY m.id_msg
       ORDER BY o.message_order ASC
     SQL
       skip = false
@@ -239,7 +247,6 @@ class ImportScripts::Smf2 < ImportScripts::Base
       post = {
         id: message[:id_msg],
         user_id: user_id_from_imported_user_id(message[:id_member]) || -1,
-        raw: convert_message_body(message[:body], ignore_quotes: ignore_quotes),
         created_at: Time.zone.at(message[:poster_time]),
         post_create_action: ignore_quotes && proc do |post|
           post.custom_fields['import_rebake'] = 't'
@@ -258,8 +265,27 @@ class ImportScripts::Smf2 < ImportScripts::Base
           skip = true
         end
       end
-      skip ? nil : post
+      next nil if skip
+
+      attachments = message[:attachment_count] == 0 ? [] : query(<<-SQL, connection: db2, as: :array)
+        SELECT id_attach, file_hash, filename FROM {prefix}attachments
+        WHERE attachment_type = 0 AND id_msg = #{message[:id_msg]}
+        ORDER BY id_attach ASC
+      SQL
+      attachments.map! {|a| import_attachment(post, a) rescue (puts $! ; nil) }
+      post[:raw] = convert_message_body(message[:body], attachments, ignore_quotes: ignore_quotes)
+      next post
     end
+  end
+
+  def import_attachment(post, attachment)
+    path = find_smf_attachment_path(attachment[:id_attach], attachment[:file_hash], attachment[:filename])
+    raise "Attachment for post #{post[:id]} failed: #{attachment[:filename]}" unless path.present?
+    upload = create_upload(post[:user_id], path, attachment[:filename])
+    raise "Attachment for post #{post[:id]} failed: #{upload.errors.full_messages.join(', ')}" unless upload.persisted?
+    return upload
+  rescue SystemCallError => err
+    raise "Attachment for post #{post[:id]} failed: #{err.message}"
   end
 
   def postprocess_posts
@@ -336,8 +362,55 @@ class ImportScripts::Smf2 < ImportScripts::Base
       s.lines.each {|l| r << '[li]' << l.strip.sub(/^\[x\]\s*/, '') << '[/li]' }
       r << "[/ul]\n"
     end
-    # TODO: attachments
+
+    if attachments.present?
+      use_count = Hash.new(0)
+      AttachmentPatterns.each do |p|
+        pattern, emitter = *p
+        body.gsub!(pattern) do |s|
+          next s unless (num = $~[:num].to_i - 1) >= 0
+          next s unless (upload = attachments[num]).present?
+          use_count[num] += 1
+          instance_exec(upload, &emitter)
+        end
+      end
+      if use_count.keys.length < attachments.select(&:present?).length
+        body << "\n\n---"
+        attachments.each_with_index do |upload, num|
+          if upload.present? and use_count[num] == 0
+            body << ( "\n\n" + get_upload_markdown(upload) )
+          end
+        end
+      end
+    end
+
     return opts[:ignore_quotes] ? body : convert_quotes(body)
+  end
+
+  def v8
+    @ctx ||= begin
+      ctx = PrettyText.create_new_context
+      PrettyText.decorate_context(ctx)
+      # provides toHumanSize but restores I18n.t which we need to fix again
+      ctx.load(Rails.root + "app/assets/javascripts/locales/i18n.js")
+      helper = PrettyText::Helpers.new
+      ctx['I18n']['t'] = proc {|_,key,opts| helper.t(key, opts) }
+      # from i18n_helpers.js -- can't load it directly because Ember is missing
+      ctx.eval(<<-'end')
+        var oldI18ntoHumanSize = I18n.toHumanSize;
+        I18n.toHumanSize = function(number, options) {
+          options = options || {};
+          options.format = I18n.t("number.human.storage_units.format");
+          return oldI18ntoHumanSize.apply(this, [number, options]);
+        };
+      end
+      ctx
+    end
+  end
+
+  def get_upload_markdown(upload)
+    @func ||= v8.eval("Discourse.Utilities.getUploadMarkdown")
+    return @func.call(upload).to_s
   end
 
   def convert_quotes(body)
@@ -415,6 +488,11 @@ class ImportScripts::Smf2 < ImportScripts::Base
   QuotePattern = build_nested_tag_regex('quote')
   ColorPattern = build_nested_tag_regex('color')
   ListPattern = build_nested_tag_regex('list')
+  AttachmentPatterns = [
+    [/^\[attach(?:|img|url|mini)=(?<num>\d+)\]$/, ->(u) { "\n"+get_upload_markdown(u)+"\n" }],
+    [/\[attach(?:|img|url|mini)=(?<num>\d+)\]/, ->(u) { get_upload_markdown(u) }]
+  ]
+
 
   # Provides command line options and parses the SMF settings file.
   class Options
