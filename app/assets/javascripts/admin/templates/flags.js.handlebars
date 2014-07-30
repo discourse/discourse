@@ -39,7 +39,7 @@
                     <span class="private-message-glyph">{{icon envelope}}</span>
                   {{/if}}
                   {{topic-status topic=flaggedPost.topic}}
-                  <a href='{{unbound flaggedPost.topic.url}}'>{{flaggedPost.topic.title}}</a>
+                  <a href='{{unbound flaggedPost.url}}'>{{flaggedPost.topic.title}}</a>
                 </h3>
                 {{#if flaggedPost.postAuthorFlagged}}
                   {{{flaggedPost.excerpt}}}
