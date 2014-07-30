@@ -3,6 +3,7 @@
 require_dependency 'rate_limiter'
 require_dependency 'topic_creator'
 require_dependency 'post_jobs_enqueuer'
+require_dependency 'distributed_mutex'
 
 class PostCreator
 
@@ -54,7 +55,7 @@ class PostCreator
     @topic = nil
     @post = nil
 
-    Post.transaction do
+    transaction do
       setup_topic
       setup_post
       rollback_if_host_spam_detected
@@ -66,19 +67,22 @@ class PostCreator
       update_user_counts
       create_embedded_topic
 
-      publish
       ensure_in_allowed_users if guardian.is_staff?
       @post.advance_draft_sequence
       @post.save_reply_relationships
     end
 
-    if @post
+    if @post && @post.errors.empty?
+      publish
       PostAlerter.post_created(@post) unless @opts[:import_mode]
 
-      handle_spam unless @opts[:import_mode]
       track_latest_on_category
       enqueue_jobs
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
+    end
+
+    if @post && (@post.errors.present? || @spam)
+      handle_spam unless @opts[:import_mode]
     end
 
     @post
@@ -110,6 +114,18 @@ class PostCreator
   end
 
   protected
+
+  def transaction(&blk)
+    Post.transaction do
+      if new_topic?
+        blk.call
+      else
+        # we need to ensure post_number is monotonically increasing with no gaps
+        # so we serialize creation to avoid needing rollbacks
+        DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}", &blk)
+      end
+    end
+  end
 
   # You can supply an `embed_url` for a post to set up the embedded relationship.
   # This is used by the wp-discourse plugin to associate a remote post with a
