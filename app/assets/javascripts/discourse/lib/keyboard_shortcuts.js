@@ -134,7 +134,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   toggleProgress: function() {
-    Discourse.__container__.lookup('controller:topic-progress').send('toggleExpansion');
+    Discourse.__container__.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
   },
 
   showSearch: function(selectContext) {

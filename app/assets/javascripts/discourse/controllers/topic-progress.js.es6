@@ -4,10 +4,16 @@ export default Ember.ObjectController.extend({
   expanded: false,
 
   actions: {
-    toggleExpansion: function() {
+    toggleExpansion: function(opts) {
       this.toggleProperty('expanded');
       if (this.get('expanded')) {
         this.set('toPostNumber', this.get('progressPosition'));
+        if(opts && opts.highlight){
+          // TODO: somehow move to view?
+          Em.run.next(function(){
+            $('.jump-form input').select().focus();
+          });
+        }
       }
     },
 
