@@ -9,7 +9,7 @@ module Onebox
       private
 
       def get_xml
-        doc = Nokogiri::XML(open(@url + "?report=xml&format=text"))
+        doc = Nokogiri::XML(open(URI.join(@url, "?report=xml&format=text")))
         pre = doc.xpath("//pre")
         Nokogiri::XML("<root>" + pre.text + "</root>")
       end
