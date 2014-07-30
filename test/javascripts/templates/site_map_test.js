@@ -76,7 +76,7 @@ test("location links part is rendered correctly", function() {
 
   var $latestTopicsLink = $locationLinks.find(".latest-topics-link");
   ok(exists($latestTopicsLink), "the latest topics link is present");
-  equal($latestTopicsLink.attr("href"), "/", "the latest topics link points to a correct URL");
+  equal($latestTopicsLink.attr("href"), "/latest", "the latest topics link points to a correct URL");
   equal($latestTopicsLink.attr("title"), "filters.latest.help", "the latest topics link has correct title attr");
   equal($latestTopicsLink.text(), "filters.latest.title", "the latest topics link has correct text");
 
