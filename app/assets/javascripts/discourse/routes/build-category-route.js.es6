@@ -11,7 +11,6 @@ export default function(filter, params) {
         return;
       }
 
-      this.controllerFor('search').set('searchContext', model.get('searchContext'));
       this._setupNavigation(model);
       return Em.RSVP.all([this._createSubcategoryList(model),
                           this._retrieveTopicList(model, transaction)]);
@@ -84,6 +83,7 @@ export default function(filter, params) {
         noSubcategories: params && !!params.no_subcategories
       });
 
+      this.controllerFor('search').set('searchContext', model.get('searchContext'));
       this.set('topics', null);
     },
 
