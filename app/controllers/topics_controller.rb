@@ -45,12 +45,12 @@ class TopicsController < ApplicationController
     rescue Discourse::NotFound
       topic = Topic.find_by(slug: params[:id].downcase) if params[:id]
       raise Discourse::NotFound unless topic
-      return redirect_to(topic.relative_url)
+      redirect_to_correct_topic(topic) && return
     end
 
     discourse_expires_in 1.minute
 
-    redirect_to_correct_topic && return if slugs_do_not_match || (!request.xhr? && params[:slug].nil?)
+    redirect_to_correct_topic(@topic_view.topic) && return if slugs_do_not_match || (!request.xhr? && params[:slug].nil?)
 
     track_visit_to_topic
 
@@ -370,13 +370,8 @@ class TopicsController < ApplicationController
     params[:slug] && @topic_view.topic.slug != params[:slug]
   end
 
-  def redirect_to_correct_topic
-    fullpath = request.fullpath
-
-    split = fullpath.split('/')
-    split[2] = @topic_view.topic.slug
-
-    redirect_to split.join('/'), status: 301
+  def redirect_to_correct_topic(topic)
+    redirect_to "#{topic.relative_url}#{request.format.json? ? ".json" : ""}", status: 301
   end
 
   def track_visit_to_topic
