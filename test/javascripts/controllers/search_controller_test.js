@@ -1,25 +1,16 @@
-var controller, searcherStub;
+var searcherStub;
 
-module("controller:search", {
+moduleFor("controller:search", "controller:search", {
   setup: function() {
     Discourse.SiteSettings.min_search_term_length = 2;
 
-    // cancels debouncing behavior (calls the debounced function immediately)
-    sinon.stub(Ember.run, "debounce").callsArg(1);
-
     searcherStub = Ember.Deferred.create();
-    sinon.stub(Discourse.Search, "forTerm").returns(searcherStub);
-
-    controller = testController('search', []);
-  },
-
-  teardown: function() {
-    Ember.run.debounce.restore();
-    Discourse.Search.forTerm.restore();
+    sandbox.stub(Discourse.Search, "forTerm").returns(searcherStub);
   }
 });
 
 test("when no search term is typed yet", function() {
+  var controller = this.subject();
   ok(!controller.get("loading"), "loading flag is false");
   ok(!controller.get("noResults"), "noResults flag is false");
   deepEqual(controller.get("content"), [], "content is empty");
@@ -28,9 +19,8 @@ test("when no search term is typed yet", function() {
 });
 
 test("when user started typing a search term but did not reach the minimum character count threshold yet", function() {
-  Ember.run(function() {
-    controller.set("term", "a");
-  });
+  var controller = this.subject();
+  controller.set("term", "a");
 
   ok(!controller.get("loading"), "loading flag is false");
   ok(!controller.get("noResults"), "noResults flag is false");
@@ -40,10 +30,8 @@ test("when user started typing a search term but did not reach the minimum chara
 });
 
 test("when user typed a search term that is equal to or exceeds the minimum character count threshold, but results have not yet finished loading", function() {
-  Ember.run(function() {
-    controller.set("term", "ab");
-  });
-
+  var controller = this.subject();
+  controller.set("term", "ab");
   ok(controller.get("loading"), "loading flag is true");
   ok(!controller.get("noResults"), "noResults flag is false");
   deepEqual(controller.get("content"), [], "content is empty");
@@ -52,9 +40,10 @@ test("when user typed a search term that is equal to or exceeds the minimum char
 });
 
 test("when user typed a search term that is equal to or exceeds the minimum character count threshold and results have finished loading, but there are no results found", function() {
-  Ember.run(function() {
-    controller.set("term", "ab");
+  var controller = this.subject();
+  Em.run(function() {
     searcherStub.resolve([]);
+    controller.set("term", "ab");
   });
 
   ok(!controller.get("loading"), "loading flag is false");
@@ -65,7 +54,8 @@ test("when user typed a search term that is equal to or exceeds the minimum char
 });
 
 test("when user typed a search term that is equal to or exceeds the minimum character count threshold and results have finished loading, and there are results found", function() {
-  Ember.run(function() {
+  var controller = this.subject();
+  Em.run(function() {
     controller.set("term", "ab");
     searcherStub.resolve([{
       type: "user",
@@ -84,7 +74,8 @@ test("when user typed a search term that is equal to or exceeds the minimum char
 });
 
 test("starting to type a new term resets the previous search results", function() {
-  Ember.run(function() {
+  var controller = this.subject();
+  Em.run.next(function() {
     controller.set("term", "ab");
     searcherStub.resolve([
       {
@@ -106,7 +97,8 @@ test("starting to type a new term resets the previous search results", function(
 });
 
 test("search results from the server are correctly reformatted (sections are sorted, section fields are preserved, item sorting is preserved, item fields are preserved, items are globally indexed across all sections)", function() {
-  Ember.run(function() {
+  var controller = this.subject();
+  Em.run(function() {
     controller.set("term", "ab");
     searcherStub.resolve([
       {
@@ -165,7 +157,8 @@ test("search results from the server are correctly reformatted (sections are sor
 });
 
 test("keyboard navigation", function() {
-  Ember.run(function() {
+  var controller = this.subject();
+  Em.run(function() {
     controller.set("term", "ab");
     searcherStub.resolve([
       {
@@ -197,8 +190,9 @@ test("keyboard navigation", function() {
 });
 
 test("selecting a highlighted item", function() {
-  this.stub(Discourse.URL, "routeTo");
+  sandbox.stub(Discourse.URL, "routeTo");
 
+  var controller = this.subject();
   Ember.run(function() {
     controller.set("term", "ab");
     searcherStub.resolve([
@@ -233,6 +227,7 @@ test("selecting a highlighted item", function() {
 });
 
 test("search query / the flow of the search", function() {
+  var controller = this.subject();
   Ember.run(function() {
     controller.set("searchContext", "context");
     controller.set("searchContextEnabled", true);
@@ -279,6 +274,7 @@ test("search query / the flow of the search", function() {
 });
 
 test("typing new term when the results are filtered by type cancels type filter", function() {
+  var controller = this.subject();
   Ember.run(function() {
     controller.set("term", "ab");
     controller.send("moreOfType", "topic");

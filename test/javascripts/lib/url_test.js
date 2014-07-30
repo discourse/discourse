@@ -1,7 +1,7 @@
 module("Discourse.URL");
 
 test("isInternal with a HTTP url", function() {
-  this.stub(Discourse.URL, "origin").returns("http://eviltrout.com");
+  sandbox.stub(Discourse.URL, "origin").returns("http://eviltrout.com");
 
   not(Discourse.URL.isInternal(null), "a blank URL is not internal");
   ok(Discourse.URL.isInternal("/test"), "relative URLs are internal");
@@ -11,7 +11,7 @@ test("isInternal with a HTTP url", function() {
 });
 
 test("isInternal with a HTTPS url", function() {
-  this.stub(Discourse.URL, "origin").returns("https://eviltrout.com");
+  sandbox.stub(Discourse.URL, "origin").returns("https://eviltrout.com");
   ok(Discourse.URL.isInternal("http://eviltrout.com/monocle"), "HTTPS urls match HTTP urls");
 });
 
@@ -20,7 +20,7 @@ test("isInternal with a HTTPS url", function() {
   // --------------------------------------------
 
 // test("routeTo", function() {
-//   this.stub(Discourse.URL, "handleURL", function (path) { return path === "/t/topic-title/42"; });
+//   sandbox.stub(Discourse.URL, "handleURL", function (path) { return path === "/t/topic-title/42"; });
 
 //   ok(Discourse.URL.routeTo("https://discourse.org/t/topic-title/42"), "can route HTTPS");
 //   ok(Discourse.URL.routeTo("http://discourse.org/t/topic-title/42"), "can route HTTP");
@@ -33,7 +33,7 @@ test("isInternal with a HTTPS url", function() {
 // test("navigatedToHome", function() {
 //   var fakeDiscoveryController = { send: function() { return true; } };
 //   var mock = sinon.mock(fakeDiscoveryController);
-//   this.stub(Discourse.URL, "controllerFor").returns(fakeDiscoveryController);
+//   sandbox.stub(Discourse.URL, "controllerFor").returns(fakeDiscoveryController);
 //
 //   mock.expects("send").withArgs('refresh').twice();
 //   ok(Discourse.URL.navigatedToHome("/", "/"));

@@ -48,7 +48,7 @@ test("destroy", function() {
   var user = Discourse.User.create({username: 'eviltrout'});
   var topic = Discourse.Topic.create({id: 1234});
 
-  this.stub(Discourse, 'ajax');
+  sandbox.stub(Discourse, 'ajax');
 
   topic.destroy(user);
   present(topic.get('deleted_at'), 'deleted at is set');
@@ -60,7 +60,7 @@ test("recover", function() {
   var user = Discourse.User.create({username: 'eviltrout'});
   var topic = Discourse.Topic.create({id: 1234, deleted_at: new Date(), deleted_by: user});
 
-  this.stub(Discourse, 'ajax');
+  sandbox.stub(Discourse, 'ajax');
 
   topic.recover();
   blank(topic.get('deleted_at'), "it clears deleted_at");

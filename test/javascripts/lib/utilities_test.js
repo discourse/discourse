@@ -16,7 +16,7 @@ test("validateUploadedFiles", function() {
 });
 
 test("uploading one file", function() {
-  this.stub(bootbox, "alert");
+  sandbox.stub(bootbox, "alert");
 
   not(validUpload([1, 2]));
   ok(bootbox.alert.calledWith(I18n.t('post.errors.too_many_uploads')));
@@ -24,7 +24,7 @@ test("uploading one file", function() {
 
 test("new user cannot upload images", function() {
   Discourse.SiteSettings.newuser_max_images = 0;
-  this.stub(bootbox, "alert");
+  sandbox.stub(bootbox, "alert");
 
   not(validUpload([{name: "image.png"}]), 'the upload is not valid');
   ok(bootbox.alert.calledWith(I18n.t('post.errors.image_upload_not_allowed_for_new_user')), 'the alert is called');
@@ -32,7 +32,7 @@ test("new user cannot upload images", function() {
 
 test("new user cannot upload attachments", function() {
   Discourse.SiteSettings.newuser_max_attachments = 0;
-  this.stub(bootbox, "alert");
+  sandbox.stub(bootbox, "alert");
 
   not(validUpload([{name: "roman.txt"}]));
   ok(bootbox.alert.calledWith(I18n.t('post.errors.attachment_upload_not_allowed_for_new_user')));
@@ -41,7 +41,7 @@ test("new user cannot upload attachments", function() {
 test("ensures an authorized upload", function() {
   var html = { name: "unauthorized.html" };
   var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
-  this.stub(bootbox, "alert");
+  sandbox.stub(bootbox, "alert");
 
   not(validUpload([html]));
   ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions })));
@@ -51,7 +51,7 @@ test("prevents files that are too big from being uploaded", function() {
   var image = { name: "image.png", size: 10 * 1024 };
   Discourse.SiteSettings.max_image_size_kb = 5;
   Discourse.User.currentProp("trust_level", 1);
-  this.stub(bootbox, "alert");
+  sandbox.stub(bootbox, "alert");
 
   not(validUpload([image]));
   ok(bootbox.alert.calledWith(I18n.t('post.errors.image_too_large', { max_size_kb: 5 })));
@@ -71,7 +71,7 @@ var dummyBlob = function() {
 test("allows valid uploads to go through", function() {
   Discourse.User.currentProp("trust_level", 1);
   Discourse.SiteSettings.max_image_size_kb = 15;
-  this.stub(bootbox, "alert");
+  sandbox.stub(bootbox, "alert");
 
   // image
   var image = { name: "image.png", size: 10 * 1024 };

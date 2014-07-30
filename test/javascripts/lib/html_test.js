@@ -35,7 +35,7 @@ test("undefined color", function() {
 
 test("allowUncategorized", function() {
   var uncategorized = Discourse.Category.create({name: 'uncategorized', id: 345});
-  this.stub(Discourse.Site, 'currentProp').withArgs('uncategorized_category_id').returns(345);
+  sandbox.stub(Discourse.Site, 'currentProp').withArgs('uncategorized_category_id').returns(345);
 
   blank(html.categoryBadge(uncategorized), "it doesn't return HTML for uncategorized by default");
   present(html.categoryBadge(uncategorized, {allowUncategorized: true}), "it returns HTML");

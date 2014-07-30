@@ -22,7 +22,7 @@ var categoryLinksSelector = ".category-links";
 
 module("Template: site_map", {
   setup: function() {
-    sinon.stub(I18n, "t", function(scope, options) {
+    sandbox.stub(I18n, "t", function(scope, options) {
       if (options) {
         if (options.count) {
           return [scope, options.count].join(" ");
@@ -39,6 +39,7 @@ module("Template: site_map", {
   },
 
   teardown: function() {
+    Discourse.reset();
     I18n.t.restore();
   }
 });
@@ -91,7 +92,7 @@ test("location links part is rendered correctly", function() {
 });
 
 test("binds mobile theme toggle link to the correct controller action", function() {
-  this.stub(Ember.Handlebars.helpers, "action", function(actionName) {
+  sandbox.stub(Ember.Handlebars.helpers, "action", function(actionName) {
     return new Handlebars.SafeString('data-test-stub-action-name="' + actionName + '"');
   });
 

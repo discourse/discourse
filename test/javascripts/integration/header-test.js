@@ -1,7 +1,7 @@
 integration("Header", {
   setup: function() {
     var originalUser = Discourse.User.current();
-    sinon.stub(Discourse.User, "current").returns(originalUser);
+    sandbox.stub(Discourse.User, "current").returns(originalUser);
     Discourse.User.current.returns(Ember.Object.create({
       username: 'test',
       staff: true,
@@ -29,7 +29,7 @@ test("header", function() {
 
   // Logo changing
   andThen(function() {
-    controllerFor("header").set("showExtraInfo", true);
+    controllerFor('header').set("showExtraInfo", true);
   });
 
   andThen(function() {

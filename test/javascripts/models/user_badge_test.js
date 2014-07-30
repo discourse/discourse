@@ -19,7 +19,7 @@ test('createFromJson array', function() {
 
 asyncTestDiscourse('findByUsername', function() {
   expect(2);
-  this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(multipleBadgesJson));
+  sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(multipleBadgesJson));
   Discourse.UserBadge.findByUsername("anne3").then(function(badges) {
     ok(Array.isArray(badges), "returns an array");
     start();
@@ -29,7 +29,7 @@ asyncTestDiscourse('findByUsername', function() {
 
 asyncTestDiscourse('findByBadgeId', function() {
   expect(2);
-  this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(multipleBadgesJson));
+  sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(multipleBadgesJson));
   Discourse.UserBadge.findByBadgeId(880).then(function(badges) {
     ok(Array.isArray(badges), "returns an array");
     start();
@@ -39,7 +39,7 @@ asyncTestDiscourse('findByBadgeId', function() {
 
 asyncTestDiscourse('grant', function() {
   expect(2);
-  this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(singleBadgeJson));
+  sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve(singleBadgeJson));
   Discourse.UserBadge.grant(1, "username").then(function(userBadge) {
     ok(!Array.isArray(userBadge), "does not return an array");
     start();
@@ -48,7 +48,7 @@ asyncTestDiscourse('grant', function() {
 });
 
 test('revoke', function() {
-  this.stub(Discourse, 'ajax');
+  sandbox.stub(Discourse, 'ajax');
   var userBadge = Discourse.UserBadge.create({id: 1});
   userBadge.revoke();
   ok(Discourse.ajax.calledOnce, "makes an AJAX call");

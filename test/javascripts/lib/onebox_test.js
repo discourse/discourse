@@ -5,7 +5,7 @@ module("Discourse.Onebox", {
 });
 
 asyncTestDiscourse("Stops rapid calls with cache true", function() {
-  this.stub(Discourse, "ajax").returns(Ember.RSVP.resolve());
+  sandbox.stub(Discourse, "ajax").returns(Ember.RSVP.resolve());
   Discourse.Onebox.load(this.anchor, true);
   Discourse.Onebox.load(this.anchor, true);
 
@@ -14,7 +14,7 @@ asyncTestDiscourse("Stops rapid calls with cache true", function() {
 });
 
 asyncTestDiscourse("Stops rapid calls with cache true", function() {
-  this.stub(Discourse, "ajax").returns(Ember.RSVP.resolve());
+  sandbox.stub(Discourse, "ajax").returns(Ember.RSVP.resolve());
   Discourse.Onebox.load(this.anchor, false);
   Discourse.Onebox.load(this.anchor, false);
 

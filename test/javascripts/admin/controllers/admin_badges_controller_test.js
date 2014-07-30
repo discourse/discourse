@@ -32,7 +32,7 @@ test("save", function() {
       controller = this.subject({ model: [badge, otherBadge] });
 
   controller.send('selectBadge', badge);
-  sinon.stub(badge, "save").returns(Ember.RSVP.resolve({}));
+  sandbox.stub(badge, "save").returns(Ember.RSVP.resolve({}));
   controller.send("save");
   ok(badge.save.calledOnce, "called save on the badge");
 });
@@ -42,7 +42,7 @@ test("destroy", function() {
       otherBadge = Discourse.Badge.create({id: 102, name: "Other Badge"}),
       controller = this.subject({model: [badge, otherBadge]});
 
-  sinon.stub(badge, 'destroy').returns(Ember.RSVP.resolve({}));
+  sandbox.stub(badge, 'destroy').returns(Ember.RSVP.resolve({}));
 
   bootbox.confirm = function(text, yes, no, func) {
     func(false);

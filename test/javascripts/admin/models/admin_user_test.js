@@ -2,7 +2,7 @@ module("Discourse.AdminUser");
 
 
 asyncTestDiscourse('generate key', function() {
-  this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve({api_key: {id: 1234, key: 'asdfasdf'}}));
+  sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve({api_key: {id: 1234, key: 'asdfasdf'}}));
 
   var adminUser = Discourse.AdminUser.create({id: 333});
 
@@ -19,7 +19,7 @@ asyncTestDiscourse('revoke key', function() {
   var apiKey = Discourse.ApiKey.create({id: 1234, key: 'asdfasdf'}),
       adminUser = Discourse.AdminUser.create({id: 333, api_key: apiKey});
 
-  this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve());
+  sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve());
 
   equal(adminUser.get('api_key'), apiKey, 'it has the api key in the beginning');
   adminUser.revokeApiKey().then(function() {

@@ -92,16 +92,25 @@ if (window.Logster) {
   window.Logster = { enabled: false };
 }
 
-QUnit.testStart(function() {
+var origDebounce = Ember.run.debounce;
+QUnit.testStart(function(ctx) {
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "/";
   Discourse.BaseUrl = "";
 
-  // Never debounce in test, just makes testing harder
-  sinon.stub(Ember.run, "debounce").callsArg(1)
+  window.sandbox = sinon.sandbox.create();
+
+  window.sandbox.stub(Discourse.ScrollingDOMMethods, "bindOnScroll");
+  window.sandbox.stub(Discourse.ScrollingDOMMethods, "unbindOnScroll");
+
+  // Don't debounce in test unless we're testing debouncing
+  if (ctx.module.indexOf('debounce') === -1) {
+    Ember.run.debounce = Ember.run;
+  }
 });
 
 QUnit.testDone(function() {
-  Ember.run.debounce.restore();
+  Ember.run.debounce = origDebounce;
+  window.sandbox.restore();
 });

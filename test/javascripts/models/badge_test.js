@@ -11,7 +11,7 @@ test('displayName', function() {
   var badge1 = Discourse.Badge.create({id: 1, name: "Test Badge 1"});
   equal(badge1.get('displayName'), "Test Badge 1", "falls back to the original name in the absence of a translation");
 
-  this.stub(I18n, "t").returnsArg(0);
+  sandbox.stub(I18n, "t").returnsArg(0);
   var badge2 = Discourse.Badge.create({id: 2, name: "Test Badge 2"});
   equal(badge2.get('displayName'), "badges.badge.test_badge_2.name", "uses translation when available");
 });
@@ -21,7 +21,7 @@ test('translatedDescription', function() {
   equal(badge1.get('translatedDescription'), null, "returns null when no translation exists");
 
   var badge2 = Discourse.Badge.create({id: 2, name: "Test Badge 2 **"});
-  this.stub(I18n, "t").returns("description translation");
+  sandbox.stub(I18n, "t").returns("description translation");
   equal(badge2.get('translatedDescription'), "description translation", "users translated description");
 });
 
@@ -30,7 +30,7 @@ test('displayDescription', function() {
   equal(badge1.get('displayDescription'), "TEST", "returns original description when no translation exists");
 
   var badge2 = Discourse.Badge.create({id: 2, name: "Test Badge 2 **"});
-  this.stub(I18n, "t").returns("description translation");
+  sandbox.stub(I18n, "t").returns("description translation");
   equal(badge2.get('displayDescription'), "description translation", "users translated description");
 });
 
@@ -61,7 +61,7 @@ test('updateFromJson', function() {
 });
 
 test('save', function() {
-  this.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve({}));
+  sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve({}));
   var badge = Discourse.Badge.create({name: "New Badge", description: "This is a new badge.", badge_type_id: 1});
   // TODO: clean API
   badge.save(["name", "description", "badge_type_id"]);
@@ -69,7 +69,7 @@ test('save', function() {
 });
 
 test('destroy', function() {
-  this.stub(Discourse, 'ajax');
+  sandbox.stub(Discourse, 'ajax');
   var badge = Discourse.Badge.create({name: "New Badge", description: "This is a new badge.", badge_type_id: 1});
   badge.destroy();
   ok(!Discourse.ajax.calledOnce, "no AJAX call for a new badge");

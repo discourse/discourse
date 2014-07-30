@@ -1,6 +1,6 @@
 module("Discourse.Composer", {
   setup: function() {
-    sinon.stub(Discourse.User, 'currentProp').withArgs('admin').returns(false);
+    sandbox.stub(Discourse.User, 'currentProp').withArgs('admin').returns(false);
   },
 
   teardown: function() {
@@ -130,7 +130,7 @@ test("Title length for private messages", function() {
 });
 
 test('importQuote with no data', function() {
-  this.stub(Discourse.Post, 'load');
+  sandbox.stub(Discourse.Post, 'load');
   var composer = Discourse.Composer.create();
   composer.importQuote();
   blank(composer.get('reply'), 'importing with no topic adds nothing');
@@ -158,7 +158,7 @@ test('editingFirstPost', function() {
 asyncTestDiscourse('importQuote with a post', function() {
   expect(1);
 
-  this.stub(Discourse.Post, 'load').withArgs(123).returns(Em.Deferred.promise(function (p) {
+  sandbox.stub(Discourse.Post, 'load').withArgs(123).returns(Em.Deferred.promise(function (p) {
     p.resolve(Discourse.Post.create({raw: "let's quote"}));
   }));
 
@@ -172,7 +172,7 @@ asyncTestDiscourse('importQuote with a post', function() {
 asyncTestDiscourse('importQuote with no post', function() {
   expect(1);
 
-  this.stub(Discourse.Post, 'load').withArgs(4).returns(Em.Deferred.promise(function (p) {
+  sandbox.stub(Discourse.Post, 'load').withArgs(4).returns(Em.Deferred.promise(function (p) {
     p.resolve(Discourse.Post.create({raw: 'quote me'}));
   }));
 
@@ -243,7 +243,7 @@ test('open with a quote', function() {
 
 module("Discourse.Composer as admin", {
   setup: function() {
-    sinon.stub(Discourse.User, 'currentProp').withArgs('admin').returns(true);
+    sandbox.stub(Discourse.User, 'currentProp').withArgs('admin').returns(true);
   },
 
   teardown: function() {

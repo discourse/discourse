@@ -48,6 +48,7 @@ module("Discourse.HomeLogoComponent", {
 
   teardown: function() {
     Discourse.Mobile.mobileView = oldMobileView;
+    Discourse.reset();
   }
 });
 

@@ -1,6 +1,6 @@
 module("Discourse.Computed", {
   setup: function() {
-    sinon.stub(I18n, "t", function(scope) {
+    sandbox.stub(I18n, "t", function(scope) {
       return "%@ translated: " + scope;
     });
   },

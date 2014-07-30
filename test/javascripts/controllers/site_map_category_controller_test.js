@@ -1,13 +1,8 @@
-var controller;
-
-module("controller:site-map-category", {
-  setup: function() {
-    controller = testController('site-map-category');
-  }
-});
+moduleFor("controller:site-map-category");
 
 test("showBadges", function() {
-  this.stub(Discourse.User, "current");
+  sandbox.stub(Discourse.User, "current");
+  var controller = this.subject();
 
   Discourse.User.current.returns(null);
   ok(!controller.get("showBadges"), "returns false when no user is logged in");

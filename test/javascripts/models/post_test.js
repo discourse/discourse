@@ -59,7 +59,7 @@ test('destroy by staff', function() {
   var user = Discourse.User.create({username: 'staff', staff: true});
   var post = buildPost({user: user});
 
-  this.stub(Discourse, 'ajax').returns(new Em.Deferred());
+  sandbox.stub(Discourse, 'ajax').returns(new Em.Deferred());
   post.destroy(user);
 
   present(post.get('deleted_at'), "it has a `deleted_at` field.");
@@ -77,7 +77,7 @@ test('destroy by non-staff', function() {
   var user = Discourse.User.create({username: 'evil trout'});
   var post = buildPost({user: user, cooked: originalCooked});
 
-  this.stub(Discourse, 'ajax');
+  sandbox.stub(Discourse, 'ajax');
   post.destroy(user);
 
   ok(!post.get('can_delete'), "the post can't be deleted again in this session");

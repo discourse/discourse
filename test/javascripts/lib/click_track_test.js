@@ -1,12 +1,16 @@
+var windowOpen,
+    win,
+    redirectTo;
+
 module("Discourse.ClickTrack", {
   setup: function() {
 
     // Prevent any of these tests from navigating away
-    this.win = {focus: function() { } };
-    this.redirectTo = sinon.stub(Discourse.URL, "redirectTo");
-    sinon.stub(Discourse, "ajax");
-    this.windowOpen = sinon.stub(window, "open").returns(this.win);
-    sinon.stub(this.win, "focus");
+    win = {focus: function() { } };
+    redirectTo = sandbox.stub(Discourse.URL, "redirectTo");
+    sandbox.stub(Discourse, "ajax");
+    windowOpen = sandbox.stub(window, "open").returns(win);
+    sandbox.stub(win, "focus");
 
     fixture().html([
       '<div id="topic" id="1337">',
@@ -23,13 +27,6 @@ module("Discourse.ClickTrack", {
       '    <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>',
       '  </article>',
       '</div>'].join("\n"));
-  },
-
-  teardown: function() {
-    Discourse.URL.redirectTo.restore();
-    Discourse.ajax.restore();
-    window.open.restore();
-    this.win.focus.restore();
   }
 });
 
@@ -42,14 +39,14 @@ var generateClickEventOn = function(selector) {
 
 test("does not track clicks on lightboxes", function() {
   var clickEvent = generateClickEventOn('.lightbox');
-  this.stub(clickEvent, "preventDefault");
+  sandbox.stub(clickEvent, "preventDefault");
   ok(track(clickEvent));
   ok(!clickEvent.preventDefault.calledOnce);
 });
 
 test("it calls preventDefault when clicking on an a", function() {
   var clickEvent = generateClickEventOn('a');
-  this.stub(clickEvent, "preventDefault");
+  sandbox.stub(clickEvent, "preventDefault");
   track(clickEvent);
   ok(clickEvent.preventDefault.calledOnce);
   ok(Discourse.URL.redirectTo.calledOnce);
@@ -82,12 +79,12 @@ var badgeClickCount = function(id, expected) {
 };
 
 test("does not update badge clicks on my own link", function() {
-  this.stub(Discourse.User, 'currentProp').withArgs('id').returns(314);
+  sandbox.stub(Discourse.User, 'currentProp').withArgs('id').returns(314);
   badgeClickCount('with-badge', 1);
 });
 
 test("does not update badge clicks in my own post", function() {
-  this.stub(Discourse.User, 'currentProp').withArgs('id').returns(3141);
+  sandbox.stub(Discourse.User, 'currentProp').withArgs('id').returns(3141);
   badgeClickCount('with-badge-but-not-mine', 1);
 });
 
@@ -117,7 +114,7 @@ test("right clicks are tracked", function() {
 test("preventDefault is not called for right clicks", function() {
   var clickEvent = generateClickEventOn('a');
   clickEvent.which = 3;
-  this.stub(clickEvent, "preventDefault");
+  sandbox.stub(clickEvent, "preventDefault");
   ok(track(clickEvent));
   ok(!clickEvent.preventDefault.calledOnce);
 });
@@ -126,7 +123,7 @@ var testOpenInANewTab = function(description, clickEventModifier) {
   test(description, function() {
     var clickEvent = generateClickEventOn('a');
     clickEventModifier(clickEvent);
-    this.stub(clickEvent, "preventDefault");
+    sandbox.stub(clickEvent, "preventDefault");
     ok(track(clickEvent));
     ok(Discourse.ajax.calledOnce);
     ok(!clickEvent.preventDefault.calledOnce);
@@ -150,8 +147,8 @@ testOpenInANewTab("it opens in a new tab on middle click", function(clickEvent) 
 });
 
 test("tracks via AJAX if we're on the same site", function() {
-  this.stub(Discourse.URL, "routeTo");
-  this.stub(Discourse.URL, "origin").returns("http://discuss.domain.com");
+  sandbox.stub(Discourse.URL, "routeTo");
+  sandbox.stub(Discourse.URL, "origin").returns("http://discuss.domain.com");
 
   ok(!track(generateClickEventOn('#same-site')));
   ok(Discourse.ajax.calledOnce);
@@ -159,8 +156,8 @@ test("tracks via AJAX if we're on the same site", function() {
 });
 
 test("does not track via AJAX for attachments", function() {
-  this.stub(Discourse.URL, "routeTo");
-  this.stub(Discourse.URL, "origin").returns("http://discuss.domain.com");
+  sandbox.stub(Discourse.URL, "routeTo");
+  sandbox.stub(Discourse.URL, "origin").returns("http://discuss.domain.com");
 
   ok(!track(generateClickEventOn('.attachment')));
   ok(Discourse.URL.redirectTo.calledOnce);
@@ -168,13 +165,13 @@ test("does not track via AJAX for attachments", function() {
 
 test("tracks custom urls when opening in another window", function() {
   var clickEvent = generateClickEventOn('a');
-  this.stub(Discourse.User, "currentProp").withArgs('external_links_in_new_tab').returns(true);
+  sandbox.stub(Discourse.User, "currentProp").withArgs('external_links_in_new_tab').returns(true);
   ok(!track(clickEvent));
-  ok(this.windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42', '_blank'));
+  ok(windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42', '_blank'));
 });
 
 test("tracks custom urls when opening in another window", function() {
   var clickEvent = generateClickEventOn('a');
   ok(!track(clickEvent));
-  ok(this.redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42'));
+  ok(redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42'));
 });

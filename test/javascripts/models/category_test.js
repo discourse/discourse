@@ -31,7 +31,7 @@ test('findBySlug', function() {
       luke = Discourse.Category.create({id: 2, slug: 'luke', parentCategory: darth}),
       categoryList = [darth, luke];
 
-  this.stub(Discourse.Category, 'list').returns(categoryList);
+  sandbox.stub(Discourse.Category, 'list').returns(categoryList);
 
   equal(Discourse.Category.findBySlug('darth'), darth, 'we can find a parent category');
   equal(Discourse.Category.findBySlug('luke', 'darth'), luke, 'we can find a child with parent');
@@ -45,7 +45,7 @@ test('findByIds', function() {
     2: Discourse.Category.create({id: 2})
   };
 
-  this.stub(Discourse.Category, 'idMap').returns(categories);
+  sandbox.stub(Discourse.Category, 'idMap').returns(categories);
   deepEqual(Discourse.Category.findByIds([1,2,3]), _.values(categories));
 });
 

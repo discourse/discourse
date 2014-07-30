@@ -1,7 +1,7 @@
 module("Discourse.FlaggedPost");
 
 test('delete first post', function() {
-  this.stub(Discourse, 'ajax');
+  sandbox.stub(Discourse, 'ajax');
 
   Discourse.FlaggedPost.create({ id: 1, topic_id: 2, post_number: 1 })
            .deletePost();
@@ -10,7 +10,7 @@ test('delete first post', function() {
 });
 
 test('delete second post', function() {
-  this.stub(Discourse, 'ajax');
+  sandbox.stub(Discourse, 'ajax');
 
   Discourse.FlaggedPost.create({ id: 1, topic_id: 2, post_number: 2 })
            .deletePost();

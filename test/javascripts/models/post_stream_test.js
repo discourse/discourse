@@ -111,7 +111,7 @@ test("removePosts", function() {
 test("cancelFilter", function() {
   var postStream = buildStream(1235);
 
-  this.stub(postStream, "refresh");
+  sandbox.stub(postStream, "refresh");
 
   postStream.set('summary', true);
   postStream.cancelFilter();
@@ -124,7 +124,7 @@ test("cancelFilter", function() {
 
 test("toggleParticipant", function() {
   var postStream = buildStream(1236);
-  this.stub(postStream, "refresh");
+  sandbox.stub(postStream, "refresh");
 
   equal(postStream.get('userFilters.length'), 0, "by default no participants are toggled");
 
@@ -137,7 +137,7 @@ test("toggleParticipant", function() {
 
 test("streamFilters", function() {
   var postStream = buildStream(1237);
-  this.stub(postStream, "refresh");
+  sandbox.stub(postStream, "refresh");
 
   deepEqual(postStream.get('streamFilters'), {}, "there are no postFilters by default");
   ok(postStream.get('hasNoFilters'), "there are no filters by default");
@@ -254,7 +254,7 @@ asyncTestDiscourse("loadIntoIdentityMap with no data", function() {
   var postStream = buildStream(1234);
   expect(1);
 
-  this.stub(Discourse, "ajax");
+  sandbox.stub(Discourse, "ajax");
   postStream.loadIntoIdentityMap([]).then(function() {
     ok(!Discourse.ajax.calledOnce, "an empty array returned a promise yet performed no ajax request");
     start();
@@ -265,7 +265,7 @@ asyncTestDiscourse("loadIntoIdentityMap with post ids", function() {
   var postStream = buildStream(1234);
   expect(1);
 
-  this.stub(Discourse, "ajax").returns(Ember.RSVP.resolve({
+  sandbox.stub(Discourse, "ajax").returns(Ember.RSVP.resolve({
     post_stream: {
       posts: [{id: 10, post_number: 10}]
     }
@@ -285,7 +285,7 @@ asyncTestDiscourse("loading a post's history", function() {
 
   var secondPost = Discourse.Post.create({id: 2222});
 
-  this.stub(Discourse, "ajax").returns(Ember.RSVP.resolve([secondPost]));
+  sandbox.stub(Discourse, "ajax").returns(Ember.RSVP.resolve([secondPost]));
   postStream.findReplyHistory(post).then(function() {
     ok(Discourse.ajax.calledOnce, "it made the ajax request");
     present(postStream.findLoadedPost(2222), "it stores the returned post in the identity map");
@@ -367,8 +367,8 @@ test("staging and committing a post", function() {
 test('triggerNewPostInStream', function() {
   var postStream = buildStream(225566);
 
-  this.stub(postStream, 'appendMore');
-  this.stub(postStream, 'refresh');
+  sandbox.stub(postStream, 'appendMore');
+  sandbox.stub(postStream, 'refresh');
 
   postStream.triggerNewPostInStream(null);
   ok(!postStream.appendMore.calledOnce, "asking for a null id does nothing");
@@ -418,7 +418,7 @@ test("comitting and triggerNewPostInStream race condition", function() {
   equal(postStream.get('filteredPostsCount'), 0, "it has no filteredPostsCount yet");
   stagedPost.set('id', 123);
 
-  this.stub(postStream, 'appendMore');
+  sandbox.stub(postStream, 'appendMore');
   postStream.triggerNewPostInStream(123);
   equal(postStream.get('filteredPostsCount'), 1, "it added the post");
 

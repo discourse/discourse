@@ -1,16 +1,10 @@
-var controller;
-
-module("controller:user-dropdown", {
-  setup: function() {
-    controller = testController('user-dropdown');
-  }
-});
+moduleFor("controller:user-dropdown");
 
 test("logout action logs out the current user", function () {
   var logout_mock = sinon.mock(Discourse, "logout");
   logout_mock.expects("logout").once();
 
-  var controller = controllerFor('user-dropdown');
+  var controller = this.subject();
   controller.send("logout");
 
   logout_mock.verify();
@@ -18,9 +12,10 @@ test("logout action logs out the current user", function () {
 
 test("showAdminLinks", function() {
   var currentUserStub = Ember.Object.create();
-  this.stub(Discourse.User, "current").returns(currentUserStub);
+  sandbox.stub(Discourse.User, "current").returns(currentUserStub);
 
   currentUserStub.set("staff", true);
+  var controller = this.subject();
   equal(controller.get("showAdminLinks"), true, "is true when current user is a staff member");
 
   currentUserStub.set("staff", false);

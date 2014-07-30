@@ -1,17 +1,13 @@
-/* global asyncTest, requirejs, require */
+/* global asyncTest */
 /* exported integration, testController, controllerFor, asyncTestDiscourse, fixture */
-
-
 function integration(name, lifecycle) {
   module("Integration: " + name, {
     setup: function() {
-      sinon.stub(Discourse.ScrollingDOMMethods, "bindOnScroll");
-      sinon.stub(Discourse.ScrollingDOMMethods, "unbindOnScroll");
       Ember.run(Discourse, Discourse.advanceReadiness);
-
       if (lifecycle && lifecycle.setup) {
         lifecycle.setup.call(this);
       }
+      Discourse.reset();
     },
 
     teardown: function() {
@@ -20,8 +16,6 @@ function integration(name, lifecycle) {
       }
 
       Discourse.reset();
-      Discourse.ScrollingDOMMethods.bindOnScroll.restore();
-      Discourse.ScrollingDOMMethods.unbindOnScroll.restore();
     }
   });
 }
@@ -30,14 +24,6 @@ function controllerFor(controller, model) {
   controller = Discourse.__container__.lookup('controller:' + controller);
   if (model) { controller.set('model', model ); }
   return controller;
-}
-
-function viewClassFor(name) {
-  return Discourse.__container__.lookupFactory('view:' + name);
-}
-
-function componentClassFor(name) {
-  return Discourse.__container__.lookupFactory('component:' + name);
 }
 
 function asyncTestDiscourse(text, func) {
