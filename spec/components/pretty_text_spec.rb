@@ -266,4 +266,11 @@ describe PrettyText do
     end
   end
 
+  describe 'format_for_email' do
+    it 'does not crash' do
+      PrettyText.format_for_email('<a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>')
+    end
+  end
+
+
 end

@@ -263,7 +263,7 @@ module PrettyText
         uri = URI(href)
         site_uri ||= URI(Discourse.base_url)
         link["href"] = "#{site_uri}#{link['href']}" unless uri.host.present?
-      rescue URI::InvalidURIError
+      rescue URI::InvalidURIError, URI::InvalidComponentError
         # leave it
       end
     end
