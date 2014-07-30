@@ -100,7 +100,8 @@ Discourse.Badge = Discourse.Model.extend({
   },
 
   badgeTypeClassName: function() {
-    return "badge-type-" + this.get('badge_type.name').toLowerCase();
+    var type = this.get('badge_type.name') || "";
+    return "badge-type-" + type.toLowerCase();
   }.property('badge_type.name'),
 
   /**
