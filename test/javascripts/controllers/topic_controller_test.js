@@ -1,4 +1,7 @@
-module("Discourse.TopicController");
+moduleFor('controller:topic', 'controller:topic', {
+  needs: ['controller:header', 'controller:modal', 'controller:composer', 'controller:quote-button',
+          'controller:search', 'controller:topic-progress']
+});
 
 var buildTopic = function() {
   return Discourse.Topic.create({
@@ -11,9 +14,10 @@ var buildTopic = function() {
   });
 };
 
+
 test("editingMode", function() {
   var topic = buildTopic(),
-      topicController = testController(Discourse.TopicController, topic);
+      topicController = this.subject({model: topic});
 
   ok(!topicController.get('editingTopic'), "we are not editing by default");
 
@@ -32,7 +36,7 @@ test("editingMode", function() {
 });
 
 test("toggledSelectedPost", function() {
-  var tc = testController(Discourse.TopicController, buildTopic()),
+  var tc = this.subject({ model: buildTopic() }),
       post = Discourse.Post.create({id: 123, post_number: 2}),
       postStream = tc.get('postStream');
 
@@ -54,7 +58,7 @@ test("toggledSelectedPost", function() {
 });
 
 test("selectAll", function() {
-  var tc = testController(Discourse.TopicController, buildTopic()),
+  var tc = this.subject({model: buildTopic()}),
       post = Discourse.Post.create({id: 123, post_number: 2}),
       postStream = tc.get('postStream');
 
@@ -72,7 +76,7 @@ test("selectAll", function() {
 
 test("Automating setting of allPostsSelected", function() {
   var topic = buildTopic(),
-      tc = testController(Discourse.TopicController, topic),
+      tc = this.subject({model: topic}),
       post = Discourse.Post.create({id: 123, post_number: 2}),
       postStream = tc.get('postStream');
 
@@ -89,7 +93,7 @@ test("Automating setting of allPostsSelected", function() {
 
 test("Select Replies when present", function() {
   var topic = buildTopic(),
-      tc = testController(Discourse.TopicController, topic),
+      tc = this.subject({ model: topic }),
       p1 = Discourse.Post.create({id: 1, post_number: 1, reply_count: 1}),
       p2 = Discourse.Post.create({id: 2, post_number: 2}),
       p3 = Discourse.Post.create({id: 2, post_number: 3, reply_to_post_number: 1});

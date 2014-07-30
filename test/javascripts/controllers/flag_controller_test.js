@@ -13,7 +13,7 @@ var buildAdminUser = function(args) {
   }, args || {}));
 };
 
-module("controller:flag canDeleteSpammer");
+moduleFor("controller:flag");
 
 test("canDeleteSpammer not staff", function(){
   var flagController = controllerFor('flag', buildPost()); 

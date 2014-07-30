@@ -11,6 +11,7 @@
     "I18n",
     "bootbox",
     "module",
+    "moduleFor",
     "integration",
     "test",
     "ok",

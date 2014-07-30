@@ -1,4 +1,3 @@
-var controller;
 var notificationFixture = {
   notification_type: 1, //mentioned
   post_number: 1,
@@ -10,36 +9,26 @@ var notificationFixture = {
   }
 };
 
-module("controller:notification", {
-  setup: function() {
-    controller = testController('notification', notificationFixture);
-  },
-
-  teardown: function() {
-    controller.set('model', null);
-  }
-});
+moduleFor("controller:notification");
 
 test("scope property is correct", function() {
+  var controller = this.subject(notificationFixture);
   equal(controller.get("scope"), "notifications.mentioned");
 });
 
 test("username property is correct", function() {
+  var controller = this.subject(notificationFixture);
   equal(controller.get("username"), "velesin");
 });
 
 test("link property returns empty string when there is no topic title", function() {
   var fixtureWithEmptyTopicTitle = _.extend({}, notificationFixture, {data: {topic_title: ""}});
-  Ember.run(function() {
-    controller.set("content", fixtureWithEmptyTopicTitle);
-  });
-
+  var controller = this.subject(fixtureWithEmptyTopicTitle);
   equal(controller.get("link"), "");
 });
 
 test("link property returns correctly built link when there is a topic title", function() {
-  var $link = $(controller.get("link"));
-
-  equal($link.attr("href"), "/t/a-slug/1234", "generated link points to a correct URL");
-  equal($link.text(), "some title", "generated link has correct text");
+  var controller = this.subject(notificationFixture);
+  ok(controller.get("link").indexOf('/t/a-slug/1234') !== -1, 'has the correct URL');
+  ok(controller.get("link").indexOf('some title') !== -1, 'has the correct title');
 });

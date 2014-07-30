@@ -1,7 +1,9 @@
-module("controller:avatar-selector");
+moduleFor("controller:avatar-selector", "controller:avatar-selector", {
+  needs: ['controller:modal']
+});
 
 test("avatarTemplate", function() {
-  var avatarSelectorController = controllerFor('avatar-selector');
+  var avatarSelectorController = this.subject();
   avatarSelectorController.setProperties({
     selected: "system",
     system_avatar_upload_id:1,

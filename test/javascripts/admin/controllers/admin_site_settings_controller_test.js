@@ -1,27 +1,20 @@
-module("controller:admin-site-settings", {
-  setup: function() {
-    sinon.stub(Ember.run, "debounce").callsArg(1);
-  },
-
-  teardown: function() {
-    Ember.run.debounce.restore();
-  }
-});
+moduleFor("controller:admin-site-settings");
 
 test("filter", function() {
-  var allSettings = Em.A([Ember.Object.create({
+  var allSettings = [Ember.Object.create({
     nameKey: 'users', name: 'users',
     siteSettings: [Discourse.SiteSetting.create({"setting":"username_change_period","description":"x","default":3,"type":"fixnum","value":"3","category":"users"})]
   }), Ember.Object.create({
     nameKey: 'posting', name: 'posting',
     siteSettings: [Discourse.SiteSetting.create({"setting":"display_name_on_posts","description":"x","default":false,"type":"bool","value":"true","category":"posting"})]
-  })]);
-  var adminSiteSettingsController = testController("admin-site-settings", allSettings);
+  })];
+  var adminSiteSettingsController = this.subject({ model: allSettings });
   adminSiteSettingsController.set('allSiteSettings', allSettings);
 
   equal(adminSiteSettingsController.get('content')[0].nameKey, 'users', "Can get first site setting category's name key.");
 
   adminSiteSettingsController.set('filter', 'username_change');
+
   equal(adminSiteSettingsController.get('content').length, 2, "a. Filter with one match for username_change");
   equal(adminSiteSettingsController.get('content')[0].nameKey, "all_results", "b. First element is all the results that match");
   equal(adminSiteSettingsController.get('content')[1].nameKey, "users", "c. Filter with one match for username_change");

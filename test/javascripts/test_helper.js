@@ -14,6 +14,7 @@
 //= require handlebars.js
 //= require development/ember.js
 //= require message-bus.js
+//= require ember-qunit.js
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
@@ -41,6 +42,7 @@
 //= require helpers/qunit_helpers
 //= require helpers/assertions
 
+//= require helpers/init-ember-qunit
 //= require_tree ./fixtures
 //= require_tree ./lib
 //= require_tree .
@@ -95,5 +97,11 @@ QUnit.testStart(function() {
   Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "/";
   Discourse.BaseUrl = "";
+
+  // Never debounce in test, just makes testing harder
+  sinon.stub(Ember.run, "debounce").callsArg(1)
 });
 
+QUnit.testDone(function() {
+  Ember.run.debounce.restore();
+});
