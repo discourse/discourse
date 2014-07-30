@@ -87,7 +87,7 @@ export default Discourse.Controller.extend({
 
       if (Discourse.Mobile.isMobileDevice) {
         top = top + 20;
-        left = left + 10;
+        left = Math.min(left + 10, $(window).width() - $quoteButton.outerWidth());
       } else {
         top = top - $quoteButton.outerHeight() - 5;
       }
