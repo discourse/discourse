@@ -213,6 +213,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
       if(index >= $articles.length){
         index = $articles.length - 1;
       }
+
+      direction = 0;
     }
 
     var $article = $articles.eq(index + direction);
