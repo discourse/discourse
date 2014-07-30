@@ -99,7 +99,7 @@ module BackupRestore
     SQL
   end
 
-  DatabaseConfiguration = Struct.new(:host, :username, :password, :database)
+  DatabaseConfiguration = Struct.new(:host, :port, :username, :password, :database)
 
   def self.database_configuration
     config = Rails.env.production? ? ActiveRecord::Base.connection_pool.spec.config : Rails.configuration.database_configuration[Rails.env]
@@ -107,6 +107,7 @@ module BackupRestore
 
     DatabaseConfiguration.new(
       config["host"],
+      config["port"],
       config["username"] || ENV["USER"] || "postgres",
       config["password"],
       config["database"]

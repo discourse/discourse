@@ -172,6 +172,7 @@ module Export
 
       password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
       host_argument     = "--host=#{db_conf.host}"         if db_conf.host.present?
+      port_argument     = "--port=#{db_conf.port}"         if db_conf.port.present?
       username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
 
       [ password_argument,            # pass the password to pg_dump (if any)
@@ -182,6 +183,7 @@ module Export
         "--no-privileges",            # prevent dumping of access privileges
         "--verbose",                  # specifies verbose mode
         host_argument,                # the hostname to connect to (if any)
+        port_argument,                # the port to connect to (if any)
         username_argument,            # the username to connect as (if any)
         db_conf.database              # the name of the database to dump
       ].join(" ")
