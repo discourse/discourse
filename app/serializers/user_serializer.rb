@@ -43,7 +43,8 @@ class UserSerializer < BasicUserSerializer
              :suspended_till,
              :uploaded_avatar_id,
              :badge_count,
-             :has_title_badges
+             :has_title_badges,
+             :edit_history_public
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
@@ -236,4 +237,7 @@ class UserSerializer < BasicUserSerializer
     object.badges.where(allow_title: true).count > 0
   end
 
+  def include_edit_history_public?
+    can_edit && !SiteSetting.edit_history_visible_to_public
+  end
 end
