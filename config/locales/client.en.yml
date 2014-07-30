@@ -1201,13 +1201,16 @@ en:
       auto_close_units: "hours"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
-      allow_badges_label: "Allow badges"
+      email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
+      email_in_disabled_click: 'enable the "email in" setting.'
+      allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
       this_year: "this year"
       position: "position"
       default_position: "Default Position"
-      position_disabled: 'Categories will be displayed in order of activity. To control the order of categories in lists, enable the "fixed category positions" setting.'
+      position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
+      position_disabled_click: 'enable the "fixed category positions" setting.'
       parent: "Parent Category"
       notifications:
         title: ''

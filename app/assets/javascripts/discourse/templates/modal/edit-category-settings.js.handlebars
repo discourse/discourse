@@ -18,9 +18,9 @@
   </div>
 </section>
 
-{{#if emailInEnabled}}
-  <section class='field'>
-    <div class="email-in-fields">
+<section class='field'>
+  <div class="email-in-fields">
+    {{#if emailInEnabled}}
       <div>
         <i class="fa fa-envelope-o"></i>
         {{i18n category.email_in}}
@@ -32,15 +32,19 @@
           {{i18n category.email_in_allow_strangers}}
         </label>
       </div>
-    </div>
-  </section>
-{{/if}}
+    {{else}}
+      {{i18n category.email_in_disabled}}
+      <a href="/admin/site_settings/category/email">{{i18n category.email_in_disabled_click}}</a>
+    {{/if}}
+  </div>
+</section>
 
-{{#if showPositionInput}}
-  <section class='field'>
+<section class='field'>
+  {{#if showPositionInput}}
     <label>{{i18n category.position}}</label>
     {{text-field value=position class="position-input"}}
-  </section>
-{{else}}
-  <p>{{i18n category.position_disabled}}</p>
-{{/if}}
+  {{else}}
+    {{i18n category.position_disabled}}
+    <a href="/admin/site_settings/category/email">{{i18n category.position_disabled_click}}</a>
+  {{/if}}
+</section>
