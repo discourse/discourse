@@ -81,7 +81,7 @@ class PostCreator
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
     end
 
-    if @post && @spam
+    if @post || @spam
       handle_spam unless @opts[:import_mode]
     end
 
