@@ -213,6 +213,10 @@ Discourse.User = Discourse.Model.extend({
       data[s + '_category_ids'] = cats;
     });
 
+    if (!Discourse.SiteSettings.edit_history_available_to_public) {
+      data['edit_history_public'] = this.get('edit_history_public');
+    }
+
     return Discourse.ajax("/users/" + this.get('username_lower'), {
       data: data,
       type: 'PUT'
