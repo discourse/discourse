@@ -291,6 +291,7 @@ Discourse.PostView.reopenClass({
         .stop()
         .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
           $contents.removeClass('highlighted');
+          $contents.css({'background-color': ''});
         });
     }
   }
