@@ -1,30 +1,22 @@
-integration("Discover Topics");
+integration("Topic Discovery");
 
-test("Default List", function() {
-  expect(2);
+test("Visit Discovery Pages", function() {
+  expect(5);
 
-  visit("/").then(function() {
+  visit("/");
+  andThen(function() {
     ok(exists(".topic-list"), "The list of topics was rendered");
     ok(exists('.topic-list .topic-list-item'), "has topics");
   });
-});
 
-test("List one Category", function() {
-  expect(2);
-
-  visit("/category/bug").then(function() {
+  visit("/category/bug");
+  andThen(function() {
     ok(exists(".topic-list"), "The list of topics was rendered");
     ok(exists('.topic-list .topic-list-item'), "has topics");
   });
-});
 
-test("Categories List", function() {
-  expect(1);
-
-  visit("/categories").then(function() {
+  visit("/categories");
+  andThen(function() {
     ok(exists('.category'), "has a list of categories");
   });
 });
-
-
-

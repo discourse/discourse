@@ -1,5 +1,7 @@
 /* global asyncTest, requirejs, require */
 /* exported integration, testController, controllerFor, asyncTestDiscourse, fixture */
+
+
 function integration(name, lifecycle) {
   module("Integration: " + name, {
     setup: function() {
@@ -32,7 +34,7 @@ function testController(klass, model) {
         module;
 
     // maybe a bit too hacky? (all of the "admin-*" controllers are in the "admin" directory)
-    if (klass.indexOf("admin") == 0) {
+    if (klass.indexOf("admin") === 0) {
       base = "admin";
     }
 

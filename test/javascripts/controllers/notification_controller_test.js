@@ -13,6 +13,10 @@ var notificationFixture = {
 module("controller:notification", {
   setup: function() {
     controller = testController('notification', notificationFixture);
+  },
+
+  teardown: function() {
+    controller.set('model', null);
   }
 });
 

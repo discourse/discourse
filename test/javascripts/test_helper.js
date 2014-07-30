@@ -1,5 +1,5 @@
 /*jshint maxlen:250 */
-/*global document, sinon, console, QUnit */
+/*global document, sinon, console, QUnit, Logster */
 
 //= require env
 
