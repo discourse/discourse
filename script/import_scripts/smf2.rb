@@ -301,8 +301,20 @@ class ImportScripts::Smf2 < ImportScripts::Base
       {symbolize_keys: true, cache_rows: false}.merge(opts))
   end
 
+  TRTR_TABLE = begin
+    from = "ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ"
+    to = "SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy"
+    from.chars.zip(to.chars)
+  end
+
   def find_smf_attachment_path(attachment_id, file_hash, filename)
-    [ filename, "#{attachment_id}_#{file_hash}" ]
+    cleaned_name = filename.dup
+    TRTR_TABLE.each {|from,to| cleaned_name.gsub!(from, to) }
+    cleaned_name.gsub!(/\s/, '_')
+    cleaned_name.gsub!(/[^\w_\.\-]/, '')
+    legacy_name = "#{attachment_id}_#{cleaned_name.gsub('.', '_')}#{Digest::MD5.hexdigest(cleaned_name)}"
+
+    [ filename, "#{attachment_id}_#{file_hash}", legacy_name ]
       .map {|name| File.join(options.smfroot, 'attachments', name) }
       .detect {|file| File.exists?(file) }
   end
