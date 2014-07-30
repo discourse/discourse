@@ -328,6 +328,8 @@ posting:
   suppress_reply_directly_above:
     client: true
     default: true
+  suppress_reply_when_quoting:
+    default: true
   post_undo_action_window_mins: 10
   max_mentions_per_post: 10
   newuser_max_replies_per_topic: 3
