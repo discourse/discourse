@@ -18,22 +18,22 @@ class PostAction < ActiveRecord::Base
   scope :spam_flags, -> { where(post_action_type_id: PostActionType.types[:spam]) }
   scope :flags, -> { where(post_action_type_id: PostActionType.notify_flag_type_ids) }
   scope :publics, -> { where(post_action_type_id: PostActionType.public_type_ids) }
-  scope :active, -> { where(defered_at: nil, agreed_at: nil, deleted_at: nil) }
+  scope :active, -> { where(disagreed_at: nil, defered_at: nil, agreed_at: nil, deleted_at: nil) }
 
   after_save :update_counters
   after_save :enforce_rules
   after_commit :notify_subscribers
 
   def disposed_by_id
-    deleted_by_id || agreed_by_id || defered_by_id
+    disagreed_by_id || agreed_by_id || defered_by_id
   end
 
   def disposed_at
-    deleted_at || agreed_at || defered_at
+    disagreed_at || agreed_at || defered_at
   end
 
   def disposition
-    return :disagreed if deleted_at
+    return :disagreed if disagreed_at
     return :agreed if agreed_at
     return :defered if defered_at
     nil
@@ -60,7 +60,7 @@ class PostAction < ActiveRecord::Base
     return {} if collection.blank?
 
     collection_ids = collection.map(&:id)
-    user_id = user.present? ? user.id : 0
+    user_id = user.try(:id) || 0
 
     post_actions = PostAction.where(post_id: collection_ids, user_id: user_id)
 
@@ -107,8 +107,8 @@ class PostAction < ActiveRecord::Base
                         .where(post_action_type_id: action_type_ids)
 
     actions.each do |action|
-      action.deleted_at = Time.zone.now
-      action.deleted_by_id = moderator.id
+      action.disagreed_at = Time.zone.now
+      action.disagreed_by_id = moderator.id
       # so callback is called
       action.save
       action.add_moderator_post_if_needed(moderator, :disagreed)
@@ -276,6 +276,7 @@ class PostAction < ActiveRecord::Base
                                     .where(post_id: post_id)
                                     .where(post_action_type_id: post_action_type_ids)
                                     .where(deleted_at: nil)
+                                    .where(disagreed_at: nil)
                                     .where(targets_topic: targets_topic)
                                     .exists?
   end
@@ -284,19 +285,20 @@ class PostAction < ActiveRecord::Base
   # can weigh flags differently.
   def self.flag_counts_for(post_id)
     flag_counts = exec_sql("SELECT SUM(CASE
-                                         WHEN pa.deleted_at IS NULL AND (pa.staff_took_action) THEN :flags_required_to_hide_post
-                                         WHEN pa.deleted_at IS NULL AND (NOT pa.staff_took_action) THEN 1
+                                         WHEN pa.disagreed_at IS NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
+                                         WHEN pa.disagreed_at IS NULL AND NOT pa.staff_took_action THEN 1
                                          ELSE 0
                                        END) AS new_flags,
                                    SUM(CASE
-                                         WHEN pa.deleted_at IS NOT NULL AND (pa.staff_took_action) THEN :flags_required_to_hide_post
-                                         WHEN pa.deleted_at IS NOT NULL AND (NOT pa.staff_took_action) THEN 1
+                                         WHEN pa.disagreed_at IS NOT NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
+                                         WHEN pa.disagreed_at IS NOT NULL AND NOT pa.staff_took_action THEN 1
                                          ELSE 0
                                        END) AS old_flags
                             FROM post_actions AS pa
                               INNER JOIN users AS u ON u.id = pa.user_id
-                            WHERE pa.post_id = :post_id AND
-                              pa.post_action_type_id IN (:post_action_types)",
+                            WHERE pa.post_id = :post_id
+                              AND pa.post_action_type_id IN (:post_action_types)
+                              AND pa.deleted_at IS NULL",
                             post_id: post_id,
                             post_action_types: PostActionType.auto_action_flag_types.values,
                             flags_required_to_hide_post: SiteSetting.flags_required_to_hide_post).first

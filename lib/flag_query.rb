@@ -112,10 +112,9 @@ module FlagQuery
                                .joins("INNER JOIN topics ON topics.id = posts.topic_id")
 
       if filter == "old"
-        post_actions.with_deleted
-                    .where("post_actions.deleted_at IS NOT NULL OR
+        post_actions.where("post_actions.disagreed_at IS NOT NULL OR
                             post_actions.defered_at IS NOT NULL OR
-                            post_actions.agreed_at  IS NOT NULL")
+                            post_actions.agreed_at IS NOT NULL")
       else
         post_actions.active
                     .where("posts.deleted_at" => nil)

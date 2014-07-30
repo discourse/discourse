@@ -281,12 +281,13 @@ describe PostAction do
 
       post.reload
 
-      post.hidden.should.should be_true
-      post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached]
+      post.hidden.should be_true
       post.hidden_at.should be_present
+      post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached]
       post.topic.visible.should be_false
 
       post.revise(post.user, post.raw + " ha I edited it ")
+
       post.reload
 
       post.hidden.should be_false
@@ -300,8 +301,9 @@ describe PostAction do
       post.reload
 
       post.hidden.should be_true
+      post.hidden_at.should be_present
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached_again]
-      post.hidden_at.should be_true
+      post.topic.visible.should be_false
 
       post.revise(post.user, post.raw + " ha I edited it again ")
 
@@ -310,6 +312,7 @@ describe PostAction do
       post.hidden.should be_true
       post.hidden_at.should be_true
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached_again]
+      post.topic.visible.should be_false
     end
 
     it "can flag the topic instead of a post" do
