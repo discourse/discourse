@@ -125,20 +125,28 @@ describe LeaderRequirements do
     before do
       user.save
       flags = [:off_topic, :inappropriate, :notify_user, :notify_moderators, :spam].map do |t|
-        Fabricate(:flag, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[t])
+        Fabricate(:flag, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[t], agreed_at: 1.minute.ago)
+      end
+
+      deferred_flags = [:off_topic, :inappropriate, :notify_user, :notify_moderators, :spam].map do |t|
+        Fabricate(:flag, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[t], defered_at: 1.minute.ago)
+      end
+
+      deleted_flags = [:off_topic, :inappropriate, :notify_user, :notify_moderators, :spam].map do |t|
+        Fabricate(:flag, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[t], deleted_at: 1.minute.ago)
       end
 
       # Same post, different user:
-      Fabricate(:flag, post: flags[1].post, post_action_type_id: PostActionType.types[:spam])
+      Fabricate(:flag, post: flags[1].post, post_action_type_id: PostActionType.types[:spam], agreed_at: 1.minute.ago)
 
       # Flagged their own post:
-      Fabricate(:flag, user: user, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[:spam])
+      Fabricate(:flag, user: user, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[:spam], agreed_at: 1.minute.ago)
 
       # More than 100 days ago:
-      Fabricate(:flag, post: Fabricate(:post, user: user, created_at: 101.days.ago), post_action_type_id: PostActionType.types[:spam], created_at: 101.days.ago)
+      Fabricate(:flag, post: Fabricate(:post, user: user, created_at: 101.days.ago), post_action_type_id: PostActionType.types[:spam], created_at: 101.days.ago, agreed_at: 1.day.ago)
     end
 
-    it "num_flagged_posts and num_flagged_by_users count spam and inappropriate flags in the last 100 days" do
+    it "num_flagged_posts and num_flagged_by_users count spam and inappropriate agreed flags in the last 100 days" do
       leader_requirements.num_flagged_posts.should == 2
       leader_requirements.num_flagged_by_users.should == 3
     end

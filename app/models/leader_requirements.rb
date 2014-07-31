@@ -95,7 +95,12 @@ class LeaderRequirements
   end
 
   def num_flagged_posts
-    PostAction.with_deleted.where(post_id: flagged_post_ids).where.not(user_id: @user.id).pluck(:post_id).uniq.count
+    PostAction.with_deleted
+              .where(post_id: flagged_post_ids)
+              .where.not(user_id: @user.id)
+              .where.not(agreed_at: nil)
+              .pluck(:post_id)
+              .uniq.count
   end
 
   def max_flagged_posts
@@ -103,7 +108,12 @@ class LeaderRequirements
   end
 
   def num_flagged_by_users
-    PostAction.with_deleted.where(post_id: flagged_post_ids).where.not(user_id: @user.id).pluck(:user_id).uniq.count
+    PostAction.with_deleted
+              .where(post_id: flagged_post_ids)
+              .where.not(user_id: @user.id)
+              .where.not(agreed_at: nil)
+              .pluck(:user_id)
+              .uniq.count
   end
 
   def max_flagged_by_users
@@ -137,7 +147,9 @@ class LeaderRequirements
   end
 
   def flagged_post_ids
-    # (TODO? and moderators explicitly agreed with the flags)
-    @user.posts.with_deleted.where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', TIME_PERIOD.days.ago).pluck(:id)
+    @user.posts
+         .with_deleted
+         .where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', TIME_PERIOD.days.ago)
+         .pluck(:id)
   end
 end
