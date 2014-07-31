@@ -9,12 +9,12 @@ function parsePostData(query) {
   return result;
 }
 
-function json(code, obj) {
+function response(code, obj) {
   if (typeof code === "object") {
     obj = code;
     code = 200;
   }
-  return [code, {"Content-Type": "application/json"}, JSON.stringify(obj)];
+  return [code, {"Content-Type": "application/json"}, obj];
 }
 
 export default function() {
@@ -23,30 +23,37 @@ export default function() {
       var data = parsePostData(request.requestBody);
 
       if (data.password === 'correct') {
-        return json({username: 'eviltrout'});
+        return response({username: 'eviltrout'});
       }
-      return json(400, {error: 'invalid login'});
+      return response(400, {error: 'invalid login'});
     });
 
     this.get('/users/hp.json', function() {
-      return json({"value":"32faff1b1ef1ac3","challenge":"61a3de0ccf086fb9604b76e884d75801"});
+      return response({"value":"32faff1b1ef1ac3","challenge":"61a3de0ccf086fb9604b76e884d75801"});
     });
 
     this.get('/session/csrf', function() {
-      return json({"csrf":"mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs="});
+      return response({"csrf":"mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs="});
     });
 
     this.get('/users/check_username', function(request) {
       if (request.queryParams.username === 'taken') {
-        return json({available: false, suggestion: 'nottaken'});
+        return response({available: false, suggestion: 'nottaken'});
       }
-      return json({available: true});
+      return response({available: true});
     });
 
-    this.post('/users', function(request) {
-      return json({success: true});
+    this.post('/users', function() {
+      return response({success: true});
     });
   });
+
+
+  server.prepareBody = function(body){
+    if (body && typeof body === "object") {
+      return JSON.stringify(body);
+    }
+  };
 
   server.unhandledRequest = function(verb, path) {
     console.error('Unhandled request in test environment: ' + path + ' (' + verb + ')');
