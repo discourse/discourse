@@ -594,6 +594,7 @@ end
 #  baked_version           :integer
 #  hidden_at               :datetime
 #  self_edits              :integer          default(0), not null
+#  reply_quoted            :boolean          default(FALSE), not null
 #
 # Indexes
 #
