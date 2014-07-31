@@ -8,8 +8,15 @@ var ApplicationRoute = Em.Route.extend({
         return;
       }
 
-      var exceptionController = this.controllerFor('exception');
-      Em.warn(err);
+      var exceptionController = this.controllerFor('exception'),
+          errorString = err.toString();
+      if (err.statusText) {
+        errorString = err.statusText;
+      }
+      var c = window.console;
+      if (c && c.error) {
+        c.error(errorString);
+      }
       exceptionController.setProperties({ lastTransition: transition, thrown: err });
 
       this.intermediateTransitionTo('exception');

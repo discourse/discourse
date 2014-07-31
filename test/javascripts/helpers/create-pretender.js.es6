@@ -1,5 +1,3 @@
-/* global console */
-
 function parsePostData(query) {
   var result = {};
   query.split("&").forEach(function(part) {
@@ -60,7 +58,9 @@ export default function() {
   };
 
   server.unhandledRequest = function(verb, path) {
-    console.error('Unhandled request in test environment: ' + path + ' (' + verb + ')');
+    var error = 'Unhandled request in test environment: ' + path + ' (' + verb + ')';
+    window.console.error(error);
+    throw error;
   };
 
   return server;
