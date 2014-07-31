@@ -1214,11 +1214,11 @@ en:
     notify_moderators: "Your post was flagged **for moderator attention**: the community thinks something about the post requires moderator intervention."
 
   flags_dispositions:
-    agreed: "Thanks for letting us know about this post. We've agreed with your flag."
-    agreed_and_deleted: "Thanks for letting us know about this post. We've agreed with your flag and deleted the post."
-    disagreed: "Thanks for letting us know about this post. We're currently looking into it."
-    defered: "Thanks for letting us know about this post. We're currently looking into it."
-    defered_and_deleted: "Thanks for letting us know about this post. We've agreed with your flag and deleted the post."
+    agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
+    agreed_and_deleted: "Thanks for letting us know. We agree there is an issue and we've removed the post."
+    disagreed: "Thanks for letting us know. We're looking into it."
+    defered: "Thanks for letting us know. We're looking into it."
+    defered_and_deleted: "Thanks for letting us know. We've removed the post."
 
   system_messages:
     post_hidden:
