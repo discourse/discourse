@@ -1,11 +1,7 @@
-integration("Header as Staff", {
-  user: { username: 'test',
-          staff: true,
-          site_flagged_posts_count: 1 }
-});
+integration("Header (Anonymous)");
 
 test("header", function() {
-  expect(20);
+  expect(14);
 
   visit("/");
   andThen(function() {
@@ -26,29 +22,12 @@ test("header", function() {
     ok(exists(".logo-small"), "it shows the small logo when `showExtraInfo` is enabled");
   });
 
-  // Notifications
-  click("#user-notifications");
-  andThen(function() {
-    var $items = $("#notifications-dropdown li");
-    ok(exists($items), "is lazily populated after user opens it");
-    ok($items.first().hasClass("read"), "correctly binds items' 'read' class");
-  });
-
   // Site Map
   click("#site-map");
   andThen(function() {
     ok(exists('#site-map-dropdown'), "is rendered after user opens it");
-    ok(exists("#site-map-dropdown .admin-link"), "it has the admin link");
-    ok(exists("#site-map-dropdown .flagged-posts.badge-notification"), "it displays flag notifications");
     ok(exists("#site-map-dropdown .faq-link"), "it shows the faq link");
     ok(exists("#site-map-dropdown .category-links"), "has categories correctly bound");
-  });
-
-  // User dropdown
-  click("#current-user");
-  andThen(function() {
-    ok(exists("#user-dropdown:visible"), "is lazily rendered after user opens it");
-    ok(exists("#user-dropdown .user-dropdown-links"), "has showing / hiding user-dropdown links correctly bound");
   });
 
   // Search

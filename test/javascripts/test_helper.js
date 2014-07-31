@@ -115,6 +115,9 @@ QUnit.testStart(function(ctx) {
 QUnit.testDone(function() {
   Ember.run.debounce = origDebounce;
   window.sandbox.restore();
+
+  // Destroy any modals
+  $('.modal-backdrop').remove();
 });
 
 // Load ES6 tests
