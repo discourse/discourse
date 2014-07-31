@@ -38,6 +38,9 @@ module Jobs
             message_template = :email_reject_reply_key
           when ActiveRecord::Rollback
             message_template = :email_reject_post_error
+          when Email::Receiver::InvalidPost
+            # TODO there is a message in this exception, place it in email
+            message_template = :email_reject_post_error
           else
             message_template = nil
         end

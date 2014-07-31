@@ -14,6 +14,7 @@ module Email
     class UserNotFoundError < ProcessingError; end
     class UserNotSufficientTrustLevelError < ProcessingError; end
     class EmailLogNotFound < ProcessingError; end
+    class InvalidPost < ProcessingError; end
 
     attr_reader :body, :reply_key, :email_log
 
@@ -40,6 +41,8 @@ module Email
         @user = User.find_by_email(@message.from.first)
         if @user.blank? && @allow_strangers
           wrap_body_in_quote
+          # TODO This is WRONG it should register an account
+          # and email the user details on how to log in / activate
           @user = Discourse.system_user
         end
 
@@ -213,7 +216,12 @@ module Email
     end
 
     def create_post(user, options)
-      PostCreator.new(user, options).create
+      creator = PostCreator.new(user, options)
+      post = creator.create
+      if creator.errors.present?
+        raise InvalidPost, creator.errors.full_messages.join("\n")
+      end
+      post
     end
 
   end

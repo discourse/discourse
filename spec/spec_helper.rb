@@ -57,6 +57,8 @@ Spork.prefork do
 
     config.before(:suite) do
 
+      Sidekiq.error_handlers.clear
+
       # Ugly, but needed until we have a user creator
       User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 

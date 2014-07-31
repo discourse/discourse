@@ -6,8 +6,8 @@ require 'email/receiver'
 describe Email::Receiver do
 
   before do
-    SiteSetting.stubs(:reply_by_email_address).returns("reply+%{reply_key}@appmail.adventuretime.ooo")
-    SiteSetting.stubs(:email_in).returns(false)
+    SiteSetting.reply_by_email_address = "reply+%{reply_key}@appmail.adventuretime.ooo"
+    SiteSetting.email_in = false
   end
 
   describe 'invalid emails' do
@@ -126,70 +126,66 @@ Thanks for listening.")
     end
   end
 
+  def fill_email(mail, from, to, body = nil, subject = nil)
+    result = mail.gsub("FROM", from).gsub("TO", to)
+    if body
+      result.gsub!(/Hey.*/m, body)
+    end
+    if subject
+      result.sub!(/We .*/, subject)
+    end
+    result
+  end
+
+  def process_email(opts)
+    incoming_email = fixture_file("emails/valid_incoming.eml")
+    email = fill_email(incoming_email, opts[:from],  opts[:to], opts[:body], opts[:subject])
+    Email::Receiver.new(email).process
+  end
+
   describe "with a valid email" do
     let(:reply_key) { "59d8df8370b7e95c5a49fbf86aeb2c93" }
-    let(:valid_reply) { fixture_file("emails/valid_reply.eml") }
+    let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
+
+    let(:valid_reply) {
+      reply = fixture_file("emails/valid_reply.eml")
+      to = SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key)
+      fill_email(reply, "test@test.com", to)
+    }
+
     let(:receiver) { Email::Receiver.new(valid_reply) }
-    let(:post) { Fabricate.build(:post) }
-    let(:user) { Fabricate.build(:user) }
-    let(:email_log) { EmailLog.new(reply_key: reply_key, post_id: 1234, topic_id: 4567, user_id: 6677, post: post, user: user ) }
+    let(:post) { create_post }
+    let(:user) { post.user }
+    let(:email_log) { EmailLog.new(reply_key: reply_key,
+                                   post_id: post.id,
+                                   topic_id: post.topic_id,
+                                   user_id: post.user_id,
+                                   post: post,
+                                   user: user,
+                                   email_type: 'test',
+                                   to_address: 'test@test.com'
+                                   ) }
     let(:reply_body) {
 "I could not disagree more. I am obviously biased but adventure time is the
 greatest show ever created. Everyone should watch it.
 
 - Jake out" }
 
-    describe "email with non-existant email log" do
-
-      before do
-        EmailLog.expects(:for).returns(nil)
-      end
-
-      it "raises EmailLogNotFoundError" do
-        expect{ receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
-      end
-
-    end
-
     describe "with an email log" do
 
-      before do
-        EmailLog.expects(:for).with(reply_key).returns(email_log)
+      it "extracts data" do
+        expect{ receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
 
-        creator = mock
-        PostCreator.expects(:new).with(instance_of(User),
-                                       has_entries(raw: reply_body,
-                                                   cooking_options: {traditional_markdown_linebreaks: true}))
-                                 .returns(creator)
+        email_log.save!
+        receiver.process
 
-        creator.expects(:create)
-      end
-
-      let!(:result) { receiver.process }
-
-      it "extracts the body" do
         expect(receiver.body).to eq(reply_body)
-      end
-
-      it "looks up the email log" do
         expect(receiver.email_log).to eq(email_log)
-      end
-
-      it "extracts the key" do
         expect(receiver.reply_key).to eq(reply_key)
-      end
 
-    end
-
-    describe "email with attachments" do
-
-      it "can find the message and create a post" do
-        user.id = -1
-        User.stubs(:find_by_email).returns(user)
-        EmailLog.stubs(:for).returns(email_log)
         attachment_email = fixture_file("emails/attachment.eml")
+        attachment_email = fill_email(attachment_email, "test@test.com", to)
         r = Email::Receiver.new(attachment_email)
-        r.expects(:create_post)
         expect { r.process }.to_not raise_error
         expect(r.body).to match(/here is an image attachment\n<img src='\/uploads\/default\/\d+\/\w{16}\.png' width='289' height='126'>\n/)
       end
@@ -200,106 +196,48 @@ greatest show ever created. Everyone should watch it.
 
   describe "processes an email to a category" do
     before do
-      SiteSetting.stubs(:email_in).returns(true)
+      SiteSetting.email_in = true
     end
 
-    let(:incoming_email) { fixture_file("emails/valid_incoming.eml") }
-    let(:receiver) { Email::Receiver.new(incoming_email) }
-    let(:user) { Fabricate.build(:user, id: 3456) }
-    let(:category) { Fabricate.build(:category, id: 10) }
-    let(:subject) { "We should have a post-by-email-feature." }
-    let(:email_body) {
-"Hey folks,
 
-I was thinking. Wouldn't it be great if we could post topics via email? Yes it would!
+    it "correctly can target categories" do
+      to = "some@email.com"
 
-Jakie" }
+      Fabricate(:category, email_in_allow_strangers: false, email_in: to)
+      SiteSetting.email_in_min_trust = TrustLevel.levels[:elder].to_s
 
-    describe "category not found" do
+      # no email in for user
+      expect{
+        process_email(from: "cobb@dob.com", to: "invalid@address.com")
+      }.to raise_error(Email::Receiver::EmailLogNotFound)
 
-      before do
-        Category.expects(:find_by_email).returns(nil)
+      # valid target invalid user
+      expect{
+        process_email(from: "cobb@dob.com", to: to)
+      }.to raise_error(Email::Receiver::UserNotFoundError)
+
+      # untrusted
+      user = Fabricate(:user)
+      expect{
+        process_email(from: user.email, to: to)
+      }.to raise_error(Email::Receiver::UserNotSufficientTrustLevelError)
+
+      # trusted
+      user.trust_level = 4
+      user.save
+
+      process_email(from: user.email, to: to)
+      user.posts.count.should == 1
+
+      # email too short
+      message = nil
+      begin
+        process_email(from: user.email, to: to, body: "x", subject: "this is my new topic title")
+      rescue Email::Receiver::InvalidPost => e
+        message = e.message
       end
 
-      it "raises EmailLogNotFoundError" do
-        expect{ receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
-      end
-
-    end
-
-    describe "email from non user" do
-
-      before do
-        User.expects(:find_by_email).returns(nil)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(category)
-      end
-
-      it "raises UserNotFoundError" do
-        expect{ receiver.process }.to raise_error(Email::Receiver::UserNotFoundError)
-      end
-
-    end
-
-    describe "email from untrusted user" do
-      before do
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(user)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(category)
-        SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:elder].to_s)
-      end
-
-      it "raises untrusted user error" do
-        expect { receiver.process }.to raise_error(Email::Receiver::UserNotSufficientTrustLevelError)
-      end
-
-    end
-
-    describe "with proper user" do
-
-      before do
-        SiteSetting.stubs(:email_in_min_trust).returns(
-              TrustLevel.levels[:newuser].to_s)
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(user)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(category)
-
-        topic_creator = mock()
-        TopicCreator.expects(:new).with(instance_of(User),
-                                        instance_of(Guardian),
-                                        has_entries(title: subject,
-                                                    category: 10)) # Make sure it is posted to the right category
-                                 .returns(topic_creator)
-
-        topic_creator.expects(:create).returns(topic_creator)
-        topic_creator.expects(:id).twice.returns(12345)
-
-
-        post_creator = mock
-        PostCreator.expects(:new).with(instance_of(User),
-                                       has_entries(raw: email_body,
-                                                   topic_id: 12345,
-                                                   cooking_options: {traditional_markdown_linebreaks: true}))
-                                 .returns(post_creator)
-
-        post_creator.expects(:create)
-
-        EmailLog.expects(:create).with(has_entries(
-                              email_type: 'topic_via_incoming_email',
-                              to_address: "discourse-in@appmail.adventuretime.ooo",
-                              user_id: 3456,
-                              topic_id: 12345
-                              ))
-      end
-
-      let!(:result) { receiver.process }
-
-      it "extracts the body" do
-        expect(receiver.body).to eq(email_body)
-      end
-
+      e.message.should include("too short")
     end
 
   end
@@ -307,77 +245,21 @@ Jakie" }
 
   describe "processes an unknown email sender to category" do
     before do
-      SiteSetting.stubs(:email_in).returns(true)
+      SiteSetting.email_in = true
     end
 
-    let(:incoming_email) { fixture_file("emails/valid_incoming.eml") }
-    let(:receiver) { Email::Receiver.new(incoming_email) }
-    let(:non_inbox_email_category) { Fabricate.build(:category, id: 20, email_in_allow_strangers: false) }
-    let(:public_inbox_email_category) { Fabricate.build(:category, id: 25, email_in_allow_strangers: true) }
-    let(:subject) { "We should have a post-by-email-feature." }
-    let(:email_body) { "[quote=\"jake@adventuretime.ooo\"]
-Hey folks,
 
-I was thinking. Wouldn't it be great if we could post topics via email? Yes it would!
-
-Jakie
-[/quote]" }
-
-    describe "to disabled category" do
-      before do
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(nil)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(non_inbox_email_category)
-      end
-
-      it "raises UserNotFoundError" do
-        expect{ receiver.process }.to raise_error(Email::Receiver::UserNotFoundError)
-      end
-
+    it "rejects anon email" do
+      Fabricate(:category, email_in_allow_strangers: false, email_in: "bob@bob.com")
+      expect { process_email(from: "test@test.com", to: "bob@bob.com") }.to raise_error(Email::Receiver::UserNotFoundError)
     end
 
-    describe "to enabled category" do
+    it "creates a topic for allowed category" do
+      Fabricate(:category, email_in_allow_strangers: true, email_in: "bob@bob.com")
+      process_email(from: "test@test.com", to: "bob@bob.com")
 
-      before do
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(nil)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(public_inbox_email_category)
-
-        topic_creator = mock()
-        TopicCreator.expects(:new).with(Discourse.system_user,
-                                        instance_of(Guardian),
-                                        has_entries(title: subject,
-                                                    category: 25)) # Make sure it is posted to the right category
-                                 .returns(topic_creator)
-
-        topic_creator.expects(:create).returns(topic_creator)
-        topic_creator.expects(:id).twice.returns(135)
-
-
-        post_creator = mock
-        PostCreator.expects(:new).with(Discourse.system_user,
-                                       has_entries(raw: email_body,
-                                                   topic_id: 135,
-                                                   cooking_options: {traditional_markdown_linebreaks: true}))
-                                 .returns(post_creator)
-
-        post_creator.expects(:create)
-
-        EmailLog.expects(:create).with(has_entries(
-                              email_type: 'topic_via_incoming_email',
-                              to_address: "discourse-in@appmail.adventuretime.ooo",
-                              user_id: Discourse.system_user.id,
-                              topic_id: 135
-                              ))
-      end
-
-      let!(:result) { receiver.process }
-
-      it "extracts the body" do
-        expect(receiver.body).to eq(email_body)
-      end
+      # This is the current implementation but it is wrong, it should register an account
+      Discourse.system_user.posts.order("id desc").limit(1).pluck(:raw).first.should include("Hey folks")
 
     end
 
