@@ -1130,7 +1130,7 @@ en:
 
       - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
 
-      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that you need to enter both SPF and TXT versions of this record for maximum compatibility.
+      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
 
       - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
 
