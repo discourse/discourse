@@ -1,8 +1,6 @@
 integration("Topic Discovery");
 
 test("Visit Discovery Pages", function() {
-  expect(5);
-
   visit("/");
   andThen(function() {
     ok(exists(".topic-list"), "The list of topics was rendered");
@@ -18,5 +16,10 @@ test("Visit Discovery Pages", function() {
   visit("/categories");
   andThen(function() {
     ok(exists('.category'), "has a list of categories");
+  });
+
+  visit("/top");
+  andThen(function() {
+    ok(exists('.topic-list .topic-list-item'), "has topics");
   });
 });
