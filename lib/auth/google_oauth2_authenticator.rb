@@ -36,7 +36,8 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
               strategy = env["omniauth.strategy"]
               strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
               strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
-           }
+           },
+           :redirect_uri => "#{Discourse.base_url}/auth/google_oauth2/callback"
   end
 
   protected
