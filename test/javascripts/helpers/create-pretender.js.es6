@@ -32,6 +32,10 @@ export default function() {
       return json({"value":"32faff1b1ef1ac3","challenge":"61a3de0ccf086fb9604b76e884d75801"});
     });
 
+    this.get('/session/csrf', function() {
+      return json({"csrf":"mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs="});
+    });
+
     this.get('/users/check_username', function(request) {
       if (request.queryParams.username === 'taken') {
         return json({available: false, suggestion: 'nottaken'});
