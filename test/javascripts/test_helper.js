@@ -114,3 +114,10 @@ QUnit.testDone(function() {
   Ember.run.debounce = origDebounce;
   window.sandbox.restore();
 });
+
+// Load ES6 tests
+Ember.keys(requirejs.entries).forEach(function(entry) {
+  if ((/\-test/).test(entry)) {
+    require(entry, null, null, true);
+  }
+});
