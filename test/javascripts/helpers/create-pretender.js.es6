@@ -46,6 +46,10 @@ export default function() {
     this.post('/users', function() {
       return response({success: true});
     });
+
+    this.get('/login.html', function() {
+      return [200, {}, 'LOGIN PAGE'];
+    });
   });
 
 

@@ -1,22 +1,28 @@
 /* global asyncTest */
 /* exported integration, testController, controllerFor, asyncTestDiscourse, fixture */
-function integration(name, lifecycle) {
+function integration(name, options) {
   module("Integration: " + name, {
     setup: function() {
       Ember.run(Discourse, Discourse.advanceReadiness);
-      if (lifecycle && lifecycle.setup) {
-        lifecycle.setup.call(this);
-      }
+      if (options) {
+        if (options.setup) {
+          options.setup.call(this);
+        }
 
-      if (lifecycle && lifecycle.user) {
-        Discourse.User.resetCurrent(Discourse.User.create(lifecycle.user));
+        if (options.user) {
+          Discourse.User.resetCurrent(Discourse.User.create(options.user));
+        }
+
+        if (options.settings) {
+          Discourse.SiteSettings = jQuery.extend(true, Discourse.SiteSettings, options.settings);
+        }
       }
       Discourse.reset();
     },
 
     teardown: function() {
-      if (lifecycle && lifecycle.teardown) {
-        lifecycle.teardown.call(this);
+      if (options && options.teardown) {
+        options.teardown.call(this);
       }
 
       Discourse.reset();
