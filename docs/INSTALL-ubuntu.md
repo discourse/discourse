@@ -28,9 +28,14 @@ We only support Docker based installs now. Please see [our **official install gu
 
 >     # Run these commands as your normal login (e.g. "michael")
 >     sudo apt-get update && sudo apt-get -y upgrade
+>     sudo apt-get install tasksel
 >     sudo tasksel install openssh-server
 >     sudo tasksel install mail-server
 >     sudo tasksel install postgresql-server
+
+> If the above installation is stuck, please use the following method instead ([detail](https://bugs.launchpad.net/ubuntu/+source/debconf/+bug/141601)):
+
+>     apt-get install postgresql-server^
 
 > ### Configure the mail server:
 
