@@ -463,5 +463,16 @@ describe PostCreator do
     end
   end
 
+
+  describe "suspended users" do
+    it "does not allow suspended users to create topics" do
+      user = Fabricate(:user, suspended_at: 1.month.ago, suspended_till: 1.month.from_now)
+
+      creator = PostCreator.new(user, {title: "my test title 123", raw: "I should not be allowed to post"} )
+      creator.create
+      creator.errors.count.should be > 0
+    end
+  end
+
 end
 

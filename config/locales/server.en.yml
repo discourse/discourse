@@ -92,6 +92,7 @@ en:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
   spamming_host: "Sorry you cannot post a link to that host."
+  user_is_suspended: "Suspended users are not allowed to post."
 
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"

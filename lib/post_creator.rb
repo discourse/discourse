@@ -47,6 +47,10 @@ class PostCreator
     @spam
   end
 
+  def skip_validations?
+    @opts[:skip_validations]
+  end
+
   def guardian
     @guardian ||= Guardian.new(@user)
   end
@@ -54,6 +58,12 @@ class PostCreator
   def create
     @topic = nil
     @post = nil
+
+    if @user.suspended? && !skip_validations?
+      @errors = Post.new.errors
+      @errors.add(:base, I18n.t(:user_is_suspended))
+      return
+    end
 
     transaction do
       setup_topic
@@ -142,7 +152,7 @@ class PostCreator
                            { user: @user,
                              limit_once_per: 24.hours,
                              message_params: {domains: @post.linked_hosts.keys.join(', ')} } )
-    elsif @post && !@post.errors.present? && !@opts[:skip_validations]
+    elsif @post && !@post.errors.present? && !skip_validations?
       SpamRulesEnforcer.enforce!(@post)
     end
   end
@@ -213,7 +223,7 @@ class PostCreator
   end
 
   def rollback_if_host_spam_detected
-    return if @opts[:skip_validations]
+    return if skip_validations?
     if @post.has_host_spam?
       @post.errors.add(:base, I18n.t(:spamming_host))
       @errors = @post.errors
@@ -223,7 +233,7 @@ class PostCreator
   end
 
   def save_post
-    unless @post.save(validate: !@opts[:skip_validations])
+    unless @post.save(validate: !skip_validations?)
       @errors = @post.errors
       raise ActiveRecord::Rollback.new
     end
