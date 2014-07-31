@@ -11,10 +11,12 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
   needs: ['modal', 'createAccount'],
   authenticate: null,
   loggingIn: false,
+  loggedIn: false,
 
   resetForm: function() {
     this.set('authenticate', null);
     this.set('loggingIn', false);
+    this.set('loggedIn', false);
   },
 
   site: function() {
@@ -32,9 +34,7 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
     return this.get('loggingIn') ? I18n.t('login.logging_in') : I18n.t('login.title');
   }.property('loggingIn'),
 
-  loginDisabled: function() {
-    return this.get('loggingIn');
-  }.property('loggingIn'),
+  loginDisabled: Em.computed.or('loggingIn', 'loggedIn'),
 
   showSignupLink: function() {
     return !Discourse.SiteSettings.invite_only &&
@@ -68,6 +68,7 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
           }
           self.flash(result.error, 'error');
         } else {
+          self.set('loggedIn', true);
           // Trigger the browser's password manager using the hidden static login form:
           var $hidden_login_form = $('#hidden-login-form');
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
@@ -76,7 +77,7 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
           $hidden_login_form.submit();
         }
 
-      }, function() {
+      }, function(e) {
         // Failed to login
         if (self.blank('loginName') || self.blank('loginPassword')) {
           self.flash(I18n.t('login.blank_username_or_password'), 'error');

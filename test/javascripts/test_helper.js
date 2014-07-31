@@ -1,20 +1,23 @@
 /*jshint maxlen:250 */
-/*global document, sinon, console, QUnit, Logster */
+/*global document, sinon, QUnit, Logster */
 
 //= require env
 
-//= require ../../app/assets/javascripts/preload_store.js
+//= require ../../app/assets/javascripts/preload_store
 
 // probe framework first
-//= require ../../app/assets/javascripts/discourse/lib/probes.js
+//= require ../../app/assets/javascripts/discourse/lib/probes
 
 // Externals we need to load first
-//= require development/jquery-2.1.1.js
-//= require jquery.ui.widget.js
-//= require handlebars.js
-//= require development/ember.js
-//= require message-bus.js
-//= require ember-qunit.js
+//= require development/jquery-2.1.1
+//= require jquery.ui.widget
+//= require handlebars
+//= require development/ember
+//= require message-bus
+//= require ember-qunit
+//= require fake_xml_http_request
+//= require route-recognizer
+//= require pretender
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
@@ -60,16 +63,6 @@ sinon.config = {
 
 window.assetPath = function() { return null; };
 
-var oldAjax = $.ajax;
-$.ajax = function() {
-  try {
-    this.undef();
-  } catch(e) {
-    console.error("Discourse.Ajax called in test environment (" + arguments[0] + ")\n caller: " + e.stack.split("\n").slice(2).join("\n"));
-  }
-  return oldAjax.apply(this, arguments);
-};
-
 // Stop the message bus so we don't get ajax calls
 Discourse.MessageBus.stop();
 
@@ -92,8 +85,13 @@ if (window.Logster) {
   window.Logster = { enabled: false };
 }
 
-var origDebounce = Ember.run.debounce;
+var origDebounce = Ember.run.debounce,
+    createPretendServer = require('helpers/create-pretender', null, null, false).default,
+    server;
+
 QUnit.testStart(function(ctx) {
+  server = createPretendServer();
+
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "/";
@@ -118,6 +116,8 @@ QUnit.testDone(function() {
 
   // Destroy any modals
   $('.modal-backdrop').remove();
+
+  server.shutdown();
 });
 
 // Load ES6 tests

@@ -5,8 +5,6 @@ integration("Header (Staff)", {
 });
 
 test("header", function() {
-  expect(6);
-
   visit("/");
 
   // Notifications
@@ -30,5 +28,4 @@ test("header", function() {
     ok(exists("#user-dropdown:visible"), "is lazily rendered after user opens it");
     ok(exists("#user-dropdown .user-dropdown-links"), "has showing / hiding user-dropdown links correctly bound");
   });
-
 });

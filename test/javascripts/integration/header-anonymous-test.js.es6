@@ -1,8 +1,6 @@
 integration("Header (Anonymous)");
 
 test("header", function() {
-  expect(14);
-
   visit("/");
   andThen(function() {
     ok(exists("header"), "is rendered");

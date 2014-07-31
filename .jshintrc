@@ -13,6 +13,7 @@
     "module",
     "moduleFor",
     "moduleForComponent",
+    "Pretender",
     "sandbox",
     "integration",
     "controllerFor",
