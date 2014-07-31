@@ -636,10 +636,6 @@ describe Post do
         reply.quote_count.should == 1
       end
 
-      it "isn't quoteless" do
-        reply.should_not be_quoteless
-      end
-
       it 'has a reply to the user of the original user' do
         reply.reply_to_user.should == post.user
       end

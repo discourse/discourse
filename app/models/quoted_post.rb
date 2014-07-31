@@ -44,6 +44,18 @@ class QuotedPost < ActiveRecord::Base
           post_id: post.id, ids: ids
     end
 
+    # simplest place to add this code
+    reply_quoted = false
+
+    if post.reply_to_post_number
+      reply_post_id = Post.where(topic_id: post.topic_id, post_number: post.reply_to_post_number).pluck(:id).first
+      reply_quoted = !!(reply_post_id && ids.include?(reply_post_id))
+    end
+
+    if reply_quoted != post.reply_quoted
+      post.update_columns(reply_quoted: reply_quoted)
+    end
+
   end
 end
 

@@ -252,10 +252,6 @@ class Post < ActiveRecord::Base
     "#{topic_id}/#{post_number}"
   end
 
-  def quoteless?
-    (quote_count == 0) && (reply_to_post_number.present?)
-  end
-
   def reply_to_post
     return if reply_to_post_number.blank?
     @reply_to_post ||= Post.find_by("topic_id = :topic_id AND post_number = :post_number", topic_id: topic_id, post_number: reply_to_post_number)

@@ -206,7 +206,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_reply_to_user?
-    (!SiteSetting.suppress_reply_when_quoting || object.quoteless?) && object.reply_to_user
+    !(SiteSetting.suppress_reply_when_quoting && object.reply_quoted?) && object.reply_to_user
   end
 
   def include_bookmarked?
