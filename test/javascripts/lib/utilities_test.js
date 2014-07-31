@@ -24,6 +24,7 @@ test("uploading one file", function() {
 
 test("new user cannot upload images", function() {
   Discourse.SiteSettings.newuser_max_images = 0;
+  Discourse.User.resetCurrent(Discourse.User.create());
   sandbox.stub(bootbox, "alert");
 
   not(validUpload([{name: "image.png"}]), 'the upload is not valid');
@@ -33,6 +34,7 @@ test("new user cannot upload images", function() {
 test("new user cannot upload attachments", function() {
   Discourse.SiteSettings.newuser_max_attachments = 0;
   sandbox.stub(bootbox, "alert");
+  Discourse.User.resetCurrent(Discourse.User.create());
 
   not(validUpload([{name: "roman.txt"}]));
   ok(bootbox.alert.calledWith(I18n.t('post.errors.attachment_upload_not_allowed_for_new_user')));
@@ -48,6 +50,7 @@ test("ensures an authorized upload", function() {
 });
 
 test("prevents files that are too big from being uploaded", function() {
+  Discourse.User.resetCurrent(Discourse.User.create());
   var image = { name: "image.png", size: 10 * 1024 };
   Discourse.SiteSettings.max_image_size_kb = 5;
   Discourse.User.currentProp("trust_level", 1);
@@ -69,6 +72,7 @@ var dummyBlob = function() {
 };
 
 test("allows valid uploads to go through", function() {
+  Discourse.User.resetCurrent(Discourse.User.create());
   Discourse.User.currentProp("trust_level", 1);
   Discourse.SiteSettings.max_image_size_kb = 15;
   sandbox.stub(bootbox, "alert");

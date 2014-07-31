@@ -1,17 +1,7 @@
-integration("Header", {
-  setup: function() {
-    var originalUser = Discourse.User.current();
-    sandbox.stub(Discourse.User, "current").returns(originalUser);
-    Discourse.User.current.returns(Ember.Object.create({
-      username: 'test',
-      staff: true,
-      site_flagged_posts_count: 1
-    }));
-  },
-
-  teardown: function() {
-    Discourse.User.current.restore();
-  }
+integration("Header as Staff", {
+  user: { username: 'test',
+          staff: true,
+          site_flagged_posts_count: 1 }
 });
 
 test("header", function() {

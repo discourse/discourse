@@ -7,6 +7,10 @@ function integration(name, lifecycle) {
       if (lifecycle && lifecycle.setup) {
         lifecycle.setup.call(this);
       }
+
+      if (lifecycle && lifecycle.user) {
+        Discourse.User.resetCurrent(Discourse.User.create(lifecycle.user));
+      }
       Discourse.reset();
     },
 

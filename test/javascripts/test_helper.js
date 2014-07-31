@@ -98,6 +98,8 @@ QUnit.testStart(function(ctx) {
   Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "/";
   Discourse.BaseUrl = "";
+  Discourse.User.resetCurrent();
+  PreloadStore.reset();
 
   window.sandbox = sinon.sandbox.create();
 

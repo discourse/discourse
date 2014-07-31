@@ -77,6 +77,14 @@ window.PreloadStore = {
   **/
   remove: function(key) {
     if (this.data[key]) delete this.data[key];
+  },
+
+  /**
+    Resets the contents of the store. Used in testing.
+
+  **/
+  reset: function() {
+    this.data = {};
   }
 
 };
