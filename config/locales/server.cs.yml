@@ -290,11 +290,9 @@ cs:
     continue: "Pokračovat na %{site_name}"
   change_email:
     confirmed: "Vaše emailová adresa bylo změněna."
-    please_continue: "Prosím, pokračujte na %{link}"
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
   activation:
     already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
-    please_continue: "Váš nový účet byl aktivován a nyní jste přihlášeni. Prosím pokračujte na %{link}"
     welcome_to: "Vítejte na %{site_name}!"
     approval_required: "Váš nový účet musí být schválen moderátorem, než budete moci používat fórum. Jakmile se tak stane, budete informováni emailem."
   post_action_types:
@@ -472,21 +470,13 @@ cs:
     welcome_invite:
       title: "Uvítání: Pozvaný uživatel"
       description: "Soukromá zpráva, která je automaticky zaslaná novým pozvaným uživatelům, když přijmou pozvánku."
-    privacy_policy:
-      title: "Ochrana soukromí"
-      description: "Podmínky ochrany soukromí vašeho webu. Nechte prázdné pro výchozí podmínky."
-    faq:
-      title: "FAQ"
-      description: "Často kladené otázky (FAQ) vašeho webu. Nechte prázdné pro výchozí FAQ."
     login_required_welcome_message:
       title: "Vyžadováno přihlášení: Uvítací zpráva"
       description: "Uvítací zpráva, která je zobrazena nepřihlášeným uživatelům, je-li zapnuto nastavení 'vyžadovat přihlášení'."
     tos_user_content_license:
       title: "Podmínky používání: Licence obsahu"
-      description: "Text sekce 'licence obsahu' z Podmínek používání."
     tos_miscellaneous:
       title: "Podmínky používání: Různé"
-      description: "Text sekce 'různé' z Podmínek používání."
     login_required:
       title: "Vyžadováno přihlášení: Úvodní stránka"
       description: "Text, který se zobrazí nepřihlášených uživatelům na webu, je-li přihlášení vyžadováno."
@@ -565,7 +555,6 @@ cs:
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
     newuser_spam_host_threshold: "Kolikrát smí uživatel zaslat odkaz na stejný server v rámci příspěvků z nastavení 'newuser_spam_host_posts', než budou příspěvky považovány za spam."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %{reply_key}@reply.myforum.com"
-    email_in_address: "Emailová adresa na kterou uživatelé můžou posílat nová témata. Prázdná adresa funkci zakáže úplně."
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
     username_change_period: "Počet dní od registrace za kolik si uživatel může změnit svoje uživatelské jméno (0 pokud chcete změnu uživatelského jména úplně zakázat)."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
@@ -659,45 +648,6 @@ cs:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Oznámení: Příspěvek skryt kvůli hlášením od komunity"
-    usage_tips:
-      text_body_template: |
-        Tato soukromá zpráva vám přináší několik rychlých tipů, jak začít:
-
-        ### Pokračujte ve skrolování
-
-        Neexistuje zde tlačítko 'další stránka' nebo číslování stránek -- chcete-li pokračovat ve čtení, prostě skrolujte dál a další obsah se bude sám nahrávat.
-
-        Jak přicházejí nové odpovědi, budou se automaticky objevovat ve spodu tématu. Není potřeba obnovovat stránku nebo znovu otevírat téma, abyste dostali nové příspěvky.
-
-        ### Jak odpovědět?
-
-        - Chcete-li odpovědět na konkrétní příspěvek, použijte tlačítko 'Odpovědět' na konci tohoto příspěvku.
-
-        - Chtete-li odpovědět obecně *na dané téma* (a ne konkrétnímu člověku), použijte tlačítko 'Odpovědět', které se nachází uplně na konci daného tématu.
-
-        - Pokud chcete, aby se konverzace ubírala jiným směrem, ale aby zůstala zachovaná návaznost, použijte 'Odpovědět jako nové téma' po pravé straně příspěvku.
-
-        ### Kdo se mnou mluví?
-
-        Jakmile někdo odpoví na váš příspěvěk, ocituje vás nebo vás zmíní pomocí @name, obdržíte oznámení v horní části stránky. Klikněte na tlačítko s počtem oznámení, abyste viděli, kdo s vámi mluví a kde. Přidejte se ke konverzaci!
-
-        - Chcete-li zmínit něčí jméno, napište znak '@' a automaticky objeví se doplňovač.
-
-        - Pro citování celého příspěvku použijte tlačítko 'Importovat citaci' v nabídce editoru příspěvku.
-
-        - Chcete-li citovat jen část některého příspěvku, označte ji a klikněte na tlačítko 'Odpovědět', které se objeví nad textem, který jste vybrali.
-
-        ### Podívej se na tenhle příspěvek!
-
-        Chcete-li někomu dát vědět, že se vám jeho příspěvek líbí, klikněte na tlačítko 'líbí se' pod daným příspěvkem. Pokud máte s nějakým příspěvkem problém, neváhejte kliknout na tlačítko 'nahlásit', čímž o tom dáte vědět moderátorům a také ostatním členům komunity.
-
-        ### Kde jsem?
-
-        - Pro návrat na hlavní stránku můžete kdykoliv **kliknout na ikonu vlevo nahoře**.
-
-        - Pro hledání, zobrazení vaší uživatelské stránky nebo jinou navigaci použijte ikony vpravo nahoře.
-
-        - Během čtení nějakého tématu se můžete kliknutím na název tématu v horní části stránky vrátit na začátek tématu. Chcete-li naopak skočit na *konec* tématu, klikněte na šipku dolů v indikátoru pozice v dolní části stránky, nebo klikněte na odkaz 'poslední příspěvek' v souhrnu tématu u prvního příspěvku.
     welcome_user:
       subject_template: "Vítejte na %{site_name}!"
     welcome_invite:

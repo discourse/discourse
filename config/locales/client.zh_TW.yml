@@ -330,11 +330,6 @@ zh_TW:
       new_topic_duration:
         label: "視為新討論話題的條件"
         not_viewed: "你尚未看過它們"
-        last_here: "建立於你上次到訪後"
-        after_n_days:
-          other: "建立於最近 {{count}} 天內"
-        after_n_weeks:
-          other: "建立於最近 {{count}} 週內"
       auto_track_topics: "自動追蹤你點進的討論話題"
       auto_track_options:
         never: "永不"
@@ -409,7 +404,6 @@ zh_TW:
     read_only_mode:
       enabled: "管理員開啟了唯讀模式。你可以繼續瀏覽網站，但一些互動功能可能無法使用。"
       login_disabled: "在唯讀模式下不能登入"
-    too_few_topics_notice: "請建立至少 5 個公開的討論話題和 30 篇公開文章讓討論得以開始進行。若沒有文章可閱讀，新用戶將無法提升信任等級。"
     learn_more: "進一步了解..."
     year: '年'
     year_desc: '最近 365 天內建立的討論話題'
@@ -866,8 +860,6 @@ zh_TW:
         unwiki: "取消標記維基文章"
       actions:
         flag: '投訴'
-        clear_flags:
-          other: "取消投訴"
         it_too:
           off_topic: "一起投訴"
           spam: "一起投訴"
@@ -1000,13 +992,11 @@ zh_TW:
       auto_close_units: "小時"
       email_in: "自訂外來電郵地址:"
       email_in_allow_strangers: "接受非用戶的電郵"
-      allow_badges_label: "允許使用徽章"
       edit_permissions: "編輯權限"
       add_permission: "新增權限"
       this_year: "今年"
       position: "位置"
       default_position: "預設的位置"
-      position_disabled: '分類的顯示將會以活躍度為排序依據。請開啟 "fixed category positions" 來手動調整分類排序。'
       parent: "父分類"
       notifications:
         watching:
@@ -1101,7 +1091,6 @@ zh_TW:
           zero: "未讀"
           one: "未讀 (1)"
           other: "未讀 ({{count}})"
-        help: "有未讀文章且正被你關注或追蹤的討論話題"
       new:
         lower_title_with_count:
           one: "1 個新話題"
@@ -1111,7 +1100,6 @@ zh_TW:
           zero: "新討論話題"
           one: "新討論話題 (1)"
           other: "新討論話題 ({{count}})"
-        help: "上次到訪後建立的討論話題"
       posted:
         title: "我的文章"
         help: "你回覆過的討論話題"
@@ -1188,24 +1176,12 @@ zh_TW:
         title: "投訴"
         old: "舊的"
         active: "待處理"
-        agree_hide: "批准 (隱藏文章 + 送出私人訊息)"
-        agree_hide_title: "隱藏此文章，並自動向此用戶送出私人訊息，要求盡快修改文章"
-        defer: "延遲"
-        defer_title: "目前不需採取行動， 將此投訴的任何動作延期或永不採取行動"
-        delete_post: "刪除文章"
-        delete_post_title: "如果刪除的是討論話題的第一篇文章，討論話題也將一併刪除"
-        disagree_unhide: "否絕 (取消文章的隱藏狀態)"
-        disagree_unhide_title: "移除此文章的所有投訴，並使文章可以被看見"
-        disagree: "否絕"
-        disagree_title: "否絕投訴，從此文章移除所有投訴"
-        delete_spammer_title: "刪除此用戶與他的所有文章與討論話題"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "該討論話題已被調查，問題已經解決。點擊完成以移除投訴。"
         flagged_by: "投訴者"
         resolved_by: "處理為"
         system: "系統"
         error: "發生了某些錯誤"
-        view_message: "回覆"
         no_results: "沒有投訴。"
         topic_flagged: "此 <strong>討論話題</strong> 已被投訴。"
         visit_topic: "瀏覽討論話題以採取行動"
@@ -1658,7 +1634,6 @@ zh_TW:
     lightbox:
       download: "下載"
     keyboard_shortcuts_help:
-      title: '鍵盤快捷鍵 (實驗性質)'
       jump_to:
         title: '跳到'
         home: '<b>g</b> 之後 <b>h</b> 主頁 ( 最近 )'

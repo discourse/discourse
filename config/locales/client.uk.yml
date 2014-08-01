@@ -781,7 +781,6 @@ uk:
         title:
           one: "Непрочитані ({{count}})"
           other: "Непрочитані"
-        help: "теми, що відстежуються або відслідковуються, та містять непрочитані дописи"
       new:
         lower_title_with_count:
           one: "{{count}} new"
@@ -789,7 +788,6 @@ uk:
         title:
           one: "Нові ({{count}})"
           other: "Нові"
-        help: "теми, створені після Вашого останнього візиту"
       posted:
         title: "Мої дописи"
         help: "теми, в які Ви дописували"
@@ -865,23 +863,11 @@ uk:
         title: "Скарги"
         old: "Старі"
         active: "Активні"
-        agree_hide: "Згода (сховати допис + надіслати ПП)"
-        agree_hide_title: "Сховати цей допис і автоматично надіслати користувачу приватне повідомлення з переконливим проханням його відредагувати"
-        defer: "Відкласти"
-        defer_title: "Наразі жоднії дії непотрібні; відкласти будь-яку реакцію на цю скаргу на пізніше, або назавжди"
-        delete_post: "Видалити допис"
-        delete_post_title: "Видалити допис; якщо це - перший допис, видалити тему"
-        disagree_unhide: "Незгода (показати допис)"
-        disagree_unhide_title: "Зняти усі скарги з цього допису і зробити його знову видимим"
-        disagree: "Незгода"
-        disagree_title: "Не погодитися зі скаргою і зняти всі скарги з цього допису"
-        delete_spammer_title: "Видалити користувача і всі його дописи та теми."
         clear_topic_flags: "Done"
         clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
         flagged_by: "Позначено"
         system: "System"
         error: "Щось трапилося"
-        view_message: "Reply"
         no_results: "Скарг немає."
         topic_flagged: "This <strong>topic</strong> has been flagged."
       groups:
@@ -1202,7 +1188,6 @@ uk:
     lightbox:
       download: "звантажити"
     keyboard_shortcuts_help:
-      title: 'Поєднання клавіш (експериментальне)'
       jump_to:
         title: 'Перейти до'
         home: '<b>g</b> потім <b>h</b> Головна (Останні)'

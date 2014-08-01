@@ -264,11 +264,9 @@ pt_BR:
     continue: "Continuar para %{site_name}"
   change_email:
     confirmed: "O seu email foi atualizado."
-    please_continue: "Por favor continue em %{link}"
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
   activation:
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
-    please_continue: "A sua nova conta está confimada e você está conectado. Continue em %{link}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
   post_action_types:
@@ -453,21 +451,13 @@ pt_BR:
     welcome_invite:
       title: "Boas-vindas: Usuário Convidado"
       description: "Uma mensagem particular enviada automaticamente para todos os usuários convidados quando eles aceitam o convite de outro usuário para participar."
-    privacy_policy:
-      title: "Política de Privacidade"
-      description: "A política de privacidade do seu site. Deixe em branco para usar a política padrão."
-    faq:
-      title: "FAQ"
-      description: "FAQ do seu site. Deixe em branco para usar a FAQ padrão."
     login_required_welcome_message:
       title: "Boas-vindas: Login Solicitado"
       description: "Mensagem de boas-vindas que é exibida para usuários que não estão logados quando a configuração de 'login requerido' está ativada."
     tos_user_content_license:
       title: "Termos do Serviço: Licença do Conteúdo"
-      description: "Texto da seção Licença do Conteúdo dos Termos do Serviço."
     tos_miscellaneous:
       title: "Termos do Serviço: Diversos"
-      description: "Texto para a seção de Diversos dos Termos de Serviço."
     login_required:
       title: "É requerido que você entre em sua conta: Página Inicial"
       description: "Texto exibido para usuários não autorizados quando é se exige entrar na conta para acessar o site."
@@ -563,7 +553,6 @@ pt_BR:
     privacy_policy_url: "Se você tem um documento de Política de Privacidade hospedado em algum outro local que você queira usar, forneça a URL completa aqui."
     newuser_spam_host_threshold: "Quantas vezes um usuário pode postar um link para o mesmo site dentro de`newuser_spam_host_posts` posts antes de ser considerado spam."
     reply_by_email_address: "Template de resposta por email, por exemplo: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    email_in_address: "O endereço de e-mail para que os usuários possam publicar novos tópicos. Nenhum significa que os usuários não podem publicar globalmente."
     delete_all_posts_max: "Número máximo de postagens que podem ser apagadas de uma vez com o botão Remover Todos Postagens. Se um usuário tiver mais postagens do que este número, as postagens não poderão ser todas removidas de uma vez e o usuário não poderá ser removido."
     username_change_period: "O número de dias após o registro para que as contas possam mudar o seu nome de usuário (0 para não permitir a mudança de nome de usuário)."
     email_editable: "Permitir que os usuários alterem o seu endereço de e-mail após o registro."
@@ -574,7 +563,6 @@ pt_BR:
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     short_progress_text_threshold: "Após o número de mensagens em um tópico for acima deste número, a barra de progresso mostrará apenas o número  da mensagem atual. Se você alterar a largura da barra de progresso, você pode precisar alterar este valor."
     default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
-    warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
     tos_accept_required: "Se ativado, os usuários terão de verificar uma caixa no formulário de cadastro para confirmar que aceitam os termos do serviço. Editar \"Formulário de Cadastro: Termos do Serviço de Mensagens\" na guia Conteúdo para alterar a mensagem."
     notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
@@ -688,9 +676,6 @@ pt_BR:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
-    usage_tips:
-      text_body_template: "Esta mensagem privada tem algumas dicas rápidas para você começar: \n\n### Mantenha rolando \n \nNão há página seguinte, botões ou números de página - para ler mais, basta manter a rolagem para baixo! \n\nÀ medida que novas respostas chegam, eles aparecerão automaticamente na parte inferior do tópico. \n\n### Como posso responder? \n\n- Para responder a uma mensagem específica, use o botão Responder na mensagem.\n \n- Para responder ao *tema* geral do tópico em vez de qualquer pessoa ou mensagem específica no tópico, use o botão Responder na parte inferior do tópico.\n\n- Para levar a conversa em uma direção diferente mas mantê-las ligadas entre si, use Responder Como Novo Tópico na direita da mensagem.\n\n### Quem está falando comigo?\n\nQuando alguém responde a sua mensagem, te citam ou mencionam seu @nome, um número ➀ aparecerá sobre um botão de conversa no topo da página. Use-o para ver quem está falando com você e onde.\n\n- Para citar o nome de alguém, comece digitando `@` e um autocompletar vai aparecer.\n\n- Para citar apenas uma seção de uma mensagem, selecione-a e use o botão de resposta que aparece sobre sua seleção.\n\n- Para citar uma mensagem inteira, use o botão Importar Citações na barra de ferramentas do editor.\n\n### Olhe para esse post!\n\nPara deixar alguém sabendo que você curtiu sua mensagem, use o botão com ♥ na parte inferior da mensagem. Se você ver um problema com uma mensagem, não hesite em usar o botão de bandeira e privativamente deixar nossa equipe sabe sobre ela.\n\n### Quem sou eu? \n\n- Para voltar para a página inicial a qualquer momento, **usar o logotipo no canto superior esquerdo** ou o botão ← voltar do seu navegador.\n\n- Para pesquisar, sua página de usuário ou o mapa do site, use os **botões de ícone na parte superior direita **.\n\n- Durante a leitura de um tópico, ir para o topo ↑ clicando em seu título na parte superior da página, ou pressione a tecla <kbd>HOME</kbd>. Para chegar no *rodapé* ↓, use a seta para baixo no indicador de progresso do tópico na parte inferior da página, ou pressione a tecla <kbd>END</kbd>.\n\n- Use tempo como atalhos de entrada. Você sempre pode entrar no topo de um tópico\
-        \ através da primeira data de postagem e na parte inferior por meio da última data de postagem . \n"
     welcome_user:
       subject_template: "Bem-vindo em %{site_name}!"
     welcome_invite:

@@ -24,8 +24,12 @@ nl:
   via: "%{username} via %{site_name}"
   is_reserved: "is gereserveerd"
   errors:
+    messages:
+      too_long_validation: "is beperkt tot %{max} tekens; je gebruikt %{length}."
     embed:
       load_from_remote: "Er ging iets mis bij het laden van dat bericht."
+  bulk_invite:
+    file_should_be_csv: "Het bestand moet in csv- of txt-formaat zijn."
   backup:
     operation_already_running: "Er wordt al een opdracht uitgevoerd. Kan nu niet een nieuwe opdracht starten."
     backup_file_should_be_tar_gz: "Het backupbestand moet een .tar.gz archief zijn."
@@ -167,13 +171,26 @@ nl:
   user_profile:
     no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou je deze willen invullen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} heeft nog niks in zijn of haar Over Mij-profielveld ingevuld</div>"
+  vip_category_name: "Lounge"
   vip_category_description: "Een categorie exclusief voor leden met trust level 3 en hoger."
+  meta_category_name: "Meta"
   meta_category_description: "Discussies over dit forum, de organisatie, hoe het werk en hoe het verbeterd kan worden."
+  staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor admins en moderatoren."
+  lounge_welcome:
+    title: "Welkom in de Lounge"
   category:
     topic_prefix: "Over de categorie %{category}"
     replace_paragraph: "[Vervang deze eerste regel met een korte omschrijving van je nieuwe categorie. Deze regel verschijnt in het selectiemenu als iemand een categorie kiest, dus hou het kort (max. 200 tekens). Deze categorie zal niet in de lijst verschijnen totdat je deze tekst wijzigt of zelf een topic in de categorie plaatst.]"
     post_template: "%{replace_paragraph}\n\nGebruik de volgende alinea's voor een lange omschrijving en om wat verwachtingen en regels van deze categorie uit te leggen.\n\nZaken waar je het over kan hebben in de reacties hieronder:\n\n- Waar is deze categorie voor? Waarom zouden mensen deze categorie moeten kiezen voor hun topic?\n\n- Waarin verschilt deze categorie van de andere categorien die we al hebben?\n\n- Hebben we deze categorie echt nodig?\n\n- Moeten we deze categorie samenvoegen met een andere categorie, of juist opsplitsen?\n"
+    errors:
+      uncategorized_parent: "Ongecategoriseerd kan geen bovenliggende categorie hebben"
+      self_parent: "Een categorie kan niet zijn eigen bovenliggende categorie zijn"
+      depth: "Je kan een subcategorie niet onder een andere subcategorie plaatsen"
+    cannot_delete:
+      uncategorized: "De categorie Ongecategoriseerd kan niet verwijderd worden"
+      has_subcategories: "Deze categorie kan niet verwijderd worden, omdat deze subcategorieën heeft"
+      topic_exists_no_oldest: "Categorie kan niet verwijderd worden omdat het aantal topics %{count} is."
   trust_levels:
     newuser:
       title: "nieuw lid"
@@ -280,11 +297,13 @@ nl:
     continue: "Ga verder naar %{site_name}"
   change_email:
     confirmed: "Je e-mailadres is aangepast."
-    please_continue: "Ga verder via %{link}"
+    please_continue: "Ga verder naar %{site_name}"
     error: "Er ging iets mis bij het wijzigen van je e-mailadres. Wellicht is deze al in gebruik?"
   activation:
+    action: "Activeer je account"
     already_done: "Sorry, de link om je account te activeren is niet langer geldig. Wellicht is je account al geactiveerd?"
-    please_continue: "Je nieuwe account is geactiveerd en je bent nu ingelogd. Ga verder via %{link}"
+    please_continue: "Je account is bevestigd en je bent nu ingelogd."
+    continue_button: "Ga verder naar %{site_name}"
     welcome_to: "Welkom bij %{site_name}!"
     approval_required: "Een moderator moet je nieuwe account handmatig activeren voordat je toegang krijgt tot dit forum. Je krijgt een e-mail van ons wanneer je account is goedgekeurd!"
   post_action_types:
@@ -345,6 +364,7 @@ nl:
     title: 'Uitgeschreven'
     description: "Je hebt je uitgeschreven. Je krijgt geen mails meer van ons!"
     oops: "Als dat niet de bedoeling was, klik dan hieronder."
+    error: "Fout bij afmelden"
     not_found_description: "Sorry, we hebben je niet uit kunnen schrijven. Het is mogelijk dat de link in je e-mail is verlopen."
   resubscribe:
     action: "Opnieuw inschrijven"
@@ -465,21 +485,13 @@ nl:
     welcome_invite:
       title: "Welkom: Uitgenodigd lid"
       description: "Een privébericht dat automatisch naar alle nieuwe leden wordt gestuurd als ze ingaan op de uitnodiging om aan het forum deel te nemen door een ander lid."
-    privacy_policy:
-      title: "Privacy Policy"
-      description: "De privacy policy van je site. Laat leeg voor de standaar privacy policy."
-    faq:
-      title: "FAQ"
-      description: "De FAQ van je site. Laat leeg voor de standaard FAQ."
     login_required_welcome_message:
       title: "Inloggen vereist: Welkomstbericht"
       description: "Welcomstbericht dat getoond wordt aan uitgelogde gebruikers als 'login required' is ingesteld."
     tos_user_content_license:
       title: "Algemene voorwaarden: Inhoudslicensie"
-      description: "De tekst van de Inhoudslicentie van de Algemene Voorwaarden."
     tos_miscellaneous:
       title: "Terms of Service: Overig"
-      description: "De overige teksten van de Algemene Voorwaarden."
     login_required:
       title: "Inloggen nodig: Homepage"
       description: "De tekst die getoond wordt als men moet inloggen om naar het forum te kunnen gaan."
@@ -530,11 +542,14 @@ nl:
     top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|new|unread|starred|categories|top|read|posted"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
+    topics_per_period_in_top_summary: "Aantal topics in het top-topics overzicht"
     enable_badges: "Activeer het badgesysteem (experimenteel)"
     version_checks: "Ping de Discourse-hub voor versieupdates and laat versiemeldingen zien in het /admin dashboard"
     port: "DEVELOPER ONLY! WARNING! Mocht je een specifieke poort willen toewijzen aan de URL. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     force_hostname: "DEVELOPER ONLY! WARNING! Mocht je een specifieke hostname willen toewijzen. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
+    min_username_length: "Minimale lengte gebruikersnaam in tekens."
+    max_username_length: "Maximale lengte gebruikersnaam in tekens."
     min_password_length: "Minimum lengte wachtwoord."
     sso_url: "URL van single sign on eindpunt"
     sso_secret: "Geheime tekenreeks voor het encrypten/decrypten van SSO informatie, zorg er voor dat het 10 tekens of langer is"
@@ -561,30 +576,56 @@ nl:
     clean_orphan_uploads_grace_period_hours: "Na hoeveel uur een weesbestand voor verwijderding gemarkeerd wordt."
     purge_deleted_uploads_grace_period_days: "Na hoeveel uur een weesbestand definitief verwijderd wordt."
     s3_upload_bucket: "De Amazon S3 bucket waar de bestanden naar geupload worden. WAARSCHUWING: gebruik kleine letters, geen punten."
+    default_invitee_trust_level: "Het standaard trustlevel (0-4) voor uitgenodigde leden."
+    default_trust_level: "Het standaard trustlevel (0-4) voor alle nieuwe leden."
     min_trust_to_create_topic: "Het minimale trust level dat nodig is om een topic te mogen maken."
     min_trust_to_edit_wiki_post: "Het minimale trust level dat nodig is om een bericht te wijzigen dat als wiki gemarkeerd is."
+    newuser_max_links: "Hoeveel links een nieuw lid in een bericht kan plaatsen."
+    newuser_max_images: "Hoeveel afbeeldingen een nieuw lid in een bericht kan plaatsen."
     title_fancy_entities: "Converteer algemene ASCII-tekens naar fancy HTML in topictitels, zoals SmartyPants (http://daringfireball.net/projects/smartypants)"
+    min_title_similar_length: "De minimale lengte die een titel van een topic moet hebben voordat er wordt gezocht naar vergelijkbare topics."
+    min_body_similar_length: "De minimale lengte die de inhoud van een bericht moet hebben voordat er wordt gezocht naar vergelijkbare topics."
+    category_colors: "Een lijst me hexadecimale kleurwaardes die gebruikt kunnen worden voor categorieën."
+    authorized_extensions: "Een lijst met bestandsextensies die mogen worden geupload (gebruik '*' voor alle bestandsextensies)"
     title_prettify: "Voorkom veel voorkomende fouten in titels (alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
+    topic_views_heat_low: "Het aantal keer dat een topic bekeken moet zijn om een laag 'heat' level te hebben."
+    topic_views_heat_medium: "Het aantal keer dat een topic bekeken moet zijn om een medium 'heat' level te hebben."
     faq_url: "Heb je je FAQ ergens extern staan, geef hier dan de volledige url op."
     tos_url: "Heb je je Algemene Voorwaarden ergens extern staan, geef hier dan de volledige url op."
     privacy_policy_url: "Heb je je Privacy Voorwaarden ergens extern staan, geef hier dan de volledige url op."
     newuser_spam_host_threshold: "Hoe vaak kan een gebruiker linken naar dezelfde host in hun `newuser_spam_host_posts` berichten voordat deze links als spam gezien worden."
+    reply_by_email_enabled: "Ondersteuning voor antwoorden per e-mail."
     reply_by_email_address: "Template voor antwoorden per e-mail, bijvoorbeeld: %{reply_key}@reageer.mijnforum.nl"
-    email_in_address: "Het emailadres waarnaar nieuwe topics gemaild kunnen worden. Leeg laten betekent dat gebruikers niet globaal kunnen plaatsen."
+    pop3s_polling_enabled: "Mail ophalen via POP3S?"
+    pop3s_polling_port: "De poort voor POP3S."
+    pop3s_polling_host: "De host voor POP3S."
+    pop3s_polling_username: "De username voor het POP3S e-mailaccount."
+    pop3s_polling_password: "Het wachtwoord voor het POP3S e-mailaccount."
+    email_in_min_trust: "Het minium trustlevel dat een gebruiker moet hebben om nieuwe topics te kunnen mailen."
+    delete_user_max_post_age: "Gebruikers wiens eerste bericht ouder dan (x) dagen is kunnen niet meer verwijderd worden."
     delete_all_posts_max: "Het maximaal aantal berichten dat ineens verwijderd kan worden met de 'Verwijder alle berichten'-knop. Als een gebruiker meer berichten heeft, kunnen de berichten niet in een keer verwijderd worden en kan de gebruiker dus niet verwijderd worden."
     username_change_period: "The number of days after registration that accounts can change their username (0 om wijziging niet toe te staan)."
     email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
+    allow_uploaded_avatars: "Sta toe dat avatars geupload kunnen worden."
+    digest_topics: "Het maximum aantal topics dat in de e-maildigest opgenomen wordt."
+    digest_min_excerpt_length: "Hoeveel karakters er per bericht getoond worden in de mail digest"
     default_digest_email_frequency: "Hoe vaak ontvangen gebruikers standaard de digestmails. Ze kunnen dit in hun eigen instellingen nog aanpassen."
     default_external_links_in_new_tab: "Open externe links in a nieuwe tab. Gebruikers kunnen dit wijzigen in hun instellingen."
+    allow_profile_backgrounds: "Gebruikers mogen een profielachtergrond instellen."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
+    suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie in de topiclijsten."
     global_notice: "Laat een LET OP, BELANGRIJK-banner zien aan alle gebruikers. Laat leeg om niet te tonen (HTML is toegestaan)."
+    enable_names: "Gebruikers mogen hun volledige naam laten zien. Zet uit om volledige namen te verbergen."
+    display_name_on_posts: "Laat de volledige naam van een gebruiker bij zijn berichten zijn, naar de @gebruikersnaam"
+    invites_shown: "Maximum aantal uitnodigingen dat op gebruikerspagina getoond wordt"
     short_progress_text_threshold: "Als het aantal berichten in een topic meer is dan dit aantal zal de voortgangsbalk alleen het nummer van het huidige bericht tonen. Als je de breedte van de voortgangsbalk verandert, moet je dit getal misschien ook aanpassen."
     default_code_lang: "Standaard programmeertaal die gebruikt wordt voor syntax highlighting van GitHub codeblokken (lang-auto, ruby, python etc.)"
-    warn_reviving_old_topic_age: "Als iemand wil reageren in een topic van meer dan dit aantal dagen oud, geef dan een waarschuwing om de gebruiker te ontmoedigen de reactie te plaatsen. Zet op 0 om deze waarschuwing uit te zetten."
     tos_accept_required: "Gebruikers moeten een vinkje zetten bij het inschrijven om aan te geven dat ze akkoord gaan met de algemene voorwaarden als deze optie actief is. Ga naar 'Inschijfformulier: Algemene Voorwaarden' in de Inhoud tab om het bericht te wijzigen."
     errors:
       invalid_email: "Ongeldig e-mailadres."
       invalid_username: "Er is geen gebruiker met die gebruikersnaam."
+      invalid_integer_min: "Waarde moet minimaal %{min} zijn."
+      invalid_integer_max: "Waarde kan maximaal %{max} zijn."
       invalid_integer: "Waarde moet een integer zijn."
       invalid_string: "Ongeldige waarde."
   notification_types:
@@ -690,47 +731,6 @@ nl:
   system_messages:
     post_hidden:
       subject_template: "Bericht van %{site_name}: je bericht is verborgen wegens meldingen uit de community"
-    usage_tips:
-      text_body_template: |
-        Dit privé-bericht heeft een paar tips om je een eind op weg te helpen:
-
-        ### Blijf scrollen
-
-        Er zijn geen "volgende pagina"-knoppen of paginanummers - om verder te lezen moet je gewoon naar beneden blijven scrollen.
-
-        Zodra er nieuwe reacties binnenkomen zullen die automatisch aan de onderkant van de topic komen te staan.
-
-        ### Hoe reageer ik?
-
-        - Om op een specifiek bericht te reageren, gebruik je de "Reageer"-knop bij dat bericht.
-
-        - Om op de topic in het algemeen, in plaats van op een persoon specifiek te reageren gebruik je de "Reageer"-knop onderaan de topic.
-
-        - Om de topic een andere richting in te sturen gebruik je "Reageer als nieuw topic" aan de rechterkant van het bericht van waaruit je de nieuwe conversatie wil starten. De beide topics zullen via een link verbonden blijven.
-
-        ### Wie praat er tegen mij?
-
-        Wanneer iemand op je bericht reageert, je citeert of je @gebruikersnaam vermeldt, krijg je een cijfer (bijv. ➀) te zien bovenaan de pagina. Druk er op om te zien wie er met je aan het praten is, en waar.
-
-        - Om iemands naam te vermelden, typ een @ en een handig venstertje opent zich waarin de naam automatisch kan worden aangevuld.
-
-        - Om alleen maar een gedeelte van een bericht te citeren selecteer je dat gedeelte en gebruik je de "Reageer"-knop die boven de selectie verschijnt.
-
-        - Om een heel bericht te citeren klik je op de "Importeer citaat"-knop op de toolbar van het bericht dat je aan het schrijven bent.
-
-        ### Moet je dat bericht zien!
-
-        Om iemand te laten weten dat je zijn of haar post waardeert gebruik je ♥ (vind ik leuk) aan de onderkant van het bericht. Mocht je een probleem zien met een bericht, twijfel niet om op de "Meld" knop te gebruiken. Zo laat je de moderators (privé) weten dat er iets aan de hand is met dat bericht.
-
-        ### Waar ben ik?
-
-        - Om terug te gaan naar de homepage kan je op elk moment **op het logo in de linker bovenhoek klikken**.
-
-        - Mocht je iets willen opzoeken, naar je gebruikerspagina gaan, of ergens anders naar toe willen navigeren, klik dan op **de icoontjes in de rechter bovenhoek**.
-
-        - Wanneer je een topic leest, kan je naar boven scrollen (↑) door op de topictitel bovenaan de pagina te klikken of op <kbd>home</kbd> te drukken. Om de *onderkant* (↓) te bereiken klik je op de pijl naar beneden aan de onderkant van de pagina of druk op <kbd>end</kbd>.
-
-        - Gebruik tijd als shortcuts. Klik op de tijd van het eerste bericht van een topic om naar het begin van de topic te gaan en op de tijd van het laatste bericht om naar het eind te gaan.
     welcome_user:
       subject_template: "Welkom bij %{site_name}!"
     welcome_invite:
@@ -893,11 +893,17 @@ nl:
         Mocht je de bovenstaande link niet kunnen aanklikken, probeer deze dan te kopiëren en te plakken in de adresbalk van je web browser.
   page_not_found:
     title: "De opgevraagde pagina bestaat niet op dit forum of is privé."
+    popular_topics: "Populair"
+    recent_topics: "Recent"
+    see_more: "Meer"
+    search_title: "Zoek op deze site"
+    search_google: "Google"
   login_required:
     welcome_message: |
       #[Welkom op het forum %{title}](#welcome)
       Leuk dat je interesse hebt in %{title}. Maak een account of log in om verder te gaan.
   terms_of_service:
+    title: "Algemene Voorwaarden"
     user_content_license: |
       User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
@@ -933,3 +939,12 @@ nl:
     body_blank: "geen tekst"
   color_schemes:
     base_theme_name: "Basis"
+  guidelines: "Regels"
+  privacy: "Privacy"
+  edit_this_page: "Wijzig deze pagina"
+  guidelines_topic:
+    title: "FAQ/Regels"
+  tos_topic:
+    title: "Algemene Voorwaarden"
+  privacy_topic:
+    title: "Privacy Voorwaarden"

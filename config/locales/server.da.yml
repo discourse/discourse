@@ -23,8 +23,19 @@ da:
   log_in: "Log på"
   via: "%{username} via %{site_name}"
   is_reserved: "er reservet"
+  errors:
+    messages:
+      too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
+    embed:
+      load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
+  bulk_invite:
+    file_should_be_csv: "Den uploadede fil skal være i .csv eller .txt format."
   backup:
     operation_already_running: "Der kører allerede en %{operation}. Kan ikke starte et nyt %{operation} job lige nu."
+    backup_file_should_be_tar_gz: "Backup filen skal være et .tar.gz arkiv."
+    not_enough_space_on_disk: "Der er ikke nok diskplads til at uploade denne backup."
+  not_logged_in: "Du skal logge på for at kunne dette."
+  read_only_mode_enabled: "Forummet er i \"kun læsning\" tilstand. Interaktioner er deaktiverede."
   too_many_replies:
     one: "Beklager, men nye brugere kan kun skrive 1 svar i hvert emne til at starte med."
     other: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
@@ -81,6 +92,7 @@ da:
   rss_description:
     latest: "Seneste emner"
     hot: "Populære emner"
+  too_late_to_edit: "Dette indlæg er gammelt og kan ikke længere redigeres eller slettes."
   groups:
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
@@ -97,6 +109,30 @@ da:
     until_posts:
       one: "indlæg"
       other: "%{count} indlæg"
+    new-topic: |
+      Velkommen til %{site_name} &mdash; **tak for at starte en ny samtale!**
+
+      Husk venligst mens du formulerer dit emne:
+
+      - Beskriver titlen nogenlunde præcist hvad man kunne forvente at finde, når man læser dit emne?
+
+      - Det første indlæg definerer dit emne: Hvad handler det om? Hvem kunne være interesserede i det? Hvorfor betyder det noget? Hvilke svar håber du at få fra dine læsere?
+
+      - Prøv at vælge de rigtige ord, så andre kan *finde* dit emne. Hvis det skal være i en kategori, så vælg den rigtige.
+
+      For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
+    new-reply: |
+      Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
+
+      Husk venligst mens du skriver dit svar:
+
+      - Forbedrer dit svar samtalen på en eller anden måde?
+
+      - Behandl dine meddebattører med den samme respekt, som du ønsker at blive behandlet med.
+
+      - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
+
+      For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
     avatar: |
       ### Hvad med et billede til din konto?
 
@@ -125,6 +161,12 @@ da:
       Beklager, men nye brugere er begrænset til %{newuser_max_replies_per_topic} svar i hvert emne.
 
       I stedet for at tilføje endnu et svar, bør du overveje at redigere et af dine eksisterende svar eller at besøge andre emner.
+    reviving_old_topic: |
+      ### Genopliv dette emne?
+
+      Det sidste svar på dette emne er nu over %{days} gammelt. dit svar vil trække dette emne til toppen af listen og vil påminde alle der tidligere have været med i samtalen.
+
+      Er du sikker på du vil vække dette emne til live igen?
   activerecord:
     attributes:
       category:
@@ -142,15 +184,36 @@ da:
               cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
         user:
           attributes:
+            password:
+              common: "er én af de 10000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
             ip_address:
               signup_not_allowed: "Tilmelding er ikke tilladt fra den aktuelle adresse."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "er ikke en gyldig fave"
   user_profile:
     no_info_me: "<div class='missing-profile'>“Om mig” feltet på din profil er pt. tomt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du at udfylde det</a>?</div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
+  vip_category_name: "Lounge"
+  vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
+  meta_category_name: "meta"
+  meta_category_description: "Diskussion omkring dette forum, dets organisering og hvordan det virker, samt hvordan vi kan forbedre det."
+  staff_category_name: "Ejere"
+  staff_category_description: "Privat gruppe for ejernes diskussioner. Emner er kun synlige for administratorer og moderatorer."
+  lounge_welcome:
+    title: "Velkommen i loungen"
   category:
     topic_prefix: "Kategoridefinition for %{category}"
     replace_paragraph: "[Erstat det første afsnit med en kort beskrivelse af din nye kategori. Denne tekst vises i området til valg af kategori, så prøv at holde den på under 200 tegn. Indtil du redigerer denne tekst eller opretter emner vil denne kategori ikke optræde på kategorisiden.]"
     post_template: "%{replace_paragraph}\n\nBrug de følgende afsnit til en længere beskrivelse samt til at fastlægge retningslinjer eller regler for kategorien.\n\nNogle ting som du kan overveje i svarene nedenfor:\n\n- Hvad er kategorien beregnet til? Hvorfor skal folk vælge denne kategori til deres emne?\n\n- Hvordan er den anderledes end de andre kategorier vi allerede har?\n\n- Har vi behov for denne kategori?\n\n- Skal vi kombinere denne kategori med en anden kategori eller dele den op i flere kategorier?\n"
+    errors:
+      uncategorized_parent: "Ukategoriserede  kan ikke have en overordnede kategori"
+      self_parent: "En underkategori kan ikke være sin egen overordnede kategori."
+      depth: "Du kan ikke indlejre en underkategori i en anden underkategori."
+    cannot_delete:
+      uncategorized: "Kan ikke slette Ukategoriseret"
+      has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
   trust_levels:
     newuser:
       title: "ny bruger"
@@ -257,11 +320,9 @@ da:
     continue: "Fortsæt til %{site_name}"
   change_email:
     confirmed: "Din e-mail-adresse er opdateret."
-    please_continue: "Fortsæt venligst til %{link}"
     error: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
   activation:
     already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
-    please_continue: "Din nye konto er bekræftet og du er nu logget ind. Fortsæt til %{link}"
     welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator skal godkende din nye konto før du kan tilgå forummet. Du får en e-mail, når din konto er godkendt!"
   post_action_types:
@@ -435,21 +496,13 @@ da:
     welcome_invite:
       title: "Velkomst: Inviteret bruger"
       description: "En privat besked som automatisk sendes til alle nye inviterede brugere når de accepterer en anden brugers invitation."
-    privacy_policy:
-      title: "Privatlivspolitik"
-      description: "Sitets privatlivspolitik. Lad feltet stå tomt for at bruge standarden."
-    faq:
-      title: "FAQ"
-      description: "Sitets FAQ. Lad feltet stå tomt for at bruge standarden."
     login_required_welcome_message:
       title: "Log ind påkrævet: Velkomstbesked"
       description: "Velkomstbesked som vises til anonyme brugere når indstillingen 'log ind påkrævet' er aktiveret."
     tos_user_content_license:
       title: "Servicevilkår: Indholdslicens"
-      description: "Teksten ti; indholdslicenssektionen af servicevilkårene."
     tos_miscellaneous:
       title: "Servicevilkår: Diverse"
-      description: "Teksten til diversesektionen af servicevilkårene."
     login_required:
       title: "Log ind påkrævet: Hjemmeside"
       description: "Teksten som vises til anonyme brugere når login er påkrævet på sitet."
@@ -490,6 +543,7 @@ da:
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     track_external_right_clicks: "Spor højreklik på eksterne links (f.eks.: åbn i ny tab); deaktiveret som standard fordi den omskriver URLer"
+    enable_badges: "Aktiver badge systemet (eksperimentielt)"
     version_checks: "Kontakt Discourse Hub for at søge efter opdateringer og vise versionsinfo på admin-dashboardet"
     port: "KUN FOR UDVIKLERE! ADVARSEL! Brug denne HTTP-port i stedet for standarden, som er port 80. Lad feltet stå tomt for at bruge standardværdien."
     force_hostname: "KUN FOR UDVIKLERE! ADVARSEL! Angiv et host-navn i URLen. Lad feltet stå tomt for at bruge standardværdien."
@@ -612,46 +666,6 @@ da:
   system_messages:
     post_hidden:
       subject_template: "Indlæg skjult på grund af feedback fra brugerne"
-    usage_tips:
-      text_body_template: |
-        Denne private besked har et par tips for at komme godt i gang med vores forum:
-
-        ### Bliv ved med at scrolle
-
-        Vi har ingen “næste side” knap eller sidetal. For at fortsætte læsningen, så fortsæt bare med at scrolle ned, så vil der blive indlæst mere indhold.
-
-        Efterhånden som der kommer nye indlæg, vil de automatisk dukke op nederst på siden. Ingen grund til at genindlæse siden for at se nye indlæg.
-
-        ### Hvordan svarer jeg?
-
-        - For at besvare et specifikt indlæg, klik på Svar-knappen nederst på indlægget.
-
-        - Hvis du ønsker at besvare det overordnede emne, mere end en specifik person, brug Svar-knappen nederst på siden.
-
-        - Hvis du ønsker at tage diskussionen i en anden retning, men holde forbindelsen til det oprindelige emne, så brug “Svar som nyt emne” til højre for indlægget.
-
-        ### Hvem taler til mig?
-
-        Når nogen svarer på dit indlæg, citerer dig eller nævner dit @navn, vil en notifikation dukke up øverst på siden. Klik på notifikationen for at se hvem der taler til dig, og hvor. Vær med i samtalen!
-
-        - For at nævne nogens navn, start med at skrive `@`, og en række forslag vil dukke op.
-
-        - For at citere et eksisterende indlæg, brug “Importér citat” knappen på redigerings-værktøjslinjen.
-
-        - For kun at citere et stykke af et indlæg, markér det, og klik så på Svar-knappen der dukker op ved markeringen.
-
-        ### Se det indlæg!
-
-        For at vise nogen at du synes om deres indlæg, klik på Like-knappen for neden på indlægget.
-        Hvis du ser et problem med et indlæg, så tøv ikke med at klikke på flag-knappen og lad moderatoren -- og andre debattører -- det vide.
-
-        ### Hvor er jeg?
-
-        - For at komme tilbage til forsiden, **klik ikonet øverst til venstre**.
-
-        - For at søge, klik på søgeikonet foroven.
-
-        - Mens du læser et emne, kan du altid springe til toppen ved at klikke på emnets titel øverst på siden. For at komme til *bunden*, klik på ned-pilen på status-viseren nederst på skærmen, eller klik på sidste indlæg-feltet på emne-opsummeringen under det første indlæg.
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:

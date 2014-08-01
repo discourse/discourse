@@ -732,9 +732,6 @@ sv:
           no_value: "Nej, bara det här inlägget"
       actions:
         flag: 'Flaga'
-        clear_flags:
-          one: "Ta bort flagga"
-          other: "Ta bort flaggningar"
         it_too:
           off_topic: "Flagga det också"
           spam: "Flagga det också"
@@ -940,7 +937,6 @@ sv:
           zero: "Olästa"
           one: "Olästa (1)"
           other: "Olästa ({{count}})"
-        help: "Trådar du tittar på eller följer med olästa inlägg"
       new:
         lower_title_with_count:
           one: "1 ny"
@@ -949,7 +945,6 @@ sv:
           zero: "Nya"
           one: "Nya (1)"
           other: "Nya ({{count}})"
-        help: "trådar som skapats sedan ditt senaste besök"
       posted:
         title: "Mina Inlägg"
         help: "trådar som du har postat i"
@@ -1026,23 +1021,11 @@ sv:
         title: "Flaggningar"
         old: "Gamla"
         active: "Aktiva"
-        agree_hide: "Godkänn (dölj inlägg + skicka PM)"
-        agree_hide_title: "Dölj detta inlägg och skicka automatiskt ett privat meddelande som ber användaren att redigera det."
-        defer: "Skjut upp"
-        defer_title: "Ingen åtgärd är nödvändig, skjut upp åtgärder för den här flaggan till ett senare datum, eller aldrig"
-        delete_post: "Ta bort inlägg"
-        delete_post_title: "Radera inlägg; om det är det första, radera tråden"
-        disagree_unhide: "Håll inte med (visa inlägg igen)"
-        disagree_unhide_title: "Ta bort alla flaggor från detta inlägg och gör det synligt igen"
-        disagree: "Håll inte med"
-        disagree_title: "Håll inte med om flagga, ta bort alla flaggor från detta inläg"
-        delete_spammer_title: "Radera användaren och alla hans/hennes inlägg och trådar."
         clear_topic_flags: "Klar"
         clear_topic_flags_title: "Tråden har undersökts och eventuella problem har lösts. Klicka på klar för att ta bort flaggorna."
         flagged_by: "Flaggad av"
         system: "System"
         error: "Någonting gick snett"
-        view_message: "Svara"
         no_results: "Det finns inga flaggor."
         topic_flagged: "Denna <strong>tråd</strong> har blivit flaggad."
         summary:
@@ -1378,7 +1361,6 @@ sv:
     lightbox:
       download: "ladda ned"
     keyboard_shortcuts_help:
-      title: 'Kortkommandon (experimentellt)'
       jump_to:
         title: 'Hoppa till'
         home: '<b>g</b> och sedan <b>h</b> hem (senaste)'

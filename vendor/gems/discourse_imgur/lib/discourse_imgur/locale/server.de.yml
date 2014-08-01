@@ -3,10 +3,10 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 de:
   site_settings:
-    enable_imgur: "Aktiviere die Imgur API zum Hochladen, so dass Dateien nicht lokal gehostet werden."
+    enable_imgur: "Aktiviere die imgur API zum Hochladen, sodass Dateien nicht lokal gehostet werden."
     imgur_client_id: "Deine imgur.com Client-ID. Wird benötigt, um Bilder hochzuladen."
-    imgur_client_secret: "Dein imgur.com-Geheimnis. Wird zurzeit für das Hochladen von Bildern nicht benötigt, könnte aber in Zukunft benötigt werden."
+    imgur_client_secret: "Dein imgur.com Client-Secret. Wird zurzeit für das Hochladen von Bildern nicht benötigt, könnte aber in Zukunft benötigt werden."

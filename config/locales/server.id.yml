@@ -146,7 +146,6 @@ id:
   site_settings:
     notify_mods_when_user_blocked: "Jika pengguna diblokir secara otomatis, kirimkan pesan kepada semua moderator."
     maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
-    warn_reviving_old_topic_age: "Saat seseorang menjawab topik yang telah berusia lebih dari hari yang ditentukan, sebuah peringatan akan ditampilkan untuk mencegah pengguna tersebut menghidupkan kembali diskusi lama. Untuk menonaktifkan fitur ini, set nilainya menjadi 0."
   user:
     email:
       blocked: "tidak diperbolehkan."

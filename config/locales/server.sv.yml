@@ -200,11 +200,9 @@ sv:
     continue: "Continue to %{site_name}"
   change_email:
     confirmed: "Din e-post har uppdaterats."
-    please_continue: "Var god fortsätt till %{link}"
     error: "Det uppstod ett fel med ändringen av din e-postadress. Adressen kanske redan används?"
   activation:
     already_done: "Tyvärr, denna kontoaktiveringslänk är inte längre giltig. Kanske är ditt konto redan aktiverat?"
-    please_continue: "Ditt nya konto är aktiverat, och du är nu inloggad. Fortsätt till %{link}"
     welcome_to: "Välkommen till %{site_name}!"
     approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få ett mail när ditt konto har godkänts!"
   post_action_types:
@@ -356,21 +354,13 @@ sv:
     welcome_invite:
       title: "Välkommen: Inbjuden användare"
       description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
-    privacy_policy:
-      title: "Integritetspolicy"
-      description: "Din sidas integritetspolicy. Lämna tom för standardpolicyn."
-    faq:
-      title: "FAQ"
-      description: "Din sidas FAQ. Lämna tom för standard-FAQ."
     login_required_welcome_message:
       title: "Inloggning krävs: Välkomstmeddelande"
       description: "Välkomstmeddelande som visas för utloggade användare när inställningen för 'inloggning krävs' är aktiv. "
     tos_user_content_license:
       title: "Användarvillkor: Innehållslicens"
-      description: "Texten för sektionen Innehållslicens i användarvillkoren."
     tos_miscellaneous:
       title: "Användarvillkor: Diverse"
-      description: "Texten för sektionen Diverse i användarvillkoren."
     login_required:
       title: "Inloggning krävs: Huvudsida"
     top:

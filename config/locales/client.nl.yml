@@ -355,13 +355,6 @@ nl:
       new_topic_duration:
         label: "Beschouw topics als nieuw wanneer"
         not_viewed: "je hebt ze nog niet bekeken"
-        last_here: "ze zijn gemaakt nadat je hier voor het laatst was"
-        after_n_days:
-          one: "ze de afgelopen dag gemaakt zijn"
-          other: "ze de afgelopen {{count}} dagen gemaakt zijn"
-        after_n_weeks:
-          one: "ze in de afgelopen week geplaatst zijn"
-          other: "ze in de afgelopen {{count}} weken gemaakt zijn"
       auto_track_topics: "Houd automatisch topics bij die je bezoekt"
       auto_track_options:
         never: "nooit"
@@ -438,7 +431,6 @@ nl:
     read_only_mode:
       enabled: "Dit forum is in read-only modus. Je kan rondkijken, maar sommige elementen zullen mogelijk niet goed werken."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
-    too_few_topics_notice: "Maak tenminste 4 publieke topics en 30 publieke berichten aan om de discussie op gang te krijgen. Nieuwe gebruikers kunnen geen vertouwensniveau verdienen als er geen inhoud voor ze is om te lezen."
     learn_more: "leer meer..."
     year: 'jaar'
     year_desc: 'topics die in de afgelopen 365 dagen gemaakt zijn'
@@ -457,6 +449,9 @@ nl:
       description_time: "Er zijn <b>{{count}}</b> reacties met een gemiddelde leestijd van <b>{{readingTime}} minuten</b>."
       enable: 'Samenvatting van topic'
       disable: 'Alle berichten'
+    deleted_filter:
+      enable: "Verberg Verwijderde Berichten"
+      disable: "Toon Verwijderde Berichten"
     private_message_info:
       title: "Privébericht"
       invite: "Nodig anderen uit..."
@@ -482,6 +477,7 @@ nl:
       username: "Gebruiker"
       password: "Wachtwoord"
       email_placeholder: "e-mail of gebruikersnaam"
+      caps_lock_warning: "Caps Lock staat aan"
       error: "Er is een onbekende fout opgetreden"
       blank_username_or_password: "Vul je email of gebruikersnaam in en je wachtwoord."
       reset_password: 'Herstel wachtwoord'
@@ -889,6 +885,7 @@ nl:
       controls:
         reply: "reageer op dit bericht"
         like: "vind dit bericht leuk"
+        has_liked: "Je vind dit bericht leuk"
         edit: "bewerk dit bericht"
         flag: "meld dit bericht of stuur er een notificatie over (alleen zichtbaar voor moderatoren en admins)"
         delete: "verwijder dit bericht"
@@ -906,9 +903,6 @@ nl:
         unwiki: "Bericht niet meer als wiki gebruiken"
       actions:
         flag: 'Markeer'
-        clear_flags:
-          one: "Verwijder markering"
-          other: "Verwijder markeringen"
         it_too:
           off_topic: "Markeer het ook"
           spam: "Markeer het ook"
@@ -1058,13 +1052,11 @@ nl:
       auto_close_units: "uren"
       email_in: "Adres voor inkomende mail:"
       email_in_allow_strangers: "Accepteer mails van anonieme gebruikers zonder account"
-      allow_badges_label: "Badges toestaan"
       edit_permissions: "Wijzig permissies"
       add_permission: "Nieuwe permissie"
       this_year: "dit jaar"
       position: "positie"
       default_position: "Standaard positie"
-      position_disabled: 'Categorieën zullen in volgorde van laatste activiteit worden getoond. Stel de "vaste categorie volgorde" instelling aan om de volgorde in te stellen van categorieën in lijsten.'
       parent: "Bovenliggende categorie"
       notifications:
         watching:
@@ -1155,7 +1147,6 @@ nl:
           zero: "Ongelezen"
           one: "Ongelezen (1)"
           other: "Ongelezen ({{count}})"
-        help: "topics die je volgt of bijhoudt met ongelezen berichten"
       new:
         lower_title_with_count:
           one: "1 nieuwe"
@@ -1165,7 +1156,6 @@ nl:
           zero: "Nieuw"
           one: "Nieuw (1)"
           other: "Nieuw ({{count}})"
-        help: "nieuwe topics sinds je laatse bezoek"
       posted:
         title: "Mijn berichten"
         help: "topics waarin je een bericht hebt geplaatst"
@@ -1242,24 +1232,12 @@ nl:
         title: "Meldingen"
         old: "Oud"
         active: "Actief"
-        agree_hide: "Mee eens (verberg bericht + stuur PM)"
-        agree_hide_title: "Verberg dit bericht en stuur de gebruiker automatisch een privé-bericht met het dringende verzoek het bericht aan te passen"
-        defer: "Stel uit"
-        defer_title: "Er hoeft nu niets gedaan te worden, stel acties op deze markering uit voor de toekomst. Of nooit."
-        delete_post: "Verwijder bericht"
-        delete_post_title: "Verwijder bericht; de hele topic als dit het eerste bericht is"
-        disagree_unhide: "Niet mee eens (toon bericht)"
-        disagree_unhide_title: "Verwijder elke markering van dit bericht en maak het weer zichtbaar"
-        disagree: "Niet mee eens"
-        disagree_title: "Niet eens met de markering, verwijder elke markering van dit bericht"
-        delete_spammer_title: "Verwijder de gebruiker en al zijn berichten en topics."
         clear_topic_flags: "Gedaan"
         clear_topic_flags_title: "Het topic is onderzocht en problemen zijn opgelost. Klik op Gedaan om de meldingen te verwijderen."
         flagged_by: "Gemarkeerd door"
         resolved_by: "Opgelost door"
         system: "Systeem"
         error: "Er ging iets mis"
-        view_message: "Reageer"
         no_results: "Er zijn geen markeringen"
         topic_flagged: "Deze <strong>topic</strong> is gemarkeerd."
         visit_topic: "Ga naar de topic om te zien wat er aan de hand is en om actie te ondernemen"
@@ -1703,6 +1681,7 @@ nl:
         display_name: Lange naam
         description: Omschrijving
         badge_type: Badgetype
+        badge_grouping: Groep
         granted_by: Toegekend door
         granted_at: Toegekend op
         save: Bewaar
@@ -1721,10 +1700,10 @@ nl:
         listable: Badge op de publieke badges pagina tonen
         enabled: Badge aanzetten
         icon: Icoon
+        preview: Badge Voorbeeld
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
-      title: 'Keyboard Shortcuts (experiment)'
       jump_to:
         title: 'Spring naar'
         home: '<b>g</b> dan <b>h</b> Home (Laatste)'
@@ -1778,9 +1757,15 @@ nl:
         other: "%{count} toegekend"
       select_badge_for_title: Kies een badge om als je titel te gebruiken
       no_title: "<geen titel>"
+      badge_grouping:
+        getting_started:
+          name: Aan De Slag
+        other:
+          name: Overige
       badge:
         editor:
           name: Auteur
+          description: Eerste berichtwijziging
         basic_user:
           name: Basis
         regular_user:
@@ -1791,14 +1776,18 @@ nl:
           name: Stamoudste
         welcome:
           name: Welkom
+          description: Like ontvangen.
         autobiographer:
           name: Autobiografist
         nice_post:
           name: Prima bericht
+          description: 10 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
         good_post:
           name: Goed bericht
+          description: 25 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
         great_post:
           name: Fantastisch bericht
+          description: 50 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
         first_like:
           name: Eerste like
           description: Hebt een bericht ge-vind-ik-leukt
@@ -1816,5 +1805,7 @@ nl:
           description: Een gebruiker geciteerd
         read_guidelines:
           name: Heeft de richtlijnen gelezen
+          description: Lees de <a href="/guidelines">community richtlijnen</a>
         reader:
           name: Lezer
+          description: Lees elk bericht in een topic met meer dan 100 berichten.

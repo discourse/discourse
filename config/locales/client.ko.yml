@@ -217,7 +217,7 @@ ko:
       trust_level: "레벨"
       notifications: "알림"
       disable_jump_reply: "댓글을 작성했을 때, 새로 작성한 댓글로 화면을 이동하지 않습니다."
-      dynamic_favicon: "Favicon으로 들어온 메시지 알림을 받습니다."
+      dynamic_favicon: "새로운 메시지 알림을 Favicon으로 보여줍니다. (실험적 기능)"
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "강조 표시된 텍스트에 대한 알림을 사용합니다"
       change: "변경"
@@ -331,11 +331,6 @@ ko:
       new_topic_duration:
         label: "새글을 정의해주세요."
         not_viewed: "아직 안본 글"
-        last_here: "마지막으로 읽은 이후에 새로운 글이 게시되었습니다."
-        after_n_days:
-          other: "지난 {{count}}일 사이에 작성된 새로운 글이 있습니다."
-        after_n_weeks:
-          other: "지난 {{count}}주 사이에 작성된 새로운 글이 있습니다."
       auto_track_topics: "내가 게시한 글을 추적할 수 있습니다."
       auto_track_options:
         never: "하지않음"
@@ -410,7 +405,7 @@ ko:
     read_only_mode:
       enabled: "관리자가 일기 전용모드를 활성화 하였습니다. 컨텐츠를 읽을 수는 있지만 활동할 수는 없습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
-    too_few_topics_notice: "최소한 5개의 공개 토픽과, 30개의 공개글을 작성해 주세요. 읽을 컨텐츠가 있어야 신규 사용자들이 신뢰 등급을 올릴 수 있습니다."
+    too_few_topics_notice: "토론을 시작하기 위해 최소 5개의 공개 토픽을 %{posts}개의 공개 포스트를 만들어주세요. 읽을거리가 없으면 새로운 사용자가 신뢰도를 올릴 수 없습니다."
     learn_more: "더 배우기"
     year: '년'
     year_desc: '지난 365일간 생성된 토픽'
@@ -823,7 +818,7 @@ ko:
     post:
       reply: "{{replyAvatar}} {{username}}님의 글에 답글 작성"
       reply_topic: "{{link}}에 답글 작성"
-      quote_reply: "답글을 인용"
+      quote_reply: "인용한 답글"
       edit: "{{replyAvatar}} {{username}}님의 글에 답글 편집"
       edit_reason: "Reason: "
       post_number: "{{number}}번째 게시물"
@@ -880,8 +875,8 @@ ko:
         unwiki: "Unwiki post"
       actions:
         flag: '신고'
-        clear_flags:
-          other: "신고 제거"
+        defer_flags:
+          other: "신고 연기"
         it_too:
           off_topic: "Flag it too"
           spam: "저도 신고합니다"
@@ -1014,13 +1009,11 @@ ko:
       auto_close_units: "hours"
       email_in: "incoming 메일 주소 수정"
       email_in_allow_strangers: "계정이 없는 익명 유저들에게 이메일을 받습니다."
-      allow_badges_label: "훈장 허용"
       edit_permissions: "권한 수정"
       add_permission: "권한 추가"
       this_year: "올해"
       position: "위치"
       default_position: "Default Position"
-      position_disabled: '카테고리는 활동성에 따라 정렬됩니다. 카테고리 순서를 변경하려면, "fixed category positions"설정을 켜 주세요.'
       parent: "부모 카테고리"
       notifications:
         watching:
@@ -1115,7 +1108,6 @@ ko:
           zero: "읽지 않은"
           one: "읽지 않은(1)"
           other: "읽지 않은({{count}})"
-        help: "추적중이지만 읽지 않은 게시글"
       new:
         lower_title_with_count:
           one: "1 new"
@@ -1125,7 +1117,6 @@ ko:
           zero: "새로운"
           one: "새로운(1)"
           other: "새로운({{count}})"
-        help: "마지막 방문 이후 새로운 글"
       posted:
         title: "내 게시물"
         help: "당신이 게시한 글"
@@ -1202,24 +1193,15 @@ ko:
         title: "신고"
         old: "지난"
         active: "활성화된"
-        agree_hide: "동의 (게시글 숨기기 + 개인 메시지 보내기)"
-        agree_hide_title: "이 게시물을 숨기고 사용자에게 편집하라는 개인 메시지를 보냅니다."
-        defer: "연기"
-        defer_title: "지금은 조치가 필요하지 않습니다, 이 신고에 대한 조치을 다음으로 연기하세요."
-        delete_post: "게시물 삭제"
-        delete_post_title: "게시글 삭제; 만약 첫 게시글이라면 토픽을 삭제"
-        disagree_unhide: "동의하지 않음 (게시글 보이기)"
-        disagree_unhide_title: "게시글의 신고를 삭제하고 보이는 상태로 변경"
-        disagree: "동의하지 않음"
-        disagree_title: "신고에 동의하지 않고, 이 게시글에 달린 모든 신고는 삭제"
-        delete_spammer_title: "사용자와 모든 토픽, 게시글 삭제."
+        agree_flag_hide_post: "동의 (포스트 숨기기 + 개인 메시지 보내기)"
+        agree_flag_hide_post_title: "이 게시물을 숨기고 자동으로 해당 사용자에게 이 게시물의 편집을 요청하는 개인 메시지를 보냄"
+        defer_flag: "연기"
         clear_topic_flags: "완료"
         clear_topic_flags_title: "이 토픽을 조사하였고 이슈는 해결되었습니다. 플래그를 지우기 위해 완료를 클리하세요"
         flagged_by: "신고 한 사람"
         resolved_by: "해결 by"
         system: "System"
         error: "뭔가 잘못 됐어요"
-        view_message: "답글"
         no_results: "신고가 없습니다."
         topic_flagged: "이 <strong>토픽</strong>은 신고 되었습니다."
         visit_topic: "처리하기 위해 토픽으로 이동"
@@ -1670,10 +1652,21 @@ ko:
         listable: 공개 훈장 페이지에 표시되는 배지입니다.
         enabled: 훈장 기능 사용
         icon: 아이콘
+        query: 훈장 Query(SQL)
+        target_posts: 포스트들을 타겟으로 하는 query
+        auto_revoke: 매일 회수 query를 실행한다.
+        show_posts: 훈장 페이지에서 훈장을 받게한 포스트를 보여줍니다.
+        preview: 훈장 미리보기
+        trigger: Trigger
+        trigger_type:
+          none: "매일 업데이트"
+          post_action: "사용자가 포스트에 액션을 했을 때"
+          post_revision: "사용자가 포스트를 수정거나 작성했을 때"
+          trust_level_change: "사용자의 신뢰도가 변했을 떄"
+          user_change: "사용자가 수정되거나 생성되었을 때"
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
-      title: 'Keyboard Shortcuts'
       jump_to:
         title: 'Jump To'
         home: '<b>g</b> then <b>h</b> Home (Latest)'
@@ -1738,24 +1731,34 @@ ko:
       badge:
         editor:
           name: 편집자
+          description: 첫 포스트 편집
         basic_user:
           name: 기본
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">부여되면</a> 커뮤니티의 기본 기능 수행 가능
         regular_user:
           name: 일반
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">부여되면</a> 초대 가능
         leader:
           name: 중견
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">부여되면</a> 토픽의 제목, 팔로우된 링크, 카테고리 변경 및 라운지 접근 가능
         elder:
           name: 원로
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">부여되면</a> 모든 포스트 수정, 보관, 내리기, 핀, 자르고 합치기 등 가능
         welcome:
           name: 환영합니다
+          description: 좋아요 받음
         autobiographer:
           name: 자서전 작가
+          description: 사용자의 <a href="/my/preferences">프로필</a> 정보를 작성함
         nice_post:
           name: 괜찮은 글
+          description: 작성한 글이 좋아요를 10개 받았습니다. 이 훈장은 중복 수여 가능합니다.
         good_post:
           name: 좋은 글
+          description: 작성한 글이 좋아요를 25개 받았습니다. 이 훈장은 중복 수여 가능합니다.
         great_post:
           name: 굉장히 좋은 글
+          description: 작성한 글이 좋아요를 50개 받았습니다. 이 훈장은 중복 수여 가능합니다.
         first_like:
           name: 첫 좋아요
           description: 처음으로 글에 '좋아요'를 했습니다.

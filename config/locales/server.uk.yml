@@ -175,11 +175,9 @@ uk:
     continue: "Продовжити у %{site_name}"
   change_email:
     confirmed: "Адресу вашої електронної скриньки оновлено."
-    please_continue: "Please continue to %{link}"
     error: "Під час зміни адреси Вашої електронної скриньки трапилася помилка. Можливо, ця адреса вже використовується?"
   activation:
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
-    please_continue: "Your new account is confirmed, and you are now logged in. Continue to %{link}"
     welcome_to: "Ласкаво просимо до сайта %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
   post_action_types:
@@ -357,21 +355,13 @@ uk:
     welcome_invite:
       title: "Вітання: Запрошений користувач"
       description: "Приватне повідомлення, що автоматично надсилається всім новим запрошеним користувачам, коли вони приймають запрошення взяти участь від іншого користувача."
-    privacy_policy:
-      title: "Політика конфіденційності"
-      description: "Політика конфіденційності Вашого сайта. Залиште порожнім, щоб використовувати політику за замовчуванням."
-    faq:
-      title: "ЧаПи"
-      description: "Часті Питання Вашого сайта. Залиште порожнім, щоб використовувати ЧаПи за замовчуванням."
     login_required_welcome_message:
       title: "Потрібно увійти: Вітальне повідомлення"
       description: "Вітальне повідомлення, що відображається для користувачів, що вийшли, коли налаштування 'потрібен вхід' увімкнено."
     tos_user_content_license:
       title: "Умови використання: Ліцензія користувацького Контенту"
-      description: "Текст розділу 'Ліцензія користувацького Контенту' Умов використання."
     tos_miscellaneous:
       title: "Умови використання: Різне"
-      description: "Текст розділу 'Різне' Умов використання."
     login_required:
       title: "Потрібно увійти: Головна сторінка"
       description: "Текст, що відображається для неавторизованих користувачів, коли потрібен вхід на сайт."
@@ -453,7 +443,6 @@ uk:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     reply_by_email_address: "Шаблон адреси електронної скриньки у формі для відповідей через електронну пошту, наприклад: %{reply_key}@reply.myforum.com"
-    email_in_address: "The email address the users can post new topics to. None means users can't post globally."
     delete_all_posts_max: "Максимальне число дописів, які можна видалити за один раз кнопкою \"Видалити всі дописи\". Якщо користувач має більше дописів, ніж це число, їх не можна буде видалити за один раз, і користувача також."
     username_change_period: "Кількість днів після реєстрації, протягом яких новим обліковим записам можна змінювати своє ім'я користувача (0 щоб заборонити зміну імені користувача)."
     email_editable: "Дозволити користувачам змінювати свою електронну скриньку після реєстрації."
@@ -462,7 +451,6 @@ uk:
     enable_mobile_theme: "Мобільні пристрої використовуватимуть тему, дружню для них, з можливістю перемикатися на повний сайт. Відключіть це, якщо хочете використовувати власну, повністю чутливу, таблицю стилів."
     short_progress_text_threshold: "Після того, як кількість дописів в темі перевищить це число, індикатор просування по темі показуватиме тільки номер поточного допису. Якщо Ви зміните ширину індикатора, Вам, ймовірно, знадобиться змінити це значення."
     default_code_lang: "Мова програмування для підсвітки синтаксису, що за замовчуванням застосовуватиметься для блоків коду GitHub (lang-auto, ruby, python і т. ін.)"
-    warn_reviving_old_topic_age: "When someone starts replying to a topic older than this many days, a warning will be displayed to discourage the user from reviving an old discussion. Disable by setting to 0."
     tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -536,47 +524,6 @@ uk:
   system_messages:
     post_hidden:
       subject_template: "Допис приховано через скарги спільноти"
-    usage_tips:
-      text_body_template: |
-        Це приватне повідомлення містить декілька коротких підказок, що допоможуть Вам розпочати:
-
-        ### Продовжуйте прокручувати
-
-        Тут немає кнопок з посиланнями на наступну сторінку або номер сторінки - щоб читати далі, просто прокручуйте екран вниз!
-
-        Нові відповіді автоматично з'являтимуться внизу теми.
-
-        ### Як мені відповісти?
-
-        - Щоб відповісти на окремий допис, натисніть кнопку "Відповісти" під цим дописом.
-
-        - Щоб відповісти загалом на всю *тему* обговорення, а не на окремий допис в темі, натисніть кнопку "Відповісти" в самому низу теми.
-
-        - Щоб змінити напрямок дискусії, але залишити зв'язок між дописами, натисніть "Відповісти у новій Темі" праворуч від допису.
-
-        ### Хто говорить до мене?
-
-        Коли хтось відповідає на Ваш допис, цитує Вас або згадує Ваше @Ім'я, вгорі сторінки на кнопці розмов з'являтиметься число ➀. Клацніть це число, щоб побачити, хто до Вас говорить, і де.
-
-        - Щоб зазначити чиєсь ім'я, введіть @ - і з'являться варіанти для автозаповнення.
-
-        - Щоб процитувати лише частину допису, виділіть її, потім натисніть кнопку "Відповісти на цитату", що з'явиться над виділенням.
-
-        - Щоб процитувати цілий допис, натисніть кнопку "Імпортувати цитату" на панелі інструментів редактора.
-
-        ### Погляньте на цей допис!
-
-        Щоб дати комусь знати, що Вам сподобався його допис, натисніть кнопку вподобати ♥ внизу допису. Якщо Ви побачили в дописі проблему, не соромтеся натиснути кнопку з прапорцем і приватно повідомити про це членів нашої команди.
-
-        ### Де я?
-
-        - Щоб в будь-яку мить повернутися на головну сторінку, **натисніть логотип у верхньому лівому кутку**, або скористайтеся кнопкою "Назад" ← Вашого веб-оглядача.
-
-        - Для пошуку, профілю, або карти сайта натисніть піктограми у верхньому правому кутку.
-
-        - Під час читання теми натисніть заголовок вгорі сторінки або клавішу <kbd>home</kbd>, щоб повернутися на її початок ↑. Щоб перейти в *кінець* ↓, натисніть стрілочку вниз на індикаторі прогресу по темі внизу сторінки, або натисніть клавішу <kbd>end</kbd>.
-
-        - Use times as entry shortcuts. You can always enter at the top of a topic via the first post date, and the bottom via the last post date.
     welcome_user:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
     welcome_invite:

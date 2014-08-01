@@ -354,13 +354,6 @@ it:
       new_topic_duration:
         label: "Considera un topic \"nuovo\" se"
         not_viewed: "non li hai ancora letti"
-        last_here: "sono stati creati dalla tua ultima visita"
-        after_n_days:
-          one: "sono stati creati nell'ultima giornata"
-          other: "sono stati creati negli ultimi {{count}} giorni"
-        after_n_weeks:
-          one: "sono stati creati nell'ultima settimana"
-          other: "sono stati creati nelle ultime {{count}} settimane"
       auto_track_topics: "Tieni traccia delle conversazioni lette"
       auto_track_options:
         never: "mai"
@@ -437,7 +430,6 @@ it:
     read_only_mode:
       enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "Il login è disabilitato quando il sito è in modalità di sola lettura."
-    too_few_topics_notice: "Crea almeno 5 topic pubblici e 30 post pubblici per avviare la discussione. I nuovi utenti non saranno in gradi di guadagnare livelli se non c'è contenuto per loro da leggere."
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'topic creati negli ultimi 365 giorni'
@@ -917,9 +909,6 @@ it:
         unwiki: "Rimuovi Wiki dal post"
       actions:
         flag: 'Contrassegna'
-        clear_flags:
-          one: "Elimina il contrassegno"
-          other: "Elimina i contrassegni"
         it_too:
           off_topic: "Contrassegna anche questo"
           spam: "Contrassegna anche questo"
@@ -1069,13 +1058,11 @@ it:
       auto_close_units: "ore"
       email_in: "Indirizzo email personalizzato:"
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
-      allow_badges_label: "Permetti badges"
       edit_permissions: "Modifica i permessi"
       add_permission: "Aggiungi un permesso"
       this_year: "Quest'anno"
       position: "posizione"
       default_position: "Posizione di default"
-      position_disabled: 'Le categorie verranno mostrate in ordine d''attività. Per controllare l''ordine delle categorie nella lista, attiva l''opzione "fixed category positions".'
       parent: "Categoria superiore"
       notifications:
         watching:
@@ -1170,7 +1157,6 @@ it:
           zero: "Non letti"
           one: "Non letti (1)"
           other: "Non letti ({{count}})"
-        help: "Topic che stai seguendo con post ancora da leggere"
       new:
         lower_title_with_count:
           one: "1 nuovo"
@@ -1180,7 +1166,6 @@ it:
           zero: "Nuovi"
           one: "Nuovi (1)"
           other: "Nuovi ({{count}})"
-        help: "Topic creati dalla tua ultima visita"
       posted:
         title: "I miei post"
         help: "Topic in cui hai postato"
@@ -1257,24 +1242,14 @@ it:
         title: "Segnalazioni"
         old: "Passate"
         active: "Attive"
-        agree_hide: "D'accordo (oscura il post e invia PM)"
-        agree_hide_title: "Oscura questo post e automaticamente segnala all'utente la necessità di modificarlo via PM"
-        defer: "Segnala"
-        defer_title: "Non c'è bisogno di nessuna azione al momento. Rinvia ogni azione su questa flag a un momento successivo, o a mai."
-        delete_post: "Cancella il post"
-        delete_post_title: "Cancella il post: se è il primo post, cancella il topic"
-        disagree_unhide: "Non d'accordo (mostra il post)"
-        disagree_unhide_title: "Rimuovi ogni contrassegno da questo post e rendilo nuovamente visibile"
-        disagree: "Non d'accordo"
-        disagree_title: "Disaccordo con il contrassegno, rimuovi ogni contrassegno da questo post"
-        delete_spammer_title: "Cancella questo utente, tutti i suoi post e le conversazioni"
+        agree_flag_hide_post: "D'accordo (oscura il post e invia PM)"
         clear_topic_flags: "Fatto"
         clear_topic_flags_title: "Il topic è stato esaminato e i problemi risolti. Clicca Fatto per rimuovere i contrassegni."
         flagged_by: "Segnalato da"
         resolved_by: "Risolto da"
         system: "sistema"
         error: "Qualcosa non ha funzionato"
-        view_message: "Rispondi"
+        reply_message: "Rispondi"
         no_results: "Non ci sono contrassegni"
         topic_flagged: "Questo <strong>topic</strong> è stato contrassegnato."
         visit_topic: "Visita il topic per effettuare un'azione"
@@ -1739,7 +1714,6 @@ it:
     lightbox:
       download: "Scaricamento"
     keyboard_shortcuts_help:
-      title: 'Scorciatoie da tastiera (sperimentale)'
       jump_to:
         title: 'Vai a'
         home: '<b>g</b> then <b>h</b> Home (Recenti)'
@@ -1815,6 +1789,7 @@ it:
           name: Veterano
         welcome:
           name: Benvenuto
+          description: Ricevuto un like.
         autobiographer:
           name: Autobiografo
         nice_post:
