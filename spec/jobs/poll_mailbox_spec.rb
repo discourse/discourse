@@ -67,7 +67,7 @@ describe Jobs::PollMailbox do
     Jobs::PollMailbox.expects(:handle_failure).never
   end
 
-  describe "processing email B" do
+  describe "processing emails" do
     let(:category) { Fabricate(:category) }
     let(:user) { Fabricate(:user) }
 
@@ -82,11 +82,11 @@ describe Jobs::PollMailbox do
       user.save
     end
 
-    describe "valid incoming email" do
+    describe "a valid incoming email" do
       let(:email) { MockPop3EmailObject.new fixture_file('emails/valid_incoming.eml')}
       let(:expected_post) { fixture_file('emails/valid_incoming.cooked') }
 
-      it "posts a new topic with the correct content" do
+      it "posts a new topic" do
         expect_success
 
         poller.handle_mail(email)
@@ -100,7 +100,7 @@ describe Jobs::PollMailbox do
       end
     end
 
-    describe "valid reply" do
+    describe "a valid reply" do
       let(:email) { MockPop3EmailObject.new fixture_file('emails/valid_reply.eml')}
       let(:expected_post) { fixture_file('emails/valid_reply.cooked')}
       let(:topic) { Fabricate(:topic) }
@@ -111,28 +111,37 @@ describe Jobs::PollMailbox do
         EmailLog.create(to_address: 'jake@email.example.com',
                         email_type: 'user_posted',
                         reply_key: '59d8df8370b7e95c5a49fbf86aeb2c93',
+                        user: user,
                         post: first_post,
                         topic: topic)
       end
 
-      pending "creates a new post with the correct content" do
+      it "creates a new post" do
         expect_success
 
         poller.handle_mail(email)
 
-        new_post = Post.where(topic: topic, post_number: 2)
+        new_post = Post.find_by(topic: topic, post_number: 2)
         assert new_post.present?
-
         assert_equal expected_post.strip, new_post.cooked.strip
 
         assert email.deleted?
       end
     end
 
+    describe "without an email log" do
+      let(:email) { MockPop3EmailObject.new fixture_file('emails/valid_reply.eml')}
 
+      it "handles an EmailLogNotFound error" do
+        poller.expects(:handle_failure).with { |mail_string, ex| ex.is_a? Email::Receiver::EmailLogNotFound }
+
+        poller.handle_mail(email)
+        assert email.deleted?
+      end
+    end
   end
 
-  describe "processing email" do
+  describe "processing email A" do
 
     let!(:receiver) { mock }
     let!(:email_string) { fixture_file("emails/valid_incoming.eml") }
