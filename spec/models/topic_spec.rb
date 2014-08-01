@@ -1411,4 +1411,14 @@ describe Topic do
     topic = Topic.find(topic.id)
     topic.custom_fields.should == {"bob" => "marley", "jack" => "black"}
   end
+
+  it "doesn't validate the title again if it isn't changing" do
+    SiteSetting.stubs(:min_topic_title_length).returns(5)
+    topic = Fabricate(:topic, title: "Short")
+    topic.should be_valid
+
+    SiteSetting.stubs(:min_topic_title_length).returns(15)
+    topic.last_posted_at = 1.minute.ago
+    topic.save.should == true
+  end
 end
