@@ -20,10 +20,35 @@ ko:
   posts: "게시물들"
   loading: "로딩중"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  log_in: "로그인"
   via: "%{site_name}의 %{username}"
   is_reserved: "예약됨"
+  errors:
+    messages:
+      too_long_validation: "%{length}자를 입력하셨습니다. 최대 %{max}자까지 입력 가능합니다. "
+    embed:
+      load_from_remote: "글 로딩 중 오류가 발생하였습니다."
+  bulk_invite:
+    file_should_be_csv: "CSV 또는 TXT형식의 파일을 업로드해야 합니다."
   backup:
     operation_already_running: "현재 %{operation} 작업중입니다. %{operation} 작업을 지금 시작할 수 없습니다."
+    backup_file_should_be_tar_gz: "백업 파일은 .tar.gz형식의 파일이어야 합니다."
+    not_enough_space_on_disk: "백업을 업로드할 디스크 공간이 충분하지 않습니다."
+  not_logged_in: "로그인된 사용자만 사용 가능합니다."
+  read_only_mode_enabled: "현재 읽기 전용 모드입니다."
+  too_many_replies:
+    other: "죄송합니다. 신규 사용자들은 같은 주제에 %{count}개까지만 댓글을 달 수 있습니다."
+  embed:
+    start_discussion: "토론 시작"
+    continue: "토론 계속하기"
+    more_replies:
+      other: "추가 %{count} 개 댓글"
+    loading: "토론 불러오는 중..."
+    permalink: "Permalink"
+    imported_from: "%{link}에 있는 원글과 유사한 주제를 가진 토론 주제입니다."
+    in_reply_to: "▶ %{username}"
+    replies:
+      other: "댓글 %{count}개"
   too_many_mentions:
     zero: "죄송합니다. 당신은 다른 사용자를 언급할 수 없습니다."
     one: "죄송합니다. 당신은 한 게시물에서 한 사용자만 언급할 수 있습니다."
@@ -50,21 +75,27 @@ ko:
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
   is_invalid: "사용할 수 없습니다. 조금더 자세하게 적어주세요."
   next_page: "다음 페이지 →"
+  prev_page: "← 이전 페이지"
+  page_num: "%{num}페이지 "
   by: "By"
   topics_in_category: "'%{category}' 카테고리의 토픽들"
   rss_posts_in_topic: "'%{topic}' 의 RSS 피드"
   rss_topics_in_category: "'%{category}' 카테고리의 RSS 피드 "
   author_wrote: "%{author} 게시:"
+  num_posts: "게시글 수:"
+  num_participants: "참여자:"
+  read_full_topic: "전체 토픽 읽기"
   private_message_abbrev: "개인 메시지"
   rss_description:
     latest: "최신 토픽"
     hot: "인기 토픽들"
+  too_late_to_edit: "이 글은 작성된 지 너무 오랜 기간이 지났습니다. 수정 또는 삭제할 수 없습니다."
   groups:
     errors:
       can_not_modify_automatic: "자동 그룹은 수정 하실 수 없습니다."
     default_names:
       admins: "운영자들"
-      moderators: "중간 관리자들"
+      moderators: "운영자"
       staff: "스태프"
       trust_level_1: "신뢰도 1"
       trust_level_2: "신뢰도 2"
@@ -72,6 +103,32 @@ ko:
       trust_level_4: "신뢰도 4"
       trust_level_5: "신뢰도 5"
   education:
+    until_posts:
+      other: "%{count} 글"
+    new-topic: |
+      %{site_name}에서 새로운 대화를 시작하여 주셔서 감사합니다. 토픽을 생성하시기 전에 이것들을 주의하여 주세요.
+
+      - 제목이 토픽을 잘 설명하고 있나요? 다른 사용자들의 관심을 끌기에 충분한가요?
+
+      - 무엇에 대한 토픽인가요? 어떤 사용자들에게 관심을 끌까요? 이 토픽이 왜 중요한가요? 어떤 반응들을 기대하고 계신가요?
+
+      - 다른 사용자들이 찾을 수 있도록 찾기 쉬운 단어들을 토픽에 포함하여 주세요. 알맞은 카테고리를 선택하는 것은 큰 도움이 됩니다.
+
+      - 더 자세한 사항은 [커뮤니티 가이드라인](/guidelines)을 찾아주세요.
+
+      이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다.
+    new-reply: |
+      %{site_name}에 오신것을 환영합니다!
+
+      - 당신의 답글이 주제에 도움이 될 수 있도록 참여해주세요.
+
+      - 커뮤니티 사용자들의 의견을 존중하여 주시고 그들에게 예의를 갖춰주세요.
+
+      - 건설적인 비판은 환영입니다, 하지만 사용자들이 아닌 그들의 아이디어를 비판해주세요.
+
+      더 자세한 사용방법은 [커뮤니티 가이드라인](/guidelines)를 참조하여 주세요.
+
+      이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다.
     avatar: |
       ### 당신의 프로필에 새로운 사진을 등록해보는건 어떨까요??
 
@@ -94,12 +151,23 @@ ko:
       이 주제에 %{percent}% 이상의 답글을 다셨군요.
 
       다른 유저들도 그들의 의견을 나눌 수 있도록 충분한 시간을 기다리고 계신가요?
+    too_many_replies: |
+      ### 댓글 개수 제한에 걸렸습니다.
+
+      죄송합니다. 신규 사용자들은 같은 주제에 %{count}개까지만 댓글을 달 수 있습니다.
+      댓글을 다는 대신 이전 댓글의 내용을 수정하거나, 다른 토픽을 읽어보는 건 어떨까요?
+    reviving_old_topic: |
+      ### 이 토픽을 부활시키겠습니까?
+
+      이 토픽에 달린 마지막 댓글은 이미 %{days}일 이전에 달렸습니다. 댓글을 새로 달면 이 토픽이 글 목록의 최상단으로 올라가게 되고, 글에 참여한 사람들에게 알림이 됩니다.
+
+      이 토픽에 대한 논의를 재개하고 싶으신 게 확실하신가요?
   activerecord:
     attributes:
       category:
         name: "카테고리 이름"
       post:
-        raw: "Body"
+        raw: "본문"
     errors:
       messages:
         is_invalid: "사용할 수 없습니다. 조금 더 자세하게 적어주세요."
@@ -111,15 +179,62 @@ ko:
               cant_send_pm: "그 사용자에게 개인 메세지를 보낼 수 없습니다."
         user:
           attributes:
+            password:
+              common: "가장 자주 사용되는 10000개의 비밀번호 중 하나압니다. 보다 안전한 비밀번호를 사용하세요."
             ip_address:
               signup_not_allowed: "이 계정에서는 가입 하실 수 없습니다."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "유효한 색상이 아닙니다."
   user_profile:
     no_info_me: "<div class='missing-profile'>프로필이 현재 비어있습니다. <a href='/users/%{username_lower}/preferences/about-me'>지금 작성하시겠습니까?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name}님께서는 아직 프로필을 작성하지 않으셨습니다</div>"
+  vip_category_name: "라운지"
+  vip_category_description: "신뢰 등급 3 혹은 그 이상의 회원만 입장가능한 카테고리"
+  meta_category_name: "메타"
+  meta_category_description: "이 포럼 자체에 대한 논의를 하는 곳입니다."
+  staff_category_name: "스태프"
+  staff_category_description: "스태프들의 논의를 위한 비공개 카테고리입니다. 관리자 및 운영자에게만 보입니다."
+  assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the forum design. Don't delete it!\n\nHere's how:\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nAlso, if you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
+  lounge_welcome:
+    title: "라운지에 오신 것을 환영합니다."
+    body: |2
+
+      Congratulations! :confetti_ball:
+
+      If you can see this topic, you were recently promoted to [trust level 3 (leader)][trust].
+
+      > Leaders are some of the most active and prolific contributors. They set a positive example for the community through their actions and their posts.
+
+      You can now &hellip;
+
+      * Edit the title of any topic
+      * Change the category of any topic
+      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+      * Access a private Lounge category only visible to users at trust level 3 and higher
+
+      Here's the [current list of users who made it to trust level 3](/badges/3/leader). Be sure to say hi!
+
+      Thanks for being an important part of this community!
+
+      (For more information on trust levels, [see this topic][trust]. Please note that only members who currently meet the selection criteria will remain at trust level 3. )
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "'%{category}' 카테고리의 설명"
     replace_paragraph: "[이 첫번째 문단을 당신의 새로운 카테고리의 짧은 설명으로 바꿔주세요. 이 지침은 카테고리 선택 화면에 나타날 것입니다. 200자 이하로 적어주세요.]"
     post_template: "%{replace_paragraph}\n\n이 공간은 긴 설명을 사용하여 주세요. 또한 카테고리 가이드라인이나 룰도 이 공간을 이용해주세요.\n\n몇 가지 답글에 관련하여 고려해봐야 할 것들:\n\n- 무엇을 위한 카테고리인가? 왜 사용자들이 이 카테고리를 필요로 하겠는가?\n\n- 이미 가지고있는 다른 카테고리와 어떻게 다른가?\n\n- 정말 이 카테고리가 필요한가?\n\n- 다른 카테고리와 합병이 필요한가 아니면 더욱 자세한 카테고리로 나눌 필요가 있는가?\n"
+    errors:
+      uncategorized_parent: "Uncategorized 카테고리는 부모 카테고리를 가질 수 없습니다."
+      self_parent: "하위 카테고리의 부모는 자신이 될 수 없습니다."
+      depth: "하위 카테고리는 계층 구조로 사용할 수 없습니다."
+    cannot_delete:
+      uncategorized: "Uncategorized는 삭제할 수 없습니다."
+      has_subcategories: "하위 카테고리가 있어, 삭제할 수 없습니다."
+      topic_exists:
+        other: "%{count}개의 토픽이 이 카테고리 내에 있어 삭제할 수 없습니다. 가장 오래된 토픽은 %{topic_link}입니다."
+      topic_exists_no_oldest: "%{count}개의 토픽이 이 카테고리 내에 있어 삭제할 수 없습니다."
   trust_levels:
     newuser:
       title: "새로운 사용자"
@@ -134,48 +249,106 @@ ko:
     change_failed_explanation: "당신은 %{user_name} 사용자를 %{new_trust_level} 으로 강등시키려 하였습니다만, 신뢰도는 이미 %{current_trust_level} 입니다. %{user_name} 사용자의 레벨은 %{current_trust_level} 로 유지됩니다."
   rate_limiter:
     too_many_requests: "지금 하시려는 행동에는 하루 제한이 있습니다. %{time_left} 동안 기다리시고 다시 시도해 주세요."
+    hours:
+      other: "%{count}시간"
+    minutes:
+      other: "%{count}분"
+    seconds:
+      other: "%{count}초"
   datetime:
     distance_in_words:
       half_a_minute: "30초 전"
+      less_than_x_seconds:
+        other: "%{count}초 전"
+      x_seconds:
+        other: "%{count}초"
+      less_than_x_minutes:
+        other: "%{count}분 전"
+      x_minutes:
+        other: "%{count}분"
+      about_x_hours:
+        other: "%{count}시간"
+      x_days:
+        other: "%{count}일"
+      about_x_months:
+        other: "%{count}달"
+      x_months:
+        other: "%{count}달"
+      about_x_years:
+        other: "%{count}년"
+      over_x_years:
+        other: "%{count}년 보다 전"
+      almost_x_years:
+        other: "약 %{count}년"
     distance_in_words_verbose:
       half_a_minute: "방금 전"
+      less_than_x_seconds:
+        other: "방금 전"
+      x_seconds:
+        other: "%{count}초 전"
+      less_than_x_minutes:
+        other: "%{count}분 보다 이전"
+      x_minutes:
+        other: "%{count}분 전"
+      about_x_hours:
+        other: "%{count}시간 전"
+      x_days:
+        other: "%{count}일 전"
+      about_x_months:
+        other: "약 %{count}달 전"
+      x_months:
+        other: "${count}달 전"
+      about_x_years:
+        other: "약 %{count}년 전"
+      over_x_years:
+        other: "%{count}년 보다 이전"
+      almost_x_years:
+        other: "약 %{count}년 전"
   password_reset:
     no_token: "토큰이 만료되었습니다. 비밀번호를 초기화하여 주세요."
     choose_new: "새로운 비밀번호를 적어주세요."
+    choose: "비밀번호를 선택해 주세요"
     update: '비밀번호 변경'
+    save: '비밀번호 설정'
     title: '비밀번호 초기화'
     success: "비밀번호를 성공적으로 변경하고 지금 로그인 되었습니다."
     success_unapproved: "비밀번호를 성공적으로 변경하였습니다."
     continue: "%{site_name}으로 가기"
   change_email:
     confirmed: "이메일 주소가 변경되었습니다."
-    please_continue: "%{link} 으로 가기"
+    please_continue: "%{site_name}으로 가기"
     error: "이메일 주소를 변경하는데 문제가 있습니다. 주소가 이미 사용되고 있나요?"
   activation:
+    action: "계정 활성화"
     already_done: "죄송합니다. 이 계정 확인 링크는 더 이상 유효하지 않습니다."
-    please_continue: "계정이 활성화되었고 이제 당신은 로그인 되었습니다. 계속하시려면 이 링크를 클릭하세요: %{link}"
+    please_continue: "계정이 활성화되었고, 로그인 되었습니다."
+    continue_button: "%{site_name}으로 가기"
     welcome_to: "%{site_name}에 오신것을 환영합니다."
-    approval_required: "이 포럼을 사용하기 위해선 중간 관리자가 수동으로 당신의 새로운 계정을 수락해야 합니다. 계정이 수락이 되면 자동으로 이메일이 발송됩니다."
+    approval_required: "이 포럼을 사용하기 위해선 운영자가 수동으로 당신의 새로운 계정을 수락해야 합니다. 계정이 수락이 되면 자동으로 이메일이 발송됩니다."
   post_action_types:
     off_topic:
       title: '오프 토픽'
+      description: '이 글은 현재 주제와 전혀 맞지 않습니다.'
       long_form: '오프 토픽으로 신고하기'
     spam:
       title: '스팸'
+      description: '이 게시물은 광고성으로 판단되어집니다. 이 글은 현재 대화에서 유용하지도, 관련되지 않습니다.'
       long_form: '스팸으로 신고하기'
     inappropriate:
       title: '부적절함'
+      description: '이 게시물은 다른 사용자들에게 공격적이나 모욕적 또는 침해적인 글을 담고 있습니다.'
       long_form: '부적절함으로 신고하기'
     notify_user:
       title: '{{username}}에게 알리기'
       description: '이 게시물은 다른 사용자에게 직접적이고, 개인적인 이야기거리를 포함하고 있습니다.'
       long_form: '신고한 사용자'
-      email_title: '님께서 ''%{title}''에 관한 개인 메세지를 보냈습니다'
+      email_title: '님께서 %{title}에 관한 개인 메세지를 보냈습니다'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: '중간 관리자에게 알리기'
-      long_form: '알려진 중앙 관리자'
-      email_title: '"%{title}" 게시물이 중앙 관리자의 주의가 필요합니다'
+      title: '운영자에게 알리기'
+      description: '이 게시물은 <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, 또는 다른 이유에서 운영자의 주의가 필요합니다.'
+      long_form: '운영자에게 알림'
+      email_title: '"%{title}" 게시물에 대한 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: '북마크'
@@ -189,16 +362,39 @@ ko:
       title: '투표'
       description: '투표하기'
       long_form: '투표 됨'
+  topic_flag_types:
+    spam:
+      title: '스팸'
+      description: '광고글입니다.'
+      long_form: '스팸으로 신고하였습니다.'
+    inappropriate:
+      title: '부적절함'
+      description: '이 게시물은 평균적인 사람들의 관점에서 볼 때 공격적이나 모욕적인 글을 담고 있거나,
+
+        <a href="/guidelines">커뮤니티 가이드라인</a>에 맞지 않습니다.'
+      long_form: '부적절함으로 신고하였습니다.'
+    notify_moderators:
+      title: '운영자에게 알림'
+      description: '이 게시물은 <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, 또는 기타 다른 이유에서 운영자의 주의가 필요합니다.'
+      long_form: '운영자에게 알림'
   flagging:
+    you_must_edit: '<p>회원님의 포스트가 신고접수 되었습니다. <a href="/my/private-messages">개인 메시지</a>를 확인해주세요.</p>'
     user_must_edit: '<p>신고 접수된 글은 보이지 않습니다.</p>'
   archetypes:
     regular:
       title: "자주보는 토픽"
+    banner:
+      message:
+        make: "해당 토픽이 배너에 걸렸습니다. 해당 사용자가 내리기 전까지 모든 페이지 상단에 보여집니다."
+        remove: "해당 토픽이 배너에서 내려왔습니다. 더 이상 모든 페이지 상단에 보여지지 않습니다."
   unsubscribed:
-    title: '구독 해지'
+    title: '구독 해지"'
     description: "구독이 해지되었습니다."
     oops: "만약 실수였다면 아래를 클릭하여주세요."
-    not_found_description: "죄송합니다. 구독 해지 할 수 없습니다. 이메일에 있는 링크가 만료되었을 수도 있습니다."
+    error: "구독 해지하는데 문제가 발생하였습니다."
+    preferences_link: "<a href='/my/preferences'>환경설정 페이지</a>에서 요약 메일도 구독 해지할 수 있습니다."
+    different_user_description: "요약 메일을 받는 다른 사용자로 로그인되어 있습니다. 로그아웃 한 후 다시 시도해주세요."
+    not_found_description: "죄송합니다. 구독 해지할 수 없습니다. 이메일의 구독해지 링크 기한이 만료되었을 수도 있습니다."
   resubscribe:
     action: "재구독"
     title: "재구독 되었습니다!"
@@ -253,11 +449,11 @@ ko:
       xaxis: "일"
       yaxis: "개인 메세지 수"
     moderator_warning_private_messages:
-      title: "중간 관리자 주의"
+      title: "운영자 주의"
       xaxis: "일"
       yaxis: "개인 메세지 수"
     notify_moderators_private_messages:
-      title: "중간 관리자 알리기"
+      title: "운영자에게 알리기"
       xaxis: "일"
       yaxis: "개인 메세지 수"
     notify_user_private_messages:
@@ -287,10 +483,13 @@ ko:
     sidekiq_warning: 'Sidekiq 이 현재 실행되고 있지 않습니다. Sidekiq는 이메일 전송 같은 많은 작업들을 비동기식으로 처리합니다. 적어도 하나의 sidekiq 프로세서를 실행시켜 주세요. <a href="https://github.com/mperham/sidekiq">Sidekiq 배우기</a>.'
     queue_size_warning: '큐 작업의 수가 %{queue_size} 개 입니다. 너무 많습니다. Sidekqi에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요.'
     memory_warning: '당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요.'
+    enable_google_logins_warning: "곧 서비스 종료될 Google OpenID 인증 버젼을 사용 중입니다. Google은 해당 OpenID인증 서비스를 2015sus 4월 20일 부로 종료합니다. 가능한 빨리 Google OAuth2 인증을 사용해주세요. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>자세히 알아보기</a>"
+    both_googles_warning: "이 사이트 세팅에서 Google OpenID 인증과 Google OAuth2 인증을 동시에 사용하기로 체크하였습니다. Google OpenID인증 설정(enable_google_logins)을 비활성화 해주세요."
+    google_oauth2_config_warning: 'Google OAuth2 인증을 통한 로그인과 회원가입(enable_google_oauth2_logins)을 설정하였습니다. 하지만, 아직 Client ID와 Client Secret을 입력하지 않았습니다. <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세히 알아보기</a>.'
     facebook_config_warning: '당신의 서버는 페이스북을 통한 가입을 설정하였습니다(enable_facebook_logins), 그러나 app id와 app secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">가이드 읽어보기</a>.'
     twitter_config_warning: '당신의 서버는 트위터를 통한 가입을 설정하였습니다(enable_twitter_logins), 그러나 key 와 secret 값이 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">가이드 읽어보기</a>.'
     github_config_warning: '당신의 서버는 Github를 통한 가입을 설정하였습니다(enable_github_logins), 그러나 client id 와 secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">가이드 읽어보기</a>.'
-    s3_config_warning: 's3를 이용한 서버 설정이 완료 되지 않았습니다. (s3_access_key_id, s3_secret_access_key, s3_upload_bucket). <a href="/admin/site_settings">사이트 설정</a> 에 가셔서 업데이트 하세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?" 읽어 보세요.</a>'
+    s3_config_warning: '파일을 Amazon S3로 업로드 하도록 설정하였습니다. 하지만 아직 Access key id(s3_access_key_id), Secret access key(s3_secret_access_key) 혹은 S3 bucket(s3_upload_bucketat) 중 하나를 설정하지 않았습니다. <a href="/admin/site_settings">사이트 세팅</a>에서 설정해주세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세히 알아보기("How to set up image uploads to S3?")</a>.'
     image_magick_warning: '큰 이미지의 섬네일 만드는 설정이 있지만, ImageMagick가 설치되지 않았습니다. <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">최신버전 받기</a>.'
     failing_emails_warning: '%{num_failed_jobs} 개의 이메일 잡이 실패하였습니다. config.action_mailer 설정이 정확한지 config/environments/production.rb 파일을 체크해보세요.'
     default_logo_warning: "당신은 사이트의 커스텀 로고를 사용하지 않고 있습니다. logo_url, logo_small_url, 와 favicon_url 를 <a href='/admin/site_settings'>사이트 설정</a> 에서 설정하세요."
@@ -318,81 +517,299 @@ ko:
     welcome_invite:
       title: "환영: 초대된 사용자"
       description: "새로운 사용자가 초대고 수락하면 자동으로 개인 메시지를 보냅니다."
-    privacy_policy:
-      title: "개인정보 취급방침"
-      description: "당신의 사이트에 개인정보 취급방침입니다. 기본 설정으로 하려면 빈칸으로 놔두세요."
-    faq:
-      title: "FAQ"
-      description: "당신의 사이트에 FAQ입니다. 기본 설정으로 하려면 빈칸으로 놔두세요."
     login_required_welcome_message:
       title: "로그인 필요: Welcome Message"
       description: "'login required' 설정이 활성화 되어있으면 웰컴 메시지가 로그인 되지 않은 사용자들에게 보여집니다."
     tos_user_content_license:
       title: "서비스 약관: 컨텐츠 라이센스"
-      description: "서비스 약관의 컨텐츠 라이센스에 관한 텍스트"
+      description: "DEPRECATED. 사용되지 않음"
     tos_miscellaneous:
       title: "서비스 약관: 기타"
-      description: "서비스 약관의 기타에 관한 텍스트"
+      description: "DEPRECATED. 사용되지 않음"
     login_required:
       title: "로그인 필요: 홈페이지"
       description: "이 텍스트는 로그인이 필요하지만 인증되지 않은 사용자들에게 보여집니다."
+    head:
+      title: "HTML head"
+      description: "<head></head> 태그 사이에 추가할 HTML"
+    top:
+      title: "페이지 상단"
+      description: "모든 페이지 상단에 추가할 HTML(헤더 아래, 네비게이션이나 토픽 제목 위)."
+    bottom:
+      title: "페이지 하단"
+      description: "모든 페이지 하단에 추가할 HTML"
+    tos_signup_form_message:
+      title: "회원가입 양식: 서비스 약관 메시지"
+      description: "tos_accept_required(약관 필요) 설정이 활성화 되어있다면, 이 메시지는 회원가입 양식 위의 체크박스 옆에 나타납니다."
+    notification_email_top:
+      title: "알림 메일 상단"
+      description: "모든 알람 메일 상단에 보여질 메시지"
   site_settings:
     default_locale: "Discourse 인스턴스가 사용하는 기본 언어 (ISO 639-1 Code)"
+    allow_user_locale: "사용자에게 자신이 원하는 언어를 선택할 수 있는 옵션을 제공한다."
+    min_post_length: "포스트의 최소 글자 수"
+    min_private_message_post_length: "개인 메시지를 보내기 위한 최소 글자 수"
+    max_post_length: "포스트의 최대 글자 수"
+    min_topic_title_length: "토픽 제목의 최소 글자 수"
+    max_topic_title_length: "토픽 제목의 최대 글자 수"
+    min_private_message_title_length: "개인 메시지 제목의 최소 글자 수"
+    min_search_term_length: "검색을 하기 위한 최소 글자 수"
     allow_uncategorized_topics: "카테고리없이 토픽이 생성되는 것을 허용한다."
-    unique_posts_mins: "How many minutes before a user can make a post with the same content again"
-    queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
-    category_featured_topics: "Number of topics displayed per category in the /categories page"
+    uncategorized_description: "'카테고리 없음' 카테고리의 설명, 설명을 쓰지 않으려면 빈칸으로 놔둔다."
+    allow_duplicate_topic_titles: "같은 제목의 동일한 토픽을 허용한다."
+    unique_posts_mins: "같은 컨텐츠를 다시 포스트 할 수 있는 기간(분)"
+    educate_until_posts: "새로운 사용자가 포스트를 작성할 시 포스트 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 포스트 개수"
+    title: "title 태그에 쓰일, 이 싸이트의 짧은 제목"
+    site_description: "이 사이트를 한 문장으로 설명해 주세요. meta description 태그에 사용됩니다."
+    contact_email: "이 사이트에 대한 주 이메일 주소. discourse.org로부터 중요한 업데이트에 대한 정보가 이 메일 주소로 보내질 것입니다."
+    company_full_name: "정책이나 약관에 사용되는 이 사이트를 운영하는 회사의 전체 이름"
+    company_short_name: "정책이나 약관에 사용되는 이 사이트를 운영하는 회사의 축약 이름"
+    company_domain: "정책이나 약관에 사용되는 이사이트를 운영하는 회사의 도메인 이름"
+    queue_jobs: "오직 개발자만!! 주의!! By default, queue jobs in sidekiq. If disabled, your site will be broken."
+    crawl_images: "제대로된 넓이와 높이를 추가하기 위해, 원격 URL로 부터 이미지를 회수해온다."
+    download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경한다. 이미지가 깨지는 것을 막을 수 있다."
+    download_remote_images_threshold: "원격의 이미지를 로컬에 다운받기 위한 최소 디스크 공간(%)"
+    disabled_image_download_domains: "이 도메인을 통해서 원격 이미지를 다운로드 하지 않는다. ` | `를 구분자로 한 리스트"
+    ninja_edit_window: "편집을 결과가 새로운 버전을 생성하지 않는 포스팅 이후에 경과할 시간(초)"
+    post_edit_time_limit: "글 작성자가 해당 글을 편집하거나 삭제할 수 있도록 허용되는 시간(분). 0으로 설정하면 언제든지 편집이나 삭제가 허용됨."
+    edit_history_visible_to_public: "모든 사용자가 게시글의 수정 내역을 볼 수 있도록 허용. 비활성화시 스태프 맴버만 수정 내역을 볼 수 있음."
+    delete_removed_posts_after: "저자에 의해 제거된 게시글이 실제로 삭제될 시간(시)"
+    max_image_width: "글에서 사용할 수 있는 썸네일 이미지의 최대 너비"
+    max_image_height: "글에서 사용할 수 있는 썸네일 이미지의 최대 높이"
+    category_featured_topics: "카테고리 페이지에서 한 카테고리당 보여질 토픽의 수"
+    show_subcategory_list: "카테고리에 들어갈 경우 토픽 리스트 대신 하위카테고리의 리스트를 보여준다."
+    fixed_category_positions: "활성화하면 고정된 순서의 카테고리들을 바꿀 수 있다. 활성화 하지 않으면 카테고리는 활동적인 순서에 따라 정렬된다."
+    add_rel_nofollow_to_user_content: "사용자 생성 컨텐츠에 대해서 rel nofollow 를 설정함. parent domain을 포함한 internal link는 예외임. 이 설정을 바꾸려면 모든 baked markdown을  \"rake posts:rebake\" 명령으로 변경해주서야 함"
     exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
-    favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
+    post_excerpt_maxlength: "게시글 인용에 허용되는 최대 글자수"
+    post_onebox_maxlength: "onebox가 적용된 Discourse 포스트에 허용되는 최대 글자수"
+    onebox_domains_whitelist: "onebox 사용을 허가할 도메일 리스트; 이 도메인은 OpenGraph나 oEmbed를 지원하여야한다. http://iframely.com/debug를 통해 테스트해볼 수 있다."
+    logo_url: "사이트의 왼쪽 상단에 로고 이미지.  예: http://example.com/logo.png"
+    digest_logo_url: "요약 이메일 발송시 사용될 로고. 공백으로 남겨두면 `logo_url`이 사용됩니다. 예: http://example.com/logo.png"
+    logo_small_url: "토픽 리스트에서 스크롤다운 할 때 사용되는 작은 로고. 예: http://example.com/logo-small.png"
+    favicon_url: "이 사이트의 favicon, 참고 http://en.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "모바일 사이트 좌상단에 고정되어 있는 로고 이미지. 만약 설정하지 않는다면 `logo_url`설정 값이 사용된다. eg: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "애플 디바이스는 144px의 아이콘을 사용함. 144px X 144px 사이즈를 추천함"
+    notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
+    use_https: "사이트의 사이트의 전체 url((Discourse.base_url)이 http인가 아니면 https인가? 이미 HTTPS를 설정하고 동작중이 아니라면 활성화하지 마세요."
+    summary_score_threshold: "요약본에 포함되기 위한 게시글의 최소 점수 값"
+    summary_posts_required: "하나의 토픽에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 게시글 수"
+    summary_likes_required: "하나의 토픽에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 좋아요 수"
+    summary_percent_filter: "요약본 보기를 클릭시, 글 중에 몇 %의 상위 글을 보여줄 것인가?"
     enable_private_messages: "신뢰도 1 사용자들만 개인 메세지와 개인 메세지에 대한 답글을 허용합니다"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
-    new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
+    auto_track_topics_after: "토픽이 자동으로 추적되기까지의 기본 시간, 사용자에 따라 재정의 될 수 있음.(밀리초, 0 : 항상, -1 : 안함)"
+    new_topic_duration_minutes: "토픽이 새로운 토픽으로 간주되는 시본 시간, 사용자에 따라 재정의 될 수 있음.(분, -1 : 항상, -2 : 마지막 접속)"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
-    max_topics_in_first_day: "The maximum number of topics a user is allowed to create in thier first day on the site"
-    max_replies_in_first_day: "첫날에 사용자가 생성할 수 있는 답글의 최대값"
-    notify_mods_when_user_blocked: "만약 사용자가 자동 블락되면 중간 관리자에게 메시지 보내기"
-    ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
-    enable_noscript_support: "당신의 사이트를 검색하기 위한 noscript 테그를 이용한 일반적인 웹 크롤러를 활성화"
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
-    post_menu: "게시물 메뉴에 어떤 사항들이 무슨 순서로 올라올지 결정합니다. 예: 좋아요|수정|신고|삭제|공유|북마크|답글"
-    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
+    cooldown_minutes_after_hiding_posts: "신고 당해서 숨겨진 글을 사용자가 편집할 수 있기 전까지 기대려야 하는 시간(분)"
+    max_topics_in_first_day: "사용 첫 날에 토픽을 생성할 수 있는 최대 허용 개수"
+    max_replies_in_first_day: "사용 첫 날에 사용자가 생성할 수 있는 답글의 최대 허용 개수"
+    num_flags_to_block_new_user: "신규 사용자가 n명의 다른 사용자들로부터 이 수치에 해당하는 스팸 신고를 받으면, 작성한 모든 게시글을 숨기고 더 이상 글 게시를 금지 (0으로 설정하면 이기능을 사용하지 않음)"
+    num_users_to_block_new_user: "신규 사용자가 이 수치에 해당하는 다른 사용자들로부터 x개의 스팸 신고를 받으면, 작성한 모든 게시글을 숨기고 더 이상 글 게시를 금지 (0으로 설정하면 이기능을 사용하지 않음)"
+    notify_mods_when_user_blocked: "만약 사용자가 자동 블락되면 중간 운영자에게 메시지 보내기"
+    flag_sockpuppets: "어떤 신규 사용자(예:24이내 가입자)가 토픽을 생성하고 같은 IP주소의 또 다른 신규 사용자가 댓글을 쓰면 자동 스팸 신고"
+    traditional_markdown_linebreaks: "Markdown에서 전통적인 linebreak를 사용, linebreak시 두개의 trailing space를 사용하는 것."
+    post_undo_action_window_mins: "사용자가 어떤 게시글에 대해서 수행한 작업(신고 등)을 취소하는 것이 허용되는 시간(초)"
+    must_approve_users: "관리자가 모든 사용자에 대해 사이트 접근 전에 허용을 해야 함"
+    ga_tracking_code: "Google analytics (ga.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
+    ga_domain_name: "Google analytics (ga.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
+    ga_universal_tracking_code: "Google Universal Analytics (analytics.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
+    ga_universal_domain_name: "Google Universal Analytics (analytics.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
+    enable_escaped_fragments: "구형의 검색엔진 및 크롤러도 잘 동작하게 하기 위한 동작을 활성화. https://support.google.com/webmasters/answer/174992?hl=en 참고하세요."
+    enable_noscript_support: "당신의 사이트를 검색하기 위한 noscript 태그를 이용한 일반적인 웹 크롤러를 활성화"
+    allow_moderators_to_create_categories: "운영자가 새로운 카테고리를 만드는 것을 허용"
+    top_menu: "홈페이지 네비게이션에 어떤 아이템이 나올지, 어떤 순서로 나올지 결정한다.예 latest(최신)|new(새로운)|unread(읽지않은)|starred(즐겨찾는)|categories(카테고리)|top(인기)|read(읽은)|posted(작성된)"
+    post_menu: "게시물 메뉴에 어떤 사항들이 무슨 순서로 올라올지 결정합니다. 예: like(좋아요)|edit(수정)|flag(신고)|delete(삭제)|share(공유)|bookmark(북마크)|reply(답글)"
+    share_links: "공유 다이얼로그에 어떤 아이템이 어떤 순서로 나올지 결정"
+    track_external_right_clicks: "우클릭한 외부 링크를 추적한다 (에: 새 탭 열기) 이 설정을 위해선 해당 URL를 다시 써야하는 이유로 기본값은 비활성화이다."
+    topics_per_page: "토픽 리스트에서 기본으로 보여지는 토픽 수와 스크롤로 인해 더 많은 토픽들이 불려올 때의 수"
+    posts_per_page: "하나의 토픽에서 기본으로 보여지는 포스트 수와 스크롤로 인해 더 많은 포스트가 불려올 때의 수"
+    site_contact_username: "All automated private messages sent by the forum will be from this user; if left blank the default System account will be used."
+    send_welcome_message: "신규 사용자에게 가입 환영 메세지를 보냅니까?"
+    suppress_reply_directly_below: "게시글의 바로 아래에 단 하나의 댓글만 있는 경우 '댓글 수'를 보여주지 않음"
+    suppress_reply_directly_above: "단 하나의 댓글 위의 게시글이 하나 있는 상황에서 '~에 대한 댓글'을 보여주지 않음."
+    topics_per_period_in_top_summary: "인기 토픽 요약에 기본으로 보여질 토픽 수"
+    topics_per_period_in_top_page: "인기 토픽에서 '더 보기'를 요청할 시 보여질 토픽 수"
+    redirect_users_to_top_page: "자동으로 신규 사용자와 오래간만에 들어온 사용자를 탑 페이지로 리다이렉트 시킴"
+    email_token_valid_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰의 유효 기간(시간)"
+    email_token_grace_period_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰은 사용되어진 이후 유효한 기간(시간)"
+    enable_badges: "훈장 시스템 활성화 (시험적 기능)"
+    allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
+    email_domains_blacklist: "허용하지 않는 Email 도메인을 파이프(|)기호로 구분하여 입력. 예: mailinator.com|trashmail.net"
+    email_domains_whitelist: "허용하는 Email 도메인을 파이프(|)기호로 구분하여 입력. 경고: 여기에 주어진 email domain이 아닌 경우 모두 거부됩니다."
+    version_checks: "버젼 업데이트를 위해 Discourse Hub에 Ping을 날린다. 그리고 /admin 대시보드에 버젼 메시지를 보여준다."
+    new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
     port: "Use this HTTP port rather than the default of port 80. Leave blank for none, mainly useful for development"
     force_hostname: "Specify a hostname in the URL. Leave blank for none, mainly useful for development"
-    invite_expiry_days: "How long user invitation keys are valid, in days"
-    enable_yahoo_logins: "Enable Yahoo authentication"
-    enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
-    enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
-    facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
-    enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
-    github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
-    github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
-    active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
-    previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
-    clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
-    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
-    title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
-    title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
+    invite_expiry_days: "사용자 초대키 유효 기간, 일"
+    invite_passthrough_hours: "사용되어진 방문키를 로그인하는데 재사용할 수 있는 기간, 시간"
+    invite_only: "공개 가입은 불가하도록 설정됨. 초대를 받아야만 신규 가입 가능함."
+    login_required: "게시글을 읽으려면 인증(로그인)이 필요함"
+    min_username_length: "사용자이름 최소 길이. (전체 시스템에서 사용자이름의 유일성을 보장하도록 설정되어있으면 이 설정은 무시됨)"
+    max_username_length: "사용자이름 최대 길이. (전체 시스템에서 사용자이름의 유일성을 보장하도록 설정되어있으면 이 설정은 무시됨)"
+    min_password_length: "비밀번호 최소 글자수."
+    block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
+    enable_sso: "외부 사이트를 통한 SSO(Single Sign On)을 허용. (초대 기능을 사용할 수 없음)"
+    sso_url: "SSO endpoint의 URL"
+    sso_secret: "SSO 정보를 encrypt/decrypt할 때 사용할 문자열.  (10글자 이상이어야 함)"
+    sso_overrides_email: "내부에서 사용되는 이메일을 SSO로부터 부여받은 외부 이메일로 사용. (주의 : 내부에서 사용되는 이메일 표준화로 인해 불일치가 발생할 수 있)"
+    sso_overrides_username: "내부에서 사용되는 사용자 이름을 SSO로부터 부여받은 외부 사용자 이름으로 사용. (주의 : 내부에서 사용되는 사용자 이름의 길이/요구조건의 차이점 때문에 불일치가 발생할 수 있)"
+    sso_overrides_name: "내부에서 사용되는 이름을 SSO로부터 부여받은 외부 이름으로 사용. (주의 : 내부에서 사용되는 이름의 표준화로 인해 불일치가 발생할 수 있)"
+    enable_local_logins: "기존의 로컬 username, password에 의한 인증을 허용. (초대 기능이 필요하다면 이 기능을 허용해야 함)"
+    allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
+    enable_google_logins: "(deprecated) Google 인증을 허용. OpenID로 인증하는 방식을 Google이 deprecated 하였습니다. 새 설치는 이 방법으로는 동작을 안할 것입니다.  대신에 Google Oauth2 사용할 수 있습니다. 기존 설치된 것은 2015년 4월20일까지 Google Oauth2로 이동해야 합니다."
+    enable_yahoo_logins: "야후 인증 활성화"
+    enable_google_oauth2_logins: "Google Oauth2 인증을 활성화한다. 이 인증 수단은 현재 Google에서 제공하고 있으며, key와 secret이 필요."
+    google_oauth2_client_id: "Google Application의 Client ID"
+    google_oauth2_client_secret: "Google Application의 Client Secret"
+    enable_twitter_logins: "Twitter 인증을 활성화한다. twitter_consumer_key와 twitter_consumer_secret이 필요."
+    twitter_consumer_key: "http://dev.twitter.com에 등록된 Twitter 인증을 위한 Consumer key"
+    twitter_consumer_secret: "http://dev.twitter.com에 등록된 Twitter 인증을 위한 Consumer secret"
+    enable_facebook_logins: "Facebook 인증을 활성화한다. facebook_app_id와 facebook_app_secret이 필요."
+    facebook_app_id: "https://developers.facebook.com/apps에 등록된 Facebook 인증을 위한 App id"
+    facebook_app_secret: "https://developers.facebook.com/apps에 등록된 Facebook 인증을 위한 App secret"
+    enable_github_logins: "Github 인증을 활성화한다. github_client_id와 github_client_secret이 필요."
+    github_client_id: "https://github.com/settings/applications에 등록된 Github 인증을 위한 Client id"
+    github_client_secret: "https://github.com/settings/applications에 등록된 Github 인증을 위한 Client secret"
+    allow_restore: "데이터 복원을 허용한다. 이 사이트의 모든 데이터가 변경될 수 있다. 백업이나 복원 계획이 없다면 비활성화로 놔둔다."
+    maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
+    backup_daily: "하루에 한 번 자동으로 백업한다."
+    enable_s3_backups: "백업이 완료되면 Amazon S3로 업로드한다. s3 credentials을 기입되어있는지 확인해야한다."
+    s3_backup_bucket: "백업본을 유지할 s3 버켓 이름. 주의 : 프라이빗 버켓인지 확인해야한다."
+    active_user_rate_limit_secs: "'last_seen_at'을 업데이트 하는 주기(초)"
+    previous_visit_timeout_hours: "최근 방문한 시간을 저장할 주기(시간)"
+    rate_limit_create_topic: "사용자가 토픽을 생성하고 난 후 다음 토픽을 생성할 때 까지의 대기 기간(초)"
+    rate_limit_create_post: "사용자가 포스팅을하고 난 후 다음 포스팅까지 대기 기간(초)"
+    rate_limit_new_user_create_topic: "새로운 사용자 토픽을 생성하고 난 후 다음 토픽을 생성할 때 까지의 대기 기간(초)"
+    rate_limit_new_user_create_post: "새로운 사용자 포스팅을하고 난 후 다음 포스팅까지 대기 기간(초)"
+    max_likes_per_day: "사용자가 하루동안 할 수 있는 최대 좋아요 개수"
+    max_flags_per_day: "사용자가 하루동안 할 수 있는 최대 신고 개수"
+    max_bookmarks_per_day: "사용자가 하루동안 할 수 있는 최대 북마크 개수"
+    max_edits_per_day: "사용자가 하루동안 할 수 있는 최대 편집 수"
+    max_stars_per_day: "사용자당 하루동안 즐겨찾기 할 수 있는 최대 토픽 개수"
+    max_topics_per_day: "사용자가 하루동안 생성할 수 있는 최대 토픽 개수"
+    max_private_messages_per_day: "사용자가 하루동안 생성할 수 있는 개인 메시지 개수"
+    suggested_topics: "토픽 아랫부분에 몇개의 토픽을 제안하여 보여준다."
+    limit_suggested_to_category: "제안된 토픽은 현재의 카테고리에 있는 토픽 중에서만 보여준다."
+    clean_up_uploads: "불법 호스팅을 막기 위해서 참조되지 않은 업로드 파일은 제거한다. 주의 : 이 설정을 활성화 하기 전에 `/uploads` 디렉토리를 백업하는 것이 좋다."
+    clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
+    purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
+    enable_s3_uploads: "업로한 파일을 Amazon S3에 저장한다."
+    s3_upload_bucket: "업로드된 파일이 위치할 Amazon S3 버켓 이름. 주의 : 소문자로 period(.)업는 문자열"
+    s3_access_key_id: "이미지를 업로드 할 때 사용할 Amazon S3의 access key id"
+    s3_secret_access_key: "이미지를 업로드 할 때 사용할 Amazon S3의 secret access key"
+    s3_region: "이미지를 업로드 할 때 사용할 Amazon S3 region"
+    enable_flash_video_onebox: "swf, flv(어도비 플래쉬)링크를 embed 할 수 있도록 함. 주의: 보안에 대한 위험성을 알려주는 것이 좋다."
+    default_invitee_trust_level: "사용자를 초대하기 위한 기본 신뢰도(0-4)"
+    default_trust_level: "새로운 사용자의 기본 신뢰도(0-4)"
+    basic_requires_topics_entered: "새로운 사용자가 기본 사용자(1)가 되기 위해 들어가봐야되는 토픽의 개수"
+    basic_requires_read_posts: "새로운 사용자가 기본 사용자(1)가 되기 위해 읽어야 하는 포스트 개수"
+    basic_requires_time_spent_mins: "새로운 사용자가 기본 사용자(1)가 되기 위해 포스트를 읽어야 하는 기간(분)"
+    regular_requires_topics_entered: "기본 사용자가 자주오는 사용자(2)가 되기 위해 들어가봐야되는 토픽의 개수"
+    regular_requires_read_posts: "기본 사용자가 자주오는 사용자(2)가 되기 위해 읽어야 하는 포스트 개수"
+    regular_requires_time_spent_mins: "기본 사용자가 자주오는 사용자(2)가 되기 위해 포스트를 읽어야 하는 기간(분)"
+    regular_requires_days_visited: "기본 사용자가 자주오는 사용자(2)가 되기 위해 사이트를 방문해야하는 날 수"
+    regular_requires_likes_received: "기본 사용자가 자주오는 사용자(2)가 되기 위해 받아야하는 좋아요 수"
+    regular_requires_likes_given: "기본 사용자가 자주오는 사용자(2)가 되기 위해 눌러야하는 좋아요 수"
+    regular_requires_topic_reply_count: "기본 사용자가 자주오는 사용자(2)가 되기 위해 답변을 달아야하는 토픽 수"
+    leader_requires_days_visited: "VIP 사용자(3)가 되기 위해 지난 100일 동안 최소한 사이트에 방문해야 하는 수(0 ~ 100)"
+    leader_requires_topics_replied_to: "VIP 사용자(3)가 되기 위해 지난 100일 동안 답글을 달아야하는 최소 토픽수(0 ~ )"
+    leader_requires_topics_viewed: "VIP 사용자(3)가 되기 위해 지난 100일 동안 생성된 전체 토픽 중 본 토픽의 비율(%, 0 ~ 100)"
+    leader_requires_posts_read: "VIP 사용자(3)가 되기 위해 지난 100일 동안 생성된 전체 포스트 중 본 포스트의 비율(%, 0 ~ 100)"
+    leader_requires_topics_viewed_all_time: "VIP 사용자(3)가 되기 위해 꼭 보아야 하는 토픽의 전체 개수"
+    leader_requires_posts_read_all_time: "VIP 사용자(3)가 되기 위해 꼭 보아야 하는 토픽의 전체 개수"
+    leader_requires_max_flagged: "사용자가 VIP 사용자(3)가 되기 위해 지난 100일동안 서로 다른 사용자에게 최소한으로 받아야하는 신고된 포스트 수(0 ~ )"
+    leader_promotion_min_duration: "신뢰도가 떨어진 후 다시 VIP 사용자(3)가 될 수 있는 최소 기간(일)"
+    leader_links_no_follow: "VIP 사용자의 link가 nofollow 속성인지 여부"
+    min_trust_to_create_topic: "새로운 토픽을 생성하기 위한 최소 신뢰도"
+    min_trust_to_edit_wiki_post: "위키로 설정된 포스트를 수정할 수 있는 최소 신뢰도"
+    newuser_max_links: "새로운 사용자가 포스트에 붙일 수 있는 최대 링크 개수"
+    newuser_max_images: "새로운 사용자가 포스트에 붙일 수 있는 최대 이미지 개수"
+    newuser_max_attachments: "새로운 사용자가 포트에 붙일 수 있는 최대 첨부파일 개수"
+    newuser_max_mentions_per_post: "새료운 사용자가 포스트에 사용할 수 있는 최대 @name 알림 개수"
+    newuser_max_replies_per_topic: "다른 사용자가 답글을 달기 전, 새로운 사용자가 개별 토픽에 달 수 있는 최대 답글 개수"
+    max_mentions_per_post: "포스트 당 사용할 수 있는 최대 @name 알림의 수"
+    create_thumbnails: "포스트의 너무 큰 크기의 이미지는 thumnails와 lightbox를 만든다."
+    email_time_window_mins: "알림 메일을 보내기 전 대기 기간(분), 사용자에게 포스트의 변경하고 완료할 수 있는 기회를 준다."
+    email_posts_context: "알림메일의 내용에 추가할 기존 답글 수"
+    flush_timings_secs: "사용자의 이용 시간 데이터를 서버로 보내는 기간(초)"
+    max_word_length: "토픽 제목에 최대 단어 길이(글자 수)"
+    title_min_entropy: "토픽 제목에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
+    body_min_entropy: "포스트 본문에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
+    title_fancy_entities: "토픽 제목에 일반 ASCII 문자로 만든 기호들을 보기 좋은 HTML로 변환시켜준다. 참고: SmartyPants http://daringfireball.net/projects/smartypants/"
+    min_title_similar_length: "유사 토픽에 대한 체크가 있기 전, 최소 제목 글자 수"
+    min_body_similar_length: "유사 토픽에 대한 체크가 있기 전, 포스트의 최소 본문 글자 수"
+    category_colors: "허용된 카테고리에 사용될 hexadecimal 색상 값의 리스트"
+    max_image_size_kb: "최대 이미지 업로드 사이즈(kB). 이 설정은 꼭 nginx / apache와 proxy에도 적용해야 한다."
+    max_attachment_size_kb: "최대 첨부파일 업로드 사이즈(kB). 이 설정은 꼭 nginx / apache와 proxy에도 적용해야 한다."
+    authorized_extensions: "파일 업로드에 허용되는 확장자 리스트 '*'을 사용하면 모든 타입의 파일이 가능하다."
+    max_similar_results: "새로운 토픽을 작성할 때, 에디터 위에 보여줄 비슷한 토픽들의 개수. 제목과 본문을 바탕으로 비교한다."
+    title_prettify: "일반적인 제목의 오타 및 오류를 수정해준다. 모두 대문자로 쓰거나, 첫자가 소문자이거나(영문), 복수의 !, ? 혹은 마침표(.)가 중복으로 들어간 것 등"
+    topic_views_heat_low: "토픽이 연하게 하이라이트 되기 위한 조회수"
+    topic_views_heat_medium: "토픽이 적당하게 하이라이트 되기 위한 조회수"
+    topic_views_heat_high: "토픽이 진하게 하이라이트 되기 위한 조회수"
     faq_url: "FAQ주소가 있으면 전체 URL을 적어주세요."
     tos_url: "이용약관이 있으면 전체 URL을 적어주세요."
     privacy_policy_url: "개인정보 보호가 있으면 전체 URL을 적어주세요."
     newuser_spam_host_threshold: "스팸인가 결정하는 새로운 사용자가 게시한 같은 링크 수 `newuser_spam_host_posts`"
+    white_listed_spam_host_domains: "스팸 호스트 테스트로부터 제외할 도메인 리스트. 새로운 사용자는 새로운 사용자는 헤당 도메인에 대한 링크를 포함하는 포스트를 생성하는데 제한되지 않는다."
+    staff_like_weight: "스태프가 좋아요를 눌렀을 때 부여할 가산점"
+    levenshtein_distance_spammer_emails: "스패머 메일을 체크할 때, 허용할 다른 글자 개수(fuzzy match)"
+    reply_by_email_enabled: "이메일을 통해 토픽에 댓글을 달 수 있음."
     reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %{reply_key}@reply.myforum.com"
+    pop3s_polling_enabled: "이메일 답글을 받기 위해 POP3S를 polling한다."
+    pop3s_polling_insecure: "SSL없이 plain text를 통해 POP3를 polling한다."
+    pop3s_polling_period_mins: "이메일을 받기 위해 POP3S 계정을 체크하는 기간(분) NOTE: 재시동 필요."
+    pop3s_polling_port: "POP3S 계정을 polling하기 위한 port"
+    pop3s_polling_host: "POP3S를 통해 이메일받기 위해 polling할 호스트"
+    pop3s_polling_username: "이메일을 받기 위해 polling할 POP3S계정의 username"
+    pop3s_polling_password: "이메일을 받기 위해  polling할 POP3S계정의 password"
+    email_in: "이메일을 통해 새로운 토픽을 포스팅할 수 있도록 허가한다.(POP3 polling 필요) 각 카테고리의 \"Setting\" 탭에서 주소를 설정한다."
+    email_in_min_trust: "이메일을 통해 새 토픽을 포스팅 할 수 있는 최소 사용자 신뢰도"
+    email_prefix: "이메일 제목에 쓰일 [라벨]. 설정하지 않으면 기본적으로 'title(필수 설정의)' 이 된다."
+    email_site_title: "사이트에서 전송되는 이메일의 보내는 이를 사이트 이름으로 설정. 설정하지 않으면 'title(필수 설정의)'이 된다. 만약 'title'에 보내는 이에 허용되지 않는 글자가 포함되어 있으면 이 설정이 사용된다."
+    minimum_topics_similar: "새로운 토픽을 작성할 때, 유사한 토픽들을 보여주기 위해 존재해야 할 최소 토픽 개수"
+    relative_date_duration: "절대적 날짜(9월 3일) 대신 상대적 날짜(7일 전)가 사용될 일 수 (토픽이 작성된 이후부터)"
+    delete_user_max_post_age: "(x)일 이전의 첫 포스트가 있는 유저는 삭제할 수 없음."
     delete_all_posts_max: "전체 게시글 지우기 버튼을 통해 한번에 삭제할 수 있는 최대 게시글 수. 만약 사용자가 이것보다 많은 게시글을 가지고 있으면 한번에 삭제 할 수 없다."
-    username_change_period: "등록 후 사용자 이름 최소 유지 기간(0은 사용자 이름 변경을 막음)"
+    username_change_period: "등록 후 사용자 이름 최소 유지 일 수(0은 사용자 이름 변경을 막음)"
     email_editable: "등록 후 이메일 주소를 바꿀수 있는 있음"
+    allow_uploaded_avatars: "사용자들이 커스톰 아바타를 올릴 수 있도록 허용"
+    allow_animated_avatars: "사용자들이 에니메이션이 있는 gif 아바타를 사용할 수 있도록 허용. 주의 : 변경을 한 후 `avatars:refresh` rake 실행이 필요하다."
+    automatically_download_gravatars: "사용자가 계정을 만들거나 이메일을 변경하자마자 Gravatar를 다운로드한다."
+    digest_topics: "요약 이메일에서 보여질 최대 토픽 개수"
+    digest_min_excerpt_length: "요약 이메일에서 최소 포스트 발췌 수"
     default_digest_email_frequency: "사용자가 요약 이메일을 받는 횟수 기본값. 사용자는 그들의 환경설정에서 변경할 수 있음"
+    default_external_links_in_new_tab: "다른 싸이트의 링크는 새 탭으로 연다. 사용자는 자신의 설정에 따라 바꿀 수 있음"
+    detect_custom_avatars: "사용자가 커스텀 아바타를 업로드 했는지 여부를 체크한다."
+    max_daily_gravatar_crawls: "하루에 Discourse가 커스텀 아파타를 위해 Gravatar를 체크하는 최대 횟수"
+    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
+    allow_profile_backgrounds: "사용자에게 프로필 배경 이미지 업로드를 허용한다."
     enable_mobile_theme: "모바일 디바이스는 모바일 환경에 친화적인 테마를 사용합니다, 그리고 PC용 화면으로 전환할 수 있습니다. 만약 커스텀 스타일 시트를 사용한다면 이것을 비활성화 시키세요."
+    suppress_uncategorized_badge: "토픽 리스트에서 카테고리가 없는 토픽에 대한 훈장을 보여주지 않는다."
+    enable_names: "사용자의 전체 이름을 보여준다."
+    display_name_on_posts: "포스트에 @username 뿐만 아니라 사용자의 전체 이름도 보여준다."
+    invites_shown: "사용자 페이지에 보여질 최대 초대 수"
+    short_progress_text_threshold: "토픽의 포스트 개수가 이 값을 넘어서면, 포스트 프로그래스바는 오직 현재 포스트 넘버만 보여준다. 만약 포스트 프로그래스바의 넓이는 변경하면, 이 숫자도 변경해야한다."
+    default_code_lang: "기본 programming language syntax highlighting은 GitHub code blocks이 적용된다. (lang-auto, ruby, python etc.)"
+    autohighlight_all_code: "형식이 지정되기 전의(되지 않은) 모든 코드 블럭들에 대해, 사용자가 언어를 지정하지 않아도 강제로 code highlighting이 적용된다."
+    tos_accept_required: "서비스 이용 약관 필수"
+    errors:
+      invalid_email: "유효하지 않은 이메일 주소입니다."
+      invalid_username: "해당 이름의 사용자가 없습니다."
+      invalid_integer_min_max: "%{min}이상 %{max}이하이어야 합니다."
+      invalid_integer_min: "%{min}이상 이어야 합니다."
+      invalid_integer_max: "%{max}이하 이어야 합니다."
+      invalid_integer: "정수만 허용됩니다."
+      regex_mismatch: "해당 포멧은 허용되지 않습니다."
+      invalid_string: "허용되는 정보가 아닙니다."
+      invalid_string_min_max: "글자 수가 %{min}자 이상 %{max}자 이하이어야 합니다."
+      invalid_string_min: "글자수가 %{min}자 이상이어야 합니다."
+      invalid_string_max: "글자 수가 %{max}자 이상이어야 합니다."
   notification_types:
     mentioned: "%{display_username} 사용자가 %{link} 에서 당신을 언급하였습니다."
     liked: "%{display_username} 사용자가 %{link} 를 좋아합니다."
@@ -405,18 +822,40 @@ ko:
     invited_to_private_message: "%{display_username} 사용자가 당신에게 개인 메시지로 초대하였습니다: %{link}"
     invitee_accepted: "%{display_username} 사용자가 당신의 초대를 수락하였습니다."
   search:
+    within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
-      category: '카테고리들'
-      user: '사용자들'
+      category: '카테고리'
+      topic: '검색 결과'
+      user: '사용자'
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
   frequent_poster: "빈번한 게시자"
+  redirected_to_top_reasons:
+    new_user: "우리 커뮤니티에 오신 것을 환영합니다! 여기 최근에 가장 인기있는 토픽들이 있습니다."
+    not_seen_in_a_month: "다시 돌아오신 것을 환용합니다! 잠시 떠나신 동안 가장 인기 있는 토픽들입니다."
+  move_posts:
+    new_topic_moderator_post:
+      other: "%{count}개의 글을 새 토픽으로 옮겼습니다: %{topic_link}"
+    existing_topic_moderator_post:
+      other: "%{count}개의 글을 기존 토픽으로 옮겼습니다: %{topic_link}"
   topic_statuses:
     archived_enabled: "이 토픽은 보관되었고 더이상 변경하실 수 없습니다."
     archived_disabled: "이 토픽의 보관이 풀렸고 이제 변경하실 수 있습니다."
     closed_enabled: "이 토픽은 이제 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     closed_disabled: "이 토픽은 이제 열렸습니다. 새로운 답글을 다실 수 있습니다."
+    autoclosed_enabled_days:
+      zero: "이 토픽은 하루 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
+      one: "이 토픽은 하루 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
+      other: "이 토픽은 %{count}일 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
+    autoclosed_enabled_hours:
+      zero: "이 토픽은 한 시간 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
+      one: "이 토픽은 한 시간 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
+      other: "이 토픽은 %{count} 시간 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
+    autoclosed_enabled_minutes:
+      zero: "이 토픽은 1분 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
+      one: "이 토픽은 1분 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
+      other: "이 토픽은 %{count} 분 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
     autoclosed_disabled: "이 토픽은 이제 열렸습니다. 새로운 답글을 허용합니다."
     pinned_disabled: "이 토픽은 이제 고정이 풀렸습니다. 더이상 카테고리 상단에 보이지 않을 것입니다."
     visible_enabled: "이 토픽은 이제 다른 사람이 볼 수 있습니다. 토픽 목록에서 찾으실 수 있습니다."
@@ -437,6 +876,8 @@ ko:
     omniauth_error_unknown: "로그인에 문제가 있습니다. 다시 시도해주세요."
   user:
     username:
+      short: "최소 %{min}자 이상이어야 합니다."
+      long: "%{max}자 이상 사용할 수 없습니다."
       characters: "문자나 숫자만 사용해야 합니다."
       unique: "이미 사용중입니다."
       blank: "공백이 없어야 합니다."
@@ -451,43 +892,16 @@ ko:
   system_messages:
     post_hidden:
       subject_template: "포럼 신고로 인한 게시글 숨김"
-    usage_tips:
-      text_body_template: |
-        이 개인 메세지에서 몇가지 팁을 알려드리고자 합니다.
-
-        ### 계속 화면을 아래로 내리세요
-
-        이곳은 다음 페이지 버튼이 없습니다. 화면을 아래로 내리세요. 그러면 계속해서 글들이 로딩됩니다.
-
-        새로운 답글이 달리면 자동으로 주제의 제일 아래 화면에 로딩됩니다. 새로운 답글을 보기위해서 새로고침을 하거나 주제를 다시 여실 필요가 없습니다.
-
-        ### 어떻게 답글을 게시할 수 있나요?
-
-        답글은 주제 또는 그 주제의 특정한 게시물에 달수 있습니다. 주제에 답글을 다실려면 그 주제 제일 아래 답글 버튼을 이용하시고 그 주제안에 특정한 게시물에 답글을 다실려면 그 게시물 바로 아래 답글 버튼을 이용하세요.
-
-        ### 누군가 저에게 말을 걸었나요?
-
-        누군가 당신의 게시물에 답글을 달거나, 인용을 하거나, @사용자이름으로 언급을 하였을때 제일 상단에 있는 알림 단추에 ➀ 이라는 숫자가 생깁니다. 그 알림 단추를 누르시면 누가 어디서 당신에게 말을 걸었는지 알 수 있습니다.
-
-        - 누군가를 언급하시려면 '@' 을 이용하세요
-
-        - 게시물의 일부부만 인용하시려면 그 부분만 선택하세요. 그러면 그것을 답글로 인용 할 수 있습니다.
-
-        - 전체 게시물을 인용하시려면 답글 버튼을 누르신후 답글을 쓰는 부분 상단에서 첫번째 단추인 "전체 게시물을 인용"을 눌러주세요.
-
-        ### 게시물을 잘 봐주세요
-
-        만약에 누군가의 게시물이 마음에 드신다면 ♥ 버튼을 눌러주세요. 또 만약에 게시물에 문제가 있다고 생각하시면 신고버튼을 누르는 것을 주저하지 말아주세요.
-
-        ### 나는 어디에 있나요?
-
-        처음 화면으로 돌아가고 싶으시다면 로고를 클릭하시거나 브라우저에 뒤로가기 버튼을 눌러주세요.
-
-        검색을 하고싶다면 오른쪽 상단에 돋보기 단추를 사용해주세요.
-
-        게시물을 읽다가 상단 페이지로 가시고 싶으시면 위에 제목을 클릭하세요. 마지막 답글로 가려면 오른쪽 하단에 초록색 진행을 알려주는 부분에서 ↓ 버튼을 눌러주세요. 또는 첫번째 게시물에서 "최근 게시물"을 클릭하셔도 됩니다.
     welcome_user:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
+      text_body_template: |
+        %{site_name} 사이트에 오신것을 환영합니다!
+
+        %{new_user_tips}
+
+        저희는 [커뮤니티 행동 방침](%{base_url}/guidelines)을 잘 따라주실 것을 믿습니다.
+
+        다시한번 환영합니다!
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
     export_succeeded:
@@ -599,6 +1013,7 @@ ko:
     user_content_license: |
       User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
+    signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: '삭제되었습니다'
   upload:
     unauthorized: "업로드 하시려는 파일 확장자는 사용이 불가능합니다 (사용가능 확장자: %{authorized_extensions})."
@@ -612,3 +1027,5 @@ ko:
       size_not_found: "죄송합니다. 이미지 사이즈가 잘못 되었습니다. 혹시 깨진 이미지가 아닌가요?"
   flag_reason:
     sockpuppet: "새로운 사용자가 토픽을 만들었습니다. 그리고 같은 IP를 사용하는 새 사용자가 답글을 달았습니다. 사이트 설정의 flag_sockpuppets를 확인하세요."
+  color_schemes:
+    base_theme_name: "기본 테마 색상"

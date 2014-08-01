@@ -346,7 +346,6 @@ cs:
       new_topic_duration:
         label: "Považovat témata za nová, pokud"
         not_viewed: "you haven't viewed them yet"
-        last_here: "byly vytvořeny od vaší poslední návštěvy"
       auto_track_topics: "Automaticky sledovat navštívená témata"
       auto_track_options:
         never: "nikdy"
@@ -849,10 +848,6 @@ cs:
           no_value: "Ne, jenom tento příspěvek"
       actions:
         flag: 'Nahlásit'
-        clear_flags:
-          one: "Odebrat nahlášení"
-          few: "Odebrat nahlášení"
-          other: "Odebrat nahlášení"
         it_too:
           off_topic: "Také nahlásit"
           spam: "Také nahlásit"
@@ -1107,7 +1102,6 @@ cs:
           zero: "Nepřečtená"
           one: "Nepřečtená (1)"
           other: "Nepřečtená ({{count}})"
-        help: "sledovaná témata s nepřečtenými příspěvky"
       new:
         lower_title_with_count:
           one: "1 nový"
@@ -1117,7 +1111,6 @@ cs:
           zero: "Nová"
           one: "Nová (1)"
           other: "Nová ({{count}})"
-        help: "nová témata od vaší poslední návštěvy a nové příspěvky v tématech, která sledujete"
       posted:
         title: "Mé příspěvky"
         help: "témata, do kterých jste přispěli"
@@ -1194,23 +1187,11 @@ cs:
         title: "Nahlášení"
         old: "Staré"
         active: "Aktivní"
-        agree_hide: "Souhlas (skrýt příspěvek + odeslat SZ)"
-        agree_hide_title: "Skrýt tento příspěvek a automaticky odeslat soukromou zprávu, která uživatele žádá o editaci"
-        defer: "Odložit"
-        defer_title: "Není zapotřebí žádná akce, odloží toto nahlášení na později"
-        delete_post: "Smazat příspěvek"
-        delete_post_title: "Odstraní příspěvek; je-li to první příspěvek v tématu, odstraní celé téma"
-        disagree_unhide: "Nesouhlas (znovu zobrazí příspěvek)"
-        disagree_unhide_title: "Odstraní všechna nahlášení na tomto příspěvku a znovu ho zviditelní"
-        disagree: "Nesouhlas"
-        disagree_title: "Nesouhlas s nahlášením, odstraní všechna nahlášení na tomto příspěvku"
-        delete_spammer_title: "Odstranit uživatele a všechny jeho příspěvky a témata."
         clear_topic_flags: "Hotovo"
         clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
         flagged_by: "Nahlásil"
         system: "Systémové soukromé zprávy"
         error: "Něco se pokazilo"
-        view_message: "Odpovědět"
         no_results: "Nejsou zde žádná nahlášení."
         topic_flagged: "Tohle <strong>téma</strong> bylo označeno."
         summary:
@@ -1616,7 +1597,6 @@ cs:
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
-      title: 'Keyboard Shortcuts (experimental)'
       jump_to:
         title: 'Jump To'
         home: '<b>g</b> then <b>h</b> Home (Latest)'

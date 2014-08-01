@@ -218,11 +218,9 @@ pt:
     continue: "Continuar para %{site_name}"
   change_email:
     confirmed: "O seu email foi atualizado."
-    please_continue: "Por favor continue em %{link}"
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
   activation:
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
-    please_continue: "A sua nova conta está confimada e você está conectado. Continue em %{link}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
   post_action_types:
@@ -379,21 +377,13 @@ pt:
     welcome_invite:
       title: "Boas-vindas: Usuário Convidado"
       description: "Uma mensagem particular enviada automaticamente para todos os usuários convidados quando eles aceitam o convite de outro usuário para participar."
-    privacy_policy:
-      title: "Política de Privacidade"
-      description: "A política de privacidade do seu site. Deixe em branco para usar a política padrão."
-    faq:
-      title: "FAQ"
-      description: "FAQ do seu site. Deixe em branco para usar a FAQ padrão."
     login_required_welcome_message:
       title: "Boas-vindas: Login Solicitado"
       description: "Mensagem de boas-vindas que é exibida para usuários que não estão logados quando a configuração de 'login requerido' está ativada."
     tos_user_content_license:
       title: "Termos do Serviço: Licença do Conteúdo"
-      description: "Texto da seção Licença do Conteúdo dos Termos do Serviço."
     tos_miscellaneous:
       title: "Termos do Serviço: Diversos"
-      description: "Texto para a seção de Diversos dos Termos de Serviço."
     login_required:
       title: "É requerido que você entre em sua conta: Página Inicial"
       description: "Texto exibido para usuários não autorizados quando é se exige entrar na conta para acessar o site."

@@ -282,13 +282,6 @@ nb_NO:
       new_topic_duration:
         label: "Anse emner som nye når"
         not_viewed: "Jeg har ikke sett dem ennå"
-        last_here: "de ble opprettet etter at du var her sist"
-        after_n_days:
-          one: "de ble opprettet i løpet av det siste døgnet"
-          other: "de ble opprettet i løpet av de siste {{count}} dagene"
-        after_n_weeks:
-          one: "de ble opprettet i løpet av den siste uka"
-          other: "de ble opprettet i løpet av de siste {{count}} ukene"
       auto_track_topics: "Følg automatisk emner jeg åpner"
       auto_track_options:
         never: "aldri"
@@ -720,9 +713,6 @@ nb_NO:
           no_value: "Nei, kun dette innlegget."
       actions:
         flag: 'Markering'
-        clear_flags:
-          one: "Fjern markering"
-          other: "Fjern markeringer"
         it_too:
           off_topic: "Marker det også"
           spam: "Marker det også"
@@ -919,7 +909,6 @@ nb_NO:
           zero: "Ulest"
           one: "Ulest (1)"
           other: "Ulest ({{count}})"
-        help: "følgte emner med uleste innlegg"
       new:
         lower_title_with_count:
           one: "1 ny"
@@ -928,7 +917,6 @@ nb_NO:
           zero: "Ny"
           one: "Ny (1)"
           other: "Ny ({{count}})"
-        help: "nye emner siden ditt siste besøk"
       posted:
         title: "Mine Innlegg"
         help: "emner du har postet i"
@@ -994,20 +982,11 @@ nb_NO:
         title: "Markeringer"
         old: "Gamle"
         active: "Aktive"
-        agree_hide: "Bekreft (gjem post + send PM)"
-        agree_hide_title: "Gjem denne posten og automatisk send en privat melding til brukeren med en forespørsel om gjøre endringer."
-        defer: "Utsett"
-        defer_title: "Ingen handling er nødvendig. Utsett all handling på dette flagget til en senere dato, eller aldri."
-        delete_post: "Slett Post"
-        delete_post_title: "Slett post; hvis første post, slett hele emnet"
-        disagree_unhide: "Uenig ("
-        disagree_unhide_title: "Fjern eventuelle flagg fra dette innlegget og gjøre det synlig igjen"
         clear_topic_flags: "Ferdig"
         clear_topic_flags_title: "Emnet har blitt undersøkt og problemer har blitt løst. Klikk Ferdig for å fjerne flaggene."
         flagged_by: "Markert av"
         system: "System"
         error: "Noe gikk galt"
-        view_message: "Svar"
         no_results: "Det er ingen flagg"
       groups:
         title: "Grupper"

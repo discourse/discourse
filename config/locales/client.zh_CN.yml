@@ -331,11 +331,6 @@ zh_CN:
       new_topic_duration:
         label: "认为主题是新主题的条件："
         not_viewed: "我还没有浏览过它们"
-        last_here: "它们是在你最近一次访问之后创建的"
-        after_n_days:
-          other: "它们是 {{count}} 天前创建的"
-        after_n_weeks:
-          other: "它们是 {{count}} 星期前创建的"
       auto_track_topics: "自动追踪我进入的主题"
       auto_track_options:
         never: "从不"
@@ -410,7 +405,7 @@ zh_CN:
     read_only_mode:
       enabled: "一个管理员启用了只读模式。您可以继续浏览这个站点但是无法进行交互。"
       login_disabled: "只读模式下不允许登录。"
-    too_few_topics_notice: "至少创建 5 个公开主题和 30 个公开帖子以开始讨论。除非有内容让新用户开始阅读，否则他们无法提高信任等级。"
+    too_few_topics_notice: "创建至少 5 个公开主题和 %{posts} 个公开帖子以开始讨论。新用户无法得到信任等级除非已经有内容让用户阅读。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -429,6 +424,11 @@ zh_CN:
       description_time: "有 <b>{{count}}</b> 个回复，大约需要 <b>{{readingTime}} 分钟</b>阅读。"
       enable: '概括本主题'
       disable: '显示所有帖子'
+    deleted_filter:
+      enabled_description: "这个主题包含已删除的帖子，他们已经被隐藏。要再次查看所有帖子，点击下方。"
+      disabled_description: "主题中被删除的帖子已显示。要再次隐藏他们，点击下方。"
+      enable: "隐藏已删除的帖子"
+      disable: "显示已删除的帖子"
     private_message_info:
       title: "私下交流"
       invite: "邀请其他..."
@@ -454,6 +454,7 @@ zh_CN:
       username: "用户"
       password: "密码"
       email_placeholder: "电子邮箱地址或用户名"
+      caps_lock_warning: "大小写锁定开启"
       error: "未知错误"
       blank_username_or_password: "请输入您的邮件地址或用户名，以及密码。"
       reset_password: '重置密码'
@@ -718,6 +719,9 @@ zh_CN:
         regular:
           title: "常规"
           description: "只有当有人 @name 提及您或者回复您的帖子时，您才会收到通知。"
+        regular_pm:
+          title: "常规"
+          description: "只有当有人 @name 提及您或者回复您的私信时，您才会收到通知。"
         muted_pm:
           title: "防打扰"
           description: "您不会收到关于此私信的任何通知。"
@@ -755,6 +759,8 @@ zh_CN:
         help: '私下报告本帖以引起注意或者发送一条匿名通知'
         success_message: '您已成功报告本帖。'
       inviting: "邀请中..."
+      automatically_add_to_groups_optional: "这个邀请也包括了这些群组的权限：（可选，仅管理员）"
+      automatically_add_to_groups_required: "这个邀请也包括了访问这些群组的权限：（<b>可选</b>，仅管理员）"
       invite_private:
         title: '邀请进行私下交流'
         email_or_username: "受邀人的电子邮箱或用户名"
@@ -851,6 +857,8 @@ zh_CN:
       controls:
         reply: "开始给本帖撰写回复"
         like: "赞本帖"
+        has_liked: "您已经赞了本帖"
+        undo_like: "撤销赞"
         edit: "编辑本帖"
         flag: "私下报告本帖以提醒管理人员关注或发送私信通知"
         delete: "删除本帖"
@@ -867,8 +875,8 @@ zh_CN:
         unwiki: "撤销维基编辑模式"
       actions:
         flag: '报告'
-        clear_flags:
-          other: "清除标记"
+        defer_flags:
+          other: "推迟的标记"
         it_too:
           off_topic: "同时报告"
           spam: "同时报告"
@@ -1001,13 +1009,11 @@ zh_CN:
       auto_close_units: "小时"
       email_in: "自定义外来电子邮件地址:"
       email_in_allow_strangers: "接受无账号的匿名用户的邮件"
-      allow_badges_label: "启用徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
       this_year: "今年"
       position: "位置"
       default_position: "默认位置"
-      position_disabled: '分类按照其活动显示顺序。要固定分类列表的显示顺序，启用“固定分类位置”设置'
       parent: "上级分类"
       notifications:
         watching:
@@ -1102,7 +1108,6 @@ zh_CN:
           zero: "未读"
           one: "1 个未读主题"
           other: "{{count}} 个未读主题"
-        help: "追踪的主题中有未读帖子的主题"
       new:
         lower_title_with_count:
           one: "1 新"
@@ -1112,7 +1117,6 @@ zh_CN:
           zero: "新主题"
           one: "新主题（1）"
           other: "新主题（{{count}}）"
-        help: "您最近一次访问后的新主题，以及您追踪的主题中有新帖子的主题"
       posted:
         title: "我的帖子"
         help: "您发表过帖子的主题"
@@ -1189,24 +1193,31 @@ zh_CN:
         title: "报告"
         old: "旧的"
         active: "待处理"
-        agree_hide: "批准（隐藏并发送私信）"
-        agree_hide_title: "隐藏帖子并自动发送私信给作者要求其修改"
-        defer: "推迟"
-        defer_title: "现在不执行任何操作，对此帖子报告的操作推迟到晚些时候甚至永远"
-        delete_post: "删除帖子"
-        delete_post_title: "删除此帖，如果这是这个主题内的第一篇帖子则删除主题"
-        disagree_unhide: "不批准（不隐藏）"
-        disagree_unhide_title: "清除此帖的任何报告，并使其重新可见"
-        disagree: "不批准"
-        disagree_title: "不批准此帖的报告，并清除此贴的任何报告"
-        delete_spammer_title: "删除该用户及其所有帖子和主题。"
+        agree_flag_hide_post: "批准（隐藏并发送私信）"
+        agree_flag_hide_post_title: "隐藏帖子并自动发送私信要求作者修改"
+        defer_flag: "推迟"
+        defer_flag_title: "现在不执行任何操作，对此帖子报告的操作推迟到晚些时候，甚至不再提醒"
+        delete: "删除"
+        delete_title: "删除"
+        delete_post_defer_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
+        delete_post_agree_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
+        delete_spammer: "删除垃圾发布者"
+        disagree_flag_unhide_post: "不批准（不隐藏帖子）"
+        disagree_flag_unhide_post_title: "清除此帖的任何报告，并使其重新可见"
+        disagree_flag: "不批准"
+        disagree_flag_title: "不批准此帖的报告，并清除此贴的任何报告"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "这个主题已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
+        more: "（更多……）"
+        dispositions:
+          agreed: "已批准"
+          disagreed: "未批准"
+          defered: "已推迟"
         flagged_by: "报告者为"
         resolved_by: "已解决，被"
         system: "系统"
         error: "出错了"
-        view_message: "查看消息"
+        reply_message: "回复"
         no_results: "没有报告"
         topic_flagged: "这个<strong>主题</strong>已被报告。"
         visit_topic: "浏览主题才能操作"
@@ -1413,7 +1424,7 @@ zh_CN:
         edit: '编辑'
         save: '保存'
         screened_actions:
-          block: "阻挡"
+          block: "封禁"
           do_nothing: "无操作"
         staff_actions:
           title: "管理人员操作"
@@ -1458,7 +1469,7 @@ zh_CN:
           description: '受监视的 IP 地址，使用“放行”可将 IP 地址加入白名单。'
           delete_confirm: "确定要撤销对 IP 地址为 %{ip_address} 的规则？"
           actions:
-            block: "阻挡"
+            block: "封禁"
             do_nothing: "放行"
           form:
             label: "新："
@@ -1611,7 +1622,7 @@ zh_CN:
         clear_filter: "清除"
         categories:
           all_results: '全部'
-          required: '必须'
+          required: '必填'
           basic: '基本设置'
           users: '用户'
           posting: '发帖'
@@ -1622,10 +1633,10 @@ zh_CN:
           onebox: "Onebox"
           seo: '搜索引擎优化'
           spam: '垃圾信息'
-          rate_limits: '速度限制'
+          rate_limits: '频率限制'
           developer: '开发者'
           embedding: "嵌入"
-          legal: "合法"
+          legal: "法律信息"
           uncategorized: '未分类'
           backups: "备份"
           login: "登录"
@@ -1638,6 +1649,9 @@ zh_CN:
         display_name: 显示名称
         description: 描述
         badge_type: 徽章分类
+        badge_grouping: 群组
+        badge_groupings:
+          modal_title: 徽章组
         granted_by: 授予由
         granted_at: 授予于
         save: 保存
@@ -1656,10 +1670,22 @@ zh_CN:
         listable: 在公共徽章页面显示徽章
         enabled: 启用徽章系统
         icon: 图标
+        query: 徽章查询（SQL）
+        target_posts: 查询到的帖子
+        auto_revoke: 每天运行撤销查询
+        show_posts: 在徽章页面显示被授予帖子的徽章
+        preview: 预览徽章
+        trigger: 开关
+        trigger_type:
+          none: "每日更新"
+          post_action: "当用户操作一个帖子时"
+          post_revision: "当用户编辑或者创建帖子时"
+          trust_level_change: "当用户信任等级改变时"
+          user_change: "当用户被编辑或创建时"
     lightbox:
       download: "下载"
     keyboard_shortcuts_help:
-      title: '快捷键'
+      title: '键盘快捷键'
       jump_to:
         title: '跳转'
         home: '先按 <b>g</b> 再按 <b>h</b> 首页（最新内容）'
@@ -1710,27 +1736,48 @@ zh_CN:
         other: "%{count} 个已授予"
       select_badge_for_title: 选择一个徽章用作您的头衔
       no_title: "<无标题>"
+      badge_grouping:
+        getting_started:
+          name: 开始
+        community:
+          name: 社群
+        trust_level:
+          name: 信任等级
+        other:
+          name: 其它
+        posting:
+          name: 发帖
       badge:
         editor:
           name: 编辑
+          description: 首个帖子编辑
         basic_user:
           name: 基础
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社群功能
         regular_user:
           name: 常规
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a> 邀请
         leader:
-          name: 领先
+          name: 领导
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a> 重分类、重命名、跟踪链接和贵宾室
         elder:
           name: 长老
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a> 全局编辑、固定、关闭、存档、分割和合并
         welcome:
           name: 欢迎
+          description: 得到一个赞
         autobiographer:
           name: 自传作者
+          description: 已填写用户<a href="/my/preferences">资料</a>信息
         nice_post:
           name: 不错的帖子
+          description: 一个帖子收到 10 个赞。这个徽章可以被授予多次
         good_post:
           name: 实用的帖子
+          description: 一个帖子收到 25 个赞。这个徽章可以被授予多次
         great_post:
           name: 非常棒的帖子
+          description: 一个帖子收到 50 个赞。这个徽章可以被授予多次
         first_like:
           name: 首个赞
           description: 已赞了一个帖子
@@ -1748,5 +1795,7 @@ zh_CN:
           description: 引用了一个用户
         read_guidelines:
           name: 阅读指引
+          description: 阅读<a href="/guidelines">社群指引</a>
         reader:
           name: 读者
+          description: 阅读一个超过 100 个帖子的主题中的每一个帖子

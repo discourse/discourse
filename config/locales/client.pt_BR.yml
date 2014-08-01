@@ -94,8 +94,10 @@ pt_BR:
     show_more: "mostrar mais"
     links: Links
     faq: "FAQ"
+    guidelines: "Orientações"
     privacy_policy: "Política de Privacidade"
     privacy: "Privacidade"
+    terms_of_service: "Termos do Serviço"
     mobile_view: "VIsualização Mobile"
     desktop_view: "Visualização Desktop"
     you: "Você"
@@ -214,7 +216,14 @@ pt_BR:
         one: "%{count} nova mensagem nos últimos %{unit}."
         other: "%{count} novas mensagens nos últimos %{unit}."
     ip_lookup:
+      title: Pesquisa do endereço de IP
+      hostname: Nome do host
+      location: Localização
+      location_not_found: (desconhecido)
       organisation: Organização
+      phone: Telefone
+      other_accounts: Outras contas com esse endereço de IP
+      no_other_accounts: (nenhum)
     user:
       said: "{{username}} postou:"
       profile: "Perfil"
@@ -246,6 +255,7 @@ pt_BR:
       watched_categories: "Acompanhados"
       watched_categories_instructions: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
       tracked_categories: "Monitorado"
+      tracked_categories_instructions: "Você vai monitorar automaticamente todos os novos tópicos dessas categorias. A contagem de postagens novas e não lidas aparecerá ao lado a lista do tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
       delete_account: "Excluir Minha Conta"
@@ -344,13 +354,6 @@ pt_BR:
       new_topic_duration:
         label: "Considerar tópicos como novos quando"
         not_viewed: "você não viu eles ainda"
-        last_here: "foram criados desde sua última visita"
-        after_n_days:
-          one: "foi criado no último dia"
-          other: "foram criados nos últimos {{count}} dias"
-        after_n_weeks:
-          one: "foi criado na última semana"
-          other: "foram criados nas últimas {{count}} semanas"
       auto_track_topics: "Monitorar automaticamente tópicos que você entrar"
       auto_track_options:
         never: "nunca"
@@ -422,7 +425,6 @@ pt_BR:
     read_only_mode:
       enabled: "Um modo somente de leitura. Você pode continuar a navegar no site, mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
-    too_few_topics_notice: "Crie pelo menos 5 tópicos públicos e 30 postagens públicas para começar a discussão. Novos usuários não irão ganhar níveis de confiança se não houver conteúdo par ser lido."
     learn_more: "aprenda mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -889,9 +891,6 @@ pt_BR:
         unwiki: "Remover Wiki"
       actions:
         flag: 'Sinalização'
-        clear_flags:
-          one: "Apagar sinalização"
-          other: "Apagar sinalizações"
         it_too:
           off_topic: "Sinalizar também"
           spam: "Sinalizar também"
@@ -1043,7 +1042,6 @@ pt_BR:
       this_year: "este ano"
       position: "posição"
       default_position: "Posição Padrão"
-      position_disabled: 'Categorias serão mostradas em ordem de atividade. Para controlar a ordem das categorias em listas, ligue a configuração "categorias em posição fixa"'
       parent: "Categoria Principal"
       notifications:
         watching:
@@ -1137,7 +1135,6 @@ pt_BR:
           zero: "Não lido"
           one: "Não lido (1)"
           other: "Não lidos ({{count}})"
-        help: "tópicos que você está acompanhando ou monitorando com mensagens não lidas"
       new:
         lower_title_with_count:
           one: "1 nova"
@@ -1147,7 +1144,6 @@ pt_BR:
           zero: "Novo"
           one: "Novo (1)"
           other: "Novos ({{count}})"
-        help: "tópicos criados desde a sua última visita"
       posted:
         title: "Minhas mensagens"
         help: "tópicos nos quais você postou"
@@ -1224,24 +1220,12 @@ pt_BR:
         title: "Sinalizações"
         old: "Antigo"
         active: "Ativo"
-        agree_hide: "Aceitar (esconder postagem + enviar MP)"
-        agree_hide_title: "Esconder esta postagem e enviar automaticamente uma mensagem particular para o usuário solicitando que ele edite esta postagem urgentemente"
-        defer: "Delegar"
-        defer_title: "Nenhum ação é necessária agora, determine uma ação para esta sinalização posteriormente, ou nunca"
-        delete_post: "Apagar Postagem"
-        delete_post_title: "Apagar o post; se for a primeira postagem apagar o tópico"
-        disagree_unhide: "Discordar (reexibir postagem)"
-        disagree_unhide_title: "Remover qualquer sinalização desta postagem e torná-la visível novamente"
-        disagree: "Rejeitar"
-        disagree_title: "Discordar desta sinalização, remover qualquer sinalização desta postagem"
-        delete_spammer_title: "Apagar usuário e todas suas mensagens e tópicos."
         clear_topic_flags: "Concluído"
         clear_topic_flags_title: "O tópico foi investigado e as questões foram resolvidas. Clique em Concluído para remover as sinalizações."
         flagged_by: "Sinalizado por"
         resolved_by: "Resolvido por"
         system: "Sistema"
         error: "Algo deu errado"
-        view_message: "Responder"
         no_results: "Não há sinalizações."
         topic_flagged: "Este <strong>tópico</strong> foi sinalizado."
         summary:
@@ -1692,7 +1676,6 @@ pt_BR:
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
-      title: 'Atalhos de Teclado (experimental)'
       jump_to:
         title: 'Ir Para'
         home: '<b>g</b> seguido de <b>h</b> Home (Recentes)'
@@ -1768,5 +1751,6 @@ pt_BR:
           name: Primeira Marcação
         first_share:
           name: Primeiro Compartilhamento
+          description: Compartilhar uma postagem
         first_link:
           name: Primeiro Link

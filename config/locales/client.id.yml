@@ -179,7 +179,6 @@ id:
           zero: "Baru"
           one: "Baru(1)"
           other: "Baru ({{count}})"
-        help: "topik dibuat sejak kunjungan terakhirmu"
       category:
         title:
           zero: "{{categoryName}}"
@@ -195,7 +194,6 @@ id:
         last_checked: "Terakhir dicek"
       flags:
         system: "Sistem"
-        view_message: "Balas"
       groups:
         delete: "Hapus"
         delete_confirm: "Hapus grup ini?"

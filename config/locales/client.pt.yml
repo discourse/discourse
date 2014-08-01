@@ -297,7 +297,6 @@ pt:
         the_topic: "o tópico"
     loading: "A carregar..."
     close: "Fechar"
-    too_few_topics_notice: "Crie pelo menos 5 tópicos e 30 posts públicos para dar inicio à discussão. Novos utilizadores não poderão ganhar níveis de confiança se não houver conteúdo para lerem."
     learn_more: "sabe mais..."
     year: 'ano'
     month: 'mês'
@@ -627,9 +626,6 @@ pt:
           no_value: "Não, somente esta mensagem"
       actions:
         flag: 'Sinalização'
-        clear_flags:
-          one: "Apagar sinalização"
-          other: "Apagar sinalizações"
         it_too:
           off_topic: "Sinalizar também"
           spam: "Sinalizar também"
@@ -872,21 +868,9 @@ pt:
         title: "Sinalizações"
         old: "Antigo"
         active: "Ativo"
-        agree_hide: "Aceitar (esconder mensagem + enviar MP)"
-        agree_hide_title: "Esconder esta mensagem e enviar automaticamente uma mensagem particular para o utilizador a solicitar que a edite  urgentemente"
-        defer: "Delegar"
-        defer_title: "Nenhuma ação é necessária agora, determine uma ação para esta sinalização posteriormente, ou nunca"
-        delete_post: "Apagar Mensagem"
-        delete_post_title: "Apagar a mensagem; se for a primeira mensagem, apagar o tópico"
-        disagree_unhide: "Discordar (reexibir mensagem)"
-        disagree_unhide_title: "Remover qualquer sinalização desta mensagem e torná-la visível novamente"
-        disagree: "Rejeitar"
-        disagree_title: "Discordar desta sinalização, remover qualquer sinalização desta mensagem"
-        delete_spammer_title: "Apagar utilizador e todas suas mensagens e tópicos."
         flagged_by: "Sinalizado por"
         system: "Sistema"
         error: "Aconteceu um erro"
-        view_message: "Responder"
         no_results: "Não há sinalizações."
         summary:
           action_type_3:

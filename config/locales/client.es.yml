@@ -181,7 +181,7 @@ es:
         nobody: "Nadie"
         only_admins: "Solo administradores"
         mods_and_admins: "Solo moderadores y administradores"
-        members_mods_and_admins: "Solo miembros del gropo, moderadores y administradore"
+        members_mods_and_admins: "Solo miembros del grupo, moderadores y administradores"
         everyone: "Todos"
     user_action_groups:
       '1': "Likes dados"
@@ -355,13 +355,6 @@ es:
       new_topic_duration:
         label: "Considerar que los temas son nuevos cuando"
         not_viewed: "Todavía no los he visto"
-        last_here: "fueron creados desde la última vez que estuviste"
-        after_n_days:
-          one: "fueron creados en el último día"
-          other: "fueron creados en los últimos {{count}} días"
-        after_n_weeks:
-          one: "fueron creados en la última semana"
-          other: "fueron creados en las últimas {{count}} semanas"
       auto_track_topics: "Seguir automáticamente los temas que leo"
       auto_track_options:
         never: "nunca"
@@ -438,7 +431,7 @@ es:
     read_only_mode:
       enabled: "Un administrador ha habilitado el modo sólo-lectura. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Abrir una sesión está desactivado mientras el foro este modo solo lectura."
-    too_few_topics_notice: "Crea al menos 5 temas y 30 posts abiertos al público para empezar la discusión. A los nuevos usuarios no les será posible ganar niveles de confianza a menos que haya contenido para que lean."
+    too_few_topics_notice: "Crea al menos 5 temas y %{posts} abiertos al público para comenzar la conversación. A los nuevos usuarios no les será posible ganar niveles de confianza a menos que haya contenido para leer."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -457,6 +450,11 @@ es:
       description_time: "Hay <b>{{count}}</b> respuestas con un tiempo de lectura estimado de <b>{{readingTime}} minutos</b>."
       enable: 'Resumir el tema'
       disable: 'Ver todos los posts'
+    deleted_filter:
+      enabled_description: "Este tema contiene posts eliminados que han sido ocultados. Para ver todos los posts de nuevo, haz clic debajo."
+      disabled_description: "Se están mostrando los posts eliminados de este tema. Para ocultarlos de nuevo, haz clic debajo."
+      enable: "Ocultar posts eliminados"
+      disable: "No ocultar posts eliminados"
     private_message_info:
       title: "Conversación privada"
       invite: "Invitar a otros..."
@@ -482,6 +480,7 @@ es:
       username: "Usuario"
       password: "Contraseña"
       email_placeholder: "dirección de email o nombre de usuario"
+      caps_lock_warning: "Está activado Bloqueo de Mayúsculas"
       error: "Error desconocido"
       blank_username_or_password: "Por favor, introducir tu email o usuario y tu contraseña"
       reset_password: 'Restablecer contraseña'
@@ -752,6 +751,9 @@ es:
         regular:
           title: "Normal"
           description: "serás notificado solo si alguien menciona tu @nombre o responde a tus posts."
+        regular_pm:
+          title: "Normal"
+          description: "Se te notificará solo si alguien menciona tu @nombre o responde a tus posts en el hilo de mensajes privados."
         muted_pm:
           title: "Silenciar"
           description: "No se te notificará sobre este mensaje privado."
@@ -789,6 +791,8 @@ es:
         help: 'reportar de forma privada para atención de los moderadores o enviar una notificación privada sobre él'
         success_message: 'Has reportado este tema correctamente.'
       inviting: "Invitando..."
+      automatically_add_to_groups_optional: "Esta invitación incluye además acceso a estos grupos: (opcional, solo administradores)"
+      automatically_add_to_groups_required: "Esta invitación incluye además acceso a estos grupos: (<b>Requerido</b>, solo administradores)"
       invite_private:
         title: 'Invitar por mensaje Privado'
         email_or_username: "Invitación por email o nombre de usuario"
@@ -893,6 +897,8 @@ es:
       controls:
         reply: "componer una respuesta para esta publicación"
         like: "me gusta esta publicación"
+        has_liked: "te gusta este post"
+        undo_like: "deshacer me gusta"
         edit: "edita esta publicación"
         flag: "reporta esta publicación de forma privada para atención de los moderadores o enviarles un notificación privada sobre el tema"
         delete: "elimina esta publicación"
@@ -910,9 +916,9 @@ es:
         unwiki: "Deshacer formato wiki"
       actions:
         flag: 'Reportar'
-        clear_flags:
-          one: "Limpiar reporte"
-          other: "Limpiar reportes"
+        defer_flags:
+          one: "Aplazar reporte"
+          other: "Aplazar reportes"
         it_too:
           off_topic: "Reportar de esto también"
           spam: "Reportar de esto también"
@@ -1062,14 +1068,12 @@ es:
       auto_close_units: "horas"
       email_in: "Dirección de correo electrónico personalizada para el correo entrante:"
       email_in_allow_strangers: "Aceptar emails de usuarios anónimos sin cuenta"
-      allow_badges_label: "Permitir distintivos"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
       this_year: "este año"
       position: "posición"
       default_position: "Posición predeterminada"
-      position_disabled: 'Las categorías se mostrarán por orden de actividad. Para controlar el orden de las categorías en las listas, habilita la opción "posición fija de categorías"'
-      parent: "Categoría Original"
+      parent: "Categoría primaria"
       notifications:
         watching:
           title: "Vigilar"
@@ -1164,7 +1168,6 @@ es:
           zero: "No leídos"
           one: "No leído (1)"
           other: "No leídos ({{count}})"
-        help: "temas que estás vigilando o siguiendo con mensajes no leídos"
       new:
         lower_title_with_count:
           one: "1 nuevo"
@@ -1174,7 +1177,6 @@ es:
           zero: "Nuevos"
           one: "Nuevo (1)"
           other: "Nuevos ({{count}})"
-        help: "temas nuevos desde su última visita"
       posted:
         title: "Mis mensajes"
         help: "temas que has publicado"
@@ -1251,24 +1253,31 @@ es:
         title: "Reportes"
         old: "Antiguo"
         active: "Activo"
-        agree_hide: "De acuerdo (ocultar + enviar MP)"
-        agree_hide_title: "Ocultar este mensaje y automáticamente enviar al usuario un mensaje privado instándolo a editarlo"
-        defer: "Aplazar"
-        defer_title: "No es necesaria ninguna acción en este momento, aplazar cualquier acción en este reporte hasta una fecha posterior, o nunca"
-        delete_post: "Eliminar Mensaje"
-        delete_post_title: "Elimina el mensaje; si es el primer mensaje, elimina el tema"
-        disagree_unhide: "En desacuerdo (hacer mensaje visible)"
-        disagree_unhide_title: "Eliminar cualquier reporte de este post y hacerlo visible de nuevo"
-        disagree: "En desacuerdo"
-        disagree_title: "En desacuerdo con el reporte, eliminar reportes de este post"
-        delete_spammer_title: "Eliminar el usuario y todos sus mensajes y temas."
+        agree_flag_hide_post: "Coincido (ocultar post + enviar MP)"
+        agree_flag_hide_post_title: "Ocultar este post y enviar automáticamente un mensaje privado al usuario para que edite su post de forma urgente."
+        defer_flag: "Aplazar"
+        defer_flag_title: "En este momento no es necesaria ninguna acción, aplazar la decisión sobre este reporte a más tarde, o para siempre"
+        delete: "Eliminar"
+        delete_title: "Eliminar"
+        delete_post_defer_flag_title: "Eliminar post; si era el primero de un tema, eliminar el tema"
+        delete_post_agree_flag_title: "Eliminar post; si era el primero de un tema, eliminar el tema"
+        delete_spammer: "Eliminar spammer"
+        disagree_flag_unhide_post: "No coincido (volver a mostrar post)"
+        disagree_flag_unhide_post_title: "Quitar todos los reportes de este post y hacerlo visible de nuevo"
+        disagree_flag: "No coincido"
+        disagree_flag_title: "No coincido con el reporte, eliminar todos los reportes de este post"
         clear_topic_flags: "Hecho"
         clear_topic_flags_title: "Este tema ha sido investigado y los problemas han sido resueltos. Haz click en Hecho para eliminar los reportes."
+        more: "(más...)"
+        dispositions:
+          agreed: "coincidió"
+          disagreed: "no coincidió"
+          defered: "aplazó"
         flagged_by: "Reportado por"
         resolved_by: "Resuelto por"
         system: "Sistema"
         error: "Algo salió mal"
-        view_message: "Responder"
+        reply_message: "Responder"
         no_results: "No hay reportes."
         topic_flagged: "Este <strong>tema</strong> ha sido reportado."
         visit_topic: "Visita el tema para tomar medidas"
@@ -1712,6 +1721,9 @@ es:
         display_name: Nombre a mostrar
         description: Descripción
         badge_type: Tipo de distintivo
+        badge_grouping: Grupo
+        badge_groupings:
+          modal_title: Grupos de distintivos
         granted_by: Concedido por
         granted_at: Concedido en
         save: Guardar
@@ -1730,10 +1742,22 @@ es:
         listable: Mostrar distintivo en la página pública de distintivos
         enabled: Activar distintivo
         icon: Icono
+        query: Consulta (SQL) para otorgar el distintivo
+        target_posts: La consulta tiene como objetivo posts
+        auto_revoke: Ejecutar diariamente la consulta de revocación
+        show_posts: Mostrar el post por el que se concedió el distintivo en la página de distintivos
+        preview: Vista previa del distintivo
+        trigger: Activador
+        trigger_type:
+          none: "Actualizar diariamente"
+          post_action: "Cuando un usuario interactúa con un post"
+          post_revision: "Cuando un usuario edita o crea un post"
+          trust_level_change: "Cuando cambia el nivel de confianza de un usuario"
+          user_change: "Cuando se edita o se crea un usuario"
     lightbox:
       download: "descargar"
     keyboard_shortcuts_help:
-      title: 'Atajos de teclado (experimental)'
+      title: 'Atajos de teclado'
       jump_to:
         title: 'Saltar a'
         home: '<b>g</b> y después <b>h</b> Home (Recientes)'
@@ -1787,27 +1811,48 @@ es:
         other: "%{count} concedido"
       select_badge_for_title: Seleccionar un distintivo para utilizar como tu título
       no_title: "<no title>"
+      badge_grouping:
+        getting_started:
+          name: Primeros pasos
+        community:
+          name: Comunidad
+        trust_level:
+          name: Nivel de confianza
+        other:
+          name: Miscelánea
+        posting:
+          name: Escritura
       badge:
         editor:
           name: Editor
+          description: Editó un post por primera vez
         basic_user:
           name: Básico
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Dispone</a> de todas las funciones esenciales de la comunidad
         regular_user:
           name: Normal
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Dispone</a> de invitaciones para el foro
         leader:
           name: Líder
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Dispone</a> de la posibilidad de recategorizar, renombrar, sus enlaces no llevan la etiqueta "nofollow" y puede entrar en la sala VIP.
         elder:
           name: Sabio
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Dispone</a> de la posibilidad de editar, destacar, cerrar, archivar y combinar temas o posts globalmente
         welcome:
           name: ¡Bienvenido/a!
+          description: Recibió un "me gusta"
         autobiographer:
           name: Autobiógrafo
+          description: Detalló información en su <a href="/my/preferences">perfil</a> de usuario
         nice_post:
           name: Buen post
+          description: Recibió 10 "me gusta" en un post. Este distintivo puede ser concedido varias veces
         good_post:
           name: Muy buen post
+          description: Recibió 25 "me gusta" en un post. Este distintivo puede ser concedido varias veces
         great_post:
           name: Excelente post
+          description: Recibió 50 "me gusta" en un post. Este distintivo puede ser concedido varias veces
         first_like:
           name: Primer "me gusta"
           description: Le dio a "me gusta" a un post
@@ -1825,5 +1870,7 @@ es:
           description: Citó a un usuario
         read_guidelines:
           name: Directrices leídas
+          description: Leyó las <a href="/guidelines">directrices de la comunidad</a>
         reader:
           name: Lector
+          description: Leyó todos los posts en un tema con más de 100

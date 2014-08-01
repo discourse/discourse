@@ -146,6 +146,7 @@ pl_PL:
     no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
   vip_category_description: "Kategoria wyłącznie dla członków o poziomie zaufania 3 lub wyższym."
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
+  assets_topic_body: "Jest to stały temat, widoczny tylko dla pracowników, do przechowywania obrazów i plików wykorzystywanych w projektowaniu forum. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie ilustracje, które chcesz użyć jako logo, favicon itd. (Użyj paska narzędzi/ikonę wysyłania w edytorze postu lub przeciągnij i upuść lub wklej zdjęcia.)\n3. Wyślij odpowiedź żeby je zachować we wpisie.\n4. Kliknij prawym przyciskiem myszy ilustrację w twoim wpisie, żeby uzyskać ścieżkę do przesłanych zdjęć lub kliknij ikonę edycji, żeby edytować swój wpis i pobrać ścieżkę do ilustracji. Skopiuj do schowka ścieżkę/adres ilustracji.\n5. Wklej te ścieżki obrazu w [podstawowych ustawieniach] (/admin/site_settings/category/required).\n\n\nPonadto, jeśli chcesz włączyć możliwość przesyłanie dodatkowych typów plików, edytuj `authorized_extensions` w [ustawieniach plików] (/admin/site_settings/category/files)."
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "[Zamień ten pierwszy paragraf na krórki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go poniżej 200 znaków. Póki nie zmienisz tego tekstu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.]"
@@ -281,11 +282,9 @@ pl_PL:
     continue: "Przejdź do %{site_name}"
   change_email:
     confirmed: "Twój email został zmieniony."
-    please_continue: "Przejdź do %{link}"
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
   activation:
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne ?"
-    please_continue: "Twoje nowe konto zostało aktywowane i zostałeś(-aś) zalogowany(-a). Przejdź do %{link}"
     welcome_to: "Witamy na forum %{site_name}!"
     approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
   post_action_types:
@@ -460,21 +459,13 @@ pl_PL:
     welcome_invite:
       title: "Przywitanie: Zaproszony użytkownik"
       description: "Prywatna wiadomość automatycznie wysyłana do nowych użytkowników po zaakceptowaniu przez nich zaproszenia do udziału od innego użytkownika."
-    privacy_policy:
-      title: "Privacy Policy"
-      description: "Your site's privacy policy. Leave blank for default policy."
-    faq:
-      title: "FAQ"
-      description: "Your site's FAQ. Leave blank for the default FAQ."
     login_required_welcome_message:
       title: "Logowanie wymagane: Przywitanie"
       description: "Wiadomość witająca wyświetlana niezalogowanym użytkownikom gdy ustawienie 'login required' jest włączone."
     tos_user_content_license:
       title: "Warunki serwisu: Licencja treści"
-      description: "Treść sekcji Licencja treści warunków serwisu."
     tos_miscellaneous:
       title: "Warunki serwisu: Rozmaite"
-      description: "Treść sekcji Rozmaite warunków serwisu."
     login_required:
       title: "Login Required: Homepage"
       description: "The text displayed for unauthorized users when login is required on the site."
@@ -609,47 +600,6 @@ pl_PL:
   system_messages:
     post_hidden:
       subject_template: "Wpis ukryty z powodu oflagowania przez społeczność"
-    usage_tips:
-      text_body_template: |
-        Ta wiadomość zawiera kilka szybkich porad na początek:
-
-        ### Przewijaj dalej
-
-        Nie ma przycisków do przejścia na następną stronę ani numerów stron - by przeczytać więcej, po prostu dalej przewijaj w dół!
-
-        Gdy ktoś napisze nową odpowiedź, pojawi się ona automatycznie na dole tematu.
-
-        ### Jak mam odpowiedzieć?
-
-        - By odpowiedzieć na konkretny wpis, użyj przycisku Odpowiedz przy tym wpisie.
-
-        - By odpowiedzieć na ogólny wątek tematu, zamiast do konkretnej osoby lub na konkretny wpis, użyj przycisku Odpowiedz na samym dole tematu.
-
-        - By poprowadzić rozmowę w innym kierunku, lecz utrzymać je powiązane, użyj przycisku Odpowiedz jako nowy temat wyświetlanego po prawej od wpisu.
-
-        ### Kto mówi do mnie?
-
-        Gdy ktoś odpowiada na Twój wpis, cytuje Cię lub wspomina Twoją @nazwę, liczba ➀ pojawi się przy przycisku rozmowy na górze strony. Użyj go by sprawdzić kto do Ciebie mówi, i gdzie.
-
-        - By wspomnieć czyjąś nazwę, wpisz `@` i pojawi się okienko automatycznego uzupełniania.
-
-        - By zacytować fragment wpisu, zaznacz go, a potem użyj przycisku Odpowiedz pojawiającego się nad Twoim zaznaczeniem..
-
-        - By zacytować cały post, użyj przycisku Importuj Cytat w pasku narzędzi edytora.
-
-        ### Spójrz na ten wpis!
-
-        By powiedzieć komuś, że podobał Ci się jego wpis, użyj przycisku polubienia ♥ na dole wpisu. Jeśli widzisz jakiś problem ze wpisem, użyj przycisku flagi by prywatnie powiadomić nasz zespół o nim.
-
-        ### Gdzie ja jestem?
-
-        - By powrócić do strony domowej w dowolnym momencie, **użyj loga w lewym, górnym rogu** lub przycisku wstecz ← w Twojej przeglądarce.
-
-        - Do wyszukiwania, Twojego profilu lub mapy strony, użyj **ikon w prawym, górnym rogu**.
-
-        - Podczas czytania tematu, przejdź na górę ↑ klikając jego tytuł na górze strony, lub naciśnij klawisz <kbd>home</kbd>. By przejść na dół ↓, użyj strzałki w dół we wskaźniku postępu tematu na dole strony, lub naciśnij klawisz <kbd>end</kbd>.
-
-        - Użyj czasów jako skrótów przy otwieraniu tematu. Możesz zawsze znaleźć się na górze tematu klikając datę pierwszego wpisu, i na dole - przez datę ostatniego.
     welcome_user:
       subject_template: "Witaj na forum %{site_name}!"
     welcome_invite:

@@ -359,15 +359,6 @@ pl_PL:
       new_topic_duration:
         label: "Uznaj, że temat jest nowy, jeśli"
         not_viewed: "jeszcze ich nie widziałeś"
-        last_here: "zostały dodane od twojej ostatniej wizyty"
-        after_n_days:
-          one: "zostały dodane w ciągu ostatniego dnia"
-          few: "zostały dodane w ciągu ostatnich {{count}} dni"
-          other: "zostały dodane w ciągu ostatnich {{count}} dni"
-        after_n_weeks:
-          one: "zostały dodane w ciągu ostatniego tygodnia"
-          few: "zostały dodane w ciągu ostatnich {{count}} tygodni"
-          other: "zostały dodane w ciągu ostatnich {{count}} tygodni"
       auto_track_topics: "Automatycznie śledź tematy, które odwiedzam"
       auto_track_options:
         never: "nigdy"
@@ -899,10 +890,6 @@ pl_PL:
         unwiki: "Zwykły wpis"
       actions:
         flag: 'Oflaguj'
-        clear_flags:
-          one: "Usuń flagę"
-          few: "Usuń flagi"
-          other: "Usuń flagi"
         it_too:
           off_topic: "Oflaguj też to"
           spam: "Oflaguj też to"
@@ -1160,7 +1147,6 @@ pl_PL:
           zero: "Nieprzeczytane"
           one: "Nieprzeczytany (1)"
           other: "Nieprzeczytanych ({{count}})"
-        help: "wątki, które obserwujesz lub śledzisz z nieprzeczytanymi wpisami"
       new:
         lower_title_with_count:
           one: "1 nowy"
@@ -1170,7 +1156,6 @@ pl_PL:
           zero: "Nowe"
           one: "Nowy (1)"
           other: "Nowych ({{count}})"
-        help: "wątki utworzone od Twojej ostatniej wizyty"
       posted:
         title: "Moje wpisy"
         help: "tematy w których pisałeś"
@@ -1247,23 +1232,11 @@ pl_PL:
         title: "Flagi"
         old: "Stare"
         active: "Aktywność"
-        agree_hide: "Zgadzam się (ukryj wpis + wyślij PW)"
-        agree_hide_title: "Ukryj ten wpis i automatycznie wyślij użytkownikowi prywatną wiadomość wzywając go do jego edycji"
-        defer: "Odrocz"
-        defer_title: "Żadne działanie nie jest teraz potrzebne, odrocz działanie związane z tą flagę na później lub nigdy"
-        delete_post: "Usuń wpis"
-        delete_post_title: "Usuń wpis; jeżeli jest pierwszym wpisem, usuń temat"
-        disagree_unhide: "Nie zgadzam się (odkryj wpis)"
-        disagree_unhide_title: "Usuń flagi dotyczące tego wpisu i uczyń wpis ponownie widzialnym"
-        disagree: "Nie zgadzam się"
-        disagree_title: "Nie zgadzam się z flagą, usuń wszystkie flagi z tego wpisu"
-        delete_spammer_title: "Usuń użytkownika(-czkę) i wszystkie jego(-ej) wpisy i tematy."
         clear_topic_flags: "Wykonane"
         clear_topic_flags_title: "Ten temat został zbadany i problemy zostały rozwiązane. Kliknij Wykone by usunąć oflagowanie."
         flagged_by: "Oflagowany przez"
         system: "System"
         error: "Coś poszło nie tak"
-        view_message: "Odpowiedz"
         no_results: "Nie ma flag."
         topic_flagged: "Ten <strong>temat</strong> został oflagowany."
         summary:
@@ -1714,7 +1687,6 @@ pl_PL:
     lightbox:
       download: "pobierz"
     keyboard_shortcuts_help:
-      title: 'Skróty klawiszowe (eksperymentalne)'
       jump_to:
         title: 'Przeskocz do'
         home: '<b>g</b> następnie <b>h</b> Home (Najnowsze)'
