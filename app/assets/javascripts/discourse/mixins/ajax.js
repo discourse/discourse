@@ -40,12 +40,6 @@ Discourse.Ajax = Em.Mixin.create({
       Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
     }
 
-    // If we have URL_FIXTURES, load from there instead (testing)
-    var fixture = Discourse.URL_FIXTURES && Discourse.URL_FIXTURES[url];
-    if (fixture) {
-      return Ember.RSVP.resolve(fixture);
-    }
-
     var performAjax = function(promise) {
       var oldSuccess = args.success;
       args.success = function(xhr) {

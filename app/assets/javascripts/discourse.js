@@ -9,9 +9,6 @@
 window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
 
-  // Helps with integration tests
-  URL_FIXTURES: {},
-
   getURL: function(url) {
     // If it's a non relative URL, return it.
     if (url.indexOf('http') === 0) return url;

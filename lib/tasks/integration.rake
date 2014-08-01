@@ -7,13 +7,8 @@ task 'integration:create_fixtures' => :environment do
     discovery: ["/latest.json", "/categories.json", "/category/bug/l/latest.json"],
     topic: ["/t/280.json"],
     user: ["/users/eviltrout.json",
-           "/user_actions.json?offset=0&username=eviltrout",
-           "/topics/created-by/eviltrout.json",
-           "/user_actions.json?offset=0&username=eviltrout&filter=5",
-           "/user_actions.json?offset=0&username=eviltrout&filter=6,7,9",
-           "/user_actions.json?offset=0&username=eviltrout&filter=1",
-           "/user_actions.json?offset=0&username=eviltrout&filter=2",
-           "/user_actions.json?offset=0&username=eviltrout&filter=11"],
+           "/user_actions.json",
+           "/topics/created-by/eviltrout.json"]
     static: ["/faq", '/tos', '/privacy'],
     unknown: ['/404-body']
   }
@@ -22,7 +17,7 @@ task 'integration:create_fixtures' => :environment do
 
     filename = "#{Rails.root}/test/javascripts/fixtures/#{type}_fixtures.js"
 
-    content = "/*jshint maxlen:10000000 */\n"
+    content = "/*jshint maxlen:10000000 */\nexport default {\n"
     urls.each do |url|
 
       http_result = fake_xhr("http://localhost:3000#{url}")
@@ -33,9 +28,10 @@ task 'integration:create_fixtures' => :environment do
       rescue
         http_result = http_result.to_json
       end
-      content << "Discourse.URL_FIXTURES[\"#{url}\"] = #{http_result};\n"
+      content << "\"#{url}\": #{http_result},\n"
 
     end
+    content << "};\n"
 
     File.write(filename, content)
   end

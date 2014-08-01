@@ -17,6 +17,35 @@ function response(code, obj) {
 
 export default function() {
   var server = new Pretender(function() {
+
+    // Load any fixtures automatically
+    var self = this;
+    Ember.keys(require._eak_seen).forEach(function(entry) {
+      if (/^fixtures/.test(entry)) {
+        var fixture = require(entry, null, null, true);
+        if (fixture && fixture.default) {
+          var obj = fixture.default;
+          Ember.keys(obj).forEach(function(url) {
+            self.get(url, function() {
+              return response(obj[url]);
+            });
+          });
+        }
+      }
+    });
+
+    this.get("/404-body", function() {
+      return [200, {"Content-Type": "text/html"}, "<div class='page-not-found'>not found</div>"];
+    });
+
+    this.get("/search", function() {
+      return response([ { type: "topic", more: true, results: [ { url: "some-url" } ] } ]);
+    });
+
+    this.get('/draft.json', function() {
+      return response({});
+    });
+
     this.post('/session', function(request) {
       var data = parsePostData(request.requestBody);
 
@@ -55,6 +84,7 @@ export default function() {
     if (body && typeof body === "object") {
       return JSON.stringify(body);
     }
+    return body;
   };
 
   server.unhandledRequest = function(verb, path) {
