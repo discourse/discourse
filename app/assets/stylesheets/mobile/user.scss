@@ -222,7 +222,7 @@
       color: scale-color($primary, $lightness: 50%);
     }
     .item.moderator-action {
-      background-color: scale-color($tertiary, $lightness: 40%);
+      background-color:  scale-color($highlight, $lightness: 50%);
     }
     .item.deleted {
       opacity: 0.8;
@@ -270,6 +270,38 @@
       float: right !important;
       margin-top: -8px;
     }
+  }
+
+  .staff-counters {
+    text-align: center;
+    > div {
+      margin-bottom: 10px;
+    }
+    a.active {
+      font-weight: bold;
+    }
+  }
+
+  .pill {
+    border-radius: 15px;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+  }
+  .helpful-flags {
+    background-color: green;
+  }
+  .flagged-posts {
+    background-color: #E49735;
+  }
+  .deleted-posts {
+    background-color: #EC441B;
+  }
+  .suspensions {
+    background-color: #c22020;
   }
 
   div#pagedown-editor {
