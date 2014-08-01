@@ -41,9 +41,13 @@ module Onebox
 
       def timestamp
         if raw.html?
-          raw.css(".metadata span").inner_text
+          raw.css(".metadata span")[0].inner_text
         else
-          access(:created_at)
+          created_at = access(:created_at)
+          date = DateTime.strptime(created_at, "%a %b %d %H:%M:%S %z %Y")
+          user_offset = access(:user, :utc_offset).to_i
+          offset = (user_offset >= 0 ? "+" : "-") + Time.at(user_offset.abs).gmtime.strftime("%H%M")
+          date.new_offset(offset).strftime("%l:%M %p - %e %b %Y")
         end
       end
 
