@@ -8,7 +8,7 @@ task 'integration:create_fixtures' => :environment do
     topic: ["/t/280.json"],
     user: ["/users/eviltrout.json",
            "/user_actions.json",
-           "/topics/created-by/eviltrout.json"]
+           "/topics/created-by/eviltrout.json"],
     static: ["/faq", '/tos', '/privacy'],
     unknown: ['/404-body']
   }
