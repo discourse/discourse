@@ -140,7 +140,8 @@ Badge.seed do |b|
   b.show_posts = true
   b.query = Badge::Queries::FirstShare
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
-  b.trigger = Badge::Trigger::PostRevision
+  # don't trigger for now, its too expensive
+  b.trigger = Badge::Trigger::None
 end
 
 Badge.seed do |b|
