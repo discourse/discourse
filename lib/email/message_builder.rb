@@ -49,7 +49,7 @@ module Email
       return unless html_override = @opts[:html_override]
       if @opts[:add_unsubscribe_link]
 
-        if response_instructions = @opts[:respond_instructions]
+        if response_instructions = @template_args[:respond_instructions]
           respond_instructions = PrettyText.cook(response_instructions).html_safe
           html_override.gsub!("%{respond_instructions}", respond_instructions)
         end

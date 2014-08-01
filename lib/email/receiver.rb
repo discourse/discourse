@@ -67,19 +67,6 @@ module Email
       end
     end
 
-    def is_in_email?
-      @allow_strangers = false
-      return false unless SiteSetting.email_in
-
-      category = Category.find_by_email(@message.to.first)
-      return false unless category
-
-      @category_id = category.id
-      @allow_strangers = category.email_in_allow_strangers
-
-      true
-    end
-
     private
 
     def parse_body
@@ -146,6 +133,19 @@ module Email
 
       @body = lines[0..range_end].join
       @body.strip!
+    end
+
+    def is_in_email?
+      @allow_strangers = false
+      return false unless SiteSetting.email_in
+
+      category = Category.find_by_email(@message.to.first)
+      return false unless category
+
+      @category_id = category.id
+      @allow_strangers = category.email_in_allow_strangers
+
+      true
     end
 
     def wrap_body_in_quote
