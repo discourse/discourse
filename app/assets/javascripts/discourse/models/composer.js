@@ -135,10 +135,10 @@ Discourse.Composer = Discourse.Model.extend({
     @property titleLengthValid
   **/
   titleLengthValid: function() {
-    if (Discourse.User.currentProp('admin') && this.get('titleLength') > 0) return true;
+    if (Discourse.User.currentProp('admin') && this.get('post.static_doc') && this.get('titleLength') > 0) return true;
     if (this.get('titleLength') < this.get('minimumTitleLength')) return false;
     return (this.get('titleLength') <= Discourse.SiteSettings.max_topic_title_length);
-  }.property('minimumTitleLength', 'titleLength'),
+  }.property('minimumTitleLength', 'titleLength', 'post.static_doc'),
 
   // The text for the save button
   saveText: function() {

@@ -3,7 +3,7 @@ module Validators; end
 class Validators::PostValidator < ActiveModel::Validator
   def validate(record)
     presence(record)
-    unless record.acting_user.try(:admin?)
+    unless Discourse.static_doc_topic_ids.include?(record.topic_id) && record.acting_user.try(:admin?)
       stripped_length(record)
       raw_quality(record)
       max_posts_validator(record)

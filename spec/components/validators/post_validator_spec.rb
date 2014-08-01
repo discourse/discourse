@@ -86,21 +86,24 @@ describe Validators::PostValidator do
     end
   end
 
-  context "acting_user is an admin" do
+  context "post is for a static page and acting_user is an admin" do
     before do
-      post.acting_user = Fabricate(:admin)
+      @tos_post = build(:post)
+      @tos_post.acting_user = Fabricate(:admin)
+      SiteSetting.stubs(:tos_topic_id).returns(@tos_post.topic_id)
     end
 
     it "skips most validations" do
-      validator.expects(:stripped_length).never
-      validator.expects(:raw_quality).never
-      validator.expects(:max_posts_validator).never
-      validator.expects(:max_mention_validator).never
-      validator.expects(:max_images_validator).never
-      validator.expects(:max_attachments_validator).never
-      validator.expects(:max_links_validator).never
-      validator.expects(:unique_post_validator).never
-      validator.validate(post)
+      v = Validators::PostValidator.new({})
+      v.expects(:stripped_length).never
+      v.expects(:raw_quality).never
+      v.expects(:max_posts_validator).never
+      v.expects(:max_mention_validator).never
+      v.expects(:max_images_validator).never
+      v.expects(:max_attachments_validator).never
+      v.expects(:max_links_validator).never
+      v.expects(:unique_post_validator).never
+      v.validate(@tos_post)
     end
   end
 

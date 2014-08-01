@@ -243,18 +243,23 @@ test('open with a quote', function() {
 
 module("Discourse.Composer as admin", {
   setup: function() {
+    Discourse.SiteSettings.min_topic_title_length = 5;
+    Discourse.SiteSettings.max_topic_title_length = 10;
     sandbox.stub(Discourse.User, 'currentProp').withArgs('admin').returns(true);
   },
 
   teardown: function() {
+    Discourse.SiteSettings.min_topic_title_length = 15;
+    Discourse.SiteSettings.max_topic_title_length = 255;
     Discourse.User.currentProp.restore();
   }
 });
 
-test("Title length for regular topics as admin", function() {
-  Discourse.SiteSettings.min_topic_title_length = 5;
-  Discourse.SiteSettings.max_topic_title_length = 10;
+test("Title length for static page topics as admin", function() {
   var composer = Discourse.Composer.create();
+
+  var post = Discourse.Post.create({id: 123, post_number: 2, static_doc: true});
+  composer.setProperties({post: post, action: Discourse.Composer.EDIT });
 
   composer.set('title', 'asdf');
   ok(composer.get('titleLengthValid'), "admins can use short titles");
