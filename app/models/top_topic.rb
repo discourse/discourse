@@ -10,20 +10,36 @@ class TopTopic < ActiveRecord::Base
     @sort_orders ||= [:posts, :views, :likes]
   end
 
-  def self.refresh!
+  # The top topics we want to refresh often
+  def self.refresh_daily!
     transaction do
-      # update the topics list
       remove_invisible_topics
       add_new_visible_topics
-      # update the denormalized data
-      TopTopic.periods.each do |period|
+
+      TopTopic.sort_orders.each do |sort|
+        TopTopic.send("update_#{sort}_count_for", :daily)
+      end
+      TopTopic.compute_top_score_for(:daily)
+    end
+  end
+
+  # We don't have to refresh these as often
+  def self.refresh_older!
+    older = TopTopic.periods - [:daily]
+
+    transaction do
+      older.each do |period|
         TopTopic.sort_orders.each do |sort|
-          TopTopic.send("update_#{sort}_count_for", period)
+          TopTopic.send("update_#{sort}_count_for", :daily)
         end
-        # compute top score
-        TopTopic.compute_top_score_for(period)
+        TopTopic.compute_top_score_for(:daily)
       end
     end
+  end
+
+  def self.refresh!
+    TopTopic.refresh_daily!
+    TopTopic.refresh_older!
   end
 
   def self.remove_invisible_topics

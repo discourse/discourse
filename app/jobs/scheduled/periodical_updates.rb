@@ -18,9 +18,6 @@ module Jobs
       # Update the scores of posts
       ScoreCalculator.new.calculate(1.day.ago)
 
-      # Update the scores of topics
-      TopTopic.refresh!
-
       # Automatically close stuff that we missed
       Topic.auto_close
 
