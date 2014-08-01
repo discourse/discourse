@@ -25,6 +25,7 @@ module Jobs
         Email::Receiver.new(mail_string).process
       rescue => e
         message_template = nil
+        template_args = {}
         case e
           when Email::Receiver::UserNotSufficientTrustLevelError
             message_template = :email_reject_trust_level
@@ -39,8 +40,13 @@ module Jobs
           when ActiveRecord::Rollback
             message_template = :email_reject_post_error
           when Email::Receiver::InvalidPost
-            # TODO there is a message in this exception, place it in email
-            message_template = :email_reject_post_error
+            if e.message.length < 6
+              message_template = :email_reject_post_error
+            else
+              message_template = :email_reject_post_error_specified
+              template_args[:post_error] = e.message
+            end
+
           else
             message_template = nil
         end
@@ -48,7 +54,10 @@ module Jobs
         if message_template
           # inform the user about the rejection
           message = Mail::Message.new(mail_string)
-          client_message = RejectionMailer.send_rejection(message.from, message.body, message.subject, message.to, message_template)
+          template_args[:former_title] = message.subject
+          template_args[:destination] = message.to
+
+          client_message = RejectionMailer.send_rejection(message_template, message.from, template_args)
           Email::Sender.new(client_message, message_template).send
         else
           Discourse.handle_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))

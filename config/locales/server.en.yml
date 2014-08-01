@@ -1419,7 +1419,18 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Some possible causes are: complex formatting, message too large, message too small. Please try again.
+        Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
+
+    email_reject_post_error_specified:
+      subject_template: "Email issue -- Posting error"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Rejection message:
+
+        %{post_error}
+
+        Please attempt to fix the errors and try again.
 
     email_reject_reply_key:
       subject_template: "Email issue -- Bad Reply Key"
