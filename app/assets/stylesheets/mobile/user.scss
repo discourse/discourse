@@ -132,6 +132,23 @@
         margin-bottom: 4px;
       }
 
+      .primary {
+        color: $secondary;
+        text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+        max-height: 300px;
+        overflow: auto;
+
+        a[href] {
+          color: $secondary;
+          text-decoration: underline;
+          text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+        }
+
+        img {
+          max-width: 100%;
+        }
+      }
+
       .secondary {
         background-color: $primary;
         text-align: left;
