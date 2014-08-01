@@ -63,6 +63,10 @@ describe Jobs::PollMailbox do
     end
   end
 
+  def expect_success
+    Jobs::PollMailbox.expects(:handle_failure).never
+  end
+
   describe "processing email B" do
     let(:category) { Fabricate(:category) }
     let(:user) { Fabricate(:user) }
@@ -83,6 +87,7 @@ describe Jobs::PollMailbox do
       let(:expected_post) { fixture_file('emails/valid_incoming.cooked') }
 
       it "posts a new topic with the correct content" do
+        expect_success
 
         poller.handle_mail(email)
 
@@ -111,8 +116,7 @@ describe Jobs::PollMailbox do
       end
 
       pending "creates a new post with the correct content" do
-        RejectionMailer.expects(:send_rejection).never
-        Discourse.expects(:handle_exception).never
+        expect_success
 
         poller.handle_mail(email)
 
