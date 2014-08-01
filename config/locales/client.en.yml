@@ -401,13 +401,13 @@ en:
       new_topic_duration:
         label: "Consider topics new when"
         not_viewed: "you haven't viewed them yet"
-        last_here: "they were created since you were here last"
+        last_here: "created since you were here last"
         after_n_days:
-          one: "they were created in the last day"
-          other: "they were created in the last {{count}} days"
+          one: "created in the last day"
+          other: "created in the last {{count}} days"
         after_n_weeks:
-          one: "they were created in the last week"
-          other: "they were created in the last {{count}} weeks"
+          one: "created in the last week"
+          other: "created in the last {{count}} weeks"
 
       auto_track_topics: "Automatically track topics you enter"
       auto_track_options:
