@@ -14,6 +14,7 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse
   beforeModel: function(transition) {
     if (transition.targetName.indexOf("discovery.top") === -1 &&
         Discourse.User.currentProp("should_be_redirected_to_top")) {
+      Discourse.User.currentProp("should_be_redirected_to_top", false);
       this.transitionTo("discovery.top");
     }
   },

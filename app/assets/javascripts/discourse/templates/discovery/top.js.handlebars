@@ -1,5 +1,5 @@
 <div class="top-lists">
-  {{#if currentUser.should_be_redirected_to_top}}
+  {{#if currentUser.redirected_to_top_reason}}
     <div class="alert alert-info">{{currentUser.redirected_to_top_reason}}</div>
   {{/if}}
   {{#if content.yearly}}

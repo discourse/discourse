@@ -39,6 +39,11 @@ Discourse.DiscoveryTopRoute = Discourse.Route.extend(Discourse.OpenComposer, {
 
   actions: {
 
+    willTransition: function () {
+      Discourse.User.currentProp("should_be_redirected_to_top", false);
+      Discourse.User.currentProp("redirected_to_top_reason", null);
+    },
+
     createTopic: function() {
       this.openComposer(this.controllerFor('discovery/top'));
     }
@@ -109,6 +114,11 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend(Discourse.OpenCompo
   },
 
   actions: {
+
+    willTransition: function () {
+      Discourse.User.currentProp("should_be_redirected_to_top", false);
+      Discourse.User.currentProp("redirected_to_top_reason", null);
+    },
 
     createTopic: function() {
       this.openComposer(this.controllerFor('discovery/top'));
