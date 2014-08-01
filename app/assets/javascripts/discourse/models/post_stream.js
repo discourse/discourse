@@ -17,9 +17,7 @@ Discourse.PostStream = Em.Object.extend({
 
   notLoading: Em.computed.not('loading'),
 
-  filteredPostsCount: function(){
-    return this.get("stream").length;
-  }.property("stream.@each"),
+  filteredPostsCount: Em.computed.alias("stream.length"),
 
   /**
     Have we loaded any posts?
@@ -281,7 +279,6 @@ Discourse.PostStream = Em.Object.extend({
     if (idx !== -1) {
       // Insert the gap at the appropriate place
       stream.splice.apply(stream, [idx, 0].concat(gap));
-      stream.enumerableContentDidChange();
 
       var postIdx = currentPosts.indexOf(post);
       if (postIdx !== -1) {
@@ -294,6 +291,7 @@ Discourse.PostStream = Em.Object.extend({
           });
 
           delete self.get('gaps.before')[postId];
+          self.get('stream').enumerableContentDidChange();
         });
       }
     }
@@ -311,11 +309,14 @@ Discourse.PostStream = Em.Object.extend({
   fillGapAfter: function(post, gap) {
     var postId = post.get('id'),
         stream = this.get('stream'),
-        idx = stream.indexOf(postId);
+        idx = stream.indexOf(postId),
+        self = this;
 
     if (idx !== -1) {
       stream.pushObjects(gap);
-      return this.appendMore();
+      return this.appendMore().then(function() {
+        self.get('stream').enumerableContentDidChange();
+      });
     }
     return Ember.RSVP.resolve();
   },
