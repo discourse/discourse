@@ -1317,7 +1317,7 @@ en:
           zero: "Unread"
           one: "Unread (1)"
           other: "Unread ({{count}})"
-        help: "topics you are watching or tracking with unread posts"
+        help: "topics you are currently watching or tracking with unread posts"
       new:
         lower_title_with_count:
           zero: ""
@@ -1328,7 +1328,7 @@ en:
           zero: "New"
           one: "New (1)"
           other: "New ({{count}})"
-        help: "topics created since your last visit"
+        help: "topics created in the last few days"
       posted:
         title: "My Posts"
         help: "topics you have posted in"
