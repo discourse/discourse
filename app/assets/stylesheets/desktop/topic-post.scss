@@ -255,13 +255,28 @@ nav.post-controls {
   &.bottom .arrow {float: right; margin: 0 0 0 0;}
   &.bottom {
   margin-top: -11px;
+    // WARNING *ONLY* DO THIS ON REPLY EXPANSIONS!
+    // auto-sizing of images causes massive havoc with regular post stream
+    // but we have to do this on reply expansions because the width is
+    // unavoidably narrower than a regular post
+  .lightbox-wrapper img {
+    width: 100%;
+    height: auto;
+  }
 }
 
   // top means "in reply to expansion" above a post
   &.top {
     margin-left: 56px;
     width: 701px;
-
+    // WARNING *ONLY* DO THIS ON REPLY EXPANSIONS!
+    // auto-sizing of images causes massive havoc with regular post stream
+    // but we have to do this on reply expansions because the width is
+    // unavoidably narrower than a regular post
+    .lightbox-wrapper img {
+      width: 100%;
+      height: auto;
+    }
   }
   &.top.topic-body {padding-left: 0; padding-right: 0;}
     .post-date {color: scale-color($primary, $lightness: 50%);}
