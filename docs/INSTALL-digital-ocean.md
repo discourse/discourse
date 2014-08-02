@@ -80,9 +80,14 @@ We recommend Nano because it works like a typical GUI text editor, just use your
 
 - Place your mail credentials in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
 
+- If your forum language is not English, set `LANG` to corresponding value.
+For example, for Russian language: `LANG: ru_RU.UTF-8`
+This will make search by keywords and similar topics search work much better.
+
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 so you have more memory room.
 
 <img src="http://www.discourse.org/images/install/nano-screenshot.png" width="578" height="407">
+
 
 After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
