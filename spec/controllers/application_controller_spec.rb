@@ -24,13 +24,6 @@ describe TopicsController do
     lambda { get :show, {id: topic.id} }.should_not raise_error
   end
 
-  it "stores an incoming link when there is an off-site referer" do
-    lambda {
-      set_referer("http://google.com/search")
-      get :show, {id: topic.id}
-    }.should change(IncomingLink, :count).by(1)
-  end
-
   describe "has_escaped_fragment?" do
     render_views
 
@@ -88,19 +81,6 @@ describe TopicsController do
         response.should render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
-    end
-
-  end
-
-  describe 'after inserting an incoming link' do
-
-    it 'sets last link correctly' do
-      set_referer("http://google.com/search")
-      get :show, {topic_id: topic.id}
-
-      last_link = IncomingLink.last
-      last_link.topic_id.should == topic.id
-      last_link.post_number.should == 1
     end
 
   end

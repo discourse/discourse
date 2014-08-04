@@ -31,6 +31,9 @@ class TopicsController < ApplicationController
   skip_before_filter :check_xhr, only: [:show, :feed]
 
   def show
+
+    flash["referer"] ||= request.referer
+
     # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
     # existing installs.
     return wordpress if params[:best].present?
@@ -379,6 +382,18 @@ class TopicsController < ApplicationController
     ip = request.remote_ip
     user_id = (current_user.id if current_user)
     track_visit = should_track_visit_to_topic?
+
+    Scheduler::Defer.later "Track Link" do
+      IncomingLink.add(
+        referer: request.referer || flash[:referer],
+        host: request.host,
+        current_user: current_user,
+        topic_id: @topic_view.topic.id,
+        post_number: params[:post_number],
+        username: request['u'],
+        ip_address: request.remote_ip
+      )
+    end unless request.xhr?
 
     Scheduler::Defer.later "Track Visit" do
       View.create_for_parent(Topic, topic_id, ip, user_id)
