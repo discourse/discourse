@@ -156,6 +156,7 @@ class PostAction < ActiveRecord::Base
 
   def add_moderator_post_if_needed(moderator, disposition, delete_post=false)
     return unless related_post
+    return if related_post.topic.posts.where(post_type: Post.types[:moderator_action]).exists?
     message_key = "flags_dispositions.#{disposition}"
     message_key << "_and_deleted" if delete_post
     related_post.topic.add_moderator_post(moderator, I18n.t(message_key))

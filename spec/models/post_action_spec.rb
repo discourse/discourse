@@ -9,6 +9,7 @@ describe PostAction do
 
   let(:moderator) { Fabricate(:moderator) }
   let(:codinghorror) { Fabricate(:coding_horror) }
+  let(:admin) { Fabricate(:admin) }
   let(:post) { Fabricate(:post) }
   let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
@@ -47,6 +48,19 @@ describe PostAction do
 
       action.reload
       action.deleted_at.should be_nil
+
+      # Acting on the flag should post an automated status message
+      topic.posts.count.should == 2
+      PostAction.agree_flags!(post, admin)
+      topic.reload
+      topic.posts.count.should == 3
+      topic.posts.last.post_type.should == Post.types[:moderator_action]
+
+      # Clearing the flags should not post another automated status message
+      PostAction.act(mod, post, PostActionType.types[:notify_moderators], message: "another special message")
+      PostAction.clear_flags!(post, admin)
+      topic.reload
+      topic.posts.count.should == 3
     end
 
     describe 'notify_moderators' do
