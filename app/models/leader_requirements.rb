@@ -59,7 +59,7 @@ class LeaderRequirements
   end
 
   def topics_viewed_query
-    View.where(user_id: @user.id, parent_type: 'Topic').select('distinct(parent_id)')
+    TopicViewItem.where(user_id: @user.id).select('topic_id')
   end
 
   def topics_viewed

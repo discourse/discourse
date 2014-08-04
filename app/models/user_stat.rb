@@ -13,10 +13,9 @@ class UserStat < ActiveRecord::Base
     # Update denormalized topics_entered
     exec_sql "UPDATE user_stats SET topics_entered = X.c
              FROM
-            (SELECT v.user_id,
-                    COUNT(DISTINCT parent_id) AS c
-             FROM views AS v
-             WHERE parent_type = 'Topic' AND v.user_id IN (
+            (SELECT v.user_id, COUNT(topic_id) AS c
+             FROM topic_views AS v
+             WHERE v.user_id IN (
                 SELECT u1.id FROM users u1 where u1.last_seen_at > :seen_at
              )
              GROUP BY v.user_id) AS X

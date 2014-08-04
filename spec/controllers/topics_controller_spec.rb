@@ -587,7 +587,7 @@ describe TopicsController do
     end
 
     it 'records a view' do
-      lambda { xhr :get, :show, topic_id: topic.id, slug: topic.slug }.should change(View, :count).by(1)
+      lambda { xhr :get, :show, topic_id: topic.id, slug: topic.slug }.should change(TopicViewItem, :count).by(1)
     end
 
     it 'records incoming links' do

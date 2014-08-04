@@ -10,7 +10,7 @@ describe LeaderRequirements do
   end
 
   def make_view(id, at, user_id)
-    View.create!(parent_id: id, parent_type: 'Topic', ip_address: '11.22.33.44', viewed_at: at, user_id: user_id)
+    TopicViewItem.add(id, '11.22.33.44', user_id, at)
   end
 
   describe "requirements" do

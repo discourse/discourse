@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
     PostTiming.delete_all(user_id: self.id)
-    View.delete_all(user_id: self.id)
+    TopicViewItem.delete_all(user_id: self.id)
   end
 
   # Whether we need to be sending a system message after creation

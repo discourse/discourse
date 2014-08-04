@@ -115,7 +115,6 @@ end
 # Table name: incoming_links
 #
 #  id                  :integer          not null, primary key
-#  topic_id            :integer
 #  created_at          :datetime
 #  user_id             :integer
 #  ip_address          :inet

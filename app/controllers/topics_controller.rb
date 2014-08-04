@@ -396,7 +396,7 @@ class TopicsController < ApplicationController
     end unless request.xhr?
 
     Scheduler::Defer.later "Track Visit" do
-      View.create_for_parent(Topic, topic_id, ip, user_id)
+      TopicViewItem.add(topic_id, ip, user_id)
       if track_visit
         TopicUser.track_visit! topic_id, user_id
       end

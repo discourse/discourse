@@ -24,7 +24,6 @@ end
 # Table name: incoming_referers
 #
 #  id                 :integer          not null, primary key
-#  url                :string(1000)     not null
 #  path               :string(1000)     not null
 #  incoming_domain_id :integer          not null
 #
