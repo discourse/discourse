@@ -90,20 +90,19 @@ end
 # Table name: incoming_links
 #
 #  id              :integer          not null, primary key
-#  url             :string(1000)     not null
 #  referer         :string(1000)
 #  domain          :string(100)
 #  topic_id        :integer
 #  post_number     :integer
 #  created_at      :datetime
-#  updated_at      :datetime
 #  user_id         :integer
 #  ip_address      :inet
 #  current_user_id :integer
+#  post_id         :integer          not null
 #
 # Indexes
 #
-#  incoming_index                                  (topic_id,post_number)
 #  index_incoming_links_on_created_at_and_domain   (created_at,domain)
 #  index_incoming_links_on_created_at_and_user_id  (created_at,user_id)
+#  index_incoming_links_on_post_id                 (post_id)
 #
