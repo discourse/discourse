@@ -13,6 +13,17 @@ Discourse.AdminFlagsRouteType = Discourse.Route.extend({
     var adminFlagsController = this.controllerFor('adminFlags');
     adminFlagsController.set('content', model);
     adminFlagsController.set('query', this.get('filter'));
+  },
+
+  actions: {
+    /**
+      Deletes a user and all posts and topics created by that user.
+
+      @method deleteSpammer
+    **/
+    deleteSpammer: function (user) {
+      user.deleteAsSpammer(function() { window.location.reload(); });
+    }
   }
 
 });
@@ -22,7 +33,12 @@ Discourse.AdminFlagsActiveRoute = Discourse.AdminFlagsRouteType.extend({
 
   actions: {
 
-    showDeleteFlagModal: function(flaggedPost) {
+    showAgreeFlagModal: function (flaggedPost) {
+      Discourse.Route.showModal(this, 'admin_agree_flag', flaggedPost);
+      this.controllerFor('modal').set('modalClass', 'agree-flag-modal');
+    },
+
+    showDeleteFlagModal: function (flaggedPost) {
       Discourse.Route.showModal(this, 'admin_delete_flag', flaggedPost);
       this.controllerFor('modal').set('modalClass', 'delete-flag-modal');
     }

@@ -8,19 +8,10 @@
 **/
 export default Ember.ArrayController.extend({
 
-  adminOldFlagsView: Em.computed.equal('query', 'old'),
-  adminActiveFlagsView: Em.computed.equal('query', 'active'),
+  adminOldFlagsView: Em.computed.equal("query", "old"),
+  adminActiveFlagsView: Em.computed.equal("query", "active"),
 
   actions: {
-
-    agreeFlags: function (flaggedPost) {
-      var self = this;
-      flaggedPost.agreeFlags().then(function () {
-        self.removeObject(flaggedPost);
-      }, function () {
-        bootbox.alert(I18n.t("admin.flags.error"));
-      });
-    },
 
     disagreeFlags: function (flaggedPost) {
       var self = this;
@@ -41,15 +32,15 @@ export default Ember.ArrayController.extend({
     },
 
     doneTopicFlags: function(item) {
-      this.send('disagreeFlags', item);
+      this.send("disagreeFlags", item);
     },
   },
 
   loadMore: function(){
-    var flags = this.get('model');
-    return Discourse.FlaggedPost.findAll(this.get('query'),flags.length+1).then(function(data){
+    var flags = this.get("model");
+    return Discourse.FlaggedPost.findAll(this.get("query"),flags.length+1).then(function(data){
       if(data.length===0){
-        flags.set('allLoaded',true);
+        flags.set("allLoaded",true);
       }
       flags.addObjects(data);
     });

@@ -19,32 +19,45 @@ class Admin::FlagsController < Admin::AdminController
   end
 
   def agree
-    params.permit(:id, :delete_post)
+    params.permit(:id, :action_on_post)
+
     post = Post.find(params[:id])
     post_action_type = PostAction.post_action_type_for_post(post.id)
-    PostAction.agree_flags!(post, current_user, params[:delete_post])
-    if params[:delete_post]
+
+    keep_post = params[:action_on_post] == "keep"
+    delete_post = params[:action_on_post] == "delete"
+
+    PostAction.agree_flags!(post, current_user, delete_post)
+
+    if delete_post
       PostDestroyer.new(current_user, post).destroy
-    else
+    elsif !keep_post
       PostAction.hide_post!(post, post_action_type)
     end
+
     render nothing: true
   end
 
   def disagree
     params.permit(:id)
     post = Post.find(params[:id])
+
     PostAction.clear_flags!(post, current_user)
+
     post.reload
     post.unhide!
+
     render nothing: true
   end
 
   def defer
     params.permit(:id, :delete_post)
     post = Post.find(params[:id])
+
     PostAction.defer_flags!(post, current_user, params[:delete_post])
+
     PostDestroyer.new(current_user, post).destroy if params[:delete_post]
+
     render nothing: true
   end
 

@@ -104,8 +104,8 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return Discourse.ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false, data: { delete_post: deletePost } });
   },
 
-  agreeFlags: function (deletePost) {
-    return Discourse.ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false, data: { delete_post: deletePost } });
+  agreeFlags: function (actionOnPost) {
+    return Discourse.ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false, data: { action_on_post: actionOnPost } });
   },
 
   postHidden: Em.computed.alias('hidden'),
