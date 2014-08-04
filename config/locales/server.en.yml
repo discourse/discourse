@@ -757,8 +757,8 @@ en:
 
     login_required: "Require authentication to read content on this site, disallow anonymous access."
 
-    min_username_length: "Minimum username length in characters."
-    max_username_length: "Maximum username length in characters."
+    min_username_length: "Minimum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES SHORTER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
+    max_username_length: "Maximum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES LONGER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
 
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
