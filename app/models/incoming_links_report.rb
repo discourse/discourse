@@ -43,7 +43,11 @@ class IncomingLinksReport
   end
 
   def self.per_user
-    @per_user_query ||= IncomingLink.where('incoming_links.created_at > ? AND incoming_links.user_id IS NOT NULL', 30.days.ago).joins(:user).group('users.username')
+    @per_user_query ||= IncomingLink
+        .where('incoming_links.created_at > ? AND incoming_links.user_id IS NOT NULL', 30.days.ago)
+        .joins(:user)
+        .joins(:post)
+        .group('users.username')
   end
 
   def self.link_count_per_user
@@ -51,7 +55,7 @@ class IncomingLinksReport
   end
 
   def self.topic_count_per_user
-    per_user.count('incoming_links.topic_id', distinct: true)
+    per_user.count('topic_id', distinct: true)
   end
 
 
@@ -71,11 +75,19 @@ class IncomingLinksReport
   end
 
   def self.link_count_per_domain(limit=10)
-    IncomingLink.where('created_at > ? AND domain IS NOT NULL', 30.days.ago).group('domain').order('count_all DESC').limit(limit).count
+    IncomingLink.where('incoming_links.created_at > ?', 30.days.ago)
+                .joins(:incoming_referer => :incoming_domain)
+                .group('incoming_domains.name')
+                .order('count_all DESC')
+                .limit(limit).count
   end
 
   def self.per_domain(domains)
-    IncomingLink.where('created_at > ? AND domain IN (?)', 30.days.ago, domains).group('domain')
+    IncomingLink
+        .joins(:incoming_referer => :incoming_domain)
+        .joins(:post)
+        .where('incoming_links.created_at > ? AND incoming_domains.name IN (?)', 30.days.ago, domains)
+        .group('incoming_domains.name')
   end
 
   def self.topic_count_per_domain(domains)
@@ -100,6 +112,9 @@ class IncomingLinksReport
   end
 
   def self.link_count_per_topic
-    IncomingLink.where('created_at > ? AND topic_id IS NOT NULL', 30.days.ago).group('topic_id').count
+    IncomingLink.joins(:post)
+                .where('incoming_links.created_at > ? AND topic_id IS NOT NULL', 30.days.ago)
+                .group('topic_id')
+                .count
   end
 end

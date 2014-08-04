@@ -63,7 +63,7 @@ class StaticController < ApplicationController
     )
   end
 
-  skip_before_filter :store_incoming_links, :verify_authenticity_token, only: [:cdn_asset]
+  skip_before_filter :verify_authenticity_token, only: [:cdn_asset]
   def cdn_asset
     path = File.expand_path(Rails.root + "public/assets/" + params[:path])
 

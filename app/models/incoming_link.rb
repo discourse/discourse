@@ -1,11 +1,11 @@
 class IncomingLink < ActiveRecord::Base
-  belongs_to :topic
+  belongs_to :post
   belongs_to :user
+  belongs_to :incoming_referer
 
   validate :referer_valid
   validate :post_id, presence: true
 
-  before_validation :extract_domain
   after_create :update_link_counts
 
   attr_accessor :url
@@ -52,14 +52,39 @@ class IncomingLink < ActiveRecord::Base
   end
 
 
-  # Internal: Extract the domain from link.
-  def extract_domain
-    if referer.present?
-      # We may get a junk URI, just deal with it
-      self.domain = URI.parse(self.referer).host rescue nil
-      self.referer = nil unless self.domain
+  def referer=(referer)
+    self.incoming_referer_id = nil
+
+    # will set incoming_referer_id
+    unless referer.present?
+      return
+    end
+
+    parsed = URI.parse(referer)
+
+    if parsed.scheme == "http" || parsed.scheme == "https"
+      domain = IncomingDomain.add!(parsed)
+
+      referer = IncomingReferer.add!(path: parsed.path, incoming_domain: domain) if domain
+      self.incoming_referer_id = referer.id if referer
+    end
+
+  rescue URI::InvalidURIError
+    # ignore
+  end
+
+  def referer
+    if self.incoming_referer
+      self.incoming_referer.incoming_domain.to_url << self.incoming_referer.path
     end
   end
+
+  def domain
+    if incoming_referer
+      incoming_referer.incoming_domain.name
+    end
+  end
+
 
   # Internal: Update appropriate link counts.
   def update_link_counts

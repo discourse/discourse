@@ -86,18 +86,17 @@ SQL
 SQL
 
     FirstShare = <<SQL
-    SELECT views.user_id, p2.id post_id, i2.created_at granted_at
+    SELECT views.user_id, i2.post_id, i2.created_at granted_at
     FROM
     (
       SELECT i.user_id, MIN(i.id) i_id
       FROM incoming_links i
       JOIN topics t on t.id = i.topic_id
-      JOIN badge_posts p on p.topic_id = t.id AND p.post_number = i.post_number
+      JOIN badge_posts p on p.id = i.post_id
       WHERE i.user_id IS NOT NULL
       GROUP BY i.user_id
     ) as views
     JOIN incoming_links i2 ON i2.id = views.i_id
-    JOIN posts p2 on p2.topic_id = i2.topic_id AND p2.post_number = i2.post_number
 SQL
 
     FirstFlag = <<SQL

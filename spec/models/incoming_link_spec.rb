@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe IncomingLink do
 
-  it { should belong_to :topic }
-
   let(:post) { Fabricate(:post) }
   let(:topic) { post.topic }
 

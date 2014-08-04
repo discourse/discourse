@@ -7,7 +7,6 @@ class PostsController < ApplicationController
   # Need to be logged in for all actions here
   before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :expand_embed, :markdown, :raw, :cooked]
 
-  skip_before_filter :store_incoming_links, only: [:short_link]
   skip_before_filter :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
 
   def markdown_id
