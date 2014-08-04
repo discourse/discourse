@@ -45,7 +45,8 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
     require "export/exporter"
 
     puts "Starting export..."
-    backup = Export::Exporter.new(Discourse.system_user.id).run
+    exporter = Export::Exporter.new(Discourse.system_user.id)
+    backup = exporter.run
     if filename.present?
       puts "Moving '#{backup}' to '#{filename}'"
       FileUtils.mv(backup, filename)
@@ -53,6 +54,8 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
     end
     puts "Export done."
     puts "Output file is in: #{backup}", ""
+
+    exit(1) unless exporter.success
   end
 
   desc "export", "Backup a Discourse forum"
@@ -68,7 +71,8 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
 
     begin
       puts "Starting restore: #{filename}"
-      Import::Importer.new(Discourse.system_user.id, filename).run
+      importer = Import::Importer.new(Discourse.system_user.id, filename)
+      importer.run
       puts 'Restore done.'
     rescue Import::FilenameMissingError
       puts '', 'The filename argument was missing.', ''
@@ -77,6 +81,8 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
       puts '', 'Restores are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.', ''
       puts 'Restore cancelled.', ''
     end
+
+    exit(1) unless importer.try(:success)
   end
 
   desc "import", "Restore a Discourse backup"

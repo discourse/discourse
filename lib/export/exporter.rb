@@ -2,6 +2,8 @@ module Export
 
   class Exporter
 
+    attr_reader :success
+
     def initialize(user_id, publish_to_message_bus = false)
       @user_id, @publish_to_message_bus = user_id, publish_to_message_bus
 
