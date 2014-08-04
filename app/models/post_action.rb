@@ -73,6 +73,23 @@ class PostAction < ActiveRecord::Base
     user_actions
   end
 
+  def self.active_flags_counts_for(collection)
+    return {} if collection.blank?
+
+    collection_ids = collection.map(&:id)
+
+    post_actions = PostAction.active.flags.where(post_id: collection_ids)
+
+    user_actions = {}
+    post_actions.each do |post_action|
+      user_actions[post_action.post_id] ||= {}
+      user_actions[post_action.post_id][post_action.post_action_type_id] ||= []
+      user_actions[post_action.post_id][post_action.post_action_type_id] << post_action
+    end
+
+    user_actions
+  end
+
   def self.count_per_day_for_type(post_action_type, since_days_ago=30)
     unscoped.where(post_action_type_id: post_action_type)
             .where('created_at > ?', since_days_ago.days.ago)

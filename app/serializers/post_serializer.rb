@@ -154,10 +154,12 @@ class PostSerializer < BasicPostSerializer
 
       count = object.send(count_col) if object.respond_to?(count_col)
       count ||= 0
-      action_summary = {id: id,
-                        count: count,
-                        hidden: (sym == :vote),
-                        can_act: scope.post_can_act?(object, sym, taken_actions: post_actions)}
+      action_summary = {
+        id: id,
+        count: count,
+        hidden: (sym == :vote),
+        can_act: scope.post_can_act?(object, sym, taken_actions: post_actions)
+      }
 
       if sym == :notify_user && scope.current_user.present? && scope.current_user == object.user
         action_summary[:can_act] = false # Don't send a pm to yourself about your own post, silly
@@ -165,7 +167,10 @@ class PostSerializer < BasicPostSerializer
 
       # The following only applies if you're logged in
       if action_summary[:can_act] && scope.current_user.present?
-        action_summary[:can_defer_flags] = scope.is_staff? && PostActionType.flag_types.values.include?(id)
+        action_summary[:can_defer_flags] = scope.is_staff? &&
+                                           PostActionType.flag_types.values.include?(id) &&
+                                           active_flags.present? &&
+                                           active_flags.count > 0
       end
 
       if post_actions.present? && post_actions.has_key?(id)
@@ -242,7 +247,12 @@ class PostSerializer < BasicPostSerializer
 
   private
 
-  def post_actions
-    @post_actions ||= (@topic_view.present? && @topic_view.all_post_actions.present?) ? @topic_view.all_post_actions[object.id] : nil
-  end
+    def post_actions
+      @post_actions ||= (@topic_view.present? && @topic_view.all_post_actions.present?) ? @topic_view.all_post_actions[object.id] : nil
+    end
+
+    def active_flags
+      @active_flags ||= (@topic_view.present? && @topic_view.all_active_flags.present?) ? @topic_view.all_active_flags[object.id] : nil
+    end
+
 end

@@ -167,6 +167,29 @@ describe TopicView do
       end
     end
 
+    context '.all_active_flags' do
+      it 'is blank at first' do
+        topic_view.all_active_flags.should be_blank
+      end
+
+      it 'returns the active flags' do
+        PostAction.act(moderator, p1, PostActionType.types[:off_topic])
+        PostAction.act(coding_horror, p1, PostActionType.types[:off_topic])
+
+        topic_view.all_active_flags[p1.id][PostActionType.types[:off_topic]].count.should == 2
+      end
+
+      it 'returns only the active flags' do
+        PostAction.act(moderator, p1, PostActionType.types[:off_topic])
+        PostAction.act(coding_horror, p1, PostActionType.types[:off_topic])
+
+        PostAction.defer_flags!(p1, moderator)
+
+        topic_view.all_active_flags[p1.id].should == nil
+      end
+    end
+
+
     context '.read?' do
       it 'tracks correctly' do
         # anon is assumed to have read everything
