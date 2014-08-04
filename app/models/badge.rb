@@ -91,7 +91,6 @@ SQL
     (
       SELECT i.user_id, MIN(i.id) i_id
       FROM incoming_links i
-      JOIN topics t on t.id = i.topic_id
       JOIN badge_posts p on p.id = i.post_id
       WHERE i.user_id IS NOT NULL
       GROUP BY i.user_id
