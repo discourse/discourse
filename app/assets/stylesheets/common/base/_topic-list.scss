@@ -97,6 +97,11 @@
 
 .topic-list.categories {
 
+  .new-posts.badge-notification {
+    background-color:transparent;
+    color: scale-color($primary, $lightness: 50%);
+  }
+
   td.category {
     vertical-align: top;
     padding-top: 15px;

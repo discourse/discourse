@@ -751,6 +751,7 @@ en:
       private_message: 'Start a private message'
       list: 'Topics'
       new: 'new topic'
+      unread: 'unread'
       new_topics:
         one: '1 new topic'
         other: '{{count}} new topics'
