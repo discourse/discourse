@@ -157,7 +157,7 @@
 .topic-list.categories {
   a.title {
     color: $tertiary;
-    font-size: 12px;
+    font-size: 13px;
   }
   a.title:visited:not(.badge-notification) {color: scale-color($tertiary, $lightness: 35%);}
 
@@ -232,16 +232,17 @@
 
   .featured-topic {
     margin: 10px 0 0;
-    font-size: 12px;
+    font-size: 13px;
     /* topic status glyphs */
     i {
       color: scale-color($primary, $lightness: 50%) !important;
+      font-size: 13px;
     }
     a.last-posted-at, a.last-posted-at:visited {
       color: scale-color($primary, $lightness: 50%);
     }
     .badge {
-      font-size: 9px;
+      font-size: 10px;
       top: -1px;
     }
   }
