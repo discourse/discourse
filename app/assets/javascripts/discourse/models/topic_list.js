@@ -210,6 +210,15 @@ Discourse.TopicList.reopenClass({
     }
     session.setProperties({topicList: null, topicListScrollPosition: null});
 
+    // Clean up any string parameters that might slip through
+    params = params || {};
+    Ember.keys(params).forEach(function(k) {
+      var val = params[k];
+      if (val === "undefined" || val === "null" || val === 'false') {
+        params[k] = undefined;
+      }
+    });
+
     var findParams = {};
     Discourse.SiteSettings.top_menu.split('|').forEach(function (i) {
       if (i.indexOf(filter) === 0) {
