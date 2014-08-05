@@ -1,12 +1,27 @@
-moduleFor("controller:site-map-category");
+moduleFor("controller:site-map-category", 'controller:site-map-category', {
+  needs: ['controller:site-map']
+});
 
-test("showBadges", function() {
-  sandbox.stub(Discourse.User, "current");
+test("showTopicCount anonymous", function() {
   var controller = this.subject();
+  ok(controller.get("showTopicCount"), 'true when anonymous');
+});
 
-  Discourse.User.current.returns(null);
-  ok(!controller.get("showBadges"), "returns false when no user is logged in");
+test("showTopicCount logged in", function() {
+  var controller = this.subject({ currentUser: Discourse.User.create() });
+  ok(!controller.get("showTopicCount"), 'false when logged in');
+});
 
-  Discourse.User.current.returns({});
-  ok(controller.get("showBadges"), "returns true when an user is logged in");
+test("unreadTotal default", function() {
+  var controller = this.subject({ currentUser: Discourse.User.create() });
+  ok(!controller.get('unreadTotal'), "empty by default");
+});
+
+test("unreadTotal with values", function() {
+  var controller = this.subject({
+    currentUser: Discourse.User.create(),
+    unreadTopics: 1,
+    newTopics: 3
+  });
+  equal(controller.get('unreadTotal'), 4);
 });
