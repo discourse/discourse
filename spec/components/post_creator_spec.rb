@@ -97,6 +97,8 @@ describe PostCreator do
                                                      "/users/#{admin.username}",
                                                      "/unread/#{admin.id}",
                                                      "/unread/#{admin.id}",
+                                                     "/latest",
+                                                     "/latest",
                                                      "/topic/#{created_post.topic_id}",
                                                      "/topic/#{created_post.topic_id}"
                                                    ].sort
@@ -112,6 +114,9 @@ describe PostCreator do
           p = creator.create
         end
 
+        latest = messages.find{|m| m.channel == "/latest"}
+        latest.should_not be_nil
+
         latest = messages.find{|m| m.channel == "/new"}
         latest.should_not be_nil
 
@@ -121,7 +126,7 @@ describe PostCreator do
         user_action = messages.find{|m| m.channel == "/users/#{p.user.username}"}
         user_action.should_not be_nil
 
-        messages.length.should == 4
+        messages.length.should == 5
       end
 
       it 'extracts links from the post' do
