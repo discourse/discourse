@@ -10,6 +10,8 @@ export default Ember.ObjectController.extend({
   user: null,
   model: null,
   totalInvites: null,
+  canLoadMore: true,
+  invitesLoading: false,
 
   init: function() {
     this._super();
@@ -29,13 +31,6 @@ export default Ember.ObjectController.extend({
       self.set('model', invites);
     });
   }, 250).observes('searchTerm'),
-
-  /**
-    The maximum amount of invites that will be displayed in the view
-
-    @property maxInvites
-  **/
-  maxInvites: Discourse.computed.setting('invites_shown'),
 
   /**
     Can the currently logged in user invite users to the site
@@ -64,15 +59,6 @@ export default Ember.ObjectController.extend({
     return this.get('totalInvites') > 9;
   }.property('totalInvites'),
 
-  /**
-    Were the results limited by our `maxInvites`
-
-    @property truncated
-  **/
-  truncated: function() {
-    return this.get('invites.length') === Discourse.SiteSettings.invites_shown;
-  }.property('invites.length'),
-
   actions: {
 
     /**
@@ -84,6 +70,22 @@ export default Ember.ObjectController.extend({
     rescind: function(invite) {
       invite.rescind();
       return false;
+    },
+
+    loadMore: function() {
+      var self = this;
+      var model = self.get('model');
+
+      if(self.get('canLoadMore')) {
+        self.set('invitesLoading', true);
+        Discourse.Invite.findInvitedBy(self.get('user'), self.get('searchTerm'), model.invites.length).then(function(invite_model) {
+          self.set('invitesLoading', false);
+          model.invites.pushObjects(invite_model.invites);
+          if(invite_model.invites.length === 0 || invite_model.invites.length < Discourse.SiteSettings.invites_per_page) {
+            self.set('canLoadMore', false);
+          }
+        });
+      }
     }
   }
 

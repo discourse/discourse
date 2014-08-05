@@ -17,7 +17,7 @@
     {{/if}}
 
     {{#if model.invites}}
-      <table class='table'>
+      <table class='table invite-list'>
         <tr>
           <th>{{i18n user.invited.user}}</th>
           <th>{{i18n user.invited.redeemed_at}}</th>
@@ -62,9 +62,8 @@
           </tr>
         {{/each}}
       </table>
-
-      {{#if truncated}}
-        <p>{{i18n user.invited.truncated count=maxInvites}}</p>
+      {{#if invitesLoading}}
+        <div class='spinner'>{{i18n loading}}</div>
       {{/if}}
 
     {{else}}
