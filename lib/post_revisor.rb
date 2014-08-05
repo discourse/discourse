@@ -82,6 +82,7 @@ class PostRevisor
   def bump_topic
     unless Post.where('post_number > ? and topic_id = ?', @post.post_number, @post.topic_id).exists?
       @post.topic.update_column(:bumped_at, Time.now)
+      TopicTrackingState.publish_latest(@post.topic)
     end
   end
 

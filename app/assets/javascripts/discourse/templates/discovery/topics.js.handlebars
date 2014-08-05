@@ -67,8 +67,8 @@
           <tr>
             <td colspan="9">
               <div class='alert alert-info clickable' {{action showInserted}}>
-                {{countI18n new_topics_inserted count=topicTrackingState.incomingCount}}
-                {{i18n show_new_topics}}
+                {{countI18n topic_count_ suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+                {{i18n click_to_show}}
               </div>
             </td>
           </tr>

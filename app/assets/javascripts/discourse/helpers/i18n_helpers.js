@@ -54,7 +54,7 @@ Ember.Handlebars.registerHelper('countI18n', function(key, options) {
     shouldRerender: Discourse.View.renderIfChanged('count'),
 
     render: function(buffer) {
-      buffer.push(I18n.t(key, { count: this.get('count') }));
+      buffer.push(I18n.t(key + (this.get('suffix') || ""), { count: this.get('count') }));
     }
 
   });

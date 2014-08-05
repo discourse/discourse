@@ -37,6 +37,23 @@ class TopicTrackingState
     publish_read(topic.id, 1, topic.user_id)
   end
 
+  def self.publish_latest(topic)
+    return unless topic.archetype == "regular"
+
+    message = {
+      topic_id: topic.id,
+      message_type: "latest",
+      payload: {
+        bumped_at: topic.bumped_at,
+        topic_id: topic.id,
+        category_id: topic.category_id
+      }
+    }
+
+    group_ids = topic.category && topic.category.secure_group_ids
+    MessageBus.publish("/latest", message.as_json, group_ids: group_ids)
+  end
+
   def self.publish_unread(post)
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well

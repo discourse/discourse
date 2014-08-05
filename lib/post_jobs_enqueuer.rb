@@ -30,6 +30,7 @@ class PostJobsEnqueuer
 
   def after_post_create
     TopicTrackingState.publish_unread(@post) if @post.post_number > 1
+    TopicTrackingState.publish_latest(@topic)
 
     Jobs.enqueue_in(
         SiteSetting.email_time_window_mins.minutes,

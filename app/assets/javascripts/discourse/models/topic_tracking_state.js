@@ -17,11 +17,15 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
         tracker.incrementMessageCount();
       }
 
-      if (data.message_type === "new_topic"){
+      if (data.message_type === "new_topic" || data.message_type === "latest") {
         var ignored_categories = Discourse.User.currentProp("muted_category_ids");
         if(_.include(ignored_categories, data.payload.category_id)){
           return;
         }
+      }
+
+      if (data.message_type === "latest"){
+        tracker.notify(data);
       }
 
       if (data.message_type === "new_topic" || data.message_type === "unread" || data.message_type === "read") {
@@ -36,6 +40,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     };
 
     Discourse.MessageBus.subscribe("/new", process);
+    Discourse.MessageBus.subscribe("/latest", process);
     var currentUser = Discourse.User.current();
     if(currentUser) {
       Discourse.MessageBus.subscribe("/unread/" + currentUser.id, process);
@@ -55,15 +60,27 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     if (!this.newIncoming) { return; }
 
     if ((this.filter === "all" ||this.filter === "latest" || this.filter === "new") && data.message_type === "new_topic" ) {
-      this.newIncoming.push(data.topic_id);
+      this.addIncoming(data.topic_id);
     }
-    if ((this.filter === "all" ||this.filter === "latest" || this.filter === "unread") && data.message_type === "unread") {
+
+    if ((this.filter === "all" || this.filter === "unread") && data.message_type === "unread") {
       var old = this.states["t" + data.topic_id];
-      if(!old) {
-        this.newIncoming.push(data.topic_id);
+      if(!old || old.highest_post_number === old.last_read_post_number) {
+        this.addIncoming(data.topic_id);
       }
     }
+
+    if(this.filter === "latest" && data.message_type === "latest") {
+      this.addIncoming(data.topic_id);
+    }
+
     this.set("incomingCount", this.newIncoming.length);
+  },
+
+  addIncoming: function(topicId) {
+    if(this.newIncoming.indexOf(topicId) === -1){
+      this.newIncoming.push(topicId);
+    }
   },
 
   resetTracking: function(){

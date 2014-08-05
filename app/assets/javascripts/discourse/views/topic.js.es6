@@ -117,6 +117,11 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     @method scrolled
   **/
   scrolled: function(){
+
+    if(this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
     var offset = window.pageYOffset || $('html').scrollTop();
     if (!this.get('docAt')) {
       var title = $('#topic-title');
