@@ -38,6 +38,9 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenCompos
     // Only show either the Create Category or Create Topic button
     this.controllerFor('navigation/categories').set('canCreateCategory', model.get('can_create_category'));
     this.controllerFor('navigation/categories').set('canCreateTopic', model.get('can_create_topic') && !model.get('can_create_category'));
+
+    this.openTopicDraft(model);
+
   },
 
   actions: {

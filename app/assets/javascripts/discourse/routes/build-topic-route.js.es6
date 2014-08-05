@@ -59,18 +59,7 @@ export default function(filter) {
         selected: []
       });
 
-      // If there's a draft, open the create topic composer
-      if (model.draft) {
-        var composer = this.controllerFor('composer');
-        if (!composer.get('model.viewOpen')) {
-          composer.open({
-            action: Discourse.Composer.CREATE_TOPIC,
-            draft: model.draft,
-            draftKey: model.draft_key,
-            draftSequence: model.draft_sequence
-          });
-        }
-      }
+      this.openTopicDraft(model);
 
       this.controllerFor('navigation/default').set('canCreateTopic', model.get('can_create_topic'));
     },

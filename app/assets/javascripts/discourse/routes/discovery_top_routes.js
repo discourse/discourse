@@ -21,15 +21,7 @@ Discourse.DiscoveryTopRoute = Discourse.Route.extend(Discourse.OpenComposer, {
     this.controllerFor('discovery/top').setProperties({ model: model, category: null });
     this.controllerFor('navigation/default').set('canCreateTopic', model.get('can_create_topic'));
 
-    // If there's a draft, open the create topic composer
-    if (model.draft) {
-      this.controllerFor('composer').open({
-        action: Discourse.Composer.CREATE_TOPIC,
-        draft: model.draft,
-        draftKey: model.draft_key,
-        draftSequence: model.draft_sequence
-      });
-    }
+    this.openTopicDraft(model);
   },
 
   renderTemplate: function() {

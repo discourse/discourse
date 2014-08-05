@@ -85,6 +85,8 @@ export default function(filter, params) {
 
       this.controllerFor('search').set('searchContext', model.get('searchContext'));
       this.set('topics', null);
+
+      this.openTopicDraft(topics);
     },
 
     renderTemplate: function() {
