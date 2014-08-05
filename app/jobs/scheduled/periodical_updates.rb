@@ -29,6 +29,12 @@ module Jobs
         end
       end
 
+      # rebake out of date user profiles
+      problems = UserProfile.rebake_old(250)
+      problems.each do |hash|
+        user_id = hash[:profile].user_id
+        Discourse.handle_exception(hash[:ex], error_context(args, "Rebaking user id #{user_id}", user_id: user_id))
+      end
     end
 
   end

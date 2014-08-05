@@ -5,6 +5,8 @@ class UserProfile < ActiveRecord::Base
   before_save :cook
   after_save :trigger_badges
 
+  BAKED_VERSION = 1
+
   def bio_excerpt
     excerpt = PrettyText.excerpt(bio_cooked, 350)
     return excerpt if excerpt.blank? || user.has_trust_level?(:basic)
@@ -36,6 +38,23 @@ class UserProfile < ActiveRecord::Base
     self.save!
   end
 
+  def self.rebake_old(limit)
+    problems = []
+    UserProfile.where('bio_cooked_version IS NULL OR bio_cooked_version < ?', BAKED_VERSION)
+        .limit(limit).each do |p|
+      begin
+        p.rebake!
+      rescue => e
+        problems << {profile: p, ex: e}
+      end
+    end
+    problems
+  end
+
+  def rebake!
+    update_columns(bio_cooked: cooked, bio_cooked_version: BAKED_VERSION)
+  end
+
   protected
 
   def trigger_badges
@@ -44,9 +63,20 @@ class UserProfile < ActiveRecord::Base
 
   private
 
+  def cooked
+    if self.bio_raw.present?
+      PrettyText.cook(self.bio_raw, omit_nofollow: user.has_trust_level?(:leader) && !SiteSetting.leader_links_no_follow)
+    else
+      nil
+    end
+  end
+
   def cook
     if self.bio_raw.present?
-      self.bio_cooked = PrettyText.cook(self.bio_raw, omit_nofollow: user.has_trust_level?(:leader) && !SiteSetting.leader_links_no_follow) if bio_raw_changed?
+      if bio_raw_changed?
+        self.bio_cooked = cooked
+        self.bio_cooked_version = BAKED_VERSION
+      end
     else
       self.bio_cooked = nil
     end

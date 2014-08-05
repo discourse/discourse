@@ -6,6 +6,20 @@ describe UserProfile do
     user.user_profile.should be_present
   end
 
+  describe 'rebaking' do
+    it 'correctly rebakes bio' do
+      user_profile = Fabricate(:evil_trout).user_profile
+      user_profile.update_columns(bio_raw: "test", bio_cooked: "broken", bio_cooked_version: nil)
+
+      problems = UserProfile.rebake_old(10)
+      problems.length.should == 0
+
+      user_profile.reload
+      user_profile.bio_cooked.should == "<p>test</p>"
+      user_profile.bio_cooked_version.should == UserProfile::BAKED_VERSION
+    end
+  end
+
   describe 'new' do
     let(:user_profile) { Fabricate.build(:user_profile) }
 
