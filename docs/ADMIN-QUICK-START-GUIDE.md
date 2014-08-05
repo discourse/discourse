@@ -179,6 +179,17 @@ Number 3 is the Discourse default &ndash; that's [Creative Commons BY-NC-SA 3.0]
 
  If that's not what you want, please see our [admin User Content Licensing](/admin/site_contents/tos_user_content_license) page for a brief form that will let you cut and paste your decision into section #3 of the [Terms of Service](/tos#3). 
 
+### Building Your Community
+
+Be patient! Building communities is hard. Before launching, be sure to:
+
+1. Define your community's purpose in a pinned or banner topic.
+2. Seed the discussion with interesting topics.
+3. Commit to visiting and participating regularly.
+4. Link your community so people can find it.
+
+See more advice at: http://blog.discourse.org/2014/08/building-a-discourse-community/
+
 ### Maintenance
 
 - One CPU and 1GB of memory, with swap, is the minimum for a basic Discourse community. As your community grows you may need more memory or CPU resources.
