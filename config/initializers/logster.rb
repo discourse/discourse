@@ -1,10 +1,13 @@
 if Rails.env.production?
-  # Logster.store.ignore = [
-  #   # honestly, Rails should not be logging this, its real noisy
-  #   /^ActionController::RoutingError \(No route matches/,
-  #   # suppress trackback spam bots
-  #   Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ })
-  # ]
+  Logster.store.ignore = [
+    # honestly, Rails should not be logging this, its real noisy
+    /^ActionController::RoutingError \(No route matches/,
+
+    /^PG::Error: ERROR:\s+duplicate key/,
+
+    # suppress trackback spam bots
+    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ })
+  ]
 
   Logster.config.authorize_callback = lambda{|env|
     user = CurrentUser.lookup_from_env(env)

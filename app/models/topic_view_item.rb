@@ -6,7 +6,7 @@ class TopicViewItem < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :topic_id, :ip_address, :viewed_at
 
-  def self.add(topic_id, ip, user_id, at=nil)
+  def self.add(topic_id, ip, user_id=nil, at=nil, skip_redis=false)
     # Only store a view once per day per thing per user per ip
     redis_key = "view:#{topic_id}:#{Date.today.to_s}"
     if user_id
@@ -15,11 +15,13 @@ class TopicViewItem < ActiveRecord::Base
       redis_key << ":ip-#{ip}"
     end
 
-    if $redis.setnx(redis_key, "1")
-      $redis.expire(redis_key, 1.day.to_i)
+    if skip_redis || $redis.setnx(redis_key, "1")
+      skip_redis || $redis.expire(redis_key, 1.day.to_i)
 
       TopicViewItem.transaction do
         at ||= Date.today
+
+        # AR likes logging failures here, we don't need that
         TopicViewItem.create!(topic_id: topic_id, ip_address: ip, viewed_at: at, user_id: user_id)
 
         # Update the views count in the parent, if it exists.
