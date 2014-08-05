@@ -155,7 +155,10 @@
 }
 
 .topic-list.categories {
-  a.title {color: $tertiary;}
+  a.title {
+    color: $tertiary;
+    font-size: 12px;
+  }
   a.title:visited:not(.badge-notification) {color: scale-color($tertiary, $lightness: 35%);}
 
   th.posts {
@@ -228,7 +231,8 @@
   }
 
   .featured-topic {
-    margin: 6px 0;
+    margin: 10px 0 0;
+    font-size: 12px;
     /* topic status glyphs */
     i {
       color: scale-color($primary, $lightness: 50%) !important;
@@ -236,9 +240,13 @@
     a.last-posted-at, a.last-posted-at:visited {
       color: scale-color($primary, $lightness: 50%);
     }
+    .badge {
+      font-size: 9px;
+      top: -1px;
+    }
   }
 
-  .badge-category {
+  .category .badge-category {
     display: inline-block;
     margin-top: 1px;
   }

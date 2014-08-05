@@ -771,6 +771,9 @@ en:
       not_found:
         title: "Topic not found"
         description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
+      total_unread_posts:
+        one: "you have 1 unread post in this topic"
+        other: "you have {{count}} unread posts in this topic"
       unread_posts:
         one: "you have 1 unread old post in this topic"
         other: "you have {{count}} unread old posts in this topic"
@@ -1319,6 +1322,10 @@ en:
           one: "Unread (1)"
           other: "Unread ({{count}})"
         help: "topics you are currently watching or tracking with unread posts"
+        lower_title_with_count:
+          zero: ""
+          one: "1 unread"
+          other: "{{count}} unread"
       new:
         lower_title_with_count:
           zero: ""

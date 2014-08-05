@@ -62,6 +62,11 @@ Discourse.Topic = Discourse.Model.extend({
     return url;
   },
 
+  totalUnread: function() {
+    var count = (this.get('unread') || 0) + (this.get('new_posts') || 0);
+    return count > 0 ? count : null;
+  }.property('new_posts', 'unread'),
+
   lastReadUrl: function() {
     return this.urlForPostNumber(this.get('last_read_post_number'));
   }.property('url', 'last_read_post_number'),

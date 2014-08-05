@@ -97,9 +97,14 @@
 
 .topic-list.categories {
 
-  .new-posts.badge-notification {
+  .category .badge-notification {
     background-color:transparent;
     color: scale-color($primary, $lightness: 50%);
+    position: inherit;
+  }
+
+  .subcategories .badge {
+    display: none;
   }
 
   td.category {
