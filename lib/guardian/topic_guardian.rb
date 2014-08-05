@@ -59,10 +59,13 @@ module TopicGuardian
     # Deleted topics
     return false if topic.deleted_at && !can_see_deleted_topics?
 
+    if topic.private_message?
+      return authenticated? &&
+             topic.all_allowed_users.where(id: @user.id).exists?
+    end
+
     # not secure, or I can see it
-    (not(topic.read_restricted_category?) || can_see_category?(topic.category)) &&
-    # not private, or I am allowed (or is staff)
-    (not(topic.private_message?) || (authenticated? && (is_admin? || topic.all_allowed_users.where(id: @user.id).exists?)))
+    !topic.read_restricted_category? || can_see_category?(topic.category)
 
   end
 end
