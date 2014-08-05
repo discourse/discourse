@@ -12,7 +12,8 @@ export default Ember.Component.extend({
 
   render: function(buffer) {
     var notification = this.get('notification'),
-        text = I18n.t(this.get('scope'), Em.getProperties(notification, 'link', 'username'));
-    buffer.push('<span>' + text + '</span>');
+        text = I18n.t(this.get('scope'), Em.getProperties(notification, 'description', 'username'));
+
+    buffer.push('<a href="' + notification.get('url') + '">' + text + '</a>');
   }
 });

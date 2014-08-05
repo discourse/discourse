@@ -1,33 +1,31 @@
 export default Discourse.ObjectController.extend({
-  scope: function() {
+
+  scope: function () {
     return "notifications." + Discourse.Site.currentProp("notificationLookup")[this.get("notification_type")];
-  }.property(),
+  }.property("notification_type"),
 
-  username: function() {
-    return this.get("data.display_username");
-  }.property(),
+  username: Em.computed.alias("data.display_username"),
 
-  safe: function(prop){
+  safe: function (prop) {
     var val = this.get(prop);
-    if(val) {
-      val = Handlebars.Utils.escapeExpression(val);
-    }
+    if (val) { val = Handlebars.Utils.escapeExpression(val); }
     return val;
   },
 
-  link: function() {
-
-    var badgeId = this.safe('data.badge_id');
+  url: function () {
+    var badgeId = this.safe("data.badge_id");
     if (badgeId) {
-      var badgeName = this.safe('data.badge_name');
-      return '<a href="/badges/' + badgeId + '/' + badgeName.replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase() + '">' + badgeName + '</a>';
+      var badgeName = this.safe("data.badge_name");
+      return '/badges/' + badgeId + '/' + badgeName.replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase();
+    } else {
+      return Discourse.Utilities.postUrl(this.safe("slug"), this.safe("topic_id"), this.safe("post_number"));
     }
+  }.property("data.@{badge_id, badge_name}", "slug", "topic_id", "post_number"),
 
-    if (this.blank("data.topic_title")) {
-      return "";
-    }
+  description: function () {
+    var badgeName = this.safe("data.badge_name");
+    if (badgeName) { return badgeName; }
+    return this.blank("data.topic_title") ? "" : this.safe("data.topic_title");
+  }.property("data.@{badge_name, topic_title}")
 
-    var url = Discourse.Utilities.postUrl(this.safe("slug"), this.safe("topic_id"), this.safe("post_number"));
-    return '<a href="' + url + '">' + this.safe("data.topic_title") + '</a>';
-  }.property()
 });
