@@ -64,7 +64,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
   def import_categories
     results = mysql_query("
-      SELECT forum_id id, parent_id, forum_name name, forum_desc description
+      SELECT forum_id id, parent_id, left(forum_name, 50) name, forum_desc description
         FROM phpbb_forums
     ORDER BY parent_id ASC, forum_id ASC
     ")
