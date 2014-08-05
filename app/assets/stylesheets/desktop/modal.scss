@@ -19,7 +19,7 @@
   border: 1px solid scale-color-diff();
   border: 1px solid scale-color-diff();
 
-  box-shadow: 0 3px 7px rgba($primary, .8);
+  box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;
 
 }
@@ -63,11 +63,11 @@ animation: modal .25s;
     font-size: 20px;
     padding: 10px 15px 7px;
   }
+  .close {margin: 10px;}
 }
 .close {
   float: right;
   font-size: 20px;
-  margin: 10px 10px 0;
   text-decoration: none;
   color: scale-color($primary, $lightness: 35%);
   cursor: pointer;

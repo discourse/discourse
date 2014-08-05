@@ -29,9 +29,10 @@
       color: $primary;
       font-size: 16px;
       line-height: 20px;
+      transition: background .15s;
       &:hover {
         color: $quaternary;
-        background-color: scale-color($quaternary, $lightness: 70%);
+        background-color: dark-light-diff($quaternary, $secondary, 70%, -70%);
       }
     }
     &.active > a, > a.active {
@@ -50,9 +51,8 @@
   padding: 0;
   overflow: hidden;
   background-color: scale-color-diff();
-  @include box-shadow(0 1px 0 scale-color-diff());
   > li {
-    border-bottom: 2px solid scale-color($primary, $lightness: 80%);
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -30%);
     &:last-of-type {
       border-bottom: 0;
     }

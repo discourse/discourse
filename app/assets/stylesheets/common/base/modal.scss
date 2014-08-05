@@ -18,7 +18,7 @@
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: $primary;
+  background-color: #111;
   &.fade {
     opacity: 0;
   }
@@ -54,7 +54,7 @@
   border: 1px solid scale-color-diff();
   border: 1px solid scale-color-diff();
 
-  box-shadow: 0 3px 7px rgba($primary, .8);
+  box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;
 }
 
@@ -87,7 +87,7 @@
 .modal {
     .nav {
     padding: 10px 30px 10px 15px;
-    background-color: lighten($secondary, 76%);
+    background-color: dark-light-diff($secondary, $primary, 10%, -15%);
     li > a {
       font-size: 14px;
     }
