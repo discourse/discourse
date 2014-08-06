@@ -176,6 +176,8 @@ SQL
 
   scope :enabled, ->{ where(enabled: true) }
 
+  before_create :ensure_not_system
+
   # fields that can not be edited on system badges
   def self.protected_system_fields
     [:badge_type_id, :multiple_grant, :target_posts, :show_posts, :query, :trigger, :auto_revoke, :listable]
@@ -203,10 +205,6 @@ SQL
     !self.multiple_grant?
   end
 
-  def system?
-    id && id < 100
-  end
-
   def default_name=(val)
     self.name ||= val
   end
@@ -219,6 +217,13 @@ SQL
     # allow to correct orphans
     if !self.badge_grouping_id || self.badge_grouping_id < 0
       self.badge_grouping_id = val
+    end
+  end
+
+  protected
+  def ensure_not_system
+    unless id
+      self.id = [Badge.maximum(:id) + 1, 100].max
     end
   end
 end

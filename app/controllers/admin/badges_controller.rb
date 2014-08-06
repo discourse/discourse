@@ -46,6 +46,7 @@ class Admin::BadgesController < Admin::AdminController
   def create
     badge = Badge.new
     update_badge_from_params(badge)
+    badge.id = nil
     badge.save!
     render_serialized(badge, BadgeSerializer, root: "badge")
   end

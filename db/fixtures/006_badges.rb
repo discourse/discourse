@@ -56,6 +56,7 @@ trust_level_badges.each do |spec|
 
     # allow title for leader and elder
     b.default_allow_title = spec[:id] > 2
+    b.system = true
   end
 end
 
@@ -69,6 +70,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::Reader
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.auto_revoke = false
+  b.system = true
 end
 
 Badge.seed do |b|
@@ -81,6 +83,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::ReadGuidelines
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::UserChange
+  b.system = true
 end
 
 Badge.seed do |b|
@@ -93,6 +96,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::FirstLink
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
+  b.system = true
 end
 
 Badge.seed do |b|
@@ -105,6 +109,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::FirstQuote
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
+  b.system = true
 end
 
 Badge.seed do |b|
@@ -117,6 +122,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::FirstLike
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostAction
+  b.system = true
 end
 
 Badge.seed do |b|
@@ -129,6 +135,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::FirstFlag
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::PostAction
+  b.system = true
 end
 
 Badge.seed do |b|
@@ -142,6 +149,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   # don't trigger for now, its too expensive
   b.trigger = Badge::Trigger::None
+  b.system = true
 end
 
 Badge.seed do |b|
@@ -154,6 +162,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::Welcome
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::PostAction
+  b.system = true
 end
 
 Badge.seed do |b|
@@ -164,6 +173,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::Autobiographer
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::UserChange
+  b.system = true
 end
 
 Badge.seed do |b|
@@ -174,6 +184,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::Editor
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::PostRevision
+  b.system = true
 end
 
 #
@@ -195,5 +206,13 @@ like_badges.each do |spec|
     b.query = Badge::Queries.like_badge(Badge.like_badge_counts[spec[:id]])
     b.default_badge_grouping_id = BadgeGrouping::Posting
     b.trigger = Badge::Trigger::PostAction
+    b.system = true
   end
+end
+
+Badge.where("NOT system AND id < 100").each do |badge|
+  new_id = [Badge.maximum(:id) + 1, 100].max
+  old_id = badge.id
+  badge.update_columns(id: new_id)
+  UserBadge.where(badge_id: old_id).update_all(badge_id: new_id)
 end
