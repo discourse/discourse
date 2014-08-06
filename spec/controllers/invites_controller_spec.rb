@@ -252,6 +252,11 @@ describe InvitesController do
       let(:invitee) { Fabricate(:user) }
       let(:invite) { Invite.create!(invited_by: invitee) }
 
+      it 'converts "space" to "+" in email parameter' do
+        Invite.expects(:redeem_from_token).with(invite.invite_key, "fname+lname@example.com", nil, nil, topic.id)
+        get :redeem_disposable_invite, email: "fname lname@example.com", token: invite.invite_key, topic: topic.id
+      end
+
       it 'redeems the invite' do
         Invite.expects(:redeem_from_token).with(invite.invite_key, "name@example.com", nil, nil, topic.id)
         get :redeem_disposable_invite, email: "name@example.com", token: invite.invite_key, topic: topic.id
