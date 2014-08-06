@@ -200,10 +200,11 @@
     .icon { color: scale-color($primary, $lightness: 30%); }
     li {
       background-color: scale-color($tertiary, $lightness: 90%);
-      padding: 5px 0 0 5px;
+      padding: 5px 0 0 2px;
       i {
         float: left;
         margin-right: 5px;
+        padding-top: 2px;
       }
       span { color: $primary; }
       &:hover a { background: transparent; }
