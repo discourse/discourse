@@ -128,15 +128,7 @@ Discourse.TopicList.reopenClass({
       if (result) {
         // the new topics loaded from the server
         var newTopics = Discourse.TopicList.topicsFrom(result);
-
-        var topics = _(topic_ids)
-          .map(function(id){
-                  return newTopics.find(function(t){ return t.id === id; });
-                })
-          .compact()
-          .value();
-
-        defer.resolve(topics);
+        defer.resolve(newTopics);
       } else {
         defer.reject();
       }
