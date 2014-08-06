@@ -105,7 +105,7 @@ module Email
         result['Reply-To'] = reply_by_email_address
       else
       	if SiteSetting.email_reply_to.present?
-        	result['Reply-To'] = SiteSetting.email_reply_to.presence
+        	result['Reply-To'] = SiteSetting.email_reply_to
         else 
         	result['Reply-To'] = from_value
         end
