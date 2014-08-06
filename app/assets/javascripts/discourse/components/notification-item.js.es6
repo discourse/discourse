@@ -14,6 +14,11 @@ export default Ember.Component.extend({
     var notification = this.get('notification'),
         text = I18n.t(this.get('scope'), Em.getProperties(notification, 'description', 'username'));
 
-    buffer.push('<a href="' + notification.get('url') + '">' + text + '</a>');
+    var url = notification.get('url');
+    if (url) {
+      buffer.push('<a href="' + notification.get('url') + '">' + text + '</a>');
+    } else {
+      buffer.push(text);
+    }
   }
 });

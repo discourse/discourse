@@ -1,4 +1,4 @@
 export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
   needs: ['header'],
-  itemController: "notification"
+  loadingNotifications: Em.computed.alias('controllers.header.loadingNotifications')
 });

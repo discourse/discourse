@@ -17,15 +17,18 @@ export default Discourse.ObjectController.extend({
     if (badgeId) {
       var badgeName = this.safe("data.badge_name");
       return '/badges/' + badgeId + '/' + badgeName.replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase();
-    } else {
-      return Discourse.Utilities.postUrl(this.safe("slug"), this.safe("topic_id"), this.safe("post_number"));
     }
-  }.property("data.@{badge_id, badge_name}", "slug", "topic_id", "post_number"),
+
+    var topicId = this.safe('topic_id');
+    if (topicId) {
+      return Discourse.Utilities.postUrl(this.safe("slug"), topicId, this.safe("post_number"));
+    }
+  }.property("data.{badge_id, badge_name}", "slug", "topic_id", "post_number"),
 
   description: function () {
     var badgeName = this.safe("data.badge_name");
     if (badgeName) { return badgeName; }
     return this.blank("data.topic_title") ? "" : this.safe("data.topic_title");
-  }.property("data.@{badge_name, topic_title}")
+  }.property("data.{badge_name, topic_title}")
 
 });

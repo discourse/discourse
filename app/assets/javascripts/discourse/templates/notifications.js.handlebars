@@ -1,8 +1,8 @@
 <section class="d-dropdown" id="notifications-dropdown">
-  {{#unless controllers.header.loading_notifications}}
+  {{#unless loadingNotifications}}
     {{#if content}}
       <ul>
-        {{#each}}
+        {{#each itemController="notification"}}
           {{notification-item notification=this scope=scope}}
         {{/each}}
         <li class="read last">

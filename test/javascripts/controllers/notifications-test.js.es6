@@ -5,7 +5,3 @@ moduleFor('controller:notifications', 'controller:notifications', {
 test("mixes in HasCurrentUser", function() {
   ok(Discourse.HasCurrentUser.detect(this.subject()));
 });
-
-test("by default uses NotificationController as its item controller", function() {
-  equal(this.subject().get("itemController"), "notification");
-});
