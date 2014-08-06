@@ -151,7 +151,7 @@
   }
 
   .about {
-    background-color: $primary;
+    background-color: dark-light-diff($primary, $secondary, 0%, -75%);
     background-size: cover;
     background-position: center center;
 
@@ -182,7 +182,8 @@
       }
 
       a[href] {
-        color: $secondary;
+        color: dark-light-diff($secondary, $primary, 75%, -10%);
+
       }
 
       img.avatar {
@@ -197,19 +198,19 @@
         position: relative;
         float: left;
         width: 71%;
-        color: $secondary;
+        color: dark-light-diff($secondary, $primary, 75%, 0%);
         text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
         h1, h2 {font-weight: bold;}
 
         .bio {
-          color: $secondary;
+          color: dark-light-diff($secondary, $primary, 75%, 0%);
           text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
           max-height: 300px;
           overflow: auto;
 
           a[href] {
-            color: $secondary;
+            color: dark-light-diff($secondary, $primary, 75%, 0%);
             text-decoration: underline;
             text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
           }
@@ -223,7 +224,7 @@
 
       .secondary {
         float: right;
-        background-color: rgba(scale-color($primary, $lightness: 20%), .9);
+        background-color: rgba(dark-light-diff($primary, $secondary, 20%, -85%), .9);
         text-align: right;
         padding: 0 10px;
         max-width: 20%;
@@ -232,16 +233,18 @@
           margin: 0 0 7px 0;
           overflow: hidden;
           text-overflow: ellipsis;
+          color: dark-light-diff($secondary, $primary, 75%, -10%);
+
         }
         dt {
-          color: rgba($secondary, .7);
+          color: dark-light-diff($secondary, $primary, 50%, -40%);
           margin: 0;
         }
       }
     }
 
     .controls {
-      background-color: scale-color($primary, $lightness: 30%);
+      background-color: dark-light-diff($primary, $secondary, 30%, -80%);
       padding: 12px;
       height: 30px;
 
@@ -300,11 +303,11 @@
       color: $primary;
     }
     .item.moderator-action {
-      background-color:  scale-color($highlight, $lightness: 50%);
+      background-color: dark-light-diff(rgba($highlight,.7), $secondary, 50%, -10%);
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: scale-color($danger, $lightness: 50%);
+      background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -10%);
     }
     .item.hidden {
       display: block;

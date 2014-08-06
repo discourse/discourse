@@ -17,7 +17,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-top: 1px solid scale-color-diff();
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   background: rgba($secondary, .8);
 
   > tbody > tr {
