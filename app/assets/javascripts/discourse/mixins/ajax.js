@@ -72,6 +72,10 @@ Discourse.Ajax = Em.Mixin.create({
       if (!args.type) args.type = 'GET';
       if (!args.dataType && args.type.toUpperCase() === 'GET') args.dataType = 'json';
 
+      if (args.type === 'GET' && args.cache !== true) {
+        args.cache = false;
+      }
+
       $.ajax(Discourse.getURL(url), args);
     };
 
@@ -79,7 +83,7 @@ Discourse.Ajax = Em.Mixin.create({
     //  request (bypass for GET, not needed)
     if(args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
       return Ember.Deferred.promise(function(promise){
-        $.ajax(Discourse.getURL('/session/csrf'))
+        $.ajax(Discourse.getURL('/session/csrf'), {cache: false})
            .success(function(result){
               Discourse.Session.currentProp('csrfToken', result.csrf);
               performAjax(promise);
