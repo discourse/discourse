@@ -10,11 +10,11 @@ export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
   badgesUrl: Discourse.getURL('/badges'),
 
   showKeyboardShortcuts: function(){
-    return !Discourse.Mobile.mobileView && !Discourse.Mobile.isMobileDevice;
+    return !Discourse.Mobile.mobileView && !Discourse.Capabilities.touch;
   }.property(),
 
   showMobileToggle: function(){
-    return Discourse.SiteSettings.enable_mobile_theme && Discourse.Mobile.isMobileDevice;
+    return Discourse.SiteSettings.enable_mobile_theme && Discourse.Capabilities.touch;
   }.property(),
 
   mobileViewLinkTextKey: function() {

@@ -28,5 +28,7 @@ export default {
     // Inject it
     application.register('capabilities:main', caps, { instantiate: false });
     application.inject('view', 'capabilities', 'capabilities:main');
+
+    Discourse.Capabilities = caps;
   }
 };
