@@ -24,6 +24,18 @@ html {font-size: 14px/19px;}
   }
 }
 
+@media all
+and (max-width : 570px) {
+  body {
+    min-width: 0;
+  }
+  .container,
+  .full-width {
+    min-width: 0;
+  }
+  .d-header .current-username a {display: none;}
+}
+
 header {
   margin-bottom: 15px;
 }
