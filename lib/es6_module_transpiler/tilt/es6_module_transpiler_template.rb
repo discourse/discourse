@@ -80,7 +80,10 @@ module Tilt
           class_name << "s"
         end
         require_name = module_name(scope.root_path, scope.logical_path)
-        @output << "\n\nDiscourse.#{class_name}#{type.classify} = require('#{require_name}').default"
+
+        if require_name !~ /\-test$/
+          @output << "\n\nDiscourse.#{class_name}#{type.classify} = require('#{require_name}').default;\n"
+        end
       end
 
       # Include JS code for JSHint
