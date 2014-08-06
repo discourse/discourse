@@ -7,7 +7,7 @@ export default Ember.Component.extend({
       this.get("location.region"),
       this.get("location.country")
     ].filter(Boolean).join(", ");
-  }.property("location.@{city,region,country}"),
+  }.property("location.{city,region,country}"),
 
   actions: {
     lookup: function () {
