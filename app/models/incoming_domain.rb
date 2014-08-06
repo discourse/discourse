@@ -11,7 +11,7 @@ class IncomingDomain < ActiveRecord::Base
 
     begin
       current = create!(name: name, https: https, port: port)
-    rescue
+    rescue ActiveRecord::RecordNotUnique
       # duplicate key is just ignored
     end
 

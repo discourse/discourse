@@ -180,7 +180,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     topics = Enumerator.new do |y|
       last_topic_id = nil
       topic_messages = nil
-      query("SELECT id_msg, id_topic, body FROM {prefix}messages ORDER BY id_topic ASC, poster_time ASC") do |message|
+      query("SELECT id_msg, id_topic, body FROM {prefix}messages ORDER BY id_topic ASC, id_msg ASC") do |message|
         if last_topic_id != message[:id_topic]
           y << topic_messages
           last_topic_id = message[:id_topic]

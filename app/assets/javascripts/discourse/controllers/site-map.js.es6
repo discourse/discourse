@@ -1,6 +1,4 @@
 export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
-  itemController: "site-map-category",
-
   showBadgesLink: function(){return Discourse.SiteSettings.enable_badges;}.property(),
   showAdminLinks: Em.computed.alias('currentUser.staff'),
   flaggedPostsCount: Em.computed.alias("currentUser.site_flagged_posts_count"),

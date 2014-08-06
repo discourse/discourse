@@ -94,11 +94,12 @@ class UsersController < ApplicationController
 
   def invited
     inviter = fetch_user_from_params
+    offset = params[:offset].to_i || 0
 
     invites = if guardian.can_see_invite_details?(inviter)
-      Invite.find_all_invites_from(inviter)
+      Invite.find_all_invites_from(inviter, offset)
     else
-      Invite.find_redeemed_invites_from(inviter)
+      Invite.find_redeemed_invites_from(inviter, offset)
     end
 
     invites = invites.filter_by(params[:filter])

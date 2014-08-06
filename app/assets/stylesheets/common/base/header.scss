@@ -196,16 +196,21 @@
 
   // Notifications
   &#notifications-dropdown {
-    .fa {
-      color: scale-color($primary, $lightness: 50%);
-    }
+    .fa { color: scale-color($primary, $lightness: 50%); }
+    .icon { color: scale-color($primary, $lightness: 30%); }
     li {
       background-color: scale-color($tertiary, $lightness: 90%);
-      padding: 5px;
-      &:hover a {background: transparent;}
-    a {
-      display: inline;
-      padding: 1px;
+      padding: 5px 0 0 5px;
+      i {
+        float: left;
+        margin-right: 5px;
+      }
+      span { color: $primary; }
+      &:hover a { background: transparent; }
+      a { padding: 1px; }
+      p {
+        margin: 0;
+        overflow: hidden;
       }
     }
     .read {

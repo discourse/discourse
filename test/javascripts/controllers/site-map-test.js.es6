@@ -10,10 +10,6 @@ moduleFor("controller:site-map", "controller:site-map", {
   }
 });
 
-test("itemController", function() {
-  equal(this.subject().get("itemController"), "site-map-category", "defaults to site-map-category");
-});
-
 test("showAdminLinks", function() {
   var currentUserStub = Ember.Object.create();
   sandbox.stub(Discourse.User, "current").returns(currentUserStub);

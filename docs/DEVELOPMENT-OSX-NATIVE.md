@@ -25,7 +25,7 @@ You should see this:
 
 ```sh
 $ echo $LANG
-en_US.UTF
+en_US.UTF-8
 ```
 
 ## OS X Development Tools

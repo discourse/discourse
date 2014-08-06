@@ -11,8 +11,8 @@ class IncomingReferer < ActiveRecord::Base
 
     begin
       current = create!(path: path, incoming_domain_id: domain_id)
-    rescue
-      # duplicates
+    rescue ActiveRecord::RecordNotUnique
+      # does not matter
     end
 
     current || find_by(path: path, incoming_domain_id: domain_id)

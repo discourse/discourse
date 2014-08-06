@@ -38,17 +38,15 @@
         {{#link-to "discovery.categories"}}{{i18n filters.categories.title}}{{/link-to}}
       </li>
 
-      {{#each categories itemController=itemController}}
+      {{#each categories itemController='site-map-category'}}
         <li class="category">
           {{category-link this allowUncategorized=true showParent=true}}
-          {{#if showBadges}}
-            {{#if unreadTopics}}
-              <a href={{unbound unreadUrl}} class='badge unread-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unreadTopics}}</a>
-            {{/if}}
-            {{#if newTopics}}
-              <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{newTopics}} {{i18n filters.new.title.zero}}</a>
-            {{/if}}
-          {{else}}
+
+          {{#if unreadTotal}}
+            <a href={{unbound url}} class='badge badge-notification'>{{unreadTotal}}</a>
+          {{/if}}
+
+          {{#if showTopicCount}}
             <b class="topics-count">{{unbound topic_count}}</b>
           {{/if}}
         </li>

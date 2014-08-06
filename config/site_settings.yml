@@ -257,9 +257,9 @@ users:
     default: true
   invite_expiry_days: 30
   invite_passthrough_hours: 0
-  invites_shown:
+  invites_per_page:
     client: true
-    default: 30
+    default: 40
   delete_user_max_post_age:
     client: true
     default: 60
