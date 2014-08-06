@@ -1,8 +1,7 @@
 /*global Modernizr:true*/
 
 /**
-  Initializes the `Discourse.Capabilities` singleton by sniffing out the browser
-  capabilities.
+  Initializes an object that lets us know about our capabilities.
 **/
 export default {
   name: "sniff-capabilities",
@@ -28,7 +27,6 @@ export default {
     // Inject it
     application.register('capabilities:main', caps, { instantiate: false });
     application.inject('view', 'capabilities', 'capabilities:main');
-
-    Discourse.Capabilities = caps;
+    application.inject('controller', 'capabilities', 'capabilities:main');
   }
 };

@@ -50,6 +50,7 @@ test("showMoblieToggle returns true when mobile theme is enabled in site setting
   Discourse.SiteSettings.enable_mobile_theme = true;
   Discourse.Mobile.isMobileDevice = true;
   var controller = this.subject();
+  controller.capabilities = { touch: true };
   equal(controller.get("showMobileToggle"), true);
 });
 
