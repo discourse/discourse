@@ -63,6 +63,7 @@ class InvitesController < ApplicationController
   def redeem_disposable_invite
     params.require(:email)
     params.permit(:username, :name, :topic)
+    params[:email] = params[:email].split(' ').join('+')
 
     invite = Invite.find_by(invite_key: params[:token])
 
