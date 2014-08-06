@@ -113,6 +113,28 @@ test("isAnImage", function() {
   not(utils.isAnImage(""));
 });
 
+test("isAVideo", function() {
+  _.each(["mp4", "webm", "ogg"], function(extension) {
+    var video = "video." + extension;
+    ok(utils.isAVideo(video), video + " is recognized as an video");
+    ok(utils.isAVideo("http://foo.bar/path/to/" + video), video + " is recognized as an video");
+  });
+  ok(!utils.isAVideo("file.wmv"));
+  ok(!utils.isAVideo("http://foo.bar/path/to/file.wmv"));
+  ok(!utils.isAVideo(""));
+});
+
+test("isAnAudio", function() {
+  _.each(["mp3", "wav", "ogg"], function(extension) {
+    var audio = "audio." + extension;
+    ok(utils.isAnAudio(audio), audio + " is recognized as an audio");
+    ok(utils.isAnAudio("http://foo.bar/path/to/" + audio), audio + " is recognized as an audio");
+  });
+  ok(!utils.isAnAudio("file.flac"));
+  ok(!utils.isAnAudio("http://foo.bar/path/to/file.flac"));
+  ok(!utils.isAnAudio(""));
+});
+
 test("avatarUrl", function() {
   blank(utils.avatarUrl('', 'tiny'), "no template returns blank");
   equal(utils.avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/" + 20*window.devicePixelRatio + ".png", "simple avatar url");
