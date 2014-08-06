@@ -108,10 +108,12 @@ Discourse.TopicList = Discourse.Model.extend({
 
     Discourse.TopicList.loadTopics(topic_ids, this.get('filter'))
       .then(function(newTopics){
+        var i = 0;
         topicList.forEachNew(newTopics, function(t) {
           // highlight the first of the new topics so we can get a visual feedback
           t.set('highlight', true);
-          topics.insertAt(0,t);
+          topics.insertAt(i,t);
+          i++;
         });
         Discourse.Session.currentProp('topicList', topicList);
       });
