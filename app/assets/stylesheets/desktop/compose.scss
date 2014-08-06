@@ -13,11 +13,11 @@
 
 .composer-popup {
 
-  @include box-shadow(3px 3px 3px rgba($primary, 0.34));
-  background: scale-color($highlight, $lightness: 50%);
+  @include box-shadow(3px 3px 3px rgba(0,0,0, 0.34));
+  background: dark-light-diff($highlight, $secondary, 50%, -40%);
 
   &.urgent {
-    background: scale-color($danger, $lightness: 50%);
+    background: dark-light-diff($danger, $secondary, 50%, -40%);
   }
 
   h3 {

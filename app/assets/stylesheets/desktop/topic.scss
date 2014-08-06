@@ -86,7 +86,7 @@ a.reply-new {
 a:hover.reply-new {
   color: $tertiary;
   i {
-    background: scale-color($tertiary, $lightness: 75%);
+    background: dark-light-diff($tertiary, $secondary, 90%, -65%);
     border: 1px solid $tertiary;
   }
 }
@@ -109,7 +109,7 @@ a:hover.reply-new {
 }
 
 #topic-closing-info {
-  border-top: 1px solid scale-color-diff();
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding-top: 10px;
   height: 20px;
 }
@@ -131,7 +131,7 @@ a:hover.reply-new {
   border: 1px solid scale-color-diff();
   padding: 5px;
   background: $secondary;
-  @include box-shadow(0 0px 2px rgba($primary, .2));
+  @include box-shadow(0 0px 2px rgba(0,0,0, .2));
 
   position: relative;
   left: 345px;
@@ -209,7 +209,7 @@ a:hover.reply-new {
     bottom: 0;
     width: 0;
     border-right: 1px solid  scale-color-diff();
-    background-color:  scale-color($success, $lightness: 70%);
+    background-color:  dark-light-diff($success, $secondary, 60%, -35%);
     transition: width .75s;
   }
 }
@@ -283,7 +283,7 @@ kbd
     background-color: $secondary;
     border:1px solid scale-color-diff();
     border-radius: 3px;
-    box-shadow: 0 1px 0 rgba($primary, .9);
+    box-shadow: 0 1px 0 rgba(0,0,0, .8);
     color: $primary;
     display: inline-block;
     font-size: 12px;

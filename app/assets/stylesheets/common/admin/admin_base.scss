@@ -93,7 +93,7 @@ td.flaggers td {
     width: 460px;
     right: 0px;
     z-index: 990;
-    box-shadow: 0 2px 6px scale-color-diff();
+    box-shadow: 0 2px 6px rgba(0,0,0, .8);
     margin-top: -2px;
     background-color: $secondary;
     padding: 12px 12px 5px;
@@ -108,7 +108,7 @@ td.flaggers td {
 }
 
 .admin-controls {
-  background-color: darken($secondary, 5%);
+  background-color: dark-light-diff($primary, $secondary, 90%, -20%);
   padding: 10px 10px 3px 0;
   height: 35px;
   .nav.nav-pills {
@@ -272,7 +272,8 @@ td.flaggers td {
 
   .setting.overridden {
     input[type=text] {
-      background-color: scale-color($highlight, $lightness: 50%);
+      background-color: dark-light-diff(rgba($highlight,.7), $secondary, 50%, -10%);
+
     }
 
     h3 {
@@ -681,7 +682,7 @@ table.api-keys {
     background-color: scale-color-diff();
     margin-bottom: 20px;
     margin-top: 10px;
-    box-shadow: inset 0 0 10px rgba($primary, .1);
+    box-shadow: inset 0 0 10px rgba(0,0,0, .1);
 
     .look-here {
       float: left;
@@ -843,7 +844,7 @@ table.api-keys {
 .content-list {
 
   h3 {
-    color: $primary;
+    color: dark-light-diff($primary, $secondary, 90%, -60%); 
     font-size: 15px;
     padding-left: 5px;
     margin-bottom: 10px;

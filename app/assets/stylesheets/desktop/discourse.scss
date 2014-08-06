@@ -24,6 +24,7 @@ html {font-size: 14px/19px;}
   }
 }
 
+
 @media all
 and (max-width : 570px) {
   body {
@@ -33,7 +34,9 @@ and (max-width : 570px) {
   .full-width {
     min-width: 0;
   }
+
   .d-header .current-username a {display: none;}
+
 }
 
 header {
@@ -54,7 +57,7 @@ body {
       color: $danger;
     }
     a.star {
-      color: scale-color($primary, $lightness: 75%);
+      color: dark-light-diff($secondary, $primary, 80%, -20%);
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
@@ -213,7 +216,7 @@ body {
     background-color:$secondary;
     border: 1px solid scale-color-diff();
     border-radius: 3px;
-    box-shadow: inset 0 1px 1px rgba($primary, .3);
+    box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
     -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
     transition: border linear 0.2s, box-shadow linear 0.2s;
   }
@@ -222,7 +225,7 @@ body {
       background-color: $secondary;
       border: 1px solid scale-color-diff();
       border-radius: 3px;
-    box-shadow: inset 0 1px 1px rgba($primary, .3);
+    box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
       -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
       transition: border linear 0.2s, box-shadow linear 0.2s;
     }
@@ -230,13 +233,13 @@ body {
   textarea:focus {
     border-color: $tertiary;
     outline: 0;
-    box-shadow: inset 0 1px 1px rgba($primary, .3), 0 0 8px $tertiary;
+    box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
   }
   input {
     &[type="text"]:focus, &[type="password"]:focus, &[type="datetime"]:focus, &[type="datetime-local"]:focus, &[type="date"]:focus, &[type="month"]:focus, &[type="time"]:focus, &[type="week"]:focus, &[type="number"]:focus, &[type="email"]:focus, &[type="url"]:focus, &[type="search"]:focus, &[type="tel"]:focus, &[type="color"]:focus {
       border-color: $tertiary;
       outline: 0;
-      box-shadow: inset 0 1px 1px rgba($primary, .3), 0 0 8px $tertiary;
+      box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
     }
   }
 
