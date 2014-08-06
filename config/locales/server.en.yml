@@ -101,7 +101,6 @@ en:
   next_page: "next page →"
   prev_page: "← previous page"
   page_num: "Page %{num}"
-  by: "By"
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "RSS feed of '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
