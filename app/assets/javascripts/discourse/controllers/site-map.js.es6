@@ -14,7 +14,7 @@ export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
   }.property(),
 
   showMobileToggle: function(){
-    return Discourse.SiteSettings.enable_mobile_theme && Discourse.Capabilities.touch;
+    return Discourse.Mobile.mobileView || (Discourse.SiteSettings.enable_mobile_theme && Discourse.Capabilities.touch);
   }.property(),
 
   mobileViewLinkTextKey: function() {
