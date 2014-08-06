@@ -1,8 +1,8 @@
 /* Default badge styles. */
 .user-badge {
   padding: 3px 8px;
-  color: darken($primary, 40%);;
-  border: 1px solid lighten($primary, 60%);
+  color: $primary;
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   font-size: $base-font-size * 0.86;
   line-height: 19px;
   margin: 0;

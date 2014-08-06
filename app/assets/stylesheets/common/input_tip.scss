@@ -6,12 +6,10 @@
   display: block;
   padding: 5px 10px;
   z-index: 101;
-  @include border-radius-all(2px);
-  border: solid 1px #955;
   &.bad {
-    background-color: #b66;
+    background: dark-light-diff($danger, $secondary, 20%, -40%);
     color: white;
-    box-shadow: 1px 1px 5px #777, inset 0 0 9px #b55;
+    box-shadow: 1px 1px 5px rgba(0,0,0, .7);
   }
   &.hide, &.good {
     display: none;

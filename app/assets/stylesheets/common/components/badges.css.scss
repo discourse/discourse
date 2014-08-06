@@ -115,8 +115,8 @@ h1 a.badge-category div {vertical-align: top;}
   padding: 3px 5px;
   color: $primary;
   text-shadow: 0 1px 0 rgba($primary, 0.1);
-  background-color: #ddd;
-  border-color: #aaa;
+  background-color: dark-light-diff($primary, $secondary, 90%, -65%);
+  border-color: dark-light-diff($primary, $secondary, 90%, -65%);
   font-size: 12px;
-  @include box-shadow(inset 0 1px 0 rgba($primary, 0.22));
+  @include box-shadow(inset 0 1px 0 rgba(0,0,0, 0.22));
 }

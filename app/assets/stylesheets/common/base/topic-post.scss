@@ -44,7 +44,7 @@ aside.quote {
 }
 
 .cooked .highlight {
-  background-color: scale-color($highlight, $lightness: 40%);
+  background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
   padding: 2px;
   margin: -2px;
 }
