@@ -22,11 +22,18 @@ class ImportScripts::Drupal < ImportScripts::Base
       {id: row['id'], username: row['name'], email: row['email'], created_at: Time.zone.at(row['created'])}
     end
 
-    # Drupal allows duplicate category names, so you may need to exclude some categories or rename them here.
+    # You'll need to edit the following query for your Drupal install:
+    #
+    #   * Drupal allows duplicate category names, so you may need to exclude some categories or rename them here.
+    #   * Table name may be term_data.
+    #   * May need to select a vid other than 1.
     create_categories(@client.query("SELECT tid, name, description FROM taxonomy_term_data WHERE vid = 1;")) do |c|
       {id: c['tid'], name: c['name'].try(:strip), description: c['description']}
     end
 
+    # "Nodes" in Drupal are divided into types. Here we import two types,
+    # and will later import all the comments/replies for each node.
+    # You will need to figure out what the type names are on your install and edit the queries to match.
     create_blog_topics
     create_forum_topics
 
