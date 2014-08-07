@@ -709,6 +709,11 @@ uncategorized:
   company_short_name: 'Unconfigured Forum'
   company_domain: 'www.example.com'
 
+  vacuum_db_days: 90
+  last_vacuum:
+    default: 0
+    hidden: true
+
   tos_topic_id:
     default: -1
     hidden: true

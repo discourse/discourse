@@ -2,6 +2,22 @@
 task 'db:migrate' => 'environment' do
   I18n.locale = SiteSetting.default_locale rescue :en
   SeedFu.seed
+
+  if SiteSetting.vacuum_db_days > 0 &&
+      SiteSetting.last_vacuum < (Time.now.to_i - SiteSetting.vacuum_db_days.days.to_i)
+    puts "Running VACUUM FULL ANALYZE to reclaim DB space, this may take a while"
+    puts "Set to run every #{SiteSetting.vacuum_db_days} days (search for vacuum in site settings)"
+    puts "#{Time.now} starting..."
+    begin
+
+      Topic.exec_sql("VACUUM FULL ANALYZE")
+    rescue => e
+      puts "VACUUM failed, skipping"
+      puts e.to_s
+    end
+    SiteSetting.last_vacuum = Time.now.to_i
+    puts "#{Time.now} VACUUM done"
+  end
 end
 
 task 'test:prepare' => 'environment' do

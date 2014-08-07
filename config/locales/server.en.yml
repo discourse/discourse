@@ -971,6 +971,8 @@ en:
     enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
+    vacuum_db_days: "Run VACUUM FULL ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
