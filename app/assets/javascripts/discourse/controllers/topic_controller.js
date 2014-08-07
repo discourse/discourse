@@ -437,7 +437,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return canDelete;
   }.property('selectedPostsCount'),
 
-  hasError: Ember.computed.or('errorBodyHtml', 'message'),
+  hasError: Ember.computed.or('notFoundHtml', 'message'),
 
   multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off

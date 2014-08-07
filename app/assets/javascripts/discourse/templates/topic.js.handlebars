@@ -119,12 +119,11 @@
 {{else}}
   {{#if hasError}}
     <div class='container'>
+    {{#if notFoundHtml}}
+      {{{notFoundHtml}}}
+    {{else}}
       <div class="topic-error">
-        {{{errorBodyHtml}}}
-
-        {{#if message}}
-          {{message}}
-        {{/if}}
+        {{message}}
         {{#if noRetry}}
           {{#unless currentUser}}
               <button {{action showLogin}} class='btn btn-primary topic-retry'><i class="fa fa-user"></i>{{i18n log_in}}</button>
@@ -136,6 +135,7 @@
       {{#if retrying}}
         <div class='spinner'>{{i18n loading}}</div>
       {{/if}}
+    {{/if}}
     </div>
   {{else}}
     <div class='container'>
