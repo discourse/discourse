@@ -9,12 +9,13 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
   end
 
   def after_authenticate(auth_token)
-
     result = Auth::Result.new
 
     data = auth_token[:info]
     identity_url = auth_token[:extra][:response].identity_url
     result.email = email = data[:email]
+
+    raise Discourse::InvalidParameters.new(:email) if email.blank?
 
     # If the auth supplies a name / username, use those. Otherwise start with email.
     result.name = data[:name] || data[:email]
