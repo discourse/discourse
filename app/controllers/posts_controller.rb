@@ -37,8 +37,6 @@ class PostsController < ApplicationController
       user = User.find(params[:user_id].to_i)
       request['u'] = user.username_lower if user
     end
-    IncomingLink.add(request, current_user)
-
     redirect_to post.url
   end
 
