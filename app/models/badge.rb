@@ -250,6 +250,7 @@ end
 #  badge_grouping_id :integer          default(5), not null
 #  trigger           :integer
 #  show_posts        :boolean          default(FALSE), not null
+#  system            :boolean          default(FALSE), not null
 #
 # Indexes
 #

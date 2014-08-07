@@ -95,4 +95,9 @@ end
 #  bio_cooked           :text
 #  dismissed_banner_key :integer
 #  profile_background   :string(255)
+#  bio_cooked_version   :integer
+#
+# Indexes
+#
+#  index_user_profiles_on_bio_cooked_version  (bio_cooked_version)
 #
