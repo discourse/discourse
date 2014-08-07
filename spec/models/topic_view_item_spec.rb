@@ -17,4 +17,14 @@ describe TopicViewItem do
     TopicViewItem.count.should == 3
   end
 
+  it "increases a users view count" do
+    user = Fabricate(:user)
+
+    add(1,  "1.1.1.1", user.id)
+    add(1,  "1.1.1.1", user.id)
+
+    user.user_stat.reload
+    user.user_stat.topics_entered.should == 1
+  end
+
 end

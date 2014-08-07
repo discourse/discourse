@@ -12,9 +12,6 @@ module Jobs
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics
 
-      # Update view counts for users
-      UserStat.update_view_counts
-
       # Update the scores of posts
       ScoreCalculator.new.calculate(1.day.ago)
 

@@ -42,6 +42,7 @@ class TopicViewItem < ActiveRecord::Base
 
         if result.cmd_tuples > 0
           Topic.where(id: topic_id).update_all 'views = views + 1'
+          UserStat.where(user_id: user_id).update_all 'topics_entered = topics_entered + 1' if user_id
         end
 
         # Update the views count in the parent, if it exists.

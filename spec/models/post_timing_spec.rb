@@ -93,12 +93,6 @@ describe PostTiming do
       @timing_attrs = {msecs: 1234, topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number}
     end
 
-    it 'creates a post timing record' do
-      lambda {
-        PostTiming.record_timing(@timing_attrs)
-      }.should change(PostTiming, :count).by(1)
-    end
-
     it 'adds a view to the post' do
       lambda {
         PostTiming.record_timing(@timing_attrs)
@@ -107,19 +101,17 @@ describe PostTiming do
     end
 
     describe 'multiple calls' do
-      before do
+      it 'correctly works' do
         PostTiming.record_timing(@timing_attrs)
         PostTiming.record_timing(@timing_attrs)
-        @timing = PostTiming.find_by(topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number)
+        timing = PostTiming.find_by(topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number)
+
+        timing.should be_present
+        timing.msecs.should == 2468
+
+        @coding_horror.user_stat.posts_read_count.should == 1
       end
 
-      it 'creates a timing record' do
-        @timing.should be_present
-      end
-
-      it 'sums the msecs together' do
-        @timing.msecs.should == 2468
-      end
     end
 
     describe 'avg times' do
