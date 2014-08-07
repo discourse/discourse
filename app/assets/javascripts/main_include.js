@@ -31,6 +31,7 @@
 //= require ./discourse/views/topic-notifications-button
 //= require ./discourse/views/pagedown-preview
 //= require ./discourse/routes/discourse_route
+//= require ./discourse/routes/build-topic-route
 //= require ./discourse/routes/discourse_restricted_user_route
 //= require ./discourse/components/text-field
 
