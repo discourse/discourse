@@ -39,9 +39,6 @@ class PostDestroyer
   end
 
   def recover
-    puts "@" * 100
-    puts "staff? #{@user.staff?}"
-    puts "post.deleted_at #{@post.deleted_at}"
     if @user.staff? && @post.deleted_at
       staff_recovered
     elsif @user.staff? || @user.id == @post.user_id
