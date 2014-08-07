@@ -14,6 +14,7 @@ export default Discourse.DiscoveryController.extend({
   order: 'default',
   ascending: false,
   status: null,
+  search: null,
 
   actions: {
 

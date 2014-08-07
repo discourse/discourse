@@ -1,6 +1,10 @@
 // A helper function to create a category route with parameters
+import { queryParams, filterQueryParams } from 'discourse/routes/build-topic-route';
+
 export default function(filter, params) {
   return Discourse.Route.extend({
+    queryParams: queryParams,
+
     model: function(modelParams) {
       return Discourse.Category.findBySlug(modelParams.slug, modelParams.parentSlug);
     },
@@ -43,17 +47,12 @@ export default function(filter, params) {
     },
 
     _retrieveTopicList: function(model, transaction) {
-      var queryParams = transaction.queryParams,
-          listFilter = "category/" + Discourse.Category.slugFor(model) + "/l/" + filter,
+      var listFilter = "category/" + Discourse.Category.slugFor(model) + "/l/" + filter,
           self = this;
 
-      params = params || {};
+      var findOpts = filterQueryParams(transaction.queryParams, params);
 
-      if (queryParams && queryParams.order) { params.order = queryParams.order; }
-      if (queryParams && queryParams.ascending) { params.ascending = queryParams.ascending; }
-      if (queryParams && queryParams.status) { params.status = queryParams.status; }
-
-      return Discourse.TopicList.list(listFilter, params).then(function(list) {
+      return Discourse.TopicList.list(listFilter, findOpts).then(function(list) {
         var tracking = Discourse.TopicTrackingState.current();
         if (tracking) {
           tracking.sync(list, listFilter);
