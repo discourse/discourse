@@ -93,4 +93,35 @@ describe SiteSetting do
 
   end
 
+  # See: https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html
+  shared_examples "s3 bucket naming conventions" do |s3_setting|
+    describe s3_setting do
+      it "disallows bucket names that start with ." do
+        expect { SiteSetting.send("#{s3_setting}=", ".foo.bar") }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "disallows bucket names that end with ." do
+        expect { SiteSetting.send("#{s3_setting}=", "foo1.bar.") }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "disallows bucket names that have more than one . in a row" do
+        expect { SiteSetting.send("#{s3_setting}=", "foo1..bar") }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "disallows bucket names that are less than 3 characters long" do
+        expect { SiteSetting.send("#{s3_setting}=", "fo") }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "allows bucket names that have . in it" do
+        expect { SiteSetting.send("#{s3_setting}=", "foo1.bar") }.not_to raise_error
+      end
+
+      it "allows bucket names that have - in it" do
+        expect { SiteSetting.send("#{s3_setting}=", "foo1-bar") }.not_to raise_error
+      end
+    end
+  end
+
+  it_behaves_like "s3 bucket naming conventions", :s3_upload_bucket
+  it_behaves_like "s3 bucket naming conventions", :s3_backup_bucket
 end
