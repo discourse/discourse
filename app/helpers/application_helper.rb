@@ -85,10 +85,17 @@ module ApplicationHelper
     opts[:image] ||= "#{Discourse.base_url}#{SiteSetting.logo_small_url}"
     opts[:url] ||= "#{Discourse.base_url}#{request.fullpath}"
 
+    # Use the correct scheme for open graph
+    if opts[:image].present? && opts[:image].start_with?("//")
+      uri = URI(Discourse.base_url)
+      opts[:image] = "#{uri.scheme}:#{opts[:image]}"
+    end
+
     # Add opengraph tags
     result =  tag(:meta, property: 'og:site_name', content: SiteSetting.title) << "\n"
 
     result << tag(:meta, name: 'twitter:card', content: "summary")
+
     [:image, :url, :title, :description, 'image:width', 'image:height'].each do |property|
       if opts[property].present?
         escape = (property != :image)
