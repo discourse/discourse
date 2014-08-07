@@ -26,7 +26,8 @@ class PostDestroyer
   end
 
   def initialize(user, post)
-    @user, @post = user, post
+    @user = user
+    @post = post
   end
 
   def destroy
@@ -38,11 +39,15 @@ class PostDestroyer
   end
 
   def recover
+    puts "@" * 100
+    puts "staff? #{@user.staff?}"
+    puts "post.deleted_at #{@post.deleted_at}"
     if @user.staff? && @post.deleted_at
       staff_recovered
     elsif @user.staff? || @user.id == @post.user_id
       user_recovered
     end
+    @post.topic.recover! if @post.post_number == 1
     @post.topic.update_statistics
   end
 
@@ -68,7 +73,7 @@ class PostDestroyer
       @post.update_flagged_posts_count
       remove_associated_replies
       remove_associated_notifications
-      @post.topic.trash!(@user) if @post.topic and @post.post_number == 1
+      @post.topic.trash!(@user) if @post.topic && @post.post_number == 1
       update_associated_category_latest_topic
     end
     publish("deleted")

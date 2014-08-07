@@ -8,15 +8,18 @@ module PostGuardian
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
     already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
 
-    if  authenticated? && post
+    if authenticated? && post
       # we allow flagging for trust level 1 and higher
       (is_flag && @user.has_trust_level?(:basic) && not(already_did_flagging)) ||
 
       # not a flagging action, and haven't done it already
       not(is_flag || already_taken_this_action) &&
 
-      # nothing except flagging on archived posts
+      # nothing except flagging on archived topics
       not(post.topic.archived?) &&
+
+      # nothing except flagging on deleted posts
+      not(post.trashed?) &&
 
       # don't like your own stuff
       not(action_key == :like && is_my_own?(post)) &&
@@ -35,6 +38,7 @@ module PostGuardian
 
   # Can we see who acted on a post in a particular way?
   def can_see_post_actors?(topic, post_action_type_id)
+    return true if is_admin?
     return false unless topic
 
     type_symbol = PostActionType.types[post_action_type_id]
@@ -47,10 +51,6 @@ module PostGuardian
     end
 
     true
-  end
-
-  def can_see_deleted_posts?
-    is_staff?
   end
 
   def can_delete_all_posts?(user)

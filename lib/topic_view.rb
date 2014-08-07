@@ -190,6 +190,7 @@ class TopicView
   def has_deleted?
     @predelete_filtered_posts.with_deleted
                              .where("posts.deleted_at IS NOT NULL")
+                             .where("posts.post_number > 1")
                              .exists?
   end
 
@@ -352,7 +353,7 @@ class TopicView
     # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
     if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
-      @filtered_posts = @filtered_posts.where(deleted_at: nil)
+      @filtered_posts = @filtered_posts.where("deleted_at IS NULL OR post_number = 1")
       @contains_gaps = true
     end
 

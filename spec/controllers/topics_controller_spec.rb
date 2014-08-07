@@ -501,7 +501,7 @@ describe TopicsController do
         end
 
         it 'succeeds' do
-          Topic.any_instance.expects(:recover!)
+          PostDestroyer.any_instance.expects(:recover)
           xhr :put, :recover, topic_id: topic.id
           response.should be_success
         end
@@ -516,31 +516,25 @@ describe TopicsController do
     end
 
     describe 'when logged in' do
-      before do
-        @topic = Fabricate(:topic, user: log_in)
-      end
+      let(:topic) { Fabricate(:topic, user: log_in) }
 
       describe 'without access' do
         it "raises an exception when the user doesn't have permission to delete the topic" do
-          Guardian.any_instance.expects(:can_delete?).with(@topic).returns(false)
-          xhr :delete, :destroy, id: @topic.id
+          Guardian.any_instance.expects(:can_delete?).with(topic).returns(false)
+          xhr :delete, :destroy, id: topic.id
           response.should be_forbidden
         end
       end
 
       describe 'with permission' do
         before do
-          Guardian.any_instance.expects(:can_delete?).with(@topic).returns(true)
+          Guardian.any_instance.expects(:can_delete?).with(topic).returns(true)
         end
 
         it 'succeeds' do
-          xhr :delete, :destroy, id: @topic.id
+          PostDestroyer.any_instance.expects(:destroy)
+          xhr :delete, :destroy, id: topic.id
           response.should be_success
-        end
-
-        it 'deletes the topic' do
-          xhr :delete, :destroy, id: @topic.id
-          Topic.exists?(id: @topic_id).should be_false
         end
 
       end

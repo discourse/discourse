@@ -36,6 +36,12 @@ shared_examples 'finding and showing post' do
       xhr :get, action, params
       response.should be_success
     end
+
+    it "can find posts as a admin" do
+      log_in(:admin)
+      xhr :get, action, params
+      response.should be_success
+    end
   end
 end
 

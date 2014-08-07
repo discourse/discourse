@@ -40,6 +40,11 @@ describe Guardian do
       Guardian.new(user).post_can_act?(post, :like).should be_false
     end
 
+    it "returns false when the post is deleted" do
+      post.deleted_at = Time.now
+      Guardian.new(user).post_can_act?(post, :like).should be_false
+    end
+
     it "always allows flagging" do
       post.topic.archived = true
       Guardian.new(user).post_can_act?(post, :spam).should be_true

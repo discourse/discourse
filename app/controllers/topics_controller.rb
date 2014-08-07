@@ -31,7 +31,6 @@ class TopicsController < ApplicationController
   skip_before_filter :check_xhr, only: [:show, :feed]
 
   def show
-
     flash["referer"] ||= request.referer
 
     # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
@@ -197,14 +196,20 @@ class TopicsController < ApplicationController
   def destroy
     topic = Topic.find_by(id: params[:id])
     guardian.ensure_can_delete!(topic)
-    topic.trash!(current_user)
+
+    first_post = topic.ordered_posts.first
+    PostDestroyer.new(current_user, first_post).destroy
+
     render nothing: true
   end
 
   def recover
     topic = Topic.where(id: params[:topic_id]).with_deleted.first
     guardian.ensure_can_recover_topic!(topic)
-    topic.recover!
+
+    first_post = topic.posts.with_deleted.order(:post_number).first
+    PostDestroyer.new(current_user, first_post).recover
+
     render nothing: true
   end
 
