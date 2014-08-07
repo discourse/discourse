@@ -1,12 +1,4 @@
 /* global requirejs, require */
-/**
-  A custom resolver to allow template names in the format we like.
-
-  @class Resolver
-  @extends Ember.DefaultResolver
-  @namespace Discourse
-  @module Discourse
-**/
 
 var classify = Ember.String.classify;
 var get = Ember.get;
@@ -30,7 +22,7 @@ function parseName(fullName) {
   };
 }
 
-Discourse.Resolver = Ember.DefaultResolver.extend({
+export default Ember.DefaultResolver.extend({
 
   parseName: parseName,
 

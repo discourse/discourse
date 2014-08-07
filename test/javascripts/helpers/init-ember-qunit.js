@@ -1,4 +1,5 @@
 /* global emq */
 
+var resolver = require('discourse/ember/resolver').default;
 emq.globalize();
-emq.setResolver(Discourse.Resolver.create({ namespace: Discourse }));
+emq.setResolver(resolver.create({ namespace: Discourse }));

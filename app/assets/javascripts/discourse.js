@@ -6,6 +6,8 @@
   @class Discourse
   @extends Ember.Application
 **/
+var DiscourseResolver = require('discourse/ember/resolver').default;
+
 window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
 
@@ -21,7 +23,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     return u + url;
   },
 
-  Resolver: Discourse.Resolver,
+  Resolver: DiscourseResolver,
 
   titleChanged: function() {
     var title = "";

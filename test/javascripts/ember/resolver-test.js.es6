@@ -1,20 +1,20 @@
+import DiscourseResolver from 'discourse/ember/resolver';
+
 var originalTemplates, originalMobileViewFlag;
+var resolver = DiscourseResolver.create();
 
-function lookup(lookupString, expectedTemplate, message) {
-  var container = Discourse.__container__;
-  equal(container.lookup(lookupString), expectedTemplate, message);
-
-  // Remove any cached results from the container
-  container.unregister(lookupString);
+function lookupTemplate(name, expectedTemplate, message) {
+  var result = resolver.resolveTemplate(resolver.parseName(name));
+  equal(result, expectedTemplate, message);
 }
 
-function setTemplates(lookupStrings) {
-  lookupStrings.forEach(function(lookupString) {
-    Ember.TEMPLATES[lookupString] = lookupString;
+function setTemplates(lookupTemplateStrings) {
+  lookupTemplateStrings.forEach(function(lookupTemplateString) {
+    Ember.TEMPLATES[lookupTemplateString] = lookupTemplateString;
   });
 }
 
-module("Discourse.Resolver", {
+module("Resolver", {
   setup: function() {
     originalTemplates = Ember.TEMPLATES;
     Ember.TEMPLATES = {};
@@ -37,10 +37,10 @@ test("finds templates in top level dir", function() {
     "foo.bar"
   ]);
 
-  lookup("template:foobar", "foobar", "by lowcased name");
-  lookup("template:fooBar", "fooBar", "by camel cased name");
-  lookup("template:foo_bar", "foo_bar", "by underscored name");
-  lookup("template:foo.bar", "foo.bar", "by dotted name");
+  lookupTemplate("template:foobar", "foobar", "by lowcased name");
+  lookupTemplate("template:fooBar", "fooBar", "by camel cased name");
+  lookupTemplate("template:foo_bar", "foo_bar", "by underscored name");
+  lookupTemplate("template:foo.bar", "foo.bar", "by dotted name");
 });
 
 test("finds templates in first-level subdir", function() {
@@ -48,10 +48,10 @@ test("finds templates in first-level subdir", function() {
     "foo/bar_baz"
   ]);
 
-  lookup("template:foo/bar_baz", "foo/bar_baz", "with subdir defined by slash");
-  lookup("template:foo.bar_baz", "foo/bar_baz", "with subdir defined by dot");
-  lookup("template:fooBarBaz", "foo/bar_baz", "with subdir defined by first camel case and the rest of camel cases converted to underscores");
-  lookup("template:foo_bar_baz", "foo/bar_baz", "with subdir defined by first underscore");
+  lookupTemplate("template:foo/bar_baz", "foo/bar_baz", "with subdir defined by slash");
+  lookupTemplate("template:foo.bar_baz", "foo/bar_baz", "with subdir defined by dot");
+  lookupTemplate("template:fooBarBaz", "foo/bar_baz", "with subdir defined by first camel case and the rest of camel cases converted to underscores");
+  lookupTemplate("template:foo_bar_baz", "foo/bar_baz", "with subdir defined by first underscore");
 });
 
 test("resolves precedence between overlapping top level dir and first level subdir templates", function() {
@@ -62,9 +62,9 @@ test("resolves precedence between overlapping top level dir and first level subd
     "foo/bar"
   ]);
 
-  lookup("template:foo.bar", "foo/bar", "preferring first level subdir for dotted name");
-  lookup("template:fooBar", "fooBar", "preferring top level dir for camel cased name");
-  lookup("template:foo_bar", "foo_bar", "preferring top level dir for underscored name");
+  lookupTemplate("template:foo.bar", "foo/bar", "preferring first level subdir for dotted name");
+  lookupTemplate("template:fooBar", "fooBar", "preferring top level dir for camel cased name");
+  lookupTemplate("template:foo_bar", "foo_bar", "preferring top level dir for underscored name");
 });
 
 test("finds templates in subdir deeper than one level", function() {
@@ -72,15 +72,15 @@ test("finds templates in subdir deeper than one level", function() {
     "foo/bar/baz/qux"
   ]);
 
-  lookup("template:foo/bar/baz/qux", "foo/bar/baz/qux", "for subdirs defined by slashes");
-  lookup("template:foo.bar.baz.qux", "foo/bar/baz/qux", "for subdirs defined by dots");
-  lookup("template:foo/bar/bazQux", "foo/bar/baz/qux", "for subdirs defined by slashes plus one camel case");
-  lookup("template:foo/bar/baz_qux", "foo/bar/baz/qux", "for subdirs defined by slashes plus one underscore");
+  lookupTemplate("template:foo/bar/baz/qux", "foo/bar/baz/qux", "for subdirs defined by slashes");
+  lookupTemplate("template:foo.bar.baz.qux", "foo/bar/baz/qux", "for subdirs defined by dots");
+  lookupTemplate("template:foo/bar/bazQux", "foo/bar/baz/qux", "for subdirs defined by slashes plus one camel case");
+  lookupTemplate("template:foo/bar/baz_qux", "foo/bar/baz/qux", "for subdirs defined by slashes plus one underscore");
 
-  lookup("template:fooBarBazQux", undefined, "but not for subdirs defined by more than one camel case");
-  lookup("template:foo_bar_baz_qux", undefined, "but not for subdirs defined by more than one underscore");
-  lookup("template:foo.bar.bazQux", undefined, "but not for subdirs defined by dots plus one camel case");
-  lookup("template:foo.bar.baz_qux", undefined, "but not for subdirs defined by dots plus one underscore");
+  lookupTemplate("template:fooBarBazQux", undefined, "but not for subdirs defined by more than one camel case");
+  lookupTemplate("template:foo_bar_baz_qux", undefined, "but not for subdirs defined by more than one underscore");
+  lookupTemplate("template:foo.bar.bazQux", undefined, "but not for subdirs defined by dots plus one camel case");
+  lookupTemplate("template:foo.bar.baz_qux", undefined, "but not for subdirs defined by dots plus one underscore");
 });
 
 test("resolves mobile templates to 'mobile/' namespace", function() {
@@ -93,9 +93,9 @@ test("resolves mobile templates to 'mobile/' namespace", function() {
 
   Discourse.Mobile.mobileView = true;
 
-  lookup("template:foo", "mobile/foo", "finding mobile version even if normal one is not present");
-  lookup("template:bar", "mobile/bar", "preferring mobile version when both mobile and normal versions are present");
-  lookup("template:baz", "baz", "falling back to a normal version when mobile version is not present");
+  lookupTemplate("template:foo", "mobile/foo", "finding mobile version even if normal one is not present");
+  lookupTemplate("template:bar", "mobile/bar", "preferring mobile version when both mobile and normal versions are present");
+  lookupTemplate("template:baz", "baz", "falling back to a normal version when mobile version is not present");
 });
 
 test("resolves plugin templates to 'javascripts/' namespace", function() {
@@ -106,9 +106,9 @@ test("resolves plugin templates to 'javascripts/' namespace", function() {
     "baz"
   ]);
 
-  lookup("template:foo", "javascripts/foo", "finding plugin version even if normal one is not present");
-  lookup("template:bar", "javascripts/bar", "preferring plugin version when both versions are present");
-  lookup("template:baz", "baz", "falling back to a normal version when plugin version is not present");
+  lookupTemplate("template:foo", "javascripts/foo", "finding plugin version even if normal one is not present");
+  lookupTemplate("template:bar", "javascripts/bar", "preferring plugin version when both versions are present");
+  lookupTemplate("template:baz", "baz", "falling back to a normal version when plugin version is not present");
 });
 
 test("resolves templates with 'admin' prefix to 'admin/templates/' namespace", function() {
@@ -120,14 +120,14 @@ test("resolves templates with 'admin' prefix to 'admin/templates/' namespace", f
     "admin/templates/bar"
   ]);
 
-  lookup("template:adminFoo", "admin/templates/foo", "when prefix is separated by camel case");
-  lookup("template:admin_foo", "admin/templates/foo", "when prefix is separated by underscore");
-  lookup("template:admin.foo", "admin/templates/foo", "when prefix is separated by dot");
+  lookupTemplate("template:adminFoo", "admin/templates/foo", "when prefix is separated by camel case");
+  lookupTemplate("template:admin_foo", "admin/templates/foo", "when prefix is separated by underscore");
+  lookupTemplate("template:admin.foo", "admin/templates/foo", "when prefix is separated by dot");
 
-  lookup("template:adminfoo", undefined, "but not when prefix is not separated in any way");
-  lookup("template:adminBar", "adminBar", "but not when template with the exact camel cased name exists");
-  lookup("template:admin_bar", "admin_bar", "but not when template with the exact underscored name exists");
-  lookup("template:admin.bar", "admin.bar", "but not when template with the exact dotted name exists");
+  lookupTemplate("template:adminfoo", undefined, "but not when prefix is not separated in any way");
+  lookupTemplate("template:adminBar", "adminBar", "but not when template with the exact camel cased name exists");
+  lookupTemplate("template:admin_bar", "admin_bar", "but not when template with the exact underscored name exists");
+  lookupTemplate("template:admin.bar", "admin.bar", "but not when template with the exact dotted name exists");
 });
 
 test("returns 'not_found' template when template name cannot be resolved", function() {
@@ -135,5 +135,5 @@ test("returns 'not_found' template when template name cannot be resolved", funct
     "not_found"
   ]);
 
-  lookup("template:foo/bar/baz", "not_found", "");
+  lookupTemplate("template:foo/bar/baz", "not_found", "");
 });
