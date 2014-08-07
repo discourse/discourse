@@ -21,15 +21,32 @@ class TopicViewItem < ActiveRecord::Base
       TopicViewItem.transaction do
         at ||= Date.today
 
-        # AR likes logging failures here, we don't need that
-        TopicViewItem.create!(topic_id: topic_id, ip_address: ip, viewed_at: at, user_id: user_id)
+        # this is called real frequently, working hard to avoid exceptions
+        sql = "INSERT INTO topic_views (topic_id, ip_address, viewed_at, user_id)
+               SELECT :topic_id, :ip_address, :viewed_at, :user_id
+               WHERE NOT EXISTS (
+                 SELECT 1 FROM topic_views
+                 /*where*/
+               )"
+
+
+        builder = SqlBuilder.new(sql)
+
+        if !user_id
+          builder.where("ip_address = :ip_address AND topic_id = :topic_id")
+        else
+          builder.where("user_id = :user_id AND topic_id = :topic_id")
+        end
+
+        result = builder.exec(topic_id: topic_id, ip_address: ip, viewed_at: at, user_id: user_id)
+
+        if result.cmd_tuples > 0
+          Topic.where(id: topic_id).update_all 'views = views + 1'
+        end
 
         # Update the views count in the parent, if it exists.
-        Topic.where(id: topic_id).update_all 'views = views + 1'
       end
     end
-  rescue ActiveRecord::RecordNotUnique
-    # don't care, skip
   end
 
 end
