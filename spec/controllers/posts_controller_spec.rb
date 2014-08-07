@@ -53,17 +53,6 @@ end
 
 describe PostsController do
 
-  describe 'short_link' do
-    let(:post) { Fabricate(:post) }
-    let(:user) { Fabricate(:user) }
-
-    it 'logs the incoming link once' do
-      IncomingLink.expects(:add).once.returns(true)
-      get :short_link, post_id: post.id, user_id: user.id
-      response.should be_redirect
-    end
-  end
-
   describe 'cooked' do
     before do
       post = Post.new(cooked: 'wat')
