@@ -313,14 +313,14 @@ Discourse.Utilities = {
     @method cropAvatar
     @param {String} url The url of the avatar
     @param {String} fileType The file type of the uploaded file
-    @returns {Ember.Deferred} a promise that will eventually be the cropped avatar.
+    @returns {Promise} a promise that will eventually be the cropped avatar.
   **/
   cropAvatar: function(url, fileType) {
     if (Discourse.SiteSettings.allow_animated_avatars && fileType === "image/gif") {
       // can't crop animated gifs... let the browser stretch the gif
       return Ember.RSVP.resolve(url);
     } else {
-      return Ember.Deferred.promise(function(promise) {
+      return new Ember.RSVP.Promise(function(resolve) {
         var image = document.createElement("img");
         // this event will be fired as soon as the image is loaded
         image.onload = function(e) {
@@ -345,7 +345,7 @@ Discourse.Utilities = {
           // draw the image into the canvas
           canvas.getContext("2d").drawImage(img, x, y, dimension, dimension, 0, 0, size, size);
           // retrieve the image from the canvas
-          promise.resolve(canvas.toDataURL(fileType));
+          resolve(canvas.toDataURL(fileType));
         };
         // launch the onload event
         image.src = url;

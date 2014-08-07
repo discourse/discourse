@@ -40,10 +40,10 @@ Discourse.Ajax = Em.Mixin.create({
       Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
     }
 
-    var performAjax = function(promise) {
+    var performAjax = function(resolve, reject) {
       var oldSuccess = args.success;
       args.success = function(xhr) {
-        Ember.run(promise, promise.resolve, xhr);
+        Ember.run(null, resolve, xhr);
         if (oldSuccess) oldSuccess(xhr);
       };
 
@@ -63,7 +63,7 @@ Discourse.Ajax = Em.Mixin.create({
         xhr.jqTextStatus = textStatus;
         xhr.requestedUrl = url;
 
-        Ember.run(promise, promise.reject, xhr);
+        Ember.run(null, reject, xhr);
         if (oldError) oldError(xhr);
       };
 
@@ -82,15 +82,15 @@ Discourse.Ajax = Em.Mixin.create({
     // For cached pages we strip out CSRF tokens, need to round trip to server prior to sending the
     //  request (bypass for GET, not needed)
     if(args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
-      return Ember.Deferred.promise(function(promise){
+      return new Ember.RSVP.Promise(function(resolve, reject){
         $.ajax(Discourse.getURL('/session/csrf'), {cache: false})
            .success(function(result){
               Discourse.Session.currentProp('csrfToken', result.csrf);
-              performAjax(promise);
+              performAjax(resolve, reject);
            });
       });
     } else {
-      return Ember.Deferred.promise(performAjax);
+      return new Ember.RSVP.Promise(performAjax);
     }
   }
 
