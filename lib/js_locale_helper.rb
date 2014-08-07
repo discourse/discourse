@@ -1,6 +1,9 @@
 module JsLocaleHelper
 
   def self.output_locale(locale, translations = nil)
+    current_locale = I18n.locale
+    I18n.locale = locale.to_sym
+
     locale_str = locale.to_s
 
     # load default translations
@@ -31,6 +34,9 @@ module JsLocaleHelper
     result << File.read("#{Rails.root}/lib/javascripts/moment.js")
     result << moment_locale(locale_str)
     result << moment_formats
+
+    I18n.locale = current_locale
+
     result
   end
 
