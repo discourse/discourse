@@ -19,8 +19,12 @@ Discourse.Scrolling = Em.Mixin.create({
   bindScrolling: function(opts) {
     opts = opts || {debounce: 100};
 
+    // So we can not call the scrolled event while transitioning
+    var router = Discourse.__container__.lookup('router:main').router;
+
     var self = this,
         onScrollMethod = function() {
+          if (router.activeTransition) { return; }
           return Em.run.scheduleOnce('afterRender', self, 'scrolled');
         };
 
