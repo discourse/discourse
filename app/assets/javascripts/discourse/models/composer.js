@@ -305,8 +305,25 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   importQuote: function() {
+    var postStream = this.get('topic.postStream'),
+        postId = this.get('post.id');
+
+    if (!postId && postStream) {
+      postId = postStream.get('firstPostId');
+    }
+
+    // If we're editing a post, fetch the reply when importing a quote
+    if (this.get('editingPost')) {
+      var replyToPostNumber = this.get('post.reply_to_post_number');
+      if (replyToPostNumber) {
+        var replyPost = postStream.get('posts').findBy('post_number', replyToPostNumber);
+        if (replyPost) {
+          postId = replyPost.get('id');
+        }
+      }
+    }
+
     // If there is no current post, use the post id from the stream
-    var postId = this.get('post.id') || this.get('topic.postStream.firstPostId');
     if (postId) {
       this.set('loading', true);
       var composer = this;
