@@ -199,3 +199,9 @@ animation: modal .25s;
   max-height: 150px;
   margin-bottom: 10px;
 }
+
+.delete-flag-modal, .agree-flag-modal {
+  .modal-inner-container {
+    width: 400px;
+  }
+}

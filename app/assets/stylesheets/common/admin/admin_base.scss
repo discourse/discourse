@@ -844,7 +844,7 @@ table.api-keys {
 .content-list {
 
   h3 {
-    color: dark-light-diff($primary, $secondary, 90%, -60%); 
+    color: dark-light-diff($primary, $secondary, 90%, -60%);
     font-size: 15px;
     padding-left: 5px;
     margin-bottom: 10px;
@@ -1146,9 +1146,6 @@ button.ru {
 }
 
 .delete-flag-modal, .agree-flag-modal {
-  .modal-inner-container {
-    width: 400px;
-  }
   button {
     display: block;
     margin: 10px 0 10px 10px;
