@@ -76,7 +76,7 @@ zh_CN:
     admin_title: "管理"
     flags_title: "报告"
     show_more: "显示更多"
-    links: 链接
+    links: "链接"
     faq: "常见问题（FAQ）"
     guidelines: "指引"
     privacy_policy: "隐私政策"
@@ -113,8 +113,6 @@ zh_CN:
       not_bookmarked: "您已经阅读过此帖；点此给它加上书签"
       last_read: "这是您阅读过的最后一帖；点此给它加上书签"
       remove: "删除书签"
-    new_topics_inserted: "{{count}} 个新帖子。"
-    show_new_topics: "点此显示。"
     preview: "预览"
     cancel: "取消"
     save: "保存修改"
@@ -218,6 +216,7 @@ zh_CN:
       notifications: "通知"
       disable_jump_reply: "不要在回复后跳转到您的新帖子"
       dynamic_favicon: "在标签页图标上动态显示未读消息提醒（测试）"
+      edit_history_public: "让其他用户查看我的帖子的以前版本"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
       enable_quoting: "在高亮选择文字时启用引用回复"
       change: "修改"
@@ -241,7 +240,7 @@ zh_CN:
       unread_message_count: "消息"
       staff_counters:
         flags_given: "树立有用标志"
-        flagged_posts: "标志的帖子"
+        flagged_posts: "被报告的帖子"
         deleted_posts: "删除的帖子"
         suspensions: "禁止的"
       messages:
@@ -331,6 +330,11 @@ zh_CN:
       new_topic_duration:
         label: "认为主题是新主题的条件："
         not_viewed: "我还没有浏览过它们"
+        last_here: "在您最近一次访问之后创建的"
+        after_n_days:
+          other: "最近 {{count}} 天内创建"
+        after_n_weeks:
+          other: "最近 {{count}} 星期内创建"
       auto_track_topics: "自动追踪我进入的主题"
       auto_track_options:
         never: "从不"
@@ -425,8 +429,6 @@ zh_CN:
       enable: '概括本主题'
       disable: '显示所有帖子'
     deleted_filter:
-      enabled_description: "这个主题包含已删除的帖子，他们已经被隐藏。要再次查看所有帖子，点击下方。"
-      disabled_description: "主题中被删除的帖子已显示。要再次隐藏他们，点击下方。"
       enable: "隐藏已删除的帖子"
       disable: "显示已删除的帖子"
     private_message_info:
@@ -556,19 +558,7 @@ zh_CN:
       title: "使用 @用户名称 提及到您，回复您的帖子和主题，私信等等的通知消息"
       none: "您当前没有任何通知。"
       more: "浏览以前的通知"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='私信'></i> {{username}} {{link}}"
-      invited_to_private_message: "{{username}} {{link}}"
-      invitee_accepted: "<i title='已接受您的邀请' class='fa fa-sign-in'></i> {{username}} 已接受您的邀请"
-      moved_post: "<i title='移动帖子' class='fa fa--sign-out'></i> {{username}} 移动了  {{link}}"
       total_flagged: "被报告帖子的总数"
-      linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i> {{username}} {{link}}"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> 您被授予了 {{link}}"
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -602,7 +592,6 @@ zh_CN:
     topics:
       bulk:
         reset_read: "设为未读"
-        dismiss_read: "设为已读"
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"
@@ -1009,11 +998,16 @@ zh_CN:
       auto_close_units: "小时"
       email_in: "自定义外来电子邮件地址:"
       email_in_allow_strangers: "接受无账号的匿名用户的邮件"
+      email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
+      email_in_disabled_click: '启用“邮件发表”设置。'
+      allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
       this_year: "今年"
       position: "位置"
       default_position: "默认位置"
+      position_disabled: "分类按照其活跃程度的顺序显示。要固定分类列表的显示顺序，"
+      position_disabled_click: '启用“固定分类位置”设置。'
       parent: "上级分类"
       notifications:
         watching:
@@ -1108,6 +1102,7 @@ zh_CN:
           zero: "未读"
           one: "1 个未读主题"
           other: "{{count}} 个未读主题"
+        help: "您正在监视或追踪的主题中有未阅帖子的主题"
       new:
         lower_title_with_count:
           one: "1 新"
@@ -1117,6 +1112,7 @@ zh_CN:
           zero: "新主题"
           one: "新主题（1）"
           other: "新主题（{{count}}）"
+        help: "最近几天创建的主题"
       posted:
         title: "我的帖子"
         help: "您发表过帖子的主题"
@@ -1153,7 +1149,7 @@ zh_CN:
       title: 'Discourse 管理员'
       moderator: '版主'
       dashboard:
-        title: "管理面板"
+        title: "仪表盘"
         last_updated: "最近更新于："
         version: "安装的版本"
         up_to_date: "您正在运行最新的论坛版本。"
@@ -1196,23 +1192,21 @@ zh_CN:
         agree_flag_hide_post: "批准（隐藏并发送私信）"
         agree_flag_hide_post_title: "隐藏帖子并自动发送私信要求作者修改"
         defer_flag: "推迟"
-        defer_flag_title: "现在不执行任何操作，对此帖子报告的操作推迟到晚些时候，甚至不再提醒"
         delete: "删除"
-        delete_title: "删除"
         delete_post_defer_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
         delete_post_agree_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
+        delete_flag_modal_title: "删除并..."
         delete_spammer: "删除垃圾发布者"
+        delete_spammer_title: "移除该用户及其的所有帖子和主题。"
         disagree_flag_unhide_post: "不批准（不隐藏帖子）"
         disagree_flag_unhide_post_title: "清除此帖的任何报告，并使其重新可见"
         disagree_flag: "不批准"
-        disagree_flag_title: "不批准此帖的报告，并清除此贴的任何报告"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "这个主题已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
         more: "（更多……）"
         dispositions:
           agreed: "已批准"
           disagreed: "未批准"
-          defered: "已推迟"
         flagged_by: "报告者为"
         resolved_by: "已解决，被"
         system: "系统"
@@ -1303,9 +1297,9 @@ zh_CN:
             title: "删除备份"
             confirm: "您确定要删除该备份吗？"
           restore:
-            is_disabled: "网站设置不允许重置。"
-            text: "重置"
-            title: "重置该备份"
+            is_disabled: "站点设置中禁用了恢复功能。"
+            text: "恢复"
+            title: "恢复该备份"
             confirm: "您确定要重置该备份吗？"
           rollback:
             text: "回滚"

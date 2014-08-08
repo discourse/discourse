@@ -72,7 +72,6 @@ cs:
   next_page: "další strana →"
   prev_page: "← předchozí strana"
   page_num: "Strana %{num}"
-  by: "Od"
   topics_in_category: "Témata v kategorii '%{category}'"
   rss_posts_in_topic: "RSS feed tématu '%{topic}'"
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"

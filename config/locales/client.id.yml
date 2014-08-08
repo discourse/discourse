@@ -39,7 +39,7 @@ id:
     admin_title: "Admin"
     flags_title: "Tanda"
     show_more: "lihat selengkapanya"
-    links: Pranala
+    links: "Pranala"
     faq: "FAQ"
     you: "Kamu"
     or: "atau"
@@ -55,7 +55,6 @@ id:
       other: "dalam {{count}} hari"
     suggested_topics:
       title: "Topik Terpilih"
-    show_new_topics: "Klik untuk menampilkan"
     cancel: "batal"
     save: "Simpan Perubahan"
     saving: "Menyimpan..."
@@ -134,13 +133,6 @@ id:
     notifications:
       none: "Tidak ada notifikasi saat ini"
       more: "lihat notifikasi sebelumnya"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
     topic:
       invalid_access:
         description: "Maaf,  kamu tidak berhak mengakses topik tersebut."

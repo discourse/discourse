@@ -48,7 +48,6 @@ id:
   is_invalid: "tidak valid; cobalah dengan sesuatu yang lebih deskriptif"
   next_page: "halaman berikutnya →"
   prev_page: "← halaman sebelumnya"
-  by: "Oleh"
   topics_in_category: "Topik dalam kategori '%{category}'"
   rss_posts_in_topic: "RSS feed dari '%{topic}'"
   rss_topics_in_category: "RSS feed dari topik-topik pada kategori '%{category}'"

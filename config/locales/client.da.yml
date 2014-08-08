@@ -92,7 +92,7 @@ da:
     admin_title: "Admin"
     flags_title: "Flag"
     show_more: "vis mere"
-    links: Links
+    links: "Links"
     faq: "FAQ"
     guidelines: "Retningslinier"
     privacy_policy: "Privatlivspolitik"
@@ -134,8 +134,6 @@ da:
       not_bookmarked: "Du har læst dette indlæg; klik her for at lave et bogmærke"
       last_read: "Dette er det seneste indlæg, du har læst; klik her for at lave et bogmærke."
       remove: "Fjern bogmærke"
-    new_topics_inserted: "{{count}} nye indlæg"
-    show_new_topics: "Klik for at se."
     preview: "forhåndsvising"
     cancel: "annullér"
     save: "Gem ændringer"
@@ -242,6 +240,7 @@ da:
       notifications: "Underretninger"
       disable_jump_reply: "Spring ikke til dit nye indlæg efter du har svaret"
       dynamic_favicon: "Vis indkommende underretninger i favicon"
+      edit_history_public: "Lad andre brugere se mine tidligere revisioner"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       change: "skift"
@@ -355,6 +354,13 @@ da:
       new_topic_duration:
         label: "Betragt emner som nye når"
         not_viewed: "jeg ikke har set dem endnu"
+        last_here: "oprettet siden du sidst var her"
+        after_n_days:
+          one: "Oprettet i dag"
+          other: "oprettet indenfor de seneste {{count}} dage"
+        after_n_weeks:
+          one: "oprettet indenfor den seneste uge"
+          other: "oprettet indenfor de sidste {{count}} uger"
       auto_track_topics: "Følg automatisk emner jeg åbner"
       auto_track_options:
         never: "aldrig"
@@ -451,8 +457,6 @@ da:
       enable: 'Opsummér dette emne'
       disable: 'Vis alle indlæg'
     deleted_filter:
-      enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult. For at se alle indlæg igen, tryk nedenfor."
-      disabled_description: "Slettede indlæg bliver vist. For at skjule dem igen, klik nedenfor."
       enable: "Skjul slettede indlæg"
       disable: "Vis slettede indæg"
     private_message_info:
@@ -582,19 +586,7 @@ da:
       title: "notifikation ved @navns nævnelse, svar til dine indlæg og emner, private beskeder, mv."
       none: "Du har ikke nogen notifikationer lige nu."
       more: "se ældre notifikationer"
-      mentioned: "<span title='nævnt' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='citeret' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='besvaret' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='besvaret' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='redigeret' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='syntes om' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-lock' title='privat besked'></i> {{username}} har sendt dig en privat besked: {{link}}"
-      invited_to_private_message: "{{username}} har inviteret dig til en privat samtale: {{link}}"
-      invitee_accepted: "<i title='accepterede din invitation' class='fa fa-sign-in'></i> {{username}} har accepteret din invitation"
-      moved_post: "<i title='flyttede post' class='fa fa-sign-out'></i> {{username}} flyttede {{link}}"
       total_flagged: "total markerede indlæg"
-      linked: "<i title='linket indlæg' class='fa fa-heart'></i> {{username}} {{link}}"
-      granted_badge: "<i title='badge tildelt' class='fa fa-certificate'></i> Du blev tildelt {{link}}"
     upload_selector:
       title: "Indsæt billede"
       title_with_attachments: "Tilføj et billede eller en fil"
@@ -628,7 +620,6 @@ da:
     topics:
       bulk:
         reset_read: "Nulstil \"læst\""
-        dismiss_read: "Afvis ulæste"
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
@@ -916,6 +907,9 @@ da:
         unwiki: "Af-Wiki indlæg"
       actions:
         flag: 'Flag'
+        defer_flags:
+          one: "Udsæt markering"
+          other: "Udsæt markeringer"
         it_too:
           off_topic: "Flag det også"
           spam: "Flag det også"
@@ -1065,11 +1059,16 @@ da:
       auto_close_units: "timer"
       email_in: "Brugerindstillet ingående email adresse:"
       email_in_allow_strangers: "Accepter emails fra ikke oprettede brugere"
+      email_in_disabled: "Nye emner via email er deaktiveret i Site opsætning. For at aktivere oprettelse af nye emner via email,"
+      email_in_disabled_click: 'aktiver "email ind" indstilligen.'
+      allow_badges_label: "Tillad af badges bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
       add_permission: "Tilføj tilladelse"
       this_year: "dette år"
       position: "position"
       default_position: "Standarposition"
+      position_disabled: "Kategorier vil blive vist i rækkefølge efter aktivitet. For at styre rækkefølgen af kategorier i lister, "
+      position_disabled_click: 'skal funktionen "fikserede kategori positioner" slås til.'
       parent: "Overordnet kategori"
       notifications:
         watching:
@@ -1165,6 +1164,7 @@ da:
           zero: "Ulæste"
           one: "Ulæst (1)"
           other: "Ulæst ({{count}})"
+        help: "emner du følger med i lige nu med ulæste indlæg"
       new:
         lower_title_with_count:
           one: "1 ny"
@@ -1174,6 +1174,7 @@ da:
           zero: "Nye"
           one: "Ny (1)"
           other: "Nye ({{count}})"
+        help: "Emner oprettet i de seneste par dage"
       posted:
         title: "Mine indlæg"
         help: "emner du har skrevet indlæg i"
@@ -1250,12 +1251,29 @@ da:
         title: "Flag"
         old: "Gamle"
         active: "Aktive"
+        agree_flag_hide_post: "Enig (skjul indlæg + send PM)"
+        agree_flag_hide_post_title: "Gem dette indlæg og send automatisk en privat besked til brugeren som tilskyndelse til at redigere det"
+        defer_flag: "Udsæt"
+        delete: "Slet"
+        delete_post_defer_flag_title: "Slet indlægget; hvis det er det første, så slet hele emnet"
+        delete_post_agree_flag_title: "Slet indlæg; hvis det er det første indlæg, slet emnet"
+        delete_flag_modal_title: "Slet og..."
+        delete_spammer: "Slet spammer"
+        delete_spammer_title: "Fjern brugeren samt alle dens indlæg og emner."
+        disagree_flag_unhide_post: "Uenig (vis indlæg)"
+        disagree_flag_unhide_post_title: "Fjern alle flag fra dette indlæg og gør det synligt igen"
+        disagree_flag: "Uenig"
         clear_topic_flags: "Færdig"
         clear_topic_flags_title: "Emnet er kontrolleret og fundet ok. Klik på færdig for at fjerne rapporteringer."
+        more: "(mere...)"
+        dispositions:
+          agreed: "enig"
+          disagreed: "uenig"
         flagged_by: "Flaget af"
         resolved_by: "Løst af"
         system: "System"
         error: "Noget gik galt"
+        reply_message: "Svar"
         no_results: "Der er ingen flag."
         topic_flagged: "Dette <strong>emne</strong> er blevet rapporteret til administrator."
         visit_topic: "Besøg emnet for at gøre noget ved det"
@@ -1700,6 +1718,8 @@ da:
         description: Beskrivelse
         badge_type: Badge Type
         badge_grouping: Gruppe
+        badge_groupings:
+          modal_title: Badge grupperinger
         granted_by: Givet af
         granted_at: Givet på
         save: Gem
@@ -1733,6 +1753,7 @@ da:
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
+      title: 'Tastatur genveje'
       jump_to:
         title: 'Hop til'
         home: '<b>g</b> så <b>h</b> Hjem (seneste)'

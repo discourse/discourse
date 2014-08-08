@@ -80,7 +80,6 @@ it:
   next_page: "successivo →"
   prev_page: "← pagina precedente"
   page_num: "Pagina %{num}"
-  by: "Da"
   topics_in_category: "Topic nella categoria '%{category}'"
   rss_posts_in_topic: "RSS feed per '%{topic}'"
   rss_topics_in_category: "RSS feed dei topic nella categoria '%{category}'"
@@ -157,17 +156,28 @@ it:
   user_profile:
     no_info_me: "<div class='missing-profile'>il campo About Me del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences/about-me'>vuoi compilarlo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo About Me del suo profilo.</div>"
+  vip_category_name: "Lounge"
   vip_category_description: "Una categoria esclusiva per i membri di livello 3 o superiori."
+  meta_category_name: "Meta"
   meta_category_description: "Discussioni circa questo forum, la sua organizzazione, come funziona e come migliorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni tra lo staff. I topic sono visibili solo agli amministratori e ai moderatori."
   assets_topic_body: "Questo è un topic permanente, visibile solo allo staff, utilizzabile per salvare immagini e files utilizzati nel design del forum. Non eliminarlo!\n\n\nEcco come:\n\n\n1. Rispondi a questo topic.\n2. Carica tutte le immagini che desideri usare per loghi, favicon e così via. (Usa l'icona di upload nell'editor del post o trascina direttamente le immagini.)\n3. Invia la risposta per postarla.\n4. Fai click destro sulle immagini nel tuo nuovo post per ottenere il percorso delle immagini caricate o clicca l'icona di modifica post e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni fondamentali](/admin/site_settings/category/required).\n\nInoltre, se hai bisogno di permettere upload di file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
+  lounge_welcome:
+    title: "Benvenuto nella Lounge"
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "[Usa questo primo paragrafo per una breve descrizione della categoria. Cerca di stare sotto i 200 caratteri.]"
     post_template: "%{replace_paragraph}\n\nUsa lo spazio sottostante per una descrizione più estesa, ed anche per stabilire delle regole per la conversazione!"
     errors:
       self_parent: "La categoria-genitore di una sottocategoria non può essere se stessa."
+    cannot_delete:
+      uncategorized: "Non puoi eliminare la categoria \"Non categorizzato\""
+      has_subcategories: "Non puoi eliminare questa categoria perchè ha sotto-categorie."
+      topic_exists:
+        one: "Non puoi eliminare questa categoria perché ha 1 topic al suo interno. Il topic più vecchio è %{topic_link}."
+        other: "Non puoi eliminare questa categoria perché ha %{count} topic. Il topic più vecchio è %{topic_link}."
+      topic_exists_no_oldest: "Non puoi cancellare questa categoria perchè il numero dei topic è di %{count}."
   trust_levels:
     newuser:
       title: "Nuovo Utente"
@@ -509,9 +519,11 @@ it:
     auto_track_topics_after: "Valore globale in millisecondi prima dei quali un topic venga automaticamente tracciato, modificabile dagli utenti (0 sempre, -1 mai)"
     new_topic_duration_minutes: "Valore globale in minuti per i quali un topic è considerato come nuovo, modificabile dagli utenti (-1 sempre, -2 ultima visita)"
     flags_required_to_hide_post: "Numero di segnalazioni che rendono un topic automaticamente nascosto. L'utente riceve un messaggio privato. (0 mai)"
+    cooldown_minutes_after_hiding_posts: "Numero di minuti che l'utente deve attendere prima di modificare un post nascosto per segnalazione"
     max_topics_in_first_day: "Numero massimo di topic che l'utente può creare nel suo primo giorno di forum"
     max_replies_in_first_day: "Numero massimo di risposte che un utente può pubblicare nel suo primo giorno di forum"
     notify_mods_when_user_blocked: "Se un utente è bloccato automaticamente, manda un messaggio ai moderatori."
+    post_undo_action_window_mins: "Numero di minuti durante i quali gli utenti sono autorizzati ad annullare le loro azioni su un post (segnalazioni, like, etc)"
     ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; per informazioni http://google.com/analytics"
     ga_domain_name: "Nome del Dominio Google analytics, esempio: miosito.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; leggi http://google.com/analytics"
@@ -551,6 +563,7 @@ it:
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: Assicurati che sia un bucket privato."
     active_user_rate_limit_secs: "Quanto frequentemente viene aggiornato il campo 'last_seen_at' field, in secondi"
     previous_visit_timeout_hours: "Durata di una visita prima che venga considerata la visita 'precedente', in ore"
+    max_flags_per_day: "Massimo numero di segnalazioni per utente al giorno."
     clean_orphan_uploads_grace_period_hours: "Quante ore prima che un upload \"orphan\" venga rimosso."
     purge_deleted_uploads_grace_period_days: "Giorni che devono trascorrere prima che un upload cancellato venga rimosso del tutto."
     s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere in minuscolo.\\"
@@ -741,6 +754,16 @@ it:
       subject_template: "Nuovo account bloccato"
     blocked_by_staff:
       subject_template: "Account bloccato"
+    user_automatically_blocked:
+      subject_template: "Nuovo utente %{username} bloccato a causa delle segnalazioni"
+      text_body_template: |
+        (Questo è un messaggio automatico.)
+
+        Il nuovo utente [%{username}](%{base_url}%{user_url}) è stato bloccato in automatico perchè più utenti hanno contrassegnato i post di %{username}.
+
+        Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato bloccato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{base_url}%{user_url}).
+
+        La soglia può essere modificata tramite l'impostazione di blocco dei nuovi utenti.
     unblocked:
       subject_template: "Account sbloccato"
       text_body_template: |

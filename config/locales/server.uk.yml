@@ -55,7 +55,6 @@ uk:
   next_page: "next page →"
   prev_page: "← previous page"
   page_num: "Сторінка %{num}"
-  by: "By"
   topics_in_category: "Теми в категорії '%{category}'"
   rss_posts_in_topic: "RSS-стрічка теми '%{topic}'"
   rss_topics_in_category: "RSS-стрічка тем у категорії '%{category}'"

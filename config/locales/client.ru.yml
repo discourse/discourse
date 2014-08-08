@@ -46,7 +46,7 @@ ru:
         x_days:
           one: "1д"
           few: "%{count}д"
-          other: "%{count}д"
+          other: "%{count}d"
         about_x_years:
           one: "1г"
           few: "%{count}г"
@@ -108,7 +108,7 @@ ru:
     admin_title: "Админка"
     flags_title: "Жалобы"
     show_more: "показать еще"
-    links: Ссылки
+    links: "Ссылки"
     faq: "FAQ"
     guidelines: "Руководство"
     privacy_policy: "Политика конфиденциальности"
@@ -155,8 +155,6 @@ ru:
       not_bookmarked: "сообщение прочитано; щелкните, чтобы добавить его в закладки"
       last_read: "это последнее прочитанное сообщение; щелкните, чтобы добавить в закладки"
       remove: "Удалить закладку"
-    new_topics_inserted: "новых сообщений: {{count}}"
-    show_new_topics: "Показать."
     preview: "предпросмотр"
     cancel: "отмена"
     save: "Сохранить"
@@ -170,7 +168,7 @@ ru:
     undo: "Отменить"
     revert: "Вернуть"
     banner:
-      close: "Отклонить этот баннер."
+      close: "Больше не показывать это объявление."
     choose_topic:
       none_found: "Темы не найдены."
       title:
@@ -266,6 +264,7 @@ ru:
       notifications: "Уведомления"
       disable_jump_reply: "Не переходить к вашему новому сообщению после ответа"
       dynamic_favicon: "Показывать количество приходящих уведомлений в favicon (экспериментальный)"
+      edit_history_public: "Разрешить другим пользователям просматривать мои редакции сообщения"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Позволить отвечать с цитированием выделенного текста"
       change: "изменить"
@@ -379,6 +378,15 @@ ru:
       new_topic_duration:
         label: "Считать темы новыми, если"
         not_viewed: "они еще не просмотрены вами"
+        last_here: "создано после вашего последнего визита"
+        after_n_days:
+          one: "созданы за последний день"
+          few: "созданы за последние {{count}} дня"
+          other: "созданы за последние {{count}} дней"
+        after_n_weeks:
+          one: "созданы за последнюю неделю"
+          few: "созданы за последние {{count}} недели"
+          other: "созданы за последние {{count}} недель"
       auto_track_topics: "Автоматически отслеживать темы, которые я просматриваю"
       auto_track_options:
         never: "никогда"
@@ -477,8 +485,6 @@ ru:
       enable: 'Сводка по теме'
       disable: 'Показать все сообщения'
     deleted_filter:
-      enabled_description: "Эта тема содержит удаленные сообщения, которые сейчас скрыты. Для просмотра всех сообщений нажмите кнопку ниже."
-      disabled_description: "Удаленные сообщения отображаются. Для их скрытия нажмите кнопку ниже."
       enable: "Скрыть удаленные сообщения"
       disable: "Отобразить удленные сообщения"
     private_message_info:
@@ -608,19 +614,7 @@ ru:
       title: "уведомления об упоминании @name в сообщениях, ответах на ваши сообщения и темы, личные сообщения и т.д."
       none: "На данный момент уведомлений нет."
       more: "посмотреть более ранние уведомления"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i> {{username}} принял ваше приглашение"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i> {{username}} переместил {{link}}"
       total_flagged: "всего сообщений с жалобами"
-      linked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Вам вручили награду {{link}}"
     upload_selector:
       title: "Add an image"
       title_with_attachments: "Add an image or a file"
@@ -654,7 +648,6 @@ ru:
     topics:
       bulk:
         reset_read: "Сбросить прочтённые"
-        dismiss_read: "Отклонить прочтённость"
         dismiss_new: "Отклонить"
         toggle: "переключить массовый выбор тем"
         actions: "Массовое действие"
@@ -798,8 +791,8 @@ ru:
         open: "Открыть тему"
         close: "Закрыть тему"
         auto_close: "Автоматическое закрытие"
-        make_banner: "Создать баннер"
-        remove_banner: "Удалить баннер"
+        make_banner: "Сделать объявлением"
+        remove_banner: "Больше не показывать объявлением"
         unpin: "Отлепить тему"
         pin: "Прилепить тему"
         pin_globally: "Прилепить тему глобально"
@@ -1127,11 +1120,16 @@ ru:
       auto_close_units: "часов"
       email_in: "Индивидуальный адрес входящей почты:"
       email_in_allow_strangers: "Принимать письма от анонимных пользователей без учетных записей"
+      email_in_disabled: "Создание новых тем через электронную почту отключено в настройках сайта. Чтобы разрешить создание новых тем через электронную почту,"
+      email_in_disabled_click: 'активируйте настройку "email in".'
+      allow_badges_label: "Разрешить вручение наград в этом разделе"
       edit_permissions: "Изменить права доступа"
       add_permission: "Добавить права"
       this_year: "за год"
       position: "местоположение"
       default_position: "Позиция по умолчанию"
+      position_disabled: "Разделы будут показаны в порядке активности. Чтобы настроить порядок разделов,"
+      position_disabled_click: 'включите настройку "fixed category positions".'
       parent: "Родительский раздел"
       notifications:
         watching:
@@ -1228,6 +1226,7 @@ ru:
           zero: "Непрочитанные"
           one: "Непрочитанные (1)"
           other: "Непрочитанные ({{count}})"
+        help: "наблюдаемые или отслеживаемые темы с непрочитанными сообщениями"
       new:
         lower_title_with_count:
           one: "1 новое"
@@ -1237,6 +1236,7 @@ ru:
           zero: "Новые"
           one: "Новые (1)"
           other: "Новые ({{count}})"
+        help: "темы, созданные за последние несколько дней"
       posted:
         title: "Мои"
         help: "темы, в которых вы принимали участие"
@@ -1316,23 +1316,21 @@ ru:
         agree_flag_hide_post: "Принять (скрыть сообщение и послать личное сообщение)"
         agree_flag_hide_post_title: "Скрыть это сообщение и автоматически отправить пользователю личное сообщение с просьбой отредактировать его"
         defer_flag: "Отложить"
-        defer_flag_title: "Не предпринимать никаких действий, отложить жалобу для дальнейшего рассмотрения"
         delete: "Удалить"
-        delete_title: "Удалить"
         delete_post_defer_flag_title: "Удалить сообщение; если это первое сообщение, удалить тему целиком"
         delete_post_agree_flag_title: "Удалить сообщение; если это первое сообщение, удалить тему целиком"
+        delete_flag_modal_title: "Удалить и..."
         delete_spammer: "Удалить спамера"
+        delete_spammer_title: "Удалить пользователя и все его темы и сообщения."
         disagree_flag_unhide_post: "Отклонить (сделать сообщение видимым)"
         disagree_flag_unhide_post_title: "Удалить все жалобы на это сообщение и сделать его снова видимым"
         disagree_flag: "Отклонить"
-        disagree_flag_title: "Отклонить жалобу и удалить все жалобы на это сообщение"
         clear_topic_flags: "Готово"
         clear_topic_flags_title: "Тема была просмотрена, и все проблемы были решены. Нажмите Готово, чтобы удалить все жалобы."
         more: "(подробнее...)"
         dispositions:
           agreed: "принято"
           disagreed: "отклонено"
-          defered: "отложено"
         flagged_by: "Отмечено"
         resolved_by: "Разрешено"
         system: "Системные"

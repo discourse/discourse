@@ -76,7 +76,7 @@ zh_TW:
     admin_title: "管理員"
     flags_title: "投訴"
     show_more: "顯示更多"
-    links: 連結
+    links: "連結"
     faq: "常見問答集"
     guidelines: "守則"
     privacy_policy: "隱私政策"
@@ -113,8 +113,6 @@ zh_TW:
       not_bookmarked: "你已閱讀過這篇文章，按此加上書籤"
       last_read: "這是你最後閱讀的文章，按此加上書籤"
       remove: "移除書籤"
-    new_topics_inserted: "{{count}} 篇新文章。"
-    show_new_topics: "按此顯示。"
     preview: "預覽"
     cancel: "取消"
     save: "儲存變更"
@@ -218,6 +216,7 @@ zh_TW:
       notifications: "通知"
       disable_jump_reply: "不要在回覆之後直接跳到你的新文章"
       dynamic_favicon: "在 favicon 顯示訊息通知"
+      edit_history_public: "讓其他用戶檢視我的文章修訂紀錄"
       external_links_in_new_tab: "以新分頁開啟所有外部連結"
       enable_quoting: "允許引用已標註的文字"
       change: "修改"
@@ -330,6 +329,11 @@ zh_TW:
       new_topic_duration:
         label: "視為新討論話題的條件"
         not_viewed: "你尚未看過它們"
+        last_here: "建立於你上次到訪後"
+        after_n_days:
+          other: "建立於最近 {{count}} 天"
+        after_n_weeks:
+          other: "建立於最近 {{count}} 週"
       auto_track_topics: "自動追蹤你點進的討論話題"
       auto_track_options:
         never: "永不"
@@ -422,6 +426,9 @@ zh_TW:
       description_time: "共有 <b>{{count}}</b> 個回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀。"
       enable: '以摘要檢視此討論話題'
       disable: '顯示所有文章'
+    deleted_filter:
+      enable: "隱藏已刪除的文章"
+      disable: "顯示已刪除的文章"
     private_message_info:
       title: "私人訊息"
       invite: "邀請其他人..."
@@ -447,6 +454,7 @@ zh_TW:
       username: "用戶"
       password: "密碼"
       email_placeholder: "電子郵件地址或用戶名稱"
+      caps_lock_warning: "大寫鎖定中"
       error: "未知的錯誤"
       blank_username_or_password: "請輸入你的電子郵件或者用戶名稱，以及密碼。"
       reset_password: '重設密碼'
@@ -548,19 +556,7 @@ zh_TW:
       title: "以 @用戶名稱 提到、回覆您的文章與討論話題、私人訊息... 的通知。"
       none: "目前沒有任何通知。"
       more: "檢視較舊的通知"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i> {{username}} 已接受你的邀請"
-      moved_post: "<i title='移動的文章' class='fa fa-sign-out'></i> {{username}} 移動了 {{link}}"
       total_flagged: "所有被投訴的文章"
-      linked: "<i title='已連結的文章' class='fa fa-arrow-left'></i> {{username}} {{link}}"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> 你已升級 {{link}}"
     upload_selector:
       title: "加入一張圖片"
       title_with_attachments: "加入一張圖片或一個檔案"
@@ -594,7 +590,6 @@ zh_TW:
     topics:
       bulk:
         reset_read: "重設閱讀"
-        dismiss_read: "設定未讀文章為已讀"
         dismiss_new: "設定新文章為已讀"
         toggle: "批量切換選擇討論話題"
         actions: "批量操作"
@@ -711,6 +706,8 @@ zh_TW:
         regular:
           title: "普通"
           description: "只在有人以 @用戶名稱 提到你或回覆你的文章時通知你。"
+        regular_pm:
+          title: "一般"
         muted_pm:
           title: "靜音"
           description: "你將不會收到任何關於此私人訊息的通知，此討論話題也不會出現在你的未讀清單裡。"
@@ -844,6 +841,8 @@ zh_TW:
       controls:
         reply: "開始編寫對此文章的回覆"
         like: "給此文章按讚"
+        has_liked: "你已對此文章按讚"
+        undo_like: "撤回讚"
         edit: "編輯此文章"
         flag: "投訴此文章或傳送私人通知"
         delete: "刪除此文章"
@@ -1100,6 +1099,7 @@ zh_TW:
           zero: "新討論話題"
           one: "新討論話題 (1)"
           other: "新討論話題 ({{count}})"
+        help: "最近幾天建立的主題"
       posted:
         title: "我的文章"
         help: "你回覆過的討論話題"
@@ -1176,12 +1176,21 @@ zh_TW:
         title: "投訴"
         old: "舊的"
         active: "待處理"
+        delete: "刪除"
+        delete_spammer: "刪除垃圾文章發送者"
+        disagree_flag_unhide_post: "不同意 ( 取消文章的隱藏狀態 )"
+        disagree_flag: "不同意"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "該討論話題已被調查，問題已經解決。點擊完成以移除投訴。"
+        more: "(更多...)"
+        dispositions:
+          agreed: "同意"
+          disagreed: "不同意"
         flagged_by: "投訴者"
         resolved_by: "處理為"
         system: "系統"
         error: "發生了某些錯誤"
+        reply_message: "回覆"
         no_results: "沒有投訴。"
         topic_flagged: "此 <strong>討論話題</strong> 已被投訴。"
         visit_topic: "瀏覽討論話題以採取行動"
@@ -1613,6 +1622,7 @@ zh_TW:
         display_name: 顯示名稱
         description: 簡述
         badge_type: 徽章類型
+        badge_grouping: 群組
         granted_by: 升級者為
         granted_at: 升級在
         save: 儲存
@@ -1631,9 +1641,13 @@ zh_TW:
         listable: 在徽章頁面上顯示徽章
         enabled: 啟用徽章
         icon: 圖示
+        preview: 預覽徽章
+        trigger_type:
+          none: "每日更新"
     lightbox:
       download: "下載"
     keyboard_shortcuts_help:
+      title: '快捷鍵'
       jump_to:
         title: '跳到'
         home: '<b>g</b> 之後 <b>h</b> 主頁 ( 最近 )'
@@ -1683,9 +1697,22 @@ zh_TW:
       granted:
         other: "%{count} 升級"
       select_badge_for_title: 選擇一枚徽章作為你的稱號
+      no_title: "<無主旨>"
+      badge_grouping:
+        getting_started:
+          name: 開始入門
+        community:
+          name: 社群
+        trust_level:
+          name: 信任等級
+        other:
+          name: 其他
+        posting:
+          name: 文章
       badge:
         editor:
           name: 編輯
+          description: 首篇文章編輯
         basic_user:
           name: 初級
         regular_user:
@@ -1696,14 +1723,18 @@ zh_TW:
           name: 長老
         welcome:
           name: 歡迎
+          description: 收到一個讚
         autobiographer:
           name: 自我介紹
         nice_post:
           name: 好文章
+          description: 一篇文章收到 10 個讚。此徽章可多次獲得。
         good_post:
           name: 棒文章
+          description: 一篇文章收到 25 個讚。此徽章可多次獲得。
         great_post:
           name: 神文章
+          description: 一篇文章收到 50 個讚。此徽章可多次獲得。
         first_like:
           name: 首次讚好
           description: 給此貼文按讚
@@ -1721,3 +1752,5 @@ zh_TW:
           description: 標記使用者
         read_guidelines:
           name: 觀看守則
+        reader:
+          name: 讀者

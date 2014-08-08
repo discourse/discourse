@@ -42,7 +42,7 @@ uk:
     admin_title: "Адмін"
     flags_title: "Скарги"
     show_more: "показати більше"
-    links: Посилання
+    links: "Посилання"
     faq: "Часті запитання"
     privacy_policy: "Політика конфіденційності"
     mobile_view: "Вигляд для мобільного"
@@ -60,7 +60,6 @@ uk:
     max: "max"
     suggested_topics:
       title: "Пропоновані теми"
-    show_new_topics: "Натисніть, щоб показати."
     preview: "попередній перегляд"
     cancel: "скасувати"
     save: "Зберегти зміни"
@@ -388,14 +387,6 @@ uk:
       title: "Сповіщення про згадку Вашого @імені, відповіді на Ваші дописи та теми, приватні повідомлення, тощо"
       none: "Наразі Ви не маєте сповіщень."
       more: "переглянути старіші сповіщення"
-      mentioned: "<span title='згадав(ла)' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='процитував(ла)' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='відповів(ла)' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='написав(ла)' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='відредагував(ла)' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='вподобав(ла)' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='приватне повідомлення'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='приватне повідомлення'></i> {{username}} {{link}}"
       total_flagged: "всього дописів, на які поскаржилися"
     upload_selector:
       title: "Додати зображення"
@@ -423,7 +414,6 @@ uk:
     topics:
       bulk:
         reset_read: "Reset Read"
-        dismiss_read: "Dismiss Read"
         dismiss_new: "Dismiss New"
         toggle: "перемикач масової дії над темами"
         actions: "Масові дії"

@@ -80,7 +80,6 @@ da:
   next_page: "næste side →"
   prev_page: "← forrige side"
   page_num: "Side %{num}"
-  by: "Af"
   topics_in_category: "Emner i kategorien '%{category}'"
   rss_posts_in_topic: "RSS-feed for emnet '%{topic}'"
   rss_topics_in_category: "RSS-feed for emner i kategorien '%{category}'"

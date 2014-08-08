@@ -76,7 +76,7 @@ ja:
     admin_title: "管理者"
     flags_title: "フラグ"
     show_more: "もっと見る"
-    links: リンク
+    links: "リンク"
     faq: "よくある質問"
     guidelines: "ガイドライン"
     privacy_policy: "プライバシーポリシー"
@@ -113,8 +113,6 @@ ja:
       not_bookmarked: "このポストをブックマークする"
       last_read: "このポストをブックマークする"
       remove: "ブックマークを削除"
-    new_topics_inserted: "新しいトピックが {{count}}個あります"
-    show_new_topics: "クリックして表示。"
     preview: "プレビュー"
     cancel: "キャンセル"
     save: "変更を保存"
@@ -425,8 +423,6 @@ ja:
       enable: 'このトピックを要訳する'
       disable: '全ての投稿を表示する'
     deleted_filter:
-      enabled_description: "削除されたポストは非表示されています。"
-      disabled_description: "削除されたポストは表示されています。"
       enable: "削除されたポストを非表示する"
       disable: "削除されたポストを表示する"
     private_message_info:
@@ -556,19 +552,7 @@ ja:
       title: "@ユーザ名 メンションやあなたのポストやトピックへの回答、プライベートメッセージなどの通知"
       none: "現在通知はありません。"
       more: "古い通知を確認する"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i> {{username}} あなたの招待を受け入れました"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i> {{username}} が {{link}}を移動しました"
       total_flagged: "フラグがたったポストの総数"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> 付与されました{{link}}"
     upload_selector:
       title: "画像のアップロード"
       title_with_attachments: "画像/ファイルをアップロード"
@@ -602,7 +586,6 @@ ja:
     topics:
       bulk:
         reset_read: "未読に設定"
-        dismiss_read: "既読に設定"
         dismiss_new: "既読に設定"
         toggle: "選択したトピックを切り替え"
         actions: "操作"
@@ -1190,14 +1173,12 @@ ja:
         old: "古いフラグ"
         active: "アクティブなフラグ"
         delete: "削除する"
-        delete_title: "削除する"
         delete_post_defer_flag_title: "投稿を削除する。もしこの最初の投稿を削除すると、トピックも削除されます。"
         delete_post_agree_flag_title: "投稿を削除する。もしこの最初の投稿を削除すると、トピックも削除されます。"
         delete_spammer: "スパムユーザーを削除"
         disagree_flag_unhide_post: "反対する（投稿を表示する）"
         disagree_flag_unhide_post_title: "投稿に付けたフラッグを削除する。ポストを表示する"
         disagree_flag: "反対する"
-        disagree_flag_title: "フラッグに反対する。投稿につけたフラッグすべてを取り消す。"
         clear_topic_flags: "トピックのフラグをクリアしました"
         clear_topic_flags_title: "このトピックについての問題が解決されました。「完了」をクリックしてフラグを外します。"
         dispositions:

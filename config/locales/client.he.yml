@@ -92,7 +92,7 @@ he:
     admin_title: "ניהול"
     flags_title: "סימוני הודעה"
     show_more: "הראה עוד"
-    links: קישורים
+    links: "קישורים"
     faq: "שאלות נפוצות"
     guidelines: "כללי התנהלות"
     privacy_policy: "מדיניות פרטיות"
@@ -134,8 +134,6 @@ he:
       not_bookmarked: "קראת הודעה זו, לחץ להוספה למועדפים"
       last_read: "זו ההודעה האחרונה שקראת, לחץ להוספה למועדפים"
       remove: "הסר מהמועדפים"
-    new_topics_inserted: "{{count}} הודעות חדשות"
-    show_new_topics: "לחץ כדי להציג."
     preview: "תצוגה מקדימה"
     cancel: "ביטול"
     save: "שמור שינויים"
@@ -242,6 +240,7 @@ he:
       notifications: "התרעות"
       disable_jump_reply: "לא לקפוץ לפוסט החדש שלך לאחר משלוח התשובה"
       dynamic_favicon: "הראה התרעה על הודעות חדשות באייקון העמוד (נסיוני)"
+      edit_history_public: "אפשרו למשתמשים אחרים לראות את תיקוני הפרסומים שלי"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
       enable_quoting: "אפשרו תגובת ציטוט לטקסט מסומן"
       change: "שנה"
@@ -355,6 +354,13 @@ he:
       new_topic_duration:
         label: "החשב נושא חדש כאשר"
         not_viewed: "עדיין לא צפית בהם"
+        last_here: "נוצר(ו) מאז שהייתם כאן לאחרונה"
+        after_n_days:
+          one: "נוצר ביום האחרון"
+          other: "נוצרו ב-{{count}} ימים האחרונים"
+        after_n_weeks:
+          one: "נוצר/ו בשבוע האחרון"
+          other: "נוצר/ו ב-{{count}} שבועות האחרונים"
       auto_track_topics: " מעקב אוטומטי אחרי נושאים אליהם אני נכנס/ת"
       auto_track_options:
         never: "אף פעם"
@@ -451,8 +457,6 @@ he:
       enable: 'סכם נושא זה'
       disable: 'הצג את כל ההודעות'
     deleted_filter:
-      enabled_description: "הנושא כולל פוסטים שנמחקו ושהם מוסתרים. כדי להציג שוב את כל הפוסטים, הקליקו למטה."
-      disabled_description: "פוסטים מחוקים מוצגים בנושא זה. להסתירם שוב, הקליקו למטה."
       enable: "הסתר פוסטים מחוקים"
       disable: "הצג פוסטים מחוקים"
     private_message_info:
@@ -582,19 +586,7 @@ he:
       title: "התראות של אזכורי @שם, תגובות להודעות ונושאים שלך, הודעות פרטיות וכיו\"ב"
       none: "אין לך התרעות כרגע."
       more: "הצג התרעות ישנות יותר"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i>אישר/ה את הזמנתך {{username}} "
-      moved_post: "<i title='moved post' class='fa fa-arrow-right'></i> {{username}} הועבר {{link}}"
       total_flagged: "סך הכל נושאים מדוגללים"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i>{{link}} הוענק לך"
     upload_selector:
       title: "הוספת תמונה"
       title_with_attachments: "הוספת תמונה או קובץ"
@@ -628,7 +620,6 @@ he:
     topics:
       bulk:
         reset_read: "איפוס נקראו"
-        dismiss_read: "שחרור לא נקראו"
         dismiss_new: "שחרור חדשים"
         toggle: "החלף קבוצה מסומנת של נושאים"
         actions: "מקבץ פעולות"
@@ -1068,11 +1059,16 @@ he:
       auto_close_units: "שעות"
       email_in: "כתובת דואר נכנס מותאמת אישית:"
       email_in_allow_strangers: "קבלת דוא\"ל ממשתמשים אנונימיים ללא חשבונות במערכת הפורומים"
+      email_in_disabled: "האפשרות פרסום נושאים חדשים דרך הדוא\"ל נוטרלה דרך הגדרות האתר. לאפשר פרסום באמצעות  משלוח דוא\"ל."
+      email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
+      allow_badges_label: "הרשו לתגים (badges) להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
       add_permission: "הוסף הרשאה"
       this_year: "השנה"
       position: "מיקום"
       default_position: "מיקום ברירת מחדל"
+      position_disabled: "קטגוריות יוצגו על פס סדר הפעילות. כדי לשלוט בסדר הקטגורייות ברשימה,"
+      position_disabled_click: 'אפשרו את ההגדרה "סדר קטגוריות קבוע".'
       parent: "קטגורית אם"
       notifications:
         watching:
@@ -1168,6 +1164,7 @@ he:
           zero: "לא נקרא"
           one: "לא נקרא (1)"
           other: "לא נקראו ({{count}})"
+        help: "נושאים שאתם כרגע צופים או עוקבים אחריהם עם פרסומים שלא נקראו"
       new:
         lower_title_with_count:
           one: "1 חדש"
@@ -1177,6 +1174,7 @@ he:
           zero: "חדש"
           one: "חדש (1)"
           other: "חדשים ({{count}})"
+        help: "פרסומים נוצרו בימים האחרונים"
       posted:
         title: "ההודעות שלי"
         help: "נושאים בהם פרסמת"
@@ -1256,23 +1254,21 @@ he:
         agree_flag_hide_post: "קבחה (הסתרת פרסום + שליחת מסר פרטי)"
         agree_flag_hide_post_title: "הסתירו פרסום זה ושלחו למשתמ/ת מסר פרטי אוטומטי עם בקשה לערוך אותו."
         defer_flag: "דחייה"
-        defer_flag_title: "לא נדרשת פעולה בעת זו, דחיית כל פעולה בנוגע לסימון זה למועד מאוחר יותר, או בכלל לא"
         delete: "מחיקה"
-        delete_title: "מחיקה"
         delete_post_defer_flag_title: "מחיקת הפרסום; אם זהו הפרסום הראשון, מחיקת הנושא"
         delete_post_agree_flag_title: "מחיקת פרסום; אם זהו הפרסום הראשון, מחיקת הנושא"
+        delete_flag_modal_title: "מחיקה ו..."
         delete_spammer: "מחיקת ספאמר"
+        delete_spammer_title: "הסרת המשתמש/ת וכל הפרסומים והנושאים של משתמש/ת אלו."
         disagree_flag_unhide_post: "אי-קבלה (הצגה מחדש של הפרסום)"
         disagree_flag_unhide_post_title: "הסרה של כל הסימונים מהפרסום הזה והחזרתו למצב תצוגה"
         disagree_flag: "אי קבלה"
-        disagree_flag_title: "אי קבלה עם הסימון, הסרת כל הסימונים מהפרסום הזה"
         clear_topic_flags: "סיום"
         clear_topic_flags_title: "הנושא נבדק והבעיה נפתרה. לחצו על סיום כדי להסיר את הסימונים."
         more: "(עוד...)"
         dispositions:
           agreed: "התקבל"
           disagreed: "לא התקבל"
-          defered: "נדחה"
         flagged_by: "דוגלל על ידי"
         resolved_by: "נפתר על ידי"
         system: "מערכת"
