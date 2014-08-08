@@ -727,7 +727,7 @@ en:
       bulk:
         reset_read: "Reset Read"
         dismiss_posts: "Dismiss Posts"
-        dismiss_posts_tooltip: "Clear unread counts on these topics but continue to show me when new posts are made"
+        dismiss_posts_tooltip: "Clear unread counts on these topics but continue to show them on my unread list when new posts are made"
         dismiss_topics: "Dismiss Topics"
         dismiss_topics_tooltip: "Stop showing these topics in my unread list when new posts are made"
         dismiss_new: "Dismiss New"
