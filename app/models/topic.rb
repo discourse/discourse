@@ -363,20 +363,37 @@ class Topic < ActiveRecord::Base
     return [] unless title.present?
     return [] unless raw.present?
 
-    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity", title: title, raw: raw]))
-                     .visible
-                     .where(closed: false, archived: false)
-                     .secured(Guardian.new(user))
-                     .listable_topics
-                     .joins("LEFT OUTER JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
-                     .limit(SiteSetting.max_similar_results)
-                     .order('similarity desc')
+    filter_words = Search.prepare_data(title + " " + raw[0...200]);
+    ts_query = Search.ts_query(filter_words, nil, "|")
 
     # Exclude category definitions from similar topic suggestions
+
+    candidates = Topic.visible
+       .secured(Guardian.new(user))
+       .listable_topics
+       .joins('JOIN posts p ON p.topic_id = topics.id AND p.post_number = 1')
+       .joins('JOIN post_search_data s ON p.id = s.post_id')
+       .where("search_data @@ #{ts_query}")
+       .order("ts_rank(search_data, #{ts_query}) DESC")
+       .limit(SiteSetting.max_similar_results * 3)
+
     exclude_topic_ids = Category.pluck(:topic_id).compact!
     if exclude_topic_ids.present?
-      similar = similar.where("topics.id NOT IN (?)", exclude_topic_ids)
+      candidates = candidates.where("topics.id NOT IN (?)", exclude_topic_ids)
     end
+
+    candidate_ids = candidates.pluck(:id)
+
+
+    return [] unless candidate_ids.present?
+
+
+    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(topics.title, :raw) AS similarity", title: title, raw: raw]))
+                     .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
+                     .limit(SiteSetting.max_similar_results)
+                     .where("topics.id IN (?)", candidate_ids)
+                     .where("similarity(topics.title, :title) + similarity(topics.title, :raw) > 0.2", raw: raw, title: title)
+                     .order('similarity desc')
 
     similar
   end

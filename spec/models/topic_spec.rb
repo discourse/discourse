@@ -211,7 +211,11 @@ describe Topic do
     end
 
     context 'with a similar topic' do
-      let!(:topic) { Fabricate(:topic, title: "Evil trout is the dude who posted this topic") }
+      let!(:topic) {
+        ActiveRecord::Base.observers.enable :search_observer
+        post = create_post(title: "Evil trout is the dude who posted this topic")
+        post.topic
+      }
 
       it 'returns the similar topic if the title is similar' do
         Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?").should == [topic]

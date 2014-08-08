@@ -215,7 +215,9 @@ export default Discourse.Controller.extend({
     if (!this.get('model.creatingTopic')) return;
 
     var body = this.get('model.reply'),
-        title = this.get('model.title');
+        title = this.get('model.title'),
+        self = this,
+        message;
 
     // Ensure the fields are of the minimum length
     if (body.length < Discourse.SiteSettings.min_body_similar_length ||
@@ -229,11 +231,19 @@ export default Discourse.Controller.extend({
       similarTopics.pushObjects(newTopics);
 
       if (similarTopics.get('length') > 0) {
-        messageController.popup(Discourse.ComposerMessage.create({
+        message = Discourse.ComposerMessage.create({
           templateName: 'composer/similar_topics',
           similarTopics: similarTopics,
           extraClass: 'similar-topics'
-        }));
+        });
+
+        self.set('similarTopicsMessage', message);
+        messageController.popup(message);
+      } else {
+        message = self.get('similarTopicsMessage');
+        if (message) {
+          messageController.send('hideMessage', message);
+        }
       }
     });
 
