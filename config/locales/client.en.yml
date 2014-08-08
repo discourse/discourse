@@ -726,7 +726,10 @@ en:
     topics:
       bulk:
         reset_read: "Reset Read"
-        dismiss_read: "Dismiss Unread"
+        dismiss_posts: "Dismiss Posts"
+        dismiss_posts_tooltip: "Skip unread posts"
+        dismiss_topics: "Dismiss Topics"
+        dismiss_topics_tooltip: "Clear unread topics and reset tracking state to regular"
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"

@@ -71,11 +71,17 @@ export default Discourse.DiscoveryController.extend({
       });
     },
 
-    dismissRead: function() {
+    dismissRead: function(operationType) {
       var self = this,
           selected = this.get('selected'),
-          operation = { type: 'change_notification_level',
+          operation;
+
+      if(operationType === "posts"){
+        operation = { type: 'dismiss_posts' };
+      } else {
+        operation = { type: 'change_notification_level',
                         notification_level_id: Discourse.Topic.NotificationLevel.REGULAR };
+      }
 
       var promise;
       if (selected.length > 0) {

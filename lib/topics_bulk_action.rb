@@ -8,7 +8,7 @@ class TopicsBulkAction
   end
 
   def self.operations
-    %w(change_category close change_notification_level reset_read)
+    %w(change_category close change_notification_level reset_read dismiss_posts)
   end
 
   def perform!
@@ -18,6 +18,18 @@ class TopicsBulkAction
   end
 
   private
+
+    def dismiss_posts
+      sql = "
+      UPDATE topic_users tu
+      SET seen_post_count = t.posts_count , last_read_post_number = highest_post_number
+      FROM topics t
+      WHERE t.id = tu.topic_id AND tu.user_id = :user_id AND t.id IN (:topic_ids)
+      "
+
+      Topic.exec_sql(sql, user_id: @user.id, topic_ids: @topic_ids)
+      @changed_ids.concat @topic_ids
+    end
 
     def reset_read
       PostTiming.destroy_for(@user.id, @topic_ids)

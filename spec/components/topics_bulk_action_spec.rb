@@ -3,6 +3,19 @@ require_dependency 'topics_bulk_action'
 
 describe TopicsBulkAction do
 
+  describe "dismiss_posts" do
+    it "dismisses posts" do
+      post1 = create_post
+      create_post(topic_id: post1.topic_id)
+
+      TopicsBulkAction.new(post1.user, [post1.topic_id], type: 'dismiss_posts').perform!
+
+      tu = TopicUser.find_by(user_id: post1.user_id, topic_id: post1.topic_id)
+      tu.last_read_post_number.should == 2
+      tu.seen_post_count = 2
+    end
+  end
+
   describe "invalid operation" do
     let(:user) { Fabricate.build(:user) }
 
