@@ -63,11 +63,14 @@ class DiscourseSassCompiler
 
     # Check if CSS needs to be RTLed after compilation
     # and run RTLit gem on compiled CSS if true and RTLit gem is available
-    if GlobalSetting.rtl_css && defined?(RTLit)
-      RTLit::Converter.to_rtl(css)
-    else
-      css
+    css_output = css
+    if GlobalSetting.rtl_css
+      begin
+        require 'rtlit'
+        css_output = RTLit::Converter.to_rtl(css) if defined?(RTLit)
+      rescue; end
     end
+    css_output
   end
 
 end
