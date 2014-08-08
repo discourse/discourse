@@ -154,7 +154,7 @@ gem 'rack-protection' # security
 group :assets do
   gem 'sass-rails', '~> 4.0.2'
   gem 'uglifier'
-  gem 'rtlit' # for css rtling
+  gem 'rtlit', require: false # for css rtling
 end
 
 group :test do
