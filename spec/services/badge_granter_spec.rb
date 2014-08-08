@@ -34,7 +34,7 @@ describe BadgeGranter do
     it 'should grant missing badges' do
       post = Fabricate(:post, like_count: 30)
       2.times {
-        BadgeGranter.backfill(Badge.find(Badge::NicePost))
+        BadgeGranter.backfill(Badge.find(Badge::NicePost), post_ids: [post.id])
         BadgeGranter.backfill(Badge.find(Badge::GoodPost))
       }
 
