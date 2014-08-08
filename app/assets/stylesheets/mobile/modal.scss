@@ -150,3 +150,12 @@
     color: $success;
   }
 }
+
+.delete-flag-modal, .agree-flag-modal {
+  .modal-inner-container {
+    width: 300px;
+  }
+  .btn {
+    float: none !important;
+  }
+}
