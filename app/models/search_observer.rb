@@ -35,6 +35,11 @@ class SearchObserver < ActiveRecord::Observer
     # don't allow concurrency to mess up saving a post
   end
 
+  def self.update_topics_index(topic_id, title, cooked)
+    search_data = title.dup << " " << scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
+    update_index('topic', topic_id, search_data)
+  end
+
   def self.update_posts_index(post_id, cooked, title, category)
     search_data = scrub_html_for_search(cooked) << " " << title
     search_data << " " << category if category
@@ -55,6 +60,7 @@ class SearchObserver < ActiveRecord::Observer
       if obj.topic
         category_name = obj.topic.category.name if obj.topic.category
         SearchObserver.update_posts_index(obj.id, obj.cooked, obj.topic.title, category_name)
+        SearchObserver.update_topics_index(obj.topic_id, obj.topic.title, obj.cooked) if obj.post_number == 1
       else
         Rails.logger.warn("Orphan post skipped in search_observer, topic_id: #{obj.topic_id} post_id: #{obj.id} raw: #{obj.raw}")
       end
@@ -69,6 +75,7 @@ class SearchObserver < ActiveRecord::Observer
         if post
           category_name = obj.category.name if obj.category
           SearchObserver.update_posts_index(post.id, post.cooked, obj.title, category_name)
+          SearchObserver.update_topics_index(obj.id, obj.title, post.cooked)
         end
       end
     end

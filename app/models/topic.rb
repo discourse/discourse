@@ -358,12 +358,13 @@ class Topic < ActiveRecord::Base
     archetype == Archetype.private_message
   end
 
+  MAX_SIMILAR_BODY_LENGTH = 200
   # Search for similar topics
   def self.similar_to(title, raw, user=nil)
     return [] unless title.present?
     return [] unless raw.present?
 
-    filter_words = Search.prepare_data(title + " " + raw[0...200]);
+    filter_words = Search.prepare_data(title + " " + raw[0...MAX_SIMILAR_BODY_LENGTH]);
     ts_query = Search.ts_query(filter_words, nil, "|")
 
     # Exclude category definitions from similar topic suggestions
@@ -371,8 +372,7 @@ class Topic < ActiveRecord::Base
     candidates = Topic.visible
        .secured(Guardian.new(user))
        .listable_topics
-       .joins('JOIN posts p ON p.topic_id = topics.id AND p.post_number = 1')
-       .joins('JOIN post_search_data s ON p.id = s.post_id')
+       .joins('JOIN topic_search_data s ON topics.id = s.topic_id')
        .where("search_data @@ #{ts_query}")
        .order("ts_rank(search_data, #{ts_query}) DESC")
        .limit(SiteSetting.max_similar_results * 3)

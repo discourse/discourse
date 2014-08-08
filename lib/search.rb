@@ -55,6 +55,19 @@ class Search
       SearchObserver.index(post)
     end
 
+    posts = Post.joins(:topic)
+            .where('posts.id IN (
+               SELECT p2.id FROM posts p2
+               LEFT JOIN topic_search_data pd ON locale = ? AND p2.topic_id = pd.topic_id
+               WHERE pd.topic_id IS NULL AND p2.post_number = 1
+              )', SiteSetting.default_locale).limit(10000)
+
+    posts.each do |post|
+      # force indexing
+      post.cooked += " "
+      SearchObserver.index(post)
+    end
+
     nil
   end
 
