@@ -66,6 +66,7 @@ SQL
       FROM quoted_posts q1
       JOIN badge_posts p1 ON p1.id = q1.post_id
       JOIN badge_posts p2 ON p2.id = q1.quoted_post_id
+      WHERE (:backfill OR ( p1.id IN (:post_ids) ))
       GROUP BY p1.user_id
     ) ids
     JOIN quoted_posts q ON q.id = ids.id
@@ -79,7 +80,8 @@ SQL
       FROM topic_links l1
       JOIN badge_posts p1 ON p1.id = l1.post_id
       JOIN badge_posts p2 ON p2.id = l1.link_post_id
-      WHERE NOT reflection AND p1.topic_id <> p2.topic_id AND not quote
+      WHERE NOT reflection AND p1.topic_id <> p2.topic_id AND not quote AND
+        (:backfill OR ( p1.id in (:post_ids) ))
       GROUP BY l1.user_id
     ) ids
     JOIN topic_links l ON l.id = ids.id
@@ -104,7 +106,8 @@ SQL
       SELECT pa.user_id, min(pa.id) id
       FROM post_actions pa
       JOIN badge_posts p on p.id = pa.post_id
-      WHERE post_action_type_id IN (#{PostActionType.flag_types.values.join(",")})
+      WHERE post_action_type_id IN (#{PostActionType.flag_types.values.join(",")}) AND
+        (:backfill OR pa.post_id IN (:post_ids) )
       GROUP BY pa.user_id
     ) x
     JOIN post_actions pa1 on pa1.id = x.id
@@ -116,7 +119,8 @@ SQL
       SELECT pa.user_id, min(pa.id) id
       FROM post_actions pa
       JOIN badge_posts p on p.id = pa.post_id
-      WHERE post_action_type_id = 2
+      WHERE post_action_type_id = 2 AND
+        (:backfill OR pa.post_id IN (:post_ids) )
       GROUP BY pa.user_id
     ) x
     JOIN post_actions pa1 on pa1.id = x.id
@@ -126,7 +130,8 @@ SQL
     Editor = <<SQL
     SELECT p.user_id, min(p.id) post_id, min(p.created_at) granted_at
     FROM badge_posts p
-    WHERE p.self_edits > 0
+    WHERE p.self_edits > 0 AND
+        (:backfill OR p.id IN (:post_ids) )
     GROUP BY p.user_id
 SQL
 
@@ -134,7 +139,8 @@ SQL
     SELECT p.user_id, min(post_id) post_id, min(pa.created_at) granted_at
     FROM post_actions pa
     JOIN badge_posts p on p.id = pa.post_id
-    WHERE post_action_type_id = 2
+    WHERE post_action_type_id = 2 AND
+        (:backfill OR pa.post_id IN (:post_ids) )
     GROUP BY p.user_id
 SQL
 
@@ -143,7 +149,8 @@ SQL
     FROM users u
     JOIN user_profiles up on u.id = up.user_id
     WHERE bio_raw IS NOT NULL AND LENGTH(TRIM(bio_raw)) > #{Badge::AutobiographerMinBioLength} AND
-          uploaded_avatar_id IS NOT NULL
+          uploaded_avatar_id IS NOT NULL AND
+          (:backfill OR u.id IN (:user_ids) )
 SQL
 
     def self.like_badge(count)
@@ -151,7 +158,8 @@ SQL
 "
     SELECT p.user_id, p.id post_id, p.updated_at granted_at
     FROM badge_posts p
-    WHERE p.like_count >= #{count.to_i}
+    WHERE p.like_count >= #{count.to_i} AND
+      (:backfill OR p.id IN (:post_ids) )
 "
     end
 
@@ -159,7 +167,9 @@ SQL
       # we can do better with dates, but its hard work figuring this out historically
 "
     SELECT u.id user_id, current_timestamp granted_at, NULL post_id FROM users u
-    WHERE trust_level >= #{level.to_i}
+    WHERE trust_level >= #{level.to_i} AND (
+      :backfill OR u.id IN (:user_ids)
+    )
 "
     end
   end

@@ -154,7 +154,12 @@ class BadgeGranter
     post_ids = opts[:post_ids] if opts
     user_ids = opts[:user_ids] if opts
 
-    post_clause = badge.target_posts ? "AND q.post_id = ub.post_id" : ""
+    post_ids = nil unless post_ids.present?
+    user_ids = nil unless user_ids.present?
+
+    full_backfill = !user_ids && !post_ids
+
+    post_clause = badge.target_posts ? "AND (q.post_id = ub.post_id OR NOT :multiple_grant)" : ""
     post_id_field = badge.target_posts ? "q.post_id" : "NULL"
 
     sql = "DELETE FROM user_badges
@@ -167,7 +172,12 @@ class BadgeGranter
              WHERE ub.badge_id = :id AND q.user_id IS NULL
            )"
 
-    Badge.exec_sql(sql, id: badge.id) if badge.auto_revoke && !post_ids && !user_ids
+    Badge.exec_sql(sql, id: badge.id,
+                        post_ids: [-1],
+                        user_ids: [-2],
+                        backfill: true,
+                        multiple_grant: true # cheat here, cause we only run on backfill and are deleting
+                  ) if badge.auto_revoke && full_backfill
 
     sql = "INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, post_id)
             SELECT :id, q.user_id, q.granted_at, -1, #{post_id_field}
@@ -181,10 +191,14 @@ class BadgeGranter
 
     builder = SqlBuilder.new(sql)
     builder.where("ub.badge_id IS NULL AND q.user_id <> -1")
-    builder.where("q.post_id in (:post_ids)", post_ids: post_ids) if post_ids.present?
-    builder.where("q.user_id in (:user_ids)", user_ids: user_ids) if user_ids.present?
+    builder.where("q.post_id in (:post_ids)") if post_ids
+    builder.where("q.user_id in (:user_ids)") if user_ids
 
-    builder.map_exec(OpenStruct, id: badge.id).each do |row|
+    builder.map_exec(OpenStruct, id: badge.id,
+                                 multiple_grant: badge.multiple_grant,
+                                 backfill: full_backfill,
+                                 post_ids: post_ids || [-2],
+                                 user_ids: user_ids || [-2]).each do |row|
 
       # old bronze badges do not matter
       next if badge.badge_type_id == BadgeType::Bronze and row.granted_at < 2.days.ago
