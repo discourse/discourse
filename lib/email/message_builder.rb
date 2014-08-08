@@ -165,14 +165,14 @@ module Email
     def alias_email(source)
       return source if @opts[:from_alias].blank? && SiteSetting.email_site_title.blank?
       if !@opts[:from_alias].blank?
-        "#{@opts[:from_alias]} <#{source}>"
+        "#{Email.cleanup_alias(@opts[:from_alias])} <#{source}>"
       else
-        "#{SiteSetting.email_site_title} <#{source}>"
+        "#{Email.cleanup_alias(SiteSetting.email_site_title)} <#{source}>"
       end
     end
 
     def site_alias_email(source)
-      "#{SiteSetting.email_site_title.presence || SiteSetting.title} <#{source}>"
+      "#{Email.cleanup_alias(SiteSetting.email_site_title.presence || SiteSetting.title)} <#{source}>"
     end
 
   end
