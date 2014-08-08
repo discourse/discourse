@@ -308,6 +308,7 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
+    rtlit (0.0.5)
     ruby-openid (2.5.0)
     ruby-readability (0.6.1)
       guess_html_encoding (>= 0.0.4)
@@ -464,6 +465,7 @@ DEPENDENCIES
   rmmseg-cpp
   rspec-given
   rspec-rails
+  rtlit
   ruby-readability
   sanitize
   sass

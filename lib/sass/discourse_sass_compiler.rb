@@ -49,7 +49,7 @@ class DiscourseSassCompiler
       style: :expanded
     }
 
-    ::Sass::Engine.new(@scss, {
+    css = ::Sass::Engine.new(@scss, {
       syntax: :scss,
       cache: false,
       read_cache: false,
@@ -60,6 +60,14 @@ class DiscourseSassCompiler
         environment: context.environment
       }
     }.merge(debug_opts)).render
+
+    # Check if CSS needs to be RTLed after compilation
+    # and run RTLit gem on compiled CSS if true and RTLit gem is available
+    if GlobalSetting.rtl_css && defined?(RTLit)
+      RTLit::Converter.to_rtl(css)
+    else
+      css
+    end
   end
 
 end
