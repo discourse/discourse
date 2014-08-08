@@ -1476,7 +1476,7 @@ en:
         dispositions:
           agreed: "agreed"
           disagreed: "disagreed"
-          defered: "defered"
+          defered: "deferred"
 
         flagged_by: "Flagged by"
         resolved_by: "Resolved by"
