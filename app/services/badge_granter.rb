@@ -123,8 +123,9 @@ class BadgeGranter
   end
 
   def self.preview(sql, opts = {})
+    params = {user_ids: [], post_ids: [], backfill: true}
     count_sql = "SELECT COUNT(*) count FROM (#{sql}) q"
-    grant_count = SqlBuilder.map_exec(OpenStruct, count_sql).first.count
+    grant_count = SqlBuilder.map_exec(OpenStruct, count_sql, params).first.count
 
     grants_sql =
      if opts[:target_posts]
@@ -141,13 +142,14 @@ class BadgeGranter
     LIMIT 10"
      end
 
-    sample = SqlBuilder.map_exec(OpenStruct, grants_sql).map(&:to_h)
+    sample = SqlBuilder.map_exec(OpenStruct, grants_sql, params).map(&:to_h)
 
     {grant_count: grant_count, sample: sample}
   rescue => e
     {error: e.to_s}
   end
 
+  MAX_ITEMS_FOR_DELTA = 200
   def self.backfill(badge, opts=nil)
     return unless badge.query.present? && badge.enabled
 
@@ -156,6 +158,13 @@ class BadgeGranter
 
     post_ids = nil unless post_ids.present?
     user_ids = nil unless user_ids.present?
+
+    # safeguard fall back to full backfill if more than 200
+    if (post_ids && post_ids.length > MAX_ITEMS_FOR_DELTA) ||
+       (user_ids && user_ids.length > MAX_ITEMS_FOR_DELTA)
+      post_ids = nil
+      user_ids = nil
+    end
 
     full_backfill = !user_ids && !post_ids
 
