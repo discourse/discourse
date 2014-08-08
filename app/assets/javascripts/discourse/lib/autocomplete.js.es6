@@ -4,6 +4,8 @@
   @module $.fn.autocomplete
 **/
 
+export var CANCELLED_STATUS = "__CANCELLED";
+
 var shiftMap = [];
 shiftMap[192] = "~";
 shiftMap[49] = "!";
@@ -43,7 +45,7 @@ function mapKeyPressToActualCharacter(isShiftKey, characterCode) {
   return stringValue;
 }
 
-$.fn.autocomplete = function(options) {
+export default function(options) {
   var autocompletePlugin = this;
 
   if (this.length === 0) return;
@@ -239,6 +241,12 @@ $.fn.autocomplete = function(options) {
       return;
     }
 
+    // Allow an update method to cancel. This allows us to debounce
+    // promises without leaking
+    if (r === CANCELLED_STATUS) {
+      return;
+    }
+
     autocompleteOptions = r;
     if (!r || r.length === 0) {
       closeAutocomplete();
@@ -409,4 +417,4 @@ $.fn.autocomplete = function(options) {
   });
 
   return this;
-};
+}

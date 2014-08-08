@@ -1,4 +1,5 @@
 import TextField from 'discourse/components/text-field';
+import userSearch from 'discourse/lib/user-search';
 
 var compiled;
 function templateFunction() {
@@ -61,7 +62,7 @@ var UserSelector = TextField.extend({
       allowAny: this.get('allowAny'),
 
       dataSource: function(term) {
-        return Discourse.UserSearch.search({
+        return userSearch({
           term: term,
           topicId: userSelectorView.get('topicId'),
           exclude: excludedUsernames(),

@@ -1,13 +1,7 @@
 /*global assetPath:true */
 
-/**
-  This view handles rendering of the composer
+import userSearch from 'discourse/lib/user-search';
 
-  @class ComposerView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
 var ComposerView = Discourse.View.extend(Ember.Evented, {
   templateName: 'composer',
   elementId: 'reply-control',
@@ -183,7 +177,7 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
     $wmdInput.autocomplete({
       template: template,
       dataSource: function(term) {
-        return Discourse.UserSearch.search({
+        return userSearch({
           term: term,
           topicId: self.get('controller.controllers.topic.model.id'),
           include_groups: true
