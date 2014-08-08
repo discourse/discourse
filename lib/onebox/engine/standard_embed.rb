@@ -61,10 +61,13 @@ module Onebox
         og
       end
 
-      def fetch_response(location, limit = 3)
+      def fetch_response(location, limit = 5, domain = nil)
         raise Net::HTTPError.new('HTTP redirect too deep', location) if limit == 0
 
         uri = URI(location)
+        if !uri.host
+          uri = URI("#{domain}#{location}")
+        end
         http = Net::HTTP.new(uri.host, uri.port)
         http.open_timeout = Onebox.options.connect_timeout
         http.read_timeout = Onebox.options.timeout
@@ -76,7 +79,7 @@ module Onebox
 
         case response
         when Net::HTTPSuccess     then response
-        when Net::HTTPRedirection then fetch_response(response['location'], limit - 1)
+        when Net::HTTPRedirection then fetch_response(response['location'], limit - 1, "#{uri.scheme}://#{uri.host}")
         else
           response.error!
         end

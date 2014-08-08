@@ -47,5 +47,22 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
     end
   end
 
+  describe 'to_html' do
+
+    before do
+      described_class.whitelist = %w(dailymail.co.uk discourse.org)
+      original_link = "http://www.dailymail.co.uk/pages/live/articles/news/news.html?in_article_id=479146&in_page_id=1770"
+      redirect_link = 'http://www.dailymail.co.uk/news/article-479146/Brutality-justice-The-truth-tarred-feathered-drug-dealer.html'
+      FakeWeb.register_uri(:get, original_link, status: ["301", "Moved Permanently"], location: '/news/article-479146/Brutality-justice-The-truth-tarred-feathered-drug-dealer.html')
+      fake(redirect_link, response('dailymail'))
+      onebox = described_class.new(original_link)
+      @html = onebox.to_html
+    end
+    let(:html) { @html }
+
+    it "includes summary" do
+      expect(html).to include("It was the most chilling image of the week")
+    end
+  end
 
 end
