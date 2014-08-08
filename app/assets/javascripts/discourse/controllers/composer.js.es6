@@ -223,6 +223,13 @@ export default Discourse.Controller.extend({
     if (body.length < Discourse.SiteSettings.min_body_similar_length ||
         title.length < Discourse.SiteSettings.min_title_similar_length) { return; }
 
+    // TODO pass the 200 in from somewhere
+    body = body.substr(0, 200);
+
+    // Done search over and over
+    if((title + body) === this.get('lastSimilaritySearch')) { return; }
+    this.set('lastSimilaritySearch', title + body);
+
     var messageController = this.get('controllers.composer-messages'),
         similarTopics = this.get('similarTopics');
 
