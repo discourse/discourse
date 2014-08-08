@@ -48,7 +48,6 @@ ja:
   invalid_characters: "は不正なキャラクターを含んでいます"
   is_invalid: "は不正です。もう少し説明を追加してください"
   next_page: "次のページ →"
-  by: "By"
   topics_in_category: "'%{category}' カテゴリ内のトピック"
   rss_posts_in_topic: "'%{topic}' の RSS フィード"
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"

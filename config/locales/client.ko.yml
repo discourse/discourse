@@ -76,7 +76,7 @@ ko:
     admin_title: "관리자"
     flags_title: "신고"
     show_more: "더 보기"
-    links: 링크
+    links: "링크"
     faq: "FAQ"
     guidelines: "가이드라인"
     privacy_policy: "개인보호 정책"
@@ -113,8 +113,6 @@ ko:
       not_bookmarked: "이 게시물을 읽으셨습니다. 즐겨찾기에 추가하려면 클릭하세요."
       last_read: "마지막으로 읽으신 게시물입니다. 즐겨찾기에 추가하려면 클릭하세요."
       remove: "북마크 삭제"
-    new_topics_inserted: "{{count}}개의 새로운 글이 등록되었어요."
-    show_new_topics: "표시하려면 클릭하세요."
     preview: "미리보기"
     cancel: "취소"
     save: "변경사항을 저장"
@@ -425,8 +423,6 @@ ko:
       enable: '이 토픽을 요약'
       disable: 'Show All Posts'
     deleted_filter:
-      enabled_description: "이 토픽은 삭제된 글들을 포함하고 있습니다. 모든 글들을 보려면 아래 버튼을 누르세요."
-      disabled_description: "삭제된 글들을 표시하고 있습니다. 숨기려면, 아래 버튼을 누르세요."
       enable: "삭제된 글 숨김"
       disable: "삭제된 글 표시"
     private_message_info:
@@ -556,19 +552,7 @@ ko:
       title: "@사용자이름 언급, 게시글과 토픽에 대한 언급, 개인 메시지 등에 대한 알림"
       none: "현재 알림이 없습니다."
       more: "이전 알림을 볼 수 있습니다."
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} 가 당신의 초대를 수락했습니다."
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i> {{username}}님이 {{link}}를 옮겼습니다."
       total_flagged: "관심 표시된 총 게시글"
-      linked: "<i title='링크된 글' class='fa fa-arrow-left'></i> {{username}} {{link}}"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i>  {{link}} 훈장을 받았습니다."
     upload_selector:
       title: "이미지 추가하기"
       title_with_attachments: "이미지 또는 파일 추가하기"
@@ -602,7 +586,6 @@ ko:
     topics:
       bulk:
         reset_read: "읽기 초기화"
-        dismiss_read: "읽지않음 제거"
         dismiss_new: "새글 제거"
         toggle: "복수토픽 선택 기능"
         actions: "일괄 적용"

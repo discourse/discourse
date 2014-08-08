@@ -92,7 +92,7 @@ it:
     admin_title: "Amministrazione"
     flags_title: "Segnalazioni"
     show_more: "Altro"
-    links: Link
+    links: "Link"
     faq: "FAQ"
     guidelines: "Linee Guida"
     privacy_policy: "Policy della privacy"
@@ -134,8 +134,6 @@ it:
       not_bookmarked: "Hai letto questo post; clicca per inserirlo nei preferiti."
       last_read: "Questo è l'ultimo post che hai letto; clicca per inserirlo nei preferiti."
       remove: "Rimuovi dai Preferiti"
-    new_topics_inserted: "{{count}} nuovi post."
-    show_new_topics: "Clicca per visualizzare."
     preview: "Anteprima"
     cancel: "annulla"
     save: "Salva modifiche"
@@ -242,6 +240,7 @@ it:
       notifications: "Notifiche"
       disable_jump_reply: "Non saltare al tuo nuovo post dopo la risposta"
       dynamic_favicon: "Mostra la notifica dei messaggi in arrivo nella Favicon (funzione sperimentale)"
+      edit_history_public: "Consenti agli altri utenti di visualizzare le mie revisioni ai post"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Cita il testo evidenziato nelle risposte"
       change: "cambia"
@@ -354,6 +353,13 @@ it:
       new_topic_duration:
         label: "Considera un topic \"nuovo\" se"
         not_viewed: "non li hai ancora letti"
+        last_here: "creati dalla tua ultima visita"
+        after_n_days:
+          one: "creato nell'ultimo giorno"
+          other: "creato negli ultimi {{count}} giorni"
+        after_n_weeks:
+          one: "creato nell'ultima settimana"
+          other: "creato nelle ultime {{count}} settimane"
       auto_track_topics: "Tieni traccia delle conversazioni lette"
       auto_track_options:
         never: "mai"
@@ -449,8 +455,6 @@ it:
       enable: 'Riassumi questo topic'
       disable: 'Mostra tutti i post'
     deleted_filter:
-      enabled_description: "Il topic contiene post eliminati che sono stati nascosti. Per mostrare nuovamente tutti i post, clicca sotto."
-      disabled_description: "I post eliminati nel topic sono visibili. Per nasconderli nuovamente, clicca sotto."
       enable: "Nasconti Post Eliminati"
       disable: "Mostra Post Eliminati"
     private_message_info:
@@ -580,19 +584,7 @@ it:
       title: "notifiche di quando @name viene citato, se ci sono risposte ai tuoi post, messaggi privati ecc."
       none: "Non hai notifiche al momento"
       more: "Visualizza le notifiche precedenti"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='fa fa-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='fa fa-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='fa fa-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='fa fa-envelope-o' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-sign-in'></i> {{username}} ha accettato il tuo invito"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i> {{username}} spostato {{link}}"
       total_flagged: "Numero totale di post segnalati"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i> {{username}} {{link}}"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i> Ti è stato assegnato {{link}}"
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -626,7 +618,6 @@ it:
     topics:
       bulk:
         reset_read: "Cancella dati lettura"
-        dismiss_read: "Ignora elementi non letti"
         dismiss_new: "Abbandona"
         toggle: "Attiva/disattiva la selezione multipla dei topic"
         actions: "Azioni in serie"
@@ -909,6 +900,9 @@ it:
         unwiki: "Rimuovi Wiki dal post"
       actions:
         flag: 'Contrassegna'
+        defer_flags:
+          one: "Ignora segnalazione"
+          other: "Ignora segnalazioni"
         it_too:
           off_topic: "Contrassegna anche questo"
           spam: "Contrassegna anche questo"
@@ -1058,11 +1052,15 @@ it:
       auto_close_units: "ore"
       email_in: "Indirizzo email personalizzato:"
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
+      email_in_disabled_click: 'abilita '
+      allow_badges_label: "Permetti che le targhette vengano assegnate in questa categoria"
       edit_permissions: "Modifica i permessi"
       add_permission: "Aggiungi un permesso"
       this_year: "Quest'anno"
       position: "posizione"
       default_position: "Posizione di default"
+      position_disabled: "Le categorie verranno mostrate in ordine d'attività. Per controllare l'ordine delle categorie nella lista,"
+      position_disabled_click: 'attiva l''opzione "fixed category positions".'
       parent: "Categoria superiore"
       notifications:
         watching:
@@ -1166,6 +1164,7 @@ it:
           zero: "Nuovi"
           one: "Nuovi (1)"
           other: "Nuovi ({{count}})"
+        help: "discussioni create negli ultimi giorni"
       posted:
         title: "I miei post"
         help: "Topic in cui hai postato"
@@ -1243,8 +1242,21 @@ it:
         old: "Passate"
         active: "Attive"
         agree_flag_hide_post: "D'accordo (oscura il post e invia PM)"
+        defer_flag: "Ignora"
+        delete: "Rimuovi"
+        delete_post_defer_flag_title: "Cancella il post: se è il primo post, cancella il topic"
+        delete_post_agree_flag_title: "Cancella il post: se è il primo post, cancella il topic"
+        delete_flag_modal_title: "Rimuovi e..."
+        delete_spammer: "Cancella lo spammer"
+        disagree_flag_unhide_post: "Non d'accordo (mostra il post)"
+        disagree_flag_unhide_post_title: "Rimuove ogni segnalazione dal post e rende il post nuovamente visibile"
+        disagree_flag: "Rifiuta"
         clear_topic_flags: "Fatto"
         clear_topic_flags_title: "Il topic è stato esaminato e i problemi risolti. Clicca Fatto per rimuovere i contrassegni."
+        more: "(più...)"
+        dispositions:
+          agreed: "accettate"
+          disagreed: "Disapprovato"
         flagged_by: "Segnalato da"
         resolved_by: "Risolto da"
         system: "sistema"
@@ -1711,9 +1723,13 @@ it:
         listable: Mostra badge sulla pagina dei badge pubblica
         enabled: Attiva targhetta
         icon: Icona
+        preview: Anteprima targhetta
+        trigger_type:
+          none: "Aggiorna giornalmente"
     lightbox:
       download: "Scaricamento"
     keyboard_shortcuts_help:
+      title: 'Scorciatoie da tastiera'
       jump_to:
         title: 'Vai a'
         home: '<b>g</b> then <b>h</b> Home (Recenti)'

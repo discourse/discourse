@@ -48,7 +48,6 @@ sv:
   invalid_characters: "innehåller otillåtna tecken"
   is_invalid: "är otillåtet; försök att vara lite mer beskrivande"
   next_page: "nästa sida →"
-  by: "Av"
   topics_in_category: "Trådar i kategorin '%{category}'"
   rss_posts_in_topic: "RSS-flöde för '%{topic}'"
   rss_topics_in_category: "RSS-flöde för trådar i kategorin '%{category}'"

@@ -73,6 +73,7 @@ es:
     one: "Lo sentimos, los nuevos usuarios solo pueden poner un link en un post."
     other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} enlaces en un post."
   spamming_host: "Lo sentimos, no puedes publicar un enlace a esa web."
+  user_is_suspended: "A los usuarios suspendidos no se les permite publicar."
   just_posted_that: "es demasiado parecido a lo que has posteado recientemente"
   has_already_been_used: "ya ha sido usado"
   invalid_characters: "contiene caracteres inválidos"
@@ -80,7 +81,6 @@ es:
   next_page: "página siguiente →"
   prev_page: "← página anterior"
   page_num: "Página %{num}"
-  by: "Por"
   topics_in_category: "Topics en la categoría '%{category}'"
   rss_posts_in_topic: "Feed RSS de '%{topic}'"
   rss_topics_in_category: "Feed RSS the topics en la categoría '%{category}'"
@@ -661,6 +661,7 @@ es:
     send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje privado de bienvenida con una guía rápida para comenzar."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."
     suppress_reply_directly_above: "No mostrar el en-respuesta-a desplegable en un post cuando solo hay una sola respuesta justo encima del post."
+    suppress_reply_when_quoting: "No mostrar el desplegable en-respuesta-a en un post cuando el post cite la respuesta."
     topics_per_period_in_top_summary: "Número de mejores temas mostrados en el resumen de mejores temas."
     topics_per_period_in_top_page: "Número de mejores temas mostrados en la vista expandida al clicar en 'ver más'."
     redirect_users_to_top_page: "Redirigir automáticamente a los nuevos usuarios y a los ausentes de larga duración a la página de mejores temas."
@@ -678,8 +679,6 @@ es:
     invite_passthrough_hours: "Durante cuánto tiempo, en horas, un usuario puede utilizar una clave de invitación redimida para iniciar sesión iniciar sesión"
     invite_only: "El registro público está deshabilitado, todos los nuevos usuarios deberán ser invitados explícitamente por otros miembros de la comunidad o por el staff."
     login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
-    min_username_length: "Extensión mínima en caracteres del nombre de usuario."
-    max_username_length: "Extensión máxima en caracteres del nombre de usuario."
     min_password_length: "Longitud mínima de contraseña."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
     enable_sso: "Habilitar el single sign on a través de un sitio externo (Nota: deshabilita las invitaciones)"
@@ -767,6 +766,8 @@ es:
     email_posts_context: "Cuántas respuestas previas se incluirán como contexto en los emails de notificación."
     flush_timings_secs: "Cuán frecuente, en segundos, se alinean los datos de sincronización con el servidor."
     max_word_length: "La extensión máxima que una palabra puede tener, en caracteres, en el título de un tema."
+    title_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el título de un tema."
+    body_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el cuerpo de un post."
     title_fancy_entities: "Convertir caracteres ASCII comunes en entidades HTML de adorno en el título de los topics, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "La extensión mínima que un título debe tener antes de revisar temas similares."
     min_body_similar_length: "La extensión mínima que el cuerpo de un post debe tener antes de revisar temas similares."
@@ -824,9 +825,9 @@ es:
     disable_edit_notifications: "Usado para desabilitar las notificaciones de edición cuando se activa la opcion de configuración  'download_remote_images_to_local'. "
     enable_names: "Habilitar que se muestren los nombres completos de los usuarios. Si se deshabilita, se ocultarán los nombres completos."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
-    invites_shown: "Máximo número de invitaciones mostradas en la página de perfil del usuario."
     short_progress_text_threshold: "Después de que un número de posts en un tema alcance esta cifra, la barra de progreso sólo mostrará el número del post actual. Si cambias el ancho de la barra de progreso, deberías revisar este valor."
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
+    warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de resucitar una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     embeddable_host: "Host que pueden embeber los comentarios desde este foro Discourse."
     feed_polling_enabled: "SOLO PARA EMBEBER: embeber feeds RSS/ATOM como posts."
@@ -1013,6 +1014,12 @@ es:
     inappropriate: "Tu post ha sido reportado como **inapropiado**: la comunidad piensa que puede ser ofensivo, abusivo, o que supone una violación de las [directrices de la comunidad](/guidelines)."
     spam: "Tu post fue reportado como **spam**: la comunidad piensa que se trata de un anuncio publiciario, no útil o de nula relevancia para el tema, sino de naturaleza promocional."
     notify_moderators: "Tu post ha sido reportado **a moderación**: la comunidad piensa que algo sobre tu post requiere la intervención de un moderador."
+  flags_dispositions:
+    agreed: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y lo estamos revisando."
+    agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y hemos quitado el post."
+    disagreed: "Gracias por hacérnoslo saber. Estamos revisándolo."
+    defered: "Gracias por hacérnoslo saber. Estamos revisándolo."
+    defered_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
@@ -1094,10 +1101,6 @@ es:
         No hemos encontrado tu respuesta en el email. **Asegúrate de escribir tu entera respuesta al principio del email** - todo lo que haya debajo del inicio del mensaje a responder es descartado.
     email_reject_post_error:
       subject_template: "Error con el email -- Error de publicación"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
-
-        Posibles causas: formato complejo, mensaje demasiado extenso o demasiado breve. Por favor, inténtalo de nuevo.
     email_reject_reply_key:
       subject_template: "Error con el email - Clave errónea"
       text_body_template: |
