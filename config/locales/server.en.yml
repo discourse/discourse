@@ -1387,6 +1387,17 @@ en:
         %{logs}
         ```
 
+    csv_export_succeeded:
+      subject_template: "Data Export completed successfully"
+      text_body_template: |
+        The data export was successful.
+
+        Download CSV file: <a class="attachment" href="%{download_link}">%{file_name}</a>
+
+    csv_export_failed:
+      subject_template: "Export failed"
+      text_body_template: "The export has failed. Please check the logs."
+
     email_reject_trust_level:
       subject_template: "Email issue -- Insufficient Trust Level"
       text_body_template: |
