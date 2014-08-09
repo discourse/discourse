@@ -38,7 +38,7 @@
   .informations {
     margin: 6px;
     padding-right: 20px;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
     font-size: 14px;
   }
 
