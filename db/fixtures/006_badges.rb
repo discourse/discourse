@@ -135,6 +135,7 @@ Badge.seed do |b|
   b.query = Badge::Queries::FirstFlag
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::PostAction
+  b.auto_revoke = false
   b.system = true
 end
 
