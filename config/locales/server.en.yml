@@ -417,7 +417,7 @@ en:
       title: 'Notify {{username}}'
       description: 'This post contains something I want to talk to this person directly and privately about.'
       long_form: 'notified user'
-      email_title: 'Regarding your post in "%{title}"'
+      email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notify moderators'
