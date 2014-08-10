@@ -17,34 +17,6 @@ class UserBadge < ActiveRecord::Base
   after_destroy do
     Badge.decrement_counter 'grant_count', self.badge_id
   end
-
-
-  # Make sure we don't have duplicate badges.
-  def self.ensure_consistency!
-    dup_ids = exec_sql("SELECT u1.id
-                        FROM user_badges u1, user_badges u2, badges
-                        WHERE u1.badge_id = badges.id
-                          AND u1.user_id = u2.user_id
-                          AND u1.badge_id = u2.badge_id
-                          AND (NOT badges.multiple_grant)
-                          AND u1.granted_at > u2.granted_at
-                        LIMIT 1000").to_a
-
-   dup_ids << exec_sql("SELECT u1.id
-                          FROM user_badges u1, user_badges u2, badges
-                          WHERE u1.badge_id = badges.id
-                            AND u1.user_id = u2.user_id
-                            AND u1.badge_id = u2.badge_id
-                            AND badges.multiple_grant
-                            AND u1.post_id = u2.post_id
-                            AND u1.granted_at > u2.granted_at
-                        LIMIT 1000").to_a
-
-    dup_ids.flatten!
-    dup_ids.map! {|row| row['id'].to_i }
-    dup_ids.uniq!
-    UserBadge.where(id: dup_ids).destroy_all
-  end
 end
 
 # == Schema Information
@@ -58,9 +30,11 @@ end
 #  granted_by_id   :integer          not null
 #  post_id         :integer
 #  notification_id :integer
+#  seq             :integer          default(0), not null
 #
 # Indexes
 #
 #  index_user_badges_on_badge_id_and_user_id              (badge_id,user_id)
 #  index_user_badges_on_badge_id_and_user_id_and_post_id  (badge_id,user_id,post_id) UNIQUE
+#  index_user_badges_on_badge_id_and_user_id_and_seq      (badge_id,user_id,seq) UNIQUE
 #

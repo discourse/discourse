@@ -9,8 +9,6 @@ module Jobs
       Group.refresh_automatic_groups!
       Notification.ensure_consistency!
       UserAction.ensure_consistency!
-      UserBadge.ensure_consistency!
-      # ensure consistent
       UserStat.update_view_counts(13.hours.ago)
     end
   end

@@ -23,17 +23,27 @@ class BadgeGranter
 
     if user_badge.nil? || (@badge.multiple_grant? && @post_id.nil?)
       UserBadge.transaction do
-        user_badge = UserBadge.create!(badge: @badge, user: @user,
+        seq = 0
+        if @badge.multiple_grant?
+          seq = UserBadge.where(badge: @badge, user: @user).maximum(:seq)
+          seq = (seq || -1) + 1
+        end
+
+        user_badge = UserBadge.create!(badge: @badge,
+                                       user: @user,
                                        granted_by: @granted_by,
                                        granted_at: Time.now,
-                                       post_id: @post_id)
+                                       post_id: @post_id,
+                                       seq: seq)
 
         if @granted_by != Discourse.system_user
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
         end
 
         if SiteSetting.enable_badges?
-          notification = @user.notifications.create(notification_type: Notification.types[:granted_badge], data: { badge_id: @badge.id, badge_name: @badge.name }.to_json)
+          notification = @user.notifications.create(
+                  notification_type: Notification.types[:granted_badge],
+                  data: { badge_id: @badge.id, badge_name: @badge.name }.to_json)
           user_badge.update_attributes notification_id: notification.id
         end
       end

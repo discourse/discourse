@@ -50,9 +50,13 @@ describe BadgeGranter do
 
   describe 'grant' do
 
-    it 'grants a badge' do
+    it 'grants multiple badges' do
+      badge = Fabricate(:badge, multiple_grant: true)
+      user_badge = BadgeGranter.grant(badge, user)
       user_badge = BadgeGranter.grant(badge, user)
       user_badge.should be_present
+
+      UserBadge.where(user_id: user.id).count.should == 2
     end
 
     it 'sets granted_at' do
