@@ -5,19 +5,7 @@ module DiscourseHub
 
   def self.version_check_payload
     {
-      installed_version: Discourse::VERSION::STRING,
-      forum_title: SiteSetting.title,
-      forum_description: SiteSetting.site_description,
-      forum_url: Discourse.base_url,
-      contact_email: SiteSetting.contact_email,
-      topic_count: Topic.listable_topics.count,
-      post_count: Post.count,
-      user_count: User.count,
-      topics_7_days: Topic.listable_topics.where('created_at > ?', 7.days.ago).count,
-      posts_7_days: Post.where('created_at > ?', 7.days.ago).count,
-      users_7_days: User.where('created_at > ?', 7.days.ago).count,
-      login_required: SiteSetting.login_required,
-      locale: SiteSetting.default_locale
+      installed_version: Discourse::VERSION::STRING
     }
   end
 
