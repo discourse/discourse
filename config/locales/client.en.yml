@@ -1480,6 +1480,7 @@ en:
 
         flagged_by: "Flagged by"
         resolved_by: "Resolved by"
+        took_action: "Took action"
         system: "System"
         error: "Something went wrong"
         reply_message: "Reply"

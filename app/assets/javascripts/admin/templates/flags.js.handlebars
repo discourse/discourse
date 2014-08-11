@@ -56,10 +56,14 @@
                             {{avatar user imageSize="small"}}
                           {{/link-to}}
                         </td>
-                        <td width="30%">
+                        <td width="40%">
+                          {{#link-to 'adminUser' user}}
+                            {{user.username}}
+                          {{/link-to}}
+                          <br />
                           {{date flaggedAt}}
                         </td>
-                        <td width="50%">
+                        <td width="40%">
                           {{flagType}}
                         </td>
                       </tr>
@@ -78,13 +82,13 @@
                             {{avatar disposedBy imageSize="small"}}
                           {{/link-to}}
                         </td>
-                        <td width="30%">
+                        <td width="40%">
                           {{date disposedAt}}
                         </td>
-                        <td width="50%">
-                          {{disposition}}
+                        <td width="40%">
+                          {{{dispositionIcon}}}
                           {{#if tookAction}}
-                            <i class='fa fa-gavel'></i>
+                            <i class='fa fa-gavel' title='{{i18n admin.flags.took_action}}'></i>
                           {{/if}}
                         </td>
                       </tr>

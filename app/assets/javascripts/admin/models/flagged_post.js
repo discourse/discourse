@@ -27,13 +27,24 @@ Discourse.FlaggedPost = Discourse.Post.extend({
         flaggedAt: postAction.created_at,
         disposedBy: postAction.disposed_by_id ? self.userLookup[postAction.disposed_by_id] : null,
         disposedAt: postAction.disposed_at,
-        disposition: postAction.disposition ? I18n.t('admin.flags.dispositions.' + postAction.disposition) : null,
+        dispositionIcon: self.dispositionIcon(postAction.disposition),
         tookAction: postAction.staff_took_action
       });
     });
 
     return flaggers;
   }.property(),
+
+  dispositionIcon: function (disposition) {
+    if (!disposition) { return null; }
+    var icon, title = I18n.t('admin.flags.dispositions.' + disposition);
+    switch (disposition) {
+      case "deferred": { icon = "fa-external-link"; break; }
+      case "agreed": { icon = "fa-thumbs-o-up"; break; }
+      case "disagreed": { icon = "fa-thumbs-o-down"; break; }
+    }
+    return "<i class='fa " + icon + "' title='" + title + "'></i>";
+  },
 
   conversations: function () {
     var self = this;
