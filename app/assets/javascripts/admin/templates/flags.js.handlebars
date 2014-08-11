@@ -51,19 +51,17 @@
                   <tbody>
                     {{#each flaggedPost.flaggers}}
                       <tr>
-                        <td width="20%">
+                        <td>
                           {{#link-to 'adminUser' user}}
                             {{avatar user imageSize="small"}}
                           {{/link-to}}
                         </td>
-                        <td width="40%">
+                        <td>
                           {{#link-to 'adminUser' user}}
                             {{user.username}}
                           {{/link-to}}
+                          {{age flaggedAt}}
                           <br />
-                          {{date flaggedAt}}
-                        </td>
-                        <td width="40%">
                           {{flagType}}
                         </td>
                       </tr>
@@ -73,28 +71,26 @@
               </td>
 
               <td class='flaggers result'>
-                <table>
-                  <tbody>
-                    {{#each flaggedPost.flaggers}}
-                      <tr>
-                        <td width="20%">
-                          {{#link-to 'adminUser' disposedBy}}
-                            {{avatar disposedBy imageSize="small"}}
-                          {{/link-to}}
-                        </td>
-                        <td width="40%">
-                          {{date disposedAt}}
-                        </td>
-                        <td width="40%">
-                          {{{dispositionIcon}}}
-                          {{#if tookAction}}
-                            <i class='fa fa-gavel' title='{{i18n admin.flags.took_action}}'></i>
-                          {{/if}}
-                        </td>
-                      </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
+                {{#if adminOldFlagsView}}
+                  <table>
+                    <tbody>
+                      {{#each flaggedPost.flaggers}}
+                        <tr>
+                          <td>
+                            {{#link-to 'adminUser' disposedBy}}
+                              {{avatar disposedBy imageSize="small"}}
+                            {{/link-to}}
+                            {{age disposedAt}}
+                            {{{dispositionIcon}}}
+                            {{#if tookAction}}
+                              <i class='fa fa-gavel' title='{{i18n admin.flags.took_action}}'></i>
+                            {{/if}}
+                          </td>
+                        </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                {{/if}}
               </td>
 
             </tr>

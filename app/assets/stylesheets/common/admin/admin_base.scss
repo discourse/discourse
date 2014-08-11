@@ -506,8 +506,8 @@ section.details {
     padding-top: 8px;
   }
   .excerpt {
-    max-width: 720px;
-    width: 720px;
+    max-width: 800px;
+    width: 800px;
     padding: 8px;
     word-wrap: break-word;
     .fa { display: inline-block; }
@@ -519,6 +519,12 @@ section.details {
   .flaggers {
     font-size: 11px;
     padding: 8px 0 0 5px;
+    table {
+      max-width: 145px;
+    }
+    tr {
+      height: 44px;
+    }
     td {
       vertical-align: middle;
       padding: 3px;
