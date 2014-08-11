@@ -23,7 +23,10 @@ class Category < ActiveRecord::Base
   has_many :groups, through: :category_groups
 
   validates :user_id, presence: true
-  validates :name, presence: true, uniqueness: { scope: :parent_category_id }, length: { in: 1..50 }
+  validates :name, if: Proc.new { |c| c.new_record? || c.name_changed? },
+                   presence: true,
+                   uniqueness: { scope: :parent_category_id, case_sensitive: false },
+                   length: { in: 1..50 }
   validate :parent_category_validator
 
   before_validation :ensure_slug

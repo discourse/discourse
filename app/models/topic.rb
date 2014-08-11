@@ -48,7 +48,7 @@ class Topic < ActiveRecord::Base
   rate_limit :limit_topics_per_day
   rate_limit :limit_private_messages_per_day
 
-  validates :title, :if => Proc.new { |t| t.title_changed? },
+  validates :title, :if => Proc.new { |t| t.new_record? || t.title_changed? },
                     :presence => true,
                     :topic_title_length => true,
                     :quality_title => { :unless => :private_message? },

@@ -12,6 +12,13 @@ describe Category do
     should validate_uniqueness_of(:name).scoped_to(:parent_category_id)
   end
 
+  it 'validates uniqueness in case insensitive way' do
+    Fabricate(:category, name: "Cats")
+    c = Fabricate.build(:category, name: "cats")
+    c.should_not be_valid
+    c.errors[:name].should be_present
+  end
+
   it { should belong_to :topic }
   it { should belong_to :user }
 
