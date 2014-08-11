@@ -23,8 +23,8 @@ class ImportScripts::Base
     @failed_groups = []
     @existing_users = {}
     @failed_users = []
-    @categories = {}
-    @posts = {}
+    @categories_lookup = {}
+    @existing_posts = {}
     @topic_lookup = {}
 
     GroupCustomField.where(name: 'import_id').pluck(:group_id, :value).each do |group_id, import_id|
@@ -36,11 +36,11 @@ class ImportScripts::Base
     end
 
     CategoryCustomField.where(name: 'import_id').pluck(:category_id, :value).each do |category_id, import_id|
-      @categories[import_id] = Category.find(category_id.to_i)
+      @categories_lookup[import_id] = Category.find(category_id.to_i)
     end
 
     PostCustomField.where(name: 'import_id').pluck(:post_id, :value).each do |post_id, import_id|
-      @posts[import_id] = post_id
+      @existing_posts[import_id] = post_id
     end
 
     Post.pluck(:id, :topic_id, :post_number).each do |post_id,t,n|
@@ -81,7 +81,7 @@ class ImportScripts::Base
 
   # Get the Discourse Post id based on the id of the source record
   def post_id_from_imported_post_id(import_id)
-    @posts[import_id] || @posts[import_id.to_s]
+    @existing_posts[import_id] || @existing_posts[import_id.to_s]
   end
 
   # Get the Discourse topic info (a hash) based on the id of the source record
@@ -110,7 +110,7 @@ class ImportScripts::Base
 
   # Get the Discourse Category id based on the id of the source category
   def category_from_imported_category_id(import_id)
-    @categories[import_id] || @categories[import_id.to_s]
+    @categories_lookup[import_id] || @categories_lookup[import_id.to_s]
   end
 
   def create_admin(opts={})
@@ -132,6 +132,8 @@ class ImportScripts::Base
   # group in the original datasource. The given id will not be used
   # to create the Discourse group record.
   def create_groups(results, opts={})
+    puts "", "creating groups"
+
     groups_created = 0
     groups_skipped = 0
     total = opts[:total] || results.size
@@ -180,6 +182,8 @@ class ImportScripts::Base
   # user in the original datasource. The given id will not be used to
   # create the Discourse user record.
   def create_users(results, opts={})
+    puts "", "creating users"
+
     num_users_before = User.count
     users_created = 0
     users_skipped = 0
@@ -188,6 +192,11 @@ class ImportScripts::Base
 
     results.each do |result|
       u = yield(result)
+
+      if u.nil?
+        users_skipped += 1
+        next # block returns nil to skip a post
+      end
 
       if user_id_from_imported_user_id(u[:id])
         users_skipped += 1
@@ -271,7 +280,7 @@ class ImportScripts::Base
       end
 
       new_category = create_category(params, params[:id])
-      @categories[params[:id]] = new_category
+      @categories_lookup[params[:id]] = new_category
     end
   end
 
@@ -282,7 +291,7 @@ class ImportScripts::Base
     post_create_action = opts.delete(:post_create_action)
     new_category = Category.new(
       name: opts[:name],
-      user_id: -1,
+      user_id: opts[:user_id] || opts[:user].try(:id) || -1,
       position: opts[:position],
       description: opts[:description],
       parent_category_id: opts[:parent_category_id]
@@ -299,6 +308,8 @@ class ImportScripts::Base
   # Topics should give attributes title and category.
   # Replies should provide topic_id. Use topic_lookup_from_imported_post_id to find the topic.
   def create_posts(results, opts={})
+    puts "", "creating posts"
+
     skipped = 0
     created = 0
     total = opts[:total] || results.size
@@ -319,7 +330,7 @@ class ImportScripts::Base
         begin
           new_post = create_post(params, import_id)
           if new_post.is_a?(Post)
-            @posts[import_id] = new_post.id
+            @existing_posts[import_id] = new_post.id
             @topic_lookup[new_post.id] = {post_number: new_post.post_number, topic_id: new_post.topic_id}
 
             created += 1
@@ -330,7 +341,7 @@ class ImportScripts::Base
           end
         rescue => e
           skipped += 1
-          puts "Error creating post #{import_id}. Skipping."
+          puts "Exception while creating post #{import_id}. Skipping."
           puts e.message
         rescue Discourse::InvalidAccess => e
           skipped += 1
