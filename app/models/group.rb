@@ -82,6 +82,34 @@ class Group < ActiveRecord::Base
       group.name = name
     end
 
+    # Remove people from groups they don't belong in.
+    #
+    # BEWARE: any of these subqueries could match ALL the user records,
+    #         so they can't be used in IN clauses.
+    remove_user_subquery = case name
+                when :admins
+                  "SELECT u.id FROM users u WHERE NOT u.admin"
+                when :moderators
+                  "SELECT u.id FROM users u WHERE NOT u.moderator"
+                when :staff
+                  "SELECT u.id FROM users u WHERE NOT u.admin AND NOT u.moderator"
+                when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+                  "SELECT u.id FROM users u WHERE u.trust_level < #{id - 10}"
+                end
+
+    remove_ids = exec_sql("SELECT gu.id id
+                             FROM group_users gu,
+                                  (#{remove_user_subquery}) u
+                            WHERE gu.group_id = #{group.id}
+                              AND gu.user_id = u.id").map {|x| x['id']}
+
+    if remove_ids.length > 0
+      remove_ids.each_slice(100) do |ids|
+        GroupUser.where(id: ids).delete_all
+      end
+    end
+
+    # Add people to groups
     real_ids = case name
                when :admins
                  "SELECT u.id FROM users u WHERE u.admin"
@@ -95,14 +123,10 @@ class Group < ActiveRecord::Base
                  "SELECT u.id FROM users u"
                end
 
-
-    extra_users = group.users.where("users.id NOT IN (#{real_ids})").select('users.id')
     missing_users = GroupUser
       .joins("RIGHT JOIN (#{real_ids}) X ON X.id = user_id AND group_id = #{group.id}")
       .where("user_id IS NULL")
       .select("X.id")
-
-    group.group_users.where("user_id IN (#{extra_users.to_sql})").delete_all
 
     missing_users.each do |u|
       group.group_users.build(user_id: u.id)
