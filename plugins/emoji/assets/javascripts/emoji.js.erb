@@ -42,7 +42,7 @@
       var lastToken = prev[prev.length-1];
       if (lastToken && lastToken.charAt) {
         var lastChar = lastToken.charAt(lastToken.length-1);
-        if (lastChar !== ' ') return false;
+        if (lastChar !== ' ' && lastChar !== "\n") return false;
       }
     }
     return true;
