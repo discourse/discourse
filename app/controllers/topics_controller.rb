@@ -275,6 +275,8 @@ class TopicsController < ApplicationController
 
     dest_topic = move_posts_to_destination(topic)
     render_topic_changes(dest_topic)
+  rescue ActiveRecord::RecordInvalid => ex
+    render_json_error(ex)
   end
 
   def change_post_owners

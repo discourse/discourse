@@ -54,9 +54,19 @@ export default Discourse.ObjectController.extend(Discourse.SelectedPostsCount, D
         self.send('closeModal');
         self.get('topicController').send('toggleMultiSelect');
         Em.run.next(function() { Discourse.URL.routeTo(result.url); });
-      }, function() {
+      }).catch(function(xhr) {
+
+        var error = I18n.t('topic.split_topic.error');
+
+        if (xhr) {
+          var json = xhr.responseJSON;
+          if (json && json.errors) {
+            error = json.errors[0];
+          }
+        }
+
         // Error moving posts
-        self.flash(I18n.t('topic.split_topic.error'));
+        self.flash(error);
         self.set('saving', false);
       });
       return false;

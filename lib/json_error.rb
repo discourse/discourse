@@ -5,6 +5,9 @@ module JsonError
     # If we're passed a string, assume that is the error message
     return {errors: [obj]} if obj.is_a?(String)
 
+    # If it's an AR exception target the record
+    obj = obj.record if obj.is_a?(ActiveRecord::RecordInvalid)
+
     # If it looks like an activerecord object, extract its messages
     return {errors: obj.errors.full_messages } if obj.respond_to?(:errors) && obj.errors.present?
 
