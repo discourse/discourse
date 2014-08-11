@@ -1069,8 +1069,8 @@ de:
     agreed: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt und sehen uns das an."
     agreed_and_deleted: "Danke, dass du uns Bescheid gegeben hast. Wir waren auch der Meinung, dass es ein Problem gibt und haben den Beitrag gelöscht."
     disagreed: "Danke für deine Meldung. Wir sehen uns das an."
-    defered: "Danke für deine Meldung. Wir sehen uns das an."
-    defered_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag gelöscht."
+    deferred: "Danke für deine Meldung. Wir sehen uns das an."
+    deferred_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag gelöscht."
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"

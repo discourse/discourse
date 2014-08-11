@@ -115,7 +115,7 @@ module FlagQuery
 
       if filter == "old"
         post_actions.where("post_actions.disagreed_at IS NOT NULL OR
-                            post_actions.defered_at IS NOT NULL OR
+                            post_actions.deferred_at IS NOT NULL OR
                             post_actions.agreed_at IS NOT NULL")
       else
         post_actions.active

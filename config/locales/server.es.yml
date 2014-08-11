@@ -1018,8 +1018,8 @@ es:
     agreed: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y lo estamos revisando."
     agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y hemos quitado el post."
     disagreed: "Gracias por hacérnoslo saber. Estamos revisándolo."
-    defered: "Gracias por hacérnoslo saber. Estamos revisándolo."
-    defered_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
+    deferred: "Gracias por hacérnoslo saber. Estamos revisándolo."
+    deferred_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"

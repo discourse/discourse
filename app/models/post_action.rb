@@ -18,24 +18,24 @@ class PostAction < ActiveRecord::Base
   scope :spam_flags, -> { where(post_action_type_id: PostActionType.types[:spam]) }
   scope :flags, -> { where(post_action_type_id: PostActionType.notify_flag_type_ids) }
   scope :publics, -> { where(post_action_type_id: PostActionType.public_type_ids) }
-  scope :active, -> { where(disagreed_at: nil, defered_at: nil, agreed_at: nil, deleted_at: nil) }
+  scope :active, -> { where(disagreed_at: nil, deferred_at: nil, agreed_at: nil, deleted_at: nil) }
 
   after_save :update_counters
   after_save :enforce_rules
   after_commit :notify_subscribers
 
   def disposed_by_id
-    disagreed_by_id || agreed_by_id || defered_by_id
+    disagreed_by_id || agreed_by_id || deferred_by_id
   end
 
   def disposed_at
-    disagreed_at || agreed_at || defered_at
+    disagreed_at || agreed_at || deferred_at
   end
 
   def disposition
     return :disagreed if disagreed_at
     return :agreed if agreed_at
-    return :defered if defered_at
+    return :deferred if deferred_at
     nil
   end
 
@@ -144,11 +144,11 @@ class PostAction < ActiveRecord::Base
                         .where(post_action_type_id: PostActionType.flag_types.values)
 
     actions.each do |action|
-      action.defered_at = Time.zone.now
-      action.defered_by_id = moderator.id
+      action.deferred_at = Time.zone.now
+      action.deferred_by_id = moderator.id
       # so callback is called
       action.save
-      action.add_moderator_post_if_needed(moderator, :defered, delete_post)
+      action.add_moderator_post_if_needed(moderator, :deferred, delete_post)
     end
 
     update_flagged_posts_count
@@ -421,7 +421,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.post_action_type_for_post(post_id)
-    post_action = PostAction.find_by(defered_at: nil, post_id: post_id, post_action_type_id: PostActionType.flag_types.values, deleted_at: nil)
+    post_action = PostAction.find_by(deferred_at: nil, post_id: post_id, post_action_type_id: PostActionType.flag_types.values, deleted_at: nil)
     PostActionType.types[post_action.post_action_type_id]
   end
 
@@ -447,11 +447,11 @@ end
 #  deleted_by_id       :integer
 #  related_post_id     :integer
 #  staff_took_action   :boolean          default(FALSE), not null
-#  defered_by_id       :integer
+#  deferred_by_id       :integer
 #  targets_topic       :boolean          default(FALSE)
 #  agreed_at           :datetime
 #  agreed_by_id        :integer
-#  defered_at          :datetime
+#  deferred_at          :datetime
 #  disagreed_at        :datetime
 #  disagreed_by_id     :integer
 #

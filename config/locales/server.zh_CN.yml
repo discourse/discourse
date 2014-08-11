@@ -1037,8 +1037,8 @@ zh_CN:
     agreed: "感谢通知我们。我们认为这是一个问题，并且我们正在了解情况。"
     agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"
     disagreed: "感谢通知我们。我们正在了解情况。"
-    defered: "感谢通知我们。我们正在了解情况。"
-    defered_and_deleted: "感谢通知我们。我们已经删除了帖子。"
+    deferred: "感谢通知我们。我们正在了解情况。"
+    deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了您的帖子"

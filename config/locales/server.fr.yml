@@ -1066,8 +1066,8 @@ fr:
     agreed: "Merci de nous en informer. Nous sommes en accord avec votre signalement et nous travaillons à sa résolution."
     agreed_and_deleted: "Merci de nous en informer. Nous sommes en accord avec votre signalement et avons supprimé le message."
     disagreed: "Merci de nous en informer. Nous travaillons à sa résolution."
-    defered: "Merci de nous en informer. Nous travaillons à sa résolution."
-    defered_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
+    deferred: "Merci de nous en informer. Nous travaillons à sa résolution."
+    deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"

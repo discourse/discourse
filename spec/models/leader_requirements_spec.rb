@@ -129,7 +129,7 @@ describe LeaderRequirements do
       end
 
       deferred_flags = [:off_topic, :inappropriate, :notify_user, :notify_moderators, :spam].map do |t|
-        Fabricate(:flag, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[t], defered_at: 1.minute.ago)
+        Fabricate(:flag, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[t], deferred_at: 1.minute.ago)
       end
 
       deleted_flags = [:off_topic, :inappropriate, :notify_user, :notify_moderators, :spam].map do |t|

@@ -1218,8 +1218,8 @@ en:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
     agreed_and_deleted: "Thanks for letting us know. We agree there is an issue and we've removed the post."
     disagreed: "Thanks for letting us know. We're looking into it."
-    defered: "Thanks for letting us know. We're looking into it."
-    defered_and_deleted: "Thanks for letting us know. We've removed the post."
+    deferred: "Thanks for letting us know. We're looking into it."
+    deferred_and_deleted: "Thanks for letting us know. We've removed the post."
 
   system_messages:
     post_hidden:
