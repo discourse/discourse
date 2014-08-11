@@ -28,6 +28,7 @@ export default Ember.ArrayController.extend(Discourse.ModalFunctionality, {
       }
       return result;
     }).catch(function() {
+      bootbox.alert(I18n.t('generic_error'));
       self.set('loading', false);
     });
   },
@@ -58,6 +59,10 @@ export default Ember.ArrayController.extend(Discourse.ModalFunctionality, {
 
     showNotificationLevel: function() {
       this.send('changeBulkTemplate', 'modal/bulk_notification_level');
+    },
+
+    deleteTopics: function() {
+      this.performAndRefresh({type: 'delete'});
     },
 
     closeTopics: function() {

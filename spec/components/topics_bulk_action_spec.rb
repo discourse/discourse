@@ -61,6 +61,18 @@ describe TopicsBulkAction do
     end
   end
 
+  describe "delete" do
+    let(:topic) { Fabricate(:topic) }
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "deletes the topic" do
+      tba = TopicsBulkAction.new(moderator, [topic.id], type: 'delete')
+      tba.perform!
+      topic.reload
+      topic.should be_trashed
+    end
+  end
+
   describe "change_notification_level" do
     let(:topic) { Fabricate(:topic) }
 
