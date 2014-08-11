@@ -230,10 +230,15 @@ class TopicUser < ActiveRecord::Base
   end
 
   def self.ensure_consistency!(topic_id=nil)
+    # TODO this needs some reworking, when we mark stuff skipped
+    # we up these numbers so they are not in-sync
+    # the simple fix is to add a column here, but table is already quite big
+    # long term we want to split up topic_users and allow for this better
     builder = SqlBuilder.new <<SQL
+
 UPDATE topic_users t
   SET
-    last_read_post_number = last_read,
+    last_read_post_number = LEAST(GREATEST(last_read, last_read_post_number), max_post_number),
     seen_post_count = LEAST(max_post_number,GREATEST(t.seen_post_count, last_read))
 FROM (
   SELECT topic_id, user_id, MAX(post_number) last_read
@@ -251,7 +256,7 @@ SQL
 X.topic_id = t.topic_id AND
 X.user_id = t.user_id AND
 (
-  last_read_post_number <> last_read OR
+  last_read_post_number <> LEAST(GREATEST(last_read, last_read_post_number), max_post_number) OR
   seen_post_count <> LEAST(max_post_number,GREATEST(t.seen_post_count, last_read))
 )
 SQL
