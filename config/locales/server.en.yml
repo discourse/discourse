@@ -1329,9 +1329,9 @@ en:
 
         To log in again, either:
 
-        1. Sign in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+        1. Log in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
 
-        2. Create a unique password for on [your user profile][prefs], and use it to sign in.
+        2. Create a unique password for on [your user profile][prefs], and use it to log in.
 
         %{new_user_tips}
 

@@ -405,7 +405,7 @@ en:
       last_emailed: "Last Emailed"
       last_seen: "Seen"
       created: "Joined"
-      log_out: "Sign Out"
+      log_out: "Log Out"
       location: "Location"
       website: "Web Site"
       email_settings: "Email"
@@ -794,7 +794,7 @@ en:
       invalid_access:
         title: "Topic is private"
         description: "Sorry, you don't have access to that topic!"
-        login_required: "You need to sign in to see that topic."
+        login_required: "You need to log in to see that topic."
       server_error:
         title: "Topic failed to load"
         description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
@@ -1840,7 +1840,7 @@ en:
         show_public_profile: "Show Public Profile"
         impersonate: 'Impersonate'
         ip_lookup: "IP Lookup"
-        log_out: "Sign Out"
+        log_out: "Log Out"
         logged_out: "User was logged out on all devices"
         revoke_admin: 'Revoke Admin'
         grant_admin: 'Grant Admin'
