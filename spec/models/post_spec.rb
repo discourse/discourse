@@ -847,4 +847,21 @@ describe Post do
     end
   end
 
+  describe ".unhide!" do
+    before { SiteSetting.stubs(:unique_posts_mins).returns(5) }
+
+    it "will unhide the post" do
+      post = create_post(user: Fabricate(:newuser))
+      post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)
+      post.reload
+
+      post.hidden.should == true
+
+      post.unhide!
+      post.reload
+
+      post.hidden.should == false
+    end
+  end
+
 end

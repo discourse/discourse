@@ -281,10 +281,9 @@ class Post < ActiveRecord::Base
   end
 
   def unhide!
-    self.hidden = false
-    self.hidden_reason_id = nil
+    self.update_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
     self.topic.update_attributes(visible: true)
-    save
+    save(validate: false)
   end
 
   def url

@@ -50,14 +50,8 @@ class PostActionsController < ApplicationController
     guardian.ensure_can_defer_flags!(@post)
 
     PostAction.defer_flags!(@post, current_user)
-    @post.reload
 
-    if @post.is_flagged?
-      render json: { success: true, hidden: true }
-    else
-      @post.unhide!
-      render json: { success: true, hidden: false }
-    end
+    render json: { success: true }
   end
 
   private

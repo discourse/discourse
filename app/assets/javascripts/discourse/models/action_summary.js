@@ -109,16 +109,15 @@ Discourse.ActionSummary = Discourse.Model.extend({
   },
 
   deferFlags: function() {
-    var actionSummary = this;
+    var self = this;
     return Discourse.ajax("/post_actions/defer_flags", {
       type: "POST",
       data: {
-        post_action_type_id: this.get('id'),
-        id: this.get('post.id')
+        post_action_type_id: this.get("id"),
+        id: this.get("post.id")
       }
-    }).then(function(result) {
-      actionSummary.set('post.hidden', result.hidden);
-      actionSummary.set('count', 0);
+    }).then(function () {
+      self.set("count", 0);
     });
   },
 

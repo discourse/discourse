@@ -101,12 +101,8 @@ class PostRevisor
     @post.self_edits += 1 if @editor == @post.user
 
     if @editor == @post.user && @post.hidden && @post.hidden_reason_id == Post.hidden_reasons[:flag_threshold_reached]
-      @post.hidden = false
-      @post.hidden_reason_id = nil
-      @post.hidden_at = nil
-      @post.topic.update_attributes(visible: true)
-
       PostAction.clear_flags!(@post, Discourse.system_user)
+      @post.unhide!
     end
 
     @post.extract_quoted_post_numbers

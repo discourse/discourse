@@ -44,7 +44,6 @@ class Admin::FlagsController < Admin::AdminController
 
     PostAction.clear_flags!(post, current_user)
 
-    post.reload
     post.unhide!
 
     render nothing: true
