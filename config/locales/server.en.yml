@@ -30,7 +30,7 @@ en:
   posts: "posts"
   loading: "Loading"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
-  log_in: "Sign In"
+  log_in: "Log In"
 
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"

@@ -96,7 +96,7 @@ page.runTests = function(){
   });
 
   test("expect a log in button", function(){
-    return $('.login-button').text().trim() === 'Sign In';
+    return $('.login-button').text().trim() === 'Log In';
   });
 
   navigate("navigate to first topic", function(){
