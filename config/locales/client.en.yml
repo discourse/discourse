@@ -147,12 +147,12 @@ en:
     about:
       title: "About"
       stats: "Site Statistics"
+      stat:
+        all_time: "All Time"
+        last_7_days: "Last 7 Days"
       topic_count: "Topic Count"
-      topics_7_days: "Topic Count (last 7 days)"
       post_count: "Post Count"
-      posts_7_days: "Post Count (last 7 days)"
       user_count: "User Count"
-      users_7_days: "User Count (last 7 days)"
 
     bookmarks:
       not_logged_in: "sorry, you must be logged in to bookmark posts"

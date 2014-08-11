@@ -21,6 +21,10 @@ section.about {
     margin-top: 20px;
     width: 100%;
 
+    th {
+      text-align: left;
+    }
+
     td, th {
       padding: 10px 5px 5px 5px;
       border-bottom: 1px solid lighten($primary, 70%);
