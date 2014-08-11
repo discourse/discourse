@@ -11,13 +11,11 @@ class BadgesController < ApplicationController
 
     end
 
-    badges = badges.to_a
-
     user_badges = nil
     if current_user
       user_badges = Set.new(current_user.user_badges.select('distinct badge_id').pluck(:badge_id))
     end
-    serialized = MultiJson.dump(serialize_data(badges, BadgeIndexSerializer, root: "badges", user_badges: user_badges))
+    serialized = MultiJson.dump(serialize_data(badges.to_a, BadgeIndexSerializer, root: "badges", user_badges: user_badges))
     respond_to do |format|
       format.html do
         store_preloaded "badges", serialized
