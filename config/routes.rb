@@ -22,6 +22,8 @@ Discourse::Application.routes.draw do
     mount Logster::Web => "/logs", constraints: AdminConstraint.new
   end
 
+  resources :about
+
   get "site" => "site#index"
 
   resources :forums
