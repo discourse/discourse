@@ -258,7 +258,23 @@ module Discourse
     Sidekiq.redis_pool.shutdown{|c| nil}
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
+    start_connection_reaper
     nil
+  end
+
+  def self.start_connection_reaper(interval=30, age=30)
+    # this helps keep connection counts in check
+    Thread.new do
+      while true
+        sleep interval
+        pools = []
+        ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool){|pool| pools << pool}
+
+        pools.each do |pool|
+          pool.drain(age.seconds)
+        end
+      end
+    end
   end
 
   def self.sidekiq_redis_config
