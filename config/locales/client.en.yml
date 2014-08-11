@@ -145,11 +145,13 @@ en:
       title: "Suggested Topics"
 
     about:
-      title: "About"
+      simple_title: "About"
+      title: "About %{title}"
       stats: "Site Statistics"
       stat:
         all_time: "All Time"
         last_7_days: "Last 7 Days"
+      like_count: "Like Count"
       topic_count: "Topic Count"
       post_count: "Post Count"
       user_count: "User Count"
