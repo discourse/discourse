@@ -48,20 +48,11 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
 # Install Discourse
 
-Create a `/var/docker` folder:
+Create a `/var/docker` folder, clone the [Official Discourse Docker Image][dd] into it, and make a copy of the config file as `app.yml`:
 
     mkdir /var/docker
-
-Clone the [Official Discourse Docker Image][dd] into this `/var/docker` folder:
-
     git clone https://github.com/discourse/discourse_docker.git /var/docker
-
-Switch to your Docker folder:
-
     cd /var/docker
-
-Copy the `samples/standalone.yml` file into the `containers` folder as `app.yml`:
-
     cp samples/standalone.yml containers/app.yml
 
 <img src="http://www.discourse.org/images/install/mkdir-var-docker.png" width="586" height="246">
