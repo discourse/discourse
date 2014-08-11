@@ -191,4 +191,12 @@ describe TextCleaner do
 
   end
 
+  describe "#normalize_whitespaces" do
+    it "normalize whitespaces" do
+      whitespaces = "\u0020\u00A0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u200B\u2028\u2029\u202F\u205F\u3000\uFEFF"
+      whitespaces.strip.should_not == ""
+      TextCleaner.normalize_whitespaces(whitespaces).strip.should == ""
+    end
+  end
+
 end

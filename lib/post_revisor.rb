@@ -17,7 +17,10 @@ class PostRevisor
   #  :skip_validation ask ActiveRecord to skip validations
   #
   def revise!(editor, new_raw, opts = {})
-    @editor, @new_raw, @opts = editor, new_raw, opts
+    @editor = editor
+    @opts = opts
+    @new_raw = TextCleaner.normalize_whitespaces(new_raw).strip
+
     return false unless should_revise?
     @post.acting_user = @editor
     revise_post

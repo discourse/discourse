@@ -203,6 +203,8 @@ class PostCreator
   end
 
   def setup_post
+    @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw]).strip
+
     post = @topic.posts.new(raw: @opts[:raw],
                             user: @user,
                             reply_to_post_number: @opts[:reply_to_post_number])
