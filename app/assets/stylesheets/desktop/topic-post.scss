@@ -1012,7 +1012,7 @@ a.attachment:before {
     position: relative;
 }
 
-.private_message .gutter:before, .deleted-topic .gutter:before, .read_restricted .gutter:before {
+.deleted-topic .gutter:before {
     display: block;
     position: absolute;
     left: 767px;
@@ -1020,14 +1020,6 @@ a.attachment:before {
     font: 90px/1 FontAwesome;
     content: "\f05c";
     z-index: -5;
-}
-
-.read_restricted .gutter:before {
-    content: "\f0c0";
-}
-
-.private_message .gutter:before {
-    content: "\f0e0";
 }
 
 .topic-meta-data {
