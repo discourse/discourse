@@ -58,7 +58,6 @@ describe ClicksController do
         end
 
         it "doesn't redirect with the redirect=false param" do
-          TopicLinkClick.expects(:create_from).with('url' => url, 'post_id' => '123', 'ip' => '192.168.0.1', 'redirect' => 'false').returns(url)
           xhr :get, :track, url: url, post_id: 123, redirect: 'false'
           response.should_not be_redirect
         end
