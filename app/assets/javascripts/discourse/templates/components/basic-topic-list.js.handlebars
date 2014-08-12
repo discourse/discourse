@@ -10,8 +10,6 @@
           <th class="num posts">{{i18n posts}}</th>
           {{#if controller.showParticipants}}
             <th class="posters">{{i18n users}}</th>
-          {{else}}
-            <th class="num likes">{{i18n likes}}</th>
           {{/if}}
           <th class="num views">{{i18n views}}</th>
           <th class="num activity" colspan="2">{{i18n activity}}</th>
@@ -41,7 +39,7 @@
               </td>
             {{/unless}}
 
-            <td class='num posts'>
+            <td {{bind-attr class=":num :posts likesHeat"}}>
               <a href="{{unbound topic.lastUnreadUrl}}" class='badge-posts'>{{number topic.posts_count numberKey="posts_long"}}</a>
             </td>
 
@@ -50,12 +48,6 @@
                 {{#each topic.participants}}
                   <a href="{{user.path}}" class="{{extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
                 {{/each}}
-              </td>
-            {{else}}
-              <td class='num likes'>
-                {{#if topic.like_count}}
-                  <a href='{{unbound topic.url}}'>{{number topic.like_count}} <i class='fa fa-heart'></i></a>
-                {{/if}}
               </td>
             {{/if}}
 

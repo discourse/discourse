@@ -46,13 +46,7 @@
   {{/each}}
 </td>
 
-<td class='num posts'><a href="{{lastUnreadUrl}}" class='badge-posts'>{{number posts_count numberKey="posts_long"}}</a></td>
-
-<td class='num likes'>
-  {{#if like_count}}
-    <a href='{{url}}' title='{{i18n topic.likes count="like_count"}}'>{{number like_count numberKey="likes_long"}} <i class='fa fa-heart'></i></a>
-  {{/if}}
-</td>
+<td {{bind-attr class=":num :posts likesHeat"}}><a href="{{lastUnreadUrl}}" class='badge-posts'>{{number posts_count numberKey="posts_long"}}</a></td>
 
 <td {{bind-attr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
 

@@ -35,10 +35,6 @@
   <div class="pull-right">
     <div class='num posts'><a href="{{lastUnreadUrl}}">{{number posts_count numberKey="posts_long"}}</a></div>
 
-    {{#if like_count}}
-      <div class='num likes'><a href='{{url}}' title='{{i18n topic.likes count="like_count"}}'>{{number like_count numberKey="likes_long"}} <i class='fa fa-heart'></i></a></div>
-    {{/if}}
-
     {{#if bumped}}
       <div class='num activity last'>
         <a href="{{lastPostUrl}}" title='{{i18n last_post}}: {{{raw-date bumped_at}}}'>{{last_poster_username}}</a>
