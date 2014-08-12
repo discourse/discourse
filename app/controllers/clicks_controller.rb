@@ -36,6 +36,7 @@ class ClicksController < ApplicationController
       @user_params ||= -> {
         _ = track_params.merge(ip: request.remote_ip)
         _.merge({ user_id: current_user.id }) if current_user.present?
+        _
       }.()
     end
 end
