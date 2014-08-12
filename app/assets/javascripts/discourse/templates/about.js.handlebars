@@ -6,7 +6,7 @@
 
   {{#if admins}}
     <section class='about admins'>
-      <h3>Our Admins</h3>
+      <h3>{{i18n about.our_admins}}</h3>
 
       {{#each admins}}
         {{user-small user=this}}
@@ -18,7 +18,7 @@
 
   {{#if moderators}}
     <section class='about admins'>
-      <h3>Our Moderators</h3>
+      <h3>{{i18n about.our_moderators}}</h3>
 
       <div class='users'>
         {{#each moderators}}
