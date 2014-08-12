@@ -107,6 +107,16 @@ Discourse.Topic = Discourse.Model.extend({
     return this.get('new_posts');
   }.property('new_posts', 'id'),
 
+  likesHeat: function() {
+    var likes = parseFloat(this.get('like_count')),
+        posts = parseFloat(this.get('posts_count')),
+        ratio = (likes || 0) / (posts || 1);
+
+    if (ratio > 2.0) { return 'heatmap-high'; }
+    if (ratio > 1.0) { return 'heatmap-med'; }
+    if (ratio > 0.5) { return 'heatmap-low'; }
+  }.property('like_count'),
+
   viewsHeat: function() {
     var v = this.get('views');
     if( v >= Discourse.SiteSettings.topic_views_heat_high )   return 'heatmap-high';

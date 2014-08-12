@@ -33,13 +33,6 @@
                 <div class='num posts'>
                   <a href="{{lastUnreadUrl}}">{{number posts_count numberKey="posts_long"}}</a>
                 </div>
-                {{#if like_count}}
-                  <div class='num likes'>
-                    <a href='{{url}}' title='{{i18n topic.likes count="like_count"}}'>
-                      <i class='fa fa-heart'></i> {{number like_count numberKey="likes_long"}}
-                    </a>
-                  </div>
-                {{/if}}
                 {{#if bumped}}
                   <div class='num activity last'>
                     <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{raw-date bumped_at}}}'>{{age bumped_at}}</a>
