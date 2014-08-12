@@ -28,7 +28,7 @@ export default function(filter, params) {
         category: model,
         filterMode: filterMode,
         noSubcategories: params && params.no_subcategories,
-        canEditCategory: Discourse.User.currentProp('staff'),
+        canEditCategory: model.get('can_edit'),
         canChangeCategoryNotificationLevel: Discourse.User.current()
       });
     },
