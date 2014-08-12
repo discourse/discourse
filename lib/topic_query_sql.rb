@@ -12,7 +12,7 @@ module TopicQuerySQL
     end
 
     def highest_date
-      "3000-01-01"
+      "infinity"
     end
 
     def order_by_category_sql(dir)
