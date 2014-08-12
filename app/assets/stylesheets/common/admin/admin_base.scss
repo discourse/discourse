@@ -503,11 +503,11 @@ section.details {
   th { text-align: left; }
   .user {
     width: 20px;
-    padding-top: 8px;
+    padding: 8px 0 0 0;
   }
   .excerpt {
-    max-width: 800px;
-    width: 800px;
+    max-width: 700px;
+    width: 700px;
     padding: 8px;
     word-wrap: break-word;
     .fa { display: inline-block; }
