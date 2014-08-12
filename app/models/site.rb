@@ -75,7 +75,7 @@ class Site
     end
 
     site = Site.new(guardian)
-    MultiJson.dump(SiteSerializer.new(site, root: false))
+    MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
   end
 
 end

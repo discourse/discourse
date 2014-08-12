@@ -66,7 +66,7 @@ Discourse.DiscoveryTopCategoryRoute = Discourse.Route.extend(Discourse.OpenCompo
 
     var opts = { category: model, filterMode: filterMode };
     opts.noSubcategories = noSubcategories;
-    opts.canEditCategory = Discourse.User.currentProp('staff');
+    opts.canEditCategory = model.get('can_edit');
     this.controllerFor('navigation/category').setProperties(opts);
 
     return Discourse.TopList.find(filterMode).then(function(list) {

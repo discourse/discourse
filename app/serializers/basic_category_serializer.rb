@@ -14,7 +14,8 @@ class BasicCategorySerializer < ApplicationSerializer
              :parent_category_id,
              :notification_level,
              :logo_url,
-             :background_url
+             :background_url,
+             :can_edit
 
   def include_parent_category_id?
     parent_category_id
@@ -23,4 +24,12 @@ class BasicCategorySerializer < ApplicationSerializer
   def description
     object.uncategorized? ? SiteSetting.uncategorized_description : object.description
   end
+
+  def can_edit
+    true
+  end
+  def include_can_edit?
+    scope && scope.can_edit?(object)
+  end
+
 end
