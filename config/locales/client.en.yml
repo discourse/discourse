@@ -515,7 +515,7 @@ en:
     read_only_mode:
       enabled: "An administrator enabled read-only mode. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users will not be able to earn trust levels unless there's content for them to read."
+    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users will not be able to earn trust levels unless there's content for them to read. This message appears only to staff."
 
     learn_more: "learn more..."
 
