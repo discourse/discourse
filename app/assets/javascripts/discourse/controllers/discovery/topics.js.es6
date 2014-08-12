@@ -1,12 +1,6 @@
-/**
-  The controller for displaying a list of topics.
+import DiscoveryController from 'discourse/controllers/discovery';
 
-  @class DiscoveryTopicsController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.DiscoveryController.extend({
+export default DiscoveryController.extend({
   needs: ['discovery'],
   bulkSelectEnabled: false,
   selected: [],

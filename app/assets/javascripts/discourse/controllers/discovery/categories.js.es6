@@ -1,4 +1,6 @@
-export default Discourse.DiscoveryController.extend({
+import DiscoveryController from 'discourse/controllers/discovery';
+
+export default DiscoveryController.extend({
   needs: ['modal', 'discovery'],
 
   withLogo: Em.computed.filterBy('categories', 'logo_url'),

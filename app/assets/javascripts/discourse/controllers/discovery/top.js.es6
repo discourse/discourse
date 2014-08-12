@@ -1,12 +1,6 @@
-/**
-  The controller for discoverying 'Top' topics
+import DiscoveryController from 'discourse/controllers/discovery';
 
-  @class DiscoveryTopController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.DiscoveryController.extend({
+export default DiscoveryController.extend({
   needs: ['discovery'],
 
   actions: {
