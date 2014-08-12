@@ -86,13 +86,13 @@ it:
     yes_value: "Sì"
     generic_error: "Spiacenti! C'è stato un problema."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
-    log_in: "Accedi"
     age: "Età"
     joined: "Partecipa da"
     admin_title: "Amministrazione"
     flags_title: "Segnalazioni"
     show_more: "Altro"
     links: "Link"
+    links_lowercase: "collegamenti"
     faq: "FAQ"
     guidelines: "Linee Guida"
     privacy_policy: "Policy della privacy"
@@ -134,6 +134,16 @@ it:
       not_bookmarked: "Hai letto questo post; clicca per inserirlo nei preferiti."
       last_read: "Questo è l'ultimo post che hai letto; clicca per inserirlo nei preferiti."
       remove: "Rimuovi dai Preferiti"
+    topic_count_latest:
+      one: "{{count}} discussione nuova o aggiornata"
+      other: "{{count}} discussione nuove o aggiornate"
+    topic_count_unread:
+      one: "{{count}} discussione non letta."
+      other: "{{count}} discussioni non lette."
+    topic_count_new:
+      one: "{{count}} nuova discussione."
+      other: "{{count}} nuove discussioni"
+    click_to_show: "Clicca per visualizzare."
     preview: "Anteprima"
     cancel: "annulla"
     save: "Salva modifiche"
@@ -336,7 +346,6 @@ it:
       last_emailed: "Ultima email inviatagli"
       last_seen: "Ultima visita"
       created: "Membro da"
-      log_out: "Logout"
       location: "Località"
       website: "Sito Web"
       email_settings: "Email"
@@ -436,6 +445,7 @@ it:
     read_only_mode:
       enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "Il login è disabilitato quando il sito è in modalità di sola lettura."
+    too_few_topics_notice: "Crea almeno 5 discussioni pubbliche e %{posts} post pubblici per iniziare una discussione. I nuovi utenti non saranno in grado di guadagnare livelli senza contenuti da leggere"
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'topic creati negli ultimi 365 giorni'
@@ -448,6 +458,7 @@ it:
     mute: Ignora
     unmute: Attiva
     last_post: Ultimo post
+    last_post_lowercase: ultimo post
     summary:
       enabled_description: "Stai osservando un sunto di questo topic: solo i post più interessanti come stabilito dalla community. Per vedere nuovamente tutti i post, clicca sotto."
       description: "Ci sono <b>{{count}}</b> risposte."
@@ -455,6 +466,8 @@ it:
       enable: 'Riassumi questo topic'
       disable: 'Mostra tutti i post'
     deleted_filter:
+      enabled_description: "Questa discussione contiene post che sono stati eliminati, sono quindi stati nascosti."
+      disabled_description: "I post eliminati di questa discussione sono ora visibili."
       enable: "Nasconti Post Eliminati"
       disable: "Mostra Post Eliminati"
     private_message_info:
@@ -465,6 +478,7 @@ it:
     username: 'Nome utente'
     last_seen: 'Ultima visita'
     created: 'Creato'
+    created_lowercase: 'creato'
     trust_level: 'Livello'
     search_hint: 'username o email'
     create_account:
@@ -478,7 +492,6 @@ it:
       complete_username: "Se un account risulta avere l'username <b>%{username}</b>, dovresti ricevere un'email con le istruzioni per ripristinare la tua password a breve."
       complete_email: "Se risulterà un account con <b>%{email}</b>, dovresti ricevere un'email contenente le istruzioni per ripristinare la tua password a breve."
     login:
-      title: "Accedi"
       username: "Utente"
       password: "Password"
       email_placeholder: "email o nome utente"
@@ -585,6 +598,18 @@ it:
       none: "Non hai notifiche al momento"
       more: "Visualizza le notifiche precedenti"
       total_flagged: "Numero totale di post segnalati"
+      mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span>ha accettato il tuo invito</p>"
+      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> ha spostato {{description}}</p>"
+      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ti è stato assegnato il grado {{description}}</p>"
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -618,6 +643,8 @@ it:
     topics:
       bulk:
         reset_read: "Cancella dati lettura"
+        dismiss_posts: "Annulla post"
+        dismiss_topics: "Annulla topic"
         dismiss_new: "Abbandona"
         toggle: "Attiva/disattiva la selezione multipla dei topic"
         actions: "Azioni in serie"
@@ -654,6 +681,7 @@ it:
       private_message: 'Apri un messaggio privato'
       list: 'Conversazioni'
       new: 'Nuove conversazioni'
+      unread: 'non letto'
       new_topics:
         one: '1 nuovo topic'
         other: '{{count}} nuovi topic'
@@ -666,13 +694,15 @@ it:
       invalid_access:
         title: "Il topic è privato"
         description: "Spiacenti, non puoi accedere a questo topic!"
-        login_required: "Devi effettuare il login per vedere questo topic."
       server_error:
         title: "Errore di caricamento del topic"
         description: "Spiacenti, non puoi caricare questo topic, probabilmente per un errore di connessione. Se il problema persiste, facci sapere."
       not_found:
         title: "Topic non trovato"
         description: "Spiacenti, non abbiamo trovato questo topic. Forse è stato rimosso da un moderatore?"
+      total_unread_posts:
+        one: "c'è un post non letto in questa discussione"
+        other: "ci sono {{count}} post non letti in questa discussione"
       unread_posts:
         one: "Hai 1 post non letto in questo topic"
         other: "Hai {{count}} post ancora da leggere in questo topic"
@@ -733,8 +763,10 @@ it:
           description: "Riceverai notifiche di ogni nuovo post in questo topic. Il conto dei non letti e dei nuovi post comparirà anche di fianco alla lista dei topic."
         tracking_pm:
           title: "Seguito"
+          description: "La somma dei post nuovi e non letti apparirà vicino ai messaggi privati. Riceverai una notifica solo quando qualcuno menzionerà il tuo @nome o risponderà ad un tuo post."
         tracking:
           title: "Seguito"
+          description: "La somma dei post nuovi e non letti apparirà vicino alla lista dei topic. Riceverai una notifica solo se qualcuno menzionerà il tuo @nome o risponderà ad un tuo post."
         regular:
           title: "Normale"
           description: "Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde a un tuo post."
@@ -792,9 +824,11 @@ it:
         title: 'Invita'
         action: 'Invita via email'
         help: 'Invia inviti agli amici. Potranno rispondere a questo topic con un solo click'
+        to_topic: "Invieremo una breve email che permetterà al tuo amico di entrare immediatamente e rispondere a questa discussione cliccando su un link, non è necessario fare login."
+        to_forum: "Invieremo una breve email che permetterà al tuo amico di entrare cliccando un link, senza bisogno di fare login."
         email_placeholder: 'nome@esempio.com'
+        success: "Abbiamo mandato un invito a <b>{{email}}</b>. Ti invieremo una notifica quando l'invito verrà confermato. Controlla gli inviti dal tab sulla tua pagina utente per tenere traccia dei tuoi inviti."
         error: "Spiacenti, non possiamo invitare quella persona. Forse è già un utente?"
-      login_reply: 'Accedi per rispondere'
       filters:
         n_posts:
           one: "1 post"
@@ -876,6 +910,8 @@ it:
         confirm: "Sicuro di voler abbandonare il tuo post?"
         no_value: "No, mantienilo"
         yes_value: "Si, abbandona"
+      wiki:
+        about: "questo post è un wiki; chiunque può modificarlo"
       archetypes:
         save: 'Opzioni di salvataggio'
       controls:
@@ -1052,6 +1088,7 @@ it:
       auto_close_units: "ore"
       email_in: "Indirizzo email personalizzato:"
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
+      email_in_disabled: "Le impostazioni del Sito non permettono di creare nuove discussioni via email. Per abilitare la funzione di creare topic via email,"
       email_in_disabled_click: 'abilita '
       allow_badges_label: "Permetti che le targhette vengano assegnate in questa categoria"
       edit_permissions: "Modifica i permessi"
@@ -1118,15 +1155,19 @@ it:
       invisible:
         help: "Questo topic è invisibile; non verrà mostrato nella lista dei topic ed è possibile accedervi solo tramite link diretto"
     posts: "Post"
+    posts_lowercase: "post"
     posts_long: "Ci sono {{number}} post in questo topic"
     original_post: "Post originale"
     views: "Visualizzazioni"
+    views_lowercase: "visualizzazioni"
     replies: "Risposte"
     views_long: "Questo topic è stato visualizzato {{number}} volte"
     activity: "Attività"
     likes: "Mi piace"
+    likes_lowercase: "Mi piace"
     likes_long: "Ci sono {{number}} \"Mi piace\" in questo topic"
     users: "Utenti"
+    users_lowercase: "utenti"
     category_title: "Categoria"
     history: "Storia"
     changed_by: "da {{author}}"
@@ -1155,6 +1196,10 @@ it:
           zero: "Non letti"
           one: "Non letti (1)"
           other: "Non letti ({{count}})"
+        help: "discussioni che stai guardando o seguendo con post non letti"
+        lower_title_with_count:
+          one: "1 non letto"
+          other: "{{count}} non letti"
       new:
         lower_title_with_count:
           one: "1 nuovo"
@@ -1241,8 +1286,14 @@ it:
         title: "Segnalazioni"
         old: "Passate"
         active: "Attive"
+        agree: "Acconsento"
+        agree_title: "Conferma questo flag come valido e corretto"
+        agree_flag_modal_title: "Acconsento e..."
         agree_flag_hide_post: "D'accordo (oscura il post e invia PM)"
+        agree_flag_hide_post_title: "Nascondi questo post e invia automaticamente all'utente un messaggio privato chiedendogli di modificarlo"
+        agree_flag: "Accetta la segnalazione"
         defer_flag: "Ignora"
+        defer_flag_title: "Rimuovi segnalazione; non è necessaria alcuna azione questa volta."
         delete: "Rimuovi"
         delete_post_defer_flag_title: "Cancella il post: se è il primo post, cancella il topic"
         delete_post_agree_flag_title: "Cancella il post: se è il primo post, cancella il topic"
@@ -1593,7 +1644,6 @@ it:
         show_public_profile: "Mostra il profilo pubblico"
         impersonate: 'Impersona'
         ip_lookup: "IP Lookup"
-        log_out: "Logout"
         logged_out: "L'utente ha effettuato il logout da tutti i device"
         revoke_admin: 'Revoca privilegi di amministrazione'
         grant_admin: 'Garantisci privilegi di amministrazione'
@@ -1726,6 +1776,8 @@ it:
         preview: Anteprima targhetta
         trigger_type:
           none: "Aggiorna giornalmente"
+          post_action: "Quando un utente lavora su un post"
+          post_revision: "Quando un utente modifica o crea un post"
     lightbox:
       download: "Scaricamento"
     keyboard_shortcuts_help:
@@ -1784,6 +1836,8 @@ it:
       select_badge_for_title: Scegli una targhetta da usare come tuo titolo
       no_title: "<no title>"
       badge_grouping:
+        getting_started:
+          name: Inizia
         community:
           name: Community
         trust_level:
@@ -1795,6 +1849,7 @@ it:
       badge:
         editor:
           name: Editore
+          description: Prima modifica ad un post.
         basic_user:
           name: Base
         regular_user:

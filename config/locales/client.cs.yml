@@ -102,7 +102,6 @@ cs:
     yes_value: "Ano"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
-    log_in: "Přihlásit se"
     age: "Věk"
     joined: "Účet vytvořen"
     admin_title: "Administrace"
@@ -428,7 +427,6 @@ cs:
       invite: "Vložte svoje uživatelské jméno nebo e-mailovou adresu a my vám zašleme postup pro obnovení hesla."
       reset: "Resetovat heslo"
     login:
-      title: "Přihlásit se"
       username: "Uživatel"
       password: "Heslo"
       email_placeholder: "emailová adresa nebo uživatelské jméno"
@@ -726,7 +724,6 @@ cs:
         help: 'odeslat pozvánku přátelům, aby mohli na toto téma odpovědět jedním kliknutím'
         email_placeholder: 'name@example.com'
         error: "Bohužel se nepodařilo pozvat tuto osobu. Není již registrovaným uživatelem?"
-      login_reply: 'Přihlaste se, chcete-li odpovědět'
       filters:
         n_posts:
           one: "Je zobrazen pouze 1 příspěvek"
@@ -1470,7 +1467,6 @@ cs:
         refresh_browsers: "Vynutit obnovení prohlížeče"
         show_public_profile: "Zobrazit veřejný profil"
         impersonate: 'Vydávat se za uživatele'
-        log_out: "Odhlásit"
         logged_out: "Uživatel byl odhlášen na všech zařízeních."
         revoke_admin: 'Odebrat administrátorská práva'
         grant_admin: 'Udělit administrátorská práva'

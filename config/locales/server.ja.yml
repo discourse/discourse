@@ -217,7 +217,6 @@ ja:
       title: '{{username}} に通知'
       description: 'この投稿やトピックを書いた人に、直接確認したい内容を含んでいる。'
       long_form: 'ユーザに通知'
-      email_title: '"%{title}" のあなたのポストについて'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '管理人に通知'
@@ -418,7 +417,6 @@ ja:
     top_menu: "ホームページナビゲーションに表示する項目を指定。例 latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "ポストメニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "右クリックされた外部リンクをトラックする (例: 新しいタブで開く)。URL のリライトを要するためデフォルトでは無効化されています"
-    version_checks: "Discourse Hub にバージョン更新の有無を問い合わせ /admin ダッシュボードにバージョンメッセージを表示する"
     port: "開発者用! 警告! デフォルトの80番ポートではなく、ここで指定した HTTP ポートを利用する。空欄でデフォルトの80番ポートを利用。"
     force_hostname: "開発者用! 警告! URL 内のホスト名を指定。空欄でデフォルト値を利用。"
     invite_expiry_days: "招待キーの有効期間 (日)"

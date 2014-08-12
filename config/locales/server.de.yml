@@ -20,7 +20,6 @@ de:
   posts: "Beiträge"
   loading: "Lädt"
   powered_by_html: 'Basiert auf <a href="http://www.discourse.org">Discourse</a>, funktioniert am besten mit aktiviertem JavaScript'
-  log_in: "Anmelden"
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
   errors:
@@ -370,7 +369,6 @@ de:
       title: '{{username}} benachrichtigen'
       description: 'Dieser Beitrag enthält etwas über das ich mit dieser Person direkt und privat sprechen möchte.'
       long_form: 'dies dem Benutzer gemeldet'
-      email_title: 'Bezüglich deinem Beitrag "%{title}"'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Moderatoren benachrichtigen'
@@ -672,7 +670,6 @@ de:
     allow_index_in_robots_txt: "Suchmaschinen mittels der robots.txt Datei erlauben, die Seite zu indizieren."
     email_domains_blacklist: "Eine Liste von E-Mail-Domains, die bei der Registrierung neuer Konten nicht erlaubt sind. Beispiel: mailinator.com trashmail.net"
     email_domains_whitelist: "Eine Liste von E-Mail-Domains, mit denen neue Konten registriert werden dürfen. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains können sich dann nicht mehr registrieren!"
-    version_checks: "Erfrage Versionsupdate bei Discourse Hub und zeige Versionsbenachrichtigungen auf der Administratorkonsole /admin."
     new_version_emails: "Sende eine E-Mail an contact_email Adresse wenn eine neue Version von Discourse verfügbar ist."
     port: "NUR FÜR ENTWICKLER! ACHTUNG! Benutze diesen HTTP-Port anstatt den Standardport 80. Diese Feld leer lassen heißt 'keinen'. Dient hauptsächlich Entwicklungszwecken."
     force_hostname: "NUR FÜR ENTWICKLER! ACHTUNG! Spezifiziere einen Hostnamen in der URL. Dieses Feld leer lassen heißt 'keinen'. Dient hauptsächlich Entwicklungszwecken."
@@ -680,6 +677,8 @@ de:
     invite_passthrough_hours: "Wie lange, in Stunden, ein Benutzer einen bereits eingelösten Einladungsschlüssel zum einloggen verwenden kann."
     invite_only: "Deaktiviere die öffentliche Registrierung, neue Nutzer können nur durch eine Einladung von existierenden Mitgliedern oder Mitarbeitern beitreten."
     login_required: "Nur angemeldete Nutzer dürfen Inhalte der Seite lesen, anonyme Zugriffe sind verboten."
+    min_username_length: "Minimale Länge für Benutzernamen in Zeichen. WARNUNG: EXISTIERENDE BENUTZER, DEREN BENUTZERNAMEN KÜRZER SIND, WERDEN DIE WEBSITE NICHT MEHR BENUTZEN KÖNNEN."
+    max_username_length: "Maximale Länge für Benutzernamen in Zeichen. WARNUNG: EXISTIERENDE BENUTZER, DEREN BENUTZERNAMEN LÄNGER SIND, WERDEN DIE WEBSITE NICHT MEHR BENUTZEN KÖNNEN."
     min_password_length: "Minimale Länge des Passworts."
     block_common_passwords: "Erlaube kein Passwort unter den 10000 meist verwendeten Passwörter."
     enable_sso: "Aktiviere Single-Sign-On mittels einer externen Seite (Anm.: Deaktiviert Einladungen)"
@@ -826,6 +825,7 @@ de:
     disable_edit_notifications: "Unterdrücke Bearbeitungshinweise durch den System-Nutzer, wenn die 'download_remote_images_to_local' Einstellung aktiviert ist."
     enable_names: "Erlaube Benutzern, ihren vollen Namen zu zeigen. Deaktivieren, um alle vollen Namen zu verbergen."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollen Namen des Benutzers bei seinen Beiträgen."
+    invites_per_page: "Anzahl an Einladungen, die auf der Benutzerseite angezeigt werden."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die die Breite des Fortschrittsbalkens verändert wird."
     default_code_lang: "Standard Syntax Highlighting, dass auf GitHub Code Blöcke angewendet wird. (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Wenn jemand beginnt auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Deaktiviere dies durch setzen auf 0."
@@ -844,6 +844,7 @@ de:
     notify_about_flags_after: "Wenn es Markierungen gibt, dich nach nach dieser Anzahl von Stunden behandelt wurden, sende eine E-Mail an den contact_email. Setze dies auf 0 um es zu deaktivieren."
     enable_cdn_js_debugging: "Ermöglicht die Anzeige vollständiger Fehler auf /logs, indem alle eingebetteten JavaScripts Cross-Origin Zugriffsberechtigungen erhalten."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
+    vacuum_db_days: "Führe VACUUM FULL ANALYZE aus, um nach Migrationen Speicher in der Datenbank zurückzugewinnen (zum Deaktivieren auf 0 setzen)"
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Nutzernamen."
@@ -1069,8 +1070,6 @@ de:
     agreed: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt und sehen uns das an."
     agreed_and_deleted: "Danke, dass du uns Bescheid gegeben hast. Wir waren auch der Meinung, dass es ein Problem gibt und haben den Beitrag gelöscht."
     disagreed: "Danke für deine Meldung. Wir sehen uns das an."
-    deferred: "Danke für deine Meldung. Wir sehen uns das an."
-    deferred_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag gelöscht."
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
@@ -1169,24 +1168,6 @@ de:
         Viel Vergnügen!
     welcome_invite:
       subject_template: "Willkommen auf %{site_name}!"
-      text_body_template: |
-        Danke dass Du der Einladung zu %{site_name} gefolgt bist. Willkommen!
-
-        Wir haben automatisch diesen Benutzernamen für Dich gewählt: **%{username}**. Sollte er Dir nicht gefallen, kannst Du diesen Namen in [Deinem Profil][prefs] jederzeit ändern.
-
-        Damit Du dich auch später wieder anmelden kannst, kannst du entweder:
-
-        1. Dich mit einem beliebigen Anbieter anmelden -- dieser muss allerdings die **gleiche Email-Adresse** verwenden wie die, unter der Du Deine Einladung erhalten hast. Ansonsten können wir Dich nicht korrekt identifizieren.
-
-        2. oder in [Deinem Profil][prefs] ein neues Passwort setzen und Dich damit direkt hier anmelden.
-
-        %{new_user_tips}
-
-        Wir stehen für [zivilisiertes Verhalten in Online-Communitys](%{base_url}/guidelines).
-
-        Viel Spaß!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Export erfolgreich abgeschlossen"
       text_body_template: "Der Export war erfolgreich."

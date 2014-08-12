@@ -20,7 +20,6 @@ it:
   posts: "post"
   loading: "Caricamento"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, è consigliato abilitare javascript'
-  log_in: "Accedi"
   via: "%{username} via %{site_name}"
   is_reserved: "è riservato"
   errors:
@@ -309,7 +308,6 @@ it:
       title: 'Notifica {{username}}'
       description: 'Il post contiene qualcosa su cui vorrei discutere direttamente e privatamente con questa persona.'
       long_form: 'utente nofiticato'
-      email_title: 'Riguarda il tuo post "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notifica moderatori'
@@ -534,7 +532,6 @@ it:
     post_menu: "Determina quali elementi vengono mostrati nel menù del post, ed in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Traccia i link esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché viene fatto il rewrite delle URL"
     enable_badges: "Attiva il sistema targhette (sperimentale)"
-    version_checks: "Pinga il Discourse Hub per aggiornamenti di versione e mostra i relativi messaggi sulla dashboard in /admin"
     port: "Usa questa porta HTTP al posto della default 80. Lasciare vuoto solo durante lo sviluppo"
     force_hostname: "Specifica un hostname nella URL. Lasciare vuoto solo durante lo sviluppo"
     invite_expiry_days: "Per quanti giorni le chiavi utente sono valide"
@@ -567,6 +564,7 @@ it:
     clean_orphan_uploads_grace_period_hours: "Quante ore prima che un upload \"orphan\" venga rimosso."
     purge_deleted_uploads_grace_period_days: "Giorni che devono trascorrere prima che un upload cancellato venga rimosso del tutto."
     s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere in minuscolo.\\"
+    leader_requires_topics_replied_to: "Numero minimo di discussione che un utente deve aver risposto negli ultimi 100 giorni per qualificarsi a una promozione a leader (3) livello di affidabilità. (0 o più alto)"
     min_trust_to_create_topic: "Livello minimo richiesto per creare un nuovo topic."
     min_trust_to_edit_wiki_post: "Livello minimo richiesto per modificare un topic segnato come wiki."
     title_fancy_entities: "Converti caratteri ASCII comuni in HTML nei titoli del topic, tipo SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -845,6 +843,7 @@ it:
         ---
         %{respond_instructions}
     digest:
+      why: "Un breve resoconto di %{site_link} dall'ultima tua visita il %{last_seen_at}."
       subject_template: "[%{site_name}] Riepilogo per %{date}"
       new_activity: "Nuove attività nei tuoi topic e post:"
       top_topics: "Post Popolari"
@@ -877,6 +876,22 @@ it:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Puoi partecipare a %{site_name}!"
+      text_body_template: |+
+        Benvenuto su %{site_name}!
+
+        Un membro dello staff ha approvato il tuo account su %{site_name}.
+
+        Clicca sul link che segue per confermare e attivare il tuo nuovo account:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Se il link qui sopra non è cliccabile, prova a copiarlo e a incollarlo nella barra degli indirizzi del tuo browser.
+
+        %{new_user_tips}
+
+        Noi crediamo in [civilized community behavior](%{base_url}/guidelines) da sempre.
+
+        Buona permanenza!
+
     signup:
       subject_template: "[%{site_name}] Attiva il tuo nuovo account"
       text_body_template: |

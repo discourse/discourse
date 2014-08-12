@@ -70,7 +70,6 @@ zh_TW:
     yes_value: "是"
     generic_error: "抱歉，發生錯誤。"
     generic_error_with_reason: "發生錯誤: %{error}"
-    log_in: "登入"
     age: "已建立"
     joined: "加入時間"
     admin_title: "管理員"
@@ -312,7 +311,6 @@ zh_TW:
       last_emailed: "最近寄出電子郵件"
       last_seen: "出現時間"
       created: "建立日期"
-      log_out: "登出"
       location: "位置"
       website: "網站"
       email_settings: "電子郵件"
@@ -450,7 +448,6 @@ zh_TW:
       complete_username: "如果有帳號符合你輸入的用戶名稱 <b>%{username}</b>，你應該很快就會收到重設密碼的電子郵件。"
       complete_email: "如果有帳號符合你輸入的電子郵件地址 <b>%{email}</b>，你應該很快就會收到重設密碼的電子郵件。"
     login:
-      title: "登入"
       username: "用戶"
       password: "密碼"
       email_placeholder: "電子郵件地址或用戶名稱"
@@ -635,7 +632,6 @@ zh_TW:
       invalid_access:
         title: "私人討論話題"
         description: "抱歉，你沒有進入此討論話題的權限！"
-        login_required: "你必須登入才能看見該討論話題。"
       server_error:
         title: "討論話題載入失敗"
         description: "抱歉，可能因為連線有問題而無法載入此討論話題，請再試一次，如果這個問題持續發生，請讓我們知道。"
@@ -762,7 +758,6 @@ zh_TW:
         email_placeholder: '電子郵件地址'
         success: "我們已將邀請寄至 <b>{{email}}</b>，當受邀者接受邀請時我們會再通知你，你也可以在你的用戶頁面的邀請清單查看邀請狀態。"
         error: "抱歉，我們無法邀請此人，他可能已經是此論壇的用戶?"
-      login_reply: '登入以發表回覆'
       filters:
         n_posts:
           other: "{{count}} 則文章"
@@ -1513,7 +1508,6 @@ zh_TW:
         show_public_profile: "顯示公開的基本資料"
         impersonate: '檢視角度'
         ip_lookup: "IP 反查"
-        log_out: "登出"
         logged_out: "用戶已從所有裝置中登出"
         revoke_admin: '撤銷管理員權限'
         grant_admin: '授予管理員權限'

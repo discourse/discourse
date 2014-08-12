@@ -86,7 +86,6 @@ nl:
     yes_value: "Ja"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
-    log_in: "Inloggen"
     age: "Leeftijd"
     joined: "Lid sinds"
     admin_title: "Beheer"
@@ -336,7 +335,6 @@ nl:
       last_emailed: "Laatst gemaild"
       last_seen: "Gezien"
       created: "Lid sinds"
-      log_out: "Log uit"
       location: "Locatie"
       website: "Website"
       email_settings: "E-mail"
@@ -471,7 +469,6 @@ nl:
       complete_username: "Als er een account gevonden kan worden met gebruikersnaam <b>%{username}<b/> dan zul je in een ogenblik een wachtwoord-herstel-mail ontvangen."
       complete_email: "Als er een account gevonden kan worden met het emailadres <b>%{email}<b/> dan zul je in een ogenblik een wachtwoord-herstel-mail ontvangen."
     login:
-      title: "Inloggen"
       username: "Gebruiker"
       password: "Wachtwoord"
       email_placeholder: "e-mail of gebruikersnaam"
@@ -659,7 +656,6 @@ nl:
       invalid_access:
         title: "Topic is privé"
         description: "Sorry, je hebt geen toegang tot deze topic."
-        login_required: "Je moet ingelogd zijn op deze topic te kunnen zien."
       server_error:
         title: "Laden van topic is mislukt"
         description: "Sorry, we konden deze topic niet laden, waarschijnlijk door een verbindingsprobleem. Probeer het later opnieuw. Als het probleem blijft, laat het ons dan weten."
@@ -784,7 +780,6 @@ nl:
         to_topic: "We zullen je vriend een korte e-mail sturen waardoor hij of zij meteen kan aanmelden en op dit topic kan reageren door op een link te klikken, hij of zij hoeft niet in te loggen."
         email_placeholder: 'naam@voorbeeld.nl'
         error: "Sorry, we kunnen deze persoon niet uitnodigen. Wellicht is deze al een lid op onze site?"
-      login_reply: 'Log in om te reageren'
       filters:
         n_posts:
           one: "één bericht"
@@ -1554,7 +1549,6 @@ nl:
         show_public_profile: "Bekijk openbaar profiel"
         impersonate: 'Log in als gebruiker'
         ip_lookup: "Zoek IP-adres op"
-        log_out: "Log uit"
         logged_out: "Gebruiker is uitgelogd op alle apparaten"
         revoke_admin: 'Ontneem beheerdersrechten'
         grant_admin: 'Geef Beheerdersrechten'

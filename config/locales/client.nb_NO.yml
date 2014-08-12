@@ -83,7 +83,6 @@ nb_NO:
     yes_value: "Ja"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
-    log_in: "Logg inn"
     age: "Alder"
     joined: "Sammensatt"
     admin_title: "Admin"
@@ -264,7 +263,6 @@ nb_NO:
       last_emailed: "Sist Kontaktet"
       last_seen: "Sist Sett"
       created: "Laget Ved"
-      log_out: "Logg Ut"
       website: "Webside"
       email_settings: "Email"
       email_digests:
@@ -361,7 +359,6 @@ nb_NO:
       invite: "Skriv inn ditt brukernavn eller e-postaddresse, så sender vi deg en email for å tilbakestille ditt passord."
       reset: "Tilbakestill Passord"
     login:
-      title: "Logg inn"
       username: "Bruker"
       password: "Passord"
       email_placeholder: "email addresse eller brukernavn"
@@ -618,7 +615,6 @@ nb_NO:
         help: 'send invitasjoner til venner så de kan svare på dette emnet med et enkelt klikk'
         email_placeholder: 'email'
         error: "Beklager, vi kunne ikke invitere den personen. Kanskje de allerede er en bruker?"
-      login_reply: 'Logg inn for å svare'
       filters:
         n_posts:
           one: "1 innlegg"

@@ -86,7 +86,6 @@ es:
     yes_value: "Sí"
     generic_error: "Lo sentimos, ha ocurrido un error."
     generic_error_with_reason: "Ha ocurrido un error: %{error}"
-    log_in: "Iniciar sesión"
     age: "Edad"
     joined: "Unido"
     admin_title: "Admin"
@@ -337,7 +336,6 @@ es:
       last_emailed: "Último Enviado por email"
       last_seen: "Visto por última vez"
       created: "Creado el"
-      log_out: "Cerrar Sesión"
       location: "Ubicación"
       website: "Sitio Web"
       email_settings: "Email"
@@ -480,7 +478,6 @@ es:
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, dentro de poco deberías recibir un email con las instrucciones para cambiar tu contraseña."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, dentro de poco deberías recibir un email con las instrucciones para cambiar tu contraseña."
     login:
-      title: "Iniciar sesión"
       username: "Usuario"
       password: "Contraseña"
       email_placeholder: "dirección de email o nombre de usuario"
@@ -668,7 +665,6 @@ es:
       invalid_access:
         title: "Este tema es privado"
         description: "Lo sentimos, ¡no tienes acceso a este tema!"
-        login_required: "Tienes que iniciar sesión para ver este tema"
       server_error:
         title: "El tema falló al intentar ser cargado"
         description: "Lo sentimos, no pudimos cargar el tema, posiblemente debido a problemas de conexión. Por favor, inténtalo nuevamente. Si el problema persiste, por favor contacta con soporte."
@@ -801,7 +797,6 @@ es:
         email_placeholder: 'dirección de email'
         success: "Hemos enviado una invitación por email a <b>{{email}}</b>. Te notificaremos cuando la invitación sea aceptada. Revisa la pestaña de invitaciones en tu página de perfil para llevar el seguimiento de tus invitaciones."
         error: "Lo sentimos, no podemos invitar a esa persona. ¿Tal vez ya es un usuario?"
-      login_reply: 'Iniciar sesión para responder'
       filters:
         n_posts:
           one: "1 post"
@@ -1605,7 +1600,6 @@ es:
         show_public_profile: "Ver perfil público"
         impersonate: 'Impersonar a'
         ip_lookup: "Búsqueda de IP"
-        log_out: "Cerrar Sesión"
         logged_out: "El usuario ha cerrado sesión desde todos los dispositivos"
         revoke_admin: 'Revocar administrador'
         grant_admin: 'Conceder administración'

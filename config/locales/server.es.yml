@@ -20,7 +20,6 @@ es:
   posts: "posts"
   loading: "Cargando"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, visualizado mejor con JavaScript activado'
-  log_in: "Iniciar sesión"
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
   errors:
@@ -369,7 +368,6 @@ es:
       title: 'Notificar a {{username}}'
       description: 'Este post contiene algo que quisiera comentar por privado directamente con esta persona.'
       long_form: 'usuario notificado'
-      email_title: 'Con respecto a tu post en "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notificar a los moderadores'
@@ -671,7 +669,6 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de email con los cuales los usuarios no podrán registrarse. Ejemplo: mailinator.com trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
-    version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
     port: "SOLO DESARROLLADORES! ADVERTENCIA! Usa este puerto HTTP en vez del puerto 80 por defecto. Dejar blanco para por defecto el 80"
     force_hostname: "SOLO DESARROLLADORES! ADVERTENCIA! Especificar un hostname en la URL, dejar blanco para por defecto"
@@ -1018,8 +1015,6 @@ es:
     agreed: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y lo estamos revisando."
     agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y hemos quitado el post."
     disagreed: "Gracias por hacérnoslo saber. Estamos revisándolo."
-    deferred: "Gracias por hacérnoslo saber. Estamos revisándolo."
-    deferred_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"

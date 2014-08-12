@@ -86,13 +86,13 @@ fr:
     yes_value: "Oui"
     generic_error: "Désolé, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue: %{error}"
-    log_in: "Se connecter"
     age: "Âge"
     joined: "Inscrit"
     admin_title: "Admin"
     flags_title: "Signalements"
     show_more: "afficher plus"
     links: "Liens"
+    links_lowercase: "liens"
     faq: "FAQ"
     guidelines: "Règles"
     privacy_policy: "Politique de confidentialité"
@@ -134,6 +134,16 @@ fr:
       not_bookmarked: "vous avez lu ce message; cliquez pour le placer dans vos signets"
       last_read: "ceci est le dernier message que vous avez lu; cliquez pour le placer dans vos signets"
       remove: "Supprimer des signets"
+    topic_count_latest:
+      one: "{{count}} sujet récent."
+      other: "{{count}} sujets récents."
+    topic_count_unread:
+      one: "{{count}} sujet non lu."
+      other: "{{count}} sujets non lus."
+    topic_count_new:
+      one: "{{count}} nouveau sujet."
+      other: "{{count}} nouveaux sujets."
+    click_to_show: "Cliquez pour afficher."
     preview: "prévisualiser"
     cancel: "annuler"
     save: "Sauvegarder les changements"
@@ -337,7 +347,6 @@ fr:
       last_emailed: "Dernier courriel"
       last_seen: "Vu"
       created: "Inscrit"
-      log_out: "Se déconnecter"
       location: "Localisation"
       website: "Site internet"
       email_settings: "Courriel"
@@ -450,6 +459,7 @@ fr:
     mute: Désactiver
     unmute: Activer
     last_post: Dernier message
+    last_post_lowercase: dernier message
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : qui ne contient que les messages importants choisis par la communauté. Pour voir tous les messages à nouveau, cliquez ci-dessous."
       description: "Il y a <b>{{count}}</b> réponses."
@@ -457,6 +467,8 @@ fr:
       enable: 'Résumer ce sujet'
       disable: 'Afficher tous les messages'
     deleted_filter:
+      enabled_description: "Ce sujet contient des messages supprimés, qui ont été cachés."
+      disabled_description: "Les messages supprimés de ce sujet sont visibles."
       enable: "Cacher les messages supprimés"
       disable: "Afficher les messages supprimés"
     private_message_info:
@@ -467,6 +479,7 @@ fr:
     username: 'Pseudo'
     last_seen: 'Vu'
     created: 'Créé'
+    created_lowercase: 'créé'
     trust_level: 'Niveau de confiance'
     search_hint: 'pseudo ou courriel'
     create_account:
@@ -480,7 +493,6 @@ fr:
       complete_username: "Si un compte correspond au pseudo <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
       complete_email: "Si un compte correspond à l'adresse de courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
     login:
-      title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
       email_placeholder: "courriel ou pseudo"
@@ -587,6 +599,18 @@ fr:
       none: "Vous n'avez aucune notification pour le moment."
       more: "voir les anciennes notifications"
       total_flagged: "Nombre total de messages signalés"
+      mentioned: "<i title='mentionné' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
+      quoted: "<i title='cité' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      replied: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      edited: "<i title='édité' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='aimé' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      private_message: "<i title='message privé' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='message privé' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invitee_accepted: "<i title='invitation accepté' class='fa fa-user'></i><p><span>{{username}}</span> a accepté votre invitation</p>"
+      moved_post: "<i title='message déplacé' class='fa fa-sign-out'></i><p><span>{{username}}</span> a déplacé {{description}}</p>"
+      linked: "<i title='message lié' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge décerné' class='fa fa-certificate'></i><p>On vous a décerné {{description}}</p>"
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -620,6 +644,8 @@ fr:
     topics:
       bulk:
         reset_read: "Réinitialiser la lecture"
+        dismiss_posts: "Ignorer les messages"
+        dismiss_topics: "Ignorer les sujets"
         dismiss_new: "Ignorer Nouveaux"
         toggle: "activer la sélection multiple des sujets"
         actions: "Actions sur sélection multiple"
@@ -656,6 +682,7 @@ fr:
       private_message: 'Commencer un message privé'
       list: 'Sujets'
       new: 'nouveau sujet'
+      unread: 'non-lus'
       new_topics:
         one: '1 nouveau sujet'
         other: '{{count}} nouveaux sujets'
@@ -668,13 +695,15 @@ fr:
       invalid_access:
         title: "Ce sujet est privé"
         description: "Désolé, vous n'avez pas accès à ce sujet !"
-        login_required: "Vous devez vous connecter pour voir ce sujet de discussion."
       server_error:
         title: "Sujet impossible à charger"
         description: "Désolé, nous n'avons pu charger ce sujet, probablement du à un problème de connexion. Merci de réessayer à nouveau. Si le problème persiste, merci de nous le faire savoir."
       not_found:
         title: "Sujet non trouvé"
         description: "Désolé, nous n'avons pas trouvé ce sujet. Peut-être a t-il été retiré par un modérateur ?"
+      total_unread_posts:
+        one: "vous avez 1 message non-lu dans ce sujet"
+        other: "vous avez {{count}} messages non-lus dans ce sujet"
       unread_posts:
         one: "vous avez 1 message non lu sur ce sujet"
         other: "vous avez {{count}} messages non lus sur ce sujet"
@@ -801,7 +830,6 @@ fr:
         email_placeholder: 'nom@exemple.com'
         success: "Nous avons envoyé un courriel à <b>{{email}}</b>. Nous vous avertirons lorsque l'invitation sera acceptée. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être a-t-elle déjà un compte utilisateur ?"
-      login_reply: 'Se connecter pour répondre'
       filters:
         n_posts:
           one: "1 message"
@@ -883,6 +911,8 @@ fr:
         confirm: "Voulez-vous vraiment abandonner votre message ?"
         no_value: "Non, le conserver"
         yes_value: "Oui, abandonner"
+      wiki:
+        about: "ce message est en mode wiki; tout le monde peut le modifier"
       archetypes:
         save: 'Sauvegarder les options'
       controls:
@@ -1127,15 +1157,19 @@ fr:
       invisible:
         help: "Ce sujet est invisible; Il ne sera pas affiché dans la liste des sujets et sera seulement accessible via un lien direct"
     posts: "Messages"
+    posts_lowercase: "messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
     original_post: "Message original"
     views: "Vues"
+    views_lowercase: "vues"
     replies: "Réponses"
     views_long: "ce sujet a été vu {{number}} fois"
     activity: "Activité"
     likes: "J'aime"
+    likes_lowercase: "j'aimes"
     likes_long: "il y a {{number}} j'aime dans ce sujet"
     users: "Utilisateurs"
+    users_lowercase: "utilisateurs"
     category_title: "Catégorie"
     history: "Historique"
     changed_by: "par {{author}}"
@@ -1165,6 +1199,9 @@ fr:
           one: "Non lus (1)"
           other: "Non lus ({{count}})"
         help: "sujets que vous suivez ou suivez attentivement actuiellement avec des messages non lus"
+        lower_title_with_count:
+          one: "1 non-lu"
+          other: "{{count}} non-lus"
       new:
         lower_title_with_count:
           one: "1 nouveau"
@@ -1251,11 +1288,20 @@ fr:
         title: "Signalements"
         old: "Ancien"
         active: "Actifs"
+        agree: "Accepter"
+        agree_title: "Confirme que le signalement est correct et valide."
+        agree_flag_modal_title: "Accepter et..."
         agree_flag_hide_post: "Accepter (caché le message + envoi d'un MP)"
         agree_flag_hide_post_title: "Cacher ce message et envoyer automatiquement un message privé urgent à l'utilisateur pour qu'il le modifie."
+        agree_flag: "Accepter le signalement"
+        agree_flag_title: "Accepter le signalement et garder le message inchangé"
         defer_flag: "Reporter"
+        defer_flag_title: "Retirer le signalement; il ne requière pas d'action pour le moment."
         delete: "Supprimer"
+        delete_title: "Supprimer le message signalé."
+        delete_post_defer_flag: "Supprimer le message et reporter le signalement"
         delete_post_defer_flag_title: "Supprimer le message; si c'est le premier message, le sujet sera supprimé"
+        delete_post_agree_flag: "Supprimer le message et accepter le signalement"
         delete_post_agree_flag_title: "Supprimer le message; si c'est le premier message, le sujet sera supprimé"
         delete_flag_modal_title: "Supprimer et..."
         delete_spammer: "Supprimer le spammer"
@@ -1263,6 +1309,7 @@ fr:
         disagree_flag_unhide_post: "Refuser (ré-affiché le message)"
         disagree_flag_unhide_post_title: "Supprimer tous les signalements de ce message et ré-affiché ce dernier"
         disagree_flag: "Refuser"
+        disagree_flag_title: "Refuser le signalement car il est invalide ou incorrect"
         clear_topic_flags: "Terminer"
         clear_topic_flags_title: "Ce sujet a été étudié et les problèmes ont été résolus. Cliquez sur Terminer pour enlever les signalements."
         more: "(plus...)"
@@ -1605,7 +1652,6 @@ fr:
         show_public_profile: "Afficher le profil public"
         impersonate: 'Incarner'
         ip_lookup: "IP de consultation"
-        log_out: "Se déconnecter"
         logged_out: "L'utilisateur s'est déconnecté de tous les appareils"
         revoke_admin: 'Révoquer les droits d''admin'
         grant_admin: 'Accorder les droits d''admin'

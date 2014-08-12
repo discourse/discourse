@@ -20,7 +20,6 @@ fr:
   posts: "messages"
   loading: "Chargement"
   powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, le rendu est meilleur avec le JavaScript activé'
-  log_in: "Se connecter"
   via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
   errors:
@@ -73,7 +72,7 @@ fr:
     one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien."
     other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens."
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
-  user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisé à poster de message."
+  user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   has_already_been_used: "a déjà été utilisé"
   invalid_characters: "contient des caractères invalides"
@@ -364,7 +363,6 @@ fr:
       title: 'Avertir {{username}}'
       description: 'Je souhaite discuter en privé avec cet utilisateur au sujet de ce message.'
       long_form: 'utilisateur avertis'
-      email_title: 'A propos de votre message sur "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Avertir un modérateur'
@@ -666,7 +664,6 @@ fr:
     allow_index_in_robots_txt: "Spécifier dans robots.txt que le site est autorisé à être indexer par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisé lors de la création de compte. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourrons pas s'enregistrer."
-    version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
     port: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Utiliser ce port HTTP plutôt que celui par défaut 80. Laissez vide par défaut 80."
     force_hostname: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Voulez-vous spécifier un nom d'hôte dans l'URL ? Sinon, laisser vide par défaut."
@@ -674,6 +671,8 @@ fr:
     invite_passthrough_hours: "Combien de temps un utilisateur peut encore utilisé une clé d'invitation après son expiration, en heure"
     invite_only: "L'inscription publique est désactivée, tous les nouveaux utilisateurs doivent explicitement être invités par les membres ou l'équipe du forum."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
+    min_username_length: "Longueur minimum des pseudos en nombre de caractères. ATTENTION : TOUS LES UTILISATEURS QUI SONT EN DESSOUS DE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
+    max_username_length: "Longueur maximum des pseudos en caractères. ATTENTION : TOUS LES UTILISATEURS QUI DÉPASSE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
     min_password_length: "Longueur minimale du mot de passe."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10 000 les plus utilisés."
     enable_sso: "Activer l'authentification unique via un site externe  (Note: désactive les invitations)"
@@ -820,6 +819,7 @@ fr:
     disable_edit_notifications: "Désactiver les notifications de modifications lorsque l'option 'download_remote_images_to_local' est activé."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs. Désactiver pour cacher les noms complets."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son @pseudo."
+    invites_per_page: "Afficher les invitations sur la page de l'utilisateur."
     short_progress_text_threshold: "Si le nombre de messages dans un sujet dépasse ce nombre, la barre de progression affichera uniquement le numéro de message actuel. Si vous modifiez la largeur de la barre de progression, vous devez peut être changer cette valeur."
     default_code_lang: "Coloration syntaxique par défaut appliquée à la syntaxe des langages de programmation des blocs de code GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
@@ -838,6 +838,7 @@ fr:
     notify_about_flags_after: "Si il y a des signalements qui n'ont pas été traités après ce nombre d'heure, envoyer un courriel à contact_email.  Désactiver la fonctionnalité en indiquant: 0."
     enable_cdn_js_debugging: "Autoriser /logs à afficher correctement les erreurs en ajoutant des permissions de crossorigin sur toutes les inclusions de js."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux admins de creer d'autres sujets."
+    vacuum_db_days: "Exécuter VACUUM FULL ANALYZE pour récupérer de l'espace dans la base de donnée après une migration (0 pour désactivé) "
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -1066,8 +1067,6 @@ fr:
     agreed: "Merci de nous en informer. Nous sommes en accord avec votre signalement et nous travaillons à sa résolution."
     agreed_and_deleted: "Merci de nous en informer. Nous sommes en accord avec votre signalement et avons supprimé le message."
     disagreed: "Merci de nous en informer. Nous travaillons à sa résolution."
-    deferred: "Merci de nous en informer. Nous travaillons à sa résolution."
-    deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
@@ -1101,7 +1100,6 @@ fr:
         Amusez-vous bien !
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir accepté l'invitation sur %{site_name}, et bienvenue !\n\nNous vous avons automatiquement généré un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter, vous pouvez :\n\n1. Utiliser votre identifiant préféré -- mais votre **adresse de courriel** devra être la même que celle de l'invitation que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique pour %{site_name} sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n[prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "Export terminé avec succès"
       text_body_template: "L'export a réussi."
@@ -1168,6 +1166,20 @@ fr:
         Nous n'avons pas trouvé où est votre réponse dans ce courriel. **Assurez vous d'avoir écrit votre réponse tout en haut du courriel** -- tout ce qui se trouve après est ignoré.
     email_reject_post_error:
       subject_template: "Problème de courriel -- Erreur d'envoi d'un message"
+      text_body_template: |
+        Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
+
+        Cela peut-être à cause de: format trop complexe, message trop long ou trop court. Veuillez réessayer, ou rédigé votre message directement sur le site si le problème persiste.
+    email_reject_post_error_specified:
+      subject_template: "Problème de courriel -- Erreur d'envoi d'un message"
+      text_body_template: |
+        Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
+
+        Raison:
+
+        %{post_error}
+
+        Veuillez corriger les erreurs et réessayer.
     email_reject_reply_key:
       subject_template: "Problème de courriel -- Mauvaise clé de réponse"
       text_body_template: |
