@@ -8,7 +8,7 @@
   @module Discourse
 **/
 export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
-  needs: ['modal', 'createAccount'],
+  needs: ['modal', 'createAccount', 'application'],
   authenticate: null,
   loggingIn: false,
   loggedIn: false,
@@ -37,8 +37,7 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
   loginDisabled: Em.computed.or('loggingIn', 'loggedIn'),
 
   showSignupLink: function() {
-    return !Discourse.SiteSettings.invite_only &&
-           Discourse.SiteSettings.allow_new_registrations &&
+    return this.get('controllers.application.canSignUp') &&
            !this.get('loggingIn') &&
            this.blank('authenticate');
   }.property('loggingIn', 'authenticate'),
@@ -77,7 +76,7 @@ export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
           $hidden_login_form.submit();
         }
 
-      }, function(e) {
+      }, function() {
         // Failed to login
         if (self.blank('loginName') || self.blank('loginPassword')) {
           self.flash(I18n.t('login.blank_username_or_password'), 'error');
