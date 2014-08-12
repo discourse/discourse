@@ -13,7 +13,11 @@ export default Discourse.Controller.extend({
   loadingNotifications: false,
   needs: ['application'],
 
-  showSignUpButton: Em.computed.alias('controllers.application.canSignUp'),
+  canSignUp: Em.computed.alias('controllers.application.canSignUp'),
+
+  showSignUpButton: function() {
+    return this.get('canSignUp') && !this.get('showExtraInfo');
+  }.property('canSignUp', 'showExtraInfo'),
 
   showStarButton: function() {
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');
