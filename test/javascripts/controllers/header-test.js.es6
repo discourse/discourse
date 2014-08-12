@@ -1,4 +1,6 @@
-moduleFor("controller:header", "controller:header");
+moduleFor("controller:header", "controller:header", {
+  needs: ['controller:application']
+});
 
 test("showNotifications action", function() {
   var resolveRequestWith;

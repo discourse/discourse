@@ -11,6 +11,9 @@ export default Discourse.Controller.extend({
   showExtraInfo: null,
   notifications: null,
   loadingNotifications: false,
+  needs: ['application'],
+
+  showSignUpButton: Em.computed.alias('controllers.application.canSignUp'),
 
   showStarButton: function() {
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');

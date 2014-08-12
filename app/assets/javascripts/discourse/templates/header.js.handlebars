@@ -41,9 +41,11 @@
         </div>
       {{/unless}}
       {{#unless currentUser}}
+        {{#if showSignUpButton}}
         <button {{action showCreateAccount}} class='btn btn-primary btn-small sign-up-button'>
           {{i18n sign_up}}
         </button>
+        {{/if}}
         <button {{action showLogin}} class='btn btn-primary btn-small login-button'>
           {{icon user}} {{i18n log_in}}
         </button>
