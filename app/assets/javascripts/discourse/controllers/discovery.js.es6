@@ -1,12 +1,4 @@
-/**
-  The base controller for discoverying topics
-
-  @class DiscoveryController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.DiscoveryController = Discourse.ObjectController.extend({
+export default Discourse.ObjectController.extend({
   loading: false,
   loadingSpinner: false,
   scheduledSpinner: null,
@@ -25,4 +17,3 @@ Discourse.DiscoveryController = Discourse.ObjectController.extend({
   showMoreMonthlyUrl: function() { return this.showMoreUrl('monthly'); }.property('category', 'noSubcategories'),
   showMoreYearlyUrl: function() { return this.showMoreUrl('yearly'); }.property('category', 'noSubcategories')
 });
-
