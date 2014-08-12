@@ -333,13 +333,13 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_dont_block'),
+      "label": I18n.t('admin.user.delete_dont_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(false);
       }
     }, {
-      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_and_block'),
+      "label": '<i class="fa fa-exclamation-triangle"></i>' + I18n.t('admin.user.delete_and_block'),
       "class": "btn btn-danger",
       "callback": function(){
         performDestroy(true);
