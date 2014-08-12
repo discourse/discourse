@@ -2,22 +2,14 @@ class BadgesController < ApplicationController
   skip_before_filter :check_xhr, only: [:index, :show]
 
   def index
-    badges = Badge.all
-
-    if (params[:only_listable] == "true") || !request.xhr?
-      # NOTE: this is sorted client side if needed
-      badges = badges.includes(:badge_grouping)
-                     .where(enabled: true, listable: true)
-
-    end
-
-    badges = badges.to_a
-
-    user_badges = nil
-    if current_user
-      user_badges = Set.new(current_user.user_badges.select('distinct badge_id').pluck(:badge_id))
-    end
+    badges = get_badge
+    
+    user_badges = current_user.nil? \
+                  ? nil 
+                  : Set.new(current_user.user_badges.select('distinct badge_id').pluck(:badge_id))
+    
     serialized = MultiJson.dump(serialize_data(badges, BadgeIndexSerializer, root: "badges", user_badges: user_badges))
+    
     respond_to do |format|
       format.html do
         store_preloaded "badges", serialized
@@ -46,5 +38,16 @@ class BadgesController < ApplicationController
       end
       format.json { render json: serialized }
     end
+  end
+  
+  private
+  def get_badge
+    if (params[:only_listable] == "true") || !request.xhr?
+      # NOTE: this is sorted client side if needed
+      return Badge.all.includes(:badge_grouping)
+                     .where(enabled: true, listable: true).to_a
+    end
+    
+    return Badge.all.to_a
   end
 end
