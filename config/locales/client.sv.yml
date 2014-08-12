@@ -86,7 +86,6 @@ sv:
     yes_value: "Ja"
     generic_error: "Vi beklagar, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
-    log_in: "Logga in"
     age: "Ålder"
     joined: "Gick med"
     admin_title: "Admin"
@@ -379,7 +378,6 @@ sv:
       invite: "Skriv in ditt användarnamn eller e-postadress, så vi skickar dig ett mail om lösenordsåterställning."
       reset: "Återställ Lösenord"
     login:
-      title: "Logga in"
       password: "Lösenord"
       email_placeholder: "email eller användarnamn"
       error: "Okänt fel"

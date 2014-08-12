@@ -20,7 +20,6 @@ he:
   posts: "הודעות"
   loading: "טוען"
   powered_by_html: 'מונע ע"י <a href="http://www.discourse.org">Discourse</a>, פועל מיטבית עם Javascript'
-  log_in: "התחברות"
   via: "%{username} עם %{site_name}"
   is_reserved: "שמור"
   errors:
@@ -339,7 +338,6 @@ he:
       title: 'התרע ל-{{username}}'
       description: 'ההודעה הזו כוללת משהו עליו אני רוצה לדבר עם האדם ישירות ובפרטיות.'
       long_form: 'המשתמש הותרע'
-      email_title: 'בנוגע להודעתך ב-"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'התרעה למנחים'
@@ -641,7 +639,6 @@ he:
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "רשימה של מתחמי דוא\"ל (email domains) בהם למשתמשים אסור לרשום חשבונות. לדוגמא: mailinator.com trashmail.net"
     email_domains_whitelist: "רשימת של מתחמי דוא\"ל (email domains) שמשתמשים חייבים(!) כדי להירשם ולפתוח חשבון. אזהרה: משתמשים עם כתובות דוא\"ל אחרות מאלו המפורטות כאן לא יאושרו באתר!"
-    version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסא חדשה של Discourse זמינה."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
@@ -649,6 +646,8 @@ he:
     invite_passthrough_hours: "כמה זמן, בשעות, יכול/ה משתמשים לעשות שימוש בהזמנה שנשלחה כדי להתחבר "
     invite_only: "הרשמה פתוחה מבוטלת, על כל המשתמשים החדשים להיות מוזמנים על ידי חבר/ת בצוות."
     login_required: "דרשו הזדהות לקריאת תוכן באתר זה, אל תאפשרו גישה אנונימית."
+    min_username_length: "מספר התווים המינימלי לאורך שם המשתמש/ת המינימלי. אזהרה: משתמשים קיימים עם שמות הקצרים מערך זה לא יוכלו להתחבר לאתר."
+    max_username_length: "מספר תווים מקסימלי המותר לשם משתמש/ת. אזהרה: משתמשים קיימים עם שמות הארוכים מערך זה לא יוכלו להתחבר לאתר."
     min_password_length: "Minimum password length."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
     enable_sso: "אפשרו התחברות יחידה באמצעות אתר חיצוני (הערה: מבטל אפשרות להזמנות)"
@@ -795,6 +794,7 @@ he:
     disable_edit_notifications: "משמש כדי לנטרל התראות עריכה כאשר תפעילו את האפשרות 'הורדת_תמונות_מרחוק_למקומי' בהעדפות האתר."
     enable_names: "אפשרו הצגת שמות מלאים של משתמשים. בטלו אפשרות זו כדי להסתיר את השמות המלאים."
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפרסומיהם, בנוסף ל@שם_המשתמש שלהם."
+    invites_per_page: "ברירת המחדל, הזמנות המוצגות בעמוד המשתמש."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "כאשר מישהו/מישהי מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. בטלו אפשרות זו באמצעות הזנה של 0."
@@ -813,6 +813,7 @@ he:
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
     enable_cdn_js_debugging: "אפשרו ל-/logs להציג שגיאות בצורה נכונה באמצעות הוספת הרשאות לגישה בין אתרים (crossorigin permissions) בכל ה-js הכלולים."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו הודעה המבקשת מן המנהלים/מנהלות ליצור עוד נושאים."
+    vacuum_db_days: "הריצו VACUUM FULL ANALYZE כדי להשיב שטח בסיס הנתונים אחרי העברות (כוונו ל-0 כדי לנטרל)"
     errors:
       invalid_email: "כתובת דוא\"ל לא קיימת."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
@@ -1038,8 +1039,6 @@ he:
     agreed: "תודה שעדכנת אותנו. אנחנו מסכימים שיש כאן בעיה ואנחנו מנסים לבדוק את העניין."
     agreed_and_deleted: "תודה שעדכנת אותנו. אנחנו מסכימים שישנה בעיה והסרנו את הפרסום."
     disagreed: "תודה שעדכנת אותנו. אנחנו בודקים את זה."
-    deferred: "תודה שעדכנת אותנו. אנחנו בודקים את בזה."
-    deferred_and_deleted: "תודה שעדכנת אותנו. הסרנו את הפרסום."
   system_messages:
     post_hidden:
       subject_template: "הודעה הוסתרה בעקבות סימון"
@@ -1072,7 +1071,6 @@ he:
         תהנו מהביקור!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
-      text_body_template: "תודה שקיבלתם את ההזמנה שנשלחה אליך להצטרפות ל%{site_name - ברוכים הבאים!\n\nיצרנו לך באופן אוטומטי שם משתמש/ת: **%{username}**, אבל תוכל/י לשנות אותו בכל עת באמצעות ביקור ב[עמוד פרופיל המשתמש/ת שלך][prefs]. \n\nכדי להתחבר פעם נוספת:\n\n1. התחברו בדרך הנוחה לך - אבל היא חייבת להתבסס על **אותה כתובת דוא\"ל** בה קיבלת את ההזמנה המקורית. אחרת, לא נוכל לדעת שזה אתם שם!\n\n2. צרו סיסמא ייחודית ב[עמוד הפרופיל האישי][prefs] שלכם, והשתמשו בו כדי להתחבר.\n\n%{new_user_tips}\n\nאנו מאמינים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines בכל עת.\n\nמאחלים לכם הנאה מהשהייה כאן!\n\n [prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "Export completed successfully"
       text_body_template: "The export was successful."
@@ -1138,6 +1136,21 @@ he:
         לא הצלחנו לאתר את התגובה שלך במייל. **אנא הקפידו לכתוב את כל התגובה בראש המייל** כל מה שיופיע מתחת לכותרת המסר אליו הגבתם לא ייקלט על ידי המערכת.
     email_reject_post_error:
       subject_template: "בעיית דוא\"ל - שגיאת פרסום (Posting error)"
+      text_body_template: |
+        אנו מצטערים, אך מסר הדוא"ל שלך ל-%{destination}  (שכותרתו %{former_title}) לא עבר.
+
+        סיבות אפשריות לעניין: מבנה מורכב, המסר ארוך מידי, המסר קצר מידי. אנא נסו שוב, או פרסמו באמצעות האתר עם הבעיה נמשכת.
+    email_reject_post_error_specified:
+      subject_template: "בעיית דוא\"ל - שגיאה בפרסום."
+      text_body_template: |
+        אנחנו מצטערים, אך הודעת הדוא"ל שלך אל %{destination} (%{former_title}) לא עברה.
+
+        מסר השגיאה:
+
+
+        %{post_error}
+
+        אנא נסו לתקן את השגיאות ולשלוח פעם נוספת.
     email_reject_reply_key:
       subject_template: "בעיות דוא\"ל -- מפתח התגובה (Reply Key) פגום"
       text_body_template: |

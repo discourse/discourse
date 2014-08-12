@@ -70,7 +70,6 @@ ja:
     yes_value: "はい"
     generic_error: "申し訳ありませんが、エラーが発生しました"
     generic_error_with_reason: "エラーが発生しました: %{error}"
-    log_in: "サインイン"
     age: "経過"
     joined: "参加者"
     admin_title: "管理者"
@@ -216,6 +215,7 @@ ja:
       notifications: "通知"
       disable_jump_reply: "回答後新しいポストに移動しない。"
       dynamic_favicon: "favicon に受信したメッセージ通知を表示する"
+      edit_history_public: "投稿編集履歴を公開する"
       external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
       enable_quoting: "ハイライトしたテキストを引用して回答する"
       change: "変更"
@@ -312,7 +312,6 @@ ja:
       last_emailed: "最終メール"
       last_seen: "最終アクティビティ"
       created: "作成"
-      log_out: "ログアウト"
       location: "所在地"
       website: "ウェブサイト"
       email_settings: "メール"
@@ -329,6 +328,11 @@ ja:
       new_topic_duration:
         label: "以下の条件でトピックを新規と見なす"
         not_viewed: "未読のもの"
+        last_here: "前回ログアウト後に投稿されたもの"
+        after_n_days:
+          other: "過去{{count}}日間に投稿されたもの"
+        after_n_weeks:
+          other: "過去{{count}}週間に投稿されたもの"
       auto_track_topics: "以下のタイミングで、自分が投稿したトピックを自動的にトラックする"
       auto_track_options:
         never: "トラックしない"
@@ -446,7 +450,6 @@ ja:
       complete_username: "<b>%{username}</b>,アカウントにパースワード再設定メールを送りました。"
       complete_email: "<b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
     login:
-      title: "サインイン"
       username: "ログイン名"
       password: "パスワード"
       email_placeholder: "メールアドレスかユーザ名"
@@ -631,7 +634,6 @@ ja:
       invalid_access:
         title: "トピックはプライベートです"
         description: "申し訳ありませんが、このトピックへのアクセスは許可されていません。"
-        login_required: "この投稿を読むためにはサインインをして下さい。"
       server_error:
         title: "トピックの読み込みに失敗しました"
         description: "申し訳ありませんが、トピックの読み込みに失敗しました。もう一度試してください。もし問題が継続する場合はお知らせください。"
@@ -761,7 +763,6 @@ ja:
         email_placeholder: 'メールアドレス'
         success: "<b>{{email}}</b>に招待を送りました。"
         error: "申し訳ありませんが招待に失敗しました。既にユーザ登録済かもしれません。"
-      login_reply: 'サインインして回答'
       filters:
         n_posts:
           other: "{{count}} ポスト"
@@ -1494,7 +1495,6 @@ ja:
         show_public_profile: "一般プロファイルを表示"
         impersonate: 'このユーザになりすます'
         ip_lookup: "IP検索"
-        log_out: "サインアウト"
         logged_out: "すべてのデバイスでログアウトしました"
         revoke_admin: '管理者権限を剥奪'
         grant_admin: '管理者権限を付与'
@@ -1590,6 +1590,7 @@ ja:
           developer: '開発者向け'
           embedding: "埋め込む"
           legal: "法律に基づく情報"
+          uncategorized: 'その他'
           backups: "バックアップ"
           login: "ログインする"
       badges:

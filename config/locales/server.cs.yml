@@ -308,7 +308,6 @@ cs:
       title: 'Informovat uživatele {{username}}'
       description: 'Tento příspěvek obsahuje něco, kvůli čemu chci s tímto člověkem mluvím přímo a soukromě.'
       long_form: 'informoval uživatele'
-      email_title: 'Ohledně vašeho příspěvku v tématu "%{title}"'
       email_body: "%{link}\\\n\\\n%{message}\n"
     notify_moderators:
       title: 'Upozornit moderátory'
@@ -522,7 +521,6 @@ cs:
     top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
-    version_checks: "Kontrolovat aktuálnost z 'Discourse Hubu' a zobrazovat zprávy o nových verzích v administrační sekci"
     port: "Používat tento HTTP port místo standardního portu 80. Nechte prázdné pro výchozí port, užitečné hlavně pro vývoj"
     force_hostname: "Na pevno nastaví hostitele v URL. Nechte prázdné pro výchozí server, užitečné hlavně pro vývoj"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"

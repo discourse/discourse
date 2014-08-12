@@ -70,13 +70,13 @@ zh_CN:
     yes_value: "是"
     generic_error: "抱歉，发生了一个错误。"
     generic_error_with_reason: "发生了一个错误：%{error}"
-    log_in: "登录"
     age: "时间"
     joined: "加入时间："
     admin_title: "管理"
     flags_title: "报告"
     show_more: "显示更多"
     links: "链接"
+    links_lowercase: "链接"
     faq: "常见问题（FAQ）"
     guidelines: "指引"
     privacy_policy: "隐私政策"
@@ -113,6 +113,13 @@ zh_CN:
       not_bookmarked: "您已经阅读过此帖；点此给它加上书签"
       last_read: "这是您阅读过的最后一帖；点此给它加上书签"
       remove: "删除书签"
+    topic_count_latest:
+      other: "{{count}} 个新的或更新的主题。"
+    topic_count_unread:
+      other: "{{count}} 未读主题。"
+    topic_count_new:
+      other: "{{count}} 个新主题。"
+    click_to_show: "点此显示。"
     preview: "预览"
     cancel: "取消"
     save: "保存修改"
@@ -313,7 +320,6 @@ zh_CN:
       last_emailed: "最后一次邮寄"
       last_seen: "最后一次活动"
       created: "加入时间"
-      log_out: "登出"
       location: "地址"
       website: "网站"
       email_settings: "电子邮箱"
@@ -422,6 +428,7 @@ zh_CN:
     mute: 防打扰
     unmute: 解除防打扰
     last_post: 最后一帖
+    last_post_lowercase: 最后一帖
     summary:
       enabled_description: "您正在查看这个主题的概括版本：这些是由社群决定的最有意思的帖子。要查看所有帖子，请点击下方。"
       description: "有 <b>{{count}}</b> 个回复。"
@@ -429,6 +436,8 @@ zh_CN:
       enable: '概括本主题'
       disable: '显示所有帖子'
     deleted_filter:
+      enabled_description: "这个主题包含已删除的帖子，他们已经被隐藏。"
+      disabled_description: "主题中被删除的帖子已显示。"
       enable: "隐藏已删除的帖子"
       disable: "显示已删除的帖子"
     private_message_info:
@@ -439,6 +448,7 @@ zh_CN:
     username: '用户名'
     last_seen: '最后一次活动时间'
     created: '创建时间'
+    created_lowercase: '创建时间'
     trust_level: '用户级别'
     search_hint: '用户名或用户电子邮件'
     create_account:
@@ -452,7 +462,6 @@ zh_CN:
       complete_username: "如果您的账户名 <b>%{username}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
       complete_email: "如果您的账户 <b>%{email}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
     login:
-      title: "登录"
       username: "用户"
       password: "密码"
       email_placeholder: "电子邮箱地址或用户名"
@@ -559,6 +568,18 @@ zh_CN:
       none: "您当前没有任何通知。"
       more: "浏览以前的通知"
       total_flagged: "被报告帖子的总数"
+      mentioned: "<i title='提及' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
+      quoted: "<i title='引用' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      replied: "<i title='回复' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='回复' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      edited: "<i title='编辑' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='赞' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      private_message: "<i title='私信' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='私信' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invitee_accepted: "<i title='已接受您的邀请' class='fa fa-user'></i><p><span>{{username}}</span> 已接受您的邀请</p>"
+      moved_post: "<i title='移动了帖子' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移动了 {{description}}</p>"
+      linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='徽章授予' class='fa fa-certificate'></i><p>您被授予了 {{description}}</p>"
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -592,6 +613,8 @@ zh_CN:
     topics:
       bulk:
         reset_read: "设为未读"
+        dismiss_posts: "忽略帖子"
+        dismiss_topics: "忽略主题"
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"
@@ -627,6 +650,7 @@ zh_CN:
       private_message: '开启一段私下交流'
       list: '主题'
       new: '新主题'
+      unread: '未读'
       new_topics:
         other: '{{count}} 新主题'
       unread_topics:
@@ -637,13 +661,14 @@ zh_CN:
       invalid_access:
         title: "这是私密主题"
         description: "抱歉，您没有访问此主题的权限！"
-        login_required: "您需要登录才能阅读此主题。"
       server_error:
         title: "载入主题失败"
         description: "抱歉，无法载入此主题。有可能是网络连接问题导致的，请重试。如果问题始终存在，请告诉我们。"
       not_found:
         title: "未找到主题"
         description: "抱歉，无法找到此主题。可能已被版主删除。"
+      total_unread_posts:
+        other: "在这个主题中，您有 {{count}} 条未读的帖子"
       unread_posts:
         other: "在这个主题中，您有 {{count}} 条未读的帖子"
       new_posts:
@@ -767,7 +792,6 @@ zh_CN:
         email_placeholder: '电子邮箱地址'
         success: "我们发了一封邀请邮件给 <b>{{email}}</b>。我们将在邀请被接受后通知您。检查您的用户中的邀请标签页来追踪您的邀请。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
-      login_reply: '登录后回复'
       filters:
         n_posts:
           other: "{{count}} 个帖子"
@@ -841,6 +865,8 @@ zh_CN:
         confirm: "您确定要放弃编辑您的帖子吗？"
         no_value: "否"
         yes_value: "是"
+      wiki:
+        about: "这个帖子是维基；任何人都能编辑它"
       archetypes:
         save: '保存选项'
       controls:
@@ -1065,15 +1091,19 @@ zh_CN:
       invisible:
         help: "本主题不可见；它将不被显示在主题列表中，只能通过一个直接链接来访问"
     posts: "帖子"
+    posts_lowercase: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
     original_post: "原始帖"
     views: "浏览"
+    views_lowercase: "浏览"
     replies: "回复"
     views_long: "本主题已经被浏览过 {{number}} 次"
     activity: "活动"
     likes: "赞"
+    likes_lowercase: "赞"
     likes_long: "本主题已有 {{number}} 次赞"
     users: "参与者"
+    users_lowercase: "参与者"
     category_title: "分类"
     history: "历史"
     changed_by: "由 {{author}}"
@@ -1103,6 +1133,9 @@ zh_CN:
           one: "1 个未读主题"
           other: "{{count}} 个未读主题"
         help: "您正在监视或追踪的主题中有未阅帖子的主题"
+        lower_title_with_count:
+          one: "1 条未读"
+          other: "{{count}} 条未读"
       new:
         lower_title_with_count:
           one: "1 新"
@@ -1189,11 +1222,20 @@ zh_CN:
         title: "报告"
         old: "旧的"
         active: "待处理"
+        agree: "已批准"
+        agree_title: "确认这个标记有效且正确"
+        agree_flag_modal_title: "批准并..."
         agree_flag_hide_post: "批准（隐藏并发送私信）"
         agree_flag_hide_post_title: "隐藏帖子并自动发送私信要求作者修改"
+        agree_flag: "批准这个标记"
+        agree_flag_title: "批准这个标记并且保持帖子不变"
         defer_flag: "推迟"
+        defer_flag_title: "移除标记；这次不处理。"
         delete: "删除"
+        delete_title: "删除标记指向的帖子。"
+        delete_post_defer_flag: "删除帖子并推迟标记"
         delete_post_defer_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
+        delete_post_agree_flag: "删除帖子并批准此标记"
         delete_post_agree_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
         delete_flag_modal_title: "删除并..."
         delete_spammer: "删除垃圾发布者"
@@ -1201,6 +1243,7 @@ zh_CN:
         disagree_flag_unhide_post: "不批准（不隐藏帖子）"
         disagree_flag_unhide_post_title: "清除此帖的任何报告，并使其重新可见"
         disagree_flag: "不批准"
+        disagree_flag_title: "拒绝这个报告，无效或不正确"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "这个主题已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
         more: "（更多……）"
@@ -1534,7 +1577,6 @@ zh_CN:
         show_public_profile: "显示公开介绍"
         impersonate: '检视角度'
         ip_lookup: "IP 查询"
-        log_out: "登出"
         logged_out: "用户在所有设备都已登出"
         revoke_admin: '吊销管理员资格'
         grant_admin: '赋予管理员资格'

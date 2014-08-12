@@ -236,7 +236,6 @@ pt:
       title: 'Notificar {{username}}'
       description: 'Esta postagem contém algo sobre o que quero falar com esta pessoal diretamente e em particular.'
       long_form: 'usuário notificado'
-      email_title: 'Sobre a sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notificar moderadores'
@@ -411,7 +410,6 @@ pt:
     enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
     post_menu: "A ordem dos items no menu da postagem."
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
-    version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
     port: "Se você quiser especificar a porta na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
     force_hostname: "Se você quiser especificar um hostname na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
     invite_expiry_days: "Quantos dias as chaves de convite são válidas."

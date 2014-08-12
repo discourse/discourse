@@ -20,7 +20,6 @@ da:
   posts: "indlæg"
   loading: "Indlæser"
   powered_by_html: 'Siden er lavet med <a href="http://www.discourse.org">Discourse</a>, opleves bedst med JavaScript slået til'
-  log_in: "Log på"
   via: "%{username} via %{site_name}"
   is_reserved: "er reservet"
   errors:
@@ -340,7 +339,6 @@ da:
       title: 'Underret {{username}}'
       description: 'Dette indlæg indeholder noget, som jeg ønsker at diskutere privat med forfatteren.'
       long_form: 'underrettede bruger'
-      email_title: 'Angående dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Underret moderatorer'
@@ -543,7 +541,6 @@ da:
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     track_external_right_clicks: "Spor højreklik på eksterne links (f.eks.: åbn i ny tab); deaktiveret som standard fordi den omskriver URLer"
     enable_badges: "Aktiver badge systemet (eksperimentielt)"
-    version_checks: "Kontakt Discourse Hub for at søge efter opdateringer og vise versionsinfo på admin-dashboardet"
     port: "KUN FOR UDVIKLERE! ADVARSEL! Brug denne HTTP-port i stedet for standarden, som er port 80. Lad feltet stå tomt for at bruge standardværdien."
     force_hostname: "KUN FOR UDVIKLERE! ADVARSEL! Angiv et host-navn i URLen. Lad feltet stå tomt for at bruge standardværdien."
     invite_expiry_days: "Hvor længe brugerinvitationsnøgler er gyldige, i dage."

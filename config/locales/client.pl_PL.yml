@@ -102,7 +102,6 @@ pl_PL:
     yes_value: "Tak"
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
-    log_in: "Zaloguj się"
     age: "Wiek"
     joined: "Dołączył"
     admin_title: "Admin"
@@ -340,7 +339,6 @@ pl_PL:
       last_emailed: "Ostatnio otrzymał email"
       last_seen: "Ostatnio widziany"
       created: "Dołączył"
-      log_out: "Wyloguj"
       location: "Położenie"
       website: "Strona internetowa"
       email_settings: "Email"
@@ -455,7 +453,6 @@ pl_PL:
       complete_username: "Jeśli jakieś mamy konto o nazwie użytkownika <b>%{username}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
     login:
-      title: "Zaloguj się"
       username: "Użytkownik"
       password: "Hasło"
       email_placeholder: "adres email lub nazwa użytkownika"
@@ -643,7 +640,6 @@ pl_PL:
       invalid_access:
         title: "Temat jest prywatny"
         description: "Przepraszamy, nie masz dostępu do tego tematu!"
-        login_required: "Musisz się zalogować by wyświetlić ten temat."
       server_error:
         title: "Wystąpił błąd przy wczytywaniu Tematu"
         description: "Przepraszamy, nie możliwe było wczytanie tematu, możliwe że wystąpił problem z połączeniem. Prosimy, spróbuj ponownie. Jeżeli problem wystąpi ponownie, powiadom administrację."
@@ -763,7 +759,6 @@ pl_PL:
         email_placeholder: 'nazwa@example.com'
         success: "Wysłaliśmy zaproszenie do <b>{{email}}</b>. Powiadomimy Ciebie jeśli zaproszenie zostanie przyjęte. Sprawdzaj zakładkę zaproszenia na Twoim profilu użytkownika by śledzić swoje zaproszenia."
         error: "Przepraszamy, nie mogliśmy zaprosić tej osoby. Być może jest już na forum?"
-      login_reply: 'Zaloguj się by odpowiedzieć'
       filters:
         n_posts:
           one: "1 wpis"
@@ -1544,7 +1539,6 @@ pl_PL:
         refresh_browsers: "Wymuś odświeżenie przeglądarki"
         show_public_profile: "Pokaż profil publiczny"
         impersonate: 'Podszyj się'
-        log_out: "Wyloguj się"
         logged_out: "Użytkownik został wylogowany na wszystkich urządzeniach."
         revoke_admin: 'Odbierz status admina'
         grant_admin: 'Przyznaj status admina'

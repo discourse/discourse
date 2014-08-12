@@ -20,7 +20,6 @@ nl:
   posts: "berichten"
   loading: "Laden"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, werkt het beste met JavaScript ingeschakeld'
-  log_in: "Inloggen"
   via: "%{username} via %{site_name}"
   is_reserved: "is gereserveerd"
   errors:
@@ -321,7 +320,6 @@ nl:
       title: 'Stuur {{username}} een privébericht'
       description: 'In dit bericht staat iets waarover ik de schrijver direct en privé wil spreken.'
       long_form: 'bericht aan schrijver verstuurd'
-      email_title: 'Betreft je bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Licht moderators in'
@@ -543,7 +541,6 @@ nl:
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
     topics_per_period_in_top_summary: "Aantal topics in het top-topics overzicht"
     enable_badges: "Activeer het badgesysteem (experimenteel)"
-    version_checks: "Ping de Discourse-hub voor versieupdates and laat versiemeldingen zien in het /admin dashboard"
     port: "DEVELOPER ONLY! WARNING! Mocht je een specifieke poort willen toewijzen aan de URL. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     force_hostname: "DEVELOPER ONLY! WARNING! Mocht je een specifieke hostname willen toewijzen. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."

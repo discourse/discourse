@@ -86,13 +86,13 @@ he:
     yes_value: "כן"
     generic_error: "סליחה, ארעה שגיאה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
-    log_in: "התחבר"
     age: "גיל"
     joined: "הצטרף"
     admin_title: "ניהול"
     flags_title: "סימוני הודעה"
     show_more: "הראה עוד"
     links: "קישורים"
+    links_lowercase: "קישורים"
     faq: "שאלות נפוצות"
     guidelines: "כללי התנהלות"
     privacy_policy: "מדיניות פרטיות"
@@ -134,6 +134,16 @@ he:
       not_bookmarked: "קראת הודעה זו, לחץ להוספה למועדפים"
       last_read: "זו ההודעה האחרונה שקראת, לחץ להוספה למועדפים"
       remove: "הסר מהמועדפים"
+    topic_count_latest:
+      one: "נושא חדש או עדכון {{count}} ."
+      other: "{{count}} נושאים חדשים או עדכונים."
+    topic_count_unread:
+      one: "נושא שלא נקרא {{count}}."
+      other: "{{count}} נושאים שלא נקראו."
+    topic_count_new:
+      one: "נושא {{count}} חדש."
+      other: "{{count}} נושאים חדשים."
+    click_to_show: "הקליקו כדי להציג."
     preview: "תצוגה מקדימה"
     cancel: "ביטול"
     save: "שמור שינויים"
@@ -337,7 +347,6 @@ he:
       last_emailed: "נשלח לאחרונה בדואר אלקטרוני"
       last_seen: "נראה"
       created: "הצטרף"
-      log_out: "התנתקות"
       location: "מיקום"
       website: "אתר"
       email_settings: "דואר אלקטרוני"
@@ -450,6 +459,7 @@ he:
     mute: השתק
     unmute: בטל השתקה
     last_post: הודעה אחרונה
+    last_post_lowercase: פרסום אחרון
     summary:
       enabled_description: "אתם צופים בסיכום של נושא זה: רק הפרסומים המעוניינים ביותר, כפי שנבחרו על ידי הקהילה. על מנת לצפות שוב בכל הפרסומים, לחצו על הכפתור למטה."
       description: "ישנן <b> {{count}}</b> תגובות"
@@ -457,6 +467,8 @@ he:
       enable: 'סכם נושא זה'
       disable: 'הצג את כל ההודעות'
     deleted_filter:
+      enabled_description: "נושא זה מכיל פרסומים שנמחקו, אשר הוסתרו."
+      disabled_description: "פרסומים שנמחקו בנושא זה מוצגים כעת."
       enable: "הסתר פוסטים מחוקים"
       disable: "הצג פוסטים מחוקים"
     private_message_info:
@@ -467,6 +479,7 @@ he:
     username: 'שם משתמש'
     last_seen: 'נצפה'
     created: 'נוצר'
+    created_lowercase: 'נוצר/ו'
     trust_level: 'רמת אמון'
     search_hint: 'שם משתמש/ת או כתובת דוא"ל'
     create_account:
@@ -480,7 +493,6 @@ he:
       complete_username: "אם קיים חשבון שמתאים לשם המשתמש <b>%{username}</b>, אתה אמור לקבל בקרוב מייל עם הוראות לאיפוס הסיסמא. "
       complete_email: "אם החשבון מתאים ל <b>%{email}</b>, אתה אמור לקבל בקרוב מעעל עם הוראות לאיפוס הסיסמא."
     login:
-      title: "התחבר"
       username: "משתמש"
       password: "סיסמה"
       email_placeholder: "דואר אלקטרוני או סיסמה"
@@ -587,6 +599,18 @@ he:
       none: "אין לך התרעות כרגע."
       more: "הצג התרעות ישנות יותר"
       total_flagged: "סך הכל נושאים מדוגללים"
+      mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> אישר/ה את הזמנתך</p>"
+      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> הזיז/ה {{description}}</p>"
+      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>הוענק/ו לך {{description}}</p>"
     upload_selector:
       title: "הוספת תמונה"
       title_with_attachments: "הוספת תמונה או קובץ"
@@ -620,6 +644,8 @@ he:
     topics:
       bulk:
         reset_read: "איפוס נקראו"
+        dismiss_posts: "ביטול פרסומים"
+        dismiss_topics: "דחיית נושאים"
         dismiss_new: "שחרור חדשים"
         toggle: "החלף קבוצה מסומנת של נושאים"
         actions: "מקבץ פעולות"
@@ -656,6 +682,7 @@ he:
       private_message: 'התחלת הודעה פרטית'
       list: 'נושאים'
       new: 'נושא חדש'
+      unread: 'לא נקרא/ו'
       new_topics:
         one: 'נושא חדש אחד'
         other: '{{count}} נושאים חדשים'
@@ -668,13 +695,15 @@ he:
       invalid_access:
         title: "הנושא פרטי"
         description: "סליחה, איך אין לך גישה לנושא הזה!"
-        login_required: "עליך להתחבר כדי לצפות בנושא זה."
       server_error:
         title: "שגיאה בטעינת נושא"
         description: "סליחה, לא יכולנו לטעון את הנושא הזה, ייתכן שבשל תקלת תקשורת. אנא נסי שוב. אם הבעיה נמשכת, הודיעו לנו."
       not_found:
         title: "נושא לא נמצא"
         description: "סליחה, לא יכולנו למצוא את הנושא הזה. אולי הוא הוסר על ידי מנהל?"
+      total_unread_posts:
+        one: "יש לכם פרסום אחד שלא נקרא בנושא זה"
+        other: "יש לכם {{count}} פרסומים שלא נקראו בנושא זה"
       unread_posts:
         one: "יש לך הודעה אחת שלא נקראה בנושא הזה"
         other: "יש לך {{count}} הודעות ישנות שלא נקראו בנושא הזה"
@@ -801,7 +830,6 @@ he:
         email_placeholder: 'name@example.com'
         success: "שלחנו הזמנה אל  <b>{{email}}</b>. נודיע לך כאשר ההזמנה תתקבל. בדקו את לשונית ההזמנות בעמוד המשתמש/ת שלך כדי לעקוב אחר ההזמנות ששלחת."
         error: "סליחה, לא יכולנו להזמין את האדם הזה, אולי הוא כבר רשום?"
-      login_reply: 'התחבר כדי להגיב'
       filters:
         n_posts:
           one: "הודעה אחת"
@@ -883,6 +911,8 @@ he:
         confirm: "האם אתה רוצה לנטוש את ההודעה שלך?"
         no_value: "לא, שמור אותה"
         yes_value: "כן, נטוש"
+      wiki:
+        about: "פרסום זה הינו ויקי; כל אחד/אחת יכולים לערוך אותו"
       archetypes:
         save: 'שמור אפשרויות'
       controls:
@@ -1127,15 +1157,19 @@ he:
       invisible:
         help: "הנושא הזה בלתי נראה; הוא לא יוצג יותר ברשימת הנושאים, וניתן לגשת אליו רק עם קישור ישיר"
     posts: "הודעות"
+    posts_lowercase: "פרסומים"
     posts_long: "יש {{number}} הודעות בנושא הזה"
     original_post: "הודעה מקורית"
     views: "צפיות"
+    views_lowercase: "תצוגות"
     replies: "תגובות"
     views_long: "הנושא הזה נצפה {{number}} פעמים"
     activity: "פעילות"
     likes: "לייקים"
+    likes_lowercase: "לייקים"
     likes_long: "יש {{number}} לייקים לנושא הזה"
     users: "משתמשים"
+    users_lowercase: "משתמשים"
     category_title: "קטגוריה"
     history: "היסטוריה"
     changed_by: "מאת {{author}}"
@@ -1165,6 +1199,9 @@ he:
           one: "לא נקרא (1)"
           other: "לא נקראו ({{count}})"
         help: "נושאים שאתם כרגע צופים או עוקבים אחריהם עם פרסומים שלא נקראו"
+        lower_title_with_count:
+          one: "1 שלא נקרא"
+          other: "{{count}} שלא נקראו"
       new:
         lower_title_with_count:
           one: "1 חדש"
@@ -1251,11 +1288,20 @@ he:
         title: "סימונים"
         old: "ישן"
         active: "פעיל"
+        agree: "הסכמה"
+        agree_title: "אישור סימון זה כתקין ונכון"
+        agree_flag_modal_title: "הסכמה ו..."
         agree_flag_hide_post: "קבחה (הסתרת פרסום + שליחת מסר פרטי)"
         agree_flag_hide_post_title: "הסתירו פרסום זה ושלחו למשתמ/ת מסר פרטי אוטומטי עם בקשה לערוך אותו."
+        agree_flag: "הסכמה עם הסימון"
+        agree_flag_title: "הסכמה עם הסימון ושמירת הפרסום ללא שינוי"
         defer_flag: "דחייה"
+        defer_flag_title: "הסרת סימון זה; הוא אינו דורש פעולה כעת."
         delete: "מחיקה"
+        delete_title: "מחיקת הפרסום המסומן כאן."
+        delete_post_defer_flag: "מחיקת הפרסום ודחיית הסימון"
         delete_post_defer_flag_title: "מחיקת הפרסום; אם זהו הפרסום הראשון, מחיקת הנושא"
+        delete_post_agree_flag: "מחיקת הפרסום והסכמה עם הסימון"
         delete_post_agree_flag_title: "מחיקת פרסום; אם זהו הפרסום הראשון, מחיקת הנושא"
         delete_flag_modal_title: "מחיקה ו..."
         delete_spammer: "מחיקת ספאמר"
@@ -1263,6 +1309,7 @@ he:
         disagree_flag_unhide_post: "אי-קבלה (הצגה מחדש של הפרסום)"
         disagree_flag_unhide_post_title: "הסרה של כל הסימונים מהפרסום הזה והחזרתו למצב תצוגה"
         disagree_flag: "אי קבלה"
+        disagree_flag_title: "התעלמות מהסימון היות שאינו תקין או אינו נכון"
         clear_topic_flags: "סיום"
         clear_topic_flags_title: "הנושא נבדק והבעיה נפתרה. לחצו על סיום כדי להסיר את הסימונים."
         more: "(עוד...)"
@@ -1605,7 +1652,6 @@ he:
         show_public_profile: "הצג פרופיל פומבי"
         impersonate: 'התחזה'
         ip_lookup: "חיפוש IP"
-        log_out: "התנתקות"
         logged_out: "המשתמש/ת התנתקו בכל המכשירים"
         revoke_admin: 'שלול ניהול ראשי'
         grant_admin: 'הענק ניהול ראשי'

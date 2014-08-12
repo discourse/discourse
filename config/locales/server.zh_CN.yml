@@ -20,7 +20,6 @@ zh_CN:
   posts: "帖子"
   loading: "载入中"
   powered_by_html: '源自<a href="http://www.discourse.org">论坛 - Discourse</a>，请启用 JavaScript 以获得最佳效果'
-  log_in: "登录"
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留权利"
   errors:
@@ -339,7 +338,6 @@ zh_CN:
       title: '通知 {{username}}'
       description: '此帖包含一些我想与该用户私下直接交流的内容。'
       long_form: '已通知用户'
-      email_title: '关于 "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '通知版主'
@@ -641,7 +639,6 @@ zh_CN:
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "一个邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com trashmail.net"
     email_domains_whitelist: "一个电子邮箱域名的列表，用户只能使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
-    version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示版本信息"
     new_version_emails: "当新版本发布时，发送一封邮件至 contact_email 设置的地址。"
     port: "仅限开发者设定！警告！使用此 HTTP 端口而不是80端口。留空为使用默认 80 端口"
     force_hostname: "仅限开发者设定！警告！指定 URL 里的主机名。留空为默认"
@@ -649,6 +646,8 @@ zh_CN:
     invite_passthrough_hours: "用户多久才能使用一个已经使用过的邀请代码，以小时计"
     invite_only: "公开注册已禁用，新用户必须被其他成员或职员邀请。"
     login_required: "需要验证才能继续在该站阅读，不允许匿名访问。"
+    min_username_length: "最小用户名长度。警告：所有现用户名小于此限制长度的用户都将无法访问站点。"
+    max_username_length: "最大用户名长度。警告：所有现用户名大于此限制长度的用户都将无法访问站点。"
     min_password_length: "最小密码长度。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用外部站点单点登录（注意：禁用邀请功能）"
@@ -795,6 +794,7 @@ zh_CN:
     disable_edit_notifications: "当您激活 'download_remote_images_to_local' 站点设置时禁用编辑提示。"
     enable_names: "允许用户显示全名。禁止隐藏全名。"
     display_name_on_posts: "在用户的帖子中显示他们的全名以及他们的 @username。"
+    invites_per_page: "默认在用户页显示邀请。"
     short_progress_text_threshold: "在主题中的帖子数超过这个设定后，进度条将只显示当前的帖子数。如果您更改了进度条的宽度，您需要修改这个值。"
     default_code_lang: "默认语法高亮语言，使用 GitHub 代码块（lang-auto、ruby、python或者其他等等。）"
     warn_reviving_old_topic_age: "当有人开始回复最后一贴超过一定天数前的主题时，将有一个警告显示，不鼓励他们复活一个老的讨论。将其设置为 0 以禁用。"
@@ -813,6 +813,7 @@ zh_CN:
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
     enable_cdn_js_debugging: "为包含的 js 启动跨源访问 /logs 权限以显示合适的错误。"
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
+    vacuum_db_days: "在数据库迁移后使用完整扫描回收数据库空间（设置 0 为禁用）"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -1037,8 +1038,6 @@ zh_CN:
     agreed: "感谢通知我们。我们认为这是一个问题，并且我们正在了解情况。"
     agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"
     disagreed: "感谢通知我们。我们正在了解情况。"
-    deferred: "感谢通知我们。我们正在了解情况。"
-    deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了您的帖子"
@@ -1137,7 +1136,6 @@ zh_CN:
         好好享受你在论坛的时光吧！
     welcome_invite:
       subject_template: "欢迎来到 %{site_name}！"
-      text_body_template: "感谢您接受邀请加入 %{site_name} —— 欢迎！\n\n我们为您自动生成了一个用户名：**%{username}**，但是您在任何时候都可以访问[您的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 使用您喜欢的方式登入——但是必须以**同样的邮件地址**，即您收到邀请的邮箱地址登入。否则我们就无法分辨是不是您本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n好好享受您在论坛的时光吧！\n\n[prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "导出成功"
       text_body_template: "导出操作成功。"
@@ -1203,6 +1201,20 @@ zh_CN:
         我们不能找到您邮件中的回复。**请确认将您的回复至于邮件顶端**——在回复消息之下的任何东西都被忽略。
     email_reject_post_error:
       subject_template: "电子邮件错误 -- 发送出错"
+      text_body_template: |
+        我们很抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件无法发送。
+
+        一些可能的原因是：复杂的格式、消息超长、消息太短。请再试一次，若还不行，使用网站发表。
+    email_reject_post_error_specified:
+      subject_template: "邮件问题——发表失败"
+      text_body_template: |
+        我们很抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件无法发送。
+
+        拒绝消息：
+
+        %{post_error}
+
+        请尝试解决错误后再试一次。
     email_reject_reply_key:
       subject_template: "电子邮件错误 -- 错误回复因素"
       text_body_template: |

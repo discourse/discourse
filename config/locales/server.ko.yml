@@ -20,7 +20,6 @@ ko:
   posts: "게시물들"
   loading: "로딩중"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
-  log_in: "로그인"
   via: "%{site_name}의 %{username}"
   is_reserved: "예약됨"
   errors:
@@ -341,7 +340,6 @@ ko:
       title: '{{username}}에게 알리기'
       description: '이 게시물은 다른 사용자에게 직접적이고, 개인적인 이야기거리를 포함하고 있습니다.'
       long_form: '신고한 사용자'
-      email_title: '님께서 %{title}에 관한 개인 메세지를 보냈습니다'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '운영자에게 알리기'
@@ -640,7 +638,6 @@ ko:
     allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "허용하지 않는 Email 도메인을 파이프(|)기호로 구분하여 입력. 예: mailinator.com|trashmail.net"
     email_domains_whitelist: "허용하는 Email 도메인을 파이프(|)기호로 구분하여 입력. 경고: 여기에 주어진 email domain이 아닌 경우 모두 거부됩니다."
-    version_checks: "버젼 업데이트를 위해 Discourse Hub에 Ping을 날린다. 그리고 /admin 대시보드에 버젼 메시지를 보여준다."
     new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
     port: "Use this HTTP port rather than the default of port 80. Leave blank for none, mainly useful for development"
     force_hostname: "Specify a hostname in the URL. Leave blank for none, mainly useful for development"

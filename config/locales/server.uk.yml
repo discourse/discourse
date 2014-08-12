@@ -29,6 +29,8 @@ uk:
   not_logged_in: "You need to be logged in to do that."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
   embed:
+    start_discussion: "Розпочати Дискусію"
+    continue: "Продовжити Дискусію"
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
@@ -143,6 +145,8 @@ uk:
     topic_prefix: "Про категорію %{category}"
     replace_paragraph: "[Замініть цей перший абзац коротким описом Вашої нової категорії. Він з'являтиметься в області вибору категорій, тому намагайтеся, щоб він був коротшим за 200 символів. Поки Ви не відредагуєте цей текст або не створите тем, ця категорія не з'явиться на сторінці категорій.]"
     post_template: "%{replace_paragraph}\n\nВикористовуйте наступні абзаци для довшого опису, а також для того, щоб встановити якісь правила категорії.\n\nДеякі речі, які можна обговорити у відповідях на цей допис:\n\n- Для чого потрібна ця категорія? Чому людям слід обирати цю категорію для своїх тем?\n\n- Чим вона відрізняється від інших категорій, що в нас є?\n\n- Чи потрібна нам ця категорія?\n\n- Чи потрібно об'єднати цю категорію з якоюсь іншою, або розбити її на декілька?\n"
+    errors:
+      depth: "Ви не можете вкладати підкатегорію під іншу"
   trust_levels:
     newuser:
       title: "новий користувач"
@@ -176,6 +180,7 @@ uk:
     confirmed: "Адресу вашої електронної скриньки оновлено."
     error: "Під час зміни адреси Вашої електронної скриньки трапилася помилка. Можливо, ця адреса вже використовується?"
   activation:
+    action: "Активувати ваш обліковий запис"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
     welcome_to: "Ласкаво просимо до сайта %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
@@ -193,7 +198,6 @@ uk:
       title: 'Сповістити {{username}}'
       description: 'Цей допис містить щось таке, про що я хотів би поговорити з цією людиною особисто і безпосередньо.'
       long_form: 'notified user'
-      email_title: 'Щодо Вашого допису у темі "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Звернути увагу модераторів'
@@ -234,6 +238,7 @@ uk:
     title: 'Unsubscribed'
     description: "You have been unsubscribed. We won't contact you again!"
     oops: "In case you didn't mean to do this, click below."
+    error: "Помилка при Відписуванні"
     not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
   resubscribe:
     action: "Re-Subscribe"
@@ -379,10 +384,15 @@ uk:
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
+    min_private_message_title_length: "Мінімальна допустима довжина назви для приватного повідомлення в символах"
+    min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
     allow_uncategorized_topics: "Дозволити створювати теми без категорії."
+    allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     queue_jobs: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! За замовчуванням, додавати завдання до черги в sidekiq. Якщо вимкнути, Ваш сайт зламається."
+    crawl_images: "Отримувати зображення з віддалених адрес, щоб встановити правильні розміри ширини і висоти."
     category_featured_topics: "Кількість тем на одну категорію, що показуються на сторінці /categories. Після зміни цього значення, оновлення категорій займе до 15 хвилин."
+    show_subcategory_list: "Показувати перелік підкатегорій замість переліку тем при вході у категорію."
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     favicon_url: "Піктограма Вашого сайта, див. http://uk.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
@@ -407,7 +417,6 @@ uk:
     top_menu: "Визначає, які елементи з'являються в навігації головної сторінки, та в якому порядку. Наприклад, latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
     port: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Використовувати цей HTTP-порт замість звичайного порту 80. Лишіть порожнім, щоб використовувати значення за замовчуванням 80."
     force_hostname: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Вкажіть ім'я хосту в URL. Лишіть порожнім, щоб використовувати значення за замовчуванням."
     invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
@@ -435,6 +444,7 @@ uk:
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     min_trust_to_create_topic: "Мінімальний рівень довіри, необхідний для створення нової теми."
+    newuser_max_attachments: "Скільки прикріплень новий користувач може додати до допису."
     title_fancy_entities: "Перетворювати звичайні ASCII-символи на примхливі HTML-сутності у назвах тем, на кшталт SmartyPants http://daringfireball.net/projects/smartypants/"
     title_prettify: "Запобігати типовим опискам та помилкам, таким як: всі літери - великі, перша літера - мала, багаторазові ! та ?, надлишкові . в кінці, тощо."
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
@@ -442,15 +452,30 @@ uk:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     reply_by_email_address: "Шаблон адреси електронної скриньки у формі для відповідей через електронну пошту, наприклад: %{reply_key}@reply.myforum.com"
+    email_in_min_trust: "Мінімальний рівень довіри, який потрібен користувачу для дозволу створювати нові теми через email. "
     delete_all_posts_max: "Максимальне число дописів, які можна видалити за один раз кнопкою \"Видалити всі дописи\". Якщо користувач має більше дописів, ніж це число, їх не можна буде видалити за один раз, і користувача також."
     username_change_period: "Кількість днів після реєстрації, протягом яких новим обліковим записам можна змінювати своє ім'я користувача (0 щоб заборонити зміну імені користувача)."
     email_editable: "Дозволити користувачам змінювати свою електронну скриньку після реєстрації."
     default_digest_email_frequency: "Як часто користувачі отримують листи зі стислим викладом новин за замовчуванням. Вони можуть змінити це у своїх налаштуваннях."
     default_external_links_in_new_tab: "Відкривати нові посилання у новій вкладці. Користувачі можуть змінити це у своїх налаштуваннях."
+    allow_profile_backgrounds: "Дозволити користувачам завантажувати фони профілю."
     enable_mobile_theme: "Мобільні пристрої використовуватимуть тему, дружню для них, з можливістю перемикатися на повний сайт. Відключіть це, якщо хочете використовувати власну, повністю чутливу, таблицю стилів."
+    enable_names: "Дозволити показувати повні імена користувачів. Відключити, щоб сховати повні імена."
+    display_name_on_posts: "Показувати повні імена користувачів на їх дописах у додаток до їх @username."
+    invites_per_page: "Запрошення по замовчуванню показані на сторінці користувача."
     short_progress_text_threshold: "Після того, як кількість дописів в темі перевищить це число, індикатор просування по темі показуватиме тільки номер поточного допису. Якщо Ви зміните ширину індикатора, Вам, ймовірно, знадобиться змінити це значення."
     default_code_lang: "Мова програмування для підсвітки синтаксису, що за замовчуванням застосовуватиметься для блоків коду GitHub (lang-auto, ruby, python і т. ін.)"
+    embeddable_host: "Хост, що можете вставляти коментарі з цього Discourse форуму."
+    embed_truncate: "Обрізати вбудовані повідомлення. "
+    embed_category: "Категорія вбудованих тем. "
     tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
+    errors:
+      invalid_integer: "Значення має бути цілим."
+      regex_mismatch: "Значення не відповідає потрібному формату."
+      invalid_string: "Некоректне значення."
+      invalid_string_min_max: "Має бути між %{min} та %{max} символів."
+      invalid_string_min: "Має бути не менше %{max} символів."
+      invalid_string_max: "Має бути не більше ніж %{max} символів."
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
@@ -462,10 +487,12 @@ uk:
     private_message: "%{display_username} sent you a private message: %{link}"
     invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
+    granted_badge: "Ви отримали %{link}"
   search:
     within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Categories'
+      topic: 'Результати'
       user: 'Users'
   original_poster: "Перший дописувач"
   most_posts: "Найбільше дописів"
@@ -473,18 +500,23 @@ uk:
   frequent_poster: "Частий дописувач"
   redirected_to_top_reasons:
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
+  change_owner:
+    post_revision_text: "Володіння передано від %{old_user} до %{new_user}"
   topic_statuses:
     archived_enabled: "Цю тему тепер заархівовано. Вона заморожена і її жодним чином не можна змінити."
     archived_disabled: "Цю тему тепер розархівовано. Вона більше не заморожена, і її можна змінювати."
     closed_enabled: "Цю тему закрито. Нові відповіді заборонено."
     closed_disabled: "Цю тему відкрито. Нові відповіді дозволено."
     autoclosed_enabled_days:
+      zero: "Ця тема була автоматично закрита через 1 день. Нові відповіді більше не дозволяються."
       one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
       other: "This topic was automatically closed after 1 day. New replies are no longer allowed."
     autoclosed_enabled_hours:
+      zero: "Ця тема була автоматично закрита через 1 годину. Нові відповіді більше не дозволяються."
       one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
       other: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
     autoclosed_enabled_minutes:
+      zero: "Ця тема була автоматично закрита через 1 хвилину. Нові відповіді більше не дозволяються."
       one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
       other: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
     autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
@@ -507,6 +539,7 @@ uk:
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
   user:
     username:
+      short: "має бути найменше %{min} символів"
       characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
@@ -520,6 +553,9 @@ uk:
     subject_template: "[%{site_name}] Тест доставки електронної пошти"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
+  flags_reminder:
+    please_review: "Будь ласка, перегляньте його."
+    post_number: "допис"
   system_messages:
     post_hidden:
       subject_template: "Допис приховано через скарги спільноти"
@@ -533,6 +569,14 @@ uk:
     import_succeeded:
       subject_template: "Import completed successfully"
       text_body_template: "The import was successful."
+    bulk_invite_succeeded:
+      subject_template: "Масове запрошення користувачів оброблено успішно"
+    bulk_invite_failed:
+      subject_template: "Масове запрошення користувачів оброблено з помилками"
+    email_reject_no_account:
+      subject_template: "Питання з email -- Немає облікового запису"
+    email_reject_empty:
+      subject_template: "Питання з email -- Немає змісту"
     too_many_spam_flags:
       subject_template: "New account blocked"
     blocked_by_staff:
@@ -550,6 +594,8 @@ uk:
         Є нові користувачі, що зареєструвалися і очікують на схвалення (або відхилення) перед тим, як зможуть отримати доступ до цього форуму.
 
         [Будь ласка, розгляньте їх в адміністративній секції](%{base_url}/admin/users/list/pending).
+    download_remote_images_disabled:
+      subject_template: "Завантаження віддалених зображені відключено"
   unsubscribe_link: "Щоб відписатися від цих листів, відідайте [сторінку своїх налаштувань](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Попередні відповіді"
@@ -612,6 +658,8 @@ uk:
         %{respond_instructions}
     digest:
       new_activity: "New activity on your topics and posts:"
+      top_topics: "Популярні дописи"
+      other_new_topics: "Популярні теми"
       click_here: "натисніть тут"
       from: "Стислий виклад новин від %{site_name}"
       read_more: "Читати більше"
@@ -652,19 +700,27 @@ uk:
         Якщо наведене посилання не є клікабельним, спробуйте скопіювати та вставити його в адресний рядок Вашого веб-оглядача.
   page_not_found:
     title: "Сторінка, яку Ви запитали, не існує або є приватною."
+    popular_topics: "Популярні"
+    recent_topics: "Останні"
+    see_more: "Більше"
+    search_title: "Пошук на цьому сайті"
+    search_google: "Google"
   login_required:
     welcome_message: |
       #[Ласкаво просимо до %{title}](#welcome)
       Для цього форуму потрібен обліковий запис, щоб переглядати %{title}. Будь ласка, увійдіть або створіть обліковий запис, щоб продовжити.
   terms_of_service:
+    title: "Умови Використання"
     user_content_license: |
       User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: 'deleted'
   upload:
+    edit_reason: "завантажені локальні копії забражень"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Вставлене зображення"
+    store_failure: "Не вдалося зберегти завантаження #%{upload_id} для користувача #%{user_id}."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
     images:
@@ -688,3 +744,8 @@ uk:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
+  guidelines: "Інструкції"
+  privacy: "Конфіденційність"
+  edit_this_page: "Редагувати цю сторінку"
+  guidelines_topic:
+    title: "ЧаПи/Інструкції"

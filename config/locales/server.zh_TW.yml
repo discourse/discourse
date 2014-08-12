@@ -20,7 +20,6 @@ zh_TW:
   posts: "文章"
   loading: "載入中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, 請啟用 Javascript 以獲得最佳瀏覽效果'
-  log_in: "登入"
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留權利"
   errors:
@@ -263,7 +262,6 @@ zh_TW:
       title: '通知 {{username}}'
       description: '此文章包含一些我想與該用戶私下討論的內容。'
       long_form: '已通知用戶'
-      email_title: '關於 "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '通知板主'
@@ -521,7 +519,6 @@ zh_TW:
     allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
     email_domains_blacklist: "Email域名的黑名單，在此名單內的域名將無法註冊，例如：mailinator.com trashmail.net"
     email_domains_whitelist: "Email域名的白名單，使用者 \"必須\" 使用此帳號來註冊，注意：使用者如果使用其他Email的域名將無法註冊"
-    version_checks: "瀏覽 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示版本資訊"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"
     port: "使用此 HTTP 埠而不是80埠。留空為不使用，主要用於開發調試"
     force_hostname: "指定 URL 裡的主機名稱。留空為不使用，主要用於開發調試"

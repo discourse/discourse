@@ -20,7 +20,6 @@ pl_PL:
   posts: "wpisy"
   loading: "Ładowanie"
   powered_by_html: 'Zasilane przez <a href="http://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
-  log_in: "Zaloguj się"
   via: "%{username} z %{site_name}"
   is_reserved: "jest zarezerwowana"
   embed:
@@ -302,7 +301,6 @@ pl_PL:
       title: 'Powiadom {{username}}'
       description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie.'
       long_form: 'powiadomiono użytkownika'
-      email_title: 'W sprawie Twojego wpisu w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Powiadom moderatorów'
@@ -493,7 +491,6 @@ pl_PL:
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
