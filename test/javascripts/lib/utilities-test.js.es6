@@ -114,9 +114,10 @@ test("isAnImage", function() {
 });
 
 test("avatarUrl", function() {
+  var rawSize = Discourse.Utilities.getRawSize;
   blank(utils.avatarUrl('', 'tiny'), "no template returns blank");
-  equal(utils.avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/" + 20*window.devicePixelRatio + ".png", "simple avatar url");
-  equal(utils.avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/" + 45*window.devicePixelRatio +  ".png", "different size");
+  equal(utils.avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/" + rawSize(20) + ".png", "simple avatar url");
+  equal(utils.avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/" + rawSize(45) +  ".png", "different size");
 });
 
 test("avatarImg", function() {
