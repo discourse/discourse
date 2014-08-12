@@ -1,6 +1,7 @@
 /*global assetPath:true */
 
 import userSearch from 'discourse/lib/user-search';
+import afterTransition from 'discourse/lib/after-transition';
 
 var ComposerView = Discourse.View.extend(Ember.Evented, {
   templateName: 'composer',
@@ -106,7 +107,7 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
       resize: this.resize,
       onDrag: function (sizePx) { self.movePanels.apply(self, [sizePx]); }
     });
-    Discourse.TransitionHelper.after($replyControl, this.resize);
+    afterTransition($replyControl, this.resize);
     this.ensureMaximumDimensionForImagesInPreview();
     this.set('controller.view', this);
   }.on('didInsertElement'),
