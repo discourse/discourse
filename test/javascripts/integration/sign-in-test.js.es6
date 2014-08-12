@@ -26,8 +26,7 @@ test("sign in", function() {
 
 test("create account", function() {
   visit("/");
-  click("header .login-button");
-  click('#new-account-link');
+  click("header .sign-up-button");
 
   andThen(function() {
     ok(exists('.create-account'), "it shows the create account modal");

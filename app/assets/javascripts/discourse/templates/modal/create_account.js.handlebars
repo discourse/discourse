@@ -80,7 +80,9 @@
     {{#if formSubmitted}}
       &nbsp; <i class='fa fa-spinner fa-spin'></i>
     {{else}}
-      &nbsp; <a {{action showLogin}}>{{i18n cancel}}</a>
+      <button class="btn btn-large" id="login-link" {{action showLogin}}>
+        {{i18n log_in}}
+      </button>
     {{/if}}
   </div>
 {{/unless}}
