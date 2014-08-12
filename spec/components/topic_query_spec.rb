@@ -165,10 +165,10 @@ describe TopicQuery do
 
         it "returns the topics in correct order" do
           # returns the topics in likes order if requested
-          ids_in_order('posts').should == [pinned_topic, archived_topic, future_topic, regular_topic, invisible_topic, closed_topic].map(&:id)
+          ids_in_order('posts').should == [future_topic, pinned_topic, archived_topic, regular_topic, invisible_topic, closed_topic].map(&:id)
 
           # returns the topics in reverse likes order if requested
-          ids_in_order('posts', false).should == [closed_topic, invisible_topic, regular_topic, future_topic, archived_topic, pinned_topic].map(&:id)
+          ids_in_order('posts', false).should == [closed_topic, invisible_topic, regular_topic, archived_topic, pinned_topic, future_topic].map(&:id)
 
           # returns the topics in likes order if requested
           ids_in_order('likes').should == [pinned_topic, regular_topic, archived_topic, future_topic, invisible_topic, closed_topic].map(&:id)
