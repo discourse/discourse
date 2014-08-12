@@ -109,8 +109,10 @@ Discourse.Topic = Discourse.Model.extend({
 
   likesHeat: function() {
     var likes = parseFloat(this.get('like_count')),
-        posts = parseFloat(this.get('posts_count')),
-        ratio = (likes || 0) / (posts || 1);
+        posts = parseFloat(this.get('posts_count'));
+
+    if (posts < 10) { return; }
+    var ratio = (likes || 0) / posts;
 
     if (ratio > 2.0) { return 'heatmap-high'; }
     if (ratio > 1.0) { return 'heatmap-med'; }
