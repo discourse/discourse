@@ -228,6 +228,9 @@ a:hover.reply-new {
 .heatmap-high {color: scale-color($danger, $lightness: 20%) !important;}
 .heatmap-med {color: $danger !important;}
 .heatmap-low {color: scale-color($danger, $lightness: -20%) !important;}
+.heatmap-high a {color: scale-color($danger, $lightness: 20%) !important;}
+.heatmap-med a {color: $danger !important;}
+.heatmap-low a {color: scale-color($danger, $lightness: -20%) !important;}
 
 
 
