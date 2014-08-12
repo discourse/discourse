@@ -1,4 +1,6 @@
-export default Discourse.ObjectController.extend({
+import ObjectController from 'discourse/controllers/object';
+
+export default ObjectController.extend({
 
   viewingSelf: function() {
     return this.get('content.username') === Discourse.User.currentProp('username');

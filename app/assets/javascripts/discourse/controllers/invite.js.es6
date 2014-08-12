@@ -1,13 +1,8 @@
-/**
-  The modal for inviting a user to a topic
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-  @class InviteController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
-export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+import ObjectController from 'discourse/controllers/object';
+
+export default ObjectController.extend(ModalFunctionality, {
   needs: ['user-invited'],
 
   // If this isn't defined, it will proxy to the user model on the preferences

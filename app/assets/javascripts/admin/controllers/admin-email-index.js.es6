@@ -1,12 +1,6 @@
-/**
-  This controller supports email functionality.
+import DiscourseController from 'discourse/controllers/controller';
 
-  @class AdminEmailIndexController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({
+export default DiscourseController.extend({
 
   /**
     Is the "send test email" button disabled?

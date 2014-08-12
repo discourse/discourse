@@ -1,4 +1,6 @@
-export default Discourse.Controller.extend({
+import DiscourseController from 'discourse/controllers/controller';
+
+export default DiscourseController.extend({
   poll: null,
   showResults: Em.computed.oneWay('poll.closed'),
   disableRadio: Em.computed.any('poll.closed', 'loading'),

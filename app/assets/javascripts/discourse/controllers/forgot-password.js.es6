@@ -1,13 +1,8 @@
-/**
-  The modal for when the user has forgotten their password
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-  @class ForgotPasswordController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
-export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
+import DiscourseController from 'discourse/controllers/controller';
+
+export default DiscourseController.extend(ModalFunctionality, {
 
   // You need a value in the field to submit it.
   submitDisabled: function() {

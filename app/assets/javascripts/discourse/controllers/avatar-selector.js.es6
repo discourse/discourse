@@ -1,22 +1,15 @@
-/**
-  The modal for selecting an avatar
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-  @class AvatarSelectorController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
-export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
+import DiscourseController from 'discourse/controllers/controller';
+
+export default DiscourseController.extend(ModalFunctionality, {
 
   selectedUploadId: function(){
       switch(this.get("selected")){
       case "system":
         return this.get("system_avatar_upload_id");
-        break;
       case "gravatar":
         return this.get("gravatar_avatar_upload_id");
-        break;
       default:
         return this.get("custom_avatar_upload_id");
       }

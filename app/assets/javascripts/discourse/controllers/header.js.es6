@@ -1,12 +1,6 @@
-/**
-  This controller supports actions on the site header
+import DiscourseController from 'discourse/controllers/controller';
 
-  @class HeaderController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({
+export default DiscourseController.extend({
   topic: null,
   showExtraInfo: null,
   notifications: null,

@@ -1,9 +1,3 @@
-/**
-  Related to showing a modal and its title.
+import DiscourseController from 'discourse/controllers/controller';
 
-  @class ModalController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({});
+export default DiscourseController.extend({});

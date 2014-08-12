@@ -1,12 +1,14 @@
+import ObjectController from 'discourse/controllers/object';
+
 /**
   Supports logic for flags in the modal
 
   @class FlagActionTypeController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.ObjectController.extend({
+export default ObjectController.extend({
   needs: ['flag'],
 
   message: Em.computed.alias('controllers.flag.message'),

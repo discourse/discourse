@@ -1,4 +1,6 @@
-export default Discourse.Controller.extend({
+import DiscourseController from 'discourse/controllers/controller';
+
+export default DiscourseController.extend({
   needs: ['discovery/topics'],
   queryParams: ['order', 'ascending', 'status', 'state', 'search'],
   order: Em.computed.alias('controllers.discovery/topics.order'),

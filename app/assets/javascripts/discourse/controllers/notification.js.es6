@@ -1,4 +1,6 @@
-export default Discourse.ObjectController.extend({
+import ObjectController from 'discourse/controllers/object';
+
+export default ObjectController.extend({
 
   scope: function () {
     return "notifications." + Discourse.Site.currentProp("notificationLookup")[this.get("notification_type")];

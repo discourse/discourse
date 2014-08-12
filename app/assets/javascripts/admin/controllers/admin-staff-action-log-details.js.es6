@@ -1,10 +1,5 @@
-/**
-  The modal for viewing the details of a staff action log record.
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-  @class AdminStaffActionLogDetailsController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
-export default Discourse.ObjectController.extend(Discourse.ModalFunctionality);
+import ObjectController from 'discourse/controllers/object';
+
+export default ObjectController.extend(ModalFunctionality);

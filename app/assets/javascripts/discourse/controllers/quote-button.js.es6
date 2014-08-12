@@ -1,14 +1,8 @@
+import DiscourseController from 'discourse/controllers/controller';
+
 /*global assetPath:true */
 
-/**
-  This controller supports the pop up quote button
-
-  @class QuoteButtonController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({
+export default DiscourseController.extend({
   needs: ['topic', 'composer'],
 
   init: function() {

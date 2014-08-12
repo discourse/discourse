@@ -1,13 +1,17 @@
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
+
+import ObjectController from 'discourse/controllers/object';
+
 /**
   Modal related to auto closing of topics
 
   @class SplitTopicController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
-  @uses Discourse.ModalFunctionality
+  @uses ModalFunctionality
   @module Discourse
 **/
-export default Discourse.ObjectController.extend(Discourse.SelectedPostsCount, Discourse.ModalFunctionality, {
+export default ObjectController.extend(Discourse.SelectedPostsCount, ModalFunctionality, {
   needs: ['topic'],
 
   topicController: Em.computed.alias('controllers.topic'),

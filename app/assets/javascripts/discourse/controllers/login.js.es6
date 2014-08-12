@@ -1,13 +1,8 @@
-/**
-  This controller supports actions related to flagging
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-  @class LoginController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
-export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
+import DiscourseController from 'discourse/controllers/controller';
+
+export default DiscourseController.extend(ModalFunctionality, {
   needs: ['modal', 'createAccount', 'application'],
   authenticate: null,
   loggingIn: false,

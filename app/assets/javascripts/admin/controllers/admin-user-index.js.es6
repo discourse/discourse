@@ -1,12 +1,14 @@
+import ObjectController from 'discourse/controllers/object';
+
 /**
   A controller related to viewing a user in the admin section
 
   @class AdminUserIndexController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.ObjectController.extend({
+export default ObjectController.extend({
   editingTitle: false,
   originalPrimaryGroupId: null,
   availableGroups: null,

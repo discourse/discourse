@@ -1,13 +1,8 @@
-/**
-  The modal for suspending a user.
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-  @class AdminSuspendUserController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
-export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+import ObjectController from 'discourse/controllers/object';
+
+export default ObjectController.extend(ModalFunctionality, {
 
   submitDisabled: function() {
     return (!this.get('reason') || this.get('reason').length < 1);

@@ -1,11 +1,3 @@
-/**
-  Support for searching
-
-  @class SearchController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
 export default Em.ArrayController.extend(Discourse.Presence, {
 
   contextChanged: function(){

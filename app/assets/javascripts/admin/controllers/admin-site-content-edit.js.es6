@@ -1,12 +1,6 @@
-/**
-  This controller is used for editing site content
+import DiscourseController from 'discourse/controllers/controller';
 
-  @class AdminSiteContentEditController
-  @extends Ember.ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({
+export default DiscourseController.extend({
 
   saveDisabled: function() {
     if (this.get('saving')) { return true; }

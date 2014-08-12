@@ -1,13 +1,8 @@
-/**
-  This controller is used to display the Keyboard Shortcuts Help Modal
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-  @class KeyboardShortcutsHelpController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
-export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
+import DiscourseController from 'discourse/controllers/controller';
+
+export default DiscourseController.extend(ModalFunctionality, {
   needs: ['modal'],
 
   onShow: function() {

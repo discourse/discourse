@@ -1,12 +1,6 @@
-/**
-  A base admin controller that has access to the Discourse properties.
+import DiscourseController from 'discourse/controllers/controller';
 
-  @class AdminController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({
+export default DiscourseController.extend({
   showBadges: function() {
     return this.get('currentUser.admin') && Discourse.SiteSettings.enable_badges;
   }.property()
