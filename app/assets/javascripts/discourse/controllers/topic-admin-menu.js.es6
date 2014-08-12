@@ -1,12 +1,14 @@
+import ObjectController from 'discourse/controllers/object';
+
 /**
   This controller supports the admin menu on topics
 
   @class TopicAdminMenuController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.ObjectController.extend({
+export default ObjectController.extend({
   menuVisible: false,
   needs: ['modal'],
 

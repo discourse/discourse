@@ -1,13 +1,8 @@
-/**
-  The modal for creating accounts
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-  @class CreateAccountController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
-export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
+import DiscourseController from 'discourse/controllers/controller';
+
+export default DiscourseController.extend(ModalFunctionality, {
   uniqueUsernameValidation: null,
   globalNicknameExists: false,
   complete: false,

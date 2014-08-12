@@ -1,14 +1,16 @@
+import ObjectController from 'discourse/controllers/object';
+
 /**
   This is the itemController for `Discourse.AdminBadgesController`. Its main purpose
   is to indicate which badge was selected.
 
   @class AdminBadgeController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
   @module Discourse
 **/
 
-export default Discourse.ObjectController.extend({
+export default ObjectController.extend({
   /**
     Whether this badge has been selected.
 

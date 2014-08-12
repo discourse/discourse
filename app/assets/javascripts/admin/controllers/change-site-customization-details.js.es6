@@ -1,4 +1,8 @@
-export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
+
+import ObjectController from 'discourse/controllers/object';
+
+export default ObjectController.extend(ModalFunctionality, {
   previousSelected: Ember.computed.equal('selectedTab', 'previous'),
   newSelected:      Ember.computed.equal('selectedTab', 'new'),
 

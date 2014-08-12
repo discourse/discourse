@@ -1,12 +1,6 @@
-/**
-  Handles the controller for the default navigation within discovery.
+import DiscourseController from 'discourse/controllers/controller';
 
-  @class NavigationDefaultController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({
+export default DiscourseController.extend({
   categories: function() {
     return Discourse.Category.list();
   }.property(),

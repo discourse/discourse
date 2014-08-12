@@ -1,8 +1,10 @@
+import ObjectController from 'discourse/controllers/object';
+
 /**
   Handles displaying of a topic as a list item
 
   @class TopicListItemController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
   @module Discourse
 **/

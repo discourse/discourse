@@ -1,12 +1,6 @@
-/**
-  This controller supports composing new posts and topics.
+import DiscourseController from 'discourse/controllers/controller';
 
-  @class ComposerController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({
+export default DiscourseController.extend({
   needs: ['modal', 'topic', 'composer-messages'],
 
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),

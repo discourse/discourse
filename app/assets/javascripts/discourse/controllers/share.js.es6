@@ -1,12 +1,6 @@
-/**
-  This controller supports the "share" link controls
+import DiscourseController from 'discourse/controllers/controller';
 
-  @class ShareController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({
+export default DiscourseController.extend({
   needs: ['topic'],
 
   // Close the share controller

@@ -1,12 +1,14 @@
+import ObjectController from 'discourse/controllers/object';
+
 /**
   Controller for showing a particular badge.
 
   @class BadgesShowController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.ObjectController.extend({
+export default ObjectController.extend({
 
   actions: {
     loadMore: function() {

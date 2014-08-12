@@ -1,12 +1,14 @@
+import ObjectController from 'discourse/controllers/object';
+
 /**
   This controller supports actions related to updating one's username
 
   @class PreferencesUsernameController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.ObjectController.extend({
+export default ObjectController.extend({
   taken: false,
   saving: false,
   error: false,

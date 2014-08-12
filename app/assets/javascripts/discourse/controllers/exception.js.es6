@@ -1,3 +1,5 @@
+import ObjectController from 'discourse/controllers/object';
+
 
 var ButtonBackBright = {
       classes: "btn-primary",
@@ -24,11 +26,11 @@ var ButtonBackBright = {
   The controller for the nice error page
 
   @class ExceptionController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.ObjectController.extend({
+export default ObjectController.extend({
   thrown: null,
   lastTransition: null,
 

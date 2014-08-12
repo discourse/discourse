@@ -1,13 +1,8 @@
-/**
-  Modal displayed to a user when they are not active yet.
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-  @class NotActivatedController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @uses Discourse.ModalFunctionality
-  @module Discourse
-**/
-export default Discourse.Controller.extend(Discourse.ModalFunctionality, {
+import DiscourseController from 'discourse/controllers/controller';
+
+export default DiscourseController.extend(ModalFunctionality, {
   emailSent: false,
 
   actions: {

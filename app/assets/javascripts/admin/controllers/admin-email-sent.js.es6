@@ -1,12 +1,6 @@
-  /**
-  This controller supports email logs functionality.
+import DiscourseController from 'discourse/controllers/controller';
 
-  @class AdminEmailSentController
-  @extends Discourse.Controller
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.Controller.extend({
+export default DiscourseController.extend({
 
   filterEmailLogs: Discourse.debounce(function() {
     var self = this;

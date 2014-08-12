@@ -1,4 +1,6 @@
-export default Discourse.ObjectController.extend({
+import ObjectController from 'discourse/controllers/object';
+
+export default ObjectController.extend({
   needs: ['topic'],
   visible: false,
   user: null,

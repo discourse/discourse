@@ -1,12 +1,14 @@
+import ObjectController from 'discourse/controllers/object';
+
 /**
   The basic controller for a group
 
   @class GroupController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
   @module Discourse
 **/
-export default Discourse.ObjectController.extend({
+export default ObjectController.extend({
   counts: null,
 
   // It would be nice if bootstrap marked action lists as selected when their links

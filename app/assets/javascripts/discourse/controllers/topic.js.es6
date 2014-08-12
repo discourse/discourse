@@ -1,4 +1,6 @@
-export default Discourse.ObjectController.extend(Discourse.SelectedPostsCount, {
+import ObjectController from 'discourse/controllers/object';
+
+export default ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
   needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress'],
   allPostsSelected: false,

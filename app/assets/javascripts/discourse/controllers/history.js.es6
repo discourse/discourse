@@ -1,13 +1,17 @@
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
+
+import ObjectController from 'discourse/controllers/object';
+
 /**
   This controller handles displaying of history
 
   @class HistoryController
-  @extends Discourse.ObjectController
+  @extends ObjectController
   @namespace Discourse
-  @uses Discourse.ModalFunctionality
+  @uses ModalFunctionality
   @module Discourse
 **/
-export default Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
+export default ObjectController.extend(ModalFunctionality, {
   loading: false,
   viewMode: "side_by_side",
   revisionsTextKey: "post.revisions.controls.comparing_previous_to_current_out_of_total",
