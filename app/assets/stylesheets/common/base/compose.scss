@@ -27,10 +27,10 @@
           vertical-align: middle;
         }
         &.selected {
-          background-color: scale-color($tertiary, $lightness: 90%);
+          background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
         }
         @include hover {
-          background-color: scale-color($highlight, $lightness: 60%);
+          background-color: dark-light-diff($highlight, $secondary, 90%, -80%);
           text-decoration: none;
         }
       }
