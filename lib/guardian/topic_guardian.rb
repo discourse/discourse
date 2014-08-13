@@ -41,7 +41,8 @@ module TopicGuardian
   def can_delete_topic?(topic)
     !topic.trashed? &&
     is_staff? &&
-    !(Category.exists?(topic_id: topic.id))
+    !(Category.exists?(topic_id: topic.id)) &&
+    !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
   def can_reply_as_new_topic?(topic)
