@@ -243,10 +243,17 @@ describe Category do
     end
 
     describe "creating a new category with the same slug" do
-      it "should have a blank slug" do
+      it "should have a blank slug if at the same level" do
         category = Fabricate(:category, name: "Amazing Categóry")
         category.slug.should be_blank
         category.slug_for_url.should == "#{category.id}-category"
+      end
+
+      it "doesn't have a blank slug if not at the same level" do
+        parent = Fabricate(:category, name: 'Other parent')
+        category = Fabricate(:category, name: "Amazing Categóry", parent_category_id: parent.id)
+        category.slug.should == 'amazing-category'
+        category.slug_for_url.should == "amazing-category"
       end
     end
 
