@@ -1,5 +1,7 @@
 import ObjectController from 'discourse/controllers/object';
 
+var INVITED_TYPE= 8;
+
 export default ObjectController.extend({
 
   scope: function () {
@@ -24,6 +26,10 @@ export default ObjectController.extend({
     var topicId = this.safe('topic_id');
     if (topicId) {
       return Discourse.Utilities.postUrl(this.safe("slug"), topicId, this.safe("post_number"));
+    }
+
+    if (this.get('notification_type') === INVITED_TYPE) {
+      return '/my/invited';
     }
   }.property("data.{badge_id, badge_name}", "slug", "topic_id", "post_number"),
 
