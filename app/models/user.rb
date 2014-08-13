@@ -720,7 +720,7 @@ class User < ActiveRecord::Base
     # and some sites still have those records which can't be purged.
     to_destroy = User.where(active: false)
                      .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
-                     .where("created_at < ?", 1.week.ago)
+                     .where("created_at < ?", SiteSetting.purge_inactive_users_grace_period_days.days.ago)
                      .where('us.post_count = 0')
 
     destroyer = UserDestroyer.new(Discourse.system_user)

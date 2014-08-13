@@ -704,6 +704,7 @@ uncategorized:
     default: true
 
   disable_edit_notifications: false
+  purge_inactive_users_grace_period_days: 7
 
   company_full_name: 'My Unconfigured Forum Ltd.'
   company_short_name: 'Unconfigured Forum'
@@ -723,3 +724,4 @@ uncategorized:
   privacy_topic_id:
     default: -1
     hidden: true
+
