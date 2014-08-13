@@ -51,7 +51,7 @@
                   <tbody>
                     {{#each flaggedPost.flaggers}}
                       <tr>
-                        <td>
+                        <td class='avatar'>
                           {{#link-to 'adminUser' user}}
                             {{avatar user imageSize="small"}}
                           {{/link-to}}
@@ -76,10 +76,12 @@
                     <tbody>
                       {{#each flaggedPost.flaggers}}
                         <tr>
-                          <td>
+                          <td class='avatar'>
                             {{#link-to 'adminUser' disposedBy}}
                               {{avatar disposedBy imageSize="small"}}
                             {{/link-to}}
+                          </td>
+                          <td>
                             {{age disposedAt}}
                             {{{dispositionIcon}}}
                             {{#if tookAction}}
