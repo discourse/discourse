@@ -11,6 +11,7 @@ describe UserSearch do
   let(:user4)     { Fabricate :user, username: "mrpink",   name: "Steve Buscemi",  last_seen_at: 7.days.ago }
   let(:user5)     { Fabricate :user, username: "mrbrown",  name: "Quentin Tarantino", last_seen_at: 6.days.ago }
   let(:user6)     { Fabricate :user, username: "mrwhite",  name: "Harvey Keitel",  last_seen_at: 5.days.ago }
+  let!(:inactive)  { Fabricate :user, username: "Ghost", active: false }
   let(:admin)     { Fabricate :admin, username: "theadmin" }
   let(:moderator) { Fabricate :moderator, username: "themod" }
 
@@ -103,12 +104,13 @@ describe UserSearch do
     results = search_for("Tarantino")
     results.size.should == 0
 
-
     # find an exact match first
     results = search_for("mrB")
     results.first.should == user1
 
-
+    # don't return inactive users
+    results = search_for("Ghost")
+    results.should be_blank
   end
 
 end

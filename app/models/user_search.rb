@@ -12,6 +12,8 @@ class UserSearch
   def search
     users = User.order(User.sql_fragment("CASE WHEN username_lower = ? THEN 0 ELSE 1 END ASC", @term.downcase))
 
+    users = users.where(active: true)
+
     if @term.present?
       if SiteSetting.enable_names?
         query = Search.ts_query(@term, "simple")
