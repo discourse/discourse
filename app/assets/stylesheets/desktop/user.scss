@@ -203,6 +203,11 @@
 
         h1, h2 {font-weight: bold;}
 
+        .primary-textual {
+          background: rgba($primary, 0.2);
+          padding: 3px;
+        }
+
         .bio {
           color: dark-light-diff($secondary, $primary, 75%, 0%);
           text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
