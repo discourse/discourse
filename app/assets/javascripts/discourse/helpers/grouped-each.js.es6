@@ -108,8 +108,7 @@ DiscourseGroupedEach.prototype = {
   }
 };
 
-
-Ember.Handlebars.registerHelper('groupedEach', function(path, options) {
+function groupedEachHelper(path, options) {
   if (arguments.length === 4) {
     Ember.assert("If you pass more than one argument to the groupedEach helper, it must be in the form #groupedEach foo in bar", arguments[1] === "in");
 
@@ -130,4 +129,11 @@ Ember.Handlebars.registerHelper('groupedEach', function(path, options) {
   options.hash.dataSourceBinding = path;
   options.data.insideGroup = true;
   new DiscourseGroupedEach(this, path, options).render();
+}
+
+Ember.Handlebars.registerHelper('groupedEach', function() {
+  Em.warn("The `groupedEach` helper is deprecated. Use `grouped-each` instead.");
+  return groupedEachHelper.apply(this, Array.prototype.slice.apply(arguments));
 });
+
+Ember.Handlebars.registerHelper('grouped-each', groupedEachHelper);
