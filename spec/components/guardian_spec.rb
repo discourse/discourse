@@ -1024,6 +1024,12 @@ describe Guardian do
       it 'returns true when an admin' do
         Guardian.new(admin).can_delete?(topic).should be_true
       end
+
+      it 'returns false for static doc topics' do
+        tos_topic = Fabricate(:topic, user: Discourse.system_user)
+        SiteSetting.stubs(:tos_topic_id).returns(tos_topic.id)
+        Guardian.new(admin).can_delete?(tos_topic).should be_false
+      end
     end
 
     context 'a Post' do
@@ -1062,6 +1068,14 @@ describe Guardian do
 
       it 'returns true when an admin' do
         Guardian.new(admin).can_delete?(post).should be_true
+      end
+
+      it 'returns false when post is first in a static doc topic' do
+        tos_topic = Fabricate(:topic, user: Discourse.system_user)
+        SiteSetting.stubs(:tos_topic_id).returns(tos_topic.id)
+        post.update_attribute :post_number, 1
+        post.update_attribute :topic_id, tos_topic.id
+        Guardian.new(admin).can_delete?(post).should be_false
       end
 
       context 'post is older than post_edit_time_limit' do
