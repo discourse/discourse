@@ -216,7 +216,7 @@ class ApplicationController < ActionController::Base
     user = if params[:username]
       username_lower = params[:username].downcase
       username_lower.gsub!(/\.json$/, '')
-      User.find_by(username_lower: username_lower)
+      User.find_by(username_lower: username_lower, active: true)
     elsif params[:external_id]
       SingleSignOnRecord.find_by(external_id: params[:external_id]).try(:user)
     end

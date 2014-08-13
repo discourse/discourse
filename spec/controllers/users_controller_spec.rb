@@ -19,6 +19,12 @@ describe UsersController do
       response.should_not be_success
     end
 
+    it 'returns not found when the user is inactive' do
+      inactive = Fabricate(:user, active: false)
+      xhr :get, :show, username: inactive.username
+      response.should_not be_success
+    end
+
     it "raises an error on invalid access" do
       Guardian.any_instance.expects(:can_see?).with(user).returns(false)
       xhr :get, :show, username: user.username

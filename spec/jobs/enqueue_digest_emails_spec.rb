@@ -42,7 +42,7 @@ describe Jobs::EnqueueDigestEmails do
     end
 
     context "inactive user" do
-      let!(:inactive_user) { Fabricate(:user) }
+      let!(:inactive_user) { Fabricate(:user, active: false) }
 
       it "doesn't return users who have been emailed recently" do
         Jobs::EnqueueDigestEmails.new.target_user_ids.include?(inactive_user.id).should be_false

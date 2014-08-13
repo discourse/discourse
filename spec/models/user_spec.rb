@@ -205,7 +205,6 @@ describe User do
 
     it { should be_valid }
     it { should_not be_admin }
-    it { should_not be_active }
     it { should_not be_approved }
     its(:approved_at) { should be_blank }
     its(:approved_by_id) { should be_blank }
