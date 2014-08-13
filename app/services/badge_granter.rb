@@ -134,8 +134,10 @@ class BadgeGranter
 
   def self.preview(sql, opts = {})
     params = {user_ids: [], post_ids: [], backfill: true}
-    count_sql = "SELECT COUNT(*) count FROM (#{sql}) q"
-    grant_count = SqlBuilder.map_exec(OpenStruct, count_sql, params).first.count
+
+    # hack to allow for params, otherwise sanitizer will trigger sprintf
+    count_sql = "SELECT COUNT(*) count FROM (#{sql}) q WHERE :backfill = :backfill"
+    grant_count = SqlBuilder.map_exec(OpenStruct, count_sql, params).first.count.to_i
 
     grants_sql =
      if opts[:target_posts]
@@ -144,11 +146,13 @@ class BadgeGranter
     JOIN users u on u.id = q.user_id
     LEFT JOIN badge_posts p on p.id = q.post_id
     LEFT JOIN topics t on t.id = p.topic_id
+    WHERE :backfill = :backfill
     LIMIT 10"
      else
       "SELECT u.id, u.username, q.granted_at
     FROM(#{sql}) q
     JOIN users u on u.id = q.user_id
+    WHERE :backfill = :backfill
     LIMIT 10"
      end
 
