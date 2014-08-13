@@ -309,7 +309,7 @@ SQL
   end
 
   def self.query_parent_category(parent_slug)
-    self.where(slug: parent_slug).pluck(:id).first ||
+    self.where(slug: parent_slug, parent_category_id: nil).pluck(:id).first ||
     self.where(id: parent_slug.to_i).pluck(:id).first
   end
 
