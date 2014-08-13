@@ -5,6 +5,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   editingTopic: false,
   selectedPosts: null,
   selectedReplies: null,
+  bulkSelectionOn: false,
+  bulkSelectionPost: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
 
   maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
@@ -254,6 +256,33 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       } else {
         selectedReplies.removeObject(post);
       }
+    },
+
+    toggledBulkSelectionStart: function(post) {
+      this.set('bulkSelectionPost', post);
+      this.performTogglePost(post);
+      this.toggleProperty('bulkSelectionOn');
+    },
+
+    toggledBulkSelectionEnd: function(post) {
+      var startPostId = this.get('bulkSelectionPost').id,
+        endPostId = post.id, self = this, tmp;
+
+      self.performTogglePost(post);
+
+      if (startPostId > endPostId) {
+        tmp = startPostId;
+        startPostId = endPostId;
+        endPostId = tmp;
+      }
+
+      self.get('postStream.posts').forEach(function (p) {
+        if (p.id === startPostId || p.id === endPostId)
+          return true;
+        if (p.id > startPostId && p.id < endPostId)
+          self.performTogglePost(p);
+      });
+      self.toggleProperty('bulkSelectionOn');
     },
 
     deleteSelected: function() {
