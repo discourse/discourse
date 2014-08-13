@@ -495,8 +495,8 @@ section.details {
 
 .admin-flags {
 
-  .hidden-post td.excerpt { opacity: 0.5; }
-  .deleted td.excerpt { background-color: scale-color($danger, $lightness: 70%); }
+  .hidden-post td.excerpt, .hidden-post td.user { opacity: 0.5; }
+  .deleted td.excerpt, .deleted td.user { background-color: scale-color($danger, $lightness: 70%); }
   .message { background-color: scale-color($highlight, $lightness: 70%); }
   .message:hover { background-color: scale-color($highlight, $lightness: 30%); }
   td { vertical-align: top; }
@@ -519,6 +519,9 @@ section.details {
   .flaggers {
     font-size: 11px;
     padding: 8px 0 0 5px;
+    .avatar {
+      width: 25px;
+    }
     table {
       max-width: 145px;
     }
@@ -528,6 +531,7 @@ section.details {
     td {
       vertical-align: middle;
       padding: 3px;
+      line-height: 1.4;
     }
   }
   .action {
