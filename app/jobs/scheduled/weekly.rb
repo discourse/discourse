@@ -11,6 +11,7 @@ module Jobs
       Post.calculate_avg_time
       Topic.calculate_avg_time
       ScoreCalculator.new.calculate
+      User.purge_inactive
     end
   end
 end

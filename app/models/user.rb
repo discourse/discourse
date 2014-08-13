@@ -712,6 +712,23 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Delete inactive accounts that are over a week old
+  def self.purge_inactive
+
+    # You might be wondering why this query matches on post_count = 0. The reason
+    # is a long time ago we had a bug where users could post before being activated
+    # and some sites still have those records which can't be purged.
+    to_destroy = User.where(active: false)
+                     .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
+                     .where("created_at < ?", 1.week.ago)
+                     .where('us.post_count = 0')
+
+    destroyer = UserDestroyer.new(Discourse.system_user)
+    to_destroy.each do |u|
+      destroyer.destroy(u)
+    end
+  end
+
   private
 
   def previous_visit_at_update_required?(timestamp)
