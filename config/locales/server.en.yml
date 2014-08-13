@@ -593,8 +593,8 @@ en:
       title: "New User Education: First Topics"
       description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
     usage_tips:
-      title: "New User Tips"
-      description: "Common usage tips, essential forum information, and key guidance intended for new users."
+      title: "New User Guidance"
+      description: "Guidance and essential information for new users."
     welcome_user:
       title: "Welcome: New User"
       description: "A private message automatically sent to all new users when they sign up."
