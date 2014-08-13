@@ -167,8 +167,23 @@ describe Jobs::PollMailbox do
         email.should be_deleted
       end
 
+      it "works with multiple To addresses" do
+        email = MockPop3EmailObject.new fixture_file('emails/multiple_destinations.eml')
+        expect_success
+
+        puts topic.posts
+        poller.handle_mail(email)
+
+        puts topic.posts
+        new_post = Post.find_by(topic: topic, post_number: 2)
+        assert new_post.present?
+        assert_equal expected_post.strip, new_post.cooked.strip
+
+        email.should be_deleted
+      end
+
       describe "with the wrong reply key" do
-        let(:email) { MockPop3EmailObject.new fixture_file('emails/wrong_reply_key.eml')}
+        let(:email) { MockPop3EmailObject.new fixture_file('emails/wrong_reply_key.eml') }
 
         it "raises an EmailLogNotFound error" do
           expect_exception Email::Receiver::EmailLogNotFound
