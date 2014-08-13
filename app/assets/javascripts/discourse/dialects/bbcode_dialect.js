@@ -120,7 +120,7 @@ Discourse.Markdown.whiteListTag('span', 'class', /^bbcode-size-\d+$/);
 // Handles `[code] ... [/code]` blocks
 Discourse.Dialect.replaceBlock({
   start: /(\[code\])([\s\S]*)/igm,
-  stop: '[/code]',
+  stop: /\[\/code\]/igm,
   rawContents: true,
 
   emitter: function(blockContents) {

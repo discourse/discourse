@@ -21,7 +21,7 @@ function flattenBlocks(blocks) {
 
 Discourse.Dialect.replaceBlock({
   start: /^`{3}([^\n\[\]]+)?\n?([\s\S]*)?/gm,
-  stop: '```',
+  stop: /^```$/gm,
   emitter: function(blockContents, matches) {
 
     var klass = Discourse.SiteSettings.default_code_lang;
@@ -54,7 +54,7 @@ Discourse.Dialect.on('parseNode', function (event) {
 
 Discourse.Dialect.replaceBlock({
   start: /(<pre[^\>]*\>)([\s\S]*)/igm,
-  stop: '</pre>',
+  stop: /<\/pre>/igm,
   rawContents: true,
   skipIfTradtionalLinebreaks: true,
 

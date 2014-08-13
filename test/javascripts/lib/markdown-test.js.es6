@@ -365,13 +365,17 @@ test("Code Blocks", function() {
           "<p><pre><code class=\"lang-auto\">hello</code></pre></p>",
           "it doesn't not whitelist all classes");
 
-  cooked("```[quote=\"sam, post:1, topic:9441, full:true\"]This is `<not>` a bug.[/quote]```",
+  cooked("```\n[quote=\"sam, post:1, topic:9441, full:true\"]This is `<not>` a bug.[/quote]\n```",
          "<p><pre><code class=\"lang-auto\">[quote=&quot;sam, post:1, topic:9441, full:true&quot;]This is &#x60;&lt;not&gt;&#x60; a bug.[/quote]</code></pre></p>",
          "it allows code with backticks in it");
 
   cooked("    hello\n<blockquote>test</blockquote>",
          "<pre><code>hello</code></pre>\n\n<blockquote>test</blockquote>",
          "it allows an indented code block to by followed by a `<blockquote>`");
+
+  cooked("``` foo bar ```",
+         "<p><code>foo bar</code></p>",
+         "it tolerates misuse of code block tags as inline code");
 });
 
 test("sanitize", function() {
