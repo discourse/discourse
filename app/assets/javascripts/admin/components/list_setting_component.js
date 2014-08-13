@@ -13,15 +13,31 @@
 Discourse.ListSettingComponent = Ember.Component.extend({
   tagName: 'div',
 
+
+  _select2FormatSelection: function(selectedObject, jqueryWrapper, htmlEscaper) {
+    var text = selectedObject.text;
+    if (text.length <= 6) {
+      jqueryWrapper.closest('li.select2-search-choice').css({"border-bottom": '7px solid #'+text});
+    }
+    return htmlEscaper(text);
+  },
+
   didInsertElement: function(){
-    this.$("input").select2({
-        multiple: false,
-        separator: "|",
-        tokenSeparators: ["|"],
-        tags : this.get("choices") || [],
-        width: 'off',
-        dropdownCss: this.get("choices") ? {} : {display: 'none'}
-      }).on("change", function(obj) {
+
+    var select2_options = {
+      multiple: false,
+      separator: "|",
+      tokenSeparators: ["|"],
+      tags : this.get("choices") || [],
+      width: 'off',
+      dropdownCss: this.get("choices") ? {} : {display: 'none'}
+    };
+
+    var settingName = this.get('settingName');
+    if (typeof settingName === 'string' && settingName.indexOf('colors') > -1) {
+      select2_options.formatSelection = this._select2FormatSelection;
+    }
+    this.$("input").select2(select2_options).on("change", function(obj) {
         this.set("settingValue", obj.val.join("|"));
         this.refreshSortables();
       }.bind(this));

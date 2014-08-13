@@ -11,6 +11,9 @@
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
+#
+# A type:list setting with the word 'colors' in its name will make color values have a bold line of the corresponding color
+#
 required:
   title:
     client: true
