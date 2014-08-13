@@ -17,7 +17,7 @@
       </thead>
 
       <tbody>
-        {{#groupedEach topic in topics}}
+        {{#grouped-each topic in topics}}
           <tr {{bind-attr class="archived"}}>
             <td class='main-link'>
               {{topic-status topic=topic}}
@@ -69,7 +69,7 @@
               <td class="activity"></td>
             {{/if}}
           </tr>
-        {{/groupedEach}}
+        {{/grouped-each}}
       </tbody>
 
     </table>

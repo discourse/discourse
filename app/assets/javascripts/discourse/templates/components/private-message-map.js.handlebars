@@ -1,11 +1,11 @@
 <h3><i class='fa fa-envelope'></i> {{i18n private_message_info.title}}</h3>
 <div class='participants clearfix'>
-  {{#groupedEach details.allowed_groups}}
+  {{#grouped-each details.allowed_groups}}
     <div class='user group'>
       #{{unbound name}}
     </div>
-  {{/groupedEach}}
-  {{#groupedEach details.allowed_users}}
+  {{/grouped-each}}
+  {{#grouped-each details.allowed_users}}
     <div class='user'>
       {{#link-to 'user' this}}
         {{avatar this imageSize="small"}}
@@ -17,7 +17,7 @@
         <a class='remove-invited' {{action removeAllowedUser this}}><i class="fa fa-times"></i></a>
       {{/if}}
     </div>
-  {{/groupedEach}}
+  {{/grouped-each}}
 </div>
 {{#if details.can_invite_to}}
   <div class='controls'>

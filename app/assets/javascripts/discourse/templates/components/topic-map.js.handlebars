@@ -45,21 +45,21 @@
     </li>
     {{/if}}
     <li {{bind-attr class=":avatars mapCollapsed::hidden"}}>
-      {{#groupedEach participant in details.fewParticipants}}{{topic-participant participant=participant}}{{/groupedEach}}
+      {{#grouped-each participant in details.fewParticipants}}{{topic-participant participant=participant}}{{/grouped-each}}
     </li>
   </ul>
 </section>
 
 {{#unless mapCollapsed}}
   <section class='avatars clearfix'>
-    {{#groupedEach participant in details.participants}}{{topic-participant participant=participant}}{{/groupedEach}}
+    {{#grouped-each participant in details.participants}}{{topic-participant participant=participant}}{{/grouped-each}}
   </section>
 
   {{#if infoLinks}}
     <section class='links'>
 
         <table class='topic-links'>
-          {{#groupedEach infoLinks}}
+          {{#grouped-each infoLinks}}
             <tr>
             <td>
               <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks count=clicks}}'>{{clicks}}</span>
@@ -71,7 +71,7 @@
               {{link-domain this}}
             </td>
             </tr>
-          {{/groupedEach}}
+          {{/grouped-each}}
         </table>
 
         {{#if showAllLinksControls}}
