@@ -238,6 +238,7 @@ class ImportScripts::Base
     end
     opts[:email] = opts[:email].downcase
     opts[:trust_level] = TrustLevel.levels[:basic] unless opts[:trust_level]
+    opts[:active] = true
     opts[:import_mode] = true
 
     u = User.new(opts)
