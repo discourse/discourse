@@ -66,8 +66,9 @@
               {{#if number_of_flagged_posts}}
                 <div>
                   {{#link-to 'user.flaggedPosts' this}}
-                    <span class="pill flagged-posts">{{number_of_flagged_posts}}</span>&nbsp;{{i18n user.staff_counters.flagged_posts}}</div>
+                    <span class="pill flagged-posts">{{number_of_flagged_posts}}</span>&nbsp;{{i18n user.staff_counters.flagged_posts}}
                   {{/link-to}}
+                </div>
               {{/if}}
               {{#if number_of_deleted_posts}}
                 <div>
