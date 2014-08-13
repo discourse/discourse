@@ -5,6 +5,14 @@ describe BadgeGranter do
   let(:badge) { Fabricate(:badge) }
   let(:user) { Fabricate(:user) }
 
+  describe 'preview' do
+    it 'can correctly preview' do
+      Fabricate(:user, email: 'sam@gmail.com')
+      result = BadgeGranter.preview('select id user_id, null post_id, created_at granted_at from users where email like \'%gmail.com\'')
+      result[:grant_count].should == 1
+    end
+  end
+
   describe 'backfill' do
 
     it 'has no broken badge queries' do
