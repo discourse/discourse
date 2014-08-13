@@ -147,16 +147,30 @@
         img {
           max-width: 100%;
         }
+
+        .primary-textual {
+          width: 90%;
+          margin: 0 auto;
+          padding: 4px;
+          background: rgba($primary, 0.3);
+
+          h1, h2 {
+            margin: 7px;
+          }
+        }
       }
 
       .secondary {
         background-color: $primary;
         text-align: left;
-        padding: 0 10px;
+        padding: 1px 10px;
 
         dd {
           color: $secondary;
           margin: 0 0 7px 0;
+          a {
+            color: inherit;
+          }
         }
         dt {
           color: scale-color($primary, $lightness: 75%);
@@ -274,8 +288,10 @@
 
   .staff-counters {
     text-align: center;
-    > div {
+    div {
+      padding: 2px 8px;
       margin-bottom: 10px;
+      display: inline-block;
     }
     a.active {
       font-weight: bold;
