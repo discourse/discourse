@@ -9,3 +9,9 @@
     1px -1px 0 scale-color($tertiary, $lightness: -10%),
     -1px 1px 0 scale-color($tertiary, $lightness: -10%);
 }
+
+.uploaded-image-preview {
+  background-position: center center;
+  background-size: cover;
+  background-color: $primary;
+}

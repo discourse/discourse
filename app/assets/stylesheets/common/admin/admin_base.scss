@@ -272,7 +272,7 @@ td.flaggers td {
 
   .setting.overridden {
     input[type=text] {
-      background-color: dark-light-diff(rgba($highlight,.7), $secondary, 50%, -10%);
+      background-color: dark-light-diff($highlight, $secondary, 50%, -10%);
 
     }
 
