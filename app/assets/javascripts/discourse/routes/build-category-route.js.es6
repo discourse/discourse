@@ -71,7 +71,7 @@ export default function(filter, params) {
           period = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
           filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
 
-      Discourse.set('title', I18n.t('filters.with_category', { filter: filterText, category: model.get('name').capitalize() }));
+      Discourse.set('title', I18n.t('filters.with_category', { filter: filterText, category: model.get('name') }));
 
       this.controllerFor('navigation/category').set('canCreateTopic', topics.get('can_create_topic'));
       this.controllerFor('discovery/topics').setProperties({

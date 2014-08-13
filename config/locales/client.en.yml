@@ -1338,8 +1338,8 @@ en:
     categories_list: "Categories List"
 
     filters:
-      with_topics: "%{filter} Topics"
-      with_category: "%{filter} %{category} Topics"
+      with_topics: "%{filter} topics"
+      with_category: "%{filter} %{category} topics"
       latest:
         title: "Latest"
         help: "topics with recent posts"
