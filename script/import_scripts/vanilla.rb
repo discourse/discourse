@@ -79,15 +79,22 @@ class ImportScripts::Vanilla < ImportScripts::Base
       create_users(@users) do |user|
         next if user[:name] == "[Deleted User]"
 
-        {
+        u = {
           id: user[:user_id],
           email: user[:email],
           name: user[:name],
           created_at: parse_date(user[:date_inserted]),
           bio_raw: clean_up(user[:discovery_text]),
+          avatar_url: user[:photo],
           moderator: @user_roles.select { |ur| ur[:user_id] == user[:user_id] }.map { |ur| ur[:role_id] }.include?(moderator_role_id),
           admin: @user_roles.select { |ur| ur[:user_id] == user[:user_id] }.map { |ur| ur[:role_id] }.include?(admin_role_id),
         }
+
+        # if @comments.select { |c| c[:insert_user_id] == user[:user_id] }.map { |c| c[:discussion_id] }.uniq.count > 3
+        #   u[:trust_level] = TrustLevel.levels[:regular]
+        # end
+
+        u
       end
     end
 
@@ -118,14 +125,14 @@ class ImportScripts::Vanilla < ImportScripts::Base
       c = {
         id: category[:category_id],
         name: category[:name],
-        user_id: user_id_from_imported_user_id(category[:insert_user_id]),
+        user_id: user_id_from_imported_user_id(category[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
         position: category[:sort].to_i,
         created_at: parse_category_date(category[:date_inserted]),
         description: clean_up(category[:description]),
       }
       if category[:parent_category_id] != "-1"
-        parent_category = category_from_imported_category_id(category[:parent_category_id].to_i)
-        c[:parent_category_id] = parent_category[:id] if parent_category
+        parent_category = category_from_imported_category_id(category[:parent_category_id])
+        c[:parent_category_id] = parent_category.id if parent_category
       end
       c
     end
@@ -140,9 +147,9 @@ class ImportScripts::Vanilla < ImportScripts::Base
       create_posts(@discussions) do |discussion|
         {
           id: "discussion#" + discussion[:discussion_id],
-          user_id: user_id_from_imported_user_id(discussion[:insert_user_id]),
+          user_id: user_id_from_imported_user_id(discussion[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
           title: discussion[:name],
-          category_id: category_from_imported_category_id(discussion[:category_id]).try(:id),
+          category: category_from_imported_category_id(discussion[:category_id]).try(:name),
           raw: clean_up(discussion[:body]),
           created_at: parse_date(discussion[:date_inserted]),
         }
@@ -157,7 +164,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
 
         {
           id: "comment#" + comment[:comment_id],
-          user_id: user_id_from_imported_user_id(comment[:insert_user_id]),
+          user_id: user_id_from_imported_user_id(comment[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
           topic_id: t[:topic_id],
           raw: clean_up(comment[:body]),
           created_at: parse_date(comment[:date_inserted]),
@@ -207,7 +214,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
         {
           archetype: Archetype.private_message,
           id: "message#" + message[:message_id],
-          user_id: user_id_from_imported_user_id(message[:insert_user_id]),
+          user_id: user_id_from_imported_user_id(message[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
           topic_id: t[:topic_id],
           raw: clean_up(message[:body]),
           created_at: parse_date(message[:date_inserted]),
@@ -225,6 +232,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
                  .gsub(/<\/?code\s*>/i, "`")
                  .gsub("&lt;", "<")
                  .gsub("&gt;", ">")
+                 # .gsub("*", "\\*")
     end
 
 end

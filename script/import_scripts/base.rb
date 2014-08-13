@@ -17,6 +17,7 @@ class ImportScripts::Base
 
   def initialize
     require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
+    preload_i18n
 
     @bbcode_to_md = true if ARGV.include?('bbcode-to-md')
     @existing_groups = {}
@@ -48,6 +49,11 @@ class ImportScripts::Base
     end
   end
 
+  def preload_i18n
+    I18n.t("test")
+    ActiveSupport::Inflector.transliterate("test")
+  end
+
   def perform
     Rails.logger.level = 3 # :error, so that we don't create log files that are many GB
 
@@ -62,12 +68,14 @@ class ImportScripts::Base
 
     execute
 
+    puts ""
+
     update_bumped_at
     update_feature_topic_users
     update_category_featured_topics
     update_topic_count_replies
 
-    puts '', 'Done'
+    puts "", "Done"
 
   ensure
     RateLimiter.enable
@@ -132,8 +140,6 @@ class ImportScripts::Base
   # group in the original datasource. The given id will not be used
   # to create the Discourse group record.
   def create_groups(results, opts={})
-    puts "", "creating groups"
-
     groups_created = 0
     groups_skipped = 0
     total = opts[:total] || results.size
@@ -182,8 +188,6 @@ class ImportScripts::Base
   # user in the original datasource. The given id will not be used to
   # create the Discourse user record.
   def create_users(results, opts={})
-    puts "", "creating users"
-
     num_users_before = User.count
     users_created = 0
     users_skipped = 0
@@ -225,17 +229,21 @@ class ImportScripts::Base
     opts.delete(:id)
     post_create_action = opts.delete(:post_create_action)
     existing = User.where(email: opts[:email].downcase, username: opts[:username]).first
-    return existing if existing and existing.custom_fields["import_id"].to_i == import_id.to_i
+    return existing if existing && existing.custom_fields["import_id"].to_i == import_id.to_i
 
     bio_raw = opts.delete(:bio_raw)
-    opts[:name] = User.suggest_name(opts[:name]) if opts[:name]
-    opts[:username] = UserNameSuggester.suggest((opts[:username].present? ? opts[:username] : nil) || opts[:name] || opts[:email])
+    opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
+    if opts[:username].blank? || !User.username_available?(opts[:username])
+      opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name] || opts[:email])
+    end
     opts[:email] = opts[:email].downcase
     opts[:trust_level] = TrustLevel.levels[:basic] unless opts[:trust_level]
+    opts[:import_mode] = true
 
     u = User.new(opts)
     u.custom_fields["import_id"] = import_id
     u.custom_fields["import_username"] = opts[:username] if opts[:username].present?
+    u.custom_fields["import_avatar_url"] = opts[:avatar_url] if opts[:avatar_url].present?
 
     begin
       User.transaction do
@@ -266,8 +274,6 @@ class ImportScripts::Base
   # create the Discourse category record.
   # Optional attributes are position, description, and parent_category_id.
   def create_categories(results)
-    puts "", "creating categories"
-
     results.each do |c|
       params = yield(c)
       puts "    #{params[:name]}"
@@ -308,8 +314,6 @@ class ImportScripts::Base
   # Topics should give attributes title and category.
   # Replies should provide topic_id. Use topic_lookup_from_imported_post_id to find the topic.
   def create_posts(results, opts={})
-    puts "", "creating posts"
-
     skipped = 0
     created = 0
     total = opts[:total] || results.size
@@ -389,8 +393,8 @@ class ImportScripts::Base
   end
 
   def close_inactive_topics(opts={})
+    puts "", "Closing topics that have been inactive for more than #{num_days} days."
     num_days = opts[:days] || 30
-    puts '', "Closing topics that have been inactive for more than #{num_days} days."
 
     query = Topic.where('last_posted_at < ?', num_days.days.ago).where(closed: false)
     total_count = query.count
@@ -404,7 +408,7 @@ class ImportScripts::Base
   end
 
   def update_bumped_at
-    puts '', "updating bumped_at on topics"
+    puts "updating bumped_at on topics"
     Post.exec_sql("update topics t set bumped_at = (select max(created_at) from posts where topic_id = t.id and post_type != #{Post.types[:moderator_action]})")
   end
 
@@ -422,7 +426,7 @@ class ImportScripts::Base
   end
 
   def update_category_featured_topics
-    puts '', "updating featured topics in categories"
+    puts "updating featured topics in categories"
     Category.find_each do |category|
       CategoryFeaturedTopic.feature_topics_for(category)
     end

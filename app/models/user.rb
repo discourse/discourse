@@ -67,19 +67,20 @@ class User < ActiveRecord::Base
   validate :password_validator
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
 
-  before_save :update_username_lower
-  before_save :ensure_password_is_hashed
   after_initialize :add_trust_level
   after_initialize :set_default_email_digest
   after_initialize :set_default_external_links_in_new_tab
-
-  after_save :update_tracked_topics
-  after_save :clear_global_notice_if_needed
 
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
+
+  before_save :update_username_lower
+  before_save :ensure_password_is_hashed
+
+  after_save :update_tracked_topics
+  after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
 
@@ -94,6 +95,9 @@ class User < ActiveRecord::Base
 
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
+
+  # set to true to optimize creation and save for imports
+  attr_accessor :import_mode
 
   scope :blocked, -> { where(blocked: true) } # no index
   scope :not_blocked, -> { where(blocked: false) } # no index
@@ -594,6 +598,8 @@ class User < ActiveRecord::Base
   end
 
   def refresh_avatar
+    return if @import_mode
+
     avatar = user_avatar || create_user_avatar
     gravatar_downloaded = false
 
