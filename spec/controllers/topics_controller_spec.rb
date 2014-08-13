@@ -558,6 +558,11 @@ describe TopicsController do
       expect(response).to redirect_to(topic.relative_url)
     end
 
+    it 'keeps the post_number parameter around when redirecting' do
+      xhr :get, :show, id: topic.slug, post_number: 42
+      expect(response).to redirect_to(topic.relative_url + "/42")
+    end
+
     it 'returns 404 when an invalid slug is given and no id' do
       xhr :get, :show, id: 'nope-nope'
       expect(response.status).to eq(404)
