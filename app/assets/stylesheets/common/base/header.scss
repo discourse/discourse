@@ -231,6 +231,8 @@
       font-size: 24px;
       text-align: center;
     }
+    /* as a big ol' click target, don't let text inside be selected */
+    @include unselectable;
   }
 
   .category-links li:not(.heading) a {
