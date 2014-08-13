@@ -610,7 +610,7 @@ text-overflow: ellipsis;
 
 .moderator {
   .topic-body {
-    background-color: dark-light-diff(rgba($highlight,.7), $secondary, 50%, -80%);
+    background-color: dark-light-diff($highlight, $secondary, 50%, -80%);
   }
 }
 
@@ -861,7 +861,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .active > a:hover {
   color: $primary;
   text-decoration: none;
-  background-color: dark-light-diff(rgba($highlight,.7), $secondary, 50%, -70%);
+  background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
 
 }
 

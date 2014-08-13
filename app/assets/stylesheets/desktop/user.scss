@@ -303,7 +303,7 @@
       color: $primary;
     }
     .item.moderator-action {
-      background-color: dark-light-diff(rgba($highlight,.7), $secondary, 50%, -10%);
+      background-color: dark-light-diff($highlight, $secondary, 50%, -10%);
     }
     .item.deleted {
       opacity: 0.8;

@@ -184,7 +184,7 @@
       }
 
       &:hover a:not(.badge-notification) {
-        background-color: dark-light-diff(rgba($highlight,.7), $secondary, 50%, -70%);
+        background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
         }
 
       button {margin-left: 5px;}
@@ -205,15 +205,14 @@
     .icon { color: scale-color($primary, $lightness: 30%); }
     li {
       background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
-      padding: 4px 0 3px 2px;
       i {
         float: left;
         margin-right: 5px;
         padding-top: 2px;
       }
       span { color: $primary; }
-      &:hover a { background: transparent; }
-      a { padding: 1px; }
+      &:hover a { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
+      a { padding: 4px 0 3px 2px; }
       p {
         margin: 0;
         overflow: hidden;
