@@ -23,6 +23,8 @@ var ApplicationRoute = Em.Route.extend({
     },
 
     showLogin: function() {
+      var self = this;
+
       if (Discourse.get("isReadOnly")) {
         bootbox.alert(I18n.t("read_only_mode.login_disabled"));
       } else {
@@ -30,14 +32,31 @@ var ApplicationRoute = Em.Route.extend({
           var returnPath = encodeURIComponent(window.location.pathname);
           window.location = Discourse.getURL('/session/sso?return_path=' + returnPath);
         } else {
-          Discourse.Route.showModal(this, 'login');
-          this.controllerFor('login').resetForm();
+          this.send('autoLogin', function(){
+            Discourse.Route.showModal(self, 'login');
+            self.controllerFor('login').resetForm();
+          });
         }
       }
     },
 
     showCreateAccount: function() {
-      Discourse.Route.showModal(this, 'createAccount');
+      var self = this;
+
+      self.send('autoLogin', function(){
+        Discourse.Route.showModal(self, 'createAccount');
+      });
+    },
+
+    autoLogin: function(onFail){
+      var methods = Em.get('Discourse.LoginMethod.all');
+      if (!Discourse.SiteSettings.enable_local_logins &&
+          methods.length === 1) {
+            Discourse.Route.showModal(this, 'login');
+            this.controllerFor('login').send("externalLogin", methods[0]);
+      } else {
+        onFail();
+      }
     },
 
     showForgotPassword: function() {
