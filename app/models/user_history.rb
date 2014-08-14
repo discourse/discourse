@@ -57,7 +57,7 @@ class UserHistory < ActiveRecord::Base
     end
     [:acting_user, :target_user].each do |key|
       if filters[key] and obj_id = User.where(username_lower: filters[key].downcase).pluck(:id)
-        query = query.where("#{key.to_s}_id = ?", obj_id)
+        query = query.where("#{key}_id = ?", obj_id)
       end
     end
     query = query.where("subject = ?", filters[:subject]) if filters[:subject]

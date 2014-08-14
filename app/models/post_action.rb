@@ -282,7 +282,7 @@ class PostAction < ActiveRecord::Base
 
     %w(like flag bookmark).each do |type|
       if send("is_#{type}?")
-        @rate_limiter = RateLimiter.new(user, "create_#{type}:#{Date.today.to_s}", SiteSetting.send("max_#{type}s_per_day"), 1.day.to_i)
+        @rate_limiter = RateLimiter.new(user, "create_#{type}:#{Date.today}", SiteSetting.send("max_#{type}s_per_day"), 1.day.to_i)
         return @rate_limiter
       end
     end
@@ -330,7 +330,7 @@ class PostAction < ActiveRecord::Base
 
   def update_counters
     # Update denormalized counts
-    column = "#{post_action_type_key.to_s}_count"
+    column = "#{post_action_type_key}_count"
     count = PostAction.where(post_id: post_id)
                       .where(post_action_type_id: post_action_type_id)
                       .count

@@ -102,7 +102,7 @@ class Typepad < Thor
   ensure
     RateLimiter.enable
     backup_settings.each do |s, v|
-      SiteSetting.send("#{s.to_s}=", v)
+      SiteSetting.send("#{s}=", v)
     end
   end
 
