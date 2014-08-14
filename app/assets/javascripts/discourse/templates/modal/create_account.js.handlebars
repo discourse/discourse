@@ -70,8 +70,10 @@
         </table>
         </form>
       </div>
-    </div>
+    {{/if}}
+  </div>
 
+  {{#if canCreateLocal}}
     <div class="modal-footer">
       {{#if tosAcceptRequired}}
         <div class="tos-agree">
