@@ -2,89 +2,91 @@
   <div class="modal-body">
     {{login-buttons action="externalLogin"}}
 
-    <div>
-      <form>
-      <table>
-      <tr class="input">
-          <td style="width:80px" class="label"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
-          <td style="width:496px">
-          {{text-field value=accountName id="new-account-name" autofocus="autofocus"}}
-          &nbsp;{{input-tip validation=nameValidation}}
-          </td>
-      </tr>
-      <tr class="instructions">
-        <td></td>
-        <td><label>{{i18n user.name.instructions}}</label></td>
-      </tr>
-
-      <tr class="input">
-            <td class="label"><label for='new-account-email'>{{i18n user.email.title}}</label></td>
-            <td>
-            {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated}}
-            &nbsp;{{input-tip validation=emailValidation}}
+    {{#if canCreateLocal}}
+      <div>
+        <form>
+        <table>
+        <tr class="input">
+            <td style="width:80px" class="label"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
+            <td style="width:496px">
+            {{text-field value=accountName id="new-account-name" autofocus="autofocus"}}
+            &nbsp;{{input-tip validation=nameValidation}}
             </td>
-      </tr>
-      <tr class="instructions">
-        <td></td>
-        <td><label>{{i18n user.email.instructions}}</label></td>
-      </tr>
+        </tr>
+        <tr class="instructions">
+          <td></td>
+          <td><label>{{i18n user.name.instructions}}</label></td>
+        </tr>
 
-      <tr class="input">
-            <td class="label"><label for='new-account-username'>{{i18n user.username.title}}</label></td>
+        <tr class="input">
+              <td class="label"><label for='new-account-email'>{{i18n user.email.title}}</label></td>
+              <td>
+              {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated}}
+              &nbsp;{{input-tip validation=emailValidation}}
+              </td>
+        </tr>
+        <tr class="instructions">
+          <td></td>
+          <td><label>{{i18n user.email.instructions}}</label></td>
+        </tr>
+
+        <tr class="input">
+              <td class="label"><label for='new-account-username'>{{i18n user.username.title}}</label></td>
+              <td>
+              {{input value=accountUsername id="new-account-username" maxlength=Discourse.SiteSettings.max_username_length}}
+              &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
+              </td>
+        </tr>
+        <tr class="instructions">
+          <td></td>
+          <td><label>{{i18n user.username.instructions}}</label></td>
+        </tr>
+
+        {{#if passwordRequired}}
+        <tr class="input">
+            <td class="label"><label for='new-account-password'>{{i18n user.password.title}}</label></td>
             <td>
-            {{input value=accountUsername id="new-account-username" maxlength=Discourse.SiteSettings.max_username_length}}
-            &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
+            {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
+            &nbsp;{{input-tip validation=passwordValidation}}
             </td>
-      </tr>
-      <tr class="instructions">
-        <td></td>
-        <td><label>{{i18n user.username.instructions}}</label></td>
-      </tr>
-
-      {{#if passwordRequired}}
-      <tr class="input">
-          <td class="label"><label for='new-account-password'>{{i18n user.password.title}}</label></td>
+        </tr>
+        <tr class="instructions">
+          <td></td>
           <td>
-          {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-          &nbsp;{{input-tip validation=passwordValidation}}
+            <label>{{passwordInstructions}}</label>
+            <div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n login.caps_lock_warning}}</div>
           </td>
-      </tr>
-      <tr class="instructions">
-        <td></td>
-        <td>
-          <label>{{passwordInstructions}}</label>
-          <div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n login.caps_lock_warning}}</div>
-        </td>
-      </tr>
-      {{/if}}
+        </tr>
+        {{/if}}
 
-      <tr class="password-confirmation">
-          <td><label for='new-account-password-confirmation'>{{i18n user.password_confirmation.title}}</label></td>
-          <td>
-          {{input type="password" value=accountPasswordConfirm id="new-account-confirmation"}}
-          {{input value=accountChallenge id="new-account-challenge"}}
-          </td>
-      </tr>
+        <tr class="password-confirmation">
+            <td><label for='new-account-password-confirmation'>{{i18n user.password_confirmation.title}}</label></td>
+            <td>
+            {{input type="password" value=accountPasswordConfirm id="new-account-confirmation"}}
+            {{input value=accountChallenge id="new-account-challenge"}}
+            </td>
+        </tr>
 
-      </table>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-footer">
-    {{#if tosAcceptRequired}}
-      <div class="tos-agree">
-        {{input type="checkbox" checked=tosAccepted}}
-        {{custom-html "tos_signup_form_message"}}
+        </table>
+        </form>
       </div>
-    {{/if}}
-    <button class='btn btn-large btn-primary' {{bind-attr disabled="submitDisabled"}} {{action createAccount}}>{{i18n create_account.title}}</button>
-    {{#if formSubmitted}}
-      &nbsp; <i class='fa fa-spinner fa-spin'></i>
-    {{else}}
-      <button class="btn btn-large" id="login-link" {{action showLogin}}>
-        {{i18n log_in}}
-      </button>
-    {{/if}}
-  </div>
+    </div>
+
+    <div class="modal-footer">
+      {{#if tosAcceptRequired}}
+        <div class="tos-agree">
+          {{input type="checkbox" checked=tosAccepted}}
+          {{custom-html "tos_signup_form_message"}}
+        </div>
+      {{/if}}
+      <button class='btn btn-large btn-primary' {{bind-attr disabled="submitDisabled"}} {{action createAccount}}>{{i18n create_account.title}}</button>
+      {{#if formSubmitted}}
+        &nbsp; <i class='fa fa-spinner fa-spin'></i>
+      {{else}}
+        <button class="btn btn-large" id="login-link" {{action showLogin}}>
+          {{i18n log_in}}
+        </button>
+      {{/if}}
+    </div>
+  {{/if}}
 {{/unless}}
