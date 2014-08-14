@@ -48,11 +48,11 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
 # Install Discourse
 
-Create a `/var/docker` folder, clone the [Official Discourse Docker Image][dd] into it, and make a copy of the config file as `app.yml`:
+Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it, and make a copy of the config file as `app.yml`:
 
-    mkdir /var/docker
-    git clone https://github.com/discourse/discourse_docker.git /var/docker
-    cd /var/docker
+    mkdir /var/discourse
+    git clone https://github.com/discourse/discourse_docker.git /var/discourse
+    cd /var/discourse
     cp samples/standalone.yml containers/app.yml
 
 <img src="http://www.discourse.org/images/install/mkdir-var-docker.png" width="586" height="246">
@@ -124,7 +124,7 @@ You should see Staff topics and the [Admin Quick Start Guide](https://github.com
 
 To **upgrade Discourse to the latest version**, visit `/admin/docker` and follow the instructions.
 
-The `launcher` command in the `/var/docker` folder can be used for various kinds of maintenance:
+The `launcher` command in the `/var/discourse` folder can be used for various kinds of maintenance:
 
 ```
 Usage: launcher COMMAND CONFIG [--skip-prereqs]
