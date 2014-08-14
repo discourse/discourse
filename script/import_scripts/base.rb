@@ -232,6 +232,8 @@ class ImportScripts::Base
     return existing if existing && existing.custom_fields["import_id"].to_i == import_id.to_i
 
     bio_raw = opts.delete(:bio_raw)
+    avatar_url = opts.delete(:avatar_url)
+
     opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
     if opts[:username].blank? || !User.username_available?(opts[:username])
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name] || opts[:email])
@@ -244,7 +246,7 @@ class ImportScripts::Base
     u = User.new(opts)
     u.custom_fields["import_id"] = import_id
     u.custom_fields["import_username"] = opts[:username] if opts[:username].present?
-    u.custom_fields["import_avatar_url"] = opts[:avatar_url] if opts[:avatar_url].present?
+    u.custom_fields["import_avatar_url"] = avatar_url if avatar_url.present?
 
     begin
       User.transaction do
