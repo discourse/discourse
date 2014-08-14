@@ -68,16 +68,12 @@ Discourse.AdminUser = Discourse.User.extend({
   }.property('can_delete_all_posts'),
 
   deleteAllPosts: function() {
-    this.set('can_delete_all_posts', false);
     var user = this;
     var message = I18n.t('admin.user.delete_all_posts_confirm', {posts: user.get('post_count'), topics: user.get('topic_count')});
     var buttons = [{
       "label": I18n.t("composer.cancel"),
       "class": "cancel-inline",
-      "link":  true,
-      "callback": function() {
-        user.set('can_delete_all_posts', true);
-      }
+      "link":  true
     }, {
       "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("admin.user.delete_all_posts"),
       "class": "btn btn-danger",
