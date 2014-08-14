@@ -20,6 +20,7 @@
 //= require ./discourse/models/composer
 //= require ./discourse/models/topic
 //= require ./discourse/controllers/controller
+//= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/object
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/views/modal_body_view

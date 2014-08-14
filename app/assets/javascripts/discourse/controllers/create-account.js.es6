@@ -3,6 +3,8 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseController from 'discourse/controllers/controller';
 
 export default DiscourseController.extend(ModalFunctionality, {
+  needs: ['login'],
+
   uniqueUsernameValidation: null,
   globalNicknameExists: false,
   complete: false,
@@ -323,6 +325,10 @@ export default DiscourseController.extend(ModalFunctionality, {
   tosAcceptRequired: Discourse.computed.setting('tos_accept_required'),
 
   actions: {
+    externalLogin: function(provider) {
+      this.get('controllers.login').send('externalLogin', provider);
+    },
+
     createAccount: function() {
       var self = this;
       this.set('formSubmitted', true);
