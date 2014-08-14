@@ -26,14 +26,7 @@ export default function(filter) {
       Discourse.ScreenTrack.current().stop();
 
       var findOpts = filterQueryParams(transaction.queryParams);
-      return Discourse.TopicList.list(filter, findOpts).then(function(list) {
-        var tracking = Discourse.TopicTrackingState.current();
-        if (tracking) {
-          tracking.sync(list, filter);
-          tracking.trackIncoming(filter);
-        }
-        return list;
-      });
+      return Discourse.TopicList.list(filter, findOpts);
     },
 
     setupController: function(controller, model, trans) {
