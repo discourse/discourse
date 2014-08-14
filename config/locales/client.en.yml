@@ -547,7 +547,7 @@ en:
       enabled_description: "This topic contains deleted posts, which have been hidden. "
       disabled_description: "Deleted posts in the topic are shown."
       enable: "Hide Deleted Posts"
-      disable: "Unhide Deleted Posts"
+      disable: "Show Deleted Posts"
 
     private_message_info:
       title: "Private Message"
