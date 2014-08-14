@@ -48,13 +48,13 @@ body {
   }
 
   .coldmap-high {
-    color: scale-color(#0088cc, $lightness: -10%) !important;
+    color: #DDDDDD !important;
   }
   .coldmap-med {
-    color: #0088cc !important;
+    color: #BFBFBF !important;
   }
   .coldmap-low {
-    color: scale-color(#0088cc, $lightness: 40%) !important;
+    color: #AAAAAA !important;
   }
   .heatmap-high {
     color: darken(#e45735, 10%) !important;
