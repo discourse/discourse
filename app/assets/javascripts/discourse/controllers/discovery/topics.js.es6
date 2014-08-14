@@ -1,14 +1,13 @@
 import DiscoveryController from 'discourse/controllers/discovery';
+import { queryParams } from 'discourse/controllers/discovery-sortable';
 
-export default DiscoveryController.extend({
+var controllerOpts = {
   needs: ['discovery'],
   bulkSelectEnabled: false,
   selected: [],
 
   order: 'default',
   ascending: false,
-  status: null,
-  search: null,
 
   actions: {
 
@@ -149,4 +148,13 @@ export default DiscoveryController.extend({
   loadMoreTopics: function() {
     return this.get('model').loadMore();
   }
+};
+
+Ember.keys(queryParams).forEach(function(p) {
+  // If we don't have a default value, initialize it to null
+  if (typeof controllerOpts[p] === 'undefined') {
+    controllerOpts[p] = null;
+  }
 });
+
+export default DiscoveryController.extend(controllerOpts);

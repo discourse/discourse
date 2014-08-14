@@ -1,12 +1,6 @@
 // A helper to build a topic route for a filter
 
-export var queryParams = {
-  sort: { replace: true },
-  ascending: { replace: true },
-  status: { replace: true },
-  state: { replace: true },
-  search: { replace: true }
-};
+import { queryParams } from 'discourse/controllers/discovery-sortable';
 
 export function filterQueryParams(params, defaultParams) {
   var findOpts = defaultParams || {};
