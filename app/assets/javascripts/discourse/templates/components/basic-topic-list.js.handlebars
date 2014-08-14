@@ -12,7 +12,7 @@
             <th class="posters">{{i18n users}}</th>
           {{/if}}
           <th class="num views">{{i18n views}}</th>
-          <th class="num activity" colspan="2">{{i18n activity}}</th>
+          <th class="num activity">{{i18n activity}}</th>
         </tr>
       </thead>
 
@@ -55,19 +55,7 @@
               {{number topic.views numberKey="views_long"}}
             </td>
 
-            {{#if topic.bumped}}
-              <td class='num activity'>
-                <a href="{{unbound topic.url}}" class='{{cold-age-class created_at}}' title='{{i18n first_post}}: {{{raw-date topic.created_at}}}' >{{age topic.created_at}}</a>
-              </td>
-              <td class='num activity last'>
-                <a href="{{unbound topic.lastPostUrl}}" class='{{cold-age-class bumped_at}}' title='{{i18n last_post}}: {{{raw-date topic.bumped_at}}}'>{{age topic.bumped_at}}</a>
-              </td>
-            {{else}}
-              <td class='num activity'>
-                <a href="{{unbound topic.url}}" class='age' title='{{i18n first_post}}: {{{raw-date topic.created_at}}}'>{{age topic.created_at}}</a>
-              </td>
-              <td class="activity"></td>
-            {{/if}}
+            {{activity-column topic=topic class="num"}}
           </tr>
         {{/grouped-each}}
       </tbody>

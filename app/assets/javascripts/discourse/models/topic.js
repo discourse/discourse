@@ -1,11 +1,3 @@
-/**
-  A data model representing a Topic
-
-  @class Topic
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.Topic = Discourse.Model.extend({
 
   postStream: function() {
