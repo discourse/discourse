@@ -119,24 +119,34 @@ describe PostDestroyer do
     end
 
     context "as a moderator" do
-      before do
-        PostDestroyer.new(moderator, post).destroy
-      end
-
       it "deletes the post" do
+        PostDestroyer.new(moderator, post).destroy
         post.deleted_at.should be_present
         post.deleted_by.should == moderator
+      end
+
+      it "updates the user's post_count" do
+        author = post.user
+        expect {
+          PostDestroyer.new(moderator, post).destroy
+          author.reload
+        }.to change { author.post_count }.by(-1)
       end
     end
 
     context "as an admin" do
-      before do
-        PostDestroyer.new(admin, post).destroy
-      end
-
       it "deletes the post" do
+        PostDestroyer.new(admin, post).destroy
         post.deleted_at.should be_present
         post.deleted_by.should == admin
+      end
+
+      it "updates the user's post_count" do
+        author = post.user
+        expect {
+          PostDestroyer.new(admin, post).destroy
+          author.reload
+        }.to change { author.post_count }.by(-1)
       end
     end
 

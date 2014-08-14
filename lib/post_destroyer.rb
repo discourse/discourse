@@ -28,6 +28,7 @@ class PostDestroyer
   def initialize(user, post)
     @user = user
     @post = post
+    @topic = post.topic if post
   end
 
   def destroy
@@ -72,6 +73,7 @@ class PostDestroyer
       remove_associated_notifications
       @post.topic.trash!(@user) if @post.topic && @post.post_number == 1
       update_associated_category_latest_topic
+      update_user_counts
     end
     publish("deleted")
   end
@@ -176,6 +178,33 @@ class PostDestroyer
     return unless @post.id == @post.topic.category.latest_post_id || (@post.post_number == 1 && @post.topic_id == @post.topic.category.latest_topic_id)
 
     @post.topic.category.update_latest
+  end
+
+  def update_user_counts
+    author = @post.user
+
+    return unless author
+
+    author.create_user_stat if author.user_stat.nil?
+
+    if @post.created_at == author.user_stat.first_post_created_at
+      author.user_stat.first_post_created_at = author.posts.order('created_at ASC').first.try(:created_at)
+    end
+
+    author.user_stat.post_count -= 1
+    author.user_stat.topic_count -= 1 if @post.post_number == 1
+
+    # We don't count replies to your own topics
+    if @topic && author.id != @topic.user_id
+      author.user_stat.update_topic_reply_count
+    end
+
+    author.user_stat.save!
+
+    if @post.created_at == author.last_posted_at
+      author.last_posted_at = author.posts.order('created_at DESC').first.try(:created_at)
+      author.save!
+    end
   end
 
 end
