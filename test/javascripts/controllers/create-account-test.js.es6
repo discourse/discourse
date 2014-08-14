@@ -1,5 +1,5 @@
 moduleFor("controller:create-account", "controller:create-account", {
-  needs: ['controller:modal']
+  needs: ['controller:modal', 'controller:login']
 });
 
 test('basicUsernameValidation', function() {
