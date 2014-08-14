@@ -27,13 +27,12 @@
 
     .active .icon {
       &:after { margin-top: -1px; }
-
+    }
   }
 
   button.sign-up-button {
     display:none;
   }
-}
 }
 #main-outlet {
   padding-top: 60px;
