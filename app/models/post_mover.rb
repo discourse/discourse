@@ -105,7 +105,7 @@ class PostMover
   def create_moderator_post_in_original_topic
     original_topic.add_moderator_post(
       user,
-      I18n.t("move_posts.#{PostMover.move_types[@move_type].to_s}_moderator_post",
+      I18n.t("move_posts.#{PostMover.move_types[@move_type]}_moderator_post",
              count: post_ids.count,
              topic_link: "[#{destination_topic.title}](#{destination_topic.url})"),
       post_number: @first_post_number_moved
