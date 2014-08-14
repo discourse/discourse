@@ -27,6 +27,11 @@
 
     .active .icon {
       &:after { margin-top: -1px; }
+
+  }
+
+  button.sign-up-button {
+    display:none;
   }
 }
 }
@@ -53,7 +58,7 @@
   // Search
 
   input[type='text'] {
-    width: 267px;
+    width: 265px;
     font-size: 16px;
   }
 
