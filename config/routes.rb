@@ -145,6 +145,15 @@ Discourse::Application.routes.draw do
       end
     end
 
+    resources :export_csv, constraints: AdminConstraint.new do
+      member do
+        get "download" => "export_csv#download", constraints: { id: /[^\/]+/ }
+      end
+      collection do
+        get "users" => "export_csv#export_user_list"
+      end
+    end
+
     resources :badges, constraints: AdminConstraint.new do
       collection do
         get "types" => "badges#badge_types"
