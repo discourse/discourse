@@ -84,7 +84,7 @@ module Middleware
         status,headers,response = result
 
         if status == 200 && cache_duration
-          headers_stripped = headers.dup.delete_if{|k,v| ["Set-Cookie","X-MiniProfiler-Ids"].include? k}
+          headers_stripped = headers.dup.delete_if{|k, _| ["Set-Cookie","X-MiniProfiler-Ids"].include? k}
           parts = []
           response.each do |part|
             parts << part

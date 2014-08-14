@@ -23,7 +23,7 @@ def profile_allocations(name)
   initial_size = ObjectSpace.count_objects
   yield
   changes = ObjectSpace.count_objects
-  changes.each do |k,v|
+  changes.each do |k, _|
     changes[k] -= initial_size[k]
   end
   puts "#{name} changes"

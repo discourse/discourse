@@ -38,7 +38,7 @@ Discourse::Application.configure do
 
     settings[:openssl_verify_mode] = GlobalSetting.smtp_openssl_verify_mode if GlobalSetting.smtp_openssl_verify_mode
 
-    config.action_mailer.smtp_settings = settings.reject{|x,y| y.nil?}
+    config.action_mailer.smtp_settings = settings.reject{|_, y| y.nil?}
   else
     config.action_mailer.delivery_method = :sendmail
     config.action_mailer.sendmail_settings = {arguments: '-i'}
