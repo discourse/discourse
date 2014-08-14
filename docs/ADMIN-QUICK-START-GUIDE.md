@@ -80,14 +80,14 @@ Email deliverability can be hard. We strongly recommend using dedicated email se
 
 ### What and Who is this site for?
 
-One of the default topics is [Welcome to Discourse](/t/welcome/6). This topic is pinned globally, so it will appear on the homepage, right at the top of the topic list, for all new users. Your welcome topic is important because it is the first thing you visitors will see:
+One of the default topics is [Welcome to Discourse](/t/welcome-to-discourse). This topic is pinned globally, so it will appear on the homepage, right at the top of the topic list, for all new users. Your welcome topic is important because it is the first thing you visitors will see:
 
 - Where am I?
 - Who is this discussion area for?
 - What can I [find here](https://www.youtube.com/watch?v=d0VNHe5fq30)?
 - Why should I visit here?
 
-[Edit this welcome topic](/t/welcome/6) and write a **brief introduction to your community**. Think of it as your "elevator pitch" &ndash; how would you describe this site to a stranger on an elevator when you had about 1 minute to talk?
+[Edit this welcome topic](/t/welcome-to-discourse) and write a **brief introduction to your community**. Think of it as your "elevator pitch" &ndash; how would you describe this site to a stranger on an elevator when you had about 1 minute to talk?
 
 Note that pinning topics works a little differently in Discourse:
 
@@ -177,7 +177,7 @@ Out of the box, Discourse defaults to [Creative Commons licensing](https://creat
 
 Number 3 is the Discourse default &ndash; that's [Creative Commons BY-NC-SA 3.0](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US).
 
- If that's not what you want, please see our [admin User Content Licensing](/admin/site_contents/tos_user_content_license) page for a brief form that will let you cut and paste your decision into section #3 of the [Terms of Service](/tos#3). 
+ If that's not what you want, edit the [Terms of Service](/tos) to taste via the edit link at the top.
 
 ### Building Your Community
 
