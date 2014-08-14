@@ -142,7 +142,7 @@ class Topic < ActiveRecord::Base
   # Helps us limit how many topics can be starred in a day
   class StarLimiter < RateLimiter
     def initialize(user)
-      super(user, "starred:#{Date.today.to_s}", SiteSetting.max_stars_per_day, 1.day.to_i)
+      super(user, "starred:#{Date.today}", SiteSetting.max_stars_per_day, 1.day.to_i)
     end
   end
 
@@ -834,7 +834,7 @@ class Topic < ActiveRecord::Base
   end
 
   def apply_per_day_rate_limit_for(key, method_name)
-    RateLimiter.new(user, "#{key}-per-day:#{Date.today.to_s}", SiteSetting.send(method_name), 1.day.to_i)
+    RateLimiter.new(user, "#{key}-per-day:#{Date.today}", SiteSetting.send(method_name), 1.day.to_i)
   end
 
 end

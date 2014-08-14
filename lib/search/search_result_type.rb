@@ -22,7 +22,7 @@ class Search
 
     def as_json(options = nil)
       { type: @type.to_s,
-        name: I18n.t("search.types.#{@type.to_s}"),
+        name: I18n.t("search.types.#{@type}"),
         more: @more,
         results: @results.map(&:as_json) }
     end
