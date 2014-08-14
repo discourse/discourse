@@ -55,7 +55,7 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
     cd /var/discourse
     cp samples/standalone.yml containers/app.yml
 
-<img src="http://www.discourse.org/images/install/mkdir-var-docker.png" width="586" height="246">
+<img src="https://meta.discourse.org/uploads/default/33557/28f36eb5069e75c4.png" width="662" height="240">
 
 # Edit Discourse Configuration
 
@@ -95,11 +95,11 @@ Save the `app.yml` file, and begin bootstrapping Discourse:
 
 This command takes about 8 minutes. It is automagically configuring your Discourse environment.
 
-<img src="http://www.discourse.org/images/install/launcher-start-app.png" width="593" height="229">
-
 After that completes, start Discourse:
 
     ./launcher start app
+
+<img src="https://meta.discourse.org/uploads/default/33558/a988b9ec9ac5ff7a.png" width="669" height="233">
 
 Congratulations! You now have your own instance of Discourse!
 
