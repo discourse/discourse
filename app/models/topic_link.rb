@@ -105,8 +105,8 @@ class TopicLink < ActiveRecord::Base
       PrettyText
         .extract_links(post.cooked)
         .map{|u| [u, URI.parse(u.url)] rescue nil}
-        .reject{|u,p| p.nil?}
-        .uniq{|u,p| p}
+        .reject{|_, p| p.nil?}
+        .uniq{|_, p| p}
         .each do |link, parsed|
         begin
 

@@ -139,7 +139,7 @@ class PostDestroyer
     public_post_actions = PostAction.publics.where(post_id: @post.id)
     public_post_actions.each { |pa| pa.trash!(@user) }
 
-    f = PostActionType.public_types.map { |k,v| ["#{k}_count", 0] }
+    f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
     Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
   end
 
