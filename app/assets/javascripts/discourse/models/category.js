@@ -240,7 +240,6 @@ Discourse.Category.reopenClass({
   },
 
   findBySlug: function(slug, parentSlug) {
-
     var categories = Discourse.Category.list(),
         category;
 
@@ -268,8 +267,8 @@ Discourse.Category.reopenClass({
     return category;
   },
 
-  reloadBySlugOrId: function(slugOrId) {
-    return Discourse.ajax("/category/" + slugOrId + "/show.json").then(function (result) {
+  reloadById: function(id) {
+    return Discourse.ajax("/category/" + id + "/show.json").then(function (result) {
       return Discourse.Category.create(result.category);
     });
   }
