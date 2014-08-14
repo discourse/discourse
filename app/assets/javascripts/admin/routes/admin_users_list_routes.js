@@ -9,6 +9,12 @@
 Discourse.AdminUsersListRoute = Discourse.Route.extend({
   renderTemplate: function() {
     this.render('admin/templates/users_list', {into: 'admin/templates/admin'});
+  },
+
+  actions: {
+    exportUsers: function() {
+      Discourse.ExportCsv.exportUserList();
+    }
   }
 });
 
@@ -57,7 +63,7 @@ Discourse.AdminUsersListNewRoute = Discourse.Route.extend({
 /**
   Handles the route that lists pending users.
 
-  @class AdminUsersListNewRoute
+  @class AdminUsersListPendingRoute
   @extends Discourse.Route
   @namespace Discourse
   @module Discourse

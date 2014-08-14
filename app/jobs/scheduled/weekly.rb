@@ -11,6 +11,7 @@ module Jobs
       Post.calculate_avg_time
       Topic.calculate_avg_time
       ScoreCalculator.new.calculate
+      ExportCsv.remove_old_exports # delete exported CSV files older than 2 days
     end
   end
 end
