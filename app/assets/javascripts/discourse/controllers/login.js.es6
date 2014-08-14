@@ -8,6 +8,8 @@ export default DiscourseController.extend(ModalFunctionality, {
   loggingIn: false,
   loggedIn: false,
 
+  canLoginLocal: Discourse.computed.setting('enable_local_logins'),
+
   resetForm: function() {
     this.set('authenticate', null);
     this.set('loggingIn', false);
