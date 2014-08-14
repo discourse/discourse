@@ -48,23 +48,24 @@ body {
   }
 
   .coldmap-high {
-    color: scale-color(#0088cc, $lightness: 40%) !important;
+    color: scale-color(#0088cc, $lightness: -10%) !important;
   }
   .coldmap-med {
     color: #0088cc !important;
   }
   .coldmap-low {
-    color: scale-color(#0088cc, $lightness: -10%) !important;
+    color: scale-color(#0088cc, $lightness: 40%) !important;
   }
   .heatmap-high {
-    color: scale-color(#e45735, $lightness: 30%) !important;
+    color: darken(#e45735, 10%) !important;
   }
   .heatmap-med {
     color: #e45735  !important;
   }
   .heatmap-low {
-    color: darken(#e45735, 10%) !important;
+    color: scale-color(#e45735, $lightness: 30%) !important;
   }
+
   #loading-message {
     position: absolute;
     font-size: 30px;
