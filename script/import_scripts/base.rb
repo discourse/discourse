@@ -212,7 +212,7 @@ class ImportScripts::Base
           users_created += 1
         else
           @failed_users << u
-          puts "Failed to create user id #{u[:id]} #{new_user.email}: #{new_user.errors.full_messages}"
+          puts "Failed to create user id: #{u[:id]}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
         end
       else
         @failed_users << u
@@ -235,7 +235,12 @@ class ImportScripts::Base
     avatar_url = opts.delete(:avatar_url)
 
     opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
-    if opts[:username].blank? || !User.username_available?(opts[:username])
+    if opts[:username].blank? ||
+        opts[:username].length < User.username_length.begin ||
+        opts[:username].length > User.username_length.end ||
+        opts[:username] =~ /[^A-Za-z0-9_]/ ||
+        opts[:username][0] =~ /[^A-Za-z0-9]/ ||
+        !User.username_available?(opts[:username])
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name] || opts[:email])
     end
     opts[:email] = opts[:email].downcase
