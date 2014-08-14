@@ -53,12 +53,6 @@ export default function(filter, params) {
       var findOpts = filterQueryParams(transaction.queryParams, params);
 
       return Discourse.TopicList.list(listFilter, findOpts).then(function(list) {
-        var tracking = Discourse.TopicTrackingState.current();
-        if (tracking) {
-          tracking.sync(list, listFilter);
-          tracking.trackIncoming(listFilter);
-        }
-
         // If all the categories are the same, we can hide them
         var hideCategory = !list.get('topics').find(function (t) { return t.get('category') !== model; });
         list.set('hideCategory', hideCategory);

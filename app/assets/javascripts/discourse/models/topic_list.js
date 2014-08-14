@@ -196,10 +196,16 @@ Discourse.TopicList.reopenClass({
   **/
   list: function(filter, params) {
     var session = Discourse.Session.current(),
-        list = session.get('topicList');
+        list = session.get('topicList'),
+        tracking = Discourse.TopicTrackingState.current();
 
     if (list && (list.get('filter') === filter)) {
       list.set('loaded', true);
+
+      if (tracking) {
+        tracking.updateTopics(list.get('topics'));
+      }
+
       return Ember.RSVP.resolve(list);
     }
     session.setProperties({topicList: null, topicListScrollPosition: null});
@@ -223,7 +229,13 @@ Discourse.TopicList.reopenClass({
       }
     });
 
-    return Discourse.TopicList.find(filter, _.extend(findParams, params || {}));
+    return Discourse.TopicList.find(filter, _.extend(findParams, params || {})).then(function (list) {
+      if (tracking) {
+        tracking.sync(list, list.filter);
+        tracking.trackIncoming(list.filter);
+      }
+      return list;
+    });
   },
 
   find: function(filter, params) {
