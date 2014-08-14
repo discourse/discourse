@@ -50,16 +50,4 @@
 
 <td {{bind-attr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
 
-{{#if bumped}}
-  <td class='num activity'>
-    <a href="{{url}}" class="{{cold-age-class created_at}}" title='{{i18n first_post}}: {{{raw-date created_at}}}' >{{age created_at}}</a>
-  </td>
-  <td class='num activity last'>
-    <a href="{{lastPostUrl}}" class="{{cold-age-class bumped_at}}" title='{{i18n last_post}}: {{{raw-date bumped_at}}}'>{{age bumped_at}}</a>
-  </td>
-{{else}}
-  <td class='num activity'>
-    <a href="{{url}}" class="{{cold-age-class created_at}}" title='{{i18n first_post}}: {{{raw-date created_at}}}'>{{age created_at}}</a>
-  </td>
-  <td class='activity'></td>
-{{/if}}
+{{activity-column topic=model class="num"}}
