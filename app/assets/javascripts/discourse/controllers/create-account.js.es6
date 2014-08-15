@@ -16,7 +16,9 @@ export default DiscourseController.extend(ModalFunctionality, {
   prefilledUsername: null,
   tosAccepted: false,
 
+  hasAuthOptions: Em.computed.notEmpty('authOptions'),
   canCreateLocal: Discourse.computed.setting('enable_local_logins'),
+  showCreateForm: Em.computed.or('hasAuthOptions', 'canCreateLocal'),
 
   resetForm: function() {
     this.setProperties({

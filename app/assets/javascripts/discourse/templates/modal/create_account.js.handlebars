@@ -1,8 +1,10 @@
 {{#unless complete}}
   <div class="modal-body">
-    {{login-buttons action="externalLogin"}}
+    {{#unless hasAuthOptions}}
+      {{login-buttons action="externalLogin"}}
+    {{/unless}}
 
-    {{#if canCreateLocal}}
+    {{#if showCreateForm}}
       <div>
         <form>
         <table>
@@ -73,7 +75,7 @@
     {{/if}}
   </div>
 
-  {{#if canCreateLocal}}
+  {{#if showCreateForm}}
     <div class="modal-footer">
       {{#if tosAcceptRequired}}
         <div class="tos-agree">
