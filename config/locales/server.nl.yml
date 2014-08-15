@@ -473,9 +473,6 @@ nl:
     education_new_topic:
       title: "Uitleg voor nieuwe leden: Eerste topics"
       description: "Popup verschijnt automatisch als een nieuw lid zijn eerste twee topics schrijft."
-    usage_tips:
-      title: "Tips voor nieuwe leden"
-      description: "Algemene gebruikstips, essentiële informatie over het forum en uitleg voor nieuwe leden."
     welcome_user:
       title: "Welkom: Nieuw lid"
       description: "Een privébericht dat automatisch naar alle nieuwe leden wordt gestuurd als ze zich inschrijven."
@@ -891,10 +888,6 @@ nl:
     see_more: "Meer"
     search_title: "Zoek op deze site"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Welkom op het forum %{title}](#welcome)
-      Leuk dat je interesse hebt in %{title}. Maak een account of log in om verder te gaan.
   terms_of_service:
     title: "Algemene Voorwaarden"
     user_content_license: |

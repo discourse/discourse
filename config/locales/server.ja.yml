@@ -365,9 +365,6 @@ ja:
     education_new_topic:
       title: "新規ユーザ支援: 初めてのポスト"
       description: "新規ユーザが新規トピックの作成を行った際に自動的にポップアップするガイダンスに内容 (最初の2回のみ表示)。"
-    usage_tips:
-      title: "新規ユーザ向けヒント"
-      description: "新規ユーザ向けのヒントや、ガイド、フォーラムに関する情報など。"
     welcome_user:
       title: "ウェルカムメッセージ: 新規ユーザ"
       description: "サインアップした全ての新規ユーザに自動送信されるプライベートメッセージの内容。"
@@ -631,10 +628,6 @@ ja:
         もし上記リンクがクリックできない場合は、ブラウザのアドレスバーにリンクアドレスをコピー&ペーストしてください。
   page_not_found:
     title: "リクエストしたページは存在しないかモデレータによって削除されました。"
-  login_required:
-    welcome_message: |
-      #[%{title}へようこそ](#welcome)
-      このフォーラムの%{title}を見るにはアカウントが必要です。アカウントを作成するかログインしてください。
   terms_of_service:
     user_content_license: |
       User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.

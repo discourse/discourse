@@ -462,9 +462,6 @@ it:
     education_new_topic:
       title: "Educatione Nuovi Utenti: Primi Topic"
       description: "Per i primi due topic dei nuovi utenti, durante la composizione del messaggio una pop-up verrà automaticamente visualizzata per mostrare dei consigli."
-    usage_tips:
-      title: "Suggerimenti per i Nuovi Utenti"
-      description: "Suggerimenti per l'uso comune, informazioni essenziali del forum e linee guida per i nuovi utenti."
     welcome_user:
       title: "Benvenuto: Nuovo Utente"
       description: "Un messaggio privato verrà automaticamente inviato a tutti i nuovi utenti dopo la registrazione."
@@ -908,10 +905,6 @@ it:
     see_more: "Altro"
     search_title: "Cerca nel sito"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Benvenuto a %{title}](#welcome)
-      Questo forum di discussione richiede un account per visualizzare %{title}. Crea un account o effettua il login per continuare.
   terms_of_service:
     title: "Termini di Servizio"
     user_content_license: |

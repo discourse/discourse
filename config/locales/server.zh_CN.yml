@@ -20,6 +20,7 @@ zh_CN:
   posts: "帖子"
   loading: "载入中"
   powered_by_html: '源自<a href="http://www.discourse.org">论坛 - Discourse</a>，请启用 JavaScript 以获得最佳效果'
+  log_in: "登陆"
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留权利"
   errors:
@@ -338,6 +339,7 @@ zh_CN:
       title: '通知 {{username}}'
       description: '此帖包含一些我想与该用户私下直接交流的内容。'
       long_form: '已通知用户'
+      email_title: '您在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '通知版主'
@@ -504,9 +506,6 @@ zh_CN:
     education_new_topic:
       title: "新用户培训：第一个主题"
       description: "在新用户发表前两个主题时，自动在编辑器上方弹出的帮助信息。"
-    usage_tips:
-      title: "新用户提示"
-      description: "使用提示，关于对新用户的必要论坛信息和关键指导信息。"
     welcome_user:
       title: "欢迎：新用户"
       description: "当新用户注册后自动发送给他们的欢迎私信。"
@@ -639,6 +638,7 @@ zh_CN:
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "一个邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com trashmail.net"
     email_domains_whitelist: "一个电子邮箱域名的列表，用户只能使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
+    version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示新版本信息"
     new_version_emails: "当新版本发布时，发送一封邮件至 contact_email 设置的地址。"
     port: "仅限开发者设定！警告！使用此 HTTP 端口而不是80端口。留空为使用默认 80 端口"
     force_hostname: "仅限开发者设定！警告！指定 URL 里的主机名。留空为默认"
@@ -1038,6 +1038,8 @@ zh_CN:
     agreed: "感谢通知我们。我们认为这是一个问题，并且我们正在了解情况。"
     agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"
     disagreed: "感谢通知我们。我们正在了解情况。"
+    deferred: "感谢通知我们。我们正在调查情况。"
+    deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了您的帖子"
@@ -1136,6 +1138,7 @@ zh_CN:
         好好享受你在论坛的时光吧！
     welcome_invite:
       subject_template: "欢迎来到 %{site_name}！"
+      text_body_template: "感谢您接受邀请加入 %{site_name} —— 欢迎！\n\n我们为您自动生成了一个用户名：**%{username}**，但是您在任何时候都可以访问[您的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 使用您喜欢的方式登入——但是必须以**同样的邮件地址**，即您收到邀请的邮箱地址登入。否则我们就无法分辨是不是您本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n好好享受您在论坛的时光吧！\n\n[prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "导出成功"
       text_body_template: "导出操作成功。"
@@ -1207,14 +1210,6 @@ zh_CN:
         一些可能的原因是：复杂的格式、消息超长、消息太短。请再试一次，若还不行，使用网站发表。
     email_reject_post_error_specified:
       subject_template: "邮件问题——发表失败"
-      text_body_template: |
-        我们很抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件无法发送。
-
-        拒绝消息：
-
-        %{post_error}
-
-        请尝试解决错误后再试一次。
     email_reject_reply_key:
       subject_template: "电子邮件错误 -- 错误回复因素"
       text_body_template: |
@@ -1414,10 +1409,6 @@ zh_CN:
     see_more: "更多"
     search_title: "搜索该网页"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[欢迎来到 %{title}](#welcome)
-      您需要一个账号才能在论坛中阅读 %{title}。请创建一个账号或者登录以继续。
   terms_of_service:
     title: "服务条款"
     user_content_license: |

@@ -20,6 +20,7 @@ fr:
   posts: "messages"
   loading: "Chargement"
   powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, le rendu est meilleur avec le JavaScript activé'
+  log_in: "Se connecter"
   via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
   errors:
@@ -363,6 +364,7 @@ fr:
       title: 'Avertir {{username}}'
       description: 'Je souhaite discuter en privé avec cet utilisateur au sujet de ce message.'
       long_form: 'utilisateur avertis'
+      email_title: 'Votre message sur "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Avertir un modérateur'
@@ -529,9 +531,6 @@ fr:
     education_new_topic:
       title: "Education du nouvel utilisateur : premiers sujets"
       description: "Pop-up affichée au dessus de la zone de saisie lorsqu'un nouvel utilisateur rédige ses 2 premiers sujets."
-    usage_tips:
-      title: "Astuce pour les nouveaux utilisateurs"
-      description: "Astuces, conseils et informations essentielles du forum destinés aux nouveaux utilisateurs."
     welcome_user:
       title: "Bienvenue : nouvel utilisateur"
       description: "Un message privé envoyé automatiquement à tous les nouveaux utilisateurs lorsqu'ils s'enregistrent."
@@ -664,6 +663,7 @@ fr:
     allow_index_in_robots_txt: "Spécifier dans robots.txt que le site est autorisé à être indexer par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisé lors de la création de compte. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourrons pas s'enregistrer."
+    version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
     port: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Utiliser ce port HTTP plutôt que celui par défaut 80. Laissez vide par défaut 80."
     force_hostname: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Voulez-vous spécifier un nom d'hôte dans l'URL ? Sinon, laisser vide par défaut."
@@ -1067,6 +1067,8 @@ fr:
     agreed: "Merci de nous en informer. Nous sommes en accord avec votre signalement et nous travaillons à sa résolution."
     agreed_and_deleted: "Merci de nous en informer. Nous sommes en accord avec votre signalement et avons supprimé le message."
     disagreed: "Merci de nous en informer. Nous travaillons à sa résolution."
+    deferred: "Merci de nous en informer. Nous travaillons à sa résolution."
+    deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
@@ -1100,6 +1102,7 @@ fr:
         Amusez-vous bien !
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
+      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name}, et bienvenue !\n\nNous vous avons automatiquement généré un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter, vous pouvez :\n\n1. Utiliser votre identifiant préféré -- mais votre **adresse de courriel** devra être la même que celle de l'invitation que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n[prefs] : %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "Export terminé avec succès"
       text_body_template: "L'export a réussi."
@@ -1172,14 +1175,6 @@ fr:
         Cela peut-être à cause de: format trop complexe, message trop long ou trop court. Veuillez réessayer, ou rédigé votre message directement sur le site si le problème persiste.
     email_reject_post_error_specified:
       subject_template: "Problème de courriel -- Erreur d'envoi d'un message"
-      text_body_template: |
-        Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Raison:
-
-        %{post_error}
-
-        Veuillez corriger les erreurs et réessayer.
     email_reject_reply_key:
       subject_template: "Problème de courriel -- Mauvaise clé de réponse"
       text_body_template: |
@@ -1375,10 +1370,6 @@ fr:
     see_more: "Plus"
     search_title: "Recherche dans ce site"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Bienvenue sur %{title}](#bienvenue)
-      Ce forum de discussion nécessite un compte pour consulter %{title}. Veuillez vous inscrire ou vous connectez pour continuer.
   terms_of_service:
     title: "Conditions générales d'utilisation"
     user_content_license: |
