@@ -26,9 +26,9 @@ export default Ember.Component.extend({
     if (!bumpedAt) { return; }
     var delta = daysSinceEpoch(bumpedAt) - daysSinceEpoch(createdAt);
 
-    if (delta > 120) { return 'coldmap-high'; }
-    if (delta > 60) { return 'coldmap-med'; }
-    if (delta > 14) { return 'coldmap-low'; }
+    if (delta > Discourse.SiteSettings.cold_age_days_high) { return 'coldmap-high'; }
+    if (delta > Discourse.SiteSettings.cold_age_days_medium) { return 'coldmap-med'; }
+    if (delta > Discourse.SiteSettings.cold_age_days_low) { return 'coldmap-low'; }
   }.property('bumpedAt', 'createdAt'),
 
   title: function() {

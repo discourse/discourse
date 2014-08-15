@@ -681,6 +681,17 @@ uncategorized:
     client: true
     default: 2.0
 
+  # Cold map thresholds
+  cold_age_days_low:
+    client: true
+    default: 14
+  cold_age_days_medium:
+    client: true
+    default: 60
+  cold_age_days_high:
+    client: true
+    default: 120
+
   # Warnings
   educate_until_posts: 2
   sequential_replies_threshold: 2
