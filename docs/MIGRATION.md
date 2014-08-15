@@ -12,7 +12,7 @@ Only admins can perform backups, so sign in as an account with admin access on y
 
 Both the new and old Discourses **MUST BE ON THE EXACT SAME VERSION** to ensure proper backup/export. So the first thing we'll do is update our existing Discourse instance on Linode to the absolute latest version.
 
-Visit `/admin/docker` to upgrade.
+Visit `/admin/upgrade` to upgrade.
 
 (If you are running the [deprecated Ubuntu install][dep_ubuntu] you may need to follow [these update instructions][ubuntu_update].)
 
