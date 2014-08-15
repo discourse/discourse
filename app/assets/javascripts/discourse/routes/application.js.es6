@@ -1,6 +1,10 @@
 var ApplicationRoute = Em.Route.extend({
 
   actions: {
+    showTopicEntrance: function(data) {
+      this.controllerFor('topic-entrance').send('show', data);
+    },
+
     error: function(err, transition) {
       if (err.status === 404) {
         // 404

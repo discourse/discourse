@@ -77,6 +77,10 @@ Discourse.Route.reopenClass({
     $('#discourse-modal').modal('hide');
     var hideDropDownFunction = $('html').data('hide-dropdown');
     if (hideDropDownFunction) { hideDropDownFunction(); }
+
+    // TODO: Avoid container lookup here
+    var appEvents = Discourse.__container__.lookup('app-events:main');
+    appEvents.trigger('dom:clean');
   },
 
   /**
