@@ -32,7 +32,7 @@ var ApplicationRoute = Em.Route.extend({
           var returnPath = encodeURIComponent(window.location.pathname);
           window.location = Discourse.getURL('/session/sso?return_path=' + returnPath);
         } else {
-          this.send('autoLogin', function(){
+          this.send('autoLogin', 'login', function(){
             Discourse.Route.showModal(self, 'login');
             self.controllerFor('login').resetForm();
           });
@@ -43,17 +43,17 @@ var ApplicationRoute = Em.Route.extend({
     showCreateAccount: function() {
       var self = this;
 
-      self.send('autoLogin', function(){
+      self.send('autoLogin', 'createAccount', function(){
         Discourse.Route.showModal(self, 'createAccount');
       });
     },
 
-    autoLogin: function(onFail){
+    autoLogin: function(modal, onFail){
       var methods = Em.get('Discourse.LoginMethod.all');
       if (!Discourse.SiteSettings.enable_local_logins &&
           methods.length === 1) {
-            Discourse.Route.showModal(this, 'login');
-            this.controllerFor('login').send("externalLogin", methods[0]);
+            Discourse.Route.showModal(this, modal);
+            this.controllerFor('login').send('externalLogin', methods[0]);
       } else {
         onFail();
       }
