@@ -126,7 +126,8 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
             highest_post_number: state.highest_post_number,
             last_read_post_number: state.last_read_post_number,
             new_posts: newPosts,
-            unread: unread
+            unread: unread,
+            unseen: false
           });
         }
       }
