@@ -128,16 +128,19 @@ export default DiscourseController.extend(ModalFunctionality, {
 
   authenticationComplete: function(options) {
     if (options.requires_invite) {
+      this.send('showLogin');
       this.flash(I18n.t('login.requires_invite'), 'success');
       this.set('authenticate', null);
       return;
     }
     if (options.awaiting_approval) {
+      this.send('showLogin');
       this.flash(I18n.t('login.awaiting_approval'), 'success');
       this.set('authenticate', null);
       return;
     }
     if (options.awaiting_activation) {
+      this.send('showLogin');
       this.flash(I18n.t('login.awaiting_confirmation'), 'success');
       this.set('authenticate', null);
       return;
