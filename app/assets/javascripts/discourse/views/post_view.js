@@ -1,3 +1,5 @@
+var DAY = 60 * 50 * 1000;
+
 Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   classNames: ['topic-post', 'clearfix'],
   templateName: 'post',
@@ -7,6 +9,19 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
                       'post.deleted',
                       'groupNameClass'],
   postBinding: 'content',
+
+  historyHeat: function() {
+    var updatedAt = this.get('post.updated_at');
+    if (!updatedAt) { return; }
+
+    // Show heat on age
+    var rightNow = new Date().getTime(),
+        updatedAtDate = new Date(updatedAt).getTime();
+
+    if (updatedAtDate > (rightNow - DAY * Discourse.SiteSettings.history_hours_low)) return 'heatmap-high';
+    if (updatedAtDate > (rightNow - DAY * Discourse.SiteSettings.history_hours_medium)) return 'heatmap-med';
+    if (updatedAtDate > (rightNow - DAY * Discourse.SiteSettings.history_hours_high)) return 'heatmap-low';
+  }.property('post.updated_at'),
 
   postTypeClass: function() {
     return this.get('post.post_type') === Discourse.Site.currentProp('post_types.moderator_action') ? 'moderator' : 'regular';

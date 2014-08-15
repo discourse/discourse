@@ -891,12 +891,16 @@ en:
     topic_views_heat_high: "After this many views, the topic is strongly highlighted."
 
     cold_age_days_low: "A topic this many days old is slightly highligted."
-    cold_age_days_medium: "A topic this many days old is slightly highligted."
-    cold_age_days_high: "A topic this many days old is slightly highligted."
+    cold_age_days_medium: "A topic this many days old is moderately highligted."
+    cold_age_days_high: "A topic this many days old is strongly highligted."
+
+    history_hours_low: "A post edited within this many hours is slightly highlighted"
+    history_hours_medium: "A topic with this likes:post ratio is moderately highlighted."
+    history_hours_high: "A topic with this likes:post ratio is strongly highlighted."
 
     topic_post_like_heat_low: "A topic with this likes:post ratio is slightly highlighted."
-    topic_post_like_heat_medium: "A topic with this likes:post ratio is slightly highlighted."
-    topic_post_like_heat_high: "A topic with this likes:post ratio is slightly highlighted."
+    topic_post_like_heat_medium: "A topic with this likes:post ratio is moderately highlighted."
+    topic_post_like_heat_high: "A topic with this likes:post ratio is strongly highlighted."
 
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
