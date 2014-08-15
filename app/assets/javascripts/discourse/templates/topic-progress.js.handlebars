@@ -5,7 +5,7 @@
       {{i18n topic.progress.go_top}}
     </button>
     <div class='jump-form'>
-      {{input value=toPostNumber}} <button {{action jumpPost}} class='btn'>{{i18n topic.progress.go}}</button>
+      {{input value=toPostIndex}} <button {{action jumpPost}} class='btn'>{{i18n topic.progress.go}}</button>
     </div>
     <button {{action jumpBottom}} {{bind-attr disabled=jumpBottomDisabled}} class='btn full no-text jump-bottom'>
       {{i18n topic.progress.go_bottom}}
