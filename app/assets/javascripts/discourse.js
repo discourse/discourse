@@ -81,7 +81,14 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     Discourse.User.logout().then(function() {
       // Reloading will refresh unbound properties
       Discourse.KeyValueStore.abandonLocal();
-      window.location.pathname = Discourse.getURL('/');
+
+      var redirect = Discourse.SiteSettings.logout_redirect;
+      if(redirect.length === 0){
+        window.location.pathname = Discourse.getURL('/');
+      } else {
+        window.location.href = redirect;
+      }
+
     });
   },
 
