@@ -1407,6 +1407,8 @@ en:
 
         Download CSV file: <a class="attachment" href="%{download_link}">%{file_name}</a>
 
+        <small>CSV file download link will expire after 48 hours.</small>
+
     csv_export_failed:
       subject_template: "Export failed"
       text_body_template: "The export has failed. Please check the logs."
