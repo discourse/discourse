@@ -1104,8 +1104,6 @@ pl_PL:
     changed_by: "przez {{author}}"
     categories_list: "Lista Kategorii"
     filters:
-      with_topics: "%{filter} Tematy"
-      with_category: "%{filter} %{category} Tematy"
       latest:
         title: "Najnowsze"
         help: "tematy z ostatnimi wpisami"
@@ -1575,9 +1573,6 @@ pl_PL:
           one: "Nie można usunąć wszystkich postów, ponieważ użytkownik ma więcej niż 1 post. (delete_all_posts_max)"
           few: "Nie można usunąć wszystkich postów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
           other: "Nie można usunąć wszystkich postów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
-        delete_confirm: "Czy jesteś PEWNY(-A), że chcesz usunąć tego użytkownika? To nieodwracalne!"
-        delete_and_block: "<b>Tak</b>, i <b>zablokuj</b> przyszłe rejestracje z tego adresu email i IP"
-        delete_dont_block: "<b>Tak</b>, po prostu usuń użytkownika"
         deleted: "Użytkownik został usunięty."
         delete_failed: "Wystąpił błąd podczas usuwania użytkownika. Upewnij się, że wszystkie wpisy zostały usunięte przed przystąpieniem do usuwania użytkownika."
         send_activation_email: "Wyślij Email Aktywacyjny"
@@ -1668,12 +1663,6 @@ pl_PL:
     keyboard_shortcuts_help:
       jump_to:
         title: 'Przeskocz do'
-        home: '<b>g</b> następnie <b>h</b> Home (Najnowsze)'
-        latest: '<b>g</b> następnie <b>l</b> Najnowsze'
-        new: '<b>g</b> następnie <b>n</b> Nowe'
-        unread: '<b>g</b> następnie <b>u</b> Nieprzeczytane '
-        starred: '<b>g</b> then <b>f</b> Gwiazdka'
-        categories: '<b>g</b> następnie <b>c</b> Kategorie'
       navigation:
         title: 'Nawigacja'
         jump: '<b>#</b> Idź to wpisu o numerze'
@@ -1700,10 +1689,6 @@ pl_PL:
         bookmark: '<b>b</b> Zakładka na wpisie'
         edit: '<b>e</b> Edytuj wpis'
         delete: '<b>d</b> Usuń wpis'
-        mark_muted: '<b>m</b> then <b>m</b> Oznacz temat jako wyciszony'
-        mark_regular: '<b>m</b> then <b>r</b> Oznacz temat jako normalny'
-        mark_tracking: '<b>m</b> then <b>t</b> Oznacz temat jako śledzony'
-        mark_watching: '<b>m</b> then <b>w</b> Oznacz temat jako obserowany'
     badges:
       title: Odznaki
       badge_count:

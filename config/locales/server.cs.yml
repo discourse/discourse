@@ -459,9 +459,6 @@ cs:
     education_new_topic:
       title: "Školení nového uživatele: První témata"
       description: "Návod, který se automaticky zobrazí ve vyskakovacím okně nad editorem zpráv, když uživatelé zakládají první dvě nová témata."
-    usage_tips:
-      title: "Tipy pro nové uživatele"
-      description: "Běžné tipy pro používání, základní informace o fóru, klíčové věci, které by měli noví uživatelé vědět."
     welcome_user:
       title: "Uvítání: Nový uživatel"
       description: "Soukromá zpráva, která je automaticky zaslaná novým uživatelům, když se zaregistrují."
@@ -787,10 +784,6 @@ cs:
         Pokud tento odkaz nefunguje, zkuste ho zkopírovat a vložit přes schránku do adresního řádku vaše webového prohlížeče.
   page_not_found:
     title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
-  login_required:
-    welcome_message: |
-      #[Vítejte na %{title}](#welcome)
-      Jsme rádi, že vás tu máme a že přispíváte do tématu %{title}. Prosím, vytvořte si účet nebo se přihlaste pro pokračování.
   terms_of_service:
     user_content_license: |-
       Uživatelské příspěvky jsou licencovány pod licencí [Creative Commons Uveďte autora-Nevyužívejte dílo komerčně-Zachovejte licenci 3.0 Unported](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.cs). Aniž by tím byly tyto vyjádření nebo záruky dotčeny, má %{company_short_name} právo z vlastního úsudku (i) odmítnout nebo odstranit libovolný obsah, který podle rozumného názoru porušuje zásady tohoto webu nebo je jinak škodlivý nebo závadný, nebo (ii) ukončit nebo odepřít přístup k používání webu jakémukoliv jednotlivci nebo subjektu z jakéhokoliv důvodu. %{company_short_name} nemá žádnou povinnost poskytnout náhradu nebo vrátit jakoukoliv již zaplacenou částku.

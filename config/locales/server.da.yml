@@ -20,6 +20,7 @@ da:
   posts: "indlæg"
   loading: "Indlæser"
   powered_by_html: 'Siden er lavet med <a href="http://www.discourse.org">Discourse</a>, opleves bedst med JavaScript slået til'
+  log_in: "Log ind"
   via: "%{username} via %{site_name}"
   is_reserved: "er reservet"
   errors:
@@ -484,9 +485,6 @@ da:
     education_new_topic:
       title: "Uddannelse af nye brugere: Første emner"
       description: "Automatisk hjælp som vises over editoren når nye brugere begynder at skrive deres første to emner."
-    usage_tips:
-      title: "Tips til nye brugere"
-      description: "Nyttige tips, essentiel foruminformation og vejledning beregnet for nye brugere."
     welcome_user:
       title: "Velkomst: Ny bruger"
       description: "En privat besked som automatisk sendes til nye brugere når de tilmelder sig."
@@ -781,10 +779,6 @@ da:
     recent_topics: "Nye"
     see_more: "Flere"
     search_title: "Søg på denne side"
-  login_required:
-    welcome_message: |
-      #[Velkommen til %{title}](#welcome)
-      Dette debatforum kræver en konto for at kunne se %{title}. Opret venligst en konto eller log ind for at fortsætte.
   terms_of_service:
     user_content_license: |
       User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.

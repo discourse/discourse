@@ -20,6 +20,7 @@ he:
   posts: "הודעות"
   loading: "טוען"
   powered_by_html: 'מונע ע"י <a href="http://www.discourse.org">Discourse</a>, פועל מיטבית עם Javascript'
+  log_in: "התחברות"
   via: "%{username} עם %{site_name}"
   is_reserved: "שמור"
   errors:
@@ -338,6 +339,7 @@ he:
       title: 'התרע ל-{{username}}'
       description: 'ההודעה הזו כוללת משהו עליו אני רוצה לדבר עם האדם ישירות ובפרטיות.'
       long_form: 'המשתמש הותרע'
+      email_title: 'הפרסום שלךב"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'התרעה למנחים'
@@ -504,9 +506,6 @@ he:
     education_new_topic:
       title: "New User Education: First Topics"
       description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
-    usage_tips:
-      title: "New User Tips"
-      description: "Common usage tips, essential forum information, and key guidance intended for new users."
     welcome_user:
       title: "Welcome: New User"
       description: "A private message automatically sent to all new users when they sign up."
@@ -639,6 +638,7 @@ he:
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "רשימה של מתחמי דוא\"ל (email domains) בהם למשתמשים אסור לרשום חשבונות. לדוגמא: mailinator.com trashmail.net"
     email_domains_whitelist: "רשימת של מתחמי דוא\"ל (email domains) שמשתמשים חייבים(!) כדי להירשם ולפתוח חשבון. אזהרה: משתמשים עם כתובות דוא\"ל אחרות מאלו המפורטות כאן לא יאושרו באתר!"
+    version_checks: "שלחו פינג להאב של Discourse לעדכוני גרסה וכדי להציג מסרים אודות גרסאות בלוח התצוגה של האדמין"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסא חדשה של Discourse זמינה."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
@@ -1039,6 +1039,8 @@ he:
     agreed: "תודה שעדכנת אותנו. אנחנו מסכימים שיש כאן בעיה ואנחנו מנסים לבדוק את העניין."
     agreed_and_deleted: "תודה שעדכנת אותנו. אנחנו מסכימים שישנה בעיה והסרנו את הפרסום."
     disagreed: "תודה שעדכנת אותנו. אנחנו בודקים את זה."
+    deferred: "תודה שעדכנתםאותנו. אנחנו בודקים את העניין."
+    deferred_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפרסום."
   system_messages:
     post_hidden:
       subject_template: "הודעה הוסתרה בעקבות סימון"
@@ -1071,6 +1073,7 @@ he:
         תהנו מהביקור!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
+      text_body_template: "תודה שקיבלת את הזמנתך אל %{site_name} - ברוכים הבאים!\n\nיצרנו עבורך שם משתמש/ת באופן אוטומטי: **%{username}**, אבל תוכלו לשנות אותו בכל עת באמצעות ביקור בתפריט ההעדפות [your user profile][prefs].\n\nכדי להתחבר שוב מחדש נקטו באחת משתי הפעולות:\n\n1. התחבר/י בכל דרך שנוחה לך - \nאך עליכם לכלול את **אותה כתובת דוא\"ל** בה קיבלת את ההזמנה המקורית. אחרת, לא נוכל לדעת שאלה באמת אתם!\n\n2. צרו סיסמא ייחודית בתפריט ההעדפות [your user profile][prefs], והשתמשו בה כדי להתחבר.\n\n\n%{new_user_tips}\n\n אנו מאמין ב [התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל עת\n\nתהנו מהביקור שלכם!\n\n [prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "Export completed successfully"
       text_body_template: "The export was successful."
@@ -1142,15 +1145,6 @@ he:
         סיבות אפשריות לעניין: מבנה מורכב, המסר ארוך מידי, המסר קצר מידי. אנא נסו שוב, או פרסמו באמצעות האתר עם הבעיה נמשכת.
     email_reject_post_error_specified:
       subject_template: "בעיית דוא\"ל - שגיאה בפרסום."
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת הדוא"ל שלך אל %{destination} (%{former_title}) לא עברה.
-
-        מסר השגיאה:
-
-
-        %{post_error}
-
-        אנא נסו לתקן את השגיאות ולשלוח פעם נוספת.
     email_reject_reply_key:
       subject_template: "בעיות דוא\"ל -- מפתח התגובה (Reply Key) פגום"
       text_body_template: |
@@ -1343,10 +1337,6 @@ he:
     see_more: "עוד"
     search_title: "חיפוש באתר זה"
     search_google: "גוגל"
-  login_required:
-    welcome_message: |
-      #[Welcome to %{title}](#welcome)
-      This discussion forum requires an account to view %{title}. Please create an account or login to continue.
   terms_of_service:
     title: "תנאי השימוש"
     user_content_license: |

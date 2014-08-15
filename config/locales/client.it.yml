@@ -445,7 +445,6 @@ it:
     read_only_mode:
       enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "Il login è disabilitato quando il sito è in modalità di sola lettura."
-    too_few_topics_notice: "Crea almeno 5 discussioni pubbliche e %{posts} post pubblici per iniziare una discussione. I nuovi utenti non saranno in grado di guadagnare livelli senza contenuti da leggere"
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'topic creati negli ultimi 365 giorni'
@@ -469,7 +468,6 @@ it:
       enabled_description: "Questa discussione contiene post che sono stati eliminati, sono quindi stati nascosti."
       disabled_description: "I post eliminati di questa discussione sono ora visibili."
       enable: "Nasconti Post Eliminati"
-      disable: "Mostra Post Eliminati"
     private_message_info:
       title: "Messaggio privato"
       invite: "Invita altri utenti..."
@@ -1173,8 +1171,6 @@ it:
     changed_by: "da {{author}}"
     categories_list: "Lista delle categorie"
     filters:
-      with_topics: "%{filter} Topic"
-      with_category: "%{filter} %{category} Topic"
       latest:
         title: "Più recenti"
         help: "Topic con post recenti"
@@ -1677,9 +1673,6 @@ it:
         cant_delete_all_too_many_posts:
           one: "Non posso cancellare tutti i post perché l'utente ha più di 1 post. (delete_all_posts_max.)"
           other: "Non posso cancellare tutti i post perché l'utente ha più di %{count} post. (delete_all_posts_max.)"
-        delete_confirm: "sei SICURO che vuoi cancellare questo utente. Non è possibile tornare indietro!"
-        delete_and_block: "<b>Si</b>, e <b>blocca</b> iscrizioni future da questa email e indirizzo IP"
-        delete_dont_block: "<b>Si</b>, solo cancella l'utente"
         deleted: "L'utente è stato cancellato"
         delete_failed: "Si è verificato un errore nella cancellazione dell'utente. Assicurati che tutti i post siano stati eliminati prima di provare a cancellare un'utente."
         send_activation_email: "Invia l'email di attivazione"
@@ -1784,12 +1777,6 @@ it:
       title: 'Scorciatoie da tastiera'
       jump_to:
         title: 'Vai a'
-        home: '<b>g</b> then <b>h</b> Home (Recenti)'
-        latest: '<b>g</b> then <b>l</b> Recenti'
-        new: '<b>g</b> then <b>n</b> Nuovi'
-        unread: '<b>g</b> then <b>u</b> Non letti'
-        starred: '<b>g</b> quindi <b>f</b> Preferiti'
-        categories: '<b>g</b> then <b>c</b> Categorie'
       navigation:
         title: 'Navigazione'
         jump: '<b>e</b> Vai al post numero'
@@ -1816,10 +1803,6 @@ it:
         bookmark: '<b>b</b> Aggiungi un segnalibro al post'
         edit: '<b>e</b> Modifica il post'
         delete: '<b>d</b> Cancella il post'
-        mark_muted: '<b>m</b> quindi <b>m</b> Contrassegna il topic come "Muted"'
-        mark_regular: '<b>m</b> then <b>r</b> Contrassegna il topic come regolare'
-        mark_tracking: '<b>m</b> then <b>t</b> Contrassegna il topic come "Seguito"'
-        mark_watching: '<b>m</b> quindi <b>w</b> Contrassegna il topic come "sotto osservazione"'
     badges:
       title: Targhette
       allow_title: "permetti badge come titolo?"

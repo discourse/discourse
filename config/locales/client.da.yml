@@ -86,6 +86,7 @@ da:
     yes_value: "Ja"
     generic_error: "Beklager, der opstod en fejl."
     generic_error_with_reason: "Der opstod en fejl: %{error}"
+    log_in: "Log ind"
     age: "Alder"
     joined: "Tilmeldt"
     admin_title: "Admin"
@@ -128,6 +129,17 @@ da:
       other: "på {{count}} dage"
     suggested_topics:
       title: "Foreslåede emner"
+    about:
+      simple_title: "Om"
+      title: "Om %{title}"
+      stats: "Site statistik"
+      stat:
+        all_time: "Alt"
+        last_7_days: "De sidste 7 Dage"
+      like_count: "Like's"
+      topic_count: "Emner"
+      post_count: "Indlæg"
+      user_count: "Brugere"
     bookmarks:
       not_logged_in: "Beklager, du er nødt til at lukke ind først, for at lave et bogmærke"
       created: "Du har bogmærket dette indlæg."
@@ -347,6 +359,7 @@ da:
       last_emailed: "Sidste e-mail"
       last_seen: "Sidst set"
       created: "Oprettet"
+      log_out: "Log ud"
       location: "Sted"
       website: "Site"
       email_settings: "E-mail"
@@ -446,7 +459,6 @@ da:
     read_only_mode:
       enabled: "En administrator har aktiver \"kun læsnings\" tilstranden. Du kan fortsætte med at læse forummet, men nogle handlinger vil ikke fungere."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
-    too_few_topics_notice: "Opret mindst 5 offentlige emner og %{posts} offentlige indlæg for at starte diskussionerne. Nye brugere vil ikke kunne optjene tillids niveauer med mindre der er indhold de kan læse."
     learn_more: "Læs mere…"
     year: 'år'
     year_desc: 'Indlæg oprettet i de seneste 365 dage'
@@ -454,7 +466,7 @@ da:
     month_desc: 'Indlæg oprettet i de seneste 30 dage'
     week: 'uge'
     week_desc: 'Indlæg oprettet i de seneste 7 dage'
-    day: 'day'
+    day: 'dag'
     first_post: Første indlæg
     mute: Mute
     unmute: Unmute
@@ -470,7 +482,6 @@ da:
       enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult."
       disabled_description: "Slettede indlæg bliver vist. "
       enable: "Skjul slettede indlæg"
-      disable: "Vis slettede indæg"
     private_message_info:
       title: "Privat samtale"
       invite: "Invitér andre…"
@@ -493,6 +504,7 @@ da:
       complete_username: "Hvis en konto matcher brugernavnet <b>%{username}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
       complete_email: "Hvis en konto matcher <b>%{email}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
     login:
+      title: "Log ind"
       username: "Bruger"
       password: "Adgangskode"
       email_placeholder: "e-mail eller brugernavn"
@@ -644,8 +656,11 @@ da:
     topics:
       bulk:
         reset_read: "Nulstil \"læst\""
+        delete: "Slet emner"
         dismiss_posts: "Afvis indlæg"
+        dismiss_posts_tooltip: "Nulstil \"ulæste\" på disse emner, men fortsæt med at vise dem på min \"ulæste\" liste når der kommer nye indlæg"
         dismiss_topics: "Afvist Emner"
+        dismiss_topics_tooltip: "Stop med at vide disse emner i min \"ulæste\" liste når der kommer nye indlæg"
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
@@ -695,6 +710,7 @@ da:
       invalid_access:
         title: "Emnet er privat"
         description: "Beklager, du har ikke adgang til dette emne!"
+        login_required: "Do skal logge på for at se dette emne."
       server_error:
         title: "Emnet kunne ikke indlæses"
         description: "Beklager, vi kunne ikke indlæse det emne, muligvis grundet et problem med netværksforbindelsen. Prøv venligst igen. Hvis problemet fortæstter, så skriv venligst til os."
@@ -830,6 +846,7 @@ da:
         email_placeholder: 'e-mail-adresse'
         success: "Vi har sendt en invitation til <b>{{email}}</b>. Vi påminder dig når invitationen er blevet accepteret. Check invitations-fanen på din brugerside, for at følge med i hvem du har inviteret."
         error: "Beklager, vi kunne ikke invitere den person. Måske er de allerede brugere?"
+      login_reply: 'Log ind for at svare'
       filters:
         n_posts:
           one: "1 indlæg"
@@ -1175,8 +1192,6 @@ da:
     changed_by: "af {{author}}"
     categories_list: "Kategorioversigt"
     filters:
-      with_topics: "%{filter} Emner"
-      with_category: "%{filter} %{category} Emner"
       latest:
         title: "Seneste"
         help: "de seneste emner"
@@ -1316,8 +1331,10 @@ da:
         dispositions:
           agreed: "enig"
           disagreed: "uenig"
+          deferred: "udsat"
         flagged_by: "Flaget af"
         resolved_by: "Løst af"
+        took_action: "Reagerede"
         system: "System"
         error: "Noget gik galt"
         reply_message: "Svar"
@@ -1652,6 +1669,7 @@ da:
         show_public_profile: "Vis offentlig profil"
         impersonate: 'Impersonate'
         ip_lookup: "IP opslag"
+        log_out: "Log ud"
         logged_out: "Bruger er logget ud på alle enheder"
         revoke_admin: 'Fratag admin'
         grant_admin: 'Tildel admin'
@@ -1685,9 +1703,6 @@ da:
         cant_delete_all_too_many_posts:
           one: "Kan ikke slette alle indlæg fordi denne bruger har flere end 1 indlæg. (delete_all_posts_max indstillingen)"
           other: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
-        delete_confirm: "Er du SIKKER på, at du ønsker at slette denne bruger? Denne handling er permanent!"
-        delete_and_block: "<b>Ja</b>, og <b>blokér</b> tilmeldinger fra denne e-mail og IP-adresse"
-        delete_dont_block: "<b>Ja</b>, men <b>tillad</b> tilmeldinger fra denne e-mail og IP-adresse"
         deleted: "Brugeren blev slettet."
         delete_failed: "Der opstod en fejl ved sletning af brugeren. Kontrollér om alle indlæg er slettet før du prøver at slette brugeren."
         send_activation_email: "Send aktiverings-e-mail"
@@ -1802,12 +1817,6 @@ da:
       title: 'Tastatur genveje'
       jump_to:
         title: 'Hop til'
-        home: '<b>g</b> så <b>h</b> Hjem (seneste)'
-        latest: '<b>g</b> så <b>l</b> Seneste'
-        new: '<b>g</b> så <b>n</b> Ny'
-        unread: '<b>g</b> så <b>u</b> Ulæste'
-        starred: '<b>g</b> så <b>f</b> Favoritter'
-        categories: '<b>g</b> så <b>c</b> Kategorier'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Gå til indlæg nummer'
@@ -1834,10 +1843,6 @@ da:
         bookmark: '<b>b</b> Bogmærk indlæg'
         edit: '<b>e</b> Redigér indlæg'
         delete: '<b>d</b> Slet indlæg'
-        mark_muted: '<b>m</b> så <b>m</b> Markér emne som muted'
-        mark_regular: '<b>m</b> så <b>r</b> Markér emne som almindelig'
-        mark_tracking: '<b>m</b> så <b>t</b> Markér emne som følger'
-        mark_watching: '<b>m</b> så <b>w</b> Markér emne som overvåger'
     badges:
       title: Badges
       allow_title: "tillad denne badge benyttes som en titel?"

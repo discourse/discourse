@@ -366,9 +366,6 @@ pt:
     education_new_topic:
       title: "Educação do Usuário Novo: Primeiros Tópicos"
       description: "Pop up de orientação automaticamente exibido em cima do composer quando usuário novo começa a escrever os seus dois primeiros tópicos."
-    usage_tips:
-      title: "Dicas para Usuários Novos"
-      description: "Dicas de uso comuns, informações essenciais do fórum, e orientação básica para usuários novos."
     welcome_user:
       title: "Boas-vindas: Usuário Novo"
       description: "Uma mensagem particular enviada automaticamente para todos os usuários novos quando eles se registram."
@@ -603,10 +600,6 @@ pt:
         %{base_url}/users/activate-account/%{email_token}
 
         Se não conseguires clicar no link em cima, tenta copia-lo e cola-lo na barra de endereções do seu browser de internet.
-  login_required:
-    welcome_message: |
-      #[Welcome to %{title}](#welcome)
-      Este fórum de discussão requer uma conta para visualizar %{title}.  Para continuar a ler, por favor, crie uma nova conta ou entre na sua conta.
   terms_of_service:
     user_content_license: |
       As contribuições do usuário são licenciadas sob [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Sem limitação de nenhuma destas representações ou garantias, %{company_short_name} tem o direito (mas não a obrigação) de, segundo o próprio critério de %{company_short_name} (i) recusar ou remover qualquer conteúdo que, na avaliação de %{company_short_name} viole qualquer regra de %{company_short_name} ou seja de alguma forma prejudicial ou censurável, ou (ii) cancelar ou negar o acesso e a utilização do site para qualquer pessoa ou entidade, por qualquer motivo, segundo próprio e único critério de %{company_short_name}. %{company_short_name} não terá obrigação de fornecer qualquer reembolso de quaisquer valores já pagos. ⏎
