@@ -122,7 +122,7 @@ You should see Staff topics and the [Admin Quick Start Guide](https://github.com
 
 # Post-Install Maintenance
 
-To **upgrade Discourse to the latest version**, visit `/admin/docker` and follow the instructions.
+To **upgrade Discourse to the latest version**, visit `/admin/upgrade` and follow the instructions.
 
 The `launcher` command in the `/var/discourse` folder can be used for various kinds of maintenance:
 

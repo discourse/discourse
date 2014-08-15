@@ -196,7 +196,7 @@ See more advice at: http://blog.discourse.org/2014/08/building-a-discourse-commu
 
 - Hopefully you are running [in our Docker container install](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md); it's the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
 
-- You should get an email notification when new versions of Discourse are released. To upgrade your instance, visit [/admin/docker](/admin/docker) -- <kbd>upgrade</kbd> button will appear. Press it!
+- You should get an email notification when new versions of Discourse are released. To upgrade your instance, visit [/admin/upgrade](/admin/upgrade) -- <kbd>upgrade</kbd> button will appear. Press it!
 
 - Some other things you might eventually want to set up:
    - [Automatic daily backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855)
