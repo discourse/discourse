@@ -7,7 +7,7 @@ export default Ember.ObjectController.extend({
     toggleExpansion: function(opts) {
       this.toggleProperty('expanded');
       if (this.get('expanded')) {
-        this.set('toPostNumber', this.get('progressPosition'));
+        this.set('toPostIndex', this.get('progressPosition'));
         if(opts && opts.highlight){
           // TODO: somehow move to view?
           Em.run.next(function(){
@@ -18,17 +18,36 @@ export default Ember.ObjectController.extend({
     },
 
     jumpPost: function() {
-      var postNumber = parseInt(this.get('toPostNumber'), 10);
+      var postIndex = parseInt(this.get('toPostIndex'), 10);
 
-      // Validate the post number first
-      if (isNaN(postNumber) || postNumber < 1) {
-        postNumber = 1;
+      // Validate the post index first
+      if (isNaN(postIndex) || postIndex < 1) {
+        postIndex = 1;
       }
-      if (postNumber > this.get('highest_post_number')) {
-        postNumber = this.get('highest_post_number');
+      if (postIndex > this.get('postStream.filteredPostsCount')) {
+        postIndex = this.get('postStream.filteredPostsCount');
       }
-      this.set('toPostNumber', postNumber);
-      this.jumpTo(this.get('model').urlForPostNumber(postNumber));
+      this.set('toPostIndex', postIndex);
+      var stream = this.get('postStream'),
+          idStream = stream.get('stream'),
+          postId = idStream[postIndex - 1];
+
+      if (!postId) {
+        Em.Logger.warn("jump-post code broken - requested an index outside the stream array");
+        return;
+      }
+
+      var post = stream.findLoadedPost(postId);
+      if (post) {
+        this.jumpTo(this.get('model').urlForPostNumber(post.get('post_number')));
+      } else {
+        var self = this;
+        // need to load it
+        stream.findPostsByIds([postId]).then(function(arr) {
+          post = arr[0];
+          self.jumpTo(self.get('model').urlForPostNumber(post.get('post_number')));
+        });
+      }
     },
 
     jumpTop: function() {
