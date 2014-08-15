@@ -32,14 +32,25 @@ export default Ember.Component.extend({
   }.property('bumpedAt', 'createdAt'),
 
   title: function() {
-    // return {{i18n last_post}}: {{{raw-date topic.bumped_at}}}
     return I18n.t('first_post') + ": " + Discourse.Formatter.longDate(this.get('createdAt')) + "\n" +
            I18n.t('last_post') + ": " + Discourse.Formatter.longDate(this.get('bumpedAt'));
   }.property('bumpedAt', 'createdAt'),
 
   render: function(buffer) {
-    buffer.push('<a href="' + this.get('topic.lastPostUrl') + '">');
     buffer.push(Discourse.Formatter.autoUpdatingRelativeAge(this.get('bumpedAt')));
-    buffer.push("</a>");
+  },
+
+  click: function() {
+    var topic = this.get('topic');
+
+    if (Discourse.Mobile.mobileView) {
+      Discourse.URL.routeTo(topic.get('lastPostUrl'));
+      return;
+    }
+
+    this.sendAction('action', {
+      topic: topic,
+      position: this.$('span').position()
+    });
   }
 });

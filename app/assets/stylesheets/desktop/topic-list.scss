@@ -138,6 +138,9 @@
   }
   .activity {
     width: 60px;
+    span {
+      cursor: pointer;
+    }
   }
   .age {
     width: 60px;
