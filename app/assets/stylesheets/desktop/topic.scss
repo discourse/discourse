@@ -225,12 +225,12 @@ a:hover.reply-new {
   padding-bottom: 15px;
 }
 
-.heatmap-high {color: scale-color($danger, $lightness: 20%) !important;}
-.heatmap-med {color: $danger !important;}
-.heatmap-low {color: scale-color($danger, $lightness: -20%) !important;}
-.heatmap-high a {color: scale-color($danger, $lightness: 20%) !important;}
-.heatmap-med a {color: $danger !important;}
-.heatmap-low a {color: scale-color($danger, $lightness: -20%) !important;}
+.heatmap-high {color: #fe7a15 !important;}
+.heatmap-med {color: #cf7721 !important;}
+.heatmap-low {color: #9b764f !important;}
+.heatmap-high a {color: #fe7a15 !important;}
+.heatmap-med a {color: #cf7721 !important;}
+.heatmap-low a {color: #9b764f !important;}
 
 
 
