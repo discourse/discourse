@@ -890,6 +890,10 @@ en:
     topic_views_heat_medium: "After this many views, the topic is moderately highlighted."
     topic_views_heat_high: "After this many views, the topic is strongly highlighted."
 
+    topic_post_like_heat_low: "A post with this likes:post ratio is slightly highlighted."
+    topic_post_like_heat_medium: "A post with this likes:post ratio is slightly highlighted."
+    topic_post_like_heat_high: "A post with this likes:post ratio is slightly highlighted."
+
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."

@@ -670,6 +670,17 @@ uncategorized:
     client: true
     default: 5000
 
+  # Post/Like heat thresholds
+  topic_post_like_heat_low:
+    client: true
+    default: 0.5
+  topic_post_like_heat_medium:
+    client: true
+    default: 1.0
+  topic_post_like_heat_high:
+    client: true
+    default: 2.0
+
   # Warnings
   educate_until_posts: 2
   sequential_replies_threshold: 2
