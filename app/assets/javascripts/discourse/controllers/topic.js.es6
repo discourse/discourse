@@ -629,10 +629,9 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     if (!post) { return; }
 
     var postStream = this.get('postStream'),
-        lastLoadedPost = postStream.get('lastLoadedPost'),
-        index = postStream.get('stream').indexOf(post.get('id'))+1;
+        lastLoadedPost = postStream.get('lastLoadedPost');
 
-    this.set('controllers.topic-progress.progressPosition', index);
+    this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
 
     if (lastLoadedPost && lastLoadedPost === post) {
       postStream.appendMore();

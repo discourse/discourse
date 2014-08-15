@@ -220,7 +220,9 @@ Discourse.URL = Em.Object.createWithMixins({
             highlightOnInsert: closest,
             enteredAt: new Date().getTime().toString()
           });
-          topicProgressController.set('progressPosition', closest);
+          var closestPost = postStream.closestPostForPostNumber(closest),
+              progress = postStream.progressIndexOfPost(closestPost);
+          topicProgressController.set('progressPosition', progress);
           Discourse.PostView.considerHighlighting(topicController, closest);
         }).then(function() {
           Discourse.URL.jumpToPost(closest);
