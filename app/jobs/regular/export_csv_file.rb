@@ -21,17 +21,13 @@ module Jobs
         when 'user'
           query = ::AdminUserIndexQuery.new
           user_data = query.find_users_query.to_a
-
-          data = Hash.new do |hash, key|
-            hash[key] = {}
-          end
+          data = Array.new
 
           user_data.each do |user|
-            id = user['id']
-            email = user['email']
-            data[id] = email
+            user_array = Array.new
+            user_array.push(user['id']).push(user['name']).push(user['username']).push(user['email'])
+            data.push(user_array)
           end
-          data = data.to_a
       end
 
       if data && data.length > 0
@@ -55,7 +51,7 @@ module Jobs
         # write to CSV file
         CSV.open(File.expand_path("#{ExportCsv.base_directory}/#{@file_name}", __FILE__), "w") do |csv|
           data.each do |value|
-            csv << [value[1]]
+            csv << value
           end
         end
       end
