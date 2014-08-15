@@ -14,9 +14,10 @@ function coldAgeClass(property, options) {
   // Show heat on age
   var nowDays = daysSinceEpoch(new Date()),
       epochDays = daysSinceEpoch(new Date(dt));
-  if (nowDays - epochDays > 60) return 'age coldmap-high';
-  if (nowDays - epochDays > 30) return 'age coldmap-med';
-  if (nowDays - epochDays > 14) return 'age coldmap-low';
+
+  if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_high) return 'age coldmap-high';
+  if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_medium) return 'age coldmap-med';
+  if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_low) return 'age coldmap-low';
 
   return 'age';
 }
