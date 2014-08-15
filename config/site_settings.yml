@@ -255,6 +255,9 @@ users:
   username_change_period: 3
   auto_track_topics_after: 240000
   email_editable: true
+  logout_redirect:
+    client: true
+    default: ''
   enable_names:
     client: true
     default: true
