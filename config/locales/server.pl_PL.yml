@@ -447,9 +447,6 @@ pl_PL:
     education_new_topic:
       title: "Edukacja nowych użytkowników: Pierwsze tematy"
       description: "Okienko z wskazówkami automatycznie wyświetlane nad panelem pisania gdy nowi użytkownicy rozpoczynają swoje pierwsze 2 tematy."
-    usage_tips:
-      title: "Wskazówki dla nowych użytkowników"
-      description: "Wskazówki dotyczące użytkowania forum oraz inne niezbędne informacje skierowane do nowych użytkowników."
     welcome_user:
       title: "Przywitanie: Nowy użytkownik"
       description: "Prywatna wiadomość automatycznie wysyłana do wszystkich nowych użytkowników po ich rejestracji."
@@ -723,10 +720,6 @@ pl_PL:
         Jeśli powyższy link nie jest klikalny, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
   page_not_found:
     title: "Strona, którą chciałeś odwiedzić, nie istnieje lub jest prywatna."
-  login_required:
-    welcome_message: |
-      #[Witaj na %{title}](#welcome)
-      To forum dyskusyjne wymaga konta by zobaczyć %{title}. Załóż konto lub zaloguj się by kontynuować.
   terms_of_service:
     user_content_license: |
       User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.

@@ -903,8 +903,6 @@ sv:
     changed_by: "av {{author}}"
     categories_list: "Kategorilista"
     filters:
-      with_topics: "%{filter} Trådar"
-      with_category: "%{filter} %{category} trådar"
       latest:
         title: "Senaste"
         help: "Trådar med nya inlägg"
@@ -1288,9 +1286,6 @@ sv:
         delete_forbidden:
           one: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dag kan ej raderas.)"
           other: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dagar kan ej raderas.)"
-        delete_confirm: "Är du SÄKER på att du vill radera den här användaren? Denna åtgärd är permanent!"
-        delete_and_block: "<b>Ja</b>, och <b>blockera</b> framtida registrationer från denna email- och IP-adress."
-        delete_dont_block: "<b>Ja</b>, ta endast bort användaren"
         deleted: "Användaren har raderats."
         delete_failed: "Ett problem uppstod då användaren skulle raderas. Kontrollera att alla inlägg är borttagna innan du försöker radera användaren."
         send_activation_email: "Skicka aktiveringsmail"
@@ -1352,12 +1347,6 @@ sv:
     keyboard_shortcuts_help:
       jump_to:
         title: 'Hoppa till'
-        home: '<b>g</b> och sedan <b>h</b> hem (senaste)'
-        latest: '<b>g</b> och sedan <b>l</b> senaste'
-        new: '<b>g</b> och sedan <b>n</b> ny'
-        unread: '<b>g</b> och sedan <b>u</b> oläst'
-        starred: '<b>g</b> och sedan <b>f</b> stjärnmärkta'
-        categories: '<b>g</b> och sedan <b>c</b> kategorier'
       navigation:
         title: 'Navigering'
         back: 'Tillbaka'
@@ -1376,7 +1365,3 @@ sv:
         bookmark: '<b>b</b> bokmärk inlägg'
         edit: '<b>e</b> redigera inlägg'
         delete: '<b>d</b> radera inlägg'
-        mark_muted: '<b>m</b> och sedan <b>m</b> markera tråd som tystad'
-        mark_regular: '<b>m</b> och sedan <b>r</b> markera tråd som vanlig'
-        mark_tracking: '<b>m</b> och sedan <b>t</b> bevaka tråd'
-        mark_watching: '<b>m</b> then <b>w</b> följ tråd'

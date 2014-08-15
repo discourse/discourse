@@ -106,12 +106,16 @@ zh_TW:
       other: "在 {{count}} 天"
     suggested_topics:
       title: "推薦的討論話題"
+    about:
+      simple_title: "關於"
+      title: "關於%{title}"
     bookmarks:
       not_logged_in: "抱歉，你必須先登入才能將文章加上書籤"
       created: "你已將此文章加上書籤"
       not_bookmarked: "你已閱讀過這篇文章，按此加上書籤"
       last_read: "這是你最後閱讀的文章，按此加上書籤"
       remove: "移除書籤"
+    click_to_show: "點擊顯示"
     preview: "預覽"
     cancel: "取消"
     save: "儲存變更"
@@ -426,7 +430,6 @@ zh_TW:
       disable: '顯示所有文章'
     deleted_filter:
       enable: "隱藏已刪除的文章"
-      disable: "顯示已刪除的文章"
     private_message_info:
       title: "私人訊息"
       invite: "邀請其他人..."
@@ -1062,8 +1065,6 @@ zh_TW:
     changed_by: "作者 {{author}}"
     categories_list: "分類清單"
     filters:
-      with_topics: "%{filter} 討論話題"
-      with_category: "%{filter} %{category} 討論話題"
       latest:
         title: "最近"
         help: "最近的討論話題"
@@ -1538,9 +1539,6 @@ zh_TW:
           other: "無法刪除所有的文章。有些文章時間早於 %{count} 天前。 ( 請見 delete_user_max_post_age 設定 )"
         cant_delete_all_too_many_posts:
           other: "無法刪除所有文章，因為此用戶擁有超過 %{count} 篇文章。( delete_all_posts_max )"
-        delete_confirm: "你確定要刪除此用戶嗎？此動作將不可復原！"
-        delete_and_block: "<b>是的</b>，並且<b>封鎖</b>使用此電子郵件地址與 IP 位址登入"
-        delete_dont_block: "<b>是的</b>，但<b>允許</b>使用此電子郵件地址與 IP 位址登入"
         deleted: "此用戶已刪除。"
         delete_failed: "刪除此用戶時發生錯誤，請先刪除此用戶的所有文章後再試一次。"
         send_activation_email: "送出啟用帳號的電子郵件"
@@ -1644,12 +1642,6 @@ zh_TW:
       title: '快捷鍵'
       jump_to:
         title: '跳到'
-        home: '<b>g</b> 之後 <b>h</b> 主頁 ( 最近 )'
-        latest: '<b>g</b> 之後 <b>l</b> 最新'
-        new: '<b>g</b> 之後 <b>n</b> 新'
-        unread: '<b>g</b> 之後 <b>u</b> 未讀'
-        starred: '<b>g</b> 之後 <b>f</b> 已收藏'
-        categories: '<b>g</b> 之後 <b>c</b> 分類'
       navigation:
         title: '導航'
         jump: '<b>#</b> 前往文章編號'
@@ -1676,10 +1668,6 @@ zh_TW:
         bookmark: '<b>b</b> 將文章加上書籤'
         edit: '<b>e</b> 編輯文章'
         delete: '<b>d</b> 刪除文章'
-        mark_muted: '<b>m</b> 之後 <b>m</b> 標記討論話題為靜音'
-        mark_regular: '<b>m</b> 之後 <b>r</b> 標記討論話題回復正常'
-        mark_tracking: '<b>m</b> 之後 <b>t</b> 標記討論話題被追蹤'
-        mark_watching: '<b>m</b> 之後 <b>w</b> 標記討論話題為關注中'
     badges:
       title: 徽章
       allow_title: "允許徽章做為標題？"

@@ -86,6 +86,7 @@ de:
     yes_value: "Ja"
     generic_error: "Entschuldigung. Ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
+    log_in: "Anmelden"
     age: "Alter"
     joined: "Beigetreten"
     admin_title: "Administration"
@@ -128,6 +129,17 @@ de:
       other: "in {{count}} Tagen"
     suggested_topics:
       title: "Vorgeschlagene Themen"
+    about:
+      simple_title: "Über"
+      title: "Über %{title}"
+      stats: "Website-Statistiken"
+      stat:
+        all_time: "Gesamt"
+        last_7_days: "Letzte 7 Tage"
+      like_count: "Anzahl der Likes"
+      topic_count: "Anzahl der Themen"
+      post_count: "Anzahl der Beiträge"
+      user_count: "Anzahl der Benutzer"
     bookmarks:
       not_logged_in: "Entschuldigung, du musst eingeloggt sein, um ein Lesezeichen zu setzen."
       created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
@@ -347,6 +359,7 @@ de:
       last_emailed: "Letzte E-Mail"
       last_seen: "Zuletzt gesehen"
       created: "Mitglied seit"
+      log_out: "Abmelden"
       location: "Wohnort"
       website: "Website"
       email_settings: "E-Mail"
@@ -446,7 +459,6 @@ de:
     read_only_mode:
       enabled: "Ein Administrator hat den Nur-Lesen-Modus aktiviert. Du kannst die Seite weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
       login_disabled: "Login ist deaktiviert während sich die Seite im Nur-Lesen-Modus befindet."
-    too_few_topics_notice: "Erstelle mindestens 5 öffentlich sichtbare Themen und %{posts} öffentlich sichtbare Beiträge, um die Unterhaltung ins Rollen zu bringen. Neue Benutzer können ihre Vertrauensstufe nur erhöhen, wenn es für sie etwas zu Lesen gibt."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'neue Themen in den letzten 365 Tagen'
@@ -470,7 +482,6 @@ de:
       enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit ausgeblendet sind."
       disabled_description: "Gelöschte Beiträge werden in diesem Thema angezeigt."
       enable: "Gelöschte Beiträge ausblenden"
-      disable: "Gelöschte Beiträge einblenden"
     private_message_info:
       title: "Private Nachricht"
       invite: "Andere einladen..."
@@ -493,6 +504,7 @@ de:
       complete_username: "Wenn ein Benutzerkonto dem Benutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_email: "Wenn ein Benutzerkonto der E-Mail <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
     login:
+      title: "Anmelden"
       username: "Benutzername"
       password: "Passwort"
       email_placeholder: "E-Mail-Adresse oder Benutzername"
@@ -644,8 +656,11 @@ de:
     topics:
       bulk:
         reset_read: "Gelesene zurücksetzen"
+        delete: "Themen löschen"
         dismiss_posts: "Beiträge ignorieren"
+        dismiss_posts_tooltip: "Neue Beiträge in diesen Themen ignorieren, die Themen aber später wieder als ungelesen anzeigen, sobald weitere neue Beiträge verfasst wurden."
         dismiss_topics: "Themen ignorieren"
+        dismiss_topics_tooltip: "Diese Themen ignorieren und nicht mehr als ungelesen anzeigen, selbst wenn weitere neue Beiträge verfasst wurden."
         dismiss_new: "Verwerfe neue Themen"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
@@ -695,6 +710,7 @@ de:
       invalid_access:
         title: "Thema ist privat"
         description: "Entschuldige, du hast keinen Zugriff auf dieses Thema!"
+        login_required: "Du musst dich anmelden, damit du dieses Thema sehen kannst."
       server_error:
         title: "Thema konnte nicht geladen werden"
         description: "Entschuldige, wir konnten das Thema, wahrscheinlich wegen eines Verbindungsfehlers, nicht laden. Bitte versuche es erneut. Wenn das Problem bestehen bleibt, gib uns Bescheid."
@@ -830,6 +846,7 @@ de:
         email_placeholder: 'name@example.com'
         success: "Wir haben deine Einladung an <b>{{email}}</b> verschickt. Wir lassen Dich wissen, sobald die Einladung eingelöst wird. In deinem Nutzerprofil kannst Du alle deine Einladungen überwachen."
         error: "Entschuldige, wir konnten diese Person nicht einladen. Vielleicht ist sie schon ein Nutzer?"
+      login_reply: 'Anmelden, um zu antworten'
       filters:
         n_posts:
           one: "1 Beitrag"
@@ -1175,8 +1192,6 @@ de:
     changed_by: "durch {{author}}"
     categories_list: "Liste der Kategorien"
     filters:
-      with_topics: "%{filter}e Themen"
-      with_category: "%{filter} %{category} Themen"
       latest:
         title: "Aktuell"
         help: "Die zuletzt geänderten Themen"
@@ -1316,6 +1331,7 @@ de:
         dispositions:
           agreed: "zugestimmt"
           disagreed: "abgelehnt"
+          deferred: "ignoriert"
         flagged_by: "Gemeldet von"
         resolved_by: "Geklärt durch"
         system: "System"
@@ -1652,6 +1668,7 @@ de:
         show_public_profile: "Zeige öffentliches Profil"
         impersonate: 'Nutzersicht'
         ip_lookup: "IP-Abfrage"
+        log_out: "Abmelden"
         logged_out: "Der Benutzer wurde auf allen Geräten abgemeldet"
         revoke_admin: 'Administrationsrechte entziehen'
         grant_admin: 'Administrationsrechte vergeben'
@@ -1685,9 +1702,6 @@ de:
         cant_delete_all_too_many_posts:
           one: "Nicht alle Beiträge konnten gelöscht werden, da der Anwender mehr als 1 Beitrag hat. (Die delete_all_posts_max Einstellung.)"
           other: "Nicht alle Beiträge konnten gelöscht werden, da der Anwender mehr als %{count} Beiträge hat. (Die delete_all_posts_max Einstellung.)"
-        delete_confirm: "Bist du SICHER das du diesen Benutzer permanent von der Seite entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!"
-        delete_and_block: "<b>Ja</b>, und <b>blockiere</b> zukünftige Anmeldungen von dieser E-Mail-Adresse und IP-Adresse"
-        delete_dont_block: "<b>Ja</b>, aber <b>erlaube</b> Anmeldungen von dieser Mail Adresse"
         deleted: "Der Benutzer wurde gelöscht."
         delete_failed: "Beim Löschen des Benutzers ist ein Fehler aufgetreten. Stelle sicher, dass dieser Benutzer keine Beiträge mehr hat."
         send_activation_email: "Aktivierungsmail senden"
@@ -1802,12 +1816,6 @@ de:
       title: 'Tastenkombinationen'
       jump_to:
         title: 'Springe zu'
-        home: '<b>g</b> dann <b>h</b> Home (Aktuell)'
-        latest: '<b>g</b> dann <b>l</b> Aktuell'
-        new: '<b>g</b> dann <b>n</b> Neue'
-        unread: '<b>g</b> dann <b>u</b> Ungelesen'
-        starred: '<b>g</b> dann <b>f</b> Favorisierte'
-        categories: '<b>g</b> dann <b>c</b> Kategorien'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Springe zum Beitrag Nummer'
@@ -1834,10 +1842,6 @@ de:
         bookmark: '<b>b</b> Lesezeichen auf Beitrag setzen'
         edit: '<b>e</b> Beitrag editieren'
         delete: '<b>d</b> Beitrag löschen'
-        mark_muted: '<b>m</b> dann <b>m</b> Thema auf Ignorieren setzen'
-        mark_regular: '<b>m</b> dann <b>r</b> Thema auf normal zurücksetzen'
-        mark_tracking: '<b>m</b> dann <b>t</b> Thema auf verfolgen setzen'
-        mark_watching: '<b>m</b> dann <b>w</b> Thema auf beobachten setzen'
     badges:
       title: Abzeichen
       allow_title: "Abzeichen als Titel erlauben?"

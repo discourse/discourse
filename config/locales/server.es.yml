@@ -20,6 +20,7 @@ es:
   posts: "posts"
   loading: "Cargando"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, visualizado mejor con JavaScript activado'
+  log_in: "Iniciar sesión"
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
   errors:
@@ -368,6 +369,7 @@ es:
       title: 'Notificar a {{username}}'
       description: 'Este post contiene algo que quisiera comentar por privado directamente con esta persona.'
       long_form: 'usuario notificado'
+      email_title: 'Tu publicación en "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notificar a los moderadores'
@@ -534,9 +536,6 @@ es:
     education_new_topic:
       title: "Educación de nuevo usuario: primeros temas"
       description: "Un mensaje emergente de guia 'justo a tiempo' aparecerá automáticamente sobre el compositor cuando nuevos usuarios empiecen ingresar sus dos primeras respuestas."
-    usage_tips:
-      title: "Consejos para nuevos usuarios"
-      description: "Consejos de uso común, información esencial de foro, y guia importante para nuevos usuarios."
     welcome_user:
       title: "Bienvenido: nuevo usuario"
       description: "Un mensaje privado enviado automáticamente a todos los nuevos usuarios cuando se registren."
@@ -669,6 +668,7 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de email con los cuales los usuarios no podrán registrarse. Ejemplo: mailinator.com trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
+    version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
     port: "SOLO DESARROLLADORES! ADVERTENCIA! Usa este puerto HTTP en vez del puerto 80 por defecto. Dejar blanco para por defecto el 80"
     force_hostname: "SOLO DESARROLLADORES! ADVERTENCIA! Especificar un hostname en la URL, dejar blanco para por defecto"
@@ -676,6 +676,8 @@ es:
     invite_passthrough_hours: "Durante cuánto tiempo, en horas, un usuario puede utilizar una clave de invitación redimida para iniciar sesión iniciar sesión"
     invite_only: "El registro público está deshabilitado, todos los nuevos usuarios deberán ser invitados explícitamente por otros miembros de la comunidad o por el staff."
     login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
+    min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: TODOS LOS USUARIOS EXISTENTES CON NOMBRES MÁS CORTOS QUE ESTE VALOR NO PODRÁN ACCEDER AL SITIO"
+    max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: TODOS LOS USUARIOS EXISTENTES CON NOMBRES MÁS LARGOS QUE ESTE VALOR NO PODRÁN ACCEDER AL SITIO"
     min_password_length: "Longitud mínima de contraseña."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
     enable_sso: "Habilitar el single sign on a través de un sitio externo (Nota: deshabilita las invitaciones)"
@@ -822,6 +824,7 @@ es:
     disable_edit_notifications: "Usado para desabilitar las notificaciones de edición cuando se activa la opcion de configuración  'download_remote_images_to_local'. "
     enable_names: "Habilitar que se muestren los nombres completos de los usuarios. Si se deshabilita, se ocultarán los nombres completos."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
+    invites_per_page: "Número de invitaciones por defecto mostradas en la página de perfil del usuario."
     short_progress_text_threshold: "Después de que un número de posts en un tema alcance esta cifra, la barra de progreso sólo mostrará el número del post actual. Si cambias el ancho de la barra de progreso, deberías revisar este valor."
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de resucitar una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
@@ -1015,9 +1018,27 @@ es:
     agreed: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y lo estamos revisando."
     agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y hemos quitado el post."
     disagreed: "Gracias por hacérnoslo saber. Estamos revisándolo."
+    deferred: "Gracias por hacérnoslo saber. Estamos revisándolo."
+    deferred_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
+      text_body_template: |
+        Hola,
+
+        Esto es un mensaje automático desde %{site_name} para informarte de que tu post ...
+
+        %{base_url}%{url}
+
+        ... ha sido ocultado por haber sido reportado por la comunidad.
+
+        %{flag_reason}
+
+        Varios miembros de la comunidad han reportado este post antes de que haya sido ocultado, por lo que **por favor, considera de qué forma podrías revisar tu post para tener en cuenta su feedback.** Puedes editar tu post después de %{edit_delay} minutos y será mostrado de nuevo automáticamente. Esto incrementará tu nivel de confianza.
+
+        Sin embargo, si el post se ocultara por la comunidad por segunda vez, se notificará a los moderadores – y habrá posibles consecuencias, como una posible suspensión de tu cuenta.
+
+         Para más consejos, por favor revisa nuestras [FAQ](%{base_url}/faq).
     welcome_user:
       subject_template: "Bienvenido a %{site_name}!"
       text_body_template: |
@@ -1096,6 +1117,10 @@ es:
         No hemos encontrado tu respuesta en el email. **Asegúrate de escribir tu entera respuesta al principio del email** - todo lo que haya debajo del inicio del mensaje a responder es descartado.
     email_reject_post_error:
       subject_template: "Error con el email -- Error de publicación"
+      text_body_template: |
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
+
+        Posibles causas: formato complejo, mensaje demasiado extenso o demasiado breve. Por favor, inténtalo de nuevo.
     email_reject_reply_key:
       subject_template: "Error con el email - Clave errónea"
       text_body_template: |
@@ -1209,6 +1234,7 @@ es:
         ---
         %{respond_instructions}
     digest:
+      why: "Aquí tienes un breve resumen de %{site_link} desde la última vez que te vimos el %{last_seen_at}."
       subject_template: "[%{site_name}] Resumen del %{date}"
       new_activity: "Actividad nueva en tus topics y posts:"
       top_topics: "Posts populares"
@@ -1264,10 +1290,6 @@ es:
     see_more: "Más"
     search_title: "Busca en este sitio"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Bienvenido a %{title}](#welcome)
-      Este foro de discusión requiere una cuenta para ver %{title}. Por favor, registra una cuenta o inicia sesión para continuar.
   terms_of_service:
     title: "Condiciones Generales de Uso"
     user_content_license: |

@@ -86,6 +86,7 @@ pt:
     yes_value: "Sim"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
+    log_in: "Entrar"
     age: "Idade"
     joined: "Juntou-se"
     admin_title: "Admin"
@@ -128,6 +129,9 @@ pt:
       other: "em {{count}} dias"
     suggested_topics:
       title: "Tópicos Sugeridos"
+    about:
+      simple_title: "Acerca"
+      title: "Acerca de %{title}"
     bookmarks:
       not_logged_in: "desculpa, tens de ter a sessão iniciada para marcar posts"
       created: "adicionaste este post aos marcadores"
@@ -444,7 +448,6 @@ pt:
     read_only_mode:
       enabled: "Um administrador activou o modo só de leitura. Pode continuar a navegar no site mas as interacções poderão não funcionar. "
       login_disabled: "A função de login está desactivada enquanto o site se encontrar no modo só de leitura."
-    too_few_topics_notice: "Crie pelo menos 5 tópicos e 30 posts públicos para dar inicio à discussão. Novos utilizadores não poderão ganhar níveis de confiança se não houver conteúdo para lerem."
     learn_more: "sabe mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -468,7 +471,6 @@ pt:
       enabled_description: "Este tópico contém posts eliminados, os quais foram ocultados."
       disabled_description: "Tópicos eliminados no tópico são apresentados."
       enable: "Ocultar Posts Eliminados"
-      disable: "Mostrar Posts Eliminados"
     private_message_info:
       title: "Conversas Privadas"
       invite: "Convidar Outros..."
@@ -1382,7 +1384,6 @@ pt:
         approve_bulk_success: "Sucesso! Todos os utilizadores selecionados foram aprovados e notificados."
         time_read: "Tempo de leitura"
         delete: "Apagar Utilizador"
-        delete_confirm: "Tem a CERTEZA que quer apagar este utilizador permanentemente do site? Esta ação é definitiva!"
         deleted: "O utilizador foi apagado."
         delete_failed: "Houve um erro ao apagar o utilizador. Certifique-se de que todas as suas mensagens foram apagadas antes de tentar apagá-lo."
         send_activation_email: "Enviar Email de Ativação"

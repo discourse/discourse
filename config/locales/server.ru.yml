@@ -20,6 +20,7 @@ ru:
   posts: "сообщения"
   loading: "Загружается..."
   powered_by_html: 'При поддержке <a href="http://www.discourse.org">Discourse</a>, лучше всего использовать с включенным JavaScript'
+  log_in: "Войти"
   via: "%{username} на %{site_name}"
   is_reserved: "зарезервировано"
   errors:
@@ -75,6 +76,7 @@ ru:
     one: "Извините, новые пользователи могут размещать только одну ссылку в сообщении."
     other: "Извините, новые пользователи могут размещать только %{count} ссылок в сообщении."
   spamming_host: "Извините, вы не можете разместить ссылку в этом сообщении."
+  user_is_suspended: "Заблокированным пользователям запрещено писать."
   just_posted_that: "слишком схоже с уже опубликованным Вами сообщением"
   has_already_been_used: "уже было использовано"
   invalid_characters: "содержит недопустимые символы"
@@ -374,6 +376,7 @@ ru:
       title: 'Отправить личное сообщение @{{username}}'
       description: 'Это сообщение содержит что-то, о чем я хочу поговорить с этим человеком наедине.'
       long_form: 'оповещаемый пользователь'
+      email_title: 'Ваше сообщение в теме "%{title}"'
       email_body: "%{link}\n\n%{message}\n"
     notify_moderators:
       title: 'Уведомить модератора'
@@ -517,6 +520,7 @@ ru:
     enable_google_logins_warning: "Вы используете устаревшую версию аутентификации Google OpenID. Google выключит эту возможность 20 апреля 2015г. Переходите на Google OAuth2 как можно скорее. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Более детальная информация по этой ссылке.</a>"
     both_googles_warning: "Обе опции включены в настройках сайта: enable_google_logins и enable_google_oauth2_logins. Выключите enable_google_logins."
     s3_config_warning: 'Сервер сконфигурирован на загрузку файлов в хранилище S3, однако не указаны некоторые значения из списка: s3_access_key_id, s3_secret_access_key или s3_upload_bucket. Перейдите в <a href="/admin/site_settings">Настройки сайта</a> и установите необходимые значения. Для получения дополнительной информации перейдите по ссылке <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">How to set up image uploads to S3?</a>.'
+    s3_backup_config_warning: 'Сервер сконфигурирован на загрузку резервных копий в хранилище S3, однако не заданы все необходимые настройки : s3_access_key_id, s3_secret_access_key, s3_backup_bucket. Перейдите в <a href="/admin/site_settings">настройки сайта</a> и установите необходимые значения. Для получения дополнительной информации перейдите по ссылке <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">How to set up image uploads to S3?</a>.'
     image_magick_warning: 'Сервер сконфигурирован на создание превью больших изображений, однако на сервере не установлен ImageMagick. Установите ImageMagick используя системный менеджер пакетов, или пройдите по ссылке <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">для загрузки последней версии</a>.'
     failing_emails_warning: 'Провалено %{num_failed_jobs} почтовых задач. Проверьте файл config/discourse.conf и убедитесь, что почтовые настройки правильные. <a href="/sidekiq/retries" target="_blank">Просмотр проваленных задач Sidekiq</a>.'
     default_logo_warning: "Вы не установили изображение логотипа вашего сайта. Обновите logo_url, logo_small_url и favicon_url в <a href='/admin/site_settings'>Site Settings</a>."
@@ -535,9 +539,6 @@ ru:
     education_new_topic:
       title: "Обучение нового пользователя: Первые темы"
       description: "Всплывающие подсказки автоматически появляются над окном ввода текста, когда новый пользователь начинает создавать две первых темы."
-    usage_tips:
-      title: "Подсказки для нового пользователя"
-      description: "Подсказки по часто используемым функциям, важной информации по форуму и ключевые рекомендации для новых пользователей."
     welcome_user:
       title: "Приветствие: новый пользователь"
       description: "После регистрации новому пользователю будет автоматически послано личное сообщение."
@@ -549,8 +550,10 @@ ru:
       description: "Приветствие, отображаемое пользователям, не вошедшим на сайт, если опция 'требуется вход' включена."
     tos_user_content_license:
       title: "Условия предоставления услуг: Content License"
+      description: "DEPRECATED. Not used anymore and will be removed. Edit the Terms of Service topic in the Staff category instead."
     tos_miscellaneous:
       title: "Условия предоставления услуг: Miscellaneous"
+      description: "DEPRECATED. Not used anymore and will be removed. Edit the Terms of Service topic in the Staff category instead."
     login_required:
       title: "Требуется вход: Начальная страница"
       description: "Текст, показываемый неавторизованным пользователям, когда требуется вход на сайт."
@@ -587,6 +590,9 @@ ru:
     title: "Короткое название этого сайта. Будет использоваться в HTML-тэге title."
     site_description: "Короткое описание этого сайта. Будет использоваться в HTML-тэге description."
     contact_email: "Главный адрес электронной почты для переписки по вопросам сайта. Команда Discourse.org может посылать важные уведомления на этот адрес."
+    company_full_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
+    company_short_name: "DEPRECATED. Not used anymore and will be removed. The short name of the company that runs this site, used in legal documents like /tos and /privacy"
+    company_domain: "DEPRECATED. Not used anymore and will be removed. The domain name owned by the company that runs this site, used in legal documents like /tos and /privacy"
     queue_jobs: "ТОЛЬКО ДЛЯ РАЗРАБОТЧИКОВ! ВНИМАНИЕ! По умолчанию задачи обрабатываются асинхронно в очереди sidekiq. Если настройка выключена, ваш сайт может не работать."
     crawl_images: "Скачивать картинки с других сайтов для автоматического определения их размеров."
     download_remote_images_to_local: "Скачивать картинки, вставленные в сообщения ссылками на другие сайты, и хранить их локально, чтобы предотвратить их изменения или утерю."
@@ -627,6 +633,7 @@ ru:
     max_topics_in_first_day: "Максимальное количество тем, которое пользователь может создать в первый день на сайте"
     max_replies_in_first_day: "Максимальное количество ответов, которое пользователь может сделать в первый день на сайте"
     notify_mods_when_user_blocked: "Отправить сообщение всем модераторам, если пользователь заблокирован автоматически."
+    traditional_markdown_linebreaks: "Использовать стандартный способ переноса строки в Markdown: строка должна заканчиваться двумя пробелами, чтобы перенос строки после нее сработал."
     post_undo_action_window_mins: "Количество минут, в течение которых пользователь может отменить действия, связанные с сообщениями: 'Мне нравится', 'Жалоба' и др."
     must_approve_users: "Персонал должен подтвердить регистрации новых пользователей перед тем, как им будет разрешен доступ к сайту."
     ga_tracking_code: "Google analytics (ga.js) tracking code код, например: UA-12345678-9; смотрите http://google.com/analytics"
@@ -701,6 +708,7 @@ ru:
     newuser_max_images: "Сколько изображений новый пользователь может вставлять в одно сообщение."
     newuser_max_attachments: "Максимальное количество вложений, которое новый пользователь может прикрепить к одному сообщению."
     newuser_max_mentions_per_post: "Максимальное число упоминаний других пользователей (@name), которое новый пользователь может сделать в одном сообщении."
+    create_thumbnails: "Создавать миниатюры слишком больших картинок в сообщениях, показывать большие оригиналы в отдельно открывающемся окне."
     max_word_length: "Максимальная длина слов в названии темы."
     title_min_entropy: "Минимальная энтропия, требуемая для названия темы. Энтропия - количество уникальных символов, причем некоторые русские буквы могут считаться за 2 символа, а не за 1, как английские)."
     body_min_entropy: "Минимальная энтропия, требуемая для текста новой темы. Энтропия - количество уникальных символов, причем некоторые русские буквы могут считаться за 2 символа, а не за 1, как английские)."
@@ -733,14 +741,16 @@ ru:
     digest_min_excerpt_length: "Минимальная длина (в символах) вытяжки из сообщения в письме - сводке новостей."
     default_digest_email_frequency: "Как часто пользователи получают дайджест по умолчанию. Возможно изменение этой настройки каждым пользователем."
     default_external_links_in_new_tab: "Открывать внешние ссылки в новом окне. Пользователи могут изменить данное поведение в настройках."
+    max_daily_gravatar_crawls: "Максимальное количество загрузок аватаорок с Gravatar за один день"
     allow_profile_backgrounds: "Разрешить пользователям загружать фоновые картинки для своих страниц профиля."
     enable_mobile_theme: "Мобильные устройства используют адаптированную тему с возможностью переключения в обычный вид. Отключите данную настройку если вы хотите использовать собственный стиль для мобильных устройств."
-    suppress_uncategorized_badge: "Не показывать награду для тем вне разделов в списке тем."
+    suppress_uncategorized_badge: "Не показывать награду в списках тем для тех тем, которые вне разделов."
     global_notice: "Показать СРОЧНОЕ ВАЖНОЕ объявление на сайте всем пользователям и посетителям. Удалите содержание, чтобы отменить объявление. Разрешено использование HTML."
     enable_names: "Разрешить отображение полных имен пользователей. Выключите, чтобы не показывать полные имена."
     display_name_on_posts: "Показывать полные имена пользователей в их сообщениях в дополнение к их @нику."
     short_progress_text_threshold: "После достижения указанного числа сообщений в теме, бар будет отображать только текущий номер сообщения. Если вы измените ширину бара, вы можете изменить это значение."
     default_code_lang: "Подсветка синтаксиса по умолчанию для блоков кода (lang-auto, ruby, python etc.)"
+    embed_post_limit: "Максимальное количество вложенных сообщений."
     tos_accept_required: "Если включено, пользователи должны будут поставить галочку в форме регистрации, чтобы подтвердить, что они согласны с условиями предоставления сервиса. Измените свойство 'Форма регистрации: сообщение об условиях предоставления сервиса' во вкладке 'Контент сайта', чтобы изменить это сообщение."
     show_create_topics_notice: "Если общее количество тем меньше 5, показывать персоналу соощбение с просьбой создать новые темы."
     errors:
@@ -767,7 +777,7 @@ ru:
     invited_to_private_message: "%{display_username} пригласил вас в частную беседу: %{link}"
     invitee_accepted: "%{display_username} принял ваше приглашение"
     linked: "пользователь %{display_username} упомянул вас в %{link}"
-    granted_badge: "Вы награждены %{link}"
+    granted_badge: "Вы награждены: %{link}"
   search:
     within_post: "#%{post_number} от %{username}: %{excerpt}"
     types:
@@ -824,7 +834,7 @@ ru:
     activate_email: "Почти готово! Мы послали письмо с инструкциями по активации учетной записи на  <b>%{email}</b>."
     not_activated: "Вы пока что не можете войти на сайт. Пожалуйста, следуйте инструкциям по активации учетной записи, которые мы отправили вам  по электронной почтой."
     suspended: "Вы не можете войти до %{date}."
-    suspended_with_reason: "Вы не можете войти до %{date}. Причина блокировки: %{reason}"
+    suspended_with_reason: "Вход запрещен до %{date}. Причина блокировки вашей учетной записи: %{reason}"
     errors: "%{errors}"
     not_available: "Недоступно. Попробуйте %{suggestion}?"
     something_already_taken: "Что-то пошло не так, возможно, имя пользователя или электронный ящик уже используются. Попробуйте восстановить ваш пароль."
@@ -897,6 +907,12 @@ ru:
     inappropriate: "Сообщество считает ваше сообщение **неприемлемым**, т.е. оскорбительным, непристойным или нурашающим [кодекс чести](/guidelines)."
     spam: "Сообщество считает, что ваше сообщение **является спамом**, то есть, не имеет отношения к теме и имеет рекламный характер."
     notify_moderators: "Сообщество считает, что ваше сообщение **требует внимания модератора**."
+  flags_dispositions:
+    agreed: "Спасибо за информацию. Мы согласны, что это проблема, и уже рассматриваем ее."
+    agreed_and_deleted: "Спасибо за информацию - мы согласны с вами и удалили сообщение."
+    disagreed: "Спасибо за информацию. Уже рассматриваем."
+    deferred: "Спасибо за информацию. Уже рассматриваем."
+    deferred_and_deleted: "Спасибо за информацию. Сообщение удалено."
   system_messages:
     post_hidden:
       subject_template: "Сообщение скрыто по причине поступления множественных жалоб"
@@ -1003,12 +1019,16 @@ ru:
         Возможные причины: слишком сложное форматирование, слишком длинное или слишком короткое сообщение. Попробуйте еще раз.
     email_reject_post_error:
       subject_template: "Проблема с письмом - ошибка в сообщении"
+    email_reject_post_error_specified:
+      subject_template: "Проблема с e-mail -- ошибка отправки"
     email_reject_reply_key:
       subject_template: "Проблема с письмом - неверный ключ ответа"
       text_body_template: |
         К сожалению, ваше письмо к %{destination} (под названием %{former_title}) не может быть обработано.
 
         Ключ ответа неверный, поэтому мы не можем определить, кому адресован ваш ответ. Пожалуйста, свяжитесь с персоналом (модератором или администратором).
+    email_error_notification:
+      subject_template: "Проблема с e-mail -- ошибка POP аутентификации"
     too_many_spam_flags:
       subject_template: "Новый аккаунт заблокирован"
       text_body_template: |
@@ -1056,6 +1076,7 @@ ru:
         [Проверьте список в секции администрирования](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Загрузка копий изображений выключена"
+      text_body_template: "Настройка `download_remote_images_to_local` была отключена, т.к. диск заполнился до отменки, указанной в настройке `download_remote_images_threshold`."
   unsubscribe_link: "Для того, чтобы отписаться от подобных сообщений, перейдите в [настройки профиля](%{user_preferences_url})."
   user_notifications:
     previous_discussion: "Предыдущие ответы"
@@ -1174,9 +1195,6 @@ ru:
     see_more: "Еще"
     search_title: "Искать на этом сайте"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      Войдите в свою учетную запись или зарегистрируйтесь на форуме, чтобы просмотреть %{title}.
   terms_of_service:
     title: "Условия предоставления услуг"
     user_content_license: |-
@@ -1188,6 +1206,7 @@ ru:
     edit_reason: "загружены и сохранены локально использованные с других сайтов картинки"
     unauthorized: "К сожалению, вы не можете загрузить файл данного типа (список разрешенных типов файлов: %{authorized_extensions})."
     pasted_image_filename: "Имя файла изображения"
+    store_failure: "Ошибка при загрузке #%{upload_id} пользователя #%{user_id}."
     attachments:
       too_large: "Файл, который вы пытаетесь загрузить, слишком большой (максимальный разрешенный размер %{max_size_kb}%kb)."
     images:
@@ -1197,6 +1216,7 @@ ru:
       size_not_found: "Извините, мы не можем определить размер изображения. Возможно, изображение повреждено?"
   flag_reason:
     sockpuppet: "Новый пользователь создал тему и другой новый пользователь с того же IP адреса ответил. Для получения подробностей см. настройку сайта flag_sockpuppets."
+    spam_hosts: "Новый пользователь попытался написать несколько сообщений или ответов в темах с сылками на один и тот же сайт. См. настройку сайта newuser_spam_host_threshold."
   email_log:
     no_user: "Не найти пользователя с id %{user_id}"
     suspended_not_pm: "Учётная запись пользователя временно приостановлена и электронная почта не может быть использована для отправки личных сообщений"
@@ -1205,7 +1225,7 @@ ru:
     notification_already_read: "Уведомление, о котором говорится в этом письме, уже прочтено"
     topic_nil: "Тема сообщения равна nil"
     post_deleted: "сообщение уделено его автором"
-    user_suspended: "использование учётной записи приостановлено"
+    user_suspended: "пользователь заблокирован"
     already_read: "пользователь уже прочитал это сообщение"
     message_blank: "пустое сообщение"
     message_to_blank: "Адрес получателя пусто"

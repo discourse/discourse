@@ -86,6 +86,7 @@ fr:
     yes_value: "Oui"
     generic_error: "Désolé, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue: %{error}"
+    log_in: "Se connecter"
     age: "Âge"
     joined: "Inscrit"
     admin_title: "Admin"
@@ -128,6 +129,17 @@ fr:
       other: "dans {{count}} jours"
     suggested_topics:
       title: "Sujets similaires"
+    about:
+      simple_title: "A propos"
+      title: "A propos de %{title}"
+      stats: "Statistiques du site"
+      stat:
+        all_time: "depuis toujours"
+        last_7_days: "Les 7 derniers jours"
+      like_count: "Nombre de J'aime"
+      topic_count: "Nombre de sujets"
+      post_count: "Nombre de messages"
+      user_count: "Nombre d'utilisateurs"
     bookmarks:
       not_logged_in: "désolé, vous devez être connecté pour placer des message dans vos signets"
       created: "vous avez placé ce message dans vos signets"
@@ -347,6 +359,7 @@ fr:
       last_emailed: "Dernier courriel"
       last_seen: "Vu"
       created: "Inscrit"
+      log_out: "Se déconnecter"
       location: "Localisation"
       website: "Site internet"
       email_settings: "Courriel"
@@ -446,7 +459,6 @@ fr:
     read_only_mode:
       enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
       login_disabled: "La connexion est désactivée quand le site est en mode lecture seule."
-    too_few_topics_notice: "Créez au moins 5 sujets et %{posts} messages publics pour démarrer la discussion. Sans contenus à lire, les nouveaux utilisateurs ne seront pas capable de gagner des niveaux de confiance."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -470,7 +482,6 @@ fr:
       enabled_description: "Ce sujet contient des messages supprimés, qui ont été cachés."
       disabled_description: "Les messages supprimés de ce sujet sont visibles."
       enable: "Cacher les messages supprimés"
-      disable: "Afficher les messages supprimés"
     private_message_info:
       title: "Message Privé"
       invite: "Inviter d'autres utilisateurs…"
@@ -493,6 +504,7 @@ fr:
       complete_username: "Si un compte correspond au pseudo <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
       complete_email: "Si un compte correspond à l'adresse de courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec les instructions pour réinitialiser votre mot de passe."
     login:
+      title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
       email_placeholder: "courriel ou pseudo"
@@ -644,8 +656,11 @@ fr:
     topics:
       bulk:
         reset_read: "Réinitialiser la lecture"
+        delete: "Supprimer les sujets"
         dismiss_posts: "Ignorer les messages"
+        dismiss_posts_tooltip: "Marquer comme lus ces sujets mais continuer de les afficher dans ma liste de sujets non-lus si de nouveaux messages apparaissent."
         dismiss_topics: "Ignorer les sujets"
+        dismiss_topics_tooltip: "Marquer tous les sujets comme lus et ne plus les afficher dans ma liste de sujet non-lus si de nouveaux messages apparaissent."
         dismiss_new: "Ignorer Nouveaux"
         toggle: "activer la sélection multiple des sujets"
         actions: "Actions sur sélection multiple"
@@ -695,6 +710,7 @@ fr:
       invalid_access:
         title: "Ce sujet est privé"
         description: "Désolé, vous n'avez pas accès à ce sujet !"
+        login_required: "Vous devez vous connecter pour voir ce sujet de discussion."
       server_error:
         title: "Sujet impossible à charger"
         description: "Désolé, nous n'avons pu charger ce sujet, probablement du à un problème de connexion. Merci de réessayer à nouveau. Si le problème persiste, merci de nous le faire savoir."
@@ -830,6 +846,7 @@ fr:
         email_placeholder: 'nom@exemple.com'
         success: "Nous avons envoyé un courriel à <b>{{email}}</b>. Nous vous avertirons lorsque l'invitation sera acceptée. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être a-t-elle déjà un compte utilisateur ?"
+      login_reply: 'Se connecter pour répondre'
       filters:
         n_posts:
           one: "1 message"
@@ -1175,8 +1192,6 @@ fr:
     changed_by: "par {{author}}"
     categories_list: "Liste des Catégories"
     filters:
-      with_topics: "%{filter} Sujets"
-      with_category: "%{filter} sujet sur %{category}"
       latest:
         title: "Récents"
         help: "sujets avec des messages récents"
@@ -1316,8 +1331,10 @@ fr:
         dispositions:
           agreed: "accepté"
           disagreed: "refusé"
+          deferred: "reporté"
         flagged_by: "Signalé par"
         resolved_by: "Résolu par"
+        took_action: "Prendre une mesure"
         system: "Système"
         error: "Quelque chose s'est mal passé"
         reply_message: "Répondre"
@@ -1652,6 +1669,7 @@ fr:
         show_public_profile: "Afficher le profil public"
         impersonate: 'Incarner'
         ip_lookup: "IP de consultation"
+        log_out: "Se déconnecter"
         logged_out: "L'utilisateur s'est déconnecté de tous les appareils"
         revoke_admin: 'Révoquer les droits d''admin'
         grant_admin: 'Accorder les droits d''admin'
@@ -1685,9 +1703,6 @@ fr:
         cant_delete_all_too_many_posts:
           one: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus d'un message. (delete_all_posts_max)"
           other: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
-        delete_confirm: "Êtes-vous SÛR de vouloir supprimer cet utilisateur ? Cette action est définitive !"
-        delete_and_block: "<b>Oui</>, et <b>bloquer</b> les inscriptions furures pour cette adresse de courriel et cette adresse IP"
-        delete_dont_block: "<b>Oui</b>, juste supprimer l'utilisateur"
         deleted: "L'utilisateur a été supprimé."
         delete_failed: "Il y a eu une erreur lors de la suppression de l'utilisateur. Veuillez vous assurez que tous ses messages ont bien été supprimmés avant d'essayer de supprimer l'utilisateur."
         send_activation_email: "Envoyer le courriel d'activation"
@@ -1802,12 +1817,6 @@ fr:
       title: 'Raccourcis clavier'
       jump_to:
         title: 'Aller à'
-        home: '<b>g</b> puis <b>h</b> Orig (Les plus récents)'
-        latest: '<b>g</b> puis <b>l</b> Le plus récent'
-        new: '<b>g</b> puis <b>n</b> Nouveau'
-        unread: '<b>g</b> puis <b>u</b> Non lus'
-        starred: '<b>g</b> puis <b>f</b> Favoris'
-        categories: '<b>g</b> puis <b>c</b> Catégories'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Aller au message numéro'
@@ -1834,10 +1843,6 @@ fr:
         bookmark: '<b>b</b> Ajouter ce message à vos signets'
         edit: '<b>e</b> Editer un message'
         delete: '<b>d</b> Supprimer un message'
-        mark_muted: '<b>m</b> puis <b>m</b> Marquer le suivi du sujet comme silencieux'
-        mark_regular: '<b>m</b> then <b>r</b> Marquer le suivi du sujet comme normale'
-        mark_tracking: '<b>m</b> then <b>t</b> Marquer le sujet comme suivi'
-        mark_watching: '<b>m</b> puis <b>w</b> Marquer le sujet comme surveillé'
     badges:
       title: Badges
       allow_title: "autorisé le badge comme titre ?"
