@@ -86,6 +86,7 @@ he:
     yes_value: "כן"
     generic_error: "סליחה, ארעה שגיאה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
+    log_in: "התחברות"
     age: "גיל"
     joined: "הצטרף"
     admin_title: "ניהול"
@@ -128,6 +129,17 @@ he:
       other: "בעוד {{count}} ימים"
     suggested_topics:
       title: "נושאים מוצעים"
+    about:
+      simple_title: "אודות"
+      title: "אודות %{title}"
+      stats: "סטטיסטיקות אתר"
+      stat:
+        all_time: "כל הזמנים"
+        last_7_days: "7 הימים האחרונים"
+      like_count: "סך הלייקים"
+      topic_count: "סך הנושאים"
+      post_count: "סך הפרסומים"
+      user_count: "סך המשתמשים"
     bookmarks:
       not_logged_in: "סליחה, עליך להיות מחובר כדי להוסיף פוסט למועדפים"
       created: "סימנת הודעה זו כמועדפת"
@@ -347,6 +359,7 @@ he:
       last_emailed: "נשלח לאחרונה בדואר אלקטרוני"
       last_seen: "נראה"
       created: "הצטרף"
+      log_out: "התנתקות"
       location: "מיקום"
       website: "אתר"
       email_settings: "דואר אלקטרוני"
@@ -446,7 +459,6 @@ he:
     read_only_mode:
       enabled: "מצב קריאה בלבד למנהל ראשי. ניתן להמשיך לקרוא באתר אבל פעולות לא יעבדו כראוי."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
-    too_few_topics_notice: "צרו לפחות חמישה נושאים ציבוריים ו %{posts} פוסטים ציבוריים כדי להתחיל בדיון. משתמשים חדשים לא יוכלו לקבל אמון, אלא אם יש תוכן לקריאה עבורם."
     learn_more: "למד עוד..."
     year: 'שנה'
     year_desc: 'נושאים שפורסמו ב-365 הימים האחרונים'
@@ -470,7 +482,6 @@ he:
       enabled_description: "נושא זה מכיל פרסומים שנמחקו, אשר הוסתרו."
       disabled_description: "פרסומים שנמחקו בנושא זה מוצגים כעת."
       enable: "הסתר פוסטים מחוקים"
-      disable: "הצג פוסטים מחוקים"
     private_message_info:
       title: "הודעה פרטית"
       invite: "הזמינו אחרים..."
@@ -493,6 +504,7 @@ he:
       complete_username: "אם קיים חשבון שמתאים לשם המשתמש <b>%{username}</b>, אתה אמור לקבל בקרוב מייל עם הוראות לאיפוס הסיסמא. "
       complete_email: "אם החשבון מתאים ל <b>%{email}</b>, אתה אמור לקבל בקרוב מעעל עם הוראות לאיפוס הסיסמא."
     login:
+      title: "התחברות"
       username: "משתמש"
       password: "סיסמה"
       email_placeholder: "דואר אלקטרוני או סיסמה"
@@ -644,8 +656,11 @@ he:
     topics:
       bulk:
         reset_read: "איפוס נקראו"
+        delete: "מחיקת נושאים"
         dismiss_posts: "ביטול פרסומים"
+        dismiss_posts_tooltip: "ניקוי ספירת הלא-נקראים בנושאים אלו, תווך המשך הצגתם ברשימת הלא נקראים כאשר נוספים פרסומים חדשים"
         dismiss_topics: "דחיית נושאים"
+        dismiss_topics_tooltip: "הפסקת הצגת נושאים אלו ברשימת הלא-נקראו האישית כאשר נוספים פרסומים חדשים"
         dismiss_new: "שחרור חדשים"
         toggle: "החלף קבוצה מסומנת של נושאים"
         actions: "מקבץ פעולות"
@@ -695,6 +710,7 @@ he:
       invalid_access:
         title: "הנושא פרטי"
         description: "סליחה, איך אין לך גישה לנושא הזה!"
+        login_required: "עליכם להתחבר כדי לצפות בנושא זה."
       server_error:
         title: "שגיאה בטעינת נושא"
         description: "סליחה, לא יכולנו לטעון את הנושא הזה, ייתכן שבשל תקלת תקשורת. אנא נסי שוב. אם הבעיה נמשכת, הודיעו לנו."
@@ -830,6 +846,7 @@ he:
         email_placeholder: 'name@example.com'
         success: "שלחנו הזמנה אל  <b>{{email}}</b>. נודיע לך כאשר ההזמנה תתקבל. בדקו את לשונית ההזמנות בעמוד המשתמש/ת שלך כדי לעקוב אחר ההזמנות ששלחת."
         error: "סליחה, לא יכולנו להזמין את האדם הזה, אולי הוא כבר רשום?"
+      login_reply: 'התחברו כדי להשיב'
       filters:
         n_posts:
           one: "הודעה אחת"
@@ -1175,8 +1192,6 @@ he:
     changed_by: "מאת {{author}}"
     categories_list: "רשימת קטגוריות"
     filters:
-      with_topics: "%{filter} נושאים"
-      with_category: "%{filter} %{category} נושאים"
       latest:
         title: "מדוברים"
         help: "נושאים עם תגובות לאחרונה"
@@ -1316,8 +1331,10 @@ he:
         dispositions:
           agreed: "התקבל"
           disagreed: "לא התקבל"
+          deferred: "נדחה"
         flagged_by: "דוגלל על ידי"
         resolved_by: "נפתר על ידי"
+        took_action: "ננקטה פעוללה"
         system: "מערכת"
         error: "משהו השתבש"
         reply_message: "תגובה"
@@ -1652,6 +1669,7 @@ he:
         show_public_profile: "הצג פרופיל פומבי"
         impersonate: 'התחזה'
         ip_lookup: "חיפוש IP"
+        log_out: "התנתקות"
         logged_out: "המשתמש/ת התנתקו בכל המכשירים"
         revoke_admin: 'שלול ניהול ראשי'
         grant_admin: 'הענק ניהול ראשי'
@@ -1685,9 +1703,6 @@ he:
         cant_delete_all_too_many_posts:
           one: "לא ניתן למחוק את כל ההודעות מפני שלמשתמש/ת יותר מהודעה אחת. (delete_all_posts_max)"
           other: "לא ניתן למחוק את כל ההודעות בגלל שלמשתמש/ת יותר מ-{count}% הודעות. (delete_all_posts_max)"
-        delete_confirm: "אתה בטוח שברצונך למחוק את המשתמש הזה? הפעולה הזו קבועה!"
-        delete_and_block: "<b>כן</b>, <b>וחסום</b> הרשמות עתידיות מכתובת הדואר האלקטרוני וה-IP האלה"
-        delete_dont_block: "<b>כן</b>, רק מחק את המשתמש"
         deleted: "המשתמש נמחק."
         delete_failed: "הייתה שגיאה במחיקת המשתמש. יש לוודא שכל ההודעות נמחקו לפני ניסיון למחוק את המשתמש."
         send_activation_email: "שלח הודעת הפעלת חשבון"
@@ -1802,12 +1817,6 @@ he:
       title: 'קיצורי מקלדת'
       jump_to:
         title: 'קפוץ ל'
-        home: '<b>g</b> ואז <b>h</b> Home (מדוברים)'
-        latest: '<b>g</b> ואז <b>l</b> מדוברים'
-        new: '<b>g</b> ואז <b>n</b> חדשים'
-        unread: '<b>g</b> ואז <b>u</b> שלא נקראו'
-        starred: '<b>g</b> ואז <b>f</b> כוכבים'
-        categories: '<b>g</b> ואז <b>c</b> קטגוריות'
       navigation:
         title: 'ניווט'
         jump: '<b>#</b> מעבר לפרסום מספר'
@@ -1834,10 +1843,6 @@ he:
         bookmark: '<b>b</b> הוסף הודעה למועדפים'
         edit: '<b>e</b> ערוך הודעה'
         delete: '<b>d</b> מחק הודעה'
-        mark_muted: '<b>m</b> ואז <b>m</b> סמן נושא כמושתק'
-        mark_regular: '<b>m</b> then <b>r</b> סמן נושא כרגיל'
-        mark_tracking: '<b>m</b> then <b>t</b> סמן נושא כעוקב'
-        mark_watching: '<b>m</b> then <b>w</b> סמן נושא כצופה'
     badges:
       title: תגים
       allow_title: "אישור תגים ככותרת?"

@@ -86,12 +86,14 @@ pt_BR:
     yes_value: "Sim"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
+    log_in: "Log In"
     age: "Idade"
     joined: "ingressou"
     admin_title: "Admin"
     flags_title: "Sinalizações"
     show_more: "mostrar mais"
     links: "Links"
+    links_lowercase: "links"
     faq: "FAQ"
     guidelines: "Orientações"
     privacy_policy: "Política de Privacidade"
@@ -127,12 +129,33 @@ pt_BR:
       other: "em {{count}} dias"
     suggested_topics:
       title: "Tópicos sugeridos"
+    about:
+      simple_title: "Sobre"
+      title: "Sobre %{title}"
+      stats: "Estatísticas do Site"
+      stat:
+        all_time: "Sempre"
+        last_7_days: "Últimos 7 Dias"
+      like_count: "Contagem de Likes"
+      topic_count: "Contagem de Tópicos"
+      post_count: "Contagem de Tópicos"
+      user_count: "Contagem de Usuários"
     bookmarks:
       not_logged_in: "desculpe, você precisa estar logado para favoritar mensagens"
       created: "você favoritou essa postagem"
       not_bookmarked: "você já leu esta mensagem; clique para favoritar."
       last_read: "este é a última postagem que você leu; clique para favoritar."
       remove: "Remover Favorito"
+    topic_count_latest:
+      one: "{{count}} tópico novo ou atualizado."
+      other: "{{count}} tópicos novos ou atualizados."
+    topic_count_unread:
+      one: "{{count}} tópico não lido."
+      other: "{{count}} tópicos não lidos."
+    topic_count_new:
+      one: "{{count}} novo tópico."
+      other: "{{count}} novos tópicos."
+    click_to_show: "Clique para mostrar."
     preview: "pré-visualização"
     cancel: "cancelar"
     save: "Salvar mudanças"
@@ -336,6 +359,7 @@ pt_BR:
       last_emailed: "Último email enviado"
       last_seen: "Visto"
       created: "Entrou"
+      log_out: "Log Out"
       location: "Localização"
       website: "Web Site"
       email_settings: "Email"
@@ -435,7 +459,6 @@ pt_BR:
     read_only_mode:
       enabled: "Um modo somente de leitura. Você pode continuar a navegar no site, mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
-    too_few_topics_notice: "Crie até 5 tópicos públicos e %{posts} postagens públicas para começar a discussão. Novos usuários não irão ganhar níveis de segurança se não houver conteúdo para ser lido."
     learn_more: "aprenda mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -448,6 +471,7 @@ pt_BR:
     mute: Silenciar
     unmute: Reativar
     last_post: Última postagem
+    last_post_lowercase: último post
     summary:
       enabled_description: "Você está vendo um resumo deste tópico: apenas as postagens mais interessantes determinadas pela comunidade. Para ver todas as mensagens novamente, clique abaixo."
       description: "Há <b>{{count}}</b> respostas."
@@ -455,8 +479,9 @@ pt_BR:
       enable: 'Resumir Este Tópico'
       disable: 'Exibir Todas as Mensagens'
     deleted_filter:
+      enabled_description: "Este tópico contém posts deletados, que foram escondidos."
+      disabled_description: "Os posts deletados deste tópico estão sendo mostrados."
       enable: "Esconder postagens apagadas"
-      disable: "Mostrar postagens deletadas"
     private_message_info:
       title: "Mensagem privada"
       invite: "Convidar outros..."
@@ -465,6 +490,7 @@ pt_BR:
     username: 'Nome de Usuário'
     last_seen: 'Visto'
     created: 'Criado'
+    created_lowercase: 'criado'
     trust_level: 'Nível de confiança'
     search_hint: 'Nome de Usuário ou email'
     create_account:
@@ -478,6 +504,7 @@ pt_BR:
       complete_username: "Se uma conta corresponder a este usuário <b>%{username}</b>, você receberá um email com instruções de como reiniciar sua senha rapidamente."
       complete_email: "Se uma conta corresponder a este email <b>%{email}</b>, você receberá um email com instruções de como reiniciar sua senha rapidamente."
     login:
+      title: "Log In"
       username: "Usuário"
       password: "Senha"
       email_placeholder: "e-mail ou Nome de Usuário"
@@ -584,6 +611,18 @@ pt_BR:
       none: "Não há notifcações neste momento."
       more: "ver notificações antigas"
       total_flagged: "total de mensagens sinalizadas"
+      mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
+      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
+      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>You were granted {{description}}</p>"
     upload_selector:
       title: "Adicionar uma imagem"
       title_with_attachments: "Adicionar uma imagem ou arquivo"
@@ -617,6 +656,11 @@ pt_BR:
     topics:
       bulk:
         reset_read: "Redefinir Lido"
+        delete: "Tópicos Deletados"
+        dismiss_posts: "Ignorar Posts"
+        dismiss_posts_tooltip: "Zerar contagem de não lidos nestes tópicos, mas continuar a mostrar eles em minha lista de não lidos quando novos posts forem feitos."
+        dismiss_topics: "Ignorar Tópicos"
+        dismiss_topics_tooltip: "Para de mostrar estes tópicos em minha lista de não lidos quando novos posts forem feitos."
         dismiss_new: "Dispensar Nova"
         toggle: "alternar a seleção em massa de tópicos"
         actions: "Ações em Massa"
@@ -653,6 +697,7 @@ pt_BR:
       private_message: 'Começar uma nova conversa privada'
       list: 'Tópicos'
       new: 'novo tópico'
+      unread: 'não lido'
       new_topics:
         one: '1 novo tópico'
         other: '{{count}} novos tópicos'
@@ -665,12 +710,16 @@ pt_BR:
       invalid_access:
         title: "Tópico é particular"
         description: "Desculpe, você não tem acesso a esse tópico!"
+        login_required: "Você precisa de logar para ver este tópico."
       server_error:
         title: "Falha ao carregar o tópico"
         description: "Desculpe, nós não conseguimos carregar este tópico, possivelmente devido a um problema na conexão. Por favor teste novamente. Se o problema persistir, contate-nos."
       not_found:
         title: "Tópico não encontrado"
         description: "Desculpe, não foi possível encontrar esse tópico. Talvez ele tenha sido apagado?"
+      total_unread_posts:
+        one: "você tem {{count}} post não lido neste tópico"
+        other: "você tem {{count}} posts não lidos neste tópico"
       unread_posts:
         one: "você possui 1 postagem antiga que não foi lido neste tópico"
         other: "você possui {{count}} mensagens antigas que não foram lidas neste tópico"
@@ -797,6 +846,7 @@ pt_BR:
         email_placeholder: 'nome@exemplo.com'
         success: "Enviamos um convite para <b>{{email}}</b>. Você saberá quando eles utilizarem o convite. Você pode ir até a seção de Convites na sua página de usuário para saber quem você já convidou."
         error: "Desculpe não podemos convidar essa pessoa. Talvez já seja um usuário?"
+      login_reply: 'Logar para Responder'
       filters:
         n_posts:
           one: "1 mensagem"
@@ -878,6 +928,8 @@ pt_BR:
         confirm: "Tem certeza que quer abandonar a sua mensagem?"
         no_value: "Não, manter"
         yes_value: "Sim, abandone"
+      wiki:
+        about: "este post é uma wiki; qualquer um pode editá-lo"
       archetypes:
         save: 'Salvar as opções'
       controls:
@@ -1122,22 +1174,24 @@ pt_BR:
       invisible:
         help: "Este tópico está invisível; não aparecerá na listagem dos tópicos, e pode apenas ser acessado por link direto"
     posts: "Mensagens"
+    posts_lowercase: "posts"
     posts_long: "há {{number}} mensagens neste tópico"
     original_post: "Postagem Original"
     views: "Visualizações"
+    views_lowercase: "visualizações"
     replies: "Respostas"
     views_long: "este tópico foi visto {{number}} vezes"
     activity: "Atividade"
     likes: "Curtidas"
+    likes_lowercase: "likes"
     likes_long: "há {{number}} curtidas neste tópico"
     users: "Usuários"
+    users_lowercase: "usuários"
     category_title: "Categoria"
     history: "Histórico"
     changed_by: "por {{author}}"
     categories_list: "Lista de categorias"
     filters:
-      with_topics: "%{filter} Tópicos"
-      with_category: "%{filter} %{category} Tópicos"
       latest:
         title: "Recente"
         help: "tópicos com mensagens recentes"
@@ -1160,6 +1214,9 @@ pt_BR:
           one: "Não lido (1)"
           other: "Não lidos ({{count}})"
         help: "tópicos que você está acompanhando ou monitorando com mensagens não lidas"
+        lower_title_with_count:
+          one: "1 não lido"
+          other: "{{count}} não lidos"
       new:
         lower_title_with_count:
           one: "1 nova"
@@ -1246,11 +1303,20 @@ pt_BR:
         title: "Sinalizações"
         old: "Antigo"
         active: "Ativo"
+        agree: "Concordo"
+        agree_title: "Confirmar esta marcação como válida e correta"
+        agree_flag_modal_title: "Concordar e..."
         agree_flag_hide_post: "Aceitar (esconder post + enviar MP)"
         agree_flag_hide_post_title: "Esconder este post e enviar automaticamente uma mensagem particular para o usuário solicitando que ele edite este post urgentemente"
+        agree_flag: "Concordar com a marcação"
+        agree_flag_title: "Concordar com a marcação e manter o post inalterado"
         defer_flag: "Delegar"
+        defer_flag_title: "Remover esta marcação; ela não requer nenhuma ação neste momento."
         delete: "Apagar"
+        delete_title: "Apagar o post ao qual a marcação se refere."
+        delete_post_defer_flag: "Apagar o post e postergar a marcação"
         delete_post_defer_flag_title: "Apaga a postagem; se for o primeiro post então apaga o tópico"
+        delete_post_agree_flag: "Deletar o post e Concordar com a marcação"
         delete_post_agree_flag_title: "Apagar postagem; se for a primeira postagem, deletar o tópico"
         delete_flag_modal_title: "Apagar e ..."
         delete_spammer: "Deletar Spammer"
@@ -1258,14 +1324,17 @@ pt_BR:
         disagree_flag_unhide_post: "Discordar (reexibir postagem)"
         disagree_flag_unhide_post_title: "Remover qualquer denúncia dessa postagem e fazer ele visível de novo"
         disagree_flag: "Discordar"
+        disagree_flag_title: "Negar a marcação como inválida ou incorreta"
         clear_topic_flags: "Concluído"
         clear_topic_flags_title: "O tópico foi investigado e as questões foram resolvidas. Clique em Concluído para remover as sinalizações."
         more: "(mais...)"
         dispositions:
           agreed: "concordar"
           disagreed: "discordar"
+          deferred: "deferida"
         flagged_by: "Sinalizado por"
         resolved_by: "Resolvido por"
+        took_action: "Tomar ação"
         system: "Sistema"
         error: "Algo deu errado"
         reply_message: "Responder"
@@ -1600,6 +1669,7 @@ pt_BR:
         show_public_profile: "Mostrar Perfil Público"
         impersonate: 'Personificar'
         ip_lookup: "Pesquisa do IP"
+        log_out: "Log Out"
         logged_out: "Usuário foi desconectado em todos os dipositivos"
         revoke_admin: 'Revogar Admin'
         grant_admin: 'Conceder Admin'
@@ -1633,9 +1703,6 @@ pt_BR:
         cant_delete_all_too_many_posts:
           one: "Não pode remover porque o usuário tem mais de uma mensagem (delete_all_posts_max)"
           other: "Não pode remover porque o usuário tem mais de %{count} mensagens. (delete_all_posts_max)"
-        delete_confirm: "Tem CERTEZA que você quer apagar este usuário permanentemente do site? Esta ação é definitiva!"
-        delete_and_block: "<b>Sim</b>, e <b>bloquear</b> futuros cadastros deste e-mail e endereço IP."
-        delete_dont_block: "<b>Sim</b>, apenas excluir o usuário"
         deleted: "O usuário foi apagado."
         delete_failed: "Houve um erro ao apagar o usuário. Certifique-se de que todas mensagens dele foram apagadas antes de tentar apagá-lo."
         send_activation_email: "Enviar Email de Ativação"
@@ -1750,12 +1817,6 @@ pt_BR:
       title: 'Atalhos de teclado'
       jump_to:
         title: 'Ir Para'
-        home: '<b>g</b> seguido de <b>h</b> Home (Recentes)'
-        latest: '<b>g</b> seguido de <b>l</b> Recentes'
-        new: '<b>g</b> seguido de <b>n</b> Nova'
-        unread: '<b>g</b> seguido de <b>u</b> Não lido'
-        starred: '<b>g</b> em seguida <b>f</b> Favorito'
-        categories: '<b>g</b> seguido de <b>c</b> Categorias'
       navigation:
         title: 'Navegação'
         jump: '<b>#</b> Ir para a postagem número'
@@ -1782,10 +1843,6 @@ pt_BR:
         bookmark: '<b>b</b> Marcar mensagem'
         edit: '<b>e</b> Editar mensagem'
         delete: '<b>d</b> Excluir mensagem'
-        mark_muted: '<b>m</b> em seguida <b>m</b> Marca tópico como silenciado'
-        mark_regular: '<b>m</b> em seguida <b>r</b> Marca tópico como normal'
-        mark_tracking: '<b>m</b> em seguida <b>t</b> Marca tópico como monitorado'
-        mark_watching: '<b>m</b> em seguida <b>w</b> Marca o tópico para acompanhamento'
     badges:
       title: Emblemas
       allow_title: "permitir emblemas como título?"

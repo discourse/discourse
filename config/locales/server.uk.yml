@@ -35,27 +35,27 @@ uk:
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
   too_many_mentions:
-    one: "Даруйте, Ви можете згадувати у дописі тільки %{count} користувача."
-    other: "Даруйте, Ви не можете згадувати інших користувачів."
+    one: "Даруйте, Ви можете згадувати тільки одного іншого користувача у дописі."
+    other: "Даруйте, Ви можете згадувати %{count} користувачів у дописі."
   too_many_mentions_newuser:
-    one: "Даруйте, нові користувачі можуть згадувати в дописі тільки %{count} користувача."
-    other: "Даруйте, нові користувачі не можуть згадувати інших користувачів."
+    one: "Даруйте, нові користувачі можуть згадувати в дописі тільки одного користувача."
+    other: "Даруйте, нові користувачі можуть згадувати %{count} інших користувачів у дописі."
   too_many_images:
-    one: "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} зображення."
-    other: "Даруйте, нові користувачі не можуть вставляти зображення у дописи."
+    one: "Даруйте, нові користувачі можуть вставляти в допис тільки одне зображення."
+    other: "Даруйте, нові користувачі можуть вставляти %{count} зображень у допис."
   too_many_attachments:
-    one: "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} прикріплення."
-    other: "Даруйте, нові користувачі не можуть вставляти прикріплення в дописи."
+    one: "Даруйте, нові користувачі можуть вставляти в допис тільки одне  прикріплення."
+    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
   too_many_links:
-    one: "Даруйте, нові користувачі можуть вставляти в допис тільки %{count} посилання."
-    other: "Даруйте, нові користувачі не можуть вставляти посилання в дописи."
+    one: "Даруйте, нові користувачі можуть вставляти в допис тільки одне посилання."
+    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
   spamming_host: "Даруйте, Ви не можете вставити посилання на цей хост."
-  just_posted_that: "is too similar to what you recently posted"
-  has_already_been_used: "has already been used"
-  invalid_characters: "contains invalid characters"
-  is_invalid: "is invalid; try to be a little more descriptive"
-  next_page: "next page →"
-  prev_page: "← previous page"
+  just_posted_that: "це дуже схоже на те, що ви нещодавно дописували"
+  has_already_been_used: "вже було використано"
+  invalid_characters: "містить неприпустимі символи"
+  is_invalid: "є неприпустимим; спробуйте бути трохи більше наочним"
+  next_page: "наступна сторінка →"
+  prev_page: "← попередня сторінка"
   page_num: "Сторінка %{num}"
   topics_in_category: "Теми в категорії '%{category}'"
   rss_posts_in_topic: "RSS-стрічка теми '%{topic}'"
@@ -63,7 +63,7 @@ uk:
   author_wrote: "%{author} написав(ла):"
   num_posts: "Дописи:"
   num_participants: "Учасники:"
-  read_full_topic: "Read full topic"
+  read_full_topic: "Читати тему цілком"
   private_message_abbrev: "ПП"
   rss_description:
     latest: "Останні теми"
@@ -73,7 +73,7 @@ uk:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
     default_names:
-      admins: "адміни"
+      admins: "адміністратори"
       moderators: "модератори"
       staff: "персонал"
       trust_level_1: "trust_level_1"
@@ -121,11 +121,11 @@ uk:
       category:
         name: "Назва категорії"
       post:
-        raw: "Body"
+        raw: "Тіло"
     errors:
       messages:
         is_invalid: "is invalid; try to be a little more descriptive"
-        has_already_been_used: "has already been used"
+        has_already_been_used: "вже було використано"
       models:
         topic:
           attributes:
@@ -134,13 +134,13 @@ uk:
         user:
           attributes:
             ip_address:
-              signup_not_allowed: "Signup is not allowed from this account."
+              signup_not_allowed: "Вхід не дозволено з цього облікового запису."
   user_profile:
-    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
+    no_info_me: "<div class='missing-profile'>поле Про Мене вашого профілю зараз є порожнім, <a href='/users/%{username_lower}/preferences/about-me'>ви маєте бажання заповнити його?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
   meta_category_description: "Обговорення цього форуму, його організації, того, як він працює, і того, як ми можемо його покращити."
-  staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
+  staff_category_description: "Закрита категорія для обговорень між персоналом. Теми бачать тільки адміністратори та модератори."
   category:
     topic_prefix: "Про категорію %{category}"
     replace_paragraph: "[Замініть цей перший абзац коротким описом Вашої нової категорії. Він з'являтиметься в області вибору категорій, тому намагайтеся, щоб він був коротшим за 200 символів. Поки Ви не відредагуєте цей текст або не створите тем, ця категорія не з'явиться на сторінці категорій.]"
@@ -350,9 +350,6 @@ uk:
     education_new_topic:
       title: "Навчання новачка: Перші теми"
       description: "Спливні настанови, що одразу автоматично відображаються над редактором, коли новий користувач починає вводити свої перші дві нові теми."
-    usage_tips:
-      title: "Підказки для новачків"
-      description: "Загальні підказки щодо використання, важлива інформація про форум, а також ключові настанови, призначені для нових користувачів."
     welcome_user:
       title: "Вітання: Новий користувач"
       description: "Приватне повідомлення, що автоматично надсилається всім новим користувачам під час реєстрації."
@@ -541,18 +538,18 @@ uk:
     username:
       short: "має бути найменше %{min} символів"
       characters: "must only include numbers, letters and underscores"
-      unique: "must be unique"
-      blank: "must be present"
+      unique: "має бути унікальним"
+      blank: "має бути наявним"
       must_begin_with_alphanumeric: "must begin with a letter or number"
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
-      blocked: "is not allowed."
+      blocked: "не допускається."
     ip_address:
-      blocked: "is blocked."
+      blocked: "заблоковано."
   test_mailer:
     subject_template: "[%{site_name}] Тест доставки електронної пошти"
   new_version_mailer_with_notes:
-    subject_template: "[%{site_name}] update available"
+    subject_template: "оновлення [%{site_name}] доступно"
   flags_reminder:
     please_review: "Будь ласка, перегляньте його."
     post_number: "допис"
@@ -564,11 +561,11 @@ uk:
     welcome_invite:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
     export_succeeded:
-      subject_template: "Export completed successfully"
-      text_body_template: "The export was successful."
+      subject_template: "Експорт завершено успішно"
+      text_body_template: "Експорт був успішним."
     import_succeeded:
-      subject_template: "Import completed successfully"
-      text_body_template: "The import was successful."
+      subject_template: "Імпорт завершено успішно"
+      text_body_template: "Імпорт був успішним."
     bulk_invite_succeeded:
       subject_template: "Масове запрошення користувачів оброблено успішно"
     bulk_invite_failed:
@@ -578,11 +575,11 @@ uk:
     email_reject_empty:
       subject_template: "Питання з email -- Немає змісту"
     too_many_spam_flags:
-      subject_template: "New account blocked"
+      subject_template: "Новий обліковий запис заблоковано"
     blocked_by_staff:
       subject_template: "Обліковий запис заблоковано"
     unblocked:
-      subject_template: "Account unblocked"
+      subject_template: "Обліковий запис розблоковано"
       text_body_template: |
         Hello,
 
@@ -600,8 +597,8 @@ uk:
   user_notifications:
     previous_discussion: "Попередні відповіді"
     unsubscribe:
-      title: "Unsubscribe"
-      description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
+      title: "Відпісатися"
+      description: "Не зацікавлені в отриманні цих листів? Немає проблем! Натисніть нижче, щоб відписатися назавжди:"
     reply_by_email: "Щоб відповісти, надішліть відповідь на цей лист або відвідайте %{base_url}%{url} у своєму веб-оглядачі."
     visit_link_to_respond: "Щоб відповісти, відвідайте %{base_url}%{url} у своєму веб-оглядачі."
     posted_by: "Опубліковано %{username} %{post_date}"
@@ -657,7 +654,7 @@ uk:
         ---
         %{respond_instructions}
     digest:
-      new_activity: "New activity on your topics and posts:"
+      new_activity: "Нова активність у ваших темах та дописах:"
       top_topics: "Популярні дописи"
       other_new_topics: "Популярні теми"
       click_here: "натисніть тут"
@@ -705,10 +702,6 @@ uk:
     see_more: "Більше"
     search_title: "Пошук на цьому сайті"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Ласкаво просимо до %{title}](#welcome)
-      Для цього форуму потрібен обліковий запис, щоб переглядати %{title}. Будь ласка, увійдіть або створіть обліковий запис, щоб продовжити.
   terms_of_service:
     title: "Умови Використання"
     user_content_license: |

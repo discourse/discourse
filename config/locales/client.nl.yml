@@ -447,7 +447,6 @@ nl:
       disable: 'Alle berichten'
     deleted_filter:
       enable: "Verberg Verwijderde Berichten"
-      disable: "Toon Verwijderde Berichten"
     private_message_info:
       title: "Privébericht"
       invite: "Nodig anderen uit..."
@@ -1104,8 +1103,6 @@ nl:
     changed_by: "door {{author}}"
     categories_list: "Categorielijst"
     filters:
-      with_topics: "%{filter} Topics"
-      with_category: "%{filter} %{category} Topics"
       latest:
         title: "Recent"
         help: "topics met recente reacties"
@@ -1582,9 +1579,6 @@ nl:
         cant_delete_all_too_many_posts:
           one: "Kan niet alle berichten verwijderen omdat de gebruiker meer dan 1 bericht heeft (delete_all_posts_max)."
           other: "Kan niet alle berichten verwijderen omdat de gebruiker meer dan %{count} berichten heeft (delete_all_posts_max)."
-        delete_confirm: "Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling is permanant!"
-        delete_and_block: "<b>Ja</b>, en <b>blokkeer</b> toekomstige registraties met datzelfde e-mail- en IP-adres"
-        delete_dont_block: "<b>Ja</b>, verwijder de gebruiker"
         deleted: "De gebruiker is verwijderd."
         delete_failed: "Er ging iets mis bij het verwijderen van deze gebruiker. Zorg er voor dat alle berichten van deze gebruiker eerst verwijderd zijn."
         send_activation_email: "Verstuur activatiemail"
@@ -1685,12 +1679,6 @@ nl:
     keyboard_shortcuts_help:
       jump_to:
         title: 'Spring naar'
-        home: '<b>g</b> dan <b>h</b> Home (Laatste)'
-        latest: '<b>g</b> dan <b>l</b> Laatste'
-        new: '<b>g</b> dan <b>n</b> Nieuw'
-        unread: '<b>g</b> dan <b>u</b> Ongelezen'
-        starred: '<b>g</b> dan <b>f</b> Ster'
-        categories: '<b>g</b> dan <b>c</b> Categorieën'
       navigation:
         title: 'Navigatie'
         jump: '<b>#</b> Ga naar post nummer'
@@ -1717,10 +1705,6 @@ nl:
         bookmark: '<b>b</b> Bookmark bericht'
         edit: '<b>e</b> Wijzig bericht'
         delete: '<b>d</b> Verwijder bericht'
-        mark_muted: '<b>m</b> dan <b>m</b> Markeer topic als genegeerd'
-        mark_regular: '<b>m</b> dan <b>r</b> Markeer topic als normaal'
-        mark_tracking: '<b>m</b> dan <b>t</b> Markeer topic als volgen'
-        mark_watching: '<b>m</b> dan <b>w</b> Markeer topic als in de gaten houden'
     badges:
       title: Badges
       allow_title: "badge als titel toestaan"

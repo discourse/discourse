@@ -7,7 +7,38 @@
 
 id:
   js:
+    number:
+      human:
+        storage_units:
+          format: '%n %u'
+          units:
+            byte:
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          other: "< %{count}s"
+        x_seconds:
+          other: "%{count}s"
+        less_than_x_minutes:
+          other: "< %{count}m"
+        x_minutes:
+          other: "%{count}m"
+        about_x_hours:
+          other: "%{count}h"
+        x_days:
+          other: "%{count}d"
+        about_x_years:
+          other: "%{count}y"
+        over_x_years:
+          other: "> %{count}y"
+        almost_x_years:
+          other: "%{count}y"
       medium:
         x_minutes:
           other: "%{count} menit"
@@ -23,28 +54,37 @@ id:
         x_days:
           other: "%{count} hari yang lalu"
     share:
-      topic: 'sebar pranala ke topik ini'
-      post: 'sebar pranala ke post #%{postNumber}'
+      topic: 'share link ke topik ini'
+      post: 'share link ke post #%{postNumber}'
       close: 'tutup'
-      twitter: 'sebarkan pranala ini di Twitter'
-      facebook: 'sebarkan pranala ini di Facebook'
-      google+: 'sebarkan pranala ini di Google+'
-      email: 'kirim pranala ini lewat email'
+      twitter: 'share link ini di Twitter'
+      facebook: 'share link ini di Facebook'
+      google+: 'share link ini di Google+'
+      email: 'kirim link ini melalui email'
     edit: 'Ubah judul dan kategori topik ini'
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
     no_value: "Tidak"
     yes_value: "Ya"
     generic_error: "Maaf, terjadi kesalahan."
+    log_in: "Log In"
     age: "Umur"
+    joined: "Joined"
     admin_title: "Admin"
-    flags_title: "Tanda"
-    show_more: "lihat selengkapanya"
-    links: "Pranala"
+    flags_title: "Flags"
+    show_more: "show more"
+    links: "Links"
+    links_lowercase: "links"
     faq: "FAQ"
+    guidelines: "Guidelines"
+    privacy_policy: "Privacy Policy"
+    privacy: "Privacy"
+    terms_of_service: "Terms of Service"
+    mobile_view: "Mobile View"
+    desktop_view: "Desktop View"
     you: "Kamu"
     or: "atau"
-    now: "baru saja"
-    read_more: 'baca selengkapnya'
+    now: "just now"
+    read_more: 'read more'
     in_n_seconds:
       other: "dalam {{count}} detik"
     in_n_minutes:
@@ -54,8 +94,8 @@ id:
     in_n_days:
       other: "dalam {{count}} hari"
     suggested_topics:
-      title: "Topik Terpilih"
-    cancel: "batal"
+      title: "Suggested Topics"
+    cancel: "cancel"
     save: "Simpan Perubahan"
     saving: "Menyimpan..."
     saved: "Tersimpan!"
@@ -63,35 +103,35 @@ id:
       none_found: "Tidak ada topik."
       title:
         search: "Cari Topik berdasarkan nama, url atau id:"
-        placeholder: "ketikkan judul topik disini"
+        placeholder: "tulis judul topik disini"
     user_action:
       user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> membalas <a href='{{postUrl}}'>{{post_number}}</a>"
       you_replied_to_post: "<a href='{{userUrl}}'>You</a> membalas <a href='{{postUrl}}'>{{post_number}}</a>"
       sent_by_user: "Dikirim oleh <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "Dikirim oleh <a href='{{userUrl}}'>you</a>"
+      sent_by_you: "Dikirim oleh <a href='{{userUrl}}'>kamu</a>"
     user_action_groups:
       '4': "Topik"
-      '11': "Ubah"
+      '11': "Edit"
       '13': "Kotak masuk"
     user:
       profile: "Profil"
       edit: "Ubah Preferensi"
-      download_archive: "unduh arsip postingan saya"
-      private_message: "Pesan Pribadi"
-      private_messages: "Pesan"
-      activity_stream: "Aktifitas"
-      bio: "Tentang saya"
+      download_archive: "download arsip postingan saya"
+      private_message: "Private Message"
+      private_messages: "Messages"
+      activity_stream: "Activity"
+      bio: "About me"
       email:
         invalid: "Masukkan email yang valid."
       name:
-        title: "Nama"
+        title: "Name"
         too_short: "Nama kamu terlalu pendek."
       username:
         available: "Username tersedia."
         too_short: "Username kamu terlalu pendek."
         too_long: "Username kamu terlalu panjang."
-      last_seen: "Dilihat"
-      created: "Bergabung"
+      last_seen: "Seen"
+      created: "Joined"
       email_settings: "Email"
       email_digests:
         daily: "harian"
@@ -160,8 +200,6 @@ id:
       auto_close_units: "jam"
     users: "Pengguna"
     filters:
-      with_topics: "Topik %{filter}"
-      with_category: "Topik %{filter} %{category} "
       new:
         lower_title_with_count:
           one: "1 baru"

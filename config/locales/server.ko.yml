@@ -505,9 +505,6 @@ ko:
     education_new_topic:
       title: "새로운 사용자 교육: 첫번째 토픽들"
       description: "새로운 사용자가 첫 두개의 토픽을 작성하면 자동 팝업됩니다."
-    usage_tips:
-      title: "새로운 사용자 팁"
-      description: "새로운 사용자들이 알아야되는 포럼에서 필요한 공통적으로 사용되는 팁."
     welcome_user:
       title: "환영: 새로운 사용자"
       description: "새로운 사용자가 가입하면 자동으로 개인 메시지를 보냅니다."
@@ -998,10 +995,6 @@ ko:
         만약 위의 링크를 클릭 할 수 없으면 주소를 복사하여 당신의 웹브라우저에 붙여넣으세요.
   page_not_found:
     title: "당신이 요청한 페이지를 찾을 수 없습니다. 혹시 아래와 같은 토픽을 찾으신 것은 아닌가요?"
-  login_required:
-    welcome_message: |
-      #[%{title}에 오신것을 환영합니다](#Welcome)
-      %{title}을 보기 위해서는 로그인이 필요합니다. 로그인을 하시거나 계정이 없으시다면 만들어주세요.
   terms_of_service:
     user_content_license: |
       User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.

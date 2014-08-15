@@ -1062,8 +1062,6 @@ cs:
     changed_by: "od uživatele {{author}}"
     categories_list: "Seznam kategorií"
     filters:
-      with_topics: "%{filter} Témata"
-      with_category: "%{filter} %{category} Témata"
       latest:
         title: "Nejnovější"
         help: "nejaktuálnější témata"
@@ -1495,9 +1493,6 @@ cs:
           one: "Uživatelé nemůžou být smazáni pokud mají příspěvky. Před smazáním uživatele smažte všechny jeho příspěvky. (Příspěvky starší než den nemůžou být smazány.)"
           few: "Uživatelé nemůžou být smazáni pokud mají příspěvky. Před smazáním uživatele smažte všechny jeho příspěvky. (Příspěvky starší než %{count} dny nemůžou být smazány.)"
           other: "Uživatelé nemůžou být smazáni pokud mají příspěvky. Před smazáním uživatele smažte všechny jeho příspěvky. (Příspěvky starší než %{count} dnů nemůžou být smazány.)"
-        delete_confirm: "Jste si jistí, že chce permanentně smazat tohoto uživatele z fóra? Tato akce je nevratná!"
-        delete_and_block: "<b>Ano</b>, a <b>zakázat</b> registraci z této emailové adresy"
-        delete_dont_block: "<b>Ano</b>, a <b>povolit</b> registraci z této emailové adresy"
         deleted: "Uživatel byl smazán."
         delete_failed: "Nastala chyba při odstraňování uživatele. Ujistěte se, že jsou všechny příspěvky tohoto uživatele smazané, než budete uživatele mazat."
         send_activation_email: "Odeslat aktivační email"
@@ -1581,12 +1576,6 @@ cs:
     keyboard_shortcuts_help:
       jump_to:
         title: 'Jump To'
-        home: '<b>g</b> then <b>h</b> Home (Latest)'
-        latest: '<b>g</b> then <b>l</b> Latest'
-        new: '<b>g</b> then <b>n</b> New'
-        unread: '<b>g</b> then <b>u</b> Unread'
-        starred: '<b>g</b> then <b>f</b> Starred'
-        categories: '<b>g</b> then <b>c</b> Categories'
       navigation:
         title: 'Navigation'
         back: '<b>u</b> Back'
@@ -1611,10 +1600,6 @@ cs:
         bookmark: '<b>b</b> Bookmark post'
         edit: '<b>e</b> Edit post'
         delete: '<b>d</b> Delete post'
-        mark_muted: '<b>m</b> then <b>m</b> Mark topic as muted'
-        mark_regular: '<b>m</b> then <b>r</b> Mark topic as regular'
-        mark_tracking: '<b>m</b> then <b>t</b> Mark topic as tracking'
-        mark_watching: '<b>m</b> then <b>w</b> Mark topic as watching'
     badges:
       title: Odznaky
       badge_count:

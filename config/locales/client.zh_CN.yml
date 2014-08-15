@@ -70,6 +70,7 @@ zh_CN:
     yes_value: "是"
     generic_error: "抱歉，发生了一个错误。"
     generic_error_with_reason: "发生了一个错误：%{error}"
+    log_in: "登录"
     age: "时间"
     joined: "加入时间："
     admin_title: "管理"
@@ -107,6 +108,17 @@ zh_CN:
       other: "在 {{count}} 天内"
     suggested_topics:
       title: "推荐主题"
+    about:
+      simple_title: "关于"
+      title: "关于 %{title}"
+      stats: "站点统计"
+      stat:
+        all_time: "所有时间内"
+        last_7_days: "7 天以内"
+      like_count: "赞数量"
+      topic_count: "主题数量"
+      post_count: "主题数量"
+      user_count: "用户数量"
     bookmarks:
       not_logged_in: "抱歉，您需要先登录才能给帖子加书签"
       created: "您给此帖的书签已加上"
@@ -320,6 +332,7 @@ zh_CN:
       last_emailed: "最后一次邮寄"
       last_seen: "最后一次活动"
       created: "加入时间"
+      log_out: "登出"
       location: "地址"
       website: "网站"
       email_settings: "电子邮箱"
@@ -415,7 +428,6 @@ zh_CN:
     read_only_mode:
       enabled: "一个管理员启用了只读模式。您可以继续浏览这个站点但是无法进行交互。"
       login_disabled: "只读模式下不允许登录。"
-    too_few_topics_notice: "创建至少 5 个公开主题和 %{posts} 个公开帖子以开始讨论。新用户无法得到信任等级除非已经有内容让用户阅读。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -439,7 +451,6 @@ zh_CN:
       enabled_description: "这个主题包含已删除的帖子，他们已经被隐藏。"
       disabled_description: "主题中被删除的帖子已显示。"
       enable: "隐藏已删除的帖子"
-      disable: "显示已删除的帖子"
     private_message_info:
       title: "私下交流"
       invite: "邀请其他..."
@@ -462,6 +473,7 @@ zh_CN:
       complete_username: "如果您的账户名 <b>%{username}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
       complete_email: "如果您的账户 <b>%{email}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
     login:
+      title: "登录"
       username: "用户"
       password: "密码"
       email_placeholder: "电子邮箱地址或用户名"
@@ -613,8 +625,11 @@ zh_CN:
     topics:
       bulk:
         reset_read: "设为未读"
+        delete: "删除主题"
         dismiss_posts: "忽略帖子"
+        dismiss_posts_tooltip: "清除这些帖子的未读计数但当有新帖子时在我的未读列表中继续显示他们"
         dismiss_topics: "忽略主题"
+        dismiss_topics_tooltip: "停止当有新帖子时在我的未读列表中显示这些主题"
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"
@@ -661,6 +676,7 @@ zh_CN:
       invalid_access:
         title: "这是私密主题"
         description: "抱歉，您没有访问此主题的权限！"
+        login_required: "您需要登陆才能阅读此主题。"
       server_error:
         title: "载入主题失败"
         description: "抱歉，无法载入此主题。有可能是网络连接问题导致的，请重试。如果问题始终存在，请告诉我们。"
@@ -792,6 +808,7 @@ zh_CN:
         email_placeholder: '电子邮箱地址'
         success: "我们发了一封邀请邮件给 <b>{{email}}</b>。我们将在邀请被接受后通知您。检查您的用户中的邀请标签页来追踪您的邀请。"
         error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
+      login_reply: '登录后回复'
       filters:
         n_posts:
           other: "{{count}} 个帖子"
@@ -1109,8 +1126,6 @@ zh_CN:
     changed_by: "由 {{author}}"
     categories_list: "分类列表"
     filters:
-      with_topics: "%{filter} 主题"
-      with_category: "%{filter} %{category} 主题"
       latest:
         title: "最新"
         help: "最新发布的帖子"
@@ -1250,8 +1265,10 @@ zh_CN:
         dispositions:
           agreed: "已批准"
           disagreed: "未批准"
+          deferred: "推迟"
         flagged_by: "报告者为"
         resolved_by: "已解决，被"
+        took_action: "立即执行"
         system: "系统"
         error: "出错了"
         reply_message: "回复"
@@ -1577,6 +1594,7 @@ zh_CN:
         show_public_profile: "显示公开介绍"
         impersonate: '检视角度'
         ip_lookup: "IP 查询"
+        log_out: "登出"
         logged_out: "用户在所有设备都已登出"
         revoke_admin: '吊销管理员资格'
         grant_admin: '赋予管理员资格'
@@ -1607,9 +1625,6 @@ zh_CN:
           other: "不能删除所有帖子。一些帖子发表于 %{count} 天前。（设置项：delete_user_max_post_age）"
         cant_delete_all_too_many_posts:
           other: "不能删除所有帖子，因为用户有超过 %{count} 个帖子。（delete_all_posts_max）"
-        delete_confirm: "您确定要永久地从本站删除此用户？该操作无法撤销！"
-        delete_and_block: "<b>确定</b>，并<b>阻止</b>该邮件地址和IP地址再次注册。"
-        delete_dont_block: "<b>确定</b>，但<b>允许</b>该邮件地址和IP地址再次注册。"
         deleted: "该用户已被删除。"
         delete_failed: "在删除用户时发生了错误。请确保删除该用户前删除了该用户的所有帖子。"
         send_activation_email: "发送激活邮件"
@@ -1724,12 +1739,6 @@ zh_CN:
       title: '键盘快捷键'
       jump_to:
         title: '跳转'
-        home: '先按 <b>g</b> 再按 <b>h</b> 首页（最新内容）'
-        latest: '先按 <b>g</b> 再按 <b>l</b> 查看最新内容'
-        new: '先按 <b>g</b> 再按 <b>n</b> 查看新主题'
-        unread: '先按 <b>g</b> 再按 <b>u</b> 查看未阅主题'
-        starred: '先按 <b>g</b> 再按 <b>f</b> 查看收藏主题'
-        categories: '先按 <b>g</b> 再按 <b>c</b> 查看分类列表'
       navigation:
         title: '导航'
         jump: '<b>#</b> 跳转到帖子标号'
@@ -1756,10 +1765,6 @@ zh_CN:
         bookmark: '<b>b</b> 给帖子添加书签'
         edit: '<b>e</b> 编辑帖子'
         delete: '<b>d</b> 删除帖子'
-        mark_muted: '先按 <b>m</b> 再按 <b>m</b> 把主题设为免打扰主题'
-        mark_regular: '先按 <b>m</b> 再按 <b>r</b> 把主题设为常规主题'
-        mark_tracking: '先按 <b>m</b> 再按 <b>t</b> 追踪主题'
-        mark_watching: '先按 <b>m</b> 再按 <b>w</b> 关注主题'
     badges:
       title: 徽章
       allow_title: "允许使用徽章作为头衔？"
