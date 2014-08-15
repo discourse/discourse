@@ -46,8 +46,7 @@
   {{/each}}
 </td>
 
-<td {{bind-attr class=":num :posts likesHeat"}}><a href="{{lastUnreadUrl}}" class='badge-posts'>{{number posts_count numberKey="posts_long"}}</a></td>
-
+{{posts-count-column topic=model class="num"}}
 <td {{bind-attr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
 
 {{activity-column topic=model class="num"}}

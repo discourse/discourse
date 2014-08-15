@@ -33,8 +33,7 @@
   {{/unless}}
 
   <div class="pull-right">
-    <div class='num posts'><a href="{{lastUnreadUrl}}" {{bind-attr class="likesHeat"}}>{{number posts_count numberKey="posts_long"}}</a></div>
-
+    {{posts-count-column topic=this tagName="div" class="num posts"}}
     <div class='num activity last'>
       <a href="{{lastPostUrl}}" title='{{i18n last_post}}: {{{raw-date bumped_at}}}'>{{last_poster_username}}</a>
       {{activity-column topic=this tagName="span" class="age"}}
