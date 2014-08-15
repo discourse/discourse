@@ -104,18 +104,6 @@ Discourse.Post = Discourse.Model.extend({
     return this.get('version') - 1;
   }.property('version'),
 
-  historyHeat: function() {
-    var rightNow, updatedAt, updatedAtDate;
-    if (!(updatedAt = this.get('updated_at'))) return;
-    rightNow = new Date().getTime();
-
-    // Show heat on age
-    updatedAtDate = new Date(updatedAt).getTime();
-    if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 12)) return 'heatmap-high';
-    if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 24)) return 'heatmap-med';
-    if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 48)) return 'heatmap-low';
-  }.property('updated_at'),
-
   flagsAvailable: function() {
     var post = this;
     return Discourse.Site.currentProp('flagTypes').filter(function(item) {

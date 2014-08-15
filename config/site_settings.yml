@@ -681,6 +681,17 @@ uncategorized:
     client: true
     default: 2.0
 
+  # History edit heat thresholds
+  history_hours_low:
+    client: true
+    default: 12
+  history_hours_medium:
+    client: true
+    default: 24
+  history_hours_high:
+    client: true
+    default: 48
+
   # Cold map thresholds
   cold_age_days_low:
     client: true
