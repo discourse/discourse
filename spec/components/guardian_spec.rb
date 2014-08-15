@@ -1687,12 +1687,12 @@ describe Guardian do
         Guardian.new(user).can_edit_email?(user).should be_false
       end
 
-      it "is true for admins" do
-        Guardian.new(admin).can_edit_email?(user).should be_true
+      it "is false for admins" do
+        Guardian.new(admin).can_edit_email?(user).should be_false
       end
 
-      it "is true for moderators" do
-        Guardian.new(moderator).can_edit_email?(user).should be_true
+      it "is false for moderators" do
+        Guardian.new(moderator).can_edit_email?(user).should be_false
       end
     end
 
