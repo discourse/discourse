@@ -550,7 +550,7 @@ describe Guardian do
             Guardian.new(coding_horror).can_create?(Post, topic).should be_false
           end
 
-          it 'allows editing of posts' do
+          it 'does not allow editing of posts' do
             Guardian.new(coding_horror).can_edit?(post).should be_false
           end
         end
@@ -854,16 +854,20 @@ describe Guardian do
       end
 
       context 'archived' do
-        it 'returns false as a moderator' do
-          Guardian.new(moderator).can_edit?(build(:topic, user: user, archived: true)).should == false
+        it 'returns true as a moderator' do
+          Guardian.new(moderator).can_edit?(build(:topic, user: user, archived: true)).should == true
         end
 
-        it 'returns false as an admin' do
-          Guardian.new(admin).can_edit?(build(:topic, user: user, archived: true)).should == false
+        it 'returns true as an admin' do
+          Guardian.new(admin).can_edit?(build(:topic, user: user, archived: true)).should == true
         end
 
-        it 'returns false at trust level 3' do
-          Guardian.new(leader).can_edit?(build(:topic, user: user, archived: true)).should == false
+        it 'returns true at trust level 3' do
+          Guardian.new(leader).can_edit?(build(:topic, user: user, archived: true)).should == true
+        end
+
+        it 'returns false as a topic creator' do
+          Guardian.new(user).can_edit?(build(:topic, user: user, archived: true)).should == false
         end
       end
     end
