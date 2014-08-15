@@ -39,9 +39,7 @@
               </td>
             {{/unless}}
 
-            <td {{bind-attr class=":num :posts likesHeat"}}>
-              <a href="{{unbound topic.lastUnreadUrl}}" class='badge-posts'>{{number topic.posts_count numberKey="posts_long"}}</a>
-            </td>
+            {{posts-count-column topic=topic class="num"}}
 
             {{#if controller.showParticipants}}
               <td class='participants'>
