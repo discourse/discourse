@@ -1397,7 +1397,7 @@ en:
         help: "latest topics in the {{categoryName}} category"
       top:
         title: "Top"
-        help: "a selection of best topics in the last year, month, week or day"
+        help: "the most active topics in the last year, month, week or day"
         yearly:
           title: "Top Yearly"
         monthly:
