@@ -118,7 +118,7 @@ Discourse.AdminUser = Discourse.User.extend({
 
   refreshBrowsers: function() {
     Discourse.ajax("/admin/users/" + (this.get('id')) + "/refresh_browsers", {type: 'POST'});
-    bootbox.alert("Message sent to all clients!");
+    bootbox.alert(I18n.t("admin.user.message_sent_to_all_clients"));
   },
 
   approve: function() {
