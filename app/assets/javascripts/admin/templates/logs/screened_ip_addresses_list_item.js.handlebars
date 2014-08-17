@@ -18,8 +18,8 @@
 <div class="col created_at">{{age-with-tooltip created_at}}</div>
 <div class="col actions">
   {{#unless editing}}
-    <button class="btn btn-danger" {{action destroy this}}><i class="fa fa-trash-o"></i> {{i18n admin.logs.delete}}</button>
-    <button class="btn" {{action edit this}}><i class="fa fa-pencil"></i> {{i18n admin.logs.edit}}</button>
+    <button class="btn btn-danger" {{action destroy this}}><i class="fa fa-trash-o"></i></button>
+    <button class="btn" {{action edit this}}><i class="fa fa-pencil"></i></button>
     {{#if isBlocked}}
       <button class="btn" {{action allow this}}><i {{bind-attr class=":fa doNothingIcon"}}></i> {{i18n admin.logs.screened_ips.actions.do_nothing}}</button>
     {{else}}

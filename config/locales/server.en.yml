@@ -1721,7 +1721,7 @@ en:
 
   email_log:
     no_user: "Can't find user with id %{user_id}"
-    suspended_not_pm: "User is supsended and email is not a private message"
+    suspended_not_pm: "User is suspended, not a private message"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"
