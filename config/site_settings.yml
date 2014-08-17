@@ -435,7 +435,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: "^[^\\.]*$"
+    regex: "^[a-z0-9]([a-z0-9\\-]\\.?)+[a-z0-9]$"
   allow_profile_backgrounds:
     client: true
     default: true
@@ -629,7 +629,7 @@ backups:
   s3_backup_bucket:
     client: false
     default: ''
-    regex: "^[^\\.]*$"
+    regex: "^[a-z0-9]([a-z0-9\\-]\\.?)+[a-z0-9]$"
 
 uncategorized:
   version_checks:
