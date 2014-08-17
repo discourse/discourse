@@ -1,4 +1,5 @@
 #topic-entrance {
+
   border: 1px solid scale-color-diff();
   padding: 5px;
   background: $secondary;
@@ -9,10 +10,12 @@
   width: 133px;
   padding: 5px;
 
+  @include unselectable;
+
   button.full {
     width: 100%;
     margin-bottom: 5px;
-    @include unselectable;
+
     i {
       display: block;
       margin-top: 2px;
