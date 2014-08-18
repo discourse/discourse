@@ -46,6 +46,14 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return "<i class='fa " + icon + "' title='" + title + "'></i>";
   },
 
+  wasEdited: function () {
+    if (this.blank("last_revised_at")) { return false; }
+    var lastRevisedAt = Date.parse(this.get("last_revised_at"));
+    return _.some(this.get("post_actions"), function (postAction) {
+      return Date.parse(postAction.created_at) < lastRevisedAt;
+    });
+  }.property("last_revised_at", "post_actions.@each.created_at"),
+
   conversations: function () {
     var self = this;
     var conversations = [];
@@ -142,7 +150,7 @@ Discourse.FlaggedPost.reopenClass({
     return Discourse.ajax('/admin/flags/' + filter + '.json?offset=' + offset).then(function (data) {
       // users
       var userLookup = {};
-      _.each(data.users,function (user) {
+      _.each(data.users, function (user) {
         userLookup[user.id] = Discourse.AdminUser.create(user);
       });
 
@@ -153,7 +161,7 @@ Discourse.FlaggedPost.reopenClass({
       });
 
       // posts
-      _.each(data.posts,function (post) {
+      _.each(data.posts, function (post) {
         var f = Discourse.FlaggedPost.create(post);
         f.userLookup = userLookup;
         f.topicLookup = topicLookup;

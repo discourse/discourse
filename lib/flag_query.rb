@@ -25,7 +25,12 @@ module FlagQuery
              p.topic_id,
              p.post_number,
              p.hidden,
-             p.deleted_at
+             p.deleted_at,
+             (SELECT pr.created_at
+                FROM post_revisions pr
+               WHERE pr.post_id = p.id AND pr.user_id = p.user_id
+            ORDER BY created_at DESC
+               LIMIT 1) AS last_revised_at
         FROM posts p
        WHERE p.id in (:post_ids)").map_exec(OpenStruct, post_ids: post_ids)
 
