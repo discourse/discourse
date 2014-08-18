@@ -457,7 +457,7 @@ en:
 
   flagging:
     you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/private-messages">see your private messages</a>.</p>'
-    user_must_edit: '<p>Flagged content temporarily hidden.</p>'
+    user_must_edit: '<p>This post was flagged by the community and is temporarily hidden.</p>'
 
   archetypes:
     regular:
