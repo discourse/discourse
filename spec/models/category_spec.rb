@@ -148,6 +148,10 @@ describe Category do
     Fabricate(:category, name: "  blanks ").name.should == "blanks"
   end
 
+  it "sets name_lower" do
+    Fabricate(:category, name: "Not MySQL").name_lower.should == "not mysql"
+  end
+
   it "has custom fields" do
     category = Fabricate(:category, name: " music")
     category.custom_fields["a"].should == nil

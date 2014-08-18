@@ -40,6 +40,13 @@ describe TopicCreator do
           topic.should be_valid
           topic.auto_close_at.should be_nil
         end
+
+        it "category name is case insensitive" do
+          category = Fabricate(:category, name: "Neil's Blog")
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: "neil's blog"))
+          topic.should be_valid
+          topic.category.should == category
+        end
       end
     end
   end
