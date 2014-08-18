@@ -360,7 +360,7 @@ describe SessionController do
       let(:user) { Fabricate(:user) }
 
       it "returns a 500 if local logins are disabled" do
-        SiteSetting.stubs(:enable_local_logins).returns(false)
+        SiteSetting.enable_local_logins = false
         xhr :post, :forgot_password, login: user.username
         response.code.to_i.should == 500
       end
