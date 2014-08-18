@@ -269,22 +269,23 @@ class Group < ActiveRecord::Base
   def add(user)
     self.users.push(user)
   end
+
   protected
 
-  def name_format_validator
-    UsernameValidator.perform_validation(self, 'name')
-  end
-
-  # hack around AR
-  def destroy_deletions
-    if @deletions
-      @deletions.each do |gu|
-        gu.destroy
-        User.where('id = ? AND primary_group_id = ?', gu.user_id, gu.group_id).update_all 'primary_group_id = NULL'
-      end
+    def name_format_validator
+      UsernameValidator.perform_validation(self, 'name')
     end
-    @deletions = nil
-  end
+
+    # hack around AR
+    def destroy_deletions
+      if @deletions
+        @deletions.each do |gu|
+          gu.destroy
+          User.where('id = ? AND primary_group_id = ?', gu.user_id, gu.group_id).update_all 'primary_group_id = NULL'
+        end
+      end
+      @deletions = nil
+    end
 
 end
 
