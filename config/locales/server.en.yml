@@ -902,7 +902,7 @@ en:
 
     topic_post_like_heat_low: "After the likes:post ratio exceeds this ratio, the post count field is slightly highlighted."
     topic_post_like_heat_medium: "After the likes:post ratio exceeds this ratio, the post count field is moderately highlighted."
-    topic_post_like_heat_high: "After the likes:post ratio exceeds this ratio, the post count field is strongly highlighted.
+    topic_post_like_heat_high: "After the likes:post ratio exceeds this ratio, the post count field is strongly highlighted."
 
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
