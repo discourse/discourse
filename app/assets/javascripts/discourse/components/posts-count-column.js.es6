@@ -32,7 +32,7 @@ export default Ember.Component.extend({
 
   render: function(buffer) {
     var postsCount = this.get('topic.posts_count'),
-        url = this.get('topic.lastUnreadUrl');
+        url = this.get('topic.lastPostUrl');
 
     buffer.push("<a href='" + url + "' class='badge-posts " + this.get('likesHeat') + "'>");
     buffer.push(Discourse.Formatter.number(postsCount));
