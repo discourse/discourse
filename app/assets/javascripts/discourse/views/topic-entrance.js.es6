@@ -47,4 +47,10 @@ export default Ember.View.extend({
     this.appEvents.on('dom:clean', this, '_cleanUp');
   }.on('didInsertElement'),
 
+  keyDown: function(e) {
+    if (e.which === 27) {
+      this._cleanUp();
+    }
+  }
+
 });

@@ -37,7 +37,7 @@ export default Ember.Component.extend({
   }.property('bumpedAt', 'createdAt'),
 
   render: function(buffer) {
-    buffer.push(Discourse.Formatter.autoUpdatingRelativeAge(this.get('bumpedAt')));
+    buffer.push("<a href>" + Discourse.Formatter.autoUpdatingRelativeAge(this.get('bumpedAt')) + "</a>");
   },
 
   click: function() {
@@ -45,12 +45,14 @@ export default Ember.Component.extend({
 
     if (Discourse.Mobile.mobileView) {
       Discourse.URL.routeTo(topic.get('lastPostUrl'));
-      return;
+      return false;
     }
 
     this.sendAction('action', {
       topic: topic,
       position: this.$('span').position()
     });
+
+    return false;
   }
 });
