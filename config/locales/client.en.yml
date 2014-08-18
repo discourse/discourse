@@ -1060,7 +1060,7 @@ en:
         yes_value: "Yes, abandon"
 
       wiki:
-        about: "this post is a wiki; anyone can edit it"
+        about: "this post is a wiki; basic users can edit it"
 
       archetypes:
         save: 'Save Options'
