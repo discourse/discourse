@@ -206,7 +206,7 @@ class Post < ActiveRecord::Base
   def has_host_spam?
     return false if acting_user.present? && acting_user.has_trust_level?(:basic)
 
-    total_hosts_usage.each do |host, count|
+    total_hosts_usage.each do |_, count|
       return true if count >= SiteSetting.newuser_spam_host_threshold
     end
 

@@ -161,7 +161,7 @@ LEFT JOIN categories c on c.id = t.category_id
         # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
         # protect against dupes, for some reason this is failing in some cases
-        action = self.find_by(hash.select { |k, v| required_parameters.include?(k) })
+        action = self.find_by(hash.select { |k, _| required_parameters.include?(k) })
         return action if action
 
         action = self.new(hash)
