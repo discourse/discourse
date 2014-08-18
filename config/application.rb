@@ -9,7 +9,7 @@ require_relative '../lib/discourse_plugin_registry'
 # Global config
 require_relative '../app/models/global_setting'
 
-require 'pry-rails' if Rails.env == "development"
+require 'pry-rails' if Rails.env.development?
 
 if defined?(Bundler)
   Bundler.require(*Rails.groups(assets: %w(development test profile)))
@@ -18,7 +18,7 @@ end
 module Discourse
   class Application < Rails::Application
     def config.database_configuration
-      if Rails.env == "production"
+      if Rails.env.production?
         GlobalSetting.database_config
       else
         super

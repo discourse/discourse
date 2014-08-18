@@ -23,7 +23,7 @@ module Jobs
             Email::Sender.new(message, :new_version).send
           end
         rescue => e
-          raise e unless Rails.env == 'development' # Fail version check silently in development mode
+          raise e unless Rails.env.development? # Fail version check silently in development mode
         end
       end
       true
