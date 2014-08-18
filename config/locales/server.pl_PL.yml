@@ -144,7 +144,6 @@ pl_PL:
     no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
   vip_category_description: "Kategoria wyłącznie dla członków o poziomie zaufania 3 lub wyższym."
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
-  assets_topic_body: "Jest to stały temat, widoczny tylko dla pracowników, do przechowywania obrazów i plików wykorzystywanych w projektowaniu forum. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie ilustracje, które chcesz użyć jako logo, favicon itd. (Użyj paska narzędzi/ikonę wysyłania w edytorze postu lub przeciągnij i upuść lub wklej zdjęcia.)\n3. Wyślij odpowiedź żeby je zachować we wpisie.\n4. Kliknij prawym przyciskiem myszy ilustrację w twoim wpisie, żeby uzyskać ścieżkę do przesłanych zdjęć lub kliknij ikonę edycji, żeby edytować swój wpis i pobrać ścieżkę do ilustracji. Skopiuj do schowka ścieżkę/adres ilustracji.\n5. Wklej te ścieżki obrazu w [podstawowych ustawieniach] (/admin/site_settings/category/required).\n\n\nPonadto, jeśli chcesz włączyć możliwość przesyłanie dodatkowych typów plików, edytuj `authorized_extensions` w [ustawieniach plików] (/admin/site_settings/category/files)."
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "[Zamień ten pierwszy paragraf na krórki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go poniżej 200 znaków. Póki nie zmienisz tego tekstu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.]"
@@ -329,7 +328,6 @@ pl_PL:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Twój wpis został oflagowany przez społeczność. <a href="/my/private-messages">Zobacz swoje prywatne wiadomości</a>.</p>'
-    user_must_edit: '<p>Oflagowana treść tymczasowo ukryta content temporarily hidden.</p>'
   archetypes:
     regular:
       title: "Zwykły temat"

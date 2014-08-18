@@ -172,7 +172,6 @@ nl:
   vip_category_name: "Lounge"
   vip_category_description: "Een categorie exclusief voor leden met trust level 3 en hoger."
   meta_category_name: "Meta"
-  meta_category_description: "Discussies over dit forum, de organisatie, hoe het werk en hoe het verbeterd kan worden."
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor admins en moderatoren."
   lounge_welcome:
@@ -353,7 +352,6 @@ nl:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Je bericht is gemarkeerd door andere gebruikers van dit forum. Kijk bij je <a href="/my/private-messages">privéberichten</a> om te zien waarom.</p>'
-    user_must_edit: '<p>Gemelde inhoud tijdelijk verborgen.</p>'
   archetypes:
     regular:
       title: "Standaard topic"
@@ -911,7 +909,6 @@ nl:
     sockpuppet: "Een nieuwe gebruiker maakte een nieuwe topic en een andere gebruiker reageerde - vanaf hetzelfde IP-adres. Zie de flag_sockpuppets instelling."
   email_log:
     no_user: "Kan geen gebruiker met id %{user_id} vinden"
-    suspended_not_pm: "Gebruiker is geschorst en email is geen privébericht"
     seen_recently: "Gebruiker was recentelijk nog online"
     post_not_found: "Kan geen bericht met id %{post_id} vinden"
     notification_already_read: "De notificatie waar deze mail voor is is al gezien"

@@ -86,6 +86,7 @@ fr:
     yes_value: "Oui"
     generic_error: "Désolé, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue: %{error}"
+    sign_up: "S'inscrire"
     log_in: "Se connecter"
     age: "Âge"
     joined: "Inscrit"
@@ -133,6 +134,8 @@ fr:
       simple_title: "A propos"
       title: "A propos de %{title}"
       stats: "Statistiques du site"
+      our_admins: "Nos administrateurs"
+      our_moderators: "Nos modérateurs"
       stat:
         all_time: "depuis toujours"
         last_7_days: "Les 7 derniers jours"
@@ -459,6 +462,7 @@ fr:
     read_only_mode:
       enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
       login_disabled: "La connexion est désactivée quand le site est en mode lecture seule."
+    too_few_topics_notice: "Créez au moins 5 sujets et %{posts} messages publics pour démarrer les discussions. Les nouveaux utilisateurs ne seront pas capable de gagner des niveaux de confiance sans contenu à lire. Ce message n’apparaît que pour les membres de l'équipe."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -482,6 +486,7 @@ fr:
       enabled_description: "Ce sujet contient des messages supprimés, qui ont été cachés."
       disabled_description: "Les messages supprimés de ce sujet sont visibles."
       enable: "Cacher les messages supprimés"
+      disable: "Afficher les messages supprimés"
     private_message_info:
       title: "Message Privé"
       invite: "Inviter d'autres utilisateurs…"
@@ -928,8 +933,6 @@ fr:
         confirm: "Voulez-vous vraiment abandonner votre message ?"
         no_value: "Non, le conserver"
         yes_value: "Oui, abandonner"
-      wiki:
-        about: "ce message est en mode wiki; tout le monde peut le modifier"
       archetypes:
         save: 'Sauvegarder les options'
       controls:
@@ -1176,6 +1179,12 @@ fr:
     posts: "Messages"
     posts_lowercase: "messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
+    posts_likes_MF: |
+      Ce sujet a {count, plural, one {1 message} other {# messages}}  {ratio, select,
+      low {avec un haut ratio de J'aime/Message}
+      med {avec un très haut ratio J'aime/Message}
+      high {avec un énorme ratio J'aime/Message}
+      other {}}
     original_post: "Message original"
     views: "Vues"
     views_lowercase: "vues"
@@ -1192,6 +1201,8 @@ fr:
     changed_by: "par {{author}}"
     categories_list: "Liste des Catégories"
     filters:
+      with_topics: "%{filter} sujets"
+      with_category: "%{filter} sujets sur %{category}"
       latest:
         title: "Récents"
         help: "sujets avec des messages récents"
@@ -1238,7 +1249,6 @@ fr:
         help: "derniers sujets dans la catégorie {{categoryName}}"
       top:
         title: "Top"
-        help: "une sélection des meilleurs sujets de l'année, du mois, de la semaine ou du jour"
         yearly:
           title: "Top Annuel"
         monthly:
@@ -1436,6 +1446,12 @@ fr:
             text: "Restaurer (Rollback)"
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer (rollback) la base de données à l'état de fonctionnement précédent?"
+      export_csv:
+        users:
+          text: "Exporter les utilisateurs"
+          title: "Exporte la liste des utilisateurs dans un fichier CSV."
+        success: "L'export a commencé, vous serez notifié prochainement de sa progression."
+        failed: "L'export a échoué. Veuillez consulter les logs."
       customize:
         title: "Personnaliser"
         long_title: "Personnalisation du site"
@@ -1703,6 +1719,9 @@ fr:
         cant_delete_all_too_many_posts:
           one: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus d'un message. (delete_all_posts_max)"
           other: "Impossible de supprimer tout les messages parce-que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
+        delete_confirm: "Êtes-vous SÛR de vouloir supprimer cet utilisateur ? Cette action est irréversible !"
+        delete_and_block: "Supprimer et <b>bloquer</b> cette adresse de courriel et adresse IP."
+        delete_dont_block: "Supprimer uniquement"
         deleted: "L'utilisateur a été supprimé."
         delete_failed: "Il y a eu une erreur lors de la suppression de l'utilisateur. Veuillez vous assurez que tous ses messages ont bien été supprimmés avant d'essayer de supprimer l'utilisateur."
         send_activation_email: "Envoyer le courriel d'activation"
@@ -1817,6 +1836,12 @@ fr:
       title: 'Raccourcis clavier'
       jump_to:
         title: 'Aller à'
+        home: '<b>g</b>, <b>h</b> Accueil (Récents)'
+        latest: '<b>g</b>, <b>l</b> Récents'
+        new: '<b>g</b>, <b>n</b> Nouveau'
+        unread: '<b>g</b>, <b>u</b> Non lus'
+        starred: '<b>g</b>, <b>f</b> Favoris'
+        categories: '<b>g</b>, <b>c</b> Catégories'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Aller au message numéro'
@@ -1843,6 +1868,10 @@ fr:
         bookmark: '<b>b</b> Ajouter ce message à vos signets'
         edit: '<b>e</b> Editer un message'
         delete: '<b>d</b> Supprimer un message'
+        mark_muted: '<b>m</b>, <b>m</b> Marquer le suivi du sujet comme silencieux'
+        mark_regular: '<b>m</b>, <b>r</b> Marquer le suivi du sujet comme normale'
+        mark_tracking: '<b>m</b>, <b>t</b> Marquer le sujet comme suivi'
+        mark_watching: '<b>m</b>, <b>w</b> Marquer le sujet comme surveillé'
     badges:
       title: Badges
       allow_title: "autorisé le badge comme titre ?"

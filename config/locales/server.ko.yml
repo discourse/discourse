@@ -191,10 +191,8 @@ ko:
   vip_category_name: "라운지"
   vip_category_description: "신뢰 등급 3 혹은 그 이상의 회원만 입장가능한 카테고리"
   meta_category_name: "메타"
-  meta_category_description: "이 포럼 자체에 대한 논의를 하는 곳입니다."
   staff_category_name: "스태프"
   staff_category_description: "스태프들의 논의를 위한 비공개 카테고리입니다. 관리자 및 운영자에게만 보입니다."
-  assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the forum design. Don't delete it!\n\nHere's how:\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nAlso, if you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "라운지에 오신 것을 환영합니다."
     body: |2
@@ -376,7 +374,6 @@ ko:
       long_form: '운영자에게 알림'
   flagging:
     you_must_edit: '<p>회원님의 포스트가 신고접수 되었습니다. <a href="/my/private-messages">개인 메시지</a>를 확인해주세요.</p>'
-    user_must_edit: '<p>신고 접수된 글은 보이지 않습니다.</p>'
   archetypes:
     regular:
       title: "자주보는 토픽"

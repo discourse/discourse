@@ -152,7 +152,6 @@ cs:
     no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
-  meta_category_description: "Diskuze o fóru, organizaci, jak funguje a jak ho můžeme zlepšit."
   staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
   category:
     topic_prefix: "Definice kategorie pro %{category}"
@@ -339,8 +338,6 @@ cs:
       long_form: 'označil příspěvek pro moderátora'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\\n\\\n%{message}\n"
-  flagging:
-    user_must_edit: '<p>Nahlášený obsah je skrytý.</p>'
   archetypes:
     regular:
       title: "Běžné téma"
@@ -804,7 +801,6 @@ cs:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
   email_log:
     no_user: "Can't find user with id %{user_id}"
-    suspended_not_pm: "User is supsended and email is not a private message"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"

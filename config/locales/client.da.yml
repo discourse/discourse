@@ -86,6 +86,7 @@ da:
     yes_value: "Ja"
     generic_error: "Beklager, der opstod en fejl."
     generic_error_with_reason: "Der opstod en fejl: %{error}"
+    sign_up: "Tilmeld dig"
     log_in: "Log ind"
     age: "Alder"
     joined: "Tilmeldt"
@@ -133,6 +134,8 @@ da:
       simple_title: "Om"
       title: "Om %{title}"
       stats: "Site statistik"
+      our_admins: "Vores Administratorer"
+      our_moderators: "Vores Moderatorer"
       stat:
         all_time: "Alt"
         last_7_days: "De sidste 7 Dage"
@@ -141,10 +144,10 @@ da:
       post_count: "Indlæg"
       user_count: "Brugere"
     bookmarks:
-      not_logged_in: "Beklager, du er nødt til at lukke ind først, for at lave et bogmærke"
+      not_logged_in: "Beklager, du skal været logget ind for at bogmærke indlæg"
       created: "Du har bogmærket dette indlæg."
-      not_bookmarked: "Du har læst dette indlæg; klik her for at lave et bogmærke"
-      last_read: "Dette er det seneste indlæg, du har læst; klik her for at lave et bogmærke."
+      not_bookmarked: "Du har læst dette indlæg; klik for at bogmærke det"
+      last_read: "Dette er det seneste indlæg, du har læst; klik for at bogmærke det"
       remove: "Fjern bogmærke"
     topic_count_latest:
       one: "{{count}} nyt eller opdateret emne."
@@ -459,6 +462,7 @@ da:
     read_only_mode:
       enabled: "En administrator har aktiver \"kun læsnings\" tilstranden. Du kan fortsætte med at læse forummet, men nogle handlinger vil ikke fungere."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
+    too_few_topics_notice: "Opret mindst 5 offentlige emner og %{posts} offentlige indlæg for at starte diskussionerne. Nye brugere vil ikke kunne opnå tillidsniveauer medmindre der er indhold som de kan læse. Denne meddelelse fremgår kun for staff."
     learn_more: "Læs mere…"
     year: 'år'
     year_desc: 'Indlæg oprettet i de seneste 365 dage'
@@ -482,6 +486,7 @@ da:
       enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult."
       disabled_description: "Slettede indlæg bliver vist. "
       enable: "Skjul slettede indlæg"
+      disable: "Vis Slettede Indlæg"
     private_message_info:
       title: "Privat samtale"
       invite: "Invitér andre…"
@@ -928,8 +933,6 @@ da:
         confirm: "Er du sikker på, at du vil droppe dit indlæg?"
         no_value: "Nej"
         yes_value: "Ja"
-      wiki:
-        about: "dette indlæg er en wiki; hvemsomhelst kan redigere den"
       archetypes:
         save: 'Gem indstillinger'
       controls:
@@ -1192,6 +1195,8 @@ da:
     changed_by: "af {{author}}"
     categories_list: "Kategorioversigt"
     filters:
+      with_topics: "%{filter} emner"
+      with_category: "%{filter} %{category} emner"
       latest:
         title: "Seneste"
         help: "de seneste emner"
@@ -1238,7 +1243,6 @@ da:
         help: "populære emner i kategorien {{categoryName}}"
       top:
         title: "Top"
-        help: "et udvalgt af de bedste emner"
         yearly:
           title: "Top årligt"
         monthly:
@@ -1436,6 +1440,12 @@ da:
             text: "Rul tilbage"
             title: "Rul databasen tilbage til et tidspunkt hvor tingene virkede"
             confirm: "Er du sikker på du vil rulle databasen tilbage?"
+      export_csv:
+        users:
+          text: "Eksporter Brugere"
+          title: "Eksporter brugerliste i en CSV-fil"
+        success: "Eksport er påbegyndt, du får snart besked om hvordan det skrider frem."
+        failed: "Eksport fejlede. Tjek venligst loggen."
       customize:
         title: "Tilpasning"
         long_title: "Tilpasning af site"
@@ -1703,6 +1713,9 @@ da:
         cant_delete_all_too_many_posts:
           one: "Kan ikke slette alle indlæg fordi denne bruger har flere end 1 indlæg. (delete_all_posts_max indstillingen)"
           other: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
+        delete_confirm: "Er du SIKKER på at du slette denne bruger? Det er permanent! "
+        delete_and_block: "Slet og <b>bloker</b> denne email og IP-adresse"
+        delete_dont_block: "Slet kun"
         deleted: "Brugeren blev slettet."
         delete_failed: "Der opstod en fejl ved sletning af brugeren. Kontrollér om alle indlæg er slettet før du prøver at slette brugeren."
         send_activation_email: "Send aktiverings-e-mail"
@@ -1817,6 +1830,12 @@ da:
       title: 'Tastatur genveje'
       jump_to:
         title: 'Hop til'
+        home: '<b>g</b>, <b>h</b> Hjem (Seneste)'
+        latest: '<b>g</b>, <b>l</b> Seneste'
+        new: '<b>g</b>, <b>n</b> Nye'
+        unread: '<b>g</b>, <b>u</b> Ulæste'
+        starred: '<b>g</b>, <b>f</b> Favoritter'
+        categories: '<b>g</b>, <b>c</b> Kategorier'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Gå til indlæg nummer'
@@ -1843,6 +1862,10 @@ da:
         bookmark: '<b>b</b> Bogmærk indlæg'
         edit: '<b>e</b> Redigér indlæg'
         delete: '<b>d</b> Slet indlæg'
+        mark_muted: '<b>m</b>, <b>m</b> Lydløst emne'
+        mark_regular: '<b>m</b>, <b>r</b> Almindelig (stardard) emne'
+        mark_tracking: '<b>m</b>, <b>t</b> Følg emne'
+        mark_watching: '<b>m</b>, <b>w</b> Iagtag emne'
     badges:
       title: Badges
       allow_title: "tillad denne badge benyttes som en titel?"

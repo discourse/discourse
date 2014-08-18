@@ -1144,7 +1144,6 @@ nl:
         help: "recente topics in de categorie {{categoryName}}"
       top:
         title: "Top"
-        help: "een selectie van beste topics van het afgelopen jaar, maand, week of dag"
         yearly:
           title: "Jaarlijkse top"
         monthly:

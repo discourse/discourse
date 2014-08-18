@@ -254,8 +254,6 @@ pt:
       title: 'Vote'
       description: 'Votar nesta postagem'
       long_form: 'voto computado para esta postagem'
-  flagging:
-    user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
   archetypes:
     regular:
       title: "Tópico Regular"

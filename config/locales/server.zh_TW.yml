@@ -295,7 +295,6 @@ zh_TW:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>你的文章已被社群投訴，請 <a href="/my/private-messages">閱讀你的私人訊息</a>。</p>'
-    user_must_edit: '<p>投訴的內容已隱藏。</p>'
   archetypes:
     regular:
       title: "一般討論話題"
@@ -919,7 +918,6 @@ zh_TW:
     spam_hosts: "此新用戶嘗試發表多篇含有指向相同網域之連結的文章。請見網站設定中的 newuser_spam_host_threshold。"
   email_log:
     no_user: "無法找到 ID 為 %{user_id} 的使用者"
-    suspended_not_pm: "用戶已被停用，且EMail不是私人訊息"
     seen_recently: "用戶最近活躍"
     post_not_found: "無法找到 ID 為 %{post_id} 的文章"
     notification_already_read: "這封通知 EMail 已被讀取"
