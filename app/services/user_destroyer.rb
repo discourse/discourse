@@ -14,7 +14,7 @@ class UserDestroyer
   def destroy(user, opts={})
     raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
     @guardian.ensure_can_delete_user!(user)
-    raise PostsExistError if !opts[:delete_posts] && user.post_count != 0
+    raise PostsExistError if !opts[:delete_posts] && user.posts.count != 0
     User.transaction do
       if opts[:delete_posts]
         user.posts.each do |post|
