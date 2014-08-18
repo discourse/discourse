@@ -892,9 +892,9 @@ en:
     topic_views_heat_medium: "After this many views, the topic is moderately highlighted."
     topic_views_heat_high: "After this many views, the topic is strongly highlighted."
 
-    cold_age_days_low: "A topic this many days old is slightly highligted."
-    cold_age_days_medium: "A topic this many days old is moderately highligted."
-    cold_age_days_high: "A topic this many days old is strongly highligted."
+    cold_age_days_low: "A topic this many days old is slightly highlighted."
+    cold_age_days_medium: "A topic this many days old is moderately highlighted."
+    cold_age_days_high: "A topic this many days old is strongly highlighted."
 
     history_hours_low: "A post edited within this many hours is slightly highlighted"
     history_hours_medium: "A topic with this likes:post ratio is moderately highlighted."
