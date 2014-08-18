@@ -32,7 +32,7 @@ class TopicQuery
     'likes' => 'like_count',
     'views' => 'views',
     'posts' => 'posts_count',
-    'activity' => 'created_at',
+    'activity' => 'bumped_at',
     'posters' => 'participant_count',
     'category' => 'category_id'
   }
