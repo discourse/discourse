@@ -73,18 +73,24 @@ class Backup
   private
 
     def s3_options
-      {
+      options = {
         provider: 'AWS',
-        aws_access_key_id: SiteSetting.s3_access_key_id,
-        aws_secret_access_key: SiteSetting.s3_secret_access_key,
         region: SiteSetting.s3_region.blank? ? "us-east-1" : SiteSetting.s3_region,
       }
+      if (SiteSetting.s3_use_iam_profile.present?)
+        options.merge!(:use_iam_profile => true)
+      else
+        options.merge!(:aws_access_key_id => SiteSetting.s3_access_key_id,
+         :aws_secret_access_key => SiteSetting.s3_secret_access_key)
+      end
+      options
     end
 
     def fog
       return @fog if @fog
-      return unless SiteSetting.s3_access_key_id.present? &&
-                    SiteSetting.s3_secret_access_key.present? &&
+      return unless ((SiteSetting.s3_access_key_id.present? &&
+                    SiteSetting.s3_secret_access_key.present?) ||
+                    SiteSetting.s3_use_iam_profile.present?) &&
                     SiteSetting.s3_backup_bucket.present?
       require 'fog'
       @fog = Fog::Storage.new(s3_options)
