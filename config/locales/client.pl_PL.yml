@@ -668,7 +668,6 @@ pl_PL:
       browse_all_categories: Przeglądaj wszystkie kategorie
       view_latest_topics: pokaż ostatnie tematy
       suggest_create_topic: Może rozpoczniesz temat?
-      read_position_reset: "Twoje miejsce czytania zostało zresetowane."
       jump_reply_up: przeskocz do wcześniejszej odpowiedzi
       jump_reply_down: przeskocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"

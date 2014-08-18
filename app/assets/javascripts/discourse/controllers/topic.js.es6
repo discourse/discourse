@@ -333,17 +333,6 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       this.get('content').clearPin();
     },
 
-    resetRead: function() {
-      Discourse.ScreenTrack.current().reset();
-      this.unsubscribe();
-
-      var topicController = this;
-      this.get('model').resetRead().then(function() {
-        topicController.set('message', I18n.t("topic.read_position_reset"));
-        topicController.set('postStream.loaded', false);
-      });
-    },
-
     replyAsNewTopic: function(post) {
       var composerController = this.get('controllers.composer'),
           quoteController = this.get('controllers.quote-button'),

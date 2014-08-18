@@ -723,7 +723,6 @@ pt:
       browse_all_categories: Procurar todas as categorias
       view_latest_topics: ver tópicos mais recentes
       suggest_create_topic: Que tal começar um assunto?
-      read_position_reset: "Sua posição de leitura foi reiniciado."
       jump_reply_up: avançar para resposta mais recente
       jump_reply_down: avançar para resposta mais antiga
       deleted: "Este tópico foi apagado"

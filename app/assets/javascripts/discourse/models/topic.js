@@ -194,13 +194,6 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
-  // Reset our read data for this topic
-  resetRead: function() {
-    return Discourse.ajax("/t/" + this.get('id') + "/timings", {
-      type: 'DELETE'
-    });
-  },
-
   /**
     Invite a user to this topic
 

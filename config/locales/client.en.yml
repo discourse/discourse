@@ -847,7 +847,6 @@ en:
 
       view_latest_topics: view latest topics
       suggest_create_topic: Why not create a topic?
-      read_position_reset: "Your read position has been reset."
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"

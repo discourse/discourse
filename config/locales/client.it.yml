@@ -743,7 +743,6 @@ it:
       browse_all_categories: Scorri tutte le categorie
       view_latest_topics: visualizza i topic più recenti
       suggest_create_topic: Perchè non ne crei uno?
-      read_position_reset: "La tua posizione di lettura è stata resettata."
       jump_reply_up: Passa a una risposta precedente
       jump_reply_down: Passa a una risposta successiva
       deleted: "Il topic è stato cancellata"
