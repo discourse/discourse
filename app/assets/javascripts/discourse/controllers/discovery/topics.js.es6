@@ -145,6 +145,18 @@ var controllerOpts = {
     }
   }.property('allLoaded', 'topics.length'),
 
+  footerEducation: function() {
+    if (!this.get('allLoaded') || this.get('topics.length') > 0 || !Discourse.User.current()) { return; }
+
+    var split = this.get('filter').split('/');
+
+    if (split[0] !== 'new' && split[0] !== 'unread') { return; }
+
+    return I18n.t("topics.none.educate." + split[0], {
+      userPrefsUrl: Discourse.getURL("/users/") + (Discourse.User.currentProp("username_lower")) + "/preferences"
+    });
+  }.property('allLoaded', 'topics.length'),
+
   loadMoreTopics: function() {
     return this.get('model').loadMore();
   }
