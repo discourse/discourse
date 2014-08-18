@@ -238,7 +238,7 @@ class PostAction < ActiveRecord::Base
   rescue ActiveRecord::RecordNotUnique
     # can happen despite being .create
     # since already bookmarked
-    true
+    PostAction.where(where_attrs).first
   end
 
   def self.remove_act(user, post, post_action_type_id)
