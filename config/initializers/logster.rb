@@ -5,6 +5,8 @@ if Rails.env.production?
 
     /^PG::Error: ERROR:\s+duplicate key/,
 
+    /^ActionController::UnknownFormat/,
+
     # suppress trackback spam bots
     Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ })
   ]
