@@ -382,7 +382,7 @@ class TopicsController < ApplicationController
 
   def redirect_to_correct_topic(topic, post_number=nil)
     url = topic.relative_url
-    url << "/" + post_number if post_number.to_i > 0
+    url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
 
     redirect_to url, status: 301
