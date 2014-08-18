@@ -32,6 +32,7 @@ class Category < ActiveRecord::Base
   before_validation :ensure_slug
   before_save :apply_permissions
   before_save :downcase_email
+  before_save :downcase_name
   after_create :create_category_definition
   after_create :publish_categories_list
   after_destroy :publish_categories_list
@@ -252,6 +253,10 @@ SQL
 
   def downcase_email
     self.email_in = email_in.downcase if self.email_in
+  end
+
+  def downcase_name
+    self.name_lower = name.downcase if self.name
   end
 
   def secure_group_ids

@@ -73,7 +73,7 @@ class TopicCreator
     if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
       Category.find_by(id: @opts[:category])
     else
-      Category.find_by(name: @opts[:category])
+      Category.find_by(name_lower: @opts[:category].try(:downcase))
     end
   end
 
