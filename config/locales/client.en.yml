@@ -1325,9 +1325,9 @@ en:
     posts_long: "there are {{number}} posts in this topic"
     posts_likes_MF: |
       This topic has {count, plural, one {1 post} other {# posts}} {ratio, select,
-        low {with a high post to like ratio}
-        med {with a very high post to like ratio}
-        high {with an extremely high post to like ratio}
+        low {with a high like to post ratio}
+        med {with a very high like to post ratio}
+        high {with an extremely high like to post ratio}
         other {}}
     original_post: "Original Post"
     views: "Views"
