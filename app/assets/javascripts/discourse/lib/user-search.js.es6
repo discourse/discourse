@@ -37,22 +37,26 @@ function organizeResults(r, options) {
       groups = [],
       results = [];
 
-  r.users.every(function(u) {
-    if (exclude.indexOf(u.username) === -1) {
-      users.push(u);
-      results.push(u);
-    }
-    return results.length <= limit;
-  });
+  if (r.users) {
+    r.users.every(function(u) {
+      if (exclude.indexOf(u.username) === -1) {
+        users.push(u);
+        results.push(u);
+      }
+      return results.length <= limit;
+    });
+  }
 
-  r.groups.every(function(g) {
-    if (results.length > limit) return false;
-    if (exclude.indexOf(g.name) === -1) {
-      groups.push(g);
-      results.push(g);
-    }
-    return true;
-  });
+  if (r.groups) {
+    r.groups.every(function(g) {
+      if (results.length > limit) return false;
+      if (exclude.indexOf(g.name) === -1) {
+        groups.push(g);
+        results.push(g);
+      }
+      return true;
+    });
+  }
 
   results.users = users;
   results.groups = groups;
