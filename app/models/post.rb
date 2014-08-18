@@ -494,9 +494,9 @@ class Post < ActiveRecord::Base
 
   def parse_quote_into_arguments(quote)
     return {} unless quote.present?
-    args = {}
+    args = HashWithIndifferentAccess.new
     quote.first.scan(/([a-z]+)\:(\d+)/).each do |arg|
-      args[arg[0].to_sym] = arg[1].to_i
+      args[arg[0]] = arg[1].to_i
     end
     args
   end
