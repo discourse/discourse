@@ -1,7 +1,7 @@
 module Scheduler
   module Deferrable
     def initialize
-      @async = Rails.env != "test"
+      @async = !Rails.env.test?
       @queue = Queue.new
       @mutex = Mutex.new
       @thread = nil
