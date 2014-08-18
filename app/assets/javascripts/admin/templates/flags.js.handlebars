@@ -29,6 +29,7 @@
                 {{#if flaggedPost.postAuthorFlagged}}
                   {{#if flaggedPost.user}}
                     {{#link-to 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="small"}}{{/link-to}}
+                    {{#if flaggedPost.wasEdited}}<i class="fa fa-pencil" title="{{i18n admin.flags.was_edited}}"></i>{{/if}}
                   {{/if}}
                 {{/if}}
               </td>
