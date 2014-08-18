@@ -1,3 +1,5 @@
+require_dependency 'rate_limiter'
+
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
@@ -93,6 +95,9 @@ class SessionController < ApplicationController
       return
     end
 
+    RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
+
     user = User.find_by_username_or_email(params[:login])
     if user.present?
       email_token = user.email_tokens.create(email: user.email)
@@ -100,6 +105,9 @@ class SessionController < ApplicationController
     end
     # always render of so we don't leak information
     render json: {result: "ok"}
+
+  rescue RateLimiter::LimitExceeded
+    render_json_error(I18n.t("rate_limiter.slow_down"))
   end
 
   def current

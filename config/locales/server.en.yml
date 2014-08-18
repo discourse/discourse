@@ -292,6 +292,7 @@ en:
 
 
   rate_limiter:
+    slow_down: "You have performed this action too many times, try again later"
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
     hours:
       one: "1 hour"
