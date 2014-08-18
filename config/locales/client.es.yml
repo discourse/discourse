@@ -744,7 +744,6 @@ es:
       browse_all_categories: Ver todas las categorías
       view_latest_topics: ver los temas recientes
       suggest_create_topic: ¿Por qué no creas un tema?
-      read_position_reset: "Tu posición de lectura se ha reiniciado."
       jump_reply_up: saltar a respuesta anterior
       jump_reply_down: saltar a ultima respuesta
       deleted: "El tema ha sido borrado"

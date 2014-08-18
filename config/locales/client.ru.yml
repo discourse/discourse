@@ -785,7 +785,6 @@ ru:
       browse_all_categories: Просмотреть все разделы
       view_latest_topics: посмотреть последние темы
       suggest_create_topic: Почему бы вам не создать новую тему?
-      read_position_reset: "Закладка перемещена."
       jump_reply_up: перейти к более ранним ответам
       jump_reply_down: перейти к более поздним ответам
       deleted: "Тема удалена"

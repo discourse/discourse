@@ -684,7 +684,6 @@ sv:
       browse_all_categories: Bläddra bland alla kategorier
       view_latest_topics: se de senaste trådarna
       suggest_create_topic: Varför inte skapa en tråd?
-      read_position_reset: "Din läsposition har blivit återställd."
       jump_reply_up: hoppa till tidigare svar
       jump_reply_down: hoppa till senare svar
       deleted: "Tråden har raderats"

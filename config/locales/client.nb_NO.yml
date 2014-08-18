@@ -541,7 +541,6 @@ nb_NO:
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
       suggest_create_topic: Hvorfor ikke lage ett emne?
-      read_position_reset: "Din leseposisjon har blitt tilbakestilt."
       jump_reply_up: hopp til tidligere svar
       jump_reply_down: hopp til siste svar
       deleted: "Emnet har blitt slettet"

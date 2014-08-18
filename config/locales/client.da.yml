@@ -744,7 +744,6 @@ da:
       browse_all_categories: Vis alle kategorier
       view_latest_topics: vis seneste emner
       suggest_create_topic: Hvorfor ikke oprette et emne?
-      read_position_reset: "Din læseposition er blevet nulstillet."
       jump_reply_up: hop til tidligere svar
       jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"

@@ -635,7 +635,6 @@ cs:
       browse_all_categories: Projděte všechny kategorie
       view_latest_topics: si zobrazte populární témata
       suggest_create_topic: Co takhle založit nové téma?
-      read_position_reset: "Vaše pozice čtení byla zresetována."
       jump_reply_up: přejít na předchozí odpověď
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
