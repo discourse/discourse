@@ -47,5 +47,7 @@
   input[type=text] {
     font-size: 16px;
     margin-bottom: 10px;
+    cursor: text;
+    background-color: $secondary;
   }
 }
