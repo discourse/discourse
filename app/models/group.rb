@@ -34,7 +34,7 @@ class Group < ActiveRecord::Base
     :everyone => 99
   }
 
-  validate :alias_level, inclusion: { in: ALIAS_LEVELS.values}
+  validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
   def posts_for(guardian, before_post_id=nil)
     user_ids = group_users.map {|gu| gu.user_id}
