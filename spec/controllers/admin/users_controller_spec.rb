@@ -311,8 +311,9 @@ describe Admin::UsersController do
       context "user has post" do
 
         before do
-          @user = build(:user)
-          @user.stubs(:post_count).returns(1)
+          @user = Fabricate(:user)
+          topic = create_topic(user: @user)
+          post = create_post(topic: topic, user: @user)
           @user.stubs(:first_post_created_at).returns(Time.zone.now)
           User.expects(:find_by).with(id: @delete_me.id).returns(@user)
         end

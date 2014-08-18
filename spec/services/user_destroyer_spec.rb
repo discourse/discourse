@@ -145,6 +145,16 @@ describe UserDestroyer do
       end
     end
 
+    context 'user has no posts, but user_stats table has post_count > 0' do
+      before do
+        # out of sync user_stat data shouldn't break UserDestroyer
+        @user.user_stat.update_attribute(:post_count, 1)
+      end
+      subject(:destroy) { UserDestroyer.new(@user).destroy(@user, {delete_posts: false}) }
+
+      include_examples "successfully destroy a user"
+    end
+
     context 'user has deleted posts' do
       let!(:deleted_post) { Fabricate(:post, user: @user, deleted_at: 1.hour.ago) }
       it "should mark the user's deleted posts as belonging to a nuked user" do
