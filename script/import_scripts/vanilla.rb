@@ -176,6 +176,8 @@ class ImportScripts::Vanilla < ImportScripts::Base
       puts "", "importing private topics..."
 
       create_posts(@conversations) do |conversation|
+        next if conversation[:first_message_id].blank?
+
         # list all other user ids in the conversation
         user_ids_in_conversation = @user_conversations.select { |uc| uc[:conversation_id] == conversation[:conversation_id] && uc[:user_id] != conversation[:insert_user_id] }
                                                       .map { |uc| uc[:user_id] }
