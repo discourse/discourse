@@ -1,18 +1,18 @@
-function entranceDate(bumpedAt, showTime) {
+function entranceDate(dt, showTime) {
   var today = new Date();
 
-  if (bumpedAt.getDate() === today.getDate()) {
-    return moment(bumpedAt).format(I18n.t("dates.time"));
+  if (dt.toDateString() === today.toDateString()) {
+    return moment(dt).format(I18n.t("dates.time"));
   }
 
-  if (bumpedAt.getYear() === today.getYear()) {
+  if (dt.getYear() === today.getYear()) {
     // No year
-    return moment(bumpedAt).format(
+    return moment(dt).format(
       showTime ? I18n.t("dates.long_no_year") : I18n.t("dates.long_no_year_no_time")
     );
   }
 
-  return moment(bumpedAt).format(
+  return moment(dt).format(
     showTime ? I18n.t('dates.long_with_year') : I18n.t('dates.long_with_year_no_time')
   );
 }
