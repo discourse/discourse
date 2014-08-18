@@ -84,7 +84,7 @@ class AdminDashboardData
   end
 
   def rails_env_check
-    I18n.t("dashboard.rails_env_warning", env: Rails.env) unless Rails.env == 'production'
+    I18n.t("dashboard.rails_env_warning", env: Rails.env) unless Rails.env.production?
   end
 
   def host_names_check
@@ -170,7 +170,7 @@ class AdminDashboardData
   end
 
   def send_consumer_email_check
-    I18n.t('dashboard.consumer_email_warning') if Rails.env == 'production' and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
+    I18n.t('dashboard.consumer_email_warning') if Rails.env.production? and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
   end
 
   def site_contact_username_check

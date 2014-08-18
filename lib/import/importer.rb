@@ -58,7 +58,7 @@ module Import
     rescue SystemExit
       log "Restore process was cancelled!"
       rollback
-    rescue Exception => ex
+    rescue => ex
       log "EXCEPTION: " + ex.message
       log ex.backtrace.join("\n")
       rollback
