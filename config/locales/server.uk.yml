@@ -139,7 +139,6 @@ uk:
     no_info_me: "<div class='missing-profile'>поле Про Мене вашого профілю зараз є порожнім, <a href='/users/%{username_lower}/preferences/about-me'>ви маєте бажання заповнити його?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
-  meta_category_description: "Обговорення цього форуму, його організації, того, як він працює, і того, як ми можемо його покращити."
   staff_category_description: "Закрита категорія для обговорень між персоналом. Теми бачать тільки адміністратори та модератори."
   category:
     topic_prefix: "Про категорію %{category}"
@@ -229,8 +228,6 @@ uk:
       long_form: 'notified moderators'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
-  flagging:
-    user_must_edit: '<p>Оскаржений вміст тимчасово приховано.</p>'
   archetypes:
     regular:
       title: "Звичайна тема"
@@ -725,7 +722,6 @@ uk:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
   email_log:
     no_user: "Can't find user with id %{user_id}"
-    suspended_not_pm: "User is supsended and email is not a private message"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"

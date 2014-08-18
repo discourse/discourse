@@ -881,8 +881,6 @@ ja:
         confirm: "編集中のポストを破棄してもよろしいですか?"
         no_value: "いいえ"
         yes_value: "はい"
-      wiki:
-        about: "この投稿は「Wiki」である。誰でも編集できます。"
       archetypes:
         save: '保存オプション'
       controls:
@@ -1163,7 +1161,6 @@ ja:
         help: "{{categoryName}} カテゴリの最新トピック"
       top:
         title: "トップ"
-        help: "過去年間、月間、週間及び日間のベストトピック"
         yearly:
           title: "年間トップ"
         monthly:

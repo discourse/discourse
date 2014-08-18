@@ -1103,7 +1103,6 @@ cs:
         help: "populární témata v kategorii {{categoryName}}"
       top:
         title: "Nejlepší"
-        help: "výběr nejlepších témat za rok, měsíc, týden nebo den"
         yearly:
           title: "Nejlepší podle let"
         monthly:

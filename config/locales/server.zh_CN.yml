@@ -190,10 +190,8 @@ zh_CN:
   vip_category_name: "贵宾室"
   vip_category_description: "高于信任等级3的用户参与讨论的分类。"
   meta_category_name: "站务"
-  meta_category_description: "讨论该论坛的站务、组织、如何运作和如何改善它。"
   staff_category_name: "职员"
   staff_category_description: "职员私有的分类。只有管理员和版主才能阅览主题。"
-  assets_topic_body: "这是一个永久主题，仅对职员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传您想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交您的回复添加帖子。\n4. 在您的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n另外，如果您需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   lounge_welcome:
     title: "欢迎来到贵宾室"
     body: |2
@@ -376,7 +374,6 @@ zh_CN:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>您的帖子被社群成员标记了。请<a href="/my/private-messages">查看您的私信</a>。</p>'
-    user_must_edit: '<p>标记的内容已隐藏。</p>'
   archetypes:
     regular:
       title: "常规主题"
@@ -989,38 +986,8 @@ zh_CN:
       <small>在每封您发送的邮件底部应该都有取消订阅的链接，让我们模拟一下。这封邮件发送自 中华人民共和国北京市海淀区中关村南大街公司名称，邮编 100081。如果您不希望将来继续收到我们的邮件，[点击此处取消订阅][5]。</small>
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
-    text_body_template: |
-      有新版本的 Discourse 可供升级。
-
-      您的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      您可能想要：
-
-      - 查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master) 中的更新内容。
-
-      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker)，然后按下“升级”按钮。
-
-      - 访问 [meta.discourse.org](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
-    text_body_template: |
-      有新版本的 [Discourse](http://www.discourse.org) 可供升级。
-
-      您的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      您可能想要：
-
-      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中的更新内容。
-
-      - 访问 [%{base_url}/admin/docker](%{base_url}/admin/docker) ，然后按下“升级”按钮。
-
-      - 访问 [meta.discourse.org](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。
-
-      ### 发行注记
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       other: "在过去的 %{count} 小时内有新的标记。"
@@ -1043,22 +1010,6 @@ zh_CN:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了您的帖子"
-      text_body_template: |
-        您好，
-
-        这是一封从 %{site_name} 自动发出的邮件，通知您的帖子...
-
-        %{base_url}%{url}
-
-        ... 由于论坛用户的标记而被封。
-
-        %{flag_reason}
-
-        请注意您的帖子是因为被多个社群成员标记才被封的。请根据他们的反馈考虑如何修改您的帖子。**您可以在 %{edit_delay} 分钟后开始编辑您的帖子，然后它会被自动显示。**这将提高您在论坛的信任等级。
-
-        但是，如果帖子再次被社群标记而封，版主将收到通知——并且可能导致进一步的措施，包括可能禁止您的用户帐号。
-
-        需要了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
     usage_tips:
       text_body_template: |
         这条私信包含了一些可以让您快速开始的技巧提示：
@@ -1433,7 +1384,6 @@ zh_CN:
     spam_hosts: "新用户试图创建链接到同一个域名的多个帖子。查看站点设置的 newuser_spam_host_threshold。"
   email_log:
     no_user: "不能找到用户 ID 为 %{user_id} 的用户"
-    suspended_not_pm: "用户被封禁并且邮件不是私信"
     seen_recently: "用户最近活跃"
     post_not_found: "不能找到帖子 ID 为 %{post_id} 的帖子"
     notification_already_read: "这封邮件中的通知已经被阅读了"

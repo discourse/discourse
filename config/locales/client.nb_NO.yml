@@ -912,7 +912,6 @@ nb_NO:
         help: "siste emner i {{categoryName}}-kategorien"
       top:
         title: "Topp"
-        help: "et utvalg av beste emner siste år, måned, uke eller dag"
         this_year: "Dette året"
         this_month: "Denne måneden"
         this_week: "Denne uken"

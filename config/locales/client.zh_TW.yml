@@ -70,6 +70,8 @@ zh_TW:
     yes_value: "是"
     generic_error: "抱歉，發生錯誤。"
     generic_error_with_reason: "發生錯誤: %{error}"
+    sign_up: "註冊"
+    log_in: "登入"
     age: "已建立"
     joined: "加入時間"
     admin_title: "管理員"
@@ -315,6 +317,7 @@ zh_TW:
       last_emailed: "最近寄出電子郵件"
       last_seen: "出現時間"
       created: "建立日期"
+      log_out: "登出"
       location: "位置"
       website: "網站"
       email_settings: "電子郵件"
@@ -451,6 +454,7 @@ zh_TW:
       complete_username: "如果有帳號符合你輸入的用戶名稱 <b>%{username}</b>，你應該很快就會收到重設密碼的電子郵件。"
       complete_email: "如果有帳號符合你輸入的電子郵件地址 <b>%{email}</b>，你應該很快就會收到重設密碼的電子郵件。"
     login:
+      title: "登入"
       username: "用戶"
       password: "密碼"
       email_placeholder: "電子郵件地址或用戶名稱"
@@ -590,6 +594,7 @@ zh_TW:
     topics:
       bulk:
         reset_read: "重設閱讀"
+        delete: "刪除討論話題"
         dismiss_new: "設定新文章為已讀"
         toggle: "批量切換選擇討論話題"
         actions: "批量操作"
@@ -761,6 +766,7 @@ zh_TW:
         email_placeholder: '電子郵件地址'
         success: "我們已將邀請寄至 <b>{{email}}</b>，當受邀者接受邀請時我們會再通知你，你也可以在你的用戶頁面的邀請清單查看邀請狀態。"
         error: "抱歉，我們無法邀請此人，他可能已經是此論壇的用戶?"
+      login_reply: '登入以發表回應'
       filters:
         n_posts:
           other: "{{count}} 則文章"
@@ -1107,7 +1113,6 @@ zh_TW:
         help: "{{categoryName}} 分類最近的討論話題"
       top:
         title: "精選"
-        help: "在本年、月、週或日的精選討論話題"
         yearly:
           title: "本年精選"
         monthly:

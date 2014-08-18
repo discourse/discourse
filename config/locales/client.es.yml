@@ -86,6 +86,7 @@ es:
     yes_value: "Sí"
     generic_error: "Lo sentimos, ha ocurrido un error."
     generic_error_with_reason: "Ha ocurrido un error: %{error}"
+    sign_up: "Registrarse"
     log_in: "Iniciar sesión"
     age: "Edad"
     joined: "Unido"
@@ -133,6 +134,8 @@ es:
       simple_title: "Acerca de"
       title: "Sobre %{title}"
       stats: "Estadísticas del sitio"
+      our_admins: "Nuestros Administradores"
+      our_moderators: "Nuestros Moderadores"
       stat:
         all_time: "Todo el tiempo"
         last_7_days: "Últimos 7 días"
@@ -459,6 +462,7 @@ es:
     read_only_mode:
       enabled: "Un administrador ha habilitado el modo sólo-lectura. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Abrir una sesión está desactivado mientras el foro este modo solo lectura."
+    too_few_topics_notice: "Crea al menos 5 temas y %{posts} respuestas públicas para comenzar la conversación. Los nuevos usuarios no serán capaces de obtener el nivel de confianza necesario a menos que tengan contenido que leer. Este mensaje es solo visible para el personal."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -482,6 +486,7 @@ es:
       enabled_description: "Este tema contiene posts eliminados que han sido ocultados."
       disabled_description: "Se están mostrando los posts eliminados de este tema. "
       enable: "Ocultar posts eliminados"
+      disable: "Mostrar las respuestas eliminadas"
     private_message_info:
       title: "Conversación privada"
       invite: "Invitar a otros..."
@@ -928,8 +933,6 @@ es:
         confirm: "¿Estás seguro que deseas abandonar tu post?"
         no_value: "No, mantener"
         yes_value: "Sí, abandonar"
-      wiki:
-        about: "Esta publicación es una wiki, cualquiera puede editarla"
       archetypes:
         save: 'Guardar opciones'
       controls:
@@ -1192,6 +1195,8 @@ es:
     changed_by: "por {{author}}"
     categories_list: "Lista de categorías"
     filters:
+      with_topics: "%{filter} temas"
+      with_category: "Temas de %{filter} %{category}"
       latest:
         title: "Recientes"
         help: "temas con publicaciones más recientes"
@@ -1238,7 +1243,6 @@ es:
         help: "temas recientes en la categoría {{categoryName}}"
       top:
         title: "Lo mejor"
-        help: "una selección de los temas más populares en el último año, mes, semana, o día"
         yearly:
           title: "Lo mejor del año"
         monthly:
@@ -1436,6 +1440,12 @@ es:
             text: "Deshacer"
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
+      export_csv:
+        users:
+          text: "Exportar los usuarios"
+          title: "Exportar una lista de los usuarios en una archivo CSV."
+        success: "La exportación ha sido iniciada. Serás notificado en breves con los avances."
+        failed: "Exportación fallida, revisa los logs."
       customize:
         title: "Personalizar"
         long_title: "Personalizaciones del sitio"
@@ -1703,6 +1713,9 @@ es:
         cant_delete_all_too_many_posts:
           one: "No se pueden eliminar todos los posts porque el usuario tiene más de 1 post. (Ver la opción delete_all_posts_max)"
           other: "No se pueden eliminar todos los posts porque el usuario tiene más de %{count} posts. (Ver la opción delete_all_posts_max)"
+        delete_confirm: "Estás SEGURO que quieres borrar este usuario? Esta acción es permanente!"
+        delete_and_block: "Eliminar y <b>bloquear</b> este correo y esta dirección IP"
+        delete_dont_block: "Eliminar solo."
         deleted: "El usuario fue borrado."
         delete_failed: "Ha habido un error al borrar ese usuario. Asegúrate que todos las publicaciones han sido borrados antes de tratando de borrar este usuario."
         send_activation_email: "Enviar correo de activación"
@@ -1817,6 +1830,12 @@ es:
       title: 'Atajos de teclado'
       jump_to:
         title: 'Saltar a'
+        home: '<b>g</b>, <b>h</b> Inicio (Recientes)'
+        latest: '<b>g</b>, <b>l</b> Recientes'
+        new: '<b>g</b>, <b>n</b> Nuevos'
+        unread: '<b>g</b>, <b>u</b> No leídos'
+        starred: '<b>g</b>, <b>f</b> Favoritos'
+        categories: '<b>g</b>, <b>c</b> Categorias'
       navigation:
         title: 'Navegación'
         jump: '<b>#</b> Ir al post número'
@@ -1843,6 +1862,9 @@ es:
         bookmark: '<b>b</b> Marcar post'
         edit: '<b>e</b> Editar post'
         delete: '<b>d</b> Borrar post'
+        mark_muted: '<b>m</b>, <b>m</b> Silenciar tema'
+        mark_tracking: '<b>m</b>, <b>t</b> Seguir tema'
+        mark_watching: '<b>m</b>, <b>w</b> Vigilar Tema'
     badges:
       title: Distintivos
       allow_title: "¿se permite usar el distintivo como título?"
