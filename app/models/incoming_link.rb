@@ -4,7 +4,7 @@ class IncomingLink < ActiveRecord::Base
   belongs_to :incoming_referer
 
   validate :referer_valid
-  validate :post_id, presence: true
+  validates :post_id, presence: true
 
   after_create :update_link_counts
 
@@ -40,11 +40,11 @@ class IncomingLink < ActiveRecord::Base
 
       unless cid && cid == user_id
 
-        IncomingLink.create(referer: referer,
-                            user_id: user_id,
-                            post_id: post_id,
-                            current_user_id: cid,
-                            ip_address: opts[:ip_address]) if post_id
+        create(referer: referer,
+               user_id: user_id,
+               post_id: post_id,
+               current_user_id: cid,
+               ip_address: opts[:ip_address]) if post_id
 
       end
     end
