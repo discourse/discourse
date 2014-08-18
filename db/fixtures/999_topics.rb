@@ -42,7 +42,7 @@ end
 if seed_welcome_topics
   puts "Seeding welcome topics"
 
-  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: "Assets for the forum design", skip_validations: true, category: staff ? staff.name : nil)
+  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: "Assets for the site design", skip_validations: true, category: staff ? staff.name : nil)
 
   welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
   post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)

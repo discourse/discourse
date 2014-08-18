@@ -18,7 +18,7 @@ We'll wait.
 
 ### Customize Logos and Colors
 
-By default you get the same standard generic "penciled in" Discourse logo everyone gets. Look for the [**assets for the forum design**](/t/assets-for-the-forum-design/5) topic; follow the instructions there to upload your logos to that topic, and then paste the uploaded image paths into the required logo settings.
+By default you get the same standard generic "penciled in" Discourse logo everyone gets. Look for the [**assets for the site design**](/t/assets-for-the-site-design/5) topic; follow the instructions there to upload your logos to that topic, and then paste the uploaded image paths into the required logo settings.
 
 To quickly give your Discourse a distinctive look, without having to edit or understand CSS, create a new color scheme via [Customize, Colors](/admin/customize/colors).
 
