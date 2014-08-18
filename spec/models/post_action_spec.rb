@@ -43,9 +43,7 @@ describe PostAction do
       topic.topic_users(true).map(&:notification_level).uniq.should == [TopicUser.notification_levels[:watching]]
 
       # reply to PM should not clear flag
-      p = PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags")
-      p.create
-
+      PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags").create
       action.reload
       action.deleted_at.should be_nil
 
