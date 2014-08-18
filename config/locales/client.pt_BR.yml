@@ -86,6 +86,7 @@ pt_BR:
     yes_value: "Sim"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
+    sign_up: "Sign Up"
     log_in: "Log In"
     age: "Idade"
     joined: "ingressou"
@@ -133,6 +134,8 @@ pt_BR:
       simple_title: "Sobre"
       title: "Sobre %{title}"
       stats: "Estatísticas do Site"
+      our_admins: "Nossos Administradores"
+      our_moderators: "Nossos Moderadores"
       stat:
         all_time: "Sempre"
         last_7_days: "Últimos 7 Dias"
@@ -459,6 +462,7 @@ pt_BR:
     read_only_mode:
       enabled: "Um modo somente de leitura. Você pode continuar a navegar no site, mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
+    too_few_topics_notice: "Crie pelo menos 5 tópicos públicos e %{posts} posts públicos para começar a discussão. Usuários novos não conseguiram ganhar níveis de confiança se não existir conteúdo para eles lerem. Esta mensagem aparece apenas para o staff."
     learn_more: "aprenda mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -482,6 +486,7 @@ pt_BR:
       enabled_description: "Este tópico contém posts deletados, que foram escondidos."
       disabled_description: "Os posts deletados deste tópico estão sendo mostrados."
       enable: "Esconder postagens apagadas"
+      disable: "Mostrar Posts Deletados"
     private_message_info:
       title: "Mensagem privada"
       invite: "Convidar outros..."
@@ -928,8 +933,6 @@ pt_BR:
         confirm: "Tem certeza que quer abandonar a sua mensagem?"
         no_value: "Não, manter"
         yes_value: "Sim, abandone"
-      wiki:
-        about: "este post é uma wiki; qualquer um pode editá-lo"
       archetypes:
         save: 'Salvar as opções'
       controls:
@@ -1176,6 +1179,12 @@ pt_BR:
     posts: "Mensagens"
     posts_lowercase: "posts"
     posts_long: "há {{number}} mensagens neste tópico"
+    posts_likes_MF: |
+      Este tópico tem {count, plural, one {1 post} other {# posts}} {ratio, select,
+        baixo {with a high post to like ratio}
+        médio {with a very high post to like ratio}
+        alto {with an extremely high post to like ratio}
+        outro {}}
     original_post: "Postagem Original"
     views: "Visualizações"
     views_lowercase: "visualizações"
@@ -1192,6 +1201,8 @@ pt_BR:
     changed_by: "por {{author}}"
     categories_list: "Lista de categorias"
     filters:
+      with_topics: "%{filter} tópicos"
+      with_category: "%{filter} %{category} tópicos"
       latest:
         title: "Recente"
         help: "tópicos com mensagens recentes"
@@ -1238,7 +1249,6 @@ pt_BR:
         help: "tópicos recentes na categoria {{categoryName}}"
       top:
         title: "Melhores"
-        help: "uma seleção dos melhores tópicos no último ano, mes, semana ou dia"
         yearly:
           title: "Melhores do Ano"
         monthly:
@@ -1436,6 +1446,12 @@ pt_BR:
             text: "Reverter"
             title: "Reverter o banco de dados para seu estado anterior"
             confirm: "Tem certeza de que quer reverter o banco de dados para o estado anterior?"
+      export_csv:
+        users:
+          text: "Exportar Usuários"
+          title: "Exportar lista de usuários como arquivo CSV."
+        success: "Exportação iniciada, você será notificado brevemente com o progresso."
+        failed: "Falha na exportação. Por favor verifique os logs."
       customize:
         title: "Personalizar"
         long_title: "Personalizações do Site"
@@ -1703,6 +1719,9 @@ pt_BR:
         cant_delete_all_too_many_posts:
           one: "Não pode remover porque o usuário tem mais de uma mensagem (delete_all_posts_max)"
           other: "Não pode remover porque o usuário tem mais de %{count} mensagens. (delete_all_posts_max)"
+        delete_confirm: "Você tem CERTEZA de que quer deletar este usuário? Isto é permanente!"
+        delete_and_block: "Deletar e <b>bloquear</b> este email e endereço IP"
+        delete_dont_block: "Apagar apenas"
         deleted: "O usuário foi apagado."
         delete_failed: "Houve um erro ao apagar o usuário. Certifique-se de que todas mensagens dele foram apagadas antes de tentar apagá-lo."
         send_activation_email: "Enviar Email de Ativação"
@@ -1817,6 +1836,12 @@ pt_BR:
       title: 'Atalhos de teclado'
       jump_to:
         title: 'Ir Para'
+        home: '<b>g</b>, <b>h</b> Home (Últimos)'
+        latest: '<b>g</b>, <b>l</b> Últimos'
+        new: '<b>g</b>, <b>n</b> Novo'
+        unread: '<b>g</b>, <b>u</b> Não Lidos'
+        starred: '<b>g</b>, <b>f</b> Marcados'
+        categories: '<b>g</b>, <b>c</b> Categorias'
       navigation:
         title: 'Navegação'
         jump: '<b>#</b> Ir para a postagem número'
@@ -1843,6 +1868,10 @@ pt_BR:
         bookmark: '<b>b</b> Marcar mensagem'
         edit: '<b>e</b> Editar mensagem'
         delete: '<b>d</b> Excluir mensagem'
+        mark_muted: '<b>m</b>, <b>m</b> Silenciar tópico'
+        mark_regular: '<b>m</b>, <b>r</b> Tópico (default) normal'
+        mark_tracking: '<b>m</b>, <b>t</b> Monitorar tópico'
+        mark_watching: '<b>m</b>, <b>w</b> Acompanhar tópico'
     badges:
       title: Emblemas
       allow_title: "permitir emblemas como título?"

@@ -185,10 +185,8 @@ he:
   vip_category_name: "לאונג' (סלון הכבוד)"
   vip_category_description: "קטגוריה אקסקלוסיבית למשתמשים עם רמת אמון 3 או יותר."
   meta_category_name: "מטא"
-  meta_category_description: "דיון על הפורום הזה, הארגון שלו, איך שהוא פועל ואיך שניתן לשפר אותו."
   staff_category_name: "צוות"
   staff_category_description: "קטגוריה פרטית לדיוני הצוות. נושאים נראים רק למנהלים ומנהלים ראשיים."
-  assets_topic_body: "זה נושא לאכסון כל מרכיבי הפורום שבשימוש בעיצובו. אל תמחקו את זה!"
   lounge_welcome:
     title: "ברוכים הבאים ללאונג'"
     body: "\nברכות!  :confetti_ball:\n\nאם את/ה יכולים לראות נושא זה, כרגע קודמתם ל[רמת אמון 3 (מוביל)][trust].\n\nמובילים הם משתתפים בעלי פרופיל מהחשובים והפעילים יותר. הם מהווים דוגמא חיובית לקהילה באמצעות פעולותיהם והפרסומים שלהם.\n\nאתם יכולים עכשיו &hellip;\n\n* לערוך את הכותרת של כל נושא\n* להחליף את הקטגוריה של כל נושא\n* לאפשר לכל הקישורים שלכם להיות נעקבים (האפשרות [automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) כעת הוסרה)\n\n* לגשת לקטגוריית הלאונג' הזמינה רק למשתמשים בעלי רמת אמון 3 ומעלה\n\nהנה [רשימת המשתמשים שמחזיקים כעת ברמת אמון 3] (/badges/3/leader). אתם מוזמנים להגיד שלום!\n\nתודה רבה על חלקכם החשוב בקהילה הזו!\n\n(למידע נוסף על רמות אמון, [ראו נושא זה][trust]. שימו לב בבקשה שרק חברים שכעת עומדים בקריטריון הנבחר ישארו ברמת אמון 3). \n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
@@ -376,7 +374,6 @@ he:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p> ההודעה שלך סומנה על ידי הקהילה. אנא <a href="/my/private-messages"> בדוק/בדקי את ההודעת הפרטיות שלך </a> </p>'
-    user_must_edit: '<p>תוכן מדוגלל נסתר זמנים.</p>'
   archetypes:
     regular:
       title: "נושא רגיל"
@@ -994,32 +991,8 @@ he:
 
   new_version_mailer:
     subject_template: "[%{site_name}] גרסת Discourse חדשה, עדכון זמין."
-    text_body_template: |2
-       new version of [Discourse](http://www.discourse.org) is available.
-      גרסא חדשה של [Discourse](http://www.discourse.org) זמינה.
-      הגרסא שלכם: %{installed_version}
-      הגרסא החדשה: **%{new_version}
-
-      ייתכן ותרצו לשקול:
-      - לראות מה חדש ב[יומן השינויים בגיטהאב](https://github.com/discourse/discourse/commits/master).
-      - לשדרג באמצעות ביקור ב[%{base_url}/admin/docker](%{base_url}/admin/docker) ולחיצה על הלחצן "שדרוג".
-      - לבקר ב[meta.discourse.org](http://meta.discourse.org) כדי להתעדכן בחדשות, דיונים ותמיכה במערכת Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
-    text_body_template: |2
-       new version of [Discourse](http://www.discourse.org) is available.
-      גרסא חדשה של [Discourse](http://www.discourse.org) זמינה.
-      הגרסא שלכם: %{installed_version}
-      הגרסא החדשה: **%{new_version}
-
-      ייתכן ותרצו לשקול:
-      - לראות מה חדש ב[יומן השינויים בגיטהאב](https://github.com/discourse/discourse/commits/master).
-      - לשדרג באמצעות ביקור ב[%{base_url}/admin/docker](%{base_url}/admin/docker) ולחיצה על הלחצן "שדרוג".
-      - לבקר ב[meta.discourse.org](http://meta.discourse.org) כדי להתעדכן בחדשות, דיונים ותמיכה במערכת Discourse.
-
-      ### הערות השחרור
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "There are flags that were submitted over 1 hour ago."
@@ -1044,20 +1017,6 @@ he:
   system_messages:
     post_hidden:
       subject_template: "הודעה הוסתרה בעקבות סימון"
-      text_body_template: |
-        שלום.
-
-        זהו מסר אוטומטי שנשלח מ%{site_name} כדי לעדכן אותך שהפרסום שלך...
-        %{base_url}%{url}....
-        הוסתר בעקבות סימון מהקהילה.
-
-        %{flag_reason}
-
-        מספר חברים בקהילה סימנו את הפרסום לפני שהוא הוסתר, אז אנא שקלו כיצד להתאים את הפרסום בצורה שישקף את הפידבק שלהם. **תוכלו לערוך את הפרסום אחרי %{edit_delay} דקות, והוא יוצג חדש באופן אוטומטי.** זה יעלה את דרגת האמון שלכם, במערכת.
-
-        בכל אופן, אם הפרסום הוסתר על ידי הקהילה בפעם השניה, המנחים של הקהילה יעודכנו על כך - ועשויות להינקט פעולות, כולל אפשרות להשעיה של החשבון שלכם.
-
-        לכללי התנהלות נוספים, אנא פנו אל [כללי ההתנהגות הקהילתיים שלנו](%{base_url}/guidelines).
     usage_tips:
       text_body_template: "המסר הפרטי הזה כולל כמה טיפים מהירים כדי לסייע לכם להתחיל:\n\n## המשיכו לגלול\n\nאיך כאן לחצנים או כפתורים לעמוד הבא או מספרי עמודים -- כדי לקרוא עוד **פשוט המשיכו לגלול מטה!**\n\nכאשר פרסומים חדשים מגיעים, הם יופיעו באופן אוטומטי.\n\n## איפה אני?\n\n- לחיפוש, עמוד המשתמש/ת שלכם או התפריט, השתמשו ב**כפתורים שבפינה השמאלית העליונה**.\n\n- בזמן קריאת נושא, נועו חזרה למעלה &uarr; באמצעות לחיצה על כותרת הנושא. הקישו על גרף ההתקדמות הירוק שבפינה השמאלית התחתונה כדי להציג את לחצני הניווט, או השמשו במקשי המקלדת  <kbd>home</kbd> and <kbd>end</kbd>.\n\n<img src=\"http://www.discourse.org/images/welcome/progress-bar.png\" width=\"190\" height=\"52\">\n\n- כותרת הנושא תמיד תעביר אתכם לפרסום האחרון שקראתם באותו הנושא. השתמשו בזמן הפרסום כקיצור דרך לרשומה. היכנסו למעלה דרך תאריך הפרסום הראשון ובתחתית דרך תאריך הפרסום האחרון.\n\n## איך אני משיב/ה?\n\n- כדי להשיב לנושא בכללותו, לחצו על לחצן ה\"תגובה\" <img src=\"http://www.discourse.org/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> שבתחתית העמוד.\n\n- כדי להשיב על פרסום מסויים (ולא על נושא שלם) השתמשו בלחצן ה\"תגובה\"  <img src=\"http://www.discourse.org/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> הצמוד לאותו הפרסום.\n\n- כדי לקחת את השיחה לכיוון אחר, אבל לשמור על חיבור עם השיחה המקורית, השתמשו בלחצן \"תגובה כנושא חדש\"  <img src=\"http://www.discourse.org/images/welcome/reply-as-new-topic.png\" width=\"33\" height=\"25\"> בפינה השמאלית העליונה של אותו הפרסום. כדי לצטט מישהו בתגובה שלכם, בחרו את הטקסט שברצונכם לצטט, ואז לחצו על אחד מלחצני התגובה.\n\n<img src=\"http://www.discourse.org/images/welcome/quote-reply.png\" width=\"467\" height=\"172\">\n\nכדי לצטט פרסום שלם, השתמשו ב\"ציטוט הודעה בשלמותה\" שבסרגל כלי העריכה.\n\nכדי להזכיר שם של מישהו בתגובה שלכם התחילו בכתיבת '@' והמשלים האוטומטי יקפוץ.\n\n <img src=\"http://www.discourse.org/images/welcome/username-completion.png\" width=\"307\" height=\"174\">\n\n## מה עוד אני יכול/ה לעשות?\n\n<img src=\"http://www.discourse.org/images/welcome/like-link-flag-bookmark.png\" width=\"225\" height=\"61\">\n\nכדי לאפשר למישהו/י לדעת שנהניתם מהפרסום שלהם, השתמשו בלחצן\
         \ ה**לייק** שבתחתית הפרסום. אם תתקלו בפרסום בעייתי, אל תהססו להשתמש בלחצן ה**סימון** ולהודיע על זה לכותב/ת, או לצוות שלנו.\n\nתוכלו גם לשתף קישור לפרסום, או ליצור סימניה לפרסום לשימוש עתידי בעמוד המשתמש/ת שלכם.\n\n## מי מדבר/ת איתי?\n\n כשמישהו מגיב/ה לפרסום שלך, מצטט/ת פרסום שלך או מזכיר את '@שם_המשתמש שלך', מספר יופיע מעל לחצן השיחות בפינה השמאלית העליונה של העמוד. השתמשו בו כדי לראות מי מדבר/ת אליך והיכן.\n\n <img src=\"http://www.discourse.org/images/welcome/notification-panel.png\" width=\"237\" height=\"78\">\n\nתקבלו מייל התראה עם התגובות הישירות (וההודעות הפרטיות) אם אינכם מחוברים לאתר כשההודעות מגיעות.\n\n## מהן שיחות חדשות?\n\nעל פי ברירת המחדל כל השיחות בנות הפחות מיומיים נחשבות חדשות וכל שיחה שבה השתתפתם תסומן באופן אוטומטי למעקב.\n\nאתם תראו את המספר הכחול כאינקציה לצד נושאים אלה:\n\n<img src=\"http://www.discourse.org/images/welcome/topics-new-unread.png\" width=\"490\" height=\"119\">\n\nתוכלו לשנות את מצב ההתראות האישיות של הנושא דרך הסרגל שבתחתית הנושא (ניתן לכוון זאת גם לפי קטגוריה). כדי לשנות את האופן בו אתם עוקבים אחר נושאים, או ההגדרות עבור נושאים חדשים, ראו את עמוד [ההעדפות שלך](/my/preferences).\n\n## מדוע איני יכול/ה לבצע פעולות מסוימות?\n\nמשתמשים חדשים מוגבלים במידת מה מטעמי בטיחות. ככל שתשתתפו כאן יותר בדיונים, תזכרו ברמות אמון של הקהילה, תהפוכ לאזרחים מלאים ומגבלות אלו יוסרו באופן אוטומטי. \nב[רמת אמון](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) גבוהה דיה תזכו אפילו ביכולות לסייע לנו לנהל יחד את הפורום שלנו.\n"
@@ -1361,7 +1320,6 @@ he:
     spam_hosts: "המשתמש/ת החדשים ניסו ליצור כמה פרסומים עם קישורים לאותו מתחם (domain)ץ ראו את הגדרות האתר (newuser_spam_host_threshold)."
   email_log:
     no_user: "Can't find user with id %{user_id}"
-    suspended_not_pm: "User is supsended and email is not a private message"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"

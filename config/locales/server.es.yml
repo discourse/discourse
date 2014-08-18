@@ -194,10 +194,8 @@ es:
   vip_category_name: "Sala VIP"
   vip_category_description: "Una categoría exclusiva para miembros de un nivel de confianza de 3 o más."
   meta_category_name: "Meta"
-  meta_category_description: "Discusión sobre este foro, su estructura, cómo funciona, y cómo podemos mejorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del staff."
-  assets_topic_body: "Este es un tema permanente, visible solo por miembros del staff, para almacenar las imágenes y archivos que se utilizan en el diseño del foro. ¡No lo elimines!\n\n\nCómo utilizarlo:\n\n\n1. Publica una respuesta a este tema.\n2. Sube todas las imágenes que quieras usar como logos, favicons y demás aquí. (Usa el icono de subida de archivos en la barra del editor de posts, o arrastra o pega las imágenes.)\n3. Publica tu respuesta.\n4. Haz click con el botón derecho en las imágenes de tu nuevo post para copiar la ruta donde están subidas las imágenes, o haz click en el icono de edición para editar tu post y verla desde ahí. Copia las rutas de cada imagen.\n5. Pega esas rutas en [configuración básica](/admin/site_settings/category/required).\n\n\nAdemás, si necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en el apartado [archivos](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
     body: |2
@@ -406,7 +404,6 @@ es:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Tu post ha sido reportado por la comunidad. Por favor <a href="/my/private-messages">mira tus mensajes privados</a>.</p>'
-    user_must_edit: '<p>Reportado, el contenido ha sido ocultado temporalmente.</p>'
   archetypes:
     regular:
       title: "Tema normal"
@@ -536,6 +533,9 @@ es:
     education_new_topic:
       title: "Educación de nuevo usuario: primeros temas"
       description: "Un mensaje emergente de guia 'justo a tiempo' aparecerá automáticamente sobre el compositor cuando nuevos usuarios empiecen ingresar sus dos primeras respuestas."
+    usage_tips:
+      title: "Consejos para nuevos usuarios"
+      description: "Guía e información esencial para los nuevos usarios."
     welcome_user:
       title: "Bienvenido: nuevo usuario"
       description: "Un mensaje privado enviado automáticamente a todos los nuevos usuarios cuando se registren."
@@ -725,6 +725,7 @@ es:
     clean_up_uploads: "Eliminar subidas huérfanas sin referencia para prevenir hosting ilegal. AVISO: antes de habilitar esta opción quizá quieres hacer un backup de tu directorio de /uploads"
     clean_orphan_uploads_grace_period_hours: "Período de gracia (en horas) antes de que una subida huérfana sea eliminada."
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
+    purge_inactive_users_grace_period_days: "Período de gracia (en días) antes de eliminar un usuario inactivo."
     enable_s3_uploads: "Situar las subidas en un almacenamiento Amazon S3."
     s3_upload_bucket: "El nombre del depósito de Amazon S3 donde se subirán los archivos. AVISO: debe estar escrito en minúsculas y sin puntos."
     s3_access_key_id: "La clave id de acceso de Amazon S3 que se utilizará para subir imágenes."
@@ -779,6 +780,9 @@ es:
     topic_views_heat_low: "Después de este número de visitas, el tema será ligeramente resaltado."
     topic_views_heat_medium: "Después de este número de visitas, el tema será moderadamente resaltado."
     topic_views_heat_high: "Después de este número de visitas, el tema será fuertemente resaltado."
+    cold_age_days_low: "Un tema con tantos días será ligeramente resaltado."
+    cold_age_days_medium: "Un tema con tantos días será moderadamente resaltado."
+    cold_age_days_high: "Un tema con tantos días será activamente resaltado."
     faq_url: "Si tienes un documento de Preguntas Frecuentes alojado que quieras utilizar, introduce la URL completa aquí."
     tos_url: "Si tienes un documento de Condiciones de Servicio alojado en algún sitio quieras utilizar, facilita la URL aquí."
     privacy_policy_url: "Si tienes un documento de Preguntas Frecuentes alojado en algún sitio quieras utilizar, facilita la URL aquí."
@@ -967,38 +971,8 @@ es:
     subject_template: "[%{site_name}] Prueba de envío de email"
   new_version_mailer:
     subject_template: "[%{site_name}] Nueva versión de Discourse, actualización disponible"
-    text_body_template: |
-      Una nueva versión de [Discourse](http://www.discourse.org) está disponible.
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      Es posible que desees:
-
-      - Mirar qué es lo nuevo en el [registro de cambios de GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Actualizar la versión visitando [%{base_url}/admin/docker](%{base_url}/admin/docker) y pulsando el botón "Upgrade".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para encontrar noticias, debates y soporte para Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] actualización disponible"
-    text_body_template: |
-      Está disponible una nueva versión de [Discourse](http://www.discourse.org).
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      Tal vez te interese:
-
-      - Ver los cambios en el [historial de cambios de GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Actualizar visitando [%{base_url}/admin/docker](%{base_url}/admin/docker), y presionando el botón "Upgrade".
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para ver novedades, debates y soporte para Discourse.
-
-      ### Notas de la versión
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Hay reportes enviados de hace 1 hora."
@@ -1023,22 +997,6 @@ es:
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático desde %{site_name} para informarte de que tu post ...
-
-        %{base_url}%{url}
-
-        ... ha sido ocultado por haber sido reportado por la comunidad.
-
-        %{flag_reason}
-
-        Varios miembros de la comunidad han reportado este post antes de que haya sido ocultado, por lo que **por favor, considera de qué forma podrías revisar tu post para tener en cuenta su feedback.** Puedes editar tu post después de %{edit_delay} minutos y será mostrado de nuevo automáticamente. Esto incrementará tu nivel de confianza.
-
-        Sin embargo, si el post se ocultara por la comunidad por segunda vez, se notificará a los moderadores – y habrá posibles consecuencias, como una posible suspensión de tu cuenta.
-
-         Para más consejos, por favor revisa nuestras [FAQ](%{base_url}/faq).
     welcome_user:
       subject_template: "Bienvenido a %{site_name}!"
       text_body_template: |
@@ -1314,7 +1272,6 @@ es:
     spam_hosts: "Este nuevo usuario intentó crear varios posts con enlaces al mismo dominio. Mira la opción newuser_spam_host_threshold."
   email_log:
     no_user: "No se puede encontrar al usuario con id %{user_id}"
-    suspended_not_pm: "El usuario está suspendido y el email no es un mensaje privado"
     seen_recently: "El usuario fue visto hace poco"
     post_not_found: "No se puede encontrar un post con id %{post_id}"
     notification_already_read: "La notificación de la que informaba este email ya ha sido leída"

@@ -741,8 +741,6 @@ uk:
         confirm: "Ви впевнені, що хочете облишити цей допис?"
         no_value: "Ні, зачекайте"
         yes_value: "Так, облишити"
-      wiki:
-        about: "цей допис як wiki; будь-хто може редагувати його"
       archetypes:
         save: 'Зберегти налаштування'
       controls:
@@ -958,7 +956,6 @@ uk:
         help: "Останні теми в категорії {{categoryName}}"
       top:
         title: "Top"
-        help: "a selection of best topics in the last year, month, week or day"
         yearly:
           title: "Top Yearly"
         monthly:

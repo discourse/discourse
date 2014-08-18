@@ -1145,7 +1145,6 @@ pl_PL:
         help: "najnowsze tematy w kategorii {{categoryName}}"
       top:
         title: "Najpopularniejsze"
-        help: "wybór najpopularniejszych tematów w tym roku, miesiącu, tygodniu lub dniu"
         yearly:
           title: "Najpopularniejsze w tym roku"
         monthly:
