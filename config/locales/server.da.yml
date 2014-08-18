@@ -73,6 +73,7 @@ da:
     one: "Beklager, nye brugere kan kun indsætte ét link i et indlæg."
     other: "Beklager, nye brugere kan kun indsætte %{count} links i et indlæg."
   spamming_host: "Beklager, du kan ikke indsætte et link til det pågældende domæne."
+  user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
   just_posted_that: "ligner et andet indlæg, som du har skrevet for nyligt, for meget"
   has_already_been_used: "er allerede i brug"
   invalid_characters: "indeholder ugyldige tegn"
@@ -197,7 +198,6 @@ da:
   vip_category_name: "Lounge"
   vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
   meta_category_name: "meta"
-  meta_category_description: "Diskussion omkring dette forum, dets organisering og hvordan det virker, samt hvordan vi kan forbedre det."
   staff_category_name: "Ejere"
   staff_category_description: "Privat gruppe for ejernes diskussioner. Emner er kun synlige for administratorer og moderatorer."
   lounge_welcome:
@@ -213,6 +213,7 @@ da:
     cannot_delete:
       uncategorized: "Kan ikke slette Ukategoriseret"
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
+      topic_exists_no_oldest: "Kan ikke slette denne kategori fordi antallet af emner er %{count}"
   trust_levels:
     newuser:
       title: "ny bruger"
@@ -319,9 +320,13 @@ da:
     continue: "Fortsæt til %{site_name}"
   change_email:
     confirmed: "Din e-mail-adresse er opdateret."
+    please_continue: "Fortsæt til %{site_name}"
     error: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
   activation:
+    action: "Aktiver din konto"
     already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
+    please_continue: "Din nye konto er bekræftet og du er nu logget ind."
+    continue_button: "Fortsæt til %{site_name}"
     welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator skal godkende din nye konto før du kan tilgå forummet. Du får en e-mail, når din konto er godkendt!"
   post_action_types:
@@ -335,6 +340,7 @@ da:
       long_form: 'markerede dette som spam'
     inappropriate:
       title: 'Upassende'
+      description: 'Dette indlæg har indhold som en rimelig person ville opfatte som stødende, udtryk for misbrug eller som et brud på <a href="/guidelines">vores sammenholds retningslinjer</a>.'
       long_form: 'markerede dette som stødende'
     notify_user:
       title: 'Underret {{username}}'
@@ -361,19 +367,31 @@ da:
   topic_flag_types:
     spam:
       title: 'Spam'
+      description: 'Dette emne minder mere om en reklame end et debatindlæg. Det er ikke nyttigt eller relevant for diskussionen.'
+      long_form: 'markerede dette som spam'
     inappropriate:
       title: 'Upassende'
       long_form: 'markeret upassende'
+    notify_moderators:
+      title: 'Underret moderatorer'
+      long_form: 'underrettede moderatorer'
+      email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
+      email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Dit indlæg er blevet flaget for mange gange. Se venligst <a href="/my/private-messages">dine private beskeder</a>.</p>'
-    user_must_edit: '<p>Flaget indhold er skjult.</p>'
   archetypes:
     regular:
       title: "Almindeligt emne"
+    banner:
+      message:
+        make: "Dette emne er nu et banner-emne. Det optræder i toppen af alle sider indtil brugeren fjerner det."
+        remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
   unsubscribed:
     title: 'Frameldt'
     description: "Du er blevet frameldt. Vi skriver ikke til dig igen."
     oops: "Klik herunder hvis det ikke var din hensigt at framelde dig."
+    error: "Fejl ved framelding"
+    preferences_link: "Du kan også framelde dig opsummerings-emails på din <a href='/my/preferences'>indstillinger side</a>"
     not_found_description: "Beklager, vi kunne ikke framelde dig. Det er muligt at linket i din e-mail er udløbet."
   resubscribe:
     action: "Tilmeld igen"
@@ -512,6 +530,8 @@ da:
       description: "HTML som tilføjes i bunden af alle sider"
   site_settings:
     default_locale: "Standardsproget for denne Discourse-instans (ISO 639-1 kode)."
+    min_post_length: "Minimumlængde tilladt for indlæg i tegn"
+    min_private_message_post_length: "Minimumlængde tilladt for private beskeder i tegn"
     allow_uncategorized_topics: "Tillad emner at blive oprettet uden en kategori."
     unique_posts_mins: "Hvor mange minutter der skal gå før en bruger kan skrive et indlæg med det samme indhold igen."
     queue_jobs: "KUN FOR UDVIKLERE! ADVARSEL! Brug sidekiq som jobkø. Hvis dette slås fra går dit site i stykker."

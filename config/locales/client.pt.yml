@@ -132,6 +132,16 @@ pt:
     about:
       simple_title: "Acerca"
       title: "Acerca de %{title}"
+      stats: "Estatísticas do site"
+      our_admins: "Os nossos admins"
+      our_moderators: "Os nossos moderadores"
+      stat:
+        all_time: "Sempre"
+        last_7_days: "Últimos 7 Dias"
+      like_count: "Contagem de Gostos"
+      topic_count: "Contagem de Tópicos"
+      post_count: "Contagem de Posts"
+      user_count: "Contagem de Utilizadores"
     bookmarks:
       not_logged_in: "desculpa, tens de ter a sessão iniciada para marcar posts"
       created: "adicionaste este post aos marcadores"
@@ -350,6 +360,7 @@ pt:
       last_emailed: "Último Email"
       last_seen: "Visto"
       created: "Juntou-se"
+      log_out: "Terminar sessão"
       location: "Localização"
       website: "Site"
       email_settings: "Email"
@@ -471,6 +482,7 @@ pt:
       enabled_description: "Este tópico contém posts eliminados, os quais foram ocultados."
       disabled_description: "Tópicos eliminados no tópico são apresentados."
       enable: "Ocultar Posts Eliminados"
+      disable: "Mostrar Posts Eliminados"
     private_message_info:
       title: "Conversas Privadas"
       invite: "Convidar Outros..."
@@ -493,6 +505,7 @@ pt:
       complete_username: "Se uma conta corresponder ao nome de utilizador <b>%{username}</b>, receberá um email com instruções sobre como redefinir rapidamente a sua senha."
       complete_email: "Se uma conta corresponder <b>%{email}</b>, receberá um email com instruções sobre como redefinir rapidamente a sua senha."
     login:
+      title: "Entrar"
       username: "Utilizador"
       password: "Palavra-chave"
       email_placeholder: "email ou nome de utilizador"
@@ -871,8 +884,6 @@ pt:
         confirm: "Tem a certeza que quer abandonar o seu post?"
         no_value: "Não, manter"
         yes_value: "Sim, abandonar"
-      wiki:
-        about: "este post é um wiki; qualquer um pode editá-lo"
       archetypes:
         save: 'Guardar as Opções'
       controls:
@@ -1104,7 +1115,6 @@ pt:
         help: "tópicos populares na categoria {{categoryName}}"
       top:
         title: "Top"
-        help: "Seleção dos melhores tópicos no último ano, mês, semana ou dia."
     browser_update: 'Infelizmente, <a href="http://www.discourse.org/faq/#browser">o seu navegador é muito antigo para ser utilizado num fórum Discours</a>. Por favor <a href="http://browsehappy.com">atualize seu navegador</a>.'
     permission_types:
       full: "Criar / Responder / Ver"

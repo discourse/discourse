@@ -158,10 +158,8 @@ it:
   vip_category_name: "Lounge"
   vip_category_description: "Una categoria esclusiva per i membri di livello 3 o superiori."
   meta_category_name: "Meta"
-  meta_category_description: "Discussioni circa questo forum, la sua organizzazione, come funziona e come migliorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni tra lo staff. I topic sono visibili solo agli amministratori e ai moderatori."
-  assets_topic_body: "Questo è un topic permanente, visibile solo allo staff, utilizzabile per salvare immagini e files utilizzati nel design del forum. Non eliminarlo!\n\n\nEcco come:\n\n\n1. Rispondi a questo topic.\n2. Carica tutte le immagini che desideri usare per loghi, favicon e così via. (Usa l'icona di upload nell'editor del post o trascina direttamente le immagini.)\n3. Invia la risposta per postarla.\n4. Fai click destro sulle immagini nel tuo nuovo post per ottenere il percorso delle immagini caricate o clicca l'icona di modifica post e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni fondamentali](/admin/site_settings/category/required).\n\nInoltre, se hai bisogno di permettere upload di file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Benvenuto nella Lounge"
   category:
@@ -341,7 +339,6 @@ it:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Il tuo postè stato segnalato dalla comunità. <a href="/my/private-messages">Controlla i tuoi messaggi privati</a>.</p>'
-    user_must_edit: '<p>Contenuto segnalato nascosto.</p>'
   archetypes:
     regular:
       title: "Topic Regolare"
@@ -929,7 +926,6 @@ it:
     spam_hosts: "Questo nuovo utente ha tentato di creare post multipli con link allo stesso dominio. Guarda l'impostazione newuser_spam_host_threeshold."
   email_log:
     no_user: "Non trovo l'utente con l'id %{user_id}"
-    suspended_not_pm: "L'utente è sospeso e l'email non è un messaggio privato"
     seen_recently: "L'utente è stato visto di recente"
     post_not_found: "Non trovo post con id %{post_id}"
     notification_already_read: "La notifica per cui è stata inviata questa mail è già stata letta"

@@ -249,8 +249,6 @@ ja:
       title: '管理人に通知'
       description: 'この投稿やトピックは不適切な可能性があるため、管理人による確認を必要とする。'
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
-  flagging:
-    user_must_edit: '<p>フラグのたった内容は一時的に非表示になります。</p>'
   archetypes:
     regular:
       title: "通常のトピック"

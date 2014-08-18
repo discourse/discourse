@@ -194,10 +194,8 @@ de:
   vip_category_name: "Lounge"
   vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit einer Vertrauensstufe Level 3 oder höher."
   meta_category_name: "Meta"
-  meta_category_description: "Diskussion über dieses Forum, die Organisation, wie es funktioniert und wie wir es verbessern können."
   staff_category_name: "Mitarbeiter"
   staff_category_description: "Geschützte Kategorie für Mitarbeiter. Themen sind nur für Administratoren und Moderatoren sichtbar."
-  assets_topic_body: "Dies ist ein fester Beitrag, der nur für Mitarbeiter sichtbar ist, um Bilder und Dateien, die im Forum benutzt werden zu speichern. Lösche diese nicht!\n\n\nAnleitung:\n\n\n1. Antworte auf dieses Thema.\n2. Lade alle Bilder, die du für Logos, Favicons und usw. nutzen willst, hier hoch. (Nutze dazu das Symbol für Lade-Symbolleiste im Beitrags-Editor oder ziehe und lasse die Bilder hier fallen oder füge sie eins.)\n3. Sende deine Antwort. \n4. Klicke mit der rechten Maustaste auf die Bilder in deinem neuen Beitrag, um die den Pfad zu bekommen oder klicke das Editier-Symbol, um deinen Beitrag zu editieren und dadurch den Pfad zu den Bildern zu bekommen. Kopiere die Bild-Pfade.\n5. Füge die Bild-Pfade in [basic settings](/admin/site_settings/category/required) ein.\n\n\nWenn du andere Dateityp-Uploads aktivieren willst, editiere `authorized_extensions` in [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Willkommen in der Lounge"
     body: |2
@@ -407,7 +405,6 @@ de:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Dein Beitrag wurde von der Community als Verstoß gemeldet. Bitte beachte <a href="/my/private-messages">deine privaten Nachrichten</a>.</p>'
-    user_must_edit: '<p>Gemeldete Inhalte wurden vorübergehend versteckt.</p>'
   archetypes:
     regular:
       title: "Normales Thema"
@@ -1018,38 +1015,8 @@ de:
       <small>Am Fuß jeder E-Mail, die du verschickst, sollte eine Möglichkeit zum Abbestellen vorhanden sein. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn du zukünftig keine weiteren E-Mails erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
-    text_body_template: |
-      Eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar.
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      Dies könnte interessant sein:
-
-      - Erkundige dich über Neues im [GitHub Changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade deine Version unter [%{base_url}/admin/docker](%{base_url}/admin/docker) mit dem "Upgrade"-Knopf.
-
-      - Besuche [meta.discourse.org](http://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung für Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
-    text_body_template: |
-      Eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar.
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      So geht's weiter:
-
-      - Lies nach, was sich in der neuen Version [geändert hat](https://github.com/discourse/discourse/commits/master).
-
-      - Aktualisiere dein Forum mit dem "Upgrade" Knopf auf [%{base_url}/admin/docker](%{base_url}/admin/docker).
-
-      - Besuche [meta.discourse.org](http://meta.discourse.org) für weitere Neuigkeiten, Diskussionen und Hilfestellungen rund um Discourse.
-
-      ### Versionshinweise
-
-      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Es gibt Markierungen, die vor 1 Stunde gesendet wurden."
@@ -1074,22 +1041,6 @@ de:
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag ...
-
-        %{base_url}%{url}
-
-        ... wegen Meldungen aus der Community versteckt wurde.
-
-        %{flag_reason}
-
-        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor dieser versteckt wurde. Überlege dir daher, wie du deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest. **Du kannst deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar.** Dadurch erhöht sich auch deine Vertrauensstufe.
-
-        Wenn dieser Beitrag jedoch ein zweites Mal von der Gemeinschaft versteckt wird, werden die Moderatoren darauf aufmerksam gemacht. Dass kann weitere Konsequenzen haben, unter anderem auch eine Sperrung deines Kontos.
-
-        Weitere Hilfestellung findest du in unseren [Richtlinien](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Diese private Nachricht enthält ein paar Tipps für einen reibungslosen Start:
@@ -1459,7 +1410,6 @@ de:
     spam_hosts: "Dieser Benutzer hat versucht mehrere Antworten mit Links zur selben Domain zu posten. Beachte die newuser_spam_host_threshold Einstellung."
   email_log:
     no_user: "Kann Benutzer mit ID %{user_id} nicht finden "
-    suspended_not_pm: "Benutzer ist gesperrt und Email ist keine private Nachricht"
     seen_recently: "Benutzer war kürzlich online"
     post_not_found: "Kann Beitrag mit ID %{post_id} nicht finden"
     notification_already_read: "Die Benachrichtigung dieser Mail wurde bereits gelesen"

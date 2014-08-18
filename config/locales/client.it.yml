@@ -86,6 +86,8 @@ it:
     yes_value: "Sì"
     generic_error: "Spiacenti! C'è stato un problema."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
+    sign_up: "Registrati"
+    log_in: "Accedi"
     age: "Età"
     joined: "Partecipa da"
     admin_title: "Amministrazione"
@@ -128,6 +130,19 @@ it:
       other: "tra {{count}} giorni"
     suggested_topics:
       title: "Discussioni Suggerite"
+    about:
+      simple_title: "A proposito"
+      title: "A proposito di %{title}"
+      stats: "Statistiche del Sito"
+      our_admins: "I Nostri Amministratori"
+      our_moderators: "I Nostri Moderatori"
+      stat:
+        all_time: "Sempre"
+        last_7_days: "Ultimi 7 giorni"
+      like_count: "Conteggio Mi Piace"
+      topic_count: "Conteggio Topic"
+      post_count: "Conteggio Post"
+      user_count: "Conteggio Utente"
     bookmarks:
       not_logged_in: "devi essere connesso per aggiungere post ai segnalibri"
       created: "Hai inserito questo post nei preferiti."
@@ -273,6 +288,7 @@ it:
       delete_yourself_not_allowed: "Non puoi eliminare il tuo account in questo momento. Contatta un amministratore e chiedigli di cancellarlo per te."
       unread_message_count: "Messaggi"
       staff_counters:
+        flags_given: "Segnalazioni"
         flagged_posts: "post segnalati"
         deleted_posts: "post cancellati"
         suspensions: "sospensioni"
@@ -346,6 +362,7 @@ it:
       last_emailed: "Ultima email inviatagli"
       last_seen: "Ultima visita"
       created: "Membro da"
+      log_out: "Esci"
       location: "Località"
       website: "Sito Web"
       email_settings: "Email"
@@ -445,6 +462,7 @@ it:
     read_only_mode:
       enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "Il login è disabilitato quando il sito è in modalità di sola lettura."
+    too_few_topics_notice: "Crea almeno 5 topic pubblici e %{posts} post pubblici per iniziare una discussione. I nuovi utenti non saranno in grado di guadagnare livelli senza contenuti da leggere. Questo messaggio viene mostrato solo allo staff."
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'topic creati negli ultimi 365 giorni'
@@ -468,6 +486,7 @@ it:
       enabled_description: "Questa discussione contiene post che sono stati eliminati, sono quindi stati nascosti."
       disabled_description: "I post eliminati di questa discussione sono ora visibili."
       enable: "Nasconti Post Eliminati"
+      disable: "Mostra Post Eliminati"
     private_message_info:
       title: "Messaggio privato"
       invite: "Invita altri utenti..."
@@ -490,6 +509,7 @@ it:
       complete_username: "Se un account risulta avere l'username <b>%{username}</b>, dovresti ricevere un'email con le istruzioni per ripristinare la tua password a breve."
       complete_email: "Se risulterà un account con <b>%{email}</b>, dovresti ricevere un'email contenente le istruzioni per ripristinare la tua password a breve."
     login:
+      title: "Accedi"
       username: "Utente"
       password: "Password"
       email_placeholder: "email o nome utente"
@@ -641,7 +661,9 @@ it:
     topics:
       bulk:
         reset_read: "Cancella dati lettura"
+        delete: "Topic Eliminati"
         dismiss_posts: "Annulla post"
+        dismiss_posts_tooltip: "Azzera il conteggio non letto su questi topic ma continua a mostrarli nella mia lista non letti quando vengono creati nuovi post"
         dismiss_topics: "Annulla topic"
         dismiss_new: "Abbandona"
         toggle: "Attiva/disattiva la selezione multipla dei topic"
@@ -692,6 +714,7 @@ it:
       invalid_access:
         title: "Il topic è privato"
         description: "Spiacenti, non puoi accedere a questo topic!"
+        login_required: "Devi connetterti per vedere questo topic."
       server_error:
         title: "Errore di caricamento del topic"
         description: "Spiacenti, non puoi caricare questo topic, probabilmente per un errore di connessione. Se il problema persiste, facci sapere."
@@ -827,6 +850,7 @@ it:
         email_placeholder: 'nome@esempio.com'
         success: "Abbiamo mandato un invito a <b>{{email}}</b>. Ti invieremo una notifica quando l'invito verrà confermato. Controlla gli inviti dal tab sulla tua pagina utente per tenere traccia dei tuoi inviti."
         error: "Spiacenti, non possiamo invitare quella persona. Forse è già un utente?"
+      login_reply: 'Connettiti per Rispondere'
       filters:
         n_posts:
           one: "1 post"
@@ -908,8 +932,6 @@ it:
         confirm: "Sicuro di voler abbandonare il tuo post?"
         no_value: "No, mantienilo"
         yes_value: "Si, abbandona"
-      wiki:
-        about: "questo post è un wiki; chiunque può modificarlo"
       archetypes:
         save: 'Opzioni di salvataggio'
       controls:
@@ -1171,6 +1193,8 @@ it:
     changed_by: "da {{author}}"
     categories_list: "Lista delle categorie"
     filters:
+      with_topics: "%{filter} topic"
+      with_category: "%{filter} %{category} topic"
       latest:
         title: "Più recenti"
         help: "Topic con post recenti"
@@ -1217,7 +1241,6 @@ it:
         help: "Ultimi topic nella categoria {{categoryName}}"
       top:
         title: "Top"
-        help: "una selezione dei migliori topic dell'ultimo anno, mese, settimana o giorno"
         yearly:
           title: "Migliori dell'anno"
         monthly:
@@ -1288,24 +1311,32 @@ it:
         agree_flag_hide_post: "D'accordo (oscura il post e invia PM)"
         agree_flag_hide_post_title: "Nascondi questo post e invia automaticamente all'utente un messaggio privato chiedendogli di modificarlo"
         agree_flag: "Accetta la segnalazione"
+        agree_flag_title: "Accetta la segnalazione e non modificare il post"
         defer_flag: "Ignora"
         defer_flag_title: "Rimuovi segnalazione; non è necessaria alcuna azione questa volta."
         delete: "Rimuovi"
+        delete_title: "Elimina il post a cui si riferisce la segnalazione."
+        delete_post_defer_flag: "Cancella post e Ignora la segnalazione"
         delete_post_defer_flag_title: "Cancella il post: se è il primo post, cancella il topic"
+        delete_post_agree_flag: "Elimina Post e Accetta la segnalazione"
         delete_post_agree_flag_title: "Cancella il post: se è il primo post, cancella il topic"
         delete_flag_modal_title: "Rimuovi e..."
         delete_spammer: "Cancella lo spammer"
+        delete_spammer_title: "Cancella questo utente, tutti i suoi post e i suoi topic."
         disagree_flag_unhide_post: "Non d'accordo (mostra il post)"
         disagree_flag_unhide_post_title: "Rimuove ogni segnalazione dal post e rende il post nuovamente visibile"
         disagree_flag: "Rifiuta"
+        disagree_flag_title: "Nega questa segnalazione come non valida o non corretta"
         clear_topic_flags: "Fatto"
         clear_topic_flags_title: "Il topic è stato esaminato e i problemi risolti. Clicca Fatto per rimuovere i contrassegni."
         more: "(più...)"
         dispositions:
           agreed: "accettate"
           disagreed: "Disapprovato"
+          deferred: "ignorate"
         flagged_by: "Segnalato da"
         resolved_by: "Risolto da"
+        took_action: "Azione intrapresa"
         system: "sistema"
         error: "Qualcosa non ha funzionato"
         reply_message: "Rispondi"
@@ -1407,6 +1438,12 @@ it:
             text: "Torna indietro"
             title: "Ripristina il database a una versione funzionante precedente"
             confirm: "Sicuro di voler ripristinare una precedente versione funzionante del database?"
+      export_csv:
+        users:
+          text: "Esporta Utenti"
+          title: "Esporta la lista utenti in un file CSV."
+        success: "L'esportazione è stata avviata. Sarai notificato a breve con il progresso del processo."
+        failed: "Esportazione fallita. Controlla i log."
       customize:
         title: "Personalizza"
         long_title: "Personalizzazioni del sito"
@@ -1640,6 +1677,7 @@ it:
         show_public_profile: "Mostra il profilo pubblico"
         impersonate: 'Impersona'
         ip_lookup: "IP Lookup"
+        log_out: "Esci"
         logged_out: "L'utente ha effettuato il logout da tutti i device"
         revoke_admin: 'Revoca privilegi di amministrazione'
         grant_admin: 'Garantisci privilegi di amministrazione'
@@ -1673,6 +1711,9 @@ it:
         cant_delete_all_too_many_posts:
           one: "Non posso cancellare tutti i post perché l'utente ha più di 1 post. (delete_all_posts_max.)"
           other: "Non posso cancellare tutti i post perché l'utente ha più di %{count} post. (delete_all_posts_max.)"
+        delete_confirm: "sei SICURO che vuoi eliminare questo utente?  Non è possibile tornare indietro!"
+        delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
+        delete_dont_block: "Elimina soltanto"
         deleted: "L'utente è stato cancellato"
         delete_failed: "Si è verificato un errore nella cancellazione dell'utente. Assicurati che tutti i post siano stati eliminati prima di provare a cancellare un'utente."
         send_activation_email: "Invia l'email di attivazione"
@@ -1707,6 +1748,7 @@ it:
           flagged_by_users: "Utenti Segnalatori"
           qualifies: "Requisiti per il livello 3"
           will_be_promoted: "Verrà promosso entro 24 ore."
+          does_not_qualify: "Non si qualifica per il livello 3."
       site_content:
         none: "Scegli un tipo di contenuto per iniziare"
         title: 'Contenuto'
@@ -1748,6 +1790,8 @@ it:
         description: Descrizione
         badge_type: Tipo di Targhetta
         badge_grouping: Grupp
+        badge_groupings:
+          modal_title: Gruppi Targhette
         granted_by: Assegnata da
         granted_at: Assegnata il
         save: Salva
@@ -1766,17 +1810,26 @@ it:
         listable: Mostra badge sulla pagina dei badge pubblica
         enabled: Attiva targhetta
         icon: Icona
+        query: Badge Query (SQL)
         preview: Anteprima targhetta
         trigger_type:
           none: "Aggiorna giornalmente"
           post_action: "Quando un utente lavora su un post"
           post_revision: "Quando un utente modifica o crea un post"
+          trust_level_change: "Quando un utente cambia livello"
+          user_change: "Quando un utente viene modificato o creato"
     lightbox:
       download: "Scaricamento"
     keyboard_shortcuts_help:
       title: 'Scorciatoie da tastiera'
       jump_to:
         title: 'Vai a'
+        home: '<b>g</b>, <b>h</b> Home (Ultimi)'
+        latest: '<b>g</b>, <b>l</b> Ultimi'
+        new: '<b>g</b>, <b>n</b> Nuovi'
+        unread: '<b>g</b>, <b>u</b> Non Letti'
+        starred: '<b>g</b>, <b>f</b> Preferiti'
+        categories: '<b>g</b>, <b>c</b> Categorie'
       navigation:
         title: 'Navigazione'
         jump: '<b>e</b> Vai al post numero'
@@ -1803,6 +1856,10 @@ it:
         bookmark: '<b>b</b> Aggiungi un segnalibro al post'
         edit: '<b>e</b> Modifica il post'
         delete: '<b>d</b> Cancella il post'
+        mark_muted: '<b>m</b>, <b>m</b> Silenzia Topic'
+        mark_regular: '<b>m</b>, <b>r</b> Ripristina (default) topic'
+        mark_tracking: '<b>m</b>, <b>t</b> Segui topic'
+        mark_watching: '<b>m</b>, <b>w</b> Osserva topic'
     badges:
       title: Targhette
       allow_title: "permetti badge come titolo?"
@@ -1848,10 +1905,13 @@ it:
           name: Autobiografo
         nice_post:
           name: Buon Post
+          description: Ha ricevuto 10 mi piace in un post. Questo badge può essere assegnato più volte.
         good_post:
           name: Ottimo Post
+          description: Ha ricevuto 25 mi piace in un post. Questo badge può essere assegnato più volte.
         great_post:
           name: Fantastico Post
+          description: Ha ricevuto 50 mi piace in un post. Questo badge può essere assegnato più volte.
         first_like:
           name: Primo Mi Piace
           description: Ha apprezzato un post

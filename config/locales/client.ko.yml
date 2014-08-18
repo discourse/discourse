@@ -70,6 +70,7 @@ ko:
     yes_value: "예"
     generic_error: "오류 발생"
     generic_error_with_reason: "에러 발견: %{error}"
+    sign_up: "회원가입"
     log_in: "로그인"
     age: "생성"
     joined: "가입함"
@@ -112,6 +113,8 @@ ko:
       simple_title: "About"
       title: "About %{title}"
       stats: "사이트 통계"
+      our_admins: "관리자"
+      our_moderators: "운영자"
       stat:
         all_time: "전체"
         last_7_days: "지난 7일"
@@ -451,6 +454,7 @@ ko:
       enabled_description: "이 토픽은 삭제된 글들을 포함하고 있습니다. 삭제된 글을 보이지 않습니다."
       disabled_description: "삭제된 글들을 표시하고 있습니다."
       enable: "삭제된 글 숨김"
+      disable: "삭제된 글 보기"
     private_message_info:
       title: "개인 메시지"
       invite: "다른 사람 초대"
@@ -880,8 +884,6 @@ ko:
         confirm: "게시물 작성을 취소 하시겠습니까?"
         no_value: "아니오"
         yes_value: "예"
-      wiki:
-        about: "이 게시글은 위키입니다. 누구나 편집 가능합니다."
       archetypes:
         save: '옵션 저장'
       controls:
@@ -1121,6 +1123,8 @@ ko:
     changed_by: "{{author}}에 의해"
     categories_list: "카테고리 목록"
     filters:
+      with_topics: "%{filter} 토픽"
+      with_category: "%{filter} %{category} 토픽"
       latest:
         title: "최신"
         help: "가장 최근 토픽"
@@ -1165,7 +1169,6 @@ ko:
         help: "{{categoryName}}카테고리의 최신 토픽"
       top:
         title: "인기"
-        help: "이번 년도, 달, 주, 또는 오늘 가장 인기있었던 글들"
         yearly:
           title: "연간 인기글"
         monthly:
@@ -1230,6 +1233,8 @@ ko:
         title: "신고"
         old: "지난"
         active: "활성화된"
+        agree: "동의"
+        agree_flag_modal_title: "동의 및 ..."
         agree_flag_hide_post: "동의 (포스트 숨기기 + 개인 메시지 보내기)"
         agree_flag_hide_post_title: "이 게시물을 숨기고 자동으로 해당 사용자에게 이 게시물의 편집을 요청하는 개인 메시지를 보냄"
         defer_flag: "연기"
@@ -1603,6 +1608,7 @@ ko:
           other: "전체글을 삭제할 수 없습니다. 몇개의 글은 %{count}일 이전에 작성되었습니다. (The delete_user_max_post_age setting.)"
         cant_delete_all_too_many_posts:
           other: "이 사용자는 %{count}개 이상 글을 작성하였기 때문에 모든 글을 삭제 할 수 없습니다. (delete_all_posts_max 설정참고)"
+        delete_dont_block: "삭제만 하기"
         deleted: "사용자가 삭제되었습니다."
         delete_failed: "해당 사용자를 삭제하는 동안 오류가 발생했습니다. 모든 글은 사용자를 삭제하기 전에 삭제해야합니다."
         send_activation_email: "인증 메일 보내기"
@@ -1715,6 +1721,12 @@ ko:
       title: '키보드 단축키'
       jump_to:
         title: 'Jump To'
+        home: '<b>g</b>, <b>h</b> 홈 (Latest)'
+        latest: '<b>g</b>, <b>l</b> 최신'
+        new: '<b>g</b>, <b>n</b> 새로운'
+        unread: '<b>g</b>, <b>u</b> 읽지 않은'
+        starred: '<b>g</b>, <b>f</b> 즐겨찾기'
+        categories: '<b>g</b>, <b>c</b> 카테고리'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> 글 번호로 이동'
