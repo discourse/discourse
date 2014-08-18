@@ -11,13 +11,28 @@ module Onebox
       # * http://youtu.be/afyK1HSFfgw
       # * https://www.youtube.com/embed/vsF0K3Ou1v0
       def video_id
-        match = @url.match(/^https?:\/\/(?:www\.)?(?:m\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_\-]{11})(?:[#&\?]t=(([0-9]+[smh]?)+))?$/)
-        match && match[1]
+        if uri.host =~ /youtu.be/
+          # A slash, then capture all non-slash characters remaining
+          match = uri.path.match(/\/([^\/]+)/)
+          return match[1] if match && match[1]
+        end
+
+        if uri.path =~ /\/embed\//
+          # A slash, then embed, then anotther slash, then capture all remaining non-slash characters
+          match = uri.path.match(/\/embed\/([^\/]+)/)
+          return match[1] if match && match[1]
+        end
+
+        if params['v']
+          return params['v']
+        end
+
+        nil
       end
 
       def placeholder_html
         if video_id
-          "<img src='http://i1.ytimg.com/vi/#{video_id}/hqdefault.jpg' width='480' height='270'>"
+          "<img src='https://i1.ytimg.com/vi/#{video_id}/hqdefault.jpg' width='480' height='270'>"
         else
           to_html
         end
@@ -27,33 +42,89 @@ module Onebox
         if video_id
           # Avoid making HTTP requests if we are able to get the video ID from the
           # URL.
-          html = "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/#{video_id}?feature=oembed\" frameborder=\"0\" allowfullscreen></iframe>"
+          html = "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/#{video_id}?#{embed_params}\" frameborder=\"0\" allowfullscreen></iframe>"
         else
-          # Fall back to making HTTP requests.
-          html = raw[:html] || ""
+          # for channel pages
+          html = Onebox::Engine::WhitelistedGenericOnebox.new(@url, @cache, @timeout).to_html
+          return nil unless html
+          html = html.gsub /http:/, 'https:'
+          html = html.gsub /"\/\//, '"https://'
+          html = html.gsub /'\/\//, "'https://"
         end
 
-        rewrite_agnostic(append_params(html))
+        html
       end
 
-      def append_params(html)
-        result = html.dup
-        result.gsub! /(src="[^"]+)/, '\1&wmode=opaque'
-        if url =~ /t=(\d+h)?(\d+m)?(\d+s?)?/
-          h = Regexp.last_match[1].to_i
-          m = Regexp.last_match[2].to_i
-          s = Regexp.last_match[3].to_i
+      # Regex to parse strings like "1h3m2s". Also accepts bare numbers (which are seconds).
+      TIMESTR_REGEX = /(\d+h)?(\d+m)?(\d+s?)?/
 
-          total = (h * 60 * 60) + (m * 60) + s
+      def embed_params
+        p = {'feature' => 'oembed', 'wmode' => 'opaque'}
 
-          result.gsub! /(src="[^"]+)/, '\1&start=' + total.to_s
+        p['list'] = params['list'] if params['list']
+
+        # Parse timestrings, and assign the result as a start= parameter
+        start = nil
+        if params['start']
+          start = params['start']
+        elsif params['t']
+          start = params['t']
+        elsif uri.fragment && uri.fragment.start_with?('t=')
+          # remove the t= from the start
+          start = uri.fragment[2..-1]
         end
-        result
+        p['start'] = parse_timestring(start) if start
+        p['end'] = parse_timestring params['end'] if params['end']
+
+        # Official workaround for looping videos
+        # https://developers.google.com/youtube/player_parameters#loop
+        # use params.include? so that you can just add "&loop"
+        if params.include? 'loop'
+          p['loop'] = 1
+          p['playlist'] = video_id
+        end
+
+        URI.encode_www_form(p)
       end
 
-      def rewrite_agnostic(html)
-        html.gsub(/https?:\/\//, '//')
+      private
+
+      # Takes a timestring and returns the number of seconds it represents.
+      def parse_timestring(string)
+        tm = string.match TIMESTR_REGEX
+        if tm && !tm[0].empty?
+          h = tm[1].to_i
+          m = tm[2].to_i
+          s = tm[3].to_i
+
+          (h * 60 * 60) + (m * 60) + s
+        else
+          puts 'warning - nil from parse_timestring'
+          nil
+        end
       end
+
+      def uri
+        @_uri ||= URI(@url)
+      end
+
+      def params
+        return {} unless uri.query
+        # This mapping is necessary because CGI.parse returns a hash of keys to arrays.
+        # And *that* is necessary because querystrings support arrays, so they
+        # force you to deal with it to avoid security issues that would pop up
+        # if one day it suddenly gave you an array.
+        #
+        # However, we aren't interested. Just take the first one.
+        @_params ||= begin
+                       params = {}
+                       CGI.parse(uri.query).each do |k, v|
+                         params[k] = v.first
+                       end
+                       params
+        end
+      end
+
     end
   end
 end
