@@ -45,7 +45,7 @@ class TopicPostersSummary
     user_ids.zip([
       :original_poster,
       :most_recent_poster,
-      :most_posts,
+      :frequent_poster,
       :frequent_poster,
       :frequent_poster,
       :frequent_poster
