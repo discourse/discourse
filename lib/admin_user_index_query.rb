@@ -18,7 +18,7 @@ class AdminUserIndexQuery
   end
 
   def filter_by_trust
-    levels = trust_levels.map { |key, value| key.to_s }
+    levels = trust_levels.map { |key, _| key.to_s }
     if levels.include?(params[:query])
       @query.where('trust_level = ?', trust_levels[params[:query].to_sym])
     end

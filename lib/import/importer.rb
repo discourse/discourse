@@ -142,7 +142,7 @@ module Import
     end
 
     def sidekiq_has_running_jobs?
-      Sidekiq::Workers.new.each do |process_id, thread_id, worker|
+      Sidekiq::Workers.new.each do |_, _, worker|
         payload = worker.try(:payload)
         return true if payload.try(:all_sites)
         return true if payload.try(:current_site_id) == @current_db
