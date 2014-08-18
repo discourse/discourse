@@ -155,11 +155,17 @@ class PostAction < ActiveRecord::Base
   end
 
   def add_moderator_post_if_needed(moderator, disposition, delete_post=false)
-    return unless related_post
-    return if related_post.topic.posts.where(post_type: Post.types[:moderator_action]).exists?
+    return if related_post.nil?
+    return if moderator_already_replied?(related_post.topic, moderator)
     message_key = "flags_dispositions.#{disposition}"
     message_key << "_and_deleted" if delete_post
     related_post.topic.add_moderator_post(moderator, I18n.t(message_key))
+  end
+
+  def moderator_already_replied?(topic, moderator)
+    topic.posts
+         .where("user_id = :user_id OR post_type = :post_type", user_id: moderator.id, post_type: Post.types[:moderator_action])
+         .exists?
   end
 
   def self.create_message_for_post_action(user, post, post_action_type_id, opts)
