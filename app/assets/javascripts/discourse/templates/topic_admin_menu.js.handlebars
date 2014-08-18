@@ -66,12 +66,7 @@
           <button {{action toggleVisibility}} class='btn btn-admin'><i class='fa fa-eye'></i> {{i18n topic.actions.visible}}</button>
         {{/if}}
       </li>
-
-      {{#if currentUser.staff}}
-        <li>
-          <button class='btn btn-admin' {{action resetRead}}><i class='fa fa-times'></i> {{i18n topic.actions.reset_read}}</button>
-        </li>
-      {{/if}}
+        
     </ul>
   </div>
 {{else}}
