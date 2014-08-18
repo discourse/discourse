@@ -18,7 +18,8 @@ class ListableTopicSerializer < BasicTopicSerializer
              :excerpt,
              :visible,
              :closed,
-             :archived
+             :archived,
+             :notification_level
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
   def include_last_poster?
@@ -38,6 +39,13 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   def unseen
     !seen
+  end
+
+  def notification_level
+    object.user_data.notification_level
+  end
+  def include_notification_level?
+    object.user_data.present?
   end
 
   def last_read_post_number
