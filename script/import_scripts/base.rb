@@ -44,8 +44,12 @@ class ImportScripts::Base
       @existing_posts[import_id] = post_id
     end
 
-    Post.pluck(:id, :topic_id, :post_number).each do |post_id,t,n|
-      @topic_lookup[post_id] = {topic_id: t, post_number: n}
+    Post.joins(:topic).select("posts.id, posts.topic_id, posts.post_number, topics.slug").each do |post|
+      @topic_lookup[post.id] = {
+        topic_id: post.topic_id,
+        post_number: post.post_number,
+        url: post.url,
+      }
     end
   end
 
@@ -202,21 +206,23 @@ class ImportScripts::Base
         next # block returns nil to skip a post
       end
 
-      if user_id_from_imported_user_id(u[:id])
+      import_id = u[:id]
+
+      if user_id_from_imported_user_id(import_id)
         users_skipped += 1
       elsif u[:email].present?
-        new_user = create_user(u, u[:id])
+        new_user = create_user(u, import_id)
 
         if new_user.valid?
-          @existing_users[u[:id].to_s] = new_user.id
+          @existing_users[import_id.to_s] = new_user.id
           users_created += 1
         else
           @failed_users << u
-          puts "Failed to create user id: #{u[:id]}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+          puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
         end
       else
         @failed_users << u
-        puts "Skipping user id #{u[:id]} because email is blank"
+        puts "Skipping user id #{import_id} because email is blank"
       end
 
       print_status users_created + users_skipped + @failed_users.length + (opts[:offset] || 0), total
@@ -232,6 +238,7 @@ class ImportScripts::Base
     return existing if existing && existing.custom_fields["import_id"].to_i == import_id.to_i
 
     bio_raw = opts.delete(:bio_raw)
+    website = opts.delete(:website)
     avatar_url = opts.delete(:avatar_url)
 
     opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
@@ -256,8 +263,9 @@ class ImportScripts::Base
     begin
       User.transaction do
         u.save!
-        if bio_raw.present?
-          u.user_profile.bio_raw = bio_raw
+        if bio_raw.present? || website.present?
+          u.user_profile.bio_raw = bio_raw if bio_raw.present?
+          u.user_profile.website = website if website.present?
           u.user_profile.save!
         end
       end
@@ -284,7 +292,7 @@ class ImportScripts::Base
   def create_categories(results)
     results.each do |c|
       params = yield(c)
-      puts "    #{params[:name]}"
+      puts "\t#{params[:name]}"
 
       # make sure categories don't go more than 2 levels deep
       if params[:parent_category_id]
@@ -299,10 +307,11 @@ class ImportScripts::Base
   end
 
   def create_category(opts, import_id)
-    existing = category_from_imported_category_id(import_id)
+    existing = category_from_imported_category_id(import_id) || Category.where("LOWER(name) = ?", opts[:name].downcase).first
     return existing if existing
 
     post_create_action = opts.delete(:post_create_action)
+
     new_category = Category.new(
       name: opts[:name],
       user_id: opts[:user_id] || opts[:user].try(:id) || -1,
@@ -310,9 +319,12 @@ class ImportScripts::Base
       description: opts[:description],
       parent_category_id: opts[:parent_category_id]
     )
+
     new_category.custom_fields["import_id"] = import_id if import_id
     new_category.save!
+
     post_create_action.try(:call, new_category)
+
     new_category
   end
 
@@ -343,7 +355,11 @@ class ImportScripts::Base
           new_post = create_post(params, import_id)
           if new_post.is_a?(Post)
             @existing_posts[import_id] = new_post.id
-            @topic_lookup[new_post.id] = {post_number: new_post.post_number, topic_id: new_post.topic_id}
+            @topic_lookup[new_post.id] = {
+              post_number: new_post.post_number,
+              topic_id: new_post.topic_id,
+              url: new_post.url,
+            }
 
             created += 1
           else
@@ -351,13 +367,13 @@ class ImportScripts::Base
             puts "Error creating post #{import_id}. Skipping."
             puts new_post.inspect
           end
+        rescue Discourse::InvalidAccess => e
+          skipped += 1
+          puts "InvalidAccess creating post #{import_id}. Topic is closed? #{e.message}"
         rescue => e
           skipped += 1
           puts "Exception while creating post #{import_id}. Skipping."
           puts e.message
-        rescue Discourse::InvalidAccess => e
-          skipped += 1
-          puts "InvalidAccess creating post #{import_id}. Topic is closed? #{e.message}"
         end
       end
 
@@ -455,7 +471,7 @@ class ImportScripts::Base
   end
 
   def print_status(current, max)
-    print "\r%9d / %d (%5.1f%%)    " % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
+    print "\r%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
   end
 
   def batches(batch_size)
