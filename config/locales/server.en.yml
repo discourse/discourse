@@ -888,21 +888,21 @@ en:
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
 
-    topic_views_heat_low: "After this many views, the topic is slightly highlighted."
-    topic_views_heat_medium: "After this many views, the topic is moderately highlighted."
-    topic_views_heat_high: "After this many views, the topic is strongly highlighted."
+    topic_views_heat_low: "After this many views, the views field is slightly highlighted."
+    topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
+    topic_views_heat_high: "After this many views, the views field is strongly highlighted."
 
-    cold_age_days_low: "A topic this many days old is slightly highligted."
-    cold_age_days_medium: "A topic this many days old is moderately highligted."
-    cold_age_days_high: "A topic this many days old is strongly highligted."
+    cold_age_days_low: "After this many days of conversation, the last activity date is slightly highlighted."
+    cold_age_days_medium: "After this many days of conversation, the last activity date is moderately highlighted."
+    cold_age_days_high: "After this many days of conversation, the last activity date is strongly highlighted."
 
-    history_hours_low: "A post edited within this many hours is slightly highlighted"
-    history_hours_medium: "A topic with this likes:post ratio is moderately highlighted."
-    history_hours_high: "A topic with this likes:post ratio is strongly highlighted."
+    history_hours_low: "A post edited within this many hours has the edit indicator slightly highlighted"
+    history_hours_medium: "A post edited within this many hours has the edit indicator moderately highlighted."
+    history_hours_high: "A post edited within this many hours has the edit indicator strongly highlighted."
 
-    topic_post_like_heat_low: "A topic with this likes:post ratio is slightly highlighted."
-    topic_post_like_heat_medium: "A topic with this likes:post ratio is moderately highlighted."
-    topic_post_like_heat_high: "A topic with this likes:post ratio is strongly highlighted."
+    topic_post_like_heat_low: "After the likes:post ratio exceeds this ratio, the post count field is slightly highlighted."
+    topic_post_like_heat_medium: "After the likes:post ratio exceeds this ratio, the post count field is moderately highlighted."
+    topic_post_like_heat_high: "After the likes:post ratio exceeds this ratio, the post count field is strongly highlighted.
 
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
