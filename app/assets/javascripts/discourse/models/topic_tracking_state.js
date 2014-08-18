@@ -157,6 +157,8 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     list.topics.forEach(function(topic){
       var row = tracker.states["t" + topic.id] || {};
       row.topic_id = topic.id;
+      row.notification_level = topic.notification_level;
+
 
       if (topic.unseen) {
         row.last_read_post_number = null;

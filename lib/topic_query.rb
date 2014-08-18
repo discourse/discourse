@@ -147,7 +147,7 @@ class TopicQuery
   end
 
   def self.unread_filter(list)
-    list.where("tu.last_read_post_number < topics.highest_post_number")
+    list.where("tu.seen_post_count < topics.highest_post_number")
         .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
