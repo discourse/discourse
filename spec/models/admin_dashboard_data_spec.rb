@@ -6,17 +6,17 @@ describe AdminDashboardData do
     subject { described_class.new.rails_env_check }
 
     it 'returns nil when running in production mode' do
-      Rails.stubs(:env).returns('production')
+      Rails.stubs(env: ActiveSupport::StringInquirer.new('production'))
       subject.should be_nil
     end
 
     it 'returns a string when running in development mode' do
-      Rails.stubs(:env).returns('development')
+      Rails.stubs(env: ActiveSupport::StringInquirer.new('development'))
       subject.should_not be_nil
     end
 
     it 'returns a string when running in test mode' do
-      Rails.stubs(:env).returns('test')
+      Rails.stubs(env: ActiveSupport::StringInquirer.new('test'))
       subject.should_not be_nil
     end
   end
@@ -119,12 +119,12 @@ describe AdminDashboardData do
       before { ActionMailer::Base.stubs(:smtp_settings).returns({address: 'smtp.gmail.com'}) }
 
       it 'returns nil in development env' do
-        Rails.stubs(:env).returns('development')
+        Rails.stubs(env: ActiveSupport::StringInquirer.new('development'))
         expect(subject).to be_nil
       end
 
       it 'returns a string when in production env' do
-        Rails.stubs(:env).returns('production')
+        Rails.stubs(env: ActiveSupport::StringInquirer.new('production'))
         expect(subject).to_not be_nil
       end
     end
