@@ -69,7 +69,7 @@ class CookedPostProcessor
     @doc.css("img[src^='data']") -
     # minus, image inside oneboxes
     oneboxed_images -
-    # minux, images inside quotes
+    # minus, images inside quotes
     @doc.css(".quote img")
   end
 

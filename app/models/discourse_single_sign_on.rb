@@ -92,7 +92,7 @@ class DiscourseSingleSignOn < SingleSignOn
         sso_record.last_payload = unsigned_payload
         sso_record.external_id = external_id
       else
-        sso_record = user.create_single_sign_on_record(last_payload: unsigned_payload,
+        user.create_single_sign_on_record(last_payload: unsigned_payload,
                                           external_id: external_id,
                                           external_username: username,
                                           external_email: email,

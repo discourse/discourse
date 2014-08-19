@@ -151,7 +151,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.expanded_for(post)
     Rails.cache.fetch("embed-topic:#{post.topic_id}", expires_in: 10.minutes) do
       url = TopicEmbed.where(topic_id: post.topic_id).pluck(:embed_url).first
-      title, body = TopicEmbed.find_remote(url)
+      _title, body = TopicEmbed.find_remote(url)
       body << TopicEmbed.imported_from_html(url)
       body
     end
