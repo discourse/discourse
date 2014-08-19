@@ -105,7 +105,7 @@ export default DiscourseController.extend(ModalFunctionality, {
             "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
         var self = this;
         var timer = setInterval(function() {
-          if(w.closed) {
+          if(!w || w.closed) {
             clearInterval(timer);
             self.set('authenticate', null);
           }
