@@ -3,7 +3,6 @@ require 'thread'
 class SidekiqPauser
   def initialize
     @mutex = Mutex.new
-    @done = ConditionVariable.new
   end
 
   def pause!
@@ -21,19 +20,12 @@ class SidekiqPauser
   end
 
   def unpause!
-    # concurrency is hard, perform signaling from a bg thread
-    # otherwise it acts weird
-    Thread.new do
-      @mutex.synchronize do
-        if @pause_thread
-          @paused = false
-          @done.signal
-        end
-      end
-    end.join
-
     @mutex.synchronize do
-      @pause_thread.join if @pause_thread
+      if @pause_thread
+        @paused = false
+      end
+      @pause_thread.kill
+      @pause_thread.join
       @pause_thread = nil
     end
 
@@ -50,11 +42,7 @@ class SidekiqPauser
         Sidekiq.redis do |r|
           r.setex paused_key, 60, "paused"
         end
-
-        @mutex.synchronize do
-          return unless @paused
-          @done.wait(@mutex, 30)
-        end
+        sleep 30
       end
     end
   end
