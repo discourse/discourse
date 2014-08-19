@@ -6,9 +6,9 @@ class SidekiqPauser
   end
 
   def pause!
+    redis.setex paused_key, 60, "paused"
     @mutex.synchronize do
-      @paused = true
-      @pause_thread ||= start_pause_thread
+      @extend_lease_thread ||= extend_lease_thread
       sleep 0.001 while !paused?
     end
 
@@ -16,35 +16,35 @@ class SidekiqPauser
   end
 
   def paused?
-    Sidekiq.redis { |r| !!r.get(paused_key) }
+    !!redis.get(paused_key)
   end
 
   def unpause!
     @mutex.synchronize do
-      if @pause_thread
-        @paused = false
+      if @extend_lease_thread
+        @extend_lease_thread.kill
+        @extend_lease_thread.join
+        @extend_lease_thread = nil
       end
-      @pause_thread.kill
-      @pause_thread.join
-      @pause_thread = nil
     end
 
-    Sidekiq.redis { |r| r.del(paused_key) }
+    redis.del(paused_key)
     true
   end
 
   private
 
-  def start_pause_thread
+  def extend_lease_thread
     Thread.new do
-      while @paused do
-        # TODO retries in case bad redis connectivity
-        Sidekiq.redis do |r|
-          r.setex paused_key, 60, "paused"
-        end
+      while true do
+        redis.expire paused_key, 60
         sleep 30
       end
     end
+  end
+
+  def redis
+    $redis.without_namespace
   end
 
   def paused_key
