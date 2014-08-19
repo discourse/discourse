@@ -34,7 +34,7 @@ module BackupRestore
 
   def self.mark_as_running!
     # TODO: for extra safety, it should acquire a lock and raise an exception if already running
-    $redis.set(running_key, "1")
+    $redis.setex(running_key, 60, "1")
     save_start_logs_message_id
     keep_it_running
   end
