@@ -99,7 +99,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
   end
 
   def approve_account_if_needed
-    invited_user.approve(invite.invited_by_id, send_email=false)
+    invited_user.approve(invite.invited_by_id, false)
   end
 
   def notify_invitee

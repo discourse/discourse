@@ -173,7 +173,6 @@ class User < ActiveRecord::Base
   end
 
   def change_username(new_username)
-    current_username = self.username
     self.username = new_username
     save
   end
