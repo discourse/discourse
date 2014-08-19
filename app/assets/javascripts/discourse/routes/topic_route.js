@@ -25,13 +25,6 @@ Discourse.TopicRoute = Discourse.Route.extend({
       }
     },
 
-    composePrivateMessage: function(user) {
-      var self = this;
-      this.transitionTo('userActivity', user).then(function () {
-        self.controllerFor('user-activity').send('composePrivateMessage');
-      });
-    },
-
     showFlags: function(post) {
       Discourse.Route.showModal(this, 'flag', post);
       this.controllerFor('flag').setProperties({ selected: null });
