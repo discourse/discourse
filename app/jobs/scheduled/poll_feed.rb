@@ -49,6 +49,7 @@ module Jobs
 
       def initialize
         @feed_url = SiteSetting.feed_polling_url
+        @feed_url = "http://#{@feed_url}" if @feed_url !~ /^https?\:\/\//
       end
 
       def topics
