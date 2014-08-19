@@ -44,7 +44,8 @@ class UserSerializer < BasicUserSerializer
              :uploaded_avatar_id,
              :badge_count,
              :has_title_badges,
-             :edit_history_public
+             :edit_history_public,
+             :custom_fields
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
@@ -77,7 +78,6 @@ class UserSerializer < BasicUserSerializer
                      :disable_jump_reply,
                      :gravatar_avatar_upload_id,
                      :custom_avatar_upload_id,
-                     :custom_fields,
                      :has_title_badges
 
   ###
@@ -239,5 +239,19 @@ class UserSerializer < BasicUserSerializer
 
   def include_edit_history_public?
     can_edit && !SiteSetting.edit_history_visible_to_public
+  end
+
+  def custom_fields
+    fields = nil
+
+    if SiteSetting.public_user_custom_fields.present?
+      fields = SiteSetting.public_user_custom_fields.split('|')
+    end
+
+    if fields.present?
+      User.custom_fields_for_ids([object.id], fields)[object.id]
+    else
+      {}
+    end
   end
 end
