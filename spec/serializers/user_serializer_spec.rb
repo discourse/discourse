@@ -67,4 +67,26 @@ describe UserSerializer do
       end
     end
   end
+
+  context "with custom_fields" do
+    let(:user) { Fabricate(:user) }
+    let(:json) { UserSerializer.new(user, scope: Guardian.new, root: false).as_json }
+
+    before do
+      user.custom_fields['secret_field'] = 'Only for me to know'
+      user.custom_fields['public_field'] = 'Everyone look here'
+      user.save
+    end
+
+    it "doesn't serialize the fields by default" do
+      json[:custom_fields]
+      json[:custom_fields].should be_empty
+    end
+
+    it "serializes the fields listed in public_user_custom_fields site setting" do
+      SiteSetting.stubs(:public_user_custom_fields).returns('public_field')
+      json[:custom_fields]['public_field'].should == user.custom_fields['public_field']
+      json[:custom_fields]['secret_field'].should be_nil
+    end
+  end
 end
