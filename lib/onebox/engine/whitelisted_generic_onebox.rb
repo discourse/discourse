@@ -38,6 +38,7 @@ module Onebox
           dailymotion.com
           deadline.com
           dell.com
+          deviantart.com
           digg.com
           dotsub.com
           ebay.ca
@@ -104,6 +105,7 @@ module Onebox
           tumblr.com
           twitpic.com
           usatoday.com
+          viddler.com
           videojug.com
           vimeo.com
           walmart.com
