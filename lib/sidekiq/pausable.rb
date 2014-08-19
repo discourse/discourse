@@ -21,11 +21,7 @@ class SidekiqPauser
 
   def unpause!
     @mutex.synchronize do
-      if @extend_lease_thread
-        @extend_lease_thread.kill
-        @extend_lease_thread.join
-        @extend_lease_thread = nil
-      end
+      @extend_lease_thread = nil
     end
 
     redis.del(paused_key)
@@ -37,6 +33,7 @@ class SidekiqPauser
   def extend_lease_thread
     Thread.new do
       while true do
+        break unless @mutex.synchronize { @extend_lease_thread }
         redis.expire paused_key, 60
         sleep 30
       end
