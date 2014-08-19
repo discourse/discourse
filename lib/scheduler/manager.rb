@@ -256,7 +256,7 @@ module Scheduler
     end
 
     def identity_key
-      @identity_key ||= "_scheduler_#{`hostname`}:#{Process.pid}:#{self.class.seq}"
+      @identity_key ||= "_scheduler_#{`hostname`}:#{Process.pid}:#{self.class.seq}:#{SecureRandom.hex}"
     end
 
     def self.lock_key
