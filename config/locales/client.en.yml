@@ -1500,7 +1500,7 @@ en:
         disagree_flag_title: "Deny this flag as invalid or incorrect"
         clear_topic_flags: "Done"
         clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
-        more: "(more...)"
+        more: "(more replies...)"
 
         dispositions:
           agreed: "agreed"
