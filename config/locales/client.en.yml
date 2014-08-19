@@ -31,10 +31,10 @@ en:
             tb: TB
     dates:
       time: "h:mm a"
-      long_no_year: "MMM DD h:mm a"
-      long_no_year_no_time: "MMM DD"
-      long_with_year: "MMM DD, YYYY h:mm a"
-      long_with_year_no_time: "MMM DD, YYYY"
+      long_no_year: "MMM D h:mm a"
+      long_no_year_no_time: "MMM D"
+      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year_no_time: "MMM D, YYYY"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
