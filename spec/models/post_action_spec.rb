@@ -9,6 +9,7 @@ describe PostAction do
 
   let(:moderator) { Fabricate(:moderator) }
   let(:codinghorror) { Fabricate(:coding_horror) }
+  let(:eviltrout) { Fabricate(:evil_trout) }
   let(:admin) { Fabricate(:admin) }
   let(:post) { Fabricate(:post) }
   let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
@@ -110,17 +111,19 @@ describe PostAction do
 
     it "should ignore validated flags" do
       post = create_post
-      admin = Fabricate(:admin)
+
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       post.hidden.should be_false
       post.hidden_at.should be_blank
       PostAction.defer_flags!(post, admin)
       PostAction.flagged_posts_count.should == 0
+
       post.reload
       post.hidden.should be_false
       post.hidden_at.should be_blank
 
       PostAction.hide_post!(post, PostActionType.types[:off_topic])
+
       post.reload
       post.hidden.should be_true
       post.hidden_at.should be_present
@@ -133,6 +136,7 @@ describe PostAction do
     it "properly updates topic counters" do
       PostAction.act(moderator, post, PostActionType.types[:like])
       PostAction.act(codinghorror, second_post, PostActionType.types[:like])
+
       post.topic.reload
       post.topic.like_count.should == 2
     end
@@ -237,11 +241,10 @@ describe PostAction do
         # A post with no flags has 0 for flag counts
         PostAction.flag_counts_for(post.id).should == [0, 0]
 
-        flag = PostAction.act(Fabricate(:evil_trout), post, PostActionType.types[:spam])
+        flag = PostAction.act(eviltrout, post, PostActionType.types[:spam])
         PostAction.flag_counts_for(post.id).should == [0, 1]
 
         # If staff takes action, it is ranked higher
-        admin = Fabricate(:admin)
         PostAction.act(admin, post, PostActionType.types[:spam], take_action: true)
         PostAction.flag_counts_for(post.id).should == [0, 8]
 
@@ -251,45 +254,41 @@ describe PostAction do
       end
     end
 
-    it 'does not allow you to flag stuff with 2 reasons' do
+    it 'does not allow you to flag stuff with the same reason more than once' do
       post = Fabricate(:post)
-      u1 = Fabricate(:evil_trout)
-      PostAction.act(u1, post, PostActionType.types[:spam])
-      lambda { PostAction.act(u1, post, PostActionType.types[:off_topic]) }.should raise_error(PostAction::AlreadyActed)
+      PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      lambda { PostAction.act(eviltrout, post, PostActionType.types[:off_topic]) }.should raise_error(PostAction::AlreadyActed)
     end
 
     it 'allows you to flag stuff with another reason' do
       post = Fabricate(:post)
-      u1 = Fabricate(:evil_trout)
-      PostAction.act(u1, post, PostActionType.types[:spam])
-      PostAction.remove_act(u1, post, PostActionType.types[:spam])
-      lambda { PostAction.act(u1, post, PostActionType.types[:off_topic]) }.should_not raise_error()
+      PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      PostAction.remove_act(eviltrout, post, PostActionType.types[:spam])
+      lambda { PostAction.act(eviltrout, post, PostActionType.types[:off_topic]) }.should_not raise_error()
     end
 
     it 'should update counts when you clear flags' do
       post = Fabricate(:post)
-      u1 = Fabricate(:evil_trout)
-      PostAction.act(u1, post, PostActionType.types[:spam])
+      PostAction.act(eviltrout, post, PostActionType.types[:spam])
 
       post.reload
       post.spam_count.should == 1
 
       PostAction.clear_flags!(post, Discourse.system_user)
-      post.reload
 
+      post.reload
       post.spam_count.should == 0
     end
 
     it 'should follow the rules for automatic hiding workflow' do
       post = create_post
-      u1 = Fabricate(:evil_trout)
-      u2 = Fabricate(:walter_white)
-      admin = Fabricate(:admin) # we need an admin for the messages
+      walterwhite = Fabricate(:walter_white)
 
       SiteSetting.stubs(:flags_required_to_hide_post).returns(2)
+      Discourse.stubs(:site_contact_user).returns(admin)
 
-      PostAction.act(u1, post, PostActionType.types[:spam])
-      PostAction.act(u2, post, PostActionType.types[:spam])
+      PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      PostAction.act(walterwhite, post, PostActionType.types[:spam])
 
       post.reload
 
@@ -307,8 +306,8 @@ describe PostAction do
       post.hidden_at.should be_blank
       post.topic.visible.should be_true
 
-      PostAction.act(u1, post, PostActionType.types[:spam])
-      PostAction.act(u2, post, PostActionType.types[:off_topic])
+      PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      PostAction.act(walterwhite, post, PostActionType.types[:off_topic])
 
       post.reload
 
@@ -330,29 +329,43 @@ describe PostAction do
     it "can flag the topic instead of a post" do
       post1 = create_post
       post2 = create_post(topic: post1.topic)
-      post_action = PostAction.act(Fabricate(:user), post1, PostActionType.types[:spam], {flag_topic: true})
+      post_action = PostAction.act(Fabricate(:user), post1, PostActionType.types[:spam], { flag_topic: true })
       post_action.targets_topic.should == true
     end
 
     it "will flag the first post if you flag a topic but there is only one post in the topic" do
       post = create_post
-      post_action = PostAction.act(Fabricate(:user), post, PostActionType.types[:spam], {flag_topic: true})
+      post_action = PostAction.act(Fabricate(:user), post, PostActionType.types[:spam], { flag_topic: true })
       post_action.targets_topic.should == false
       post_action.post_id.should == post.id
+    end
+
+    it "will unhide the post when a moderator undos the flag on which s/he took action" do
+      Discourse.stubs(:site_contact_user).returns(admin)
+
+      post = create_post
+      PostAction.act(moderator, post, PostActionType.types[:spam], { take_action: true })
+
+      post.reload
+      post.hidden.should == true
+
+      PostAction.remove_act(moderator, post, PostActionType.types[:spam])
+
+      post.reload
+      post.hidden.should == false
     end
 
   end
 
   it "prevents user to act twice at the same time" do
     post = Fabricate(:post)
-    user = Fabricate(:evil_trout)
 
     # flags are already being tested
     all_types_except_flags = PostActionType.types.except(PostActionType.flag_types)
     all_types_except_flags.values.each do |action|
       lambda do
-        PostAction.act(user, post, action)
-        PostAction.act(user, post, action)
+        PostAction.act(eviltrout, post, action)
+        PostAction.act(eviltrout, post, action)
       end.should raise_error(PostAction::AlreadyActed)
     end
   end
