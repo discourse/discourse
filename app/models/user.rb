@@ -727,11 +727,16 @@ class User < ActiveRecord::Base
                      .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
                      .where("created_at < ?", SiteSetting.purge_inactive_users_grace_period_days.days.ago)
                      .where('us.post_count = 0')
+                     .where('NOT admin AND NOT moderator')
                      .limit(100)
 
     destroyer = UserDestroyer.new(Discourse.system_user)
     to_destroy.each do |u|
-      destroyer.destroy(u)
+      begin
+        destroyer.destroy(u)
+      rescue Discourse::InvalidAccess
+        # if for some reason the user can't be deleted, continue on to the next one
+      end
     end
   end
 
