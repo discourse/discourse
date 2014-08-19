@@ -85,8 +85,6 @@ class ErrorLog
     end
   end
 
-  private
-
   def self.sanitize_backtrace(trace)
     re = Regexp.new(/^#{Regexp.escape(Rails.root.to_s)}/)
     trace.map { |line| Pathname.new(line.gsub(re, "[RAILS_ROOT]")).cleanpath.to_s }
