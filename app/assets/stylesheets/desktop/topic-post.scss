@@ -706,23 +706,18 @@ blockquote > *:last-child {
   float: right;
   color: scale-color($primary, $lightness: 50%);
   a {
-  margin: 0;
+    margin: 0;
   }
-    .back:before,
-    .quote-other-topic:before {
+  .back:before
+  {
     display: inline-block;
     margin-left: 8px;
     color: scale-color($primary, $lightness: 50%);
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
-    }
-    .back:before {
     content: "\f062";
-    }
-    .quote-other-topic:before {
-    content: "\f061";
-    }
+  }
 }
 
 .gutter {
