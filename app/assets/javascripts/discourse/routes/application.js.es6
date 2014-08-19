@@ -5,6 +5,18 @@ var ApplicationRoute = Em.Route.extend({
       this.controllerFor('topic-entrance').send('show', data);
     },
 
+    composePrivateMessage: function(user) {
+      var self = this;
+      this.transitionTo('userActivity', user).then(function () {
+        self.controllerFor('user-activity').send('composePrivateMessage');
+      });
+    },
+
+    expandUser: function(user) {
+      this.controllerFor('poster-expansion').show(user.get('username'), user.get('uploaded_avatar_id'));
+      return true;
+    },
+
     error: function(err, transition) {
       if (err.status === 404) {
         // 404

@@ -111,52 +111,6 @@ Handlebars.registerHelper('shorten-url', function(property, options) {
 });
 
 /**
-  Show an avatar for a user, intelligently making use of available properties
-
-  @method avatar
-  @for Handlebars
-**/
-Handlebars.registerHelper('avatar', function(user, options) {
-  if (typeof user === 'string') {
-    user = Ember.Handlebars.get(this, user, options);
-  }
-
-  if (user) {
-    var username = Em.get(user, 'username');
-    if (!username) username = Em.get(user, options.hash.usernamePath);
-
-    var title;
-    if (!options.hash.ignoreTitle) {
-      // first try to get a title
-      title = Em.get(user, 'title');
-      // if there was no title provided
-      if (!title) {
-        // try to retrieve a description
-        var description = Em.get(user, 'description');
-        // if a description has been provided
-        if (description && description.length > 0) {
-          // preprend the username before the description
-          title = username + " - " + description;
-        }
-      }
-    }
-
-    // this is simply done to ensure we cache images correctly
-    var uploadedAvatarId = Em.get(user, 'uploaded_avatar_id') || Em.get(user, 'user.uploaded_avatar_id');
-    var avatarTemplate = Discourse.User.avatarTemplate(username,uploadedAvatarId);
-
-    return new safe(Discourse.Utilities.avatarImg({
-      size: options.hash.imageSize,
-      extraClasses: Em.get(user, 'extras') || options.hash.extraClasses,
-      title: title || username,
-      avatarTemplate: avatarTemplate
-    }));
-  } else {
-    return '';
-  }
-});
-
-/**
   Bound avatar helper.
 
   @method bound-avatar

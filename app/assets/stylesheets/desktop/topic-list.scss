@@ -376,11 +376,10 @@ and (max-width : 850px) {
     .topic-excerpt {
       padding-right: 20px;
       }
-  th.posters {
-    text-align: center;
-    }
-     .posters {
-
+    th.posters {
+      text-align: center;
+      }
+    .posters {
        min-width: 0;
        width: 50px;
        a:not(.latest) {
