@@ -27,8 +27,6 @@ class Draft < ActiveRecord::Base
     end
   end
 
-  protected
-
   def self.find_draft(user, key)
     if user.is_a?(User)
       find_by(user_id: user.id, draft_key: key)

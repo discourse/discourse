@@ -35,14 +35,13 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     end
   end
 
-  private
-    def self.fake_admin
-      # fake an admin
-      admin = User.new
-      admin.admin = true
-      admin.id = -1
-      admin
-    end
+  def self.fake_admin
+    # fake an admin
+    admin = User.new
+    admin.admin = true
+    admin.id = -1
+    admin
+  end
 
 end
 

@@ -26,10 +26,6 @@ class PluginStore
     PluginStoreRow.where(plugin_name: plugin_name, key: key).destroy_all
   end
 
-
-  protected
-
-
   def self.determine_type(value)
     value.is_a?(Hash) || value.is_a?(Array) ? "JSON" : value.class.to_s
   end
