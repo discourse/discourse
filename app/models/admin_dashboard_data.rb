@@ -194,14 +194,13 @@ class AdminDashboardData
       I18n.t(i18n_key)
     end
   end
+
   def self.report_access_password_removal
     $redis.setex access_password_removal_key, 172_800, 'dashboard.access_password_removal'
   end
 
-  private
-
-    def self.access_password_removal_key
-      'dash-data:access_password_removal'
-    end
+  def self.access_password_removal_key
+    'dash-data:access_password_removal'
+  end
 
 end
