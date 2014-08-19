@@ -154,6 +154,7 @@ module Jobs
                 execute(opts)
               rescue => e
                 thread_exception[:ex] = e
+                thread_exception[:other] = { problem_db: db }
               end
             rescue => e
               thread_exception[:ex] = e
