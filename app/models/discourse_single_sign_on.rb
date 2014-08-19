@@ -121,9 +121,32 @@ class DiscourseSingleSignOn < SingleSignOn
       user.name = User.suggest_name(name || username || email)
     end
 
+    if SiteSetting.sso_overrides_avatar && (
+      avatar_force_update == "true" ||
+      avatar_force_update.to_i != 0 ||
+      sso_record.external_avatar_url != avatar_url)
+      begin
+        tempfile = FileHelper.download(avatar_url, 1.megabyte, "sso-avatar")
+
+        upload = Upload.create_for(user.id, tempfile, "external-avatar", File.size(tempfile.path), { origin: avatar_url })
+
+        user.uploaded_avatar_id = upload.id
+
+        if !user.user_avatar.contains_upload?(upload.id)
+          user.user_avatar.custom_upload_id = upload.id
+        end
+      rescue SocketError
+        # skip saving, we are not connected to the net
+        Rails.logger.warn "Failed to download external avatar: #{avatar_url}, socket error - user id #{ user.id }"
+      ensure
+        tempfile.close! if tempfile && tempfile.respond_to?(:close!)
+      end
+    end
+
     # change external attributes for sso record
     sso_record.external_username = username
     sso_record.external_email = email
     sso_record.external_name = name
+    sso_record.external_avatar_url = avatar_url
   end
 end
