@@ -35,6 +35,7 @@
 //= require ./discourse/routes/build-topic-route
 //= require ./discourse/routes/discourse_restricted_user_route
 //= require ./discourse/components/text-field
+//= require ./discourse/helpers/user-avatar
 //= require ./discourse/helpers/cold-age-class
 
 //= require ./discourse/dialects/dialect
