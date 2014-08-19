@@ -431,8 +431,6 @@ class PostAction < ActiveRecord::Base
     PostActionType.types[post_action.post_action_type_id]
   end
 
-  protected
-
   def self.target_moderators
     Group[:moderators].name
   end

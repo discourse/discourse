@@ -80,8 +80,6 @@ class GlobalSetting
       @data.keys
     end
 
-
-    private
     def self.parse(file)
       provider = self.new(file)
       provider.read
