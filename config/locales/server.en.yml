@@ -1275,7 +1275,7 @@ en:
 
             <img src="http://www.discourse.org/images/welcome/progress-bar.png" width="190" height="52">
 
-        - The topic title will always take you to your last read post. Use times as entry shortcuts. Enter at the top via the first post date, and the bottom via the last post date.
+        - The topic title will always take you to your next unread post. Use the last activity time to quickly jump to the first or last post in a topic.
 
         ## How do I reply?
 
@@ -1283,7 +1283,7 @@ en:
 
         - To reply to a specific post, use the Reply button <img src="http://www.discourse.org/images/welcome/reply-post.png" width="29" height="25"> on that post.
 
-        - To take the conversation in a different direction, but keep them linked together, use Reply as New Topic <img src="http://www.discourse.org/images/welcome/reply-as-new-topic.png" width="33" height="25">   to the right of the post.
+        - To take the conversation in a different direction, but keep them linked together, use Reply as New Topic <img src="http://www.discourse.org/images/welcome/reply-as-new-topic.png" width="33" height="25"> to the right of the post.
 
         To quote someone in your reply, select the text you wish to quote, then press any Reply button.
 
@@ -1302,6 +1302,8 @@ en:
         To let someone know that you enjoyed their post, use the **like** button at the bottom of the post. If you see a problem with a post, don't hesitate to use the **flag** button and privately let them, or our staff, know about it.
 
         You can also share a link to a post, or bookmark a post for later reference on your user page.
+
+        For [standard Emoji](http://www.emoji-cheat-sheet.com/), just start typing `:` or the traditional smileys `:)` :smile:
 
         ## Who is talking to me?
 
