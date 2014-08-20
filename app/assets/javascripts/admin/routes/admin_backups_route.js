@@ -47,22 +47,14 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       @method startBackup
     **/
     startBackup: function() {
-      var self = this;
-      bootbox.confirm(
-        I18n.t("admin.backups.operations.backup.confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        function(confirmed) {
-          if (confirmed) {
-            Discourse.User.currentProp("hideReadOnlyAlert", true);
-            Discourse.Backup.start().then(function() {
-              self.controllerFor("adminBackupsLogs").clear();
-              self.modelFor("adminBackups").set("isOperationRunning", true);
-              self.transitionTo("admin.backups.logs");
-            });
-          }
-        }
-      );
+      Discourse.Route.showModal(this, 'admin_start_backup');
+      this.controllerFor('modal').set('modalClass', 'start-backup-modal');
+    },
+
+    backupStarted: function () {
+      this.modelFor("adminBackups").set("isOperationRunning", true);
+      this.transitionTo("admin.backups.logs");
+      this.send("closeModal");
     },
 
     /**
