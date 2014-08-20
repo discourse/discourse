@@ -1029,8 +1029,8 @@ en:
   frequent_poster: "Frequent Poster"
 
   redirected_to_top_reasons:
-    new_user: "Welcome to our community! Here are our most popular recent topics."
-    not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
+    new_user: "Welcome to our community! These are the most popular recent topics."
+    not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
 
   move_posts:
     new_topic_moderator_post:
