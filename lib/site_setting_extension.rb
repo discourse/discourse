@@ -131,7 +131,7 @@ module SiteSettingExtension
         opts = {
           setting: s,
           description: description(s),
-          default: v,
+          default: v.to_s,
           type: type.to_s,
           value: value.to_s,
           category: categories[s]
@@ -328,6 +328,8 @@ module SiteSettingExtension
 
   def convert(value, type)
     case type
+    when types[:float]
+      value.to_f
     when types[:fixnum]
       value.to_i
     when types[:string], types[:list], types[:enum]

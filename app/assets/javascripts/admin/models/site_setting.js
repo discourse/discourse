@@ -47,20 +47,15 @@ Discourse.SiteSetting = Discourse.Model.extend({
     return this.get('originalValue') !== this.get('value');
   }.property('originalValue', 'value'),
 
-  /**
-    Has the setting been overridden from its default value?
-
-    @property overridden
-  **/
   overridden: function() {
-    var val = this.get('value');
-    var defaultVal = this.get('default');
+    var val = this.get('value'),
+        defaultVal = this.get('default');
 
     if (val === null) val = '';
     if (defaultVal === null) defaultVal = '';
 
     return val.toString() !== defaultVal.toString();
-  }.property('value'),
+  }.property('value', 'default'),
 
   /**
     Reset the setting to its original value.
