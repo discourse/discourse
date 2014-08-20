@@ -173,6 +173,36 @@ describe PostMover do
 
       end
 
+      context "to an existing topic with a deleted post" do
+
+        let!(:destination_topic) { Fabricate(:topic, user: user ) }
+        let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
+        let!(:destination_deleted_reply) { Fabricate(:post, topic: destination_topic, user: another_user) }
+        let(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id)}
+
+        it "works correctly" do
+          destination_deleted_reply.trash!
+
+          moved_to.should == destination_topic
+
+          # Check out new topic
+          moved_to.reload
+          moved_to.posts_count.should == 3
+          moved_to.highest_post_number.should == 4
+
+          # Posts should be re-ordered
+          p2.reload
+          p2.sort_order.should == 3
+          p2.post_number.should == 3
+          p2.topic_id.should == moved_to.id
+
+          p4.reload
+          p4.post_number.should == 4
+          p4.sort_order.should == 4
+          p4.topic_id.should == moved_to.id
+        end
+      end
+
 
     end
   end
