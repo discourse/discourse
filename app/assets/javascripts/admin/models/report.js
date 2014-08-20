@@ -5,7 +5,7 @@ Discourse.Report = Discourse.Model.extend({
 
   valueAt: function(numDaysAgo) {
     if (this.data) {
-      var wantedDate = moment().subtract('days', numDaysAgo).format('YYYY-MM-DD');
+      var wantedDate = moment().subtract(numDaysAgo, 'days').format('YYYY-MM-DD');
       var item = this.data.find( function(d) { return d.x === wantedDate; } );
       if (item) {
         return item.y;
@@ -16,8 +16,8 @@ Discourse.Report = Discourse.Model.extend({
 
   sumDays: function(startDaysAgo, endDaysAgo) {
     if (this.data) {
-      var earliestDate = moment().subtract('days', endDaysAgo).startOf('day');
-      var latestDate = moment().subtract('days',startDaysAgo).startOf('day');
+      var earliestDate = moment().subtract(endDaysAgo, 'days').startOf('day');
+      var latestDate = moment().subtract(startDaysAgo, 'days').startOf('day');
       var d, sum = 0;
       _.each(this.data,function(datum){
         d = moment(datum.x);

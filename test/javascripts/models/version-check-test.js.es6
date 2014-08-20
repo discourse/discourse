@@ -5,14 +5,14 @@ test('dataIsOld', function() {
     equal(Discourse.VersionCheck.create(args).get('dataIsOld'), expected, message);
   };
 
-  dataIsOld({updated_at: moment().subtract('hours', 2).toJSON()},  false, '2 hours ago');
-  dataIsOld({updated_at: moment().subtract('hours', 49).toJSON()}, true,  '49 hours ago');
-  dataIsOld({updated_at: moment().subtract('hours', 2).toJSON(), version_check_pending: true},  true, 'version check pending');
+  dataIsOld({updated_at: moment().subtract(2, 'hours').toJSON()},  false, '2 hours ago');
+  dataIsOld({updated_at: moment().subtract(49, 'hours').toJSON()}, true,  '49 hours ago');
+  dataIsOld({updated_at: moment().subtract(2, 'hours').toJSON(), version_check_pending: true},  true, 'version check pending');
 });
 
 test('staleData', function() {
   var updatedAt = function(hoursAgo) {
-    return moment().subtract('hours', hoursAgo).toJSON();
+    return moment().subtract(hoursAgo, 'hours').toJSON();
   };
   var staleData = function(args, expected, message) {
     equal(Discourse.VersionCheck.create(args).get('staleData'), expected, message);
