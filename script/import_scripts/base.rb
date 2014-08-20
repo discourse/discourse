@@ -67,6 +67,7 @@ class ImportScripts::Base
     SiteSetting.min_private_message_post_length = 1
     SiteSetting.min_private_message_title_length = 1
     SiteSetting.allow_duplicate_topic_titles = true
+    SiteSetting.default_digest_email_frequency = ''
 
     RateLimiter.disable
 
