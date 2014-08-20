@@ -1226,7 +1226,6 @@ en:
       save: 'Save Category'
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
-      more_posts: "view all {{posts}}..."
       name: "Category Name"
       description: "Description"
       topic: "category topic"
