@@ -28,6 +28,8 @@ module Onebox
         end
 
         nil
+      rescue
+        return nil
       end
 
       def placeholder_html
@@ -70,6 +72,7 @@ module Onebox
         elsif params['t']
           start = params['t']
         elsif uri.fragment && uri.fragment.start_with?('t=')
+          # referencing uri is safe here because any throws were already caught by video_id returning nil
           # remove the t= from the start
           start = uri.fragment[2..-1]
         end
@@ -99,11 +102,11 @@ module Onebox
 
           (h * 60 * 60) + (m * 60) + s
         else
-          puts 'warning - nil from parse_timestring'
           nil
         end
       end
 
+      # Note: May throw! Make sure to recue.
       def uri
         @_uri ||= URI(@url)
       end
@@ -123,6 +126,8 @@ module Onebox
                        end
                        params
         end
+      rescue
+        return {}
       end
 
     end
