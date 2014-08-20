@@ -53,7 +53,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
             data << line.strip
           end
           # PERF: don't parse useless tables
-          next if ["activities", "user_meta"].include? table
+          next if ["user_meta"].include? table
           # parse the data
           puts "parsing #{table}..."
           parsed_data = CSV.parse(data.join("\n"), headers: true, header_converters: :symbol).map { |row| row.to_hash }
@@ -73,18 +73,25 @@ class ImportScripts::Vanilla < ImportScripts::Base
     end
 
     def import_users
+      puts "", "importing users..."
+
       admin_role_id = @roles.select { |r| r[:name] == "Administrator" }.first[:role_id]
       moderator_role_id = @roles.select { |r| r[:name] == "Moderator" }.first[:role_id]
 
+      activities = @activities.reject { |a| a[:activity_user_id] != a[:regarding_user_id] }
+
       create_users(@users) do |user|
         next if user[:name] == "[Deleted User]"
+
+        last_activity = activities.select { |a| user[:user_id] == a[:activity_user_id] }.last
+        bio_raw = last_activity.try(:[], :story) || user[:discovery_text] || ""
 
         u = {
           id: user[:user_id],
           email: user[:email],
           name: user[:name],
           created_at: parse_date(user[:date_inserted]),
-          bio_raw: clean_up(user[:discovery_text]),
+          bio_raw: clean_up(bio_raw),
           avatar_url: user[:photo],
           moderator: @user_roles.select { |ur| ur[:user_id] == user[:user_id] }.map { |ur| ur[:role_id] }.include?(moderator_role_id),
           admin: @user_roles.select { |ur| ur[:user_id] == user[:user_id] }.map { |ur| ur[:role_id] }.include?(admin_role_id),
@@ -99,6 +106,8 @@ class ImportScripts::Vanilla < ImportScripts::Base
     end
 
     def import_categories
+      puts "", "importing categories..."
+
       # save some information about the root category
       @root_category = @categories.select { |c| c[:category_id] == "-1" }.first
       @root_category_created_at = parse_date(@root_category[:date_inserted])
@@ -229,12 +238,15 @@ class ImportScripts::Vanilla < ImportScripts::Base
     end
 
     def clean_up(raw)
-      (raw || "").gsub("\\n", "\n")
-                 .gsub(/<\/?pre\s*>/i, "\n```\n")
-                 .gsub(/<\/?code\s*>/i, "`")
-                 .gsub("&lt;", "<")
-                 .gsub("&gt;", ">")
-                 # .gsub("*", "\\*")
+      return "" if raw.blank?
+      raw.gsub("\\n", "\n")
+         .gsub(/<\/?pre\s*>/i, "\n```\n")
+         .gsub(/<\/?code\s*>/i, "`")
+         .gsub("&lt;", "<")
+         .gsub("&gt;", ">")
+         # .gsub(/`([^`]+)`/im) { "`" + $1.gsub("*", "\u2603") + "`" }
+         # .gsub("*", "\*")
+         # .gsub("\u2603", "*")
     end
 
 end
