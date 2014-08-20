@@ -19,6 +19,7 @@
 //= require ./discourse/models/user_action
 //= require ./discourse/models/composer
 //= require ./discourse/models/topic
+//= require ./discourse/models/top-period
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/object
@@ -34,6 +35,7 @@
 //= require ./discourse/routes/discourse_route
 //= require ./discourse/routes/build-topic-route
 //= require ./discourse/routes/discourse_restricted_user_route
+//= require ./discourse/components/top-title
 //= require ./discourse/components/text-field
 //= require ./discourse/helpers/user-avatar
 //= require ./discourse/helpers/cold-age-class

@@ -2,44 +2,22 @@
   {{#if currentUser.redirected_to_top_reason}}
     <div class="alert alert-info">{{currentUser.redirected_to_top_reason}}</div>
   {{/if}}
-  {{#if content.yearly}}
+
+  {{#if topicList}}
     <div class="clearfix">
-      <h2><i class="fa fa-calendar-o"></i> {{i18n filters.top.this_year}}</h2>
-      {{basic-topic-list topicList=content.yearly hideCategory=hideCategory postsAction="showTopicEntrance"}}
-      {{#if content.yearly.topics.length}}<a href="{{unbound showMoreYearlyUrl}}" class='btn btn-default pull-right'>{{i18n show_more}}</a>{{/if}}
+      {{top-period-chooser period=period}}
+      {{basic-topic-list topicList=topicList hideCategory=hideCategory postsAction="showTopicEntrance"}}
+      {{#if topicList.topics.length}}<a href="{{unbound period.showMoreUrl}}" class='btn btn-default pull-right'>{{i18n show_more}}</a>{{/if}}
     </div>
   {{/if}}
-  {{#if content.monthly}}
-    <div class="clearfix">
-      <h2><i class="fa fa-calendar-o"></i> {{i18n filters.top.this_month}}</h2>
-      {{basic-topic-list topicList=content.monthly hideCategory=hideCategory postsAction="showTopicEntrance"}}
-      {{#if content.monthly.topics.length}}<a href="{{unbound showMoreMonthlyUrl}}" class='btn btn-default pull-right'>{{i18n show_more}}</a>{{/if}}
-    </div>
-  {{/if}}
-  {{#if content.weekly}}
-    <div class="clearfix">
-      <h2><i class="fa fa-calendar-o"></i> {{i18n filters.top.this_week}}</h2>
-      {{basic-topic-list topicList=content.weekly hideCategory=hideCategory postsAction="showTopicEntrance"}}
-      {{#if content.weekly.topics.length}}<a href="{{unbound showMoreWeeklyUrl}}" class='btn btn-default pull-right'>{{i18n show_more}}</a>{{/if}}
-    </div>
-  {{/if}}
-  {{#if content.daily}}
-    <div class="clearfix">
-      <h2><i class="fa fa-calendar-o"></i> {{i18n filters.top.today}}</h2>
-      {{basic-topic-list topicList=content.daily hideCategory=hideCategory postsAction="showTopicEntrance"}}
-      {{#if content.daily.topics.length}}<a href="{{unbound showMoreDailyUrl}}" class='btn btn-default pull-right'>{{i18n show_more}}</a>{{/if}}
-    </div>
-  {{/if}}
+
   <footer class="topic-list-bottom">
     <h3>
     {{#if hasDisplayedAllTopLists}}
       {{#link-to "discovery.categories"}}{{i18n topic.browse_all_categories}}{{/link-to}} {{i18n or}} {{#link-to 'discovery.latest'}}{{i18n topic.view_latest_topics}}{{/link-to}}.
     {{else}}
       {{#link-to "discovery.categories"}}{{i18n topic.browse_all_categories}}{{/link-to}}, {{#link-to 'discovery.latest'}}{{i18n topic.view_latest_topics}}{{/link-to}} {{i18n or}} {{i18n filters.top.other_periods}}
-      {{#unless content.yearly}}<a href="{{unbound showMoreYearlyUrl}}" class='btn btn-default'><i class="fa fa-calendar-o"></i>{{i18n filters.top.this_year}}</a>{{/unless}}
-      {{#unless content.monthly}}<a href="{{unbound showMoreMonthlyUrl}}" class='btn btn-default'><i class="fa fa-calendar-o"></i>{{i18n filters.top.this_month}}</a>{{/unless}}
-      {{#unless content.weekly}}<a href="{{unbound showMoreWeeklyUrl}}" class='btn btn-default'><i class="fa fa-calendar-o"></i>{{i18n filters.top.this_week}}</a>{{/unless}}
-      {{#unless content.daily}}<a href="{{unbound showMoreDailyUrl}}" class='btn btn-default'><i class="fa fa-calendar-o"></i>{{i18n filters.top.today}}</a>{{/unless}}
+      {{top-period-buttons period=period}}
     {{/if}}
     </h3>
   </footer>

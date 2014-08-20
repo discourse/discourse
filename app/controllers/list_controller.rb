@@ -317,11 +317,7 @@ class ListController < ApplicationController
     options[:per_page] = SiteSetting.topics_per_period_in_top_summary
     topic_query = TopicQuery.new(current_user, options)
 
-    if current_user.present?
-      periods = [ListController.best_period_for(current_user.previous_visit_at, options[:category])]
-    else
-      periods = TopTopic.periods
-    end
+    periods = [ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])]
 
     periods.each { |period| top.send("#{period}=", topic_query.list_top_for(period)) }
 
