@@ -27,7 +27,6 @@ describe TopicPostersSummary do
 
       summary.first.tap do |topic_poster|
         expect(topic_poster.user).to eq topic_creator
-        expect(topic_poster.extras).to eq 'latest'
         expect(topic_poster.description).to eq(
           "#{I18n.t(:original_poster)}, #{I18n.t(:most_recent_poster)}"
         )
@@ -65,6 +64,8 @@ describe TopicPostersSummary do
           featured_user1, featured_user2, featured_user3,
           last_poster
         ])
+        # If more than one user, attach the latest class
+        expect(summary.last.extras).to eq 'latest'
       end
     end
   end
