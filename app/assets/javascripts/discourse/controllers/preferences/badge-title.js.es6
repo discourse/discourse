@@ -19,9 +19,8 @@ export default Ember.ArrayController.extend({
   }.property('saving'),
 
   selectableUserBadges: function() {
-    var items = new Array();
-    this.get('model').filterBy('badge.allow_title', true).forEach(function(item, index, arr) {
-        if(!items.findBy('badge.name', item.badge.name)) items.push(item); });
+    var items = this.get('model').filterBy('badge.allow_title', true);
+    items = _.uniq(items, true, function(e) { return e.get('badge.name'); });
     items.unshiftObject(Em.Object.create({
           badge: Discourse.Badge.create({name: I18n.t('badges.no_title')})
     }));
