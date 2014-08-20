@@ -88,6 +88,7 @@ describe JsLocaleHelper do
     it "generates valid date helpers for #{locale[:value]} locale" do
       js = JsLocaleHelper.output_locale(locale[:value])
       ctx = V8::Context.new
+      ctx.eval('var window = this;')
       ctx.load(Rails.root + 'app/assets/javascripts/locales/i18n.js')
       ctx.eval(js)
     end
