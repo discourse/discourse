@@ -188,25 +188,25 @@ class PostAction < ActiveRecord::Base
     else
       opts[:subtype] = TopicSubtype.notify_user
       opts[:target_usernames] = if post_action_type == :notify_user
-        post.user.username
-      elsif post_action_type != :notify_moderators
-        # this is a hack to allow a PM with no reciepients, we should think through
-        # a cleaner technique, a PM with myself is valid for flagging
-        'x'
-      end
+                                  post.user.username
+                                elsif post_action_type != :notify_moderators
+                                  # this is a hack to allow a PM with no recipients, we should think through
+                                  # a cleaner technique, a PM with myself is valid for flagging
+                                  'x'
+                                end
     end
 
     PostCreator.new(user, opts).create.id
   end
 
-  def self.act(user, post, post_action_type_id, opts={})
+  def self.act(user, post, post_action_type_id, opts = {})
     related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)
     staff_took_action = opts[:take_action] || false
 
     targets_topic = if opts[:flag_topic] && post.topic
-      post.topic.reload
-      post.topic.posts_count != 1
-    end
+                      post.topic.reload
+                      post.topic.posts_count != 1
+                    end
 
     where_attrs = {
       post_id: post.id,
