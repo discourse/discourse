@@ -65,6 +65,7 @@ class Backup
   end
 
   def self.remove_old
+    return if Rails.env.development?
     all_backups = Backup.all
     return unless all_backups.size > SiteSetting.maximum_backups
     all_backups[SiteSetting.maximum_backups..-1].each(&:remove)
