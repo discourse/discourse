@@ -84,7 +84,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
         next if user[:name] == "[Deleted User]"
 
         last_activity = activities.select { |a| user[:user_id] == a[:activity_user_id] }.last
-        bio_raw = last_activity.try(:[], :story) || user[:discovery_text] || ""
+        bio_raw = last_activity.try(:[], :story) || ""
 
         u = {
           id: user[:user_id],
