@@ -4,7 +4,7 @@ function reportWithData(data) {
   return Discourse.Report.create({
     type: 'topics',
     data: _.map(data, function(val, index) {
-      return {x: moment().subtract("days", index).format('YYYY-MM-DD'), y: val};
+      return { x: moment().subtract(index, "days").format('YYYY-MM-DD'), y: val };
     })
   });
 }

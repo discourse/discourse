@@ -29,7 +29,7 @@ var formatDays = function(days) {
 };
 
 var shortDate = function(days){
-  return moment().subtract('days', days).format('D MMM');
+  return moment().subtract(days, 'days').format('D MMM');
 };
 
 test("formating medium length dates", function() {
@@ -40,7 +40,7 @@ test("formating medium length dates", function() {
   };
 
   var shortDateYear = function(days){
-    return moment().subtract('days', days).format('D MMM YYYY');
+    return moment().subtract(days, 'days').format('D MMM YYYY');
   };
 
   leaveAgo = true;
@@ -81,7 +81,7 @@ test("formating medium length dates", function() {
 
 test("formating tiny dates", function() {
   var shortDateYear = function(days){
-    return moment().subtract('days', days).format("MMM 'YY");
+    return moment().subtract(days, 'days').format("MMM 'YY");
   };
 
   format = "tiny";
@@ -144,7 +144,7 @@ test("formating tiny dates", function() {
 module("Discourse.Formatter");
 
 test("autoUpdatingRelativeAge", function() {
-  var d = moment().subtract('days',1).toDate();
+  var d = moment().subtract(1, 'day').toDate();
 
   var $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d));
   equal($elem.data('format'), "tiny");
