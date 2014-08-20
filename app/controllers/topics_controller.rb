@@ -79,7 +79,7 @@ class TopicsController < ApplicationController
     params.permit(:min_trust_level, :min_score, :min_replies, :bypass_trust_level_score, :only_moderator_liked)
 
     opts = { best: params[:best].to_i,
-      min_trust_level: params[:min_trust_level] ? 1 : params[:min_trust_level].to_i,
+      min_trust_level: params[:min_trust_level] ? params[:min_trust_level].to_i : 1,
       min_score: params[:min_score].to_i,
       min_replies: params[:min_replies].to_i,
       bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
