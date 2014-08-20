@@ -446,7 +446,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
         p = {
           id: post[:postid],
-          user_id: user_id_from_imported_user_id(post[:postuserid]) || Discourse::SYSTEM_USER_ID,
+          user_id: user_id_from_imported_user_id(post[:userid]) || Discourse::SYSTEM_USER_ID,
           topic_id: t[:topic_id],
           raw: post[:raw],
           created_at: Time.at(post[:dateline].to_i),
