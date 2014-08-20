@@ -144,6 +144,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     },
 
     editPost: function(post) {
+      if (!Discourse.User.current()) {
+        return bootbox.alert(I18n.t('post.controls.edit_anonymous'));
+      }
+
       this.get('controllers.composer').open({
         post: post,
         action: Discourse.Composer.EDIT,
