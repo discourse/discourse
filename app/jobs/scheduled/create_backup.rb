@@ -7,7 +7,7 @@ module Jobs
 
     def execute(args)
       return unless SiteSetting.backup_daily?
-      BackupRestore.backup!(Discourse.system_user.id, false)
+      BackupRestore.backup!(Discourse.system_user.id, publish_to_message_bus: false)
     end
   end
 end

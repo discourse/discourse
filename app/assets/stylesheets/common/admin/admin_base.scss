@@ -1164,6 +1164,15 @@ button.ru {
   }
 }
 
+.start-backup-modal {
+  .btn {
+    margin: 10px 0 10px 5px;
+  }
+  .btn:first-of-type {
+    margin-left: 10px;
+  }
+}
+
 @media all
 and (max-width : 850px) {
   .nav-stacked {
