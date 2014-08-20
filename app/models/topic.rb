@@ -575,7 +575,7 @@ class Topic < ActiveRecord::Base
   end
 
   def max_post_number
-    posts.maximum(:post_number).to_i
+    posts.with_deleted.maximum(:post_number).to_i
   end
 
   def move_posts(moved_by, post_ids, opts)
