@@ -40,8 +40,8 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    clickedActivity: function(data) {
-      this.sendAction('activityAction', data);
+    clickedPosts: function(data) {
+      this.sendAction('postsAction', data);
     }
   }
 

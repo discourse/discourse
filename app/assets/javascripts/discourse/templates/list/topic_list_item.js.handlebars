@@ -42,7 +42,7 @@
 
 {{view 'posters-column' posters=posters}}
 
-{{posts-count-column topic=model class="num"}}
+{{posts-count-column topic=model class="num" action="showTopicEntrance"}}
 <td {{bind-attr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
 
-{{activity-column topic=model class="num" action="showTopicEntrance"}}
+{{activity-column topic=model class="num"}}
