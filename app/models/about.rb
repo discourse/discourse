@@ -21,7 +21,7 @@ class About
   end
 
   def moderators
-    @moderators ||= User.where(moderator: true)
+    @moderators ||= User.where(moderator: true, admin: false)
                         .where.not(id: Discourse::SYSTEM_USER_ID)
   end
 
