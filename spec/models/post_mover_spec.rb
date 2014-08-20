@@ -8,9 +8,9 @@ describe PostMover do
     let(:category) { Fabricate(:category, user: user) }
     let!(:topic) { Fabricate(:topic, user: user) }
     let!(:p1) { Fabricate(:post, topic: topic, user: user) }
-    let!(:p2) { Fabricate(:post, topic: topic, user: another_user, raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.")}
-    let!(:p3) { Fabricate(:post, topic: topic, user: user)}
-    let!(:p4) { Fabricate(:post, topic: topic, user: user)}
+    let!(:p2) { Fabricate(:post, topic: topic, user: another_user, raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.", reply_to_post_number: p1.post_number)}
+    let!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user)}
+    let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user)}
 
     before do
       # add a like to a post, enable observers so we get user actions
@@ -120,11 +120,15 @@ describe PostMover do
           p2.sort_order.should == 2
           p2.post_number.should == 2
           p2.topic_id.should == moved_to.id
+          p2.reply_count.should == 1
+          p2.reply_to_post_number.should be_nil
 
           p4.reload
           p4.post_number.should == 3
           p4.sort_order.should == 3
           p4.topic_id.should == moved_to.id
+          p4.reply_count.should == 0
+          p4.reply_to_post_number.should == 2
 
           # Check out the original topic
           topic.reload
@@ -159,12 +163,19 @@ describe PostMover do
           p1.sort_order.should == 1
           p1.post_number.should == 1
           p1.topic_id == topic.id
+          p1.reply_count.should == 0
+
+          # New first post
+          new_first = new_topic.posts.where(post_number: 1).first
+          new_first.reply_count.should == 1
 
           # Second post is in a new topic
           p2.reload
           p2.post_number.should == 2
           p2.sort_order.should == 2
           p2.topic_id == new_topic.id
+          p2.reply_to_post_number.should == 1
+          p2.reply_count.should == 0
 
           topic.reload
           topic.posts.by_post_number.should =~ [p1, p3, p4]
@@ -195,11 +206,14 @@ describe PostMover do
           p2.sort_order.should == 3
           p2.post_number.should == 3
           p2.topic_id.should == moved_to.id
+          p2.reply_count.should == 1
+          p2.reply_to_post_number.should be_nil
 
           p4.reload
           p4.post_number.should == 4
           p4.sort_order.should == 4
           p4.topic_id.should == moved_to.id
+          p4.reply_to_post_number.should == p2.post_number
         end
       end
 
