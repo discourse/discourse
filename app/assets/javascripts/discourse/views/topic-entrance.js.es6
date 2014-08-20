@@ -1,3 +1,5 @@
+import CleansUp from 'discourse/mixins/cleans-up';
+
 export default Ember.View.extend({
   elementId: 'topic-entrance',
   classNameBindings: ['visible::hidden'],
@@ -29,27 +31,22 @@ export default Ember.View.extend({
       if (($target.prop('id') === 'topic-entrance') || ($self.has($target).length !== 0)) {
         return;
       }
-      self._cleanUp();
+      self.cleanUp();
     });
   }.observes('controller.position'),
 
   _removed: function() {
     $('html').off('mousedown.topic-entrance');
-    this.appEvents.off('dom:clean', this, '_cleanUp');
   }.on('willDestroyElement'),
 
-  _cleanUp: function() {
+  cleanUp: function() {
     this.set('controller.model', null);
     $('html').off('mousedown.topic-entrance');
   },
 
-  _wireClean: function() {
-    this.appEvents.on('dom:clean', this, '_cleanUp');
-  }.on('didInsertElement'),
-
   keyDown: function(e) {
     if (e.which === 27) {
-      this._cleanUp();
+      this.cleanUp();
     }
   }
 

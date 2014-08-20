@@ -35,7 +35,8 @@ export default function(filter) {
         return 'queryParams.' + v;
       })));
 
-      var period = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
+      var periods = this.controllerFor('discovery').get('periods'),
+          periodId = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
           filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
 
       if (filter === Discourse.Utilities.defaultHomepage()) {
@@ -47,7 +48,7 @@ export default function(filter) {
       this.controllerFor('discovery/topics').setProperties({
         model: model,
         category: null,
-        period: period,
+        period: periods.findBy('id', periodId),
         selected: []
       });
 

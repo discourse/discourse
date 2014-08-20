@@ -1,13 +1,14 @@
+import CleansUp from 'discourse/mixins/cleans-up';
+
 var clickOutsideEventName = "mousedown.outside-poster-expansion";
 
-export default Discourse.View.extend({
+export default Discourse.View.extend(CleansUp, {
   elementId: 'poster-expansion',
   classNameBindings: ['controller.visible::hidden', 'controller.showBadges'],
 
   _setup: function() {
     var self = this;
     this.appEvents.on('poster:expand', this, '_posterExpand');
-    this.appEvents.on('dom:clean', this, '_cleanUp');
 
     $('html').off(clickOutsideEventName).on(clickOutsideEventName, function(e) {
       if (self.get('controller.visible')) {
@@ -43,14 +44,13 @@ export default Discourse.View.extend({
     });
   },
 
-  _cleanUp: function() {
+  cleanUp: function() {
     this.get('controller').close();
   },
 
   _removeEvents: function() {
     $('html').off(clickOutsideEventName);
     this.appEvents.off('poster:expand', this, '_posterExpand');
-    this.appEvents.off('dom:clean', this, '_cleanUp');
   }.on('willDestroyElement')
 
 });

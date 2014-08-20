@@ -3,6 +3,14 @@ import DiscoveryController from 'discourse/controllers/discovery';
 export default DiscoveryController.extend({
   needs: ['discovery'],
 
+  period: function() {
+    return this.get('controllers.discovery.periods').findBy('id', this.get('periodId'));
+  }.property('periodId'),
+
+  topicList: function() {
+    return this.get('model.' + this.get('periodId'));
+  }.property('periodId'),
+
   actions: {
     refresh: function() {
       var self = this;
@@ -16,7 +24,6 @@ export default DiscoveryController.extend({
         self.send('loadingComplete');
       });
     }
-  },
+  }
 
-  hasDisplayedAllTopLists: Em.computed.and('content.yearly', 'content.monthly', 'content.weekly', 'content.daily')
 });
