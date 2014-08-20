@@ -1,5 +1,12 @@
 <header class="row">
-  <div class="col-sm-5">
+  <% if Sidekiq.paused? %>
+    <div class="col-sm-12">
+      <div class="alert alert-danger text-center">
+        <h2>SIDEKIQ IS PAUSED!</h2>
+      </div>
+    </div>
+  <% end %>
+  <div class="col-sm-12">
     <h3>Recurring Jobs</h3>
   </div>
 </header>
