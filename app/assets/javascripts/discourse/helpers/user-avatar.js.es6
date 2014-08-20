@@ -1,10 +1,6 @@
 export function renderAvatar(user, options) {
   options = options || {};
 
-  if (typeof user === 'string') {
-    user = Ember.Handlebars.get(this, user, options);
-  }
-
   if (user) {
     var username = Em.get(user, 'username');
     if (!username) username = Em.get(user, options.usernamePath);
@@ -41,5 +37,8 @@ export function renderAvatar(user, options) {
 }
 
 Handlebars.registerHelper('avatar', function(user, options) {
+  if (typeof user === 'string') {
+    user = Ember.Handlebars.get(this, user, options);
+  }
   return new Handlebars.SafeString(renderAvatar.call(this, user, options.hash));
 });
