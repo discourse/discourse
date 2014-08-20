@@ -1792,6 +1792,8 @@ en:
             label: "New:"
             ip_address: "IP address"
             add: "Add"
+        logster:
+          title: "Error Logs"
 
       impersonate:
         title: "Impersonate User"
