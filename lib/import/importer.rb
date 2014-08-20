@@ -93,6 +93,7 @@ module Import
 
     def initialize_state
       @success = false
+      @db_was_changed = false
       @current_db = RailsMultisite::ConnectionManagement.current_db
       @current_version = BackupRestore.current_version
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
@@ -244,6 +245,8 @@ module Import
         "COMMIT;"
       ].join("\n")
 
+      @db_was_changed = true
+
       User.exec_sql(sql)
     end
 
@@ -275,7 +278,7 @@ module Import
 
     def rollback
       log "Trying to rollback..."
-      if BackupRestore.can_rollback?
+      if @db_was_changed && BackupRestore.can_rollback?
         log "Rolling back..."
         BackupRestore.move_tables_between_schemas("backup", "public")
       else
