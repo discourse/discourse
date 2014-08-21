@@ -575,8 +575,6 @@ cs:
   most_posts: "Více příspěvků"
   most_recent_poster: "Poslední zasilatel"
   frequent_poster: "Častý zasilatel"
-  redirected_to_top_reasons:
-    not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
   move_posts:
     new_topic_moderator_post:
       one: "Přesunul jsem příspěvek do nového tématu: %{topic_link}"

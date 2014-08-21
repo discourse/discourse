@@ -194,6 +194,7 @@ de:
   vip_category_name: "Lounge"
   vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit einer Vertrauensstufe Level 3 oder höher."
   meta_category_name: "Meta"
+  meta_category_description: "Diskussion über dieses Forum, die Organisation, wie es funktioniert und wie wir es verbessern können."
   staff_category_name: "Mitarbeiter"
   staff_category_description: "Geschützte Kategorie für Mitarbeiter. Themen sind nur für Administratoren und Moderatoren sichtbar."
   lounge_welcome:
@@ -249,6 +250,7 @@ de:
       title: "Ältester"
     change_failed_explanation: "Du wolltest %{user_name} auf '%{new_trust_level}' zurückstufen. Jedoch ist seine Vertrauensstufe bereits '%{current_trust_level}'. %{user_name} verbleibt auf '%{current_trust_level}'"
   rate_limiter:
+    slow_down: "Du hast diese Aktion zu oft durchgeführt. Versuch es später wieder. "
     too_many_requests: "Diese Aktion kann nur ein begrenztes Mal pro Tag durchgeführt werden. Bitte warte %{time_left} bis zum nächsten Versuch."
     hours:
       one: "eine Stunde"
@@ -405,6 +407,7 @@ de:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Dein Beitrag wurde von der Community als Verstoß gemeldet. Bitte beachte <a href="/my/private-messages">deine privaten Nachrichten</a>.</p>'
+    user_must_edit: '<p>Dieser Beitrag wurde von der Community gemeldet und ist vorübergehend ausgeblendet.</p>'
   archetypes:
     regular:
       title: "Normales Thema"
@@ -534,6 +537,9 @@ de:
     education_new_topic:
       title: "Hilfe: Erste Themen"
       description: "Die Hilfe wird automatisch überhalb des Editors eingeblendet, wenn neue Benutzer ihre ersten zwei Themen veröffentlichen."
+    usage_tips:
+      title: "Leitfaden für neue Benutzer"
+      description: "Leitfaden und wichtige Informationen für neue Benutzer"
     welcome_user:
       title: "Willkommen: Neuer Benutzer"
       description: "Eine private Nachricht welche automatisch an alle Benutzer gesendet wird welche sich anmelden."
@@ -666,6 +672,7 @@ de:
     allow_index_in_robots_txt: "Suchmaschinen mittels der robots.txt Datei erlauben, die Seite zu indizieren."
     email_domains_blacklist: "Eine Liste von E-Mail-Domains, die bei der Registrierung neuer Konten nicht erlaubt sind. Beispiel: mailinator.com trashmail.net"
     email_domains_whitelist: "Eine Liste von E-Mail-Domains, mit denen neue Konten registriert werden dürfen. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains können sich dann nicht mehr registrieren!"
+    version_checks: "Kontaktiere den Discourse Hub zur Überprüfung auf neue Versionen und zeige Benachrichtigungen über neue Versionen auf der Administratorkonsole an."
     new_version_emails: "Sende eine E-Mail an contact_email Adresse wenn eine neue Version von Discourse verfügbar ist."
     port: "NUR FÜR ENTWICKLER! ACHTUNG! Benutze diesen HTTP-Port anstatt den Standardport 80. Diese Feld leer lassen heißt 'keinen'. Dient hauptsächlich Entwicklungszwecken."
     force_hostname: "NUR FÜR ENTWICKLER! ACHTUNG! Spezifiziere einen Hostnamen in der URL. Dieses Feld leer lassen heißt 'keinen'. Dient hauptsächlich Entwicklungszwecken."
@@ -722,7 +729,9 @@ de:
     clean_up_uploads: "Lösche verwaiste Uploads, um illegales Hosting zu vermeiden. ACHTUNG: Du solltest ein Backup deines /uploads Verzeichnisses erstellen, bevor Du diese Funktion aktivierst."
     clean_orphan_uploads_grace_period_hours: "Frist (in Stunden) bevor ein verwaister Upload entfernt wird."
     purge_deleted_uploads_grace_period_days: "Frist (in Tagen) bevor ein entfernter Upload endgültig gelöscht wird."
+    purge_inactive_users_grace_period_days: "Schonfrist (in Tagen) bevor ein inaktiver Benutzer gelöscht wird."
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3."
+    s3_use_iam_profile: 'Benutze die AWS EC2 IAM Rolle zum Abrufen von Keys. ANMERKUNG: Das Aktivieren überschreibt die Einstellungen „s3 access key id“ und „s3 secret access key“.'
     s3_upload_bucket: "Der Amazon S3 Bucketname in den hochgeladene Dateien abgelegt werden. WARNUNG: Nur Kleinbuchstaben, keine Punkte."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
     s3_secret_access_key: "Der geheime Schlüssel von Amazon S3 welcher für das Hochladen verwendet wird"
@@ -773,9 +782,6 @@ de:
     authorized_extensions: "Liste von erlaubten Dateiendungen für hochgeladene Dateien ('*' um alle Dateiendungen zu erlauben)"
     max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird an Hand des Titels und Inhalts bestimmt."
     title_prettify: "Verhindert gängige Fehler im Titel, wie reine Grossschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende, etc."
-    topic_views_heat_low: "Themen leicht hervorheben, die so oft gelesen wurden."
-    topic_views_heat_medium: "Themen moderat hervorheben, die so oft gelesen wurden."
-    topic_views_heat_high: "Themen stark hervorheben, die so oft gelesen wurden."
     faq_url: "URL zu einer externen FAQ welche Du gerne verwenden möchtest."
     tos_url: "Die vollständige URL zu Deinen extern gehosteten Nutzungsbedingungen, sofern vorhanden."
     privacy_policy_url: "Die vollständige URL zu Deinen extern gehosteten Datenschutzrichtlinien, sofern vorhanden."
@@ -802,6 +808,7 @@ de:
     delete_all_posts_max: "Die maximale Anzahl von Beiträgen welche auf einmal gelöscht werden kann. Hat ein Benutzer mehr Beiträge, so können die Beiträge nicht auf einmal und der Benutzer nicht gelöscht werden."
     username_change_period: "Die Anzahl der Tage, die neu registrierte Benutzer Zeit haben, um ihren Benutzernamen zu ändern (0 verbietet Änderungen)."
     email_editable: "Erlaube Benutzern ihre E-Mail-Adresse nach der Registrierung zu ändern."
+    logout_redirect: "Ziel für Weiterleitung nach einem Logout (z. B.: http://somesite.com/logout)"
     allow_uploaded_avatars: "Erlaube das Hochladen benutzerdefinierter Avatare."
     allow_animated_avatars: "Erlaube den Benutzern animierte GIFs als Avatar zu benutzen. ACHTUNG: Wenn Du diese Einstellung änderst, solltest Du den Rake-Task avatars:refresh ausführen."
     automatically_download_gravatars: "Avatare von Gravatar herunterladen, wenn ein Nutzer sich registriert oder seine E-Mail-Adresse ändert."
@@ -876,9 +883,6 @@ de:
   most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
   frequent_poster: "Autor regelmäßiger Beiträge"
-  redirected_to_top_reasons:
-    new_user: "Willkommen in unserem Forum! Dies sind unsere beliebtesten aktuellen Themen."
-    not_seen_in_a_month: "Willkommen zurück! Wir haben Dich länger nicht gesehen. Dies sind die während Deiner Abwesenheit aktivsten Unterhaltungen."
   move_posts:
     new_topic_moderator_post:
       one: "Ich habe einen Beitrag in ein neues Thema verschoben: %{topic_link}"
@@ -1041,73 +1045,6 @@ de:
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
-    usage_tips:
-      text_body_template: |
-        Diese private Nachricht enthält ein paar Tipps für einen reibungslosen Start:
-
-        ## Immer weiterscrollen
-
-        Es gibt keinen "Nächste Seite"-Knopf und keine Seitennummern – um weiterzulesen, **scrolle einfach weiter nach unten!**
-
-        Neue Antworten erscheinen automatisch unten auf der Seite.
-
-        ## Wie finde ich mich zurecht?
-
-        - Die Suchfunktion, das Menü und deine persönliche Übersichtsseite erreichst du mit Hilfe der **Icons oben rechts in der Kopfzeile**.
-
-        - Um beim Lesen eines Themas zurück zum Anfang &uarr; zu gelangen, klicke auf den Titel des Themas in der Kopfzeile. Klicke auf die grüne Fortschrittsleiste unten rechts, um durch das Thema zu navigieren, oder verwende die <kbd>Pos1</kbd> oder <kbd>Ende</kbd> Tasten.
-
-            <img src="http://www.discourse.org/images/welcome/progress-bar.png" width="190" height="52">
-
-        - Auf Themenübersichtsseiten bringt dich ein Klick auf den Titel eines Themas zu dem Beitrag, den du zuletzt gelesen hast. Die Zeitangaben kannst du als Abkürzungen verwenden: ein Klick auf das Datum des ersten Beitrags bringt dich zum Anfang des Themas, das Datum des aktuellsten Beitrags zum letzten Beitrag.
-
-        ## Wie kann ich antworten?
-
-        - Um auf das Thema als Ganzes zu antworten, benutze den "Antworten" Knopf <img src="http://www.discourse.org/images/welcome/reply-topic.png" width="29" height="25"> ganz unten auf der Seite.
-
-        - Wenn du dagegen auf einen bestimmten Beitrag antworten möchtest, benutze den "Antworten" Knopf <img src="http://www.discourse.org/images/welcome/reply-post.png" width="29" height="25"> unmittelbar nach diesem Beitrag.
-
-        - Wenn du die Unterhaltung in eine andere Richtung lenken möchtest, das neue Thema aber mit der bisherigen Unterhaltung verlinkt bleiben soll, klicke auf "Mit Themenwechsel antworten" <img src="http://www.discourse.org/images/welcome/reply-as-new-topic.png" width="33" height="25"> rechts neben dem Beitrag.
-
-        Du kannst aus einem fremden Beitrag zitieren, indem du einen Teil des Beitrags auswählst und einen beliebigen "Antworten" Knopf drückst.
-
-        <img src="http://www.discourse.org/images/welcome/quote-reply.png" width="467" height="172">
-
-        (Wenn du den gesamten Beitrag zitieren möchtest, kannst du auch einfach den entsprechenden Knopf in der Toolbar des Editors drücken.)
-
-        Um einen anderen Benutzer namentlich zu erwähnen, gib zunächst ein `@` ein, gefolgt von den ersten Buchstaben des gewünschten Namens, und ein Autovervollständigungs-Popup erscheint.
-
-        <img src="http://www.discourse.org/images/welcome/username-completion.png" width="307" height="174">
-
-        ## Welche Funktionen gibt es sonst?
-
-        <img src="http://www.discourse.org/images/welcome/like-link-flag-bookmark.png" width="225" height="61">
-
-        Wenn dir ein Beitrag gefällt, kannst du dies dem Autor ganz einfach mit einem Klick auf die "Gefällt mir" Schaltfläche mitteilen. Wenn du dagegen der Meinung bist, dass ein Beitrag ein Problem darstellt, dann kannst du mit der "Melden" Funktion diesen Beitrag privat seinem Autor oder direkt den Moderatoren melden.
-
-        Außerdem kannst du einen Link zum Beitrag mit anderen teilen und Lesezeichen setzen, um auf ausgewählte Beiträge später über deine Benutzer-Übersichtsseite zurückkommen zu können.
-
-        ## Wer spricht mit mir?
-
-        Jedes mal, wenn jemand anders auf einen deiner Beiträge antwortet, dich zitiert oder deinen `@Benutzernamen` erwähnt, erscheint eine Benachrichtigung oben rechts auf der Seite in Form einer Zahl über einer Sprechblase. Die Liste hinter diesem Symbol verrät dir, wer mit dir kommunizieren will und im welche Themen es sich jeweils handelt.
-
-        <img src="http://www.discourse.org/images/welcome/notification-panel.png" width="237" height="78">
-
-        Solltest du die Seite gerade nicht geöffnet haben, erhälst du Benachrichtigungen über direkt an dich gerichtete Antworten (und private Nachrichten) per E-Mail.
-
-        ## Welche Themen werden als neu betrachtet?
-
-        Standardmäßig werden all solche Themen als neu betrachtet, die in den letzten zwei Tagen begonnen wurden. Themen, an denen du dich beteiligst, werden zusätzlich automatisch verfolgt.
-
-        Neue Themen und Themen, die du verfolgst, werden mit blauen Markierungen angezeigt:
-
-        <img src="http://www.discourse.org/images/welcome/topics-new-unread.png" width="490" height="119">
-
-        Mit dem entsprechenden Auswahlfeld am Ende eines Themas kannst du für jedes Thema individuell festlegen, ob und wie du es verfolgen möchtest. (Du kannst dies auch für eine ganze Kategorie aufs Mal festlegen.) In deinen [persönlichen Einstellungen](/my/preferences) kannst du genauer festlegen, welche Themen als neu gelten sollen und wann Themen automatisch verfolgt werden.
-
-        ## Warum kann ich manche Funktionen nicht nutzen?
-
-        Um Missbrauch vorzubeugen gelten für neu registrierte Benutzer einige Beschränkungen. Wenn du dich konstruktiv beteiligst und damit das Vertrauen der Community gewinnst, werden diese Beschränkungen automatisch nach und nach aufgehoben. Bei ausreichender [Vertrauensstufe](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) erhälst du außerdem zusätzliche Rechte und kannst bei der Verwaltung unserer Community mithelfen.
     welcome_user:
       subject_template: "Willkommen auf %{site_name}!"
       text_body_template: |
@@ -1159,6 +1096,17 @@ de:
         ```
         %{logs}
         ```
+    csv_export_succeeded:
+      subject_template: "Export erfolgreich abgeschlossen"
+      text_body_template: |
+        Die Daten wurden erfolgreich exportiert.
+
+        CSV-Datei herunterladen: <a class="attachment" href="%{download_link}">%{file_name}</a>
+
+        <small>Der Download-Link zur CSV-Datei wird in 48 Stunden ungültig.</small>
+    csv_export_failed:
+      subject_template: "Export fehlgeschlagen"
+      text_body_template: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
     email_reject_trust_level:
       subject_template: "E-Mail-Problem -- Ungenügende Vertrauensstufe"
       text_body_template: |
@@ -1186,10 +1134,24 @@ de:
         Wir konnten deine Antwort in der E-Mail nicht auffinden. **Stelle sicher, dass deine komplette Antwort am Beginn der E-Mail steht.** Alles unterhalb der Nachricht, auf die geantwortet wurde, wird verworfen.
     email_reject_post_error:
       subject_template: "E-Mail-Problem -- Fehler beim Posten."
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
+
+        Mögliche Gründe sind: komplexe Formatierung, Nachricht zu lang oder zu kurz. Bitte versuche es erneut oder erstelle deinen Beitrag auf der Website, wenn der Fehler weiterhin auftritt.
+    email_reject_post_error_specified:
+      subject_template: "E-Mail-Problem -- Fehler beim Posten"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
+
+        Grund:
+
+        %{post_error}
+
+        Bitte versuch es erneut, wenn du das Problem beheben kannst.
     email_reject_reply_key:
       subject_template: "E-Mail-Problem -- Ungültiger Antwort-Schlüssel"
       text_body_template: |
-        Es tut uns Leid, aber die E-Mail-Nachricht an %{destination} (Titel: „%{former_title}“) hat nicht geklappt.
+        Es tut uns leid, aber die E-Mail-Nachricht an %{destination} (Titel: „%{former_title}“) hat nicht geklappt.
         Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Kontaktiere einen Mitarbeiter.
     email_error_notification:
       subject_template: "E-Mail-Problem -- POP-Authentifizierungsfehler"
@@ -1386,6 +1348,10 @@ de:
     see_more: "Mehr"
     search_title: "Diese Seite durchsuchen"
     search_google: "Google"
+  login_required:
+    welcome_message: |
+      #[Wilkommen bei %{title}](#welcome)
+      Ein Benutzerkonto ist notwendig. Bitte registriere dich oder melde dich an.
   terms_of_service:
     title: "Nutzungsbedingungen"
     user_content_license: |
@@ -1410,6 +1376,7 @@ de:
     spam_hosts: "Dieser Benutzer hat versucht mehrere Antworten mit Links zur selben Domain zu posten. Beachte die newuser_spam_host_threshold Einstellung."
   email_log:
     no_user: "Kann Benutzer mit ID %{user_id} nicht finden "
+    suspended_not_pm: "Benutzer ist gesperrt; keine private Nachricht"
     seen_recently: "Benutzer war kürzlich online"
     post_not_found: "Kann Beitrag mit ID %{post_id} nicht finden"
     notification_already_read: "Die Benachrichtigung dieser Mail wurde bereits gelesen"

@@ -1012,7 +1012,6 @@ ja:
       save: 'カテゴリを保存する'
       creation_error: カテゴリの作成に失敗しました。
       save_error: カテゴリの保存に失敗しました。
-      more_posts: "{{posts}}個のポストをすべて見る..."
       name: "カテゴリ名"
       description: "カテゴリ内容"
       topic: "カテゴリトピック"
@@ -1318,7 +1317,6 @@ ja:
           backup:
             text: "バックアップ"
             title: "バックアップを作成します"
-            confirm: "本当に新しいバックアップを作成しますか？"
           download:
             text: "ダウンロード"
             title: "バックアップをダウンロード"

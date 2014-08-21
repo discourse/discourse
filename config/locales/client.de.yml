@@ -20,6 +20,11 @@ de:
             mb: MB
             tb: TB
     dates:
+      time: "HH:mm"
+      long_no_year: "DD. MMM HH:mm"
+      long_no_year_no_time: "DD. MMM"
+      long_with_year: "DD. MMM YYYY HH:mm"
+      long_with_year_no_time: "DD. MMM YYYY"
       tiny:
         half_a_minute: "< 1min"
         less_than_x_seconds:
@@ -685,6 +690,9 @@ de:
         hot: "Es gibt keine beliebten Themen."
         category: "Es gibt keine Themen in {{category}}."
         top: "Es gibt keine Top-Themen."
+        educate:
+          new: '<p>Standardmäßig werden Themen als neu angesehen, wenn diese in den letzten 2 Tagen erstellt wurden.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
+          unread: "<p>Standardmäßig werden Ungelesen-Indikatoren nur für jene Themen angezeigt, die du</p><ul>\t<li>erstellt,</li><li>beantwortet oder</li><li>länger als 4 Minuten gelesen hast.</li></ul>\t<p>Du kannst das in deinen <a href=\"%{userPrefsUrl}\">Einstellungen</a> ändern.</p><p>Außerdem werden jene Themen berücksichtigt, die du ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.<br/>Du kannst das in den Benachrichtigungseinstellungen am Ende eines jeden Themas ändern.</p>"
       bottom:
         latest: "Das waren die aktuellen Themen."
         hot: "Das waren alle beliebten Themen."
@@ -932,6 +940,8 @@ de:
         confirm: "Willst du deinen Beitrag wirklich verwerfen?"
         no_value: "Nein, beibehalten"
         yes_value: "Ja, verwerfen"
+      wiki:
+        about: "dieser Beitrag ist ein Wiki; Neulinge können diesen bearbeiten"
       archetypes:
         save: 'Speicheroptionen'
       controls:
@@ -1085,7 +1095,6 @@ de:
       save: 'Kategorie speichern'
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
-      more_posts: "Zeige alle {{posts}}..."
       name: "Name der Kategorie"
       description: "Beschreibung"
       topic: "Kategorie des Themas"
@@ -1111,7 +1120,7 @@ de:
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie"
-      edit_permissions: "Berechtigung bearbeiten"
+      edit_permissions: "Berechtigungen bearbeiten"
       add_permission: "Berechtigung hinzufügen"
       this_year: "dieses Jahr"
       position: "Position"
@@ -1146,12 +1155,12 @@ de:
       custom_placeholder_notify_user: "Weshalb erfordert der Beitrag, dass du den Benutzer direkt und privat kontaktieren möchtest? Sei spezifisch, konstruktiv und immer freundlich."
       custom_placeholder_notify_moderators: "Warum soll ein Moderator sich diesen Beitrag ansehen? Bitte lass uns wissen, was genau Dich beunruhigt, und wenn möglich dafür relevante Links."
       custom_message:
-        at_least: "Gib mindestens {{n}} Zeichen ein"
+        at_least: "gib mindestens {{n}} Zeichen ein"
         more: "{{n}} weitere..."
         left: "{{n}} übrig"
     flagging_topic:
       title: "Warum meldest du dieses Thema vertraulich?"
-      action: "Melde Thema"
+      action: "Thema melden"
       notify_action: "Private Nachricht"
     topic_map:
       title: "Zusammenfassung des Themas"
@@ -1179,10 +1188,10 @@ de:
     posts_lowercase: "Beiträge"
     posts_long: "{{number}} Beiträge zu diesem Thema"
     posts_likes_MF: |
-      Dieses Thema hat {count, plural, one {1 Beitrag} other {# Beiträge}} {ratio, select,
-        low {mit einem hohen Verhältnis von Beiträgen zu Likes}
-        med {mit einem sehr hohen Verhältnis von Beiträgen zu Likes}
-        high {mit einem extrem hohen Verhältnis von Beiträgen zu Likes}
+      This topic has {count, plural, one {1 post} other {# posts}} {ratio, select,
+        low {with a high like to post ratio}
+        med {with a very high like to post ratio}
+        high {with an extremely high like to post ratio}
         other {}}
     original_post: "Originaler Beitrag"
     views: "Aufrufe"
@@ -1239,7 +1248,7 @@ de:
         help: "Themen, die in den letzten paar Tagen erstellt wurden"
       posted:
         title: "Meine Beiträge"
-        help: "Themen zu denen Du beigetragen hast"
+        help: "Themen zu denen du beigetragen hast"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1248,6 +1257,7 @@ de:
         help: "aktuelle Themen in der Kategorie {{categoryName}}"
       top:
         title: "Angesagt"
+        help: "die aktivsten Themen in diesem Jahr, in diesem Monat, in dieser Woche und heute"
         yearly:
           title: "Angesagt jährlich"
         monthly:
@@ -1261,7 +1271,7 @@ de:
         this_week: "Diese Woche"
         today: "Heute"
         other_periods: "zeige weitere angesagte Themen"
-    browser_update: '<a href="http://www.discourse.org/faq/#browser">Dein Webbrowser ist leider zu alt um dieses Forum zu besuchen</a>. Bitte <a href="http://browsehappy.com">installiere einen neueren Browser</a>.'
+    browser_update: '<a href="http://www.discourse.org/faq/#browser">Dein Webbrowser ist leider zu alt, um dieses Forum zu besuchen</a>. Bitte <a href="http://browsehappy.com">installiere einen neueren Browser</a>.'
     permission_types:
       full: "Erstellen / Antworten / Anschauen"
       create_post: "Antworten / Anschauen"
@@ -1278,7 +1288,7 @@ de:
         up_to_date: "Du verwendest die neueste Version!"
         critical_available: "Ein kritisches Update ist verfügbar."
         updates_available: "Updates sind verfügbar."
-        please_upgrade: "Bitte updaten!"
+        please_upgrade: "Bitte Upgrade durchführen!"
         no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte sicherstellen, dass sidekiq lauft."
         stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte sicherstellen, dass sidekiq lauft."
         version_check_pending: "Sieht so aus, als hättest du vor Kurzem upgedated. Großartig!"
@@ -1336,7 +1346,7 @@ de:
         disagree_flag_title: "Meldung ablehnen, weil diese ungültig oder falsch ist"
         clear_topic_flags: "Erledigt"
         clear_topic_flags_title: "Das Thema wurde untersucht und Probleme beseitigt. Klicke auf 'Erledigt' um die Markierungen zu entfernen."
-        more: "(mehr...)"
+        more: "(weitere Antworten...)"
         dispositions:
           agreed: "zugestimmt"
           disagreed: "abgelehnt"
@@ -1350,6 +1360,7 @@ de:
         no_results: "Es gibt keine Meldungen."
         topic_flagged: "Dieses <strong>Thema</strong> wurde gemeldet."
         visit_topic: "Besuche das Thema, um zu reagieren"
+        was_edited: "Beitrag wurde nach der ersten Meldung bearbeitet"
         summary:
           action_type_3:
             one: "Passt nicht zum Thema"
@@ -1428,7 +1439,6 @@ de:
           backup:
             text: "Backup"
             title: "Erstellt ein Backup"
-            confirm: "Bist du sicher, dass du ein neues Backup starten möchtest?"
           download:
             text: "Download"
             title: "Backup herunterladen"
@@ -1681,6 +1691,7 @@ de:
         edit_title: "Titel bearbeiten"
         save_title: "Titel speichern"
         refresh_browsers: "Aktualisierung im Browser erzwingen"
+        refresh_browsers_message: "Nachricht wurde an alle Clients gesendet!"
         show_public_profile: "Zeige öffentliches Profil"
         impersonate: 'Nutzersicht'
         ip_lookup: "IP-Abfrage"
@@ -1713,11 +1724,11 @@ de:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst all dessen Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
           other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst all dessen Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"
         cant_delete_all_posts:
-          one: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tag. (Die delete_user_max_post_age Einstellung.)"
-          other: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tage. (Die delete_user_max_post_age Einstellung.)"
+          one: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tag (die „delete_user_max_post_age“ Einstellung)."
+          other: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tage (die „delete_user_max_post_age“ Einstellung)."
         cant_delete_all_too_many_posts:
-          one: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als 1 Beitrag hat. (Die delete_all_posts_max Einstellung.)"
-          other: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Die delete_all_posts_max Einstellung.)"
+          one: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als 1 Beitrag hat (die „delete_all_posts_max“ Einstellung)."
+          other: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat (die „delete_all_posts_max“ Einstellung)."
         delete_confirm: "Bist du dir SICHER, dass du diesen Benutzer löschen willst? Dies kann nicht rückgängig gemacht werden!"
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"

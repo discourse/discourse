@@ -20,6 +20,11 @@ da:
             mb: MB
             tb: TB
     dates:
+      time: "h:mm a"
+      long_no_year: "MMM D h:mm a"
+      long_no_year_no_time: "MMM D"
+      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year_no_time: "MMM D, YYYY"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -685,6 +690,9 @@ da:
         hot: "Der er ingen populære emner."
         category: "Der er ingen emner i kategorien {{category}}."
         top: "Der er ingen top emner"
+        educate:
+          new: '<p>Som standard, bliver emmer betragtet som nye når de blev oprettet indenfor de sidste 2 dage.</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a>.</p>'
+          unread: '<p>Som standard vil der kun være indication for ulæste indlæg for emmer du har:</p><ul><li>Oprettet</li><li>Svaret på</li><li>Læst i mere end 4 minutter</li></ul><p>Eller, hvis du specifikt har sat emnet til overvåget eller følger via notifikations indstillingen i bunden af hvert emne.</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a>.</p>'
       bottom:
         latest: "Der er ikke flere populære emner."
         hot: "There are no more hot topics."
@@ -932,6 +940,8 @@ da:
         confirm: "Er du sikker på, at du vil droppe dit indlæg?"
         no_value: "Nej"
         yes_value: "Ja"
+      wiki:
+        about: "dette indlæg er en wiki; almindelige brugere kan redigere den"
       archetypes:
         save: 'Gem indstillinger'
       controls:
@@ -1085,7 +1095,6 @@ da:
       save: 'Gem kategori'
       creation_error: Der opstod en fejl under oprettelsen af kategorien.
       save_error: Der opstod en fejl da kategorien skulle gemmes.
-      more_posts: "se alle {{posts}}…"
       name: "Kategorinavn"
       description: "Beskrivelse"
       topic: "kategoriemne"
@@ -1178,6 +1187,12 @@ da:
     posts: "Indlæg"
     posts_lowercase: "indlæg"
     posts_long: "{{number}} indlæg i dette emne"
+    posts_likes_MF: |
+      Dette emne har {count, plural, one {1 indlæg} other {# indlæg}} {ratio, select,
+        low {with a high like to post ratio}
+        med {with a very high like to post ratio}
+        high {with an extremely high like to post ratio}
+        other {}}
     original_post: "Oprindeligt indlæg"
     views: "Visninger"
     views_lowercase: "visninger"
@@ -1242,6 +1257,7 @@ da:
         help: "populære emner i kategorien {{categoryName}}"
       top:
         title: "Top"
+        help: "de mest aktive emner i det sidse år, måned, uge og dag"
         yearly:
           title: "Top årligt"
         monthly:
@@ -1330,7 +1346,7 @@ da:
         disagree_flag_title: "Sæt dette flag som invalid eller forkert"
         clear_topic_flags: "Færdig"
         clear_topic_flags_title: "Emnet er kontrolleret og fundet ok. Klik på færdig for at fjerne rapporteringer."
-        more: "(mere...)"
+        more: "(flere svar...)"
         dispositions:
           agreed: "enig"
           disagreed: "uenig"
@@ -1344,6 +1360,7 @@ da:
         no_results: "Der er ingen flag."
         topic_flagged: "Dette <strong>emne</strong> er blevet rapporteret til administrator."
         visit_topic: "Besøg emnet for at gøre noget ved det"
+        was_edited: "Indlægget blev redigeret efter det første gang blev flagget"
         summary:
           action_type_3:
             one: "off-topic"
@@ -1422,7 +1439,6 @@ da:
           backup:
             text: "Backup"
             title: "Start backup"
-            confirm: "Er du sikker på du vil starte en ny backup?"
           download:
             text: "Download"
             title: "Download backuppen"
@@ -1675,6 +1691,7 @@ da:
         edit_title: "Redigér titel"
         save_title: "Gem titel"
         refresh_browsers: "Gennemtving browser refresh"
+        refresh_browsers_message: "Beskeden er sendt til alle tilsluttede browsere!"
         show_public_profile: "Vis offentlig profil"
         impersonate: 'Impersonate'
         ip_lookup: "IP opslag"

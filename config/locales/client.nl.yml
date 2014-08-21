@@ -1007,7 +1007,6 @@ nl:
       save: 'Bewaar categorie'
       creation_error: Er ging bij het maken van de categorie iets mis.
       save_error: Er ging iets mis bij het opslaan van de categorie.
-      more_posts: "bekijk alle {{posts}}..."
       name: "Naam categorie"
       description: "Omschrijving"
       topic: "Onderwerp van de categorie"
@@ -1294,7 +1293,6 @@ nl:
           backup:
             text: "Backup"
             title: "Maak een backup"
-            confirm: "Weet je zeker dat je een nieuwe backup wil starten?"
           download:
             text: "Download"
             title: "Download de backup"

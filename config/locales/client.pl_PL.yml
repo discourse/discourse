@@ -102,6 +102,7 @@ pl_PL:
     yes_value: "Tak"
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
+    log_in: "Logowanie"
     age: "Wiek"
     joined: "Dołączył"
     admin_title: "Admin"
@@ -151,6 +152,7 @@ pl_PL:
       not_bookmarked: "wpis przeczytany - kliknij, aby dodać zakładkę"
       last_read: "to ostatni przeczytany wpis przez Ciebie - kliknij, aby dodać zakładkę"
       remove: "Usuń zakładkę"
+    click_to_show: "Kliknij aby zobaczyć."
     preview: "podgląd"
     cancel: "anuluj"
     save: "Zapisz zmiany"
@@ -339,6 +341,7 @@ pl_PL:
       last_emailed: "Ostatnio otrzymał email"
       last_seen: "Ostatnio widziany"
       created: "Dołączył"
+      log_out: "Wyloguj się"
       location: "Położenie"
       website: "Strona internetowa"
       email_settings: "Email"
@@ -427,6 +430,7 @@ pl_PL:
     mute: Wycisz
     unmute: Włącz
     last_post: Ostatni wpis
+    last_post_lowercase: ostatni wpis
     summary:
       description: "Istnieją <b>{{count}}</b> odpowiedzi."
       description_time: "Istnieją <b>{{count}}</b> odpowiedzi z czasem czytania oszacowanym na <b>{{readingTime}} minut</b>."
@@ -440,6 +444,7 @@ pl_PL:
     username: 'Nazwa użytkownika'
     last_seen: 'Ostatnio oglądane'
     created: 'Utworzono'
+    created_lowercase: 'utworzono'
     trust_level: 'Poziom zaufania'
     search_hint: 'nazwa użytkownika lub email'
     create_account:
@@ -626,6 +631,7 @@ pl_PL:
       private_message: 'Napisz Prywatną Wiadomość'
       list: 'Tematy'
       new: 'nowy temat'
+      unread: 'nieprzeczytane'
       new_topics:
         one: '1 nowy temat'
         few: '{{count}} nowe tematy'
@@ -640,6 +646,7 @@ pl_PL:
       invalid_access:
         title: "Temat jest prywatny"
         description: "Przepraszamy, nie masz dostępu do tego tematu!"
+        login_required: "Musisz się zalogować, aby zobaczyć ten temat."
       server_error:
         title: "Wystąpił błąd przy wczytywaniu Tematu"
         description: "Przepraszamy, nie możliwe było wczytanie tematu, możliwe że wystąpił problem z połączeniem. Prosimy, spróbuj ponownie. Jeżeli problem wystąpi ponownie, powiadom administrację."
@@ -758,6 +765,7 @@ pl_PL:
         email_placeholder: 'nazwa@example.com'
         success: "Wysłaliśmy zaproszenie do <b>{{email}}</b>. Powiadomimy Ciebie jeśli zaproszenie zostanie przyjęte. Sprawdzaj zakładkę zaproszenia na Twoim profilu użytkownika by śledzić swoje zaproszenia."
         error: "Przepraszamy, nie mogliśmy zaprosić tej osoby. Być może jest już na forum?"
+      login_reply: 'Zaloguj się, aby odpowiedzieć'
       filters:
         n_posts:
           one: "1 wpis"
@@ -1009,7 +1017,6 @@ pl_PL:
       save: 'Zapisz kategorię'
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
-      more_posts: "pokaż wszystkie {{posts}}..."
       name: "Nazwa kategorii"
       description: "Opis"
       topic: "temat kategorii"
@@ -1298,7 +1305,6 @@ pl_PL:
           backup:
             text: "Kopia zapasowa"
             title: "Wykonaj kopię zapasową"
-            confirm: "Czy na pewno chcesz wykonać kopię zapasową?"
           download:
             text: "Pobierz"
             title: "Pobierz kopię zapasową"
@@ -1337,6 +1343,7 @@ pl_PL:
         opacity: "Widoczność"
         copy: "Kopiuj"
         css_html:
+          title: "CSS, HTML"
           long_title: "Dostosowanie kodu CSS i HTML"
         colors:
           title: "Kolory"
@@ -1399,6 +1406,7 @@ pl_PL:
           filters:
             title: "Filtr"
             user_placeholder: "nazwa użytkownika"
+            address_placeholder: "nazwa@example.com"
             type_placeholder: "streszczenie, rejestracja…"
             skipped_reason_placeholder: "powód"
       logs:
@@ -1659,6 +1667,7 @@ pl_PL:
     lightbox:
       download: "pobierz"
     keyboard_shortcuts_help:
+      title: 'Skróty Klawiszowe'
       jump_to:
         title: 'Przeskocz do'
       navigation:

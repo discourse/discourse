@@ -1085,7 +1085,6 @@ pt_BR:
       save: 'Salvar categoria'
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
-      more_posts: "visualizar todas as {{posts}}..."
       name: "Nome da Categoria"
       description: "Descrição"
       topic: "tópico da categoria"
@@ -1178,12 +1177,6 @@ pt_BR:
     posts: "Mensagens"
     posts_lowercase: "posts"
     posts_long: "há {{number}} mensagens neste tópico"
-    posts_likes_MF: |
-      Este tópico tem {count, plural, one {1 post} other {# posts}} {ratio, select,
-        baixo {with a high post to like ratio}
-        médio {with a very high post to like ratio}
-        alto {with an extremely high post to like ratio}
-        outro {}}
     original_post: "Postagem Original"
     views: "Visualizações"
     views_lowercase: "visualizações"
@@ -1336,7 +1329,6 @@ pt_BR:
         disagree_flag_title: "Negar a marcação como inválida ou incorreta"
         clear_topic_flags: "Concluído"
         clear_topic_flags_title: "O tópico foi investigado e as questões foram resolvidas. Clique em Concluído para remover as sinalizações."
-        more: "(mais...)"
         dispositions:
           agreed: "concordar"
           disagreed: "discordar"
@@ -1428,7 +1420,6 @@ pt_BR:
           backup:
             text: "Backup"
             title: "Cria um backup"
-            confirm: "Você tem certeza que quer iniciar um novo backup?"
           download:
             text: "Download"
             title: "Download do backup"
