@@ -116,9 +116,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     ];
 
     var whitelist = [
-      /^application_topic_/,
-      /^application_discovery_discovery/,
-      /^application_user_userActivity/
+      /^application_topic_/
     ];
 
     var check = function(regex){return routeName.match(regex);};
