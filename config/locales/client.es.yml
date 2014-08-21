@@ -1085,7 +1085,6 @@ es:
       save: 'Guardar categoria'
       creation_error: Se ha producido un error al crear la categoría.
       save_error: Ha ocurrido un error al guardar la categoría
-      more_posts: "ver todos {{posts}}..."
       name: "Nombre de la categoría"
       description: "Descripción"
       topic: "categoría"
@@ -1330,7 +1329,6 @@ es:
         disagree_flag_title: "Denegar esta indicación como inválida o incorrecta"
         clear_topic_flags: "Hecho"
         clear_topic_flags_title: "Este tema ha sido investigado y los problemas han sido resueltos. Haz click en Hecho para eliminar los reportes."
-        more: "(más...)"
         dispositions:
           agreed: "coincidió"
           disagreed: "no coincidió"
@@ -1422,7 +1420,6 @@ es:
           backup:
             text: "Crear copia"
             title: "Crear una copia de seguridad"
-            confirm: "¿Estás seguro que quieres empezar una nueva copia de seguridad?"
           download:
             text: "Descargar"
             title: "Descargar la copia de seguridad"

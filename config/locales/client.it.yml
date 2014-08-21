@@ -1084,7 +1084,6 @@ it:
       save: 'Salva la categoria'
       creation_error: Si è verificato un errore nella creazione della categoria
       save_error: Si è verificato un errore salvando questa categoria
-      more_posts: "visualizza tutti {{posts}}..."
       name: "Nome della categoria"
       description: "Descrizione"
       topic: "Topic sulla categoria"
@@ -1328,7 +1327,6 @@ it:
         disagree_flag_title: "Nega questa segnalazione come non valida o non corretta"
         clear_topic_flags: "Fatto"
         clear_topic_flags_title: "Il topic è stato esaminato e i problemi risolti. Clicca Fatto per rimuovere i contrassegni."
-        more: "(più...)"
         dispositions:
           agreed: "accettate"
           disagreed: "Disapprovato"
@@ -1420,7 +1418,6 @@ it:
           backup:
             text: "Backup"
             title: "Crea un backup"
-            confirm: "Sicuro di voler creare un nuovo backup?"
           download:
             text: "Download"
             title: "Scarica il backup"

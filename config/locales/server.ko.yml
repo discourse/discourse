@@ -737,9 +737,6 @@ ko:
     authorized_extensions: "파일 업로드에 허용되는 확장자 리스트 '*'을 사용하면 모든 타입의 파일이 가능하다."
     max_similar_results: "새로운 토픽을 작성할 때, 에디터 위에 보여줄 비슷한 토픽들의 개수. 제목과 본문을 바탕으로 비교한다."
     title_prettify: "일반적인 제목의 오타 및 오류를 수정해준다. 모두 대문자로 쓰거나, 첫자가 소문자이거나(영문), 복수의 !, ? 혹은 마침표(.)가 중복으로 들어간 것 등"
-    topic_views_heat_low: "토픽이 연하게 하이라이트 되기 위한 조회수"
-    topic_views_heat_medium: "토픽이 적당하게 하이라이트 되기 위한 조회수"
-    topic_views_heat_high: "토픽이 진하게 하이라이트 되기 위한 조회수"
     faq_url: "FAQ주소가 있으면 전체 URL을 적어주세요."
     tos_url: "이용약관이 있으면 전체 URL을 적어주세요."
     privacy_policy_url: "개인정보 보호가 있으면 전체 URL을 적어주세요."
@@ -818,9 +815,6 @@ ko:
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
   frequent_poster: "빈번한 게시자"
-  redirected_to_top_reasons:
-    new_user: "우리 커뮤니티에 오신 것을 환영합니다! 여기 최근에 가장 인기있는 토픽들이 있습니다."
-    not_seen_in_a_month: "다시 돌아오신 것을 환용합니다! 잠시 떠나신 동안 가장 인기 있는 토픽들입니다."
   move_posts:
     new_topic_moderator_post:
       other: "%{count}개의 글을 새 토픽으로 옮겼습니다: %{topic_link}"

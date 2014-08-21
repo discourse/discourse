@@ -1017,7 +1017,6 @@ ko:
       save: '카테고리 저장'
       creation_error: 카테고리 생성 중 오류가 발생했습니다.
       save_error: 카테고리 저장 중 오류가 발생했습니다.
-      more_posts: "모든 {{posts}} 보기"
       name: "카테고리 이름"
       description: "설명"
       topic: "카테고리 토픽"
@@ -1244,7 +1243,6 @@ ko:
         disagree_flag: "Disagree"
         clear_topic_flags: "완료"
         clear_topic_flags_title: "이 토픽을 조사하였고 이슈는 해결되었습니다. 플래그를 지우기 위해 완료를 클리하세요"
-        more: "(more...)"
         dispositions:
           agreed: "agreed"
           disagreed: "disagreed"
@@ -1330,7 +1328,6 @@ ko:
           backup:
             text: "백업"
             title: "백업 생성"
-            confirm: "정말로 새로운 백업을 생성할까요?"
           download:
             text: "다운로드"
             title: "백업 다운로드"

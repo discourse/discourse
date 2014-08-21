@@ -201,7 +201,7 @@ nb_NO:
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_reason: "Begrunnelse:"
       watched_categories: "Så"
-      tracked_categories: "Sporet"
+      tracked_categories: "Følger"
       muted_categories: "Dempet"
       delete_account: "Slett kontoen min"
       delete_account_confirm: "Er du sikker på at du vil slette kontoen din permanent? Denne handlingen kan ikke angres!"
@@ -811,7 +811,6 @@ nb_NO:
       save: 'Lagre Kategori'
       creation_error: Det oppstod en feil ved å lage denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
-      more_posts: "se alle {{posts}}..."
       name: "Kategorinavn"
       description: "Beskrivelse"
       topic: "kategori emne"
@@ -998,8 +997,6 @@ nb_NO:
           cancel:
             text: "Avbryt"
             title: "Avbryt den nåværende handlingen"
-          backup:
-            confirm: "Er du sikkert på at du vil starte en ny backup?"
           download:
             text: "Last ned"
           destroy:

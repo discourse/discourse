@@ -492,8 +492,6 @@ uk:
   most_posts: "Найбільше дописів"
   most_recent_poster: "Автор останнього допису"
   frequent_poster: "Частий дописувач"
-  redirected_to_top_reasons:
-    not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the top discussion topics since you've been away."
   change_owner:
     post_revision_text: "Володіння передано від %{old_user} до %{new_user}"
   topic_statuses:

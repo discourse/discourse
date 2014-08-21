@@ -189,8 +189,10 @@ fr:
   vip_category_name: "Salon"
   vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
   meta_category_name: "Meta"
+  meta_category_description: "Discussion à propos du site, son organisation, son fonctionnement, et comment nous pouvons l'améliorer."
   staff_category_name: "Staff"
   staff_category_description: "Catégorie privée pour les discussions de l'équipe du forum. Les sujets ne sont visibles que pour les admins et les modérateurs."
+  assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenue dans le salon"
     body: |2
@@ -243,6 +245,7 @@ fr:
       title: "vétéran"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}'."
   rate_limiter:
+    slow_down: "Vous avez effectué cette action trop de fois, réessayez plus tard"
     too_many_requests: "Nous avons une limite journalière du nombre d'actions qui peuvent être effectuées. Veuillez patienter %{time_left} avant de recommencer."
     hours:
       one: "1 heure"
@@ -399,6 +402,7 @@ fr:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my/private-messages">regarder vos messages privés</a>.</p>'
+    user_must_edit: '<p>Ce message a été signalé par la communauté et temporairement masqué.</p>'
   archetypes:
     regular:
       title: "Sujet régulier"
@@ -722,6 +726,7 @@ fr:
     purge_deleted_uploads_grace_period_days: "La période de grâce (en jours) avant qu'un fichier envoyé et supprimé soit effacé."
     purge_inactive_users_grace_period_days: "Période de grâce (en jours) avant qu'un utilisateur inactif soit supprimé."
     enable_s3_uploads: "Placer les fichiers envoyés sur un stockage Amazon S3."
+    s3_use_iam_profile: 'Utiliser un role AWS EC2 IAM pour la récupération des clés. NOTE: si activé, surcharge les paramètres "s3 access key id" et "s3 secret access key".'
     s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans périodes."
     s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images."
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images."
@@ -772,18 +777,18 @@ fr:
     authorized_extensions: "Une liste d'extensions de fichier autorisés pour les envois sur le serveur (mettre '*' pour autoriser tout les types)"
     max_similar_results: "Combien de sujets similaires sont afficher lorsqu'un utilisateur est en train de créer un nouveau sujet. La comparaison se base sur le titre et le contenu."
     title_prettify: "Corrige les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples ! et ?, un . inutile à la fin, etc.)"
-    topic_views_heat_low: "Après ce nombre de vues, ce sujet sera légèrement mis en évidence."
-    topic_views_heat_medium: "Après ce nombre de vues, ce sujet sera modérément mis en évidence."
-    topic_views_heat_high: "Après ce nombre de vues, ce sujet sera fortement mis en évidence."
-    cold_age_days_low: "Un sujet vieux de plusieurs jours est légèrement mis en évidence."
-    cold_age_days_medium: "Un sujet vieux de plusieurs jours est modérément mis en évidence."
-    cold_age_days_high: "Un sujet vieux de plusieurs jours est fortement mis en évidence."
-    history_hours_low: "Un message modifié durant ce nombre d'heure sera légèrement mis en évidence"
-    history_hours_medium: "Un sujet avec ce ratio j'aime:message sera modérément mis en évidence."
-    history_hours_high: "Un sujet avec ce ratio j'aime:message sera fortement mis en évidence."
-    topic_post_like_heat_low: "Un sujet avec ce ratio j'aime:message sera légèrement mis en évidence."
-    topic_post_like_heat_medium: "Un sujet avec ce ratio j'aime:message sera modérément mis en évidence."
-    topic_post_like_heat_high: "Un sujet avec ce ratio j'aime:message sera fortement mis en évidence."
+    topic_views_heat_low: "Après ce nombre de vues, le champ Vues sera légèrement mis en évidence."
+    topic_views_heat_medium: "Après ce nombre de vues, le champ Vues sera modérément mis en évidence."
+    topic_views_heat_high: "Après ce nombre de vues, le champ Vues sera fortement mis en évidence."
+    cold_age_days_low: "Après ce nombre de jours de discussion, la date de dernière activité est légèrement mis en évidence."
+    cold_age_days_medium: "Après ce nombre de jours de discussion, la date de dernière activité est modérément mis en évidence."
+    cold_age_days_high: "Après ce nombre de jours de discussion, la date de dernière activité est fortement mis en évidence."
+    history_hours_low: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification légèrement mis en évidence"
+    history_hours_medium: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification modérément mis en évidence."
+    history_hours_high: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification fortement mis en évidence."
+    topic_post_like_heat_low: "Après le dépassement de ce ratio j'aime:message, le champ Messages de la liste des sujets sera légèrement mis en évidence."
+    topic_post_like_heat_medium: "Après le dépassement de ce ratio j'aime:message, le champ Messages de la liste des sujets sera modérément mis en évidence."
+    topic_post_like_heat_high: "Après le dépassement de ce ratio j'aime:message, le champ Messages de la liste des sujets sera fortement mis en évidence."
     faq_url: "Si vous disposez déjà d'une FAQ/Règles de la communauté, hébergée ailleurs, que vous souhaitez utiliser, vous pouvez renseigner l'URL complète ici."
     tos_url: "Si vous disposez déjà de CGU, hébergées ailleurs, que vous souhaitez utiliser, vous pouvez renseigner leur URL complète ici."
     privacy_policy_url: "Si vous disposez déjà d'une Politique de Confidentialité, hébergée ailleurs, que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
@@ -885,9 +890,6 @@ fr:
   most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur fréquent"
-  redirected_to_top_reasons:
-    new_user: "Bienvenue dans notre communauté ! Retrouvez ici une sélection de nos sujets récents."
-    not_seen_in_a_month: "Bon retour parmi nous ! Nous ne vous avons pas vu depuis un moment, voici les meilleurs sujets de discussions depuis votre absence."
   move_posts:
     new_topic_moderator_post:
       one: "J'ai déplacé un message dans un nouveau sujet : %{topic_link}"
@@ -1027,8 +1029,38 @@ fr:
       <small>Vous pouvez mettre un message pour les désinscriptions, en voici un de test. Ce courriel a été envoyé par Nom de l'entreprise, 55 rue du cheval, 78015 Paris. Si vous ne souhaitez plus recevoir nos courriels [cliquez ici pour vous désinscrire][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
+    text_body_template: |
+      Une nouvelle version de [Discourse](http://www.discourse.org) est disponible.
+
+      Votre version : %{installed_version}
+      Nouvelle version: **%{new_version}**
+
+      Vous voulez peut-être:
+
+      - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
+
+      - Mettre à jour en allant sur [%{base_url}/admin/upograde](%{base_url}/admin/upgrade) en appuyant sur le bouton "Upgrade".
+
+      - Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
+    text_body_template: |
+      Une nouvelle version de [Discourse](http://www.discourse.org) est disponible.
+
+      Votre version : %{installed_version}
+      Nouvelle version: **%{new_version}**
+
+      Vous voulez peut-être:
+
+      - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
+
+      - Mettre à jour en allant sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) et en appuyant sur le bouton "Upgrade".
+
+      - Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
+
+      ### Notes de mise à jour
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Il y a des signalements qui ont été soumis il y a plus de 1 heure."
@@ -1053,8 +1085,22 @@ fr:
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
-    usage_tips:
-      text_body_template: "Ce message privé contient quelques astuces pour vous aider à démarrer rapidement :\n\n## Continuez de descendre\n\nIl n'y a pas de bouton Page Suivante ni de numéro de page – pour en lire plus, **il vous suffit de descendre !**\n\nLorsque de nouvelles réponses arrivent, elles apparaissent automatiquement.\n\n## Où suis-je ?\n\n- Pour la recherche, votre page d'utilisateur, ou le menu, utiliser les **boutons icônes en haut à droite**.\n\n- Lorsque vous lisez un sujet, retournez en haut de celui en cliquant sur le titre. Cliquez sur la barre de progression en bas à droite pour avoir une navigation complète, ou utiliser les touches <kbd>Home</kbd> et <kbd>Fin</kbd>.\n\n    <img src=\"http://www.discourse.org/images/welcome/progress-bar.png\" width=\"190\" height=\"52\">\n\n- Le titre du sujet vous amènera toujours sur le premier message non lu. Utiliser les dates pour des accès rapides. Accéder au premier message via la date de création, et au dernier message via la date du dernier message.\n\n## Comment je réponds ? \n\n- Pour répondre au sujet dans sa globalité, utilisez le bouton \"Répondre\" <img src=\"http://www.discourse.org/images/welcome/reply-topic.png\" width=\"29\" height=\"25\">  tout en bas de la page.\n\n- Pour répondre à un message spécifique, utilisez le bouton \"Répondre\" <img src=\"http://www.discourse.org/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> sur le message.\n\n- Si vous voulez continuer le sujet dans une section différente, mais garder le lien entre votre sujet et le message qui vous l'a inspiré, utilisez la fonction Répondre en créant un nouveau sujet <img src=\"http://www.discourse.org/images/welcome/reply-as-new-topic.png\" width=\"33\" height=\"25\"> à droite de chaque message.\n\nPour citer quelqu'un dans votre message, sélectionner le texte que vous voulez citer et appuyer sur le bouton Répondre.\n\n<img src=\"http://www.discourse.org/images/welcome/quote-reply.png\" width=\"467\" height=\"172\">\n\n(Pour citer l'ensemble du message, utiliser le bouton Importer la Citation dans la barre d'édition)\n\nPour mentionner le pseudo d'un utilisateur, commencez à taper `@` et une liste d'auto-complétion apparaîtra.\n\n<img src=\"http://www.discourse.org/images/welcome/username-completion.png\" width=\"307\" height=\"174\">\n\n## Que puis-je faire d'autre ?\n\n<img src=\"http://www.discourse.org/images/welcome/like-link-flag-bookmark.png\" width=\"225\" height=\"61\">\n\nPour faire savoir à quelqu'un que vous avez apprécié son message, cliquez sur le bouton *j'aime** en bas du message. Si vous voyez un problème avec un message, n'hésitez pas à cliquer sur le bouton **signaler** pour avertir les modérateurs et les autres membres\n\nVous pouvez aussi partager un message, l'ajouter à vos signets ou à vos favoris.\n\n## Qui me parle ?\n\nQuand quelqu'un répond à votre message, vous cite, ou mentionne votre `@pseudo`, un nombre sur le bouton de conversation en haut à droite. Utilisez-le pour savoir qui vous parle et où.\n\n<img src=\"http://www.discourse.org/images/welcome/notification-panel.png\" width=\"237\" height=\"78\">\n\nVous serez notifier par un courriel si quelqu'un vous répond directement (ou message privé) si vous n'êtes pas présent sur le site lorsqu'il est envoyé.\n\n## Quand est-ce qu'une conversation est nouvelle ?\n\nPar défaut, toutes les conversations de moins de deux jours sont considérées comme nouvelles, et chaque sujets auxquels vous avez participé.\n\nVous verrez le badge bleu de nouveauté et le nombre de nouveaux messages :\n\n<img src=\"http://www.discourse.org/images/welcome/topics-new-unread.png\" width=\"490\" height=\"119\">\n\nVous pouvez modifié vos préférences de notifications par défaut des sujets  dans vos [préférences utilisateurs](/my/preferences). Vous pouvez aussi les modifié pour chaque sujet séparément.\n\n## Quelles sont les choses que je ne peux pas faire ?\n\nLes nouveaux utilisateurs sont limités pour des raisons de sécurité. Plus vous participerez, plus vous gagnerez la confiance de la communauté et les restrictions disparaîtrons. A plus haut [niveau de confiance](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous gagnerez de nouvelles compétences pour nous aider à gérer la communauté.\n"
+      text_body_template: |
+        Bonjour,
+
+        Ceci est un message automatique de %{site_name} pour vous informer que votre message ...
+
+        %{base_url}%{url}
+
+        ... a été caché à la suite d'un signalement de la communauté.
+
+        %{flag_reason}
+
+        Plusieurs membres ont signalé ce message avant qu'il ne soit caché, **veuillez donc prendre en compte leurs remarques pour revoir votre message**. Vous pouvez modifier le message après %{edit_delay} minutes, et il sera automatiquement ré-affiché. Ceci augmentera votre niveau de confiance sur le forum.
+
+        Cependant, si le message est signalé par la communauté une seconde fois, il restera marqué jusqu’à l'intervention d'un modérateur -- et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.
+
+        Pour plus d'informations, merci de vous en référer aux [règles de la communauté](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
@@ -1109,6 +1155,12 @@ fr:
         ```
     csv_export_succeeded:
       subject_template: "Données exportées avec succès."
+      text_body_template: |
+        Export des données réussi.
+
+        Télécharger le fichier CSV: <a class="attachment" href="%{download_link}">%{file_name}</a>
+
+        <small>Le lien de téléchargement du CSV expire après 48h.</small>
     csv_export_failed:
       subject_template: "Export échoué"
       text_body_template: "L'export a échoué. Veuillez consultez les logs."
@@ -1377,6 +1429,7 @@ fr:
     spam_hosts: "Cet utilisateur a essayé de créer plusieurs messages avec des liens vers le même domaine. Voir le paramétrage du site newuser_spam_host_threshold."
   email_log:
     no_user: "Impossible de trouver l'utilisateur avec l'id %{user_id}"
+    suspended_not_pm: "L'utilisateur est suspendu, pas de message privé"
     seen_recently: "L'utilisateur a été vu récemment"
     post_not_found: "Impossible de trouver le message avec l'id %{post_id}"
     notification_already_read: "La notification de ce courriel a déjà été lue"
