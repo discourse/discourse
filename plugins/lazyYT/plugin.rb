@@ -43,3 +43,21 @@ class Onebox::Engine::YoutubeOnebox
     result
   end
 end
+
+after_initialize do
+
+  Email::Styles.register_plugin_style do |fragment|
+    # YouTube onebox can't go in emails, so replace them with clickable links
+    fragment.css('.lazyYT').each do |i|
+      begin
+        src = "https://www.youtube.com/embed/#{i['data-youtube-id']}?autoplay=1&#{i['data-parameters']}"
+        src_uri = URI(src)
+        display_src = "https://#{src_uri.host}#{src_uri.path}"
+        i.replace "<p><a href='#{src_uri.to_s}'>#{display_src}</a><p>"
+      rescue URI::InvalidURIError
+        # If the URL is weird, remove it
+        i.remove
+      end
+    end
+  end
+end
