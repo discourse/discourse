@@ -1024,7 +1024,6 @@ pt:
       save: 'Guardar Categoria'
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao guardar a categoria.
-      more_posts: "visualizar todos os {{posts}}..."
       name: "Nome da Categoria"
       description: "Descrição"
       topic: "tópico da categoria"

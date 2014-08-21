@@ -1080,7 +1080,6 @@ he:
       save: 'שמור קטגוריה'
       creation_error: ארעה שגיאה במהלך יצירת הקטגוריה הזו.
       save_error: ארעה שגיאה בשמירת הקטגוריה הזו
-      more_posts: "צפה בכל {{posts}}..."
       name: "שם הקטגוריה"
       description: "תיאור"
       topic: "נושא הקטגוריה"
@@ -1323,7 +1322,6 @@ he:
         disagree_flag_title: "התעלמות מהסימון היות שאינו תקין או אינו נכון"
         clear_topic_flags: "סיום"
         clear_topic_flags_title: "הנושא נבדק והבעיה נפתרה. לחצו על סיום כדי להסיר את הסימונים."
-        more: "(עוד...)"
         dispositions:
           agreed: "התקבל"
           disagreed: "לא התקבל"
@@ -1415,7 +1413,6 @@ he:
           backup:
             text: "גיבוי"
             title: "צור גיבוי"
-            confirm: "אתה בטוח שברצונך ליצור גיבוי חדש?"
           download:
             text: "הורד"
             title: "הורד את הגיבוי"

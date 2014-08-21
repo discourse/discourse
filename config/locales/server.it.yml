@@ -617,9 +617,6 @@ it:
   most_posts: "Molti Post"
   most_recent_poster: "Ultimo poster"
   frequent_poster: "Utente assiduo"
-  redirected_to_top_reasons:
-    new_user: "Benvenuto nella nostra community| Qui ci sono i nostri topic recenti più popolari."
-    not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Queste sono le discussioni più importanti da quando te ne sei andato."
   move_posts:
     new_topic_moderator_post:
       one: "Ho spostato 1 post in un nuovo topic: %{topic_link}"

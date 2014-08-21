@@ -988,7 +988,6 @@ sv:
       save: 'Spara kategori'
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
-      more_posts: "visa alla {{posts}}..."
       name: "Kategorinamn"
       description: "Beskrivning"
       topic: "Kategoritråd"
@@ -1217,7 +1216,6 @@ sv:
           backup:
             text: "säkerhetskopia"
             title: "skapa en säkerhetskopia"
-            confirm: "Är du säker på att du vill starta en ny säkerhetskopiering?"
           download:
             text: "ladda ned"
             title: "ladda ned säkerhetskopian"
