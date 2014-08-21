@@ -4,7 +4,8 @@
 <div id='period-popup' {{bind-attr class="showPeriods::hidden"}}>
   <ul>
     {{#each period.availablePeriods}}
-      <li><a {{bind-attr href="showMoreUrl"}}>{{title}}</a></li>
+      <li><a {{bind-attr href="showMoreUrl"}}>{{top-title tagName="span" period=this}}</a></li>
     {{/each}}
   </ul>
 </div>
+<div class='clearfix'></div>
