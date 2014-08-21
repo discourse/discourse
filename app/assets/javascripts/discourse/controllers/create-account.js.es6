@@ -37,9 +37,11 @@ export default DiscourseController.extend(ModalFunctionality, {
   },
 
   submitDisabled: function() {
+    // Even if password is required, we respect the tos setting
+    if (this.get('tosAcceptRequired') && !this.get('tosAccepted')) return true;
+
     if (!this.get('passwordRequired')) return false; // 3rd party auth
     if (this.get('formSubmitted')) return true;
-    if (this.get('tosAcceptRequired') && !this.get('tosAccepted')) return true;
     if (this.get('nameValidation.failed')) return true;
     if (this.get('emailValidation.failed')) return true;
     if (this.get('usernameValidation.failed')) return true;
