@@ -577,8 +577,6 @@ nl:
     category_colors: "Een lijst me hexadecimale kleurwaardes die gebruikt kunnen worden voor categorieën."
     authorized_extensions: "Een lijst met bestandsextensies die mogen worden geupload (gebruik '*' voor alle bestandsextensies)"
     title_prettify: "Voorkom veel voorkomende fouten in titels (alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
-    topic_views_heat_low: "Het aantal keer dat een topic bekeken moet zijn om een laag 'heat' level te hebben."
-    topic_views_heat_medium: "Het aantal keer dat een topic bekeken moet zijn om een medium 'heat' level te hebben."
     faq_url: "Heb je je FAQ ergens extern staan, geef hier dan de volledige url op."
     tos_url: "Heb je je Algemene Voorwaarden ergens extern staan, geef hier dan de volledige url op."
     privacy_policy_url: "Heb je je Privacy Voorwaarden ergens extern staan, geef hier dan de volledige url op."
@@ -639,9 +637,6 @@ nl:
   most_posts: "Meer berichten"
   most_recent_poster: "Meest recente schrijver"
   frequent_poster: "Frequente schrijver"
-  redirected_to_top_reasons:
-    new_user: "Welkom bij deze community! Hier zijn een aantal van de meest populaire topics."
-    not_seen_in_a_month: "Welkom terug! We hebben je een tijdje niet gezien. Dit is een overzicht van de topics die zijn gemaakt sinds je weg was."
   move_posts:
     new_topic_moderator_post:
       one: "Ik heb een bericht naar een nieuwe topic verplaatst: %{topic_link}"

@@ -970,7 +970,6 @@ cs:
       save: 'Uložit kategorii'
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
-      more_posts: "zobrazit všechny {{posts}}..."
       name: "Název kategorie"
       description: "Popis"
       topic: "téma kategorie"
@@ -1256,7 +1255,6 @@ cs:
           backup:
             text: "Zálohovat"
             title: "Vytvořit zálohu"
-            confirm: "Are you sure you want to start a new backup?"
           download:
             text: "Stáhnout"
             title: "Stáhnout zálohu"

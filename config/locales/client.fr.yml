@@ -20,6 +20,11 @@ fr:
             mb: Mo
             tb: To
     dates:
+      time: "H:mm"
+      long_no_year: "DD MMM H:mm"
+      long_no_year_no_time: "D MMM"
+      long_with_year: "DD MMM YYY H:mm"
+      long_with_year_no_time: "DD MMM YYYY"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -96,7 +101,7 @@ fr:
     links: "Liens"
     links_lowercase: "liens"
     faq: "FAQ"
-    guidelines: "Règles"
+    guidelines: "Instructions"
     privacy_policy: "Politique de confidentialité"
     privacy: "Confidentialité"
     terms_of_service: "Conditions Générales d'Utilisation"
@@ -263,11 +268,11 @@ fr:
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
       notifications: "Notifications"
-      disable_jump_reply: "Ne pas se déplacer à votre nouveau message après avoir répondu"
+      disable_jump_reply: "Ne pas allez à votre nouveau message après avoir répondu"
       dynamic_favicon: "Afficher les notifications de nouveaux messages sur le favicon (expérimental)"
       edit_history_public: "Autoriser les autres utilisateurs à consulter les modifications de mes messages."
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
-      enable_quoting: "Activer la citation automatique du texte surligné"
+      enable_quoting: "Proposer la citation du texte surligné"
       change: "modifier"
       moderator: "{{user}} est un modérateur"
       admin: "{{user}} est un administrateur"
@@ -306,9 +311,9 @@ fr:
         title: "Modifier à propos de moi"
       change_username:
         title: "Changer de pseudo"
-        confirm: "Si vous changez de pseudo, toutes les citations de vos messages et les mentions @pseudo seront cassées. Êtes-vous absolument sûr de le vouloir ?"
-        taken: "Désolé, ce pseudo est déjà pris"
-        error: "Il y a eu une erreur en changeant votre pseudo."
+        confirm: "Si vous changez de pseudo, toutes les citations de vos messages et les mentions @pseudo seront cassées. Êtes-vous absolument sûr vouloir le faire ?"
+        taken: "Désolé, ce pseudo est déjà pris."
+        error: "Il y a eu une erreur lors du changement de votre pseudo."
         invalid: "Ce pseudo est invalide. Il ne doit être composé que de lettres et de chiffres."
       change_email:
         title: "Changer d'adresse de courriel"
@@ -316,13 +321,13 @@ fr:
         error: "Il y a eu une erreur lors du changement d'adresse de courriel. Cette adresse est peut-être déjà utilisée ?"
         success: "Nous avons envoyé un courriel à cette adresse. Merci de suivre les instructions."
       change_avatar:
-        title: "Changez votre avatar"
+        title: "Modifier votre avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
         refresh_gravatar_title: "Actualiser votre Gravatar"
-        letter_based: "Le système a attribué un avatar"
-        uploaded_avatar: "Photo personnalisée"
-        uploaded_avatar_empty: "Ajouter une photo personnalisée"
-        upload_title: "Envoyer votre photo"
+        letter_based: "Avatar par défaut"
+        uploaded_avatar: "Avatar personnalisé"
+        uploaded_avatar_empty: "Ajouter une avatar personnalisé"
+        upload_title: "Envoyer votre avatar"
         upload_picture: "Envoyer une image"
         image_is_not_a_square: "Attention : nous avons découpé votre image ; elle n'est pas carrée."
       change_profile_background:
@@ -346,7 +351,7 @@ fr:
         available: "Votre pseudo est disponible."
         global_match: "L'adresse de courriel correspond au pseudo enregistré."
         global_mismatch: "Déjà enregistré. Essayez {{suggestion}} ?"
-        not_available: "Pas disponible. Essayez {{suggestion}} ?"
+        not_available: "Non disponible. Essayez {{suggestion}} ?"
         too_short: "Votre pseudo est trop court."
         too_long: "Votre pseudo est trop long."
         checking: "Vérification de la disponibilité de votre pseudo..."
@@ -424,7 +429,7 @@ fr:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
         common: "Ce mot de passe est trop commun."
-        ok: "Votre mot de passe a l'air bon."
+        ok: "Votre mot de passe semble correct."
         instructions: "Doit être d'au moins %{count} caractères."
       ip_address:
         title: "Dernières adresses IP"
@@ -461,7 +466,7 @@ fr:
     assets_changed_confirm: "Ce site vient d'être mis à jour. Rafraîchir maintenant pour accéder à la nouvelle version ?"
     read_only_mode:
       enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
-      login_disabled: "La connexion est désactivée quand le site est en mode lecture seule."
+      login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
     too_few_topics_notice: "Créez au moins 5 sujets et %{posts} messages publics pour démarrer les discussions. Les nouveaux utilisateurs ne seront pas capable de gagner des niveaux de confiance sans contenu à lire. Ce message n’apparaît que pour les membres de l'équipe."
     learn_more: "en savoir plus…"
     year: 'an'
@@ -513,7 +518,7 @@ fr:
       username: "Utilisateur"
       password: "Mot de passe"
       email_placeholder: "courriel ou pseudo"
-      caps_lock_warning: "Capitales vérouillées"
+      caps_lock_warning: "Majuscules vérrouillées"
       error: "Erreur inconnue"
       blank_username_or_password: "Merci de saisir votre courriel ou nom d'utilisateur, et mot de passe."
       reset_password: 'Réinitialiser le mot de passe'
@@ -685,6 +690,9 @@ fr:
         hot: "Il n'y a aucun sujet populaire pour le moment."
         category: "Il n'y a aucun sujet sur {{category}}."
         top: "Il n'y a pas de meilleurs sujets."
+        educate:
+          new: '<p>Par défaut, les sujets sont considérés comme nouveau lorsqu''ils ont été crées dans les deux derniers jours..</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
+          unread: '<p>Par défaut, l''indicateur "nouveau" n’apparaît que sur les sujets :</p><ul><li>Que vous avez crées</li><li>Auxquels vous avez répondu</li><li>Que vous avez lu plus de 4 minutes</li></ul><p>Ou que vous avez explicitement suivis ou surveillés</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
       bottom:
         latest: "Il n'y a plus de sujet à lire."
         hot: "Il n'y a plus de sujet populaire à lire."
@@ -711,7 +719,7 @@ fr:
         other: '{{count}} sujets non lus'
       title: 'Sujet'
       loading_more: "Chargement de sujets supplémentaires…"
-      loading: 'Chargement des sujets en cours…'
+      loading: 'Chargement du sujet…'
       invalid_access:
         title: "Ce sujet est privé"
         description: "Désolé, vous n'avez pas accès à ce sujet !"
@@ -740,7 +748,7 @@ fr:
       toggle_information: "afficher les détails de ce sujet"
       read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres sujets dans {{catLink}} ou {{latestLink}}."
       read_more: "Vous voulez en lire plus? {{catLink}} or {{latestLink}}."
-      read_more_MF: "Il y a { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}."
+      read_more_MF: "Il y { UNREAD, plural, =0 {} one { <a href='/unread'>a 1 sujet non lu</a> } other { <a href='/unread'>a # sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='/new'>1 nouveau</a> sujet} other { {BOTH, select, true{et } false {a } other{}} <a href='/new'># nouveaux</a> sujets} } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}."
       browse_all_categories: Voir toutes les catégories
       view_latest_topics: voir les derniers sujets
       suggest_create_topic: Pourquoi ne pas créer votre sujet ?
@@ -830,7 +838,7 @@ fr:
         title: 'Signaler'
         help: 'signaler secrètement ce sujet pour attirer l''attention ou envoyer une notification privée à son propos.'
         success_message: 'Vous avez signalé ce sujet avec succès.'
-      inviting: "Inviter…"
+      inviting: "Invitation en cours…"
       automatically_add_to_groups_optional: "Cette invitation inclus l'accès à ces groupes: (optionnel, administrateur uniquement)"
       automatically_add_to_groups_required: "Cette invitation inclus l'accès à ces groupes: (<b>Requis</b>, administrateur uniquement)"
       invite_private:
@@ -932,6 +940,8 @@ fr:
         confirm: "Voulez-vous vraiment abandonner votre message ?"
         no_value: "Non, le conserver"
         yes_value: "Oui, abandonner"
+      wiki:
+        about: "ce message est en mode wiki; les utilisateurs de base peuvent le modifier"
       archetypes:
         save: 'Sauvegarder les options'
       controls:
@@ -1085,7 +1095,6 @@ fr:
       save: 'Enregistrer la catégorie'
       creation_error: Il y a eu une erreur lors de la création de la catégorie.
       save_error: Il y a eu une erreur lors de la sauvegarde de la catégorie.
-      more_posts: "voir tous les {{posts}}..."
       name: "Nom de la catégorie"
       description: "Description"
       topic: "catégorie du sujet"
@@ -1200,8 +1209,8 @@ fr:
     changed_by: "par {{author}}"
     categories_list: "Liste des Catégories"
     filters:
-      with_topics: "%{filter} sujets"
-      with_category: "%{filter} sujets sur %{category}"
+      with_topics: "Sujets %{filter}"
+      with_category: "Sujets %{filter} sur %{category}"
       latest:
         title: "Récents"
         help: "sujets avec des messages récents"
@@ -1248,6 +1257,7 @@ fr:
         help: "derniers sujets dans la catégorie {{categoryName}}"
       top:
         title: "Top"
+        help: "les meilleurs sujets de l'année, du mois, de la semaine ou du jour"
         yearly:
           title: "Top Annuel"
         monthly:
@@ -1336,7 +1346,7 @@ fr:
         disagree_flag_title: "Refuser le signalement car il est invalide ou incorrect"
         clear_topic_flags: "Terminer"
         clear_topic_flags_title: "Ce sujet a été étudié et les problèmes ont été résolus. Cliquez sur Terminer pour enlever les signalements."
-        more: "(plus...)"
+        more: "(plus de réponses...)"
         dispositions:
           agreed: "accepté"
           disagreed: "refusé"
@@ -1350,6 +1360,7 @@ fr:
         no_results: "Il n'y a aucun signalements."
         topic_flagged: "Ce <strong>sujet</strong> a été signalé."
         visit_topic: "Consulter le sujet pour intervenir"
+        was_edited: "Le message a été édité après le premier signalement"
         summary:
           action_type_3:
             one: "hors sujet"
@@ -1428,7 +1439,6 @@ fr:
           backup:
             text: "Sauvegarder"
             title: "Créer une sauvegarde"
-            confirm: "Êtes-vous sûr que vous voulez commencer une nouvelle sauvegarde?"
           download:
             text: "Télécharger"
             title: "Télécharger la sauvegarde"
@@ -1618,7 +1628,7 @@ fr:
       impersonate:
         title: "Se faire passer pour un utilisateur"
         username_or_email: "Pseudo ou adresse de courriel de l'utilisateur"
-        help: "Utiliser cet outil pour prendre l'identité d'un utilisateur (développeur)."
+        help: "Utiliser cet outil pour incarner un compte utilisateur à des fins de tests."
         not_found: "Cet utilisateur n'a pas été trouvé."
         invalid: "Désolé, vous ne pouvez pas vous faire passer pour cet utilisateur."
       users:
@@ -1681,6 +1691,7 @@ fr:
         edit_title: "Éditer le titre"
         save_title: "Sauvegarder le titre"
         refresh_browsers: "Forcer le rafraîchissement du navigateur"
+        refresh_browsers_message: "Message envoyé à tous les clients !"
         show_public_profile: "Afficher le profil public"
         impersonate: 'Incarner'
         ip_lookup: "IP de consultation"
@@ -1835,7 +1846,7 @@ fr:
       title: 'Raccourcis clavier'
       jump_to:
         title: 'Aller à'
-        home: '<b>g</b>, <b>h</b> Accueil (Récents)'
+        home: '<b>g</b>, <b>h</b> Accueil'
         latest: '<b>g</b>, <b>l</b> Récents'
         new: '<b>g</b>, <b>n</b> Nouveau'
         unread: '<b>g</b>, <b>u</b> Non lus'
@@ -1900,7 +1911,7 @@ fr:
       badge:
         editor:
           name: Editeur
-          description: Modifier son premier message
+          description: A modifié un message pour la première fois
         basic_user:
           name: Actif
           description: Toutes les fonctions communautaires essentielles sont accessibles
@@ -1944,8 +1955,8 @@ fr:
           name: Première citation
           description: A cité un utilisateur
         read_guidelines:
-          name: A lu les instructions
-          description: A lu les <a href="/guidelines">instructions communautaire</a>
+          name: Instructions lues
+          description: A lu les <a href="/guidelines">instructions à propos de la communauté</a>
         reader:
           name: Lecteur
           description: A lu tous les messages d'un sujet contenant plus de 100 messages

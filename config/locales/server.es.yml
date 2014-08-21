@@ -777,12 +777,6 @@ es:
     authorized_extensions: "Una lista de las extensiones de archivo permitidas para subir (usa \"*\" para habilitar todos los tipos de archivo)"
     max_similar_results: "Cuántos temas similares se mostrarán encima del editor cuando estés creando un nuevo tema. La comparación se basa en el título y el cuerpo del tema."
     title_prettify: "Prevenir errores comunes en el título, incluyendo \"todo mayúsculas\", primera letra minúscula, multiples signos ! o ?, . extra al final, etc."
-    topic_views_heat_low: "Después de este número de visitas, el tema será ligeramente resaltado."
-    topic_views_heat_medium: "Después de este número de visitas, el tema será moderadamente resaltado."
-    topic_views_heat_high: "Después de este número de visitas, el tema será fuertemente resaltado."
-    cold_age_days_low: "Un tema con tantos días será ligeramente resaltado."
-    cold_age_days_medium: "Un tema con tantos días será moderadamente resaltado."
-    cold_age_days_high: "Un tema con tantos días será activamente resaltado."
     faq_url: "Si tienes un documento de Preguntas Frecuentes alojado que quieras utilizar, introduce la URL completa aquí."
     tos_url: "Si tienes un documento de Condiciones de Servicio alojado en algún sitio quieras utilizar, facilita la URL aquí."
     privacy_policy_url: "Si tienes un documento de Preguntas Frecuentes alojado en algún sitio quieras utilizar, facilita la URL aquí."
@@ -882,9 +876,6 @@ es:
   most_posts: "Con más posts"
   most_recent_poster: "Posteador más reciente"
   frequent_poster: "Posteador frecuente"
-  redirected_to_top_reasons:
-    new_user: "¡Bienvenido a nuestra comunidad! Aquí encontrarás los temas recientes más populares."
-    not_seen_in_a_month: "¡Bienvenido de nuevo! No te hemos visto desde hace algún tiempo. Estos son los principales temas de discusión desde que has estado fuera."
   move_posts:
     new_topic_moderator_post:
       one: "He movido un post al nuevo tema: %{topic_link}"

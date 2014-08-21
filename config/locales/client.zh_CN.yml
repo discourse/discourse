@@ -19,6 +19,7 @@ zh_CN:
             mb: MB
             tb: TB
     dates:
+      time: "h:mm a"
       tiny:
         half_a_minute: "< 1 分钟"
         less_than_x_seconds:
@@ -1020,7 +1021,6 @@ zh_CN:
       save: '保存分类'
       creation_error: 创建此分类时发生了错误。
       save_error: 在保存此分类时发生了错误。
-      more_posts: "浏览全部 {{posts}} ..."
       name: "分类名称"
       description: "描述"
       topic: "分类主题"
@@ -1112,13 +1112,6 @@ zh_CN:
     posts: "帖子"
     posts_lowercase: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
-    posts_likes_MF: |
-      这个主题有 {count, plural, one {1 个帖子}其他{# 帖子数}}
-      {ratio, select,
-      low {with a high post to like ratio}
-      med {with a very high post to like ratio}
-      high {with an extremely high post to like ratio}
-      other {}}
     original_post: "原始帖"
     views: "浏览"
     views_lowercase: "浏览"
@@ -1271,7 +1264,6 @@ zh_CN:
         disagree_flag_title: "拒绝这个报告，无效或不正确"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "这个主题已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
-        more: "（更多……）"
         dispositions:
           agreed: "已批准"
           disagreed: "未批准"
@@ -1358,7 +1350,6 @@ zh_CN:
           backup:
             text: "备份"
             title: "建立一个备份"
-            confirm: "您确定要建立一个备份吗？"
           download:
             text: "下载"
             title: "下载该备份"
