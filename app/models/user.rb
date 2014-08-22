@@ -375,6 +375,10 @@ class User < ActiveRecord::Base
     UserAction.where(user_id: id, action_type: UserAction::WAS_LIKED).count
   end
 
+  def like_count_since(time)
+    UserAction.where(user_id: id, action_type: UserAction::WAS_LIKED).where('created_at > ?', time).count
+  end
+
   def post_count
     stat = user_stat || create_user_stat
     stat.post_count
