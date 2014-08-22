@@ -36,6 +36,9 @@
     &:nth-child(even) {
       background-color: $secondary;
       }
+    &.highlighted {
+      background-color: scale-color($tertiary, $lightness: 85%);
+    }
     }
 
   th,
