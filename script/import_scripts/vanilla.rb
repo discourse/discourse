@@ -89,7 +89,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
         u = {
           id: user[:user_id],
           email: user[:email],
-          name: user[:name],
+          username: user[:name],
           created_at: parse_date(user[:date_inserted]),
           bio_raw: clean_up(bio_raw),
           avatar_url: user[:photo],
@@ -245,7 +245,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
          .gsub("&lt;", "<")
          .gsub("&gt;", ">")
          # .gsub(/`([^`]+)`/im) { "`" + $1.gsub("*", "\u2603") + "`" }
-         # .gsub("*", "\*")
+         # .gsub("*", "\\*")
          # .gsub("\u2603", "*")
     end
 
