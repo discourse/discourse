@@ -503,6 +503,12 @@ trust:
   leader_promotion_min_duration:
     default: 14
     min: 0
+  leader_requires_likes_given:
+    default: 30
+    min: 0
+  leader_requires_likes_received:
+    default: 20
+    min: 0
   leader_links_no_follow: false
 
 security:

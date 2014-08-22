@@ -1939,6 +1939,8 @@ en:
           posts_read_all_time: "Posts Read (all time)"
           flagged_posts: "Flagged Posts"
           flagged_by_users: "Users Who Flagged"
+          likes_given: "Likes Given"
+          likes_received: "Likes Received"
           qualifies: "Qualifies for trust level 3."
           will_be_promoted: "Will be promoted within 24 hours."
           does_not_qualify: "Doesn't qualify for trust level 3."
