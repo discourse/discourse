@@ -7,7 +7,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_revoke_moderation,
              :can_impersonate,
              :like_count,
-             :like_count_last_100_days,
+             :like_given_count,
              :post_count,
              :topic_count,
              :flags_given_count,
@@ -51,10 +51,6 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def moderator
     object.moderator
-  end
-
-  def like_count_last_100_days
-    object.like_count_since(100.days.ago)
   end
 
   def topic_count
