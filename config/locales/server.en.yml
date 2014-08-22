@@ -1472,6 +1472,13 @@ en:
 
         The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
 
+    email_reject_destination:
+      subject_template: "Email issue -- Bad Destination Address(es)"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        None of the destination addresses are recognized by the forum. Please make sure that the forum is in the To: line (not CC or BCC), and that you are sending to the email address provided by the forum administrators.
+
     email_error_notification:
       subject_template: "Email issue -- POP authentication error"
       text_body_template: |

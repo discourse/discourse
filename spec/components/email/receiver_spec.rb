@@ -181,7 +181,6 @@ greatest show ever created. Everyone should watch it.
 
         expect(receiver.body).to eq(reply_body)
         expect(receiver.email_log).to eq(email_log)
-        expect(receiver.reply_key).to eq(reply_key)
 
         attachment_email = fixture_file("emails/attachment.eml")
         attachment_email = fill_email(attachment_email, "test@test.com", to)
@@ -209,7 +208,7 @@ greatest show ever created. Everyone should watch it.
       # no email in for user
       expect{
         process_email(from: "cobb@dob.com", to: "invalid@address.com")
-      }.to raise_error(Email::Receiver::EmailLogNotFound)
+      }.to raise_error(Email::Receiver::BadDestinationAddress)
 
       # valid target invalid user
       expect{

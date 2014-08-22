@@ -43,6 +43,8 @@ module Jobs
           message_template = :email_reject_parsing
         when Email::Receiver::EmailLogNotFound
           message_template = :email_reject_reply_key
+        when Email::Receiver::BadDestinationAddress
+          message_template = :email_reject_destination
         when ActiveRecord::Rollback
           message_template = :email_reject_post_error
         when Email::Receiver::InvalidPost
