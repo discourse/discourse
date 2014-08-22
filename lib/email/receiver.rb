@@ -13,10 +13,11 @@ module Email
     class EmptyEmailError < ProcessingError; end
     class UserNotFoundError < ProcessingError; end
     class UserNotSufficientTrustLevelError < ProcessingError; end
+    class BadDestinationAddress < ProcessingError; end
     class EmailLogNotFound < ProcessingError; end
     class InvalidPost < ProcessingError; end
 
-    attr_reader :body, :reply_key, :email_log
+    attr_reader :body, :email_log
 
     def initialize(raw)
       @raw = raw
@@ -37,10 +38,26 @@ module Email
       discourse_email_parser
       raise EmailUnparsableError if @body.blank?
 
-      if is_in_email?
-        @user = User.find_by_email(@message.from.first)
+      dest_info = {type: :invalid, obj: nil}
+      @message.to.each do |to_address|
+        if dest_info[:type] == :invalid
+          dest_info = check_address to_address
+        end
+      end
+
+      raise BadDestinationAddress if dest_info[:type] == :invalid
+
+      if dest_info[:type] == :category
+        raise BadDestinationAddress unless SiteSetting.email_in
+        category = dest_info[:obj]
+        @category_id = category.id
+        @allow_strangers = category.email_in_allow_strangers
+
+        user_email = @message.from.first
+        @user = User.find_by_email(user_email)
         if @user.blank? && @allow_strangers
-          wrap_body_in_quote
+
+          wrap_body_in_quote user_email
           # TODO This is WRONG it should register an account
           # and email the user details on how to log in / activate
           @user = Discourse.system_user
@@ -51,20 +68,30 @@ module Email
 
         create_new_topic
       else
-        @reply_key = @message.to.first
+        @email_log = dest_info[:obj]
 
-        # Extract the `reply_key` from the format the site has specified
-        tokens = SiteSetting.reply_by_email_address.split("%{reply_key}")
-        tokens.each do |t|
-          @reply_key.gsub!(t, "") if t.present?
-        end
-
-        # Look up the email log for the reply key
-        @email_log = EmailLog.for(reply_key)
         raise EmailLogNotFound if @email_log.blank?
 
         create_reply
       end
+    end
+
+    def check_address(address)
+      category = Category.find_by_email(address)
+      return {type: :category, obj: category} if category
+
+      regex = Regexp.escape SiteSetting.reply_by_email_address
+      regex = regex.gsub(Regexp.escape('%{reply_key}'), "(.*)")
+      regex = Regexp.new regex
+      match = regex.match address
+      if match && match[1].present?
+        reply_key = match[1]
+        email_log = EmailLog.for(reply_key)
+
+        return {type: :reply, obj: email_log}
+      end
+
+      {type: :invalid, obj: nil}
     end
 
     private
@@ -135,21 +162,8 @@ module Email
       @body.strip!
     end
 
-    def is_in_email?
-      @allow_strangers = false
-      return false unless SiteSetting.email_in
-
-      category = Category.find_by_email(@message.to.first)
-      return false unless category
-
-      @category_id = category.id
-      @allow_strangers = category.email_in_allow_strangers
-
-      true
-    end
-
-    def wrap_body_in_quote
-      @body = "[quote=\"#{@message.from.first}\"]
+    def wrap_body_in_quote(user_email)
+      @body = "[quote=\"#{user_email}\"]
 #{@body}
 [/quote]"
     end
