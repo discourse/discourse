@@ -76,7 +76,7 @@ module PrettyText
       "app/assets/javascripts/discourse/lib/markdown.js"
     )
 
-    Dir["#{Rails.root}/app/assets/javascripts/discourse/dialects/**.js"].each do |dialect|
+    Dir["#{Rails.root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
       unless dialect =~ /\/dialect\.js$/
         ctx.load(dialect)
       end
