@@ -68,6 +68,9 @@
     &:nth-child(odd) {
         background-color: $secondary;
     }
+    &.highlighted {
+      background-color: scale-color($tertiary, $lightness: 85%);
+    }
   }
   button.bulk-select {
     padding: 0;

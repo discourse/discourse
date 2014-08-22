@@ -879,16 +879,6 @@ $topic-avatar-width: 45px;
   clear: both;
 }
 
-.fade {
-  opacity: 0;
-  -webkit-transition: opacity 0.15s linear;
-  transition: opacity 0.15s linear;
-}
-
-.fade.in {
-  opacity: 1;
-}
-
 #selected-posts {
 
   padding-left: 20px;
