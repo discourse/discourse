@@ -1,6 +1,6 @@
 import CleansUp from 'discourse/mixins/cleans-up';
 
-export default Ember.View.extend({
+export default Ember.View.extend(CleansUp, {
   elementId: 'topic-entrance',
   classNameBindings: ['visible::hidden'],
   visible: Em.computed.notEmpty('controller.model'),
