@@ -452,16 +452,16 @@ end
 #  deleted_by_id       :integer
 #  related_post_id     :integer
 #  staff_took_action   :boolean          default(FALSE), not null
-#  deferred_by_id       :integer
-#  targets_topic       :boolean          default(FALSE)
+#  deferred_by_id      :integer
+#  targets_topic       :boolean          default(FALSE), not null
 #  agreed_at           :datetime
 #  agreed_by_id        :integer
-#  deferred_at          :datetime
+#  deferred_at         :datetime
 #  disagreed_at        :datetime
 #  disagreed_by_id     :integer
 #
 # Indexes
 #
-#  idx_unique_actions             (user_id,post_action_type_id,post_id,deleted_at,targets_topic) UNIQUE
+#  idx_unique_actions             (user_id,post_action_type_id,post_id,targets_topic) UNIQUE
 #  index_post_actions_on_post_id  (post_id)
 #

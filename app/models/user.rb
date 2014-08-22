@@ -769,7 +769,7 @@ end
 #  email                         :string(256)      not null
 #  password_hash                 :string(64)
 #  salt                          :string(32)
-#  active                        :boolean
+#  active                        :boolean          default(FALSE), not null
 #  username_lower                :string(60)       not null
 #  auth_token                    :string(32)
 #  last_seen_at                  :datetime
