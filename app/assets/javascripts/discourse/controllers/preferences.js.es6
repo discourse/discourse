@@ -12,6 +12,7 @@ export default ObjectController.extend({
 
   allowAvatarUpload: Discourse.computed.setting('allow_uploaded_avatars'),
   allowUserLocale: Discourse.computed.setting('allow_user_locale'),
+  ssoOverridesAvatar: Discourse.computed.setting('sso_overrides_avatar'),
 
   selectedCategories: function(){
     return [].concat(this.get("watchedCategories"), this.get("trackedCategories"), this.get("mutedCategories"));
