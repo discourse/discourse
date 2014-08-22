@@ -81,6 +81,7 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
         topics.forEach(function(t) {
           t.set('category', category);
         });
+        self.get('controllers.discovery/topics').send('refresh');
         self.send('closeModal');
       });
     },
