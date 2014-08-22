@@ -47,7 +47,7 @@ function replaceBBCodeParamsRaw(tag, emitter) {
     stop: "[/" + tag + "]",
     rawContents: true,
     emitter: function(contents) {
-      var regexp = /^([^\]]+)\](.*)$/,
+      var regexp = /^([^\]]+)\]([\S\s]*)$/,
           m = regexp.exec(contents);
 
       if (m) { return emitter.call(this, m[1], m[2]); }
