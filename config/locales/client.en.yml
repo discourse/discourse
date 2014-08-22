@@ -1879,7 +1879,7 @@ en:
         reputation: Reputation
         permissions: Permissions
         activity: Activity
-        like_count: Likes Received
+        like_count: Likes Given / Received
         last_100_days: 'in the last 100 days'
         private_topics_count: Private Topics
         posts_read_count: Posts Read
@@ -1887,6 +1887,7 @@ en:
         topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
+        flags_given_received_count: 'Flags Given / Received'
         approve: 'Approve'
         approved_by: "approved by"
         approve_success: "User approved and email sent with activation instructions."
