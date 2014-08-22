@@ -62,8 +62,8 @@ test("size tags", function() {
   format("[size=asdf]regular[/size]",
          "<span class=\"bbcode-size-1\">regular</span>",
          "it only supports numbers in bbcode");
-  format("[size=35]\nNEWLINE\n[/size]",
-         "<span class=\"bbcode-size-35\"><br>NEWLINE<br></span>",
+  format("[size=35]NEWLINE\n\ntest[/size]",
+         "<span class=\"bbcode-size-35\"><p>NEWLINE</p><p>test</p></span>",
          "works with newlines");
 });
 
