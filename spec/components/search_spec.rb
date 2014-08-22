@@ -195,7 +195,9 @@ describe Search do
       it 'returns the post' do
         result.should be_present
         result[:title].should == topic.title
-        result[:url].should == reply.url
+
+        # The link is to the topic url because it's aggregated
+        result[:url].should == topic.relative_url
       end
     end
 
