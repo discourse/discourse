@@ -4,10 +4,15 @@
 #
 module Email
   class Styles
+    @@plugin_callbacks = []
 
     def initialize(html)
       @html = html
       @fragment = Nokogiri::HTML.fragment(@html)
+    end
+
+    def self.register_plugin_style(&block)
+      @@plugin_callbacks.push(block)
     end
 
     def add_styles(node, new_styles)
@@ -60,6 +65,7 @@ module Email
       correct_footer_style
       reset_tables
       onebox_styles
+      plugin_styles
     end
 
     def onebox_styles
@@ -113,6 +119,12 @@ module Email
       style('.featured-topic a', 'text-decoration: none; font-weight: bold; color: #006699; margin-right: 5px')
 
       onebox_styles
+      plugin_styles
+    end
+
+    # this method is reserved for styles specific to plugin
+    def plugin_styles
+      @@plugin_callbacks.each { |block| block.call(@fragment) }
     end
 
     def to_html
