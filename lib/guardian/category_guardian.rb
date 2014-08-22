@@ -22,7 +22,7 @@ module CategoryGuardian
 
   def can_delete_category?(category)
     can_edit_category?(category) &&
-    category.topic_count == 0 &&
+    category.topic_count <= 0 &&
     !category.uncategorized? &&
     !category.has_children?
   end
