@@ -73,6 +73,18 @@
           <td>{{num_flagged_by_users}}</td>
           <td>{{max_flagged_by_users}} {{i18n max}}</td>
         </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.likes_given}}</th>
+          <td><i {{bind-attr class=":fa met.likes_given:fa-check:fa-times"}}></i></td>
+          <td>{{num_likes_given}}</td>
+          <td>{{min_likes_given}}</td>
+        </tr>
+        <tr>
+          <th>{{i18n admin.user.tl3_requirements.likes_received}}</th>
+          <td><i {{bind-attr class=":fa met.likes_received:fa-check:fa-times"}}></i></td>
+          <td>{{num_likes_received}}</td>
+          <td>{{min_likes_received}}</td>
+        </tr>
       </tbody>
     </table>
   {{/with}}

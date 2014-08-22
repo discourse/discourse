@@ -16,7 +16,9 @@ Discourse.LeaderRequirements = Discourse.Model.extend({
       topics_viewed_all_time: this.get('topics_viewed_all_time') >= this.get('min_topics_viewed_all_time'),
       posts_read_all_time: this.get('posts_read_all_time') >= this.get('min_posts_read_all_time'),
       flagged_posts: this.get('num_flagged_posts') <= this.get('max_flagged_posts'),
-      flagged_by_users: this.get('num_flagged_by_users') <= this.get('max_flagged_by_users')
+      flagged_by_users: this.get('num_flagged_by_users') <= this.get('max_flagged_by_users'),
+      likes_given: this.get('num_likes_given') >= this.get('min_likes_given'),
+      likes_received: this.get('num_likes_received') >= this.get('min_likes_received')
     };
   }.property('days_visited', 'min_days_visited',
              'num_topics_replied_to', 'min_topics_replied_to',
@@ -25,5 +27,7 @@ Discourse.LeaderRequirements = Discourse.Model.extend({
              'num_flagged_posts', 'max_flagged_posts',
              'topics_viewed_all_time', 'min_topics_viewed_all_time',
              'posts_read_all_time', 'min_posts_read_all_time',
-             'num_flagged_by_users', 'max_flagged_by_users')
+             'num_flagged_by_users', 'max_flagged_by_users',
+             'num_likes_given', 'min_likes_given',
+             'num_likes_received', 'min_likes_received')
 });

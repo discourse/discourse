@@ -50,6 +50,16 @@ describe LeaderRequirements do
       SiteSetting.stubs(:leader_requires_max_flagged).returns(3)
       leader_requirements.max_flagged_posts.should == 3
     end
+
+    it "min_likes_given depends on site setting" do
+      SiteSetting.stubs(:leader_requires_likes_given).returns(30)
+      leader_requirements.min_likes_given.should == 30
+    end
+
+    it "min_likes_received depends on site setting" do
+      SiteSetting.stubs(:leader_requires_likes_received).returns(20)
+      leader_requirements.min_likes_received.should == 20
+    end
   end
 
   describe "days_visited" do
@@ -152,6 +162,40 @@ describe LeaderRequirements do
     end
   end
 
+  describe "num_likes_given" do
+    it "counts likes given in the last 100 days" do
+      ActiveRecord::Base.observers.enable :user_action_observer
+
+      recent_post1 = create_post(created_at: 1.hour.ago)
+      recent_post2 = create_post(created_at: 10.days.ago)
+      old_post     = create_post(created_at: 102.days.ago)
+
+      Fabricate(:like, user: user, post: recent_post1, created_at: 2.hours.ago)
+      Fabricate(:like, user: user, post: recent_post2, created_at: 5.days.ago)
+      Fabricate(:like, user: user, post: old_post,     created_at: 101.days.ago)
+
+      leader_requirements.num_likes_given.should == 2
+    end
+  end
+
+  describe "num_likes_received" do
+    it "counts likes received in the last 100 days" do
+      ActiveRecord::Base.observers.enable :user_action_observer
+
+      t = Fabricate(:topic, user: user, created_at: 102.days.ago)
+      old_post     = create_post(topic: t, user: user, created_at: 102.days.ago)
+      recent_post2 = create_post(topic: t, user: user, created_at: 10.days.ago)
+      recent_post1 = create_post(topic: t, user: user, created_at: 1.hour.ago)
+
+      liker = Fabricate(:user)
+      Fabricate(:like, user: liker, post: recent_post1, created_at: 2.hours.ago)
+      Fabricate(:like, user: liker, post: recent_post2, created_at: 5.days.ago)
+      Fabricate(:like, user: liker, post: old_post,     created_at: 101.days.ago)
+
+      leader_requirements.num_likes_received.should == 2
+    end
+  end
+
   describe "requirements" do
 
     before do
@@ -163,6 +207,8 @@ describe LeaderRequirements do
       leader_requirements.stubs(:min_posts_read_all_time).returns(500)
       leader_requirements.stubs(:max_flagged_posts).returns(5)
       leader_requirements.stubs(:max_flagged_by_users).returns(5)
+      leader_requirements.stubs(:min_likes_given).returns(30)
+      leader_requirements.stubs(:min_likes_received).returns(20)
 
       leader_requirements.stubs(:days_visited).returns(50)
       leader_requirements.stubs(:num_topics_replied_to).returns(10)
@@ -172,6 +218,8 @@ describe LeaderRequirements do
       leader_requirements.stubs(:posts_read_all_time).returns(500)
       leader_requirements.stubs(:num_flagged_posts).returns(0)
       leader_requirements.stubs(:num_flagged_by_users).returns(0)
+      leader_requirements.stubs(:num_likes_given).returns(30)
+      leader_requirements.stubs(:num_likes_received).returns(20)
     end
 
     it "are met when all requirements are met" do
@@ -188,6 +236,8 @@ describe LeaderRequirements do
       leader_requirements.stubs(:num_topics_replied_to).returns(9)
       leader_requirements.stubs(:topics_viewed).returns(23)
       leader_requirements.stubs(:posts_read).returns(23)
+      leader_requirements.stubs(:num_likes_given).returns(29)
+      leader_requirements.stubs(:num_likes_received).returns(19)
       leader_requirements.requirements_lost?.should == false
     end
 
@@ -211,6 +261,25 @@ describe LeaderRequirements do
       leader_requirements.requirements_lost?.should == true
     end
 
+    it "are not met if not enough likes given" do
+      leader_requirements.stubs(:num_likes_given).returns(29)
+      leader_requirements.requirements_met?.should == false
+    end
+
+    it "are not met if not enough likes received" do
+      leader_requirements.stubs(:num_likes_received).returns(19)
+      leader_requirements.requirements_met?.should == false
+    end
+
+    it "are lost if not enough likes given" do
+      leader_requirements.stubs(:num_likes_given).returns(26)
+      leader_requirements.requirements_lost?.should == true
+    end
+
+    it "are lost if not enough likes received" do
+      leader_requirements.stubs(:num_likes_received).returns(17)
+      leader_requirements.requirements_lost?.should == true
+    end
   end
 
 end
