@@ -1880,6 +1880,7 @@ en:
         permissions: Permissions
         activity: Activity
         like_count: Likes Received
+        last_100_days: 'in the last 100 days'
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
