@@ -452,8 +452,14 @@ class ImportScripts::Base
 
   def update_category_featured_topics
     puts "updating featured topics in categories"
+
+    total_count = Category.count
+    progress_count = 0
+
     Category.find_each do |category|
       CategoryFeaturedTopic.feature_topics_for(category)
+      progress_count += 1
+      print_status(progress_count, total_count)
     end
   end
 
