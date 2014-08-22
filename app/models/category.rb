@@ -387,6 +387,7 @@ end
 #  logo_url                 :string(255)
 #  background_url           :string(255)
 #  allow_badges             :boolean          default(TRUE), not null
+#  name_lower               :string(50)       not null
 #
 # Indexes
 #
