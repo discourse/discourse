@@ -26,6 +26,8 @@ class AdminUserSerializer < BasicUserSerializer
              :blocked,
              :time_read
 
+  has_one :single_sign_on_record, serializer: SingleSignOnRecordSerializer, embed: :objects
+
   [:days_visited,:posts_read_count,:topics_entered].each do |sym|
     attributes sym
     define_method sym do
