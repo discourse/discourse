@@ -18,9 +18,14 @@ module Jobs
           DiscourseUpdates.updated_at = Time.zone.now
           DiscourseUpdates.missing_versions = json['versions']
 
-          if SiteSetting.new_version_emails and json['missingVersionsCount'] > 0 and prev_missing_versions_count < json['missingVersionsCount'].to_i
+          if  GlobalSetting.new_version_emails and
+              SiteSetting.new_version_emails and
+              json['missingVersionsCount'] > 0 and
+              prev_missing_versions_count < json['missingVersionsCount'].to_i
+
             message = VersionMailer.send_notice
             Email::Sender.new(message, :new_version).send
+
           end
         rescue => e
           raise e unless Rails.env.development? # Fail version check silently in development mode
