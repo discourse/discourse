@@ -3,6 +3,13 @@ require 'email/sender'
 
 describe Email::Sender do
 
+  it "doesn't deliver mail when mails are disabled" do
+    SiteSetting.expects(:disable_emails).returns(true)
+    Mail::Message.any_instance.expects(:deliver).never
+    message = Mail::Message.new(to: "hello@world.com" , body: "hello")
+    Email::Sender.new(message, :hello).send
+  end
+
   it "doesn't deliver mail when the message is nil" do
     Mail::Message.any_instance.expects(:deliver).never
     Email::Sender.new(nil, :hello).send

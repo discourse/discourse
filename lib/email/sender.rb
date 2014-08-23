@@ -22,6 +22,7 @@ module Email
     end
 
     def send
+      return if SiteSetting.disable_emails
       return skip(I18n.t('email_log.message_blank')) if @message.blank?
       return skip(I18n.t('email_log.message_to_blank')) if @message.to.blank?
 

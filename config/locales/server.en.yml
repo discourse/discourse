@@ -921,6 +921,8 @@ en:
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
 
+    disable_emails: "Prevent Discourse from sending any kind of emails"
+
     pop3s_polling_enabled: "Poll via POP3S for email replies."
     pop3s_polling_insecure: "Poll using plain text POP3 without SSL."
     pop3s_polling_period_mins: "The period in minutes between checking the POP3S account for email. NOTE: requires restart."
