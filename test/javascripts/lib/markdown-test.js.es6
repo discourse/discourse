@@ -138,6 +138,10 @@ test("Links", function() {
   cooked("[http://google.com ... wat](http://discourse.org)",
          "<p><a href=\"http://discourse.org\">http://google.com ... wat</a></p>",
          "it supports linkins within links");
+
+  cooked("[Link](http://www.example.com) (with an outer \"description\")",
+         "<p><a href=\"http://www.example.com\">Link</a> (with an outer \"description\")</p>",
+         "it doesn't consume closing parens as part of the url")
 });
 
 test("simple quotes", function() {
