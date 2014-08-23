@@ -259,6 +259,9 @@ ol.category-breadcrumb {
 }
 
 .period-chooser {
+
+  @include unselectable;
+
   h2 {
     float: left;
   }
@@ -272,6 +275,9 @@ ol.category-breadcrumb {
   }
 
   #period-popup {
+
+    @include unselectable;
+
     border: 1px solid scale-color-diff();
     padding: 5px;
     background: $secondary;
