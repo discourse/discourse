@@ -14,7 +14,8 @@
   {{/each}}
 </table>
 
-<button {{action toggleShowResults}} class="btn btn-small">
+<div class='row'>
+<button {{action toggleShowResults}} class="btn btn-small show-results">
   {{#if showResults}}
     <i class="fa fa-eye-slash"></i>
     {{i18n poll.results.hide}}
@@ -25,7 +26,7 @@
 </button>
 
 {{#if showToggleClosePoll}}
-  <button {{action toggleClosePoll}} class="btn btn-small">
+  <button {{action toggleClosePoll}} class="btn btn-small toggle-poll">
     {{#if poll.closed}}
       <i class="fa fa-unlock-alt"></i>
       {{i18n poll.open_poll}}
@@ -35,6 +36,7 @@
     {{/if}}
   </button>
 {{/if}}
+</div>
 
 {{#if loading}}
   <i class="fa fa-spin fa-spinner"></i>
