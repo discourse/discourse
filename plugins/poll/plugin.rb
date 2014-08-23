@@ -158,8 +158,9 @@ register_css <<CSS
   cursor: pointer;
 }
 
-.poll-ui button:first-of-type {
-  margin-left: 20px;
+.poll-ui .row {
+  padding-left: 15px;
+  padding-top: 10px;
 }
 
 
@@ -190,6 +191,10 @@ register_css <<CSS
 
 .poll-ui .radio {
   margin-right: 0px;
+}
+
+.poll-ui .toggle-poll {
+  float: right;
 }
 
 CSS
