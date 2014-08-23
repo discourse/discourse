@@ -1944,6 +1944,13 @@ en:
           qualifies: "Qualifies for trust level 3."
           will_be_promoted: "Will be promoted within 24 hours."
           does_not_qualify: "Doesn't qualify for trust level 3."
+        sso:
+          title: "Single Sign On"
+          external_id: "External ID"
+          external_username: "Username"
+          external_name: "Name"
+          external_email: "Email"
+          external_avatar_url: "Avatar URL"
 
       site_content:
         none: "Choose a type of content to begin editing."
