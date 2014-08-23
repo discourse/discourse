@@ -395,6 +395,7 @@ email:
     enum: 'TrustLevelSetting'
   email_prefix: ''
   email_site_title: ''
+  disable_emails: false
 
 files:
   max_image_size_kb:
