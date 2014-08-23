@@ -189,34 +189,51 @@ I18n.interpolate = function(message, options) {
   return message;
 };
 
+// translationCallsIncrementor properties and methods are used to help translators match
+// strings in GUI with their translation keys.
+I18n.translationCallsIncrementorActive = false;
+
+I18n.translationCallsIncrementor = 0;
+
+// Increments translation calls counter, outputs the scope and options to console and returns a suffix
+// that should be appended to the translated string.
+I18n.translationCallsNext = function(scope, options) {
+  if (!this.translationCallsIncrementorActive)
+    return '';
+  this.translationCallsIncrementor++;
+  console.log("Translation #" + this.translationCallsIncrementor + ": " + scope + ", parameters: " + JSON.stringify(options));
+  return " (t" + this.translationCallsIncrementor + ")";
+};
+
 I18n.translate = function(scope, options) {
   options = this.prepareOptions(options);
+
   var translation = this.lookup(scope, options);
 
   try {
     if (typeof translation === "object") {
       if (typeof options.count === "number") {
-        return this.pluralize(options.count, scope, options);
+        return this.pluralize(options.count, scope, options) + this.translationCallsNext(scope, options);
       } else {
-        return translation;
+        return translation + this.translationCallsNext(scope, options);
       }
     } else {
-      return this.interpolate(translation, options);
+      return this.interpolate(translation, options) + this.translationCallsNext(scope, options);
     }
   } catch (error) {
-    return this.missingTranslation(scope);
+    return this.missingTranslation(scope) + this.translationCallsNext(scope, options);
   }
 };
 
 I18n.localize = function(scope, value) {
   switch (scope) {
     case "currency":
-      return this.toCurrency(value);
+      return this.toCurrency(value) + this.translationCallsNext(scope, value);
     case "number":
       scope = this.lookup("number.format");
-      return this.toNumber(value, scope);
+      return this.toNumber(value, scope) + this.translationCallsNext(scope, value);
     case "percentage":
-      return this.toPercentage(value);
+      return this.toPercentage(value) + this.translationCallsNext(scope, value);
     default:
       if (scope.match(/^(date|time)/)) {
         return this.toTime(scope, value);
