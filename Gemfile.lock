@@ -436,6 +436,7 @@ DEPENDENCIES
   listen (= 0.7.3)
   logster
   lru_redux
+  mail (~> 2.5.4)
   memory_profiler
   message_bus
   minitest
