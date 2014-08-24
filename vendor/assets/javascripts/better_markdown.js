@@ -1310,7 +1310,7 @@
         // back based on if there a matching ones in the url
         //    ([here](/url/(test))
         // The parens have to be balanced
-        var m = text.match( /^\s*\([ \t]*([^"']*)(?:[ \t]+(["'])(.*?)\2)?[ \t]*\)/ );
+        var m = text.match( /^\s*\([ \t]*([^"'\s]*)(?:[ \t]+(["'])(.*?)\2)?[ \t]*\)/ );
         if ( m ) {
           var url = m[1].replace(/\s+$/, '');
           consumed += m[0].length;
