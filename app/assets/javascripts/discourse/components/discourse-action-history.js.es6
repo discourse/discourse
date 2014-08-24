@@ -38,7 +38,7 @@ export default Em.Component.extend({
             }
             iconsHtml += Discourse.Utilities.avatarImg({
               size: 'small',
-              avatarTemplate: u.get('avatar_template'),
+              avatarTemplate: u.get('avatarTemplate'),
               title: u.get('username')
             });
             iconsHtml += "</a>";
