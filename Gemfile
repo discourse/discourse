@@ -80,6 +80,8 @@ else
 end
 gem 'rails-observers'
 
+gem 'mail', '~> 2.5.4'
+
 #gem 'redis-rails'
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
