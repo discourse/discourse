@@ -795,7 +795,7 @@ en:
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     backup_daily: "Automatically create a site backup once a day."
-    enable_s3_backups: "Upload backups to S3 when complete. Make sure you have filled in your s3 credentials."
+    enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: Requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
