@@ -19,9 +19,9 @@ module JsLocaleHelper
     # merge translations (plugin translations overwrite default translations)
     # insert fallback translations
     if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
-      translations[locale_str]['js'].deep_merge!(plugin_translations['en']['js'].deep_merge(translations[locale_str]['js']))
+      translations[locale_str]['js'].deep_merge!(plugin_translations['en']['js'].deep_merge(plugin_translations[locale_str]['js']))
     else
-      translations[locale_str]['js'] = plugin_translations['en']['js']
+      translations[locale_str]['js'].deep_merge!(plugin_translations['en']['js'])
     end
 
     # We used to split the admin versus the client side, but it's much simpler to just
