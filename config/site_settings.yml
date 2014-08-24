@@ -232,7 +232,12 @@ login:
   sso_overrides_avatar:
     default: false
     client: true
-
+  email_domains_blacklist:
+    default: 'mailinator.com'
+    type: list
+  email_domains_whitelist:
+    default: ''
+    type: list
 
 users:
   min_username_length:
@@ -529,12 +534,6 @@ onebox:
 spam:
   add_rel_nofollow_to_user_content: true
   exclude_rel_nofollow_domains:
-    default: ''
-    type: list
-  email_domains_blacklist:
-    default: 'mailinator.com'
-    type: list
-  email_domains_whitelist:
     default: ''
     type: list
   flags_required_to_hide_post: 3
