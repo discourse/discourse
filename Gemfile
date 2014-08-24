@@ -67,9 +67,7 @@ unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21
    end
 end
 
-# see: https://github.com/mbleigh/seed-fu/pull/54
-# taking forever to get changes upstream in seed-fu
-gem 'seed-fu-discourse', require: 'seed-fu'
+gem 'seed-fu', '~> 2.3.3'
 
 if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
