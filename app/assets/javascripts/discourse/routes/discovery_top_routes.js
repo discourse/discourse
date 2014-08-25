@@ -26,7 +26,7 @@ Discourse.DiscoveryTopRoute = Discourse.Route.extend(Discourse.OpenComposer, {
 
   renderTemplate: function() {
     this.render('navigation/default', { outlet: 'navigation-bar' });
-    this.render('discovery/topics', { outlet: 'list-container' });
+    this.render('discovery/top', { outlet: 'list-container' });
   },
 
   actions: {
