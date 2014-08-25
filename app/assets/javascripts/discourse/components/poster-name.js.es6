@@ -85,7 +85,7 @@ var PosterNameComponent = Em.Component.extend({
 
     if(post.get('admin')) {
       desc = I18n.t('user.admin_tooltip');
-      return '<i class="fa icon-shield" title="' + desc +  '" alt="' + desc + '"></i>';
+      return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
     } else if(post.get('moderator')) {
       desc = I18n.t('user.moderator_tooltip');
       return '<i class="fa fa-magic" title="' + desc +  '" alt="' + desc + '"></i>';
