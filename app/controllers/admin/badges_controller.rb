@@ -14,7 +14,10 @@ class Admin::BadgesController < Admin::AdminController
   end
 
   def preview
-    render json: BadgeGranter.preview(params[:sql], target_posts: params[:target_posts] == "true")
+    render json: BadgeGranter.preview(params[:sql],
+                                      target_posts: params[:target_posts] == "true",
+                                      explain: params[:explain] == "true",
+                                      trigger: params[:trigger].to_i)
   end
 
   def badge_types
@@ -53,9 +56,28 @@ class Admin::BadgesController < Admin::AdminController
 
   def update
     badge = find_badge
-    update_badge_from_params(badge)
-    badge.save!
-    render_serialized(badge, BadgeSerializer, root: "badge")
+
+    error = nil
+    Badge.transaction do
+      update_badge_from_params(badge)
+
+      # Perform checks to prevent bad queries
+      begin
+        BadgeGranter.contract_checks!(badge.query, { target_posts: badge.target_posts, trigger: badge.trigger })
+      rescue => e
+        # noinspection RubyUnusedLocalVariable
+        error = e.message
+        raise ActiveRecord::Rollback
+      end
+
+      badge.save!
+    end
+
+    if error
+      render_json_error error
+    else
+      render_serialized(badge, BadgeSerializer, root: "badge")
+    end
   end
 
   def destroy

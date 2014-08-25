@@ -15,8 +15,39 @@ Discourse.AdminBadgesRoute = Discourse.Route.extend({
   },
 
   actions: {
-    editGroupings: function(model){
+    editGroupings: function(model) {
       Discourse.Route.showModal(this, 'admin_edit_badge_groupings', model);
+    },
+
+    saveError: function(jqXhr) {
+      if (jqXhr.status === 422) {
+        Discourse.Route.showModal(this, 'admin_badge_preview', jqXhr.responseJSON);
+      } else {
+        Em.Logger.error(jqXhr);
+        bootbox.alert(I18n.t('errors.description.unknown'));
+      }
+    },
+
+    preview: function(badge, explain) {
+      var self = this;
+
+      badge.set('preview_loading', true);
+      Discourse.ajax('/admin/badges/preview.json', {
+        method: 'post',
+        data: {
+          sql: badge.query,
+          target_posts: !!badge.target_posts,
+          trigger: badge.trigger,
+          explain: explain
+        }
+      }).then(function(json) {
+        badge.set('preview_loading', false);
+        Discourse.Route.showModal(self, 'admin_badge_preview', json);
+      }).catch(function(error) {
+        badge.set('preview_loading', false);
+        Em.Logger.error(error);
+        bootbox.alert("Network error");
+      });
     }
   }
 

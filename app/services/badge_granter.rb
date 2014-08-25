@@ -132,8 +132,37 @@ class BadgeGranter
     "badge_queue".freeze
   end
 
+  # Options:
+  #   :target_posts - whether the badge targets posts
+  #   :trigger - the Badge::Trigger id
+  def self.contract_checks!(sql, opts = {})
+    return unless sql.present?
+    if Badge::Trigger.uses_post_ids?(opts[:trigger])
+      raise "Contract violation:\nQuery triggers on posts, but does not reference the ':post_ids' array" unless sql.match /:post_ids/
+    end
+    if Badge::Trigger.uses_user_ids?(opts[:trigger])
+      raise "Contract violation:\nQuery triggers on users, but does not reference the ':user_ids' array" unless sql.match /:user_ids/
+    end
+    if opts[:trigger] && !Badge::Trigger.is_none?(opts[:trigger])
+      raise "Contract violation:\nQuery is triggered, but does not reference the ':backfill' parameter.\n(Hint: if :backfill is TRUE, you should ignore the :post_ids/:user_ids)" unless sql.match /:backfill/
+    end
+
+    # TODO these three conditions have a lot of false negatives
+    if opts[:target_posts]
+      raise "Contract violation:\nQuery targets posts, but does not return a 'post_id' column" unless sql.match /post_id/
+    end
+    raise "Contract violation:\nQuery does not return a 'user_id' column" unless sql.match /user_id/
+    raise "Contract violation:\nQuery does not return a 'granted_at' column" unless sql.match /granted_at/
+  end
+
+  # Options:
+  #   :target_posts - whether the badge targets posts
+  #   :trigger - the Badge::Trigger id
+  #   :explain - return the EXPLAIN query
   def self.preview(sql, opts = {})
     params = {user_ids: [], post_ids: [], backfill: true}
+
+    BadgeGranter.contract_checks!(sql, opts)
 
     # hack to allow for params, otherwise sanitizer will trigger sprintf
     count_sql = "SELECT COUNT(*) count FROM (#{sql}) q WHERE :backfill = :backfill"
@@ -156,22 +185,33 @@ class BadgeGranter
     LIMIT 10"
      end
 
+    query_plan = nil
+    query_plan = ActiveRecord::Base.exec_sql("EXPLAIN #{sql}", params) if opts[:explain]
+
     sample = SqlBuilder.map_exec(OpenStruct, grants_sql, params).map(&:to_h)
 
-    {grant_count: grant_count, sample: sample}
+    sample.each do |result|
+      raise "Query returned a non-existent user ID:\n#{result[:id]}" unless User.find(result[:id]).present?
+      raise "Query did not return a badge grant time\n(Try using 'current_timestamp granted_at')" unless result[:granted_at]
+      if opts[:target_posts]
+        raise "Query did not return a post ID" unless result[:post_id]
+        raise "Query returned a non-existent post ID:\n#{result[:post_id]}" unless Post.find(result[:post_id]).present?
+      end
+    end
+
+    {grant_count: grant_count, sample: sample, query_plan: query_plan}
   rescue => e
-    {error: e.to_s}
+    {errors: e.message}
   end
 
   MAX_ITEMS_FOR_DELTA = 200
   def self.backfill(badge, opts=nil)
     return unless badge.query.present? && badge.enabled
 
+    post_ids = user_ids = nil
+
     post_ids = opts[:post_ids] if opts
     user_ids = opts[:user_ids] if opts
-
-    post_ids = nil unless post_ids.present?
-    user_ids = nil unless user_ids.present?
 
     # safeguard fall back to full backfill if more than 200
     if (post_ids && post_ids.length > MAX_ITEMS_FOR_DELTA) ||
@@ -179,6 +219,9 @@ class BadgeGranter
       post_ids = nil
       user_ids = nil
     end
+
+    post_ids = nil unless post_ids.present?
+    user_ids = nil unless user_ids.present?
 
     full_backfill = !user_ids && !post_ids
 
