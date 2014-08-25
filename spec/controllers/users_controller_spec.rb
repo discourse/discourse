@@ -243,7 +243,7 @@ describe UsersController do
       end
     end
 
-    context 'invalid token' do
+    context 'missing token' do
       before do
         get :password_reset, token: SecureRandom.hex
       end
@@ -251,9 +251,22 @@ describe UsersController do
       it 'disallows login' do
         flash[:error].should be_present
         session[:current_user_id].should be_blank
+        assigns[:invalid_token].should be_nil
         response.should be_success
       end
+    end
 
+    context 'invalid token' do
+      before do
+        get :password_reset, token: "evil_trout!"
+      end
+
+      it 'disallows login' do
+        flash[:error].should be_present
+        session[:current_user_id].should be_blank
+        assigns[:invalid_token].should be_true
+        response.should be_success
+      end
     end
 
     context 'valid token' do
@@ -269,18 +282,19 @@ describe UsersController do
     end
 
     context 'submit change' do
+      let(:token) { EmailToken.generate_token }
       before do
-        EmailToken.expects(:confirm).with('asdfasdf').returns(user)
+        EmailToken.expects(:confirm).with(token).returns(user)
       end
 
       it "logs in the user" do
-        put :password_reset, token: 'asdfasdf', password: 'newpassword'
+        put :password_reset, token: token, password: 'newpassword'
         session[:current_user_id].should be_present
       end
 
       it "doesn't log in the user when not approved" do
         SiteSetting.expects(:must_approve_users?).returns(true)
-        put :password_reset, token: 'asdfasdf', password: 'newpassword'
+        put :password_reset, token: token, password: 'newpassword'
         session[:current_user_id].should be_blank
       end
     end
