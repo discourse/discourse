@@ -93,9 +93,9 @@ Discourse.UserBadge.reopenClass({
     @returns {Promise} a promise that resolves to an array of `Discourse.UserBadge`.
   **/
   findByUsername: function(username, options) {
-    var url = "/user_badges.json?username=" + username;
+    var url = "/users/" + username + "/badges_json.json";
     if (options && options.grouped) {
-      url += "&grouped=true";
+      url += "?grouped=true";
     }
     return Discourse.ajax(url).then(function(json) {
       return Discourse.UserBadge.createFromJson(json);
