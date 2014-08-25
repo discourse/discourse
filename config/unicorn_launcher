@@ -23,10 +23,18 @@ function on_reload()
   UNICORN_PID=$NEW_UNICORN_PID
 }
 
+function on_reopenlogs()
+{
+
+  echo "Reopening logs"
+  kill -s USR1 $UNICORN_PID
+}
+
 export UNICORN_SUPERVISOR_PID=$$
 
 trap on_exit EXIT
 trap on_reload USR2 HUP
+trap on_reopenlogs USR1
 
 unicorn $@ &
 UNICORN_PID=$!
