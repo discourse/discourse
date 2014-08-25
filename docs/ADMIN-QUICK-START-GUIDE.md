@@ -98,6 +98,22 @@ If a pin isn't visible enough, you can also turn one single topic into a **banne
 
 To make (or remove) a pin or a banner, use the admin wrench at the top right of the topic.
 
+### Set the homepage
+
+By default your homepage is a simple list of the latest posts.
+
+We strongly recommend sticking with this homepage for small and medium communities until you start getting so many new topics that a simple list isn't workable.
+
+You can change the homepage to the Categories list by editing `top menu` in the [Basic Setup](/admin/site_settings/category/basic) site settings. Change it from the default of
+
+`latest|new|unread|starred|top|categories`
+
+to
+
+`categories|latest|new|unread|starred|top`
+
+That is, move categories from the far right to the far left -- that leftmost top menu item is your default homepage. 
+
 ### Build Your Own FAQ
 
 Right now [your FAQ](/faq) is the same Creative Commons [universal rules of civilized discourse](http://blog.discourse.org/2013/03/the-universal-rules-of-civilized-discourse/) we provide to all Discourse installs. These built-in community guidelines are referenced a bunch of places; please *do* use them and refer to them often -- they really work!
