@@ -1,27 +1,32 @@
 class UserBadgesController < ApplicationController
   def index
-    params.permit(:username).permit(:granted_before)
+    params.permit [:granted_before, :offset]
 
-    if params[:username]
-      user = fetch_user_from_params
-      user_badges = user.user_badges
-    else
-      badge = fetch_badge_from_params
-      user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(96)
-    end
+    badge = fetch_badge_from_params
+    user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(96)
+    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic)
 
     if offset = params[:offset]
       user_badges = user_badges.offset(offset.to_i)
     end
 
-    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic)
+    render_serialized(user_badges, UserBadgeSerializer, root: "user_badges")
+  end
+
+  def username
+    params.permit [:grouped]
+
+    user = fetch_user_from_params
+    user_badges = user.user_badges
 
     if params[:grouped]
       user_badges = user_badges.group(:badge_id)
                                .select(UserBadge.attribute_names.map {|x| "MAX(#{x}) as #{x}" }, 'COUNT(*) as count')
     end
 
-    render_serialized(user_badges, UserBadgeSerializer, root: "user_badges")
+    user_badges = user_badges.includes(badge: [:badge_grouping, :badge_type])
+
+    render_serialized(user_badges, BasicUserBadgeSerializer, root: "user_badges")
   end
 
   def create
