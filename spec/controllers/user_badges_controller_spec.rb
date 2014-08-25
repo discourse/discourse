@@ -26,7 +26,7 @@ describe UserBadgesController do
     end
 
     it 'returns user_badges for a user' do
-      xhr :get, :index, username: user.username
+      xhr :get, :username, username: user.username
 
       response.status.should == 200
       parsed = JSON.parse(response.body)
@@ -42,7 +42,7 @@ describe UserBadgesController do
     end
 
     it 'includes counts when passed the aggregate argument' do
-      xhr :get, :index, username: user.username, grouped: true
+      xhr :get, :username, username: user.username, grouped: true
 
       response.status.should == 200
       parsed = JSON.parse(response.body)
