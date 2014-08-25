@@ -802,12 +802,6 @@ $topic-avatar-width: 45px;
   position: relative;
 }
 
-.row:before, .row:after {
-  display: table;
-  content: "";
-}
-.row:after {clear: both;}
-
 .dropdown {
   position: relative;
 }
