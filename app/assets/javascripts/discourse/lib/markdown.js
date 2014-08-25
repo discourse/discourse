@@ -205,7 +205,7 @@ Discourse.Markdown = {
       // Add anything whitelisted to the list of elements if it's not in there
       // already.
       var elements = window.html4.ELEMENTS;
-      Ember.keys(_validTags).forEach(function(t) {
+      Object.keys(_validTags).forEach(function(t) {
         if (!elements[t]) {
           elements[t] = 0;
         }
