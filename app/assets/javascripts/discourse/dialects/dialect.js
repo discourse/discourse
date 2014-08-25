@@ -11,7 +11,8 @@ var parser = window.BetterMarkdown,
     dialect = MD.dialects.Discourse = DialectHelpers.subclassDialect( MD.dialects.Gruber ),
     initialized = false,
     emitters = [],
-    hoisted;
+    hoisted,
+    preProcessors = [];
 
 /**
   Initialize our dialects for processing.
@@ -165,6 +166,11 @@ Discourse.Dialect = {
   **/
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
+
+    preProcessors.forEach(function(p) {
+      text = p(text);
+    });
+
     hoisted = {};
     dialect.options = opts;
     var tree = parser.toHTMLTree(text, 'Discourse'),
@@ -186,6 +192,14 @@ Discourse.Dialect = {
 
     hoisted = {};
     return result.trim();
+  },
+
+  /**
+    Adds a text pre-processor. Use only if necessary, as a dialect
+    that emits JsonML is much better if possible.
+  **/
+  addPreProcessor: function(preProc) {
+    preProcessors.push(preProc);
   },
 
   /**
