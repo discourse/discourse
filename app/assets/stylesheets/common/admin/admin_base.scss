@@ -419,6 +419,38 @@ section.details {
   }
 }
 
+.badge-query-preview {
+  .grant-count, .sample, .error-header {
+    margin-left: 10px;
+  }
+
+  .badge-query-plan, .badge-errors {
+    padding: 4px;
+    background-color: scale-color-diff();
+  }
+
+  .badge-query-plan {
+    font-size: 80%;
+  }
+  .badge-errors {
+    font-family: monospace;
+  }
+
+  .count-warning {
+    background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+    margin: 0 0 7px 0;
+    padding: 10px 20px;
+
+    p {
+      margin: 0;
+    }
+    .heading {
+      color: $danger;
+      font-weight: bold;
+    }
+  }
+}
+
 // Customise area
 .customize {
   .nav.nav-pills {

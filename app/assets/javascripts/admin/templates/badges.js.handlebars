@@ -76,7 +76,12 @@
 
       {{#if hasQuery}}
 
-      <a href="/admin/badges/preview" {{action preview this}}>{{i18n admin.badges.preview}}</a>
+      <a href {{action preview this "false"}}>{{i18n admin.badges.preview.link_text}}</a>
+      |
+      <a href {{action preview this "true"}}>{{i18n admin.badges.preview.plan_text}}</a>
+      {{#if preview_loading}}
+        {{i18n loading}}...
+      {{/if}}
 
       <div>
         <span>
