@@ -81,7 +81,7 @@ Discourse.User = Discourse.Model.extend({
 
     if(this.get('admin')) {
       desc = I18n.t('user.admin', {user: name});
-      return '<i class="fa icon-shield" title="' + desc +  '" alt="' + desc + '"></i>';
+      return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
     }
     if(this.get('moderator')){
       desc = I18n.t('user.moderator', {user: name});
