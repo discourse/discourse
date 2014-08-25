@@ -376,7 +376,7 @@ en:
 
       email:
         title: "Email"
-        instructions: "Your email will never be shown to the public."
+        instructions: "Will never be shown to the public."
         ok: "Looks good. We will email you to confirm."
         invalid: "Please enter a valid email address."
         authenticated: "Your email has been authenticated by {{provider}}."
@@ -384,12 +384,12 @@ en:
 
       name:
         title: "Name"
-        instructions: "The long version of your name."
+        instructions: "Longer version of your name."
         too_short: "Your name is too short."
         ok: "Your name looks good."
       username:
         title: "Username"
-        instructions: "Your @username must be unique, no spaces, short."
+        instructions: "Must be unique, no spaces, short."
         short_instructions: "People can mention you as @{{username}}."
         available: "Your username is available."
         global_match: "Email matches the registered username."
