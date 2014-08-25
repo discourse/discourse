@@ -88,15 +88,12 @@ class ImportScripts::VBulletin < ImportScripts::Base
       puts "", "Loading groups from '#{@options.user_group}'..."
 
       data = File.read(@options.user_group)
-      @groups = CSV.parse(data, default_csv_options).map { |row| row.to_hash }
-      original_count = @groups.count
+      @all_groups = CSV.parse(data, default_csv_options).map { |row| row.to_hash }
 
       # reject unmapped groups
-      if @new_group_ids.try(:size) > 0
-        @groups.reject! { |group| !@new_group_ids.has_key?(group[:usergroupid]) }
-      end
+      @groups = @all_groups.reject { |group| !@new_group_ids.has_key?(group[:usergroupid]) }
 
-      puts "Loaded #{@groups.count} out of #{original_count} groups!"
+      puts "Loaded #{@groups.count} out of #{@all_groups.count} groups!"
     end
 
     def load_users
@@ -108,6 +105,13 @@ class ImportScripts::VBulletin < ImportScripts::Base
       original_count = @users.count
 
       if @mapped_groups.try(:size) > 0
+        # show some stats
+        group_ids = Set.new(@users.map { |user| user[:usergroupid].to_i })
+        group_ids.sort.each do |group_id|
+          count = @users.select { |user| user[:usergroupid].to_i == group_id }.count
+          group = @all_groups.select { |group| group[:usergroupid].to_i == group_id }.first.try(:[], :title)
+          puts "\t- #{count} users in usergroup ##{group_id} (#{group})"
+        end
         # reject users from unmapped groups
         @users.reject! { |user| !@mapped_groups.has_key?(user[:usergroupid]) }
         # change mapped groups

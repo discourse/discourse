@@ -28,27 +28,32 @@ class ImportScripts::Base
     @existing_posts = {}
     @topic_lookup = {}
 
+    puts "loading existing groups..."
     GroupCustomField.where(name: 'import_id').pluck(:group_id, :value).each do |group_id, import_id|
       @existing_groups[import_id] = group_id
     end
 
+    puts "loading existing users..."
     UserCustomField.where(name: 'import_id').pluck(:user_id, :value).each do |user_id, import_id|
       @existing_users[import_id] = user_id
     end
 
+    puts "loading existing categories..."
     CategoryCustomField.where(name: 'import_id').pluck(:category_id, :value).each do |category_id, import_id|
       @categories_lookup[import_id] = Category.find(category_id.to_i)
     end
 
+    puts "loading existing posts..."
     PostCustomField.where(name: 'import_id').pluck(:post_id, :value).each do |post_id, import_id|
       @existing_posts[import_id] = post_id
     end
 
-    Post.joins(:topic).select("posts.id, posts.topic_id, posts.post_number, topics.slug").each do |post|
-      @topic_lookup[post.id] = {
-        topic_id: post.topic_id,
-        post_number: post.post_number,
-        url: post.url,
+    puts "loading existing topics..."
+    Post.joins(:topic).pluck("posts.id, posts.topic_id, posts.post_number, topics.slug").each do |p|
+      @topic_lookup[p[0]] = {
+        topic_id: p[1],
+        post_number: p[2],
+        url: Post.url(p[3], p[1], p[2]),
       }
     end
   end
