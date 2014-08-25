@@ -1,3 +1,5 @@
+Discourse.BBCode = {};
+
 /**
   Create a simple BBCode tag handler
 
@@ -13,7 +15,6 @@
     @param {Boolean} [opts.wordBoundary] If true, the match must be on a word boundary
     @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
 **/
-Discourse.BBCode = {};
 
 Discourse.BBCode.register = function(codeName, args, emitter) {
 
@@ -64,7 +65,7 @@ Discourse.BBCode.register = function(codeName, args, emitter) {
   });
 };
 
-function replaceBBCode(tag, emitter, opts) {
+Discourse.BBCode.replaceBBCode = function (tag, emitter, opts) {
   opts = opts || {};
   opts = _.merge(opts, { start: "[" + tag + "]", stop: "[/" + tag + "]", emitter: emitter });
   Discourse.Dialect.inlineBetween(opts);
@@ -72,7 +73,7 @@ function replaceBBCode(tag, emitter, opts) {
   tag = tag.toUpperCase();
   opts = _.merge(opts, { start: "[" + tag + "]", stop: "[/" + tag + "]", emitter: emitter });
   Discourse.Dialect.inlineBetween(opts);
-}
+};
 
 /**
   Shortcut to call replaceBBCode with `rawContents` as true.
@@ -81,9 +82,9 @@ function replaceBBCode(tag, emitter, opts) {
   @param {tag} tag the tag we want to match
   @param {function} emitter the function that creates JsonML for the tag
 **/
-function rawBBCode(tag, emitter) {
-  replaceBBCode(tag, emitter, { rawContents: true });
-}
+Discourse.BBCode.rawBBCode = function (tag, emitter) {
+  Discourse.BBCode.replaceBBCode(tag, emitter, { rawContents: true });
+};
 
 /**
   Creates a BBCode handler that accepts parameters. Passes them to the emitter.
@@ -92,10 +93,8 @@ function rawBBCode(tag, emitter) {
   @param {tag} tag the tag we want to match
   @param {function} emitter the function that creates JsonML for the tag
 **/
-function replaceBBCodeParamsRaw(tag, emitter) {
-  Discourse.Dialect.inlineBetween({
-    start: "[" + tag + "=",
-    stop: "[/" + tag + "]",
+Discourse.BBCode.replaceBBCodeParamsRaw = function (tag, emitter) {
+  var opts = {
     rawContents: true,
     emitter: function(contents) {
       var regexp = /^([^\]]+)\]([\S\s]*)$/,
@@ -103,8 +102,13 @@ function replaceBBCodeParamsRaw(tag, emitter) {
 
       if (m) { return emitter.call(this, m[1], m[2]); }
     }
-  });
-}
+  };
+
+  Discourse.Dialect.inlineBetween(_.merge(opts, { start: "[" + tag + "=", stop: "[/" + tag + "]" }));
+
+  tag = tag.toUpperCase();
+  Discourse.Dialect.inlineBetween(_.merge(opts, { start: "[" + tag + "=", stop: "[/" + tag + "]" }));
+};
 
 /**
   Filters an array of JSON-ML nodes, removing nodes that represent empty lines ("\n").
@@ -112,28 +116,28 @@ function replaceBBCodeParamsRaw(tag, emitter) {
   @method removeEmptyLines
   @param {Array} [contents] Array of JSON-ML nodes
 **/
-function removeEmptyLines(contents) {
+Discourse.BBCode.removeEmptyLines = function (contents) {
   var result = [];
   for (var i=0; i < contents.length; i++) {
     if (contents[i] !== "\n") { result.push(contents[i]); }
   }
   return result;
-}
+};
 
-replaceBBCode('b', function(contents) { return ['span', {'class': 'bbcode-b'}].concat(contents); });
-replaceBBCode('i', function(contents) { return ['span', {'class': 'bbcode-i'}].concat(contents); });
-replaceBBCode('u', function(contents) { return ['span', {'class': 'bbcode-u'}].concat(contents); });
-replaceBBCode('s', function(contents) { return ['span', {'class': 'bbcode-s'}].concat(contents); });
+Discourse.BBCode.replaceBBCode('b', function(contents) { return ['span', {'class': 'bbcode-b'}].concat(contents); });
+Discourse.BBCode.replaceBBCode('i', function(contents) { return ['span', {'class': 'bbcode-i'}].concat(contents); });
+Discourse.BBCode.replaceBBCode('u', function(contents) { return ['span', {'class': 'bbcode-u'}].concat(contents); });
+Discourse.BBCode.replaceBBCode('s', function(contents) { return ['span', {'class': 'bbcode-s'}].concat(contents); });
 Discourse.Markdown.whiteListTag('span', 'class', /^bbcode-[bius]$/);
 
-replaceBBCode('ul', function(contents) { return ['ul'].concat(removeEmptyLines(contents)); });
-replaceBBCode('ol', function(contents) { return ['ol'].concat(removeEmptyLines(contents)); });
-replaceBBCode('li', function(contents) { return ['li'].concat(removeEmptyLines(contents)); });
+Discourse.BBCode.replaceBBCode('ul', function(contents) { return ['ul'].concat(Discourse.BBCode.removeEmptyLines(contents)); });
+Discourse.BBCode.replaceBBCode('ol', function(contents) { return ['ol'].concat(Discourse.BBCode.removeEmptyLines(contents)); });
+Discourse.BBCode.replaceBBCode('li', function(contents) { return ['li'].concat(Discourse.BBCode.removeEmptyLines(contents)); });
 
-rawBBCode('img', function(contents) { return ['img', {href: contents}]; });
-rawBBCode('email', function(contents) { return ['a', {href: "mailto:" + contents, 'data-bbcode': true}, contents]; });
-rawBBCode('url', function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; });
-rawBBCode('spoiler', function(contents) {
+Discourse.BBCode.rawBBCode('img', function(contents) { return ['img', {href: contents}]; });
+Discourse.BBCode.rawBBCode('email', function(contents) { return ['a', {href: "mailto:" + contents, 'data-bbcode': true}, contents]; });
+Discourse.BBCode.rawBBCode('url', function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; });
+Discourse.BBCode.rawBBCode('spoiler', function(contents) {
   if (/<img/i.test(contents)) {
     return ['div', { 'class': 'spoiler' }, contents];
   } else {
@@ -141,12 +145,12 @@ rawBBCode('spoiler', function(contents) {
   }
 });
 
-replaceBBCodeParamsRaw("url", function(param, contents) {
-  return ['a', {href: param, 'data-bbcode': true}, contents];
+Discourse.BBCode.replaceBBCodeParamsRaw("url", function(param, contents) {
+  return ['a', {href: param, 'data-bbcode': true}].concat(contents);
 });
 
-replaceBBCodeParamsRaw("email", function(param, contents) {
-  return ['a', {href: "mailto:" + param, 'data-bbcode': true}, contents];
+Discourse.BBCode.replaceBBCodeParamsRaw("email", function(param, contents) {
+  return ['a', {href: "mailto:" + param, 'data-bbcode': true}].concat(contents);
 });
 
 Discourse.BBCode.register('size', function(contents, params) {
@@ -165,4 +169,3 @@ Discourse.Dialect.replaceBlock({
     return ['p', ['pre', ['code', {'class': Discourse.SiteSettings.default_code_lang}, inner]]];
   }
 });
-
