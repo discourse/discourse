@@ -506,12 +506,13 @@ en:
       prev_page: "while trying to load"
       reasons:
         network: "Network Error"
-        server: "Server Error: {{code}}"
+        server: "Server Error"
+        forbidden: "Access Denied"
         unknown: "Error"
       desc:
         network: "Please check your connection."
         network_fixed: "Looks like it's back."
-        server: "Something went wrong."
+        server: "Error code: {{status}}"
         unknown: "Something went wrong."
       buttons:
         back: "Go Back"
