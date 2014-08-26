@@ -218,13 +218,13 @@
     <div class='controls'>
       {{#if can_revoke_moderation}}
         <button class='btn' {{action revokeModeration target="content"}}>
-          <i class='fa fa-magic'></i>
+          <i class='fa fa-shield'></i>
           {{i18n admin.user.revoke_moderation}}
         </button>
       {{/if}}
       {{#if can_grant_moderation}}
         <button class='btn' {{action grantModeration target="content"}}>
-          <i class='fa fa-magic'></i>
+          <i class='fa fa-shield'></i>
           {{i18n admin.user.grant_moderation}}
         </button>
       {{/if}}
