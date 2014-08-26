@@ -11,10 +11,12 @@ class ExportCsv
 
   def self.remove_old_exports
     if Dir.exists?(ExportCsv.base_directory)
-      dir = Dir.new(ExportCsv.base_directory)
-      dir.each do |file|
-        if (File.mtime(File.join(ExportCsv.base_directory, file)) < 2.days.ago)
-          File.delete(File.join(ExportCsv.base_directory, file))
+      Dir.foreach(ExportCsv.base_directory) do |file|
+        path = File.join(ExportCsv.base_directory, file)
+        next if File.directory? path
+
+        if (File.mtime(path) < 2.days.ago)
+          File.delete(path)
         end
       end
     end
