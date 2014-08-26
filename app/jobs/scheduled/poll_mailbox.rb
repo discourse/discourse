@@ -73,19 +73,13 @@ module Jobs
     end
 
     def poll_pop3s
-      if !SiteSetting.pop3s_polling_insecure
-        Net::POP3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
-      end
-      Net::POP3.start(SiteSetting.pop3s_polling_host,
-                      SiteSetting.pop3s_polling_port,
-                      SiteSetting.pop3s_polling_username,
-                      SiteSetting.pop3s_polling_password) do |pop|
-        unless pop.mails.empty?
-          pop.each do |mail|
-            handle_mail(mail)
-          end
+      pop = Net::POP3.new(SiteSetting.pop3s_polling_host, SiteSetting.pop3s_polling_port)
+
+      pop.enable_ssl if SiteSetting.pop3s_polling_port == 995
+      pop.start(SiteSetting.pop3s_polling_username, SiteSetting.pop3s_polling_password) do |inner_pop|
+        inner_pop.each_mail do |mail|
+          handle_mail(mail)
         end
-        pop.finish
       end
     rescue Net::POPAuthenticationError => e
       Discourse.handle_exception(e, error_context(@args, "Signing in to poll incoming email"))
