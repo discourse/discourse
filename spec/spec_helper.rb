@@ -91,6 +91,7 @@ Spork.prefork do
       SiteSetting.enable_system_avatars = false
       SiteSetting.automatically_download_gravatars = false
 
+      I18n.locale = :en
     end
 
     class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
