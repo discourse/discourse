@@ -371,6 +371,10 @@ test("Code Blocks", function() {
   cooked("``` foo bar ```",
          "<p><code>foo bar</code></p>",
          "it tolerates misuse of code block tags as inline code");
+
+  cooked("```\nline1\n```\n```\nline2\n\nline3\n```",
+         "<p><pre><code class=\"lang-auto\">line1</code></pre></p>\n\n<p><pre><code class=\"lang-auto\">line2\n\nline3</code></pre></p>",
+         "it does not consume next block's trailing newlines");
 });
 
 test("sanitize", function() {
