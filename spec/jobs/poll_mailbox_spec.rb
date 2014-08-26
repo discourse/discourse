@@ -7,18 +7,18 @@ describe Jobs::PollMailbox do
 
   describe ".execute" do
 
-    it "does no polling if pop3s_polling_enabled is false" do
-      SiteSetting.expects(:pop3s_polling_enabled?).returns(false)
-      poller.expects(:poll_pop3s).never
+    it "does no polling if pop3_polling_enabled is false" do
+      SiteSetting.expects(:pop3_polling_enabled?).returns(false)
+      poller.expects(:poll_pop3).never
 
       poller.execute({})
     end
 
-    describe "with pop3s_polling_enabled" do
+    describe "with pop3_polling_enabled" do
 
-      it "calls poll_pop3s" do
-        SiteSetting.expects(:pop3s_polling_enabled?).returns(true)
-        poller.expects(:poll_pop3s).once
+      it "calls poll_pop3" do
+        SiteSetting.expects(:pop3_polling_enabled?).returns(true)
+        poller.expects(:poll_pop3).once
 
         poller.execute({})
       end
@@ -26,7 +26,7 @@ describe Jobs::PollMailbox do
 
   end
 
-  describe ".poll_pop3s" do
+  describe ".poll_pop3" do
 
     it "logs an error on pop authentication error" do
       error = Net::POPAuthenticationError.new
@@ -36,7 +36,7 @@ describe Jobs::PollMailbox do
 
       Discourse.expects(:handle_exception)
 
-      poller.poll_pop3s
+      poller.poll_pop3
     end
 
   end
