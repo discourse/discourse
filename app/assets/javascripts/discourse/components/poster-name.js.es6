@@ -88,7 +88,7 @@ var PosterNameComponent = Em.Component.extend({
       return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
     } else if(post.get('moderator')) {
       desc = I18n.t('user.moderator_tooltip');
-      return '<i class="fa fa-magic" title="' + desc +  '" alt="' + desc + '"></i>';
+      return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
     }
   }
 });
