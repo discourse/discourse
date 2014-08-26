@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 fi:
   dates:
     short_date_no_year: "D. MMM"
@@ -220,12 +227,12 @@ fi:
     replace_paragraph: "[Korvaa tämä kappale lyhyellä kuvauksella uudesta alueesta. Tämä kuvaus näytetään alueen valinnan yhteydessä, joten yritä pitää se alle 200 merkin pituisenä. Tätä aluetta ei näytetä listauksissa ennen kuin olet muokannut tätä tekstiä tai luonut viestiketjuja.]"
     post_template: "%{replace_paragraph}\n\nKäytä seuraavat kappaleet pidempään kuvaukseen ja selvittääksesi alueen säännöt ja ohjeet.\n\nJotain huomioitavia asioita alle muodostuvaa keskustelua ajatellen:\n\n- Mitä varten tämä alue on? Miksi ihmiset valitsisivat tämän alueen viestiketjulleen?\n\n- Kuinka se eroaa muista alueista?\n\n- Tarvitaanko tätä aluetta?\n\n- Pitäisikö alue yhdistää toisen alueen kanssa, tai jakaa useammaksi alueeksi?\n"
     errors:
-      uncategorized_parent: "Kategorisoimattomia ei voi asettaa toisen alueen alle"
+      uncategorized_parent: "Alueettomia ei voi asettaa toisen alueen alle"
       self_parent: "Alue ei voi olla itsensä ylempi alue."
       depth: "Et voi laittaa alempia alueita sisäkkäin"
     cannot_delete:
-      uncategorized: "Kategorisoimattomia ei voi poistaa"
-      has_subcategories: "Aluetta ei voi poistaa, koska sillä on sisempiä alueita"
+      uncategorized: "Alueettomat-aluetta ei voi poistaa"
+      has_subcategories: "Aluetta ei voi poistaa, koska sillä on sisempiä alueita."
       topic_exists:
         one: "Aluetta ei voi poistaa, koska siellä on 1 ketju. Linkki ketjuun %{topic_link}."
         other: "Aluetta ei voi poistaa, koska siellä on %{count} ketjua. Vanhin ketju on %{topic_link}."
@@ -256,7 +263,7 @@ fi:
       other: "%{count} sekuntia"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1 m"
+      half_a_minute: "< 1 min"
       less_than_x_seconds:
         one: "< 1 s"
         other: "< %{count} s"
@@ -264,11 +271,11 @@ fi:
         one: "1 s"
         other: "%{count} s"
       less_than_x_minutes:
-        one: "< 1 m"
-        other: "< %{count} m"
+        one: "< 1 min"
+        other: "< %{count} min"
       x_minutes:
-        one: "1 m"
-        other: "%{count} m"
+        one: "1 min"
+        other: "%{count} min"
       about_x_hours:
         one: "1 t"
         other: "%{count} t"
@@ -532,7 +539,7 @@ fi:
       description: "Ohjeistus uusille käyttäjille, joka näytetään viestikentän yläpuolella, kun he aloittavat kirjoittamaan ensimmäisiä ketjujaan."
     usage_tips:
       title: "Uuden käyttäjän ohjeet"
-      description: "Ohjeita ja tärkeää tietoa uusille käyttäjille"
+      description: "Ohjeita ja tärkeää tietoa uusille käyttäjille."
     welcome_user:
       title: "Tervetuloa: Uusi käyttäjä"
       description: "Tilin luomisen yhteydessä automaattisesti lähetettävä yksityisviesti uusille käyttäjille."
@@ -574,16 +581,16 @@ fi:
     max_topic_title_length: "Viestin otsikon merkkien maksimimäärä"
     min_private_message_title_length: "Viestin otsikon merkkien minimimäärä yksityisviestille"
     min_search_term_length: "Haun merkkien minimimäärä"
-    allow_uncategorized_topics: "Salli ketjujen luominen valitsematta aluetta"
-    uncategorized_description: "Kategorisoimattomien ketjujen alueen kuvaus. Jätä tyhjäksi, jos et halua käyttää kuvausta."
-    allow_duplicate_topic_titles: "Salli ketjun luominen identtisellä otsikolla"
+    allow_uncategorized_topics: "Salli ketjujen luominen valitsematta aluetta."
+    uncategorized_description: "Alueettomien ketjujen alueen kuvaus. Jätä tyhjäksi, jos et halua käyttää kuvausta."
+    allow_duplicate_topic_titles: "Salli ketjun luominen identtisellä otsikolla."
     unique_posts_mins: "Kuinka monta minuuttia, kunnes käyttäjä voi luoda uudestaan saman sisältöisen viestin"
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
     title: "Palstan lyhyt otsikko, käytetään title tagissa."
     site_description: "Kuvaile sivustoa yhdellä lauseella, käytetään meta description tagissa."
     contact_email: "Sähköpostiosoite, josta sivuston henkilökunnan saa tavoitettua. Tärkeät tiedotteet kriittisistä päivityksistä lähetetään tähän osoitteeseen."
     queue_jobs: "VAIN KEHITTÄJILLE! VAROITUS! Oletusarvona tehtävät asetetaan sidekiq jonoon. Jos poistetaan käytöstä, sivusto ei enää toimi."
-    crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi"
+    crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi."
     download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan (prosenteissa)"
     disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu lista."
@@ -598,8 +605,8 @@ fi:
     fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjetsetään aktiivisuuden mukaan."
     add_rel_nofollow_to_user_content: "Lisää rel nofollow kaikkeen käyttäjien lähettämään sisältöön, paitsi sivuston sisäisiin linkkeihin (sisältäen ylemmät verkkotunnukset). Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Pystyviivalla eroteltu lista verkkotunnuksista, joihin nofollow:ta ei lisätä (tld.com sallii automaattisesti myös sub.tld.comin)"
-    post_excerpt_maxlength: "Viestin katkelman merkkien maksimimäärä"
-    post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä"
+    post_excerpt_maxlength: "Viestin katkelman merkkien maksimimäärä."
+    post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
     onebox_domains_whitelist: "Lista verkkotunnuksista, joilta sallitaan onebox-esikatselut; näiden tunnusten pitäisi tukea OpenGraphia tai oEmbedia. Testaa ne osoitteessa http://iframely.com/debug"
     logo_url: "Logo palstan vasemmassa yläkulmassa, esim: http://esimerkki.fi/logo.png"
     digest_logo_url: "Vaihtoehtoinen logo, jota käytetään tiivistelmäsähköpostin yläreunassa. Jos asetus jätetään tyhjäksi 'logo_url' käytetään tämän sijaan. esim: http://esimerkki.fi/logo.png"
@@ -609,7 +616,7 @@ fi:
     apple_touch_icon_url: "Applen laitteiden käyttämä ikoni, Suositeltu koko on 144px kertaa 144px."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Verkkotunnuksen SPF, DKIM ja reverse PTR tietueiden täytyy olla kunnossa, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu lista mukautetuista sähköpostin tunnisteista"
-    use_https: "Pitäisikö sivuston täyden url:n (Discourse.base_url) olla http vai https? ÄLÄ OTA TÄTÄ KÄYTTÖÖN KUNNES HTTPS ON KOKONAAN ASENNETTU JA TOIMINNASSA"
+    use_https: "Pitäisikö sivuston täyden url:n (Discourse.base_url) olla http vai https? ÄLÄ OTA TÄTÄ KÄYTTÖÖN KUNNES HTTPS ON KOKONAAN ASENNETTU JA TOIMINNASSA!"
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
     summary_posts_required: "Montako viestiä ketjussa täytyy olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_likes_required: "Montako tykkäystä ketjussa pitää olla, jotta ketjun tiivistelmä otetaan käyttöön"
@@ -647,12 +654,12 @@ fi:
     topics_per_page: "Kuinka monta ketjua ladataan avattaessa ketjulista ja kerrallaan lisää vieritettäessä sivua alaspäin"
     posts_per_page: "Kuinka monta viestiä ladataa avattaessa viestiketju ja kerrallaan lisää vieritetäessä sivua alaspäin"
     site_contact_username: "Kaikki automaattiset yksityisviestit lähetetään tämän käyttäjän nimissä; jos jätetään tyhjäksi oletuksena on System-käyttäjä."
-    send_welcome_message: "Lähetä kaikille uusille käyttäjille yksityinen tervetuliaisviesti, jossa on pikakäyttöopas"
+    send_welcome_message: "Lähetä kaikille uusille käyttäjille yksityinen tervetuliaisviesti, jossa on pikakäyttöopas."
     suppress_reply_directly_below: "Älä näytä vastausten lukumäärää viestissä, jos ainoa vastaus on seuraavassa viestissä."
     suppress_reply_directly_above: "Älä näytä vastauksena-painiketta viestin yläreunassa, jos viestissä on vastattu vain edelliseen viestiin."
     suppress_reply_when_quoting: "Älä näytä vastauksena-painiketta viestin yläreunassa, kun viestissä on lainaus."
-    topics_per_period_in_top_summary: "Kejujen lukumäärä, joka näytetään oletuksena Huiput-listauksissa"
-    topics_per_period_in_top_page: "Kejujen lukumäärä, joka näytetään laajennetussa Huiput-listauksessa"
+    topics_per_period_in_top_summary: "Kejujen lukumäärä, joka näytetään oletuksena Huiput-listauksissa."
+    topics_per_period_in_top_page: "Kejujen lukumäärä, joka näytetään laajennetussa Huiput-listauksessa."
     redirect_users_to_top_page: "Ohjaa uudet ja kauan poissa olleet käyttäjät automaattisesti huiput-sivulle."
     email_token_valid_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat voimassa (n) tuntia."
     email_token_grace_period_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat vielä voimassa (n) tuntia käyttämisen jälkeen."
@@ -670,7 +677,7 @@ fi:
     login_required: "Vaadi kirjautumista sivuston lukemiseen, epää anonyymi pääsy."
     min_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: OLEMASSA OLEVAT KÄYTTÄJÄT JOIDEN KÄYTTÄJÄTUNNUS ON LYHYEMPI KUIN TÄMÄ EIVÄT VOI ENÄÄ KIRJAUTUA SISÄÄN MUUTOKSEN JÄLKEEN."
     max_username_length: "Käyttäjänimen enimmäispituus merkeissä. VAROITUS: KÄYTTÄJÄT JOIDEN KÄYTTÄJÄTUNNUS ON PIDEMPI KUIN TÄMÄ EIVÄT VOI ENÄÄ KIRJAUTUA SISÄÄN MUUTOKSEN JÄLKEEN."
-    min_password_length: "Salasanan vähimmäispituus"
+    min_password_length: "Salasanan vähimmäispituus."
     block_common_passwords: "Älä salli salasanoja, jotka ovat 10 000 yleisimmän salasanan joukossa."
     enable_sso: "Ota käyttöön single sign on ulkopuolisen sivuston kautta (Huom: poistaa kutsut käytöstä)"
     sso_url: "single sign on endpointin URL"
@@ -697,7 +704,6 @@ fi:
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden maksimimäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
     backup_daily: "Luo uusi varmuuskopio automaattisesti kerran päivässä."
-    enable_s3_backups: "Lataa varmuuskopiot S3:een niiden valmistuttua. Varmista, että S3 kirjautumistiedot ovat ajan tasalla."
     s3_backup_bucket: "Amazon S3 bucket johon varmuuskopiot ladataan. VAROITUS: Varmista, että se on yksityinen."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
     previous_visit_timeout_hours: "Kuinka kauan vierailun on täytynyt kestää, jotta se lasketaan 'edelliseksi' vierailuksi, tunneissa"
@@ -705,15 +711,15 @@ fi:
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
     rate_limit_new_user_create_topic: "Ketjun luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden ketjun."
     rate_limit_new_user_create_post: "Viestin luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
-    max_likes_per_day: "Tykkäysten päivittäinen maksimäärä per käyttäjä"
-    max_flags_per_day: "Liputusten päivittäinen maksimäärä per käyttäjä"
-    max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimäärä per käyttäjä"
-    max_edits_per_day: "Muokkausten päivittäinen maksimäärä per käyttäjä"
+    max_likes_per_day: "Tykkäysten päivittäinen maksimäärä per käyttäjä."
+    max_flags_per_day: "Liputusten päivittäinen maksimäärä per käyttäjä."
+    max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimäärä per käyttäjä."
+    max_edits_per_day: "Muokkausten päivittäinen maksimäärä per käyttäjä."
     max_stars_per_day: "Ketjujen maksimimäärä, jotka yksittäinen käyttäjä voi merkitä tähdellä päivässä."
-    max_topics_per_day: "Luotujen ketjujen päivittäinen maksimäärä per käyttäjä"
-    max_private_messages_per_day: "Yksityisviestien päivittäinen maksimäärä per käyttäjä"
-    suggested_topics: "Suositeltujen ketjujen määrä ketjun alaosassa"
-    limit_suggested_to_category: "Näytä suositeltuja ketjuja vain nykyiseltä alueelta"
+    max_topics_per_day: "Luotujen ketjujen päivittäinen maksimäärä per käyttäjä."
+    max_private_messages_per_day: "Yksityisviestien päivittäinen maksimäärä per käyttäjä."
+    suggested_topics: "Suositeltujen ketjujen määrä ketjun alaosassa."
+    limit_suggested_to_category: "Näytä suositeltuja ketjuja vain nykyiseltä alueelta."
     clean_up_uploads: "Poista orpoutuneet liitetiedostot, joita ei käytetä viesteissä, laittoman hostauksen estämiseksi. VAROITUS: kannattaa varmuuskopioida /uploads kansio ennen tämän asetuksen ottamista käyttöön."
     clean_orphan_uploads_grace_period_hours: "Varoaika (tunteina) kunnes orpoutuneet liitetiedostot poistetaan"
     purge_deleted_uploads_grace_period_days: "Varoaika (päivinä) kunnes poistettu liitetiedosto tuhotaan."
@@ -722,7 +728,7 @@ fi:
     s3_use_iam_profile: 'Käytä AWS EC2 IAM roolia avainten hakuun. HUOM: käyttöönotto korvaa "s3 access key id" ja "s3 secret access key" asetukset.'
     s3_upload_bucket: "Amazon S3 bucket, jonne lataukset sijoitetaan. VAROITUS: täytyy olla pienillä kirjaimilla, ei pisteitä."
     s3_access_key_id: "Amazon S3 access key id, jota käytetään kuvien sijoittamisessa."
-    s3_secret_access_key: "Amazon S3 secret access key, jota käytetään kuvien sijoittamisessa"
+    s3_secret_access_key: "Amazon S3 secret access key, jota käytetään kuvien sijoittamisessa."
     s3_region: "Amazon S3 region, jota käytetään kuvien sijoittamisessa."
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
@@ -758,8 +764,8 @@ fi:
     email_time_window_mins: "Odota (n) minuuttia ennen ilmoitussähköpostien lähettämistä, jotta käyttäjällä on aikaa muokata ja viimeistellä viestinsä."
     email_posts_context: "Kuinka monta edellistä vastausta liitetään kontekstiksi sähköposti-ilmoituksessa."
     flush_timings_secs: "Kuinka usein timing data päivitetään palvelimelle, sekunneissa."
-    max_word_length: "Sanan enimmäispituus merkkeinä ketjun otsikossa"
-    title_min_entropy: "Ketjun otsikon minimientropia (uniikkeja merkkejä)"
+    max_word_length: "Sanan enimmäispituus merkkeinä ketjun otsikossa."
+    title_min_entropy: "Ketjun otsikon minimientropia (uniikkeja merkkejä)."
     body_min_entropy: "Viestin minimientropia (uniikkeja merkkejä)."
     title_fancy_entities: "Muunna tavalliset ASCII merkit hienommiksi HTML merkinnöiksi ketjun otsikoissa, kuten SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Ketjun otsikon minimipituus, kunnes sitä verrataan muihin samankaltaisiin ketjuihin."
@@ -787,23 +793,23 @@ fi:
     privacy_policy_url: "Jos haluat ylläpitää rekisteriselostetta sivuston ulkopuolella, syötä URL tähän."
     newuser_spam_host_threshold: "Kuinka monta kertaa uusi käyttäjä voi lisätä linkin samaan isäntään `newuser_spam_host_posts` viesteissään, kunnes se tulkitaan roskapostin lähettämiseksi."
     white_listed_spam_host_domains: "Lista verkkotunnuksista, joita ei oteta huomioon roskapostin tunnistamisessa. Uusilla käyttäjillä ei ole rajoituksia linkkaamisessa näihin tunnuksiin."
-    staff_like_weight: "Kuinka suuri ylimääräinen arvo on henkilökunnan tykkäyksillä"
+    staff_like_weight: "Kuinka suuri ylimääräinen arvo on henkilökunnan tykkäyksillä."
     levenshtein_distance_spammer_emails: "Verrattaessa sähköpostiosoitteita tunnettuihin roskapostittajiin, näin monen merkin ero saa vielä aikaan löydöksen."
-    reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla"
+    reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
     reply_by_email_address: "Saapuvan sähköpostin sapluuna sähköpostivastauksiin, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
     pop3s_polling_enabled: "Pollaa sähköpostivastaukset POP3S:lla."
     pop3s_polling_insecure: "Pollaa käyttäen selkotekstistä POP3 ilman SSL:ia."
     pop3s_polling_period_mins: "Tiheys minuuteissa kuinka usein POP3S tililtä tarkastetaan uudet sähköpostit. HUOM: vaatii uudelleenkäynnistyksen."
     pop3s_polling_port: "POP3S pollauksen portti."
     pop3s_polling_host: "POP3S pollauksen host."
-    pop3s_polling_username: "POP3S käyttäjänimi"
+    pop3s_polling_username: "POP3S käyttäjänimi."
     pop3s_polling_password: "POP3S käyttäjätilin salasana."
     email_in: "Salli käyttäjien luoda uusia ketjuja sähköpostitse (vaatii pop3 pollauksen). Konfiguroi osoitteet  erikseen jokaisen alueen \"Asetukset\" välilehdeltä. "
     email_in_min_trust: "Alin luottamustaso, jonka käyttäjä tarvitsee voidakseen luoda uusia ketjuja sähköpostitse."
     email_prefix: "Sähköpostin otsikossa käytettävä [tunniste]. Jos et aseta arvoa, oletusarvona käytetään 'otsikkoa'."
     email_site_title: "Sähköpostin lähettäjänä käytettävä nimi. Jos arvoa ei ole asetettu, oletuksena käytetään 'title'. Jos 'title' sisältää merkkejä joita ei sallita sähköpostin lähettäjän nimessä, käytä tätä asetusta."
     minimum_topics_similar: "Kuinka monta ketjua täytyy olla olemassa, ennen kuin samankaltaisia ketjuja näytetään uutta ketjua luotaessa."
-    relative_date_duration: "Monenako päivänä viestin lähettämisen jälkeen päivämäärät näytetään suhteellisina (7p) eikä absoluuttisina (20 Huh)."
+    relative_date_duration: "Monenako päivänä viestin lähettämisen jälkeen päivämäärät näytetään suhteellisina (7p) eikä absoluuttisina (20 Huhti)."
     delete_user_max_post_age: "Älä salli käyttäjien poistamista, joiden ensimmäinen viestin on vanhempi kuin (x) päivää."
     delete_all_posts_max: "Kerralla poistettavien viestien maksimimäärä Poista kaikki viestit-painikkeella. Jos käyttäjällä on enemmän viestejä, niitä ei voi poistaa kerralla eikä käyttäjää voi poistaa."
     username_change_period: "Montako päivää aikaa käyttäjällä on vaihtaa käyttäjänimeä tilin luomisen jälkeen (0 poistaa nimen vaihdon käytöstä)."
@@ -823,7 +829,7 @@ fi:
     sequential_replies_threshold: "Kuinka monen peräkkäisen viestin jälkeen yhdessä ketjussa käyttäjää muistutetaan peräkkäisistä vastauksista."
     enable_mobile_theme: "Mobiililaitteet käyttävät erillistä teemaa ja kahden välillä on mahdollista vaihtaa. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin tulee muistutetuksi ketjun dominoinnista."
-    suppress_uncategorized_badge: "Älä näytä tunnusta kategorisoimattomille ketjuille listassa."
+    suppress_uncategorized_badge: "Älä näytä alueettomille ketjuille tunnusta ketjujen listauksissa."
     global_notice: "Näytä KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri kaikilla sivuilla kaikille käyttäjille, vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
     disable_edit_notifications: "Käytetään poistamaan käytöstä muokkauksen ilmoitukset, kun otat käyttöön asetuksen 'download_remote_images_to_local'."
     enable_names: "Salli käyttäjän pitkän nimen näyttäminen. Ota pois käytöstä piilottaaksesi pitkän nimen."
@@ -884,8 +890,8 @@ fi:
   most_recent_poster: "Uusin kirjoittaja"
   frequent_poster: "Usein kirjoittava"
   redirected_to_top_reasons:
-    new_user: "Tervetuloa yhteisöömme! Tässä ovat suosituimmat viimeaikaiset viestiketjumme."
-    not_seen_in_a_month: "Tervetuloa takaisin! Emme ole nähneet sinua vähään aikaan. Tässä ovat parhaat viestiketjut sitten viime näkemän."
+    new_user: "Tervetuloa yhteisöömme! Nämä ovat suosituimmat viimeaikaiset viestiketjut."
+    not_seen_in_a_month: "Tervetuloa takaisin! Emme ole nähneet sinua vähään aikaan. Tässä ovat suosituimmat viestiketjut sitten viime näkemän."
   move_posts:
     new_topic_moderator_post:
       one: "Siirsin yhden viestin uuteen ketjuun: %{topic_link}"
@@ -1099,72 +1105,12 @@ fi:
 
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
     usage_tips:
-      text_body_template: |
-        Tässä yksityisviestissä on muutama pikaohje, joiden avulla pääset alkuun:
-
-        ## Jatka vierittämistä
-
-        Palstalla ei ole sivunumeroita tai 'Seuraava'-painikkeita – lukeaksesi lisää, **jatka vain sivun vierittämistä alaspäin!**
-
-        Kun uusia viestejä lähetetään, nekin ilmestyvät näkyviin automaattisesti.
-
-        ## Missä olen?
-
-        - Jos haluat käyttää hakua, päästä käyttäjäsivullesi tai avata päävalikon, klikkaa **oikeassa yläkulmassa olevia painikkeita**.
-
-        - Kun olet lukemassa viestiketjua, pääset takaisin ylös &uarr; klikkaamalla otsikkoa. Klikkaa vihreää edistymispalkkia oikealla alhaalla tuodaksesi esiin navigaatiopainikkeet, tai käytä <kbd>home</kbd> ja <kbd>end</kbd> näppäimiä.
-
-        <img src="http://www.discourse.org/images/welcome/progress-bar.png" width="190" height="52">
-
-        - Ketjun otsikko vie sinut automaattisesti viimeiseen lukemaasi viestiin. Käytä aikoja oikoteinä. Ensimmäiseen viestiin pääset klikkaamalla aloitusviestin aikaa, viimeiseen viestiin uusimman viestin ajasta.
-
-        ## Kuinka vastaan viesteihin?
-
-        - Vastataksesi ketjuun yleisesti, käytä Vastaa-painiketta <img src="http://www.discourse.org/images/welcome/reply-topic.png" width="29" height="25"> sivun alalaidassa.
-
-        - Vastataksesi tiettyyn viestiin, käytä kyseisen viestin Vastaa-painiketta <img src="http://www.discourse.org/images/welcome/reply-post.png" width="29" height="25">.
-
-        - Jos haluat viedä keskustelun uuteen suuntaan, mutta säilyttää yhteyden aiempaan keskusteluun, käytä Vastaa uudessa ketjussa -painiketta <img src="http://www.discourse.org/images/welcome/reply-as-new-topic.png" width="33" height="25"> viestin oikealla puolella.
-
-        Lainataksesi toista käyttäjää viestissäsi, valitse teksti jota haluat lainata ja klikkaa mitä hyvänsä Vastaa-painiketta.
-
-        <img src="http://www.discourse.org/images/welcome/quote-reply.png" width="467" height="172">
-
-        (Lainataksesi koko viestin, käytä Lainaa koko viesti -painiketta editorin valikkorivillä.)
-
-        Mainitaksesi toisen käyttään viestissäsi, aloita kirjoittamaan `@` ja automaattinen täydennys tulee esiin.
-
-        <img src="http://www.discourse.org/images/welcome/username-completion.png" width="307" height="174">
-
-        ## Mitä muuta voin tehdä?
-
-        <img src="http://www.discourse.org/images/welcome/like-link-flag-bookmark.png" width="225" height="61">
-
-        Käytä **tykkää** painiketta viestin alareunassa osoittaaksesi kirjoittajalle, että olet pitänyt hänen viestistään. Jos huomaat viestissä ongelman, älä epäröi käyttää **liputa** painiketta ja saattaksesi asian kirjoittajan tai palstan henkilökunnan tietoon yksityisesti.
-
-        Voit myös jakaa linkin viestiin tai lisätä sen kirjanmerkkeihin käyttäjäsivullesi myöhempää tarkastelua varten.
-
-        ## Kuka minulle puhuu?
-
-        Kun toinen käyttäjä vastaa viestiisi, lainaa viestiäsi tai mainitsee `@käyttäjänimesi`, ilmestyy keskustelukuvakkeen yhteyteen numero sivun oikeassa yläkulmassa. Näyt sieltä kuka puhuu sinulle ja missä.
-
-        <img src="http://www.discourse.org/images/welcome/notification-panel.png" width="237" height="78">
-
-        Saat sähköposti-ilmoituksia suorista vastauksista (ja yksityisviesteistä) jos et ole paikalla sivustolla, kun ne saapuvat.
-
-        ## Milloin keskustelut ovat uusia?
-
-        Oletuksena kaikki alle kaksi päivää vanhat keskustelut tulkitaan uusiksi ja kaikki keskustelut joihin olet ottanut osaa asetetaan automaattisesti seurantaan.
-
-        Näet siniset uusien ketjujen ja viestien ilmaisimet näiden ketjujen yhteydessä:
-
-        <img src="http://www.discourse.org/images/welcome/topics-new-unread.png" width="490" height="119">
-
-        Voit vaihtaa yksittäisen viestiketjun ilmoitusasetuksia ketjun alalaidassa olevalla painikkeella (asetuksen voi muuttaa myös aluekohtaisesti). Vaihtaaksesi asetuksia siitä, kuinka seuraat ketjuja tai mitkä ketjut tulkitaan uusiksi, katso [käyttäjäasetukset](/my/preferences).
-
-        ## Miksi en voi tehdä jotain?
-
-        Uusien käyttäjien oikeuksia rajoitetaan turvallisussyistä. Osallistumalla ansaitset yhteisön luottamuksen ja rajoitukset poistuvat automaattisesti. Korkeammilla [luottamustasoilla](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) saat vielä enemmän valtuuksia joiden avulla voit auttaa yhteisön ylläpitämisessä.
+      text_body_template: "Tässä yksityisviestissä on muutama pikaohje, joiden avulla pääset alkuun:\n\n## Jatka vierittämistä\n\nPalstalla ei ole sivunumeroita tai 'Seuraava'-painikkeita – lukeaksesi lisää, **jatka vain sivun vierittämistä alaspäin!**\n\nKun uusia viestejä lähetetään, nekin ilmestyvät näkyviin automaattisesti.\n\n## Missä olen?\n\n- Jos haluat käyttää hakua, päästä käyttäjäsivullesi tai avata päävalikon, klikkaa **oikeassa yläkulmassa olevia painikkeita**.\n\n- Kun olet lukemassa viestiketjua, pääset takaisin ylös &uarr; klikkaamalla otsikkoa. Klikkaa vihreää edistymispalkkia oikealla alhaalla tuodaksesi esiin navigaatiopainikkeet, tai käytä <kbd>home</kbd> ja <kbd>end</kbd> näppäimiä.\n\n<img src=\"http://www.discourse.org/images/welcome/progress-bar.png\" width=\"190\" height=\"52\">\n\n- Ketjun\
+        \ otsikkoa klikkaamalla pääset automaattisesti ensimmäisen lukemattoman viestin kohdalle. Kejun viimeisimpään viestiin pääset klikkaamalla viimeisimmän viestin aikaa, viimeiseen viestiin uusimman viestin ajasta.\n\n## Kuinka vastaan viesteihin?\n\n- Vastataksesi ketjuun yleisesti, käytä Vastaa-painiketta <img src=\"http://www.discourse.org/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> sivun alalaidassa.\n\n- Vastataksesi tiettyyn viestiin, käytä kyseisen viestin Vastaa-painiketta <img src=\"http://www.discourse.org/images/welcome/reply-post.png\" width=\"29\" height=\"25\">.\n\n- Jos haluat viedä keskustelun uuteen suuntaan, mutta säilyttää yhteyden aiempaan keskusteluun, käytä Vastaa uudessa ketjussa -painiketta <img src=\"http://www.discourse.org/images/welcome/reply-as-new-topic.png\" width=\"\
+        33\" height=\"25\"> viestin oikealla puolella.\n\nLainataksesi toista käyttäjää viestissäsi, valitse teksti jota haluat lainata ja klikkaa mitä hyvänsä Vastaa-painiketta.\n\n<img src=\"http://www.discourse.org/images/welcome/quote-reply.png\" width=\"467\" height=\"172\">\n\n(Lainataksesi koko viestin, käytä Lainaa koko viesti -painiketta editorin valikkorivillä.)\n\nMainitaksesi toisen käyttään viestissäsi, aloita kirjoittamaan `@` ja automaattinen täydennys tulee esiin.\n\n<img src=\"http://www.discourse.org/images/welcome/username-completion.png\" width=\"307\" height=\"174\">\n\n## Mitä muuta voin tehdä?\n\n<img src=\"http://www.discourse.org/images/welcome/like-link-flag-bookmark.png\" width=\"225\" height=\"61\">\n\nKäytä **tykkää** painiketta viestin alareunassa osoittaaksesi kirjoittajalle, että olet\
+        \ pitänyt hänen viestistään. Jos huomaat viestissä ongelman, älä epäröi käyttää **liputa** painiketta ja saattaksesi asian kirjoittajan tai palstan henkilökunnan tietoon yksityisesti.\n\nVoit myös jakaa linkin viestiin tai lisätä sen kirjanmerkkeihin käyttäjäsivullesi myöhempää tarkastelua varten.\n\nLisätäksesi [Emoji-hymiöitä](http://www.emoji-cheat-sheet.com/), aloita vain kirjoittamaan `:` tai perinteisiä hymiöitä `:)` :smile: \n\n## Kuka minulle puhuu?\n\nKun toinen käyttäjä vastaa viestiisi, lainaa viestiäsi tai mainitsee `@käyttäjänimesi`, ilmestyy keskustelukuvakkeen yhteyteen numero sivun oikeassa yläkulmassa. Näyt sieltä kuka puhuu sinulle ja missä.\n\n<img src=\"http://www.discourse.org/images/welcome/notification-panel.png\" width=\"237\" height=\"78\">\n\nSaat sähköposti-ilmoituksia suorista vastauksista\
+        \ (ja yksityisviesteistä) jos et ole paikalla sivustolla, kun ne saapuvat.\n\n## Milloin keskustelut ovat uusia?\n\nOletuksena kaikki alle kaksi päivää vanhat keskustelut tulkitaan uusiksi ja kaikki keskustelut joihin olet ottanut osaa asetetaan automaattisesti seurantaan.\n\nNäet siniset uusien ketjujen ja viestien ilmaisimet näiden ketjujen yhteydessä:\n\n<img src=\"http://www.discourse.org/images/welcome/topics-new-unread.png\" width=\"490\" height=\"119\">\n\nVoit vaihtaa yksittäisen viestiketjun ilmoitusasetuksia ketjun alalaidassa olevalla painikkeella (asetuksen voi muuttaa myös aluekohtaisesti). Vaihtaaksesi asetuksia siitä, kuinka seuraat ketjuja tai mitkä ketjut tulkitaan uusiksi, katso [käyttäjäasetukset](/my/preferences).\n\n## Miksi en voi tehdä jotain?\n\nUusien käyttäjien oikeuksia rajoitetaan\
+        \ turvallisussyistä. Osallistumalla ansaitset yhteisön luottamuksen ja rajoitukset poistuvat automaattisesti. Korkeammilla [luottamustasoilla](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) saat vielä enemmän valtuuksia joiden avulla voit auttaa yhteisön ylläpitämisessä.\n"
     welcome_user:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
@@ -1197,7 +1143,7 @@ fi:
         [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Vieminen suoritettu onnistuneesti"
-      text_body_template: "Vieminen onnistui"
+      text_body_template: "Vieminen onnistui."
     export_failed:
       subject_template: "Vienti epäonnistui"
       text_body_template: |
@@ -1210,7 +1156,7 @@ fi:
         ```
     import_succeeded:
       subject_template: "Tuominen suoritettu onnistuneesti"
-      text_body_template: "Tuominen onnistui"
+      text_body_template: "Tuominen onnistui."
     import_failed:
       subject_template: "Tuonti epäonnistui"
       text_body_template: |

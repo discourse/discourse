@@ -20,6 +20,7 @@ it:
   posts: "post"
   loading: "Caricamento"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, è consigliato abilitare javascript'
+  log_in: "Accedi"
   via: "%{username} via %{site_name}"
   is_reserved: "è riservato"
   errors:
@@ -72,6 +73,7 @@ it:
     one: "Spiacente, i nuovi utenti possono inserire solo un link nei post."
     other: "Spiacente, i nuovi utenti possono inserire %{count} link nei post."
   spamming_host: "Spiacente, non puoi inserire un link verso questo dominio."
+  user_is_suspended: "Agli utenti sospesi non è permesso creare post."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
   has_already_been_used: "è già stato usato"
   invalid_characters: "contiene caratteri non validi"
@@ -306,6 +308,7 @@ it:
       title: 'Notifica {{username}}'
       description: 'Il post contiene qualcosa su cui vorrei discutere direttamente e privatamente con questa persona.'
       long_form: 'utente nofiticato'
+      email_title: 'Il tuo post su "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notifica moderatori'
@@ -346,6 +349,7 @@ it:
     title: 'Iscrizione cancellata'
     description: "La tua iscrizione è stata cancellata. Non ti contatteremo più!"
     oops: "Se non intendevi cancellarti, clicca sotto."
+    error: "Errore nella cancellazione della sottoscrizione"
     not_found_description: "Spiacenti, non abbiamo poputo cancellarti. E' possibile che il link nella mail sia scaduto."
   resubscribe:
     action: "Iscriviti di nuovo"
@@ -459,6 +463,8 @@ it:
     education_new_topic:
       title: "Educatione Nuovi Utenti: Primi Topic"
       description: "Per i primi due topic dei nuovi utenti, durante la composizione del messaggio una pop-up verrà automaticamente visualizzata per mostrare dei consigli."
+    usage_tips:
+      title: "Guida iniziale nuovi utenti"
     welcome_user:
       title: "Benvenuto: Nuovo Utente"
       description: "Un messaggio privato verrà automaticamente inviato a tutti i nuovi utenti dopo la registrazione."
@@ -493,9 +499,16 @@ it:
   site_settings:
     default_locale: "Il linguaggio di default di questa installazione Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permetti agli utenti di scegliere la lingua"
+    min_post_length: "Lunghezza minima dei messaggi nei post, in caratteri"
+    min_private_message_post_length: "Numero minimo di caratteri per i messaggi privati"
+    max_post_length: "Numero massimo di caratteri nei post"
+    min_topic_title_length: "Numero minimo di caratteri per i titoli delle conversazioni"
+    max_topic_title_length: "Numero massimo di caratteri per i titoli delle conversazioni"
     allow_uncategorized_topics: "Permetti la creazione di topic senza categoria."
+    allow_duplicate_topic_titles: "Permetti discussioni con lo stesso titolo, duplicato"
     unique_posts_mins: "Quanti minuti prima che un utente possa postare un altro topic con lo stesso contenuto"
     queue_jobs: "Metti in coda diversi job in sidekiq, se false le code sono inline"
+    edit_history_visible_to_public: "Permetti a tutti di vedere le precedenti versioni di un post modificato. Se disabilitato solo i membri dello staff possono vederle."
     category_featured_topics: "Numero di topic mostrati per categoira nella pagina /categories"
     fixed_category_positions: "Se attivo, sarai in grado di assegnare un ordine personalizzato alle categoria. Se non attivo, le categorie saranno in ordine di attività."
     exclude_rel_nofollow_domains: "Una lista di domini in cui nofollow non è aggiunto (tld.com autorizzerà automaticamente sub.tld.com)"
@@ -550,7 +563,6 @@ it:
     github_client_id: "Client id per autenticazione Github, ottenibile da https://github.com/settings/applications"
     github_client_secret: "Client secret per autenticazione Github, ottenibile da https://github.com/settings/applications"
     maximum_backups: "Il numero massimo di backup da tenere sul disco. I backup più vecchi vengono automaticamente cancellati."
-    enable_s3_backups: "Carica i backup su S3 quando completati. Assicurati di aver inserito le tue credenziali S3"
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: Assicurati che sia un bucket privato."
     active_user_rate_limit_secs: "Quanto frequentemente viene aggiornato il campo 'last_seen_at' field, in secondi"
     previous_visit_timeout_hours: "Durata di una visita prima che venga considerata la visita 'precedente', in ore"

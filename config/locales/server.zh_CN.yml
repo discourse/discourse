@@ -672,7 +672,6 @@ zh_CN:
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非您计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
     backup_daily: "每天自动创建站点备份。"
-    enable_s3_backups: "当完成备份时自动上传到 S3。请确定已经填写了 s3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
     previous_visit_timeout_hours: "系统判断一次访问之后多少小时后为'上一次'访问"

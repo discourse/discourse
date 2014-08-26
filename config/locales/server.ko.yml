@@ -666,7 +666,6 @@ ko:
     allow_restore: "데이터 복원을 허용한다. 이 사이트의 모든 데이터가 변경될 수 있다. 백업이나 복원 계획이 없다면 비활성화로 놔둔다."
     maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
     backup_daily: "하루에 한 번 자동으로 백업한다."
-    enable_s3_backups: "백업이 완료되면 Amazon S3로 업로드한다. s3 credentials을 기입되어있는지 확인해야한다."
     s3_backup_bucket: "백업본을 유지할 s3 버켓 이름. 주의 : 프라이빗 버켓인지 확인해야한다."
     active_user_rate_limit_secs: "'last_seen_at'을 업데이트 하는 주기(초)"
     previous_visit_timeout_hours: "최근 방문한 시간을 저장할 주기(시간)"

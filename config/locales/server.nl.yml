@@ -558,7 +558,6 @@ nl:
     github_client_id: "github_client_id (registreer op https://github.com/settings/applications)"
     github_client_secret: "github_client_secret (registreer op https://github.com/settings/applications)"
     maximum_backups: "Het maximum aantal backups om te bewaren. Oudere backups worden automatisch verwijderd."
-    enable_s3_backups: "Upload voltooide backups naar S3. Zorg ervoor dat je je S3 logingegevens hebt ingevuld."
     s3_backup_bucket: "De S3 bucket voor de backups. WAARSCHUWING: zorg er voor dat dit een privébucket is."
     active_user_rate_limit_secs: "Hoe vaak we het 'last_seen_at'-veld updaten, in seconden."
     previous_visit_timeout_hours: "Hoe lang een bezoek duurt voordat we het als het 'vorige' bezoek beschouwen, in uren."

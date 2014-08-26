@@ -431,7 +431,6 @@ uk:
     github_client_id: "Client id для входу через Github, зареєстрований на https://github.com/settings/applications"
     github_client_secret: "Client secret для входу через Github, зареєстрований на https://github.com/settings/applications"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
-    enable_s3_backups: "Upload backups to S3 when complete. Make sure you have filled in your s3 credentials."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"

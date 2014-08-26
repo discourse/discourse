@@ -20,6 +20,11 @@ it:
             mb: MB
             tb: TB
     dates:
+      time: "h:mm a"
+      long_no_year: "D MMM h:mm a"
+      long_no_year_no_time: "D MMM"
+      long_with_year: "D MMM YYYY h:mm a"
+      long_with_year_no_time: "D MMM YYYY"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -250,7 +255,6 @@ it:
     user:
       said: "{{username}} ha scritto:"
       profile: "Profilo"
-      show_profile: "Visita il profilo"
       mute: "Ignora"
       edit: "Modifica opzioni"
       download_archive: "scarica lo storico dei miei post"
@@ -329,19 +333,16 @@ it:
         title: "Sfondo Profilo"
       email:
         title: "Email"
-        instructions: "Non pubblicheremo mai la tua email."
         ok: "Tutto a posto! Ti manderemo una email di conferma."
         invalid: "Inserisci un indirizzo di email valido."
         authenticated: "{{provider}} ha autenticato la tua email"
         frequency: "Ti invieremo mail solo se è un po' che non ti si vede; le email riguarderanno solo le conversazioni che non hai letto."
       name:
         title: "Nome"
-        instructions: "La versione completa del tuo nome."
         too_short: "Il tuo nome è troppo breve."
         ok: "Il tuo nome è adeguato."
       username:
         title: "Nome utente"
-        instructions: "Il tuo @username deve essere unico, senza spazi, corto."
         short_instructions: "Gli utenti possono citarti scrivendo \"@{{username}}\"."
         available: "Il tuo nome utente è disponibile."
         global_match: "L'email corrisponde allo username registrato."
@@ -446,12 +447,10 @@ it:
       prev_page: "durante il caricamento"
       reasons:
         network: "Errore di Rete"
-        server: "Errore del Server: {{code}}"
         unknown: "Errore"
       desc:
         network: "Per favore controlla la tua connessione."
         network_fixed: "Sembra essere tornato."
-        server: "Qualcosa è andato storto."
         unknown: "Qualcosa è andato storto."
       buttons:
         back: "Torna indietro"
@@ -577,7 +576,7 @@ it:
       view_new_post: "Visualizza i tuoi nuovi post."
       saving: "Sto salvando..."
       saved: "Salvato!"
-      saved_draft: "Hai una bozza in lavorazione. Clicca ovunque in questa barra per riprendere la modifica."
+      saved_draft: "Hai una bozza per la creazione di un post in sospeso. Clicca su questa barra per modificarla."
       uploading: "In caricamento..."
       show_preview: 'Visualizza l''anteprima &raquo;'
       hide_preview: '&laquo; nascondi l''anteprima'
@@ -665,6 +664,7 @@ it:
         dismiss_posts: "Annulla post"
         dismiss_posts_tooltip: "Azzera il conteggio non letto su questi topic ma continua a mostrarli nella mia lista non letti quando vengono creati nuovi post"
         dismiss_topics: "Annulla topic"
+        dismiss_topics_tooltip: "Non mostrare più questi topic nella mia lista non letti quando un nuovo post viene creato"
         dismiss_new: "Abbandona"
         toggle: "Attiva/disattiva la selezione multipla dei topic"
         actions: "Azioni in serie"
@@ -684,6 +684,9 @@ it:
         hot: "Non ci sono conversazioni \"hot\""
         category: "Non ci sono conversazioni di {{category}}"
         top: "Non ci sono topic \"top\""
+        educate:
+          new: '<p>Di default, tutti i topic creati negli ultimi 2 giorni sono considerati nuovi. Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">opzioni</a>.</p>'
+          unread: '<p>Di default, sarà mostrata una notifica per i topic non letti solo se hai:</p><ul><li>Creato</li><li>Risposto</li><li>Letto per più di 4 minuti</li></ul><p>Oppure se hai impostato in modo esplicito di Seguirlo o Osservarlo in fondo ad ogni topic.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">opzioni</a>.</p>'
       bottom:
         latest: "Non ci sono topic più recenti."
         hot: "Non ci sono altre conversazioni hot"
@@ -931,6 +934,8 @@ it:
         confirm: "Sicuro di voler abbandonare il tuo post?"
         no_value: "No, mantienilo"
         yes_value: "Si, abbandona"
+      wiki:
+        about: "questo post è una guida; gli utenti normali possono modificarla"
       archetypes:
         save: 'Opzioni di salvataggio'
       controls:
@@ -939,6 +944,7 @@ it:
         has_liked: "ti è piaciuto questo post"
         undo_like: "rimuovi \"mi piace\""
         edit: "Modifica questo post"
+        edit_anonymous: "Spiacente, effettua l'accesso per poter modificare questo post."
         flag: "Contrassegna questo post o fai una segnalazione privata"
         delete: "Cancella questo post"
         undelete: "Recupera questo post"
@@ -1239,6 +1245,7 @@ it:
         help: "Ultimi topic nella categoria {{categoryName}}"
       top:
         title: "Top"
+        help: "le discussioni più attive nell'ultimo anno, mese, settimana o giorno"
         yearly:
           title: "Migliori dell'anno"
         monthly:
@@ -1327,6 +1334,7 @@ it:
         disagree_flag_title: "Nega questa segnalazione come non valida o non corretta"
         clear_topic_flags: "Fatto"
         clear_topic_flags_title: "Il topic è stato esaminato e i problemi risolti. Clicca Fatto per rimuovere i contrassegni."
+        more: "(più risposte...)"
         dispositions:
           agreed: "accettate"
           disagreed: "Disapprovato"
@@ -1340,6 +1348,7 @@ it:
         no_results: "Non ci sono contrassegni"
         topic_flagged: "Questo <strong>topic</strong> è stato contrassegnato."
         visit_topic: "Visita il topic per effettuare un'azione"
+        was_edited: "Il post è stato modificato dopo la prima segnalazione"
         summary:
           action_type_3:
             one: "off-topic "
@@ -1418,6 +1427,8 @@ it:
           backup:
             text: "Backup"
             title: "Crea un backup"
+            confirm: "Vuoi creare un nuovo backup?"
+            without_uploads: "Sì (senza upload)"
           download:
             text: "Download"
             title: "Scarica il backup"
@@ -1604,6 +1615,8 @@ it:
             label: "Nuovo:"
             ip_address: "Indirizzo IP"
             add: "Aggiungi"
+        logster:
+          title: "Log degli errori"
       impersonate:
         title: "Impersona l'utente"
         username_or_email: "Nome utente o email dell'utente"
@@ -1670,6 +1683,7 @@ it:
         edit_title: "Modifica il titolo"
         save_title: "Salva il titolo"
         refresh_browsers: "Forza il refresh del browser"
+        refresh_browsers_message: "Messaggio inviato a tutti i client!"
         show_public_profile: "Mostra il profilo pubblico"
         impersonate: 'Impersona'
         ip_lookup: "IP Lookup"
@@ -1684,13 +1698,15 @@ it:
         reputation: reputazione
         permissions: Permessi
         activity: Attività
-        like_count: Mi piace - Ricevuti
+        like_count: Mi piace - Assegnati / Ricevuti
+        last_100_days: 'negli ultimi 100 giorni'
         private_topics_count: Topic privati
         posts_read_count: Post letti
         post_count: Post creati
         topics_entered: Topic letti
         flags_given_count: Segnalazioni fatte
         flags_received_count: Segnalazioni ricevute
+        flags_given_received_count: 'Segnalazioni Fatte / Ricevute'
         approve: 'Approva'
         approved_by: "approvato da"
         approve_success: "Utente approvato ed email inviata con istruzioni di attivazione."
@@ -1742,6 +1758,8 @@ it:
           posts_read_all_time: "Posti letti (sempre)"
           flagged_posts: "Post segnalati"
           flagged_by_users: "Utenti Segnalatori"
+          likes_given: "Mi piace - Assegnati"
+          likes_received: "Mi piace - Ricevuti"
           qualifies: "Requisiti per il livello 3"
           will_be_promoted: "Verrà promosso entro 24 ore."
           does_not_qualify: "Non si qualifica per il livello 3."
@@ -1807,6 +1825,8 @@ it:
         enabled: Attiva targhetta
         icon: Icona
         query: Badge Query (SQL)
+        auto_revoke: Avvia la query di revoca giornalmente
+        show_posts: 'Visualizza i post che assegnano i badge sulla pagina dei badge '
         preview: Anteprima targhetta
         trigger_type:
           none: "Aggiorna giornalmente"
@@ -1888,17 +1908,21 @@ it:
           description: Prima modifica ad un post.
         basic_user:
           name: Base
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Assegnate</a> tutte le funzioni essenziali della community
         regular_user:
           name: Normale
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Possibilità</a>  di creare inviti
         leader:
           name: Leader
         elder:
           name: Veterano
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Possibilità</a> globale di modifica, mettere in evidenza, chiudere, archiviare, dividere e unire
         welcome:
           name: Benvenuto
           description: Ricevuto un like.
         autobiographer:
           name: Autobiografo
+          description: Hai completato le informazioni del tuo <a href="/my/preferences">profilo</a> utente
         nice_post:
           name: Buon Post
           description: Ha ricevuto 10 mi piace in un post. Questo badge può essere assegnato più volte.
