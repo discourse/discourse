@@ -30,9 +30,8 @@ describe Jobs::PollMailbox do
 
     it "logs an error on pop authentication error" do
       error = Net::POPAuthenticationError.new
-      data = { limit_once_per: 1.hour, message_params: { error: error }}
 
-      Net::POP3.expects(:start).raises(error)
+      Net::POP3.any_instance.expects(:start).raises(error)
 
       Discourse.expects(:handle_exception)
 
