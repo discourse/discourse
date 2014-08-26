@@ -38,7 +38,7 @@
         <button class='btn btn-primary' {{action composePrivateMessage user}}><i class='fa fa-envelope'></i>{{i18n user.private_message}}</button>
       {{/if}}
 
-      {{#link-to 'user' user class="btn"}}<i class='fa fa-user'></i>{{i18n user.show_profile}}{{/link-to}}
+      {{#link-to 'user' user class="btn"}}<i class='fa fa-user'></i>{{i18n user.profile}}{{/link-to}}
 
       {{#if showFilter}}
         <button class='btn' {{action togglePosts user}}><i class='fa fa-filter'></i>{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</button>
