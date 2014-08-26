@@ -385,13 +385,12 @@ email:
   email_custom_headers: 'Auto-Submitted: auto-generated'
   reply_by_email_enabled: false
   reply_by_email_address: ''
-  pop3s_polling_enabled: false
-  pop3s_polling_insecure: false
-  pop3s_polling_period_mins: 5
-  pop3s_polling_host: ''
-  pop3s_polling_port: 995
-  pop3s_polling_username: ''
-  pop3s_polling_password: ''
+  pop3_polling_enabled: false
+  pop3_polling_period_mins: 5
+  pop3_polling_host: ''
+  pop3_polling_port: 995
+  pop3_polling_username: ''
+  pop3_polling_password: ''
   email_in:
     default: false
     client: true

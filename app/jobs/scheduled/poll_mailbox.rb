@@ -8,14 +8,14 @@ require_dependency 'email/message_builder'
 
 module Jobs
   class PollMailbox < Jobs::Scheduled
-    every SiteSetting.pop3s_polling_period_mins.minutes
+    every SiteSetting.pop3_polling_period_mins.minutes
     sidekiq_options retry: false
     include Email::BuildEmailHelper
 
     def execute(args)
       @args = args
-      if SiteSetting.pop3s_polling_enabled?
-        poll_pop3s
+      if SiteSetting.pop3_polling_enabled?
+        poll_pop3
       end
     end
 
@@ -72,14 +72,11 @@ module Jobs
       end
     end
 
-    def poll_pop3s
-      if !SiteSetting.pop3s_polling_insecure
-        Net::POP3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
-      end
-      Net::POP3.start(SiteSetting.pop3s_polling_host,
-                      SiteSetting.pop3s_polling_port,
-                      SiteSetting.pop3s_polling_username,
-                      SiteSetting.pop3s_polling_password) do |pop|
+    def poll_pop3
+      Net::POP3.start(SiteSetting.pop3_polling_host,
+                      SiteSetting.pop3_polling_port,
+                      SiteSetting.pop3_polling_username,
+                      SiteSetting.pop3_polling_password) do |pop|
         unless pop.mails.empty?
           pop.each do |mail|
             handle_mail(mail)
