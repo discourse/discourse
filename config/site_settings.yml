@@ -199,10 +199,10 @@ login:
     default: false
   twitter_consumer_key:
     default: ''
-    regex: "^\\w*$"
+    regex: "^[a-zA-Z0-9_+-]*$"
   twitter_consumer_secret:
     default: ''
-    regex: "^\\w*$"
+    regex: "^[a-zA-Z0-9_+-]*$"
   enable_facebook_logins:
     client: true
     default: false
