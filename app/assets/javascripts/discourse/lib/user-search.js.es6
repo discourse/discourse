@@ -3,7 +3,8 @@ import { CANCELLED_STATUS } from 'discourse/lib/autocomplete';
 var cache = {},
     cacheTopicId,
     cacheTime,
-    currentTerm;
+    currentTerm,
+    oldSearch;
 
 function performSearch(term, topicId, includeGroups, resultsFn) {
   var cached = cache[term];
@@ -12,18 +13,25 @@ function performSearch(term, topicId, includeGroups, resultsFn) {
     return true;
   }
 
-  Discourse.ajax('/users/search/users', {
+  // need to be able to cancel this
+  oldSearch = $.ajax(Discourse.getURL('/users/search/users'), {
     data: { term: term,
             topic_id: topicId,
             include_groups: includeGroups }
-  }).then(function (r) {
+  });
+
+  oldSearch.then(function (r) {
     cache[term] = r;
     cacheTime = new Date();
 
     // If there is a newer search term, return null
     if (term !== currentTerm) { r = CANCELLED_STATUS; }
     resultsFn(r);
+
+  }).always(function(){
+    oldSearch = null;
   });
+
   return true;
 }
 var debouncedSearch = _.debounce(performSearch, 300);
@@ -68,6 +76,12 @@ export default function userSearch(options) {
   var term = options.term || "",
       includeGroups = !!options.include_groups,
       topicId = options.topicId;
+
+
+  if (oldSearch) {
+    oldSearch.abort();
+    oldSearch = null;
+  }
 
   currentTerm = term;
 
