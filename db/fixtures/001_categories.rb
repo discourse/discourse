@@ -12,8 +12,8 @@ if SiteSetting.uncategorized_category_id == -1 || !Category.exists?(SiteSetting.
   end
 
   result = Category.exec_sql "INSERT INTO categories
-          (name,color,slug,description,text_color, user_id, created_at, updated_at, position)
-   VALUES ('#{name}', 'AB9364', 'uncategorized', '', 'FFFFFF', -1, now(), now(), 1 )
+          (name,color,slug,description,text_color, user_id, created_at, updated_at, position, name_lower)
+   VALUES ('#{name}', 'AB9364', 'uncategorized', '', 'FFFFFF', -1, now(), now(), 1, '#{name.downcase}' )
    RETURNING id
   "
   category_id = result[0]["id"].to_i
