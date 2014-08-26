@@ -231,7 +231,6 @@ cs:
     user:
       said: "uživatel {{username}} řekl:"
       profile: "Profil"
-      show_profile: "Zobrazit profil"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
       download_archive: "stáhnout archiv mých příspěvků"
@@ -297,7 +296,6 @@ cs:
         title: "Pozadí profilu"
       email:
         title: "Emailová adresa"
-        instructions: "Vaše emailová adresa nikdy nebude veřejně zobrazena."
         ok: "To vypadá dobře. Zašleme vám email s potvrzením."
         invalid: "Prosím zadejte platnou emailovou adresu."
         authenticated: "Vaše emailová adresa byla autorizována přes službu {{provider}}."
@@ -1471,7 +1469,6 @@ cs:
         reputation: Reputace
         permissions: Oprávnění
         activity: Aktivita
-        like_count: Obdržených 'líbí se'
         private_topics_count: Počet soukromách témat
         posts_read_count: Přečteno příspěvků
         post_count: Vytvořeno příspěvků

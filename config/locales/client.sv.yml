@@ -248,7 +248,6 @@ sv:
     user:
       said: "{{username}} sa:"
       profile: "Profil"
-      show_profile: "Besök Profil"
       mute: "Dämpa"
       edit: "Redigera inställningar"
       download_archive: "ladda ned ett arkiv med mina inlägg"
@@ -325,19 +324,16 @@ sv:
         title: "Profilbakgrund"
       email:
         title: "E-post"
-        instructions: "Din e-postadress kommer aldrig att visas för allmänheten."
         ok: "Ser bra ut. Vi kommer maila dig för att bekräfta."
         invalid: "Vad god ange en giltig e-postadress."
         authenticated: "Din e-post har autentiserats av {{provider}}."
         frequency: "Vi kommer bara maila dig om vi inte har sett dig nyligen och du inte redan sett det vi mailar dig om."
       name:
         title: "Namn"
-        instructions: "Fullständigt namn"
         too_short: "Ditt namn är för kort."
         ok: "Ditt namn ser bra ut."
       username:
         title: "Användarnamn"
-        instructions: "Ditt @användarnamn måste vara unikt, kort och får inte innehålla mellanslag."
         short_instructions: "Personer kan omnämna dig som @{{username}}."
         available: "Ditt användarnamn är tillgängligt."
         global_match: "E-posten matchar det registrerade användarnamnet."
@@ -438,12 +434,10 @@ sv:
     errors:
       reasons:
         network: "Nätverksfel"
-        server: "Server fel: {{code}}"
         unknown: "Fel"
       desc:
         network: "Vänligen kontrollera din uppkoppling."
         network_fixed: "Ser ut som att den är tillbaka."
-        server: "Något gick fel."
         unknown: "Något gick fel."
       buttons:
         back: "Gå tillbaka"
@@ -1412,7 +1406,6 @@ sv:
         reputation: Rykte
         permissions: Rättigheter
         activity: Aktivitet
-        like_count: Gillningar Mottagna
         private_topics_count: Antal Privata Trådar
         posts_read_count: Inlägg Lästa
         post_count: Inlägg Skapade

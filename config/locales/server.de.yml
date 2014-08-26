@@ -7,9 +7,9 @@
 
 de:
   dates:
-    short_date_no_year: "D. MMM"
-    short_date: "D. MMM YYYY"
-    long_date: "D. MMMM YYYY, H:mm"
+    short_date_no_year: "DD. MMM"
+    short_date: "DD. MMM YYYY"
+    long_date: "DD. MMMM YYYY, H:mm"
   time:
     formats:
       short: "%d. %m. %Y"
@@ -197,6 +197,7 @@ de:
   meta_category_description: "Diskussion über dieses Forum, die Organisation, wie es funktioniert und wie wir es verbessern können."
   staff_category_name: "Mitarbeiter"
   staff_category_description: "Geschützte Kategorie für Mitarbeiter. Themen sind nur für Administratoren und Moderatoren sichtbar."
+  assets_topic_body: "Dies ist ein fester Beitrag, der nur für Mitarbeiter sichtbar ist, um Bilder und Dateien, die im Forum benutzt werden zu speichern. Lösche diese nicht!\n\n\nAnleitung:\n\n\n1. Antworte auf dieses Thema.\n2. Lade alle Bilder, die du für Logos, Favicons und usw. nutzen willst, hier hoch. (Nutze dazu das Symbol für Lade-Symbolleiste im Beitrags-Editor oder ziehe und lasse die Bilder hier fallen oder füge sie eins.)\n3. Sende deine Antwort. \n4. Klicke mit der rechten Maustaste auf die Bilder in deinem neuen Beitrag, um die den Pfad zu bekommen oder klicke das Editier-Symbol, um deinen Beitrag zu editieren und dadurch den Pfad zu den Bildern zu bekommen. Kopiere die Bild-Pfade.\n5. Füge die Bild-Pfade in [basic settings](/admin/site_settings/category/required) ein.\n\n\nWenn du andere Dateityp-Uploads aktivieren willst, editiere `authorized_extensions` in [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Willkommen in der Lounge"
     body: |2
@@ -709,7 +710,6 @@ de:
     allow_restore: "Wiederherstellung zulassen, welche ALLE vorhandenen Daten überschreiben kann! Auf 'false' lassen, sofern du nicht planst eine Sicherung wiederherzustellen."
     maximum_backups: "Maximale Anzahl Backups, die auf dem Server gespeichert werden. Ältere Backups werden automatisch gelöscht."
     backup_daily: "Erstelle jeden Tag automatisch ein Backup."
-    enable_s3_backups: "Lade fertige Backups zu S3 hoch. Stelle sicher, dass du deine S3 Kontodaten eingegeben hast. "
     s3_backup_bucket: "Der entfernte Speicherort für deine Backups. WARNUNG: Stelle sicher, dass es sich um einen privaten Speicherort handelt."
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert bevor er als 'früherer' Besuch gezählt wird."
@@ -815,7 +815,7 @@ de:
     digest_topics: "Maximale Anzahl von Themen, die in der E-Mail-Zusammenfassung angezeigt werden."
     digest_min_excerpt_length: "Minimale Länge des Auszugs aus einem Beitrag in der E-Mail-Zusammenfassung, in Zeichen."
     default_digest_email_frequency: "Wie oft man Zusammenfassungen per Mail standardmässig erhält. Diese Einstellung kann von jedem geändert werden."
-    default_external_links_in_new_tab: "Öffne externe Links in einem neuen Tab. Bentzer können dies in ihren Einstellungen ändern."
+    default_external_links_in_new_tab: "Öffne externe Links in einem neuen Tab. Benutzer können dies in ihren Einstellungen ändern."
     detect_custom_avatars: "Ob überprüft wird, dass Benutzer benutzerdefinierte Avatare hochgeladen haben."
     max_daily_gravatar_crawls: "Wie oft pro Tag Discourse höchstens auf Gravatar nach benuterdefinierten Avataren suchen soll."
     public_user_custom_fields: "Eine Whitelist von selbst definierten Feldern für einen Anwender, die öffentlich angezeigt werden können."
@@ -883,6 +883,9 @@ de:
   most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
   frequent_poster: "Autor regelmäßiger Beiträge"
+  redirected_to_top_reasons:
+    new_user: "Willkommen bei unserer Community! Dies sind die derzeit am beliebtesten Themen."
+    not_seen_in_a_month: "Willkommen zurück! Wir haben dich länger nicht gesehen. Während deiner Abwesenheit waren dies die beliebtesten Themen."
   move_posts:
     new_topic_moderator_post:
       one: "Ich habe einen Beitrag in ein neues Thema verschoben: %{topic_link}"
@@ -1019,8 +1022,38 @@ de:
       <small>Am Fuß jeder E-Mail, die du verschickst, sollte eine Möglichkeit zum Abbestellen vorhanden sein. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn du zukünftig keine weiteren E-Mails erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
+    text_body_template: |
+      Eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar.
+
+      Deine Version: %{installed_version}
+      Neue Version: **%{new_version}**
+
+      Dies könnte interessant sein:
+
+      - Erkundige dich über Neues im [GitHub Changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Upgrade deine Version unter [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) mit dem "Upgrade"-Knopf.
+
+      - Besuche [meta.discourse.org](http://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung für Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
+    text_body_template: |
+      Eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar.
+
+      Deine Version: %{installed_version}
+      Neue Version: **%{new_version}**
+
+      So geht's weiter:
+
+      - Lies nach, was sich in der neuen Version [geändert hat](https://github.com/discourse/discourse/commits/master).
+
+      - Aktualisiere dein Forum mit dem "Upgrade" Knopf auf [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Besuche [meta.discourse.org](http://meta.discourse.org) für weitere Neuigkeiten, Diskussionen und Hilfestellungen rund um Discourse.
+
+      ### Versionshinweise
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       one: "Es gibt Markierungen, die vor 1 Stunde gesendet wurden."
@@ -1045,6 +1078,91 @@ de:
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag ...
+
+        %{base_url}%{url}
+
+        ... wegen Meldungen aus der Community versteckt wurde.
+
+        %{flag_reason}
+
+        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor dieser versteckt wurde. Überlege dir daher, wie du deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest. **Du kannst deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar.** Dadurch erhöht sich auch deine Vertrauensstufe.
+
+        Wenn dieser Beitrag jedoch ein zweites Mal von der Community versteckt wird, bleibt dieser solange ausgeblendet, bis ein Mitarbeiter sich darum kümmert. Das kann weitere Konsequenzen haben, unter anderem auch eine Sperrung deines Kontos.
+
+        Weitere Hilfestellung findest du in unseren [Richtlinien](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        Diese private Nachricht enthält ein paar Tipps für einen reibungslosen Start:
+
+        ## Immer weiterscrollen
+
+        Es gibt keinen "Nächste Seite"-Knopf und keine Seitennummern – um weiterzulesen, **scrolle einfach weiter nach unten!**
+
+        Neue Antworten erscheinen automatisch unten auf der Seite.
+
+        ## Wie finde ich mich zurecht?
+
+        - Die Suchfunktion, das Menü und deine persönliche Übersichtsseite erreichst du mit Hilfe der **Icons oben rechts in der Kopfzeile**.
+
+        - Um beim Lesen eines Themas zurück zum Anfang &uarr; zu gelangen, klicke auf den Titel des Themas in der Kopfzeile. Klicke auf die grüne Fortschrittsleiste unten rechts, um durch das Thema zu navigieren, oder verwende die <kbd>Pos1</kbd> oder <kbd>Ende</kbd> Tasten.
+
+            <img src="http://www.discourse.org/images/welcome/progress-bar.png" width="190" height="52">
+
+        - Ein Klick auf den Titel eines Themas bringt dich immer zum nächsten ungelesenen im Thema. Benutze die Angabe der letzten Aktivität, um schnell zum ersten oder letzten Beitrag eines Themas zu springen.
+
+        ## Wie kann ich antworten?
+
+        - Um auf das Thema als Ganzes zu antworten, benutze den "Antworten" Knopf <img src="http://www.discourse.org/images/welcome/reply-topic.png" width="29" height="25"> ganz unten auf der Seite.
+
+        - Wenn du dagegen auf einen bestimmten Beitrag antworten möchtest, benutze den "Antworten" Knopf <img src="http://www.discourse.org/images/welcome/reply-post.png" width="29" height="25"> unmittelbar nach diesem Beitrag.
+
+        - Wenn du die Unterhaltung in eine andere Richtung lenken möchtest, das neue Thema aber mit der bisherigen Unterhaltung verlinkt bleiben soll, klicke auf "Mit Themenwechsel antworten" <img src="http://www.discourse.org/images/welcome/reply-as-new-topic.png" width="33" height="25"> rechts neben dem Beitrag.
+
+        Du kannst aus einem fremden Beitrag zitieren, indem du einen Teil des Beitrags auswählst und einen beliebigen "Antworten" Knopf drückst.
+
+        <img src="http://www.discourse.org/images/welcome/quote-reply.png" width="467" height="172">
+
+        (Wenn du den gesamten Beitrag zitieren möchtest, kannst du auch einfach den entsprechenden Knopf in der Toolbar des Editors drücken.)
+
+        Um einen anderen Benutzer namentlich zu erwähnen, gib zunächst ein `@` ein, gefolgt von den ersten Buchstaben des gewünschten Namens, und ein Autovervollständigungs-Popup erscheint.
+
+        <img src="http://www.discourse.org/images/welcome/username-completion.png" width="307" height="174">
+
+        ## Welche Funktionen gibt es sonst?
+
+        <img src="http://www.discourse.org/images/welcome/like-link-flag-bookmark.png" width="225" height="61">
+
+        Wenn dir ein Beitrag gefällt, kannst du dies dem Autor ganz einfach mit einem Klick auf die "Gefällt mir" Schaltfläche mitteilen. Wenn du dagegen der Meinung bist, dass ein Beitrag ein Problem darstellt, dann kannst du mit der "Melden" Funktion diesen Beitrag privat seinem Autor oder direkt den Moderatoren melden.
+
+        Außerdem kannst du einen Link zum Beitrag mit anderen teilen und Lesezeichen setzen, um auf ausgewählte Beiträge später über deine Benutzer-Übersichtsseite zurückkommen zu können.
+
+        [Emoji](http://www.emoji-cheat-sheet.com/) kannst du einfügen, indem du beginnst `:` einzutippen oder du verwendest die herkömmlichen Smileys `:)` :smile:
+
+        ## Wer spricht mit mir?
+
+        Jedes mal, wenn jemand anders auf einen deiner Beiträge antwortet, dich zitiert oder deinen `@Benutzernamen` erwähnt, erscheint eine Benachrichtigung oben rechts auf der Seite in Form einer Zahl über einer Sprechblase. Die Liste hinter diesem Symbol verrät dir, wer mit dir kommunizieren will und im welche Themen es sich jeweils handelt.
+
+        <img src="http://www.discourse.org/images/welcome/notification-panel.png" width="237" height="78">
+
+        Solltest du die Seite gerade nicht geöffnet haben, erhälst du Benachrichtigungen über direkt an dich gerichtete Antworten (und private Nachrichten) per E-Mail.
+
+        ## Welche Themen werden als neu betrachtet?
+
+        Standardmäßig werden all solche Themen als neu betrachtet, die in den letzten zwei Tagen begonnen wurden. Themen, an denen du dich beteiligst, werden zusätzlich automatisch verfolgt.
+
+        Neue Themen und Themen, die du verfolgst, werden mit blauen Markierungen angezeigt:
+
+        <img src="http://www.discourse.org/images/welcome/topics-new-unread.png" width="490" height="119">
+
+        Mit dem entsprechenden Auswahlfeld am Ende eines Themas kannst du für jedes Thema individuell festlegen, ob und wie du es verfolgen möchtest. (Du kannst dies auch für eine ganze Kategorie aufs Mal festlegen.) In deinen [persönlichen Einstellungen](/my/preferences) kannst du genauer festlegen, welche Themen als neu gelten sollen und wann Themen automatisch verfolgt werden.
+
+        ## Warum kann ich manche Funktionen nicht nutzen?
+
+        Um Missbrauch vorzubeugen gelten für neu registrierte Benutzer einige Beschränkungen. Wenn du dich konstruktiv beteiligst und damit das Vertrauen der Community gewinnst, werden diese Beschränkungen automatisch nach und nach aufgehoben. Bei ausreichender [Vertrauensstufe](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) erhälst du außerdem zusätzliche Rechte und kannst bei der Verwaltung unserer Community mithelfen.
     welcome_user:
       subject_template: "Willkommen auf %{site_name}!"
       text_body_template: |

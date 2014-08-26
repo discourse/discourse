@@ -54,7 +54,7 @@ de:
         almost_x_years:
           one: "1a"
           other: "%{count}a"
-        date_month: "D. MMM"
+        date_month: "DD. MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -66,7 +66,7 @@ de:
         x_days:
           one: "1 Tag"
           other: "%{count} Tage"
-        date_year: "D. MMM YYYY"
+        date_year: "DD. MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "vor einer Minute"
@@ -255,7 +255,6 @@ de:
     user:
       said: "{{username}} sagte:"
       profile: "Profil"
-      show_profile: "Profil ansehen"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive: "Ein Archiv meiner Beiträge herunterladen"
@@ -334,19 +333,16 @@ de:
         title: "Profilhintergrund"
       email:
         title: "E-Mail"
-        instructions: "Deine E-Mail-Adresse wird niemals öffentlich angezeigt."
         ok: "Schaut gut aus. Wir schicken dir eine E-Mail zur Bestätigung."
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein."
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt."
         frequency: "Wir werden dir nur E-Mails senden, wenn wir dich kürzlich nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gesehen hast."
       name:
         title: "Name"
-        instructions: "Dein vollständiger Name."
         too_short: "Dein Name ist zu kurz."
         ok: "Dein Name schaut gut aus."
       username:
         title: "Benutzername"
-        instructions: "Dein @Benutzername muss eindeutig, ohne Leerzeichen und kurz sein."
         short_instructions: "Andere Benutzer können dich mit @{{username}} erwähnen."
         available: "Dein Benutzername ist verfügbar."
         global_match: "Die E-Mail-Adresse stimmt mit dem registrierten Benutzernamen überein."
@@ -451,12 +447,10 @@ de:
       prev_page: "während des Ladens"
       reasons:
         network: "Netzwerkfehler"
-        server: "Server-Fehler: {{code}}"
         unknown: "Fehler"
       desc:
         network: "Bitte überprüfe deine Netzwerkverbindung."
         network_fixed: "Sieht aus, als wäre es wieder da."
-        server: "Etwas ist schief gelaufen."
         unknown: "Etwas ist schief gelaufen."
       buttons:
         back: "Zurück"
@@ -582,7 +576,7 @@ de:
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
-      saved_draft: "Du hast einen Entwurf im Gange. Klicke irgendwo auf diese Leiste, um den Entwurf fortzusetzen."
+      saved_draft: "Du hast einen Beitrag als Entwurf gespeichert. Aktiviere diese Leiste, um den Entwurf fortzusetzen."
       uploading: "Wird hochgeladen..."
       show_preview: 'Vorschau anzeigen &raquo;'
       hide_preview: '&laquo; Vorschau ausblenden'
@@ -950,6 +944,7 @@ de:
         has_liked: "dir gefällt dieser Beitrag"
         undo_like: "gefällt mir nicht mehr"
         edit: "diesen Beitrag bearbeiten"
+        edit_anonymous: "Du musst angemeldet sein, um diesen Beitrag zu bearbeiten."
         flag: "Diesen Beitrag den Moderatoren melden"
         delete: "diesen Beitrag löschen"
         undelete: "diesen Beitrag wiederherstellen"
@@ -1188,10 +1183,10 @@ de:
     posts_lowercase: "Beiträge"
     posts_long: "{{number}} Beiträge zu diesem Thema"
     posts_likes_MF: |
-      This topic has {count, plural, one {1 post} other {# posts}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
+      Dieses Thema hat {count, plural, one {1 Beitrag} other {# Beiträge}} {ratio, select,
+        low {mit einem hohen Verhältnis von Likes zu Beiträgen}
+        med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen}
+        high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen}
         other {}}
     original_post: "Originaler Beitrag"
     views: "Aufrufe"
@@ -1439,6 +1434,8 @@ de:
           backup:
             text: "Backup"
             title: "Erstellt ein Backup"
+            confirm: "Willst du ein neues Backup starten?"
+            without_uploads: "Ja (ohne Upload)"
           download:
             text: "Download"
             title: "Backup herunterladen"
@@ -1625,6 +1622,8 @@ de:
             label: "Neu:"
             ip_address: "IP-Adresse"
             add: "Hinzufügen"
+        logster:
+          title: "Fehlerprotokolle"
       impersonate:
         title: "Aus Sicht des Benutzers betrachten"
         username_or_email: "Benutzername oder E-Mail-Adresse des Benutzers"
@@ -1706,13 +1705,15 @@ de:
         reputation: Reputation
         permissions: Berechtigungen
         activity: Aktivität
-        like_count: Erhaltene Likes
+        like_count: Abgegebene / erhaltene Likes
+        last_100_days: 'in den letzten 100 tagen'
         private_topics_count: Private Themen
         posts_read_count: Gelesene Beiträge
         post_count: Erstelle Beiträge
         topics_entered: Betrachtete Themen
         flags_given_count: Gemachte Meldungen
         flags_received_count: Erhaltene Meldungen
+        flags_given_received_count: 'Erhaltene / gemachte Meldungen'
         approve: 'Genehmigen'
         approved_by: "genehmigt von"
         approve_success: "Benutzer wurde genehmigt und eine E-Mail mit Anweisungen zur Aktivierung wurde gesendet."
@@ -1764,9 +1765,18 @@ de:
           posts_read_all_time: "Gelesene Beiträge (gesamte Zeit)"
           flagged_posts: "Gemeldete Beiträge"
           flagged_by_users: "Von Benutzern gemeldet"
+          likes_given: "Abgegebene Likes"
+          likes_received: "Erhaltene Likes"
           qualifies: "Erfüllt die Anforderungen für Vertrauensstufe 3."
           will_be_promoted: "Wird innerhalb der nächsten 24 Stunden befördert."
           does_not_qualify: "Erfüllt nicht die Anforderungen für Vertrauensstufe 3."
+        sso:
+          title: "Single Sign-on"
+          external_id: "Externe ID"
+          external_username: "Benutzername"
+          external_name: "Name"
+          external_email: "E-Mail"
+          external_avatar_url: "Avatar URL"
       site_content:
         none: "Wähle einen Inhaltstyp, um mit dem Bearbeiten zu beginnen."
         title: 'Inhalt'

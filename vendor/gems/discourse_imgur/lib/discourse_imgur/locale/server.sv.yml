@@ -3,8 +3,10 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 sv:
   site_settings:
-    enable_imgur: "Aktivera imgur.coms API för uppladdning, sparar inte filer lokalt"
+    enable_imgur: "Använd imgur för uppladdning istället för att spara lokalt"
+    imgur_client_id: "Ditt \"client ID\" på imgur.com, används för uppladdning av bilder"
+    imgur_client_secret: "Din \"client secret\" på imgur.com. Ej obligatorisk för uppladdning av bilder just nu, men kan komma att bli i framtiden."
