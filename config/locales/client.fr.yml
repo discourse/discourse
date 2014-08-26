@@ -101,7 +101,7 @@ fr:
     links: "Liens"
     links_lowercase: "liens"
     faq: "FAQ"
-    guidelines: "Instructions"
+    guidelines: "Règlement"
     privacy_policy: "Politique de confidentialité"
     privacy: "Confidentialité"
     terms_of_service: "Conditions Générales d'Utilisation"
@@ -255,7 +255,6 @@ fr:
     user:
       said: "{{username}} a dit :"
       profile: "Profil"
-      show_profile: "Visiter le profil"
       mute: "Silencieux"
       edit: "Modifier les préférences"
       download_archive: "télécharger une archive de mes messages"
@@ -334,19 +333,16 @@ fr:
         title: "Arrière plan du profil"
       email:
         title: "Courriel"
-        instructions: "Votre adresse de courriel ne sera jamais communiquée."
         ok: "Cela semble correct. Un courriel de confirmation sera envoyé."
         invalid: "Merci de saisir une adresse de courriel valide."
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}."
         frequency: "Nous vous envoyons des courriels contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
       name:
         title: "Nom"
-        instructions: "Votre nom complet."
         too_short: "Votre nom est trop court."
         ok: "Votre nom semble correct."
       username:
         title: "Pseudo"
-        instructions: "Votre @pseudo doit être unique, court et sans espace."
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @{{username}}."
         available: "Votre pseudo est disponible."
         global_match: "L'adresse de courriel correspond au pseudo enregistré."
@@ -451,12 +447,10 @@ fr:
       prev_page: "lors d'une tentative de chargement"
       reasons:
         network: "Erreur réseau"
-        server: "Erreur serveur : {{code}}"
         unknown: "Erreur"
       desc:
         network: "Veuillez vérifier votre connexion."
         network_fixed: "On dirait que c'est revenu."
-        server: "Une erreur est survenue."
         unknown: "Une erreur est survenue."
       buttons:
         back: "Retour"
@@ -582,7 +576,7 @@ fr:
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde…"
       saved: "Sauvegardé !"
-      saved_draft: "Vous avez un brouillon de message en cours. Cliquez n'importe où sur cette barre pour reprendre son édition."
+      saved_draft: "Vous un message brouillon en cours. Sélectionner cette barre pour reprendre son édition."
       uploading: "Envoi en cours…"
       show_preview: 'afficher la prévisualisation &raquo;'
       hide_preview: '&laquo; cacher la prévisualisation'
@@ -950,6 +944,7 @@ fr:
         has_liked: "vous avez aimé ce message"
         undo_like: "annuler j'aime"
         edit: "Éditer ce message"
+        edit_anonymous: "Désolé, mais vous devez être connecté pour éditer ce message."
         flag: "signaler secrètement ce message pour attirer l'attention ou envoyer une notification privée à son sujet"
         delete: "Supprimer ce message"
         undelete: "Annuler la suppression de ce message"
@@ -1439,6 +1434,8 @@ fr:
           backup:
             text: "Sauvegarder"
             title: "Créer une sauvegarde"
+            confirm: "Voulez-vous démarrer une nouvelle sauvegarde ?"
+            without_uploads: "Oui (sans les fichiers envoyés)"
           download:
             text: "Télécharger"
             title: "Télécharger la sauvegarde"
@@ -1625,6 +1622,8 @@ fr:
             label: "Nouveau :"
             ip_address: "Adresse IP"
             add: "Ajouter"
+        logster:
+          title: "Logs d'erreurs"
       impersonate:
         title: "Se faire passer pour un utilisateur"
         username_or_email: "Pseudo ou adresse de courriel de l'utilisateur"
@@ -1706,13 +1705,15 @@ fr:
         reputation: Réputation
         permissions: Permissions
         activity: Activité
-        like_count: J'aime reçus
+        like_count: J'aimes donnés / reçus
+        last_100_days: 'dans les 100 derniers jours'
         private_topics_count: Sujets privés
         posts_read_count: Messages lus
         post_count: Messages postés
         topics_entered: Sujets consultés
         flags_given_count: Signalements effectués
         flags_received_count: Signalements reçus
+        flags_given_received_count: 'Signalements émis / reçus'
         approve: 'Approuvé'
         approved_by: "approuvé par"
         approve_success: "Utilisateur approuvé et un courriel avec les instructions d'activation a été envoyé."
@@ -1764,9 +1765,18 @@ fr:
           posts_read_all_time: "Messages lus (depuis le début)"
           flagged_posts: "Messages signalés"
           flagged_by_users: "Utilisateurs signalés"
+          likes_given: "J'aimes donnés"
+          likes_received: "J'aimes reçus"
           qualifies: "Admissible au niveau de confiance 3."
           will_be_promoted: "Sera promu dans les 24 heures."
           does_not_qualify: "Non admissible au niveau de confiance 3."
+        sso:
+          title: "Authentification unique (SSO)"
+          external_id: "ID Externe"
+          external_username: "Pseudo"
+          external_name: "Nom"
+          external_email: "Courriel"
+          external_avatar_url: "URL Avatar"
       site_content:
         none: "Choisissez un type de contenu afin de commencer l'édition."
         title: 'Contenu'
@@ -1955,8 +1965,8 @@ fr:
           name: Première citation
           description: A cité un utilisateur
         read_guidelines:
-          name: Instructions lues
-          description: A lu les <a href="/guidelines">instructions à propos de la communauté</a>
+          name: Règlement lu
+          description: A lu le <a href="/guidelines">règlement de la communauté</a>
         reader:
           name: Lecteur
           description: A lu tous les messages d'un sujet contenant plus de 100 messages

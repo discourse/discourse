@@ -552,7 +552,6 @@ zh_TW:
     allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
     backup_daily: "每日自動對網站進行備份"
-    enable_s3_backups: "當備份完成時自動上傳到 S3，請確定已經填寫了 S3 的驗證資料"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"
     previous_visit_timeout_hours: "系統判斷一次瀏覽之後多少小時後為“上一次”瀏覽"

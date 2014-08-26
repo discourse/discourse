@@ -20,6 +20,11 @@ pt:
             mb: MB
             tb: TB
     dates:
+      time: "H:mm"
+      long_no_year: "DD MMM H:mm"
+      long_no_year_no_time: "D MMM"
+      long_with_year: "DD MMM YYY H:mm"
+      long_with_year_no_time: "DD MMM YYYY"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -44,10 +49,10 @@ pt:
           one: "1a"
           other: "%{count}a"
         over_x_years:
-          one: "> 1y"
+          one: "> 1a"
           other: "> %{count}a"
         almost_x_years:
-          one: "1y"
+          one: "1a"
           other: "%{count}a"
         date_month: "D MMM"
         date_year: "MMM 'YY"
@@ -73,19 +78,20 @@ pt:
           one: "1 dia atrás"
           other: "%{count} dias atrás"
     share:
-      topic: 'partilhe um link para este tópico'
-      post: 'partilhe um link para esta mensagem'
+      topic: 'partilhar um link para este tópico'
+      post: 'partilhar um link para o post #%{postNumber}'
       close: 'fechar'
-      twitter: 'partilhe este link no Twitter'
-      facebook: 'partilhe este link no Facebook'
-      google+: 'partilhe este link no Google+'
-      email: 'enviar este link em um email'
-    edit: 'edite o título ou a categoria deste tópico'
+      twitter: 'partilhar este link no Twitter'
+      facebook: 'partilhar este link no Facebook'
+      google+: 'partilhar este link no Google+'
+      email: 'enviar este link num email'
+    edit: 'editar o título ou a categoria deste tópico'
     not_implemented: "Essa característica ainda não foi implementada, desculpe!"
     no_value: "Não"
     yes_value: "Sim"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
+    sign_up: "Registar"
     log_in: "Entrar"
     age: "Idade"
     joined: "Juntou-se"
@@ -93,7 +99,7 @@ pt:
     flags_title: "Sinalizações"
     show_more: "mostrar mais"
     links: "Links"
-    links_lowercase: "Links"
+    links_lowercase: "links"
     faq: "FAQ"
     guidelines: "Diretrizes"
     privacy_policy: "Política de Privacidade"
@@ -104,14 +110,14 @@ pt:
     you: "Você"
     or: "ou"
     now: "agora"
-    read_more: 'leia mais'
+    read_more: 'ler mais'
     more: "Mais"
     less: "Menos"
     never: "nunca"
     daily: "diário"
     weekly: "semanal"
     every_two_weeks: "a cada duas semanas"
-    max: "max"
+    max: "máx"
     character_count:
       one: "{{count}} caracter"
       other: "{{count}} caracteres"
@@ -130,8 +136,8 @@ pt:
     suggested_topics:
       title: "Tópicos Sugeridos"
     about:
-      simple_title: "Acerca"
-      title: "Acerca de %{title}"
+      simple_title: "Sobre"
+      title: "Sobre %{title}"
       stats: "Estatísticas do site"
       our_admins: "Os nossos admins"
       our_moderators: "Os nossos moderadores"
@@ -143,10 +149,10 @@ pt:
       post_count: "Contagem de Posts"
       user_count: "Contagem de Utilizadores"
     bookmarks:
-      not_logged_in: "desculpa, tens de ter a sessão iniciada para marcar posts"
-      created: "adicionaste este post aos marcadores"
-      not_bookmarked: "leste este post; clica para o adicionar aos marcadores"
-      last_read: "este é o último post que leste; clica para o adicionar aos marcadores"
+      not_logged_in: "desculpe, necessita de ter a sessão iniciada para marcar posts"
+      created: "adicionou este post aos marcadores"
+      not_bookmarked: "leu este post; clique para o adicionar aos marcadores"
+      last_read: "este é o último post que leu; clique para o adicionar aos marcadores"
       remove: "Remover Marcador"
     topic_count_latest:
       one: "{{count}} tópico novo ou actualizado."
@@ -160,13 +166,13 @@ pt:
     click_to_show: "Clique para mostrar."
     preview: "prever"
     cancel: "cancelar"
-    save: "Gravar Alterações"
+    save: "Gravar alterações"
     saving: "A gravar..."
     saved: "Guardado!"
     upload: "Enviar"
     uploading: "A enviar..."
     uploaded: "Enviado!"
-    enable: "Ativar"
+    enable: "Ativar "
     disable: "Desativar"
     undo: "Desfazer"
     revert: "Reverter"
@@ -192,12 +198,12 @@ pt:
       sent_by_user: "Enviado por <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Enviado por <a href='{{userUrl}}'>você</a>"
     groups:
-      visible: "Grupo está visível para todos os utilizadores"
+      visible: "Grupo é visível para todos os utilizadores"
       title:
         one: "grupo"
         other: "grupos"
       members: "Membros"
-      posts: "Mensagens"
+      posts: "Posts"
       alias_levels:
         title: "Quem pode usar este grupo como nome de utilizador?"
         nobody: "Ninguém"
@@ -208,7 +214,7 @@ pt:
     user_action_groups:
       '1': "Gostos dados"
       '2': "Gostos recebidos"
-      '3': "Guardados"
+      '3': "Marcadores"
       '4': "Tópicos"
       '5': "Mensagens"
       '6': "Respostas"
@@ -220,13 +226,13 @@ pt:
       '13': "Caixa de Entrada"
     categories:
       all: "todas as categorias"
-      all_subcategories: "todos"
-      no_subcategory: "ninguém"
+      all_subcategories: "todas"
+      no_subcategory: "nenhuma"
       category: "Categoria"
-      posts: "Mensagens"
+      posts: "Posts"
       topics: "Tópicos"
-      latest: "Última versão"
-      latest_by: "por última versão"
+      latest: "Mais recente"
+      latest_by: "mais recente por"
       toggle_ordering: "alternar o controlo de ordenação"
       subcategories: "Subcategorias"
       topic_stats: "Número de tópicos novos."
@@ -249,7 +255,6 @@ pt:
     user:
       said: "{{username}} enviou:"
       profile: "Perfil"
-      show_profile: "Visitar Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
       download_archive: "fazer o download do arquivo das minhas mensagens"
@@ -327,19 +332,16 @@ pt:
         title: "Fundo de Perfil"
       email:
         title: "Email"
-        instructions: "O endereço de email não será visível publicamente."
         ok: "Parece OK. Vamos enviar um email para confirmar."
         invalid: "Por favor coloque um endereço de email válido."
         authenticated: "O seu email foi autenticado por {{provider}}."
         frequency: "Vamos enviar-lhe emails apenas quando não o virmos há algum tempo e não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
-        instructions: "A versão longa do seu nome."
         too_short: "O seu nome é muito curto."
         ok: "O seu nome parece bom."
       username:
         title: "Nome de Utilizador"
-        instructions: "O seu @nomedeutilizador deve ser único, sem espaços, curto."
         short_instructions: "As pessoas podem mencioná-lo utilizando @{{username}}."
         available: "O seu nome de utilizador está disponível."
         global_match: "O email corresponde ao nome de utilizador registado."
@@ -443,12 +445,10 @@ pt:
       prev_page: "enquanto tenta carregar"
       reasons:
         network: "Erro de Rede"
-        server: "Erro de Servidor: {{code}}"
         unknown: "Erro"
       desc:
         network: "Por favor verifique a sua ligação."
         network_fixed: "Parece que está de volta."
-        server: "Algo correu mal."
         unknown: "Algo correu mal."
       buttons:
         back: "Voltar Atrás"
@@ -573,7 +573,6 @@ pt:
       view_new_post: "Ver as suas novas mensagens."
       saving: "A Gravar..."
       saved: "Gravado!"
-      saved_draft: "Tem um rascunho de um post em progresso. Clique em qualquer local nesta caixa para continuar a edição."
       uploading: "A enviar..."
       show_preview: 'mostrar pré-visualização &raquo;'
       hide_preview: '&laquo; esconder pré-visualização'
@@ -646,6 +645,7 @@ pt:
     topics:
       bulk:
         reset_read: "Repor Leitura"
+        delete: "Apagar Tópicos"
         dismiss_posts: "Dispensar Posts"
         dismiss_topics: "Dispensar Tópicos"
         dismiss_new: "Dispensar Novo"
@@ -695,6 +695,7 @@ pt:
       invalid_access:
         title: "Tópico é particular"
         description: "Desculpe, mas não tem acesso àquele tópico!"
+        login_required: "Necessita de ter sessão iniciada para ver este tópico."
       server_error:
         title: "Falha ao carregar tópico"
         description: "Desculpe, não conseguimos carregar este tópico, possivelmente devido a um problema na conexão. Por favor teste novamente. Se o problema persistir, diga-nos."
@@ -797,17 +798,22 @@ pt:
         title: 'Partilhar'
         help: 'Partilhar um link para este tópico'
       inviting: "A Convidar..."
+      automatically_add_to_groups_optional: "Este convite também inclui acesso a estes grupo: (opcional, apenas Admin)"
+      automatically_add_to_groups_required: "Esse convite também inclui acesso a estes grupos: (<b>Obrigatório<b>, apenas Admin)"
       invite_private:
         title: 'Convidar para Conversa Privada'
         email_or_username: "Email ou Nome de Utilizador do Convidado"
         email_or_username_placeholder: "endereço de email ou username"
         action: "Convite"
+        success: "Convidamos esse utilizador para participar nesta conversa privada."
         error: "Desculpe, houve um erro ao convidar esse utilizador."
+        group_name: "nome do grupo"
       invite_reply:
         action: 'Email de Convite'
         help: 'envie convites aos seus amigos para que eles possam responder a este tópico com um simples toque do rato.'
         email_placeholder: 'name@example.com'
         error: "Desculpe, não podíamos convidar essa pessoa. Talvez já seja um utilizador?"
+      login_reply: 'Iniciar sessão para responder'
       filters:
         n_posts:
           one: "1 postagem"
@@ -830,6 +836,7 @@ pt:
           other: "Por favor selecione o tópico para o qual gostaria de mover estas <b>{{count}}</b> mensagens."
       change_owner:
         title: "Mudar proprietário dos posts"
+        action: "mudar titularidade"
         label: "Novo proprietário dos Posts"
         placeholder: "nome de utilizador do novo proprietário"
       multi_select:
@@ -883,6 +890,8 @@ pt:
         confirm: "Tem a certeza que quer abandonar o seu post?"
         no_value: "Não, manter"
         yes_value: "Sim, abandonar"
+      wiki:
+        about: "este post é um wiki; utilizadores comuns podem editá-lo"
       archetypes:
         save: 'Guardar as Opções'
       controls:
@@ -891,6 +900,7 @@ pt:
         has_liked: "gostaste deste post"
         undo_like: "desfazer gosto"
         edit: "editar este tópico"
+        edit_anonymous: "Desculpe, mas necessita de ter sessão iniciada para editar este post."
         delete: "apagar esta mensagem"
         undelete: "repor esta mensagem"
         share: "partilhar um link para esta mensagem"
@@ -1380,7 +1390,6 @@ pt:
         reputation: Reputação
         permissions: Permissões
         activity: Atividade
-        like_count: Gostos recebidos
         private_topics_count: Tópicos Privados
         posts_read_count: Mensagens lidas
         post_count: Mensagens criadas

@@ -247,7 +247,6 @@ he:
     user:
       said: "{{username}} אמר:"
       profile: "פרופיל"
-      show_profile: "בקר בפרופיל"
       mute: "השתק"
       edit: "ערוך העדפות"
       download_archive: "הורד ארכיון של ההודעות שלי"
@@ -326,19 +325,16 @@ he:
         title: "שינוי רקע פרופיל"
       email:
         title: "דואר אלקטרוני"
-        instructions: "כתובת הדואר האלקטרוני שלך לעולם לא תוצג לציבור."
         ok: "נראה טוב, נשלח לך דואר אלקטרוני לאישור."
         invalid: "בבקשה הכנס כתובת דואר אלקטרוני חוקית"
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}."
         frequency: "נשלח לך דואר אלקטרוני רק אם לא ראינו אותך לאחרונה ועדיין לא ראית את מה שאנחנו רוצים לשלוח"
       name:
         title: "שם"
-        instructions: "הגרסא הארוכה של שמכם"
         too_short: "השם שלך קצר מידי."
         ok: "השם נראה טוב."
       username:
         title: "שם משתמש"
-        instructions: "שם המשתמש שלכם חייב להיות ייחודי, ללא רווחים וקצר."
         short_instructions: "אנשים יכולים לאזכר אותך כ @{{username}}."
         available: "שם המשתמש שלך פנוי."
         global_match: "הדואר האלקטרוני תואם את שם המשתמש הרשום"
@@ -443,12 +439,10 @@ he:
       prev_page: "בזמן הניסיון לטעון"
       reasons:
         network: "שגיאת רשת"
-        server: "תקלת שרת: {{code}}"
         unknown: "תקלה"
       desc:
         network: "אנא בדקו את ההתקשרות שלכם"
         network_fixed: "נראה שזה חזר לעבוד."
-        server: "משהו השתבש."
         unknown: "משהו השתבש."
       buttons:
         back: "חזרה"
@@ -572,7 +566,6 @@ he:
       view_new_post: "הצגת את ההודעה החדשה שלך."
       saving: "שומר..."
       saved: "נשמר!"
-      saved_draft: "יש לך טיוטאת פרסום בתהליך. הקישו איפהשהו בבר זה כדי להמשיך לערוך."
       uploading: "מעלה..."
       show_preview: 'הראה תצוגה מקדימה &raquo;'
       hide_preview: '&laquo; הסתר תצוגה מקדימה'
@@ -1673,7 +1666,6 @@ he:
         reputation: מוניטין
         permissions: הרשאות
         activity: פעילות
-        like_count: לייקים שהתקבלו
         private_topics_count: נושאים פרטיים
         posts_read_count: הודעות שנקראו
         post_count: הודעות שנוצרו

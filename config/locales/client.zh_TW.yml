@@ -224,7 +224,6 @@ zh_TW:
     user:
       said: "{{username}} 說了："
       profile: "基本資料"
-      show_profile: "檢視基本資料"
       mute: "靜音"
       edit: "編輯喜好設定"
       download_archive: "下載我的文章存檔"
@@ -302,19 +301,16 @@ zh_TW:
         title: "基本資料背景圖案"
       email:
         title: "電子郵件"
-        instructions: "你的電子郵件地址不會被公開。"
         ok: "看起來很好，我們將寄出一封確認郵件。"
         invalid: "請輸入有效的電子郵件地址。"
         authenticated: "你的電子郵件地址已得到 {{provider}} 的認証。"
         frequency: "我們只會在一段時間未看到你及你尚未看過我們通知你的事物時才會寄信給你。"
       name:
         title: "名稱"
-        instructions: "長名稱"
         too_short: "你的名稱太短。"
         ok: "你的名稱符合要求。"
       username:
         title: "用戶名稱"
-        instructions: "你的 @用戶名稱 必須是獨一無二、不含空白、且簡短的。"
         short_instructions: "其他人可以輸入 @{{username}} 提到你。"
         available: "你的用戶名稱可以使用。"
         global_match: "電子郵件地址與註冊的用戶名稱相符。"
@@ -415,12 +411,10 @@ zh_TW:
       prev_page: "當嘗試載入"
       reasons:
         network: "網絡錯誤"
-        server: "伺服器錯誤: {{code}}"
         unknown: "錯誤"
       desc:
         network: "請檢查你的網絡連線。"
         network_fixed: "似乎沒有問題了"
-        server: "發生錯誤。"
         unknown: "發生錯誤。"
       buttons:
         back: "返回"
@@ -546,7 +540,6 @@ zh_TW:
       view_new_post: "檢視你的新文章。"
       saving: "正在儲存..."
       saved: "儲存完畢!"
-      saved_draft: "你目前有個正在編輯的慘考，點擊這邊來繼續編輯"
       uploading: "正在上傳..."
       show_preview: '顯示預覽 &raquo;'
       hide_preview: '&laquo; 隱藏預覽'
@@ -1600,7 +1593,6 @@ zh_TW:
         reputation: 聲望
         permissions: 權限
         activity: 活動
-        like_count: 收到的讚
         private_topics_count: 私人討論話題
         posts_read_count: 讀過的文章
         post_count: 已發表的文章

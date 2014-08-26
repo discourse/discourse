@@ -20,15 +20,35 @@ pl_PL:
   posts: "wpisy"
   loading: "Ładowanie"
   powered_by_html: 'Zasilane przez <a href="http://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
+  log_in: "Logowanie"
   via: "%{username} z %{site_name}"
   is_reserved: "jest zarezerwowana"
+  errors:
+    messages:
+      too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
+    embed:
+      load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
+  bulk_invite:
+    file_should_be_csv: "Wysłany plik powinien być w formacie CSV lub TXT."
+  backup:
+    operation_already_running: "Operacja jest już uruchomiona. Nie można teraz utworzyć nowej."
+    backup_file_should_be_tar_gz: "Plik z kopią zapasową powinien mieć postać archiwum .tar.gz."
+    not_enough_space_on_disk: "Nie ma wystarczającej ilości wolnego miejsca, aby wczytać tę kopię zapasową."
+  not_logged_in: "Aby to zrobić musisz się zalogować."
+  read_only_mode_enabled: "Strona jest w trybie tylko do odczytu. Możliwość interakcji jest wyłączona."
+  too_many_replies:
+    one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do 1 odpowiedzi w ramach  jednego tematu."
+    few: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
+    other: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach  jednego tematu."
   embed:
+    start_discussion: "Rozpocznij dyskusję"
+    continue: "Kontynuuj dyskusję"
     more_replies:
       one: "1 odpowiedź więcej"
       few: "%{count} odpowiedzi więcej"
       other: "%{count} odpowiedzi więcej"
-    loading: "Ładowanie dyskusji..."
-    permalink: "Stały link"
+    loading: "Wczytywanie dyskusji..."
+    permalink: "Link bezpośredni"
     in_reply_to: "▶ %{username}"
     replies:
       one: "1 odpowiedź"
@@ -55,6 +75,7 @@ pl_PL:
     one: "Przepraszamy, nowi użytkownicy mogą dodać tylko jeden link we wpisie."
     other: "Przepraszamy, nowi użytkownicy mogą dodać tylko %{count} linków we wpisie."
   spamming_host: "Przepraszamy, nie możesz umieścić linka do tej strony."
+  user_is_suspended: "Zawieszeni użytkownicy nie mogą wysyłać wiadomości."
   just_posted_that: "jest zbyt podobne do tego co umieściłeś niedawno"
   has_already_been_used: "został już użyty"
   invalid_characters: "zawiera niepoprawne znaki"
@@ -73,6 +94,7 @@ pl_PL:
   rss_description:
     latest: "Ostatnie wątki"
     hot: "Popularne wątki"
+  too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
   groups:
     errors:
       can_not_modify_automatic: "Nie możesz modyfikować automatycznej grupy"
@@ -87,17 +109,17 @@ pl_PL:
       trust_level_5: "poziom_zaufania_5"
   education:
     until_posts:
-      one: "Twojego pierwszego wpisu"
-      few: "Twoich pierwszych %{count} wpisów"
-      other: "Twoich pierwszych %{count} wpisów"
+      one: "1 wpis"
+      few: "%{count} wpisy"
+      other: "%{count} wpisów"
     avatar: |
       ### Co powiesz na zmianę swojego zdjęcia?
 
-      Napisałeś już kilka tematów i wpisów, lecz Twój avatar nie jest tak unikalny jak Ty - jest tym samym, domyślnym avatarem, który mają wszyscy nowi użytkownicy.
+      Napisałeś już kilka tematów i wpisów, lecz Twój awatar nie jest tak unikalny jak Ty -- jest tym samym domyślnym awatarem, który mają wszyscy nowi użytkownicy.
 
-      Rozważałeś **[odwiedzenie Twojego profilu](%{profile_path})** i ustawienie własnego obrazka, który będzie Cię reprezentował?
+      Rozważałeś **[odwiedzenie swojego profilu](%{profile_path})** i ustawienie własnego obrazka, który będzie Cię reprezentował?
 
-      Łatwiej czyta się dyskusje, i znajduje ciekawych ludzi w rozmowach gdy każdy ma unikalny avatar!
+      Łatwiej czyta się dyskusje i znajduje ciekawych ludzi w rozmowach, gdy każdy ma unikalny awatar!
     sequential_replies: |
       ### Rozważ odpowiadanie na kilka postów jednocześnie
 
@@ -121,9 +143,9 @@ pl_PL:
     reviving_old_topic: |
       ### Ożywić ten temat?
 
-      Ostatnia odpowiedź w tym temacie ma już %{days} dni. Twoja odpowiedź przesunie temat na górę listy i spowoduje powiadomienie wszystkich wcześniej uczestniczących w rozmowie.
+      Ostatnia odpowiedź w tym temacie ma ponad %{days} dni. Twoja odpowiedź przesunie temat na górę listy i spowoduje powiadomienie wszystkich wcześniej uczestniczących w rozmowie.
 
-      Jesteś pewny, że chcesz kontynuować tą starą rozmowę?
+      Jesteś pewny(-a), że chcesz kontynuować tę starą rozmowę?
   activerecord:
     attributes:
       category:
@@ -139,15 +161,36 @@ pl_PL:
           attributes:
             archetype:
               cant_send_pm: "Przepraszamy, nie możesz wysłać prywatnej wiadomości do tego użytkownika."
+        user:
+          attributes:
+            ip_address:
+              signup_not_allowed: "Rejestracja z tego konta jest niemożliwa."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "nie jest poprawnym kolorem"
   user_profile:
-    no_info_me: "<div class='missing-profile'>Pole O mnie Twojego profilu jest obecnie puste, <a href='/users/%{username_lower}/preferences/about-me'>może chcesz je wypełnić?</a></div>"
+    no_info_me: "<div class='missing-profile'>Pole O mnie w Twoim profilu jest obecnie puste, <a href='/users/%{username_lower}/preferences/about-me'>czy chcesz je wypełnić?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
+  vip_category_name: "Salon"
   vip_category_description: "Kategoria wyłącznie dla członków o poziomie zaufania 3 lub wyższym."
+  meta_category_name: "Meta"
+  meta_category_description: "Dyskusje o tej stronie, jej organizacji, tym jak działa i jak możemy ją usprawnić."
+  staff_category_name: "Zespół"
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
+  lounge_welcome:
+    title: "Witaj w Salonie"
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "[Zamień ten pierwszy paragraf na krórki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go poniżej 200 znaków. Póki nie zmienisz tego tekstu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.]"
     post_template: "%{replace_paragraph}\n\nUżyj poniższych akapitów do umieszczenia dłuższego opisu oraz do ustalenia zasad pisania w danej kategorii.\n\nRzeczy do rozważenia w odpowiedziach poniżej:\n\n- Do czego jest ta kategoria? Dlaczego ludzie powinni wybierać tą kategorię dla swoich tematów?\n\n- Czym się różni od innych kategorii, które już mamy?\n\n- Czy potrzebujemy tej kategorii?\n\n- Czy powinniśmy ją połączyć z jakąś inną kategorią, lub podzielić na więcej kategorii?\n"
+    errors:
+      self_parent: "Podkategoria nie może być swoim rodzicem"
+    cannot_delete:
+      topic_exists:
+        one: "Nie można usunąć tej kategorii ponieważ zawiera temat: %{topic_link}."
+        few: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematy. Najstarszy z nich: %{topic_link}."
+        other: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematów. Najstarszy z nich: %{topic_link}."
   trust_levels:
     newuser:
       title: "nowy użytkownik"
@@ -286,23 +329,26 @@ pl_PL:
     approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
   post_action_types:
     off_topic:
-      title: 'Nie na temat'
-      description: 'Ten wpis nie ma żadnego związku z tematem, w którym się znajduje, i powinien prawdopodobnie zostać przeniesiony. Jeśli to temat, możliwe że nie pasuje tutaj.'
-      long_form: 'oznaczono to jako nie na temat'
+      title: 'Nie-na-temat'
+      description: 'Ten wpis nie ma żadnego związku z tematem w którym się znajduje i powinien prawdopodobnie zostać przeniesiony. Jeśli jest to wpis rozpoczynający temat, możliwe, że cały temat tu nie pasuje.'
+      long_form: 'oflagowano jako nie-na-temat'
     spam:
       title: 'Spam'
       description: 'Ten wpis jest reklamą. Jest nieprzydatny i bez związku z obecnym tematem, ma naturę promocyjną.'
-      long_form: 'oznaczono to jako spam'
+      long_form: 'oflagowano jako spam'
     inappropriate:
       title: 'Niewłaściwe'
-      long_form: 'oznaczono to jako niewłaściwe'
+      description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe, lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
+      long_form: 'oflagowano jako niewłaściwe'
     notify_user:
       title: 'Powiadom {{username}}'
       description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie.'
       long_form: 'powiadomiono użytkownika'
+      email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Powiadom moderatorów'
+      description: 'Ten wpis wymaga uwagi moderatora z uwagi na niezgodność z <a href="/guidelines">wytycznymi społeczności</a>, <a href="%{tos_url}">warunkami użytkowania</a>, lub z innego, nie wymienionego tu powodu.'
       long_form: 'powiadomiono moderatorów'
       email_title: 'Wpis w "%{title}" wymaga uwagi moderatorów'
       email_body: "%{link}\n\n%{message}"
@@ -321,13 +367,18 @@ pl_PL:
   topic_flag_types:
     spam:
       title: 'Spam'
+      long_form: 'oflagowano jako spam'
     inappropriate:
       title: 'Niewłaściwe'
+      long_form: 'oflagowano jako niewłaściwe'
     notify_moderators:
       title: 'Powiadom moderatorów'
+      long_form: 'powiadomiono moderatorów'
+      email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Twój wpis został oflagowany przez społeczność. <a href="/my/private-messages">Zobacz swoje prywatne wiadomości</a>.</p>'
+    you_must_edit: '<p>Twój wpis został oflagowany przez społeczność. Sprawdź <a href="/my/private-messages">swoje prywatne wiadomości</a>.</p>'
+    user_must_edit: '<p>Ten wpis został oflagowany przez społeczność i został tymczasowo ukryty.</p>'
   archetypes:
     regular:
       title: "Zwykły temat"
@@ -370,7 +421,7 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Liczba nowych zakładek"
     starred:
-      title: "Oznaczone gwiazdką"
+      title: "Oznaczone"
       xaxis: "Dzień"
       yaxis: "Liczba oznaczonych tematów"
     users_by_trust_level:
@@ -463,6 +514,7 @@ pl_PL:
       description: "The text displayed for unauthorized users when login is required on the site."
   site_settings:
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
+    min_private_message_title_length: "Minimalna ilość znaków w tytule prywatnej wiadomości"
     allow_uncategorized_topics: "Pozwól na tworzenie tematów bez kategorii"
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
@@ -484,7 +536,6 @@ pl_PL:
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
-    post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
@@ -536,6 +587,15 @@ pl_PL:
   most_posts: "Większość postów"
   most_recent_poster: "Autor najnowszego wpisu"
   frequent_poster: "Aktywny uczestnik"
+  move_posts:
+    new_topic_moderator_post:
+      one: "Przeniesiono wpis do nowego tematu: %{topic_link}"
+      few: "Przeniesiono %{count} wpisy do nowego tematu: %{topic_link}"
+      other: "Przeniesiono %{count} wpisów do nowego tematu: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "Przeniesiono wpis do innego tematu: %{topic_link}"
+      few: "Przeniesiono %{count} wpisy do innego tematu: %{topic_link}"
+      other: "Przeniesiono %{count} wpisów do innego tematu: %{topic_link}"
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
@@ -560,7 +620,7 @@ pl_PL:
     omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
   user:
     username:
-      short: "Musi zawierać przynajmniej %{min} znaków."
+      short: "music zawierać co najmniej %{min} znaków"
       characters: "może zawierać tylko litery, cyfry i podkreślenia"
       unique: "musi być unikalna"
       blank: "musi zostać podana"
@@ -584,13 +644,22 @@ pl_PL:
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   flags_reminder:
+    flags_were_submitted:
+      one: "Istnieją flagi dodane ponad 1 godzinę temu."
+      few: "Istnieją flagi dodane %{count} godziny temu."
+      other: "Istnieją flagi dodane %{count} godzin temu."
     post_number: "wpis"
+    subject_template:
+      one: "1 flaga oczekuje na reakcję"
+      few: "%{count} flagi oczekują na reakcję"
+      other: "%{count} flag oczekuje na reakcję"
   flag_reasons:
-    off_topic: "Twój wpis został oznaczony jako **off-topic** (nie na temat): społeczność uważa, że nie pasuje to tematu zdefiniowanego przez tytuł i treść pierwszego wpisu w wątku."
-    spam: "Twój wpis został oznaczony jako **spam**: społeczność uważa, że to jest nie przydatna reklama nie mająca związku z tematem."
+    off_topic: "Twój wpis został oznaczony jako **nie-na-temat**: społeczność uważa, że nie pasuje on do tematu zdefiniowanego przez tytuł i treść pierwszego wpisu w wątku."
+    spam: "Twój wpis został oznaczony jako **spam**: społeczność uważa, że jest to nieprzydatna reklama bez związku z tematem."
+    notify_moderators: "Twój wpis został oznaczony jako **wymagający uwagi moderatora**: społeczność uważa, że wpis wymaga interwencji moderatorów."
   system_messages:
     post_hidden:
-      subject_template: "Wpis ukryty z powodu oflagowania przez społeczność"
+      subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
     welcome_user:
       subject_template: "Witaj na forum %{site_name}!"
     welcome_invite:
@@ -605,6 +674,8 @@ pl_PL:
       subject_template: "Nowe konto zablokowane"
     blocked_by_staff:
       subject_template: "Account blocked"
+    user_automatically_blocked:
+      subject_template: "Nowy użytkownik %{username} został zablokowany z powodu oflagowania przez społeczność"
     unblocked:
       subject_template: "Konto odblokowane"
       text_body_template: |

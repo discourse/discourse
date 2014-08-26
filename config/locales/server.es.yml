@@ -194,8 +194,10 @@ es:
   vip_category_name: "Sala VIP"
   vip_category_description: "Una categoría exclusiva para miembros de un nivel de confianza de 3 o más."
   meta_category_name: "Meta"
+  meta_category_description: "Debate sobre este sitio, su gestión, cómo funciona y cómo podríamos mejorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del staff."
+  assets_topic_body: "Este es un tema permanente, visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
     body: |2
@@ -248,6 +250,7 @@ es:
       title: "sabio"
     change_failed_explanation: "Intentaste degradar a un usuario %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} seguirá en '%{current_trust_level}'"
   rate_limiter:
+    slow_down: "Has realizado esta acción demasiadas veces, inténtalo de nuevo más tarde"
     too_many_requests: "Estas haciendo eso demasiado a menudo. Por favor espera %{time_left} antes de intentarlo de nuevo."
     hours:
       one: "1 hora"
@@ -404,6 +407,7 @@ es:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Tu post ha sido reportado por la comunidad. Por favor <a href="/my/private-messages">mira tus mensajes privados</a>.</p>'
+    user_must_edit: '<p>Este post fue reportado por la comunidad y está oculto temporalmente.</p>'
   archetypes:
     regular:
       title: "Tema normal"
@@ -686,6 +690,7 @@ es:
     sso_overrides_email: "Reemplaza el email local con el email del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a la normalización de los correos electrónicos locales)"
     sso_overrides_username: "Reemplaza el nombre de usuario local con el nombre de usuario del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a las diferencias de requirimientos/longitud en los nombres de usuario)"
     sso_overrides_name: "Reemplaza el nombre local con el nombre del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a la normalización de los nombres locales)"
+    sso_overrides_avatar: "Sustituye el avatar de usuario con el avatar proveniente del sitio externo configurado para el SSO. Si se activa esta opción, se recomienda encarecidamente deshabilitar allow_uploaded_avatars"
     enable_local_logins: "Habilitar las cuentas con nombre de usuario y contraseña de forma local. (Nota: esto debe estar habilitado para que funcionen las invitaciones)"
     allow_new_registrations: "Permitir el registro de nuevos usuarios. Desactiva esta opción para prevenir que nadie pueda crear una nueva cuenta."
     enable_google_logins: "(obsoleto próximamente) Habilitar autenticación por Google. Este es el método de autenticación que Google ha dejado de actualizar. Las nuevas instalaciones NO funcionarán con esto. En su lugar, se recomienda usar Google Oauth2. Las instalaciones actuales deberán pasar a utilizar Google Oauth2 antes del 20 de abril de 2015."
@@ -705,7 +710,6 @@ es:
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     backup_daily: "Crear automáticamente una copia de seguridad del sitio una vez al día."
-    enable_s3_backups: "Subir las copias de seguridad a S3 cuando se completen. Asegúrate de haber introducido tus credenciales del S3."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     active_user_rate_limit_secs: "Como de frecuentemente actualizaremos el campo 'last_seen_at', en segundos"
     previous_visit_timeout_hours: "Cuanto tiempo debe pasar antes de que una visita sea considerada la 'visita previa', en horas"

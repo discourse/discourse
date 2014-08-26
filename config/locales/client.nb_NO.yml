@@ -179,7 +179,6 @@ nb_NO:
     user:
       said: "{{username}} sa:"
       profile: "Profile"
-      show_profile: "Besøk profil"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive: "last ned arkiv av mine innlegg"
@@ -236,7 +235,6 @@ nb_NO:
         image_is_not_a_square: "Advarsel: Vi har beskåret bildet ditt, det er ikke kvadratisk."
       email:
         title: "Email"
-        instructions: "Din email vil aldri bli vist til offentligheten."
         ok: "Ser bra ut. Vi sender deg en email for å bekrefte."
         invalid: "Vennligst skriv inn en gyldig emailaddresse."
         authenticated: "Din email har blitt autentisert av {{provider}}."
@@ -1150,7 +1148,6 @@ nb_NO:
         reputation: Rykte
         permissions: Tillatelser
         activity: Aktivitet
-        like_count: Likes Mottatt
         private_topics_count: Private Emner
         posts_read_count: Innlegg Lest
         post_count: Innlegg Skrevet
