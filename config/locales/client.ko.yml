@@ -19,6 +19,11 @@ ko:
             mb: MB
             tb: TB
     dates:
+      time: "a h:mm"
+      long_no_year: "MMM D a h:mm "
+      long_no_year_no_time: "MMM D"
+      long_with_year: "YYYY  MMM D a h:mm"
+      long_with_year_no_time: "YYYY MMM D"
       tiny:
         half_a_minute: "< 1분"
         less_than_x_seconds:
@@ -223,7 +228,6 @@ ko:
     user:
       said: "{{username}}의 말:"
       profile: "프로필"
-      show_profile: "프로필 방문"
       mute: "음소거"
       edit: "편집"
       download_archive: "내 게시물을 아카이브로 다운로드"
@@ -302,19 +306,16 @@ ko:
         title: "프로필 배경"
       email:
         title: "이메일"
-        instructions: "당신의 이메일은 노출되지 않습니다."
         ok: "완료. 확인 이메일을 보냈습니다."
         invalid: "사용하고 계시는 이메일 주소를 입력해주세요."
         authenticated: "당신의 이메일은 {{provider}}에 의해 인증되었습니다."
         frequency: "당신의 활동이 뜸해지거나 저희가 보낸 이메일에 포함된 글들을 읽지 못하셨다면 확인 이메일을 보내드립니다."
       name:
         title: "별명"
-        instructions: "당신 이름의 긴 버전"
         too_short: "너무 짧습니다."
         ok: "사용가능합니다."
       username:
         title: "아이디"
-        instructions: "@username 은 중복될 수 없으며, 스페이스가 포함될 수 없고 짧아야합니다."
         short_instructions: "@{{username}}으로 언급이 가능합니다."
         available: "아이디\x1D로 사용가능합니다."
         global_match: "이메일이 등록된 아이디와 일치합니다."
@@ -415,12 +416,10 @@ ko:
       prev_page: "로드하는 중"
       reasons:
         network: "네트워크 에러"
-        server: "서버 에러 ({{code}})"
         unknown: "에러"
       desc:
         network: "접속상태를 확인해주세요."
         network_fixed: "문제가 해결된 것으로 보입니다."
-        server: "문제가 발생했습니다."
         unknown: "문제가 발생했습니다."
       buttons:
         back: "뒤로가기"
@@ -431,6 +430,7 @@ ko:
     read_only_mode:
       enabled: "관리자가 일기 전용모드를 활성화 하였습니다. 컨텐츠를 읽을 수는 있지만 활동할 수는 없습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
+    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users will not be able to earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "더 배우기"
     year: '년'
     year_desc: '지난 365일간 생성된 토픽'
@@ -545,7 +545,7 @@ ko:
       view_new_post: "새로운 게시물을 볼 수 있습니다."
       saving: "저장 중..."
       saved: "저장 완료!"
-      saved_draft: "작성중인 글이 있습니다. 계속해서 글을 작성하려면 상자 아무곳이나 클릭해 주세요."
+      saved_draft: "작성중인 글이 있습니다. 계속 작성하려면 여기를 클릭하세요."
       uploading: "업로딩 중..."
       show_preview: '미리보기를 보여줍니다 &laquo;'
       hide_preview: '&laquo; 미리보기를 숨기기'
@@ -631,7 +631,9 @@ ko:
         reset_read: "읽기 초기화"
         delete: "토픽 삭제"
         dismiss_posts: "게시글 닫기"
+        dismiss_posts_tooltip: "이 토픽들의 '읽지 않은' 표시를 없애고 새 토픽이 발생하면 내 '읽지 않은' 목록에 표시하기"
         dismiss_topics: "토픽 닫기"
+        dismiss_topics_tooltip: "새글이 발생할 때 내 '읽지 않은' 목록에 표시하지 않기"
         dismiss_new: "새글 제거"
         toggle: "복수토픽 선택 기능"
         actions: "일괄 적용"
@@ -891,6 +893,7 @@ ko:
         has_liked: "'좋아요'를 눌렀습니다."
         undo_like: "'좋아요' 취소하기"
         edit: "이 게시물을 편집합니다."
+        edit_anonymous: "이 토픽을 수정하려면 먼저 로그인을 해야합니다."
         flag: "운영자에게 이 글을 신고합니다."
         delete: "이 게시물을 삭제합니다."
         undelete: "이 게시물 삭제를 취소합니다."
@@ -1041,6 +1044,7 @@ ko:
       email_in_allow_strangers: "계정이 없는 익명 유저들에게 이메일을 받습니다."
       email_in_disabled: "이메일로 새 토픽 작성하기 기능이 비활성화되어 있습니다. 사이트 설정에서 '이메일로 새 토픽작성하기'를 활성화 해주세요."
       email_in_disabled_click: '"email in" 활성화'
+      allow_badges_label: "뱃지가 이 카테고리에서 주어질 수 있도록 허용"
       edit_permissions: "권한 수정"
       add_permission: "권한 추가"
       this_year: "올해"
@@ -1328,6 +1332,7 @@ ko:
           backup:
             text: "백업"
             title: "백업 생성"
+            without_uploads: "네 (업로드 없이)"
           download:
             text: "다운로드"
             title: "백업 다운로드"
@@ -1344,6 +1349,12 @@ ko:
             text: "롤백"
             title: "데이터베이스를 이전 workiong state로 되돌리기"
             confirm: "정말로 이전 작업 상태로 데이터베이스를 롤백하시겠습니까?"
+      export_csv:
+        users:
+          text: "사용자 내보내기"
+          title: "CSV 파일로 사용자 목록 내보내기"
+        success: "내보내기가 시작되었습니다. 곧 진행사항을 알려드릴께요."
+        failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
       customize:
         title: "사용자 지정"
         long_title: "사이트 사용자 지정"
@@ -1508,6 +1519,8 @@ ko:
             label: "새 IP:"
             ip_address: "IP 주소"
             add: "추가"
+        logster:
+          title: "에러 로그"
       impersonate:
         title: "이 사용자로 로그인"
         username_or_email: "사용자의 아이디 또는 이메일"
@@ -1570,6 +1583,7 @@ ko:
         edit_title: "제목 수정"
         save_title: "제목 저장"
         refresh_browsers: "브라우저 새로 고침"
+        refresh_browsers_message: "모든 클라이언트에게 메시지 보내기"
         show_public_profile: "공개 프로필 보기"
         impersonate: '사용자로 로그인하기'
         ip_lookup: "IP Lookup"
@@ -1584,13 +1598,15 @@ ko:
         reputation: 평판
         permissions: 권한
         activity: 활동
-        like_count: 좋아요
+        like_count: 준/받은 '좋아요'
+        last_100_days: '지난 100일간'
         private_topics_count: 개인적인 토픽 수
         posts_read_count: 게시글 읽은 수
         post_count: 게시글 수
         topics_entered: 읽은 토픽 수
         flags_given_count: 작성한 신고
         flags_received_count: 받은 신고
+        flags_given_received_count: '준/받은 신고'
         approve: '승인'
         approved_by: "승인자"
         approve_success: "인증 이메일이 발송되었습니다."
@@ -1604,6 +1620,8 @@ ko:
           other: "전체글을 삭제할 수 없습니다. 몇개의 글은 %{count}일 이전에 작성되었습니다. (The delete_user_max_post_age setting.)"
         cant_delete_all_too_many_posts:
           other: "이 사용자는 %{count}개 이상 글을 작성하였기 때문에 모든 글을 삭제 할 수 없습니다. (delete_all_posts_max 설정참고)"
+        delete_confirm: "정말 이 사용자를 삭제하시겠습니다? 삭제하면 복구 할 수 없습니다."
+        delete_and_block: "이 이메일과 IP주소를 삭제하고 차단하기"
         delete_dont_block: "삭제만 하기"
         deleted: "사용자가 삭제되었습니다."
         delete_failed: "해당 사용자를 삭제하는 동안 오류가 발생했습니다. 모든 글은 사용자를 삭제하기 전에 삭제해야합니다."
@@ -1637,9 +1655,18 @@ ko:
           posts_read_all_time: "읽은 글 수 (전체 기간)"
           flagged_posts: "신고된 글"
           flagged_by_users: "신고한 사용자들"
+          likes_given: "선사한  '좋아요'"
+          likes_received: "받은 '좋아요'"
           qualifies: "신뢰 등급 3의 조건에 부합합니다."
           will_be_promoted: "24시간 내에 승급됩니다."
           does_not_qualify: "신뢰 등급 3의 조건에 부합하지 않습니다."
+        sso:
+          title: "Single Sign On"
+          external_id: "External ID"
+          external_username: "Username"
+          external_name: "Name"
+          external_email: "Email"
+          external_avatar_url: "Avatar URL"
       site_content:
         none: "편집을 시작하려는 컨텐츠의 타입을 선택하세요."
         title: '사이트 컨텐츠'
@@ -1681,6 +1708,8 @@ ko:
         description: 설명
         badge_type: 훈장 종류
         badge_grouping: 그룹
+        badge_groupings:
+          modal_title: 뱃지 그룹으로 나누기
         granted_by: 훈장 부여자
         granted_at: 훈장 수여일
         save: 저장
@@ -1749,6 +1778,10 @@ ko:
         bookmark: '<b>b</b> Bookmark post'
         edit: '<b>e</b> Edit post'
         delete: '<b>d</b> Delete post'
+        mark_muted: '<b>m</b>, <b>m</b> 토픽 알람 : 끄기'
+        mark_regular: '<b>m</b>, <b>r</b> 토픽 알람 : 일반(기본)으로 설정하기'
+        mark_tracking: '<b>m</b>, <b>t</b> 토픽 알람 : 추적하기'
+        mark_watching: '<b>m</b>, <b>w</b> 토픽 알람 : 주시하기'
     badges:
       title: 훈장
       allow_title: "훈장을 제목으로 사용가능하도록 허용중인가요?"

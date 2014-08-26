@@ -220,7 +220,6 @@ ja:
     user:
       said: "{{username}} のコメント:"
       profile: "プロフィール"
-      show_profile: "プロフィールを見る"
       mute: "ミュート"
       edit: "プロフィールを編集"
       download_archive: "ポストのアーカイブをダウンロード"
@@ -299,19 +298,16 @@ ja:
         title: "プロフィール背景"
       email:
         title: "メールアドレス"
-        instructions: "メールアドレスが外部に公開されることは一切ありません。"
         ok: "メールアドレス OK。確認用のメールを送ります。"
         invalid: "正しいメールアドレスを入力してください。"
         authenticated: "あたなのメールは {{provider}} により認証されました。"
         frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
       name:
         title: "名前"
-        instructions: "フルネーム"
         too_short: "名前が短すぎます。"
         ok: "名前 OK。"
       username:
         title: "ユーザ名"
-        instructions: "スペースなしの@ユーザ名を入力してください。"
         short_instructions: "他のユーザはあなたを @ユーザ名 でメンションできます。"
         available: "ユーザ名は利用可能です。"
         global_match: "メールアドレスが登録済のユーザ名と一致しました。"
@@ -412,12 +408,10 @@ ja:
       prev_page: "ロード中に"
       reasons:
         network: "ネットワークエラー"
-        server: "サーバーエラー：{{code}}"
         unknown: "エラー"
       desc:
         network: "インターネット接続を確認してください。"
         network_fixed: "ネットワーク接続が回復しました。"
-        server: "エラーが発生しました。"
         unknown: "エラーが発生しました。"
       buttons:
         back: "戻る"
@@ -541,7 +535,6 @@ ja:
       view_new_post: "新規ポストを見る。"
       saving: "保存中..."
       saved: "保存完了!"
-      saved_draft: "編集中の投稿があります。こちらをクリックすると編集を再開します。"
       uploading: "アップロード中..."
       show_preview: 'プレビューを表示する &raquo;'
       hide_preview: '&laquo; プレビューを隠す'
@@ -1556,7 +1549,6 @@ ja:
         reputation: レピュテーション
         permissions: パーミッション
         activity: アクティビティ
-        like_count: 「いいね！」された数
         private_topics_count: プライベートトピック数
         posts_read_count: 読んだポスト数
         post_count: 投稿したポスト数

@@ -224,7 +224,6 @@ zh_CN:
     user:
       said: "{{username}}说："
       profile: "个人资料"
-      show_profile: "访问个人资料"
       mute: "防打扰"
       edit: "修改设置"
       download_archive: "下载我的帖子的存档"
@@ -303,19 +302,16 @@ zh_CN:
         title: "个人资料背景"
       email:
         title: "电子邮箱"
-        instructions: "您的电子邮箱绝不会被公开显示。"
         ok: "看起来不错哦，我们会发送电子邮件让您确认。"
         invalid: "请填写正确的电子邮箱地址。"
         authenticated: "您的电子邮箱已经被 {{provider}} 确认有效。"
         frequency: "只有当您最近一段时间没有访问时，我们才会把您未读过的内容发送到您的电子邮箱。"
       name:
         title: "名字"
-        instructions: "名字全称"
         too_short: "您设置的名字太短了。"
         ok: "您的名字符合要求。"
       username:
         title: "用户名"
-        instructions: "您的@username 必须是唯一，没有空格，简短的."
         short_instructions: "其他人可以用 @{{username}} 来提及您。"
         available: "您的用户名可用。"
         global_match: "电子邮箱与注册用户名相匹配。"
@@ -416,12 +412,10 @@ zh_CN:
       prev_page: "当尝试载入时"
       reasons:
         network: "网络错误"
-        server: "服务器错误：{{code}}"
         unknown: "错误"
       desc:
         network: "请检查您的网络连接。"
         network_fixed: "似乎恢复正常了。"
-        server: "出错了。"
         unknown: "出错了。"
       buttons:
         back: "返回"
@@ -547,7 +541,6 @@ zh_CN:
       view_new_post: "浏览您的新帖子。"
       saving: "保存中..."
       saved: "已保存！"
-      saved_draft: "您有一个帖子草稿尚未发表。点击该栏任意位置即可继续编辑。"
       uploading: "上传中..."
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
@@ -1612,7 +1605,6 @@ zh_CN:
         reputation: 声誉
         permissions: 权限
         activity: 活动
-        like_count: 收到的赞
         private_topics_count: 私有主题数量
         posts_read_count: 已阅帖子数量
         post_count: 创建的帖子数量

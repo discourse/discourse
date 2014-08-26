@@ -99,7 +99,7 @@ da:
     default_names:
       admins: "admins"
       moderators: "moderatorer"
-      staff: "stab"
+      staff: "staff"
       trust_level_1: "tillidsniveau_1"
       trust_level_2: "tillidsniveau_2"
       trust_level_3: "tillidsniveau_3"
@@ -198,8 +198,8 @@ da:
   vip_category_name: "Lounge"
   vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
   meta_category_name: "meta"
-  staff_category_name: "Ejere"
-  staff_category_description: "Privat gruppe for ejernes diskussioner. Emner er kun synlige for administratorer og moderatorer."
+  staff_category_name: "Staff"
+  staff_category_description: "Privat gruppe for staff diskussioner. Emner er kun synlige for administratorer og moderatorer."
   lounge_welcome:
     title: "Velkommen i loungen"
   category:
@@ -392,6 +392,7 @@ da:
     oops: "Klik herunder hvis det ikke var din hensigt at framelde dig."
     error: "Fejl ved framelding"
     preferences_link: "Du kan også framelde dig opsummerings-emails på din <a href='/my/preferences'>indstillinger side</a>"
+    different_user_description: "Du er logget ind som en anden buger den den som uddragene blev sendt til. Log ud og prøv igen."
     not_found_description: "Beklager, vi kunne ikke framelde dig. Det er muligt at linket i din e-mail er udløbet."
   resubscribe:
     action: "Tilmeld igen"
@@ -403,19 +404,19 @@ da:
       xaxis: "Dag"
       yaxis: "Antal besøg"
     signups:
-      title: "Nye brugere"
+      title: "Brugere"
       xaxis: "Dag"
       yaxis: "Antal nye brugere"
     topics:
-      title: "Nye emner"
+      title: "Emner"
       xaxis: "Dag"
       yaxis: "Antal nye emner"
     posts:
-      title: "Nye indlæg"
+      title: "Indlæg"
       xaxis: "Dag"
       yaxis: "Antal nye indlæg"
     likes:
-      title: "Nye likes"
+      title: "Likes"
       xaxis: "Dag"
       yaxis: "Antal nye likes"
     flags:
@@ -432,7 +433,7 @@ da:
       yaxis: "Antal nye favoritter"
     users_by_trust_level:
       title: "Brugere pr. tillidsniveau"
-      xaxis: "Tillidsnivea"
+      xaxis: "Tillidsniveau"
       yaxis: "Antal brugere"
     emails:
       title: "Sendte e-mails"
@@ -719,6 +720,12 @@ da:
     reply_by_email: "For at svare kan du svare på denne e-mail eller gå til %{base_url}%{url} i din browser."
     visit_link_to_respond: "For at svare kan du gå til %{base_url}%{url} i din browser."
     posted_by: "Oprettet af %{username} den %{post_date}"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} inviterede dig til en privat besked '%{topic_title}'"
+      text_body_template: |
+        %{username} inviterede dig til en privat besked '%{topic_title}' på %{site_name}
+
+        Besøg dette link for at se emnet: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} svarede på dit indlæg i emnet '%{topic_title}'"
       text_body_template: |
@@ -738,7 +745,7 @@ da:
         ---
         %{respond_instructions}
     user_mentioned:
-      subject_template: "[%{site_name}] %{username} nævnte dig i emnet '%{topic_title}'"
+      subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -755,13 +762,27 @@ da:
 
         ---
         %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     digest:
+      why: "En kort opsummering fra %{site_link} siden %{last_seen_at} hvor vi sidst så dig."
+      subject_template: "[%{site_name}] Uddrag for %{date}"
       new_activity: "Ny aktivitet på dine emner og indlæg:"
       top_topics: "Populære emner"
       other_new_topics: "Populære emner"
+      unsubscribe: "Denne besked med uddrag sendes fra %{site_link} når vi ikke set dig i et stykke tid. For at afmelde %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} opsummering"
       read_more: "Læs mere"
+      more_topics: "Der er skrevet %{new_topics_since_seen} andre nye emner siden %{last_seen_at} hvor du sidst besøgte os."
+      more_topics_category: "Der er skrevet %{new_topics_since_seen} andre nye emner i disse kategorier siden %{last_seen_at} hvor du sidst besøgte os:"
       posts:
         one: "1 indlæg"
         other: "%{count} indlæg"
@@ -776,6 +797,14 @@ da:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Sæt kodeord"
+      text_body_template: |
+        Nogen har bedt om at tilføje et kodeord til din konto på [%{site_name}](%{base_url}).
+        Du kan også loge ind med en af de undestøttede online services (Google, Facebook o.s.v. ) som associeret med denne bekræftede emailadresse.
+
+        Hvis ikke du har bedt om dette kan du blot ignorere denne email.
+
+        Klik på følgende for at vælge et kodeord.:
+        %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] Bekræft din nye e-mail-adresse"
       text_body_template: |

@@ -76,7 +76,6 @@ pt_BR:
   next_page: "próxima página →"
   prev_page: "← página anterior"
   page_num: "Página %{num}"
-  by: "Por"
   topics_in_category: "Tópicos na categoria '%{category}'"
   rss_posts_in_topic: "RSS feed de '%{topic}'"
   rss_topics_in_category: "RSS feed dos tópicos da categoria '%{category}'"

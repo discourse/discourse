@@ -144,7 +144,7 @@ da:
       stat:
         all_time: "Alt"
         last_7_days: "De sidste 7 Dage"
-      like_count: "Like's"
+      like_count: "Likes"
       topic_count: "Emner"
       post_count: "Indlæg"
       user_count: "Brugere"
@@ -244,8 +244,8 @@ da:
         one: "%{count} nyt indlæg i den seneste %{unit}."
         other: "%{count} nye indlæg i den seneste %{unit}."
     ip_lookup:
-      title: IP opslag
-      hostname: Hostname
+      title: IP-adresse opslag
+      hostname: Værtsnavn
       location: Sted
       location_not_found: (ukendt)
       organisation: Organisation
@@ -255,7 +255,6 @@ da:
     user:
       said: "{{username}} sagde:"
       profile: "Profil"
-      show_profile: "Besøg profil"
       mute: "Mute"
       edit: "Redigér indstillinger"
       download_archive: "download arkiv med alle mine indlæg"
@@ -334,19 +333,16 @@ da:
         title: "Profil baggrundsbillede"
       email:
         title: "E-mail"
-        instructions: "Din e-mail-adresse bliver aldrig vist offentligt."
         ok: "Det ser fint ud. Vi e-mail’er dig for at bekræfte."
         invalid: "Skriv venligst en gyldig e-mail-adresse."
         authenticated: "Din e-mail er bekræftet af {{provider}}."
         frequency: "Vi sender dig kun e-mail, hvis du ikke har været på siden for nylig, og du ikke allerede har set de ting vi ville e-mail’e dig om."
       name:
         title: "Navn"
-        instructions: "Den lange udgave af dit navn."
         too_short: "Dit navn er for kort."
         ok: "Dit navn ser fint ud."
       username:
         title: "Brugernavn"
-        instructions: "Dit brugernavn skal være unikt, uden mellemrum og kort."
         short_instructions: "Andre brugere kan referere til dig som @{{username}}."
         available: "Brugernavnet er tilgængeligt."
         global_match: "E-mail-adressen matcher det registrerede brugernavn."
@@ -451,12 +447,10 @@ da:
       prev_page: "da vi prøvede at indlæse"
       reasons:
         network: "Netværksfejl"
-        server: "Server fejl: {{code}}"
         unknown: "Fejl"
       desc:
         network: "Tjek din internetforbindelse."
         network_fixed: "Det ser ud som om den er tilbage."
-        server: "Noget gik galt."
         unknown: "Noget gik galt."
       buttons:
         back: "Gå tilbage"
@@ -490,7 +484,7 @@ da:
     deleted_filter:
       enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult."
       disabled_description: "Slettede indlæg bliver vist. "
-      enable: "Skjul slettede indlæg"
+      enable: "Skjul Slettede Indlæg"
       disable: "Vis Slettede Indlæg"
     private_message_info:
       title: "Privat samtale"
@@ -582,7 +576,7 @@ da:
       view_new_post: "Se dit nye indlæg."
       saving: "Gemmer…"
       saved: "Gemt!"
-      saved_draft: "Du har en kladde i gang. Klik hvorsomhelst i denne kasse for at forsætte med at redigere den."
+      saved_draft: "Du har en kladde i gang. vælg denne kasse for at forsætte med at redigere den."
       uploading: "Uploader…"
       show_preview: 'forhåndsvisning &raquo;'
       hide_preview: '&laquo; skjul forhåndsvisning'
@@ -597,8 +591,8 @@ da:
       link_optional_text: "evt. titel"
       quote_title: "Citatblok"
       quote_text: "Citatblok"
-      code_title: "Programkode"
-      code_text: "Indrykket forud formatteret tekst med 4 mellemrum"
+      code_title: "Præformateret tekst"
+      code_text: "indryk præformateret tekst med 4 mellemrum"
       upload_title: "Billede"
       upload_description: "skriv billedets beskrivelse her"
       olist_title: "Nummereret liste"
@@ -950,6 +944,7 @@ da:
         has_liked: "Du liker dette indlæg"
         undo_like: "fortryd like"
         edit: "redigér dette indlæg"
+        edit_anonymous: "Beklager, du skal være logget ind for at redigere dette indlæg."
         flag: "gør moderator opmærksom på dette indlæg"
         delete: "slet dette indlæg"
         undelete: "annullér sletning"
@@ -1439,6 +1434,8 @@ da:
           backup:
             text: "Backup"
             title: "Start backup"
+            confirm: "Vil du starte en ny backup?"
+            without_uploads: "Ja (Uden upload)"
           download:
             text: "Download"
             title: "Download backuppen"
@@ -1625,6 +1622,8 @@ da:
             label: "Ny:"
             ip_address: "IP-adresse"
             add: "Tilføj"
+        logster:
+          title: "Fejl beskeder"
       impersonate:
         title: "Udgiv dig for bruger"
         username_or_email: "Brugernavn eller e-mail på bruger"
@@ -1706,13 +1705,15 @@ da:
         reputation: Omdømme
         permissions: Tilladelser
         activity: Aktivitet
-        like_count: Antal likes
+        like_count: Likes Givet / Modtaget
+        last_100_days: 'de sidste 100 dage'
         private_topics_count: Private emner
         posts_read_count: Læste indlæg
         post_count: Oprettede indlæg
         topics_entered: Læste emner
         flags_given_count: Afgivne flag
         flags_received_count: Modtagne flag
+        flags_given_received_count: 'Flag Givet / Modtaget'
         approve: 'Godkend'
         approved_by: "godkendt af"
         approve_success: "Bruger godkendt og e-mail med aktiveringsvejledning sendt."
@@ -1764,9 +1765,17 @@ da:
           posts_read_all_time: "Indlæg læst (siden begyndelsen)"
           flagged_posts: "Markerede indlæg"
           flagged_by_users: "Brugere der har markeret indlæg"
+          likes_given: "Likes givet"
+          likes_received: "Likes modtaget"
           qualifies: "Krav for tillidsniveau 3"
           will_be_promoted: "Vil blive forfremmet indenfor 24 timer."
           does_not_qualify: "Ikke kvalificeret til tillids niveau 3."
+        sso:
+          external_id: "Externt ID"
+          external_username: "Brugernavn"
+          external_name: "Navn"
+          external_email: "Email"
+          external_avatar_url: "Avatar URL"
       site_content:
         none: "Vælg en indholdstype for at begynde at redigere."
         title: 'Indhold'
