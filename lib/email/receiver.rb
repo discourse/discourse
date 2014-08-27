@@ -1,3 +1,4 @@
+require 'email/html_cleaner'
 #
 # Handles an incoming message
 #
@@ -26,26 +27,22 @@ module Email
     def process
       raise EmptyEmailError if @raw.blank?
 
-      @message = Mail.new(@raw)
+      message = Mail.new(@raw)
 
-      # First remove the known discourse stuff.
-      parse_body
-      raise EmptyEmailError if @body.blank?
-
-      # Then run the github EmailReplyParser on it in case we didn't catch it
-      @body = EmailReplyParser.read(@body).visible_text.force_encoding('UTF-8')
-
-      discourse_email_parser
-      raise EmailUnparsableError if @body.blank?
+      body = parse_body message
 
       dest_info = {type: :invalid, obj: nil}
-      @message.to.each do |to_address|
+      message.to.each do |to_address|
         if dest_info[:type] == :invalid
           dest_info = check_address to_address
         end
       end
 
       raise BadDestinationAddress if dest_info[:type] == :invalid
+
+      # TODO get to a state where we can remove this
+      @message = message
+      @body = body
 
       if dest_info[:type] == :category
         raise BadDestinationAddress unless SiteSetting.email_in
@@ -74,6 +71,8 @@ module Email
 
         create_reply
       end
+    rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError => e
+      raise EmailUnparsableError.new(e)
     end
 
     def check_address(address)
@@ -94,56 +93,63 @@ module Email
       {type: :invalid, obj: nil}
     end
 
+    def parse_body(message)
+      body = select_body message
+      raise EmptyEmailError if body.strip.blank?
 
-    def parse_body
+      body = discourse_email_trimmer body
+      raise EmptyEmailError if body.strip.blank?
+
+      body = EmailReplyParser.parse_reply body
+      raise EmptyEmailError if body.strip.blank?
+
+      body
+    end
+
+    def select_body(message)
       html = nil
-
-      # If the message is multipart, find the best type for our purposes
-      if @message.multipart?
-        if p = @message.text_part
-          @body = p.charset ? p.body.decoded.force_encoding(p.charset).encode("UTF-8").to_s : p.body.to_s
-          return @body
-        elsif p = @message.html_part
-          html = p.charset ? p.body.decoded.force_encoding(p.charset).encode("UTF-8").to_s : p.body.to_s
+      # If the message is multipart, return that part (favor html)
+      if message.multipart?
+        html = fix_charset message.html_part
+        text = fix_charset message.text_part
+        # TODO picking text if available may be better
+        if text && !html
+          return text
         end
+      elsif message.content_type =~ /text\/html/
+        html = fix_charset message
       end
 
-      if @message.content_type =~ /text\/html/
-        if defined? @message.charset
-          html = @message.body.decoded.force_encoding(@message.charset).encode("UTF-8").to_s
-        else
-          html = @message.body.to_s
-        end
+      if html
+        body = HtmlCleaner.new(html).output_html
+      else
+        body = fix_charset message
       end
-
-      if html.present?
-        @body = scrub_html(html)
-        return @body
-      end
-
-      @body = @message.charset ? @message.body.decoded.force_encoding(@message.charset).encode("UTF-8").to_s.strip : @message.body.to_s
 
       # Certain trigger phrases that means we didn't parse correctly
-      @body = nil if @body =~ /Content\-Type\:/ ||
-                     @body =~ /multipart\/alternative/ ||
-                     @body =~ /text\/plain/
+      if body =~ /Content\-Type\:/ || body =~ /multipart\/alternative/ || body =~ /text\/plain/
+        raise EmptyEmailError
+      end
 
-      @body
+      body
     end
 
-    def scrub_html(html)
-      # If we have an HTML message, strip the markup
-      doc = Nokogiri::HTML(html)
+    # Force encoding to UTF-8 on a Mail::Message or Mail::Part
+    def fix_charset(object)
+      return nil if object.nil?
 
-      # Blackberry is annoying in that it only provides HTML. We can easily extract it though
-      content = doc.at("#BB10_response_div")
-      return content.text if content.present?
-
-      doc.xpath("//text()").text
+      if object.charset
+        object.body.decoded.force_encoding(object.charset).encode("UTF-8").to_s
+      else
+        object.body.to_s
+      end
     end
 
-    def discourse_email_parser
-      lines = @body.scrub.lines.to_a
+    REPLYING_HEADER_LABELS = ['From', 'Sent', 'To', 'Subject', 'Reply To']
+    REPLYING_HEADER_REGEX = Regexp.union(REPLYING_HEADER_LABELS.map { |lbl| "#{lbl}:" })
+
+    def discourse_email_trimmer(body)
+      lines = body.scrub.lines.to_a
       range_end = 0
 
       lines.each_with_index do |l, idx|
@@ -154,11 +160,15 @@ module Email
                  # Let's try it and see how well it works.
                  (l =~ /\d{4}/ && l =~ /\d:\d\d/ && l =~ /\:$/)
 
+        # Headers on subsequent lines
+        break if (0..2).all? { |off| lines[idx+off] =~ REPLYING_HEADER_REGEX }
+        # Headers on the same line
+        break if REPLYING_HEADER_LABELS.count { |lbl| l.include? lbl } >= 3
+
         range_end = idx
       end
 
-      @body = lines[0..range_end].join
-      @body.strip!
+      lines[0..range_end].join.strip
     end
 
     def wrap_body_in_quote(user_email)
