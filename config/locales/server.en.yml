@@ -1020,7 +1020,7 @@ en:
     invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
     linked: "%{display_username} linked you in %{link}"
-    granted_badge: "You were granted %{link}"
+    granted_badge: "You earned %{link}"
 
   search:
     within_post: "#%{post_number} by %{username}: %{excerpt}"
