@@ -2052,6 +2052,8 @@ en:
         title: 'Application'
         create: '<b>c</b> Create a new topic'
         notifications: '<b>n</b> Open notifications'
+        site_map_menu: '<b>=</b> Open site map menu'
+        user_profile_menu: '<b>p</b> Open user profile menu'
         search: '<b>/</b> Search'
         help: '<b>?</b> Open keyboard shortcuts help'
       actions:
