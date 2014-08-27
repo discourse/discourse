@@ -122,6 +122,9 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
               unread = postsCount - state.last_read_post_number;
 
           if (newPosts < 0) { newPosts = 0; }
+          if (!state.last_read_post_number) {
+            unread = 0;
+          }
           if (unread < 0) { unread = 0; }
 
           t.setProperties({
@@ -129,7 +132,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
             last_read_post_number: state.last_read_post_number,
             new_posts: newPosts,
             unread: unread,
-            unseen: false
+            unseen: !state.last_read_post_number
           });
         }
       }
