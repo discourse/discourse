@@ -162,7 +162,7 @@ Handlebars.registerHelper('raw-date', function(property, options) {
   @for Handlebars
 **/
 Em.Handlebars.helper('bound-raw-date', function (date) {
-  return Discourse.Formatter.longDate(new Date(date));
+  return Discourse.Formatter.longDateNoYear(new Date(date));
 });
 
 /**
