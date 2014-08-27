@@ -594,6 +594,9 @@ developer:
     client: true
     default: 5
   active_user_rate_limit_secs: 60
+  verbose_localization:
+    default: false
+    client: true
 
 embedding:
   embeddable_host: ''
