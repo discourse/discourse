@@ -36,7 +36,7 @@ class Badge < ActiveRecord::Base
   module Queries
 
     Reader = <<SQL
-    SELECT id user_id, current_timestamp granted_at, NULL post_id
+    SELECT id user_id, current_timestamp granted_at
     FROM users
     WHERE id IN
     (
@@ -53,9 +53,9 @@ class Badge < ActiveRecord::Base
 SQL
 
     ReadGuidelines = <<SQL
-    SELECT user_id, read_faq granted_at, NULL post_id
+    SELECT user_id, read_faq granted_at
     FROM user_stats
-    WHERE read_faq IS NOT NULL
+    WHERE read_faq IS NOT NULL AND (user_id IN (:user_ids) OR :backfill)
 SQL
 
     FirstQuote = <<SQL
@@ -145,7 +145,7 @@ SQL
 SQL
 
     Autobiographer = <<SQL
-    SELECT u.id user_id, current_timestamp granted_at, NULL post_id
+    SELECT u.id user_id, current_timestamp granted_at
     FROM users u
     JOIN user_profiles up on u.id = up.user_id
     WHERE bio_raw IS NOT NULL AND LENGTH(TRIM(bio_raw)) > #{Badge::AutobiographerMinBioLength} AND
@@ -166,7 +166,7 @@ SQL
     def self.trust_level(level)
       # we can do better with dates, but its hard work figuring this out historically
 "
-    SELECT u.id user_id, current_timestamp granted_at, NULL post_id FROM users u
+    SELECT u.id user_id, current_timestamp granted_at FROM users u
     WHERE trust_level >= #{level.to_i} AND (
       :backfill OR u.id IN (:user_ids)
     )
