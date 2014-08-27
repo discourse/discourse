@@ -20,7 +20,7 @@ if(Rails.env.development?)
       'exclude_fixtures'     => "true",
       'exclude_factories'    => "true",
       'ignore_model_sub_dir' => "false",
-      'skip_on_db_migrate'   => "false",
+      'skip_on_db_migrate'   => "true",
       'format_bare'          => "true",
       'format_rdoc'          => "false",
       'format_markdown'      => "false",
