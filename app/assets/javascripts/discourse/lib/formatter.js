@@ -80,9 +80,9 @@ longDateNoYear = function(dt) {
   if (!dt) return;
 
   if ((new Date()).getFullYear() !== dt.getFullYear()) {
-    return moment(dt).format("MMM D, 'YY LT");
+    return moment(dt).format(I18n.t("dates.long_date_with_year"));
   } else {
-    return moment(dt).format("MMM D, LT");
+    return moment(dt).format(I18n.t("dates.long_date_without_year"));
   }
 };
 
