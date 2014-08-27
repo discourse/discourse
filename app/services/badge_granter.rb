@@ -214,8 +214,21 @@ class BadgeGranter
 
     builder = SqlBuilder.new(sql)
     builder.where("ub.badge_id IS NULL AND q.user_id <> -1")
-    builder.where("q.post_id in (:post_ids)") if post_ids
-    builder.where("q.user_id in (:user_ids)") if user_ids
+
+    if (post_ids || user_ids) && !badge.query.include?(":backfill")
+      Rails.logger.warn "Your triggered badge query for #{badge.name} does not include the :backfill param, skipping!"
+      return
+    end
+
+    if (post_ids && !badge.query.include?(":post_ids"))
+      Rails.logger.warn "Your triggered badge query for #{badge.name} does not include the :post_ids param, skipping!"
+      return
+    end
+
+    if (user_ids && !badge.query.include?(":user_ids"))
+      Rails.logger.warn "Your triggered badge query for #{badge.name} does not include the :user_ids param, skipping!"
+      return
+    end
 
     builder.map_exec(OpenStruct, id: badge.id,
                                  multiple_grant: badge.multiple_grant,
