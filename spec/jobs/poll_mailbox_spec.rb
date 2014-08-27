@@ -202,9 +202,9 @@ describe Jobs::PollMailbox do
         email.should be_deleted
       end
 
-      it "a no content reply raises an EmailUnparsableError" do
+      it "a no content reply raises an EmptyEmailError" do
         email = MockPop3EmailObject.new fixture_file('emails/no_content_reply.eml')
-        expect_exception Email::Receiver::EmailUnparsableError
+        expect_exception Email::Receiver::EmptyEmailError
 
         poller.handle_mail(email)
         email.should be_deleted
