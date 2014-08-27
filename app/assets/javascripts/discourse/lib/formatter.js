@@ -1,7 +1,7 @@
 /* global BreakString:true */
 
 var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
-    relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
+    relativeAgeMedium, relativeAgeMediumSpan, longDate, longDateNoYear, toTitleCase,
     shortDate, shortDateNoYear, tinyDateYear, relativeAgeTinyShowsYear;
 
 /*
@@ -73,6 +73,17 @@ toTitleCase = function toTitleCase(str) {
 longDate = function(dt) {
   if (!dt) return;
   return moment(dt).longDate();
+};
+
+// suppress year, if current year
+longDateNoYear = function(dt) {
+  if (!dt) return;
+
+  if ((new Date()).getFullYear() !== dt.getFullYear()) {
+    return moment(dt).format("MMM D, 'YY LT");
+  } else {
+    return moment(dt).format("MMM D, LT");
+  }
 };
 
 updateRelativeAge = function(elems) {
@@ -258,6 +269,7 @@ var number = function(val) {
 
 Discourse.Formatter = {
   longDate: longDate,
+  longDateNoYear: longDateNoYear,
   relativeAge: relativeAge,
   autoUpdatingRelativeAge: autoUpdatingRelativeAge,
   updateRelativeAge: updateRelativeAge,
