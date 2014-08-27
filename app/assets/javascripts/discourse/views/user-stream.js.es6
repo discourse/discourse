@@ -14,6 +14,7 @@ export default Ember.View.extend(Discourse.LoadMore, {
       var self = this;
       if (this.get('loading')) { return; }
 
+      this.set('loading', true);
       var stream = this.get('controller.model');
       stream.findItems().then(function() {
         self.set('loading', false);
