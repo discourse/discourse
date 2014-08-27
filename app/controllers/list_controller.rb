@@ -92,7 +92,7 @@ class ListController < ApplicationController
       @link = "#{Discourse.base_url}/#{filter}"
       @description = I18n.t("rss_description.#{filter}")
       @atom_link = "#{Discourse.base_url}/#{filter}.rss"
-      @topic_list = TopicQuery.new(nil, order: 'activity').public_send("list_#{filter}")
+      @topic_list = TopicQuery.new(nil, order: 'created').public_send("list_#{filter}")
 
       render 'list', formats: [:rss]
     end
