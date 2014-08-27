@@ -10,8 +10,8 @@ end
 #  user_id             :integer          not null
 #  external_id         :string(255)      not null
 #  last_payload        :text             not null
-#  created_at          :datetime
-#  updated_at          :datetime
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
 #  external_username   :string(255)
 #  external_email      :string(255)
 #  external_name       :string(255)

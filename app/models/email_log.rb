@@ -37,8 +37,8 @@ end
 #  to_address     :string(255)      not null
 #  email_type     :string(255)      not null
 #  user_id        :integer
-#  created_at     :datetime
-#  updated_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #  reply_key      :string(32)
 #  post_id        :integer
 #  topic_id       :integer

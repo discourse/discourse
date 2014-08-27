@@ -361,8 +361,8 @@ end
 #  color                    :string(6)        default("AB9364"), not null
 #  topic_id                 :integer
 #  topic_count              :integer          default(0), not null
-#  created_at               :datetime
-#  updated_at               :datetime
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
 #  user_id                  :integer          not null
 #  topics_year              :integer          default(0)
 #  topics_month             :integer          default(0)

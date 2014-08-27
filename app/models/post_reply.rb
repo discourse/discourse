@@ -11,8 +11,8 @@ end
 #
 #  post_id    :integer
 #  reply_id   :integer
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #

@@ -58,8 +58,8 @@ end
 #  id            :integer          not null, primary key
 #  topic_link_id :integer          not null
 #  user_id       :integer
-#  created_at    :datetime
-#  updated_at    :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #  ip_address    :inet             not null
 #
 # Indexes

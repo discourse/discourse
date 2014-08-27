@@ -247,8 +247,8 @@ end
 #  description       :text
 #  badge_type_id     :integer          not null
 #  grant_count       :integer          default(0), not null
-#  created_at        :datetime
-#  updated_at        :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #  allow_title       :boolean          default(FALSE), not null
 #  multiple_grant    :boolean          default(FALSE), not null
 #  icon              :string(255)      default("fa-certificate")

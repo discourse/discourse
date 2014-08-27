@@ -105,8 +105,8 @@ end
 #  acting_user_id :integer
 #  target_user_id :integer
 #  details        :text
-#  created_at     :datetime
-#  updated_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #  context        :string(255)
 #  ip_address     :string(255)
 #  email          :string(255)

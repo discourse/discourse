@@ -198,8 +198,8 @@ end
 #  invited_by_id  :integer          not null
 #  user_id        :integer
 #  redeemed_at    :datetime
-#  created_at     :datetime
-#  updated_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #  deleted_at     :datetime
 #  deleted_by_id  :integer
 #  invalidated_at :datetime

@@ -12,8 +12,8 @@ end
 #  name            :string(255)      not null
 #  hex             :string(255)      not null
 #  color_scheme_id :integer          not null
-#  created_at      :datetime
-#  updated_at      :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #

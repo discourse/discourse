@@ -168,8 +168,8 @@ end
 #  post_id      :integer          not null
 #  embed_url    :string(255)      not null
 #  content_sha1 :string(40)
-#  created_at   :datetime
-#  updated_at   :datetime
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
 #
 # Indexes
 #
