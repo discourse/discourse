@@ -49,7 +49,9 @@ module("Discourse.KeyboardShortcuts", {
       "</div>",
       "<button id='create-topic'></button>",
       "<div id='user-notifications'></div>",
+      "<div id='site-map'></div>",
       "<div id='search-button'></div>",
+      "<div id='current-user'></div>",
       "<div id='keyboard-help'></div>"
     ].join("\n"));
   },
