@@ -104,6 +104,6 @@ end
 #  enabled      :boolean          default(FALSE), not null
 #  versioned_id :integer
 #  version      :integer          default(1), not null
-#  created_at   :datetime
-#  updated_at   :datetime
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
 #
