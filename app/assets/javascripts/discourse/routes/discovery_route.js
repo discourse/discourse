@@ -36,7 +36,9 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse
       var controller = this.controllerFor('discovery');
       Ember.run.cancel(controller.get('scheduledSpinner'));
       controller.setProperties({ loading: false, loadingSpinner: false });
-      this._scrollTop();
+      if (!Discourse.Session.currentProp('topicListScrollPosition')) {
+        this._scrollTop();
+      }
     },
 
     didTransition: function() {
