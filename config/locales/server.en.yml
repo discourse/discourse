@@ -35,6 +35,8 @@ en:
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
 
+  purge_reason: "Automatically deleted due to being old and unverified"
+
   errors:
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
