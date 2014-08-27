@@ -108,7 +108,16 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   },
 
   _toggleQuote: function($aside) {
+    if (this.get('expanding')) { return; }
+    this.set('expanding', true);
+
     $aside.data('expanded', !$aside.data('expanded'));
+
+    var self = this,
+        finished = function() {
+          self.set('expanding', false);
+        };
+
     if ($aside.data('expanded')) {
       this._updateQuoteElements($aside, 'chevron-up');
       // Show expanded quote
@@ -128,12 +137,12 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
       Discourse.ajax("/posts/by_number/" + topicId + "/" + postId).then(function (result) {
         var parsed = $(result.cooked);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
-        $blockQuote.showHtml(parsed);
+        $blockQuote.showHtml(parsed, 'fast', finished);
       });
     } else {
       // Hide expanded quote
       this._updateQuoteElements($aside, 'chevron-down');
-      $('blockquote', $aside).showHtml($aside.data('original-contents'));
+      $('blockquote', $aside).showHtml($aside.data('original-contents'), 'fast', finished);
     }
     return false;
   },
