@@ -15,9 +15,8 @@ Discourse.LoadMore = Em.Mixin.create(Ember.ViewTargetActionSupport, Discourse.Sc
     if (eyeline) { eyeline.update(); }
   },
 
-  didInsertElement: function() {
-    this._super();
-    var eyeline = new Discourse.Eyeline(this.get('eyelineSelector'));
+  _bindEyeline: function() {
+    var eyeline = new Discourse.Eyeline(this.get('eyelineSelector') + ":last");
     this.set('eyeline', eyeline);
 
     var self = this;
@@ -25,11 +24,10 @@ Discourse.LoadMore = Em.Mixin.create(Ember.ViewTargetActionSupport, Discourse.Sc
       self.send('loadMore');
     });
     this.bindScrolling();
-  },
+  }.on('didInsertElement'),
 
-  willDestroyElement: function() {
-    this._super();
+  _removeEyeline: function() {
     this.unbindScrolling();
-  }
+  }.on('willDestroyElement')
 
 });
