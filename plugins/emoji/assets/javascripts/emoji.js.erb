@@ -80,6 +80,10 @@
       translationColonRegexp.lastIndex = 0;
       var m = translationColonRegexp.exec(text);
       if (m && m[0] && text.indexOf(m[0]) === 0) {
+
+        // Check outer edge
+        var lastChar = text.charAt(m[0].length);
+        if (lastChar && (lastChar !== ' ' && lastChar !== "\n")) return;
         contents = imageFor(translationsWithColon[m[0]]);
         if (contents) {
           return [m[0].length, contents];
