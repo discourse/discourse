@@ -8,7 +8,7 @@
     <link><%= topic_url %></link>
     <description><%= @topic_view.posts.first.raw %></description>
     <%= "<language>#{lang}</language>" if lang %>
-    <lastBuildDate><%= @topic_view.topic.created_at.rfc2822 %></lastBuildDate>
+    <lastBuildDate><%= @topic_view.topic.bumped_at.rfc2822 %></lastBuildDate>
     <category><%= @topic_view.topic.category.name %></category>
     <atom:link href="<%= topic_url %>.rss" rel="self" type="application/rss+xml" />
     <% @topic_view.recent_posts.each do |post| %>
