@@ -234,6 +234,7 @@ Discourse.TopicList.reopenClass({
         tracking.sync(list, list.filter);
         tracking.trackIncoming(list.filter);
       }
+      Discourse.Session.currentProp('topicList', list);
       return list;
     });
   },
