@@ -73,10 +73,10 @@ module Jobs
     end
 
     def poll_pop3
-      Net::POP3.start(SiteSetting.pop3_polling_host,
-                      SiteSetting.pop3_polling_port,
-                      SiteSetting.pop3_polling_username,
-                      SiteSetting.pop3_polling_password) do |pop|
+      connection = Net::POP3.new(SiteSetting.pop3_polling_host, SiteSetting.pop3_polling_port)
+      connection.enable_ssl if SiteSetting.pop3_polling_ssl
+
+      connection.start(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password) do |pop|
         unless pop.mails.empty?
           pop.each do |mail|
             handle_mail(mail)
