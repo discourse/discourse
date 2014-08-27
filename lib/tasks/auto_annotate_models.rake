@@ -30,5 +30,4 @@ if(Rails.env.development?)
     })
   end
 
-  Annotate.load_tasks
 end
