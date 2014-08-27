@@ -133,7 +133,8 @@ SQL
     # If you refactor this, test performance on a large database.
 
     Category.all.each do |c|
-      topics = c.topics.where(['topics.id <> ?', c.topic_id]).visible
+      topics = c.topics.visible
+      topics = topics.where(['topics.id <> ?', c.topic_id]) if c.topic_id
       c.topics_year  = topics.created_since(1.year.ago).count
       c.topics_month = topics.created_since(1.month.ago).count
       c.topics_week  = topics.created_since(1.week.ago).count
