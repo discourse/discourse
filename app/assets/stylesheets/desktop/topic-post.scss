@@ -683,9 +683,8 @@ blockquote > *:last-child {
   .title {
     border-left: 5px solid darken(scale-color-diff(), 10%);
     background-color: scale-color-diff();
-    padding: 12px;
-    /* blockquote is underneath this and has top margin we need to absorb */
-    margin-bottom: -1.5em;
+    padding: 12px 12px 0 12px;
+    /* blockquote is underneath this and has top margin */
     .avatar { margin-right: 7px; }
     img { margin-top: -4px; }
   }
