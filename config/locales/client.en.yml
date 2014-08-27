@@ -35,6 +35,8 @@ en:
       long_no_year_no_time: "MMM D"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      long_date_with_year: "MMM D, 'YY LT"
+      long_date_without_year: "MMM D, LT"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
