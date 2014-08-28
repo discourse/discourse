@@ -95,6 +95,7 @@ module Email
 
     def parse_body(message)
       body = select_body message
+      encoding = body.encoding
       raise EmptyEmailError if body.strip.blank?
 
       body = discourse_email_trimmer body
@@ -103,7 +104,7 @@ module Email
       body = EmailReplyParser.parse_reply body
       raise EmptyEmailError if body.strip.blank?
 
-      body
+      body.force_encoding(encoding).encode("UTF-8")
     end
 
     def select_body(message)

@@ -45,14 +45,14 @@ describe Email::Receiver do
       I18n.expects(:t).with('user_notifications.previous_discussion').returns('כלטוב')
 
       # The force_encoding call is only needed for the test - it is passed on fine to the cooked post
-      test_parse_body(fixture_file("emails/hebrew.eml")).force_encoding("UTF-8").should == "שלום"
+      test_parse_body(fixture_file("emails/hebrew.eml")).should == "שלום"
     end
 
     it "supports a BIG5-encoded reply" do
       I18n.expects(:t).with('user_notifications.previous_discussion').returns('媽！我上電視了！')
 
       # The force_encoding call is only needed for the test - it is passed on fine to the cooked post
-      test_parse_body(fixture_file("emails/big5.eml")).force_encoding("UTF-8").should == "媽！我上電視了！"
+      test_parse_body(fixture_file("emails/big5.eml")).should == "媽！我上電視了！"
     end
 
     it "removes 'via' lines if they match the site title" do
@@ -75,6 +75,16 @@ The thing about candy is it stays delicious for a long time -- we can just keep
 it there without worrying about it too much, imo.
 
 Thanks for listening."
+      )
+    end
+
+    it "converts back to UTF-8 at the end" do
+      result = test_parse_body(fixture_file("emails/big5.eml"))
+      result.encoding.should == Encoding::UTF_8
+
+      # should not throw
+      TextCleaner.normalize_whitespaces(
+          test_parse_body(fixture_file("emails/big5.eml"))
       )
     end
   end
