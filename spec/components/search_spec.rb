@@ -110,17 +110,8 @@ describe Search do
 
     it 'returns a result' do
       result.should be_present
-    end
-
-    it 'has the display name as the title' do
       result[:title].should == user.username
-    end
-
-    it 'has the avatar_template is there so it can hand it to the client' do
       result[:avatar_template].should_not be_nil
-    end
-
-    it 'has a url for the record' do
       result[:url].should == "/users/#{user.username_lower}"
     end
 
@@ -196,8 +187,7 @@ describe Search do
         result.should be_present
         result[:title].should == topic.title
 
-        # The link is to the topic url because it's aggregated
-        result[:url].should == topic.relative_url
+        result[:url].should == topic.relative_url + "/2"
       end
     end
 

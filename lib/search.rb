@@ -279,13 +279,16 @@ class Search
 
     def aggregate_search
       cols = ['topics.id', 'topics.title', 'topics.slug']
-      topics = posts_query(@limit, aggregate_search: true).group(*cols).pluck(*cols)
+      topics = posts_query(@limit, aggregate_search: true)
+                .group(*cols)
+                .pluck('min(posts.post_number)',*cols)
+
       topics.each do |t|
         @results.add_result(SearchResult.new(type: :topic,
-                                             topic_id: t[0],
-                                             id: t[0],
-                                             title: t[1],
-                                             url: "/t/#{t[2]}/#{t[0]}"))
+                                             topic_id: t[1],
+                                             id: t[1],
+                                             title: t[2],
+                                             url: "/t/#{t[3]}/#{t[1]}/#{t[0]}"))
       end
     end
 
