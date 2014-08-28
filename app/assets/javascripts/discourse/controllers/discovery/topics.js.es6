@@ -5,6 +5,7 @@ var controllerOpts = {
   needs: ['discovery'],
   bulkSelectEnabled: false,
   selected: [],
+  period: null,
 
   redirectedReason: Em.computed.alias('currentUser.redirected_to_top_reason'),
 
