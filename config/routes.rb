@@ -425,4 +425,5 @@ Discourse::Application.routes.draw do
   # special case for top
   root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
 
+  # See config/routes_last.rb for more
 end

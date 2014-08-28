@@ -148,6 +148,10 @@ module Discourse
     require 'auth'
     Discourse.activate_plugins! unless Rails.env.test? and ENV['LOAD_PLUGINS'] != "1"
 
+    initializer :add_last_routes, :after => :add_routing_paths do |app|
+      app.routes_reloader.paths << File.join(Rails.root, 'config', 'routes_last.rb')
+    end
+
     config.after_initialize do
       # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
