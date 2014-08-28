@@ -82,6 +82,27 @@ describe StaticController do
       end
     end
 
+    context 'with a full url' do
+      it 'redirects to the correct path' do
+        xhr :post, :enter, redirect: "#{Discourse.base_url}/foo"
+        expect(response).to redirect_to '/foo'
+      end
+    end
+
+    context 'with a full url to someone else' do
+      it 'redirects to the root path' do
+        xhr :post, :enter, redirect: "http://eviltrout.com/foo"
+        expect(response).to redirect_to '/'
+      end
+    end
+
+    context 'with an invalid URL' do
+      it "redirects to the root" do
+        xhr :post, :enter, redirect: "javascript:alert('trout')"
+        expect(response).to redirect_to '/'
+      end
+    end
+
     context 'when the redirect path is the login page' do
       it 'redirects to the root url' do
         xhr :post, :enter, redirect: login_path
