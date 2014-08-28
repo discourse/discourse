@@ -94,7 +94,6 @@ module Email
       {type: :invalid, obj: nil}
     end
 
-    private
 
     def parse_body
       html = nil
@@ -168,37 +167,37 @@ module Email
 [/quote]"
     end
 
+    private
+
     def create_reply
-      create_post_with_attachments(email_log.user, @body, @email_log.topic_id, @email_log.post.post_number)
+      create_post_with_attachments(@email_log.user,
+                                   raw: @body,
+                                   topic_id: @email_log.topic_id,
+                                   reply_to_post_number: @email_log.post.post_number)
     end
 
     def create_new_topic
-      topic = TopicCreator.new(
-        @user,
-        Guardian.new(@user),
-        category: @category_id,
-        title: @message.subject,
-      ).create
-
-      post = create_post_with_attachments(@user, @body, topic.id)
+      post = create_post_with_attachments(@user,
+                                          raw: @body,
+                                          title: @message.subject,
+                                          category: @category_id)
 
       EmailLog.create(
         email_type: "topic_via_incoming_email",
-        to_address: @message.to.first,
-        topic_id: topic.id,
+        to_address: @message.from.first, # pick from address because we want the user's email
+        topic_id: post.topic.id,
         user_id: @user.id,
       )
 
       post
     end
 
-    def create_post_with_attachments(user, raw, topic_id, reply_to_post_number=nil)
+    def create_post_with_attachments(user, post_opts={})
       options = {
-        raw: raw,
-        topic_id: topic_id,
         cooking_options: { traditional_markdown_linebreaks: true },
-      }
-      options[:reply_to_post_number] = reply_to_post_number if reply_to_post_number
+      }.merge(post_opts)
+
+      raw = options[:raw]
 
       # deal with attachments
       @message.attachments.each do |attachment|
@@ -215,8 +214,9 @@ module Email
         ensure
           tmp.close!
         end
-
       end
+
+      options[:raw] = raw
 
       create_post(user, options)
     end
@@ -232,9 +232,11 @@ module Email
     def create_post(user, options)
       creator = PostCreator.new(user, options)
       post = creator.create
+
       if creator.errors.present?
         raise InvalidPost, creator.errors.full_messages.join("\n")
       end
+
       post
     end
 
