@@ -447,6 +447,8 @@ it:
       prev_page: "durante il caricamento"
       reasons:
         network: "Errore di Rete"
+        server: "Errore del Server"
+        forbidden: "Accesso Negato"
         unknown: "Errore"
       desc:
         network: "Per favore controlla la tua connessione."
@@ -626,7 +628,6 @@ it:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span>ha accettato il tuo invito</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> ha spostato {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ti è stato assegnato il grado {{description}}</p>"
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -1763,6 +1764,8 @@ it:
           qualifies: "Requisiti per il livello 3"
           will_be_promoted: "Verrà promosso entro 24 ore."
           does_not_qualify: "Non si qualifica per il livello 3."
+        sso:
+          external_name: "Nome"
       site_content:
         none: "Scegli un tipo di contenuto per iniziare"
         title: 'Contenuto'

@@ -625,7 +625,6 @@ fi:
       invitee_accepted: "<i title='hyväksyi kutsusi' class='fa fa-user'></i><p><span>{{username}}</span> hyväksyi kutsusi</p>"
       moved_post: "<i title='siirsi viestin' class='fa fa-sign-out'></i><p><span>{{username}}</span> siirsi {{description}}</p>"
       linked: "<i title='linkattu viesti' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='arvomerkki myönnetty' class='fa fa-certificate'></i><p>Sinulle myönnettiin {{description}}</p>"
     upload_selector:
       title: "Lisää kuva"
       title_with_attachments: "Lisää kuva tai tidosto"
