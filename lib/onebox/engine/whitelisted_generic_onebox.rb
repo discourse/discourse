@@ -96,6 +96,7 @@ module Onebox
           ted.com
           thefreedictionary.com
           theglobeandmail.com
+          thenextweb.com
           theonion.com
           thestar.com
           thesun.co.uk
