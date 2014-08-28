@@ -147,12 +147,12 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
   showSiteMap: function() {
     $('#site-map').click();
-    $('#site-map-dropdown').focus();
+    $('#site-map-dropdown a:first').focus();
   },
 
   showCurrentUser: function() {
     $('#current-user').click();
-    $('#user-dropdown').focus();
+    $('#user-dropdown a:first').focus();
   },
 
   showHelpModal: function() {
