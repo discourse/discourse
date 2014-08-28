@@ -628,7 +628,7 @@ legal:
 
 backups:
   allow_restore:
-    client: true
+    client: false
     default: false
   maximum_backups:
     client: true
