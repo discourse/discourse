@@ -58,7 +58,7 @@ export default Discourse.View.extend({
     // fade it fast
     $dropdown.fadeIn('fast');
     // autofocus any text input field
-    $dropdown.find('input[type=text],a:first').focus().select();
+    $dropdown.find('input[type=text]').focus().select();
 
     $html.on('click.d-dropdown', function(e) {
       return $(e.target).closest('.d-dropdown').length > 0 ? true : hideDropdown.apply(self);
