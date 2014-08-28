@@ -869,7 +869,6 @@ es:
     invited_to_private_message: "%{display_username} te ha invitado a un mensaje privado: %{link}"
     invitee_accepted: "%{display_username} ha aceptado tu invitación"
     linked: "%{display_username} te enlazó en %{link}"
-    granted_badge: "Te ha sido concedido %{link}"
   search:
     within_post: "#%{post_number} por %{username}: %{excerpt}"
     types:

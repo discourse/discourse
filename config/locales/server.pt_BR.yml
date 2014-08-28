@@ -579,7 +579,6 @@ pt_BR:
     invited_to_private_message: "%{display_username} convidou-te para uma conversa privada: %{link}"
     invitee_accepted: "%{display_username} aceitou o seu convite"
     linked: "%{display_username} linkou você em %{link}"
-    granted_badge: "Foi concedido a você %{link}"
   search:
     within_post: "#%{post_number} por %{username}: %{excerpt}"
     types:

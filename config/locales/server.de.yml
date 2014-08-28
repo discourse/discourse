@@ -872,7 +872,6 @@ de:
     invited_to_private_message: "%{display_username} hat Dich zu einem privaten Gespräch eingeladen: %{link}"
     invitee_accepted: "%{display_username} hat Deine Einladung angenommen."
     linked: "%{display_username} hat dich auf %{link} verlinkt"
-    granted_badge: "Dir wurde %{link} verliehen"
   search:
     within_post: "#%{post_number} von %{username}: %{excerpt}"
     types:
