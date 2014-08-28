@@ -883,7 +883,6 @@ fr:
     invited_to_private_message: "%{display_username} vous a invité dans une conversation privée: %{link}"
     invitee_accepted: "%{display_username} a accepté votre invitation"
     linked: "%{display_username} a mentionné l'un de vos messages : %{link}"
-    granted_badge: "On vous a décerné %{link}"
   search:
     within_post: "#%{post_number} par %{username}: %{excerpt}"
     types:

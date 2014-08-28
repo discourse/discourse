@@ -831,7 +831,6 @@ he:
     invited_to_private_message: "%{display_username} הזמין אותך להודעה פרטית: %{link}"
     invitee_accepted: "%{display_username} קיבל את הזמנתך"
     linked: "%{display_username} קישר אליך ב %{link}"
-    granted_badge: "הוענק לך %{link}"
   search:
     within_post: "#%{post_number} מאת %{username}: %{excerpt}"
     types:

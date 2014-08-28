@@ -626,7 +626,6 @@ nl:
       invitee_accepted: "<i title='heeft jouw uitnodiging geaccepteerd' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='heeft bericht verplaatst' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='gelinkt bericht' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge toegekend' class='fa fa-certificate'></i><p>Je hebt {{description}} gekregen</p>"
     upload_selector:
       title: "Voeg een afbeelding toe"
       title_with_attachments: "Voeg een afbeelding of bestand toe"
@@ -1292,15 +1291,45 @@ nl:
         title: "Meldingen"
         old: "Oud"
         active: "Actief"
+        agree: "Akkoord"
+        agree_title: "Bevestig dat deze melding geldig en correct is"
+        agree_flag_modal_title: "Akkoord en ... "
+        agree_flag_hide_post: "Akkoord (verberg bericht en stuur privébericht)"
+        agree_flag_hide_post_title: "Verberg dit bericht en stuur de gebruiker automatisch een privébericht met het verzoek om het bericht aan te passen. "
+        agree_flag: "Akkoord met melding"
+        agree_flag_title: "Akkoord met melding en het bericht ongewijzigd laten"
+        defer_flag: "Negeer"
+        defer_flag_title: "Verwijder deze melding; nu geen actie nodig"
+        delete: "Verwijder"
+        delete_title: "Verwijder het bericht waar deze melding naar verwijst"
+        delete_post_defer_flag: "Verwijder bericht en negeer melding"
+        delete_post_defer_flag_title: "Verwijder bericht; de hele topic als dit het eerste bericht is"
+        delete_post_agree_flag: "Verwijder bericht en akkoord met melding"
+        delete_post_agree_flag_title: "Verwijder bericht; de hele topic als dit het eerste bericht is"
+        delete_flag_modal_title: "Verwijder en ... "
+        delete_spammer: "Verwijder spammer"
+        delete_spammer_title: "Verwijder de gebruiker en al hun berichten en topics."
+        disagree_flag_unhide_post: "Niet akkoord (toon bericht)"
+        disagree_flag_unhide_post_title: "Verwijder elke melding van dit bericht en maak het weer zichtbaar"
+        disagree_flag: "Niet akkoord"
+        disagree_flag_title: "Deze melding is ongeldig of niet correct"
         clear_topic_flags: "Gedaan"
         clear_topic_flags_title: "Het topic is onderzocht en problemen zijn opgelost. Klik op Gedaan om de meldingen te verwijderen."
+        more: "(meer antwoorden...)"
+        dispositions:
+          agreed: "akkoord"
+          disagreed: "niet akkoord"
+          deferred: "genegeerd"
         flagged_by: "Gemarkeerd door"
         resolved_by: "Opgelost door"
+        took_action: "Heeft actie ondernomen"
         system: "Systeem"
         error: "Er ging iets mis"
+        reply_message: "Reageer"
         no_results: "Er zijn geen markeringen"
         topic_flagged: "Deze <strong>topic</strong> is gemarkeerd."
         visit_topic: "Ga naar de topic om te zien wat er aan de hand is en om actie te ondernemen"
+        was_edited: "Bericht is gewijzigd na de eerste melding"
         summary:
           action_type_3:
             one: "off-topic"
@@ -1379,6 +1408,8 @@ nl:
           backup:
             text: "Backup"
             title: "Maak een backup"
+            confirm: "Wil je een nieuwe backup starten? "
+            without_uploads: "Ja (zonder upload)"
           download:
             text: "Download"
             title: "Download de backup"
@@ -1395,6 +1426,12 @@ nl:
             text: "Rollback"
             title: "Herstel de database naar de laatst werkende versie"
             confirm: "Weet je zeker dat je de database wil herstellen naar de laatste versie?"
+      export_csv:
+        users:
+          text: "Exporteer gebruikers"
+          title: "Exporteer gebruikerslijst in *.CSV-formaat"
+        success: "Exporteren is gestart; over enkele momenten krijg je meer informatie over de voortgang"
+        failed: "Exporteren is mislukt. Controleer de logbestanden."
       customize:
         title: "Aanpassingen"
         long_title: "Aanpassingen aan de site"
@@ -1625,9 +1662,11 @@ nl:
         edit_title: "Wijzig titel"
         save_title: "Bewaar titel"
         refresh_browsers: "Forceer browser refresh"
+        refresh_browsers_message: "Bericht verstuurd aan alle gebruikers!"
         show_public_profile: "Bekijk openbaar profiel"
         impersonate: 'Log in als gebruiker'
         ip_lookup: "Zoek IP-adres op"
+        log_out: "Uitloggen"
         logged_out: "Gebruiker is uitgelogd op alle apparaten"
         revoke_admin: 'Ontneem beheerdersrechten'
         grant_admin: 'Geef Beheerdersrechten'
@@ -1638,12 +1677,15 @@ nl:
         reputation: Reputatie
         permissions: Toestemmingen
         activity: Activiteit
+        like_count: '''Vind ik leuks'' gegeven / ontvangen'
+        last_100_days: 'in de laatste 100 dagen'
         private_topics_count: Privétopics
         posts_read_count: Berichten gelezen
         post_count: Berichten gemaakt
         topics_entered: Topics bekeken
         flags_given_count: Meldingen gedaan
         flags_received_count: Meldigen ontvangen
+        flags_given_received_count: 'Meldingen gedaan / ontvangen'
         approve: 'Accepteer'
         approved_by: "Geaccepteerd door"
         approve_success: "Gebruiker geaccepteerd en e-mail verzonden met instructies voor activering."
@@ -1660,6 +1702,9 @@ nl:
         cant_delete_all_too_many_posts:
           one: "Kan niet alle berichten verwijderen omdat de gebruiker meer dan 1 bericht heeft (delete_all_posts_max)."
           other: "Kan niet alle berichten verwijderen omdat de gebruiker meer dan %{count} berichten heeft (delete_all_posts_max)."
+        delete_confirm: "Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling kan niet ongedaan worden gemaakt! "
+        delete_and_block: "Verwijder en <b>blokkeer</b> dit e-mail- en IP-adres"
+        delete_dont_block: "Alleen verwijderen"
         deleted: "De gebruiker is verwijderd."
         delete_failed: "Er ging iets mis bij het verwijderen van deze gebruiker. Zorg er voor dat alle berichten van deze gebruiker eerst verwijderd zijn."
         send_activation_email: "Verstuur activatiemail"
@@ -1692,9 +1737,16 @@ nl:
           posts_read_all_time: "Berichten gelezen (ooit)"
           flagged_posts: "Gemarkeerde berichten"
           flagged_by_users: "Gebruikers die gemarkeerd hebben"
+          likes_given: "'Vind ik leuks' gegeven"
+          likes_received: "'Vind ik leuks' ontvangen"
           qualifies: "Komt in aanmerking voor Trust Level 3"
           will_be_promoted: "Zal over 24 uur gepromoveerd worden."
           does_not_qualify: "Komt niet in aanmerking voor Trust Level 3"
+        sso:
+          external_username: "Gebruikersnaam"
+          external_name: "Naam"
+          external_email: "E-mail"
+          external_avatar_url: "URL voor profielfoto"
       site_content:
         none: "Selecteer een tekst om deze te bewerken"
         title: 'Teksten'

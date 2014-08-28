@@ -47,7 +47,7 @@ pl_PL:
       one: "1 odpowiedź więcej"
       few: "%{count} odpowiedzi więcej"
       other: "%{count} odpowiedzi więcej"
-    loading: "Wczytywanie dyskusji..."
+    loading: "Wczytuję dyskusję…"
     permalink: "Link bezpośredni"
     in_reply_to: "▶ %{username}"
     replies:
@@ -79,14 +79,14 @@ pl_PL:
   just_posted_that: "jest zbyt podobne do tego co umieściłeś niedawno"
   has_already_been_used: "został już użyty"
   invalid_characters: "zawiera niepoprawne znaki"
-  is_invalid: "jest niepoprawny; spróbuj opisać to dokładniej"
+  is_invalid: "jest niewystarczająca – spróbuj ją rozwinąć"
   next_page: "następna strona →"
   prev_page: "← poprzednia strona"
   page_num: "Strona %{num}"
   topics_in_category: "Tematy w kategorii '%{category}'"
   rss_posts_in_topic: "Kanał RSS tematu '%{topic}'"
   rss_topics_in_category: "Kanał RSS tematów z kategorii '%{category}'"
-  author_wrote: "%{author} napisał(-a):"
+  author_wrote: "%{author} pisze:"
   num_posts: "Wpisy:"
   num_participants: "Uczestnicy:"
   read_full_topic: "Przeczytaj cały temat"
@@ -123,11 +123,11 @@ pl_PL:
     sequential_replies: |
       ### Rozważ odpowiadanie na kilka postów jednocześnie
 
-      Zamiast umieszczać tyle kolejnych odpowiedzi w jednym temacie, rozważ zastosowanie jednej odpowiedzi, która zawiera cytaty lub odwołania przez @nazwa do poprzednich wpisów.
+      Zamiast umieszczać odpowiedzi jedna po drugiej w jednym temacie, rozważ zastosowanie jednej odpowiedzi, która zawiera cytaty lub odwołania przez @nazwy do poprzednich wpisów.
 
-      Możesz edytować swoją poprzednią odpowiedź by dodać cytat przez zaznaczenie tekstu i kliknięcie pojawiającego się przycisku <b>quote reply</b>.
+      Możesz edytować swoją poprzednią odpowiedź aby dodać cytat przez zaznaczenie tekstu i kliknięcie <b>odpowiedz na ten cytat</b>.
 
-      Łatwiej jest czytać tematy mające mniej głębszych odpowiedzi niż wiele małych, indywidualnych odpowiedzi.
+      O wiele łatwiej jest czytać tematy mające kilka wyczerpujących odpowiedzi niż wiele krótkich i zdawkowych.
     dominating_topic: |
       ### Pozwól innym dołączyć do rozmowy
 
@@ -154,7 +154,7 @@ pl_PL:
         raw: "Treść"
     errors:
       messages:
-        is_invalid: "jest niepoprawny; spróbuj opisać go dokładniej"
+        is_invalid: "jest niewystarczająca – spróbuj ją rozwinąć"
         has_already_been_used: "jest już użyty"
       models:
         topic:
@@ -317,7 +317,7 @@ pl_PL:
     update: 'Zmień hasło'
     save: 'Ustaw hasło'
     title: 'Zresetuj hasło'
-    success: "Zmieniłeś(-aś) swoje hasło i zostałeś(-aś) zalogowany(-a)."
+    success: "Twoje hasło zostało pomyślnie zmienione i nastąpiło zalogowanie.."
     success_unapproved: "Zmieniłeś(-a) swoje hasło."
     continue: "Przejdź do %{site_name}"
   change_email:
@@ -486,7 +486,6 @@ pl_PL:
     title_nag: "Ustawienie serwisu title nadal ma domyślną wartość. Zmień ją na tytuł Twojego serwisu w <a href='/admin/site_settings'>ustawieniach serwisu</a>."
     site_description_missing: "The site_description setting is blank. Write a brief description of this forum in the <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Twój serwis jest skonfigurowany by używać Gmaila (lub innego konsumenckiego serwisu poczty) do wysyłania emaili. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ogranicza jak dużo wiadomości możesz wysłać</a>. Rozważ wykorzystanie dostawcy serwisu pocztowego jak mandrill.com by zagwarantować dostarczanie poczty."
-    access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
     site_contact_username_warning: "The site_contact_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
     notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
   content_types:
@@ -516,6 +515,7 @@ pl_PL:
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
     min_private_message_title_length: "Minimalna ilość znaków w tytule prywatnej wiadomości"
     allow_uncategorized_topics: "Pozwól na tworzenie tematów bez kategorii"
+    uncategorized_description: "Znajdują się tu wątki którym jeszcze nie przypisano odpowiedniej kategorii."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
@@ -528,18 +528,18 @@ pl_PL:
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
+    auto_track_topics_after: "Liczba milisekund zanim temat jest automatycznie dodany do śledzonych. użytkownik może nadpisać tę wartość w swoich preferencjach  (0 zawsze, -1 nigdy)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
-    ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
+    ga_tracking_code: "Identyfikator Google analytics (ga.js), np: UA-12345678-9; zobacz http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    ga_universal_tracking_code: "Identyfikator Google Universal Analytics (analytics.js), np: UA-12345678-9; zobacz http://google.com/analytics"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
-    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
+    track_external_right_clicks: "Śledź zewnętrzne linki kliknięte prawym klawiszem (np. otwierane w nowej zakładce). Domyślnie wyłączone, gdyż wymaga nadpisywania URLi."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
-    invite_expiry_days: "How long user invitation keys are valid, in days"
     min_password_length: "Minimalna długość hasła."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
@@ -555,6 +555,8 @@ pl_PL:
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    newuser_max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla nowych użytkowników)."
+    max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
@@ -563,22 +565,20 @@ pl_PL:
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
-    username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
   notification_types:
-    mentioned: "%{display_username} wspomniał(-a) o Tobie w %{link}"
+    mentioned: "%{display_username} wspomina o Tobie w %{link}"
     liked: "%{display_username} polubił(-a) Twój wpis w %{link}"
-    replied: "%{display_username} odpowiedział(-a) na Twój wpis w %{link}"
-    quoted: "%{display_username} zacytował(-a) Twój wpis w %{link}"
-    edited: "%{display_username} edytował(-a) Twój wpis w %{link}"
-    posted: "%{display_username} napisał(-a) w %{link}"
+    replied: "%{display_username} odpowiada na Twój wpis w %{link}"
+    quoted: "%{display_username} cytuje Twój wpis w %{link}"
+    edited: "%{display_username} edytuje Twój wpis w %{link}"
+    posted: "%{display_username} pisze w %{link}"
     moved_post: "%{display_username} przeniósł(-a) Twój wpis do %{link}"
-    private_message: "%{display_username} wysłał(-a) Ci prywatną wiadomość: %{link}"
+    private_message: "%{display_username} wysyła Ci prywatną wiadomość: %{link}"
     invited_to_private_message: "%{display_username} zaprosił(-a) Cię do prywatnej wiadomości: %{link}"
     invitee_accepted: "%{display_username} przyjął(-ęła) Twoje zaproszenie"
-    granted_badge: "Otrzymałeś %{link}"
   search:
     types:
       category: 'Kategorie'
@@ -602,10 +602,10 @@ pl_PL:
     closed_enabled: "This topic is now closed. New replies are no longer allowed."
     closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
-    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
+    pinned_enabled: "Ten temat został przypięty. Pojawi się na górze swojej kategorii dopóki nie zostanie odpięty dla wszystkich przez opiekuna, lub tylko dla siebie przez użytkownika."
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
     visible_enabled: "This topic is now visible. It will be displayed in topic lists."
-    visible_disabled: "This topic is now invisible. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
+    visible_disabled: "Ten temat został ustawiony jako niewidoczny. Nie pojawi się na żadnej liście tematów. Aby go otworzyć wymagana będzie znajomość linku bezpośredniego. "
   login:
     not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł się zalogować."
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
@@ -660,6 +660,10 @@ pl_PL:
   system_messages:
     post_hidden:
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
+    usage_tips:
+      text_body_template: "Ta prywatna wiadomość zawiera kilka szybkich porad na początek:\n\n## Przewijaj!\n\nNie ma przycisków do przejścia na następną stronę ani numerów stron.\nChcesz przeczytać więcej? **Po prostu dalej przewijaj w dół!**\n\nGdy ktoś napisze nową wiadomość, pojawi się ona automatycznie na końcu tematu.\n\n## Gdzie ja jestem? \n\n- Wyszukiwanie, twój profil oraz menu znajdują się **pod ikonami w prawym, górnym rogu**.\n\n- Podczas czytania tematu, możesz przejść na początek &uarr; klikając jego tytuł na górze strony. \nKliknij na pasku postępu na dole strony, aby wyświetlić szczegółową nawigację lub użyj klawiszy <kbd>home</kbd> i <kbd>end</kbd>.\n\n    <img src=\"http://www.discourse.org/images/welcome/progress-bar.png\" width=\"190\" height=\"52\">\n\n-  Kliknięcie na tytule innego tematu zawsze przenosi do miejsca w którym pojawiają się nieprzeczytane wpisy. \n\n## Jak odpowiadać?\n\n - By odpowiedzieć na ogólny wątek tematu użyj przycisku *Odpowiedz*  <img src=\"http://www.discourse.org/images/welcome/reply-topic.png\" width=\"29\" height=\"25\">  na samym końcu  tematu.\n\n - By odpowiedzieć na konkretny wpis, użyj przycisku *Odpowiedz* <img src=\"http://www.discourse.org/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> przy danym wpisie.\n\n - By poprowadzić rozmowę w innym kierunku, lecz utrzymać powiązanie, użyj przycisku *Odpowiedz jako nowy temat* <img src=\"http://www.discourse.org/images/welcome/reply-as-new-topic.png\" width=\"33\" height=\"25\"> wyświetlanego po prawej stronie wpisu.\n\n - By zacytować kogoś w swojej odpowiedzi zaznacz fragment którego chcesz użyć:\n<img src=\"http://www.discourse.org/images/welcome/quote-reply.png\" width=\"467\" height=\"172\">\n (możesz też użyć przycisku *Cytuj cały wpis* na pasku edytora, aby uzyskać źródło całej cytowanej wiadomości)\n\n - By odnieść się do kogoś w swojej odpowiedzi użyj nazwy tej osoby poprzedzonej znakiem `@`.\n  Jeśli kilka osób ma podobne nazwy, powinno pojawić się małe okno wyboru:\n<img src=\"http://www.discourse.org/images/welcome/username-completion.png\" width=\"307\" height=\"174\">\n\n\
+        ## Co jeszcze mogę zrobić?\n\n<img src=\"http://www.discourse.org/images/welcome/like-link-flag-bookmark.png\" width=\"225\" height=\"61\">\n\n- Wpis który uważasz za wartościowy możesz **polubić** jednym z przycisków widocznych na jego końcu.\n- Jeśli chcesz **udostępnić** dany wpis, możesz skopiować jego *link bezpośredni*.\n- Jeśli z wpisem jest coś nie tak, możesz go **oflagować**, co zasygnalizuje autorowi lub moderatorom, że należy go poprawić.\n- Możesz też stworzyć **zakładkę** zaznaczyć miejsce do którego chcesz wrócić \n\nObsługiwany jest [standard Emoji](http://www.emoji-cheat-sheet.com/): zacznij od `:` lub standardowych emotikon  `:)` :smile:\n\n## Kto do mnie pisze?\n\nGdy ktoś odpowie na twój wpis, zacytuje, lub wspomni o tobie używając twojej `@nazwy` w prawym górnym rogu strony, nad dymkiem pojawi się liczba. Klikając na niej dowiesz się kto i gdzie do ciebie pisze.\n\n<img src=\"http://www.discourse.org/images/welcome/notification-panel.png\" width=\"237\" height=\"78\">\n\nPowiadomienie o odpowiedziach oraz prywatnych wiadomościach otrzymasz emailem, jeśli w chwili ich otrzymania nie będziesz na stronie.\n\n## Nowe dyskusje?\n\nDomyślnie wszystkie dyskusje młodsze niż dwa dni są uważane za nowe.\nKażda w której bierzesz udział jest automatycznie śledzona.\n\nObok tych tematów zobaczysz niebieskie wskaźniki nowości oraz ilości nieprzeczytanych wpisów:\n\n<img src=\"http://www.discourse.org/images/welcome/topics-new-unread.png\" width=\"490\" height=\"119\">\n\nMożesz zmienić stan powiadomienia każdego tematu przy użyciu przycisku znajdującego się na jego końcu (kategorie posiadają podobny przycisk).\n\nAby zmienić domyślne ustawienia śledzenia i zdefiniować nowe wejdź w  [preferencje](/my/preferences).\n\n## Dlaczego nie mogę wykonać niektórych operacji?\n\nDla ochrony innych, nowi użytkownicy mają nałożone ograniczenia. Udzielając się w dyskusjach zdobędziesz zaufanie społeczności, staniesz się pełnoprawnym jej obywatelem i wspomniane limity zostaną automatycznie zdjęte. Zdobywając odpowiednio wysoki [poziom zaufania](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)\
+        \ otrzymasz dostęp do zaawansowanych funkcji dzięki którym będziesz mógł pomóc w zarządzaniu społecznością.\n"
     welcome_user:
       subject_template: "Witaj na forum %{site_name}!"
     welcome_invite:
@@ -695,9 +699,9 @@ pl_PL:
     unsubscribe:
       title: "Wypisz"
       description: "Nie chcesz otrzymywać tych emaili? Nie ma problemu! Kliknij poniżej by wypisać się natychmiast:"
-    reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
+    reply_by_email: "Aby odpowiedzieć odpisz na ten email lub otwórz %{base_url}%{url} w swojej przeglądarce."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
-    posted_by: "Dodane przez %{username} dnia %{post_date}"
+    posted_by: "Dodany przez %{username} w dniu %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} dołączył ciebie do prywatnego tematu '%{topic_title}'"
       text_body_template: |
@@ -743,7 +747,7 @@ pl_PL:
     digest:
       subject_template: "[%{site_name}] Streszczenie dla %{date}"
       new_activity: "Nowa aktywność w Twoich tematach i wpisach:"
-      top_topics: "Najpopularniejsze wpisy"
+      top_topics: "Popularne wpisy"
       other_new_topics: "Popularne wątki"
       click_here: "kliknij tutaj"
       from: "%{site_name} streszczenie"
