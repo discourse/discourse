@@ -111,7 +111,8 @@ class Search
     return nil if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
 
     # If the term is a number or url to a topic, just include that topic
-    if @results.type_filter == 'topic'
+    if @opts[:search_for_id] && @results.type_filter == 'topic'
+      return single_topic(@term.to_i).as_json if @term =~ /^\d+$/
       begin
         route = Rails.application.routes.recognize_path(@term)
         return single_topic(route[:topic_id]).as_json if route[:topic_id].present?

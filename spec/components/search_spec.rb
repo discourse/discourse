@@ -191,8 +191,18 @@ describe Search do
       end
     end
 
+    context "search for a topic by id" do
+      let(:result) { first_of_type(Search.new(topic.id, type_filter: 'topic', search_for_id: true, min_search_term_length: 1).execute, 'topic') }
+
+      it 'returns the topic' do
+        result.should be_present
+        result[:title].should == topic.title
+        result[:url].should == topic.relative_url
+      end
+    end
+
     context "search for a topic by url" do
-      let(:result) { first_of_type(Search.new(topic.relative_url, type_filter: 'topic').execute, 'topic') }
+      let(:result) { first_of_type(Search.new(topic.relative_url, search_for_id: true, type_filter: 'topic').execute, 'topic') }
 
       it 'returns the topic' do
         result.should be_present
