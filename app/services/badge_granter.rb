@@ -212,11 +212,10 @@ class BadgeGranter
   def self.backfill(badge, opts=nil)
     return unless badge.query.present? && badge.enabled
 
+    post_ids = user_ids = nil
+
     post_ids = opts[:post_ids] if opts
     user_ids = opts[:user_ids] if opts
-
-    post_ids = nil unless post_ids.present?
-    user_ids = nil unless user_ids.present?
 
     # safeguard fall back to full backfill if more than 200
     if (post_ids && post_ids.length > MAX_ITEMS_FOR_DELTA) ||
@@ -224,6 +223,9 @@ class BadgeGranter
       post_ids = nil
       user_ids = nil
     end
+
+    post_ids = nil unless post_ids.present?
+    user_ids = nil unless user_ids.present?
 
     full_backfill = !user_ids && !post_ids
 
