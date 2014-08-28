@@ -198,7 +198,11 @@ class UserNotifications < ActionMailer::Base
     html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
       template: 'email/notification',
       format: :html,
-      locals: { context_posts: context_posts, post: post, top: top ? PrettyText.cook(top).html_safe : nil }
+      locals: { context_posts: context_posts,
+                post: post,
+                top: top ? PrettyText.cook(top).html_safe : nil,
+                classes: RTL.new(user).css_class
+      }
     )
 
     template = "user_notifications.user_#{notification_type}"
