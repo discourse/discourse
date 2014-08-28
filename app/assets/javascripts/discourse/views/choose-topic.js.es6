@@ -30,7 +30,7 @@ export default Discourse.View.extend({
       self.setProperties({ topics: null, loading: false });
       return;
     }
-    Discourse.Search.forTerm(title, {typeFilter: 'topic'}).then(function (facets) {
+    Discourse.Search.forTerm(title, {typeFilter: 'topic', searchForId: true}).then(function (facets) {
       if (facets && facets[0] && facets[0].results) {
         self.set('topics', facets[0].results);
       } else {
