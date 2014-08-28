@@ -589,7 +589,6 @@ zh_TW:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span>已接受你的邀請</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移動了 {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>你已升級{{description}}</p>"
     upload_selector:
       title: "加入一張圖片"
       title_with_attachments: "加入一張圖片或一個檔案"
@@ -1516,6 +1515,8 @@ zh_TW:
             label: "新增:"
             ip_address: "IP 位址"
             add: "加入"
+        logster:
+          title: "錯誤紀錄"
       impersonate:
         title: "以用戶的角度檢視"
         username_or_email: "用戶名稱或電子郵件地址"
@@ -1593,6 +1594,7 @@ zh_TW:
         reputation: 聲望
         permissions: 權限
         activity: 活動
+        last_100_days: '在過去 100 天內'
         private_topics_count: 私人討論話題
         posts_read_count: 讀過的文章
         post_count: 已發表的文章
@@ -1647,9 +1649,16 @@ zh_TW:
           posts_read_all_time: "已讀的文章 (任何時間)"
           flagged_posts: "被投訴的文章"
           flagged_by_users: "投訴之用戶"
+          likes_given: "給出的讚"
+          likes_received: "收到的讚"
           qualifies: "符合信任等級 3 的條件。"
           will_be_promoted: "將在 24 小時內升級。"
           does_not_qualify: "不符合信任等級 3 的條件。"
+        sso:
+          external_username: "用戶名稱"
+          external_name: "名稱"
+          external_email: "電子郵件"
+          external_avatar_url: "頭像 URL"
       site_content:
         none: "選擇要編輯的內容類型。"
         title: '內容'
@@ -1691,6 +1700,8 @@ zh_TW:
         description: 簡述
         badge_type: 徽章類型
         badge_grouping: 群組
+        badge_groupings:
+          modal_title: 徽章群組
         granted_by: 升級者為
         granted_at: 升級在
         save: 儲存
