@@ -36,8 +36,6 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'm t': 'div.notification-options li[data-id="2"] a',          // mark topic as tracking
     'm w': 'div.notification-options li[data-id="3"] a',          // mark topic as watching
     'n': '#user-notifications',                                   // open notifications menu
-    '=': '#site-map',                                             // open site map menu
-    'p': '#current-user',                                         // open current user menu
     'o,enter': '.topic-list tr.selected a.title',                 // open selected topic
     'shift+r': '#topic-footer-buttons button.create',             // reply to topic
     'shift+s': '#topic-footer-buttons button.share',              // share topic
@@ -54,6 +52,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     '`': 'nextSection',
     '~': 'prevSection',
     '/': 'showSearch',
+    '=': 'showSiteMap',                                             // open site map menu
+    'p': 'showCurrentUser',                                         // open current user menu
     'ctrl+f': 'showBuiltinSearch',
     'command+f': 'showBuiltinSearch',
     '?': 'showHelpModal',                                          // open keyboard shortcut help
@@ -143,6 +143,16 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
       Discourse.__container__.lookup('controller:search').set('searchContextEnabled', true);
     }
     return false;
+  },
+
+  showSiteMap: function() {
+    $('#site-map').click();
+    $('#site-map-dropdown').focus();
+  },
+
+  showCurrentUser: function() {
+    $('#current-user').click();
+    $('#user-dropdown').focus();
   },
 
   showHelpModal: function() {
