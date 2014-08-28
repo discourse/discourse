@@ -10,6 +10,8 @@ class BadgeGranter
     BadgeGranter.new(badge, user, opts).grant
   end
 
+  FAILING_ALERT_REDIS_KEY = 'dash-data:badges_query_failed'
+
   def grant
     return if @granted_by and !Guardian.new(@granted_by).can_grant_badges?(@user)
 
@@ -104,6 +106,7 @@ class BadgeGranter
     $redis.del queue_key
   end
 
+  # Process the queue of triggered badges. Catches and reports failures.
   def self.process_queue!
     limit = 1000
     items = []
@@ -112,16 +115,58 @@ class BadgeGranter
       limit -= 1
     end
 
-    items = items.group_by{|i| i["type"]}
+    items = items.group_by { |i| i["type"] }
 
     items.each do |type, list|
-      post_ids = list.map{|i| i["post_ids"]}.flatten.compact.uniq
-      user_ids = list.map{|i| i["user_ids"]}.flatten.compact.uniq
+      post_ids = list.map{ |i| i["post_ids"] }.flatten.compact.uniq
+      user_ids = list.map{ |i| i["user_ids"] }.flatten.compact.uniq
 
       next unless post_ids.present? || user_ids.present?
-      find_by_type(type).each{|badge| backfill(badge, post_ids: post_ids, user_ids: user_ids)}
+      find_by_type(type).each do |badge|
+        begin
+          backfill(badge, post_ids: post_ids, user_ids: user_ids)
+        rescue => e
+          report_badge_exception e, {
+              description: "Performing triggered badge grants",
+              badge_id: badge.id,
+              trigger_type: type,
+              post_ids: post_ids,
+              user_ids: user_ids
+          }
+        end
+      end
     end
   end
+
+  # This method wraps backfill() with a rescue block, to catch and report failures.
+  def self.backfill_job(badge)
+    begin
+      backfill(badge)
+    rescue => e
+      report_badge_exception e, {
+          description: "Performing daily badge grants",
+          badge_id: badge.id,
+          backfill: true
+      }
+    end
+  end
+
+  def self.report_badge_exception(badge_id, ex, hash={})
+    # Notify admins if it's a user badge
+    if badge_id >= 100
+      $redis.setex(BadgeGranter::FAILING_ALERT_REDIS_KEY, 3.days, Time.now)
+    end
+
+    # Add message to the start (exception messages are..usually immutable)
+    begin
+      raise ex, "Badge failed: #{ex.message}", ex.backtrace
+    rescue => e
+      exc = e
+    end
+
+    Discourse.handle_exception exc, hash
+  end
+  private :report_badge_exception
 
   def self.find_by_type(type)
     id = "Badge::Trigger::#{type}".constantize

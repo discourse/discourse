@@ -36,6 +36,7 @@ class AdminDashboardData
       s3_config_check,
       image_magick_check,
       failing_emails_check,
+      failing_badges_check,
       default_logo_check,
       contact_email_check,
       send_consumer_email_check,
@@ -148,6 +149,11 @@ class AdminDashboardData
   def failing_emails_check
     num_failed_jobs = Jobs.num_email_retry_jobs
     I18n.t('dashboard.failing_emails_warning', num_failed_jobs: num_failed_jobs) if num_failed_jobs > 0
+  end
+
+  def failing_badges_check
+    last_failed = $redis.get(BadgeGranter::FAILING_ALERT_REDIS_KEY)
+    I18n.t('dashboard.failing_badges_warning', last_failed: I18n.localize(last_failed)) if last_failed
   end
 
   def default_logo_check
