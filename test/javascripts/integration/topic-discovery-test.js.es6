@@ -20,6 +20,6 @@ test("Visit Discovery Pages", function() {
 
   visit("/top");
   andThen(function() {
-    ok(exists('.topic-list tr td.main-link'), "has topics");
+    ok(exists('.topic-list .topic-list-item'), "has topics");
   });
 });
