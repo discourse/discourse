@@ -18,6 +18,17 @@ export default {
       app["Discovery" + filter.capitalize() + "CategoryNoneRoute"] = buildCategoryRoute(filter, {no_subcategories: true});
     });
 
+    Discourse.DiscoveryTopRoute = buildTopicRoute('top', {
+      actions: {
+        willTransition: function() {
+          Discourse.User.currentProp("should_be_redirected_to_top", false);
+          Discourse.User.currentProp("redirected_to_top_reason", null);
+        }
+      }
+    });
+
+    Discourse.DiscoveryTopCategoryRoute = buildCategoryRoute('top');
+    Discourse.DiscoveryTopCategoryNoneRoute = buildCategoryRoute('top', {no_subcategories: true});
     Discourse.Site.currentProp('periods').forEach(function(period) {
       app["DiscoveryTop" + period.capitalize() + "Controller"] = DiscoverySortableController.extend();
       app["DiscoveryTop" + period.capitalize() + "Route"] = buildTopicRoute('top/' + period);

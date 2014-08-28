@@ -12,7 +12,8 @@ export function filterQueryParams(params, defaultParams) {
   return findOpts;
 }
 
-export default function(filter) {
+export default function(filter, extras) {
+  extras = extras || {};
   return Discourse.Route.extend({
     queryParams: queryParams,
 
@@ -36,7 +37,7 @@ export default function(filter) {
       })));
 
       var periods = this.controllerFor('discovery').get('periods'),
-          periodId = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
+          periodId = model.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : ''),
           filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
 
       if (filter === Discourse.Utilities.defaultHomepage()) {
@@ -61,6 +62,6 @@ export default function(filter) {
       this.render('navigation/default', { outlet: 'navigation-bar' });
       this.render('discovery/topics', { controller: 'discovery/topics', outlet: 'list-container' });
     }
-  });
+  }, extras);
 }
 

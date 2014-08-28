@@ -6,6 +6,8 @@ var controllerOpts = {
   bulkSelectEnabled: false,
   selected: [],
 
+  redirectedReason: Em.computed.alias('currentUser.redirected_to_top_reason'),
+
   order: 'default',
   ascending: false,
 

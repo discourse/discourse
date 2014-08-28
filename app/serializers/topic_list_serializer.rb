@@ -4,12 +4,17 @@ class TopicListSerializer < ApplicationSerializer
              :more_topics_url,
              :draft,
              :draft_key,
-             :draft_sequence
+             :draft_sequence,
+             :for_period
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
 
   def can_create_topic
     scope.can_create?(Topic)
+  end
+
+  def include_for_period?
+    for_period.present?
   end
 
   def include_more_topics_url?
