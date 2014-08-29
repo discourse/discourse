@@ -2058,8 +2058,8 @@ en:
         user_profile_menu: '<b>p</b> Open user profile menu'
         search: '<b>/</b> Search'
         help: '<b>?</b> Open keyboard shortcuts help'
-        dismiss_new_posts: '<b>d</b>, <b>r</b> Dismiss New/Posts'
-        dismiss_topics: '<b>d</b>, <b>t</b> Dismiss Topics'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
+        dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
       actions:
         title: 'Actions'
         star: '<b>f</b> Star topic'
