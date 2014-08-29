@@ -188,6 +188,8 @@ Discourse.Category = Discourse.Model.extend({
   }.property('id')
 });
 
+var _uncategorized;
+
 Discourse.Category.reopenClass({
 
   NotificationLevel: {
@@ -195,6 +197,11 @@ Discourse.Category.reopenClass({
     TRACKING: 2,
     REGULAR: 1,
     MUTED: 0
+  },
+
+  findUncategorized: function() {
+    _uncategorized = _uncategorized || Discourse.Category.list().findBy('id', Discourse.Site.currentProp('uncategorized_category_id'));
+    return _uncategorized;
   },
 
   slugFor: function(category) {

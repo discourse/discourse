@@ -4,38 +4,43 @@ describe SearchController do
 
   let(:search_context) { {type: 'user', id: 'eviltrout'} }
 
-  it 'performs the query' do
-    guardian = Guardian.new
-    Guardian.stubs(:new).returns(guardian)
+  context "basics" do
+    let(:guardian) { Guardian.new }
+    let(:search) { mock() }
 
-    search = mock()
-    Search.expects(:new).with('test', guardian: guardian).returns(search)
-    search.expects(:execute)
+    before do
+      Guardian.stubs(:new).returns(guardian)
+    end
 
-    xhr :get, :query, term: 'test'
+    it 'performs the query' do
+      Search.expects(:new).with('test', guardian: guardian).returns(search)
+      search.expects(:execute)
+
+      xhr :get, :query, term: 'test'
+    end
+
+    it 'performs the query with a filter' do
+      Search.expects(:new).with('test', guardian: guardian, type_filter: 'topic').returns(search)
+      search.expects(:execute)
+
+      xhr :get, :query, term: 'test', type_filter: 'topic'
+    end
+
+    it "performs the query and returns results including blurbs" do
+      Search.expects(:new).with('test', guardian: guardian, include_blurbs: true).returns(search)
+      search.expects(:execute)
+
+      xhr :get, :query, term: 'test', include_blurbs: 'true'
+    end
+
+    it 'performs the query with a filter and passes through search_for_id' do
+      Search.expects(:new).with('test', guardian: guardian, search_for_id: true, type_filter: 'topic').returns(search)
+      search.expects(:execute)
+
+      xhr :get, :query, term: 'test', type_filter: 'topic', search_for_id: true
+    end
   end
 
-  it 'performs the query with a filter' do
-    guardian = Guardian.new
-    Guardian.stubs(:new).returns(guardian)
-
-    search = mock()
-    Search.expects(:new).with('test', guardian: guardian, type_filter: 'topic').returns(search)
-    search.expects(:execute)
-
-    xhr :get, :query, term: 'test', type_filter: 'topic'
-  end
-
-  it "performs the query and returns results including blurbs" do
-    guardian = Guardian.new
-    Guardian.stubs(:new).returns(guardian)
-
-    search = mock()
-    Search.expects(:new).with('test', guardian: guardian, include_blurbs: true).returns(search)
-    search.expects(:execute)
-
-    xhr :get, :query, term: 'test', include_blurbs: 'true'
-  end
 
   context "search context" do
 

@@ -360,16 +360,19 @@ ru:
         title: "Фон профиля"
       email:
         title: "E-mail"
+        instructions: "Будет всегда скрыт."
         ok: "Отлично, мы послали вам письмо с инструкциями."
         invalid: "Введите корректный адрес электронной почты."
         authenticated: "Ваш адрес электронной почты подтвержден через {{provider}}."
         frequency: "В случае вашего отсутствия на форуме вы будете получать уведомления, но только о новых сообщениях."
       name:
         title: "Имя"
+        instructions: "Ваше полное имя."
         too_short: "Ваше имя слишком короткое."
         ok: "Допустимое имя."
       username:
         title: "Псевдоним"
+        instructions: "Должен быть уникальным, без пробелов и не очень длинным."
         short_instructions: "Пользователи могут упоминать вас по @{{username}}."
         available: "Псевдоним доступен."
         global_match: "Адрес электронной почты совпадает с зарегистрированным."
@@ -478,10 +481,13 @@ ru:
       prev_page: "при попытке загрузки"
       reasons:
         network: "Ошибка сети"
+        server: "Ошибка сервера"
+        forbidden: "Доступ закрыт"
         unknown: "Ошибка"
       desc:
         network: "Пожалуйста, проверьте ваше соединение."
         network_fixed: "Похоже, сеть появилась."
+        server: "Ошибка: {{status}}"
         unknown: "Что-то пошло не так."
       buttons:
         back: "Вернуться"
@@ -657,7 +663,6 @@ ru:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> принял(а) ваше приглашение</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> переместил(а) {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Вы награждены: {{description}}</p>"
     upload_selector:
       title: "Add an image"
       title_with_attachments: "Add an image or a file"
@@ -1848,9 +1853,12 @@ ru:
           will_be_promoted: "Будет повышен в течение 24 часов."
           does_not_qualify: "Не заслуживает уровень доверия 3."
         sso:
+          title: "Технология единого входа SSO"
+          external_id: "Внешний идентификатор"
           external_username: "Псевдоним"
           external_name: "Имя"
           external_email: "E-mail"
+          external_avatar_url: "URL-адрес аватарки"
       site_content:
         none: "Выберите тип контента, чтобы начать редактирование."
         title: 'Контент сайта'

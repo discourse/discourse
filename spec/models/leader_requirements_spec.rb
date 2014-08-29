@@ -280,6 +280,16 @@ describe LeaderRequirements do
       leader_requirements.stubs(:num_likes_received).returns(17)
       leader_requirements.requirements_lost?.should == true
     end
+
+    it "are not met if suspended" do
+      user.stubs(:suspended?).returns(true)
+      leader_requirements.requirements_met?.should == false
+    end
+
+    it "are lost if suspended" do
+      user.stubs(:suspended?).returns(true)
+      leader_requirements.requirements_lost?.should == true
+    end
   end
 
 end

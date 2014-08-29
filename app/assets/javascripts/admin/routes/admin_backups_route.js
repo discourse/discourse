@@ -31,7 +31,8 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
     }).then(function (status) {
       return Discourse.BackupStatus.create({
         isOperationRunning: status.is_operation_running,
-        canRollback: status.can_rollback
+        canRollback: status.can_rollback,
+        allowRestore: status.allow_restore
       });
     });
   },

@@ -9,7 +9,7 @@ export default Ember.ArrayController.extend({
   restoreDisabled: Em.computed.alias("status.restoreDisabled"),
 
   restoreTitle: function() {
-    if (!Discourse.SiteSettings.allow_restore) {
+    if (!this.get('status.allowRestore')) {
       return I18n.t("admin.backups.operations.restore.is_disabled");
     } else if (this.get("status.isOperationRunning")) {
       return I18n.t("admin.backups.operation_already_running");

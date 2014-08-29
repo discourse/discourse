@@ -772,7 +772,6 @@ ru:
     invited_to_private_message: "%{display_username} пригласил вас в частную беседу: %{link}"
     invitee_accepted: "%{display_username} принял ваше приглашение"
     linked: "пользователь %{display_username} упомянул вас в %{link}"
-    granted_badge: "Вы награждены: %{link}"
   search:
     within_post: "#%{post_number} от %{username}: %{excerpt}"
     types:

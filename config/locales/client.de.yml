@@ -287,7 +287,7 @@ de:
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
       delete_account: "Lösche mein Benutzerkonto"
-      delete_account_confirm: "Bist du sicher, dass du dein Benutzerkonto permanent löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!"
+      delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Benutzerkonto wurde erfolgreich gelöscht."
       delete_yourself_not_allowed: "Du kannst im Moment dein Benutzerkonto nicht löschen. Kontaktiere einen Administrator, um dein Benutzerkonto löschen zu lassen."
       unread_message_count: "Nachrichten"
@@ -310,7 +310,7 @@ de:
         title: "„Über mich“ ändern"
       change_username:
         title: "Benutzernamen ändern"
-        confirm: "Wenn du deinen Benutzernamen änderst, werden alle derzeit vorhandenen Zitate deiner Beiträge und alle Erwähnungen per @Name nicht mehr funktionieren. Bist Du sicher, dass du fortfahren willst?"
+        confirm: "Wenn du deinen Benutzernamen änderst, werden alle derzeit vorhandenen Zitate deiner Beiträge und alle Erwähnungen per @Name nicht mehr funktionieren. Bist du dir absolut sicher, dass du fortfahren willst?"
         taken: "Der Benutzername ist bereits vergeben."
         error: "Bei der Änderung deines Benutzernamens ist ein Fehler aufgetreten."
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
@@ -333,16 +333,19 @@ de:
         title: "Profilhintergrund"
       email:
         title: "E-Mail"
+        instructions: "Wird niemals öffentlich angezeigt."
         ok: "Schaut gut aus. Wir schicken dir eine E-Mail zur Bestätigung."
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein."
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt."
         frequency: "Wir werden dir nur E-Mails senden, wenn wir dich kürzlich nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gesehen hast."
       name:
         title: "Name"
+        instructions: "Längere Version deines Namens."
         too_short: "Dein Name ist zu kurz."
         ok: "Dein Name schaut gut aus."
       username:
         title: "Benutzername"
+        instructions: "Muss eindeutig, ohne Leerzeichen und kurz sein."
         short_instructions: "Andere Benutzer können dich mit @{{username}} erwähnen."
         available: "Dein Benutzername ist verfügbar."
         global_match: "Die E-Mail-Adresse stimmt mit dem registrierten Benutzernamen überein."
@@ -368,7 +371,7 @@ de:
       website: "Website"
       email_settings: "E-Mail"
       email_digests:
-        title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich die Seite länger nicht besuche:"
+        title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich die Website länger nicht besuche:"
         daily: "täglich"
         weekly: "wöchentlich"
         bi_weekly: "alle zwei Wochen"
@@ -447,10 +450,13 @@ de:
       prev_page: "während des Ladens"
       reasons:
         network: "Netzwerkfehler"
+        server: "Server-Fehler"
+        forbidden: "Zugriff verweigert"
         unknown: "Fehler"
       desc:
         network: "Bitte überprüfe deine Netzwerkverbindung."
         network_fixed: "Sieht aus, als wäre es wieder da."
+        server: "Fehlercode: {{status}}"
         unknown: "Etwas ist schief gelaufen."
       buttons:
         back: "Zurück"
@@ -459,8 +465,8 @@ de:
     close: "Schließen"
     assets_changed_confirm: "Diese Website wurde gerade aktualisiert. Neu laden für die neuste Version?"
     read_only_mode:
-      enabled: "Ein Administrator hat den Nur-Lesen-Modus aktiviert. Du kannst die Seite weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
-      login_disabled: "Login ist deaktiviert während sich die Seite im Nur-Lesen-Modus befindet."
+      enabled: "Ein Administrator hat den Nur-Lesen-Modus aktiviert. Du kannst die Website weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
+      login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_notice: "Erstelle mindestens 5 öffentlich sichtbare Themen und %{posts} öffentlich sichtbare Beiträge, um die Unterhaltung ins Rollen zu bringen. Neue Benutzer können ihre Vertrauensstufe nur erhöhen, wenn es für sie etwas zu Lesen gibt. Diese Meldung wird nur Mitarbeitern angezeigt."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
@@ -605,7 +611,7 @@ de:
       redo_title: "Wiederholen"
       help: "Hilfe zur Markdown-Formatierung"
       toggler: "Eingabebereich aus- oder einblenden"
-      admin_options_title: "Optionale Moderator-Einstellungen für dieses Thema"
+      admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
       auto_close_label: "Schließe das Thema automatisch nach:"
       auto_close_units: "(Stunden, Uhrzeit oder Datum)"
       auto_close_examples: 'Gib eine Anzahl von Stunden, eine Uhrzeit oder ein Datum ein — 24, 17:00, 2013-11-22 14:00'
@@ -626,7 +632,6 @@ de:
       invitee_accepted: "<i title='Einladung angenommen' class='fa fa-user'></i><p><span>{{username}}</span> hat deine Einladung angenommen</p>"
       moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
       linked: "<i title='Beitrag verlinkt' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Dir wurde das Abzeichen {{description}} verliehen</p>"
     upload_selector:
       title: "Ein Bild hinzufügen"
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
@@ -651,7 +656,7 @@ de:
     site_map: "zu einer anderen Themenliste oder Kategorie wechseln"
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
-    current_user: 'zu deiner Nutzerseite gehen'
+    current_user: 'zu deiner Benutzerseite gehen'
     starred:
       title: 'Favoriten'
       help:
@@ -662,9 +667,9 @@ de:
         reset_read: "Gelesene zurücksetzen"
         delete: "Themen löschen"
         dismiss_posts: "Beiträge ignorieren"
-        dismiss_posts_tooltip: "Neue Beiträge in diesen Themen ignorieren, die Themen aber später wieder als ungelesen anzeigen, sobald weitere neue Beiträge verfasst wurden."
+        dismiss_posts_tooltip: "Neue Beiträge in diesen Themen ignorieren. Die Themen aber später wieder als ungelesen anzeigen, sobald neue Beiträge verfasst werden."
         dismiss_topics: "Themen ignorieren"
-        dismiss_topics_tooltip: "Diese Themen ignorieren und nicht mehr als ungelesen anzeigen, selbst wenn weitere neue Beiträge verfasst wurden."
+        dismiss_topics_tooltip: "Diese Themen ignorieren und nicht mehr als ungelesen anzeigen, selbst wenn neue Beiträge verfasst werden."
         dismiss_new: "Verwerfe neue Themen"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
@@ -789,13 +794,13 @@ de:
           description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Eintrag in der Themenliste angezeigt. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
         tracking:
           title: "Verfolgen"
-          description: "Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Eintrag in der Themenliste angezeigt. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder deinen Beitrag beantwortet."
+          description: "Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Eintrag in der Themenliste angezeigt. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular:
           title: "Normal"
           description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular_pm:
           title: "Normal"
-          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag in der privaten Unterhaltung antwortet."
+          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deine Nachricht in der privaten Unterhaltung antwortet."
         muted_pm:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über diese private Unterhaltung."
@@ -847,10 +852,10 @@ de:
         title: 'Einladung'
         action: 'Einladung senden'
         help: 'Sendet Freunden eine Einladung, so dass mit einem Klick auf dieses Thema antworten können.'
-        to_topic: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht direkt auf dieses Thema zu antworten. Hierfür ist kein Login erforderlich."
-        to_forum: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht dem Forum beizutreten. Hierfür ist kein Login erforderlich."
+        to_topic: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, direkt auf dieses Thema zu antworten. Es ist keine Anmeldung erforderlich."
+        to_forum: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, dem Forum sofort beizutreten. Es ist keine Anmeldung erforderlich."
         email_placeholder: 'name@example.com'
-        success: "Wir haben deine Einladung an <b>{{email}}</b> verschickt. Wir lassen Dich wissen, sobald die Einladung eingelöst wird. In deinem Nutzerprofil kannst Du alle deine Einladungen überwachen."
+        success: "Wir haben an <b>{{email}}</b> eine Einladung verschickt. Wir werden dich benachrichtigen, sobald die Einladung angenommen wurde. Auf deiner Benutzerseite kannst du den Status deiner Einladungen verfolgen."
         error: "Entschuldige, wir konnten diese Person nicht einladen. Vielleicht ist sie schon ein Nutzer?"
       login_reply: 'Anmelden, um zu antworten'
       filters:
@@ -931,7 +936,7 @@ de:
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
       abandon:
-        confirm: "Willst du deinen Beitrag wirklich verwerfen?"
+        confirm: "Möchtest du deinen Beitrag wirklich verwerfen?"
         no_value: "Nein, beibehalten"
         yes_value: "Ja, verwerfen"
       wiki:
@@ -1055,8 +1060,8 @@ de:
         zero: keine Bearbeitungen
       delete:
         confirm:
-          one: "Bist du sicher, dass du diesen Beitrag löschen willst?"
-          other: "Bist du sicher, dass du all diese Beiträge löschen willst?"
+          one: "Möchtest du wirklich diesen Beitrag löschen?"
+          other: "Möchtest du wirklich all diese Beiträge löschen?"
       revisions:
         controls:
           first: "Erste Überarbeitung"
@@ -1098,21 +1103,21 @@ de:
       badge_colors: "Plakettenfarben"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
-      name_placeholder: "Sollte kurz und knapp sein."
-      color_placeholder: "Irgendeine Webfarbe"
-      delete_confirm: "Bist Du sicher, dass Du diese Kategorie löschen willst?"
+      name_placeholder: "Ein oder maximal zwei Wörter"
+      color_placeholder: "Irgendeine Web-Farbe"
+      delete_confirm: "Möchtest du wirklich diese Kategorie löschen?"
       delete_error: "Beim Löschen der Kategorie ist ein Fehler aufgetreten."
       list: "Kategorien auflisten"
       no_description: "Bitte füge eine Beschreibung für diese Kategorie hinzu."
-      change_in_category_topic: "Besuche die Themen dieser Kategorie um einen Eindruck für eine gute Beschreibung zu gewinnen."
+      change_in_category_topic: "Beschreibung bearbeiten"
       already_used: 'Diese Farbe wird bereits für eine andere Kategorie verwendet'
       security: "Sicherheit"
       images: "Bilder"
       auto_close_label: "Themen automatisch schließen nach:"
       auto_close_units: "Stunden"
-      email_in: "Benutzerdefinierte Email Adresse:"
+      email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_allow_strangers: "Akzeptiere E-Mails von nicht registrierten, anonymen Benutzern"
-      email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
+      email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie"
       edit_permissions: "Berechtigungen bearbeiten"
@@ -1122,7 +1127,7 @@ de:
       default_position: "Standardposition"
       position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern,"
       position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
-      parent: "Elternkategorie"
+      parent: "Übergeordnete Kategorie"
       notifications:
         watching:
           title: "Beobachten"
@@ -1221,7 +1226,7 @@ de:
       categories:
         title: "Kategorien"
         title_in: "Kategorie - {{categoryName}}"
-        help: "Alle Themen, gruppiert nach Kategorie"
+        help: "alle Themen, gruppiert nach Kategorie"
       unread:
         title:
           zero: "Ungelesen"
@@ -1284,8 +1289,8 @@ de:
         critical_available: "Ein kritisches Update ist verfügbar."
         updates_available: "Updates sind verfügbar."
         please_upgrade: "Bitte Upgrade durchführen!"
-        no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte sicherstellen, dass sidekiq lauft."
-        stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte sicherstellen, dass sidekiq lauft."
+        no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
+        stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
         version_check_pending: "Sieht so aus, als hättest du vor Kurzem upgedated. Großartig!"
         installed_version: "Installiert"
         latest_version: "Neueste"
@@ -1395,8 +1400,8 @@ de:
         generate: "API-Schlüssel generieren"
         regenerate: "API-Schlüssel neu generieren"
         revoke: "Widerrufen"
-        confirm_regen: "Bist du sicher, dass du den API Key mit einem neuen ersetzen willst?"
-        confirm_revoke: "Bist du dir sicher, dass du den API Key widerrufen willst?"
+        confirm_regen: "Möchtest du wirklich den API Key mit einem neuen ersetzen?"
+        confirm_revoke: "Möchtest du wirklich den API Key widerrufen?"
         info_html: "Dein API-Schlüssel erlaubt Dir das Erstellen und Bearbeiten von Themen via JSON aufrufen."
         all_users: "Alle Benutzer"
         note_html: "Behalte deinen <strong>Schlüssel</strong> geheim, jeder Benutzer mit diesem Schlüssel kann beliebige Beiträge unter jedem Benutzer im Forum erstellen."
@@ -1408,14 +1413,14 @@ de:
         none: "Kein Backup verfügbar."
         read_only:
           enable:
-            title: "Aktiviere den Nur-Lesen Modus"
-            text: "Aktiviere Nur-Lesen Modus"
-            confirm: "Bist du sicher, dass du den Nur-Lesen Modus aktivieren möchtest?"
+            title: "Nur-Lesen-Modus aktivieren"
+            text: "Nur-Lesen-Modus aktivieren"
+            confirm: "Möchtest du wirklich den Nur-Lesen Modus aktivieren?"
           disable:
-            title: "Deaktiviere den Nur-Lesen Modus"
-            text: "Deaktiviere Nur-Lesen Modus"
+            title: "Nur-Lesen-Modus deaktivieren"
+            text: "Nur-Lesen-Modus deaktivieren"
         logs:
-          none: "Noch keine Logs verfügbar..."
+          none: "Noch keine Protokolleinträge verfügbar..."
         columns:
           filename: "Dateiname"
           size: "Größe"
@@ -1429,11 +1434,11 @@ de:
           failed: "Der Vorgang '{{operation}}' ist fehlgeschlagen. Bitte überprüfe die Logs."
           cancel:
             text: "Abbrechen"
-            title: "Bricht den aktuellen Vorgang ab"
-            confirm: "Bist du sicher, dass du den aktuellen Vorgang abbrechen möchtest?"
+            title: "Den aktuellen Vorgang abbrechen"
+            confirm: "Möchtest du wirklich den aktuellen Vorgang abbrechen?"
           backup:
             text: "Backup"
-            title: "Erstellt ein Backup"
+            title: "Ein Backup erstellen"
             confirm: "Willst du ein neues Backup starten?"
             without_uploads: "Ja (ohne Upload)"
           download:
@@ -1441,17 +1446,17 @@ de:
             title: "Backup herunterladen"
           destroy:
             text: "Löschen"
-            title: "Löscht das Backup"
-            confirm: "Bist du sicher, dass du das Backup löschen möchtest?"
+            title: "Das Backup löschen"
+            confirm: "Möchtest du wirklich das Backup löschen?"
           restore:
-            is_disabled: "Wiederherstellung ist in den Einstellungen deaktiviert."
+            is_disabled: "Wiederherstellung ist in den Website-Einstellungen deaktiviert."
             text: "Wiederherstellen"
-            title: "Wiederherstellung des Backups"
-            confirm: "Bist du sicher, dass du dieses Backup wiederherstellen möchtest?"
+            title: "Das Backup wiederherstellen"
+            confirm: "Möchtest du wirklich dieses Backup wiederherstellen?"
           rollback:
             text: "Zurücksetzen"
-            title: "Setzt die Datenbank auf den letzten funktionierenden Zustand zurück"
-            confirm: "Bist du sicher, dass du die Datenbank auf den letzten funktionierenden Zustand zurücksetzen möchtest?"
+            title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
+            confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
       export_csv:
         users:
           text: "Exportieren"
@@ -1459,61 +1464,61 @@ de:
         success: "Der Export wurde gestartet. Du wirst in Kürze über den Fortschritt benachrichtigt."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
       customize:
-        title: "Personalisieren"
-        long_title: "Seite personalisieren"
-        header: "Header"
+        title: "Anpassen"
+        long_title: "Website-Anpassungen"
+        header: "Kopfbereich"
         css: "Stylesheet"
-        mobile_header: "Mobiler Header"
-        mobile_css: "Mobiles Stylesheet"
-        override_default: "Standard überschreiben?"
+        mobile_header: "Kopfbereich für Mobilgeräte"
+        mobile_css: "Stylesheet Mobilgeräte"
+        override_default: "Das Standard-Stylesheet nicht verwenden"
         enabled: "Aktiviert?"
         preview: "Vorschau"
         undo_preview: "Vorschau entfernen"
-        rescue_preview: "Standardstil"
-        explain_preview: "Zeige die Seite mit benutzerdefiniertem Stylesheet"
+        rescue_preview: "Standard-Style"
+        explain_preview: "Zeige die Website mit benutzerdefiniertem Stylesheet an"
         explain_undo_preview: "Gehe zurück zum aktuell aktivierten benutzerdefinierten Stylesheet"
-        explain_rescue_preview: "Zeige die Seite mit dem Standard-Stylesheet"
+        explain_rescue_preview: "Zeige die Website mit dem Standard-Stylesheet an"
         save: "Speichern"
         new: "Neu"
-        new_style: "Neuer Stil"
+        new_style: "Neuer Style"
         delete: "Löschen"
         delete_confirm: "Diese Anpassung löschen?"
-        about: "Ändere CSS stylesheets und HTML header auf der Seite. Füge eine Anpassung hinzu um zu starten."
+        about: "Ändere die Stylesheets (CSS) und den HTML-Header auf der Website. Füge eine Anpassung hinzu, um zu starten."
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Kopieren"
         css_html:
-          title: "CSS, HTML"
+          title: "CSS/HTML"
           long_title: "CSS und HTML Anpassungen"
         colors:
           title: "Farben"
-          long_title: "Farb-Schemata"
-          about: "Farbschemen erlauben dir die auf der Seite benutzen Farben zu ändern ohne CSS schreiben zu müssen. Wähle oder füge eine hinzu, um zu beginnen."
+          long_title: "Farbschemata"
+          about: "Farbschemen erlauben dir die auf der Seite benutzen Farben zu ändern ohne CSS schreiben zu müssen. Füge ein Schema hinzu, um zu beginnen."
           new_name: "Neues Farbschema"
           copy_name_prefix: "Kopie von"
           delete_confirm: "Dieses Farbschema löschen?"
           undo: "rückgängig"
           undo_title: "Änderungen an dieser Farbe bis zum lezten Speichern rückgängig machen"
           revert: "verwerfen"
-          revert_title: "Diese Farbe auf Discourse Standard Farbschema zurücksetzen."
+          revert_title: "Diese Farbe auf das Discourse-Standard-Farbschema zurücksetzen."
           primary:
             name: 'erste'
             description: 'Die meisten Texte, Bilder und Ränder.'
           secondary:
             name: 'zweite'
-            description: 'Die Haupt Hintergrundfarbe, und Textfarbe einiger Schaltflächen.'
+            description: 'Die Haupthintergrundfarbe und Textfarbe einiger Schaltflächen.'
           tertiary:
-            name: 'tertiär'
-            description: 'Links, einige Schaltflächen, Benachrichtigungen und Akzentfarben'
+            name: 'dritte'
+            description: 'Links, einige Schaltflächen, Benachrichtigungen und Akzentfarben.'
           quaternary:
-            name: "quaternären"
+            name: "vierte"
             description: "Navigations-Links"
           header_background:
             name: "Hintergrund Kopfbereich"
-            description: "Hintergrundfarbe des Seitenkopfs."
+            description: "Hintergrundfarbe des Kopfbereichs der Website."
           header_primary:
             name: "primärer Kopfbereich"
-            description: "Texte und Bilder im Kopfbereich der Seite."
+            description: "Text und Symbole im Kopfbereich der Website."
           highlight:
             name: 'hervorheben'
             description: 'Die Hintergrundfarbe der hervorgehobenen Elemente auf der Seite, so wie Beiträge und Themen.'
@@ -1527,33 +1532,33 @@ de:
             name: 'Liebe'
             description: "Die Farbe des Like-Buttons."
       email:
-        title: "Mailprotokoll"
+        title: "E-Mail"
         settings: "Einstellungen"
         all: "Alle"
-        sending_test: "Versende Testemail..."
+        sending_test: "Versende Test-E-Mail..."
         test_error: "Es gab ein Problem beim Senden der Test-E-Mail. Bitte überprüfe nochmals deine E-Mail-Einstellungen, stelle sicher dass dein Anbieter keine E-Mail-Verbindungen blockiert und probiere es erneut."
         sent: "Gesendet"
         skipped: "Übersprungen"
         sent_at: "Gesendet am"
         time: "Zeit"
         user: "Benutzer"
-        email_type: "Mailtyp"
+        email_type: "E-Mail-Typ"
         to_address: "Empfänger"
-        test_email_address: "Mailadresse zum Testen"
-        send_test: "Testmail senden"
+        test_email_address: "E-Mail-Adresse für Test"
+        send_test: "Test-E-Mail senden"
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
         preview_digest: "Vorschau auf Neuigkeiten anzeigen"
         preview_digest_desc: "Hiermit kannst du dir anschauen, wie die regelmäßig versendeten Neuigkeits-Mails aussehen."
         refresh: "Aktualisieren"
         format: "Format"
-        html: "html"
-        text: "text"
+        html: "HTML"
+        text: "Text"
         last_seen_user: "Letzter Benutzer:"
         reply_key: "Antwort-Schlüssel"
         skipped_reason: "Grund des Überspringens"
         logs:
-          none: "Keine Protokolle gefunden."
+          none: "Keine Protokolleinträge gefunden."
           filters:
             title: "Filter"
             user_placeholder: "Benutzername"
@@ -1568,14 +1573,14 @@ de:
         match_count: "Treffer"
         ip_address: "IP"
         delete: 'Löschen'
-        edit: 'Editieren'
+        edit: 'Bearbeiten'
         save: 'Speichern'
         screened_actions:
           block: "blockieren"
-          do_nothing: "nichts machen"
+          do_nothing: "nichts tun"
         staff_actions:
-          title: "Mitarbeiter Aktion"
-          instructions: "Klicke auf die Benutzernamen und Aktionen um die Liste zu filtern. Klicke den Avatar um die Benutzerseite zu sehen."
+          title: "Mitarbeiter-Aktionen"
+          instructions: "Klicke auf die Benutzernamen und Aktionen, um die Liste zu filtern. Klicke auf Avatare, um die Benutzerseiten zu sehen."
           clear_filters: "Alles anzeigen"
           staff_user: "Mitarbeiter"
           target_user: "Zielnutzer"
@@ -1585,36 +1590,36 @@ de:
           details: "Details"
           previous_value: "Alt"
           new_value: "Neu"
-          diff: "Diff"
+          diff: "Vergleich"
           show: "Anzeigen"
           modal_title: "Details"
-          no_previous: "Es gibt keinen vorgängigen Wert."
+          no_previous: "Es gibt keinen vorherigen Wert."
           deleted: "Kein neuer Wert. Der Eintrag wurde gelöscht."
           actions:
             delete_user: "Benutzer löschen"
             change_trust_level: "Vertrauensstufe ändern"
-            change_site_setting: "Seiteneinstellungen ändern"
-            change_site_customization: "Seitenanpassungen ändern"
-            delete_site_customization: "Seitenanpassungen löschen"
+            change_site_setting: "Website-Einstellungen ändern"
+            change_site_customization: "Website-Anpassungen ändern"
+            delete_site_customization: "Website-Anpassungen löschen"
             suspend_user: "gesperrter Benutzer"
             unsuspend_user: "ungesperrter Benutzer"
             grant_badge: "Abzeichen verleihen"
             revoke_badge: "Abzeichen entziehen"
         screened_emails:
-          title: "Geschützte E-Mails"
+          title: "Überprüfte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
           email: "E-Mail-Adresse"
           actions:
             allow: "Erlauben"
         screened_urls:
-          title: "Geschützte URLs"
+          title: "Überprüfte URLs"
           description: "Die aufgelisteten URLs wurden in Beiträgen von identifizierten Spammen verwendet."
           url: "URL"
           domain: "Domain"
         screened_ips:
-          title: "Geschützte IPs"
+          title: "Überprüfte IPs"
           description: 'IP-Adressen die beobachtet werden. Benutze „Erlauben“ um IP-Adressen auf die Whitelist zu setzen.'
-          delete_confirm: "Bist du dir sicher, dass du die Rege für %{ip_address} entfernen willst?"
+          delete_confirm: "Möchtest du wirklich die Regel für %{ip_address} entfernen?"
           actions:
             block: "Blockieren"
             do_nothing: "Erlauben"
@@ -1675,11 +1680,11 @@ de:
         unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schief gegangen {{error}}"
         suspend_duration: "Wie lange soll dieser Benutzer gesperrt werden?"
         suspend_duration_units: "(Tage)"
-        suspend_reason_label: "Warum wird gesperrt? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Bitte kurz halten."
+        suspend_reason_label: "Warum sperrst du? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Bitte kurz halten."
         suspend_reason: "Grund"
         suspended_by: "Gesperrt von"
         delete_all_posts: "Lösche alle Beiträge"
-        delete_all_posts_confirm: "Du wirst %{posts} Beiträge und %{topics} Themen löschen. Bist du sicher?"
+        delete_all_posts_confirm: "Du wirst %{posts} Beiträge und %{topics} Themen löschen. Bist du dir sicher?"
         suspend: "Sperren"
         unsuspend: "Entsperren"
         suspended: "Gesperrt?"
@@ -1824,9 +1829,9 @@ de:
         granted_at: Verliehen am
         save: Speichern
         delete: Löschen
-        delete_confirm: Bist du dir sicher, dass du dieses Abzeichen löschen willst?
+        delete_confirm: Möchtest du wirklich dieses Abzeichen löschen?
         revoke: Entziehen
-        revoke_confirm: Bist du dir sicher, dass du dieses Abzeichen entziehen willst?
+        revoke_confirm: Möchtest du wirklich dieses Abzeichen entziehen?
         edit_badges: Abzeichen bearbeiten
         grant_badge: Abzeichen verleihen
         granted_badges: Verliehene Abzeichen

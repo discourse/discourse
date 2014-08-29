@@ -256,9 +256,10 @@ Discourse.User = Discourse.Model.extend({
     var self = this,
         stream = this.get('stream');
     return Discourse.ajax("/user_actions/" + id + ".json", { cache: 'false' }).then(function(result) {
-      if (result) {
-        if ((self.get('stream.filter') || result.action_type) !== result.action_type) return;
-        var action = Discourse.UserAction.collapseStream([Discourse.UserAction.create(result)]);
+      if (result && result.user_action) {
+        var ua = result.user_action;
+        if ((self.get('stream.filter') || ua.action_type) !== ua.action_type) return;
+        var action = Discourse.UserAction.collapseStream([Discourse.UserAction.create(ua)]);
         stream.set('itemsLoaded', stream.get('itemsLoaded') + 1);
         stream.get('content').insertAt(0, action[0]);
       }
