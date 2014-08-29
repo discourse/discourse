@@ -87,6 +87,15 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def publish_change_to_clients!(type)
+    MessageBus.publish("/topic/#{topic_id}", {
+        id: id,
+        post_number: post_number,
+        updated_at: Time.now,
+        type: type
+    }, group_ids: topic.secure_group_ids)
+  end
+
   def trash!(trashed_by=nil)
     self.topic_links.each(&:destroy)
     super(trashed_by)
