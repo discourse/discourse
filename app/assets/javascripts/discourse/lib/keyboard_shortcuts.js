@@ -51,6 +51,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'u': 'goBack',
     '`': 'nextSection',
     '~': 'prevSection',
+    '.': 'showIncomingUpdatedTopics',
     '/': 'showSearch',
     '=': 'showSiteMap',                                             // open site map menu
     'p': 'showCurrentUser',                                         // open current user menu
@@ -131,6 +132,11 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     } else {
       return true;
     }
+  },
+
+  showIncomingUpdatedTopics: function() {
+    $('.alert .alert-info .clickable').click();
+    return false;
   },
 
   toggleProgress: function() {
