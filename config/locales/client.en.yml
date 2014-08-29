@@ -1833,7 +1833,7 @@ en:
           newuser: 'Users at Trust Level 0 (New User)'
           basic: 'Users at Trust Level 1 (Basic User)'
           regular: 'Users at Trust Level 2 (Regular User)'
-          leader: 'Users at Trust Level 3 (Leader)'
+          leader: 'Users at Trust Level 3 (Veteran)'
           elder: 'Users at Trust Level 4 (Elder)'
           admins: 'Admin Users'
           moderators: 'Moderators'
