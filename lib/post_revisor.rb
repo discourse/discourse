@@ -22,13 +22,18 @@ class PostRevisor
     @new_raw = TextCleaner.normalize_whitespaces(new_raw).strip
 
     return false unless should_revise?
-    @post.acting_user = @editor
-    revise_post
-    update_category_description
-    update_topic_excerpt
-    post_process_post
-    update_topic_word_counts
-    @post.advance_draft_sequence
+
+    Post.transaction do
+      @post.acting_user = @editor
+      revise_post
+      plugin_callbacks
+      update_category_description
+      update_topic_excerpt
+      post_process_post
+      update_topic_word_counts
+      @post.advance_draft_sequence
+    end
+
     PostAlerter.new.after_save_post(@post)
     publish_revision
     BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
@@ -59,6 +64,11 @@ class PostRevisor
     else
       update_post
     end
+  end
+
+  def plugin_callbacks
+    DiscourseEvent.trigger :before_edit_post, @post
+    DiscourseEvent.trigger :validate_post, @post
   end
 
   def get_revised_at

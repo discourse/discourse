@@ -69,6 +69,7 @@ class PostCreator
       setup_topic
       setup_post
       rollback_if_host_spam_detected
+      plugin_callbacks
       save_post
       extract_links
       store_unique_post_key
@@ -113,7 +114,6 @@ class PostCreator
 
     post.cooked ||= post.cook(post.raw, cooking_options)
     post.sort_order = post.post_number
-    DiscourseEvent.trigger(:before_create_post, post)
     post.last_version_at ||= Time.now
   end
 
@@ -155,6 +155,11 @@ class PostCreator
     elsif @post && !@post.errors.present? && !skip_validations?
       SpamRulesEnforcer.enforce!(@post)
     end
+  end
+
+  def plugin_callbacks
+    DiscourseEvent.trigger :before_create_post, @post
+    DiscourseEvent.trigger :validate_post, @post
   end
 
   def track_latest_on_category
