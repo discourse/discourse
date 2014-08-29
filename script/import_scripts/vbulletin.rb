@@ -350,8 +350,26 @@ class ImportScripts::VBulletin < ImportScripts::Base
       raw = raw.gsub(/(\\r)?\\n/, "\n")
                .gsub("\\t", "\t")
 
+      # remove attachments
+      raw = raw.gsub(/\[attach\]\d+\[\/attach\]/i, "")
+
+      # replace all chevrons with HTML entities
+      # NOTE: must be before any of the "quote" processing
+      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
+               .gsub("<", "&lt;")
+               .gsub("\u2603", "<")
+
+      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
+               .gsub(">", "&gt;")
+               .gsub("\u2603", ">")
+
+      # [URL=...]...[/URL]
+      raw = raw.gsub(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
+
       # [URL]...[/URL]
-      raw = raw.gsub(/\[url\](.+?)\[\/url\]/i) { $1.to_s }
+      # [MP3]...[/MP3]
+      raw = raw.gsub(/\[\/?url\]/i, "")
+               .gsub(/\[\/?mp3\]/i, "")
 
       # [MENTION]<username>[/MENTION]
       raw = raw.gsub(/\[mention\](.+?)\[\/mention\]/i) do
@@ -363,7 +381,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       end
 
       # [MENTION=<user_id>]<username>[/MENTION]
-      raw = raw.gsub(/\[mention=(\d+)\](.+?)\[\/mention\]/i) do
+      raw = raw.gsub(/\[mention="?(\d+)"?\](.+?)\[\/mention\]/i) do
         user_id, old_username = $1, $2
         if user = @users.select { |u| u[:userid] == user_id }.first
           old_username = @old_username_to_new_usernames[user[:username]] || user[:username]
@@ -384,37 +402,29 @@ class ImportScripts::VBulletin < ImportScripts::Base
       end
 
       # [HTML]...[/HTML]
+      raw = raw.gsub(/\[html\]/i, "\n```html\n")
+               .gsub(/\[\/html\]/i, "\n```\n")
+
       # [PHP]...[/PHP]
-      ["html", "php"].each do |language|
-        raw = raw.gsub(/\[#{language}\](.+?)\[\/#{language}\]/im) { "\n```#{language}\n#{$1}\n```\n" }
-      end
+      raw = raw.gsub(/\[php\]/i, "\n```php\n")
+               .gsub(/\[\/php\]/i, "\n```\n")
+
+      # [HIGHLIGHT="..."]
+      raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
 
       # [CODE]...[/CODE]
-      raw = raw.gsub(/\[code\](.+?)\[\/code\]/im) { "\n```\n#{$1}\n```\n" }
+      # [HIGHLIGHT]...[/HIGHLIGHT]
+      raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
+               .gsub(/\[\/?highlight\]/i, "\n```\n")
 
-      # [HIGHLIGHT="..."]...[/HIGHLIGHT]
-      raw = raw.gsub(/\[highlight(?:[^\]]*)\](.+)\[\/highlight\]/im) { "\n```\n#{$1}\n```\n" }
-
-      # [SAMP]...[SAMP]
-      raw = raw.gsub(/\[samp\](.+?)\[\/samp\]/i) { "`#{$1}`" }
+      # [SAMP]...[/SAMP]
+      raw = raw.gsub(/\[\/?samp\]/i, "`")
 
       # [YOUTUBE]<id>[/YOUTUBE]
       raw = raw.gsub(/\[youtube\](.+?)\[\/youtube\]/i) { "\n//youtu.be/#{$1}\n" }
 
       # [VIDEO=youtube;<id>]...[/VIDEO]
-      raw = raw.gsub(/\[video=youtube;([^\]]+)\].*\[\/video\]/i) { "\n//youtu.be/#{$1}\n" }
-
-      # [MP3]<url>[/MP3]
-      raw = raw.gsub(/\[MP3\](.+?)\[\/MP3\]/i) { "\n#{$1}\n" }
-
-      # replace all chevrons with HTML entities
-      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-               .gsub("<", "&lt;")
-               .gsub("\u2603", "<")
-
-      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-               .gsub(">", "&gt;")
-               .gsub("\u2603", ">")
+      raw = raw.gsub(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\n//youtu.be/#{$1}\n" }
 
       raw
     end
