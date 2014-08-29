@@ -1,11 +1,11 @@
-# name: discourse-learn_auth
-# about: learn.thoughtbot.com login support for Discourse
-# version: 0.1
+# name: discourse-upcase_auth
+# about: upcase.com login support for Discourse
+# version: 0.2
 # authors: Chad Pytel, thoughtbot
 
 require 'auth/oauth2_authenticator'
 
-class LearnAuthenticator < ::Auth::OAuth2Authenticator
+class UpcaseAuthenticator < ::Auth::OAuth2Authenticator
   def after_authenticate(auth_token)
     auth_token[:uid] = auth_token[:uid].to_s
     result = super
@@ -20,9 +20,9 @@ class LearnAuthenticator < ::Auth::OAuth2Authenticator
   end
 
   def register_middleware(omniauth)
-    omniauth.provider :learn,
-      ENV['LEARN_OAUTH_CLIENT_ID_PRODUCTION'],
-      ENV['LEARN_OAUTH_CLIENT_SECRET_PRODUCTION']
+    omniauth.provider :upcase,
+      ENV['UPCASE_OAUTH_CLIENT_ID_PRODUCTION'],
+      ENV['UPCASE_OAUTH_CLIENT_SECRET_PRODUCTION']
   end
 
   private
@@ -70,13 +70,13 @@ end
 
 require 'omniauth-oauth2'
 
-class OmniAuth::Strategies::Learn < OmniAuth::Strategies::OAuth2
-  LEARN_URL = ENV['LEARN_URL']
+class OmniAuth::Strategies::Upcase < OmniAuth::Strategies::OAuth2
+  UPCASE_URL = ENV['UPCASE_URL']
 
-  option :name, :learn
+  option :name, :upcase
 
   option :client_options, {
-    :site => LEARN_URL,
+    :site => UPCASE_URL,
     :authorize_url => '/oauth/authorize'
   }
 
@@ -92,14 +92,14 @@ class OmniAuth::Strategies::Learn < OmniAuth::Strategies::OAuth2
   end
 end
 
-auth_provider :title => 'with Learn',
-    :message => 'Log in via Learn',
+auth_provider :title => 'with Upcase',
+    :message => 'Log in via Upcase',
     :frame_width => 920,
     :frame_height => 800,
-    :authenticator => LearnAuthenticator.new('learn', trusted: true)
+    :authenticator => UpcaseAuthenticator.new('upcase', trusted: true)
 
 register_css <<CSS
-.btn-social.learn {
+.btn-social.upcase {
   background: #b22115;
 }
 CSS
