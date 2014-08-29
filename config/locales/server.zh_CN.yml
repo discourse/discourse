@@ -190,8 +190,10 @@ zh_CN:
   vip_category_name: "贵宾室"
   vip_category_description: "高于信任等级3的用户参与讨论的分类。"
   meta_category_name: "站务"
+  meta_category_description: "讨论该站点的站务、组织、如何运作和如何改善它。"
   staff_category_name: "职员"
   staff_category_description: "职员私有的分类。只有管理员和版主才能阅览主题。"
+  assets_topic_body: "这是一个永久主题，仅对职员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传您想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交您的回复添加帖子。\n4. 在您的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果您需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   lounge_welcome:
     title: "欢迎来到贵宾室"
     body: |2
@@ -243,6 +245,7 @@ zh_CN:
       title: "资深用户"
     change_failed_explanation: "您尝试将 %{user_name} 降至 '%{new_trust_level}'。然而他们的信任等级已经是 '%{current_trust_level}'。%{user_name} 将仍是 '%{current_trust_level}'"
   rate_limiter:
+    slow_down: "您已经重复这一操作太多次了，请一会再重试"
     too_many_requests: "您的请求过于频繁，请等待 %{time_left} 之后再试。"
     hours:
       other: "%{count} 小时"
@@ -374,6 +377,7 @@ zh_CN:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>您的帖子被社群成员标记了。请<a href="/my/private-messages">查看您的私信</a>。</p>'
+    user_must_edit: '<p>您的帖子已经被社群标记并被临时隐藏。</p>'
   archetypes:
     regular:
       title: "常规主题"
@@ -503,6 +507,9 @@ zh_CN:
     education_new_topic:
       title: "新用户培训：第一个主题"
       description: "在新用户发表前两个主题时，自动在编辑器上方弹出的帮助信息。"
+    usage_tips:
+      title: "新用户指引"
+      description: "新用户指引和重要信息"
     welcome_user:
       title: "欢迎：新用户"
       description: "当新用户注册后自动发送给他们的欢迎私信。"
@@ -653,6 +660,7 @@ zh_CN:
     sso_overrides_email: "用 SSO 信息中的外部邮件地址覆盖本地邮件地址（警告：因为对本地邮件的统一处理，这个邮件地址可能不同）"
     sso_overrides_username: "用 SSO 信息中的外部用户名覆盖用户名（警告：因为对本地用户名的统一处理，用户名的长度或者要求可能不同）"
     sso_overrides_name: "用 SSO 信息中的外部名字覆盖本地名字（警告：因为对本地名字的统一处理，这个名字可能不同）"
+    sso_overrides_avatar: "用单点登录信息中的外部站点头像覆盖用户头像。如果启用，强烈建议禁用 allow_uploaded_avatars"
     enable_local_logins: "启用本地用户名和密码验证。（注意：邀请特性需要该选项）"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
     enable_google_logins: "（废弃）启用 Google 验证。这是 OpenID 的验证方案，已被 Google 废弃。新论坛将无法使用它。使用 Google Oauth2 替代它。现存论坛必须在2015年4月20日前切换至 Google Oauth。"
@@ -672,6 +680,7 @@ zh_CN:
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非您计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
     backup_daily: "每天自动创建站点备份。"
+    enable_s3_backups: "当完成备份后上传备份到 S3。重要：确定在文件设置中的 S3 验证信息有效。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
     previous_visit_timeout_hours: "系统判断一次访问之后多少小时后为'上一次'访问"
@@ -691,7 +700,9 @@ zh_CN:
     clean_up_uploads: "移除孤立的已上传资料。警告：您可能想要在启用这个设定前备份一下 /uploads 目录。"
     clean_orphan_uploads_grace_period_hours: "删除孤立上传资料的宽限期（单位：小时）"
     purge_deleted_uploads_grace_period_days: "移除已删除的孤立上传资料的宽限期（单位：小时）"
+    purge_inactive_users_grace_period_days: "移除不活跃用户的宽限期（单位：天）。"
     enable_s3_uploads: "上传文件到 Amazon S3。"
+    s3_use_iam_profile: '使用 AWS EC2 IAM 角色来获得 key。注意：启用这个会覆盖“S3 access key id”和“S3 secret access key” 设置。'
     s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点（.）。"
     s3_access_key_id: "将用于上传图片的 Amazon S3 access key。"
     s3_secret_access_key: "将用于上传图片的 Amazon S3 secret key。"
@@ -717,6 +728,8 @@ zh_CN:
     leader_requires_posts_read_all_time: "用户升至领导信任等级(3)所需查看的最小帖子数量。"
     leader_requires_max_flagged: "用户在最近 100 天内升至领导(3)信任等级（0或更高）所需的必须没有超过 x 个帖子被 x 个不同的用户标记数量，x为数量。"
     leader_promotion_min_duration: "领导可被降级前最小持续天数。"
+    leader_requires_likes_given: "在最近 100 天内升至领导(3)信任等级所需给出的赞。"
+    leader_requires_likes_received: "在最近 100 天内升至领导(3)信任等级所需收到的赞。"
     leader_links_no_follow: "领导的链接是否使用 nofollow 属性。"
     min_trust_to_create_topic: "创建主题所需的最低信任等级。"
     min_trust_to_edit_wiki_post: "能编辑维基模式帖子的最小信任等级"
@@ -742,6 +755,12 @@ zh_CN:
     authorized_extensions: "允许上传文件的扩展名列表（'*' 表示允许所有文件类型）"
     max_similar_results: "当用户撰写新主题时，显示多少类似主题给用户。比较是根据标题和内容进行的。"
     title_prettify: "防止常见标题里的错别字和错误，包括全部大写，第一个字符小写，多个'！'和'？'，结尾多余的'.'等等。"
+    topic_views_heat_low: "多少次浏览后，该视图将稍稍高亮。"
+    topic_views_heat_medium: "多少次浏览后，该视图将明显高亮。"
+    topic_views_heat_high: "多少次浏览后，该视图将强烈高亮。"
+    cold_age_days_low: "在讨论开始多少天后，最后活跃日期将轻微高亮。"
+    cold_age_days_medium: "在讨论开始多少天后，最后活跃日期将明显高亮。"
+    cold_age_days_high: "在讨论开始多少天后，最后活跃日期将强烈高亮。"
     faq_url: "如果您的 FAQ 文档在外部，那么请在此填写其完整 URL 地址。"
     tos_url: "如果您的服务条款文档在外部，那么请在此填写其完整 URL 地址。"
     privacy_policy_url: "如果您的隐私政策文档在外部，那么请在此填写其完整 URL 地址。"
@@ -831,7 +850,6 @@ zh_CN:
     invited_to_private_message: "%{display_username} 邀请您进行私信：%{link}"
     invitee_accepted: "%{display_username} 接受了您的邀请"
     linked: "%{display_username} 在 %{link} 里链接了您"
-    granted_badge: "您被授予了 %{link}"
   search:
     within_post: "#%{post_number} %{username}： %{excerpt}"
     types:
@@ -1286,6 +1304,10 @@ zh_CN:
     see_more: "更多"
     search_title: "搜索该网页"
     search_google: "Google"
+  login_required:
+    welcome_message: |
+      #[欢迎来到 %{title}](#welcome)
+      您需要一个账号。请创建一个账号或者登录以继续。
   terms_of_service:
     title: "服务条款"
     user_content_license: |
@@ -1310,6 +1332,7 @@ zh_CN:
     spam_hosts: "新用户试图创建链接到同一个域名的多个帖子。查看站点设置的 newuser_spam_host_threshold。"
   email_log:
     no_user: "不能找到用户 ID 为 %{user_id} 的用户"
+    suspended_not_pm: "用户被封禁，这不是私信"
     seen_recently: "用户最近活跃"
     post_not_found: "不能找到帖子 ID 为 %{post_id} 的帖子"
     notification_already_read: "这封邮件中的通知已经被阅读了"

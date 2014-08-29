@@ -34,7 +34,7 @@ export default ComboboxView.extend({
       if (this.get('rootNone')) {
         return "category.none";
       } else {
-        return Discourse.Category.list().findBy('id', Discourse.Site.currentProp('uncategorized_category_id'));
+        return Discourse.Category.findUncategorized();
       }
     } else {
       return 'category.choose';
@@ -42,9 +42,20 @@ export default ComboboxView.extend({
   }.property(),
 
   template: function(item) {
-    var category = Discourse.Category.findById(parseInt(item.id,10));
-    if (!category) return item.text;
 
+    var category;
+
+    // If we have no id, but text with the uncategorized name, we can use that badge.
+    if (Em.empty(item.id)) {
+      var uncat = Discourse.Category.findUncategorized();
+      if (uncat && uncat.get('name') === item.text) {
+        category = uncat;
+      }
+    } else {
+      category = Discourse.Category.findById(parseInt(item.id,10));
+    }
+
+    if (!category) return item.text;
     var result = badgeHtml(category, {showParent: false, link: false, allowUncategorized: true}),
         parentCategoryId = category.get('parent_category_id');
     if (parentCategoryId) {
@@ -56,7 +67,6 @@ export default ComboboxView.extend({
     var description = category.get('description');
     // TODO wtf how can this be null?;
     if (description && description !== 'null') {
-
       result += '<div class="category-desc">' +
                  description.substr(0,200) +
                  (description.length > 200 ? '&hellip;' : '') +

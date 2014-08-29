@@ -105,7 +105,7 @@ export default ObjectController.extend(ModalFunctionality, {
 
     changePostActionType: function(action) {
       this.set('selected', action);
-    }
+    },
   },
 
   canDeleteSpammer: function() {
@@ -117,11 +117,6 @@ export default ObjectController.extend(ModalFunctionality, {
       return false;
     }
   }.property('selected.name_key', 'userDetails.can_be_deleted', 'userDetails.can_delete_all_posts'),
-
-  deleteSpammer: function() {
-    this.send('closeModal');
-    this.get('userDetails').deleteAsSpammer(function() { window.location.reload(); });
-  },
 
   usernameChanged: function() {
     this.set('userDetails', null);

@@ -176,6 +176,7 @@ Discourse.TopicList.reopenClass({
       draft_key: result.topic_list.draft_key,
       draft_sequence: result.topic_list.draft_sequence,
       draft: result.topic_list.draft,
+      for_period: result.topic_list.for_period,
       loaded: true
     });
 

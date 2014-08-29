@@ -111,7 +111,8 @@ class Search
     return nil if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
 
     # If the term is a number or url to a topic, just include that topic
-    if @results.type_filter == 'topic'
+    if @opts[:search_for_id] && @results.type_filter == 'topic'
+      return single_topic(@term.to_i).as_json if @term =~ /^\d+$/
       begin
         route = Rails.application.routes.recognize_path(@term)
         return single_topic(route[:topic_id]).as_json if route[:topic_id].present?
@@ -279,13 +280,16 @@ class Search
 
     def aggregate_search
       cols = ['topics.id', 'topics.title', 'topics.slug']
-      topics = posts_query(@limit, aggregate_search: true).group(*cols).pluck(*cols)
+      topics = posts_query(@limit, aggregate_search: true)
+                .group(*cols)
+                .pluck('min(posts.post_number)',*cols)
+
       topics.each do |t|
         @results.add_result(SearchResult.new(type: :topic,
-                                             topic_id: t[0],
-                                             id: t[0],
-                                             title: t[1],
-                                             url: "/t/#{t[2]}/#{t[0]}"))
+                                             topic_id: t[1],
+                                             id: t[1],
+                                             title: t[2],
+                                             url: "/t/#{t[3]}/#{t[1]}/#{t[0]}"))
       end
     end
 

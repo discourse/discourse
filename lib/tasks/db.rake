@@ -1,6 +1,6 @@
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => 'environment' do
-  I18n.locale = SiteSetting.default_locale rescue :en
+  I18n.locale = (SiteSetting.default_locale || :en) rescue :en
   SeedFu.seed
 
   if SiteSetting.vacuum_db_days > 0 &&

@@ -56,6 +56,7 @@ module BackupRestore
     {
       is_operation_running: is_operation_running?,
       can_rollback: can_rollback?,
+      allow_restore: Rails.env.development? || SiteSetting.allow_restore
     }
   end
 

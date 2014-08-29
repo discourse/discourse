@@ -54,13 +54,21 @@ class StaticController < ApplicationController
     params.delete(:username)
     params.delete(:password)
 
-    redirect_to(
-      if params[:redirect].blank? || params[:redirect].match(login_path)
-        "/"
-      else
-        params[:redirect]
+    destination = "/"
+
+    if params[:redirect].present? && !params[:redirect].match(login_path)
+      begin
+        forum_uri = URI(Discourse.base_url)
+        uri = URI(params[:redirect])
+        if uri.path.present? && (uri.host.blank? || uri.host == forum_uri.host)
+          destination = uri.path
+        end
+      rescue URI::InvalidURIError
+        # Do nothing if the URI is invalid
       end
-    )
+    end
+
+    redirect_to destination
   end
 
   skip_before_filter :verify_authenticity_token, only: [:cdn_asset]

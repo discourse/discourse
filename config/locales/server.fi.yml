@@ -878,7 +878,6 @@ fi:
     invited_to_private_message: "%{display_username} kutsui sinut yksityisviestiin: %{link}"
     invitee_accepted: "%{display_username} hyväksyi kutsusi"
     linked: "%{display_username} linkitti sinuun täällä %{link}"
-    granted_badge: "Sinulle myönnettiin %{link}"
   search:
     within_post: "#%{post_number} käyttäjältä %{username}: %{excerpt}"
     types:
