@@ -288,11 +288,13 @@ users:
 posting:
   min_post_length:
     client: true
+    min: 1
     default:
       test: 5
       default: 20
   min_private_message_post_length:
     client: true
+    min: 1
     default:
       test: 5
       default: 10
