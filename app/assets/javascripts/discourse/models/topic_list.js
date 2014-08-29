@@ -202,7 +202,8 @@ Discourse.TopicList.reopenClass({
 
     return new Ember.RSVP.Promise(function(resolve) {
       // Try to use the cached version
-      if (list && (list.get('filter') === filter)) {
+      if (list && (list.get('filter') === filter) &&
+               _.isEqual(list.get('listParams'), params)) {
         list.set('loaded', true);
 
         if (tracking) {
@@ -235,6 +236,7 @@ Discourse.TopicList.reopenClass({
       return resolve(Discourse.TopicList.find(filter, _.extend(findParams, params || {})));
 
     }).then(function(list) {
+      list.set('listParams', params);
       if (tracking) {
         tracking.sync(list, list.filter);
         tracking.trackIncoming(list.filter);
