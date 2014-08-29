@@ -641,7 +641,6 @@ zh_TW:
     invited_to_private_message: "%{display_username} 邀請你進行私人通訊：%{link}"
     invitee_accepted: "%{display_username} 接受了你的邀請"
     linked: "%{display_username} 在 %{link} 關連了你"
-    granted_badge: "你被授與了 %{link}"
   search:
     within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:

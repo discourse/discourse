@@ -595,7 +595,6 @@ ko:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>{{description}} 배지를 받았습니다.</p>"
     upload_selector:
       title: "이미지 추가하기"
       title_with_attachments: "이미지 또는 파일 추가하기"

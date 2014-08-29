@@ -858,7 +858,7 @@ en:
     leader_promotion_min_duration: "The minimum number of days that a promotion to leader lasts before a user can be demoted."
     leader_requires_likes_given: "The minimum number of likes that must be given in the last 100 days to qualify for promotion to leader (3) trust level."
     leader_requires_likes_received: "The minimum number of likes that must be received in the last 100 days to qualify for promotion to leader (3) trust level."
-    leader_links_no_follow: "Whether links from leaders have the nofollow attribute."
+    leader_links_no_follow: "Do not remove rel=nofollow from leader links."
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
@@ -926,13 +926,13 @@ en:
 
     disable_emails: "Prevent Discourse from sending any kind of emails"
 
-    pop3s_polling_enabled: "Poll via POP3S for email replies."
-    pop3s_polling_insecure: "Poll using plain text POP3 without SSL."
-    pop3s_polling_period_mins: "The period in minutes between checking the POP3S account for email. NOTE: requires restart."
-    pop3s_polling_port: "The port to poll a POP3S account on."
-    pop3s_polling_host: "The host to poll for email via POP3S."
-    pop3s_polling_username: "The username for the POP3S account to poll for email."
-    pop3s_polling_password: "The password for the POP3S account to poll for email."
+    pop3_polling_enabled: "Poll via POP3 for email replies."
+    pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
+    pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
+    pop3_polling_port: "The port to poll a POP3 account on."
+    pop3_polling_host: "The host to poll for email via POP3."
+    pop3_polling_username: "The username for the POP3 account to poll for email."
+    pop3_polling_password: "The password for the POP3 account to poll for email."
     email_in: "Allow users to post new topics via email (requires pop3 polling). Configure the addresses in the \"Settings\" tab of each category."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."

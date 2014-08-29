@@ -98,6 +98,9 @@
       {{/unless}}
     {{else}}
       <i class="fa fa-times"></i> {{i18n admin.user.tl3_requirements.does_not_qualify}}
+      {{#if suspended}}
+        {{i18n user.suspended_notice date="suspendedTillDate"}}
+      {{/if}}
     {{/if}}
   </p>
 </div>

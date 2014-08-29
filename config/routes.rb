@@ -3,6 +3,7 @@ require_dependency "scheduler/web"
 require_dependency "admin_constraint"
 require_dependency "staff_constraint"
 require_dependency "homepage_constraint"
+require_dependency "permalink_constraint"
 
 # This used to be User#username_format, but that causes a preload of the User object
 # and makes Guard not work properly.
@@ -425,4 +426,5 @@ Discourse::Application.routes.draw do
   # special case for top
   root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
 
+  get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 end

@@ -22,7 +22,7 @@ class UserActionsController < ApplicationController
 
   def show
     params.require(:id)
-    render json: UserAction.stream_item(params[:id], guardian)
+    render_serialized(UserAction.stream_item(params[:id], guardian), UserActionSerializer)
   end
 
   def private_messages

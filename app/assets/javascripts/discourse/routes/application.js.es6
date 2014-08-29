@@ -136,7 +136,16 @@ var ApplicationRoute = Em.Route.extend({
           router.controllerFor('editCategory').set('selectedTab', 'general');
         });
       }
+    },
 
+    /**
+      Deletes a user and all posts and topics created by that user.
+
+      @method deleteSpammer
+    **/
+    deleteSpammer: function (user) {
+      this.send('closeModal');
+      user.deleteAsSpammer(function() { window.location.reload(); });
     }
   },
 

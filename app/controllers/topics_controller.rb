@@ -52,7 +52,7 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    redirect_to_correct_topic(@topic_view.topic, opts[:post_number]) && return if slugs_do_not_match || (!request.xhr? && params[:slug].nil?)
+    redirect_to_correct_topic(@topic_view.topic, opts[:post_number]) && return if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
 
     track_visit_to_topic
 
@@ -404,7 +404,7 @@ class TopicsController < ApplicationController
         username: request['u'],
         ip_address: request.remote_ip
       )
-    end unless request.xhr?
+    end unless request.format.json?
 
     Scheduler::Defer.later "Track Visit" do
       TopicViewItem.add(topic_id, ip, user_id)
@@ -416,7 +416,7 @@ class TopicsController < ApplicationController
   end
 
   def should_track_visit_to_topic?
-    !!((!request.xhr? || params[:track_visit]) && current_user)
+    !!((!request.format.json? || params[:track_visit]) && current_user)
   end
 
   def perform_show_response
