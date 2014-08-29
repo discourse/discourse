@@ -200,37 +200,41 @@ Discourse.TopicList.reopenClass({
         list = session.get('topicList'),
         tracking = Discourse.TopicTrackingState.current();
 
-    if (list && (list.get('filter') === filter)) {
-      list.set('loaded', true);
+    return new Ember.RSVP.Promise(function(resolve) {
+      // Try to use the cached version
+      if (list && (list.get('filter') === filter)) {
+        list.set('loaded', true);
 
-      if (tracking) {
-        tracking.updateTopics(list.get('topics'));
-      }
-
-      return Ember.RSVP.resolve(list);
-    }
-    session.setProperties({topicList: null, topicListScrollPosition: null});
-
-    // Clean up any string parameters that might slip through
-    params = params || {};
-    Ember.keys(params).forEach(function(k) {
-      var val = params[k];
-      if (val === "undefined" || val === "null" || val === 'false') {
-        params[k] = undefined;
-      }
-    });
-
-    var findParams = {};
-    Discourse.SiteSettings.top_menu.split('|').forEach(function (i) {
-      if (i.indexOf(filter) === 0) {
-        var exclude = i.split("-");
-        if (exclude && exclude.length === 2) {
-          findParams.exclude_category = exclude[1];
+        if (tracking) {
+          tracking.updateTopics(list.get('topics'));
         }
+        return resolve(list);
       }
-    });
 
-    return Discourse.TopicList.find(filter, _.extend(findParams, params || {})).then(function (list) {
+      // Perform the search
+      session.setProperties({topicList: null, topicListScrollPosition: null});
+
+      // Clean up any string parameters that might slip through
+      params = params || {};
+      Ember.keys(params).forEach(function(k) {
+        var val = params[k];
+        if (val === "undefined" || val === "null" || val === 'false') {
+          params[k] = undefined;
+        }
+      });
+
+      var findParams = {};
+      Discourse.SiteSettings.top_menu.split('|').forEach(function (i) {
+        if (i.indexOf(filter) === 0) {
+          var exclude = i.split("-");
+          if (exclude && exclude.length === 2) {
+            findParams.exclude_category = exclude[1];
+          }
+        }
+      });
+      return resolve(Discourse.TopicList.find(filter, _.extend(findParams, params || {})));
+
+    }).then(function(list) {
       if (tracking) {
         tracking.sync(list, list.filter);
         tracking.trackIncoming(list.filter);
