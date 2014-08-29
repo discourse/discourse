@@ -22,6 +22,7 @@ Discourse.AdminFlagsRouteType = Discourse.Route.extend({
       @method deleteSpammer
     **/
     deleteSpammer: function (user) {
+      this.send('closeModal');
       user.deleteAsSpammer(function() { window.location.reload(); });
     }
   }
@@ -50,6 +51,3 @@ Discourse.AdminFlagsActiveRoute = Discourse.AdminFlagsRouteType.extend({
 Discourse.AdminFlagsOldRoute = Discourse.AdminFlagsRouteType.extend({
   filter: 'old'
 });
-
-
-
