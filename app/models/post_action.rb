@@ -375,13 +375,7 @@ class PostAction < ActiveRecord::Base
 
   def notify_subscribers
     if (is_like? || is_flag?) && post
-      MessageBus.publish("/topic/#{post.topic_id}",{
-                      id: post.id,
-                      post_number: post.post_number,
-                      type: "acted"
-                    },
-                    group_ids: post.topic.secure_group_ids
-      )
+      post.publish_change_to_clients! :acted
     end
   end
 
