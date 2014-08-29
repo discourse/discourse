@@ -2066,6 +2066,7 @@ en:
         star: '<b>f</b> Star topic'
         share_topic: '<b>shift s</b> Share topic'
         share_post: '<b>s</b> Share post'
+        reply_as_new_topic: '<b>t</b> Reply as new topic'
         reply_topic: '<b>shift r</b> Reply to topic'
         reply_post: '<b>r</b> Reply to post'
         quote_post: '<b>q</b> Quote post'

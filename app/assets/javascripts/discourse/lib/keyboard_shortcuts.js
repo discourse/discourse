@@ -22,7 +22,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'e': 'editPost',
     'l': 'toggleLike',
     'r': 'replyToPost',
-    '!': 'showFlags'
+    '!': 'showFlags',
+    't': 'replyAsNewTopic'
   },
 
   CLICK_BINDINGS: {
