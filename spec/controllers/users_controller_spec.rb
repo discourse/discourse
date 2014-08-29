@@ -942,11 +942,7 @@ describe UsersController do
 
   describe 'send_activation_email' do
     context 'for an existing user' do
-      let(:user) { Fabricate(:user) }
-
-      before do
-        UsersController.any_instance.stubs(:fetch_user_from_params).returns(user)
-      end
+      let(:user) { Fabricate(:user, active: false) }
 
       context 'with a valid email_token' do
         it 'should send the activation email' do

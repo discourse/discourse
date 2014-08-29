@@ -20,6 +20,7 @@ nl:
   posts: "berichten"
   loading: "Laden"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, werkt het beste met JavaScript ingeschakeld'
+  log_in: "Inloggen"
   via: "%{username} via %{site_name}"
   is_reserved: "is gereserveerd"
   errors:
@@ -201,6 +202,7 @@ nl:
       title: "ervaren lid"
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trust level is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'"
   rate_limiter:
+    slow_down: "Je hebt deze actie te vaak uitgevoerd. Probeer het later nog een keer."
     too_many_requests: "Er is een dagelijks limiet voor hoe vaak je dat kan doen. Wacht %{time_left} voordat je dit opnieuw probeert."
     hours:
       one: "1 uur"
@@ -602,7 +604,7 @@ nl:
     suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie in de topiclijsten."
     global_notice: "Laat een LET OP, BELANGRIJK-banner zien aan alle gebruikers. Laat leeg om niet te tonen (HTML is toegestaan)."
     enable_names: "Gebruikers mogen hun volledige naam laten zien. Zet uit om volledige namen te verbergen."
-    display_name_on_posts: "Laat de volledige naam van een gebruiker bij zijn berichten zijn, naar de @gebruikersnaam"
+    display_name_on_posts: "Laat de volledige naam van een gebruiker bij zijn berichten zien, na de @gebruikersnaam"
     short_progress_text_threshold: "Als het aantal berichten in een topic meer is dan dit aantal zal de voortgangsbalk alleen het nummer van het huidige bericht tonen. Als je de breedte van de voortgangsbalk verandert, moet je dit getal misschien ook aanpassen."
     default_code_lang: "Standaard programmeertaal die gebruikt wordt voor syntax highlighting van GitHub codeblokken (lang-auto, ruby, python etc.)"
     tos_accept_required: "Gebruikers moeten een vinkje zetten bij het inschrijven om aan te geven dat ze akkoord gaan met de algemene voorwaarden als deze optie actief is. Ga naar 'Inschijfformulier: Algemene Voorwaarden' in de Inhoud tab om het bericht te wijzigen."
@@ -625,11 +627,10 @@ nl:
     invited_to_private_message: "%{display_username} heeft je uitgenodigd voor een privé-bericht: %{link}"
     invitee_accepted: "%{display_username} heeft je uitnodiging geaccepteerd"
     linked: "%{display_username} heeft je gelinkt in %{link}"
-    granted_badge: "%{link} is aan jou toegekend"
   search:
     within_post: "#%{post_number} door %{username}: %{excerpt}"
     types:
-      category: 'Categorien'
+      category: 'Categorieën'
       topic: 'Resultaten'
       user: 'Leden'
   original_poster: "Oorspronkelijk geplaatst door"
@@ -880,6 +881,10 @@ nl:
     see_more: "Meer"
     search_title: "Zoek op deze site"
     search_google: "Google"
+  login_required:
+    welcome_message: |
+      #[Welkom op %{title}](#welcome)
+      Voor dit forum is een account nodig. Maak een account aan of log in om verder te gaan.
   terms_of_service:
     title: "Algemene Voorwaarden"
     user_content_license: |
@@ -903,6 +908,7 @@ nl:
     sockpuppet: "Een nieuwe gebruiker maakte een nieuwe topic en een andere gebruiker reageerde - vanaf hetzelfde IP-adres. Zie de flag_sockpuppets instelling."
   email_log:
     no_user: "Kan geen gebruiker met id %{user_id} vinden"
+    suspended_not_pm: "De gebruiker is geschorst, geen privébericht"
     seen_recently: "Gebruiker was recentelijk nog online"
     post_not_found: "Kan geen bericht met id %{post_id} vinden"
     notification_already_read: "De notificatie waar deze mail voor is is al gezien"
@@ -919,6 +925,8 @@ nl:
   guidelines: "Regels"
   privacy: "Privacy"
   edit_this_page: "Wijzig deze pagina"
+  static_topic_first_reply: |
+    Verander het eerste bericht in dit Topic om de inhoud van de %{page_name} pagina te wijzigen.
   guidelines_topic:
     title: "FAQ/Regels"
   tos_topic:

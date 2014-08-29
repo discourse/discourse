@@ -496,25 +496,30 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       }
 
       var postStream = topicController.get('postStream');
-      if (data.type === "revised" || data.type === "acted"){
+      if (data.type === "revised" || data.type === "acted") {
         // TODO we could update less data for "acted"
         // (only post actions)
         postStream.triggerChangedPost(data.id, data.updated_at);
         return;
       }
 
-      if (data.type === "deleted"){
+      if (data.type === "deleted") {
         postStream.triggerDeletedPost(data.id, data.post_number);
         return;
       }
 
-      if (data.type === "recovered"){
+      if (data.type === "recovered") {
         postStream.triggerRecoveredPost(data.id, data.post_number);
         return;
       }
 
-      // Add the new post into the stream
-      postStream.triggerNewPostInStream(data.id);
+      if (data.type === "created") {
+        postStream.triggerNewPostInStream(data.id);
+        return;
+      }
+
+      // log a warning
+      Em.Logger.warn("unknown topic bus message type", data);
     });
   },
 

@@ -20,6 +20,10 @@ zh_CN:
             tb: TB
     dates:
       time: "h:mm a"
+      long_no_year: "MMM DD h:mm a"
+      long_no_year_no_time: "MMM D"
+      long_with_year: "YYYY MMM D h:mm a"
+      long_with_year_no_time: "YYYY MMM D"
       tiny:
         half_a_minute: "< 1 分钟"
         less_than_x_seconds:
@@ -302,16 +306,19 @@ zh_CN:
         title: "个人资料背景"
       email:
         title: "电子邮箱"
+        instructions: "绝不会被公开显示。"
         ok: "看起来不错哦，我们会发送电子邮件让您确认。"
         invalid: "请填写正确的电子邮箱地址。"
         authenticated: "您的电子邮箱已经被 {{provider}} 确认有效。"
         frequency: "只有当您最近一段时间没有访问时，我们才会把您未读过的内容发送到您的电子邮箱。"
       name:
         title: "名字"
+        instructions: "名字全称。"
         too_short: "您设置的名字太短了。"
         ok: "您的名字符合要求。"
       username:
         title: "用户名"
+        instructions: "必须唯一，没有空格，简短。"
         short_instructions: "其他人可以用 @{{username}} 来提及您。"
         available: "您的用户名可用。"
         global_match: "电子邮箱与注册用户名相匹配。"
@@ -412,10 +419,13 @@ zh_CN:
       prev_page: "当尝试载入时"
       reasons:
         network: "网络错误"
+        server: "服务器错误"
+        forbidden: "访问被阻止"
         unknown: "错误"
       desc:
         network: "请检查您的网络连接。"
         network_fixed: "似乎恢复正常了。"
+        server: "错误代码：{{status}}"
         unknown: "出错了。"
       buttons:
         back: "返回"
@@ -541,6 +551,7 @@ zh_CN:
       view_new_post: "浏览您的新帖子。"
       saving: "保存中..."
       saved: "已保存！"
+      saved_draft: "您有一个帖子草稿尚未发表。点击该栏任意位置即可继续编辑。"
       uploading: "上传中..."
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
@@ -590,7 +601,6 @@ zh_CN:
       invitee_accepted: "<i title='已接受您的邀请' class='fa fa-user'></i><p><span>{{username}}</span> 已接受您的邀请</p>"
       moved_post: "<i title='移动了帖子' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移动了 {{description}}</p>"
       linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='徽章授予' class='fa fa-certificate'></i><p>您被授予了 {{description}}</p>"
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -647,6 +657,9 @@ zh_CN:
         hot: "没有热门主题。"
         category: "没有 {{category}} 分类的主题。"
         top: "没有最佳主题。"
+        educate:
+          new: '<p>默认情况下，最近两天创建的主题是新主题。</p><p>您可以在您的<a href="%{userPrefsUrl}">设置</a>里改变这一行为。</p>'
+          unread: '<p>默认情况下，未读提醒将仅对以下主题显示：</p><ul><li>创建的</li><li>回复的</li><li>阅读超过4分钟的</li></ul><p>或者，如果您在每个主题底部的通知控制中选择了追踪或监视的。</p><p>您可以改变您的<a href="%{userPrefsUrl}">用户设置</a>。</p>'
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"
@@ -880,6 +893,8 @@ zh_CN:
         confirm: "您确定要放弃编辑您的帖子吗？"
         no_value: "否"
         yes_value: "是"
+      wiki:
+        about: "这个帖子是维基；基础用户能编辑它"
       archetypes:
         save: '保存选项'
       controls:
@@ -888,6 +903,7 @@ zh_CN:
         has_liked: "您已经赞了本帖"
         undo_like: "撤销赞"
         edit: "编辑本帖"
+        edit_anonymous: "抱歉，但是您需要登陆后才能编辑该贴。"
         flag: "私下报告本帖以提醒管理人员关注或发送私信通知"
         delete: "删除本帖"
         undelete: "恢复本帖"
@@ -1105,6 +1121,12 @@ zh_CN:
     posts: "帖子"
     posts_lowercase: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
+    posts_likes_MF: |
+      这个主题有 {count, plural, one {1 个帖子}其他{# 帖子数}} {ratio, select,
+      low {with a high like to like ratio}
+      med {with a very high post to like ratio}
+      high {with an extremely high post to like ratio}
+      other {}}
     original_post: "原始帖"
     views: "浏览"
     views_lowercase: "浏览"
@@ -1169,6 +1191,7 @@ zh_CN:
         help: "在 {{categoryName}} 分类中热门的主题"
       top:
         title: "热门"
+        help: "最近一年、一月、一周或一天的最活跃主题"
         yearly:
           title: "年度热门"
         monthly:
@@ -1257,6 +1280,7 @@ zh_CN:
         disagree_flag_title: "拒绝这个报告，无效或不正确"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "这个主题已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
+        more: "（更多回复...）"
         dispositions:
           agreed: "已批准"
           disagreed: "未批准"
@@ -1270,6 +1294,7 @@ zh_CN:
         no_results: "没有报告"
         topic_flagged: "这个<strong>主题</strong>已被报告。"
         visit_topic: "浏览主题才能操作"
+        was_edited: "帖子在第一次标记后被编辑"
         summary:
           action_type_3:
             other: "偏离主题 x{{count}}"
@@ -1343,6 +1368,8 @@ zh_CN:
           backup:
             text: "备份"
             title: "建立一个备份"
+            confirm: "您确定要开始建立一个备份吗？"
+            without_uploads: "是（但不上传）"
           download:
             text: "下载"
             title: "下载该备份"
@@ -1529,6 +1556,8 @@ zh_CN:
             label: "新："
             ip_address: "IP地址"
             add: "添加"
+        logster:
+          title: "错误日志"
       impersonate:
         title: "以用户角度检视"
         username_or_email: "用户名或用户电子邮件"
@@ -1591,6 +1620,7 @@ zh_CN:
         edit_title: "编辑头衔"
         save_title: "保存头衔"
         refresh_browsers: "强制浏览器刷新"
+        refresh_browsers_message: "消息发送至所有用户！"
         show_public_profile: "显示公开介绍"
         impersonate: '检视角度'
         ip_lookup: "IP 查询"
@@ -1605,12 +1635,15 @@ zh_CN:
         reputation: 声誉
         permissions: 权限
         activity: 活动
+        like_count: 给出的赞 / 收到的赞
+        last_100_days: '在最近 100 天'
         private_topics_count: 私有主题数量
         posts_read_count: 已阅帖子数量
         post_count: 创建的帖子数量
         topics_entered: 已查看的主题数量
         flags_given_count: 所做报告数量
         flags_received_count: 收到报告数量
+        flags_given_received_count: '给出的标记 / 收到的标记'
         approve: '批准'
         approved_by: "批准人"
         approve_success: "用户已被批准， 激活邮件已发送。"
@@ -1659,9 +1692,18 @@ zh_CN:
           posts_read_all_time: "已读的帖子 (全部)"
           flagged_posts: "旗标帖子"
           flagged_by_users: "标记的用户"
+          likes_given: "给出的赞"
+          likes_received: "收到的赞"
           qualifies: "符合等级3的信用度"
           will_be_promoted: "在24小时后升级"
           does_not_qualify: "未符合等级3的信用度"
+        sso:
+          title: "单点登录"
+          external_id: "外部 ID"
+          external_username: "用户名"
+          external_name: "名字"
+          external_email: "电子邮件"
+          external_avatar_url: "头像 URL"
       site_content:
         none: "选择内容类型以开始编辑。"
         title: '内容'

@@ -333,16 +333,19 @@ fr:
         title: "Arrière plan du profil"
       email:
         title: "Courriel"
+        instructions: "Ne sera jamais visible publiquement."
         ok: "Cela semble correct. Un courriel de confirmation sera envoyé."
         invalid: "Merci de saisir une adresse de courriel valide."
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}."
         frequency: "Nous vous envoyons des courriels contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
       name:
         title: "Nom"
+        instructions: "Nom complet."
         too_short: "Votre nom est trop court."
         ok: "Votre nom semble correct."
       username:
         title: "Pseudo"
+        instructions: "Doit être unique, court et sans espace."
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @{{username}}."
         available: "Votre pseudo est disponible."
         global_match: "L'adresse de courriel correspond au pseudo enregistré."
@@ -447,10 +450,13 @@ fr:
       prev_page: "lors d'une tentative de chargement"
       reasons:
         network: "Erreur réseau"
+        server: "Erreur serveur"
+        forbidden: "Accès refusé"
         unknown: "Erreur"
       desc:
         network: "Veuillez vérifier votre connexion."
         network_fixed: "On dirait que c'est revenu."
+        server: "Code d'erreur: {{status}}"
         unknown: "Une erreur est survenue."
       buttons:
         back: "Retour"
@@ -576,7 +582,7 @@ fr:
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde…"
       saved: "Sauvegardé !"
-      saved_draft: "Vous un message brouillon en cours. Sélectionner cette barre pour reprendre son édition."
+      saved_draft: "Vous avez un message brouillon en cours. Sélectionner cette barre pour reprendre son édition."
       uploading: "Envoi en cours…"
       show_preview: 'afficher la prévisualisation &raquo;'
       hide_preview: '&laquo; cacher la prévisualisation'
@@ -626,7 +632,6 @@ fr:
       invitee_accepted: "<i title='invitation accepté' class='fa fa-user'></i><p><span>{{username}}</span> a accepté votre invitation</p>"
       moved_post: "<i title='message déplacé' class='fa fa-sign-out'></i><p><span>{{username}}</span> a déplacé {{description}}</p>"
       linked: "<i title='message lié' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge décerné' class='fa fa-certificate'></i><p>On vous a décerné {{description}}</p>"
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"

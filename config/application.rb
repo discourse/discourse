@@ -91,7 +91,7 @@ module Discourse
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [
         :password,
-        :pop3s_polling_password,
+        :pop3_polling_password,
         :s3_secret_access_key,
         :twitter_consumer_secret,
         :facebook_app_secret,
@@ -147,6 +147,14 @@ module Discourse
 
     require 'auth'
     Discourse.activate_plugins! unless Rails.env.test? and ENV['LOAD_PLUGINS'] != "1"
+
+    # FIXME: needs to work with engines such as docker manager
+    # this mounts routes_last before the engine, one option here if a hook is to hard
+    # is to add a constraint on the route that ensures its only captured if its a permalink
+    #
+    # initializer :add_last_routes, :after => :add_routing_paths do |app|
+    #   app.routes_reloader.paths << File.join(Rails.root, 'config', 'routes_last.rb')
+    # end
 
     config.after_initialize do
       # So open id logs somewhere sane
