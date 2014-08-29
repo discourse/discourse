@@ -35,6 +35,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'm r': 'div.notification-options li[data-id="1"] a',          // mark topic as regular
     'm t': 'div.notification-options li[data-id="2"] a',          // mark topic as tracking
     'm w': 'div.notification-options li[data-id="3"] a',          // mark topic as watching
+    '.': '.alert .alert-info .clickable',                         // show incoming topics
     'n': '#user-notifications',                                   // open notifications menu
     '=': '#site-map',                                             // open site map menu
     'p': '#current-user',                                         // open current user menu
