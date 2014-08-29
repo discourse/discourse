@@ -54,7 +54,6 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     '`': 'nextSection',
     '~': 'prevSection',
     '/': 'showSearch',
-    '.': 'showIncomingUpdatedTopics',                              // show incoming topics
     'ctrl+f': 'showBuiltinSearch',
     'command+f': 'showBuiltinSearch',
     '?': 'showHelpModal',                                          // open keyboard shortcut help
@@ -132,11 +131,6 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     } else {
       return true;
     }
-  },
-
-  showIncomingUpdatedTopics: function() {
-    $('.alert .alert-info .clickable').click();
-    return false;
   },
 
   toggleProgress: function() {
