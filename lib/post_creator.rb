@@ -281,8 +281,8 @@ class PostCreator
   def track_topic
     return if @opts[:auto_track] == false
 
-    TopicUser.change(@post.user.id,
-                     @post.topic.id,
+    TopicUser.change(@post.user_id,
+                     @topic.id,
                      posted: true,
                      last_read_post_number: @post.post_number,
                      seen_post_count: @post.post_number)
