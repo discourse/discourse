@@ -1,11 +1,11 @@
 {{#if showDismissAtTop}}
   <div class="row">
     {{#if showDismissRead}}
-      <button title="{{i18n topics.bulk.dismiss_topics_tooltip}}" class='btn dismiss-read' {{action dismissRead "topics"}}>{{i18n topics.bulk.dismiss_topics}}</button>
-      <button title="{{i18n topics.bulk.dismiss_posts_tooltip}}" class='btn dismiss-read' {{action dismissRead "posts"}}>{{i18n topics.bulk.dismiss_posts}}</button>
+      <button title="{{i18n topics.bulk.dismiss_topics_tooltip}}" id='dismiss-topics' class='btn dismiss-read' {{action dismissRead "topics"}}>{{i18n topics.bulk.dismiss_topics}}</button>
+      <button title="{{i18n topics.bulk.dismiss_posts_tooltip}}" id='dismiss-posts' class='btn dismiss-read' {{action dismissRead "posts"}}>{{i18n topics.bulk.dismiss_posts}}</button>
     {{/if}}
     {{#if showResetNew}}
-      <button class='btn dismiss-read' {{action resetNew}}>{{i18n topics.bulk.dismiss_new}}</button>
+      <button id='dismiss-new' class='btn dismiss-read' {{action resetNew}}>{{i18n topics.bulk.dismiss_new}}</button>
     {{/if}}
   </div>
 {{/if}}
@@ -83,11 +83,11 @@
   {{/if}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
-      <button title="{{i18n topics.bulk.dismiss_topics_tooltip}}" class='btn dismiss-read' {{action dismissRead "topics"}}>{{i18n topics.bulk.dismiss_topics}}</button>
-      <button title="{{i18n topics.bulk.dismiss_posts_tooltip}}" class='btn dismiss-read' {{action dismissRead "posts"}}>{{i18n topics.bulk.dismiss_posts}}</button>
+      <button title="{{i18n topics.bulk.dismiss_topics_tooltip}}" id='dismiss-topics' class='btn dismiss-read' {{action dismissRead "topics"}}>{{i18n topics.bulk.dismiss_topics}}</button>
+      <button title="{{i18n topics.bulk.dismiss_posts_tooltip}}" id='dismiss-posts' class='btn dismiss-read' {{action dismissRead "posts"}}>{{i18n topics.bulk.dismiss_posts}}</button>
     {{/if}}
     {{#if showResetNew}}
-      <button class='btn dismiss-read' {{action resetNew}}>{{i18n topics.bulk.dismiss_new}}</button>
+      <button id='dismiss-new' class='btn dismiss-read' {{action resetNew}}>{{i18n topics.bulk.dismiss_new}}</button>
     {{/if}}
 
     {{#if latest}}
