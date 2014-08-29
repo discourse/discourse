@@ -23,19 +23,21 @@ class LeaderRequirements
   end
 
   def requirements_met?
+    !@user.suspended? &&
     days_visited >= min_days_visited &&
-      num_topics_replied_to >= min_topics_replied_to &&
-      topics_viewed >= min_topics_viewed &&
-      posts_read >= min_posts_read &&
-      num_flagged_posts <= max_flagged_posts &&
-      num_flagged_by_users <= max_flagged_by_users &&
-      topics_viewed_all_time >= min_topics_viewed_all_time &&
-      posts_read_all_time >= min_posts_read_all_time &&
-      num_likes_given >= min_likes_given &&
-      num_likes_received >= min_likes_received
+    num_topics_replied_to >= min_topics_replied_to &&
+    topics_viewed >= min_topics_viewed &&
+    posts_read >= min_posts_read &&
+    num_flagged_posts <= max_flagged_posts &&
+    num_flagged_by_users <= max_flagged_by_users &&
+    topics_viewed_all_time >= min_topics_viewed_all_time &&
+    posts_read_all_time >= min_posts_read_all_time &&
+    num_likes_given >= min_likes_given &&
+    num_likes_received >= min_likes_received
   end
 
   def requirements_lost?
+    @user.suspended? ||
     days_visited < min_days_visited * LOW_WATER_MARK ||
     num_topics_replied_to < min_topics_replied_to * LOW_WATER_MARK ||
     topics_viewed < min_topics_viewed * LOW_WATER_MARK ||
