@@ -35,6 +35,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'm r': 'div.notification-options li[data-id="1"] a',          // mark topic as regular
     'm t': 'div.notification-options li[data-id="2"] a',          // mark topic as tracking
     'm w': 'div.notification-options li[data-id="3"] a',          // mark topic as watching
+    '.': '.alert.alert-info.clickable',                           // show incoming/updated topics
     'n': '#user-notifications',                                   // open notifications menu
     'o,enter': '.topic-list tr.selected a.title',                 // open selected topic
     'shift+r': '#topic-footer-buttons button.create',             // reply to topic
@@ -51,7 +52,6 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'u': 'goBack',
     '`': 'nextSection',
     '~': 'prevSection',
-    '.': 'showIncomingUpdatedTopics',
     '/': 'showSearch',
     '=': 'showSiteMap',                                             // open site map menu
     'p': 'showCurrentUser',                                         // open current user menu
@@ -132,11 +132,6 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     } else {
       return true;
     }
-  },
-
-  showIncomingUpdatedTopics: function() {
-    $('.alert .alert-info .clickable').click();
-    return false;
   },
 
   toggleProgress: function() {
