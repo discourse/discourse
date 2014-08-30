@@ -29,7 +29,7 @@ var formatDays = function(days) {
 };
 
 var shortDate = function(days){
-  return moment().subtract(days, 'days').format('D MMM');
+  return moment().subtract(days, 'days').format('MMM D');
 };
 
 test("formating medium length dates", function() {
@@ -40,7 +40,7 @@ test("formating medium length dates", function() {
   };
 
   var shortDateYear = function(days){
-    return moment().subtract(days, 'days').format('D MMM YYYY');
+    return moment().subtract(days, 'days').format("MMM D, 'YY");
   };
 
   leaveAgo = true;
