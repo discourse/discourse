@@ -46,6 +46,8 @@ module("Discourse.KeyboardShortcuts", {
       "  <button class='star'></button>",
       "  <button class='create'></button>",
       "  <button class='share'></button>",
+      "  <button id='dismiss-new-top'></button>",
+      "  <button id='dismiss-topics-top'></button>",
       "</div>",
       "<div class='alert alert-info clickable'></div>",
       "<button id='create-topic'></button>",

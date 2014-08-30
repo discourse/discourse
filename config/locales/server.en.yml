@@ -1267,7 +1267,7 @@ en:
 
     usage_tips:
       text_body_template: |
-        This private message has a few quick tips to get you started:
+        This private message has a few quick tips to get you started.
 
         ## Keep scrolling
 
@@ -1279,11 +1279,13 @@ en:
 
         - For search, your user page, or the menu, use the **icon buttons at the upper right**.
 
-        - While reading a topic, move back to the top &uarr; by clicking the topic title. Click the green progress bar at the bottom right to see full navigation controls, or use the <kbd>home</kbd> and <kbd>end</kbd> keys.
+        - In a list of topics, the title will always take you to your next unread post. Use the last activity time to jump to the last post.
+
+        - While reading a topic, jump to the top &uarr; by selecting the topic title. Select the green progress bar at the bottom right for full navigation controls, or use the <kbd>home</kbd> and <kbd>end</kbd> keys.
 
             <img src="http://www.discourse.org/images/welcome/progress-bar.png" width="190" height="52">
 
-        - The topic title will always take you to your next unread post. Use the last activity time to quickly jump to the first or last post in a topic.
+
 
         ## How do I reply?
 
@@ -1299,19 +1301,22 @@ en:
 
         (To quote an entire post, use the Import Quote button on the editor toolbar.)
 
-        To mention someone's name in your reply, start typing `@` and an autocompleter will pop up.
+        To ping someone in your reply, mention their name. Type `@` and an autocompleter will pop up.
 
         <img src="http://www.discourse.org/images/welcome/username-completion.png" width="307" height="174">
+
+        For [standard Emoji](http://www.emoji-cheat-sheet.com/), just start typing `:` or the traditional smileys `:)` :smile:
 
         ## What else can I do?
 
         <img src="http://www.discourse.org/images/welcome/like-link-flag-bookmark.png" width="225" height="61">
 
-        To let someone know that you enjoyed their post, use the **like** button at the bottom of the post. If you see a problem with a post, don't hesitate to use the **flag** button and privately let them, or our staff, know about it.
+        There are action buttons at the bottom of each post.
 
-        You can also share a link to a post, or bookmark a post for later reference on your user page.
+        To let someone know that you enjoyed their post, use the **like** button. If you see a problem with a post, privately let them, or our staff, know about it with the **flag** button.
 
-        For [standard Emoji](http://www.emoji-cheat-sheet.com/), just start typing `:` or the traditional smileys `:)` :smile:
+        You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
+
 
         ## Who is talking to me?
 
@@ -1323,7 +1328,7 @@ en:
 
         ## When are conversations new?
 
-        By default all conversations less than two days old are considered new, and any conversation you've participated in will automatically be tracked.
+        By default all conversations less than two days old are considered new, and any conversation you've participated in (replied to, created, or read for an extended period) will automatically be tracked.
 
         You will see the blue new and number indicators next to these topics:
 
