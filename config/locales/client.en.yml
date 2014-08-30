@@ -67,7 +67,7 @@ en:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
-        date_month: "D MMM"
+        date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -79,7 +79,7 @@ en:
         x_days:
           one: "1 day"
           other: "%{count} days"
-        date_year: "D MMM YYYY"
+        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "1 min ago"
