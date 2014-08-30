@@ -159,7 +159,7 @@ If your discussion area is be open to the public, new visitors will arrive that 
 
 Discourse is designed to offer safe defaults for public communities, even with no active moderation. 
 
-> **0 (new) &rarr; 1 (basic) &rarr; 2 (regular) &rarr; 3 (leader) &rarr; 4 (elder)**
+> **0 (new) &rarr; 1 (basic) &rarr; 2 (regular) &rarr; 3 (veteran) &rarr; 4 (elder)**
 
 All new users start out in a sandbox with restrictions for everyone's safety. **Trust level 0 (new) users _cannot_** &hellip;
 

@@ -244,9 +244,9 @@ en:
 
       Congratulations! :confetti_ball:
 
-      If you can see this topic, you were recently promoted to [trust level 3 (leader)][trust].
+      If you can see this topic, you were recently promoted to [trust level 3 (veteran)][trust].
 
-      > Leaders are some of the most active and prolific contributors. They set a positive example for the community through their actions and their posts.
+      > Veterans are some of the most active and prolific contributors. They set a positive example for the community through their actions and their posts.
 
       You can now &hellip;
 
@@ -255,7 +255,7 @@ en:
       * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
       * Access a private Lounge category only visible to users at trust level 3 and higher
 
-      Here's the [current list of users who made it to trust level 3](/badges/3/leader). Be sure to say hi!
+      Here's the [current list of users who made it to trust level 3](/badges/3/veteran). Be sure to say hi!
 
       Thanks for being an important part of this community!
 
@@ -287,7 +287,7 @@ en:
     regular:
       title: "regular user"
     leader:
-      title: "leader"
+      title: "veteran"
     elder:
       title: "elder"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
@@ -848,17 +848,17 @@ en:
     regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level."
     regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level."
 
-    leader_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to leader (3) trust level. (0 to 100)"
-    leader_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to leader (3) trust level. (0 or higher)"
-    leader_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to leader (3) trust level. (0 to 100)"
-    leader_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to leader (3) trust level. (0 to 100)"
-    leader_requires_topics_viewed_all_time: "The minimum total number of topics a user must have viewed to qualify for leader (3) trust level."
-    leader_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for leader (3) trust level."
-    leader_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last 100 days to qualify for promotion to leader (3) trust level, where x is this setting's value. (0 or higher)"
-    leader_promotion_min_duration: "The minimum number of days that a promotion to leader lasts before a user can be demoted."
-    leader_requires_likes_given: "The minimum number of likes that must be given in the last 100 days to qualify for promotion to leader (3) trust level."
-    leader_requires_likes_received: "The minimum number of likes that must be received in the last 100 days to qualify for promotion to leader (3) trust level."
-    leader_links_no_follow: "Do not remove rel=nofollow from leader links."
+    leader_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to veteran (3) trust level. (0 to 100)"
+    leader_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to veteran (3) trust level. (0 or higher)"
+    leader_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to veteran (3) trust level. (0 to 100)"
+    leader_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to veteran (3) trust level. (0 to 100)"
+    leader_requires_topics_viewed_all_time: "The minimum total number of topics a user must have viewed to qualify for veteran (3) trust level."
+    leader_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for veteran (3) trust level."
+    leader_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last 100 days to qualify for promotion to veteran (3) trust level, where x is this setting's value. (0 or higher)"
+    leader_promotion_min_duration: "The minimum number of days that a promotion to veteran lasts before a user can be demoted."
+    leader_requires_likes_given: "The minimum number of likes that must be given in the last 100 days to qualify for promotion to veteran (3) trust level."
+    leader_requires_likes_received: "The minimum number of likes that must be received in the last 100 days to qualify for promotion to veteran (3) trust level."
+    leader_links_no_follow: "Do not remove rel=nofollow from veteran links."
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
