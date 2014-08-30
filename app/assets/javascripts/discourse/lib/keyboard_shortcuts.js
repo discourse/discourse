@@ -211,7 +211,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
     // if nothing is selected go to the first post on screen
     if ($selected.length === 0) {
-      var scrollTop = $('body').scrollTop();
+      var scrollTop = $(document).scrollTop();
 
       index = 0;
       $articles.each(function(){
