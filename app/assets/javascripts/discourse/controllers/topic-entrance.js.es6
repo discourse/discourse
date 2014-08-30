@@ -8,12 +8,12 @@ function entranceDate(dt, showTime) {
   if (dt.getYear() === today.getYear()) {
     // No year
     return moment(dt).format(
-      showTime ? I18n.t("dates.long_date_without_year") : I18n.t("dates.long_no_year_no_time")
+      showTime ? I18n.t("dates.long_date_without_year_with_linebreak") : I18n.t("dates.long_no_year_no_time")
     );
   }
 
   return moment(dt).format(
-    showTime ? I18n.t('dates.long_date_with_year') : I18n.t('dates.long_date_with_year_without_time')
+    showTime ? I18n.t('dates.long_date_with_year_with_linebreak') : I18n.t('dates.long_date_with_year_without_time')
   );
 }
 
