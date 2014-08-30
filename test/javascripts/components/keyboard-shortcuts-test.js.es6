@@ -49,6 +49,7 @@ module("Discourse.KeyboardShortcuts", {
       "  <button id='dismiss-new-top'></button>",
       "  <button id='dismiss-topics-top'></button>",
       "</div>",
+      "<div class='alert alert-info clickable'></div>",
       "<button id='create-topic'></button>",
       "<div id='user-notifications'></div>",
       "<div id='site-map'></div>",
