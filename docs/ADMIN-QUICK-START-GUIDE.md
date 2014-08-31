@@ -183,7 +183,7 @@ These defaults are safe, but they may be too conservative for your site:
 
 Out of the box, Discourse defaults to [Creative Commons licensing](https://creativecommons.org/).
 
-> Your users will always retain copyright on their posts, and will always grant the forum owner enough rights to include their content on the forum.
+> Your users will always retain copyright on their posts, and will always grant the site owner enough rights to include their content on the site.
 >
 > Who is allowed to republish the content posted on this forum?
 > 

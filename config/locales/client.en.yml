@@ -407,7 +407,7 @@ en:
 
       locale:
         title: "Interface language"
-        instructions: "The language used by the forum interface. It will change when you refresh the page."
+        instructions: "User interface language. It will change when you refresh the page."
         default: "(default)"
 
       password_confirmation:
@@ -429,7 +429,7 @@ en:
 
       email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
       email_private_messages: "Receive an email when someone sends you a private message"
-      email_always: "Receive email notifications and email digests even if you are active on the forum"
+      email_always: "Do not suppress email notifications when I am active on the site"
 
       other_settings: "Other"
       categories_settings: "Categories"
@@ -1568,7 +1568,7 @@ en:
         confirm_revoke: "Are you sure you want to revoke that key?"
         info_html: "Your API key will allow you to create and update topics using JSON calls."
         all_users: "All Users"
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
 
       backups:
         title: "Backups"
