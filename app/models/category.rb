@@ -19,7 +19,7 @@ class Category < ActiveRecord::Base
   has_many :category_featured_users
   has_many :featured_users, through: :category_featured_users, source: :user
 
-  has_many :category_groups
+  has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
   validates :user_id, presence: true
