@@ -27,6 +27,7 @@ class ImportScripts::Base
     @categories_lookup = {}
     @existing_posts = {}
     @topic_lookup = {}
+    @old_site_settings = {}
 
     puts "loading existing groups..."
     GroupCustomField.where(name: 'import_id').pluck(:group_id, :value).each do |group_id, import_id|
@@ -66,17 +67,7 @@ class ImportScripts::Base
   def perform
     Rails.logger.level = 3 # :error, so that we don't create log files that are many GB
 
-    SiteSetting.email_domains_blacklist = ''
-    SiteSetting.min_topic_title_length = 1
-    SiteSetting.min_post_length = 1
-    SiteSetting.min_private_message_post_length = 1
-    SiteSetting.min_private_message_title_length = 1
-    SiteSetting.allow_duplicate_topic_titles = true
-    SiteSetting.default_digest_email_frequency = ''
-    SiteSetting.disable_emails = true
-
-    RateLimiter.disable
-
+    change_site_settings
     execute
 
     puts ""
@@ -89,6 +80,34 @@ class ImportScripts::Base
     puts "", "Done"
 
   ensure
+    reset_site_settings
+  end
+
+  def change_site_settings
+    new_settings = {
+      email_domains_blacklist: '',
+      min_topic_title_length: 1,
+      min_post_length: 1,
+      min_private_message_post_length: 1,
+      min_private_message_title_length: 1,
+      allow_duplicate_topic_titles: true,
+      default_digest_email_frequency: '',
+      disable_emails: true
+    }
+
+    new_settings.each do |key, value|
+      @old_site_settings[key] = SiteSetting.send(key)
+      SiteSetting.set(key, value)
+    end
+
+    RateLimiter.disable
+  end
+
+  def reset_site_settings
+    @old_site_settings.each do |key, value|
+      SiteSetting.set(key, value)
+    end
+
     RateLimiter.enable
   end
 
