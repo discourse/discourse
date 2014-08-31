@@ -1135,7 +1135,7 @@
       },
 
       referenceDefn: function referenceDefn( block, next) {
-        var re = /^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*)\3|\((.*?)\)))?\n?/;
+        var re = /^\s*\[([^\[\]]+)\]:\s*(\S+)(?:\s+(?:(['"])(.*)\3|\((.*?)\)))?\n?/;
         // interesting matches are [ , ref_id, url, , title, title ]
 
         if ( !block.match(re) )
@@ -1294,6 +1294,8 @@
         if ( !res[1] ) {
           return [ res[0] + 1, text.charAt(0) ].concat(res[2]);
         }
+
+        if ( res[0] == 1 ) { return [ 2, "[]" ]; } // empty link found.
 
         var consumed = 1 + res[ 0 ],
             children = res[ 1 ],

@@ -119,6 +119,10 @@ test("Links", function() {
 
   cooked("[3]: http://eviltrout.com", "", "It doesn't autolink markdown link references");
 
+  cooked("[]: http://eviltrout.com", "<p>[]: <a href=\"http://eviltrout.com\">http://eviltrout.com</a></p>", "It doesn't accept empty link references");
+
+  cooked("[b]label[/b]: description", "<p><span class=\"bbcode-b\">label</span>: description</p>", "It doesn't accept BBCode as link references");
+
   cooked("http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369",
          "<p><a href=\"http://discourse.org\">http://discourse.org</a> and " +
          "<a href=\"http://discourse.org/another_url\">http://discourse.org/another_url</a> and " +
