@@ -34,17 +34,12 @@ describe Search do
       @post = Fabricate(:post, topic: @topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
       @indexed = @post.post_search_data.search_data
     end
-    it "should include body in index" do
-      @indexed.should =~ /fun/
-    end
-    it "should include title in index" do
-      @indexed.should =~ /sam/
-    end
-    it "should include category in index" do
-      @indexed.should =~ /america/
-    end
 
-    it "should pick up on title updates" do
+    it "should index correctly" do
+      @indexed.should =~ /fun/
+      @indexed.should =~ /sam/
+      @indexed.should =~ /america/
+
       @topic.title = "harpi is the new title"
       @topic.save!
       @post.post_search_data.reload
@@ -186,8 +181,8 @@ describe Search do
       it 'returns the post' do
         result.should be_present
         result[:title].should == topic.title
-
         result[:url].should == topic.relative_url + "/2"
+        result[:blurb].should == "this reply has no quotes"
       end
     end
 
