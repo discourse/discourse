@@ -9,7 +9,8 @@ module Jobs
 
     def execute(args)
       Badge.all.each do |b|
-        BadgeGranter.backfill(b)
+        # Call backfill_job instead of backfill because that catches errors
+        BadgeGranter.backfill_job(b)
       end
     end
 
