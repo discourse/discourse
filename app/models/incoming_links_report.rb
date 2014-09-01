@@ -8,7 +8,7 @@ class IncomingLinksReport
     @data = nil
   end
 
-  def as_json(options = nil)
+  def as_json(_options = nil)
     {
       type: self.type,
       title: I18n.t("reports.#{self.type}.title"),
@@ -18,7 +18,7 @@ class IncomingLinksReport
     }
   end
 
-  def self.find(type, opts={})
+  def self.find(type, _opts = {})
     report_method = :"report_#{type}"
     return nil unless respond_to?(report_method)
 
