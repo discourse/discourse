@@ -2049,7 +2049,7 @@ en:
         back: '<b>u</b> Back'
         up_down: '<b>k</b>/<b>j</b> Move selection up/down'
         open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>`</b>/<b>~</b> Next/previous section'
+        next_prev: '<b>shift j</b>/<b>shift k</b> Next/previous section'
       application:
         title: 'Application'
         create: '<b>c</b> Create a new topic'
