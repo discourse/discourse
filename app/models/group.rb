@@ -1,7 +1,7 @@
 class Group < ActiveRecord::Base
   include HasCustomFields
 
-  has_many :category_groups
+  has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
 
   has_many :categories, through: :category_groups
