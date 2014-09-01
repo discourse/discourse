@@ -78,21 +78,6 @@ export default Ember.ArrayController.extend({
 
   actions: {
 
-    preview: function(badge) {
-      // TODO wire modal and localize
-      Discourse.ajax('/admin/badges/preview.json', {
-        method: 'post',
-        data: {sql: badge.query, target_posts: !!badge.target_posts}
-      }).then(function(json){
-        if(json.error){
-          bootbox.alert(json.error);
-        } else {
-          bootbox.alert(json.grant_count + " badges to be assigned");
-        }
-      });
-
-    },
-
     /**
       Create a new badge and select it.
 
@@ -128,16 +113,21 @@ export default Ember.ArrayController.extend({
                      'enabled', 'show_posts',
                      'target_posts', 'name', 'description',
                      'icon', 'query', 'badge_grouping_id',
-                     'trigger', 'badge_type_id'];
+                     'trigger', 'badge_type_id'],
+            self = this;
 
-        if(this.get('selectedItem.system')){
+        if (this.get('selectedItem.system')){
           var protectedFields = this.get('protectedSystemFields');
           fields = _.filter(fields, function(f){
             return !_.include(protectedFields,f);
           });
         }
 
-        this.get('selectedItem').save(fields);
+        this.get('selectedItem').save(fields).catch(function(error) {
+          // this shows the admin-badge-preview modal with the error
+          // kinda weird, but it consolidates the display logic for badge errors
+          self.send('saveError', error);
+        });
       }
     },
 
