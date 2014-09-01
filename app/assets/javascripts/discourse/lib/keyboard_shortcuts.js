@@ -32,16 +32,18 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     // star topic
     'f': '#topic-footer-buttons button.star, .topic-list tr.topic-list-item.selected a.star',
 
-    'm m': 'div.notification-options li[data-id="0"] a',          // mark topic as muted
-    'm r': 'div.notification-options li[data-id="1"] a',          // mark topic as regular
-    'm t': 'div.notification-options li[data-id="2"] a',          // mark topic as tracking
-    'm w': 'div.notification-options li[data-id="3"] a',          // mark topic as watching
-    '.': '.alert.alert-info.clickable',                           // show incoming/updated topics
-    'n': '#user-notifications',                                   // open notifications menu
-    'o,enter': '.topic-list tr.selected a.title',                 // open selected topic
-    'shift+r': '#topic-footer-buttons button.create',             // reply to topic
-    'shift+s': '#topic-footer-buttons button.share',              // share topic
-    's': '.topic-post.selected a.post-date'                       // share post
+    'm m': 'div.notification-options li[data-id="0"] a',                      // mark topic as muted
+    'm r': 'div.notification-options li[data-id="1"] a',                      // mark topic as regular
+    'm t': 'div.notification-options li[data-id="2"] a',                      // mark topic as tracking
+    'm w': 'div.notification-options li[data-id="3"] a',                      // mark topic as watching
+    'x r': '#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top', // dismiss new/posts
+    'x t': '#dismiss-topics,#dismiss-topics-top',                             //dismiss topics
+    '.': '.alert.alert-info.clickable',                                       // show incoming/updated topics
+    'n': '#user-notifications',                                               // open notifications menu
+    'o,enter': '.topic-list tr.selected a.title',                             // open selected topic
+    'shift+r': '#topic-footer-buttons button.create',                         // reply to topic
+    'shift+s': '#topic-footer-buttons button.share',                          // share topic
+    's': '.topic-post.selected a.post-date'                                   // share post
   },
 
   FUNCTION_BINDINGS: {
