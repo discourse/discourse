@@ -1,3 +1,5 @@
+require 'sanitize'
+
 class Search
 
   class SearchResult
@@ -55,24 +57,23 @@ class Search
       SearchResult.new(type: :topic, topic_id: t.id, id: t.id, title: options[:custom_title] || t.title, url: t.relative_url, blurb: options[:custom_blurb])
     end
 
+    def self.blurb(raw, term)
+      blurb = TextHelper.excerpt(raw, term.split(/\s+/)[0], radius: 100)
+      blurb = TextHelper.truncate(raw, length: 200) if blurb.blank?
+      Sanitize.clean(blurb)
+    end
+
     def self.from_post(p, context, term, include_blurbs=false)
       custom_title =
         if context && context.id == p.topic_id
-          # TODO: rewrite this
-          # 1. convert markdown to text
-          # 2. grab full words
-          excerpt = TextHelper.excerpt(p.raw, term.split(/\s+/)[0], radius: 30)
-          excerpt = TextHelper.truncate(p.raw, length: 50) if excerpt.blank?
           I18n.t("search.within_post",
                  post_number: p.post_number,
-                 username: p.user && p.user.username,
-                 excerpt: excerpt
+                 username: p.user && p.user.username
                 )
         end
       if include_blurbs
         #add a blurb from the post to the search results
-        custom_blurb = TextHelper.excerpt(p.raw, term.split(/\s+/)[0], radius: 100)
-        custom_blurb = TextHelper.truncate(p.raw, length: 200) if custom_blurb.blank?
+        custom_blurb = blurb(p.raw, term)
       end
       if p.post_number == 1
         # we want the topic link when it's the OP

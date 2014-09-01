@@ -279,17 +279,24 @@ class Search
     end
 
     def aggregate_search
-      cols = ['topics.id', 'topics.title', 'topics.slug']
+      cols = ['topics.id', 'topics.title', 'topics.slug', 'cooked']
       topics = posts_query(@limit, aggregate_search: true)
                 .group(*cols)
                 .pluck('min(posts.post_number)',*cols)
 
+
       topics.each do |t|
+        post_number, topic_id, title, slug, cooked = t
+
+        cooked = SearchObserver::HtmlScrubber.scrub(cooked).squish
+        blurb = SearchResult.blurb(cooked, @term)
+
         @results.add_result(SearchResult.new(type: :topic,
-                                             topic_id: t[1],
-                                             id: t[1],
-                                             title: t[2],
-                                             url: "/t/#{t[3]}/#{t[1]}/#{t[0]}"))
+                                             topic_id: topic_id,
+                                             id: topic_id,
+                                             title: title,
+                                             url: "/t/#{slug}/#{topic_id}/#{post_number}",
+                                             blurb: blurb))
       end
     end
 

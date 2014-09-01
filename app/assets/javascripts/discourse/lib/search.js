@@ -21,7 +21,7 @@ Discourse.Search = {
     if (!opts) opts = {};
 
     // Only include the data we have
-    var data = { term: term };
+    var data = { term: term, include_blurbs: 'true' };
     if (opts.typeFilter) data.type_filter = opts.typeFilter;
     if (opts.searchForId) data.search_for_id = true;
 

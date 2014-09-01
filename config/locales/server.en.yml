@@ -1025,7 +1025,7 @@ en:
     granted_badge: "You earned %{link}"
 
   search:
-    within_post: "#%{post_number} by %{username}: %{excerpt}"
+    within_post: "#%{post_number} by %{username}"
     types:
       category: 'Categories'
       topic: 'Results'
