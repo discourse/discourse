@@ -204,6 +204,7 @@ en:
     disable: "Disable"
     undo: "Undo"
     revert: "Revert"
+    failed: "Failed"
 
     banner:
       close: "Dismiss this banner."
@@ -2024,7 +2025,6 @@ en:
         target_posts: Query targets posts
         auto_revoke: Run revocation query daily
         show_posts: Show post granting badge on badge page
-        preview: Preview badge
         trigger: Trigger
         trigger_type:
           none: "Update daily"
@@ -2032,6 +2032,25 @@ en:
           post_revision: "When a user edits or creates a post"
           trust_level_change: "When a user changes trust level"
           user_change: "When a user is edited or created"
+        preview:
+          link_text: "Preview granted badges"
+          plan_text: "Preview with query plan"
+          modal_title: "Badge Query Preview"
+          sql_error_header: "There was an error with the query."
+          error_help: "See the following links for help with badge queries."
+          bad_count_warning:
+            header: "WARNING!"
+            text: "There are missing grant samples. This happens when the badge query returns user IDs or post IDs that do not exist. This may cause unexpected results later on - please double-check your query."
+          grant_count:
+            zero: "No badges to be assigned."
+            one: "<b>1</b> badge to be assigned."
+            other: "<b>%{count}</b> badges to be assigned."
+          sample: "Sample:"
+          grant:
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for post in %{link}
+            with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
 
     lightbox:
       download: "download"

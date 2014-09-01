@@ -31,6 +31,18 @@ class Badge < ActiveRecord::Base
     PostRevision = 2
     TrustLevelChange = 4
     UserChange = 8
+
+    def self.is_none?(trigger)
+      [None].include? trigger
+    end
+
+    def self.uses_user_ids?(trigger)
+      [TrustLevelChange, UserChange].include? trigger
+    end
+
+    def self.uses_post_ids?(trigger)
+      [PostAction, PostRevision].include? trigger
+    end
   end
 
   module Queries
