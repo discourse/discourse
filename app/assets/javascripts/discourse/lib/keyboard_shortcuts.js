@@ -52,8 +52,6 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'shift+k': 'prevSection',
     'k': 'selectUp',
     'u': 'goBack',
-    '`': 'nextSection',
-    '~': 'prevSection',
     '/': 'showSearch',
     '=': 'showSiteMap',                                             // open site map menu
     'p': 'showCurrentUser',                                         // open current user menu
