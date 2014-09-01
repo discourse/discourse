@@ -272,5 +272,12 @@ describe PostRevisor do
         }.to_not change { topic.excerpt }
       end
     end
+
+    it "doesn't strip starting whitespaces" do
+      subject.revise!(post.user, "    <-- whitespaces -->    ")
+      post.reload
+      post.raw.should == "    <-- whitespaces -->"
+    end
+
   end
 end

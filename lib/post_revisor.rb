@@ -19,7 +19,7 @@ class PostRevisor
   def revise!(editor, new_raw, opts = {})
     @editor = editor
     @opts = opts
-    @new_raw = TextCleaner.normalize_whitespaces(new_raw).strip
+    @new_raw = TextCleaner.normalize_whitespaces(new_raw).gsub(/\s+\z/, "")
 
     # TODO this is not in a transaction - dangerous!
     return false unless should_revise?
