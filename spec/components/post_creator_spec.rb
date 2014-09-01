@@ -468,7 +468,6 @@ describe PostCreator do
     end
   end
 
-
   describe "suspended users" do
     it "does not allow suspended users to create topics" do
       user = Fabricate(:user, suspended_at: 1.month.ago, suspended_till: 1.month.from_now)
@@ -477,6 +476,11 @@ describe PostCreator do
       creator.create
       creator.errors.count.should be > 0
     end
+  end
+
+  it "doesn't strip starting whitespaces" do
+    post = PostCreator.new(user, { title: "testing whitespace stripping", raw: "    <-- whitespaces -->    " }).create
+    post.raw.should == "    <-- whitespaces -->"
   end
 
 end
