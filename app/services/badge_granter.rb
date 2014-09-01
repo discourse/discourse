@@ -139,9 +139,11 @@ class BadgeGranter
     return unless sql.present?
     if Badge::Trigger.uses_post_ids?(opts[:trigger])
       raise "Contract violation:\nQuery triggers on posts, but does not reference the ':post_ids' array" unless sql.match /:post_ids/
+      raise "Contract violation:\nQuery triggers on posts, but references the ':user_ids' array" if sql.match /:user_ids/
     end
     if Badge::Trigger.uses_user_ids?(opts[:trigger])
       raise "Contract violation:\nQuery triggers on users, but does not reference the ':user_ids' array" unless sql.match /:user_ids/
+      raise "Contract violation:\nQuery triggers on users, but references the ':post_ids' array" if sql.match /:post_ids/
     end
     if opts[:trigger] && !Badge::Trigger.is_none?(opts[:trigger])
       raise "Contract violation:\nQuery is triggered, but does not reference the ':backfill' parameter.\n(Hint: if :backfill is TRUE, you should ignore the :post_ids/:user_ids)" unless sql.match /:backfill/
