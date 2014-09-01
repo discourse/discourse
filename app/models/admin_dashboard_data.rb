@@ -64,7 +64,7 @@ class AdminDashboardData
     AdminDashboardData.new.problems
   end
 
-  def as_json(options = nil)
+  def as_json(_options = nil)
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type).as_json },
       admins: User.admins.count,
