@@ -143,8 +143,6 @@ describe Search do
           r[:type] == "topic"
         end[:results]
 
-        results.find{|r| r[:title].include? 'birds'}.should_not be_nil
-
         results.map{|r| r[:id]}.should == [
           post1.topic_id,
           "_#{post2.id}",
