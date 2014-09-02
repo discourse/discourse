@@ -15,13 +15,13 @@ Discourse.TopicRoute = Discourse.Route.extend({
   actions: {
     // Modals that can pop up within a topic
     expandPostUser: function(post) {
-      this.controllerFor('poster-expansion').show(post.get('username'), post.get('uploaded_avatar_id'));
+      this.controllerFor('user-expansion').show(post.get('username'), post.get('uploaded_avatar_id'));
     },
 
     expandPostUsername: function(username) {
       username = username.replace(/^@/, '');
       if (!Em.isEmpty(username)) {
-        this.controllerFor('poster-expansion').show(username);
+        this.controllerFor('user-expansion').show(username);
       }
     },
 
@@ -155,7 +155,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     // Clear the search context
     this.controllerFor('search').set('searchContext', null);
-    this.controllerFor('poster-expansion').set('visible', false);
+    this.controllerFor('user-expansion').set('visible', false);
 
     var topicController = this.controllerFor('topic'),
         postStream = topicController.get('postStream');
