@@ -247,7 +247,7 @@ Discourse.TopicList.reopenClass({
   },
 
   find: function(filter, params) {
-    return PreloadStore.getAndRemove("topic_list", finderFor(filter, params)).then(function(result) {
+    return PreloadStore.getAndRemove("topic_list_" + filter, finderFor(filter, params)).then(function(result) {
       return Discourse.TopicList.from(result, filter, params);
     });
   }
