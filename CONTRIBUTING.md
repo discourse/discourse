@@ -50,7 +50,7 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
   * use spaces around operators, after commas, colons, semicolons, around `{` and before `}`
   * no space after `(`, `[` or before `]`, `)`
   * use Ruby 1.9 hash syntax: prefer `{ a: 1 }` over `{ :a => 1 }`
-  * prefer `class << self; def method; end` over `def class.method` for class methods
+  * prefer `class << self; def method; end` over `def self.method` for class methods
   * prefer `{ ... }` over `do ... end` for single-line blocks, avoid using `{ ... }` for multi-line blocks
   * avoid `return` when not required
 
