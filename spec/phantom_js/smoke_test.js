@@ -126,7 +126,7 @@ page.runTests = function(){
   });
 
   test("has details",function(){
-    return $('#poster-expansion .names').length === 1;
+    return $('#user-expansion .names').length === 1;
   });
 
   run();

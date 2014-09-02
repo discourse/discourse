@@ -1,9 +1,9 @@
 import CleansUp from 'discourse/mixins/cleans-up';
 
-var clickOutsideEventName = "mousedown.outside-poster-expansion";
+var clickOutsideEventName = "mousedown.outside-user-expansion";
 
 export default Discourse.View.extend(CleansUp, {
-  elementId: 'poster-expansion',
+  elementId: 'user-expansion',
   classNameBindings: ['controller.visible::hidden', 'controller.showBadges'],
 
   _setup: function() {
