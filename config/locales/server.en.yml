@@ -244,9 +244,7 @@ en:
 
       Congratulations! :confetti_ball:
 
-      If you can see this topic, you were recently promoted to [trust level 3 (veteran)][trust].
-
-      > Veterans are some of the most active and prolific contributors. They set a positive example for the community through their actions and their posts.
+      If you can see this topic, you were recently promoted to **regular** (trust level 3).
 
       You can now &hellip;
 
@@ -254,12 +252,13 @@ en:
       * Change the category of any topic
       * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
       * Access a private Lounge category only visible to users at trust level 3 and higher
+      * Cast more heavily weighted likes and flags
 
-      Here's the [current list of users who made it to trust level 3](/badges/3/veteran). Be sure to say hi!
+      Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
 
       Thanks for being an important part of this community!
 
-      (For more information on trust levels, [see this topic][trust]. Please note that only members who currently meet the selection criteria will remain at trust level 3. )
+      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
 
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
 
