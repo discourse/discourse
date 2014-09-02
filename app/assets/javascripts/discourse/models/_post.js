@@ -283,34 +283,25 @@ Discourse.Post = Discourse.Model.extend({
     @param {Discourse.Post} otherPost The post we're updating from
   **/
   updateFromPost: function(otherPost) {
-    var post = this;
+    var self = this;
     Object.keys(otherPost).forEach(function (key) {
-      var value = otherPost[key];
-      // optimisation
-      var oldValue = post[key];
+      var value = otherPost[key],
+          oldValue = self[key];
 
-      if(!value) {
-        value = null;
-      }
-
-      if(!oldValue) {
-        oldValue = null;
-      }
+      if (!value) { value = null; }
+      if (!oldValue) { oldValue = null; }
 
       var skip = false;
-
       if (typeof value !== "function" && oldValue !== value) {
-
         // wishing for an identity map
-        if(key === "reply_to_user" && value && oldValue) {
+        if (key === "reply_to_user" && value && oldValue) {
           skip = value.username === oldValue.username || Em.get(value, "username") === Em.get(oldValue, "username");
         }
 
-        if(!skip) {
-          post.set(key, value);
+        if (!skip) {
+          self.set(key, value);
         }
       }
-
     });
   },
 

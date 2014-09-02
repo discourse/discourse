@@ -31,7 +31,6 @@ Discourse.TopicRoute = Discourse.Route.extend({
     },
 
     showFlagTopic: function(topic) {
-      //Discourse.Route.showModal(this, 'flagTopic', topic);
       Discourse.Route.showModal(this, 'flag', topic);
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: true });
     },
