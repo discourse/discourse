@@ -55,7 +55,7 @@ export default ObjectController.extend({
     this.set('participant', null);
 
     // Retrieve their participants info
-    var participants = this.get('topic.details.participants');
+    var participants = this.get('controllers.topic.details.participants');
     if (participants) {
       this.set('participant', participants.findBy('username', username));
     }
