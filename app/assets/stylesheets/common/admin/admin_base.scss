@@ -424,16 +424,18 @@ section.details {
     margin-left: 10px;
   }
 
-  .badge-query-plan, .badge-errors {
+  .badge-errors {
+    font-size: 14px;
+    line-height: 16px;
     padding: 4px;
     background-color: scale-color-diff();
   }
 
   .badge-query-plan {
-    font-size: 80%;
-  }
-  .badge-errors {
-    font-family: monospace;
+    font-size: 12px;
+    line-height: 13px;
+    padding: 4px;
+    background-color: scale-color-diff();
   }
 
   .count-warning {
