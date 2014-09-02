@@ -10,7 +10,7 @@
   <div class='searching'></div>
 {{else}}
   {{#unless noResults}}
-    {{#each resultType in content}}
+    {{#each resultType in content.resultTypes}}
       <ul>
         <li class='heading'>
           {{resultType.name}}

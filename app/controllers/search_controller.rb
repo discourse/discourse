@@ -36,7 +36,8 @@ class SearchController < ApplicationController
     end
 
     search = Search.new(params[:term], search_args.symbolize_keys)
-    render_json_dump(search.execute.as_json)
+    result = search.execute
+    render_serialized(result, GroupedSearchResultSerializer, :result => result)
   end
 
 end

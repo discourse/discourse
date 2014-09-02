@@ -2,6 +2,25 @@ require 'spec_helper'
 
 describe SearchController do
 
+  context "integration" do
+
+    before do
+      ActiveRecord::Base.observers.enable :search_observer
+    end
+
+    it "can search correctly" do
+      my_post = Fabricate(:post, raw: 'this is my really awesome post')
+      xhr :get, :query, term: 'awesome', include_blurb: true
+
+      response.should be_success
+      data = JSON.parse(response.body)
+      data['posts'][0]['id'].should == my_post.id
+      data['posts'][0]['blurb'].should == 'this is my really awesome post'
+      data['topics'][0]['id'].should == my_post.topic_id
+    end
+  end
+
+
   let(:search_context) { {type: 'user', id: 'eviltrout'} }
 
   context "basics" do
