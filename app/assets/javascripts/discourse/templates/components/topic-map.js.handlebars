@@ -39,14 +39,16 @@
       </li>
     {{/if}}
     {{#if details.links.length}}
-    <li class='secondary'>
-      {{number details.links.length}}
-      <h4>{{i18n links_lowercase}}</h4>
-    </li>
+      <li class='secondary'>
+        {{number details.links.length}}
+        <h4>{{i18n links_lowercase}}</h4>
+      </li>
     {{/if}}
-    <li {{bind-attr class=":avatars mapCollapsed::hidden"}}>
-      {{#grouped-each participant in details.fewParticipants}}{{topic-participant participant=participant}}{{/grouped-each}}
-    </li>
+    {{#if showPosterAvatar}}
+      <li {{bind-attr class=":avatars mapCollapsed::hidden"}}>
+        {{#grouped-each participant in details.fewParticipants}}{{topic-participant participant=participant}}{{/grouped-each}}
+      </li>
+    {{/if}}
   </ul>
 </section>
 

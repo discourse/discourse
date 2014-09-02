@@ -22,6 +22,8 @@ export default Ember.Component.extend({
     this.set('mapCollapsed', Discourse.Mobile.mobileView || (!this.get('topic.has_summary')));
   },
 
+  showPosterAvatar: Em.computed.gt('topic.posts_count', 2),
+
   toggleMapClass: function() {
     return this.get('mapCollapsed') ? 'fa fa-chevron-down' : 'fa fa-chevron-up';
   }.property('mapCollapsed'),
