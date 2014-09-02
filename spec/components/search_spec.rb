@@ -13,20 +13,6 @@ describe Search do
     ActiveRecord::Base.observers.enable :search_observer
   end
 
-  def first_of_type(results, type)
-    return nil if results.blank?
-    results.each do |r|
-      return r[:results].first if r[:type] == type
-    end
-    nil
-  end
-
-  def result_ids_for_type(results, type)
-    results.find do |group|
-      group[:type] == type
-    end[:results].map {|r| r[:id]}
-  end
-
   context 'post indexing observer' do
     before do
       @category = Fabricate(:category, name: 'america')
@@ -56,11 +42,8 @@ describe Search do
       @indexed = @user.user_search_data.search_data
     end
 
-    it "should pick up on username" do
+    it "should pick up on data" do
       @indexed.should =~ /fred/
-    end
-
-    it "should pick up on name" do
       @indexed.should =~ /jone/
     end
   end
@@ -77,43 +60,36 @@ describe Search do
 
   end
 
-  it 'returns something blank on a nil search' do
-    ActiveRecord::Base.expects(:exec_sql).never
-    Search.new(nil).execute.should be_blank
-  end
-
   it 'does not search when the search term is too small' do
     ActiveRecord::Base.expects(:exec_sql).never
-    Search.new('evil', min_search_term_length: 5).execute.should be_blank
+    Search.execute('evil', min_search_term_length: 5)
   end
 
   it 'escapes non alphanumeric characters' do
-    Search.new('foo :!$);}]>@\#\"\'').execute.should be_blank # There are at least three levels of sanitation for Search.query!
+    Search.execute('foo :!$);}]>@\#\"\'').posts.length.should == 0 # There are at least three levels of sanitation for Search.query!
   end
 
   it "doesn't raise an error when single quotes are present" do
-    Search.new("'hello' world").execute.should be_blank # There are at least three levels of sanitation for Search.query!
+    Search.execute("'hello' world").posts.length.should == 0 # There are at least three levels of sanitation for Search.query!
   end
 
   it 'works when given two terms with spaces' do
-    lambda { Search.new('evil trout').execute }.should_not raise_error
+    lambda { Search.execute('evil trout') }.should_not raise_error
   end
 
   context 'users' do
     let!(:user) { Fabricate(:user) }
-    let(:result) { first_of_type( Search.new('bruce', type_filter: 'user').execute, 'user') }
+    let(:result) { Search.execute('bruce', type_filter: 'user') }
 
     it 'returns a result' do
-      result.should be_present
-      result[:title].should == user.username
-      result[:avatar_template].should_not be_nil
-      result[:url].should == "/users/#{user.username_lower}"
+      result.users.length.should == 1
+      result.users[0].id.should == user.id
     end
-
   end
 
   context 'topics' do
-    let(:topic) { Fabricate(:topic) }
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic}
 
 
     context 'search within topic' do
@@ -139,76 +115,62 @@ describe Search do
         # update posts_count
         topic.reload
 
-        results = Search.new('posting', search_context: post1.topic).execute.find do |r|
-          r[:type] == "topic"
-        end[:results]
-
-        results.map{|r| r[:id]}.should == [
-          post1.topic_id,
-          "_#{post2.id}",
-          "_#{post3.id}",
-          "_#{post4.id}"]
+        results = Search.execute('posting', search_context: post1.topic)
+        results.posts.map(&:id).should == [post1.id, post2.id, post3.id, post4.id]
 
         # stop words should work
-        results = Search.new('this', search_context: post1.topic).execute.find do |r|
-          r[:type] == "topic"
-        end[:results]
-
-        results.length.should == 4
+        results = Search.execute('this', search_context: post1.topic)
+        results.posts.length.should == 4
 
       end
     end
 
     context 'searching the OP' do
-      let!(:post) { Fabricate(:post_with_long_raw_content, topic: topic, user: topic.user) }
-      let(:result) { first_of_type(Search.new('hundred', type_filter: 'topic', include_blurbs: true).execute, 'topic') }
+      let!(:post) { Fabricate(:post_with_long_raw_content) }
+      let(:result) { Search.execute('hundred', type_filter: 'topic', include_blurbs: true) }
 
       it 'returns a result correctly' do
-        result.should be_present
-        result[:title].should == topic.title
-        result[:url].should == topic.relative_url
-        result[:blurb].should == TextHelper.excerpt(post.raw, 'hundred', radius: 100)
+        result.posts.length.should == 1
+        result.posts[0].id.should == post.id
       end
     end
 
     context 'searching for a post' do
-      let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
       let!(:reply) { Fabricate(:basic_reply, topic: topic, user: topic.user) }
-      let(:result) { first_of_type(Search.new('quote', type_filter: 'topic').execute, 'topic') }
+      let(:result) { Search.execute('quotes', type_filter: 'topic', include_blurbs: true) }
 
       it 'returns the post' do
         result.should be_present
-        result[:title].should == topic.title
-        result[:url].should == topic.relative_url + "/2"
-        result[:blurb].should == "this reply has no quotes"
+        result.posts.length.should == 1
+        p = result.posts[0]
+        p.topic.id.should == topic.id
+        p.id.should == reply.id
+        result.blurb(p).should == "this reply has no quotes"
       end
     end
 
     context "search for a topic by id" do
-      let(:result) { first_of_type(Search.new(topic.id, type_filter: 'topic', search_for_id: true, min_search_term_length: 1).execute, 'topic') }
+      let(:result) { Search.execute(topic.id, type_filter: 'topic', search_for_id: true, min_search_term_length: 1) }
 
       it 'returns the topic' do
-        result.should be_present
-        result[:title].should == topic.title
-        result[:url].should == topic.relative_url
+        result.posts.length.should == 1
+        result.posts.first.id.should == post.id
       end
     end
 
     context "search for a topic by url" do
-      let(:result) { first_of_type(Search.new(topic.relative_url, search_for_id: true, type_filter: 'topic').execute, 'topic') }
+      let(:result) { Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic')}
 
       it 'returns the topic' do
-        result.should be_present
-        result[:title].should == topic.title
-        result[:url].should == topic.relative_url
+        result.posts.length.should == 1
+        result.posts.first.id.should == post.id
       end
     end
 
     context 'security' do
-      let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
       def result(current_user)
-        first_of_type(Search.new('hello', guardian: current_user).execute, 'topic')
+        Search.execute('hello', guardian: current_user)
       end
 
       it 'secures results correctly' do
@@ -220,9 +182,9 @@ describe Search do
         category.set_permissions(:staff => :full)
         category.save
 
-        result(nil).should_not be_present
-        result(Fabricate(:user)).should_not be_present
-        result(Fabricate(:admin)).should be_present
+        result(nil).posts.should_not be_present
+        result(Fabricate(:user)).posts.should_not be_present
+        result(Fabricate(:admin)).posts.should be_present
 
       end
     end
@@ -236,30 +198,27 @@ describe Search do
                                               end
     }
     let!(:post) {Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user)}
-    let(:result) { first_of_type(Search.new('запись').execute, 'topic') }
+    let(:result) { Search.execute('запись') }
 
     it 'finds something when given cyrillic query' do
-      result.should be_present
+      result.posts.should be_present
     end
   end
 
   context 'categories' do
 
     let!(:category) { Fabricate(:category) }
-    def result
-      first_of_type(Search.new('amazing').execute, 'category')
+    def search
+      Search.execute(category.name)
     end
 
     it 'returns the correct result' do
-      r = result
-      r.should be_present
-      r[:title].should == category.name
-      r[:url].should == "/category/#{category.slug}"
+      search.categories.should be_present
 
       category.set_permissions({})
       category.save
 
-      result.should_not be_present
+      search.categories.should_not be_present
     end
 
   end
@@ -272,21 +231,23 @@ describe Search do
 
 
     context 'user filter' do
-      let(:results) { Search.new('amazing', type_filter: 'user').execute }
+      let(:results) { Search.execute('amazing', type_filter: 'user') }
 
       it "returns a user result" do
-        results.detect {|r| r[:type] == 'user'}.should be_present
-        results.detect {|r| r[:type] == 'category'}.should be_blank
+        results.categories.length.should == 0
+        results.posts.length.should == 0
+        results.users.length.should == 1
       end
 
     end
 
     context 'category filter' do
-      let(:results) { Search.new('amazing', type_filter: 'category').execute }
+      let(:results) { Search.execute('amazing', type_filter: 'category') }
 
       it "returns a category result" do
-        results.detect {|r| r[:type] == 'user'}.should be_blank
-        results.detect {|r| r[:type] == 'category'}.should be_present
+        results.categories.length.should == 1
+        results.posts.length.should == 0
+        results.users.length.should == 0
       end
 
     end
@@ -295,27 +256,30 @@ describe Search do
 
   context 'search_context' do
 
-    context 'user as a search context' do
-      let(:coding_horror) { Fabricate(:coding_horror) }
+    it 'can find a user when using search context' do
 
-      Given!(:post) { Fabricate(:post) }
-      Given!(:coding_horror_post) { Fabricate(:post, user: coding_horror )}
-      When(:search_user) { Search.new('hello', search_context: post.user).execute }
+      coding_horror = Fabricate(:coding_horror)
+      post = Fabricate(:post)
 
-      # should find topic created by searched user first
-      Then          { first_of_type(search_user, 'topic')[:id].should == post.topic_id }
+      Fabricate(:post, user: coding_horror)
+
+      result = Search.execute('hello', search_context: post.user)
+
+      result.posts.first.topic_id = post.topic_id
+      result.posts.length.should == 1
     end
 
-    context 'category as a search context' do
-      let(:category) { Fabricate(:category) }
-      let(:topic) { Fabricate(:topic, category: category) }
-      let(:topic_no_cat) { Fabricate(:topic) }
+    it 'can use category as a search context' do
+      category = Fabricate(:category)
+      topic = Fabricate(:topic, category: category)
+      topic_no_cat = Fabricate(:topic)
 
-      Given!(:post) { Fabricate(:post, topic: topic, user: topic.user ) }
-      Given!(:another_post) { Fabricate(:post, topic: topic_no_cat, user: topic.user ) }
-      When(:search_cat) { Search.new('hello', search_context: category).execute }
-      # should find topic in searched category first
-      Then          { first_of_type(search_cat, 'topic')[:id].should == topic.id }
+      post = Fabricate(:post, topic: topic, user: topic.user )
+      _another_post = Fabricate(:post, topic: topic_no_cat, user: topic.user )
+
+      search = Search.execute('hello', search_context: category)
+      search.posts.length.should == 1
+      search.posts.first.id.should == post.id
     end
 
   end
@@ -330,10 +294,10 @@ describe Search do
     it 'finds chinese topic based on title' do
       SiteSetting.default_locale = 'zh_TW'
       topic = Fabricate(:topic, title: 'My Title Discourse社区指南')
-      Fabricate(:post, topic: topic)
+      post = Fabricate(:post, topic: topic)
 
-      Search.new('社区指南').execute[0][:results][0][:id].should == topic.id
-      Search.new('指南').execute[0][:results][0][:id].should == topic.id
+      Search.execute('社区指南').posts.first.id.should == post.id
+      Search.execute('指南').posts.first.id.should == post.id
     end
   end
 

@@ -57,21 +57,50 @@ export default Em.ArrayController.extend(Discourse.Presence, {
       if (results) {
         self.set('noResults', results.length === 0);
 
-        var index = 0;
-        results = _(['topic', 'category', 'user'])
-            .map(function(n){
-              return _(results).where({type: n}).first();
-            })
-            .compact()
-            .each(function(list){
-              _.each(list.results, function(item){
-                item.index = index++;
-                urls.pushObject(item.url);
-              });
-            })
-            .value();
+        var topicMap = {};
+        results.topics = results.topics.map(function(topic){
+          topic = Discourse.Topic.create(topic);
+          topicMap[topic.id] = topic;
+          return topic;
+        });
 
-        self.setProperties({ resultCount: index, content: results, urls: urls });
+        results.posts = results.posts.map(function(post){
+          post = Discourse.Post.create(post);
+          post.set('topic', topicMap[post.topic_id]);
+          urls.push(post.get('url'));
+          return post;
+        });
+
+        results.users = results.users.map(function(user){
+          user = Discourse.User.create(user);
+          urls.push(user.get('path'));
+          return user;
+        });
+
+        results.categories = results.categories.map(function(category){
+          category = Discourse.Category.create(category);
+          urls.push(category.get('url'));
+          return category;
+        });
+
+        var r = results.grouped_search_result;
+        results.resultTypes = [];
+
+        // TODO: consider refactoring front end to take a better structure
+        [['topic','posts'],['user','users'],['category','categories']].forEach(function(pair){
+          var type = pair[0], name = pair[1];
+          if(results[name].length > 0) {
+            results.resultTypes.push({
+              results: results[name],
+              type: type,
+              more: r['more_' + name]
+            });
+          }
+        });
+
+        console.log(results)
+
+        self.setProperties({ resultCount: urls.length, content: results, urls: urls });
       }
 
       self.set('loading', false);

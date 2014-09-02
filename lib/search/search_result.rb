@@ -7,7 +7,7 @@ class Search
       extend ActionView::Helpers::TextHelper
     end
 
-    attr_accessor :type, :id, :topic_id, :blurb
+    attr_accessor :type, :id, :topic_id, :blurb, :locked, :pinned
 
     # Category attributes
     attr_accessor :color, :text_color
@@ -27,7 +27,9 @@ class Search
         :uploaded_avatar_id,
         :color,
         :text_color,
-        :blurb
+        :blurb,
+        :locked,
+        :pinned
       ].each do |k|
         val = send(k)
         json[k] = val if val
@@ -73,7 +75,8 @@ class Search
         end
       if include_blurbs
         #add a blurb from the post to the search results
-        custom_blurb = blurb(p.raw, term)
+        cooked = SearchObserver::HtmlScrubber.scrub(p.cooked).squish
+        custom_blurb = blurb(cooked, term)
       end
       if p.post_number == 1
         # we want the topic link when it's the OP

@@ -1,36 +1,56 @@
+require 'sanitize'
+
 class Search
 
   class GroupedSearchResults
-    attr_reader :topic_count, :type_filter
 
-    def initialize(type_filter)
-      @type_filter = type_filter
-      @by_type = {}
-      @topic_count = 0
-    end
+    include ActiveModel::Serialization
 
-    def topic_ids
-      topic_results = @by_type[:topic]
-      return Set.new if topic_results.blank?
-      return topic_results.results.map{|r| r.topic_id}
-    end
-
-    def as_json(options = nil)
-      @by_type.values.map do |grouped_result|
-        grouped_result.as_json
+    class TextHelper
+      extend ActionView::Helpers::TextHelper
+      def self.sanitize(text)
+        # we run through sanitize at the end so it does not matter
+        text
       end
     end
 
-    def add_result(result)
-      grouped_result = @by_type[result.type] || (@by_type[result.type] = SearchResultType.new(result.type))
+    attr_reader :type_filter,
+                :posts, :categories, :users,
+                :more_posts, :more_categories, :more_users,
+                :term, :search_context, :include_blurbs
 
-      # Limit our results if there is no filter
-      if @type_filter.present? or (grouped_result.size < Search.per_facet)
-        @topic_count += 1 if (result.type == :topic)
+    def initialize(type_filter, term, search_context, include_blurbs)
+      @type_filter = type_filter
+      @term = term
+      @search_context = search_context
+      @include_blurbs = include_blurbs
+      @posts = []
+      @categories = []
+      @users = []
+    end
 
-        grouped_result.add(result)
+    def blurb(post)
+      cooked = SearchObserver::HtmlScrubber.scrub(post.cooked).squish
+      terms = @term.split(/\s+/)
+      blurb = TextHelper.excerpt(cooked, terms.first, radius: 100)
+
+      # TODO highlight term
+      # terms.each do |term|
+      #   blurb = TextHelper.highlight(blurb, term)
+      # end
+
+      blurb = TextHelper.truncate(cooked, length: 200) if blurb.blank?
+
+      Sanitize.clean(blurb)
+    end
+
+    def add(object)
+      type = object.class.to_s.downcase.pluralize
+
+      if !@type_filter.present? && send(type).length == Search.per_facet
+        instance_variable_set("@more_#{type}".to_sym, true)
       else
-        grouped_result.more = true
+        (send type) << object
       end
     end
 
