@@ -233,6 +233,9 @@ class PostAction < ActiveRecord::Base
       end
     else
       post_action = PostAction.where(where_attrs).first
+
+      # after_commit is not called on an `update_all` so do the notify ourselves
+      post_action.notify_subscribers
     end
 
     # agree with other flags

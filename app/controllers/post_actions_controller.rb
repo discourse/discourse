@@ -21,8 +21,7 @@ class PostActionsController < ApplicationController
     else
       # We need to reload or otherwise we are showing the old values on the front end
       @post.reload
-      post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
-      render_json_dump(post_serializer)
+      render_post_json(@post)
     end
   end
 
@@ -42,7 +41,8 @@ class PostActionsController < ApplicationController
 
     PostAction.remove_act(current_user, @post, post_action.post_action_type_id)
 
-    render nothing: true
+    @post.reload
+    render_post_json(@post)
   end
 
   def defer_flags
