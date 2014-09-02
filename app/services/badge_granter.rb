@@ -155,6 +155,7 @@ class BadgeGranter
     end
     raise "Contract violation:\nQuery does not return a 'user_id' column" unless sql.match /user_id/
     raise "Contract violation:\nQuery does not return a 'granted_at' column" unless sql.match /granted_at/
+    raise "Contract violation:\nQuery ends with a semicolon. Remove the semicolon; your sql will be used in a subquery." if sql.match /;\s*\z/
   end
 
   # Options:
