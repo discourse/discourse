@@ -8,6 +8,7 @@ module Jobs
     every 1.day
 
     def execute(args)
+      return unless SiteSetting.enable_badges
       Badge.all.each do |b|
         BadgeGranter.backfill(b)
       end
