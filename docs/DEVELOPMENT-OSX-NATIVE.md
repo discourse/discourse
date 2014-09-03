@@ -133,7 +133,7 @@ If you get this error when starting `psql` from the command line:
     Is the server running locally and accepting
     connections on Unix domain socket "/tmp/.s.PGSQL.5432"?
     
-It is because it is still looking in the `/temp` directory and not in `/var/pgsql_socket`.
+it is because it is still looking in the `/tmp` directory and not in `/var/pgsql_socket`.
 
 If running `psql -h /var/pgsql_socket` works then you need to configure the host in your `.bash_profile`:
 
