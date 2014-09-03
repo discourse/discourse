@@ -1,29 +1,6 @@
 var safe = Handlebars.SafeString;
 
 /**
-  Truncates long strings
-
-  @method shorten
-  @for Handlebars
-**/
-Handlebars.registerHelper('shorten', function(property, options) {
-  return Ember.Handlebars.get(this, property, options).substring(0,35);
-});
-
-/**
-  Produces a link to a topic
-
-  @method topic-link
-  @for Handlebars
-**/
-Handlebars.registerHelper('topic-link', function(property, options) {
-  var topic = Ember.Handlebars.get(this, property, options),
-      title = topic.get('fancy_title');
-  return "<a href='" + topic.get('lastUnreadUrl') + "' class='title'>" + title + "</a>";
-});
-
-
-/**
   Produces a link to a category given a category object and helper options
 
   @method categoryLinkHTML
@@ -89,25 +66,6 @@ Handlebars.registerHelper('titled-link-to', function(name, object) {
   } else {
     return Ember.Handlebars.helpers['link-to'].call(this, name, options);
   }
-});
-
-/**
-  Shorten a URL for display by removing common components
-
-  @method shortenUrl
-  @for Handlebars
-**/
-Handlebars.registerHelper('shorten-url', function(property, options) {
-  var url, matches;
-  url = Ember.Handlebars.get(this, property, options);
-  // Remove trailing slash if it's a top level URL
-  matches = url.match(/\//g);
-  if (matches && matches.length === 3) {
-    url = url.replace(/\/$/, '');
-  }
-  url = url.replace(/^https?:\/\//, '');
-  url = url.replace(/^www\./, '');
-  return url.substring(0,80);
 });
 
 /**
