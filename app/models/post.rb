@@ -401,7 +401,6 @@ class Post < ActiveRecord::Base
 
   before_save do
     self.last_editor_id ||= user_id
-    self.cooked = cook(raw, topic_id: topic_id) unless new_record?
     self.baked_at = Time.new
     self.baked_version = BAKED_VERSION
   end

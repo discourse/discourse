@@ -108,6 +108,8 @@ class PostRevisor
       @post.unhide!
     end
 
+    @post.cooked = @post.cook(@new_raw, topic_id: @post.topic_id)
+
     @post.extract_quoted_post_numbers
     @post.save(validate: !@opts[:skip_validations])
 
