@@ -1300,3 +1300,9 @@ and (max-width : 500px) {
     }
   }
 }
+
+tr.not-activated {
+  td, td a, td a:visited {
+    color: #bbb;
+  }
+}
