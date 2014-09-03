@@ -68,9 +68,9 @@
             <td>{{#link-to 'adminUser' this}}{{avatar this imageSize="small"}}{{/link-to}}</td>
             <td>{{#link-to 'adminUser' this}}{{unbound username}}{{/link-to}}</td>
             {{#if active}}
-              <td>{{shorten email}}</td>
+              <td>{{shorten-text email}}</td>
             {{else}}
-              <td title="{{i18n admin.users.not_verified}}">{{shorten email}}</td>
+              <td title="{{i18n admin.users.not_verified}}">{{shorten-text email}}</td>
             {{/if}}
             <td>{{{unbound last_emailed_age}}}</td>
             <td>{{{unbound last_seen_age}}}</td>
