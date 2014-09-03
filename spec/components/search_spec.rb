@@ -321,6 +321,16 @@ describe Search do
 
       Search.execute('test status:closed').posts.length.should == 1
       Search.execute('test status:open').posts.length.should == 0
+    end
+
+    it 'can find by latest' do
+      topic1 = Fabricate(:topic, title: 'I do not like that Sam I am')
+      post1 = Fabricate(:post, topic: topic1)
+
+      post2 = Fabricate(:post, raw: 'that Sam I am, that Sam I am')
+
+      Search.execute('sam').posts.map(&:id).should == [post1.id, post2.id]
+      Search.execute('sam order:latest').posts.map(&:id).should == [post2.id, post1.id]
 
     end
   end
