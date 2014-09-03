@@ -301,5 +301,29 @@ describe Search do
     end
   end
 
+  describe 'Advanced search' do
+    it 'can find by status' do
+      post = Fabricate(:post, raw: 'hi this is a test 123 123')
+      topic = post.topic
+
+      Search.execute('test status:closed').posts.length.should == 0
+      Search.execute('test status:open').posts.length.should == 1
+
+      topic.closed = true
+      topic.save
+
+      Search.execute('test status:closed').posts.length.should == 1
+      Search.execute('test status:open').posts.length.should == 0
+
+      topic.archived = true
+      topic.closed = false
+      topic.save
+
+      Search.execute('test status:closed').posts.length.should == 1
+      Search.execute('test status:open').posts.length.should == 0
+
+    end
+  end
+
 end
 

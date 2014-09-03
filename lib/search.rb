@@ -95,6 +95,7 @@ class Search
   end
 
   def initialize(term, opts=nil)
+    term = process_advanced_search!(term)
     if term.present?
       @term = Search.prepare_data(term.to_s)
       @original_term = PG::Connection.escape_string(@term)
@@ -139,6 +140,21 @@ class Search
   end
 
   private
+
+    def process_advanced_search!(term)
+      term.to_s.split(/\s+/).map do |word|
+        if word == 'status:open'
+          @status = :open
+          nil
+        elsif word == 'status:closed'
+          @status = :closed
+          nil
+        else
+          word
+        end
+      end.compact.join(' ')
+    end
+
 
     def find_grouped_results
 
@@ -236,6 +252,12 @@ class Search
         posts = posts.where("posts.raw ilike ?", "%#{@term}%")
       else
         posts = posts.where("post_search_data.search_data @@ #{ts_query}")
+      end
+
+      if @status == :open
+        posts = posts.where('NOT topics.closed AND NOT topics.archived')
+      elsif @status == :closed
+        posts = posts.where('topics.closed OR topics.archived')
       end
 
       # If we have a search context, prioritize those posts first
