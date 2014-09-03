@@ -324,7 +324,7 @@
 .search-link .topic-statuses {
   float: none;
   display: inline-block;
-  color: $primary;
+  color: scale-color($primary, $lightness: 50%);
   margin: 0;
   .fa {
     margin: 0;
