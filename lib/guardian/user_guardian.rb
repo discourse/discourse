@@ -26,6 +26,10 @@ module UserGuardian
     can_edit?(user)
   end
 
+  def can_see_notifications?(user)
+    is_me?(user) || is_admin?
+  end
+
   def can_block_user?(user)
     user && is_staff? && not(user.staff?)
   end

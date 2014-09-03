@@ -6,11 +6,15 @@
           {{notification-item notification=this scope=scope}}
         {{/each}}
         <li class="read last">
-          <a {{bind-attr href="currentUser.path"}}>{{i18n notifications.more}} &hellip;</a>
+          <a href="/my/notifications">{{i18n notifications.more}}&hellip;</a>
         </li>
       </ul>
     {{else}}
-      <div class="none">{{i18n notifications.none}}</div>
+      {{#if error}}
+        <div class="none error">{{i18n notifications.none}}</div>
+      {{else}}
+        <div class="none">{{i18n notifications.none}}</div>
+      {{/if}}
     {{/if}}
   {{else}}
     <div class='loading'><i class='fa fa-spinner fa-spin'></i></div>
