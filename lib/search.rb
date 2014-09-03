@@ -149,6 +149,9 @@ class Search
         elsif word == 'status:closed'
           @status = :closed
           nil
+        elsif word == 'order:latest'
+          @order = :latest
+          nil
         else
           word
         end
@@ -274,15 +277,23 @@ class Search
 
       end
 
-      posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
-
-      data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
-      if opts[:aggregate_search]
-        posts = posts.order("SUM(#{data_ranking}) DESC")
+      if @order == :latest
+        if opts[:aggregate_search]
+          posts = posts.order("MAX(posts.created_at) DESC")
+        else
+          posts = posts.order("posts.created_at DESC")
+        end
       else
-        posts = posts.order("#{data_ranking} DESC")
+        posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
+
+        data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
+        if opts[:aggregate_search]
+          posts = posts.order("SUM(#{data_ranking}) DESC")
+        else
+          posts = posts.order("#{data_ranking} DESC")
+        end
+        posts = posts.order("topics.bumped_at DESC")
       end
-      posts = posts.order("topics.bumped_at DESC")
 
       if secure_category_ids.present?
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
@@ -330,7 +341,6 @@ class Search
       posts = Post.includes(:topic => :category)
                   .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
                   .order('row_number')
-
 
       posts.each do |post|
         @results.add(post)
