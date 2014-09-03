@@ -1,25 +1,27 @@
-<section class='details'>
+<section {{bind-attr class=":details active::not-activated"}}>
 
   <div class='user-controls'>
-    {{#link-to 'user' model class="btn"}}
-      <i class='fa fa-user'></i>
-      {{i18n admin.user.show_public_profile}}
-    {{/link-to}}
-    {{#if can_impersonate}}
-        <button class='btn btn-danger' {{action impersonate target="content"}} title="{{i18n admin.impersonate.help}}">
-          <i class='fa fa-crosshairs'></i>
-          {{i18n admin.impersonate.title}}
-        </button>
-    {{/if}}
-    {{#if currentUser.admin}}
-    <button class='btn' {{action log_out target="content"}}>
-      <i class='fa fa-power-off'></i>
-      {{i18n admin.user.log_out}}
-    </button>
+    {{#if active}}
+      {{#link-to 'user' model class="btn"}}
+        <i class='fa fa-user'></i>
+        {{i18n admin.user.show_public_profile}}
+      {{/link-to}}
+      {{#if can_impersonate}}
+          <button class='btn btn-danger' {{action impersonate target="content"}} title="{{i18n admin.impersonate.help}}">
+            <i class='fa fa-crosshairs'></i>
+            {{i18n admin.impersonate.title}}
+          </button>
+      {{/if}}
+      {{#if currentUser.admin}}
+      <button class='btn' {{action log_out target="content"}}>
+        <i class='fa fa-power-off'></i>
+        {{i18n admin.user.log_out}}
+      </button>
+      {{/if}}
     {{/if}}
   </div>
 
-  <div class='display-row'>
+  <div class='display-row username'>
     <div class='field'>{{i18n user.username.title}}</div>
     <div class='value'>{{username}}</div>
     <div class='controls'>
@@ -30,9 +32,10 @@
     </div>
   </div>
 
-  <div class='display-row'>
+  <div class='display-row email'>
     <div class='field'>{{i18n user.email.title}}</div>
     <div class='value'><a href="mailto:{{unbound email}}">{{email}}</a></div>
+    <div class='controls'>{{i18n admin.users.not_verified}}</div>
   </div>
 
   <div class='display-row'>

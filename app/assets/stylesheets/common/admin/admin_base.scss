@@ -1306,3 +1306,8 @@ tr.not-activated {
     color: #bbb;
   }
 }
+.details.not-activated {
+  .username .value, .email .value a, .email .value a:visited {
+    color: #bbb;
+  }
+}
