@@ -99,12 +99,17 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
-  scope :blocked, -> { where(blocked: true) } # no index
-  scope :not_blocked, -> { where(blocked: false) } # no index
-  scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) } # no index
-  scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
-  # excluding fake users like the community user
+  # excluding fake users like the system user
   scope :real, -> { where('id > 0') }
+
+  # TODO-PERF: There is no indexes on any of these
+  # and NotifyMailingListSubscribers does a select-all-and-loop
+  # may want to create an index on (active, blocked, suspended_till, mailing_list_mode)?
+  scope :blocked, -> { where(blocked: true) }
+  scope :not_blocked, -> { where(blocked: false) }
+  scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
+  scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
+  scope :activated, -> { where(active: true) }
 
   module NewTopicDuration
     ALWAYS = -1
