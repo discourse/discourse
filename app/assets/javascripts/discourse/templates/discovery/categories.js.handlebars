@@ -48,12 +48,7 @@
               <div class="featured-topic">
                 {{topic-status topic=this}}
                 <a class='title' href="{{unbound lastUnreadUrl}}">{{{unbound fancy_title}}}</a>
-                {{#if totalUnread}}
-                  <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.total_unread_posts count="totalUnread"}}'>{{totalUnread}}</a>
-                {{/if}}
-                {{#if unseen}}
-                  <a href="{{unbound lastUnreadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'>{{i18n filters.new.lower_title}}</a>
-                {{/if}}
+                {{topic-post-badges unread=totalUnread unseen=unseen url=lastUnreadUrl}}
 
                 {{#if controller.latestTopicOnly}}
                   <div class='last-user-info'>
