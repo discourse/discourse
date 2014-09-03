@@ -38,10 +38,6 @@ export default function() {
       return [200, {"Content-Type": "text/html"}, "<div class='page-not-found'>not found</div>"];
     });
 
-    this.get("/search", function() {
-      return response([ { type: "topic", more: true, results: [ { url: "some-url" } ] } ]);
-    });
-
     this.get('/draft.json', function() {
       return response({});
     });
