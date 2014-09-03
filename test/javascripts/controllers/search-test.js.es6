@@ -128,57 +128,6 @@ test("keyboard navigation", function() {
   });
 
   equal(controller.get("selectedIndex"), 0, "initially the first item is selected");
-
-  controller.moveUp();
-  equal(controller.get("selectedIndex"), 0, "you can't move up above the first item");
-
-  controller.moveDown();
-  equal(controller.get("selectedIndex"), 1, "you can go down from the first item");
-
-  controller.moveDown();
-  equal(controller.get("selectedIndex"), 2, "you can go down from the middle item");
-
-  controller.moveDown();
-  equal(controller.get("selectedIndex"), 2, "you can't go down below the last item");
-
-  controller.moveUp();
-  equal(controller.get("selectedIndex"), 1, "you can go up from the last item");
-
-  controller.moveUp();
-  equal(controller.get("selectedIndex"), 0, "you can go up from the middle item");
-});
-
-test("selecting a highlighted item", function() {
-  sandbox.stub(Discourse.URL, "routeTo");
-
-  var controller = this.subject();
-  Ember.run(function() {
-    controller.set("term", "ab");
-
-    searcherStub.resolve(
-      {
-        type: "user",
-        posts: [],
-        categories: [],
-        topics: [],
-        users: [{username: 'bob'}],
-        grouped_search_result: {},
-      }
-    );
-  });
-
-  Ember.run(function() {
-    controller.set("selectedIndex", 0);
-  });
-  controller.select();
-  ok(Discourse.URL.routeTo.calledWith("/users/bob"), "when selected item has url, a redirect is fired");
-
-  Discourse.URL.routeTo.reset();
-  Ember.run(function() {
-    controller.set("loading", true);
-  });
-  controller.select();
-  ok(!Discourse.URL.routeTo.called, "when loading flag is set to true, there is no redirect");
 });
 
 test("search query / the flow of the search", function() {
