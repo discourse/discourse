@@ -13,7 +13,7 @@ test("when no search term is typed yet", function() {
   var controller = this.subject();
   ok(!controller.get("loading"), "loading flag is false");
   ok(!controller.get("noResults"), "noResults flag is false");
-  deepEqual(controller.get("content"), [], "content is empty");
+  ok(!controller.get("content"), "content is empty");
   blank(controller.get("selectedIndex"), "selectedIndex is not set");
   blank(controller.get("resultCount"), "result count is not set");
 });
@@ -24,7 +24,7 @@ test("when user started typing a search term but did not reach the minimum chara
 
   ok(!controller.get("loading"), "loading flag is false");
   ok(!controller.get("noResults"), "noResults flag is false");
-  deepEqual(controller.get("content"), [], "content is empty");
+  ok(!controller.get("content"), "content is empty");
   equal(controller.get("selectedIndex"), 0, "selectedIndex is set to 0");
   equal(controller.get("resultCount"), 0, "result count is set to 0");
 });
@@ -34,7 +34,7 @@ test("when user typed a search term that is equal to or exceeds the minimum char
   controller.set("term", "ab");
   ok(controller.get("loading"), "loading flag is true");
   ok(!controller.get("noResults"), "noResults flag is false");
-  deepEqual(controller.get("content"), [], "content is empty");
+  ok(!controller.get("content"), "content is empty");
   equal(controller.get("selectedIndex"), 0, "selectedIndex is set to 0");
   equal(controller.get("resultCount"), 0, "result count is set to 0");
 });
@@ -42,13 +42,22 @@ test("when user typed a search term that is equal to or exceeds the minimum char
 test("when user typed a search term that is equal to or exceeds the minimum character count threshold and results have finished loading, but there are no results found", function() {
   var controller = this.subject();
   Em.run(function() {
-    searcherStub.resolve([]);
+    searcherStub.resolve(
+      {
+        type: "topic",
+        posts: [],
+        categories: [],
+        topics: [],
+        users: [],
+        grouped_search_result: {},
+      }
+    );
     controller.set("term", "ab");
   });
 
   ok(!controller.get("loading"), "loading flag is false");
   ok(controller.get("noResults"), "noResults flag is true");
-  deepEqual(controller.get("content"), [], "content is empty");
+  ok(!controller.get("content"), "content is empty");
   equal(controller.get("selectedIndex"), 0, "selectedIndex is set to 0");
   equal(controller.get("resultCount"), 0, "result count is set to 0");
 });
@@ -57,18 +66,20 @@ test("when user typed a search term that is equal to or exceeds the minimum char
   var controller = this.subject();
   Em.run(function() {
     controller.set("term", "ab");
-    searcherStub.resolve([{
-      type: "user",
-      results: [{}]
-    }]);
+    searcherStub.resolve(
+      {
+        type: "topic",
+        posts: [{}],
+        categories: [],
+        topics: [],
+        users: [],
+        grouped_search_result: {},
+      }
+    );
   });
 
   ok(!controller.get("loading"), "loading flag is false");
   ok(!controller.get("noResults"), "noResults flag is false");
-  deepEqual(controller.get("content"), [{
-    type: "user",
-    results: [{index: 0}]
-  }], "content is correctly set");
   equal(controller.get("selectedIndex"), 0, "selectedIndex is set to 0");
   equal(controller.get("resultCount"), 1, "resultCount is correctly set");
 });
@@ -77,12 +88,16 @@ test("starting to type a new term resets the previous search results", function(
   var controller = this.subject();
   Em.run.next(function() {
     controller.set("term", "ab");
-    searcherStub.resolve([
+    searcherStub.resolve(
       {
-        type: "user",
-        results: [{}]
+        type: "topic",
+        posts: [],
+        categories: [],
+        topics: [],
+        users: [{}],
+        grouped_search_result: {},
       }
-    ]);
+    );
   });
 
   Ember.run(function() {
@@ -91,81 +106,25 @@ test("starting to type a new term resets the previous search results", function(
 
   ok(!controller.get("loading"), "loading flag is reset correctly");
   ok(!controller.get("noResults"), "noResults flag is reset correctly");
-  deepEqual(controller.get("content"), [], "content is reset correctly");
+  ok(!controller.get("content"), "content is reset correctly");
   equal(controller.get("selectedIndex"), 0, "selected index is reset correctly");
   equal(controller.get("resultCount"), 0, "resultCount is reset correctly");
-});
-
-test("search results from the server are correctly reformatted (sections are sorted, section fields are preserved, item sorting is preserved, item fields are preserved, items are globally indexed across all sections)", function() {
-  var controller = this.subject();
-  Em.run(function() {
-    controller.set("term", "ab");
-    searcherStub.resolve([
-      {
-        type: "user",
-        results: [
-          {itemField: "user-item-1"},
-          {itemField: "user-item-2"}
-        ],
-        sectionField: "user-section"
-      },
-      {
-        type: "topic",
-        results: [
-          {itemField: "topic-item-1"},
-          {itemField: "topic-item-2"}
-        ],
-        sectionField: "topic-section"
-      },
-      {
-        type: "category",
-        results: [
-          {itemField: "category-item-1"},
-          {itemField: "category-item-2"}
-        ],
-        sectionField: "category-section"
-      }
-    ]);
-  });
-
-  deepEqual(controller.get("content"), [
-    {
-      type: "topic",
-      results: [
-        {index: 0, itemField: "topic-item-1"},
-        {index: 1, itemField: "topic-item-2"}
-      ],
-      sectionField: "topic-section"
-    },
-    {
-      type: "category",
-      results: [
-        {index: 2, itemField: "category-item-1"},
-        {index: 3, itemField: "category-item-2"}
-      ],
-      sectionField: "category-section"
-    },
-    {
-      type: "user",
-      results: [
-        {index: 4, itemField: "user-item-1"},
-        {index: 5, itemField: "user-item-2"}
-      ],
-      sectionField: "user-section"
-    }
-  ]);
 });
 
 test("keyboard navigation", function() {
   var controller = this.subject();
   Em.run(function() {
     controller.set("term", "ab");
-    searcherStub.resolve([
+    searcherStub.resolve(
       {
-        type: "user",
-        results: [{}, {}, {}]
+        type: "topic",
+        posts: [{},{},{}],
+        categories: [],
+        topics: [],
+        users: [],
+        grouped_search_result: {},
       }
-    ]);
+    );
   });
 
   equal(controller.get("selectedIndex"), 0, "initially the first item is selected");
@@ -195,28 +154,24 @@ test("selecting a highlighted item", function() {
   var controller = this.subject();
   Ember.run(function() {
     controller.set("term", "ab");
-    searcherStub.resolve([
+
+    searcherStub.resolve(
       {
         type: "user",
-        results: [
-          {},
-          {url: "some-url"}
-        ]
+        posts: [],
+        categories: [],
+        topics: [],
+        users: [{username: 'bob'}],
+        grouped_search_result: {},
       }
-    ]);
+    );
   });
 
   Ember.run(function() {
     controller.set("selectedIndex", 0);
   });
   controller.select();
-  ok(!Discourse.URL.routeTo.called, "when selected item has no url, there is no redirect");
-
-  Ember.run(function() {
-    controller.set("selectedIndex", 1);
-  });
-  controller.select();
-  ok(Discourse.URL.routeTo.calledWith("some-url"), "when selected item has url, a redirect is fired");
+  ok(Discourse.URL.routeTo.calledWith("/users/bob"), "when selected item has url, a redirect is fired");
 
   Discourse.URL.routeTo.reset();
   Ember.run(function() {

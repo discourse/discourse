@@ -1,6 +1,6 @@
 class SearchPostSerializer < PostSerializer
 
-  has_one :topic, serializer: ListableTopicSerializer
+  has_one :topic, serializer: TopicListItemSerializer
 
   attributes :blurb
   def blurb

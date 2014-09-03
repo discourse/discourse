@@ -1,4 +1,4 @@
-export default Em.ArrayController.extend(Discourse.Presence, {
+export default Em.Controller.extend(Discourse.Presence, {
 
   contextChanged: function(){
     if(this.get('searchContextEnabled')){
@@ -35,7 +35,7 @@ export default Em.ArrayController.extend(Discourse.Presence, {
       this.set('loading', true);
       this.searchTerm(term, this.get('typeFilter'));
     } else {
-      this.setProperties({ content: [], resultCount: 0, urls: [] });
+      this.setProperties({ content: null, resultCount: 0, urls: [] });
     }
     this.set('selectedIndex', 0);
   }.observes('term', 'typeFilter'),
@@ -55,7 +55,6 @@ export default Em.ArrayController.extend(Discourse.Presence, {
     }).then(function(results) {
       var urls = [];
       if (results) {
-        self.set('noResults', results.length === 0);
 
         var topicMap = {};
         results.topics = results.topics.map(function(topic){
@@ -98,16 +97,17 @@ export default Em.ArrayController.extend(Discourse.Presence, {
           }
         });
 
-        console.log(results)
-
-        self.setProperties({ resultCount: urls.length, content: results, urls: urls });
+        var noResults = urls.length === 0;
+        self.setProperties({ noResults: noResults,
+                             resultCount: urls.length,
+                             content: noResults ? null : Em.Object.create(results),
+                             urls: urls });
       }
-
       self.set('loading', false);
     }).catch(function() {
       self.set('loading', false);
     });
-  }, 300),
+  }, 400),
 
   showCancelFilter: function() {
     if (this.get('loading')) return false;

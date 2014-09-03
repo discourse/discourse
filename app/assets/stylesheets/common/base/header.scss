@@ -320,3 +320,18 @@
     }
   }
 }
+
+.search-link .topic-statuses {
+  float: none;
+  display: inline-block;
+  color: $primary;
+  margin: 0;
+  .fa {
+    margin: 0;
+  }
+}
+
+.search-link .badge-category {
+  padding: 4px 6px;
+  margin-left: 6px;
+}

@@ -29,11 +29,16 @@ export default Ember.Component.extend({
     });
   },
 
+  canAct: function() {
+    return Discourse.User.current() && !this.get('disableActions');
+  }.property('disableActions'),
+
   render: function(buffer) {
     if (!this.get('hasDisplayableStatus')) { return; }
 
-    var self = this,
-        renderIconIf = function(conditionProp, name, key, actionable) {
+    var self = this;
+
+    var renderIconIf = function(conditionProp, name, key, actionable) {
       if (!self.get(conditionProp)) { return; }
       var title = I18n.t("topic_statuses." + key + ".help");
 
@@ -47,12 +52,10 @@ export default Ember.Component.extend({
     // Allow a plugin to add a custom icon to a topic
     this.trigger('addCustomIcon', buffer);
 
-    var togglePin = function () {};
-
     renderIconIf('topic.closed', 'lock', 'locked');
     renderIconIf('topic.archived', 'lock', 'archived');
-    renderIconIf('topic.pinned', 'thumb-tack', 'pinned', togglePin);
-    renderIconIf('topic.unpinned', 'thumb-tack unpinned', 'unpinned', togglePin);
+    renderIconIf('topic.pinned', 'thumb-tack', 'pinned', self.get("canAct") );
+    renderIconIf('topic.unpinned', 'thumb-tack unpinned', 'unpinned', self.get("canAct"));
     renderIconIf('topic.invisible', 'eye-slash', 'invisible');
   }
 });

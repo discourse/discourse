@@ -12,7 +12,7 @@
   {{#unless noResults}}
     {{#each resultType in content.resultTypes}}
       <ul>
-        <li class='heading'>
+        <li class='heading row'>
           {{resultType.name}}
           {{#if resultType.more}}
             <a href='#' class='filter' {{action moreOfType resultType.type bubbles=false}}>{{i18n show_more}}</a>

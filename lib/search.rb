@@ -300,9 +300,12 @@ class Search
     def aggregate_search
 
       post_sql = posts_query(@limit, aggregate_search: true)
-        .select('topics.id', 'min(post_number) post_number, row_number() OVER() row_number')
+        .select('topics.id', 'min(post_number) post_number')
         .group('topics.id')
         .to_sql
+
+      # double wrapping so we get correct row numbers
+      post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
 
       posts = Post.includes(:topic => :category)
                   .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
