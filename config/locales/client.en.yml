@@ -1847,6 +1847,7 @@ en:
         reject_failures:
           one: "Failed to reject 1 user."
           other: "Failed to reject %{count} users."
+        not_verified: "Not verified"
 
       user:
         suspend_failed: "Something went wrong suspending this user {{error}}"
