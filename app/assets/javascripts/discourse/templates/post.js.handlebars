@@ -61,6 +61,7 @@
         <button {{action toggledSelectedPost this}} class="select-post">{{view.selectPostText}}</button>
       </div>
 
+      <!-- keep the classes here in sync with composer.js.handlebars -->
       <div {{bind-attr class="showUserReplyTab:avoid-tab view.repliesShown::bottom-round :contents :regular view.extraClass"}}>
         <div class='cooked'>
           {{{cooked}}}
