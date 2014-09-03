@@ -130,7 +130,10 @@ gem 'omniauth-openid'
 gem 'openid-redis-store'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'omniauth-github'
+
+# forked while https://github.com/intridea/omniauth-github/pull/41 is being upstreamd
+gem 'omniauth-github-discourse', require: 'omniauth-github'
+
 gem 'omniauth-oauth2', require: false
 gem 'omniauth-google-oauth2'
 gem 'oj'
