@@ -732,6 +732,7 @@ en:
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       searching: "Searching ..."
+      post_format: "#{{post_number}} by {{username}}"
 
       context:
         user: "Search posts by @{{username}}"
