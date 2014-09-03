@@ -35,14 +35,13 @@ export default Em.Controller.extend(Discourse.Presence, {
       this.set('loading', true);
       this.searchTerm(term, this.get('typeFilter'));
     } else {
-      this.setProperties({ content: null, resultCount: 0, urls: [] });
+      this.setProperties({ content: null });
     }
     this.set('selectedIndex', 0);
   }.observes('term', 'typeFilter'),
 
   searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
     var self = this;
-    this.setProperties({ resultCount: 0, urls: [] });
 
     var context;
     if(this.get('searchContextEnabled')){
@@ -53,8 +52,10 @@ export default Em.Controller.extend(Discourse.Presence, {
       typeFilter: typeFilter,
       searchContext: context
     }).then(function(results) {
-      var urls = [];
       if (results) {
+
+        // Topics might not be included
+        if (!results.topics) { results.topics = []; }
 
         var topicMap = {};
         results.topics = results.topics.map(function(topic){
@@ -66,19 +67,16 @@ export default Em.Controller.extend(Discourse.Presence, {
         results.posts = results.posts.map(function(post){
           post = Discourse.Post.create(post);
           post.set('topic', topicMap[post.topic_id]);
-          urls.push(post.get('url'));
           return post;
         });
 
         results.users = results.users.map(function(user){
           user = Discourse.User.create(user);
-          urls.push(user.get('path'));
           return user;
         });
 
         results.categories = results.categories.map(function(category){
           category = Discourse.Category.create(category);
-          urls.push(category.get('url'));
           return category;
         });
 
@@ -100,11 +98,8 @@ export default Em.Controller.extend(Discourse.Presence, {
 
         results.displayType = self.get('searchContext') === 'topic' ? 'post' : results.type;
 
-        var noResults = urls.length === 0;
-        self.setProperties({ noResults: noResults,
-                             resultCount: urls.length,
-                             content: noResults ? null : Em.Object.create(results),
-                             urls: urls });
+        var noResults = !!((results.topics.length === 0) && (results.posts.length === 0) && (results.categories.length === 0));
+        self.setProperties({ noResults: noResults, content: noResults ? null : Em.Object.create(results) });
       }
       self.set('loading', false);
     }).catch(function() {
