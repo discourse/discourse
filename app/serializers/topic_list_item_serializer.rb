@@ -22,7 +22,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def last_poster_username
-    object.posters.find { |poster| poster.user.id == object.last_post_user_id }.try(:user).try(:username)
+    posters.find { |poster| poster.user.id == object.last_post_user_id }.try(:user).try(:username)
   end
 
   def participants
