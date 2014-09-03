@@ -1,5 +1,3 @@
-require_dependency 'search/search_result'
-require_dependency 'search/search_result_type'
 require_dependency 'search/grouped_search_results'
 
 class Search
