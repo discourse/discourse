@@ -7,7 +7,8 @@ class PostActionsController < ApplicationController
   before_filter :fetch_post_action_type_id_from_params
 
   def create
-    guardian.ensure_post_can_act!(@post, PostActionType.types[@post_action_type_id])
+    taken = PostAction.counts_for([@post], current_user)[@post.id]
+    guardian.ensure_post_can_act!(@post, PostActionType.types[@post_action_type_id], taken_actions: taken)
 
     args = {}
     args[:message] = params[:message] if params[:message].present?
