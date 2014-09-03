@@ -68,6 +68,7 @@ class BadgeGranter
   end
 
   def self.queue_badge_grant(type,opt)
+    return unless SiteSetting.enable_badges
     payload = nil
 
     case type
@@ -209,6 +210,7 @@ class BadgeGranter
 
   MAX_ITEMS_FOR_DELTA = 200
   def self.backfill(badge, opts=nil)
+    return unless SiteSetting.enable_badges
     return unless badge.query.present? && badge.enabled
 
     post_ids = user_ids = nil
