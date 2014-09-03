@@ -91,11 +91,14 @@ export default Em.Controller.extend(Discourse.Presence, {
           if(results[name].length > 0) {
             results.resultTypes.push({
               results: results[name],
+              displayType: (context && Em.get(context, 'type') === 'topic' && type === 'topic') ? 'post' : type,
               type: type,
               more: r['more_' + name]
             });
           }
         });
+
+        results.displayType = self.get('searchContext') === 'topic' ? 'post' : results.type;
 
         var noResults = urls.length === 0;
         self.setProperties({ noResults: noResults,
