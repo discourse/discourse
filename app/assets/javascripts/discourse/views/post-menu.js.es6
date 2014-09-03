@@ -26,12 +26,46 @@ Button.prototype.render = function(buffer) {
   buffer.push("</button>");
 };
 
-var hiddenButtons;
+/**
+ * Check whether, given the post object, the Button should render on that post
+ * despite it possibly being in the hidden-buttons site setting.
+ *
+ * Replace this with a function (button.shouldAlwaysShow =
+ * function(post) { .... }) following the above contract, or call
+ * addAlwaysShowCondition, which will replace it for you, and 'or' the result
+ * of your function with any function that was there previously.
+ *
+ * @param post the post object
+ * @returns {boolean} true if the hidden buttons site setting is overridden
+ */
+Button.prototype.shouldAlwaysShow = false;
 
-export default Discourse.View.extend({
+/**
+ * Add a condition to the shouldAlwaysShow() function.
+ *
+ * @param callback your function. 'this' is the Button, argument is the post object
+ * @returns {Button} the button you called this method on
+ */
+Button.prototype.addAlwaysShowCondition = function(callback) {
+  var previous = this.shouldAlwaysShow;
+
+  if (previous) {
+    this.shouldAlwaysShow = function(post) {
+      if (callback(post)) return true;
+      return previous.call(this, post);
+    };
+  } else {
+    this.shouldAlwaysShow = callback;
+  }
+
+  return this;
+};
+
+var PostMenuView = Discourse.View.extend({
   tagName: 'section',
   classNames: ['post-menu-area', 'clearfix'],
 
+  // TODO add extension point for plugins adding extra rerender conditions
   shouldRerender: Discourse.View.renderIfChanged(
     'post.deleted_at',
     'post.flagsAvailable.@each',
@@ -85,39 +119,48 @@ export default Discourse.View.extend({
   },
 
   renderButtons: function(post, buffer) {
-    var self = this,
-        allButtons = [],
-        visibleButtons = [];
-
-    if (typeof hiddenButtons === "undefined") {
-      if (!Em.isEmpty(Discourse.SiteSettings.post_menu_hidden_items)) {
-        hiddenButtons = Discourse.SiteSettings.post_menu_hidden_items.split('|');
-      } else {
-        hiddenButtons = [];
-      }
+    // anons get no buttons, so don't bother doing anything at all
+    if (!Discourse.User.current() && PostMenuView.noButtonsForAnons) {
+      return;
     }
 
-    var yours = post.get('yours');
-    Discourse.SiteSettings.post_menu.split("|").forEach(function(i) {
+    var self = this,
+        allButtons = [],
+        visibleButtons = [],
+        hiddenButtonNames = PostMenuView.hiddenButtons();
+
+    // Create button objects
+    PostMenuView.buttonOrder().forEach(function(i) {
       var creator = self["buttonFor" + i.replace(/\+/, '').capitalize()];
       if (creator) {
         var button = creator.call(self, post);
         if (button) {
           allButtons.push(button);
-          if ((yours && button.opts.alwaysShowYours) ||
-              (post.get('wiki') && button.opts.alwaysShowWiki) ||
-              (hiddenButtons.indexOf(i) === -1)) {
-            visibleButtons.push(button);
-          }
         }
+      } else {
+        PostMenuView.warnUnknownButtonName(i);
       }
     });
 
-    // Only show ellipsis if there is more than one button hidden
-    if (!this.get('collapsed') || (allButtons.length <= visibleButtons.length + 1)) {
-      visibleButtons = allButtons;
+    // Fill in visibleButtons
+    if (this.get('collapsed')) {
+      allButtons.forEach(function(b) {
+        if ((b.shouldAlwaysShow !== false && b.shouldAlwaysShow(post)) ||
+            hiddenButtonNames.indexOf(b.action) === -1) {
+          visibleButtons.push(b);
+        }
+      });
+      // Only show ellipsis if there is more than one button hidden
+      if (allButtons.length <= visibleButtons.length + 1) {
+        visibleButtons = allButtons;
+      }
     } else {
-      visibleButtons.splice(visibleButtons.length - 1, 0, this.buttonForShowMoreActions(post));
+      visibleButtons = allButtons;
+    }
+
+    // remove showMore if only thing left
+    if (visibleButtons === ['showMoreActions']) {
+      visibleButtons = [];
     }
 
     buffer.push('<div class="actions">');
@@ -211,10 +254,11 @@ export default Discourse.View.extend({
   // Edit button
   buttonForEdit: function(post) {
     if (!post.get('can_edit')) return;
-    return new Button('edit', 'post.controls.edit', 'pencil', {
-      alwaysShowYours: true,
-      alwaysShowWiki: true
-    });
+    var button = new Button('edit', 'post.controls.edit', 'pencil', {});
+    button.shouldAlwaysShow = function(post) {
+          return post.get('wiki') || post.get('yours');
+        };
+    return button;
   },
 
   clickEdit: function(post) {
@@ -290,6 +334,8 @@ export default Discourse.View.extend({
   },
 
   buttonForShowMoreActions: function() {
+    if (!this.get('collapsed')) return;
+
     return new Button('showMoreActions', 'show_more', 'ellipsis-h');
   },
 
@@ -298,3 +344,60 @@ export default Discourse.View.extend({
   }
 
 });
+
+PostMenuView.reopenClass({
+  _hiddenButtons: null,
+  hiddenButtons: function() {
+    if (!this._hiddenButtons) {
+      if (!Em.isEmpty(Discourse.SiteSettings.post_menu_hidden_items)) {
+        this._hiddenButtons = Discourse.SiteSettings.post_menu_hidden_items.split('|');
+      } else {
+        this._hiddenButtons = [];
+      }
+    }
+    return this._hiddenButtons;
+  },
+
+  _buttonOrder: null,
+  /**
+   * Get the order of Buttons in the post menu (as strings)
+   *
+   * @returns {Array} order of buttons, as strings
+   */
+  buttonOrder: function() {
+    if (this._buttonOrder) return this._buttonOrder;
+
+    var order = Discourse.SiteSettings.post_menu.split("|");
+
+    // Substitute '...' with showMoreActions
+    var ellipsisIndex = order.indexOf('...');
+    if (ellipsisIndex !== -1) {
+      order[ellipsisIndex] = 'showMoreActions';
+    }
+
+    // Put showMore right before end if it isn't there
+    ellipsisIndex = order.indexOf('showMoreActions');
+    if (ellipsisIndex === -1) {
+      order.splice(order.length - 1, 0, 'showMoreActions');
+    }
+
+
+    return this._buttonOrder = order;
+  },
+
+  /**
+   * PLUGINS - change this to false if you need anons to have a button!
+   */
+  noButtonsForAnons: true,
+
+  warnedNames: [],
+  warnUnknownButtonName: function(buttonName) {
+    var warnedButtons = this.get('warnedNames');
+    if (warnedButtons.indexOf(buttonName) === -1) {
+      Em.Logger.warn("Unknown post menu button type " + buttonName + " - please fix the post_menu site setting");
+      warnedButtons.push(buttonName);
+    }
+  }
+});
+
+export default PostMenuView;
