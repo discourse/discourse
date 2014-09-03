@@ -2,9 +2,8 @@
   {{#if errors}}
     <p class="error-header">{{i18n admin.badges.preview.sql_error_header}}</p>
 
-    <div class="badge-errors">
-      {{errors}}
-    </div>
+    <pre class="badge-errors">{{errors}}</pre>
+
     <!--
     TODO we want some help pages for this, link to those instead
     <p>

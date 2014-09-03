@@ -19,7 +19,7 @@ export default Ember.Controller.extend({
 
   query_plan_html: function() {
     var raw = this.get('model.query_plan'),
-        returned = "<pre>";
+        returned = "<pre class='badge-query-plan'>";
 
     _.each(raw, function(linehash) {
       returned += Handlebars.Utils.escapeExpression(linehash["QUERY PLAN"]);
