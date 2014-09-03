@@ -8,10 +8,6 @@ class Search
 
     class TextHelper
       extend ActionView::Helpers::TextHelper
-      def self.sanitize(text)
-        # we run through sanitize at the end so it does not matter
-        text
-      end
     end
 
     attr_reader :type_filter,
@@ -33,15 +29,14 @@ class Search
       cooked = SearchObserver::HtmlScrubber.scrub(post.cooked).squish
       terms = @term.split(/\s+/)
       blurb = TextHelper.excerpt(cooked, terms.first, radius: 100)
-
-      # TODO highlight term
-      # terms.each do |term|
-      #   blurb = TextHelper.highlight(blurb, term)
-      # end
-
       blurb = TextHelper.truncate(cooked, length: 200) if blurb.blank?
+      blurb = Sanitize.clean(blurb)
 
-      Sanitize.clean(blurb)
+      terms.each do |term|
+        blurb.gsub!(Regexp.new("(#{Regexp.escape(term)})", Regexp::IGNORECASE), "<span class='highlighted'>\\1</span>")
+      end
+
+      blurb
     end
 
     def add(object)
