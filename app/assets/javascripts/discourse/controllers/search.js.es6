@@ -133,23 +133,5 @@ export default Em.Controller.extend(Discourse.Presence, {
 
   cancelTypeFilter: function() {
     this.set('typeFilter', null);
-  },
-
-  moveUp: function() {
-    if (this.get('selectedIndex') === 0) return;
-    this.set('selectedIndex', this.get('selectedIndex') - 1);
-  },
-
-  moveDown: function() {
-    if (this.get('resultCount') === (this.get('selectedIndex') + 1)) return;
-    this.set('selectedIndex', this.get('selectedIndex') + 1);
-  },
-
-  select: function() {
-    if (this.get('loading')) return;
-    var href = this.get('urls')[this.get("selectedIndex")];
-    if (href) {
-      Discourse.URL.routeTo(href);
-    }
   }
 });
