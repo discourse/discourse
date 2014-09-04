@@ -147,6 +147,12 @@ export default DiscourseController.extend(ModalFunctionality, {
       this.set('authenticate', null);
       return;
     }
+    if (options.not_allowed_from_ip_address) {
+      this.send('showLogin');
+      this.flash(I18n.t('login.not_allowed_from_ip_address'), 'success');
+      this.set('authenticate', null);
+      return;
+    }
     // Reload the page if we're authenticated
     if (options.authenticated) {
       if (window.location.pathname === Discourse.getURL('/login')) {

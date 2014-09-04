@@ -1082,6 +1082,7 @@ en:
     active: "Your account is activated and ready to use."
     activate_email: "You're almost done! We sent an activation email to <b>%{email}</b>. Please follow the instructions in the email to activate your account."
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
+    not_allowed_from_ip_address: "You can't login as %{username} from that IP address."
     suspended: "You can't log in until %{date}."
     suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
     errors: "%{errors}"
