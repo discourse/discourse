@@ -21,21 +21,33 @@ class PostRevisor
     @opts = opts
     @new_raw = TextCleaner.normalize_whitespaces(new_raw).gsub(/\s+\z/, "")
 
-    # TODO this is not in a transaction - dangerous!
     return false unless should_revise?
 
+    @post.acting_user = @editor
+
     Post.transaction do
-      @post.acting_user = @editor
       revise_post
+
+      # TODO these callbacks are being called in a transaction
+      #  it is kind of odd, cause the callback is called before_edit
+      #  but the post is already edited at this point
+      #  trouble is that much of the logic of should I edit? is deeper
+      #  down so yanking this in front of the transaction will lead to
+      #  false positives. This system needs a review
       plugin_callbacks
+
       update_category_description
       update_topic_excerpt
-      post_process_post
-      update_topic_word_counts
       @post.advance_draft_sequence
     end
 
+    # WARNING: do not pull this into the transaction, it can fire events in
+    #  sidekiq before the post is done saving leading to corrupt state
+    post_process_post
+    update_topic_word_counts
+
     PostAlerter.new.after_save_post(@post)
+
     @post.publish_change_to_clients! :revised
     BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
 
@@ -73,13 +85,11 @@ class PostRevisor
   end
 
   def revise_and_create_new_version
-    Post.transaction do
-      @post.version += 1
-      @post.last_version_at = get_revised_at
-      update_post
-      EditRateLimiter.new(@editor).performed! unless @opts[:bypass_rate_limiter] == true
-      bump_topic unless @opts[:bypass_bump]
-    end
+    @post.version += 1
+    @post.last_version_at = get_revised_at
+    update_post
+    EditRateLimiter.new(@editor).performed! unless @opts[:bypass_rate_limiter] == true
+    bump_topic unless @opts[:bypass_bump]
   end
 
   def bump_topic
