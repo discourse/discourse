@@ -16,7 +16,7 @@
           {{#if canEdit}}
             {{#if showEditReason}}
               <div class="edit-reason-input">
-                {{text-field value=editReason tabindex="5" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
               </div>
             {{else}}
               <a {{action displayEditReason}} class="display-edit-reason">{{i18n composer.show_edit_reason}}</a>
@@ -44,7 +44,7 @@
 
             {{#unless model.privateMessage}}
               <div class="category-input">
-                {{category-chooser valueAttribute="id" value=model.categoryId scopedCategoryId=scopedCategoryId}}
+                {{category-chooser valueAttribute="id" value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
                 {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
               </div>
               {{#if model.archetype.hasOptions}}
@@ -59,7 +59,7 @@
           <div class='textarea-wrapper'>
             <div class='wmd-button-bar' id='wmd-button-bar'></div>
             <div id='wmd-preview-scroller'></div>
-            {{composer-text-area tabindex="3" value=model.reply}}
+            {{composer-text-area tabindex="4" value=model.reply}}
             {{popupInputTip validation=view.replyValidation shownAt=view.showReplyTip}}
           </div>
           <!-- keep the classes here in sync with post.js.handlebars -->
@@ -81,8 +81,8 @@
 
         {{#if currentUser}}
           <div class='submit-panel'>
-            <button {{action save}} tabindex="4" {{bind-attr class=":btn :btn-primary :create disableSubmit:disabled"}} title="{{i18n composer.title}}">{{model.saveText}}</button>
-            <a href='#' {{action cancel}} class='cancel' tabindex="4">{{i18n cancel}}</a>
+            <button {{action save}} tabindex="5" {{bind-attr class=":btn :btn-primary :create disableSubmit:disabled"}} title="{{i18n composer.title}}">{{model.saveText}}</button>
+            <a href='#' {{action cancel}} class='cancel' tabindex="6">{{i18n cancel}}</a>
           </div>
         {{/if}}
 
