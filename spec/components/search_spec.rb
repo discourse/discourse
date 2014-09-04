@@ -145,7 +145,7 @@ describe Search do
         p = result.posts[0]
         p.topic.id.should == topic.id
         p.id.should == reply.id
-        result.blurb(p).should == "this reply has no <span class='highlighted'>quotes</span>"
+        result.blurb(p).should == "this reply has no quotes"
       end
     end
 
