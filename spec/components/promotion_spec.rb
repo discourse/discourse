@@ -38,9 +38,9 @@ describe Promotion do
 
       before do
         stat = user.user_stat
-        stat.topics_entered = SiteSetting.basic_requires_topics_entered
-        stat.posts_read_count = SiteSetting.basic_requires_read_posts
-        stat.time_read = SiteSetting.basic_requires_time_spent_mins * 60
+        stat.topics_entered = SiteSetting.tl1_requires_topics_entered
+        stat.posts_read_count = SiteSetting.tl1_requires_read_posts
+        stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
         @result = promotion.review
       end
 
@@ -76,13 +76,13 @@ describe Promotion do
 
       before do
         stat = user.user_stat
-        stat.topics_entered = SiteSetting.regular_requires_topics_entered
-        stat.posts_read_count = SiteSetting.regular_requires_read_posts
-        stat.time_read = SiteSetting.regular_requires_time_spent_mins * 60
-        stat.days_visited = SiteSetting.regular_requires_days_visited * 60
-        stat.likes_received = SiteSetting.regular_requires_likes_received
-        stat.likes_given = SiteSetting.regular_requires_likes_given
-        stat.topic_reply_count = SiteSetting.regular_requires_topic_reply_count
+        stat.topics_entered = SiteSetting.tl2_requires_topics_entered
+        stat.posts_read_count = SiteSetting.tl2_requires_read_posts
+        stat.time_read = SiteSetting.tl2_requires_time_spent_mins * 60
+        stat.days_visited = SiteSetting.tl2_requires_days_visited * 60
+        stat.likes_received = SiteSetting.tl2_requires_likes_received
+        stat.likes_given = SiteSetting.tl2_requires_likes_given
+        stat.topic_reply_count = SiteSetting.tl2_requires_topic_reply_count
 
         @result = promotion.review
       end

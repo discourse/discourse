@@ -98,8 +98,8 @@ describe UserProfile do
         expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
       end
 
-      context 'leader_links_no_follow is false' do
-        before { SiteSetting.stubs(:leader_links_no_follow).returns(false) }
+      context 'tl3_links_no_follow is false' do
+        before { SiteSetting.stubs(:tl3_links_no_follow).returns(false) }
 
         it 'includes the link without nofollow if the user is trust level 3 or higher' do
           user.trust_level = TrustLevel.levels[:leader]
@@ -123,8 +123,8 @@ describe UserProfile do
         end
       end
 
-      context 'leader_links_no_follow is true' do
-        before { SiteSetting.stubs(:leader_links_no_follow).returns(true) }
+      context 'tl3_links_no_follow is true' do
+        before { SiteSetting.stubs(:tl3_links_no_follow).returns(true) }
 
         it 'includes the link with nofollow if the user is trust level 3 or higher' do
           user.trust_level = TrustLevel.levels[:leader]

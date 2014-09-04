@@ -759,15 +759,15 @@ describe Post do
       post.cooked.should =~ /nofollow/
     end
 
-    it "when leader_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
-      SiteSetting.stubs(:leader_links_no_follow).returns(false)
+    it "when tl3_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
+      SiteSetting.stubs(:tl3_links_no_follow).returns(false)
       post.user.trust_level = 3
       post.save
       (post.cooked =~ /nofollow/).should be_false
     end
 
-    it "when leader_links_no_follow is true, should add nofollow for trust level 3 and higher" do
-      SiteSetting.stubs(:leader_links_no_follow).returns(true)
+    it "when tl3_links_no_follow is true, should add nofollow for trust level 3 and higher" do
+      SiteSetting.stubs(:tl3_links_no_follow).returns(true)
       post.user.trust_level = 3
       post.save
       (post.cooked =~ /nofollow/).should be_true

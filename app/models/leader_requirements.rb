@@ -55,7 +55,7 @@ class LeaderRequirements
   end
 
   def min_days_visited
-    SiteSetting.leader_requires_days_visited
+    SiteSetting.tl3_requires_days_visited
   end
 
   def num_topics_replied_to
@@ -63,7 +63,7 @@ class LeaderRequirements
   end
 
   def min_topics_replied_to
-    SiteSetting.leader_requires_topics_replied_to
+    SiteSetting.tl3_requires_topics_replied_to
   end
 
   def topics_viewed_query
@@ -75,7 +75,7 @@ class LeaderRequirements
   end
 
   def min_topics_viewed
-    (LeaderRequirements.num_topics_in_time_period.to_i * (SiteSetting.leader_requires_topics_viewed.to_f / 100.0)).round
+    (LeaderRequirements.num_topics_in_time_period.to_i * (SiteSetting.tl3_requires_topics_viewed.to_f / 100.0)).round
   end
 
   def posts_read
@@ -83,7 +83,7 @@ class LeaderRequirements
   end
 
   def min_posts_read
-    (LeaderRequirements.num_posts_in_time_period.to_i * (SiteSetting.leader_requires_posts_read.to_f / 100.0)).round
+    (LeaderRequirements.num_posts_in_time_period.to_i * (SiteSetting.tl3_requires_posts_read.to_f / 100.0)).round
   end
 
   def topics_viewed_all_time
@@ -91,7 +91,7 @@ class LeaderRequirements
   end
 
   def min_topics_viewed_all_time
-    SiteSetting.leader_requires_topics_viewed_all_time
+    SiteSetting.tl3_requires_topics_viewed_all_time
   end
 
   def posts_read_all_time
@@ -99,7 +99,7 @@ class LeaderRequirements
   end
 
   def min_posts_read_all_time
-    SiteSetting.leader_requires_posts_read_all_time
+    SiteSetting.tl3_requires_posts_read_all_time
   end
 
   def num_flagged_posts
@@ -112,7 +112,7 @@ class LeaderRequirements
   end
 
   def max_flagged_posts
-    SiteSetting.leader_requires_max_flagged
+    SiteSetting.tl3_requires_max_flagged
   end
 
   def num_flagged_by_users
@@ -125,7 +125,7 @@ class LeaderRequirements
   end
 
   def max_flagged_by_users
-    SiteSetting.leader_requires_max_flagged
+    SiteSetting.tl3_requires_max_flagged
   end
 
   def num_likes_given
@@ -133,7 +133,7 @@ class LeaderRequirements
   end
 
   def min_likes_given
-    SiteSetting.leader_requires_likes_given
+    SiteSetting.tl3_requires_likes_given
   end
 
   def num_likes_received
@@ -141,7 +141,7 @@ class LeaderRequirements
   end
 
   def min_likes_received
-    SiteSetting.leader_requires_likes_received
+    SiteSetting.tl3_requires_likes_received
   end
 
 

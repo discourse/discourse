@@ -158,8 +158,8 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
           post_count  += c.get('post_count');
         }
       });
-      if (topic_count < 5 || post_count < Discourse.SiteSettings.basic_requires_read_posts) {
-        notices.push(I18n.t("too_few_topics_notice", {posts: Discourse.SiteSettings.basic_requires_read_posts}));
+      if (topic_count < 5 || post_count < Discourse.SiteSettings.tl1_requires_read_posts) {
+        notices.push(I18n.t("too_few_topics_notice", {posts: Discourse.SiteSettings.tl1_requires_read_posts}));
       }
     }
 
