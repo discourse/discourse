@@ -52,55 +52,7 @@ export default Em.Controller.extend(Discourse.Presence, {
       typeFilter: typeFilter,
       searchContext: context
     }).then(function(results) {
-      if (results) {
-
-        // Topics might not be included
-        if (!results.topics) { results.topics = []; }
-
-        var topicMap = {};
-        results.topics = results.topics.map(function(topic){
-          topic = Discourse.Topic.create(topic);
-          topicMap[topic.id] = topic;
-          return topic;
-        });
-
-        results.posts = results.posts.map(function(post){
-          post = Discourse.Post.create(post);
-          post.set('topic', topicMap[post.topic_id]);
-          return post;
-        });
-
-        results.users = results.users.map(function(user){
-          user = Discourse.User.create(user);
-          return user;
-        });
-
-        results.categories = results.categories.map(function(category){
-          category = Discourse.Category.create(category);
-          return category;
-        });
-
-        var r = results.grouped_search_result;
-        results.resultTypes = [];
-
-        // TODO: consider refactoring front end to take a better structure
-        [['topic','posts'],['user','users'],['category','categories']].forEach(function(pair){
-          var type = pair[0], name = pair[1];
-          if(results[name].length > 0) {
-            results.resultTypes.push({
-              results: results[name],
-              displayType: (context && Em.get(context, 'type') === 'topic' && type === 'topic') ? 'post' : type,
-              type: type,
-              more: r['more_' + name]
-            });
-          }
-        });
-
-        results.displayType = self.get('searchContext') === 'topic' ? 'post' : results.type;
-
-        var noResults = !!((results.topics.length === 0) && (results.posts.length === 0) && (results.categories.length === 0));
-        self.setProperties({ noResults: noResults, content: noResults ? null : Em.Object.create(results) });
-      }
+      self.setProperties({ noResults: !results, content: results });
       self.set('loading', false);
     }).catch(function() {
       self.set('loading', false);
