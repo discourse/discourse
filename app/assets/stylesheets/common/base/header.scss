@@ -339,3 +339,7 @@
 .highlight-strong {
   background-color: dark-light-diff($highlight, $secondary, 40%, -50%);
 }
+
+.search-highlight {
+  font-weight: bold;
+}
