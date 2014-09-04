@@ -402,6 +402,7 @@ class ImportScripts::Base
           skipped += 1
           puts "Exception while creating post #{import_id}. Skipping."
           puts e.message
+          puts e.backtrace.join("\n")
         end
       end
 

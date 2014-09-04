@@ -52,6 +52,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     postprocess_posts
 
+    close_topics
+
     puts "", "Done"
   end
 
@@ -432,21 +434,29 @@ class ImportScripts::VBulletin < ImportScripts::Base
     def import_topics
       puts "", "Importing topics..."
 
+      # keep track of closed topics
+      @closed_topic_ids = []
+
       # sort the topics
       @topics.sort_by! { |topic| topic[:threadid].to_i }
 
       create_posts(@topics) do |topic|
+        id = "thread#" + topic[:threadid]
+
+        # store the list of closed topics
+        @closed_topic_ids << id if topic[:open] == "0"
+
+        next if post_id_from_imported_post_id(id)
         next unless post = @posts.select { |p| p[:postid] == topic[:firstpostid] }.first
 
         t = {
-          id: "thread#" + topic[:threadid],
+          id: id,
           user_id: user_id_from_imported_user_id(topic[:postuserid]) || Discourse::SYSTEM_USER_ID,
           title: CGI.unescapeHTML(topic[:title]).strip[0...255],
           category: category_from_imported_category_id(topic[:forumid]).try(:name),
           raw: post[:raw],
           created_at: Time.at(topic[:dateline].to_i),
           visible: topic[:visible].to_i == 1,
-          closed: topic[:open].to_i == 0,
           views: topic[:views].to_i,
         }
 
@@ -469,12 +479,12 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
       # reject all first posts
       first_post_ids = Set.new(@topics.map { |t| t[:firstpostid] })
-      @posts.reject! { |post| first_post_ids.include?(post[:postid]) }
+      posts_to_import = @posts.reject { |post| first_post_ids.include?(post[:postid]) }
 
       # sort the posts
       @posts.sort_by! { |post| post[:postid].to_i }
 
-      create_posts(@posts) do |post|
+      create_posts(posts_to_import) do |post|
         next unless t = topic_lookup_from_imported_post_id("thread#" + post[:threadid])
 
         p = {
@@ -505,14 +515,29 @@ class ImportScripts::VBulletin < ImportScripts::Base
       max = @posts.size
 
       @posts.each do |post|
-        new_raw = postprocess_post_raw(post[:raw])
-        if new_raw != post[:raw]
-          p = Post.find(post_id_from_imported_post_id(post[:postid]))
-          p.raw = new_raw
-          p.save
+        begin
+          new_raw = postprocess_post_raw(post[:raw])
+
+          if new_raw != post[:raw]
+            new_id = post_id_from_imported_post_id(post[:postid])
+            p = Post.find_by(id: new_id)
+            if p.nil?
+              puts "Could not save the post-processed raw of the post ##{new_id} (previous id: ##{post[:postid]})"
+              next
+            end
+            p.raw = new_raw
+            p.save
+          end
+        rescue Exception => e
+          puts "", "-" * 100
+          puts e.message
+          puts e.backtrace.join("\n")
+          puts "-" * 100, ""
+          next
+        ensure
+          current += 1
+          print_status(current, max)
         end
-        current += 1
-        print_status(current, max)
       end
     end
 
@@ -581,6 +606,26 @@ class ImportScripts::VBulletin < ImportScripts::Base
       end
 
       raw
+    end
+
+    def close_topics
+      puts "", "Closing topics..."
+
+      sql = <<-SQL
+        WITH closed_topic_ids AS (
+          SELECT t.id AS topic_id
+          FROM post_custom_fields pcf
+          JOIN posts p ON p.id = pcf.post_id
+          JOIN topics t ON t.id = p.topic_id
+          WHERE pcf.name = 'import_id'
+          AND pcf.value IN (?)
+        )
+        UPDATE topics
+        SET closed = true
+        WHERE id IN (SELECT topic_id FROM closed_topic_ids)
+      SQL
+
+      Topic.exec_sql(sql, @closed_topic_ids)
     end
 
     ############################################################################
