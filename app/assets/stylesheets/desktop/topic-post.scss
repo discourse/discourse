@@ -702,22 +702,8 @@ blockquote > *:last-child {
 
 }
 
-.quote-controls {
-  float: right;
+.quote-controls, .quote-controls .back:before, .quote-controls .quote-other-topic:before {
   color: scale-color($primary, $lightness: 50%);
-  a {
-    margin: 0;
-  }
-  .back:before
-  {
-    display: inline-block;
-    margin-left: 8px;
-    color: scale-color($primary, $lightness: 50%);
-    font-family: "FontAwesome";
-    position: relative;
-    z-index: 20;
-    content: "\f062";
-  }
 }
 
 .gutter {
