@@ -189,7 +189,6 @@ he:
   staff_category_description: "קטגוריה פרטית לדיוני הצוות. נושאים נראים רק למנהלים ומנהלים ראשיים."
   lounge_welcome:
     title: "ברוכים הבאים ללאונג'"
-    body: "\nברכות!  :confetti_ball:\n\nאם את/ה יכולים לראות נושא זה, כרגע קודמתם ל[רמת אמון 3 (מוביל)][trust].\n\nמובילים הם משתתפים בעלי פרופיל מהחשובים והפעילים יותר. הם מהווים דוגמא חיובית לקהילה באמצעות פעולותיהם והפרסומים שלהם.\n\nאתם יכולים עכשיו &hellip;\n\n* לערוך את הכותרת של כל נושא\n* להחליף את הקטגוריה של כל נושא\n* לאפשר לכל הקישורים שלכם להיות נעקבים (האפשרות [automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) כעת הוסרה)\n\n* לגשת לקטגוריית הלאונג' הזמינה רק למשתמשים בעלי רמת אמון 3 ומעלה\n\nהנה [רשימת המשתמשים שמחזיקים כעת ברמת אמון 3] (/badges/3/leader). אתם מוזמנים להגיד שלום!\n\nתודה רבה על חלקכם החשוב בקהילה הזו!\n\n(למידע נוסף על רמות אמון, [ראו נושא זה][trust]. שימו לב בבקשה שרק חברים שכעת עומדים בקריטריון הנבחר ישארו ברמת אמון 3). \n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
   category:
     topic_prefix: "אודות הקטגוריה %{category}"
     replace_paragraph: "[החלף את הפסקה הראשונה הזו עם תיאור קצר של הקטגוריה החדש שלך. התיאור הזה יופיע באיזור בחירת הקטגוריה, כך שיש לנסות לשמור עליו באורך פחות מ-200 תויים. עד שתעריך את המלל הזה או תיצור נושאים, הקטגוריה הזו לא תופיע בעמוד הקטגוריות.]"
@@ -212,8 +211,6 @@ he:
       title: "משתמש בסיסי"
     regular:
       title: "משתמש רגיל"
-    leader:
-      title: "מנהיג"
     elder:
       title: "זקן שבט"
     change_failed_explanation: "ניסית להוריד את דרגת %{user_name} לדרגה '%{new_trust_level}'. אולם הדרגה שלהם היא כבר '%{current_trust_level}'. %{user_name} יישאר '%{current_trust_level}'"
@@ -335,7 +332,6 @@ he:
       long_form: 'דוגלל כלא ראוי'
     notify_user:
       title: 'התרע ל-{{username}}'
-      description: 'ההודעה הזו כוללת משהו עליו אני רוצה לדבר עם האדם ישירות ובפרטיות.'
       long_form: 'המשתמש הותרע'
       email_title: 'הפרסום שלךב"%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -621,7 +617,6 @@ he:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "כמה נושאים נטענים כברירת מחדל ברשימת הנושאים, ומתי גלילה למטה טוענת נושאים נוספים"
     posts_per_page: "כמה פרסומים נטענים כברירת מחדל בנושא, ומתי גלילה מטה תטען פרסומים נוספים"
-    site_contact_username: "כל ההודעות האוטומטיות האישיות שישלחו על ידי הפורום ישלחו ממשתמש זה; אם תשאירו שדה זה ריק, חשבון ברירת המחדל של המערכת ישמש לכך."
     send_welcome_message: "שלחו כל המשתמשים החדשים הודעת \"ברוכים הבאים\" פרטים עם הדרכה ראשונית כיצד להתחיל."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפרסום כאשר ישנה תגובה ישירה אחת לפרסום זה."
     suppress_reply_directly_above: "אל תציגו את את אפשרות ההרחבה \"בתגובה ל..\" לפרסום כאשר יש רק תגובה אחת ישירה מעל לפרסום זה."
@@ -709,15 +704,6 @@ he:
     regular_requires_likes_received: "כמה לייקים חייב/ת משתמש/ת בסיסיים לקבל לפני שיקודמו לרמת אמון רגילה (2)?"
     regular_requires_likes_given: "כמה לייקים חייבים משתמש/ת בסיסיים להעניק לפני שיקודמו לרמת אמון רגילה (2)."
     regular_requires_topic_reply_count: "לכמה נושאים חייבים משתמש/ת בסיסיים להשיב לפני שיקודמו לרמת אמון רגילה (2)."
-    leader_requires_days_visited: "מספר הימים המינימלי שמשתמש/ת צריכים לבקר באתר ב-100 הימים האחרונים כדי להיות זכאים לקידום לדרגת אמון של מוביל/ה (3). (בין 0 ל-100)"
-    leader_requires_topics_replied_to: "מספר הנושאים המינימלי להם נדרשים משתמש/ת להשיב ב-100 הימים האחרונים כדי להיות זכאים לקידום לדרגת אמון של מוביל/ה (3). (0 ומעלה)"
-    leader_requires_topics_viewed: "אחוז הנושאים שנוצרו ב-100 הימים האחרונים בהם צריך משתמש/ת לצפות כדי להיות זכאים לקידום לדרגת אמון של מוביל/ה (3). (בין 0 ל-100)"
-    leader_requires_posts_read: "אחוז הפרסומים שנוצרו ב-100 הימים האחרונים בהם צריכים משתמש/ת לצפות כדי להיות זכאים לקידום לרמת אמון של מוביל/ה (3). (בין 0 ל-100)"
-    leader_requires_topics_viewed_all_time: "מספר הנושאים המינימלי בהם חייבים משתמש/ת לצפות כדי להיות זכאים לדרגת אמון של מוביל/ה (3)."
-    leader_requires_posts_read_all_time: "המספר המינימלי של פרסומים שחייבים משתמש/ת לקרוא כדי להיות זכאים לדרגת אמון של מוביל/ה (3)."
-    leader_requires_max_flagged: "למשתמש/ת חייבים להיות לא יותר מ-x פרסומים מסומנים על ידי x משתמשים אחרים ב-100 הימים האחרונים כדי להיות זכאים להיות מקודמים לדרגת אמון של מוביל/ה (3). x הוא ערך ההגדרה. (0 ומעלה)"
-    leader_promotion_min_duration: "מספר הימים המינימלי שקידום לדרגת אמון של מוביל/ה נמשך לפני שהמשתמש/ת יכולים להיות מורדים בדרגה."
-    leader_links_no_follow: "האם לקישורים ממובילים תוצמד התכונה \"לא למעקב\"."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     min_trust_to_edit_wiki_post: "דרגת האמון המינימלי הנדרשת כדי לערוך פרסום שמסומן כ-wiki."
     newuser_max_links: "כמה קישורים יכול/ה משתמש/ת חדשים להוספים לפרסום."
@@ -751,13 +737,6 @@ he:
     levenshtein_distance_spammer_emails: "כאשר מתאימים דוא\"ל של ספאמרים, מספר ההבדלים בתווים שעדיין מאפשרים התאמה מטושטשת."
     reply_by_email_enabled: "אפשרו  תגובה לנושאים באמצעות הדוא\"ל."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
-    pop3s_polling_enabled: "בדיקה באמצעות POP3 לתגובות דוא\"ל."
-    pop3s_polling_insecure: "בדיקה באמצעות טקסט פשוט ו-POP3 ללא SSL."
-    pop3s_polling_period_mins: "משך הזמן בדקות בין בדיקת דוא\"ל בחשבונות POP3. שימו לב: דורש אתחול."
-    pop3s_polling_port: "החיבור (port) ממנו יש למשוך חשבון POP3S."
-    pop3s_polling_host: "המארח לבדיקת דוא\"ל באמצעות POP3S."
-    pop3s_polling_username: "שם המשתמש/ת למשיכת הדוא\"ל מחשבון ה-POP3S."
-    pop3s_polling_password: "הסיסמא למשיכה הדוא\"ל מחשבון ה-POP3S."
     email_in: "אפשרו למשתמשים לפרסם נושאים חדשים באמצעות דוא\"ל (דורש משיכה באמצעוצ pop3). הגדירו את הכתובת בלשונית \"הגדרות\" עבור כל קטגוריה."
     email_in_min_trust: "רמת האמון המינימלית הנדרשת למשתמש/ת כדי שיוכלו להעלות נושאים חדשים באמצעות הדוא\"ל."
     email_prefix: "ה[תווית] שתשמש בנושא הודעות הדוא\"ל. אם לא יוגדר, ברירת המחדל תכוון ל'כותרת' אם לא יוגדר אחרת."
@@ -832,7 +811,6 @@ he:
     invitee_accepted: "%{display_username} קיבל את הזמנתך"
     linked: "%{display_username} קישר אליך ב %{link}"
   search:
-    within_post: "#%{post_number} מאת %{username}: %{excerpt}"
     types:
       category: 'קטגוריות'
       topic: 'תוצאות'

@@ -170,8 +170,6 @@ zh_TW:
       title: "初級用戶"
     regular:
       title: "一般用戶"
-    leader:
-      title: "領袖"
     elder:
       title: "長老"
   rate_limiter:
@@ -265,7 +263,6 @@ zh_TW:
       long_form: '投訴為不當內容'
     notify_user:
       title: '通知 {{username}}'
-      description: '此文章包含一些我想與該用戶私下討論的內容。'
       long_form: '已通知用戶'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -575,14 +572,6 @@ zh_TW:
     s3_region: "上傳至 Amazon S3 的 region name，將用於上傳圖片"
     default_invitee_trust_level: "預設的受邀用戶等級 (0-4)"
     default_trust_level: "所有新用戶的預設等級 (0-4)"
-    leader_requires_days_visited: "升級至領導 ( 3 ) 信任等級所需的訪問網站的天數，最近 100 天的區間內要達到多少天 ( 0 到 100 )"
-    leader_requires_topics_replied_to: "升級至領導 ( 3 ) 信任等級所需的回覆話題的最小數量，最近 100 天的區間內要達到多少量 ( 0 或以上 )"
-    leader_requires_topics_viewed: "升級至領導 ( 3 ) 信任等級所需的新建話題的百分比，最近 100 天的區間內要達到多少百分比 ( 0 到 100 )"
-    leader_requires_posts_read: "升級至領導 ( 3 ) 信任等級所需的新建文章的百分比，最近 100 天的區間內要達到多少百分比 ( 0 到 100 )"
-    leader_requires_topics_viewed_all_time: "用戶升級至領袖信任等級 ( 3 ) 所需檢閱的最小話題數量。"
-    leader_requires_posts_read_all_time: "用戶升級至領袖信任等級 ( 3 ) 所需檢閱的最小文章數量。"
-    leader_requires_max_flagged: "升級至領導 ( 3 ) 信任等級所需的數量，最近 100 天內必須沒有超過 x 個文章被 x 個不同用戶標記的數量，x 為 ( 0 或以上 )"
-    leader_links_no_follow: "主導者的鏈接是否使用 nofollow 屬性"
     min_trust_to_create_topic: "建立話題最低所需的信任等級"
     min_trust_to_edit_wiki_post: "編輯被標示為維基的文章所需之最低信任等級。"
     title_fancy_entities: "轉換討論話題標題中的 HTML 實體"
@@ -592,8 +581,6 @@ zh_TW:
     newuser_spam_host_threshold: "用戶在一篇文章中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇文章被認為是垃圾文章。"
     white_listed_spam_host_domains: "域名的白名單列表，新用戶可以任意連結到這些主機，而不會因防止廣告的測試過濾被檔下"
     levenshtein_distance_spammer_emails: "當比對廣告Email時，數字與文字將仍使用模糊比對"
-    pop3s_polling_insecure: "Poll 使用沒有 SSL 的 POP3 協定"
-    pop3s_polling_period_mins: "EMail 查詢 POP3S 帳號的時間間格（以分鐘計算），注意：需要重新啟動"
     email_in_min_trust: "能使用 EMail 發表新話題的最低的用戶信任等級"
     email_prefix: "EMail主題中使用的 [ 標籤 ]，留空將預設使用 'title'"
     delete_user_max_post_age: "不允許刪除首發表文章超過 (x) 天的用戶"
@@ -642,7 +629,6 @@ zh_TW:
     invitee_accepted: "%{display_username} 接受了你的邀請"
     linked: "%{display_username} 在 %{link} 關連了你"
   search:
-    within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: '分類'
       topic: '結果'

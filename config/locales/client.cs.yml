@@ -59,7 +59,6 @@ cs:
           one: "1r"
           few: "%{count}r"
           other: "%{count}let"
-        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -74,7 +73,6 @@ cs:
           one: "1 den"
           few: "%{count} dny"
           other: "%{count} dní"
-        date_year: "D. MMM, YYYY"
       medium_with_ago:
         x_minutes:
           one: "před 1 minutou"
@@ -250,7 +248,6 @@ cs:
       admin: "{{user}} je administrátor"
       suspended_notice: "Uživatel je suspendován do {{date}}."
       suspended_reason: "Důvod: "
-      mailing_list_mode: "Obdržet email za každý nový příspěvek ve fóru (pokud nemáte téma nebo kategorii ztišené)"
       watched_categories: "Hlídané"
       watched_categories_instructions: "Nová témata v těchto kategoriích budou hlídaná. Na všechny nové příspěvky budete upozorněni."
       tracked_categories: "Sledované"
@@ -318,7 +315,6 @@ cs:
         prefilled: "Emailová adresa odpovídá registrovaného uživatelskému jménu."
       locale:
         title: "Jazyk rozhraní"
-        instructions: "Jazyk fóra se změní, až když stránku obnovíte."
         default: "(výchozí)"
       password_confirmation:
         title: "Heslo znovu"
@@ -335,7 +331,6 @@ cs:
         bi_weekly: "jednou za 14 dní"
       email_direct: "Upozornění emailem na citace, odpovědi na vaše příspěvky a zmínky @vy"
       email_private_messages: "Upozornění emailem na novou soukromou zprávu"
-      email_always: "Receive email notifications and email digests even if you are active on the forum"
       other_settings: "Ostatní"
       categories_settings: "Kategorie"
       new_topic_duration:
@@ -1112,7 +1107,6 @@ cs:
         this_week: "Tenhle týden"
         today: "Dnes"
         other_periods: "další nejlepší témata"
-    browser_update: 'Bohužel, <a href="http://www.discourse.org/faq/#browser">váš prohlížeč je příliš starý, aby na něm Discourse mohl fungovat</a>. Prosím <a href="http://browsehappy.com">aktualizujte svůj prohlížeč</a>.'
     permission_types:
       full: "Vytvářet / Odpovídat / Prohlížet"
       create_post: "Odpovídat / Prohlížet"
@@ -1218,7 +1212,6 @@ cs:
         confirm_revoke: "Jste si jisti, že chcete tento klíč zrušit?"
         info_html: "Váš API klíč umožní vytvářet a aktualizovat témata pomocí JSONových volání."
         all_users: "Všichni uživatelé"
-        note_html: "Uchovejte tento klíč <strong>v bezpečí</strong>, každý, kdo má tento klíč, může libovolně vytvářet příspěvky na fóru i za ostatní uživatele."
       backups:
         title: "Zálohy"
         menu:
@@ -1387,12 +1380,6 @@ cs:
             label: "Nové:"
             ip_address: "IP adresa"
             add: "Přidat"
-      impersonate:
-        title: "Vydávat se za uživatele"
-        username_or_email: "Uživatelské jméno nebo emailová adresa"
-        help: "Použijte tento nástroj k přihlášení za jiného uživatele pro ladící a vývojové potřeby."
-        not_found: "Tento uživatel nebyl nalezen."
-        invalid: "Bohužel za tohoto uživatele se nemůžete vydávat."
       users:
         title: 'Uživatelé'
         create: 'Přidat administrátora'
@@ -1423,7 +1410,6 @@ cs:
           newuser: 'Uživatelé s věrohodností 0 (Nový uživatel)'
           basic: 'Uživatelé s věrohodností 1 (Základní uživatel)'
           regular: 'Uživatelé s věrohodností 2 (Pravidelný uživatel)'
-          leader: 'Uživatelé s věrohodností 3 (Vedoucí)'
           elder: 'Uživatelé s věrohodností 4 (Starší)'
           admins: 'Admininstrátoři'
           moderators: 'Moderátoři'
@@ -1574,7 +1560,6 @@ cs:
         back: '<b>u</b> Back'
         up_down: '<b>k</b>/<b>j</b> Move selection up/down'
         open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>`</b>/<b>~</b> Next/previous section'
       application:
         title: 'Application'
         create: '<b>c</b> Create a new topic'

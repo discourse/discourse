@@ -23,6 +23,7 @@ fr:
   log_in: "Se connecter"
   via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
+  purge_reason: "Supprimer automatiquement car devenue trop ancien et non verifier"
   errors:
     messages:
       too_long_validation: "est limité à %{max} caractères maximum; il y en a %{length}."
@@ -195,28 +196,6 @@ fr:
   assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenue dans le salon"
-    body: |2
-
-      Félicitation ! :confetti_ball:
-
-      Si vous voyez ce sujet, c'est que vous avez récemment été promu au [niveau de confiance 3 (meneur)][trust].
-
-      > Les meneurs sont les contributeurs les plus actifs et prolifiques. Ils sont un exemple pour la communauté grâce à leurs actions et messages.
-
-      Vous pouvez désormais &hellip;
-
-      * Modifier le titre de tous les sujets
-      * Modifier la catégorie de tous les sujets
-      * Avoir vos liens suivis [automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) est retiré)
-      * Accès à un salon privé visible uniquement pour les membres de niveau de confiance 3 ou plus.
-
-      Voici la [liste courante des meneurs](/badges/3/leader). Hésitez pas à dire bonjour !
-
-      Merci d'être une part importante de la communauté !
-
-      (Pour plus d'information sur les niveaux de confiance [voir ce sujet][trust]. Veuillez noter que seul les membres qui continuerons de respecter les critères garderons ce niveau de confiance.
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "A propos de la catégorie %{category}"
     replace_paragraph: "[Remplacez ce premier paragraphe par une courte description de votre nouvelle catégorie. Ce texte apparaît dans la zone de sélection de catégorie, alors essayez de le maintenir en dessous de 200 caractères. Cette catégorie n'apparaîtra pas sur la page des catégories tant que vous modifiez ce texte ou jusqu'à ce qu'un sujet soit crée.]"
@@ -239,8 +218,6 @@ fr:
       title: "utilisateur de base"
     regular:
       title: "utilisateur régulier"
-    leader:
-      title: "meneur"
     elder:
       title: "vétéran"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}'."
@@ -363,7 +340,6 @@ fr:
       long_form: 'signalé comme inapproprié'
     notify_user:
       title: 'Avertir {{username}}'
-      description: 'Je souhaite discuter en privé avec cet utilisateur au sujet de ce message.'
       long_form: 'utilisateur avertis'
       email_title: 'Votre message sur "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -653,7 +629,6 @@ fr:
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écriture de toutes les urls"
     topics_per_page: "Combien de sujets seront chargés par défaut sur la liste des sujets et lors du défilement vers le bas pour charger des sujets supplémentaires"
     posts_per_page: "Combien de messages seront chargés par défaut sur un sujet, et lors du défilement vers le bas pour charger des messages supplémentaires."
-    site_contact_username: "Tous les messages privés automatisés envoyés par le forum auront pour auteur cet utilisateur; Si non renseigné, le compte System sera utilisé."
     send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message privé avec un guide de démarrage rapide."
     suppress_reply_directly_below: "Ne pas afficher le panneau extensible des réponses d'un message quand la seule réponse est juste en dessous ce dernier."
     suppress_reply_directly_above: "Ne pas afficher 'en réponse à' sur un message quand la seule réponse est juste en dessus de ce dernier."
@@ -708,6 +683,7 @@ fr:
     enable_s3_backups: "Envoyer votre sauvegarde à S3 lorsqu'elle est terminée. IMPORTANT: Vous devez avoir renseigné vos identifiants S3 dans les paramètres de fichiers."
     s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION: Vérifié que c'est un bucket privée"
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'last_seen_at' (Dernière vu à), en secondes."
+    verbose_localization: "Afficher des informations de debug sur l'interface à coté des textes traduits."
     previous_visit_timeout_hours: "Combien de temps pour qu'une visite soit considérer comme la visite 'précédente', en heures."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir posté un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en poster un nouveau."
@@ -745,17 +721,6 @@ fr:
     regular_requires_likes_received: "Combien de J'aime un utilisateur de base doit recevoir pour être promu au niveau régulier (2)"
     regular_requires_likes_given: "Combien de J'aime un utilisateur de base doit donner pour être promu au niveau régulier (2)"
     regular_requires_topic_reply_count: "Combien de réponses un utilisateur de base doit donner pour être promu au niveau régulier (2)"
-    leader_requires_days_visited: "Nombre minimum de jours qu'un utilisateur doit avoir passer sur le site dans les 100 derniers jours pour être éligible au rang de meneur (niveau de confiance 3). (0 à 100)"
-    leader_requires_topics_replied_to: "Nombre minimum de sujets auquels un utilisateur doit avoir répondu dans les 100 derniers jours pour être éligible au rang de meneur (niveau de confiance 3). (0 à 100)"
-    leader_requires_topics_viewed: "Pourcentage de sujets crées dans les 100 derniers jours qu'un utilisateur doit avoir vu pour être éligible au rang de meneur (niveau de confiance 3). (0 à 100)"
-    leader_requires_posts_read: "Pourcentage de message crées dans les 100 derniers jours qu'un utilisateur doit avoir vus pour être éligible au rang de meneur (niveau de confiance 3). (0 à 100)"
-    leader_requires_topics_viewed_all_time: "Nombre minimum de sujets qu'un utilisateur doit avoir vus pour être éligible au rang de meneur (niveau de confiance 3)."
-    leader_requires_posts_read_all_time: "Nombre minimum de messages qu'un utilisateur doit avoir vus pour être éligible au rang de meneur (niveau de confiance 3)."
-    leader_requires_max_flagged: "L'utilisateur ne doit pas avoir plus de x messages signalés par x utilisateurs différents dans les 100 derniers jours pour être éligible au rang de meneur (niveau de confiance 3); x étant la valeur de ce paramètre. (0 ou plus)"
-    leader_promotion_min_duration: "Nombre minimum de jours qu'un utilisateur restera meneur avant de pouvoir être rétrogradé."
-    leader_requires_likes_given: "Nombre minimum de J'aime à donner dans les 100 derniers jours pour être éligible au rang de meneur (niveau de confiance 3)."
-    leader_requires_likes_received: "Nombre minimum de J'aime à recevoir dans les 100 derniers jours pour être éligible au rang de meneur (niveau de confiance 3)."
-    leader_links_no_follow: "Activer l'attribut nofllow même sur les liens des meneurs."
     min_trust_to_create_topic: "Le niveau de confiance minimum pour créer un nouveau sujet."
     min_trust_to_edit_wiki_post: "Le niveau de confiance minimum requis pour modifier les messages de type wiki."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
@@ -802,13 +767,6 @@ fr:
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
-    pop3s_polling_enabled: "Requêtes via POP3S pour les réponses par courriel."
-    pop3s_polling_insecure: "Requêtes utilisent le texte brut POP3 sans SSL."
-    pop3s_polling_period_mins: "La période en minutes entre les vérifications des comptes POP3S pour les courriels. NOTE: nécessite un redémarrage."
-    pop3s_polling_port: "Le port utilisé pour les requêtes sur le compte POPS3."
-    pop3s_polling_host: "L'hôte utilisé pour les requêtes des courriels via POP3S."
-    pop3s_polling_username: "Le nom d'utilisateur pour le compte POPS3 des requêtes des courriels."
-    pop3s_polling_password: "Le mot de passe pour le compte POPS3 des requêtes des courriels."
     email_in: "Autoriser les utilisateurs à poster de nouveaux sujets par courriel (requêtes via pop3 requise). Configurer les adresses dans l'onglet \"Paramètres\" de chaque catégorie."
     email_in_min_trust: "Le niveau de confiance minimum qu'un utilisateur doit avoir pour être autorisé à poster de nouveaux sujets par courriel."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des courriels. Par défaut il prend la valeur de 'title'."
@@ -883,8 +841,8 @@ fr:
     invited_to_private_message: "%{display_username} vous a invité dans une conversation privée: %{link}"
     invitee_accepted: "%{display_username} a accepté votre invitation"
     linked: "%{display_username} a mentionné l'un de vos messages : %{link}"
+    granted_badge: "Vous avez gagné %{link}"
   search:
-    within_post: "#%{post_number} par %{username}: %{excerpt}"
     types:
       category: 'Catégories'
       topic: 'Résultats'
@@ -1107,8 +1065,6 @@ fr:
         Cependant, si le message est signalé par la communauté une seconde fois, il restera marqué jusqu’à l'intervention d'un modérateur -- et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.
 
         Pour plus d'informations, merci de vous en référer au [règlement de la communauté](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "Ce message privé contient quelques astuces pour vous aider à démarrer rapidement :\n\n## Continuez de descendre\n\nIl n'y a pas de bouton Page Suivante ni de numéro de page – pour en lire plus, **il vous suffit de descendre !**\n\nLorsque de nouvelles réponses arrivent, elles apparaissent automatiquement.\n\n## Où suis-je ?\n\n- Pour la recherche, votre page d'utilisateur, ou le menu, utiliser les **boutons icônes en haut à droite**.\n\n- Lorsque vous lisez un sujet, retournez en haut de celui en cliquant sur le titre. Cliquez sur la barre de progression en bas à droite pour avoir une navigation complète, ou utiliser les touches <kbd>Home</kbd> et <kbd>Fin</kbd>.\n\n    <img src=\"http://www.discourse.org/images/welcome/progress-bar.png\" width=\"190\" height=\"52\">\n\nThe topic title will always take you to your next unread post. Use the last activity time to quickly jump to the first or last post in a topic\n\n- Le titre du sujet vous amènera toujours sur le prochain message non-lu. Utiliser la date d'activité pour aller directement au premier message, ou au dernier message dans un sujet.\n\n## Comment je réponds ? \n\n- Pour répondre au sujet dans sa globalité, utilisez le bouton \"Répondre\" <img src=\"http://www.discourse.org/images/welcome/reply-topic.png\" width=\"29\" height=\"25\">  tout en bas de la page.\n\n- Pour répondre à un message spécifique, utilisez le bouton \"Répondre\" <img src=\"http://www.discourse.org/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> sur le message.\n\n- Si vous voulez continuer le sujet dans une section différente, mais garder le lien entre votre sujet et le message qui vous l'a inspiré, utilisez la fonction Répondre en créant un nouveau sujet <img src=\"http://www.discourse.org/images/welcome/reply-as-new-topic.png\" width=\"33\" height=\"25\"> à droite de chaque message.\n\nPour citer quelqu'un dans votre message, sélectionner le texte que vous voulez citer et appuyer sur le bouton Répondre.\n\n<img src=\"http://www.discourse.org/images/welcome/quote-reply.png\" width=\"467\" height=\"172\">\n\n(Pour citer l'ensemble du message, utiliser le bouton Importer la Citation dans la barre d'édition)\n\nPour mentionner le pseudo d'un utilisateur, commencez à taper `@` et une liste d'auto-complétion apparaîtra.\n\n<img src=\"http://www.discourse.org/images/welcome/username-completion.png\" width=\"307\" height=\"174\">\n\n## Que puis-je faire d'autre ?\n\n<img src=\"http://www.discourse.org/images/welcome/like-link-flag-bookmark.png\" width=\"225\" height=\"61\">\n\nPour faire savoir à quelqu'un que vous avez apprécié son message, cliquez sur le bouton *j'aime** en bas du message. Si vous voyez un problème avec un message, n'hésitez pas à cliquer sur le bouton **signaler** pour avertir les modérateurs et les autres membres\n\nVous pouvez aussi partager un message, l'ajouter à vos signets ou à vos favoris.\n\nConcernant les [icones Emoji](http://www.emoji-cheat-sheet.com/), commencer par écrire `:` ou le traditionnel smiley `:)` :smile:\n\n## Qui me parle ?\n\nQuand quelqu'un répond à votre message, vous cite, ou mentionne votre `@pseudo`, un nombre sur le bouton de conversation en haut à droite. Utilisez-le pour savoir qui vous parle et où.\n\n<img src=\"http://www.discourse.org/images/welcome/notification-panel.png\" width=\"237\" height=\"78\">\n\nVous serez notifier par un courriel si quelqu'un vous répond directement (ou message privé) si vous n'êtes pas présent sur le site lorsqu'il est envoyé.\n\n## Quand est-ce qu'une conversation est nouvelle ?\n\nPar défaut, toutes les conversations de moins de deux jours sont considérées comme nouvelles, et chaque sujets auxquels vous avez participé.\n\nVous verrez le badge bleu de nouveauté et le nombre de nouveaux messages :\n\n<img src=\"http://www.discourse.org/images/welcome/topics-new-unread.png\" width=\"490\" height=\"119\">\n\nVous pouvez modifié vos préférences de notifications par défaut des sujets  dans vos [préférences utilisateurs](/my/preferences). Vous pouvez aussi les modifié pour chaque sujet séparément.\n\n## Quelles sont les choses que je ne peux pas faire ?\n\nLes nouveaux utilisateurs sont limités pour des raisons de sécurité. Plus vous participerez, plus vous gagnerez la confiance de la communauté et les restrictions disparaîtrons. A plus haut [niveau de confiance](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous gagnerez de nouvelles compétences pour nous aider à gérer la communauté.\n"
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
