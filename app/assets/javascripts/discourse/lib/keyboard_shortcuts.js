@@ -176,25 +176,28 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
           topicController.send(action, post);
         }
       }
-    });
+    }, 'keyup');
   },
 
   _bindToPath: function(path, binding) {
     this.keyTrapper.bind(binding, function() {
       Discourse.URL.routeTo(path);
-    });
+    }, 'keyup');
   },
 
   _bindToClick: function(selector, binding) {
     binding = binding.split(',');
     this.keyTrapper.bind(binding, function() {
       $(selector).click();
-    });
+    }, 'keyup');
   },
 
   _bindToFunction: function(func, binding) {
     if (typeof this[func] === 'function') {
-      this.keyTrapper.bind(binding, _.bind(this[func], this));
+      if (func === 'selectDown' || func === 'selectUp')
+        this.keyTrapper.bind(binding, _.bind(this[func], this));
+      else
+        this.keyTrapper.bind(binding, _.bind(this[func], this), 'keyup');
     }
   },
 
