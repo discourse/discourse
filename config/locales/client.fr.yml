@@ -25,6 +25,11 @@ fr:
       long_no_year_no_time: "D MMM"
       long_with_year: "DD MMM YYY H:mm"
       long_with_year_no_time: "DD MMM YYYY"
+      long_date_with_year: "D MMM, 'YY LT"
+      long_date_without_year: "D MMM, LT"
+      long_date_with_year_without_time: "D MMM, 'YY"
+      long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -66,7 +71,7 @@ fr:
         x_days:
           one: "1 jour"
           other: "%{count} jours"
-        date_year: "D MMM YYYY"
+        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "Il y a 1 min"
@@ -176,6 +181,7 @@ fr:
     disable: "Désactiver"
     undo: "Annuler"
     revert: "Rétablir"
+    failed: "Echec"
     banner:
       close: "Ignorer cette bannière."
     choose_topic:
@@ -279,7 +285,7 @@ fr:
       admin_tooltip: "Cet utilisateur est un admin"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
-      mailing_list_mode: "Recevoir un courriel à chaque fois qu'un message est posté sur le forum (sauf si vous avez rendu silencieuse ce sujet ou cette catégorie)"
+      mailing_list_mode: "Recevoir un e-mail pour tous les nouveaux messages (sauf si vous avez rendu silencieux le sujet ou la catégorie)"
       watched_categories: "Surveillés"
       watched_categories_instructions: "Vous pourrez suivre attentivement automatiquement toutes les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, de plus les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
       tracked_categories: "Suivies"
@@ -358,7 +364,7 @@ fr:
         prefilled: "L'adresse de courriel correspond à ce pseudo enregistré."
       locale:
         title: "Langue de l'interface"
-        instructions: "La langue utilisée par l'interface du forum. Cette dernière changera lorsque vous actualiserez la page."
+        instructions: "Langage de votre interface.  Cette dernière changera lorsque vous actualiserez la page."
         default: "(par défaut)"
       password_confirmation:
         title: "Confirmation du mot de passe"
@@ -377,7 +383,7 @@ fr:
         bi_weekly: "tous les 15 jours"
       email_direct: "Recevoir un courriel quand quelqu'un vous cite, répond à votre message ou mentionne votre @pseudo"
       email_private_messages: "Recevoir un courriel quand quelqu'un vous envoie un message privé"
-      email_always: "Recevoir des notifications et des résumés par courriel même si vous êtes actif sur le forum"
+      email_always: "Ne pas recevoir de courriel de notifications lorsque je suis actif sur le site"
       other_settings: "Autre"
       categories_settings: "Catégories"
       new_topic_duration:
@@ -467,7 +473,6 @@ fr:
     read_only_mode:
       enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
-    too_few_topics_notice: "Créez au moins 5 sujets et %{posts} messages publics pour démarrer les discussions. Les nouveaux utilisateurs ne seront pas capable de gagner des niveaux de confiance sans contenu à lire. Ce message n’apparaît que pour les membres de l'équipe."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -482,7 +487,6 @@ fr:
     last_post: Dernier message
     last_post_lowercase: dernier message
     summary:
-      enabled_description: "Vous visualisez un résumé de ce sujet : qui ne contient que les messages importants choisis par la communauté. Pour voir tous les messages à nouveau, cliquez ci-dessous."
       description: "Il y a <b>{{count}}</b> réponses."
       description_time: "Il y a <b>{{count}}</b> réponses avec un temps estimé de lecture de <b>{{readingTime}} minutes</b>."
       enable: 'Résumer ce sujet'
@@ -632,6 +636,7 @@ fr:
       invitee_accepted: "<i title='invitation accepté' class='fa fa-user'></i><p><span>{{username}}</span> a accepté votre invitation</p>"
       moved_post: "<i title='message déplacé' class='fa fa-sign-out'></i><p><span>{{username}}</span> a déplacé {{description}}</p>"
       linked: "<i title='message lié' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge décerné' class='fa fa-certificate'></i>;<;p>Vous avez gagné {{description}}</p>"
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -1271,7 +1276,6 @@ fr:
         this_week: "Cette semaine"
         today: "Aujourd'hui"
         other_periods: "voir plus de meilleurs sujets"
-    browser_update: 'Malheureusement, <a href="http://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour afficher ce forum Discourse</a>. Merci <a href="http://browsehappy.com">de mettre à jour votre navigateur</a>.'
     permission_types:
       full: "Créer / Répondre / Voir"
       create_post: "Répondre / Voir"
@@ -1404,7 +1408,6 @@ fr:
         confirm_revoke: "Êtes-vous sûr de vouloir révoquer cette clé ?"
         info_html: "Cette clé vous permettra de créer et mettre à jour des sujets à l'aide d'appels JSON."
         all_users: "Tous les Utilisateurs"
-        note_html: "Gardez cette clé <strong>secrète</strong> ! Tous les personnes qui la possède peuvent créer des messages sur ce forum au nom de n'import quel utilisateur."
       backups:
         title: "Sauvegardes"
         menu:
@@ -1629,12 +1632,6 @@ fr:
             add: "Ajouter"
         logster:
           title: "Logs d'erreurs"
-      impersonate:
-        title: "Se faire passer pour un utilisateur"
-        username_or_email: "Pseudo ou adresse de courriel de l'utilisateur"
-        help: "Utiliser cet outil pour incarner un compte utilisateur à des fins de tests."
-        not_found: "Cet utilisateur n'a pas été trouvé."
-        invalid: "Désolé, vous ne pouvez pas vous faire passer pour cet utilisateur."
       users:
         title: 'Utilisateurs'
         create: 'Ajouter un administateur'
@@ -1663,7 +1660,6 @@ fr:
           newuser: 'Utilisateurs au niveau de confiance 0 (Nouveaux utilisateurs)'
           basic: 'Utilisateurs au niveau de confiance 1 (Utilisateurs de base)'
           regular: 'Utilisateurs au niveau de confiance 2 (Utilisateurs réguliers)'
-          leader: 'Utilisateurs au niveau de confiance 3 (Meneur)'
           elder: 'Utilisateurs au niveau de confiance 4 (Vétéran)'
           admins: 'Administrateurs'
           moderators: 'Modérateurs'
@@ -1847,7 +1843,6 @@ fr:
         target_posts: Requête sur les messages
         auto_revoke: Exécuter la requête de révocation quotidiennement
         show_posts: Afficher le message concerné par le badge sur la page des badges.
-        preview: Aperçu du badge
         trigger: Déclencheur
         trigger_type:
           none: "Mettre à jour quotidiennement"
@@ -1873,11 +1868,12 @@ fr:
         back: '<b>u</b> Retour'
         up_down: '<b>k</b>/<b>j</b> Déplacer la sélection haut/bas'
         open: '<b>o</b> ou <b>Entrée</b> Ouvrir le sujet sélectionné'
-        next_prev: '<b>`</b>/<b>~</b> Section Suivante/précédente'
       application:
         title: 'Application'
         create: '<b>c</b> Créer un nouveau sujet'
         notifications: '<b>n</b> Ouvrir les notifications'
+        site_map_menu: '<b>=</b> Ouvrir le menu principal'
+        user_profile_menu: '<b>p</b> Ouvrir le menu de votre profil'
         search: '<b>/</b> Rechercher'
         help: '<b>?</b> Ouvrir l''aide des raccourcis clavier'
       actions:

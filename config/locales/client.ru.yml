@@ -26,6 +26,8 @@ ru:
       long_no_year_no_time: "D MMM"
       long_with_year: "D MMM, YYYY H:mm"
       long_with_year_no_time: "D MMM, YYYY"
+      long_date_with_year: "D MMM YY, LT"
+      long_date_without_year: "D MMM, LT"
       tiny:
         half_a_minute: "< 1мин"
         less_than_x_seconds:
@@ -64,7 +66,6 @@ ru:
           one: "1г"
           few: "%{count}г"
           other: "%{count}л"
-        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -79,7 +80,6 @@ ru:
           one: "1 день"
           few: "%{count} дня"
           other: "%{count} дней"
-        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "1 минуту назад"
@@ -306,7 +306,6 @@ ru:
       admin_tooltip: "{{user}} - админ"
       suspended_notice: "Пользователь заморожен до {{date}}."
       suspended_reason: "Причина:"
-      mailing_list_mode: "Получать письмо каждый раз, когда появляется сообщение на форуме (кроме тех случаев, когда тема или раздел отключены)"
       watched_categories: "Наблюдение"
       watched_categories_instructions: "Вы будете автоматически отслеживать новые темы в этих разделах. Вам будут приходить уведомления о новых сообщениях и темах, плюс рядом со списком тем будет отображено количество непрочитанных и новых сообщений."
       tracked_categories: "Отслеживаемая"
@@ -385,7 +384,6 @@ ru:
         prefilled: "Адрес электронной почты совпадает с зарегистрированным псевдонимом."
       locale:
         title: "Язык интерфейса"
-        instructions: "Язык интерфейса форума. Изменится после обновления страницы."
         default: "(по умолчанию)"
       password_confirmation:
         title: "Пароль еще раз"
@@ -404,7 +402,6 @@ ru:
         bi_weekly: "каждые две недели"
       email_direct: "Получать уведомления на почту когда меня цитируют, упоминают по @псевдониму или отвечают на мои соощения"
       email_private_messages: "Получение уведомлений по электронной почте о личных сообщениях"
-      email_always: "Получать почтовые уведомления и дайджесты даже если вы активны на форуме"
       other_settings: "Прочее"
       categories_settings: "Разделы"
       new_topic_duration:
@@ -498,7 +495,6 @@ ru:
     read_only_mode:
       enabled: "Администратор включил режим только для чтения. Вы можете продолжать просматривать сайт, но взаимодействие может не работать."
       login_disabled: "Вход отключён, пока сайт в режиме «только для чтения»"
-    too_few_topics_notice: "Создайте как минимум 5 общедоступных тем и %{posts} сообщений, чтобы начать дискуссии. Новые пользователи не смогут зарабатывать уровни доверия если для них не будет ничего, что можно прочитать. Это сообщение показывается только персоналу."
     learn_more: "подробнее..."
     year: 'год'
     year_desc: 'темы, созданные за последние 365 дней'
@@ -513,7 +509,6 @@ ru:
     last_post: Последнее сообщение
     last_post_lowercase: последнее сообщение
     summary:
-      enabled_description: "Вы просматриваете выдержку темы: только самые интересные сообщения по мнению сообщества. Для просмотра всех сообщений нажмите кнопку ниже."
       description: "Есть <b>{{count}}</b> ответ(ов)."
       description_time: "В теме <b>{{count}}</b> сообщений с ожидаемым временем чтения <b>{{readingTime}} минут</b>."
       enable: 'Сводка по теме'
@@ -663,6 +658,7 @@ ru:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> принял(а) ваше приглашение</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> переместил(а) {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Вы награждены: {{description}}</p>"
     upload_selector:
       title: "Add an image"
       title_with_attachments: "Add an image or a file"
@@ -1336,7 +1332,6 @@ ru:
         this_week: "За неделю"
         today: "Сегодня"
         other_periods: "смотреть больше обсуждаемых сообщений"
-    browser_update: 'К сожалению, <a href="http://www.discourse.org/faq/#browser">ваш браузер слишком устарел</a> для комфортного просмотра нашего форума. Пожалуйста, <a href="http://browsehappy.com">обновите ваш браузер</a>.'
     permission_types:
       full: "Создавать / Отвечать / Просматривать"
       create_post: "Отвечать / Просматривать"
@@ -1474,7 +1469,6 @@ ru:
         confirm_revoke: "Вы уверены, что хотите отозвать этот ключ?"
         info_html: "Ваш API ключ позволит вам создавать и обновлять темы, используя JSON calls."
         all_users: "Все пользователи"
-        note_html: "Никому <strong>не сообщайте</strong> эти ключи, Тот, у кого они есть, сможет создавать сообщения, выдавая себя за любого пользователя форума."
       backups:
         title: "Резервные копии"
         menu:
@@ -1699,12 +1693,6 @@ ru:
             add: "Добавить"
         logster:
           title: "Журнаш ошибок"
-      impersonate:
-        title: "Представиться как пользователь"
-        username_or_email: "Псевдоним или адрес электронной почты"
-        help: "Здесь вы можете представится системе как пользователь форума, для отладки."
-        not_found: "Пользователь не найден."
-        invalid: "Извините, но вы не можете представиться этим пользователем."
       users:
         title: 'Пользователи'
         create: 'Добавить администратора'
@@ -1735,7 +1723,6 @@ ru:
           newuser: 'Пользователи с уровнем доверия 0 (Новые пользователи)'
           basic: 'Пользователи с уровнем доверия 1 (Базовые пользователи)'
           regular: 'Пользователи с уровнем доверия 2 (Постоянные пользователи)'
-          leader: 'Пользователи с уровнем доверия 3 (Лидеры)'
           elder: 'Пользователи с уровнем доверия 4 (Опытные пользователи)'
           admins: 'Администраторы'
           moderators: 'Модераторы'
@@ -1924,7 +1911,6 @@ ru:
         target_posts: Выборка целевых сообщений
         auto_revoke: Запускать запрос на отзыв ежедневно
         show_posts: Показывать сообщение, на основе которого была выдана награда, на странице наград
-        preview: Предосмотр награды
         trigger: Запуск
         trigger_type:
           none: "Обновлять ежедневно"
@@ -1950,11 +1936,12 @@ ru:
         back: '<b>u</b> Назад'
         up_down: '<b>k</b>/<b>j</b> Переместить выделение вверх/вниз'
         open: '<b>o</b> или <b>Enter</b> Открыть выбранную тему'
-        next_prev: '<b>`</b>/<b>~</b> Следующая/предыдущая секция'
       application:
         title: 'Приложение'
         create: '<b>c</b> Создать новую тему'
         notifications: '<b>n</b> Открыть уведомления'
+        site_map_menu: '<b>=</b> Открыть карту сайта'
+        user_profile_menu: '<b>p</b> Открыть меню профиля пользователя'
         search: '<b>/</b> Поиск'
         help: '<b>?</b> Открыть помощь по горячим клавишам'
       actions:

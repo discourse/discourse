@@ -44,7 +44,6 @@ ko:
           other: "> %{count}년"
         almost_x_years:
           other: "%{count}년"
-        date_month: "MMM D일"
         date_year: "'YY M/D"
       medium:
         x_minutes:
@@ -53,7 +52,6 @@ ko:
           other: "%{count}시간"
         x_days:
           other: "%{count}일"
-        date_year: "YYYY MMM D"
       medium_with_ago:
         x_minutes:
           other: "%{count}분 전"
@@ -252,7 +250,6 @@ ko:
       admin_tooltip: "이 사용자는 관리자입니다."
       suspended_notice: "이 사용자는 {{date}}까지 접근 금지 되었습니다."
       suspended_reason: "이유: "
-      mailing_list_mode: "포럼에 글이 게시될 때마다 이메일을 받습니다. (해당 토픽이나 카테고리에 대한 알림을 끄지 않은 경우)"
       watched_categories: "모든 알림 받기"
       watched_categories_instructions: "이 카테고리들에 있는 모든 새로운 토픽에 대한 알림을 켭니다. 새로운 글과 토픽이 작성될 때마다 알림이 오고, 읽지 않은 글과 새로운 글 수가 토픽의 리스트에 나타납니다."
       tracked_categories: "새 글 표시하기"
@@ -328,7 +325,6 @@ ko:
         prefilled: "이메일이 등록된 아이디와 연결되어 있습니다."
       locale:
         title: "인터페이스 언어"
-        instructions: "포럼 인터페이스에 사용되는 언어입니다. 페이지를 새로 고침하면 바뀝니다."
         default: "(기본)"
       password_confirmation:
         title: "비밀번호를 재입력해주세요."
@@ -347,7 +343,6 @@ ko:
         bi_weekly: "격주"
       email_direct: "누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 이메일을 받습니다."
       email_private_messages: "누군가 당신에게 메세지를 보낼 때 이메일을 받습니다."
-      email_always: "해당 포럼을 이용중이면 이메일 알림과 이메일 요약을 받습니다."
       other_settings: "추가 사항"
       categories_settings: "카테고리"
       new_topic_duration:
@@ -430,7 +425,6 @@ ko:
     read_only_mode:
       enabled: "관리자가 일기 전용모드를 활성화 하였습니다. 컨텐츠를 읽을 수는 있지만 활동할 수는 없습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users will not be able to earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "더 배우기"
     year: '년'
     year_desc: '지난 365일간 생성된 토픽'
@@ -445,7 +439,6 @@ ko:
     last_post: 최근 게시물
     last_post_lowercase: 마지막 글
     summary:
-      enabled_description: "현재 토픽에서 인기 있는 몇개의 게시글을 보고 있습니다. 전체 게시글을 보려면 다음을 클릭하세요."
       description: "<b>{{count}}</b>개의 답글이 있습니다."
       description_time: "총 <b>{{count}}</b>개의 댓글이 있습니다. 예상 소요 시간은 <b>{{readingTime}}분</b>입니다.."
       enable: '이 토픽을 요약'
@@ -1183,7 +1176,6 @@ ko:
         this_week: "이번 주"
         today: "오늘"
         other_periods: "더 많은 인기 토픽 보기"
-    browser_update: '불행하게도, <a href="http://www.discourse.org/faq/#browser">당신의 브라우저는 이 사이트를 이용하기에 어렵습니다.</a>. 브라우저를 업그레이드 하시기 바랍니다.<a href="http://browsehappy.com">.'
     permission_types:
       full: "생성 / 답글 / 보기"
       create_post: "답글 / 보기"
@@ -1296,7 +1288,6 @@ ko:
         confirm_revoke: "API 키를 폐지하겠습니까?"
         info_html: "당신의 API 키는 JSON콜을 이용하여 토픽을 생성하거나 수정할 수 있습니다."
         all_users: "전체 유저"
-        note_html: "이 <strong>API 키 번호</strong>를 노출하지 마세요. 다른 사용자가 대신 글을 게시하거나 수정할 수 있습니다."
       backups:
         title: "백업"
         menu:
@@ -1520,12 +1511,6 @@ ko:
             add: "추가"
         logster:
           title: "에러 로그"
-      impersonate:
-        title: "이 사용자로 로그인"
-        username_or_email: "사용자의 아이디 또는 이메일"
-        help: "디버깅 목적으로 사용자 계정에 로그인하기 위해 이 도구를 사용합니다."
-        not_found: "해당 사용자를 찾을 수 없습니다."
-        invalid: "죄송합니다. 해당 사용자로 로그인 할 수 있습니다."
       users:
         title: '사용자'
         create: '관리자 사용자 추가'
@@ -1552,7 +1537,6 @@ ko:
           newuser: '사용자 신뢰도 0 (새로운 사용자)'
           basic: '사용자 신뢰도 1 (초보 사용자)'
           regular: '사용자 신뢰도 2 (자주오는 사용자)'
-          leader: '사용자 신뢰도 3 (VIP 사용자)'
           elder: '사용자 신뢰도 4 (후원자)'
           admins: '관리자 사용자 목록'
           moderators: '운영자'
@@ -1731,7 +1715,6 @@ ko:
         target_posts: 포스트들을 타겟으로 하는 query
         auto_revoke: 매일 회수 query를 실행한다.
         show_posts: 훈장 페이지에서 훈장을 받게한 포스트를 보여줍니다.
-        preview: 훈장 미리보기
         trigger: Trigger
         trigger_type:
           none: "매일 업데이트"
@@ -1757,7 +1740,6 @@ ko:
         back: '<b>u</b> Back'
         up_down: '<b>k</b>/<b>j</b> Move selection up/down'
         open: '<b>o</b> or <b>Enter</b> 선택한 토픽에 들어갑니다.'
-        next_prev: '<b>`</b>/<b>~</b> Next/previous section'
       application:
         title: 'Application'
         create: '<b>c</b> 새 토픽을 만듭니다.'

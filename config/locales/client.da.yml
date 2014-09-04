@@ -25,6 +25,11 @@ da:
       long_no_year_no_time: "MMM D"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      long_date_with_year: "MMM D, 'YY LT"
+      long_date_without_year: "MMM D, LT"
+      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -54,7 +59,7 @@ da:
         almost_x_years:
           one: "1å"
           other: "%{count}å"
-        date_month: "D MMM"
+        date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -66,7 +71,7 @@ da:
         x_days:
           one: "1 dag"
           other: "%{count} dage"
-        date_year: "D MMM YYYY"
+        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "1 min siden"
@@ -176,6 +181,7 @@ da:
     disable: "Deaktiver"
     undo: "Fortryd"
     revert: "Gendan"
+    failed: "Fejlet"
     banner:
       close: "Afvis denne banner."
     choose_topic:
@@ -279,7 +285,7 @@ da:
       admin_tooltip: "Denne bruger er administrator"
       suspended_notice: "Denne bruger er suspenderet indtil {{date}}."
       suspended_reason: "Begrundelse: "
-      mailing_list_mode: "Få en email, hver gang et nyt emne er oprettet i forummet (med mindre du har sat et emne eller en kategori på lydløs)"
+      mailing_list_mode: "Få en email, hver nyt emne (med mindre du har sat et emne eller en kategori på lydløs)"
       watched_categories: "Overvåget"
       watched_categories_instructions: "Du overvåger automatisk alle emner i disse kategorier"
       tracked_categories: "Fulgt"
@@ -333,16 +339,19 @@ da:
         title: "Profil baggrundsbillede"
       email:
         title: "E-mail"
+        instructions: "Vil aldrig blive vist offentligt."
         ok: "Det ser fint ud. Vi e-mail’er dig for at bekræfte."
         invalid: "Skriv venligst en gyldig e-mail-adresse."
         authenticated: "Din e-mail er bekræftet af {{provider}}."
         frequency: "Vi sender dig kun e-mail, hvis du ikke har været på siden for nylig, og du ikke allerede har set de ting vi ville e-mail’e dig om."
       name:
         title: "Navn"
+        instructions: "Lang version af dit navn"
         too_short: "Dit navn er for kort."
         ok: "Dit navn ser fint ud."
       username:
         title: "Brugernavn"
+        instructions: "Skal være unikt, ingen mellemrum og kort"
         short_instructions: "Andre brugere kan referere til dig som @{{username}}."
         available: "Brugernavnet er tilgængeligt."
         global_match: "E-mail-adressen matcher det registrerede brugernavn."
@@ -355,7 +364,7 @@ da:
         prefilled: "E-mail-adressen matcher det registrerede brugernavn."
       locale:
         title: "sprog"
-        instructions: "Sproget der bliver brugt her på forumet. Det skifter når du genindlæser sitet."
+        instructions: "Brugerinterface sprog. Det skifter når de reloader siden."
         default: "(standard)"
       password_confirmation:
         title: "Gentag adgangskode"
@@ -374,7 +383,7 @@ da:
         bi_weekly: "hver anden uge"
       email_direct: "Modtag e-mail, når nogen citerer dig, svarer på dine indlæg eller nævner dit @brugernavn"
       email_private_messages: "Modtag e-mail, når nogen sender dig en privat besked"
-      email_always: "Modtag e-mail-notifikationer og -sammendrag selvom jeg er aktiv i forummet"
+      email_always: "Send email notifikationer, selvom jeg er aktiv på forummet"
       other_settings: "Andre"
       categories_settings: "Kategorier"
       new_topic_duration:
@@ -447,10 +456,13 @@ da:
       prev_page: "da vi prøvede at indlæse"
       reasons:
         network: "Netværksfejl"
+        server: "Server fejl"
+        forbidden: "Adgang nægtet"
         unknown: "Fejl"
       desc:
         network: "Tjek din internetforbindelse."
         network_fixed: "Det ser ud som om den er tilbage."
+        server: "Fejl kode: {{status}}"
         unknown: "Noget gik galt."
       buttons:
         back: "Gå tilbage"
@@ -476,7 +488,7 @@ da:
     last_post: Sidste indlæg
     last_post_lowercase: Sidste indlæg
     summary:
-      enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante. Klik nedenfor at se alle indlæg igen."
+      enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
       description: "Der er <b>{{count}}</b> svar."
       description_time: "Der er <b>{{count}}</b> svar og det vil tage ca. <b>{{readingTime}} minutter</b> at læse."
       enable: 'Opsummér dette emne'
@@ -626,6 +638,7 @@ da:
       invitee_accepted: "<i title='accepterede din invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='indlæg flyttet' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='indlæg linket' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge givet' class='fa fa-certificate'></i><p>Du blev tildelt '{{description}}'</p>"
     upload_selector:
       title: "Indsæt billede"
       title_with_attachments: "Tilføj et billede eller en fil"
@@ -643,6 +656,7 @@ da:
       title: "søg efter emner, indlæg, brugere eller kategorier"
       no_results: "Ingen resultater fundet."
       searching: "Søger…"
+      post_format: "#{{post_number}} af {{username}}"
       context:
         user: "Søg i indlæg fra @{{username}}"
         category: "Søg i kategorien \"{{category}}\""
@@ -1265,7 +1279,7 @@ da:
         this_week: "Denne uge"
         today: "I dag"
         other_periods: "Se flere top emner"
-    browser_update: 'Desværre, <a href="http://www.discourse.org/faq/#browser">din browser er for gammel til at kunne virke med dette Discourse forum</a>. <a href="http://browsehappy.com">Opgradér venligst din browser</a>.'
+    browser_update: 'Desværre, <a href="http://www.discourse.org/faq/#browser">din browser er for gammel til at kunne virke med dette forum</a>. <a href="http://browsehappy.com">Opgradér venligst din browser</a>.'
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -1398,7 +1412,7 @@ da:
         confirm_revoke: "Er du sikker på, at du ønsker at tilbagekalde nøglen?"
         info_html: "Din API-nøgle giver dig mulighed for at oprette og opdatere emner vha. JSON-kald."
         all_users: "Alle brugere"
-        note_html: "Hold denne nøgle <strong>hemmelig</strong>, alle brugere som har den kan oprette vilkårlige indlæg på forummet som enhver bruger."
+        note_html: "Hold denne nøgle <strong>hemmelig</strong>, alle brugere som har den kan oprette vilkårlige indlæg, som enhver bruger."
       backups:
         title: "Backups"
         menu:
@@ -1624,11 +1638,8 @@ da:
         logster:
           title: "Fejl beskeder"
       impersonate:
-        title: "Udgiv dig for bruger"
-        username_or_email: "Brugernavn eller e-mail på bruger"
-        help: "Brug dette værktøj til at udgive dig for en anden bruger til brug for debugging."
-        not_found: "Brugeren findes ikke."
-        invalid: "Beklager, du kan ikke udgive dig for dén bruger."
+        title: "Skift personlighed"
+        help: "Brug dette værktøj til at udgive dig for en anden bruger til brug for debugging. Du skal logge ud når du er færdig."
       users:
         title: 'Brugere'
         create: 'Tilføj admin-bruger'
@@ -1657,7 +1668,7 @@ da:
           newuser: 'Brugere på tillidsniveau 0 (Ny bruger)'
           basic: 'Brugere på tillidsniveau 1 (Basisbruger)'
           regular: 'Brugere på tillidsniveau 2 (Almindelig bruger)'
-          leader: 'Brugere på tillidsniveau 3 (Ekspertbruger)'
+          leader: 'Brugere på tillidsniveau 3 (Veteran)'
           elder: 'Brugere på tillidsniveau 4 (Advanceret bruger)'
           admins: 'Admin-brugere'
           moderators: 'Moderatorer'
@@ -1669,6 +1680,7 @@ da:
         reject_failures:
           one: "Kunne ikke afvise 1 bruger."
           other: "Kunne ikke afvise %{count} brugere."
+        not_verified: "Ikke verificeret"
       user:
         suspend_failed: "Noget gik galt ved suspenderingen af denne bruger {{error}}"
         unsuspend_failed: "Noget gik galt ved ophævningen af denne brugers suspendering {{error}}"
@@ -1770,6 +1782,7 @@ da:
           will_be_promoted: "Vil blive forfremmet indenfor 24 timer."
           does_not_qualify: "Ikke kvalificeret til tillids niveau 3."
         sso:
+          title: "Single Sign On"
           external_id: "Externt ID"
           external_username: "Brugernavn"
           external_name: "Navn"
@@ -1840,7 +1853,6 @@ da:
         target_posts: Forespørg mål indlæg
         auto_revoke: Kør tilbagekaldelses forespørgsel hver dag
         show_posts: Vis det indlæg der gav et badge på badge siden
-        preview: Forhåndsvisning af badge
         trigger: Trigger
         trigger_type:
           none: "Opdater dagligt"
@@ -1848,6 +1860,14 @@ da:
           post_revision: "Når en bruger redigerer eller opretter et indlæg"
           trust_level_change: "Når en bruger skifter tillidsniveau"
           user_change: "Når en bruger er redigeret eller oprettet"
+        preview:
+          link_text: "Forhåndsvisning af opnåede badges"
+          plan_text: "Forhåndsvisning med forespørgsels plan (SQL)"
+          modal_title: "Badge Forespørgesel forhåndsvisning (SQL)"
+          sql_error_header: "Der var en fejl i forespørgslen"
+          error_help: "Se disse links for hjælp med at skrive badge forespørgsler."
+          bad_count_warning:
+            header: "ADVARSEL!"
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1866,7 +1886,6 @@ da:
         back: '<b>u</b> Tilbage'
         up_down: '<b>k</b>/<b>j</b> Flyt det valgte op/ned'
         open: '<b>o</b> eller <b>Enter</b> Åbn det valgte emne'
-        next_prev: '<b>`</b>/<b>~</b> Næste/forrige sektion'
       application:
         title: 'Applikation'
         create: '<b>c</b> Opret et nyt emne'
