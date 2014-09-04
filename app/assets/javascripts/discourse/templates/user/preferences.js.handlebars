@@ -167,7 +167,7 @@
       {{preference-checkbox labelKey="user.enable_quoting" checked=enable_quoting}}
       {{preference-checkbox labelKey="user.dynamic_favicon" checked=dynamic_favicon}}
       {{preference-checkbox labelKey="user.disable_jump_reply" checked=disable_jump_reply}}
-      {{#unless Discourse.SiteSettings.edit_history_available_to_public}}
+      {{#unless Discourse.SiteSettings.edit_history_visible_to_public}}
         {{preference-checkbox labelKey="user.edit_history_public" checked=edit_history_public}}
       {{/unless}}
       {{plugin-outlet "user_custom_preferences"}}
