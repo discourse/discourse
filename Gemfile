@@ -88,7 +88,10 @@ gem 'mail', '~> 2.5.4'
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 
-gem 'active_model_serializers'
+# We use some ams 0.8.0 features, need to amend code
+# to support 0.9 etc, bench needs to run and ensure no
+# perf regressions
+gem 'active_model_serializers', '~> 0.8.0'
 
 
 gem 'onebox'
@@ -161,7 +164,13 @@ gem 'rack-protection' # security
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'sass-rails', '~> 4.0.2'
+
+  if rails_master?
+    gem 'sass-rails', git: 'https://github.com/rails/sass-rails.git'
+  else
+    gem 'sass-rails', '~> 4.0.2'
+  end
+
   gem 'uglifier'
   gem 'rtlit', require: false # for css rtling
 end
