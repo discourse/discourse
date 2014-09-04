@@ -1070,6 +1070,8 @@ en:
         no_value: "No, keep"
         yes_value: "Yes, abandon"
 
+      via_email: "this post arrived via email"
+
       wiki:
         about: "this post is a wiki; basic users can edit it"
 
