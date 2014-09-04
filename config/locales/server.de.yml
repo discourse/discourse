@@ -7,9 +7,9 @@
 
 de:
   dates:
-    short_date_no_year: "DD. MMM"
-    short_date: "DD. MMM YYYY"
-    long_date: "DD. MMMM YYYY, H:mm"
+    short_date_no_year: "TT. MMM"
+    short_date: "TT. MMM JJJJ"
+    long_date: "TT. MMMM JJJJ, H:mm"
   time:
     formats:
       short: "%d. %m. %Y"
@@ -40,8 +40,8 @@ de:
     one: "Entschuldigung, aber neue Benutzer sind temporär auf 1 Antwort im gleichen Thema beschränkt."
     other: "Entschuldigung, aber neue Benutzer sind temporär auf %{count} Antworten im gleichen Thema beschränkt."
   embed:
-    start_discussion: "Beginne die Diskussion"
-    continue: "Setze Diskussion fort"
+    start_discussion: "Diskussion beginnen"
+    continue: "Diskussion fortsetzen"
     more_replies:
       one: "1 weitere Antwort"
       other: "%{count} weitere Antworten"
@@ -91,7 +91,7 @@ de:
   private_message_abbrev: "PN"
   rss_description:
     latest: "Aktuelle Themen"
-    hot: "Angesagte Themen\""
+    hot: "Angesagte Themen"
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   groups:
     errors:
@@ -107,7 +107,7 @@ de:
       trust_level_5: "vertrauensstufe_5"
   education:
     until_posts:
-      one: "Beitrag"
+      one: "1 Beitrag"
       other: "%{count} Beiträge"
     new-topic: |
       Willkommen auf %{site_name} &mdash; **Danke, dass Du ein neues Thema erstellst!**
@@ -200,31 +200,8 @@ de:
   assets_topic_body: "Dies ist ein fester Beitrag, der nur für Mitarbeiter sichtbar ist, um Bilder und Dateien, die im Forum benutzt werden zu speichern. Lösche diese nicht!\n\n\nAnleitung:\n\n\n1. Antworte auf dieses Thema.\n2. Lade alle Bilder, die du für Logos, Favicons und usw. nutzen willst, hier hoch. (Nutze dazu das Symbol für Lade-Symbolleiste im Beitrags-Editor oder ziehe und lasse die Bilder hier fallen oder füge sie eins.)\n3. Sende deine Antwort. \n4. Klicke mit der rechten Maustaste auf die Bilder in deinem neuen Beitrag, um die den Pfad zu bekommen oder klicke das Editier-Symbol, um deinen Beitrag zu editieren und dadurch den Pfad zu den Bildern zu bekommen. Kopiere die Bild-Pfade.\n5. Füge die Bild-Pfade in [basic settings](/admin/site_settings/category/required) ein.\n\n\nWenn du andere Dateityp-Uploads aktivieren willst, editiere `authorized_extensions` in [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Willkommen in der Lounge"
-    body: |2
-
-      Herzlichen Glückwunsch! :confetti_ball:
-
-      Wenn Du dieses Thema sehen kannst wurdest du vor Kurzem zum [Anführer (Vertrauensstufe 3)][trust] befördert.
-
-      > Anführer gehören zu den aktivisten und produktivsten Mitgliedern. Ihre Beiträge und Handlungen sind ein positives Beispiel für die Community.
-
-      Du kannst nun &hellip;
-
-      * den Titel eines jeden Themas ändern
-      * Themen in andere Kategorien verschieben
-      * Links posten, die von Suchmaschinen beachtet werden ([nofollow](http://de.wikipedia.org/wiki/Nofollow) wird entfernt)
-      * auf die Lounge Kategorie zugreifen, die für Nutzer mit Vertrauensstufe 3 oder höher reserviert ist
-
-      Eine aktuelle Liste der Mitglieder, die die Anführer-Stufe erlangt haben, [findest du hier](/badges/3/leader). Vergiss nicht, hallo zu sagen!
-
-      Thanks for being an important part of this community!
-      Vielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!
-
-      (Wenn Du mehr über Vertrauensstufen wissen möchtest, kannst Du [dieses Thema lesen][trust]. Beachte bitte, dass nur Mitglieder, die derzeit die Auswahlkritierien erfüllen, in der Vertrauensstufe 3 bleiben.)
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
-    topic_prefix: "Definition der Kategorie %{category}"
+    topic_prefix: "Über die Kategorie %{category}"
     replace_paragraph: "[Ersetze den ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Bitte benutze weniger als 200 Zeichen.]"
     post_template: "%{replace_paragraph}\n\nBenutze den folgenden Platz für eine ausführliche Beschreibung sowie für Regeln und zur Diskussion!"
     errors:
@@ -246,7 +223,7 @@ de:
     regular:
       title: "Stammnutzer"
     leader:
-      title: "Anführer"
+      title: "Veteran"
     elder:
       title: "Ältester"
     change_failed_explanation: "Du wolltest %{user_name} auf '%{new_trust_level}' zurückstufen. Jedoch ist seine Vertrauensstufe bereits '%{current_trust_level}'. %{user_name} verbleibt auf '%{current_trust_level}'"
@@ -254,13 +231,13 @@ de:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Versuch es später wieder. "
     too_many_requests: "Diese Aktion kann nur ein begrenztes Mal pro Tag durchgeführt werden. Bitte warte %{time_left} bis zum nächsten Versuch."
     hours:
-      one: "eine Stunde"
+      one: "1 Stunde"
       other: "%{count} Stunden"
     minutes:
-      one: "eine Minute"
+      one: "1 Minute"
       other: "%{count} Minuten"
     seconds:
-      one: "eine Sekunde"
+      one: "1 Sekunde"
       other: "%{count} Sekunden"
   datetime:
     distance_in_words:
@@ -319,7 +296,7 @@ de:
         one: "vor einem Tag"
         other: "vor %{count} Tagen"
       about_x_months:
-        one: "vor etwa 1 Monat"
+        one: "vor etwa einem Monat"
         other: "vor etwa %{count} Monaten"
       x_months:
         one: "vor einem Monat"
@@ -337,14 +314,14 @@ de:
     no_token: "Entschuldigung, dieses Token ist zu alt. Bitte setze Dein Passwort nochmals zurück."
     choose_new: "Bitte wähle ein neues Passwort"
     choose: "Bitte wähle ein Passwort"
-    update: 'Passwort updaten'
-    save: 'Setze Passwort'
+    update: 'Passwort aktualisieren'
+    save: 'Passwort festlegen'
     title: 'Passwort zurücksetzen'
     success: "Dein Passwort wurde erfolgreich geändert, Du bist nun angemeldet."
     success_unapproved: "Dein Passwort wurde erfolgreich verändert."
     continue: "Weiter zu %{site_name}"
   change_email:
-    confirmed: "Deine Mailadresse wurde aktualisiert."
+    confirmed: "Deine E-Mail-Adresse wurde aktualisiert."
     please_continue: "Weiter zu %{site_name}"
     error: "Es gab einen Fehler beim Ändern deiner Mailadresse. Wird diese Adresse bereits genutzt?"
   activation:
@@ -369,7 +346,6 @@ de:
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
       title: '{{username}} benachrichtigen'
-      description: 'Dieser Beitrag enthält etwas über das ich mit dieser Person direkt und privat sprechen möchte.'
       long_form: 'dies dem Benutzer gemeldet'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
@@ -466,9 +442,9 @@ de:
       xaxis: "Stufe"
       yaxis: "Zahl der Nutzer"
     emails:
-      title: "Gesendete Mails"
+      title: "Gesendete E-Mails"
       xaxis: "Tag"
-      yaxis: "Zahl der Mails"
+      yaxis: "Zahl der E-Mails"
     user_to_user_private_messages:
       title: "Benutzer-zu-Benutzer"
       xaxis: "Tag"
@@ -560,7 +536,7 @@ de:
       title: "Anmeldung erforderlich: Hauptseite"
       description: "Der Text welcher nicht angemeldeten Benutzer angezeigt wird, wenn eine Anmeldung erforderlich ist."
     head:
-      title: "HTML Kopf"
+      title: "HTML-Kopf"
       description: "HTML, das zwischen den <head></head> Tags eingefügt wird."
     top:
       title: "Oberer Teil der Seiten"
@@ -659,7 +635,6 @@ de:
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die auf der Themen-Übersichtsseite zu Beginn und beim Scrollen geladen werden."
     posts_per_page: "Zahl der Beiträge, die in einem Thema zu Beginn und beim Scrollen geladen werden."
-    site_contact_username: "Benutzer, der als Absender aller vom Forum automatisch verschickten privaten Nachrichten benutzt wird. Bei fehlender Angabe wird das Standardkonto \"system\" verwendet."
     send_welcome_message: "Sende allen neuen Nutzern eine private Willkommensnachricht mit Hinweisen zur Benutzung des Forums."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der beantwortete Beitrag direkt darüber angezeigt wird."
@@ -712,6 +687,7 @@ de:
     backup_daily: "Erstelle jeden Tag automatisch ein Backup."
     s3_backup_bucket: "Der entfernte Speicherort für deine Backups. WARNUNG: Stelle sicher, dass es sich um einen privaten Speicherort handelt."
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."
+    verbose_localization: "Erweiterte Lokalisierungstipps in der Benutzeroberfläche anzeigen "
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert bevor er als 'früherer' Besuch gezählt wird."
     rate_limit_create_topic: "Nach Erstellen eines Themas muss ein Nutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Nutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
@@ -749,15 +725,6 @@ de:
     regular_requires_likes_received: "Zahl der „Gefällt mir“ die ein Anfänger die Seite erhalten muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
     regular_requires_likes_given: "Zahl der „Gefällt mir“ die ein Anfänger die Seite verteilen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
     regular_requires_topic_reply_count: "Zahl der Themen an denen ein Anfänger teilnehmen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
-    leader_requires_days_visited: "Mindestanzahl Tage, an denen ein Nutzer während der letzten 100 Tage aktiv gewesen sein muss, um die Vertrauensstufe Anführer (3) erhalten zu können. (0 bis 100)"
-    leader_requires_topics_replied_to: "Mindestanzahl Themen, auf die ein Nutzer in den letzten 100 Tagen geantwortet haben muss, um die Vertrauensstufe Anführer (3) erhalten zu können. (0 oder mehr)"
-    leader_requires_topics_viewed: "Anteil in Prozent der in den letzten 100 Tagen neu erstellten Themen, die ein Nutzer mindestens angesehen haben muss, um die Vertrauensstufe Anführer (3) erhalten zu können. (0 bis 100)"
-    leader_requires_posts_read: "Anteil in Prozent aller in den letzten 100 Tagen geschriebenen Beiträge, die ein Nutzer mindestens gelesen haben muss, um die Vertrauensstufe Anführer (3) erhalten zu können. (0 bis 100)"
-    leader_requires_topics_viewed_all_time: "Die kleine Gesamtanzahl an Themen, die ein Benutzer betrachtet haben muss, um sich für die Vertrauensstufe 'Anführer' (3) zu qualifizieren."
-    leader_requires_posts_read_all_time: "Die kleine Gesamtanzahl an Beiträgen, die ein Benutzer gelesen haben muss, um sich für die Vertrauensstufe 'Anführer' (3) zu qualifizieren."
-    leader_requires_max_flagged: "Um die Vertrauensstufe Anführer (3) erhalten zu können dürfen in den letzten 100 Tagen höchstens X Beiträge eines Nutzers von X verschiedenen Nutzern gemeldet worden sein, wobei X dem Wert dieser Einstellung entspricht. (0 oder mehr)"
-    leader_promotion_min_duration: "Benutzer, die zum 'Anführer' befördert wurden, können frühestens nach so vielen Tagen wieder automatisch degradiert werden."
-    leader_links_no_follow: "Links von Anführern mit dem \"nofollow\" Attribut kennzeichnen."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
     newuser_max_links: "Maximale Zahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -791,13 +758,10 @@ de:
     levenshtein_distance_spammer_emails: "E-Mail-Adressen, die sich um so viele Zeichen unterscheiden, werden beim Vergleich von Adressen von Spam-Nutzern dennoch als identisch betrachtet."
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
     reply_by_email_address: "Vorgabe der Antwort-Mail Adresse in der Form von: %{reply_key}@reply.myforum.com"
-    pop3s_polling_enabled: "Antwort-E-Mails regelmäßig via POP3S abholen."
-    pop3s_polling_insecure: "Abfragen mit Klartext-POP3 ohne SSL."
-    pop3s_polling_period_mins: "Intervall in Minuten zum Abholen neuer E-Mails vom POP3S-Konto. HINWEIS: Änderung wird erst nach Neustart wirksam."
-    pop3s_polling_port: "Der Port für die POP3S Anfrage."
-    pop3s_polling_host: "Der Host für die POP3S Anfrage."
-    pop3s_polling_username: "Der Benutzername für die POP3S Anfrage."
-    pop3s_polling_password: "Das Passwort für die POP3S Anfrage."
+    disable_emails: "Discourse daran hindern, jegliche Art von Emails zu verschicken"
+    pop3_polling_ssl: "SSL für die Verbindung zum POP3-Server verwenden. (Empfohlen)"
+    pop3_polling_username: "Der Benutzername für das POP3-Konto zum Abfragen von E-Mails."
+    pop3_polling_password: "Das Passwort für das POP3-Konto zum Abfragen von E-Mails."
     email_in: "Erlaube Benutzern neue Themen per E-Mail (benötigt POP3 polling) zu erstellen. Konfiguriere die Adressen im Reiter „Einstellungen“ für jede Kategorie."
     email_in_min_trust: "Minimale Vertrauensstufe um neue Themen per E-Mail posten zu können."
     email_prefix: "Das [label] das für den Betreff von E-Mails genutzt wird. Standardwert ist 'title' wenn dies nicht gesetzt ist."
@@ -872,8 +836,9 @@ de:
     invited_to_private_message: "%{display_username} hat Dich zu einem privaten Gespräch eingeladen: %{link}"
     invitee_accepted: "%{display_username} hat Deine Einladung angenommen."
     linked: "%{display_username} hat dich auf %{link} verlinkt"
+    granted_badge: "Sie haben %{link} verdient"
   search:
-    within_post: "#%{post_number} von %{username}: %{excerpt}"
+    within_post: "#%{post_number} von %{username}"
     types:
       category: 'Kategorien'
       topic: 'Ergebnisse'
@@ -1093,75 +1058,6 @@ de:
         Wenn dieser Beitrag jedoch ein zweites Mal von der Community versteckt wird, bleibt dieser solange ausgeblendet, bis ein Mitarbeiter sich darum kümmert. Das kann weitere Konsequenzen haben, unter anderem auch eine Sperrung deines Kontos.
 
         Weitere Hilfestellung findest du in unseren [Richtlinien](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Diese private Nachricht enthält ein paar Tipps für einen reibungslosen Start:
-
-        ## Immer weiterscrollen
-
-        Es gibt keinen "Nächste Seite"-Knopf und keine Seitennummern – um weiterzulesen, **scrolle einfach weiter nach unten!**
-
-        Neue Antworten erscheinen automatisch unten auf der Seite.
-
-        ## Wie finde ich mich zurecht?
-
-        - Die Suchfunktion, das Menü und deine persönliche Übersichtsseite erreichst du mit Hilfe der **Icons oben rechts in der Kopfzeile**.
-
-        - Um beim Lesen eines Themas zurück zum Anfang &uarr; zu gelangen, klicke auf den Titel des Themas in der Kopfzeile. Klicke auf die grüne Fortschrittsleiste unten rechts, um durch das Thema zu navigieren, oder verwende die <kbd>Pos1</kbd> oder <kbd>Ende</kbd> Tasten.
-
-            <img src="http://www.discourse.org/images/welcome/progress-bar.png" width="190" height="52">
-
-        - Ein Klick auf den Titel eines Themas bringt dich immer zum nächsten ungelesenen im Thema. Benutze die Angabe der letzten Aktivität, um schnell zum ersten oder letzten Beitrag eines Themas zu springen.
-
-        ## Wie kann ich antworten?
-
-        - Um auf das Thema als Ganzes zu antworten, benutze den "Antworten" Knopf <img src="http://www.discourse.org/images/welcome/reply-topic.png" width="29" height="25"> ganz unten auf der Seite.
-
-        - Wenn du dagegen auf einen bestimmten Beitrag antworten möchtest, benutze den "Antworten" Knopf <img src="http://www.discourse.org/images/welcome/reply-post.png" width="29" height="25"> unmittelbar nach diesem Beitrag.
-
-        - Wenn du die Unterhaltung in eine andere Richtung lenken möchtest, das neue Thema aber mit der bisherigen Unterhaltung verlinkt bleiben soll, klicke auf "Mit Themenwechsel antworten" <img src="http://www.discourse.org/images/welcome/reply-as-new-topic.png" width="33" height="25"> rechts neben dem Beitrag.
-
-        Du kannst aus einem fremden Beitrag zitieren, indem du einen Teil des Beitrags auswählst und einen beliebigen "Antworten" Knopf drückst.
-
-        <img src="http://www.discourse.org/images/welcome/quote-reply.png" width="467" height="172">
-
-        (Wenn du den gesamten Beitrag zitieren möchtest, kannst du auch einfach den entsprechenden Knopf in der Toolbar des Editors drücken.)
-
-        Um einen anderen Benutzer namentlich zu erwähnen, gib zunächst ein `@` ein, gefolgt von den ersten Buchstaben des gewünschten Namens, und ein Autovervollständigungs-Popup erscheint.
-
-        <img src="http://www.discourse.org/images/welcome/username-completion.png" width="307" height="174">
-
-        ## Welche Funktionen gibt es sonst?
-
-        <img src="http://www.discourse.org/images/welcome/like-link-flag-bookmark.png" width="225" height="61">
-
-        Wenn dir ein Beitrag gefällt, kannst du dies dem Autor ganz einfach mit einem Klick auf die "Gefällt mir" Schaltfläche mitteilen. Wenn du dagegen der Meinung bist, dass ein Beitrag ein Problem darstellt, dann kannst du mit der "Melden" Funktion diesen Beitrag privat seinem Autor oder direkt den Moderatoren melden.
-
-        Außerdem kannst du einen Link zum Beitrag mit anderen teilen und Lesezeichen setzen, um auf ausgewählte Beiträge später über deine Benutzer-Übersichtsseite zurückkommen zu können.
-
-        [Emoji](http://www.emoji-cheat-sheet.com/) kannst du einfügen, indem du beginnst `:` einzutippen oder du verwendest die herkömmlichen Smileys `:)` :smile:
-
-        ## Wer spricht mit mir?
-
-        Jedes mal, wenn jemand anders auf einen deiner Beiträge antwortet, dich zitiert oder deinen `@Benutzernamen` erwähnt, erscheint eine Benachrichtigung oben rechts auf der Seite in Form einer Zahl über einer Sprechblase. Die Liste hinter diesem Symbol verrät dir, wer mit dir kommunizieren will und im welche Themen es sich jeweils handelt.
-
-        <img src="http://www.discourse.org/images/welcome/notification-panel.png" width="237" height="78">
-
-        Solltest du die Seite gerade nicht geöffnet haben, erhälst du Benachrichtigungen über direkt an dich gerichtete Antworten (und private Nachrichten) per E-Mail.
-
-        ## Welche Themen werden als neu betrachtet?
-
-        Standardmäßig werden all solche Themen als neu betrachtet, die in den letzten zwei Tagen begonnen wurden. Themen, an denen du dich beteiligst, werden zusätzlich automatisch verfolgt.
-
-        Neue Themen und Themen, die du verfolgst, werden mit blauen Markierungen angezeigt:
-
-        <img src="http://www.discourse.org/images/welcome/topics-new-unread.png" width="490" height="119">
-
-        Mit dem entsprechenden Auswahlfeld am Ende eines Themas kannst du für jedes Thema individuell festlegen, ob und wie du es verfolgen möchtest. (Du kannst dies auch für eine ganze Kategorie aufs Mal festlegen.) In deinen [persönlichen Einstellungen](/my/preferences) kannst du genauer festlegen, welche Themen als neu gelten sollen und wann Themen automatisch verfolgt werden.
-
-        ## Warum kann ich manche Funktionen nicht nutzen?
-
-        Um Missbrauch vorzubeugen gelten für neu registrierte Benutzer einige Beschränkungen. Wenn du dich konstruktiv beteiligst und damit das Vertrauen der Community gewinnst, werden diese Beschränkungen automatisch nach und nach aufgehoben. Bei ausreichender [Vertrauensstufe](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) erhälst du außerdem zusätzliche Rechte und kannst bei der Verwaltung unserer Community mithelfen.
     welcome_user:
       subject_template: "Willkommen auf %{site_name}!"
       text_body_template: |

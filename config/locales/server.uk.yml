@@ -153,8 +153,6 @@ uk:
       title: "базовий користувач"
     regular:
       title: "звичайний користувач"
-    leader:
-      title: "провідник"
     elder:
       title: "старійшина"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
@@ -195,7 +193,6 @@ uk:
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Сповістити {{username}}'
-      description: 'Цей допис містить щось таке, про що я хотів би поговорити з цією людиною особисто і безпосередньо.'
       long_form: 'notified user'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -481,7 +478,6 @@ uk:
     invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
   search:
-    within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Categories'
       topic: 'Результати'

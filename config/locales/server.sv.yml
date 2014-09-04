@@ -103,8 +103,6 @@ sv:
       title: "vanlig användare"
     regular:
       title: "regelbunden användare"
-    leader:
-      title: "ledare"
     elder:
       title: "församlingsäldste"
   rate_limiter:
@@ -216,7 +214,6 @@ sv:
       long_form: 'flagga detta som olämpligt'
     notify_user:
       title: 'Notifiera {{username}}'
-      description: 'Det här inlägget innehåller något som jag vill tala direkt och privat med den här personen om.'
       long_form: 'notifierad användare'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:

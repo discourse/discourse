@@ -39,7 +39,6 @@ ja:
           other: "> %{count} 年"
         almost_x_years:
           other: "%{count} 年"
-        date_month: "M月D日"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -48,7 +47,6 @@ ja:
           other: "%{count} 時間"
         x_days:
           other: "%{count} 日"
-        date_year: "YYYY MMM D"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分前"
@@ -70,6 +68,7 @@ ja:
     yes_value: "はい"
     generic_error: "申し訳ありませんが、エラーが発生しました"
     generic_error_with_reason: "エラーが発生しました: %{error}"
+    sign_up: "サインアップ"
     log_in: "サインイン"
     age: "経過"
     joined: "参加者"
@@ -112,6 +111,8 @@ ja:
       simple_title: "アバウト"
       title: "%{title}について"
       stats: "Site Statistics"
+      our_admins: "管理者"
+      our_moderators: "モデレーター"
       stat:
         all_time: "All Time"
         last_7_days: "過去7日間"
@@ -244,7 +245,6 @@ ja:
       admin_tooltip: "このユーザは管理者であり"
       suspended_notice: "このユーザは {{date}} までサスペンド状態です。"
       suspended_reason: "理由: "
-      mailing_list_mode: "フォーラムに投稿がされる度にメールで通知を受け取る(ミュートしているトピックやカテゴリ以外)"
       watched_categories: "参加中"
       watched_categories_instructions: "このカテゴリに新しく投稿されたトピックを自動的に参加します。このカテゴリに対して新しい投稿があった場合、登録されたメールアドレスと、コミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
       tracked_categories: "トラック中"
@@ -298,16 +298,19 @@ ja:
         title: "プロフィール背景"
       email:
         title: "メールアドレス"
+        instructions: "公開されなくなります。"
         ok: "メールアドレス OK。確認用のメールを送ります。"
         invalid: "正しいメールアドレスを入力してください。"
         authenticated: "あたなのメールは {{provider}} により認証されました。"
         frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
       name:
         title: "名前"
+        instructions: "フルネーム"
         too_short: "名前が短すぎます。"
         ok: "名前 OK。"
       username:
         title: "ユーザ名"
+        instructions: "空白を含まないユニークな名前を入力してください。"
         short_instructions: "他のユーザはあなたを @ユーザ名 でメンションできます。"
         available: "ユーザ名は利用可能です。"
         global_match: "メールアドレスが登録済のユーザ名と一致しました。"
@@ -320,7 +323,6 @@ ja:
         prefilled: "この登録ユーザが使用するメールアドレスが見つかりました。"
       locale:
         title: "表示言語"
-        instructions: "フォーラム表示言語。ページを更新する際には、表示言語を更新されます。"
         default: "既定"
       password_confirmation:
         title: "もう一度パスワードを入力してください。"
@@ -339,7 +341,6 @@ ja:
         bi_weekly: "隔週"
       email_direct: "ポストが引用されたり、回答を受けたり、 @ユーザ名 でメンションを受けた際にメール通知を受け取る"
       email_private_messages: "プライベートメッセージを受けた際にメール通知を受け取る"
-      email_always: "フォーラムにアクティブに参加している状態でも常にメール通知やダイジェストを受け取る"
       other_settings: "その他"
       categories_settings: "カテゴリ設定"
       new_topic_duration:
@@ -408,10 +409,13 @@ ja:
       prev_page: "ロード中に"
       reasons:
         network: "ネットワークエラー"
+        server: "サーバーエラー"
+        forbidden: "アクセスが許可されていません。"
         unknown: "エラー"
       desc:
         network: "インターネット接続を確認してください。"
         network_fixed: "ネットワーク接続が回復しました。"
+        server: "エラーコード : {{status}}"
         unknown: "エラーが発生しました。"
       buttons:
         back: "戻る"
@@ -436,7 +440,6 @@ ja:
     last_post: 最終ポスト
     last_post_lowercase: 最後の投稿
     summary:
-      enabled_description: "トピックのまとめを表示されています。"
       description: "<b>{{count}}</b> 返信があります。"
       description_time: "全てを確認するのに <b>{{readingTime}} 分</b> 前後を要する <b>{{count}}</b> 個の回答があります。"
       enable: 'このトピックを要訳する'
@@ -445,6 +448,7 @@ ja:
       enabled_description: "削除されたポストは非表示されています。"
       disabled_description: "削除されたポストは表示されています。"
       enable: "削除されたポストを非表示する"
+      disable: "削除されたポストを表示"
     private_message_info:
       title: "プライベートメッセージ"
       invite: "友人を招待..."
@@ -1164,7 +1168,6 @@ ja:
         this_week: "今週"
         today: "本日"
         other_periods: "トップとピックをもっと見る"
-    browser_update: '<a href="http://www.discourse.org/faq/#browser">ご使用中のブラウザが古すぎるため Discourse フォーラムが正しく動作しません</a>。<a href="http://browsehappy.com">ブラウザをアップグレードしてください</a>。'
     permission_types:
       full: "作成できる / 回答できる / 閲覧できる"
       create_post: "回答できる / 閲覧できる"
@@ -1274,7 +1277,6 @@ ja:
         confirm_revoke: "このキーを無効化しても本当によろしいですか?"
         info_html: "API キーを使うと、JSON 呼び出しでトピックの作成・更新を行うことが出来ます。"
         all_users: "全てのユーザ"
-        note_html: "このキーは<strong>秘密</strong>情報です。キーを知るユーザは、任意のユーザとして任意のポストを作成することができます。"
       backups:
         title: "バックアップ"
         menu:
@@ -1472,12 +1474,6 @@ ja:
             label: "新規:"
             ip_address: "IPアドレス"
             add: "追加"
-      impersonate:
-        title: "ユーザになりすます"
-        username_or_email: "ユーザ名かメールアドレス"
-        help: "デバッグ用途でユーザアカウントになりすますためのツールです。"
-        not_found: "ユーザが見つかりませんでした。"
-        invalid: "申し訳ありませんがこのユーザとして使えません。"
       users:
         title: 'ユーザ'
         create: '管理者を追加'
@@ -1504,7 +1500,6 @@ ja:
           newuser: 'トラストレベル0のユーザ (新規ユーザ)'
           basic: 'トラストレベル1のユーザ (ベーシックユーザ)'
           regular: 'トラストレベル2のユーザ (レギュラーユーザ)'
-          leader: 'トラストレベル3のユーザ (リーダ)'
           elder: 'トラストレベル4のユーザ (マスター)'
           admins: '管理者ユーザ'
           moderators: 'モデレータ'

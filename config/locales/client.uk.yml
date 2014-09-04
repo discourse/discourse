@@ -23,10 +23,7 @@ uk:
     dates:
       tiny:
         half_a_minute: "< 1 хв"
-        date_month: "D MMM"
         date_year: "MMM 'YY"
-      medium:
-        date_year: "D MMM YYYY"
       medium_with_ago:
         x_hours:
           one: "1 годину тому"
@@ -271,7 +268,6 @@ uk:
         prefilled: "Електронна скринька відповідає цьому зареєстрованому імені користувача."
       locale:
         title: "Interface language"
-        instructions: "The language used by the forum interface. It will change when you refresh the page."
         default: "(default)"
       password_confirmation:
         title: "Пароль ще раз"
@@ -289,7 +285,6 @@ uk:
         bi_weekly: "кожні два тижні"
       email_direct: "Отримувати електронний лист, коли хтось цитує Вас, відповідає на Ваш допис або згадує Ваше @Ім'я"
       email_private_messages: "Отримувати електронний лист, коли хтось надсилає Вам приватне повідомлення"
-      email_always: "Отримувати електронні листи та виклади новин навіть якщо Ви активні на форумі"
       other_settings: "Інше"
       categories_settings: "Категорії"
       new_topic_duration:
@@ -968,7 +963,6 @@ uk:
         this_week: "This week"
         today: "Today"
         other_periods: "see more top topics"
-    browser_update: 'На жаль, <a href="http://www.discourse.org/faq/#browser">Ваш веб-оглядач надто застарілий, щоб працювати із цим Discourse-форумом</a>. Будь ласка, <a href="http://browsehappy.com">оновіть свій оглядач</a>.'
     permission_types:
       full: "Створювати / Відповідати / Бачити"
       create_post: "Відповідати / Бачити"
@@ -1072,7 +1066,6 @@ uk:
         confirm_revoke: "Are you sure you want to revoke that key?"
         info_html: "Your API key will allow you to create and update topics using JSON calls."
         all_users: "All Users"
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
       backups:
         title: "Backups"
         menu:
@@ -1259,12 +1252,6 @@ uk:
             label: "Нова:"
             ip_address: "IP-адреса"
             add: "Додати"
-      impersonate:
-        title: "Втілитися у користувача"
-        username_or_email: "Ім'я користувача або електронна скринька"
-        help: "Використовуйте цей інструмент, щоб втілитися в інший обліковий запис для відлагоджувальних потреб."
-        not_found: "Цього користувача не вдалося знайти."
-        invalid: "Даруйте, Ви не можете втілитися в цього користувача."
       users:
         title: 'Користувачі'
         create: 'Додати адміністратора'
@@ -1287,7 +1274,6 @@ uk:
           newuser: 'Користувачі з Рівнем довіри 0 (Новий користувач)'
           basic: 'Користувачі з Рівнем довіри 1 (Базовий користувач)'
           regular: 'Користувачі з Рівнем довіри 2 (Звичайний користувач)'
-          leader: 'Користувачі з Рівнем довіри 3 (Провідник)'
           elder: 'Користувачі з Рівнем довіри 4 (Старійшина)'
           admins: 'Адміністратори'
           moderators: 'Модератори'
@@ -1426,7 +1412,6 @@ uk:
         back: '<b>u</b> Назад'
         up_down: '<b>k</b>/<b>j</b> Перемістити виділення вгору/вниз'
         open: '<b>o</b> або <b>Enter</b> Відкрити обрану тему'
-        next_prev: '<b>`</b>/<b>~</b> Наступний/попередній розділ'
       application:
         title: 'Застосунок'
         create: '<b>c</b> Створити нову тему'

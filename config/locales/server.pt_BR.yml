@@ -164,8 +164,6 @@ pt_BR:
       title: "utilizador básico"
     regular:
       title: "utilizador regular"
-    leader:
-      title: "líder"
     elder:
       title: "senior"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}'"
@@ -282,7 +280,6 @@ pt_BR:
       long_form: 'sinalizado como inapropriado'
     notify_user:
       title: 'Notificar {{username}}'
-      description: 'Esta postagem contém algo sobre o que quero falar com esta pessoal diretamente e em particular.'
       long_form: 'usuário notificado'
       email_title: 'Sobre a sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -580,7 +577,6 @@ pt_BR:
     invitee_accepted: "%{display_username} aceitou o seu convite"
     linked: "%{display_username} linkou você em %{link}"
   search:
-    within_post: "#%{post_number} por %{username}: %{excerpt}"
     types:
       category: 'Categorias'
       topic: 'Resultados'

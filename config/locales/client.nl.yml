@@ -54,7 +54,6 @@ nl:
         almost_x_years:
           one: "1j"
           other: "%{count}j"
-        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -66,7 +65,6 @@ nl:
         x_days:
           one: "1 dag"
           other: "%{count} dagen"
-        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "1 min geleden"
@@ -279,7 +277,6 @@ nl:
       admin_tooltip: "Deze gebruiker is een admin"
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_reason: "Reden: "
-      mailing_list_mode: "Ontvang een mail als er een bericht op het forum geplaatst is (tenzij je het topic of de betreffende categorie op stil zet)"
       watched_categories: "In de gaten gehouden"
       watched_categories_instructions: "Je krijgt bericht van alle nieuwe berichten en topics in deze categoriën, daarnaast zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
       tracked_categories: "Gevolgd"
@@ -355,7 +352,6 @@ nl:
         prefilled: "E-mail hoort bij deze gebruikersnaam."
       locale:
         title: "Interfacetaal"
-        instructions: "De taal van de foruminterface. Deze verandert als je de pagina herlaadt"
         default: "(standaard)"
       password_confirmation:
         title: "Nogmaals het wachtwoord"
@@ -374,7 +370,6 @@ nl:
         bi_weekly: "elke twee weken"
       email_direct: "Ontvang een mail wanneer iemand je citeert, reageert op je bericht of je @gebruikersnaam noemt."
       email_private_messages: "Ontvang een mail wanneer iemand je een privébericht heeft gestuurd."
-      email_always: "Ontvang notificaties en topicoverzichten, zelfs als je actief bent op het forum."
       other_settings: "Overige"
       categories_settings: "Categorieën"
       new_topic_duration:
@@ -461,7 +456,6 @@ nl:
     read_only_mode:
       enabled: "Dit forum is in read-only modus. Je kan rondkijken, maar sommige elementen zullen mogelijk niet goed werken."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
-    too_few_topics_notice: "Maak ten minste 5 openbare discussies en %{posts} openbare berichten om de discussie te starten. Nieuwe gebruikers zullen geen vertrouwensniveau's kunnen verdienen totdat er berichten te lezen zijn voor hen. Dit bericht wordt alleen getoond aan de beheerders."
     learn_more: "leer meer..."
     year: 'jaar'
     year_desc: 'topics die in de afgelopen 365 dagen gemaakt zijn'
@@ -476,7 +470,6 @@ nl:
     last_post: Laatste bericht
     last_post_lowercase: laatste bericht
     summary:
-      enabled_description: "Je leest een samenvatting van dit topic: alleen de meeste interessante berichten bepaald door de community. Klik hier onder om alle berichten weer te zien."
       description: "Er zijn <b>{{count}}</b> reacties."
       description_time: "Er zijn <b>{{count}}</b> reacties met een gemiddelde leestijd van <b>{{readingTime}} minuten</b>."
       enable: 'Samenvatting van topic'
@@ -1240,7 +1233,6 @@ nl:
         this_week: "Deze week"
         today: "Vandaag"
         other_periods: "bekijk meer top-topics"
-    browser_update: 'Helaas <a href="http://www.discourse.org/faq/#browser">is je browser te oud om te kunnen werken met dit forum</a>. <a href="http://browsehappy.com">Upgrade je browser</a>.'
     permission_types:
       full: "Maak topic / Reageer / Bekijk"
       create_post: "Reageer / Bekijk"
@@ -1373,7 +1365,6 @@ nl:
         confirm_revoke: "Weet je zeker dat je die API Key wil intrekken?"
         info_html: "Met deze API key kun je met behulp van JSON calls topics maken en bewerken."
         all_users: "Alle gebruikers"
-        note_html: "Houd deze key <strong>geheim</strong>, gebruikers die deze key hebben kunnen zich als elke andere gebruiker voordoen op het forum en topics aanmaken."
       backups:
         title: "Backups"
         menu:
@@ -1596,12 +1587,6 @@ nl:
             label: "Nieuw:"
             ip_address: "IP-adres"
             add: "Voeg toe"
-      impersonate:
-        title: "Log in als gebruiker"
-        username_or_email: "Gebruikersnaam of e-mailadres van gebruiker"
-        help: "Gebruik dit hulpmiddel om in te loggen als een gebruiker voor debug-doeleinden."
-        not_found: "Die gebruiker kan niet gevonden worden."
-        invalid: "Sorry, maar als deze gebruiker mag je niet inloggen."
       users:
         title: 'Leden'
         create: 'Voeg beheerder toe'
@@ -1630,7 +1615,6 @@ nl:
           newuser: 'Leden met Trust Level 0 (Nieuw lid)'
           basic: 'Leden met Trust Level 1 (Lid)'
           regular: 'Leden met Trust Level 2 (Regulier lid)'
-          leader: 'Leden met Trust Level 3 (Leider)'
           elder: 'Leden met Trust Level 4 (Ervaren lid)'
           admins: 'Administrators'
           moderators: 'Moderators'
@@ -1806,7 +1790,6 @@ nl:
         listable: Badge op de publieke badges pagina tonen
         enabled: Badge aanzetten
         icon: Icoon
-        preview: Badge Voorbeeld
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1818,7 +1801,6 @@ nl:
         back: '<b>u</b> Terug'
         up_down: '<b>k</b>/<b>j</b> Verplaats selectie omhoog/omlaag'
         open: '<b>o</b> of <b>Enter</b> Open geselecteerde topic'
-        next_prev: '<b>`</b>/<b>~</b> Vorige/volgende sectie'
       application:
         title: 'Applicatie'
         create: '<b>c</b> Maak nieuwe topic'

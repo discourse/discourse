@@ -44,7 +44,6 @@ zh_CN:
           other: "> %{count} 年"
         almost_x_years:
           other: "%{count} 年"
-        date_month: "MMMDo"
         date_year: "YY-MM-D"
       medium:
         x_minutes:
@@ -53,7 +52,6 @@ zh_CN:
           other: "%{count} 小时"
         x_days:
           other: "%{count} 天"
-        date_year: "YYYY年MMMDo"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分钟前"
@@ -252,7 +250,6 @@ zh_CN:
       admin_tooltip: "用户是管理员"
       suspended_notice: "该用户将被禁止登录，直至 {{date}}。"
       suspended_reason: "原因："
-      mailing_list_mode: "每次论坛中出现回帖就发送一封邮件（除非您屏蔽了主题或者分类）"
       watched_categories: "已关注"
       watched_categories_instructions: "您将自动关注这些分类的所有新主题。您将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
       tracked_categories: "已跟踪"
@@ -331,7 +328,6 @@ zh_CN:
         prefilled: "电子邮箱与用户名匹配。"
       locale:
         title: "界面语言"
-        instructions: "论坛界面使用的语言，设置后刷新起效。"
         default: "（默认）"
       password_confirmation:
         title: "请再次输入密码"
@@ -350,7 +346,6 @@ zh_CN:
         bi_weekly: "每两周"
       email_direct: "当有人引用、回复或提及您时发送一封邮件给您"
       email_private_messages: "当有人给您发私信时发送一封邮件给您"
-      email_always: "即使在论坛中活跃时也接收电子邮件提醒和摘要"
       other_settings: "其它"
       categories_settings: "分类"
       new_topic_duration:
@@ -436,7 +431,6 @@ zh_CN:
     read_only_mode:
       enabled: "一个管理员启用了只读模式。您可以继续浏览这个站点但是无法进行交互。"
       login_disabled: "只读模式下不允许登录。"
-    too_few_topics_notice: "创建至少 5 个公开主题和 %{posts} 个公开帖子以开始讨论。新用户无法得到信任等级除非已经有内容让用户阅读。这个消息仅显示给职员。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -451,7 +445,6 @@ zh_CN:
     last_post: 最后一帖
     last_post_lowercase: 最后一帖
     summary:
-      enabled_description: "您正在查看这个主题的概括版本：这些是由社群决定的最有意思的帖子。要查看所有帖子，请点击下方。"
       description: "有 <b>{{count}}</b> 个回复。"
       description_time: "有 <b>{{count}}</b> 个回复，大约需要 <b>{{readingTime}} 分钟</b>阅读。"
       enable: '概括本主题'
@@ -1205,7 +1198,6 @@ zh_CN:
         this_week: "本周"
         today: "今天"
         other_periods: "查看更多热门主题"
-    browser_update: '抱歉，<a href="http://www.discourse.org/faq/#browser">您的浏览器版本太低，无法使用 Discourse 论坛</a>，请先<a href="http://browsehappy.com">升级浏览器</a>。'
     permission_types:
       full: "创建 / 回复 / 阅读"
       create_post: "回复 / 阅读"
@@ -1333,7 +1325,6 @@ zh_CN:
         confirm_revoke: "确定要撤销该密钥？"
         info_html: "API 密钥可以用来通过 JSON 调用创建和更新主题。"
         all_users: "所有用户"
-        note_html: "请<strong>安全地</strong>保管好本密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义来发帖。"
       backups:
         title: "备份"
         menu:
@@ -1558,12 +1549,6 @@ zh_CN:
             add: "添加"
         logster:
           title: "错误日志"
-      impersonate:
-        title: "以用户角度检视"
-        username_or_email: "用户名或用户电子邮件"
-        help: "使用此工具以用户角度检视以方便调试。"
-        not_found: "无法找到该用户。"
-        invalid: "抱歉，您不能以此用户角度检视。"
       users:
         title: '用户'
         create: '添加管理员用户'
@@ -1590,7 +1575,6 @@ zh_CN:
           newuser: '信用等级为0的用户（新用户）'
           basic: '信用等级为1的用户（基本用户）'
           regular: '信用等级为2的用户（常访问用户）'
-          leader: '信用等级为3的用户（高级用户）'
           elder: '信用等级为4的用户（骨灰用户）'
           admins: '管理员'
           moderators: '版主'
@@ -1769,7 +1753,6 @@ zh_CN:
         target_posts: 查询到的帖子
         auto_revoke: 每天运行撤销查询
         show_posts: 在徽章页面显示被授予帖子的徽章
-        preview: 预览徽章
         trigger: 开关
         trigger_type:
           none: "每日更新"
@@ -1795,7 +1778,6 @@ zh_CN:
         back: '<b>u</b> 返回'
         up_down: '<b>k</b> 和 <b>j</b> 上/下移动'
         open: '<b>o</b> 或者 <b>Enter</b> 打开选中的主题'
-        next_prev: '<b>`</b>/<b>~</b> 下一个/上一个选区'
       application:
         title: '应用'
         create: '<b>c</b> 创建一个新主题'

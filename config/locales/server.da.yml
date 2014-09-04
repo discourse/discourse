@@ -221,8 +221,6 @@ da:
       title: "basis-bruger"
     regular:
       title: "almindelig bruger"
-    leader:
-      title: "erfaren bruger"
     elder:
       title: "advanceret bruger"
     change_failed_explanation: "Du forsøgte at degradere  %{user_name} til '%{new_trust_level}'. Imidlertid er deres tillidsniveau allerede '%{current_trust_level}'. %{user_name} bliver på '%{current_trust_level}'"
@@ -344,7 +342,6 @@ da:
       long_form: 'markerede dette som stødende'
     notify_user:
       title: 'Underret {{username}}'
-      description: 'Dette indlæg indeholder noget, som jeg ønsker at diskutere privat med forfatteren.'
       long_form: 'underrettede bruger'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:

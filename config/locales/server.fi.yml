@@ -8,7 +8,7 @@
 fi:
   dates:
     short_date_no_year: "D. MMM"
-    short_date: "D. MMM YYYY"
+    short_date: "D. MMMM[ta] YYYY"
     long_date: "D. MMMM[ta] YYYY, H:mm"
   time:
     formats:
@@ -23,6 +23,7 @@ fi:
   log_in: "Kirjaudu sisään"
   via: "%{username} sivustolta %{site_name}"
   is_reserved: "on varattu"
+  purge_reason: "Poistettiin automaattisesti, koska tiliä ei oltu aktivoitu riittävässä ajassa"
   errors:
     messages:
       too_long_validation: "on rajoitettu %{max} merkkiin; sinä syötit %{length} merkkiä."
@@ -200,28 +201,6 @@ fi:
   assets_topic_body: "Tämä on pysyvä ketju, joka näkyy ainoastaan henkilökunnalle. Se on tarkoitettu sivuston käyttämien kuvien ja muiden tiedostojen tallentamiseen. Älä poista sitä!\n\n\nTässä ova ohjeet sen käyttämiseen:\n\n\n1. Vastaa tähän ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Lähetä viesti\n4. Klikkaa hiiren oikealla näppäimellä, tai klikkaa muokkaa-näppäintä muokataksesi viestiäsi, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nLisäksi, jos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `sallitut tiedostopäätteet` listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Tervetuloa Loungeen"
-    body: |2
-
-      Onnittelut! :confetti_ball:
-
-      Jos näet tämän ketjun, sinut on juuri ylennetty [luottamustasolle 3 (johtaja)][trust].
-
-      > Johtajat ovat palstan aktiivisimpia ja tuotteiliampia jäseniä. He toimivat positiivisena esimerkkinä muille tekojensa ja viestiensä kautta.
-
-      Voit nyt&hellip;
-
-      * Muokata minkä hyvänsä ketjun otsikkoa
-      * Vaihtaa minkä hyvänsä ketjun toiselle alueelle
-      * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](http://en.wikipedia.org/wiki/Nofollow) on poistettu)
-      * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
-
-      Tässä on [nykyinen lista käyttäjistä, jotka ovat päässeet luottamustasolle 3](/badges/3/leader). Muista käydä moikkaamassa!
-
-      Kiitos, että olet yhteisön arvokas jäsen!
-
-      (Saadaksesi lisätietoja luottamustasoista, [katso tämä englanninkielinen ketju][trust]. Huomaa, että vain käyttäjät, jotka täyttävät asetetut vaatimukset pysyvät luottamustasolla 3. )
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Alueesta %{category}"
     replace_paragraph: "[Korvaa tämä kappale lyhyellä kuvauksella uudesta alueesta. Tämä kuvaus näytetään alueen valinnan yhteydessä, joten yritä pitää se alle 200 merkin pituisenä. Tätä aluetta ei näytetä listauksissa ennen kuin olet muokannut tätä tekstiä tai luonut viestiketjuja.]"
@@ -244,8 +223,6 @@ fi:
       title: "peruskäyttäjä"
     regular:
       title: "tavallinen käyttäjä"
-    leader:
-      title: "johtaja"
     elder:
       title: "vanhin"
     change_failed_explanation: "Yritit alentaa käyttäjän %{user_name} luottamustasolle '%{new_trust_level}'. Käyttäjän luottamustaso on jo valmiiksi '%{current_trust_level}'. %{user_name} jatkaa edelleen luottamustasolla '%{current_trust_level}'"
@@ -368,7 +345,7 @@ fi:
       long_form: 'liputti tämän asiattomaksi'
     notify_user:
       title: 'Ilmoita käyttäjälle {{username}}'
-      description: 'Tämä viesti sisältää jotain, mistä haluan keskustellä viestin kirjoittajan kanssa suoraan ja yksityisesti.'
+      description: 'Tämä viesti sisältää jotain, mistä haluan keskustellä tämän henkilön kanssa suoraan ja yksityisesti. Tämä ei aiheuta liputusta.'
       long_form: 'ilmoitti käyttäjälle'
       email_title: 'Viestisi ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -685,6 +662,7 @@ fi:
     sso_overrides_email: "Ohittaa paikallisen sähköpostiosoitteen SSO:n kautta saatavalla ulkopuolisella sähköpostillosoitteella (VAROITUS: eroavuuksia saattaa syntyä johtuen paikallisten sähköpostien normalisoinnista)"
     sso_overrides_username: "Ohittaa paikallisen käyttäjänimen SSO:n kautta saatavalla ulkopuolisella käyttäjänimellä (VAROITUS: eroavuuksia saattaa syntyä johtuen eroavuuksista nimien pituuksissa/vaatimuksissa)"
     sso_overrides_name: "Ohittaa paikallisen nimen SSO:n kautta saatavalla ulkopuolisella nimellä (VAROITUS: eroavuuksia saattaa syntyä johtuen paikallisten nimien normalisoinnista)"
+    sso_overrides_avatar: "Syrjäyttää käyttäjän avatarin ulkopuolisella kertakirjautumisen kautta haetulla avatarilla. Jos tämä otetaan käyttöön, suositellaan samalla allow_uploaded_avatars -asetuksen poistamista käytöstä."
     enable_local_logins: "Ota käyttöön käyttäjätunnus/salasana -perusteinen kirjautuminen. (Huom: tämän täytyy olla käytössä kutsujen toimimiseksi)"
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Ota tämä asetus pois käytöstä estääksesi uusien käyttäjätilien luomisen."
     enable_google_logins: "(vanhentunut) Ota käyttöön Google autentikaatio. Tämä on OpenID autentikaatio, jonka Google on lakkauttanut. Tämä ei toimi uusien asennusten kanssa. Käytä Googlen OAuth2 autentikointia. Käytössä olevien järjestelmien pitää vaihtaa Googlen OAuth2:een 20.4.2015 mennessä."
@@ -704,8 +682,10 @@ fi:
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden maksimimäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
     backup_daily: "Luo uusi varmuuskopio automaattisesti kerran päivässä."
+    enable_s3_backups: "Lataa varmuuskopiot S3:een niiden valmistuttua. TÄRKEÄÄ: Edellyttää, että toimivat S3 kirjautumistiedot on syötetty asetuksiin."
     s3_backup_bucket: "Amazon S3 bucket johon varmuuskopiot ladataan. VAROITUS: Varmista, että se on yksityinen."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
+    verbose_localization: "Näytä laajennetut lokalisointitiedot käyttöliittymässä"
     previous_visit_timeout_hours: "Kuinka kauan vierailun on täytynyt kestää, jotta se lasketaan 'edelliseksi' vierailuksi, tunneissa"
     rate_limit_create_topic: "Ketjun luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden ketjun."
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
@@ -743,15 +723,6 @@ fi:
     regular_requires_likes_received: "Kuinka monta tykkäystä peruskäyttäjän täytyy saada ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
     regular_requires_likes_given: "Kuinka monta tykkäystä peruskäyttäjän täytyy antaa ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
     regular_requires_topic_reply_count: "Kuinka moneen ketjuun peruskäyttäjän täytyy vastata ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
-    leader_requires_days_visited: "Monenako päivänä vähintään käyttäjän täytyy olla vieraillut sivustolla viimeisen 100 päivän aikana voidakseen saavuttaa johtajan (3) luottamustason. (asteikko 0-100)"
-    leader_requires_topics_replied_to: "Moneenko ketjuun vähintään käyttäjän täytyy olla vastannut viimeisen 100 päivän aikana voidakseen saavuttaa johtajan (3) luottamustason. (0 tai korkeampi)"
-    leader_requires_topics_viewed: "Montako prosenttia viimeisen 100 päivän aikana luoduista ketjuista käyttäjän täytyy olla katsellut voidakseen saavuttaa johtajan (3) luottamustason. (asteikko 0-100)"
-    leader_requires_posts_read: "Montako prosenttia viimeisen 100 päivän aikana luoduista viesteistä käyttäjän täytyy olla katsellut voidakseen saavuttaa johtajan (3) luottamustason. (asteikko 0-100)"
-    leader_requires_topics_viewed_all_time: "Montako ketjua käyttäjän täytyy olla katsonut voidakseen saavuttaa johtajan (3) luottamustason."
-    leader_requires_posts_read_all_time: "Montako viestiä käyttäjän täytyy olla katsonut voidakseen saavuttaa johtajan (3) luottamustason."
-    leader_requires_max_flagged: "Käyttäjällä ei saa olla enempää kuin x viestiä liputettuna x eri käyttäjältä viimeisen 100 päivän aikana voidakseen saavuttaa johtajan (3) luottamustason. (0 tai korkeampi)"
-    leader_promotion_min_duration: "Kuinka montaa päivää johtajaksi ylennyksen jälkeen käyttäjä voidaa jälleen alentaa."
-    leader_links_no_follow: "Onko johtajien linkeissä nofollow-attribuutti."
     min_trust_to_create_topic: "Ketjun luomiseksi vaadittava luottamustaso."
     min_trust_to_edit_wiki_post: "Wikiviestin muokkaamiseen vaadittava luottamustaso."
     newuser_max_links: "Kuinka monta linkkiä uusi käyttäjä voi lisätä viestiin."
@@ -797,13 +768,14 @@ fi:
     levenshtein_distance_spammer_emails: "Verrattaessa sähköpostiosoitteita tunnettuihin roskapostittajiin, näin monen merkin ero saa vielä aikaan löydöksen."
     reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
     reply_by_email_address: "Saapuvan sähköpostin sapluuna sähköpostivastauksiin, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
-    pop3s_polling_enabled: "Pollaa sähköpostivastaukset POP3S:lla."
-    pop3s_polling_insecure: "Pollaa käyttäen selkotekstistä POP3 ilman SSL:ia."
-    pop3s_polling_period_mins: "Tiheys minuuteissa kuinka usein POP3S tililtä tarkastetaan uudet sähköpostit. HUOM: vaatii uudelleenkäynnistyksen."
-    pop3s_polling_port: "POP3S pollauksen portti."
-    pop3s_polling_host: "POP3S pollauksen host."
-    pop3s_polling_username: "POP3S käyttäjänimi."
-    pop3s_polling_password: "POP3S käyttäjätilin salasana."
+    disable_emails: "Estä Discoursea lähettämästä mitään sähköpostia"
+    pop3_polling_enabled: "Pollaa sähköpostivastaukset POP3:lla."
+    pop3_polling_ssl: "Käytä SSL-salausta yhdistettäessä POP3-palvelimeen. (Suositellaan)"
+    pop3_polling_period_mins: "Tiheys minuuteissa kuinka usein POP3 tililtä tarkastetaan uudet sähköpostit. HUOM: vaatii uudelleenkäynnistyksen."
+    pop3_polling_port: "POP3 pollauksen portti."
+    pop3_polling_host: "POP3 pollauksen host."
+    pop3_polling_username: "POP3 käyttäjänimi"
+    pop3_polling_password: "POP3 käyttäjätilin salasana."
     email_in: "Salli käyttäjien luoda uusia ketjuja sähköpostitse (vaatii pop3 pollauksen). Konfiguroi osoitteet  erikseen jokaisen alueen \"Asetukset\" välilehdeltä. "
     email_in_min_trust: "Alin luottamustaso, jonka käyttäjä tarvitsee voidakseen luoda uusia ketjuja sähköpostitse."
     email_prefix: "Sähköpostin otsikossa käytettävä [tunniste]. Jos et aseta arvoa, oletusarvona käytetään 'otsikkoa'."
@@ -878,8 +850,9 @@ fi:
     invited_to_private_message: "%{display_username} kutsui sinut yksityisviestiin: %{link}"
     invitee_accepted: "%{display_username} hyväksyi kutsusi"
     linked: "%{display_username} linkitti sinuun täällä %{link}"
+    granted_badge: "Ansaitsit %{link}"
   search:
-    within_post: "#%{post_number} käyttäjältä %{username}: %{excerpt}"
+    within_post: "#%{post_number} käyttäjältä %{username}"
     types:
       category: 'Alueet'
       topic: 'Tulokset'
@@ -1103,13 +1076,6 @@ fi:
         Kuitenkin, jos viesti piilotettiin toista kertaa, se pysyy piilotettuna kunnes henkilökunta tutkii tilanteen – jonka jälkeen voi seurata muita seuraamuksia, mukaan lukien tilisi hyllyttäminen.
 
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "Tässä yksityisviestissä on muutama pikaohje, joiden avulla pääset alkuun:\n\n## Jatka vierittämistä\n\nPalstalla ei ole sivunumeroita tai 'Seuraava'-painikkeita – lukeaksesi lisää, **jatka vain sivun vierittämistä alaspäin!**\n\nKun uusia viestejä lähetetään, nekin ilmestyvät näkyviin automaattisesti.\n\n## Missä olen?\n\n- Jos haluat käyttää hakua, päästä käyttäjäsivullesi tai avata päävalikon, klikkaa **oikeassa yläkulmassa olevia painikkeita**.\n\n- Kun olet lukemassa viestiketjua, pääset takaisin ylös &uarr; klikkaamalla otsikkoa. Klikkaa vihreää edistymispalkkia oikealla alhaalla tuodaksesi esiin navigaatiopainikkeet, tai käytä <kbd>home</kbd> ja <kbd>end</kbd> näppäimiä.\n\n<img src=\"http://www.discourse.org/images/welcome/progress-bar.png\" width=\"190\" height=\"52\">\n\n- Ketjun\
-        \ otsikkoa klikkaamalla pääset automaattisesti ensimmäisen lukemattoman viestin kohdalle. Kejun viimeisimpään viestiin pääset klikkaamalla viimeisimmän viestin aikaa, viimeiseen viestiin uusimman viestin ajasta.\n\n## Kuinka vastaan viesteihin?\n\n- Vastataksesi ketjuun yleisesti, käytä Vastaa-painiketta <img src=\"http://www.discourse.org/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> sivun alalaidassa.\n\n- Vastataksesi tiettyyn viestiin, käytä kyseisen viestin Vastaa-painiketta <img src=\"http://www.discourse.org/images/welcome/reply-post.png\" width=\"29\" height=\"25\">.\n\n- Jos haluat viedä keskustelun uuteen suuntaan, mutta säilyttää yhteyden aiempaan keskusteluun, käytä Vastaa uudessa ketjussa -painiketta <img src=\"http://www.discourse.org/images/welcome/reply-as-new-topic.png\" width=\"\
-        33\" height=\"25\"> viestin oikealla puolella.\n\nLainataksesi toista käyttäjää viestissäsi, valitse teksti jota haluat lainata ja klikkaa mitä hyvänsä Vastaa-painiketta.\n\n<img src=\"http://www.discourse.org/images/welcome/quote-reply.png\" width=\"467\" height=\"172\">\n\n(Lainataksesi koko viestin, käytä Lainaa koko viesti -painiketta editorin valikkorivillä.)\n\nMainitaksesi toisen käyttään viestissäsi, aloita kirjoittamaan `@` ja automaattinen täydennys tulee esiin.\n\n<img src=\"http://www.discourse.org/images/welcome/username-completion.png\" width=\"307\" height=\"174\">\n\n## Mitä muuta voin tehdä?\n\n<img src=\"http://www.discourse.org/images/welcome/like-link-flag-bookmark.png\" width=\"225\" height=\"61\">\n\nKäytä **tykkää** painiketta viestin alareunassa osoittaaksesi kirjoittajalle, että olet\
-        \ pitänyt hänen viestistään. Jos huomaat viestissä ongelman, älä epäröi käyttää **liputa** painiketta ja saattaksesi asian kirjoittajan tai palstan henkilökunnan tietoon yksityisesti.\n\nVoit myös jakaa linkin viestiin tai lisätä sen kirjanmerkkeihin käyttäjäsivullesi myöhempää tarkastelua varten.\n\nLisätäksesi [Emoji-hymiöitä](http://www.emoji-cheat-sheet.com/), aloita vain kirjoittamaan `:` tai perinteisiä hymiöitä `:)` :smile: \n\n## Kuka minulle puhuu?\n\nKun toinen käyttäjä vastaa viestiisi, lainaa viestiäsi tai mainitsee `@käyttäjänimesi`, ilmestyy keskustelukuvakkeen yhteyteen numero sivun oikeassa yläkulmassa. Näyt sieltä kuka puhuu sinulle ja missä.\n\n<img src=\"http://www.discourse.org/images/welcome/notification-panel.png\" width=\"237\" height=\"78\">\n\nSaat sähköposti-ilmoituksia suorista vastauksista\
-        \ (ja yksityisviesteistä) jos et ole paikalla sivustolla, kun ne saapuvat.\n\n## Milloin keskustelut ovat uusia?\n\nOletuksena kaikki alle kaksi päivää vanhat keskustelut tulkitaan uusiksi ja kaikki keskustelut joihin olet ottanut osaa asetetaan automaattisesti seurantaan.\n\nNäet siniset uusien ketjujen ja viestien ilmaisimet näiden ketjujen yhteydessä:\n\n<img src=\"http://www.discourse.org/images/welcome/topics-new-unread.png\" width=\"490\" height=\"119\">\n\nVoit vaihtaa yksittäisen viestiketjun ilmoitusasetuksia ketjun alalaidassa olevalla painikkeella (asetuksen voi muuttaa myös aluekohtaisesti). Vaihtaaksesi asetuksia siitä, kuinka seuraat ketjuja tai mitkä ketjut tulkitaan uusiksi, katso [käyttäjäasetukset](/my/preferences).\n\n## Miksi en voi tehdä jotain?\n\nUusien käyttäjien oikeuksia rajoitetaan\
-        \ turvallisussyistä. Osallistumalla ansaitset yhteisön luottamuksen ja rajoitukset poistuvat automaattisesti. Korkeammilla [luottamustasoilla](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) saat vielä enemmän valtuuksia joiden avulla voit auttaa yhteisön ylläpitämisessä.\n"
     welcome_user:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
@@ -1238,6 +1204,12 @@ fi:
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Annettu vastausavain on väärä tai tuntematon, joten emme pystyneet selvittämään mihin tämä sähköposti lähetettiin vastauksena. Ota yhteys henkilökuntaan.
+    email_reject_destination:
+      subject_template: "Sähköpostiongelma -- Väärä kohdeosoite tai -osoitteet"
+      text_body_template: |
+        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
+
+        Mitään sähköpostin kohdeosoitteista ei tunnistettu. Varmista, että sähköpostiosoite on "Vastaanottaja:"-rivillä (ei CC tai BCC) ja että yrität lähettää sähköpostia osoitteeseen, jonka palstan ylläpitäjät ovat antaneet.
     email_error_notification:
       subject_template: "Sähköpostiongelma -- POP autentikoinnin virhe"
       text_body_template: |
