@@ -76,6 +76,7 @@ class ImportScripts::Base
     update_feature_topic_users
     update_category_featured_topics
     update_topic_count_replies
+    reset_topic_counters
 
     puts "", "Done"
 
@@ -473,6 +474,19 @@ class ImportScripts::Base
 
     Topic.find_each do |topic|
       topic.feature_topic_users
+      progress_count += 1
+      print_status(progress_count, total_count)
+    end
+  end
+
+  def reset_topic_counters
+    puts "", "reseting topic counters"
+
+    total_count = Topic.count
+    progress_count = 0
+
+    Topic.find_each do |topic|
+      Topic.reset_highest(topic.id)
       progress_count += 1
       print_status(progress_count, total_count)
     end
