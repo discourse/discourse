@@ -8,8 +8,8 @@ export default Ember.CollectionView.extend({
   didInsertElement: function(){
     var term = this.get('controller.term');
     if(!_.isEmpty(term)) {
-      this.$('.blurb').highlight(term.split(/\s+/));
-      this.$('.topic-title').highlight(term.split(/\s+/), {className: 'highlighted'} );
+      this.$('.blurb').highlight(term.split(/\s+/), {className: 'search-highlight'});
+      this.$('.topic-title').highlight(term.split(/\s+/), {className: 'search-highlight'} );
     }
   }
 });

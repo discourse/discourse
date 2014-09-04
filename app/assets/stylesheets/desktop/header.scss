@@ -70,6 +70,9 @@ and (max-width : 570px) {
   color: scale-color($primary, $lightness: 45%);
   display: block;
   font-size: 11px;
+  .search-highlight {
+    color: scale-color($primary, $lightness: 25%);
+  }
 }
 
 .d-dropdown#search-dropdown {
