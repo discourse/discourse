@@ -1,56 +1,6 @@
 var safe = Handlebars.SafeString;
 
 /**
-  Produces a link to a category given a category object and helper options
-
-  @method categoryLinkHTML
-  @param {Discourse.Category} category to link to
-  @param {Object} options standard from handlebars
-**/
-function categoryLinkHTML(category, options) {
-  var categoryOptions = {};
-  if (options.hash) {
-    if (options.hash.allowUncategorized) { categoryOptions.allowUncategorized = true; }
-    if (options.hash.showParent) { categoryOptions.showParent = true; }
-    if (options.hash.onlyStripe) { categoryOptions.onlyStripe = true; }
-    if (options.hash.link !== undefined) { categoryOptions.link = options.hash.link; }
-    if (options.hash.extraClasses) { categoryOptions.extraClasses = options.hash.extraClasses; }
-    if (options.hash.categories) {
-      categoryOptions.categories = Em.Handlebars.get(this, options.hash.categories, options);
-    }
-  }
-  return new safe(Discourse.HTML.categoryBadge(category, categoryOptions));
-}
-
-/**
-  Produces a link to a category
-
-  @method category-link
-  @for Handlebars
-**/
-Handlebars.registerHelper('category-link', function(property, options) {
-  return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
-});
-
-Handlebars.registerHelper('category-link-raw', function(property, options) {
-  return categoryLinkHTML(property, options);
-});
-
-Handlebars.registerHelper('category-badge', function(property, options) {
-  options.hash.link = false;
-  return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
-});
-
-
-/**
-  Produces a bound link to a category
-
-  @method bound-category-link
-  @for Handlebars
-**/
-Em.Handlebars.helper('bound-category-link', categoryLinkHTML);
-
-/**
   Produces a link to a route with support for i18n on the title
 
   @method titled-link-to
