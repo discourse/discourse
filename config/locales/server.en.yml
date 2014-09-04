@@ -284,9 +284,9 @@ en:
     basic:
       title: "basic user"
     regular:
-      title: "regular user"
+      title: "member"
     leader:
-      title: "veteran"
+      title: "regular"
     elder:
       title: "elder"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
@@ -687,7 +687,7 @@ en:
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
-    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
+    enable_private_messages: "Allow trust level 1 users to create private messages and reply to private messages"
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
@@ -856,8 +856,8 @@ en:
     tl3_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last 100 days to qualify for promotion to trust level 3, where x is this setting's value. (0 or higher)"
     tl3_promotion_min_duration: "The minimum number of days that a promotion to trust level 3 lasts before a user can be demoted back to trust level 2."
     tl3_requires_likes_given: "The minimum number of likes that must be given in the last 100 days to qualify for promotion to trust level 3."
-    tl3_requires_likes_received: "The minimum number of likes that must be received in the last 100 days to qualify for promotion to veteran (3) trust level."
-    tl3_links_no_follow: "Do not remove rel=nofollow from veteran links."
+    tl3_requires_likes_received: "The minimum number of likes that must be received in the last 100 days to qualify for promotion to trust level 3."
+    tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
