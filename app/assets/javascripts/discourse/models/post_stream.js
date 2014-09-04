@@ -122,8 +122,7 @@ Discourse.PostStream = Em.Object.extend({
 
     var userFilters = this.get('userFilters');
     if (!Em.isEmpty(userFilters)) {
-      var userFiltersArray = this.get('userFilters').toArray();
-      if (userFiltersArray.length > 0) { result.username_filters = userFiltersArray.join(","); }
+      result.username_filters = userFilters.join(",");
     }
 
     return result;
@@ -215,9 +214,9 @@ Discourse.PostStream = Em.Object.extend({
     this.set('summary', false);
     this.set('show_deleted', true);
     if (userFilters.contains(username)) {
-      userFilters.remove(username);
+      userFilters.removeObject(username);
     } else {
-      userFilters.add(username);
+      userFilters.addObject(username);
     }
     return this.refresh();
   },
@@ -904,9 +903,9 @@ Discourse.PostStream.reopenClass({
   create: function() {
     var postStream = this._super.apply(this, arguments);
     postStream.setProperties({
-      posts: Em.A(),
-      stream: Em.A(),
-      userFilters: Em.Set.create(),
+      posts: [],
+      stream: [],
+      userFilters: [],
       postIdentityMap: Em.Map.create(),
       summary: false,
       loaded: false,
