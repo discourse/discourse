@@ -97,7 +97,12 @@
   .badge-notification {
     position: relative;
     top: -2px;
+    &.new-topic {
+      top: 0px;
+      padding-left: 5px;
+    }
   }
+
   .category {
     padding: 0 20px 0 20px;
     min-width: 80px;
