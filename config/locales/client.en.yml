@@ -389,7 +389,7 @@ en:
 
       name:
         title: "Name"
-        instructions: "Longer version of your name."
+        instructions: "Your full name."
         too_short: "Your name is too short."
         ok: "Your name looks good."
       username:
