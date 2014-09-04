@@ -15,49 +15,49 @@ describe LeaderRequirements do
 
   describe "requirements" do
     it "min_days_visited uses site setting" do
-      SiteSetting.stubs(:leader_requires_days_visited).returns(66)
+      SiteSetting.stubs(:tl3_requires_days_visited).returns(66)
       leader_requirements.min_days_visited.should == 66
     end
 
     it "min_topics_replied_to uses site setting" do
-      SiteSetting.stubs(:leader_requires_topics_replied_to).returns(12)
+      SiteSetting.stubs(:tl3_requires_topics_replied_to).returns(12)
       leader_requirements.min_topics_replied_to.should == 12
     end
 
     it "min_topics_viewed depends on site setting and number of topics created" do
-      SiteSetting.stubs(:leader_requires_topics_viewed).returns(75)
+      SiteSetting.stubs(:tl3_requires_topics_viewed).returns(75)
       described_class.stubs(:num_topics_in_time_period).returns(31)
       leader_requirements.min_topics_viewed.should == 23
     end
 
     it "min_posts_read depends on site setting and number of posts created" do
-      SiteSetting.stubs(:leader_requires_posts_read).returns(66)
+      SiteSetting.stubs(:tl3_requires_posts_read).returns(66)
       described_class.stubs(:num_posts_in_time_period).returns(1234)
       leader_requirements.min_posts_read.should == 814
     end
 
     it "min_topics_viewed_all_time depends on site setting" do
-      SiteSetting.stubs(:leader_requires_topics_viewed_all_time).returns(75)
+      SiteSetting.stubs(:tl3_requires_topics_viewed_all_time).returns(75)
       leader_requirements.min_topics_viewed_all_time.should == 75
     end
 
     it "min_posts_read_all_time depends on site setting" do
-      SiteSetting.stubs(:leader_requires_posts_read_all_time).returns(1001)
+      SiteSetting.stubs(:tl3_requires_posts_read_all_time).returns(1001)
       leader_requirements.min_posts_read_all_time.should == 1001
     end
 
     it "max_flagged_posts depends on site setting" do
-      SiteSetting.stubs(:leader_requires_max_flagged).returns(3)
+      SiteSetting.stubs(:tl3_requires_max_flagged).returns(3)
       leader_requirements.max_flagged_posts.should == 3
     end
 
     it "min_likes_given depends on site setting" do
-      SiteSetting.stubs(:leader_requires_likes_given).returns(30)
+      SiteSetting.stubs(:tl3_requires_likes_given).returns(30)
       leader_requirements.min_likes_given.should == 30
     end
 
     it "min_likes_received depends on site setting" do
-      SiteSetting.stubs(:leader_requires_likes_received).returns(20)
+      SiteSetting.stubs(:tl3_requires_likes_received).returns(20)
       leader_requirements.min_likes_received.should == 20
     end
   end
