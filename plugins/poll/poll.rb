@@ -54,7 +54,7 @@ module ::PollPlugin
           @post.errors.add(:poll_options, I18n.t('poll.cannot_add_or_remove_options'))
         end
       else
-        # Regular user, tell them to contact a moderator.
+        # not staff, tell them to contact one.
         @post.errors.add(:poll_options, I18n.t('poll.cannot_have_modified_options'))
       end
     end

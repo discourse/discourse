@@ -63,7 +63,7 @@ describe SpamRulesEnforcer do
             Then { expect(spammer.reload).to be_blocked }
           end
 
-          context "spammer becomes a basic user" do
+          context "spammer becomes trust level 1" do
             When { spammer.change_trust_level!(:basic); spammer.reload }
             Then { expect(spammer.reload).to be_blocked }
           end
