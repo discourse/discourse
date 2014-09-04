@@ -30,13 +30,7 @@ class Search
       terms = @term.split(/\s+/)
       blurb = TextHelper.excerpt(cooked, terms.first, radius: 100)
       blurb = TextHelper.truncate(cooked, length: 200) if blurb.blank?
-      blurb = Sanitize.clean(blurb)
-
-      terms.each do |term|
-        blurb.gsub!(Regexp.new("(#{Regexp.escape(term)})", Regexp::IGNORECASE), "<span class='highlighted'>\\1</span>")
-      end
-
-      blurb
+      Sanitize.clean(blurb)
     end
 
     def add(object)

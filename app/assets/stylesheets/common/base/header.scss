@@ -335,3 +335,7 @@
   padding: 4px 6px;
   margin-left: 6px;
 }
+
+.highlight-strong {
+  background-color: dark-light-diff($highlight, $secondary, 40%, -50%);
+}

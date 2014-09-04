@@ -70,7 +70,7 @@ jQuery.extend({
 });
 
 jQuery.fn.unhighlight = function (options) {
-    var settings = { className: 'highlight', element: 'span' };
+    var settings = { className: 'highlight-strong', element: 'span' };
     jQuery.extend(settings, options);
 
     return this.find(settings.element + "." + settings.className).each(function () {
@@ -81,7 +81,7 @@ jQuery.fn.unhighlight = function (options) {
 };
 
 jQuery.fn.highlight = function (words, options) {
-    var settings = { className: 'highlight', element: 'span', caseSensitive: false, wordsOnly: false };
+    var settings = { className: 'highlight-strong', element: 'span', caseSensitive: false, wordsOnly: false };
     jQuery.extend(settings, options);
 
     if (words.constructor === String) {

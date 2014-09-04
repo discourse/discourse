@@ -289,7 +289,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
       if(this._highlighted){
          cooked.unhighlight();
       }
-      cooked.highlight(highlight);
+      cooked.highlight(highlight.split(/\s+/));
       this._highlighted = true;
 
     } else if(this._highlighted){
