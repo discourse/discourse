@@ -28,7 +28,10 @@
         </div>
       {{/unless}}
       {{#if wiki}}
-      <div {{action editPost this}} class="wiki" title="{{i18n post.wiki.about}}"><i class="fa fa-pencil-square-o fa-3x"></i></div>
+        <div {{action editPost this}} class="wiki" title="{{i18n post.wiki.about}}"><i class="fa fa-pencil-square-o fa-3x"></i></div>
+      {{/if}}
+      {{#if via_email}}
+        <div title="{{i18n post.via_email}}" class="via-email"><i class="fa fa-envelope-o fa-2x"></i></div>
       {{/if}}
     </div>
 

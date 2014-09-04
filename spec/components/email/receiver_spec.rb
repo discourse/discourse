@@ -125,7 +125,9 @@ Thanks for listening."
         receiver.process
 
         topic.posts.count.should == (start_count + 1)
-        topic.posts.last.cooked.strip.should == fixture_file("emails/valid_reply.cooked").strip
+        created_post = topic.posts.last
+        created_post.via_email.should be_true
+        created_post.cooked.strip.should == fixture_file("emails/valid_reply.cooked").strip
       end
     end
 

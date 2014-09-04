@@ -773,6 +773,11 @@ $topic-avatar-width: 45px;
    margin-left: 5px;
    cursor: pointer;
  }
+
+ .via-email {
+   margin: 14px 0 0 8px;
+   color: scale-color($primary, $lightness: 60%);
+ }
 }
 
 .gap {

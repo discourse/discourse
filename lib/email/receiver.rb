@@ -241,6 +241,9 @@ module Email
     end
 
     def create_post(user, options)
+      # Mark the reply as incoming via email
+      options[:via_email] = true
+
       creator = PostCreator.new(user, options)
       post = creator.create
 
