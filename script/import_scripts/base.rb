@@ -228,28 +228,28 @@ class ImportScripts::Base
     results.each do |result|
       u = yield(result)
 
+      # block returns nil to skip a post
       if u.nil?
         users_skipped += 1
-        next # block returns nil to skip a post
-      end
+      else
+        import_id = u[:id]
 
-      import_id = u[:id]
+        if user_id_from_imported_user_id(import_id)
+          users_skipped += 1
+        elsif u[:email].present?
+          new_user = create_user(u, import_id)
 
-      if user_id_from_imported_user_id(import_id)
-        users_skipped += 1
-      elsif u[:email].present?
-        new_user = create_user(u, import_id)
-
-        if new_user.valid?
-          @existing_users[import_id.to_s] = new_user.id
-          users_created += 1
+          if new_user.valid?
+            @existing_users[import_id.to_s] = new_user.id
+            users_created += 1
+          else
+            @failed_users << u
+            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+          end
         else
           @failed_users << u
-          puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+          puts "Skipping user id #{import_id} because email is blank"
         end
-      else
-        @failed_users << u
-        puts "Skipping user id #{import_id} because email is blank"
       end
 
       print_status users_created + users_skipped + @failed_users.length + (opts[:offset] || 0), total
@@ -370,40 +370,40 @@ class ImportScripts::Base
     results.each do |r|
       params = yield(r)
 
+      # block returns nil to skip a post
       if params.nil?
         skipped += 1
-        next # block returns nil to skip a post
-      end
-
-      import_id = params.delete(:id).to_s
-
-      if post_id_from_imported_post_id(import_id)
-        skipped += 1 # already imported this post
       else
-        begin
-          new_post = create_post(params, import_id)
-          if new_post.is_a?(Post)
-            @existing_posts[import_id] = new_post.id
-            @topic_lookup[new_post.id] = {
-              post_number: new_post.post_number,
-              topic_id: new_post.topic_id,
-              url: new_post.url,
-            }
+        import_id = params.delete(:id).to_s
 
-            created += 1
-          else
+        if post_id_from_imported_post_id(import_id)
+          skipped += 1 # already imported this post
+        else
+          begin
+            new_post = create_post(params, import_id)
+            if new_post.is_a?(Post)
+              @existing_posts[import_id] = new_post.id
+              @topic_lookup[new_post.id] = {
+                post_number: new_post.post_number,
+                topic_id: new_post.topic_id,
+                url: new_post.url,
+              }
+
+              created += 1
+            else
+              skipped += 1
+              puts "Error creating post #{import_id}. Skipping."
+              puts new_post.inspect
+            end
+          rescue Discourse::InvalidAccess => e
             skipped += 1
-            puts "Error creating post #{import_id}. Skipping."
-            puts new_post.inspect
+            puts "InvalidAccess creating post #{import_id}. Topic is closed? #{e.message}"
+          rescue => e
+            skipped += 1
+            puts "Exception while creating post #{import_id}. Skipping."
+            puts e.message
+            puts e.backtrace.join("\n")
           end
-        rescue Discourse::InvalidAccess => e
-          skipped += 1
-          puts "InvalidAccess creating post #{import_id}. Topic is closed? #{e.message}"
-        rescue => e
-          skipped += 1
-          puts "Exception while creating post #{import_id}. Skipping."
-          puts e.message
-          puts e.backtrace.join("\n")
         end
       end
 
