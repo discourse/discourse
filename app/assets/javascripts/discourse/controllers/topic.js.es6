@@ -40,8 +40,8 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
   init: function() {
     this._super();
-    this.set('selectedPosts', new Em.Set());
-    this.set('selectedReplies', new Em.Set());
+    this.set('selectedPosts', []);
+    this.set('selectedReplies', []);
   },
 
   actions: {
@@ -275,8 +275,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
           var selectedPosts = self.get('selectedPosts'),
               selectedReplies = self.get('selectedReplies'),
               postStream = self.get('postStream'),
-              toRemove = new Ember.Set();
-
+              toRemove = [];
 
           Discourse.Post.deleteMany(selectedPosts, selectedReplies);
           postStream.get('posts').forEach(function (p) {
