@@ -1,6 +1,6 @@
 <a class='search-link' href='{{unbound url}}'>
   <span class='topic'>
-  {{topic-status topic=topic disableActions=true}}{{unbound topic.title}}{{category-badge topic.category}}
+    {{topic-status topic=topic disableActions=true}}<span class='topic-title'>{{unbound topic.title}}</span>{{category-badge topic.category}}
   </span>
   {{#unless Discourse.Mobile.mobileView}}
   <span class='blurb'>
