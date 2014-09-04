@@ -17,11 +17,33 @@ pt:
       date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "Tópicos"
-  posts: "postagens"
+  posts: "posts"
   loading: "Carregando"
   powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript ativado'
+  log_in: "Entrar"
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
+  purge_reason: "Apagar automaticamente devido à antiguidade e por não ser verificado"
+  errors:
+    embed:
+      load_from_remote: "Houve um erro no carregamento desse post."
+  bulk_invite:
+    file_should_be_csv: "O ficheiro a enviar deve estar em formato csv ou txt."
+  backup:
+    operation_already_running: "Existe actualmente uma operação em andamento. Neste momento não é possível iniciar um novo trabalho. "
+    backup_file_should_be_tar_gz: "O ficheiro de backup deve ser um arquivo .tar.gz"
+    not_enough_space_on_disk: "Não existe espaço suficiente no disco para carregar este backup."
+  not_logged_in: "Necessita de ter sessão iniciada para fazer isso."
+  read_only_mode_enabled: "Este site encontra-se no modo apenas leitura. As interacções estão desctivadas."
+  embed:
+    start_discussion: "Iniciar Discussão"
+    continue: "Continuar Discussão"
+    loading: "A carregar Discussão..."
+    permalink: "Permalink"
+    in_reply_to: "▶ %{username}"
+    replies:
+      one: "1 resposta"
+      other: "%{count} respostas"
   too_many_mentions:
     zero: "Desculpe, você não pode mencionar outros usuários."
     one: "Desculpe, você pode mencionar apenas um outro usuário em um post."
@@ -52,10 +74,14 @@ pt:
   rss_posts_in_topic: "RSS feed de '%{topic}'"
   rss_topics_in_category: "RSS feed dos tópicos da categoria '%{category}'"
   author_wrote: "%{author} escreveu:"
+  num_posts: "Posts:"
+  num_participants: "Participantes:"
+  read_full_topic: "Ler tópico completo"
   private_message_abbrev: "MP"
   rss_description:
     latest: "Últimos tópicos"
     hot: "Tópicos quentes"
+  too_late_to_edit: "Esse poste foi criada há muito tempo. Já não pode ser editado ou apagado."
   groups:
     errors:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
@@ -69,6 +95,9 @@ pt:
       trust_level_4: "nivel_de_confianca_4"
       trust_level_5: "nivel_de_confianca_5"
   education:
+    until_posts:
+      one: "1 post"
+      other: "%{count} posts"
     avatar: |
       ### Que tal uma nova imagem para a sua conta? ⏎
       ⏎
@@ -108,12 +137,27 @@ pt:
               cant_send_pm: "Desculpe, não podes enviar uma mensagem particular para esse utilizador."
         user:
           attributes:
+            password:
+              common: "é uma das 10000 senhas mais comuns. Por favor use uma senha mais segura."
             ip_address:
               signup_not_allowed: "O registo não é permitido através desta conta."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "não é uma cor válida"
   user_profile:
     no_info_me: "<div class='missing-profile'>o campo Sobre mim do seu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>quer completar?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
+  vip_category_name: "Lounge"
+  vip_category_description: "Uma categoria exclusiva para membros de nível de confiança 3 ou mais alto."
+  meta_category_name: "Meta"
+  meta_category_description: "Discussão sobre este site, a sua organização, como funciona, e como o podemos melhorar."
+  staff_category_name: "Staff"
+  staff_category_description: "Categoria privada para discussões do staff. Os tópicos estão apenas visíveis para administradores e moderadores."
+  lounge_welcome:
+    title: "Bem-vindo ao Lounge"
   category:
+    topic_prefix: "Acerca da categoria %{category}"
     post_template: "%{replace_paragraph}\n\nUse os parágrados a seguir para uma descrição longa, assim como para estabelecer diretrizes ou regras da categoria.\n\nAlgumas coisas para se considerar em qualquer resposta de discussão:\n\n- Para que serve esta categoria? Porque algum usaria esta categoria para seu tópico?\n\n- Como esta categoria se difere das demais categorias já existentes?\n\n- Nós precisamos desta categoria?\n\n- Deveríamos mesclar esta categoria com outra, ou dividir esta categoria em mais categorias?\n"
   trust_levels:
     newuser:
@@ -122,8 +166,6 @@ pt:
       title: "utilizador básico"
     regular:
       title: "utilizador regular"
-    leader:
-      title: "líder"
     elder:
       title: "ancião"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}'"
@@ -234,7 +276,6 @@ pt:
       long_form: 'sinalizado como inapropriado'
     notify_user:
       title: 'Notificar {{username}}'
-      description: 'Esta postagem contém algo sobre o que quero falar com esta pessoal diretamente e em particular.'
       long_form: 'usuário notificado'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:

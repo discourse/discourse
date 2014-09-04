@@ -25,6 +25,8 @@ es:
       long_no_year_no_time: "MMM D"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      long_date_with_year: "D MMM, 'YY LT"
+      long_date_without_year: "D MMM, LT"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -54,7 +56,6 @@ es:
         almost_x_years:
           one: "1a"
           other: "%{count}a"
-        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -66,7 +67,6 @@ es:
         x_days:
           one: "1 día"
           other: "%{count} días"
-        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "hace 1 minuto"
@@ -279,7 +279,6 @@ es:
       admin_tooltip: "Este usuario es administrador"
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_reason: "Causa: "
-      mailing_list_mode: "Recibir un email cada vez que se crea un nuevo post en el foro (a menos que el tema o la categoría esté silenciado)"
       watched_categories: "Vigiladas"
       watched_categories_instructions: "Automáticamente vigilarás todos los temas en estas categorías. Se te notificará de todos los posts y temas, y además aparecerá un contador de posts nuevos y no leídos en la lista de temas."
       tracked_categories: "Siguiendo"
@@ -333,16 +332,19 @@ es:
         title: "Fondo de perfil"
       email:
         title: "Email"
+        instructions: "Nunca será mostrado al público."
         ok: "De acuerdo. Te enviaremos un email para confirmar."
         invalid: "Por favor ingresa una dirección de email válida."
         authenticated: "Tu email ha sido autenticado por {{provider}}."
         frequency: "Sólo te enviaremos emails si no te hemos visto recientemente y todavía no has visto lo que te estamos enviando."
       name:
         title: "Nombre"
+        instructions: "Tu nombre completo."
         too_short: "Tu nombre es demasiado corto."
         ok: "Tu nombre es válido."
       username:
         title: "Nombre de usuario"
+        instructions: "Debe ser único, conciso y sin espacios."
         short_instructions: "La gente puede mencionarte como @{{username}}."
         available: "Tu nombre de usuario está disponible."
         global_match: "El email coincide con el nombre de usuario registrado."
@@ -355,7 +357,6 @@ es:
         prefilled: "El email coincide con el nombre de usuario registrado."
       locale:
         title: "Idioma del interfaz"
-        instructions: "El idioma usado en el interfaz del foro. Se cambiará cuando recargues la página."
         default: "(por defecto)"
       password_confirmation:
         title: "Introduce de nuevo la contraseña"
@@ -374,7 +375,6 @@ es:
         bi_weekly: "cada dos semanas"
       email_direct: "Quiero recibir un email cuando alguien cite, responda, o mencione tu @nombredeusuario"
       email_private_messages: "Quiero recibir un email cuando alguien te envíe un mensaje privado"
-      email_always: "Quiero recibir un email para cualquier notificación y también los resumenes incluso cuando esté activo en el foro"
       other_settings: "Otros"
       categories_settings: "Categorias"
       new_topic_duration:
@@ -447,10 +447,13 @@ es:
       prev_page: "mientras se intentaba cargar"
       reasons:
         network: "Error de red"
+        server: "Error de servidor"
+        forbidden: "Acceso denegado"
         unknown: "Error"
       desc:
         network: "Por favor revisa tu conexión."
         network_fixed: "Parece que ha vuelto."
+        server: "Código de error: {{status}}"
         unknown: "Algo fue mal."
       buttons:
         back: "Volver atrás"
@@ -461,7 +464,6 @@ es:
     read_only_mode:
       enabled: "Un administrador ha habilitado el modo sólo-lectura. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Abrir una sesión está desactivado mientras el foro este modo solo lectura."
-    too_few_topics_notice: "Crea al menos 5 temas y %{posts} respuestas públicas para comenzar la conversación. Los nuevos usuarios no serán capaces de obtener el nivel de confianza necesario a menos que tengan contenido que leer. Este mensaje es solo visible para el personal."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -476,7 +478,6 @@ es:
     last_post: Último post
     last_post_lowercase: Última publicación
     summary:
-      enabled_description: "Estás viendo un resumen de este tema: los posts que la comunidad ha considerado más interesantes. Para ver todos los posts de nuevo, haz clic debajo."
       description: "Hay <b>{{count}}</b> respuestas."
       description_time: "Hay <b>{{count}}</b> respuestas con un tiempo de lectura estimado de <b>{{readingTime}} minutos</b>."
       enable: 'Resumir el tema'
@@ -626,6 +627,7 @@ es:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> ha aceptado tu invitación</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> movió {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Se te ha concedido '{{description}}'</p>"
     upload_selector:
       title: "Añadir imagen"
       title_with_attachments: "Añadir una imagen o archivo"
@@ -1265,7 +1267,6 @@ es:
         this_week: "Esta semana"
         today: "Hoy"
         other_periods: "ver más de los mejores temas"
-    browser_update: 'Desafortunadamente, <a href="http://www.discourse.org/faq/#browser">tu navegador es demasiado viejo para funcionar en este foro de Discourse</a>. Por favor <a href="http://browsehappy.com">actualiza tu navegador</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -1398,7 +1399,6 @@ es:
         confirm_revoke: "Estás seguro que quieres revocar esa clave?"
         info_html: "Tu clave de API te permitirá crear y actualizar temas usando llamadas a JSON."
         all_users: "Todos los usuarios"
-        note_html: "Esta llave es <strong>secreta</strong>. Mantenla en un lugar seguro. Con ella cualquier usuario puede crear contenido con otra identidad."
       backups:
         title: "Copia de seguridad"
         menu:
@@ -1623,12 +1623,6 @@ es:
             add: "Añadir"
         logster:
           title: "Registros de errores"
-      impersonate:
-        title: "Impersonar Usuario"
-        username_or_email: "Nombre de usuario o Email "
-        help: "Utilice esta herramienta para suplantar una cuenta de usuario con fines de depuración."
-        not_found: "El usuario no puede ser encontrado."
-        invalid: "Lo sentimos, usted no puede impersonar a ese usuario."
       users:
         title: 'Usuarios'
         create: 'Añadir Usuario Administrador'
@@ -1657,7 +1651,6 @@ es:
           newuser: 'Usuarios con nivel de confianza 0 (Nuevo)'
           basic: 'Usuarios con nivel de confianza 1 (Básico)'
           regular: 'Usuarios con nivel de confianza 2 (Usuario Normal)'
-          leader: 'Usuarios con nivel de confianza 3 (Líder)'
           elder: 'Usuarios con nivel de confianza 4 (Sabio)'
           admins: 'Administradores'
           moderators: 'Moderadores'
@@ -1841,7 +1834,6 @@ es:
         target_posts: La consulta tiene como objetivo posts
         auto_revoke: Ejecutar diariamente la consulta de revocación
         show_posts: Mostrar el post por el que se concedió el distintivo en la página de distintivos
-        preview: Vista previa del distintivo
         trigger: Activador
         trigger_type:
           none: "Actualizar diariamente"
@@ -1867,11 +1859,12 @@ es:
         back: '<b>u</b> Atrás'
         up_down: '<b>k</b>/<b>j</b> Mover la selección arriba/abajo'
         open: '<b>o</b> or <b>Entrar</b> Abrir tema seleccionado'
-        next_prev: '<b>`</b>/<b>~</b> Sección siguiente/anterior'
       application:
         title: 'Aplicación'
         create: '<b>c</b> Crear un tema nuevo'
         notifications: '<b>n</b> Abrir notificaciones'
+        site_map_menu: '<b>=</b> Abrir el menú del mapa del sitio'
+        user_profile_menu: '<b>p</b> Abrir el menú de perfil de usuario'
         search: '<b>/</b> Buscar'
         help: '<b>?</b> Abrir el asistente de accesos directos del teclado'
       actions:

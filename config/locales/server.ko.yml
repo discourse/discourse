@@ -195,28 +195,6 @@ ko:
   staff_category_description: "스태프들의 논의를 위한 비공개 카테고리입니다. 관리자 및 운영자에게만 보입니다."
   lounge_welcome:
     title: "라운지에 오신 것을 환영합니다."
-    body: |2
-
-      Congratulations! :confetti_ball:
-
-      If you can see this topic, you were recently promoted to [trust level 3 (leader)][trust].
-
-      > Leaders are some of the most active and prolific contributors. They set a positive example for the community through their actions and their posts.
-
-      You can now &hellip;
-
-      * Edit the title of any topic
-      * Change the category of any topic
-      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
-      * Access a private Lounge category only visible to users at trust level 3 and higher
-
-      Here's the [current list of users who made it to trust level 3](/badges/3/leader). Be sure to say hi!
-
-      Thanks for being an important part of this community!
-
-      (For more information on trust levels, [see this topic][trust]. Please note that only members who currently meet the selection criteria will remain at trust level 3. )
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "'%{category}' 카테고리의 설명"
     replace_paragraph: "[이 첫번째 문단을 당신의 새로운 카테고리의 짧은 설명으로 바꿔주세요. 이 지침은 카테고리 선택 화면에 나타날 것입니다. 200자 이하로 적어주세요.]"
@@ -238,8 +216,6 @@ ko:
       title: "기본 사용자"
     regular:
       title: "자주오는 사용자"
-    leader:
-      title: "VIP 사용자"
     elder:
       title: "후원자"
     change_failed_explanation: "당신은 %{user_name} 사용자를 %{new_trust_level} 으로 강등시키려 하였습니다만, 신뢰도는 이미 %{current_trust_level} 입니다. %{user_name} 사용자의 레벨은 %{current_trust_level} 로 유지됩니다."
@@ -336,7 +312,6 @@ ko:
       long_form: '부적절함으로 신고하기'
     notify_user:
       title: '{{username}}에게 알리기'
-      description: '이 게시물은 다른 사용자에게 직접적이고, 개인적인 이야기거리를 포함하고 있습니다.'
       long_form: '신고한 사용자'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -619,7 +594,6 @@ ko:
     track_external_right_clicks: "우클릭한 외부 링크를 추적한다 (에: 새 탭 열기) 이 설정을 위해선 해당 URL를 다시 써야하는 이유로 기본값은 비활성화이다."
     topics_per_page: "토픽 리스트에서 기본으로 보여지는 토픽 수와 스크롤로 인해 더 많은 토픽들이 불려올 때의 수"
     posts_per_page: "하나의 토픽에서 기본으로 보여지는 포스트 수와 스크롤로 인해 더 많은 포스트가 불려올 때의 수"
-    site_contact_username: "All automated private messages sent by the forum will be from this user; if left blank the default System account will be used."
     send_welcome_message: "신규 사용자에게 가입 환영 메세지를 보냅니까?"
     suppress_reply_directly_below: "게시글의 바로 아래에 단 하나의 댓글만 있는 경우 '댓글 수'를 보여주지 않음"
     suppress_reply_directly_above: "단 하나의 댓글 위의 게시글이 하나 있는 상황에서 '~에 대한 댓글'을 보여주지 않음."
@@ -703,15 +677,6 @@ ko:
     regular_requires_likes_received: "기본 사용자가 자주오는 사용자(2)가 되기 위해 받아야하는 좋아요 수"
     regular_requires_likes_given: "기본 사용자가 자주오는 사용자(2)가 되기 위해 눌러야하는 좋아요 수"
     regular_requires_topic_reply_count: "기본 사용자가 자주오는 사용자(2)가 되기 위해 답변을 달아야하는 토픽 수"
-    leader_requires_days_visited: "VIP 사용자(3)가 되기 위해 지난 100일 동안 최소한 사이트에 방문해야 하는 수(0 ~ 100)"
-    leader_requires_topics_replied_to: "VIP 사용자(3)가 되기 위해 지난 100일 동안 답글을 달아야하는 최소 토픽수(0 ~ )"
-    leader_requires_topics_viewed: "VIP 사용자(3)가 되기 위해 지난 100일 동안 생성된 전체 토픽 중 본 토픽의 비율(%, 0 ~ 100)"
-    leader_requires_posts_read: "VIP 사용자(3)가 되기 위해 지난 100일 동안 생성된 전체 포스트 중 본 포스트의 비율(%, 0 ~ 100)"
-    leader_requires_topics_viewed_all_time: "VIP 사용자(3)가 되기 위해 꼭 보아야 하는 토픽의 전체 개수"
-    leader_requires_posts_read_all_time: "VIP 사용자(3)가 되기 위해 꼭 보아야 하는 토픽의 전체 개수"
-    leader_requires_max_flagged: "사용자가 VIP 사용자(3)가 되기 위해 지난 100일동안 서로 다른 사용자에게 최소한으로 받아야하는 신고된 포스트 수(0 ~ )"
-    leader_promotion_min_duration: "신뢰도가 떨어진 후 다시 VIP 사용자(3)가 될 수 있는 최소 기간(일)"
-    leader_links_no_follow: "VIP 사용자의 link가 nofollow 속성인지 여부"
     min_trust_to_create_topic: "새로운 토픽을 생성하기 위한 최소 신뢰도"
     min_trust_to_edit_wiki_post: "위키로 설정된 포스트를 수정할 수 있는 최소 신뢰도"
     newuser_max_links: "새로운 사용자가 포스트에 붙일 수 있는 최대 링크 개수"
@@ -745,13 +710,6 @@ ko:
     levenshtein_distance_spammer_emails: "스패머 메일을 체크할 때, 허용할 다른 글자 개수(fuzzy match)"
     reply_by_email_enabled: "이메일을 통해 토픽에 댓글을 달 수 있음."
     reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %{reply_key}@reply.myforum.com"
-    pop3s_polling_enabled: "이메일 답글을 받기 위해 POP3S를 polling한다."
-    pop3s_polling_insecure: "SSL없이 plain text를 통해 POP3를 polling한다."
-    pop3s_polling_period_mins: "이메일을 받기 위해 POP3S 계정을 체크하는 기간(분) NOTE: 재시동 필요."
-    pop3s_polling_port: "POP3S 계정을 polling하기 위한 port"
-    pop3s_polling_host: "POP3S를 통해 이메일받기 위해 polling할 호스트"
-    pop3s_polling_username: "이메일을 받기 위해 polling할 POP3S계정의 username"
-    pop3s_polling_password: "이메일을 받기 위해  polling할 POP3S계정의 password"
     email_in: "이메일을 통해 새로운 토픽을 포스팅할 수 있도록 허가한다.(POP3 polling 필요) 각 카테고리의 \"Setting\" 탭에서 주소를 설정한다."
     email_in_min_trust: "이메일을 통해 새 토픽을 포스팅 할 수 있는 최소 사용자 신뢰도"
     email_prefix: "이메일 제목에 쓰일 [라벨]. 설정하지 않으면 기본적으로 'title(필수 설정의)' 이 된다."
@@ -805,7 +763,6 @@ ko:
     invited_to_private_message: "%{display_username} 사용자가 당신에게 개인 메시지로 초대하였습니다: %{link}"
     invitee_accepted: "%{display_username} 사용자가 당신의 초대를 수락하였습니다."
   search:
-    within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: '카테고리'
       topic: '검색 결과'

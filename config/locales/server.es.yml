@@ -200,28 +200,6 @@ es:
   assets_topic_body: "Este es un tema permanente, visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
-    body: |2
-
-      ¡Enhorabuena! :confetti_ball:
-
-      Si puedes ver este tema significa que se ha promocionado tu cuenta a [nivel 3 de confianza (líder)][trust].
-
-      > Los usuarios con nivel de confianza Líder son los más activos y prolíficos. A través de sus acciones y sus posts, establecen un ejemplo virtuoso para toda la comunidad.
-
-      Ahora puedes &hellip;
-
-      * Editar el título de cualquier tema
-      * Cambiar la categoría de cualquier tema
-      * Tener todos tus enlaces sin la etiqueta ([no follow](http://en.wikipedia.org/wiki/Nofollow))
-      * Acceder a la categoría privada sala VIP, visible solo para usuarios con nivel de confianza 3 o más
-
-      Puedes encontrar aquí [la lista de los usuarios que actualmente han logrado el nivel de confianza 3](/badges/3/leader). ¡Saluda!
-
-      ¡Gracias por conformar una parte muy importante de esta comunidad!
-
-      (Para saber más sobre niveles de confianza, [mira este tema][trust]. Ten en cuenta que solo los miembros que actualmente cumplen con los criterios de selección permanecerán en el nivel 3 de confianza. )
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Definición de la categoría %{category}"
     replace_paragraph: "[Reemplaza el primer párrafo con una descripción corta de tu nueva categoría. Esta guía aparecerá en el área de selección de categoría, por lo que trata de mantenerla por debajo de los 200 caracteres.]"
@@ -244,8 +222,6 @@ es:
       title: "usuario básico"
     regular:
       title: "usuario normal"
-    leader:
-      title: "líder"
     elder:
       title: "sabio"
     change_failed_explanation: "Intentaste degradar a un usuario %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} seguirá en '%{current_trust_level}'"
@@ -368,7 +344,6 @@ es:
       long_form: 'reportado como inapropiado'
     notify_user:
       title: 'Notificar a {{username}}'
-      description: 'Este post contiene algo que quisiera comentar por privado directamente con esta persona.'
       long_form: 'usuario notificado'
       email_title: 'Tu publicación en "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -658,7 +633,6 @@ es:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "Cuántos temas se cargan por defecto en la lista de temas y cuando se hace scroll hacia abajo para cargar más temas"
     posts_per_page: "Cuántos posts se cargan por defecto en un tema y cuando se hace scroll hacia abajo para cargar más posts"
-    site_contact_username: "Todos los mensajes privados automatizados enviados por el foro provendrán de este usuario; déjalo en blanco para utilizar la cuenta System por defecto."
     send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje privado de bienvenida con una guía rápida para comenzar."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."
     suppress_reply_directly_above: "No mostrar el en-respuesta-a desplegable en un post cuando solo hay una sola respuesta justo encima del post."
@@ -748,15 +722,6 @@ es:
     regular_requires_likes_received: "Cuántos me gusta debe recibir un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
     regular_requires_likes_given: "Cuántos me gusta debe otorgar un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
     regular_requires_topic_reply_count: "Cuántos temas debe responder un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
-    leader_requires_days_visited: "Mínimo número de días que un usuario necesita haber visitado el sitio en los últimos 100 para poder ser promocionado a nivel de confianza (3) líder. (de 0 a 100)"
-    leader_requires_topics_replied_to: "Mínimo número de temas que un usuario debe haber respondido en los últimos 100 días para poder ser promocionado a nivel de confianza (3) líder. (0 o más)"
-    leader_requires_topics_viewed: "El porcentaje de temas creados en los últimos 100 días que un usuario necesita haber visto para poder ser promocionado a nivel de confianza (3) líder. (de 0 a 100)"
-    leader_requires_posts_read: "El porcentaje de posts creados en los últimos 100 días que un usuario necesita haber visto para poder ser promocionado a nivel de confianza (3) líder. (de 0 a 100)"
-    leader_requires_topics_viewed_all_time: "El mínimo número total de temas que un usuario debe haber visto para poder ser promocionado a nivel de confianza (3) líder."
-    leader_requires_posts_read_all_time: "El mínimo número total de posts que un usuario debe haber leído para poder ser promocionado a nivel de confianza (3) líder."
-    leader_requires_max_flagged: "El usuario no debe haber tenido más de x posts reportados por x diferentes usuarios en los últimos 100 días para poder ser promocionado a nivel de confianza (3) líder, donde x es el valor de esta opción. (0 o más)"
-    leader_promotion_min_duration: "El mínimo número de días que dura la promoción a Líder antes de que pueda ser revocada."
-    leader_links_no_follow: "Si los enlaces de los usuarios líder llevan el atributo nofollow."
     min_trust_to_create_topic: "El mínimo nivel de confianza requerido para crear un nuevo tema."
     min_trust_to_edit_wiki_post: "El mínimo nivel de confianza requerido para editar un post marcado como wiki."
     newuser_max_links: "Cuántos enlaces puede un nuevo usuario añadir a un post."
@@ -790,13 +755,6 @@ es:
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, qué número de caracteres permiten una coincidencia parcial."
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
-    pop3s_polling_enabled: "Polling vía POP3S para respuestas por email."
-    pop3s_polling_insecure: "Polling usando texto plano POP3 sin SSL."
-    pop3s_polling_period_mins: "El periodo en minutos entre los que se revisa la cuenta POP3S para el email. NOTA: requiere reinicio."
-    pop3s_polling_port: "El puerto utilizado para el polling con la cuenta POP3S."
-    pop3s_polling_host: "El host utilizado para el polling por email via POP3S."
-    pop3s_polling_username: "El nombre de usuario de la cuenta POP3S para el polling por email."
-    pop3s_polling_password: "La contraseña de la cuenta POP3S para el polling por email."
     email_in: "Permitir a los usuarios crear nuevos temas por email (requiere el polling pop3). Configura las direcciones en la pestaña \"Ajustes\" de cada categoría."
     email_in_min_trust: "El mínimo nivel de confianza requerido para poder publicar nuevos temas por email."
     email_prefix: "La [etiqueta] utilizada en el asunto de los emails. Si no está configurado, será por defecto el 'título'."
@@ -870,7 +828,6 @@ es:
     invitee_accepted: "%{display_username} ha aceptado tu invitación"
     linked: "%{display_username} te enlazó en %{link}"
   search:
-    within_post: "#%{post_number} por %{username}: %{excerpt}"
     types:
       category: 'Categorías'
       topic: 'Resultados'

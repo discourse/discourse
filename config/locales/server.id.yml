@@ -91,8 +91,6 @@ id:
       title: "pengguna standar"
     regular:
       title: "pengguna reguler"
-    leader:
-      title: "pimpinan"
     elder:
       title: "sesepuh"
   rate_limiter:

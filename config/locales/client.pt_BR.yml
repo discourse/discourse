@@ -54,7 +54,6 @@ pt_BR:
         almost_x_years:
           one: "1a"
           other: "%{count}a"
-        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -66,7 +65,6 @@ pt_BR:
         x_days:
           one: "1 dia"
           other: "%{count} dias"
-        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "1 minuto atrás"
@@ -279,7 +277,6 @@ pt_BR:
       admin_tooltip: "Esse usuário é da administração"
       suspended_notice: "Esse usuário está suspenso até {{date}}."
       suspended_reason: "Motivo:"
-      mailing_list_mode: "Receber um email sempre que uma mensagem for feita nesse fórum (exceto que você silencie o tópico ou categoria)"
       watched_categories: "Acompanhados"
       watched_categories_instructions: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
       tracked_categories: "Monitorado"
@@ -355,7 +352,6 @@ pt_BR:
         prefilled: "E-mail corresponde a este nome de usuário registrado."
       locale:
         title: "idioma da interface"
-        instructions: "O idioma utilizado pela interface do fórum. Ela vai mudar quando você atualizar a página."
         default: "(padrão)"
       password_confirmation:
         title: "Senha novamente"
@@ -374,7 +370,6 @@ pt_BR:
         bi_weekly: "duas em duas semanas"
       email_direct: "Receber um email quando alguém te cita, responda, ou menciona o seu @nome"
       email_private_messages: "Receber um email quando alguém te enviar uma mensagem privada"
-      email_always: "Receber notificações e resumos por e-mail mesmo se você estiver ativo no fórum"
       other_settings: "Outros"
       categories_settings: "Categorias"
       new_topic_duration:
@@ -461,7 +456,6 @@ pt_BR:
     read_only_mode:
       enabled: "Um modo somente de leitura. Você pode continuar a navegar no site, mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
-    too_few_topics_notice: "Crie pelo menos 5 tópicos públicos e %{posts} posts públicos para começar a discussão. Usuários novos não conseguiram ganhar níveis de confiança se não existir conteúdo para eles lerem. Esta mensagem aparece apenas para o staff."
     learn_more: "aprenda mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -476,7 +470,6 @@ pt_BR:
     last_post: Última resposta
     last_post_lowercase: último post
     summary:
-      enabled_description: "Você está vendo um resumo deste tópico: apenas as respostas mais interessantes determinadas pela comunidade. Para ver todas as mensagens novamente, clique abaixo."
       description: "Há <b>{{count}}</b> respostas."
       description_time: "Há <b>{{count}}</b> respostas com um tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
       enable: 'Resumir Este Tópico'
@@ -1265,7 +1258,6 @@ pt_BR:
         this_week: "Nesta semana"
         today: "Hoje"
         other_periods: "veja mais tópicos em alta"
-    browser_update: 'Infelizmente, <a href="http://www.discourse.org/faq/#browser">seu navegador é muito antigo para ser utilizado em um fórum Discours</a>. Por favor <a href="http://browsehappy.com">atualize seu navegador</a>.'
     permission_types:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
@@ -1398,7 +1390,6 @@ pt_BR:
         confirm_revoke: "Tem a certeza que quer revogar essa chave?"
         info_html: "Sua chave de API permitirá a criação e edição de tópicos usando requests JSON."
         all_users: "Todos os Usuários"
-        note_html: "Guarde esta chave <strong>secretamente</strong>, todos usuários que tiverem acesso a ela poderão criar mensagens aleatórias no forum como qualquer usuário."
       backups:
         title: "Backups"
         menu:
@@ -1623,12 +1614,6 @@ pt_BR:
             add: "Adicionar"
         logster:
           title: "Registro de erros"
-      impersonate:
-        title: "Personificar Usuário"
-        username_or_email: "Nome do Usuário ou Email do Usuário"
-        help: "Utiliza este ferramenta para personificar uma conta de usuário para efeitos de depuração."
-        not_found: "Esse usuário não consegue ser encotrado."
-        invalid: "Desculpe, não é possível personificar esse usuário."
       users:
         title: 'Usuários'
         create: 'Adicionar Usuário Admin'
@@ -1657,7 +1642,6 @@ pt_BR:
           newuser: 'Usuários no Nível de Confiança 0 (Usuário Novo)'
           basic: 'Usuários no Nível de Confiança 1 (Usuário Básico)'
           regular: 'Usuários no Nível de Confiança 2 (Usuário Regular)'
-          leader: 'Usuários no Nível de Confiança 3 (Líder)'
           elder: 'Usuários no Nível de Confiança 4 (Cavaleiro)'
           admins: 'Usuários Administradores'
           moderators: 'Moderadores'
@@ -1834,7 +1818,6 @@ pt_BR:
         target_posts: Consultar respostas selecionadas
         auto_revoke: Rodar revocation query todo dia
         show_posts: Mostrar as concessões de emblemas na página de emblemas
-        preview: Pré-visualizar emblema
         trigger: Trigger
         trigger_type:
           none: "Atualizado diariamente"
@@ -1860,7 +1843,6 @@ pt_BR:
         back: '<b>u</b> Voltar'
         up_down: '<b>k</b>/<b>j</b> Move selecionado para cima/para baixo'
         open: '<b>o</b> ou <b>Enter</b> Abre tópico selecionado'
-        next_prev: '<b>`</b>/<b>~</b> Próxima sessão/anterior'
       application:
         title: 'Aplicação'
         create: '<b>c</b> Cria um novo tópico'
