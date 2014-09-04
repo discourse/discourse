@@ -65,7 +65,8 @@ aside.quote {
   a {
     margin: 0;
   }
-  .back:before
+
+  .back:before, .quote-other-topic:before
   {
     display: inline-block;
     margin-left: 8px;
@@ -74,13 +75,9 @@ aside.quote {
     z-index: 20;
     content: "\f062";
   }
+
   .quote-other-topic:before
   {
-    display: inline-block;
-    margin-left: 8px;
-    font-family: "FontAwesome";
-    position: relative;
-    z-index: 20;
     content: "\f061";
   }
 }
