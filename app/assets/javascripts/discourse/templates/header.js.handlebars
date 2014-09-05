@@ -65,7 +65,7 @@
           </li>
         {{/if}}
         <li>
-          {{#if Discourse.loginRequired}}
+          {{#if loginRequired}}
             <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action showLogin}}>
               {{icon search}}
             </a>
@@ -80,7 +80,7 @@
           {{/if}}
         </li>
         <li class='categories dropdown'>
-          {{#if Discourse.loginRequired}}
+          {{#if loginRequired}}
             <a class='icon'
                href="#"
                aria-hidden="true"

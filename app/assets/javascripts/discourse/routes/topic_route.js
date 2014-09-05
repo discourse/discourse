@@ -4,7 +4,7 @@ var isTransitioning = false,
     SCROLL_DELAY = 500;
 
 Discourse.TopicRoute = Discourse.Route.extend({
-  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+  redirect: function() { return this.redirectIfLoginRequired(); },
 
   queryParams: {
     filter: { replace: true },

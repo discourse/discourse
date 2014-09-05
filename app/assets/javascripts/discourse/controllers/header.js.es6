@@ -7,6 +7,7 @@ export default DiscourseController.extend({
   loadingNotifications: false,
   needs: ['application'],
 
+  loginRequired: Em.computed.alias('controllers.application.loginRequired'),
   canSignUp: Em.computed.alias('controllers.application.canSignUp'),
 
   showSignUpButton: function() {

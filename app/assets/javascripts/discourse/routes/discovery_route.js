@@ -8,8 +8,7 @@
   @module Discourse
 **/
 Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse.OpenComposer, {
-
-  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+  redirect: function() { return this.redirectIfLoginRequired(); },
 
   beforeModel: function(transition) {
     if (transition.targetName.indexOf("discovery.top") === -1 &&
