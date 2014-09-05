@@ -537,7 +537,7 @@ describe PostsController do
       end
 
       it "ensures trust level 4 can see the revisions" do
-        log_in(:elder)
+        log_in(:trust_level_4)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
         response.should be_success
       end
