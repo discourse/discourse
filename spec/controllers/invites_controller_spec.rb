@@ -54,7 +54,7 @@ describe InvitesController do
       end
 
       it "fails for normal user if invite email already exists" do
-        user = log_in(:elder)
+        user = log_in(:trust_level_4)
         invite = Invite.invite_by_email("invite@example.com", user)
         invite.reload
         post :create, email: invite.email

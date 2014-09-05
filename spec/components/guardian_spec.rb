@@ -7,8 +7,8 @@ describe Guardian do
   let(:user) { build(:user) }
   let(:moderator) { build(:moderator) }
   let(:admin) { build(:admin) }
-  let(:leader) { build(:user, trust_level: 3) }
-  let(:elder)  { build(:user, trust_level: 4) }
+  let(:trust_level_3) { build(:user, trust_level: 3) }
+  let(:trust_level_4)  { build(:user, trust_level: 4) }
   let(:another_admin) { build(:admin) }
   let(:coding_horror) { build(:coding_horror) }
 
@@ -426,11 +426,11 @@ describe Guardian do
         end
 
         it 'is true for trust level 4' do
-          Guardian.new(Fabricate(:elder)).can_see?(post_revision).should == true
+          Guardian.new(trust_level_4).can_see?(post_revision).should == true
         end
 
         it 'is false for trust level lower than 4' do
-          Guardian.new(Fabricate(:leader)).can_see?(post_revision).should == false
+          Guardian.new(trust_level_3).can_see?(post_revision).should == false
         end
 
         it 'is true if the author has public edit history' do
@@ -535,8 +535,8 @@ describe Guardian do
           Guardian.new(admin).can_create?(Post, topic).should be_true
         end
 
-        it "allows new posts from elders" do
-          Guardian.new(elder).can_create?(Post, topic).should be_true
+        it "allows new posts from trust_level_4s" do
+          Guardian.new(trust_level_4).can_create?(Post, topic).should be_true
         end
       end
 
@@ -756,7 +756,7 @@ describe Guardian do
       end
 
       it 'returns true as a trust level 4 user' do
-        Guardian.new(elder).can_edit?(post).should be_true
+        Guardian.new(trust_level_4).can_edit?(post).should be_true
       end
 
       context 'post is older than post_edit_time_limit' do
@@ -849,7 +849,7 @@ describe Guardian do
         end
 
         it 'returns true at trust level 3' do
-          Guardian.new(leader).can_edit?(topic).should eq(true)
+          Guardian.new(trust_level_3).can_edit?(topic).should eq(true)
         end
       end
 
@@ -863,7 +863,7 @@ describe Guardian do
         end
 
         it 'returns true at trust level 3' do
-          Guardian.new(leader).can_edit?(build(:topic, user: user, archived: true)).should == true
+          Guardian.new(trust_level_3).can_edit?(build(:topic, user: user, archived: true)).should == true
         end
 
         it 'returns false as a topic creator' do
@@ -943,7 +943,7 @@ describe Guardian do
       end
 
       it 'returns true when trust level 4' do
-        Guardian.new(elder).can_moderate?(topic).should be_true
+        Guardian.new(trust_level_4).can_moderate?(topic).should be_true
       end
 
     end
@@ -1840,8 +1840,8 @@ describe Guardian do
       Guardian.new(admin).can_wiki?.should be_true
     end
 
-    it 'returns true for elder user' do
-      Guardian.new(elder).can_wiki?.should be_true
+    it 'returns true for trust_level_4 user' do
+      Guardian.new(trust_level_4).can_wiki?.should be_true
     end
   end
 end

@@ -73,9 +73,9 @@ Fabricator(:leader, from: :user) do
   trust_level TrustLevel[3]
 end
 
-Fabricator(:elder, from: :user) do
-  name 'Elder McElderson'
-  username { sequence(:username) { |i| "elder#{i}" } }
-  email { sequence(:email) { |i| "elder#{i}@elderfun.com" } }
+Fabricator(:trust_level_4, from: :user) do
+  name 'Leader McElderson'
+  username { sequence(:username) { |i| "tl4#{i}" } }
+  email { sequence(:email) { |i| "tl4#{i}@elderfun.com" } }
   trust_level TrustLevel[4]
 end

@@ -208,8 +208,8 @@ describe TopicsController do
       end
     end
 
-    describe 'forbidden to elders' do
-      let!(:elder) { log_in(:elder) }
+    describe 'forbidden to trust_level_4s' do
+      let!(:trust_level_4) { log_in(:trust_level_4) }
 
       it 'correctly denies' do
         xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1,2,3]
