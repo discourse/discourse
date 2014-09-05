@@ -22,7 +22,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
-  has_one :leader_requirements, serializer: LeaderRequirementsSerializer, embed: :objects
+  has_one :leader_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
 
   def can_revoke_admin
@@ -70,7 +70,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def include_leader_requirements?
-    object.has_trust_level?(:regular)
+    object.has_trust_level?(TrustLevel[2])
   end
 
 end

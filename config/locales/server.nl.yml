@@ -196,8 +196,6 @@ nl:
       title: "lid"
     regular:
       title: "regulier lid"
-    leader:
-      title: "leider"
     elder:
       title: "ervaren lid"
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trust level is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'"
@@ -319,7 +317,6 @@ nl:
       long_form: 'heeft dit als ongepast gemeld'
     notify_user:
       title: 'Stuur {{username}} een privébericht'
-      description: 'In dit bericht staat iets waarover ik de schrijver direct en privé wil spreken.'
       long_form: 'bericht aan schrijver verstuurd'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -584,11 +581,6 @@ nl:
     newuser_spam_host_threshold: "Hoe vaak kan een gebruiker linken naar dezelfde host in hun `newuser_spam_host_posts` berichten voordat deze links als spam gezien worden."
     reply_by_email_enabled: "Ondersteuning voor antwoorden per e-mail."
     reply_by_email_address: "Template voor antwoorden per e-mail, bijvoorbeeld: %{reply_key}@reageer.mijnforum.nl"
-    pop3s_polling_enabled: "Mail ophalen via POP3S?"
-    pop3s_polling_port: "De poort voor POP3S."
-    pop3s_polling_host: "De host voor POP3S."
-    pop3s_polling_username: "De username voor het POP3S e-mailaccount."
-    pop3s_polling_password: "Het wachtwoord voor het POP3S e-mailaccount."
     email_in_min_trust: "Het minium trustlevel dat een gebruiker moet hebben om nieuwe topics te kunnen mailen."
     delete_user_max_post_age: "Gebruikers wiens eerste bericht ouder dan (x) dagen is kunnen niet meer verwijderd worden."
     delete_all_posts_max: "Het maximaal aantal berichten dat ineens verwijderd kan worden met de 'Verwijder alle berichten'-knop. Als een gebruiker meer berichten heeft, kunnen de berichten niet in een keer verwijderd worden en kan de gebruiker dus niet verwijderd worden."
@@ -628,7 +620,6 @@ nl:
     invitee_accepted: "%{display_username} heeft je uitnodiging geaccepteerd"
     linked: "%{display_username} heeft je gelinkt in %{link}"
   search:
-    within_post: "#%{post_number} door %{username}: %{excerpt}"
     types:
       category: 'Categorieën'
       topic: 'Resultaten'

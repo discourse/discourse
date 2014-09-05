@@ -40,7 +40,6 @@ zh_TW:
           other: "> %{count} 年"
         almost_x_years:
           other: "%{count} 年"
-        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -49,7 +48,6 @@ zh_TW:
           other: "%{count} 小時"
         x_days:
           other: "%{count} 天"
-        date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分鐘前"
@@ -248,7 +246,6 @@ zh_TW:
       admin_tooltip: "此用戶為管理員"
       suspended_notice: "此用戶已被停權至 {{date}}。"
       suspended_reason: "原因: "
-      mailing_list_mode: "每當論壇上有新文章時你都會收到一封電子郵件。( 除非你將該討論話題或分類設為靜音 )"
       watched_categories: "關注"
       watched_categories_instructions: "你將會自動關注在此分類的新討論話題。你將收到所有新文章和討論話題的通知，未讀和新討論話題的數量也將出現在討論話題的列表旁。"
       tracked_categories: "追蹤"
@@ -323,7 +320,6 @@ zh_TW:
         prefilled: "電子郵件地址與此註冊的用戶名稱相符。"
       locale:
         title: "界面語言"
-        instructions: "所使用的論壇界面的語言。當你刷新頁面，它將改變。"
         default: "(default)"
       password_confirmation:
         title: "再次輸入密碼"
@@ -342,7 +338,6 @@ zh_TW:
         bi_weekly: "每兩週"
       email_direct: "當有人引用、回覆你的文章，或以 @用戶名稱 提到你時以電子郵件通知你。"
       email_private_messages: "當有人寄給你私人訊息時以電子郵件通知你。"
-      email_always: "即時你經常來此網站仍然寄電子郵件通知給你，並告訴你最近論壇有什麼新文章。"
       other_settings: "其它"
       categories_settings: "分類"
       new_topic_duration:
@@ -425,7 +420,6 @@ zh_TW:
     read_only_mode:
       enabled: "管理員開啟了唯讀模式。你可以繼續瀏覽網站，但一些互動功能可能無法使用。"
       login_disabled: "在唯讀模式下不能登入"
-    too_few_topics_notice: "請建立至少 5 個公開的討論話題和 %{posts} 篇公開文章讓討論得以開始進行。若沒有文章可閱讀，新用戶將無法提升信任等級。這訊息只有工作人員看得到。"
     learn_more: "進一步了解..."
     year: '年'
     year_desc: '最近 365 天內建立的討論話題'
@@ -440,7 +434,6 @@ zh_TW:
     last_post: 最後一篇文章
     last_post_lowercase: 最近發表
     summary:
-      enabled_description: "你正在檢視此討論話題的摘要：最熱門的文章在這個社群裡，按下方再次檢視所有文章。"
       description: "共有 <b>{{count}}</b> 個回覆。"
       description_time: "共有 <b>{{count}}</b> 個回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀。"
       enable: '以摘要檢視此討論話題'
@@ -1178,7 +1171,6 @@ zh_TW:
         this_week: "本週"
         today: "今天"
         other_periods: "看更多精選討論話題"
-    browser_update: '抱歉，<a href="http://www.discourse.org/faq/#browser">你的網頁瀏覽器過於老舊無法使用 Discourse 論壇</a>，請先<a href="http://browsehappy.com">升級你的瀏覽器</a>。'
     permission_types:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
@@ -1294,7 +1286,6 @@ zh_TW:
         confirm_revoke: "你確定要撤銷此金鑰嗎?"
         info_html: "你可以使用 API 金鑰呼叫 JSON 建立與更新討論話題。"
         all_users: "所有用戶"
-        note_html: "請<strong>隱密</strong>保存此金鑰，有此金鑰的用戶可以使用任何用戶的身份在論壇上發表。"
       backups:
         title: "備份"
         menu:
@@ -1517,12 +1508,6 @@ zh_TW:
             add: "加入"
         logster:
           title: "錯誤紀錄"
-      impersonate:
-        title: "以用戶的角度檢視"
-        username_or_email: "用戶名稱或電子郵件地址"
-        help: "使用此工具以用戶的檢視角度進行除錯。"
-        not_found: "找不到此用戶。"
-        invalid: "抱歉，你無法以此用戶的角度檢視。"
       users:
         title: '用戶'
         create: '新增管理員'
@@ -1549,7 +1534,6 @@ zh_TW:
           newuser: '信任等級 0 的用戶 ( 新用戶 )'
           basic: '信任等級 1 的用戶 ( 初級用戶 )'
           regular: '信任等級 2 的用戶 ( 一般用戶 )'
-          leader: '信任等級 3 的用戶 ( 領袖 )'
           elder: '信任等級 4 的用戶 ( 長老 )'
           admins: '管理員'
           moderators: '板主'
@@ -1720,7 +1704,6 @@ zh_TW:
         listable: 在徽章頁面上顯示徽章
         enabled: 啟用徽章
         icon: 圖示
-        preview: 預覽徽章
         trigger: 觸發
         trigger_type:
           none: "每日更新"
@@ -1746,7 +1729,6 @@ zh_TW:
         back: '<b>u</b> 返回'
         up_down: '<b>k</b>/<b>j</b> 移動選擇向上/向下'
         open: '<b>o</b> 或 <b>Enter</b> 開啟已選擇討論話題'
-        next_prev: '<b>`</b>/<b>~</b> 下/前一段'
       application:
         title: 'Application'
         create: '<b>c</b> 表示新討論話題'

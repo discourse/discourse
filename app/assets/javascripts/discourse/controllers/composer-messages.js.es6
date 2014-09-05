@@ -66,7 +66,7 @@ export default Ember.ArrayController.extend({
   reset: function() {
     this.clear();
     this.set('messagesByTemplate', {});
-    this.set('queuedForTyping', new Em.Set());
+    this.set('queuedForTyping', []);
     this.set('checkedMessages', false);
   },
 

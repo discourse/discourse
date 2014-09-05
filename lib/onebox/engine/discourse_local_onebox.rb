@@ -57,9 +57,10 @@ module Onebox
               }
             end
 
+            category_name = ''
             category = topic.category
-            if category
-              category = "<a href=\"#{category.url}\" class=\"badge badge-category\" style=\"background-color: ##{category.color}; color: ##{category.text_color}\">#{category.name}</a>"
+            if category && !category.uncategorized?
+              category_name = "<a href=\"#{category.url}\" class=\"badge badge-category\" style=\"background-color: ##{category.color}; color: ##{category.text_color}\">#{category.name}</a>"
             end
 
             quote = post.excerpt(SiteSetting.post_onebox_maxlength)
@@ -71,7 +72,7 @@ module Onebox
                         views: topic.views,
                         posters: posters,
                         quote: quote,
-                        category: category,
+                        category_name: category_name,
                         topic: topic.id
 
             @template = 'topic'

@@ -76,10 +76,19 @@ class ScreenedIpAddress < ActiveRecord::Base
     exists_for_ip_address_and_action?(ip_address, actions[:do_nothing])
   end
 
-  def self.exists_for_ip_address_and_action?(ip_address, action_type)
+  def self.exists_for_ip_address_and_action?(ip_address, action_type, opts={})
     b = match_for_ip_address(ip_address)
-    b.record_match! if b
-    !!b and b.action_type == action_type
+    found = (!!b and b.action_type == action_type)
+    b.record_match! if found and opts[:record_match] != false
+    found
+  end
+
+  def self.block_login?(user, ip_address)
+    return false if user.nil?
+    return false if !user.admin?
+    return false if ScreenedIpAddress.where(action_type: actions[:allow_admin]).count == 0
+    return true if ip_address.nil?
+    !exists_for_ip_address_and_action?(ip_address, actions[:allow_admin], record_match: false)
   end
 end
 

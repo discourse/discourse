@@ -169,11 +169,11 @@ describe BadgeGranter do
     end
 
     it "grants and revokes trust level badges" do
-      user.change_trust_level!(:elder)
+      user.change_trust_level!(TrustLevel[4])
       BadgeGranter.process_queue!
       UserBadge.where(user_id: user.id, badge_id: Badge.trust_level_badge_ids).count.should eq(4)
 
-      user.change_trust_level!(:basic)
+      user.change_trust_level!(TrustLevel[1])
       BadgeGranter.backfill(Badge.find(1))
       BadgeGranter.backfill(Badge.find(2))
       UserBadge.where(user_id: user.id, badge_id: 1).first.should_not be_nil

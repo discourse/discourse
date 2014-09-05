@@ -35,8 +35,8 @@ describe StaffActionLogger do
 
   describe 'log_trust_level_change' do
     let(:user) { Fabricate(:user) }
-    let(:old_trust_level) { TrustLevel.levels[:newuser] }
-    let(:new_trust_level) { TrustLevel.levels[:basic] }
+    let(:old_trust_level) { TrustLevel[0] }
+    let(:new_trust_level) { TrustLevel[1] }
 
     subject(:log_trust_level_change) { described_class.new(admin).log_trust_level_change(user, old_trust_level, new_trust_level) }
 
@@ -51,7 +51,7 @@ describe StaffActionLogger do
     end
 
     it 'raises an error when new trust level is not a Trust Level' do
-      max_level = TrustLevel.levels.values.max
+      max_level = TrustLevel.valid_range.max
       expect { logger.log_trust_level_change(user, old_trust_level, max_level + 1) }.to raise_error(Discourse::InvalidParameters)
     end
 

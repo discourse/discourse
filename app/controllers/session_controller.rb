@@ -84,6 +84,11 @@ class SessionController < ApplicationController
       return
     end
 
+    if ScreenedIpAddress.block_login?(user, request.remote_ip)
+      not_allowed_from_ip_address(user)
+      return
+    end
+
     (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
@@ -149,6 +154,10 @@ class SessionController < ApplicationController
       sent_to_email: user.find_email || user.email,
       current_email: user.email
     }
+  end
+
+  def not_allowed_from_ip_address(user)
+    render json: {error: I18n.t("login.not_allowed_from_ip_address", username: user.username)}
   end
 
   def failed_to_login(user)

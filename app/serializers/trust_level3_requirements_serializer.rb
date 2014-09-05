@@ -1,4 +1,4 @@
-class LeaderRequirementsSerializer < ApplicationSerializer
+class TrustLevel3RequirementsSerializer < ApplicationSerializer
   attributes :time_period,
              :requirements_met,
              :days_visited, :min_days_visited,
@@ -13,7 +13,7 @@ class LeaderRequirementsSerializer < ApplicationSerializer
              :num_likes_received, :min_likes_received
 
   def time_period
-    LeaderRequirements::TIME_PERIOD
+    TrustLevel3Requirements::TIME_PERIOD
   end
 
   def requirements_met

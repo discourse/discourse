@@ -76,6 +76,7 @@ class ImportScripts::Base
     update_feature_topic_users
     update_category_featured_topics
     update_topic_count_replies
+    reset_topic_counters
 
     puts "", "Done"
 
@@ -158,7 +159,7 @@ class ImportScripts::Base
     admin.password = SecureRandom.uuid
     admin.save!
     admin.grant_admin!
-    admin.change_trust_level!(:regular)
+    admin.change_trust_level!(TrustLevel[4])
     admin.email_tokens.update_all(confirmed: true)
     admin
   end
@@ -227,28 +228,28 @@ class ImportScripts::Base
     results.each do |result|
       u = yield(result)
 
+      # block returns nil to skip a post
       if u.nil?
         users_skipped += 1
-        next # block returns nil to skip a post
-      end
+      else
+        import_id = u[:id]
 
-      import_id = u[:id]
+        if user_id_from_imported_user_id(import_id)
+          users_skipped += 1
+        elsif u[:email].present?
+          new_user = create_user(u, import_id)
 
-      if user_id_from_imported_user_id(import_id)
-        users_skipped += 1
-      elsif u[:email].present?
-        new_user = create_user(u, import_id)
-
-        if new_user.valid?
-          @existing_users[import_id.to_s] = new_user.id
-          users_created += 1
+          if new_user.valid?
+            @existing_users[import_id.to_s] = new_user.id
+            users_created += 1
+          else
+            @failed_users << u
+            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+          end
         else
           @failed_users << u
-          puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+          puts "Skipping user id #{import_id} because email is blank"
         end
-      else
-        @failed_users << u
-        puts "Skipping user id #{import_id} because email is blank"
       end
 
       print_status users_created + users_skipped + @failed_users.length + (opts[:offset] || 0), total
@@ -279,7 +280,7 @@ class ImportScripts::Base
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name] || opts[:email])
     end
     opts[:email] = opts[:email].downcase
-    opts[:trust_level] = TrustLevel.levels[:basic] unless opts[:trust_level]
+    opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
     opts[:active] = true
     opts[:import_mode] = true
 
@@ -369,39 +370,40 @@ class ImportScripts::Base
     results.each do |r|
       params = yield(r)
 
+      # block returns nil to skip a post
       if params.nil?
         skipped += 1
-        next # block returns nil to skip a post
-      end
-
-      import_id = params.delete(:id).to_s
-
-      if post_id_from_imported_post_id(import_id)
-        skipped += 1 # already imported this post
       else
-        begin
-          new_post = create_post(params, import_id)
-          if new_post.is_a?(Post)
-            @existing_posts[import_id] = new_post.id
-            @topic_lookup[new_post.id] = {
-              post_number: new_post.post_number,
-              topic_id: new_post.topic_id,
-              url: new_post.url,
-            }
+        import_id = params.delete(:id).to_s
 
-            created += 1
-          else
+        if post_id_from_imported_post_id(import_id)
+          skipped += 1 # already imported this post
+        else
+          begin
+            new_post = create_post(params, import_id)
+            if new_post.is_a?(Post)
+              @existing_posts[import_id] = new_post.id
+              @topic_lookup[new_post.id] = {
+                post_number: new_post.post_number,
+                topic_id: new_post.topic_id,
+                url: new_post.url,
+              }
+
+              created += 1
+            else
+              skipped += 1
+              puts "Error creating post #{import_id}. Skipping."
+              puts new_post.inspect
+            end
+          rescue Discourse::InvalidAccess => e
             skipped += 1
-            puts "Error creating post #{import_id}. Skipping."
-            puts new_post.inspect
+            puts "InvalidAccess creating post #{import_id}. Topic is closed? #{e.message}"
+          rescue => e
+            skipped += 1
+            puts "Exception while creating post #{import_id}. Skipping."
+            puts e.message
+            puts e.backtrace.join("\n")
           end
-        rescue Discourse::InvalidAccess => e
-          skipped += 1
-          puts "InvalidAccess creating post #{import_id}. Topic is closed? #{e.message}"
-        rescue => e
-          skipped += 1
-          puts "Exception while creating post #{import_id}. Skipping."
-          puts e.message
         end
       end
 
@@ -472,6 +474,19 @@ class ImportScripts::Base
 
     Topic.find_each do |topic|
       topic.feature_topic_users
+      progress_count += 1
+      print_status(progress_count, total_count)
+    end
+  end
+
+  def reset_topic_counters
+    puts "", "reseting topic counters"
+
+    total_count = Topic.count
+    progress_count = 0
+
+    Topic.find_each do |topic|
+      Topic.reset_highest(topic.id)
       progress_count += 1
       print_status(progress_count, total_count)
     end

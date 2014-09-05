@@ -176,7 +176,7 @@
     line-height: 16px;
 
       .fa {
-        margin-right: 3px;
+        font-size: inherit;
       }
 
       a {
@@ -286,8 +286,11 @@
       size: 18px;
     };
   }
+  // I am ghetto using this to display "Show More".. be warned
   .no-results {
     padding: 5px;
+    height: 12px;
+    width:60%;
   }
   .filter {
     float: right;
@@ -334,4 +337,12 @@
 .search-link .badge-category {
   padding: 4px 6px;
   margin-left: 6px;
+}
+
+.highlight-strong {
+  background-color: dark-light-diff($highlight, $secondary, 40%, -50%);
+}
+
+.search-highlight {
+  font-weight: bold;
 }

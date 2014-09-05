@@ -40,9 +40,9 @@ Badge.exec_sql "UPDATE badges
 # Trust level system badges.
 trust_level_badges = [
   {id: 1, name: "Basic User", type: BadgeType::Bronze},
-  {id: 2, name: "Regular User", type: BadgeType::Bronze},
-  {id: 3, name: "Leader", type: BadgeType::Silver},
-  {id: 4, name: "Elder", type: BadgeType::Gold}
+  {id: 2, name: "Member", type: BadgeType::Bronze},
+  {id: 3, name: "Regular", type: BadgeType::Silver},
+  {id: 4, name: "Leader", type: BadgeType::Gold}
 ]
 
 trust_level_badges.each do |spec|
@@ -54,7 +54,7 @@ trust_level_badges.each do |spec|
     b.default_badge_grouping_id = BadgeGrouping::TrustLevel
     b.trigger = Badge::Trigger::TrustLevelChange
 
-    # allow title for leader and elder
+    # allow title for tl3 and above
     b.default_allow_title = spec[:id] > 2
     b.system = true
   end

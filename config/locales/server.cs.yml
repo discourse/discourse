@@ -164,8 +164,6 @@ cs:
       title: "základní uživatel"
     regular:
       title: "pravidelný uživatel"
-    leader:
-      title: "vůdce"
     elder:
       title: "starší"
     change_failed_explanation: "Pokusili jste se změnil důvěryhodnost uživatele %{user_name} na '%{new_trust_level}'. Jejich důvěryhodnost je ale již '%{current_trust_level}'. %{user_name} zůstané na důvěryhodnosti '%{current_trust_level}'"
@@ -305,7 +303,6 @@ cs:
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
       title: 'Informovat uživatele {{username}}'
-      description: 'Tento příspěvek obsahuje něco, kvůli čemu chci s tímto člověkem mluvím přímo a soukromě.'
       long_form: 'informoval uživatele'
       email_body: "%{link}\\\n\\\n%{message}\n"
     notify_moderators:
@@ -567,7 +564,6 @@ cs:
     invited_to_private_message: "%{display_username} vás pozval k soukromé zprávě: %{link}"
     invitee_accepted: "%{display_username} přijal vaši pozvánku"
   search:
-    within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Kategorie'
       user: 'Uživatelé'

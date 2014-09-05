@@ -99,12 +99,17 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
-  scope :blocked, -> { where(blocked: true) } # no index
-  scope :not_blocked, -> { where(blocked: false) } # no index
-  scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) } # no index
-  scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
-  # excluding fake users like the community user
+  # excluding fake users like the system user
   scope :real, -> { where('id > 0') }
+
+  # TODO-PERF: There is no indexes on any of these
+  # and NotifyMailingListSubscribers does a select-all-and-loop
+  # may want to create an index on (active, blocked, suspended_till, mailing_list_mode)?
+  scope :blocked, -> { where(blocked: true) }
+  scope :not_blocked, -> { where(blocked: false) }
+  scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
+  scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
+  scope :activated, -> { where(active: true) }
 
   module NewTopicDuration
     ALWAYS = -1
@@ -293,7 +298,7 @@ class User < ActiveRecord::Base
   end
 
   def new_user?
-    created_at >= 24.hours.ago || trust_level == TrustLevel.levels[:newuser]
+    created_at >= 24.hours.ago || trust_level == TrustLevel[0]
   end
 
   def seen_before?
@@ -400,7 +405,7 @@ class User < ActiveRecord::Base
 
     # Does not apply to staff, non-new members or your own topics
     return false if staff? ||
-                    (trust_level != TrustLevel.levels[:newuser]) ||
+                    (trust_level != TrustLevel[0]) ||
                     Topic.where(id: topic_id, user_id: id).exists?
 
     last_action_in_topic = UserAction.last_action_in_topic(id, topic_id)
@@ -433,7 +438,7 @@ class User < ActiveRecord::Base
   # Use this helper to determine if the user has a particular trust level.
   # Takes into account admin, etc.
   def has_trust_level?(level)
-    raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
+    raise "Invalid trust level #{level}" unless TrustLevel.valid?(level)
     admin? || moderator? || TrustLevel.compare(trust_level, level)
   end
 
@@ -557,7 +562,7 @@ class User < ActiveRecord::Base
   end
 
   def leader_requirements
-    @lq ||= LeaderRequirements.new(self)
+    @lq ||= TrustLevel3Requirements.new(self)
   end
 
   def should_be_redirected_to_top

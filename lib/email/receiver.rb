@@ -61,7 +61,7 @@ module Email
         end
 
         raise UserNotFoundError if @user.blank?
-        raise UserNotSufficientTrustLevelError.new @user unless @allow_strangers || @user.has_trust_level?(TrustLevel.levels[SiteSetting.email_in_min_trust.to_i])
+        raise UserNotSufficientTrustLevelError.new @user unless @allow_strangers || @user.has_trust_level?(TrustLevel[SiteSetting.email_in_min_trust.to_i])
 
         create_new_topic
       else
@@ -241,6 +241,9 @@ module Email
     end
 
     def create_post(user, options)
+      # Mark the reply as incoming via email
+      options[:via_email] = true
+
       creator = PostCreator.new(user, options)
       post = creator.create
 

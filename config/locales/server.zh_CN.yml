@@ -196,28 +196,6 @@ zh_CN:
   assets_topic_body: "这是一个永久主题，仅对职员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传您想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交您的回复添加帖子。\n4. 在您的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果您需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   lounge_welcome:
     title: "欢迎来到贵宾室"
-    body: |2
-
-      恭喜！:confetti_ball:
-
-      如果您看到了这个主题，说明您已经被提升至[信任等级3（领导）][trust]了。
-
-      > 领导是最活跃和最有建设性的贡献者。他们以他们的行为和帖子为社群做了一个良好的代表。
-
-      您现在可以&hellip;
-
-      * 编辑任何主题的标题
-      * 改变任何主题的分类
-      * 让您的链接设置为 follow 属性（[自动 nofollow](http://en.wikipedia.org/wiki/Nofollow)已经移除）
-      * 访问一个只有信任等级3及更高才能见到的贵宾室分类
-
-      这里是[目前达到信任等级3的用户列表](/badges/3/leader)。一定要来问个好！
-
-      感谢成为社群的重要一员！
-
-      （想了解关于信任等级的更多信息，[参见这个主题][trust]。请注意只有当前满足了一定的选择条件的成员才能保持在信任等级3。）
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "关于分类：%{category}"
     replace_paragraph: "[用一段简短的话描述分类，并替换此第一段内容。这段文字将出现在分类选择区域，所有试着不要超过200个字符。只要当您编辑了这段文字或者是创建了一个主题，分类才会出现在分类列表中。]"
@@ -239,8 +217,6 @@ zh_CN:
       title: "初级用户"
     regular:
       title: "常规用户"
-    leader:
-      title: "领先用户"
     elder:
       title: "资深用户"
     change_failed_explanation: "您尝试将 %{user_name} 降至 '%{new_trust_level}'。然而他们的信任等级已经是 '%{current_trust_level}'。%{user_name} 将仍是 '%{current_trust_level}'"
@@ -338,7 +314,6 @@ zh_CN:
       long_form: '标记为不当内容'
     notify_user:
       title: '通知 {{username}}'
-      description: '此帖包含一些我想与该用户私下直接交流的内容。'
       long_form: '已通知用户'
       email_title: '您在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
@@ -628,7 +603,6 @@ zh_CN:
     track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
     topics_per_page: "在主题列表页面，缺省载入多少个主题，以及滚动至什么时候载入更多主题"
     posts_per_page: "在主题页面，默认载入多少个帖子，以及滚动时什么时候载入更多帖子"
-    site_contact_username: "论坛给用户发送自动私信时使用的用户名；如果留空将使用默认的系统账户。"
     send_welcome_message: "给所有用户发送快速开始指导的私信"
     suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量。"
     suppress_reply_directly_above: "当一个帖子只有一个回复时，不显示回复到该贴的回复。"
@@ -720,17 +694,6 @@ zh_CN:
     regular_requires_likes_received: "一个初级用户升级到常规用户（2）所需要获得的赞数。"
     regular_requires_likes_given: "一个初级用户升级到常规用户（2）所需要给出的赞数。"
     regular_requires_topic_reply_count: "一个初级用户升级到常规用户（2）所需要回复的主题数量。"
-    leader_requires_days_visited: "在最近 100 天内升至领导(3)信任等级（0到100）所需的访问站点的天数。"
-    leader_requires_topics_replied_to: "在最近 100 天内升至领导(3)信任等级（0或更高）所需的回复主题的最小数量。"
-    leader_requires_topics_viewed: "在最近 100 天内升至领导(3)信任等级（0到100）所需的创建主题的百分比。"
-    leader_requires_posts_read: "在最近 100 天内升至领导(3)信任等级（0到100）所需的创建帖子的百分比。"
-    leader_requires_topics_viewed_all_time: "用户升至领导信任等级(3)所需查看的最小主题数量。"
-    leader_requires_posts_read_all_time: "用户升至领导信任等级(3)所需查看的最小帖子数量。"
-    leader_requires_max_flagged: "用户在最近 100 天内升至领导(3)信任等级（0或更高）所需的必须没有超过 x 个帖子被 x 个不同的用户标记数量，x为数量。"
-    leader_promotion_min_duration: "领导可被降级前最小持续天数。"
-    leader_requires_likes_given: "在最近 100 天内升至领导(3)信任等级所需给出的赞。"
-    leader_requires_likes_received: "在最近 100 天内升至领导(3)信任等级所需收到的赞。"
-    leader_links_no_follow: "领导的链接是否使用 nofollow 属性。"
     min_trust_to_create_topic: "创建主题所需的最低信任等级。"
     min_trust_to_edit_wiki_post: "能编辑维基模式帖子的最小信任等级"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
@@ -770,13 +733,6 @@ zh_CN:
     levenshtein_distance_spammer_emails: "当匹配广告邮件时，模糊匹配判断差异的字符数。"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
-    pop3s_polling_enabled: "轮询 POP3S 收取邮件回复。"
-    pop3s_polling_insecure: "Poll 使用 POP3 经纯文本传输而没有使用 SSL。"
-    pop3s_polling_period_mins: "查询用于邮件的 POP3S 账户的间隔（以分钟计）。注意：需要重新启动。"
-    pop3s_polling_port: "POP3S 轮询账户端口。"
-    pop3s_polling_host: "POP3S 轮询主机。"
-    pop3s_polling_username: "轮询 POP3S 账户。"
-    pop3s_polling_password: "轮询 POP3S 密码。"
     email_in: "允许用户通过邮件发表新主题（需要 pop3 轮询）。在每一个分类的“设置”标签页配置地址。"
     email_in_min_trust: "能通过邮件发表新主题的最低用户信任等级。"
     email_prefix: "邮件主题中使用的 [标签]。留空将缺省使用 'title'。"
@@ -851,7 +807,6 @@ zh_CN:
     invitee_accepted: "%{display_username} 接受了您的邀请"
     linked: "%{display_username} 在 %{link} 里链接了您"
   search:
-    within_post: "#%{post_number} %{username}： %{excerpt}"
     types:
       category: '分类'
       topic: '结果'

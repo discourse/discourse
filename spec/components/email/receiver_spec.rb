@@ -125,7 +125,9 @@ Thanks for listening."
         receiver.process
 
         topic.posts.count.should == (start_count + 1)
-        topic.posts.last.cooked.strip.should == fixture_file("emails/valid_reply.cooked").strip
+        created_post = topic.posts.last
+        created_post.via_email.should be_true
+        created_post.cooked.strip.should == fixture_file("emails/valid_reply.cooked").strip
       end
     end
 
@@ -308,7 +310,7 @@ greatest show ever created. Everyone should watch it.
       to = "some@email.com"
 
       Fabricate(:category, email_in_allow_strangers: false, email_in: to)
-      SiteSetting.email_in_min_trust = TrustLevel.levels[:elder].to_s
+      SiteSetting.email_in_min_trust = TrustLevel[4].to_s
 
       # no email in for user
       expect{

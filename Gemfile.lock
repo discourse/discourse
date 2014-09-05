@@ -406,7 +406,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-action_caching
-  active_model_serializers
+  active_model_serializers (~> 0.8.0)
   airbrake (= 3.1.2)
   annotate
   barber

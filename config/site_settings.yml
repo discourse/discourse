@@ -472,52 +472,52 @@ trust:
   min_trust_to_edit_wiki_post:
     default: 1
     enum: 'TrustLevelSetting'
-  basic_requires_topics_entered: 5
-  basic_requires_read_posts:
+  tl1_requires_topics_entered: 5
+  tl1_requires_read_posts:
     default: 30
     client: true
-  basic_requires_time_spent_mins: 10
-  regular_requires_topics_entered: 20
-  regular_requires_read_posts: 100
-  regular_requires_time_spent_mins: 60
-  regular_requires_days_visited: 15
-  regular_requires_likes_received: 1
-  regular_requires_likes_given: 1
-  regular_requires_topic_reply_count: 3
-  leader_requires_days_visited:
+  tl1_requires_time_spent_mins: 10
+  tl2_requires_topics_entered: 20
+  tl2_requires_read_posts: 100
+  tl2_requires_time_spent_mins: 60
+  tl2_requires_days_visited: 15
+  tl2_requires_likes_received: 1
+  tl2_requires_likes_given: 1
+  tl2_requires_topic_reply_count: 3
+  tl3_requires_days_visited:
     default: 50
     min: 0
     max: 100
-  leader_requires_topics_replied_to:
+  tl3_requires_topics_replied_to:
     default: 10
     min: 0
-  leader_requires_topics_viewed:
+  tl3_requires_topics_viewed:
     default: 25
     min: 0
     max: 100
-  leader_requires_posts_read:
+  tl3_requires_posts_read:
     default: 25
     min: 0
     max: 100
-  leader_requires_topics_viewed_all_time:
+  tl3_requires_topics_viewed_all_time:
     default: 200
     min: 0
-  leader_requires_posts_read_all_time:
+  tl3_requires_posts_read_all_time:
     default: 500
     min: 0
-  leader_requires_max_flagged:
+  tl3_requires_max_flagged:
     default: 5
     min: 0
-  leader_promotion_min_duration:
+  tl3_promotion_min_duration:
     default: 14
     min: 0
-  leader_requires_likes_given:
+  tl3_requires_likes_given:
     default: 30
     min: 0
-  leader_requires_likes_received:
+  tl3_requires_likes_received:
     default: 20
     min: 0
-  leader_links_no_follow: false
+  tl3_links_no_follow: false
 
 security:
   use_https: false

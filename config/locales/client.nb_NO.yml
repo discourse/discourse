@@ -270,7 +270,6 @@ nb_NO:
         bi_weekly: "hver andre uke"
       email_direct: "Motta en email når noen siterer deg, svarer på ditt innlegg, eller nevner ditt @brukernavn"
       email_private_messages: "Notta en email når noen sender deg en privat melding"
-      email_always: "Motta e-postbeskjeder selv hvis du ikke er aktiv på forumet"
       other_settings: "Annet"
       categories_settings: "Kategorier"
       new_topic_duration:
@@ -912,7 +911,6 @@ nb_NO:
         this_month: "Denne måneden"
         this_week: "Denne uken"
         today: "I dag"
-    browser_update: 'Desverre,<a href="http://www.discourse.org/faq/#browser">nettleseren din er for gammel for  å fungere med Discourse</a>. Vennligst <a href="http://browsehappy.com">oppgrader</a>.'
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
@@ -986,7 +984,6 @@ nb_NO:
         regenerate: "Regenerer API Nøkkel"
         info_html: "Din API nøkkel vil tillate deg å lage og oppdatere emner ved å bruke JSON samteler."
         all_users: "Alle brukere"
-        note_html: "Bevar denne nøkkelen <strong>hemmelig</strong>. Alle brukere som har den kan lage nye innlegg som hvilken som helst bruker på forumet."
       backups:
         columns:
           filename: "Filnavn"
@@ -1081,12 +1078,6 @@ nb_NO:
             label: "Ny:"
             ip_address: "IP-addresse"
             add: "Legg til"
-      impersonate:
-        title: "Gi deg ut for å være en annen Bruker"
-        username_or_email: "Brukernavn eller Email til bruker"
-        help: "Bruk dette verktøyet for å bruke en annen bruker's konto for debugging."
-        not_found: "Den brukeren kunne ikke bli funnet."
-        invalid: "Beklager, du kan ikke gi deg ut for å være den brukeren."
       users:
         title: 'Brukere'
         create: 'Legg til Admin Bruker'
@@ -1111,7 +1102,6 @@ nb_NO:
           newuser: 'Brukere på tillitsnivå 0 (Ny Bruker)'
           basic: 'Brukere på tillitsnivå 1 (Grunnleggende Bruker)'
           regular: 'Brukere på tillitsnivå 2 (Ordinær Bruker)'
-          leader: 'Brukere på tillitsnivå 3 (Leder)'
           elder: 'Brukere på tillitsnivå 4 (Eldre)'
           admins: 'Admins'
           moderators: 'Moderatorer'

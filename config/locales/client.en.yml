@@ -389,7 +389,7 @@ en:
 
       name:
         title: "Name"
-        instructions: "Longer version of your name."
+        instructions: "Your full name."
         too_short: "Your name is too short."
         ok: "Your name looks good."
       username:
@@ -601,6 +601,7 @@ en:
       awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
       requires_invite: "Sorry, access to this forum is by invite only."
       not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
+      not_allowed_from_ip_address: "You can't login from that IP address."
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       google:
@@ -781,6 +782,7 @@ en:
         educate:
           new: '<p>By default, topics are considered new when they were created in the last 2 days.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
           unread: '<p>By default, unread indicators will only appear for topics that you have:</p><ul><li>Created</li><li>Replied to</li><li>Read for more than 4 minutes</li></ul><p>Or, if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
+          starred: '<p>Topics that you have starred will appear here.</p>'
       bottom:
         latest: "There are no more latest topics."
         hot: "There are no more hot topics."
@@ -1069,6 +1071,8 @@ en:
         confirm: "Are you sure you want to abandon your post?"
         no_value: "No, keep"
         yes_value: "Yes, abandon"
+
+      via_email: "this post arrived via email"
 
       wiki:
         about: "this post is a wiki; basic users can edit it"
@@ -1796,6 +1800,7 @@ en:
           actions:
             block: "Block"
             do_nothing: "Allow"
+            allow_admin: "Allow Admin"
           form:
             label: "New:"
             ip_address: "IP address"
@@ -1834,9 +1839,9 @@ en:
           pending: 'Users Pending Review'
           newuser: 'Users at Trust Level 0 (New User)'
           basic: 'Users at Trust Level 1 (Basic User)'
-          regular: 'Users at Trust Level 2 (Regular User)'
-          leader: 'Users at Trust Level 3 (Veteran)'
-          elder: 'Users at Trust Level 4 (Elder)'
+          regular: 'Users at Trust Level 2 (Member)'
+          leader: 'Users at Trust Level 3 (Regular)'
+          elder: 'Users at Trust Level 4 (Leader)'
           admins: 'Admin Users'
           moderators: 'Moderators'
           blocked: 'Blocked Users'
@@ -2134,14 +2139,14 @@ en:
         basic_user:
           name: Basic
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
-        regular_user:
-          name: Regular
+        member:
+          name: Member
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations
+        regular:
+          name: Regular
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
         leader:
           name: Leader
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
-        elder:
-          name: Elder
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
         welcome:
           name: Welcome

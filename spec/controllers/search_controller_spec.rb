@@ -15,7 +15,7 @@ describe SearchController do
       response.should be_success
       data = JSON.parse(response.body)
       data['posts'][0]['id'].should == my_post.id
-      data['posts'][0]['blurb'].should == 'this is my really <span class=\'highlighted\'>awesome</span> post'
+      data['posts'][0]['blurb'].should == 'this is my really awesome post'
       data['topics'][0]['id'].should == my_post.topic_id
     end
   end

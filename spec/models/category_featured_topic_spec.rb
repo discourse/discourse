@@ -13,12 +13,12 @@ describe CategoryFeaturedTopic do
     it "should feature topics for a secure category" do
 
       # so much dancing, I am thinking fixures make sense here.
-      user.change_trust_level!(:basic)
+      user.change_trust_level!(TrustLevel[1])
 
       category.set_permissions(:trust_level_1 => :full)
       category.save
 
-      uncategorized_post = PostCreator.create(user, raw: "this is my new post 123 post", title: "hello world")
+      _uncategorized_post = PostCreator.create(user, raw: "this is my new post 123 post", title: "hello world")
 
       CategoryFeaturedTopic.feature_topics_for(category)
       CategoryFeaturedTopic.count.should == 1

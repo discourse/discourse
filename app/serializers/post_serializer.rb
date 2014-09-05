@@ -50,7 +50,8 @@ class PostSerializer < BasicPostSerializer
              :can_view_edit_history,
              :wiki,
              :user_custom_fields,
-             :static_doc
+             :static_doc,
+             :via_email
 
   def moderator?
     !!(object.user && object.user.moderator?)
@@ -243,6 +244,10 @@ class PostSerializer < BasicPostSerializer
 
   def include_static_doc?
     object.post_number == 1 && Discourse.static_doc_topic_ids.include?(object.topic_id)
+  end
+
+  def include_via_email?
+    object.via_email?
   end
 
   private

@@ -21,6 +21,13 @@ Discourse.Route = Em.Route.extend({
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
   },
 
+  redirectIfLoginRequired: function() {
+    var app = this.controllerFor('application');
+    if (app.get('loginRequired')) {
+      this.replaceWith('login');
+    }
+  },
+
   openTopicDraft: function(model){
     // If there's a draft, open the create topic composer
     if (model.draft) {

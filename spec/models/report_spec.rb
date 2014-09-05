@@ -131,16 +131,16 @@ describe Report do
 
     context "with users at different trust levels" do
       before do
-        3.times { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
-        2.times { Fabricate(:user, trust_level: TrustLevel.levels[:regular]) }
-        Fabricate(:user, trust_level: TrustLevel.levels[:elder])
+        3.times { Fabricate(:user, trust_level: TrustLevel[0]) }
+        2.times { Fabricate(:user, trust_level: TrustLevel[2]) }
+        Fabricate(:user, trust_level: TrustLevel[4])
       end
 
       it "returns a report with data" do
         report.data.should be_present
-        report.data.find {|d| d[:x] == TrustLevel.levels[:newuser]}[:y].should == 3
-        report.data.find {|d| d[:x] == TrustLevel.levels[:regular]}[:y].should == 2
-        report.data.find {|d| d[:x] == TrustLevel.levels[:elder]}[:y].should == 1
+        report.data.find {|d| d[:x] == TrustLevel[0]}[:y].should == 3
+        report.data.find {|d| d[:x] == TrustLevel[2]}[:y].should == 2
+        report.data.find {|d| d[:x] == TrustLevel[4]}[:y].should == 1
       end
     end
   end

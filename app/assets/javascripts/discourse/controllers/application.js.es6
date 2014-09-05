@@ -6,4 +6,9 @@ export default Ember.Controller.extend({
            Discourse.SiteSettings.allow_new_registrations &&
            !Discourse.SiteSettings.enable_sso;
   }.property(),
+
+  loginRequired: function() {
+    return Discourse.SiteSettings.login_required && !Discourse.User.current();
+  }.property()
+
 });
