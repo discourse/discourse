@@ -19,4 +19,24 @@ test("redirect", function() {
   andThen(function() {
     ok(exists('.login-modal'), "they can still access the login modal");
   });
+
+  click('.modal-header .close');
+  andThen(function() {
+    ok(!exists('.login-modal'), "it closes the login modal");
+  });
+
+  click('#search-button');
+  andThen(function() {
+    ok(exists('.login-modal'), "clicking search opens the login modal");
+  });
+
+  click('.modal-header .close');
+  andThen(function() {
+    ok(!exists('.login-modal'), "it closes the login modal");
+  });
+
+  click('#site-map');
+  andThen(function() {
+    ok(exists('.login-modal'), "site map opens the login modal");
+  });
 });
