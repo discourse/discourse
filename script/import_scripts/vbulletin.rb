@@ -353,10 +353,31 @@ class ImportScripts::VBulletin < ImportScripts::Base
                .gsub("\\t", "\t")
 
       # remove attachments
-      raw = raw.gsub(/\[attach\]\d+\[\/attach\]/i, "")
+      raw = raw.gsub(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
+
+      # [HTML]...[/HTML]
+      raw = raw.gsub(/\[html\]/i, "\n```html\n")
+               .gsub(/\[\/html\]/i, "\n```\n")
+
+      # [PHP]...[/PHP]
+      raw = raw.gsub(/\[php\]/i, "\n```php\n")
+               .gsub(/\[\/php\]/i, "\n```\n")
+
+      # [HIGHLIGHT="..."]
+      raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
+
+      # [CODE]...[/CODE]
+      # [HIGHLIGHT]...[/HIGHLIGHT]
+      raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
+               .gsub(/\[\/?highlight\]/i, "\n```\n")
+
+      # [SAMP]...[/SAMP]
+      raw = raw.gsub(/\[\/?samp\]/i, "`")
 
       # replace all chevrons with HTML entities
-      # NOTE: must be before any of the "quote" processing
+      # NOTE: must be done
+      #  - AFTER all the "code" processing
+      #  - BEFORE the "quote" processing
       raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
                .gsub("<", "&lt;")
                .gsub("\u2603", "<")
@@ -402,25 +423,6 @@ class ImportScripts::VBulletin < ImportScripts::Base
         end
         "\n[quote=\"#{old_username}\"]\n#{quote}\n[/quote]\n"
       end
-
-      # [HTML]...[/HTML]
-      raw = raw.gsub(/\[html\]/i, "\n```html\n")
-               .gsub(/\[\/html\]/i, "\n```\n")
-
-      # [PHP]...[/PHP]
-      raw = raw.gsub(/\[php\]/i, "\n```php\n")
-               .gsub(/\[\/php\]/i, "\n```\n")
-
-      # [HIGHLIGHT="..."]
-      raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
-
-      # [CODE]...[/CODE]
-      # [HIGHLIGHT]...[/HIGHLIGHT]
-      raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
-               .gsub(/\[\/?highlight\]/i, "\n```\n")
-
-      # [SAMP]...[/SAMP]
-      raw = raw.gsub(/\[\/?samp\]/i, "`")
 
       # [YOUTUBE]<id>[/YOUTUBE]
       raw = raw.gsub(/\[youtube\](.+?)\[\/youtube\]/i) { "\n//youtu.be/#{$1}\n" }
