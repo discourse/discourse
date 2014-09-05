@@ -286,8 +286,11 @@
       size: 18px;
     };
   }
+  // I am ghetto using this to display "Show More".. be warned
   .no-results {
     padding: 5px;
+    height: 12px;
+    width:60%;
   }
   .filter {
     float: right;
