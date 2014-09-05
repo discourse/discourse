@@ -41,7 +41,9 @@ class TopicViewSerializer < ApplicationSerializer
              :deleted_by,
              :has_deleted,
              :actions_summary,
-             :expandable_first_post
+             :expandable_first_post,
+             :is_warning
+
 
   # Define a delegator for each attribute of the topic we want
   attributes(*topic_attributes)
@@ -109,6 +111,14 @@ class TopicViewSerializer < ApplicationSerializer
     result
   end
 
+
+  def is_warning
+    object.topic.private_message? && object.topic.warning.present?
+  end
+
+  def include_is_warning?
+    is_warning
+  end
   def draft
     object.draft
   end
