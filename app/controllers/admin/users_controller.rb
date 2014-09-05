@@ -127,8 +127,7 @@ class Admin::UsersController < Admin::AdminController
 
   def trust_level
     guardian.ensure_can_change_trust_level!(@user)
-    level = TrustLevel.levels[params[:level].to_i]
-    @user.change_trust_level!(level, log_action_for: current_user)
+    @user.change_trust_level!(params[:level].to_i, log_action_for: current_user)
 
     render_serialized(@user, AdminUserSerializer)
   rescue Discourse::InvalidAccess => e

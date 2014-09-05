@@ -11,6 +11,6 @@ class TrustLevelSetting < EnumSiteSetting
   end
 
   def self.valid_values
-    TrustLevel.levels.values.sort
+    TrustLevel.valid_range.to_a
   end
 end

@@ -310,7 +310,7 @@ greatest show ever created. Everyone should watch it.
       to = "some@email.com"
 
       Fabricate(:category, email_in_allow_strangers: false, email_in: to)
-      SiteSetting.email_in_min_trust = TrustLevel.levels[:elder].to_s
+      SiteSetting.email_in_min_trust = TrustLevel[4].to_s
 
       # no email in for user
       expect{

@@ -194,8 +194,8 @@ describe Admin::UsersController do
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts + 1
         stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
         stat.save!
-        @another_user.update_attributes(trust_level: TrustLevel.levels[:basic])
-        xhr :put, :trust_level, user_id: @another_user.id, level: TrustLevel.levels[:newuser]
+        @another_user.update_attributes(trust_level: TrustLevel[1])
+        xhr :put, :trust_level, user_id: @another_user.id, level: TrustLevel[0]
         response.should_not be_success
       end
     end

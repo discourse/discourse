@@ -61,7 +61,7 @@ module Email
         end
 
         raise UserNotFoundError if @user.blank?
-        raise UserNotSufficientTrustLevelError.new @user unless @allow_strangers || @user.has_trust_level?(TrustLevel.levels[SiteSetting.email_in_min_trust.to_i])
+        raise UserNotSufficientTrustLevelError.new @user unless @allow_strangers || @user.has_trust_level?(TrustLevel[SiteSetting.email_in_min_trust.to_i])
 
         create_new_topic
       else

@@ -1,6 +1,6 @@
 # This class performs calculations to determine if a user qualifies for
 # the Leader (3) trust level.
-class LeaderRequirements
+class TrustLevel3Requirements
 
   include ActiveModel::Serialization
 
@@ -75,7 +75,7 @@ class LeaderRequirements
   end
 
   def min_topics_viewed
-    (LeaderRequirements.num_topics_in_time_period.to_i * (SiteSetting.tl3_requires_topics_viewed.to_f / 100.0)).round
+    (TrustLevel3Requirements.num_topics_in_time_period.to_i * (SiteSetting.tl3_requires_topics_viewed.to_f / 100.0)).round
   end
 
   def posts_read
@@ -83,7 +83,7 @@ class LeaderRequirements
   end
 
   def min_posts_read
-    (LeaderRequirements.num_posts_in_time_period.to_i * (SiteSetting.tl3_requires_posts_read.to_f / 100.0)).round
+    (TrustLevel3Requirements.num_posts_in_time_period.to_i * (SiteSetting.tl3_requires_posts_read.to_f / 100.0)).round
   end
 
   def topics_viewed_all_time

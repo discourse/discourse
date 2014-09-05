@@ -9,7 +9,7 @@ describe SpamRule::AutoBlock do
   end
 
   describe 'perform' do
-    let(:post)  { Fabricate.build(:post, user: Fabricate.build(:user, trust_level: TrustLevel.levels[:newuser])) }
+    let(:post)  { Fabricate.build(:post, user: Fabricate.build(:user, trust_level: TrustLevel[0])) }
     subject     { described_class.new(post.user) }
 
     it 'takes no action if user should not be blocked' do
@@ -148,9 +148,9 @@ describe SpamRule::AutoBlock do
         end
       end
 
-      [:basic, :regular, :leader, :elder].each do |trust_level|
+      (1..4).each do |trust_level|
         context "user has trust level #{trust_level}" do
-          let(:user) { Fabricate(:user, trust_level: TrustLevel.levels[trust_level]) }
+          let(:user) { Fabricate(:user, trust_level: trust_level) }
           include_examples "can't be blocked"
         end
       end
@@ -167,7 +167,7 @@ describe SpamRule::AutoBlock do
     end
 
     context 'new user' do
-      let(:user)  { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+      let(:user)  { Fabricate(:user, trust_level: TrustLevel[0]) }
       subject     { described_class.new(user) }
 
       it 'returns false if there are no spam flags' do
@@ -210,7 +210,7 @@ describe SpamRule::AutoBlock do
     end
 
     context "blocked, but has higher trust level now" do
-      let(:user)  { Fabricate(:user, blocked: true, trust_level: TrustLevel.levels[:basic]) }
+      let(:user)  { Fabricate(:user, blocked: true, trust_level: TrustLevel[1]) }
       subject     { described_class.new(user) }
 
       it 'returns false' do

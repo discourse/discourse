@@ -6,11 +6,11 @@ class TrustLevel
 
   class << self
 
-    def[](val)
-      if val < 0 || val > 4
+    def[](level)
+      if !valid?(level)
         raise InvalidTrustLevel
       end
-      val
+      level
     end
 
     def levels
@@ -25,12 +25,16 @@ class TrustLevel
       end
     end
 
-    def valid_level?(level)
-      levels.valid?(level)
+    def valid?(level)
+       valid_range === level
+    end
+
+    def valid_range
+       (0..4)
     end
 
     def compare(current_level, level)
-      (current_level || levels[:newuser]) >= levels[level] rescue binding.pry
+      (current_level || 0) >= level
     end
   end
 

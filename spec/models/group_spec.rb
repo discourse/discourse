@@ -81,17 +81,17 @@ describe Group do
     user = Fabricate(:user)
     Group[:trust_level_0].user_ids.should include user.id
 
-    user.change_trust_level!(:basic)
+    user.change_trust_level!(TrustLevel[1])
 
     Group[:trust_level_1].user_ids.should include user.id
 
-    user.change_trust_level!(:regular)
+    user.change_trust_level!(TrustLevel[2])
 
     Group[:trust_level_1].user_ids.should include user.id
     Group[:trust_level_2].user_ids.should include user.id
 
     user2 = Fabricate(:coding_horror)
-    user2.change_trust_level!(:regular)
+    user2.change_trust_level!(TrustLevel[3])
 
     Group[:trust_level_2].user_ids.sort.should == [-1, user.id, user2.id].sort
   end
@@ -99,7 +99,7 @@ describe Group do
   it "Correctly updates all automatic groups upon request" do
     Fabricate(:admin)
     user = Fabricate(:user)
-    user.change_trust_level!(:regular)
+    user.change_trust_level!(TrustLevel[2])
 
     Group.exec_sql("update groups set user_count=0 where id = #{Group::AUTO_GROUPS[:trust_level_2]}")
 

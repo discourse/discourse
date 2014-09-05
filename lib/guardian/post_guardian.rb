@@ -10,7 +10,7 @@ module PostGuardian
 
     if authenticated? && post
       # we allow flagging for trust level 1 and higher
-      (is_flag && @user.has_trust_level?(:basic) && not(already_did_flagging)) ||
+      (is_flag && @user.has_trust_level?(TrustLevel[1]) && not(already_did_flagging)) ||
 
       # not a flagging action, and haven't done it already
       not(is_flag || already_taken_this_action) &&
@@ -25,7 +25,7 @@ module PostGuardian
       not(action_key == :like && is_my_own?(post)) &&
 
       # new users can't notify_user because they are not allowed to send private messages
-      not(action_key == :notify_user && !@user.has_trust_level?(:basic)) &&
+      not(action_key == :notify_user && !@user.has_trust_level?(TrustLevel[1])) &&
 
       # no voting more than once on single vote topics
       not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
@@ -76,7 +76,7 @@ module PostGuardian
       return false
     end
 
-    if is_staff? || @user.has_trust_level?(:elder)
+    if is_staff? || @user.has_trust_level?(TrustLevel[4])
       return true
     end
 
@@ -149,7 +149,7 @@ module PostGuardian
     end
 
     authenticated? &&
-    (is_staff? || @user.has_trust_level?(:elder) || @user.id == post.user_id) &&
+    (is_staff? || @user.has_trust_level?(TrustLevel[4]) || @user.id == post.user_id) &&
     can_see_post?(post)
   end
 
@@ -162,7 +162,7 @@ module PostGuardian
   end
 
   def can_wiki?
-    is_staff? || @user.has_trust_level?(:elder)
+    is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
   def can_see_flagged_posts?

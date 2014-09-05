@@ -622,7 +622,7 @@ describe TopicsController do
       end
 
       it "reviews the user for a promotion if they're new" do
-        user.update_column(:trust_level, TrustLevel.levels[:newuser])
+        user.update_column(:trust_level, TrustLevel[0])
         Promotion.any_instance.expects(:review)
         get :show, topic_id: topic.id, slug: topic.slug
       end

@@ -17,7 +17,7 @@ describe SpamRulesEnforcer do
     Given(:user2)      { Fabricate(:user) }
 
     context 'spammer is a new user' do
-      Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+      Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel[0]) }
 
       context 'spammer post is not flagged enough times' do
         Given!(:spam_post)  { create_post(user: spammer) }
@@ -64,7 +64,7 @@ describe SpamRulesEnforcer do
           end
 
           context "spammer becomes trust level 1" do
-            When { spammer.change_trust_level!(:basic); spammer.reload }
+            When { spammer.change_trust_level!(TrustLevel[1]); spammer.reload }
             Then { expect(spammer.reload).to be_blocked }
           end
         end
@@ -79,7 +79,7 @@ describe SpamRulesEnforcer do
     end
 
     context "spammer has trust level basic" do
-      Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel.levels[:basic]) }
+      Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel[1]) }
 
       context 'one spam post is flagged enough times by enough users' do
         Given!(:spam_post)              { Fabricate(:post, user: spammer) }
@@ -93,7 +93,7 @@ describe SpamRulesEnforcer do
       end
     end
 
-    [[:user, trust_level: TrustLevel.levels[:regular]], [:admin], [:moderator]].each do |spammer_args|
+    [[:user, trust_level: TrustLevel[2]], [:admin], [:moderator]].each do |spammer_args|
       context "spammer is trusted #{spammer_args[0]}" do
         Given!(:spammer)                { Fabricate(*spammer_args) }
         Given!(:spam_post)              { Fabricate(:post, user: spammer) }

@@ -64,22 +64,22 @@ describe Guardian do
 
     describe "trust levels" do
       it "returns true for a new user liking something" do
-        user.trust_level = TrustLevel.levels[:new]
+        user.trust_level = TrustLevel[0]
         Guardian.new(user).post_can_act?(post, :like).should be_true
       end
 
       it "returns false for a new user flagging something as spam" do
-        user.trust_level = TrustLevel.levels[:new]
+        user.trust_level = TrustLevel[0]
         Guardian.new(user).post_can_act?(post, :spam).should be_false
       end
 
       it "returns false for a new user flagging something as off topic" do
-        user.trust_level = TrustLevel.levels[:new]
+        user.trust_level = TrustLevel[0]
         Guardian.new(user).post_can_act?(post, :off_topic).should be_false
       end
 
       it "returns false for a new user flagging with notify_user" do
-        user.trust_level = TrustLevel.levels[:new]
+        user.trust_level = TrustLevel[0]
         Guardian.new(user).post_can_act?(post, :notify_user).should be_false # because new users can't send private messages
       end
     end
@@ -127,7 +127,7 @@ describe Guardian do
     end
 
     it "returns false when you are untrusted" do
-      user.trust_level = TrustLevel.levels[:new]
+      user.trust_level = TrustLevel[0]
       Guardian.new(user).can_send_private_message?(another_user).should be_false
     end
 
@@ -174,7 +174,7 @@ describe Guardian do
     end
 
     it "returns false for an untrusted user" do
-      user.trust_level = TrustLevel.levels[:new]
+      user.trust_level = TrustLevel[0]
       Guardian.new(user).can_reply_as_new_topic?(topic).should be_false
     end
 

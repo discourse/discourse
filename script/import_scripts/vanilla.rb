@@ -98,7 +98,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
         }
 
         # if @comments.select { |c| c[:insert_user_id] == user[:user_id] }.map { |c| c[:discussion_id] }.uniq.count > 3
-        #   u[:trust_level] = TrustLevel.levels[:regular]
+        #   u[:trust_level] = TrustLevel[2]
         # end
 
         u
