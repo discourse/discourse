@@ -14,16 +14,18 @@
       <ul>
         <li class='heading row'>
           {{resultType.name}}
-          {{#if resultType.more}}
-            <a href='#' class='filter' {{action moreOfType resultType.type bubbles=false}}>{{i18n show_more}}</a>
-          {{else}}
-            {{#if showCancelFilter}}
-              <a href='#' class='filter' {{action cancelType bubbles=false}}><i class='fa fa-times-circle'></i></a>
-            {{/if}}
-          {{/if}}
         </li>
         {{view 'search-results-type' type=resultType.type displayType=resultType.displayType content=resultType.results}}
       </ul>
+        <div class='no-results'>
+            {{#if resultType.more}}
+                <a href='#' class='filter' {{action moreOfType resultType.type bubbles=false}}>{{i18n show_more}}</a>
+            {{else}}
+                {{#if showCancelFilter}}
+                    <a href='#' class='filter' {{action cancelType bubbles=false}}><i class='fa fa-times-circle'></i></a>
+                {{/if}}
+            {{/if}}
+        </div>
     {{/each}}
   {{else}}
     <div class='no-results'>
