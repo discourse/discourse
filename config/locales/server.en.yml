@@ -211,6 +211,9 @@ en:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "You can only attach warnings to private messages."
+              too_many_users: "You can only send warnings to one user at a time."
             archetype:
               cant_send_pm: "Sorry, you cannot send a private message to that user."
         user:

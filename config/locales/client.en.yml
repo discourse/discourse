@@ -336,6 +336,7 @@ en:
         flagged_posts: "flagged posts"
         deleted_posts: "deleted posts"
         suspensions: "suspensions"
+        warnings_received: "warnings received"
 
       messages:
         all: "All"
@@ -624,6 +625,7 @@ en:
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
 
     composer:
+      add_warning: "This is an official warning."
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving"
       saved_draft_tip: "saved"
@@ -1318,6 +1320,8 @@ en:
         other: "%{count} clicks"
 
     topic_statuses:
+      warning:
+        help: "This is an official warning."
       locked:
         help: "This topic is closed; it no longer accepts new replies"
       archived:
@@ -1898,6 +1902,7 @@ en:
         topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
+        warnings_received_count: Warnings Received
         flags_given_received_count: 'Flags Given / Received'
         approve: 'Approve'
         approved_by: "approved by"
