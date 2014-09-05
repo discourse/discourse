@@ -28,7 +28,7 @@ describe Jobs::LeaderPromotions do
     end
 
     before do
-      SiteSetting.stubs(:leader_promotion_min_duration).returns(3)
+      SiteSetting.tl3_promotion_min_duration = 3
     end
 
     it "demotes if was promoted more than X days ago" do
