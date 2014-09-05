@@ -159,7 +159,7 @@ class ImportScripts::Base
     admin.password = SecureRandom.uuid
     admin.save!
     admin.grant_admin!
-    admin.change_trust_level!(:regular)
+    admin.change_trust_level!(TrustLevel[4])
     admin.email_tokens.update_all(confirmed: true)
     admin
   end
@@ -280,7 +280,7 @@ class ImportScripts::Base
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name] || opts[:email])
     end
     opts[:email] = opts[:email].downcase
-    opts[:trust_level] = TrustLevel.levels[:basic] unless opts[:trust_level]
+    opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
     opts[:active] = true
     opts[:import_mode] = true
 

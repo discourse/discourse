@@ -17,8 +17,8 @@ class StaffActionLogger
 
   def log_trust_level_change(user, old_trust_level, new_trust_level, opts={})
     raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
-    raise Discourse::InvalidParameters.new('old trust level is invalid') unless TrustLevel.levels.values.include? old_trust_level
-    raise Discourse::InvalidParameters.new('new trust level is invalid') unless TrustLevel.levels.values.include? new_trust_level
+    raise Discourse::InvalidParameters.new('old trust level is invalid') unless TrustLevel.valid? old_trust_level
+    raise Discourse::InvalidParameters.new('new trust level is invalid') unless TrustLevel.valid? new_trust_level
     UserHistory.create!( params(opts).merge({
       action: UserHistory.actions[:change_trust_level],
       target_user_id: user.id,

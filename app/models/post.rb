@@ -153,7 +153,7 @@ class Post < ActiveRecord::Base
     return raw if cook_method == Post.cook_methods[:raw_html]
 
     # Default is to cook posts
-    cooked = if !self.user || SiteSetting.tl3_links_no_follow || !self.user.has_trust_level?(:leader)
+    cooked = if !self.user || SiteSetting.tl3_links_no_follow || !self.user.has_trust_level?(TrustLevel[3])
                post_analyzer.cook(*args)
              else
                # At trust level 3, we don't apply nofollow to links
@@ -213,7 +213,7 @@ class Post < ActiveRecord::Base
 
   # Prevent new users from posting the same hosts too many times.
   def has_host_spam?
-    return false if acting_user.present? && acting_user.has_trust_level?(:basic)
+    return false if acting_user.present? && acting_user.has_trust_level?(TrustLevel[1])
 
     total_hosts_usage.each do |_, count|
       return true if count >= SiteSetting.newuser_spam_host_threshold

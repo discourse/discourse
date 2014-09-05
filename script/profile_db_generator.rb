@@ -49,7 +49,7 @@ def create_admin(seq)
     admin.password = "password"
     admin.save
     admin.grant_admin!
-    admin.change_trust_level!(:regular)
+    admin.change_trust_level!(TrustLevel[4])
     admin.email_tokens.update_all(confirmed: true)
   }
 end

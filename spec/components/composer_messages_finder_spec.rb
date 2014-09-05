@@ -107,7 +107,7 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't return notifications for new users" do
-        user.trust_level = TrustLevel.levels[:newuser]
+        user.trust_level = TrustLevel[0]
         finder.check_avatar_notification.should be_blank
       end
 

@@ -95,7 +95,7 @@ describe Jobs::PollMailbox do
       SiteSetting.reply_by_email_address = "reply+%{reply_key}@appmail.adventuretime.ooo"
       category.email_in = 'incoming+amazing@appmail.adventuretime.ooo'
       category.save
-      user.change_trust_level! :regular
+      user.change_trust_level! 2
       user.username = 'Jake'
       user.email = 'jake@adventuretime.ooo'
       user.save
@@ -127,7 +127,7 @@ describe Jobs::PollMailbox do
 
       describe "with insufficient trust" do
         before do
-          user.change_trust_level! :newuser
+          user.change_trust_level! 0
         end
 
         it "raises a UserNotSufficientTrustLevelError" do
