@@ -2,6 +2,8 @@ class ExceptionsController < ApplicationController
   skip_before_filter :check_xhr, :preload_json
 
   def not_found
+    @hide_google = true if SiteSetting.login_required
+
     # centralize all rendering of 404 into app controller
     raise Discourse::NotFound
   end
