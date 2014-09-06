@@ -74,9 +74,20 @@ module Email
     private
 
     def add_newlines(doc)
+      # Replace <br> tags with a markdown \n
       doc.xpath('//br').each do |br|
-        br.replace(Nokogiri::XML::Text.new("\n", doc))
+        br.replace(new_linebreak_node doc)
       end
+      # Surround <p> tags with newlines, to help with line-wise postprocessing
+      # and ensure markdown paragraphs
+      doc.xpath('//p').each do |p|
+        p.before(new_linebreak_node doc)
+        p.after(new_linebreak_node doc, 2)
+      end
+    end
+
+    def new_linebreak_node(doc, count=1)
+      Nokogiri::XML::Text.new("\n" * count, doc)
     end
 
     def trim_process_node(node)
