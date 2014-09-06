@@ -1219,8 +1219,8 @@ en:
             title: "Show the rendered output diffs side-by-side"
             button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
-            title: "Show the markdown source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Markdown'
+            title: "Show the raw source diffs side-by-side"
+            button: '<i class="fa fa-columns"></i> Raw'
         details:
           edited_by: "Edited by"
 
