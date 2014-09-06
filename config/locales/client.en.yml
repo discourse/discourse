@@ -770,7 +770,7 @@ en:
           other: "You have selected <b>{{count}}</b> topics."
 
       none:
-        starred: "You haven't starred any topics yet. To star a topic, click or tap the star next to the title."
+        starred: "You have no starred topics."
         unread: "You have no unread topics."
         new: "You have no new topics."
         read: "You haven't read any topics yet."
@@ -782,7 +782,8 @@ en:
         educate:
           new: '<p>By default, topics are considered new when they were created in the last 2 days.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
           unread: '<p>By default, unread indicators will only appear for topics that you have:</p><ul><li>Created</li><li>Replied to</li><li>Read for more than 4 minutes</li></ul><p>Or, if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
-          starred: '<p>Topics that you have starred will appear here.</p>'
+          starred: '<p>Your starred topics will appear here.</p>
+          <p>To star or unstar a topic, click or tap the <i class="fa fa-star"></i> when you see it &hellip;</p><ul><li>Next to the title at the top of each topic</li><li>In the <kbd>Star</kbd> button at the bottom of the topic</li><li>To the left of each topic in the topic list</li>'
       bottom:
         latest: "There are no more latest topics."
         hot: "There are no more hot topics."
