@@ -23,8 +23,8 @@
 
 <%- unless @hide_google %>
   <div class="row">
-    <div class="span10" style='padding-top: 20px'>
-      <h2 class="page-not-found-search"><%= t 'page_not_found.search_title' %></h2>
+    <div class="span10 page-not-found-search">
+      <h2><%= t 'page_not_found.search_title' %></h2>
       <p>
         <form action='//google.com/search' id='google-search' onsubmit="return google_button_clicked()">
           <input type="text" id='user-query' value="<%= @slug %>">
