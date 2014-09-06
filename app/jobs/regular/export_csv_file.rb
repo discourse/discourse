@@ -25,7 +25,9 @@ module Jobs
 
           user_data.each do |user|
             user_array = Array.new
+            group_names = get_group_names(user).join(';')
             user_array.push(user['id']).push(user['name']).push(user['username']).push(user['email'])
+            user_array.push(group_names) if group_names != ''
             data.push(user_array)
           end
       end
@@ -39,6 +41,15 @@ module Jobs
     end
 
     private
+
+      def get_group_names(user)
+        group_names = []
+        groups = user.custom_groups
+        groups.each do |group|
+          group_names.push(group.name)
+        end
+        return group_names
+      end
 
       def set_file_path
         @file_name = "export_#{SecureRandom.hex(4)}.csv"
