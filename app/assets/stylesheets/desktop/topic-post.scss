@@ -513,20 +513,6 @@ button.expand-post {
   margin-top: 10px;
 }
 
-.quote-button {
-  display: none;
-  position: absolute;
-  background-color: scale-color($primary, $lightness: 50%);
-  color: $secondary;
-  padding: 10px;
-  z-index: 401;
-
-  &:hover {
-    background-color: scale-color($primary, $lightness: 40%);
-    cursor: pointer;
-  }
-}
-
 .quote-button.visible {
   display: block;
 }

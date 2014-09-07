@@ -27,7 +27,6 @@ export default Discourse.View.extend({
     @method render
   **/
   render: function(buffer) {
-    buffer.push('<i class="fa fa-quote-right"></i>&nbsp;&nbsp;');
     buffer.push(I18n.t("post.quote_reply"));
   },
 
