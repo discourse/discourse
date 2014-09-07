@@ -1740,7 +1740,7 @@ en:
             user_placeholder: "username"
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
-            reply_key_placeholder: ""
+            reply_key_placeholder: "reply key"
             skipped_reason_placeholder: "reason"
 
       logs:
