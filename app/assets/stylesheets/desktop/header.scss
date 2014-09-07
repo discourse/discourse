@@ -11,23 +11,10 @@
     padding-right: 3px;
     padding-top: 3px;
   }
-  .current-username {
-    a {
-      display:block;
-      margin-top: 10px;
-    }
-  }
 }
 
 @media all
 and (max-width : 570px) {
-  .d-header {
-    .current-username {
-      a {
-        display:none;
-      }
-    }
-  }
   .extra-info-wrapper {display: none;}
 }
 
