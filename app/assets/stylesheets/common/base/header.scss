@@ -39,17 +39,6 @@
       position: relative;
     }
 
-    .current-username {
-      float: left;
-      a {
-        color: $header_primary;
-        font-size: 14px;
-        max-width: 200px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
     button.login-button, button.sign-up-button {
       float: left;
       margin-top: 7px;
