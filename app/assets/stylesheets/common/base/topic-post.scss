@@ -81,3 +81,22 @@ aside.quote {
     content: "\f061";
   }
 }
+
+.quote-button {
+  display: none;
+  position: absolute;
+  background-color: scale-color($primary, $lightness: 50%);
+  color: $secondary;
+  padding: 10px;
+  z-index: 401;
+
+  &:before {
+    font-family: "FontAwesome";
+    content: "\f10e\00a0\00a0";
+  }
+
+  &:hover {
+    background-color: scale-color($primary, $lightness: 40%);
+    cursor: pointer;
+  }
+}
