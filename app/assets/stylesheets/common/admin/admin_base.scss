@@ -69,7 +69,7 @@ td.flaggers td {
 .admin-loading {
   width: 100px;
   margin: 0 auto 30px auto;
-  background-color: $primary;
+  background-color: #000;
   @include border-radius-all(10px);
   padding: 10px 10px 10px 30px;
   font-size: 15px;
@@ -108,7 +108,7 @@ td.flaggers td {
 }
 
 .admin-controls {
-  background-color: dark-light-diff($primary, $secondary, 90%, -20%);
+  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 10px 10px 3px 0;
   height: 35px;
   .nav.nav-pills {
@@ -272,7 +272,7 @@ td.flaggers td {
 
   .setting.overridden {
     input[type=text] {
-      background-color: dark-light-diff($highlight, $secondary, 50%, -10%);
+      background-color: dark-light-diff($highlight, $secondary, 50%, -60%);
 
     }
 
@@ -685,7 +685,7 @@ table.api-keys {
     th {
       font-weight: normal;
       text-align: center;
-      background-color: scale-color-diff();
+      background: dark-light-diff($primary, $secondary, 80%, -65%);
     }
     th.title {
       text-align: left;
@@ -693,9 +693,6 @@ table.api-keys {
     thead {
       tr:hover > td {
         background-color: $secondary;
-      }
-      tr:hover > th {
-        background-color: scale-color($primary, $lightness: 75%);
       }
     }
 
@@ -729,11 +726,9 @@ table.api-keys {
   }
 
   &.detected-problems {
-    @include border-radius-all(5px);
-    background-color: scale-color-diff();
+    background: dark-light-diff($primary, $secondary, 90%, -75%);
     margin-bottom: 20px;
     margin-top: 10px;
-    box-shadow: inset 0 0 10px rgba(0,0,0, .1);
 
     .look-here {
       float: left;
@@ -748,7 +743,8 @@ table.api-keys {
 
     .problem-messages {
       float: left;
-      width: 75%;
+      width: 80%;
+      margin-left: 1%;
       a {
         text-decoration: underline;
       }
@@ -756,10 +752,14 @@ table.api-keys {
         text-align: right;
       }
       .btn {
-        background-color: lighten($primary, 60%);
+        background: dark-light-diff($primary, $secondary, 80%, -85%);
       }
       ul {
         margin-left: 0;
+        padding-left: 20px;
+      li {
+        margin-bottom: 10px;
+        }
       }
   }
 }
@@ -820,7 +820,7 @@ table.api-keys {
     color: $primary;
     font-weight: bold;
     height: 30px;
-    background-color: scale-color($primary, $lightness: 75%);
+    background: dark-light-diff($primary, $secondary, 80%, -75%);
     cursor: pointer;
 
     h1 {
@@ -884,7 +884,7 @@ table.api-keys {
     width: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: scale-color($primary, $lightness: 75%);
+    background: dark-light-diff($primary, $secondary, 90%, -75%);
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
@@ -895,7 +895,7 @@ table.api-keys {
 .content-list {
 
   h3 {
-    color: dark-light-diff($primary, $secondary, 90%, -60%);
+    color: dark-light-diff($primary, $secondary, 50%, -60%);
     font-size: 15px;
     padding-left: 5px;
     margin-bottom: 10px;
