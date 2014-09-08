@@ -44,7 +44,7 @@ class UsersController < ApplicationController
   def update
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-    json_result(user, serializer: UserSerializer) do |u|
+    json_result(user, serializer: UserSerializer, additional_errors: [:user_profile]) do |u|
       updater = UserUpdater.new(current_user, user)
       updater.update(params)
     end

@@ -292,7 +292,6 @@ class ApplicationController < ActionController::Base
 
     def json_result(obj, opts={})
       if yield(obj)
-
         json = success_json
 
         # If we were given a serializer, add the class to the json that comes back
@@ -302,7 +301,15 @@ class ApplicationController < ActionController::Base
 
         render json: MultiJson.dump(json)
       else
-        render_json_error(obj)
+        error_obj = nil
+        if opts[:additional_errors]
+          error_target = opts[:additional_errors].find do |o|
+            target = obj.send(o)
+            target && target.errors.present?
+          end
+          error_obj = obj.send(error_target) if error_target
+        end
+        render_json_error(error_obj || obj)
       end
     end
 
