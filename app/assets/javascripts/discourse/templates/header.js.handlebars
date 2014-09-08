@@ -33,13 +33,6 @@
     {{/if}}
 
     <div class='panel clearfix'>
-      {{#unless showExtraInfo}}
-        <div class='current-username'>
-          {{#if currentUser}}
-            <span class='username'><a {{bind-attr href="currentUser.path"}}>{{currentUser.displayName}}</a></span>
-          {{/if}}
-        </div>
-      {{/unless}}
       {{#unless currentUser}}
         {{#if showSignUpButton}}
         <button {{action showCreateAccount}} class='btn btn-primary btn-small sign-up-button'>

@@ -2,11 +2,11 @@
   <ul class="location-links">
     {{#if showAdminLinks}}
       <li>
-        <a href="/admin" class="admin-link"><i class='fa fa-wrench'></i>{{i18n admin_title}}</a>
+        <a href="/admin" class="admin-link"><i class='fa fa-wrench'></i> {{i18n admin_title}}</a>
       </li>
       <li>
         <a href="/admin/flags/active" class="flagged-posts-link">
-          <i class='fa fa-flag'></i>{{i18n flags_title}}
+          <i class='fa fa-flag'></i> {{i18n flags_title}}
           {{#if flaggedPostsCount}}
             <span title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{flaggedPostsCount}}</span>
           {{/if}}

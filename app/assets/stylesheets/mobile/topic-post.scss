@@ -334,20 +334,6 @@ span.post-count {
   }
 }
 
-.quote-button {
-  display: none;
-  position: absolute;
-  background-color: scale-color($primary, $lightness: 50%);
-  color: $primary;
-  padding: 10px;
-  z-index: 401;
-
-  &:hover {
-    background-color: scale-color($primary, $lightness: 50%);
-    cursor: pointer;
-  }
-}
-
 .quote-button.visible {
   display: block;
 }
