@@ -331,21 +331,12 @@ class PostsController < ApplicationController
       permitted << :embed_url
     end
 
-
     params.require(:raw)
-    result = params.permit(*permitted).tap do |whitelisted|
-      whitelisted[:image_sizes] = params[:image_sizes]
-      # TODO this does not feel right, we should name what meta_data is allowed
-      whitelisted[:meta_data] = params[:meta_data]
+    params.permit(*permitted).tap do |whitelisted|
+        whitelisted[:image_sizes] = params[:image_sizes]
+        # TODO this does not feel right, we should name what meta_data is allowed
+        whitelisted[:meta_data] = params[:meta_data]
     end
-
-    # Staff are allowed to pass `is_warning`
-    if current_user.staff?
-      params.permit(:is_warning)
-      result[:is_warning] = (params[:is_warning] == "true")
-    end
-
-    result
   end
 
   def too_late_to(action, post)

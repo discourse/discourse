@@ -1,6 +1,6 @@
 export default Ember.Component.extend({
   tagName: 'li',
-  classNameBindings: ['notification.read', 'notification.is_warning'],
+  classNameBindings: ['notification.read'],
 
   _markRead: function(){
     var self = this;

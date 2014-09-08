@@ -27,9 +27,7 @@
             <button class='btn btn-small no-text' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
           {{else}}
             <h1>
-              {{#unless is_warning}}
-                <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
-              {{/unless}}
+              <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
               {{#unless isPrivateMessage}}
                 {{#if category.parentCategory}}
                   {{bound-category-link category.parentCategory}}

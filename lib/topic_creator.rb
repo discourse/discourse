@@ -10,7 +10,6 @@ class TopicCreator
     @user = user
     @guardian = guardian
     @opts = opts
-    @added_users = []
   end
 
   def create
@@ -19,34 +18,12 @@ class TopicCreator
     setup_auto_close_time
     process_private_message
     save_topic
-    create_warning
     watch_topic
 
     @topic
   end
 
   private
-
-  def create_warning
-    return unless @opts[:is_warning]
-
-    # We can only attach warnings to PMs
-    unless @topic.private_message?
-      @topic.errors.add(:base, :warning_requires_pm)
-      @errors = @topic.errors
-      raise ActiveRecord::Rollback.new
-    end
-
-    # Don't create it if there is more than one user
-    if @added_users.size != 1
-      @topic.errors.add(:base, :too_many_users)
-      @errors = @topic.errors
-      raise ActiveRecord::Rollback.new
-    end
-
-    # Create a warning record
-    Warning.create(topic: @topic, user: @added_users.first, created_by: @user)
-  end
 
   def watch_topic
     unless @opts[:auto_track] == false
@@ -131,8 +108,7 @@ class TopicCreator
   def add_users(topic, usernames)
     return unless usernames
     User.where(username: usernames.split(',')).each do |user|
-      check_can_send_permission!(topic, user)
-      @added_users << user
+      check_can_send_permission!(topic,user)
       topic.topic_allowed_users.build(user_id: user.id)
     end
   end

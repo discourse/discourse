@@ -15,16 +15,6 @@ export default DiscourseController.extend({
     this.set('similarTopics', []);
   }.on('init'),
 
-  showWarning: function() {
-    var usernames = this.get('model.targetUsernames');
-
-    // We need exactly one user to issue a warning
-    if (Em.empty(usernames) || usernames.split(',').length !== 1) {
-      return false;
-    }
-    return this.get('model.creatingPrivateMessage');
-  }.property('model.creatingPrivateMessage', 'model.targetUsernames'),
-
   actions: {
     // Toggle the reply view
     toggle: function() {
@@ -112,12 +102,6 @@ export default DiscourseController.extend({
   save: function(force) {
     var composer = this.get('model'),
         self = this;
-
-
-    // Clear the warning state if we're not showing the checkbox anymore
-    if (!this.get('showWarning')) {
-      this.set('model.isWarning', false);
-    }
 
     if(composer.get('cantSubmitPost')) {
       var now = Date.now();
@@ -361,7 +345,6 @@ export default DiscourseController.extend({
 
     this.set('model', composerModel);
     composerModel.set('composeState', Discourse.Composer.OPEN);
-    composerModel.set('isWarning', false);
 
     var composerMessages = this.get('controllers.composer-messages');
     composerMessages.queryFor(composerModel);
