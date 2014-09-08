@@ -92,10 +92,14 @@ export default ObjectController.extend({
         }
         self.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(self.get('bio_raw'))));
         self.set('saved', true);
-      }, function() {
+      }, function(error) {
         // model failed to save
         self.set('saving', false);
-        alert(I18n.t('generic_error'));
+        if (error && error.responseText) {
+          alert($.parseJSON(error.responseText).errors[0]);
+        } else {
+          alert(I18n.t('generic_error'));
+        }
       });
     },
 

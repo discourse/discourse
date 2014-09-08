@@ -1,6 +1,7 @@
 class UserProfile < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_profile
 
+  validates :bio_raw, length: { maximum: 3000 }
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
