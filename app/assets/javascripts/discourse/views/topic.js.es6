@@ -6,6 +6,7 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
   userFiltersBinding: 'controller.userFilters',
   classNameBindings: ['controller.multiSelect:multi-select',
                       'topic.archetype',
+                      'topic.is_warning',
                       'topic.category.read_restricted:read_restricted',
                       'topic.deleted:deleted-topic',
                       'topic.categoryClass'],

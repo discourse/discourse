@@ -80,6 +80,9 @@
               {{#if number_of_suspensions}}
                 <div><span class="pill suspensions">{{number_of_suspensions}}</span>&nbsp;{{i18n user.staff_counters.suspensions}}</div>
               {{/if}}
+              {{#if number_of_warnings}}
+                <div><span class="pill warnings-received">{{number_of_warnings}}</span>&nbsp;{{i18n user.staff_counters.warnings_received}}</div>
+              {{/if}}
             </div>
 
             {{bound-avatar model "huge"}}

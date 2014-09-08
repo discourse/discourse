@@ -6,10 +6,19 @@ class NotificationSerializer < ApplicationSerializer
              :post_number,
              :topic_id,
              :slug,
-             :data
+             :data,
+             :is_warning
 
   def slug
     Slug.for(object.topic.title) if object.topic.present?
+  end
+
+  def is_warning
+    object.topic.present? && object.topic.warning.present?
+  end
+
+  def include_is_warning?
+    is_warning
   end
 
   def data

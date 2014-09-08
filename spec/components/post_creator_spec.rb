@@ -350,6 +350,9 @@ describe PostCreator do
     end
 
     it 'acts correctly' do
+      # It's not a warning
+      post.topic.warning.should be_blank
+
       post.topic.archetype.should == Archetype.private_message
       post.topic.topic_allowed_users.count.should == 3
 
@@ -367,6 +370,43 @@ describe PostCreator do
 
       post.topic.reload
       post.topic.topic_allowed_users.where(user_id: admin.id).count.should == 1
+    end
+  end
+
+  context "warnings" do
+    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user2) { Fabricate(:moderator) }
+    let(:base_args) do
+      { title: 'you need a warning buddy!',
+        raw: "you did something bad and I'm telling you about it!",
+        is_warning: true,
+        target_usernames: target_user1.username,
+        category: 1 }
+    end
+
+    it "works as expected" do
+      # Invalid archetype
+      creator = PostCreator.new(user, base_args)
+      creator.create
+      creator.errors.should be_present
+
+      # Too many users
+      creator = PostCreator.new(user, base_args.merge(archetype: Archetype.private_message,
+                                                      target_usernames: [target_user1.username, target_user2.username].join(',')))
+      creator.create
+      creator.errors.should be_present
+
+      # Success
+      creator = PostCreator.new(user, base_args.merge(archetype: Archetype.private_message))
+      post = creator.create
+      creator.errors.should be_blank
+
+      topic = post.topic
+      topic.should be_present
+      topic.warning.should be_present
+      topic.warning.user.should == target_user1
+      topic.warning.created_by.should == user
+      target_user1.warnings.count.should == 1
     end
   end
 
