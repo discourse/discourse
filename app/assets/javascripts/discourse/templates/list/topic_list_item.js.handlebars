@@ -13,7 +13,9 @@
 <td class='main-link clearfix' {{bind-attr colspan="titleColSpan"}}>
   {{topic-status topic=this.model}}
   {{topic-link this}}
-  {{topic-post-badges unread=unread newPosts=displayNewPosts unseen=unseen url=lastUnreadUrl}}
+  {{#if showTopicPostBadges}}
+    {{topic-post-badges unread=unread newPosts=displayNewPosts unseen=unseen url=lastUnreadUrl}}
+  {{/if}}
 
   {{#if hasExcerpt}}
     <div class="topic-excerpt">

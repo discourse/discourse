@@ -13,6 +13,7 @@ export default Ember.ObjectController.extend({
 
   canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),
   bulkSelectEnabled: Em.computed.alias('controllers.discovery/topics.bulkSelectEnabled'),
+  showTopicPostBadges: Em.computed.not('controllers.discovery/topics.new'),
 
   checked: function(key, value) {
     var selected = this.get('controllers.discovery/topics.selected'),
@@ -44,4 +45,3 @@ export default Ember.ObjectController.extend({
     }
   }
 });
-
