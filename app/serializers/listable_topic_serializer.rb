@@ -39,7 +39,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def is_warning
-    object.private_message? && object.warning.present?
+    object.subtype == TopicSubtype.moderator_warning
   end
 
   def include_is_warning?

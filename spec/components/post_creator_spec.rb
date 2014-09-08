@@ -354,6 +354,7 @@ describe PostCreator do
       post.topic.warning.should be_blank
 
       post.topic.archetype.should == Archetype.private_message
+      post.topic.subtype.should == TopicSubtype.user_to_user
       post.topic.topic_allowed_users.count.should == 3
 
       # PMs can't have a category
@@ -404,6 +405,7 @@ describe PostCreator do
       topic = post.topic
       topic.should be_present
       topic.warning.should be_present
+      topic.subtype.should == TopicSubtype.moderator_warning
       topic.warning.user.should == target_user1
       topic.warning.created_by.should == user
       target_user1.warnings.count.should == 1

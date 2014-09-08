@@ -75,6 +75,9 @@ class TopicCreator
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 
+    # Automatically give it a moderator warning subtype if specified
+    topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
+
     category = find_category
 
     @guardian.ensure_can_create!(Topic, category)

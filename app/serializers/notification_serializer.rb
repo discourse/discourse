@@ -14,7 +14,7 @@ class NotificationSerializer < ApplicationSerializer
   end
 
   def is_warning
-    object.topic.present? && object.topic.warning.present?
+    object.topic.present? && object.topic.subtype == TopicSubtype.moderator_warning
   end
 
   def include_is_warning?

@@ -113,7 +113,7 @@ class TopicViewSerializer < ApplicationSerializer
 
 
   def is_warning
-    object.topic.private_message? && object.topic.warning.present?
+    object.topic.private_message? && object.topic.subtype == TopicSubtype.moderator_warning
   end
 
   def include_is_warning?
