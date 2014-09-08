@@ -213,7 +213,7 @@ class CookedPostProcessor
     Oneboxer.apply(@doc) { |url| Oneboxer.onebox(url, args) }
 
     # make sure we grab dimensions for oneboxed images
-    oneboxed_images.each { |img| puts "image: #{img["src"]}"; limit_size!(img) }
+    oneboxed_images.each { |img| limit_size!(img) }
   end
 
   def optimize_urls

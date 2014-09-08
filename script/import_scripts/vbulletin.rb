@@ -289,24 +289,29 @@ class ImportScripts::VBulletin < ImportScripts::Base
       puts "", "Creating groups membership..."
 
       Group.find_each do |group|
-        next if group.automatic
+        begin
+          next if group.automatic
 
-        puts "\t#{group.name}"
+          puts "\t#{group.name}"
 
-        next if GroupUser.where(group_id: group.id).count > 0
+          next if GroupUser.where(group_id: group.id).count > 0
 
-        user_ids_in_group = User.where(primary_group_id: group.id).pluck(:id).to_a
-        next if user_ids_in_group.size == 0
+          user_ids_in_group = User.where(primary_group_id: group.id).pluck(:id).to_a
+          next if user_ids_in_group.size == 0
 
-        values = user_ids_in_group.map { |user_id| "(#{group.id}, #{user_id})" }.join(",")
+          values = user_ids_in_group.map { |user_id| "(#{group.id}, #{user_id}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)" }.join(",")
 
-        User.exec_sql <<-SQL
-          BEGIN;
-          INSERT INTO group_users (group_id, user_id) VALUES #{values};
-          COMMIT;
-        SQL
+          User.exec_sql <<-SQL
+            BEGIN;
+            INSERT INTO group_users (group_id, user_id, created_at, updated_at) VALUES #{values};
+            COMMIT;
+          SQL
 
-        Group.reset_counters(group.id, :group_users)
+          Group.reset_counters(group.id, :group_users)
+        rescue Exception => e
+          puts e.message
+          puts e.backtrace.join("\n")
+        end
       end
     end
 
