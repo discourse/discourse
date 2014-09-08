@@ -468,8 +468,23 @@ class ImportScripts::Base
   end
 
   def update_last_posted_at
-    puts "", "updaing last posted at on users"
-    User.exec_sql("UPDATE users SET last_posted_at = (SELECT MAX(posts.created_at) FROM posts WHERE posts.user_id = users.id)")
+    puts "", "updating last posted at on users"
+
+    sql = <<-SQL
+      WITH lpa AS (
+        SELECT user_id, MAX(posts.created_at) AS last_posted_at
+        FROM posts
+        GROUP BY user_id
+      )
+      UPDATE users
+      SET last_posted_at = lpa.last_posted_at
+      FROM users u1
+      JOIN lpa ON lpa.user_id = u1.id
+      WHERE u1.id = users.id
+        AND users.last_posted_at <> lpa.last_posted_at
+    SQL
+
+    User.exec_sql(sql)
   end
 
   def update_feature_topic_users
