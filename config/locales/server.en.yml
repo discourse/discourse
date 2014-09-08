@@ -120,14 +120,15 @@ en:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
     default_names:
+      everyone: "everyone"
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
+      trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
 
   education:
     until_posts:
