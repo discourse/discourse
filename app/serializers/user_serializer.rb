@@ -55,8 +55,7 @@ class UserSerializer < BasicUserSerializer
   staff_attributes :number_of_deleted_posts,
                    :number_of_flagged_posts,
                    :number_of_flags_given,
-                   :number_of_suspensions,
-                   :number_of_warnings
+                   :number_of_suspensions
 
 
   private_attributes :email,
@@ -192,10 +191,6 @@ class UserSerializer < BasicUserSerializer
               .where(user_id: object.id)
               .where(post_action_type_id: PostActionType.notify_flag_type_ids)
               .count
-  end
-
-  def number_of_warnings
-    object.warnings.count
   end
 
   def number_of_suspensions

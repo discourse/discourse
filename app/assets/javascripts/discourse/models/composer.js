@@ -494,7 +494,6 @@ Discourse.Composer = Discourse.Model.extend({
       title: this.get('title'),
       category: this.get('categoryId'),
       topic_id: this.get('topic.id'),
-      is_warning: this.get('isWarning'),
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,

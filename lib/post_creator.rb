@@ -28,7 +28,6 @@ class PostCreator
   #   When creating a topic:
   #     title                 - New topic title
   #     archetype             - Topic archetype
-  #     is_warning            - Is the topic a warning?
   #     category              - Category to assign to topic
   #     target_usernames      - comma delimited list of usernames for membership (private message)
   #     target_group_names    - comma delimited list of groups for membership (private message)

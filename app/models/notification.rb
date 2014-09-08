@@ -98,7 +98,7 @@ class Notification < ActiveRecord::Base
 
   def self.recent_report(user, count = nil)
     count ||= 10
-    notifications = user.notifications.recent(count).includes({:topic => :warning}).to_a
+    notifications = user.notifications.recent(count).includes(:topic).to_a
 
     if notifications.present?
       notifications += user.notifications

@@ -384,7 +384,6 @@ describe PostsController do
     describe 'when logged in' do
 
       let!(:user) { log_in }
-      let(:moderator) { log_in(:moderator) }
       let(:new_post) { Fabricate.build(:post, user: user) }
 
       it "raises an exception without a raw parameter" do
@@ -491,24 +490,6 @@ describe PostsController do
         it "passes meta_data through" do
           PostCreator.expects(:new).with(user, has_entries('meta_data' => {'xyz' => 'abc'})).returns(post_creator)
           xhr :post, :create, {raw: 'hello', meta_data: {xyz: 'abc'}}
-        end
-
-        context "is_warning" do
-          it "doesn't pass `is_warning` through if you're not staff" do
-            PostCreator.expects(:new).with(user, Not(has_entries('is_warning' => true))).returns(post_creator)
-            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
-          end
-
-          it "passes `is_warning` through if you're staff" do
-            PostCreator.expects(:new).with(moderator, has_entries('is_warning' => true)).returns(post_creator)
-            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
-          end
-
-          it "passes `is_warning` as false through if you're staff" do
-            PostCreator.expects(:new).with(moderator, has_entries('is_warning' => false)).returns(post_creator)
-            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'false'}
-          end
-
         end
 
       end

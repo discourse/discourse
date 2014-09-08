@@ -208,14 +208,6 @@
         overflow: hidden;
       }
     }
-    .is-warning {
-      i.fa-envelope-o {
-        &:before {
-          content: "\f0e0";
-        }
-        color: $danger;
-      }
-    }
     .read {
       background-color: $secondary;
     }

@@ -9,8 +9,8 @@
 export default Ember.Component.extend({
   classNames: ['topic-statuses'],
 
-  hasDisplayableStatus: Em.computed.or('topic.archived','topic.closed', 'topic.pinned', 'topic.unpinned', 'topic.invisible', 'topic.archetypeObject.notDefault', 'topic.is_warning'),
-  shouldRerender: Discourse.View.renderIfChanged('topic.archived', 'topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned', 'topic.is_warning'),
+  hasDisplayableStatus: Em.computed.or('topic.archived','topic.closed', 'topic.pinned', 'topic.unpinned', 'topic.invisible', 'topic.archetypeObject.notDefault'),
+  shouldRerender: Discourse.View.renderIfChanged('topic.archived','topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned'),
 
   didInsertElement: function(){
     var self = this;
@@ -52,7 +52,6 @@ export default Ember.Component.extend({
     // Allow a plugin to add a custom icon to a topic
     this.trigger('addCustomIcon', buffer);
 
-    renderIconIf('topic.is_warning', 'envelope', 'warning');
     renderIconIf('topic.closed', 'lock', 'locked');
     renderIconIf('topic.archived', 'lock', 'archived');
     renderIconIf('topic.pinned', 'thumb-tack', 'pinned', self.get("canAct") );
