@@ -527,6 +527,7 @@ iframe {
 
   .topic-statuses {
     i         { color: $header_primary; }
+    i.fa-envelope { color: $danger; }
     .unpinned { color: $header_primary; }
   }
   .topic-link { color: $header_primary;

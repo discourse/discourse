@@ -100,6 +100,7 @@ class Topic < ActiveRecord::Base
   has_many :invites, through: :topic_invites, source: :invite
 
   has_many :revisions, foreign_key: :topic_id, class_name: 'TopicRevision'
+  has_one :warning
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data

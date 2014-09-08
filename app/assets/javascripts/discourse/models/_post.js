@@ -149,6 +149,7 @@ Discourse.Post = Discourse.Model.extend({
       var data = {
         raw: this.get('raw'),
         topic_id: this.get('topic_id'),
+        is_warning: this.get('is_warning'),
         reply_to_post_number: this.get('reply_to_post_number'),
         category: this.get('category'),
         archetype: this.get('archetype'),
