@@ -73,6 +73,7 @@ class ImportScripts::Base
     puts ""
 
     update_bumped_at
+    update_last_posted_at
     update_feature_topic_users
     update_category_featured_topics
     update_topic_count_replies
@@ -464,6 +465,11 @@ class ImportScripts::Base
   def update_bumped_at
     puts "", "updating bumped_at on topics"
     Post.exec_sql("update topics t set bumped_at = (select max(created_at) from posts where topic_id = t.id and post_type != #{Post.types[:moderator_action]})")
+  end
+
+  def update_last_posted_at
+    puts "", "updaing last posted at on users"
+    User.exec_sql("UPDATE users SET last_posted_at = (SELECT MAX(posts.created_at) FROM posts WHERE posts.user_id = users.id)")
   end
 
   def update_feature_topic_users
