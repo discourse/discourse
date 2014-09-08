@@ -16,6 +16,8 @@ export default DiscourseController.extend({
   }.on('init'),
 
   showWarning: function() {
+    if (!Discourse.User.currentProp('staff')) { return false; }
+
     var usernames = this.get('model.targetUsernames');
 
     // We need exactly one user to issue a warning
