@@ -975,7 +975,7 @@ en:
 
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
 
-    disable_edit_notifications: "Used to disable edit notifications when you activate the 'download_remote_images_to_local' site setting."
+    disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
     enable_names: "Allow showing user full names. Disable to hide full names."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
