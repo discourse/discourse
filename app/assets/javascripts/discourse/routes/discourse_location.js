@@ -189,8 +189,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
       popstateCallbacks.forEach(function(cb) {
         cb(url);
       });
-
-      self.set('poppedState',true);
       callback(url);
     });
   },
