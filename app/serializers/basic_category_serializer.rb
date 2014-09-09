@@ -28,6 +28,7 @@ class BasicCategorySerializer < ApplicationSerializer
   def can_edit
     true
   end
+
   def include_can_edit?
     scope && scope.can_edit?(object)
   end
