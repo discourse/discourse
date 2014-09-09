@@ -234,7 +234,6 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   _destroyedPostView: function() {
     Discourse.ScreenTrack.current().stopTracking(this.get('elementId'));
-    this._unbindExpandMentions();
   }.on('willDestroyElement'),
 
   _postViewInserted: function() {
@@ -262,22 +261,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     Em.run.scheduleOnce('afterRender', this, '_insertQuoteControls');
 
     this._applySearchHighlight();
-    this._bindExpandMentions();
   }.on('didInsertElement'),
-
-  _bindExpandMentions: function() {
-    var self = this;
-    this.$('.cooked').on('click.discourse-mention', 'a.mention', function(e) {
-      var $target = $(e.target);
-      self.appEvents.trigger('poster:expand', $target);
-      self.get('controller').send('expandPostUsername', $target.text());
-      return false;
-    });
-  },
-
-  _unbindExpandMentions: function() {
-    this.$('.cooked').off('click.discourse-mention');
-  },
 
   _applySearchHighlight: function() {
     var highlight = this.get('controller.searchHighlight');
