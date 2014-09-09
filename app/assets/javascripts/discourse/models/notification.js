@@ -17,10 +17,12 @@ Discourse.NotificationContainer.reopenClass({
   },
 
   loadRecent: function() {
+    // TODO - add .json (breaks tests atm)
     return Discourse.ajax('/notifications').then(function(result) {
       return Discourse.NotificationContainer.createFromJson(result);
     }).catch(function(error) {
-      // HeaderController can't handle it properly
+      // TODO HeaderController can't handle a createFromError
+      // just throw for now
       throw error;
     });
   },
