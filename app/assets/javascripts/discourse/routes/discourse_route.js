@@ -19,6 +19,15 @@ Discourse.Route = Em.Route.extend({
   activate: function() {
     this._super();
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
+
+    // the chain of events sucks, we get an event from discourse location
+    // it goes ahead and sets it, then it call model, then it deactivates
+    // old route and activates new
+    //
+    // if we want to pin this on the location, we need to amend onUpdateURL
+    // to pass this in to the callback it gets, this would require ember
+    // API changes
+    this.set('router.location.poppedState', false);
   },
 
   redirectIfLoginRequired: function() {

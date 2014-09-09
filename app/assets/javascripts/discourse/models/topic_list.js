@@ -197,8 +197,11 @@ Discourse.TopicList.reopenClass({
   **/
   list: function(filter, params) {
     var session = Discourse.Session.current(),
-        list = session.get('topicList'),
+        list = params["cache"] && session.get('topicList'),
         tracking = Discourse.TopicTrackingState.current();
+
+    // only used to control caching
+    delete params["cache"];
 
     return new Ember.RSVP.Promise(function(resolve) {
       // Try to use the cached version
