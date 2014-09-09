@@ -21,15 +21,12 @@ export default function(filter, extras) {
       this.controllerFor('navigation/default').set('filterMode', filter);
     },
 
-    model: function(data, transition) {
+    model: function(data, transaction) {
 
       // attempt to stop early cause we need this to be called before .sync
       Discourse.ScreenTrack.current().stop();
 
-      var findOpts = filterQueryParams(transition.queryParams);
-
-      findOpts["cache"] = this.get("router.location.poppedState");
-
+      var findOpts = filterQueryParams(transaction.queryParams);
       return Discourse.TopicList.list(filter, findOpts);
     },
 
