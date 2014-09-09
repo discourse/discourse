@@ -1002,7 +1002,7 @@ en:
 
     vacuum_db_days: "Run VACUUM FULL ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
 
-    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files."
+    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
 
     errors:
       invalid_email: "Invalid email address."
