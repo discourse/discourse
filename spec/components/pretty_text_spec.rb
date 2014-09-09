@@ -196,14 +196,12 @@ describe PrettyText do
       post.excerpt.should == "hi"
     end
 
-    it "handles span excerpt that starts before the max length" do
-      text =  "123456789 123456789 12345679 123456789 123456789 " +
-              "as long as span starts before max length of the " +
-              "<span class='excerpt'>the specified excerpt</span>" +
-              "of the post  will be used"
-      PrettyText.excerpt(text, 100).should == 'the specified excerpt'
+    it "ignores max excerpt length if a span excerpt is specified" do
+      two_hundred = "123456789 " * 20 + "."
+      text =  two_hundred + "<span class='excerpt'>#{two_hundred}</span>" + two_hundred
+      PrettyText.excerpt(text, 100).should == two_hundred
       post = Fabricate(:post, raw: text)
-      post.excerpt.should == 'the specified excerpt'
+      post.excerpt.should == two_hundred
     end
 
   end
