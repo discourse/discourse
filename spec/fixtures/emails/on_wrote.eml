@@ -1,0 +1,277 @@
+
+MIME-Version: 1.0
+Received: by 10.107.9.17 with HTTP; Tue, 9 Sep 2014 16:18:19 -0700 (PDT)
+In-Reply-To: <540f16d4c08d9_4a3f9ff6d61890391c@tiefighter4-meta.mail>
+References: <topic/18058@meta.discourse.org>
+	<540f16d4c08d9_4a3f9ff6d61890391c@tiefighter4-meta.mail>
+Date: Tue, 9 Sep 2014 16:18:19 -0700
+Delivered-To: kanepyork@gmail.com
+Message-ID: <CABeNrKXxfb8YJUWxO5L_oPTGrFsiZfQOpWudk+44Mh=yuUEHNQ@mail.gmail.com>
+Subject: Re: [Discourse Meta] Badge icons - where to find them?
+From: Kane York <jake@adventuretime.ooo>
+To: Discourse Meta <reply+8305e3604ae4d1485dc12b6af6a8446c@appmail.adventuretime.ooo>
+Content-Type: multipart/alternative; boundary=001a11c34c389e728f0502aa26a0
+
+--001a11c34c389e728f0502aa26a0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Sure, all you need to do is frobnicate the foobar and you'll be all set!
+
+On Tue, Sep 9, 2014 at 8:03 AM, gordon_ryan <info@discourse.org> wrote:
+
+>     gordon_ryan <https://meta.discourse.org/users/gordon_ryan>
+> September 9
+>
+> @riking <https://meta.discourse.org/users/riking>- willing to step by
+> step of the custom icon method for an admittedly ignorant admin? Seriousl=
+y
+> confused.
+>
+> Or anyone else who knows how to do this [image: smiley]
+>
+> To respond, reply to this email or visit
+> https://meta.discourse.org/t/badge-icons-where-to-find-them/18058/9 in
+> your browser.
+>  ------------------------------
+> Previous Replies    riking <https://meta.discourse.org/users/riking>
+> July 25
+>
+> Check out the "HTML Head" section in the "Content" tab of the admin panel=
+.
+>      meglio <https://meta.discourse.org/users/meglio>
+> July 25
+>
+> How will it load the related custom font?
+>      riking <https://meta.discourse.org/users/riking>
+> July 25
+>
+> Here's an example of the styles that FA applies. I'll use <i class=3D"fa
+> fa-heart"></i> as the example.
+>
+> .fa {
+>   display: inline-block;
+>   font-family: FontAwesome;
+>   font-style: normal;
+>   font-weight: normal;
+>   line-height: 1;
+>   -webkit-font-smoothing: antialiased;
+>   -moz-osx-font-smoothing: grayscale;
+> }
+> .fa-heart:before {
+>   content: "\f004";
+> }
+>
+> So you could do this in your site stylesheet:
+>
+> .fa-custom-burger:before {
+>   content: "\01f354";
+>   font-family: inherit;
+> }
+>
+> And get =F0=9F=8D=94 as your badge icon when you enter custom-burger.
+>   ------------------------------
+>
+> To respond, reply to this email or visit
+> https://meta.discourse.org/t/badge-icons-where-to-find-them/18058/9 in
+> your browser.
+>
+> To unsubscribe from these emails, visit your user preferences
+> <https://meta.discourse.org/my/preferences>.
+>
+
+--001a11c34c389e728f0502aa26a0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><span style=3D"font-family:arial,sans-serif;font-size:13px=
+">Sure, all you need to do is frobnicate the foobar and you&#39;ll be all s=
+et!</span><br><div class=3D"gmail_extra"><br clear=3D"all"><div><br>=
+<br><div class=3D"gmail_quote">On Tue, Sep 9, 2014 at 8:03 AM, gordon_ryan =
+<span dir=3D"ltr">&lt;<a href=3D"mailto:info@discourse.org" target=3D"_blan=
+k">info@discourse.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_q=
+uote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1e=
+x"><div>
+
+
+<table style=3D"margin-bottom:25px;max-width:761px" cellspacing=3D"0" cellp=
+adding=3D"0" border=3D"0">
+  <tbody>
+    <tr>
+      <td style=3D"vertical-align:top;width:55px">
+        <img src=3D"https://meta-discourse.global.ssl.fastly.net/user_avata=
+r/meta.discourse.org/gordon_ryan/45/34017.png" title=3D"gordon_ryan" style=
+=3D"max-width:694px" width=3D"45" height=3D"45">
+      </td>
+      <td>
+        <a href=3D"https://meta.discourse.org/users/gordon_ryan" style=3D"f=
+ont-size:13px;font-family:&#39;lucida grande&#39;,tahoma,verdana,arial,sans=
+-serif;color:#3b5998;text-decoration:none;font-weight:bold;text-decoration:=
+none;font-weight:bold;color:#006699" target=3D"_blank">gordon_ryan</a><br>
+        <span style=3D"text-align:right;color:#999999;padding-right:5px;fon=
+t-family:&#39;lucida grande&#39;,tahoma,verdana,arial,sans-serif;font-size:=
+11px">September 9</span>
+      </td>
+    </tr>
+    <tr>
+      <td style=3D"padding-top:5px" colspan=3D"2">
+<p style=3D"margin-top:0;border:0"><a href=3D"https://meta.discourse.org/us=
+ers/riking" style=3D"text-decoration:none;font-weight:bold;color:#006699" t=
+arget=3D"_blank">@riking</a>- willing to step by step of the custom icon me=
+thod for an admittedly ignorant admin? Seriously confused.</p>
+
+<p style=3D"margin-top:0;border:0">Or anyone else who knows how to do this =
+<img src=3D"https://meta-discourse.global.ssl.fastly.net/plugins/emoji/imag=
+es/smiley.png" title=3D":smiley:" alt=3D"smiley" width=3D"20" height=3D"20"=
+></p>
+</td>
+    </tr>
+  </tbody>
+</table>
+
+
+  <div style=3D"color:#666">
+    <p>To respond, reply to this email or visit <a href=3D"https://meta.dis=
+course.org/t/badge-icons-where-to-find-them/18058/9" style=3D"color:#666;te=
+xt-decoration:none;font-weight:bold;color:#006699" target=3D"_blank">https:=
+//meta.discourse.org/t/badge-icons-where-to-find-them/18058/9</a> in your b=
+rowser.</p>
+  </div>
+  <hr style=3D"background-color:#ddd;min-height:1px;border:1px;background-c=
+olor:#ddd;min-height:1px;border:1px">
+  <h4>Previous Replies</h4>
+
+  <table style=3D"margin-bottom:25px;max-width:761px" cellspacing=3D"0" cel=
+lpadding=3D"0" border=3D"0">
+  <tbody>
+    <tr>
+      <td style=3D"vertical-align:top;width:55px">
+        <img src=3D"https://meta-discourse.global.ssl.fastly.net/user_avata=
+r/meta.discourse.org/riking/45/9779.png" title=3D"riking" style=3D"max-widt=
+h:694px" width=3D"45" height=3D"45">
+      </td>
+      <td>
+        <a href=3D"https://meta.discourse.org/users/riking" style=3D"font-s=
+ize:13px;font-family:&#39;lucida grande&#39;,tahoma,verdana,arial,sans-seri=
+f;color:#3b5998;text-decoration:none;font-weight:bold;text-decoration:none;=
+font-weight:bold;color:#006699" target=3D"_blank">riking</a><br>
+        <span style=3D"text-align:right;color:#999999;padding-right:5px;fon=
+t-family:&#39;lucida grande&#39;,tahoma,verdana,arial,sans-serif;font-size:=
+11px">July 25</span>
+      </td>
+    </tr>
+    <tr>
+      <td style=3D"padding-top:5px" colspan=3D"2"><p style=3D"margin-top:0;=
+border:0">Check out the &quot;HTML Head&quot; section in the &quot;Content&=
+quot; tab of the admin panel.</p></td>
+    </tr>
+  </tbody>
+</table>
+
+  <table style=3D"margin-bottom:25px;max-width:761px" cellspacing=3D"0" cel=
+lpadding=3D"0" border=3D"0">
+  <tbody>
+    <tr>
+      <td style=3D"vertical-align:top;width:55px">
+        <img src=3D"https://meta-discourse.global.ssl.fastly.net/user_avata=
+r/meta.discourse.org/meglio/45/33480.png" title=3D"meglio" style=3D"max-wid=
+th:694px" width=3D"45" height=3D"45">
+      </td>
+      <td>
+        <a href=3D"https://meta.discourse.org/users/meglio" style=3D"font-s=
+ize:13px;font-family:&#39;lucida grande&#39;,tahoma,verdana,arial,sans-seri=
+f;color:#3b5998;text-decoration:none;font-weight:bold;text-decoration:none;=
+font-weight:bold;color:#006699" target=3D"_blank">meglio</a><br>
+        <span style=3D"text-align:right;color:#999999;padding-right:5px;fon=
+t-family:&#39;lucida grande&#39;,tahoma,verdana,arial,sans-serif;font-size:=
+11px">July 25</span>
+      </td>
+    </tr>
+    <tr>
+      <td style=3D"padding-top:5px" colspan=3D"2"><p style=3D"margin-top:0;=
+border:0">How will it load the related custom font?</p></td>
+    </tr>
+  </tbody>
+</table>
+
+  <table style=3D"margin-bottom:25px;max-width:761px" cellspacing=3D"0" cel=
+lpadding=3D"0" border=3D"0">
+  <tbody>
+    <tr>
+      <td style=3D"vertical-align:top;width:55px">
+        <img src=3D"https://meta-discourse.global.ssl.fastly.net/user_avata=
+r/meta.discourse.org/riking/45/9779.png" title=3D"riking" style=3D"max-widt=
+h:694px" width=3D"45" height=3D"45">
+      </td>
+      <td>
+        <a href=3D"https://meta.discourse.org/users/riking" style=3D"font-s=
+ize:13px;font-family:&#39;lucida grande&#39;,tahoma,verdana,arial,sans-seri=
+f;color:#3b5998;text-decoration:none;font-weight:bold;text-decoration:none;=
+font-weight:bold;color:#006699" target=3D"_blank">riking</a><br>
+        <span style=3D"text-align:right;color:#999999;padding-right:5px;fon=
+t-family:&#39;lucida grande&#39;,tahoma,verdana,arial,sans-serif;font-size:=
+11px">July 25</span>
+      </td>
+    </tr>
+    <tr>
+      <td style=3D"padding-top:5px" colspan=3D"2">
+<p style=3D"margin-top:0;border:0">Here&#39;s an example of the styles that=
+ FA applies. I&#39;ll use <code style=3D"background-color:#f1f1ff;padding:2=
+px 5px">&lt;i class=3D&quot;fa fa-heart&quot;&gt;&lt;/i&gt;</code> as the e=
+xample.</p>
+
+<p style=3D"margin-top:0;border:0"></p>
+<pre style=3D"word-wrap:break-word;max-width:694px"><code style=3D"backgrou=
+nd-color:#f1f1ff;padding:2px 5px;display:block;background-color:#f1f1ff;pad=
+ding:5px">.fa {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.fa-heart:before {
+  content: &quot;\f004&quot;;
+}</code></pre>
+
+<p style=3D"margin-top:0;border:0">So you could do this in your site styles=
+heet:</p>
+
+<p style=3D"margin-top:0;border:0"></p>
+<pre style=3D"word-wrap:break-word;max-width:694px"><code style=3D"backgrou=
+nd-color:#f1f1ff;padding:2px 5px;display:block;background-color:#f1f1ff;pad=
+ding:5px">.fa-custom-burger:before {
+  content: &quot;\01f354&quot;;
+  font-family: inherit;
+}</code></pre>
+
+<p style=3D"margin-top:0;border:0">And get =F0=9F=8D=94 as your badge icon =
+when you enter <code style=3D"background-color:#f1f1ff;padding:2px 5px">cus=
+tom-burger</code>.</p>
+</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<hr style=3D"background-color:#ddd;min-height:1px;border:1px;background-col=
+or:#ddd;min-height:1px;border:1px">
+
+<div style=3D"color:#666">
+<p>To respond, reply to this email or visit <a href=3D"https://meta.discour=
+se.org/t/badge-icons-where-to-find-them/18058/9" style=3D"color:#666;text-d=
+ecoration:none;font-weight:bold;color:#006699" target=3D"_blank">https://me=
+ta.discourse.org/t/badge-icons-where-to-find-them/18058/9</a> in your brows=
+er.</p>
+</div>
+<div style=3D"color:#666">
+<p>To unsubscribe from these emails, visit your <a href=3D"https://meta.dis=
+course.org/my/preferences" style=3D"color:#666;text-decoration:none;font-we=
+ight:bold;color:#006699" target=3D"_blank">user preferences</a>.</p>
+</div>
+</div>
+</blockquote></div><br></div></div>
+
+--001a11c34c389e728f0502aa26a0--
