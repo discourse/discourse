@@ -322,7 +322,7 @@ en:
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic's listing."
+      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
       delete_account: "Delete My Account"
@@ -900,16 +900,16 @@ en:
           "0": 'You are ignoring all notifications on this topic.'
         watching_pm:
           title: "Watching"
-          description: "You will be notified of every new post in this private message. A count of unread and new posts will also appear next to the topic's listing."
+          description: "You will be notified of every new post in this private message. A count of unread and new posts will also appear next to the topic."
         watching:
           title: "Watching"
-          description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic's listing."
+          description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic."
         tracking_pm:
           title: "Tracking"
           description: "A count of unread and new posts will appear next to the private message. You will be notified only if someone mentions your @name or replies to your post."
         tracking:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the topic's listing. You will be notified only if someone mentions your @name or replies to your post. "
+          description: "A count of unread and new posts will appear next to the topic. You will be notified only if someone mentions your @name or replies to your post. "
         regular:
           title: "Regular"
           description: "You will be notified only if someone mentions your @name or replies to your post."
@@ -1278,10 +1278,10 @@ en:
         reasons:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
+          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic's listing."
+          description: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
           description: "You will be notified only if someone mentions your @name or replies to your post."
