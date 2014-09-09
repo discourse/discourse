@@ -2079,6 +2079,7 @@ en:
         unread: '<b>g</b>, <b>u</b> Unread'
         starred: '<b>g</b>, <b>f</b> Starred'
         categories: '<b>g</b>, <b>c</b> Categories'
+        top: '<b>g</b>, <b>t</b> Top'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Go to post number'
