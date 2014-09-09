@@ -29,10 +29,15 @@ module Onebox
             section_title_text = section_header_title.inner_text
             section_header = section_header_title[0].parent #parent element of the section span element should be an <h3> node
             cur_element = section_header
-            while ( (next_sibling = cur_element.next_sibling).name =~ /p|text|div/ ) do  #from section header get the next sibling until it is a not one of the tags <text> | <p> | <div>
-                                                                                         #a div tag may be used as an assets wraper in an article section, it can't be a loop if a div is the 1st element in a section no p will be populated
+            
+            # p|text|div covers the general case. We assume presence of atleast 1 P node. if section has no P node we may end up with a P node from the next section.
+            # div tag is commonly used as an assets wraper in an article section. often as the first element holding an image.
+            # ul support will imporve the output generated for a section with a list as the main content (for example: an Author Bibliography, A musician Discography, etc)
+            first_p_found = nil 
+            while ( ((next_sibling = cur_element.next_sibling).name =~ /p|text|div|ul/) || first_p_found.nil? ) do  #from section header get the next sibling until it is a breaker tag
               cur_element = next_sibling
-              if cur_element.name == "p"
+              if (cur_element.name == "p" || cur_element.name == "ul") #we treat a list as we detect a p to avoid showing 
+                first_p_found = true 
                 paras.push(cur_element)
               end
             end
@@ -46,7 +51,16 @@ module Onebox
           while text.length < Onebox::LayoutSupport.max_text && cnt <= 3
             break if cnt >= paras.size
             text << " " unless cnt == 0
-            paragraph = paras[cnt].inner_text[0..Onebox::LayoutSupport.max_text]
+            
+            if paras[cnt].name =="ul" #Handle UL tag. Generate a textual ordered list (1.item | 2.item | 3.item). Unfourtently no newline allowed in output
+              li_index=1
+              list_items = []
+              paras[cnt].children.css("li").each {|li| list_items.push "#{li_index}." + li.inner_text ; li_index+=1}
+              paragraph =  (list_items.join " |\n ")[0..Onebox::LayoutSupport.max_text]
+            else
+              paragraph = paras[cnt].inner_text[0..Onebox::LayoutSupport.max_text]  
+            end
+            
             paragraph.gsub!(/\[\d+\]/mi, "")
             text << paragraph
             cnt += 1
