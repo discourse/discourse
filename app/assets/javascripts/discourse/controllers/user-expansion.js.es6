@@ -1,7 +1,7 @@
 import ObjectController from 'discourse/controllers/object';
 
 export default ObjectController.extend({
-  needs: ['topic'],
+  needs: ['topic', 'application'],
   visible: false,
   user: null,
   username: null,
@@ -10,8 +10,10 @@ export default ObjectController.extend({
 
   postStream: Em.computed.alias('controllers.topic.postStream'),
   enoughPostsForFiltering: Em.computed.gte('participant.post_count', 2),
+  viewingTopic: Em.computed.match('controllers.application.currentPath', /^topic\./),
+  showFilter: Em.computed.and('viewingTopic', 'postStream.hasNoFilters', 'enoughPostsForFiltering'),
 
-  showFilter: Em.computed.and('postStream.hasNoFilters', 'enoughPostsForFiltering'),
+  // showFilter: Em.computed.and('postStream.hasNoFilters', 'enoughPostsForFiltering'),
   showName: Discourse.computed.propertyNotEqual('user.name', 'user.username'),
 
   hasUserFilters: Em.computed.gt('postStream.userFilters.length', 0),
