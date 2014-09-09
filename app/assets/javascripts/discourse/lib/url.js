@@ -317,6 +317,7 @@ Discourse.URL = Em.Object.createWithMixins({
     }
 
     var transition = router.handleURL(path);
+    transition._discourse_intercepted = true;
     transition.promise.then(function() {
       if (elementId) {
 
