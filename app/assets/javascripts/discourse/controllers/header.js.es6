@@ -45,12 +45,16 @@ export default DiscourseController.extend({
     if (self.get("loadingNotifications")) { return; }
 
     self.set("loadingNotifications", true);
-    Discourse.ajax("/notifications").then(function(result) {
+    Discourse.NotificationContainer.loadRecent().then(function(result) {
       self.setProperties({
         'currentUser.unread_notifications': 0,
         notifications: result
       });
-    }).finally(function(){
+    }).catch(function() {
+      self.setProperties({
+        notifications: null
+      });
+    }).finally(function() {
       self.set("loadingNotifications", false);
     });
   },
