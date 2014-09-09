@@ -5,10 +5,8 @@ export default Ember.View.extend({
 
   click: function(e) {
     var $target = $(e.target);
-    // some buttons get removed from the DOM when you click on them.
-    // we don't want to close the modal when we click on those...
-    if ($target.parent().length > 0 &&
-        $target.closest('.modal-inner-container').length === 0) {
+    if ($target.hasClass("modal-middle-container") ||
+        $target.hasClass("modal-outer-container")) {
       // Delegate click to modal backdrop if clicked outside. We do this
       // because some CSS of ours seems to cover the backdrop and makes it
       // unclickable.
