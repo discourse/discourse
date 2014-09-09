@@ -1498,6 +1498,8 @@ en:
         agree_flag_modal_title: "Agree and..."
         agree_flag_hide_post: "Agree (hide post + send PM)"
         agree_flag_hide_post_title: "Hide this post and automatically send the user a private message urging them to edit it"
+        agree_flag_restore_post: "Agree (restore post)"
+        agree_flag_restore_post_title: "Restore this post"
         agree_flag: "Agree with flag"
         agree_flag_title: "Agree with flag and keep the post unchanged"
         defer_flag: "Defer"
