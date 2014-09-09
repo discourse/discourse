@@ -1,4 +1,4 @@
-export default Handlebars.registerHelper('shorten-url', function(property, options) {
+Handlebars.registerHelper('shorten-url', function(property, options) {
   var url = Ember.Handlebars.get(this, property, options),
       matches = url.match(/\//g);
 
@@ -9,4 +9,3 @@ export default Handlebars.registerHelper('shorten-url', function(property, optio
   url = url.replace(/^www\./, '');
   return url.substring(0, 80);
 });
-

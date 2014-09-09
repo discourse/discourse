@@ -199,22 +199,3 @@ Handlebars.registerHelper('link-domain', function(property, options) {
     }
   }
 });
-
-/**
-  Renders a font-awesome icon with an optional i18n string as hidden text for
-  screen readers.
-
-  @method icon
-  @for Handlebars
-**/
-Handlebars.registerHelper('icon', function(icon, options) {
-  var labelKey, html;
-  if (options.hash) { labelKey = options.hash.label; }
-  html = "<i class='fa fa-" + icon + "'";
-  if (labelKey) { html += " aria-hidden='true'"; }
-  html += "></i>";
-  if (labelKey) {
-    html += "<span class='sr-only'>" + I18n.t(labelKey) + "</span>";
-  }
-  return new safe(html);
-});
