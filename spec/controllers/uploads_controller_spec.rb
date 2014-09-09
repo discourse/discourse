@@ -137,6 +137,18 @@ describe UploadsController do
       get :show, site: "default", id: 42, sha: "66b3ed1503efc936", extension: "zip"
     end
 
+    context "prevent anons from downloading files" do
+
+      before { SiteSetting.stubs(:prevent_anons_from_downloading_files).returns(true) }
+
+      it "returns 404 when an anonymous user tries to download a file" do
+        Upload.expects(:find_by).never
+        get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
+        response.response_code.should == 404
+      end
+
+    end
+
   end
 
 end

@@ -1068,6 +1068,7 @@ en:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
+        attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
       abandon:
         confirm: "Are you sure you want to abandon your post?"

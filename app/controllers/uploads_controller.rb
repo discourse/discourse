@@ -20,6 +20,7 @@ class UploadsController < ApplicationController
 
     RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
       return render_404 unless Discourse.store.internal?
+      return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
 
       id = params[:id].to_i
       url = request.fullpath
