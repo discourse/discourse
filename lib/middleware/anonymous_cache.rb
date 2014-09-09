@@ -44,13 +44,8 @@ module Middleware
         @is_crawler == :true
       end
 
-      def accept_html?
-        accept = @env["HTTP_ACCEPT"]
-        !!(accept && accept =~ /html/)
-      end
-
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{accept_html?}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}"
       end
 
       def cache_key_body
