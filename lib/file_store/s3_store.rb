@@ -139,7 +139,11 @@ module FileStore
         public: true,
         body: file
       }
-      args[:content_disposition] = "attachment; filename=\"#{filename}\"" if filename
+
+      if filename && !FileHelper.is_image?(filename)
+        args[:content_disposition] = "attachment; filename=\"#{filename}\""
+      end
+
       args[:content_type] = content_type if content_type
 
       get_or_create_directory(s3_bucket).files.create(args)
