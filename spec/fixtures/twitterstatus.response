@@ -3,10 +3,10 @@
 <!--[if IE 8]><html class="lt-ie10 ie8" lang="en"><![endif]-->
 <!--[if IE 9]><html class="lt-ie10 ie9" lang="en"><![endif]-->
 <!--[if gt IE 9]><!--><html lang="en"><!--<![endif]-->
-  <head>    
+  <head>
     <meta charset="utf-8">
       <title>Twitter / vyki_e: I&#39;m a sucker for pledges.  ...</title>
-    
+
 
 
 <meta name="msapplication-TileImage" content="//abs.twimg.com/favicons/win8-tile-144.png"/>
@@ -26,9 +26,9 @@
 
 <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Twitter">
 
-    
-    
-  
+
+
+
     <script id="swift_action_queue">
       (function(){function f(a){a=a||window.event;if(!a)return;!a.target&&a.srcElement&&(a.target=a.srcElement);if(!j(a))return;if(!document.addEventListener){var b={};for(var c in a)b[c]=a[c];a=b}a.preventDefault=a.stopPropagation=a.stopImmediatePropagation=function(
 ){};d.push(a);return!1}function g($){i();for(var b=0,c;c=d[b];b++){var e=$(c.target);if(c.type=="click"&&c.target.tagName.toLowerCase()=="a"){var f=$.data(e.get(0),"events"),g=f&&f.click,j=!c.target.hostname.match(a)||!c.target.href.match(/#$/);if(!g&&j){window
@@ -45,7 +45,7 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
         <link rel="stylesheet" href="https://abs.twimg.com/a/1383847355/t1/css/t1_core.bundle.css" type="text/css">
 
     <link rel="stylesheet" href="https://abs.twimg.com/a/1383847355/t1/css/t1_more.bundle.css" type="text/css">
-      
+
 <style id="user-style-vyki_e">
 
 
@@ -56,7 +56,7 @@ c.target.hostname.match(a)?!1:!0}var a=/^([^\.]+\.)*twitter.com$/,b=/^key/,c=["c
   a:hover,
   a:focus,
   a:active,
-  
+
   .u-linkPseudo:hover a,
   .u-linkPseudo:focus a,
   .u-linkPseudo:active a {
@@ -352,7 +352,7 @@ s,
 
 </style>
 
-  
+
 <style id="user-style-vyki_e-bg-img" class="js-user-style-bg-img">
   body.user-style-vyki_e {
         background-image: url(https://abs.twimg.com/images/themes/theme18/bg.gif);
@@ -371,7 +371,7 @@ s,
 
 
   </head>
-  <body class="t1 logged-in user-style-vyki_e" 
+  <body class="t1 logged-in user-style-vyki_e"
 data-fouc-class-names="swift-loading"
  dir="ltr">
       <script id="swift_loading_indicator">
@@ -386,15 +386,15 @@ data-fouc-class-names="swift-loading"
       <div class="container">
 
 
-          
+
           <h1 class=" icon bird-topbar-etched" style="display: inline-block; width: 24px; height: 21px;">
             <span class="visuallyhidden">Twitter</span>
           </h1>
 
-            
+
             <div role="navigation" style="display: inline-block;"><ul class="nav js-global-actions" id="global-actions" ><li id="global-nav-home" class="home" data-global-action="home"> <a class="js-nav js-tooltip" href="/" data-component-term="home_nav" data-nav="home" title="Home"> <span class="new-wrapper"><i class="nav-home"></i><i class="nav-new"></i></span> <span class="text">Home</span>  </a> </li> <li class="people" data-global-action="connect"> <a class="js-nav js-tooltip" href="/i/connect" data-component-term="connect_nav" data-nav="connect" title="Connect"> <span class="new-wrapper"><i class="nav-people"></i><i class="nav-new"></i></span> <span class="text">Connect</span>  </a> </li> <li class="topics" data-global-action="discover"> <a class="js-nav js-tooltip" href="/i/discover" data-component-term="discover_nav" data-nav="discover" title="Discover"> <span class="new-wrapper"><i class="nav-topics"></i><i class="nav-new"></i></span> <span class="text">Discover</span>  </a> </li>  <li class="profile" data-global-action="profile"> <a class="js-nav js-tooltip" href="/vyki_e" data-component-term="profile_nav" data-nav="profile" title="Me"> <span class="new-wrapper"><i class="nav-me"></i><i class="nav-new"></i></span> <span class="text">Me</span>  </a> </li> </ul></div>
 
-          
+
           <div class="pull-right" style="display: inline-block;"> <div role="search">
   <form class="form-search js-search-form" action="/search" id="global-nav-search">
     <label class="visuallyhidden" for="search-query">Search query</label>
@@ -402,7 +402,7 @@ data-fouc-class-names="swift-loading"
     <span class="search-icon js-search-action">
       <button type="submit" class="icon nav-search">
         <span class="visuallyhidden">
-          
+
           Search
         </span>
       </button>
@@ -417,7 +417,7 @@ data-fouc-class-names="swift-loading"
       <div role="presentation" class="typeahead-recent-searches">
     <h4 id="recent-searches-heading" class="typeahead-category-title recent-searches-title">Recent Searches</h4><button type="button" tabindex="-1" class="btn-link clear-recent-searches">Clear All</button>
   <ul role="presentation" class="typeahead-items recent-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-recent-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="recent-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="recent_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -428,7 +428,7 @@ data-fouc-class-names="swift-loading"
     <div role="presentation" class="typeahead-saved-searches">
       <h4 id="saved-searches-heading" class="typeahead-category-title saved-searches-title">Saved Searches</h4>
   <ul role="presentation" class="typeahead-items saved-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-saved-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="saved-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -437,7 +437,7 @@ data-fouc-class-names="swift-loading"
 </div>
 
     <ul role="presentation" class="typeahead-items typeahead-topics">
-  
+
   <li role="presentation" class="typeahead-item typeahead-topic-item">
     <a role="menuitem" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1">
       <span class="icon generic-search"></span>
@@ -447,9 +447,9 @@ data-fouc-class-names="swift-loading"
 
 
     <ul role="presentation" class="typeahead-items typeahead-accounts social-context js-typeahead-accounts">
-  
+
   <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
-    
+
     <a role="menuitem" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
       <img class="avatar size32" alt="">
       <span class="typeahead-user-item-info">
@@ -464,18 +464,18 @@ data-fouc-class-names="swift-loading"
 </ul>
 
     <ul role="presentation" class="typeahead-items typeahead-trend-locations-list">
-  
+
   <li role="presenation" class="typeahead-item typeahead-trend-locations-item"><a role="menuitem" class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
 </ul>
     <ul role="presentation" class="typeahead-items typeahead-context-list">
-  
+
   <li role="presentation" class="typeahead-item typeahead-context-item"><a role="menuitem" class="js-nav" href="" data-ds="context_helper" data-search-query="" tabindex="-1"></a></li>
 </ul>
   </div>
 </div>
 
   </form>
-</div>  
+</div>
 
   <i class="topbar-divider"></i>
   <div class="dm-nav">
@@ -490,9 +490,9 @@ data-fouc-class-names="swift-loading"
       <span class="caret-inner"></span>
     </div>
     <ul>
-      
+
       <li class="current-user" data-name="profile">
-        
+
 
 <a href="/settings/profile"
    class="account-summary account-summary-small"
@@ -504,7 +504,7 @@ data-fouc-class-names="swift-loading"
       <span class="screen-name hidden">@vyki_e</span>
       <small class="metadata">
           Edit profile
-          
+
       </small>
     </div>
   </div>
@@ -512,33 +512,33 @@ data-fouc-class-names="swift-loading"
       </li>
 
       <li class="dropdown-divider"></li>
-      
+
       <li data-name="lists"><a href="/vyki_e/lists" data-nav="all_lists">Lists</a></li>
       <li class="dropdown-divider"></li>
 
-      
 
-      
+
+
       <li><a href="//support.twitter.com" data-nav="help_center">Help</a></li>
 
-        
+
         <li class="js-keyboard-shortcut-trigger" data-nav="shortcuts">
           <button type="button" class="dropdown-link">Keyboard shortcuts</button>
         </li>
 
-      
 
-      
 
-      
+
+
+
 
 
       <li class="dropdown-divider"></li>
 
-      
+
       <li><a href="/settings/account" data-nav="settings" class="js-nav">Settings</a></li>
 
-      
+
       <li class="js-signout-button" id="signout-button" data-nav="logout">
         <button type="button" class="dropdown-link">Sign out</button>
         <form class="dropdown-link-form signout-form" id="signout-form" action="/logout" method="POST">
@@ -553,7 +553,7 @@ data-fouc-class-names="swift-loading"
  </li> </ul>  <i class="topbar-divider"></i> <div role="complementary" aria-labelledby="global-new-tweet-button" class="well topbar-tweet-btn"> <button id="global-new-tweet-button" type="button" class="btn btn-tweet js-global-new-tweet js-tooltip" data-placement="bottom" data-component-term="new_tweet_button" title="Compose new Tweet"> <i class="nav-tweet"><span class="visuallyhidden">Compose new Tweet</span></i> </button> </div>   </div>
 
 
-        
+
         <button type="button" id="close-all-button" class="close-all-tweets js-close-all-tweets js-tooltip" title="Close all open Tweets">
           <span class="icon nav-breaker"><span class="visuallyhidden">Close all open Tweets</span></button>
         </button>
@@ -565,12 +565,12 @@ data-fouc-class-names="swift-loading"
 
         <div id="page-outer">
           <div id="page-container" class="wrapper wrapper-permalink white">
-                
-    
-    
-    
 
-              
+
+
+
+
+
 <style id="user-style-vyki_e">
 
 
@@ -581,7 +581,7 @@ data-fouc-class-names="swift-loading"
   a:hover,
   a:focus,
   a:active,
-  
+
   .u-linkPseudo:hover a,
   .u-linkPseudo:focus a,
   .u-linkPseudo:active a {
@@ -877,7 +877,7 @@ s,
 
 </style>
 
-  
+
 <style id="user-style-vyki_e-bg-img" class="js-user-style-bg-img">
   body.user-style-vyki_e {
         background-image: url(https://abs.twimg.com/images/themes/theme18/bg.gif);
@@ -907,11 +907,11 @@ s,
 <div role="main" class="permalink  stream-uncapped">
 
 
-      
+
   <div class="permalink-inner permalink-tweet-container">
 
 
-    <div class="tweet permalink-tweet js-actionable-user js-actionable-tweet js-original-tweet 
+    <div class="tweet permalink-tweet js-actionable-user js-actionable-tweet js-original-tweet
  my-tweet opened-tweet
 
 
@@ -930,7 +930,7 @@ s,
 
 
 
- logged-in  preexpanded" data-associated-tweet-id="363116819147538433" 
+ logged-in  preexpanded" data-associated-tweet-id="363116819147538433"
 data-feedback-key="stream_status_363116819147538433"
 data-tweet-id="363116819147538433"
 
@@ -958,13 +958,13 @@ data-item-id="363116819147538433"
  data-you-follow="false"
  data-you-block="false">
 
-      
+
       <i class="dogear"></i>
 
-      
+
         <div class="content clearfix">
           <div class="permalink-header">
-              
+
 
   <a class="btn js-thats-you edit-profile-btn js-nav" href="/settings/profile">Edit your profile</a>
 
@@ -973,32 +973,32 @@ data-item-id="363116819147538433"
     <img class="avatar js-action-profile-avatar" src="https://pbs.twimg.com/profile_images/3518892092/39b969d32a10b2437563e246708c8f9d_normal.jpeg" alt="">
     <strong class="fullname js-action-profile-name show-popup-with-id">Vyki Englert</strong>
     <span>&rlm;</span><span class="username js-action-profile-name"><s>@</s><b>vyki_e</b></span>
-    
+
   </a>
 
-            
+
             <small class="time">
     <a href="/vyki_e/status/363116819147538433" class="tweet-timestamp js-permalink js-nav js-tooltip" title="6:59 PM - 1 Aug 13" ><span class="_timestamp js-short-timestamp " data-time="1375408770" data-long-form="true">1 Aug</span></a>
 </small>
 
           </div>
         </div>
-      
+
       <p class="js-tweet-text tweet-text">I&#39;m a sucker for pledges.  <a href="/peers" class="twitter-atreply pretty-link" dir="ltr" ><s>@</s><b>Peers</b></a> Pledge <a href="/search?q=%23sharingeconomy&amp;src=hash" data-query-source="hashtag_click" class="twitter-hashtag pretty-link js-nav" dir="ltr" ><s>#</s><b>sharingeconomy</b></a> <a href="http://t.co/T4Sc47KAzh" rel="nofollow" dir="ltr" data-expanded-url="http://www.peers.org/action/peers-pledgea/" class="twitter-timeline-link" target="_blank" title="http://www.peers.org/action/peers-pledgea/" ><span class="tco-ellipsis"></span><span class="invisible">http://www.</span><span class="js-display-url">peers.org/action/peers-p</span><span class="invisible">ledgea/</span><span class="tco-ellipsis"><span class="invisible">&nbsp;</span>…</span></a></p>
 
 
-      
+
       <div class="stream-item-footer">
-        
-        
+
+
 
 
 <div class="context">
 </div>
 
 
-        
-        
+
+
 
 <ul class="tweet-actions js-actions">
   <li class="action-reply-container">
@@ -1061,13 +1061,13 @@ data-item-id="363116819147538433"
 
 
 
-  
+
 </ul>
 
       </div>
 
       <div class="permalink-footer">
-        
+
 
 
 <div class="expanded-content js-tweet-details-dropdown">
@@ -1089,26 +1089,26 @@ data-item-id="363116819147538433"
     <span class="metadata">
       <span title="6:59 PM - 1 Aug 13">6:59 PM - 1 Aug 13</span>
 
-      
 
 
 
-      
+
+
 
 
     </span>
   </div>
 </div>
 
-        
+
 <div class="proxy-tweet-container">
-  
 
 
-  
 
 
-  <div class="tweet original-tweet js-stream-tweet js-actionable-tweet js-profile-popup-actionable js-original-tweet  
+
+
+  <div class="tweet original-tweet js-stream-tweet js-actionable-tweet js-profile-popup-actionable js-original-tweet
  my-tweet opened-tweet
 
 
@@ -1127,7 +1127,7 @@ data-item-id="363116819147538433"
 
 
 
-" 
+"
 data-feedback-key="stream_status_363116819147538433"
 data-tweet-id="363116819147538433"
 
@@ -1155,22 +1155,22 @@ data-item-id="363116819147538433"
  data-you-follow="false"
  data-you-block="false">
 
-    
+
     <span class="icon dogear"></span>
 
-    
+
     <div class="content">
 
-      
-      
 
-      
+
+
+
       <div class="stream-item-header">
           <a  class="account-group js-account-group js-action-profile js-user-profile-link js-nav" href="/vyki_e" data-user-id="1087064150">
     <img class="avatar js-action-profile-avatar" src="https://pbs.twimg.com/profile_images/3518892092/39b969d32a10b2437563e246708c8f9d_normal.jpeg" alt="">
     <strong class="fullname js-action-profile-name show-popup-with-id">Vyki Englert</strong>
     <span>&rlm;</span><span class="username js-action-profile-name"><s>@</s><b>vyki_e</b></span>
-    
+
   </a>
 
         <small class="time">
@@ -1179,22 +1179,22 @@ data-item-id="363116819147538433"
 
       </div>
 
-      
+
 
       <p class="js-tweet-text tweet-text">I&#39;m a sucker for pledges.  <a href="/peers" class="twitter-atreply pretty-link" dir="ltr" ><s>@</s><b>Peers</b></a> Pledge <a href="/search?q=%23sharingeconomy&amp;src=hash" data-query-source="hashtag_click" class="twitter-hashtag pretty-link js-nav" dir="ltr" ><s>#</s><b>sharingeconomy</b></a> <a href="http://t.co/T4Sc47KAzh" rel="nofollow" dir="ltr" data-expanded-url="http://www.peers.org/action/peers-pledgea/" class="twitter-timeline-link" target="_blank" title="http://www.peers.org/action/peers-pledgea/" ><span class="tco-ellipsis"></span><span class="invisible">http://www.</span><span class="js-display-url">peers.org/action/peers-p</span><span class="invisible">ledgea/</span><span class="tco-ellipsis"><span class="invisible">&nbsp;</span>…</span></a></p>
 
-      
+
       <div class="stream-item-footer">
-          
-          
+
+
 
 
 <div class="context">
 </div>
 
 
-          
-          
+
+
 
 <ul class="tweet-actions js-actions">
   <li class="action-reply-container">
@@ -1257,18 +1257,18 @@ data-item-id="363116819147538433"
 
 
 
-  
+
 </ul>
 
 
-            
+
 <a class="details with-icn js-details" href="/vyki_e/status/363116819147538433">
   <span class="details-icon js-icon-container">
-    
+
   </span>
   <b>
     <span class="expand-stream-item js-view-details">
-      
+
         <span class="expand-action-wrapper">
           Expand
         </span>
@@ -1282,10 +1282,10 @@ data-item-id="363116819147538433"
 
       </div>
 
-      
 
-      
-      
+
+
+
 
 
 <div class="expanded-content js-tweet-details-dropdown">
@@ -1293,7 +1293,7 @@ data-item-id="363116819147538433"
 
 
 
-      
+
 
     </div>
   </div>
@@ -1308,7 +1308,7 @@ data-item-id="363116819147538433"
 
 
 
-    
+
   <div class="inline-reply-tweetbox swift">
         <form class="tweet-form condensed "
       method="post"
@@ -1330,18 +1330,18 @@ data-item-id="363116819147538433"
 
   <div class="tweet-content">
     <i class="add-photo-icon hidden"></i>
-    
+
     <i class="nav-tweet hidden"></i>
     <span class="tweet-drag-help tweet-drag-photo-here hidden">Drag photo here</span>
     <span class="tweet-drag-help tweet-or-drag-photo-here hidden">Or drag photo here</span>
     <label class="visuallyhidden" for="tweet-box-reply-to-363116819147538433" id="tweet-box-reply-to-363116819147538433-label">Tweet text</label>
 
-    
+
     <div aria-labelledby="tweet-box-reply-to-363116819147538433-label" id="tweet-box-reply-to-363116819147538433" class="tweet-box rich-editor u-textUserColor u-borderUserColorLight u-borderUserColorLightFocus u-boxShadowUserColorLighterFocus" contenteditable="true" spellcheck="true" role="textbox"
       aria-multiline="true">Reply to @peers</div>
     <div class="rich-normalizer"></div>
 
-    
+
 
 
 <div role="menu" aria-hidden="true" class="dropdown-menu typeahead ">
@@ -1353,7 +1353,7 @@ data-item-id="363116819147538433"
       <div role="presentation" class="typeahead-recent-searches">
     <h4 id="recent-searches-heading" class="typeahead-category-title recent-searches-title">Recent Searches</h4><button type="button" tabindex="-1" class="btn-link clear-recent-searches">Clear All</button>
   <ul role="presentation" class="typeahead-items recent-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-recent-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="recent-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="recent_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -1364,7 +1364,7 @@ data-item-id="363116819147538433"
     <div role="presentation" class="typeahead-saved-searches">
       <h4 id="saved-searches-heading" class="typeahead-category-title saved-searches-title">Saved Searches</h4>
   <ul role="presentation" class="typeahead-items saved-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-saved-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="saved-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -1373,7 +1373,7 @@ data-item-id="363116819147538433"
 </div>
 
     <ul role="presentation" class="typeahead-items typeahead-topics">
-  
+
   <li role="presentation" class="typeahead-item typeahead-topic-item">
     <a role="menuitem" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1">
       <span class="icon generic-search"></span>
@@ -1382,13 +1382,13 @@ data-item-id="363116819147538433"
 </ul>
 
 
-    
+
 
 
 <ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
-  
+
   <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
-    
+
     <a role="menuitem" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
       <img class="avatar size24" alt="">
       <span class="typeahead-user-item-info">
@@ -1402,21 +1402,21 @@ data-item-id="363116819147538433"
 </ul>
 
     <ul role="presentation" class="typeahead-items typeahead-trend-locations-list">
-  
+
   <li role="presenation" class="typeahead-item typeahead-trend-locations-item"><a role="menuitem" class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
 </ul>
     <ul role="presentation" class="typeahead-items typeahead-context-list">
-  
+
   <li role="presentation" class="typeahead-item typeahead-context-item"><a role="menuitem" class="js-nav" href="" data-ds="context_helper" data-search-query="" tabindex="-1"></a></li>
 </ul>
   </div>
 </div>
 
 
-    
+
     <textarea class="tweet-box-shadow" name="status"></textarea>
 
-    
+
     <div class="thumbnail-container">
       <div class="preview">
         <button type="button" class="dismiss js-dismiss" tabindex="-1">
@@ -1484,12 +1484,12 @@ data-item-id="363116819147538433"
     <div class="tweets-wrapper">
       <div id="descendants">
           <div class="stream-container "
-    
+
       data-cursor=""
-      
-      
-    
-    
+
+
+
+
     >
     <div class="stream permalink-stream">
       <ol class="stream-items js-navigable-stream" id="stream-items-id">
@@ -1512,7 +1512,7 @@ data-item-id="363116819147538433"
         <i class="bird-etched"></i>
 
     <p class="empty-text">
-            
+
     </p>
 
 
@@ -1615,7 +1615,7 @@ data-item-id="363116819147538433"
 
           </div>
         </div>
-      
+
     </div>
     <div class="alert-messages hidden" id="message-drawer">
     <div class="message ">
@@ -1664,7 +1664,7 @@ data-item-id="363116819147538433"
   <div class="close-modal-background-target"></div>
   <div class="modal draggable twttr-dialog dm-dialog">
     <div id="dm_dialog_conversation_list" class="modal-content">
-  
+
   <div class="twttr-dialog-header modal-header">
     <h3>Direct messages</h3>
     <div class="dm-toolbar">
@@ -1681,7 +1681,7 @@ data-item-id="363116819147538433"
     </div>
   </div>
 
-  
+
   <div class="twttr-dialog-inside">
     <div class="twttr-dialog-body clearfix">
       <div class="dm-error js-dm-error">
@@ -1709,12 +1709,12 @@ data-item-id="363116819147538433"
   </div>
 </div>
     <div id="dm_dialog_conversation" class="modal-content">
-  
+
   <div class="twttr-dialog-header modal-header">
     <h3><a class="js-dm-header-title" href="#">Direct messages</a> › with <span class="dm_dialog_real_name"></span></h3>
   </div>
 
-  
+
   <div class="twttr-dialog-inside">
     <div class="twttr-dialog-body clearfix">
         <div class="dm-error js-dm-error">
@@ -1751,12 +1751,12 @@ data-item-id="363116819147538433"
   </div>
 </div>
     <div id="dm_dialog_new" class="modal-content">
-  
+
   <div class="twttr-dialog-header modal-header">
     <h3><a href="#">Direct messages</a> › New</h3>
   </div>
 
-  
+
   <div class="twttr-dialog-inside">
     <div class="twttr-dialog-body clearfix">
       <div class="dm-dialog-content">
@@ -1764,7 +1764,7 @@ data-item-id="363116819147538433"
         <div class="dm-to">
           <input class="dm-to-input twttr-directmessage-input js-initial-focus" type="text">
           <img class="avatar size24 selected-profile" src="https://twimg0-a.akamaihd.net/sticky/default_profile_images/default_profile_6_mini.png" data-default-img="https://twimg0-a.akamaihd.net/sticky/default_profile_images/default_profile_6_mini.png" alt="">
-            
+
 
 
 <div role="menu" aria-hidden="true" class="dropdown-menu typeahead ">
@@ -1776,7 +1776,7 @@ data-item-id="363116819147538433"
       <div role="presentation" class="typeahead-recent-searches">
     <h4 id="recent-searches-heading" class="typeahead-category-title recent-searches-title">Recent Searches</h4><button type="button" tabindex="-1" class="btn-link clear-recent-searches">Clear All</button>
   <ul role="presentation" class="typeahead-items recent-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-recent-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="recent-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="recent_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -1787,7 +1787,7 @@ data-item-id="363116819147538433"
     <div role="presentation" class="typeahead-saved-searches">
       <h4 id="saved-searches-heading" class="typeahead-category-title saved-searches-title">Saved Searches</h4>
   <ul role="presentation" class="typeahead-items saved-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-saved-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="saved-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -1796,7 +1796,7 @@ data-item-id="363116819147538433"
 </div>
 
     <ul role="presentation" class="typeahead-items typeahead-topics">
-  
+
   <li role="presentation" class="typeahead-item typeahead-topic-item">
     <a role="menuitem" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1">
       <span class="icon generic-search"></span>
@@ -1805,13 +1805,13 @@ data-item-id="363116819147538433"
 </ul>
 
 
-    
+
 
 
 <ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
-  
+
   <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
-    
+
     <a role="menuitem" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
       <img class="avatar size24" alt="">
       <span class="typeahead-user-item-info">
@@ -1825,11 +1825,11 @@ data-item-id="363116819147538433"
 </ul>
 
     <ul role="presentation" class="typeahead-items typeahead-trend-locations-list">
-  
+
   <li role="presenation" class="typeahead-item typeahead-trend-locations-item"><a role="menuitem" class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
 </ul>
     <ul role="presentation" class="typeahead-items typeahead-context-list">
-  
+
   <li role="presentation" class="typeahead-item typeahead-context-item"><a role="menuitem" class="js-nav" href="" data-ds="context_helper" data-search-query="" tabindex="-1"></a></li>
 </ul>
   </div>
@@ -1918,18 +1918,18 @@ data-item-id="363116819147538433"
 
   <div class="tweet-content">
     <i class="add-photo-icon hidden"></i>
-    
+
     <i class="nav-tweet hidden"></i>
     <span class="tweet-drag-help tweet-drag-photo-here hidden">Drag photo here</span>
     <span class="tweet-drag-help tweet-or-drag-photo-here hidden">Or drag photo here</span>
     <label class="visuallyhidden" for="tweet-box-global" id="tweet-box-global-label">Tweet text</label>
 
-    
+
     <div aria-labelledby="tweet-box-global-label" id="tweet-box-global" class="tweet-box rich-editor " contenteditable="true" spellcheck="true" role="textbox"
       aria-multiline="true"></div>
     <div class="rich-normalizer"></div>
 
-    
+
 
 
 <div role="menu" aria-hidden="true" class="dropdown-menu typeahead ">
@@ -1941,7 +1941,7 @@ data-item-id="363116819147538433"
       <div role="presentation" class="typeahead-recent-searches">
     <h4 id="recent-searches-heading" class="typeahead-category-title recent-searches-title">Recent Searches</h4><button type="button" tabindex="-1" class="btn-link clear-recent-searches">Clear All</button>
   <ul role="presentation" class="typeahead-items recent-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-recent-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="recent-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="recent_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -1952,7 +1952,7 @@ data-item-id="363116819147538433"
     <div role="presentation" class="typeahead-saved-searches">
       <h4 id="saved-searches-heading" class="typeahead-category-title saved-searches-title">Saved Searches</h4>
   <ul role="presentation" class="typeahead-items saved-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-saved-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="saved-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -1961,7 +1961,7 @@ data-item-id="363116819147538433"
 </div>
 
     <ul role="presentation" class="typeahead-items typeahead-topics">
-  
+
   <li role="presentation" class="typeahead-item typeahead-topic-item">
     <a role="menuitem" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1">
       <span class="icon generic-search"></span>
@@ -1970,13 +1970,13 @@ data-item-id="363116819147538433"
 </ul>
 
 
-    
+
 
 
 <ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
-  
+
   <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
-    
+
     <a role="menuitem" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
       <img class="avatar size24" alt="">
       <span class="typeahead-user-item-info">
@@ -1990,21 +1990,21 @@ data-item-id="363116819147538433"
 </ul>
 
     <ul role="presentation" class="typeahead-items typeahead-trend-locations-list">
-  
+
   <li role="presenation" class="typeahead-item typeahead-trend-locations-item"><a role="menuitem" class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
 </ul>
     <ul role="presentation" class="typeahead-items typeahead-context-list">
-  
+
   <li role="presentation" class="typeahead-item typeahead-context-item"><a role="menuitem" class="js-nav" href="" data-ds="context_helper" data-search-query="" tabindex="-1"></a></li>
 </ul>
   </div>
 </div>
 
 
-    
+
     <textarea class="tweet-box-shadow" name="status"></textarea>
 
-    
+
     <div class="thumbnail-container">
       <div class="preview">
         <button type="button" class="dismiss js-dismiss" tabindex="-1">
@@ -2093,7 +2093,7 @@ data-item-id="363116819147538433"
         <div class="modal-inner">
           <form class="goto-user-form">
             <input class="input-block username-input" type="text" placeholder="Start typing a name to jump to a profile">
-            
+
 
 
 <div role="menu" aria-hidden="true" class="dropdown-menu typeahead ">
@@ -2105,7 +2105,7 @@ data-item-id="363116819147538433"
       <div role="presentation" class="typeahead-recent-searches">
     <h4 id="recent-searches-heading" class="typeahead-category-title recent-searches-title">Recent Searches</h4><button type="button" tabindex="-1" class="btn-link clear-recent-searches">Clear All</button>
   <ul role="presentation" class="typeahead-items recent-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-recent-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="recent-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="recent_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -2116,7 +2116,7 @@ data-item-id="363116819147538433"
     <div role="presentation" class="typeahead-saved-searches">
       <h4 id="saved-searches-heading" class="typeahead-category-title saved-searches-title">Saved Searches</h4>
   <ul role="presentation" class="typeahead-items saved-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-saved-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="saved-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -2125,7 +2125,7 @@ data-item-id="363116819147538433"
 </div>
 
     <ul role="presentation" class="typeahead-items typeahead-topics">
-  
+
   <li role="presentation" class="typeahead-item typeahead-topic-item">
     <a role="menuitem" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1">
       <span class="icon generic-search"></span>
@@ -2134,13 +2134,13 @@ data-item-id="363116819147538433"
 </ul>
 
 
-    
+
 
 
 <ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
-  
+
   <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
-    
+
     <a role="menuitem" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
       <img class="avatar size24" alt="">
       <span class="typeahead-user-item-info">
@@ -2154,11 +2154,11 @@ data-item-id="363116819147538433"
 </ul>
 
     <ul role="presentation" class="typeahead-items typeahead-trend-locations-list">
-  
+
   <li role="presenation" class="typeahead-item typeahead-trend-locations-item"><a role="menuitem" class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
 </ul>
     <ul role="presentation" class="typeahead-items typeahead-context-list">
-  
+
   <li role="presentation" class="typeahead-item typeahead-context-item"><a role="menuitem" class="js-nav" href="" data-ds="context_helper" data-search-query="" tabindex="-1"></a></li>
 </ul>
   </div>
@@ -2235,12 +2235,12 @@ data-item-id="363116819147538433"
 </button>
 
 
-      
+
       <div class="modal-header">
         <h3 class="modal-title">Keyboard shortcuts</h3>
       </div>
 
-      
+
       <div class="modal-body">
 
         <div class="keyboard-shortcuts clearfix" id="keyboard-shortcut-menu">
@@ -2468,8 +2468,8 @@ data-item-id="363116819147538433"
 
 
 
-  
-  
+
+
 
 
   <div id="geo-enabled-dropdown">
@@ -2550,7 +2550,7 @@ data-item-id="363116819147538433"
         <h3 class="modal-title">Create a new list</h3>
       </div>
       <div class="modal-body">
-        
+
 <div class="list-editor">
   <div class="field">
     <label for="list-name">List name</label>
@@ -2748,7 +2748,7 @@ data-item-id="363116819147538433"
 </div>
 
 
-  
+
 <div id="report-tweet-dialog" class="modal-container report-tweet-dialog">
   <div class="close-modal-background-target"></div>
   <div class="modal modal-medium draggable">
@@ -2803,7 +2803,7 @@ data-item-id="363116819147538433"
         <div class="modal-body">
           <p>Please choose the topic that best defines your issue. Once you complete and submit the form, your report will be filed with Twitter.</p>
           <ul class="abuse-links">
-            
+
             <li><a href="#" class="report-impersonation-link hide-focus" data-abuse-type="impersonation" target="_blank">Impersonation</a></li>
             <li><a href="#" class="report-trademark-link" data-abuse-type="trademark" target="_blank">Trademarks</a></li>
             <li><a href="#" class="report-harassment-link" data-abuse-type="harassment" target="_blank">Harassment</a></li>
@@ -2823,7 +2823,7 @@ data-item-id="363116819147538433"
     <div class="hidden">
   <iframe class="tweet-post-iframe" name="tweet-post-iframe"></iframe>
 
-  
+
   <div id="inline-reply-tweetbox">
       <form class="tweet-form  "
       method="post"
@@ -2843,18 +2843,18 @@ data-item-id="363116819147538433"
 
   <div class="tweet-content">
     <i class="add-photo-icon hidden"></i>
-    
+
     <i class="nav-tweet hidden"></i>
     <span class="tweet-drag-help tweet-drag-photo-here hidden">Drag photo here</span>
     <span class="tweet-drag-help tweet-or-drag-photo-here hidden">Or drag photo here</span>
     <label class="visuallyhidden" for="tweet-box-template" id="tweet-box-template-label">Tweet text</label>
 
-    
+
     <div aria-labelledby="tweet-box-template-label" id="tweet-box-template" class="tweet-box rich-editor " contenteditable="true" spellcheck="true" role="textbox"
       aria-multiline="true"></div>
     <div class="rich-normalizer"></div>
 
-    
+
 
 
 <div role="menu" aria-hidden="true" class="dropdown-menu typeahead ">
@@ -2866,7 +2866,7 @@ data-item-id="363116819147538433"
       <div role="presentation" class="typeahead-recent-searches">
     <h4 id="recent-searches-heading" class="typeahead-category-title recent-searches-title">Recent Searches</h4><button type="button" tabindex="-1" class="btn-link clear-recent-searches">Clear All</button>
   <ul role="presentation" class="typeahead-items recent-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-recent-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="recent-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="recent_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -2877,7 +2877,7 @@ data-item-id="363116819147538433"
     <div role="presentation" class="typeahead-saved-searches">
       <h4 id="saved-searches-heading" class="typeahead-category-title saved-searches-title">Saved Searches</h4>
   <ul role="presentation" class="typeahead-items saved-searches-list">
-    
+
     <li role="presentation" class="typeahead-item typeahead-saved-search-item">
       <span class="icon close" aria-hidden="true"><span class="visuallyhidden">Remove</span></span>
       <a role="menuitem" aria-describedby="saved-searches-heading" class="js-nav" href="" data-search-query="" data-query-source="" data-ds="saved_search" tabindex="-1"><span class="icon generic-search"></span></a>
@@ -2886,7 +2886,7 @@ data-item-id="363116819147538433"
 </div>
 
     <ul role="presentation" class="typeahead-items typeahead-topics">
-  
+
   <li role="presentation" class="typeahead-item typeahead-topic-item">
     <a role="menuitem" class="js-nav" href="" data-search-query="" data-query-source="typeahead_click" data-ds="topics" tabindex="-1">
       <span class="icon generic-search"></span>
@@ -2895,13 +2895,13 @@ data-item-id="363116819147538433"
 </ul>
 
 
-    
+
 
 
 <ul role="presentation" class="typeahead-items typeahead-accounts js-typeahead-accounts">
-  
+
   <li role="presentation" data-user-id="" data-user-screenname="" data-remote="true" data-score="" class="typeahead-item typeahead-account-item js-selectable">
-    
+
     <a role="menuitem" class="js-nav" data-query-source="typeahead_click" data-search-query="" data-ds="account">
       <img class="avatar size24" alt="">
       <span class="typeahead-user-item-info">
@@ -2915,21 +2915,21 @@ data-item-id="363116819147538433"
 </ul>
 
     <ul role="presentation" class="typeahead-items typeahead-trend-locations-list">
-  
+
   <li role="presenation" class="typeahead-item typeahead-trend-locations-item"><a role="menuitem" class="js-nav" href="" data-ds="trend_location" data-search-query="" tabindex="-1"></a></li>
 </ul>
     <ul role="presentation" class="typeahead-items typeahead-context-list">
-  
+
   <li role="presentation" class="typeahead-item typeahead-context-item"><a role="menuitem" class="js-nav" href="" data-ds="context_helper" data-search-query="" tabindex="-1"></a></li>
 </ul>
   </div>
 </div>
 
 
-    
+
     <textarea class="tweet-box-shadow" name="status"></textarea>
 
-    
+
     <div class="thumbnail-container">
       <div class="preview">
         <button type="button" class="dismiss js-dismiss" tabindex="-1">
@@ -2993,7 +2993,7 @@ data-item-id="363116819147538433"
 
   </div>
 </div>
-    
+
     <div id="spoonbill-outer"></div>
   </body>
 </html>
@@ -3001,6 +3001,5 @@ data-item-id="363116819147538433"
     <input type="hidden" class="swift-boot-module" value="app/pages/permalink">
   <input type="hidden" id="swift-module-path" value="https://abs.twimg.com/c/swift/en">
 
-  
-    <script src="https://abs.twimg.com/c/swift/en/init.60642a289b5798dceb687c1681a7ae951106fb23.js" async></script>
 
+    <script src="https://abs.twimg.com/c/swift/en/init.60642a289b5798dceb687c1681a7ae951106fb23.js" async></script>

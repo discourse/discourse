@@ -96,6 +96,7 @@ module Onebox
           ted.com
           thefreedictionary.com
           theglobeandmail.com
+          thenextweb.com
           theonion.com
           thestar.com
           thesun.co.uk
@@ -103,11 +104,13 @@ module Onebox
           tmz.com
           torontosun.com
           tumblr.com
+          twitch.tv
           twitpic.com
           usatoday.com
           viddler.com
           videojug.com
           vimeo.com
+          vine.co
           walmart.com
           washingtonpost.com
           wikia.com

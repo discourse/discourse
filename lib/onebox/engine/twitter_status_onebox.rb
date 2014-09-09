@@ -35,7 +35,7 @@ module Onebox
         if raw.html?
           raw.css(".tweet-text")[0].inner_text
         else
-          access(:text)
+          client.prettify_tweet(raw)
         end
       end
 

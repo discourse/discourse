@@ -10,6 +10,10 @@ describe Onebox::Engine::TwitterStatusOnebox do
       expect(html).to include("I'm a sucker for pledges.")
     end
 
+    it "includes link" do
+      expect(html).to include("http://www.peers.org/action/peers-pledgea")
+    end
+
     it "includes timestamp" do
       pending
       expect(html).to include("6:59 PM - 1 Aug 13")
@@ -88,6 +92,9 @@ describe Onebox::Engine::TwitterStatusOnebox do
           possibly_sensitive: false,
           lang: "en"
         }
+      end
+      @twitter_client.stub("prettify_tweet") do
+        "I'm a sucker for pledges.  <a href='https://twitter.com/Peers' target='_blank'>@Peers</a> Pledge <a href='https://twitter.com/search?q=%23sharingeconomy' target='_blank'>#sharingeconomy</a> <a target='_blank' href='http://www.peers.org/action/peers-pledgea/'>peers.org/action/peers-p…</a>"
       end
       Onebox.options = { twitter_client: @twitter_client }
     end
