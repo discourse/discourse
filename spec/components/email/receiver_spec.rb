@@ -61,6 +61,10 @@ describe Email::Receiver do
       test_parse_body(fixture_file("emails/via_line.eml")).should == "Hello this email has content!"
     end
 
+    it "removes an 'on date wrote' quoting line" do
+      test_parse_body(fixture_file("emails/on_wrote.eml")).should == "Sure, all you need to do is frobnicate the foobar and you'll be all set!"
+    end
+
     it "removes the 'Previous Discussion' marker" do
       test_parse_body(fixture_file("emails/previous.eml")).should == "This will not include the previous discussion that is present in this email."
     end
