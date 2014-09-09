@@ -523,19 +523,32 @@ iframe {
 
 .extra-info-wrapper {
   float: left;
-  width: 46%;
+  width: 78%;
+
+  @media all and (max-width : 1080px) {
+    width: 75%;
+    }
+
+  @media all and (max-width : 870px) {
+    width: 70%;
+    }
+
+  @media all and (max-width : 725px) {
+    width: 61%;
+    }
 
   .topic-statuses {
-    i         { color: $header_primary; }
+    i  { color: $header_primary; }
     i.fa-envelope { color: $danger; }
     .unpinned { color: $header_primary; }
   }
-  .topic-link { color: $header_primary;
-  display: block;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
 
+  .topic-link {
+    color: $header_primary;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -544,7 +557,6 @@ text-overflow: ellipsis;
     margin: 5px 0 0 0;
     font-size: 1.6em;
     line-height: 1.3em;
-    width: 820px;
 
   }
 
@@ -1027,11 +1039,6 @@ span.highlighted {
 
 @media all
 and (max-width : 1140px) {
-  .extra-info {
-    h1 {
-      width: 720px;
-    }
-  }
   .post-cloak .reply-to-tab {
     right: 320px;
   }
@@ -1040,11 +1047,6 @@ and (max-width : 1140px) {
 
 @media all
 and (max-width : 975px) {
-  .extra-info {
-    h1 {
-      width: 650px;
-    }
-  }
   .post-cloak .reply-to-tab {
     right: 300px;
   }
@@ -1059,11 +1061,7 @@ and (max-width : 940px) {
 
 @media all
 and (max-width : 870px) {
-  .extra-info {
-    h1 {
-      width: 520px;
-    }
-  }
+
   .gutter {
     display: none;
     }
