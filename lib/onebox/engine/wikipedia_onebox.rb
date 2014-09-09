@@ -21,12 +21,16 @@ module Onebox
         end
 
         unless m_url_hash.nil?
-          section_header = raw.xpath("//span[@id='#{m_url_hash_name}']/..")
-          if section_header.empty?
+          section_header_title = raw.xpath("//span[@id='#{m_url_hash_name}']") 
+
+          if section_header_title.empty? 
             paras = raw.search("p") #default get all the paras
-          else #section id not found
-            cur_element = section_header[0]
-            while ( (next_sibling = cur_element.next_sibling).name =~ /p|text/ ) do  #from header get next sibling until it is not a <text> node or a <p> node
+          else 
+            section_title_text = section_header_title.inner_text
+            section_header = section_header_title[0].parent #parent element of the section span element should be an <h3> node
+            cur_element = section_header
+            while ( (next_sibling = cur_element.next_sibling).name =~ /p|text|div/ ) do  #from section header get the next sibling until it is a not one of the tags <text> | <p> | <div>
+                                                                                         #a div tag may be used as an assets wraper in an article section, it can't be a loop if a div is the 1st element in a section no p will be populated
               cur_element = next_sibling
               if cur_element.name == "p"
                 paras.push(cur_element)
@@ -48,11 +52,10 @@ module Onebox
             cnt += 1
           end
         end
-
         text = "#{text[0..Onebox::LayoutSupport.max_text]}..." if text.length > Onebox::LayoutSupport.max_text
         result = {
           link: link,
-          title: raw.css("html body h1").inner_text,
+          title: raw.css("html body h1").inner_text + (section_title_text ? " | " + section_title_text : ""),  #if a section sub title exists add it to the main article title
           description: text
         }
         img = raw.css(".image img")
