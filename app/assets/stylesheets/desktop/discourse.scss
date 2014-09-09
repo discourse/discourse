@@ -14,17 +14,6 @@ html {font-size: 14px/19px;}
   }
 }
 
-@include small-width {
-  body {
-    min-width: 760px;
-  }
-  .container,
-  .full-width {
-    min-width: 760px;
-  }
-}
-
-
 @media all
 and (max-width : 570px) {
   body {
