@@ -29,7 +29,8 @@ test("showNotifications action", function() {
     resolveRequestWith(["notification"]);
   });
 
-  deepEqual(controller.get("notifications"), ["notification"], "notifications are set correctly after data has finished loading");
+  // Can't use deepEquals because controller.get("notifications") is an ArrayProxy, not an Array
+  ok(controller.get("notifications").indexOf("notification") !== -1, "notification is in the controller");
   equal(Discourse.User.current().get("unread_notifications"), 0, "current user's unread notifications count is zeroed after data has finished loading");
   ok(viewSpy.showDropdownBySelector.calledWith("#user-notifications"), "dropdown with notifications is shown after data has finished loading");
 });

@@ -284,6 +284,26 @@
       float: right !important;
       margin-top: -8px;
     }
+    .notification {
+      padding: 0 8px;
+      li { display: inline-block; }
+      p {
+        display: inline-block;
+        margin: 7px;
+        span {
+          color: $primary;
+        }
+      }
+      .time {
+        display: inline-block;
+        margin: 0;
+        float: none;
+      }
+      // common/base/header.scss
+      .fa, .icon {
+        color: scale-color($primary, $lightness: 50%);
+      }
+    }
   }
 
   .staff-counters {

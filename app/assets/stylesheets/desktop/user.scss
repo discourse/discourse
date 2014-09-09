@@ -367,6 +367,30 @@
       float: right;
       margin-top: -4px;
     }
+    .notification {
+      &.unread {
+        background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+      }
+
+      li { display: inline-block; }
+      p {
+        display: inline-block;
+        margin-left: 10px;
+        span {
+          color: $primary;
+        }
+      }
+      .time {
+        display: inline-block;
+        margin-left: 10px;
+        float: none;
+      }
+      // common/base/header.scss
+      .fa, .icon {
+        color: scale-color($primary, $lightness: 50%);
+        font-size: 24px;
+      }
+    }
   }
 
   .staff-counters {
