@@ -649,8 +649,10 @@ Discourse.PostStream = Em.Object.extend({
 
     var closest = null;
     this.get('posts').forEach(function (p) {
-      if (closest === postNumber) { return; }
-      if (!closest) { closest = p; }
+      if (!closest) {
+        closest = p;
+        return;
+      }
 
       if (Math.abs(postNumber - p.get('post_number')) < Math.abs(closest.get('post_number') - postNumber)) {
         closest = p;
