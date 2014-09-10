@@ -79,7 +79,7 @@ Discourse.ClickTrack = {
     e.preventDefault();
 
     // We don't track clicks on quote back buttons
-    if ($link.hasClass('back') || $link.hasClass('quote-other-topic')) return true;
+    if ($link.hasClass('back') || $link.hasClass('quote-other-topic')) { return true; }
 
     // Remove the href, put it as a data attribute
     if (!$link.data('href')) {
@@ -88,6 +88,12 @@ Discourse.ClickTrack = {
       $link.attr('href', null);
       // Don't route to this URL
       $link.data('auto-route', true);
+    }
+
+    // warn the user if they can't download the file
+    if (Discourse.SiteSettings.prevent_anons_from_downloading_files && $link.hasClass("attachment") && !Discourse.User.current()) {
+      bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));
+      return false;
     }
 
     // If we're on the same site, use the router and track via AJAX

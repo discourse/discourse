@@ -1,0 +1,24 @@
+{{#if model.error}}
+  <div class="item error">
+    {{#if model.forbidden}}
+      {{i18n errors.reasons.forbidden}}
+    {{else}}
+      {{i18n errors.desc.unknown}}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#each itemController="notification"}}
+  <div {{bind-attr class=":item :notification read::unread"}}>
+    {{notification-item notification=this scope=scope}}
+    <span class="time">
+      {{date path="created_at" leaveAgo="true"}}
+    </span>
+  </div>
+{{/each}}
+{{#if loading}}
+  <div class='spinner'>{{i18n loading}}</div>
+{{/if}}
+{{#unless canLoadMore}}
+  <div class='end-of-stream'></div>
+{{/unless}}

@@ -9,6 +9,10 @@ var deprecatedViewHelpers = {
   'discourse-activity-filter': 'activity-filter'
 };
 
+var renamedHelpers = {
+  icon: "fa-icon"
+};
+
 export default {
   name: 'deprecations',
   initialize: function(container) {
@@ -22,6 +26,15 @@ export default {
 
         Discourse.Utilities.normalizeHash(hash, types);
         return Ember.Handlebars.helpers.view.call(this, helper, options);
+      });
+    });
+
+    Ember.keys(renamedHelpers).forEach(function(old) {
+      var newName = renamedHelpers[old];
+      Ember.Handlebars.registerHelper(old, function() {
+        Em.warn("The `" + old +"` helper is deprecated. Use `" + newName + "` instead.");
+        var newHelper = container.lookupFactory('helper:' + newName);
+        return newHelper.apply(this, Array.prototype.slice.call(arguments));
       });
     });
   }

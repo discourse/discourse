@@ -1,6 +1,8 @@
 import CleansUp from 'discourse/mixins/cleans-up';
 
-var clickOutsideEventName = "mousedown.outside-user-expansion";
+var clickOutsideEventName = "mousedown.outside-user-expansion",
+    clickDataExpand = "click.discourse-user-expand",
+    clickMention = "click.discourse-user-mention";
 
 export default Discourse.View.extend(CleansUp, {
   elementId: 'user-expansion',
@@ -20,6 +22,21 @@ export default Discourse.View.extend(CleansUp, {
       }
 
       return true;
+    });
+
+    $('#main-outlet').on(clickDataExpand, '[data-user-expand]', function(e) {
+      var $target = $(e.currentTarget);
+      self._posterExpand($target);
+      self.get('controller').show($target.data('user-expand'));
+      return false;
+    });
+
+    $('#main-outlet').on(clickMention, 'a.mention', function(e) {
+      var $target = $(e.target);
+      self._posterExpand($target);
+      var username = $target.text().replace(/^@/, '');
+      self.get('controller').show(username);
+      return false;
     });
   }.on('didInsertElement'),
 
@@ -50,6 +67,9 @@ export default Discourse.View.extend(CleansUp, {
 
   _removeEvents: function() {
     $('html').off(clickOutsideEventName);
+    $('#main').off(clickDataExpand);
+    $('#main').off(clickMention);
+
     this.appEvents.off('poster:expand', this, '_posterExpand');
   }.on('willDestroyElement')
 

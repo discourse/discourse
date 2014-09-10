@@ -32,12 +32,17 @@
                     {{#if flaggedPost.wasEdited}}<i class="fa fa-pencil" title="{{i18n admin.flags.was_edited}}"></i>{{/if}}
                   {{/if}}
                 {{/if}}
+                {{#if adminActiveFlagsView}}
+                  {{#if flaggedPost.previous_flags_count}}
+                    <span title="{{i18n admin.flags.previous_flags_count count=flaggedPost.previous_flags_count}}" class="badge-notification flagged-posts">{{flaggedPost.previous_flags_count}}</span>
+                  {{/if}}
+                {{/if}}
               </td>
 
               <td class='excerpt'>
                 <h3>
                   {{#if flaggedPost.topic.isPrivateMessage}}
-                    <span class="private-message-glyph">{{icon envelope}}</span>
+                    <span class="private-message-glyph">{{fa-icon envelope}}</span>
                   {{/if}}
                   {{topic-status topic=flaggedPost.topic}}
                   <a href='{{unbound flaggedPost.url}}'>{{flaggedPost.topic.title}}</a>

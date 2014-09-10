@@ -1,5 +1,5 @@
 .d-header {
-    min-width: 100%;
+    width: 100%;
     position: absolute;
     top: 0;
     z-index: 1001;
@@ -131,7 +131,6 @@
     .flagged-posts {
       background: $danger;
     }
-
 }
 
 .d-dropdown {
@@ -206,6 +205,14 @@
       p {
         margin: 0;
         overflow: hidden;
+      }
+    }
+    .is-warning {
+      i.fa-envelope-o {
+        &:before {
+          content: "\f0e0";
+        }
+        color: $danger;
       }
     }
     .read {

@@ -1,4 +1,4 @@
-export default Handlebars.registerHelper('topic-link', function(property, options) {
+Handlebars.registerHelper('topic-link', function(property, options) {
   var topic = Ember.Handlebars.get(this, property, options),
       title = topic.get('fancy_title');
 

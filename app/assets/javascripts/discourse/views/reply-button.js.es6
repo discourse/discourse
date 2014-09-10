@@ -12,10 +12,6 @@ export default ButtonView.extend({
     return I18n.t("topic.reply.title");
   }.property(),
 
-  renderIcon: function(buffer) {
-    buffer.push("<i class='fa fa-plus'></i>");
-  },
-
   click: function() {
     this.get('controller').send('replyToPost');
   }

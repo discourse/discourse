@@ -43,6 +43,7 @@ class UserSerializer < BasicUserSerializer
              :suspended_till,
              :uploaded_avatar_id,
              :badge_count,
+             :unread_notification_count,
              :has_title_badges,
              :edit_history_public,
              :custom_fields
@@ -55,7 +56,8 @@ class UserSerializer < BasicUserSerializer
   staff_attributes :number_of_deleted_posts,
                    :number_of_flagged_posts,
                    :number_of_flags_given,
-                   :number_of_suspensions
+                   :number_of_suspensions,
+                   :number_of_warnings
 
 
   private_attributes :email,
@@ -75,6 +77,7 @@ class UserSerializer < BasicUserSerializer
                      :tracked_category_ids,
                      :watched_category_ids,
                      :private_messages_stats,
+                     :unread_notification_count,
                      :disable_jump_reply,
                      :gravatar_avatar_upload_id,
                      :custom_avatar_upload_id,
@@ -193,6 +196,10 @@ class UserSerializer < BasicUserSerializer
               .count
   end
 
+  def number_of_warnings
+    object.warnings.count
+  end
+
   def number_of_suspensions
     UserHistory.for(object, :suspend_user).count
   end
@@ -235,6 +242,10 @@ class UserSerializer < BasicUserSerializer
 
   def has_title_badges
     object.badges.where(allow_title: true).count > 0
+  end
+
+  def unread_notification_count
+    Notification.where(user_id: object.id, read: false).count
   end
 
   def include_edit_history_public?

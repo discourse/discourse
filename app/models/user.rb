@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :uploads
+  has_many :warnings
 
   has_one :user_avatar, dependent: :destroy
   has_one :facebook_user_info, dependent: :destroy
@@ -391,6 +392,10 @@ class User < ActiveRecord::Base
 
   def flags_given_count
     PostAction.where(user_id: id, post_action_type_id: PostActionType.flag_types.values).count
+  end
+
+  def warnings_received_count
+    warnings.count
   end
 
   def flags_received_count

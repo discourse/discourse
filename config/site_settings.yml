@@ -438,6 +438,9 @@ files:
   clean_up_uploads: false
   clean_orphan_uploads_grace_period_hours: 1
   purge_deleted_uploads_grace_period_days: 30
+  prevent_anons_from_downloading_files:
+    default: false
+    client: true
   enable_s3_uploads: false
   s3_use_iam_profile: false
   s3_access_key_id: ''

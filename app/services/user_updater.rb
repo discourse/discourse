@@ -71,8 +71,7 @@ class UserUpdater
     end
 
     User.transaction do
-      user_profile.save
-      user.save
+      user_profile.save && user.save
     end
   end
 

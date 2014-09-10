@@ -4,10 +4,10 @@
   {{view 'reply-history' content=replyHistory}}
 </div>
 
-<article class='boxed' {{bind-attr id="postElementId"}} {{bind-attr data-post-id="id"}} data-user-id="{{unbound user_id}}">
+<article class='boxed' {{bind-attr id="postElementId" data-post-id="id" data-user-id="user_id"}}>
   <div class='row'>
     {{#if showUserReplyTab}}
-      <a href='#' {{action toggleReplyHistory this target="view"}} class='reply-to-tab'>
+      <a href {{action toggleReplyHistory this target="view"}} class='reply-to-tab'>
         {{#if loadingReplyHistory}}
           {{i18n loading}}
         {{else}}
@@ -18,15 +18,13 @@
       </a>
     {{/if}}
     <div class='topic-avatar'>
-      {{#unless userDeleted}}
-        <div {{bind-attr class=":contents byTopicCreator:topic-creator"}}>
+      <div class="contents">
+        {{#unless userDeleted}}
           {{poster-avatar action="expandPostUser" post=this classNames="main-avatar"}}
-        </div>
-      {{else}}
-        <div class="contents">
+        {{else}}
           <i class="fa fa-trash-o deleted-user-avatar"></i>
-        </div>
-      {{/unless}}
+        {{/unless}}
+      </div>
       {{#if wiki}}
         <div {{action editPost this}} class="wiki" title="{{i18n post.wiki.about}}"><i class="fa fa-pencil-square-o fa-3x"></i></div>
       {{/if}}
@@ -44,7 +42,7 @@
         {{#if hasHistory}}
           <div class='post-info edits'>
             {{#if can_view_edit_history}}
-              <a href='#' class="{{unbound view.historyHeat}}" {{action showHistory this}} title="{{i18n post.last_edited_on}} {{raw-date updated_at}}">
+              <a href class="{{unbound view.historyHeat}}" {{action showHistory this}} title="{{i18n post.last_edited_on}} {{raw-date updated_at}}">
                 {{editCount}}
                 <i class='fa fa-pencil'></i>
               </a>

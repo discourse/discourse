@@ -2,7 +2,7 @@ class NotificationsController < ApplicationController
 
   before_filter :ensure_logged_in
 
-  def index
+  def recent
     notifications = Notification.recent_report(current_user, 10)
 
     if notifications.present?
@@ -16,4 +16,25 @@ class NotificationsController < ApplicationController
     render_serialized(notifications, NotificationSerializer)
   end
 
+  def history
+    params.permit(:before, :user)
+    params[:before] ||= 1.day.from_now
+
+    user = current_user
+    if params[:user]
+      user = User.find_by_username(params[:user].to_s)
+    end
+
+    unless guardian.can_see_notifications?(user)
+      return render json: {errors: [I18n.t('js.errors.reasons.forbidden')]}, status: 403
+    end
+
+    notifications = Notification.where(user_id: user.id)
+        .includes(:topic)
+        .limit(60)
+        .where('created_at < ?', params[:before])
+        .order(created_at: :desc)
+
+    render_serialized(notifications, NotificationSerializer)
+  end
 end

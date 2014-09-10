@@ -322,7 +322,7 @@ en:
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic's listing."
+      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
       delete_account: "Delete My Account"
@@ -336,6 +336,7 @@ en:
         flagged_posts: "flagged posts"
         deleted_posts: "deleted posts"
         suspensions: "suspensions"
+        warnings_received: "warnings received"
 
       messages:
         all: "All"
@@ -519,6 +520,7 @@ en:
         network: "Please check your connection."
         network_fixed: "Looks like it's back."
         server: "Error code: {{status}}"
+        forbidden: "You're not allowed to view that."
         unknown: "Something went wrong."
       buttons:
         back: "Go Back"
@@ -624,6 +626,7 @@ en:
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
 
     composer:
+      add_warning: "This is an official warning."
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving"
       saved_draft_tip: "saved"
@@ -782,8 +785,7 @@ en:
         educate:
           new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
-          starred: '<p>Your starred topics appear here.</p>
-          <p>To star or unstar a topic, click or tap</p><ul><li>The <i class="fa fa-star"></i> next to the topic title</li><li>The Star button at the bottom of each topic</li>'
+          starred: '<p>Your starred topics appear here.</p><p>To star or unstar a topic, use:</p><ul><li>the <i class="fa fa-star"></i> next to any topic title</li><li>the Star button at the bottom of each topic</li></ul>'
       bottom:
         latest: "There are no more latest topics."
         hot: "There are no more hot topics."
@@ -899,16 +901,16 @@ en:
           "0": 'You are ignoring all notifications on this topic.'
         watching_pm:
           title: "Watching"
-          description: "You will be notified of every new post in this private message. A count of unread and new posts will also appear next to the topic's listing."
+          description: "You will be notified of every new post in this private message. A count of unread and new posts will also appear next to the topic."
         watching:
           title: "Watching"
-          description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic's listing."
+          description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic."
         tracking_pm:
           title: "Tracking"
           description: "A count of unread and new posts will appear next to the private message. You will be notified only if someone mentions your @name or replies to your post."
         tracking:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the topic's listing. You will be notified only if someone mentions your @name or replies to your post. "
+          description: "A count of unread and new posts will appear next to the topic. You will be notified only if someone mentions your @name or replies to your post. "
         regular:
           title: "Regular"
           description: "You will be notified only if someone mentions your @name or replies to your post."
@@ -1067,6 +1069,7 @@ en:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
+        attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
       abandon:
         confirm: "Are you sure you want to abandon your post?"
@@ -1277,10 +1280,10 @@ en:
         reasons:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
+          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic's listing."
+          description: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
           description: "You will be notified only if someone mentions your @name or replies to your post."
@@ -1319,6 +1322,8 @@ en:
         other: "%{count} clicks"
 
     topic_statuses:
+      warning:
+        help: "This is an official warning."
       locked:
         help: "This topic is closed; it no longer accepts new replies"
       archived:
@@ -1494,6 +1499,8 @@ en:
         agree_flag_modal_title: "Agree and..."
         agree_flag_hide_post: "Agree (hide post + send PM)"
         agree_flag_hide_post_title: "Hide this post and automatically send the user a private message urging them to edit it"
+        agree_flag_restore_post: "Agree (restore post)"
+        agree_flag_restore_post_title: "Restore this post"
         agree_flag: "Agree with flag"
         agree_flag_title: "Agree with flag and keep the post unchanged"
         defer_flag: "Defer"
@@ -1530,6 +1537,7 @@ en:
         topic_flagged: "This <strong>topic</strong> has been flagged."
         visit_topic: "Visit the topic to take action"
         was_edited: "Post was edited after the first flag"
+        previous_flags_count: "This post has already been flagged {{count}} times."
 
         summary:
           action_type_3:
@@ -1741,7 +1749,7 @@ en:
             user_placeholder: "username"
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
-            reply_key_placeholder: ""
+            reply_key_placeholder: "reply key"
             skipped_reason_placeholder: "reason"
 
       logs:
@@ -1899,6 +1907,7 @@ en:
         topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
+        warnings_received_count: Warnings Received
         flags_given_received_count: 'Flags Given / Received'
         approve: 'Approve'
         approved_by: "approved by"
@@ -2071,6 +2080,7 @@ en:
         unread: '<b>g</b>, <b>u</b> Unread'
         starred: '<b>g</b>, <b>f</b> Starred'
         categories: '<b>g</b>, <b>c</b> Categories'
+        top: '<b>g</b>, <b>t</b> Top'
       navigation:
         title: 'Navigation'
         jump: '<b>#</b> Go to post number'

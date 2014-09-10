@@ -32,6 +32,11 @@ describe UserProfile do
       expect(user_profile.valid?).to be_true
     end
 
+    it "doesn't support really long bios" do
+      user_profile = Fabricate.build(:user_profile_long)
+      user_profile.should_not be_valid
+    end
+
     describe 'after save' do
       let(:user) { Fabricate(:user) }
 

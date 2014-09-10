@@ -26,7 +26,7 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def include_displayable_topics?
-    return displayable_topics.present?
+    displayable_topics.present?
   end
 
   def description_excerpt

@@ -140,6 +140,16 @@ Discourse.Composer = Discourse.Model.extend({
     return (this.get('titleLength') <= Discourse.SiteSettings.max_topic_title_length);
   }.property('minimumTitleLength', 'titleLength', 'post.static_doc'),
 
+  // The icon for the save button
+  saveIcon: function () {
+    switch (this.get('action')) {
+      case EDIT: return '<i class="fa fa-pencil"></i>';
+      case REPLY: return '<i class="fa fa-reply"></i>';
+      case CREATE_TOPIC: return '<i class="fa fa-plus"></i>';
+      case PRIVATE_MESSAGE: return '<i class="fa fa-envelope"></i>';
+    }
+  }.property('action'),
+
   // The text for the save button
   saveText: function() {
     switch (this.get('action')) {
@@ -494,6 +504,7 @@ Discourse.Composer = Discourse.Model.extend({
       title: this.get('title'),
       category: this.get('categoryId'),
       topic_id: this.get('topic.id'),
+      is_warning: this.get('isWarning'),
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,

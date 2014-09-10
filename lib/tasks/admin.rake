@@ -1,3 +1,32 @@
+
+desc "invite an admin to this discourse instance"
+task "admin:invite", [:email] => [:environment] do |_,args|
+  email = args[:email]
+  if !email || email !~ /@/
+    puts "ERROR: Expecting rake admin:invite[some@email.com]"
+    exit 1
+  end
+
+  unless user = User.find_by_email(email)
+    puts "Creating new account!"
+    user = User.new(email: email)
+    user.password = SecureRandom.hex
+    user.username = UserNameSuggester.suggest(user.email)
+  end
+
+  user.active = true
+  user.save!
+
+  puts "Granting admin!"
+  user.grant_admin!
+  user.change_trust_level!(4)
+  user.email_tokens.update_all  confirmed: true
+
+  puts "Sending forgot password emails!"
+  email_token = user.email_tokens.create(email: user.email)
+  Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
+end
+
 desc "Creates a forum administrator"
 task "admin:create" => :environment do
   require 'highline/import'

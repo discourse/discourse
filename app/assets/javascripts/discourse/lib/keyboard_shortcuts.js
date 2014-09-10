@@ -116,25 +116,19 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   showBuiltinSearch: function() {
-    var routeName = _.map(Discourse.Router.router.currentHandlerInfos, "name").join("_");
-    var blacklist = [
-      /^application_discovery_discovery.categories/
-    ];
+    var currentPath = this.container.lookup('controller:application').get('currentPath'),
+        blacklist = [ /^discovery\.categories/ ],
+        whitelist = [ /^topic\./ ],
+        check = function(regex) { return !!currentPath.match(regex); },
+        showSearch = whitelist.any(check) && !blacklist.any(check);
 
-    var whitelist = [
-      /^application_topic_/
-    ];
+    // If we're viewing a topic, only intercept search if there are cloaked posts
+    if (showSearch && currentPath.match(/^topic\./)) {
+      showSearch = $('.cooked').length < this.container.lookup('controller:topic').get('postStream.stream.length');
 
-    var check = function(regex){return routeName.match(regex);};
-
-    var whitelisted = _.any(whitelist, check);
-    var blacklisted = _.any(blacklist, check);
-
-    if(whitelisted && !blacklisted){
-      return this.showSearch(true);
-    } else {
-      return true;
     }
+
+    return showSearch ? this.showSearch(true) : true;
   },
 
   toggleProgress: function() {

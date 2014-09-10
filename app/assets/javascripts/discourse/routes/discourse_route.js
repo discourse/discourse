@@ -41,6 +41,10 @@ Discourse.Route = Em.Route.extend({
         });
       }
     }
+  },
+
+  isPoppedState: function(transition) {
+    return (!transition._discourse_intercepted) && (!!transition.intent.url);
   }
 
 });

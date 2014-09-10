@@ -18,6 +18,8 @@ export default {
           $currentTarget.data('ember-action') ||
           $currentTarget.data('auto-route') ||
           $currentTarget.data('share-url') ||
+          $currentTarget.data('user-expand') ||
+          $currentTarget.hasClass('mention') ||
           $currentTarget.hasClass('ember-view') ||
           $currentTarget.hasClass('lightbox') ||
           href.indexOf("mailto:") === 0 ||
