@@ -144,7 +144,7 @@ class TopicTrackingState
     LEFT JOIN categories c ON c.id = topics.category_id
     WHERE u.id IN (:user_ids) AND
           topics.archetype <> 'private_message' AND
-          (**COND**) AND
+          ((#{unread}) OR (#{new})) AND
           (topics.visible OR u.admin OR u.moderator) AND
           topics.deleted_at IS NULL AND
           ( category_id IS NULL OR NOT c.read_restricted OR category_id IN (
@@ -163,19 +163,11 @@ SQL
     if topic_id
       sql << " AND topics.id = :topic_id"
     end
-    sql << " ORDER BY topics.bumped_at DESC LIMIT 250"
-
-    sql = wrap(sql.sub("**COND**", new), "A") << " UNION ALL " << wrap(sql.sub("**COND**", unread),"B")
+    sql << " ORDER BY topics.bumped_at DESC LIMIT 500"
 
     SqlBuilder.new(sql)
       .map_exec(TopicTrackingState, user_ids: user_ids, topic_id: topic_id)
 
-  end
-
-  private
-
-  def self.wrap(query, name)
-    "SELECT * FROM (#{query}) #{name}"
   end
 
 end
