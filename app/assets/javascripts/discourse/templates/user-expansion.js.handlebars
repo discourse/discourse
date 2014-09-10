@@ -32,7 +32,15 @@
     </div>
 
     <div class='bottom'>
-      {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}
+      {{#if isSuspended}}
+        <div class='suspended'>
+          <i class='fa fa-ban'></i>
+          <b>{{i18n user.suspended_notice date="user.suspendedTillDate"}}</b><br/>
+          <b>{{i18n user.suspended_reason}}</b> {{user.suspend_reason}}
+        </div>
+      {{else}}
+        {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}
+      {{/if}}
 
       {{#if user.can_send_private_message_to_user}}
         <button class='btn btn-primary' {{action composePrivateMessage user}}><i class='fa fa-envelope'></i>{{i18n user.private_message}}</button>
@@ -47,7 +55,6 @@
       {{#if hasUserFilters}}
         <button class='btn' {{action cancelFilter}}><i class='fa fa-times'></i>{{i18n topic.filters.cancel}}</button>
       {{/if}}
-
     </div>
   {{else}}
     <p class='loading'>{{i18n loading}}</p>

@@ -18,6 +18,8 @@ export default ObjectController.extend({
 
   hasUserFilters: Em.computed.gt('postStream.userFilters.length', 0),
 
+  isSuspended: Em.computed.notEmpty('user.suspend_reason'),
+
   showBadges: Discourse.computed.setting('enable_badges'),
 
   moreBadgesCount: function() {
