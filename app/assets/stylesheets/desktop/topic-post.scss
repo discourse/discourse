@@ -682,6 +682,7 @@ blockquote > *:last-child {
   .title {
     border-left: 5px solid darken(scale-color-diff(), 10%);
     background-color: scale-color-diff();
+    color: scale-color($primary, $lightness: 30%);
     padding: 12px 12px 0 12px;
     /* blockquote is underneath this and has top margin */
     .avatar { margin-right: 7px; }
