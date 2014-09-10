@@ -306,7 +306,6 @@ en:
       invited_by: "Invited By"
       trust_level: "Trust Level"
       notifications: "Notifications"
-      notification_history: "Notification History"
       disable_jump_reply: "Don't jump to your new post after replying"
       dynamic_favicon: "Show incoming message notifications on favicon (experimental)"
       edit_history_public: "Let other users view my post revisions"
