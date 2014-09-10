@@ -206,9 +206,10 @@ Discourse.TopicList.reopenClass({
       if (extras.cached) {
         var cachedList = session.get('topicList');
 
-        // Try to use the cached version
+        // Try to use the cached version if it exists and is greater than the topics per page
         if (cachedList && (cachedList.get('filter') === filter) &&
-                 _.isEqual(cachedList.get('listParams'), filterParams)) {
+            (cachedList.get('topics.length') || 0) > Discourse.SiteSettings.topics_per_page &&
+            _.isEqual(cachedList.get('listParams'), filterParams)) {
           cachedList.set('loaded', true);
 
           if (tracking) {
