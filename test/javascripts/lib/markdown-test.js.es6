@@ -379,6 +379,14 @@ test("Code Blocks", function() {
   cooked("```\nline1\n```\n```\nline2\n\nline3\n```",
          "<p><pre><code class=\"lang-auto\">line1</code></pre></p>\n\n<p><pre><code class=\"lang-auto\">line2\n\nline3</code></pre></p>",
          "it does not consume next block's trailing newlines");
+
+  cooked("    <pre>test</pre>",
+         "<pre><code>&lt;pre&gt;test&lt;/pre&gt;</code></pre>",
+         "it does not parse other block types in markdown code blocks");
+
+  cooked("    [quote]test[/quote]",
+         "<pre><code>[quote]test[/quote]</code></pre>",
+         "it does not parse other block types in markdown code blocks");
 });
 
 test("sanitize", function() {
