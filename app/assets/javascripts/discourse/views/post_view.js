@@ -8,7 +8,8 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
                       'post.hidden:post-hidden',
                       'post.deleted',
                       'byTopicCreator:topic-creator',
-                      'groupNameClass'],
+                      'groupNameClass',
+                      'post.wiki:wiki'],
   postBinding: 'content',
 
   historyHeat: function() {
