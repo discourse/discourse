@@ -28,6 +28,9 @@ ru:
       long_with_year_no_time: "D MMM, YYYY"
       long_date_with_year: "D MMM YY, LT"
       long_date_without_year: "D MMM, LT"
+      long_date_with_year_without_time: "D MMM YYYY"
+      long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM YYYY <br/>LT"
       tiny:
         half_a_minute: "< 1мин"
         less_than_x_seconds:
@@ -66,6 +69,7 @@ ru:
           one: "1г"
           few: "%{count}г"
           other: "%{count}л"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -80,6 +84,7 @@ ru:
           one: "1 день"
           few: "%{count} дня"
           other: "%{count} дней"
+        date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
           one: "1 минуту назад"
@@ -200,6 +205,7 @@ ru:
     disable: "Отключить"
     undo: "Отменить"
     revert: "Вернуть"
+    failed: "Проблема"
     banner:
       close: "Больше не показывать это объявление."
     choose_topic:
@@ -384,6 +390,7 @@ ru:
         prefilled: "Адрес электронной почты совпадает с зарегистрированным псевдонимом."
       locale:
         title: "Язык интерфейса"
+        instructions: "Язык сайта. Необходимо перезагрузить страницу, чтобы изменения вступили в силу."
         default: "(по умолчанию)"
       password_confirmation:
         title: "Пароль еще раз"
@@ -555,6 +562,7 @@ ru:
       awaiting_approval: "Ваша учетная запись еще не одобрена. Вы получите письмо, когда это случится."
       requires_invite: "К сожалению, доступ к форуму только по приглашениям."
       not_activated: "Прежде чем вы сможете воспользоваться новой учетной записью, вам необходимо ее активировать. Мы отправили вам на почту <b>{{sentTo}}</b> подробные инструкции, как это cделать."
+      not_allowed_from_ip_address: "Нельзя входить с этого IP адреса."
       resend_activation_email: "Щелкните здесь, чтобы мы повторно выслали вам письмо для активации учетной записи."
       sent_activation_email_again: "По адресу <b>{{currentEmail}}</b> повторно отправлено письмо с кодом активации. Доставка сообщения может занять несколько минут. Имейте в виду, что иногда по ошибке письмо может попасть в папку Спам."
       google:
@@ -676,6 +684,7 @@ ru:
       title: "поиск по темам, сообщениям, пользователям или разделам"
       no_results: "Ничего не найдено."
       searching: "Поиск ..."
+      post_format: "#{{post_number}} от {{username}}"
       context:
         user: "Искать сообщения от @{{username}}"
         category: "Искать в разделе \"{{category}}\""
@@ -708,7 +717,6 @@ ru:
           few: "Вы выбрали <b>{{count}}</b> темы."
           other: "Вы выбрали <b>{{count}}</b> тем."
       none:
-        starred: "Вы еще не добавили ни одной темы в избранное. Чтобы тема попала в избранное, нажмите на звездочку рядом с названием темы."
         unread: "У вас нет непрочитанных тем."
         new: "У вас нет новых тем."
         read: "Вы еще не прочитали ни одной темы."
@@ -1136,9 +1144,6 @@ ru:
           side_by_side:
             title: "Отобразить сообщение с построчными изменениями"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "Отобразить вывод с построчными изменениями и разметкой"
-            button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "Изменено"
     category:
@@ -1332,6 +1337,7 @@ ru:
         this_week: "За неделю"
         today: "Сегодня"
         other_periods: "смотреть больше обсуждаемых сообщений"
+    browser_update: 'К сожалению, ваш браузер устарел и не поддерживается этим сайтом. Пожалуйста, <a href="http://browsehappy.com">обновите браузер</a> (пройдите по ссылке, чтобы получить больше информации).'
     permission_types:
       full: "Создавать / Отвечать / Просматривать"
       create_post: "Отвечать / Просматривать"
@@ -1469,6 +1475,7 @@ ru:
         confirm_revoke: "Вы уверены, что хотите отозвать этот ключ?"
         info_html: "Ваш API ключ позволит вам создавать и обновлять темы, используя JSON calls."
         all_users: "Все пользователи"
+        note_html: "Никому <strong>не сообщайте</strong> этот ключ. Тот, у кого он есть, сможет создавать сообщения, выдавая себя за любого пользователя форума."
       backups:
         title: "Резервные копии"
         menu:
@@ -1687,6 +1694,7 @@ ru:
           actions:
             block: "Заблокировать"
             do_nothing: "Разрешить"
+            allow_admin: "Разрешить админов"
           form:
             label: "Новые:"
             ip_address: "IP адрес"
@@ -1722,8 +1730,9 @@ ru:
           pending: 'Пользователи, ожидающие одобрения'
           newuser: 'Пользователи с уровнем доверия 0 (Новые пользователи)'
           basic: 'Пользователи с уровнем доверия 1 (Базовые пользователи)'
-          regular: 'Пользователи с уровнем доверия 2 (Постоянные пользователи)'
-          elder: 'Пользователи с уровнем доверия 4 (Опытные пользователи)'
+          regular: 'Пользователи с уровнем доверия 2 (активные)'
+          leader: 'Пользователи с уровнем доверия 3 (лидеры сообщества)'
+          elder: 'Пользователи с уровнем доверия 4 (старейшина)'
           admins: 'Администраторы'
           moderators: 'Модераторы'
           blocked: 'Заблокированные пользователи'
@@ -1918,6 +1927,22 @@ ru:
           post_revision: "Когда пользователь редактирует или создает сообщение"
           trust_level_change: "Когда пользователь меняет уровень доверия"
           user_change: "Когда создается или редактируется пользователь"
+        preview:
+          link_text: "Предварительный просмотр выданных наград"
+          modal_title: "Предосмотр запроса награды"
+          error_help: "См. следующую ссылку с информацией по запросам для наград."
+          bad_count_warning:
+            header: "ВНИМАНИЕ!"
+          grant_count:
+            zero: "Нет наград для выдачи."
+            one: "<b>1</b> награда для выдачи."
+            other: "<b>%{count}</b> наград на выдачу."
+          sample: "Пример:"
+          grant:
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> за сообщение в %{link}
+            with_post_time: <span class="username">%{username}</span> за сообщение в %{link} в <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> в <span class="time">%{time}</span>
     lightbox:
       download: "загрузить"
     keyboard_shortcuts_help:
@@ -1936,6 +1961,7 @@ ru:
         back: '<b>u</b> Назад'
         up_down: '<b>k</b>/<b>j</b> Переместить выделение вверх/вниз'
         open: '<b>o</b> или <b>Enter</b> Открыть выбранную тему'
+        next_prev: '<b>shift j</b>/<b>shift k</b> Следующая/предыдущая секция'
       application:
         title: 'Приложение'
         create: '<b>c</b> Создать новую тему'
@@ -1949,6 +1975,7 @@ ru:
         star: '<b>f</b> Отметить тему'
         share_topic: '<b>shift s</b> Поделиться темой'
         share_post: '<b>s</b> Поделиться сообщением'
+        reply_as_new_topic: '<b>t</b> Ответить в новой теме'
         reply_topic: '<b>shift r</b> Ответить на тему'
         reply_post: '<b>r</b> Ответить на сообщение'
         quote_post: '<b>q</b> Цитировать сообщение'
@@ -1997,15 +2024,10 @@ ru:
         basic_user:
           name: Базовый
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Предоставлены</a> все основные функции сообщества
-        regular_user:
-          name: Постоянный
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Предоставлены</a> приглашения
+        member:
+          name: Участник
         leader:
           name: Лидер
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Разрешены</a> изменение разделов, переименование, отслеживаемые ссылки и лаунж
-        elder:
-          name: Опытный
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Предоставлены</a> глобальное редактирование, прикрепление, закрытие, архивирование, разделение и объединение
         welcome:
           name: Приветсвуемый
           description: Получил отметку "Мне нравится"

@@ -19,6 +19,16 @@ ja:
             mb: MB
             tb: TB
     dates:
+      time: "h:mm a"
+      long_no_year: "MMM D h:mm a"
+      long_no_year_no_time: "MMM D"
+      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year_no_time: "MMM D, YYYY"
+      long_date_with_year: "MMM D, 'YY LT"
+      long_date_without_year: "MMM D, LT"
+      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       tiny:
         half_a_minute: "< 1分"
         less_than_x_seconds:
@@ -39,6 +49,7 @@ ja:
           other: "> %{count} 年"
         almost_x_years:
           other: "%{count} 年"
+        date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -47,6 +58,7 @@ ja:
           other: "%{count} 時間"
         x_days:
           other: "%{count} 日"
+        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分前"
@@ -145,6 +157,7 @@ ja:
     disable: "無効する"
     undo: "取り消す"
     revert: "戻す"
+    failed: "失敗"
     banner:
       close: "バナーを閉じる"
     choose_topic:
@@ -245,6 +258,7 @@ ja:
       admin_tooltip: "このユーザは管理者であり"
       suspended_notice: "このユーザは {{date}} までサスペンド状態です。"
       suspended_reason: "理由: "
+      mailing_list_mode: "フォーラムに投稿がされる度にメールで通知を受け取る(ミュートしているトピックやカテゴリ以外)"
       watched_categories: "参加中"
       watched_categories_instructions: "このカテゴリに新しく投稿されたトピックを自動的に参加します。このカテゴリに対して新しい投稿があった場合、登録されたメールアドレスと、コミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
       tracked_categories: "トラック中"
@@ -298,14 +312,14 @@ ja:
         title: "プロフィール背景"
       email:
         title: "メールアドレス"
-        instructions: "公開されなくなります。"
+        instructions: "Eメールアドレスは公開されません。"
         ok: "メールアドレス OK。確認用のメールを送ります。"
         invalid: "正しいメールアドレスを入力してください。"
         authenticated: "あたなのメールは {{provider}} により認証されました。"
         frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
       name:
         title: "名前"
-        instructions: "フルネーム"
+        instructions: "名前"
         too_short: "名前が短すぎます。"
         ok: "名前 OK。"
       username:
@@ -323,6 +337,7 @@ ja:
         prefilled: "この登録ユーザが使用するメールアドレスが見つかりました。"
       locale:
         title: "表示言語"
+        instructions: "ユーザインタフェイス表示言語。ページを更新する際には、表示言語を更新されます。"
         default: "既定"
       password_confirmation:
         title: "もう一度パスワードを入力してください。"
@@ -539,6 +554,7 @@ ja:
       view_new_post: "新規ポストを見る。"
       saving: "保存中..."
       saved: "保存完了!"
+      saved_draft: "編集中の投稿があります。こちらをクリックすると編集を再開します。"
       uploading: "アップロード中..."
       show_preview: 'プレビューを表示する &raquo;'
       hide_preview: '&laquo; プレビューを隠す'
@@ -588,6 +604,7 @@ ja:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p> {{description}}バッジを付けられました</p>"
     upload_selector:
       title: "画像のアップロード"
       title_with_attachments: "画像/ファイルをアップロード"
@@ -605,6 +622,7 @@ ja:
       title: "トピック、ポスト、ユーザ、カテゴリを探す"
       no_results: "何も見つかりませんでした。"
       searching: "検索中..."
+      post_format: "#{{post_number}}  {{username}}から"
       context:
         user: "@{{username}}のポストを検索"
         category: "\"{{category}}\" カテゴリで検索する"
@@ -635,7 +653,6 @@ ja:
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
       none:
-        starred: "まだどのトピックもお気に入りにしていません。トピックをお気に入りリストに追加するには、タイトルの横にある☆をクリックしてください。"
         unread: "未読トピックはありません。"
         new: "新着トピックはありません。"
         read: "またトピックを一つも読んでいません。"
@@ -644,6 +661,10 @@ ja:
         hot: "ホットなトピックはありません。"
         category: "{{category}} トピックはありません。"
         top: "トップトピック無し"
+        educate:
+          new: '<p>過去2日間に投稿されたトピックは新規と見なす。</p>
+
+            <p><a href="%{userPrefsUrl}">設定パネル</a>で変更できます。</p>'
       bottom:
         latest: "最新のトピックは以上です。"
         hot: "ホットなトピックは以上です。"
@@ -876,6 +897,8 @@ ja:
         confirm: "編集中のポストを破棄してもよろしいですか?"
         no_value: "いいえ"
         yes_value: "はい"
+      wiki:
+        about: "この投稿は「Wiki」である。ベーシックユーザが編集できます。"
       archetypes:
         save: '保存オプション'
       controls:
@@ -884,6 +907,7 @@ ja:
         has_liked: "この投稿に「いいね！」しました。"
         undo_like: "「いいね！」を取り消す"
         edit: "このポストを編集"
+        edit_anonymous: "ポストを編集するには、サインインする必要があります"
         flag: "このポストにフラグをつける、または通知を送る"
         delete: "このポストを削除する"
         undelete: "このポストを元に戻す"
@@ -989,9 +1013,6 @@ ja:
           side_by_side:
             title: "差分を横に並べて表示"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "Markdown ソースの差分を横に並べて表示"
-            button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "編集者"
     category:
@@ -1109,6 +1130,8 @@ ja:
     changed_by: "by {{author}}"
     categories_list: "カテゴリ一覧"
     filters:
+      with_topics: "%{filter} トピック"
+      with_category: "%{filter} %{category} トピック"
       latest:
         title: "最新"
         help: "最新のトピック"
@@ -1155,6 +1178,7 @@ ja:
         help: "{{categoryName}} カテゴリの最新トピック"
       top:
         title: "トップ"
+        help: "過去年間、月間、週間及び日間のアクティブトピック"
         yearly:
           title: "年間トップ"
         monthly:
@@ -1168,6 +1192,7 @@ ja:
         this_week: "今週"
         today: "本日"
         other_periods: "トップとピックをもっと見る"
+    browser_update: '<a href="http://www.discourse.org/faq/#browser">ここで動作するにはブラウザのバージョンが古すぎます。</a> 。 <a href="http://browsehappy.com">ここでブラウザアップグレード</a>.'
     permission_types:
       full: "作成できる / 回答できる / 閲覧できる"
       create_post: "回答できる / 閲覧できる"
@@ -1219,6 +1244,8 @@ ja:
         old: "古いフラグ"
         active: "アクティブなフラグ"
         agree: "賛成"
+        agree_flag: "フラッグに賛成する"
+        defer_flag: "Defer"
         delete: "削除する"
         delete_post_defer_flag_title: "投稿を削除する。もしこの最初の投稿を削除すると、トピックも削除されます。"
         delete_post_agree_flag_title: "投稿を削除する。もしこの最初の投稿を削除すると、トピックも削除されます。"
@@ -1327,6 +1354,12 @@ ja:
             text: "ロールバック"
             title: "データベースを元の作業状態にロールバックする"
             confirm: "本当にデータベースを元の作業状態にロールバックしますか？"
+      export_csv:
+        users:
+          text: "ユーザ情報を出力する"
+          title: "ユーザ情報をCSVファイルに出力する"
+        success: "出力作業が始まりました。"
+        failed: "出力失敗。詳しくはログに参考してください。"
       customize:
         title: "カスタマイズ"
         long_title: "サイトのカスタマイズ"
@@ -1394,6 +1427,7 @@ ja:
         email_type: "メールタイプ"
         to_address: "送信先アドレス"
         test_email_address: "テスト用メールアドレス"
+        send_test: "テストメールを送る"
         sent_test: "送信完了!"
         delivery_method: "送信方法"
         preview_digest: "ダイジェストのプレビュー"
@@ -1410,6 +1444,7 @@ ja:
           filters:
             title: "フィルター"
             user_placeholder: "ユーザ名"
+            address_placeholder: "name@example.com"
             type_placeholder: "ダイジェスト、サインアップ..."
             skipped_reason_placeholder: "理由"
       logs:
@@ -1474,6 +1509,8 @@ ja:
             label: "新規:"
             ip_address: "IPアドレス"
             add: "追加"
+        logster:
+          title: "エラーログ"
       users:
         title: 'ユーザ'
         create: '管理者を追加'
@@ -1499,8 +1536,6 @@ ja:
           pending: '保留中のユーザ'
           newuser: 'トラストレベル0のユーザ (新規ユーザ)'
           basic: 'トラストレベル1のユーザ (ベーシックユーザ)'
-          regular: 'トラストレベル2のユーザ (レギュラーユーザ)'
-          elder: 'トラストレベル4のユーザ (マスター)'
           admins: '管理者ユーザ'
           moderators: 'モデレータ'
           blocked: 'ブロック中のユーザ'
@@ -1562,6 +1597,9 @@ ja:
           other: "全ての投稿を削除できませんでした。%{count}日以上が経過した投稿があります。（設定：delete_user_max_post_age）"
         cant_delete_all_too_many_posts:
           other: "全てのポストを削除できませんでした。ユーザは%{count} つ以上のポストを投稿しています。(delete_all_posts_max)"
+        delete_confirm: "本当にこのユーザを削除しますか？"
+        delete_and_block: " 削除する。このメールとIPアドレスからのサインアップを以後<b>ブロック</b>"
+        delete_dont_block: "削除する"
         deleted: "ユーザが削除されました。"
         delete_failed: "ユーザ削除中にエラーが発生しました。このユーザの全てのポストを削除したことを確認してください。"
         send_activation_email: "アクティベーションメールを送信"
@@ -1589,13 +1627,21 @@ ja:
           days: "日"
           topics_replied_to: "回答したトピック"
           topics_viewed: "閲覧したトピック数"
+          topics_viewed_all_time: "閲覧したトピック"
           posts_read: "閲覧したポスト数"
           posts_read_all_time: "閲覧したポスト数"
           flagged_posts: "フラグ付きのポスト"
           flagged_by_users: "フラグを立ったユーザ"
+          likes_given: "与えた「いいね！」"
+          likes_received: "もらった「いいね！」"
           qualifies: "トラストレベル3の条件を満たしています。"
           will_be_promoted: "24時間内プロモートする予定"
           does_not_qualify: "トラストレベル3の条件を満たしていません。"
+        sso:
+          external_username: "ユーザ名"
+          external_name: "名前"
+          external_email: "メール"
+          external_avatar_url: "アバターURL"
       site_content:
         none: "編集するコンテンツのタイプを選択してください。"
         title: 'コンテンツ'
@@ -1636,6 +1682,7 @@ ja:
         display_name: バッジの表示名
         description: バッジの説明
         badge_type: バッジの種類
+        badge_grouping: グループ
         granted_by: バッジ付与者
         save: バッジを保存する
         delete: バッジを削除する
@@ -1650,9 +1697,14 @@ ja:
         no_badges: 付けられるバッジがありません
         allow_title: バッジは、タイトルとして使用されることを許可する
         multiple_grant: 複数回付与することができます
+        enabled: バッジシステムを使う
         icon: アイコン
         trigger_type:
           none: "毎日更新する"
+        preview:
+          sample: "サンプル："
+          grant:
+            with: <span class="username">%{username}</span>
     lightbox:
       download: "ダウンロード"
     keyboard_shortcuts_help:
@@ -1698,12 +1750,8 @@ ja:
           name: 編集者
         basic_user:
           name: 基礎設定
-        regular_user:
-          name: 通常
         leader:
           name: リーダー
-        elder:
-          name: エルダー
         welcome:
           name: ようこそ
           description: 「いいね！」を受けました
