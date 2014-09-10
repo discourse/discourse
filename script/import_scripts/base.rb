@@ -322,6 +322,12 @@ class ImportScripts::Base
   def create_categories(results)
     results.each do |c|
       params = yield(c)
+
+      # Basic massaging on the category name
+      params[:name] = "Blank" if params[:name].blank?
+      params[:name].strip!
+      params[:name] = params[:name][0..49]
+
       puts "\t#{params[:name]}"
 
       # make sure categories don't go more than 2 levels deep
