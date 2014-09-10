@@ -28,7 +28,7 @@ class ImportScripts::Drupal < ImportScripts::Base
     #   * Table name may be term_data.
     #   * May need to select a vid other than 1.
     create_categories(@client.query("SELECT tid, name, description FROM taxonomy_term_data WHERE vid = 1;")) do |c|
-      {id: c['tid'], name: c['name'].try(:strip), description: c['description']}
+      {id: c['tid'], name: c['name'], description: c['description']}
     end
 
     # "Nodes" in Drupal are divided into types. Here we import two types,
@@ -185,4 +185,6 @@ class ImportScripts::Drupal < ImportScripts::Base
 
 end
 
-ImportScripts::Drupal.new.perform
+if __FILE__==$0
+  ImportScripts::Drupal.new.perform
+end
