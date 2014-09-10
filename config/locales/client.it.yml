@@ -27,6 +27,9 @@ it:
       long_with_year_no_time: "D MMM YYYY"
       long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
+      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -56,6 +59,7 @@ it:
         almost_x_years:
           one: "1a"
           other: "%{count}a"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -67,6 +71,7 @@ it:
         x_days:
           one: "1 giorno"
           other: "%{count} giorni"
+        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "1 minuto fa"
@@ -84,7 +89,7 @@ it:
       twitter: 'Condividi questo link su Twitter'
       facebook: 'Condividi questo link su Facebook'
       google+: 'Condividi questo link su Google+'
-      email: 'Invia questo link via email'
+      email: 'invia questo collegamento via email'
     edit: 'modifica titolo e categoria del topic'
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
@@ -176,6 +181,7 @@ it:
     disable: "Disattiva"
     undo: "Annulla"
     revert: "Ripristina"
+    failed: "Fallito"
     banner:
       close: "Nascondi questo banner."
     choose_topic:
@@ -279,6 +285,7 @@ it:
       admin_tooltip: "Questo utente è un amministratore"
       suspended_notice: "Questo utente è sospeso fino al {{date}}."
       suspended_reason: "Motivo: "
+      mailing_list_mode: "Ricevi una email per ogni nuovo messaggio (a meno che tu non ignori l'argomento o la categoria)"
       watched_categories: "Osservata/e"
       watched_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti. Inoltre, accanto all'elenco degli argomenti apparirà il conteggio dei messaggi non letti e di quelli nuovi."
       tracked_categories: "Seguita/e"
@@ -339,7 +346,7 @@ it:
         frequency: "Ti invieremo mail solo se è un po' che non ti si vede; le email riguarderanno solo le conversazioni che non hai letto."
       name:
         title: "Nome"
-        instructions: "Versione completa del tuo nome."
+        instructions: "Nome completo."
         too_short: "Il nome è troppo breve."
         ok: "Il nome è adeguato."
       username:
@@ -357,6 +364,7 @@ it:
         prefilled: "L'email corrisponde allo username registrato."
       locale:
         title: "Lingua dell'interfaccia"
+        instructions: "Lingua dell'interfaccia utente. Cambierà quando aggiornerai la pagina."
         default: "(default)"
       password_confirmation:
         title: "Ripeti la password"
@@ -375,6 +383,7 @@ it:
         bi_weekly: "ogni due settimane"
       email_direct: "Ricevi un'email quando qualcuno ti cita, risponde ad un tuo messaggio, o menziona il tuo @nome"
       email_private_messages: "Ricevi un'email quando qualcuno ti invia un messaggio privato "
+      email_always: "Non sospendere le notifiche via email anche quando sono attivo sul sito"
       other_settings: "Altro"
       categories_settings: "Categorie"
       new_topic_duration:
@@ -464,6 +473,7 @@ it:
     read_only_mode:
       enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
+    too_few_topics_notice: "Crea almeno 5 argomenti pubblici e %{posts} messaggi pubblici per iniziare la discussione. I nuovi utenti non possono guadagnare livelli di esperienza a meno che non abbiano contenuti da leggere. Questo messaggio appare solo per lo staff."
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'argomenti creati negli ultimi 365 giorni'
@@ -478,6 +488,7 @@ it:
     last_post: Ultimo messaggio
     last_post_lowercase: ultimo messaggio
     summary:
+      enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description: "Ci sono <b>{{count}}</b> risposte."
       description_time: "Ci sono <b>{{count}}</b> risposte con un tempo stimato di lettura di  <b>{{readingTime}} minuti</b>."
       enable: 'Riassumi Questo Argomento'
@@ -524,6 +535,7 @@ it:
       awaiting_approval: "Il tuo account non è stato ancora approvato da un membro dello staff. Ti invieremo un'email non appena verrà approvato."
       requires_invite: "Spiacenti, l'accesso a questo forum e solo ad invito."
       not_activated: "Non puoi ancora effettuare l'accesso. Abbiamo inviato un'email di attivazione a <b>{{sentTo}}</b>. Per favore segui le istruzioni contenute nell'email per attivare l'account."
+      not_allowed_from_ip_address: "Non puoi collegarti con questo indirizzo IP."
       resend_activation_email: "Clicca qui per inviare nuovamente l'email di attivazione."
       sent_activation_email_again: "Ti abbiamo mandato un'altra email di attivazione su <b>{{currentEmail}}</b>. Potrebbero essere necessari alcuni minuti di attesa; assicurati di controllare anche la cartella dello spam."
       google:
@@ -645,6 +657,7 @@ it:
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       searching: "Ricerca in corso..."
+      post_format: "#{{post_number}} da {{username}}"
       context:
         user: "Cerca messaggi di @{{username}}"
         category: "Cerca nella categoria \"{{category}}\""
@@ -676,7 +689,7 @@ it:
           one: "Hai selezionato <b>1</b> topic."
           other: "Hai selezionato <b>{{count}}</b> argomenti."
       none:
-        starred: "Ancora non hai inserito nessun argomento nei preferiti. Per aggiungerne uno, clicca sulla stella vicino al titolo."
+        starred: "Non hai argomenti preferiti."
         unread: "Non ci sono argomenti non letti."
         new: "Non ci sono nuovi argomenti."
         read: "Non hai ancora letto nessun argomento."
@@ -688,6 +701,7 @@ it:
         educate:
           new: '<p>Per default, gli argomenti creati negli ultimi 2 giorni sono considerati nuovi. Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">opzioni</a>.</p>'
           unread: '<p>Per default, gli indicatori di argomento non-letto appariranno solo se hai:</p><ul><li>Creato</li><li>Risposto</li><li>Letto per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l''argomento come Seguito o Osservato nel pannello di notifica in fondo ad ogni argomento.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">opzioni</a>.</p>'
+          starred: '<p>I tuoi argomenti preferiti appariranno qui.</p> <p>Per aggiungere o togliere un argomento dai preferiti, clicca sulla <i class="fa fa-star"></i> quando la vedi &hellip;</p><ul><li>Accanto al titolo in cima ad ogni argomento</li><li>Nel bottone <kbd>Star</kbd> in fondo all''argomento</li><li>Alla sinistra di ogni argomento nell''elenco argomenti</li>'
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         hot: "Non ci sono altri argomenti caldi."
@@ -936,6 +950,7 @@ it:
         confirm: "Sicuro di voler abbandonare il tuo messaggio?"
         no_value: "No, mantienilo"
         yes_value: "Si, abbandona"
+      via_email: "questo messaggio è arrivato via email"
       wiki:
         about: "questo messaggio è una guida; gli utenti normali possono modificarla"
       archetypes:
@@ -1074,8 +1089,8 @@ it:
             title: "Mostra le differenze del risultato fianco a fianco"
             button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
-            title: "Mostra le differenze di markdown fianco a fianco"
-            button: '<i class="fa fa-columns"></i> Markdown'
+            title: "Mostra le differenze nei sorgenti fianco-a-fianco"
+            button: '<i class="fa fa-columns"></i> Raw'
         details:
           edited_by: "Modificato da"
     category:
@@ -1173,7 +1188,7 @@ it:
         help: "Questo argomento è spuntato; verrà mostrato con l'ordinamento di default"
       pinned_globally:
         title: "In Evidenza Globalmente"
-        help: "Questo topic è in evidenza globalmente; verrà mostrato in cima ad ogni lista"
+        help: "Questo argomento è in evidenza globalmente; verrà mostrato in cima ad ogni lista"
       pinned:
         title: "In Evidenza"
         help: "Questo argomento è in evidenza; verrà mostrato in cima alla sua categoria"
@@ -1268,6 +1283,7 @@ it:
         this_week: "Questa settimana"
         today: "Oggi"
         other_periods: "vedi altri argomenti di punta"
+    browser_update: 'Purtroppo <a href="http://www.discourse.org/faq/#browser">il tuo browser è troppo vecchio per funzionare su questo forum</a>. Per favore <a href="http://browsehappy.com">aggiorna il browser</a>.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -1400,6 +1416,7 @@ it:
         confirm_revoke: "Sei sicuro di revocare la chiave?"
         info_html: "La tua chiave API ti permetterà di creare e aggiornare gli argomenti usando chiamate JSON."
         all_users: "Tutti gli Utenti"
+        note_html: "Mantieni <strong>segreta</strong> questa chiave, tutti gli utenti che la possiedono possono creare messaggi per conto di altri."
       backups:
         title: "Backup"
         menu:
@@ -1624,6 +1641,9 @@ it:
             add: "Aggiungi"
         logster:
           title: "Log Errori"
+      impersonate:
+        title: "Impersona"
+        help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai scollegarti."
       users:
         title: 'Utenti'
         create: 'Aggiungi Utente Amministratore'
@@ -1651,8 +1671,9 @@ it:
           pending: 'Revisione degli utenti in sospeso'
           newuser: 'Utenti con Livello Attendibilità 0 (Nuovo Utente)'
           basic: 'Utenti con Livello Attendibilità 1 (Utente Base)'
-          regular: 'Utenti con Livello Attendibilità 2 (Utente Abituale)'
-          elder: 'Utenti con Livello Attendibilità 4 (Veterano)'
+          regular: 'Utenti al Livello Esperienza 2 (Base)'
+          leader: 'Utenti al Livello Esperienza 3 (Assiduo)'
+          elder: 'Utenti al Livello Esperienza 4 (Esperto)'
           admins: 'Utenti Amministratori'
           moderators: 'Moderatori'
           blocked: 'Utenti Bloccati'
@@ -1663,6 +1684,7 @@ it:
         reject_failures:
           one: "Impossibile rifiutare 1 utente"
           other: "Impossibile rifiutare %{count} utenti."
+        not_verified: "Non verificato"
       user:
         suspend_failed: "Si è verificato un errore sospendendo questo utente {{error}}"
         unsuspend_failed: "Si è verificato un errore riabilitando questo utente {{error}}"
@@ -1842,6 +1864,23 @@ it:
           post_revision: "Quando un utente modifica o crea un messaggio"
           trust_level_change: "Quando un utente cambia livello di attendibilità"
           user_change: "Quando un utente viene modificato o creato"
+        preview:
+          link_text: "Anteprima targhette guadagnate"
+          modal_title: "Anteprima Query Targhetta"
+          sql_error_header: "Si è verificato un errore con la query."
+          error_help: "Visita i seguenti collegamenti per un aiuto con le query delle targhette."
+          bad_count_warning:
+            header: "ATTENZIONE!"
+          grant_count:
+            zero: "Nessuna targhetta da assegnare."
+            one: "<b>1</b> targhetta da assegnare."
+            other: "<b>%{count}</b> targhette da assegnare."
+          sample: "Esempio:"
+          grant:
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> per messaggio in %{link}
+            with_post_time: <span class="username">%{username}</span> per messaggio in %{link} in data <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> in data <span class="time">%{time}</span>
     lightbox:
       download: "scaricamento"
     keyboard_shortcuts_help:
@@ -1860,19 +1899,24 @@ it:
         back: '<b>u</b> Indietro'
         up_down: '<b>k</b>/<b>j</b> Sposta la selezione su/giù'
         open: '<b>o</b> o <b>Invio</b> Apre l''argomento selezionato'
+        next_prev: '<b>shift j</b>/<b>shift k</b> Prossima/precedente sezione'
       application:
         title: 'Applicazione'
         create: '<b>c</b> Crea un nuovo argomento'
         notifications: '<b>n</b> Apre le notifiche'
         site_map_menu: '<b>=</b> Apri il menu: mappa del sito'
         user_profile_menu: '<b>p</b> Apre il menu del profilo utente'
+        show_incoming_updated_topics: '<b>.</b> Mostra argomenti nuovi/aggiornati'
         search: '<b>/</b> Cerca'
         help: '<b>?</b> Apre l''aiuto per le scorciatoie da tastiera'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
+        dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
       actions:
         title: 'Azioni'
         star: '<b>f</b> Metti l''argomento nei preferiti'
         share_topic: '<b>shift s</b> Condividi argomento'
         share_post: '<b>s</b> Condividi messaggio'
+        reply_as_new_topic: '<b>t</b> Rispondi come nuovo argomento'
         reply_topic: '<b>shift r</b> Rispondi all''argomento'
         reply_post: '<b>r</b> Rispondi al messaggio'
         quote_post: '<b>q</b> Cita messaggio'
@@ -1918,15 +1962,14 @@ it:
         basic_user:
           name: Base
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Assegnate</a> tutte le funzioni essenziali della comunità
-        regular_user:
-          name: Normale
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Assegnata</a> inviti
+        member:
+          name: Membro
+        regular:
+          name: Assiduo
+          description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concessi</a> i permessi di: ricategorizzare, rinominare, collegamenti seguiti e Lounge'
         leader:
           name: Leader
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Assegnata</a> ricategorizza, rinomina, collegamenti seguiti e lounge
-        elder:
-          name: Veterano
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Assegnata</a> capacità globale di modifica, evidenzare, chiudere, archiviare, dividere e unire
+          description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concessi</a> i permessi di: modifica globale, evidenziare, chiudere, archiviare, separare e fondere'
         welcome:
           name: Benvenuto
           description: Ricevuto un "Mi piace"
