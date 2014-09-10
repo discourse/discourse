@@ -275,8 +275,24 @@ export default Discourse.View.extend({
 
   renderAdminPopup: function(post, buffer) {
     if (!Discourse.User.currentProp('canManageTopic')) { return; }
-    var wikiText = post.get('wiki') ? I18n.t('post.controls.unwiki') : I18n.t('post.controls.wiki');
-    buffer.push('<div class="post-admin-menu"><h3>' + I18n.t('admin_title') + '</h3><ul><li class="btn btn-admin" data-action="toggleWiki"><i class="fa fa-pencil-square-o"></i>' + wikiText +'</li></ul></div>');
+
+    var isWiki = post.get('wiki'),
+        wikiIcon = '<i class="fa fa-pencil-square-o"></i>',
+        wikiText = isWiki ? I18n.t('post.controls.unwiki') : I18n.t('post.controls.wiki');
+
+    var isModerator = post.get('post_type') === Discourse.Site.currentProp('post_types.moderator_action'),
+        postTypeIcon = '<i class="fa fa-shield"></i>',
+        postTypeText = isModerator ? I18n.t('post.controls.revert_to_regular') : I18n.t('post.controls.convert_to_moderator');
+
+    var html = '<div class="post-admin-menu">' +
+                 '<h3>' + I18n.t('admin_title') + '</h3>' +
+                 '<ul>' +
+                   '<li class="btn btn-admin" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
+                   '<li class="btn btn-admin" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' +
+                 '</ul>' +
+               '</div>';
+
+    buffer.push(html);
   },
 
   clickAdmin: function() {
@@ -287,6 +303,10 @@ export default Discourse.View.extend({
 
   clickToggleWiki: function() {
     this.get('controller').send('toggleWiki', this.get('post'));
+  },
+
+  clickTogglePostType: function () {
+    this.get("controller").send("togglePostType", this.get("post"));
   },
 
   buttonForShowMoreActions: function() {

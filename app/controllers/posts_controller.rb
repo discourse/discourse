@@ -241,6 +241,17 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def post_type
+    guardian.ensure_can_change_post_type!
+
+    post = find_post_from_params
+    post.post_type = params[:post_type].to_i
+    post.version += 1
+    post.save
+
+    render nothing: true
+  end
+
   def flagged_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_flagged_posts!

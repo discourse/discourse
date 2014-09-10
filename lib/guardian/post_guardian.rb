@@ -165,6 +165,10 @@ module PostGuardian
     is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
+  def can_change_post_type?
+    is_staff?
+  end
+
   def can_see_flagged_posts?
     is_staff?
   end

@@ -379,7 +379,20 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     },
 
     toggleWiki: function(post) {
+      // the request to the server is made in an observer in the post class
       post.toggleProperty('wiki');
+    },
+
+    togglePostType: function (post) {
+      // the request to the server is made in an observer in the post class
+      var regular = Discourse.Site.currentProp('post_types.regular'),
+          moderator = Discourse.Site.currentProp('post_types.moderator_action');
+
+      if (post.get("post_type") === moderator) {
+        post.set("post_type", regular);
+      } else {
+        post.set("post_type", moderator);
+      }
     }
   },
 
