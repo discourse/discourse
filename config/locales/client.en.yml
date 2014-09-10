@@ -1105,6 +1105,8 @@ en:
         admin: "post admin actions"
         wiki: "Wiki post"
         unwiki: "Unwiki post"
+        revert_to_regular: "Regular post"
+        convert_to_moderator: "Staff post"
 
       actions:
         flag: 'Flag'
