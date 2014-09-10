@@ -759,24 +759,12 @@ $topic-avatar-width: 45px;
   }
 }
 .topic-avatar {
- border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
- padding-top: 16px;
- width: $topic-avatar-width;
- float: left;
- position: relative;
- z-index: 2;
-
- .wiki {
-   margin-top: 14px;
-   color: scale-color($primary, $lightness: 80%);
-   margin-left: 5px;
-   cursor: pointer;
- }
-
- .via-email {
-   margin: 14px 0 0 8px;
-   color: scale-color($primary, $lightness: 80%);
- }
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  padding-top: 16px;
+  width: $topic-avatar-width;
+  float: left;
+  position: relative;
+  z-index: 2;
 }
 
 .gap {

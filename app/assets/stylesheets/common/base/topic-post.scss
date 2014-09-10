@@ -100,3 +100,23 @@ aside.quote {
     cursor: pointer;
   }
 }
+
+.wiki .topic-body {
+  background-color: rgba(64, 128, 64, .05);
+}
+
+.post-info {
+  &.wiki, &.via-email {
+    margin-right: 5px;
+    i.fa {
+      font-size: 14px;
+    }
+  }
+  &.wiki {
+    cursor: pointer;
+    color: rgb(64, 128, 64);
+  }
+  &.via-email {
+    color: scale-color($primary, $lightness: 70%);
+  }
+}
