@@ -48,7 +48,7 @@
               <div class="featured-topic">
                 {{topic-status topic=this}}
                 <a class='title' href="{{unbound lastUnreadUrl}}">{{{unbound fancy_title}}}</a>
-                {{topic-post-badges unread=totalUnread unseen=unseen url=lastUnreadUrl}}
+                {{topic-post-badges newPosts=totalUnread unseen=unseen url=lastUnreadUrl}}
 
                 {{#if controller.latestTopicOnly}}
                   <div class='last-user-info'>
