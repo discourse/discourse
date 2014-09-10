@@ -12,9 +12,10 @@ export default Ember.ArrayController.extend({
             self.get('model.lastObject.created_at'),
             self.get('user.username')).then(function(result) {
           self.set('loading', false);
-          self.pushObjects(result);
+          var notifications = result.get('content');
+          self.pushObjects(notifications);
           // Stop trying if it's the end
-          if (result.length === 0) {
+          if (notifications && notifications.length === 0) {
             self.set('canLoadMore', false);
           }
         }).catch(function(error) {
