@@ -91,6 +91,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     },
 
     willTransition: function() {
+      this.controllerFor("quote-button").deselectText();
       Em.run.cancel(scheduledReplace);
       isTransitioning = true;
       return true;
