@@ -151,6 +151,11 @@ class UsersController < ApplicationController
       return
     end
 
+    if params[:password] && params[:password].length > User.max_password_length
+      render json: { success: false, message: I18n.t("login.password_too_long") }
+      return
+    end
+
     user = User.new(user_params)
 
     authentication = UserAuthenticator.new(user, session)
@@ -221,12 +226,17 @@ class UsersController < ApplicationController
     if !@user
       flash[:error] = I18n.t('password_reset.no_token')
     elsif request.put?
-      raise Discourse::InvalidParameters.new(:password) unless params[:password].present?
-      @user.password = params[:password]
-      @user.password_required!
-      if @user.save
-        Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
-        logon_after_password_reset
+      @invalid_password = params[:password].blank? || params[:password].length > User.max_password_length
+
+      if @invalid_password
+        @user.errors.add(:password, :invalid)
+      else
+        @user.password = params[:password]
+        @user.password_required!
+        if @user.save
+          Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
+          logon_after_password_reset
+        end
       end
     end
     render layout: 'no_js'
