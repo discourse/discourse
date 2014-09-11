@@ -59,6 +59,10 @@ module Discourse
     @filters ||= [:latest, :unread, :new, :starred, :read, :posted]
   end
 
+  def self.feed_filters
+    @feed_filters ||= [:latest]
+  end
+
   def self.anonymous_filters
     @anonymous_filters ||= [:latest, :top, :categories]
   end

@@ -84,7 +84,7 @@ class ListController < ApplicationController
     end
   end
 
-  Discourse.anonymous_filters.each do |filter|
+  Discourse.feed_filters.each do |filter|
     define_method("#{filter}_feed") do
       discourse_expires_in 1.minute
 
