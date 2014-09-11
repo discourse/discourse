@@ -1,13 +1,6 @@
 <div class="modal-body">
-  {{#if hasAtLeastOneLoginButton}}
-    <div id="login-buttons">
-      {{#each Discourse.LoginMethod.all}}
-        <button class="btn btn-social {{unbound name}}" {{action externalLogin this}}>{{unbound title}}</button>
-      {{/each}}
-    </div>
-    <div class="clearfix"></div>
-  {{/if}}
-  {{#if Discourse.SiteSettings.enable_local_logins}}
+  {{login-buttons action="externalLogin"}}
+  {{#if canLoginLocal}}
     {{#if hasAtLeastOneLoginButton}}
       <h3 style="text-align:center;">{{i18n login.or}}</h3>
     {{/if}}
@@ -47,17 +40,17 @@
   {{#if authenticate}}
     {{i18n login.authenticating}}
   {{/if}}
-  {{#if Discourse.SiteSettings.enable_local_logins}}
+  {{#if canLoginLocal}}
     <button class='btn btn-large btn-primary'
       {{bind-attr disabled="loginDisabled"}}
       {{action login}}>
         <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
     </button>
 
-    {{#unless Discourse.SiteSettings.invite_only}}
+    {{#if showSignupLink}}
       <button class="btn btn-large" id="new-account-link" {{action showCreateAccount}}>
         {{i18n create_account.title}}
       </button>
-    {{/unless}}
+    {{/if}}
   {{/if}}
 </div>
