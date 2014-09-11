@@ -8,6 +8,8 @@
 **/
 Discourse.Site = Discourse.Model.extend({
 
+  isReadOnly: Em.computed.alias('is_readonly'),
+
   notificationLookup: function() {
     var result = [];
     _.each(this.get('notification_types'), function(v,k) {

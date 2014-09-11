@@ -132,38 +132,6 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       }
     }
     return this.get("currentAssetVersion");
-  }.property(),
-
-  globalNotice: function(){
-    var notices = [];
-
-    if(this.get("isReadOnly")){
-      notices.push(I18n.t("read_only_mode.enabled"));
-    }
-
-    if(Discourse.User.currentProp('admin') && Discourse.SiteSettings.show_create_topics_notice) {
-      var topic_count = 0,
-          post_count = 0;
-      _.each(Discourse.Site.currentProp('categories'), function(c) {
-        if (!c.get('read_restricted')) {
-          topic_count += c.get('topic_count');
-          post_count  += c.get('post_count');
-        }
-      });
-      if (topic_count < 5 || post_count < Discourse.SiteSettings.tl1_requires_read_posts) {
-        notices.push(I18n.t("too_few_topics_notice", {posts: Discourse.SiteSettings.tl1_requires_read_posts}));
-      }
-    }
-
-    if(!_.isEmpty(Discourse.SiteSettings.global_notice)){
-      notices.push(Discourse.SiteSettings.global_notice);
-    }
-
-    if(notices.length > 0) {
-      return new Handlebars.SafeString(_.map(notices, function(text) {
-        return "<div class='row'><div class='alert alert-info'>" + text + "</div></div>";
-      }).join(""));
-    }
-  }.property("isReadOnly")
+  }.property()
 
 });
