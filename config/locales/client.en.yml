@@ -1107,11 +1107,11 @@ en:
           yes_value: "Yes, delete the replies too"
           no_value: "No, just this post"
         admin: "post admin actions"
-        wiki: "Wiki post"
-        unwiki: "Unwiki post"
-        revert_to_regular: "Regular post"
-        convert_to_moderator: "Staff post"
-        rebake: "Rebake post"
+        wiki: "Make Wiki"
+        unwiki: "Remove Wiki"
+        convert_to_moderator: "Add Staff Color"
+        revert_to_regular: "Remove Staff Color"
+        rebake: "Rebake HTML"
 
       actions:
         flag: 'Flag'
