@@ -537,8 +537,8 @@ section.details {
 
   .hidden-post td.excerpt, .hidden-post td.user { opacity: 0.5; }
   .deleted td.excerpt, .deleted td.user { background-color: scale-color($danger, $lightness: 70%); }
-  .message { background-color: scale-color($highlight, $lightness: 70%); }
-  .message:hover { background-color: scale-color($highlight, $lightness: 30%); }
+  .message { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
+  .message:hover { background-color: dark-light-diff($highlight, $secondary, 60%, -60%); }
   td { vertical-align: top; }
   th { text-align: left; }
   .user {
