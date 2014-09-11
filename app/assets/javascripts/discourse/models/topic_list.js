@@ -217,10 +217,12 @@ Discourse.TopicList.reopenClass({
           }
           return resolve(cachedList);
         }
+        session.set('topicList', null);
+      } else {
+        // Clear the cache
+        session.setProperties({topicList: null, topicListScrollPosition: null});
       }
 
-      // Clear the cache
-      session.setProperties({topicList: null, topicListScrollPosition: null});
 
       // Clean up any string parameters that might slip through
       filterParams = filterParams || {};
