@@ -2184,12 +2184,21 @@ en:
         nice_topic:
           name: Nice Topic
           description: Received 10 likes on a topic. This badge can be granted multiple times
-        good_post:
+        good_topic:
           name: Good Topic
           description: Received 25 likes on a topic. This badge can be granted multiple times
-        great_post:
+        great_topic:
           name: Great Topic
           description: Received 50 likes on a topic. This badge can be granted multiple times
+        nice_share:
+          name: Nice Share
+          description: Shared a post with 25 unique visitors
+        good_share:
+          name: Good Share
+          description: Shared a post with 300 unique visitors
+        great_share:
+          name: Great Share
+          description: Shared a post with 1000 unique visitors
         first_like:
           name: First Like
           description: Liked a post

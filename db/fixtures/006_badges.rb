@@ -153,6 +153,28 @@ Badge.seed do |b|
   b.system = true
 end
 
+[
+ [Badge::NiceShare, "Nice Share", BadgeType::Bronze, 25],
+ [Badge::GoodShare, "Good Share", BadgeType::Silver, 300],
+ [Badge::GreatShare, "Great Share", BadgeType::Gold, 1000],
+].each do |spec|
+
+  id, name, level, count = spec
+  Badge.seed do |b|
+    b.id = id
+    b.default_name = name
+    b.badge_type_id = level
+    b.multiple_grant = true
+    b.target_posts = true
+    b.show_posts = true
+    b.query = Badge::Queries.sharing_badge(count)
+    b.default_badge_grouping_id = BadgeGrouping::Community
+    # don't trigger for now, its too expensive
+    b.trigger = Badge::Trigger::None
+    b.system = true
+  end
+end
+
 Badge.seed do |b|
   b.id = Badge::Welcome
   b.default_name = "Welcome"
