@@ -25,6 +25,11 @@ task 'test:prepare' => 'environment' do
   SeedFu.seed
 end
 
+task 'db:api_test_seed' => 'environment' do
+  puts "Loading test data for discourse_api"
+  load Rails.root + 'db/api_test_seeds.rb'
+end
+
 desc 'Rebuild indexes'
 task 'db:rebuild_indexes' => 'environment' do
   if Import::backup_tables_count > 0
