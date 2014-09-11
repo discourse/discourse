@@ -46,16 +46,6 @@ Handlebars.registerHelper('raw-date', function(property, options) {
 });
 
 /**
-  Nicely format a bound date without returning HTML
-
-  @method bound-raw-date
-  @for Handlebars
-**/
-Em.Handlebars.helper('bound-raw-date', function (date) {
-  return Discourse.Formatter.longDateNoYear(new Date(date));
-});
-
-/**
   Live refreshing age helper
 
   @method age
@@ -138,46 +128,3 @@ Em.Handlebars.helper('bound-date', function(dt) {
   return new safe(Discourse.Formatter.autoUpdatingRelativeAge(new Date(dt), {format: 'medium', title: true }));
 });
 
-/**
-  Look for custom html content using `Discourse.HTML`. If none exists, look for a template
-  to render with that name.
-
-  @method custom-html
-  @for Handlebars
-**/
-Handlebars.registerHelper('custom-html', function(name, contextString, options) {
-  var html = Discourse.HTML.getCustomHTML(name);
-  if (html) { return html; }
-
-  var container = (options || contextString).data.keywords.controller.container;
-
-  if (container.lookup('template:' + name)) {
-    return Ember.Handlebars.helpers.partial.apply(this, arguments);
-  }
-});
-
-Em.Handlebars.helper('human-size', function(size) {
-  return new safe(I18n.toHumanSize(size));
-});
-
-/**
-  Renders the domain for a link if it's not internal and has a title.
-
-  @method link-domain
-  @for Handlebars
-**/
-Handlebars.registerHelper('link-domain', function(property, options) {
-  var link = Em.get(this, property, options);
-  if (link) {
-    var internal = Em.get(link, 'internal'),
-        hasTitle = (!Em.isEmpty(Em.get(link, 'title')));
-    if (hasTitle && !internal) {
-      var domain = Em.get(link, 'domain');
-      if (!Em.isEmpty(domain)) {
-        var s = domain.split('.');
-        domain = s[s.length-2] + "." + s[s.length-1];
-        return new safe("<span class='domain'>" + domain + "</span>");
-      }
-    }
-  }
-});
