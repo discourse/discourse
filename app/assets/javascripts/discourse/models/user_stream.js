@@ -25,8 +25,8 @@ Discourse.UserStream = Discourse.Model.extend({
     }
 
     if(!filter) {
-      return [Discourse.UserAction.TYPES.posts,
-              Discourse.UserAction.TYPES.topics];
+      return [ Discourse.UserAction.TYPES.topics,
+               Discourse.UserAction.TYPES.posts].join(",");
     }
 
     return filter;
