@@ -236,7 +236,10 @@ SQL
     @like_badge_counts ||= {
       NicePost => 10,
       GoodPost => 25,
-      GreatPost => 50
+      GreatPost => 50,
+      NiceTopic => 10,
+      GoodTopic => 25,
+      GreatTopic => 50
     }
   end
 
