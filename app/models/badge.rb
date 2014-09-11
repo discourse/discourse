@@ -16,6 +16,9 @@ class Badge < ActiveRecord::Base
   NiceTopic = 18
   GoodTopic = 19
   GreatTopic = 20
+  NiceShare = 21
+  GoodShare = 22
+  GreatShare = 23
 
   # other consts
   AutobiographerMinBioLength = 10
@@ -186,6 +189,22 @@ SQL
       :backfill OR u.id IN (:user_ids)
     )
 "
+    end
+
+    def self.sharing_badge(count)
+<<SQL
+    SELECT views.user_id, i2.post_id, i2.created_at granted_at
+    FROM
+    (
+      SELECT i.user_id, MIN(i.id) i_id
+      FROM incoming_links i
+      JOIN badge_posts p on p.id = i.post_id
+      WHERE i.user_id IS NOT NULL
+      GROUP BY i.user_id,i.post_id
+      HAVING COUNT(*) > #{count}
+    ) as views
+    JOIN incoming_links i2 ON i2.id = views.i_id
+SQL
     end
   end
 
