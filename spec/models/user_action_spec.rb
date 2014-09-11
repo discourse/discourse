@@ -18,7 +18,7 @@ describe UserAction do
     let(:private_post) { Fabricate(:post) }
     let(:private_topic) do
       topic = private_post.topic
-      topic.update_column(:archetype, Archetype::private_message)
+      topic.update_columns(category_id: nil, archetype: Archetype::private_message)
       topic
     end
 
@@ -136,7 +136,7 @@ describe UserAction do
     context "liking a private message" do
 
       before do
-        post.topic.update_column(:archetype, Archetype::private_message)
+        post.topic.update_columns(category_id: nil, archetype: Archetype::private_message)
       end
 
       it "doesn't add the entry to the stream" do

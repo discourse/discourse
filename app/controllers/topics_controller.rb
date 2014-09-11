@@ -115,7 +115,8 @@ class TopicsController < ApplicationController
 
     success = false
     Topic.transaction do
-      success = topic.save && topic.change_category_to_id(params[:category_id].to_i)
+      success = topic.save
+      success &= topic.change_category_to_id(params[:category_id].to_i) unless topic.private_message?
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"

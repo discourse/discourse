@@ -7,7 +7,8 @@ describe TopicParticipantsSummary do
     let(:topic) do
       Fabricate(:topic,
         user: topic_creator,
-        archetype: Archetype::private_message
+        archetype: Archetype::private_message,
+        category_id: nil
       )
     end
 

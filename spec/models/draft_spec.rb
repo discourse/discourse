@@ -39,7 +39,7 @@ describe Draft do
     it 'nukes new topic draft after a topic is created' do
       u = Fabricate(:user)
       Draft.set(u, Draft::NEW_TOPIC, 0, 'my draft')
-      t = Fabricate(:topic, user: u)
+      _t = Fabricate(:topic, user: u)
       s = DraftSequence.current(u, Draft::NEW_TOPIC)
       Draft.get(u, Draft::NEW_TOPIC, s).should be_nil
     end
@@ -47,7 +47,7 @@ describe Draft do
     it 'nukes new pm draft after a pm is created' do
       u = Fabricate(:user)
       Draft.set(u, Draft::NEW_PRIVATE_MESSAGE, 0, 'my draft')
-      t = Fabricate(:topic, user: u, archetype: Archetype.private_message)
+      t = Fabricate(:topic, user: u, archetype: Archetype.private_message, category_id: nil)
       s = DraftSequence.current(t.user, Draft::NEW_PRIVATE_MESSAGE)
       Draft.get(u, Draft::NEW_PRIVATE_MESSAGE, s).should be_nil
     end
@@ -55,7 +55,7 @@ describe Draft do
     it 'does not nuke new topic draft after a pm is created' do
       u = Fabricate(:user)
       Draft.set(u, Draft::NEW_TOPIC, 0, 'my draft')
-      t = Fabricate(:topic, user: u, archetype: Archetype.private_message)
+      t = Fabricate(:topic, user: u, archetype: Archetype.private_message, category_id: nil)
       s = DraftSequence.current(t.user, Draft::NEW_TOPIC)
       Draft.get(u, Draft::NEW_TOPIC, s).should == 'my draft'
     end

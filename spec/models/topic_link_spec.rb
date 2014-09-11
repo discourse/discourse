@@ -217,7 +217,7 @@ http://b.com/#{'a'*500}
 
   describe 'internal link from pm' do
     it 'works' do
-      pm = Fabricate(:topic, user: user, archetype: 'private_message')
+      pm = Fabricate(:topic, user: user, category_id: nil, archetype: 'private_message')
       pm.posts.create(user: user, raw: "some content")
 
       url = "http://#{test_uri.host}/t/topic-slug/#{topic.id}"
