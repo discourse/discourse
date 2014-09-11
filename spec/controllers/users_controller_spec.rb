@@ -287,14 +287,28 @@ describe UsersController do
         EmailToken.expects(:confirm).with(token).returns(user)
       end
 
+      it "fails when the password is blank" do
+        put :password_reset, token: token, password: ''
+        assigns(:user).errors.should be_present
+        session[:current_user_id].should be_blank
+      end
+
+      it "fails when the password is too long" do
+        put :password_reset, token: token, password: ('x' * (User.max_password_length + 1))
+        assigns(:user).errors.should be_present
+        session[:current_user_id].should be_blank
+      end
+
       it "logs in the user" do
         put :password_reset, token: token, password: 'newpassword'
+        assigns(:user).errors.should be_blank
         session[:current_user_id].should be_present
       end
 
       it "doesn't log in the user when not approved" do
         SiteSetting.expects(:must_approve_users?).returns(true)
         put :password_reset, token: token, password: 'newpassword'
+        assigns(:user).errors.should be_blank
         session[:current_user_id].should be_blank
       end
     end
@@ -505,6 +519,11 @@ describe UsersController do
 
     context 'when password is blank' do
       let(:create_params) { {name: @user.name, username: @user.username, password: "", email: @user.email} }
+      include_examples 'failed signup'
+    end
+
+    context 'when password is too long' do
+      let(:create_params) { {name: @user.name, username: @user.username, password: "x" * (User.max_password_length + 1), email: @user.email} }
       include_examples 'failed signup'
     end
 

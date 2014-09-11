@@ -186,6 +186,14 @@ describe SessionController do
         end
       end
 
+      describe 'invalid password' do
+        it "should return an error with an invalid password if too long" do
+          User.any_instance.expects(:confirm_password?).never
+          xhr :post, :create, login: user.username, password: ('s' * (User.max_password_length + 1))
+          ::JSON.parse(response.body)['error'].should be_present
+        end
+      end
+
       describe 'suspended user' do
         it 'should return an error' do
           User.any_instance.stubs(:suspended?).returns(true)
