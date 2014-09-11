@@ -5,11 +5,12 @@ export default {
   name: "read-only",
   after: "message-bus",
 
-  initialize: function () {
+  initialize: function (container) {
     if (!Discourse.MessageBus) { return; }
 
+    var site = container.lookup('site:main');
     Discourse.MessageBus.subscribe("/site/read-only", function (enabled) {
-      Discourse.Site.currentProp('isReadOnly', enabled);
+      site.currentProp('isReadOnly', enabled);
     });
   }
 };
