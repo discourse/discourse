@@ -2,9 +2,9 @@
   <span class='topic'>
     {{i18n search.post_format post_number=post_number username=username}}
   </span>
-  {{#unless Discourse.Mobile.mobileView}}
-  <span class='blurb'>
-  {{{unbound blurb}}}
-  </span>
+  {{#unless controller.site.mobileView}}
+    <span class='blurb'>
+    {{{unbound blurb}}}
+    </span>
   {{/unless}}
 </a>

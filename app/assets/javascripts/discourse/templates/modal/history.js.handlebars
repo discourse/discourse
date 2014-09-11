@@ -10,7 +10,7 @@
     {{#if loading}}<div id='revision-loading'><i class='fa fa-spinner fa-spin'></i>{{i18n loading}}</div>{{/if}}
     <div id="display-modes">
       <button {{bind-attr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n post.revisions.displays.inline.title}}" {{action displayInline}}>{{{i18n post.revisions.displays.inline.button}}}</button>
-      {{#unless Discourse.Mobile.mobileView}}
+      {{#unless site.mobileView}}
         <button {{bind-attr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action displaySideBySide}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
         <button {{bind-attr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action displaySideBySideMarkdown}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
       {{/unless}}
