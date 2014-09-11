@@ -34,13 +34,7 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
 - If you're using 2 GB+ memory, you can probably get by without a swap file.
 
-# Install Git
-
-    apt-get install git
-
-<img src="http://www.discourse.org/images/install/install-git.png" width="586" height="293">
-
-# Install Docker
+# Install Docker / Git
 
     wget -qO- https://get.docker.io/ | sh
 
