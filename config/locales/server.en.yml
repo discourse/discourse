@@ -1678,6 +1678,14 @@ en:
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
 
+    account_created:
+      subject_template: "[%{site_name}] Your New Account"
+      text_body_template: |
+        A new account was created for you at %{site_name}
+
+        Click the following link to choose a password for your new account:
+        %{base_url}/users/password-reset/%{email_token}
+
     authorize_email:
       subject_template: "[%{site_name}] Confirm your new email address"
       text_body_template: |
