@@ -151,6 +151,11 @@ class UsersController < ApplicationController
       return
     end
 
+    if params[:password] && params[:password].length > 200
+      render json: { success: false, message: I18n.t("login.password_too_long") }
+      return
+    end
+
     user = User.new(user_params)
 
     authentication = UserAuthenticator.new(user, session)
