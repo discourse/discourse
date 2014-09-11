@@ -56,7 +56,6 @@ export default function(filter, extras) {
       });
 
       this.openTopicDraft(model);
-
       this.controllerFor('navigation/default').set('canCreateTopic', model.get('can_create_topic'));
     },
 
