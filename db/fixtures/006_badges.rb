@@ -191,20 +191,24 @@ end
 #
 # Like system badges.
 like_badges = [
-  {id: 6, name: "Nice Post", type: BadgeType::Bronze, multiple: true},
-  {id: 7, name: "Good Post", type: BadgeType::Silver, multiple: true},
-  {id: 8, name: "Great Post", type: BadgeType::Gold, multiple: true}
+  {id: Badge::NicePost, name: "Nice Post", type: BadgeType::Bronze},
+  {id: Badge::GoodPost, name: "Good Post", type: BadgeType::Silver},
+  {id: Badge::GreatPost, name: "Great Post", type: BadgeType::Gold},
+  {id: Badge::NiceTopic, name: "Nice Topic", type: BadgeType::Bronze, topic: true},
+  {id: Badge::GoodTopic, name: "Good Topic", type: BadgeType::Silver, topic: true},
+  {id: Badge::GreatTopic, name: "Great Topic", type: BadgeType::Gold, topic: true}
 ]
+
 
 like_badges.each do |spec|
   Badge.seed do |b|
     b.id = spec[:id]
     b.default_name = spec[:name]
     b.badge_type_id = spec[:type]
-    b.multiple_grant = spec[:multiple]
+    b.multiple_grant = true
     b.target_posts = true
     b.show_posts = true
-    b.query = Badge::Queries.like_badge(Badge.like_badge_counts[spec[:id]])
+    b.query = Badge::Queries.like_badge(Badge.like_badge_counts[spec[:id]], spec[:topic])
     b.default_badge_grouping_id = BadgeGrouping::Posting
     b.trigger = Badge::Trigger::PostAction
     b.system = true

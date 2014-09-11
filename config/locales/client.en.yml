@@ -2181,6 +2181,15 @@ en:
         great_post:
           name: Great Post
           description: Received 50 likes on a post. This badge can be granted multiple times
+        nice_topic:
+          name: Nice Topic
+          description: Received 10 likes on a topic. This badge can be granted multiple times
+        good_post:
+          name: Good Topic
+          description: Received 25 likes on a topic. This badge can be granted multiple times
+        great_post:
+          name: Great Topic
+          description: Received 50 likes on a topic. This badge can be granted multiple times
         first_like:
           name: First Like
           description: Liked a post
