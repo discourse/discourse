@@ -4,11 +4,11 @@
 
 [Sign up for Digital Ocean][do], update billing info, then begin creating your new cloud server (Droplet).
 
-- Enter the URL of your new site as the Droplet name, e.g. `discourse.example.com`.
+- Enter your domain `discourse.example.com` as the Droplet name.
 
-- The default of 1GB RAM works fine for small Discourse communities. We do recommend 2 GB RAM for medium communities.
+- The default of **1GB** RAM works fine for small Discourse communities. We do recommend 2 GB RAM for medium communities.
  
-- The default of Ubuntu 14.04 LTS x64 works fine. Always select the latest 64-bit [LTS distribution][lts].
+- The default of **Ubuntu 14.04 LTS x64** works fine. Always select the latest 64-bit [LTS distribution][lts].
 
 Create your new Droplet. You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
