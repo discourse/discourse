@@ -1,13 +1,5 @@
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  This controller supports actions related to updating one's username
-
-  @class PreferencesUsernameController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
 export default ObjectController.extend({
   taken: false,
   saving: false,
@@ -15,6 +7,7 @@ export default ObjectController.extend({
   errorMessage: null,
   newUsername: null,
 
+  maxLength: Discourse.computed.setting('max_username_length'),
   newUsernameEmpty: Em.computed.empty('newUsername'),
   saveDisabled: Em.computed.or('saving', 'newUsernameEmpty', 'taken', 'unchanged', 'errorMessage'),
   unchanged: Discourse.computed.propertyEqual('newUsername', 'username'),

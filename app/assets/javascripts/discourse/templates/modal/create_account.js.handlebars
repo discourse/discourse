@@ -35,7 +35,7 @@
         <tr class="input">
               <td class="label"><label for='new-account-username'>{{i18n user.username.title}}</label></td>
               <td>
-              {{input value=accountUsername id="new-account-username" maxlength=Discourse.SiteSettings.max_username_length}}
+              {{input value=accountUsername id="new-account-username" maxlength=maxUsernameLength}}
               &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
               </td>
         </tr>
