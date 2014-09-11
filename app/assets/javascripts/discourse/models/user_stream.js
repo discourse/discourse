@@ -23,6 +23,12 @@ Discourse.UserStream = Discourse.Model.extend({
               Discourse.UserAction.TYPES.mentions,
               Discourse.UserAction.TYPES.quotes].join(",");
     }
+
+    if(!filter) {
+      return [Discourse.UserAction.TYPES.posts,
+              Discourse.UserAction.TYPES.topics];
+    }
+
     return filter;
   }.property('filter'),
 

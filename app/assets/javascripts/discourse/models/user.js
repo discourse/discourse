@@ -276,7 +276,10 @@ Discourse.User = Discourse.Model.extend({
     if (this.blank('statsExcludingPms')) return 0;
     var count = 0;
     _.each(this.get('statsExcludingPms'), function(val) {
-      count += val.count;
+      if (val.action_type === Discourse.UserAction.TYPES.posts ||
+          val.action_type === Discourse.UserAction.TYPES.topics ) {
+        count += val.count;
+      }
     });
     return count;
   }.property('statsExcludingPms.@each.count'),
