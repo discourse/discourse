@@ -108,8 +108,13 @@ class SessionController < ApplicationController
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
-    # always render of so we don't leak information
-    render json: {result: "ok"}
+
+    json = { result: "ok" }
+    if SiteSetting.forgot_password_verbose
+      json[:user_found] = user.present?
+    end
+
+    render json: json
 
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))

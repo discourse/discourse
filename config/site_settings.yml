@@ -239,6 +239,7 @@ login:
   email_domains_whitelist:
     default: ''
     type: list
+  forgot_password_verbose: true
 
 users:
   min_username_length:
