@@ -290,6 +290,8 @@ class TopicQuery
           result = result.where('topics.archived')
         when 'visible'
           result = result.where('topics.visible')
+        when 'invisible'
+          result = result.where('NOT topics.visible')
         end
       end
 
