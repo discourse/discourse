@@ -1111,7 +1111,7 @@ en:
         unwiki: "Remove Wiki"
         convert_to_moderator: "Add Staff Color"
         revert_to_regular: "Remove Staff Color"
-        rebake: "Rebake HTML"
+        rebake: "Rebuild HTML"
 
       actions:
         flag: 'Flag'
