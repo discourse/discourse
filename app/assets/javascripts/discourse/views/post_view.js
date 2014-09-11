@@ -54,7 +54,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     }
 
     var $adminMenu = this.get('adminMenu');
-    if ($adminMenu && !$(e.target).is($adminMenu) && $adminMenu.has($(e.target)).length === 0) {
+    if ($adminMenu && !$(e.target).is($adminMenu)) {
       $adminMenu.hide();
       this.set('adminMenu', null);
     }

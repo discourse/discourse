@@ -400,6 +400,10 @@ Discourse.Post = Discourse.Model.extend({
         cooked_hidden: false
       });
     });
+  },
+
+  rebake: function () {
+    return Discourse.ajax("/posts/" + this.get("id") + "/rebake", { type: "PUT" });
   }
 });
 

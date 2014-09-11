@@ -393,6 +393,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       } else {
         post.set("post_type", moderator);
       }
+    },
+
+    rebakePost: function (post) {
+      post.rebake();
     }
   },
 

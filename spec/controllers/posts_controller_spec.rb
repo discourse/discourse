@@ -327,7 +327,7 @@ describe PostsController do
       let(:user) {log_in}
       let(:post) {Fabricate(:post, user: user)}
 
-      it "raises an error if the user doesn't have permission to see the post" do
+      it "raises an error if the user doesn't have permission to wiki the post" do
         Guardian.any_instance.expects(:can_wiki?).returns(false)
 
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
@@ -352,6 +352,63 @@ describe PostsController do
 
         wikied_post.reload
         wikied_post.wiki.should be_false
+      end
+
+    end
+
+  end
+
+  describe "post_type" do
+
+    include_examples "action requires login", :put, :post_type, post_id: 2
+
+    describe "when logged in" do
+      let(:user) {log_in}
+      let(:post) {Fabricate(:post, user: user)}
+
+      it "raises an error if the user doesn't have permission to change the post type" do
+        Guardian.any_instance.expects(:can_change_post_type?).returns(false)
+
+        xhr :put, :post_type, post_id: post.id, post_type: 2
+
+        response.should be_forbidden
+      end
+
+      it "can change the post type" do
+        Guardian.any_instance.expects(:can_change_post_type?).returns(true)
+
+        xhr :put, :post_type, post_id: post.id, post_type: 2
+
+        post.reload
+        post.post_type.should == 2
+      end
+
+    end
+
+  end
+
+  describe "rebake" do
+
+    include_examples "action requires login", :put, :rebake, post_id: 2
+
+    describe "when logged in" do
+      let(:user) {log_in}
+      let(:post) {Fabricate(:post, user: user)}
+
+      it "raises an error if the user doesn't have permission to rebake the post" do
+        Guardian.any_instance.expects(:can_rebake?).returns(false)
+
+        xhr :put, :rebake, post_id: post.id
+
+        response.should be_forbidden
+      end
+
+      it "can rebake the post" do
+        Guardian.any_instance.expects(:can_rebake?).returns(true)
+
+        xhr :put, :rebake, post_id: post.id
+
+        response.should be_success
       end
 
     end
