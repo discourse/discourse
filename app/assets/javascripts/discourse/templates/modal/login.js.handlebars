@@ -18,7 +18,7 @@
                 <label for='login-account-password'>{{i18n login.password}}&nbsp;</label>
             </td>
             <td>
-                {{password-field value=loginPassword type="password" id="login-account-password" capsLockOn=capsLockOn}} &nbsp;
+                {{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn}} &nbsp;
             </td>
             <td>
               <a id="forgot-password-link" {{action showForgotPassword}}>{{i18n forgot_password.action}}</a>
