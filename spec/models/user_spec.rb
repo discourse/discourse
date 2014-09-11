@@ -1150,4 +1150,30 @@ describe User do
     end
   end
 
+  describe "hash_passwords" do
+
+    let(:too_long) { "x" * (User.max_password_length + 1) }
+
+    def hash(password, salt)
+      User.new.send(:hash_password, password, salt)
+    end
+
+    it "returns the same hash for the same password and salt" do
+      hash('poutine', 'gravy').should == hash('poutine', 'gravy')
+    end
+
+    it "returns a different hash for the same salt and different password" do
+      hash('poutine', 'gravy').should_not == hash('fries', 'gravy')
+    end
+
+    it "returns a different hash for the same password and different salt" do
+      hash('poutine', 'gravy').should_not == hash('poutine', 'cheese')
+    end
+
+    it "raises an error when passwords are too long" do
+      -> { hash(too_long, 'gravy') }.should raise_error
+    end
+
+  end
+
 end

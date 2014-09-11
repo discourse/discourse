@@ -117,6 +117,10 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
+  def self.max_password_length
+    200
+  end
+
   def self.username_length
     SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
   end
@@ -679,6 +683,7 @@ class User < ActiveRecord::Base
   end
 
   def hash_password(password, salt)
+    raise "password is too long" if password.size > User.max_password_length
     Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
   end
 
