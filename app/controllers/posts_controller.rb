@@ -252,6 +252,15 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def rebake
+    guardian.ensure_can_rebake!
+
+    post = find_post_from_params
+    post.rebake!(invalidate_oneboxes: true)
+
+    render nothing: true
+  end
+
   def flagged_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_flagged_posts!

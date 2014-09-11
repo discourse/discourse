@@ -169,6 +169,10 @@ module PostGuardian
     is_staff?
   end
 
+  def can_rebake?
+    is_staff?
+  end
+
   def can_see_flagged_posts?
     is_staff?
   end

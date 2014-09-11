@@ -284,11 +284,15 @@ export default Discourse.View.extend({
         postTypeIcon = '<i class="fa fa-shield"></i>',
         postTypeText = isModerator ? I18n.t('post.controls.revert_to_regular') : I18n.t('post.controls.convert_to_moderator');
 
+    var rebakePostIcon = '<i class="fa fa-cog"></i>',
+        rebakePostText = I18n.t('post.controls.rebake');
+
     var html = '<div class="post-admin-menu">' +
                  '<h3>' + I18n.t('admin_title') + '</h3>' +
                  '<ul>' +
                    '<li class="btn btn-admin" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
                    '<li class="btn btn-admin" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' +
+                   '<li class="btn btn-admin" data-action="rebakePost">' + rebakePostIcon + rebakePostText + '</li>' +
                  '</ul>' +
                '</div>';
 
@@ -307,6 +311,10 @@ export default Discourse.View.extend({
 
   clickTogglePostType: function () {
     this.get("controller").send("togglePostType", this.get("post"));
+  },
+
+  clickRebakePost: function () {
+    this.get("controller").send("rebakePost", this.get("post"));
   },
 
   buttonForShowMoreActions: function() {

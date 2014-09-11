@@ -1111,6 +1111,7 @@ en:
         unwiki: "Unwiki post"
         revert_to_regular: "Regular post"
         convert_to_moderator: "Staff post"
+        rebake: "Rebake post"
 
       actions:
         flag: 'Flag'
