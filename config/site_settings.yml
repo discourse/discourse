@@ -239,7 +239,7 @@ login:
   email_domains_whitelist:
     default: ''
     type: list
-  forgot_password_verbose: true
+  forgot_password_strict: false
 
 users:
   min_username_length:

@@ -110,7 +110,7 @@ class SessionController < ApplicationController
     end
 
     json = { result: "ok" }
-    if SiteSetting.forgot_password_verbose
+    unless SiteSetting.forgot_password_strict
       json[:user_found] = user.present?
     end
 
