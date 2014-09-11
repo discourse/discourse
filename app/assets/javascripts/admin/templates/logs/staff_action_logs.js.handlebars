@@ -48,7 +48,7 @@
     <div class='admin-loading'>{{i18n loading}}</div>
   {{else}}
     {{#if model.length}}
-      {{view Discourse.StaffActionLogsListView contentBinding="controller"}}
+      {{view "staff-action-logs-list" content=controller}}
     {{else}}
       {{i18n search.no_results}}
     {{/if}}

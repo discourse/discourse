@@ -3,7 +3,7 @@
     <ul class="nav nav-pills">
       <li>{{#link-to 'adminUsersList.active'}}{{i18n admin.users.nav.active}}{{/link-to}}</li>
       <li>{{#link-to 'adminUsersList.new'}}{{i18n admin.users.nav.new}}{{/link-to}}</li>
-      {{#if Discourse.SiteSettings.must_approve_users}}
+      {{#if mustApproveUsers}}
         <li>{{#link-to 'adminUsersList.pending'}}{{i18n admin.users.nav.pending}}{{/link-to}}</li>
       {{/if}}
       <li>{{#link-to 'adminUsersList.admins'}}{{i18n admin.users.nav.admins}}{{/link-to}}</li>

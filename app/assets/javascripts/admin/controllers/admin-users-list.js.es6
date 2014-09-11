@@ -13,6 +13,7 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
   content: null,
   loading: false,
 
+  mustApproveUsers: Discourse.computed.setting('must_approve_users'),
   queryNew: Em.computed.equal('query', 'new'),
   queryPending: Em.computed.equal('query', 'pending'),
   queryHasApproval: Em.computed.or('queryNew', 'queryPending'),
