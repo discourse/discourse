@@ -22,9 +22,9 @@ task "admin:invite", [:email] => [:environment] do |_,args|
   user.change_trust_level!(4)
   user.email_tokens.update_all  confirmed: true
 
-  puts "Sending forgot password emails!"
+  puts "Sending email!"
   email_token = user.email_tokens.create(email: user.email)
-  Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
+  Jobs.enqueue(:user_email, type: :account_created, user_id: user.id, email_token: email_token.token)
 end
 
 desc "Creates a forum administrator"
