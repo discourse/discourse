@@ -1,38 +1,4 @@
 <div class="dashboard-left">
-  {{#if foundProblems}}
-    <div class="dashboard-stats detected-problems">
-      <div class="look-here"><i class="fa fa-exclamation-triangle"></i></div>
-      <div class="problem-messages">
-        <p {{bind-attr class="loadingProblems:invisible"}}>
-          {{i18n admin.dashboard.problems_found}}
-          <ul {{bind-attr class="loadingProblems:invisible"}}>
-            {{#each problem in problems}}
-              <li>{{{problem}}}</li>
-            {{/each}}
-          </ul>
-        </p>
-        <p class="actions">
-          <small>{{i18n admin.dashboard.last_checked}}: {{problemsTimestamp}}</small>
-          <button {{action refreshProblems}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
-        </p>
-      </div>
-      <div class="clearfix"></div>
-    </div>
-  {{else}}
-    {{#if thereWereProblems}}
-      <div class="dashboard-stats detected-problems">
-        <div class="look-here">&nbsp;</div>
-        <div class="problem-messages">
-          <p>
-            {{i18n admin.dashboard.no_problems}}
-            <button {{action refreshProblems}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
-          </p>
-        </div>
-        <div class="clearfix"></div>
-      </div>
-    {{/if}}
-  {{/if}}
-
   {{#if Discourse.SiteSettings.version_checks}}
     {{partial 'admin/templates/version_checks'}}
   {{/if}}
@@ -138,7 +104,40 @@
 </div>
 
 <div class="dashboard-right">
-  {{ render 'admin/templates/commits' githubCommits }}
+
+  {{#if foundProblems}}
+    <div class="dashboard-stats detected-problems">
+      <div class="look-here"><i class="fa fa-exclamation-triangle"></i></div>
+      <div class="problem-messages">
+        <p {{bind-attr class="loadingProblems:invisible"}}>
+          {{i18n admin.dashboard.problems_found}}
+          <ul {{bind-attr class="loadingProblems:invisible"}}>
+            {{#each problem in problems}}
+              <li>{{{problem}}}</li>
+            {{/each}}
+          </ul>
+        </p>
+        <p class="actions">
+          <small>{{i18n admin.dashboard.last_checked}}: {{problemsTimestamp}}</small>
+          <button {{action refreshProblems}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+        </p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  {{else}}
+    {{#if thereWereProblems}}
+      <div class="dashboard-stats detected-problems">
+        <div class="look-here">&nbsp;</div>
+        <div class="problem-messages">
+          <p>
+            {{i18n admin.dashboard.no_problems}}
+            <button {{action refreshProblems}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+          </p>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    {{/if}}
+  {{/if}}
 
   <div class="dashboard-stats">
     <table class="table table-condensed table-hover">

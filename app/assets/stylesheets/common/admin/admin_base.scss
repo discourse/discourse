@@ -591,6 +591,7 @@ section.details {
 
 .dashboard-left {
   float: left;
+  margin-top: 10px;
   width: 60%;
 }
 .dashboard-right {
@@ -606,6 +607,8 @@ section.details {
 }
 
 .version-check {
+  margin-top: 10px;
+
   .version-number {
     font-size: 18px;
     font-weight: bold;
@@ -790,9 +793,9 @@ table.api-keys {
   }
 
   .referred-topic-title {
-    width: 410px;
-    @include medium-width { width: 360px; }
-    @include small-width  { width: 320px; }
+    width: 355px;
+    @include medium-width { width: 305px; }
+    @include small-width  { width: 265px; }
   }
 }
 
