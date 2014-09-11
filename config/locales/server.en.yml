@@ -1308,8 +1308,6 @@ en:
 
         <img src="/images/welcome/quote-reply.png" width="350" height="129">
 
-        (To quote an entire post, use the Import Quote button on the editor toolbar.)
-
         To ping someone in your reply, mention their name. Type `@` and an autocompleter will pop up.
 
         <img src="/images/welcome/username-completion.png" width="230" height="131">
@@ -1318,22 +1316,23 @@ en:
 
         ## What else can I do?
 
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
         There are action buttons at the bottom of each post.
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
 
         To let someone know that you enjoyed their post, use the **like** button. If you see a problem with a post, privately let them, or our staff, know about it with the **flag** button.
 
         You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
 
-
         ## Who is talking to me?
 
-        When someone replies to your post, quotes your post, or mentions your `@username`, a number will appear over a conversation button at the top right of the page. Use it see who's talking to you, and where.
+        When someone replies to your post, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it access your **notifications**.
 
         <img src="/images/welcome/notification-panel.png" width="178" height="59">
 
-        You will get email notifications of direct replies (and private messages) if you are not present on the site when they arrive.
+        From here you can also **search**, access the **menu** to jump elsewhere, and view your **profile**.
+
+        Don't worry about missing a reply – you'll be emailed direct replies (and private messages) if you aren't online when they arrive.
 
         ## When are conversations new?
 
