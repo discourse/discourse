@@ -3,6 +3,7 @@
 **/
 export default {
   name: "message-bus",
+  after: 'inject-objects',
 
   initialize: function() {
 
