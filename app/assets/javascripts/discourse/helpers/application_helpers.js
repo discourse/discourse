@@ -1,24 +1,6 @@
 var safe = Handlebars.SafeString;
 
 /**
-  Produces a link to a route with support for i18n on the title
-
-  @method titled-link-to
-  @for Handlebars
-**/
-Handlebars.registerHelper('titled-link-to', function(name, object) {
-  var options = [].slice.call(arguments, -1)[0];
-  if (options.hash.titleKey) {
-    options.hash.title = I18n.t(options.hash.titleKey);
-  }
-  if (arguments.length === 3) {
-    return Ember.Handlebars.helpers['link-to'].call(this, name, object, options);
-  } else {
-    return Ember.Handlebars.helpers['link-to'].call(this, name, options);
-  }
-});
-
-/**
   Bound avatar helper.
 
   @method bound-avatar
