@@ -11,7 +11,8 @@ export default {
     app.DiscoveryParentCategoryRoute = buildCategoryRoute('latest');
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute('latest', {no_subcategories: true});
 
-    Discourse.Site.currentProp('filters').forEach(function(filter) {
+    var site = container.lookup('site:main');
+    site.get('filters').forEach(function(filter) {
       app["Discovery" + filter.capitalize() + "Controller"] = DiscoverySortableController.extend();
       app["Discovery" + filter.capitalize() + "Route"] = buildTopicRoute(filter);
       app["Discovery" + filter.capitalize() + "CategoryRoute"] = buildCategoryRoute(filter);
@@ -29,7 +30,7 @@ export default {
 
     Discourse.DiscoveryTopCategoryRoute = buildCategoryRoute('top');
     Discourse.DiscoveryTopCategoryNoneRoute = buildCategoryRoute('top', {no_subcategories: true});
-    Discourse.Site.currentProp('periods').forEach(function(period) {
+    site.get('periods').forEach(function(period) {
       app["DiscoveryTop" + period.capitalize() + "Controller"] = DiscoverySortableController.extend();
       app["DiscoveryTop" + period.capitalize() + "Route"] = buildTopicRoute('top/' + period);
       app["DiscoveryTop" + period.capitalize() + "CategoryRoute"] = buildCategoryRoute('top/' + period);
