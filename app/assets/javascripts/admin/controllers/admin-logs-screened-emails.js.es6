@@ -10,11 +10,13 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
   loading: false,
   content: [],
 
-  clearBlock: function(row){
-    row.clearBlock().then(function(){
-      // feeling lazy
-      window.location.reload();
-    });
+  actions: {
+    clearBlock: function(row){
+      row.clearBlock().then(function(){
+        // feeling lazy
+        window.location.reload();
+      });
+    }
   },
 
   show: function() {

@@ -11,6 +11,8 @@ export default Ember.Controller.extend({
   versionCheck: null,
   problemsCheckMinutes: 1,
 
+  showVersionChecks: Discourse.computed.setting('version_checks'),
+
   foundProblems: function() {
     return(Discourse.User.currentProp('admin') && this.get('problems') && this.get('problems').length > 0);
   }.property('problems'),
