@@ -513,6 +513,8 @@ class Topic < ActiveRecord::Base
   end
 
   def change_category_to_id(category_id)
+    return false if private_message?
+
     # If the category name is blank, reset the attribute
     if (category_id.nil? || category_id.to_i == 0)
       cat = Category.find_by(id: SiteSetting.uncategorized_category_id)

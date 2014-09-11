@@ -258,7 +258,7 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't notify you in a private message" do
-        topic.update_column(:archetype, Archetype.private_message)
+        topic.update_columns(category_id: nil, archetype: Archetype.private_message)
         finder.check_dominating_topic.should be_blank
       end
 

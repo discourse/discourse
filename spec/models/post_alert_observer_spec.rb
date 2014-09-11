@@ -66,7 +66,7 @@ describe PostAlertObserver do
     let(:mention_post) { Fabricate(:post, user: user, raw: 'Hello @eviltrout')}
     let(:topic) do
       topic = mention_post.topic
-      topic.update_column :archetype, Archetype.private_message
+      topic.update_columns archetype: Archetype.private_message, category_id: nil
       topic
     end
 

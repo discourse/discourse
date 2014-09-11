@@ -28,7 +28,7 @@ module TopicGuardian
   # Editing Method
   def can_edit_topic?(topic)
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
-    return true if is_staff? || user.has_trust_level?(TrustLevel[3])
+    return true if is_staff? || (!topic.private_message? && user.has_trust_level?(TrustLevel[3]))
     return false if topic.archived
     is_my_own?(topic)
   end
