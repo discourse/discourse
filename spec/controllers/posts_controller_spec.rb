@@ -22,13 +22,13 @@ shared_examples 'finding and showing post' do
 
     it "can't find deleted posts as an anonymous user" do
       xhr :get, action, params
-      response.should be_forbidden
+      response.status.should == 404
     end
 
     it "can't find deleted posts as a regular user" do
       log_in(:user)
       xhr :get, action, params
-      response.should be_forbidden
+      response.status.should == 404
     end
 
     it "can find posts as a moderator" do
