@@ -17,18 +17,28 @@ export default DiscourseController.extend(ModalFunctionality, {
 
       this.set('disabled', true);
 
-      var success = function() {
+      var success = function(data) {
         // don't tell people what happened, this keeps it more secure (ensure same on server)
         var escaped = Handlebars.Utils.escapeExpression(self.get('accountEmailOrUsername'));
-        if (self.get('accountEmailOrUsername').match(/@/)) {
-          self.flash(I18n.t('forgot_password.complete_email', {email: escaped}));
-        } else {
-          self.flash(I18n.t('forgot_password.complete_username', {username: escaped}));
+        var isEmail = self.get('accountEmailOrUsername').match(/@/);
+
+        var key = 'forgot_password.complete_' + (isEmail ? 'email' : 'username');
+        var extraClass;
+
+        if (data.user_found === true) {
+          key += '_found';
         }
+
+        if (data.user_found === false) {
+          key += '_not_found';
+          extraClass = 'error';
+        }
+
+        self.flash(I18n.t(key, {email: escaped, username: escaped}), extraClass);
       };
 
       var fail = function(e) {
-        self.flash(e.responseJSON.errors[0], 'alert-error');
+        self.flash(e.responseJSON.errors[0], 'error');
       };
 
       Discourse.ajax('/session/forgot_password', {
