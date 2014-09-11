@@ -522,20 +522,7 @@ iframe {
 }
 
 .extra-info-wrapper {
-  float: left;
-  width: 78%;
-
-  @media all and (max-width : 1080px) {
-    width: 75%;
-    }
-
-  @media all and (max-width : 870px) {
-    width: 70%;
-    }
-
-  @media all and (max-width : 725px) {
-    width: 61%;
-    }
+  overflow: hidden;
 
   .topic-statuses {
     i  { color: $header_primary; }
