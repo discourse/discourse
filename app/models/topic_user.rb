@@ -156,11 +156,13 @@ class TopicUser < ActiveRecord::Base
       # seen_post_count represents the highest_post_number of the topic when
       # the user visited it. It may be out of alignment with last_read, meaning
       # ... user visited the topic but did not read the posts
+      #
+      # 86400000 = 1 day
       rows = exec_sql("UPDATE topic_users
                                     SET
-                                      last_read_post_number = greatest(:post_number, tu.last_read_post_number),
+                                      last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
                                       seen_post_count = t.highest_post_number,
-                                      total_msecs_viewed = tu.total_msecs_viewed + :msecs,
+                                      total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
                                       notification_level =
                                          case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
                                             coalesce(u.auto_track_topics_after_msecs,:threshold) and
