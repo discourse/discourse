@@ -54,6 +54,10 @@ class SessionController < ApplicationController
     params.require(:login)
     params.require(:password)
 
+    if params[:password].length > 200
+      return invalid_credentials
+    end
+
     login = params[:login].strip
     login = login[1..-1] if login[0] == "@"
 
