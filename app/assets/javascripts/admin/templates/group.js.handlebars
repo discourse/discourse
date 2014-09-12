@@ -24,6 +24,6 @@
 <div class='controls'>
   <button {{action save}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
   {{#unless automatic}}
-    <a {{action destroy}} class='delete-link'>{{i18n admin.customize.delete}}</a>
+    <button {{action destroy}} class='btn btn-danger'><i class="fa fa-trash-o"></i>{{i18n admin.customize.delete}}</button>
   {{/unless}}
 </div>
