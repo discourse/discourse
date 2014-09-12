@@ -1349,11 +1349,13 @@
           return [ consumed, link ];
         }
 
-        m = text.match(new RegExp("^\\((" + urlRegexp + ")\\)"));
-        if (m && m[1]) {
-          consumed += m[0].length;
-          link = ["link", {href: m[1]}].concat(children);
-          return [consumed, link];
+        if (text.indexOf('(') === 0 && text.indexOf(')') !== -1) {
+          m = text.match(new RegExp("^\\((" + urlRegexp + ")\\)"));
+          if (m && m[1]) {
+            consumed += m[0].length;
+            link = ["link", {href: m[1]}].concat(children);
+            return [consumed, link];
+          }
         }
 
         // [Alt text][id]
