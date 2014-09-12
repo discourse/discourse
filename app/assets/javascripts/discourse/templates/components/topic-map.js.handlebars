@@ -10,14 +10,14 @@
       <a href='{{unbound topic.url}}'>
       <h4>{{i18n created_lowercase}}</h4>
       {{avatar details.created_by imageSize="tiny"}}
-      {{date topic.created_at}}
+      {{format-date topic.created_at}}
       </a>
     </li>
     <li>
       <a {{bind-attr href="topic.lastPostUrl"}}>
       <h4>{{i18n last_post_lowercase}}</h4>
       {{avatar details.last_poster imageSize="tiny"}}
-      {{date topic.last_posted_at}}
+      {{format-date topic.last_posted_at}}
       </a>
     </li>
     <li>

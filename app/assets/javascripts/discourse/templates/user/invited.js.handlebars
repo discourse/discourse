@@ -36,9 +36,9 @@
                 {{#link-to 'user' invite.user}}{{avatar invite.user imageSize="tiny"}}{{/link-to}}
                 {{#link-to 'user' invite.user}}{{invite.user.username}}{{/link-to}}
               </td>
-              <td>{{date invite.redeemed_at}}</td>
+              <td>{{format-date invite.redeemed_at}}</td>
               {{#if can_see_invite_details}}
-                <td>{{date invite.user.last_seen_at}}</td>
+                <td>{{format-date invite.user.last_seen_at}}</td>
                 <td>{{number invite.user.topics_entered}}</td>
                 <td>{{number invite.user.posts_read_count}}</td>
                 <td>{{{unbound invite.user.time_read}}}</td>

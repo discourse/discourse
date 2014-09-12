@@ -7,7 +7,7 @@
         </div>
       </a>
       <span class="time">
-        {{date path="created_at" leaveAgo="true"}}
+        {{format-date path="created_at" leaveAgo="true"}}
       </span>
       <span class="title">
         <a href="{{unbound url}}">{{unbound topic_title}}</a>
@@ -17,7 +17,7 @@
       </span>
       {{#if deleted}}
         <span class="delete-info">
-          <i class="fa fa-trash-o"></i> {{avatar deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}} {{date path="deleted_at" leaveAgo="true"}}
+          <i class="fa fa-trash-o"></i> {{avatar deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}} {{format-date path="deleted_at" leaveAgo="true"}}
         </span>
       {{/if}}
     </div>

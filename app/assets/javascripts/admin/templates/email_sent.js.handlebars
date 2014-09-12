@@ -19,7 +19,7 @@
 
   {{#each model}}
     <tr>
-      <td>{{date created_at}}</td>
+      <td>{{format-date created_at}}</td>
       <td>
         {{#if user}}
           {{#link-to 'adminUser' user}}{{avatar user imageSize="tiny"}}{{/link-to}}

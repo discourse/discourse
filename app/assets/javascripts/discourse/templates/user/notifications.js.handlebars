@@ -12,7 +12,7 @@
   <div {{bind-attr class=":item :notification read::unread"}}>
     {{notification-item notification=this scope=scope}}
     <span class="time">
-      {{date path="created_at" leaveAgo="true"}}
+      {{format-date path="created_at" leaveAgo="true"}}
     </span>
   </div>
 {{/each}}

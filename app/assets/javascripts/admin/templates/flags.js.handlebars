@@ -66,7 +66,7 @@
                           {{#link-to 'adminUser' user}}
                             {{user.username}}
                           {{/link-to}}
-                          {{age flaggedAt}}
+                          {{format-age flaggedAt}}
                           <br />
                           {{flagType}}
                         </td>
@@ -88,7 +88,7 @@
                             {{/link-to}}
                           </td>
                           <td>
-                            {{age disposedAt}}
+                            {{format-age disposedAt}}
                             {{{dispositionIcon}}}
                             {{#if tookAction}}
                               <i class='fa fa-gavel' title='{{i18n admin.flags.took_action}}'></i>
