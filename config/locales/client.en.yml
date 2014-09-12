@@ -332,11 +332,11 @@ en:
       unread_message_count: "Messages"
 
       staff_counters:
-        flags_given: "helpful flags cast"
+        flags_given: "helpful flags"
         flagged_posts: "flagged posts"
         deleted_posts: "deleted posts"
         suspensions: "suspensions"
-        warnings_received: "warnings received"
+        warnings_received: "warnings"
 
       messages:
         all: "All"
