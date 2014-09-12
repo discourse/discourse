@@ -9,7 +9,7 @@ export default function(filter, params) {
       return Discourse.Category.findBySlug(modelParams.slug, modelParams.parentSlug);
     },
 
-    afterModel: function(model, transaction) {
+    afterModel: function(model, transition) {
       if (!model) {
         this.replaceWith('/404');
         return;
@@ -17,7 +17,7 @@ export default function(filter, params) {
 
       this._setupNavigation(model);
       return Em.RSVP.all([this._createSubcategoryList(model),
-                          this._retrieveTopicList(model, transaction)]);
+                          this._retrieveTopicList(model, transition)]);
     },
 
     _setupNavigation: function(model) {
@@ -46,13 +46,14 @@ export default function(filter, params) {
       return Em.RSVP.resolve();
     },
 
-    _retrieveTopicList: function(model, transaction) {
+    _retrieveTopicList: function(model, transition) {
       var listFilter = "category/" + Discourse.Category.slugFor(model) + "/l/" + filter,
           self = this;
 
-      var findOpts = filterQueryParams(transaction.queryParams, params);
+      var findOpts = filterQueryParams(transition.queryParams, params),
+          extras = { cached: this.isPoppedState(transition) };
 
-      return Discourse.TopicList.list(listFilter, findOpts).then(function(list) {
+      return Discourse.TopicList.list(listFilter, findOpts, extras).then(function(list) {
         // If all the categories are the same, we can hide them
         var hideCategory = !list.get('topics').find(function (t) { return t.get('category') !== model; });
         list.set('hideCategory', hideCategory);
