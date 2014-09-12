@@ -117,7 +117,7 @@ export default Ember.DefaultResolver.extend({
 
   findUnderscoredTemplate: function(parsedName) {
     var decamelized = parsedName.fullNameWithoutType.decamelize();
-    var underscored = decamelized.replace("-", "_");
+    var underscored = decamelized.replace(/\-/g, "_");
     return Ember.TEMPLATES[underscored];
   },
 
