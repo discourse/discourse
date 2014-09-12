@@ -206,9 +206,10 @@ Discourse.TopicList.reopenClass({
       if (extras.cached) {
         var cachedList = session.get('topicList');
 
-        // Try to use the cached version
+        // Try to use the cached version if it exists and is greater than the topics per page
         if (cachedList && (cachedList.get('filter') === filter) &&
-                 _.isEqual(cachedList.get('listParams'), filterParams)) {
+            (cachedList.get('topics.length') || 0) > Discourse.SiteSettings.topics_per_page &&
+            _.isEqual(cachedList.get('listParams'), filterParams)) {
           cachedList.set('loaded', true);
 
           if (tracking) {
@@ -216,10 +217,12 @@ Discourse.TopicList.reopenClass({
           }
           return resolve(cachedList);
         }
+        session.set('topicList', null);
+      } else {
+        // Clear the cache
+        session.setProperties({topicList: null, topicListScrollPosition: null});
       }
 
-      // Clear the cache
-      session.setProperties({topicList: null, topicListScrollPosition: null});
 
       // Clean up any string parameters that might slip through
       filterParams = filterParams || {};

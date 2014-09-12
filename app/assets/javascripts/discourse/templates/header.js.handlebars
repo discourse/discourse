@@ -3,35 +3,6 @@
 
     {{home-logo minimized=showExtraInfo}}
 
-    {{#if showExtraInfo}}
-      <div class="extra-info-wrapper">
-        <div class="extra-info">
-          {{#if showStarButton}}
-            <a {{bind-attr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
-          {{/if}}
-          <h1>
-            {{#if showPrivateMessageGlyph}}
-              <span class="private-message-glyph">{{fa-icon envelope}}</span>
-            {{/if}}
-            {{#if topic.category.parentCategory}}
-              {{bound-category-link topic.category.parentCategory}}
-            {{/if}}
-            {{bound-category-link topic.category}}
-            {{#if topic.details.loaded}}
-              {{topic-status topic=topic}}
-              <a class='topic-link' href='{{unbound topic.url}}' {{action jumpToTopPost}}>{{{topic.fancy_title}}}</a>
-            {{else}}
-              {{#if topic.errorLoading}}
-                {{topic.errorTitle}}
-              {{else}}
-                {{i18n topic.loading}}
-              {{/if}}
-            {{/if}}
-          </h1>
-        </div>
-      </div>
-    {{/if}}
-
     <div class='panel clearfix'>
       {{#unless currentUser}}
         {{#if showSignUpButton}}
@@ -120,6 +91,36 @@
       {{render "userDropdown"}}
 
     </div>
+
+    {{#if showExtraInfo}}
+      <div class="extra-info-wrapper">
+        <div class="extra-info">
+          {{#if showStarButton}}
+            <a {{bind-attr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
+          {{/if}}
+          <h1>
+            {{#if showPrivateMessageGlyph}}
+              <span class="private-message-glyph">{{fa-icon envelope}}</span>
+            {{/if}}
+            {{#if topic.category.parentCategory}}
+              {{bound-category-link topic.category.parentCategory}}
+            {{/if}}
+            {{bound-category-link topic.category}}
+            {{#if topic.details.loaded}}
+              {{topic-status topic=topic}}
+              <a class='topic-link' href='{{unbound topic.url}}' {{action jumpToTopPost}}>{{{topic.fancy_title}}}</a>
+            {{else}}
+              {{#if topic.errorLoading}}
+                {{topic.errorTitle}}
+              {{else}}
+                {{i18n topic.loading}}
+              {{/if}}
+            {{/if}}
+          </h1>
+        </div>
+      </div>
+    {{/if}}
+
   </div>
 </div>
 

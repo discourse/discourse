@@ -4,11 +4,15 @@
 export default {
   name: "subscribe-user-notifications",
   after: 'message-bus',
-  initialize: function() {
+  initialize: function(container) {
     var user = Discourse.User.current();
+
+    var site = container.lookup('site:main'),
+        siteSettings = container.lookup('site-settings:main');
+
     if (user) {
       var bus = Discourse.MessageBus;
-      bus.callbackInterval = Discourse.SiteSettings.polling_interval;
+      bus.callbackInterval = siteSettings.polling_interval;
       bus.enableLongPolling = true;
       bus.baseUrl = Discourse.getURL("/");
 
@@ -30,7 +34,6 @@ export default {
       }), user.notification_channel_position);
 
       bus.subscribe("/categories", function(data){
-        var site = Discourse.Site.current();
         _.each(data.categories,function(c){
           site.updateCategory(c);
         });

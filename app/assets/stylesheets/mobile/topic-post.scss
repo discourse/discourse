@@ -330,7 +330,7 @@ span.post-count {
 
 .topic-post {
   &.moderator {
-    background-color: scale-color($highlight, $lightness: 60%);
+    background-color: scale-color($highlight, $lightness: 75%);
   }
 }
 
@@ -373,19 +373,6 @@ iframe {
   position: relative;
 }
 
-.wiki {
-  float: left;
-  padding: 10px;
-  color: #408040;
-  i {
-    float: left;
-  }
-  h3 {
-    float: left;
-    margin-left: 10px;
-  }
-}
-
 .modal-body {
   input[type=text] {
     font-size: 16px;
@@ -393,7 +380,6 @@ iframe {
     margin-top: 10px;
   }
 }
-
 
 #share-link {
   width: 290px;

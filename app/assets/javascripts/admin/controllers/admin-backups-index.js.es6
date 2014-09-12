@@ -28,11 +28,11 @@ export default Ember.ArrayController.extend({
     }
   }.property("status.isOperationRunning"),
 
-  readOnlyModeTitle: function() { return this._readOnlyModeI18n("title"); }.property("Discourse.isReadOnly"),
-  readOnlyModeText: function() { return this._readOnlyModeI18n("text"); }.property("Discourse.isReadOnly"),
+  readOnlyModeTitle: function() { return this._readOnlyModeI18n("title"); }.property("site.isReadOnly"),
+  readOnlyModeText: function() { return this._readOnlyModeI18n("text"); }.property("site.isReadOnly"),
 
   _readOnlyModeI18n: function(value) {
-    var action = Discourse.get("isReadOnly") ? "disable" : "enable";
+    var action = this.site.get("isReadOnly") ? "disable" : "enable";
     return I18n.t("admin.backups.read_only." + action + "." + value);
   },
 
@@ -45,7 +45,7 @@ export default Ember.ArrayController.extend({
     **/
     toggleReadOnlyMode: function() {
       var self = this;
-      if (!Discourse.get("isReadOnly")) {
+      if (!this.site.get("isReadOnly")) {
         bootbox.confirm(
           I18n.t("admin.backups.read_only.enable.confirm"),
           I18n.t("no_value"),
@@ -65,11 +65,12 @@ export default Ember.ArrayController.extend({
   },
 
   _toggleReadOnlyMode: function(enable) {
+    var site = this.site;
     Discourse.ajax("/admin/backups/readonly", {
       type: "PUT",
       data: { enable: enable }
     }).then(function() {
-      Discourse.set("isReadOnly", enable);
+      site.set("isReadOnly", enable);
     });
   }
 });

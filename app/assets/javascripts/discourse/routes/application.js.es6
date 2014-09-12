@@ -41,7 +41,7 @@ var ApplicationRoute = Em.Route.extend({
     showLogin: function() {
       var self = this;
 
-      if (Discourse.get("isReadOnly")) {
+      if (this.site.get("isReadOnly")) {
         bootbox.alert(I18n.t("read_only_mode.login_disabled"));
       } else {
         if(Discourse.SiteSettings.enable_sso) {

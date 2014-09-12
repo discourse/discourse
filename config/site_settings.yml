@@ -154,6 +154,7 @@ basic:
   topics_per_page:
     default: 30
     min: 1
+    client: true
   show_subcategory_list:
     default: false
     client: true
@@ -238,6 +239,7 @@ login:
   email_domains_whitelist:
     default: ''
     type: list
+  forgot_password_strict: false
 
 users:
   min_username_length:

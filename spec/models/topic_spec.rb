@@ -801,16 +801,22 @@ describe Topic do
     context 'changing category' do
       let(:category) { Fabricate(:category) }
 
-      before do
+      it "creates a new revision" do
         topic.change_category_to_id(category.id)
+        post.revisions.size.should == 1
       end
 
-      it "creates a new revision" do
-        post.revisions.size.should == 1
+      it "does nothing for private messages" do
+        topic.archetype = "private_message"
+        topic.category_id = nil
+
+        topic.change_category_to_id(category.id)
+        topic.category_id.should == nil
       end
 
       context "removing a category" do
         before do
+          topic.change_category_to_id(category.id)
           topic.change_category_to_id(nil)
         end
 

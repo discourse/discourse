@@ -21,6 +21,11 @@ var parser = window.BetterMarkdown,
 **/
 function initializeDialects() {
   MD.buildBlockOrder(dialect.block);
+  var index = dialect.block.__order__.indexOf("code");
+  if (index > -1) {
+    dialect.block.__order__.splice(index, 1);
+    dialect.block.__order__.unshift("code");
+  }
   MD.buildInlinePatterns(dialect.inline);
   initialized = true;
 }

@@ -88,7 +88,7 @@
       </div>
     </div>
 
-    {{#if Discourse.SiteSettings.allow_profile_backgrounds}}
+    {{#if allowBackgrounds}}
     <div class="control-group pref-profile-bg">
       <label class="control-label">{{i18n user.change_profile_background.title}}</label>
       <div class="controls">
@@ -167,7 +167,7 @@
       {{preference-checkbox labelKey="user.enable_quoting" checked=enable_quoting}}
       {{preference-checkbox labelKey="user.dynamic_favicon" checked=dynamic_favicon}}
       {{preference-checkbox labelKey="user.disable_jump_reply" checked=disable_jump_reply}}
-      {{#unless Discourse.SiteSettings.edit_history_visible_to_public}}
+      {{#unless editHistoryVisible}}
         {{preference-checkbox labelKey="user.edit_history_public" checked=edit_history_public}}
       {{/unless}}
       {{plugin-outlet "user_custom_preferences"}}

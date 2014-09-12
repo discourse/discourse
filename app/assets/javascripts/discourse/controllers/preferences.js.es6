@@ -1,18 +1,12 @@
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  This controller supports actions related to updating one's preferences
-
-  @class PreferencesController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
 export default ObjectController.extend({
 
   allowAvatarUpload: Discourse.computed.setting('allow_uploaded_avatars'),
   allowUserLocale: Discourse.computed.setting('allow_user_locale'),
   ssoOverridesAvatar: Discourse.computed.setting('sso_overrides_avatar'),
+  allowBackgrounds: Discourse.computed.setting('allow_profile_backgrounds'),
+  editHistoryVisible: Discourse.computed.setting('edit_history_visible_to_public'),
 
   selectedCategories: function(){
     return [].concat(this.get("watchedCategories"), this.get("trackedCategories"), this.get("mutedCategories"));

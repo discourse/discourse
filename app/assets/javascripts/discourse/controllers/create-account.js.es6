@@ -19,6 +19,7 @@ export default DiscourseController.extend(ModalFunctionality, {
   hasAuthOptions: Em.computed.notEmpty('authOptions'),
   canCreateLocal: Discourse.computed.setting('enable_local_logins'),
   showCreateForm: Em.computed.or('hasAuthOptions', 'canCreateLocal'),
+  maxUsernameLength: Discourse.computed.setting('max_username_length'),
 
   resetForm: function() {
     this.setProperties({
@@ -200,7 +201,7 @@ export default DiscourseController.extend(ModalFunctionality, {
     }
 
     // If too long
-    if (this.get('accountUsername').length > Discourse.SiteSettings.max_username_length) {
+    if (this.get('accountUsername').length > this.get('maxUsernameLength')) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.username.too_long')

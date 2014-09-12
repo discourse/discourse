@@ -13,7 +13,7 @@ describe ListController do
 
   describe 'indexes' do
 
-    Discourse.anonymous_filters.each do |filter|
+    (Discourse.anonymous_filters - [:categories]).each do |filter|
       context "#{filter}" do
         before { xhr :get, filter }
         it { should respond_with(:success) }
@@ -39,7 +39,7 @@ describe ListController do
 
   describe 'RSS feeds' do
 
-    Discourse.anonymous_filters.each do |filter|
+    Discourse.feed_filters.each do |filter|
 
       it 'renders RSS' do
         get "#{filter}_feed", format: :rss

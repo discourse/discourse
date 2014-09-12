@@ -73,7 +73,7 @@ module Import
     protected
 
     def ensure_import_is_enabled
-      raise Import::ImportDisabledError unless SiteSetting.allow_restore?
+      raise Import::ImportDisabledError unless Rails.env.development? || SiteSetting.allow_restore?
     end
 
     def ensure_no_operation_is_running

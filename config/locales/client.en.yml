@@ -586,7 +586,11 @@ en:
       reset: "Reset Password"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
+      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
+      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
 
+      complete_username_not_found: "No account matches the username <b>%{username}</b>"
+      complete_email_not_found: "No account matches <b>%{email}</b>"
     login:
       title: "Log In"
       username: "User"
@@ -1103,8 +1107,11 @@ en:
           yes_value: "Yes, delete the replies too"
           no_value: "No, just this post"
         admin: "post admin actions"
-        wiki: "Wiki post"
-        unwiki: "Unwiki post"
+        wiki: "Make Wiki"
+        unwiki: "Remove Wiki"
+        convert_to_moderator: "Add Staff Color"
+        revert_to_regular: "Remove Staff Color"
+        rebake: "Rebuild HTML"
 
       actions:
         flag: 'Flag'
@@ -2175,6 +2182,24 @@ en:
         great_post:
           name: Great Post
           description: Received 50 likes on a post. This badge can be granted multiple times
+        nice_topic:
+          name: Nice Topic
+          description: Received 10 likes on a topic. This badge can be granted multiple times
+        good_topic:
+          name: Good Topic
+          description: Received 25 likes on a topic. This badge can be granted multiple times
+        great_topic:
+          name: Great Topic
+          description: Received 50 likes on a topic. This badge can be granted multiple times
+        nice_share:
+          name: Nice Share
+          description: Shared a post with 25 unique visitors
+        good_share:
+          name: Good Share
+          description: Shared a post with 300 unique visitors
+        great_share:
+          name: Great Share
+          description: Shared a post with 1000 unique visitors
         first_like:
           name: First Like
           description: Liked a post

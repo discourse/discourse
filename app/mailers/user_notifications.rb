@@ -30,6 +30,10 @@ class UserNotifications < ActionMailer::Base
                  email_token: opts[:email_token])
   end
 
+  def account_created(user, opts={})
+    build_email( user.email, template: "user_notifications.account_created", email_token: opts[:email_token])
+  end
+
 
   def digest(user, opts={})
     @user = user

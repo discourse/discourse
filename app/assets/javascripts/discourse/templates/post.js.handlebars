@@ -25,12 +25,6 @@
           <i class="fa fa-trash-o deleted-user-avatar"></i>
         {{/unless}}
       </div>
-      {{#if wiki}}
-        <div {{action editPost this}} class="wiki" title="{{i18n post.wiki.about}}"><i class="fa fa-pencil-square-o fa-3x"></i></div>
-      {{/if}}
-      {{#if via_email}}
-        <div title="{{i18n post.via_email}}" class="via-email"><i class="fa fa-envelope-o fa-2x"></i></div>
-      {{/if}}
     </div>
 
     <div class='topic-body'>
@@ -53,6 +47,12 @@
               </span>
             {{/if}}
           </div>
+        {{/if}}
+        {{#if wiki}}
+          <div class="post-info wiki" title="{{i18n post.wiki.about}}" {{action editPost this}}><i class="fa fa-pencil-square-o"></i></div>
+        {{/if}}
+        {{#if via_email}}
+          <div class="post-info via-email" title="{{i18n post.via_email}}"><i class="fa fa-envelope-o"></i></div>
         {{/if}}
         <div {{bind-attr class=":read-state read"}} title="{{i18n post.unread}}"><i class='fa fa-circle'></i></div>
       </div>

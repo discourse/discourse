@@ -35,7 +35,9 @@
   <div class='display-row email'>
     <div class='field'>{{i18n user.email.title}}</div>
     <div class='value'><a href="mailto:{{unbound email}}">{{email}}</a></div>
-    <div class='controls'>{{i18n admin.users.not_verified}}</div>
+    {{#unless active}}
+      <div class='controls'>{{i18n admin.users.not_verified}}</div>
+    {{/unless}}
   </div>
 
   <div class='display-row'>

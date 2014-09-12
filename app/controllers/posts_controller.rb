@@ -241,6 +241,26 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def post_type
+    guardian.ensure_can_change_post_type!
+
+    post = find_post_from_params
+    post.post_type = params[:post_type].to_i
+    post.version += 1
+    post.save
+
+    render nothing: true
+  end
+
+  def rebake
+    guardian.ensure_can_rebake!
+
+    post = find_post_from_params
+    post.rebake!(invalidate_oneboxes: true)
+
+    render nothing: true
+  end
+
   def flagged_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_flagged_posts!
@@ -371,6 +391,7 @@ class PostsController < ApplicationController
     # Include deleted posts if the user is staff
     finder = finder.with_deleted if current_user.try(:staff?)
     post = finder.first
+    raise Discourse::NotFound unless post
     # load deleted topic
     post.topic = Topic.with_deleted.find(post.topic_id) if current_user.try(:staff?)
     guardian.ensure_can_see!(post)

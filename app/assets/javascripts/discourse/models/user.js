@@ -79,9 +79,11 @@ Discourse.User = Discourse.Model.extend({
     var name = Handlebars.Utils.escapeExpression(this.get('name')),
         desc;
 
-    if(this.get('admin')) {
-      desc = I18n.t('user.admin', {user: name});
-      return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
+    if(Discourse.User.currentProp("admin") || Discourse.User.currentProp("moderator")) {
+      if(this.get('admin')) {
+        desc = I18n.t('user.admin', {user: name});
+        return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
+      }
     }
     if(this.get('moderator')){
       desc = I18n.t('user.moderator', {user: name});
@@ -276,7 +278,10 @@ Discourse.User = Discourse.Model.extend({
     if (this.blank('statsExcludingPms')) return 0;
     var count = 0;
     _.each(this.get('statsExcludingPms'), function(val) {
-      count += val.count;
+      if (val.action_type === Discourse.UserAction.TYPES.posts ||
+          val.action_type === Discourse.UserAction.TYPES.topics ) {
+        count += val.count;
+      }
     });
     return count;
   }.property('statsExcludingPms.@each.count'),

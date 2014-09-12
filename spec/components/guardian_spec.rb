@@ -853,6 +853,13 @@ describe Guardian do
         end
       end
 
+      context 'private message' do
+        it 'returns false at trust level 3' do
+          topic.archetype = 'private_message'
+          Guardian.new(trust_level_3).can_edit?(topic).should eq(false)
+        end
+      end
+
       context 'archived' do
         it 'returns true as a moderator' do
           Guardian.new(moderator).can_edit?(build(:topic, user: user, archived: true)).should == true

@@ -263,6 +263,8 @@ Discourse::Application.routes.draw do
   resources :posts do
     put "bookmark"
     put "wiki"
+    put "post_type"
+    put "rebake"
     get "replies"
     get "revisions/:revision" => "posts#revisions"
     put "recover"

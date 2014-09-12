@@ -1,8 +1,10 @@
 export default {
   name: 'verbose-localization',
-  initialize: function() {
+  after: 'inject-objects',
 
-    if(Discourse.SiteSettings.verbose_localization){
+  initialize: function(container) {
+    var siteSettings = container.lookup('site-settings:main');
+    if (siteSettings.verbose_localization) {
       I18n.enable_verbose_localization();
     }
   }

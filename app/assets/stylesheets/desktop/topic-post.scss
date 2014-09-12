@@ -522,20 +522,7 @@ iframe {
 }
 
 .extra-info-wrapper {
-  float: left;
-  width: 78%;
-
-  @media all and (max-width : 1080px) {
-    width: 75%;
-    }
-
-  @media all and (max-width : 870px) {
-    width: 70%;
-    }
-
-  @media all and (max-width : 725px) {
-    width: 61%;
-    }
+  overflow: hidden;
 
   .topic-statuses {
     i  { color: $header_primary; }
@@ -610,7 +597,7 @@ iframe {
 
 .moderator {
   .topic-body {
-    background-color: dark-light-diff($highlight, $secondary, 50%, -80%);
+    background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
   }
 }
 
@@ -682,6 +669,7 @@ blockquote > *:last-child {
   .title {
     border-left: 5px solid darken(scale-color-diff(), 10%);
     background-color: scale-color-diff();
+    color: scale-color($primary, $lightness: 30%);
     padding: 12px 12px 0 12px;
     /* blockquote is underneath this and has top margin */
     .avatar { margin-right: 7px; }
@@ -759,24 +747,12 @@ $topic-avatar-width: 45px;
   }
 }
 .topic-avatar {
- border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
- padding-top: 16px;
- width: $topic-avatar-width;
- float: left;
- position: relative;
- z-index: 2;
-
- .wiki {
-   margin-top: 14px;
-   color: scale-color($primary, $lightness: 80%);
-   margin-left: 5px;
-   cursor: pointer;
- }
-
- .via-email {
-   margin: 14px 0 0 8px;
-   color: scale-color($primary, $lightness: 80%);
- }
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  padding-top: 16px;
+  width: $topic-avatar-width;
+  float: left;
+  position: relative;
+  z-index: 2;
 }
 
 .gap {

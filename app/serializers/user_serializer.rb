@@ -43,7 +43,7 @@ class UserSerializer < BasicUserSerializer
              :suspended_till,
              :uploaded_avatar_id,
              :badge_count,
-             :unread_notification_count,
+             :notification_count,
              :has_title_badges,
              :edit_history_public,
              :custom_fields
@@ -77,7 +77,7 @@ class UserSerializer < BasicUserSerializer
                      :tracked_category_ids,
                      :watched_category_ids,
                      :private_messages_stats,
-                     :unread_notification_count,
+                     :notification_count,
                      :disable_jump_reply,
                      :gravatar_avatar_upload_id,
                      :custom_avatar_upload_id,
@@ -244,8 +244,8 @@ class UserSerializer < BasicUserSerializer
     object.badges.where(allow_title: true).count > 0
   end
 
-  def unread_notification_count
-    Notification.where(user_id: object.id, read: false).count
+  def notification_count
+    Notification.where(user_id: object.id).count
   end
 
   def include_edit_history_public?

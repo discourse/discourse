@@ -1,7 +1,7 @@
 <div class='container'>
   {{custom-html "top"}}
-  {{Discourse.globalNotice}}
-  {{discourse-banner user=currentUser banner=Discourse.banner overlay=view.hasScrolled}}
+  {{global-notice}}
+  {{discourse-banner user=currentUser banner=site.banner overlay=view.hasScrolled}}
 </div>
 
 {{#if postStream.loaded}}
@@ -61,7 +61,7 @@
 
   <div class="container posts">
 
-    {{view Discourse.SelectedPostsView}}
+    {{view "selected-posts"}}
 
     <div class="row">
       <section class="topic-area" id='topic' data-topic-id='{{unbound id}}'>

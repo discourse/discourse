@@ -2,9 +2,9 @@
   <span class='topic'>
     {{topic-status topic=topic disableActions=true}}<span class='topic-title'>{{unbound topic.title}}</span>{{category-badge topic.category}}
   </span>
-  {{#unless Discourse.Mobile.mobileView}}
-  <span class='blurb'>
-  {{age created_at}} - {{{unbound blurb}}}
-  </span>
+  {{#unless controller.site.mobileView}}
+    <span class='blurb'>
+    {{age created_at}} - {{{unbound blurb}}}
+    </span>
   {{/unless}}
 </a>

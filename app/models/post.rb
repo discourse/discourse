@@ -525,7 +525,7 @@ class Post < ActiveRecord::Base
   end
 
   def save_revision
-    modifications = changes.extract!(:raw, :cooked, :edit_reason, :user_id, :wiki)
+    modifications = changes.extract!(:raw, :cooked, :edit_reason, :user_id, :wiki, :post_type)
     # make sure cooked is always present (oneboxes might not change the cooked post)
     modifications["cooked"] = [self.cooked, self.cooked] unless modifications["cooked"].present?
     PostRevision.create!(

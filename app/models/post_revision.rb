@@ -39,6 +39,17 @@ class PostRevision < ActiveRecord::Base
     }
   end
 
+  def post_type_changes
+    prev = lookup("post_type", 0)
+    cur = lookup("post_type", 1)
+    return if prev == cur
+
+    {
+        previous_post_type: prev,
+        current_post_type: cur,
+    }
+  end
+
   def title_changes
     prev = "<div>#{CGI::escapeHTML(previous("title"))}</div>"
     cur = "<div>#{CGI::escapeHTML(current("title"))}</div>"

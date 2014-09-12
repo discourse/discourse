@@ -42,17 +42,17 @@ describe BadgeGranter do
     it 'should grant missing badges' do
       post = Fabricate(:post, like_count: 30)
       2.times {
-        BadgeGranter.backfill(Badge.find(Badge::NicePost), post_ids: [post.id])
-        BadgeGranter.backfill(Badge.find(Badge::GoodPost))
+        BadgeGranter.backfill(Badge.find(Badge::NiceTopic), post_ids: [post.id])
+        BadgeGranter.backfill(Badge.find(Badge::GoodTopic))
       }
 
       # TODO add welcome
-      post.user.user_badges.pluck(:badge_id).sort.should == [Badge::NicePost,Badge::GoodPost]
+      post.user.user_badges.pluck(:badge_id).sort.should == [Badge::NiceTopic,Badge::GoodTopic]
 
       post.user.notifications.count.should == 2
 
-      Badge.find(Badge::NicePost).grant_count.should == 1
-      Badge.find(Badge::GoodPost).grant_count.should == 1
+      Badge.find(Badge::NiceTopic).grant_count.should == 1
+      Badge.find(Badge::GoodTopic).grant_count.should == 1
     end
   end
 
@@ -187,26 +187,29 @@ describe BadgeGranter do
       BadgeGranter.process_queue!
       UserBadge.find_by(user_id: user.id, badge_id: 5).should_not be_nil
 
+      post = create_post(topic: post.topic, user: user)
+      action = PostAction.act(liker, post, PostActionType.types[:like])
+
       # Nice post badge
       post.update_attributes like_count: 10
 
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
 
-      UserBadge.find_by(user_id: user.id, badge_id: 6).should_not be_nil
-      UserBadge.where(user_id: user.id, badge_id: 6).count.should == 1
+      UserBadge.find_by(user_id: user.id, badge_id: Badge::NicePost).should_not be_nil
+      UserBadge.where(user_id: user.id, badge_id: Badge::NicePost).count.should == 1
 
       # Good post badge
       post.update_attributes like_count: 25
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
-      UserBadge.find_by(user_id: user.id, badge_id: 7).should_not be_nil
+      UserBadge.find_by(user_id: user.id, badge_id: Badge::GoodPost).should_not be_nil
 
       # Great post badge
       post.update_attributes like_count: 50
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
-      UserBadge.find_by(user_id: user.id, badge_id: 8).should_not be_nil
+      UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost).should_not be_nil
 
       # Revoke badges on unlike
       post.update_attributes like_count: 49

@@ -749,6 +749,7 @@ en:
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
     email_domains_whitelist: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
+    forgot_password_strict: "Don't inform users of an account's existance when they use the forgot password dialog."
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
 
@@ -1291,48 +1292,45 @@ en:
 
         - While reading a topic, jump to the top &uarr; by selecting the topic title. Select the green progress bar at the bottom right for full navigation controls, or use the <kbd>home</kbd> and <kbd>end</kbd> keys.
 
-            <img src="http://www.discourse.org/images/welcome/progress-bar.png" width="190" height="52">
+            <img src="/images/welcome/progress-bar.png" width="143" height="39">
 
 
 
         ## How do I reply?
 
-        - To reply to the overall topic, use the Reply button <img src="http://www.discourse.org/images/welcome/reply-topic.png" width="29" height="25">  at the very bottom of the page.
+        - To reply to the overall topic, use the Reply button <img src="/images/welcome/reply-topic.png" width="29" height="25">  at the very bottom of the page.
 
-        - To reply to a specific post, use the Reply button <img src="http://www.discourse.org/images/welcome/reply-post.png" width="29" height="25"> on that post.
+        - To reply to a specific post, use the Reply button <img src="/images/welcome/reply-post.png" width="29" height="25"> on that post.
 
-        - To take the conversation in a different direction, but keep them linked together, use Reply as New Topic <img src="http://www.discourse.org/images/welcome/reply-as-new-topic.png" width="33" height="25"> to the right of the post.
+        - To take the conversation in a different direction, but keep them linked together, use Reply as New Topic <img src="/images/welcome/reply-as-new-topic.png" width="33" height="25"> to the right of the post.
 
         To quote someone in your reply, select the text you wish to quote, then press any Reply button.
 
-        <img src="http://www.discourse.org/images/welcome/quote-reply.png" width="467" height="172">
-
-        (To quote an entire post, use the Import Quote button on the editor toolbar.)
+        <img src="/images/welcome/quote-reply.png" width="350" height="129">
 
         To ping someone in your reply, mention their name. Type `@` and an autocompleter will pop up.
 
-        <img src="http://www.discourse.org/images/welcome/username-completion.png" width="307" height="174">
+        <img src="/images/welcome/username-completion.png" width="230" height="131">
 
         For [standard Emoji](http://www.emoji-cheat-sheet.com/), just start typing `:` or the traditional smileys `:)` :smile:
 
         ## What else can I do?
 
-        <img src="http://www.discourse.org/images/welcome/like-link-flag-bookmark.png" width="225" height="61">
-
         There are action buttons at the bottom of each post.
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
 
         To let someone know that you enjoyed their post, use the **like** button. If you see a problem with a post, privately let them, or our staff, know about it with the **flag** button.
 
         You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
 
-
         ## Who is talking to me?
 
-        When someone replies to your post, quotes your post, or mentions your `@username`, a number will appear over a conversation button at the top right of the page. Use it see who's talking to you, and where.
+        When someone replies to your post, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it access your **notifications**.
 
-        <img src="http://www.discourse.org/images/welcome/notification-panel.png" width="237" height="78">
+        <img src="/images/welcome/notification-panel.png" width="178" height="59">
 
-        You will get email notifications of direct replies (and private messages) if you are not present on the site when they arrive.
+        Don't worry about missing a reply – you'll be emailed direct replies (and private messages) if you aren't online when they arrive.
 
         ## When are conversations new?
 
@@ -1340,7 +1338,7 @@ en:
 
         You will see the blue new and number indicators next to these topics:
 
-        <img src="http://www.discourse.org/images/welcome/topics-new-unread.png" width="490" height="119">
+        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
 
         You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](/my/preferences).
 
@@ -1675,6 +1673,14 @@ en:
         If you did not make this request, you can safely ignore this email.
 
         Click the following link to choose a password:
+        %{base_url}/users/password-reset/%{email_token}
+
+    account_created:
+      subject_template: "[%{site_name}] Your New Account"
+      text_body_template: |
+        A new account was created for you at %{site_name}
+
+        Click the following link to choose a password for your new account:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:
