@@ -46,17 +46,6 @@ Handlebars.registerHelper('raw-date', function(property, options) {
 });
 
 /**
-  Live refreshing age helper
-
-  @method age
-  @for Handlebars
-**/
-Handlebars.registerHelper('age', function(property, options) {
-  var dt = new Date(Ember.Handlebars.get(this, property, options));
-  return new safe(Discourse.Formatter.autoUpdatingRelativeAge(dt));
-});
-
-/**
   Live refreshing age helper, with a tooltip showing the date and time
 
   @method age-with-tooltip
@@ -98,33 +87,3 @@ Handlebars.registerHelper('number', function(property, options) {
 
   return new safe(result);
 });
-
-/**
-  Display logic for dates. It is unbound in Ember but will use jQuery to
-  update the dates on a regular interval.
-
-  @method date
-  @for Handlebars
-**/
-Handlebars.registerHelper('date', function(property, options) {
-  var leaveAgo;
-  if (property.hash) {
-    if (property.hash.leaveAgo) {
-      leaveAgo = property.hash.leaveAgo === "true";
-    }
-    if (property.hash.path) {
-      property = property.hash.path;
-    }
-  }
-
-  var val = Ember.Handlebars.get(this, property, options);
-  if (val) {
-    var date = new Date(val);
-    return new safe(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', title: true, leaveAgo: leaveAgo}));
-  }
-});
-
-Em.Handlebars.helper('bound-date', function(dt) {
-  return new safe(Discourse.Formatter.autoUpdatingRelativeAge(new Date(dt), {format: 'medium', title: true }));
-});
-

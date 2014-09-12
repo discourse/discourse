@@ -10,7 +10,9 @@ var deprecatedViewHelpers = {
 };
 
 var renamedHelpers = {
-  icon: "fa-icon"
+  icon: "fa-icon",
+  date: "format-date",
+  age: "format-age"
 };
 
 export default {
