@@ -294,7 +294,7 @@ en:
     leader:
       title: "regular"
     elder:
-      title: "elder"
+      title: "leader"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
 
 
