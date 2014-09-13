@@ -9,6 +9,6 @@
 **/
 Discourse.AdminUserLeaderRequirementsRoute = Discourse.Route.extend({
   model: function() {
-    return this.controllerFor('adminUser').get('model');
+    return this.modelFor('adminUser');
   }
 });
