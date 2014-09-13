@@ -574,6 +574,14 @@ class User < ActiveRecord::Base
     @lq ||= TrustLevel3Requirements.new(self)
   end
 
+  def on_leader_grace_period?
+    UserHistory.for(self, :auto_trust_level_change)
+      .where('created_at >= ?', SiteSetting.tl3_promotion_min_duration.to_i.days.ago)
+      .where(previous_value: TrustLevel[2].to_s)
+      .where(new_value: TrustLevel[3].to_s)
+      .exists?
+  end
+
   def should_be_redirected_to_top
     redirected_to_top_reason.present?
   end
