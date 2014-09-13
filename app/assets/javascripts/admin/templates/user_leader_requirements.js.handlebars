@@ -116,6 +116,9 @@
           <i class="fa fa-lock"></i> {{i18n admin.user.tl3_requirements.locked_will_not_be_demoted}}
         {{else}} {{! tl not locked }}
           <i class="fa fa-check"></i> {{i18n admin.user.tl3_requirements.qualifies}}
+          {{#if leaderRequirements.on_grace_period}}
+            {{i18n admin.user.tl3_requirements.on_grace_period}}
+          {{/if}}
         {{/if}}
       {{/if}}
     {{else}} {{! is not leader }}
