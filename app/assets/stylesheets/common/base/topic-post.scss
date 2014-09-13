@@ -120,3 +120,31 @@ aside.quote {
     color: scale-color($primary, $lightness: 70%);
   }
 }
+
+
+pre {
+  code {
+    white-space: pre-wrap;
+    display: block;
+    padding: 5px 10px;
+    color: $primary;
+    background: scale-color-diff();
+    max-height: 500px;
+  }
+}
+
+kbd
+{
+  background-color: $secondary;
+  border: 1px solid scale-color-diff();
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(0,0,0, .8);
+  color: $primary;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 0 .1em;
+  padding: .1em .6em;
+
+  * * { display: none; }
+}

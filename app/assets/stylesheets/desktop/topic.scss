@@ -242,59 +242,6 @@ a:hover.reply-new {
   z-index: 495
 }
 
-/* Code, KBD, Sub/sup formatting */
-
-code,kbd,pre,samp {
-  font-size:1em;
-}
-pre {
-  code {
-  white-space:pre-wrap;
-  display: block;
-  padding: 5px 10px;
-  color: $primary;
-  background: scale-color-diff();
-  max-height: 500px;
-  }
-}
-q{ quotes:"\201C" "\201D" "\2018" "\2019"; }
-small{ font-size:80%; }
-sub,sup{
-  font-size:75%;
-  line-height:0;
-  position:relative;
-  vertical-align:baseline;
-}
-sup{top:-0.5em; }
-sub{bottom:-0.25em; }
-sup sup, sub sup, sup sub, sub sub { top: 0; }
-figure{margin:0; }
-fieldset{
-  border:1px solid scale-color-diff();
-  margin:0 2px;
-  padding:0.35em 0.625em 0.75em;
-}
-legend{
-  border:0;
-  padding:0;
-}
-
-kbd
-{
-    background-color: $secondary;
-    border:1px solid scale-color-diff();
-    border-radius: 3px;
-    box-shadow: 0 1px 0 rgba(0,0,0, .8);
-    color: $primary;
-    display: inline-block;
-    font-size: 12px;
-    line-height: 1.4;
-    margin: 0 .1em;
-    padding: .1em .6em;
-
-    * * { display: none; }
-}
-
 @media all
 and (max-width : 940px) {
 
