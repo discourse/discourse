@@ -932,6 +932,9 @@ en:
 
     disable_emails: "Prevent Discourse from sending any kind of emails"
 
+    strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
+    short_email_length: "Short email length in Bytes"
+
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
