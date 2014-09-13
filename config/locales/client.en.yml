@@ -941,8 +941,8 @@ en:
         pin_globally: "Pin Topic Globally"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
-        invisible: "Make Invisible"
-        visible: "Make Visible"
+        invisible: "Make Unlisted"
+        visible: "Make Listed"
         reset_read: "Reset Read Data"
         multi_select: "Select Posts"
 
@@ -1347,7 +1347,7 @@ en:
       archived:
         help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
-        help: "This topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
     posts: "Posts"
     posts_lowercase: "posts"
