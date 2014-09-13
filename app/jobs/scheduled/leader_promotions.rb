@@ -6,7 +6,7 @@ module Jobs
     def execute(args)
       # Demotions
       demoted_user_ids = []
-      User.real.where(trust_level: TrustLevel[3]).find_each do |u|
+      User.real.where(trust_level: TrustLevel[3], trust_level_locked: false).find_each do |u|
         # Don't demote too soon after being promoted
         next if user.on_leader_grace_period?
 
@@ -17,7 +17,9 @@ module Jobs
       end
 
       # Promotions
-      User.real.where(trust_level: TrustLevel[2]).where.not(id: demoted_user_ids).find_each do |u|
+      User.real.where(trust_level: TrustLevel[2],
+                      trust_level_locked: false)
+               .where.not(id: demoted_user_ids).find_each do |u|
         Promotion.new(u).review_tl2
       end
     end
