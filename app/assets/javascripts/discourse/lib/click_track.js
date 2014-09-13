@@ -6,7 +6,7 @@
   @module Discourse
 **/
 Discourse.ClickTrack = {
-
+  if (Discourse.Utilities.selectedText()!=="") return false; //cancle click if triggered as part of selection.
   /**
     Track a click on a link
 
