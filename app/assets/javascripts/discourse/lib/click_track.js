@@ -14,6 +14,7 @@ Discourse.ClickTrack = {
     @param {jQuery.Event} e The click event that occurred
   **/
   trackClick: function(e) {
+    if (Discourse.Utilities.selectedText()!=="") return false;  //cancle click if triggered as part of selection.
     var $link = $(e.currentTarget);
     if ($link.hasClass('lightbox')) return true;
 
