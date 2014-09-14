@@ -280,7 +280,6 @@ pt_BR:
       watched_categories: "Acompanhados"
       watched_categories_instructions: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
       tracked_categories: "Monitorado"
-      tracked_categories_instructions: "Você vai monitorar automaticamente todos os novos tópicos dessas categorias. A contagem de respostas novas e não lidas aparecerá ao lado a lista do tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
       delete_account: "Excluir Minha Conta"
@@ -289,7 +288,6 @@ pt_BR:
       delete_yourself_not_allowed: "Você não pode excluir a sua conta agora. Contate um administrador para apagar a sua conta para você."
       unread_message_count: "Mensagens Privadas"
       staff_counters:
-        flags_given: "conjunto de sinalizações úteis"
         flagged_posts: "posts marcados"
         deleted_posts: "posts apagados"
         suspensions: "suspensões"
@@ -413,7 +411,6 @@ pt_BR:
         bulk_invite:
           none: "Você ainda não convidou ninguém. Você pode enviar convites individuais, ou enviar vários de uma vez através da ferramenta de <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviar em massa</a>."
           text: "Convidar em massa a partir de arquivo"
-          uploading: "ENVIANDO"
           success: "Arquivo enviado com sucesso, você será notificado em breve sobre o progresso."
           error: "Houve um erro ao enviar '{{filename}}': {{message}}"
       password:
@@ -667,7 +664,6 @@ pt_BR:
           one: "Você selecionou <b>1</b> tópico."
           other: "Você selecionou <b>{{count}}</b> tópicos."
       none:
-        starred: "Você não marcou nenhum tópico favorito ainda. Para marcar um tópico favorito, clique ou toque na estrela próximo do título."
         unread: "Não há nenhum tópico não lido."
         new: "Não há tópicos novos."
         read: "Você ainda não leu nenhum tópico."
@@ -676,9 +672,6 @@ pt_BR:
         hot: "Não há tópicos quentes."
         category: "Não há tópicos na categoria {{category}}."
         top: "Não há tópicos em alta."
-        educate:
-          new: '<p>Por padrão, tópicos são considerados novos quando foram criados nos últimos 2 dias.</p><p>Você pode mudar isso em suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
-          unread: '<p>Por padrão, o indicador de não lido apenas aparecerá nos tópicos que você:</p><ul><li>Criou</li><li>Respondeu to</li><li>Leu por mais de 4 minutos</li></ul><p>Ou se você configurou para Acompanhar ou Assistir através do controle de notificação no final de cada tópico.</p><p>Você pode mudar isso nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
       bottom:
         latest: "Não há mais tópicos recentes."
         hot: "Não mais tópicos quentes."
@@ -772,16 +765,13 @@ pt_BR:
           '0': 'Você está ignorando todas as notificações deste tópico.'
         watching_pm:
           title: "Acompanhando"
-          description: "Você será notificado de cada nova resposta para esta mensagem privada. A contagem de respostas novas e não lidas também aparecerá ao lado da lista do tópico."
         watching:
           title: "Observar"
-          description: "Você será notificado de todos os novos posts neste tópico. A contagem dos posts não lidos e dos novos posts aparecerá próxima ao lado da lista de tópicos."
         tracking_pm:
           title: "Monitorando"
           description: "Uma contagem de respostas novas e não lidas aparecerá perto das mensagens privadas. Você será notificado se alguém mencionar seu @nome ou te responder."
         tracking:
           title: "Monitorar"
-          description: "Uma contagem de respostas novas e não lidas aparecerá perto da listagem de tópicos. Você será notificado se alguém mencionar seu @nome ou te responder."
         regular:
           title: "Normal"
           description: "Você será notificado apenas se alguém mencionar seu @nome ou te responder."
@@ -807,8 +797,6 @@ pt_BR:
         pin_globally: "Fixar Tópico Globalmente"
         unarchive: "Desarquivar tópico"
         archive: "Arquivar tópico"
-        invisible: "Tornar invisível"
-        visible: "Tornar visível"
         reset_read: "Repor data de leitura"
         multi_select: "Selecionar mensagens"
       reply:
@@ -949,8 +937,6 @@ pt_BR:
           yes_value: "Sim, remover as respostas também"
           no_value: "Não, somente esta resposta"
         admin: "ações de mensagens do admin"
-        wiki: "Mensagem Wiki"
-        unwiki: "Remover Wiki"
       actions:
         flag: 'Sinalização'
         defer_flags:
@@ -1063,9 +1049,6 @@ pt_BR:
           side_by_side:
             title: "Exibir as diferentes saídas renderizadas lado a lado"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "Exibir as diferenças nas origens markdown lado a lado"
-            button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "Editado por"
     category:
@@ -1118,10 +1101,8 @@ pt_BR:
       notifications:
         watching:
           title: "Observar"
-          description: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
         tracking:
           title: "Monitorar"
-          description: "Você vai monitorar automaticamente todos os novos tópicos dessas categorias. A contagem de respostas novas e não lidas aparecerá ao lado a lista do tópico."
         regular:
           title: "Normal"
           description: "Você receberá notificações apenas se alguém mencionar o seu @nome ou responder ao seu post."
@@ -1169,8 +1150,6 @@ pt_BR:
         help: "Este tópico está fixo; irá ser mostrado no topo da sua categoria"
       archived:
         help: "Este tópico está arquivado; está congelado e não pode ser alterado"
-      invisible:
-        help: "Este tópico está invisível; não aparecerá na listagem dos tópicos, e pode apenas ser acessado por link direto"
     posts: "Mensagens"
     posts_lowercase: "posts"
     posts_long: "há {{number}} mensagens neste tópico"
@@ -1410,8 +1389,6 @@ pt_BR:
           filename: "Nome do arquivo"
           size: "Tamanho"
         upload:
-          text: "CARREGAR"
-          uploading: "CARREGANDO"
           success: "'{{filename}}' foi carregado com sucesso."
           error: "Houve um erro ao carregar '{{filename}}': {{message}}"
         operations:
@@ -1641,8 +1618,6 @@ pt_BR:
           pending: 'Usuários com Confirmação Pendente'
           newuser: 'Usuários no Nível de Confiança 0 (Usuário Novo)'
           basic: 'Usuários no Nível de Confiança 1 (Usuário Básico)'
-          regular: 'Usuários no Nível de Confiança 2 (Usuário Regular)'
-          elder: 'Usuários no Nível de Confiança 4 (Cavaleiro)'
           admins: 'Usuários Administradores'
           moderators: 'Moderadores'
           blocked: 'Usuários Boqueados'
@@ -1839,16 +1814,13 @@ pt_BR:
         categories: '<b>g</b>, <b>c</b> Categorias'
       navigation:
         title: 'Navegação'
-        jump: '<b>#</b> Ir para a resposta número'
         back: '<b>u</b> Voltar'
-        up_down: '<b>k</b>/<b>j</b> Move selecionado para cima/para baixo'
         open: '<b>o</b> ou <b>Enter</b> Abre tópico selecionado'
       application:
         title: 'Aplicação'
         create: '<b>c</b> Cria um novo tópico'
         notifications: '<b>n</b> Abre notificações'
         search: '<b>/</b> Pesquisa'
-        help: '<b>?</b> Abre a ajuda dos atalhos de teclado'
       actions:
         title: 'Ações'
         star: '<b>f</b> Tópico favorito'
@@ -1899,15 +1871,8 @@ pt_BR:
         basic_user:
           name: Básico
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Concedido</a> todas as funções essenciais da comunidade
-        regular_user:
-          name: Médio
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Concedido</a> convites
         leader:
           name: Líder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concedido</a> recategorizar, renomear, seguir links e sala de lazer
-        elder:
-          name: Ancião
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concedido</a> edição global, fixar, fechar, arquivar, dividir e mesclar
         welcome:
           name: Bem-Vindo
           description: Recebeu uma curtida

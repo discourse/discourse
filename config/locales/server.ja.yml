@@ -73,6 +73,7 @@ ja:
   rss_description:
     latest: "最新トピック"
     hot: "ホットトピック"
+  too_late_to_edit: "この投稿の編集・削除期間が過ぎまして、編集・削除が出来ません。"
   groups:
     errors:
       can_not_modify_automatic: "自動作成グループの変更はできません"
@@ -84,8 +85,9 @@ ja:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
+    until_posts:
+      other: "%{count} 投稿"
     avatar: |
       ### アカウント用の画像を用意してみては?
 
@@ -121,24 +123,34 @@ ja:
               cant_send_pm: "申し訳ありませんが、このユーザにはプライベートメッセージを送信できません。"
         user:
           attributes:
+            password:
+              common: "は10000最も一般的なパスワードのいずれかである。より安全なパスワードを使用してください。"
             ip_address:
               signup_not_allowed: "このアカウントからのサインアップできません。"
   user_profile:
     no_info_me: "<div class='missing-profile'>プロフィールの自己紹介フィールドが空欄のようです。<a href='/users/%{username_lower}/preferences/about-me'>自己紹介をしてみませんか?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
+  vip_category_name: "ラウンジ"
+  staff_category_name: "スタッフ"
+  lounge_welcome:
+    title: "ラウンジへようこそ"
   category:
     topic_prefix: "%{category} カテゴリの定義"
     replace_paragraph: "[この最初のパラグラフを、本カテゴリの簡単な紹介文に置き換えてください。このガイダンスはカテゴリ選択エリアに表示されるため、パラグラフは200文字以内にしてください。]"
     post_template: "%{replace_paragraph}\n\nこれ以降のパラグラフに、カテゴリのガイドライン等を書いてください。\n\nいくつかのヒント:\n\n- このカテゴリは何か? どのようなトピックをこのカテゴリに入れるべきか?\n\n- 既に存在するカテゴリとの違いは何か?\n\n- このカテゴリはなぜ必要か?\n\n- 他のカテゴリとの統合や、複数カテゴリへの分割をするべきか?\n"
+    errors:
+      uncategorized_parent: "未分類カテゴリは親カテゴリに設定出来ません。"
+    cannot_delete:
+      uncategorized: "未分類カテゴリは削除出来ません"
   trust_levels:
     newuser:
       title: "新規ユーザ"
     basic:
       title: "ベーシックユーザ"
     regular:
-      title: "レギュラーユーザ"
-    elder:
-      title: "マスター"
+      title: "メンバー"
+    leader:
+      title: "レギュラー"
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に格下げしようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります。"
   rate_limiter:
     too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
@@ -200,16 +212,22 @@ ja:
   password_reset:
     no_token: "申し訳ありませんがトークンの有効期限が切れました。パスワードをリセットを再度試みてください。"
     choose_new: "新しいパスワードを選択してください"
+    choose: "パスワードを入力ください"
     update: 'パスワード更新'
+    save: 'パスワードを設定する'
     title: 'パスワードリセット'
     success: "パスワードは無事更新され、ログインに成功しました。"
     success_unapproved: "パスワードは無事更新されました。"
     continue: "%{site_name} に進む"
   change_email:
     confirmed: "メールアドレスが更新されました。"
+    please_continue: "%{site_name}へ"
     error: "メールアドレスの更新に失敗しました。アドレスが既に使用されているかもしれません。"
   activation:
+    action: "アカウントを有効する"
     already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
+    please_continue: "新しいアカウントを作成しました。自動的にログインされています。"
+    continue_button: "%{site_name} へ"
     welcome_to: "%{site_name} へようこそ!"
     approval_required: "このフォーラムにアクセスするにはモデレータによる承認が必要です。承認されるとメールにて通知されます!"
   post_action_types:
@@ -227,7 +245,9 @@ ja:
       long_form: '不適切フラグをたてる'
     notify_user:
       title: '{{username}} に通知'
+      description: 'この投稿やトピックを書いた人に、直接メッセージを送る。（フラグを付けません）'
       long_form: 'ユーザに通知'
+      email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '管理人に通知'
@@ -259,14 +279,24 @@ ja:
     notify_moderators:
       title: '管理人に通知'
       description: 'この投稿やトピックは不適切な可能性があるため、管理人による確認を必要とする。'
+      long_form: 'モデレータに告知する'
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
+      email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>あなたの投稿はコミュニティにフラグを付けられました。<a href="/my/private-messages">受信トレイ</a>に確認してください。</p>'
+    user_must_edit: '<p>この投稿はコミュニティにフラグを付けられまして、非表示されています。</p>'
   archetypes:
     regular:
       title: "通常のトピック"
+    banner:
+      message:
+        make: "このトピックはバナートピックに設定されています。ページ毎の一番上に表示されます。"
+        remove: "このトピックはバナートピックから外されていました。"
   unsubscribed:
     title: '購読解除'
     description: "購読解除されました。メールの送信をストップしました。"
     oops: "誤って購読解除した場合は、下をクリックしてください。"
+    error: "購読エラー"
     not_found_description: "申し訳ありませんが購読解除に失敗しました。メール内のリンクの有効期限が切れているのかもしれません。"
   resubscribe:
     action: "再購読"
@@ -406,7 +436,6 @@ ja:
     favicon_url: "サイトの favicon。参照: http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Apple のタッチデバイス用のアイコン。推奨サイズは 144px x 144px"
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
-    enable_private_messages: "トラストレベルがベーシック (1) なユーザにプライベートメッセージの作成およびプライベートメッセージへの返信を許可"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     long_polling_interval: "新たなロングポーリングを開始するまでの間隔 (ミリ秒)"
     polling_interval: "ログイン済ユーザのクライアントのポーリング間隔 (ミリ秒)"
@@ -493,8 +522,6 @@ ja:
       other: "このトピックは%{count}分が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
     autoclosed_disabled: "このトピックは再オープンされました。新しい回答が投稿できるようになりました。。"
     pinned_disabled: "このトピックのピン留めが解除されました。以後、カテゴリのトップに表示されません。"
-    visible_enabled: "このトピックは表示状態になりました。トピックリストに表示されます。"
-    visible_disabled: "このトピックは非表示状態になりました。トピックリストには表示されません。直接リンク経由でのみこのトピックにアクセスできます。"
   login:
     not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
     incorrect_username_email_or_password: "ユーザネーム、メールアドレス、またはパスワードが違います"
@@ -606,6 +633,7 @@ ja:
         %{respond_instructions}
     digest:
       new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
+      unsubscribe: "こちらのメールマガジンでは、%{site_link} が最新情報をご紹介しています！配信停止はこちら %{unsubscribe_link}."
       click_here: "ここをクリック"
       from: "%{site_name} ダイジェスト"
       read_more: "もっと読む"

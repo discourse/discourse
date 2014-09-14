@@ -7,9 +7,9 @@
 
 zh_CN:
   dates:
-    short_date_no_year: "M月D日"
-    short_date: "YYYY年MM月DDDD日"
-    long_date: "YYYY年MM月DDDD日 h:mma"
+    short_date_no_year: "MMMDo"
+    short_date: "ll"
+    long_date: "lll"
   time:
     formats:
       short: "%Y年%m月%d日"
@@ -23,9 +23,10 @@ zh_CN:
   log_in: "登陆"
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留权利"
+  purge_reason: "自动删除长期未使用或者未验证"
   errors:
     messages:
-      too_long_validation: "被限制到最多 %{max} 个字符；您已经输入了 %{length}。"
+      too_long_validation: "最多只能有 %{max} 个字符；您已经输入了 %{length} 个字符。"
     embed:
       load_from_remote: "载入帖子时遇到错误。"
   bulk_invite:
@@ -94,14 +95,15 @@ zh_CN:
     errors:
       can_not_modify_automatic: "您不能修改一个自动组"
     default_names:
+      everyone: "任何人"
       admins: "管理面板"
       moderators: "版主"
       staff: "员工"
+      trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
     until_posts:
       other: "%{count} 个帖子"
@@ -165,6 +167,8 @@ zh_CN:
         name: "分类名称"
       post:
         raw: "内容"
+      user_profile:
+        bio_raw: "关于我"
     errors:
       messages:
         is_invalid: "无效；试试写的更明确一些吧"
@@ -172,6 +176,9 @@ zh_CN:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "您只能使用私信警告。"
+              too_many_users: "您一次只能发送警告给一个用户。"
             archetype:
               cant_send_pm: "抱歉，您不能向该用户发送私信。"
         user:
@@ -196,6 +203,26 @@ zh_CN:
   assets_topic_body: "这是一个永久主题，仅对职员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传您想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交您的回复添加帖子。\n4. 在您的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果您需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   lounge_welcome:
     title: "欢迎来到贵宾室"
+    body: |2
+
+      恭喜！:confetti_ball:
+
+      如果您看到了这个主题，说明您已经被提升至**常规**（信任等级3）了。
+
+      您现在可以&hellip;
+
+      * 编辑任何主题的标题
+      * 改变任何主题的分类
+      * 让您的链接设置为 follow 属性（[自动 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已经移除）
+      * 访问一个只有信任等级3及更高才能见到的贵宾室分类
+
+      这里是[目前达到常规的用户列表](/badges/3/regular)。一定要来问个好！
+
+      感谢成为社群的重要一员！
+
+      （想了解关于信任等级的更多信息，[参见这个主题][trust]。请注意成员需要在将来也维持一定的选择条件的成员才能保持在常规。）
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "关于分类：%{category}"
     replace_paragraph: "[用一段简短的话描述分类，并替换此第一段内容。这段文字将出现在分类选择区域，所有试着不要超过200个字符。只要当您编辑了这段文字或者是创建了一个主题，分类才会出现在分类列表中。]"
@@ -216,9 +243,9 @@ zh_CN:
     basic:
       title: "初级用户"
     regular:
-      title: "常规用户"
-    elder:
-      title: "资深用户"
+      title: "成员"
+    leader:
+      title: "常规"
     change_failed_explanation: "您尝试将 %{user_name} 降至 '%{new_trust_level}'。然而他们的信任等级已经是 '%{current_trust_level}'。%{user_name} 将仍是 '%{current_trust_level}'"
   rate_limiter:
     slow_down: "您已经重复这一操作太多次了，请一会再重试"
@@ -314,6 +341,7 @@ zh_CN:
       long_form: '标记为不当内容'
     notify_user:
       title: '通知 {{username}}'
+      description: '此帖包含一些我想与该用户私下直接交流的内容。不能执行标记操作。'
       long_form: '已通知用户'
       email_title: '您在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
@@ -359,7 +387,7 @@ zh_CN:
     banner:
       message:
         make: "本主题已经是一个横幅主题。它将出现在每一页的顶部，除非用户将其隐藏。"
-        remove: "本主题已经被解决横幅主题。它将不再显示在每一页的顶部。"
+        remove: "本主题已经不再是横幅主题。它将不再显示在每一个页面的顶部。"
   unsubscribed:
     title: '取消订阅'
     description: "您已经取消订阅，我们不会再发送邮件给您！"
@@ -571,7 +599,7 @@ zh_CN:
     summary_posts_required: "在一个主题启用'摘要模式'的最小帖子数量"
     summary_likes_required: "在一个主题启用'摘要模式'的最小赞的数量"
     summary_percent_filter: "当用户点击摘要，显示前 % 几的帖子"
-    enable_private_messages: "允许基本（1）信任等级的用户创建私信或者以私信回复"
+    enable_private_messages: "允许信任等级1的用户创建私信或者以私信回复"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
     long_polling_interval: "长轮询每次请求之间的时间间隔（单位：毫秒） "
     polling_interval: "已登录用户客户端轮询时间间隔（单位：毫秒）"
@@ -603,6 +631,7 @@ zh_CN:
     track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
     topics_per_page: "在主题列表页面，缺省载入多少个主题，以及滚动至什么时候载入更多主题"
     posts_per_page: "在主题页面，默认载入多少个帖子，以及滚动时什么时候载入更多帖子"
+    site_contact_username: "论坛给用户发送自动私信时使用的用户名；如果留空将使用默认的系统账户。"
     send_welcome_message: "给所有用户发送快速开始指导的私信"
     suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量。"
     suppress_reply_directly_above: "当一个帖子只有一个回复时，不显示回复到该贴的回复。"
@@ -616,6 +645,7 @@ zh_CN:
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "一个邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com trashmail.net"
     email_domains_whitelist: "一个电子邮箱域名的列表，用户只能使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
+    forgot_password_strict: "在找回密码对话框中不告知用户账户的存在。"
     version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示新版本信息"
     new_version_emails: "当新版本发布时，发送一封邮件至 contact_email 设置的地址。"
     port: "仅限开发者设定！警告！使用此 HTTP 端口而不是80端口。留空为使用默认 80 端口"
@@ -657,6 +687,7 @@ zh_CN:
     enable_s3_backups: "当完成备份后上传备份到 S3。重要：确定在文件设置中的 S3 验证信息有效。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
+    verbose_localization: "在界面上显示详细的本地化提示"
     previous_visit_timeout_hours: "系统判断一次访问之后多少小时后为'上一次'访问"
     rate_limit_create_topic: "在创建一个主题之后，用户必须间隔多少秒（n）才能创建另一个主题"
     rate_limit_create_post: "在创建一个帖子之后，用户必须间隔多少秒（n）才能创建另一个帖子"
@@ -684,16 +715,27 @@ zh_CN:
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
     default_trust_level: "所有新用户的缺省信任等级（0-4）。"
-    basic_requires_topics_entered: "新用户升级到初级用户（1）所需要进入的主题数量。"
-    basic_requires_read_posts: "新用户升级到初级用户（1）所需要阅读的帖子数量。"
-    basic_requires_time_spent_mins: "新用户升级到初级用户（1）所需要阅读帖子耗费的分钟数。"
-    regular_requires_topics_entered: "一个初级用户升级到常规用户（2）所需进入的主题数量。"
-    regular_requires_read_posts: "一个初级用户升级到常规用户（2）所需要阅读的帖子数量。"
-    regular_requires_time_spent_mins: "一个初级用户升级到常规用户（2）所需要阅读帖子耗费的分钟数。"
-    regular_requires_days_visited: "一个初级用户升级到常规用户（2）所需要访问站点的累计天数。"
-    regular_requires_likes_received: "一个初级用户升级到常规用户（2）所需要获得的赞数。"
-    regular_requires_likes_given: "一个初级用户升级到常规用户（2）所需要给出的赞数。"
-    regular_requires_topic_reply_count: "一个初级用户升级到常规用户（2）所需要回复的主题数量。"
+    tl1_requires_topics_entered: "新用户升级到信任等级1所需要进入的主题数量。"
+    tl1_requires_read_posts: "新用户升级到信任等级1所需要阅读的帖子数量。"
+    tl1_requires_time_spent_mins: "新用户升级到信任等级1所需要阅读帖子耗费的分钟数。"
+    tl2_requires_topics_entered: "新用户升级到信任等级2所需要进入的主题数量。"
+    tl2_requires_read_posts: "新用户升级到信任等级2所需要阅读的帖子数量。"
+    tl2_requires_time_spent_mins: "新用户升级到信任等级2所需要阅读帖子耗费的分钟数。"
+    tl2_requires_days_visited: "一个初级用户升级到信任等级2所需要访问站点的累计天数。"
+    tl2_requires_likes_received: "一个初级用户升级到信任等级2所需要获得的赞数。"
+    tl2_requires_likes_given: "一个初级用户升级到信任等级2所需要给出的赞数。"
+    tl2_requires_topic_reply_count: "一个初级用户升级到信任等级2所需要回复的主题数量。"
+    tl3_requires_days_visited: "在最近 100 天内升至信任等级3所需的访问站点的天数。（0到100）"
+    tl3_requires_topics_replied_to: "在最近 100 天内升至信任等级3所需的回复主题的最小数量。（0或更高）"
+    tl3_requires_topics_viewed: "在最近 100 天内升至信任等级3所需的创建主题的百分比。（0到100）"
+    tl3_requires_posts_read: "在最近 100 天内升信任等级3所需的创建帖子的百分比。（0到100）"
+    tl3_requires_topics_viewed_all_time: "用户升至领导信任等级3所需查看的最小主题数量。"
+    tl3_requires_posts_read_all_time: "用户升至领导信任等级3所需查看的最小帖子数量。"
+    tl3_requires_max_flagged: "用户在最近 100 天内升至信任等级3所需的必须没有超过 x 个帖子被 x 个不同的用户标记数量，x为数量。（0或更高）"
+    tl3_promotion_min_duration: "信任等级3的用户可被降级至信任等级2前最小持续天数。"
+    tl3_requires_likes_given: "在最近 100 天内升至信任等级3所需给出的赞。"
+    tl3_requires_likes_received: "在最近 100 天内升至信任等级3所需收到的赞。"
+    tl3_links_no_follow: "不移除信任等级3用户帖子中的链接中的 rel=nofollow 属性。"
     min_trust_to_create_topic: "创建主题所需的最低信任等级。"
     min_trust_to_edit_wiki_post: "能编辑维基模式帖子的最小信任等级"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
@@ -724,6 +766,12 @@ zh_CN:
     cold_age_days_low: "在讨论开始多少天后，最后活跃日期将轻微高亮。"
     cold_age_days_medium: "在讨论开始多少天后，最后活跃日期将明显高亮。"
     cold_age_days_high: "在讨论开始多少天后，最后活跃日期将强烈高亮。"
+    history_hours_low: "帖子在编辑后编辑指示器轻微高亮的小时数"
+    history_hours_medium: "帖子在编辑后编辑指示器明显高亮的小时数"
+    history_hours_high: "帖子在编辑后编辑指示器强烈高亮的小时数"
+    topic_post_like_heat_low: "在赞与帖子的比例超过此比例后，帖子数量一栏将稍稍高亮。"
+    topic_post_like_heat_medium: "在赞与帖子的比例超过此比例后，帖子数量一栏将明显高亮。"
+    topic_post_like_heat_high: "在赞与帖子的比例超过此比例后，帖子数量一栏将强烈高亮。"
     faq_url: "如果您的 FAQ 文档在外部，那么请在此填写其完整 URL 地址。"
     tos_url: "如果您的服务条款文档在外部，那么请在此填写其完整 URL 地址。"
     privacy_policy_url: "如果您的隐私政策文档在外部，那么请在此填写其完整 URL 地址。"
@@ -733,6 +781,14 @@ zh_CN:
     levenshtein_distance_spammer_emails: "当匹配广告邮件时，模糊匹配判断差异的字符数。"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
+    disable_emails: "禁止 Discourse 发送任何邮件"
+    pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
+    pop3_polling_ssl: "连接至 POP3 服务器时使用 SSL。（推荐）"
+    pop3_polling_period_mins: "查询用于邮件的 POP3 账户的间隔（以分钟计）。注意：需要重新启动。"
+    pop3_polling_port: "POP3 轮询账户端口。"
+    pop3_polling_host: "需用 POP3 向该地址轮询电子邮件的主机。"
+    pop3_polling_username: "轮询 POP3 账户所用的用户名。"
+    pop3_polling_password: "轮询 POP3 账户所用的密码。"
     email_in: "允许用户通过邮件发表新主题（需要 pop3 轮询）。在每一个分类的“设置”标签页配置地址。"
     email_in_min_trust: "能通过邮件发表新主题的最低用户信任等级。"
     email_prefix: "邮件主题中使用的 [标签]。留空将缺省使用 'title'。"
@@ -743,6 +799,7 @@ zh_CN:
     delete_all_posts_max: "通过删除所有帖子按钮可以删除的最大帖子数量。如果用户有比这更多的帖子，这些帖子不能一次性删除并且这个用户不能被删除。"
     username_change_period: "用户在注册多少天内可以更改他们的用户名（0 表示禁用用户名更改）"
     email_editable: "允许用户在注册后改变他们的邮箱地址。"
+    logout_redirect: "登出后重定向至的地址。如：http://somesite.com/logout"
     allow_uploaded_avatars: "允许用户上传他们自己的自定义头像。"
     allow_animated_avatars: "允许用户使用 gif 动画头像。警告：更改后运行 avatars:refresh 这个 rake 任务。"
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
@@ -759,7 +816,7 @@ zh_CN:
     dominating_topic_minimum_percent: "用户在主题中的帖子占到多少百分比时使得用户主导话题。"
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章。"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
-    disable_edit_notifications: "当您激活 'download_remote_images_to_local' 站点设置时禁用编辑提示。"
+    disable_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
     enable_names: "允许用户显示全名。禁止隐藏全名。"
     display_name_on_posts: "在用户的帖子中显示他们的全名以及他们的 @username。"
     invites_per_page: "默认在用户页显示邀请。"
@@ -782,6 +839,7 @@ zh_CN:
     enable_cdn_js_debugging: "为包含的 js 启动跨源访问 /logs 权限以显示合适的错误。"
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
     vacuum_db_days: "在数据库迁移后使用完整扫描回收数据库空间（设置 0 为禁用）"
+    prevent_anons_from_downloading_files: " 禁止匿名用户下载文件。警告：这将禁止他们访问任何发表在帖子中的资源。"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -806,7 +864,9 @@ zh_CN:
     invited_to_private_message: "%{display_username} 邀请您进行私信：%{link}"
     invitee_accepted: "%{display_username} 接受了您的邀请"
     linked: "%{display_username} 在 %{link} 里链接了您"
+    granted_badge: "您获得了 %{link}"
   search:
+    within_post: "#{{post_number}} 由 {{username}}"
     types:
       category: '分类'
       topic: '结果'
@@ -815,6 +875,9 @@ zh_CN:
   most_posts: "大部分帖子"
   most_recent_poster: "当前大部分帖子作者"
   frequent_poster: "频繁发帖者"
+  redirected_to_top_reasons:
+    new_user: "欢迎来到我们的社区！这是我们最近的热门主题。"
+    not_seen_in_a_month: "欢迎回来！我们已经好久没见到您了。这些是您不在时的最热门主题。"
   move_posts:
     new_topic_moderator_post:
       other: "我已经移动了 %{conut} 个帖子到新的主题：%{topic_link}"
@@ -844,8 +907,6 @@ zh_CN:
     pinned_disabled: "本主题已被解除置顶，它将不再显示在它所属分类的顶部。"
     pinned_globally_enabled: "本主题已全局置顶，它将始终显示在它所属分类的顶部。可由职员对所有人解除置顶，或者由用户自己取消置顶。"
     pinned_globally_disabled: "本主题已被解除置顶，它将不再显示在它所属分类的顶部。"
-    visible_enabled: "本主题可见，它将显示在主题列表中。"
-    visible_disabled: "本主题不可见，它将不会出现在主题列表中。只有直达链接才可以访问该主题。"
   login:
     not_approved: "您的帐号尚未获得批准。一旦您的帐号获得批准，您会收到一封电子邮件。"
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
@@ -853,6 +914,7 @@ zh_CN:
     active: "您的帐号已经被激活，可以使用了。"
     activate_email: "快完成了！我们发送了一封激活邮件<b>%{email}</b>给您，请按照邮件中的指示激活您的帐号。"
     not_activated: "您还不能登录。我们发送了一封激活邮件给您，请按照邮件中的步骤来激活您的帐号。"
+    not_allowed_from_ip_address: "您不能以 %{username} 身份从该 IP 地址登陆。"
     suspended: "您要等到 %{date} 之后才能登录。"
     suspended_with_reason: "您要等到 %{date} 之后才能登录。您被封禁的理由是 %{reason}"
     errors: "%{errors}"
@@ -909,7 +971,7 @@ zh_CN:
   test_mailer:
     subject_template: "[%{site_name}] 电子邮件发送测试"
     text_body_template: |
-      这是一封来自 %{site_name} 论坛的测试邮件：
+      这是一封测试电子邮件，发于：
 
       [**%{base_url}**][0]
 
@@ -925,11 +987,9 @@ zh_CN:
 
       - 您域名的[域名密钥身份识别邮件（DKIM）记录][3]正确？这将显著提高邮件分发的成功率。在此[测试您的 DKIM 记录]。
 
-      - 如果您自己运行邮件服务器，检查确认您发送电子邮件的服务器IP [不在任何邮件黑名单中][4]。
+      - 如果您自己运行邮件服务器，检查确认您发送电子邮件的服务器IP [不在任何邮件黑名单中][4]。验证您的 DNS 记录的 HELO 消息中*确定无疑地*发送了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒绝您的邮件。
 
-      - 如果您自己运行邮件服务器，验证您的 DNS 记录的 HELO 消息中*确定无疑地*发送了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒绝您的邮件。
-
-      （最简单的方法是[注册 Mandrill 账户][6]，它有一个几乎不用付费的邮件方案并且适合小论坛。不过您仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
+      （最简单的方法是在[Mandrill][md]或[Mailgun][mg]或[Mailjet][mj]注册免费账户，他们的免费账户足够小社群使用。如果您希望在中国大陆提供稳定的服务，您可以考虑[SendCloud][sc]不过您仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
 
       我们衷心希望您收到这封邮件，成功完成邮件发送测试！
 
@@ -943,17 +1003,50 @@ zh_CN:
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
       [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
       [7]: http://dkimcore.org/tools/dkimrecordcheck.html
       [8]: http://www.openspf.org/SPF_Record_Syntax
+      [md]: http://mandrill.com
+      [mg]: http://www.mailgun.com/
+      [mj]: http://www.mailjet.com/pricing
+      [sc]: http://sendcloud.sohu.com/
 
       ----
 
       <small>在每封您发送的邮件底部应该都有取消订阅的链接，让我们模拟一下。这封邮件发送自 中华人民共和国北京市海淀区中关村南大街公司名称，邮编 100081。如果您不希望将来继续收到我们的邮件，[点击此处取消订阅][5]。</small>
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
+    text_body_template: |
+      有新版本的 Discourse 可供升级。
+
+      您的版本：%{installed_version}
+      新版本：**%{new_version}**
+
+      您可能想要：
+
+      - 查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master) 中的更新内容。
+
+      - 访问 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)，然后按下“升级”按钮。
+
+      - 访问 [meta.discourse.org](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
+    text_body_template: |
+      有新版本的 [Discourse](http://www.discourse.org) 可供升级。
+
+      您的版本：%{installed_version}
+      新版本：**%{new_version}**
+
+      您可能想要：
+
+      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中的更新内容。
+
+      - 访问 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) ，然后按下“升级”按钮。
+
+      - 访问 [meta.discourse.org](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。
+
+      ### 发行注记
+
+      %{notes}
   flags_reminder:
     flags_were_submitted:
       other: "在过去的 %{count} 小时内有新的标记。"
@@ -976,6 +1069,22 @@ zh_CN:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了您的帖子"
+      text_body_template: |
+        您好，
+
+        这是一封从 %{site_name} 自动发出的邮件，通知您的帖子...
+
+        %{base_url}%{url}
+
+        ... 由于论坛用户的标记而被封。
+
+        %{flag_reason}
+
+        请注意您的帖子是因为被多个社群成员标记才被封的。请根据他们的反馈考虑如何修改您的帖子。**您可以在 %{edit_delay} 分钟后开始编辑您的帖子，然后它会被自动显示。**这将提高您在论坛的信任等级。
+
+        但是，如果帖子再次被社群标记并隐藏，它将被隐藏直至版主处理——并且可能导致进一步的措施，包括可能禁止您的用户帐号。
+
+        需要了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
@@ -1028,6 +1137,17 @@ zh_CN:
         ```
         %{logs}
         ```
+    csv_export_succeeded:
+      subject_template: "数据成功导出"
+      text_body_template: |
+        数据成功导出。
+
+        下载 CSV 文件：<a class="attachment" href="%{download_link}">%{file_name}</a>
+
+        <small>CSV 文件下载链接将在 48 小时后失效。</small>
+    csv_export_failed:
+      subject_template: "导出失败"
+      text_body_template: "导出失败。请检查日志。"
     email_reject_trust_level:
       subject_template: "电子邮件错误 -- 等级不足"
       text_body_template: |
@@ -1060,12 +1180,26 @@ zh_CN:
         一些可能的原因是：复杂的格式、消息超长、消息太短。请再试一次，若还不行，使用网站发表。
     email_reject_post_error_specified:
       subject_template: "邮件问题——发表失败"
+      text_body_template: |
+        我们很抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件消息无法发送。
+
+        援引：
+
+        %{post_error}
+
+        如果您能解决错误，请再试一次。
     email_reject_reply_key:
       subject_template: "电子邮件错误 -- 错误回复因素"
       text_body_template: |
         我们很抱歉，但是您发送至 %{destination}（名为%{former_title}） 的邮件无法发送。
 
         提供的回复 key 是无效或者未知的，所以我们不知道邮件是回复给谁的。联系一个职员。
+    email_reject_destination:
+      subject_template: "电子邮件错误 -- 错误地址"
+      text_body_template: |
+        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件消息无法发送。
+
+        以下地址无法被论坛发现。请确认论坛地址在您的发送到：那一行（而不是抄送或者是密送），并且您将发送至论坛管理员提供的邮件地址。
     email_error_notification:
       subject_template: "电子邮件错误 -- POP 验证错误"
       text_body_template: |

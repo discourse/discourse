@@ -104,7 +104,6 @@ es:
       trust_level_2: "nivel de confianza 2"
       trust_level_3: "nivel de confianza 3"
       trust_level_4: "nivel de confianza 4"
-      trust_level_5: "nivel de confianza 5"
   education:
     until_posts:
       one: "post"
@@ -220,10 +219,6 @@ es:
       title: "nuevo usuario"
     basic:
       title: "usuario básico"
-    regular:
-      title: "usuario normal"
-    elder:
-      title: "sabio"
     change_failed_explanation: "Intentaste degradar a un usuario %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} seguirá en '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Has realizado esta acción demasiadas veces, inténtalo de nuevo más tarde"
@@ -601,7 +596,6 @@ es:
     summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
     summary_percent_filter: "Cuando un usuario hace clic en 'Resumen de este tema', se muestra el n % mejores posts"
-    enable_private_messages: "Permitir el nivel básico de confianza en los usuarios (1) para crear mensajes privados y contestar a mensajes privados"
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     long_polling_interval: "Frecuencia del 'long polling' en milisegundos"
     polling_interval: "¿Cuán a menudo deben hacer poll los usuarios logados en milisegundos"
@@ -712,16 +706,6 @@ es:
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios."
-    basic_requires_topics_entered: "A cuántos temas debe entrar un nuevo usuario antes de ser promocionado a nivel de confianza (1) básico."
-    basic_requires_read_posts: "Cuántos posts debe leer un nuevo usuario antes de ser promocionado a nivel de confianza (1) básico."
-    basic_requires_time_spent_mins: "Cuántos minutos debe permanecer leyendo posts un nuevo usuario antes de ser promocionado a nivel de confianza (1) básico."
-    regular_requires_topics_entered: "A cuántos temas debe entrar un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
-    regular_requires_read_posts: "Cuántos posts debe leer un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
-    regular_requires_time_spent_mins: "Cuántos minutos debe permanecer leyendo posts un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
-    regular_requires_days_visited: "Cuántos días debe visitar el sitio un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
-    regular_requires_likes_received: "Cuántos me gusta debe recibir un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
-    regular_requires_likes_given: "Cuántos me gusta debe otorgar un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
-    regular_requires_topic_reply_count: "Cuántos temas debe responder un usuario básico antes de ser promocionado a nivel de confianza (2) normal."
     min_trust_to_create_topic: "El mínimo nivel de confianza requerido para crear un nuevo tema."
     min_trust_to_edit_wiki_post: "El mínimo nivel de confianza requerido para editar un post marcado como wiki."
     newuser_max_links: "Cuántos enlaces puede un nuevo usuario añadir a un post."
@@ -781,7 +765,6 @@ es:
     dominating_topic_minimum_percent: "Qué porcentaje de posts tiene que publicar un usuario en un mismo tema hasta mostrarle un recordatorio acerca de dominar en demasía un tema."
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     global_notice: "Mostrar una noticia de URGENCIA o EMERGENCIA para todos los visitantes, deja este campo en blanco para ocultarla (se puede utilizar código HTML)"
-    disable_edit_notifications: "Usado para desabilitar las notificaciones de edición cuando se activa la opcion de configuración  'download_remote_images_to_local'. "
     enable_names: "Habilitar que se muestren los nombres completos de los usuarios. Si se deshabilita, se ocultarán los nombres completos."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
     invites_per_page: "Número de invitaciones por defecto mostradas en la página de perfil del usuario."
@@ -867,8 +850,6 @@ es:
     pinned_disabled: "Este tema está ahora sin destacar. No aparecerá más en la parte superior de su categoría."
     pinned_globally_enabled: "Este tema ahora está destacado globalmente. Aparecerá en primer lugar en la lista de su categoría y en todas las listas de temas hasta que se deshaga el destacado de forma general por los moderadores o de forma particular por cada usuario para sí."
     pinned_globally_disabled: "Este tema se ha dejado de destacar. Ya no aparecerá en primer lugar de su categoría."
-    visible_enabled: "Este topic está ahora visible. Será mostrado en la lista de topics."
-    visible_disabled: "Este topic es ahora invisible. No será mostrado en ninguna lista de topics. El único modo de acceder a este topic es con un enlace directo."
   login:
     not_approved: "Tu cuenta aún no ha sido aprovada. Serás notificado por email cuando estés listo para hacer log in."
     incorrect_username_email_or_password: "Nombre de usuario, email o password incorrectos"

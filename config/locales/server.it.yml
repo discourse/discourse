@@ -9,7 +9,7 @@ it:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
-    long_date: "MMMM D, YYYY h:mma"
+    long_date: "D MMMM YYYY h:mma"
   time:
     formats:
       short: "%d-%m-%Y"
@@ -105,7 +105,6 @@ it:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
     until_posts:
       one: "1 messaggio"
@@ -207,10 +206,6 @@ it:
       title: "nuovo utente"
     basic:
       title: "utente base"
-    regular:
-      title: "utente normale"
-    elder:
-      title: "veterano"
     change_failed_explanation: "Hai cercato di degradare %{user_name} a '%{new_trust_level}'. Però il suo livello di attendibilità è già '%{current_trust_level}'. %{user_name} resterà a '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi"
@@ -331,6 +326,7 @@ it:
       long_form: 'segnalato come inappropriato'
     notify_user:
       title: 'Notifica {{username}}'
+      description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio. Non voglio attivare una segnalazione.'
       long_form: 'utente nofiticato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -545,7 +541,13 @@ it:
     allow_uncategorized_topics: "Permetti la creazione di topic senza categoria."
     allow_duplicate_topic_titles: "Permetti discussioni con lo stesso titolo, duplicato"
     unique_posts_mins: "Quanti minuti prima che un utente possa postare un altro topic con lo stesso contenuto"
+    title: "Breve titolo di questo sito, usato nel tag title."
+    site_description: "Descrivi questo sito in una sola frase. La descrizione verrà usata nel tag meta description."
     queue_jobs: "SOLO PER SVILUPPATORI! ATTENZIONE! Per default, accoda i job in sidekiq. Se disabilitato, il tuo sito non funzionerà."
+    crawl_images: "Recupera le immagini dagli URL remoti per inserire le dimensioni corrette di ampiezza e altezza nel tag."
+    download_remote_images_to_local: "Scarica localmente le immagini remote; ciò permettei di evitare immagini assenti."
+    download_remote_images_threshold: "Minimo spazio disco necessario per scaricare le immagini remote in locale (in percentuale)"
+    disabled_image_download_domains: "Le immagini non verranno mai scaricate dai seguenti domini. Elenco delimitato dal carattere pipe |"
     ninja_edit_window: "Per (n) secondi dopo la creazione del post, le modifiche non saranno tracciate nella sua cronologia."
     edit_history_visible_to_public: "Permetti a tutti di vedere le precedenti versioni di un post modificato. Se disabilitato solo i membri dello staff possono vederle."
     category_featured_topics: "Numero di topic mostrati per categoira nella pagina /categories"
@@ -555,7 +557,6 @@ it:
     apple_touch_icon_url: "Icona usata per dispositivi mobile Apple. La dimensione consigliata è 144 x 144 pixel."
     email_custom_headers: "Una lista di intestazioni email custom delimitata da una barra verticale"
     use_https: "L'indirizzo completo del sito (Discourse.base_url) dovrebbe essere http o https? NON ATTIVARE QUESTA OPZIONE A MENO CHE HTTPS SIA GIA' CONFIGURATO E FUNZIONANTE!"
-    enable_private_messages: "Autorizza gli utenti trust level 1 a creare messaggi privati e conversazioni"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
@@ -610,6 +611,11 @@ it:
     clean_orphan_uploads_grace_period_hours: "Quante ore prima che un upload \"orphan\" venga rimosso."
     purge_deleted_uploads_grace_period_days: "Giorni che devono trascorrere prima che un upload cancellato venga rimosso del tutto."
     s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere in minuscolo.\\"
+    default_invitee_trust_level: "Livello di esperienza (0-4) assegnato di default agli utenti invitati."
+    default_trust_level: "Livello di esperienza (0-4) assegnato di default ai nuovi utenti."
+    tl1_requires_topics_entered: "Quanti argomenti deve inserire un utente per essere promosso a livello di esperienza 1."
+    tl1_requires_read_posts: "Quanti messaggi deve leggere un utente per essere promosso al livello di esperienza 1."
+    tl1_requires_time_spent_mins: "Per quanti minuti un utente deve leggere i messaggi per essere promosso al livello di esperienza 1."
     min_trust_to_create_topic: "Livello minimo richiesto per creare un nuovo topic."
     min_trust_to_edit_wiki_post: "Livello minimo richiesto per modificare un topic segnato come wiki."
     title_fancy_entities: "Converti caratteri ASCII comuni in HTML nei titoli del topic, tipo SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -621,7 +627,7 @@ it:
     reply_by_email_address: "Template di risposta via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
     delete_all_posts_max: "Massimo numero di post che possono essere eliminati contemporaneamente con il pulsante Cancella tutti i post. Se un utente ha più post attivi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
     username_change_period: "Numero di giorni (dall'iscrizione) dopo i quali è possibile modificare lo username. Digita 0 per non permettere cambi di username"
-    email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione"
+    email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione."
     default_digest_email_frequency: "Quanto spesso gli utenti ricevono mail di riepilogo. Possono modificare questa impostazione nel loro pannello utente."
     default_external_links_in_new_tab: "Apri link esterni in una nuova scheda. Gli utenti possono modificare questa impostazione nelle loro preferenze."
     public_user_custom_fields: "Una whitelist di campi personalizzati di un utente che possono essere mostrati pubblicamente."
@@ -697,8 +703,6 @@ it:
     pinned_disabled: "Questo argomento è stato spuntato. Non sarà più mostrato in cima alla sua categoria."
     pinned_globally_enabled: "Questo argomento è ora puntato globalmente. Apparirà in cima sia alla sua categoria sia alle liste di tutti argomenti finché non sarà spuntato dallo staff - e allora varrà per tutti - oppure dai singoli utenti - e allora varrà solo per loro stessi."
     pinned_globally_disabled: "Questo argomento è ora spuntato. Non apparirà più in cima alla sua categoria."
-    visible_enabled: "Questo argomento è stato reso visibile. Sarà mostrato nelle liste degli argomenti."
-    visible_disabled: "Questo argomento è ora invisibile. Non verrà più mostrato in nessuna lista degli argomenti. Sarà possibile accedervi solo tramite collegamento diretto."
   login:
     not_approved: "Il tuo account non è ancora stato approvato. Verrai notificato via mail quando potrai effettuare il log in."
     incorrect_username_email_or_password: "Nome utente, email o password errati"
@@ -751,14 +755,43 @@ it:
     spam: "Il tuo messaggio è stato segnalato come **spam**: la comunità pensa che sia una pubblicità, non utile né rilevante all'argomento, ma di natura promozionale."
     notify_moderators: "Il tuo messaggio è stato segnalato **all'attenzione dei moderatori**: la comunità pensa che il tuo messaggio richieda l'intervento dei moderatori."
   flags_dispositions:
+    agreed: "Grazie per averci informato. Sappiamo che c'è un problema e lo stiamo analizzando."
+    agreed_and_deleted: "Grazie per averci informato. Sappiamo che c'è un problema e abbiamo cancellato il messaggio."
+    disagreed: "Grazie per averci informato. Stiamo provvedendo."
+    deferred: "Grazie per averci informato. Stiamo provvedendo."
     deferred_and_deleted: "Grazie per averci informato. Noi abbiamo rimosso il messaggio."
   system_messages:
     post_hidden:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
+      text_body_template: |
+        Salve,
+
+        il presente è un messaggio automatico da parte di %{site_name} per informarti che il tuo messaggio...
+
+        %{base_url}%{url}
+
+        ...è stato nascosto a causa di segnalazioni da parte della comunità.
+
+        %{flag_reason}
+
+        Diversi membri della comunità hanno segnalato questo messaggio, perciò considera l'opportunità di rivedere il suo contenuto in modo che rispetti tale valutazione. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente visualizzato.** Ciò aumenterà il tuo Livello Esperienza.
+
+        Comunque, se il messaggio verrà nascosto dalla comunità un'altra volta, resterà nascosto finché non verrà gestito dallo staff – e ci potrebbero essere ulteriori provvedimenti, inclusa la possibile sospensione del tuo account.
+
+        Per ulteriori informazioni, puoi far riferimento alle nostre [community guidelines](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
+      text_body_template: |
+        Grazie per esserti unito a %{site_name}, e benvenuto!
+
+        %{new_user_tips}
+
+        Noi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines).
+
+        Buona permanenza!
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
+      text_body_template: "Grazie per aver accettato l'invito su %{site_name} -- benvenuto! \n\nTi abbiamo generato automaticamente un nome utente: **%{username}**, ma puoi cambiarlo in ogni momento visitando [il tuo profilo][prefs]. \n\nPer collegarti puoi: \n\n1. Collegarti usando il metodo che preferisci -- posto che usi lo **stesso indirizzo email** sul quale hai ricevuto l'invito iniziale. Diversamente non riusciremmo a sapere che chi si iscrive sei proprio tu!\n\n2. Creare una password univoca nel [tuo profilo][prefs], ed usarla per poi collegarti. \n\n%{new_user_tips} \n\nNoi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines).\n\nBuona permanenza!\n\n[prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "Esportazione completata con successo"
       text_body_template: "L'esportazione è stata eseguita correttamente."
@@ -809,12 +842,17 @@ it:
         Non esiste un account con questo indirizzo email. Prova ad inviarla da un altro indirizzo o contatta un membro dello staff.
     email_reject_empty:
       subject_template: "Problema email -- Nessun contenuto"
+      text_body_template: "Spiacenti ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.\n\nNon abbiamo trovato del contenuto nella email. Sincerati di scrivere qualcosa all'inizio dell'email, perché non possiamo processare solo risposte in linea. \nSe hai ricevuto questo messaggio ma sei sicuro di aver incluso del contenuto, prova ancora usando testo semplice in formato UTF-8 (non HTML).\n"
     email_reject_parsing:
       subject_template: "Problema email -- Contenuto non riconosciuto"
       text_body_template: |
         Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
 
         Non è stato possibile trovare la tua risposta nella mail. **Accertati di scrivere l'intera risposta all'inizio dell'email** -- tutto quello che è al di sotto dell'inizio del messaggio della risposta-a sarà scartato.
+    email_reject_post_error:
+      subject_template: "Problema email -- Errore di invio"
+    email_reject_post_error_specified:
+      subject_template: "Problema email -- Errore di invio"
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
     blocked_by_staff:

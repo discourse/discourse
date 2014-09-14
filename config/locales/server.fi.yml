@@ -105,7 +105,6 @@ fi:
       trust_level_2: "luottamustaso_2"
       trust_level_3: "luottamustaso_3"
       trust_level_4: "luottamustaso_4"
-      trust_level_5: "luottamustaso_5"
   education:
     until_posts:
       one: "ensimmäisen viestisi"
@@ -221,10 +220,6 @@ fi:
       title: "uusi käyttäjä"
     basic:
       title: "peruskäyttäjä"
-    regular:
-      title: "tavallinen käyttäjä"
-    elder:
-      title: "vanhin"
     change_failed_explanation: "Yritit alentaa käyttäjän %{user_name} luottamustasolle '%{new_trust_level}'. Käyttäjän luottamustaso on jo valmiiksi '%{current_trust_level}'. %{user_name} jatkaa edelleen luottamustasolla '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Olet tehnyt tämän toiminnon liian monta kertaa, yritä uudelleen myöhemmin."
@@ -370,7 +365,7 @@ fi:
   topic_flag_types:
     spam:
       title: 'Roskaposti'
-      description: 'Tämä ketju on mainos. Se ei ole hyödyllinen tai relevantti tälla sivustolla, vaan on luonteeltaan mainostamista.'
+      description: 'Tämä ketju on mainos. Se ei ole hyödyllinen tai relevantti tällä sivustolla, vaan on luonteeltaan mainostamista.'
       long_form: 'merkitsi tämän roskapostiksi'
     inappropriate:
       title: 'Asiaton'
@@ -378,7 +373,7 @@ fi:
       long_form: 'liputti tämän asiattomaksi'
     notify_moderators:
       title: 'Ilmoita valvojille'
-      description: 'Valvojan tulee huomioida tämä ketju<a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a>, tai muun syyn vuoksi.'
+      description: 'Valvojan tulee huomioida tämä ketju <a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a>, tai muun syyn vuoksi.'
       long_form: 'ilmoitettu valvojille'
       email_title: 'Viestiketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
@@ -598,7 +593,6 @@ fi:
     summary_posts_required: "Montako viestiä ketjussa täytyy olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_likes_required: "Montako tykkäystä ketjussa pitää olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
-    enable_private_messages: "Salli perus(1) luottamustason käyttäjien luoda ja vastata yksityisviesteihin"
     enable_long_polling: "Ilmoitusten käyttämä viestiväylä voi käyttää long pollingia"
     long_polling_interval: "Uuden long pollin intervalli millisekunneissa."
     polling_interval: "Kuinka usein kirjautuneet käyttäjät pollaavat millisekunneissa"
@@ -713,16 +707,6 @@ fi:
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
     default_trust_level: "Oletus luottamustaso (0-4) kaikile käyttäjille."
-    basic_requires_topics_entered: "Kuinka monta ketjua uuden käyttäjän täytyy avata ennen ylentämistä peruskäyttäjän (1) luottamustasolle."
-    basic_requires_read_posts: "Kuinka monta viestiä uuden käyttäjän täytyy lukea ennen ylentämistä peruskäyttäjän (1) luottamustasolle."
-    basic_requires_time_spent_mins: "Kuinka monta minuuttia uuden käyttäjän täytyy lukea keskusteluita ennen ylentämistä peruskäyttäjän (1) luottamustasolle."
-    regular_requires_topics_entered: "Kuinka monta ketjua peruskäyttäjän täytyy avata ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
-    regular_requires_read_posts: "Kuinka monta viestiä peruskäyttäjän täytyy lukea ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
-    regular_requires_time_spent_mins: "Kuinka monta minuuttia peruskäyttäjän täytyy lukea keskusteluita ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
-    regular_requires_days_visited: "Kuinka monena päivänä peruskäyttäjän täytyy vierailla sivustolla ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
-    regular_requires_likes_received: "Kuinka monta tykkäystä peruskäyttäjän täytyy saada ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
-    regular_requires_likes_given: "Kuinka monta tykkäystä peruskäyttäjän täytyy antaa ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
-    regular_requires_topic_reply_count: "Kuinka moneen ketjuun peruskäyttäjän täytyy vastata ennen ylentämistä tavalisen käyttäjän (2) luottamustasolle."
     min_trust_to_create_topic: "Ketjun luomiseksi vaadittava luottamustaso."
     min_trust_to_edit_wiki_post: "Wikiviestin muokkaamiseen vaadittava luottamustaso."
     newuser_max_links: "Kuinka monta linkkiä uusi käyttäjä voi lisätä viestiin."
@@ -803,7 +787,6 @@ fi:
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin tulee muistutetuksi ketjun dominoinnista."
     suppress_uncategorized_badge: "Älä näytä alueettomille ketjuille tunnusta ketjujen listauksissa."
     global_notice: "Näytä KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri kaikilla sivuilla kaikille käyttäjille, vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
-    disable_edit_notifications: "Käytetään poistamaan käytöstä muokkauksen ilmoitukset, kun otat käyttöön asetuksen 'download_remote_images_to_local'."
     enable_names: "Salli käyttäjän pitkän nimen näyttäminen. Ota pois käytöstä piilottaaksesi pitkän nimen."
     display_name_on_posts: "Näytä käyttäjän pitkä nimi viesteissä @nimen lisäksi."
     invites_per_page: "Oletuksena montako kutsua näytetään käyttäjäsivulla."
@@ -895,8 +878,6 @@ fi:
     pinned_disabled: "Ketjun kiinnitys on poistettu. Sitä ei enää näytetä alueen ylimmäisenä."
     pinned_globally_enabled: "Tämä ketju on nyt kiinnitetty yleisesti. Se näytetään alueensa ja kaikkien listausten ylimmäisenä. Kiinnityksen voi poistaa joko henkilökunnan jäsen kaikilta yhteisesti tai yksittäiset käyttäjät itseltään."
     pinned_globally_disabled: "Ketjun kiinnitys on poistettu. Sitä ei enää näytetä ylimmäisenä."
-    visible_enabled: "Tämä ketju on nyt näkyvä. Se näytetään ketjulistauksissa."
-    visible_disabled: "Tämä ketju on näkymätön. Sitä ei näytetä missään listauksissa. Ainoa tapa avata ketju on suoralla lnkillä."
   login:
     not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
     incorrect_username_email_or_password: "Väärä käyttäjänimi, sähköposti tai salasana"
@@ -959,48 +940,6 @@ fi:
       Tämän kutsun lähetti luotettu käyttäjä, joten sinun ei tarvitse kirjautua sisään.
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
-    text_body_template: |
-      Tämä on testisähköposti, joka lähetettiin sivustoltasi %{site_name}:
-
-      [**%{base_url}**][0]
-
-      Sähköpostin toimitus on monimutkaista. Tässä on muutama tärkeä asia, jotka kannattaa tarkistaa ensin:
-
-      - *Varmista,* että `ilmoitusten sähköpostiosoitteen` from: kenttä on asetettu oikein sivuston asetuksissa. **Sähköpostin varmennus tapahtuu "from"-kentän sähköpostiosoitteen verkkotunnusta vastaan**.
-
-      - Selvitä, miten sähköpostiohjelmassasi saa näkyville *sähköpostin raakadatan,* jotta voit tutkia viestin tunnistetiedot. Gmailissa tämä tapahtuu "näytä kokonaan" valinnalla viestin oikeassa yläkulmassa olevasta valikosta.
-
-      - **TÄRKEÄÄ:** Onko palveluntarjoajasi syöttänyt reverse DNS kentän verkkotunnuksille ja IP osoitteille, joists lähetät sähköpostia? [Kokeile Reverse PTR tietuetta][2] täällä. Jos palveluntarjoajasi ei tarjoa kunnollista reverse DNS pointer tietuetta, on hyvin epätodennäköistä, että mikään sähköposti menee perille.
-
-      - Onko verkkotunnuksesi [SPF record][8] oikein? [Kokeile SPF tietuetta][1] täällä. Huomaa, että TXT oikea tietuetyyppi SPF tietueelle.
-
-      - Onko verkkotunnuksesi [DKIM tietue][3] oikein? Tämä vaikuttaa merkittävästi sähköpostin toimitettavuuteen. [Kokeile DKIM tietuetta][7] täällä.
-
-      - Jos käytät omaa sähköpostipalvelinta, tarkista että palvelimen IP osoite [ei ole millään sähköpostin mustalla listalla][4].
-
-      - Jos käytät omaa sähköpostipalvelinta, tarkista että se *varmasti* lähettää oikean muotoisen isäntänimen HELO viestissään, joka palauttaa oikean DNS tietueen. Jos näin ei ole, sähköposti hylätään monissa sähköpostipalveluissa.
-
-      (Helpoin tapa on [kirjautua Mandrilliin][6], jonka ilmainen palvelu riittää hyvin piemen palstan käyttöön. Muista silti asettaa SPF ja DKIM tietueet DNS:ään!)
-
-      Toivottavasti tämä testisähköposti meni perille OK!
-
-      Onnea matkaan,
-
-      Ystäväsi [Discourselta](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-
-      ----
-
-      <small>Jokaisen lähettämäsi sähköpostin lopussa pitäisi olla listaltapoistumislinkki, joten luodaan sellainen tähänkin. Tämän sähköpostin lähetti Yritys, Tie 1, 12345 Kaupunki, Suomi. Jos et halua vastaanottaa näitä sähköposteja jatkossa, [klikkaa poistuaksesi listalta][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Uusi Discourse versio, päivitys saatavilla"
     text_body_template: |+
