@@ -67,7 +67,6 @@ sv:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
     until_posts:
       one: "1 inlägg"
@@ -101,10 +100,6 @@ sv:
       title: "besökare"
     basic:
       title: "vanlig användare"
-    regular:
-      title: "regelbunden användare"
-    elder:
-      title: "församlingsäldste"
   rate_limiter:
     too_many_requests: "Du gör det där för ofta. Var god vänta %{time_left} innan du försöker igen."
     hours:
@@ -363,7 +358,6 @@ sv:
     queue_jobs: "Köa diverse jobb i sidekiq, om urkryssat så körs köer infogat"
     favicon_url: "En favicon för till webbplats, se http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Ikon som används för Apples touch-enheter. Rekommenderad storlek är 144*144 pixlar."
-    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
@@ -426,8 +420,6 @@ sv:
     closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled: "Den här tråden är nu öppen. Nya svar är tillåtna."
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    visible_enabled: "This topic is now visible. It will be displayed in topic lists."
-    visible_disabled: "This topic is now invisible. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"

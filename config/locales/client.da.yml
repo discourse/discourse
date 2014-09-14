@@ -289,7 +289,6 @@ da:
       watched_categories: "Overvåget"
       watched_categories_instructions: "Du overvåger automatisk alle emner i disse kategorier"
       tracked_categories: "Fulgt"
-      tracked_categories_instructions: "Du vil blive underrettet for hvert nyt indlæg i denne tråd. En optælling af nye indlæg vil blive vist ved siden af tråden."
       muted_categories: "Ignoreret"
       muted_categories_instructions: "Du ignorerer automatisk alle emner i disse kategorier"
       delete_account: "Slet min konto"
@@ -298,7 +297,6 @@ da:
       delete_yourself_not_allowed: "Du kan ikke slette din konto lige nu. Kontakt en administrator for at få din konto slettet."
       unread_message_count: "Beskeder"
       staff_counters:
-        flags_given: "hjælpsomme markeringer givet"
         flagged_posts: "markerede indlæg"
         deleted_posts: "slettede indlæg"
         suspensions: "suspenderinger"
@@ -346,7 +344,6 @@ da:
         frequency: "Vi sender dig kun e-mail, hvis du ikke har været på siden for nylig, og du ikke allerede har set de ting vi ville e-mail’e dig om."
       name:
         title: "Navn"
-        instructions: "Lang version af dit navn"
         too_short: "Dit navn er for kort."
         ok: "Dit navn ser fint ud."
       username:
@@ -427,7 +424,6 @@ da:
         bulk_invite:
           none: "Du har ikke inviteret nogen her endnu. Du kan sende individuelle invitationer eller invitere en masse mennesker på én gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en samlet liste over invitationer</a>."
           text: "Masse invitering fra en fil"
-          uploading: "UPLOADER"
           success: "Filen er uploadet uden problemer, du vil snart blive notificeret om hvordan det går."
           error: "Der var en fejl ved upload af filen '{{filename}}': {{message}}"
       password:
@@ -688,7 +684,6 @@ da:
           one: "Du har valgt <b>1</b> indlæg."
           other: "Du har valgt <b>{{count}}</b> indlæg."
       none:
-        starred: "Du har ikke nogen favorit-emner endnu. For at gøre et emne til favorit, tryk på stjernen ved siden af emnets titel."
         unread: "Du har ingen ulæste emner."
         new: "Du har ingen nye emner."
         read: "Du har ikke læst nogen emner endnu."
@@ -697,9 +692,6 @@ da:
         hot: "Der er ingen populære emner."
         category: "Der er ingen emner i kategorien {{category}}."
         top: "Der er ingen top emner"
-        educate:
-          new: '<p>Som standard, bliver emmer betragtet som nye når de blev oprettet indenfor de sidste 2 dage.</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a>.</p>'
-          unread: '<p>Som standard vil der kun være indication for ulæste indlæg for emmer du har:</p><ul><li>Oprettet</li><li>Svaret på</li><li>Læst i mere end 4 minutter</li></ul><p>Eller, hvis du specifikt har sat emnet til overvåget eller følger via notifikations indstillingen i bunden af hvert emne.</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a>.</p>'
       bottom:
         latest: "Der er ikke flere populære emner."
         hot: "There are no more hot topics."
@@ -793,16 +785,13 @@ da:
           '0': 'Du får ingen notifikationer for dette emne.'
         watching_pm:
           title: "Følger"
-          description: "Du vil blive underrettet for hver ny post i denne private mail. Antallet af ulæste og nye posts vil også blive vist ved siden af emnelisten"
         watching:
           title: "Overvåger"
-          description: "Du vil blive underrettet for hvert nyt indlæg i denne tråd. En optælling af nye indlæg vil blive vist ved siden af tråden."
         tracking_pm:
           title: "Følger"
           description: "Antallet af ulæste og nye indlæg, vil stå efter den private besked. Du bliver kun notificeret nogen nævner dit @name eller svarer på dit indlæg."
         tracking:
           title: "Følger"
-          description: "Antallet af ulæste og nye indlæg vil stå efter emne linien. Du bliver kun notificeret hvis nogen nævner dit @name eller svarer på dine indlæg."
         regular:
           title: "Standard"
           description: "du får kun besked hvis nogen nævner dit @navn eller svarer på dit indlæg."
@@ -828,8 +817,6 @@ da:
         pin_globally: "Fastgør emnet globalt"
         unarchive: "Gendan emne fra arkiv"
         archive: "Arkivér emne"
-        invisible: "Gør usynlig"
-        visible: "Gør synlig"
         reset_read: "Glem hvilke emner jeg har læst"
         multi_select: "Vælg emner der skal flyttes"
       reply:
@@ -970,8 +957,6 @@ da:
           yes_value: "Ja, slet også svarene"
           no_value: "Nej, kun dette indlæg"
         admin: "indlæg administrator handlinger"
-        wiki: "Wiki indlæg"
-        unwiki: "Af-Wiki indlæg"
       actions:
         flag: 'Flag'
         defer_flags:
@@ -1084,9 +1069,6 @@ da:
           side_by_side:
             title: "Vis de renderede output-diffs ved siden af hinanden"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "Vis markdown-diffs ved siden af hinanden"
-            button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "Redigeret af"
     category:
@@ -1139,10 +1121,8 @@ da:
       notifications:
         watching:
           title: "Kigger"
-          description: "Du overvåger automatisk alle emner i disse kategorier. Du vil blive notificeret af alle nye indlæg og emner og antallet af ulæste og nye indlæg vil også stå ved siden af indlæggets emne."
         tracking:
           title: "Følger"
-          description: "Du vil blive underrettet for hvert nyt indlæg i denne tråd. En optælling af nye indlæg vil blive vist ved siden af tråden."
         regular:
           title: "Standard"
           description: "Du får kun notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg."
@@ -1190,8 +1170,6 @@ da:
         help: "emnet er fastgjort; det vises i toppen af sin kategori"
       archived:
         help: "emnet er arkiveret; det er frosset og kan ikke ændres"
-      invisible:
-        help: "emnet er usynligt; det vises ikke på lister og kan kun tilgåes med et direkte link"
     posts: "Indlæg"
     posts_lowercase: "indlæg"
     posts_long: "{{number}} indlæg i dette emne"
@@ -1433,8 +1411,6 @@ da:
           filename: "Filnavn"
           size: "Størrelse"
         upload:
-          text: "UPLOAD"
-          uploading: "UPLOADER"
           success: "'{{filename}}' er blevet uploaded."
           error: "Der skete en fejl da filen '{{filename}}' blev forsøgt uploaded: {{message}}"
         operations:
@@ -1667,9 +1643,6 @@ da:
           pending: 'Brugere som afvanter godkendelse'
           newuser: 'Brugere på tillidsniveau 0 (Ny bruger)'
           basic: 'Brugere på tillidsniveau 1 (Basisbruger)'
-          regular: 'Brugere på tillidsniveau 2 (Almindelig bruger)'
-          leader: 'Brugere på tillidsniveau 3 (Veteran)'
-          elder: 'Brugere på tillidsniveau 4 (Advanceret bruger)'
           admins: 'Admin-brugere'
           moderators: 'Moderatorer'
           blocked: 'Blokerede brugere'
@@ -1868,6 +1841,7 @@ da:
           error_help: "Se disse links for hjælp med at skrive badge forespørgsler."
           bad_count_warning:
             header: "ADVARSEL!"
+          sample: "Eksempel:"
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1882,21 +1856,19 @@ da:
         categories: '<b>g</b>, <b>c</b> Kategorier'
       navigation:
         title: 'Navigation'
-        jump: '<b>#</b> Gå til indlæg nummer'
         back: '<b>u</b> Tilbage'
-        up_down: '<b>k</b>/<b>j</b> Flyt det valgte op/ned'
         open: '<b>o</b> eller <b>Enter</b> Åbn det valgte emne'
       application:
         title: 'Applikation'
         create: '<b>c</b> Opret et nyt emne'
         notifications: '<b>n</b> Åbn notifikationer'
         search: '<b>/</b> Søg'
-        help: '<b>?</b> Åbn hjælp til tastaturgenveje'
       actions:
         title: 'Handlinger'
         star: '<b>f</b> Markér emne som favorit'
         share_topic: '<b>shift s</b> Del emne'
         share_post: '<b>s</b> Del opslag'
+        reply_as_new_topic: '<b>t</b> Svar som nyt emne'
         reply_topic: '<b>shift r</b> Svar på emnet'
         reply_post: '<b>r</b> Svar på kommentaren'
         quote_post: '<b>q</b> Citer emne'
@@ -1942,15 +1914,8 @@ da:
         basic_user:
           name: Basic
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Givet</a> alle vigtige fællesskab funktioner
-        regular_user:
-          name: Standard
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Givet</a> invitationer
         leader:
           name: Leder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Givet</a> rekategorisering, omdøbning, fulgte links og lounge
-        elder:
-          name: advanceret bruger
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Givet</a> global redigering, fastgøring, lukning, arkivering, del og samling
         welcome:
           name: Velkommen
           description: Modtaget et like

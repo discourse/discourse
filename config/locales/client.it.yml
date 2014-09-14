@@ -289,7 +289,6 @@ it:
       watched_categories: "Osservata/e"
       watched_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti. Inoltre, accanto all'elenco degli argomenti apparirà il conteggio dei messaggi non letti e di quelli nuovi."
       tracked_categories: "Seguita/e"
-      tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti in queste categorie. Il conteggio dei messaggi nuovi e non letti comparirà di fianco all'elenco degli argomenti."
       muted_categories: "Ignorato"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nel tab dei non letti."
       delete_account: "Cancella il mio account"
@@ -298,7 +297,6 @@ it:
       delete_yourself_not_allowed: "Non puoi eliminare il tuo account in questo momento. Contatta un amministratore e chiedigli di cancellarlo per te."
       unread_message_count: "Messaggi"
       staff_counters:
-        flags_given: "segnalazioni utili inviate"
         flagged_posts: "messaggi segnalati"
         deleted_posts: "messaggi cancellati"
         suspensions: "sospensioni"
@@ -427,7 +425,6 @@ it:
         bulk_invite:
           none: "Non hai ancora invitato nessuno qui. Puoi inviare inviti individuali, o invitare un gruppo di persone caricando un <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>file di invito di massa</a>."
           text: "Invito di Massa da File"
-          uploading: "CARICAMENTO"
           success: "Il file è stato caricato correttamente, verrai notificato a breve con i progressi."
           error: "Si è verificato un errore durante il caricamento {{filename}}': {{message}}"
       password:
@@ -698,10 +695,6 @@ it:
         hot: "Non ci sono argomenti caldi."
         category: "Non ci sono argomenti in {{category}}."
         top: "Non ci sono argomenti di punta."
-        educate:
-          new: '<p>Per default, gli argomenti creati negli ultimi 2 giorni sono considerati nuovi. Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">opzioni</a>.</p>'
-          unread: '<p>Per default, gli indicatori di argomento non-letto appariranno solo se hai:</p><ul><li>Creato</li><li>Risposto</li><li>Letto per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l''argomento come Seguito o Osservato nel pannello di notifica in fondo ad ogni argomento.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">opzioni</a>.</p>'
-          starred: '<p>I tuoi argomenti preferiti appariranno qui.</p> <p>Per aggiungere o togliere un argomento dai preferiti, clicca sulla <i class="fa fa-star"></i> quando la vedi &hellip;</p><ul><li>Accanto al titolo in cima ad ogni argomento</li><li>Nel bottone <kbd>Star</kbd> in fondo all''argomento</li><li>Alla sinistra di ogni argomento nell''elenco argomenti</li>'
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         hot: "Non ci sono altri argomenti caldi."
@@ -796,16 +789,13 @@ it:
           '0': 'Stai ignorando tutte le notifiche di questo argomento.'
         watching_pm:
           title: "In osservazione"
-          description: "Riceverai notifiche di ogni nuovo messaggio in questo messaggio privato. Un conteggio dei messaggi non letti e nuovi comparirà anche di fianco alla lista degli argomenti."
         watching:
           title: "In osservazione"
-          description: "Riceverai notifiche per ogni nuovo messaggio in questo argomento. Un conteggio dei messaggio non letti e nuovi comparirà anche di fianco alla lista degli argomenti."
         tracking_pm:
           title: "Seguito"
           description: "Un conteggio dei messaggio non letti e nuovi apparirà vicino al messaggio privato. Riceverai una notifica solo se qualcuno menziona il tuo @name o risponde al tuo messaggio."
         tracking:
           title: "Seguito"
-          description: "Un conteggio dei messaggio non letti e nuovi apparirà vicino alla lista degli argomenti. Riceverai una notifica solo se qualcuno menzionerà il tuo @name o risponderà al tuo messaggio."
         regular:
           title: "Normale"
           description: "Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde al tuo messaggio."
@@ -831,8 +821,6 @@ it:
         pin_globally: "Appunta Argomento Globalmente"
         unarchive: "De-archivia Argomento"
         archive: "Archivia Argomento"
-        invisible: "Rendi Invisibile"
-        visible: "Rendi Visibile"
         reset_read: "Reimposta Dati Letti"
         multi_select: "Seleziona Messaggi"
       reply:
@@ -974,8 +962,6 @@ it:
           yes_value: "Si, cancella anche le risposte"
           no_value: "No, solo questo messaggio"
         admin: "azioni post-amministrazione"
-        wiki: "Aggiungi messaggio a Wiki"
-        unwiki: "Rimuovi il messaggio da Wiki"
       actions:
         flag: 'Segnala'
         defer_flags:
@@ -1143,10 +1129,8 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Seguirai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti. Inoltre, di fianco all'elenco di argomenti, apparirà il conteggio di quelli non letti e di quelli nuovi."
         tracking:
           title: "Seguendo"
-          description: "Seguirai automaticamente tutti i nuovi argomenti di queste categorie. Il conteggio dei messaggi nuovi e non letti comparirà di fianco all'elenco degli argomenti."
         regular:
           title: "Normale"
           description: "Riceverai notifiche solo se qualcuno menziona il tuo @nome o risponde a un tuo messaggio."
@@ -1194,8 +1178,6 @@ it:
         help: "Questo argomento è in evidenza; verrà mostrato in cima alla sua categoria"
       archived:
         help: "Questo argomento è archiviato; è bloccato e non può essere modificato"
-      invisible:
-        help: "Questo argomento è invisibile; non verrà mostrato nella lista degli argomenti ed è possibile accedervi solo tramite collegamento diretto"
     posts: "Messaggi"
     posts_lowercase: "messaggi"
     posts_long: "ci sono {{number}} messaggi in questo argomento"
@@ -1437,8 +1419,6 @@ it:
           filename: "Nome del file"
           size: "Dimensione"
         upload:
-          text: "CARICA"
-          uploading: "CARICAMENTO"
           success: "'{{filename}}' è stato caricato con successo."
           error: "Si è verificato un errore durante il caricamento {{filename}}': {{message}}"
         operations:
@@ -1895,20 +1875,14 @@ it:
         categories: '<b>g</b>, <b>c</b> Categorie'
       navigation:
         title: 'Navigazione'
-        jump: '<b>#</b> Va al messaggio numero'
         back: '<b>u</b> Indietro'
-        up_down: '<b>k</b>/<b>j</b> Sposta la selezione su/giù'
         open: '<b>o</b> o <b>Invio</b> Apre l''argomento selezionato'
         next_prev: '<b>shift j</b>/<b>shift k</b> Prossima/precedente sezione'
       application:
         title: 'Applicazione'
         create: '<b>c</b> Crea un nuovo argomento'
         notifications: '<b>n</b> Apre le notifiche'
-        site_map_menu: '<b>=</b> Apri il menu: mappa del sito'
-        user_profile_menu: '<b>p</b> Apre il menu del profilo utente'
-        show_incoming_updated_topics: '<b>.</b> Mostra argomenti nuovi/aggiornati'
         search: '<b>/</b> Cerca'
-        help: '<b>?</b> Apre l''aiuto per le scorciatoie da tastiera'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
       actions:

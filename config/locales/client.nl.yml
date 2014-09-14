@@ -25,6 +25,11 @@ nl:
       long_no_year_no_time: "MMM D"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      long_date_with_year: "MMM D, 'YY LT"
+      long_date_without_year: "MMM D, LT"
+      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -54,6 +59,7 @@ nl:
         almost_x_years:
           one: "1j"
           other: "%{count}j"
+        date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -65,6 +71,7 @@ nl:
         x_days:
           one: "1 dag"
           other: "%{count} dagen"
+        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "1 min geleden"
@@ -174,6 +181,7 @@ nl:
     disable: "Uitschakelen"
     undo: "Herstel"
     revert: "Zet terug"
+    failed: "Mislukt"
     banner:
       close: "Verberg deze banner."
     choose_topic:
@@ -277,10 +285,10 @@ nl:
       admin_tooltip: "Deze gebruiker is een admin"
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_reason: "Reden: "
+      mailing_list_mode: "Ontvang een mail als er een nieuw bericht op het forum geplaatst is (tenzij je het topic of de betreffende categorie op stil zet)"
       watched_categories: "In de gaten gehouden"
       watched_categories_instructions: "Je krijgt bericht van alle nieuwe berichten en topics in deze categoriën, daarnaast zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
       tracked_categories: "Gevolgd"
-      tracked_categories_instructions: "Het aantal ongelezen en nieuwe berichten in deze categoriën zal naast de topiclijst verschijnen"
       muted_categories: "Genegeerd"
       muted_categories_instructions: "Je zal geen notificaties krijgen over nieuwe topics en berichten in deze categoriën"
       delete_account: "Verwijder mijn account"
@@ -289,7 +297,6 @@ nl:
       delete_yourself_not_allowed: "Je kan je account nu niet verwijderen. Neem contact op met een admin om je account te laten verwijderen."
       unread_message_count: "Berichten"
       staff_counters:
-        flags_given: "behulpzame markeringen"
         flagged_posts: "gemarkeerde berichten"
         deleted_posts: "verwijderde berichten"
         suspensions: "schorsingen"
@@ -413,7 +420,6 @@ nl:
         bulk_invite:
           none: "Je hebt nog niemand uitgenodigd. Je kan individueel uitnodigen of een groep mensen tegelijk door <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>een groepsuitnodiging-bestand te uploaden</a>"
           text: "Groepsuitnodiging van bestan"
-          uploading: "UPLOADEN"
           success: "Het uploaden van het bestand is gelukt, over enkele momenten krijg je meer informatie over de voortgang"
           error: "Het uploaden van '{{filename}}' is niet gelukt: {{message}}"
       password:
@@ -667,7 +673,6 @@ nl:
           one: "Je hebt <b>1</b> topic geselecteerd."
           other: "Je hebt <b>{{count}}</b> topics geselecteerd."
       none:
-        starred: "Je hebt nog geen topics met een ster. Om een topic aan deze lijst toe te voegen, klik of druk je op de ster naast de topictitel."
         unread: "Je hebt geen ongelezen topics."
         new: "Je hebt geen nieuwe topics."
         read: "Je hebt nog geen topics gelezen."
@@ -676,9 +681,6 @@ nl:
         hot: "Er zijn geen polulaire topics."
         category: "Er zijn geen topics in {{category}}."
         top: "Er zijn geen top-topics."
-        educate:
-          new: '<p>Standaard worden discussies als nieuw beschouwd als ze gemaakt zijn in de afgelopen 2 dagen.</p><p>Je kan dit aanpassen in je <a href="%{userPrefsUrl}">voorkeuren</a>.</p>'
-          unread: '<p>Standaard worden discussies alleen als ongelezen getoond als je ze hebt:</p><ul><li>Gemaakt</li><li>Beantwoord</li><li>Meer dan 4 minuten hebt gelezen</li></ul><p>Of als je de discussie expliciet hebt gemarkeerd als Te Volgen via de notificatieknop onder aan de pagina van elke discussie.</p><p>Je kan dit aanpassen in je <a href="%{userPrefsUrl}">instellingen</a>.</p>'
       bottom:
         latest: "Er zijn geen recente topics."
         hot: "Er zijn geen polulaire topics meer."
@@ -772,16 +774,13 @@ nl:
           '0': 'Je negeert alle notificaties in deze topic.'
         watching_pm:
           title: "In de gaten houden"
-          description: "Je krijgt een notificatie voor elk nieuw bericht in dit privéconversatie. Het aantal ongelezen en nieuwe berichten zal naast de topiclijst verschijnen."
         watching:
           title: "In de gaten houden"
-          description: "Je krijgt een notificatie voor elk nieuw bericht in dit topic. Het aantal ongelezen en nieuwe berichten zal naast de topiclijst verschijnen."
         tracking_pm:
           title: "Volgen"
           description: "Het aantal ongelezen en nieuwe berichten verschijnt naast het privébericht. Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht."
         tracking:
           title: "Volgen"
-          description: "Het aantal ongelezen en nieuwe berichten wordt getoond naast de discussie in het overzicht. Je krijgt alleen een notificatie als iemand je @naam noemt of een bericht van jou beantwoord."
         regular:
           title: "Normaal"
           description: "Je zal alleen een notificatie krijgen als iemand je @naam vermeldt of een reactie geeft op je berichten."
@@ -807,8 +806,6 @@ nl:
         pin_globally: "Pin topic globaal vast"
         unarchive: "De-archiveer topic"
         archive: "Archiveer topic"
-        invisible: "Maak onzichtbaar"
-        visible: "Maak zichtbaar"
         reset_read: "Reset leesdata"
         multi_select: "Selecteer berichten"
       reply:
@@ -949,8 +946,6 @@ nl:
           yes_value: "Ja, verwijder deze antwoorden ook"
           no_value: "Nee, alleen dit bericht"
         admin: "adminacties voor bericht"
-        wiki: "Maak wiki van bericht"
-        unwiki: "Bericht niet meer als wiki gebruiken"
       actions:
         flag: 'Markeer'
         it_too:
@@ -1060,9 +1055,6 @@ nl:
           side_by_side:
             title: "Toon de wijzigingen in het gerenderde bericht naast elkaar"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "Toon de wijzigingen in het gerenderde bericht als markdown naast elkaar"
-            button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "Gewijzigd door"
     category:
@@ -1161,8 +1153,6 @@ nl:
         help: "Deze topic is vastgepind en zal bovenaan de categorie getoond worden"
       archived:
         help: "Deze topic is gearchiveerd en kan niet meer gewijzigd worden"
-      invisible:
-        help: "Deze topic is niet zichtbaar, zal niet verschijnen in de topiclijst en kan alleen bekeken worden met een directe link"
     posts: "Berichten"
     posts_lowercase: "berichten"
     posts_long: "er zijn {{number}} berichten in deze topic"
@@ -1385,8 +1375,6 @@ nl:
           filename: "Bestandsnaam"
           size: "Grootte"
         upload:
-          text: "UPLOAD"
-          uploading: "UPLOADEN"
           success: "'{{filename}}' is geupload."
           error: "Er ging iets fout bij het uploaden van '{{filename}}': {{message}}"
         operations:
@@ -1614,8 +1602,6 @@ nl:
           pending: 'Nog niet geaccepteerde leden'
           newuser: 'Leden met Trust Level 0 (Nieuw lid)'
           basic: 'Leden met Trust Level 1 (Lid)'
-          regular: 'Leden met Trust Level 2 (Regulier lid)'
-          elder: 'Leden met Trust Level 4 (Ervaren lid)'
           admins: 'Administrators'
           moderators: 'Moderators'
           blocked: 'Geblokkeerde leden'
@@ -1797,16 +1783,13 @@ nl:
         title: 'Spring naar'
       navigation:
         title: 'Navigatie'
-        jump: '<b>#</b> Ga naar post nummer'
         back: '<b>u</b> Terug'
-        up_down: '<b>k</b>/<b>j</b> Verplaats selectie omhoog/omlaag'
         open: '<b>o</b> of <b>Enter</b> Open geselecteerde topic'
       application:
         title: 'Applicatie'
         create: '<b>c</b> Maak nieuwe topic'
         notifications: '<b>n</b> Open notificaties'
         search: '<b>/</b> Zoek'
-        help: '<b>?</b> Open keyboard shortcuts help'
       actions:
         title: 'Acties'
         star: '<b>f</b> Markeer topic met ster'
@@ -1846,12 +1829,8 @@ nl:
           description: Eerste berichtwijziging
         basic_user:
           name: Basis
-        regular_user:
-          name: Normaal
         leader:
           name: Leider
-        elder:
-          name: Stamoudste
         welcome:
           name: Welkom
           description: Like ontvangen.

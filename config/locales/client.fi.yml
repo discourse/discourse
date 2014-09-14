@@ -114,7 +114,7 @@ fi:
     desktop_view: "Työpöytänäkymä"
     you: "Sinä"
     or: "tai"
-    now: "juuri nyt"
+    now: "juuri äsken"
     read_more: 'lue lisää'
     more: "Lisää"
     less: "Vähemmän"
@@ -289,7 +289,6 @@ fi:
       watched_categories: "Tarkkaillut"
       watched_categories_instructions: "Näiden alueiden ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen listauksissa. "
       tracked_categories: "Seuratut"
-      tracked_categories_instructions: "Näiden alueiden ketjut asetetaan automaattisesti seurantaan. Uusien ja lukemattomien viestien lukumäärä näytetään ketjujen listauksissa."
       muted_categories: "Vaimennetut"
       muted_categories_instructions: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä."
       delete_account: "Poista tilini"
@@ -298,7 +297,6 @@ fi:
       delete_yourself_not_allowed: "Et voi poistaa käyttäjätiliäsi juuti nyt. Sinun tulee pyytää ylläpitäjää poistamaan tilisi."
       unread_message_count: "Viestit"
       staff_counters:
-        flags_given: "hyödyllisiä liputuksia"
         flagged_posts: "liputettuja viestejä"
         deleted_posts: "poistettuja viestejä"
         suspensions: "hyllytyksiä"
@@ -346,7 +344,6 @@ fi:
         frequency: "Lähetämme sähköpostia vain aiheista, joita et ole nähnyt, ja kun emme ole nähneet sinua viime aikoina."
       name:
         title: "Nimi"
-        instructions: "Nimesi pidempi muoto."
         too_short: "Nimesi on liian lyhyt."
         ok: "Nimesi vaikuttaa hyvältä."
       username:
@@ -427,7 +424,6 @@ fi:
         bulk_invite:
           none: "Et ole kutsunut vielä ketään. Voit lähettää yksittäisiä kutsuja tai kutsua useita ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lähettämällä massakutsun tiedostosta</a>."
           text: "Lähetä massakutsu tiedostosta"
-          uploading: "LÄHETTÄÄ"
           success: "Tiedoston lähettäminen onnistui, saat pikaisesti ilmoituksen edistymisestä."
           error: "Tiedoston '{{filename}}' lähetyksen aikana tapahtui virhe: {{message}}"
       password:
@@ -688,7 +684,6 @@ fi:
           one: "Olet valinnut <b>yhden</b> ketjun."
           other: "Olet valinnut <b>{{count}}</b> ketjua."
       none:
-        starred: "Et ole merkinnyt yhtään ketjua tähdellä. Merkitäksesi ketjun, klikkaa tai hipaise tähteä ketjun otsikon vieressä."
         unread: "Sinulla ei ole lukemattomia ketjuja."
         new: "Sinulla ei ole uusia ketjuja."
         read: "Et ole lukenut vielä yhtään yhtään ketjua."
@@ -697,9 +692,6 @@ fi:
         hot: "Kuumia ketjuja ei ole."
         category: "Alueella {{category}} ei ole ketjua."
         top: "Huippuketjuja ei ole."
-        educate:
-          new: '<p>Ketjut tulkitaan uusiksi, kun ne on luotu viimeisen 2 päivän sisällä.</p><p>Voit muuttaa tätä oletusarvoa <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
-          unread: '<p>Lukemattomien viestien ilmoitukset näytetään ketjuista,</p><ul><li>jotka olet luonut</li><li>joihin olet vastannut</li><li>joita olet lukenut vähintään 4 minuuttia,</li></ul><p> tai jotka olet erikseen asettanut seurantaan tai tarkkailuun ketjun alta löytyvästä painikkeesta.</p><p>Voit muuttaa näitä oletusarvoja <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         hot: "Kuumia ketjuja ei ole enempää."
@@ -793,16 +785,13 @@ fi:
           '0': 'Et saa mitään ilmoituksia tästä ketjusta.'
         watching_pm:
           title: "Tarkkaile"
-          description: "Saat ilmoituksen kaikista uusista viesteistä tässä yksityisviestiketjussa. Uusien ja lukemattomien viestien lukumäärä näytetään ketjun listauksissa."
         watching:
           title: "Tarkkaile"
-          description: "Saat ilmoituksen kaikista uusista viesteistä tässä ketjussa. Uusien ja lukemattomien viestien lukumäärä ilmestyy näkyviin ketjun listauksissa."
         tracking_pm:
           title: "Seuraa"
           description: "Lukemattomien ja uusien viestien lukumäätä näytetään yksityisviestin yhteydessä. Saat ilmoituksen vain jos joku mainitsee @nimesi tai vastaa sinulle viestissään."
         tracking:
           title: "Seuraa"
-          description: "Lukemattomien ja uusien viestien lukumäärä näytetään ketjujen listauksissa. Saat ilmoituksen vain jos joku mainitsee @nimesi tai vastaa sinulle viestissään."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen vain jos joku mainitsee @nimesi tai vastaa viestiisi."
@@ -828,8 +817,6 @@ fi:
         pin_globally: "Kiinnitä ketju koko palstalle"
         unarchive: "Poista ketjun arkistointi"
         archive: "Arkistoi ketju"
-        invisible: "Tee ketjusta näkymätön"
-        visible: "Tee ketjusta näkyvä"
         reset_read: "Nollaa tiedot lukemisista"
         multi_select: "Valitse viestejä"
       reply:
@@ -970,8 +957,6 @@ fi:
           yes_value: "Kyllä, poista myös vastaukset"
           no_value: "En, poista vain tämä viesti"
         admin: "viestin ylläpitotoimet"
-        wiki: "Tee wiki"
-        unwiki: "Poista wiki"
       actions:
         flag: 'Liputa'
         defer_flags:
@@ -1084,9 +1069,6 @@ fi:
           side_by_side:
             title: "Näytä muokkauksen versiot vierekkäin"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "Näytä versioiden markdown-lähdekoodit vierekkäin"
-            button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "Muokannut"
     category:
@@ -1139,10 +1121,8 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
-          description: "Tämän alueen ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja alueen uusien ja lukemattomien viestien lukumäärä näytetään ketjujen listauksissa. "
         tracking:
           title: "Seuraa"
-          description: "Näiden alueiden ketjut asetetaan automaattisesti seurantaan. Uusien ja lukemattomien viestien lukumäärä näytetään ketjujen listauksissa."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen vain jos joku mainitsee @nimesi tai vastaa viestiisi."
@@ -1190,8 +1170,6 @@ fi:
         help: "Tämä ketju on nostettu; se näytetään alueensa ensimmäisenä"
       archived:
         help: "Tämä ketju on arkistoitu; se on jäädytetty eikä sitä voi muuttaa"
-      invisible:
-        help: "Tämä ketju on näkymätön; sitä ei näytetä listauksissa ja siihen pääsee vain suoralla lnkillä"
     posts: "Viestit"
     posts_lowercase: "viestit"
     posts_long: "tässä ketjussa on {{number}} viestiä"
@@ -1315,8 +1293,8 @@ fi:
         reports:
           today: "Tänään"
           yesterday: "Eilen"
-          last_7_days: "Viimeisenä 7 päivänä"
-          last_30_days: "Viimeisenä 30 päivänä"
+          last_7_days: "Edellisenä 7 päivänä"
+          last_30_days: "Edellisenä 30 päivänä"
           all_time: "Kaikilta ajoilta"
           7_days_ago: "7 päivää sitten"
           30_days_ago: "30 päivää sitten"
@@ -1328,8 +1306,8 @@ fi:
         by: "käyttäjältä"
       flags:
         title: "Liput"
-        old: "Vanha"
-        active: "Aktiivinen"
+        old: "Vanhat"
+        active: "Aktiiviset"
         agree: "Ole samaa mieltä"
         agree_title: "Vahvista, että lippu on annettu oikeasta syystä"
         agree_flag_modal_title: "Ole samaa mieltä ja..."
@@ -1433,8 +1411,6 @@ fi:
           filename: "Tiedostonimi"
           size: "Koko"
         upload:
-          text: "LÄHETÄ"
-          uploading: "LÄHETTÄÄ"
           success: "Tiedosto '{{filename}}' on lähetetty onnistuneesti."
           error: "Tiedoston '{{filename}}' lähetyksen aikana tapahtui virhe: {{message}}"
         operations:
@@ -1667,8 +1643,6 @@ fi:
           pending: 'Hyväksymistä odottavat käyttäjät'
           newuser: 'Luottamustason 0 käyttäjät (Uusi käyttäjä)'
           basic: 'Luottamustason 1 käyttäjät (Peruskäyttäjä)'
-          regular: 'Luottamustason 2 käyttäjät (Tavallinen käyttäjä)'
-          elder: 'Luottamustason 4 käyttäjät (Vanhimmat)'
           admins: 'Ylläpitäjät'
           moderators: 'Valvojat'
           blocked: 'Estetyt käyttäjät'
@@ -1720,7 +1694,7 @@ fi:
         private_topics_count: Yksityisviestit
         posts_read_count: Luettuja viestejä
         post_count: Kirjoitettuja viestejä
-        topics_entered: Katseltuja viestejä
+        topics_entered: Katseltuja ketjuja
         flags_given_count: Annettuja lippuja
         flags_received_count: Saatuja lippuja
         flags_given_received_count: 'Lippuja annettu / saatu'
@@ -1891,20 +1865,14 @@ fi:
         categories: '<b>g</b>, <b>c</b> Alueet'
       navigation:
         title: 'Navigointi'
-        jump: '<b>#</b> Siirry viestiin numeron perusteella'
         back: '<b>u</b> Takaisin'
-        up_down: '<b>k</b>/<b>j</b> Siirrä valintaa ylös/alas'
         open: '<b>o</b> tai <b>Enter</b> Avaa valittu ketju'
         next_prev: '<b>shift j</b>/<b>shift k</b> Seuraava/edellinen osio'
       application:
         title: 'Ohjelmisto'
         create: '<b>c</b> Luo uusi ketju'
         notifications: '<b>n</b> Avaa ilmoitukset'
-        site_map_menu: '<b>=</b> Avaa palstan valikko'
-        user_profile_menu: '<b>p</b> Avaa käyttäjätilin valikko'
-        show_incoming_updated_topics: '<b>.</b> Näytä tulevat/päivittyneet ketjut'
         search: '<b>/</b> Etsi'
-        help: '<b>?</b> Avaa näppäinoikoteiden apu'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Unohda uudet/viestit'
         dismiss_topics: '<b>x</b>, <b>t</b> Unohda ketjut'
       actions:
@@ -1958,15 +1926,8 @@ fi:
         basic_user:
           name: Peruskäyttäjä
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Myönnetty</a> oikeudet tärkeimpiin toimintoihin
-        regular_user:
-          name: Tavallinen käyttäjä
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Myönnetty</a> oikeus kutsua käyttäjiä
         leader:
           name: Johtaja
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Myönnetty</a> oikeus siirtää ja nimetä uudelleen ketjuja, linkkien seuraaminen ja Lounge
-        elder:
-          name: Vanhin
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Myönnetty</a> ketjujen globaali muokkaus, kiinnitys, sulkeminen, arkistointi, jakaminen ja yhdistäminen
         welcome:
           name: Tervetuloa
           description: Sai tykkäyksen

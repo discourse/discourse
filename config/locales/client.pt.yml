@@ -27,6 +27,9 @@ pt:
       long_with_year_no_time: "DD MMM YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
+      long_date_with_year_without_time: "D MMM, 'YY LT"
+      long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -56,6 +59,7 @@ pt:
         almost_x_years:
           one: "1a"
           other: "%{count}a"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -67,6 +71,7 @@ pt:
         x_days:
           one: "1 dia"
           other: "%{count} dias"
+        date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "1 minuto atrás"
@@ -176,6 +181,7 @@ pt:
     disable: "Desativar"
     undo: "Desfazer"
     revert: "Reverter"
+    failed: "Falhou"
     banner:
       close: "Dispensar este banner."
     choose_topic:
@@ -279,10 +285,10 @@ pt:
       admin_tooltip: "Este utilizador é um admin"
       suspended_notice: "Utilizador suspenso até {{date}}."
       suspended_reason: "Razão: "
+      mailing_list_mode: "Receber um email para cada post novo (salvo quando silenciar o tópico ou categoria)"
       watched_categories: "Observado"
       watched_categories_instructions: "Observará automaticamente todos os novos tópicos nestas categorias. Será notificado de todos os novos posts e tópicos. Além disso, a contagem de posts novos e não lidos irá surgir ao lado da listagem do tópico. "
       tracked_categories: "Seguido "
-      tracked_categories_instructions: "Seguirá automaticamente todos os tópicos neste categorias. Uma contagem de postos novos e não lidos irá surgir ao lado da listagem do tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Não será notificado relativamente a novos tópicos nestas categorias, e não aparecerão na sua lista de não lidos."
       delete_account: "Eliminar Conta"
@@ -291,7 +297,6 @@ pt:
       delete_yourself_not_allowed: "Neste momento não pode eliminar a sua conta. Contacte um administrador para que este elimine a sua conta por sí."
       unread_message_count: "Mensagens"
       staff_counters:
-        flags_given: "denúncias úteis lançadas"
         flagged_posts: "posts sinalizados"
         deleted_posts: "posts eleminados"
         suspensions: "suspensões"
@@ -339,7 +344,7 @@ pt:
         frequency: "Vamos enviar-lhe emails apenas quando não o virmos há algum tempo e não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
-        instructions: "Versão longa do seu nome."
+        instructions: "O seu nome completo."
         too_short: "O seu nome é muito curto."
         ok: "O seu nome parece bom."
       username:
@@ -357,6 +362,7 @@ pt:
         prefilled: "O email corresponde ao nome de um utilizador registado."
       locale:
         title: "Idioma de Interface"
+        instructions: "Idioma da interface de utilizador. Será alterado quando atualizar a página."
         default: "(predefindio)"
       password_confirmation:
         title: "Palavra-chave novamente"
@@ -375,6 +381,7 @@ pt:
         bi_weekly: "de duas em duas semanas"
       email_direct: "Receber um email quando alguém o cita, responde às suas mensagens, ou menciona o seu @nome_de_utilizador"
       email_private_messages: "Recebe um email quando alguém lhe envia uma mensagem particular"
+      email_always: "Não suprimir notificações de email quando estou ativo no site"
       other_settings: "Outros"
       categories_settings: "Categorias"
       new_topic_duration:
@@ -418,7 +425,6 @@ pt:
         bulk_invite:
           none: "Ainda não convidou ninguém. Pode enviar convites individuais, ou convidar um grupo de pessoas <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> enviando um ficheiro com convites em massa."
           text: "Convite em massa a partir do ficheiro"
-          uploading: "CARREGANDO"
           success: "Envio de ficheiro feito com sucesso, será notificado em breve do seu progresso."
           error: "Erro de envio '{{filename}}': {{message}}"
       password:
@@ -524,6 +530,7 @@ pt:
       awaiting_approval: "A sua conta ainda não foi aprovada por um membro do staff. Receberá um email quando a sua conta for aprovada."
       requires_invite: "Desculpe, o acesso a este fórum é permitido somente por convite de outro membro."
       not_activated: "Não pode entrar ainda. Enviámos anteriormente um email de ativação para o endereço <b>{{sentTo}}</b>. Por favor siga as instruções contidas neste email para ativar a sua conta."
+      not_allowed_from_ip_address: "Não pode iniciar sessão a partir desse endereço IP."
       resend_activation_email: "Carregue aqui para enviar o email de ativação novamente."
       sent_activation_email_again: "Enviámos mais um email de ativação para o endereço <b>{{currentEmail}}</b>. Pode ser que demore alguns minutos; verifique sempre a sua pasta de spam ou lixo."
       google:
@@ -644,6 +651,7 @@ pt:
       title: "pesquisar tópicos, posts, utilizadores, ou categorias"
       no_results: "Não foi encontrado nenhum resultado."
       searching: "A procurar..."
+      post_format: "#{{post_number}} por {{username}}"
       context:
         user: "Procurar posts por @{{username}}"
         category: "Procurar na categoria \"{{category}}\""
@@ -652,6 +660,11 @@ pt:
     go_back: 'voltar atrás'
     not_logged_in_user: 'página de utilizador com resumo da actividade actual e preferências  '
     current_user: 'ir para a sua página de utilizador'
+    starred:
+      title: 'Favoritos'
+      help:
+        star: 'adicionar este tópico à sua lista de favoritos'
+        unstar: 'remover este tópico da sua lista de favoritos'
     topics:
       bulk:
         reset_read: "Repor Leitura"
@@ -670,6 +683,7 @@ pt:
           one: "Seleccionou  <b>1</b> tópico."
           other: "Seleccionou <b>{{count}}</b> tópicos."
       none:
+        starred: "Não tem tópicos favoritos."
         unread: "Há tópicos não lidos."
         new: "Não há novos tópicos."
         read: "Ainda não leu nenhum tópico."
@@ -678,9 +692,6 @@ pt:
         hot: "Não há tópicos quentes."
         category: "Não há tópicos na categoria {{category}}."
         top: "Não existem tópicos."
-        educate:
-          new: '<p>Por defeito, os tópicos são considerados novos quando criados nos últimos 2 dias.</p><p>Pode alterar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
-          unread: '<p>Por defeito, indicadores de não lidos surgirão apenas para tópicos que:</p><ul><li>Criou</li><li>Respondeu</li><li>Leu durante mais do que 4 minutos</li><li>Ou, se definiu explicitamente o tópico para Acompanhar ou Vigiar no controlo de notificações que se encontra na parte inferior de cada tópico. Pode alterar isto nas suas <a href="%{userPrefsUrl}">preferências'
       bottom:
         latest: "Não há mais tópicos recentes."
         hot: "Não mais tópicos quentes."
@@ -773,16 +784,13 @@ pt:
           '0': 'Está a ignorar todas as notificações para este tópico.'
         watching_pm:
           title: "Observar"
-          description: "Será notificado de todos os novos posts desta mensagem privada. Um contagem de posts novos e não lidos irá aparecer junto da listagem do tópico."
         watching:
           title: "Observar"
-          description: "Será notificado sobre todos os novos posts neste tópico. Será também apresentada uma contagem de posts novos e não lidos ao lado da listagem de tópicos."
         tracking_pm:
           title: "Seguir"
           description: "Será apresentada uma contagem de posts novos e não lidos junto da mensagem privada. Será apenas notificado se alguém mencionar o seu @nome ou responder ao seu post."
         tracking:
           title: "Monitorar"
-          description: "Será apresentada uma contagem de posts novos e não lidos ao lado da listagem de tópicos. Será apenas notificado quando alguém mencionar o seu @nome ou responder ao seu post."
         regular:
           title: "Regular"
           description: "Será apenas notificado quando alguém mencionar o seu @nome ou responder ao sei post."
@@ -808,8 +816,6 @@ pt:
         pin_globally: "Destacar Tópico Globalmente"
         unarchive: "Desarquivar Tópico"
         archive: "Arquivar Tópico"
-        invisible: "Tornar Invisível"
-        visible: "Tornar Visível"
         reset_read: "Repor Data de Leitura"
         multi_select: "Seleccionar Posts"
       reply:
@@ -927,6 +933,7 @@ pt:
         confirm: "Tem a certeza que quer abandonar o seu post?"
         no_value: "Não, manter"
         yes_value: "Sim, abandonar"
+      via_email: "este post chegou por email"
       wiki:
         about: "este post é um wiki; utilizadores comuns podem editá-lo"
       archetypes:
@@ -950,8 +957,6 @@ pt:
           yes_value: "Sim, remover as respostas também"
           no_value: "Não, somente esta mensagem"
         admin: "acções administrativas de post"
-        wiki: "Wiki post"
-        unwiki: "Apresentar post como Wiki"
       actions:
         flag: 'Sinalização'
         defer_flags:
@@ -1063,7 +1068,7 @@ pt:
           side_by_side:
             button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
-            button: '<i class="fa fa-columns"></i> Markdown'
+            button: '<i class="fa fa-columns"></i> Raw'
         details:
           edited_by: "Editado por"
     category:
@@ -1115,10 +1120,8 @@ pt:
       notifications:
         watching:
           title: "Vigiar"
-          description: "Irá vigiar automaticamente todos os tópicos novos nestas categorias. Será notificado de todos os posts e tópicos novos, além disso será apresentada uma contagem de posts novos e não lidos junto da listagem de tópicos."
         tracking:
           title: "Acompanhar"
-          description: "Irá acompanhar automaticamente todos os tópicos novos nestas categorias. Será apresentada uma contagem de posts novos e não lidos na listagem de tópicos."
         regular:
           title: "Normal"
           description: "Será notificado apenas se alguém mencionar o seu @nome ou responder ao seu post."
@@ -1166,8 +1169,6 @@ pt:
         help: "Este tópico está marcado; será mostrada no topo da sua categoria"
       archived:
         help: "Este tópico está arquivado; está bloqueado e não pode ser alterado"
-      invisible:
-        help: "Este tópico está invisível; não será apresentado na listagem de tópicos e apenas pode ser acedido através de um link directo"
     posts: "Mensagens"
     posts_lowercase: "posts"
     posts_long: "há {{number}} mensagens neste tópico"
@@ -1203,6 +1204,7 @@ pt:
         help: "uma seleção dos tópicos mais quentes"
       starred:
         title: "Favoritos"
+        help: "tópicos favoritos"
       read:
         title: "Lido"
         help: "tópicos que leu"
@@ -1406,8 +1408,6 @@ pt:
           filename: "Nome do ficheiro"
           size: "Tamanho"
         upload:
-          text: "CARREGAR"
-          uploading: "CARREGANDO"
           success: "'{{filename}}' foi carregado com sucesso."
           error: "Verificou-se um erro no carregamento de '{{filename}}': {{message}}"
         operations:
@@ -1584,6 +1584,8 @@ pt:
             delete_site_customization: "remover personalização do site"
             suspend_user: "utilizador suspenso"
             unsuspend_user: "utilizador não suspenso"
+            grant_badge: "conceder medalha"
+            revoke_badge: "revogar medalha"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de email serão verificados e o registo será bloqueado, ou outra ação será executada."
@@ -1602,12 +1604,16 @@ pt:
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
+            allow_admin: "Permitir Admin"
           form:
             label: "Novo:"
             ip_address: "Endereço IP"
             add: "Adicionar"
         logster:
           title: "Erros de logo de dados"
+      impersonate:
+        title: "Personificar"
+        help: "Usar este ferramente de forma personificar uma conta de utilizador para fins de depuração. Terá de fechar a sessão assim que terminar."
       users:
         title: 'Utilizadores'
         create: 'Adicionar Utilizador Admin'
@@ -1635,8 +1641,6 @@ pt:
           pending: 'Utilizadores com Confirmação Pendente'
           newuser: 'Utilizadores no Nível de Confiança 0 (Utilizador Novo)'
           basic: 'Utilizadores no Nível de Confiança 1 (Utilizador Básico)'
-          regular: 'Utilizadores no Nível de Confiança 2 (Utilizador Regular)'
-          elder: 'Utilizadores no Nível de Confiança 4 (Cavaleiro)'
           admins: 'Utilizadores Administradores'
           moderators: 'Moderadores'
           blocked: 'Utilizadores Bloqueados'
@@ -1647,6 +1651,7 @@ pt:
         reject_failures:
           one: "Falha ao rejeitar 1 usuário."
           other: "Falha ao rejeitar %{count} utilizadores."
+        not_verified: "Não verificado"
       user:
         suspend_failed: "Houve um erro ao suspender este utilizador {{error}}"
         unsuspend_failed: "Houve um erro ao respirar a suspensão a este utilizador {{error}}"
@@ -1748,6 +1753,7 @@ pt:
           will_be_promoted: "Será promovido dentro de 24 horas."
           does_not_qualify: "Não se qualifica para o nível 3 de confiança."
         sso:
+          title: "Single Sign On"
           external_id: "ID Externo"
           external_username: "Nome de utilizador"
           external_name: "Nome"
@@ -1785,18 +1791,30 @@ pt:
           backups: "Backups"
           login: "Entrar"
       badges:
+        title: Medalhas
+        new_badge: Nova Medalha
         new: Novo
         name: Nome
+        badge: Medalha
         display_name: Apresentar Nome
         description: Descrição
+        badge_type: Tipe de Medalha
         badge_grouping: Grupo
+        badge_groupings:
+          modal_title: Agrupamento de Medalhas
         granted_by: Concedido Por
         granted_at: Concedido Em
         save: Guardar
         delete: Apagar
+        delete_confirm: Tem a certeza que quer eliminar esta medalha?
         revoke: Revogar
+        revoke_confirm: Tem a certeza que quer revogar esta medalha?
+        edit_badges: Editar Medalhas
+        grant_badge: Conceder Medalha
+        granted_badges: Medalhas Concedidas
         grant: Conceder
         multiple_grant: Pode ser concedido diversas vezes
+        enabled: Ativar medalha
         icon: Icon
         trigger_type:
           none: "Actualizado diariamente"
@@ -1804,20 +1822,39 @@ pt:
           post_revision: "Quando um utilizador edita ou cria um post"
           trust_level_change: "Quando um utilizador muda de nível de confiança"
           user_change: "Quando um utilizador é editado ou criado"
+        preview:
+          bad_count_warning:
+            header: "AVISO!"
+          sample: "Amostra:"
+          grant:
+            with: <span class="username">%{username}</span>
     lightbox:
       download: "descarregar"
     keyboard_shortcuts_help:
       title: 'Atalhos de Teclado'
       jump_to:
         title: 'Ir Para'
+        latest: '<b>g</b>, <b>l</b> Mais recente'
+        new: '<b>g</b>, <b>n</b> Novo'
+        unread: '<b>g</b>, <b>u</b> Não lido'
+        starred: '<b>g</b>, <b>f</b> Favoritos'
+        categories: '<b>g</b>, <b>c</b> Categorias'
       navigation:
         title: 'Navegação'
+        back: '<b>u</b> Retroceder'
       application:
         title: 'Aplicação'
       actions:
         title: 'Acções'
     badges:
+      title: Medalhas
+      allow_title: "permitir uso de medalha como título?"
       multiple_grant: "conceder múltiplas vezes?"
+      badge_count:
+        one: "1 Medalha"
+        other: "%{count} Medalhas"
+      select_badge_for_title: Selecionar uma medalha para usar como título
+      no_title: "<no title>"
       badge_grouping:
         getting_started:
           name: Dar Início
@@ -1831,6 +1868,8 @@ pt:
         editor:
           name: Editor
           description: Primeira edição de um post
+        member:
+          name: Membro
         welcome:
           name: Bem-vindo
           description: Recebeu um gosto

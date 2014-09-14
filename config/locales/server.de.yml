@@ -7,9 +7,9 @@
 
 de:
   dates:
-    short_date_no_year: "TT. MMM"
-    short_date: "TT. MMM JJJJ"
-    long_date: "TT. MMMM JJJJ, H:mm"
+    short_date_no_year: "DD. MMM"
+    short_date: "DD. MMM YYYY"
+    long_date: "DD. MMMM YYYY, H:mm"
   time:
     formats:
       short: "%d. %m. %Y"
@@ -97,6 +97,7 @@ de:
     errors:
       can_not_modify_automatic: "Du kannst eine automatisch verwaltete Gruppe nicht verändern."
     default_names:
+      everyone: "jeder"
       admins: "admins"
       moderators: "moderatoren"
       staff: "mitarbeiter"
@@ -104,13 +105,12 @@ de:
       trust_level_2: "vertrauensstufe_2"
       trust_level_3: "vertrauensstufe_3"
       trust_level_4: "vertrauensstufe_4"
-      trust_level_5: "vertrauensstufe_5"
   education:
     until_posts:
       one: "1 Beitrag"
       other: "%{count} Beiträge"
     new-topic: |
-      Willkommen auf %{site_name} &mdash; **Danke, dass Du ein neues Thema erstellst!**
+      Willkommen bei %{site_name} &mdash; **Danke, dass Du ein neues Thema erstellst!**
 
       - Ist der Titel eines adäquate Beschreibung dessen, was ein Nutzer vorzufinden erwartet, wenn er dieses Thema aufruft?
 
@@ -120,7 +120,7 @@ de:
 
       Bitte beachte auch [unsere Richtlinien](/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} Beiträgen angezeigt.
     new-reply: |
-      Willkommen auf %{site_name} &mdash; **Danke für deinen Beitrag zum Thema!**
+      Willkommen bei %{site_name} &mdash; **Danke für deinen Beitrag zum Thema!**
 
       - Fügt dein Beitrag dem Gespräch etwas Neues hinzu, und sei es auch wenig?
 
@@ -169,6 +169,8 @@ de:
         name: "Name der Kategorie"
       post:
         raw: "Hauptteil"
+      user_profile:
+        bio_raw: "Über mich"
     errors:
       messages:
         is_invalid: "ist ungültig; versuche ein wenig mehr zu erklären"
@@ -217,15 +219,15 @@ de:
       topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, weil sie #{category.topic_count} Themen enthält."
   trust_levels:
     newuser:
-      title: "Frischling"
+      title: "Neuer Benutzer"
     basic:
-      title: "Anfänger"
+      title: "Neuling"
     regular:
-      title: "Stammnutzer"
+      title: "Mitglied"
     leader:
-      title: "Veteran"
+      title: "Stammgast"
     elder:
-      title: "Ältester"
+      title: "Anführer"
     change_failed_explanation: "Du wolltest %{user_name} auf '%{new_trust_level}' zurückstufen. Jedoch ist seine Vertrauensstufe bereits '%{current_trust_level}'. %{user_name} verbleibt auf '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Versuch es später wieder. "
@@ -329,7 +331,7 @@ de:
     already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
     please_continue: "Dein neues Konto ist aktiviert und du bist jetzt angemeldet."
     continue_button: "Weiter zu %{site_name}"
-    welcome_to: "Willkommen auf %{site_name}!"
+    welcome_to: "Willkommen bei %{site_name}!"
     approval_required: "Bevor Du auf das Forum zugreifen kannst, muss Dein neues Konto noch von einem Moderator genehmigt werden. Du erhälst eine E-Mail, sobald dies geschehen ist!"
   post_action_types:
     off_topic:
@@ -603,7 +605,6 @@ de:
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\" Ansicht."
-    enable_private_messages: "Erlaube Nutzern der Stufe Anfänger (1), private Nachrichten zu erstellen und auf private Nachrichten zu antworten."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_interval: "Intervall in Millisekunden bevor ein neues Long-Poll initiiert wird."
     polling_interval: "Pollingintervall in Millisekunden für angemeldete Nutzer-Clients."
@@ -715,16 +716,6 @@ de:
     enable_flash_video_onebox: "Aktiviere das Einbinden von swf und flv (Adobe Flash) Links in einer Onebox. ACHTUNG: Kann ein Sicherheitsrisiko sein."
     default_invitee_trust_level: "Standardwert für die Stufe eines eingeladenen Nutzers (0-4)."
     default_trust_level: "Standardwert für die Vertrauensstufe von neuen Nutzern (0-4)."
-    basic_requires_topics_entered: "Zahl der Themen die ein Frischling erstellen muss bevor er zum Anfänger (Stufe 1) aufsteigt."
-    basic_requires_read_posts: "Zahl der Beiträge die ein Frischling lesen muss bevor bevor er zum Anfänger (Stufe 1) aufsteigt."
-    basic_requires_time_spent_mins: "Zahl der Minuten die ein Frischling Beiträge lesen muss bevor er zum Anfänger (Stufe 1) aufsteigt."
-    regular_requires_topics_entered: "Zahl der Themen an denen ein Anfänger anschauen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
-    regular_requires_read_posts: "Zahl der Beiträge die ein Anfänger lesen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
-    regular_requires_time_spent_mins: "Zahl der Minuten die ein Anfänger Beiträge lesen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
-    regular_requires_days_visited: "Zahl der Tage die ein Anfänger die Seite besuchen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
-    regular_requires_likes_received: "Zahl der „Gefällt mir“ die ein Anfänger die Seite erhalten muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
-    regular_requires_likes_given: "Zahl der „Gefällt mir“ die ein Anfänger die Seite verteilen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
-    regular_requires_topic_reply_count: "Zahl der Themen an denen ein Anfänger teilnehmen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
     newuser_max_links: "Maximale Zahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -789,7 +780,6 @@ de:
     dominating_topic_minimum_percent: "Anteil der Nachrichten eines Themas in Prozent, die ein einzelner Nutzer verfassen darf, bevor dieser Nutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste."
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-NACHRICHT als global sichtbares Banner an. Deaktiviert bei leerer Nachricht. (HTML ist erlaubt.)"
-    disable_edit_notifications: "Unterdrücke Bearbeitungshinweise durch den System-Nutzer, wenn die 'download_remote_images_to_local' Einstellung aktiviert ist."
     enable_names: "Erlaube Benutzern, ihren vollen Namen zu zeigen. Deaktivieren, um alle vollen Namen zu verbergen."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollen Namen des Benutzers bei seinen Beiträgen."
     invites_per_page: "Anzahl an Einladungen, die auf der Benutzerseite angezeigt werden."
@@ -881,8 +871,6 @@ de:
     pinned_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
     pinned_globally_enabled: "Dieses Thema ist nun global angepinnt. Es wird sowohl in seiner Kategorie als auch in allen anderen Themenlisten oben aufgelistet, solange der Pin nicht von einem Moderator gelöst wird, oder nicht jeder Nutzer selbst den Pin löst."
     pinned_globally_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
-    visible_enabled: "Dieses Thema ist nun sichtbar. Es wird in Themenlisten aufgeführt."
-    visible_disabled: "Dieses Thema ist nun unsichtbar. Es wird nicht länger in Themenlisten aufgeführt und kann nur direkt über seinen Link aufgerufen werden."
   login:
     not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald dies geschehen ist."
     incorrect_username_email_or_password: "Benutzername, Mailadresse oder Passwort falsch"
@@ -890,6 +878,7 @@ de:
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
     activate_email: "Fast fertig! Wir haben eine E-Mail an <b>%{email}</b> verschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
     not_activated: "Du kannst Dich noch nicht anmelden. Wir haben dir eine Aktivierungs-E-Mail geschickt. Bitte folge zunächst den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
+    not_allowed_from_ip_address: "Von dieser IP-Adresse können Sie sich nicht als %{username} anmelden."
     suspended: "Du kannst Dich bis zum %{date} nicht anmelden."
     suspended_with_reason: "Du kannst Dich bis zum %{date} nicht mehr anmelden. Grund des Ausschlusses: %{reason}"
     errors: "%{errors}"
@@ -898,6 +887,7 @@ de:
     omniauth_error: "Entschuldigung, bei der Autorisierung deines %{strategy} Kontos ist ein Fehler aufgetreten. Hast du die Autorisierung möglicherweise aus Versehen abgelehnt?"
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
+    password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
   user:
     username:
       short: "muss mindestens %{min} Zeichen lang sein"
@@ -943,47 +933,6 @@ de:
       Die Einladung ist von einem vertrautem Benutzer, du musst dich daher nicht einloggen.
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
-    text_body_template: |
-      Das ist ein zu Testzwecken versendetes E-Mail von %{site_name}:
-
-      [**%{base_url}**][0]
-
-      E-Mail-Zustellbarkeit ist komplex. Hier sind einige wichtige Dinge, die du überprüfen solltest:
-
-      - Sei dir *sicher*, dass in den Einstellungen die `notification email` auf die korrekte Absender-Adresse gesetzt ist. **Der in der „From“ Adresse angegebene Domainname wird für die Überprüfung der versendeten E-Mails herangezogen.**
-
-      - Du solltest wissen, wie du den *Quelltext einer E-Mail* in deinem E-Mail-Client betrachten kannst, um die E-Mail-Header auf Hinweise zu untersuchen. Bei Gmail findest du den Menüpunkt „Original anzeigen“ im Dropdown-Menü in der rechten, oberen Ecke jeder E-Mail.
-
-      - **WICHTIG:** Hat dein Internetprovider Reverse-DNS-Einträge eingetragen, um den zum Versenden von E-Mails verwendeten IP-Adressen die passenden Domainnamen zuzuordnen? Du kannst [den PTR-Eintrag hier testen][2]. Wenn Dein Internetprovider nicht die passenden Reverse-DNS-Einträge eingetragen hat, ist es sehr unwahrscheinlich, dass deine E-Mails zugestellt werden.
-
-      - Ist der [SPF-Eintrag][8] deiner Domain korrekt? Du kannst [den SPF-Eintrag hier testen][1]. Beachte, dass du für höchstmögliche Kompatibilität sowohl die SPF- als auch die TXT-Version dieses Eintrages anlegen musst.
-
-      - Ist der [DKIM-Eintrag][3] deiner Domain korrekt? Das verbessert erheblich die Zustellbarkeit der E-Mails. Du kannst den [DKIM-Eintrag hier testen][7].
-
-      - Wenn du deinen eigenen Mailserver betreibst, überprüfe, dass die IP-Adressen deines Mailservers [nicht auf einer schwarzen Liste stehen][4].
-
-      - Wenn du deinen eigenen Mailserver betreibst, stelle sicher, dass dieser *definitiv* einen vollständig qualifizierten Hostnamen in seinen HELO-Nachrichten verwendet, der per DNS aufgelöst werden kann. Falls das nicht der Fall ist, werden deine E-Mails von vielen E-Mail-Anbietern abgelehnt.
-
-      (Der *einfache* Weg ist [sich bei Mandrill anzumelden][6]. Deren großzügiges, kostenloses Abo zum E-Mail-Versand ist für kleine Foren ausreichend. Du musst allerdings trotzdem die SPF und DKIM Einträge in deinem DNS einrichten!)
-
-      Wir hoffen, dass der Mail-Zustelltest erfolgreich war!
-
-      Viel Erfolg,
-      deine Freunde von [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-
-      ----
-
-      <small>Am Fuß jeder E-Mail, die du verschickst, sollte eine Möglichkeit zum Abbestellen vorhanden sein. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn du zukünftig keine weiteren E-Mails erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
     text_body_template: |
@@ -1059,7 +1008,7 @@ de:
 
         Weitere Hilfestellung findest du in unseren [Richtlinien](%{base_url}/guidelines).
     welcome_user:
-      subject_template: "Willkommen auf %{site_name}!"
+      subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
         Danke fürs Anmelden auf %{site_name}, willkommen in unserem Forum!
 
@@ -1069,7 +1018,7 @@ de:
 
         Viel Vergnügen!
     welcome_invite:
-      subject_template: "Willkommen auf %{site_name}!"
+      subject_template: "Willkommen bei %{site_name}!"
     export_succeeded:
       subject_template: "Export erfolgreich abgeschlossen"
       text_body_template: "Der Export war erfolgreich."
@@ -1322,6 +1271,8 @@ de:
 
         Klicke auf den folgenden Link um ein Passwort auszuwählen:
         %{base_url}/users/password-reset/%{email_token}
+    account_created:
+      subject_template: "[%{site_name}] Dein neues Konto"
     authorize_email:
       subject_template: "[%{site_name}] Bestätige deine neue Mailadresse"
       text_body_template: |
@@ -1331,7 +1282,7 @@ de:
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
-        Willkommen auf %{site_name}!
+        Willkommen bei %{site_name}!
 
         Dein Beitritt zu %{site_name} wurde gutgeheissen, willkommen in unserem Diskussionsforum!
 
@@ -1348,7 +1299,7 @@ de:
     signup:
       subject_template: "[%{site_name}] Aktiviere deinen neues Konto"
       text_body_template: |
-        Willkommen auf %{site_name}!
+        Willkommen bei %{site_name}!
 
         Um dein Konto zu aktivieren, klicke auf den folgenden Link:
         %{base_url}/users/activate-account/%{email_token}

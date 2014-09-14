@@ -80,7 +80,6 @@ uk:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
     avatar: |
       ### Як щодо нового зображення для Вашого профілю?
@@ -151,10 +150,6 @@ uk:
       title: "новий користувач"
     basic:
       title: "базовий користувач"
-    regular:
-      title: "звичайний користувач"
-    elder:
-      title: "старійшина"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
   rate_limiter:
     too_many_requests: "У нас є обмеження щодо того, скільки разів за добу можна виконати цю дію. Будь ласка, зачекайте %{time_left} перед тим, як спробувати ще раз."
@@ -389,7 +384,6 @@ uk:
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     use_https: "Чи повинна повна адреса сайта (Discourse.base_url) використовувати https (чи просто http)? ВМИКАЙТЕ ЦЕ ТІЛЬКИ ЯКЩО HTTPS ВЖЕ НАЛАШТОВАНО І ВІН ПРАЦЮЄ!"
-    enable_private_messages: "Дозволити Базовим користувам (Рівень довіри 1) створювати приватні повідомлення та відповідати на приватні повідомлення"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
@@ -507,8 +501,6 @@ uk:
       other: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
     autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
     pinned_disabled: "Тепер цю тему відкріплено. Вона більше не з'являтиметься вгорі своєї категорії."
-    visible_enabled: "Тепер ця тема видима. Вона буде відображатися у списках тем."
-    visible_disabled: "Тепер ця тема невидима. Вона більше не відображатиметься в жодному списку тем. Єдиний спосіб отримати до неї доступ - це за прямим посиланням."
   login:
     not_approved: "Ваш обліковий запис ще не було схвалено. Ви отримаєте сповіщення на електронну скриньку, коли зможете увійти."
     incorrect_username_email_or_password: "Неправильне ім'я користувача, електронна скринька або пароль"

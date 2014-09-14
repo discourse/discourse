@@ -103,7 +103,6 @@ nl:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
     until_posts:
       one: "één bericht"
@@ -194,10 +193,6 @@ nl:
       title: "nieuw lid"
     basic:
       title: "lid"
-    regular:
-      title: "regulier lid"
-    elder:
-      title: "ervaren lid"
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trust level is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Je hebt deze actie te vaak uitgevoerd. Probeer het later nog een keer."
@@ -513,7 +508,6 @@ nl:
     apple_touch_icon_url: "Icoon voor Apple touch devices. Aanbevolen grootte is 144px bij 144px."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
     use_https: "Gebruik http of https voor de volledige url van de site (Discourse.base_url)? GEBRUIK DIT NIET ALS HTTPS NOG NIET OPGEZET IS!"
-    enable_private_messages: "Sta nieuwe leden (trustlevel 1) toe privé-berichten te maken en er op te reageren"
     enable_long_polling: "De 'message bus' die gebruikt wordt voor notificaties kan 'long polling' gebruiken."
     long_polling_interval: "Het interval in milliseconden voor dat een nieuwe 'long poll' wordt uitgestuurd"
     polling_interval: "Hoe vaak een cliënt een 'poll' moet uitvoeren in milliseconden"
@@ -659,8 +653,6 @@ nl:
     pinned_disabled: "Deze topic is niet langer gepind en zal niet meer bovenaan de lijst van topics in zijn categorie staan."
     pinned_globally_enabled: "Deze topic is nu globaal vastgepind en zal bovenaan de lijst van topics in zijn categorie en alle andere topiclijsten staan. Wanneer iemand op 'Verwijder pin' drukt, zal de topic voor diegene niet meer bovenaan staan."
     pinned_globally_disabled: "Deze topic is niet langer gepind en zal niet meer bovenaan de lijst van topics in zijn categorie staan."
-    visible_enabled: "Deze topic is nu zichtbaar en zal weer worden weergegeven in topiclijsten."
-    visible_disabled: "Deze topic is nu onzichtbaar en zal niet worden weergegeven in topiclijsten, en kan alleen via een directe link worden bezocht."
   login:
     not_approved: "Je account is nog niet goedgekeurd. Je zal via de mail een bericht van ons ontvangen wanneer je in kan loggen."
     incorrect_username_email_or_password: "Incorrecte gebruikersnaam, e-mailadres of wachtwoord"
