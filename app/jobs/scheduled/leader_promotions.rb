@@ -8,7 +8,7 @@ module Jobs
       demoted_user_ids = []
       User.real.where(trust_level: TrustLevel[3], trust_level_locked: false).find_each do |u|
         # Don't demote too soon after being promoted
-        next if user.on_leader_grace_period?
+        next if u.on_leader_grace_period?
 
         if Promotion.tl3_lost?(u)
           demoted_user_ids << u.id
