@@ -37,10 +37,25 @@
 aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
+
+  .title {
+    border-left: 5px solid darken(scale-color-diff(), 10%);
+    background-color: scale-color-diff();
+    color: scale-color($primary, $lightness: 30%);
+    padding: 12px 12px 0 12px;
+    /* blockquote is underneath this and has top margin */
+    .avatar { margin-right: 7px; }
+    img { margin-top: -4px; }
+  }
+
   // blockquote is docked within aside for content
   blockquote {
     margin-top: 0;
   }
+}
+
+.quote-controls, .quote-controls .back:before, .quote-controls .quote-other-topic:before {
+  color: scale-color($primary, $lightness: 50%);
 }
 
 .cooked .highlight {

@@ -448,19 +448,6 @@ blockquote > *:last-child {
   margin-bottom: 0 !important;
 }
 
-.quote-controls, .quote-controls .back:before, .quote-controls .quote-other-topic:before {
-  color: $primary;
-}
-
-
-.quote .title {
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
-  background-color: scale-color-diff();
-  padding: 10px 10px 10px 12px;
-  clear: both;
-  .avatar { margin-right: 7px; }
-}
-
 .gutter { display: none; }
 
 .posts-wrapper {  position: relative;
