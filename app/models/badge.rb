@@ -66,7 +66,7 @@ class Badge < ActiveRecord::Base
       LEFT JOIN user_badges ub ON ub.badge_id = 17 AND ub.user_id = pt.user_id
       WHERE ub.id IS NULL AND t.posts_count > 100
       GROUP BY pt.user_id, pt.topic_id, t.posts_count
-      HAVING count(*) = t.posts_count
+      HAVING count(*) >= t.posts_count
     )
 SQL
 
