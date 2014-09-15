@@ -1,7 +1,4 @@
 (function() {
-  // disable the whole plugin
-
-
   var emoji = <%= Dir.glob(File.expand_path("../../../public/images/*.png", __FILE__)).map{|f| File.basename(f).split(".")[0]}.inspect %>;
 
   function imageFor(code) {
