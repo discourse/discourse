@@ -93,7 +93,6 @@ pt:
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
       trust_level_4: "nivel_de_confianca_4"
-      trust_level_5: "nivel_de_confianca_5"
   education:
     until_posts:
       one: "1 post"
@@ -164,10 +163,6 @@ pt:
       title: "usuário novo"
     basic:
       title: "utilizador básico"
-    regular:
-      title: "utilizador regular"
-    elder:
-      title: "ancião"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}'"
   rate_limiter:
     too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
@@ -432,7 +427,6 @@ pt:
     favicon_url: "Um favicon para o seu site"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
-    enable_private_messages: "permitir membros a ter conversas com mensagens particulares"
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
     long_polling_interval: "Intervalo em milisegundos antes de uma nova solicitação longa ser feita"
     polling_interval: "Com que frequencia os clientes podem solicitar o servidor em milisegundos"
@@ -506,8 +500,6 @@ pt:
     closed_disabled: "Este tópico está agora aberto. Novas respostas serão aceites."
     autoclosed_disabled: "Este tópico está aberto agora. Novas respostas estão permitidas."
     pinned_disabled: "Este tópico deixou de estár afixado. Não irá mais aparecer no topo das suas categorias."
-    visible_enabled: "Este tópico está agora visivél. Irá aparecer na lista dos tópicos."
-    visible_disabled: "Este tópico está agora invisivel. Não irá mais aparecer em qualquer listagem de tópicos. A única forma de aceder a este tópico é com o link direto."
   login:
     not_approved: "A sua conta ainda não foi aprovada. Vais ser notificado por email assim que estiver pronto para fazeres log in."
     incorrect_username_email_or_password: "Usuário, email ou senha incorretos"

@@ -313,7 +313,6 @@ uk:
         create: "Надіслати Запрошення"
         bulk_invite:
           text: "Масове Запрошення з Файлу"
-          uploading: "ЗАВАНТАЖЕННЯ"
       password:
         title: "Пароль"
         too_short: "Ваш пароль надто короткий."
@@ -531,7 +530,6 @@ uk:
         close_topics: "Закрити теми"
         notification_level: "Change Notification Level"
       none:
-        starred: "Ви ще не позначили зірочкою жодної теми. Щоб позначити тему, клацніть зірочку біля її назви."
         unread: "У Вас немає непрочитаних тем."
         new: "У Вас немає нових тем."
         read: "Ви ще не прочитали жодної теми."
@@ -634,8 +632,6 @@ uk:
         pin: "Закріпити тему"
         unarchive: "Розархівувати тему"
         archive: "Заархівувати тему"
-        invisible: "Зробити невидимою"
-        visible: "Зробити видимою"
         reset_read: "Скинути дані про прочитаність"
         multi_select: "Перемістити дописи"
       reply:
@@ -752,7 +748,6 @@ uk:
         delete_replies:
           yes_value: "Так, відповіді також видалити"
           no_value: "Ні, тільки цей допис"
-        wiki: "Wiki допис"
       actions:
         flag: 'Поскаржитися'
         it_too:
@@ -809,9 +804,6 @@ uk:
           side_by_side:
             title: "Показати бік-о-бік результати виведення"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "Показати бік-о-бік коди розмітки"
-            button: '<i class="fa fa-columns"></i> Розмітка'
         details:
           edited_by: "Редаговано"
     category:
@@ -894,8 +886,6 @@ uk:
         help: "цю тему закріплено; вона буде відображатися вгорі своєї категорії"
       archived:
         help: "цю тему заархівовано; вона заморожена і її не можна змінити"
-      invisible:
-        help: "ця тема є невидимою; вона не відображається у списках тем, і до неї можна отримати доступ лише за прямим посиланням"
     posts: "Дописи"
     posts_long: "тема містить {{number}} дописів"
     original_post: "Перший допис"
@@ -1086,8 +1076,6 @@ uk:
           filename: "Filename"
           size: "Size"
         upload:
-          text: "UPLOAD"
-          uploading: "UPLOADING"
           success: "'{{filename}}' has successfully been uploaded."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
@@ -1273,8 +1261,6 @@ uk:
           pending: 'Користувачі, що очікують на перевірку'
           newuser: 'Користувачі з Рівнем довіри 0 (Новий користувач)'
           basic: 'Користувачі з Рівнем довіри 1 (Базовий користувач)'
-          regular: 'Користувачі з Рівнем довіри 2 (Звичайний користувач)'
-          elder: 'Користувачі з Рівнем довіри 4 (Старійшина)'
           admins: 'Адміністратори'
           moderators: 'Модератори'
           blocked: 'Заблоковані користувачі'
@@ -1410,14 +1396,12 @@ uk:
       navigation:
         title: 'Навігація'
         back: '<b>u</b> Назад'
-        up_down: '<b>k</b>/<b>j</b> Перемістити виділення вгору/вниз'
         open: '<b>o</b> або <b>Enter</b> Відкрити обрану тему'
       application:
         title: 'Застосунок'
         create: '<b>c</b> Створити нову тему'
         notifications: '<b>n</b> Відкрити сповіщення'
         search: '<b>/</b> Пошук'
-        help: '<b>?</b> Відкрити довідку з поєднань клавіш'
       actions:
         title: 'Дії'
         star: '<b>f</b> Позначити тему зірочкою'
@@ -1451,6 +1435,3 @@ uk:
           name: Редактор
         basic_user:
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Надані</a> всі основні функції спільноти
-        regular_user:
-          name: Звичайний
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Надано</a> запрошень

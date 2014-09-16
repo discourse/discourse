@@ -120,7 +120,7 @@ ja:
     suggested_topics:
       title: "関連トピック"
     about:
-      simple_title: "アバウト"
+      simple_title: "このサイトについて"
       title: "%{title}について"
       stats: "Site Statistics"
       our_admins: "管理者"
@@ -262,7 +262,6 @@ ja:
       watched_categories: "参加中"
       watched_categories_instructions: "このカテゴリに新しく投稿されたトピックを自動的に参加します。このカテゴリに対して新しい投稿があった場合、登録されたメールアドレスと、コミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
       tracked_categories: "トラック中"
-      tracked_categories_instructions: "このカテゴリの新規トピックを自動的にトラックします。トピックに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
       muted_categories: "ミュート中"
       muted_categories_instructions: "このカテゴリに投稿されたトピックについての通知を受け取りません。また、未読タブにも通知されません。"
       delete_account: "アカウントを削除する"
@@ -271,13 +270,12 @@ ja:
       delete_yourself_not_allowed: "アカウントを削除できませんでした。サイトアドミンを連絡してください。"
       unread_message_count: "メッセージ"
       staff_counters:
-        flags_given: "helpful flags cast"
         flagged_posts: "フラグしたポスト"
         deleted_posts: "削除したポスト"
         suspensions: "suspensions"
       messages:
         all: "すべて"
-        mine: "マイボックス"
+        mine: "受信トレイ"
         unread: "未読"
       change_password:
         success: "(メールを送信しました)"
@@ -319,7 +317,7 @@ ja:
         frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
       name:
         title: "名前"
-        instructions: "名前"
+        instructions: "フルネーム"
         too_short: "名前が短すぎます。"
         ok: "名前 OK。"
       username:
@@ -356,6 +354,7 @@ ja:
         bi_weekly: "隔週"
       email_direct: "ポストが引用されたり、回答を受けたり、 @ユーザ名 でメンションを受けた際にメール通知を受け取る"
       email_private_messages: "プライベートメッセージを受けた際にメール通知を受け取る"
+      email_always: "ログインしている際にメール通知を受け取る。"
       other_settings: "その他"
       categories_settings: "カテゴリ設定"
       new_topic_duration:
@@ -395,7 +394,6 @@ ja:
         bulk_invite:
           none: "あなたはまだ誰も招待していません。"
           text: "ファイルからまとめて招待をする"
-          uploading: "アップロード中"
           success: "ファイル通常にアップされていました。"
           error: "ファイルアップロードエラー：'{{filename}}': {{message}}"
       password:
@@ -441,6 +439,7 @@ ja:
     read_only_mode:
       enabled: "読み取り専用モードにされています。サイトインターアクションを無効されています。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
+    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "より詳しく..."
     year: '年'
     year_desc: '過去365日間に投稿されたトピック'
@@ -484,7 +483,7 @@ ja:
       invite: "ユーザ名かメールアドレスを入力してください。パスワードリセット用のメールを送信します。"
       reset: "パスワードをリセット"
       complete_username: "<b>%{username}</b>,アカウントにパースワード再設定メールを送りました。"
-      complete_email: "<b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
+      complete_email: "<b>%{email}</b>にパースワード再設定メールを送りました。"
     login:
       title: "サインイン"
       username: "ログイン名"
@@ -661,10 +660,6 @@ ja:
         hot: "ホットなトピックはありません。"
         category: "{{category}} トピックはありません。"
         top: "トップトピック無し"
-        educate:
-          new: '<p>過去2日間に投稿されたトピックは新規と見なす。</p>
-
-            <p><a href="%{userPrefsUrl}">設定パネル</a>で変更できます。</p>'
       bottom:
         latest: "最新のトピックは以上です。"
         hot: "ホットなトピックは以上です。"
@@ -752,16 +747,13 @@ ja:
           '0': 'このトピックに関して一切通知を受けません。'
         watching_pm:
           title: "参加中"
-          description: "このプライベットメッセージに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
         watching:
           title: "参加中"
-          description: "このトピックに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
         tracking_pm:
           title: "トラック中"
           description: "プライベートメッセージ一覧に新しい投稿数と未読ポスト数がつきます。他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
         tracking:
           title: "トラック中"
-          description: "トピック一覧に新しい投稿数と未読ポスト数がつきます。他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
         regular:
           title: "通常"
           description: "他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
@@ -787,8 +779,6 @@ ja:
         pin_globally: "トピックを全サイト的にピン留めする"
         unarchive: "トピックのアーカイブ解除"
         archive: "トピックのアーカイブ"
-        invisible: "非表示にする"
-        visible: "非表示を解除"
         reset_read: "読み込みデータをリセット"
         multi_select: "移動するポストを選択"
       reply:
@@ -919,8 +909,6 @@ ja:
           yes_value: "はい、回答も一緒に削除する"
           no_value: "いいえ、ポストのみ削除する"
         admin: "ポスト管理"
-        wiki: "Wikiポストする"
-        unwiki: "Wikiポストに削除"
       actions:
         flag: 'フラグ'
         it_too:
@@ -1060,10 +1048,8 @@ ja:
       notifications:
         watching:
           title: "カテゴリ参加中"
-          description: "このカテゴリに新しく投稿されたトピックを自動的に参加します。このカテゴリに対して新しい投稿があった場合、登録されたメールアドレスと、コミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
         tracking:
           title: "トラック中"
-          description: "このカテゴリの新規トピックを自動的にトラックします。トピックに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
         regular:
           title: "通常"
           description: "他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
@@ -1109,8 +1095,6 @@ ja:
         help: "このトピックは固定されています。常にカテゴリのトップに表示されます"
       archived:
         help: "このトピックはアーカイブされています。凍結状態のため一切の変更ができません"
-      invisible:
-        help: "このトピックは非表示状態です。トピックリストには表示されません。直接リンクでのみアクセス可能です"
     posts: "投稿"
     posts_lowercase: "投稿"
     posts_long: "このトピックには{{number}}個のポストがあります"
@@ -1324,8 +1308,6 @@ ja:
           filename: "ファイル名"
           size: "サイズ"
         upload:
-          text: "アップロード"
-          uploading: "アップロード中"
           success: "ファイル'{{filename}}' がアップロードされました。"
           error: "ファイル '{{filename}}'アップロードエラー: {{message}}"
         operations:
@@ -1511,6 +1493,9 @@ ja:
             add: "追加"
         logster:
           title: "エラーログ"
+      impersonate:
+        title: "ユーザになる"
+        help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
       users:
         title: 'ユーザ'
         create: '管理者を追加'
@@ -1544,6 +1529,7 @@ ja:
           other: "%{count}人のユーザの拒否に成功しました。"
         reject_failures:
           other: "%{count}人のユーザの拒否に失敗しました。"
+        not_verified: "検証されていません"
       user:
         suspend_failed: "ユーザのサスペンドに失敗しました {{error}}"
         unsuspend_failed: "ユーザのサスペンド解除に失敗しました {{error}}"
@@ -1711,7 +1697,6 @@ ja:
       title: 'キーボードショートカット'
       navigation:
         title: 'ナビゲーション'
-        jump: '<b>#</b> ポストに移動'
         back: '<b>u</b> 戻る'
       application:
         title: 'アプリケーション'
