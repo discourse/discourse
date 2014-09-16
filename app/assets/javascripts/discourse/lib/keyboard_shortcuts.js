@@ -231,6 +231,15 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
       $articles.removeClass('selected');
       Em.run.next(function(){
         $article.addClass('selected');
+
+        if ($article.is('.topic-post')) {
+          var tabLoc = $article.find('a.tabLoc');
+          if (tabLoc.length === 0) {
+            tabLoc = $('<a href="#" class="tabLoc"></a>');
+            $article.prepend(tabLoc);
+          }
+          tabLoc.focus();
+        }
       });
 
       var rgx = new RegExp("post-cloak-(\\d+)").exec($article.parent()[0].id);
