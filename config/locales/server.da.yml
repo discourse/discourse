@@ -104,7 +104,6 @@ da:
       trust_level_2: "tillidsniveau_2"
       trust_level_3: "tillidsniveau_3"
       trust_level_4: "tillidsniveau_4"
-      trust_level_5: "tillidsniveau_5"
   education:
     until_posts:
       one: "indlæg"
@@ -219,10 +218,6 @@ da:
       title: "ny bruger"
     basic:
       title: "basis-bruger"
-    regular:
-      title: "almindelig bruger"
-    elder:
-      title: "advanceret bruger"
     change_failed_explanation: "Du forsøgte at degradere  %{user_name} til '%{new_trust_level}'. Imidlertid er deres tillidsniveau allerede '%{current_trust_level}'. %{user_name} bliver på '%{current_trust_level}'"
   rate_limiter:
     too_many_requests: "Vi har en daglig grænse for hvor mange gange den pågældende handling kan udføres. Vent venligst %{time_left} før du prøver igen."
@@ -538,7 +533,6 @@ da:
     favicon_url: "Sitets favicon, se http://en.wikipedia.org/wiki/Favicon."
     apple_touch_icon_url: "Ikon til Apple touch-enheder. Den anbefalede størrelse er 144px gange 144px."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
-    enable_private_messages: "Tillad bruger med basalt tillidsniveau (1) at oprette private beskeder og svare på private beskeder"
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     long_polling_interval: "Interval før det lave et nyt long poll, i millisekunder."
     polling_interval: "Hvor ofte skal indloggede brugere polle, i millisekunder."
@@ -640,8 +634,6 @@ da:
     autoclosed_disabled: "Dette emne er nu åbnet. Nye svar er tilladt."
     pinned_enabled: "Dette emne er nu fastgjort. Det vil stå i toppen af dets kategori indtil det bliver frigjort af \"staff\" for alle eller af hver bruger individuelt for dem selv."
     pinned_disabled: "Dette emne er nu frigjort. Det optræder ikke længere i toppen af dets kategori."
-    visible_enabled: "Dette emne er nu synligt. Det vises i emnelister."
-    visible_disabled: "Dette emne er nu usynligt. Det vises ikke længere på emnelister. Den eneste måde at tilfå dette emne er via et direkte link."
   login:
     not_approved: "Din konto er ikke blevet godkendt af en moderator endnu. Du får en e-mail når den bliver godkendt."
     incorrect_username_email_or_password: "Ugyldigt navn, e-mail eller adgangskode"

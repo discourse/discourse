@@ -275,7 +275,6 @@ sv:
       watched_categories: "Tittade på"
       watched_categories_instructions: "Du kommer automatiskt att följa alla nya trådar inom dessa kategorier. Du kommer att få notifieringar om alla nya inlägg och trådar; antalet olästa och nya inlägg kommer även att visas vid sidan av trådens namn."
       tracked_categories: "Följd"
-      tracked_categories_instructions: "Du kommer automatiskt att följa alla nya trådar inom dessa kategorier. Antalet olästa och nya inlägg kommer att visas vid sidan av trådens namn."
       muted_categories: "Tystad"
       muted_categories_instructions: "Du kommer inte att få notifieringar om nya trådar inom dessa kategorier, och de kommer inte att visas under din \"oläst\"-tab."
       delete_account: "Ta bort mitt konto"
@@ -331,7 +330,6 @@ sv:
         frequency: "Vi kommer bara maila dig om vi inte har sett dig nyligen och du inte redan sett det vi mailar dig om."
       name:
         title: "Namn"
-        instructions: "Fullständigt namn"
         too_short: "Ditt namn är för kort."
         ok: "Ditt namn ser bra ut."
       username:
@@ -410,7 +408,6 @@ sv:
         bulk_invite:
           none: "Du har inte skickat några inbjudningar. Du kan skicka individuella inbjudningar, eller så kan du bjuda in flera på en gång genom att <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ladda upp en bulkfil.</a>"
           text: "Massinbjudan från fil"
-          uploading: "LADDAR UPP"
           success: "Uppladdning av filen lyckades"
           error: "Det blev ett fel vid uppladdning av '{{filename}}': {{message}}"
       password:
@@ -667,7 +664,6 @@ sv:
           one: "Du har markerat <b>1</b> diskussion."
           other: "Du har markerat <b>{{count}}</b> diskussioner."
       none:
-        starred: "Du har inte stjärnmarkerat några trådar ännu. För att stjärnmarkera en tråd, klicka eller tryck på stjärnan brevid titeln."
         unread: "Du har inga olästa trådar att läsa."
         new: "Du har inga nya trådar att läsa."
         read: "Du har inte läst några trådar än."
@@ -676,9 +672,6 @@ sv:
         hot: "Det finns inga heta trådar."
         category: "Det finns inga {{category}}-trådar."
         top: "Det finns inga topptrådar."
-        educate:
-          new: '<p>Som standard ses diskussioner som olästa när de startats de senaste 2 dagarna.</p><p>Du kan ändra detta i dina <a href="%{userPrefsUrl}">inställningar</a>.</p>'
-          unread: '<p>Som standard visas bara olästindikation för diskussioner som du har:</p><ul><li>Startat</li><li>Svarat på</li><li>Läst i mer än 4 minuter</li></ul><p>Eller om du uttryckligen har satt diskussionen.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
       bottom:
         latest: "Det finns inga fler senaste trådar att läsa."
         hot: "Det finns inga fler heta trådar att läsa."
@@ -772,16 +765,13 @@ sv:
           '0': 'Du ignorerar alla notifikationer för denna tråd.'
         watching_pm:
           title: "följda"
-          description: "Du kommer att få notifieringar om varje nytt inlägg i detta privata meddelande. Antalet olästa och nya inlägg kommer också att visas vid sidan av diskussionens namn."
         watching:
           title: "Kollar"
-          description: "Du kommer att få notfieringar om varje nytt inlägg i denna diskussion. Antalet olästa och nya inlägg kommer också att visas vid sidan av diskussionens namn."
         tracking_pm:
           title: "bevakade"
           description: "Antal olästa och nya inlägg kommer visas bredvid det privata meddelandet. Du kommer enbart notifieras om någon nämner ditt @namn eller svarar på ditt inlägg."
         tracking:
           title: "Följer"
-          description: "Antal olästa och nya inlägg kommer visas bredvid diskussionens namn. Du kommer enbart notifieras om någon nämner ditt @namn eller svarar på ditt inlägg."
         regular:
           title: "Vanlig"
           description: "Du kommer endast att få notifieringar om någon nämner ditt @namn eller svarar på ditt inlägg."
@@ -807,8 +797,6 @@ sv:
         pin_globally: "Nåla diskussionen globalt"
         unarchive: "Dearkivera Tråd"
         archive: "Arkivera Tråd"
-        invisible: "Gör Osynlig"
-        visible: "Gör Synlig"
         reset_read: "Återställ Läsdata"
         multi_select: "Markera inlägg"
       reply:
@@ -1050,9 +1038,6 @@ sv:
           side_by_side:
             title: "Visa diffar för resultat sida vid sida"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "Visa diffar för markdown-kod sida vid sida"
-            button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "Ändrad av"
     category:
@@ -1095,7 +1080,6 @@ sv:
       notifications:
         tracking:
           title: "Följer"
-          description: "Du kommer automatiskt att följa alla nya trådar inom dessa kategorier. Antalet olästa och nya inlägg kommer att visas vid sidan av trådens namn."
     flagging:
       title: 'Varför flaggar du detta inlägg privat?'
       action: 'Flagga Inlägg'
@@ -1155,10 +1139,14 @@ sv:
           one: "Olästa (1)"
           other: "Olästa ({{count}})"
         help: "Trådar du tittar på eller följer med olästa inlägg"
+        lower_title_with_count:
+          one: "1 oläst"
+          other: "{{count}} olästa"
       new:
         lower_title_with_count:
           one: "1 ny"
           other: "{{count}} nya"
+        lower_title: "ny"
         title:
           zero: "Nya"
           one: "Nya (1)"
@@ -1294,6 +1282,9 @@ sv:
         columns:
           filename: "filnamn"
           size: "storlek"
+        upload:
+          success: "'{{filename}}' har laddats upp."
+          error: "Ett fel har uppstått vid uppladdning av '{{filename}}': {{message}}"
         operations:
           cancel:
             text: "avbryt"
@@ -1399,10 +1390,14 @@ sv:
             delete_site_customization: "radera webbplatsanpassning"
             suspend_user: "Stäng av användare"
             unsuspend_user: "Ej avstängd användare"
+            grant_badge: "ge utmärkelse"
+            revoke_badge: "upphäv utmärkelse"
         screened_emails:
           title: "Kontrollerade email"
           description: "När någon försöker skapa ett nytt konto, kommer följande emailadresser att kontrolleras och registrationen blockeras, eller någon annan åtgärd vidtas."
           email: "Emailadress"
+          actions:
+            allow: "Tillåt"
         screened_urls:
           title: "Granskade URL:er"
           description: "URL:erna som är listade här har använts i inlägg av användare som är identifierade som spammare."
@@ -1415,10 +1410,13 @@ sv:
           actions:
             block: "Blockera"
             do_nothing: "Tillåt"
+            allow_admin: "Tillåt admin"
           form:
             label: "Nytt:"
             ip_address: "IP-adress"
             add: "Lägg till"
+        logster:
+          title: "Felprotokoll"
       users:
         title: 'Användare'
         create: 'Lägg till Administratör'
@@ -1446,8 +1444,6 @@ sv:
           pending: 'Användare under granskning'
           newuser: 'Användare på Förtroendenivå 0 (ny användare)'
           basic: 'Användare på Förtroendenivå 1 (grundnivå)'
-          regular: 'Användare på Förtroendenivå 2 (normal användare)'
-          elder: 'Användare på förtroendenivå 4 (vördig)'
           admins: 'Admin-användare'
           moderators: 'Moderatorer'
           blocked: 'Blockerade användare'
@@ -1558,9 +1554,32 @@ sv:
           developer: 'Utvecklare'
           embedding: "Inbäddning"
       badges:
+        title: Utmärkelser
+        new_badge: Ny utmärkelse
+        new: Ny
+        badge: Utmärkelse
         description: beskrivning
+        badge_type: Utmärkelsetyp
+        badge_grouping: Grupp
+        badge_groupings:
+          modal_title: Utmärkelsegrupper
+        granted_by: Utfärdad av
+        granted_at: Utfärdad vid
         save: spara
         delete: ta bort
+        delete_confirm: Är du säker på att du vill ta bort den utmärkelsen?
+        revoke: Upphäv
+        revoke_confirm: Är du säker på att du vill upphäva den utmärkelsen?
+        edit_badges: Redigera utmärkelser
+        grant_badge: Ge utmärkelse
+        granted_badges: Utfärdade utmärkelser
+        grant: Utfärda
+        no_user_badges: "%{name} har inte beviljats några utmärkelser."
+        no_badges: Det finns inga utmärkelser som kan utfärdas.
+        allow_title: Tillåt att utmärkelse används som titel
+        multiple_grant: Kan utfärdas flera gånger
+        listable: Visa utmärkelse på den offentliga utmärkelsesidan
+        enabled: Aktivera utmärkelse
     lightbox:
       download: "ladda ned"
     keyboard_shortcuts_help:
@@ -1569,13 +1588,11 @@ sv:
       navigation:
         title: 'Navigering'
         back: 'Tillbaka'
-        up_down: '<b>k</b>/<b>j</b> flytta markering upp/ned'
         open: '<b>ö</b> eller <b>Välj</b> Öppna vald tråd'
       application:
         create: '<b>s</b> Skapa en ny tråd'
         notifications: '<b>n</b> Öppna notifikationer'
         search: 'Sök'
-        help: '<b>?</b> öppna hjälp för kortkommandon'
       actions:
         star: '<b>f</b> stjärnmärk tråd'
         like: 'Gilla inlägg'
@@ -1584,3 +1601,8 @@ sv:
         edit: '<b>e</b> redigera inlägg'
         delete: '<b>d</b> radera inlägg'
         mark_tracking: '<b>m</b>, <b>t</b> Följd diskussion'
+    badges:
+      badge:
+        reader:
+          name: Läsare
+          description: Läs varje inlägg i en diskussion med över 100 inlägg

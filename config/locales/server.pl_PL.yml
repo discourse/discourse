@@ -7,9 +7,9 @@
 
 pl_PL:
   dates:
-    short_date_no_year: "D. MMM"
-    short_date: "D. MMM, YYYY"
-    long_date: "D. MMMM YYYY h:mma"
+    short_date_no_year: "D MMM"
+    short_date: "D MMM YYYY"
+    long_date: "D MMMM YYYY H:mm"
   time:
     formats:
       short: "%d.%m.%Y"
@@ -50,6 +50,7 @@ pl_PL:
       other: "%{count} odpowiedzi więcej"
     loading: "Wczytuję dyskusję…"
     permalink: "Link bezpośredni"
+    imported_from: "Ten temat jest powiązany ze źródłową dyskusją: %{link}"
     in_reply_to: "▶ %{username}"
     replies:
       one: "1 odpowiedź"
@@ -100,14 +101,15 @@ pl_PL:
     errors:
       can_not_modify_automatic: "Nie możesz modyfikować automatycznej grupy"
     default_names:
+      everyone: "wszyscy"
       admins: "admini"
       moderators: "moderatorzy"
       staff: "zespół"
+      trust_level_0: "poziom_zaufania_1"
       trust_level_1: "poziom_zaufania_1"
       trust_level_2: "poziom_zaufania_2"
       trust_level_3: "poziom_zaufania_3"
       trust_level_4: "poziom_zaufania_4"
-      trust_level_5: "poziom_zaufania_5"
   education:
     until_posts:
       one: "1 wpis"
@@ -155,6 +157,8 @@ pl_PL:
         name: "Nazwa kategorii"
       post:
         raw: "Treść"
+      user_profile:
+        bio_raw: "O mnie"
     errors:
       messages:
         is_invalid: "jest niewystarczająca – spróbuj ją rozwinąć"
@@ -183,8 +187,30 @@ pl_PL:
   meta_category_description: "Dyskusje o tej stronie, jej organizacji, tym jak działa i jak możemy ją usprawnić."
   staff_category_name: "Zespół"
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
+  assets_topic_body: "Ten temat jest widoczny tylko dla członków zespołu. Służy do przechowywania obrazów i plików wykorzystywanych w wyglądzie serwisu. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie grafiki jakich chcesz użyć jako logo, favicon itd. (Użyj ikony wysyłania w edytorze wpisu lub przeciągnij i upuść.)\n3. Wyślij odpowiedź, aby je zachować.\n4. Kliknij prawym przyciskiem myszy na grafice i skopiuj jej adres URL.\n5. Wklej adres w [ogólnych ustawieniach](/admin/site_settings/category/required).\n\nJeśli chcesz włączyć możliwość przesyłania dodatkowych typów plików, zmień  `authorized_extensions` w [ustawieniach plików](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Witaj w Salonie"
+    body: |2
+
+      Gratulacje! :confetti_ball:
+
+      Jeśli widzisz ten temat, twoje konto osiągnęło trzeci poziom zaufania.
+
+      Od teraz możesz &hellip;
+
+      * Edytować temat każdego tematu
+      * Przenieść temat do innej kategorii
+      * Twoje linki nie będą posiadać już atrybutu [nofollow](http://en.wikipedia.org/wiki/Nofollow)
+      * Korzystać z prywatnego Salonu, kategorii która jest widoczna jedynie dla użytkowników na 3 poziomie zaufania lub wyższym
+      * Przyznawać polubienia i flagi o większej wadze
+
+      Możesz zobaczyć [wszystkie osoby z tym poziomem zaufania](/badges/3/regular). Nie zapomnij się przywitać.
+
+      Dziękujemy, że jesteś tak aktywną częścią naszej społeczności!
+
+      (Więcej informacji o poziomach zaufania znajduje się [pod tym adresem][trust]. Pamiętaj, że trzeci poziom zaufania zależy od utrzymywania aktywności danego konta na określonym poziomie.)
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "[Zamień ten pierwszy paragraf na krórki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go poniżej 200 znaków. Póki nie zmienisz tego tekstu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.]"
@@ -203,14 +229,14 @@ pl_PL:
       topic_exists_no_oldest: "Nie można usunąć tej kategorii z uwagi na liczbę tematów: %{count}."
   trust_levels:
     newuser:
-      title: "nowy użytkownik"
+      title: "nowy"
     basic:
-      title: "początkujący użytkownik"
+      title: "początkujący"
     regular:
-      title: "zwykły użytkownik"
-    elder:
-      title: "starszyzna"
-    change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
+      title: "zwykły"
+    leader:
+      title: "regularny"
+    change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Ta akcja została wykonana zbyt wiele razy, próbuj ponownie za jakiś czas"
     too_many_requests: "Liczba wykonań tej czynności w ciągu dnia jest ograniczona. Odczekaj %{time_left} przed ponowną próbą."
@@ -355,6 +381,7 @@ pl_PL:
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
       title: 'Powiadom {{username}}'
+      description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie. Bez oflagowania.'
       long_form: 'powiadomiono użytkownika'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -387,6 +414,7 @@ pl_PL:
       long_form: 'oflagowano jako niewłaściwe'
     notify_moderators:
       title: 'Powiadom moderatorów'
+      description: 'Ten temat wymaga interwencji moderatora z uwagi na niezgodność z <a href="/guidelines">wytycznymi społeczności</a>, <a href="%{tos_url}">warunkami użytkowania</a> lub z innego, niewymienionego tu powodu.'
       long_form: 'powiadomiono moderatorów'
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
@@ -396,10 +424,17 @@ pl_PL:
   archetypes:
     regular:
       title: "Zwykły temat"
+    banner:
+      message:
+        make: "Ten temat został ustawiony jako baner.  Będzie pojawiać się na górze każdej strony do czasu zamknięcia przez użytkownika."
+        remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze  każdej strony."
   unsubscribed:
     title: 'Wypisano'
     description: "Zostałeś wypisany. Nie skontaktujemy się z Tobą więcej!"
     oops: "Jeśli nie chciałeś tego zrobić, kliknij poniżej."
+    error: "Błąd podczas wypisywania"
+    preferences_link: "Możesz zrezygnować z podsumowań email w <a href='/my/preferences'>ustawieniach konta</a>"
+    different_user_description: "Jesteś zalogowany jako inny użytkownik niż ten do którego wysłano to podsumowanie. Wyloguj się i spróbuj ponownie."
     not_found_description: "Przepraszamy: nie mogliśmy Cię wypisać. Możliwe, że link wysłany w wiadomości email wygasł."
   resubscribe:
     action: "Zapisz ponownie"
@@ -483,6 +518,7 @@ pl_PL:
       num_clicks: "Kliki"
   dashboard:
     rails_env_warning: "Twój serwer działa w trybie %{env}"
+    ruby_version_warning: "Używasz Ruby w wersji 2.0.0, która może powodować problemy. Zaktualizuj się do patch level 247 lub późniejszej. "
     host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
     gc_warning: 'Twój serwer wykorzystuje domyślne ustawienia odśmiecacza ruby, który nie da Ci optymalnej wydajności. Przeczytaj ten temat o optymalizacji wydajności: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
@@ -578,7 +614,6 @@ pl_PL:
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     email_custom_headers: "A pipe-delimited list of custom email headers"
-    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
@@ -592,6 +627,7 @@ pl_PL:
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Identyfikator Google Universal Analytics (analytics.js), np: UA-12345678-9; zobacz http://google.com/analytics"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
+    allow_moderators_to_create_categories: "Zezwól moderatorom na tworzenie nowych kategorii"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     track_external_right_clicks: "Śledź zewnętrzne linki kliknięte prawym klawiszem (np. otwierane w nowej zakładce). Domyślnie wyłączone, gdyż wymaga nadpisywania URLi."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
@@ -634,11 +670,12 @@ pl_PL:
     quoted: "%{display_username} cytuje Twój wpis w %{link}"
     edited: "%{display_username} edytuje Twój wpis w %{link}"
     posted: "%{display_username} pisze w %{link}"
-    moved_post: "%{display_username} przeniósł(-a) Twój wpis do %{link}"
+    moved_post: "%{display_username} przenosi twój wpis do %{link}"
     private_message: "%{display_username} wysyła Ci prywatną wiadomość: %{link}"
     invited_to_private_message: "%{display_username} zaprosił(-a) Cię do prywatnej wiadomości: %{link}"
     invitee_accepted: "%{display_username} przyjął(-ęła) Twoje zaproszenie"
   search:
+    within_post: "#%{post_number} przez %{username}"
     types:
       category: 'Kategorie'
       user: 'Użytkownicy'
@@ -648,13 +685,13 @@ pl_PL:
   frequent_poster: "Aktywny uczestnik"
   move_posts:
     new_topic_moderator_post:
-      one: "Przeniesiono wpis do nowego tematu: %{topic_link}"
-      few: "Przeniesiono %{count} wpisy do nowego tematu: %{topic_link}"
-      other: "Przeniesiono %{count} wpisów do nowego tematu: %{topic_link}"
+      one: "Przenoszę wpis do nowego tematu: %{topic_link}"
+      few: "Przenoszę %{count} wpisy do nowego tematu: %{topic_link}"
+      other: "Przenoszę %{count} wpisów do nowego tematu: %{topic_link}"
     existing_topic_moderator_post:
-      one: "Przeniesiono wpis do innego tematu: %{topic_link}"
-      few: "Przeniesiono %{count} wpisy do innego tematu: %{topic_link}"
-      other: "Przeniesiono %{count} wpisów do innego tematu: %{topic_link}"
+      one: "Przenoszę wpis do innego tematu: %{topic_link}"
+      few: "Przenoszę %{count} wpisy do innego tematu: %{topic_link}"
+      other: "Przenoszę %{count} wpisów do innego tematu: %{topic_link}"
   topic_statuses:
     archived_enabled: "Temat został zarchiwizowany. Został zablokowany i nie może być zmieniany. "
     archived_disabled: "Temat został przywrócony z archiwum. Został odblokowany i może ponownie być zmieniany."
@@ -677,8 +714,6 @@ pl_PL:
     pinned_disabled: "Temat został odpięty. Już nie będzie pojawiać się na początku swojej kategorii."
     pinned_globally_enabled: "Temat został przypięty globalnie. Będzie pojawiać się na początku swojej kategorii i wszystkich list dopóki nie zostanie odpięty przez obsługę lub prywatnie przez użytkownika."
     pinned_globally_disabled: "Temat został odpięty. Już nie będzie wyświetlany na górze swojej kategorii."
-    visible_enabled: "Temat jest ponownie widoczny i będzie pojawiać się na listach tematów."
-    visible_disabled: "Ten temat został ustawiony jako niewidoczny. Nie pojawi się na żadnej liście tematów. Aby go wyświetlić wymagana będzie znajomość linku bezpośredniego. "
   login:
     not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł się zalogować."
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
@@ -688,7 +723,7 @@ pl_PL:
     not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy do Ciebie email aktywacyjny. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
-    something_already_taken: "Coś poszło źle, możliwe że ta nazwa użytkownika lub email jest już zarejestrowana/y. Spróbuj użyć linku zapomniałem hasła."
+    something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
     omniauth_error: "Przepraszamy, wystąpił błąd podczas uwierzytelniania Twojego konta %{strategy}. Może nie zaakceptowałeś uwierzytelnienia?"
     omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
   user:
@@ -898,3 +933,5 @@ pl_PL:
     user_suspended: "użytkownik został zawieszony"
   color_schemes:
     base_theme_name: "Podstawa"
+  tos_topic:
+    title: "Warunki użytkowania"

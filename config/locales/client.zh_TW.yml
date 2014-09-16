@@ -249,7 +249,6 @@ zh_TW:
       watched_categories: "關注"
       watched_categories_instructions: "你將會自動關注在此分類的新討論話題。你將收到所有新文章和討論話題的通知，未讀和新討論話題的數量也將出現在討論話題的列表旁。"
       tracked_categories: "追蹤"
-      tracked_categories_instructions: "你將自動追蹤這些分類的新話題，未讀和新文章的數量會出現在話題的列表旁"
       muted_categories: "靜音"
       muted_categories_instructions: "你將不會收到此分類的新討論話題通知，以及不會出現在未讀欄內。"
       delete_account: "刪除我的帳號"
@@ -377,7 +376,6 @@ zh_TW:
         bulk_invite:
           none: "你尚未邀請任何人。你可以發送個別邀請，或者透過<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上傳邀請名單</a>一次邀請一群人。"
           text: "從檔案大量邀請"
-          uploading: "上傳中"
           success: "檔案已成功上傳，你很快就會收到進度通知。"
           error: "上傳 '{{filename}}' 時發生問題：{{message}}"
       password:
@@ -627,7 +625,6 @@ zh_TW:
         selected:
           other: "你已選擇了 <b>{{count}}</b> 個討論話題。"
       none:
-        starred: "你尚未收藏任何討論話題，要收藏討論話題請按標題前面的星號。"
         unread: "沒有未讀的討論話題。"
         new: "沒有新的討論話題。"
         read: "你尚未閱讀任何討論話題。"
@@ -723,16 +720,13 @@ zh_TW:
           '0': '你正忽略此討論話題的所有通知。'
         watching_pm:
           title: "關注中"
-          description: "當此私人信息有新回覆時，你會被通知。討論話題列表上將會顯示未讀及新討論話題數目。"
         watching:
           title: "關注"
-          description: "當討論話題有新回覆時會通知你。討論話題列表上將會顯示未讀及新討論話題量。"
         tracking_pm:
           title: "追蹤"
           description: "只在有人以 @名稱 提到你或回覆你的文章時通知你，未讀文章以及新文章的數目將顯示在私人訊息旁"
         tracking:
           title: "追蹤"
-          description: "未讀文章以及新文章的數目將顯示在討論話題清單旁。只在有人以 @名稱 提到你或回覆你的文章時通知你。"
         regular:
           title: "普通"
           description: "只在有人以 @用戶名稱 提到你或回覆你的文章時通知你。"
@@ -758,8 +752,6 @@ zh_TW:
         pin_globally: "全區置頂討論話題"
         unarchive: "復原已封存的討論話題"
         archive: "封存討論話題"
-        invisible: "使不可見"
-        visible: "使可見"
         reset_read: "重置讀取資料"
         multi_select: "選取要移動的文章"
       reply:
@@ -890,8 +882,6 @@ zh_TW:
           yes_value: "是，將回覆文章一併刪除"
           no_value: "否，只刪除此文章"
         admin: "文章管理動作"
-        wiki: "標記維基文章"
-        unwiki: "取消標記維基文章"
       actions:
         flag: '投訴'
         it_too:
@@ -984,9 +974,6 @@ zh_TW:
           side_by_side:
             title: "以並排網頁模式檢視，分開標示增加與刪減的內容"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "以並排的 Markdown 原始碼模式檢視，分開標示增加與刪減的內容"
-            button: '<i class="fa fa-columns"></i> Markdown'
         details:
           edited_by: "編輯者"
     category:
@@ -1038,10 +1025,8 @@ zh_TW:
       notifications:
         watching:
           title: "關注"
-          description: "你將會自動關注在此分類中的新討論話題。您將收到所有新文章和討論話題的通知，而未讀和新文章的數量也將出現在討論話題的列表旁。"
         tracking:
           title: "追蹤"
-          description: "你將自動追蹤這些分類的新話題，未讀和新文章的數量會出現在話題的列表旁"
         regular:
           title: "一般"
           description: "只在有人以 @名稱 提到你或回覆你的文章時通知你。"
@@ -1088,8 +1073,6 @@ zh_TW:
         help: "此討論話題已置頂，將顯示在它所屬分類的討論話題列表的最上方"
       archived:
         help: "此討論話題已封存，已被凍結無法再修改"
-      invisible:
-        help: "此討論話題已隱藏，將不會出現在討論話題列表，只能以它的網址開啟"
     posts: "文章"
     posts_lowercase: "文章"
     posts_long: "此討論話題有 {{number}} 篇文章"
@@ -1306,8 +1289,6 @@ zh_TW:
           filename: "文件名稱"
           size: "大小"
         upload:
-          text: "上載"
-          uploading: "上載中"
           success: "'{{filename}}' 已成功被上載"
           error: "上載時發生問題： '{{filename}}': {{message}}"
         operations:
@@ -1533,8 +1514,6 @@ zh_TW:
           pending: '等待審核的用戶'
           newuser: '信任等級 0 的用戶 ( 新用戶 )'
           basic: '信任等級 1 的用戶 ( 初級用戶 )'
-          regular: '信任等級 2 的用戶 ( 一般用戶 )'
-          elder: '信任等級 4 的用戶 ( 長老 )'
           admins: '管理員'
           moderators: '板主'
           blocked: '已封鎖的用戶'
@@ -1725,16 +1704,13 @@ zh_TW:
         categories: '<b>g</b>, <b>c</b> 分類'
       navigation:
         title: '導航'
-        jump: '<b>#</b> 前往文章編號'
         back: '<b>u</b> 返回'
-        up_down: '<b>k</b>/<b>j</b> 移動選擇向上/向下'
         open: '<b>o</b> 或 <b>Enter</b> 開啟已選擇討論話題'
       application:
         title: 'Application'
         create: '<b>c</b> 表示新討論話題'
         notifications: '<b>n</b> 開啟通知'
         search: '<b>/</b> 搜尋'
-        help: '<b>?</b> 開始鍵盤快捷鍵幫忙'
       actions:
         title: '行動'
         star: '<b>f</b> 收藏討論話題'
@@ -1781,12 +1757,8 @@ zh_TW:
           description: 首篇文章編輯
         basic_user:
           name: 初級
-        regular_user:
-          name: 一般
         leader:
           name: 領袖
-        elder:
-          name: 長老
         welcome:
           name: 歡迎
           description: 收到一個讚

@@ -65,6 +65,7 @@ cs:
     one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden odkaz."
     other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} odkazů."
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
+  user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   has_already_been_used: "je již použito"
   invalid_characters: "obsahuje neplatné znaky"
@@ -95,7 +96,6 @@ cs:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
     until_posts:
       one: "příspěvek"
@@ -148,6 +148,10 @@ cs:
           attributes:
             ip_address:
               signup_not_allowed: "Registrace z této adresy není povolena."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "není platná barva"
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
@@ -162,10 +166,6 @@ cs:
       title: "nový uživatel"
     basic:
       title: "základní uživatel"
-    regular:
-      title: "pravidelný uživatel"
-    elder:
-      title: "starší"
     change_failed_explanation: "Pokusili jste se změnil důvěryhodnost uživatele %{user_name} na '%{new_trust_level}'. Jejich důvěryhodnost je ale již '%{current_trust_level}'. %{user_name} zůstané na důvěryhodnosti '%{current_trust_level}'"
   rate_limiter:
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
@@ -493,7 +493,6 @@ cs:
     apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     use_https: "Should the full url for the site (Discourse.base_url) be http or https?"
-    enable_private_messages: "Povolit uživatelům s věrohodností 1, aby zasílali soukromé zprávy a zahajovali soukromé konverzace"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     long_polling_interval: "Interval v milisekundách než je zahájena nová dlouhá výzva"
     polling_interval: "Jak často se mají zasílat výzvy přihlášených uživatelům v milisekundách"
@@ -599,8 +598,6 @@ cs:
       other: "Toto téma bylo po %{count} minutách automaticky uzavřeno. Nové odpovědi se už nepřijímají."
     autoclosed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     pinned_disabled: "Toto téma již není připevněno. Nebude se zobrazovat na vrcholu seznamu témat v kategorii."
-    visible_enabled: "Toto téma je viditelné. Bude se zobrazovat v seznamu témat."
-    visible_disabled: "Toto téma je neviditelné. Nebude se zobrazovat v seznamu témat. Je možné ho navštívit pouze přes přímý odkaz."
   login:
     not_approved: "Váš účet ještě nebyl schválen. Až se tak stane, obdržíte oznámení emailem."
     incorrect_username_email_or_password: "Neplatné uživatelské jméno, email nebo heslo"

@@ -104,7 +104,6 @@ he:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
     until_posts:
       one: "הודעה אחת"
@@ -209,10 +208,6 @@ he:
       title: "משתמש חדש"
     basic:
       title: "משתמש בסיסי"
-    regular:
-      title: "משתמש רגיל"
-    elder:
-      title: "זקן שבט"
     change_failed_explanation: "ניסית להוריד את דרגת %{user_name} לדרגה '%{new_trust_level}'. אולם הדרגה שלהם היא כבר '%{current_trust_level}'. %{user_name} יישאר '%{current_trust_level}'"
   rate_limiter:
     too_many_requests: "יש לנו מגבלה יומית על מספר הפעמים שניתן לבצע פעולה זו. אנא המתן %{time_left} לפני ניסיון חוזר."
@@ -585,7 +580,6 @@ he:
     summary_posts_required: "מספר הפרסומים המנימאלי בנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_likes_required: "מינימום הלייקים לנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את  % o הפרסומים הראשונים"
-    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
@@ -694,16 +688,6 @@ he:
     enable_flash_video_onebox: "אפשרו הטמעת קישורי swf ו-flv (פלאש של אדובי) בפרסומים. אזהרה: עלול להביא לבעיות בטיחות באתר."
     default_invitee_trust_level: "ברירת מחדל של דרגת אמון (0-4) של משתמשים מוזמנים."
     default_trust_level: "ברירת המחדל של דרגות אמון (0-4) של משתמשים חדשים."
-    basic_requires_topics_entered: "לכמה נושאים חייבים משתמש/ת חדשים להיכנס לפני שיקודמו לרמת אמון בסיסית (1)."
-    basic_requires_read_posts: "כמה פרסומים חייבים לקרוא משתמש/ת חדשים לפני שיוקדמו לרמת אמון בסיסית (1)."
-    basic_requires_time_spent_mins: "כמה דקות חייבים משתמש/ת חדשים לקרוא פרסומים לפני שיקודמו לרמת אמון בסיסית (1)."
-    regular_requires_topics_entered: "לכמה נושאים משתמש/ת בסיסיים חייבים להיכנס לפני שיקודמו לרמת אמון רגילה (2)."
-    regular_requires_read_posts: "כמה פרסומים חייבים משתמש/ת בסיסיים לקרוא לפני שיקודמו לרמת אמון רגילה (2)."
-    regular_requires_time_spent_mins: "כמה דקות חייבים משתמש/ת בסיסיים לקרוא פרסומים לפני שיקודמו לרמת אמון רגילה (2)."
-    regular_requires_days_visited: "כמה ימים חייבים משתמש/ת בסיסיים לבקר באתר לפני שיקודמו לרמת אמון רגילה (2)?"
-    regular_requires_likes_received: "כמה לייקים חייב/ת משתמש/ת בסיסיים לקבל לפני שיקודמו לרמת אמון רגילה (2)?"
-    regular_requires_likes_given: "כמה לייקים חייבים משתמש/ת בסיסיים להעניק לפני שיקודמו לרמת אמון רגילה (2)."
-    regular_requires_topic_reply_count: "לכמה נושאים חייבים משתמש/ת בסיסיים להשיב לפני שיקודמו לרמת אמון רגילה (2)."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     min_trust_to_edit_wiki_post: "דרגת האמון המינימלי הנדרשת כדי לערוך פרסום שמסומן כ-wiki."
     newuser_max_links: "כמה קישורים יכול/ה משתמש/ת חדשים להוספים לפרסום."
@@ -763,7 +747,6 @@ he:
     dominating_topic_minimum_percent: "איזה אחוז מהפרסומים משתמש צריך לייצר בנושא לפני שיקבל תזכורת לגבי שליטת/שתלטנות יתר על הנושא."
     suppress_uncategorized_badge: "אל תציגו את התג (badge) לנושאים נטולי קטגוריה ברשימת הנושאים."
     global_notice: "הציגו הודעת אזהרה דחופה כללית לכל המבקרים, החליפו לריק כדי להסתיר אותה (ניתן להשתמש ב-HTML)."
-    disable_edit_notifications: "משמש כדי לנטרל התראות עריכה כאשר תפעילו את האפשרות 'הורדת_תמונות_מרחוק_למקומי' בהעדפות האתר."
     enable_names: "אפשרו הצגת שמות מלאים של משתמשים. בטלו אפשרות זו כדי להסתיר את השמות המלאים."
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפרסומיהם, בנוסף ל@שם_המשתמש שלהם."
     invites_per_page: "ברירת המחדל, הזמנות המוצגות בעמוד המשתמש."
@@ -850,8 +833,6 @@ he:
     pinned_disabled: "הנושא הזה הוסר מנעיצה. הוא לא יוצג יותר בראש הקטגוריה שלו."
     pinned_globally_enabled: "הנושא הזה עכשיו נעוץ גלובאלית. הוא יופיע בראש הקטגוריה שלו ובראש כל רשימות הנושאים עד שיוסר מנעיצה על ידי מנהל או שכפתור הנקה נעיצות יילחץ."
     pinned_globally_disabled: "הנושא הזה הוסר מנעיצה. הוא לא יא יופיע יותר בראש הקטגוריה שלו."
-    visible_enabled: "הנושא הזה נראה. הוא יוצג ברשימות נושאים."
-    visible_disabled: "הנושא הזה בלתי נראה. הוא לא יוצג יותר באף רשימת נושאים. הדרך היחידה לגשת לנושא הזה היא דרך קישור ישיר."
   login:
     not_approved: "חשבונך טרם אושר. יישלח אליך דואר אלקטרוני כשהוא יהיה מוכן להתחברות."
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
@@ -915,50 +896,6 @@ he:
       הודעה זו נשלחה על ידי משתמש/ת מוכרים כך שאינך חייב/ת להתחבר.
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
-    text_body_template: |+
-      זהו מייל שנשלח אליך מהפורום %{site_name} ב:
-
-      [**%{base_url}**][0]
-
-      משלוח המייל הוא תהליך מסובך. הנה כמה דברים חשובים שכדאי שתבדקו קודם:
-
-      - היו *בטוחים* לכוון נכון את כתובת ה'מאת:' ב'התראת הדוא"ל' בהגדרות האתר שלכם. **המתחם המפורט בשדה הכתובת "מאת" של המיילים שאתם שולחים הוא שם המתחם של כתובת הדוא"ל שתאומת ותיבדק**.
-
-      - דעו כיצד לצפות ב*טקסט המקור של המייל* בשרת הדוא"ל שלכם, כך שתוכלו לחפש רמזים חשובים בכותרות מיילים. בג'ימייל מדובר באפשרות "הצג מקור" בתפריט הנפתח שבפינה השמאלית העליונה של כל מייל.
-
-      - ** חשוב: ** האם לספק השירות שלכם יש רשומת DNS הפוכה (reverse DNS record) מוזנת כדי לקשר את שם המתחם וכתובת ה-IP ממנה אתם שולחים דוא"ל? [בדקו את רשומת ה-PTR ההפוכה][2] כאן. אם ספק השירות שלכם לא הזין את רשומת מצביע ה-DNS ההפוך הנכונה, סביר להניח שאף אחד מהמיילים שלכם ישלח.
-
-      - האם [רשומת ה-SPF][8] של המתחם שלכם נכונה? [בדקו את רשומת ה-SPF שלכם][1] כאן. שימוש לב שסוג הרשומה הנכון והרשמי ל-SPF הוא -TXT.
-
-      - האם [רשומת ה-DKIM][3] של המתחם שלכם נכונה? זה יכול לשפר באופן מובהק את משלוח המיילים. [בדקו את רשומת ה-DKIM שלכם][7] כאן.
-
-      - אם אתם מריצים שרת דוא"ל משלכם, בדקו וודאו שה-IPs של שרת המייל [אינם מופיעים ברשימות שחורות][4].
-
-      - אם אתם מריצים שרת מייל משלכם, וודאו שהוא *בוודאות* שולח שם מתחם תקין לגמרי שמפורש ב-DNS במספר ה-HELO שלו. אם לא, זה יגרום לדוא"ל שלכם להידחות על ידי שרתי מייל רבים.
-
-      (*הדרך הקלה* היא [להירשם ל-Mandrill][6], המציעים תוכנית חינמית ונדיבה של דיוור שיכולה להתאים לפורומים קטנים. עדיין תזדקקו לההתקין את רשומות ה-SPF וה-DKIM ב-DNS שלכם!)
-
-      אנחנו מקווים שקיבלתם את מבחן השליחה הזה תקין!
-
-      בהצלחה,
-
-      החברים שלכם ב-[Discourse]](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-
-      ----
-      כדאי שתופיע בתחתית כל מייל שאתם שולחים האפשרות להסרה מרשימת הדיוור, אז בואו ניצור אחת. מייל זה נשלח על ידי שם-החברה, ברחוב כלשהוא 55, בעיר, בארה"ב 12345. אם תרצו להסיר עצמכם ממיילים עתידיים [לחצו כאן להסרה][5].
-
-      <small>כדאי שתופיע בתחתית כל מייל שאתם שולחים האפשרות להסרה מרשימת הדיוור, אז בואו ניצור אחת. מייל זה נלח על ידי שם-החברה, ברחוב כלשהוא 55, בעיר, בארה"ב 12345. אם תרצו להסיר עצמכם ממיילים עתידיים [לחצו כאן להסרה][5].</small>
-
   new_version_mailer:
     subject_template: "[%{site_name}] גרסת Discourse חדשה, עדכון זמין."
   new_version_mailer_with_notes:

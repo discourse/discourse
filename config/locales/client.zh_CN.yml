@@ -19,46 +19,53 @@ zh_CN:
             mb: MB
             tb: TB
     dates:
-      time: "h:mm a"
-      long_no_year: "MMM DD h:mm a"
-      long_no_year_no_time: "MMM D"
-      long_with_year: "YYYY MMM D h:mm a"
-      long_with_year_no_time: "YYYY MMM D"
+      time: "ah:mm"
+      long_no_year: "MMMDoah:mm"
+      long_no_year_no_time: "MMMDo"
+      long_with_year: "lll"
+      long_with_year_no_time: "ll"
+      long_date_with_year: "YY年MMMDoLT"
+      long_date_without_year: "MMMDoLT"
+      long_date_with_year_without_time: "YY年MMMDo"
+      long_date_without_year_with_linebreak: "MMMDo<br/>LT"
+      long_date_with_year_with_linebreak: "YY年MMMDo<br/>LT"
       tiny:
         half_a_minute: "< 1 分钟"
         less_than_x_seconds:
-          other: "< %{count} 秒钟"
+          other: "< %{count}秒钟"
         x_seconds:
-          other: "%{count} 秒钟"
+          other: "%{count}秒钟前"
         less_than_x_minutes:
-          other: "< %{count} 分钟"
+          other: "< %{count}分钟"
         x_minutes:
-          other: "%{count} 分钟"
+          other: "%{count}分钟前"
         about_x_hours:
-          other: "%{count} 小时"
+          other: "%{count}小时前"
         x_days:
-          other: "%{count} 天"
+          other: "%{count}日前"
         about_x_years:
-          other: "%{count} 年"
+          other: "约%{count}年前"
         over_x_years:
-          other: "> %{count} 年"
+          other: "> %{count}年"
         almost_x_years:
-          other: "%{count} 年"
+          other: "近%{count}年"
+        date_month: "MMMDo"
         date_year: "YY-MM-D"
       medium:
         x_minutes:
-          other: "%{count} 分钟"
+          other: "%{count}分钟"
         x_hours:
-          other: "%{count} 小时"
+          other: "%{count}小时"
         x_days:
-          other: "%{count} 天"
+          other: "%{count}日"
+        date_year: "YY年MMMDo"
       medium_with_ago:
         x_minutes:
-          other: "%{count} 分钟前"
+          other: "%{count}分钟前"
         x_hours:
-          other: "%{count} 小时前"
+          other: "%{count}小时前"
         x_days:
-          other: "%{count} 天前"
+          other: "%{count}日前"
     share:
       topic: '分享本主题的链接'
       post: '分享 #%{postNumber} 帖的链接'
@@ -150,6 +157,7 @@ zh_CN:
     disable: "禁用"
     undo: "重做"
     revert: "撤销"
+    failed: "失败"
     banner:
       close: "隐藏横幅。"
     choose_topic:
@@ -250,10 +258,11 @@ zh_CN:
       admin_tooltip: "用户是管理员"
       suspended_notice: "该用户将被禁止登录，直至 {{date}}。"
       suspended_reason: "原因："
+      mailing_list_mode: "对每个新帖发送一封邮件（除非您屏蔽了主题或者分类）"
       watched_categories: "已关注"
       watched_categories_instructions: "您将自动关注这些分类的所有新主题。您将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
       tracked_categories: "已跟踪"
-      tracked_categories_instructions: "您将会自动追踪这些分类中的所有新主题。未读和新帖子数量将出现在主题列表中每个主题后。"
+      tracked_categories_instructions: "您将会自动追踪这些分类中的所有新主题。未读和新帖子数量将出现在每个主题后。"
       muted_categories: "已屏蔽"
       muted_categories_instructions: "您不会收到这些分类的新主题的任何通知，他们也不会出现在您的未读标签中。"
       delete_account: "删除我的帐号"
@@ -262,7 +271,6 @@ zh_CN:
       delete_yourself_not_allowed: "您目前不能删除自己的帐号。联系管理员帮助您删除帐号。"
       unread_message_count: "消息"
       staff_counters:
-        flags_given: "树立有用标志"
         flagged_posts: "被报告的帖子"
         deleted_posts: "删除的帖子"
         suspensions: "禁止的"
@@ -310,7 +318,7 @@ zh_CN:
         frequency: "只有当您最近一段时间没有访问时，我们才会把您未读过的内容发送到您的电子邮箱。"
       name:
         title: "名字"
-        instructions: "名字全称。"
+        instructions: "您的全名。"
         too_short: "您设置的名字太短了。"
         ok: "您的名字符合要求。"
       username:
@@ -328,6 +336,7 @@ zh_CN:
         prefilled: "电子邮箱与用户名匹配。"
       locale:
         title: "界面语言"
+        instructions: "用户界面语言。将在您刷新页面后改变。"
         default: "（默认）"
       password_confirmation:
         title: "请再次输入密码"
@@ -346,6 +355,7 @@ zh_CN:
         bi_weekly: "每两周"
       email_direct: "当有人引用、回复或提及您时发送一封邮件给您"
       email_private_messages: "当有人给您发私信时发送一封邮件给您"
+      email_always: "即使在论坛中活跃时也接收电子邮件提醒"
       other_settings: "其它"
       categories_settings: "分类"
       new_topic_duration:
@@ -385,7 +395,6 @@ zh_CN:
         bulk_invite:
           none: "您没有邀请过任何人。您可以发送个人邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传一个批量邀请文件</a>一次性邀请一批人。"
           text: "通过文件批量邀请"
-          uploading: "正在上传"
           success: "文件上传成功，您将很快被通知状态。"
           error: "在上传 '{{filename}}' 时出现错误：{{message}}"
       password:
@@ -421,6 +430,7 @@ zh_CN:
         network: "请检查您的网络连接。"
         network_fixed: "似乎恢复正常了。"
         server: "错误代码：{{status}}"
+        forbidden: "你没有权限读这个。"
         unknown: "出错了。"
       buttons:
         back: "返回"
@@ -431,6 +441,7 @@ zh_CN:
     read_only_mode:
       enabled: "一个管理员启用了只读模式。您可以继续浏览这个站点但是无法进行交互。"
       login_disabled: "只读模式下不允许登录。"
+    too_few_topics_notice: "创建至少 5 个公开主题和 %{posts} 个公开帖子以开始讨论。如果没有内容让新用户阅读，他们就无法得到信任等级。这个消息仅显示给职员。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -445,6 +456,7 @@ zh_CN:
     last_post: 最后一帖
     last_post_lowercase: 最后一帖
     summary:
+      enabled_description: "您正在查看这个主题的概括版本：由社群认定的最有意思的帖子。"
       description: "有 <b>{{count}}</b> 个回复。"
       description_time: "有 <b>{{count}}</b> 个回复，大约需要 <b>{{readingTime}} 分钟</b>阅读。"
       enable: '概括本主题'
@@ -475,6 +487,10 @@ zh_CN:
       reset: "重置密码"
       complete_username: "如果您的账户名 <b>%{username}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
       complete_email: "如果您的账户 <b>%{email}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
+      complete_username_found: "您的账户名 <b>%{username}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
+      complete_email_found: "您的账户 <b>%{email}</b> 存在，您将马上收到一封电子邮件，告诉您如何重置密码。"
+      complete_username_not_found: "没有帐户匹配这个用户名 <b>%{username}</b>"
+      complete_email_not_found: "没有帐户匹配 <b>%{email}</b> "
     login:
       title: "登录"
       username: "用户"
@@ -491,6 +507,7 @@ zh_CN:
       awaiting_approval: "您的帐号尚未被论坛版主批准。一旦您的帐号获得批准，您会收到一封电子邮件。"
       requires_invite: "抱歉，本论坛仅接受邀请注册。"
       not_activated: "您还不能登录。我们之前在 <b>{{sentTo}}</b> 发送了一封激活邮件给您。请按照邮件中的介绍来激活您的帐号。"
+      not_allowed_from_ip_address: "您不能从该 IP 地址登陆。"
       resend_activation_email: "点击此处重新发送激活邮件。"
       sent_activation_email_again: "我们在 <b>{{currentEmail}}</b> 又发送了一封激活邮件给您，邮件送达可能需要几分钟；请检查一下您邮箱的垃圾邮件文件夹。"
       google:
@@ -512,6 +529,7 @@ zh_CN:
         title: "使用 GitHub 帐号登录"
         message: "正使用 GitHub 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
     composer:
+      add_warning: "这是一个正式的警告。"
       posting_not_on_topic: "您想回复哪一个主题？"
       saving_draft_tip: "保存中"
       saved_draft_tip: "已保存"
@@ -594,6 +612,7 @@ zh_CN:
       invitee_accepted: "<i title='已接受您的邀请' class='fa fa-user'></i><p><span>{{username}}</span> 已接受您的邀请</p>"
       moved_post: "<i title='移动了帖子' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移动了 {{description}}</p>"
       linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='徽章授予' class='fa fa-certificate'></i><p>获得“{{description}}”</p>"
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -611,6 +630,7 @@ zh_CN:
       title: "搜索主题、帖子、用户或分类"
       no_results: "没有找到结果。"
       searching: "搜索中..."
+      post_format: "#{{post_number}} 来自于 {{username}}"
       context:
         user: "搜索 @{{username}} 的帖子"
         category: "搜索“{{category}}”分类"
@@ -641,7 +661,7 @@ zh_CN:
         selected:
           other: "您已经选择了 <b>{{count}}</b>个主题"
       none:
-        starred: "您尚未收藏任何主题。要收藏一个主题，点击标题旁的星星图标。"
+        starred: "您没有收藏任何主题。"
         unread: "您没有未阅主题。"
         new: "您没有新主题可读。"
         read: "您尚未阅读任何主题。"
@@ -651,8 +671,9 @@ zh_CN:
         category: "没有 {{category}} 分类的主题。"
         top: "没有最佳主题。"
         educate:
-          new: '<p>默认情况下，最近两天创建的主题是新主题。</p><p>您可以在您的<a href="%{userPrefsUrl}">设置</a>里改变这一行为。</p>'
-          unread: '<p>默认情况下，未读提醒将仅对以下主题显示：</p><ul><li>创建的</li><li>回复的</li><li>阅读超过4分钟的</li></ul><p>或者，如果您在每个主题底部的通知控制中选择了追踪或监视的。</p><p>您可以改变您的<a href="%{userPrefsUrl}">用户设置</a>。</p>'
+          new: '<p>这里是您的新主题。</p><p>默认情况下，最近两天创建的主题是新主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>您可以在您的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
+          unread: '<p>这里是您的未读主题。</p><p>默认情况下，下述主题将被认为是未读的，并会显示未读数目： <span class="badge new-posts badge-notification">1</span> 如果您：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>您可以改变您的<a href="%{userPrefsUrl}">用户设置</a>.</p>'
+          starred: '<p>您收藏的主题会出现在这里。</p><p>要收藏主题或者取消，请使用 </p><ul><li>the <i class="fa fa-star"></i> 在主题标题的右边</li><li>主题底部的星标按钮</li></ul>'
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"
@@ -775,8 +796,6 @@ zh_CN:
         pin_globally: "全局置顶主题"
         unarchive: "解除主题存档"
         archive: "存档主题"
-        invisible: "使不可见"
-        visible: "使可见"
         reset_read: "重置阅读数据"
         multi_select: "选择帖子"
       reply:
@@ -882,10 +901,12 @@ zh_CN:
         upload_not_authorized: "抱歉, 您不能上传此类型文件（可上传的文件类型有: {{authorized_extensions}}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传附件。"
+        attachment_download_requires_login: "抱歉，但是您需要登陆后才能下载附件。"
       abandon:
         confirm: "您确定要放弃编辑您的帖子吗？"
         no_value: "否"
         yes_value: "是"
+      via_email: "通过电子邮件发送的帖子"
       wiki:
         about: "这个帖子是维基；基础用户能编辑它"
       archetypes:
@@ -908,8 +929,6 @@ zh_CN:
           yes_value: "是，删除回复"
           no_value: "否，仅删除该帖"
         admin: "帖子管理"
-        wiki: "启用维基编辑模式"
-        unwiki: "撤销维基编辑模式"
       actions:
         flag: '报告'
         defer_flags:
@@ -1005,8 +1024,8 @@ zh_CN:
             title: "以并排页面显示，分开标示增加和删除的内容"
             button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
-            title: "以并列的 markdown 源码显示，分开标示增加和删除的内容"
-            button: '<i class="fa fa-columns"></i> Markdown'
+            title: "并列显示源代码差异信息"
+            button: '<i class="fa fa-columns"></i> 原始'
         details:
           edited_by: "编辑："
     category:
@@ -1050,6 +1069,7 @@ zh_CN:
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
+      everyone_permission: "任何人"
       this_year: "今年"
       position: "位置"
       default_position: "默认位置"
@@ -1059,10 +1079,10 @@ zh_CN:
       notifications:
         watching:
           title: "关注"
-          description: "您将自动关注这些分类中的所有新主题。您收到新的帖子和主题的通知，以及未读和新帖子数量将显示在靠近帖子主题列表旁。"
+          description: "您将会自动监视这些分类中的所有新主题。您会收到新帖子或新主题的同志，未读和新帖子数量将出现在每个主题后。"
         tracking:
           title: "追踪"
-          description: "您将会自动追踪这些分类的所有新主题。未读和新主题数量将出现在主题列表的每个主题后面。"
+          description: "您将会自动追踪这些分类中的所有新主题。未读和新帖子数量将出现在每个主题后。"
         regular:
           title: "常规"
           description: "只有当有人 @name 提及你或者回复你的帖子时，你才会收到通知。"
@@ -1096,6 +1116,8 @@ zh_CN:
       clicks:
         other: "%{count} 次点击"
     topic_statuses:
+      warning:
+        help: "这是一个正式的警告。"
       locked:
         help: "本主题已关闭；不再接受新的回复"
       unpinned:
@@ -1109,8 +1131,6 @@ zh_CN:
         help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       archived:
         help: "本主题已归档；即已经冻结，无法修改"
-      invisible:
-        help: "本主题不可见；它将不被显示在主题列表中，只能通过一个直接链接来访问"
     posts: "帖子"
     posts_lowercase: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
@@ -1198,6 +1218,7 @@ zh_CN:
         this_week: "本周"
         today: "今天"
         other_periods: "查看更多热门主题"
+    browser_update: '抱歉，<a href="http://www.discourse.com/faq/#browser">您的浏览器版本太低，无法正常访问该站点。</a>。请<a href="http://browsehappy.com">升级您的浏览器</a>。'
     permission_types:
       full: "创建 / 回复 / 阅读"
       create_post: "回复 / 阅读"
@@ -1253,6 +1274,8 @@ zh_CN:
         agree_flag_modal_title: "批准并..."
         agree_flag_hide_post: "批准（隐藏并发送私信）"
         agree_flag_hide_post_title: "隐藏帖子并自动发送私信要求作者修改"
+        agree_flag_restore_post: "同意 (还原帖子)"
+        agree_flag_restore_post_title: "还原这篇帖子"
         agree_flag: "批准这个标记"
         agree_flag_title: "批准这个标记并且保持帖子不变"
         defer_flag: "推迟"
@@ -1287,6 +1310,7 @@ zh_CN:
         topic_flagged: "这个<strong>主题</strong>已被报告。"
         visit_topic: "浏览主题才能操作"
         was_edited: "帖子在第一次标记后被编辑"
+        previous_flags_count: "这篇帖子已经被标示了 {{count}} 次。"
         summary:
           action_type_3:
             other: "偏离主题 x{{count}}"
@@ -1325,6 +1349,7 @@ zh_CN:
         confirm_revoke: "确定要撤销该密钥？"
         info_html: "API 密钥可以用来通过 JSON 调用创建和更新主题。"
         all_users: "所有用户"
+        note_html: "请<strong>安全地</strong>保管密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义发帖。"
       backups:
         title: "备份"
         menu:
@@ -1345,8 +1370,6 @@ zh_CN:
           filename: "文件名"
           size: "大小"
         upload:
-          text: "上传"
-          uploading: "正在上传"
           success: "'{{filename}}'已成功上传。"
           error: "在上传的'{{filename}}'过程中出现错误：({{message}})"
         operations:
@@ -1484,6 +1507,7 @@ zh_CN:
             user_placeholder: "username"
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
+            reply_key_placeholder: "回复键"
             skipped_reason_placeholder: "原因"
       logs:
         title: "日志"
@@ -1543,12 +1567,16 @@ zh_CN:
           actions:
             block: "封禁"
             do_nothing: "放行"
+            allow_admin: "允许管理"
           form:
             label: "新："
             ip_address: "IP地址"
             add: "添加"
         logster:
           title: "错误日志"
+      impersonate:
+        title: "检视用户视角"
+        help: "使用此工具来检视其他用户的帐号以方便调试。您应该在完成后立即登出。"
       users:
         title: '用户'
         create: '添加管理员用户'
@@ -1559,7 +1587,7 @@ zh_CN:
           new: "新建"
           active: "活跃"
           pending: "待定"
-          admins: '管理员'
+          admins: '管理'
           moderators: '版主'
           suspended: '禁止登录'
           blocked: '禁止参与讨论'
@@ -1574,8 +1602,9 @@ zh_CN:
           pending: '等待审核用户'
           newuser: '信用等级为0的用户（新用户）'
           basic: '信用等级为1的用户（基本用户）'
-          regular: '信用等级为2的用户（常访问用户）'
-          elder: '信用等级为4的用户（骨灰用户）'
+          regular: '信用等级为2的用户（成员）'
+          leader: '信用等级为3的用户（常规）'
+          elder: '信用等级为4的用户（领导）'
           admins: '管理员'
           moderators: '版主'
           blocked: '被封用户'
@@ -1584,6 +1613,7 @@ zh_CN:
           other: "成功拒绝 %{count} 个用户。"
         reject_failures:
           other: "成功拒绝 %{count} 个用户。"
+        not_verified: "未验证"
       user:
         suspend_failed: "禁止此用户时发生了错误 {{error}}"
         unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
@@ -1627,6 +1657,7 @@ zh_CN:
         topics_entered: 已查看的主题数量
         flags_given_count: 所做报告数量
         flags_received_count: 收到报告数量
+        warnings_received_count: 收到警告
         flags_given_received_count: '给出的标记 / 收到的标记'
         approve: '批准'
         approved_by: "批准人"
@@ -1760,6 +1791,25 @@ zh_CN:
           post_revision: "当用户编辑或者创建帖子时"
           trust_level_change: "当用户信任等级改变时"
           user_change: "当用户被编辑或创建时"
+        preview:
+          link_text: "预览授予的徽章"
+          plan_text: "预览查询计划"
+          modal_title: "徽章查询预览"
+          sql_error_header: "查询时出错。"
+          error_help: "查看下列关于徽章查询的帮助链接。"
+          bad_count_warning:
+            header: "警告！"
+            text: "有授予的样本消失。这在徽章查询返回用户 ID 或者帖子 ID 不存在的时候发生。这可能导致未预期的结果发生——请再次检查您的查询。"
+          grant_count:
+            zero: "没有徽章可以被授予。"
+            one: "已授予 <b>1</b> 个徽章。"
+            other: "已授予 <b>%{count}</b> 个徽章。"
+          sample: "样本："
+          grant:
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span>因 %{link} 帖子
+            with_post_time: <span class="username">%{username}</span>因在<span class="time">%{time}</span>时的 %{link} 帖子
+            with_time: <span class="username">%{username}</span>在<span class="time">%{time}</span>
     lightbox:
       download: "下载"
     keyboard_shortcuts_help:
@@ -1772,23 +1822,25 @@ zh_CN:
         unread: '<b>g</b> 然后 <b>u</b> 未读主题'
         starred: '<b>g</b> 然后 <b>f</b> 收藏的主题'
         categories: '<b>g</b> 然后 <b>c</b> 分类列表'
+        top: '<b>g</b>, <b>t</b> 顶部'
       navigation:
         title: '导航'
-        jump: '<b>#</b> 跳转到帖子标号'
         back: '<b>u</b> 返回'
-        up_down: '<b>k</b> 和 <b>j</b> 上/下移动'
         open: '<b>o</b> 或者 <b>Enter</b> 打开选中的主题'
+        next_prev: '<b>shift j</b>/<b>shift k</b> 下一个/上一个选区'
       application:
         title: '应用'
         create: '<b>c</b> 创建一个新主题'
         notifications: '<b>n</b> 打开通知菜单'
         search: '<b>/</b> 搜索'
-        help: '<b>?</b> 打开快捷键列表'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> 解除新/帖子提示'
+        dismiss_topics: '<b>x</b>, <b>t</b> 解除主题提示'
       actions:
         title: '动作'
         star: '<b>f</b> 收藏主题'
         share_topic: '<b>shift s</b> 分享主题'
         share_post: '<b>s</b> 分享帖子'
+        reply_as_new_topic: '<b>t</b> 回复为新主题Reply as new topic'
         reply_topic: '<b>shift r</b> 回复主题'
         reply_post: '<b>r</b> 回复帖子'
         quote_post: '<b>q</b> 引用帖子'
@@ -1831,15 +1883,15 @@ zh_CN:
         basic_user:
           name: 基础
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社群功能
-        regular_user:
+        member:
+          name: 成员
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">已授予</a>邀请权限
+        regular:
           name: 常规
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a> 邀请
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">已授予</a>重分类、重命名、跟踪链接和贵宾室
         leader:
           name: 领导
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a> 重分类、重命名、跟踪链接和贵宾室
-        elder:
-          name: 长老
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a> 全局编辑、固定、关闭、存档、分割和合并
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">已授予</a> 全局编辑、固定、关闭、存档、分割和合并
         welcome:
           name: 欢迎
           description: 得到一个赞
@@ -1855,6 +1907,24 @@ zh_CN:
         great_post:
           name: 非常棒的帖子
           description: 一个帖子收到 50 个赞。这个徽章可以被授予多次
+        nice_topic:
+          name: 好的主题
+          description: 一个帖子收到 10 个赞。这个徽章可以被授予多次
+        good_topic:
+          name: 不错的主题
+          description: 一个帖子收到 25 个赞。这个徽章可以被授予多次
+        great_topic:
+          name: 很棒的主题
+          description: 一个帖子收到 50 个赞。这个徽章可以被授予多次
+        nice_share:
+          name: 分享得很好
+          description: 分享了一个有 25 个独立访问者的帖子
+        good_share:
+          name: 分享得不错
+          description: 分享了一个有 300 个独立访问者的帖子
+        great_share:
+          name: 分享得很好
+          description: 分享了一个有 1000 个独立访问者的帖子
         first_like:
           name: 首个赞
           description: 已赞了一个帖子

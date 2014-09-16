@@ -100,7 +100,6 @@ zh_TW:
       trust_level_2: "信任等級 2"
       trust_level_3: "信任等級 3"
       trust_level_4: "信任等級 4"
-      trust_level_5: "信任等級 5"
   education:
     until_posts:
       other: "%{count} 篇文章"
@@ -168,10 +167,6 @@ zh_TW:
       title: "新用戶"
     basic:
       title: "初級用戶"
-    regular:
-      title: "一般用戶"
-    elder:
-      title: "長老"
   rate_limiter:
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     hours:
@@ -484,7 +479,6 @@ zh_TW:
     summary_posts_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小的文章的數量"
     summary_likes_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小得到\"讚\"的數量"
     summary_percent_filter: "當用戶點擊 \"此話題的摘要\"，顯示前面多少 % 的文章"
-    enable_private_messages: "允許初級 (1) 用戶撰寫與回覆私人訊息"
     enable_long_polling: "啟用消息匯流排使通知功能可以使用長輪詢（long polling）"
     long_polling_interval: "長輪詢每次請求之間的時間間隔（單位 毫秒） "
     polling_interval: "已登入用戶用戶端輪詢時間間隔（單位 毫秒）"
@@ -663,8 +657,6 @@ zh_TW:
     autoclosed_disabled: "此討論話題已開放，可以發表新的回覆。"
     pinned_disabled: "此討論話題已被解除置頂，它將不再顯示在它所屬分類的頂部。"
     pinned_globally_disabled: "本主題已被解除置頂，它將不再置頂於所屬分類"
-    visible_enabled: "此討論話題可見，它將顯示在討論話題清單中。"
-    visible_disabled: "此討論話題不可見，它將不被顯示在討論話題清單中，只能通過一個直接連結來瀏覽。"
   login:
     not_approved: "你的帳號尚未獲得批准。一旦你的帳號獲得批准，你會收到一封電子郵件。"
     incorrect_username_email_or_password: "用戶名、電子郵箱或密碼不正確"

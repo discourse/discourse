@@ -99,7 +99,6 @@ ko:
       trust_level_2: "신뢰도 2"
       trust_level_3: "신뢰도 3"
       trust_level_4: "신뢰도 4"
-      trust_level_5: "신뢰도 5"
   education:
     until_posts:
       other: "%{count} 글"
@@ -214,10 +213,6 @@ ko:
       title: "새로운 사용자"
     basic:
       title: "기본 사용자"
-    regular:
-      title: "자주오는 사용자"
-    elder:
-      title: "후원자"
     change_failed_explanation: "당신은 %{user_name} 사용자를 %{new_trust_level} 으로 강등시키려 하였습니다만, 신뢰도는 이미 %{current_trust_level} 입니다. %{user_name} 사용자의 레벨은 %{current_trust_level} 로 유지됩니다."
   rate_limiter:
     too_many_requests: "지금 하시려는 행동에는 하루 제한이 있습니다. %{time_left} 동안 기다리시고 다시 시도해 주세요."
@@ -563,7 +558,6 @@ ko:
     summary_posts_required: "하나의 토픽에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 게시글 수"
     summary_likes_required: "하나의 토픽에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 좋아요 수"
     summary_percent_filter: "요약본 보기를 클릭시, 글 중에 몇 %의 상위 글을 보여줄 것인가?"
-    enable_private_messages: "신뢰도 1 사용자들만 개인 메세지와 개인 메세지에 대한 답글을 허용합니다"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
@@ -667,16 +661,6 @@ ko:
     enable_flash_video_onebox: "swf, flv(어도비 플래쉬)링크를 embed 할 수 있도록 함. 주의: 보안에 대한 위험성을 알려주는 것이 좋다."
     default_invitee_trust_level: "사용자를 초대하기 위한 기본 신뢰도(0-4)"
     default_trust_level: "새로운 사용자의 기본 신뢰도(0-4)"
-    basic_requires_topics_entered: "새로운 사용자가 기본 사용자(1)가 되기 위해 들어가봐야되는 토픽의 개수"
-    basic_requires_read_posts: "새로운 사용자가 기본 사용자(1)가 되기 위해 읽어야 하는 포스트 개수"
-    basic_requires_time_spent_mins: "새로운 사용자가 기본 사용자(1)가 되기 위해 포스트를 읽어야 하는 기간(분)"
-    regular_requires_topics_entered: "기본 사용자가 자주오는 사용자(2)가 되기 위해 들어가봐야되는 토픽의 개수"
-    regular_requires_read_posts: "기본 사용자가 자주오는 사용자(2)가 되기 위해 읽어야 하는 포스트 개수"
-    regular_requires_time_spent_mins: "기본 사용자가 자주오는 사용자(2)가 되기 위해 포스트를 읽어야 하는 기간(분)"
-    regular_requires_days_visited: "기본 사용자가 자주오는 사용자(2)가 되기 위해 사이트를 방문해야하는 날 수"
-    regular_requires_likes_received: "기본 사용자가 자주오는 사용자(2)가 되기 위해 받아야하는 좋아요 수"
-    regular_requires_likes_given: "기본 사용자가 자주오는 사용자(2)가 되기 위해 눌러야하는 좋아요 수"
-    regular_requires_topic_reply_count: "기본 사용자가 자주오는 사용자(2)가 되기 위해 답변을 달아야하는 토픽 수"
     min_trust_to_create_topic: "새로운 토픽을 생성하기 위한 최소 신뢰도"
     min_trust_to_edit_wiki_post: "위키로 설정된 포스트를 수정할 수 있는 최소 신뢰도"
     newuser_max_links: "새로운 사용자가 포스트에 붙일 수 있는 최대 링크 개수"
@@ -795,8 +779,6 @@ ko:
       other: "이 토픽은 %{count} 분 뒤 자동으로 닫혔습니다. 더이상 답글을 달 수 없습니다."
     autoclosed_disabled: "이 토픽은 이제 열렸습니다. 새로운 답글을 허용합니다."
     pinned_disabled: "이 토픽은 이제 고정이 풀렸습니다. 더이상 카테고리 상단에 보이지 않을 것입니다."
-    visible_enabled: "이 토픽은 이제 다른 사람이 볼 수 있습니다. 토픽 목록에서 찾으실 수 있습니다."
-    visible_disabled: "이 토픽은 이제 보이지 않습니다. 더이상 토픽 목록에서 찾을 수 없고 이 토픽은 링크를 통해서만 볼 수 있습니다."
   login:
     not_approved: "당신의 계정은 아직 활성화되지 않았습니다. 이메일을 확인하시고 로그인 해주세요."
     incorrect_username_email_or_password: "계정 아이디, 이메일 또는 패스워드가 다릅니다."
