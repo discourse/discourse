@@ -121,7 +121,11 @@ button {
 }
 
 a.reply-to-tab {
-  display: none;
+  position: absolute;
+  z-index: 400;
+  right: 80px;
+  color: scale-color($primary, $lightness: 50%);
+  span { display: none; }
 }
 
 a.star {
