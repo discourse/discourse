@@ -185,6 +185,11 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
           topicController = this.get('controller'),
           origScrollTop = $(window).scrollTop();
 
+      if (Discourse.Mobile.mobileView) {
+        Discourse.URL.routeTo(this.get('post.topic').urlForPostNumber(this.get('post.reply_to_post_number')));
+        return;
+      }
+
 
       if (replyHistory.length > 0) {
         var origHeight = this.$('.embedded-posts.top').height();

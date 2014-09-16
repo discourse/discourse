@@ -11,9 +11,9 @@
         {{#if loadingReplyHistory}}
           {{i18n loading}}
         {{else}}
-          <i class="fa fa-mail-forward"></i>&nbsp;
+          <i class="fa fa-mail-forward"></i>
           {{avatar reply_to_user imageSize="tiny"}}
-          {{reply_to_user.username}}
+          <span>{{reply_to_user.username}}</span>
         {{/if}}
       </a>
     {{/if}}
