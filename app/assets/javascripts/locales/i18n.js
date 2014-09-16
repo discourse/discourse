@@ -532,6 +532,7 @@ I18n.enable_verbose_localization = function(){
 I18n.verbose_localization_session = function(){
   sessionStorage.setItem("verbose_localization", "true");
   I18n.enable_verbose_localization();
+  return true;
 }
 
 try {
