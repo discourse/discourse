@@ -21,6 +21,14 @@ describe Topic do
       Fabricate.build(:topic, title: title).slug.should == slug
     end
 
+    let(:chinese_title) { "习近平:中企承建港口电站等助斯里兰卡发展" }
+    let(:chinese_slug) { "xi-jin-ping-zhong-qi-cheng-jian-gang-kou-dian-zhan-deng-zhu-si-li-lan-qia-fa-zhan" }
+
+    it "returns a symbolized slug for a chinese title" do
+      SiteSetting.default_locale = 'zh_CN'
+      Fabricate.build(:topic, title: chinese_title).slug.should == chinese_slug
+    end
+
     it "returns 'topic' when the slug is empty (say, non-english chars)" do
       Slug.expects(:for).with(title).returns("")
       Fabricate.build(:topic, title: title).slug.should == "topic"
