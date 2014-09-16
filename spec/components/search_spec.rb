@@ -302,10 +302,10 @@ describe Search do
 
     it 'finds chinese topic based on title' do
       SiteSetting.default_locale = 'zh_TW'
-      topic = Fabricate(:topic, title: 'My Title Discourse社区指南')
+      topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
       post = Fabricate(:post, topic: topic)
 
-      Search.execute('社区指南').posts.first.id.should == post.id
+      Search.execute('社區指南').posts.first.id.should == post.id
       Search.execute('指南').posts.first.id.should == post.id
     end
   end
