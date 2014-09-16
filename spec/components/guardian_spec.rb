@@ -710,6 +710,13 @@ describe Guardian do
         Guardian.new(post.user).can_edit?(post).should be_true
       end
 
+      it "returns true if the post is hidden, it's been enough time and the edit window has expired" do
+        post.hidden = true
+        post.hidden_at = (SiteSetting.cooldown_minutes_after_hiding_posts + 1).minutes.ago
+        post.created_at = (SiteSetting.post_edit_time_limit + 1).minutes.ago
+        Guardian.new(post.user).can_edit?(post).should be_true
+      end
+
       it "returns true if the post is hidden due to flagging and it's got a nil `hidden_at`" do
         post.hidden = true
         post.hidden_at = nil
