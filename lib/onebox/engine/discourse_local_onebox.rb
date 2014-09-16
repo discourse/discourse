@@ -58,9 +58,14 @@ module Onebox
             end
 
             category_name = ''
+            parent_category_name = ''
             category = topic.category
             if category && !category.uncategorized?
               category_name = "<a href=\"#{category.url}\" class=\"badge badge-category\" style=\"background-color: ##{category.color}; color: ##{category.text_color}\">#{category.name}</a>"
+              if !category.parent_category_id.nil?
+                parent_category = Category.find_by(id: category.parent_category_id)
+                parent_category_name = "<a href=\"#{parent_category.url}\" class=\"badge badge-category\" style=\"background-color: ##{parent_category.color}; color: ##{parent_category.text_color}\">#{parent_category.name}</a>"
+              end
             end
 
             quote = post.excerpt(SiteSetting.post_onebox_maxlength)
@@ -73,6 +78,7 @@ module Onebox
                         posters: posters,
                         quote: quote,
                         category_name: category_name,
+                        parent_category_name: parent_category_name,
                         topic: topic.id
 
             @template = 'topic'
