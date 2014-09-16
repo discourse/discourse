@@ -243,8 +243,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   _scrollList: function($article, direction) {
-    var $body = $('body'),
-        distToElement = $article.position().top + $article.height() - $(window).height() - $body.scrollTop();
+    var $document = $(document),
+        distToElement = $article.position().top + $article.height() - $(window).height() - $document.scrollTop();
 
     // cut some bottom slack
     distToElement += 40;
@@ -254,7 +254,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
       return;
     }
 
-    $('html, body').scrollTop($body.scrollTop() + distToElement);
+    $('html, body').scrollTop($document.scrollTop() + distToElement);
   },
 
   _findArticles: function() {
