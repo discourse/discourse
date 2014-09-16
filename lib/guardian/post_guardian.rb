@@ -89,9 +89,13 @@ module PostGuardian
     end
 
     if is_my_own?(post)
-      return false if post.hidden? &&
-                      post.hidden_at.present? &&
-                      post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
+      if post.hidden?
+        return false if post.hidden_at.present? &&
+                        post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
+
+        # If it's your own post and it's hidden, you can still edit it
+        return true
+      end
 
       return !post.edit_time_limit_expired?
     end
