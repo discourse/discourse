@@ -3,4 +3,4 @@ en:
     admin:
       site_settings:
         categories:
-          emoji: "Emoji"
+          plugins: "Plugins"
