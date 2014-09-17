@@ -30,6 +30,13 @@ class TopicsController < ApplicationController
 
   skip_before_filter :check_xhr, only: [:show, :feed]
 
+  def id_for_slug
+    topic = Topic.find_by(slug: params[:slug].downcase)
+    guardian.ensure_can_see!(topic)
+    raise Discourse::NotFound unless topic
+    render json: {slug: topic.slug, topic_id: topic.id, url: topic.url}
+  end
+
   def show
     flash["referer"] ||= request.referer
 

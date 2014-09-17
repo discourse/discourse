@@ -17,6 +17,7 @@ Discourse.Route.buildRoutes(function() {
     this.route('fromParams', { path: '/' });
     this.route('fromParamsNear', { path: '/:nearPost' });
   });
+  this.resource('topicBySlug', { path: '/t/:slug' });
 
   this.resource('discovery', { path: '/' }, function() {
     router = this;

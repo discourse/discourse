@@ -458,9 +458,10 @@ Discourse.Topic.reopenClass({
 
   resetNew: function() {
     return Discourse.ajax("/topics/reset-new", {type: 'PUT'});
+  },
+
+  idForSlug: function(slug) {
+    return Discourse.ajax("/t/id_for/" + slug);
   }
 
-
 });
-
-

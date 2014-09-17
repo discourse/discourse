@@ -542,6 +542,26 @@ describe TopicsController do
     end
   end
 
+  describe 'id_for_slug' do
+    let(:topic) { Fabricate(:post).topic }
+
+    it "returns JSON for the slug" do
+      xhr :get, :id_for_slug, slug: topic.slug
+      response.should be_success
+      json = ::JSON.parse(response.body)
+      json.should be_present
+      json['topic_id'].should == topic.id
+      json['url'].should == topic.url
+      json['slug'].should == topic.slug
+    end
+
+    it "returns invalid access if the user can't see the topic" do
+      Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
+      xhr :get, :id_for_slug, slug: topic.slug
+      response.should_not be_success
+    end
+  end
+
   describe 'show' do
 
     let(:topic) { Fabricate(:post).topic }
