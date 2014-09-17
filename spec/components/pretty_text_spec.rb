@@ -218,6 +218,10 @@ describe PrettyText do
     it "strips links but leaves the text content" do
       expect(PrettyText.strip_links("I'm the linked <a href='http://en.wikipedia.org/wiki/Batman'>batman</a>")).to eq("I'm the linked batman")
     end
+
+    it "escapes the text content" do
+      expect(PrettyText.strip_links("I'm the linked <a href='http://en.wikipedia.org/wiki/Batman'>&lt;batman&gt;</a>")).to eq("I'm the linked &lt;batman&gt;")
+    end
   end
 
   describe "make_all_links_absolute" do
