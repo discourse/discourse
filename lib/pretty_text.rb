@@ -250,7 +250,7 @@ module PrettyText
 
     # If the user is not basic, strip links from their bio
     fragment = Nokogiri::HTML.fragment(string)
-    fragment.css('a').each {|a| a.replace(a.text) }
+    fragment.css('a').each {|a| a.replace(a.inner_html) }
     fragment.to_html
   end
 
