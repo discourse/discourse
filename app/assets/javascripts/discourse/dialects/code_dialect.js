@@ -10,8 +10,6 @@ var acceptableCodeClasses =
    "profile", "python", "r", "rib", "rsl", "ruby", "rust", "scala", "smalltalk", "sql", "tex", "text",
    "vala", "vbscript", "vhdl"];
 
-var textCodeClasses = ["text", "pre"];
-
 function flattenBlocks(blocks) {
   var result = "";
   blocks.forEach(function(b) {
@@ -30,12 +28,7 @@ Discourse.Dialect.replaceBlock({
     if (matches[1] && acceptableCodeClasses.indexOf(matches[1]) !== -1) {
       klass = matches[1];
     }
-
-    if (textCodeClasses.indexOf(matches[1]) !== -1) {
-      return ['p', ['pre', ['code', flattenBlocks(blockContents) ]]];
-    } else  {
-      return ['p', ['pre', ['code', {'class': klass}, flattenBlocks(blockContents) ]]];
-    }
+    return ['p', ['pre', ['code', {'class': klass}, flattenBlocks(blockContents) ]]];
   }
 });
 
