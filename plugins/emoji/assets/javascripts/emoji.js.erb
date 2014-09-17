@@ -54,7 +54,7 @@
     } else {
       var replacement = translations[t];
       Discourse.Dialect.inlineReplace(t, function (token, match, prev) {
-        if (!Discourse.SiteSettings.enable_emoji) { return; }
+        if (!Discourse.SiteSettings.enable_emoji) { return token; }
         return checkPrev(prev) ? imageFor(replacement) : token;
       });
     }
