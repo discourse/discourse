@@ -91,5 +91,17 @@ describe UserUpdater do
         expect(user.reload.user_profile.website).to eq 'http://example.com'
       end
     end
+
+    context 'when custom_fields is empty string' do
+      it "update is successful" do
+        user = Fabricate(:user)
+        user.custom_fields = {'import_username' => 'my_old_username'}
+        user.save
+        updater = described_class.new(acting_user, user)
+
+        updater.update(website: 'example.com', custom_fields: '')
+        user.reload.custom_fields.should == {'import_username' => 'my_old_username'}
+      end
+    end
   end
 end
