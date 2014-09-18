@@ -41,8 +41,9 @@ module Onebox
     private
 
     def record
-      result = cache.fetch(url) { data }
-      cache[url] = result if cache.respond_to?(:key?)
+      url_result = url
+      result = cache.fetch(url_result) { data }
+      cache[url_result] = result if cache.respond_to?(:key?)
       result
     end
 
