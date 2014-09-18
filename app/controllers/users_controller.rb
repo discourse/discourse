@@ -1,6 +1,7 @@
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
 require_dependency 'avatar_upload_service'
+require_dependency 'rate_limiter'
 
 class UsersController < ApplicationController
 
@@ -261,6 +262,9 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit_email!(user)
     lower_email = Email.downcase(params[:email]).strip
 
+    RateLimiter.new(user, "change-email-hr-#{request.remote_ip}", 6, 1.hour).performed!
+    RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute).performed!
+
     # Raise an error if the email is already in use
     if User.find_by_email(lower_email)
       raise Discourse::InvalidParameters.new(:email)
@@ -276,6 +280,8 @@ class UsersController < ApplicationController
     )
 
     render nothing: true
+  rescue RateLimiter::LimitExceeded
+    render_json_error(I18n.t("rate_limiter.slow_down"))
   end
 
   def authorize_email
