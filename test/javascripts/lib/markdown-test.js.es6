@@ -340,9 +340,11 @@ test("Code Blocks", function() {
          "<p>hello<br/>world<br/></p>\n\n<p><pre><code class=\"json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
          "it maintains new lines inside a code block with leading content.");
 
-  cooked("```text\n<header>hello</header>\n```",
-         "<p><pre><code class=\"text\">&lt;header&gt;hello&lt;/header&gt;</code></pre></p>",
+  cooked("```ruby\n<header>hello</header>\n```",
+         "<p><pre><code class=\"ruby\">&lt;header&gt;hello&lt;/header&gt;</code></pre></p>",
          "it escapes code in the code block");
+
+  cooked("```text\ntext\n```", "<p><pre><code>text</code></pre></p>", "handles text without adding class");
 
   cooked("```ruby\n# cool\n```",
          "<p><pre><code class=\"ruby\"># cool</code></pre></p>",
