@@ -16,7 +16,10 @@ class TopicPostersSummary
     TopicPoster.new.tap do |topic_poster|
       topic_poster.user = user
       topic_poster.description = descriptions_for(user)
-      topic_poster.extras = 'latest' if include_latest_class?(user)
+      if topic.last_post_user_id == user.id
+        topic_poster.extras = 'latest'
+        topic_poster.extras << ' single' if user_ids.uniq.size == 1
+      end
     end
   end
 
@@ -27,10 +30,6 @@ class TopicPostersSummary
         descriptions[id] << description
       end
     end
-  end
-
-  def include_latest_class?(user)
-    topic.last_post_user_id == user.id && user_ids.uniq.size > 1
   end
 
   def descriptions_for(user)
