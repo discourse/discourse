@@ -692,8 +692,14 @@ blockquote > *:last-child {
   li {margin-bottom: 10px;}
   i {font-size: 12px;}
 
-  .reply-new, .track-link {
+  .reply-new {
     padding-left: 27px;
+    display:block;
+    overflow:hidden;
+  }
+
+  .track-link {
+    padding-left: 10px;
     display: block;
     overflow: hidden;
     }
