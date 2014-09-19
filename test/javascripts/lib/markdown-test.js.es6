@@ -458,7 +458,7 @@ test("urlAllowed", function() {
   allowed("//eviltrout.com/evil/trout", "allows protocol relative urls");
 
   equal(urlAllowed("http://google.com/test'onmouseover=alert('XSS!');//.swf"),
-        "http://google.com/test&#39;onmouseover=alert(&#39;XSS!&#39;);//.swf",
+        "http://google.com/test%27onmouseover=alert(%27XSS!%27);//.swf",
         "escape single quotes");
 });
 
