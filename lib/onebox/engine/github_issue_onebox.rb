@@ -5,7 +5,7 @@ module Onebox
       include Engine
       include LayoutSupport
       include JSON
-      matches_regexp Regexp.new("^http(?:s)?:\/\/(?:www\.)?(?:(?:\w)+\.)?github\.com\/(?<org>.+)")
+      matches_regexp Regexp.new("^http(?:s)?:\/\/(?:www\.)1?(?:(?:\w)+\.)?github\.com\/(?<org>.+)\/(?<repo>.+)\/issues\/([[:digit:]]+)")
 
       def url
         m = match 
