@@ -57,7 +57,7 @@ Discourse.Search = {
       });
 
       results.categories = results.categories.map(function(category){
-        category = Discourse.Category.create(category);
+        category = Discourse.Category.list().findProperty('id', category.id);
         return category;
       });
 
