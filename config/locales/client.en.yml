@@ -292,7 +292,7 @@ en:
       no_other_accounts: (none)
 
     user:
-      said: "{{username}} said:"
+      said: "{{username}}:"
       profile: "Profile"
       mute: "Mute"
       edit: "Edit Preferences"
