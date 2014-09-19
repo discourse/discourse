@@ -152,6 +152,9 @@ class Search
         elsif word == 'order:latest'
           @order = :latest
           nil
+        elsif word =~ /category:(.+)/
+          @category_id = Category.find_by('name ilike ?', $1).try(:id)
+          nil
         else
           word
         end
@@ -275,6 +278,10 @@ class Search
                        .order("posts.post_number")
         end
 
+      end
+
+      if @category_id
+        posts = posts.where("topics.category_id = ?", @category_id)
       end
 
       if @order == :latest
