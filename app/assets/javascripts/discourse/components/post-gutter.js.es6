@@ -37,10 +37,7 @@ export default Em.Component.extend({
             clicks = Em.get(l, 'clicks');
 
         buffer.push("<li><a href='" + Em.get(l, 'url') + "' class='track-link'>");
-        /* suppress right arrow as it is the common, expected case */
-        if (direction == 'left') {
-          buffer.push("<i class='fa fa-arrow-" + direction + "'></i>");
-        }
+        /* suppress both left and right arrow for now */
         var title = Em.get(l, 'title');
         if (!Em.isEmpty(title)) {
           buffer.push(Handlebars.Utils.escapeExpression(title));
