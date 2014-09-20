@@ -102,6 +102,7 @@ require_relative "engine/html"
 require_relative "engine/json"
 require_relative "engine/amazon_onebox"
 require_relative "engine/classic_google_maps_onebox"
+require_relative "engine/github_issue_onebox"
 require_relative "engine/github_blob_onebox"
 require_relative "engine/github_commit_onebox"
 # broken

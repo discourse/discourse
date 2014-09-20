@@ -1,0 +1,29 @@
+<a href="{{user.html_url}}">
+<img src="{{avatar}}" class="thumbnail">
+</a>
+
+<h4><a href="{{link}}" target="_blank">{{title}}</a></h4>
+
+<div class="date" style="margin-top:10px;">
+	<div class="status">
+	<span style="background-color: {{status_color}};padding: 2px;border-radius: 4px;color: #fff;">{{status}}</span>
+	</div>
+	<div class="user" style="margin-top:10px;">
+	opened by <a href="{{user.html_url}}" target="_blank">{{user.login}}</a> 
+	on <a href="{{link}}" target="_blank">{{created_at}}</a>
+	</div>
+	<div class="user">
+	{{#closed_by}}
+	closed by <a href="{{html_url}}" target="_blank">{{login}}</a> 
+	on <a href="{{link}}" target="_blank">{{closed_at}}</a>
+	{{/closed_by}}
+	</div>
+</div>
+
+<pre class='content' style="white-space: pre-wrap;">{{content}}</pre>
+
+<div class='lables'>
+	{{#labels}}
+ 	<span style="display:inline-block;margin-top:2px;background-color: #B8B8B8;padding: 2px;border-radius: 4px;color: #fff;margin-left: 3px;">{{name}}</span>
+ 	{{/labels}}
+</div>
