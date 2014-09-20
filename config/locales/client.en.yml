@@ -1275,7 +1275,6 @@ en:
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
-      everyone_permission: "everyone"
       this_year: "this year"
       position: "position"
       default_position: "Default Position"
