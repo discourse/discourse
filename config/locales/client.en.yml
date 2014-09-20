@@ -395,7 +395,7 @@ en:
         ok: "Your name looks good."
       username:
         title: "Username"
-        instructions: "Must be unique, no spaces, short."
+        instructions: "Unique, no spaces, short."
         short_instructions: "People can mention you as @{{username}}."
         available: "Your username is available."
         global_match: "Email matches the registered username."
@@ -488,7 +488,7 @@ en:
         too_short: "Your password is too short."
         common: "That password is too common."
         ok: "Your password looks good."
-        instructions: "Must be at least %{count} characters."
+        instructions: "At least %{count} characters."
 
       ip_address:
         title: "Last IP Address"
