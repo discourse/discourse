@@ -13,7 +13,7 @@ describe Onebox::Engine::FlashVideoOnebox do
 
     it "generates a flash video" do
       expect(@o.to_html).to match_html(
-        "<object width='100%' height='100%'><param name='http://player.56.com/v_OTMyNTk1MzE.swf' value='http://player.56.com/v_OTMyNTk1MzE.swf'><embed src='http://player.56.com/v_OTMyNTk1MzE.swf' width='100%' height='100%'></embed></object>" 
+        "<object style="" width='100%' height='100%'><param name='http://player.56.com/v_OTMyNTk1MzE.swf' value='http://player.56.com/v_OTMyNTk1MzE.swf'><embed src='http://player.56.com/v_OTMyNTk1MzE.swf' style="" width='100%' height='100%'></embed></object>" 
       )
     end
   end
