@@ -55,7 +55,7 @@ Discourse.BBCode.register = function(codeName, args, emitter) {
           }
         });
       }
-      if (!args.singlePara && contents.length === 1) {
+      if (!args.singlePara && contents.length === 1 && contents[0] instanceof Array && contents[0][0] === "para") {
         contents[0].shift();
         contents = contents[0];
       }
