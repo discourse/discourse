@@ -6,6 +6,9 @@
   @namespace Discourse
   @module Discourse
 **/
+
+var originalZIndex;
+
 export default Discourse.View.extend({
   tagName: 'header',
   classNames: ['d-header', 'clearfix'],
@@ -18,7 +21,16 @@ export default Discourse.View.extend({
         $li = $target.closest('li'),
         $ul = $target.closest('ul'),
         $html = $('html'),
+        $header = $('header'),
+        replyZIndex = parseInt($('#reply-control').css('z-index'), 10),
         self = this;
+
+
+    originalZIndex = originalZIndex || $('header').css('z-index');
+
+    if(replyZIndex > 0) {
+      $header.css("z-index", replyZIndex + 1);
+    }
 
     var controller = self.get('controller');
     if(controller && !controller.isDestroyed){
@@ -38,6 +50,7 @@ export default Discourse.View.extend({
     }
 
     var hideDropdown = function() {
+      $header.css("z-index", originalZIndex);
       $dropdown.fadeOut('fast');
       $li.removeClass('active');
       $html.data('hide-dropdown', null);
