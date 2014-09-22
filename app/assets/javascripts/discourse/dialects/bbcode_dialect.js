@@ -136,7 +136,6 @@ Discourse.BBCode.replaceBBCode('li', function(contents) { return ['li'].concat(D
 
 Discourse.BBCode.rawBBCode('img', function(contents) { return ['img', {href: contents}]; });
 Discourse.BBCode.rawBBCode('email', function(contents) { return ['a', {href: "mailto:" + contents, 'data-bbcode': true}, contents]; });
-Discourse.BBCode.rawBBCode('url', function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; });
 Discourse.BBCode.rawBBCode('spoiler', function(contents) {
   if (/<img/i.test(contents)) {
     return ['div', { 'class': 'spoiler' }, contents];
@@ -145,8 +144,17 @@ Discourse.BBCode.rawBBCode('spoiler', function(contents) {
   }
 });
 
-Discourse.BBCode.replaceBBCodeParamsRaw("url", function(param, contents) {
-  return ['a', {href: param, 'data-bbcode': true}].concat(contents);
+Discourse.BBCode.register('url', function(contents, params) {
+  if (!params) {
+    if (contents && contents.length) {
+      var tag = contents[0];
+      if (tag && tag.length === 3 && tag[1].href) {
+        return ['a', {'href': tag[1].href, 'data-bbcode': true}, tag[1].href];
+      }
+    }
+    return;
+  }
+  return ['a', {'href': params, 'data-bbcode': true}].concat(contents);
 });
 
 Discourse.BBCode.replaceBBCodeParamsRaw("email", function(param, contents) {
