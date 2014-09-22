@@ -8,7 +8,7 @@ class TopicsBulkAction
   end
 
   def self.operations
-    %w(change_category close change_notification_level reset_read dismiss_posts delete)
+    %w(change_category close archive change_notification_level reset_read dismiss_posts delete)
   end
 
   def perform!
@@ -56,6 +56,15 @@ class TopicsBulkAction
       topics.each do |t|
         if guardian.can_moderate?(t)
           t.update_status('closed', true, @user)
+          @changed_ids << t.id
+        end
+      end
+    end
+
+    def archive
+      topics.each do |t|
+        if guardian.can_moderate?(t)
+          t.update_status('archived', true, @user)
           @changed_ids << t.id
         end
       end
