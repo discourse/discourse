@@ -397,6 +397,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
     rebakePost: function (post) {
       post.rebake();
+    },
+
+    unhidePost: function (post) {
+      post.unhide();
     }
   },
 
@@ -512,30 +516,30 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       }
 
       var postStream = topicController.get('postStream');
-      if (data.type === "revised" || data.type === "acted") {
-        // TODO we could update less data for "acted"
-        // (only post actions)
-        postStream.triggerChangedPost(data.id, data.updated_at);
-        return;
+      switch (data.type) {
+        case "revised":
+        case "acted":
+        case "rebaked": {
+          // TODO we could update less data for "acted" (only post actions)
+          postStream.triggerChangedPost(data.id, data.updated_at);
+          return;
+        }
+        case "deleted": {
+          postStream.triggerDeletedPost(data.id, data.post_number);
+          return;
+        }
+        case "recovered": {
+          postStream.triggerRecoveredPost(data.id, data.post_number);
+          return;
+        }
+        case "created": {
+          postStream.triggerNewPostInStream(data.id);
+          return;
+        }
+        default: {
+          Em.Logger.warn("unknown topic bus message type", data);
+        }
       }
-
-      if (data.type === "deleted") {
-        postStream.triggerDeletedPost(data.id, data.post_number);
-        return;
-      }
-
-      if (data.type === "recovered") {
-        postStream.triggerRecoveredPost(data.id, data.post_number);
-        return;
-      }
-
-      if (data.type === "created") {
-        postStream.triggerNewPostInStream(data.id);
-        return;
-      }
-
-      // log a warning
-      Em.Logger.warn("unknown topic bus message type", data);
     });
   },
 

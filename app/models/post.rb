@@ -293,6 +293,7 @@ class Post < ActiveRecord::Base
     self.update_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
     self.topic.update_attributes(visible: true)
     save(validate: false)
+    publish_change_to_clients!(:acted)
   end
 
   def url
@@ -351,6 +352,8 @@ class Post < ActiveRecord::Base
 
     # make sure we trigger the post process
     trigger_post_process(true)
+
+    publish_change_to_clients!(:rebaked)
 
     new_cooked != old_cooked
   end

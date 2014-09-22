@@ -823,6 +823,8 @@ describe Post do
       Post.exec_sql("UPDATE posts SET cooked = 'frogs' WHERE id = ?", post.id)
       post.reload
 
+      post.expects(:publish_change_to_clients!).with(:rebaked)
+
       result = post.rebake!
 
       post.baked_at.should_not == first_baked
@@ -856,6 +858,8 @@ describe Post do
       post.reload
 
       post.hidden.should == true
+
+      post.expects(:publish_change_to_clients!).with(:acted)
 
       post.unhide!
       post.reload
