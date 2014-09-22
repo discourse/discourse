@@ -43,8 +43,7 @@
     // Used to work around some browser bugs where we can't use feature testing.
         uaSniffed = {
             isIE: /msie/.test(nav.userAgent.toLowerCase()),
-            isIE_5or6: /msie 6/.test(nav.userAgent.toLowerCase()) || /msie 5/.test(nav.userAgent.toLowerCase()),
-            isOpera: /opera/.test(nav.userAgent.toLowerCase())
+            isIE_5or6: /msie 6/.test(nav.userAgent.toLowerCase()) || /msie 5/.test(nav.userAgent.toLowerCase())
         };
 
     var defaultsStrings = {
@@ -743,7 +742,7 @@
                 return;
             }
 
-            if (inputArea.selectionStart !== undefined && !uaSniffed.isOpera) {
+            if (inputArea.selectionStart !== undefined) {
 
                 inputArea.focus();
                 inputArea.selectionStart = stateObj.start;
@@ -1325,10 +1324,6 @@
         makeSpritedButtonRow();
 
         var keyEvent = "keydown";
-        if (uaSniffed.isOpera) {
-            keyEvent = "keypress";
-        }
-
         util.addEvent(inputBox, keyEvent, function (key) {
 
             // Check to see if we have a button key and, if so execute the callback.
