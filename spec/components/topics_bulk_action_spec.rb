@@ -122,4 +122,31 @@ describe TopicsBulkAction do
       end
     end
   end
+
+  describe "archive" do
+    let(:topic) { Fabricate(:topic) }
+
+    context "when the user can moderate the topic" do
+      it "archives the topic and returns the topic_id" do
+        Guardian.any_instance.expects(:can_moderate?).returns(true)
+        Guardian.any_instance.expects(:can_create?).returns(true)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'archive')
+        topic_ids = tba.perform!
+        topic_ids.should == [topic.id]
+        topic.reload
+        topic.should be_archived
+      end
+    end
+
+    context "when the user can't edit the topic" do
+      it "doesn't archive the topic" do
+        Guardian.any_instance.expects(:can_moderate?).returns(false)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'archive')
+        topic_ids = tba.perform!
+        topic_ids.should be_blank
+        topic.reload
+        topic.should_not be_archived
+      end
+    end
+  end
 end
