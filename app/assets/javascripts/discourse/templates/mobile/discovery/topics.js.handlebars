@@ -1,10 +1,10 @@
 <div class='contents'>
+  {{#if top}}
+    <div class='top-lists'>
+      {{top-period-chooser period=period}}
+    </div>
+  {{/if}}
   {{#if showTable}}
-    {{#if top}}
-      <div class='top-lists'>
-        {{top-period-chooser period=period}}
-      </div>
-    {{/if}}
     <table class='topic-list'>
       {{#if topicTrackingState.hasIncoming}}
         <tbody>
