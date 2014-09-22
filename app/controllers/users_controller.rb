@@ -182,7 +182,8 @@ class UsersController < ApplicationController
       render json: {
         success: true,
         active: user.active?,
-        message: activation.message
+        message: activation.message,
+        user_id: user.id
       }
     else
       render json: {
@@ -501,10 +502,14 @@ class UsersController < ApplicationController
     end
 
     def suspicious?(params)
+      return false if current_user && is_api? && current_user.admin?
+
       honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
     end
 
     def honeypot_or_challenge_fails?(params)
+      return false if is_api?
+
       params[:password_confirmation] != honeypot_value ||
         params[:challenge] != challenge_value.try(:reverse)
     end
