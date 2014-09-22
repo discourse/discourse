@@ -101,6 +101,7 @@ describe Admin::BackupsController do
     describe ".show" do
 
       it "uses send_file to transmit the backup" do
+        FileUtils.mkdir_p Backup.base_directory
         File.open(Backup.base_directory << "/" << backup_filename, "w") do |f|
           f.write("hello")
         end
