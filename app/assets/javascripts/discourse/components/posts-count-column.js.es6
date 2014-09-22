@@ -41,11 +41,6 @@ export default Ember.Component.extend({
   click: function() {
     var topic = this.get('topic');
 
-    if (Discourse.Mobile.mobileView) {
-      Discourse.URL.routeTo(topic.get('lastPostUrl'));
-      return false;
-    }
-
     this.sendAction('action', {
       topic: topic,
       position: this.$('a').position()
