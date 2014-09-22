@@ -9,7 +9,10 @@
 <% @topic_view.posts.each do |post| %>
   <% if post.user %>
     <div class='creator'>
-      <b><%= post.user.username_lower %></b> <%= "(#{post.user.name})" if SiteSetting.display_name_on_posts %> — <%= post.created_at.to_formatted_s(:iso8601) %> — #<%= post.post_number %>
+      <b><%= post.user.username_lower %></b>
+       <%= "(#{post.user.name})" if SiteSetting.display_name_on_posts %> —
+       <%= post.created_at.to_formatted_s(:iso8601) %> —
+       #<%= post.post_number %>
     </div>
     <div class='post'>
       <% if post.hidden %>
