@@ -101,13 +101,16 @@ describe Admin::BackupsController do
     describe ".show" do
 
       it "uses send_file to transmit the backup" do
-        controller.stubs(:render) # we need this since we're stubing send_file
+        File.open(Backup.base_directory << "/" << backup_filename, "w") do |f|
+          f.write("hello")
+        end
 
-        backup = Backup.new("backup42")
-        Backup.expects(:[]).with(backup_filename).returns(backup)
-        subject.expects(:send_file).with(backup.path)
+        Backup.create_from_filename(backup_filename)
 
         get :show, id: backup_filename
+
+        response.headers['Content-Length'].should == 5
+        response.headers['Content-Disposition'].should =~ /attachment; filename/
       end
 
       it "returns 404 when the backup does not exist" do
