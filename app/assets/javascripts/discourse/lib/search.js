@@ -86,4 +86,3 @@ Discourse.Search = {
   }
 
 };
-
