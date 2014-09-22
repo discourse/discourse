@@ -25,6 +25,11 @@ test('basic bbcode', function() {
   format("[b]strong [b]stronger[/b][/b]", "<span class=\"bbcode-b\">strong <span class=\"bbcode-b\">stronger</span></span>", "accepts nested bbcode tags");
 });
 
+test('url with images', function() {
+  format("[url=http://www.example.com][img]http://example.com/logo.png[/img][/url]",
+         "<a href=\"http://www.example.com\"><img src=\"http://example.com/logo.png\"></a>",
+         "supports [url] with an embedded [img]");
+});
 test('invalid bbcode', function() {
   var cooked = Discourse.Markdown.cook("[code]I am not closed\n\nThis text exists.", {lookupAvatar: false});
   equal(cooked, "<p>[code]I am not closed</p>\n\n<p>This text exists.</p>", "does not raise an error with an open bbcode tag.");
