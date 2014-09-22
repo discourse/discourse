@@ -73,6 +73,12 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
       });
     },
 
+    archiveTopics: function() {
+      this.forEachPerformed({type: 'archive'}, function(t) {
+        t.set('archived', true);
+      });
+    },
+
     changeCategory: function() {
       var categoryId = parseInt(this.get('newCategoryId'), 10) || 0,
           category = Discourse.Category.findById(categoryId),
