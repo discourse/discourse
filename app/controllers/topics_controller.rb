@@ -58,7 +58,7 @@ class TopicsController < ApplicationController
     end
 
     page = params[:page].to_i
-    if (page - 1) * SiteSetting.posts_per_page > @topic_view.topic.highest_post_number
+    if (page < 0) || ((page - 1) * SiteSetting.posts_per_page > @topic_view.topic.highest_post_number)
       raise Discourse::NotFound
     end
 
