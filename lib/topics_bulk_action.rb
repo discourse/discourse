@@ -61,6 +61,15 @@ class TopicsBulkAction
       end
     end
 
+    def archive
+      topics.each do |t|
+        if guardian.can_moderate?(t)
+          t.update_status('archived', true, @user)
+          @changed_ids << t.id
+        end
+      end
+    end
+
     def delete
       topics.each do |t|
         t.trash! if guardian.can_delete?(t)

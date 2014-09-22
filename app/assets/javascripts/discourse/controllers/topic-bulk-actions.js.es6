@@ -74,7 +74,7 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
     },
 
     archiveTopics: function() {
-      this.forEachPerformed({type: 'archived'}, function(t) {
+      this.forEachPerformed({type: 'archive'}, function(t) {
         t.set('archived', true);
       });
     },
