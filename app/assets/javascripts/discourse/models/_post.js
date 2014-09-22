@@ -404,6 +404,10 @@ Discourse.Post = Discourse.Model.extend({
 
   rebake: function () {
     return Discourse.ajax("/posts/" + this.get("id") + "/rebake", { type: "PUT" });
+  },
+
+  unhide: function () {
+    return Discourse.ajax("/posts/" + this.get("id") + "/unhide", { type: "PUT" });
   }
 });
 

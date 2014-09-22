@@ -1112,6 +1112,7 @@ en:
         convert_to_moderator: "Add Staff Color"
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
+        unhide: "Unhide"
 
       actions:
         flag: 'Flag'

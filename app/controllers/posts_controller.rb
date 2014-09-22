@@ -261,6 +261,16 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def unhide
+    post = find_post_from_params
+
+    guardian.ensure_can_unhide!(post)
+
+    post.unhide!
+
+    render nothing: true
+  end
+
   def flagged_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_flagged_posts!

@@ -265,6 +265,7 @@ Discourse::Application.routes.draw do
     put "wiki"
     put "post_type"
     put "rebake"
+    put "unhide"
     get "replies"
     get "revisions/:revision" => "posts#revisions"
     put "recover"

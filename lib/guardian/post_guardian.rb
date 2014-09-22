@@ -184,4 +184,8 @@ module PostGuardian
   def can_see_deleted_posts?
     is_staff?
   end
+
+  def can_unhide?(post)
+    post.try(:hidden) && is_staff?
+  end
 end
