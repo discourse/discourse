@@ -21,13 +21,16 @@ test("basic cooking", function() {
   cooked("__bold__", "<p><strong>bold</strong></p>", "it bolds text.");
   cooked("*trout*", "<p><em>trout</em></p>", "it italicizes text.");
   cooked("_trout_", "<p><em>trout</em></p>", "it italicizes text.");
-  cooked("*this is italic **with some bold** inside*", "<p><em>this is italic <strong>with some bold</strong> inside</em></p>", "it handles nested bold in italics");
   cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
   cooked("word_with_underscores", "<p>word_with_underscores</p>", "it doesn't do intraword italics");
   cooked("common/_special_font_face.html.erb", "<p>common/_special_font_face.html.erb</p>", "it doesn't intraword with a slash");
   cooked("hello \\*evil\\*", "<p>hello *evil*</p>", "it supports escaping of asterisks");
   cooked("hello \\_evil\\_", "<p>hello _evil_</p>", "it supports escaping of italics");
   cooked("brussel sproutes are *awful*.", "<p>brussel sproutes are <em>awful</em>.</p>", "it doesn't swallow periods.");
+});
+
+test("Nested bold and italics", function() {
+  cooked("*this is italic **with some bold** inside*", "<p><em>this is italic <strong>with some bold</strong> inside</em></p>", "it handles nested bold in italics");
 });
 
 test("Traditional Line Breaks", function() {
@@ -145,7 +148,7 @@ test("Links", function() {
 
   cooked("[Link](http://www.example.com) (with an outer \"description\")",
          "<p><a href=\"http://www.example.com\">Link</a> (with an outer \"description\")</p>",
-         "it doesn't consume closing parens as part of the url")
+         "it doesn't consume closing parens as part of the url");
 });
 
 test("simple quotes", function() {
@@ -274,6 +277,11 @@ test("bold and italics", function() {
   cooked("**hello **", "<p>**hello **</p>", "does not bold on a space boundary");
   cooked("你**hello**", "<p>你**hello**</p>", "does not bold chinese intra word");
   cooked("**你hello**", "<p><strong>你hello</strong></p>", "allows bolded chinese");
+});
+
+test("Escaping", function() {
+  cooked("*\\*laughs\\**", "<p><em>*laughs*</em></p>", "allows escaping strong");
+  cooked("*\\_laughs\\_*", "<p><em>_laughs_</em></p>", "allows escaping em");
 });
 
 test("New Lines", function() {
