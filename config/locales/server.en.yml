@@ -1457,7 +1457,7 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         We couldn't find any content in the email. Make sure that you wrote something at the top of the email - we can't parse inline replies.
-        If you're getting this and you did include content, try again in UTF-8 plain text (no HTML).
+        If you're getting this and you did include content, try again with HTML content included in your email (not just plain text only).
 
     email_reject_parsing:
       subject_template: "Email issue -- Content unrecognized"
