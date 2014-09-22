@@ -66,7 +66,7 @@ class UserUpdater
       user_profile.send("#{attribute}=", attributes[attribute])
     end
 
-    if fields = attributes[:custom_fields] and fields.present?
+    if fields = attributes[:custom_fields] && fields.present?
       user.custom_fields = fields
     end
 
