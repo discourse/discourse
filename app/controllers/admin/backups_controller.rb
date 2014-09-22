@@ -46,6 +46,7 @@ class Admin::BackupsController < Admin::AdminController
   def show
     filename = params.fetch(:id)
     if backup = Backup[filename]
+      headers['Content-Length'] = File.size(backup.path)
       send_file backup.path
     else
       render nothing: true, status: 404
