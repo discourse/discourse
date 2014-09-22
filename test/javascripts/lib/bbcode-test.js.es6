@@ -65,6 +65,9 @@ test("size tags", function() {
   format("[size=35]NEWLINE\n\ntest[/size]",
          "<span class=\"bbcode-size-35\"><p>NEWLINE</p><p>test</p></span>",
          "works with newlines");
+  format("[size=35][quote=\"user\"]quote[/quote][/size]",
+         "<span class=\"bbcode-size-35\"><aside class=\"quote\"><div class=\"title\"><div class=\"quote-controls\"></div>user:</div><blockquote><p>quote</p></blockquote></aside></span>",
+         "works with nested complex blocks");
 });
 
 test("quotes", function() {
