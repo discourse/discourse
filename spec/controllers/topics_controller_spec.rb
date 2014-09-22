@@ -573,6 +573,11 @@ describe TopicsController do
       response.should be_success
     end
 
+    it 'return 404 for an invalid page' do
+      xhr :get, :show, topic_id: topic.id, slug: topic.slug, page: 2
+      response.code.should == "404"
+    end
+
     it 'can find a topic given a slug in the id param' do
       xhr :get, :show, id: topic.slug
       expect(response).to redirect_to(topic.relative_url)
