@@ -57,6 +57,11 @@ class TopicsController < ApplicationController
       redirect_to_correct_topic(topic, opts[:post_number]) && return
     end
 
+    page = params[:page].to_i
+    if (page - 1) * SiteSetting.posts_per_page > @topic_view.topic.highest_post_number
+      raise Discourse::NotFound
+    end
+
     discourse_expires_in 1.minute
 
     redirect_to_correct_topic(@topic_view.topic, opts[:post_number]) && return if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
