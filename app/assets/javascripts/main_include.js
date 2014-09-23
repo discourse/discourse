@@ -12,6 +12,7 @@
 //= require_tree ./discourse/mixins
 //= require ./discourse/lib/markdown
 //= require ./discourse/lib/computed
+//= require ./discourse/lib/search-for-term
 //= require ./discourse/views/view
 //= require ./discourse/views/container
 //= require ./discourse/lib/debounce
