@@ -346,7 +346,8 @@ describe CookedPostProcessor do
       before { SiteSetting.expects(:download_remote_images_threshold).returns(75) }
 
       it "disables download_remote_images_threshold and send a notification to the admin" do
-        SystemMessage.expects(:create).with(Discourse.site_contact_user, :download_remote_images_disabled).once
+        StaffActionLogger.any_instance.expects(:log_site_setting_change).once
+        SystemMessage.expects(:create_from_system_user).with(Discourse.site_contact_user, :download_remote_images_disabled).once
         cpp.disable_if_low_on_disk_space.should == true
         SiteSetting.download_remote_images_to_local.should == false
       end
