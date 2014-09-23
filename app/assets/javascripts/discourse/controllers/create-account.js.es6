@@ -347,8 +347,12 @@ export default DiscourseController.extend(ModalFunctionality, {
       var challenge = this.get('accountChallenge');
       return Discourse.User.createAccount(name, email, password, username, passwordConfirm, challenge).then(function(result) {
         if (result.success) {
-          self.flash(result.message);
-          self.set('complete', true);
+          // Trigger the browser's password manager using the hidden static login form:
+          var $hidden_login_form = $('#hidden-login-form');
+          $hidden_login_form.find('input[name=username]').val(self.get('accountName'));
+          $hidden_login_form.find('input[name=password]').val(self.get('accountPassword'));
+          $hidden_login_form.find('input[name=redirect]').val(Discourse.getURL('/users/account-created'));
+          $hidden_login_form.submit();
         } else {
           self.flash(result.message || I18n.t('create_account.failed'), 'error');
           if (result.errors && result.errors.email && result.errors.email.length > 0 && result.values) {

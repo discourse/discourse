@@ -52,9 +52,7 @@ test("create account", function() {
 
   click('.modal-footer .btn-primary');
   andThen(function() {
-    not(exists('.modal-body'), 'it hides the body when finished');
+    ok(exists('.modal-footer .btn-primary:disabled'), "create account is disabled");
   });
 
 });
-
-
