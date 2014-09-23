@@ -245,8 +245,8 @@ Discourse::Application.routes.draw do
   get "user_avatar/:hostname/:username/:size/:version.png" => "user_avatars#show",
       format: false, constraints: {hostname: /[\w\.-]+/}
 
-
   get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
+  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-z0-9]{40}/}
   post "uploads" => "uploads#create"
 
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
