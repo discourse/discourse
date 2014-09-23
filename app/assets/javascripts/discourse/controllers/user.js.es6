@@ -8,6 +8,10 @@ export default ObjectController.extend({
 
   collapsedInfo: Em.computed.not('indexStream'),
 
+  showEmailOnProfile: Discourse.computed.setting('show_email_on_profile'),
+
+  showEmail: Ember.computed.and('email', 'showEmailOnProfile'),
+
   websiteName: function() {
     var website = this.get('website');
     if (Em.isEmpty(website)) { return; }
