@@ -36,7 +36,7 @@
 .modal-body {
   overflow-y: auto;
   max-height: 400px;
-  padding: 10px 15px 10px 15px;
+  padding: 10px 0 10px 15px;
 }
 
 // an ember metamorph is inserted between btn's sometimes, breaking this rule, but only on mobile for some reason:
@@ -57,18 +57,16 @@
   h3 {
     color: $quaternary;
     font-size: 15px;
-    padding-left: 20px;
+    padding-left: 15px;
     margin-bottom: 5px;
   }
 }
 .close {
   float: right;
   font-size: 24px;
-  padding: 15px; // more pixels to touch
+  padding: 15px 15px 5px 5px;
   margin: -15px 0 0 0;
-  text-decoration: none;
   color: $primary;
-  cursor: pointer;
 }
 
 #move-selected {
