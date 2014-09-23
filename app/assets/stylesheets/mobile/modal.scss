@@ -49,10 +49,16 @@
   margin-left: -1px;
 }
 .modal-header {
+  // we need tighter spacing on mobile for header
+  // this clearfix under the modal title h3 pushes it way down
+  .clearfix {
+    display:none;
+  }
   h3 {
     color: $quaternary;
     font-size: 15px;
-    padding: 0 0 0 20px;
+    padding-left: 20px;
+    margin-bottom: 5px;
   }
 }
 .close {
