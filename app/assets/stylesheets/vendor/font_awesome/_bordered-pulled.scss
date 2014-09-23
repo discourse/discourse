@@ -7,8 +7,7 @@
   border-radius: .1em;
 }
 
-.pull-right { float: right; }
-.pull-left { float: left; }
+// dupe pull-left and pull-right removed from here
 
 .#{$fa-css-prefix} {
   &.pull-left { margin-right: .3em; }
