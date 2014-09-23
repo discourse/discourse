@@ -1291,7 +1291,7 @@ en:
 
         - For search, your user page, or the menu, use the **icon buttons at the upper right**.
 
-        - In a list of topics, the title will always take you to your next unread post. Use the last activity time to jump to the last post.
+        - Any topic title will always take you to your next unread post in that topic. Use the last activity time and post count to enter at the top or bottom.
 
         - While reading a topic, jump to the top &uarr; by selecting the topic title. Select the green progress bar at the bottom right for full navigation controls, or use the <kbd>home</kbd> and <kbd>end</kbd> keys.
 
@@ -1305,7 +1305,7 @@ en:
 
         - To reply to a specific post, use the Reply button <img src="/images/welcome/reply-post.png" width="29" height="25"> on that post.
 
-        - To take the conversation in a different direction, but keep them linked together, use Reply as New Topic <img src="/images/welcome/reply-as-new-topic.png" width="33" height="25"> to the right of the post.
+        - To take the conversation in a different direction, but keep them linked together, use <img src="/images/welcome/reply-as-new-topic.png" width="25" height="25"> Reply as linked Topic to the right of the post.
 
         To quote someone in your reply, select the text you wish to quote, then press any Reply button.
 
