@@ -144,6 +144,9 @@
               {{#if invited_by}}
                 <dt>{{i18n user.invited_by}}</dt><dd>{{#link-to 'user' invited_by}}{{invited_by.username}}{{/link-to}}</dd>
               {{/if}}
+              {{#if showEmail}}
+                <dt>{{i18n user.email.title}}</dt><dd {{bind-attr title="email"}}>{{email}}</dd>
+              {{/if}}
               <dt>{{i18n user.trust_level}}</dt><dd>{{trustLevel.name}}</dd>
             </dl>
             {{plugin-outlet "user-profile-secondary"}}
