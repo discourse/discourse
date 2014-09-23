@@ -14,7 +14,8 @@ module Jobs
 
       grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
 
-      Upload.where("created_at < ?", grace_period.hour.ago)
+      Upload.where("created_at < ? AND
+                   (retain_hours IS NULL OR created_at < current_timestamp - interval '1 hour' * retain_hours )", grace_period.hour.ago)
             .where("id NOT IN (SELECT upload_id from post_uploads)")
             .where("id NOT IN (SELECT custom_upload_id from user_avatars)")
             .where("id NOT IN (SELECT gravatar_upload_id from user_avatars)")
