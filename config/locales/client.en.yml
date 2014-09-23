@@ -1045,7 +1045,7 @@ en:
       post_number: "post {{number}}"
       in_reply_to: "reply to"
       last_edited_on: "post last edited on"
-      reply_as_new_topic: "Reply as new Topic"
+      reply_as_new_topic: "Reply as linked Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
       show_full: "Show Full Post"
@@ -2113,7 +2113,7 @@ en:
         star: '<b>f</b> Star topic'
         share_topic: '<b>shift s</b> Share topic'
         share_post: '<b>s</b> Share post'
-        reply_as_new_topic: '<b>t</b> Reply as new topic'
+        reply_as_new_topic: '<b>t</b> Reply as linked topic'
         reply_topic: '<b>shift r</b> Reply to topic'
         reply_post: '<b>r</b> Reply to post'
         quote_post: '<b>q</b> Quote post'
