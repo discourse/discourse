@@ -37,6 +37,7 @@
   overflow-y: auto;
   max-height: 400px;
   padding: 10px 0 10px 15px;
+  width: 95%;
 }
 
 // an ember metamorph is inserted between btn's sometimes, breaking this rule, but only on mobile for some reason:
@@ -56,7 +57,7 @@
   }
   h3 {
     color: $quaternary;
-    font-size: 15px;
+    font-size: 18px;
     padding-left: 15px;
     margin-bottom: 5px;
   }
@@ -64,7 +65,7 @@
 .close {
   float: right;
   font-size: 24px;
-  padding: 15px 15px 5px 5px;
+  padding: 10px 15px 5px 5px;
   margin: -15px 0 0 0;
   color: $primary;
 }
