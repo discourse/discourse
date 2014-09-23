@@ -166,6 +166,9 @@ pl_PL:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Ostrzeżenie można dołączać jedynie do prywatnych wiadomości."
+              too_many_users: "Jedno ostrzeżenie możesz wysłać tylko do pojedynczego użytkownika."
             archetype:
               cant_send_pm: "Przepraszamy, nie możesz wysłać prywatnej wiadomości do tego użytkownika."
         user:
@@ -236,6 +239,8 @@ pl_PL:
       title: "zwykły"
     leader:
       title: "regularny"
+    elder:
+      title: "starszyzna"
     change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Ta akcja została wykonana zbyt wiele razy, próbuj ponownie za jakiś czas"
@@ -580,7 +585,7 @@ pl_PL:
       description: "Wiadomość jaka zostanie umieszczona na początku każdego powiadomienia email."
   site_settings:
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
-    allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  preferencjach"
+    allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"
     min_post_length: "Minimalna długość wpisu w znakach"
     min_private_message_post_length: "Minimalna długość wpisu w znakach dla prywatnych wiadomości"
     max_post_length: "Maksymalna długość wpisu, w znakach"
@@ -618,7 +623,7 @@ pl_PL:
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    auto_track_topics_after: "Liczba milisekund zanim temat jest automatycznie dodany do śledzonych. użytkownik może nadpisać tę wartość w swoich preferencjach  (0 zawsze, -1 nigdy)"
+    auto_track_topics_after: "Liczba milisekund zanim temat jest automatycznie dodany do śledzonych. użytkownik może nadpisać tę wartość w swoich ustawieniach (0 zawsze, -1 nigdy)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
@@ -714,6 +719,8 @@ pl_PL:
     pinned_disabled: "Temat został odpięty. Już nie będzie pojawiać się na początku swojej kategorii."
     pinned_globally_enabled: "Temat został przypięty globalnie. Będzie pojawiać się na początku swojej kategorii i wszystkich list dopóki nie zostanie odpięty przez obsługę lub prywatnie przez użytkownika."
     pinned_globally_disabled: "Temat został odpięty. Już nie będzie wyświetlany na górze swojej kategorii."
+    visible_enabled: "Temat jest ponownie widoczny i będzie pojawiać się na listach tematów."
+    visible_disabled: "Ten temat został ustawiony jako niewidoczny. Nie pojawi się na żadnej liście tematów. Aby go wyświetlić wymagana będzie znajomość linku bezpośredniego."
   login:
     not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł się zalogować."
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
@@ -726,6 +733,7 @@ pl_PL:
     something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
     omniauth_error: "Przepraszamy, wystąpił błąd podczas uwierzytelniania Twojego konta %{strategy}. Może nie zaakceptowałeś uwierzytelnienia?"
     omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
+    password_too_long: "Hasła są ograniczone do 200 znaków."
   user:
     username:
       short: "music zawierać co najmniej %{min} znaków"
@@ -889,6 +897,13 @@ pl_PL:
         Jeśli to nie była twoja prośba, możesz zignorować tą wiadomość.
 
         Kliknij odnośnik poniżej by ustawić hasło:
+        %{base_url}/users/password-reset/%{email_token}
+    account_created:
+      subject_template: "[%{site_name}] Twoje nowe konto"
+      text_body_template: |
+        Utworzyliśmy Twoje konto na %{site_name}
+
+        Kliknij na linku poniżej, aby ustawić swoje hasło:
         %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] Potwierdź nowy adres email"

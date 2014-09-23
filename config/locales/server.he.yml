@@ -23,6 +23,7 @@ he:
   log_in: "התחברות"
   via: "%{username} עם %{site_name}"
   is_reserved: "שמור"
+  purge_reason: "נמחק באופן אוטומטי מכיוון שהיה ישן וללא שינוי"
   errors:
     messages:
       too_long_validation: "מוגבל לאורך של  %{max} תוים: את/ה הקשת %{length}."
@@ -97,9 +98,11 @@ he:
     errors:
       can_not_modify_automatic: "אתה לא יכול לשנות קבוצה אוטומטית"
     default_names:
+      everyone: "כולם"
       admins: "מנהלים ראשיים"
       moderators: "מנהלים"
       staff: "צוות"
+      trust_level_0: "רמת_אמון_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
@@ -159,6 +162,8 @@ he:
         name: "שם קטגוריה"
       post:
         raw: "גוף"
+      user_profile:
+        bio_raw: "אודותיי"
     errors:
       messages:
         is_invalid: "אינו קביל; נסה להיות מעט יותר מפורט"
@@ -166,6 +171,9 @@ he:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "את/ה יכולים להוסיף אזהרות רק למסרים פרטיים."
+              too_many_users: "את/ה יכולים לשלוח אזהרות רק למשתמש/ת אחד בכל פעם."
             archetype:
               cant_send_pm: "סליחה, אינך יכול לשלוח הודעה פרטית למשתמש הזה."
         user:
@@ -184,6 +192,7 @@ he:
   vip_category_name: "לאונג' (סלון הכבוד)"
   vip_category_description: "קטגוריה אקסקלוסיבית למשתמשים עם רמת אמון 3 או יותר."
   meta_category_name: "מטא"
+  meta_category_description: "דיון אודות אתר זה, הארגון שמאחוריו, איך הוא פועל ואיך נוכל לשפר אותו."
   staff_category_name: "צוות"
   staff_category_description: "קטגוריה פרטית לדיוני הצוות. נושאים נראים רק למנהלים ומנהלים ראשיים."
   lounge_welcome:
@@ -208,8 +217,15 @@ he:
       title: "משתמש חדש"
     basic:
       title: "משתמש בסיסי"
+    regular:
+      title: "חבר/ה"
+    leader:
+      title: "רגיל/ה"
+    elder:
+      title: "מוביל/ה"
     change_failed_explanation: "ניסית להוריד את דרגת %{user_name} לדרגה '%{new_trust_level}'. אולם הדרגה שלהם היא כבר '%{current_trust_level}'. %{user_name} יישאר '%{current_trust_level}'"
   rate_limiter:
+    slow_down: "ביצעתם פעולה זו מספר רב מידי של פעמים, נסו שוב מאוחר יותר"
     too_many_requests: "יש לנו מגבלה יומית על מספר הפעמים שניתן לבצע פעולה זו. אנא המתן %{time_left} לפני ניסיון חוזר."
     hours:
       one: "שעה אחת"
@@ -327,6 +343,7 @@ he:
       long_form: 'דוגלל כלא ראוי'
     notify_user:
       title: 'התרע ל-{{username}}'
+      description: 'פרסום זה מכיל משהו שארצה לשוחח עליו עם האדם הזה באופן ישיר ופרטי. אין צורך בסימון.'
       long_form: 'המשתמש הותרע'
       email_title: 'הפרסום שלךב"%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -365,6 +382,7 @@ he:
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p> ההודעה שלך סומנה על ידי הקהילה. אנא <a href="/my/private-messages"> בדוק/בדקי את ההודעת הפרטיות שלך </a> </p>'
+    user_must_edit: '<p>פרסום זה סומן על ידי הקהילה וכרגע מוסתר באופן זמני.</p>'
   archetypes:
     regular:
       title: "נושא רגיל"
@@ -494,6 +512,9 @@ he:
     education_new_topic:
       title: "New User Education: First Topics"
       description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
+    usage_tips:
+      title: "הדרכה למשתמש/ת חדשים"
+      description: "הדרכה ומידע חשוב למשתמשים חדשים."
     welcome_user:
       title: "Welcome: New User"
       description: "A private message automatically sent to all new users when they sign up."
@@ -580,6 +601,7 @@ he:
     summary_posts_required: "מספר הפרסומים המנימאלי בנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_likes_required: "מינימום הלייקים לנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את  % o הפרסומים הראשונים"
+    enable_private_messages: "אפשרו למשתמשים בעלי רמת אמון 1 ליצור מסרים פרטיים ולהשיב למסרים פרטיים"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
@@ -936,7 +958,6 @@ he:
         תהנו מהביקור!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
-      text_body_template: "תודה שקיבלת את הזמנתך אל %{site_name} - ברוכים הבאים!\n\nיצרנו עבורך שם משתמש/ת באופן אוטומטי: **%{username}**, אבל תוכלו לשנות אותו בכל עת באמצעות ביקור בתפריט ההעדפות [your user profile][prefs].\n\nכדי להתחבר שוב מחדש נקטו באחת משתי הפעולות:\n\n1. התחבר/י בכל דרך שנוחה לך - \nאך עליכם לכלול את **אותה כתובת דוא\"ל** בה קיבלת את ההזמנה המקורית. אחרת, לא נוכל לדעת שאלה באמת אתם!\n\n2. צרו סיסמא ייחודית בתפריט ההעדפות [your user profile][prefs], והשתמשו בה כדי להתחבר.\n\n\n%{new_user_tips}\n\n אנו מאמין ב [התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל עת\n\nתהנו מהביקור שלכם!\n\n [prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "Export completed successfully"
       text_body_template: "The export was successful."
@@ -988,12 +1009,6 @@ he:
       text_body_template: "אנו מצטערים, אבל הודעת הדוא\"ל שלך אל %{destination} (titled %{former_title}) didn't work.\nלא עברה.\n\nלא ידוע לנו על חשבון עם כתובת דוא\"ל זו. נסו לשלוח מכתובת דוא\"ל אחרת או ליצור קשר עם אנשי הצוות. \n"
     email_reject_empty:
       subject_template: "בעיית דוא\"ל - אין תוכן"
-      text_body_template: |
-        אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
-
-        לא הצלחנו לאתר תוכן בדוא"ל. וודאו שכתבתים משהו בראש הדוא"ל - לא נוכל לפענח תגובות בגוף הטקסט.
-
-        אם אתם מקבלים הודעה זו וכללתם בה תוכן, אנא נסו שוב באמצעות שימוש בקידוד טקסט פשוט  UTF-8 (ללא HTML).
     email_reject_parsing:
       subject_template: "סוגיית דוא\"ל -- תוכן בלתי מוכר"
       text_body_template: |

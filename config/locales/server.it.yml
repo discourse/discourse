@@ -98,9 +98,11 @@ it:
     errors:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
     default_names:
+      everyone: "chiunque"
       admins: "amministratori"
       moderators: "moderatori"
       staff: "staff"
+      trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
@@ -155,6 +157,8 @@ it:
         name: "Nome Categoria"
       post:
         raw: "Contenuto"
+      user_profile:
+        bio_raw: "Su di me"
     errors:
       messages:
         is_invalid: "non è valido; cerca di essere più descrittivo"
@@ -162,6 +166,8 @@ it:
       models:
         topic:
           attributes:
+            base:
+              too_many_users: "Puoi inviare avvertimenti ad un solo utente per volta."
             archetype:
               cant_send_pm: "Spriacenti, non puoi mandare un messaggio privato a quell'utente."
         user:
@@ -186,6 +192,7 @@ it:
   assets_topic_body: "Questo è un argomento permanente, visibile solo allo staff, per salvare immagini e file utilizzati nel design del sito. Non eliminarlo!\n\n\nEcco come fare:\n\n\n1. Rispondi a questo argomento.\n2. Carica qui tutte le immagini che desideri usare per loghi, favicon e così via (usa l'icona di caricamento nell'editor del messaggio o trascina direttamente le immagini).\n3. Invia la risposta per creare il messaggio.\n4. Fai click con il tasto destro sulle immagini nel tuo nuovo messaggio per prelevare il percorso delle immagini caricate, o clicca l'icona di modifica messaggio e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni di base](/admin/site_settings/category/required).\n\nSe vuoi permettere di caricare file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Benvenuto nel Lounge"
+    body: "\nCongratulazioni! :confetti_ball: \n\nSe vedi questo argomento, sei stato recentemente promosso a **abituale** (livello di attendibilità 3).\n\nAdesso puoi &hellip;\n\n\n* Modificare il titolo di qualunque argomento \n* Cambiare la categoria di qualunque argomento \n* Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://en.wikipedia.org/wiki/Nofollow) ) \n* Accedere alla categoria privata Lounge visibile solo agli utenti con livello di attendibilità 3 o superiore\n* Assegnare con più forza i \"Mi piace\" e le segnalazioni \n\nEcco l'elenco degli altri [utenti abituali](/badges/3/regular). Vai a salutarli.\n\nGrazie per essere una parte importante di questa comunità! \n\n(Per maggiori informazioni sui livelli di attendibilità, [leggi questa discussione][trust]. Nota che possono rimanere utenti abituali solo quegli utenti che continuano a soddisfare i criteri di selezione) \n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "[Sostituisci questo primo paragrafo con una breve descrizione della nuova categoria. Questa guida apparirà nell'area di selezione della categoria, perciò cerca di stare sotto i 200 caratteri. Finché non modifichi questo testo o non crei argomenti, questa categoria non apparirà sulla pagina delle categorie.]"
@@ -206,6 +213,12 @@ it:
       title: "nuovo utente"
     basic:
       title: "utente base"
+    regular:
+      title: "membro"
+    leader:
+      title: "abituale"
+    elder:
+      title: "capo"
     change_failed_explanation: "Hai cercato di degradare %{user_name} a '%{new_trust_level}'. Però il suo livello di attendibilità è già '%{current_trust_level}'. %{user_name} resterà a '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi"
@@ -521,7 +534,7 @@ it:
       description: "HTML che verrà aggiunto in cima a ogni pagina (dopo l'header, prima della barra di navigazione o del titolo del topic)."
     bottom:
       title: "Piè di pagina"
-      description: "HTML che verrà aggiunto al fondo di ogni pagina."
+      description: "HTML che verrà aggiunto in fondo ad ogni pagina."
     tos_signup_form_message:
       title: "Form di iscrizione: Termini del servizio"
       description: "Il messaggio che comparirà all'interno di un checkbox nel form di iscrizione se l'impostazione tos_accept_required è abilitata."
@@ -539,6 +552,7 @@ it:
     min_private_message_title_length: "Numero minimo di caratteri necessari per un messaggio privato."
     min_search_term_length: "Numero minimo di caratteri per le parole cercate"
     allow_uncategorized_topics: "Permetti la creazione di topic senza categoria."
+    uncategorized_description: "La descrizione della categoria \"Non classificato\". Lascia vuoto per nessuna descrizione."
     allow_duplicate_topic_titles: "Permetti discussioni con lo stesso titolo, duplicato"
     unique_posts_mins: "Quanti minuti prima che un utente possa postare un altro topic con lo stesso contenuto"
     title: "Breve titolo di questo sito, usato nel tag title."
@@ -557,11 +571,16 @@ it:
     apple_touch_icon_url: "Icona usata per dispositivi mobile Apple. La dimensione consigliata è 144 x 144 pixel."
     email_custom_headers: "Una lista di intestazioni email custom delimitata da una barra verticale"
     use_https: "L'indirizzo completo del sito (Discourse.base_url) dovrebbe essere http o https? NON ATTIVARE QUESTA OPZIONE A MENO CHE HTTPS SIA GIA' CONFIGURATO E FUNZIONANTE!"
+    summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
+    summary_posts_required: "Minimo numero di messaggi in un argomento affinché venga abilitato 'Riassumi Questo Argomento' "
+    summary_likes_required: "Minimo numero di \"Mi piace\" in un argomento affinché venga abilitato 'Riassumi Questo Argomento'"
+    summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
+    enable_private_messages: "Autorizza gli utenti con livello di attendibilità 1 a creare e rispondere a messaggi privati"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    auto_track_topics_after: "Valore globale in millisecondi prima dei quali un topic venga automaticamente tracciato, modificabile dagli utenti (0 sempre, -1 mai)"
+    auto_track_topics_after: "Valore globale in millisecondi prima che un argomento venga automaticamente seguito, modificabile dagli utenti (0 sempre, -1 mai)"
     new_topic_duration_minutes: "Valore globale in minuti per i quali un topic è considerato come nuovo, modificabile dagli utenti (-1 sempre, -2 ultima visita)"
     flags_required_to_hide_post: "Numero di segnalazioni che rendono un topic automaticamente nascosto. L'utente riceve un messaggio privato. (0 mai)"
     cooldown_minutes_after_hiding_posts: "Numero di minuti che l'utente deve attendere prima di modificare un post nascosto per segnalazione"
@@ -578,7 +597,7 @@ it:
     allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
     top_menu: "Determina quali elementi vengono mostrati nella navigazione in homepage, ed in quale ordine. Esempio latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determina quali elementi vengono mostrati nel menù del post, ed in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
-    track_external_right_clicks: "Traccia i link esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché viene fatto il rewrite delle URL"
+    track_external_right_clicks: "Segui i collegamenti esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché riscrive le URL"
     enable_badges: "Attiva il sistema targhette (sperimentale)"
     port: "Usa questa porta HTTP al posto della default 80. Lasciare vuoto solo durante lo sviluppo"
     force_hostname: "Specifica un hostname nella URL. Lasciare vuoto solo durante lo sviluppo"
@@ -633,6 +652,7 @@ it:
     public_user_custom_fields: "Una whitelist di campi personalizzati di un utente che possono essere mostrati pubblicamente."
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     enable_mobile_theme: "I dispositivi mobile usano un tema apposito, con possibilità di passare alla visualizzazione desktop. Disabilita questa opzione se vuoi usare un foglio di stile custom e completamente responsive."
+    suppress_uncategorized_badge: "Non mostrare la targhetta per gli argomenti senza categoria nell'elenco degli argomenti."
     global_notice: "Mostra a tutti i visitatori un avviso con striscione globale URGENTE, EMERGENZA, lascia vuoto per nasconderlo (HTML consentito)."
     short_progress_text_threshold: "Quando il numero di messaggi di un argomento supera questo valore, la barra di avanzamento mostrerà solo il numero attuale di messaggi. Se modifichi la lunghezza della barra di avanzamento, potresti dover cambiare questo valore."
     default_code_lang: "Ai blocchi di codice GitHub viene applicata l'evidenziazione della sintassi del linguaggio di programmazione di default (lang-auto, ruby, python ecc.)"
@@ -779,6 +799,10 @@ it:
         Comunque, se il messaggio verrà nascosto dalla comunità un'altra volta, resterà nascosto finché non verrà gestito dallo staff – e ci potrebbero essere ulteriori provvedimenti, inclusa la possibile sospensione del tuo account.
 
         Per ulteriori informazioni, puoi far riferimento alle nostre [community guidelines](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: "Questo messaggio privato contiene qualche breve consiglio per permetterti di iniziare: \n\n## Continua a scorrere \n\nNon ci sono bottoni per cambiare pagina né numeri di pagina - per leggere più messaggi, semplicemente **continua a scorrere giù!** \n\nNon appena arrivano nuovi messaggi, questi appaiono automaticamente. \n\n## Dove mi trovo? \n\n- Per la ricerca, la tua pagina utente, o il menu, usa i **bottoni icona in alto a destra**. \n\n- In un elenco di argomenti, cliccando sul titolo arriverai sempre al prossimo messaggio che non hai ancora letto. Usa l'ora di ultima attività per saltare all'ultimo messaggio.\n\n- Mentre leggi un argomento, salta all'inizio &uarr; cliccando sul titolo dell'argomento stesso. Clicca la barra verde in basso a destra per vedere tutti i bottoni di navigazione, oppure usa i tasti <kbd>inizio</kbd> e <kbd>fine</kbd>. \n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\"> \n\n## Come faccio a rispondere? \n\n- Per rispondere all'argomento base, usa il bottone Rispondi <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> che si trova nella parte più in basso della pagina. \n\n- Per rispondere ad un messaggio specifico, usa il bottone Rispondi <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> che si trova su quel messaggio. \n\n- Per deviare la conversazione - anziché andare fuori tema - e lasciare le due conversazioni collegate tra loro, usa Rispondi come Nuovo Argomento <img src=\"/images/welcome/reply-as-new-topic.png\" width=\"33\" height=\"25\"> alla destra del messaggio. \n\nPer citare qualcuno nella risposta, seleziona il testo che vuoi citare, poi premi qualunque bottone Rispondi. \n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\"> \n\nPer avvisare qualcuno nella tua risposta, menziona il suo nome. Inizia digitando `@` e si aprirà un completamento automatico. \n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nPer [Emoji standard](http://www.emoji-cheat-sheet.com/), inizia a scrivere `:` oppure direttamente\
+        \ i normali smile `:)` :smile:\n\n## Che altro posso fare? \n\nCi sono bottoni-azione in fondo ad ogni messaggio.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPer far sapere a qualcuno che ti è piaciuto il suo messaggio, usa il bottone **mi piace**. Se rilevi un problema con un messaggio, non esitare ad usare il bottone di segnalazione **bandiera** per inviare una notifica privata all'autore o ad un moderatore. \n\nPuoi anche **condividere** un collegamento ad un messaggio, o impostare un **segnalibro** ad un messaggio per riferimenti futuri. \n\n## Chi sta parlando con me? \n\nQuando qualcuno risponde ad un tuo messaggio o lo cita, oppure menziona il tuo `@utente`, appare un numero sul bottone della conversazione in alto a destra della pagina. Usalo per accedere alle tue **notifiche**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\"> \n\nSe non sei presente sul forum quando ci sono risposte ai tuoi messaggi (oppure quando ricevi messaggi privati), riceverai delle notifiche per email. \n\n## Quando le conversazioni sono considerate nuove? \n\nPer difetto, sono considerate nuove tutte le conversazioni che hanno meno di due giorni, e sarà seguita ogni conversazione alla quale hai partecipato (risposto, creato o letto per un periodo abbastanza lungo). \n\nVedrai accanto a tali argomenti un indicatore blu con dei numeri:\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\"> \n\nPuoi cambiare lo stato delle notifiche di ogni argomento con il pannello in fondo all'argomento stesso (lo puoi impostare anche per categoria). Per cambiare il modo in cui segui gli argomenti, o la definizione di Nuovo, vedi le [tue preferenze](/my/preferences).\n\n## Perché certe cose non le posso fare? \n\nPer ragioni di sicurezza i nuovi utenti hanno qualche limitazione. Mano a mano che partecipi, ottieni la fiducia della comunità e diventi un cittadino completo, e tali limitazioni vengono automaticamente rimosse. Quanto raggiungi un [livello di esperienza] (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)\
+        \ abbastanza alto, allora ottieni ulteriori capacità per aiutarci a gestire la nostra comunità.\n"
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
@@ -791,7 +815,6 @@ it:
         Buona permanenza!
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
-      text_body_template: "Grazie per aver accettato l'invito su %{site_name} -- benvenuto! \n\nTi abbiamo generato automaticamente un nome utente: **%{username}**, ma puoi cambiarlo in ogni momento visitando [il tuo profilo][prefs]. \n\nPer collegarti puoi: \n\n1. Collegarti usando il metodo che preferisci -- posto che usi lo **stesso indirizzo email** sul quale hai ricevuto l'invito iniziale. Diversamente non riusciremmo a sapere che chi si iscrive sei proprio tu!\n\n2. Creare una password univoca nel [tuo profilo][prefs], ed usarla per poi collegarti. \n\n%{new_user_tips} \n\nNoi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines).\n\nBuona permanenza!\n\n[prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "Esportazione completata con successo"
       text_body_template: "L'esportazione è stata eseguita correttamente."
@@ -842,7 +865,6 @@ it:
         Non esiste un account con questo indirizzo email. Prova ad inviarla da un altro indirizzo o contatta un membro dello staff.
     email_reject_empty:
       subject_template: "Problema email -- Nessun contenuto"
-      text_body_template: "Spiacenti ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.\n\nNon abbiamo trovato del contenuto nella email. Sincerati di scrivere qualcosa all'inizio dell'email, perché non possiamo processare solo risposte in linea. \nSe hai ricevuto questo messaggio ma sei sicuro di aver incluso del contenuto, prova ancora usando testo semplice in formato UTF-8 (non HTML).\n"
     email_reject_parsing:
       subject_template: "Problema email -- Contenuto non riconosciuto"
       text_body_template: |

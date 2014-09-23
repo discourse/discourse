@@ -232,7 +232,6 @@ zh_CN:
       other_accounts: 其他使用该 IP 地址的账户
       no_other_accounts: (无)
     user:
-      said: "{{username}}说："
       profile: "个人资料"
       mute: "防打扰"
       edit: "修改设置"
@@ -271,9 +270,11 @@ zh_CN:
       delete_yourself_not_allowed: "您目前不能删除自己的帐号。联系管理员帮助您删除帐号。"
       unread_message_count: "消息"
       staff_counters:
+        flags_given: "有用的标记"
         flagged_posts: "被报告的帖子"
         deleted_posts: "删除的帖子"
         suspensions: "禁止的"
+        warnings_received: "警告"
       messages:
         all: "所有"
         mine: "我的"
@@ -311,7 +312,6 @@ zh_CN:
         title: "个人资料背景"
       email:
         title: "电子邮箱"
-        instructions: "绝不会被公开显示。"
         ok: "看起来不错哦，我们会发送电子邮件让您确认。"
         invalid: "请填写正确的电子邮箱地址。"
         authenticated: "您的电子邮箱已经被 {{provider}} 确认有效。"
@@ -323,7 +323,6 @@ zh_CN:
         ok: "您的名字符合要求。"
       username:
         title: "用户名"
-        instructions: "必须唯一，没有空格，简短。"
         short_instructions: "其他人可以用 @{{username}} 来提及您。"
         available: "您的用户名可用。"
         global_match: "电子邮箱与注册用户名相匹配。"
@@ -395,6 +394,7 @@ zh_CN:
         bulk_invite:
           none: "您没有邀请过任何人。您可以发送个人邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传一个批量邀请文件</a>一次性邀请一批人。"
           text: "通过文件批量邀请"
+          uploading: "上传中……"
           success: "文件上传成功，您将很快被通知状态。"
           error: "在上传 '{{filename}}' 时出现错误：{{message}}"
       password:
@@ -402,7 +402,6 @@ zh_CN:
         too_short: "您设置的密码太短了。"
         common: "您设置的密码太常见了。"
         ok: "您设置的密码符合要求。"
-        instructions: "至少需要 %{count} 个字符。"
       ip_address:
         title: "最后使用的 IP 地址"
       registration_ip_address:
@@ -796,6 +795,8 @@ zh_CN:
         pin_globally: "全局置顶主题"
         unarchive: "解除主题存档"
         archive: "存档主题"
+        invisible: "使其不列于主题列表"
+        visible: "使其列于主题列表"
         reset_read: "重置阅读数据"
         multi_select: "选择帖子"
       reply:
@@ -929,6 +930,11 @@ zh_CN:
           yes_value: "是，删除回复"
           no_value: "否，仅删除该帖"
         admin: "帖子管理"
+        wiki: "使其成为维基帖子"
+        unwiki: "使其成为普通帖子"
+        convert_to_moderator: "增加职员颜色"
+        revert_to_regular: "移除职员颜色"
+        rebake: "重建 HTML"
       actions:
         flag: '报告'
         defer_flags:
@@ -1131,6 +1137,8 @@ zh_CN:
         help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       archived:
         help: "本主题已归档；即已经冻结，无法修改"
+      invisible:
+        help: "本主题被设置为不显示在主题列表中，并且只能通过直达链接来访问"
     posts: "帖子"
     posts_lowercase: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
@@ -1370,6 +1378,8 @@ zh_CN:
           filename: "文件名"
           size: "大小"
         upload:
+          text: "上传"
+          uploading: "上传中……"
           success: "'{{filename}}'已成功上传。"
           error: "在上传的'{{filename}}'过程中出现错误：({{message}})"
         operations:
@@ -1825,14 +1835,20 @@ zh_CN:
         top: '<b>g</b>, <b>t</b> 顶部'
       navigation:
         title: '导航'
+        jump: '<b>#</b> 跳转到帖子 #'
         back: '<b>u</b> 返回'
+        up_down: '<b>k</b> 和 <b>j</b> 移动选择焦点 &uarr; &darr;'
         open: '<b>o</b> 或者 <b>Enter</b> 打开选中的主题'
         next_prev: '<b>shift j</b>/<b>shift k</b> 下一个/上一个选区'
       application:
         title: '应用'
         create: '<b>c</b> 创建一个新主题'
         notifications: '<b>n</b> 打开通知菜单'
+        site_map_menu: '<b>=</b> 打开站点菜单'
+        user_profile_menu: '<b>p</b> 打开用户菜单'
+        show_incoming_updated_topics: '<b>.</b> 显示更新过的主题'
         search: '<b>/</b> 搜索'
+        help: '<b>?</b> 打开键盘快捷键帮助'
         dismiss_new_posts: '<b>x</b>, <b>r</b> 解除新/帖子提示'
         dismiss_topics: '<b>x</b>, <b>t</b> 解除主题提示'
       actions:

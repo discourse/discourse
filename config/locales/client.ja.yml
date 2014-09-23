@@ -172,9 +172,9 @@ ja:
       you_replied_to_post: "<a href='{{userUrl}}'>あなた</a> が <a href='{{postUrl}}'>{{post_number}}</a> に回答"
       user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{topicUrl}}'>トピック</a> に回答"
       you_replied_to_topic: "<a href='{{userUrl}}'>あなた</a> が <a href='{{topicUrl}}'>トピック</a> に回答"
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>{{another_user}}</a> をメンション"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>あなた</a> をメンション"
-      you_mentioned_user: "<a href='{{user1Url}}'>あなた</a> が <a href='{{user2Url}}'>{{another_user}}</a> をメンション"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>{{another_user}}</a> をタグ付けしました"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> が <a href='{{user2Url}}'>あなた</a> を をタグ付けしました"
+      you_mentioned_user: "<a href='{{user1Url}}'>あなた</a> が <a href='{{user2Url}}'>{{another_user}}</a> をタグ付けしました"
       posted_by_user: "<a href='{{userUrl}}'>{{user}}</a> がポストを投稿"
       posted_by_you: "<a href='{{userUrl}}'>あなた</a> がポストを投稿"
       sent_by_user: "<a href='{{userUrl}}'>{{user}}</a> が送信"
@@ -199,7 +199,7 @@ ja:
       '4': "トピック"
       '5': "投稿"
       '6': "リプライ"
-      '7': "メンション"
+      '7': "タグ付け"
       '9': "引用"
       '10': "お気に入り"
       '11': "編集"
@@ -232,7 +232,6 @@ ja:
       other_accounts: 同じIPアドレスを持つアカウント
       no_other_accounts: （なし）
     user:
-      said: "{{username}} のコメント:"
       profile: "プロフィール"
       mute: "ミュート"
       edit: "プロフィールを編集"
@@ -262,6 +261,7 @@ ja:
       watched_categories: "参加中"
       watched_categories_instructions: "このカテゴリに新しく投稿されたトピックを自動的に参加します。このカテゴリに対して新しい投稿があった場合、登録されたメールアドレスと、コミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
       tracked_categories: "トラック中"
+      tracked_categories_instructions: "このカテゴリに新しく投稿されたトピックを自動的にトラックします。このカテゴリに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
       muted_categories: "ミュート中"
       muted_categories_instructions: "このカテゴリに投稿されたトピックについての通知を受け取りません。また、未読タブにも通知されません。"
       delete_account: "アカウントを削除する"
@@ -287,7 +287,7 @@ ja:
         title: "自己紹介の変更"
       change_username:
         title: "ユーザ名の変更"
-        confirm: "ユーザ名を変更すると、あなたのポストの引用と @ユーザ名 メンションのリンクが解除されます。本当にユーザ名を変更しますか？"
+        confirm: "ユーザ名を変更すると、あなたのポストの引用と @ユーザ名でタグ付けされたリンクが解除されます。本当にユーザ名を変更しますか？"
         taken: "このユーザ名は既に使われています。"
         error: "ユーザ名変更中にエラーが発生しました。"
         invalid: "このユーザ名は無効です。英数字のみ利用可能です。"
@@ -310,7 +310,6 @@ ja:
         title: "プロフィール背景"
       email:
         title: "メールアドレス"
-        instructions: "Eメールアドレスは公開されません。"
         ok: "メールアドレス OK。確認用のメールを送ります。"
         invalid: "正しいメールアドレスを入力してください。"
         authenticated: "あたなのメールは {{provider}} により認証されました。"
@@ -322,8 +321,7 @@ ja:
         ok: "名前 OK。"
       username:
         title: "ユーザ名"
-        instructions: "空白を含まないユニークな名前を入力してください。"
-        short_instructions: "他のユーザはあなたを @ユーザ名 でメンションできます。"
+        short_instructions: "他のユーザはあなたを @{{username}} でタグ付けできます。"
         available: "ユーザ名は利用可能です。"
         global_match: "メールアドレスが登録済のユーザ名と一致しました。"
         global_mismatch: "既に利用されています。{{suggestion}} などはいかがでしょう？"
@@ -352,7 +350,7 @@ ja:
         daily: "毎日"
         weekly: "毎週"
         bi_weekly: "隔週"
-      email_direct: "ポストが引用されたり、回答を受けたり、 @ユーザ名 でメンションを受けた際にメール通知を受け取る"
+      email_direct: "ポストが引用されたり、回答を受けたり、 @ユーザ名 でタグ付けを受けた際にメール通知を受け取る"
       email_private_messages: "プライベートメッセージを受けた際にメール通知を受け取る"
       email_always: "ログインしている際にメール通知を受け取る。"
       other_settings: "その他"
@@ -401,7 +399,6 @@ ja:
         too_short: "パスワードが短すぎます。"
         common: "このパスワードは他の人が使用している可能性があります。"
         ok: "パスワード OK。"
-        instructions: "%{count} 文字以上の長さにしてください。"
       ip_address:
         title: "最終 IP アドレス"
       registration_ip_address:
@@ -588,7 +585,7 @@ ja:
       auto_close_examples: '例: 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "正しい値を入力してください。"
     notifications:
-      title: "@ユーザ名 メンションやあなたのポストやトピックへの回答、プライベートメッセージなどの通知"
+      title: "@ユーザ名 のタグ付けやあなたのポストやトピックへの回答、プライベートメッセージなどの通知"
       none: "現在通知はありません。"
       more: "古い通知を確認する"
       total_flagged: "フラグがたったポストの総数"
@@ -652,6 +649,7 @@ ja:
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
       none:
+        starred: "お気に入りトピックがありません。"
         unread: "未読トピックはありません。"
         new: "新着トピックはありません。"
         read: "またトピックを一つも読んでいません。"
@@ -660,6 +658,10 @@ ja:
         hot: "ホットなトピックはありません。"
         category: "{{category}} トピックはありません。"
         top: "トップトピック無し"
+        educate:
+          new: '２日以内に投稿されたトピックは「最新」トピックとして表示されます。<a href="%{userPrefsUrl}">設定画面s</a>で日数変更が可能です。'
+          unread: '参加中のトピックに対して新しい投稿がある場合、未読記事として表示されます。'
+          starred: 'お気に入りトピックはここに表示されます。トピックをお気に入りに追加するにはトピック左側にある★マークをクリックしてください。'
       bottom:
         latest: "最新のトピックは以上です。"
         hot: "ホットなトピックは以上です。"
@@ -747,13 +749,16 @@ ja:
           '0': 'このトピックに関して一切通知を受けません。'
         watching_pm:
           title: "参加中"
+          description: "このメッセージに対して新しい投稿があった場合、登録されたメールアドレスと、NVコミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
         watching:
           title: "参加中"
+          description: "このトピックに対して新しい投稿があった場合、登録されたメールアドレスと、NVコミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
         tracking_pm:
           title: "トラック中"
           description: "プライベートメッセージ一覧に新しい投稿数と未読ポスト数がつきます。他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
         tracking:
           title: "トラック中"
+          description: "このトピックに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
         regular:
           title: "通常"
           description: "他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
@@ -1048,8 +1053,10 @@ ja:
       notifications:
         watching:
           title: "カテゴリ参加中"
+          description: "このカテゴリに対して新しい投稿があった場合、登録されたメールアドレスと、NVコミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
         tracking:
           title: "トラック中"
+          description: "このカテゴリに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
         regular:
           title: "通常"
           description: "他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
@@ -1564,6 +1571,7 @@ ja:
         reputation: レピュテーション
         permissions: パーミッション
         activity: アクティビティ
+        like_count: 「いいね！」付けた/もらった数
         private_topics_count: プライベートトピック数
         posts_read_count: 読んだポスト数
         post_count: 投稿したポスト数
@@ -1695,25 +1703,51 @@ ja:
       download: "ダウンロード"
     keyboard_shortcuts_help:
       title: 'キーボードショートカット'
+      jump_to:
+        title: 'ページ移動'
+        home: '<b>g</b>, <b>h</b> ホーム'
+        latest: '<b>g</b>, <b>l</b> 最新'
+        new: '<b>g</b>, <b>n</b> 新規'
+        unread: '<b>g</b>, <b>u</b> 未読'
+        starred: '<b>g</b>, <b>f</b> お気に入り'
+        categories: '<b>g</b>, <b>c</b> カテゴリ'
+        top: '<b>g</b>, <b>t</b> トップ'
       navigation:
         title: 'ナビゲーション'
+        jump: '<b>#</b> # 投稿へ'
         back: '<b>u</b> 戻る'
+        up_down: '<b>k</b>/<b>j</b> トピック・投稿 &uarr; &darr;移動'
+        open: '<b>o</b> or <b>Enter</b> トピックへ'
+        next_prev: '<b>shift j</b>/<b>shift k</b> 次・前の選択へ移動'
       application:
         title: 'アプリケーション'
         create: '<b>c</b> 新しいトピックを作成'
         notifications: '<b>n</b> お知らせを開く'
+        site_map_menu: '<b>=</b> サイトメニュを開く'
+        user_profile_menu: '<b>p</b> ユーザメニュを開く'
+        show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
         search: '<b>/</b> 検索'
+        help: '<b>?</b> キーボードヘルプを表示する'
+        dismiss_new_posts: '<b>x</b>, <b>r</b>　新しい投稿を非表示する'
+        dismiss_topics: 'Dismiss Topics'
       actions:
         title: '操作'
+        star: '<b>f</b> お気に入りトピック'
         share_topic: '<b>shift s</b> トピックをシェアする'
         share_post: '<b>s</b> 投稿をシェアする'
+        reply_as_new_topic: '<b>t</b> 新規トピックとして回答する'
         reply_topic: '<b>shift r</b> トピックに返信'
         reply_post: '<b>r</b> 投稿に返信'
+        quote_post: '<b>q</b> 投稿を引用する'
         like: '<b>l</b> 投稿を「いいね！」する'
         flag: '<b>!</b> 投稿をフラグする'
         bookmark: '<b>b</b> 投稿をブックマークする'
         edit: '<b>e</b> 投稿を編集'
         delete: '<b>d</b> 投稿を削除する'
+        mark_muted: '<b>m</b>, <b>m</b> トピックをミュートする'
+        mark_regular: '<b>m</b>, <b>r</b> 通常トピックにする'
+        mark_tracking: '<b>m</b>, <b>t</b> トピックをトラックする'
+        mark_watching: '<b>m</b>, <b>w</b> トピックを参加中にする'
     badges:
       title: バッジ
       allow_title: "バッヂををタイトルとして使用しますか？"
@@ -1734,7 +1768,11 @@ ja:
         editor:
           name: 編集者
         basic_user:
-          name: 基礎設定
+          name: ベーシックユーザ
+        member:
+          name: メンバー
+        regular:
+          name: レギュラー
         leader:
           name: リーダー
         welcome:
@@ -1749,6 +1787,18 @@ ja:
         great_post:
           name: 素晴らしい投稿！
           description: 50人に「いいね！」をされました。このバッヂは何度でもらえます。
+        nice_topic:
+          name: ナイストピック
+        good_topic:
+          name: グッドトピック
+        great_topic:
+          name: グレートトピック
+        nice_share:
+          name: ナイスシェア
+        good_share:
+          name: グッドシェア
+        great_share:
+          name: グレートシェア
         first_like:
           name: 初めての「いいね！」
           description: 投稿に「いいね！」した

@@ -232,7 +232,6 @@ ko:
       other_accounts: 이 IP 주소로 접속한 다른 계정
       no_other_accounts: (없음)
     user:
-      said: "{{username}}의 말:"
       profile: "프로필"
       mute: "음소거"
       edit: "편집"
@@ -310,7 +309,6 @@ ko:
         title: "프로필 배경"
       email:
         title: "이메일"
-        instructions: "안심하세요. 절대로 공개되지 않습니다."
         ok: "완료. 확인 이메일을 보냈습니다."
         invalid: "사용하고 계시는 이메일 주소를 입력해주세요."
         authenticated: "당신의 이메일은 {{provider}}에 의해 인증되었습니다."
@@ -322,7 +320,6 @@ ko:
         ok: "사용가능합니다."
       username:
         title: "아이디"
-        instructions: "중복될 수 없으며 띄어쓰기 사용이 불가합니다. 짧을 수록 좋아요."
         short_instructions: "@{{username}}으로 언급이 가능합니다."
         available: "아이디\x1D로 사용가능합니다."
         global_match: "이메일이 등록된 아이디와 일치합니다."
@@ -400,7 +397,6 @@ ko:
         too_short: "암호가 너무 짧습니다."
         common: "That password is too common."
         ok: "적절한 암호입니다."
-        instructions: "Must be at least %{count} characters."
       ip_address:
         title: "마지막 IP 주소"
       registration_ip_address:
@@ -438,6 +434,7 @@ ko:
     read_only_mode:
       enabled: "관리자가 일기 전용모드를 활성화 하였습니다. 컨텐츠를 읽을 수는 있지만 활동할 수는 없습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
+    too_few_topics_notice: "토론을 시작하기 위해 최소 5개의 공개 토픽을 %{posts}개의 공개 포스트를 만들어주세요. 읽을거리가 없으면 새로운 사용자가 신뢰도를 올릴 수 없습니다. 이 메시지는 관리자에게만 보입니다."
     learn_more: "더 배우기"
     year: '년'
     year_desc: '지난 365일간 생성된 토픽'
@@ -910,6 +907,9 @@ ko:
           yes_value: "예, 답글도 삭제합니다."
           no_value: "아니오, 게시글만 삭제합니다."
         admin: "관리자 기능"
+        wiki: "위키 만들기"
+        unwiki: "위키 제거하기"
+        rebake: "HTML 다시 빌드하기"
       actions:
         flag: '신고'
         defer_flags:
@@ -1004,6 +1004,8 @@ ko:
           side_by_side:
             title: "Show the rendered output diffs side-by-side"
             button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            button: '<i class="fa fa-columns"></i> Raw'
         details:
           edited_by: "Edited by"
     category:
@@ -1047,6 +1049,7 @@ ko:
       allow_badges_label: "뱃지가 이 카테고리에서 주어질 수 있도록 허용"
       edit_permissions: "권한 수정"
       add_permission: "권한 추가"
+      everyone_permission: "누구나"
       this_year: "올해"
       position: "위치"
       default_position: "Default Position"
@@ -1089,6 +1092,8 @@ ko:
       clicks:
         other: "%{count}번 클릭"
     topic_statuses:
+      warning:
+        help: "공식적인 주의입니다."
       locked:
         help: "이 토픽은 폐쇄되었습니다. 더 이상 새 답글을 받을 수 없습니다."
       unpinned:
@@ -1805,10 +1810,13 @@ ko:
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">부여되면</a> 커뮤니티의 기본 기능 수행 가능
         member:
           name: 멤버
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations
         regular:
           name: 일반
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
         leader:
           name: 중견
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
         welcome:
           name: 환영합니다
           description: 좋아요 받음
@@ -1824,6 +1832,24 @@ ko:
         great_post:
           name: 굉장히 좋은 글
           description: 작성한 글이 좋아요를 50개 받았습니다. 이 훈장은 중복 수여 가능합니다.
+        nice_topic:
+          name: Nice 토픽
+          description: 10개의 '좋아요'를 받았습니다. 이 뱃지는 여러번 받을 수 있습니다.
+        good_topic:
+          name: Good 토픽
+          description: 25개의 '좋아요'를 받았습니다. 이 뱃지는 여러번 받을 수 있습니다.
+        great_topic:
+          name: Great 토픽
+          description: 50개의 '좋아요'를 받았습니다. 이 뱃지는 여러번 받을 수 있습니다.
+        nice_share:
+          name: Nice 공유
+          description: 25명의 사용자로부터 공유되었습니다
+        good_share:
+          name: Good 공유
+          description: 300명의 사용자로부터 공유되었습니다
+        great_share:
+          name: Great 공유
+          description: 1000명의 사용자로부터 공유되었습니다
         first_like:
           name: 첫 좋아요
           description: 처음으로 글에 '좋아요'를 했습니다.
