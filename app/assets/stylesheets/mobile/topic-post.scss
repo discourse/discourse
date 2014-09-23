@@ -215,7 +215,7 @@ a.star {
   .map {
     li {
       float: left;
-      padding: 7px 11px;
+      padding: 7px 8px;
       &:last-of-type {
         border-right: 0;
       }
@@ -229,7 +229,10 @@ a.star {
       float: left;
     }
   }
-  .avatars,
+  .avatars {
+    display: none;
+  }
+
   .links,
   .information {
     padding: 7px 10px;
@@ -262,7 +265,7 @@ a.star {
       border: 0;
       border-bottom: 1px solid scale-color-diff();
       border-left: 1px solid scale-color-diff();
-      padding: 0 23px;
+      padding: 0 15px;
       color: $primary;
       background: scale-color-diff();
       &:hover {
