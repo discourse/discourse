@@ -25,6 +25,8 @@ pt:
   is_reserved: "está reservado"
   purge_reason: "Apagar automaticamente devido à antiguidade e por não ser verificado"
   errors:
+    messages:
+      too_long_validation: "está limitado a %{max} caracteres; inseriu %{length}."
     embed:
       load_from_remote: "Houve um erro no carregamento desse post."
   bulk_invite:
@@ -38,8 +40,12 @@ pt:
   embed:
     start_discussion: "Iniciar Discussão"
     continue: "Continuar Discussão"
+    more_replies:
+      one: "mais 1 resposta"
+      other: "mais %{count} respostas"
     loading: "A carregar Discussão..."
     permalink: "Permalink"
+    imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
     replies:
       one: "1 resposta"
@@ -65,11 +71,14 @@ pt:
     one: "Desculpe, usuários novos podem colocar apenas um link nas postagens."
     other: "Desculpe, usuários novos podem colocar apenas %{count} links nas postagens."
   spamming_host: "Desculpe, você não pode colocar um link para este site."
+  user_is_suspended: "Não é permitida a criação de posts para utilizadores suspensos."
   just_posted_that: "é demasiado similar ao que postaste recentemente"
   has_already_been_used: "já foi usado"
   invalid_characters: "contém caracteres inválidos"
   is_invalid: "é inválido; tenta ser um bocado mais descritivo"
   next_page: "próxima página →"
+  prev_page: "← página anterior"
+  page_num: "Página %{num}"
   topics_in_category: "Tópicos na categoria '%{category}'"
   rss_posts_in_topic: "RSS feed de '%{topic}'"
   rss_topics_in_category: "RSS feed dos tópicos da categoria '%{category}'"
@@ -86,9 +95,11 @@ pt:
     errors:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
     default_names:
+      everyone: "todos"
       admins: "admins"
       moderators: "moderadores"
       staff: "staff"
+      trust_level_0: "trust_level_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
@@ -125,6 +136,8 @@ pt:
         name: "Nome da Categoria"
       post:
         raw: "Corpo"
+      user_profile:
+        bio_raw: "Sobre Mim"
     errors:
       messages:
         is_invalid: "é inválido; tente ser um pouco mais descritivo"
@@ -132,6 +145,9 @@ pt:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Apenas pode anexar avisos a mensagens privadas."
+              too_many_users: "Apenas pode envias avisos a um utilizador de cada vez."
             archetype:
               cant_send_pm: "Desculpe, não podes enviar uma mensagem particular para esse utilizador."
         user:
@@ -158,13 +174,27 @@ pt:
   category:
     topic_prefix: "Acerca da categoria %{category}"
     post_template: "%{replace_paragraph}\n\nUse os parágrados a seguir para uma descrição longa, assim como para estabelecer diretrizes ou regras da categoria.\n\nAlgumas coisas para se considerar em qualquer resposta de discussão:\n\n- Para que serve esta categoria? Porque algum usaria esta categoria para seu tópico?\n\n- Como esta categoria se difere das demais categorias já existentes?\n\n- Nós precisamos desta categoria?\n\n- Deveríamos mesclar esta categoria com outra, ou dividir esta categoria em mais categorias?\n"
+    cannot_delete:
+      uncategorized: "Não é possível apagar Sem Categoria"
+      has_subcategories: "Não é possível apagar esta categoria porque contém sub-categorias."
+      topic_exists:
+        one: "Não é possível apagar esta categoria porque contém 1 tópico. O tópico mais antigo é  %{topic_link}."
+        other: "Não é possível apagar esta categoria porque contém %{count} tópicos. O tópico mais antigo é  %{topic_link}."
+      topic_exists_no_oldest: "Não é possível apagar esta categoria porque a contagem de tópicos é de %{count}."
   trust_levels:
     newuser:
       title: "usuário novo"
     basic:
       title: "utilizador básico"
+    regular:
+      title: "membro"
+    leader:
+      title: "regular"
+    elder:
+      title: "líder"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}'"
   rate_limiter:
+    slow_down: "Realizou esta acção demasiadas vezes, tente novamente mais tarde"
     too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
@@ -249,14 +279,22 @@ pt:
   password_reset:
     no_token: "Desculpe, o seu token expirou. Por favor tenta redefinir a sua password novamente."
     choose_new: "Por favor escolhe uma password nova"
+    choose: "Por favor escolha uma senha"
+    update: 'Actualizar Senha'
+    save: 'Definir Senha'
+    title: 'Redifinir Senha'
     success: "Sua senha foi modificado com sucesso e você está conectado agora."
     success_unapproved: "Senha modificada com sucesso."
     continue: "Continuar para %{site_name}"
   change_email:
     confirmed: "O seu email foi atualizado."
+    please_continue: "Continuar para %{site_name}"
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
   activation:
+    action: "Activar a sua conta"
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
+    please_continue: "A sua nova conta foi confirmada e tem agora a sessão iniciada."
+    continue_button: "Continuar para %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
   post_action_types:
@@ -272,6 +310,7 @@ pt:
     notify_user:
       title: 'Notificar {{username}}'
       long_form: 'usuário notificado'
+      email_title: 'O seu post em "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notificar moderadores'
@@ -290,6 +329,23 @@ pt:
       title: 'Vote'
       description: 'Votar nesta postagem'
       long_form: 'voto computado para esta postagem'
+  topic_flag_types:
+    spam:
+      title: 'Spam'
+      description: 'Este tópico é um anúncio. Não é útil ou relevante para este site, mas é promocional por natureza.'
+      long_form: 'denunciar isto como spam'
+    inappropriate:
+      title: 'Impróprio'
+      description: 'Este tópico contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação das <a href="/guidelines">directrizes da nossa comunidades</a>.'
+      long_form: 'denunciar isto como impróprio'
+    notify_moderators:
+      title: 'Notificar moderadores'
+      long_form: 'moderadores notificados'
+      email_title: 'O tópico "%{title}" requer a atenção da moderação'
+      email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>O seu post foi denunciado pela comunidade. Por favor <a href="/my/private-messages">consulte as sua mensagens privadas</a>.</p>'
+    user_must_edit: '<p>Este post foi denunciado pela comunidade e está temporariamente oculto.</p>'
   archetypes:
     regular:
       title: "Tópico Regular"
@@ -331,6 +387,10 @@ pt:
       title: "Marcadores Adicionados"
       xaxis: "Dia"
       yaxis: "Número de novos marcadores adicionados"
+    starred:
+      title: "Favoritos"
+      xaxis: "Dia"
+      yaxis: "Número de novos tópicos favoritos"
     users_by_trust_level:
       title: "Usuários por Nível de Confiança"
       xaxis: "Nível de Confiança"
@@ -400,6 +460,9 @@ pt:
     education_new_topic:
       title: "Educação do Usuário Novo: Primeiros Tópicos"
       description: "Pop up de orientação automaticamente exibido em cima do composer quando usuário novo começa a escrever os seus dois primeiros tópicos."
+    usage_tips:
+      title: "Orientação para o novo utilizador"
+      description: "Orientação e informação essencial para novos utilizadores."
     welcome_user:
       title: "Boas-vindas: Usuário Novo"
       description: "Uma mensagem particular enviada automaticamente para todos os usuários novos quando eles se registram."
@@ -422,7 +485,10 @@ pt:
       title: "Rodapé das páginas"
   site_settings:
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
+    allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
     unique_posts_mins: "Quantos minutos antes para um utilizador poder criar uma postagem com o mesmo conteúdo outra vez?"
+    title: "Breve título deste site, usado na tag título."
+    site_description: "Descrever este site num frase, usada na tag de descrição meta,"
     queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Por padrão, enfileira tarefas no sidekiq. Se desativado, seu site ficará defeituoso."
     favicon_url: "Um favicon para o seu site"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."

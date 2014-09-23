@@ -220,7 +220,6 @@ zh_TW:
       other_accounts: 其他帳號正在使用相同 IP 地址
       no_other_accounts: (none)
     user:
-      said: "{{username}} 說了："
       profile: "基本資料"
       mute: "靜音"
       edit: "編輯喜好設定"
@@ -383,7 +382,6 @@ zh_TW:
         too_short: "你的密碼太短。"
         common: "此密碼太簡單。"
         ok: "你的密碼符合要求。"
-        instructions: "至少要 %{count} 個字。"
       ip_address:
         title: "最近的 IP 位址"
       registration_ip_address:
