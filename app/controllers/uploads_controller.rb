@@ -8,6 +8,13 @@ class UploadsController < ApplicationController
     filesize = File.size(file.tempfile)
     upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, filesize, { content_type: file.content_type })
 
+    if current_user.admin?
+      retain_hours = params[:retain_hours].to_i
+      if retain_hours > 0
+        upload.update_columns(retain_hours: retain_hours)
+      end
+    end
+
     if upload.errors.empty?
       render_serialized(upload, UploadSerializer, root: false)
     else
@@ -26,7 +33,7 @@ class UploadsController < ApplicationController
       url = request.fullpath
 
       # the "url" parameter is here to prevent people from scanning the uploads using the id
-      if upload = Upload.find_by(id: id, url: url)
+      if upload = (Upload.find_by(id: id, url: url) || Upload.find_by(sha1: params[:sha]))
         send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
       else
         render_404
