@@ -2,9 +2,9 @@
   <div class='content-list span6'>
     <h3>{{i18n admin.site_content.edit}}</h3>
     <ul>
-      {{#each type in model}}
+      {{#each model}}
         <li>
-          {{#link-to 'adminSiteContentEdit' type}}{{type.title}}{{/link-to}}
+          {{#link-to 'adminSiteContents.edit' content_type}}{{title}}{{/link-to}}
         </li>
       {{/each}}
     </ul>
