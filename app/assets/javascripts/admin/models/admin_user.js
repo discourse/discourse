@@ -307,9 +307,7 @@ Discourse.AdminUser = Discourse.User.extend({
         data: formData
       }).then(function(data) {
         if (data.deleted) {
-          bootbox.alert(I18n.t("admin.user.deleted"), function() {
-            document.location = "/admin/users/list/active";
-          });
+          document.location = "/admin/users/list/active";
         } else {
           bootbox.alert(I18n.t("admin.user.delete_failed"));
           if (data.user) {
@@ -361,9 +359,7 @@ Discourse.AdminUser = Discourse.User.extend({
           data: {delete_posts: true, block_email: true, block_urls: true, block_ip: true, context: window.location.pathname}
         }).then(function(data) {
           if (data.deleted) {
-            bootbox.alert(I18n.t("admin.user.deleted"), function() {
-              if (successCallback) successCallback();
-            });
+            if (successCallback) successCallback();
           } else {
             bootbox.alert(I18n.t("admin.user.delete_failed"));
           }
