@@ -1,10 +1,14 @@
+import searchForTerm from 'discourse/lib/search-for-term';
+
+var _dontSearch = false;
+
 export default Em.Controller.extend(Discourse.Presence, {
 
   contextChanged: function(){
-    if(this.get('searchContextEnabled')){
-      this._dontSearch = true;
+    if (this.get('searchContextEnabled')) {
+      _dontSearch = true;
       this.set('searchContextEnabled', false);
-      this._dontSearch = false;
+      _dontSearch = false;
     }
   }.observes("searchContext"),
 
@@ -23,7 +27,7 @@ export default Em.Controller.extend(Discourse.Presence, {
   }.property('searchContext'),
 
   searchContextEnabledChanged: function(){
-    if(this._dontSearch){ return; }
+    if (_dontSearch) { return; }
     this.newSearchNeeded();
   }.observes('searchContextEnabled'),
 
@@ -33,14 +37,15 @@ export default Em.Controller.extend(Discourse.Presence, {
     var term = (this.get('term') || '').trim();
     if (term.length >= Discourse.SiteSettings.min_search_term_length) {
       this.set('loading', true);
-      this.searchTerm(term, this.get('typeFilter'));
+
+      Ember.run.debounce(this, 'searchTerm', term, this.get('typeFilter'), 400);
     } else {
       this.setProperties({ content: null });
     }
     this.set('selectedIndex', 0);
   }.observes('term', 'typeFilter'),
 
-  searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
+  searchTerm: function(term, typeFilter) {
     var self = this;
 
     var context;
@@ -48,7 +53,7 @@ export default Em.Controller.extend(Discourse.Presence, {
       context = this.get('searchContext');
     }
 
-    return Discourse.Search.forTerm(term, {
+    searchForTerm(term, {
       typeFilter: typeFilter,
       searchContext: context
     }).then(function(results) {
@@ -57,7 +62,7 @@ export default Em.Controller.extend(Discourse.Presence, {
     }).catch(function() {
       self.set('loading', false);
     });
-  }, 400),
+  },
 
   showCancelFilter: function() {
     if (this.get('loading')) return false;

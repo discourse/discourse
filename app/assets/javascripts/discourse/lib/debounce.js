@@ -21,31 +21,3 @@ Discourse.debounce = function(func, wait) {
     Ember.run.debounce(null, later, wait);
   };
 };
-
-/**
-  Debounce a javascript function that returns a promise. If it's called too soon it
-  will return a promise that is never resolved.
-
-  @method debouncePromise
-  @module Discourse
-  @param {function} func The function to debounce
-  @param {Number} wait how long to wait
-**/
-Discourse.debouncePromise = function(func, wait) {
-  var self, args, promise;
-  var later = function() {
-    func.apply(self, args).then(function (funcResult) {
-      promise.resolve(funcResult);
-    });
-  };
-
-  return function() {
-    self = this;
-    args = arguments;
-    promise = Ember.Deferred.create();
-
-    Ember.run.debounce(null, later, wait);
-
-    return promise;
-  };
-};
