@@ -36,6 +36,7 @@ en:
   is_reserved: "is reserved"
 
   purge_reason: "Automatically deleted due to being old and unverified"
+  disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
 
   errors:
     messages:
