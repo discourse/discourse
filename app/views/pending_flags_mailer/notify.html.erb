@@ -1,27 +1,27 @@
 <p>
-  <%=t 'flags_reminder.flags_were_submitted', count: @hours %>
-  <a href="<%= Discourse.base_url + '/admin/flags/active' %>"><%=t 'flags_reminder.please_review' %></a>
+  <%= t 'flags_reminder.flags_were_submitted', count: @hours %>
+  <a href="<%= Discourse.base_url + '/admin/flags/active' %>"><%= t 'flags_reminder.please_review' %></a>
 </p>
 
-<hr/>
-
-<table>
-  <tr>
-    <td></td>
-    <td><%=t 'flags_reminder.post_number' %></td>
-    <td></td>
-  </tr>
+<table style="border-collapse: collapse; border-spacing: 0;">
   <% @posts.each do |post| %>
-  <tr>
-    <td><%= link_to post[:title], "#{Discourse.base_url}/t/#{post[:topic_slug]}/#{post[:topic_id]}/#{post[:post_number]}" %></td>
-    <td align="center"><%= post[:post_number] %></td>
-    <td><%= post[:reason_counts] %></td>
-  </tr>
+    <tr style="border-bottom: 1px solid #e9e9e9; border-top: 1px solid #e9e9e9;">
+      <td style="width: 25px; padding: 8px 0 0 0; text-align: center; vertical-align: top;">
+        <a href='<%= Discourse.base_url + "/admin/users/#{post[:user].username.downcase}" %>'>
+          <img width="25" height="25" src="<%= Discourse.base_url + post[:user].avatar_template.gsub("{size}", "45") %>" title="<%= post[:user].username %>">
+        </a>
+      </td>
+      <td style="padding: 8px; word-wrap: break-word; vertical-align: top;">
+        <h3 style="margin: 0 !important;"><%= link_to post[:title], post[:url] %></h3>
+        <p style="margin: 0 2px;"><%= raw post[:excerpt] %></p>
+      </td>
+      <td style="vertical-align: middle; min-width: 120px;">
+        <%= raw post[:html_reason_counts] %>
+      </td>
+    </tr>
   <% end %>
 </table>
 
-<hr/>
-
 <p>
-  <%=t 'flags_reminder.how_to_disable' %>
+  <%= t 'flags_reminder.how_to_disable' %>
 </p>
