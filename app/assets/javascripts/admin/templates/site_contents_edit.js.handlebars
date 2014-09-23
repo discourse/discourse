@@ -1,21 +1,21 @@
-<h3>{{model.title}}</h3>
-<p class='description'>{{model.description}}</p>
+<h3>{{title}}</h3>
+<p class='description'>{{description}}</p>
 
-{{#if model.markdown}}
+{{#if markdown}}
   {{pagedown-editor value=model.content}}
 {{/if}}
-{{#if model.plainText}}
+{{#if plainText}}
   {{textarea value=model.content class="plain"}}
 {{/if}}
-{{#if model.html}}
+{{#if html}}
   {{aceEditor content=model.content mode="html"}}
 {{/if}}
-{{#if model.css}}
+{{#if css}}
   {{aceEditor content=model.content mode="css"}}
 {{/if}}
 
 <div class='controls'>
-  <button class='btn' {{action saveChanges}} {{bind-attr disabled="saveDisabled"}}>
+  <button class='btn' {{action "saveChanges"}} {{bind-attr disabled="saveDisabled"}}>
     {{#if saving}}
       {{i18n saving}}
     {{else}}

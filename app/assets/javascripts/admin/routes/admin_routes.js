@@ -1,18 +1,8 @@
-/**
-  Builds the routes for the admin section
-
-  @method buildRoutes
-  @for Discourse.AdminRoute
-**/
 Discourse.Route.buildRoutes(function() {
   this.resource('admin', function() {
     this.route('dashboard', { path: '/' });
     this.resource('adminSiteSettings', { path: '/site_settings' }, function() {
       this.resource('adminSiteSettingsCategory', { path: 'category/:category_id'} );
-    });
-
-    this.resource('adminSiteContents', { path: '/site_contents' }, function() {
-      this.resource('adminSiteContentEdit', {path: '/:content_type'});
     });
 
     this.resource('adminEmail', { path: '/email'}, function() {
@@ -25,6 +15,9 @@ Discourse.Route.buildRoutes(function() {
     this.resource('adminCustomize', { path: '/customize' } ,function() {
       this.route('colors');
       this.route('css_html');
+      this.resource('adminSiteContents', { path: '/site_contents' }, function() {
+        this.route('edit', {path: '/:content_type'});
+      });
     });
     this.route('api');
 
