@@ -259,7 +259,6 @@ he:
       other_accounts: חשבונות אחרים עם כתובת IP זהה
       no_other_accounts: (ללא)
     user:
-      said: "{{username}} אמר:"
       profile: "פרופיל"
       mute: "השתק"
       edit: "ערוך העדפות"
@@ -289,6 +288,7 @@ he:
       watched_categories: "נצפה"
       watched_categories_instructions: "את/ה אוטומטית תצפו בכל הנושאים החדשים בקטגוריות האלה. תקבלו התרעות על כל ההודעות והנושאים החדשים, ובנוסף, כמות ההודעות שלא נקראו יופיעו לצד כל נושא."
       tracked_categories: "במעקב"
+      tracked_categories_instructions: "מעקב אוטומטי אחרי נושאים חדשים בקטגוריות אלו. סך הפרסומים החדשים ושלא נקראו יופיע לצד הנושא."
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבלו התרעות בנוגע לנושאים חדשים בקטגוריות האלה, והם לא יופיעו בעמוד הלא נקראו שלך."
       delete_account: "מחק את החשבון שלי"
@@ -297,9 +297,11 @@ he:
       delete_yourself_not_allowed: "אתה לא יכול למחוק את חשבונך כרגע. צור קשר עם מנהל כדי שימחק אותו בשבילך."
       unread_message_count: "הודעות"
       staff_counters:
+        flags_given: "סימונים שעוזרים"
         flagged_posts: "הודעות מסומנות"
         deleted_posts: "הודעות שנמחקו"
         suspensions: "השעיות"
+        warnings_received: "אזהרות"
       messages:
         all: "הכל"
         mine: "שלי"
@@ -317,7 +319,7 @@ he:
         confirm: "אם תשנו את שם המשתמש/ת שלך, כל הציטוטים של ההודעות שלך ואזכורי @שם_המשתמש שלך יישברו. את/ה בטוחים לחלוטין שברצונך לשנות?"
         taken: "סליחה, שם המשתמש הזה תפוס."
         error: "ארעה שגיאה בשינוי שם המשתמש שלך."
-        invalid: "שם המשתמש אינו תקין. עליו לכלול רק אותיות ומספרים."
+        invalid: "שם המשתמש אינו תקין. עליו לכלול רק אותיות באנגלית ומספרים."
       change_email:
         title: "שנה דואר אלקטרוני"
         taken: "סליחה, הכתובת הזו אינה זמינה."
@@ -337,7 +339,6 @@ he:
         title: "שינוי רקע פרופיל"
       email:
         title: "דואר אלקטרוני"
-        instructions: "לעולם לא יוצג באופן פומבי."
         ok: "נראה טוב, נשלח לך דואר אלקטרוני לאישור."
         invalid: "בבקשה הכנס כתובת דואר אלקטרוני חוקית"
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}."
@@ -349,7 +350,6 @@ he:
         ok: "השם נראה טוב."
       username:
         title: "שם משתמש"
-        instructions: "חייב להיות ייחודי, ללא רווחים וקצר."
         short_instructions: "אנשים יכולים לאזכר אותך כ @{{username}}."
         available: "שם המשתמש שלך פנוי."
         global_match: "הדואר האלקטרוני תואם את שם המשתמש הרשום"
@@ -425,6 +425,7 @@ he:
         bulk_invite:
           none: "נכון לעכשיו לא הזמנת לכאן אף אחד. תוכלו לשלוח הזמנות אישיות, או להזמין כמה אנשים בבת אחת באמצעות   <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> העלאת קובץ הזמנה קבוצתית</a>."
           text: "הזמנה קבוצתית מקובץ"
+          uploading: "העלאה..."
           success: "הקובץ הועלה בהצלחה, תקבל/י התראה תוך זמן קצר בנוגע להתקדמות."
           error: "חלה תקלה בהעלאת \"'{{filename}}': \n{{message}}"
       password:
@@ -432,7 +433,6 @@ he:
         too_short: "הסיסמה שלך קצרה מידי."
         common: "הסיסמה הזו נפוצה מידי."
         ok: "הסיסמה שלך נראית טוב."
-        instructions: "יש להכיל לפחות %{count} תווים."
       ip_address:
         title: "כתובת IP אחרונה"
       registration_ip_address:
@@ -460,6 +460,7 @@ he:
         network: "אנא בדקו את ההתקשרות שלכם"
         network_fixed: "נראה שזה חזר לעבוד."
         server: "קוד שגיאה: {{status}}"
+        forbidden: "אינך רשא/ית לצפות בזה."
         unknown: "משהו השתבש."
       buttons:
         back: "חזרה"
@@ -516,6 +517,7 @@ he:
       reset: "איפוס סיסמה"
       complete_username: "אם קיים חשבון שמתאים לשם המשתמש <b>%{username}</b>, אתה אמור לקבל בקרוב מייל עם הוראות לאיפוס הסיסמא. "
       complete_email: "אם החשבון מתאים ל <b>%{email}</b>, אתה אמור לקבל בקרוב מעעל עם הוראות לאיפוס הסיסמא."
+      complete_username_found: "מצאנו חשבון שתואם את שם המשתמש  <b>%{username}</b>, קרוב לודאי שתקבלו דוא\"ל עם הנחיות כיצד לאתחל את הסיסמא שלכם תוך זמן קצר."
     login:
       title: "התחברות"
       username: "משתמש"
@@ -554,6 +556,7 @@ he:
         title: "עם GitHub"
         message: "התחברות עם GitHub (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
     composer:
+      add_warning: "זוהי התראה רשמית."
       posting_not_on_topic: "לאיזה נושא רצית להגיב?"
       saving_draft_tip: "שומר"
       saved_draft_tip: "נשמר"
@@ -1907,6 +1910,10 @@ he:
         basic_user:
           name: בסיסי
           description: <a href="https://meta.d הפעולות הקהילתיות הבסיסיותiscourse.org/t/what-do-user-trust-levels-do/4924/4">מאושרות</a> כל
+        member:
+          name: חבר/ה
+        regular:
+          name: רגיל/ה
         leader:
           name: מוביל/ה
         welcome:
@@ -1924,6 +1931,24 @@ he:
         great_post:
           name: פרסום מצויין
           description: קבלת 50 לייקים על פרסום. תג זה יכול להיות מוענק מספר פעמים
+        nice_topic:
+          name: נושא נחמד
+          description: קיבל/ה 10 לייקים על נושא. תג זה יכול להיות מוענק כמה פעמים
+        good_topic:
+          name: נושא טוב
+          description: קיבל/ה 25 לייקים על הנושא. תג זה יכול להיות מוענק כמה פעמים
+        great_topic:
+          name: נושא מצויין
+          description: קיבל/ה 50 לייקים על הנושא. תג זה יכול להיות מוענק מספר פעמים
+        nice_share:
+          name: שיתוף נחמד
+          description: שיתפ/ה פרסום עם 25 מבקרים ייחודיים
+        good_share:
+          name: שיתוף טוב
+          description: שיתפ/ה פרסום עם 300 מבקרים ייחודיים
+        great_share:
+          name: שיתוף מעולה
+          description: חלק/ה פרסום עם 1000 מבקרים ייחודיים
         first_like:
           name: לייק ראשון
           description: חיבב/ה פרסום

@@ -259,7 +259,6 @@ fr:
       other_accounts: Autres comptes utilisant cette adresse IP
       no_other_accounts: (aucun)
     user:
-      said: "{{username}} a dit :"
       profile: "Profil"
       mute: "Silencieux"
       edit: "Modifier les préférences"
@@ -298,9 +297,11 @@ fr:
       delete_yourself_not_allowed: "Vous ne pouvez pas supprimer votre compte maintenant. Contactez un administrateur pour faire supprimer votre compte pour vous."
       unread_message_count: "Messages"
       staff_counters:
+        flags_given: "signalements obligeants"
         flagged_posts: "messages signalés"
         deleted_posts: "messages supprimés"
         suspensions: "suspensions"
+        warnings_received: "avertissements"
       messages:
         all: "Tous"
         mine: "Envoyés"
@@ -338,7 +339,6 @@ fr:
         title: "Arrière plan du profil"
       email:
         title: "Courriel"
-        instructions: "Ne sera jamais visible publiquement."
         ok: "Cela semble correct. Un courriel de confirmation sera envoyé."
         invalid: "Merci de saisir une adresse de courriel valide."
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}."
@@ -350,7 +350,6 @@ fr:
         ok: "Votre nom semble correct."
       username:
         title: "Pseudo"
-        instructions: "Doit être unique, court et sans espace."
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @{{username}}."
         available: "Votre pseudo est disponible."
         global_match: "L'adresse de courriel correspond au pseudo enregistré."
@@ -426,6 +425,7 @@ fr:
         bulk_invite:
           none: "Vous n'avez encore invité personne. Vous pouvez envoyé des invitations individuelles, ou en masse en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier d'invitation contenant la liste des courriels</a>."
           text: "Invitation massive depuis un fichier"
+          uploading: "Envoi en cours..."
           success: "Ficher téléchargé avec succès, vous recevrez bientôt une notification avec la progression."
           error: "Il y a eu une erreur lors de l'envoi de '{{filename}}': {{message}}"
       password:
@@ -433,7 +433,6 @@ fr:
         too_short: "Votre mot de passe est trop court."
         common: "Ce mot de passe est trop commun."
         ok: "Votre mot de passe semble correct."
-        instructions: "Doit être d'au moins %{count} caractères."
       ip_address:
         title: "Dernières adresses IP"
       registration_ip_address:
@@ -702,6 +701,13 @@ fr:
         hot: "Il n'y a aucun sujet populaire pour le moment."
         category: "Il n'y a aucun sujet sur {{category}}."
         top: "Il n'y a pas de meilleurs sujets."
+        educate:
+          new: '<p>Vos nouveaux sujets apparaissent ici</p><p>Par défaut, les sujets sont considérés comme nouveau et affiche l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nouveau</span> lorsqu''ils ont été crées dans les deux derniers jours.</p><p>
+
+            Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
+          unread: '<p>Vos sujets non-lus apparaissent ici</p><p>Par défaut, les sujets sont considérés comme non-lus et affichent le nombre de messages non-lus <span class="badge new-posts badge-notification">1</span> sont ceux:</p>
+
+            <ul><li>Que vous avez crées</li><li>Auxquels vous avez répondu</li><li>Que vous avez lu plus de 4 minutes</li></ul><p>Ou que vous avez explicitement suivis ou surveillés</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
       bottom:
         latest: "Il n'y a plus de sujet à lire."
         hot: "Il n'y a plus de sujet populaire à lire."
@@ -795,13 +801,16 @@ fr:
           '0': 'Vous ignorez toutes les notifications de ce sujet.'
         watching_pm:
           title: "Suivre attentivement"
+          description: "Vous serez averti de chaque nouveau message de cette conversation privée. Le nombre de messages non lus et nouveaux apparaîtra également à côté du sujet."
         watching:
           title: "Surveiller"
+          description: "Vous serez notifier de chaque nouveau message de ce sujet. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté du sujet."
         tracking_pm:
           title: "Suivi simple"
           description: "Le nombre de messages non lus et nouveaux apparaîtra à côté de cette conversation privée. Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message."
         tracking:
           title: "Suivi"
+          description: "Le nombre de messages non lus et de nouveaux messages apparaîtra à côté du sujet. Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message."
         regular:
           title: "Normal"
           description: "Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message. "
@@ -827,6 +836,8 @@ fr:
         pin_globally: "Épingler le sujet globalement"
         unarchive: "Désarchiver le sujet"
         archive: "Archiver le sujet"
+        invisible: "Retirer de la liste des sujets"
+        visible: "Afficher dans la liste des sujets"
         reset_read: "Réinitialiser les lectures"
         multi_select: "Sélectionner les messages"
       reply:
@@ -940,6 +951,7 @@ fr:
         upload_not_authorized: "Désolé, le fichier que vous êtes en train d'envoyer n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'image."
         attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichier."
+        attachment_download_requires_login: "Désolé, vous devez être connecté pour télécharger une pièce jointe."
       abandon:
         confirm: "Voulez-vous vraiment abandonner votre message ?"
         no_value: "Non, le conserver"
@@ -968,6 +980,11 @@ fr:
           yes_value: "Oui, supprimer les réponses égalements"
           no_value: "Non, juste ce message"
         admin: "action sur message d'administrateur"
+        wiki: "Basculer en mode wiki"
+        unwiki: "Retirer le mode wiki"
+        convert_to_moderator: "Ajouter la couleur modérateur"
+        revert_to_regular: "Retirer la couleur modérateur"
+        rebake: "Reconstruire l'HTML"
       actions:
         flag: 'Signaler'
         defer_flags:
@@ -1136,8 +1153,10 @@ fr:
       notifications:
         watching:
           title: "S'abonner"
+          description: "Vous pourrez suivre attentivement automatiquement toutes les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, de plus les nombres de messages non lus et de nouveaux messages apparaîtront également à côté du sujet."
         tracking:
           title: "Suivi"
+          description: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de messages non-lus et nouveaux apparaîtra à côté du sujet."
         regular:
           title: "Normal"
           description: "Vous recevrez une notification seulement si quelqu'un mentionne votre @pseudo ou répond à votre message."
@@ -1187,6 +1206,8 @@ fr:
         help: "Ce sujet est épinglé; il s'affichera en haut de sa catégorie"
       archived:
         help: "Ce sujet est archivé; il est gelé et ne peut être modifié"
+      invisible:
+        help: "Ce sujet n'apparait plus dans la liste des sujets et sera seulement accessible via un lien direct"
     posts: "Messages"
     posts_lowercase: "messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
@@ -1431,6 +1452,8 @@ fr:
           filename: "Nom du fichier"
           size: "Taille"
         upload:
+          text: "Envoyer"
+          uploading: "Envoi en cours..."
           success: "'{{filename}}' a été envoyé avec succès."
           error: "Il y a eu une erreur lors de l'envoi de '{{filename}}': {{message}}"
         operations:
@@ -1893,14 +1916,20 @@ fr:
         top: '<b>g</b>, <b>t</b> Haut'
       navigation:
         title: 'Navigation'
+        jump: '<b>#</b> Aller au message #'
         back: '<b>u</b> Retour'
+        up_down: '<b>k</b>/<b>j</b> Déplacer la sélection &uarr; &darr;'
         open: '<b>o</b> ou <b>Entrée</b> Ouvrir le sujet sélectionné'
         next_prev: '<b>shift j</b>/<b>shift k</b> Suivante/précédente section'
       application:
         title: 'Application'
         create: '<b>c</b> Créer un nouveau sujet'
         notifications: '<b>n</b> Ouvrir les notifications'
+        site_map_menu: '<b>=</b> Ouvrir le menu principal'
+        user_profile_menu: '<b>p</b> Ouvrir le menu de votre profil'
+        show_incoming_updated_topics: '<b>.</b> Afficher les sujets mis à jour'
         search: '<b>/</b> Rechercher'
+        help: '<b>?</b> Ouvrir l''aide au clavier'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Marquer comme lu les nouveaux messages'
         dismiss_topics: '<b>x</b>, <b>r</b> Marquer comme lu les sujets'
       actions:
@@ -1980,14 +2009,21 @@ fr:
           description: A reçu 50 j'aime sur un message. Ce badge peut être décerné plusieurs fois
         nice_topic:
           name: Sujet intéressant
+          description: A reçu 10 J'aime sur un sujet. Ce badge peut être décerné plusieurs fois
         good_topic:
           name: Bon sujet
+          description: A reçu 25 J'aime sur un sujet. Ce badge peut être décerné plusieurs fois
         great_topic:
           name: Eminent sujet
+          description: A reçu 50 J'aime sur un sujet. Ce badge peut être décerné plusieurs fois
         nice_share:
           name: Partage
+          description: Message partagé avec 25 visiteurs uniques
         good_share:
           name: Grand partage
+          description: Message partagé avec 300 visiteurs uniques
+        great_share:
+          description: Message partagé avec 1000 visiteurs uniques
         first_like:
           name: Premier j'aime
           description: A aimé un message

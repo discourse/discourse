@@ -259,7 +259,6 @@ pt:
       other_accounts: Outras contas com este endereço IP
       no_other_accounts: (nenhum)
     user:
-      said: "{{username}} enviou:"
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
@@ -289,6 +288,7 @@ pt:
       watched_categories: "Observado"
       watched_categories_instructions: "Observará automaticamente todos os novos tópicos nestas categorias. Será notificado de todos os novos posts e tópicos. Além disso, a contagem de posts novos e não lidos irá surgir ao lado da listagem do tópico. "
       tracked_categories: "Seguido "
+      tracked_categories_instructions: "Seguirá automaticamente todos os tópicos novos nestas categorias. Uma contagem de posts novos e não lidos irá surgir ao lado do tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Não será notificado relativamente a novos tópicos nestas categorias, e não aparecerão na sua lista de não lidos."
       delete_account: "Eliminar Conta"
@@ -297,9 +297,11 @@ pt:
       delete_yourself_not_allowed: "Neste momento não pode eliminar a sua conta. Contacte um administrador para que este elimine a sua conta por sí."
       unread_message_count: "Mensagens"
       staff_counters:
+        flags_given: "denúncias úteis"
         flagged_posts: "posts sinalizados"
         deleted_posts: "posts eleminados"
         suspensions: "suspensões"
+        warnings_received: "avisos"
       messages:
         all: "Todas"
         mine: "Minha"
@@ -337,7 +339,6 @@ pt:
         title: "Fundo de Perfil"
       email:
         title: "Email"
-        instructions: "Nunca estará visível publicamente."
         ok: "Parece OK. Vamos enviar um email para confirmar."
         invalid: "Por favor coloque um endereço de email válido."
         authenticated: "O seu email foi autenticado por {{provider}}."
@@ -349,7 +350,6 @@ pt:
         ok: "O seu nome parece bom."
       username:
         title: "Nome de Utilizador"
-        instructions: "Tem de ser único, sem espaços, curto."
         short_instructions: "As pessoas podem mencioná-lo utilizando @{{username}}."
         available: "O seu nome de utilizador está disponível."
         global_match: "O email corresponde ao nome de utilizador registado."
@@ -425,6 +425,7 @@ pt:
         bulk_invite:
           none: "Ainda não convidou ninguém. Pode enviar convites individuais, ou convidar um grupo de pessoas <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> enviando um ficheiro com convites em massa."
           text: "Convite em massa a partir do ficheiro"
+          uploading: "Enviando..."
           success: "Envio de ficheiro feito com sucesso, será notificado em breve do seu progresso."
           error: "Erro de envio '{{filename}}': {{message}}"
       password:
@@ -432,7 +433,6 @@ pt:
         too_short: "A sua palavra-chave é muito curta."
         common: "Essa senha é demasiada comum."
         ok: "A sua palavra-chave parece estar OK."
-        instructions: "Tem de ter pelo menos %{count} caracteres."
       ip_address:
         title: "Último endereço IP"
       registration_ip_address:
@@ -460,6 +460,7 @@ pt:
         network: "Por favor verifique a sua ligação."
         network_fixed: "Parece que está de volta."
         server: "Código de Erro: {{status}}"
+        forbidden: "Não tem permissão para visualizar isso."
         unknown: "Algo correu mal."
       buttons:
         back: "Voltar Atrás"
@@ -470,6 +471,7 @@ pt:
     read_only_mode:
       enabled: "Um administrador activou o modo só de leitura. Pode continuar a navegar no site mas as interacções poderão não funcionar. "
       login_disabled: "A função de login está desactivada enquanto o site se encontrar no modo só de leitura."
+    too_few_topics_notice: "Crie pelo menos 5 tópicos públicos e %{posts} posts públicos para iniciar a discussão. Novos utilizadores não poderão ganhar níveis de confiança se não existir conteúdo para lerem. Esta mensagem surge apenas para membros do staff."
     learn_more: "sabe mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -484,6 +486,7 @@ pt:
     last_post: Última mensagem
     last_post_lowercase: último post
     summary:
+      enabled_description: "Está a ler um resumo deste tópico: os posts mais interessantes são determinados pela comunidade."
       description: "Existem <b>{{count}}</b> respostas."
       description_time: "Existem <b>{{count}}</b> respostas com um tempo de leitura estimado <b>{{readingTime}} minutos</b>."
       enable: 'Sumarize este tópico'
@@ -514,6 +517,10 @@ pt:
       reset: "Recuperar Palavra-chave"
       complete_username: "Se uma conta corresponder ao nome de utilizador <b>%{username}</b>, receberá um email com instruções sobre como redefinir rapidamente a sua senha."
       complete_email: "Se uma conta corresponder <b>%{email}</b>, receberá um email com instruções sobre como redefinir rapidamente a sua senha."
+      complete_username_found: "Encontramos uma conta correspondente ao nome de utilizador <b>%{username}</b>, receberá em breve um email com instruções para repor a sua senha."
+      complete_email_found: "Encontramos uma conta correspondente a <b>%{email}</b>, receberá em breve um email com instruções para repor a sua senha."
+      complete_username_not_found: "Não existe nenhuma conta correspondente ao nome de utilizador <b>%{username}</b>"
+      complete_email_not_found: "Não existe nenhuma conta correspondente a <b>%{email}</b>"
     login:
       title: "Entrar"
       username: "Utilizador"
@@ -552,6 +559,7 @@ pt:
         title: "com GitHub"
         message: "A autenticar com GitHub (certifique-se de que os bloqueadores de popup estão desativados)"
     composer:
+      add_warning: "Este é aviso oficial."
       posting_not_on_topic: "A que tópico gostaria de responder?"
       saving_draft_tip: "a guardar"
       saved_draft_tip: "guardado"
@@ -634,6 +642,7 @@ pt:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ganhou '{{description}}'</p>"
     upload_selector:
       title: "Adicionar uma imagem"
       title_with_attachments: "Adicionar uma imagem ou um ficheiro"
@@ -692,6 +701,8 @@ pt:
         hot: "Não há tópicos quentes."
         category: "Não há tópicos na categoria {{category}}."
         top: "Não existem tópicos."
+        educate:
+          new: '<p>Os tópicos novos serão apresentados aqui.</p><p>Por defeito, os tópicos são considerados novo e mostrarão o indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> caso tenham sido criados nos últimos 2 dias.</p><p>Pode alterar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
       bottom:
         latest: "Não há mais tópicos recentes."
         hot: "Não mais tópicos quentes."
@@ -699,6 +710,7 @@ pt:
         read: "Não há mais tópicos lidos."
         new: "Não há mais tópicos novos."
         unread: "Não há mais tópicos não lidos."
+        starred: "Não existem mais tópicos nos favoritos."
         category: "Não há mais tópicos na categoria {{category}}."
         top: "Não existem mais tópicos populares."
     topic:
@@ -816,6 +828,8 @@ pt:
         pin_globally: "Destacar Tópico Globalmente"
         unarchive: "Desarquivar Tópico"
         archive: "Arquivar Tópico"
+        invisible: "Tornar Não Listado"
+        visible: "Tornar Listado"
         reset_read: "Repor Data de Leitura"
         multi_select: "Seleccionar Posts"
       reply:
@@ -929,6 +943,7 @@ pt:
         upload_not_authorized: "Desculpe, o tipo de ficheiro que está a enviar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos utilizadores não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, utilizadores novos não podem enviar anexos."
+        attachment_download_requires_login: "Desculpe, necessita de ter sessão iniciada para descarregar anexos."
       abandon:
         confirm: "Tem a certeza que quer abandonar o seu post?"
         no_value: "Não, manter"
@@ -957,6 +972,11 @@ pt:
           yes_value: "Sim, remover as respostas também"
           no_value: "Não, somente esta mensagem"
         admin: "acções administrativas de post"
+        wiki: "Tornar Wiki"
+        unwiki: "Retirar Wiki"
+        convert_to_moderator: "Adicionar Cor do Staff"
+        revert_to_regular: "Remover Cor do Staff"
+        rebake: "Reconstruir HTML"
       actions:
         flag: 'Sinalização'
         defer_flags:
@@ -1068,6 +1088,7 @@ pt:
           side_by_side:
             button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
+            title: "Show the raw source diffs side-by-side"
             button: '<i class="fa fa-columns"></i> Raw'
         details:
           edited_by: "Editado por"
@@ -1109,8 +1130,10 @@ pt:
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
       email_in_disabled: "Publicar tópicos novos via email está desactivado nas Definições do Site. Para permitir a publicação de novos tópicos por email,"
       email_in_disabled_click: 'active a definição "email in".'
+      allow_badges_label: "Permitir a atribuição de medalhas nesta categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
+      everyone_permission: "todos"
       this_year: "este ano"
       position: "posição"
       default_position: "Posição Padrão"
@@ -1156,6 +1179,8 @@ pt:
         one: "1 clique"
         other: "%{count} cliques"
     topic_statuses:
+      warning:
+        help: "Este é um aviso oficial."
       locked:
         help: "Este tópico está fechado; já não são aceites novas respostas"
       unpinned:
@@ -1169,6 +1194,8 @@ pt:
         help: "Este tópico está marcado; será mostrada no topo da sua categoria"
       archived:
         help: "Este tópico está arquivado; está bloqueado e não pode ser alterado"
+      invisible:
+        help: "Este tópico não está listado; não será apresentado na listagem de tópicos e poderá ser apenas acedido através de um link directo"
     posts: "Mensagens"
     posts_lowercase: "posts"
     posts_long: "há {{number}} mensagens neste tópico"
@@ -1256,6 +1283,7 @@ pt:
         this_week: "Esta semana"
         today: "Hoje"
         other_periods: "ver mais tópicos populares"
+    browser_update: 'Infelzimente, <a href="http://www.discourse.org/faq/#browser">o seu browser é demasiado antigo para funcionar com este site</a>. Por favor <a href="http://browsehappy.com">actualize o seu browser</a>.'
     permission_types:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
@@ -1311,6 +1339,8 @@ pt:
         agree_flag_modal_title: "Aceitar e..."
         agree_flag_hide_post: "Aceitar (esconder post + enviar MP)"
         agree_flag_hide_post_title: "Esconder este post e enviar automaticamente uma mensagem privada ao utilizador solicitando a edição do post com urgência"
+        agree_flag_restore_post: "Concordar (restaurar post)"
+        agree_flag_restore_post_title: "Restaurar este post"
         agree_flag: "Aceitar a denúncia"
         agree_flag_title: "Aceitar a denúncia e manter o post inalterado"
         defer_flag: "Diferir"
@@ -1345,6 +1375,7 @@ pt:
         topic_flagged: "Este <strong>topic</strong> foi denunciado."
         visit_topic: "Visitar tópico para tomar medidas"
         was_edited: "Post foi editado após a primeira denúncia"
+        previous_flags_count: "Este já foi denunciado {{count}} vezes."
         summary:
           action_type_3:
             one: "off-topic"
@@ -1388,6 +1419,7 @@ pt:
         confirm_revoke: "Tem a certeza que quer revogar essa chave?"
         info_html: "A sua chave de API permitirá a criação e edição de tópicos usando requests JSON."
         all_users: "Todos os Utilizadores"
+        note_html: "Manter esta chave <strong>secreta</strong>, todos os utilizadores que a tenham poderão criar posts arbitrários como qualquer utilizador."
       backups:
         title: "Backups"
         menu:
@@ -1408,6 +1440,8 @@ pt:
           filename: "Nome do ficheiro"
           size: "Tamanho"
         upload:
+          text: "Enviar"
+          uploading: "A enviar..."
           success: "'{{filename}}' foi carregado com sucesso."
           error: "Verificou-se um erro no carregamento de '{{filename}}': {{message}}"
         operations:
@@ -1545,6 +1579,7 @@ pt:
             user_placeholder: "nome de utilizador"
             address_placeholder: "name@example.com"
             type_placeholder: "resumo, subscrever..."
+            reply_key_placeholder: "chave de resposta"
             skipped_reason_placeholder: "motivo"
       logs:
         title: "Logs"
@@ -1641,6 +1676,9 @@ pt:
           pending: 'Utilizadores com Confirmação Pendente'
           newuser: 'Utilizadores no Nível de Confiança 0 (Utilizador Novo)'
           basic: 'Utilizadores no Nível de Confiança 1 (Utilizador Básico)'
+          regular: 'Utilizadores no Nível 2 de Confiança (Membro)'
+          leader: 'Utilizadores no Nível 3 de Confiança (Regular)'
+          elder: 'Utilizadores no Nível 4 de Confiança (Líder)'
           admins: 'Utilizadores Administradores'
           moderators: 'Moderadores'
           blocked: 'Utilizadores Bloqueados'
@@ -1695,6 +1733,7 @@ pt:
         topics_entered: Tópicos Vistos
         flags_given_count: Sinalizações dadas
         flags_received_count: Sinalizações recebidas
+        warnings_received_count: Avisos Recebidos
         flags_given_received_count: 'Denúncias Dadas / Recebidas'
         approve: 'Aprovar'
         approved_by: "aprovado por"
@@ -1813,9 +1852,18 @@ pt:
         grant_badge: Conceder Medalha
         granted_badges: Medalhas Concedidas
         grant: Conceder
+        no_user_badges: "%{name} não recebeu qualquer medalha."
+        no_badges: Não existe qualquer medalha que pode ser concedida.
+        allow_title: Permitir o uso de medalha como um título
         multiple_grant: Pode ser concedido diversas vezes
+        listable: Mostrar medalha no página pública de medalhas
         enabled: Ativar medalha
         icon: Icon
+        query: Query de Medalha (SQL)
+        target_posts: Query direccionado a posts
+        auto_revoke: 'Correr diariamente query de revogação '
+        show_posts: Mostrar post de concessão de medalha na página de medalha
+        trigger: Accionar
         trigger_type:
           none: "Actualizado diariamente"
           post_action: "Quando um utilizador actua num post"
@@ -1823,29 +1871,69 @@ pt:
           trust_level_change: "Quando um utilizador muda de nível de confiança"
           user_change: "Quando um utilizador é editado ou criado"
         preview:
+          link_text: "Pré-visualizar medalhas concedidas"
+          plan_text: "Pré-visualizar com plano query"
+          modal_title: "Pré-visualização do Query da Medalha"
+          sql_error_header: "Houve um erro com o query."
+          error_help: "Para ajuda com queries de medalhas, ver os seguintes links"
           bad_count_warning:
             header: "AVISO!"
+          grant_count:
+            zero: "Nenhumas medalhas a atribuir."
+            one: "<b>1</b> medalha a atribuir."
+            other: "<b>%{count}</b> medalhas a atribuir."
           sample: "Amostra:"
           grant:
             with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> por o post em %{link}
+            with_post_time: <span class="username">%{username}</span> por o post em %{link} às <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
     lightbox:
       download: "descarregar"
     keyboard_shortcuts_help:
       title: 'Atalhos de Teclado'
       jump_to:
         title: 'Ir Para'
+        home: '<b>g</b>, <b>h</b> Página Principal (Mais recente)'
         latest: '<b>g</b>, <b>l</b> Mais recente'
         new: '<b>g</b>, <b>n</b> Novo'
         unread: '<b>g</b>, <b>u</b> Não lido'
         starred: '<b>g</b>, <b>f</b> Favoritos'
         categories: '<b>g</b>, <b>c</b> Categorias'
+        top: '<b>g</b>, <b>t</b> Início'
       navigation:
         title: 'Navegação'
+        jump: '<b>#</b> Ir para o post #'
         back: '<b>u</b> Retroceder'
+        up_down: '<b>k</b>/<b>j</b> Mover selecção &uarr; &darr;'
+        open: '<b>o</b> ou <b>Enter</b> Abrir tópico seleccionado'
+        next_prev: '<b>shift j</b>/<b>shift k</b> Próxima seccção ou secção anterior'
       application:
         title: 'Aplicação'
+        create: '<b>c</b> Criar um novo tópico'
+        notifications: '<b>n</b> Abrir notificações'
+        site_map_menu: '<b>=</b> Abrir menu do site'
+        user_profile_menu: '<b>p</b> Abrir menu do utilizador'
+        show_incoming_updated_topics: '<b>.</b> Mostrar tópicos actualizados'
+        search: '<b>/</b> Pesquisar'
+        help: '<b>?</b> Abrir ajuda do teclado'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Dispensar Novos/Posts'
+        dismiss_topics: '<b>x</b>, <b>t</b> Dispensar Tópicos'
       actions:
         title: 'Acções'
+        star: '<b>f</b> Adicionar tópico aos favoritos'
+        share_topic: '<b>shift s</b> Partilhar tópico'
+        share_post: '<b>s</b> Partilhar tópico'
+        reply_as_new_topic: '<b>t</b> Responder com um novo tópico'
+        reply_topic: '<b>shift r</b> Responder ao tópico'
+        reply_post: '<b>r</b> Responder ao post'
+        quote_post: '<b>q</b> Citar post'
+        like: '<b>l</b> Gostar do post'
+        flag: '<b>!</b> Denunciar post'
+        bookmark: '<b>b</b> Adicionar post aos marcadores'
+        edit: '<b>e</b> Editar post'
+        delete: '<b>d</b> Apagar post'
+        mark_muted: '<b>m</b>, <b>m</b> Silenciar tópico'
     badges:
       title: Medalhas
       allow_title: "permitir uso de medalha como título?"
@@ -1853,6 +1941,9 @@ pt:
       badge_count:
         one: "1 Medalha"
         other: "%{count} Medalhas"
+      granted:
+        one: "1 concedida"
+        other: "%{count} concedidas"
       select_badge_for_title: Selecionar uma medalha para usar como título
       no_title: "<no title>"
       badge_grouping:
@@ -1870,11 +1961,41 @@ pt:
           description: Primeira edição de um post
         member:
           name: Membro
+        leader:
+          name: Líder
         welcome:
           name: Bem-vindo
           description: Recebeu um gosto
         autobiographer:
           name: Autobiógrafo
+          description: 'Preencheu informações no <a href="/my/preferences">perfil</a> de utilizador '
+        nice_post:
+          name: Bom Post
+          description: Recebeu 10 gostos num post. Esta medalha pode ser atribuída diversas vezes
+        good_post:
+          name: Óptimo Post
+          description: 'Recebeu 25 gostos num post. Esta medalha pode ser atribuída diversas vezes '
+        great_post:
+          name: Excelente Post
+          description: Recebeu 50 gostos num post. Esta medalha pode ser atribuída diversas vezes
+        nice_topic:
+          name: Bom Tópico
+          description: Recebeu 10 gostos num tópico. Esta medalha pode ser atribuída diversas vezes
+        good_topic:
+          name: Óptimo Tópico
+          description: 'Recebeu 25 gostos num tópico. Esta medalha pode ser atribuída diversas vezes '
+        great_topic:
+          name: Excelente Tópico
+          description: Recebeu 50 gostos num tópico. Esta medalha pode ser atribuída diversas vezes
+        nice_share:
+          name: Boa Partilha
+          description: Partilhou um post com 25 visitantes únicos
+        good_share:
+          name: Óptima Partilha
+          description: Partilhou um post com 300 visitantes únicos
+        great_share:
+          name: Excelente Partilha
+          description: Partilhou um post com 1000 visitantes únicos
         first_like:
           name: Primeiro Gosto
           description: Gostou de um post

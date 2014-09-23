@@ -198,7 +198,7 @@ pl_PL:
     save: "Zapisz zmiany"
     saving: "Zapisuję…"
     saved: "Zapisano!"
-    upload: "Wgraj"
+    upload: "Dodaj"
     uploading: "Wysyłam…"
     uploaded: "Wgrano!"
     enable: "Włącz"
@@ -286,7 +286,6 @@ pl_PL:
       other_accounts: Inne konta z tym adresem IP
       no_other_accounts: (brak)
     user:
-      said: "{{username}} pisze:"
       profile: "Profil"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
@@ -325,9 +324,11 @@ pl_PL:
       delete_yourself_not_allowed: "Nie możesz usunąć swojego konta w tej chwili. Skontaktuj się z administratorem, by usunął Twoje konto za Ciebie."
       unread_message_count: "Wiadomości"
       staff_counters:
+        flags_given: "uczynnych oflagowań"
         flagged_posts: "oflagowane wpisy"
         deleted_posts: "usunięte wpisy"
         suspensions: "zawieszone"
+        warnings_received: "otrzymanych ostrzeżeń"
       messages:
         all: "Wszystkie"
         mine: "Moje"
@@ -358,14 +359,13 @@ pl_PL:
         letter_based: "Awatar przyznany przez system"
         uploaded_avatar: "Zwyczajny obrazek"
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
-        upload_title: "Wgraj swoje zdjęcie"
-        upload_picture: "Wgraj zdjęcie"
+        upload_title: "Wyślij swoją grafikę"
+        upload_picture: "Wyślij grafikę"
         image_is_not_a_square: "Uwaga: przycięliśmy twój obraz ponieważ nie był kwadratem."
       change_profile_background:
         title: "Tło profilu"
       email:
         title: "Email"
-        instructions: "Nigdy nie będzie wyświetlony publicznie."
         ok: "Wygląda dobrze. Wyślemy Ci wiadomość do potwierdzenia."
         invalid: "Podaj poprawny adres email."
         authenticated: "Twój adres email został potwierdzony przez {{provider}}."
@@ -377,7 +377,6 @@ pl_PL:
         ok: "Twoja nazwa jest poprawna."
       username:
         title: "Nazwa użytkownika"
-        instructions: "Powinien być unikalny, krótki i bez spacji."
         short_instructions: "Aby o tobie wspomnieć, wystarczy napisać @{{username}}."
         available: "Nazwa jest dostępna."
         global_match: "Email zgadza się z zarejestrowaną nazwą użytkownika."
@@ -457,6 +456,7 @@ pl_PL:
         bulk_invite:
           none: "Jeszcze nikogo nie zaproszono. Możesz wysłać pojedyncze zaproszenie lub <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>zaprosić wiele osób na raz wysyłając odpowiedni plik</a>."
           text: "Zaproszenia hurtowe z pliku"
+          uploading: "Wysyłanie…"
           success: "Plik został przesłany pomyślnie, wkrótce dostaniesz powiadomienie z postępem."
           error: "Podczas przesyłania wystąpił błąd '{{filename}}': {{message}}"
       password:
@@ -464,7 +464,6 @@ pl_PL:
         too_short: "Hasło jest za krótkie."
         common: "To hasło jest zbyt popularne."
         ok: "Twoje hasło jest poprawne."
-        instructions: "Musi zawierać co najmniej %{count} znaków."
       ip_address:
         title: "Ostatni adres IP"
       registration_ip_address:
@@ -641,7 +640,7 @@ pl_PL:
       quote_text: "Cytat"
       code_title: "Tekst sformatowany"
       code_text: "Sformatowany blok tekstu poprzedź 4 spacjami"
-      upload_title: "Wgraj"
+      upload_title: "Dodaj"
       upload_description: "wprowadź opis tutaj"
       olist_title: "Lista numerowana"
       ulist_title: "Lista wypunktowana"
@@ -738,7 +737,7 @@ pl_PL:
           new: '<p>Pojawią się tu nowe tematy.</p><p>Domyślnie, tematy są traktowane jako <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nowe</span> jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Możesz to zmienić w <a href="%{userPrefsUrl}">swoich ustawieniach</a>.</p>'
           unread: '<p>Pojawią się tu tematy oznaczone licznikiem <span class="badge new-posts badge-notification">1</span> nieprzeczytanych wpisów.</p>
 
-            <p>Domyślnie, jako nieprzeczytane rozumiane są tematy:</p><ul><li>twojego autorstwa</li><li>te w których są twoje odpowiedzi </li><li>czytane przez ciebie dłużej niż 4 minuty</li></ul><p>Znajdą się tu też te, którym ręcznie przyznano status Śledzony lub Obserwowany przyciskiem znajdującym się na końcu każdego tematu.&lt;/p><p>Możesz zmienić te zachowania w swoich <a href="%{userPrefsUrl}">preferencjach</a>.</p>'
+            <p>Domyślnie, jako nieprzeczytane rozumiane są tematy:</p><ul><li>twojego autorstwa</li><li>te w których są twoje odpowiedzi </li><li>czytane przez ciebie dłużej niż 4 minuty</li></ul><p>Znajdą się tu też te, którym ręcznie przyznano status Śledzony lub Obserwowany przyciskiem znajdującym się na końcu każdego tematu.</p><p>Możesz zmienić te zachowania w swoich <a href="%{userPrefsUrl}">ustawieniach</a>.</p>'
           starred: '<p>Pojawią się tu oznaczone przez ciebie tematy.</p> <p>Aby oznaczyć lub odznaczyć temat kliknij na <i class="fa fa-star"></i> gdy tylko takową zobaczysz &hellip;</p><ul><li>na górze, obok tytułu każdego tematu</li><li>na końcu tematu, przyciskiem <kbd>Oznacz</kbd> </li><li>po lewej stronie na dowolnej liście tematów</li>'
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
@@ -874,6 +873,8 @@ pl_PL:
         pin_globally: "Przypnij temat globalnie"
         unarchive: "Przywróć z archiwum"
         archive: "Archiwizuj temat"
+        invisible: "Ustaw jako niewidoczny"
+        visible: "Ustaw jako widoczny"
         reset_read: "Zresetuj przeczytane dane"
         multi_select: "Wybierz wpisy"
       reply:
@@ -1025,6 +1026,11 @@ pl_PL:
           yes_value: "Tak, usuń też odpowiedzi"
           no_value: "Nie, tylko ten wpis"
         admin: "administracja wpisem (tryb wiki itp)"
+        wiki: "Włącz tryb Wiki"
+        unwiki: "Wyłącz tryb Wiki"
+        convert_to_moderator: "Włącz kolor moderatora"
+        revert_to_regular: "Wyłącz kolor moderatora"
+        rebake: "Odśwież HTML"
       actions:
         flag: 'Oflaguj'
         defer_flags:
@@ -1265,6 +1271,8 @@ pl_PL:
         help: "Temat przypięty. Będzie wyświetlany na początku swojej kategorii."
       archived:
         help: "Ten temat został zarchiwizowany i nie można go zmieniać"
+      invisible:
+        help: "Temat jest niewidoczny: nie będzie wyświetlany na listach tematów a dostęp do niego można uzyskać jedynie poprzez link bezpośredni"
     posts: "Wpisy"
     posts_lowercase: "wpisy"
     posts_long: "jest {{number}} wpisów w tym temacie"
@@ -1305,8 +1313,8 @@ pl_PL:
       unread:
         title:
           zero: "Nieprzeczytane"
-          one: "Nieprzeczytany (1)"
-          other: "Nieprzeczytanych ({{count}})"
+          one: "Nieprzeczytane (1)"
+          other: "Nieprzeczytane ({{count}})"
         help: "obserwowane lub śledzone tematy z nieprzeczytanymi wpisami"
         lower_title_with_count:
           one: "1 nieprzeczytany"
@@ -1407,7 +1415,7 @@ pl_PL:
         agree_flag: "Potwierdź flagę"
         agree_flag_title: "Potwierdź flagę i zostaw wpis bez zmian"
         defer_flag: "Zignoruj"
-        defer_flag_title: "Usunięcie flagi, nie wymaga dalszych działań."
+        defer_flag_title: "Usunięcie flagi z twojej listy, nie wymaga dalszych działań."
         delete: "Usuń"
         delete_title: "Usuń wpis do którego odnosi się flaga."
         delete_post_defer_flag: "Usuń wpis i zignoruj flagę"
@@ -1508,6 +1516,8 @@ pl_PL:
           filename: "Nazwa pliku"
           size: "Rozmiar"
         upload:
+          text: "Wyślij"
+          uploading: "Wysyłanie…"
           success: "'{{filename}}' został pomyślnie przesłany."
           error: "Podczas przesyłania pliku wystąpił błąd '{{filename}}': {{message}}"
         operations:
@@ -1977,14 +1987,20 @@ pl_PL:
         top: '<b>g</b>, <b>t</b> Popularne'
       navigation:
         title: 'Nawigacja'
+        jump: '<b>#</b> idź do wpisu #'
         back: '<b>u</b> wstecz'
+        up_down: '<b>k</b>/<b>j</b> zaznacz &uarr; &darr;'
         open: '<b>o</b> lub <b>Enter</b> otwórz wybrany temat'
         next_prev: '<b>shift j</b>/<b>shift k</b> następna/poprzednia sekcja'
       application:
         title: 'Aplikacja'
         create: '<b>c</b> utwórz nowy temat'
         notifications: '<b>n</b> pokaż powiadomienia'
+        site_map_menu: '<b>=</b> menu strony'
+        user_profile_menu: '<b>p</b> menu użytkownika'
+        show_incoming_updated_topics: '<b>.</b> nowe zmiany w tematach'
         search: '<b>/</b> wyszukaj'
+        help: '<b>?</b> skróty klawiszowe'
         dismiss_new_posts: '<b>x</b>, <b>r</b> wyczyść listę wpisów'
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
       actions:

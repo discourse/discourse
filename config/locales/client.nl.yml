@@ -259,7 +259,6 @@ nl:
       other_accounts: Andere accounts met dit IP-adres
       no_other_accounts: (geen)
     user:
-      said: "{{username}} zei:"
       profile: "Profiel"
       mute: "Negeer"
       edit: "Wijzig voorkeuren"
@@ -427,7 +426,6 @@ nl:
         too_short: "Je wachtwoord is te kort."
         common: "Dat wachtwoord wordt al te vaak gebruikt."
         ok: "Je wachtwoord ziet er goed uit."
-        instructions: "Moet te minste uit %{count} tekens bestaan."
       ip_address:
         title: "Laatste IP-adres"
       registration_ip_address:

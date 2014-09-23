@@ -17,7 +17,7 @@ ja:
       date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "トピック"
-  posts: "ポスト"
+  posts: "投稿"
   loading: "読み込み中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "ログイン"
@@ -34,13 +34,13 @@ ja:
     replies:
       other: "%{count} 通の返信"
   too_many_mentions:
-    zero: "申し訳ありませんが、このポストにおいて他のユーザをメンションできません。"
-    one: "申し訳ありませんが、このポストにおいてあと1人しかメンションできません。"
-    other: "申し訳ありませんが、このポストにおいてあと%{count}人しかメンションできません。"
+    zero: "申し訳ありませんが、この投稿において他のユーザをタグ付けできません。"
+    one: "申し訳ありませんが、この投稿においてあと1人しかタグ付けできません。"
+    other: "申し訳ありませんが、このポストにおいてあと%{count}人しかタグ付けできません。"
   too_many_mentions_newuser:
-    zero: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをメンションできません。"
-    one: "申し訳ありませんが、新規ユーザはこのポストにおいてあと1人しかメンションできません。"
-    other: "申し訳ありませんが、新規ユーザはこのポストにおいてあと%{count}人しかメンションできません。"
+    zero: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
+    one: "申し訳ありませんが、新規ユーザはこのポストにおいてあと1人しかタグ付けできません。"
+    other: "申し訳ありませんが、新規ユーザはこのポストにおいてあと%{count}人しかタグ付けできません。"
   too_many_images:
     zero: "申し訳ありませんが、新規ユーザはこのポストに画像をアップロードできません。"
     one: "申し訳ありませんが、新規ユーザはこのポストに画像を1つしかアップロードできません。"
@@ -485,7 +485,7 @@ ja:
     short_progress_text_threshold: "プログレスバーが現在のポスト番号のみを表示するようになるポスト数のしきい値。プログレスバーの幅を変更した際には、この値を変更することをおすすめします。"
     default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
   notification_types:
-    mentioned: "%{link} で %{display_username} があなたをメンションしました"
+    mentioned: "%{link} で %{display_username} があなたをタグ付けしました"
     liked: "%{link} で %{display_username} があなたのポストを「いいね！」しました"
     replied: "%{link} で %{display_username} があなたのポストに回答しました"
     quoted: "%{link} で %{display_username} があなたのポストを引用しました"
@@ -614,7 +614,7 @@ ja:
         ---
         %{respond_instructions}
     user_mentioned:
-      subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたをメンションしました"
+      subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたをタグ付けしました"
       text_body_template: |
         %{message}
 

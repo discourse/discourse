@@ -259,7 +259,6 @@ da:
       other_accounts: Andre kontoer med denne IP adresse
       no_other_accounts: (ingen)
     user:
-      said: "{{username}} sagde:"
       profile: "Profil"
       mute: "Mute"
       edit: "Redigér indstillinger"
@@ -337,7 +336,6 @@ da:
         title: "Profil baggrundsbillede"
       email:
         title: "E-mail"
-        instructions: "Vil aldrig blive vist offentligt."
         ok: "Det ser fint ud. Vi e-mail’er dig for at bekræfte."
         invalid: "Skriv venligst en gyldig e-mail-adresse."
         authenticated: "Din e-mail er bekræftet af {{provider}}."
@@ -348,7 +346,6 @@ da:
         ok: "Dit navn ser fint ud."
       username:
         title: "Brugernavn"
-        instructions: "Skal være unikt, ingen mellemrum og kort"
         short_instructions: "Andre brugere kan referere til dig som @{{username}}."
         available: "Brugernavnet er tilgængeligt."
         global_match: "E-mail-adressen matcher det registrerede brugernavn."
@@ -431,7 +428,6 @@ da:
         too_short: "Din adgangskode er for kort."
         common: "Den adgangskode er for udbredt."
         ok: "Din adgangskode ser fin ud."
-        instructions: "Skal være på mindst %{count} tegn."
       ip_address:
         title: "Sidste IP-adresse"
       registration_ip_address:

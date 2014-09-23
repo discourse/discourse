@@ -1083,11 +1083,6 @@ de:
         Es ist kein Account mit dieser E-Mail-Adresse bekannt. Versuch die Nachricht von einer anderen E-Mail-Adresse zu verschicken oder kontaktiere einen Mitarbeiter.
     email_reject_empty:
       subject_template: "E-Mail-Problem -- Kein Inhalt"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (titled %{former_title}) hat nicht funktioniert.
-
-        Wir konnten keinen Inhalt in deiner E-Mail finden. Stelle sicher, dass du etwas am Beginn der E-Mail geschrieben hast – wir können keine Inline-Antworten parsen.
-        Wenn du diese Meldung erhältst, obwohl die E-Mail einen Inhalt enthielt, dann versuche es erneut. Verwende als Kodierung UTF-8 und das Textformat (kein HTML).
     email_reject_parsing:
       subject_template: "E-Mail-Problem -- Inhalt nicht erkannt"
       text_body_template: |
