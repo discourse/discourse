@@ -246,7 +246,6 @@ sv:
       other_accounts: Andra konton med samma IP-adress
       no_other_accounts: (ingen)
     user:
-      said: "{{username}} sa:"
       profile: "Profil"
       mute: "Dämpa"
       edit: "Redigera inställningar"
@@ -323,7 +322,6 @@ sv:
         title: "Profilbakgrund"
       email:
         title: "E-post"
-        instructions: "Kommer aldrig visas offentligt"
         ok: "Ser bra ut. Vi kommer maila dig för att bekräfta."
         invalid: "Vad god ange en giltig e-postadress."
         authenticated: "Din e-post har autentiserats av {{provider}}."
@@ -334,7 +332,6 @@ sv:
         ok: "Ditt namn ser bra ut."
       username:
         title: "Användarnamn"
-        instructions: "Måste vara unikt, kort och utan mellanslag."
         short_instructions: "Personer kan omnämna dig som @{{username}}."
         available: "Ditt användarnamn är tillgängligt."
         global_match: "E-posten matchar det registrerade användarnamnet."
@@ -415,7 +412,6 @@ sv:
         too_short: "Ditt lösenord är för kort."
         common: "Det lösenordet är för vanligt."
         ok: "Ditt lösenord ser bra ut."
-        instructions: "Måste vara minst %{count} tecken lång."
       ip_address:
         title: "Senaste IP-adress"
       registration_ip_address:

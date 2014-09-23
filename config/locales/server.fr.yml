@@ -244,6 +244,8 @@ fr:
       title: "membre"
     leader:
       title: "régulier"
+    elder:
+      title: "meneur"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}'."
   rate_limiter:
     slow_down: "Vous avez effectué cette action trop de fois, réessayez plus tard"
@@ -945,6 +947,7 @@ fr:
     omniauth_error: "Désolé, il y a eu une erreur lors de l'autorisation de votre compte %{strategy}. Vous n'avez peut-être pas approuvé l'autorisation ?"
     omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
     new_registrations_disabled: "La création de nouveau compte n'est pas autorisé pour le moment."
+    password_too_long: "Les mots de passe sont limités à 200 caractères."
   user:
     username:
       short: "doit être d'au moins %{min} caractères"
@@ -1078,7 +1081,6 @@ fr:
         Amusez-vous bien !
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name}, et bienvenue !\n\nNous vous avons automatiquement généré un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter, vous pouvez :\n\n1. Utiliser votre identifiant préféré -- mais votre **adresse de courriel** devra être la même que celle de l'invitation que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n[prefs] : %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "Export terminé avec succès"
       text_body_template: "L'export a réussi."
@@ -1143,11 +1145,6 @@ fr:
         Aucun compte avec cette adresse existe. Essayez de l'envoyer depuis une autre adresse, ou contactez un membre de l'équipe du forum.
     email_reject_empty:
       subject_template: "Problème de courriel - Sans contenu"
-      text_body_template: |
-        Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
-
-        Il semble que le courriel soit sans contenu. Veuillez vous assurer que son début n'est pas vide - il n'est pas possible d'analyser les réponses entre-lignes.
-        Si vous avez reçu ce message après avoir envoyé du contenu, réenvoyez-le au format simple UTF-8 (sans HTML) .
     email_reject_parsing:
       subject_template: "Problème de courriel - Contenu non reconnu."
       text_body_template: |

@@ -246,6 +246,8 @@ zh_CN:
       title: "成员"
     leader:
       title: "常规"
+    elder:
+      title: "领导"
     change_failed_explanation: "您尝试将 %{user_name} 降至 '%{new_trust_level}'。然而他们的信任等级已经是 '%{current_trust_level}'。%{user_name} 将仍是 '%{current_trust_level}'"
   rate_limiter:
     slow_down: "您已经重复这一操作太多次了，请一会再重试"
@@ -907,6 +909,8 @@ zh_CN:
     pinned_disabled: "本主题已被解除置顶，它将不再显示在它所属分类的顶部。"
     pinned_globally_enabled: "本主题已全局置顶，它将始终显示在它所属分类的顶部。可由职员对所有人解除置顶，或者由用户自己取消置顶。"
     pinned_globally_disabled: "本主题已被解除置顶，它将不再显示在它所属分类的顶部。"
+    visible_enabled: "本主题已设置为显示在主题列表中。"
+    visible_disabled: "本主题设置为不显示在主题列表中。只能通过直达链接来访问。"
   login:
     not_approved: "您的帐号尚未获得批准。一旦您的帐号获得批准，您会收到一封电子邮件。"
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
@@ -923,6 +927,7 @@ zh_CN:
     omniauth_error: "抱歉，在给您的 %{strategy} 帐号授权时发生了错误。有可能您没有批准授权申请？"
     omniauth_error_unknown: "在处理您的登录过程中发生了错误，请重试。"
     new_registrations_disabled: "现在不允许注册新账户。"
+    password_too_long: "密码不能超过 200 个字符。"
   user:
     username:
       short: "必须超过 %{min} 个字符"
@@ -1085,6 +1090,80 @@ zh_CN:
         但是，如果帖子再次被社群标记并隐藏，它将被隐藏直至版主处理——并且可能导致进一步的措施，包括可能禁止您的用户帐号。
 
         需要了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
+    usage_tips:
+      text_body_template: |
+        这条私信包含了一些可以让您快速开始的技巧提示：
+
+        ## 保持滚动
+
+        没有下一页按钮或者页码——要阅读更多，**只需要继续向下滚动页面！**
+
+        当新的帖子加载后，它们会自动显示。
+
+        ## 我在哪儿？
+
+        - 要搜索，访问您的用户页面或者菜单，使用**右上角的图标按钮**。
+
+        - 在主题列表时，点击标题将会引导您至您下一个未读的帖子。使用最后一次活动时间调至最后一帖。
+
+        - 当在阅读主题时，通过点击帖子标题回到顶部 &uarr;。点击右下角的绿色进度条使用完整导航控制，或使用键盘上的 <kbd>home</kbd> 和 <kbd>end</kbd>键。
+
+            <img src="/images/welcome/progress-bar.png" width="143" height="39">
+
+
+
+        ## 我怎么回复？
+
+        - 要回复整个主题，使用页面最底下的回复按钮 <img src="/images/welcome/reply-topic.png" width="29" height="25">。
+
+        - 要回复特定的帖子，使用那个帖子的回复按钮 <img src="/images/welcome/reply-post.png" width="29" height="25">。
+
+        - 如果您想把讨论导向另一个方向，但是保持讨论之间的联系，请使用帖子右侧的“回复为新主题”<img src="/images/welcome/reply-as-new-topic.png" width="33" height="25">。
+
+        若想在您的回复中引用什么，选择想要引用的文字，然后点击任何回复按钮。
+
+        每一个帖子最下方有功能按钮。
+
+        <img src="/images/welcome/quote-reply.png" width="350" height="129">
+
+        （要引用整个帖子，使用编辑器工具栏的导入引用按钮。）
+
+        要在您的回复中提到某人，键入 `@`，自动完成将会弹出。
+
+        <img src="/images/welcome/username-completion.png" width="230" height="131">
+
+        要使用[标准绘文字（Emoji）](http://www.emoji-cheat-sheet.com/)，先键入`:`或传统表情符`:)` :smile
+
+        ## 我还能做什么？
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        要让别人知道您喜欢他们的帖子，使用**赞**按钮。如果您觉得一个帖子有问题，请使用**标记**按钮以私下地让它们或者我们的职员了解情况。
+
+        您可以分享一个帖子的链接，或者是收藏一个帖子以在用户也中引用他们。
+
+
+        ## 谁在跟我交谈？
+
+        当有人回复您的帖子，引用您的帖子或者使用`@用户名`提及到您的时候，一个数字将会立即出现在页面右上角。使用它查看**通知**。
+
+        <img src="/images/welcome/notification-panel.png" width="178" height="59">
+
+        不用担心错过他人的回复 —— 当别人回复您的帖子（和私信）时您不在站点上，您将会收到邮件提醒。
+
+        ## 哪一个是新讨论？
+
+        默认情况，所有小于两天的对话被认为是心的，并且所有您参与的讨论（回复过的、创建的或阅读了很长一段时间的）将自动被追踪。
+
+        您将会在主题名字附近见到蓝色的新合数字指示：
+
+        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        您可以通过帖子下方的控制选项改变每一个主题的通知状态（也可以设置每一个分类的状态）。要改变您跟踪帖子的方式，或新的定义，详见[您的用户设置](/my/preferences)。
+
+        ## 为什么我不能做某些事？
+
+        新用户因为某些安全原因被限制。只要您参与了讨论，您将会得到社群的信任，成为一个真正的成员，并且这些限制将自动被移除。当达到了一个足够的[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，您将会得到足够的能力来一起帮助社群管理。
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
@@ -1097,7 +1176,6 @@ zh_CN:
         好好享受你在论坛的时光吧！
     welcome_invite:
       subject_template: "欢迎来到 %{site_name}！"
-      text_body_template: "感谢您接受邀请加入 %{site_name} —— 欢迎！\n\n我们为您自动生成了一个用户名：**%{username}**，但是您在任何时候都可以访问[您的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 使用您喜欢的方式登入——但是必须以**同样的邮件地址**，即您收到邀请的邮箱地址登入。否则我们就无法分辨是不是您本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n好好享受您在论坛的时光吧！\n\n[prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "导出成功"
       text_body_template: "导出操作成功。"
@@ -1162,10 +1240,6 @@ zh_CN:
         该邮件没有与已知的账户关联。试试从不同的邮件地址发送或联系一个职员。
     email_reject_empty:
       subject_template: "电子邮件错误 -- 空内容"
-      text_body_template: |
-        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
-
-        您的账户没有足够的信任等级向刚邮件地址发布新主题。如果您坚信这是一个错误，联系一个职员。
     email_reject_parsing:
       subject_template: "电子邮件错误 -- 内容无法识别"
       text_body_template: |
@@ -1353,6 +1427,13 @@ zh_CN:
         如果不是您请求添加密码，您可以直接忽略本邮件。
 
         点击下面的链接来选择一个新密码：
+        %{base_url}/users/password-reset/%{email_token}
+    account_created:
+      subject_template: "[%{site_name}] 您的新帐号"
+      text_body_template: |
+        您在 %{site_name} 上建立了一个新账号
+
+        点击下面的链接来为新账户设置密码：
         %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] 确认您的新电子邮箱地址"

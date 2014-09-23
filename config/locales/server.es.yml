@@ -19,10 +19,11 @@ es:
   topics: "Temas"
   posts: "posts"
   loading: "Cargando"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, visualizado mejor con JavaScript activado'
+  powered_by_html: 'Empoderado por <a href="http://www.discourse.org">Discourse</a>, visualizado mejor con JavaScript activado'
   log_in: "Iniciar sesión"
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
+  purge_reason: "Automáticamente borrado debido a que es antiguo y no verificado"
   errors:
     messages:
       too_long_validation: "está limitado a %{max} caracteres; has introducido %{length}."
@@ -31,7 +32,7 @@ es:
   bulk_invite:
     file_should_be_csv: "El archivo a subir debe tener formato csv o txt."
   backup:
-    operation_already_running: "Actualmente se está ejecutando una operación. No se puede iniciar un nuevo trabajo justo ahora."
+    operation_already_running: "Actualmente se está ejecutando una operación. No se puede iniciar un nuevo trabajo en este momento."
     backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser del tipo .tar.gz"
     not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de seguridad."
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
@@ -97,13 +98,15 @@ es:
     errors:
       can_not_modify_automatic: "No puedes modificar un grupo automático"
     default_names:
+      everyone: "todos"
       admins: "administradores"
       moderators: "moderadores"
       staff: "staff"
-      trust_level_1: "nivel de confianza 1"
-      trust_level_2: "nivel de confianza 2"
-      trust_level_3: "nivel de confianza 3"
-      trust_level_4: "nivel de confianza 4"
+      trust_level_0: "nivel_de_confianza_0"
+      trust_level_1: "nivel_de_confianza_1"
+      trust_level_2: "nivel_de_confianza_2"
+      trust_level_3: "nivel_de_confianza_3"
+      trust_level_4: "nivel_de_confianza_4"
   education:
     until_posts:
       one: "post"
@@ -175,6 +178,9 @@ es:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Solamente puedes ver advertencias para mensajes privados."
+              too_many_users: "Solamente puedes enviar advertencias a un usuario a la vez."
             archetype:
               cant_send_pm: "Lo sentimos, no puedes enviar un mensaje privado a este usuario."
         user:
@@ -219,6 +225,12 @@ es:
       title: "nuevo usuario"
     basic:
       title: "usuario básico"
+    regular:
+      title: "Miembro"
+    leader:
+      title: "regular"
+    elder:
+      title: "lider"
     change_failed_explanation: "Intentaste degradar a un usuario %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} seguirá en '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Has realizado esta acción demasiadas veces, inténtalo de nuevo más tarde"
@@ -339,6 +351,7 @@ es:
       long_form: 'reportado como inapropiado'
     notify_user:
       title: 'Notificar a {{username}}'
+      description: 'Este post contiene algo que yo quiero hablar con esta persona directa y privadamente. No se marca como bandera.'
       long_form: 'usuario notificado'
       email_title: 'Tu publicación en "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -447,15 +460,15 @@ es:
       xaxis: "Día"
       yaxis: "Número de mensajes privados"
     moderator_warning_private_messages:
-      title: "Advertencia del Moderador"
+      title: "Advertencias al moderador"
       xaxis: "Día"
       yaxis: "Número de mensajes privados"
     notify_moderators_private_messages:
-      title: "Notificaciones a los moderadores"
+      title: "Notificaciones a moderadores"
       xaxis: "Día"
       yaxis: "Número de mensajes privados"
     notify_user_private_messages:
-      title: "Notificar Usuario"
+      title: "Notificaciones a usuarios"
       xaxis: "Día"
       yaxis: "Número de mensajes privados"
     top_referrers:
@@ -596,6 +609,7 @@ es:
     summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
     summary_percent_filter: "Cuando un usuario hace clic en 'Resumen de este tema', se muestra el n % mejores posts"
+    enable_private_messages: "Permitir a los usuarios de nivel de confianza 1 crear y responder mensajes privados"
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     long_polling_interval: "Frecuencia del 'long polling' en milisegundos"
     polling_interval: "¿Cuán a menudo deben hacer poll los usuarios logados en milisegundos"
@@ -627,6 +641,7 @@ es:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "Cuántos temas se cargan por defecto en la lista de temas y cuando se hace scroll hacia abajo para cargar más temas"
     posts_per_page: "Cuántos posts se cargan por defecto en un tema y cuando se hace scroll hacia abajo para cargar más posts"
+    site_contact_username: "Todos los mensajes privados automatizados serán de este usuario. Si es dejado en blanco, el la cuenta del Sistema por defecto será utilizada."
     send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje privado de bienvenida con una guía rápida para comenzar."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."
     suppress_reply_directly_above: "No mostrar el en-respuesta-a desplegable en un post cuando solo hay una sola respuesta justo encima del post."
@@ -640,6 +655,7 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de email con los cuales los usuarios no podrán registrarse. Ejemplo: mailinator.com trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
+    forgot_password_strict: "No informar de la existencia de la cuenta de un usuario cuando ellos use la opción de olvidar contraseña."
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
     port: "SOLO DESARROLLADORES! ADVERTENCIA! Usa este puerto HTTP en vez del puerto 80 por defecto. Dejar blanco para por defecto el 80"
@@ -678,8 +694,10 @@ es:
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     backup_daily: "Crear automáticamente una copia de seguridad del sitio una vez al día."
+    enable_s3_backups: "Subir respaldos a S3 cuando sea completado. IIMPORTANTE: Se requiere que en las opciones de Archivo existan credenciales de S3 válidas."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     active_user_rate_limit_secs: "Como de frecuentemente actualizaremos el campo 'last_seen_at', en segundos"
+    verbose_localization: "Mostrar sugerencias de localización extendida en la interface de usuario "
     previous_visit_timeout_hours: "Cuanto tiempo debe pasar antes de que una visita sea considerada la 'visita previa', en horas"
     rate_limit_create_topic: "Después de crear un tema, los usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_create_post: "Después de publicar un post, los usuarios deben esperar (n) segundos antes de crear otro post."
@@ -699,6 +717,7 @@ es:
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
     purge_inactive_users_grace_period_days: "Período de gracia (en días) antes de eliminar un usuario inactivo."
     enable_s3_uploads: "Situar las subidas en un almacenamiento Amazon S3."
+    s3_use_iam_profile: 'Usar el rol de AWS EC2 IAM para descargar las llaves. NOTA: habilitando esta opción ignorará la "llave de acceso s3" y "la llave de acceso secreta s3".'
     s3_upload_bucket: "El nombre del depósito de Amazon S3 donde se subirán los archivos. AVISO: debe estar escrito en minúsculas y sin puntos."
     s3_access_key_id: "La clave id de acceso de Amazon S3 que se utilizará para subir imágenes."
     s3_secret_access_key: "La clave secreta de acceso de Amazon S3 que se utilizará para subir imágenes."
@@ -706,6 +725,13 @@ es:
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios."
+    tl1_requires_topics_entered: "¿Cuántos temas un nuevo usuario debe de entrar antes de que sea promovido a nivel de confianza 1?"
+    tl1_requires_read_posts: "Cuántos posts debe leer un nuevo usuario antes de ser promocionado al nivel de confianza 1."
+    tl1_requires_time_spent_mins: "Cuántos minutos debe permanecer leyendo posts un nuevo usuario antes de ser promocionado al nivel de confianza 1."
+    tl2_requires_topics_entered: "A cuántos temas debe entrar un usuario antes de ser promocionado al nivel de confianza 2."
+    tl2_requires_read_posts: "Cuántos posts debe leer un usuario antes de ser promocionado al nivel de confianza 2."
+    tl2_requires_time_spent_mins: "Cuántos minutos debe leer posts un usuario antes de ser promocionado al nivel de confianza 2."
+    tl2_requires_days_visited: "Cuántos días debe visitar el sitio un usuario antes de ser promocionado al nivel de confianza 2."
     min_trust_to_create_topic: "El mínimo nivel de confianza requerido para crear un nuevo tema."
     min_trust_to_edit_wiki_post: "El mínimo nivel de confianza requerido para editar un post marcado como wiki."
     newuser_max_links: "Cuántos enlaces puede un nuevo usuario añadir a un post."
@@ -811,6 +837,7 @@ es:
     invitee_accepted: "%{display_username} ha aceptado tu invitación"
     linked: "%{display_username} te enlazó en %{link}"
   search:
+    within_post: "#%{post_number} por %{username}"
     types:
       category: 'Categorías'
       topic: 'Resultados'
@@ -850,6 +877,8 @@ es:
     pinned_disabled: "Este tema está ahora sin destacar. No aparecerá más en la parte superior de su categoría."
     pinned_globally_enabled: "Este tema ahora está destacado globalmente. Aparecerá en primer lugar en la lista de su categoría y en todas las listas de temas hasta que se deshaga el destacado de forma general por los moderadores o de forma particular por cada usuario para sí."
     pinned_globally_disabled: "Este tema se ha dejado de destacar. Ya no aparecerá en primer lugar de su categoría."
+    visible_enabled: "Este tema ahora es visible. Se mostrará en las listas de temas"
+    visible_disabled: "Este tema ahora es invisible. Ya no se mostrará en ninguna lista de temas. La única forma de acceder a este tema es con un enlace directo."
   login:
     not_approved: "Tu cuenta aún no ha sido aprovada. Serás notificado por email cuando estés listo para hacer log in."
     incorrect_username_email_or_password: "Nombre de usuario, email o password incorrectos"
@@ -865,6 +894,7 @@ es:
     omniauth_error: "Lo sentimos, ha habido un error autorizando tu cuenta %{strategy}. ¿Quizás no has aprovado la autorización?"
     omniauth_error_unknown: "Algo ha salido mal procesando tu log in, por favor vuelve a intentarlo."
     new_registrations_disabled: "El registro de nuevas cuentas no está permitido en este momento."
+    password_too_long: "Las contraseñas están limitadas a 200 caracteres"
   user:
     username:
       short: "debe contener al menos %{min} caracteres"
@@ -980,6 +1010,11 @@ es:
         ```
         %{logs}
         ```
+    csv_export_succeeded:
+      subject_template: "La exportación de datos se completó satisfactoriamente"
+    csv_export_failed:
+      subject_template: "La exportación falló"
+      text_body_template: "La exportación ha fallado. Por favor revisa los logs."
     email_reject_trust_level:
       subject_template: "Error con el email -- insuficiente nivel de confianza"
       text_body_template: |
@@ -994,11 +1029,6 @@ es:
         No hay una cuenta asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_empty:
       subject_template: "Error con el email -- No hay contenido"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
-
-        No hemos encontrado ningún contenido en el email. Asegúrate de haber escrito algo al principio del email - no podemos analizar las respuestas entre líneas.
-        Si recibes este mensaje pero incluiste contenido, inténtalo de nuevo en texto plano UTF-8 (no HTML).
     email_reject_parsing:
       subject_template: "Error con el email -- Contenido desconocido"
       text_body_template: |
@@ -1011,12 +1041,16 @@ es:
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
 
         Posibles causas: formato complejo, mensaje demasiado extenso o demasiado breve. Por favor, inténtalo de nuevo.
+    email_reject_post_error_specified:
+      subject_template: "Error con el email -- Error de publicación"
     email_reject_reply_key:
       subject_template: "Error con el email - Clave errónea"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
 
         La clave de respuesta proporcionada no es válida o es desconocida, por lo que no sabemos a qué responde este email. Contacta con algún miembro del staff.
+    email_reject_destination:
+      subject_template: "Error con el email -- Dirección(es) de destino incorrecta(s)."
     email_error_notification:
       subject_template: "Error con el email -- Autenticación POP errónea"
       text_body_template: |
@@ -1156,6 +1190,8 @@ es:
 
         Haz click en el siguiente enlace para escoger una contraseña:
         %{base_url}/users/password-reset/%{email_token}
+    account_created:
+      subject_template: "[%{site_name}] Tu nueva cuenta"
     authorize_email:
       subject_template: "[%{site_name}] Confirma tu nueva dirección de email"
       text_body_template: |

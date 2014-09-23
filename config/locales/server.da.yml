@@ -97,6 +97,7 @@ da:
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
     default_names:
+      everyone: "Alle"
       admins: "admins"
       moderators: "moderatorer"
       staff: "staff"

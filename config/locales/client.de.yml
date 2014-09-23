@@ -259,7 +259,6 @@ de:
       other_accounts: Andere Konten mit dieser IP-Adresse
       no_other_accounts: (keine)
     user:
-      said: "{{username}} sagte:"
       profile: "Profil"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
@@ -289,6 +288,7 @@ de:
       watched_categories: "Beobachtet"
       watched_categories_instructions: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Eintrag in der Themenliste angezeigt."
       tracked_categories: "Verfolgt"
+      tracked_categories_instructions: "Du wirst automatisch alle neuen Themen dieser Kategorie folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema angezeigt."
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
       delete_account: "Lösche mein Benutzerkonto"
@@ -297,6 +297,7 @@ de:
       delete_yourself_not_allowed: "Du kannst im Moment dein Benutzerkonto nicht löschen. Kontaktiere einen Administrator, um dein Benutzerkonto löschen zu lassen."
       unread_message_count: "Nachrichten"
       staff_counters:
+        flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
         deleted_posts: "gelöschte Beiträge"
         suspensions: "Sperren"
@@ -338,7 +339,6 @@ de:
         title: "Profilhintergrund"
       email:
         title: "E-Mail"
-        instructions: "Wird niemals öffentlich angezeigt."
         ok: "Schaut gut aus. Wir schicken dir eine E-Mail zur Bestätigung."
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein."
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt."
@@ -350,7 +350,6 @@ de:
         ok: "Dein Name schaut gut aus."
       username:
         title: "Benutzername"
-        instructions: "Muss eindeutig, ohne Leerzeichen und kurz sein."
         short_instructions: "Andere Benutzer können dich mit @{{username}} erwähnen."
         available: "Dein Benutzername ist verfügbar."
         global_match: "Die E-Mail-Adresse stimmt mit dem registrierten Benutzernamen überein."
@@ -426,7 +425,7 @@ de:
         bulk_invite:
           none: "Du hast noch niemanden hierher eingeladen. Du kannst individuelle Einladungen verschicken oder eine Masseneinladung an eine Gruppe von Leuten verschicken indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine Datei für Masseneinladung</a> hochlädst."
           text: "Masseneinladung aus Datei"
-          uploading: "Hochladen..."
+          uploading: "Wird hochgeladen..."
           success: "Datei erfolgreich hochgeladen. Du wirst in Kürze über den Fortschritt benachrichtigt."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
       password:
@@ -434,7 +433,6 @@ de:
         too_short: "Dein Passwort ist zu kurz."
         common: "Das Passwort wird zu häufig verwendet."
         ok: "Dein Passwort sieht gut aus."
-        instructions: "Muss mindestens %{count} Zeichen lang sein."
       ip_address:
         title: "Letzte IP-Adresse"
       registration_ip_address:
@@ -462,6 +460,7 @@ de:
         network: "Bitte überprüfe deine Netzwerkverbindung."
         network_fixed: "Sieht aus, als wäre es wieder da."
         server: "Fehlercode: {{status}}"
+        forbidden: "Du darfst das nicht ansehen."
         unknown: "Etwas ist schief gelaufen."
       buttons:
         back: "Zurück"
@@ -518,8 +517,10 @@ de:
       reset: "Passwort zurücksetzen"
       complete_username: "Wenn ein Benutzerkonto dem Benutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_email: "Wenn ein Benutzerkonto der E-Mail <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
-      complete_username_not_found: "Kein Konto stimmt mit dem Benutzernamen <b>%{username}</b> überein"
-      complete_email_not_found: "Kein Konto stimmt mit <b>%{email}</b> überein"
+      complete_username_found: "Wir haben ein zum Benutzername <b>%{username}</b> gehörendes Konto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
+      complete_email_found: "Wir haben ein zu <b>%{email}</b> gehörendes Benutzerkonto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
+      complete_username_not_found: "Es gibt kein Konto mit dem Benutzernamen <b>%{username}</b>"
+      complete_email_not_found: "Es gibt kein Benutzerkonto für <b>%{email}</b>"
     login:
       title: "Anmelden"
       username: "Benutzername"
@@ -797,7 +798,7 @@ de:
           title: "Beobachten"
         tracking_pm:
           title: "Verfolgen"
-          description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Eintrag in der Themenliste angezeigt. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
+          description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Thema. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
         tracking:
           title: "Verfolgen"
         regular:
@@ -825,6 +826,8 @@ de:
         pin_globally: "Thema global anheften"
         unarchive: "Thema aus Archiv holen"
         archive: "Thema archivieren"
+        invisible: "Unsichtbar machen"
+        visible: "Sichtbar machen"
         reset_read: "„Gelesen“ zurücksetzen"
         multi_select: "Beiträge auswählen"
       reply:
@@ -968,6 +971,9 @@ de:
         admin: "Aktionen für Administratoren"
         wiki: "Wiki erstellen"
         unwiki: "Wiki entfernen"
+        convert_to_moderator: "Mitarbeiter-Einfärbung hinzufügen"
+        revert_to_regular: "Mitarbeiter-Einfärbung entfernen"
+        rebake: "HTML erneuern"
       actions:
         flag: 'Melden'
         defer_flags:
@@ -1330,6 +1336,8 @@ de:
         agree_flag_modal_title: "Zustimmen und..."
         agree_flag_hide_post: "Zustimmen (Beitrag ausblenden + PN senden)"
         agree_flag_hide_post_title: "Diesen Beitrag ausblenden und den Benutzer mit einer automatisch gesendeten, privaten Nachricht zum Bearbeiten des Beitrags auffordern."
+        agree_flag_restore_post: "Zustimmen (Beitrag wiederherstellen)"
+        agree_flag_restore_post_title: "Diesen Beitrag wiederherstellen"
         agree_flag: "Meldung zustimmen"
         agree_flag_title: "Der Meldung zustimmen und den Beitrag unverändert lassen."
         defer_flag: "Ignorieren"
@@ -1429,7 +1437,7 @@ de:
           size: "Größe"
         upload:
           text: "Hochladen"
-          uploading: "Hochladen..."
+          uploading: "Wird hochgeladen..."
           success: "'{{filename}}' wurde erfolgreich hochgeladen."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
         operations:
@@ -1567,6 +1575,7 @@ de:
             user_placeholder: "Benutzername"
             address_placeholder: "name@example.com"
             type_placeholder: "zusammenfassen, registrieren..."
+            reply_key_placeholder: "Antwort-Schlüssel"
             skipped_reason_placeholder: "Grund"
       logs:
         title: "Logs"
@@ -1858,9 +1867,15 @@ de:
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
           user_change: "Wenn ein Benutzer bearbeitet oder angelegt wird"
         preview:
+          plan_text: "Vorschau mit Query Plan"
+          modal_title: "Vorschau für Abzeichen-Abfrage"
           sql_error_header: "Es gab einen Fehler mit der SQL-Abfrage."
           bad_count_warning:
             header: "WARNUNG!"
+          grant_count:
+            zero: "Es wird kein Abzeichen verliehen."
+            one: "Es wird <b>1</b> Abzeichen verliehen."
+            other: "Es werden <b>%{count}</b> Abzeichen verliehen."
           sample: "Beispiel:"
           grant:
             with: <span class="username">%{username}</span>
@@ -1873,45 +1888,49 @@ de:
       title: 'Tastenkombinationen'
       jump_to:
         title: 'Springe zu'
-        home: '<b>G</b>, <b>H</b> Hauptseite (Aktuell)'
-        latest: '<b>G</b>, <b>L</b> Aktuell'
-        new: '<b>G</b>, <b>N</b> Neu'
-        unread: '<b>G</b>, <b>U</b> Ungelesen'
-        starred: '<b>G</b>, <b>F</b> Favorisiert'
-        categories: '<b>G</b>, <b>C</b> Kategorien'
+        home: '<b>g</b>, <b>h</b> Hauptseite (Aktuell)'
+        latest: '<b>g</b>, <b>l</b> Aktuell'
+        new: '<b>g</b>, <b>n</b> Neu'
+        unread: '<b>g</b>, <b>u</b> Ungelesen'
+        starred: '<b>g</b>, <b>f</b> Favorisiert'
+        categories: '<b>g</b>, <b>c</b> Kategorien'
+        top: '<b>g</b>, <b>t</b> Anfang'
       navigation:
         title: 'Navigation'
-        back: '<b>U</b> Zurück'
-        open: '<b>O</b> oder <b>↵ Eingabe</b> Ausgewähltes Thema anzeigen'
-        next_prev: '<b>⇧ Umsch</b> + <b>J</b> / <b>⇧ Umsch</b> + <b>K</b> Nächster/vorheriger Abschnitt'
+        jump: '<b>#</b> Zeige Beitrag #'
+        back: '<b>u</b> Zurück'
+        up_down: '<b>k</b>/<b>j</b> Auswahl &uarr; &darr; bewegen'
+        open: '<b>o</b> oder <b>↵ Eingabe</b> Ausgewähltes Thema anzeigen'
+        next_prev: '<b>⇧ Umsch</b> + <b>j</b> / <b>⇧ Umsch</b> + <b>k</b> Nächster/vorheriger Abschnitt'
       application:
         title: 'Anwendung'
-        create: '<b>C</b> Neues Thema erstellen'
-        notifications: '<b>N</b> Benachrichtigungen anzeigen'
+        create: '<b>c</b> Neues Thema erstellen'
+        notifications: '<b>n</b> Benachrichtigungen anzeigen'
         site_map_menu: '<b>=</b> Seitenmenü öffnen'
         user_profile_menu: '<b>p</b> Benutzermenü öffnen'
+        show_incoming_updated_topics: '<b>.</b> Zeige aktualisierte Themen'
         search: '<b>/</b> Suchen'
-        help: '<b>?</b> Tastaturhilfe öffnen'
-        dismiss_new_posts: '<b>X</b>, <b>R</b> Neue Themen / Beiträge ignorieren'
-        dismiss_topics: '<b>X</b>, <b>T</b> Themen ignorieren'
+        help: '<b>?</b> Tastaturhilfe anzeigen'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Neue Themen / Beiträge ignorieren'
+        dismiss_topics: '<b>x</b>, <b>t</b> Themen ignorieren'
       actions:
         title: 'Aktionen'
-        star: '<b>F</b> Thema favorisieren'
-        share_topic: '<b>⇧ Umsch</b> + <b>S</b> Thema teilen'
-        share_post: '<b>S</b> Beitrag teilen'
-        reply_as_new_topic: '<b>T</b> Mit Themenwechsel antworten'
-        reply_topic: '<b>⇧ Umsch</b> + <b>R</b> Auf Thema antworten'
-        reply_post: '<b>R</b> Auf Beitrag antworten'
-        quote_post: '<b>Q</b> Beitrag zitieren'
-        like: '<b>L</b> Beitrag gefällt mir'
+        star: '<b>f</b> Thema favorisieren'
+        share_topic: '<b>⇧ Umsch</b> + <b>s</b> Thema teilen'
+        share_post: '<b>s</b> Beitrag teilen'
+        reply_as_new_topic: '<b>t</b> Mit Themenwechsel antworten'
+        reply_topic: '<b>⇧ Umsch</b> + <b>r</b> Auf Thema antworten'
+        reply_post: '<b>r</b> Auf Beitrag antworten'
+        quote_post: '<b>q</b> Beitrag zitieren'
+        like: '<b>l</b> Beitrag gefällt mir'
         flag: '<b>!</b> Beitrag melden'
-        bookmark: '<b>B</b> Lesezeichen auf Beitrag setzen'
-        edit: '<b>E</b> Beitrag bearbeiten'
-        delete: '<b>D</b> Beitrag löschen'
-        mark_muted: '<b>M</b>, <b>M</b> Thema stummschalten'
-        mark_regular: '<b>M</b>, <b>R</b> Thema auf Normal setzen'
-        mark_tracking: '<b>M</b>, <b>T</b> Thema verfolgen'
-        mark_watching: '<b>M</b>, <b>W</b> Thema beobachten'
+        bookmark: '<b>b</b> Lesezeichen auf Beitrag setzen'
+        edit: '<b>e</b> Beitrag bearbeiten'
+        delete: '<b>d</b> Beitrag löschen'
+        mark_muted: '<b>m</b>, <b>m</b> Thema stummschalten'
+        mark_regular: '<b>m</b>, <b>r</b> Thema auf Normal setzen'
+        mark_tracking: '<b>m</b>, <b>t</b> Thema verfolgen'
+        mark_watching: '<b>m</b>, <b>w</b> Thema beobachten'
     badges:
       title: Abzeichen
       allow_title: "Abzeichen als Titel erlauben?"
@@ -1941,7 +1960,7 @@ de:
       badge:
         editor:
           name: Bearbeiter
-          description: Hat einen Beitrag bearbeitet
+          description: Hat den ersten Beitrag bearbeitet
         basic_user:
           name: Neuling
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Ermöglicht</a> das Nutzen alle wesentlichen Community-Funktionen
@@ -1961,7 +1980,7 @@ de:
           name: Autobiograf
           description: Hat <a href="/my/preferences">Benutzerprofil</a> ausgefüllt
         nice_post:
-          name: Netter Beitrag
+          name: Schöner Beitrag
           description: Hat 10 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
         good_post:
           name: Guter Beitrag
@@ -1969,6 +1988,24 @@ de:
         great_post:
           name: Großartiger Beitrag
           description: Hat 50 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
+        nice_topic:
+          name: Schönes Thema
+          description: Hat 10 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
+        good_topic:
+          name: Gutes Thema
+          description: Hat 25 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
+        great_topic:
+          name: Großartiges Thema
+          description: Hat 50 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
+        nice_share:
+          name: Schöne Weitergabe
+          description: Hat einen Beitrag mit 25 Besuchern geteilt
+        good_share:
+          name: Gute Weitergabe
+          description: Hat einen Beitrag mit 300 Besuchern geteilt
+        great_share:
+          name: Großartige Weitergabe
+          description: Hat einen Beitrag mit 1000 Besuchern geteilt
         first_like:
           name: Erster Like
           description: Hat Gefallen an einem Beitrag gefunden
@@ -1976,7 +2013,7 @@ de:
           name: Erste Meldung
           description: Hat einen Beitrag gemeldet
         first_share:
-          name: Erster geteilter Beitrag
+          name: Erste Weitergabe
           description: Hat einen Beitrag geteilt
         first_link:
           name: Erster Link

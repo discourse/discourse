@@ -259,7 +259,6 @@ it:
       other_accounts: Altri account con questo indirizzo IP
       no_other_accounts: (nessuno)
     user:
-      said: "{{username}} ha scritto:"
       profile: "Profilo"
       mute: "Ignora"
       edit: "Modifica opzioni"
@@ -286,9 +285,10 @@ it:
       suspended_notice: "Questo utente è sospeso fino al {{date}}."
       suspended_reason: "Motivo: "
       mailing_list_mode: "Ricevi una email per ogni nuovo messaggio (a meno che tu non ignori l'argomento o la categoria)"
-      watched_categories: "Osservata/e"
-      watched_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti. Inoltre, accanto all'elenco degli argomenti apparirà il conteggio dei messaggi non letti e di quelli nuovi."
-      tracked_categories: "Seguita/e"
+      watched_categories: "Osservato"
+      watched_categories_instructions: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti. Inoltre, accanto all'elenco degli argomenti apparirà il conteggio dei messaggi non letti e di quelli nuovi."
+      tracked_categories: "Seguito"
+      tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
       muted_categories: "Ignorato"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nel tab dei non letti."
       delete_account: "Cancella il mio account"
@@ -297,9 +297,11 @@ it:
       delete_yourself_not_allowed: "Non puoi eliminare il tuo account in questo momento. Contatta un amministratore e chiedigli di cancellarlo per te."
       unread_message_count: "Messaggi"
       staff_counters:
+        flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
         deleted_posts: "messaggi cancellati"
         suspensions: "sospensioni"
+        warnings_received: "avvisi"
       messages:
         all: "Tutti"
         mine: "Miei"
@@ -337,7 +339,6 @@ it:
         title: "Sfondo Profilo"
       email:
         title: "Email"
-        instructions: "Non verrà mai mostrato al pubblico."
         ok: "Tutto a posto! Ti manderemo una email di conferma."
         invalid: "Inserisci un indirizzo email valido."
         authenticated: "{{provider}} ha autenticato la tua email."
@@ -349,7 +350,6 @@ it:
         ok: "Il nome è adeguato."
       username:
         title: "Nome utente"
-        instructions: "Deve essere unico, senza spazi e breve."
         short_instructions: "Gli utenti possono citarti scrivendo \"@{{username}}\"."
         available: "Il nome utente è disponibile."
         global_match: "L'email corrisponde allo nome utente registrato."
@@ -425,6 +425,7 @@ it:
         bulk_invite:
           none: "Non hai ancora invitato nessuno qui. Puoi inviare inviti individuali, o invitare un gruppo di persone caricando un <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>file di invito di massa</a>."
           text: "Invito di Massa da File"
+          uploading: "In caricamento..."
           success: "Il file è stato caricato correttamente, verrai notificato a breve con i progressi."
           error: "Si è verificato un errore durante il caricamento {{filename}}': {{message}}"
       password:
@@ -432,7 +433,6 @@ it:
         too_short: "La password è troppo breve."
         common: "Questa password è troppo comune."
         ok: "La password è adeguata"
-        instructions: "Deve essere almeno di %{count} caratteri."
       ip_address:
         title: "Ultimo indirizzo IP"
       registration_ip_address:
@@ -460,6 +460,7 @@ it:
         network: "Per favore controlla la connessione."
         network_fixed: "Sembra essere tornato."
         server: "Codice di errore: {{status}}"
+        forbidden: "Non hai i permessi per visualizzarlo."
         unknown: "Qualcosa è andato storto."
       buttons:
         back: "Torna Indietro"
@@ -516,6 +517,10 @@ it:
       reset: "Azzera Password"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con le istruzioni per ripristinare la tua password."
       complete_email: "Se un account corrisponde a <b>%{email}</b>,  a breve dovresti ricevere un'email contenente le istruzioni per ripristinare la password."
+      complete_username_found: "C'è un account che corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
+      complete_email_found: "C'è un account che corrisponde alla email <b>%{email}</b>, a breve dovresti ricevere una email con le istruzioni per reimpostare la tua password. "
+      complete_username_not_found: "Nessun account corrisponde al nome utente <b>%{username}</b>"
+      complete_email_not_found: "Nessun account corrisponde alla email <b>%{email}</b>"
     login:
       title: "Accedi"
       username: "Utente"
@@ -554,6 +559,7 @@ it:
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
     composer:
+      add_warning: "Questo è un avvertimento ufficiale."
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saving_draft_tip: "salvataggio"
       saved_draft_tip: "salvato"
@@ -695,6 +701,10 @@ it:
         hot: "Non ci sono argomenti caldi."
         category: "Non ci sono argomenti in {{category}}."
         top: "Non ci sono argomenti di punta."
+        educate:
+          new: '<p>Qui compaiono i tuoi nuovi argomenti.</p><p>Per difetto, gli argomenti creati negli ultimi 2 giorni saranno considerati nuovi e mostreranno l''indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuovo</span>.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
+          unread: '<p>Qui compaiono i tuoi argomenti non letti.</p><p>Per difetto, gli argomenti sono considerati non letti e mostrano un conteggio di non lettura <span class="badge new-posts badge-notification">1</span> se hai:</p><ul><li>Creato l''argomento</li><li>Risposto all''argomento</li><li>Letto l''argomento per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l''argomento come Seguito o Osservato usando il pannello di controllo delle notifiche in fondo ad ogni argomento.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
+          starred: '<p>Qui compaiono i tuoi argomenti preferiti.</p><p>Per aggiungere o rimuovere un argomento dai preferiti, usa:</p><ul><li>la <i class="fa fa-star"></i> vicino al titolo di ogni argomento</li><li>il bottone Stella in fondo ad ogni argomento</li></ul>'
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         hot: "Non ci sono altri argomenti caldi."
@@ -750,8 +760,7 @@ it:
       toggle_information: "commuta i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in {{catLink}} o {{latestLink}}."
       read_more: "Vuoi saperne di più? {{catLink}} o {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} \n\tone { C'è <a href='/unread'>1 argomento non letto</a> } \n\tother { Ci sono <a href='/unread'># argomenti non letti</a> } \n} \n{ NEW, plural, =0 {} \n\tone { \n\t\t{BOTH, select, true{e } false {è } other{}} <a href='/new'>1 nuovo</a> argomento} \n\tother { \n\t\t{BOTH, select, true{e } false {sono } other{}} <a href='/new'># nuovi</a> argomenti} } \nrestanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other\
-        \ {}}."
+      read_more_MF: "{ UNREAD, plural, =0 {} \n\tone { C'è <a href='/unread'>1 argomento non letto</a> } \n\tother { Ci sono <a href='/unread'># argomenti non letti</a> } \n} \n{ NEW, plural, =0 {} \n\tone { \n\t\t{BOTH, select, true{e } false {è } other{}} <a href='/new'>1 nuovo</a> argomento} \n\tother { \n\t\t{BOTH, select, true{e } false {sono } other{}} <a href='/new'># nuovi</a> argomenti} } \nrestanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}."
       browse_all_categories: Scorri tutte le categorie
       view_latest_topics: visualizza gli argomenti più recenti
       suggest_create_topic: Perché non crei un argomento?
@@ -773,11 +782,11 @@ it:
         position: "messaggio %{current} di %{total}"
       notifications:
         reasons:
-          '3_6': 'Riceverai notifiche perché stai monitorando questa categoria.'
-          '3_5': 'Riceverai notifiche poiché hai iniziato a monitorare questo argomento automaticamente.'
-          '3_2': 'Riceverai notifiche perché stai monitorando questo argomento.'
+          '3_6': 'Riceverai notifiche perché stai osservando questa categoria.'
+          '3_5': 'Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente.'
+          '3_2': 'Riceverai notifiche perché stai osservando questo argomento.'
           '3_1': 'Riceverai notifiche perché hai creato questo argomento.'
-          '3': 'Riceverai notifiche perché stai monitorando questo argomento.'
+          '3': 'Riceverai notifiche perché stai osservando questo argomento.'
           '2_8': 'Riceverai notifiche perché stai seguendo questa categoria.'
           '2_4': 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
           '2_2': 'Riceverai notifiche perché stai seguendo questo argomento.'
@@ -789,13 +798,16 @@ it:
           '0': 'Stai ignorando tutte le notifiche di questo argomento.'
         watching_pm:
           title: "In osservazione"
+          description: "Riceverai una notifica per ogni nuovo messaggio ricevuto all'interno di questo messaggio privato. Accanto all'argomento comparirà anche un conteggio dei messaggi non letti e di quelli nuovi."
         watching:
           title: "In osservazione"
+          description: "Riceverai una notifica per ogni nuovo messaggio in questo argomento. Accanto all'argomento comparirà anche un conteggio dei messaggi non letti e di quelli nuovi."
         tracking_pm:
           title: "Seguito"
           description: "Un conteggio dei messaggio non letti e nuovi apparirà vicino al messaggio privato. Riceverai una notifica solo se qualcuno menziona il tuo @name o risponde al tuo messaggio."
         tracking:
           title: "Seguito"
+          description: "Accanto all'argomento comparirà un conteggio dei messaggi non letti e di quelli nuovi. Riceverai una notifica solo se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         regular:
           title: "Normale"
           description: "Riceverai notifiche solo se qualcuno menziona il tuo @name o risponde al tuo messaggio."
@@ -821,6 +833,8 @@ it:
         pin_globally: "Appunta Argomento Globalmente"
         unarchive: "De-archivia Argomento"
         archive: "Archivia Argomento"
+        invisible: "Rendi Invisibile"
+        visible: "Rendi Visibile"
         reset_read: "Reimposta Dati Letti"
         multi_select: "Seleziona Messaggi"
       reply:
@@ -934,6 +948,7 @@ it:
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
+        attachment_download_requires_login: "Spiacenti, devi essere collegato per poter scaricare gli allegati."
       abandon:
         confirm: "Sicuro di voler abbandonare il tuo messaggio?"
         no_value: "No, mantienilo"
@@ -962,6 +977,11 @@ it:
           yes_value: "Si, cancella anche le risposte"
           no_value: "No, solo questo messaggio"
         admin: "azioni post-amministrazione"
+        wiki: "Rendi Wiki"
+        unwiki: "Rimuovi Wiki"
+        convert_to_moderator: "Aggiungi Colore Staff"
+        revert_to_regular: "Rimuovi Colore Staff"
+        rebake: "Ricrea HTML"
       actions:
         flag: 'Segnala'
         defer_flags:
@@ -1120,6 +1140,7 @@ it:
       allow_badges_label: "Permetti che le targhette vengano assegnate in questa categoria"
       edit_permissions: "Modifica Permessi"
       add_permission: "Aggiungi Permesso"
+      everyone_permission: "chiunque"
       this_year: "quest'anno"
       position: "posizione"
       default_position: "Posizione di default"
@@ -1129,8 +1150,10 @@ it:
       notifications:
         watching:
           title: "In osservazione"
+          description: "Osserverai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Verrai avvisato di tutti i nuovi messaggi ed argomento. Inoltre di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
         tracking:
           title: "Seguendo"
+          description: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
         regular:
           title: "Normale"
           description: "Riceverai notifiche solo se qualcuno menziona il tuo @nome o risponde a un tuo messaggio."
@@ -1165,6 +1188,8 @@ it:
         one: "1 click"
         other: "%{count} click"
     topic_statuses:
+      warning:
+        help: "Questo è un avvertimento ufficiale."
       locked:
         help: "Questo argomento è chiuso; non sono ammesse nuove risposte"
       unpinned:
@@ -1178,6 +1203,8 @@ it:
         help: "Questo argomento è in evidenza; verrà mostrato in cima alla sua categoria"
       archived:
         help: "Questo argomento è archiviato; è bloccato e non può essere modificato"
+      invisible:
+        help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
     posts: "Messaggi"
     posts_lowercase: "messaggi"
     posts_long: "ci sono {{number}} messaggi in questo argomento"
@@ -1226,7 +1253,7 @@ it:
           zero: "Non letti"
           one: "Non letto (1)"
           other: "Non letti ({{count}})"
-        help: "argomenti che stai guardando o seguendo contenenti messaggi non letti"
+        help: "argomenti che stai osservando o seguendo contenenti messaggi non letti"
         lower_title_with_count:
           one: "1 non letto"
           other: "{{count}} non letti"
@@ -1321,6 +1348,8 @@ it:
         agree_flag_modal_title: "Acconsento e..."
         agree_flag_hide_post: "D'accordo (nascondi il messaggio e invia MP)"
         agree_flag_hide_post_title: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato chiedendogli di modificarlo"
+        agree_flag_restore_post: "D'accordo (ripristina messaggio)"
+        agree_flag_restore_post_title: "Ripristina questo messaggio"
         agree_flag: "Accetta la segnalazione"
         agree_flag_title: "Accetta la segnalazione e non modificare il messaggio"
         defer_flag: "Ignora"
@@ -1355,6 +1384,7 @@ it:
         topic_flagged: "Questo <strong>argomento</strong> è stato segnalato."
         visit_topic: "Visita l'argomento per intervenire"
         was_edited: "Il messaggio è stato modificato dopo la prima segnalazione"
+        previous_flags_count: "Questo messaggio è stato già segnalato {{count}} volte."
         summary:
           action_type_3:
             one: "off-topic "
@@ -1419,6 +1449,8 @@ it:
           filename: "Nome del file"
           size: "Dimensione"
         upload:
+          text: "Carica"
+          uploading: "In caricamento..."
           success: "'{{filename}}' è stato caricato con successo."
           error: "Si è verificato un errore durante il caricamento {{filename}}': {{message}}"
         operations:
@@ -1708,6 +1740,7 @@ it:
         topics_entered: Argomenti Visti
         flags_given_count: Segnalazioni Fatte
         flags_received_count: Segnalazioni Ricevute
+        warnings_received_count: Avvertimenti Ricevuti
         flags_given_received_count: 'Segnalazioni Fatte / Ricevute'
         approve: 'Approva'
         approved_by: "approvato da"
@@ -1873,16 +1906,23 @@ it:
         unread: '<b>g</b>, <b>u</b> Non Letti'
         starred: '<b>g</b>, <b>f</b> Preferiti'
         categories: '<b>g</b>, <b>c</b> Categorie'
+        top: '<b>g</b>, <b>t</b> Alto'
       navigation:
         title: 'Navigazione'
+        jump: '<b>#</b> Va al messaggio numero'
         back: '<b>u</b> Indietro'
+        up_down: '<b>k</b>/<b>j</b> Sposta la selezione &uarr; &darr;'
         open: '<b>o</b> o <b>Invio</b> Apre l''argomento selezionato'
         next_prev: '<b>shift j</b>/<b>shift k</b> Prossima/precedente sezione'
       application:
         title: 'Applicazione'
         create: '<b>c</b> Crea un nuovo argomento'
         notifications: '<b>n</b> Apre le notifiche'
+        site_map_menu: '<b>=</b> Apre il menu sito'
+        user_profile_menu: '<b>p</b> Apre il menu del profilo utente'
+        show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
         search: '<b>/</b> Cerca'
+        help: '<b>?</b> Apre l''aiuto per le scorciatoie da tastiera'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
       actions:
@@ -1938,6 +1978,7 @@ it:
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Assegnate</a> tutte le funzioni essenziali della comunità
         member:
           name: Membro
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Assegnata</a> inviti
         regular:
           name: Assiduo
           description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concessi</a> i permessi di: ricategorizzare, rinominare, collegamenti seguiti e Lounge'
@@ -1959,6 +2000,24 @@ it:
         great_post:
           name: Fantastico Messaggio
           description: Ha ricevuto 50 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
+        nice_topic:
+          name: Argomento Buono
+          description: Ricevuti 10 "Mi piace" per un argomento. Questa targhetta può essere assegnata più volte
+        good_topic:
+          name: Argomento Ottimo
+          description: Ricevuti 25 "Mi piace" per un argomento. Questa targhetta può essere assegnata più volte
+        great_topic:
+          name: Argomento Eccellente
+          description: Ricevuti 50 "Mi piace" per un argomento. Questa targhetta può essere assegnata più volte
+        nice_share:
+          name: Condivisione Buona
+          description: Condiviso un messaggio con 25 visitatori unici
+        good_share:
+          name: Condivisione Ottima
+          description: Condiviso un messaggio con 300 visitatori unici
+        great_share:
+          name: Condivisione Eccellente
+          description: Condiviso un messaggio con 1000 visitatori unici
         first_like:
           name: Primo Mi Piace
           description: '"Mi piace" ad un messaggio'

@@ -98,9 +98,11 @@ fi:
     errors:
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
     default_names:
+      everyone: "kaikki"
       admins: "ylläpitäjät"
       moderators: "valvojat"
       staff: "henkilökunta"
+      trust_level_0: "luottamustaso_0"
       trust_level_1: "luottamustaso_1"
       trust_level_2: "luottamustaso_2"
       trust_level_3: "luottamustaso_3"
@@ -169,6 +171,8 @@ fi:
         name: "Alueen nimi"
       post:
         raw: "Leipäteksti"
+      user_profile:
+        bio_raw: "Minusta"
     errors:
       messages:
         is_invalid: "ei kelpaa; yritä olla kuvailevampi"
@@ -176,6 +180,9 @@ fi:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Voit liittää varoituksia vain yksityisviesteihin."
+              too_many_users: "Voit lähettää varoituksia vain yhdelle käyttäjälle kerrallaan."
             archetype:
               cant_send_pm: "Pahoittelut, et voi lähettää tälle käyttäjälle yksityisviestiä."
         user:
@@ -200,6 +207,27 @@ fi:
   assets_topic_body: "Tämä on pysyvä ketju, joka näkyy ainoastaan henkilökunnalle. Se on tarkoitettu sivuston käyttämien kuvien ja muiden tiedostojen tallentamiseen. Älä poista sitä!\n\n\nTässä ova ohjeet sen käyttämiseen:\n\n\n1. Vastaa tähän ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Lähetä viesti\n4. Klikkaa hiiren oikealla näppäimellä, tai klikkaa muokkaa-näppäintä muokataksesi viestiäsi, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nLisäksi, jos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `sallitut tiedostopäätteet` listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Tervetuloa Loungeen"
+    body: |2
+
+      Onnittelut! :confetti_ball:
+
+      Jos näet tämän ketjun, sinut on juuri ylennetty **Mestariksi** (luottamustaso 3).
+
+      Voit nyt&hellip;
+
+      * Muokata minkä hyvänsä ketjun otsikkoa
+      * Vaihtaa minkä hyvänsä ketjun toiselle alueelle
+      * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](http://en.wikipedia.org/wiki/Nofollow) on poistettu)
+      * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
+      * Jakaa tykkäyksiä ja lippuja, joiden painoarvo on suurempi
+
+      Tässä on nykyinen [lista mestareista](/badges/3/leader). Muista käydä moikkaamassa.
+
+      Kiitos, että olet tämän yhteisön arvokas jäsen!
+
+      (Saadaksesi lisätietoja luottamustasoista, [katso tämä englanninkielinen ketju][trust]. Huomaa, että pysyäksesi mestarina sinun pitää täyttää vaatimukset jatkossakin. )
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Alueesta %{category}"
     replace_paragraph: "[Korvaa tämä kappale lyhyellä kuvauksella uudesta alueesta. Tämä kuvaus näytetään alueen valinnan yhteydessä, joten yritä pitää se alle 200 merkin pituisenä. Tätä aluetta ei näytetä listauksissa ennen kuin olet muokannut tätä tekstiä tai luonut viestiketjuja.]"
@@ -217,9 +245,15 @@ fi:
       topic_exists_no_oldest: "Aluetta ei voi poistaa, koska ketjujen lukumäärä on #{count}."
   trust_levels:
     newuser:
-      title: "uusi käyttäjä"
+      title: "tulokas"
     basic:
-      title: "peruskäyttäjä"
+      title: "haastaja"
+    regular:
+      title: "konkari"
+    leader:
+      title: "mestari"
+    elder:
+      title: "johtaja"
     change_failed_explanation: "Yritit alentaa käyttäjän %{user_name} luottamustasolle '%{new_trust_level}'. Käyttäjän luottamustaso on jo valmiiksi '%{current_trust_level}'. %{user_name} jatkaa edelleen luottamustasolla '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Olet tehnyt tämän toiminnon liian monta kertaa, yritä uudelleen myöhemmin."
@@ -593,6 +627,7 @@ fi:
     summary_posts_required: "Montako viestiä ketjussa täytyy olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_likes_required: "Montako tykkäystä ketjussa pitää olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
+    enable_private_messages: "Salli luottamustason 1 käyttäjien luoda ja vastata yksityisviesteihin"
     enable_long_polling: "Ilmoitusten käyttämä viestiväylä voi käyttää long pollingia"
     long_polling_interval: "Uuden long pollin intervalli millisekunneissa."
     polling_interval: "Kuinka usein kirjautuneet käyttäjät pollaavat millisekunneissa"
@@ -638,6 +673,7 @@ fi:
     allow_index_in_robots_txt: "Määrittele robots.txt-tiedostossa, että hakukoneet saavat luetteloida sivuston."
     email_domains_blacklist: "Lista sähköposti-verkkotunnuksista, joista käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com trashmail.net"
     email_domains_whitelist: "Lista sähköposti-verkkotunnuksista, joista käyttäjien pitää luoda tilinsä. VAROITUS: Käyttäjiä, joiden sähköpostiosoite on muusta verkkotunnuksesta ei sallita!"
+    forgot_password_strict: "Älä paljasta tilin olemassaoloa unohtuneen salasanan kyselyssä."
     version_checks: "Pingaa Discourse Hubia päivityksistä ja näytä viesti /admin hallintapaneelissa kun uusi versio on saatavilla"
     new_version_emails: "Lähetä sähköposti contact_email osoitteeseen kun uusi versio Discoursesta on saatavilla."
     port: "VAIN KEHITTÄJILLE! VAROITUS! Käytä tätä HTTP porttia portin 80 sijaan. Jätä tyhjäksi jos haluat käyttää oletusporttia 80."
@@ -707,6 +743,27 @@ fi:
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
     default_trust_level: "Oletus luottamustaso (0-4) kaikile käyttäjille."
+    tl1_requires_topics_entered: "Kuinka monta ketjua uuden käyttäjän täytyy avata ennen ylentämistä luottamustasolle 1."
+    tl1_requires_read_posts: "Kuinka monta viestiä uuden käyttäjän täytyy lukea ennen ylentämistä luottamustasolle 1."
+    tl1_requires_time_spent_mins: "Kuinka monta minuuttia uuden käyttäjän täytyy lukea keskusteluita ennen ylentämistä luottamustasolle 1."
+    tl2_requires_topics_entered: "Kuinka monta ketjua käyttäjän täytyy avata ennen ylentämistä luottamustasolle 2."
+    tl2_requires_read_posts: "Kuinka monta viestiä käyttäjän täytyy lukea ennen ylentämistä luottamustasolle 2."
+    tl2_requires_time_spent_mins: "Kuinka monta minuuttia käyttäjän täytyy lukea keskusteluita ennen ylentämistä luottamustasolle 2."
+    tl2_requires_days_visited: "Kuinka monena päivänä käyttäjän täytyy vierailla sivustolla ennen ylentämistä luottamustasolle 2."
+    tl2_requires_likes_received: "Kuinka monta tykkäystä käyttäjän täytyy saada ennen ylentämistä luottamustasolle 2."
+    tl2_requires_likes_given: "Kuinka monta tykkäystä käyttäjän täytyy antaa ennen ylentämistä luottamustasolle 2."
+    tl2_requires_topic_reply_count: "Kuinka moneen ketjuun käyttäjän täytyy vastata ennen ylentämistä luottamustasolle 2."
+    tl3_requires_days_visited: "Monenako päivänä vähintään käyttäjän täytyy olla vieraillut sivustolla viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3. (asteikko 0-100)"
+    tl3_requires_topics_replied_to: "Moneenko ketjuun vähintään käyttäjän täytyy olla vastannut viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3. (0 tai korkeampi)"
+    tl3_requires_topics_viewed: "Montako prosenttia viimeisen 100 päivän aikana luoduista ketjuista käyttäjän täytyy olla katsellut voidakseen saavuttaa luottamustason 3. (asteikko 0-100)"
+    tl3_requires_posts_read: "Montako prosenttia viimeisen 100 päivän aikana luoduista viesteistä käyttäjän täytyy olla katsellut voidakseen saavuttaa luottamustason 3. (asteikko 0-100)"
+    tl3_requires_topics_viewed_all_time: "Montako ketjua käyttäjän täytyy olla katsonut voidakseen saavuttaa luottamustason 3."
+    tl3_requires_posts_read_all_time: "Montako viestiä käyttäjän täytyy olla katsonut voidakseen saavuttaa luottamustason 3."
+    tl3_requires_max_flagged: "Käyttäjällä ei saa olla enempää kuin x viestiä liputettuna x eri käyttäjältä viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3. (0 tai korkeampi)"
+    tl3_promotion_min_duration: "Kuinka montaa päivää luottamustasolle 3 ylennyksen jälkeen käyttäjä voidaa jälleen alentaa luottamustasolle 2."
+    tl3_requires_likes_given: "Montako tykkäystä käyttäjän täytyy olla vähintään antanut viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3."
+    tl3_requires_likes_received: "Montako tykkäystä käyttäjän täytyy olla vähintään saanut viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3."
+    tl3_links_no_follow: "Älä poista rel=nofollow -attribuuttia linkeistä luottamustason 3 käyttäjiltä."
     min_trust_to_create_topic: "Ketjun luomiseksi vaadittava luottamustaso."
     min_trust_to_edit_wiki_post: "Wikiviestin muokkaamiseen vaadittava luottamustaso."
     newuser_max_links: "Kuinka monta linkkiä uusi käyttäjä voi lisätä viestiin."
@@ -787,6 +844,7 @@ fi:
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin tulee muistutetuksi ketjun dominoinnista."
     suppress_uncategorized_badge: "Älä näytä alueettomille ketjuille tunnusta ketjujen listauksissa."
     global_notice: "Näytä KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri kaikilla sivuilla kaikille käyttäjille, vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
+    disable_edit_notifications: "Poista muokkausilmoitukset system-käyttäjältä, kun 'download_remote_images_to_local' on asetettu."
     enable_names: "Salli käyttäjän pitkän nimen näyttäminen. Ota pois käytöstä piilottaaksesi pitkän nimen."
     display_name_on_posts: "Näytä käyttäjän pitkä nimi viesteissä @nimen lisäksi."
     invites_per_page: "Oletuksena montako kutsua näytetään käyttäjäsivulla."
@@ -809,6 +867,7 @@ fi:
     enable_cdn_js_debugging: "Salli /logs näyttää kunnolliset virheilmoitukset lisäämällä crossorigin permissions kaikkiin sisällytettyihin js-kirjastoihin."
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, huomauta ylläpitäjiä ketjujen luonnista."
     vacuum_db_days: "Aja VACUUM FULL ANALYZE vapauttaaksesi tilaa tietokantaan migraatioiden jälkeen (aseta 0 ottaaksesi pois käytöstä)"
+    prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta tiedostoja. VAROITUS: tämä estää viestin liitetiedostojen käyttämisen sivuston logoina ym."
     errors:
       invalid_email: "Sähköpostiosoite ei kelpaa."
       invalid_username: "Tällä nimellä ei löydy käyttäjää."
@@ -878,6 +937,8 @@ fi:
     pinned_disabled: "Ketjun kiinnitys on poistettu. Sitä ei enää näytetä alueen ylimmäisenä."
     pinned_globally_enabled: "Tämä ketju on nyt kiinnitetty yleisesti. Se näytetään alueensa ja kaikkien listausten ylimmäisenä. Kiinnityksen voi poistaa joko henkilökunnan jäsen kaikilta yhteisesti tai yksittäiset käyttäjät itseltään."
     pinned_globally_disabled: "Ketjun kiinnitys on poistettu. Sitä ei enää näytetä ylimmäisenä."
+    visible_enabled: "Tämä ketju näytetään nyt listauksissa."
+    visible_disabled: "Tämä ketju on poistettu listauksista. Sitä ei näytetä missään ketjujen listauksissa. Ainoa tapa avata ketju on suoralla lnkillä."
   login:
     not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
     incorrect_username_email_or_password: "Väärä käyttäjänimi, sähköposti tai salasana"
@@ -885,6 +946,7 @@ fi:
     active: "Tilisi on aktivoitu ja valmiina käyttöön."
     activate_email: "Olet melkein valmis! Lähetimme vahvistusviestin osoitteeseen <b>%{email}</b>. Seuraa viestin ohjeita ottaaksesi tilisi käyttöön."
     not_activated: "Et voi vielä kirjautua sisään. Lähetimme sinulle vahvistusviestin. Seuraa sähköpostiviestin ohjeita ottaaksesi tunnuksen käyttöön."
+    not_allowed_from_ip_address: "Et voi kirjautua käyttäjätunnuksella %{username} tästä IP-osoitteesta."
     suspended: "Et voi kirjautu sisään ennen %{date}."
     suspended_with_reason: "Et voi kirjautua sisään ennen %{date}. Hyllytyksen syy: %{reason}"
     errors: "%{errors}"
@@ -893,6 +955,7 @@ fi:
     omniauth_error: "Pahoittelut, %{strategy} tilisi tunnistautumisessa tapahtui virhe. Ehkäpä et hyväksynyt valtuutusta?"
     omniauth_error_unknown: "Jotain meni pieleen kirjautumisesti käsittelyssä, ole hyvä ja yritä uudelleen."
     new_registrations_disabled: "Uusien tilien luonti ei ole tällä hetkellä sallittu."
+    password_too_long: "Salasanan enimmäispituus on 200 merkkiä."
   user:
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
@@ -1027,24 +1090,6 @@ fi:
         Toivottavasti viihdyt!
     welcome_invite:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
-      text_body_template: |
-        Kiitos kutsun hyväksymisestä sivustolle %{site_name} -- tervetuloa!
-
-        Olemme luoneet sinulle automaattisesti käyttäjänimen: **%{username}**, mutta voit vaihtaa sen koska hyvänsä [käyttäjäprofiilistasi][prefs].
-
-        Kirjautuaksesi sisään uudestaan, joko:
-
-        1. Kirjaudu sisään millä metodilla haluat -- kunhan se on yhdistetty **samaan sähköpostiosoitteeseen,** kuin jonne vastaanotit alkuperäisen kutsun. Muuten emme voi tietää, että se todella olet sinä!
-
-        2. Luo salasana [käyttäjäprofiilissasi][prefs], ja käytä sitä kirjautumiseen.
-
-        %{new_user_tips}
-
-        Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
-
-        Toivottavasti viihdyt!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Vieminen suoritettu onnistuneesti"
       text_body_template: "Vieminen onnistui."
@@ -1109,12 +1154,6 @@ fi:
         Tälle sähköpostiosoitteelle ei löydy käyttäjätiliä. Yritä lähettää sähköposti toisesta osoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_empty:
       subject_template: "Sähköpostiongelma -- Ei sisältöä"
-      text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
-
-        Emme löytäneet sähköpostista viestin sisältöä. Varmista, että kirjoitit jotain viestin yläreunaan - emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia.
-
-        Jos saat tämän viestin, vaikka sähköpostissa oli sisältöä, yritä uudestaan UTF-8 selkoteksti -muodossa (ei HTML).
     email_reject_parsing:
       subject_template: "Sähköpostionelma -- Tunnistamaton sisältö"
       text_body_template: |
@@ -1305,6 +1344,13 @@ fi:
         Jos et ole pyytänyt salasanan lisäämistä, voit jättää viestin huomiotta.
 
         Klikkaa tätä linkkiä valitaksesi salasanan:
+        %{base_url}/users/password-reset/%{email_token}
+    account_created:
+      subject_template: "[%{site_name}] Uusi käyttäjätilisi"
+      text_body_template: |
+        Sinulle luotiin uusi käyttäjätunnus sivustolla %{site_name}
+
+        Klikkaa seuraavaa linkkiä asettaaksesi salasanan uudelle tunnuksellesi:
         %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] Vahvista uusi sähköpostiosoite"
