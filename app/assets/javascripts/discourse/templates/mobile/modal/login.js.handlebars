@@ -1,9 +1,6 @@
 <div class="modal-body">
   {{login-buttons action="externalLogin"}}
   {{#if canLoginLocal}}
-    {{#if hasAtLeastOneLoginButton}}
-      <h3 style="text-align:center;">{{i18n login.or}}</h3>
-    {{/if}}
     <form id='login-form' method='post'>
       <div>
         <table>

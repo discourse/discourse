@@ -6,12 +6,10 @@
 }
 
 #login-buttons {
-  text-align: center;
   button {
     margin: 0 0 5px 0;
   }
-  margin-top: 0;
-  margin-bottom: 0;
+  display: inline-block;
 }
 
 #login-form {
