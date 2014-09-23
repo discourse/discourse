@@ -1984,8 +1984,7 @@ en:
 
       site_content:
         none: "Choose a type of content to begin editing."
-        title: 'Content'
-        edit: "Edit Site Content"
+        title: 'Text Content'
 
       site_settings:
         show_overriden: 'Only show overridden'
