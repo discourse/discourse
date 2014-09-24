@@ -76,6 +76,8 @@ describe ScreenedIpAddress do
       test_good_value("123.12.*.*",    "123.12.0.0/16")
       test_good_value("123.12.1.*",    "123.12.1.0/24")
       test_good_value("123.12.*.*/16", "123.12.0.0/16")
+      test_good_value("123.12.*",      "123.12.0.0/16")
+      test_good_value("123.*",         "123.0.0.0/8")
     end
 
     it "handles bad input" do
