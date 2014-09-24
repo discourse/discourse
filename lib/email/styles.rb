@@ -137,6 +137,19 @@ module Email
       end
     end
 
+    def strip_avatars_and_emojis
+      @fragment.css('img').each do |img|
+        if img['src'] =~ /user_avatar/
+          img.remove
+        end
+
+        if img['src'] =~ /plugins\/emoji/
+          img.replace img['title']
+        end
+      end
+      return @fragment.to_s
+    end
+
     private
 
     def replace_relative_urls

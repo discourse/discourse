@@ -407,6 +407,8 @@ email:
   email_prefix: ''
   email_site_title: ''
   disable_emails: false
+  strip_images_from_short_emails: true
+  short_email_length: 2800
 
 files:
   max_image_size_kb:
@@ -785,4 +787,3 @@ uncategorized:
   privacy_topic_id:
     default: -1
     hidden: true
-
