@@ -296,6 +296,10 @@ Discourse.Post = Discourse.Model.extend({
       var value = otherPost[key],
           oldValue = self[key];
 
+      if (key === "replyHistory") {
+        return;
+      }
+
       if (!value) { value = null; }
       if (!oldValue) { oldValue = null; }
 
