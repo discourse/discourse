@@ -1610,7 +1610,7 @@ nb_NO:
           external_name: "Navn"
           external_email: "Epost"
           external_avatar_url: "URL til profilbilde"
-      site_content:
+      site_text:
         none: "Velg et type innhold du vil begynne å redigere."
         title: 'Innhold'
         edit: "Rediger Sideinnhold"

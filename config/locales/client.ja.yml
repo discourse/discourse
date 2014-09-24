@@ -1636,7 +1636,7 @@ ja:
           external_name: "名前"
           external_email: "メール"
           external_avatar_url: "アバターURL"
-      site_content:
+      site_text:
         none: "編集するコンテンツのタイプを選択してください。"
         title: 'コンテンツ'
         edit: "サイトのコンテンツを編集"

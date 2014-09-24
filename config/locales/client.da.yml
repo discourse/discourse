@@ -1757,7 +1757,7 @@ da:
           external_name: "Navn"
           external_email: "Email"
           external_avatar_url: "Avatar URL"
-      site_content:
+      site_text:
         none: "Vælg en indholdstype for at begynde at redigere."
         title: 'Indhold'
         edit: "Redigér indhold"

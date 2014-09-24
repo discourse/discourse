@@ -1769,7 +1769,7 @@ he:
           external_name: "שם"
           external_email: "כתובת דוא\"ל"
           external_avatar_url: "כתובת URL של אווטר"
-      site_content:
+      site_text:
         none: "בחר סוג תוכן לפני תחילת העריכה."
         title: 'תוכן'
         edit: "ערוך תוכן אתר"

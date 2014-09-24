@@ -1807,7 +1807,7 @@ fi:
           external_name: "Nimi"
           external_email: "Sähköposti"
           external_avatar_url: "Avatarin URL"
-      site_content:
+      site_text:
         none: "Valitse sivuston osa aloittaaksesi muokkaamisen."
         title: 'Sisältö'
         edit: "Muokkaa sivuston osia"

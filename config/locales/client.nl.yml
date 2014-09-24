@@ -1715,7 +1715,7 @@ nl:
           external_name: "Naam"
           external_email: "E-mail"
           external_avatar_url: "URL voor profielfoto"
-      site_content:
+      site_text:
         none: "Selecteer een tekst om deze te bewerken"
         title: 'Teksten'
         edit: "Bewerk teksten"
