@@ -144,17 +144,32 @@ Discourse.BBCode.rawBBCode('spoiler', function(contents) {
   }
 });
 
-Discourse.BBCode.register('url', function(contents, params) {
-  if (!params) {
-    if (contents && contents.length) {
-      var tag = contents[0];
-      if (tag && tag.length === 3 && tag[1].href) {
-        return ['a', {'href': tag[1].href, 'data-bbcode': true}, tag[1].href];
-      }
-    }
-    return;
+Discourse.BBCode.replaceBBCode('url', function(contents) {
+  if (!Array.isArray(contents)) { return; }
+  if (contents.length === 1 && contents[0][0] === 'a') {
+    // single-line bbcode links shouldn't be oneboxed, so we mark this as a bbcode link.
+    if (typeof contents[0][1] !== 'object') { contents[0].splice(1, 0, {}); }
+    contents[0][1]['data-bbcode'] = true;
   }
-  return ['a', {'href': params, 'data-bbcode': true}].concat(contents);
+  return ['concat'].concat(contents);
+});
+Discourse.BBCode.replaceBBCodeParamsRaw('url', function(param, contents) {
+  var url = param.replace(/(^")|("$)/g, '');
+  return ['a', {'href': url}].concat(this.processInline(contents));
+});
+Discourse.Dialect.on('parseNode', function(event) {
+  if (!Array.isArray(event.node)) { return; }
+  var result = [ event.node[0] ];
+  var nodes = event.node.slice(1);
+  var i, j;
+  for (i = 0; i < nodes.length; i++) {
+    if (Array.isArray(nodes[i]) && nodes[i][0] === 'concat') {
+      for (j = 1; j < nodes[i].length; j++) { result.push(nodes[i][j]); }
+    } else {
+      result.push(nodes[i]);
+    }
+  }
+  for (i = 0; i < result.length; i++) { event.node[i] = result[i]; }
 });
 
 Discourse.BBCode.replaceBBCodeParamsRaw("email", function(param, contents) {
