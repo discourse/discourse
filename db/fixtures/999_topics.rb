@@ -33,10 +33,10 @@ unless Rails.env.test?
   })
 
   create_static_page_topic('guidelines_topic_id', 'guidelines_topic.title', "guidelines_topic.body",
-                           (SiteContent.content_for(:faq) rescue nil), staff, "guidelines")
+                           (SiteText.text_for(:faq) rescue nil), staff, "guidelines")
 
   create_static_page_topic('privacy_topic_id', 'privacy_topic.title', "privacy_topic.body",
-                           (SiteContent.content_for(:privacy_policy) rescue nil), staff, "privacy policy")
+                           (SiteText.text_for(:privacy_policy) rescue nil), staff, "privacy policy")
 end
 
 if seed_welcome_topics

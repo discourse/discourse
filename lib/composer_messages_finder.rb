@@ -28,7 +28,7 @@ class ComposerMessagesFinder
       education_posts_text = I18n.t('education.until_posts', count: SiteSetting.educate_until_posts)
       return {templateName: 'composer/education',
               wait_for_typing: true,
-              body: PrettyText.cook(SiteContent.content_for(education_key, education_posts_text: education_posts_text)) }
+              body: PrettyText.cook(SiteText.text_for(education_key, education_posts_text: education_posts_text)) }
     end
 
     nil

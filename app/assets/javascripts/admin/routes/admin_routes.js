@@ -15,8 +15,8 @@ Discourse.Route.buildRoutes(function() {
     this.resource('adminCustomize', { path: '/customize' } ,function() {
       this.route('colors');
       this.route('css_html');
-      this.resource('adminSiteContents', { path: '/site_contents' }, function() {
-        this.route('edit', {path: '/:content_type'});
+      this.resource('adminSiteText', { path: '/site_text' }, function() {
+        this.route('edit', {path: '/:text_type'});
       });
     });
     this.route('api');

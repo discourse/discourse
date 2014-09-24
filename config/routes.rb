@@ -110,8 +110,8 @@ Discourse::Application.routes.draw do
     post "flags/defer/:id" => "flags#defer"
     resources :site_customizations, constraints: AdminConstraint.new
     scope "/customize" do
-      resources :site_contents, constraints: AdminConstraint.new
-      resources :site_content_types, constraints: AdminConstraint.new
+      resources :site_text, constraints: AdminConstraint.new
+      resources :site_text_types, constraints: AdminConstraint.new
     end
 
     resources :color_schemes, constraints: AdminConstraint.new
