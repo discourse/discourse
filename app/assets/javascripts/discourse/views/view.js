@@ -51,7 +51,9 @@ Discourse.View.reopenClass({
   **/
   renderIfChanged: function() {
     var args = Array.prototype.slice.call(arguments, 0);
-    args.unshift(function () { this.rerender(); });
+    args.unshift(function () {
+      Ember.run.once(this, 'rerender');
+    });
     return Ember.observer.apply(this, args);
   }
 
