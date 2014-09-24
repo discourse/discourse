@@ -1881,7 +1881,7 @@ pl_PL:
           external_name: "Nazwa"
           external_email: "Email"
           external_avatar_url: "URL awatara"
-      site_content:
+      site_text:
         none: "Wybierz typ zawartości których chcesz zacząć edytować."
         title: 'Teksty'
         edit: "Edytuj zawartość strony"

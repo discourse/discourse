@@ -1810,7 +1810,7 @@ fr:
           external_name: "Nom"
           external_email: "Courriel"
           external_avatar_url: "URL Avatar"
-      site_content:
+      site_text:
         none: "Choisissez un type de contenu afin de commencer l'édition."
         title: 'Contenu'
         edit: "Modifier le contenu du site"

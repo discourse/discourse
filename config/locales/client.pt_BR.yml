@@ -1799,7 +1799,7 @@ pt_BR:
           external_name: "Nome"
           external_email: "Email"
           external_avatar_url: "URL do Avatar"
-      site_content:
+      site_text:
         none: "Escolhar um tipo de conteúdo para começar a editar."
         title: 'Conteúdo'
         edit: "Editar Conteúdo do Site"

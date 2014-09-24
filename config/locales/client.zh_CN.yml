@@ -1729,7 +1729,7 @@ zh_CN:
           external_name: "名字"
           external_email: "电子邮件"
           external_avatar_url: "头像 URL"
-      site_content:
+      site_text:
         none: "选择内容类型以开始编辑。"
         title: '内容'
         edit: "编辑站点内容"

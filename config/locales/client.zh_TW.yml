@@ -1620,7 +1620,7 @@ zh_TW:
           external_name: "名稱"
           external_email: "電子郵件"
           external_avatar_url: "頭像 URL"
-      site_content:
+      site_text:
         none: "選擇要編輯的內容類型。"
         title: '內容'
         edit: "編輯網站的內容"

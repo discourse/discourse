@@ -1807,7 +1807,7 @@ es:
           external_name: "Nombre"
           external_email: "Email"
           external_avatar_url: "URL del avatar"
-      site_content:
+      site_text:
         none: "Elige un tipo de contenido para empezar a editar."
         title: 'Contenido'
         edit: "Editar contenido del sitio"

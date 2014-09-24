@@ -1770,7 +1770,7 @@ cs:
           days: "dní"
           topics_replied_to: "Odpovědí na témata"
           flagged_posts: "Nahlášené příspěvky"
-      site_content:
+      site_text:
         none: "Zvolte typ obsahu a můžete začít editovat."
         title: 'Obsah webu'
         edit: "Editovat obsah webu"

@@ -1982,7 +1982,7 @@ en:
           external_email: "Email"
           external_avatar_url: "Avatar URL"
 
-      site_content:
+      site_text:
         none: "Choose a type of content to begin editing."
         title: 'Text Content'
 

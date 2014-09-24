@@ -1524,7 +1524,7 @@ sv:
           days: "dagar"
           topics_replied_to: "Trådar svarade på"
           flagged_posts: "flaggade inlägg"
-      site_content:
+      site_text:
         none: "Välj typ av innehåll för att börja ändra."
         title: 'Sidinnehåll'
         edit: "Ändra sidinnehåll"

@@ -1656,7 +1656,7 @@ ko:
           external_name: "Name"
           external_email: "Email"
           external_avatar_url: "Avatar URL"
-      site_content:
+      site_text:
         none: "편집을 시작하려는 컨텐츠의 타입을 선택하세요."
         title: '사이트 컨텐츠'
         edit: "사이트 컨텐츠를 편집"

@@ -1899,7 +1899,7 @@ ro:
           will_be_promoted: "Vor fi promovaţi în 24 de ore."
           does_not_qualify: "Nu se califică pentru nivelul 3 de încredere."
 
-      site_content:
+      site_text:
         none: "Alege un tip de conţinut pentru editare."
         title: 'Conţinut'
         edit: "Editează conţinutul site-ului"

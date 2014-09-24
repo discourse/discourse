@@ -1794,7 +1794,7 @@ de:
           external_name: "Name"
           external_email: "E-Mail"
           external_avatar_url: "Avatar URL"
-      site_content:
+      site_text:
         none: "Wähle einen Inhaltstyp, um mit dem Bearbeiten zu beginnen."
         title: 'Inhalt'
         edit: "Website-Inhalte bearbeiten"

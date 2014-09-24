@@ -1885,7 +1885,7 @@ ru:
           external_name: "Имя"
           external_email: "E-mail"
           external_avatar_url: "URL-адрес аватарки"
-      site_content:
+      site_text:
         none: "Выберите тип контента, чтобы начать редактирование."
         title: 'Контент сайта'
         edit: "Изменить контент сайта"
