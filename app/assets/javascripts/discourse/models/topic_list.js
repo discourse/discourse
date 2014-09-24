@@ -123,20 +123,19 @@ Discourse.TopicList = Discourse.Model.extend({
 Discourse.TopicList.reopenClass({
 
   loadTopics: function(topic_ids, filter) {
-    var defer = new Ember.Deferred(),
-        url = Discourse.getURL("/") + filter + "?topic_ids=" + topic_ids.join(",");
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      var url = Discourse.getURL("/") + filter + "?topic_ids=" + topic_ids.join(",");
 
-    Discourse.ajax({url: url}).then(function (result) {
-      if (result) {
-        // the new topics loaded from the server
-        var newTopics = Discourse.TopicList.topicsFrom(result);
-        defer.resolve(newTopics);
-      } else {
-        defer.reject();
-      }
-    }).then(null, function(){ defer.reject(); });
-
-    return defer;
+      Discourse.ajax({url: url}).then(function (result) {
+        if (result) {
+          // the new topics loaded from the server
+          var newTopics = Discourse.TopicList.topicsFrom(result);
+          resolve(newTopics);
+        } else {
+          reject();
+        }
+      }).catch(reject);
+    });
   },
 
   /**
