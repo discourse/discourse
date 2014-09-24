@@ -2,16 +2,16 @@
 <p class='description'>{{description}}</p>
 
 {{#if markdown}}
-  {{pagedown-editor value=model.content}}
+  {{pagedown-editor value=value}}
 {{/if}}
 {{#if plainText}}
-  {{textarea value=model.content class="plain"}}
+  {{textarea value=value class="plain"}}
 {{/if}}
 {{#if html}}
-  {{aceEditor content=model.content mode="html"}}
+  {{aceEditor content=value mode="html"}}
 {{/if}}
 {{#if css}}
-  {{aceEditor content=model.content mode="css"}}
+  {{aceEditor content=value mode="css"}}
 {{/if}}
 
 <div class='controls'>

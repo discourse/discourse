@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Admin::SiteContentTypesController do
+describe Admin::SiteTextController do
 
   it "is a subclass of AdminController" do
-    (Admin::SiteContentTypesController < Admin::AdminController).should be_true
+    (Admin::SiteTextController < Admin::AdminController).should be_true
   end
 
   context 'while logged in as an admin' do
@@ -11,14 +11,16 @@ describe Admin::SiteContentTypesController do
       @user = log_in(:admin)
     end
 
-    context ' .index' do
+    context '.show' do
+      let(:text_type) { SiteText.text_types.first.text_type }
+
       it 'returns success' do
-        xhr :get, :index
+        xhr :get, :show, id: text_type
         response.should be_success
       end
 
       it 'returns JSON' do
-        xhr :get, :index
+        xhr :get, :show, id: text_type
         ::JSON.parse(response.body).should be_present
       end
     end

@@ -256,12 +256,12 @@ class ApplicationController < ActionController::Base
 
     def custom_html_json
       data = {
-        top: SiteContent.content_for(:top),
-        bottom: SiteContent.content_for(:bottom)
+        top: SiteText.text_for(:top),
+        bottom: SiteText.text_for(:bottom)
       }
 
       if SiteSetting.tos_accept_required && !current_user
-        data[:tos_signup_form_message] = SiteContent.content_for(:tos_signup_form_message)
+        data[:tos_signup_form_message] = SiteText.text_for(:tos_signup_form_message)
       end
 
       if DiscoursePluginRegistry.custom_html

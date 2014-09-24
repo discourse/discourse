@@ -17,7 +17,7 @@ class UserNotifications < ActionMailer::Base
     build_email(user.email,
                 template: 'user_notifications.signup_after_approval',
                 email_token: opts[:email_token],
-                new_user_tips: SiteContent.content_for(:usage_tips))
+                new_user_tips: SiteText.text_for(:usage_tips))
   end
 
   def authorize_email(user, opts={})
@@ -197,7 +197,7 @@ class UserNotifications < ActionMailer::Base
       end
     end
 
-    top = SiteContent.content_for(:notification_email_top)
+    top = SiteText.text_for(:notification_email_top)
 
     html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
       template: 'email/notification',
