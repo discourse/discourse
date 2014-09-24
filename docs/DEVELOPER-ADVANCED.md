@@ -13,7 +13,7 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
   1. Run `redis-server -v` to see if you already have it.
 3. Install ImageMagick
 4. Install libxml2, g++, and make.
-5. Install Ruby 1.9.3 and Bundler.
+5. Install Ruby 2.1.3 and Bundler.
 6. Clone the project and bundle.
 7. Copy `config/database.yml.development-sample` to `config/database.yml`. Copy `config/redis.yml.sample` to `config/redis.yml`. Edit the files to point to your postgres and redis instances.
 8. Create the "vagrant" user and the development and test databases in postgres. See the postgres section in "Building your own Vagrant VM", below.
