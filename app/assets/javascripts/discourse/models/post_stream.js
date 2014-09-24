@@ -229,7 +229,7 @@ Discourse.PostStream = Em.Object.extend({
     @param {Object} opts Options for loading the stream
       @param {Integer} opts.nearPost The post we want to find other posts near to.
       @param {Boolean} opts.track_visit Whether or not to track this as a visit to a topic.
-    @returns {Ember.Deferred} a promise that is resolved when the posts have been inserted into the stream.
+    @returns {Promise} a promise that is resolved when the posts have been inserted into the stream.
   **/
   refresh: function(opts) {
     opts = opts || {};
@@ -266,7 +266,7 @@ Discourse.PostStream = Em.Object.extend({
     @method fillGapBefore
     @paaram {Discourse.Post} post beside gap
     @paaram {Array} gap array of post ids to load
-    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+    @returns {Promise} a promise that's resolved when the posts have been added.
   **/
   fillGapBefore: function(post, gap) {
     var postId = post.get('id'),
@@ -303,7 +303,7 @@ Discourse.PostStream = Em.Object.extend({
     @method fillGapAfter
     @paaram {Discourse.Post} post beside gap
     @paaram {Array} gap array of post ids to load
-    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+    @returns {Promise} a promise that's resolved when the posts have been added.
   **/
   fillGapAfter: function(post, gap) {
     var postId = post.get('id'),
@@ -324,7 +324,7 @@ Discourse.PostStream = Em.Object.extend({
     Appends the next window of posts to the stream. Call it when scrolling downwards.
 
     @method appendMore
-    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+    @returns {Promise} a promise that's resolved when the posts have been added.
   **/
   appendMore: function() {
     var self = this;
@@ -353,7 +353,7 @@ Discourse.PostStream = Em.Object.extend({
     Prepend the previous window of posts to the stream. Call it when scrolling upwards.
 
     @method prependMore
-    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+    @returns {Promise} a promise that's resolved when the posts have been added.
   **/
   prependMore: function() {
     var postStream = this;
@@ -798,7 +798,7 @@ Discourse.PostStream = Em.Object.extend({
 
     @method findPostsByIds
     @param {Array} postIds The post Ids we want to retrieve, in order.
-    @returns {Ember.Deferred} a promise that will resolve to the posts in the order requested.
+    @returns {Promise} a promise that will resolve to the posts in the order requested.
   **/
   findPostsByIds: function(postIds) {
     var unloaded = this.listUnloadedIds(postIds),
@@ -819,13 +819,13 @@ Discourse.PostStream = Em.Object.extend({
 
     @method loadIntoIdentityMap
     @param {Array} postIds The post Ids we want to insert into the identity map.
-    @returns {Ember.Deferred} a promise that will resolve to the posts in the order requested.
+    @returns {Promise} a promise that will resolve to the posts in the order requested.
   **/
   loadIntoIdentityMap: function(postIds) {
 
     // If we don't want any posts, return a promise that resolves right away
     if (Em.isEmpty(postIds)) {
-      return Ember.Deferred.promise(function (p) { p.resolve(); });
+      return Ember.RSVP.resolve();
     }
 
     var url = "/t/" + this.get('topic.id') + "/posts.json",

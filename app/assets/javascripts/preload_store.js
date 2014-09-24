@@ -28,7 +28,7 @@ window.PreloadStore = {
     @method getAndRemove
     @param {String} key the key to look up the object with
     @param {function} finder a function to find the object with
-    @returns {Ember.Deferred} a promise that will eventually be the object we want.
+    @returns {Promise} a promise that will eventually be the object we want.
   **/
   getAndRemove: function(key, finder) {
     if (this.data[key]) {
@@ -38,23 +38,23 @@ window.PreloadStore = {
     }
 
     if (finder) {
-      return Em.Deferred.promise(function(promise) {
+      return new Ember.RSVP.Promise(function(resolve, reject) {
         var result = finder();
 
         // If the finder returns a promise, we support that too
         if (result.then) {
           result.then(function(result) {
-            return promise.resolve(result);
+            return resolve(result);
           }, function(result) {
-            return promise.reject(result);
+            return reject(result);
           });
         } else {
-          promise.resolve(result);
+          resolve(result);
         }
       });
     }
 
-    return Em.RSVP.resolve(null);
+    return Ember.RSVP.resolve(null);
   },
 
   /**
