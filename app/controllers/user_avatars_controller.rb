@@ -64,12 +64,14 @@ class UserAvatarsController < ApplicationController
       if Discourse.store.external? || File.exists?(original)
         optimized = get_optimized_image(upload, size)
 
-        if Discourse.store.external?
-          expires_in 1.day, public: true
-          return redirect_to optimized.url
-        end
+        if optimized
+          if Discourse.store.external?
+            expires_in 1.day, public: true
+            return redirect_to optimized.url
+          end
 
-        image = Discourse.store.path_for(optimized)
+          image = Discourse.store.path_for(optimized)
+        end
       end
     end
 

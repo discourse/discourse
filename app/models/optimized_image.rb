@@ -19,40 +19,45 @@ class OptimizedImage < ActiveRecord::Base
     unless thumbnail
       external_copy = Discourse.store.download(upload) if Discourse.store.external?
       original_path = if Discourse.store.external?
-        external_copy.path
+        external_copy.try(:path)
       else
         Discourse.store.path_for(upload)
       end
 
-      # create a temp file with the same extension as the original
-      extension = File.extname(original_path)
-      temp_file = Tempfile.new(["discourse-thumbnail", extension])
-      temp_path = temp_file.path
-      original_path += "[0]" unless opts[:allow_animation]
-
-      if resize(original_path, temp_path, width, height)
-        thumbnail = OptimizedImage.create!(
-          upload_id: upload.id,
-          sha1: Digest::SHA1.file(temp_path).hexdigest,
-          extension: File.extname(temp_path),
-          width: width,
-          height: height,
-          url: "",
-        )
-        # store the optimized image and update its url
-        url = Discourse.store.store_optimized_image(temp_file, thumbnail)
-        if url.present?
-          thumbnail.url = url
-          thumbnail.save
-        else
-          Rails.logger.error("Failed to store avatar #{size} for #{upload.url} from #{source}")
-        end
+      if original_path.blank?
+        Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
       else
-        Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
+        # create a temp file with the same extension as the original
+        extension = File.extname(original_path)
+        temp_file = Tempfile.new(["discourse-thumbnail", extension])
+        temp_path = temp_file.path
+        original_path += "[0]" unless opts[:allow_animation]
+
+        if resize(original_path, temp_path, width, height)
+          thumbnail = OptimizedImage.create!(
+            upload_id: upload.id,
+            sha1: Digest::SHA1.file(temp_path).hexdigest,
+            extension: File.extname(temp_path),
+            width: width,
+            height: height,
+            url: "",
+          )
+          # store the optimized image and update its url
+          url = Discourse.store.store_optimized_image(temp_file, thumbnail)
+          if url.present?
+            thumbnail.url = url
+            thumbnail.save
+          else
+            Rails.logger.error("Failed to store avatar #{size} for #{upload.url} from #{source}")
+          end
+        else
+          Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
+        end
+
+        # close && remove temp file
+        temp_file.close!
       end
 
-      # close && remove temp file
-      temp_file.close!
       # make sure we remove the cached copy from external stores
       external_copy.close! if Discourse.store.external?
     end
