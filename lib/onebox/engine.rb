@@ -13,8 +13,29 @@ module Onebox
     attr_reader :url
     attr_reader :cache
     attr_reader :timeout
+    
+    DEFUALT = {}
+    def options
+      @options
+    end
+    
+    def options=(opt)
+      return @options if opt.nil? #make sure options provided
+      if opt.instance_of? OpenStruct
+        @options = @options.merge(opt.to_h)   
+      else
+       @options =  @options.merge(opt)
+      end
+      @options
+    end
+    
 
     def initialize(link, cache = nil, timeout = nil)
+      
+      @options = DEFUALT
+      class_name = self.class.name.split("::").last.to_s
+      self.options = Onebox.options[class_name] || {} #Set the engine options extracted from global options.
+      
       @url = link
       @cache = cache || Onebox.options.cache
       @timeout = timeout || Onebox.options.timeout
@@ -102,6 +123,7 @@ require_relative "engine/html"
 require_relative "engine/json"
 require_relative "engine/amazon_onebox"
 require_relative "engine/classic_google_maps_onebox"
+require_relative "engine/github_issue_onebox"
 require_relative "engine/github_blob_onebox"
 require_relative "engine/github_commit_onebox"
 # broken
