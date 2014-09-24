@@ -133,13 +133,8 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 */
 
 p > code, li > code, pre > code {
-  margin: 0 2px;
-  padding: 2px 5px;
   color: #333;
   background: #f8f8f8;
-  border-radius: 3px;
 }
 
-pre > code {
-  display: block;
-}
+// removed some unnecessary styles here
