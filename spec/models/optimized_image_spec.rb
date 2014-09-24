@@ -2,10 +2,7 @@ require 'spec_helper'
 
 describe OptimizedImage do
 
-  it { should belong_to :upload }
-
   let(:upload) { build(:upload) }
-
   before { upload.id = 42 }
 
   describe ".create_for" do
