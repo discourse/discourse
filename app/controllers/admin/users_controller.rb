@@ -212,7 +212,7 @@ class Admin::UsersController < Admin::AdminController
   def badges
   end
 
-  def leader_requirements
+  def tl3_requirements
   end
 
   def ip_info
