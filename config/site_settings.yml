@@ -379,6 +379,7 @@ posting:
   autohighlight_all_code:
     client: true
     default: false
+  delete_old_hidden_posts: true
 
 email:
   email_time_window_mins: 10

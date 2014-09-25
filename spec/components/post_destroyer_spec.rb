@@ -11,6 +11,44 @@ describe PostDestroyer do
   let(:admin) { Fabricate(:admin) }
   let(:post) { create_post }
 
+  describe "destroy_old_hidden_posts" do
+
+    it "destroys posts that have been hidden for 30 days" do
+      Fabricate(:admin)
+
+      now = Time.now
+
+      freeze_time(now - 60.days)
+      topic = post.topic
+      reply1 = create_post(topic: topic)
+
+      freeze_time(now - 40.days)
+      reply2 = create_post(topic: topic)
+      PostAction.hide_post!(reply2, PostActionType.types[:off_topic])
+
+      freeze_time(now - 20.days)
+      reply3 = create_post(topic: topic)
+      PostAction.hide_post!(reply3, PostActionType.types[:off_topic])
+
+      freeze_time(now - 10.days)
+      reply4 = create_post(topic: topic)
+
+      freeze_time(now)
+      PostDestroyer.destroy_old_hidden_posts
+
+      reply1.reload
+      reply2.reload
+      reply3.reload
+      reply4.reload
+
+      reply1.deleted_at.should == nil
+      reply2.deleted_at.should_not == nil
+      reply3.deleted_at.should == nil
+      reply4.deleted_at.should == nil
+    end
+
+  end
+
   describe 'destroy_old_stubs' do
     it 'destroys stubs for deleted by user posts' do
       SiteSetting.stubs(:delete_removed_posts_after).returns(24)
@@ -314,8 +352,8 @@ describe PostDestroyer do
 
       PostDestroyer.new(moderator, second_post).destroy
 
-      expect(UserAction.find_by(id: bookmark.id)).should == nil
-      expect(UserAction.find_by(id: like.id)).should == nil
+      expect(UserAction.find_by(id: bookmark.id)).to be_nil
+      expect(UserAction.find_by(id: like.id)).to be_nil
     end
   end
 
