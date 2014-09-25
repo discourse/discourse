@@ -7,7 +7,7 @@ export default DiscourseController.extend(ModalFunctionality, {
 
   actions: {
     sendActivationEmail: function() {
-      Discourse.ajax('/users/' + this.get('username') + '/send_activation_email', {type: 'POST'});
+      Discourse.ajax('/users/action/send_activation_email', {data: {username: this.get('username')}, type: 'POST'});
       this.set('emailSent', true);
     }
   }
