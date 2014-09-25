@@ -24,7 +24,8 @@ class AdminUserSerializer < BasicUserSerializer
              :can_activate,
              :can_deactivate,
              :blocked,
-             :time_read
+             :time_read,
+             :associated_accounts
 
   has_one :single_sign_on_record, serializer: SingleSignOnRecordSerializer, embed: :objects
 
