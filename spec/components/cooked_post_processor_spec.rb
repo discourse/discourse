@@ -106,7 +106,7 @@ describe CookedPostProcessor do
 
       it "adds a topic image if there's one in the post" do
         FastImage.stubs(:size)
-        post.topic.image_url.should be_nil
+        post.topic.image_url.should == nil
         cpp.post_process_images
         post.topic.reload
         post.topic.image_url.should be_present
@@ -364,12 +364,12 @@ describe CookedPostProcessor do
 
     it "is true when the image is inside a link" do
       img = doc.css("img#linked_image").first
-      cpp.is_a_hyperlink?(img).should be_true
+      cpp.is_a_hyperlink?(img).should == true
     end
 
     it "is false when the image is not inside a link" do
       img = doc.css("img#standard_image").first
-      cpp.is_a_hyperlink?(img).should be_false
+      cpp.is_a_hyperlink?(img).should == false
     end
 
   end

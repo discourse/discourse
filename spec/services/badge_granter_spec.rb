@@ -176,8 +176,8 @@ describe BadgeGranter do
       user.change_trust_level!(TrustLevel[1])
       BadgeGranter.backfill(Badge.find(1))
       BadgeGranter.backfill(Badge.find(2))
-      UserBadge.where(user_id: user.id, badge_id: 1).first.should_not be_nil
-      UserBadge.where(user_id: user.id, badge_id: 2).first.should be_nil
+      UserBadge.where(user_id: user.id, badge_id: 1).first.should_not == nil
+      UserBadge.where(user_id: user.id, badge_id: 2).first.should == nil
     end
 
     it "grants system like badges" do
@@ -185,7 +185,7 @@ describe BadgeGranter do
       # Welcome badge
       action = PostAction.act(liker, post, PostActionType.types[:like])
       BadgeGranter.process_queue!
-      UserBadge.find_by(user_id: user.id, badge_id: 5).should_not be_nil
+      UserBadge.find_by(user_id: user.id, badge_id: 5).should_not == nil
 
       post = create_post(topic: post.topic, user: user)
       action = PostAction.act(liker, post, PostActionType.types[:like])
@@ -196,25 +196,25 @@ describe BadgeGranter do
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
 
-      UserBadge.find_by(user_id: user.id, badge_id: Badge::NicePost).should_not be_nil
+      UserBadge.find_by(user_id: user.id, badge_id: Badge::NicePost).should_not == nil
       UserBadge.where(user_id: user.id, badge_id: Badge::NicePost).count.should == 1
 
       # Good post badge
       post.update_attributes like_count: 25
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
-      UserBadge.find_by(user_id: user.id, badge_id: Badge::GoodPost).should_not be_nil
+      UserBadge.find_by(user_id: user.id, badge_id: Badge::GoodPost).should_not == nil
 
       # Great post badge
       post.update_attributes like_count: 50
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
-      UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost).should_not be_nil
+      UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost).should_not == nil
 
       # Revoke badges on unlike
       post.update_attributes like_count: 49
       BadgeGranter.backfill(Badge.find(Badge::GreatPost))
-      UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost).should be_nil
+      UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost).should == nil
     end
   end
 

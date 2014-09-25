@@ -13,7 +13,7 @@ describe UserBadgesController do
       xhr :get, :index, badge_id: badge.id
       response.status.should == 200
       parsed = JSON.parse(response.body)
-      parsed["topics"].should be_nil
+      parsed["topics"].should == nil
       parsed["user_badges"][0]["post_id"].should == nil
     end
   end
@@ -46,7 +46,7 @@ describe UserBadgesController do
 
       response.status.should == 200
       parsed = JSON.parse(response.body)
-      parsed["user_badges"].first.has_key?('count').should be_true
+      parsed["user_badges"].first.has_key?('count').should == true
     end
   end
 
@@ -102,7 +102,7 @@ describe UserBadgesController do
       StaffActionLogger.any_instance.expects(:log_badge_revoke).once
       xhr :delete, :destroy, id: user_badge.id
       response.status.should == 200
-      UserBadge.find_by(id: user_badge.id).should be_nil
+      UserBadge.find_by(id: user_badge.id).should == nil
     end
   end
 end

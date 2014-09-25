@@ -94,7 +94,7 @@ describe PostActionsController do
 
         it 'deletes the action' do
           xhr :delete, :destroy, id: post.id, post_action_type_id: 1
-          PostAction.exists?(user_id: user.id, post_id: post.id, post_action_type_id: 1, deleted_at: nil).should be_false
+          PostAction.exists?(user_id: user.id, post_id: post.id, post_action_type_id: 1, deleted_at: nil).should == false
         end
 
         it 'ensures it can be deleted' do

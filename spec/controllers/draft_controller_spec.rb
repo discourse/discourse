@@ -16,7 +16,7 @@ describe DraftController do
     user = log_in
     Draft.set(user, 'xxx', 0, 'hi')
     delete :destroy, draft_key: 'xxx', sequence: 0
-    Draft.get(user, 'xxx', 0).should be_nil
+    Draft.get(user, 'xxx', 0).should == nil
   end
 
 end

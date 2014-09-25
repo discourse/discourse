@@ -13,7 +13,7 @@ describe ScreenedEmail do
     it "last_match_at is null" do
       # If we manually load the table with some emails, we can see whether those emails
       # have ever been blocked by looking at last_match_at.
-      ScreenedEmail.create(email: email).last_match_at.should be_nil
+      ScreenedEmail.create(email: email).last_match_at.should == nil
     end
 
     it "downcases the email" do
@@ -56,24 +56,24 @@ describe ScreenedEmail do
     subject { ScreenedEmail.should_block?(email) }
 
     it "returns false if a record with the email doesn't exist" do
-      subject.should be_false
+      subject.should == false
     end
 
     it "returns true when there is a record with the email" do
-      ScreenedEmail.should_block?(email).should be_false
+      ScreenedEmail.should_block?(email).should == false
       ScreenedEmail.create(email: email).save
-      ScreenedEmail.should_block?(email).should be_true
+      ScreenedEmail.should_block?(email).should == true
     end
 
     it "returns true when there is a record with a similar email" do
-      ScreenedEmail.should_block?(email).should be_false
+      ScreenedEmail.should_block?(email).should == false
       ScreenedEmail.create(email: similar_email).save
-      ScreenedEmail.should_block?(email).should be_true
+      ScreenedEmail.should_block?(email).should == true
     end
 
     it "returns true when it's same email, but all caps" do
       ScreenedEmail.create(email: email).save
-      ScreenedEmail.should_block?(email.upcase).should be_true
+      ScreenedEmail.should_block?(email.upcase).should == true
     end
 
     shared_examples "when a ScreenedEmail record matches" do
@@ -87,13 +87,13 @@ describe ScreenedEmail do
 
     context "action_type is :block" do
       let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:block]) }
-      it { should be_true }
+      it { should == true }
       include_examples "when a ScreenedEmail record matches"
     end
 
     context "action_type is :do_nothing" do
       let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:do_nothing]) }
-      it { should be_false }
+      it { should == false }
       include_examples "when a ScreenedEmail record matches"
     end
   end

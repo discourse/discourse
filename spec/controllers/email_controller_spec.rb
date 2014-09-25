@@ -30,7 +30,7 @@ describe EmailController do
       end
 
       it 'subscribes the user' do
-        user.email_digests.should be_true
+        user.email_digests.should == true
       end
     end
 
@@ -47,7 +47,7 @@ describe EmailController do
       end
 
       it 'unsubscribes the user' do
-        user.email_digests.should be_false
+        user.email_digests.should == false
       end
 
       it "sets the appropriate instance variables" do
@@ -74,7 +74,7 @@ describe EmailController do
       end
 
       it 'does not unsubscribe the user' do
-        user.email_digests.should be_true
+        user.email_digests.should == true
       end
 
       it 'sets the appropriate instance variables' do
@@ -92,7 +92,7 @@ describe EmailController do
       end
 
       it 'unsubscribes the user' do
-        user.email_digests.should be_false
+        user.email_digests.should == false
       end
 
       it 'sets the appropriate instance variables' do
@@ -102,7 +102,7 @@ describe EmailController do
 
     it "sets not_found when the key didn't match anything" do
       get :unsubscribe, key: 'asdfasdf'
-      assigns(:not_found).should be_true
+      assigns(:not_found).should == true
     end
 
   end

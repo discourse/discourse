@@ -468,7 +468,7 @@ describe Post do
     it 'has no revision' do
       post.revisions.size.should == 0
       first_version_at.should be_present
-      post.revise(post.user, post.raw).should be_false
+      post.revise(post.user, post.raw).should == false
     end
 
     describe 'with the same body' do
@@ -563,7 +563,7 @@ describe Post do
       let!(:result) { post.revise(changed_by, 'updated body') }
 
       it 'acts correctly' do
-        result.should be_true
+        result.should == true
         post.raw.should == 'updated body'
         post.invalidate_oneboxes.should == true
         post.version.should == 2
@@ -594,7 +594,7 @@ describe Post do
     let(:post) { Fabricate(:post, post_args) }
 
     it "has correct info set" do
-      post.user_deleted?.should be_false
+      post.user_deleted?.should == false
       post.post_number.should be_present
       post.excerpt.should be_present
       post.post_type.should == Post.types[:regular]
@@ -671,8 +671,8 @@ describe Post do
 
         it 'has the correct info set' do
           multi_reply.quote_count.should == 2
-          post.replies.include?(multi_reply).should be_true
-          reply.replies.include?(multi_reply).should be_true
+          post.replies.include?(multi_reply).should == true
+          reply.replies.include?(multi_reply).should == true
         end
       end
 
@@ -763,14 +763,14 @@ describe Post do
       SiteSetting.stubs(:tl3_links_no_follow).returns(false)
       post.user.trust_level = 3
       post.save
-      (post.cooked =~ /nofollow/).should be_false
+      post.cooked.should_not =~ /nofollow/
     end
 
     it "when tl3_links_no_follow is true, should add nofollow for trust level 3 and higher" do
       SiteSetting.stubs(:tl3_links_no_follow).returns(true)
       post.user.trust_level = 3
       post.save
-      (post.cooked =~ /nofollow/).should be_true
+      post.cooked.should =~ /nofollow/
     end
   end
 

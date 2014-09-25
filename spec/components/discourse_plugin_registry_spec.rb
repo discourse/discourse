@@ -53,7 +53,7 @@ describe DiscoursePluginRegistry do
     end
 
     it 'is returned by DiscoursePluginRegistry.stylesheets' do
-      registry_instance.stylesheets.include?('hello.css').should be_true
+      registry_instance.stylesheets.include?('hello.css').should == true
     end
 
     it "won't add the same file twice" do
@@ -67,7 +67,7 @@ describe DiscoursePluginRegistry do
     end
 
     it 'is returned by DiscoursePluginRegistry.javascripts' do
-      registry_instance.javascripts.include?('hello.js').should be_true
+      registry_instance.javascripts.include?('hello.js').should == true
     end
 
     it "won't add the same file twice" do

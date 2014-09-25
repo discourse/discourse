@@ -66,8 +66,8 @@ describe PostRevision do
     r = create_rev("wiki" => [false, true])
 
     changes = r.wiki_changes
-    changes[:previous_wiki].should be_false
-    changes[:current_wiki].should be_true
+    changes[:previous_wiki].should == false
+    changes[:current_wiki].should == true
   end
 
   it "can find post_type changes" do

@@ -29,7 +29,7 @@ describe TopicTrackingState do
 
     row.topic_id.should == post.topic_id
     row.highest_post_number.should == 1
-    row.last_read_post_number.should be_nil
+    row.last_read_post_number.should == nil
     row.user_id.should == user.id
 
     # lets not leak out random users

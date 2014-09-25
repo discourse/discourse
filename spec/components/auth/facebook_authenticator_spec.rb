@@ -49,7 +49,7 @@ describe Auth::FacebookAuthenticator do
 
       result = authenticator.after_authenticate(hash)
 
-      result.user.should be_nil
+      result.user.should == nil
       result.extra_data[:name].should == "bob bob"
     end
   end

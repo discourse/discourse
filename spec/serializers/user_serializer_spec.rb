@@ -86,7 +86,7 @@ describe UserSerializer do
     it "serializes the fields listed in public_user_custom_fields site setting" do
       SiteSetting.stubs(:public_user_custom_fields).returns('public_field')
       json[:custom_fields]['public_field'].should == user.custom_fields['public_field']
-      json[:custom_fields]['secret_field'].should be_nil
+      json[:custom_fields]['secret_field'].should == nil
     end
   end
 end

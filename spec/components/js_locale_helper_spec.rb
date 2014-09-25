@@ -71,7 +71,7 @@ describe JsLocaleHelper do
     }))
 
     ctx.eval('I18n.translations')["en"]["js"]["hello"].should == "world"
-    ctx.eval('I18n.translations')["en"]["js"]["test_MF"].should be_nil
+    ctx.eval('I18n.translations')["en"]["js"]["test_MF"].should == nil
 
     ctx.eval('I18n.messageFormat("test_MF", { HELLO: "hi", COUNT: 3 })').should == "hi 3 ducks"
     ctx.eval('I18n.messageFormat("error_MF", { HELLO: "hi", COUNT: 3 })').should =~ /Invalid Format/

@@ -59,7 +59,7 @@ describe PostCreator do
 
       it "doesn't return true for spam" do
         creator.create
-        creator.spam?.should be_false
+        creator.spam?.should == false
       end
 
       it "does not notify on system messages" do
@@ -70,8 +70,8 @@ describe PostCreator do
         end
         # don't notify on system messages they introduce too much noise
         channels = messages.map(&:channel)
-        channels.find{|s| s =~ /unread/}.should be_nil
-        channels.find{|s| s =~ /new/}.should be_nil
+        channels.find{|s| s =~ /unread/}.should == nil
+        channels.find{|s| s =~ /new/}.should == nil
       end
 
       it "generates the correct messages for a secure topic" do
@@ -104,7 +104,7 @@ describe PostCreator do
                                                    ].sort
         admin_ids = [Group[:admins].id]
 
-        messages.any?{|m| m.group_ids != admin_ids && m.user_ids != [admin.id]}.should be_false
+        messages.any?{|m| m.group_ids != admin_ids && m.user_ids != [admin.id]}.should == false
       end
 
       it 'generates the correct messages for a normal topic' do
@@ -115,16 +115,16 @@ describe PostCreator do
         end
 
         latest = messages.find{|m| m.channel == "/latest"}
-        latest.should_not be_nil
+        latest.should_not == nil
 
         latest = messages.find{|m| m.channel == "/new"}
-        latest.should_not be_nil
+        latest.should_not == nil
 
         read = messages.find{|m| m.channel == "/unread/#{p.user_id}"}
-        read.should_not be_nil
+        read.should_not == nil
 
         user_action = messages.find{|m| m.channel == "/users/#{p.user.username}"}
-        user_action.should_not be_nil
+        user_action.should_not == nil
 
         messages.length.should == 5
       end
@@ -207,7 +207,7 @@ describe PostCreator do
       it 'ensures the user can auto-close the topic, but ignores auto-close param silently' do
         Guardian.any_instance.stubs(:can_moderate?).returns(false)
         post = PostCreator.new(user, basic_topic_params.merge(auto_close_time: 2)).create
-        post.topic.auto_close_at.should be_nil
+        post.topic.auto_close_at.should == nil
       end
     end
   end
@@ -288,7 +288,7 @@ describe PostCreator do
       GroupMessage.stubs(:create)
       creator.create
       creator.errors.should be_present
-      creator.spam?.should be_true
+      creator.spam?.should == true
     end
 
     it "sends a message to moderators" do
@@ -358,7 +358,7 @@ describe PostCreator do
       post.topic.topic_allowed_users.count.should == 3
 
       # PMs can't have a category
-      post.topic.category.should be_nil
+      post.topic.category.should == nil
 
       # does not notify an unrelated user
       unrelated.notifications.count.should == 0
@@ -469,7 +469,7 @@ describe PostCreator do
     it 'can save a post' do
       creator = PostCreator.new(user, raw: 'q', title: 'q', skip_validations: true)
       creator.create
-      creator.errors.should be_nil
+      creator.errors.should == nil
     end
   end
 
@@ -494,7 +494,7 @@ describe PostCreator do
                                 title: 'Reviews of Science Ovens',
                                 raw: 'Did you know that you can use microwaves to cook your dinner? Science!')
       creator.create
-      TopicEmbed.where(embed_url: embed_url).exists?.should be_true
+      TopicEmbed.where(embed_url: embed_url).exists?.should == true
     end
   end
 

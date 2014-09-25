@@ -26,7 +26,7 @@ describe Promotion do
       let!(:result) { promotion.review }
 
       it "returns false" do
-        result.should be_false
+        result.should == false
       end
 
       it "has not changed the user's trust level" do
@@ -45,7 +45,7 @@ describe Promotion do
       end
 
       it "returns true" do
-        @result.should be_true
+        @result.should == true
       end
 
       it "has upgraded the user to basic" do
@@ -64,7 +64,7 @@ describe Promotion do
       let!(:result) { promotion.review }
 
       it "returns false" do
-        result.should be_false
+        result.should == false
       end
 
       it "has not changed the user's trust level" do
@@ -88,7 +88,7 @@ describe Promotion do
       end
 
       it "returns true" do
-        @result.should be_true
+        @result.should == true
       end
 
       it "has upgraded the user to regular" do

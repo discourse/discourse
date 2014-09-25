@@ -15,17 +15,17 @@ describe Group do
 
     it "is invalid for blank" do
       group.name = ""
-      group.valid?.should be_false
+      group.valid?.should == false
     end
 
     it "is valid for a longer name" do
       group.name = "this_is_a_name"
-      group.valid?.should be_true
+      group.valid?.should == true
     end
 
     it "is invalid for non names" do
       group.name = "this is_a_name"
-      group.valid?.should be_false
+      group.valid?.should == false
     end
   end
 

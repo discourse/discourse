@@ -33,7 +33,7 @@ describe Topic do
 
     it "doesn't update it to be shorter due to cleaning using TextCleaner" do
       topic.title = 'unread    glitch'
-      topic.save.should be_false
+      topic.save.should == false
     end
   end
 
@@ -267,14 +267,14 @@ describe Topic do
     let(:topic) { Fabricate(:private_message_topic) }
 
     it "should integrate correctly" do
-      Guardian.new(topic.user).can_see?(topic).should be_true
-      Guardian.new.can_see?(topic).should be_false
-      Guardian.new(evil_trout).can_see?(topic).should be_false
-      Guardian.new(coding_horror).can_see?(topic).should be_true
+      Guardian.new(topic.user).can_see?(topic).should == true
+      Guardian.new.can_see?(topic).should == false
+      Guardian.new(evil_trout).can_see?(topic).should == false
+      Guardian.new(coding_horror).can_see?(topic).should == true
       TopicQuery.new(evil_trout).list_latest.topics.should_not include(topic)
 
       # invites
-      topic.invite(topic.user, 'duhhhhh').should be_false
+      topic.invite(topic.user, 'duhhhhh').should == false
     end
 
     context 'invite' do
@@ -285,12 +285,12 @@ describe Topic do
         context 'by username' do
 
           it 'adds and removes walter to the allowed users' do
-            topic.invite(topic.user, walter.username).should be_true
-            topic.allowed_users.include?(walter).should be_true
+            topic.invite(topic.user, walter.username).should == true
+            topic.allowed_users.include?(walter).should == true
 
-            topic.remove_allowed_user(walter.username).should be_true
+            topic.remove_allowed_user(walter.username).should == true
             topic.reload
-            topic.allowed_users.include?(walter).should be_false
+            topic.allowed_users.include?(walter).should == false
           end
 
           it 'creates a notification' do
@@ -302,9 +302,9 @@ describe Topic do
 
           it 'adds user correctly' do
             lambda {
-              topic.invite(topic.user, walter.email).should be_true
+              topic.invite(topic.user, walter.email).should == true
             }.should change(Notification, :count)
-            topic.allowed_users.include?(walter).should be_true
+            topic.allowed_users.include?(walter).should == true
           end
 
         end
@@ -682,7 +682,7 @@ describe Topic do
         @topic.last_post_user_id.should == @second_user.id
         @topic.last_posted_at.to_i.should == @new_post.created_at.to_i
         topic_user = @second_user.topic_users.find_by(topic_id: @topic.id)
-        topic_user.posted?.should be_true
+        topic_user.posted?.should == true
       end
 
     end
@@ -759,7 +759,7 @@ describe Topic do
 
     it 'is a regular topic by default' do
       topic.archetype.should == Archetype.default
-      topic.has_summary.should be_false
+      topic.has_summary.should == false
       topic.percent_rank.should == 1.0
       topic.should be_visible
       topic.pinned_at.should be_blank
@@ -924,7 +924,7 @@ describe Topic do
         let!(:topic) { Fabricate(:topic, category: Fabricate(:category)) }
 
         it 'returns false' do
-          topic.change_category_to_id(nil).should eq(false) # don't use "be_false" here because it would also match nil
+          topic.change_category_to_id(nil).should eq(false) # don't use "== false" here because it would also match nil
         end
       end
 
@@ -1033,7 +1033,7 @@ describe Topic do
           topic = Fabricate(:topic)
           Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
           topic.auto_close_at = 12.hours.from_now
-          topic.save.should be_true
+          topic.save.should == true
         end
       end
 
@@ -1044,7 +1044,7 @@ describe Topic do
           Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: closer.id))
           topic.auto_close_at = 12.hours.from_now
           topic.auto_close_user = closer
-          topic.save.should be_true
+          topic.save.should == true
         end
       end
 
@@ -1053,8 +1053,8 @@ describe Topic do
         topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
         Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
         topic.auto_close_at = nil
-        topic.save.should be_true
-        topic.auto_close_user.should be_nil
+        topic.save.should == true
+        topic.auto_close_user.should == nil
       end
 
       it 'when auto_close_user is removed, it updates the job' do
@@ -1064,7 +1064,7 @@ describe Topic do
           Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
           Jobs.expects(:enqueue_at).with(1.day.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
           topic.auto_close_user = nil
-          topic.save.should be_true
+          topic.save.should == true
         end
       end
 
@@ -1075,7 +1075,7 @@ describe Topic do
           Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
           Jobs.expects(:enqueue_at).with(3.days.from_now, :close_topic, has_entry(topic_id: topic.id))
           topic.auto_close_at = 3.days.from_now
-          topic.save.should be_true
+          topic.save.should == true
         end
       end
 
@@ -1087,7 +1087,7 @@ describe Topic do
           Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
           Jobs.expects(:enqueue_at).with(1.day.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: admin.id))
           topic.auto_close_user = admin
-          topic.save.should be_true
+          topic.save.should == true
         end
       end
 
@@ -1097,7 +1097,7 @@ describe Topic do
           Jobs.expects(:cancel_scheduled_job).never
           topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
           topic.title = 'A new title that is long enough'
-          topic.save.should be_true
+          topic.save.should == true
         end
       end
 
@@ -1136,7 +1136,7 @@ describe Topic do
 
     it 'can take nil' do
       topic.auto_close_hours = nil
-      topic.auto_close_at.should be_nil
+      topic.auto_close_at.should == nil
     end
   end
 
@@ -1330,8 +1330,9 @@ describe Topic do
   it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
     SiteSetting.stubs(:max_topics_in_first_day).returns(1)
     SiteSetting.stubs(:max_replies_in_first_day).returns(1)
-    RateLimiter.stubs(:disabled?).returns(false)
     SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
+    RateLimiter.stubs(:rate_limit_create_topic).returns(100)
+    RateLimiter.stubs(:disabled?).returns(false)
 
     start = Time.now.tomorrow.beginning_of_day
 
@@ -1361,14 +1362,14 @@ describe Topic do
     context "when Topic count is geater than minimum_topics_similar" do
       it "should be true" do
         Topic.stubs(:count).returns(30)
-        expect(Topic.count_exceeds_minimum?).to be_true
+        expect(Topic.count_exceeds_minimum?).to be_truthy
       end
     end
 
     context "when topic's count is less than minimum_topics_similar" do
       it "should be false" do
         Topic.stubs(:count).returns(10)
-        expect(Topic.count_exceeds_minimum?).to_not be_true
+        expect(Topic.count_exceeds_minimum?).to_not be_truthy
       end
     end
 
@@ -1391,22 +1392,22 @@ describe Topic do
     end
 
     it "is true with the correct settings and topic_embed" do
-      topic.expandable_first_post?.should be_true
+      topic.expandable_first_post?.should == true
     end
 
     it "is false if embeddable_host is blank" do
       SiteSetting.stubs(:embeddable_host).returns(nil)
-      topic.expandable_first_post?.should be_false
+      topic.expandable_first_post?.should == false
     end
 
     it "is false if embed_truncate? is false" do
       SiteSetting.stubs(:embed_truncate?).returns(false)
-      topic.expandable_first_post?.should be_false
+      topic.expandable_first_post?.should == false
     end
 
     it "is false if has_topic_embed? is false" do
       topic.stubs(:has_topic_embed?).returns(false)
-      topic.expandable_first_post?.should be_false
+      topic.expandable_first_post?.should == false
     end
   end
 

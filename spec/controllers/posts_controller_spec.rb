@@ -341,7 +341,7 @@ describe PostsController do
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
 
         post.reload
-        post.wiki.should be_true
+        post.wiki.should == true
       end
 
       it "can unwiki a post" do
@@ -351,7 +351,7 @@ describe PostsController do
         xhr :put, :wiki, post_id: wikied_post.id, wiki: 'false'
 
         wikied_post.reload
-        wikied_post.wiki.should be_false
+        wikied_post.wiki.should == false
       end
 
     end

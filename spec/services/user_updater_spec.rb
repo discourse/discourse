@@ -28,7 +28,7 @@ describe UserUpdater do
         user = Fabricate(:user)
         updater = described_class.new(acting_user, user)
 
-        expect(updater.update).to be_true
+        expect(updater.update).to be_truthy
       end
     end
 
@@ -38,7 +38,7 @@ describe UserUpdater do
         user.stubs(save: false)
         updater = described_class.new(acting_user, user)
 
-        expect(updater.update).to be_false
+        expect(updater.update).to be_falsey
       end
     end
 

@@ -32,25 +32,25 @@ describe Scheduler::ScheduleInfo do
     end
 
     it 'starts off invalid' do
-      @info.valid?.should be_false
+      @info.valid?.should == false
     end
 
     it 'will have a due date in the next 5 minutes if it was blank' do
       @info.schedule!
-      @info.valid?.should be_true
+      @info.valid?.should == true
       @info.next_run.should be_within(5.minutes).of(Time.now.to_i)
     end
 
     it 'will have a due date within the next hour if it just ran' do
       @info.prev_run = Time.now.to_i
       @info.schedule!
-      @info.valid?.should be_true
+      @info.valid?.should == true
       @info.next_run.should be_within(1.hour * manager.random_ratio).of(Time.now.to_i + 1.hour)
     end
 
     it 'is invalid if way in the future' do
       @info.next_run = Time.now.to_i + 1.year
-      @info.valid?.should be_false
+      @info.valid?.should == false
     end
   end
 
@@ -79,19 +79,18 @@ describe Scheduler::ScheduleInfo do
     end
 
     it "starts off invalid" do
-      @info.valid?.should be_false
+      @info.valid?.should == false
     end
 
-    it "will have a due date at the appropriate time if blank" do
-      pending
-      @info.next_run.should be_nil
+    skip "will have a due date at the appropriate time if blank" do
+      @info.next_run.should == nil
       @info.schedule!
-      @info.valid?.should be_true
+      @info.valid?.should == true
     end
 
     it 'is invalid if way in the future' do
       @info.next_run = Time.now.to_i + 1.year
-      @info.valid?.should be_false
+      @info.valid?.should == false
     end
   end
 

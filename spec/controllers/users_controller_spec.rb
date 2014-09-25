@@ -251,7 +251,7 @@ describe UsersController do
       it 'disallows login' do
         flash[:error].should be_present
         session[:current_user_id].should be_blank
-        assigns[:invalid_token].should be_nil
+        assigns[:invalid_token].should == nil
         response.should be_success
       end
     end
@@ -264,7 +264,7 @@ describe UsersController do
       it 'disallows login' do
         flash[:error].should be_present
         session[:current_user_id].should be_blank
-        assigns[:invalid_token].should be_true
+        assigns[:invalid_token].should == true
         response.should be_success
       end
     end
@@ -345,7 +345,7 @@ describe UsersController do
         SiteSetting.stubs(:allow_new_registrations).returns(false)
         post_user
         json = JSON.parse(response.body)
-        json['success'].should be_false
+        json['success'].should == false
         json['message'].should be_present
       end
 
@@ -355,7 +355,7 @@ describe UsersController do
 
         post_user
 
-        expect(JSON.parse(response.body)['active']).to be_false
+        expect(JSON.parse(response.body)['active']).to be_falsey
       end
 
       context "and 'must approve users' site setting is enabled" do
@@ -373,14 +373,12 @@ describe UsersController do
 
         it 'indicates the user is not active in the response' do
           post_user
-          expect(JSON.parse(response.body)['active']).to be_false
+          expect(JSON.parse(response.body)['active']).to be_falsey
         end
 
         it "shows the 'waiting approval' message" do
           post_user
-          expect(JSON.parse(response.body)['message']).to eq(
-            I18n.t 'login.wait_approval'
-          )
+          expect(JSON.parse(response.body)['message']).to eq(I18n.t 'login.wait_approval')
         end
       end
     end
@@ -410,14 +408,14 @@ describe UsersController do
       it 'indicates the user is active in the response' do
         User.any_instance.expects(:enqueue_welcome_message)
         post_user
-        expect(JSON.parse(response.body)['active']).to be_true
+        expect(JSON.parse(response.body)['active']).to be_truthy
       end
 
       it 'returns 500 status when new registrations are disabled' do
         SiteSetting.stubs(:allow_new_registrations).returns(false)
         post_user
         json = JSON.parse(response.body)
-        json['success'].should be_false
+        json['success'].should == false
         json['message'].should be_present
       end
 
@@ -449,11 +447,11 @@ describe UsersController do
 
       it 'has the proper JSON' do
         json = JSON::parse(response.body)
-        json["success"].should be_true
+        json["success"].should == true
       end
 
       it 'should not result in an active account' do
-        User.find_by(username: @user.username).active.should be_false
+        User.find_by(username: @user.username).active.should == false
       end
     end
 
@@ -472,7 +470,7 @@ describe UsersController do
       it 'should say it was successful' do
         xhr :post, :create, create_params
         json = JSON::parse(response.body)
-        json["success"].should be_true
+        json["success"].should == true
       end
     end
 
@@ -513,7 +511,7 @@ describe UsersController do
       it 'should report failed' do
         xhr :post, :create, create_params
         json = JSON::parse(response.body)
-        json["success"].should_not be_true
+        json["success"].should_not == true
       end
     end
 
@@ -593,7 +591,7 @@ describe UsersController do
       end
 
       it 'should return available as false in the JSON' do
-        ::JSON.parse(response.body)['available'].should be_false
+        ::JSON.parse(response.body)['available'].should == false
       end
 
       it 'should return a suggested username' do
@@ -607,7 +605,7 @@ describe UsersController do
       end
 
       it 'should return available in the JSON' do
-        ::JSON.parse(response.body)['available'].should be_true
+        ::JSON.parse(response.body)['available'].should == true
       end
     end
 
@@ -637,7 +635,7 @@ describe UsersController do
       end
 
       it 'should not return an available key' do
-        ::JSON.parse(response.body)['available'].should be_nil
+        ::JSON.parse(response.body)['available'].should == nil
       end
 
       it 'should return an error message' do

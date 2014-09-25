@@ -24,7 +24,7 @@ describe Jobs::BulkInvite do
       it 'reads csv file' do
         bulk_invite.current_user = user
         bulk_invite.read_csv_file(csv_file)
-        Invite.where(email: "robin@outlook.com").exists?.should be_true
+        Invite.where(email: "robin@outlook.com").exists?.should == true
       end
     end
 
@@ -41,7 +41,7 @@ describe Jobs::BulkInvite do
 
         bulk_invite.current_user = user
         bulk_invite.send_invite(csv_info, 1)
-        Invite.where(email: email).exists?.should be_true
+        Invite.where(email: email).exists?.should == true
       end
 
       it 'creates an invite with group' do
@@ -52,7 +52,7 @@ describe Jobs::BulkInvite do
         bulk_invite.send_invite(csv_info, 1)
         invite = Invite.where(email: email).first
         invite.should be_present
-        InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?.should be_true
+        InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?.should == true
       end
 
       it 'creates an invite with topic' do
@@ -63,7 +63,7 @@ describe Jobs::BulkInvite do
         bulk_invite.send_invite(csv_info, 1)
         invite = Invite.where(email: email).first
         invite.should be_present
-        TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?.should be_true
+        TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?.should == true
       end
 
       it 'creates an invite with group and topic' do
@@ -75,8 +75,8 @@ describe Jobs::BulkInvite do
         bulk_invite.send_invite(csv_info, 1)
         invite = Invite.where(email: email).first
         invite.should be_present
-        InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?.should be_true
-        TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?.should be_true
+        InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?.should == true
+        TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?.should == true
       end
 
     end

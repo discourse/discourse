@@ -3,7 +3,7 @@ require "spec_helper"
 describe Admin::ExportCsvController do
 
   it "is a subclass of AdminController" do
-    (Admin::ExportCsvController < Admin::AdminController).should be_true
+    (Admin::ExportCsvController < Admin::AdminController).should == true
   end
 
   let(:export_filename) { "export_b6a2bc87.csv" }

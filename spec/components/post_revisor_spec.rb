@@ -16,7 +16,7 @@ describe PostRevisor do
     describe 'with the same body' do
       it "doesn't change version" do
         lambda {
-          subject.revise!(post.user, post.raw).should be_false
+          subject.revise!(post.user, post.raw).should == false
           post.reload
         }.should_not change(post, :version)
       end
@@ -110,7 +110,7 @@ describe PostRevisor do
 
       let(:new_description) { "this is my new description." }
 
-      it "should have to description by default" do
+      it "should have no description by default" do
         category.description.should be_blank
       end
 
@@ -120,8 +120,8 @@ describe PostRevisor do
           category.reload
         end
 
-        it "returns true for category_changed" do
-          subject.category_changed.should be_true
+        it "returns the changed category info" do
+          subject.category_changed.should == category
         end
 
         it "updates the description of the category" do
@@ -155,7 +155,7 @@ describe PostRevisor do
           category.description.should be_blank
         end
 
-        it "returns true for category_changed" do
+        it "returns the changed category info" do
           subject.category_changed.should == category
         end
       end
@@ -211,7 +211,7 @@ describe PostRevisor do
       let!(:result) { subject.revise!(changed_by, "lets update the body") }
 
       it 'returns true' do
-        result.should be_true
+        result.should == true
       end
 
       it 'updates the body' do

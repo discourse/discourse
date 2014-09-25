@@ -39,7 +39,7 @@ describe SpamRulesEnforcer do
 
           When { PostAction.act(user2, spam_post, PostActionType.types[:spam]) }
 
-          Invariant { expect(Guardian.new(spammer).can_create_topic?(nil)).to be_false }
+          Invariant { expect(Guardian.new(spammer).can_create_topic?(nil)).should == false }
           Invariant { expect{PostCreator.create(spammer, {title: 'limited time offer for you', raw: 'better buy this stuff ok', archetype_id: 1})}.to raise_error(Discourse::InvalidAccess) }
           Invariant { expect{PostCreator.create(spammer, {topic_id: another_topic.id, raw: 'my reply is spam in your topic', archetype_id: 1})}.to raise_error(Discourse::InvalidAccess) }
 
@@ -73,7 +73,7 @@ describe SpamRulesEnforcer do
           Given { SiteSetting.stubs(:flags_required_to_hide_post).returns(2) }
           When  { PostAction.act(user2, spam_post, PostActionType.types[:spam]) }
           Then  { expect(spammer.reload).to be_blocked }
-          And   { expect(Guardian.new(spammer).can_create_topic?(nil)).to be_false }
+          And   { expect(Guardian.new(spammer).can_create_topic?(nil)).should == false }
         end
       end
     end
@@ -87,7 +87,7 @@ describe SpamRulesEnforcer do
         When { PostAction.act(user1, spam_post, PostActionType.types[:spam]) }
         When { PostAction.act(user2, spam_post, PostActionType.types[:spam]) }
         Then { expect(spam_post.reload).to_not be_hidden }
-        And  { expect(Guardian.new(spammer).can_create_topic?(nil)).to be_true }
+        And  { expect(Guardian.new(spammer).can_create_topic?(nil)).should == true }
         And  { expect{PostCreator.create(spammer, {title: 'limited time offer for you', raw: 'better buy this stuff ok', archetype_id: 1})}.to_not raise_error }
         And  { expect(spammer.reload.private_topics_count).to eq(private_messages_count) }
       end

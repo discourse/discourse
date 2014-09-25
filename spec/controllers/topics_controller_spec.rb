@@ -69,7 +69,7 @@ describe TopicsController do
         it "returns success" do
           response.should be_success
           result = ::JSON.parse(response.body)
-          result['success'].should be_true
+          result['success'].should == true
           result['url'].should be_present
         end
       end
@@ -85,7 +85,7 @@ describe TopicsController do
         it "returns JSON with a false success" do
           response.should be_success
           result = ::JSON.parse(response.body)
-          result['success'].should be_false
+          result['success'].should == false
           result['url'].should be_blank
         end
       end
@@ -129,7 +129,7 @@ describe TopicsController do
         it "returns success" do
           response.should be_success
           result = ::JSON.parse(response.body)
-          result['success'].should be_true
+          result['success'].should == true
           result['url'].should be_present
         end
       end
@@ -145,7 +145,7 @@ describe TopicsController do
         it "returns JSON with a false success" do
           response.should be_success
           result = ::JSON.parse(response.body)
-          result['success'].should be_false
+          result['success'].should == false
           result['url'].should be_blank
         end
       end
@@ -185,7 +185,7 @@ describe TopicsController do
         it "returns success" do
           response.should be_success
           result = ::JSON.parse(response.body)
-          result['success'].should be_true
+          result['success'].should == true
           result['url'].should be_present
         end
       end

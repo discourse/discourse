@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Admin::ColorSchemesController do
   it "is a subclass of AdminController" do
-    (described_class < Admin::AdminController).should be_true
+    (described_class < Admin::AdminController).should == true
   end
 
   context "while logged in as an admin" do

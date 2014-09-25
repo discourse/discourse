@@ -106,7 +106,7 @@ describe PostDestroyer do
 
       post2.deleted_at.should be_blank
       post2.deleted_by.should be_blank
-      post2.user_deleted.should be_true
+      post2.user_deleted.should == true
       post2.raw.should == I18n.t('js.post.deleted_by_author', {count: 24})
       post2.version.should == 2
 
@@ -114,7 +114,7 @@ describe PostDestroyer do
       PostDestroyer.new(post2.user, post2).recover
       post2.reload
       post2.version.should == 3
-      post2.user_deleted.should be_false
+      post2.user_deleted.should == false
       post2.cooked.should == @orig
     end
 
@@ -177,7 +177,7 @@ describe PostDestroyer do
       let(:topic_user) { second_user.topic_users.find_by(topic_id: topic.id) }
 
       it 'clears the posted flag for the second user' do
-        topic_user.posted?.should be_false
+        topic_user.posted?.should == false
       end
 
       it "sets the second user's last_read_post_number back to 1" do
@@ -314,8 +314,8 @@ describe PostDestroyer do
 
       PostDestroyer.new(moderator, second_post).destroy
 
-      expect(UserAction.find_by(id: bookmark.id)).to be_nil
-      expect(UserAction.find_by(id: like.id)).to be_nil
+      expect(UserAction.find_by(id: bookmark.id)).should == nil
+      expect(UserAction.find_by(id: like.id)).should == nil
     end
   end
 

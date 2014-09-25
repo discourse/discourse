@@ -35,7 +35,7 @@ describe ScreenedIpAddress do
 
   describe "ip_address_with_mask" do
     it "returns nil when ip_address is nil" do
-      described_class.new.ip_address_with_mask.should be_nil
+      described_class.new.ip_address_with_mask.should == nil
     end
 
     it "returns ip_address without mask if there is no mask" do

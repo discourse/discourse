@@ -90,7 +90,7 @@ describe User do
       end
 
       it 'returns true' do
-        @result.should be_true
+        @result.should == true
       end
 
       it 'should change the username' do
@@ -114,7 +114,7 @@ describe User do
       end
 
       it 'returns false' do
-        @result.should be_false
+        @result.should == false
       end
 
       it 'should not change the username' do
@@ -132,7 +132,7 @@ describe User do
       let!(:myself) { Fabricate(:user, username: 'hansolo') }
 
       it 'should return true' do
-        myself.change_username('HanSolo').should be_true
+        myself.change_username('HanSolo').should == true
       end
 
       it 'should change the username' do
@@ -149,17 +149,17 @@ describe User do
 
       it 'should allow a shorter username than default' do
         result = user.change_username('a' * @custom_min)
-        result.should_not be_false
+        result.should_not == false
       end
 
       it 'should not allow a shorter username than limit' do
         result = user.change_username('a' * (@custom_min - 1))
-        result.should be_false
+        result.should == false
       end
 
       it 'should not allow a longer username than limit' do
         result = user.change_username('a' * (User.username_length.end + 1))
-        result.should be_false
+        result.should == false
       end
     end
   end
@@ -179,7 +179,7 @@ describe User do
       expect(Post.where(id: @posts.map(&:id))).to be_empty
       @posts.each do |p|
         if p.post_number == 1
-          expect(Topic.find_by(id: p.topic_id)).to be_nil
+          expect(Topic.find_by(id: p.topic_id)).should == nil
         end
       end
     end
@@ -208,24 +208,24 @@ describe User do
     it { should_not be_approved }
     its(:approved_at) { should be_blank }
     its(:approved_by_id) { should be_blank }
-    its(:email_private_messages) { should be_true }
-    its(:email_direct ) { should be_true }
+    its(:email_private_messages) { should == true }
+    its(:email_direct ) { should == true }
 
     context 'digest emails' do
       it 'defaults to digests every week' do
-        subject.email_digests.should be_true
+        subject.email_digests.should == true
         subject.digest_after_days.should == 7
       end
 
       it 'uses default_digest_email_frequency' do
         SiteSetting.stubs(:default_digest_email_frequency).returns(1)
-        subject.email_digests.should be_true
+        subject.email_digests.should == true
         subject.digest_after_days.should == 1
       end
 
       it 'disables digests by default if site setting says so' do
         SiteSetting.stubs(:default_digest_email_frequency).returns('')
-        subject.email_digests.should be_false
+        subject.email_digests.should == false
       end
     end
 
@@ -276,39 +276,39 @@ describe User do
       end
 
       it "is true for your basic level" do
-        user.has_trust_level?(TrustLevel[0]).should be_true
+        user.has_trust_level?(TrustLevel[0]).should == true
       end
 
       it "is false for a higher level" do
-        user.has_trust_level?(TrustLevel[2]).should be_false
+        user.has_trust_level?(TrustLevel[2]).should == false
       end
 
       it "is true if you exceed the level" do
         user.trust_level = TrustLevel[4]
-        user.has_trust_level?(TrustLevel[1]).should be_true
+        user.has_trust_level?(TrustLevel[1]).should == true
       end
 
       it "is true for an admin even with a low trust level" do
         user.trust_level = TrustLevel[0]
         user.admin = true
-        user.has_trust_level?(TrustLevel[1]).should be_true
+        user.has_trust_level?(TrustLevel[1]).should == true
       end
 
     end
 
     describe 'moderator' do
       it "isn't a moderator by default" do
-        user.moderator?.should be_false
+        user.moderator?.should == false
       end
 
       it "is a moderator if the user level is moderator" do
         user.moderator = true
-        user.has_trust_level?(TrustLevel[4]).should be_true
+        user.has_trust_level?(TrustLevel[4]).should == true
       end
 
       it "is staff if the user is an admin" do
         user.admin = true
-        user.staff?.should be_true
+        user.staff?.should == true
       end
 
     end
@@ -322,36 +322,36 @@ describe User do
     describe '#staff?' do
       subject { user.staff? }
 
-      it { should be_false }
+      it { should == false }
 
       context 'for a moderator user' do
         before { user.moderator = true }
 
-        it { should be_true }
+        it { should == true }
       end
 
       context 'for an admin user' do
         before { user.admin = true }
 
-        it { should be_true }
+        it { should == true }
       end
     end
 
     describe '#regular?' do
       subject { user.regular? }
 
-      it { should be_true }
+      it { should == true }
 
       context 'for a moderator user' do
         before { user.moderator = true }
 
-        it { should be_false }
+        it { should == false }
       end
 
       context 'for an admin user' do
         before { user.admin = true }
 
-        it { should be_false }
+        it { should == false }
       end
     end
   end
@@ -464,22 +464,22 @@ describe User do
 
     it "should not allow saving if username is reused" do
        @codinghorror.username = @user.username
-       @codinghorror.save.should be_false
+       @codinghorror.save.should == false
     end
 
     it "should not allow saving if username is reused in different casing" do
        @codinghorror.username = @user.username.upcase
-       @codinghorror.save.should be_false
+       @codinghorror.save.should == false
     end
   end
 
   context '.username_available?' do
     it "returns true for a username that is available" do
-      User.username_available?('BruceWayne').should be_true
+      User.username_available?('BruceWayne').should == true
     end
 
     it 'returns false when a username is taken' do
-      User.username_available?(Fabricate(:user).username).should be_false
+      User.username_available?(Fabricate(:user).username).should == false
     end
   end
 
@@ -571,11 +571,11 @@ describe User do
     end
 
     it "should have a valid password after the initial save" do
-      @user.confirm_password?("ilovepasta").should be_true
+      @user.confirm_password?("ilovepasta").should == true
     end
 
     it "should not have an active account after initial save" do
-      @user.active.should be_false
+      @user.active.should == false
     end
   end
 
@@ -592,16 +592,16 @@ describe User do
     end
 
     it "should act correctly" do
-      user.previous_visit_at.should be_nil
+      user.previous_visit_at.should == nil
 
       # first visit
       user.update_last_seen!(first_visit_date)
-      user.previous_visit_at.should be_nil
+      user.previous_visit_at.should == nil
 
       # updated same time
       user.update_last_seen!(first_visit_date)
       user.reload
-      user.previous_visit_at.should be_nil
+      user.previous_visit_at.should == nil
 
       # second visit
       user.update_last_seen!(second_visit_date)
@@ -620,7 +620,7 @@ describe User do
     let(:user) { Fabricate(:user) }
 
     it "should have a blank last seen on creation" do
-      user.last_seen_at.should be_nil
+      user.last_seen_at.should == nil
     end
 
     it "should have 0 for days_visited" do
@@ -696,7 +696,7 @@ describe User do
 
     context 'when email has not been confirmed yet' do
       it 'should return false' do
-        user.email_confirmed?.should be_false
+        user.email_confirmed?.should == false
       end
     end
 
@@ -704,7 +704,7 @@ describe User do
       it 'should return true' do
         token = user.email_tokens.find_by(email: user.email)
         EmailToken.confirm(token.token)
-        user.email_confirmed?.should be_true
+        user.email_confirmed?.should == true
       end
     end
 
@@ -712,7 +712,7 @@ describe User do
       it 'should return false' do
         user.email_tokens.each {|t| t.destroy}
         user.reload
-        user.email_confirmed?.should be_true
+        user.email_confirmed?.should == true
       end
     end
   end
@@ -774,7 +774,7 @@ describe User do
       expect(found_user).to eq bob
 
       found_user = User.find_by_username_or_email('bob1')
-      expect(found_user).to be_nil
+      expect(found_user).should == nil
 
       found_user = User.find_by_email('bob@Example.com')
       expect(found_user).to eq bob
@@ -783,7 +783,7 @@ describe User do
       expect(found_user).to eq bob
 
       found_user = User.find_by_email('bob')
-      expect(found_user).to be_nil
+      expect(found_user).should == nil
 
       found_user = User.find_by_username('bOb')
       expect(found_user).to eq bob
@@ -873,11 +873,11 @@ describe User do
 
       it "does not return true for staff" do
         user.stubs(:staff?).returns(true)
-        user.posted_too_much_in_topic?(topic.id).should be_false
+        user.posted_too_much_in_topic?(topic.id).should == false
       end
 
       it "returns true when the user has posted too much" do
-        user.posted_too_much_in_topic?(topic.id).should be_true
+        user.posted_too_much_in_topic?(topic.id).should == true
       end
 
       context "with a reply" do
@@ -886,7 +886,7 @@ describe User do
         end
 
         it "resets the `posted_too_much` threshold" do
-          user.posted_too_much_in_topic?(topic.id).should be_false
+          user.posted_too_much_in_topic?(topic.id).should == false
         end
       end
     end
@@ -894,7 +894,7 @@ describe User do
     it "returns false for a user who created the topic" do
       topic_user = topic.user
       topic_user.trust_level = TrustLevel[0]
-      topic.user.posted_too_much_in_topic?(topic.id).should be_false
+      topic.user.posted_too_much_in_topic?(topic.id).should == false
     end
 
   end
@@ -979,7 +979,7 @@ describe User do
     let!(:user) { Fabricate(:user) }
 
     it "has no primary_group_id by default" do
-      user.primary_group_id.should be_nil
+      user.primary_group_id.should == nil
     end
 
     context "when the user has a group" do
@@ -1002,7 +1002,7 @@ describe User do
 
         # It should unset it from the primary_group_id
         user.reload
-        user.primary_group_id.should be_nil
+        user.primary_group_id.should == nil
       end
     end
   end
@@ -1160,9 +1160,9 @@ describe User do
     it 'should only remove old, inactive users' do
       User.purge_inactive
       all_users = User.all
-      all_users.include?(user).should be_true
-      all_users.include?(inactive).should be_true
-      all_users.include?(inactive_old).should be_false
+      all_users.include?(user).should == true
+      all_users.include?(inactive).should == true
+      all_users.include?(inactive_old).should == false
     end
   end
 
