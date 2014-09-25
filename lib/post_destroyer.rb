@@ -4,6 +4,14 @@
 #
 class PostDestroyer
 
+  def self.destroy_old_hidden_posts
+    Post.where(deleted_at: nil)
+        .where("hidden_at < ?", 30.days.ago)
+        .find_each do |post|
+        PostDestroyer.new(Discourse.system_user, post).destroy
+      end
+  end
+
   def self.destroy_stubs
     # exclude deleted topics and posts that are actively flagged
     Post.where(deleted_at: nil, user_deleted: true)
