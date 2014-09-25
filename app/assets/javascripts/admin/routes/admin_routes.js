@@ -18,6 +18,8 @@ Discourse.Route.buildRoutes(function() {
       this.resource('adminSiteText', { path: '/site_text' }, function() {
         this.route('edit', {path: '/:text_type'});
       });
+      this.resource('adminUserFields', { path: '/user_fields' }, function() {
+      });
     });
     this.route('api');
 

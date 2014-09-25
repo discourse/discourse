@@ -1,0 +1,43 @@
+<div class='user-fields'>
+  <h2>{{i18n admin.user_fields.title}}</h2>
+
+  <p class="desc">{{i18n admin.user_fields.description}}</p>
+
+  {{#if model}}
+    {{#each f in model itemController="admin-user-field-item" itemView="admin-user-field-item"}}
+      {{#if f.editing}}
+        <div class='form-element'>
+          <label>{{i18n admin.user_fields.name}}
+            {{input value=f.buffered.name class="user-field-name"}}
+          </label>
+        </div>
+        <div class='form-element'>
+          <label>{{i18n admin.user_fields.type}}
+            {{combo-box content=fieldTypes valueAttribute="id" value=f.buffered.field_type}}
+          </label>
+        </div>
+        <div class='form-element controls'>
+          <button {{action "save"}}class='btn btn-primary'>{{fa-icon 'check'}} {{i18n admin.user_fields.save}}</button>
+          <button {{action "cancel"}} class='btn btn-danger'>{{fa-icon 'times'}} {{i18n admin.user_fields.cancel}}</button>
+        </div>
+      {{else}}
+        <div class='form-display'>
+          {{f.name}}
+        </div>
+        <div class='form-display'>
+          {{f.fieldName}}
+        </div>
+        <div class='form-element controls'>
+          <button {{action "edit"}}class='btn btn-default'>{{fa-icon 'pencil'}} {{i18n admin.user_fields.edit}}</button>
+          <button {{action "destroy"}}class='btn btn-danger'>{{fa-icon 'trash-o'}} {{i18n admin.user_fields.delete}}</button>
+        </div>
+      {{/if}}
+      <div class='clearfix'></div>
+    {{/each}}
+  {{/if}}
+
+  <button {{bind-attr disabled="createDisabled"}} class='btn btn-primary' {{action createField}}>
+    {{fa-icon "plus"}}
+    {{i18n admin.user_fields.create}}
+  </button>
+</div>

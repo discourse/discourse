@@ -136,7 +136,8 @@ export default Ember.DefaultResolver.extend({
       decamelized = decamelized.replace(/^admin\_/, 'admin/templates/');
       decamelized = decamelized.replace(/^admin\./, 'admin/templates/');
       decamelized = decamelized.replace(/\./, '_');
-      return Ember.TEMPLATES[decamelized];
+      var dashed = decamelized.replace(/_/g, '-');
+      return Ember.TEMPLATES[decamelized] || Ember.TEMPLATES[dashed];
     }
   }
 
