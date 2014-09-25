@@ -140,6 +140,7 @@ module Email
     def strip_avatars_and_emojis
       @fragment.css('img').each do |img|
         if img['src'] =~ /user_avatar/
+          img.parent['style'] = "vertical-align: top;" if img.parent.name == 'td'
           img.remove
         end
 
@@ -188,7 +189,7 @@ module Email
     end
 
     def reset_tables
-      style('table',nil, cellspacing: '0', cellpadding: '0', border: '0')
+      style('table', nil, cellspacing: '0', cellpadding: '0', border: '0')
     end
 
     def style(selector, style, attribs = {})
