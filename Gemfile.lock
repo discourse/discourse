@@ -98,7 +98,7 @@ GEM
     fast_xs (0.8.0)
     fastimage (1.6.3)
       addressable (~> 2.3, >= 2.3.5)
-    ffi (1.9.4)
+    ffi (1.9.5)
     flamegraph (0.0.5)
       fast_stack
     fog (1.22.1)
