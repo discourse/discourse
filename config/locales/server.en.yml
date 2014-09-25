@@ -472,8 +472,8 @@ en:
       title: "Regular Topic"
     banner:
       message:
-        make: "This topic is now a banner topic. It will appear at the top of every page until it is dismissed by the user."
-        remove: "This topic is not a banner topic anymore. It will no longer appear at the top of every page."
+        make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
+        remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
 
   unsubscribed:
     title: 'Unsubscribed'
