@@ -22,7 +22,7 @@
             <td class='main-link'>
               {{topic-status topic=topic}}
               <a class='title' href="{{unbound topic.lastUnreadUrl}}">{{{unbound topic.fancy_title}}}</a>
-              {{topic-post-badges unread=unread
+              {{topic-post-badges unread=topic.unread
                                   newPosts=topic.new_posts
                                   unseen=topic.unseen
                                   url=topic.lastUnreadUrl}}
