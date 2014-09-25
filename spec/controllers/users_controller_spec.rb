@@ -709,7 +709,7 @@ describe UsersController do
     it 'filters by email' do
       inviter = Fabricate(:user)
       invitee = Fabricate(:user)
-      invite = Fabricate(
+      _invite = Fabricate(
         :invite,
         email: 'billybob@example.com',
         invited_by: inviter,
@@ -732,7 +732,7 @@ describe UsersController do
     it 'filters by username' do
       inviter = Fabricate(:user)
       invitee = Fabricate(:user, username: 'billybob')
-      invite = Fabricate(
+      _invite = Fabricate(
         :invite,
         invited_by: inviter,
         email: 'billybob@example.com',
@@ -803,7 +803,7 @@ describe UsersController do
           it 'does not return invites' do
             user = log_in
             inviter = Fabricate(:user)
-            invitee = Fabricate(:user)
+            _invitee = Fabricate(:user)
             Fabricate(:invite, invited_by: inviter)
             stub_guardian(user) do |guardian|
               guardian.stubs(:can_see_invite_details?).
@@ -820,7 +820,7 @@ describe UsersController do
 
       context 'with redeemed invites' do
         it 'returns invites' do
-          user = log_in
+          _user = log_in
           inviter = Fabricate(:user)
           invitee = Fabricate(:user)
           invite = Fabricate(:invite, invited_by: inviter, user: invitee)
