@@ -35,7 +35,7 @@ class ScreenedEmail < ActiveRecord::Base
 
     screened_email.record_match! if screened_email
 
-    screened_email && screened_email.action_type == actions[:block]
+    screened_email.try(:action_type) == actions[:block]
   end
 
   def self.levenshtein(first, second)

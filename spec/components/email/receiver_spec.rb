@@ -28,7 +28,7 @@ describe Email::Receiver do
       expect { test_parse_body(fixture_file("emails/no_content_reply.eml")) }.to raise_error(Email::Receiver::EmptyEmailError)
     end
 
-    pending "raises EmailUnparsableError if the headers are corrupted" do
+    skip "raises EmailUnparsableError if the headers are corrupted" do
       expect { ; }.to raise_error(Email::Receiver::EmailUnparsableError)
     end
 
@@ -130,7 +130,7 @@ Thanks for listening."
 
         topic.posts.count.should == (start_count + 1)
         created_post = topic.posts.last
-        created_post.via_email.should be_true
+        created_post.via_email.should == true
         created_post.cooked.strip.should == fixture_file("emails/valid_reply.cooked").strip
       end
     end
@@ -168,7 +168,7 @@ Thanks for listening."
 
         topic.posts.count.should == (start_count + 1)
         topic.posts.last.cooked.should match /<img src=['"](\/uploads\/default\/\d+\/\w{16}\.png)['"] width=['"]289['"] height=['"]126['"]>/
-        Upload.find_by(sha1: upload_sha).should_not be_nil
+        Upload.find_by(sha1: upload_sha).should_not == nil
       end
 
     end

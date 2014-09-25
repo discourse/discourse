@@ -105,7 +105,7 @@ describe SpamRule::AutoBlock do
 
       it 'prevents the user from making new posts' do
         subject.block_user
-        expect(Guardian.new(user).can_create_post?(nil)).to be_false
+        expect(Guardian.new(user).can_create_post?(nil)).to be_falsey
       end
 
       it 'sends private message to moderators' do
@@ -173,39 +173,39 @@ describe SpamRule::AutoBlock do
       it 'returns false if there are no spam flags' do
         subject.stubs(:num_spam_flags_against_user).returns(0)
         subject.stubs(:num_users_who_flagged_spam_against_user).returns(0)
-        expect(subject.block?).to be_false
+        expect(subject.block?).to be_falsey
       end
 
       it 'returns false if there are not received enough flags' do
         subject.stubs(:num_spam_flags_against_user).returns(1)
         subject.stubs(:num_users_who_flagged_spam_against_user).returns(2)
-        expect(subject.block?).to be_false
+        expect(subject.block?).to be_falsey
       end
 
       it 'returns false if there have not been enough users' do
         subject.stubs(:num_spam_flags_against_user).returns(2)
         subject.stubs(:num_users_who_flagged_spam_against_user).returns(1)
-        expect(subject.block?).to be_false
+        expect(subject.block?).to be_falsey
       end
 
       it 'returns false if num_flags_to_block_new_user is 0' do
         SiteSetting.stubs(:num_flags_to_block_new_user).returns(0)
         subject.stubs(:num_spam_flags_against_user).returns(100)
         subject.stubs(:num_users_who_flagged_spam_against_user).returns(100)
-        expect(subject.block?).to be_false
+        expect(subject.block?).to be_falsey
       end
 
       it 'returns false if num_users_to_block_new_user is 0' do
         SiteSetting.stubs(:num_users_to_block_new_user).returns(0)
         subject.stubs(:num_spam_flags_against_user).returns(100)
         subject.stubs(:num_users_who_flagged_spam_against_user).returns(100)
-        expect(subject.block?).to be_false
+        expect(subject.block?).to be_falsey
       end
 
       it 'returns true when there are enough flags from enough users' do
         subject.stubs(:num_spam_flags_against_user).returns(2)
         subject.stubs(:num_users_who_flagged_spam_against_user).returns(2)
-        expect(subject.block?).to be_true
+        expect(subject.block?).to be_truthy
       end
     end
 
@@ -214,7 +214,7 @@ describe SpamRule::AutoBlock do
       subject     { described_class.new(user) }
 
       it 'returns false' do
-        expect(subject.block?).to be_true
+        expect(subject.block?).to be_truthy
       end
     end
   end

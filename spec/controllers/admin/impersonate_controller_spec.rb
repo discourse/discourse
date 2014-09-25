@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::ImpersonateController do
 
   it "is a subclass of AdminController" do
-    (Admin::ImpersonateController < Admin::AdminController).should be_true
+    (Admin::ImpersonateController < Admin::AdminController).should == true
   end
 
 

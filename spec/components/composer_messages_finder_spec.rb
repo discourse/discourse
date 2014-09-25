@@ -102,7 +102,7 @@ describe ComposerMessagesFinder do
         end
 
         it "creates a notified_about_avatar log" do
-          UserHistory.exists_for_user?(user, :notified_about_avatar).should be_true
+          UserHistory.exists_for_user?(user, :notified_about_avatar).should == true
         end
       end
 
@@ -185,7 +185,7 @@ describe ComposerMessagesFinder do
         end
 
         it "creates a notified_about_sequential_replies log" do
-          UserHistory.exists_for_user?(user, :notified_about_sequential_replies).should be_true
+          UserHistory.exists_for_user?(user, :notified_about_sequential_replies).should == true
         end
 
       end
@@ -270,7 +270,7 @@ describe ComposerMessagesFinder do
         end
 
         it "creates a notified_about_dominating_topic log" do
-          UserHistory.exists_for_user?(user, :notified_about_dominating_topic).should be_true
+          UserHistory.exists_for_user?(user, :notified_about_dominating_topic).should == true
         end
 
       end

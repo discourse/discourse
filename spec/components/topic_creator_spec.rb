@@ -38,7 +38,7 @@ describe TopicCreator do
         it "ignores auto_close_time without raising an error" do
           topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(auto_close_time: '24'))
           topic.should be_valid
-          topic.auto_close_at.should be_nil
+          topic.auto_close_at.should == nil
         end
 
         it "category name is case insensitive" do

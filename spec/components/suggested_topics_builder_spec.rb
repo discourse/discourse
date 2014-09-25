@@ -45,7 +45,7 @@ describe SuggestedTopicsBuilder do
   end
 
   it "has the correct defaults" do
-    builder.excluded_topic_ids.include?(topic.id).should be_true
+    builder.excluded_topic_ids.include?(topic.id).should == true
     builder.results_left.should == 5
     builder.size.should == 0
     builder.should_not be_full
@@ -77,8 +77,8 @@ describe SuggestedTopicsBuilder do
         builder.size.should == 1
         builder.results_left.should == 4
         builder.should_not be_full
-        builder.excluded_topic_ids.include?(topic.id).should be_true
-        builder.excluded_topic_ids.include?(other_topic.id).should be_true
+        builder.excluded_topic_ids.include?(topic.id).should == true
+        builder.excluded_topic_ids.include?(other_topic.id).should == true
       end
 
     end

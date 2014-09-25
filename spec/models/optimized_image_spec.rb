@@ -16,7 +16,7 @@ describe OptimizedImage do
 
         it "returns nil" do
           OptimizedImage.expects(:resize).returns(false)
-          OptimizedImage.create_for(upload, 100, 200).should be_nil
+          OptimizedImage.create_for(upload, 100, 200).should == nil
         end
 
       end
@@ -59,7 +59,7 @@ describe OptimizedImage do
 
         it "returns nil" do
           OptimizedImage.expects(:resize).returns(false)
-          OptimizedImage.create_for(upload, 100, 200).should be_nil
+          OptimizedImage.create_for(upload, 100, 200).should == nil
         end
 
       end

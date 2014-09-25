@@ -23,7 +23,7 @@ describe Cache do
     cache.write("hello1", "world")
     cache.clear
 
-    cache.read("hello0").should be_nil
+    cache.read("hello0").should == nil
   end
 
   it "can delete by family" do
@@ -32,8 +32,8 @@ describe Cache do
 
     cache.delete_by_family("my_family")
 
-    cache.fetch("key").should be_nil
-    cache.fetch("key2").should be_nil
+    cache.fetch("key").should == nil
+    cache.fetch("key2").should == nil
 
   end
 
@@ -43,7 +43,7 @@ describe Cache do
     end
 
     cache.delete("key")
-    cache.fetch("key").should be_nil
+    cache.fetch("key").should == nil
   end
 
   #TODO yuck on this mock

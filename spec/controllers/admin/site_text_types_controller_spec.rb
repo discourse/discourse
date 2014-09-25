@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::SiteTextTypesController do
 
   it "is a subclass of AdminController" do
-    (Admin::SiteTextTypesController < Admin::AdminController).should be_true
+    (Admin::SiteTextTypesController < Admin::AdminController).should == true
   end
 
   context 'while logged in as an admin' do

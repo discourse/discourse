@@ -13,11 +13,11 @@ describe ImageSizer do
   end
 
   it 'returns nil if the width is nil' do
-    ImageSizer.resize(nil, 100).should be_nil
+    ImageSizer.resize(nil, 100).should == nil
   end
 
   it 'returns nil if the height is nil' do
-    ImageSizer.resize(100, nil).should be_nil
+    ImageSizer.resize(100, nil).should == nil
   end
 
   it 'works with string parameters' do

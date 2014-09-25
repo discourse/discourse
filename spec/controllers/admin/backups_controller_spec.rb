@@ -3,7 +3,7 @@ require "spec_helper"
 describe Admin::BackupsController do
 
   it "is a subclass of AdminController" do
-    (Admin::BackupsController < Admin::AdminController).should be_true
+    (Admin::BackupsController < Admin::AdminController).should == true
   end
 
   let(:backup_filename) { "2014-02-10-065935.tar.gz" }
@@ -81,7 +81,7 @@ describe Admin::BackupsController do
       #   response.should be_success
 
       #   json = JSON.parse(response.body)
-      #   json["message"].should_not be_nil
+      #   json["message"].should_not == nil
       # end
 
     end

@@ -29,13 +29,13 @@ describe Topic do
 
     context 'uncategorized' do
       Given(:category) { nil }
-      Then { topic.auto_close_at.should be_nil }
+      Then { topic.auto_close_at.should == nil }
       And  { scheduled_jobs_for(:close_topic).should be_empty }
     end
 
     context 'category without default auto-close' do
       Given(:category) { Fabricate(:category, auto_close_hours: nil) }
-      Then { topic.auto_close_at.should be_nil }
+      Then { topic.auto_close_at.should == nil }
       And  { scheduled_jobs_for(:close_topic).should be_empty }
     end
 
@@ -63,8 +63,8 @@ describe Topic do
 
           context 'topic is closed manually' do
             When { staff_topic.update_status('closed', true, admin) }
-            Then { staff_topic.reload.auto_close_at.should be_nil }
-            And  { staff_topic.auto_close_started_at.should be_nil }
+            Then { staff_topic.reload.auto_close_at.should == nil }
+            And  { staff_topic.auto_close_started_at.should == nil }
           end
         end
 
@@ -92,8 +92,8 @@ describe Topic do
         Given(:admin)              { Fabricate(:admin) }
         Given!(:auto_closed_topic) { Fabricate(:topic, user: admin, closed: true, auto_close_at: 1.day.ago, auto_close_user_id: admin.id, auto_close_started_at: 6.days.ago) }
         When { auto_closed_topic.update_status('closed', false, admin) }
-        Then { auto_closed_topic.reload.auto_close_at.should be_nil }
-        And  { auto_closed_topic.auto_close_started_at.should be_nil }
+        Then { auto_closed_topic.reload.auto_close_at.should == nil }
+        And  { auto_closed_topic.auto_close_started_at.should == nil }
       end
     end
   end

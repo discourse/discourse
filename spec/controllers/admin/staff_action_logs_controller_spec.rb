@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Admin::StaffActionLogsController do
   it "is a subclass of AdminController" do
-    (Admin::StaffActionLogsController < Admin::AdminController).should be_true
+    (Admin::StaffActionLogsController < Admin::AdminController).should == true
   end
 
   let!(:user) { log_in(:admin) }

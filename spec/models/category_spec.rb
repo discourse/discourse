@@ -39,7 +39,7 @@ describe Category do
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(:everyone => :full)
 
-      read_restricted.should be_false
+      read_restricted.should == false
       resolved.should == []
     end
   end
@@ -102,13 +102,13 @@ describe Category do
     let(:group) { Fabricate(:group) }
 
     it "secures categories correctly" do
-      category.read_restricted?.should be_false
+      category.read_restricted?.should == false
 
       category.set_permissions({})
-      category.read_restricted?.should be_true
+      category.read_restricted?.should == true
 
       category.set_permissions(:everyone => :full)
-      category.read_restricted?.should be_false
+      category.read_restricted?.should == false
 
       user.secure_categories.should be_empty
 
@@ -216,7 +216,7 @@ describe Category do
 
       @topic.pinned_at.should be_present
 
-      Guardian.new(@category.user).can_delete?(@topic).should be_false
+      Guardian.new(@category.user).can_delete?(@topic).should == false
 
       @topic.posts.count.should == 1
 
@@ -243,7 +243,7 @@ describe Category do
 
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
-      category.topic.auto_close_at.should be_nil
+      category.topic.auto_close_at.should == nil
     end
 
     describe "creating a new category with the same slug" do
@@ -286,8 +286,8 @@ describe Category do
     end
 
     it 'is deleted correctly' do
-      Category.exists?(id: @category_id).should be_false
-      Topic.exists?(id: @topic_id).should be_false
+      Category.exists?(id: @category_id).should == false
+      Topic.exists?(id: @topic_id).should == false
     end
   end
 

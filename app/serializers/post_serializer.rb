@@ -54,15 +54,15 @@ class PostSerializer < BasicPostSerializer
              :via_email
 
   def moderator?
-    !!(object.user && object.user.moderator?)
+    !!(object.try(:user).try(:moderator?))
   end
 
   def admin?
-    !!(object.user && object.user.admin?)
+    !!(object.try(:user).try(:admin?))
   end
 
   def staff?
-    !!(object.user && object.user.staff?)
+    !!(object.try(:user).try(:staff?))
   end
 
   def yours
@@ -119,11 +119,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_title
-    object.user.try(:title)
+    object.try(:user).try(:title)
   end
 
   def trust_level
-    object.user.try(:trust_level)
+    object.try(:user).try(:trust_level)
   end
 
   def reply_to_user

@@ -11,7 +11,7 @@ describe Admin::VersionsController do
   end
 
   it "is a subclass of AdminController" do
-    (Admin::VersionsController < Admin::AdminController).should be_true
+    (Admin::VersionsController < Admin::AdminController).should == true
   end
 
   context 'while logged in as an admin' do

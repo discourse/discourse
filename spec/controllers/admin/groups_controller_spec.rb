@@ -7,7 +7,7 @@ describe Admin::GroupsController do
   end
 
   it "is a subclass of AdminController" do
-    (Admin::GroupsController < Admin::AdminController).should be_true
+    (Admin::GroupsController < Admin::AdminController).should == true
   end
 
   it "produces valid json for groups" do

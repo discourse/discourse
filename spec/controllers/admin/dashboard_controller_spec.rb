@@ -8,7 +8,7 @@ describe Admin::DashboardController do
   end
 
   it "is a subclass of AdminController" do
-    (Admin::DashboardController < Admin::AdminController).should be_true
+    (Admin::DashboardController < Admin::AdminController).should == true
   end
 
   context 'while logged in as an admin' do

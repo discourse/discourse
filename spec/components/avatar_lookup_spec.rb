@@ -12,11 +12,11 @@ describe AvatarLookup do
     end
 
     it 'returns nil if user_id does not exists' do
-      @avatar_lookup[0].should be_nil
+      @avatar_lookup[0].should == nil
     end
 
     it 'returns nil if user_id is nil' do
-      @avatar_lookup[nil].should be_nil
+      @avatar_lookup[nil].should == nil
     end
 
     it 'returns user if user_id exists' do

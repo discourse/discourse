@@ -77,7 +77,7 @@ describe ColorSchemeRevisor do
           ]))
         }.to change { color_scheme.reload.version }.by(1)
         old_version = ColorScheme.find_by(versioned_id: color_scheme.id, version: (color_scheme.version - 1))
-        old_version.should_not be_nil
+        old_version.should_not == nil
         old_version.colors.count.should == color_scheme.colors.count
         old_version.colors_by_name[color.name].hex.should == old_hex
         color_scheme.colors_by_name[color.name].hex.should == 'BEEF99'
@@ -124,7 +124,7 @@ describe ColorSchemeRevisor do
         expect {
           described_class.revert(color_scheme)
         }.to change { ColorScheme.count }.by(-1)
-        color_scheme.reload.previous_version.should be_nil
+        color_scheme.reload.previous_version.should == nil
       end
     end
   end

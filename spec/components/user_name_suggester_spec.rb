@@ -15,7 +15,7 @@ describe UserNameSuggester do
     end
 
     it "doesn't raise an error on nil username" do
-      UserNameSuggester.suggest(nil).should be_nil
+      UserNameSuggester.suggest(nil).should == nil
     end
 
     it 'corrects weird characters' do

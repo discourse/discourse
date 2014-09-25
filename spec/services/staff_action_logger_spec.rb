@@ -83,7 +83,7 @@ describe StaffActionLogger do
     it "logs new site customizations" do
       log_record = logger.log_site_customization_change(nil, valid_params)
       log_record.subject.should == valid_params[:name]
-      log_record.previous_value.should be_nil
+      log_record.previous_value.should == nil
       log_record.new_value.should be_present
       json = ::JSON.parse(log_record.new_value)
       json['stylesheet'].should be_present
@@ -109,7 +109,7 @@ describe StaffActionLogger do
       site_customization = SiteCustomization.new(name: 'Banana', stylesheet: "body {color: yellow;}", header: "h1 {color: brown;}")
       log_record = logger.log_site_customization_destroy(site_customization)
       log_record.previous_value.should be_present
-      log_record.new_value.should be_nil
+      log_record.new_value.should == nil
       json = ::JSON.parse(log_record.previous_value)
       json['stylesheet'].should == site_customization.stylesheet
       json['header'].should == site_customization.header

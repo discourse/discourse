@@ -29,7 +29,7 @@ describe Permalink do
 
     it "returns nil when topic_id is set but topic is not found" do
       permalink.topic_id = 99999
-      target_url.should be_nil
+      target_url.should == nil
     end
 
     it "returns a post url when post_id is set" do
@@ -39,7 +39,7 @@ describe Permalink do
 
     it "returns nil when post_id is set but post is not found" do
       permalink.post_id = 99999
-      target_url.should be_nil
+      target_url.should == nil
     end
 
     it "returns a post url when post_id and topic_id are both set" do
@@ -55,7 +55,7 @@ describe Permalink do
 
     it "returns nil when category_id is set but category is not found" do
       permalink.category_id = 99999
-      target_url.should be_nil
+      target_url.should == nil
     end
 
     it "returns a post url when topic_id, post_id, and category_id are all set for some reason" do
@@ -66,7 +66,7 @@ describe Permalink do
     end
 
     it "returns nil when nothing is set" do
-      target_url.should be_nil
+      target_url.should == nil
     end
   end
 end

@@ -51,7 +51,7 @@ describe "Redis Store" do
     end
 
     store.clear
-    store.read("key").should be_nil
+    store.read("key").should == nil
     cache.fetch("key").should == "key in cache"
 
   end

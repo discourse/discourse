@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::ReportsController do
 
   it "is a subclass of AdminController" do
-    (Admin::ReportsController < Admin::AdminController).should be_true
+    (Admin::ReportsController < Admin::AdminController).should == true
   end
 
   context 'while logged in as an admin' do

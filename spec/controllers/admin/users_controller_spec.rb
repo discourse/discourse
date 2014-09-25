@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::UsersController do
 
   it 'is a subclass of AdminController' do
-    (Admin::UsersController < Admin::AdminController).should be_true
+    (Admin::UsersController < Admin::AdminController).should == true
   end
 
   context 'while logged in as an admin' do
@@ -214,7 +214,7 @@ describe Admin::UsersController do
       it 'updates the moderator flag' do
         xhr :put, :revoke_moderation, user_id: @moderator.id
         @moderator.reload
-        @moderator.moderator.should_not be_true
+        @moderator.moderator.should_not == true
       end
     end
 
@@ -237,7 +237,7 @@ describe Admin::UsersController do
       it 'updates the moderator flag' do
         xhr :put, :grant_moderation, user_id: @another_user.id
         @another_user.reload
-        @another_user.moderator.should be_true
+        @another_user.moderator.should == true
       end
     end
 

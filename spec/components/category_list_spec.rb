@@ -40,10 +40,10 @@ describe CategoryList do
       CategoryList.new(Guardian.new(admin)).categories.find { |x| x.name == private_cat.name }.displayable_topics.count.should == 1
 
       CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count.should == 1
-      CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == private_cat.name }.should be_nil
+      CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == private_cat.name }.should == nil
 
       CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count.should == 1
-      CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == private_cat.name }.should be_nil
+      CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == private_cat.name }.should == nil
     end
   end
 
@@ -98,7 +98,7 @@ describe CategoryList do
       end
 
       it "should contain our topic" do
-        category.featured_topics.include?(topic).should be_true
+        category.featured_topics.include?(topic).should == true
       end
     end
 

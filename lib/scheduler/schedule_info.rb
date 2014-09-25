@@ -35,14 +35,16 @@ module Scheduler
 
     def valid_every?
       return false unless @klass.every
-      @prev_run &&
+      !!@prev_run &&
         @prev_run <= Time.now.to_i &&
         @next_run < @prev_run + @klass.every * (1 + @manager.random_ratio)
     end
 
     def valid_daily?
       return false unless @klass.daily
-      @prev_run && @prev_run <= Time.now.to_i && @next_run < @prev_run + 1.day
+      !!@prev_run &&
+        @prev_run <= Time.now.to_i &&
+        @next_run < @prev_run + 1.day
     end
 
     def schedule_every!

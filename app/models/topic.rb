@@ -528,15 +528,15 @@ class Topic < ActiveRecord::Base
   end
 
   def remove_allowed_user(username)
-    user = User.find_by(username: username)
-    if user
+    if user = User.find_by(username: username)
       topic_user = topic_allowed_users.find_by(user_id: user.id)
       if topic_user
         topic_user.destroy
-      else
-        false
+        return true
       end
     end
+
+    false
   end
 
   # Invite a user to the topic by username or email. Returns success/failure

@@ -14,7 +14,7 @@ describe RateLimiter do
     end
 
     it "returns true for can_perform?" do
-      rate_limiter.can_perform?.should be_true
+      rate_limiter.can_perform?.should == true
     end
 
     it "doesn't raise an error on performed!" do
@@ -31,7 +31,7 @@ describe RateLimiter do
 
     context 'never done' do
       it "should perform right away" do
-        rate_limiter.can_perform?.should be_true
+        rate_limiter.can_perform?.should == true
       end
 
       it "performs without an error" do
@@ -46,7 +46,7 @@ describe RateLimiter do
       end
 
       it "returns false for can_perform when the limit has been hit" do
-        rate_limiter.can_perform?.should be_false
+        rate_limiter.can_perform?.should == false
       end
 
       it "raises an error the third time called" do
@@ -57,7 +57,7 @@ describe RateLimiter do
 
         it "returns true for can_perform if the user is an admin" do
           user.admin = true
-          rate_limiter.can_perform?.should be_true
+          rate_limiter.can_perform?.should == true
         end
 
         it "doesn't raise an error when an admin performs the task" do
@@ -67,7 +67,7 @@ describe RateLimiter do
 
         it "returns true for can_perform if the user is a mod" do
           user.moderator = true
-          rate_limiter.can_perform?.should be_true
+          rate_limiter.can_perform?.should == true
         end
 
         it "doesn't raise an error when a moderator performs the task" do
@@ -84,7 +84,7 @@ describe RateLimiter do
         end
 
         it "returns true for can_perform since there is now room" do
-          rate_limiter.can_perform?.should be_true
+          rate_limiter.can_perform?.should == true
         end
 
         it "raises no error now that there is room" do

@@ -25,7 +25,7 @@ describe ErrorLog do
     it "creates a non empty file on first call" do
       ErrorLog.clear_all!
       ErrorLog.add_row!(hello: "world")
-      File.exists?(ErrorLog.filename).should be_true
+      File.exists?(ErrorLog.filename).should == true
     end
   end
 

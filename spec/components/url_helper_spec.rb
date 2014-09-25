@@ -15,21 +15,21 @@ describe UrlHelper do
       store = stub
       store.expects(:has_been_uploaded?).returns(true)
       Discourse.stubs(:store).returns(store)
-      helper.is_local("http://discuss.site.com/path/to/file.png").should be_true
+      helper.is_local("http://discuss.site.com/path/to/file.png").should == true
     end
 
     it "is true for relative assets" do
       store = stub
       store.expects(:has_been_uploaded?).returns(false)
       Discourse.stubs(:store).returns(store)
-      helper.is_local("/assets/javascripts/all.js").should be_true
+      helper.is_local("/assets/javascripts/all.js").should == true
     end
 
     it "is true for plugin assets" do
       store = stub
       store.expects(:has_been_uploaded?).returns(false)
       Discourse.stubs(:store).returns(store)
-      helper.is_local("/plugins/all.js").should be_true
+      helper.is_local("/plugins/all.js").should == true
     end
 
   end

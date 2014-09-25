@@ -31,7 +31,7 @@ describe SiteCustomization do
       end
 
       it 'finds no style when none enabled' do
-        SiteCustomization.enabled_style_key.should be_nil
+        SiteCustomization.enabled_style_key.should == nil
       end
 
 
@@ -50,7 +50,7 @@ describe SiteCustomization do
         #  this bypasses the before / after stuff
         SiteCustomization.exec_sql('delete from site_customizations')
 
-        SiteCustomization.enabled_style_key.should be_nil
+        SiteCustomization.enabled_style_key.should == nil
       end
     end
 
@@ -156,13 +156,13 @@ describe SiteCustomization do
     it 'should compile scss' do
       c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '$black: #000; #a { color: $black; }', header: '')
       s = c.stylesheet_baked.gsub(' ', '').gsub("\n", '')
-      (s.include?("#a{color:#000;}") || s.include?("#a{color:black;}")).should be_true
+      (s.include?("#a{color:#000;}") || s.include?("#a{color:black;}")).should == true
     end
 
     it 'should compile mobile scss' do
       c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '', header: '', mobile_stylesheet: '$black: #000; #a { color: $black; }', mobile_header: '')
       s = c.mobile_stylesheet_baked.gsub(' ', '').gsub("\n", '')
-      (s.include?("#a{color:#000;}") || s.include?("#a{color:black;}")).should be_true
+      (s.include?("#a{color:#000;}") || s.include?("#a{color:black;}")).should == true
     end
 
     it 'should allow including discourse styles' do

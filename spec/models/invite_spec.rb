@@ -16,7 +16,7 @@ describe Invite do
     end
 
     it "should not allow a user to invite themselves" do
-      invite.email_already_exists.should be_true
+      invite.email_already_exists.should == true
     end
 
   end
@@ -26,7 +26,7 @@ describe Invite do
     context 'saved' do
       subject { Fabricate(:invite) }
       its(:invite_key) { should be_present }
-      its(:email_already_exists) { should be_false }
+      its(:email_already_exists) { should == false }
 
       it 'should store a lower case version of the email' do
         subject.email.should == iceking
@@ -117,7 +117,7 @@ describe Invite do
       invite.should be_blank
 
       # gives the user permission to access the topic
-      topic.allowed_users.include?(coding_horror).should be_true
+      topic.allowed_users.include?(coding_horror).should == true
     end
 
   end
@@ -177,8 +177,8 @@ describe Invite do
       let!(:user) { invite.redeem }
 
       it 'works correctly' do
-        user.is_a?(User).should be_true
-        user.send_welcome_message.should be_true
+        user.is_a?(User).should == true
+        user.send_welcome_message.should == true
         user.trust_level.should == SiteSetting.default_invitee_trust_level
       end
 
@@ -214,7 +214,7 @@ describe Invite do
 
             it 'will not redeem twice' do
               invite.redeem.should be_present
-              invite.redeem.send_welcome_message.should be_false
+              invite.redeem.send_welcome_message.should == false
             end
           end
         end
@@ -233,8 +233,8 @@ describe Invite do
         it 'adds the user to the topic_users' do
           user = invite.redeem
           topic.reload
-          topic.allowed_users.include?(user).should be_true
-          Guardian.new(user).can_see?(topic).should be_true
+          topic.allowed_users.include?(user).should == true
+          Guardian.new(user).can_see?(topic).should == true
         end
 
       end
@@ -246,7 +246,7 @@ describe Invite do
 
         it 'adds the user to the topic_users' do
           topic.reload
-          topic.allowed_users.include?(user).should be_true
+          topic.allowed_users.include?(user).should == true
         end
       end
 
@@ -258,8 +258,8 @@ describe Invite do
         let(:another_topic) { Fabricate(:topic, category_id: nil, archetype: "private_message", user: coding_horror) }
 
         it 'adds the user to the topic_users of the first topic' do
-          topic.allowed_users.include?(user).should be_true
-          another_topic.allowed_users.include?(user).should be_true
+          topic.allowed_users.include?(user).should == true
+          another_topic.allowed_users.include?(user).should == true
           another_invite.reload
           another_invite.should_not be_redeemed
         end

@@ -19,7 +19,7 @@ describe SystemMessage do
       topic.should be_private_message
       topic.should be_valid
       topic.subtype.should == TopicSubtype.system_message
-      topic.allowed_users.include?(user).should be_true
+      topic.allowed_users.include?(user).should == true
     end
   end
 

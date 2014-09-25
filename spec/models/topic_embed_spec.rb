@@ -14,7 +14,7 @@ describe TopicEmbed do
     let(:contents) { "hello world new post <a href='/hello'>hello</a> <img src='/images/wat.jpg'>" }
 
     it "returns nil when the URL is malformed" do
-      TopicEmbed.import(user, "invalid url", title, contents).should be_nil
+      TopicEmbed.import(user, "invalid url", title, contents).should == nil
       TopicEmbed.count.should == 0
     end
 
@@ -29,9 +29,9 @@ describe TopicEmbed do
         post.cooked.should == post.raw
 
         # It converts relative URLs to absolute
-        post.cooked.start_with?("hello world new post <a href=\"http://eviltrout.com/hello\">hello</a> <img src=\"http://eviltrout.com/images/wat.jpg\">").should be_true
+        post.cooked.start_with?("hello world new post <a href=\"http://eviltrout.com/hello\">hello</a> <img src=\"http://eviltrout.com/images/wat.jpg\">").should == true
 
-        post.topic.has_topic_embed?.should be_true
+        post.topic.has_topic_embed?.should == true
         TopicEmbed.where(topic_id: post.topic_id).should be_present
       end
 
