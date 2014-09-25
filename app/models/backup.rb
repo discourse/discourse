@@ -53,8 +53,9 @@ class Backup
 
   def upload_to_s3
     return unless s3
-    file = File.read(@path)
-    s3.upload(file, @filename)
+    File.open(@path) do |file|
+      s3.upload(file, @filename)
+    end
   end
 
   def remove_from_s3
