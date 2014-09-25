@@ -167,7 +167,8 @@ group :assets do
   if rails_master?
     gem 'sass-rails', git: 'https://github.com/rails/sass-rails.git'
   else
-    gem 'sass-rails', '~> 4.0.2'
+    # later is breaking our asset compliation extensions
+    gem 'sass-rails', '4.0.2'
   end
 
   gem 'uglifier'
@@ -180,10 +181,13 @@ group :test do
 end
 
 group :test, :development do
+  # while upgrading to 3
+  gem 'rspec', '2.99.0'
   gem 'mock_redis'
   gem 'listen', '0.7.3', require: false
   gem 'certified', require: false
-  gem 'fabrication', require: false
+  # later appears to break Fabricate(:topic, category: category)
+  gem 'fabrication', '2.9.8', require: false
   gem 'qunit-rails'
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
