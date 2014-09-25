@@ -490,6 +490,7 @@ en:
         ok: "Your password looks good."
         instructions: "At least %{count} characters."
 
+      associated_accounts: "Associated accounts"
       ip_address:
         title: "Last IP Address"
       registration_ip_address:

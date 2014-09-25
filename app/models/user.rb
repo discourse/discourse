@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
+  has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
@@ -631,6 +632,31 @@ class User < ActiveRecord::Base
 
   def first_post_created_at
     user_stat.try(:first_post_created_at)
+  end
+
+  def associated_accounts
+    result = []
+    if twitter_user_info
+      result << "Twitter(#{twitter_user_info.screen_name})"
+    end
+
+    if facebook_user_info
+      result << "Facebook(#{facebook_user_info.username})"
+    end
+
+    if google_user_info
+      result << "Google(#{google_user_info.email})"
+    end
+
+    if github_user_info
+      result << "Github(#{github_user_info.screen_name})"
+    end
+
+    user_open_ids.each do |oid|
+      result << "OpenID #{oid.url[0..20]}...(#{oid.email})"
+    end
+
+    result.empty? ? I18n.t("user.no_accounts_associated") : result.join(", ")
   end
 
   protected

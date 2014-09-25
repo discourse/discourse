@@ -405,6 +405,22 @@ describe User do
     end
   end
 
+  describe 'associated_accounts' do
+    it 'should correctly find social associations' do
+      user = Fabricate(:user)
+      user.associated_accounts.should == I18n.t("user.no_accounts_associated")
+
+      TwitterUserInfo.create(user_id: user.id, screen_name: "sam", twitter_user_id: 1)
+      FacebookUserInfo.create(user_id: user.id, username: "sam", facebook_user_id: 1)
+      GoogleUserInfo.create(user_id: user.id, email: "sam@sam.com", google_user_id: 1)
+      GithubUserInfo.create(user_id: user.id, screen_name: "sam", github_user_id: 1)
+
+      user.reload
+      user.associated_accounts.should == "Twitter(sam), Facebook(sam), Google(sam@sam.com), Github(sam)"
+
+    end
+  end
+
   describe 'name heuristics' do
     it 'is able to guess a decent name from an email' do
       User.suggest_name('sam.saffron@gmail.com').should == 'Sam Saffron'
