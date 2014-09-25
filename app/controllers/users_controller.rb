@@ -330,6 +330,9 @@ class UsersController < ApplicationController
     RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
 
     @user = User.find_by_username_or_email(params[:username].to_s)
+
+    raise Discourse::NotFound unless @user
+
     @email_token = @user.email_tokens.unconfirmed.active.first
     enqueue_activation_email if @user
     render nothing: true
