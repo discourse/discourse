@@ -58,7 +58,7 @@ class TrustLevel3Requirements
   end
 
   def on_grace_period
-    @user.on_leader_grace_period?
+    @user.on_tl3_grace_period?
   end
 
   def days_visited

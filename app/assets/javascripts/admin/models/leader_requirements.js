@@ -1,4 +1,4 @@
-Discourse.LeaderRequirements = Discourse.Model.extend({
+Discourse.TL3Requirements = Discourse.Model.extend({
   days_visited_percent: function() {
     return ((this.get('days_visited') * 100) / this.get('time_period'));
   }.property('days_visited', 'time_period'),

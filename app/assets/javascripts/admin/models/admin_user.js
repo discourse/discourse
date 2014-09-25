@@ -399,11 +399,11 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
-  leaderRequirements: function() {
-    if (this.get('leader_requirements')) {
-      return Discourse.LeaderRequirements.create(this.get('leader_requirements'));
+  tl3Requirements: function() {
+    if (this.get('tl3_requirements')) {
+      return Discourse.TL3Requirements.create(this.get('tl3_requirements'));
     }
-  }.property('leader_requirements'),
+  }.property('tl3_requirements'),
 
   suspendedBy: function() {
     if (this.get('suspended_by')) {
