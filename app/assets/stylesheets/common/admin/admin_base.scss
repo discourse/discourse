@@ -1319,3 +1319,43 @@ tr.not-activated {
     color: #bbb;
   }
 }
+
+.user-fields {
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  .user-field {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid scale-color-diff();
+
+    .form-display {
+      width: 35%;
+      display: inline-block;
+      float: left;
+    }
+
+    .form-element {
+      float: left;
+      width: 35%;
+      margin-right: 10px;
+      label {
+        margin-right: 10px;
+      }
+      input, div.combobox {
+        margin-left: 10px;
+      }
+    }
+
+    .controls {
+      float: right;
+      text-align: right;
+      width: 20%;
+    }
+
+    .clearfix {
+      clear: both;
+    }
+  }
+}

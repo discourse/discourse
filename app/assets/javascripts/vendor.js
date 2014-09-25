@@ -39,4 +39,5 @@
 //= require lock-on.js
 //= require ember-cloaking
 //= require break_string
+//= require buffered-proxy
 //= require_tree ./discourse/ember

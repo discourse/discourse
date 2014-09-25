@@ -1983,6 +1983,23 @@ en:
           external_email: "Email"
           external_avatar_url: "Avatar URL"
 
+      user_fields:
+        title: "User Fields"
+        description: "Any fields added here will be required from users when they sign up."
+        create: "Create User Field"
+        untitled: "Untitled"
+        name: "Field Name"
+        type: "Field Type"
+        save: "Save"
+        edit: "Edit"
+        delete: "Delete"
+        cancel: "Cancel"
+        delete_confirm: "Are you sure you want to delete that user field?"
+
+        field_types:
+          text: 'Text Field'
+          confirm: 'Confirmation'
+
       site_text:
         none: "Choose a type of content to begin editing."
         title: 'Text Content'
