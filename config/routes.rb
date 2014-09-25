@@ -77,7 +77,8 @@ Discourse::Application.routes.draw do
       post "groups" => "users#add_group", constraints: AdminConstraint.new
       delete "groups/:group_id" => "users#remove_group", constraints: AdminConstraint.new
       get "badges"
-      get "leader_requirements"
+      get "leader_requirements" => "users#tl3_requirements"
+      get "tl3_requirements"
     end
 
     resources :impersonate, constraints: AdminConstraint.new

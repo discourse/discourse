@@ -570,11 +570,11 @@ class User < ActiveRecord::Base
     last_sent_email_address || email
   end
 
-  def leader_requirements
+  def tl3_requirements
     @lq ||= TrustLevel3Requirements.new(self)
   end
 
-  def on_leader_grace_period?
+  def on_tl3_grace_period?
     UserHistory.for(self, :auto_trust_level_change)
       .where('created_at >= ?', SiteSetting.tl3_promotion_min_duration.to_i.days.ago)
       .where(previous_value: TrustLevel[2].to_s)

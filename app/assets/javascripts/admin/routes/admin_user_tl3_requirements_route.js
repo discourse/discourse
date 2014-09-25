@@ -7,7 +7,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminUserLeaderRequirementsRoute = Discourse.Route.extend({
+Discourse.AdminUserTl3RequirementsRoute = Discourse.Route.extend({
   model: function() {
     return this.modelFor('adminUser');
   },

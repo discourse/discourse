@@ -269,8 +269,8 @@
       {{combo-box content=trustLevels value=trust_level nameProperty="detailedName"}}
     </div>
     <div class="controls">
-      {{#if leaderRequirements}}
-        {{#link-to 'adminUser.leaderRequirements' this class="btn"}}{{i18n admin.user.trust_level_3_requirements}}{{/link-to}}
+      {{#if tl3Requirements}}
+        {{#link-to 'adminUser.tl3Requirements' this class="btn"}}{{i18n admin.user.trust_level_3_requirements}}{{/link-to}}
       {{/if}}
 
       {{#if dirty}}
