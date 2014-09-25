@@ -59,26 +59,16 @@ export default Discourse.View.extend({
     buffer.push("</nav>");
   },
 
-  didInsertElement: function(){
-    // @Robin, why is this being called twice on initial render?
-    // this is a workaround to try to fix https://meta.discourse.org/t/click-on-reply-sometimes-without-effect/19860
-    var self = this;
-    var $self = this.$();
+  // Delegate click actions
+  click: function(e) {
+    var $target = $(e.target),
+        action = $target.data('action') || $target.parent().data('action');
 
-    $self.off('click.post').on('click.post', function(e){
-      var $target = $(e.target),
-          action = $target.data('action') || $target.parent().data('action');
+    if (!action) return;
+    var handler = this["click" + action.capitalize()];
+    if (!handler) return;
 
-      if (!action) return;
-      var handler = self["click" + action.capitalize()];
-      if (!handler) return;
-
-      handler.call(self, self.get('post'));
-    });
-  },
-
-  willDestroyElement: function(){
-    this.$().off('click.post');
+    handler.call(this, this.get('post'));
   },
 
   // Replies Button
