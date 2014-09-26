@@ -1240,14 +1240,14 @@ en:
 
   flags_reminder:
     flags_were_submitted:
-      one: "There are flags that were submitted over 1 hour ago."
-      other: "There are flags that were submitted over %{count} hours ago."
+      one: "These flags were submitted over 1 hour ago."
+      other: "These flags were submitted over %{count} hours ago."
     please_review: "Please review them."
     post_number: "post"
-    how_to_disable: "Disable this email by changing the notify_about_flags_after setting to 0."
+    how_to_disable: "Disable this email by changing the <pre>notify_about_flags_after</pre> setting to 0."
     subject_template:
-      one: "1 flag is waiting to be handled"
-      other: "%{count} flags are waiting to be handled"
+      one: "1 flag waiting to be handled"
+      other: "%{count} flags waiting to be handled"
 
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
