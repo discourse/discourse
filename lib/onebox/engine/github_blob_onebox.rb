@@ -21,8 +21,8 @@ module Onebox
 
 
 
-      def initialize a,b
-        super
+      def initialize(link, cache = nil, timeout = nil)
+        super link, cache , timeout
         #merge engine options from global Onebox.options interface
         # self.options = Onebox.options["GithubBlobOnebox"] #  self.class.name.split("::").last.to_s
         # self.options = Onebox.options[self.class.name.split("::").last.to_s] #We can use this a more generic approach. extract the engine class name automatically 
