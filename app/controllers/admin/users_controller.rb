@@ -17,6 +17,7 @@ class Admin::UsersController < Admin::AdminController
                                     :block,
                                     :unblock,
                                     :trust_level,
+                                    :trust_level_lock,
                                     :add_group,
                                     :remove_group,
                                     :primary_group,
@@ -134,6 +135,19 @@ class Admin::UsersController < Admin::AdminController
     render_json_error(e.message)
   end
 
+  def trust_level_lock
+    guardian.ensure_can_change_trust_level!(@user)
+
+    new_lock = params[:locked]
+    unless new_lock =~ /t|f|true|false/
+      return render_json_error I18n.t('errors.invalid_boolaen')
+    end
+
+    @user.trust_level_locked = !!(new_lock =~ /t|true/)
+    @user.save
+    render nothing: true
+  end
+
   def approve
     guardian.ensure_can_approve!(@user)
     @user.approve(current_user)
@@ -198,7 +212,7 @@ class Admin::UsersController < Admin::AdminController
   def badges
   end
 
-  def leader_requirements
+  def tl3_requirements
   end
 
   def ip_info

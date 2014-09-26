@@ -72,11 +72,13 @@ Discourse::Application.routes.draw do
       put "block"
       put "unblock"
       put "trust_level"
+      put "trust_level_lock"
       put "primary_group"
       post "groups" => "users#add_group", constraints: AdminConstraint.new
       delete "groups/:group_id" => "users#remove_group", constraints: AdminConstraint.new
       get "badges"
-      get "leader_requirements"
+      get "leader_requirements" => "users#tl3_requirements"
+      get "tl3_requirements"
     end
 
     resources :impersonate, constraints: AdminConstraint.new

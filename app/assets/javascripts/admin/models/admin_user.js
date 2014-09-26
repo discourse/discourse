@@ -164,6 +164,24 @@ Discourse.AdminUser = Discourse.User.extend({
     this.set('trustLevel.id', this.get('originalTrustLevel'));
   },
 
+  lockTrustLevel: function(locked) {
+    Discourse.ajax("/admin/users/" + this.id + "/trust_level_lock", {
+      type: 'PUT',
+      data: { locked: !!locked }
+    }).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failure
+      var error;
+      if (e.responseJSON && e.responseJSON.errors) {
+        error = e.responseJSON.errors[0];
+      }
+      error = error || I18n.t('admin.user.trust_level_change_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
   isSuspended: Em.computed.equal('suspended', true),
   canSuspend: Em.computed.not('staff'),
 
@@ -381,11 +399,11 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
-  leaderRequirements: function() {
-    if (this.get('leader_requirements')) {
-      return Discourse.LeaderRequirements.create(this.get('leader_requirements'));
+  tl3Requirements: function() {
+    if (this.get('tl3_requirements')) {
+      return Discourse.TL3Requirements.create(this.get('tl3_requirements'));
     }
-  }.property('leader_requirements'),
+  }.property('tl3_requirements'),
 
   suspendedBy: function() {
     if (this.get('suspended_by')) {
