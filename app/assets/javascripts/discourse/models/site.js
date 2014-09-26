@@ -133,6 +133,12 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
       });
     }
 
+    if (result.user_fields) {
+      result.user_fields = result.user_fields.map(function(uf) {
+        return Ember.Object.create(uf);
+      });
+    }
+
     return result;
   }
 });

@@ -426,4 +426,13 @@
   .suspensions {
     background-color: #c22020;
   }
+
+  .user-field {
+    margin-left: 160px;
+    margin-top: 10px;
+    input[type=text] {
+      width: 540px;
+      display: block;
+    }
+  }
 }

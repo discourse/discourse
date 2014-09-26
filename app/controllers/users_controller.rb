@@ -46,6 +46,16 @@ class UsersController < ApplicationController
   def update
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
+
+    if params[:user_fields].present?
+      params[:custom_fields] ||= {}
+      UserField.where(editable: true).pluck(:id).each do |fid|
+        val = params[:user_fields][fid.to_s]
+        return render_json_error(I18n.t("login.missing_user_field")) if val.blank?
+        params[:custom_fields]["user_field_#{fid}"] = val
+      end
+    end
+
     json_result(user, serializer: UserSerializer, additional_errors: [:user_profile]) do |u|
       updater = UserUpdater.new(current_user, user)
       updater.update(params)
@@ -162,17 +172,33 @@ class UsersController < ApplicationController
   end
 
   def create
+    params.permit(:user_fields)
+
     unless SiteSetting.allow_new_registrations
-      render json: { success: false, message: I18n.t("login.new_registrations_disabled") }
-      return
+      return fail_with("login.new_registrations_disabled")
     end
 
     if params[:password] && params[:password].length > User.max_password_length
-      render json: { success: false, message: I18n.t("login.password_too_long") }
-      return
+      return fail_with("login.password_too_long")
     end
 
     user = User.new(user_params)
+
+    # Handle custom fields
+    user_field_ids = UserField.pluck(:id)
+    if user_field_ids.present?
+      if params[:user_fields].blank?
+        return fail_with("login.missing_user_field")
+      else
+        fields = user.custom_fields
+        user_field_ids.each do |fid|
+          field_val = params[:user_fields][fid.to_s]
+          return fail_with("login.missing_user_field") if field_val.blank?
+          fields["user_field_#{fid}"] = field_val
+        end
+        user.custom_fields = fields
+      end
+    end
 
     authentication = UserAuthenticator.new(user, session)
 
@@ -193,6 +219,7 @@ class UsersController < ApplicationController
     if user.save
       authentication.finish
       activation.finish
+
 
       render json: {
         success: true,
@@ -550,4 +577,9 @@ class UsersController < ApplicationController
         :active
       ).merge(ip_address: request.ip, registration_ip_address: request.ip)
     end
+
+    def fail_with(key)
+      render json: { success: false, message: I18n.t(key) }
+    end
+
 end

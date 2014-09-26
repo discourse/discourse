@@ -1,3 +1,3 @@
 class UserFieldSerializer < ApplicationSerializer
-  attributes :id, :name, :field_type
+  attributes :id, :name, :field_type, :editable
 end

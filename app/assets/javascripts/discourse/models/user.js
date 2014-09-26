@@ -188,8 +188,8 @@ Discourse.User = Discourse.Model.extend({
     @returns {Promise} the result of the operation
   **/
   save: function() {
-    var user = this;
-    var data = this.getProperties('auto_track_topics_after_msecs',
+    var self = this,
+        data = this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
                                'location',
@@ -206,10 +206,11 @@ Discourse.User = Discourse.Model.extend({
                                'mailing_list_mode',
                                'enable_quoting',
                                'disable_jump_reply',
-                               'custom_fields');
+                               'custom_fields',
+                               'user_fields');
 
-    _.each(['muted','watched','tracked'], function(s){
-      var cats = user.get(s + 'Categories').map(function(c){ return c.get('id')});
+    ['muted','watched','tracked'].forEach(function(s){
+      var cats = self.get(s + 'Categories').map(function(c){ return c.get('id')});
       // HACK: denote lack of categories
       if(cats.length === 0) { cats = [-1]; }
       data[s + '_category_ids'] = cats;
@@ -223,13 +224,10 @@ Discourse.User = Discourse.Model.extend({
       data: data,
       type: 'PUT'
     }).then(function(data) {
-      user.set('bio_excerpt',data.user.bio_excerpt);
+      self.set('bio_excerpt',data.user.bio_excerpt);
 
-      _.each([
-        'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon'
-      ], function(preference) {
-        Discourse.User.current().set(preference, user.get(preference));
-      });
+      var userProps = self.getProperties('enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
+      Discourse.User.current().setProperties(userProps);
     });
   },
 
@@ -542,26 +540,18 @@ Discourse.User.reopenClass(Discourse.Singleton, {
   },
 
   /**
-  Creates a new account over POST
-
-    @method createAccount
-    @param {String} name This user's name
-    @param {String} email This user's email
-    @param {String} password This user's password
-    @param {String} username This user's username
-    @param {String} passwordConfirm This user's confirmed password
-    @param {String} challenge
-    @returns Result of ajax call
+    Creates a new account
   **/
-  createAccount: function(name, email, password, username, passwordConfirm, challenge) {
+  createAccount: function(attrs) {
     return Discourse.ajax("/users", {
       data: {
-        name: name,
-        email: email,
-        password: password,
-        username: username,
-        password_confirmation: passwordConfirm,
-        challenge: challenge
+        name: attrs.accountName,
+        email: attrs.accountEmail,
+        password: attrs.accountPassword,
+        username: attrs.accountUsername,
+        password_confirmation: attrs.accountPasswordConfirm,
+        challenge: attrs.accountChallenge,
+        user_fields: attrs.userFields
       },
       type: 'POST'
     });

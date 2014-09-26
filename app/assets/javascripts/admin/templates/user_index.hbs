@@ -85,22 +85,22 @@
 
 
   {{#if currentUser.admin}}
-  <div class='display-row'>
-    <div class='field'>{{i18n admin.groups.title}}</div>
-    <div class='value'>
-      {{admin-group-selector selected=model.groups available=availableGroups}}
+    <div class='display-row'>
+      <div class='field'>{{i18n admin.groups.title}}</div>
+      <div class='value'>
+        {{admin-group-selector selected=model.groups available=availableGroups}}
+      </div>
+      <div class='controls'>
+        {{#if custom_groups}}
+          {{i18n admin.groups.primary}}
+          {{combo-box content=custom_groups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
+        {{/if}}
+        {{#if primaryGroupDirty}}
+          <button class='btn ok no-text' {{action savePrimaryGroup}}><i class='fa fa-check'></i></button>
+          <button class='btn cancel no-text' {{action resetPrimaryGroup}}><i class='fa fa-times'></i></button>
+        {{/if}}
+      </div>
     </div>
-    <div class='controls'>
-      {{#if custom_groups}}
-        {{i18n admin.groups.primary}}
-        {{combo-box content=custom_groups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
-      {{/if}}
-      {{#if primaryGroupDirty}}
-        <button class='btn ok no-text' {{action savePrimaryGroup}}><i class='fa fa-check'></i></button>
-        <button class='btn cancel no-text' {{action resetPrimaryGroup}}><i class='fa fa-times'></i></button>
-      {{/if}}
-    </div>
-  </div>
   {{/if}}
 
   <div class='display-row'>
@@ -137,8 +137,24 @@
       </div>
     </div>
   {{/if}}
-
 </section>
+
+{{#if userFields}}
+  <section class='details'>
+    {{#each userFields}}
+      <div class='display-row'>
+        <div class='field'>{{name}}</div>
+        <div class='value'>
+          {{#if value}}
+            {{value}}
+          {{else}}
+            &mdash;
+          {{/if}}
+        </div>
+      </div>
+    {{/each}}
+  </section>
+{{/if}}
 
 
 <section class='details'>

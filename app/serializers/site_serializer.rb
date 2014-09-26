@@ -16,6 +16,7 @@ class SiteSerializer < ApplicationSerializer
   has_many :topic_flag_types, serializer: TopicFlagTypeSerializer, embed: :objects
   has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
+  has_many :user_fields, embed: :objects, serialzer: UserFieldSerializer
 
 
   def default_archetype

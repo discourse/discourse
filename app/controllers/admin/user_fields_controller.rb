@@ -1,7 +1,7 @@
 class Admin::UserFieldsController < Admin::AdminController
 
   def create
-    field = UserField.create!(params.require(:user_field).permit(:name, :field_type))
+    field = UserField.create!(params.require(:user_field).permit(:name, :field_type, :editable))
     render_serialized(field, UserFieldSerializer)
   end
 
@@ -15,7 +15,8 @@ class Admin::UserFieldsController < Admin::AdminController
     field = UserField.where(id: params.require(:id)).first
     field.name = field_params[:name]
     field.field_type = field_params[:field_type]
-    field.save
+    field.editable = field_params[:editable] == "true"
+    field.save!
 
     render_serialized(field, UserFieldSerializer)
   end

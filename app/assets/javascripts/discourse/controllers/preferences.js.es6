@@ -18,6 +18,17 @@ export default ObjectController.extend(CanCheckEmails, {
 
   newNameInput: null,
 
+  userFields: function() {
+    var siteUserFields = this.site.get('user_fields');
+    if (!Ember.empty(siteUserFields)) {
+      var userFields = this.get('user_fields');
+      return siteUserFields.filterProperty('editable', true).map(function(uf) {
+        var val = userFields ? userFields[uf.get('id').toString()] : null;
+        return Ember.Object.create({value: val, field: uf});
+      });
+    }
+  }.property('user_fields.@each.value'),
+
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
 
@@ -70,8 +81,20 @@ export default ObjectController.extend(CanCheckEmails, {
       var self = this;
       this.setProperties({ saving: true, saved: false });
 
+      var model = this.get('model'),
+          userFields = this.get('userFields');
+
+      // Update the user fields
+      if (!Em.empty(userFields)) {
+        var modelFields = model.get('user_fields');
+        if (!Em.empty(modelFields)) {
+          userFields.forEach(function(uf) {
+            modelFields[uf.get('field.id').toString()] = uf.get('value');
+          });
+        }
+      }
+
       // Cook the bio for preview
-      var model = this.get('model');
       model.set('name', this.get('newNameInput'));
       return model.save().then(function() {
         // model was saved

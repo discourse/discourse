@@ -17,17 +17,17 @@ var UserField = Ember.Object.extend({
     });
   },
 
-  save: function() {
+  save: function(attrs) {
     var id = this.get('id');
     if (!id) {
       return Discourse.ajax("/admin/customize/user_fields", {
         type: "POST",
-        data: { user_field: this.getProperties('name', 'field_type') }
+        data: { user_field: attrs }
       });
     } else {
       return Discourse.ajax("/admin/customize/user_fields/" + id, {
         type: "PUT",
-        data: { user_field: this.getProperties('name', 'field_type') }
+        data: { user_field: attrs }
       });
     }
   }

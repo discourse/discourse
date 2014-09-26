@@ -42,7 +42,7 @@
 //= require sinon-qunit-1.0.0
 //= require jshint
 
-//= require helpers/qunit_helpers
+//= require helpers/qunit-helpers
 //= require helpers/assertions
 
 //= require helpers/init-ember-qunit
@@ -50,7 +50,6 @@
 //= require_tree ./lib
 //= require_tree .
 //= require_self
-//= require jshint_all
 
 // sinon settings
 sinon.config = {
@@ -87,6 +86,7 @@ if (window.Logster) {
 
 var origDebounce = Ember.run.debounce,
     createPretendServer = require('helpers/create-pretender', null, null, false).default,
+    fixtures = require('fixtures/site_fixtures', null, null, false).default,
     server;
 
 QUnit.testStart(function(ctx) {
@@ -97,6 +97,7 @@ QUnit.testStart(function(ctx) {
   Discourse.BaseUri = "/";
   Discourse.BaseUrl = "";
   Discourse.User.resetCurrent();
+  Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
   PreloadStore.reset();
 
   window.sandbox = sinon.sandbox.create();
@@ -121,6 +122,15 @@ QUnit.testDone(function() {
 });
 
 // Load ES6 tests
+var helpers = require("helpers/qunit-helpers");
+
+// TODO: Replace with proper imports rather than globals
+window.asyncTestDiscourse = helpers.asyncTestDiscourse;
+window.controllerFor = helpers.controllerFor;
+window.fixture = helpers.fixture;
+window.integration = helpers.integration;
+
+
 Ember.keys(requirejs.entries).forEach(function(entry) {
   if ((/\-test/).test(entry)) {
     require(entry, null, null, true);

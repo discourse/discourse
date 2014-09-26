@@ -46,7 +46,8 @@ class UserSerializer < BasicUserSerializer
              :notification_count,
              :has_title_badges,
              :edit_history_public,
-             :custom_fields
+             :custom_fields,
+             :user_fields
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
@@ -251,6 +252,14 @@ class UserSerializer < BasicUserSerializer
 
   def include_edit_history_public?
     can_edit && !SiteSetting.edit_history_visible_to_public
+  end
+
+  def user_fields
+    object.user_fields
+  end
+
+  def include_user_fields?
+    user_fields.present?
   end
 
   def custom_fields

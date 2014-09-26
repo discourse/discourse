@@ -531,7 +531,6 @@ describe UsersController do
     end
 
     context 'when an Exception is raised' do
-
       [ ActiveRecord::StatementInvalid,
         RestClient::Forbidden ].each do |exception|
         before { User.any_instance.stubs(:save).raises(exception) }
@@ -542,6 +541,40 @@ describe UsersController do
         }
 
         include_examples 'failed signup'
+      end
+    end
+
+    context "with custom fields" do
+      let!(:user_field) { Fabricate(:user_field) }
+      let!(:another_field) { Fabricate(:user_field) }
+
+      context "without a value for the fields" do
+        let(:create_params) { {name: @user.name, password: 'watwatwat', username: @user.username, email: @user.email} }
+        include_examples 'failed signup'
+      end
+
+      context "with values for the fields" do
+        let(:create_params) { {
+          name: @user.name,
+          password: 'watwatwat',
+          username: @user.username,
+          email: @user.email,
+          user_fields: {
+            user_field.id.to_s => 'value1',
+            another_field.id.to_s => 'value2',
+          }
+        } }
+
+        it "should succeed" do
+          xhr :post, :create, create_params
+          response.should be_success
+          inserted = User.where(email: @user.email).first
+          inserted.should be_present
+          inserted.custom_fields.should be_present
+          inserted.custom_fields["user_field_#{user_field.id}"].should == 'value1'
+          inserted.custom_fields["user_field_#{another_field.id}"].should == 'value2'
+        end
+
       end
     end
 
@@ -844,12 +877,10 @@ describe UsersController do
 
     context 'with authenticated user' do
       context 'with permission to update' do
+        let!(:user) { log_in(:user) }
+
         it 'allows the update' do
-          user = Fabricate(:user, name: 'Billy Bob')
-          log_in_user(user)
-
           put :update, username: user.username, name: 'Jim Tom', custom_fields: {test: :it}
-
           expect(response).to be_success
 
           user.reload
@@ -858,14 +889,42 @@ describe UsersController do
           expect(user.custom_fields['test']).to eq 'it'
         end
 
-        it 'returns user JSON' do
-          user = log_in
+        context "with user fields" do
+          context "an editable field" do
+            let!(:user_field) { Fabricate(:user_field) }
 
+            it "should update the user field" do
+              put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy' }
+              expect(response).to be_success
+              expect(user.user_fields[user_field.id.to_s]).to eq 'happy'
+            end
+
+            it "cannot be updated to blank" do
+              put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => '' }
+              response.should_not be_success
+              user.user_fields[user_field.id.to_s].should_not == 'happy'
+            end
+          end
+
+          context "uneditable field" do
+            let!(:user_field) { Fabricate(:user_field, editable: false) }
+
+            it "does not update the user field" do
+              put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy' }
+              expect(response).to be_success
+              expect(user.user_fields[user_field.id.to_s]).to be_blank
+            end
+          end
+
+        end
+
+        it 'returns user JSON' do
           put :update, username: user.username
 
           json = JSON.parse(response.body)
           expect(json['user']['id']).to eq user.id
         end
+
       end
 
       context 'without permission to update' do

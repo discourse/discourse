@@ -20,16 +20,18 @@ test('has a postStream', function() {
   equal(postStream.get('topic'), topic, "the postStream has a reference back to the topic");
 });
 
-var category = _.first(Discourse.Category.list());
 
 test('category relationship', function() {
   // It finds the category by id
-  var topic = Discourse.Topic.create({id: 1111, category_id: category.get('id') });
+  var category = Discourse.Category.list()[0],
+      topic = Discourse.Topic.create({id: 1111, category_id: category.get('id') });
+
   equal(topic.get('category'), category);
 });
 
 test("updateFromJson", function() {
-  var topic = Discourse.Topic.create({id: 1234});
+  var topic = Discourse.Topic.create({id: 1234}),
+      category = Discourse.Category.list()[0];
 
   topic.updateFromJson({
     post_stream: [1,2,3],

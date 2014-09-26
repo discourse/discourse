@@ -15,6 +15,7 @@ export default DiscourseController.extend(ModalFunctionality, {
   rejectedPasswords: Em.A([]),
   prefilledUsername: null,
   tosAccepted: false,
+  userFields: null,
 
   hasAuthOptions: Em.computed.notEmpty('authOptions'),
   canCreateLocal: Discourse.computed.setting('enable_local_logins'),
@@ -22,6 +23,8 @@ export default DiscourseController.extend(ModalFunctionality, {
   maxUsernameLength: Discourse.computed.setting('max_username_length'),
 
   resetForm: function() {
+
+    // We wrap the fields in a structure so we can assign a value
     this.setProperties({
       accountName: '',
       accountEmail: '',
@@ -31,10 +34,11 @@ export default DiscourseController.extend(ModalFunctionality, {
       globalNicknameExists: false,
       complete: false,
       formSubmitted: false,
-      rejectedEmails: Em.A([]),
-      rejectedPasswords: Em.A([]),
-      prefilledUsername: null
+      rejectedEmails: [],
+      rejectedPasswords: [],
+      prefilledUsername: null,
     });
+    this._createUserFields();
   },
 
   submitDisabled: function() {
@@ -47,8 +51,18 @@ export default DiscourseController.extend(ModalFunctionality, {
     if (this.get('emailValidation.failed')) return true;
     if (this.get('usernameValidation.failed')) return true;
     if (this.get('passwordValidation.failed')) return true;
+
+    // Validate required fields
+    var userFields = this.get('userFields');
+    if (!Ember.empty(userFields)) {
+      var anyEmpty = userFields.any(function(uf) {
+        var val = uf.get('value');
+        return !val || Ember.empty(val);
+      });
+      if (anyEmpty) { return true; }
+    }
     return false;
-  }.property('passwordRequired', 'nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted', 'tosAccepted'),
+  }.property('passwordRequired', 'nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted', 'tosAccepted', 'userFields.@each.value'),
 
   passwordRequired: function() {
     return this.blank('authOptions.auth_provider');
@@ -337,20 +351,25 @@ export default DiscourseController.extend(ModalFunctionality, {
     },
 
     createAccount: function() {
-      var self = this;
+      var self = this,
+          attrs = this.getProperties('accountName', 'accountEmail', 'accountPassword', 'accountUsername', 'accountPasswordConfirm', 'accountChallenge'),
+          userFields = this.get('userFields');
+
+      // Add the userfields to the data
+      if (!Em.empty(userFields)) {
+        attrs.userFields = {};
+        userFields.forEach(function(f) {
+          attrs.userFields[f.get('field.id')] = f.get('value');
+        });
+      }
+
       this.set('formSubmitted', true);
-      var name = this.get('accountName');
-      var email = this.get('accountEmail');
-      var password = this.get('accountPassword');
-      var username = this.get('accountUsername');
-      var passwordConfirm = this.get('accountPasswordConfirm');
-      var challenge = this.get('accountChallenge');
-      return Discourse.User.createAccount(name, email, password, username, passwordConfirm, challenge).then(function(result) {
+      return Discourse.User.createAccount(attrs).then(function(result) {
         if (result.success) {
           // Trigger the browser's password manager using the hidden static login form:
           var $hidden_login_form = $('#hidden-login-form');
-          $hidden_login_form.find('input[name=username]').val(self.get('accountName'));
-          $hidden_login_form.find('input[name=password]').val(self.get('accountPassword'));
+          $hidden_login_form.find('input[name=username]').val(attrs.accountName);
+          $hidden_login_form.find('input[name=password]').val(attrs.accountPassword);
           $hidden_login_form.find('input[name=redirect]').val(Discourse.getURL('/users/account-created'));
           $hidden_login_form.submit();
         } else {
@@ -359,7 +378,7 @@ export default DiscourseController.extend(ModalFunctionality, {
             self.get('rejectedEmails').pushObject(result.values.email);
           }
           if (result.errors && result.errors.password && result.errors.password.length > 0) {
-            self.get('rejectedPasswords').pushObject(password);
+            self.get('rejectedPasswords').pushObject(attrs.accountPassword);
           }
           self.set('formSubmitted', false);
         }
@@ -371,5 +390,21 @@ export default DiscourseController.extend(ModalFunctionality, {
         return self.flash(I18n.t('create_account.failed'), 'error');
       });
     }
-  }
+  },
+
+  _createUserFields: function() {
+    if (!this.site) { return; }
+
+    var userFields = this.site.get('user_fields');
+    if (userFields) {
+      userFields = userFields.map(function(f) {
+        return Ember.Object.create({
+          value: null,
+          field: f
+        });
+      });
+    }
+    this.set('userFields', userFields);
+  }.on('init')
+
 });

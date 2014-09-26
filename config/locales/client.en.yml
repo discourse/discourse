@@ -579,6 +579,7 @@ en:
     create_account:
       title: "Create New Account"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
+      required_information: "Required Information"
 
     forgot_password:
       title: "Forgot Password"
@@ -2006,6 +2007,10 @@ en:
         delete: "Delete"
         cancel: "Cancel"
         delete_confirm: "Are you sure you want to delete that user field?"
+        editable:
+          title: "Editable after signup?"
+          enabled: "editable"
+          disabled: "not editable"
 
         field_types:
           text: 'Text Field'

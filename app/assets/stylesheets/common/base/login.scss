@@ -11,3 +11,28 @@
 .discourse-touch .caps-lock-warning {
   display: none;
 }
+
+
+.user-fields {
+
+  h3 {
+    line-height: 1.5em;
+    color: scale-color($primary, $lightness: 20%);
+    border-bottom: 1px solid scale-color($primary, $lightness: 50%);
+    margin-bottom: 20px;
+  }
+
+  .user-field {
+    label: {
+      display: block;
+    }
+    input[type=text] {
+      width: 80%;
+      display: block;
+    }
+    input[type=checkbox] {
+      margin-right: 5px;
+    }
+    margin-bottom: 20px;
+  }
+}

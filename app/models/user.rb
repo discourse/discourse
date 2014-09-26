@@ -657,6 +657,18 @@ class User < ActiveRecord::Base
     result.empty? ? I18n.t("user.no_accounts_associated") : result.join(", ")
   end
 
+  def user_fields
+    return @user_fields if @user_fields
+    user_field_ids = UserField.pluck(:id)
+    if user_field_ids.present?
+      @user_fields = {}
+      user_field_ids.each do |fid|
+        @user_fields[fid.to_s] = custom_fields["user_field_#{fid}"]
+      end
+    end
+    @user_fields
+  end
+
   protected
 
   def badge_grant
