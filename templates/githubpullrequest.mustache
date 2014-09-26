@@ -8,6 +8,27 @@
   <a href="{{html_url}}" target="_blank">{{title}}</a>
 </h4>
 
+
+
+<div class='github-commit-status' style='margin-bottom:3px;'>
+{{#pull_status_str_open}}
+<span style='background:#6cc644;color:#fff;display:inline-block;border-radius:3px;padding:2px;'>
+{{/pull_status_str_open}}
+{{#pull_status_closed_accepted}}
+<span style='background:#6e5494;color:#fff;display:inline-block;border-radius:3px;padding:2px;'>
+{{/pull_status_closed_accepted}}
+{{#pull_status_closed_declined}}
+<span style='background:#bd2c00;color:#fff;display:inline-block;border-radius:3px;padding:2px;'>
+{{/pull_status_closed_declined}}
+
+{{pull_status_str}} </span>
+</br>
+
+{{#build_status}}
+<span style='padding: 2px;background: #cfcfcf;'>{{build_status}}</span>
+{{/build_status}}
+</div>
+
 <div class="date">
   by <a href="{{user.html_url}}" target="_blank">{{user.login}}</a>
   on <a href="{{html_url}}" target="_blank">{{created_at}}</a>
