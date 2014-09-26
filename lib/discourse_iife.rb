@@ -22,6 +22,7 @@ class DiscourseIIFE < Sprockets::Processor
     return data if path =~ /\.handlebars/
     return data if path =~ /\.shbrs/
     return data if path =~ /\.hbrs/
+    return data if path =~ /\.hbs/
 
     res = "(function () {\n\nvar $ = window.jQuery;\n// IIFE Wrapped Content Begins:\n\n#{data}\n\n// IIFE Wrapped Content Ends\n\n })(this);"
 
