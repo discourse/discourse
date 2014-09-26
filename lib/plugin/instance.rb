@@ -256,6 +256,8 @@ class Plugin::Instance
           DiscoursePluginRegistry.stylesheets << asset
         end
 
+      elsif asset =~ /\.hbs$/
+        DiscoursePluginRegistry.handlebars << asset
       elsif asset =~ /\.js\.handlebars$/
         DiscoursePluginRegistry.handlebars << asset
       end
