@@ -33,6 +33,10 @@ class Site
     @groups ||= Group.order(:name).map { |g| {:id => g.id, :name => g.name}}
   end
 
+  def user_fields
+    UserField.all
+  end
+
   def categories
     @categories ||= begin
       categories = Category

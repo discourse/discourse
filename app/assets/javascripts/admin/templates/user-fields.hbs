@@ -7,13 +7,14 @@
     {{#each f in model itemController="admin-user-field-item" itemView="admin-user-field-item"}}
       {{#if f.editing}}
         <div class='form-element'>
-          <label>{{i18n admin.user_fields.name}}
-            {{input value=f.buffered.name class="user-field-name"}}
-          </label>
+          {{input value=f.buffered.name class="user-field-name" placeholder=userFieldsName}}
         </div>
         <div class='form-element'>
-          <label>{{i18n admin.user_fields.type}}
-            {{combo-box content=fieldTypes valueAttribute="id" value=f.buffered.field_type}}
+          {{combo-box content=fieldTypes valueAttribute="id" value=f.buffered.field_type}}
+        </div>
+        <div class='form-element'>
+          <label>
+            {{input type="checkbox" checked=f.buffered.editable}} {{i18n admin.user_fields.editable.title}}
           </label>
         </div>
         <div class='form-element controls'>
@@ -21,11 +22,14 @@
           <button {{action "cancel"}} class='btn btn-danger'>{{fa-icon 'times'}} {{i18n admin.user_fields.cancel}}</button>
         </div>
       {{else}}
+        <div class='form-display'>{{f.name}}</div>
+        <div class='form-display'>{{f.fieldName}}</div>
         <div class='form-display'>
-          {{f.name}}
-        </div>
-        <div class='form-display'>
-          {{f.fieldName}}
+          {{#if f.editable}}
+            {{i18n admin.user_fields.editable.enabled}}
+          {{else}}
+            {{i18n admin.user_fields.editable.disabled}}
+          {{/if}}
         </div>
         <div class='form-element controls'>
           <button {{action "edit"}}class='btn btn-default'>{{fa-icon 'pencil'}} {{i18n admin.user_fields.edit}}</button>

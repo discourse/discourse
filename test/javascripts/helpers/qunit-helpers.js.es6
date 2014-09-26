@@ -1,9 +1,13 @@
 /* global asyncTest */
-/* exported integration, testController, controllerFor, asyncTestDiscourse, fixture */
-function integration(name, options) {
+
+import siteFixtures from 'fixtures/site_fixtures';
+
+export function integration(name, options) {
   module("Integration: " + name, {
     setup: function() {
       Ember.run(Discourse, Discourse.advanceReadiness);
+
+      var siteJson = siteFixtures['site.json'].site;
       if (options) {
         if (options.setup) {
           options.setup.call(this);
@@ -16,7 +20,12 @@ function integration(name, options) {
         if (options.settings) {
           Discourse.SiteSettings = jQuery.extend(true, Discourse.SiteSettings, options.settings);
         }
+
+        if (options.site) {
+          Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, siteJson, options.site)));
+        }
       }
+
       Discourse.reset();
     },
 
@@ -30,13 +39,13 @@ function integration(name, options) {
   });
 }
 
-function controllerFor(controller, model) {
+export function controllerFor(controller, model) {
   controller = Discourse.__container__.lookup('controller:' + controller);
   if (model) { controller.set('model', model ); }
   return controller;
 }
 
-function asyncTestDiscourse(text, func) {
+export function asyncTestDiscourse(text, func) {
   asyncTest(text, function () {
     var self = this;
     Ember.run(function () {
@@ -45,7 +54,7 @@ function asyncTestDiscourse(text, func) {
   });
 }
 
-function fixture(selector) {
+export function fixture(selector) {
   if (selector) {
     return $("#qunit-fixture").find(selector);
   }

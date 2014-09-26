@@ -2,8 +2,10 @@ import UserField from 'admin/models/user-field';
 
 export default Ember.ArrayController.extend({
   fieldTypes: null,
-
   createDisabled: Em.computed.gte('model.length', 3),
+  userFieldsName: function() {
+    return I18n.t('admin.user_fields.name');
+  }.property(),
 
   _performDestroy: function(f, model) {
     return f.destroy().then(function() {
@@ -13,10 +15,7 @@ export default Ember.ArrayController.extend({
 
   actions: {
     createField: function() {
-      this.pushObject(UserField.create({
-        field_type: 'text',
-        name: I18n.t('admin.user_fields.untitled')
-      }));
+      this.pushObject(UserField.create({ field_type: 'text' }));
     },
 
     destroy: function(f) {

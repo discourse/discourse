@@ -1331,21 +1331,14 @@ tr.not-activated {
     border-bottom: 1px solid scale-color-diff();
 
     .form-display {
-      width: 35%;
+      width: 25%;
       display: inline-block;
       float: left;
     }
 
     .form-element {
       float: left;
-      width: 35%;
-      margin-right: 10px;
-      label {
-        margin-right: 10px;
-      }
-      input, div.combobox {
-        margin-left: 10px;
-      }
+      width: 25%;
     }
 
     .controls {

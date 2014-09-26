@@ -62,14 +62,25 @@
         {{/if}}
 
         <tr class="password-confirmation">
-            <td><label for='new-account-password-confirmation'>{{i18n user.password_confirmation.title}}</label></td>
-            <td>
+          <td><label for='new-account-password-confirmation'>{{i18n user.password_confirmation.title}}</label></td>
+          <td>
             {{input type="password" value=accountPasswordConfirm id="new-account-confirmation"}}
             {{input value=accountChallenge id="new-account-challenge"}}
-            </td>
+          </td>
         </tr>
 
         </table>
+
+        {{#if userFields}}
+          <div class='user-fields'>
+            <h3>{{i18n create_account.required_information}}</h3>
+
+            {{#each userFields}}
+              {{user-field field=field value=value}}
+            {{/each}}
+          </div>
+        {{/if}}
+
         </form>
       </div>
     {{/if}}

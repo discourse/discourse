@@ -1,14 +1,6 @@
 import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
-/**
-  A controller related to viewing a user in the admin section
-
-  @class AdminUserIndexController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
 export default ObjectController.extend(CanCheckEmails, {
   editingTitle: false,
   originalPrimaryGroupId: null,
@@ -22,6 +14,19 @@ export default ObjectController.extend(CanCheckEmails, {
   custom_groups: Ember.computed.filter("model.groups", function(g){
     return (!g.automatic && g.visible);
   }),
+
+  userFields: function() {
+    var siteUserFields = this.site.get('user_fields'),
+        userFields = this.get('user_fields');
+
+    if (!Ember.empty(siteUserFields)) {
+      return siteUserFields.map(function(uf) {
+        var value = userFields ? userFields[uf.get('id').toString()] : null;
+        return {name: uf.get('name'), value: value};
+      });
+    }
+    return [];
+  }.property('user_fields.@each'),
 
   actions: {
     toggleTitleEdit: function() {

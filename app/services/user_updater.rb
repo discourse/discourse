@@ -68,7 +68,7 @@ class UserUpdater
 
     fields = attributes[:custom_fields]
     if fields.present?
-      user.custom_fields = fields
+      user.custom_fields = user.custom_fields.merge(fields)
     end
 
     User.transaction do

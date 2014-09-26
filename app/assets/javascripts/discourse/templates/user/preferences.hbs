@@ -178,6 +178,11 @@
       {{#unless editHistoryVisible}}
         {{preference-checkbox labelKey="user.edit_history_public" checked=edit_history_public}}
       {{/unless}}
+
+      {{#each userFields}}
+        {{user-field field=field value=value}}
+      {{/each}}
+
       {{plugin-outlet "user_custom_preferences"}}
     </div>
 

@@ -18,7 +18,8 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :suspend_reason,
              :primary_group_id,
              :badge_count,
-             :warnings_received_count
+             :warnings_received_count,
+             :user_fields
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
@@ -72,6 +73,14 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def include_tl3_requirements?
     object.has_trust_level?(TrustLevel[2])
+  end
+
+  def user_fields
+    object.user_fields
+  end
+
+  def include_user_fields?
+    object.user_fields.present?
   end
 
 end
