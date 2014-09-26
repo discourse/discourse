@@ -37,12 +37,16 @@ module Jobs
                 hotlinked = FileHelper.download(src, @max_size, "discourse-hotlinked")
               rescue Discourse::InvalidParameters
               end
-              if hotlinked.try(:size) <= @max_size
-                filename = File.basename(URI.parse(src).path)
-                upload = Upload.create_for(post.user_id, hotlinked, filename, hotlinked.size, { origin: src })
-                downloaded_urls[src] = upload.url
+              if hotlinked
+                if hotlinked.size <= @max_size
+                  filename = File.basename(URI.parse(src).path)
+                  upload = Upload.create_for(post.user_id, hotlinked, filename, hotlinked.size, { origin: src })
+                  downloaded_urls[src] = upload.url
+                else
+                  Rails.logger.error("Failed to pull hotlinked image: #{src} - Image is bigger than #{@max_size}")
+                end
               else
-                Rails.logger.error("Failed to pull hotlinked image: #{src} - Image is bigger than #{@max_size}")
+                Rails.logger.error("There was an error while downloading '#{src}' locally.")
               end
             end
             # have we successfully downloaded that file?
@@ -98,6 +102,8 @@ module Jobs
       return false unless src.present?
       # we don't want to pull uploaded images
       return false if Discourse.store.has_been_uploaded?(src)
+      # we don't want to pull relative images
+      return false if src =~ /\A\/[^\/]/i
       # parse the src
       begin
         uri = URI.parse(src)
