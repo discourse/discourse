@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Jobs::LeaderPromotions do
+describe Jobs::Tl3Promotions do
 
   subject(:run_job) { described_class.new.execute({}) }
 
