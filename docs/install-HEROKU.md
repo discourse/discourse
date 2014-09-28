@@ -116,7 +116,7 @@ If you haven't already, download Discourse and create a new branch for your Hero
 ```ruby
     u = User.first
     u.admin = true
-    u.approved = true
+    u.activate
     u.save
 ```
 
