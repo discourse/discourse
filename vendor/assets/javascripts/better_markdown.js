@@ -690,7 +690,7 @@
       inline_until_char = DialectHelpers.inline_until_char;
 
   // A robust regexp for matching URLs. Thakns: https://gist.github.com/dperini/729294
-  var urlRegexp = /(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/i.source;
+  var urlRegexp = /(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10\.|127\.|192\.168\.|169\.254\.|172\.(?:1[6-9]|2\d|31)\.)(?:\d{1,2}|1(?:\d{2})|2(?:[0-4]\d|5[0-5]))(?:\.(?:\d{1,2}|1(?:\d{2})|2(?:[0-4]\d|5[0-5]))){3}|(?:(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))))(?::\d{2,5})?(?:\/\S*)?/i.source;
 
   /**
    * Gruber dialect
@@ -1244,8 +1244,8 @@
         // First attempt to use a strong URL regexp to catch things like parentheses. If it misses, use the
         // old one.
         var origMatcher = /^!\[(.*?)\][ \t]*\([ \t]*([^")]*?)(?:[ \t]+(["'])(.*?)\3)?[ \t]*\)/;
-            m = text.match(new RegExp("^!\\[(.*?)][ \\t]*\\((" + urlRegexp + ")\\)([ \\t])*([\"'].*[\"'])?")) ||
-                text.match(origMatcher);
+        var newMatcher = new RegExp("^!\\[(.*?)\\]\\((" + urlRegexp + ")(?:\\s+([\"'])(\\S+?)\\3)?\\)");
+        m = text.match(newMatcher) || text.match(origMatcher);
 
         if (m && m[2].indexOf(")]") !== -1) { m = text.match(origMatcher); }
 
