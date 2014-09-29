@@ -14,7 +14,6 @@ export default DiscourseController.extend(ModalFunctionality, {
   rejectedEmails: Em.A([]),
   rejectedPasswords: Em.A([]),
   prefilledUsername: null,
-  tosAccepted: false,
   userFields: null,
 
   hasAuthOptions: Em.computed.notEmpty('authOptions'),
@@ -42,9 +41,6 @@ export default DiscourseController.extend(ModalFunctionality, {
   },
 
   submitDisabled: function() {
-    // Even if password is required, we respect the tos setting
-    if (this.get('tosAcceptRequired') && !this.get('tosAccepted')) return true;
-
     if (!this.get('passwordRequired')) return false; // 3rd party auth
     if (this.get('formSubmitted')) return true;
     if (this.get('nameValidation.failed')) return true;
@@ -62,7 +58,7 @@ export default DiscourseController.extend(ModalFunctionality, {
       if (anyEmpty) { return true; }
     }
     return false;
-  }.property('passwordRequired', 'nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted', 'tosAccepted', 'userFields.@each.value'),
+  }.property('passwordRequired', 'nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted', 'userFields.@each.value'),
 
   passwordRequired: function() {
     return this.blank('authOptions.auth_provider');
@@ -342,8 +338,6 @@ export default DiscourseController.extend(ModalFunctionality, {
       createAccountController.set('accountChallenge', json.challenge.split("").reverse().join(""));
     });
   },
-
-  tosAcceptRequired: Discourse.computed.setting('tos_accept_required'),
 
   actions: {
     externalLogin: function(provider) {

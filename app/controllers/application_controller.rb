@@ -260,10 +260,6 @@ class ApplicationController < ActionController::Base
         bottom: SiteText.text_for(:bottom)
       }
 
-      if SiteSetting.tos_accept_required && !current_user
-        data[:tos_signup_form_message] = SiteText.text_for(:tos_signup_form_message)
-      end
-
       if DiscoursePluginRegistry.custom_html
         data.merge! DiscoursePluginRegistry.custom_html
       end
