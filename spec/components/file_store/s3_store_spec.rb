@@ -13,7 +13,6 @@ describe FileStore::S3Store do
   let(:optimized_image_file) { file_from_fixtures("logo.png") }
 
   let(:avatar) { build(:upload) }
-  let(:avatar_file) { file_from_fixtures("logo-dev.png") }
 
   before(:each) do
     SiteSetting.stubs(:s3_upload_bucket).returns("S3_Upload_Bucket")
@@ -38,16 +37,6 @@ describe FileStore::S3Store do
       optimized_image.stubs(:id).returns(42)
       s3_helper.expects(:upload)
       store.store_optimized_image(optimized_image_file, optimized_image).should == "//s3_upload_bucket.s3.amazonaws.com/4286f7e437faa5a7fce15d1ddcb9eaeaea377667b8_100x200.png"
-    end
-
-  end
-
-  describe ".store_avatar" do
-
-    it "returns an absolute schemaless url" do
-      avatar.stubs(:id).returns(42)
-      s3_helper.expects(:upload)
-      store.store_avatar(avatar_file, avatar, 100).should == "//s3_upload_bucket.s3.amazonaws.com/avatars/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98/100.png"
     end
 
   end
