@@ -626,9 +626,6 @@ en:
     bottom:
       title: "Bottom of the pages"
       description: "HTML that will be added at the bottom of every page."
-    tos_signup_form_message:
-      title: "Signup Form: Terms of Service Message"
-      description: "The message that will appear beside a checkbox on the signup form if the tos_accept_required site setting is enabled."
     notification_email_top:
       title: "Notification Email Top"
       description: "A message that will be displayed at the top of all notification emails."
@@ -998,7 +995,6 @@ en:
     embed_post_limit: "Maximum number of posts to embed."
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
     embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
-    tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
     enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."

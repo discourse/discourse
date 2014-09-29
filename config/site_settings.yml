@@ -632,9 +632,6 @@ legal:
   privacy_policy_url:
     client: true
     default: ''
-  tos_accept_required:
-    client: true
-    default: false
   faq_url:
     client: true
     default: ''
