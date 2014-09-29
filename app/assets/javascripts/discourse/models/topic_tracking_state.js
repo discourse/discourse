@@ -1,3 +1,15 @@
+function isNew(topic){
+  return topic.last_read_post_number === null &&
+        ((topic.notification_level !== 0 && !topic.notification_level) ||
+        topic.notification_level >= Discourse.Topic.NotificationLevel.TRACKING);
+}
+
+function isUnread(topic){
+  return topic.last_read_post_number !== null &&
+         topic.last_read_post_number < topic.highest_post_number &&
+         topic.notification_level >= Discourse.Topic.NotificationLevel.TRACKING;
+}
+
 Discourse.TopicTrackingState = Discourse.Model.extend({
   messageCount: 0,
 
@@ -184,6 +196,31 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
       tracker.states["t" + topic.id] = row;
     });
 
+    // Correct missing states, safeguard in case message bus is corrupt
+    if((filter === "new" || filter === "unread") && !list.more_topics_url){
+
+      var ids = {};
+      list.topics.forEach(function(r){
+        ids["t" + r.id] = true;
+      });
+
+      _.each(tracker.states, function(v, k){
+
+        // we are good if we are on the list
+        if (ids[k]) { return; }
+
+        if (filter === "unread" && isUnread(v)) {
+          // pretend read
+          v.last_read_post_number = v.highest_post_number;
+        }
+
+        if (filter === "new" && isNew(v)) {
+          // pretend not new
+          v.last_read_post_number = 1;
+        }
+      });
+    }
+
     this.incrementMessageCount();
   },
 
@@ -193,12 +230,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
 
   countNew: function(category_id){
     return _.chain(this.states)
-      .where({last_read_post_number: null})
-      .where(function(topic) {
-        // !0 is true
-        return (topic.notification_level !== 0 && !topic.notification_level) ||
-               topic.notification_level >= Discourse.Topic.NotificationLevel.TRACKING;
-      })
+      .where(isNew)
       .where(function(topic){ return topic.category_id === category_id || !category_id;})
       .value()
       .length;
@@ -215,11 +247,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
 
   countUnread: function(category_id){
     return _.chain(this.states)
-      .where(function(topic){
-        return topic.last_read_post_number !== null &&
-               topic.last_read_post_number < topic.highest_post_number;
-      })
-      .where(function(topic) { return topic.notification_level >= Discourse.Topic.NotificationLevel.TRACKING})
+      .where(isUnread)
       .where(function(topic){ return topic.category_id === category_id || !category_id;})
       .value()
       .length;
