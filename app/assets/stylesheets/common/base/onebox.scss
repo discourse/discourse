@@ -147,3 +147,53 @@ blockquote {
         border-left: 5px solid darken(scale-color-diff(), 12%);
       }
     }
+
+
+
+// -- Onebox Github Code Blob --
+pre.onebox code ol.lines li:before {
+  position: absolute;
+  display:inline-block;
+  width:35px;
+  left: -40px;
+  background: #F7F7F7;
+  color:#AFAFAF;
+  text-align:right;
+  padding-right:5px;
+  font-size:12px;
+  line-height: 1.9em;
+  content: counter(li-counter);
+  counter-increment: li-counter;
+}
+
+
+pre.onebox code ol{
+	margin-left:0px;
+	line-height:1.5em;
+}
+pre.onebox code li{
+	background-color:#fff;
+	padding-left:5px;
+}
+
+pre.onebox code ol.lines{
+	position:relative;
+	margin-left: 40px;
+}
+
+pre.onebox code ol.lines li {
+	list-style-type: none;
+	padding-left: 5px;
+	margin-left: 0px;
+	border-left: 1px solid #CFCFCF;
+  border-bottom:1px solid #E8E8E8;
+	min-height: 1.5em; //show empty li lines 
+}
+
+pre.onebox code li.selected{
+	background-color:#F8EEC7
+}
+
+pre.onebox code {
+ white-space: normal; 
+}
