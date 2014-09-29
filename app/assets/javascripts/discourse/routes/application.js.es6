@@ -146,6 +146,10 @@ var ApplicationRoute = Em.Route.extend({
     deleteSpammer: function (user) {
       this.send('closeModal');
       user.deleteAsSpammer(function() { window.location.reload(); });
+    },
+
+    checkEmail: function (user) {
+      user.checkEmail();
     }
   },
 

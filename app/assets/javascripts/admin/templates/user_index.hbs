@@ -32,18 +32,32 @@
     </div>
   </div>
 
-  <div class='display-row email'>
-    <div class='field'>{{i18n user.email.title}}</div>
-    <div class='value'><a href="mailto:{{unbound email}}">{{email}}</a></div>
-    {{#unless active}}
-      <div class='controls'>{{i18n admin.users.not_verified}}</div>
-    {{/unless}}
-  </div>
+  {{#if canCheckEmails}}
+    <div class='display-row email'>
+      <div class='field'>{{i18n user.email.title}}</div>
+      <div class='value'>
+        {{#unless active}}
+          <div class='controls'>{{i18n admin.users.not_verified}}</div>
+        {{/unless}}
+        {{#if email}}
+          <a href="mailto:{{unbound email}}">{{email}}</a>
+        {{else}}
+          <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action checkEmail this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+        {{/if}}
+      </div>
+    </div>
 
-  <div class='display-row associations'>
-    <div class='field'>{{i18n user.associated_accounts}}</div>
-    <div class='value'>{{associated_accounts}}</div>
-  </div>
+    <div class='display-row associations'>
+      <div class='field'>{{i18n user.associated_accounts}}</div>
+      <div class='value'>
+        {{#if associated_accounts}}
+          {{associated_accounts}}
+        {{else}}
+          <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action checkEmail this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
 
   <div class='display-row'>
     <div class='field'>{{i18n user.avatar.title}}</div>

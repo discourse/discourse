@@ -8,10 +8,10 @@
 //= require highlight.pack.js
 
 // Stuff we need to load first
+//= require ./discourse/lib/computed
 //= require ./discourse/mixins/scrolling
 //= require_tree ./discourse/mixins
 //= require ./discourse/lib/markdown
-//= require ./discourse/lib/computed
 //= require ./discourse/lib/search-for-term
 //= require ./discourse/views/view
 //= require ./discourse/views/container

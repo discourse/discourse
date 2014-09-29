@@ -92,6 +92,14 @@ class StaffActionLogger
     }))
   end
 
+  def log_check_email(user, opts={})
+    raise Discourse::InvalidParameters.new('user is nil') unless user
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:check_email],
+      target_user_id: user.id
+    }))
+  end
+
   private
 
   def params(opts)

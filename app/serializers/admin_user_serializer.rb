@@ -36,6 +36,13 @@ class AdminUserSerializer < BasicUserSerializer
     end
   end
 
+  def include_email?
+    # staff members can always see their email
+    scope.is_staff? && object.id == scope.user.id
+  end
+
+  alias_method :include_associated_accounts?, :include_email?
+
   def suspended
     object.suspended?
   end

@@ -47,18 +47,26 @@
       </div>
     {{/if}}
 
-    <div class="control-group pref-email">
-      <label class="control-label">{{i18n user.email.title}}</label>
-      <div class="controls">
-        <span class='static'>{{email}}</span>
-        {{#if can_edit_email}}
-          {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+    {{#if canCheckEmails}}
+      <div class="control-group pref-email">
+        <label class="control-label">{{i18n user.email.title}}</label>
+        {{#if email}}
+          <div class="controls">
+            <span class='static'>{{email}}</span>
+            {{#if can_edit_email}}
+              {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+            {{/if}}
+          </div>
+          <div class='instructions'>
+            {{i18n user.email.instructions}}
+          </div>
+        {{else}}
+          <div class="controls">
+            <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action checkEmail this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+          </div>
         {{/if}}
       </div>
-      <div class='instructions'>
-        {{i18n user.email.instructions}}
-      </div>
-    </div>
+    {{/if}}
 
     {{#if canChangePassword}}
     <div class="control-group pref-password">

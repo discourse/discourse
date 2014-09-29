@@ -26,17 +26,17 @@ class AdminUserIndexQuery
 
   def filter_by_query_classification
     case params[:query]
-      when 'admins' then @query.where('admin = ?', true)
-      when 'moderators' then @query.where('moderator = ?', true)
+      when 'admins' then @query.where(admin: true)
+      when 'moderators' then @query.where(moderator: true)
       when 'blocked' then @query.blocked
       when 'suspended' then @query.suspended
-      when 'pending' then @query.not_suspended.where('approved = false')
+      when 'pending' then @query.not_suspended.where(approved: false)
     end
   end
 
   def filter_by_search
     if params[:filter].present?
-      @query.where('username_lower ILIKE :filter or email ILIKE :filter', filter: "%#{params[:filter]}%")
+      @query.where('username_lower ILIKE :filter', filter: "%#{params[:filter]}%")
     end
   end
 
@@ -67,6 +67,13 @@ class AdminUserIndexQuery
   end
 
   def find_users
-    find_users_query.includes(:user_stat).take(100)
+    find_users_query.includes(:user_stat)
+                    .includes(:single_sign_on_record)
+                    .includes(:facebook_user_info)
+                    .includes(:twitter_user_info)
+                    .includes(:github_user_info)
+                    .includes(:google_user_info)
+                    .includes(:oauth2_user_info)
+                    .take(100)
   end
 end

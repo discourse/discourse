@@ -52,16 +52,13 @@ class UserSerializer < BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
 
-
   staff_attributes :number_of_deleted_posts,
                    :number_of_flagged_posts,
                    :number_of_flags_given,
                    :number_of_suspensions,
                    :number_of_warnings
 
-
-  private_attributes :email,
-                     :locale,
+  private_attributes :locale,
                      :email_digests,
                      :email_private_messages,
                      :email_direct,
@@ -86,6 +83,10 @@ class UserSerializer < BasicUserSerializer
   ###
   ### ATTRIBUTES
   ###
+
+  def include_email?
+    object.id && object.id == scope.user.try(:id)
+  end
 
   def bio_raw
     object.user_profile.bio_raw
