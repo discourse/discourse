@@ -47,23 +47,24 @@ module Onebox
         box_options =  self.options
         result = raw.clone
 
-        pull_status =  "Pull Status:" << {:closed=>"closed",:open=>"open"}[raw["state"].to_sym] << (raw["state"] == "closed" ? (raw["merged"] ? " & accepted" : " & declined") : "")  #closed , open
+        pull_status =  "" << {:closed=>"closed",:open=>"open"}[raw["state"].to_sym] << (raw["state"] == "closed" ? (raw["merged"] ? " & merged" : " & declined") : "")  #closed , open
         result['pull_status_str'] = pull_status
+        result['pull_status'] = raw["state"]
+        result['pull_status_str'] = pull_status
+        result['pull_status_str_open'] = raw["state"]=="open"
+        result['pull_status_closed_accepted'] = raw["state"]=="closed" && raw["merged"]
+        result['pull_status_closed_declined'] = raw["state"]=="closed" && !raw["merged"]
+        result['pull_status_class'] =  (raw["merged"] ? "merged": raw["state"] ) # open, merged, close
+        result['pull_status_bgcolor'] = {:open=>"#6cc644",:merged =>"6e5494", :closed=> "#bd2c00"}[result['pull_status_class'].to_sym]
+        result['inline_css'] = false  #set to true if you need basic styling and you don't have external css
         if box_options[:get_build_status]
           url2 = raw["statuses_url"]
-          raw2 =  api_json_request url2  #2nd api request to get build status 
-
-          result['pull_status'] = raw["state"]
-          result['pull_status_str'] = pull_status
-          result['pull_status_str_open'] = raw["state"]=="open"
-          result['pull_status_closed_accepted'] = raw["state"]=="closed" && raw["merged"] 
-          result['pull_status_closed_declined'] = raw["state"]=="closed" && !raw["merged"] 
+          raw2 =  api_json_request url2  #2nd api request to get build status         
           unless raw2.empty?
             result['build_status'] = "Build status: " +  raw2[0]["state"].to_s.capitalize  + " | " + raw2[0]["description"].to_s
           end
         end
 
-        
         result['link'] = link
         result['created_at'] = Time.parse(result['created_at']).strftime("%I:%M%p - %d %b %y")
         result
