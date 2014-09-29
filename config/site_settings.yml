@@ -390,6 +390,7 @@ email:
     default: 7
     enum: 'DigestEmailSiteSetting'
   email_custom_headers: 'Auto-Submitted: auto-generated'
+  email_subject: '%{optional_re}[%{site_name}] %{optional_pm}%{topic_title}'
   reply_by_email_enabled: false
   reply_by_email_address: ''
   pop3_polling_enabled: false
