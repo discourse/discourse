@@ -104,6 +104,53 @@ describe UserNotifications do
     end
   end
 
+  describe '.user_posted' do
+    let(:post) { Fabricate(:post) }
+    let(:response) { Fabricate(:post, topic: post.topic)}
+    let(:user) { Fabricate(:user) }
+    let(:notification) { Fabricate(:notification, user: user) }
+
+    it 'generates a correct email' do
+      mail = UserNotifications.user_posted(response.user, post: response, notification: notification)
+
+      # subject should include "Re:"
+      expect(mail.subject).to match("Re:")
+
+      # 2 respond to links cause we have 1 context post
+      mail.html_part.to_s.scan(/To respond/).count.should == 2
+
+      # 1 unsubscribe link
+      mail.html_part.to_s.scan(/To unsubscribe/).count.should == 1
+
+      # side effect, topic user is updated with post number
+      tu = TopicUser.get(post.topic_id, response.user)
+      tu.last_emailed_post_number.should == response.post_number
+    end
+  end
+
+  describe '.user_private_message' do
+    let(:topic) { Fabricate(:private_message_topic) }
+    let(:response) { Fabricate(:post, topic: topic)}
+    let(:user) { Fabricate(:user) }
+    let(:notification) { Fabricate(:notification, user: user) }
+
+    it 'generates a correct email' do
+      mail = UserNotifications.user_private_message(response.user, post: response, notification: notification)
+
+      # subject should include "[PM]"
+      expect(mail.subject).to match("[PM]")
+
+      # 1 respond to link
+      mail.html_part.to_s.scan(/To respond/).count.should == 1
+
+      # 1 unsubscribe link
+      mail.html_part.to_s.scan(/To unsubscribe/).count.should == 1
+
+      # side effect, topic user is updated with post number
+      tu = TopicUser.get(topic.id, response.user)
+      tu.last_emailed_post_number.should == response.post_number
+    end
+  end
 
   def expects_build_with(condition)
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
@@ -125,7 +172,6 @@ describe UserNotifications do
       end
     end
   end
-
 
   shared_examples "notification email building" do
     let(:post) { Fabricate(:post, user: user) }
