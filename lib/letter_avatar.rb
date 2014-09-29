@@ -23,7 +23,6 @@ class LetterAvatar
       end
     end
 
-
     def cache_path
       "public/uploads/letter_avatars/#{VERSION}"
     end

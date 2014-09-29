@@ -20,11 +20,6 @@ module FileStore
       store_file(file, path)
     end
 
-    def store_avatar(file, avatar, size)
-      path = get_path_for_avatar(file, avatar, size)
-      store_file(file, path)
-    end
-
     def remove_upload(upload)
       remove_file(upload.url)
     end

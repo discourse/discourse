@@ -8,9 +8,6 @@ module FileStore
     def store_optimized_image(file, optimized_image)
     end
 
-    def store_avatar(file, avatar, size)
-    end
-
     def remove_upload(upload)
     end
 

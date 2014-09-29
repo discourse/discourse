@@ -84,7 +84,6 @@ class UserAvatarsController < ApplicationController
     end
   end
 
-
   # this protects us from a DoS
   def render_dot
     expires_in 10.minutes, public: true
