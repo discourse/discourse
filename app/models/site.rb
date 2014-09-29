@@ -29,8 +29,8 @@ class Site
     TrustLevel.all
   end
 
-  def group_names
-    @group_name ||= Group.order(:name).pluck(:name)
+  def groups
+    @groups ||= Group.order(:name).map { |g| {:id => g.id, :name => g.name}}
   end
 
   def categories

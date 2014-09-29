@@ -3,7 +3,7 @@ class SiteSerializer < ApplicationSerializer
   attributes :default_archetype,
              :notification_types,
              :post_types,
-             :group_names,
+             :groups,
              :filters,
              :periods,
              :top_menu_items,
