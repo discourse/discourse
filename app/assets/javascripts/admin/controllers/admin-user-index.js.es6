@@ -1,4 +1,5 @@
 import ObjectController from 'discourse/controllers/object';
+import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
 /**
   A controller related to viewing a user in the admin section
@@ -8,7 +9,7 @@ import ObjectController from 'discourse/controllers/object';
   @namespace Discourse
   @module Discourse
 **/
-export default ObjectController.extend({
+export default ObjectController.extend(CanCheckEmails, {
   editingTitle: false,
   originalPrimaryGroupId: null,
   availableGroups: null,

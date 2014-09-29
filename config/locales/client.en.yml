@@ -574,7 +574,7 @@ en:
     created: 'Created'
     created_lowercase: 'created'
     trust_level: 'Trust Level'
-    search_hint: 'username or email'
+    search_hint: 'username'
 
     create_account:
       title: "Create New Account"
@@ -1801,6 +1801,7 @@ en:
             unsuspend_user: "unsuspend user"
             grant_badge: "grant badge"
             revoke_badge: "revoke badge"
+            check_email: "check email"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -1872,6 +1873,9 @@ en:
           one: "Failed to reject 1 user."
           other: "Failed to reject %{count} users."
         not_verified: "Not verified"
+        check_email:
+          title: "Click this button to retrieve this user's email"
+          text: "Retrieve Email"
 
       user:
         suspend_failed: "Something went wrong suspending this user {{error}}"

@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy]
+  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -62,6 +62,20 @@ class UsersController < ApplicationController
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
     render nothing: true
+  end
+
+  def check_emails
+    user = fetch_user_from_params
+    guardian.ensure_can_check_emails!(user)
+
+    StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+
+    render json: {
+      email: user.email,
+      associated_accounts: user.associated_accounts
+    }
+  rescue Discourse::InvalidAccess => e
+    render json: failed_json, status: 403
   end
 
   def badge_title

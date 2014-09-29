@@ -144,8 +144,15 @@
               {{#if invited_by}}
                 <dt>{{i18n user.invited_by}}</dt><dd>{{#link-to 'user' invited_by}}{{invited_by.username}}{{/link-to}}</dd>
               {{/if}}
-              {{#if showEmail}}
-                <dt>{{i18n user.email.title}}</dt><dd {{bind-attr title="email"}}>{{email}}</dd>
+              {{#if canCheckEmails}}
+                <dt>{{i18n user.email.title}}</dt>
+                <dd {{bind-attr title="email"}}>
+                  {{#if email}}
+                    {{email}}
+                  {{else}}
+                    <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action checkEmail this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+                  {{/if}}
+                </dd>
               {{/if}}
               <dt>{{i18n user.trust_level}}</dt><dd>{{trustLevel.name}}</dd>
             </dl>

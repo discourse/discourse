@@ -47,4 +47,8 @@ module UserGuardian
     end
   end
 
+  def can_check_emails?(user)
+    is_admin? || (is_staff? && SiteSetting.show_email_on_profile)
+  end
+
 end

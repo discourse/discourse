@@ -411,6 +411,22 @@ Discourse.User = Discourse.Model.extend({
       type: 'PUT',
       data: { dismissed_banner_key: bannerKey }
     });
+  },
+
+  checkEmail: function () {
+    var self = this;
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/emails.json", {
+      type: "PUT",
+      data: { context: window.location.pathname }
+    })
+    .then(function (result) {
+      if (result) {
+        self.setProperties({
+          email: result.email,
+          associated_accounts: result.associated_accounts
+        });
+      }
+    });
   }
 
 });

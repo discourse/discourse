@@ -1,16 +1,13 @@
 import ObjectController from 'discourse/controllers/object';
+import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
-export default ObjectController.extend({
+export default ObjectController.extend(CanCheckEmails, {
 
   viewingSelf: function() {
     return this.get('content.username') === Discourse.User.currentProp('username');
   }.property('content.username'),
 
   collapsedInfo: Em.computed.not('indexStream'),
-
-  showEmailOnProfile: Discourse.computed.setting('show_email_on_profile'),
-
-  showEmail: Ember.computed.and('email', 'showEmailOnProfile'),
 
   websiteName: function() {
     var website = this.get('website');
@@ -47,5 +44,4 @@ export default ObjectController.extend({
   privateMessagesActive: Em.computed.equal('pmView', 'index'),
   privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
   privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread')
-
 });

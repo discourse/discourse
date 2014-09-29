@@ -1,6 +1,7 @@
 import ObjectController from 'discourse/controllers/object';
+import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
-export default ObjectController.extend({
+export default ObjectController.extend(CanCheckEmails, {
 
   allowAvatarUpload: Discourse.computed.setting('allow_uploaded_avatars'),
   allowUserLocale: Discourse.computed.setting('allow_user_locale'),
@@ -16,12 +17,6 @@ export default ObjectController.extend({
   saved: false,
 
   newNameInput: null,
-
-  saveDisabled: function() {
-    if (this.get('saving')) return true;
-    if (this.blank('email')) return true;
-    return false;
-  }.property('saving', 'email'),
 
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),

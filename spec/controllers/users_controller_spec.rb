@@ -1245,4 +1245,32 @@ describe UsersController do
     end
   end
 
+  describe '.check_emails' do
+
+    it 'raises an error when not logged in' do
+      lambda { xhr :get, :check_emails, username: 'zogstrip' }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'while logged in' do
+      let!(:user) { log_in }
+
+      it "raises an error when you aren't allowed to check emails" do
+        Guardian.any_instance.expects(:can_check_emails?).returns(false)
+        xhr :get, :check_emails, username: Fabricate(:user).username
+        response.should be_forbidden
+      end
+
+      it "returns both email and associated_accounts when you're allowed to see them" do
+        Guardian.any_instance.expects(:can_check_emails?).returns(true)
+        xhr :get, :check_emails, username: Fabricate(:user).username
+        response.should be_success
+        json = JSON.parse(response.body)
+        json["email"].should be_present
+        json["associated_accounts"].should be_present
+      end
+
+    end
+
+  end
+
 end
