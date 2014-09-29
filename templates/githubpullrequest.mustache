@@ -8,35 +8,66 @@
   <a href="{{html_url}}" target="_blank">{{title}}</a>
 </h4>
 
+<div class='github-commit-status github-content-right' {{#inline_css}}style='margin-bottom:5px;padding: 10px;background: #F5F5F5;margin-left: 100px;border-radius: 5px;'{{/inline_css}}>
+
+<span class="status_tag {{pull_status_class}}" {{#inline_css}}style="background:{{pull_status_bgcolor}};color:#fff;display:inline-block;border-radius:3px;padding:1px 4px;font-weight:bold;margin-bottom:5px;"{{/inline_css}}> {{pull_status_str}} </span>
 
 
-<div class='github-commit-status' style='margin-bottom:3px;'>
-{{#pull_status_str_open}}
-<span style='background:#6cc644;color:#fff;display:inline-block;border-radius:3px;padding:2px;'>
-{{/pull_status_str_open}}
-{{#pull_status_closed_accepted}}
-<span style='background:#6e5494;color:#fff;display:inline-block;border-radius:3px;padding:2px;'>
-{{/pull_status_closed_accepted}}
-{{#pull_status_closed_declined}}
-<span style='background:#bd2c00;color:#fff;display:inline-block;border-radius:3px;padding:2px;'>
-{{/pull_status_closed_declined}}
 
-{{pull_status_str}} </span>
-</br>
 
-{{#build_status}}
-<span style='padding: 2px;background: #cfcfcf;'>{{build_status}}</span>
-{{/build_status}}
+  {{#build_status}}
+  <span class='build_status' {{#inline_css}}style='padding: 2px;font-size:12px'{{/inline_css}}>{{build_status}}</span>
+  {{/build_status}}
+
+  <div class="github-commit-stats">
+    <strong>{{commits}} commits</strong>
+    changed <strong>{{changed_files}} files</strong>
+    with <strong>{{additions}} additions</strong>
+    and <strong>{{deletions}} deletions</strong>.
+  </div>
 </div>
 
-<div class="date">
+<div class="date github-content-right" {{#inline_css}}style='margin-left:100px;'{{/inline_css}}>
   by <a href="{{user.html_url}}" target="_blank">{{user.login}}</a>
   on <a href="{{html_url}}" target="_blank">{{created_at}}</a>
 </div>
 
-<div class="github-commit-stats">
-  <strong>{{commits}} commits</strong>
-  changed <strong>{{changed_files}} files</strong>
-  with <strong>{{additions}} additions</strong>
-  and <strong>{{deletions}} deletions</strong>.
-</div>
+{{! // Sample Styling
+
+.onebox-body .github-commit-status {
+  background: #F5F5F5;
+  border-radius: 5px;
+  margin:0px 0px 5px 100px;
+  padding: 10px;
+}
+
+.onebox-body .status_tag {
+  display:inline-block;
+  color:#fff;
+  padding:1px 4px;
+  border-radius:3px;
+  font-weight:bold;
+  margin-bottom:5px;
+  text-transform:capitalize;
+}
+
+.onebox-body .build_status
+{
+  padding: 2px;
+  font-size:12px;
+}
+
+.onebox-body .status_tag.open {
+  background-color:#6cc644;
+}
+.onebox-body .status_tag.merged{
+  background-color:#6e5494; 
+}
+.onebox-body .status_tag.closed {
+  background-color:#bd2c00;
+}
+
+.onebox-body .github-content-right{
+  margin-left:100px;
+}
+}}
