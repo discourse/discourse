@@ -197,3 +197,41 @@ pre.onebox code li.selected{
 pre.onebox code {
  white-space: normal; 
 }
+
+//Onebox - Github - Pull request
+.onebox-body .github-commit-status {
+  background: #F5F5F5;
+  border-radius: 5px;
+  margin:0px 0px 5px 100px;
+  padding: 10px;
+}
+
+.onebox-body .status_tag {
+  display:inline-block;
+  color:#fff;
+  padding:1px 4px;
+  border-radius:3px;
+  font-weight:bold;
+  margin-bottom:5px;
+  text-transform:capitalize;
+}
+
+.onebox-body .build_status
+{
+  padding: 2px;
+  font-size:12px;
+}
+
+.onebox-body .status_tag.open {
+  background-color:#6cc644;
+}
+.onebox-body .status_tag.merged{
+  background-color:#6e5494; 
+}
+.onebox-body .status_tag.closed {
+  background-color:#bd2c00;
+}
+
+.onebox-body .github-content-right{
+  margin-left:100px;
+}
