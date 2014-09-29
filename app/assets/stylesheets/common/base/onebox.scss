@@ -187,6 +187,7 @@ pre.onebox code ol.lines li {
 	margin-left: 0px;
 	border-left: 1px solid #CFCFCF;
 	min-height: 1.5em; //show empty li lines 
+  white-space: pre;
 }
 
 pre.onebox code li.selected{
