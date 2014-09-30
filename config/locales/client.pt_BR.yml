@@ -96,10 +96,10 @@ pt_BR:
     yes_value: "Sim"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
-    sign_up: "Sign Up"
-    log_in: "Log In"
+    sign_up: "Registrar"
+    log_in: "Entrar"
     age: "Idade"
-    joined: "ingressou"
+    joined: "Aderiu"
     admin_title: "Admin"
     flags_title: "Sinalizações"
     show_more: "mostrar mais"
@@ -259,6 +259,7 @@ pt_BR:
       other_accounts: Outras contas com esse endereço de IP
       no_other_accounts: (nenhum)
     user:
+      said: "{{username}}:"
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
@@ -339,6 +340,7 @@ pt_BR:
         title: "Fundo do perfil"
       email:
         title: "Email"
+        instructions: "Não visível publicamente."
         ok: "Parece ok. Vamos enviar um email para você confirmar."
         invalid: "Por favor, coloque um email válido."
         authenticated: "O seu email foi autenticado por {{provider}}."
@@ -350,6 +352,7 @@ pt_BR:
         ok: "O seu nome parece ok."
       username:
         title: "Nome de Usuário"
+        instructions: "Único, sem espaços e curto."
         short_instructions: "As pessoas podem mencionar você usando @{{username}}."
         available: "O seu Nome de Usuário está disponível."
         global_match: "O email corresponde ao Nome de Usuário registado."
@@ -433,6 +436,8 @@ pt_BR:
         too_short: "A sua senha é muito curta."
         common: "Essa senha é muito comum."
         ok: "A sua senha parece boa."
+        instructions: "Deve ter pelo menos %{count} caracteres."
+      associated_accounts: "Contas associadas"
       ip_address:
         title: "Último endereço IP"
       registration_ip_address:
@@ -506,7 +511,6 @@ pt_BR:
     created: 'Criado'
     created_lowercase: 'criado'
     trust_level: 'Nível de confiança'
-    search_hint: 'Nome de Usuário ou email'
     create_account:
       title: "Criar nova conta"
       failed: "Alguma coisa deu errado, talvez este email já esteja registrado, tente usar o Esqueci a Senha."
@@ -687,6 +691,7 @@ pt_BR:
         actions: "Ações em Massa"
         change_category: "Mudar Categoria"
         close_topics: "Fechar Tópicos"
+        archive_topics: "Arquivar Tópicos"
         notification_level: "Modificar Nível de Notificação"
         selected:
           one: "Você selecionou <b>1</b> tópico."
@@ -921,7 +926,7 @@ pt_BR:
       post_number: "resposta {{number}}"
       in_reply_to: "responder para"
       last_edited_on: "resposta editada pela última vez em"
-      reply_as_new_topic: "Responder como um novo tópico"
+      reply_as_new_topic: "Responder como um Tópico linkado"
       continue_discussion: "Continuando a discussão do {{postLink}}:"
       follow_quote: "ir para a resposta citada"
       show_full: "Exibir mensagem completa"
@@ -982,6 +987,7 @@ pt_BR:
         convert_to_moderator: "Converter para Moderação"
         revert_to_regular: "Remover da Moderação"
         rebake: "Reconstruir HTML"
+        unhide: "Revelar"
       actions:
         flag: 'Sinalização'
         defer_flags:
@@ -1140,7 +1146,6 @@ pt_BR:
       allow_badges_label: "Permitir emblemas serem concedidos nessa categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
-      everyone_permission: "todos"
       this_year: "este ano"
       position: "posição"
       default_position: "Posição Padrão"
@@ -1150,8 +1155,10 @@ pt_BR:
       notifications:
         watching:
           title: "Observar"
+          description: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado a lista do tópico."
         tracking:
           title: "Monitorar"
+          description: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
         regular:
           title: "Normal"
           description: "Você receberá notificações apenas se alguém mencionar o seu @nome ou responder ao seu post."
@@ -1201,6 +1208,8 @@ pt_BR:
         help: "Este tópico está fixo; irá ser mostrado no topo da sua categoria"
       archived:
         help: "Este tópico está arquivado; está congelado e não pode ser alterado"
+      invisible:
+        help: "Este tópico está invisível; não aparecerá na listagem dos tópicos, e pode apenas ser acessado por link direto"
     posts: "Mensagens"
     posts_lowercase: "posts"
     posts_long: "há {{number}} mensagens neste tópico"
@@ -1288,6 +1297,7 @@ pt_BR:
         this_week: "Nesta semana"
         today: "Hoje"
         other_periods: "veja mais tópicos em alta"
+    browser_update: 'Infelizmente, <a href="http://www.discourse.org/faq/#browser">seu navegador é muito antigo para ser utilizado neste site</a>. Por favor <a href="http://browsehappy.com">atualize seu navegador</a>.'
     permission_types:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
@@ -1423,6 +1433,7 @@ pt_BR:
         confirm_revoke: "Tem a certeza que quer revogar essa chave?"
         info_html: "Sua chave de API permitirá a criação e edição de tópicos usando requests JSON."
         all_users: "Todos os Usuários"
+        note_html: "Guarde esta chave <strong>secretamente</strong>, todos usuários que tiverem acesso a ela poderão criar posts arbritários no forum como qualquer usuário."
       backups:
         title: "Backups"
         menu:
@@ -1582,6 +1593,7 @@ pt_BR:
             user_placeholder: "Nome de usuário"
             address_placeholder: "nome@exemplo.com"
             type_placeholder: "resenha, cadastro..."
+            reply_key_placeholder: "tecla de resposta"
             skipped_reason_placeholder: "motivo"
       logs:
         title: "Logs"
@@ -1650,6 +1662,7 @@ pt_BR:
           title: "Registro de erros"
       impersonate:
         title: "Personificar"
+        help: "Utilize esta ferramenta para personificar uma conta de usuário para efeitos de depuração. Você terá que sair dela assim que terminar."
       users:
         title: 'Usuários'
         create: 'Adicionar Usuário Admin'
@@ -1790,7 +1803,6 @@ pt_BR:
           likes_given: "Curtidas dados"
           likes_received: "Curtidas recebidos"
           qualifies: "Qualificado para o nível 3 de confiança."
-          will_be_promoted: "Será promovido dentro de 24 horas."
           does_not_qualify: "Não qualificado para o nível 3 de confiança."
         sso:
           title: "Único Login"
@@ -1799,10 +1811,24 @@ pt_BR:
           external_name: "Nome"
           external_email: "Email"
           external_avatar_url: "URL do Avatar"
+      user_fields:
+        title: "Campos de Usuários"
+        description: "Qualquer campo adicionado aqui será requerido dos usuários quando eles criarem uma conta."
+        create: "Criar Campo de Usuário"
+        untitled: "Sem título"
+        name: "Nome do Campo"
+        type: "Tipo do Campo"
+        save: "Salvar"
+        edit: "Editar"
+        delete: "Apagar"
+        cancel: "Cancelar"
+        delete_confirm: "Tem certeza que quer apagar este campo de usuário?"
+        field_types:
+          text: 'Campo Texto'
+          confirm: 'Confirmação'
       site_text:
-        none: "Escolhar um tipo de conteúdo para começar a editar."
-        title: 'Conteúdo'
-        edit: "Editar Conteúdo do Site"
+        none: "Escolha um tipo de conteúdo para começar a editar."
+        title: 'Conteúdo do Texto'
       site_settings:
         show_overriden: 'Exibir apenas valores alterados'
         title: 'Configurações'
@@ -1876,9 +1902,20 @@ pt_BR:
           plan_text: "Prever com plano de busca"
           modal_title: "Preview da Busca de Medalhas"
           sql_error_header: "Houve um erro com a busca."
+          error_help: "Veja os seguintes links para ajuda com consulta de emblemas."
           bad_count_warning:
             header: "CUIDADO!"
+            text: "Faltam amostras de concessão. Isso acontece quando a consulta de emblemas retorna IDs de usuários ou IDs de postagens que não existem. Isso pode causar resultados inesperados futuramente - por favor verifique novamente a sua consulta."
+          grant_count:
+            zero: "Sem emblemas para serem atribuídos."
+            one: "<b>1</b> emblema para ser atribuído."
+            other: "<b>%{count}</b> emblemas para serem atribuídos."
           sample: "Exemplo:"
+          grant:
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for post in %{link}
+            with_post_time: <span class="username">%{username}</span> por postar em %{link} às <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1891,20 +1928,31 @@ pt_BR:
         unread: '<b>g</b>, <b>u</b> Não Lidos'
         starred: '<b>g</b>, <b>f</b> Marcados'
         categories: '<b>g</b>, <b>c</b> Categorias'
+        top: '<b>g</b>, <b>t</b> Topo'
       navigation:
         title: 'Navegação'
+        jump: '<b>#</b> Ir para a resposta #'
         back: '<b>u</b> Voltar'
+        up_down: '<b>k</b>/<b>j</b> Move seleção &uarr; &darr;'
         open: '<b>o</b> ou <b>Enter</b> Abre tópico selecionado'
+        next_prev: '<b>shift j</b>/<b>shift k</b> Sessão próxima/anterior'
       application:
         title: 'Aplicação'
         create: '<b>c</b> Cria um novo tópico'
         notifications: '<b>n</b> Abre notificações'
+        site_map_menu: '<b>=</b> Abrir menu do site'
+        user_profile_menu: '<b>p</b> Abrir menu do usuário'
+        show_incoming_updated_topics: '<b>.</b> Exibir tópicos atualizados'
         search: '<b>/</b> Pesquisa'
+        help: '<b>?</b> Abrir ajuda de teclado'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Descartar Novas Postagens'
+        dismiss_topics: '<b>x</b>, <b>t</b> Descartar Tópicos'
       actions:
         title: 'Ações'
         star: '<b>f</b> Tópico favorito'
         share_topic: '<b>shift s</b> Compartilhar tópico'
         share_post: '<b>s</b> Compartilhar mensagem'
+        reply_as_new_topic: '<b>t</b> Responder como tópico linkado'
         reply_topic: '<b>shift r</b> Responder ao tópico'
         reply_post: '<b>r</b> Responder a mensagem'
         quote_post: '<b>q</b> Citar resposta'
@@ -1929,7 +1977,7 @@ pt_BR:
         other: "+%{count} Mais"
       granted:
         one: "1 emblema concedido"
-        other: "%{count} emblemas condedidos"
+        other: "%{count} emblemas concedidos"
       select_badge_for_title: Selecione um emblema para usar como título
       no_title: "<no title>"
       badge_grouping:
@@ -1952,10 +2000,13 @@ pt_BR:
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Concedido</a> todas as funções essenciais da comunidade
         member:
           name: Membro
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Concedido</a> envio de convites
         regular:
           name: Regular
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concedido</a> recategorizar, renomear, seguir links e sala de lazer
         leader:
           name: Líder
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concedido</a> edição global, fixar, fechar, arquivar, dividir e mesclar
         welcome:
           name: Bem-Vindo
           description: Recebeu uma curtida
@@ -1971,6 +2022,24 @@ pt_BR:
         great_post:
           name: Ótimo Post
           description: Recebeu 50 curtidas em uma resposta. Esse emblema pode ser concedido várias vezes.
+        nice_topic:
+          name: Tópico Interessante
+          description: Recebeu 10 curtidas em um tópico. Esse emblema pode ser concedido várias vezes.
+        good_topic:
+          name: Tópico Bom
+          description: Recebeu 25 curtidas em um tópico. Esse emblema pode ser concedido várias vezes.
+        great_topic:
+          name: Tópico Excelente
+          description: Recebeu 50 curtidas em um tópico. Esse emblema pode ser concedido várias vezes.
+        nice_share:
+          name: Compartilhamento Interessante
+          description: Compartilhou uma postagem com 25 visitas únicas
+        good_share:
+          name: Compartilhamento Bom
+          description: Compartilhou uma postagem com 300 visitas únicas
+        great_share:
+          name: Compartilhamento Excelente
+          description: Compartilhou uma postagem com 1000 visitas únicas
         first_like:
           name: Primeiro Like
           description: Curtiu uma resposta

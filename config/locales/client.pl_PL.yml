@@ -286,6 +286,7 @@ pl_PL:
       other_accounts: Inne konta z tym adresem IP
       no_other_accounts: (brak)
     user:
+      said: "{{username}}:"
       profile: "Profil"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
@@ -366,6 +367,7 @@ pl_PL:
         title: "Tło profilu"
       email:
         title: "Email"
+        instructions: "Nie będzie publicznie widoczny."
         ok: "Wygląda dobrze. Wyślemy Ci wiadomość do potwierdzenia."
         invalid: "Podaj poprawny adres email."
         authenticated: "Twój adres email został potwierdzony przez {{provider}}."
@@ -377,6 +379,7 @@ pl_PL:
         ok: "Twoja nazwa jest poprawna."
       username:
         title: "Nazwa użytkownika"
+        instructions: "Unikalna, krótka i bez spacji."
         short_instructions: "Aby o tobie wspomnieć, wystarczy napisać @{{username}}."
         available: "Nazwa jest dostępna."
         global_match: "Email zgadza się z zarejestrowaną nazwą użytkownika."
@@ -464,6 +467,7 @@ pl_PL:
         too_short: "Hasło jest za krótkie."
         common: "To hasło jest zbyt popularne."
         ok: "Twoje hasło jest poprawne."
+        instructions: "Co najmniej %{count} znaków."
       ip_address:
         title: "Ostatni adres IP"
       registration_ip_address:
@@ -537,7 +541,6 @@ pl_PL:
     created: 'Utworzono'
     created_lowercase: 'utworzono'
     trust_level: 'Poziom zaufania'
-    search_hint: 'nazwa użytkownika lub email'
     create_account:
       title: "Utwórz Konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
@@ -718,6 +721,7 @@ pl_PL:
         actions: "Operacje grupowe"
         change_category: "Zmień kategorię"
         close_topics: "Zamknij wpisy"
+        archive_topics: "Zarchiwizuj tematy"
         notification_level: "Poziom powiadomień o zmianach"
         selected:
           one: "Zaznaczono <b>1</b> temat."
@@ -966,7 +970,6 @@ pl_PL:
       post_number: "wpis {{number}}"
       in_reply_to: "w odpowiedzi na"
       last_edited_on: "ostatnia edycja wpisu"
-      reply_as_new_topic: "Odpowiedz w nowym temacie"
       continue_discussion: "Kontynuując dyskusję z {{postLink}}:"
       follow_quote: "idź do cytowanego wpisu"
       show_full: "Pokaż pełny wpis"
@@ -1031,6 +1034,7 @@ pl_PL:
         convert_to_moderator: "Włącz kolor moderatora"
         revert_to_regular: "Wyłącz kolor moderatora"
         rebake: "Odśwież HTML"
+        unhide: "Wycofaj ukrycie"
       actions:
         flag: 'Oflaguj'
         defer_flags:
@@ -1207,7 +1211,6 @@ pl_PL:
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
       add_permission: "Dodaj uprawnienie"
-      everyone_permission: "wszyscy"
       this_year: "ten rok"
       position: "pozycja"
       default_position: "Domyślna pozycja"
@@ -1872,7 +1875,6 @@ pl_PL:
           likes_given: "Polubień danych"
           likes_received: "Polubień otrzymanych"
           qualifies: "Kwalifikuje się do 3 poziomu zaufania."
-          will_be_promoted: "Zwiększenie zaufania wejdzie w życie w ciągu 24 godzin."
           does_not_qualify: "Nie kwalifikuje się do 3 poziomu zaufania."
         sso:
           title: "Single Sign On"
@@ -1881,10 +1883,6 @@ pl_PL:
           external_name: "Nazwa"
           external_email: "Email"
           external_avatar_url: "URL awatara"
-      site_text:
-        none: "Wybierz typ zawartości których chcesz zacząć edytować."
-        title: 'Teksty'
-        edit: "Edytuj zawartość strony"
       site_settings:
         show_overriden: 'Pokaż tylko nadpisane'
         title: 'Ustawienia'
@@ -2008,7 +2006,6 @@ pl_PL:
         star: '<b>f</b> oznacz temat gwiazdką'
         share_topic: '<b>shift s</b> udostępnij temat'
         share_post: '<b>s</b> udostępnij wpis'
-        reply_as_new_topic: '<b>t</b> odpowiedz w nowym temacie'
         reply_topic: '<b>shift r</b> odpowiedz w temacie'
         reply_post: '<b>r</b> odpowiedz na wpis'
         quote_post: '<b>q</b> cytuj wpis'

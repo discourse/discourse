@@ -232,6 +232,7 @@ zh_CN:
       other_accounts: 其他使用该 IP 地址的账户
       no_other_accounts: (无)
     user:
+      said: "{{username}}："
       profile: "个人资料"
       mute: "防打扰"
       edit: "修改设置"
@@ -312,6 +313,7 @@ zh_CN:
         title: "个人资料背景"
       email:
         title: "电子邮箱"
+        instructions: "绝不会被公开显示。"
         ok: "看起来不错哦，我们会发送电子邮件让您确认。"
         invalid: "请填写正确的电子邮箱地址。"
         authenticated: "您的电子邮箱已经被 {{provider}} 确认有效。"
@@ -323,6 +325,7 @@ zh_CN:
         ok: "您的名字符合要求。"
       username:
         title: "用户名"
+        instructions: "唯一，没有空格，简短。"
         short_instructions: "其他人可以用 @{{username}} 来提及您。"
         available: "您的用户名可用。"
         global_match: "电子邮箱与注册用户名相匹配。"
@@ -402,6 +405,7 @@ zh_CN:
         too_short: "您设置的密码太短了。"
         common: "您设置的密码太常见了。"
         ok: "您设置的密码符合要求。"
+        instructions: "至少需要 %{count} 个字符。"
       ip_address:
         title: "最后使用的 IP 地址"
       registration_ip_address:
@@ -475,7 +479,6 @@ zh_CN:
     created: '创建时间'
     created_lowercase: '创建时间'
     trust_level: '用户级别'
-    search_hint: '用户名或用户电子邮件'
     create_account:
       title: "创建新帐号"
       failed: "出问题了，有可能这个电子邮箱已经被注册了。试试忘记密码链接？"
@@ -656,6 +659,7 @@ zh_CN:
         actions: "批量操作"
         change_category: "更改目录"
         close_topics: "关闭话题"
+        archive_topics: "存档主题"
         notification_level: "更改提示等级"
         selected:
           other: "您已经选择了 <b>{{count}}</b>个主题"
@@ -672,7 +676,7 @@ zh_CN:
         educate:
           new: '<p>这里是您的新主题。</p><p>默认情况下，最近两天创建的主题是新主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>您可以在您的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
           unread: '<p>这里是您的未读主题。</p><p>默认情况下，下述主题将被认为是未读的，并会显示未读数目： <span class="badge new-posts badge-notification">1</span> 如果您：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>您可以改变您的<a href="%{userPrefsUrl}">用户设置</a>.</p>'
-          starred: '<p>您收藏的主题会出现在这里。</p><p>要收藏主题或者取消，请使用 </p><ul><li>the <i class="fa fa-star"></i> 在主题标题的右边</li><li>主题底部的星标按钮</li></ul>'
+          starred: '<p>您收藏的主题会出现在这里。</p><p>要收藏主题或者取消，请使用 <i class="fa fa-star"></p><ul><li>在主题标题的右边</i> </li><li>主题底部的星标按钮</li></ul>'
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"
@@ -878,7 +882,6 @@ zh_CN:
       post_number: "帖子 {{number}}"
       in_reply_to: "回复给"
       last_edited_on: "最后修改于"
-      reply_as_new_topic: "回复为新主题"
       continue_discussion: "从 {{postLink}} 继续讨论："
       follow_quote: "跳转至所引用的帖子"
       show_full: "显示所有帖子"
@@ -935,6 +938,7 @@ zh_CN:
         convert_to_moderator: "增加职员颜色"
         revert_to_regular: "移除职员颜色"
         rebake: "重建 HTML"
+        unhide: "显示"
       actions:
         flag: '报告'
         defer_flags:
@@ -1075,7 +1079,6 @@ zh_CN:
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
-      everyone_permission: "任何人"
       this_year: "今年"
       position: "位置"
       default_position: "默认位置"
@@ -1720,7 +1723,6 @@ zh_CN:
           likes_given: "给出的赞"
           likes_received: "收到的赞"
           qualifies: "符合等级3的信用度"
-          will_be_promoted: "在24小时后升级"
           does_not_qualify: "未符合等级3的信用度"
         sso:
           title: "单点登录"
@@ -1729,10 +1731,6 @@ zh_CN:
           external_name: "名字"
           external_email: "电子邮件"
           external_avatar_url: "头像 URL"
-      site_text:
-        none: "选择内容类型以开始编辑。"
-        title: '内容'
-        edit: "编辑站点内容"
       site_settings:
         show_overriden: '只显示被覆盖了缺省值的'
         title: '设置'
@@ -1856,7 +1854,6 @@ zh_CN:
         star: '<b>f</b> 收藏主题'
         share_topic: '<b>shift s</b> 分享主题'
         share_post: '<b>s</b> 分享帖子'
-        reply_as_new_topic: '<b>t</b> 回复为新主题Reply as new topic'
         reply_topic: '<b>shift r</b> 回复主题'
         reply_post: '<b>r</b> 回复帖子'
         quote_post: '<b>q</b> 引用帖子'

@@ -241,7 +241,6 @@ pl_PL:
       title: "regularny"
     elder:
       title: "starszyzna"
-    change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Ta akcja została wykonana zbyt wiele razy, próbuj ponownie za jakiś czas"
     too_many_requests: "Liczba wykonań tej czynności w ciągu dnia jest ograniczona. Odczekaj %{time_left} przed ponowną próbą."
@@ -429,10 +428,6 @@ pl_PL:
   archetypes:
     regular:
       title: "Zwykły temat"
-    banner:
-      message:
-        make: "Ten temat został ustawiony jako baner.  Będzie pojawiać się na górze każdej strony do czasu zamknięcia przez użytkownika."
-        remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze  każdej strony."
   unsubscribed:
     title: 'Wypisano'
     description: "Zostałeś wypisany. Nie skontaktujemy się z Tobą więcej!"
@@ -562,10 +557,6 @@ pl_PL:
     login_required_welcome_message:
       title: "Wymagane logowanie: wiadomość powitalna"
       description: "Wiadomość powitalna wyświetlana niezalogowanym użytkownikom, gdy ustawienie 'login required' jest włączone."
-    tos_user_content_license:
-      title: "Warunki serwisu: Licencja treści"
-    tos_miscellaneous:
-      title: "Warunki serwisu: Rozmaite"
     login_required:
       title: "Login Required: Homepage"
       description: "The text displayed for unauthorized users when login is required on the site."
@@ -726,7 +717,6 @@ pl_PL:
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
     wait_approval: "Dziękujemy za rejestrację. Powiadomimy Cię gdy Twoje konto zostanie aktywowane."
     active: "Twoje konto zostało aktywowane i jest gotowe do użycia."
-    activate_email: "Prawie skończone! Wysłaliśmy email aktywacyjny na adres <b>%{email}</b>. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy do Ciebie email aktywacyjny. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
@@ -760,15 +750,7 @@ pl_PL:
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   flags_reminder:
-    flags_were_submitted:
-      one: "Istnieją flagi dodane ponad 1 godzinę temu."
-      few: "Istnieją flagi dodane %{count} godziny temu."
-      other: "Istnieją flagi dodane %{count} godzin temu."
     post_number: "wpis"
-    subject_template:
-      one: "1 flaga oczekuje na reakcję"
-      few: "%{count} flagi oczekują na reakcję"
-      other: "%{count} flag oczekuje na reakcję"
   flag_reasons:
     off_topic: "Twój wpis został oznaczony jako **nie-na-temat**: społeczność uważa, że nie pasuje on do tematu zdefiniowanego przez tytuł i treść pierwszego wpisu w wątku."
     spam: "Twój wpis został oznaczony jako **spam**: społeczność uważa, że jest to nieprzydatna reklama bez związku z tematem."
@@ -788,12 +770,21 @@ pl_PL:
         Miłego korzystania!
     welcome_invite:
       subject_template: "Witaj na %{site_name}!"
+      text_body_template: "Dziękujemy za przyjęcie zaproszenia do %{site_name} – witamy!\n\nTwoja automatycznie wygenerowana nazwa użytkownika: **%{username}**. Możesz ją zmienić w każdej chwili w [swoich ustawieniach][prefs].\n\nAby zalogować się:\n\nA) Zaloguj się przyciskiem logowania przez zewnętrzny serwis. Pamiętaj, aby podpięty pod wybrany serwis adres e-mail **był taki sam** jak ten na który dostałeś swoje zaproszenie. W przeciwnym wypadku nie będziemy mogli stwierdzić, że ty to Ty! \n\nB) Stwórz unikalne hasło w [swoich ustawieniach][prefs] i zaloguj się przy jego pomocy.\n\n%{new_user_tips}\n\nWierzymy w [cywilizowane zachowanie](%{base_url}/guidelines) jako podstawę naszej społeczności.\n\n\
+        Miłego uczestnictwa! \n\n[prefs]: %{user_preferences_url}\n"
     export_succeeded:
       subject_template: "Eksportowanie zostało zakończone."
       text_body_template: "Eksport się powiódł."
     import_succeeded:
       subject_template: "Importowanie zostało zakończone."
       text_body_template: "Import się powiódł."
+    email_reject_empty:
+      text_body_template: |
+        Przepraszamy, ale wysyłanie twojej wiadomości do %{destination} (o tytule %{former_title}) zakończyło się niepowodzeniem.
+
+        Nie udało się wykryć treści. Upewnij się, że odpowiedź znajduje się na początku e-maila: nie rozpoznajemy odpowiedzi wymieszanych z cytowanym tekstem,
+
+        Dodatkowo upewnij się, że odpowiadasz e-mailem w formacie HTML (a nie czystym ASCII).
     too_many_spam_flags:
       subject_template: "Nowe konto zablokowane"
     blocked_by_staff:
@@ -925,9 +916,6 @@ pl_PL:
   page_not_found:
     title: "Strona, którą chciałeś odwiedzić, nie istnieje lub jest prywatna."
   terms_of_service:
-    user_content_license: |
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
-    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
     signup_form_message: 'Przeczytałem i zgadzam się z <a href="/tos" target="_blank">Regulaminem Serwisu</a>.'
   deleted: 'usunięte'
   upload:

@@ -135,6 +135,8 @@ cs:
         name: "Název kategorie"
       post:
         raw: "Tělo"
+      user_profile:
+        bio_raw: "O mně"
     errors:
       messages:
         is_invalid: "je neplatné; zkuste se vyjádřit více popisně"
@@ -166,7 +168,12 @@ cs:
       title: "nový uživatel"
     basic:
       title: "základní uživatel"
-    change_failed_explanation: "Pokusili jste se změnil důvěryhodnost uživatele %{user_name} na '%{new_trust_level}'. Jejich důvěryhodnost je ale již '%{current_trust_level}'. %{user_name} zůstané na důvěryhodnosti '%{current_trust_level}'"
+    regular:
+      title: "člen"
+    leader:
+      title: "normální"
+    elder:
+      title: "vůdce"
   rate_limiter:
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
     hours:
@@ -342,6 +349,7 @@ cs:
     title: 'Odhlášen'
     description: "Byli jste odhlášeni ze seznamu. Již vás nebudeme kontaktovat."
     oops: "Pokud jste tuto akci provedli omylem, klikněte na odkaz níže."
+    error: "Chyba při odhlašování"
     not_found_description: "Bohužel jsme vás nemohli odhlásit ze seznamu. Je možné, že váš odkaz z emailu již není platný."
   resubscribe:
     action: "Znovu přihlásit"
@@ -462,10 +470,6 @@ cs:
     login_required_welcome_message:
       title: "Vyžadováno přihlášení: Uvítací zpráva"
       description: "Uvítací zpráva, která je zobrazena nepřihlášeným uživatelům, je-li zapnuto nastavení 'vyžadovat přihlášení'."
-    tos_user_content_license:
-      title: "Podmínky používání: Licence obsahu"
-    tos_miscellaneous:
-      title: "Podmínky používání: Různé"
     login_required:
       title: "Vyžadováno přihlášení: Úvodní stránka"
       description: "Text, který se zobrazí nepřihlášených uživatelům na webu, je-li přihlášení vyžadováno."
@@ -603,7 +607,6 @@ cs:
     incorrect_username_email_or_password: "Neplatné uživatelské jméno, email nebo heslo"
     wait_approval: "Děkujeme, že jste se zaregistrovali. Dáme vám vědět, až bude váš nový účet schválen."
     active: "Váš účet je aktivní a připraven k používání."
-    activate_email: "Už to skoro bude! Zaslali jsme vám aktivační email na <b>%{email}</b>. Prosím následujte instrukce v tomto emailu a aktivujte si tak svůj účet."
     not_activated: "Ještě se nemůžete přihlásit. Zaslali jsme vám aktivační email na <b>%{email}</b>. Prosím následujte instrukce v tomto emailu a aktivujte si tak svůj účet."
     suspended: "Máte zakázáno přihlášení až do %{date}."
     suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
@@ -773,9 +776,6 @@ cs:
   page_not_found:
     title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
   terms_of_service:
-    user_content_license: |-
-      Uživatelské příspěvky jsou licencovány pod licencí [Creative Commons Uveďte autora-Nevyužívejte dílo komerčně-Zachovejte licenci 3.0 Unported](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.cs). Aniž by tím byly tyto vyjádření nebo záruky dotčeny, má %{company_short_name} právo z vlastního úsudku (i) odmítnout nebo odstranit libovolný obsah, který podle rozumného názoru porušuje zásady tohoto webu nebo je jinak škodlivý nebo závadný, nebo (ii) ukončit nebo odepřít přístup k používání webu jakémukoliv jednotlivci nebo subjektu z jakéhokoliv důvodu. %{company_short_name} nemá žádnou povinnost poskytnout náhradu nebo vrátit jakoukoliv již zaplacenou částku.
-    miscellaneous: "Toto ujednání tvoří celou dohodu mezi %{company_short_name} a vámi ohledně zmiňované věci a smí být změněno pouze písemným dodatkem podepsaným pověřeným jednatelem společnosti %{company_short_name}, nebo zveřejněním revidované verze tohoto dokumentu. Provoz tohoto webu, jeho používání a jakýkoliv přístup na něj se řídí platnými zákony České republiky. Jakékoliv spory v souvislosti v tímto webem budou řešeny u soudů v České republice a používáním této služby souhlasíte se soudní pravomocí těchto soudů."
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: 'smazáno'
   upload:

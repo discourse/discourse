@@ -286,6 +286,7 @@ ru:
       other_accounts: Другие учетные записи с этим IP адресом
       no_other_accounts: (нет)
     user:
+      said: "{{username}}:"
       profile: "Профиль"
       mute: "Отключить"
       edit: "Настройки"
@@ -366,6 +367,7 @@ ru:
         title: "Фон профиля"
       email:
         title: "E-mail"
+        instructions: "Всегда скрыт от публики."
         ok: "Отлично, мы послали вам письмо с инструкциями."
         invalid: "Введите корректный адрес электронной почты."
         authenticated: "Ваш адрес электронной почты подтвержден через {{provider}}."
@@ -377,6 +379,7 @@ ru:
         ok: "Допустимое имя."
       username:
         title: "Псевдоним"
+        instructions: "Уникальный, без пробелов и покороче."
         short_instructions: "Пользователи могут упоминать вас по @{{username}}."
         available: "Псевдоним доступен."
         global_match: "Адрес электронной почты совпадает с зарегистрированным."
@@ -464,6 +467,7 @@ ru:
         too_short: "Пароль слишком короткий."
         common: "Пароль слишком короткий."
         ok: "Допустимый пароль."
+        instructions: "Не менее %{count} символов."
       ip_address:
         title: "Последний IP адрес"
       registration_ip_address:
@@ -537,7 +541,6 @@ ru:
     created: 'Тема создана'
     created_lowercase: 'создано'
     trust_level: 'Уровень доверия'
-    search_hint: 'псевдоним или адрес электронной почты'
     create_account:
       title: "Зарегистрироваться"
       failed: "Произошла ошибка. Возможно, этот Email уже используется. Попробуйте восстановить пароль"
@@ -718,6 +721,7 @@ ru:
         actions: "Массовое действие"
         change_category: "Изменить раздел"
         close_topics: "Закрыть темы"
+        archive_topics: "Архивировать темы"
         notification_level: "Изменить уровень оповещения"
         selected:
           one: "Вы выбрали <b>1</b> тему."
@@ -964,7 +968,6 @@ ru:
       post_number: "сообщение {{number}}"
       in_reply_to: "Ответить"
       last_edited_on: "последний раз сообщение редактировалось"
-      reply_as_new_topic: "Ответить в новой теме"
       continue_discussion: "Продолжить обсуждение из {{postLink}}:"
       follow_quote: "перейти к цитируемому сообщению"
       show_full: "Показать полный текст"
@@ -1029,6 +1032,7 @@ ru:
         convert_to_moderator: "Добавить цвет модератора"
         revert_to_regular: "Убрать цвет модератора"
         rebake: "Обработать сообщение заново - HTML"
+        unhide: "Показать"
       actions:
         flag: 'Жалоба'
         defer_flags:
@@ -1205,7 +1209,6 @@ ru:
       allow_badges_label: "Разрешить вручение наград в этом разделе"
       edit_permissions: "Изменить права доступа"
       add_permission: "Добавить права"
-      everyone_permission: "все"
       this_year: "за год"
       position: "местоположение"
       default_position: "Позиция по умолчанию"
@@ -1876,7 +1879,6 @@ ru:
           likes_given: "Выразил симпатий"
           likes_received: "Получил симпатий"
           qualifies: "Заслуживает уровень доверия 3."
-          will_be_promoted: "Будет повышен в течение 24 часов."
           does_not_qualify: "Не заслуживает уровень доверия 3."
         sso:
           title: "Технология единого входа SSO"
@@ -1885,10 +1887,6 @@ ru:
           external_name: "Имя"
           external_email: "E-mail"
           external_avatar_url: "URL-адрес аватарки"
-      site_text:
-        none: "Выберите тип контента, чтобы начать редактирование."
-        title: 'Контент сайта'
-        edit: "Изменить контент сайта"
       site_settings:
         show_overriden: 'Показывать только переопределенные'
         title: 'Настройки сайта'
@@ -2012,7 +2010,6 @@ ru:
         star: '<b>f</b> Отметить тему'
         share_topic: '<b>shift s</b> Поделиться темой'
         share_post: '<b>s</b> Поделиться сообщением'
-        reply_as_new_topic: '<b>t</b> Ответить в новой теме'
         reply_topic: '<b>shift r</b> Ответить на тему'
         reply_post: '<b>r</b> Ответить на сообщение'
         quote_post: '<b>q</b> Цитировать сообщение'

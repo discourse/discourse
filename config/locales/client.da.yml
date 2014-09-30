@@ -500,7 +500,6 @@ da:
     created: 'Oprettet'
     created_lowercase: 'Oprettet'
     trust_level: 'Tillidsniveau'
-    search_hint: 'brugernavn eller email'
     create_account:
       title: "Opret konto"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
@@ -899,7 +898,6 @@ da:
       post_number: "indlæg {{number}}"
       in_reply_to: "som svar til"
       last_edited_on: "indlæg sidst redigeret den"
-      reply_as_new_topic: "Svar som nyt emne"
       continue_discussion: "Fortsætter debatten fra {{postLink}}:"
       follow_quote: "gå til det citerede indlæg"
       show_full: "Vis hele emnet"
@@ -1748,7 +1746,6 @@ da:
           likes_given: "Likes givet"
           likes_received: "Likes modtaget"
           qualifies: "Krav for tillidsniveau 3"
-          will_be_promoted: "Vil blive forfremmet indenfor 24 timer."
           does_not_qualify: "Ikke kvalificeret til tillids niveau 3."
         sso:
           title: "Single Sign On"
@@ -1757,10 +1754,6 @@ da:
           external_name: "Navn"
           external_email: "Email"
           external_avatar_url: "Avatar URL"
-      site_text:
-        none: "Vælg en indholdstype for at begynde at redigere."
-        title: 'Indhold'
-        edit: "Redigér indhold"
       site_settings:
         show_overriden: 'Vis kun tilsidesatte'
         title: 'Indstillinger'
@@ -1864,7 +1857,6 @@ da:
         star: '<b>f</b> Markér emne som favorit'
         share_topic: '<b>shift s</b> Del emne'
         share_post: '<b>s</b> Del opslag'
-        reply_as_new_topic: '<b>t</b> Svar som nyt emne'
         reply_topic: '<b>shift r</b> Svar på emnet'
         reply_post: '<b>r</b> Svar på kommentaren'
         quote_post: '<b>q</b> Citer emne'

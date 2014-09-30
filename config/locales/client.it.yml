@@ -84,13 +84,13 @@ it:
           other: "%{count} giorni fa"
     share:
       topic: 'Condividi un link a questa conversazione'
-      post: 'Condividi un link al post #%{postNumber}'
+      post: 'Condividi un collegamento al messaggio n°%{postNumber}'
       close: 'chiudi'
       twitter: 'Condividi questo link su Twitter'
       facebook: 'Condividi questo link su Facebook'
       google+: 'Condividi questo link su Google+'
       email: 'invia questo collegamento via email'
-    edit: 'modifica titolo e categoria del topic'
+    edit: 'modifica titolo e categoria dell''argomento'
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
     yes_value: "Sì"
@@ -185,17 +185,17 @@ it:
     banner:
       close: "Nascondi questo banner."
     choose_topic:
-      none_found: "Nessun topic trovato."
+      none_found: "Nessun argomento trovato."
       title:
         search: "Cerca conversazioni per nome, indirizzo o numero:"
         placeholder: "digita il titolo della conversazione"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> ha pubblicato questo <a href='{{topicUrl}}'>topic</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>Tu</a> hai pubblicato questo <a href='{{topicUrl}}'>topic</a>"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> ha pubblicato <a href='{{topicUrl}}'>l'argomento</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>Tu</a> hai pubblicato <a href='{{topicUrl}}'>l'argomento</a>"
       user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> ha risposto a <a href='{{postUrl}}'>{{post_number}}</a>"
       you_replied_to_post: "<a href='{{userUrl}}'>Tu</a> hai risposto a <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> ha risposto a questo <a href='{{topicUrl}}'>topic</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> hai risposto a questo <a href='{{topicUrl}}'>topic</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> ha risposto <a href='{{topicUrl}}'>all'argomento</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> hai risposto <a href='{{topicUrl}}'>all'argomento</a>"
       user_mentioned_user: "<a href='{{user1Url}}'>Tu</a> hai menzionato <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>Tu</a> hai menzionato <a href='{{user2Url}}'>{{another_user}}</a>"
       you_mentioned_user: "<a href='{{user1Url}}'>Tu</a> hai menzionato <a href='{{user2Url}}'>{{another_user}}</a>"
@@ -221,8 +221,8 @@ it:
       '1': "Mi piace - Assegnati"
       '2': "Mi piace - Ricevuti"
       '3': "Segnalibri"
-      '4': "Topic"
-      '5': "Post"
+      '4': "Argomenti"
+      '5': "Messaggi"
       '6': "Risposte"
       '7': "Menzioni"
       '9': "Citazioni"
@@ -259,10 +259,11 @@ it:
       other_accounts: Altri account con questo indirizzo IP
       no_other_accounts: (nessuno)
     user:
+      said: "{{username}}:"
       profile: "Profilo"
       mute: "Ignora"
       edit: "Modifica opzioni"
-      download_archive: "scarica lo storico dei miei post"
+      download_archive: "scarica lo storico dei miei messaggi"
       private_message: "Messaggio privato"
       private_messages: "Messaggi"
       activity_stream: "Attività"
@@ -270,7 +271,7 @@ it:
       bookmarks: "Segnalibri"
       bio: "Su di me"
       invited_by: "Invitato Da"
-      trust_level: "Livello Attendibilità"
+      trust_level: "Livello Esperienza"
       notifications: "Notifiche"
       disable_jump_reply: "Non saltare al nuovo messaggio dopo la risposta"
       dynamic_favicon: "Mostra la notifica dei messaggi in arrivo nella favicon (funzione sperimentale)"
@@ -339,6 +340,7 @@ it:
         title: "Sfondo Profilo"
       email:
         title: "Email"
+        instructions: "Mai mostrato pubblicamente."
         ok: "Tutto a posto! Ti manderemo una email di conferma."
         invalid: "Inserisci un indirizzo email valido."
         authenticated: "{{provider}} ha autenticato la tua email."
@@ -350,7 +352,8 @@ it:
         ok: "Il nome è adeguato."
       username:
         title: "Nome utente"
-        short_instructions: "Gli utenti possono citarti scrivendo \"@{{username}}\"."
+        instructions: "Deve essere univoco, senza spazi e breve."
+        short_instructions: "Gli utenti possono citarti scrivendo @{{username}}."
         available: "Il nome utente è disponibile."
         global_match: "L'email corrisponde allo nome utente registrato."
         global_mismatch: "Già registrato. Prova {{suggestion}}?"
@@ -433,6 +436,8 @@ it:
         too_short: "La password è troppo breve."
         common: "Questa password è troppo comune."
         ok: "La password è adeguata"
+        instructions: "Minimo %{count} caratteri."
+      associated_accounts: "Account associati"
       ip_address:
         title: "Ultimo indirizzo IP"
       registration_ip_address:
@@ -505,8 +510,7 @@ it:
     last_seen: 'Ultima visita'
     created: 'Creato'
     created_lowercase: 'creato'
-    trust_level: 'Livello Attendibilità'
-    search_hint: 'username o email'
+    trust_level: 'Livello Esperienza'
     create_account:
       title: "Crea Nuovo Account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
@@ -622,7 +626,7 @@ it:
       help: "Aiuto Inserimento Markdown"
       toggler: "nascondi o mostra il pannello di editing"
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
-      auto_close_label: "Tempo di chiusura automatica del topic:"
+      auto_close_label: "Tempo di chiusura automatica dell'argomento:"
       auto_close_units: "(n° ore, un'orario, o un timestamp)"
       auto_close_examples: 'inserisci orario assoluto o numero di ore - 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Per favore immetti un valore valido."
@@ -689,7 +693,7 @@ it:
         close_topics: "Chiudi Argomenti"
         notification_level: "Cambia Livello Notifiche"
         selected:
-          one: "Hai selezionato <b>1</b> topic."
+          one: "Hai selezionato <b>1</b> argomento."
           other: "Hai selezionato <b>{{count}}</b> argomenti."
       none:
         starred: "Non hai argomenti preferiti."
@@ -704,7 +708,7 @@ it:
         educate:
           new: '<p>Qui compaiono i tuoi nuovi argomenti.</p><p>Per difetto, gli argomenti creati negli ultimi 2 giorni saranno considerati nuovi e mostreranno l''indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuovo</span>.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
           unread: '<p>Qui compaiono i tuoi argomenti non letti.</p><p>Per difetto, gli argomenti sono considerati non letti e mostrano un conteggio di non lettura <span class="badge new-posts badge-notification">1</span> se hai:</p><ul><li>Creato l''argomento</li><li>Risposto all''argomento</li><li>Letto l''argomento per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l''argomento come Seguito o Osservato usando il pannello di controllo delle notifiche in fondo ad ogni argomento.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
-          starred: '<p>Qui compaiono i tuoi argomenti preferiti.</p><p>Per aggiungere o rimuovere un argomento dai preferiti, usa:</p><ul><li>la <i class="fa fa-star"></i> vicino al titolo di ogni argomento</li><li>il bottone Stella in fondo ad ogni argomento</li></ul>'
+          starred: '<p>Qui compaiono i tuoi argomenti preferiti.</p><p>Per aggiungere o rimuovere un argomento dai preferiti, usa:</p><ul><li>la <i class="fa fa-star"></i> vicino al titolo di ogni argomento</li><li>il bottone Preferito in fondo ad ogni argomento</li></ul>'
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         hot: "Non ci sono altri argomenti caldi."
@@ -724,10 +728,10 @@ it:
       new: 'nuovo argomento'
       unread: 'non letto'
       new_topics:
-        one: '1 nuovo topic'
+        one: '1 nuovo argomento'
         other: '{{count}} nuovi argomenti'
       unread_topics:
-        one: '1 topic non letto'
+        one: '1 argomento non letto'
         other: '{{count}} argomenti non letti'
       title: 'Argomento'
       loading_more: "Caricamento di altri argomenti..."
@@ -746,13 +750,13 @@ it:
         one: "c'è un post non letto in questa discussione"
         other: "hai {{count}} messagi non letti in questo argomento"
       unread_posts:
-        one: "Hai 1 post non letto in questo topic"
+        one: "Hai 1 vecchio messaggio non letto in questo argomento"
         other: "hai {{count}} vecchi messaggi non letti in questo argomento"
       new_posts:
-        one: "1 nuovo post in questo topic dal tuo ultimo accesso"
-        other: "ci sono {{count}} nuovi messaggi in questo argomento dal tuo ultimo accesso"
+        one: "c'è 1 nuovo messaggio in questo argomento dalla tua ultima lettura"
+        other: "ci sono {{count}} nuovi messaggi in questo argomento dalla tua ultima lettura"
       likes:
-        one: "C'è 1 nuovo \"Mi piace\" in questo topic"
+        one: "c'è 1 \"Mi piace\" in questo argomento"
         other: "ci sono {{count}} \"Mi piace\" in questo argomento"
       back_to_list: "Torna alla Lista Argomenti"
       options: "Opzioni Argomento"
@@ -821,7 +825,7 @@ it:
           title: "Ignorato"
           description: "Non ti verrà notificato nulla di questo argomento e non comparirà nella tab dei non letti."
       actions:
-        recover: "Ripristina l'argomento"
+        recover: "Ripristina Argomento"
         delete: "Cancella l'argomento"
         open: "Apri l'argomento"
         close: "Chiudi l'argomento"
@@ -921,7 +925,6 @@ it:
       post_number: "messaggio {{number}}"
       in_reply_to: "rispondi a"
       last_edited_on: "ultima modifica al messaggio:"
-      reply_as_new_topic: "Rispondi come nuovo Messaggio"
       continue_discussion: "Continua la discussione da {{postLink}}:"
       follow_quote: "vai al messaggio citato"
       show_full: "Mostra Messaggio Completo"
@@ -955,7 +958,7 @@ it:
         yes_value: "Si, abbandona"
       via_email: "questo messaggio è arrivato via email"
       wiki:
-        about: "questo messaggio è una guida; gli utenti normali possono modificarla"
+        about: "questo messaggio è una guida; gli utenti base possono modificarla"
       archetypes:
         save: 'Opzioni di salvataggio'
       controls:
@@ -1140,7 +1143,6 @@ it:
       allow_badges_label: "Permetti che le targhette vengano assegnate in questa categoria"
       edit_permissions: "Modifica Permessi"
       add_permission: "Aggiungi Permesso"
-      everyone_permission: "chiunque"
       this_year: "quest'anno"
       position: "posizione"
       default_position: "Posizione di default"
@@ -1218,7 +1220,7 @@ it:
     views: "Visualizzazioni"
     views_lowercase: "visualizzazioni"
     replies: "Risposte"
-    views_long: "questo topic è stato visualizzato {{number}} volte"
+    views_long: "questo argomento è stato visualizzato {{number}} volte"
     activity: "Attività"
     likes: "Mi piace"
     likes_lowercase: "mi piace"
@@ -1277,8 +1279,8 @@ it:
           other: "{{categoryName}} ({{count}})"
         help: "ultimi argomenti nella categoria {{categoryName}}"
       top:
-        title: "Alto"
-        help: "gli argomenti più attive nell'ultimo anno, mese, settimana o giorno"
+        title: "Di Punta"
+        help: "gli argomenti più attivi nell'ultimo anno, mese, settimana o giorno"
         yearly:
           title: "Migliori dell'anno"
         monthly:
@@ -1621,7 +1623,7 @@ it:
           deleted: "Nessun nuovo valore. Il registro è stato cancellato."
           actions:
             delete_user: "cancella l'utente"
-            change_trust_level: "cambia livello attendibilità"
+            change_trust_level: "cambia livello esperienza"
             change_site_setting: "modifica le impostazioni del sito"
             change_site_customization: "modifica la personalizzazione del sito"
             delete_site_customization: "cancella la personalizzazione del sito"
@@ -1681,11 +1683,11 @@ it:
           active: 'Utenti Attivi'
           new: 'Nuovi Utenti'
           pending: 'Revisione degli utenti in sospeso'
-          newuser: 'Utenti con Livello Attendibilità 0 (Nuovo Utente)'
-          basic: 'Utenti con Livello Attendibilità 1 (Utente Base)'
-          regular: 'Utenti al Livello Esperienza 2 (Base)'
-          leader: 'Utenti al Livello Esperienza 3 (Assiduo)'
-          elder: 'Utenti al Livello Esperienza 4 (Esperto)'
+          newuser: 'Utenti con Livello Esperienza 0 (Nuovo)'
+          basic: 'Utenti con Livello Esperienza 1 (Base)'
+          regular: 'Utenti al Livello Esperienza 2 (Assiduo)'
+          leader: 'Utenti al Livello Esperienza 3 (Esperto)'
+          elder: 'Utenti al Livello Esperienza 4 (Veterano)'
           admins: 'Utenti Amministratori'
           moderators: 'Moderatori'
           blocked: 'Utenti Bloccati'
@@ -1775,12 +1777,12 @@ it:
         deactivate_explanation: "Un utente disattivato deve riconvalidare la propria email."
         suspended_explanation: "Un utente sospeso non può fare il login."
         block_explanation: "Un utente bloccato non può pubblicare messaggi o iniziare argomenti."
-        trust_level_change_failed: "C'è stato un problema nel cambio di livello di attendibilità di questo utente.  "
+        trust_level_change_failed: "C'è stato un problema nel cambio di livello di esperienza di questo utente.  "
         suspend_modal_title: "Sospendi Utente"
-        trust_level_2_users: "Utenti con Livello Attendibilità 2"
-        trust_level_3_requirements: "Requisiti per Livello Attendibilità 3"
+        trust_level_2_users: "Utenti con Livello Esperienza 2"
+        trust_level_3_requirements: "Requisiti per Livello Esperienza 3"
         tl3_requirements:
-          title: "Requisiti per Livello Attendibilità 3"
+          title: "Requisiti per Livello Esperienza 3"
           table_title: "Negli ultimi 100 giorni:"
           value_heading: "Valore"
           requirement_heading: "Requisito"
@@ -1795,9 +1797,8 @@ it:
           flagged_by_users: "Utenti Segnalatori"
           likes_given: "Mi piace - Assegnati"
           likes_received: "Mi piace - Ricevuti"
-          qualifies: "Requisiti per Livello Attendibilità 3."
-          will_be_promoted: "Verrà promosso entro 24 ore."
-          does_not_qualify: "Non ha i requisiti per il Livello Attendibilità 3."
+          qualifies: "Requisiti per livello esperienza 3."
+          does_not_qualify: "Non ha i requisiti per il livello esperienza 3."
         sso:
           title: "Single Sign On"
           external_id: "ID Esterno"
@@ -1805,10 +1806,6 @@ it:
           external_name: "Nome"
           external_email: "Email"
           external_avatar_url: "URL dell'Avatar"
-      site_text:
-        none: "Scegli un tipo di contenuto per iniziare a scrivere."
-        title: 'Contenuto'
-        edit: "Modifica Contenuto Sito"
       site_settings:
         show_overriden: 'Mostra solo i sovrascritti'
         title: 'Impostazioni'
@@ -1824,7 +1821,7 @@ it:
           posting: 'Pubblicazione'
           email: 'Email'
           files: 'File'
-          trust: 'Livelli Attendibilità'
+          trust: 'Livelli Esperienza'
           security: 'Sicurezza'
           onebox: "Onebox"
           seo: 'SEO'
@@ -1875,7 +1872,7 @@ it:
           none: "Aggiorna giornalmente"
           post_action: "Quando un utente agisce su un messaggio"
           post_revision: "Quando un utente modifica o crea un messaggio"
-          trust_level_change: "Quando un utente cambia livello di attendibilità"
+          trust_level_change: "Quando un utente cambia livello di esperienza"
           user_change: "Quando un utente viene modificato o creato"
         preview:
           link_text: "Anteprima targhette guadagnate"
@@ -1899,7 +1896,7 @@ it:
     keyboard_shortcuts_help:
       title: 'Scorciatoie da tastiera'
       jump_to:
-        title: 'Vai A'
+        title: 'Vai A (G)'
         home: '<b>g</b>, <b>h</b> Home (Ultimi)'
         latest: '<b>g</b>, <b>l</b> Ultimi'
         new: '<b>g</b>, <b>n</b> Nuovi'
@@ -1930,7 +1927,6 @@ it:
         star: '<b>f</b> Metti l''argomento nei preferiti'
         share_topic: '<b>shift s</b> Condividi argomento'
         share_post: '<b>s</b> Condividi messaggio'
-        reply_as_new_topic: '<b>t</b> Rispondi come nuovo argomento'
         reply_topic: '<b>shift r</b> Rispondi all''argomento'
         reply_post: '<b>r</b> Rispondi al messaggio'
         quote_post: '<b>q</b> Cita messaggio'
@@ -1940,7 +1936,7 @@ it:
         edit: '<b>e</b> Modifica il messaggio'
         delete: '<b>d</b> Cancella il messaggio'
         mark_muted: '<b>m</b>, <b>m</b> Ignora argomento'
-        mark_regular: '<b>m</b>, <b>r</b> Ripristina (default) argomento'
+        mark_regular: '<b>m</b>, <b>r</b> Argomento normale (default)'
         mark_tracking: '<b>m</b>, <b>t</b> Segui argomento'
         mark_watching: '<b>m</b>, <b>w</b> Osserva argomento'
     badges:
@@ -1952,19 +1948,19 @@ it:
         other: "%{count} Targhette"
       more_badges:
         one: "+1 Più"
-        other: "+%{count} Più"
+        other: "+ altri %{count}"
       granted:
         one: "1 assegnato"
         other: "%{count} assegnate"
-      select_badge_for_title: Scegli una targhetta da usare come tuo titolo
-      no_title: "<no title>"
+      select_badge_for_title: Scegli una targhetta da usare come titolo
+      no_title: "<nessun titolo>"
       badge_grouping:
         getting_started:
           name: Per Iniziare
         community:
           name: Comunità
         trust_level:
-          name: Livello Attendibilità
+          name: Livello Esperienza
         other:
           name: Altro
         posting:
@@ -1977,10 +1973,10 @@ it:
           name: Base
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Assegnate</a> tutte le funzioni essenziali della comunità
         member:
-          name: Membro
+          name: Assiduo
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Assegnata</a> inviti
         regular:
-          name: Assiduo
+          name: Esperto
           description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concessi</a> i permessi di: ricategorizzare, rinominare, collegamenti seguiti e Lounge'
         leader:
           name: Leader
@@ -2034,8 +2030,8 @@ it:
           name: Prima Citazione
           description: Ha citato un utente
         read_guidelines:
-          name: Leggi le Linee Guida
-          description: Leggi le <a href="/guidelines">linee guida della comunità</a>
+          name: Linee Guida Lette
+          description: Hai letto le <a href="/guidelines">linee guida della comunità</a>
         reader:
           name: Lettore
           description: Leggi tutti i messaggi in un argomento con più di 100 messaggi

@@ -231,7 +231,6 @@ es:
       title: "regular"
     elder:
       title: "lider"
-    change_failed_explanation: "Intentaste degradar a un usuario %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} seguirá en '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Has realizado esta acción demasiadas veces, inténtalo de nuevo más tarde"
     too_many_requests: "Estas haciendo eso demasiado a menudo. Por favor espera %{time_left} antes de intentarlo de nuevo."
@@ -394,10 +393,6 @@ es:
   archetypes:
     regular:
       title: "Tema normal"
-    banner:
-      message:
-        make: "Este tema es ahora un tema de encabezado . Aparecera en la parte superior de cada página hasta que el usuario lo cierre. "
-        remove: "Este tema ya no es un tema de encabezado y dejara de aparecer en la parte superior de cada página."
   unsubscribed:
     title: 'Dado de bajada'
     description: "Has sido dado de baja. ¡No te contactaremos de nuevo!"
@@ -505,7 +500,7 @@ es:
     image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">descárgate la última versión</a>.'
     failing_emails_warning: 'Hay %{num_failed_jobs} de tareas de email que fallaron. Revisa tu archivo config/discourse.conf y asegúrate que la configuración del servidor de email esté correcta. <a href="/sidekiq/retries" target="_blank">Revisa las tareas fallidas en Sidekiq</a>.'
     default_logo_warning: "No has personalizado los imágenes del logo para tu sitio. Actualiza logo_url, logo_small_url, y favicon_url en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
-    contact_email_missing: "No has proveido un correo de contacto para tu sitio. Por favor actualiza contact_email en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    contact_email_missing: "No has proporcionado un email de contacto para tu sitio. Por favor, actualiza contact_email en los <a href='/admin/site_settings'>Ajustes del sitio</a>."
     contact_email_invalid: "La dirección email de contacto es inválida. Por favor actualiza contact_email en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
     title_nag: "El título Site Setting todavía está configurado al valor predeterminado. Por favor actualízalo con el título de tu sitio en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
     site_description_missing: "La site_description configuración está vacía. Escribe una breve descripción de este foro en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
@@ -532,12 +527,6 @@ es:
     login_required_welcome_message:
       title: "Registro requerido: mensaje de bienvenida"
       description: "El mensaje de bienvenida que se muestra a los usuarios que han salido cuando la configuración de 'login required' está activada."
-    tos_user_content_license:
-      title: "Términos del servicio: licencia de contenido"
-      description: "OBSOLETO PRÓXIMAMENTE. No se usará más, será eliminado. En vez de esto, edita el tema Condiciones de Servicio en la categoría Staff."
-    tos_miscellaneous:
-      title: "Términos del servicio: misceláneo"
-      description: "OBSOLETO PRÓXIMAMENTE. No se usará más, será eliminado. En vez de esto, edita el tema Condiciones de Servicio en la categoría Staff."
     login_required:
       title: "Registro Requerido: Homepage"
       description: "El texto mostrado para usuarios no autorizados cuando el registro es requerido en el sitio."
@@ -694,7 +683,6 @@ es:
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     backup_daily: "Crear automáticamente una copia de seguridad del sitio una vez al día."
-    enable_s3_backups: "Subir respaldos a S3 cuando sea completado. IIMPORTANTE: Se requiere que en las opciones de Archivo existan credenciales de S3 válidas."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     active_user_rate_limit_secs: "Como de frecuentemente actualizaremos el campo 'last_seen_at', en segundos"
     verbose_localization: "Mostrar sugerencias de localización extendida en la interface de usuario "
@@ -716,7 +704,6 @@ es:
     clean_orphan_uploads_grace_period_hours: "Período de gracia (en horas) antes de que una subida huérfana sea eliminada."
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
     purge_inactive_users_grace_period_days: "Período de gracia (en días) antes de eliminar un usuario inactivo."
-    enable_s3_uploads: "Situar las subidas en un almacenamiento Amazon S3."
     s3_use_iam_profile: 'Usar el rol de AWS EC2 IAM para descargar las llaves. NOTA: habilitando esta opción ignorará la "llave de acceso s3" y "la llave de acceso secreta s3".'
     s3_upload_bucket: "El nombre del depósito de Amazon S3 donde se subirán los archivos. AVISO: debe estar escrito en minúsculas y sin puntos."
     s3_access_key_id: "La clave id de acceso de Amazon S3 que se utilizará para subir imágenes."
@@ -884,7 +871,6 @@ es:
     incorrect_username_email_or_password: "Nombre de usuario, email o password incorrectos"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprovada."
     active: "Tu cuenta está activa y lista."
-    activate_email: "¡Casi estás listo! Te envíaremos un email de activación a <b>%{email}</b>. Por favor sigue las instrucciones del email para activar tu cuenta."
     not_activated: "Aún no puedes hacer log in. Te hemos enviado un email de activación. Por favor sigue las instrucciones en el email para activar tu cuenta."
     suspended: "No puedes iniciar sesión hasta %{date}."
     suspended_with_reason: "No puedes iniciar sesión hasta el %{date}. El motivo por el que tu cuenta fue suspendida: %{reason}"
@@ -936,15 +922,8 @@ es:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] actualización disponible"
   flags_reminder:
-    flags_were_submitted:
-      one: "Hay reportes enviados de hace 1 hora."
-      other: "Hay reportes enviados de hace %{count} horas."
     please_review: "Por favor, revísalos."
     post_number: "post"
-    how_to_disable: "Deshabilita este correo electrónico cambiando la opción notify_about_flags_after a 0."
-    subject_template:
-      one: "1 reporte esperando ser atendido"
-      other: "%{count} reportes esperando ser atendidos"
   flag_reasons:
     off_topic: "Tu post fue reportado como **off-topic**: la comunidad piensa que no se ajusta al asunto del tema, definido actualmente por su título y primer post."
     inappropriate: "Tu post ha sido reportado como **inapropiado**: la comunidad piensa que puede ser ofensivo, abusivo, o que supone una violación de las [directrices de la comunidad](/guidelines)."
@@ -1218,9 +1197,6 @@ es:
     search_google: "Google"
   terms_of_service:
     title: "Condiciones Generales de Uso"
-    user_content_license: |
-      Las contribuciones de los usuarios tienen licencia [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Sin limitar esas declaraciones o garantías, %{company_short_name} tiene el derecho (que no la obligación) de, según el criterio de %{company_short_name}, (i) rechazar o eliminar cualquier contenido que, en opinión de %{company_short_name}, violara alguna de las políticas de %{company_short_name} o fuera perjudicial o censurable, o (ii) bloquear o denegar el acceso al uso del sitio a cualquier individuo o entidad por razones a juicio de %{company_short_name}. %{company_short_name} no tiene la obligación de devolver ninguna cantidad previamente pagada.
-    miscellaneous: "Este Contrato constituye un convenio completo entre %{company_short_name} y el Usuario en relación con el objeto del mismo y que sólo puede ser modificado por una enmienda escrita y firmada por un ejecutivo autorizado de %{company_short_name}, o mediante la publicación por %{company_short_name} de una versión revisada. \n\nEstas Condiciones de uso se regirán e interpretarán conforme a la legislación española. %{company_short_name} y el Usuario acuerdan someter cualquier controversia que pudiera suscitarse entre ellos por el acceso y/o uso del Sitio Web a los Juzgados y Tribunales de Madrid capital, salvo que la ley establezca otra cosa.\n\nSi alguna parte de este Acuerdo es considerada inválida o inaplicable, dicha parte se interpretará en el sentido de reflejar la intención original de las partes, y las partes restantes permanecerán en pleno vigor y efecto. La renuncia por cualquiera de las partes de cualquier término o condición de este Contrato o cualquier incumplimiento del mismo, en cualquier instancia, no renunciará a dicho término o condición o cualquier incumplimiento posterior de la misma. \n\nEl Usuario puede asignar sus derechos bajo este Contrato a cualquier parte que consienta a, y se compromete a estar obligado por sus términos y condiciones; %{company_short_name} puede asignar sus derechos bajo este Contrato sin condiciones. Este Contrato será vinculante y redundará en beneficio de las partes, sus sucesores y cesionarios autorizados."
     signup_form_message: 'He leído y acepto las <a href="/tos" target="_blank">Condiciones de Servicio</a>.'
   deleted: 'borrado'
   upload:

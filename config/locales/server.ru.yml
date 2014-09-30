@@ -233,7 +233,6 @@ ru:
       title: "базовый пользователь"
     regular:
       title: "участник"
-    change_failed_explanation: "Вы попытались понизить пользователя %{user_name} до уровня '%{new_trust_level}'. Однако, его уровень доверия уже '%{current_trust_level}'. Пользователь %{user_name} останется в группе '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Вы выполняете это действие слишком часто; пожалуйста, попробуйте еще раз позже"
     too_many_requests: "Вы повторяете действие слишком часто. Пожалуйста, подождите %{time_left} до следующей попытки."
@@ -421,10 +420,6 @@ ru:
   archetypes:
     regular:
       title: "Обычная тема"
-    banner:
-      message:
-        make: "Эта тема теперь является объявлением и будет отображаться сверху на всех страницах. Пользователи могут спрятать объявление, чтобы оно больше не показывалось для них - каждый сам для себя."
-        remove: "Эта тема больше не является объявлением и больше не будет отображаться вверху всех страниц."
   unsubscribed:
     title: 'Отписаться'
     description: "Вы отписались от рассылки. Мы более не будем посылать вам информацию."
@@ -555,12 +550,6 @@ ru:
     login_required_welcome_message:
       title: "Требуется вход: приветствие"
       description: "Приветствие, отображаемое пользователям, не вошедшим на сайт, если опция 'требуется вход' включена."
-    tos_user_content_license:
-      title: "Условия предоставления услуг: Content License"
-      description: "DEPRECATED. Not used anymore and will be removed. Edit the Terms of Service topic in the Staff category instead."
-    tos_miscellaneous:
-      title: "Условия предоставления услуг: Miscellaneous"
-      description: "DEPRECATED. Not used anymore and will be removed. Edit the Terms of Service topic in the Staff category instead."
     login_required:
       title: "Требуется вход: Начальная страница"
       description: "Текст, показываемый неавторизованным пользователям, когда требуется вход на сайт."
@@ -833,7 +822,6 @@ ru:
     incorrect_username_email_or_password: "Неверное имя пользователя, адрес электронной почты или пароль"
     wait_approval: "Спасибо за регистрацию. Мы оповестим вас, когда ваша учетная запись будет одобрена."
     active: "Ваша учетная запись активирована и готова к использованию."
-    activate_email: "Почти готово! Мы послали письмо с инструкциями по активации учетной записи на  <b>%{email}</b>."
     not_activated: "Вы пока что не можете войти на сайт. Пожалуйста, следуйте инструкциям по активации учетной записи, которые мы отправили вам  по электронной почтой."
     not_allowed_from_ip_address: "Вам нельзя входить как %{username} с этого IP адреса."
     suspended: "Вы не можете войти до %{date}."
@@ -927,15 +915,7 @@ ru:
 
       %{notes}
   flags_reminder:
-    flags_were_submitted:
-      one: "Есть жалобы, поданные более часа назад."
-      few: "Есть жалобы, поданные более %{count}ч назад."
-      other: "Есть жалобы, поданные более %{count}ч назад."
     please_review: "Пожалуйста, рассмотрите их"
-    subject_template:
-      one: "1 жалоба ожидает рассмотрения"
-      few: "%{count} жалоб(ы) ожидают рассмотрения"
-      other: "%{count} жалоб(ы) ожидают рассмотрения"
   flag_reasons:
     off_topic: "Сообщество считает, что ваше сообщение **не относится к теме**, учитывая ее заголовок и первое сообщение."
     inappropriate: "Сообщество считает ваше сообщение **неприемлемым**, т.е. оскорбительным, непристойным или нурашающим [кодекс чести](/guidelines)."
@@ -1229,9 +1209,6 @@ ru:
       Для доступа требуется учетная запись пользователя. Чтобы продолжить, пожалуйста, зарегистрируйтесь или войдите.
   terms_of_service:
     title: "Условия предоставления услуг"
-    user_content_license: |-
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
-    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
     signup_form_message: 'Я прочитал(а) и согласен(а) с <a href="/tos" target="_blank">пользовательским соглашением</a>.'
   deleted: 'удалено'
   upload:

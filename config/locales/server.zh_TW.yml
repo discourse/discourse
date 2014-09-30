@@ -296,10 +296,6 @@ zh_TW:
   archetypes:
     regular:
       title: "一般討論話題"
-    banner:
-      message:
-        make: "此討論話題已成為橫幅討論話題，它將顯示於每頁的正上方，直到用戶將其關閉。"
-        remove: "此討論話題不再是橫幅討論話題，它將不再顯示於每頁的正上方。"
   unsubscribed:
     title: '取消訂閱'
     description: "你已經取消訂閱，我們不會再聯絡你。"
@@ -424,10 +420,6 @@ zh_TW:
     login_required_welcome_message:
       title: "請登入：歡迎訊息"
       description: "歡迎資訊只會在已啟用'login required'時向未登入的用戶顯示"
-    tos_user_content_license:
-      title: "服務條款：內容授權"
-    tos_miscellaneous:
-      title: "服務條款：其它"
     login_required:
       title: "請登入：首頁"
     head:
@@ -559,7 +551,6 @@ zh_TW:
     max_private_messages_per_day: "每個用戶每天最多能發\"私訊\"的數量"
     suggested_topics: "討論話題下的推薦話題數量"
     limit_suggested_to_category: "目前的話題下只顯示同分類的推薦話題"
-    enable_s3_uploads: "上傳檔案到 Amazon S3"
     s3_upload_bucket: "上傳檔案到 Amazon S3 的 bucket 名，警告：必須為英文小寫，且無句點（.）"
     s3_access_key_id: "上傳至 Amazon S3 的 access key id，將用於上傳圖片"
     s3_secret_access_key: "上傳至 Amazon S3 的 secret access key，將用於上傳圖片"
@@ -662,7 +653,6 @@ zh_TW:
     incorrect_username_email_or_password: "用戶名、電子郵箱或密碼不正確"
     wait_approval: "謝謝註冊帳號。我們會在你的帳號獲得批准之後通知你。"
     active: "你的帳號已經被啟用，可以使用了。"
-    activate_email: "快完成了！我們發送了一封啟用郵件<b>%{email}</b>給你，請按照郵件中的步驟來啟用你的帳號。"
     not_activated: "你還不能登入。我們發送了一封啟用郵件給你，請按照郵件中的步驟來啟用你的帳號。"
     suspended: "你在 %{date} 之前無法登入。"
     suspended_with_reason: "你在 %{date} 之前無法登入。你被停權的理由：%{reason}"
@@ -705,13 +695,8 @@ zh_TW:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升級"
   flags_reminder:
-    flags_were_submitted:
-      other: "在過去的 %{count} 小時內有新的標記"
     please_review: "請再次確認。"
     post_number: "文章"
-    how_to_disable: "將 notify_about_flags_after 設為 0 來禁用此來通知 EMail"
-    subject_template:
-      other: "%{count} 個標記需要處理"
   flag_reasons:
     off_topic: "你的文章被標記為 **離題**：社群認為它不切合主題，也就是該討論話題的標題和首篇文章所述之內容。"
     spam: "你的文章被標記為 **垃圾內容**：我們認為這是一則廣告，和討論話題無關只是促銷資訊。"
@@ -881,9 +866,6 @@ zh_TW:
     search_title: "搜尋該網頁"
     search_google: "Google"
   terms_of_service:
-    user_content_license: |
-      使用者的內容基於 [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US) 授權。. Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
-    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
     signup_form_message: '我已閱讀並接受 <a href="/tos" target="_blank">服務條款</a>'
   deleted: '已刪除'
   upload:

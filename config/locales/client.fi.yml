@@ -168,7 +168,7 @@ fi:
     topic_count_new:
       one: "{{count}} uusi ketju."
       other: "{{count}} uutta ketjua."
-    click_to_show: "Klikkaa avataksesi."
+    click_to_show: "Klikkaa nähdäksesi."
     preview: "esikatselu"
     cancel: "peruuta"
     save: "Tallenna muutokset"
@@ -259,6 +259,7 @@ fi:
       other_accounts: Muut tilit samasta IP osoitteesta
       no_other_accounts: (ei mitään)
     user:
+      said: "{{username}}:"
       profile: "Profiili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
@@ -339,6 +340,7 @@ fi:
         title: "Profiilin taustakuva"
       email:
         title: "Sähköposti"
+        instructions: "Ei tule julkiseksi."
         ok: "Hyvältä näyttää. Lähetämme sinulle sähköpostin varmistukseksi."
         invalid: "Ole hyvä ja anna toimiva sähköpostiosoite."
         authenticated: "{{provider}} on todentanut sähköpostisi."
@@ -350,6 +352,7 @@ fi:
         ok: "Nimesi vaikuttaa hyvältä."
       username:
         title: "Käyttäjätunnus"
+        instructions: "Uniikki, lyhyt ja ilman välilyöntejä."
         short_instructions: "Muut käyttäjät voivat viitata sinuun nimellä @{{username}}."
         available: "Käyttäjätunnuksesi on vapaana."
         global_match: "Sähköposti vastaa rekisteröityä käyttäjänimeä."
@@ -433,6 +436,8 @@ fi:
         too_short: "Salasanasi on liian lyhyt."
         common: "Annettu salasana on liian yleinen."
         ok: "Salasana vaikuttaa hyvältä."
+        instructions: "Vähintään %{count} merkkiä."
+      associated_accounts: "Liittyvät käyttäjätilit"
       ip_address:
         title: "Viimeinen IP-osoite"
       registration_ip_address:
@@ -506,7 +511,6 @@ fi:
     created: 'Luotu'
     created_lowercase: 'luotu'
     trust_level: 'Luottamustaso'
-    search_hint: 'käyttäjänimi tai sähköposti'
     create_account:
       title: "Luo uusi tunnus"
       failed: "Jotain meni pieleen. Ehkäpä tämä sähköpostiosoite on jo rekisteröity, kokeile salasana unohtui -linkkiä."
@@ -687,6 +691,7 @@ fi:
         actions: "Massatoiminnot"
         change_category: "Vaihda aluetta"
         close_topics: "Sulje ketjut"
+        archive_topics: "Arkistoi ketjut"
         notification_level: "Vaihda ilmoitusasetusta"
         selected:
           one: "Olet valinnut <b>yhden</b> ketjun."
@@ -729,7 +734,7 @@ fi:
       unread_topics:
         one: '1 lukematon ketju'
         other: '{{count}} lukematonta ketjua'
-      title: 'Ketju'
+      title: 'Aihe'
       loading_more: "Ladataan lisää ketjuja..."
       loading: 'Ladataan ketjua...'
       invalid_access:
@@ -921,14 +926,14 @@ fi:
       post_number: "viesti {{number}}"
       in_reply_to: "vastauksena"
       last_edited_on: "viestin viimeinen muokkausaika"
-      reply_as_new_topic: "Vastaa uudessa ketjussa"
+      reply_as_new_topic: "Aloita uusi yhdistetty ketju"
       continue_discussion: "Jatkoa ketjulle {{postLink}}:"
       follow_quote: "siirry lainattuun viestiin"
       show_full: "Näytä koko viesti"
       show_hidden: 'Näytä piilotettu sisältö.'
       deleted_by_author:
-        one: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti tunnin kuluttua, paitsi jo se liputetaan)"
-        other: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jo se liputetaan)"
+        one: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti tunnin kuluttua, paitsi jos se liputetaan)"
+        other: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos se liputetaan)"
       expand_collapse: "laajenna/pienennä"
       gap:
         one: "1 piilotettu viesti"
@@ -982,6 +987,7 @@ fi:
         convert_to_moderator: "Lisää henkilökunnan taustaväri"
         revert_to_regular: "Poista henkilökunnan taustaväri"
         rebake: "Tee HTML uudelleen"
+        unhide: "Poista piilotus"
       actions:
         flag: 'Liputa'
         defer_flags:
@@ -1140,7 +1146,6 @@ fi:
       allow_badges_label: "Salli arvomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"
-      everyone_permission: "kaikki"
       this_year: "tänä vuonna"
       position: "asema"
       default_position: "Oletuspaikka"
@@ -1205,8 +1210,8 @@ fi:
         help: "Tämä ketju on arkistoitu; se on jäädytetty eikä sitä voi muuttaa"
       invisible:
         help: "Tämä ketju on poistettu listauksista; sitä ei näytetä ketjujen listauksissa ja siihen pääsee vain suoralla linkillä"
-    posts: "Viestit"
-    posts_lowercase: "viestit"
+    posts: "Viestejä"
+    posts_lowercase: "viestejä"
     posts_long: "tässä ketjussa on {{number}} viestiä"
     posts_likes_MF: |
       Tässä ketjussa on {count, plural, one {1 viesti, jolla on} other {# viestiä, joilla on}} {ratio, select,
@@ -1798,7 +1803,6 @@ fi:
           likes_given: "Annettuja tykkäyksiä"
           likes_received: "Saatuja tykkäyksiä"
           qualifies: "Täyttää luottamustaso 3:n vaatimukset."
-          will_be_promoted: "Ylennetään 24 tunnin sisällä."
           does_not_qualify: "Ei täytä luottamustaso 3:n vaatimuksia."
         sso:
           title: "Kertakirjautuminen"
@@ -1807,10 +1811,24 @@ fi:
           external_name: "Nimi"
           external_email: "Sähköposti"
           external_avatar_url: "Avatarin URL"
+      user_fields:
+        title: "Käyttäjäkentät"
+        description: "Käyttäjiltä vaaditaan rekisteröitymisen yhteydessä vastaus kaikiin kenttiin, jotka lisätään tähän"
+        create: "Luo käyttäjäkenttä"
+        untitled: "Nimetön"
+        name: "Kentän nimi"
+        type: "Kentän tyyppi"
+        save: "Tallenna"
+        edit: "Muokkaa"
+        delete: "Poista"
+        cancel: "Peruuta"
+        delete_confirm: "Oletko varma, että haluat poistaa tämän käyttäjäkentän?"
+        field_types:
+          text: 'Tekstikenttä'
+          confirm: 'Vahvistus'
       site_text:
-        none: "Valitse sivuston osa aloittaaksesi muokkaamisen."
-        title: 'Sisältö'
-        edit: "Muokkaa sivuston osia"
+        none: "Valitse sisällön tyyppi aloittaaksesi muokkaamisen."
+        title: 'Tekstin sisältö'
       site_settings:
         show_overriden: 'Näytä vain muokatut'
         title: 'Asetukset'
@@ -1934,7 +1952,7 @@ fi:
         star: '<b>f</b> Merkitse ketju tähdellä'
         share_topic: '<b>shift s</b> Jaa ketju'
         share_post: '<b>s</b> Jaa viesti'
-        reply_as_new_topic: '<b>t</b> Vastaa uudessa ketjussa'
+        reply_as_new_topic: '<b>t</b> Aloita uusi yhdistetty ketju'
         reply_topic: '<b>shift r</b> Vastaa ketjuun'
         reply_post: '<b>r</b> Vastaa viestiin'
         quote_post: '<b>q</b> Lainaa viesti'
