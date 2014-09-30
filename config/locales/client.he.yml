@@ -506,7 +506,6 @@ he:
     created: 'נוצר'
     created_lowercase: 'נוצר/ו'
     trust_level: 'רמת אמון'
-    search_hint: 'שם משתמש/ת או כתובת דוא"ל'
     create_account:
       title: "יצירת חשבון חדש"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסה את קישור שכחתי סיסמה."
@@ -909,7 +908,6 @@ he:
       post_number: "הודעה {{number}}"
       in_reply_to: "השב ל"
       last_edited_on: "הודעה נערכה לאחרונה ב"
-      reply_as_new_topic: "תגובה כנושא חדש"
       continue_discussion: "ממשיך את הדיון מ {{postLink}}:"
       follow_quote: "מעבר להודעה המצוטטת"
       show_full: "הראה הודעה מלאה"
@@ -1760,7 +1758,6 @@ he:
           likes_given: "לייקים שהוענקו"
           likes_received: "לייקים שהתקבלו"
           qualifies: "דרישות עבור רמת אמון 3"
-          will_be_promoted: "יקודם בתוך 24 שעות."
           does_not_qualify: "אין עומד בדרישות עבור רמת אמון 3."
         sso:
           title: "התחברות חד פעמית"
@@ -1769,10 +1766,6 @@ he:
           external_name: "שם"
           external_email: "כתובת דוא\"ל"
           external_avatar_url: "כתובת URL של אווטר"
-      site_text:
-        none: "בחר סוג תוכן לפני תחילת העריכה."
-        title: 'תוכן'
-        edit: "ערוך תוכן אתר"
       site_settings:
         show_overriden: 'הצג רק הגדרות ששונו'
         title: 'הגדרות'

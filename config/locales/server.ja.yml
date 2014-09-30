@@ -151,7 +151,6 @@ ja:
       title: "メンバー"
     leader:
       title: "レギュラー"
-    change_failed_explanation: "%{user_name} を '%{new_trust_level}' に格下げしようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります。"
   rate_limiter:
     too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
     hours:
@@ -288,10 +287,6 @@ ja:
   archetypes:
     regular:
       title: "通常のトピック"
-    banner:
-      message:
-        make: "このトピックはバナートピックに設定されています。ページ毎の一番上に表示されます。"
-        remove: "このトピックはバナートピックから外されていました。"
   unsubscribed:
     title: '購読解除'
     description: "購読解除されました。メールの送信をストップしました。"
@@ -413,10 +408,6 @@ ja:
     login_required_welcome_message:
       title: "ウェルカムメッセージ: 要ログイン"
       description: "'login required' 設定有効時に、ユーザに対してログインを促すメッセージの内容。"
-    tos_user_content_license:
-      title: "利用規約: コンテンツ使用許諾"
-    tos_miscellaneous:
-      title: "利用規約: その他"
     login_required:
       title: "ホームページ: 要ログイン"
       description: "要ログイン設定の際に、未ログインユーザに対して表示されるメッセージの内容。"
@@ -527,7 +518,6 @@ ja:
     incorrect_username_email_or_password: "ユーザネーム、メールアドレス、またはパスワードが違います"
     wait_approval: "サインアップありがとうござました。アカウントが承認され次第メールにて通知いたします。"
     active: "アカウントが利用可能になりました。"
-    activate_email: "<b>%{email}</b> にメールを送りました。メールの指示に従ってあなたのアカウントを有効にしてください。"
     not_activated: "まだログインできません。メールを送信済ですので、メールの指示に従ってあなたのアカウントを有効にしてください。"
     suspended: "%{date} までログインできません。"
     suspended_with_reason: "%{date} までログインできません。アカウントがサスペンドされた理由は次の通りです: %{reason}"
@@ -547,6 +537,8 @@ ja:
       blocked: "は許可されていません。"
     ip_address:
       blocked: "はブロックされてます。"
+  invite_forum_mailer:
+    subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
   flag_reasons:
@@ -665,10 +657,6 @@ ja:
         もし上記リンクがクリックできない場合は、ブラウザのアドレスバーにリンクアドレスをコピー&ペーストしてください。
   page_not_found:
     title: "リクエストしたページは存在しないかモデレータによって削除されました。"
-  terms_of_service:
-    user_content_license: |
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
-    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
   deleted: 'deleted'
   upload:
     unauthorized: "申し訳ありません、ファイルのアップロードが拒否されました (サポートするファイルの拡張子: %{authorized_extensions})."

@@ -259,6 +259,7 @@ es:
       other_accounts: Otras cuentas con esta dirección IP
       no_other_accounts: (ninguna)
     user:
+      said: "{{username}}:"
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferencias"
@@ -339,6 +340,7 @@ es:
         title: "Fondo de perfil"
       email:
         title: "Email"
+        instructions: "Nunca se mostrará públicamente."
         ok: "De acuerdo. Te enviaremos un email para confirmar."
         invalid: "Por favor ingresa una dirección de email válida."
         authenticated: "Tu email ha sido autenticado por {{provider}}."
@@ -350,6 +352,7 @@ es:
         ok: "Tu nombre es válido."
       username:
         title: "Nombre de usuario"
+        instructions: "Debe ser único, sin espacios y conciso."
         short_instructions: "La gente puede mencionarte como @{{username}}."
         available: "Tu nombre de usuario está disponible."
         global_match: "El email coincide con el nombre de usuario registrado."
@@ -433,6 +436,7 @@ es:
         too_short: "Tu contraseña es demasiado corta."
         common: "Esa contraseña es demasiado común."
         ok: "Tu contraseña es válida."
+        instructions: "Debe contener al menos %{count} caracteres."
       ip_address:
         title: "Última dirección IP"
       registration_ip_address:
@@ -506,7 +510,6 @@ es:
     created: 'Creado'
     created_lowercase: 'Creado'
     trust_level: 'Nivel de confianza'
-    search_hint: 'usuario o email'
     create_account:
       title: "Crear nueva cuenta"
       failed: "Algo ha salido mal, tal vez este email ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
@@ -687,6 +690,7 @@ es:
         actions: "Acciones en bloque"
         change_category: "Cambiar categoria"
         close_topics: "Cerrar temas"
+        archive_topics: "Archivar temas"
         notification_level: "Cambiar el nivel de notificación"
         selected:
           one: "Has seleccionado <b>1</b> tema."
@@ -921,7 +925,6 @@ es:
       post_number: "post {{number}}"
       in_reply_to: "responder a"
       last_edited_on: "post editado por última ven en"
-      reply_as_new_topic: "Responder como nuevo tema"
       continue_discussion: "Continuando la discusión desde {{postLink}}:"
       follow_quote: "ir al post citado"
       show_full: "Mostrar todo el post"
@@ -982,6 +985,7 @@ es:
         convert_to_moderator: "Convertir a post de staff"
         revert_to_regular: "Eliminar el formato de post de staff"
         rebake: "Reconstruir HTML"
+        unhide: "Deshacer ocultar"
       actions:
         flag: 'Reportar'
         defer_flags:
@@ -1140,7 +1144,6 @@ es:
       allow_badges_label: "Permitir conceder distintivos en esta categoria"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
-      everyone_permission: "todos"
       this_year: "este año"
       position: "posición"
       default_position: "Posición predeterminada"
@@ -1798,7 +1801,6 @@ es:
           likes_given: "Likes dados"
           likes_received: "Likes recibidos"
           qualifies: "Califica para el nivel de confianza 3."
-          will_be_promoted: "Será promocionado en 24 horas."
           does_not_qualify: "No califica para el nivel de confianza 3."
         sso:
           title: "Single Sign On"
@@ -1807,10 +1809,6 @@ es:
           external_name: "Nombre"
           external_email: "Email"
           external_avatar_url: "URL del avatar"
-      site_text:
-        none: "Elige un tipo de contenido para empezar a editar."
-        title: 'Contenido'
-        edit: "Editar contenido del sitio"
       site_settings:
         show_overriden: 'Sólo mostrar lo personalizado'
         title: 'Ajustes del sitio'
@@ -1934,7 +1932,6 @@ es:
         star: '<b>f</b> Añadir tema a favoritos'
         share_topic: '<b>shift s</b> Compartir tema'
         share_post: '<b>s</b> Compartir post'
-        reply_as_new_topic: '<b>t</b> Responder como nuevo tema'
         reply_topic: '<b>shift r</b> Responder al tema'
         reply_post: '<b>r</b> Responder al post'
         quote_post: '<b>q</b> Citar post'

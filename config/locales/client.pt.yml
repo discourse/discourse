@@ -506,7 +506,6 @@ pt:
     created: 'Criado'
     created_lowercase: 'criado'
     trust_level: 'Nível de confiança'
-    search_hint: 'nome de utilizador ou e-mail'
     create_account:
       title: "Criar Conta Nova"
       failed: "Houve um erro, talvez este email já esteja registado, tente usar o link Esqueci-me da Palavra-chave."
@@ -916,7 +915,6 @@ pt:
       post_number: "mensagem {{number}}"
       in_reply_to: "responder a"
       last_edited_on: "mensagem editada pela última vez em"
-      reply_as_new_topic: "Responder como um novo Tópico"
       continue_discussion: "Continuar a discussão desde {{postLink}}:"
       follow_quote: "ir para a mensagem citada"
       show_full: "Mostrar Post Completo"
@@ -1133,7 +1131,6 @@ pt:
       allow_badges_label: "Permitir a atribuição de medalhas nesta categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
-      everyone_permission: "todos"
       this_year: "este ano"
       position: "posição"
       default_position: "Posição Padrão"
@@ -1789,7 +1786,6 @@ pt:
           likes_given: "Gostos Dados"
           likes_received: "Gostos Recebidos"
           qualifies: "Qualifica-se para nível 3 de confiança."
-          will_be_promoted: "Será promovido dentro de 24 horas."
           does_not_qualify: "Não se qualifica para o nível 3 de confiança."
         sso:
           title: "Single Sign On"
@@ -1798,10 +1794,6 @@ pt:
           external_name: "Nome"
           external_email: "Email"
           external_avatar_url: "URL do Avatar"
-      site_text:
-        none: "Escolher um tipo de conteúdo para começar a editar."
-        title: 'Conteúdo'
-        edit: "Editar Conteúdo do Site"
       site_settings:
         show_overriden: 'Apenas mostrar valores alterados'
         title: 'Configurações do Site'
@@ -1924,7 +1916,6 @@ pt:
         star: '<b>f</b> Adicionar tópico aos favoritos'
         share_topic: '<b>shift s</b> Partilhar tópico'
         share_post: '<b>s</b> Partilhar tópico'
-        reply_as_new_topic: '<b>t</b> Responder com um novo tópico'
         reply_topic: '<b>shift r</b> Responder ao tópico'
         reply_post: '<b>r</b> Responder ao post'
         quote_post: '<b>q</b> Citar post'

@@ -286,6 +286,7 @@ cs:
       other_accounts: Další účty s touto IP adresou
       no_other_accounts: (žádné)
     user:
+      said: "{{username}}:"
       profile: "Profil"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
@@ -366,6 +367,7 @@ cs:
         title: "Pozadí profilu"
       email:
         title: "Emailová adresa"
+        instructions: "Nikdy nebude zveřejněno."
         ok: "To vypadá dobře. Zašleme vám email s potvrzením."
         invalid: "Prosím zadejte platnou emailovou adresu."
         authenticated: "Vaše emailová adresa byla autorizována přes službu {{provider}}."
@@ -377,6 +379,7 @@ cs:
         ok: "Vaše jméno vypadá dobře"
       username:
         title: "Uživatelské jméno"
+        instructions: "Unikátní, bez mezer, krátké."
         short_instructions: "Ostatní vás mohou zmínit pomocí @{{username}}."
         available: "Toto uživatelské jméno je volné."
         global_match: "Emailová adresa odpovídá registrovaného uživatelskému jménu."
@@ -464,6 +467,7 @@ cs:
         too_short: "Vaše heslo je příliš krátké."
         common: "Toto heslo je používané moc často."
         ok: "Vaše heslo je v pořádku."
+        instructions: "Alespo %{count} znaků."
       ip_address:
         title: "Poslední IP adresa"
       registration_ip_address:
@@ -537,7 +541,6 @@ cs:
     created: 'Vytvořeno'
     created_lowercase: 'vytvořeno'
     trust_level: 'Důvěryhodnost'
-    search_hint: 'uživatelské jméno nebo email'
     create_account:
       title: "Vytvořit nový účet"
       failed: "Něco se nepovedlo, možná je tato e-mailová adresa již použita. Zkuste použít formulář pro obnovení hesla."
@@ -964,7 +967,6 @@ cs:
       post_number: "příspěvek č. {{number}}"
       in_reply_to: "Odpovědět"
       last_edited_on: "příspěvek naposledy upraven"
-      reply_as_new_topic: "Odpovědět přes nové téma"
       continue_discussion: "Pokračující diskuze z {{postLink}}:"
       follow_quote: "přejít na citovaný příspěvek"
       show_full: "Zobrazit celý příspěvek"
@@ -1029,6 +1031,7 @@ cs:
         convert_to_moderator: "Přidejte Staff Color"
         revert_to_regular: "Odstraňte Staff Color"
         rebake: "Obnovit HTML"
+        unhide: "Odkrýt"
       actions:
         flag: 'Nahlásit'
         it_too:
@@ -1196,7 +1199,6 @@ cs:
       email_in_disabled: "Přidávání nových témat před email je zakázáno v Nastavení fóra. K povolení nových témat přes email,"
       edit_permissions: "Upravit oprávnění"
       add_permission: "Přidat oprávnění"
-      everyone_permission: "všichni"
       this_year: "letos"
       position: "umístění"
       default_position: "Výchozí umístění"
@@ -1304,6 +1306,7 @@ cs:
           other: "Nepřečtená ({{count}})"
         lower_title_with_count:
           one: "1 nepřečtený"
+          other: "{{count}} nepřečtených"
       new:
         lower_title_with_count:
           one: "1 nový"
@@ -1534,6 +1537,7 @@ cs:
         override_default: "Přetížit výchozí?"
         enabled: "Zapnuto?"
         preview: "náhled"
+        undo_preview: "odstranit náhled"
         rescue_preview: "výchozí styl"
         save: "Uložit"
         new: "Nové"
@@ -1552,6 +1556,8 @@ cs:
           new_name: "Nové barevné schéma"
           copy_name_prefix: "Kopie"
           undo: "zpět"
+          highlight:
+            name: 'zvýraznit'
           danger:
             name: 'nebezpečí'
           success:
@@ -1694,6 +1700,7 @@ cs:
           one: "Failed to reject 1 user."
           few: "Failed to reject %{count} users."
           other: "Failed to reject %{count} users."
+        not_verified: "Neověřeno"
       user:
         suspend_failed: "Nastala chyba při zakazování uživatele {{error}}"
         unsuspend_failed: "Nastala chyba při povolování uživatele {{error}}"
@@ -1726,6 +1733,7 @@ cs:
         reputation: Reputace
         permissions: Oprávnění
         activity: Aktivita
+        last_100_days: 'Za posledních 100 dní'
         private_topics_count: Počet soukromách témat
         posts_read_count: Přečteno příspěvků
         post_count: Vytvořeno příspěvků
@@ -1770,10 +1778,6 @@ cs:
           days: "dní"
           topics_replied_to: "Odpovědí na témata"
           flagged_posts: "Nahlášené příspěvky"
-      site_text:
-        none: "Zvolte typ obsahu a můžete začít editovat."
-        title: 'Obsah webu'
-        edit: "Editovat obsah webu"
       site_settings:
         show_overriden: 'Zobrazit pouze změněná nastavení'
         title: 'Nastavení'
@@ -1857,7 +1861,6 @@ cs:
         star: '<b>f</b> Star topic'
         share_topic: '<b>shift s</b> Sdílet téma'
         share_post: '<b>s</b> Share post'
-        reply_as_new_topic: '<b>t</b> Reply as new topic'
         reply_topic: '<b>shift r</b> Odpovědět na téma'
         reply_post: '<b>r</b> Odpovědět na příspěvek'
         quote_post: '<b>q</b> Citovat příspěvek'

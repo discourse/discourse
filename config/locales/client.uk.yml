@@ -378,7 +378,6 @@ uk:
     created: 'Створено'
     created_lowercase: 'створено'
     trust_level: 'Рівень довіри'
-    search_hint: 'ім''я користувача або email'
     create_account:
       title: "Створити Новий Обліковий Запис"
       failed: "Щось пішло не так; скоріше за все, цю електронну пошту вже зареєстровано, спробуйте посилання Забув пароль"
@@ -700,7 +699,6 @@ uk:
       post_number: "допис {{number}}"
       in_reply_to: "Відповісти"
       last_edited_on: "допис востаннє редаговано"
-      reply_as_new_topic: "Відповісти у новій Темі"
       continue_discussion: "В продовження дискусії {{postLink}}:"
       follow_quote: "перейти до цитованого допису"
       show_full: "Показати Увесь Допис"
@@ -1340,10 +1338,6 @@ uk:
           posts_read: "Прочитано Дописів"
           posts_read_all_time: "Прочитано дописів (весь час)"
           flagged_posts: "Оскаржені дописи"
-      site_text:
-        none: "Виберіть тип вмісту, щоб почати його редагувати."
-        title: 'Вміст'
-        edit: "Редагування вмісту сайта"
       site_settings:
         show_overriden: 'Показувати тільки перевизначені'
         title: 'Налаштування'
