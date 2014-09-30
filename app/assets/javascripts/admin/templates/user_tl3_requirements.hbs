@@ -7,12 +7,12 @@
   </div>
 </div>
 
-<div class="admin-container leader-requirements">
+<div class="admin-container tl3-requirements">
   <h2>{{username}} - {{i18n admin.user.tl3_requirements.title}}</h2>
   <br/>
   <p>{{i18n admin.user.tl3_requirements.table_title}}</p>
 
-  {{#with leaderRequirements}}
+  {{#with tl3Requirements}}
     <table class="table" style="width: 50%;">
       <thead>
         <tr>
@@ -91,32 +91,32 @@
 
   <br/>
   <p>
-    {{#if isLeader}}
-      {{#if leaderRequirements.requirements_lost}}
+    {{#if istl3}}
+      {{#if tl3Requirements.requirements_lost}}
         {{! tl implicitly not locked }}
-        {{#if leaderRequirements.on_grace_period}}
+        {{#if tl3Requirements.on_grace_period}}
           <i class="fa fa-times"></i> {{i18n admin.user.tl3_requirements.on_grace_period}}
         {{else}} {{! not on grace period }}
           <i class="fa fa-times"></i> {{i18n admin.user.tl3_requirements.does_not_qualify}}
                                       {{i18n admin.user.tl3_requirements.will_be_demoted}}
         {{/if}}
-      {{else}} {{! requirements not lost - remains leader }}
-        {{#if leaderRequirements.trust_level_locked}}
+      {{else}} {{! requirements not lost - remains tl3 }}
+        {{#if tl3Requirements.trust_level_locked}}
           <i class="fa fa-lock"></i> {{i18n admin.user.tl3_requirements.locked_will_not_be_demoted}}
         {{else}} {{! tl not locked }}
           <i class="fa fa-check"></i> {{i18n admin.user.tl3_requirements.qualifies}}
-          {{#if leaderRequirements.on_grace_period}}
+          {{#if tl3Requirements.on_grace_period}}
             {{i18n admin.user.tl3_requirements.on_grace_period}}
           {{/if}}
         {{/if}}
       {{/if}}
-    {{else}} {{! is not leader }}
-      {{#if leaderRequirements.requirements_met}}
-        {{! met & not leader - will be promoted}}
+    {{else}} {{! is not tl3 }}
+      {{#if tl3Requirements.requirements_met}}
+        {{! met & not tl3 - will be promoted}}
         <i class="fa fa-check"></i> {{i18n admin.user.tl3_requirements.qualifies}}
                                     {{i18n admin.user.tl3_requirements.will_be_promoted}}
       {{else}} {{! requirements not met - remains regular }}
-        {{#if leaderRequirements.trust_level_locked}}
+        {{#if tl3Requirements.trust_level_locked}}
           <i class="fa fa-lock"></i> {{i18n admin.user.tl3_requirements.locked_will_not_be_promoted}}
         {{else}}
           <i class="fa fa-times"></i> {{i18n admin.user.tl3_requirements.does_not_qualify}}
@@ -125,5 +125,3 @@
     {{/if}}
   </p>
 </div>
-
-
