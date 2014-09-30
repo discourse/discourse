@@ -3,11 +3,11 @@
   <ul>
     {{#each model}}
       {{#unless is_base}}
-        <li><a {{action selectColorScheme this}} {{bind-attr class="selected:active"}}>{{description}}</a></li>
+        <li><a {{action "selectColorScheme" this}} {{bind-attr class="selected:active"}}>{{description}}</a></li>
       {{/unless}}
     {{/each}}
   </ul>
-  <button {{action newColorScheme}} class='btn'><i class="fa fa-plus"></i>{{i18n admin.customize.new}}</button>
+  <button {{action "newColorScheme"}} class='btn'><i class="fa fa-plus"></i>{{i18n admin.customize.new}}</button>
 </div>
 
 {{#if selectedItem}}
@@ -17,16 +17,16 @@
         <h1>{{text-field class="style-name" value=name}}</h1>
 
         <div class="controls">
-          <button {{action save}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
-          <button {{action toggleEnabled}} {{bind-attr disabled="disableEnable"}} class="btn">
+          <button {{action "save"}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+          <button {{action "toggleEnabled"}} {{bind-attr disabled="disableEnable"}} class="btn">
             {{#if enabled}}
               {{i18n disable}}
             {{else}}
               {{i18n enable}}
             {{/if}}
           </button>
-          <button {{action copy this}} class='btn'><i class="fa fa-copy"></i> {{i18n admin.customize.copy}}</button>
-          <button {{action destroy}} class='btn btn-danger'><i class="fa fa-trash-o"></i> {{i18n admin.customize.delete}}</button>
+          <button {{action "copy" this}} class='btn'><i class="fa fa-copy"></i> {{i18n admin.customize.copy}}</button>
+          <button {{action "destroy"}} class='btn btn-danger'><i class="fa fa-trash-o"></i> {{i18n admin.customize.delete}}</button>
           <span {{bind-attr class=":saving savingStatus::hidden" }}>{{savingStatus}}</span>
         </div>
       {{/with}}
@@ -61,8 +61,8 @@
               </td>
               <td class="hex">{{color-input hexValue=hex brightnessValue=brightness valid=valid}}</td>
               <td class="actions">
-                <button {{bind-attr class=":btn :revert savedIsOverriden::invisible"}} {{action revert this}} title="{{i18n admin.customize.colors.revert_title}}">{{i18n revert}}</button>
-                <button {{bind-attr class=":btn :undo changed::invisible"}} {{action undo this}} title="{{i18n admin.customize.colors.undo_title}}">{{i18n undo}}</button>
+                <button {{bind-attr class=":btn :revert savedIsOverriden::invisible"}} {{action "revert" this}} title="{{i18n admin.customize.colors.revert_title}}">{{i18n revert}}</button>
+                <button {{bind-attr class=":btn :undo changed::invisible"}} {{action "undo" this}} title="{{i18n admin.customize.colors.undo_title}}">{{i18n undo}}</button>
               </td>
             </tr>
           {{/each}}

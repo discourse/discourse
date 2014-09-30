@@ -5,7 +5,7 @@
     <ul>
       {{#each}}
       <li>
-        <a {{action selectBadge this}} {{bind-attr class="selected:active"}}>
+        <a {{action "selectBadge" this}} {{bind-attr class="selected:active"}}>
         <span {{bind-attr class=":user-badge badgeTypeClassName" data-badge-name="name" title="displayDescription"}}>
           <i {{bind-attr class=":fa icon"}}></i>
           {{displayName}}
@@ -17,7 +17,7 @@
       </li>
       {{/each}}
     </ul>
-    <button {{action createNewBadge}} {{bind-attr disabled=newBadgeExists}} class='btn'><i class="fa fa-plus"></i>{{i18n admin.badges.new}}</button>
+    <button {{action "createNewBadge"}} {{bind-attr disabled=newBadgeExists}} class='btn'><i class="fa fa-plus"></i>{{i18n admin.badges.new}}</button>
   </div>
 
   {{#if selectedItem}}
@@ -56,7 +56,7 @@
                             content=controller.badgeGroupings
                             optionValuePath="content.id"
                             optionLabelPath="content.name"}}
-        &nbsp;<button {{action editGroupings controller.badgeGroupings}}><i class="fa fa-pencil"></i></button>
+        &nbsp;<button {{action "editGroupings" controller.badgeGroupings}}><i class="fa fa-pencil"></i></button>
       </div>
 
 
@@ -76,9 +76,9 @@
 
       {{#if hasQuery}}
 
-      <a href {{action preview this "false"}}>{{i18n admin.badges.preview.link_text}}</a>
+      <a href {{action "preview" this "false"}}>{{i18n admin.badges.preview.link_text}}</a>
       |
-      <a href {{action preview this "true"}}>{{i18n admin.badges.preview.plan_text}}</a>
+      <a href {{action "preview" this "true"}}>{{i18n admin.badges.preview.plan_text}}</a>
       {{#if preview_loading}}
         {{i18n loading}}...
       {{/if}}
@@ -144,10 +144,10 @@
       </div>
 
       <div class='buttons'>
-        <button {{action save}} {{bind-attr disabled=controller.disableSave}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
+        <button {{action "save"}} {{bind-attr disabled=controller.disableSave}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
         <span class='saving'>{{savingStatus}}</span>
         {{#unless readOnly}}
-          <a {{action destroy}} class='delete-link'>{{i18n admin.badges.delete}}</a>
+          <a {{action "destroy"}} class='delete-link'>{{i18n admin.badges.delete}}</a>
         {{/unless}}
       </div>
     </form>

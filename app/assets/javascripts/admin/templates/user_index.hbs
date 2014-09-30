@@ -7,13 +7,13 @@
         {{i18n admin.user.show_public_profile}}
       {{/link-to}}
       {{#if can_impersonate}}
-          <button class='btn btn-danger' {{action impersonate target="content"}} title="{{i18n admin.impersonate.help}}">
+          <button class='btn btn-danger' {{action "impersonate" target="content"}} title="{{i18n admin.impersonate.help}}">
             <i class='fa fa-crosshairs'></i>
             {{i18n admin.impersonate.title}}
           </button>
       {{/if}}
       {{#if currentUser.admin}}
-      <button class='btn' {{action log_out target="content"}}>
+      <button class='btn' {{action "log_out" target="content"}}>
         <i class='fa fa-power-off'></i>
         {{i18n admin.user.log_out}}
       </button>
@@ -42,7 +42,7 @@
         {{#if email}}
           <a href="mailto:{{unbound email}}">{{email}}</a>
         {{else}}
-          <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action checkEmail this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+          <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
         {{/if}}
       </div>
     </div>
@@ -53,7 +53,7 @@
         {{#if associated_accounts}}
           {{associated_accounts}}
         {{else}}
-          <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action checkEmail this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+          <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
         {{/if}}
       </div>
     </div>
@@ -70,15 +70,15 @@
       {{#if editingTitle}}
         {{text-field value=title autofocus="autofocus"}}
       {{else}}
-        <span {{action toggleTitleEdit}}>{{title}}&nbsp;</span>
+        <span {{action "toggleTitleEdit"}}>{{title}}&nbsp;</span>
       {{/if}}
     </div>
     <div class='controls'>
       {{#if editingTitle}}
-        <button class='btn' {{action saveTitle}}>{{i18n admin.user.save_title}}</button>
-        <a href="#" {{action toggleTitleEdit}}>{{i18n cancel}}</a>
+        <button class='btn' {{action "saveTitle"}}>{{i18n admin.user.save_title}}</button>
+        <a href="#" {{action "toggleTitleEdit"}}>{{i18n cancel}}</a>
       {{else}}
-        <button class='btn' {{action toggleTitleEdit}}><i class="fa fa-pencil"></i>{{i18n admin.user.edit_title}}</button>
+        <button class='btn' {{action "toggleTitleEdit"}}><i class="fa fa-pencil"></i>{{i18n admin.user.edit_title}}</button>
       {{/if}}
     </div>
   </div>
@@ -96,8 +96,8 @@
           {{combo-box content=custom_groups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
         {{/if}}
         {{#if primaryGroupDirty}}
-          <button class='btn ok no-text' {{action savePrimaryGroup}}><i class='fa fa-check'></i></button>
-          <button class='btn cancel no-text' {{action resetPrimaryGroup}}><i class='fa fa-times'></i></button>
+          <button class='btn ok no-text' {{action "savePrimaryGroup"}}><i class='fa fa-check'></i></button>
+          <button class='btn cancel no-text' {{action "resetPrimaryGroup"}}><i class='fa fa-times'></i></button>
         {{/if}}
       </div>
     </div>
@@ -108,7 +108,7 @@
     <div class='value'>{{ip_address}}</div>
     <div class='controls'>
       {{#if currentUser.admin}}
-        <button class='btn' {{action refreshBrowsers target="content"}}>
+        <button class='btn' {{action "refreshBrowsers" target="content"}}>
           {{i18n admin.user.refresh_browsers}}
         </button>
         {{ip-lookup ip=ip_address user_id=id}}
@@ -179,7 +179,7 @@
           {{i18n admin.user.approve_success}}
         {{else}}
           {{#if can_approve}}
-            <button class='btn' {{action approve target="content"}}>
+            <button class='btn' {{action "approve" target="content"}}>
               <i class='fa fa-check'></i>
               {{i18n admin.user.approve}}
             </button>
@@ -201,18 +201,18 @@
     <div class='controls'>
       {{#if active}}
         {{#if can_deactivate}}
-          <button class='btn' {{action deactivate target="content"}}>{{i18n admin.user.deactivate_account}}</button>
+          <button class='btn' {{action "deactivate" target="content"}}>{{i18n admin.user.deactivate_account}}</button>
           {{i18n admin.user.deactivate_explanation}}
         {{/if}}
       {{else}}
         {{#if can_send_activation_email}}
-          <button class='btn' {{action sendActivationEmail target="content"}}>
+          <button class='btn' {{action "sendActivationEmail" target="content"}}>
             <i class='fa fa-envelope'></i>
             {{i18n admin.user.send_activation_email}}
           </button>
         {{/if}}
         {{#if can_activate}}
-          <button class='btn' {{action activate target="content"}}>
+          <button class='btn' {{action "activate" target="content"}}>
             <i class='fa fa-check'></i>
             {{i18n admin.user.activate}}
           </button>
@@ -227,15 +227,15 @@
     {{#if api_key}}
       <div class='long-value'>
         {{api_key.key}}
-        <button class='btn' {{action regenerateApiKey}}><i class="fa fa-undo"></i>{{i18n admin.api.regenerate}}</button>
-        <button {{action revokeApiKey}} class="btn"><i class="fa fa-times"></i>{{i18n admin.api.revoke}}</button>
+        <button class='btn' {{action "regenerateApiKey"}}><i class="fa fa-undo"></i>{{i18n admin.api.regenerate}}</button>
+        <button {{action "revokeApiKey"}} class="btn"><i class="fa fa-times"></i>{{i18n admin.api.revoke}}</button>
       </div>
     {{else}}
       <div class='value'>
       &mdash;
       </div>
       <div class='controls'>
-        <button {{action generateApiKey}} class="btn"><i class="fa fa-key"></i>{{i18n admin.api.generate}}</button>
+        <button {{action "generateApiKey"}} class="btn"><i class="fa fa-key"></i>{{i18n admin.api.generate}}</button>
       </div>
     {{/if}}
   </div>
@@ -245,13 +245,13 @@
     <div class='value'>{{admin}}</div>
     <div class='controls'>
       {{#if can_revoke_admin}}
-        <button class='btn' {{action revokeAdmin target="content"}}>
+        <button class='btn' {{action "revokeAdmin" target="content"}}>
           <i class='fa fa-shield'></i>
           {{i18n admin.user.revoke_admin}}
         </button>
       {{/if}}
       {{#if can_grant_admin}}
-        <button class='btn' {{action grantAdmin target="content"}}>
+        <button class='btn' {{action "grantAdmin" target="content"}}>
           <i class='fa fa-shield'></i>
           {{i18n admin.user.grant_admin}}
         </button>
@@ -264,13 +264,13 @@
     <div class='value'>{{moderator}}</div>
     <div class='controls'>
       {{#if can_revoke_moderation}}
-        <button class='btn' {{action revokeModeration target="content"}}>
+        <button class='btn' {{action "revokeModeration" target="content"}}>
           <i class='fa fa-shield'></i>
           {{i18n admin.user.revoke_moderation}}
         </button>
       {{/if}}
       {{#if can_grant_moderation}}
-        <button class='btn' {{action grantModeration target="content"}}>
+        <button class='btn' {{action "grantModeration" target="content"}}>
           <i class='fa fa-shield'></i>
           {{i18n admin.user.grant_moderation}}
         </button>
@@ -285,17 +285,17 @@
       {{combo-box content=trustLevels value=trust_level nameProperty="detailedName"}}
       {{#if dirty}}
         <div>
-        <button class='btn ok no-text' {{action saveTrustLevel target="content"}}><i class='fa fa-check'></i></button>
-        <button class='btn cancel no-text' {{action restoreTrustLevel target="content"}}><i class='fa fa-times'></i></button>
+        <button class='btn ok no-text' {{action "saveTrustLevel" target="content"}}><i class='fa fa-check'></i></button>
+        <button class='btn cancel no-text' {{action "restoreTrustLevel" target="content"}}><i class='fa fa-times'></i></button>
         </div>
       {{/if}}
     </div>
     <div class="controls">
       {{#if model.canLockTrustLevel}}
         {{#if model.trust_level_locked}}
-        <i title='{{i18n admin.user.trust_level_locked_tip}}' {{action lockTrustLevel false target="model"}} class='fa fa-lock'></i> <button class="btn" {{action lockTrustLevel false target="model"}}>{{i18n admin.user.unlock_trust_level}}</button>
+        <i title='{{i18n admin.user.trust_level_locked_tip}}' {{action "lockTrustLevel" false target="model"}} class='fa fa-lock'></i> <button class="btn" {{action "lockTrustLevel" false target="model"}}>{{i18n admin.user.unlock_trust_level}}</button>
         {{else}}
-        <i title='{{i18n admin.user.trust_level_unlocked_tip}}' class='fa fa-unlock'></i> <button class="btn" {{action lockTrustLevel true target="model"}}>{{i18n admin.user.lock_trust_level}}</button>
+        <i title='{{i18n admin.user.trust_level_unlocked_tip}}' class='fa fa-unlock'></i> <button class="btn" {{action "lockTrustLevel" true target="model"}}>{{i18n admin.user.lock_trust_level}}</button>
         {{/if}}
       {{/if}}
       {{#if tl3Requirements}}
@@ -310,7 +310,7 @@
     <div class='value'>{{isSuspended}}</div>
     <div class='controls'>
     {{#if isSuspended}}
-      <button class='btn btn-danger' {{action unsuspend target="content"}}>
+      <button class='btn btn-danger' {{action "unsuspend" target="content"}}>
         <i class='fa fa-ban'></i>
         {{i18n admin.user.unsuspend}}
       </button>
@@ -318,7 +318,7 @@
       {{i18n admin.user.suspended_explanation}}
     {{else}}
       {{#if canSuspend}}
-        <button class='btn btn-danger' {{action showSuspendModal this}}>
+        <button class='btn btn-danger' {{action "showSuspendModal" this}}>
           <i class='fa fa-ban'></i>
           {{i18n admin.user.suspend}}
         </button>
@@ -347,7 +347,7 @@
     <div class='value'>{{blocked}}</div>
     <div class='controls'>
       {{#if blocked}}
-        <button class='btn' {{action unblock target="content"}}>
+        <button class='btn' {{action "unblock" target="content"}}>
           <i class='fa fa-thumbs-o-up'></i>
           {{i18n admin.user.unblock}}
         </button>
@@ -385,7 +385,7 @@
     <div class='value'>{{post_count}}</div>
     <div class='controls'>
       {{#if can_delete_all_posts}}
-        <button class='btn btn-danger' {{action deleteAllPosts target="content"}}>
+        <button class='btn btn-danger' {{action "deleteAllPosts" target="content"}}>
           <i class='fa fa-trash-o'></i>
           {{i18n admin.user.delete_all_posts}}
         </button>
@@ -451,7 +451,7 @@
 
 <section>
   <hr/>
-  <button {{bind-attr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action destroy target="content"}} {{bind-attr disabled="deleteForbidden"}}>
+  <button {{bind-attr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action "destroy" target="content"}} {{bind-attr disabled="deleteForbidden"}}>
     <i class="fa fa-exclamation-triangle"></i>
     {{i18n admin.user.delete}}
   </button>
