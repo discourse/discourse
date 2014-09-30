@@ -40,7 +40,7 @@
     {{/each}}
   {{/if}}
 
-  <button {{bind-attr disabled="createDisabled"}} class='btn btn-primary' {{action createField}}>
+  <button {{bind-attr disabled="createDisabled"}} class='btn btn-primary' {{action "createField"}}>
     {{fa-icon "plus"}}
     {{i18n admin.user_fields.create}}
   </button>

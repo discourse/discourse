@@ -62,7 +62,7 @@
           </div>
         {{else}}
           <div class="controls">
-            <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action checkEmail this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+            <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
           </div>
         {{/if}}
       </div>
@@ -72,7 +72,7 @@
     <div class="control-group pref-password">
       <label class="control-label">{{i18n user.password.title}}</label>
       <div class="controls">
-        <a href="#" {{action changePassword}} class='btn'><i class="fa fa-envelope"></i>
+        <a href="#" {{action "changePassword"}} class='btn'><i class="fa fa-envelope"></i>
           {{#if no_password}}
             {{i18n user.change_password.set_password}}
           {{else}}
@@ -89,7 +89,7 @@
       <div class="controls">
         {{bound-avatar model "large"}}
         {{#if allowAvatarUpload}}
-          <button {{action showAvatarSelector}} class="btn pad-left no-text"><i class="fa fa-pencil"></i></button>
+          <button {{action "showAvatarSelector"}} class="btn pad-left no-text"><i class="fa fa-pencil"></i></button>
         {{else}} {{#unless ssoOverridesAvatar}}
           <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn no-text"><i class="fa fa-pencil"></i></a>
         {{/unless}} {{/if}}
@@ -215,7 +215,7 @@
       <div class="control-group delete-account">
         <hr/>
         <div class="controls">
-            <button {{action delete}} {{bind-attr disabled="deleteDisabled"}} class="btn btn-danger"><i class="fa fa-trash-o"></i> {{i18n user.delete_account}}</button>
+            <button {{action "delete"}} {{bind-attr disabled="deleteDisabled"}} class="btn btn-danger"><i class="fa fa-trash-o"></i> {{i18n user.delete_account}}</button>
         </div>
       </div>
     {{/if}}
