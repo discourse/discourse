@@ -228,7 +228,6 @@ de:
       title: "Stammgast"
     elder:
       title: "Anführer"
-    change_failed_explanation: "Du wolltest %{user_name} auf '%{new_trust_level}' zurückstufen. Jedoch ist seine Vertrauensstufe bereits '%{current_trust_level}'. %{user_name} verbleibt auf '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Versuch es später wieder. "
     too_many_requests: "Diese Aktion kann nur ein begrenztes Mal pro Tag durchgeführt werden. Bitte warte %{time_left} bis zum nächsten Versuch."
@@ -390,10 +389,6 @@ de:
   archetypes:
     regular:
       title: "Normales Thema"
-    banner:
-      message:
-        make: "Dieses Thema ist jetzt ein Banner-Thema. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird."
-        remove: "Dieses Thema ist jetzt kein Banner-Thema mehr. Es wird nicht länger oberhalb jeder Seite angezeigt."
   unsubscribed:
     title: 'Abo abbestellt'
     description: "Dein Abo wurde abbestellt. Wir werden Dich nicht wieder kontaktieren!"
@@ -528,12 +523,6 @@ de:
     login_required_welcome_message:
       title: "Anmeldung erforderlich: Willkommensnachricht"
       description: "Willkommensnachricht welche angezeigt wird wenn der Benutzer nicht angemeldet ist und die Einstellung 'login required' aktiviert ist."
-    tos_user_content_license:
-      title: "Nutzungsbedingungen: Lizenz"
-      description: "VERALTET. Ist nicht mehr benutzt und wird entfernt. Bearbeite in der Kategorie „Mitarbeiter“ das Thema „Nutzungsbedingungen“."
-    tos_miscellaneous:
-      title: "Nutzungsbedingungen: Verschiedenes"
-      description: "VERALTET. Ist nicht mehr benutzt und wird entfernt. Bearbeite in der Kategorie „Mitarbeiter“ das Thema „Nutzungsbedingungen“."
     login_required:
       title: "Anmeldung erforderlich: Hauptseite"
       description: "Der Text welcher nicht angemeldeten Benutzer angezeigt wird, wenn eine Anmeldung erforderlich ist."
@@ -595,7 +584,7 @@ de:
     logo_url: "Die Logo-Grafik oben links auf deiner Seite, zum Beispiel: http://example.com/logo.png"
     digest_logo_url: "Alternatives Logo, das oben in E-Mail-Zusammenfassungen verwendet wird. Wenn leer wird `logo_url` verwendet. Zum Beispiel: http://example.com/logo.png "
     logo_small_url: "Kleine Logo-Grafik oben links auf der Seite, die beim Herunterscrollen angezeigt wird. Zum Beispiel: http://example.com/logo-small.png"
-    favicon_url: "Das Favicon Deiner Seite, siehe http://de.wikipedia.org/wiki/Favicon"
+    favicon_url: "Das Favicon deiner Website, siehe http://de.wikipedia.org/wiki/Favicon"
     mobile_logo_url: "Die statische Logo-Grafik oben links auf deiner Seite für mobile Geräte. Wenn leer wird `logo_url` benutzt. Zum Beispiel: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-Emails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit Emails sicher zugestellt werden können."
@@ -707,7 +696,6 @@ de:
     clean_orphan_uploads_grace_period_hours: "Frist (in Stunden) bevor ein verwaister Upload entfernt wird."
     purge_deleted_uploads_grace_period_days: "Frist (in Tagen) bevor ein entfernter Upload endgültig gelöscht wird."
     purge_inactive_users_grace_period_days: "Schonfrist (in Tagen) bevor ein inaktiver Benutzer gelöscht wird."
-    enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3."
     s3_use_iam_profile: 'Benutze die AWS EC2 IAM Rolle zum Abrufen von Keys. ANMERKUNG: Das Aktivieren überschreibt die Einstellungen „s3 access key id“ und „s3 secret access key“.'
     s3_upload_bucket: "Der Amazon S3 Bucketname in den hochgeladene Dateien abgelegt werden. WARNUNG: Nur Kleinbuchstaben, keine Punkte."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
@@ -876,7 +864,6 @@ de:
     incorrect_username_email_or_password: "Benutzername, Mailadresse oder Passwort falsch"
     wait_approval: "Danke fürs Registrieren. Wir werden dich benachrichtigen, sobald dein Benutzerkonto freigeschaltet wurde."
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
-    activate_email: "Fast fertig! Wir haben eine E-Mail an <b>%{email}</b> verschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
     not_activated: "Du kannst Dich noch nicht anmelden. Wir haben dir eine Aktivierungs-E-Mail geschickt. Bitte folge zunächst den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
     not_allowed_from_ip_address: "Von dieser IP-Adresse können Sie sich nicht als %{username} anmelden."
     suspended: "Du kannst Dich bis zum %{date} nicht anmelden."
@@ -889,6 +876,7 @@ de:
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
     password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
   user:
+    no_accounts_associated: "Keine Konten zugehörig"
     username:
       short: "muss mindestens %{min} Zeichen lang sein"
       long: "darf nicht länger als %{max} Zeichen sein"
@@ -968,15 +956,8 @@ de:
 
       %{notes}
   flags_reminder:
-    flags_were_submitted:
-      one: "Es gibt Markierungen, die vor 1 Stunde gesendet wurden."
-      other: "Es gibt Markierungen, die von %{count} Stunden gesendet wurden."
     please_review: "Bitte überprüfe sie."
     post_number: "Beitrag"
-    how_to_disable: "Deaktiviere diese E-Mail, indem Du die notify_about_flags_after Einstellung auf 0 setzt."
-    subject_template:
-      one: "1 Markierung ist noch unbehandelt"
-      other: "%{count} Markierungen sind noch unbehandelt"
   flag_reasons:
     off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community glaubt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
     inappropriate: "Dein Betrag wurde als **unangemessen** geflaggt: Die Community denkt, dass er beleidigend oder eine Verletzung der [der Richtlinien](/guidelines) ist."
@@ -1313,9 +1294,6 @@ de:
       Ein Benutzerkonto ist notwendig. Bitte registriere dich oder melde dich an.
   terms_of_service:
     title: "Nutzungsbedingungen"
-    user_content_license: |
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
-    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
     signup_form_message: 'Ich habe die <a href="/tos" target="_blank">Nutzerbedingungen</a> gelesen und akzeptiert.'
   deleted: 'gelöscht'
   upload:

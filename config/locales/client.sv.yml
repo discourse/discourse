@@ -482,7 +482,6 @@ sv:
     created: 'Skapad'
     created_lowercase: 'skapad'
     trust_level: 'Förtroendenivå'
-    search_hint: 'användarnamn eller e-post'
     create_account:
       title: "Registrera nytt konto"
       failed: "Något gick fel, kanske är denna e-post redan registrerad, försök glömt lösenordslänken"
@@ -879,7 +878,6 @@ sv:
       post_number: "inlägg {{number}}"
       in_reply_to: "svara till"
       last_edited_on: "inlägg senast ändrat den"
-      reply_as_new_topic: "Svara som ny Tråd"
       continue_discussion: "Fortsätter diskussionen från {{postLink}}:"
       follow_quote: "gå till det citerade inlägget"
       show_full: "Via hela inlägget"
@@ -1497,6 +1495,14 @@ sv:
         delete_forbidden:
           one: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dag kan ej raderas.)"
           other: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dagar kan ej raderas.)"
+        cant_delete_all_posts:
+          one: "Kan inte radera alla inlägg. Några inlägg är äldre än %{count} dag gammal. (Inställningen delete_user_max_post_age)"
+          other: "Kan inte radera alla inlägg. Några inlägg är äldre än %{count} dagar gamla. (Inställningen delete_user_max_post_age)"
+        cant_delete_all_too_many_posts:
+          one: "Kan inte radera alla inlägg, då användaren har fler än 1 inlägg. (delete_all_posts_max)"
+          other: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
+        delete_confirm: "Är du SÄKER på att du vill radera den användaren? Detta är permanent!"
+        delete_and_block: "Radera och <b>blockera</b> denna e-post och IP-adress"
         deleted: "Användaren har raderats."
         delete_failed: "Ett problem uppstod då användaren skulle raderas. Kontrollera att alla inlägg är borttagna innan du försöker radera användaren."
         send_activation_email: "Skicka aktiveringsmail"
@@ -1524,10 +1530,6 @@ sv:
           days: "dagar"
           topics_replied_to: "Trådar svarade på"
           flagged_posts: "flaggade inlägg"
-      site_text:
-        none: "Välj typ av innehåll för att börja ändra."
-        title: 'Sidinnehåll'
-        edit: "Ändra sidinnehåll"
       site_settings:
         show_overriden: 'Visa bara överskrivna'
         title: 'Webbplatsinställningar'
@@ -1599,6 +1601,57 @@ sv:
         mark_tracking: '<b>m</b>, <b>t</b> Följd diskussion'
     badges:
       badge:
+        welcome:
+          name: Välkommen
+          description: Fick en gilla
+        autobiographer:
+          name: Självbiograf
+          description: Fyllde ut sin <a href="/my/preferences">profilinformation</a>
+        nice_post:
+          name: Bra inlägg
+          description: Fick 10 gilla på ett inlägg. Denna utmärkelse kan utfärdas flera gånger.
+        good_post:
+          name: Jättebra inlägg
+          description: Fick 25 gilla på ett inlägg. Denna utmärkelse kan utfärdas flera gånger.
+        great_post:
+          name: Fantastiskt inlägg
+          description: Fick 50 gilla på ett inlägg. Denna utmärkelse kan utfärdas flera gånger.
+        nice_topic:
+          name: Bra tråd
+          description: Fick 10 gilla på en tråd. Denna utmärkelse kan utfärdas flera gånger.
+        good_topic:
+          name: Jättebra tråd
+          description: Fick 25 gilla på en tråd. Denna utmärkelse kan utfärdas flera gånger.
+        great_topic:
+          name: Fantastisk tråd
+          description: Fick 50 gilla på en tråd. Denna utmärkelse kan utfärdas flera gånger.
+        nice_share:
+          name: Bra delning
+          description: Delade ett inlägg med 25 unika besökare
+        good_share:
+          name: Jättebra delning
+          description: Delade ett inlägg med 300 unika besökare
+        great_share:
+          name: Fantastisk delning
+          description: Delade ett inlägg med 1000 unika besökare
+        first_like:
+          name: Första gillning
+          description: Gillade ett inlägg
+        first_flag:
+          name: Första flaggning
+          description: Flaggade ett inlägg
+        first_share:
+          name: Första delning
+          description: Delade ett inlägg
+        first_link:
+          name: Första länk
+          description: Länkade internt till en annan tråd
+        first_quote:
+          name: Första citation
+          description: Citerade en användare
+        read_guidelines:
+          name: Läst riktlinjer
+          description: Läste <a href="/guidelines">forumets riktlinjer</a>
         reader:
           name: Läsare
           description: Läs varje inlägg i en diskussion med över 100 inlägg

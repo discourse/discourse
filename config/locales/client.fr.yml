@@ -259,6 +259,7 @@ fr:
       other_accounts: Autres comptes utilisant cette adresse IP
       no_other_accounts: (aucun)
     user:
+      said: "{{username}} :"
       profile: "Profil"
       mute: "Silencieux"
       edit: "Modifier les préférences"
@@ -339,6 +340,7 @@ fr:
         title: "Arrière plan du profil"
       email:
         title: "Courriel"
+        instructions: "Ne sera jamais visible publiquement."
         ok: "Cela semble correct. Un courriel de confirmation sera envoyé."
         invalid: "Merci de saisir une adresse de courriel valide."
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}."
@@ -350,6 +352,7 @@ fr:
         ok: "Votre nom semble correct."
       username:
         title: "Pseudo"
+        instructions: "Unique, sans espace, court."
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @{{username}}."
         available: "Votre pseudo est disponible."
         global_match: "L'adresse de courriel correspond au pseudo enregistré."
@@ -433,6 +436,8 @@ fr:
         too_short: "Votre mot de passe est trop court."
         common: "Ce mot de passe est trop commun."
         ok: "Votre mot de passe semble correct."
+        instructions: "Au moins %{count} caractères."
+      associated_accounts: "Comptes associés"
       ip_address:
         title: "Dernières adresses IP"
       registration_ip_address:
@@ -506,7 +511,6 @@ fr:
     created: 'Créé'
     created_lowercase: 'créé'
     trust_level: 'Niveau de confiance'
-    search_hint: 'pseudo ou courriel'
     create_account:
       title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse de courriel est déjà enregistrée, essayez le lien Mot de passe oublié."
@@ -687,6 +691,7 @@ fr:
         actions: "Actions sur sélection multiple"
         change_category: "Changer la Catégorie"
         close_topics: "Fermer les sujets"
+        archive_topics: "Sujets archivés"
         notification_level: "Changer le niveau de notification"
         selected:
           one: "Vous avez sélectionné <b>1</b> sujet."
@@ -708,6 +713,7 @@ fr:
           unread: '<p>Vos sujets non-lus apparaissent ici</p><p>Par défaut, les sujets sont considérés comme non-lus et affichent le nombre de messages non-lus <span class="badge new-posts badge-notification">1</span> sont ceux:</p>
 
             <ul><li>Que vous avez crées</li><li>Auxquels vous avez répondu</li><li>Que vous avez lu plus de 4 minutes</li></ul><p>Ou que vous avez explicitement suivis ou surveillés</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
+          starred: '<p>Vos sujets favoris apparaissent ici.</p><p>Pour ajouter ou retirer un favoris :</p><ul><li>Cliquez sur <i class="fa fa-star"></i> à coté du titre du sujet</li><li>Via le bouton <kbd>Favoris</kbd> en bas de chaque sujet</li></ul>'
       bottom:
         latest: "Il n'y a plus de sujet à lire."
         hot: "Il n'y a plus de sujet populaire à lire."
@@ -924,7 +930,7 @@ fr:
       post_number: "message {{number}}"
       in_reply_to: "répondre à"
       last_edited_on: "message dernièrement édité le"
-      reply_as_new_topic: "Répondre en créant un nouveau sujet"
+      reply_as_new_topic: "Répondre en créant un sujet lié"
       continue_discussion: "Suite du sujet {{postLink}}:"
       follow_quote: "Voir le message cité"
       show_full: "Voir le message en entier"
@@ -985,6 +991,7 @@ fr:
         convert_to_moderator: "Ajouter la couleur modérateur"
         revert_to_regular: "Retirer la couleur modérateur"
         rebake: "Reconstruire l'HTML"
+        unhide: "Afficher"
       actions:
         flag: 'Signaler'
         defer_flags:
@@ -1143,7 +1150,6 @@ fr:
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Éditer les permissions"
       add_permission: "Ajouter une Permission"
-      everyone_permission: "tout le monde"
       this_year: "cette année"
       position: "position"
       default_position: "Position par défaut"
@@ -1801,7 +1807,6 @@ fr:
           likes_given: "J'aimes donnés"
           likes_received: "J'aimes reçus"
           qualifies: "Admissible au niveau de confiance 3."
-          will_be_promoted: "Sera promu dans les 24 heures."
           does_not_qualify: "Non admissible au niveau de confiance 3."
         sso:
           title: "Authentification unique (SSO)"
@@ -1810,10 +1815,24 @@ fr:
           external_name: "Nom"
           external_email: "Courriel"
           external_avatar_url: "URL Avatar"
+      user_fields:
+        title: "Champs utilisateurs"
+        description: "Tous les champs ajoutés ici seront requis lors de l'enregistrement d'un utilisateur."
+        create: "Créer un champ utilisateur"
+        untitled: "Sans titre"
+        name: "Nom du champ"
+        type: "Type du champ"
+        save: "Sauvegarder"
+        edit: "Modifier"
+        delete: "Supprimer"
+        cancel: "Annuler"
+        delete_confirm: "Etes vous sur de vouloir supprimer ce champ utilisateur ?"
+        field_types:
+          text: 'Zone de texte'
+          confirm: 'Confirmation'
       site_text:
-        none: "Choisissez un type de contenu afin de commencer l'édition."
+        none: "Choisissez un type de contenu pour commencer l'édition."
         title: 'Contenu'
-        edit: "Modifier le contenu du site"
       site_settings:
         show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres'
@@ -1937,7 +1956,7 @@ fr:
         star: '<b>f</b> Sujet Favoris'
         share_topic: '<b>shift s</b> Partager un sujet'
         share_post: '<b>s</b> Partager un message'
-        reply_as_new_topic: '<b>t</b> Répondre en créant un nouveau sujet'
+        reply_as_new_topic: '<b>t</b> Répondre en créant un sujet lié'
         reply_topic: '<b>shift r</b> Répondre au sujet'
         reply_post: '<b>r</b> Répondre à un message'
         quote_post: '<b>q</b> Citer un message'

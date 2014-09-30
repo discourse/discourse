@@ -342,10 +342,6 @@ sv:
     login_required_welcome_message:
       title: "Inloggning krävs: Välkomstmeddelande"
       description: "Välkomstmeddelande som visas för utloggade användare när inställningen för 'inloggning krävs' är aktiv. "
-    tos_user_content_license:
-      title: "Användarvillkor: Innehållslicens"
-    tos_miscellaneous:
-      title: "Användarvillkor: Diverse"
     login_required:
       title: "Inloggning krävs: Huvudsida"
     top:
@@ -425,7 +421,6 @@ sv:
     incorrect_username_email_or_password: "Incorrect username, email or password"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is active and ready."
-    activate_email: "You're almost done! We sent an activation email to <b>%{email}</b>. Please follow the instructions in the email to activate your account."
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     suspended: "Du kan inte logga in förrän %{date}."
     suspended_with_reason: "Du kan inte logga in förrän %{date}. Anledningen att du blev avstängd: %{reason}"
