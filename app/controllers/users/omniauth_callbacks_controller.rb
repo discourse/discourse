@@ -38,13 +38,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     @data = authenticator.after_authenticate(auth)
     @data.authenticator_name = authenticator.name
 
-    if @data.user
-      user_found(@data.user)
-    elsif SiteSetting.invite_only?
-      @data.requires_invite = true
-    else
-      session[:authentication] = @data.session_data
-    end
+    complete_response_data(@data)
 
     respond_to do |format|
       format.html
@@ -74,6 +68,16 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   protected
+
+  def complete_response_data
+    if @data.user
+      user_found(@data.user)
+    elsif SiteSetting.invite_only?
+      @data.requires_invite = true
+    else
+      session[:authentication] = @data.session_data
+    end
+  end
 
   def user_found(user)
     # automatically activate any account if a provider marked the email valid
