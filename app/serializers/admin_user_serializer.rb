@@ -9,6 +9,7 @@ class AdminUserSerializer < BasicUserSerializer
              :created_at_age,
              :username_lower,
              :trust_level,
+             :trust_level_locked,
              :flag_level,
              :username,
              :title,

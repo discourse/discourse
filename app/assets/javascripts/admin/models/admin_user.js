@@ -182,6 +182,10 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
+  canLockTrustLevel: function(){
+    return this.get('trust_level') < 4;
+  }.property('trust_level'),
+
   isSuspended: Em.computed.equal('suspended', true),
   canSuspend: Em.computed.not('staff'),
 
