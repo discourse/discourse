@@ -310,6 +310,7 @@ ja:
         title: "プロフィール背景"
       email:
         title: "メールアドレス"
+        instructions: "Eメールアドレスは外部に公開されません。"
         ok: "メールアドレス OK。確認用のメールを送ります。"
         invalid: "正しいメールアドレスを入力してください。"
         authenticated: "あたなのメールは {{provider}} により認証されました。"
@@ -321,6 +322,7 @@ ja:
         ok: "名前 OK。"
       username:
         title: "ユーザ名"
+        instructions: "空白を含まないユニークな名前を入力してください。"
         short_instructions: "他のユーザはあなたを @{{username}} でタグ付けできます。"
         available: "ユーザ名は利用可能です。"
         global_match: "メールアドレスが登録済のユーザ名と一致しました。"
@@ -470,7 +472,6 @@ ja:
     created: '作成'
     created_lowercase: '作成'
     trust_level: 'トラストレベル'
-    search_hint: 'ユーザーメールかEメールアドレス'
     create_account:
       title: "アカウントの作成"
       failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
@@ -864,7 +865,6 @@ ja:
       post_number: "ポスト{{number}}"
       in_reply_to: "こちらへの回答"
       last_edited_on: "ポストの最終編集日"
-      reply_as_new_topic: "新規トピックとして回答"
       continue_discussion: "{{postLink}} からの議論を継続:"
       follow_quote: "引用ポストに移動"
       show_full: "全て表示"
@@ -1006,6 +1006,9 @@ ja:
           side_by_side:
             title: "差分を横に並べて表示"
             button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "ソース文書で表示する"
+            button: 'ソース文書'
         details:
           edited_by: "編集者"
     category:
@@ -1629,17 +1632,12 @@ ja:
           likes_given: "与えた「いいね！」"
           likes_received: "もらった「いいね！」"
           qualifies: "トラストレベル3の条件を満たしています。"
-          will_be_promoted: "24時間内プロモートする予定"
           does_not_qualify: "トラストレベル3の条件を満たしていません。"
         sso:
           external_username: "ユーザ名"
           external_name: "名前"
           external_email: "メール"
           external_avatar_url: "アバターURL"
-      site_text:
-        none: "編集するコンテンツのタイプを選択してください。"
-        title: 'コンテンツ'
-        edit: "サイトのコンテンツを編集"
       site_settings:
         show_overriden: '上書き部分のみ表示'
         title: '設定'
@@ -1735,7 +1733,6 @@ ja:
         star: '<b>f</b> お気に入りトピック'
         share_topic: '<b>shift s</b> トピックをシェアする'
         share_post: '<b>s</b> 投稿をシェアする'
-        reply_as_new_topic: '<b>t</b> 新規トピックとして回答する'
         reply_topic: '<b>shift r</b> トピックに返信'
         reply_post: '<b>r</b> 投稿に返信'
         quote_post: '<b>q</b> 投稿を引用する'
@@ -1813,10 +1810,10 @@ ja:
           description: サイト内投稿のリンクを挿入した
         first_quote:
           name: 最初の投稿
-          description: このユーザーにタグ付けをする
+          description: ユーザーにタグ付けました
         read_guidelines:
-          name: ガイドラインを読む
-          description: <a href="/guidelines">community guidelines</a>を読む
+          name: ガイドラインを読んだ
+          description: <a href="/guidelines">community guidelines</a>を読みました
         reader:
           name: 閲覧者
           description: 100以上の投稿があるトピック内の投稿をすべて読みました。

@@ -259,6 +259,7 @@ de:
       other_accounts: Andere Konten mit dieser IP-Adresse
       no_other_accounts: (keine)
     user:
+      said: "{{username}}:"
       profile: "Profil"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
@@ -288,7 +289,7 @@ de:
       watched_categories: "Beobachtet"
       watched_categories_instructions: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Eintrag in der Themenliste angezeigt."
       tracked_categories: "Verfolgt"
-      tracked_categories_instructions: "Du wirst automatisch alle neuen Themen dieser Kategorie folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema angezeigt."
+      tracked_categories_instructions: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema angezeigt."
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
       delete_account: "Lösche mein Benutzerkonto"
@@ -339,6 +340,7 @@ de:
         title: "Profilhintergrund"
       email:
         title: "E-Mail"
+        instructions: "Wird niemals öffentlich angezeigt."
         ok: "Schaut gut aus. Wir schicken dir eine E-Mail zur Bestätigung."
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein."
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt."
@@ -350,6 +352,7 @@ de:
         ok: "Dein Name schaut gut aus."
       username:
         title: "Benutzername"
+        instructions: "Eindeutig, keine Leerzeichen, kurz."
         short_instructions: "Andere Benutzer können dich mit @{{username}} erwähnen."
         available: "Dein Benutzername ist verfügbar."
         global_match: "Die E-Mail-Adresse stimmt mit dem registrierten Benutzernamen überein."
@@ -433,6 +436,8 @@ de:
         too_short: "Dein Passwort ist zu kurz."
         common: "Das Passwort wird zu häufig verwendet."
         ok: "Dein Passwort sieht gut aus."
+        instructions: "Mindestens %{count} Zeichen."
+      associated_accounts: "Zugehörige Konten"
       ip_address:
         title: "Letzte IP-Adresse"
       registration_ip_address:
@@ -506,7 +511,6 @@ de:
     created: 'Erstellt'
     created_lowercase: 'erstellt'
     trust_level: 'Vertrauensstufe'
-    search_hint: 'Benutzername oder E-Mail-Adresse'
     create_account:
       title: "Neues Benutzerkonto erstellen"
       failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
@@ -687,6 +691,7 @@ de:
         actions: "Massenoperationen"
         change_category: "Kategorie ändern"
         close_topics: "Themen schließen"
+        archive_topics: "Themen archivieren"
         notification_level: "Benachrichtigungsstufe ändern"
         selected:
           one: "Du hast <b>ein</b> Thema ausgewählt."
@@ -798,7 +803,7 @@ de:
           title: "Beobachten"
         tracking_pm:
           title: "Verfolgen"
-          description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Thema. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
+          description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Thema angezeigt. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
         tracking:
           title: "Verfolgen"
         regular:
@@ -914,7 +919,6 @@ de:
       post_number: "Beitrag {{number}}"
       in_reply_to: "als Antwort auf"
       last_edited_on: "Beitrag zuletzt bearbeitet am"
-      reply_as_new_topic: "Mit Themenwechsel antworten"
       continue_discussion: "Fortsetzung der Diskussion von {{postLink}}:"
       follow_quote: "springe zum zitierten Beitrag"
       show_full: "Zeige ganzen Beitrag"
@@ -941,6 +945,7 @@ de:
         upload_not_authorized: "Entschuldige, die Datei, die du hochladen wolltest, ist nicht erlaubt (erlaubte Endungen: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
+        attachment_download_requires_login: "Du musst eingeloggt sein, um Dateien herunterladen zu können."
       abandon:
         confirm: "Möchtest du deinen Beitrag wirklich verwerfen?"
         no_value: "Nein, beibehalten"
@@ -974,6 +979,7 @@ de:
         convert_to_moderator: "Mitarbeiter-Einfärbung hinzufügen"
         revert_to_regular: "Mitarbeiter-Einfärbung entfernen"
         rebake: "HTML erneuern"
+        unhide: "Einblenden"
       actions:
         flag: 'Melden'
         defer_flags:
@@ -1132,7 +1138,6 @@ de:
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie"
       edit_permissions: "Berechtigungen bearbeiten"
       add_permission: "Berechtigung hinzufügen"
-      everyone_permission: "jeder"
       this_year: "dieses Jahr"
       position: "Position"
       default_position: "Standardposition"
@@ -1785,7 +1790,6 @@ de:
           likes_given: "Abgegebene Likes"
           likes_received: "Erhaltene Likes"
           qualifies: "Erfüllt die Anforderungen für Vertrauensstufe 3."
-          will_be_promoted: "Wird innerhalb der nächsten 24 Stunden befördert."
           does_not_qualify: "Erfüllt nicht die Anforderungen für Vertrauensstufe 3."
         sso:
           title: "Single Sign-on"
@@ -1794,10 +1798,22 @@ de:
           external_name: "Name"
           external_email: "E-Mail"
           external_avatar_url: "Avatar URL"
+      user_fields:
+        title: "Benutzerfelder"
+        create: "Benutzerfeld erstellen"
+        untitled: "Unbetitelt"
+        name: "Feldname"
+        type: "Feldtyp"
+        save: "Speichern"
+        edit: "Bearbeiten"
+        delete: "Löschen"
+        cancel: "Abbrechen"
+        delete_confirm: "Sind Sie sicher, dass Sie dieses Textfeld löschen möchten?"
+        field_types:
+          text: 'Textfeld'
+          confirm: 'Bestätigung'
       site_text:
-        none: "Wähle einen Inhaltstyp, um mit dem Bearbeiten zu beginnen."
-        title: 'Inhalt'
-        edit: "Website-Inhalte bearbeiten"
+        title: 'Textinhalt'
       site_settings:
         show_overriden: 'Zeige nur geänderte Einstellungen'
         title: 'Einstellungen'
@@ -1918,7 +1934,6 @@ de:
         star: '<b>f</b> Thema favorisieren'
         share_topic: '<b>⇧ Umsch</b> + <b>s</b> Thema teilen'
         share_post: '<b>s</b> Beitrag teilen'
-        reply_as_new_topic: '<b>t</b> Mit Themenwechsel antworten'
         reply_topic: '<b>⇧ Umsch</b> + <b>r</b> Auf Thema antworten'
         reply_post: '<b>r</b> Auf Beitrag antworten'
         quote_post: '<b>q</b> Beitrag zitieren'

@@ -24,6 +24,7 @@ fi:
   via: "%{username} sivustolta %{site_name}"
   is_reserved: "on varattu"
   purge_reason: "Poistettiin automaattisesti, koska tiliä ei oltu aktivoitu riittävässä ajassa"
+  disable_remote_images_download_reason: "Linkattujen kuvien lataaminen poistettiin käytöstä vähäisen tallennustilan vuoksi."
   errors:
     messages:
       too_long_validation: "on rajoitettu %{max} merkkiin; sinä syötit %{length} merkkiä."
@@ -254,7 +255,6 @@ fi:
       title: "mestari"
     elder:
       title: "johtaja"
-    change_failed_explanation: "Yritit alentaa käyttäjän %{user_name} luottamustasolle '%{new_trust_level}'. Käyttäjän luottamustaso on jo valmiiksi '%{current_trust_level}'. %{user_name} jatkaa edelleen luottamustasolla '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Olet tehnyt tämän toiminnon liian monta kertaa, yritä uudelleen myöhemmin."
     too_many_requests: "Sille, kuinka useasti tämä toiminto voidaan suorittaa on määritelty päivittäinen raja. Odota %{time_left} ennen uudelleen kokeilemista."
@@ -419,8 +419,8 @@ fi:
       title: "Tavallinen ketju"
     banner:
       message:
-        make: "Tämä ketju on nyt banneri-ketju. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
-        remove: "Tämä ketju ei ole enää banneri-ketju. Sitä ei näytetä enää jokaisen sivun ylälaidassa."
+        make: "Tämä ketju on nyt banneri. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
+        remove: "Tämä ketju ei ole enää banneri. Sitä ei näytetä enää jokaisen sivun ylälaidassa."
   unsubscribed:
     title: 'Peruutetut tilaukset'
     description: "Olet perunut tilauksesi. Emme ota enää yhteyttä!"
@@ -555,10 +555,6 @@ fi:
     login_required_welcome_message:
       title: "Kirjautuminen vaaditaan: Tervetuloviesti"
       description: "Tervetuloviesti uloskirjautuneille käyttäjille, kun 'pakollinen kirjautuminen' on otettu käyttöön."
-    tos_user_content_license:
-      title: "Käyttöehdot: Sisällön lisenssi"
-    tos_miscellaneous:
-      title: "Käyttehdot: Muut"
     login_required:
       title: "Kirjautuminen vaaditaan: Kotisivu"
       description: "Teksti, joka näytetään tunnistautumattomille käyttäjille, kun sivustolle kirjautuminen on pakollista."
@@ -578,6 +574,7 @@ fi:
       title: "Ilmoitussähköpostin yläosa"
       description: "Viesti, joka näytetään kaikkien ilmoitussähköpostien yläosassa."
   site_settings:
+    delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Sivuston oletuskieli (ISO 639-1 koodi)"
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
     min_post_length: "Viestin merkkien minimimäärä"
@@ -667,6 +664,7 @@ fi:
     topics_per_period_in_top_summary: "Kejujen lukumäärä, joka näytetään oletuksena Huiput-listauksissa."
     topics_per_period_in_top_page: "Kejujen lukumäärä, joka näytetään laajennetussa Huiput-listauksessa."
     redirect_users_to_top_page: "Ohjaa uudet ja kauan poissa olleet käyttäjät automaattisesti huiput-sivulle."
+    show_email_on_profile: "Näytä käyttäjän sähköpostiosoite profiilissa (näkyy vain käyttäjälle itselleen ja henkilökunnalle)"
     email_token_valid_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat voimassa (n) tuntia."
     email_token_grace_period_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat vielä voimassa (n) tuntia käyttämisen jälkeen."
     enable_badges: "Ota käyttöön arvomerkkijärjestelmä (kokeellinen)"
@@ -712,7 +710,7 @@ fi:
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden maksimimäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
     backup_daily: "Luo uusi varmuuskopio automaattisesti kerran päivässä."
-    enable_s3_backups: "Lataa varmuuskopiot S3:een niiden valmistuttua. TÄRKEÄÄ: Edellyttää, että toimivat S3 kirjautumistiedot on syötetty asetuksiin."
+    enable_s3_backups: "Lataa varmuuskopiot S3:een niiden valmistuttua. TÄRKEÄÄ: edellyttää, että toimivat S3 kirjautumistiedot on syötetty asetuksiin."
     s3_backup_bucket: "Amazon S3 bucket johon varmuuskopiot ladataan. VAROITUS: Varmista, että se on yksityinen."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
     verbose_localization: "Näytä laajennetut lokalisointitiedot käyttöliittymässä"
@@ -734,7 +732,7 @@ fi:
     clean_orphan_uploads_grace_period_hours: "Varoaika (tunteina) kunnes orpoutuneet liitetiedostot poistetaan"
     purge_deleted_uploads_grace_period_days: "Varoaika (päivinä) kunnes poistettu liitetiedosto tuhotaan."
     purge_inactive_users_grace_period_days: "Varoaika (päivinä) kunnes aktivoimaton käyttäjätili tuhotaan."
-    enable_s3_uploads: "Sijoita latauksen Amazon S3:een."
+    enable_s3_uploads: "Lataa liitetiedostot Amazon S3:een. Tärkeää: edellyttää toimivat S3 kirjautumistiedot (access key id ja secret access key)."
     s3_use_iam_profile: 'Käytä AWS EC2 IAM roolia avainten hakuun. HUOM: käyttöönotto korvaa "s3 access key id" ja "s3 secret access key" asetukset.'
     s3_upload_bucket: "Amazon S3 bucket, jonne lataukset sijoitetaan. VAROITUS: täytyy olla pienillä kirjaimilla, ei pisteitä."
     s3_access_key_id: "Amazon S3 access key id, jota käytetään kuvien sijoittamisessa."
@@ -810,6 +808,8 @@ fi:
     reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
     reply_by_email_address: "Saapuvan sähköpostin sapluuna sähköpostivastauksiin, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
     disable_emails: "Estä Discoursea lähettämästä mitään sähköpostia"
+    strip_images_from_short_emails: "Poista kuvat sähköposteista, joiden koko on alle 2800 tavua"
+    short_email_length: "Lyhyen sähköpostin pituus tavuissa"
     pop3_polling_enabled: "Pollaa sähköpostivastaukset POP3:lla."
     pop3_polling_ssl: "Käytä SSL-salausta yhdistettäessä POP3-palvelimeen. (Suositellaan)"
     pop3_polling_period_mins: "Tiheys minuuteissa kuinka usein POP3 tililtä tarkastetaan uudet sähköpostit. HUOM: vaatii uudelleenkäynnistyksen."
@@ -944,7 +944,7 @@ fi:
     incorrect_username_email_or_password: "Väärä käyttäjänimi, sähköposti tai salasana"
     wait_approval: "Kiitos kirjautumisesta. Ilmoitamme, kun tilisi on hyväksytty."
     active: "Tilisi on aktivoitu ja valmiina käyttöön."
-    activate_email: "Olet melkein valmis! Lähetimme vahvistusviestin osoitteeseen <b>%{email}</b>. Seuraa viestin ohjeita ottaaksesi tilisi käyttöön."
+    activate_email: "Olet melkein valmis! Lähetimme vahvistusviestin antamaasi osoitteeseen. Seuraa viestin ohjeita ottaaksesi tilisi käyttöön."
     not_activated: "Et voi vielä kirjautua sisään. Lähetimme sinulle vahvistusviestin. Seuraa sähköpostiviestin ohjeita ottaaksesi tunnuksen käyttöön."
     not_allowed_from_ip_address: "Et voi kirjautua käyttäjätunnuksella %{username} tästä IP-osoitteesta."
     suspended: "Et voi kirjautu sisään ennen %{date}."
@@ -957,6 +957,7 @@ fi:
     new_registrations_disabled: "Uusien tilien luonti ei ole tällä hetkellä sallittu."
     password_too_long: "Salasanan enimmäispituus on 200 merkkiä."
   user:
+    no_accounts_associated: "Ei liittyviä käyttäjätilejä"
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
       long: "ei saa olla yli %{max} merkkiä"
@@ -1003,6 +1004,50 @@ fi:
       Tämän kutsun lähetti luotettu käyttäjä, joten sinun ei tarvitse kirjautua sisään.
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
+    text_body_template: |
+      Tämä on testisähköposti sivustolta
+
+      [**%{base_url}**][0]
+
+      Sähköpostin toimitus on monimutkaista. Tässä on muutama tärkeä asia, jotka kannattaa tarkistaa ensin:
+
+      - *Varmista,* että `ilmoitusten sähköpostiosoitteen` from: kenttä on asetettu oikein sivuston asetuksissa. **Sähköpostin varmennus tapahtuu "from"-kentän sähköpostiosoitteen verkkotunnusta vastaan**.
+
+      - Selvitä, miten sähköpostiohjelmassasi saa näkyville *sähköpostin raakadatan,* jotta voit tutkia viestin tunnistetiedot. Gmailissa tämä tapahtuu "näytä kokonaan" valinnalla viestin oikeassa yläkulmassa olevasta valikosta.
+
+      - **TÄRKEÄÄ:** Onko palveluntarjoajasi syöttänyt reverse DNS kentän verkkotunnuksille ja IP osoitteille, joists lähetät sähköpostia? [Kokeile Reverse PTR tietuetta][2] täällä. Jos palveluntarjoajasi ei tarjoa kunnollista reverse DNS pointer tietuetta, on hyvin epätodennäköistä, että mikään sähköposti menee perille.
+
+      - Onko verkkotunnuksesi [SPF record][8] oikein? [Kokeile SPF tietuetta][1] täällä. Huomaa, että TXT oikea tietuetyyppi SPF tietueelle.
+
+      - Onko verkkotunnuksesi [DKIM tietue][3] oikein? Tämä vaikuttaa merkittävästi sähköpostin toimitettavuuteen. [Kokeile DKIM tietuetta][7] täällä.
+
+      - Jos käytät omaa sähköpostipalvelinta, tarkista että palvelimen IP osoite [ei ole millään sähköpostin mustalla listalla][4].
+
+      - Tarkista myös, että se varmasti lähettää oikean muotoisen isäntänimen HELO viestissään, joka palauttaa oikean DNS tietueen. Jos näin ei ole, sähköposti hylätään monissa sähköpostipalveluissa.
+
+      (Helpoin tapa on luoda ilmainen tili [Mandrilliin][md], [Mailguniin][mg] tai [Mailjetiin][mj], joide ilmaiset palvelut riittävät hyvin piemen palstan käyttöön. Muista silti asettaa SPF ja DKIM tietueet DNS:ään!)
+
+      Toivottavasti tämä testisähköposti meni perille OK!
+
+      Onnea matkaan,
+
+      Ystäväsi [Discourselta](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [5]: %{base_url}/unsubscribe
+      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [md]: http://mandrill.com
+      [mg]: http://www.mailgun.com/
+      [mj]: http://www.mailjet.com/pricing
+
+      ----
+
+      <small>Jokaisen lähettämäsi sähköpostin lopussa pitäisi olla listaltapoistumislinkki, joten luodaan sellainen tähänkin. Tämän sähköpostin lähetti Yritys, Tie 1, 12345 Kaupunki, Suomi. Jos et halua vastaanottaa näitä sähköposteja jatkossa, [klikkaa poistuaksesi listalta][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Uusi Discourse versio, päivitys saatavilla"
     text_body_template: |+
@@ -1040,13 +1085,13 @@ fi:
       %{notes}
   flags_reminder:
     flags_were_submitted:
-      one: "Sivustolla on liputuksia, jotka annettiin yli 1 tunti sitten."
-      other: "Sivustolla on liputuksia, jotka annettiin yli %{count} tuntia sitten."
+      one: "Nämä liput annettiin yli tunti sitten."
+      other: "Nämä liput annettiin yli %{count} tuntia sitten."
     please_review: "Ole hyvä ja tarkasta ne."
     post_number: "viesti"
-    how_to_disable: "Ota tämä sähköposti-ilmoitus pois käytöstä asettamalla notify_about_flags_after arvo 0."
+    how_to_disable: "Ota tämä sähköposti-ilmoitus pois käytöstä asettamalla <pre>notify_about_flags_after</pre> arvoon 0."
     subject_template:
-      one: "1 liputus odottaa käsittelyä"
+      one: "Yksi liputus odottaa käsittelyä"
       other: "%{count} liputusta odottaa käsittelyä"
   flag_reasons:
     off_topic: "Viestisi liputettiin **asiaan kuulumattomaksi**: se ei kuulu tähän ketjuun, jonka aiheen määrittelee aloitusviesti ja otsikko."
@@ -1078,6 +1123,73 @@ fi:
         Kuitenkin, jos viesti piilotettiin toista kertaa, se pysyy piilotettuna kunnes henkilökunta tutkii tilanteen – jonka jälkeen voi seurata muita seuraamuksia, mukaan lukien tilisi hyllyttäminen.
 
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        Tässä yksityisviestissä on muutama pikaohje, joiden avulla pääset alkuun:
+
+        ## Jatka vierittämistä
+
+        Palstalla ei ole sivunumeroita tai 'Seuraava'-painikkeita – lukeaksesi lisää, **jatka vain sivun vierittämistä alaspäin!**
+
+        Kun uusia viestejä lähetetään, nekin ilmestyvät näkyviin automaattisesti.
+
+        ## Missä olen?
+
+        - Jos haluat käyttää hakua, päästä käyttäjäsivullesi tai avata päävalikon, klikkaa **oikeassa yläkulmassa olevia painikkeita**.
+
+        - Ketjun otsikkoa klikkaamalla pääset uusimpaan lukemattomaan viestiin. Klikkaa uusinta toimintaa tai viestien lukumäärrää hypätäksesi ketjun alkuun tai loppuun.
+
+        - Kun olet lukemassa viestiketjua, pääset takaisin ylös &uarr; klikkaamalla otsikkoa. Klikkaa vihreää edistymispalkkia oikealla alhaalla tuodaksesi esiin navigaatiopainikkeet, tai käytä <kbd>home</kbd> ja <kbd>end</kbd> näppäimiä.
+
+        <img src="/images/welcome/progress-bar.png" width="143" height="39">
+
+        ## Kuinka vastaan viesteihin?
+
+        - Vastataksesi ketjuun yleisesti, käytä Vastaa-painiketta <img src="/images/welcome/reply-topic.png" width="29" height="25"> sivun alalaidassa.
+
+        - Vastataksesi tiettyyn viestiin, käytä kyseisen viestin Vastaa-painiketta <img src="/images/welcome/reply-post.png" width="29" height="25">.
+
+        - Jos haluat viedä keskustelun uuteen suuntaan, mutta säilyttää yhteyden aiempaan keskusteluun, käytä Aloita uusi yhdistetty ketju -painiketta <img src="/images/welcome/reply-as-new-topic.png" width="15" height="25"> viestin oikealla puolella.
+
+        Lainataksesi toista käyttäjää viestissäsi, valitse teksti jota haluat lainata ja klikkaa mitä hyvänsä Vastaa-painiketta.
+
+        <img src="/images/welcome/quote-reply.png" width="350" height="129">
+
+        Tavoittaaksesi toisen käyttäjän viestissäsi, mainitse hänen nimensä. Kirjoita `@` ja automaattinen täydennys tulee esiin.
+
+        <img src="/images/welcome/username-completion.png" width="230" height="131">
+
+        ## Mitä muuta voin tehdä?
+
+        Jokaisen viestin alalaidassa on rivi painikkeita.
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        Käytä **tykkää** painiketta osoittaaksesi kirjoittajalle, että olet pitänyt hänen viestistään. Jos huomaat viestissä ongelman, saata asia kirjoittajan tai palstan henkilökunnan tietoon yksityisesti **liputa** painikkeella.
+
+        Voit myös **jakaa** linkin viestiin tai **lisätä sen kirjanmerkkeihin** käyttäjäsivullesi myöhempää tarkastelua varten.
+
+        ## Kuka minulle puhuu?
+
+        Kun toinen käyttäjä vastaa viestiisi, lainaa viestiäsi tai mainitsee `@käyttäjänimesi`, numero ilmestyy sivun oikeaan yläkulmaan. Sieltä pääset katselemaan **ilmoituksiasi**.
+
+        <img src="/images/welcome/notification-panel.png" width="178" height="59">
+
+        Älä murehdi siitä, että et huomaisi uusi vastauksia. Saat sähköposti-ilmoituksen uusista vastauksista viesteihisi (ja yksityisviesteistä) jos et ole paikalla, kun ne saapuvat.
+
+        ## Milloin keskustelut ovat uusia?
+
+        Oletuksena kaikki alle kaksi päivää vanhat keskustelut tulkitaan uusiksi ja kaikki keskustelut joihin olet ottanut osaa (vastannut, luonut tai lukenut pitkään) asetetaan automaattisesti seurantaan.
+
+        Näet siniset uusien ketjujen ja viestien ilmaisimet näiden ketjujen yhteydessä:
+
+        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        Voit vaihtaa yksittäisen viestiketjun ilmoitusasetuksia ketjun alalaidassa olevalla painikkeella (asetuksen voi muuttaa myös aluekohtaisesti). Vaihtaaksesi asetuksia siitä, kuinka seuraat ketjuja tai mitkä ketjut tulkitaan uusiksi, katso [käyttäjäasetukset](/my/preferences).
+
+        ## Miksi en voi tehdä jotain?
+
+        Uusien käyttäjien oikeuksia rajoitetaan turvallisussyistä. Osallistumalla ansaitset yhteisön luottamuksen ja rajoitukset poistuvat automaattisesti. Korkeammilla [luottamustasoilla](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) saat vielä enemmän valtuuksia joiden avulla voit auttaa yhteisön ylläpitämisessä.
     welcome_user:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
@@ -1090,6 +1202,24 @@ fi:
         Toivottavasti viihdyt!
     welcome_invite:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
+      text_body_template: |
+        Kiitos kutsun hyväksymisestä sivustolle %{site_name} -- tervetuloa!
+
+        Olemme luoneet sinulle automaattisesti käyttäjänimen: **%{username}**, mutta voit vaihtaa sen koska hyvänsä [käyttäjäprofiilistasi][prefs].
+
+        Kirjautuaksesi sisään uudestaan, joko:
+
+        1. Kirjaudu sisään millä metodilla haluat -- kunhan se on yhdistetty **samaan sähköpostiosoitteeseen,** kuin jonne vastaanotit alkuperäisen kutsun. Muuten emme voi tietää, että se todella olet sinä!
+
+        2. Luo salasana [käyttäjäprofiilissasi][prefs], ja käytä sitä kirjautumiseen.
+
+        %{new_user_tips}
+
+        Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
+
+        Toivottavasti viihdyt!
+
+        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Vieminen suoritettu onnistuneesti"
       text_body_template: "Vieminen onnistui."
@@ -1154,6 +1284,12 @@ fi:
         Tälle sähköpostiosoitteelle ei löydy käyttäjätiliä. Yritä lähettää sähköposti toisesta osoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_empty:
       subject_template: "Sähköpostiongelma -- Ei sisältöä"
+      text_body_template: |
+        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+
+        Emme löytäneet sähköpostista viestin sisältöä. Varmista, että kirjoitit jotain viestin yläreunaan - emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia.
+
+        Jos saat tämän viestin, vaikka sähköpostissa oli sisältöä, yritä uudestaan siten, että viesti sisältää HTML-sisältöä (ei pelkkää selkotekstiä).
     email_reject_parsing:
       subject_template: "Sähköpostionelma -- Tunnistamaton sisältö"
       text_body_template: |

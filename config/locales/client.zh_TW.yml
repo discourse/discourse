@@ -449,7 +449,6 @@ zh_TW:
     created: '已建立'
     created_lowercase: '已建立'
     trust_level: '信任等級'
-    search_hint: '用戶名稱或電子郵件'
     create_account:
       title: "建立新帳號"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
@@ -831,7 +830,6 @@ zh_TW:
       post_number: "文章 {{number}}"
       in_reply_to: "回覆"
       last_edited_on: "文章最近編輯的時間"
-      reply_as_new_topic: "回覆為新討論話題"
       continue_discussion: "繼續 {{postLink}} 的討論:"
       follow_quote: "跳到引用的文章"
       show_full: "顯示所有文章"
@@ -1613,17 +1611,12 @@ zh_TW:
           likes_given: "給出的讚"
           likes_received: "收到的讚"
           qualifies: "符合信任等級 3 的條件。"
-          will_be_promoted: "將在 24 小時內升級。"
           does_not_qualify: "不符合信任等級 3 的條件。"
         sso:
           external_username: "用戶名稱"
           external_name: "名稱"
           external_email: "電子郵件"
           external_avatar_url: "頭像 URL"
-      site_text:
-        none: "選擇要編輯的內容類型。"
-        title: '內容'
-        edit: "編輯網站的內容"
       site_settings:
         show_overriden: '只顯示修改過的項目'
         title: '設定'

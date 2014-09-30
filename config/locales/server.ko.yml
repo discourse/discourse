@@ -20,6 +20,7 @@ ko:
   posts: "게시물들"
   loading: "로딩중"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  log_in: "로그인"
   via: "%{site_name}의 %{username}"
   is_reserved: "예약됨"
   errors:
@@ -92,9 +93,11 @@ ko:
     errors:
       can_not_modify_automatic: "자동 그룹은 수정 하실 수 없습니다."
     default_names:
+      everyone: "모든 사람"
       admins: "운영자들"
       moderators: "운영자"
       staff: "스태프"
+      trust_level_0: "신뢰도_0"
       trust_level_1: "신뢰도 1"
       trust_level_2: "신뢰도 2"
       trust_level_3: "신뢰도 3"
@@ -194,6 +197,27 @@ ko:
   staff_category_description: "스태프들의 논의를 위한 비공개 카테고리입니다. 관리자 및 운영자에게만 보입니다."
   lounge_welcome:
     title: "라운지에 오신 것을 환영합니다."
+    body: |2
+
+      축하합니다! :confetti_ball:
+
+      당신의 신뢰도가 **지도자** (신뢰도 3등급)로 올라갔기 때문에 이 토픽을 볼 수 있게 되었습니다.
+
+      이제부터 아래의 행동들을 할 수 있습니다 &hellip;
+
+      * 토픽을 제목을 수정할 수 있습니다
+      * 토픽의 카테고리를 수정할 수 있습니다
+      * 링크가 follow로 처리됩니다 ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) 가 제거됩니다)
+      * 신뢰도 3 이상인 사용자가 접근할 수 있는 비공개 카테고리인 라운지에 접근할 수 있습니다
+      * 좋아요와 신고의 가중치가 높아집니다
+
+      [정규 멤버 목록](/badges/3/regular)을 확인할 수 있습니다. 인사하는 것을 잊지마세요.
+
+      이 커뮤니티의 중요한 역할을 해주신 것에 감사드립니다!
+
+      (신뢰도에 관한 더 자세한 정보를 보시려면, [이 토픽을 확인하세요][trust]. 기준에 맞는 사람만 정규 회원으로 자격이 유지됩니다.)
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "'%{category}' 카테고리의 설명"
     replace_paragraph: "[이 첫번째 문단을 당신의 새로운 카테고리의 짧은 설명으로 바꿔주세요. 이 지침은 카테고리 선택 화면에 나타날 것입니다. 200자 이하로 적어주세요.]"
@@ -213,7 +237,12 @@ ko:
       title: "새로운 사용자"
     basic:
       title: "기본 사용자"
-    change_failed_explanation: "당신은 %{user_name} 사용자를 %{new_trust_level} 으로 강등시키려 하였습니다만, 신뢰도는 이미 %{current_trust_level} 입니다. %{user_name} 사용자의 레벨은 %{current_trust_level} 로 유지됩니다."
+    regular:
+      title: "회원"
+    leader:
+      title: "정규 회원"
+    elder:
+      title: "지도자"
   rate_limiter:
     too_many_requests: "지금 하시려는 행동에는 하루 제한이 있습니다. %{time_left} 동안 기다리시고 다시 시도해 주세요."
     hours:
@@ -308,6 +337,7 @@ ko:
     notify_user:
       title: '{{username}}에게 알리기'
       long_form: '신고한 사용자'
+      email_title: '"%{title}" 내의 당신의 게시글'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '운영자에게 알리기'
@@ -342,15 +372,18 @@ ko:
       title: '운영자에게 알림'
       description: '이 게시물은 <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, 또는 기타 다른 이유에서 운영자의 주의가 필요합니다.'
       long_form: '운영자에게 알림'
+      email_title: '토픽 "%{title}" 은 운영자의 확인이 필요합니다'
+      email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>회원님의 포스트가 신고접수 되었습니다. <a href="/my/private-messages">개인 메시지</a>를 확인해주세요.</p>'
+    user_must_edit: '<p>게시물이 신고되었기 때문에 일시적으로 보이지 않습니다.</p>'
   archetypes:
     regular:
       title: "자주보는 토픽"
     banner:
       message:
-        make: "해당 토픽이 배너에 걸렸습니다. 해당 사용자가 내리기 전까지 모든 페이지 상단에 보여집니다."
-        remove: "해당 토픽이 배너에서 내려왔습니다. 더 이상 모든 페이지 상단에 보여지지 않습니다."
+        make: "이 토픽은 배너에 올라왔습니다. 사용자가 내리기 전까지 모든 페이지의 상단에 표시됩니다."
+        remove: "이 토픽은 배너에서 내려왔습니다. 더 이상 모든 페이지의 상단에 표시되지 않습니다."
   unsubscribed:
     title: '구독 해지"'
     description: "구독이 해지되었습니다."
@@ -472,6 +505,8 @@ ko:
     education_new_topic:
       title: "새로운 사용자 교육: 첫번째 토픽들"
       description: "새로운 사용자가 첫 두개의 토픽을 작성하면 자동 팝업됩니다."
+    usage_tips:
+      title: "새로운 사용자 가이드"
     welcome_user:
       title: "환영: 새로운 사용자"
       description: "새로운 사용자가 가입하면 자동으로 개인 메시지를 보냅니다."
@@ -481,12 +516,6 @@ ko:
     login_required_welcome_message:
       title: "로그인 필요: Welcome Message"
       description: "'login required' 설정이 활성화 되어있으면 웰컴 메시지가 로그인 되지 않은 사용자들에게 보여집니다."
-    tos_user_content_license:
-      title: "서비스 약관: 컨텐츠 라이센스"
-      description: "DEPRECATED. 사용되지 않음"
-    tos_miscellaneous:
-      title: "서비스 약관: 기타"
-      description: "DEPRECATED. 사용되지 않음"
     login_required:
       title: "로그인 필요: 홈페이지"
       description: "이 텍스트는 로그인이 필요하지만 인증되지 않은 사용자들에게 보여집니다."
@@ -596,7 +625,7 @@ ko:
     redirect_users_to_top_page: "자동으로 신규 사용자와 오래간만에 들어온 사용자를 탑 페이지로 리다이렉트 시킴"
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰의 유효 기간(시간)"
     email_token_grace_period_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰은 사용되어진 이후 유효한 기간(시간)"
-    enable_badges: "훈장 시스템 활성화 (시험적 기능)"
+    enable_badges: "뱃지 시스템 활성화 (시험 기능)"
     allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "허용하지 않는 Email 도메인을 파이프(|)기호로 구분하여 입력. 예: mailinator.com|trashmail.net"
     email_domains_whitelist: "허용하는 Email 도메인을 파이프(|)기호로 구분하여 입력. 경고: 여기에 주어진 email domain이 아닌 경우 모두 거부됩니다."
@@ -653,7 +682,6 @@ ko:
     clean_up_uploads: "불법 호스팅을 막기 위해서 참조되지 않은 업로드 파일은 제거한다. 주의 : 이 설정을 활성화 하기 전에 `/uploads` 디렉토리를 백업하는 것이 좋다."
     clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
     purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
-    enable_s3_uploads: "업로한 파일을 Amazon S3에 저장한다."
     s3_upload_bucket: "업로드된 파일이 위치할 Amazon S3 버켓 이름. 주의 : 소문자로 period(.)업는 문자열"
     s3_access_key_id: "이미지를 업로드 할 때 사용할 Amazon S3의 access key id"
     s3_secret_access_key: "이미지를 업로드 할 때 사용할 Amazon S3의 secret access key"
@@ -784,7 +812,6 @@ ko:
     incorrect_username_email_or_password: "계정 아이디, 이메일 또는 패스워드가 다릅니다."
     wait_approval: "가입해 주셔서 감사합니다. 곧 활성화 메일이 도착할 것 입니다."
     active: "당신의 계정이 활성화되었습니다."
-    activate_email: "계정 생성을 위해 <b>%{email}</b>로 이메일을 보냈습니다. 계정을 활성화하기 위해 지침을 따라주세요."
     not_activated: "당신은 아직 로그인 할 수 없습니다. 계정 활성화 이메일을 보냈습니다. 계정을 활성화하기 위해 지침을 따라주세요."
     suspended: "당신은 %{date} 까지 로그인할 수 없습니다. "
     suspended_with_reason: "당신은 %{date} 까지 로그인할 수 없습니다. 이유: %{reason}"
@@ -925,9 +952,6 @@ ko:
   page_not_found:
     title: "당신이 요청한 페이지를 찾을 수 없습니다. 혹시 아래와 같은 토픽을 찾으신 것은 아닌가요?"
   terms_of_service:
-    user_content_license: |
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
-    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: '삭제되었습니다'
   upload:

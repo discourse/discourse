@@ -192,7 +192,6 @@ pt:
       title: "regular"
     elder:
       title: "líder"
-    change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}'"
   rate_limiter:
     slow_down: "Realizou esta acção demasiadas vezes, tente novamente mais tarde"
     too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
@@ -472,10 +471,6 @@ pt:
     login_required_welcome_message:
       title: "Boas-vindas: Login Solicitado"
       description: "Mensagem de boas-vindas que é exibida para usuários que não estão logados quando a configuração de 'login requerido' está ativada."
-    tos_user_content_license:
-      title: "Termos do Serviço: Licença do Conteúdo"
-    tos_miscellaneous:
-      title: "Termos do Serviço: Diversos"
     login_required:
       title: "É requerido que você entre em sua conta: Página Inicial"
       description: "Texto exibido para usuários não autorizados quando é se exige entrar na conta para acessar o site."
@@ -571,7 +566,6 @@ pt:
     incorrect_username_email_or_password: "Usuário, email ou senha incorretos"
     wait_approval: "Obrigado por se registar. Você será notificado por email quando a sua conta for aprovada."
     active: "A sua conta está ativa e pronta."
-    activate_email: "Estamos quase prontos! Enviamos um email de ativação para <b>%{email}</b>. Por favor siga as instruções no email para ativar a sua conta."
     not_activated: "Ainda não podes fazer log in. Enviamos um email de ativação para você. Por favor siga as instruções no email para ativar a sua conta."
     suspended: "Não pode iniciar sessão até %{date}"
     suspended_with_reason: "Não pode iniciar sessão até %{date}, pois encontra-se ativa uma suspensão com o seguinte motivo: %{reason}"
@@ -697,10 +691,6 @@ pt:
         %{base_url}/users/activate-account/%{email_token}
 
         Se não conseguires clicar no link em cima, tenta copia-lo e cola-lo na barra de endereções do seu browser de internet.
-  terms_of_service:
-    user_content_license: |
-      As contribuições do usuário são licenciadas sob [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Sem limitação de nenhuma destas representações ou garantias, %{company_short_name} tem o direito (mas não a obrigação) de, segundo o próprio critério de %{company_short_name} (i) recusar ou remover qualquer conteúdo que, na avaliação de %{company_short_name} viole qualquer regra de %{company_short_name} ou seja de alguma forma prejudicial ou censurável, ou (ii) cancelar ou negar o acesso e a utilização do site para qualquer pessoa ou entidade, por qualquer motivo, segundo próprio e único critério de %{company_short_name}. %{company_short_name} não terá obrigação de fornecer qualquer reembolso de quaisquer valores já pagos. ⏎
-    miscellaneous: "Este Acordo constitui a totalidade do acordo entre %{company_short_name} e você sobre o assunto em questão, e só pode ser modificado por uma emenda por escrito assinado por um executivo autorizado %{company_short_name}, ou pela publicação por %{company_short_name} de uma versão revisada. Exceto o definido em lei aplicável, se houver, em contrário, o presente Contrato, qualquer acesso ou uso do Site serão regidos pelas leis do República Federativa do Brasil, Brasil, excluindo seu conflito às disposições da lei, e o local adequado para quaisquer disputas decorrentes ou relacionadas com qualquer do mesmo serão os tribunais estaduais e federais localizados em Florianópolis, Santa Catarina. Com exceção de pedidos de medida cautelar ou de equidade ou reclamações relativas aos direitos de propriedade intelectual (que podem ser levados a qualquer tribunal competente, sem a constituição de uma garantia), qualquer litígio decorrente do presente Acordo será resolvido de acordo com as Regras de Arbitragem globais de Arbitragem e Mediação Judicial, Inc. (\"JAMS\") por três árbitros nomeados em conformidade com tais regras. A arbitragem terá lugar em Florianópolis, Santa Catarina, no idioma português brasileiro e a decisão arbitral pode ser executada em qualquer tribunal. A parte prevalecente em qualquer ação ou processo para executar este Contrato terá o direito de custos e honorários advocatícios. Se qualquer parte deste Contrato for considerada inválida ou inexequível, essa parte será interpretada de modo a refletir a intenção original das partes, e as parcelas restantes permanecerão em pleno vigor e efeito. A renúncia por qualquer das partes de qualquer termo ou condição deste Contrato ou qualquer violação da mesma, em qualquer instância, não vai renunciar a tal termo ou condição ou qualquer violação subseqüente. Você pode transferir seus direitos sob este Contrato a qualquer partido que consente e concorda em ficar vinculado por seus termos e condições; %{company_short_name} pode ceder seus direitos sob este Contrato sem qualquer condição. Este Acordo será vinculativo e reverterá em benefício das partes, seus sucessores e cessionários autorizados."
   deleted: 'removido'
   upload:
     unauthorized: "Desculpe-nos, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
