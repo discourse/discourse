@@ -187,8 +187,7 @@ describe Admin::UsersController do
         response.should be_success
       end
 
-      it "raises an error when demoting a user below their current trust level" do
-        StaffActionLogger.any_instance.expects(:log_trust_level_change).never
+      it "raises no error when demoting a user below their current trust level (locks trust level)" do
         stat = @another_user.user_stat
         stat.topics_entered = SiteSetting.tl1_requires_topics_entered + 1
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts + 1
@@ -196,7 +195,9 @@ describe Admin::UsersController do
         stat.save!
         @another_user.update_attributes(trust_level: TrustLevel[1])
         xhr :put, :trust_level, user_id: @another_user.id, level: TrustLevel[0]
-        response.should_not be_success
+        response.should be_success
+        @another_user.reload
+        @another_user.trust_level_locked.should == true
       end
     end
 
