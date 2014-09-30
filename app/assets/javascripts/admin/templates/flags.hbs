@@ -143,14 +143,14 @@
             <tr>
               <td colspan="4" class="action">
                 {{#if adminActiveFlagsView}}
-                  <button title='{{i18n admin.flags.agree_title}}' class='btn' {{action showAgreeFlagModal flaggedPost}}><i class="fa fa-thumbs-o-up"></i>{{i18n admin.flags.agree}}&hellip;</button>
+                  <button title='{{i18n admin.flags.agree_title}}' class='btn' {{action "showAgreeFlagModal" flaggedPost}}><i class="fa fa-thumbs-o-up"></i>{{i18n admin.flags.agree}}&hellip;</button>
                   {{#if flaggedPost.postHidden}}
-                    <button title='{{i18n admin.flags.disagree_flag_unhide_post_title}}' class='btn' {{action disagreeFlags flaggedPost}}><i class="fa fa-thumbs-o-down"></i>{{i18n admin.flags.disagree_flag_unhide_post}}</button>
+                    <button title='{{i18n admin.flags.disagree_flag_unhide_post_title}}' class='btn' {{action "disagreeFlags" flaggedPost}}><i class="fa fa-thumbs-o-down"></i>{{i18n admin.flags.disagree_flag_unhide_post}}</button>
                   {{else}}
-                    <button title='{{i18n admin.flags.disagree_flag_title}}' class='btn' {{action disagreeFlags flaggedPost}}><i class="fa fa-thumbs-o-down"></i>{{i18n admin.flags.disagree_flag}}</button>
+                    <button title='{{i18n admin.flags.disagree_flag_title}}' class='btn' {{action "disagreeFlags" flaggedPost}}><i class="fa fa-thumbs-o-down"></i>{{i18n admin.flags.disagree_flag}}</button>
                   {{/if}}
-                  <button title='{{i18n admin.flags.defer_flag_title}}' class='btn' {{action deferFlags flaggedPost}}><i class="fa fa-external-link"></i>{{i18n admin.flags.defer_flag}}</button>
-                  <button title='{{i18n admin.flags.delete_title}}' class='btn btn-danger' {{action showDeleteFlagModal flaggedPost}}><i class="fa fa-trash-o"></i>{{i18n admin.flags.delete}}&hellip;</button>
+                  <button title='{{i18n admin.flags.defer_flag_title}}' class='btn' {{action "deferFlags" flaggedPost}}><i class="fa fa-external-link"></i>{{i18n admin.flags.defer_flag}}</button>
+                  <button title='{{i18n admin.flags.delete_title}}' class='btn btn-danger' {{action "showDeleteFlagModal" flaggedPost}}><i class="fa fa-trash-o"></i>{{i18n admin.flags.delete}}&hellip;</button>
                 {{/if}}
               </td>
             </tr>

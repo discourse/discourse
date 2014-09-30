@@ -6,18 +6,18 @@
     <div class='panel clearfix'>
       {{#unless currentUser}}
         {{#if showSignUpButton}}
-        <button {{action showCreateAccount}} class='btn btn-primary btn-small sign-up-button'>
+        <button {{action "showCreateAccount"}} class='btn btn-primary btn-small sign-up-button'>
           {{i18n sign_up}}
         </button>
         {{/if}}
-        <button {{action showLogin}} class='btn btn-primary btn-small login-button'>
+        <button {{action "showLogin"}} class='btn btn-primary btn-small login-button'>
           {{fa-icon user}} {{i18n log_in}}
         </button>
       {{/unless}}
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
           <li class='notifications'>
-            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'>
+            <a class='icon' href="#" {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'>
               {{fa-icon comment label="notifications.title"}}
             </a>
             {{#if currentUser.unread_notifications}}

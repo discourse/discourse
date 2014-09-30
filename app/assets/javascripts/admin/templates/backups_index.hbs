@@ -5,7 +5,7 @@
     <th>
       <div class="pull-right">
         {{resumable-upload target="/admin/backups/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
-        <button {{action toggleReadOnlyMode}} class="btn" {{bind-attr disabled="readOnlyModeDisabled" title="readOnlyModeTitle"}}><i class="fa fa-eye"></i>{{readOnlyModeText}}</button>
+        <button {{action "toggleReadOnlyMode"}} class="btn" {{bind-attr disabled="readOnlyModeDisabled" title="readOnlyModeTitle"}}><i class="fa fa-eye"></i>{{readOnlyModeText}}</button>
       </div>
     </th>
   </tr>
@@ -16,8 +16,8 @@
       <td>
         <div class="pull-right">
           <a {{bind-attr href="backup.link"}} class="btn download" title="{{i18n admin.backups.operations.download.title}}"><i class="fa fa-download"></i>{{i18n admin.backups.operations.download.text}}</a>
-          <button {{action destroyBackup backup}} class="btn btn-danger" {{bind-attr disabled="destroyDisabled" title="destroyTitle"}}><i class="fa fa-trash-o"></i></button>
-          <button {{action startRestore backup}} class="btn" {{bind-attr disabled="restoreDisabled" title="restoreTitle"}}><i class="fa fa-play"></i>{{i18n admin.backups.operations.restore.text}}</button>
+          <button {{action "destroyBackup" backup}} class="btn btn-danger" {{bind-attr disabled="destroyDisabled" title="destroyTitle"}}><i class="fa fa-trash-o"></i></button>
+          <button {{action "startRestore" backup}} class="btn" {{bind-attr disabled="restoreDisabled" title="restoreTitle"}}><i class="fa fa-play"></i>{{i18n admin.backups.operations.restore.text}}</button>
         </div>
       </td>
     </tr>

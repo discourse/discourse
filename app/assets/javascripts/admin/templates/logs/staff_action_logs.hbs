@@ -1,27 +1,27 @@
 <div class="staff-action-logs-controls">
-  <a {{action clearAllFilters}} {{bind-attr class=":clear-filters :filter filtersExists::invisible"}}>
+  <a {{action "clearAllFilters"}} {{bind-attr class=":clear-filters :filter filtersExists::invisible"}}>
     <span class="label">{{i18n admin.logs.staff_actions.clear_filters}}</span>
   </a>
   {{#if actionFilter}}
-    <a {{action clearFilter "action_name"}} class="filter">
+    <a {{action "clearFilter" "action_name"}} class="filter">
       <span class="label">{{i18n admin.logs.action}}</span>: {{actionFilter}}
       <i class="fa fa-times-circle"></i>
     </a>
   {{/if}}
   {{#if filters.acting_user}}
-    <a {{action clearFilter "acting_user"}} class="filter">
+    <a {{action "clearFilter" "acting_user"}} class="filter">
       <span class="label">{{i18n admin.logs.staff_actions.staff_user}}</span>: {{filters.acting_user}}
       <i class="fa fa-times-circle"></i>
     </a>
   {{/if}}
   {{#if filters.target_user}}
-    <a {{action clearFilter "target_user"}} class="filter">
+    <a {{action "clearFilter" "target_user"}} class="filter">
       <span class="label">{{i18n admin.logs.staff_actions.target_user}}</span>: {{filters.target_user}}
       <i class="fa fa-times-circle"></i>
     </a>
   {{/if}}
   {{#if filters.subject}}
-    <a {{action clearFilter "subject"}} class="filter">
+    <a {{action "clearFilter" "subject"}} class="filter">
       <span class="label">{{i18n admin.logs.staff_actions.subject}}</span>: {{filters.subject}}
       <i class="fa fa-times-circle"></i>
     </a>

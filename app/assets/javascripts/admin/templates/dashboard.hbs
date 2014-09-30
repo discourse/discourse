@@ -119,7 +119,7 @@
         </p>
         <p class="actions">
           <small>{{i18n admin.dashboard.last_checked}}: {{problemsTimestamp}}</small>
-          <button {{action refreshProblems}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+          <button {{action "refreshProblems"}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
         </p>
       </div>
       <div class="clearfix"></div>
@@ -131,7 +131,7 @@
         <div class="problem-messages">
           <p>
             {{i18n admin.dashboard.no_problems}}
-            <button {{action refreshProblems}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
+            <button {{action "refreshProblems"}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n admin.dashboard.refresh_problems}}</button>
           </p>
         </div>
         <div class="clearfix"></div>
