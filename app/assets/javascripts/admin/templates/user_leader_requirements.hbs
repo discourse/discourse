@@ -85,17 +85,6 @@
           <td>{{num_likes_received}}</td>
           <td>{{min_likes_received}}</td>
         </tr>
-        <tr>
-          <th>{{i18n admin.user.tl3_requirements.trust_level_locked}}</th>
-          <td><i {{bind-attr class=":fa met.level_locked:fa-lock:fa-unlock"}}></i></td>
-          {{#if trust_level_locked}}
-            <td>{{i18n yes_value}}</td>
-            <td><a class="btn" {{action unlock_trust_level}}>{{i18n admin.user.tl3_requirements.unlock_tl}}</a></td>
-          {{else}}
-            <td>{{i18n no_value}}</td>
-            <td><a class="btn" {{action lock_trust_level}}>{{i18n admin.user.tl3_requirements.lock_tl}}</a></td>
-          {{/if}}
-        </tr>
       </tbody>
     </table>
   {{/with}}

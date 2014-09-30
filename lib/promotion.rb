@@ -12,7 +12,7 @@ class Promotion
   # Returns true if the user was promoted, false otherwise.
   def review
     # nil users are never promoted
-    return false if @user.blank?
+    return false if @user.blank? || @user.trust_level_locked
 
     # Promotion beyond basic requires some expensive queries, so don't do that here.
     return false if @user.trust_level >= TrustLevel[2]
@@ -42,7 +42,7 @@ class Promotion
     old_level = @user.trust_level
     new_level = level
 
-    if new_level < old_level
+    if new_level < old_level && !@user.trust_level_locked
       next_up = new_level+1
       key = "tl#{next_up}_met?"
       if self.class.respond_to?(key) && self.class.send(key, @user)

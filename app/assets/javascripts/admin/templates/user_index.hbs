@@ -267,18 +267,25 @@
     <div class='field'>{{i18n trust_level}}</div>
     <div class="value">
       {{combo-box content=trustLevels value=trust_level nameProperty="detailedName"}}
-    </div>
-    <div class="controls">
-      {{#if tl3Requirements}}
-        {{#link-to 'adminUser.tl3Requirements' this class="btn"}}{{i18n admin.user.trust_level_3_requirements}}{{/link-to}}
-      {{/if}}
-
       {{#if dirty}}
         <div>
         <button class='btn ok no-text' {{action saveTrustLevel target="content"}}><i class='fa fa-check'></i></button>
         <button class='btn cancel no-text' {{action restoreTrustLevel target="content"}}><i class='fa fa-times'></i></button>
         </div>
       {{/if}}
+    </div>
+    <div class="controls">
+      {{#if model.canLockTrustLevel}}
+        {{#if model.trust_level_locked}}
+        <i title='{{i18n admin.user.trust_level_locked_tip}}' {{action lockTrustLevel false target="model"}} class='fa fa-lock'></i> <button class="btn" {{action lockTrustLevel false target="model"}}>{{i18n admin.user.unlock_trust_level}}</button>
+        {{else}}
+        <i title='{{i18n admin.user.trust_level_unlocked_tip}}' class='fa fa-unlock'></i> <button class="btn" {{action lockTrustLevel true target="model"}}>{{i18n admin.user.lock_trust_level}}</button>
+        {{/if}}
+      {{/if}}
+      {{#if tl3Requirements}}
+        {{#link-to 'adminUser.tl3Requirements' this class="btn"}}{{i18n admin.user.trust_level_3_requirements}}{{/link-to}}
+      {{/if}}
+
     </div>
   </div>
 

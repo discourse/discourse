@@ -10,15 +10,5 @@
 Discourse.AdminUserTl3RequirementsRoute = Discourse.Route.extend({
   model: function() {
     return this.modelFor('adminUser');
-  },
-
-  actions: {
-    lock_trust_level: function() {
-      this.modelFor('adminUser').lockTrustLevel(true);
-    },
-
-    unlock_trust_level: function() {
-      this.modelFor('adminUser').lockTrustLevel(false);
-    }
   }
 });
