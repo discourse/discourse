@@ -1874,8 +1874,8 @@ en:
           other: "Failed to reject %{count} users."
         not_verified: "Not verified"
         check_email:
-          title: "Click this button to retrieve this user's email"
-          text: "Retrieve Email"
+          title: "Reveal this user's email address"
+          text: "Show Email"
 
       user:
         suspend_failed: "Something went wrong suspending this user {{error}}"
