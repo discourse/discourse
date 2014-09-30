@@ -2,11 +2,11 @@
   <h3>{{title}}</h3>
 
   <button class='btn'
-          {{action viewAsTable}}
+          {{action "viewAsTable"}}
           {{bind-attr disabled="viewingTable"}}>{{i18n admin.dashboard.reports.view_table}}</button>
 
   <button class='btn'
-          {{action viewAsBarChart}}
+          {{action "viewAsBarChart"}}
           {{bind-attr disabled="viewingBarChart"}}>{{i18n admin.dashboard.reports.view_chart}}</button>
 
   <table class='table report'>

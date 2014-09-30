@@ -5,7 +5,7 @@
   {{render "composer-messages"}}
 
   <div class='control'>
-    <a href='#' class='toggler' {{action toggle bubbles=false}} title='{{i18n composer.toggler}}'></a>
+    <a href='#' class='toggler' {{action "toggle" bubbles=false}} title='{{i18n composer.toggler}}'></a>
 
     {{#if model.viewOpen}}
       <div class='control-row reply-area'>
@@ -19,7 +19,7 @@
                 {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
               </div>
             {{else}}
-              <a {{action displayEditReason}} class="display-edit-reason">{{i18n composer.show_edit_reason}}</a>
+              <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n composer.show_edit_reason}}</a>
             {{/if}}
           {{/if}}
         </div>
@@ -56,7 +56,7 @@
                 {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
               </div>
               {{#if model.archetype.hasOptions}}
-                <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
+                <button class='btn' {{action "showOptions"}}>{{i18n topic.options}}</button>
               {{/if}}
               {{render "additional-composer-buttons" model}}
             {{/unless}}
@@ -75,7 +75,7 @@
             <div id='wmd-preview' {{bind-attr class="hidePreview:hidden :cooked"}}></div>
           </div>
           <div class="composer-bottom-right">
-            <a href="#" {{action togglePreview}} class='toggle-preview'>{{{model.toggleText}}}</a>
+            <a href="#" {{action "togglePreview"}} class='toggle-preview'>{{{model.toggleText}}}</a>
             <div id="file-uploading" {{bind-attr class="view.isUploading::hidden"}}>
               {{i18n upload_selector.uploading}} {{view.uploadProgress}}% <a id="cancel-file-upload">{{i18n cancel}}</a>
             </div>
@@ -89,8 +89,8 @@
 
         {{#if currentUser}}
           <div class='submit-panel'>
-            <button {{action save}} tabindex="5" {{bind-attr class=":btn :btn-primary :create disableSubmit:disabled"}} title="{{i18n composer.title}}">{{{model.saveIcon}}}{{model.saveText}}</button>
-            <a href='#' {{action cancel}} class='cancel' tabindex="6">{{i18n cancel}}</a>
+            <button {{action "save"}} tabindex="5" {{bind-attr class=":btn :btn-primary :create disableSubmit:disabled"}} title="{{i18n composer.title}}">{{{model.saveIcon}}}{{model.saveText}}</button>
+            <a href='#' {{action "cancel"}} class='cancel' tabindex="6">{{i18n cancel}}</a>
           </div>
         {{/if}}
 
@@ -100,7 +100,7 @@
         <div class='span24'>
           <div class='saving-text'>
             {{#if model.createdPost}}
-              {{i18n composer.saved}} <a class='permalink' href="{{unbound createdPost.url}}" {{action viewNewReply}}>{{i18n composer.view_new_post}}</a>
+              {{i18n composer.saved}} <a class='permalink' href="{{unbound createdPost.url}}" {{action "viewNewReply"}}>{{i18n composer.view_new_post}}</a>
             {{else}}
               {{i18n composer.saving}}
             {{/if}}

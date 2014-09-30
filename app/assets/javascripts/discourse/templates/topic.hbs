@@ -12,7 +12,7 @@
         <div class='inner'>
 
           {{#if showStarButton}}
-            <a {{bind-attr class=":star starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="starTooltip"}}></a>
+            <a {{bind-attr class=":star starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="starTooltip"}}></a>
           {{/if}}
 
           {{#if editingTopic}}
@@ -23,8 +23,8 @@
             {{/if}}
             {{text-field id='edit-title' value=newTitle maxLength=maxTitleLength}}
 
-            <button class='btn btn-primary btn-small no-text' {{action finishedEditingTopic}}><i class='fa fa-check'></i></button>
-            <button class='btn btn-small no-text' {{action cancelEditingTopic}}><i class='fa fa-times'></i></button>
+            <button class='btn btn-primary btn-small no-text' {{action "finishedEditingTopic"}}><i class='fa fa-check'></i></button>
+            <button class='btn btn-small no-text' {{action "cancelEditingTopic"}}><i class='fa fa-times'></i></button>
           {{else}}
             <h1>
               {{#unless is_warning}}
@@ -38,7 +38,7 @@
               {{/unless}}
               {{#if details.loaded}}
                 {{topic-status topic=model}}
-                <a href='{{unbound url}}' {{action jumpTop}}>
+                <a href='{{unbound url}}' {{action "jumpTop"}}>
                   {{#if topicSaving}}
                     {{fancy_title}}
                   {{else}}
@@ -49,7 +49,7 @@
 
 
               {{#if details.can_edit}}
-                <a href='#' {{action editTopic}} class='edit-topic' title='{{i18n edit}}'><i class="fa fa-pencil"></i></a>
+                <a href='#' {{action "editTopic"}} class='edit-topic' title='{{i18n edit}}'><i class="fa fa-pencil"></i></a>
               {{/if}}
             </h1>
           {{/if}}
@@ -128,10 +128,10 @@
         {{message}}
         {{#if noRetry}}
           {{#unless currentUser}}
-              <button {{action showLogin}} class='btn btn-primary topic-retry'><i class="fa fa-user"></i>{{i18n log_in}}</button>
+              <button {{action "showLogin"}} class='btn btn-primary topic-retry'><i class="fa fa-user"></i>{{i18n log_in}}</button>
           {{/unless}}
         {{else}}
-          <button class="btn btn-primary topic-retry" {{action retryLoading}}>{{i18n errors.buttons.again}}</button>
+          <button class="btn btn-primary topic-retry" {{action "retryLoading"}}>{{i18n errors.buttons.again}}</button>
         {{/if}}
       </div>
       {{#if retrying}}

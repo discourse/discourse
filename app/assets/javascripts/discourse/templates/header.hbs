@@ -30,7 +30,7 @@
         {{/if}}
         <li>
           {{#if loginRequired}}
-            <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action showLogin}}>
+            <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action "showLogin"}}>
               {{fa-icon search}}
             </a>
           {{else}}
@@ -49,7 +49,7 @@
                href="#"
                aria-hidden="true"
                id="site-map"
-               {{action showLogin}}>
+               {{action "showLogin"}}>
                {{fa-icon bars}}
             </a>
           {{else}}
@@ -96,7 +96,7 @@
       <div class="extra-info-wrapper">
         <div class="extra-info">
           {{#if showStarButton}}
-            <a {{bind-attr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
+            <a {{bind-attr class=":star topic.starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
           {{/if}}
           <h1>
             {{#if showPrivateMessageGlyph}}
@@ -108,7 +108,7 @@
             {{bound-category-link topic.category}}
             {{#if topic.details.loaded}}
               {{topic-status topic=topic}}
-              <a class='topic-link' href='{{unbound topic.url}}' {{action jumpToTopPost}}>{{{topic.fancy_title}}}</a>
+              <a class='topic-link' href='{{unbound topic.url}}' {{action "jumpToTopPost"}}>{{{topic.fancy_title}}}</a>
             {{else}}
               {{#if topic.errorLoading}}
                 {{topic.errorTitle}}

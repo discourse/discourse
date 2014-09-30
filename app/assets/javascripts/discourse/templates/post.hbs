@@ -7,7 +7,7 @@
 <article class='boxed' {{bind-attr id="postElementId" data-post-id="id" data-user-id="user_id"}}>
   <div class='row'>
     {{#if showUserReplyTab}}
-      <a href {{action toggleReplyHistory this target="view"}} class='reply-to-tab'>
+      <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
         {{#if loadingReplyHistory}}
           {{i18n loading}}
         {{else}}
@@ -37,7 +37,7 @@
         {{#if hasHistory}}
           <div class='post-info edits'>
             {{#if can_view_edit_history}}
-              <a href class="{{unbound view.historyHeat}}" {{action showHistory this}} title="{{i18n post.last_edited_on}} {{raw-date updated_at}}">
+              <a href class="{{unbound view.historyHeat}}" {{action "showHistory" this}} title="{{i18n post.last_edited_on}} {{raw-date updated_at}}">
                 {{editCount}}
                 <i class='fa fa-pencil'></i>
               </a>
@@ -50,7 +50,7 @@
           </div>
         {{/if}}
         {{#if wiki}}
-          <div class="post-info wiki" title="{{i18n post.wiki.about}}" {{action editPost this}}><i class="fa fa-pencil-square-o"></i></div>
+          <div class="post-info wiki" title="{{i18n post.wiki.about}}" {{action "editPost" this}}><i class="fa fa-pencil-square-o"></i></div>
         {{/if}}
         {{#if via_email}}
           <div class="post-info via-email" title="{{i18n post.via_email}}"><i class="fa fa-envelope-o"></i></div>
@@ -59,8 +59,8 @@
       </div>
 
       <div {{bind-attr class=":select-posts controller.multiSelect::hidden"}}>
-        <button {{action toggledSelectedPostReplies this}} {{bind-attr class="view.canSelectReplies::hidden"}}>{{i18n topic.multi_select.select_replies}}</button>
-        <button {{action toggledSelectedPost this}} class="select-post">{{view.selectPostText}}</button>
+        <button {{action "toggledSelectedPostReplies" this}} {{bind-attr class="view.canSelectReplies::hidden"}}>{{i18n topic.multi_select.select_replies}}</button>
+        <button {{action "toggledSelectedPost" this}} class="select-post">{{view.selectPostText}}</button>
       </div>
 
       <!-- keep the classes here in sync with composer.hbs -->
@@ -69,13 +69,13 @@
           {{{cooked}}}
         </div>
         {{#if cooked_hidden}}
-          <a href {{action expandHidden this}}>{{i18n post.show_hidden}}</a>
+          <a href {{action "expandHidden" this}}>{{i18n post.show_hidden}}</a>
         {{/if}}
         {{#if view.showExpandButton}}
           {{#if controller.loadingExpanded}}
             <button class="btn expand-post" disabled>{{i18n loading}}</button>
           {{else}}
-            <button {{action expandFirstPost this}} class='btn expand-post'>{{i18n post.show_full}}&hellip;</button>
+            <button {{action "expandFirstPost" this}} class='btn expand-post'>{{i18n post.show_full}}&hellip;</button>
           {{/if}}
         {{/if}}
         {{view 'post-menu' post=this adminMenu=view.adminMenu}}

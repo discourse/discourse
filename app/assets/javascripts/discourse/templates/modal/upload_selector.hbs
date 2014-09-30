@@ -1,7 +1,7 @@
 <div class="modal-body">
   {{#if allowLocal}}
     <div class="radios">
-      <input type="radio" id="local" value="local" name="upload" {{action useLocal}}>
+      <input type="radio" id="local" value="local" name="upload" {{action "useLocal"}}>
       <label class="radio" for="local">{{i18n upload_selector.from_my_computer}}</label>
       {{#if local}}
         <div class="inputs">
@@ -12,7 +12,7 @@
     </div>
   {{/if}}
   <div class="radios">
-    <input type="radio" id="remote" value="remote" name="upload" {{action useRemote}}>
+    <input type="radio" id="remote" value="remote" name="upload" {{action "useRemote"}}>
     <label class="radio" for="remote">{{i18n upload_selector.from_the_web}}</label>
     {{#if remote}}
       <div class="inputs">
@@ -37,10 +37,10 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" {{action upload target="view"}}>
+  <button class="btn btn-primary" {{action "upload" target="view"}}>
     <span class='add-upload'><i {{bind-attr class=":fa view.uploadIcon"}}></i><i class='fa fa-plus'></i></span>
     {{i18n upload}}
   </button>
-  <a {{action closeModal}}>{{i18n cancel}}</a>
-  {{#if remote}}<a {{action toggleShowMore}} class="pull-right">{{i18n show_more}}</a>{{/if}}
+  <a {{action "closeModal"}}>{{i18n cancel}}</a>
+  {{#if remote}}<a {{action "toggleShowMore"}} class="pull-right">{{i18n show_more}}</a>{{/if}}
 </div>
