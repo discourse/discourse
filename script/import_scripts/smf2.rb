@@ -445,7 +445,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
   # param1=value1=still1 value1 param2=value2 ...
   # => {'param1' => 'value1=still1 value1', 'param2' => 'value2 ...'}
   def parse_tag_params(params)
-    params.to_s.strip.scan(/(?<param>\w+)=(?<value>(?:(?>\S+)|\s+(?!\w+=))*)/).to_h
+    params.to_s.strip.scan(/(?<param>\w+)=(?<value>(?:(?>\S+)|\s+(?!\w+=))*)/).
+      inject({}) {|h,e| h[e[0]] = e[1]; h }
   end
 
   class << self
