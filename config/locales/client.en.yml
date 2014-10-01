@@ -1630,7 +1630,7 @@ en:
             text: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (without upload)"
+            without_uploads: "Yes (without uploads)"
           download:
             text: "Download"
             title: "Download the backup"
