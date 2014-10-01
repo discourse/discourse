@@ -326,6 +326,21 @@ describe PostAction do
       post.topic.visible.should == false
     end
 
+    it "hide tl0 posts that are flagged as spam by a tl3 user" do
+      newuser = Fabricate(:newuser)
+      post = create_post(user: newuser)
+
+      Discourse.stubs(:site_contact_user).returns(admin)
+
+      PostAction.act(Fabricate(:leader), post, PostActionType.types[:spam])
+
+      post.reload
+
+      post.hidden.should == true
+      post.hidden_at.should be_present
+      post.hidden_reason_id.should == Post.hidden_reasons[:flagged_by_tl3_user]
+    end
+
     it "can flag the topic instead of a post" do
       post1 = create_post
       post2 = create_post(topic: post1.topic)

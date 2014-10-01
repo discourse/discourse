@@ -372,7 +372,7 @@ class PostAction < ActiveRecord::Base
 
   def enforce_rules
     post = Post.with_deleted.where(id: post_id).first
-    PostAction.auto_hide_if_needed(post, post_action_type_key)
+    PostAction.auto_hide_if_needed(user, post, post_action_type_key)
     SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
   end
 
@@ -382,11 +382,17 @@ class PostAction < ActiveRecord::Base
     end
   end
 
-  def self.auto_hide_if_needed(post, post_action_type)
+  def self.auto_hide_if_needed(acting_user, post, post_action_type)
     return if post.hidden
 
-    if PostActionType.auto_action_flag_types.include?(post_action_type) &&
-       SiteSetting.flags_required_to_hide_post > 0
+    if post_action_type == :spam &&
+       acting_user.trust_level == TrustLevel[3] &&
+       post.user.trust_level == TrustLevel[0]
+
+       hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
+
+    elsif PostActionType.auto_action_flag_types.include?(post_action_type) &&
+          SiteSetting.flags_required_to_hide_post > 0
 
       old_flags, new_flags = PostAction.flag_counts_for(post.id)
 
