@@ -62,7 +62,12 @@ class Post < ActiveRecord::Base
   delegate :username, to: :user
 
   def self.hidden_reasons
-    @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again, :new_user_spam_threshold_reached)
+    @hidden_reasons ||= Enum.new(
+      :flag_threshold_reached,
+      :flag_threshold_reached_again,
+      :new_user_spam_threshold_reached,
+      :flagged_by_tl3_user
+    )
   end
 
   def self.types
