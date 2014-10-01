@@ -1875,7 +1875,7 @@ en:
         not_verified: "Not verified"
         check_email:
           title: "Reveal this user's email address"
-          text: "Show Email"
+          text: "Show"
 
       user:
         suspend_failed: "Something went wrong suspending this user {{error}}"
