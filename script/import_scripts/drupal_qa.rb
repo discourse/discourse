@@ -68,10 +68,10 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
                q.field_answer_question_nid AS nid,
                n.uid,
                n.created,
-               f.comment_body_value AS body
+               f.body_value AS body
         FROM node AS n
           INNER JOIN field_data_field_answer_question AS q ON q.entity_id = n.nid
-          INNER JOIN field_data_comment_body AS f ON f.entity_id = n.nid
+          INNER JOIN field_data_body AS f ON f.entity_id = n.nid
         WHERE n.status = 1
           AND n.type = 'answer'
         LIMIT #{batch_size}
