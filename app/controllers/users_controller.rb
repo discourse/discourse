@@ -220,6 +220,8 @@ class UsersController < ApplicationController
       authentication.finish
       activation.finish
 
+      # save user email in session, to show on account-created page
+      session["user_created_email"] = user.email
 
       render json: {
         success: true,
