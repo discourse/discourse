@@ -2,32 +2,74 @@
 class StaffActionLogger
   def initialize(admin)
     @admin = admin
-    raise Discourse::InvalidParameters.new('admin is nil') unless @admin and @admin.is_a?(User)
+    raise Discourse::InvalidParameters.new('admin is nil') unless @admin && @admin.is_a?(User)
   end
 
   def log_user_deletion(deleted_user, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless deleted_user and deleted_user.is_a?(User)
+    raise Discourse::InvalidParameters.new('user is nil') unless deleted_user && deleted_user.is_a?(User)
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:delete_user],
       email: deleted_user.email,
       ip_address: deleted_user.ip_address.to_s,
-      details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{deleted_user.send(x)}" }.join(', ')
+      details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{deleted_user.send(x)}" }.join("\n")
+    }))
+  end
+
+  def log_post_deletion(deleted_post, opts={})
+    raise Discourse::InvalidParameters.new("post is nil") unless deleted_post && deleted_post.is_a?(Post)
+
+    topic = deleted_post.topic || Topic.with_deleted.find(deleted_post.topic_id)
+
+    details = [
+      "id: #{deleted_post.id}",
+      "created_at: #{deleted_post.created_at}",
+      "user: #{deleted_post.user.username} (#{deleted_post.user.name})",
+      "topic: #{topic.title}",
+      "post_number: #{deleted_post.post_number}",
+      "raw: #{deleted_post.raw}"
+    ]
+
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:delete_post],
+      post_id: deleted_post.id,
+      details: details.join("\n")
+    }))
+  end
+
+  def log_topic_deletion(deleted_topic, opts={})
+    raise Discourse::InvalidParameters.new("topic is nil") unless deleted_topic && deleted_topic.is_a?(Topic)
+
+    details = [
+      "id: #{deleted_topic.id}",
+      "created_at: #{deleted_topic.created_at}",
+      "user: #{deleted_topic.user.username} (#{deleted_topic.user.name})",
+      "title: #{deleted_topic.title}"
+    ]
+
+    if first_post = deleted_topic.ordered_posts.first
+      details << "raw: #{first_post.raw}"
+    end
+
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:delete_topic],
+      topic_id: deleted_topic.id,
+      details: details.join("\n")
     }))
   end
 
   def log_trust_level_change(user, old_trust_level, new_trust_level, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
+    raise Discourse::InvalidParameters.new('user is nil') unless user && user.is_a?(User)
     raise Discourse::InvalidParameters.new('old trust level is invalid') unless TrustLevel.valid? old_trust_level
     raise Discourse::InvalidParameters.new('new trust level is invalid') unless TrustLevel.valid? new_trust_level
     UserHistory.create!( params(opts).merge({
       action: UserHistory.actions[:change_trust_level],
       target_user_id: user.id,
-      details: "old trust level: #{old_trust_level}, new trust level: #{new_trust_level}"
+      details: "old trust level: #{old_trust_level}\nnew trust level: #{new_trust_level}"
     }))
   end
 
   def log_site_setting_change(setting_name, previous_value, new_value, opts={})
-    raise Discourse::InvalidParameters.new('setting_name is invalid') unless setting_name.present? and SiteSetting.respond_to?(setting_name)
+    raise Discourse::InvalidParameters.new('setting_name is invalid') unless setting_name.present? && SiteSetting.respond_to?(setting_name)
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:change_site_setting],
       subject: setting_name,

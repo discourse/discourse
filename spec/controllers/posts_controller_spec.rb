@@ -143,7 +143,7 @@ describe PostsController do
 
       it "uses a PostDestroyer" do
         destroyer = mock
-        PostDestroyer.expects(:new).with(user, post).returns(destroyer)
+        PostDestroyer.expects(:new).returns(destroyer)
         destroyer.expects(:destroy)
         xhr :delete, :destroy, id: post.id
       end

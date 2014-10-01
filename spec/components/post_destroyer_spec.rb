@@ -170,6 +170,12 @@ describe PostDestroyer do
           author.reload
         }.to change { author.post_count }.by(-1)
       end
+
+      it "creates a new user history entry" do
+        expect {
+          PostDestroyer.new(moderator, post).destroy
+        }.to change { UserHistory.count}.by(1)
+      end
     end
 
     context "as an admin" do
@@ -257,6 +263,12 @@ describe PostDestroyer do
       it "deletes the post" do
         post.deleted_at.should be_present
         post.deleted_by.should == admin
+      end
+
+      it "creates a new user history entry" do
+        expect {
+          PostDestroyer.new(admin, post).destroy
+        }.to change { UserHistory.count}.by(1)
       end
     end
   end

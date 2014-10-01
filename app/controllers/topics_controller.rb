@@ -211,7 +211,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_delete!(topic)
 
     first_post = topic.ordered_posts.first
-    PostDestroyer.new(current_user, first_post).destroy
+    PostDestroyer.new(current_user, first_post, { context: params[:context] }).destroy
 
     render nothing: true
   end

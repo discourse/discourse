@@ -1768,6 +1768,8 @@ en:
         last_match_at: "Last Matched"
         match_count: "Matches"
         ip_address: "IP"
+        topic_id: "Topic ID"
+        post_id: "Post ID"
         delete: 'Delete'
         edit: 'Edit'
         save: 'Save'
@@ -1802,6 +1804,8 @@ en:
             grant_badge: "grant badge"
             revoke_badge: "revoke badge"
             check_email: "check email"
+            delete_topic: "delete topic"
+            delete_post: "delete post"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

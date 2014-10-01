@@ -33,6 +33,42 @@ describe StaffActionLogger do
     end
   end
 
+  describe 'log_post_deletion' do
+    let(:deleted_post) { Fabricate(:post) }
+
+    subject(:log_post_deletion) { described_class.new(admin).log_post_deletion(deleted_post) }
+
+    it 'raises an error when post is nil' do
+      expect { logger.log_post_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when post is not a Post' do
+      expect { logger.log_post_deletion(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_post_deletion }.to change { UserHistory.count }.by(1)
+    end
+  end
+
+  describe 'log_topic_deletion' do
+    let(:deleted_topic) { Fabricate(:topic) }
+
+    subject(:log_topic_deletion) { described_class.new(admin).log_topic_deletion(deleted_topic) }
+
+    it 'raises an error when topic is nil' do
+      expect { logger.log_topic_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when topic is not a Topic' do
+      expect { logger.log_topic_deletion(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_topic_deletion }.to change { UserHistory.count }.by(1)
+    end
+  end
+
   describe 'log_trust_level_change' do
     let(:user) { Fabricate(:user) }
     let(:old_trust_level) { TrustLevel[0] }
