@@ -167,7 +167,7 @@ class PostsController < ApplicationController
 
     guardian.ensure_can_delete!(post)
 
-    destroyer = PostDestroyer.new(current_user, post)
+    destroyer = PostDestroyer.new(current_user, post, { context: params[:context] })
     destroyer.destroy
 
     render nothing: true

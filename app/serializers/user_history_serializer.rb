@@ -7,7 +7,9 @@ class UserHistorySerializer < ApplicationSerializer
              :created_at,
              :subject,
              :previous_value,
-             :new_value
+             :new_value,
+             :topic_id,
+             :post_id
 
   has_one :acting_user, serializer: BasicUserSerializer, embed: :objects
   has_one :target_user, serializer: BasicUserSerializer, embed: :objects

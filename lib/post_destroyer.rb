@@ -33,10 +33,11 @@ class PostDestroyer
     end
   end
 
-  def initialize(user, post)
+  def initialize(user, post, opts={})
     @user = user
     @post = post
     @topic = post.topic if post
+    @opts = opts
   end
 
   def destroy
@@ -79,7 +80,12 @@ class PostDestroyer
       @post.update_flagged_posts_count
       remove_associated_replies
       remove_associated_notifications
-      @post.topic.trash!(@user) if @post.topic && @post.post_number == 1
+      if @post.topic && @post.post_number == 1
+        StaffActionLogger.new(@user).log_topic_deletion(@post.topic, @opts.slice(:context))
+        @post.topic.trash!(@user)
+      else
+        StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))
+      end
       update_associated_category_latest_topic
       update_user_counts
     end

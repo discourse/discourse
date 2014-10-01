@@ -280,7 +280,10 @@ Discourse.Post = Discourse.Model.extend({
   **/
   destroy: function(deletedBy) {
     this.setDeletedState(deletedBy);
-    return Discourse.ajax("/posts/" + (this.get('id')), { type: 'DELETE' });
+    return Discourse.ajax("/posts/" + this.get('id'), {
+      data: { context: window.location.pathname },
+      type: 'DELETE'
+    });
   },
 
   /**
