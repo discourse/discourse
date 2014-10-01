@@ -207,7 +207,7 @@ Discourse::Application.routes.draw do
 
   post "users/read-faq" => "users#read_faq"
   get "users/search/users" => "users#search_users"
-  get "users/account-created/" => "users#account_created"
+  get "users/:username/account-created" => "users#account_created", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/password-reset/:token" => "users#password_reset"
   put "users/password-reset/:token" => "users#password_reset"
   get "users/activate-account/:token" => "users#activate_account"
