@@ -362,10 +362,9 @@ export default DiscourseController.extend(ModalFunctionality, {
         if (result.success) {
           // Trigger the browser's password manager using the hidden static login form:
           var $hidden_login_form = $('#hidden-login-form');
-          var account_created_url = Discourse.getURL('/users/' + self.get('accountUsername') + '/account-created');
           $hidden_login_form.find('input[name=username]').val(attrs.accountName);
           $hidden_login_form.find('input[name=password]').val(attrs.accountPassword);
-          $hidden_login_form.find('input[name=redirect]').val(account_created_url);
+          $hidden_login_form.find('input[name=redirect]').val(Discourse.getURL('/users/account-created'));
           $hidden_login_form.submit();
         } else {
           self.flash(result.message || I18n.t('create_account.failed'), 'error');

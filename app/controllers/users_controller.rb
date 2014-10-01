@@ -338,11 +338,6 @@ class UsersController < ApplicationController
   end
 
   def account_created
-    params.require(:username)
-    @user = User.find_by_username_or_email(params[:username].to_s)
-
-    raise Discourse::NotFound unless @user
-
     expires_now
     render layout: 'no_js'
   end
