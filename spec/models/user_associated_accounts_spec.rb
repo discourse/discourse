@@ -14,5 +14,3 @@ describe UserAssociatedAccounts do
     UserAssociatedAccounts.new(user).associated_accounts.should == "Twitter(sam), Facebook(sam), Google(sam@sam.com), Github(sam)"
   end
 end
-
-

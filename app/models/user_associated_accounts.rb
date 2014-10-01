@@ -12,11 +12,13 @@ class UserAssociatedAccounts
   end
 
   def associated_accounts
-    twitter_screen_name
-    facebook_username
-    google_email
-    github_screen_name
-    user_open_ids_info
+    unless accounts.present?
+      twitter_screen_name
+      facebook_username
+      google_email
+      github_screen_name
+      user_open_ids_info
+    end
     accounts.empty? ? I18n.t("user.no_accounts_associated") : accounts.join(", ")
   end
 
@@ -27,7 +29,7 @@ class UserAssociatedAccounts
   end
 
   def facebook_username
-    accounts << "Facebook(#{facebook_user_info.username})"  if facebook_user_info
+    accounts << "Facebook(#{facebook_user_info.username})" if facebook_user_info
   end
 
   def google_email
