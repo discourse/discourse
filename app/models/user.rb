@@ -255,8 +255,12 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
-    User.where(["id = ? and seen_notification_id < ?", id, notification_id])
+    User.where("id = ? and seen_notification_id < ?", id, notification_id)
         .update_all ["seen_notification_id = ?", notification_id]
+
+    # mark all badge notifications read
+    Notification.where('user_id = ? AND NOT read AND notification_type = ?', id, Notification.types[:granted_badge])
+        .update_all ["read = ?", true]
   end
 
   def publish_notifications_state
