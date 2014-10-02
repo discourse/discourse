@@ -194,16 +194,6 @@ clear: both;
   }
 }
 
-span.posted {
-  display: inline-block;
-  text-indent: -9999em;
-  width: 15px;
-  height: 15px;
-  background: {
-    image: image-url("posted.png");
-  }
-}
-
 ol.category-breadcrumb {
   display: block;
   float: left;
