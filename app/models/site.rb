@@ -75,6 +75,7 @@ class Site
       return {
         periods: TopTopic.periods.map(&:to_s),
         filters: Discourse.filters.map(&:to_s),
+        user_fields: UserField.all
       }.to_json
     end
 
