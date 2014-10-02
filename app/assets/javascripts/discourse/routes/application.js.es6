@@ -47,7 +47,11 @@ var ApplicationRoute = Em.Route.extend({
     },
 
     showCreateAccount: function() {
-      this.handleShowCreateAccount();
+      if (this.site.get("isReadOnly")) {
+        bootbox.alert(I18n.t("read_only_mode.login_disabled"));
+      } else {
+        this.handleShowCreateAccount();
+      }
     },
 
     autoLogin: function(modal, onFail){
