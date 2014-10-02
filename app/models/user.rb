@@ -511,6 +511,9 @@ class User < ActiveRecord::Base
   def featured_user_badges
     user_badges
         .joins(:badge)
+        .order("CASE WHEN badges.id = (SELECT MAX(ub2.badge_id) FROM user_badges ub2
+                              WHERE ub2.badge_id IN (#{Badge.trust_level_badge_ids.join(",")}) AND
+                                    ub2.user_id = #{self.id}) THEN 1 ELSE 0 END DESC")
         .order('badges.badge_type_id ASC, badges.grant_count ASC')
         .includes(:user, :granted_by, badge: :badge_type)
         .where("user_badges.id in (select min(u2.id)

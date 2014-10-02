@@ -56,6 +56,7 @@ trust_level_badges.each do |spec|
 
     # allow title for tl3 and above
     b.default_allow_title = spec[:id] > 2
+    b.default_icon = "fa-user"
     b.system = true
   end
 end
