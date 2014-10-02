@@ -22,11 +22,6 @@
   h1 {
     font-size: 1.5em;
     margin:0;
-    a.edit-topic {
-      // let's not even bother with inline title and category edits on mobile
-      // use the full editor instead
-      visibility: hidden;
-    }
     a {
       color: $primary;
       vertical-align: middle;
