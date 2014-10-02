@@ -380,6 +380,11 @@ posting:
     client: true
     default: false
   delete_old_hidden_posts: true
+  censored_words:
+    client: true
+    default: ''
+    refresh: true
+    type: list
 
 email:
   email_time_window_mins: 10
