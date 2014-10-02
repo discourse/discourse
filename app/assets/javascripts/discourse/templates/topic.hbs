@@ -30,12 +30,7 @@
               {{#unless is_warning}}
                 <span class="private-message-glyph"><i class='fa fa-envelope'></i></span>
               {{/unless}}
-              {{#unless isPrivateMessage}}
-                {{#if category.parentCategory}}
-                  {{bound-category-link category.parentCategory}}
-                {{/if}}
-                {{bound-category-link category}}
-              {{/unless}}
+
               {{#if details.loaded}}
                 {{topic-status topic=model}}
                 <a href='{{unbound url}}' {{action "jumpTop"}}>
@@ -52,6 +47,16 @@
                 <a href='#' {{action "editTopic"}} class='edit-topic' title='{{i18n edit}}'><i class="fa fa-pencil"></i></a>
               {{/if}}
             </h1>
+
+            <div class="title-category-wrapper">
+            {{#unless isPrivateMessage}}
+              {{#if category.parentCategory}}
+                {{bound-category-link category.parentCategory}}
+              {{/if}}
+              {{bound-category-link category}}
+            {{/unless}}
+          </div>
+
           {{/if}}
           {{plugin-outlet "topic-title"}}
         </div>
