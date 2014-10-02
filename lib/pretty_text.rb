@@ -8,7 +8,7 @@ module PrettyText
   class Helpers
 
     def t(key, opts)
-      str = I18n.t("js." + key)
+      str = I18n.t("js." + key, opts)
       if opts
         # TODO: server localisation has no parity with client should be fixed
         str = str.dup
