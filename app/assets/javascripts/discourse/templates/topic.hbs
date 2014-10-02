@@ -75,7 +75,7 @@
           {{render 'topic-progress'}}
 
           {{#if postStream.loadingAbove}}
-            <div class='spinner'>{{i18n loading}}</div>
+            <div class='spinner'></div>
           {{/if}}
 
           {{#unless postStream.loadingFilter}}
@@ -92,13 +92,13 @@
           {{/unless}}
 
           {{#if postStream.loadingBelow}}
-            <div class='spinner'>{{i18n loading}}</div>
+            <div class='spinner'></div>
           {{/if}}
         </div>
         <div id='topic-bottom'></div>
 
         {{#if postStream.loadingFilter}}
-          <div class='spinner small'>{{i18n loading}}</div>
+          <div class='spinner small'></div>
         {{else}}
           {{#if postStream.loadedAllPosts}}
 
@@ -140,13 +140,13 @@
         {{/if}}
       </div>
       {{#if retrying}}
-        <div class='spinner'>{{i18n loading}}</div>
+        <div class='spinner'></div>
       {{/if}}
     {{/if}}
     </div>
   {{else}}
     <div class='container'>
-      <div class='spinner'>{{i18n loading}}</div>
+      <div class='spinner'></div>
     </div>
   {{/if}}
 {{/if}}
