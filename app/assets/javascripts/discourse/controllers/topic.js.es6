@@ -486,7 +486,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   }.property('isPrivateMessage'),
 
   loadingHTML: function() {
-    return "<div class='spinner'>" + I18n.t('loading') + "</div>";
+    return "<div class='spinner'></div>";
   }.property(),
 
   recoverTopic: function() {
