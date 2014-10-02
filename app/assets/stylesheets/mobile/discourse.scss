@@ -87,17 +87,16 @@ blockquote {
 
 .topic-statuses {
   display: inline-block;
-  margin: 0;
-  padding: 0;
   vertical-align: middle;
   .topic-status {
-    margin: 0;
-    display: inline-block;
     i {
       font-size: 20px;
       color: darken($secondary, 60%);
     }
   }
+}
+.topic-statuses:empty {
+  display: none;
 }
 
 // Styles used before the user is logged into discourse. For example, activating their
