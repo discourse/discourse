@@ -6,26 +6,44 @@
 
 export var CANCELLED_STATUS = "__CANCELLED";
 
-var Keys = {
-  BackSpace: 8,
-  Tab: 9,
-  Enter: 13,
-  Shift: 16,
-  Ctrl: 17,
-  Alt: 18,
-  Esc: 27,
-  Space: 32,
-  LeftWindows: 91,
-  RightWindows: 92,
-  PageUp: 33,
-  PageDown: 34,
-  End: 35,
-  Home: 36,
-  LeftArrow: 37,
-  UpArrow: 38,
-  RightArrow: 39,
-  DownArrow: 40,
-};
+var shiftMap = [];
+shiftMap[192] = "~";
+shiftMap[49] = "!";
+shiftMap[50] = "@";
+shiftMap[51] = "#";
+shiftMap[52] = "$";
+shiftMap[53] = "%";
+shiftMap[54] = "^";
+shiftMap[55] = "&";
+shiftMap[56] = "*";
+shiftMap[57] = "(";
+shiftMap[48] = ")";
+shiftMap[109] = "_";
+shiftMap[107] = "+";
+shiftMap[219] = "{";
+shiftMap[221] = "}";
+shiftMap[220] = "|";
+shiftMap[59] = ":";
+shiftMap[222] = "\"";
+shiftMap[188] = "<";
+shiftMap[190] = ">";
+shiftMap[191] = "?";
+shiftMap[32] = " ";
+
+function mapKeyPressToActualCharacter(isShiftKey, characterCode) {
+  if ( characterCode === 27 || characterCode === 8 || characterCode === 9 || characterCode === 20 || characterCode === 16 || characterCode === 17 || characterCode === 91 || characterCode === 13 || characterCode === 92 || characterCode === 18 ) { return false; }
+
+  // Lookup non-letter keypress while holding shift
+  if (isShiftKey && ( characterCode < 65 || characterCode > 90 )) {
+    return shiftMap[characterCode];
+  }
+
+  var stringValue = String.fromCharCode(characterCode);
+  if ( !isShiftKey ) {
+    stringValue = stringValue.toLowerCase();
+  }
+  return stringValue;
+}
 
 export default function(options) {
   var autocompletePlugin = this;
@@ -60,12 +78,7 @@ export default function(options) {
     }
     div = null;
     completeStart = null;
-    completeEnd = null;
     autocompleteOptions = null;
-  };
-
-  var autoCompleting = function () {
-    return completeStart !== null;
   };
 
   var addInputSelectedItem = function(item) {
@@ -118,7 +131,7 @@ export default function(options) {
           term = options.transformComplete(term);
         }
         var text = me.val();
-        text = text.substring(0, completeStart) + term + ' ' + text.substring(completeEnd, text.length);
+        text = text.substring(0, completeStart) + (options.key || "") + term + ' ' + text.substring(completeEnd + 1, text.length);
         me.val(text);
         Discourse.Utilities.setCaretPosition(me[0], completeStart + 1 + term.length);
       }
@@ -251,37 +264,24 @@ export default function(options) {
     closeAutocomplete();
   });
 
-  var getTerm = function() {
-    return me.val().slice(completeStart, completeEnd);
-  };
 
   $(this).keypress(function(e) {
-    var term, key = (e.char || String.fromCharCode(e.charCode));
 
-    // if we just started with an options.key, set start and end.
-    if (key === options.key && !autoCompleting()) {
-      completeStart = completeEnd = Discourse.Utilities.caretPosition(me[0]) + 1;
-    }
+    if (!options.key) return;
 
-    if (!options.key) {
-      completeStart = 0;
-      completeEnd = Discourse.Utilities.caretPosition(me[0]);
-    }
-
-    if (autoCompleting()) {
-      if ((completeStart === completeEnd) && key === options.key) {
+    // keep hunting backwards till you hit a
+    if (e.which === options.key.charCodeAt(0)) {
+      var caretPosition = Discourse.Utilities.caretPosition(me[0]);
+      var prevChar = me.val().charAt(caretPosition - 1);
+      if (!prevChar || /\s/.test(prevChar)) {
+        completeStart = completeEnd = caretPosition;
         updateAutoComplete(options.dataSource(""));
-      } else {
-        term = getTerm() + key;
-        completeEnd += 1;
-        updateAutoComplete(options.dataSource(term));
       }
-      return true;
     }
   });
 
   $(this).keydown(function(e) {
-    var caretPosition, i, term, total, userToComplete;
+    var c, caretPosition, i, initial, next, prev, prevIsGood, stopFound, term, total, userToComplete;
 
     if(options.allowAny){
       // saves us wiring up a change event as well, keypress is while its pressed
@@ -301,38 +301,57 @@ export default function(options) {
       },50);
     }
 
-    // Handle Backspacing into stuff
-    if ((!autoCompleting()) && e.which === Keys.BackSpace && options.key) {
-      var c = Discourse.Utilities.caretPosition(me[0]),
-          last, first,
-          text = me[0].value;
-      // search backwards until you find the last letter of the word
-      while (/[\s]/.test(text[c]) && c >= 0) { c--; }
-      last = c;
-      // search further until you find the first letter of the word
-      while (/[\S]/.test(text[c]) && c >= 0) { c--; }
-      first = c + 1;
-
-      if (text[first] === options.key) {
-        completeStart = first + 1;
-        completeEnd = (options.key === ":" ? last - 1 : last);
-
-        if (completeEnd >= completeStart) {
-          updateAutoComplete(options.dataSource(getTerm()));
+    if (!options.key) {
+      completeStart = 0;
+    }
+    if (e.which === 16) return;
+    if ((completeStart === null) && e.which === 8 && options.key) {
+      c = Discourse.Utilities.caretPosition(me[0]);
+      next = me[0].value[c];
+      c -= 1;
+      initial = c;
+      prevIsGood = true;
+      while (prevIsGood && c >= 0) {
+        c -= 1;
+        prev = me[0].value[c];
+        stopFound = prev === options.key;
+        if (stopFound) {
+          prev = me[0].value[c - 1];
+          if (!prev || /\s/.test(prev)) {
+            completeStart = c;
+            caretPosition = completeEnd = initial;
+            term = me[0].value.substring(c + 1, initial);
+            updateAutoComplete(options.dataSource(term));
+            return true;
+          }
         }
-        return true;
+        prevIsGood = /[a-zA-Z\.]/.test(prev);
       }
     }
 
-    if (autoCompleting()) {
+    // ESC
+    if (e.which === 27) {
+      if (completeStart !== null) {
+        closeAutocomplete();
+        return false;
+      }
+      return true;
+    }
+
+    if (completeStart !== null) {
+      caretPosition = Discourse.Utilities.caretPosition(me[0]);
+
+      // If we've backspaced past the beginning, cancel unless no key
+      if (caretPosition <= completeStart && options.key) {
+        closeAutocomplete();
+        return false;
+      }
+
       // Keyboard codes! So 80's.
       switch (e.which) {
-        case Keys.Esc:
-          closeAutocomplete();
-          return false;
-        case Keys.Enter:
-        case Keys.RightArrow:
-        case Keys.Tab:
+        case 13:
+        case 39:
+        case 9:
           if (!autocompleteOptions) return true;
           if (selectedOption >= 0 && (userToComplete = autocompleteOptions[selectedOption])) {
             completeTerm(userToComplete);
@@ -342,14 +361,14 @@ export default function(options) {
           }
           e.stopImmediatePropagation();
           return false;
-        case Keys.UpArrow:
+        case 38:
           selectedOption = selectedOption - 1;
           if (selectedOption < 0) {
             selectedOption = 0;
           }
           markSelected();
           return false;
-        case Keys.DownArrow:
+        case 40:
           total = autocompleteOptions.length;
           selectedOption = selectedOption + 1;
           if (selectedOption >= total) {
@@ -360,11 +379,12 @@ export default function(options) {
           }
           markSelected();
           return false;
-        case Keys.BackSpace:
-          caretPosition = Discourse.Utilities.caretPosition(me[0]) - 1;
+        default:
+          // otherwise they're typing - let's search for it!
           completeEnd = caretPosition;
-
-
+          if (e.which === 8) {
+            caretPosition--;
+          }
           if (caretPosition < 0) {
             closeAutocomplete();
             if (isInput) {
@@ -375,16 +395,22 @@ export default function(options) {
             }
             return false;
           }
-
-          if (completeEnd < completeStart) {
-            closeAutocomplete();
-            return true;
+          term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
+          if (e.which >= 48 && e.which <= 90) {
+            term += mapKeyPressToActualCharacter(e.shiftKey, e.which);
+          } else if (e.which === 187) {
+            term += "+";
+          } else if (e.which === 189) {
+            term += (e.shiftKey) ? "_" : "-";
+          } else if (e.which === 220) {
+            term += (e.shiftKey) ? "|" : "]";
+          } else if (e.which === 222) {
+            term += (e.shiftKey) ? "\"" : "'";
+          } else if (e.which !== 8) {
+            term += ",";
           }
 
-          term = getTerm();
           updateAutoComplete(options.dataSource(term));
-          return true;
-        default:
           return true;
       }
     }
