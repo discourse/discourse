@@ -23,6 +23,7 @@
     font-size: 20px;
     margin-top: 6px;
     margin-right: 6px;
+    margin-bottom: 30px; // this allows the categories to align underneath title
   }
   #edit-title { width: 500px; }
   .category-combobox {
@@ -50,8 +51,7 @@
     a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
   }
   .title-category-wrapper {
-    margin: 5px 0 0 26px;
-    .badge-category {margin-bottom: 5px;}
+    margin-top: 5px;
   }
   .topic-statuses {
     margin-top: -2px;
