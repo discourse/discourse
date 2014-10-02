@@ -39,29 +39,15 @@ var ApplicationRoute = Em.Route.extend({
     },
 
     showLogin: function() {
-      var self = this;
-
       if (this.site.get("isReadOnly")) {
         bootbox.alert(I18n.t("read_only_mode.login_disabled"));
       } else {
-        if(Discourse.SiteSettings.enable_sso) {
-          var returnPath = encodeURIComponent(window.location.pathname);
-          window.location = Discourse.getURL('/session/sso?return_path=' + returnPath);
-        } else {
-          this.send('autoLogin', 'login', function(){
-            Discourse.Route.showModal(self, 'login');
-            self.controllerFor('login').resetForm();
-          });
-        }
+        this.handleShowLogin();
       }
     },
 
     showCreateAccount: function() {
-      var self = this;
-
-      self.send('autoLogin', 'createAccount', function(){
-        Discourse.Route.showModal(self, 'createAccount');
-      });
+      this.handleShowCreateAccount();
     },
 
     autoLogin: function(modal, onFail){
@@ -159,8 +145,29 @@ var ApplicationRoute = Em.Route.extend({
       // Support for callbacks once the application has activated
       ApplicationRoute.trigger('activate');
     });
-  }
+  },
 
+  handleShowLogin: function() {
+    var self = this;
+
+    if(Discourse.SiteSettings.enable_sso) {
+      var returnPath = encodeURIComponent(window.location.pathname);
+      window.location = Discourse.getURL('/session/sso?return_path=' + returnPath);
+    } else {
+      this.send('autoLogin', 'login', function(){
+        Discourse.Route.showModal(self, 'login');
+        self.controllerFor('login').resetForm();
+      });
+    }
+  },
+
+  handleShowCreateAccount: function() {
+    var self = this;
+
+    self.send('autoLogin', 'createAccount', function(){
+      Discourse.Route.showModal(self, 'createAccount');
+    });
+  }
 });
 
 RSVP.EventTarget.mixin(ApplicationRoute);
