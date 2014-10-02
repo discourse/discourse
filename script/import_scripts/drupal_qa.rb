@@ -5,7 +5,28 @@ require "mysql2"
 
 class ImportScripts::DrupalQA < ImportScripts::Drupal
 
+  def categories_query
+    result = @client.query("SELECT n.nid, GROUP_CONCAT(ti.tid) AS tids
+                            FROM node AS n
+                            INNER JOIN taxonomy_index AS ti ON ti.nid = n.nid
+                            WHERE n.type = 'question'
+                              AND n.status = 1
+                            GROUP BY n.nid")
+
+    categories = {}
+    result.each do |r|
+      tids = r['tids']
+      if tids.present?
+        tids = tids.split(',')
+        categories[tids[0].to_i] = true
+      end
+    end
+
+    @client.query("SELECT tid, name, description FROM taxonomy_term_data WHERE tid IN (#{categories.keys.join(',')})")
+  end
+
   def create_forum_topics
+
     puts '', "creating forum topics"
 
     total_count = @client.query("
@@ -20,12 +41,12 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
       results = @client.query("
         SELECT n.nid,
                n.title,
-               MIN(t.field_question_tags_tid) AS tid,
+               GROUP_CONCAT(t.tid) AS tid,
                n.uid,
                n.created,
                f.body_value AS body
         FROM node AS n
-          LEFT OUTER JOIN field_data_field_question_tags AS t on t.entity_id = n.nid
+          LEFT OUTER JOIN taxonomy_index AS t on t.nid = n.nid
           INNER JOIN field_data_body AS f ON f.entity_id = n.nid
         WHERE n.type = 'question'
           AND n.status = 1
@@ -40,7 +61,7 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
         {
           id: "nid:#{row['nid']}",
           user_id: user_id_from_imported_user_id(row['uid']) || -1,
-          category: category_from_imported_category_id(row['tid']).try(:name),
+          category: category_from_imported_category_id((row['tid'] || '').split(',')[0]).try(:name),
           raw: row['body'],
           created_at: Time.zone.at(row['created']),
           pinned_at: nil,
