@@ -20,6 +20,7 @@ export default DiscourseController.extend(ModalFunctionality, {
   canCreateLocal: Discourse.computed.setting('enable_local_logins'),
   showCreateForm: Em.computed.or('hasAuthOptions', 'canCreateLocal'),
   maxUsernameLength: Discourse.computed.setting('max_username_length'),
+  minUsernameLength: Discourse.computed.setting('min_username_length'),
 
   resetForm: function() {
 
@@ -227,7 +228,7 @@ export default DiscourseController.extend(ModalFunctionality, {
   }.property('accountUsername'),
 
   shouldCheckUsernameMatch: function() {
-    return !this.blank('accountUsername') && this.get('accountUsername').length > 2;
+    return !this.blank('accountUsername') && this.get('accountUsername').length >= this.get('minUsernameLength');
   },
 
   checkUsernameAvailability: Discourse.debounce(function() {
