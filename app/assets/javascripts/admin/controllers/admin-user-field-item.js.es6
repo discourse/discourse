@@ -13,14 +13,18 @@ export default Ember.ObjectController.extend(BufferedContent, {
     save: function() {
       var self = this;
 
-      var attrs = this.get('buffered').getProperties('name', 'field_type', 'editable');
+      var attrs = this.get('buffered').getProperties('name', 'description', 'field_type', 'editable');
 
       this.get('model').save(attrs).then(function(res) {
         self.set('model.id', res.user_field.id);
         self.set('editing', false);
         self.commitBuffer();
-      }).catch(function() {
-        bootbox.alert(I18n.t('generic_error'));
+      }).catch(function(e) {
+        var msg = I18n.t("generic_error");
+        if (e.responseJSON && e.responseJSON.errors) {
+          msg = I18n.t("generic_error_with_reason", {error: e.responseJSON.errors.join('. ')});
+        }
+        bootbox.alert(msg);
       });
     },
 

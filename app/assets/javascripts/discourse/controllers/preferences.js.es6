@@ -22,7 +22,7 @@ export default ObjectController.extend(CanCheckEmails, {
     var siteUserFields = this.site.get('user_fields');
     if (!Ember.empty(siteUserFields)) {
       var userFields = this.get('user_fields');
-      return siteUserFields.filterProperty('editable', true).map(function(uf) {
+      return siteUserFields.filterProperty('editable', true).sortBy('field_type').map(function(uf) {
         var val = userFields ? userFields[uf.get('id').toString()] : null;
         return Ember.Object.create({value: val, field: uf});
       });

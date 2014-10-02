@@ -1999,11 +1999,12 @@ en:
 
       user_fields:
         title: "User Fields"
-        description: "Any fields added here will be required from users when they sign up."
+        help: "Any fields added here will be required from users when they sign up."
         create: "Create User Field"
         untitled: "Untitled"
         name: "Field Name"
         type: "Field Type"
+        description: "Field Description"
         save: "Save"
         edit: "Edit"
         delete: "Delete"

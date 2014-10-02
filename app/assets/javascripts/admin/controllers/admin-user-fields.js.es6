@@ -3,6 +3,11 @@ import UserField from 'admin/models/user-field';
 export default Ember.ArrayController.extend({
   fieldTypes: null,
   createDisabled: Em.computed.gte('model.length', 3),
+
+  userFieldsDescription: function() {
+    return I18n.t('admin.user_fields.description');
+  }.property(),
+
   userFieldsName: function() {
     return I18n.t('admin.user_fields.name');
   }.property(),

@@ -52,3 +52,23 @@ a#forgot-password-link {clear: left; float: left; }
     }
   }
 }
+
+.create-account {
+  .user-field.confirm {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .user-field {
+    margin-top: 10px;
+    label {
+      width: 85px;
+    }
+    input[type=text] {
+      margin-top: 0;
+      width: 184px;
+    }
+    .controls {
+      margin-left: 85px;
+    }
+  }
+}

@@ -1,4 +1,3 @@
 class UserField < ActiveRecord::Base
-  validates_presence_of :name, :field_type
+  validates_presence_of :name, :description, :field_type
 end
-

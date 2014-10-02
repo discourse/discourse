@@ -12,7 +12,7 @@ describe Admin::UserFieldsController do
     context '.create' do
       it "creates a user field" do
         -> {
-          xhr :post, :create, {user_field: {name: 'hello', field_type: 'text'} }
+          xhr :post, :create, {user_field: {name: 'hello', description: 'hello desc', field_type: 'text'} }
           response.should be_success
         }.should change(UserField, :count).by(1)
       end
@@ -44,7 +44,7 @@ describe Admin::UserFieldsController do
       let!(:user_field) { Fabricate(:user_field) }
 
       it "returns a list of user fields" do
-        xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle', field_type: 'confirm'}
+        xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle', field_type: 'confirm', description: 'muppet'}
         response.should be_success
         user_field.reload
         user_field.name.should == 'fraggle'

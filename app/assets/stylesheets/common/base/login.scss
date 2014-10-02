@@ -12,27 +12,33 @@
   display: none;
 }
 
-
-.user-fields {
-
-  h3 {
-    line-height: 1.5em;
-    color: scale-color($primary, $lightness: 20%);
-    border-bottom: 1px solid scale-color($primary, $lightness: 50%);
-    margin-bottom: 20px;
+.create-account {
+  .user-field.confirm {
+    margin-top: 20px;
   }
 
   .user-field {
-    label: {
-      display: block;
+    label {
+      width: 92px;
+      float: left;
     }
     input[type=text] {
-      width: 80%;
-      display: block;
+      width: 220px;
+      margin-bottom: 0;
     }
-    input[type=checkbox] {
-      margin-right: 5px;
+    .controls {
+      margin-left: 92px;
+      label {
+        width: auto;
+        text-align: left;
+        font-weight: normal;
+        float: auto;
+      }
+      p {
+        color: scale-color($primary, $lightness: 50%);
+        margin: 0;
+      }
     }
-    margin-bottom: 20px;
+    clear: both;
   }
 }

@@ -1,8 +1,10 @@
 class Admin::UserFieldsController < Admin::AdminController
 
   def create
-    field = UserField.create!(params.require(:user_field).permit(:name, :field_type, :editable))
-    render_serialized(field, UserFieldSerializer)
+    field = UserField.new(params.require(:user_field).permit(:name, :field_type, :editable, :description))
+    json_result(field, serializer: UserFieldSerializer) do
+      field.save
+    end
   end
 
   def index
@@ -15,10 +17,12 @@ class Admin::UserFieldsController < Admin::AdminController
     field = UserField.where(id: params.require(:id)).first
     field.name = field_params[:name]
     field.field_type = field_params[:field_type]
+    field.description = field_params[:description]
     field.editable = field_params[:editable] == "true"
-    field.save!
 
-    render_serialized(field, UserFieldSerializer)
+    json_result(field, serializer: UserFieldSerializer) do
+      field.save
+    end
   end
 
   def destroy
