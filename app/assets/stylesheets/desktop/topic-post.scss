@@ -415,7 +415,7 @@ a.star {
   .avatars,
   .links,
   .information {
-    padding: 7px 10px;
+    padding: 7px 10px 15px 10px;
     color: $primary;
   }
   .information {
@@ -716,7 +716,7 @@ blockquote > *:last-child {
       margin-top: -2px;
       margin-left: -17px;
     }
-    
+
     a.toggle-more {
       display: block;
       text-align: right;

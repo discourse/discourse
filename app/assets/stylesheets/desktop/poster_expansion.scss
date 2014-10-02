@@ -53,6 +53,8 @@
     font-weight: normal;
     margin-top: 0;
     color: scale-color($primary, $lightness: 50%);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .groups {
     font-size: 13px;
@@ -120,7 +122,7 @@
     .badge-section {
       margin-top: 10px;
       float: left;
-      width: 300px;
+      width: 270px;
 
       h3 {
         color: $primary;
