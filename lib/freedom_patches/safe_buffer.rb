@@ -15,18 +15,20 @@ class ActiveSupport::SafeBuffer
       raise
     else
 
+      encoding_diags = "internal encoding #{Encoding.default_internal}, external encoding #{Encoding.default_external}"
+
       unless encoding == Encoding::UTF_8
         self.force_encoding("UTF-8")
         unless valid_encoding?
           encode!("utf-16","utf-8",:invalid => :replace)
           encode!("utf-8","utf-16")
         end
-        Rails.logger.warn("Encountered a non UTF-8 string in SafeBuffer - #{self}")
+        Rails.logger.warn("Encountered a non UTF-8 string in SafeBuffer - #{self} - #{encoding_diags}")
       end
 
       unless value.encoding == Encoding::UTF_8
         value = value.dup.force_encoding("UTF-8").scrub
-        Rails.logger.warn("Attempted to concat a non UTF-8 string in SafeBuffer - #{value}")
+        Rails.logger.warn("Attempted to concat a non UTF-8 string in SafeBuffer - #{value} - #{encoding_diags}")
       end
 
       concat(value,_raise=true)
