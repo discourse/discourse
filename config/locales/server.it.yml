@@ -28,6 +28,7 @@ it:
   errors:
     messages:
       too_long_validation: "è limitato a %{max} caratteri; tu ne hai inseriti %{length}."
+      invalid_boolean: "Booleano non valido."
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
   bulk_invite:
@@ -221,6 +222,7 @@ it:
       title: "abituale"
     elder:
       title: "capo"
+    change_failed_explanation: "Hai cercato di degradare %{user_name} a '%{new_trust_level}'. Comunque il suo livello di esperienza è già '%{current_trust_level}'. %{user_name} resterà a '%{current_trust_level}' - se vuoi degradarlo, prima blocca il suo livello di esperienza"
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi"
     too_many_requests: "C'è un limite giornaliero su quante volte si può fare questa azione. Per favore attendi %{time_left} prima di riprovare."
@@ -574,10 +576,13 @@ it:
     fixed_category_positions: "Se attivo, sarai in grado di ordinare le categorie. Se non attivo, le categorie saranno in ordine di attività."
     exclude_rel_nofollow_domains: "Una lista di domini separati da pipe | in cui il nofollow non viene aggiunto (tld.com autorizzerà automaticamente sub.tld.com)"
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
+    post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
     logo_url: "Il logo mostrato in alto a sinistra del tuo sito, es: http://example.com/logo.png"
+    digest_logo_url: "Il logo alternativo usato in cima alla email di riepilogo. Se lasciato vuoto, sarà utilizzato il campo `logo_url`. es: http://example.com/logo.png"
     favicon_url: "La favicon del tuo sito, vedi http://it.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
+    email_subject: "Il formato dell'oggetto per le email standard."
     use_https: "L'indirizzo completo del sito (Discourse.base_url) dovrebbe essere http o https? NON ATTIVARE QUESTA OPZIONE A MENO CHE HTTPS SIA GIA' CONFIGURATO E FUNZIONANTE!"
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
     summary_posts_required: "Minimo numero di messaggi in un argomento affinché venga abilitato 'Riassumi Questo Argomento' "
@@ -595,6 +600,7 @@ it:
     max_topics_in_first_day: "Numero massimo di argomenti che l'utente può creare nel suo primo giorno di forum"
     max_replies_in_first_day: "Numero massimo di risposte che un utente può pubblicare nel suo primo giorno di forum"
     notify_mods_when_user_blocked: "Se un utente è bloccato automaticamente, manda un messaggio ai moderatori."
+    flag_sockpuppets: "Se un nuovo utente risponde ad un argomento dallo stesso indirizzo IP dell'utente che ha aperto l'argomento stesso, segnala entrambi i messaggi come potenziale spam."
     post_undo_action_window_mins: "Numero di minuti durante i quali gli utenti sono autorizzati ad annullare le loro azioni su un post (segnalazioni, like, etc)"
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che loro possano accedere al sito."
     ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; per informazioni http://google.com/analytics"
@@ -611,8 +617,10 @@ it:
     topics_per_page: "Quanti argomenti vengono caricati per difetto nella lista di argomenti, e quando si scorre in basso per caricare altri argomenti"
     posts_per_page: "Quanti messaggi vengono caricati per difetto in un argomento, e quando si scorre in basso per caricare altri messaggi"
     send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
+    topics_per_period_in_top_summary: "Numero di argomenti di punta mostrati nel riepilogo di default."
     show_email_on_profile: "Mostra l'email di un utente nel suo profilo (visibile solo a se stesso e allo staff)"
     enable_badges: "Attiva il sistema targhette (sperimentale)"
+    new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
     port: "Usa questa porta HTTP al posto della default 80. Lasciare vuoto solo durante lo sviluppo"
     force_hostname: "Specifica un hostname nella URL. Lasciare vuoto solo durante lo sviluppo"
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
@@ -666,6 +674,7 @@ it:
     privacy_policy_url: "Se hai un documento sulle Politiche di Privacy ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
     newuser_spam_host_threshold: "Il numero delle volte che un nuovo utente può postare un link verso lo stesso host compreso nel `newuser_spam_host_posts` post prima che venga considerato spam."
     reply_by_email_address: "Template di risposta via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
+    pop3_polling_port: "La porta dell'account POP3."
     delete_user_max_post_age: "Non permettere di cancellare utenti il cui primo messaggio è più vecchio di (x) giorni."
     delete_all_posts_max: "Massimo numero di post che possono essere eliminati contemporaneamente con il pulsante Cancella tutti i post. Se un utente ha più post attivi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
     username_change_period: "Numero di giorni (dall'iscrizione) dopo i quali è possibile modificare lo username. Digita 0 per non permettere cambi di username"
@@ -727,7 +736,7 @@ it:
     not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Questi sono gli argomenti più popolari da quando sei stato via."
   move_posts:
     new_topic_moderator_post:
-      one: "Ho spostato 1 messaggio in un nuovo argomento: %{topic_link}"
+      one: "Ho spostato un messaggio in un nuovo argomento: %{topic_link}"
       other: "Ho spostato %{count} messaggi in un nuovo argomento: %{topic_link}"
     existing_topic_moderator_post:
       one: "Ho spostato un messaggio in un argomento esistente: %{topic_link}"
@@ -763,6 +772,7 @@ it:
     incorrect_username_email_or_password: "Nome utente, email o password errati"
     wait_approval: "Grazie per esserti registrato. Ti notificheremo quando il tuo account verrà approvato."
     active: "Il tuo account è attivo e pronto all'uso."
+    activate_email: "Ci siamo quasi! Abbiamo mandato un'email di attivazione all'indirizzo che hai fornito. Per favore segui le istruzioni contenute nell'email per attivare il tuo account."
     not_activated: "Non puoi ancora fare il login. Ti abbiamo mandato un'email di attivazione. Per favore segui le istruzioni contenute nell'email per attivare il tuo account."
     not_allowed_from_ip_address: "Non puoi collegarti come %{username} da quell'indirizzo IP."
     suspended: "Non puoi accedere fino a %{date}."
@@ -890,7 +900,7 @@ it:
     email_reject_no_account:
       subject_template: "Problema email -- Nessun Account"
       text_body_template: |
-        Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
+        Ci dispiace, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non è stato processato.
 
         Non esiste un account con questo indirizzo email. Prova ad inviarla da un altro indirizzo o contatta un membro dello staff.
     email_reject_empty:
@@ -905,6 +915,8 @@ it:
       subject_template: "Problema email -- Errore di invio"
     email_reject_post_error_specified:
       subject_template: "Problema email -- Errore di invio"
+    email_reject_destination:
+      subject_template: "Problema email - Indirizzo/i di destinazione non valido/i"
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
     blocked_by_staff:
@@ -947,7 +959,7 @@ it:
     unsubscribe:
       title: "Cancella iscrizione"
       description: "Non sei interessato a ricevere queste email? Nessun problema! Clicca qui sotto per cancellarti istantaneamente:"
-    reply_by_email: "Per intervenire, rispondi a questa email o visita %{base_url}%{url}"
+    reply_by_email: "Per intervenire, rispondi a questa email o visita %{base_url}%{url}."
     visit_link_to_respond: "Per intervenire, visita %{base_url}%{url}"
     posted_by: "Pubblicato da %{username} il %{post_date}"
     user_invited_to_private_message_pm:
@@ -1007,6 +1019,7 @@ it:
       new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
       top_topics: "Post Popolari"
       other_new_topics: "Argomenti più attivi"
+      unsubscribe: "Questo riepilogo ti è stato inviato come notifica di cortesia da %{site_link} poiché non ti vediamo da un po'. Per cancellarti %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
       read_more: "Leggi altro"
@@ -1032,7 +1045,7 @@ it:
     authorize_email:
       subject_template: "[%{site_name}] Conferma il tuo nuovo indirizzo email"
       text_body_template: |
-        Conferma il tuo nuovo indirizzo email per %{site_name} cliccando sul link qui sotto:
+        Conferma il tuo nuovo indirizzo email per %{site_name} cliccando sul seguente collegamento:
 
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:

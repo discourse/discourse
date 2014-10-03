@@ -406,6 +406,7 @@ zh_CN:
         common: "您设置的密码太常见了。"
         ok: "您设置的密码符合要求。"
         instructions: "至少需要 %{count} 个字符。"
+      associated_accounts: "关联账户"
       ip_address:
         title: "最后使用的 IP 地址"
       registration_ip_address:
@@ -479,6 +480,7 @@ zh_CN:
     created: '创建时间'
     created_lowercase: '创建时间'
     trust_level: '用户级别'
+    search_hint: '用户名'
     create_account:
       title: "创建新帐号"
       failed: "出问题了，有可能这个电子邮箱已经被注册了。试试忘记密码链接？"
@@ -882,6 +884,7 @@ zh_CN:
       post_number: "帖子 {{number}}"
       in_reply_to: "回复给"
       last_edited_on: "最后修改于"
+      reply_as_new_topic: "回复为联结主题"
       continue_discussion: "从 {{postLink}} 继续讨论："
       follow_quote: "跳转至所引用的帖子"
       show_full: "显示所有帖子"
@@ -1562,6 +1565,7 @@ zh_CN:
             unsuspend_user: "解禁用户"
             grant_badge: "授予徽章"
             revoke_badge: "撤销徽章"
+            check_email: "检查电子邮件"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -1627,6 +1631,9 @@ zh_CN:
         reject_failures:
           other: "成功拒绝 %{count} 个用户。"
         not_verified: "未验证"
+        check_email:
+          title: "显示用户电子邮件"
+          text: "显示邮件地址"
       user:
         suspend_failed: "禁止此用户时发生了错误 {{error}}"
         unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
@@ -1706,6 +1713,10 @@ zh_CN:
         suspend_modal_title: "被禁用户"
         trust_level_2_users: "二级信任等级用户"
         trust_level_3_requirements: "三级信任等级需求"
+        trust_level_locked_tip: "信任等级已经被锁定，系统将不会升降用户的信任等级"
+        trust_level_unlocked_tip: "信任等级已经解锁，系统将自动升降用户的信任等级"
+        lock_trust_level: "锁定信任等级"
+        unlock_trust_level: "解锁信任等级"
         tl3_requirements:
           title: "3 级信任等级的需求"
           table_title: "在过去的 100 天中："
@@ -1724,6 +1735,11 @@ zh_CN:
           likes_received: "收到的赞"
           qualifies: "符合等级3的信用度"
           does_not_qualify: "未符合等级3的信用度"
+          will_be_promoted: "将在近期被提升。"
+          will_be_demoted: "将在近期被降级。"
+          on_grace_period: "目前在升级优惠阶段，将不会被降级。"
+          locked_will_not_be_promoted: "信任等级被锁定。将不再被提升。"
+          locked_will_not_be_demoted: "信任等级被锁定。将不再被降级。"
         sso:
           title: "单点登录"
           external_id: "外部 ID"
@@ -1731,6 +1747,24 @@ zh_CN:
           external_name: "名字"
           external_email: "电子邮件"
           external_avatar_url: "头像 URL"
+      user_fields:
+        title: "用户属性"
+        description: "在这里添加的任何属性将在用户注册时要求填写。"
+        create: "创建用户属性 "
+        untitled: "无标题"
+        name: "字段名称"
+        type: "字段类型"
+        save: "保存"
+        edit: "编辑"
+        delete: "删除"
+        cancel: "取消"
+        delete_confirm: "您确定要删除这个用户字段么？"
+        field_types:
+          text: '文本字段'
+          confirm: '确认'
+      site_text:
+        none: "选择一个内容类型开始编辑。"
+        title: '文本内容'
       site_settings:
         show_overriden: '只显示被覆盖了缺省值的'
         title: '设置'
@@ -1854,6 +1888,7 @@ zh_CN:
         star: '<b>f</b> 收藏主题'
         share_topic: '<b>shift s</b> 分享主题'
         share_post: '<b>s</b> 分享帖子'
+        reply_as_new_topic: '<b>t</b> 回复为联结主题'
         reply_topic: '<b>shift r</b> 回复主题'
         reply_post: '<b>r</b> 回复帖子'
         quote_post: '<b>q</b> 引用帖子'

@@ -511,6 +511,7 @@ fr:
     created: 'Créé'
     created_lowercase: 'créé'
     trust_level: 'Niveau de confiance'
+    search_hint: 'pseudo'
     create_account:
       title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse de courriel est déjà enregistrée, essayez le lien Mot de passe oublié."
@@ -1639,6 +1640,7 @@ fr:
             unsuspend_user: "retirer la suspension de l'utilisateur"
             grant_badge: "décerné le badge"
             revoke_badge: "retirer le badge"
+            check_email: "vérifier l'adresse courriel"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -1708,6 +1710,9 @@ fr:
           one: "Utilisateur dont le rejet a échoué."
           other: "%{count} utilisateurs dont le rejet a échoué."
         not_verified: "Non verifié"
+        check_email:
+          title: "Afficher l'adresse courriel de cet utilisateur"
+          text: "Voir l'adresse courriel"
       user:
         suspend_failed: "Il y a eu un problème pendant la suspension de cet utilisateur {{error}}"
         unsuspend_failed: "Il y a eu un problème pendant le retrait de la suspension de cet utilisateur {{error}}"
@@ -1790,6 +1795,10 @@ fr:
         suspend_modal_title: "Suspendre l'utilisateur"
         trust_level_2_users: "Utilisateurs de niveau de confiance 2"
         trust_level_3_requirements: "Niveaux de confiance 3 Pré-requis"
+        trust_level_locked_tip: "les niveaux de confiance sont verrouillés. Le système n'accordera plus de promotion ou ne rétrogradera d'utilisateur."
+        trust_level_unlocked_tip: "les niveaux de confiance sont déverrouillés. Le système pourra promouvoir ou rétrograder des utilisateurs."
+        lock_trust_level: "Verrouiller les niveaux de confiance"
+        unlock_trust_level: "Deverrouiller les niveaux de confiance"
         tl3_requirements:
           title: "Pré-requis pour le niveau de confiance 3"
           table_title: "Les 100 derniers jours :"
@@ -1808,6 +1817,11 @@ fr:
           likes_received: "J'aimes reçus"
           qualifies: "Admissible au niveau de confiance 3."
           does_not_qualify: "Non admissible au niveau de confiance 3."
+          will_be_promoted: "Sera promu prochainement."
+          will_be_demoted: "Sera rétrograder prochainement."
+          on_grace_period: "Actuellement en période de grâce, sera bientôt rétrograder."
+          locked_will_not_be_promoted: "Niveau de confiance verrouillé. Ne sera jamais promu."
+          locked_will_not_be_demoted: "Niveau de confiance verrouillé. Ne sera jamais rétrograder."
         sso:
           title: "Authentification unique (SSO)"
           external_id: "ID Externe"

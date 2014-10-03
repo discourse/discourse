@@ -511,6 +511,7 @@ de:
     created: 'Erstellt'
     created_lowercase: 'erstellt'
     trust_level: 'Vertrauensstufe'
+    search_hint: 'Benutzername'
     create_account:
       title: "Neues Benutzerkonto erstellen"
       failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
@@ -1622,6 +1623,7 @@ de:
             unsuspend_user: "Benutzer entsperren"
             grant_badge: "Abzeichen verleihen"
             revoke_badge: "Abzeichen entziehen"
+            check_email: "E-Mail abrufen"
         screened_emails:
           title: "Überprüfte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -1691,6 +1693,8 @@ de:
           one: "Konnte 1 Benutzer nicht ablehnen."
           other: "Konnte %{count} Benutzer nicht ablehnen."
         not_verified: "Nicht überprüft"
+        check_email:
+          text: "E-Mail anzeigen"
       user:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
         unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schief gegangen {{error}}"

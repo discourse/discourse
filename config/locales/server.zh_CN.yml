@@ -24,9 +24,11 @@ zh_CN:
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留权利"
   purge_reason: "自动删除长期未使用或者未验证"
+  disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被禁用。"
   errors:
     messages:
       too_long_validation: "最多只能有 %{max} 个字符；您已经输入了 %{length} 个字符。"
+      invalid_boolean: "无效布尔值。"
     embed:
       load_from_remote: "载入帖子时遇到错误。"
   bulk_invite:
@@ -248,6 +250,7 @@ zh_CN:
       title: "常规"
     elder:
       title: "领导"
+    change_failed_explanation: "您尝试将 %{user_name} 降至 '%{new_trust_level}'。然而他们的信任等级已经是 '%{current_trust_level}'。%{user_name} 将仍是 '%{current_trust_level}' —— 如果你想要降级用户，先锁定信任等级"
   rate_limiter:
     slow_down: "您已经重复这一操作太多次了，请一会再重试"
     too_many_requests: "您的请求过于频繁，请等待 %{time_left} 之后再试。"
@@ -385,6 +388,10 @@ zh_CN:
   archetypes:
     regular:
       title: "常规主题"
+    banner:
+      message:
+        make: "本主题现在是横幅主题。它将出现在每页的顶部，除非用户将其隐藏。"
+        remove: "本主题已经不再是横幅主题。它将不在每个页面的顶部显示。"
   unsubscribed:
     title: '取消订阅'
     description: "您已经取消订阅，我们不会再发送邮件给您！"
@@ -538,6 +545,7 @@ zh_CN:
       title: "通知邮件顶部"
       description: "将显示于所有通知邮件顶部的消息"
   site_settings:
+    delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
     default_locale: "此论坛的缺省语言（ISO 639-1 代码）"
     allow_user_locale: "允许用户选择他们自己的语言界面"
     min_post_length: "帖子允许的最少字符数"
@@ -585,6 +593,7 @@ zh_CN:
     apple_touch_icon_url: "Apple 触摸设备使用的图标。推荐 144x144 大小。"
     notification_email: "这个表格：被用于发送所有重要系统邮件的邮箱地址。指定的域名必须正确设置 SPF、DKIM 和反向 PTR 记录以发送邮件。"
     email_custom_headers: "一个逗号分离的自定义邮件头部"
+    email_subject: "标准邮件的主题格式"
     use_https: "站点的完整链接（Discourse.base_url）需要是 http 还是 https？HTTPS 没有被配置并启用好前绝不要开启这个设置！"
     summary_score_threshold: "将一个帖子包含在'摘要模式'中所需的最小分值"
     summary_posts_required: "在一个主题启用'摘要模式'的最小帖子数量"
@@ -630,6 +639,7 @@ zh_CN:
     topics_per_period_in_top_summary: "在一个主题底部显示的默认推荐主题的数量。"
     topics_per_period_in_top_page: "在展开“显示更多”推荐主题列表显示的主题数量。"
     redirect_users_to_top_page: "自动重定向至新用户或者长时间未登入的用户至热门页面。"
+    show_email_on_profile: "在用户页面显示用户的邮件地址（只有用户和职员可见）"
     email_token_valid_hours: "“忘记密码”/“激活账户” token 有效的小时数(n)。"
     email_token_grace_period_hours: "“忘记密码”/“激活账户” token 在使用后仍旧有效的小时数(n)。"
     enable_badges: "启用徽章系统（实验性）"
@@ -675,6 +685,7 @@ zh_CN:
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非您计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
     backup_daily: "每天自动创建站点备份。"
+    enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
     verbose_localization: "在界面上显示详细的本地化提示"
@@ -696,6 +707,7 @@ zh_CN:
     clean_orphan_uploads_grace_period_hours: "删除孤立上传资料的宽限期（单位：小时）"
     purge_deleted_uploads_grace_period_days: "移除已删除的孤立上传资料的宽限期（单位：小时）"
     purge_inactive_users_grace_period_days: "移除不活跃用户的宽限期（单位：天）。"
+    enable_s3_uploads: "上传至 Amazon S3 存储的地址。重要：需要有效的 S3 验证资料（包括 access key id & secret access key）。"
     s3_use_iam_profile: '使用 AWS EC2 IAM 角色来获得 key。注意：启用这个会覆盖“S3 access key id”和“S3 secret access key” 设置。'
     s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点（.）。"
     s3_access_key_id: "将用于上传图片的 Amazon S3 access key。"
@@ -771,6 +783,8 @@ zh_CN:
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     disable_emails: "禁止 Discourse 发送任何邮件"
+    strip_images_from_short_emails: "从邮件中除去小于 2800 比特的图片"
+    short_email_length: "短邮件地址长度（以比特作为单位）"
     pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
     pop3_polling_ssl: "连接至 POP3 服务器时使用 SSL。（推荐）"
     pop3_polling_period_mins: "查询用于邮件的 POP3 账户的间隔（以分钟计）。注意：需要重新启动。"
@@ -903,6 +917,7 @@ zh_CN:
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
     wait_approval: "谢谢注册帐号。我们会在您的帐号获得批准之后通知您。"
     active: "您的帐号已经被激活，可以使用了。"
+    activate_email: "快完成了！我们发送了一封激活邮件到您提供的邮箱。请按照邮件中的步骤来激活您的帐号。"
     not_activated: "您还不能登录。我们发送了一封激活邮件给您，请按照邮件中的步骤来激活您的帐号。"
     not_allowed_from_ip_address: "您不能以 %{username} 身份从该 IP 地址登陆。"
     suspended: "您要等到 %{date} 之后才能登录。"
@@ -915,6 +930,7 @@ zh_CN:
     new_registrations_disabled: "现在不允许注册新账户。"
     password_too_long: "密码不能超过 200 个字符。"
   user:
+    no_accounts_associated: "无关联账户"
     username:
       short: "必须超过 %{min} 个字符"
       long: "必须不超过 %{max} 个字符"
@@ -1039,8 +1055,13 @@ zh_CN:
 
       %{notes}
   flags_reminder:
+    flags_were_submitted:
+      other: "这些标记在过去 %{count} 内被提交。"
     please_review: "请核查他们。"
     post_number: "帖子"
+    how_to_disable: "将 notify_about_flags_after 设为 0 禁用这个通知邮件。"
+    subject_template:
+      other: "%{count} 个标记需要被处理"
   flag_reasons:
     off_topic: "您的帖子被标记为**偏离主题**：社群认为它不适合处于这个主题中，主题应与标题和第一个帖子有关。"
     inappropriate: "您的帖子被标记为**不恰当**：社群认为它有冒犯、侮辱或者违反了[社群准则](/guidelines)。"
@@ -1071,6 +1092,80 @@ zh_CN:
         但是，如果帖子再次被社群标记并隐藏，它将被隐藏直至版主处理——并且可能导致进一步的措施，包括可能禁止您的用户帐号。
 
         需要了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
+    usage_tips:
+      text_body_template: |
+        这条私信包含了一些可以让您快速开始的技巧提示：
+
+        ## 保持滚动
+
+        没有下一页按钮或者页码——要阅读更多，**只需要继续向下滚动页面！**
+
+        当新的帖子加载后，它们会自动显示。
+
+        ## 我在哪儿？
+
+        - 要搜索，访问您的用户页面或者菜单，使用**右上角的图标<kbd>☰</kbd>按钮**。
+
+        - 任何主题标题点击后都将引导您至下一个未读的帖子。使用最后一次活动时间和帖子数量跳至主题顶部或底部。
+
+        - 当在阅读主题时，通过点击帖子标题回到顶部 &uarr;。点击右下角的绿色进度条使用完整导航控制，或使用键盘上的 <kbd>home</kbd> 和 <kbd>end</kbd>键。
+
+            <img src="/images/welcome/progress-bar.png" width="143" height="39">
+
+
+
+        ## 我怎么回复？
+
+        - 要回复整个主题，使用页面最底下的回复按钮 <img src="/images/welcome/reply-topic.png" width="29" height="25">。
+
+        - 要回复特定的帖子，使用那个帖子的回复按钮 <img src="/images/welcome/reply-post.png" width="29" height="25">。
+
+        - 如果您想把讨论导向另一个方向，但是保持讨论之间的联系，请使用帖子右侧的“回复为联结主题”<img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25">。
+
+        若想在您的回复中引用什么，选择想要引用的文字，然后点击任何回复按钮。
+
+        每一个帖子最下方有功能按钮。
+
+        <img src="/images/welcome/quote-reply.png" width="350" height="129">
+
+        （要引用整个帖子，使用编辑器工具栏的导入引用按钮。）
+
+        要在您的回复中提到某人，键入 `@`，自动完成将会弹出。
+
+        <img src="/images/welcome/username-completion.png" width="230" height="131">
+
+        要使用[标准绘文字（Emoji）](http://www.emoji.codes/)，先键入`:`或传统表情符`:)` :smile
+
+        ## 我还能做什么？
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        要让别人知道您喜欢他们的帖子，使用**赞**按钮。如果您觉得一个帖子有问题，请使用**标记**按钮以私下地让它们或者我们的职员了解情况。
+
+        您可以分享一个帖子的链接，或者是收藏一个帖子以在用户也中引用他们。
+
+
+        ## 谁在跟我交谈？
+
+        当有人回复您的帖子，引用您的帖子或者使用`@用户名`提及到您的时候，一个数字将会立即出现在页面右上角。使用它查看**通知**。
+
+        <img src="/images/welcome/notification-panel.png" width="178" height="59">
+
+        不用担心错过他人的回复 —— 当别人回复您的帖子（和私信）时您不在站点上，您将会收到邮件提醒。
+
+        ## 哪一个是新讨论？
+
+        默认情况，所有小于两天的对话被认为是心的，并且所有您参与的讨论（回复过的、创建的或阅读了很长一段时间的）将自动被追踪。
+
+        您将会在主题名字附近见到蓝色的新合数字指示：
+
+        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        您可以通过帖子下方的控制选项改变每一个主题的通知状态（也可以设置每一个分类的状态）。要改变您跟踪帖子的方式，或新的定义，详见[您的用户设置](/my/preferences)。
+
+        ## 为什么我不能做某些事？
+
+        新用户因为某些安全原因被限制。只要您参与了讨论，您将会得到社群的信任，成为一个真正的成员，并且这些限制将自动被移除。当达到了一个足够的[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，您将会得到足够的权力来参与帮助社群管理。
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
@@ -1250,6 +1345,8 @@ zh_CN:
       subject_template: "远程图片下载已禁用。"
       text_body_template: "`download_remote_images_to_local` 设定已被禁用，因为已经达到 ``download_remote_images_threshold` 设定中的磁盘空间限制。"
   unsubscribe_link: "如果您希望取消这些邮件的订阅，请访问您的[用户设置](%{user_preferences_url})。"
+  subject_re: "回复："
+  subject_pm: "[私信]"
   user_notifications:
     previous_discussion: "之前的回复"
     unsubscribe:

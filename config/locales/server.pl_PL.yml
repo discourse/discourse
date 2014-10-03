@@ -356,7 +356,7 @@ pl_PL:
     update: 'Zmień hasło'
     save: 'Ustaw hasło'
     title: 'Zresetuj hasło'
-    success: "Twoje hasło zostało pomyślnie zmienione i nastąpiło zalogowanie.."
+    success: "Twoje hasło zostało pomyślnie zmienione, zalogowano."
     success_unapproved: "Zmieniłeś(-a) swoje hasło."
     continue: "Przejdź do %{site_name}"
   change_email:
@@ -428,6 +428,10 @@ pl_PL:
   archetypes:
     regular:
       title: "Zwykły temat"
+    banner:
+      message:
+        make: "Ten temat został ustawiony jako baner. Będzie pojawiać się na górze każdej strony do czasu zamknięcia przez użytkownika."
+        remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
   unsubscribed:
     title: 'Wypisano'
     description: "Zostałeś wypisany. Nie skontaktujemy się z Tobą więcej!"
@@ -717,6 +721,7 @@ pl_PL:
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
     wait_approval: "Dziękujemy za rejestrację. Powiadomimy Cię gdy Twoje konto zostanie aktywowane."
     active: "Twoje konto zostało aktywowane i jest gotowe do użycia."
+    activate_email: "Prawie koniec! Wysłaliśmy email aktywacyjny na adres <b>%{email}</b>. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy do Ciebie email aktywacyjny. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
@@ -750,7 +755,15 @@ pl_PL:
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   flags_reminder:
+    flags_were_submitted:
+      one: "Flagi dodane godzinę temu."
+      few: "Flagi dodane ponad %{count} godziny temu."
+      other: "Flagi dodane ponad %{count} godzin temu."
     post_number: "wpis"
+    subject_template:
+      one: "1 flaga oczekuje na reakcję"
+      few: "%{count} flagi oczekują na reakcję"
+      other: "%{count} flagi oczekują na reakcję"
   flag_reasons:
     off_topic: "Twój wpis został oznaczony jako **nie-na-temat**: społeczność uważa, że nie pasuje on do tematu zdefiniowanego przez tytuł i treść pierwszego wpisu w wątku."
     spam: "Twój wpis został oznaczony jako **spam**: społeczność uważa, że jest to nieprzydatna reklama bez związku z tematem."
