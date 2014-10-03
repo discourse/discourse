@@ -140,16 +140,17 @@ body {
 }
 
 .spinner {
-  width: 30px;
+  width: 20px;
   margin: 0 auto;
-  padding: 15px 15px;
+  padding: 25px 15px;
   background: {
     image: image-url("spinner_96.gif");
     repeat: no-repeat;
-    size: 30px;
+    size: 50px;
   };
   -webkit-animation: spinner .25s;
   animation: spinner .25s;
+  margin-top: 10px;
 }
 
 //loading spinner fade-in
