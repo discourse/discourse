@@ -384,7 +384,7 @@ a.star {
 
     /* limit to one line of avatars for now */
     height:30px;
-    overflow:visible;
+    overflow:hidden;
   }
 
   .avatar {
@@ -415,7 +415,6 @@ a.star {
   .avatars,
   .links,
   .information {
-    clear:left;
     padding: 7px 10px 15px 10px;
     color: $primary;
   }
