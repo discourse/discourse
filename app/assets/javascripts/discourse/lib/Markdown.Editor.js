@@ -2250,7 +2250,7 @@
             chunk.endTag = " ##";
 
             if(chunk.after === "" || !chunk.after.match(/^\n/)){
-              chunk.endTag = "## \n";
+              chunk.endTag = " ##\n";
             }
 
             return;
