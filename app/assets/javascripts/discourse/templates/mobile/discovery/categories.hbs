@@ -30,7 +30,7 @@
                     {{#unless canClearPin}}<a href="{{url}}">{{i18n read_more}}</a>{{/unless}}
                   {{/if}}
                   {{#if canClearPin}}
-                    <a href="#" {{action clearPin this}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
+                    <a href="#" {{action "clearPin" this}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
                   {{/if}}
                 </div>
               {{/if}}
@@ -60,7 +60,7 @@
       <figure title="{{i18n week_desc}}">{{number topics_week}} <figcaption>{{i18n week}}</figcaption></figure>
 
       {{#if controller.canEdit}}
-        <a href='#' {{action editCategory this}} class='btn btn-small'>{{i18n category.edit}}</a>
+        <a href='#' {{action "editCategory" this}} class='btn btn-small'>{{i18n category.edit}}</a>
       {{/if}}
 
     </footer>

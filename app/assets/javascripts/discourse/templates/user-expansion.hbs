@@ -43,17 +43,17 @@
       {{/if}}
 
       {{#if user.can_send_private_message_to_user}}
-        <button class='btn btn-primary' {{action composePrivateMessage user}}>{{fa-icon "envelope"}}{{i18n user.private_message}}</button>
+        <button class='btn btn-primary' {{action "composePrivateMessage" user}}>{{fa-icon "envelope"}}{{i18n user.private_message}}</button>
       {{/if}}
 
       {{#link-to 'user' user class="btn"}}{{fa-icon "user"}}{{i18n user.profile}}{{/link-to}}
 
       {{#if showFilter}}
-      <button class='btn' {{action togglePosts user}}>{{fa-icon "filter"}}{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</button>
+      <button class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</button>
       {{/if}}
 
       {{#if hasUserFilters}}
-      <button class='btn' {{action cancelFilter}}>{{fa-icon "times"}}{{i18n topic.filters.cancel}}</button>
+      <button class='btn' {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n topic.filters.cancel}}</button>
       {{/if}}
     </div>
   {{else}}

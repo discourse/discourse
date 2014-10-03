@@ -15,9 +15,9 @@
   </div>
 
   <div class="modal-footer">
-    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
+    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action "saveCategory"}}>{{buttonTitle}}</button>
     {{#if can_delete}}
-      <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
+      <button class='btn btn-danger pull-right' {{bind-attr disabled="deleteDisabled"}} {{action "deleteCategory"}}><i class="fa fa-trash-o"></i>{{deleteButtonTitle}}</button>
     {{else}}
       <div class="cannot_delete_reason">
         {{{cannot_delete_reason}}}

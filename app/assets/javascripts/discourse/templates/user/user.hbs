@@ -150,7 +150,7 @@
                   {{#if email}}
                     {{email}}
                   {{else}}
-                    <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action checkEmail this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+                    <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
                   {{/if}}
                 </dd>
               {{/if}}
@@ -164,7 +164,7 @@
 
         <section class='controls'>
           {{#if can_send_private_message_to_user}}
-            <button class='btn btn-primary' {{action composePrivateMessage}}>
+            <button class='btn btn-primary' {{action "composePrivateMessage"}}>
               <i class='fa fa-envelope'></i>
               {{i18n user.private_message}}
             </button>

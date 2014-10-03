@@ -1,5 +1,5 @@
 <input type="file" accept="image/*" style="display:none" />
-<button class="btn" {{action selectFile}} {{bind-attr disabled="uploading"}} title="{{i18n user.change_avatar.upload_title}}">
+<button class="btn" {{action "selectFile"}} {{bind-attr disabled="uploading"}} title="{{i18n user.change_avatar.upload_title}}">
   <i class="fa fa-picture-o"></i>&nbsp;{{uploadButtonText}}
 </button>
 {{#if uploading}}

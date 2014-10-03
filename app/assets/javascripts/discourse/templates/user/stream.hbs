@@ -14,7 +14,7 @@
         <i class="icon {{unbound icon}}"></i>
         {{#grouped-each items}}
           {{#if bookmarkType}}
-            <button class="btn btn-default remove-bookmark" {{action removeBookmark this}}>
+            <button class="btn btn-default remove-bookmark" {{action "removeBookmark" this}}>
               <i class="fa fa-times"></i>
               {{i18n "bookmarks.remove"}}
             </button>

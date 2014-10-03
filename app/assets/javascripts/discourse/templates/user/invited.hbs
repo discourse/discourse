@@ -4,7 +4,7 @@
     <h2>{{i18n user.invited.title}}</h2>
 
     <div class="pull-right">
-      <button {{action showInvite}} class='btn'>{{i18n user.invited.create}}</button>
+      <button {{action "showInvite"}} class='btn'>{{i18n user.invited.create}}</button>
       {{#if canBulkInvite}}
         {{resumable-upload target="/invites/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
       {{/if}}
@@ -55,7 +55,7 @@
                 {{#if invite.rescinded}}
                   {{i18n user.invited.rescinded}}
                 {{else}}
-                  <button class='btn' {{action rescind invite}}><i class="fa fa-times"></i>{{i18n user.invited.rescind}}</button>
+                  <button class='btn' {{action "rescind" invite}}><i class="fa fa-times"></i>{{i18n user.invited.rescind}}</button>
                 {{/if}}
               </td>
             {{/if}}
