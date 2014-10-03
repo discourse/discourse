@@ -295,6 +295,7 @@ SQL
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
       builder.where("a.action_type not in (#{BOOKMARK},#{STAR})")
+      builder.where("t.visible")
     end
 
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages
