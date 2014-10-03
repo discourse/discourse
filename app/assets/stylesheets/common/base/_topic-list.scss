@@ -136,12 +136,11 @@
 .topics-loading {
   width: 20px;
   margin: 0 auto;
-  padding: 15px 15px;
+  padding: 25px 15px;
   background: {
     image: image-url("spinner_96.gif");
     repeat: no-repeat;
-    position: 10px 50%;
-    size: 30px;
+    size: 50px;
   };
 }
 
