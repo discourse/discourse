@@ -8,15 +8,14 @@ module PrettyText
   class Helpers
 
     def t(key, opts)
-      str = I18n.t("js." + key, opts)
-      if opts
-        # TODO: server localisation has no parity with client should be fixed
-        str = str.dup
-        opts.each do |k,v|
-          str.gsub!("{{#{k}}}", v)
-        end
+      key = "js." + key
+      unless opts
+        return I18n.t(key)
+      else
+        str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
+        opts.each {|k,v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+        return str
       end
-      str
     end
 
     # function here are available to v8
