@@ -30,6 +30,7 @@ class TopicQuery
   # Maps `order` to a columns in `topics`
   SORTABLE_MAPPING = {
     'likes' => 'like_count',
+    'op_likes' => 'op_likes',
     'views' => 'views',
     'posts' => 'posts_count',
     'activity' => 'bumped_at',
@@ -209,6 +210,10 @@ class TopicQuery
       # If we are sorting by category, actually use the name
       if sort_column == 'category_id'
         return result.references(:categories).order(TopicQuerySQL.order_by_category_sql(sort_dir))
+      end
+
+      if sort_column == 'op_likes'
+        return result.order("(SELECT like_count FROM posts p3 WHERE p3.topic_id = topics.id AND p3.post_number = 1) #{sort_dir}")
       end
 
       result.order("topics.#{sort_column} #{sort_dir}")
