@@ -11,7 +11,7 @@
     {{#each view.topics}}
       <div class='controls'>
         <label class='radio'>
-        <input type='radio' id="choose-topic-{{unbound id}}" name='choose_topic_id' {{action chooseTopic this target="view"}}>{{title}}
+        <input type='radio' id="choose-topic-{{unbound id}}" name='choose_topic_id' {{action "chooseTopic" this target="view"}}>{{title}}
         {{#if category.parentCategory}}
           {{bound-category-link category.parentCategory}}
         {{/if}}

@@ -1,5 +1,5 @@
 {{#if ip}}
-  <button class="btn" {{action lookup}}>
+  <button class="btn" {{action "lookup"}}>
     <span class="fa fa-globe"></span>&nbsp;{{i18n admin.user.ip_lookup}}
   </button>
 {{/if}}
@@ -49,6 +49,6 @@
         {{/if}}
       <dd>
     </dl>
-    <button class="btn close" {{action hide}}>{{i18n close}}</button>
+    <button class="btn close" {{action "hide"}}>{{i18n close}}</button>
   </div>
 {{/if}}

@@ -19,7 +19,7 @@
       </ul>
         <div class='no-results'>
             {{#if resultType.more}}
-                <a href='#' class='filter' {{action moreOfType resultType.type bubbles=false}}>{{i18n show_more}} <i class="fa fa-chevron-down"></i></a>
+                <a href='#' class='filter' {{action "moreOfType" resultType.type bubbles=false}}>{{i18n show_more}} <i class="fa fa-chevron-down"></i></a>
             {{else}}
             {{/if}}
         </div>

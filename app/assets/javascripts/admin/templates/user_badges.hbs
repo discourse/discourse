@@ -16,7 +16,7 @@
     {{else}}
       <br>
       {{combo-box valueAttribute="id" value=controller.selectedBadgeId content=controller.grantableBadges}}
-      <button class='btn btn-primary' {{action grantBadge controller.selectedBadgeId}}>{{i18n admin.badges.grant}}</button>
+      <button class='btn btn-primary' {{action "grantBadge" controller.selectedBadgeId}}>{{i18n admin.badges.grant}}</button>
     {{/if}}
 
     <br>
@@ -44,7 +44,7 @@
           </td>
           <td>{{age-with-tooltip granted_at}}</td>
           <td>
-            <button class='btn' {{action revokeBadge this}}>{{i18n admin.badges.revoke}}</button>
+            <button class='btn' {{action "revokeBadge" this}}>{{i18n admin.badges.revoke}}</button>
           </td>
         </tr>
       {{else}}

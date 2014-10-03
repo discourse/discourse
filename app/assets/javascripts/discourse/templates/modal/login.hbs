@@ -21,7 +21,7 @@
                 {{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn}} &nbsp;
             </td>
             <td>
-              <a id="forgot-password-link" {{action showForgotPassword}}>{{i18n forgot_password.action}}</a>
+              <a id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n forgot_password.action}}</a>
             </td>
           </tr>
           <tr>
@@ -40,13 +40,13 @@
   {{#if canLoginLocal}}
     <button class="btn btn-large btn-primary"
       {{bind-attr disabled="loginDisabled"}}
-      {{action login}}>
+      {{action "login"}}>
         <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
     </button>
 
     {{#if showSignupLink}}
       &nbsp;
-      <button class="btn btn-large" id="new-account-link" {{action createAccount}}>
+      <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>
         {{i18n create_account.title}}
       </button>
     {{/if}}
