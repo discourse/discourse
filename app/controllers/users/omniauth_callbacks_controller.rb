@@ -38,7 +38,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     @data = authenticator.after_authenticate(auth)
     @data.authenticator_name = authenticator.name
 
-    complete_response_data(@data)
+    complete_response_data
 
     respond_to do |format|
       format.html
