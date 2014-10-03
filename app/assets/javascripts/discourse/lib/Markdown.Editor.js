@@ -2241,8 +2241,18 @@
         // make a level 2 hash header around some default text.
         if (!chunk.selection) {
             chunk.startTag = "## ";
+
+            if(chunk.before === "" || !chunk.before.match(/\n$/)){
+              chunk.startTag = "\n## ";
+            }
+
             chunk.selection = this.getString("headingexample");
             chunk.endTag = " ##";
+
+            if(chunk.after === "" || !chunk.after.match(/^\n/)){
+              chunk.endTag = "## \n";
+            }
+
             return;
         }
 
