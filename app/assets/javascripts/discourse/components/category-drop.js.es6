@@ -51,6 +51,10 @@ export default Ember.Component.extend({
     }
   }.property('category'),
 
+  clickEventName: function() {
+    return "click.category-drop-" + (this.get('category.id') || "all");
+  }.property('category.id'),
+
   actions: {
     expand: function() {
       if (this.get('expanded')) {
@@ -68,7 +72,7 @@ export default Ember.Component.extend({
         self.close();
       });
 
-      $('html').on('click.category-drop', function(e) {
+      $('html').on(this.get('clickEventName'), function(e) {
         var $target = $(e.target),
             closest = $target.closest($dropdown);
 
@@ -78,13 +82,13 @@ export default Ember.Component.extend({
   },
 
   close: function() {
-    $('html').off('click.category-drop');
+    $('html').off(this.get('clickEventName'));
     this.$('a[data-drop-close]').off('click.category-drop');
     this.set('expanded', false);
   },
 
   willDestroyElement: function() {
-    $('html').off('click.category-drop');
+    $('html').off(this.get('clickEventName'));
     this.$('a[data-drop-close]').off('click.category-drop');
   }
 
