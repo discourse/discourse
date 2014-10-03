@@ -3,9 +3,9 @@
 Are you having trouble setting up Discourse? Here are some basic things to
 check before reaching out to the community for help:
 
-1. Are you running Ruby 1.9.3 or later?
+1. Are you running Ruby 2.0 or later?
 
-   Discourse is designed for Ruby 1.9.3 or later. You can check your version by
+   Discourse is designed for Ruby 2.0 or later. You can check your version by
 typing `ruby -v` (as the discourse user) and checking the response for
 something like:
 
