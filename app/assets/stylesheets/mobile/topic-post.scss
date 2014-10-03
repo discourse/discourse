@@ -471,14 +471,13 @@ span.highlighted {
 .topic-avatar {
   float: left;
   position: relative;
-  z-index: 2;
 }
 
 .topic-meta-data {
   white-space: nowrap;
   position: absolute;
-  z-index: 1;
   width: 100%;
+  left: 0px;
   .names {
     margin: 5px 0 0 65px;
     line-height: 17px;
