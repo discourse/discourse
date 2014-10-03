@@ -40,6 +40,11 @@ describe PrettyText do
         match_html "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
     end
 
+    # see: https://github.com/sparklemotion/nokogiri/issues/1173
+    pending 'allows html entities correctly' do
+      PrettyText.cook("&aleph;&pound;&#162;").should == "<p>&aleph;&pound;&#162;</p>"
+    end
+
   end
 
   describe "rel nofollow" do
