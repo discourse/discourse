@@ -589,12 +589,22 @@ rate_limits:
   max_replies_in_first_day: 10
 
 developer:
-  force_hostname: ''
+  force_hostname:
+    hidden:
+      development: false
+      default: true
+    default: ''
   port:
+    hidden:
+      development: false
+      default: true
     default:
       development: 3000
       default: ''
   queue_jobs:
+    hidden:
+      development: false
+      default: true
     default:
       test: false
       default: true
