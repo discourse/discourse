@@ -71,14 +71,18 @@ describe UserNotifications do
   end
 
   describe '.user_replied' do
-    let(:post) { Fabricate(:post) }
+    let(:category) { Fabricate(:category, name: 'India') }
+    let(:topic) { Fabricate(:topic, category: category) }
+    let(:post) { Fabricate(:post, topic: topic) }
     let(:response) { Fabricate(:post, topic: post.topic)}
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:notification, user: user) }
 
-
     it 'generates a correct email' do
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
+
+      # subject should include category name
+      expect(mail.subject).to match(/India/)
 
       # 2 respond to links cause we have 1 context post
       mail.html_part.to_s.scan(/To respond/).count.should == 2
@@ -112,6 +116,9 @@ describe UserNotifications do
 
     it 'generates a correct email' do
       mail = UserNotifications.user_posted(response.user, post: response, notification: notification)
+
+      # subject should not include category name
+      expect(mail.subject).not_to match(/Uncategorized/)
 
       # subject should include "Re:"
       expect(mail.subject).to match("Re:")
@@ -251,13 +258,6 @@ describe UserNotifications do
   describe "user quoted" do
     include_examples "notification email building" do
       let(:notification_type) { :quoted }
-      include_examples "supports reply by email"
-    end
-  end
-
-  describe "user posted" do
-    include_examples "notification email building" do
-      let(:notification_type) { :posted }
       include_examples "supports reply by email"
     end
   end
