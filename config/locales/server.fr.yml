@@ -27,6 +27,7 @@ fr:
   errors:
     messages:
       too_long_validation: "est limité à %{max} caractères maximum; il y en a %{length}."
+      invalid_boolean: "Vrai/Faux invalide."
     embed:
       load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
   bulk_invite:

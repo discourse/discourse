@@ -720,7 +720,7 @@ it:
         category: "Non ci sono altri argomenti nella categoria {{category}}."
         top: "Non ci sono altri argomenti di punta."
     topic:
-      filter_to: "{{post_count}} messaggi in questo argomento"
+      filter_to: "{{post_count}} filtra messaggi in questo argomento"
       create: 'Crea Argomento'
       create_long: 'Crea un nuovo Argomento'
       private_message: 'Inizia un messaggio privato'
@@ -849,7 +849,7 @@ it:
         help: "Rimuovi la spunta da questo argomento, così non comparirà più in cima alla lista degli argomenti"
       share:
         title: 'Condividi'
-        help: 'Condividi un collegamento a questo argomento'
+        help: 'condividi un collegamento a questo argomento'
       flag_topic:
         title: 'Segnala'
         help: 'segnala questo argomento o invia una notifica privata'
@@ -879,7 +879,7 @@ it:
         n_posts:
           one: "1 post"
           other: "{{count}} messaggi"
-        cancel: "Mostra nuovamente tutti i messaggi in questo argomento."
+        cancel: "Mostra tutti i messaggi (rimuovi filtro)."
       split_topic:
         title: "Sposta in un Nuovo Argomento"
         action: "sposta in un nuovo argomento"
@@ -925,6 +925,7 @@ it:
       post_number: "messaggio {{number}}"
       in_reply_to: "rispondi a"
       last_edited_on: "ultima modifica al messaggio:"
+      reply_as_new_topic: "Rispondi come Argomento collegato"
       continue_discussion: "Continua la discussione da {{postLink}}:"
       follow_quote: "vai al messaggio citato"
       show_full: "Mostra Messaggio Completo"
@@ -1152,7 +1153,7 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Osserverai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Verrai avvisato di tutti i nuovi messaggi ed argomento. Inoltre di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
+          description: "Osserverai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Verrai avvisato di tutti i nuovi messaggi ed argomenti. Inoltre, accanto all'argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
         tracking:
           title: "Seguendo"
           description: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
@@ -1564,12 +1565,12 @@ it:
         sending_test: "Invio email di prova in corso..."
         test_error: "C'è stato un problema nell'invio dell'email di test. Controlla nuovamente le impostazioni email, verifica che il tuo host non blocchi le connessioni email e riprova."
         sent: "Inviato"
-        skipped: "Saltato"
+        skipped: "Omesso"
         sent_at: "Inviato Alle"
         time: "Ora"
         user: "Utente"
         email_type: "Tipo di Email"
-        to_address: "All'indirizzo"
+        to_address: "Indirizzo Destinazione"
         test_email_address: "indirizzo email da testare"
         send_test: "Invia una email di prova"
         sent_test: "inviata!"
@@ -1699,6 +1700,8 @@ it:
           one: "Impossibile rifiutare 1 utente"
           other: "Impossibile rifiutare %{count} utenti."
         not_verified: "Non verificato"
+        check_email:
+          title: "Mostra l'indirizzo email di questo utente"
       user:
         suspend_failed: "Si è verificato un errore sospendendo questo utente {{error}}"
         unsuspend_failed: "Si è verificato un errore riabilitando questo utente {{error}}"
@@ -1906,27 +1909,28 @@ it:
         top: '<b>g</b>, <b>t</b> Alto'
       navigation:
         title: 'Navigazione'
-        jump: '<b>#</b> Va al messaggio numero'
+        jump: '<b>#</b> Vai al messaggio numero'
         back: '<b>u</b> Indietro'
         up_down: '<b>k</b>/<b>j</b> Sposta la selezione &uarr; &darr;'
-        open: '<b>o</b> o <b>Invio</b> Apre l''argomento selezionato'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Prossima/precedente sezione'
+        open: '<b>o</b> o <b>Invio</b> Apri l''argomento selezionato'
+        next_prev: '<b>shift j</b>/<b>shift k</b> Sezione prossima/precedente '
       application:
         title: 'Applicazione'
         create: '<b>c</b> Crea un nuovo argomento'
-        notifications: '<b>n</b> Apre le notifiche'
-        site_map_menu: '<b>=</b> Apre il menu sito'
-        user_profile_menu: '<b>p</b> Apre il menu del profilo utente'
+        notifications: '<b>n</b> Apri le notifiche'
+        site_map_menu: '<b>=</b> Apri il menu sito'
+        user_profile_menu: '<b>p</b> Apri il menu del profilo utente'
         show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
         search: '<b>/</b> Cerca'
-        help: '<b>?</b> Apre l''aiuto per le scorciatoie da tastiera'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
+        help: '<b>?</b> Apri l''aiuto per le scorciatoie da tastiera'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Chiudi Nuovo/Messaggi'
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
       actions:
         title: 'Azioni'
-        star: '<b>f</b> Metti l''argomento nei preferiti'
+        star: '<b>f</b> Aggiungi l''argomento ai preferiti'
         share_topic: '<b>shift s</b> Condividi argomento'
         share_post: '<b>s</b> Condividi messaggio'
+        reply_as_new_topic: '<b>t</b> Rispondi con argomento collegato'
         reply_topic: '<b>shift r</b> Rispondi all''argomento'
         reply_post: '<b>r</b> Rispondi al messaggio'
         quote_post: '<b>q</b> Cita messaggio'

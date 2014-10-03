@@ -589,6 +589,7 @@ de:
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-Emails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit Emails sicher zugestellt werden können."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
+    email_subject: "Betreffformat für Standard-E-Mails."
     use_https: "Soll die volle URL der Seite (Discourse.base_url) mit http oder https beginnen? AKTIVIERE DIES NICHT BIS HTTPS AUFGESETZT IST UND BEREITS FUNKTIONIERT!"
     summary_score_threshold: "Mindestpunktzahl die ein Beitrag benötigt, in der \"Thema zusammenfassen\" Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."

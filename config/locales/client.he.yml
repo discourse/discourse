@@ -259,6 +259,7 @@ he:
       other_accounts: חשבונות אחרים עם כתובת IP זהה
       no_other_accounts: (ללא)
     user:
+      said: "{{שם משתמש/ת}}:"
       profile: "פרופיל"
       mute: "השתק"
       edit: "ערוך העדפות"
@@ -339,6 +340,7 @@ he:
         title: "שינוי רקע פרופיל"
       email:
         title: "דואר אלקטרוני"
+        instructions: "לעולם לא מוצג לציבור."
         ok: "נראה טוב, נשלח לך דואר אלקטרוני לאישור."
         invalid: "בבקשה הכנס כתובת דואר אלקטרוני חוקית"
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}."
@@ -350,6 +352,7 @@ he:
         ok: "השם נראה טוב."
       username:
         title: "שם משתמש"
+        instructions: "ייחדוי, ללא רווחים, קצר."
         short_instructions: "אנשים יכולים לאזכר אותך כ @{{username}}."
         available: "שם המשתמש שלך פנוי."
         global_match: "הדואר האלקטרוני תואם את שם המשתמש הרשום"
@@ -433,6 +436,8 @@ he:
         too_short: "הסיסמה שלך קצרה מידי."
         common: "הסיסמה הזו נפוצה מידי."
         ok: "הסיסמה שלך נראית טוב."
+        instructions: "לפחות %{count} תווים."
+      associated_accounts: "חשבונות מקושרים"
       ip_address:
         title: "כתובת IP אחרונה"
       registration_ip_address:
@@ -506,6 +511,7 @@ he:
     created: 'נוצר'
     created_lowercase: 'נוצר/ו'
     trust_level: 'רמת אמון'
+    search_hint: 'שם משתמש/ת'
     create_account:
       title: "יצירת חשבון חדש"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסה את קישור שכחתי סיסמה."
@@ -517,6 +523,9 @@ he:
       complete_username: "אם קיים חשבון שמתאים לשם המשתמש <b>%{username}</b>, אתה אמור לקבל בקרוב מייל עם הוראות לאיפוס הסיסמא. "
       complete_email: "אם החשבון מתאים ל <b>%{email}</b>, אתה אמור לקבל בקרוב מעעל עם הוראות לאיפוס הסיסמא."
       complete_username_found: "מצאנו חשבון שתואם את שם המשתמש  <b>%{username}</b>, קרוב לודאי שתקבלו דוא\"ל עם הנחיות כיצד לאתחל את הסיסמא שלכם תוך זמן קצר."
+      complete_email_found: "מצאנו חשבון תואם ל<b>%{email}</b>. בתוך זמן קצר תקבלו אליו דוא\"ל עם הנחיות כיצד לאתחל את הסיסמא שלכם."
+      complete_username_not_found: "שום חשבון אינו תואם לשם המשתמש  <b>%{username}</b>"
+      complete_email_not_found: "שום חשבון אינו תואם ל <b>%{email}</b>"
     login:
       title: "התחברות"
       username: "משתמש"
@@ -683,6 +692,7 @@ he:
         actions: "מקבץ פעולות"
         change_category: "שינוי קטגוריה"
         close_topics: "סגירת נושאים"
+        archive_topics: "ארכיון הנושאים"
         notification_level: "שינוי רמת התרעה"
         selected:
           one: "בחרת נושא <b>אחד</b>."
@@ -697,6 +707,10 @@ he:
         hot: "אין נושאים חמים."
         category: "אין נושאים בקטגוריה {{category}}."
         top: "אין נושאים מובילים."
+        educate:
+          new: '<p>הנושאים החדשים שלך יופיעו כאן.</p><p> כברירת מחדל, נושאים נחשבים חדשים ויופיעו עם האינדיקציה <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"> חדש </span> אם הם נוצרו ב-2 הימים האחרונים. .</p><p> תוכלו לשנות זאת ב <a href="%{userPrefsUrl}">העדפות </a>.</p>'
+          unread: '<p> הנושאים הלא-נקראים שלך מופיעים כאן.</p><p>כברירת מחדל נושאים נחשבים ככאלה שלא נקראו ויוצגו כ- <span class="badge new-posts badge-notification">1</span> אם את/ה:</p><ul><li> יצרת את הנושא</li></ul><p>או אם כיוונתם את הנושא הזה להיות תחת מעקב או צפייה באמצעות כפתור ההתראות שבתחתית כל נושא. </p><p> את/ה יכולים לשנות זאת ב<a href="%{userPrefsUrl}">העדפות</a>.</p>'
+          starred: '<p>הנושאים שסימנת למעקב מופיעים כאן.</p><p>כדי לבטל סימון השתמשו ב:</p><ul><li>ה<i class="fa fa-star"></i> שלצד כל כותרת נושא </li><li>לחצן הכפתור שבתחתית כל נושא</li></ul>'
       bottom:
         latest: "אין עוד נושאים מדוברים."
         hot: "אין עוד נושאים חמים."
@@ -790,13 +804,16 @@ he:
           '0': 'אתה מתעלם מכל ההתרעות בנושא זה.'
         watching_pm:
           title: "צופה"
+          description: "תקבל/י התראה על כל פרסום חדש במסר הפרטי הזה. סך הפרסומים החדשים ושלא נקראו יופיע גם לצד הנושא."
         watching:
           title: "צופה"
+          description: "תקבל/י התראה על כל פרסום חדש תחת נושא זה. סך הפרסומים החדשים ושלא נקראו יופיע גם לצד הנושא."
         tracking_pm:
           title: "עוקב"
           description: "סך הפרסומים החדשים ואלה שלא נקראו יופיע לצד המסר הפרטי. תקבלו התראה רק אם מישהו יזכיר את @שם_המשתמש שלכם או ישיב לפרסומים שלכם."
         tracking:
           title: "עוקב"
+          description: "סך הפרסומים החדשים ושלא נקראו יופיע לצד הנושא. תקבל/י התראה רק אם מישהו יזכיר את @שםהמשתמש/ת שלכם או ישיב לפרסום שלך."
         regular:
           title: "רגיל"
           description: "תקבל/י הודעה רק אם מישהו מזכיר אותך עם @שם_המשתמש או מגיבים להודעה שלך."
@@ -822,6 +839,8 @@ he:
         pin_globally: "נעץ נושא גלובלית"
         unarchive: "הוצא נושא מארכיון"
         archive: "הכנס נושא לארכיון"
+        invisible: "הסתרה"
+        visible: "גילוי"
         reset_read: "אפס מידע שנקרא"
         multi_select: "בחר הודעות"
       reply:
@@ -908,6 +927,7 @@ he:
       post_number: "הודעה {{number}}"
       in_reply_to: "השב ל"
       last_edited_on: "הודעה נערכה לאחרונה ב"
+      reply_as_new_topic: "תגובה כנושא מקושר"
       continue_discussion: "ממשיך את הדיון מ {{postLink}}:"
       follow_quote: "מעבר להודעה המצוטטת"
       show_full: "הראה הודעה מלאה"
@@ -934,6 +954,7 @@ he:
         upload_not_authorized: "סליחה, אך סוג הקובץ שאתה מנסה להעלות אינו מורשה (סיומות מורשות: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות תמונות."
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
+        attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
       abandon:
         confirm: "האם אתה רוצה לנטוש את ההודעה שלך?"
         no_value: "לא, שמור אותה"
@@ -962,6 +983,12 @@ he:
           yes_value: "כן, מחק גם את התגובות"
           no_value: "לא, רק את ההודעה"
         admin: "פרסום פעולות מנהל/ת"
+        wiki: "יצירת wiki"
+        unwiki: "הסרת ה-Wiki"
+        convert_to_moderator: "הוספת צבע צוות"
+        revert_to_regular: "הסרת צבע צוות"
+        rebake: "בנייה מחודשת של HTML"
+        unhide: "הסרת הסתרה"
       actions:
         flag: 'סימון'
         defer_flags:
@@ -1129,8 +1156,10 @@ he:
       notifications:
         watching:
           title: "צופה"
+          description: "תצפו באופן אוטומטי בכל הנושאים החדשים בקטגוריות אלה. תקבלו התראה על כל פרסום ונושא חדש, ובנוסף, סך הפרסומים החדשים ושלא נקראו יופיעו לצד הנושא."
         tracking:
           title: "במעקב"
+          description: "תעקבו באופן אוטומטי אחרי כל הנושאים החדשים בקטגוריות אלה. סך הפרסומים החדשים ושלא נקראו יופיעו לצד הנושא."
         regular:
           title: "רגיל"
           description: "תקבל הודעה רק אם מישהו/מישהי יזכירו את @השם-שלך או ישיבו להודעתך"
@@ -1165,6 +1194,8 @@ he:
         one: "לחיצה אחת"
         other: "%{count} לחיצות"
     topic_statuses:
+      warning:
+        help: "זוהי אזהרה רשמית."
       locked:
         help: "הנושא הזה נעול, הוא לא מקבל יותר תגובות חדשות"
       unpinned:
@@ -1178,6 +1209,8 @@ he:
         help: "הנושא הזה נעוץ; הוא יוצג בראש הקטגוריה שלו"
       archived:
         help: "הנושא הזה אוכסן בארכיון; הוא הוקפא ולא ניתן לשנותו"
+      invisible:
+        help: "נושא זה מוסתר; הוא לא יוצג ברשימות הנושאים, וזמין רק באמצעות קישור ישיר."
     posts: "הודעות"
     posts_lowercase: "פרסומים"
     posts_long: "יש {{number}} הודעות בנושא הזה"
@@ -1315,6 +1348,8 @@ he:
         agree_flag_modal_title: "הסכמה ו..."
         agree_flag_hide_post: "קבחה (הסתרת פרסום + שליחת מסר פרטי)"
         agree_flag_hide_post_title: "הסתירו פרסום זה ושלחו למשתמ/ת מסר פרטי אוטומטי עם בקשה לערוך אותו."
+        agree_flag_restore_post: "הסכמה (שחזור הפרסום)"
+        agree_flag_restore_post_title: "שחזור פרסום זה"
         agree_flag: "הסכמה עם הסימון"
         agree_flag_title: "הסכמה עם הסימון ושמירת הפרסום ללא שינוי"
         defer_flag: "דחייה"
@@ -1349,6 +1384,7 @@ he:
         topic_flagged: "<strong>הנושא</strong> הזה דוגלל."
         visit_topic: "בקרו בנושא כדי לנקוט פעולה"
         was_edited: "הפרסום נערך לאחר הסימון הראשון"
+        previous_flags_count: "פרסום זה כבר סומן  {{count}} פעמים."
         summary:
           action_type_3:
             one: "אוף-טופיק"
@@ -1413,6 +1449,8 @@ he:
           filename: "שם קובץ"
           size: "גודל"
         upload:
+          text: "העלאה"
+          uploading: "מעלה..."
           success: "'{{filename}}' הועלה בהצלחה."
           error: "הייתה שגיאה במהלך העלאת '{{filename}}': {{message}}"
         operations:
@@ -1550,6 +1588,7 @@ he:
             user_placeholder: "username"
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
+            reply_key_placeholder: "מפתח תגובה"
             skipped_reason_placeholder: "סיבה"
       logs:
         title: "לוגים"
@@ -1591,6 +1630,7 @@ he:
             unsuspend_user: "בטל השהיית משתמש"
             grant_badge: "הענק תג"
             revoke_badge: "שלול תג"
+            check_email: "בדיקת דוא\"ל"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -1660,6 +1700,9 @@ he:
           one: "דחיית משתמש אחד נדחתה."
           other: "דחיית %{count} משתמשים נכשלה."
         not_verified: "לא מאומת"
+        check_email:
+          title: "חשיפת כתובת הדוא\"ל של המשתמש/ת"
+          text: "הצגת דוא\"ל"
       user:
         suspend_failed: "משהו נכשל בהשעיית המשתמש הזה {{error}}"
         unsuspend_failed: "משהו נכשל בביטול השהיית המשתמש הזה {{error}}"
@@ -1703,6 +1746,7 @@ he:
         topics_entered: נושאים שנצפו
         flags_given_count: דגלים שניתנו
         flags_received_count: סימונים שהתקבלו
+        warnings_received_count: התקבלו אזהרות
         flags_given_received_count: 'סימונים שניתנו / התקבלו'
         approve: 'אשר'
         approved_by: "אושר על ידי"
@@ -1741,6 +1785,8 @@ he:
         suspend_modal_title: "השעה משתמש"
         trust_level_2_users: "משתמשי רמת אמון 2"
         trust_level_3_requirements: "דרישות רמת אמון 3"
+        trust_level_locked_tip: "רמות האמון נעולה, המערכת לא תקדם או או תנמיך משתמשים"
+        trust_level_unlocked_tip: "רמת האמון אינן נעולות, המערכת תקדם ותנמיך דרגות של משתמשים"
         tl3_requirements:
           title: "דרישות עבור רמת אמון 3"
           table_title: "במאה הימים האחרונים:"
@@ -1766,6 +1812,16 @@ he:
           external_name: "שם"
           external_email: "כתובת דוא\"ל"
           external_avatar_url: "כתובת URL של אווטר"
+      user_fields:
+        edit: "עריכה"
+        delete: "מחיקה"
+        cancel: "ביטול"
+        delete_confirm: "האם את/ה בטוחים שאתם רוצים למחוק את שדה משתמש/ת הזה?"
+        field_types:
+          text: 'שדה טקסט'
+          confirm: 'אישור'
+      site_text:
+        none: "בחרו את סוג התוכן לתחילת עריכה."
       site_settings:
         show_overriden: 'הצג רק הגדרות ששונו'
         title: 'הגדרות'

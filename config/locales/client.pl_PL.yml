@@ -378,7 +378,7 @@ pl_PL:
         too_short: "Twoja nazwa jest za krótka."
         ok: "Twoja nazwa jest poprawna."
       username:
-        title: "Nazwa użytkownika"
+        title: "Nazwa konta"
         instructions: "Unikalna, krótka i bez spacji."
         short_instructions: "Aby o tobie wspomnieć, wystarczy napisać @{{username}}."
         available: "Nazwa jest dostępna."
@@ -468,6 +468,7 @@ pl_PL:
         common: "To hasło jest zbyt popularne."
         ok: "Twoje hasło jest poprawne."
         instructions: "Co najmniej %{count} znaków."
+      associated_accounts: "Powiązane konta"
       ip_address:
         title: "Ostatni adres IP"
       registration_ip_address:
@@ -536,13 +537,14 @@ pl_PL:
       invite: "Zaproś innych"
       remove_allowed_user: "Czy naprawdę chcesz usunąć {{name}} z tej prywatnej wiadomości?"
     email: 'Email'
-    username: 'Nazwa użytkownika'
+    username: 'Nazwa konta'
     last_seen: 'Ostatnio oglądane'
     created: 'Utworzono'
     created_lowercase: 'utworzono'
     trust_level: 'Poziom zaufania'
+    search_hint: 'nazwa'
     create_account:
-      title: "Utwórz Konto"
+      title: "Utwórz konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
     forgot_password:
       title: "Zapomniane hasło"
@@ -770,7 +772,7 @@ pl_PL:
         few: '{{count}} nieprzeczytane tematy'
         other: '{{count}} nieprzeczytanych tematów'
       title: 'Temat'
-      loading_more: "Wczytuję więcej tematów…"
+      loading_more: "Wczytuję tematy…"
       loading: 'Wczytuję temat…'
       invalid_access:
         title: "Temat jest prywatny"
@@ -970,6 +972,7 @@ pl_PL:
       post_number: "wpis {{number}}"
       in_reply_to: "w odpowiedzi na"
       last_edited_on: "ostatnia edycja wpisu"
+      reply_as_new_topic: "Odpowiedz w nowym temacie"
       continue_discussion: "Kontynuując dyskusję z {{postLink}}:"
       follow_quote: "idź do cytowanego wpisu"
       show_full: "Pokaż pełny wpis"
@@ -1410,7 +1413,7 @@ pl_PL:
         active: "Aktywność"
         agree: "Potwierdź"
         agree_title: "Potwierdź to zgłoszenie jako uzasadnione i poprawne"
-        agree_flag_modal_title: "Potwierdź i..."
+        agree_flag_modal_title: "Potwierdź i…"
         agree_flag_hide_post: "Potwierdź (ukryj post i wyślij PW)"
         agree_flag_hide_post_title: "Ukryj ten wpis i automatycznie wyślij użytkownikowi prywatną wiadomość informującą, że wpis wymaga przeredagowania"
         agree_flag_restore_post: "Zgoda (przywróć wpis)"
@@ -1425,7 +1428,7 @@ pl_PL:
         delete_post_defer_flag_title: "Usuń wpis. Jeśli jest pierwszym w temacie, usuń temat."
         delete_post_agree_flag: "Usuń post i potwierdź flagę"
         delete_post_agree_flag_title: "Usuń wpis. Jeśli jest pierwszym w temacie, usuń temat."
-        delete_flag_modal_title: "Usuń i..."
+        delete_flag_modal_title: "Usuń i…"
         delete_spammer: "Usuń spamera"
         delete_spammer_title: "Usuwa konto tego użytkownika oraz wszystkie tematy i wpisy jakie nim utworzono."
         disagree_flag_unhide_post: "Wycofaj (pokaż wpis)"
@@ -1488,7 +1491,7 @@ pl_PL:
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."
-        user: "Urzytkownik"
+        user: "Użytkownik"
         title: "API"
         key: "Klucz API"
         generate: "Generuj"
@@ -1700,6 +1703,7 @@ pl_PL:
             unsuspend_user: "odwieś użytkownika"
             grant_badge: "przyznaj odznakę"
             revoke_badge: "odbierz odznakę"
+            check_email: "sprawdź pocztę"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -1773,6 +1777,9 @@ pl_PL:
           few: "Odrzucenie %{count} użytkowników powiodło się."
           other: "Odrzucenie %{count} użytkowników nie powiodło się."
         not_verified: "Niezweryfikowany"
+        check_email:
+          title: "Wyświetl adres email tego użytkownika"
+          text: "Pokaż email"
       user:
         suspend_failed: "Coś poszło nie tak podczas zawieszania użytkownika {{error}}"
         unsuspend_failed: "Coś poszło nie tak podczas odwieszania użytkownika {{error}}"
@@ -1858,6 +1865,10 @@ pl_PL:
         suspend_modal_title: "Zawieś użytkownika"
         trust_level_2_users: "Użytkownicy o 2. poziomie zaufania"
         trust_level_3_requirements: "Wymagania 3. poziomu zaufania"
+        trust_level_locked_tip: "poziom zaufania jest zablokowany, system nie będzie awansować lub degradować tego użytkownika"
+        trust_level_unlocked_tip: "poziom zaufania jest odblokowany, system może awansować lub degradować tego użytkownika"
+        lock_trust_level: "Zablokuj poziom zaufania"
+        unlock_trust_level: "Odblokuj poziom zaufania"
         tl3_requirements:
           title: "Wymagania dla osiągnięcia 3. poziomu zaufania"
           table_title: "W ciągu ostatnich 100 dni:"
@@ -1876,6 +1887,11 @@ pl_PL:
           likes_received: "Polubień otrzymanych"
           qualifies: "Kwalifikuje się do 3 poziomu zaufania."
           does_not_qualify: "Nie kwalifikuje się do 3 poziomu zaufania."
+          will_be_promoted: "Zostanie awansowany wkrótce."
+          will_be_demoted: "Zostanie zdegradowany wkrótce."
+          on_grace_period: "Podlega pod okres ochronny, nie zostanie zdegradowany."
+          locked_will_not_be_promoted: "Zablokowany poziom zaufania. Nie będzie awansować."
+          locked_will_not_be_demoted: "Zablokowany poziom zaufania. Nie będzie degradowany."
         sso:
           title: "Single Sign On"
           external_id: "Zewnętrzny ID"
@@ -1883,6 +1899,24 @@ pl_PL:
           external_name: "Nazwa"
           external_email: "Email"
           external_avatar_url: "URL awatara"
+      user_fields:
+        title: "Pola użytkownika"
+        description: "Wypełnienie dodanych tu pól będzie wymagane podczas rejestracji."
+        create: "Dodaj pole użytkownika"
+        untitled: "Bez tytułu"
+        name: "Nazwa pola"
+        type: "Typ pola"
+        save: "Zapisz"
+        edit: "Edycja"
+        delete: "Usuń"
+        cancel: "Anuluj"
+        delete_confirm: "Czy na pewno chcesz usunąć to pole?"
+        field_types:
+          text: 'Pole tekstowe'
+          confirm: 'Potwierdzenie'
+      site_text:
+        none: "Aby rozpocząć edycję, wybierz typ treści. "
+        title: 'Kontekst'
       site_settings:
         show_overriden: 'Pokaż tylko nadpisane'
         title: 'Ustawienia'
@@ -2006,6 +2040,7 @@ pl_PL:
         star: '<b>f</b> oznacz temat gwiazdką'
         share_topic: '<b>shift s</b> udostępnij temat'
         share_post: '<b>s</b> udostępnij wpis'
+        reply_as_new_topic: '<b>t</b> odpowiedz w nowym temacie'
         reply_topic: '<b>shift r</b> odpowiedz w temacie'
         reply_post: '<b>r</b> odpowiedz na wpis'
         quote_post: '<b>q</b> cytuj wpis'

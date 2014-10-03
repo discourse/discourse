@@ -209,7 +209,7 @@ ru:
     banner:
       close: "Больше не показывать это объявление."
     choose_topic:
-      none_found: "Тем не найден."
+      none_found: "Темы не найдены."
       title:
         search: "Искать тему по названию, ссылке или уникальному номеру:"
         placeholder: "введите здесь название темы"
@@ -541,6 +541,7 @@ ru:
     created: 'Тема создана'
     created_lowercase: 'создано'
     trust_level: 'Уровень доверия'
+    search_hint: 'имя пользователя'
     create_account:
       title: "Зарегистрироваться"
       failed: "Произошла ошибка. Возможно, этот Email уже используется. Попробуйте восстановить пароль"
@@ -968,6 +969,7 @@ ru:
       post_number: "сообщение {{number}}"
       in_reply_to: "Ответить"
       last_edited_on: "последний раз сообщение редактировалось"
+      reply_as_new_topic: "Ответить в новом топике"
       continue_discussion: "Продолжить обсуждение из {{postLink}}:"
       follow_quote: "перейти к цитируемому сообщению"
       show_full: "Показать полный текст"
@@ -1777,6 +1779,8 @@ ru:
           few: "Не удалось отклонить %{count} пользователей."
           other: "Не удалось отклонить %{count} пользователей."
         not_verified: "Не проверенные"
+        check_email:
+          text: "Показать Email"
       user:
         suspend_failed: "Ошибка заморозки пользователя {{error}}"
         unsuspend_failed: "Ошибка разморозки пользователя {{error}}"
@@ -1887,6 +1891,19 @@ ru:
           external_name: "Имя"
           external_email: "E-mail"
           external_avatar_url: "URL-адрес аватарки"
+      user_fields:
+        title: "Пользовательские поля"
+        create: "Создать пользовательское поле"
+        name: "Название поля"
+        type: "Тип поля"
+        save: "Сохранить"
+        edit: "Изменить"
+        delete: "Удалить"
+        cancel: "Отмена"
+        delete_confirm: "Вы уверены, что хотите удалить это поле?"
+        field_types:
+          text: 'Текстовое поле'
+          confirm: 'Подтверждение'
       site_settings:
         show_overriden: 'Показывать только переопределенные'
         title: 'Настройки сайта'
