@@ -81,6 +81,7 @@ SQL
             )
   end
 
+  private_class_method :apply_default_to_topic
 end
 
 # == Schema Information
