@@ -13,4 +13,6 @@ class TrustLevelSetting < EnumSiteSetting
   def self.valid_values
     TrustLevel.valid_range.to_a
   end
+
+  private_class_method :valid_values
 end

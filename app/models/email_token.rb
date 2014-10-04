@@ -1,9 +1,7 @@
 class EmailToken < ActiveRecord::Base
   belongs_to :user
 
-  validates_presence_of :token
-  validates_presence_of :user_id
-  validates_presence_of :email
+  validates :token, :user_id, :email, presence: true
 
   before_validation(on: :create) do
     self.token = EmailToken.generate_token

@@ -90,4 +90,5 @@ class ErrorLog
     trace.map { |line| Pathname.new(line.gsub(re, "[RAILS_ROOT]")).cleanpath.to_s }
   end
 
+  private_class_method :sanitize_backtrace
 end
