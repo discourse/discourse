@@ -12,11 +12,11 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 
 3. Make sure you can reproduce your problem on our sandbox at [try.discourse.org](http://try.discourse.org)
 
-4. If this is a bug or problem that **requires any kind of extended discussion -- open [a topic on meta][m] about it**. Do *not* open a bug on GitHub.
+4. If this is a bug or problem that **requires any kind of extended discussion -- open [a topic on meta][m] about it**.
 
-5. If this is a bug or problem that is clear, simple, and is unlikely to require *any* discussion -- it is OK to open an [issue on GitHub](https://github.com/discourse/discourse/issues) with a reproduction of the bug including workflows, screenshots, or links to examples on [try.discourse.org](http://try.discourse.org). If possible, submit a Pull Request with a failing test. If you'd rather take matters into your own hands, fix the bug yourself (jump down to the "Contributing (Step-by-step)" section).
+5. If possible, submit a Pull Request with a failing test. If you'd rather take matters into your own hands, fix the bug yourself (jump down to the "Contributing (Step-by-step)" section).
 
-6. When the bug is fixed, we will do our best to update the Discourse topic or GitHub issue with a resolution.
+6. When the bug is fixed, we will do our best to update the Discourse topic.
 
 ## Requesting New Features
 
@@ -50,7 +50,7 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
   * use spaces around operators, after commas, colons, semicolons, around `{` and before `}`
   * no space after `(`, `[` or before `]`, `)`
   * use Ruby 1.9 hash syntax: prefer `{ a: 1 }` over `{ :a => 1 }`
-  * prefer `class << self; def method; end` over `def class.method` for class methods
+  * prefer `class << self; def method; end` over `def self.method` for class methods
   * prefer `{ ... }` over `do ... end` for single-line blocks, avoid using `{ ... }` for multi-line blocks
   * avoid `return` when not required
 
@@ -116,5 +116,14 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
   The Discourse team may recommend adjustments to your code. Part of interacting with a healthy open-source community requires you to be open to learning new techniques and strategies; *don't get discouraged!* Remember: if the Discourse team suggest changes to your code, **they care enough about your work that they want to include it**, and hope that you can assist by implementing those revisions on your own.
 
   > Though we ask you to clean your history and squash commit before submitting a pull-request, please do not change any commits you've submitted already (as other work might be build on top).
+
+## Translations
+
+Translators can do their work in our [Transifex project](https://www.transifex.com/projects/p/discourse-org/). For more information, please see these how-to topics:
+
+* [Contributing a translation to Discourse](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882)
+* [How to add a new language](https://meta.discourse.org/t/how-to-add-a-new-language/14970)
+
+
 
 [m]: http://meta.discourse.org

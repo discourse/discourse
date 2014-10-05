@@ -6,7 +6,7 @@ module Jobs
       topic_id = args[:topic_id]
       raise Discourse::InvalidParameters.new(:topic_id) unless topic_id.present?
 
-      topic = Topic.where(id: topic_id).first
+      topic = Topic.find_by(id: topic_id)
 
       # there are 3 cases here
       # 1. topic was atomically nuked, this should be skipped

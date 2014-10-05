@@ -39,8 +39,17 @@ class UserAction < ActiveRecord::Base
   #  having strings where you would expect bools
   class UserActionRow < OpenStruct
     include ActiveModel::SerializerSupport
+
+    def as_json(options = nil)
+      @table.as_json(options)
+    end
   end
 
+  def self.last_action_in_topic(user_id, topic_id)
+    UserAction.where(user_id: user_id,
+                     target_topic_id: topic_id,
+                     action_type: [RESPONSE, MENTION, QUOTE]).order('created_at DESC').pluck(:target_post_id).first
+  end
 
   def self.stats(user_id, guardian)
 
@@ -68,6 +77,18 @@ SQL
     results
   end
 
+  def self.private_messages_stats(user_id, guardian)
+    return unless guardian.can_see_private_messages?(user_id)
+    # list the stats for: all/mine/unread (topic-based)
+    private_messages = Topic.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user_id})")
+                            .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user_id})")
+                            .private_messages
+    all = private_messages.count
+    mine = private_messages.where(user_id: user_id).count
+    unread = private_messages.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number").count
+    { all: all, mine: mine, unread: unread }
+  end
+
   def self.stream_item(action_id, guardian)
     stream(action_id: action_id, guardian: guardian).first
   end
@@ -86,19 +107,21 @@ SQL
 
     builder = SqlBuilder.new("
 SELECT
+  a.id,
   t.title, a.action_type, a.created_at, t.id topic_id,
   a.user_id AS target_user_id, au.name AS target_name, au.username AS target_username,
-  coalesce(p.post_number, 1) post_number,
+  coalesce(p.post_number, 1) post_number, p.id as post_id,
   p.reply_to_post_number,
   pu.email, pu.username, pu.name, pu.id user_id,
-  pu.use_uploaded_avatar, pu.uploaded_avatar_template, pu.uploaded_avatar_id,
+  pu.uploaded_avatar_id,
   u.email acting_email, u.username acting_username, u.name acting_name, u.id acting_user_id,
-  u.use_uploaded_avatar acting_use_uploaded_avatar, u.uploaded_avatar_template acting_uploaded_avatar_template, u.uploaded_avatar_id acting_uploaded_avatar_id,
+  u.uploaded_avatar_id acting_uploaded_avatar_id,
   coalesce(p.cooked, p2.cooked) cooked,
   CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
   p.hidden,
   p.post_type,
-  p.edit_reason
+  p.edit_reason,
+  t.category_id
 FROM user_actions as a
 JOIN topics t on t.id = a.target_topic_id
 LEFT JOIN posts p on p.id = a.target_post_id
@@ -132,13 +155,13 @@ LEFT JOIN categories c on c.id = t.category_id
   def self.log_action!(hash)
     required_parameters = [:action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id]
     require_parameters(hash, *required_parameters)
+
     transaction(requires_new: true) do
       begin
-
         # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
         # protect against dupes, for some reason this is failing in some cases
-        action = self.where(hash.select{|k,v| required_parameters.include?(k)}).first
+        action = self.find_by(hash.select { |k, _| required_parameters.include?(k) })
         return action if action
 
         action = self.new(hash)
@@ -151,7 +174,7 @@ LEFT JOIN categories c on c.id = t.category_id
         user_id = hash[:user_id]
         update_like_count(user_id, hash[:action_type], 1)
 
-        topic = Topic.includes(:category).where(id: hash[:target_topic_id]).first
+        topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
 
         # move into Topic perhaps
         group_ids = nil
@@ -160,10 +183,7 @@ LEFT JOIN categories c on c.id = t.category_id
         end
 
         if action.user
-          MessageBus.publish("/users/#{action.user.username.downcase}",
-                                action.id,
-                                user_ids: [user_id],
-                                group_ids: group_ids )
+          MessageBus.publish("/users/#{action.user.username.downcase}", action.id, user_ids: [user_id], group_ids: group_ids)
         end
 
         action
@@ -177,7 +197,7 @@ LEFT JOIN categories c on c.id = t.category_id
 
   def self.remove_action!(hash)
     require_parameters(hash, :action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id)
-    if action = UserAction.where(hash.except(:created_at)).first
+    if action = UserAction.find_by(hash.except(:created_at))
       action.destroy
       MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
     end
@@ -251,8 +271,6 @@ SQL
     self.synchronize_starred
   end
 
-  protected
-
   def self.update_like_count(user_id, action_type, delta)
     if action_type == LIKE
       UserStat.where(user_id: user_id).update_all("likes_given = likes_given + #{delta.to_i}")
@@ -277,6 +295,7 @@ SQL
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
       builder.where("a.action_type not in (#{BOOKMARK},#{STAR})")
+      builder.where("t.visible")
     end
 
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages
@@ -318,8 +337,7 @@ end
 #
 # Indexes
 #
-#  idx_unique_rows                           (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
-#  index_actions_on_acting_user_id           (acting_user_id)
-#  index_actions_on_user_id_and_action_type  (user_id,action_type)
+#  idx_unique_rows                                (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  index_user_actions_on_acting_user_id           (acting_user_id)
+#  index_user_actions_on_user_id_and_action_type  (user_id,action_type)
 #
-

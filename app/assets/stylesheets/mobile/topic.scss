@@ -1,12 +1,3 @@
-.topic-meta-data {
-  width: 100%;
-  h3 a {margin-left: 10px;}
-  a {float: left;
-  }
-
-}
-
-
 .post-info a {color: #aaa;}
 
 .topic-meta-data-inside {
@@ -25,23 +16,33 @@
 #topic-title {
   margin-bottom: 20px;
   margin: 0 60px 10px 20px;
-  line-height: 1.7em;
-
+  .star {
+    margin-bottom: 30px; // this allows the categories to align underneath title
+  }
   h1 {
     font-size: 1.5em;
     margin:0;
-    a.edit-topic {font-size: 15px;}
+    a {
+      color: $primary;
+      vertical-align: middle;
+    }
+  }
+  .title-category-wrapper {
+    margin-top:5px;
   }
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: lighten($primary_text_color, 60%); }
+.private-message-glyph { color: scale-color($primary, $lightness: 75%); }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
-.notification-options {
+
+/* both blocks that appear under the standard post control buttons */
+.notification-options, .pinned-options {
   clear: both;
   float: left;
   margin-top: 0px;
+  padding-top: 1px;
 }
 
 #topic-closing-info {
@@ -49,7 +50,7 @@
 }
 
 .docked #topic-progress {
-  box-shadow: 0 0 3px rbga($primary_shadow_color, .5);
+  box-shadow: 0 0 3px rbga(0,0,0, .5);
 }
 
 #topic-progress-wrapper {
@@ -58,23 +59,65 @@
   right: 0;
   bottom: 0;
   z-index: 500;
-  margin-right: 140px;
+  margin-right: 145px;
   outline: 1px solid transparent;
 }
 
+#topic-progress-expanded {
+  border: 1px solid scale-color-diff();
+  padding: 5px;
+  background: $secondary;
+  @include box-shadow(0 0px 2px rgba(0,0,0, .2));
+
+  position: absolute;
+  bottom: 34px;
+  width: 133px;
+  padding: 5px;
+
+  button.full {
+    width: 100%;
+    margin-bottom: 5px;
+    i {
+      display: block;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      font-size: 18px;
+    }
+  }
+  .jump-form {
+    input[type="text"] {
+      float: left;
+      width: 45px;
+      height: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+    button.btn {
+      float: right !important;
+      width: 55px;
+    }
+  }
+  button.btn.jump-bottom {
+    margin-top: 5px;
+    margin-bottom: 0;
+  }
+}
+
 #topic-progress {
-
-  box-shadow: 0 0 3px rbga($primary_shadow_color, .7);
-
+  box-shadow: 0 0 3px rbga(0,0,0, .7);
   position: relative;
   &.hidden {
     display: none;
   }
   border: none;
-  background-color: lighten($primary_background_color, 60%);
-  color: $primary_text_color;
-  width: 130px;
+  background-color: scale-color-diff();
+  color: $primary;
+  width: 145px;
   height: 34px;
+
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
+
   .nums {
     position: relative;
     top: 9px;
@@ -82,49 +125,40 @@
     text-align: center;
     z-index: 1;
   }
-  button {
-    padding: 0 1px;
-    cursor: pointer;
-    z-index: 1000;
-    position: absolute;
-    top: 8px;
-    left: 4px;
-    border: 0;
-    background: none;
-    color: lighten($primary_text_color, 35%);
-
-    width: 60px;
-    text-align: left;
-    i {
-      font-size: 18px;
-    }
-    &:nth-of-type(2) {
-      right: 4px;
-      left: auto;
-      text-align: right;
-    }
-
-
-    &:disabled {
-
-      cursor: default;
-    color: lighten($primary_text_color, 35%);
-    }
-  }
   h4 {
     display: inline;
     font-size: 18px;
     line-height: 15px;
+  }
+  i.fa {
+    position: absolute;
+    right: 8px;
+    bottom: 9px;
+    z-index: 1;
   }
   .bg {
     position: absolute;
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid $primary_border_color;
-    // background-color: #d4eaf4;
-    // background-color: #C5E8F7;
-    background-color: $success_background_color;
+    border-right: 1px solid scale-color($success, $lightness: 50%);
+    background-color: scale-color($success, $lightness: 50%);
+  }
+}
+
+.topic-error {
+  padding: 18px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 24px;
+  line-height: 1.1em;
+
+  .topic-retry {
+    display: block;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -134,6 +168,8 @@
 
 .post-cloak:last-of-type {padding-bottom: 40px;}
 
-.heatmap-high {color: $heatmap-high !important;}
-.heatmap-med {color: $heatmap-med !important;}
-.heatmap-low {color: $heatmap-low !important;}
+.heatmap-high {color: scale-color($danger, $lightness: -25%) !important;}
+.heatmap-med {color: $danger !important;}
+.heatmap-low {color: scale-color($danger, $lightness: 25%) !important;}
+
+sup sup, sub sup, sup sub, sub sub { top: 0; }

@@ -23,4 +23,3 @@ end
 #  index_topic_invites_on_invite_id               (invite_id)
 #  index_topic_invites_on_topic_id_and_invite_id  (topic_id,invite_id) UNIQUE
 #
-

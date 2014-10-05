@@ -28,7 +28,7 @@ class ComposerMessagesFinder
       education_posts_text = I18n.t('education.until_posts', count: SiteSetting.educate_until_posts)
       return {templateName: 'composer/education',
               wait_for_typing: true,
-              body: PrettyText.cook(SiteContent.content_for(education_key, education_posts_text: education_posts_text)) }
+              body: PrettyText.cook(SiteText.text_for(education_key, education_posts_text: education_posts_text)) }
     end
 
     nil
@@ -44,10 +44,10 @@ class ComposerMessagesFinder
   def check_avatar_notification
 
     # A user has to be basic at least to be considered for an avatar notification
-    return unless @user.has_trust_level?(:basic)
+    return unless @user.has_trust_level?(TrustLevel[1])
 
     # We don't notify users who have avatars or who have been notified already.
-    return if @user.user_stat.has_custom_avatar? || UserHistory.exists_for_user?(@user, :notified_about_avatar)
+    return if @user.uploaded_avatar_id || UserHistory.exists_for_user?(@user, :notified_about_avatar)
 
     # Finally, we don't check users whose avatars haven't been examined
     return unless UserHistory.exists_for_user?(@user, :checked_for_custom_avatar)
@@ -101,7 +101,7 @@ class ComposerMessagesFinder
                   (@user.post_count >= SiteSetting.educate_until_posts) &&
                   !UserHistory.exists_for_user?(@user, :notified_about_dominating_topic, topic_id: @details[:topic_id])
 
-    topic = Topic.where(id: @details[:topic_id]).first
+    topic = Topic.find_by(id: @details[:topic_id])
     return if topic.blank? ||
               topic.user_id == @user.id ||
               topic.posts_count < SiteSetting.summary_posts_required ||
@@ -127,12 +127,13 @@ class ComposerMessagesFinder
   def check_reviving_old_topic
     return unless @details[:topic_id]
 
-    topic = Topic.where(id: @details[:topic_id]).first
+    topic = Topic.find_by(id: @details[:topic_id])
 
     return unless replying?
 
     return if topic.nil? ||
               SiteSetting.warn_reviving_old_topic_age < 1 ||
+              topic.last_posted_at.nil? ||
               topic.last_posted_at > SiteSetting.warn_reviving_old_topic_age.days.ago
 
     {templateName: 'composer/education',

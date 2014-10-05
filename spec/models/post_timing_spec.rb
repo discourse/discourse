@@ -2,9 +2,6 @@ require 'spec_helper'
 
 describe PostTiming do
 
-  it { should belong_to :topic }
-  it { should belong_to :user }
-
   it { should validate_presence_of :post_number }
   it { should validate_presence_of :msecs }
 
@@ -48,15 +45,15 @@ describe PostTiming do
       PostTiming.where(topic_id: topic_id, user_id: 2, post_number: 3).count.should == 1
       PostTiming.where(topic_id: topic_id, user_id: 3, post_number: 3).count.should == 1
 
-      tu = TopicUser.where(topic_id: topic_id, user_id: 1).first
+      tu = TopicUser.find_by(topic_id: topic_id, user_id: 1)
       tu.last_read_post_number.should == 1
       tu.seen_post_count.should == 1
 
-      tu = TopicUser.where(topic_id: topic_id, user_id: 2).first
+      tu = TopicUser.find_by(topic_id: topic_id, user_id: 2)
       tu.last_read_post_number.should == 3
       tu.seen_post_count.should == 3
 
-      tu = TopicUser.where(topic_id: topic_id, user_id: 3).first
+      tu = TopicUser.find_by(topic_id: topic_id, user_id: 3)
       tu.last_read_post_number.should == 3
       tu.seen_post_count.should == 3
 
@@ -77,7 +74,7 @@ describe PostTiming do
       PostAction.act(user2, post, PostActionType.types[:like])
 
       post.user.unread_notifications.should == 1
-      post.user.unread_notifications_by_type.should == { Notification.types[:liked] => 1 }
+      post.user.unread_notifications_by_type.should == {Notification.types[:liked] => 1 }
 
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
 
@@ -96,12 +93,6 @@ describe PostTiming do
       @timing_attrs = {msecs: 1234, topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number}
     end
 
-    it 'creates a post timing record' do
-      lambda {
-        PostTiming.record_timing(@timing_attrs)
-      }.should change(PostTiming, :count).by(1)
-    end
-
     it 'adds a view to the post' do
       lambda {
         PostTiming.record_timing(@timing_attrs)
@@ -110,19 +101,17 @@ describe PostTiming do
     end
 
     describe 'multiple calls' do
-      before do
+      it 'correctly works' do
         PostTiming.record_timing(@timing_attrs)
         PostTiming.record_timing(@timing_attrs)
-        @timing = PostTiming.where(topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number).first
+        timing = PostTiming.find_by(topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number)
+
+        timing.should be_present
+        timing.msecs.should == 2468
+
+        @coding_horror.user_stat.posts_read_count.should == 1
       end
 
-      it 'creates a timing record' do
-        @timing.should be_present
-      end
-
-      it 'sums the msecs together' do
-        @timing.msecs.should == 2468
-      end
     end
 
     describe 'avg times' do

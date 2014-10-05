@@ -52,8 +52,9 @@ Discourse.Backup.reopenClass({
     @method start
     @returns {Promise} a promise that resolves when the backup has started
   **/
-  start: function() {
-    return Discourse.ajax("/admin/backups", { type: "POST" }).then(function(result) {
+  start: function (withUploads) {
+    if (withUploads === undefined) { withUploads = true; }
+    return Discourse.ajax("/admin/backups", { type: "POST", data: { with_uploads: withUploads } }).then(function(result) {
       if (!result.success) { bootbox.alert(result.message); }
     });
   },

@@ -5,6 +5,17 @@ describe DiscourseDiff do
 
   describe "inline_html" do
 
+    it "does not lead to XSS" do
+      a = "<test>start</test>"
+      b = "<test>end</test>"
+      prev = "<div>#{CGI::escapeHTML(a)}</div>"
+      cur = "<div>#{CGI::escapeHTML(b)}</div>"
+
+      diff = DiscourseDiff.new(prev,cur)
+      diff.inline_html.should_not =~ /<\/?test>/
+      diff.side_by_side_html.should_not =~ /<\/?test>/
+    end
+
     it "returns an empty div when no content is diffed" do
       DiscourseDiff.new("", "").inline_html.should == "<div class=\"inline-diff\"></div>"
     end
@@ -121,4 +132,3 @@ describe DiscourseDiff do
   end
 
 end
-

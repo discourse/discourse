@@ -6,14 +6,14 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend({
+Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenComposer, {
   renderTemplate: function() {
     this.render('navigation/categories', { outlet: 'navigation-bar' });
     this.render('discovery/categories', { outlet: 'list-container' });
   },
 
   beforeModel: function() {
-    this.controllerFor('navigationCategories').set('filterMode', 'categories');
+    this.controllerFor('navigation/categories').set('filterMode', 'categories');
   },
 
   model: function() {
@@ -34,16 +34,33 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend({
   setupController: function(controller, model) {
     controller.set('model', model);
     Discourse.set('title', I18n.t('filters.categories.title'));
-    this.controllerFor('navigationCategories').set('canCreateCategory', model.get('can_create_category'));
+
+    // Only show either the Create Category or Create Topic button
+    this.controllerFor('navigation/categories').set('canCreateCategory', model.get('can_create_category'));
+    this.controllerFor('navigation/categories').set('canCreateTopic', model.get('can_create_topic') && !model.get('can_create_category'));
+
+    this.openTopicDraft(model);
+
   },
 
   actions: {
     createCategory: function() {
+      var groups = Discourse.Site.current().groups;
+      var everyone_group = groups.findBy('id', 0);
+      var group_names = groups.map(function(group) {
+        return group.name;
+      });
+
       Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create({
-        color: 'AB9364', text_color: 'FFFFFF', group_permissions: [{group_name: 'everyone', permission_type: 1}],
-        available_groups: Discourse.Site.current().group_names
+        color: 'AB9364', text_color: 'FFFFFF', group_permissions: [{group_name: everyone_group.name, permission_type: 1}],
+        available_groups: group_names,
+        allow_badges: true
       }));
       this.controllerFor('editCategory').set('selectedTab', 'general');
+    },
+
+    createTopic: function() {
+      this.openComposer(this.controllerFor('discovery/categories'));
     }
   }
 });

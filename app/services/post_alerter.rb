@@ -76,6 +76,8 @@ class PostAlerter
 
     user.notifications.where(notification_type: type,
                              topic_id: topic.id).destroy_all
+    # HACK so notification counts sync up correctly
+    user.reload
   end
 
   def create_notification(user, type, post, opts={})
@@ -137,12 +139,12 @@ class PostAlerter
   # Returns a list of users who were quoted in the post
   def extract_quoted_users(post)
     post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.map do |m|
-      User.where("username_lower = :username and id != :id", username: m.first.strip.downcase, id: post.user_id).first
+      User.find_by("username_lower = :username and id != :id", username: m.first.strip.downcase, id: post.user_id)
     end.compact
   end
 
   def extract_linked_users(post)
-    post.topic_links.map do |link|
+    post.topic_links.where(reflection: false).map do |link|
       linked_post = link.link_post
       if !linked_post && topic = link.link_topic
         linked_post = topic.posts(post_number: 1).first

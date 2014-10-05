@@ -1,43 +1,45 @@
 <script>
   window.assetPath = (function(){
 
-    // TODO: automate this to grab from the manifest, Rails voodoo should be able to get it
-    var map = {
-      'defer/html-sanitizer-bundle': <%= asset_path('defer/html-sanitizer-bundle.js').inspect.html_safe %>,
-      'defer/google_diff_match_patch': <%= asset_path('defer/google_diff_match_patch.js').inspect.html_safe %>
-    };
+    var map = <%= deferred_scripts %>;
 
     return function(asset){ return map[asset]; };
   })();
 </script>
 
-<% if Rails.env.development? %>
-  <script>
-    // Don't swallow promises in development mode. Let's fix those.
-    Ember.RSVP.configure('onerror', function(e) {
+<script>
+  Ember.RSVP.configure('onerror', function(e) {
+
+    // Ignore TransitionAborted exceptions that bubble up
+    if (e && e.message === "TransitionAborted") { return; }
+
+    <% if Rails.env.development? %>
       if (e) {
         if (e.message || e.stack) {
           console.log(e.message);
           console.log(e.stack);
         } else {
-          console.log("Uncaught promise: " + e.toString());
+          console.log("Uncaught promise: ", e);
         }
       } else {
         console.log("A promise failed but was not caught.");
       }
-    });
-  </script>
-<% end %>
+    <% end %>
+    window.onerror(e && e.message, null,null,null,e);
+  });
+</script>
 
 <script>
   Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host %>';
-  Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname %>';
+  Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname %>'.replace(/:[\d]*$/,"");
   Discourse.BaseUri = '<%= Discourse::base_uri "/" %>';
   Discourse.Environment = '<%= Rails.env %>';
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
-  Discourse.Router.map(function() { Discourse.routeBuilder.call(this); });
+  Discourse.LetterAvatarVersion = <%= LetterAvatar::VERSION %>;
+  Discourse.Router = Ember.Router.extend({ location: 'discourse-location' });
+  Discourse.Route.mapRoutes();
   Discourse.start();
   Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
 </script>
 
-<%= javascript_include_tag 'browser-update.js' %>
+<%= script 'browser-update' %>

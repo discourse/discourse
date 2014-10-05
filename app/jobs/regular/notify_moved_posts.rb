@@ -10,7 +10,7 @@ module Jobs
       users_notified = Set.new
       posts = Post.where(id: args[:post_ids]).where('user_id <> ?', args[:moved_by_id]).includes(:user, :topic)
       if posts.present?
-        moved_by = User.where(id: args[:moved_by_id]).first
+        moved_by = User.find_by(id: args[:moved_by_id])
 
         posts.each do |p|
           unless users_notified.include?(p.user_id)

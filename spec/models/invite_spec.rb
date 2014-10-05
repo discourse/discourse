@@ -2,11 +2,6 @@ require 'spec_helper'
 
 describe Invite do
 
-  it { should belong_to :user }
-  it { should have_many :topic_invites }
-  it { should belong_to :invited_by }
-  it { should have_many :topics }
-  it { should validate_presence_of :email }
   it { should validate_presence_of :invited_by_id }
 
   let(:iceking) { 'iceking@adventuretime.ooo' }
@@ -21,7 +16,7 @@ describe Invite do
     end
 
     it "should not allow a user to invite themselves" do
-      invite.email_already_exists.should be_true
+      invite.email_already_exists.should == true
     end
 
   end
@@ -31,7 +26,7 @@ describe Invite do
     context 'saved' do
       subject { Fabricate(:invite) }
       its(:invite_key) { should be_present }
-      its(:email_already_exists) { should be_false }
+      its(:email_already_exists) { should == false }
 
       it 'should store a lower case version of the email' do
         subject.email.should == iceking
@@ -65,9 +60,6 @@ describe Invite do
 
         it 'belongs to the topic' do
           topic.invites.should == [@invite]
-        end
-
-        it 'has a topic' do
           @invite.topics.should == [topic]
         end
 
@@ -77,28 +69,17 @@ describe Invite do
 
           it 'returns a different invite' do
             new_invite.should_not == @invite
-          end
-
-          it 'has a different key' do
             new_invite.invite_key.should_not == @invite.invite_key
-          end
-
-          it 'has the topic relationship' do
             new_invite.topics.should == [topic]
           end
+
         end
 
         context 'when adding a duplicate' do
           it 'returns the original invite' do
             topic.invite_by_email(inviter, 'iceking@adventuretime.ooo').should == @invite
-          end
-
-          it 'matches case insensitively for the domain part' do
             topic.invite_by_email(inviter, 'iceking@ADVENTURETIME.ooo').should == @invite
-          end
-
-          it 'matches case sensitively for the local part' do
-            topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo').should_not == @invite
+            topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo').should == @invite
           end
 
           it 'returns a new invite if the other has expired' do
@@ -114,38 +95,31 @@ describe Invite do
         context 'when adding to another topic' do
           let!(:another_topic) { Fabricate(:topic, user: topic.user) }
 
-          before do
-            @new_invite = another_topic.invite_by_email(inviter, iceking)
-          end
-
           it 'should be the same invite' do
+            @new_invite = another_topic.invite_by_email(inviter, iceking)
             @new_invite.should == @invite
-          end
-
-          it 'belongs to the new topic' do
             another_topic.invites.should == [@invite]
-          end
-
-          it 'has references to both topics' do
             @invite.topics.should =~ [topic, another_topic]
           end
+
         end
       end
     end
   end
 
   context 'an existing user' do
-    let(:topic) { Fabricate(:topic, archetype: Archetype.private_message) }
+    let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
     let(:coding_horror) { Fabricate(:coding_horror) }
     let!(:invite) { topic.invite_by_email(topic.user, coding_horror.email) }
 
-    it "doesn't create an invite" do
+    it "works" do
+      # doesn't create an invite
       invite.should be_blank
+
+      # gives the user permission to access the topic
+      topic.allowed_users.include?(coding_horror).should == true
     end
 
-    it "gives the user permission to access the topic" do
-      topic.allowed_users.include?(coding_horror).should be_true
-    end
   end
 
   context '.redeem' do
@@ -172,31 +146,21 @@ describe Invite do
       invite.redeem.should be_blank
     end
 
-    context 'invite trust levels' do
+    context "when inviting to groups" do
+      it "add the user to the correct groups" do
+        group = Fabricate(:group)
+        invite.invited_groups.build(group_id: group.id)
+        invite.save
 
-      it "returns the trust level in default_invitee_trust_level" do
-        SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:leader])
-        invite.redeem.trust_level.should == TrustLevel.levels[:leader]
+        user = invite.redeem
+        user.groups.count.should == 1
       end
+    end
 
-      context "invited by a trust level 3 user" do
-        let(:leader) { Fabricate(:user, trust_level: TrustLevel.levels[:leader]) }
-        let(:invitation) { Fabricate(:invite, invited_by: leader) }
-
-        it "default_invitee_trust_level is 1, then invited user should be trust level 2" do
-          SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:basic])
-          invitation.redeem.trust_level.should == TrustLevel.levels[:regular]
-        end
-
-        it "default_invitee_trust_level is 2, then invited user should be trust level 2" do
-          SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:regular])
-          invitation.redeem.trust_level.should == TrustLevel.levels[:regular]
-        end
-
-        it "default_invitee_trust_level is 3, then invited user should be trust level 3" do
-          SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:leader])
-          invitation.redeem.trust_level.should == TrustLevel.levels[:leader]
-        end
+    context "invite trust levels" do
+      it "returns the trust level in default_invitee_trust_level" do
+        SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel[3])
+        invite.redeem.trust_level.should == TrustLevel[3]
       end
     end
 
@@ -204,7 +168,6 @@ describe Invite do
       it 'correctly activates accounts' do
         SiteSetting.stubs(:must_approve_users).returns(true)
         user = invite.redeem
-
         user.approved?.should == true
       end
     end
@@ -214,8 +177,8 @@ describe Invite do
       let!(:user) { invite.redeem }
 
       it 'works correctly' do
-        user.is_a?(User).should be_true
-        user.send_welcome_message.should be_true
+        user.is_a?(User).should == true
+        user.send_welcome_message.should == true
         user.trust_level.should == SiteSetting.default_invitee_trust_level
       end
 
@@ -234,11 +197,26 @@ describe Invite do
 
 
         context 'again' do
-          it 'will not redeem twice' do
-            invite.redeem.should == user
-            invite.redeem.send_welcome_message.should be_false
+          context "without a passthrough" do
+            before do
+              SiteSetting.invite_passthrough_hours = 0
+            end
+
+            it 'will not redeem twice' do
+              invite.redeem.should be_blank
+            end
           end
 
+          context "with a passthrough" do
+            before do
+              SiteSetting.invite_passthrough_hours = 1
+            end
+
+            it 'will not redeem twice' do
+              invite.redeem.should be_present
+              invite.redeem.send_welcome_message.should == false
+            end
+          end
         end
       end
 
@@ -246,60 +224,51 @@ describe Invite do
 
     context 'invited to topics' do
       let!(:topic) { Fabricate(:private_message_topic) }
-      let!(:invite) { topic.invite(topic.user, 'jake@adventuretime.ooo')}
+      let!(:invite) {
+        topic.invite(topic.user, 'jake@adventuretime.ooo')
+      }
 
       context 'redeem topic invite' do
-        let!(:user) { invite.redeem }
 
         it 'adds the user to the topic_users' do
-          topic.allowed_users.include?(user).should be_true
+          user = invite.redeem
+          topic.reload
+          topic.allowed_users.include?(user).should == true
+          Guardian.new(user).can_see?(topic).should == true
         end
 
-        it 'can see the private topic' do
-          Guardian.new(user).can_see?(topic).should be_true
-        end
       end
 
       context 'invited by another user to the same topic' do
-        let(:coding_horror) { User.where(username: 'CodingHorror').first }
+        let(:coding_horror) { User.find_by(username: "CodingHorror") }
         let!(:another_invite) { topic.invite(coding_horror, 'jake@adventuretime.ooo') }
         let!(:user) { invite.redeem }
 
         it 'adds the user to the topic_users' do
-          topic.allowed_users.include?(user).should be_true
+          topic.reload
+          topic.allowed_users.include?(user).should == true
         end
       end
 
       context 'invited by another user to a different topic' do
-        let(:coding_horror) { User.where(username: 'CodingHorror').first }
-        let(:another_topic) { Fabricate(:topic, archetype: "private_message", user: coding_horror) }
         let!(:another_invite) { another_topic.invite(coding_horror, 'jake@adventuretime.ooo') }
         let!(:user) { invite.redeem }
 
+        let(:coding_horror) { User.find_by(username: "CodingHorror") }
+        let(:another_topic) { Fabricate(:topic, category_id: nil, archetype: "private_message", user: coding_horror) }
+
         it 'adds the user to the topic_users of the first topic' do
-          topic.allowed_users.include?(user).should be_true
-        end
-
-        it 'adds the user to the topic_users of the second topic' do
-          another_topic.allowed_users.include?(user).should be_true
-        end
-
-        it 'does not redeem the second invite' do
+          topic.allowed_users.include?(user).should == true
+          another_topic.allowed_users.include?(user).should == true
           another_invite.reload
           another_invite.should_not be_redeemed
         end
 
         context 'if they redeem the other invite afterwards' do
 
-          before do
-            @result = another_invite.redeem
-          end
-
           it 'returns the same user' do
-            @result.should == user
-          end
-
-          it 'marks the second invite as redeemed' do
+            result = another_invite.redeem
+            result.should == user
             another_invite.reload
             another_invite.should be_redeemed
           end
@@ -324,7 +293,7 @@ describe Invite do
     context 'with user that has not invited' do
       it 'does not return invites' do
         user = Fabricate(:user)
-        invite = Fabricate(:invite)
+        Fabricate(:invite)
 
         invites = Invite.find_all_invites_from(user)
 
@@ -336,12 +305,13 @@ describe Invite do
   describe '.find_redeemed_invites_from' do
     it 'returns redeemed invites only' do
       inviter = Fabricate(:user)
-      pending_invite = Fabricate(
+      Fabricate(
         :invite,
         invited_by: inviter,
         user_id: nil,
         email: 'pending@example.com'
       )
+
       redeemed_invite = Fabricate(
         :invite,
         invited_by: inviter,
@@ -379,4 +349,43 @@ describe Invite do
       result.should be_valid
     end
   end
+
+  describe '.redeem_from_email' do
+    let(:inviter) { Fabricate(:user) }
+    let(:invite) { Fabricate(:invite, invited_by: inviter, email: 'test@example.com', user_id: nil) }
+    let(:user) { Fabricate(:user, email: invite.email) }
+
+    it 'redeems the invite from email' do
+      result = Invite.redeem_from_email(user.email)
+      invite.reload
+      invite.should be_redeemed
+    end
+
+    it 'does not redeem the invite if email does not match' do
+      result = Invite.redeem_from_email('test24@example.com')
+      invite.reload
+      invite.should_not be_redeemed
+    end
+
+  end
+
+  describe '.redeem_from_token' do
+    let(:inviter) { Fabricate(:user) }
+    let(:invite) { Fabricate(:invite, invited_by: inviter, email: 'test@example.com', user_id: nil) }
+    let(:user) { Fabricate(:user, email: invite.email) }
+
+    it 'redeems the invite from token' do
+      result = Invite.redeem_from_token(invite.invite_key, user.email)
+      invite.reload
+      invite.should be_redeemed
+    end
+
+    it 'does not redeem the invite if token does not match' do
+      result = Invite.redeem_from_token("bae0071f995bb4b6f756e80b383778b5", user.email)
+      invite.reload
+      invite.should_not be_redeemed
+    end
+
+  end
+
 end

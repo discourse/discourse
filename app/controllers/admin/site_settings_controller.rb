@@ -10,9 +10,15 @@ class Admin::SiteSettingsController < Admin::AdminController
     params.require(:id)
     id = params[:id]
     value = params[id]
-    StaffActionLogger.new(current_user).log_site_setting_change(id, SiteSetting.send(id), value) if SiteSetting.has_setting?(id)
-    SiteSetting.set(id, value)
-    render nothing: true
+    value.strip! if value.is_a?(String)
+    begin
+      prev_value = SiteSetting.send(id)
+      SiteSetting.set(id, value)
+      StaffActionLogger.new(current_user).log_site_setting_change(id, prev_value, value) if SiteSetting.has_setting?(id)
+      render nothing: true
+    rescue Discourse::InvalidParameters => e
+      render json: {errors: [e.message]}, status: 422
+    end
   end
 
 end

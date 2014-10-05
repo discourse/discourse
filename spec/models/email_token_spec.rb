@@ -16,6 +16,11 @@ describe EmailToken do
       email_token.should be_present
     end
 
+    it 'should downcase the email' do
+      token = user.email_tokens.create(email: "UpperCaseSoWoW@GMail.com")
+      token.email.should == "uppercasesowow@gmail.com"
+    end
+
     it 'is valid' do
       email_token.should be_valid
     end
@@ -63,8 +68,8 @@ describe EmailToken do
     end
 
     it 'returns nil when a token is older than a specific time' do
-      EmailToken.expects(:valid_after).returns(1.week.ago)
-      email_token.update_column(:created_at, 2.weeks.ago)
+      SiteSetting.email_token_valid_hours = 10
+      email_token.update_column(:created_at, 11.hours.ago)
       EmailToken.confirm(email_token.token).should be_blank
     end
 
@@ -84,17 +89,16 @@ describe EmailToken do
     context 'welcome message' do
       it 'sends a welcome message when the user is activated' do
         user = EmailToken.confirm(email_token.token)
-        user.send_welcome_message.should be_true
+        user.send_welcome_message.should == true
       end
 
       context "when using the code a second time" do
-        before do
-          EmailToken.confirm(email_token.token)
-        end
 
         it "doesn't send the welcome message" do
+          SiteSetting.email_token_grace_period_hours = 1
+          EmailToken.confirm(email_token.token)
           user = EmailToken.confirm(email_token.token)
-          user.send_welcome_message.should be_false
+          user.send_welcome_message.should == false
         end
       end
 

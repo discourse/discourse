@@ -11,6 +11,44 @@ describe PostDestroyer do
   let(:admin) { Fabricate(:admin) }
   let(:post) { create_post }
 
+  describe "destroy_old_hidden_posts" do
+
+    it "destroys posts that have been hidden for 30 days" do
+      Fabricate(:admin)
+
+      now = Time.now
+
+      freeze_time(now - 60.days)
+      topic = post.topic
+      reply1 = create_post(topic: topic)
+
+      freeze_time(now - 40.days)
+      reply2 = create_post(topic: topic)
+      PostAction.hide_post!(reply2, PostActionType.types[:off_topic])
+
+      freeze_time(now - 20.days)
+      reply3 = create_post(topic: topic)
+      PostAction.hide_post!(reply3, PostActionType.types[:off_topic])
+
+      freeze_time(now - 10.days)
+      reply4 = create_post(topic: topic)
+
+      freeze_time(now)
+      PostDestroyer.destroy_old_hidden_posts
+
+      reply1.reload
+      reply2.reload
+      reply3.reload
+      reply4.reload
+
+      reply1.deleted_at.should == nil
+      reply2.deleted_at.should_not == nil
+      reply3.deleted_at.should == nil
+      reply4.deleted_at.should == nil
+    end
+
+  end
+
   describe 'destroy_old_stubs' do
     it 'destroys stubs for deleted by user posts' do
       SiteSetting.stubs(:delete_removed_posts_after).returns(24)
@@ -106,7 +144,7 @@ describe PostDestroyer do
 
       post2.deleted_at.should be_blank
       post2.deleted_by.should be_blank
-      post2.user_deleted.should be_true
+      post2.user_deleted.should == true
       post2.raw.should == I18n.t('js.post.deleted_by_author', {count: 24})
       post2.version.should == 2
 
@@ -114,29 +152,45 @@ describe PostDestroyer do
       PostDestroyer.new(post2.user, post2).recover
       post2.reload
       post2.version.should == 3
-      post2.user_deleted.should be_false
+      post2.user_deleted.should == false
       post2.cooked.should == @orig
     end
 
     context "as a moderator" do
-      before do
-        PostDestroyer.new(moderator, post).destroy
-      end
-
       it "deletes the post" do
+        PostDestroyer.new(moderator, post).destroy
         post.deleted_at.should be_present
         post.deleted_by.should == moderator
+      end
+
+      it "updates the user's post_count" do
+        author = post.user
+        expect {
+          PostDestroyer.new(moderator, post).destroy
+          author.reload
+        }.to change { author.post_count }.by(-1)
+      end
+
+      it "creates a new user history entry" do
+        expect {
+          PostDestroyer.new(moderator, post).destroy
+        }.to change { UserHistory.count}.by(1)
       end
     end
 
     context "as an admin" do
-      before do
-        PostDestroyer.new(admin, post).destroy
-      end
-
       it "deletes the post" do
+        PostDestroyer.new(admin, post).destroy
         post.deleted_at.should be_present
         post.deleted_by.should == admin
+      end
+
+      it "updates the user's post_count" do
+        author = post.user
+        expect {
+          PostDestroyer.new(admin, post).destroy
+          author.reload
+        }.to change { author.post_count }.by(-1)
       end
     end
 
@@ -164,10 +218,10 @@ describe PostDestroyer do
 
     context 'topic_user' do
 
-      let(:topic_user) { second_user.topic_users.where(topic_id: topic.id).first }
+      let(:topic_user) { second_user.topic_users.find_by(topic_id: topic.id) }
 
       it 'clears the posted flag for the second user' do
-        topic_user.posted?.should be_false
+        topic_user.posted?.should == false
       end
 
       it "sets the second user's last_read_post_number back to 1" do
@@ -209,6 +263,12 @@ describe PostDestroyer do
       it "deletes the post" do
         post.deleted_at.should be_present
         post.deleted_by.should == admin
+      end
+
+      it "creates a new user history entry" do
+        expect {
+          PostDestroyer.new(admin, post).destroy
+        }.to change { UserHistory.count}.by(1)
       end
     end
   end
@@ -263,28 +323,49 @@ describe PostDestroyer do
   end
 
   describe "post actions" do
+    let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
+    let!(:bookmark) { PostAction.act(moderator, second_post, PostActionType.types[:bookmark]) }
+    let!(:flag) { PostAction.act(moderator, second_post, PostActionType.types[:off_topic]) }
+
+    it "should delete public post actions and agree with flags" do
+      second_post.expects(:update_flagged_posts_count)
+
+      PostDestroyer.new(moderator, second_post).destroy
+
+      PostAction.find_by(id: bookmark.id).should == nil
+
+      off_topic = PostAction.find_by(id: flag.id)
+      off_topic.should_not == nil
+      off_topic.agreed_at.should_not == nil
+
+      second_post.reload
+      second_post.bookmark_count.should == 0
+      second_post.off_topic_count.should == 1
+    end
+  end
+
+  describe "user actions" do
     let(:codinghorror) { Fabricate(:coding_horror) }
-    let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
     let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
 
-    it "should reset counts when a post is deleted" do
-      PostAction.act(codinghorror, second_post, PostActionType.types[:off_topic])
-      expect { PostDestroyer.new(moderator, second_post).destroy }.to change(PostAction, :flagged_posts_count).by(-1)
+    def create_user_action(action_type)
+      UserAction.log_action!({
+        action_type: action_type,
+        user_id: codinghorror.id,
+        acting_user_id: codinghorror.id,
+        target_topic_id: second_post.topic_id,
+        target_post_id: second_post.id
+      })
     end
 
-    it "should delete the post actions" do
-      flag = PostAction.act(codinghorror, second_post, PostActionType.types[:off_topic])
+    it "should delete the user actions" do
+      bookmark = create_user_action(UserAction::BOOKMARK)
+      like = create_user_action(UserAction::LIKE)
+
       PostDestroyer.new(moderator, second_post).destroy
-      expect(PostAction.where(id: flag.id).first).to be_nil
-      expect(PostAction.where(id: bookmark.id).first).to be_nil
-    end
 
-    it 'should update flag counts on the post' do
-      PostAction.act(codinghorror, second_post, PostActionType.types[:off_topic])
-      PostDestroyer.new(moderator, second_post.reload).destroy
-      second_post.reload
-      expect(second_post.off_topic_count).to eq(0)
-      expect(second_post.bookmark_count).to eq(0)
+      expect(UserAction.find_by(id: bookmark.id)).to be_nil
+      expect(UserAction.find_by(id: like.id)).to be_nil
     end
   end
 

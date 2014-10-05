@@ -9,7 +9,7 @@ Discourse.computed = {
     @return {Function} computedProperty function
   **/
   propertyEqual: function(p1, p2) {
-    return Ember.computed(function() {
+    return Em.computed(function() {
       return this.get(p1) === this.get(p2);
     }).property(p1, p2);
   },
@@ -23,7 +23,7 @@ Discourse.computed = {
     @return {Function} computedProperty function
   **/
   propertyNotEqual: function(p1, p2) {
-    return Ember.computed(function() {
+    return Em.computed(function() {
       return this.get(p1) !== this.get(p2);
     }).property(p1, p2);
   },
@@ -39,7 +39,7 @@ Discourse.computed = {
   i18n: function() {
     var args = Array.prototype.slice.call(arguments, 0);
     var format = args.pop();
-    var computed = Ember.computed(function() {
+    var computed = Em.computed(function() {
       var self = this;
       return I18n.t(format.fmt.apply(format, args.map(function (a) {
         return self.get(a);
@@ -50,7 +50,7 @@ Discourse.computed = {
 
   /**
     Uses an Ember String `fmt` call to format a string. See:
-    http://emberjs.com/api/classes/Ember.String.html#method_fmt
+    http://emberjs.com/api/classes/Em.String.html#method_fmt
 
     @method fmt
     @params {String} properties* to format
@@ -60,7 +60,7 @@ Discourse.computed = {
   fmt: function() {
     var args = Array.prototype.slice.call(arguments, 0);
     var format = args.pop();
-    var computed = Ember.computed(function() {
+    var computed = Em.computed(function() {
       var self = this;
       return format.fmt.apply(format, args.map(function (a) {
         return self.get(a);
@@ -81,7 +81,7 @@ Discourse.computed = {
   url: function() {
     var args = Array.prototype.slice.call(arguments, 0);
     var format = args.pop();
-    var computed = Ember.computed(function() {
+    var computed = Em.computed(function() {
       var self = this;
       return Discourse.getURL(format.fmt.apply(format, args.map(function (a) {
         return self.get(a);
@@ -93,7 +93,7 @@ Discourse.computed = {
   /**
     Returns whether properties end with a string
 
-    @method i18n
+    @method endWith
     @params {String} properties* to check
     @params {String} substring the substring
     @return {Function} computedProperty function
@@ -101,7 +101,7 @@ Discourse.computed = {
   endWith: function() {
     var args = Array.prototype.slice.call(arguments, 0);
     var substring = args.pop();
-    var computed = Ember.computed(function() {
+    var computed = Em.computed(function() {
       var self = this;
       return _.all(args.map(function(a) { return self.get(a); }), function(s) {
         var position = s.length - substring.length,
@@ -110,6 +110,37 @@ Discourse.computed = {
       });
     });
     return computed.property.apply(computed, args);
+  },
+
+  /**
+    Creates a one way alias to a computed property, suitable for query params.
+
+    @method queryAlias
+    @param {String} path to the alias
+    @param {String} defaultValue for the variable (omitted if equal)
+  **/
+  queryAlias: function(path, defaultValue) {
+    return Em.computed(function(key, value) {
+      if (value) {
+        // Annoying but this ensures the parameter is present
+      }
+      var result = this.get(path);
+      if (typeof result !== "undefined" && result.toString() === defaultValue) { return; }
+      return result;
+    }).property(path);
+  },
+
+  /**
+    Creates a property from a SiteSetting. In the future the plan is for them to
+    be able to update when changed.
+
+    @method setting
+    @param {String} name of site setting
+  **/
+  setting: function(name) {
+    return Em.computed(function() {
+      return Discourse.SiteSettings[name];
+    }).property();
   }
 
 };

@@ -1,10 +1,24 @@
-if GlobalSetting.enable_cors
-  require 'rack/cors'
+if GlobalSetting.enable_cors && GlobalSetting.cors_origin.present?
 
-  Rails.configuration.middleware.use Rack::Cors do
-    allow do
-      origins GlobalSetting.cors_origin
-      resource '*', headers: :any, methods: [:get, :post, :options]
+  class Discourse::Cors
+    def initialize(app, options = nil)
+      @app = app
+      @origins = GlobalSetting.cors_origin.split(',').map(&:strip)
+    end
+
+    def call(env)
+      status, headers, body = @app.call(env)
+      origin = nil
+
+      if origin = env['HTTP_ORIGIN']
+        origin = nil unless @origins.include? origin
+      end
+
+      headers['Access-Control-Allow-Origin'] = origin || @origins[0]
+      headers['Access-Control-Allow-Credentials'] = "true"
+      [status,headers,body]
     end
   end
+
+  Rails.configuration.middleware.insert 0, Discourse::Cors
 end

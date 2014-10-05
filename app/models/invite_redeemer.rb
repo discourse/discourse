@@ -1,34 +1,36 @@
-InviteRedeemer = Struct.new(:invite) do
+InviteRedeemer = Struct.new(:invite, :username, :name) do
 
   def redeem
     Invite.transaction do
-      process_invitation if invite_was_redeemed?
+      if invite_was_redeemed?
+        process_invitation
+        return invited_user
+      end
     end
 
-    invited_user
+    # If `invite_passthrough_hours` is defined, allow them to re-use the invite link
+    # to login again.
+    if invite.redeemed_at && invite.redeemed_at >= SiteSetting.invite_passthrough_hours.hours.ago
+      return invited_user
+    end
+
+    nil
   end
 
   # extracted from User cause it is very specific to invites
-  def self.create_user_from_invite(invite)
-    username = UserNameSuggester.suggest(invite.email)
+  def self.create_user_from_invite(invite, username, name)
+    user_exists = User.find_by_email(invite.email)
+    return user if user_exists
 
-    DiscourseHub.username_operation do
-      match, available, suggestion = DiscourseHub.username_match?(username, invite.email)
-      username = suggestion unless match || available
-    end
-
-    user = User.new(email: invite.email, username: username, name: username, active: true)
-    if invite.invited_by and invite.invited_by.has_trust_level?(:leader)
-      # People invited by users with trust level 3 will start at the default trust level + 1,
-      # unless the default trust level is 2 or higher.
-      user.trust_level = SiteSetting.default_invitee_trust_level
-      user.trust_level += 1 if user.trust_level < TrustLevel.levels[:regular]
+    if username && UsernameValidator.new(username).valid_format? && User.username_available?(username)
+      available_username = username
     else
-      user.trust_level = SiteSetting.default_invitee_trust_level
+      available_username = UserNameSuggester.suggest(invite.email)
     end
-    user.save!
+    available_name = name || available_username
 
-    DiscourseHub.username_operation { DiscourseHub.register_username(username, invite.email) }
+    user = User.new(email: invite.email, username: available_username, name: available_name, active: true, trust_level: SiteSetting.default_invitee_trust_level)
+    user.save!
 
     user
   end
@@ -42,6 +44,7 @@ InviteRedeemer = Struct.new(:invite) do
   def process_invitation
     add_to_private_topics_if_invited
     add_user_to_invited_topics
+    add_user_to_groups
     send_welcome_message
     approve_account_if_needed
     notify_invitee
@@ -59,13 +62,13 @@ InviteRedeemer = Struct.new(:invite) do
 
   def get_invited_user
     result = get_existing_user
-    result ||= InviteRedeemer.create_user_from_invite(invite)
+    result ||= InviteRedeemer.create_user_from_invite(invite, username, name)
     result.send_welcome_message = false
     result
   end
 
   def get_existing_user
-    User.where(email: invite.email).first
+    User.find_by(email: invite.email)
   end
 
 
@@ -83,6 +86,12 @@ InviteRedeemer = Struct.new(:invite) do
     end
   end
 
+  def add_user_to_groups
+    invite.groups.each do |g|
+      invited_user.group_users.create(group_id: g.id)
+    end
+  end
+
   def send_welcome_message
     if Invite.where(['email = ?', invite.email]).update_all(['user_id = ?', invited_user.id]) == 1
       invited_user.send_welcome_message = true
@@ -90,7 +99,7 @@ InviteRedeemer = Struct.new(:invite) do
   end
 
   def approve_account_if_needed
-    invited_user.approve(invite.invited_by_id, send_email=false)
+    invited_user.approve(invite.invited_by_id, false)
   end
 
   def notify_invitee

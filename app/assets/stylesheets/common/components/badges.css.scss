@@ -21,10 +21,6 @@
   white-space: nowrap;
   display: inline-block;
   line-height: 1;
-  i.fa {
-    font-size: 11px;
-    vertical-align: 1px;
-  }
 }
 .badge-wrapper {
   white-space: nowrap;
@@ -32,9 +28,9 @@
 
 .badge-category {
   padding: 6px;
-  color: $tertiary_text_color;
+  color: $secondary;
   &[href] {
-  color: $tertiary_text_color;
+  color: $secondary;
   }
 }
 
@@ -65,26 +61,36 @@ h1 a.badge-category div {vertical-align: top;}
 
 .badge-notification {
   @extend %badge;
-  padding: 4px;
-  color: $tertiary_text_color;
+  padding: 3px 5px;
+  vertical-align: middle;
+  color: $secondary;
   font-size: 11px;
   line-height: 1;
-  min-width: 11px;
   text-align: center;
-  background-color: $notification_badge_background_color;
+  background-color: scale-color($primary, $lightness: 70%);
   &[href] {
-  color: $tertiary_text_color;
+  color: $secondary;
   }
 
   // New posts
 
   &.new-posts, &.unread-posts {
-    background-color: lighten($emphasis_text_color, 20%);
-    color: $tertiary_text_color;
+    background-color: scale-color($tertiary, $lightness: 50%);
+    color: $secondary;
     font-weight: normal;
   }
 
+  &.new-topic {
+    background-color: transparent;
+    color: scale-color($tertiary, $lightness: 20%);
+    font-weight: normal;
+    font-size: 13px;
+  }
 
+  &.new-topic::before {
+    content: "●";
+    margin-right: 2px;
+  }
 
   // Click count
 
@@ -95,6 +101,7 @@ h1 a.badge-category div {vertical-align: top;}
     color: #888;
     position: relative;
     margin-left: 2px;
+    border: none;
   }
 }
 
@@ -106,7 +113,7 @@ h1 a.badge-category div {vertical-align: top;}
   font-size: 14px;
   line-height: 1;
   &[href] {
-    color: $topic-list-td-color;
+    color: scale-color($primary, $lightness: 40%);
   }
 }
 
@@ -116,10 +123,10 @@ h1 a.badge-category div {vertical-align: top;}
 .badge-group {
   @extend %badge;
   padding: 3px 5px;
-  color: $primary_text_color;
-  text-shadow: 0 1px 0 rgba($secondary_shadow_color, 0.2);
-  background-color: #ddd;
-  border-color: #aaa;
+  color: $primary;
+  text-shadow: 0 1px 0 rgba($primary, 0.1);
+  background-color: dark-light-diff($primary, $secondary, 90%, -65%);
+  border-color: dark-light-diff($primary, $secondary, 90%, -65%);
   font-size: 12px;
-  @include box-shadow(inset 0 1px 0 rgba($secondary_shadow_color, 0.52));
+  @include box-shadow(inset 0 1px 0 rgba(0,0,0, 0.22));
 }

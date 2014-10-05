@@ -8,24 +8,30 @@ module Jobs
     every 15.minutes
 
     def execute(args)
-      # Update the average times
-      Post.calculate_avg_time(1.day.ago)
-      Topic.calculate_avg_time(1.day.ago)
 
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics
 
-      # Update view counts for users
-      UserStat.update_view_counts
-
       # Update the scores of posts
       ScoreCalculator.new.calculate(1.day.ago)
 
-      # Update the scores of topics
-      TopTopic.refresh!
-
       # Automatically close stuff that we missed
       Topic.auto_close
+
+      # Forces rebake of old posts where needed, as long as no system avatars need updating
+      unless UserAvatar.where("last_gravatar_download_attempt IS NULL").limit(1).first
+        problems = Post.rebake_old(250)
+        problems.each do |hash|
+          Discourse.handle_exception(hash[:ex], error_context(args, "Rebaking post id #{hash[:post].id}", post_id: hash[:post].id))
+        end
+      end
+
+      # rebake out of date user profiles
+      problems = UserProfile.rebake_old(250)
+      problems.each do |hash|
+        user_id = hash[:profile].user_id
+        Discourse.handle_exception(hash[:ex], error_context(args, "Rebaking user id #{user_id}", user_id: user_id))
+      end
     end
 
   end

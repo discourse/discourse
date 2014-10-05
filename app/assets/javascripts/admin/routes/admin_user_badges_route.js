@@ -9,7 +9,7 @@
 **/
 Discourse.AdminUserBadgesRoute = Discourse.Route.extend({
   model: function() {
-    var username = this.controllerFor('adminUser').get('username');
+    var username = this.modelFor('adminUser').get('username');
     return Discourse.UserBadge.findByUsername(username);
   },
 

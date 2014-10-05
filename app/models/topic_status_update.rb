@@ -14,8 +14,8 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
   private
 
   def change(status)
-    if status.pinned?
-      topic.update_pinned status.enabled?
+    if status.pinned? || status.pinned_globally?
+      topic.update_pinned status.enabled?, status.pinned_globally?
     elsif status.autoclosed?
       topic.update_column 'closed', status.enabled?
     else
@@ -67,7 +67,7 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
   end
 
   Status = Struct.new(:name, :enabled) do
-    %w(pinned autoclosed closed).each do |status|
+    %w(pinned_globally pinned autoclosed closed).each do |status|
       define_method("#{status}?") { name == status }
     end
 

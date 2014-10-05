@@ -21,7 +21,6 @@ var UserActionTypes = {
       messages_sent: 12,
       messages_received: 13
     },
-    esc = Handlebars.Utils.escapeExpression,
     InvertedActionTypes = {};
 
 _.each(UserActionTypes, function (k, v) {
@@ -29,6 +28,13 @@ _.each(UserActionTypes, function (k, v) {
 });
 
 Discourse.UserAction = Discourse.Model.extend({
+
+  _attachCategory: function() {
+    var categoryId = this.get('category_id');
+    if (categoryId) {
+      this.set('category', Discourse.Category.findById(categoryId));
+    }
+  }.on('init'),
 
   /**
     Return an i18n key we will use for the description text of a user action.
@@ -66,31 +72,6 @@ Discourse.UserAction = Discourse.Model.extend({
     }
   }.property('action_type'),
 
-  /**
-    Returns the HTML representation of a user action's description, complete with icon.
-
-    @property descriptionHtml
-  **/
-  descriptionHtml: function() {
-    var descriptionKey = this.get('descriptionKey');
-    if (!descriptionKey) { return; }
-
-    var icon = this.get('isPM') ? '<i class="fa fa-envelope" title="{{i18n user.stream.private_message}}"></i>' : '';
-
-    return new Handlebars.SafeString(icon + " " + I18n.t("user_action." + descriptionKey, {
-      userUrl: this.get('userUrl'),
-      replyUrl: this.get('replyUrl'),
-      postUrl: this.get('postUrl'),
-      topicUrl: this.get('replyUrl'),
-      user: esc(this.get('presentName')),
-      post_number: '#' + this.get('reply_to_post_number'),
-      user1Url: this.get('userUrl'),
-      user2Url: this.get('targetUserUrl'),
-      another_user: esc(this.get('targetDisplayName'))
-    }));
-
-  }.property('descriptionKey'),
-
   sameUser: function() {
     return this.get('username') === Discourse.User.currentProp('username');
   }.property('username'),
@@ -102,9 +83,8 @@ Discourse.UserAction = Discourse.Model.extend({
   presentName: Em.computed.any('name', 'username'),
   targetDisplayName: Em.computed.any('target_name', 'target_username'),
   actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
-
-
   targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),
+
   usernameLower: function() {
     return this.get('username').toLowerCase();
   }.property('username'),
@@ -122,6 +102,7 @@ Discourse.UserAction = Discourse.Model.extend({
   replyType: Em.computed.equal('action_type', UserActionTypes.replies),
   postType: Em.computed.equal('action_type', UserActionTypes.posts),
   topicType: Em.computed.equal('action_type', UserActionTypes.topics),
+  bookmarkType: Em.computed.equal('action_type', UserActionTypes.bookmarks),
   messageSentType: Em.computed.equal('action_type', UserActionTypes.messages_sent),
   messageReceivedType: Em.computed.equal('action_type', UserActionTypes.messages_received),
   mentionType: Em.computed.equal('action_type', UserActionTypes.mentions),
@@ -168,12 +149,16 @@ Discourse.UserAction = Discourse.Model.extend({
       });
     }
     return rval;
-  }.property("childGroups"),
+  }.property("childGroups",
+    "childGroups.likes.items", "childGroups.likes.items.@each",
+    "childGroups.stars.items", "childGroups.stars.items.@each",
+    "childGroups.edits.items", "childGroups.edits.items.@each",
+    "childGroups.bookmarks.items", "childGroups.bookmarks.items.@each"),
 
   switchToActing: function() {
     this.setProperties({
       username: this.get('acting_username'),
-      avatar_template: this.get('acting_avatar_template'),
+      uploaded_avatar_id: this.get('acting_uploaded_avatar_id'),
       name: this.get('actingDisplayName')
     });
   }
@@ -182,7 +167,7 @@ Discourse.UserAction = Discourse.Model.extend({
 Discourse.UserAction.reopenClass({
   collapseStream: function(stream) {
     var uniq = {},
-        collapsed = Em.A(),
+        collapsed = [],
         pos = 0;
 
     stream.forEach(function(item) {
@@ -193,7 +178,6 @@ Discourse.UserAction.reopenClass({
         var current;
         if (Discourse.UserAction.TO_COLLAPSE.indexOf(item.action_type) >= 0) {
           current = Discourse.UserAction.create(item);
-          current.setProperties({action_type: null, description: null});
           item.switchToActing();
           current.addChild(item);
         } else {
@@ -217,11 +201,13 @@ Discourse.UserAction.reopenClass({
   TYPES: UserActionTypes,
   TYPES_INVERTED: InvertedActionTypes,
 
-  TO_COLLAPSE: [UserActionTypes.likes_given,
-                UserActionTypes.likes_received,
-                UserActionTypes.starred,
-                UserActionTypes.edits,
-                UserActionTypes.bookmarks],
+  TO_COLLAPSE: [
+    UserActionTypes.likes_given,
+    UserActionTypes.likes_received,
+    UserActionTypes.starred,
+    UserActionTypes.edits,
+    UserActionTypes.bookmarks
+  ],
 
   TO_SHOW: [
     UserActionTypes.likes_given,
@@ -234,6 +220,3 @@ Discourse.UserAction.reopenClass({
   ]
 
 });
-
-
-

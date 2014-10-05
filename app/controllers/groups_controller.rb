@@ -25,7 +25,7 @@ class GroupsController < ApplicationController
 
   def find_group(param_name)
     name = params.require(param_name)
-    group = Group.where("lower(name) = ?", name.downcase).first
+    group = Group.find_by("lower(name) = ?", name.downcase)
     guardian.ensure_can_see!(group)
     group
   end

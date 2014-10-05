@@ -1,0 +1,59 @@
+.lightbox {
+  position: relative;
+  display: inline-block;
+
+  &:hover .meta {
+    background: $primary;
+    opacity: 1;
+    @include transition(opacity .5s);
+  }
+}
+
+.lightbox-wrapper {
+  display: inline-block;
+}
+
+.meta {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: $secondary;
+  background: $primary;
+  opacity: 0;
+  @include transition(opacity .2s);
+
+  span {
+    float: left;
+  }
+
+  .filename {
+    margin: 5px;
+    &:before {
+      font-family: "FontAwesome";
+      content: "\F03E";
+      margin-right: 5px;
+    }
+  }
+
+  .informations {
+    margin: 6px;
+    padding-right: 20px;
+    color: scale-color($primary, $lightness: 50%);
+    font-size: 14px;
+  }
+
+  .expand {
+    position: absolute;
+    bottom: 4px;
+    right: 7px;
+    &:before {
+      font-family: "FontAwesome";
+      content: "\F065";
+    }
+  }
+}
+
+// this should be removed once all the posts have been rebaked with the new lightboxes overlays
+.lightbox > span {
+  display: none;
+}

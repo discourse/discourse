@@ -10,6 +10,7 @@ class TopicCreator
     @user = user
     @guardian = guardian
     @opts = opts
+    @added_users = []
   end
 
   def create
@@ -18,16 +19,33 @@ class TopicCreator
     setup_auto_close_time
     process_private_message
     save_topic
+    create_warning
     watch_topic
-    auto_mute_topic
 
     @topic
   end
 
   private
 
-  def auto_mute_topic
-    CategoryUser.auto_mute_new_topic(@topic)
+  def create_warning
+    return unless @opts[:is_warning]
+
+    # We can only attach warnings to PMs
+    unless @topic.private_message?
+      @topic.errors.add(:base, :warning_requires_pm)
+      @errors = @topic.errors
+      raise ActiveRecord::Rollback.new
+    end
+
+    # Don't create it if there is more than one user
+    if @added_users.size != 1
+      @topic.errors.add(:base, :too_many_users)
+      @errors = @topic.errors
+      raise ActiveRecord::Rollback.new
+    end
+
+    # Create a warning record
+    Warning.create(topic: @topic, user: @added_users.first, created_by: @user)
   end
 
   def watch_topic
@@ -35,11 +53,15 @@ class TopicCreator
       @topic.notifier.watch_topic!(@topic.user_id)
     end
 
-    @topic.topic_allowed_users.pluck(:user_id).reject{|id| id == @topic.user_id}.each do |id|
-      @topic.notifier.watch_topic!(id, nil)
+    user_ids = @topic.topic_allowed_users(true).pluck(:user_id)
+    user_ids += @topic.topic_allowed_groups(true).map { |t| t.group.users.pluck(:id) }.flatten
+
+    user_ids.uniq.reject{ |id| id == @topic.user_id }.each do |user_id|
+      @topic.notifier.watch_topic!(user_id, nil) unless user_id == -1
     end
 
     CategoryUser.auto_watch_new_topic(@topic)
+    CategoryUser.auto_track_new_topic(@topic)
   end
 
   def setup_topic_params
@@ -49,9 +71,12 @@ class TopicCreator
       last_post_user_id: @user.id
     }
 
-    [:subtype, :archetype, :meta_data].each do |key|
+    [:subtype, :archetype, :meta_data, :import_mode].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
+
+    # Automatically give it a moderator warning subtype if specified
+    topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
 
     category = find_category
 
@@ -72,9 +97,9 @@ class TopicCreator
     # When all clients are updated the category variable should
     # be set directly to the contents of the if statement.
     if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
-      Category.where(id: @opts[:category]).first
+      Category.find_by(id: @opts[:category])
     else
-      Category.where(name: @opts[:category]).first
+      Category.find_by(name_lower: @opts[:category].try(:downcase))
     end
   end
 
@@ -109,7 +134,8 @@ class TopicCreator
   def add_users(topic, usernames)
     return unless usernames
     User.where(username: usernames.split(',')).each do |user|
-      check_can_send_permission!(topic,user)
+      check_can_send_permission!(topic, user)
+      @added_users << user
       topic.topic_allowed_users.build(user_id: user.id)
     end
   end

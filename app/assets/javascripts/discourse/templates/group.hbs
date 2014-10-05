@@ -1,0 +1,26 @@
+<div class="container">
+    <section class='user-navigation'>
+      <ul class='action-list nav-stacked'>
+        <li {{bind-attr class="showingIndex:active"}}>
+          {{#link-to 'group.index' model}}{{i18n groups.posts}}
+          <span class='count'>({{counts.posts}})</span>
+          <span class='fa fa-chevron-right'></span>{{/link-to}}
+        </li>
+      <li {{bind-attr class="showingMembers:active"}}>
+        {{#link-to 'group.members' model}}{{i18n groups.members}}
+        <span class='count'>({{counts.members}})</span>
+        <span class='fa fa-chevron-right'></span>{{/link-to}}
+      </li>
+    </ul>
+  </section>
+
+    <section class='user-main'>
+      <section class='about group'>
+        <div class='details'>
+          <h1>{{name}}</h1>
+        </div>
+      </section>
+
+      {{outlet}}
+    </section>
+</div>

@@ -14,8 +14,8 @@ module UserGuardian
 
   def can_edit_email?(user)
     return false if (SiteSetting.sso_overrides_email? && SiteSetting.enable_sso?)
-    return true if is_staff?
     return false unless SiteSetting.email_editable?
+    return true if is_staff?
     can_edit?(user)
   end
 
@@ -24,6 +24,10 @@ module UserGuardian
     return false if (SiteSetting.sso_overrides_name? && SiteSetting.enable_sso?)
     return true if is_staff?
     can_edit?(user)
+  end
+
+  def can_see_notifications?(user)
+    is_me?(user) || is_admin?
   end
 
   def can_block_user?(user)
@@ -35,13 +39,16 @@ module UserGuardian
   end
 
   def can_delete_user?(user)
-    return false if user.nil?
-    return false if user.admin?
+    return false if user.nil? || user.admin?
     if is_me?(user)
       user.post_count <= 1
     else
-      is_staff? && (user.first_post.nil? || user.first_post.created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago)
+      is_staff? && (user.first_post_created_at.nil? || user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago)
     end
+  end
+
+  def can_check_emails?(user)
+    is_admin? || (is_staff? && SiteSetting.show_email_on_profile)
   end
 
 end

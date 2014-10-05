@@ -28,6 +28,12 @@ describe Onebox::Engine::DiscourseLocalOnebox do
       Onebox.preview(url).to_s.should == "<a href='#{url}'>#{url}</a>"
     end
 
+    it "returns a link if post is hidden" do
+      hidden_post = Fabricate(:post, topic: post.topic, post_number: 2, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
+      url = "#{Discourse.base_url}#{hidden_post.url}"
+      Onebox.preview(url).to_s.should == "<a href='#{url}'>#{url}</a>"
+    end
+
     it "returns some onebox goodness if post exists and can be seen" do
       url = "#{Discourse.base_url}#{post2.url}"
       Guardian.any_instance.stubs(:can_see?).returns(true)

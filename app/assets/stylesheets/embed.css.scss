@@ -2,6 +2,8 @@
 //= require ./common/foundation/base
 
 @import "./common/foundation/variables";
+@import "./common/foundation/colors";
+@import "./common/base/onebox";
 
 article.post {
   border-bottom: 1px solid #ddd;
@@ -11,8 +13,8 @@ article.post {
   }
 
   .quote .title {
-    border-left: 5px solid $primary_border_color;
-    background-color: lighten($secondary_background_color, 76%);
+    border-left: 5px solid darken(scale-color-diff(), 10%);
+    background-color: scale-color-diff();
     padding: 10px 10px 0 12px;
     .avatar { margin-right: 7px; }
   }
@@ -24,10 +26,13 @@ article.post {
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
-    background-color: $quote-background;
-    border-left: 5px solid $primary_border_color;
+    background-color: scale-color-diff();
+    border-left: 5px solid darken(scale-color-diff(), 10%);
     p {
       margin: 0 0 10px 0;
+    }
+    p:last-of-type {
+      margin-bottom:0;
     }
   }
 
@@ -35,36 +40,44 @@ article.post {
     float: right;
     color: #aaa;
     font-size: 12px;
-    margin: 4px 4px 0 0;
+    margin: 10px 4px 0 0;
   }
 
   .author {
-    padding: 20px 0;
-    width: 92px;
+    padding: 10px 5px;
     float: left;
-
     text-align: center;
 
-    h3 {
-      text-align: center;
-      color: #0088cc;
-      font-size: 13px;
-      margin: 5px 0 0 0;
-      word-wrap: break-word;
+    img {
+      max-width: 45px;
+    }
+  }
 
-      a.staff {
-        background-color: #ffffc2;
-      }
+  h3.username {
+    font-size: 13px;
+    margin: 0 0 10px 0;
+    word-wrap: break-word;
 
-      a.new-user {
-        color: lighten($primary_text_color, 35%);
-      }
+    a {
+      color: #5c5c5c
+    }
+    a.staff {
+      background-color: #ffffc2;
+    }
+
+    a.new-user {
+      color: scale-color($primary, $lightness: 70%);
+    }
+
+    span.title {
+      font-weight: normal;
+      color: #999;
     }
   }
 
   .cooked {
-    padding: 20px 0;
-    margin-left: 100px;
+    padding: 10px 0 20px 0;
+    margin-left: 65px;
     word-wrap: break-word;
 
     img {
@@ -89,9 +102,11 @@ img.emoji {
 
 .in-reply-to {
   font-size: 13px;
-  margin-top: 4px;
+  text-align: center;
+  margin: 10px 20px 6px 0;
   display: inline-block;
-  color: #999;
+  float: right;
+  color: #0088cc;
 }
 
 .replies {
@@ -99,7 +114,7 @@ img.emoji {
   color: #999;
 }
 
-header {
+header.embedded {
   padding: 10px 10px 20px 10px;
   font-size: 18px;
   border-bottom: 1px solid #ddd;

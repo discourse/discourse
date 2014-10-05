@@ -3,6 +3,15 @@
 // hack, this needs to be done cleaner
 #private-message-users {
   width: 400px;
+  float: left;
+}
+
+.add-warning {
+  width: 300px;
+  display: inline-block;
+  position: relative;
+  top: -30px;
+  margin-left: 20px;
 }
 
 .composer-popup-container {
@@ -13,13 +22,11 @@
 
 .composer-popup {
 
-  @include box-shadow(3px 3px 3px rgba($primary_shadow_color, 0.14));
-  background: lighten($highlight, 15%);
-  border: 1px solid $highlight_border_color;
+  @include box-shadow(3px 3px 3px rgba(0,0,0, 0.34));
+  background: dark-light-diff($highlight, $secondary, 50%, -80%);
 
   &.urgent {
-    background: lighten($warning_border_color, 15%);
-    border: 1px solid $warning_border_color;
+    background: dark-light-diff($danger, $secondary, 50%, -40%);
   }
 
   h3 {
@@ -32,7 +39,7 @@
 
   a.close {
     float: right;
-    color: $primary_text_color;
+    color: $primary;
     opacity: 0.5;
     font-size: 15px;
   }
@@ -58,55 +65,20 @@
 }
 
 .similar-topics {
-  background-color: $emphasis_background_color;
-  border: 1px solid $emphasis_background_color;
+  background-color: scale-color($tertiary, $lightness: 60%);
 
   a[href] {
     color: #000;
   }
 
   .posts-count {
-    color: darken($link_color, 40%);
+    color: scale-color($tertiary, $lightness: -40%);
     font-size: 12px;
   }
 }
 
 .composer-popup:nth-of-type(2) {
   margin-left: 10px;
-}
-
-
-.autocomplete {
-  z-index: 999999;
-  position: absolute;
-  width: 240px;
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    li {
-      border-bottom: 1px solid $primary_border_color;
-      a[href] {
-        padding: 5px;
-        display: block;
-        span.username {
-          color: $primary_text_color;
-        }
-        span.name {
-          font-size: 11px;
-        }
-        &.selected {
-          background-color: lighten($secondary_background_color, 60%);
-        }
-        @include hover {
-          background-color: lighten($secondary_background_color, 60%);
-          text-decoration: none;
-        }
-      }
-    }
-  }
 }
 
 #reply-control {
@@ -122,20 +94,20 @@
   #file-uploading {
     left: 51%;
     font-size: 12px;
-    color: $secondary_text_color;
+    color: $primary;
   }
   #draft-status {
     right: 51%;
-    color: $primary_text_color;
+    color: $primary;
     &.flash {
-      color: $warning_text_color;
+      color: $danger;
     }
   }
   @include transition(height 0.4s ease);
   width: 100%;
   z-index: 1039;
   height: 0;
-  background-color: rgba($composer_background_color, 0.96);
+  background-color: scale-color-diff();
   bottom: 0;
   font-size: 14px;
   position: fixed;
@@ -146,7 +118,7 @@
     right: 13px;
     position: absolute;
     font-size: 15px;
-    color: $primary_text_color;
+    color: $primary;
     text-decoration: none;
     &:before {
       font-family: "FontAwesome";
@@ -182,7 +154,7 @@
   &.draft {
     height: 40px !important;
     cursor: pointer;
-    border-top: 1px solid $primary_border_color;
+    border-top: 1px solid scale-color-diff();
     .draft-text {
       display: block;
     }
@@ -195,7 +167,7 @@
   }
   &.saving {
     height: 40px !important;
-    border-top: 1px solid $primary_border_color;
+    border-top: 1px solid scale-color-diff();
     .saving-text {
       display: block;
     }
@@ -217,7 +189,7 @@
     height: 70px;
     text-indent: -9999em;
     background: {
-      color: $primary_text_color;
+      color: #000;
       image: image-url("spinner_96_w.gif");
       repeat: no-repeat;
       size: 35px;
@@ -235,6 +207,9 @@
     margin-left: auto;
     margin-right: auto;
     float: none;
+    .ac-wrap {
+      padding-left: 10px;
+    }
   }
 
   // When the post is new (new topic) the sizings are different
@@ -247,12 +222,12 @@
       input#reply-title {
         padding: 7px 10px;
         margin: 6px 10px 3px 0;
-        color: $primary_text_color;
+        color: $primary;
 
       }
       input#reply-title {
         width: 400px;
-                color: $primary_text_color;
+                color: $primary;
 
       }
       .wmd-controls {
@@ -266,7 +241,7 @@
     min-width: 1280px;
     .form-element {
       display: inline-block;
-      .chzn-container {
+      .select2-container {
         width: 400px;
         margin-top: 6px;
         a {
@@ -282,13 +257,13 @@
         @include medium-width { width: 285px; }
         @include small-width { width: 220px; }
 
-        .chzn-drop {
+        .select2-drop {
           left: -9000px;
           width: 428px;
           @include medium-width { width: 283px; }
           @include small-width { width: 218px; }
         }
-        .chzn-search input {
+        .select2-search input {
           width: 378px;
           @include medium-width { width: 233px; }
           @include small-width { width: 168px; }
@@ -307,33 +282,31 @@
       }
     }
     #reply-title {
-      color: $primary_text_color;
+      color: $primary;
       margin-right: 10px;
       float: left;
       &:disabled {
-        background-color: lighten($secondary_background_color, 60%);
+        background-color: scale-color-diff();
       }
     }
     #wmd-input:disabled {
-      background-color: lighten($primary_background_color, 60%);
+      background-color: scale-color-diff();
     }
     #wmd-input, #wmd-preview {
-      color: $primary_text_color;
+      color: $primary;
+    }
 
+    #wmd-preview {
+      border: 1px dashed scale-color-diff();
+      overflow: auto;
+      visibility: visible;
       video {
         max-width: 100%;
         height: auto;
       }
-
       audio {
         max-width: 100%;
       }
-    }
-    #wmd-preview {
-      border: 1px dashed $primary_border_color;
-      overflow: auto;
-      visibility: visible;
-
       &.hidden {
         width: 0;
         visibility: hidden;
@@ -342,6 +315,7 @@
     #wmd-input {
       bottom: 35px;
     }
+
     .submit-panel {
       position: absolute;
       display: block;
@@ -359,10 +333,10 @@
   .show-admin-options {
     vertical-align: top;
     margin-top: 8px;
-    background: lighten($secondary_background_color, 60%);
+    background: scale-color-diff();
   &:hover {
-    color: $tertiary_text_color;
-    background: lighten($secondary_background_color, 35%);
+    color: $secondary;
+    background: $primary;
   }
   }
   .title-input .popup-tip {
@@ -381,67 +355,11 @@
   margin-bottom: 10px;
 }
 
-div.ac-wrap.disabled {
-  input {
-    display:none;
-  }
-  .item a {
-    display:none;
-  }
-}
-
-div.ac-wrap {
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  padding: 5px 10px;
-  div.item {
-    float: left;
-    margin-right: 10px;
-    margin-bottom: 5px;
-    span {
-      padding-left: 5px;
-      height: 22px;
-      display: inline-block;
-      line-height: 22px;
-      vertical-align: bottom;
-    }
-    a.remove {
-      margin-left: 4px;
-      font-size: 10px;
-      line-height: 10px;
-      padding: 2px 1px 1px 3px;
-      border-radius: 10px;
-      width: 10px;
-      display: inline-block;
-      border: 1px solid $primary_border_color;
-      &:hover {
-        background-color: $warning_background_color;
-        border: 1px solid $warning_border_color;
-        text-decoration: none;
-        color: $warning_text_color;
-      }
-    }
-  }
-  input[type="text"] {
-    float: left;
-    margin-top: 5px;
-    border: 0;
-    padding: 0;
-    margin: 4px 0 0;
-    box-shadow: none;
-  }
-}
-
-
 #reply-control.edit-title.private-message {
   .wmd-controls {
     @include transition(top 0.3s ease);
     top: 140px;
   }
-}
-
-#reply-control.topic #wmd-quote-post {
-  display: none;
 }
 
 #reply-control {
@@ -462,8 +380,8 @@ div.ac-wrap {
     left: 30px;
     right: 30px;
     position: absolute;
-    top: 50px;
     bottom: 48px;
+    top: 50px;
 
     // this removes the topmost margin;
     // if we don't have this, all posts would have extra space at the top
@@ -478,36 +396,21 @@ div.ac-wrap {
       min-height: 100%;
       padding: 7px;
       margin: 0;
-      background-color: $primary_background_color;
+      background-color: $secondary;
       word-wrap: break-word;
-
-      // set up proper header margins in post preview
-      h1, h2, h3, h4, h5, h6 {
-        margin: 30px 0 10px;
-      }
-      p {
-        margin-top: 19px;
-      }
-      blockquote p:first-of-type {margin-top: 0px;}
     }
     #wmd-input, #wmd-preview-scroller {
       position: absolute;
       left: 0;
       top: 0;
-      height: 100%;
-      min-height: 100%;
-      @include box-sizing(border-box);
-      border: 0;
+      border: 0px;
       border-top: 30px solid transparent;
-      box-shadow: none;
       @include border-radius-all(0);
-      transition: none;
     }
     #wmd-preview-scroller {
       font-size: 13px;
       line-height: 18px;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-weight: normal;
       overflow: scroll;
       visibility: hidden;
       .marker, .caret {
@@ -540,8 +443,8 @@ div.ac-wrap {
   #wmd-button-bar {
     top: 0;
     position: absolute;
-    border-bottom: 1px solid $primary_border_color;
-    background-color: $primary_background_color;
+    border-bottom: 1px solid scale-color-diff();
+    background-color: $secondary;
     z-index: 100;
   }
 }
@@ -551,37 +454,12 @@ div.ac-wrap {
   padding-right: 20px;
 }
 
-@media screen and (min-width: 1550px) {
+@media all and (min-width: 1550px) {
   #reply-control {
     .wmd-controls {
       width: 1450px;
       left: auto;
       right: auto;
-    }
-  }
-}
-
-.auto-close-fields {
-  input {
-    width: 150px;
-  }
-  .examples {
-    margin: 10px 0 0 0;
-    color: $secondary_text_color;
-  }
-}
-
-.edit-auto-close-modal {
-  form {
-    margin: 0;
-  }
-  .auto-close-fields {
-    i.fa-clock-o {
-      font-size: 16px;
-      line-height: 8px;
-    }
-    input {
-      margin: 0;
     }
   }
 }

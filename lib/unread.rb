@@ -18,6 +18,7 @@ class Unread
   def new_posts
     return 0 if @topic_user.seen_post_count.blank?
     return 0 if do_not_notify?(@topic_user.notification_level)
+    return 0 if (@topic_user.last_read_post_number||0) > @topic.highest_post_number
 
     new_posts = (@topic.highest_post_number - @topic_user.seen_post_count)
     new_posts = 0 if new_posts < 0

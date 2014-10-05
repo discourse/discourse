@@ -57,7 +57,7 @@ describe CategoriesController do
                               }
 
           response.status.should == 200
-          category = Category.where(name: "hello").first
+          category = Category.find_by(name: "hello")
           category.category_groups.map{|g| [g.group_id, g.permission_type]}.sort.should == [
             [Group[:everyone].id, readonly],[Group[:staff].id,create_post]
           ]
@@ -93,6 +93,37 @@ describe CategoriesController do
       end
     end
 
+  end
+
+  describe "upload" do
+    it "requires the user to be logged in" do
+      lambda { xhr :post, :upload, image_type: 'logo'}.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    describe "logged in" do
+      let!(:user) { log_in(:admin) }
+
+      let(:logo) { file_from_fixtures("logo.png") }
+      let(:upload) do
+        ActionDispatch::Http::UploadedFile.new({ filename: 'logo.png', tempfile: logo })
+      end
+
+      it "raises an error when you don't have permission to upload" do
+        Guardian.any_instance.expects(:can_create?).with(Category).returns(false)
+        xhr :post, :upload, image_type: 'logo', file: upload
+        response.should be_forbidden
+      end
+
+      it "requires the `image_type` param" do
+        -> { xhr :post, :upload }.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "calls Upload.create_for" do
+        Upload.expects(:create_for).returns(Upload.new)
+        xhr :post, :upload, image_type: 'logo', file: upload
+        response.should be_success
+      end
+    end
   end
 
   describe "update" do
@@ -164,13 +195,6 @@ describe CategoriesController do
           @category.name.should == "hello"
           @category.color.should == "ff0"
           @category.auto_close_hours.should == 72
-        end
-
-        it "can set category to use default position" do
-          xhr :put, :update, valid_attrs.merge(position: 'default')
-          response.should be_success
-          @category.reload
-          @category.position.should be_nil
         end
       end
     end

@@ -20,8 +20,13 @@ class SuggestedTopicsBuilder
     # Only add results if we don't have those topic ids already
     results = results.where('topics.id NOT IN (?)', @excluded_topic_ids)
                      .where(visible: true)
-                     .to_a
-                     .reject { |topic| @category_topic_ids.include?(topic.id) }
+
+    # If limit suggested to category is enabled, restrict to that category
+    if @category_id && SiteSetting.limit_suggested_to_category?
+      results = results.where(category_id: @category_id)
+    end
+
+    results = results.to_a.reject { |topic| @category_topic_ids.include?(topic.id) }
 
     unless results.empty?
       # Keep track of the ids we've added

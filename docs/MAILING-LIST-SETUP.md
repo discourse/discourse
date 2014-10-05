@@ -7,13 +7,13 @@ Acting like a Mailing list is disabled per default in Discourse. This guide show
 First of, you need a POP3s enabled server receiving your email. Then make sure to enable "reply_by_email_enabled" and configured the server appropriately in your Admin-Settings under "Email":
 ![enable-reply-by-email](https://f.cloud.github.com/assets/2879972/2242953/97d5dd52-9d17-11e3-915e-037758cc68a7.png)
 
-Once that is in place, you can enable the "email_in"-feature globally in the same email-section. If you provide another "email_in_address" all emails arriving in the inbox to that address will be handeled and posted to the "email_in_category" (defaults to "uncategorised"). For spam protection only users of a high trust level can post via email per default. You can change this via the "email_in_min_trust" setting.
+Once that is in place, you can enable the "email_in"-feature globally in the same email-section.
 
 ### Per category email address
 
-Once "email_in" is enabled globally a new configuration option appears in your category settings dialog allowing you to specify an email-address for that category. Emails going to the previously configured inbox to that email-address will be posted in this category instead of the default configuration. **Attention** User-Permissions and the minimum trust levels still apply.
+Once "email_in" is enabled globally a new configuration option appears in your category settings dialog allowing you to specify an email-address for that category. Emails going to the previously configured inbox to that email-address will be posted in this category.
 
-Additionally, by checking the "accept non-user emails"-checkbox in the category settings, emails to the given email but from unknown email-addresses will be posted in the category by the System-User in a quoted fashion, showing the original email-address and content in the quotes.
+For spam protection only users of a high trust level can post via email per default. You can change this via the "email_in_min_trust" setting. Additionally, by checking the "accept non-user emails"-checkbox in the category settings, emails to the given email but from unknown email-addresses will be posted in the category by the System-User in a quoted fashion, showing the original email-address and content in the quotes.
 
 ### Troubleshooting
 

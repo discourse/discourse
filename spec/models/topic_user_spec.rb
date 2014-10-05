@@ -62,21 +62,21 @@ describe TopicUser do
       topic.notify_watch!(user)
       topic_user.notification_level.should == TopicUser.notification_levels[:watching]
       topic_user.notifications_reason_id.should == TopicUser.notification_reasons[:user_changed]
-      topic_user.notifications_changed_at.should_not be_nil
+      topic_user.notifications_changed_at.should_not == nil
     end
 
     it 'should have the correct reason for a user change when set to regular' do
       topic.notify_regular!(user)
       topic_user.notification_level.should == TopicUser.notification_levels[:regular]
       topic_user.notifications_reason_id.should == TopicUser.notification_reasons[:user_changed]
-      topic_user.notifications_changed_at.should_not be_nil
+      topic_user.notifications_changed_at.should_not == nil
     end
 
     it 'should have the correct reason for a user change when set to regular' do
       topic.notify_muted!(user)
       topic_user.notification_level.should == TopicUser.notification_levels[:muted]
       topic_user.notifications_reason_id.should == TopicUser.notification_reasons[:user_changed]
-      topic_user.notifications_changed_at.should_not be_nil
+      topic_user.notifications_changed_at.should_not == nil
     end
 
     it 'should watch topics a user created' do
@@ -233,7 +233,7 @@ describe TopicUser do
       end
 
       it 'has a key in the lookup for this forum topic' do
-        TopicUser.lookup_for(user, [topic]).has_key?(topic.id).should be_true
+        TopicUser.lookup_for(user, [topic]).has_key?(topic.id).should == true
       end
 
     end
@@ -263,7 +263,7 @@ describe TopicUser do
 
     TopicUser.ensure_consistency!
 
-    tu = TopicUser.where(user_id: p1.user_id, topic_id: p1.topic_id).first
+    tu = TopicUser.find_by(user_id: p1.user_id, topic_id: p1.topic_id)
     tu.last_read_post_number.should == p2.post_number
     tu.seen_post_count.should == 2
   end
@@ -278,15 +278,15 @@ describe TopicUser do
       create_post(topic_id: post.topic_id)
 
       # mails posts from earlier topics
-      tu = TopicUser.where(user_id: user3.id, topic_id: post.topic_id).first
+      tu = TopicUser.find_by(user_id: user3.id, topic_id: post.topic_id)
       tu.last_emailed_post_number.should == 2
 
       # mails nothing to random users
-      tu = TopicUser.where(user_id: user1.id, topic_id: post.topic_id).first
-      tu.should be_nil
+      tu = TopicUser.find_by(user_id: user1.id, topic_id: post.topic_id)
+      tu.should == nil
 
       # mails other user
-      tu = TopicUser.where(user_id: user2.id, topic_id: post.topic_id).first
+      tu = TopicUser.find_by(user_id: user2.id, topic_id: post.topic_id)
       tu.last_emailed_post_number.should == 2
     end
   end

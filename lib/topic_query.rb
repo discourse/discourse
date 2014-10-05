@@ -13,23 +13,30 @@ class TopicQuery
                      limit
                      page
                      per_page
+                     min_posts
+                     max_posts
                      topic_ids
                      visible
                      category
-                     sort_order
+                     order
+                     ascending
                      no_subcategories
-                     sort_descending
                      no_definitions
-                     status).map(&:to_sym)
+                     status
+                     state
+                     search
+                     ).map(&:to_sym)
 
-  # Maps `sort_order` to a columns in `topics`
+  # Maps `order` to a columns in `topics`
   SORTABLE_MAPPING = {
     'likes' => 'like_count',
+    'op_likes' => 'op_likes',
     'views' => 'views',
     'posts' => 'posts_count',
-    'activity' => 'created_at',
+    'activity' => 'bumped_at',
     'posters' => 'participant_count',
-    'category' => 'category_id'
+    'category' => 'category_id',
+    'created' => 'created_at'
   }
 
   def initialize(user=nil, options={})
@@ -88,17 +95,11 @@ class TopicQuery
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
       topics = topics.joins(:top_topic).where("top_topics.#{score} > 0")
-      if period == :yearly && @user.try(:trust_level) == TrustLevel.levels[:newuser]
+      if period == :yearly && @user.try(:trust_level) == TrustLevel[0]
         topics.order(TopicQuerySQL.order_top_with_pinned_category_for(score))
       else
         topics.order(TopicQuerySQL.order_top_for(score))
       end
-    end
-  end
-
-  TopTopic.periods.each do |period|
-    define_method("list_top_#{period}") do
-      list_top_for(period)
     end
   end
 
@@ -121,7 +122,7 @@ class TopicQuery
 
   def list_private_messages_unread(user)
     list = private_messages_for(user)
-    list = TopicQuery.unread_filter(list)
+    list = list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number")
     TopicList.new(:private_messages, user, list)
   end
 
@@ -165,7 +166,8 @@ class TopicQuery
       options.reverse_merge!(per_page: SiteSetting.topics_per_page)
 
       # Start with a list of all topics
-      result = Topic.where(id: TopicAllowedUser.where(user_id: user.id).pluck(:topic_id))
+      result = Topic.includes(:allowed_users)
+                    .where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
                     .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
                     .order(TopicQuerySQL.order_nocategory_basic_bumped)
                     .private_messages
@@ -189,8 +191,8 @@ class TopicQuery
     end
 
     def apply_ordering(result, options)
-      sort_column = SORTABLE_MAPPING[options[:sort_order]] || 'default'
-      sort_dir = (options[:sort_descending] == "false") ? "ASC" : "DESC"
+      sort_column = SORTABLE_MAPPING[options[:order]] || 'default'
+      sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
 
       # If we are sorting in the default order desc, we should consider including pinned
       # topics. Otherwise, just use bumped_at.
@@ -210,7 +212,18 @@ class TopicQuery
         return result.references(:categories).order(TopicQuerySQL.order_by_category_sql(sort_dir))
       end
 
+      if sort_column == 'op_likes'
+        return result.order("(SELECT like_count FROM posts p3 WHERE p3.topic_id = topics.id AND p3.post_number = 1) #{sort_dir}")
+      end
+
       result.order("topics.#{sort_column} #{sort_dir}")
+    end
+
+    def get_category_id(category_id_or_slug)
+      return nil unless category_id_or_slug
+      category_id = category_id_or_slug.to_i
+      category_id = Category.where(slug: category_id_or_slug).pluck(:id).first if category_id == 0
+      category_id
     end
 
 
@@ -227,23 +240,18 @@ class TopicQuery
                        .references('tu')
       end
 
-      category_id = nil
-      if options[:category].present?
-        category_id  = options[:category].to_i
-        category_id = Category.where(slug: options[:category]).pluck(:id).first if category_id == 0
-
-        if category_id
-          if options[:no_subcategories]
-            result = result.where('categories.id = ?', category_id)
-          else
-            result = result.where('categories.id = ? or categories.parent_category_id = ?', category_id, category_id)
-          end
-          result = result.references(:categories)
+      category_id = get_category_id(options[:category])
+      if category_id
+        if options[:no_subcategories]
+          result = result.where('categories.id = ?', category_id)
+        else
+          result = result.where('categories.id = ? or (categories.parent_category_id = ? AND categories.topic_id <> topics.id)', category_id, category_id)
         end
+        result = result.references(:categories)
       end
 
       result = apply_ordering(result, options)
-      result = result.listable_topics.includes(category: :topic_only_relative_url)
+      result = result.listable_topics.includes(:category)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
 
       # Don't include the category topics if excluded
@@ -260,6 +268,23 @@ class TopicQuery
         result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
       end
 
+      if search = options[:search]
+        result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(search.to_s)})")
+      end
+
+      # NOTE protect against SYM attack can be removed with Ruby 2.2
+      #
+      state = options[:state]
+      if @user && state &&
+          TopicUser.notification_levels.keys.map(&:to_s).include?(state)
+        level = TopicUser.notification_levels[state.to_sym]
+        result = result.where('topics.id IN (
+                                  SELECT topic_id
+                                  FROM topic_users
+                                  WHERE user_id = ? AND
+                                        notification_level = ?)', @user.id, level)
+      end
+
       if status = options[:status]
         case status
         when 'open'
@@ -268,8 +293,15 @@ class TopicQuery
           result = result.where('topics.closed')
         when 'archived'
           result = result.where('topics.archived')
+        when 'visible'
+          result = result.where('topics.visible')
+        when 'invisible'
+          result = result.where('NOT topics.visible')
         end
       end
+
+      result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
+      result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
       guardian = Guardian.new(@user)
       if !guardian.is_admin?
@@ -287,18 +319,25 @@ class TopicQuery
 
     def latest_results(options={})
       result = default_results(options)
-      result = remove_muted_categories(result, @user) unless options[:category].present?
+      result = remove_muted_categories(result, @user, exclude: options[:category])
       result
     end
 
-    def remove_muted_categories(list, user)
+    def remove_muted_categories(list, user, opts=nil)
+      category_id = get_category_id(opts[:exclude]) if opts
       if user
         list = list.where("NOT EXISTS(
                          SELECT 1 FROM category_users cu
                          WHERE cu.user_id = ? AND
                                cu.category_id = topics.category_id AND
-                               cu.notification_level = ?
-                         )", user.id, CategoryUser.notification_levels[:muted]).references('cu')
+                               cu.notification_level = ? AND
+                               cu.category_id <> ?
+                         )",
+                          user.id,
+                          CategoryUser.notification_levels[:muted],
+                          category_id || -1
+                         )
+                      .references('cu')
       end
 
       list
@@ -314,7 +353,7 @@ class TopicQuery
 
     def new_results(options={})
       result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
-      result = remove_muted_categories(result, @user) unless options[:category].present?
+      result = remove_muted_categories(result, @user, exclude: options[:category])
       suggested_ordering(result, options)
     end
 
@@ -322,6 +361,8 @@ class TopicQuery
       result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
       excluded_topic_ids += Category.pluck(:topic_id).compact
       result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
+
+      result = remove_muted_categories(result, @user)
 
       # If we are in a category, prefer it for the random results
       if topic.category_id

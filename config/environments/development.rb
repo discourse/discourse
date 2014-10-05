@@ -36,7 +36,7 @@ Discourse::Application.configure do
 
   BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 
-  config.enable_mini_profiler = true
+  config.load_mini_profiler = true
 
   require 'middleware/turbo_dev'
   require 'middleware/missing_avatars'
@@ -47,7 +47,7 @@ Discourse::Application.configure do
   require 'rbtrace'
 
   if emails = GlobalSetting.developer_emails
-    config.developer_emails = emails.split(",")
+    config.developer_emails = emails.split(",").map(&:strip)
   end
 end
 

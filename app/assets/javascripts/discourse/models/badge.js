@@ -15,6 +15,11 @@ Discourse.Badge = Discourse.Model.extend({
   **/
   newBadge: Em.computed.none('id'),
 
+  hasQuery: function(){
+    var query = this.get('query');
+    return query && query.trim().length > 0;
+  }.property('query'),
+
   /**
     @private
 
@@ -35,24 +40,42 @@ Discourse.Badge = Discourse.Model.extend({
     @type {String}
   **/
   displayName: function() {
-    var i18nKey = "badges." + this.get('i18nNameKey') + ".name";
+    var i18nKey = "badges.badge." + this.get('i18nNameKey') + ".name";
     return I18n.t(i18nKey, {defaultValue: this.get('name')});
   }.property('name', 'i18nNameKey'),
 
   /**
-    The i18n translated description for this badge. `null` if no translation exists.
+    The i18n translated description for this badge. Returns the null if no
+    translation exists.
 
     @property translatedDescription
     @type {String}
   **/
   translatedDescription: function() {
-    var i18nKey = "badges." + this.get('i18nNameKey') + ".description",
+    var i18nKey = "badges.badge." + this.get('i18nNameKey') + ".description",
         translation = I18n.t(i18nKey);
     if (translation.indexOf(i18nKey) !== -1) {
       translation = null;
     }
     return translation;
   }.property('i18nNameKey'),
+
+  displayDescription: function(){
+    // we support html in description but in most places do not need it
+    return this.get('displayDescriptionHtml').replace(/<[^>]*>/g, "");
+  }.property('displayDescriptionHtml'),
+
+  /**
+    Display-friendly description string. Returns either a translation or the
+    original description string.
+
+    @property displayDescription
+    @type {String}
+  **/
+  displayDescriptionHtml: function() {
+    var translated = this.get('translatedDescription');
+    return (translated === null ? this.get('description') : translated) || "";
+  }.property('description', 'translatedDescription'),
 
   /**
     Update this badge with the response returned by the server on save.
@@ -62,15 +85,24 @@ Discourse.Badge = Discourse.Model.extend({
   **/
   updateFromJson: function(json) {
     var self = this;
-    Object.keys(json.badge).forEach(function(key) {
-      self.set(key, json.badge[key]);
-    });
-    json.badge_types.forEach(function(badgeType) {
-      if (badgeType.id === self.get('badge_type_id')) {
-        self.set('badge_type', Object.create(badgeType));
-      }
-    });
+    if (json.badge) {
+      Object.keys(json.badge).forEach(function(key) {
+        self.set(key, json.badge[key]);
+      });
+    }
+    if (json.badge_types) {
+      json.badge_types.forEach(function(badgeType) {
+        if (badgeType.id === self.get('badge_type_id')) {
+          self.set('badge_type', Object.create(badgeType));
+        }
+      });
+    }
   },
+
+  badgeTypeClassName: function() {
+    var type = this.get('badge_type.name') || "";
+    return "badge-type-" + type.toLowerCase();
+  }.property('badge_type.name'),
 
   /**
     Save and update the badge from the server's response.
@@ -78,7 +110,7 @@ Discourse.Badge = Discourse.Model.extend({
     @method save
     @returns {Promise} A promise that resolves to the updated `Discourse.Badge`
   **/
-  save: function() {
+  save: function(fields) {
     this.set('savingStatus', I18n.t('saving'));
     this.set('saving', true);
 
@@ -92,18 +124,32 @@ Discourse.Badge = Discourse.Model.extend({
       requestType = "PUT";
     }
 
+    var boolFields = ['allow_title', 'multiple_grant',
+                      'listable', 'auto_revoke',
+                      'enabled', 'show_posts',
+                      'target_posts' ];
+
+    var data = {};
+    fields.forEach(function(field){
+      var d = self.get(field);
+      if(_.include(boolFields, field)) {
+        d = !!d;
+      }
+      data[field] = d;
+    });
+
     return Discourse.ajax(url, {
       type: requestType,
-      data: {
-        name: this.get('name'),
-        description: this.get('description'),
-        badge_type_id: this.get('badge_type_id')
-      }
+      data: data
     }).then(function(json) {
       self.updateFromJson(json);
       self.set('savingStatus', I18n.t('saved'));
       self.set('saving', false);
       return self;
+    }).catch(function(error) {
+      self.set('savingStatus', I18n.t('failed'));
+      self.set('saving', false);
+      throw error;
     });
   },
 
@@ -138,6 +184,13 @@ Discourse.Badge.reopenClass({
       });
     }
 
+    var badgeGroupings = {};
+    if ('badge_groupings' in json) {
+      json.badge_groupings.forEach(function(badgeGroupingJson) {
+        badgeGroupings[badgeGroupingJson.id] = Discourse.BadgeGrouping.create(badgeGroupingJson);
+      });
+    }
+
     // Create Badge objects.
     var badges = [];
     if ("badge" in json) {
@@ -148,8 +201,10 @@ Discourse.Badge.reopenClass({
     badges = badges.map(function(badgeJson) {
       var badge = Discourse.Badge.create(badgeJson);
       badge.set('badge_type', badgeTypes[badge.get('badge_type_id')]);
+      badge.set('badge_grouping', badgeGroupings[badge.get('badge_grouping_id')]);
       return badge;
     });
+
     if ("badge" in json) {
       return badges[0];
     } else {
@@ -163,9 +218,26 @@ Discourse.Badge.reopenClass({
     @method findAll
     @returns {Promise} a promise that resolves to an array of `Discourse.Badge`
   **/
-  findAll: function() {
-    return Discourse.ajax('/admin/badges').then(function(badgesJson) {
+  findAll: function(opts) {
+    var listable = "";
+    if(opts && opts.onlyListable){
+      listable = "?only_listable=true";
+    }
+    return Discourse.ajax('/badges.json' + listable).then(function(badgesJson) {
       return Discourse.Badge.createFromJson(badgesJson);
+    });
+  },
+
+  /**
+    Returns a `Discourse.Badge` that has the given ID.
+
+    @method findById
+    @param {Number} id ID of the badge
+    @returns {Promise} a promise that resolves to a `Discourse.Badge`
+  **/
+  findById: function(id) {
+    return Discourse.ajax("/badges/" + id).then(function(badgeJson) {
+      return Discourse.Badge.createFromJson(badgeJson);
     });
   }
 });

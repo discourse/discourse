@@ -11,7 +11,7 @@ class Autospec::ReloadCss
   watch(/\.css$/)
   watch(/\.ca?ss\.erb$/)
   watch(/\.s[ac]ss$/)
-  watch(/\.handlebars$/)
+  watch(/\.hbs$/)
 
   def self.message_bus
     MessageBus::Instance.new.tap do |bus|
@@ -24,6 +24,12 @@ class Autospec::ReloadCss
   end
 
   def self.run_on_change(paths)
+    if paths.any? { |p| p =~ /\.(css|s[ac]ss)/ }
+      s = DiscourseStylesheets.new(:desktop) # TODO: what about mobile?
+      s.compile
+      s.ensure_digestless_file
+      paths << "public" + s.stylesheet_relpath_no_digest
+    end
     paths.map! do |p|
       hash = nil
       fullpath = "#{Rails.root}/#{p}"

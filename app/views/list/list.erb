@@ -1,6 +1,10 @@
 <div class="topic-list">
 <% @list.topics.each do |t| %>
-  <a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
+  <a href="<%= t.relative_url %>"><%= t.title %></a>
+  <% if !@category && t.category %>
+    [<a href="<%= t.category.url%>"><%= t.category.name %></a>]
+  <% end %>
+  <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
 <% end %>
 </div>
 
@@ -13,8 +17,6 @@
     <b><a href="<%= @list.more_topics_url.sub('.json?','?') %>" rel="next"><%= t 'next_page'%></a></b>
   </p>
 <% end %>
-
-<p><%= t 'powered_by_html' %></p>
 
 <% if @rss %>
   <% content_for :head do %>

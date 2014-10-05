@@ -94,23 +94,6 @@ In a few seconds, rails will start serving pages. To access them, open a web bro
 
 You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changes.
 
-### Changing the Seed Data
-
-By default, the Vagrant virtual machine comes seeded with test data. You'll have a few topics to play around with
-and some user accounts. If you'd like to use the default production seed data instead you can execute the following
-commands:
-
-```
-vagrant ssh
-cd /vagrant
-rake db:drop db:create
-psql discourse_development < pg_dumps/production-image.sql
-rake db:migrate
-rake db:test:prepare
-```
-
-If you change your mind and want to use the test data again, just execute the above but using `pg_dumps/development-image.sql` instead.
-
 ### Tests
 
 If you're actively working on Discourse, we recommend that you run rake autospec, which will run the specs.  It’s very, very smart. It’ll abort very long test runs. So if it starts running all of the specs and then you just start editing a spec file and save it, it knows that it’s time to interrupt the spec suite, run this one spec for you, then it’ll keep running these specs until they pass as well. If you fail a spec by saving it and then go and start editing around the project to try and fix that spec, it’ll detect that and run that one failing spec, not a hundred of them.
@@ -120,8 +103,8 @@ To use it, follow all the above steps. Once rails is running, open a new termina
 ```
 vagrant ssh
 cd /vagrant
-bundle exec rake db:test:prepare
-bundle exec rake autospec
+RAILS_ENV=test bundle exec rake db:drop db:create db:migrate
+bundle exec rake autospec p l=5
 ```
 
 For more insight into testing Discourse, see [this discussion](http://rubyrogues.com/117-rr-discourse-part-2-with-sam-saffron-and-robin-ward/) with the Ruby Rogues.

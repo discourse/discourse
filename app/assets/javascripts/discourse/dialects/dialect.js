@@ -1,3 +1,4 @@
+/*global md5:true */
 /**
 
   Discourse uses the Markdown.js as its main parser. `Discourse.Dialect` is the framework
@@ -9,7 +10,9 @@ var parser = window.BetterMarkdown,
     DialectHelpers = parser.DialectHelpers,
     dialect = MD.dialects.Discourse = DialectHelpers.subclassDialect( MD.dialects.Gruber ),
     initialized = false,
-    emitters = [];
+    emitters = [],
+    hoisted,
+    preProcessors = [];
 
 /**
   Initialize our dialects for processing.
@@ -18,6 +21,11 @@ var parser = window.BetterMarkdown,
 **/
 function initializeDialects() {
   MD.buildBlockOrder(dialect.block);
+  var index = dialect.block.__order__.indexOf("code");
+  if (index > -1) {
+    dialect.block.__order__.splice(index, 1);
+    dialect.block.__order__.unshift("code");
+  }
   MD.buildInlinePatterns(dialect.inline);
   initialized = true;
 }
@@ -35,24 +43,18 @@ function processTextNodes(node, event, emitter) {
   if (node.length < 2) { return; }
 
   if (node[0] === '__RAW') {
+    var hash = md5(node[1]);
+    hoisted[hash] = node[1];
+    node[1] = hash;
     return;
   }
 
-  var skipSanitize = [];
   for (var j=1; j<node.length; j++) {
     var textContent = node[j];
     if (typeof textContent === "string") {
-
-      if (dialect.options.sanitize && !skipSanitize[textContent]) {
-        textContent = Discourse.Markdown.sanitize(textContent);
-      }
-
       var result = emitter(textContent, event);
       if (result) {
         if (result instanceof Array) {
-          for (var i=0; i<result.length; i++) {
-            skipSanitize[result[i]] = true;
-          }
           node.splice.apply(node, [j, 1].concat(result));
         } else {
           node[j] = result;
@@ -63,8 +65,8 @@ function processTextNodes(node, event, emitter) {
 
     }
   }
-
 }
+
 
 /**
   Parse a JSON ML tree, using registered handlers to adjust it if necessary.
@@ -96,7 +98,7 @@ function parseTree(tree, path, insideCounts) {
 
       insideCounts[tagName] = (insideCounts[tagName] || 0) + 1;
 
-      if (n && n.length === 2 && n[0] === "p" && /^<!--([\s\S]*)-->$/m.exec(n[1])) {
+      if (n && n.length === 2 && n[0] === "p" && /^<!--([\s\S]*)-->$/.exec(n[1])) {
         // Remove paragraphs around comment-only nodes.
         tree[i] = n[1];
       } else {
@@ -105,6 +107,14 @@ function parseTree(tree, path, insideCounts) {
 
       insideCounts[tagName] = insideCounts[tagName] - 1;
     }
+
+    // If raw nodes are in paragraphs, pull them up
+    if (tree.length === 2 && tree[0] === 'p' && tree[1] instanceof Array && tree[1][0] === "__RAW") {
+      var text = tree[1][1];
+      tree[0] = "__RAW";
+      tree[1] = text;
+    }
+
     path.pop();
   }
   return tree;
@@ -119,15 +129,39 @@ function parseTree(tree, path, insideCounts) {
   @returns {Boolean} whether there is an invalid word boundary
 **/
 function invalidBoundary(args, prev) {
-
-  if (!args.wordBoundary && !args.spaceBoundary) { return false; }
+  if (!(args.wordBoundary || args.spaceBoundary || args.spaceOrTagBoundary)) { return false; }
 
   var last = prev[prev.length - 1];
   if (typeof last !== "string") { return false; }
 
   if (args.wordBoundary && (last.match(/(\w|\/)$/))) { return true; }
   if (args.spaceBoundary && (!last.match(/\s$/))) { return true; }
+  if (args.spaceOrTagBoundary && (!last.match(/(\s|\>)$/))) { return true; }
 }
+
+/**
+  Returns the number of (terminated) lines in a string.
+
+  @method countLines
+  @param {string} str the string.
+  @returns {Integer} number of terminated lines in str
+**/
+function countLines(str) {
+  var index = -1, count = 0;
+  while ((index = str.indexOf("\n", index + 1)) !== -1) { count++; }
+  return count;
+}
+
+function hoister(t, target, replacement) {
+  var regexp = new RegExp(target.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), "g");
+  if (t.match(regexp)) {
+    var hash = md5(target);
+    t = t.replace(regexp, hash);
+    hoisted[hash] = replacement;
+  }
+  return t;
+}
+
 
 /**
   An object used for rendering our dialects.
@@ -148,10 +182,42 @@ Discourse.Dialect = {
   **/
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
-    dialect.options = opts;
-    var tree = parser.toHTMLTree(text, 'Discourse');
 
-    return parser.renderJsonML(parseTree(tree));
+    // Helps us hoist out HTML
+    hoisted = {};
+
+    preProcessors.forEach(function(p) {
+      text = p(text, hoister);
+    });
+
+    dialect.options = opts;
+    var tree = parser.toHTMLTree(text, 'Discourse'),
+        result = parser.renderJsonML(parseTree(tree));
+
+    if (opts.sanitize) {
+      result = Discourse.Markdown.sanitize(result);
+    } else if (opts.sanitizerFunction) {
+      result = opts.sanitizerFunction(result);
+    }
+
+    // If we hoisted out anything, put it back
+    var keys = Object.keys(hoisted);
+    if (keys.length) {
+      keys.forEach(function(k) {
+        result = result.replace(new RegExp(k,"g"), hoisted[k]);
+      });
+    }
+
+    hoisted = {};
+    return result.trim();
+  },
+
+  /**
+    Adds a text pre-processor. Use only if necessary, as a dialect
+    that emits JsonML is much better if possible.
+  **/
+  addPreProcessor: function(preProc) {
+    preProcessors.push(preProc);
   },
 
   /**
@@ -183,8 +249,8 @@ Discourse.Dialect = {
     @param {Function} emitter A function that emits the JsonML for the replacement.
   **/
   inlineReplace: function(token, emitter) {
-    this.registerInline(token, function() {
-      return [token.length, emitter.call(this, token)];
+    this.registerInline(token, function(text, match, prev) {
+      return [token.length, emitter.call(this, token, match, prev)];
     });
   },
 
@@ -256,19 +322,19 @@ Discourse.Dialect = {
       @param {String} [opts.between] A shortcut for when the `start` and `stop` are the same.
       @param {Boolean} [opts.rawContents] If true, the contents between the tokens will not be parsed.
       @param {Boolean} [opts.wordBoundary] If true, the match must be on a word boundary
-      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a sppace boundary
+      @param {Boolean} [opts.spaceBoundary] If true, the match must be on a space boundary
   **/
   inlineBetween: function(args) {
     var start = args.start || args.between,
         stop = args.stop || args.between,
-        startLength = start.length;
+        startLength = start.length,
+        self = this;
 
     this.registerInline(start, function(text, match, prev) {
       if (invalidBoundary(args, prev)) { return; }
 
-      var endPos = text.indexOf(stop, startLength);
+      var endPos = self.findEndPos(text, start, stop, args, startLength);
       if (endPos === -1) { return; }
-
       var between = text.slice(startLength, endPos);
 
       // If rawcontents is set, don't process inline
@@ -281,6 +347,17 @@ Discourse.Dialect = {
         return [endPos+stop.length, contents];
       }
     });
+  },
+
+  findEndPos: function(text, start, stop, args, offset) {
+    var endPos, nextStart;
+    do {
+      endPos = text.indexOf(stop, offset);
+      if (endPos === -1) { return -1; }
+      nextStart = text.indexOf(start, offset);
+      offset = endPos + stop.length;
+    } while (nextStart !== -1 && nextStart < endPos);
+    return endPos;
   },
 
   /**
@@ -306,6 +383,7 @@ Discourse.Dialect = {
       Discourse.Dialect.replaceBlock({
         start: /(\[code\])([\s\S]*)/igm,
         stop: '[/code]',
+        rawContents: true,
 
         emitter: function(blockContents) {
           return ['p', ['pre'].concat(blockContents)];
@@ -315,90 +393,97 @@ Discourse.Dialect = {
 
     @method replaceBlock
     @param {Object} args Our replacement options
-      @param {String} [opts.start] The starting regexp we want to find
-      @param {String} [opts.stop] The ending token we want to find
-      @param {Function} [opts.emitter] The emitting function to transform the contents of the block into jsonML
+      @param {RegExp} [args.start] The starting regexp we want to find
+      @param {String} [args.stop] The ending token we want to find
+      @param {Boolean} [args.rawContents] True to skip recursive processing
+      @param {Function} [args.emitter] The emitting function to transform the contents of the block into jsonML
 
   **/
   replaceBlock: function(args) {
     this.registerBlock(args.start.toString(), function(block, next) {
 
+      var linebreaks = dialect.options.traditional_markdown_linebreaks ||
+          Discourse.SiteSettings.traditional_markdown_linebreaks;
+      if (linebreaks && args.skipIfTradtionalLinebreaks) { return; }
+
       args.start.lastIndex = 0;
-      var m = (args.start).exec(block);
+      var result = [], match = (args.start).exec(block);
+      if (!match) { return; }
 
-      if (!m) { return; }
+      var lastChance = function() {
+        return !next.some(function(blk) { return blk.match(args.stop); });
+      };
 
-      var startPos = block.indexOf(m[0]),
-          leading,
-          blockContents = [],
-          result = [],
-          lineNumber = block.lineNumber;
-
-      if (startPos > 0) {
-        leading = block.slice(0, startPos);
-        lineNumber += (leading.split("\n").length - 1);
-
-        var para = ['p'];
-        this.processInline(leading).forEach(function (l) {
-          para.push(l);
-        });
-
-        result.push(para);
+      // shave off start tag and leading text, if any.
+      var pos = args.start.lastIndex - match[0].length,
+          leading = block.slice(0, pos),
+          trailing = match[2] ? match[2].replace(/^\n*/, "") : "";
+      // just give up if there's no stop tag in this or any next block
+      args.stop.lastIndex = block.length - trailing.length;
+      if (!args.stop.exec(block) && lastChance()) { return; }
+      if (leading.length > 0) { result.push(['p'].concat(this.processInline(leading))); }
+      if (trailing.length > 0) {
+        next.unshift(MD.mk_block(trailing, block.trailing,
+          block.lineNumber + countLines(leading) + (match[2] ? match[2].length : 0) - trailing.length));
       }
 
-      if (m[2]) {
-        next.unshift(MD.mk_block(m[2], null, lineNumber + 1));
-      }
+      // go through the available blocks to find the matching stop tag.
+      var contentBlocks = [], nesting = 0, actualEndPos = -1, currentBlock;
+      blockloop:
+      while (currentBlock = next.shift()) {
+        // collect all the start and stop tags in the current block
+        args.start.lastIndex = 0;
+        var startPos = [], m;
+        while (m = (args.start).exec(currentBlock)) {
+          startPos.push(args.start.lastIndex - m[0].length);
+          args.start.lastIndex = args.start.lastIndex - (m[2] ? m[2].length : 0);
+        }
+        args.stop.lastIndex = 0;
+        var endPos = [];
+        while (m = (args.stop).exec(currentBlock)) {
+          endPos.push(args.stop.lastIndex - m[0].length);
+        }
 
-      lineNumber++;
-
-
-      var blockClosed = false;
-      if (next.length > 0) {
-        for (var i=0; i<next.length; i++) {
-          if (next[i].indexOf(args.stop) >= 0) {
-            blockClosed = true;
-            break;
+        // go through the available end tags:
+        var ep = 0, sp = 0; // array indices
+        while (ep < endPos.length) {
+          if (sp < startPos.length && startPos[sp] < endPos[ep]) {
+            // there's an end tag, but there's also another start tag first. we need to go deeper.
+            sp++; nesting++;
+          } else if (nesting > 0) {
+            // found an end tag, but we must go up a level first.
+            ep++; nesting--;
+          } else {
+            // found an end tag and we're at the top: done! -- or: start tag and end tag are
+            // identical, (i.e. startPos[sp] == endPos[ep]), so we don't do nesting at all.
+            actualEndPos = endPos[ep];
+            break blockloop;
           }
         }
-      }
 
-      if (!blockClosed) {
-        if (m[2]) { next.shift(); }
-        return;
-      }
-
-      while (next.length > 0) {
-        var b = next.shift(),
-            blockLine = b.lineNumber,
-            diff = ((typeof blockLine === "undefined") ? lineNumber : blockLine) - lineNumber,
-            endFound = b.indexOf(args.stop),
-            leadingContents = b.slice(0, endFound),
-            trailingContents = b.slice(endFound+args.stop.length);
-
-        if (endFound >= 0) { blockClosed = true; }
-        for (var j=1; j<diff; j++) {
-          blockContents.push("");
-        }
-        lineNumber = blockLine + b.split("\n").length - 1;
-
-        if (endFound !== -1) {
-          if (trailingContents) {
-            next.unshift(MD.mk_block(trailingContents.replace(/^\s+/, "")));
-          }
-
-          blockContents.push(leadingContents.replace(/\s+$/, ""));
+        if (lastChance()) {
+          // when lastChance() becomes true the first time, currentBlock contains the last
+          // end tag available in the input blocks but it's not on the right nesting level
+          // or we would have terminated the loop already. the only thing we can do is to
+          // treat the last available end tag as tho it were matched with our start tag
+          // and let the emitter figure out how to render the garbage inside.
+          actualEndPos = endPos[endPos.length - 1];
           break;
-        } else {
-          blockContents.push(b);
         }
+
+        // any left-over start tags still increase the nesting level
+        nesting += startPos.length - sp;
+        contentBlocks.push(currentBlock);
       }
 
+      var stopLen = currentBlock.match(args.stop)[0].length,
+          before = currentBlock.slice(0, actualEndPos).replace(/\n*$/, ""),
+          after = currentBlock.slice(actualEndPos + stopLen).replace(/^\n*/, "");
+      if (before.length > 0) contentBlocks.push(MD.mk_block(before, "", currentBlock.lineNumber));
+      if (after.length > 0) next.unshift(MD.mk_block(after, currentBlock.trailing, currentBlock.lineNumber + countLines(before)));
 
-      var emitterResult = args.emitter.call(this, blockContents, m, dialect.options);
-      if (emitterResult) {
-        result.push(emitterResult);
-      }
+      var emitterResult = args.emitter.call(this, contentBlocks, match, dialect.options);
+      if (emitterResult) { result.push(emitterResult); }
       return result;
     });
   },

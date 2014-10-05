@@ -4,11 +4,18 @@ require_dependency 'auth/default_current_user_provider'
 
 module Discourse
 
+  require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
     extend Sidekiq::ExceptionHandler
   end
 
-  def self.handle_exception(ex, context=nil, parent_logger = nil)
+  # Log an exception.
+  #
+  # If your code is in a scheduled job, it is recommended to use the
+  # error_context() method in Jobs::Base to pass the job arguments and any
+  # other desired context.
+  # See app/jobs/base.rb for the error_context function.
+  def self.handle_exception(ex, context = {}, parent_logger = nil)
     context ||= {}
     parent_logger ||= SidekiqExceptionHandler
 
@@ -52,8 +59,12 @@ module Discourse
     @filters ||= [:latest, :unread, :new, :starred, :read, :posted]
   end
 
+  def self.feed_filters
+    @feed_filters ||= [:latest]
+  end
+
   def self.anonymous_filters
-    @anonymous_filters ||= [:latest]
+    @anonymous_filters ||= [:latest, :top, :categories]
   end
 
   def self.logged_in_filters
@@ -194,14 +205,26 @@ module Discourse
     end
   end
 
+  def self.git_branch
+    return $git_branch if $git_branch
+
+    begin
+      $git_branch ||= `git rev-parse --abbrev-ref HEAD`.strip
+    rescue
+      $git_branch = "unknown"
+    end
+  end
+
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
-    user = User.where(username_lower: SiteSetting.site_contact_username.downcase).first if SiteSetting.site_contact_username.present?
+    user = User.find_by(username_lower: SiteSetting.site_contact_username.downcase) if SiteSetting.site_contact_username.present?
     user ||= User.admins.real.order(:id).first
   end
 
+  SYSTEM_USER_ID = -1 unless defined? SYSTEM_USER_ID
+
   def self.system_user
-    User.where(id: -1).first
+    User.find_by(id: SYSTEM_USER_ID)
   end
 
   def self.store
@@ -238,13 +261,42 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    current_db = RailsMultisite::ConnectionManagement.current_db
+    RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
+    MessageBus.after_fork
     SiteSetting.after_fork
-    ActiveRecord::Base.establish_connection
     $redis.client.reconnect
     Rails.cache.reconnect
-    MessageBus.after_fork
-    # /!\ HACK /!\ force sidekiq to create a new connection to redis
-    Sidekiq.instance_variable_set(:@redis, nil)
+    Logster.store.redis.reconnect
+    # shuts down all connections in the pool
+    Sidekiq.redis_pool.shutdown{|c| nil}
+    # re-establish
+    Sidekiq.redis = sidekiq_redis_config
+    start_connection_reaper
+    nil
+  end
+
+  def self.start_connection_reaper(interval=30, age=30)
+    # this helps keep connection counts in check
+    Thread.new do
+      while true
+        sleep interval
+        pools = []
+        ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool){|pool| pools << pool}
+
+        pools.each do |pool|
+          pool.drain(age.seconds)
+        end
+      end
+    end
+  end
+
+  def self.sidekiq_redis_config
+    { url: $redis.url, namespace: 'sidekiq' }
+  end
+
+  def self.static_doc_topic_ids
+    [SiteSetting.tos_topic_id, SiteSetting.guidelines_topic_id, SiteSetting.privacy_topic_id]
   end
 
 end

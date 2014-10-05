@@ -2,13 +2,10 @@ module FileStore
 
   class BaseStore
 
-    def store_upload(file, upload)
+    def store_upload(file, upload, content_type = nil)
     end
 
     def store_optimized_image(file, optimized_image)
-    end
-
-    def store_avatar(file, avatar, size)
     end
 
     def remove_upload(upload)

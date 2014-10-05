@@ -1,7 +1,8 @@
 # If Mini Profiler is included via gem
-if Rails.configuration.respond_to?(:enable_mini_profiler) && Rails.configuration.enable_mini_profiler
+if Rails.configuration.respond_to?(:load_mini_profiler) && Rails.configuration.load_mini_profiler
   require 'rack-mini-profiler'
   require 'flamegraph'
+  require 'memory_profiler' if RUBY_VERSION >= "2.1.0"
   # initialization is skipped so trigger it
   Rack::MiniProfilerRails.initialize!(Rails.application)
 end
@@ -16,13 +17,18 @@ if defined?(Rack::MiniProfiler)
 
   # For our app, let's just show mini profiler always, polling is chatty so nuke that
   Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
+    path = env['PATH_INFO']
     (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Nexus 7|Android/) &&
-    (env['PATH_INFO'] !~ /^\/message-bus/) &&
-    (env['PATH_INFO'] !~ /topics\/timings/) &&
-    (env['PATH_INFO'] !~ /assets/) &&
-    (env['PATH_INFO'] !~ /qunit/) &&
-    (env['PATH_INFO'] !~ /srv\/status/) &&
-    (env['PATH_INFO'] !~ /commits-widget/)
+    (path !~ /^\/message-bus/) &&
+    (path !~ /topics\/timings/) &&
+    (path !~ /assets/) &&
+    (path !~ /\/user_avatar\//) &&
+    (path !~ /\/letter_avatar\//) &&
+    (path !~ /qunit/) &&
+    (path !~ /srv\/status/) &&
+    (path !~ /commits-widget/) &&
+    (path !~ /^\/cdn_asset/) &&
+    (path !~ /^\/logs/)
   end
 
   # without a user provider our results will use the ip address for namespacing

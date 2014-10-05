@@ -852,15 +852,10 @@ html4.ATTRIBS = {
   'iframe::marginwidth': 0,
   'iframe::width': 0,
   'iframe::src': 1,
-  'img::align': 0,
   'img::alt': 0,
-  'img::border': 0,
   'img::height': 0,
-  'img::hspace': 0,
-  'img::ismap': 0,
   'img::name': 7,
   'img::src': 1,
-  'img::vspace': 0,
   'img::width': 0,
   'ins::cite': 1,
   'ins::datetime': 0,
@@ -883,9 +878,6 @@ html4.ATTRIBS = {
   'ol::type': 0,
   'p::align': 0,
   'pre::width': 0,
-  'progress::max': 0,
-  'progress::min': 0,
-  'progress::value': 0,
   'q::cite': 1,
   'source::type': 0,
   'track::default': 0,
@@ -965,7 +957,6 @@ html4.ELEMENTS = {
   'legend': 0,
   'li': 1,
   'link': 274,
-  'mark': 0,
   'meter': 0,
   'nav': 0,
   'nobr': 0,
@@ -977,7 +968,6 @@ html4.ELEMENTS = {
   'p': 1,
   'param': 274,
   'pre': 0,
-  'progress': 0,
   'q': 0,
   's': 0,
   'samp': 0,
@@ -1076,7 +1066,6 @@ html4.ELEMENT_DOM_INTERFACES = {
   'li': 'HTMLLIElement',
   'link': 'HTMLLinkElement',
   'map': 'HTMLMapElement',
-  'mark': 'HTMLElement',
   'menu': 'HTMLMenuElement',
   'meta': 'HTMLMetaElement',
   'meter': 'HTMLMeterElement',
@@ -1093,7 +1082,6 @@ html4.ELEMENT_DOM_INTERFACES = {
   'p': 'HTMLParagraphElement',
   'param': 'HTMLParamElement',
   'pre': 'HTMLPreElement',
-  'progress': 'HTMLProgressElement',
   'q': 'HTMLQuoteElement',
   's': 'HTMLElement',
   'samp': 'HTMLElement',
@@ -2067,6 +2055,16 @@ var html = (function(html4) {
            html4.ATTRIBS.hasOwnProperty(attribKey))) {
         atype = html4.ATTRIBS[attribKey];
       }
+
+      // Discourse modification: give us more flexibility with whitelists
+      if (opt_nmTokenPolicy) {
+        var newValue = opt_nmTokenPolicy(tagName, attribName, value);
+        if (newValue) {
+          attribs[i + 1] = newValue;
+          continue;
+        }
+      }
+
       if (atype !== null) {
         switch (atype) {
           case html4.atype['NONE']: break;
@@ -2115,17 +2113,6 @@ var html = (function(html4) {
               log(opt_logger, tagName, attribName, oldValue, value);
             }
             break;
-          case html4.atype['ID']:
-          case html4.atype['IDREF']:
-          case html4.atype['IDREFS']:
-          case html4.atype['GLOBAL_NAME']:
-          case html4.atype['LOCAL_NAME']:
-          case html4.atype['CLASSES']:
-            value = opt_nmTokenPolicy ? opt_nmTokenPolicy(value) : value;
-            if (opt_logger) {
-              log(opt_logger, tagName, attribName, oldValue, value);
-            }
-            break;
           case html4.atype['URI']:
             value = safeUri(value,
               getUriEffect(tagName, attribName),
@@ -2142,7 +2129,6 @@ var html = (function(html4) {
           case html4.atype['URI_FRAGMENT']:
             if (value && '#' === value.charAt(0)) {
               value = value.substring(1);  // remove the leading '#'
-              value = opt_nmTokenPolicy ? opt_nmTokenPolicy(value) : value;
               if (value !== null && value !== void 0) {
                 value = '#' + value;  // restore the leading '#'
               }

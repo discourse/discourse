@@ -36,10 +36,18 @@ class TextCleaner
     text.sub!(/\s+([!?]\s*)\z/, '\1') if opts[:remove_extraneous_space]
     # Fixes interior spaces
     text.gsub!(/ +/, ' ') if opts[:fixes_interior_spaces]
+    # Normalize whitespaces
+    text = normalize_whitespaces(text)
     # Strip whitespaces
     text.strip! if opts[:strip_whitespaces]
 
     text
+  end
+
+  @@whitespaces_regexp = Regexp.new("(\u00A0|\u1680|\u180E|[\u2000-\u200B]|\u2028|\u2029|\u202F|\u205F|\u3000|\uFEFF)", "u").freeze
+
+  def self.normalize_whitespaces(text)
+    text.gsub(@@whitespaces_regexp, ' ')
   end
 
 end

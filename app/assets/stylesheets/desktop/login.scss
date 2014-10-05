@@ -11,8 +11,7 @@
 
 #login-form {
   a {
-    color: lighten($primary_text_color, 35%);
-    cursor: pointer;
+    color: scale-color($primary, $lightness: 35%);
   }
 }
 
@@ -49,7 +48,7 @@
 
   tr.instructions {
     label {
-      color: $secondary_text_color;
+      color: scale-color($primary, $lightness: 50%);
     }
   }
 
@@ -60,4 +59,5 @@
   .tos-agree {
     margin-bottom: 12px;
   }
+
 }

@@ -1,0 +1,17 @@
+.category-combobox, .select2-drop {
+  .badge-category {
+    display: inline-block;
+  }
+  .topic-count {
+    font-size: 11px;
+    color: $primary;
+    display: inline-block;
+  }
+  .highlighted .topic-count {
+    color: $secondary;
+  }
+  .category-desc {
+    margin: 6px 0 0 3px;
+    font-size: 12px;
+  }
+}

@@ -43,7 +43,6 @@ describe SessionController do
       response.should redirect_to('/')
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       logged_on_user.email.should == user.email
-      
       logged_on_user.single_sign_on_record.external_id.should == "abc"
       logged_on_user.single_sign_on_record.external_username.should == 'sam'
     end
@@ -54,11 +53,16 @@ describe SessionController do
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
+      sso.custom_fields["shop_url"] = "http://my_shop.com"
+      sso.custom_fields["shop_name"] = "Sam"
 
       get :sso_login, Rack::Utils.parse_query(sso.payload)
       response.should redirect_to('/a/')
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+      # ensure nothing is transient
+      logged_on_user = User.find(logged_on_user.id)
 
       logged_on_user.email.should == 'bob@bob.com'
       logged_on_user.name.should == 'Sam Saffron'
@@ -67,8 +71,11 @@ describe SessionController do
       logged_on_user.single_sign_on_record.external_id.should == "666"
       logged_on_user.single_sign_on_record.external_username.should == 'sam'
       logged_on_user.active.should == true
+      logged_on_user.custom_fields["shop_url"].should == "http://my_shop.com"
+      logged_on_user.custom_fields["shop_name"].should == "Sam"
+      logged_on_user.custom_fields["bla"].should == nil
     end
-    
+
     it 'allows login to existing account with valid nonce' do
       sso = get_sso('/hello/world')
       sso.external_id = '997'
@@ -164,7 +171,7 @@ describe SessionController do
 
     context 'when email is confirmed' do
       before do
-        token = user.email_tokens.where(email: user.email).first
+        token = user.email_tokens.find_by(email: user.email)
         EmailToken.confirm(token.token)
       end
 
@@ -179,12 +186,28 @@ describe SessionController do
         end
       end
 
+      describe 'invalid password' do
+        it "should return an error with an invalid password if too long" do
+          User.any_instance.expects(:confirm_password?).never
+          xhr :post, :create, login: user.username, password: ('s' * (User.max_password_length + 1))
+          ::JSON.parse(response.body)['error'].should be_present
+        end
+      end
+
       describe 'suspended user' do
         it 'should return an error' do
           User.any_instance.stubs(:suspended?).returns(true)
           User.any_instance.stubs(:suspended_till).returns(2.days.from_now)
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
           ::JSON.parse(response.body)['error'].should be_present
+        end
+      end
+
+      describe 'deactivated user' do
+        it 'should return an error' do
+          User.any_instance.stubs(:active).returns(false)
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          expect(JSON.parse(response.body)['error']).to eq(I18n.t('login.not_activated'))
         end
       end
 
@@ -276,6 +299,36 @@ describe SessionController do
           end
         end
       end
+
+      context 'when admins are restricted by ip address' do
+        let(:permitted_ip_address) { '111.234.23.11' }
+
+        before do
+          Fabricate(:screened_ip_address, ip_address: permitted_ip_address, action_type: ScreenedIpAddress.actions[:allow_admin])
+        end
+
+        it 'is successful for admin at the ip address' do
+          User.any_instance.stubs(:admin?).returns(true)
+          ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(permitted_ip_address)
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          session[:current_user_id].should == user.id
+        end
+
+        it 'returns an error for admin not at the ip address' do
+          User.any_instance.stubs(:admin?).returns(true)
+          ActionDispatch::Request.any_instance.stubs(:remote_ip).returns("111.234.23.12")
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          JSON.parse(response.body)['error'].should be_present
+          session[:current_user_id].should_not == user.id
+        end
+
+        it 'is successful for non-admin not at the ip address' do
+          User.any_instance.stubs(:admin?).returns(false)
+          ActionDispatch::Request.any_instance.stubs(:remote_ip).returns("111.234.23.12")
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          session[:current_user_id].should == user.id
+        end
+      end
     end
 
     context 'when email has not been confirmed' do
@@ -345,7 +398,7 @@ describe SessionController do
       let(:user) { Fabricate(:user) }
 
       it "returns a 500 if local logins are disabled" do
-        SiteSetting.stubs(:enable_local_logins).returns(false)
+        SiteSetting.enable_local_logins = false
         xhr :post, :forgot_password, login: user.username
         response.code.to_i.should == 500
       end

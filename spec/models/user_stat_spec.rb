@@ -26,7 +26,7 @@ describe UserStat do
 
       context 'with a view' do
         let(:topic) { Fabricate(:topic) }
-        let!(:view) { View.create_for(topic, '127.0.0.1', user) }
+        let!(:view) { TopicViewItem.add(topic.id, '127.0.0.1', user.id) }
 
         before do
           user.update_column :last_seen_at, 1.second.ago
@@ -39,7 +39,7 @@ describe UserStat do
         end
 
         it "won't record a second view as a different topic" do
-          View.create_for(topic, '127.0.0.1', user)
+          TopicViewItem.add(topic.id, '127.0.0.1', user.id)
           UserStat.update_view_counts
           stat.reload
           stat.topics_entered.should == 1

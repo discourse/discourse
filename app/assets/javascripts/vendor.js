@@ -1,3 +1,4 @@
+//= require logster
 //= require ./env
 //= require ./discourse/lib/probes.js
 
@@ -5,9 +6,9 @@
 //= require jquery_include.js
 //= require ember_include.js
 
+//= require loader
 //= require message-bus
 //= require jquery.ui.widget.js
-//= require_tree ./discourse/ember
 //= require LAB.js
 //= require Markdown.Converter.js
 //= require better_markdown.js
@@ -17,7 +18,7 @@
 //= require bootstrap-dropdown.js
 //= require bootstrap-modal.js
 //= require bootstrap-transition.js
-//= require chosen.jquery.js
+//= require select2.js
 //= require favcount.js
 //= require jquery.ba-replacetext.js
 //= require jquery.ba-resize.min.js
@@ -38,3 +39,5 @@
 //= require lock-on.js
 //= require ember-cloaking
 //= require break_string
+//= require buffered-proxy
+//= require_tree ./discourse/ember

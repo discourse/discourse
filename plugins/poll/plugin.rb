@@ -58,11 +58,45 @@ after_initialize do
 
         render json: poll.serialize(current_user)
       end
+
+      def toggle_close
+        post = Post.find(params[:post_id])
+        topic = post.topic
+        poll = PollPlugin::Poll.new(post)
+
+        # Make sure the user is allowed to close the poll.
+        Guardian.new(current_user).ensure_can_edit!(topic)
+
+        # Make sure this is actually a poll.
+        unless poll.has_poll_details?
+          render status: 400, json: false
+          return
+        end
+
+        # Make sure the topic is not closed.
+        if topic.closed?
+          render status: 400, json: false
+          return
+        end
+
+        # Modify topic title.
+        if topic.title =~ /^(#{I18n.t('poll.prefix').strip})\s?:/i
+          topic.title = topic.title.gsub(/^(#{I18n.t('poll.prefix').strip})\s?:/i, I18n.t('poll.closed_prefix') + ':')
+        elsif topic.title =~ /^(#{I18n.t('poll.closed_prefix').strip})\s?:/i
+          topic.title = topic.title.gsub(/^(#{I18n.t('poll.closed_prefix').strip})\s?:/i, I18n.t('poll.prefix') + ':')
+        end
+
+        topic.acting_user = current_user
+        topic.save!
+
+        render json: topic, serializer: BasicTopicSerializer
+      end
     end
   end
 
   PollPlugin::Engine.routes.draw do
     put '/' => 'poll#vote'
+    put '/toggle_close' => 'poll#toggle_close'
   end
 
   Discourse::Application.routes.append do
@@ -108,19 +142,27 @@ after_initialize do
 end
 
 # Poll UI.
-register_asset "javascripts/discourse/templates/poll.js.handlebars"
-register_asset "javascripts/poll_ui.js"
+register_asset "javascripts/controllers/poll.js.es6"
+register_asset "javascripts/discourse/templates/poll.hbs"
+register_asset "javascripts/initializers/poll.js.es6"
 register_asset "javascripts/poll_bbcode.js", :server_side
 
 register_css <<CSS
 
 .poll-ui table {
   margin-bottom: 5px;
+  margin-left: 20px;
 }
 
 .poll-ui tr {
   cursor: pointer;
 }
+
+.poll-ui .row {
+  padding-left: 15px;
+  padding-top: 10px;
+}
+
 
 .poll-ui td.radio input {
   margin-left: -10px !important;
@@ -143,8 +185,16 @@ register_css <<CSS
   background-color: #FFFFB3;
 }
 
-.poll-ui button {
-  border: none;
+.poll-ui button i.fa {
+  margin-right: 2px;
+}
+
+.poll-ui .radio {
+  margin-right: 0px;
+}
+
+.poll-ui .toggle-poll {
+  float: right;
 }
 
 CSS

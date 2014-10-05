@@ -1,4 +1,4 @@
-# Builds a Mail::Mesage we can use for sending. Optionally supports using a template
+# Builds a Mail::Message we can use for sending. Optionally supports using a template
 # for the body and subject
 module Email
 
@@ -23,21 +23,34 @@ module Email
 
       @template_args = {site_name: SiteSetting.email_prefix.presence || SiteSetting.title,
                         base_url: Discourse.base_url,
-                        user_preferences_url: "#{Discourse.base_url}/user_preferences" }.merge!(@opts)
+                        user_preferences_url: "#{Discourse.base_url}/my/preferences" }.merge!(@opts)
 
       if @template_args[:url].present?
-        @template_args[:respond_instructions] =
-          if allow_reply_by_email?
-            I18n.t('user_notifications.reply_by_email', @template_args)
-          else
-            I18n.t('user_notifications.visit_link_to_respond', @template_args)
-          end
+        if @opts[:include_respond_instructions] == false
+          @template_args[:respond_instructions] = ''
+        else
+          @template_args[:respond_instructions] =
+            if allow_reply_by_email?
+              I18n.t('user_notifications.reply_by_email', @template_args)
+            else
+              I18n.t('user_notifications.visit_link_to_respond', @template_args)
+            end
+        end
       end
     end
 
     def subject
-      subject = @opts[:subject]
-      subject = I18n.t("#{@opts[:template]}.subject_template", template_args) if @opts[:template]
+      if @opts[:use_site_subject]
+        subject = String.new(SiteSetting.email_subject)
+        subject.gsub!("%{site_name}", @template_args[:site_name])
+        subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re', template_args) : '')
+        subject.gsub!("%{optional_pm}", @opts[:private_reply] ? I18n.t('subject_pm', template_args) : '')
+        subject.gsub!("%{optional_cat}", @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '')
+        subject.gsub!("%{topic_title}", @template_args[:topic_title]) if @template_args[:topic_title] # must be last for safety
+      else
+        subject = @opts[:subject]
+        subject = I18n.t("#{@opts[:template]}.subject_template", template_args) if @opts[:template]
+      end
       subject
     end
 
@@ -132,11 +145,17 @@ module Email
       @opts[:allow_reply_by_email]
     end
 
+    def private_reply?
+      SiteSetting.reply_by_email_enabled? &&
+      reply_by_email_address.present? &&
+      @opts[:allow_reply_by_email] &&
+      @opts[:private_reply]
+    end
+
     def from_value
       return @from_value if @from_value
       @from_value = @opts[:from] || SiteSetting.notification_email
       @from_value = alias_email(@from_value)
-      @from_value
     end
 
     def reply_by_email_address
@@ -145,14 +164,24 @@ module Email
 
       @reply_by_email_address = SiteSetting.reply_by_email_address.dup
       @reply_by_email_address.gsub!("%{reply_key}", reply_key)
-      @reply_by_email_address = alias_email(@reply_by_email_address)
-
-      @reply_by_email_address
+      @reply_by_email_address = if private_reply?
+                                  alias_email(@reply_by_email_address)
+                                else
+                                  site_alias_email(@reply_by_email_address)
+                                end
     end
 
     def alias_email(source)
-      return source if @opts[:from_alias].blank?
-      "#{@opts[:from_alias]} <#{source}>"
+      return source if @opts[:from_alias].blank? && SiteSetting.email_site_title.blank?
+      if !@opts[:from_alias].blank?
+        "#{Email.cleanup_alias(@opts[:from_alias])} <#{source}>"
+      else
+        "#{Email.cleanup_alias(SiteSetting.email_site_title)} <#{source}>"
+      end
+    end
+
+    def site_alias_email(source)
+      "#{Email.cleanup_alias(SiteSetting.email_site_title.presence || SiteSetting.title)} <#{source}>"
     end
 
   end

@@ -1,7 +1,6 @@
 require "spec_helper"
-require_dependency "concern/positionable"
 
-describe Concern::Positionable do
+describe Positionable do
 
   def positions
     TestItem.order('position asc, id asc').pluck(:id)
@@ -10,7 +9,7 @@ describe Concern::Positionable do
   context "move_to" do
     before do
       class TestItem < ActiveRecord::Base
-        include Concern::Positionable
+        include Positionable
       end
 
       Topic.exec_sql("create temporary table test_items(id int primary key, position int)")
@@ -46,34 +45,7 @@ describe Concern::Positionable do
       item = TestItem.new
       item.id = 7
       item.save
-      item.position.should be_nil
-    end
-
-    it "can set records to have null position" do
-      5.times do |i|
-        Topic.exec_sql("insert into test_items(id,position) values(#{i}, #{i})")
-      end
-
-      TestItem.find(2).use_default_position
-      TestItem.find(2).position.should be_nil
-
-      TestItem.find(1).move_to(4)
-      TestItem.order('id ASC').pluck(:position).should == [0,4,nil,2,3]
-    end
-
-    it "can maintain null positions when moving things around" do
-      5.times do |i|
-        Topic.exec_sql("insert into test_items(id,position) values(#{i}, null)")
-      end
-
-      TestItem.find(2).move_to(0)
-      TestItem.order('id asc').pluck(:position).should == [nil,nil,0,nil,nil]
-      TestItem.find(0).move_to(4)
-      TestItem.order('id asc').pluck(:position).should == [4,nil,0,nil,nil]
-      TestItem.find(2).move_to(1)
-      TestItem.order('id asc').pluck(:position).should == [4,nil,1,nil,nil]
-      TestItem.find(0).move_to(1)
-      TestItem.order('id asc').pluck(:position).should == [1,nil,2,nil,nil]
+      item.position.should == 5
     end
   end
 end

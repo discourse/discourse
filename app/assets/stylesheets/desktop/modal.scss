@@ -1,75 +1,8 @@
 // base styles for every modal popup used in Discourse
 
-.modal-open {
-  .dropdown-menu {
-     z-index: 2050;
-  }
-  .popover {
-    z-index: 2060;
-  }
-  .tooltip {
-    z-index: 2070;
-  }
-
-}
-
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1040;
-  background-color: $secondary_background_color;
-  &.fade {
-    opacity: 0;
-  }
-}
-
-.modal-backdrop,
-.modal-backdrop.fade.in {
-  -webkit-animation: fade .25s;
-  animation: fade .25s;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
-}
-
-//fade in
-
-@-webkit-keyframes fade {
-    from {opacity: 0}
-    to {opacity: .8}
-}@keyframes fade {
-    from {opacity: 0}
-    to {opacity: .8}
-}
-
-.modal-outer-container {
-  display:table;
-  width:100%;
-  height:100%;
-}
 .modal-middle-container {
   display:table-cell;
   vertical-align: middle;
-}
-.modal-inner-container {
-  max-width: 710px;
-  margin: 0 auto;
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  border: 1px solid lighten($primary_border_color, 10%);
-
-  box-shadow: 0 3px 7px rgba($primary_shadow_color, .8);
-  background-clip: padding-box;
-}
-.modal {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1050;
-  overflow: auto;
 }
 
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
@@ -82,11 +15,11 @@
   width: 610px;
   height: auto;
   margin: -250px 0 0 -305px;
-  background-color: $primary_background_color;
-  border: 1px solid $primary_border_color;
-  border: 1px solid lighten($primary_border_color, 10%);
+  background-color: $secondary;
+  border: 1px solid scale-color-diff();
+  border: 1px solid scale-color-diff();
 
-  box-shadow: 0 3px 7px rgba($primary_shadow_color, .8);
+  box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;
 
 }
@@ -111,22 +44,7 @@ animation: modal .25s;
   max-height: 400px;
   padding: 15px;
 }
-.modal-form {
-  margin-bottom: 0;
-}
-.modal-footer {
-  margin: 0 15px;
-  padding: 14px 0 15px;
-  border-top: 1px solid $primary_border_color;
-}
-.modal-footer:before,
-.modal-footer:after {
-  display: table;
-  content: "";
-}
-.modal-footer:after {
-  clear: both;
-}
+
 .modal-footer .btn + .btn {
   margin-left: 5px;
   margin-bottom: 0;
@@ -139,83 +57,38 @@ animation: modal .25s;
   margin-left: -1px;
 }
 .modal-header {
-  border-bottom: 1px solid $primary_border_color;
+  border-bottom: 1px solid scale-color-diff();
   h3 {
-    color: $nav-pills-background-color-active;
+    color: $quaternary;
     font-size: 20px;
     padding: 10px 15px 7px;
   }
-  .close {
-    float: right;
-    font-size: 20px;
-    margin: 10px 10px 0;
-    text-decoration: none;
-    color: $modal-close-button-color;
-    cursor: pointer;
-    &:hover {
-      color: darken($modal-close-button-color,20);
-    }
+  .close {margin: 10px;}
+}
+.close {
+  float: right;
+  font-size: 20px;
+  text-decoration: none;
+  color: scale-color($primary, $lightness: 35%);
+  cursor: pointer;
+  &:hover {
+    color: $primary;
   }
 }
 
 .modal {
-  .nav {
-    padding: 10px 30px;
-    background-color: lighten($primary_background_color, 76%);
-    li > a {
-      font-size: 14px;
-    }
-    border-bottom: 1px solid $primary_border_color;
-
-  }
-
   .category-combobox {
     width: 430px;
 
-    .chzn-drop {
+    .select2-drop {
       left: -9000px;
       width: 428px;
     }
-    .chzn-search input {
+    .select2-search input {
       width: 378px;
     }
-
-    .chzn-search-icon {
-      margin-top: 8px;
-    }
-  }
-
-  &.hidden {
-    display: none;
-  }
-  .modal-body {
-    textarea {
-      width: 99%;
-      height: 80px;
-    }
-    label {
-      color: lighten($primary_text_color, 35%);
-    }
-    p {
-      color: $primary_text_color;
-      font-size: 13px;
-    }
-    .archetype-option {
-      margin-bottom: 20px;
-    }
-    .warning {
-      color: $warning_text_color !important;
-    }
-  }
-  .password-confirmation {
-    display: none;
-  }
-
-  section.field {
-    margin-bottom: 20px;
   }
 }
-
 
 .flag-modal {
   max-height: 450px;
@@ -245,14 +118,21 @@ animation: modal .25s;
       li {
         margin: 0 4px 8px 0;
         a {
-          color: lighten($primary_text_color, 50%);
+          color: scale-color($primary, $lightness: 50%);
           cursor: pointer;
         }
         a:hover {
-          color: $primary_text_color;
+          color: scale-color($primary, $lightness: 40%);
         }
       }
     }
+  }
+
+  .cannot_delete_reason {
+    float: right;
+    text-align: right;
+    max-width: 380px;
+    color: scale-color($primary, $lightness: 60%);
   }
 }
 
@@ -282,7 +162,6 @@ animation: modal .25s;
     height: 350px;
   }
 
-
   #move-selected {
     p {
       margin-top: 0;
@@ -307,83 +186,22 @@ animation: modal .25s;
   }
 }
 
-.invite-modal {
-  overflow: visible;
-  .ember-text-field {
-    width: 550px;
-  }
+.upload-options {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.uploaded-avatar {
+  margin-top: 20px;
 }
 
-.reply-where-modal {
-  width: 370px;
-  margin-left: -185px;
-  .modal-footer {
-    .btn {
-      text-align: left;
-      font-size: 18px;
-      line-height: 20px;
-      width: 310px;
-      margin-bottom: 10px;
-      display: block;
-      margin-left: 0;
-      .topic-title {
-        font-size: 13px;
-        font-weight: normal;
-      }
-      &.btn-reply-here {
-        background: lighten($secondary_background_color, 60%);
-        text-shadow: none;
-        color: lighten($primary_text_color, 35%);
-      }
-    }
-    .cancel {
-      text-decoration: underline;
-      float: right;
-      margin-right: 5px;
-    }
-  }
+.uploaded-image-preview {
+  width: 400px;
+  max-height: 150px;
+  margin-bottom: 10px;
 }
 
-.delete-user-modal {
-  .modal-footer {
-    .btn {
-      font-weight: normal;
-      text-align: left;
-      font-size: 14px;
-      line-height: 20px;
-      margin-bottom: 10px;
-      display: inline-block;
-      margin-left: 0;
-    }
-    .cancel {
-      text-decoration: underline;
-      display: block;
-      margin-right: 5px;
-    }
-  }
-}
-
-.modal-footer .cancel-inline {
-  text-decoration: underline;
-  margin-left: 10px;
-}
-
-.permission-list{
-  list-style:none;
-  margin: 0 0 30px;
-  padding: 0;
-  .name {
-    margin-right: 20px;
-    display: inline-block;
-    min-width: 100px;
-  }
-  .permission {
-    margin-left: 20px;
-  }
-  .fa-times-circle {
-    margin-left: 5px;
-  }
-  li {
-    margin-bottom: 10px;
+.delete-flag-modal, .agree-flag-modal {
+  .modal-inner-container {
+    width: 400px;
   }
 }

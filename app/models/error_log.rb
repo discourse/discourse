@@ -10,7 +10,7 @@ class ErrorLog
     "#{Rails.root}/log/#{Rails.env}_errors.log"
   end
 
-  def self.clear!(guid)
+  def self.clear!(_guid)
     raise NotImplementedError
   end
 
@@ -84,8 +84,6 @@ class ErrorLog
       break if lines == ""
     end
   end
-
-  private
 
   def self.sanitize_backtrace(trace)
     re = Regexp.new(/^#{Regexp.escape(Rails.root.to_s)}/)

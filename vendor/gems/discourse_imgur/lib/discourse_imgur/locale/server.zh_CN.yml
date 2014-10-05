@@ -1,5 +1,12 @@
-zs_CN:
-	site_settings:
-    enable_imgur: "启用 Imgur API 来上传文件，不在本地（站点服务器）保存文件"
-    imgur_client_id: "你的imgur.com的客户端ID，以便图片上传能正常工作。"
-    imgur_client_secret: "你的imgur.com的客户端secret。 目前图片上传功能并不需要这项信息，但是将来的某天可能需要。"
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+zh_CN:
+  site_settings:
+    enable_imgur: "上传文件到 imgur，不在本地存储。"
+    imgur_client_id: "您的 imgur.com client ID，如果启用上传则必填"
+    imgur_client_secret: "您的 imgur.com 客户密钥。目前不需要此密钥即可使用上传图片功能，但可能在以后会用到。"

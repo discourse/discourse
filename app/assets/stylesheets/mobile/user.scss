@@ -13,13 +13,13 @@
     height: 100px;
   }
   .static {
-    color: $primary_text_color;
+    color: $primary;
     margin-top: 5px;
     margin-left: 5px;
     display: inline-block;
   }
   .instructions {
-    color: $secondary_text_color;
+    color: $primary;
     margin-top: 5px;
   }
   .category-controls {
@@ -29,13 +29,13 @@
     margin-left: 3px;
   }
   .instructions a[href] {
-    color: $secondary_text_color;
+    color: $primary;
   }
   .warning {
     @include border-radius-all(6px);
-    background-color: $warning_background_color;
+    background-color: $danger;
     padding: 5px 8px;
-    color: $primary_text_color;
+    color: $primary;
     width: 520px;
   }
 
@@ -63,13 +63,6 @@
     padding: 5px 8px;
   }
 
-  #profile-background-preview {
-    height: 150px;
-    background-position: center center;
-    background-size: cover;
-    background-color: $secondary_background_color;
-  }
-
   .bio-composer #wmd-quote-post {
     display: none;
   }
@@ -81,46 +74,22 @@
   display: block;
   width: 220px;
   min-height: 200px;
-  background-color: lighten($secondary_background_color, 76%);
-  color: $primary_text_color;
+  background-color: scale-color-diff();
+  color: $primary;
   word-wrap: break-word;
 }
 
 .user-navigation {
 
   h3 {
-    color: lighten($primary_text_color, 35%);
+    color: scale-color($primary, $lightness: 50%);
     padding-left: 5px;
   }
   .nav-stacked {
     border-left: 0;
     border-right: 0;
   }
-  .map {
-    height: 50px;
-  }
-  .avatar {
-    float: left;
-    width: 45px;
-    background-color: $primary_background_color;
-  }
 
-  nav.buttons {
-    width: 180px;
-    padding: 0;
-    .btn {
-      width: 100%;
-      margin-bottom: 5px;
-      @include box-sizing(border-box);
-    }
-  }
-  h2 {
-    a {
-      font-size: 14px;
-      color: $secondary_text_color;
-      cursor: pointer;
-    }
-  }
 }
 
 .user-main {
@@ -128,12 +97,12 @@
   margin-bottom: 50px;
 
   .about {
-    background-color: $secondary_background_color;
+    background-color: scale-color-diff();
     background-position: center center;
     background-size: cover;
     margin-bottom: 10px;
     overflow: hidden;
-    color: $primary_text_color;
+    color: $primary;
 
     .details {
       text-align: center;
@@ -148,35 +117,69 @@
         font-size: 20px;
         margin-bottom: 6px;
         font-weight: normal;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       a[href] {
-        color: $primary_text_color;
+        color: $primary;
       }
 
       img.avatar {
-        border: 3px solid $primary_border_color;
+        border: 3px solid scale-color-diff();
         margin-bottom: 4px;
       }
 
+      .primary {
+        color: $secondary;
+        text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+        max-height: 800px;
+        overflow: auto;
+
+        a[href] {
+          color: $secondary;
+          text-decoration: underline;
+          text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+        }
+
+        img {
+          max-width: 100%;
+        }
+
+        .primary-textual {
+          width: 90%;
+          margin: 0 auto;
+          padding: 4px;
+
+          h1, h2 {
+            margin: 7px;
+          }
+        }
+      }
+
       .secondary {
-        background-color: $secondary_background_color;
+        background-color: $primary;
         text-align: left;
-        padding: 0 10px;
+        padding: 1px 10px;
 
         dd {
-          color: $tertiary_text_color;
+          color: $secondary;
           margin: 0 0 7px 0;
+          a {
+            color: inherit;
+          }
         }
         dt {
-          color: $secondary_text_color;
+          color: scale-color($primary, $lightness: 75%);
           margin: 0;
         }
       }
     }
 
     .controls {
-      background-color: lighten($secondary_background_color, 60%);
+      background-color: scale-color($primary, $lightness: 75%);
       margin-top: 0;
       padding: 10px 10px 0 10px;
 
@@ -204,7 +207,7 @@
         .avatar {
           float: left;
           margin-right: 10px;
-          border: 2px solid $tertiary_border_color;
+          border: 2px solid $tertiary;
           width: 45px;
           height: 45px;
         }
@@ -229,14 +232,14 @@
       margin: 5px 0;
       font-size: 13px;
       word-wrap: break-word;
-      color: lighten($primary_text_color, 30%);
+      color: scale-color($primary, $lightness: 50%);
     }
     .item.moderator-action {
-      background-color: $emphasis_background_color;
+      background-color:  scale-color($highlight, $lightness: 50%);
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: $warning_background_color;
+      background-color: scale-color($danger, $lightness: 50%);
     }
     .item.hidden {
       display: block;
@@ -244,21 +247,24 @@
     }
     .item {
       padding: 10px 8px;
-      background-color: $primary_background_color;
-      border-bottom: 1px solid $primary_border_color;
+      background-color: $secondary;
+      border-bottom: 1px solid scale-color-diff();
     }
     .type {
-      color: lighten($primary_text_color, 40%);
+      color: scale-color($primary, $lightness: 50%);
     }
     span.name {
-      color: lighten($primary_text_color, 40%);
+      color: scale-color($primary, $lightness: 50%);
     }
-    .time {
+    .time, .delete-info {
       display: block;
       float: right;
-      color: $secondary_text_color;
+      color: $primary;
       margin-right: 8px;
       font-size: 11px;
+    }
+    .delete-info i {
+      font-size: 14px;
     }
     .avatar-link {
       float: left;
@@ -270,43 +276,75 @@
       font-size: 14px;
     }
     .edit-reason {
-      background-color: $highlight_background_color;
+      background-color: scale-color($highlight, $lightness: 50%);
       padding: 3px 5px 5px 5px;
     }
+    .remove-bookmark {
+      float: right !important;
+      margin-top: -8px;
+    }
+    .notification {
+      padding: 0 8px;
+      li { display: inline-block; }
+      p {
+        display: inline-block;
+        margin: 7px;
+        span {
+          color: $primary;
+        }
+      }
+      .time {
+        display: inline-block;
+        margin: 0;
+        float: none;
+      }
+      // common/base/header.scss
+      .fa, .icon {
+        color: scale-color($primary, $lightness: 50%);
+      }
+    }
   }
-}
 
-// styling of bottom section
-.user-stream .child-actions {
-  margin-top: 8px;
-  .avatar-link {
-    float: none;
+  .staff-counters {
+    text-align: center;
+    div {
+      padding: 2px 8px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    a.active {
+      font-weight: bold;
+    }
   }
-  .fa {
-    width: 15px;
+
+  .pill {
+    border-radius: 15px;
     display: inline-block;
-    color: lighten($primary_text_color, 35%);
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
   }
-  .avatar-wrapper {
-    border: none;
+  .helpful-flags {
+    background-color: green;
   }
-  .avatar-link {
-    margin-right: 3px;
+  .flagged-posts {
+    background-color: #E49735;
+  }
+  .deleted-posts {
+    background-color: #EC441B;
+  }
+  .suspensions {
+    background-color: #c22020;
+  }
 
+  div#pagedown-editor {
+    width: 100%;
   }
-}
 
-.avatar-selector {
-  label {
-    display: inline-block;
-    margin-right: 10px;
+  textarea#wmd-input {
+    width: 100%;
   }
-  #avatar-input {
-    width: 0;
-    height: 0;
-    overflow: hidden;
-  }
-  .avatar {
-    margin: 5px 10px 5px 0;
-  }
+
 }

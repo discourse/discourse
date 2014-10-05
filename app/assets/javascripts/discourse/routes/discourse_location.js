@@ -6,34 +6,6 @@ var get = Ember.get, set = Ember.set;
 var popstateFired = false;
 var supportsHistoryState = window.history && 'state' in window.history;
 
-// Thanks: https://gist.github.com/kares/956897
-var re = /([^&=]+)=?([^&]*)/g;
-var decode = function(str) {
-    return decodeURIComponent(str.replace(/\+/g, ' '));
-};
-$.parseParams = function(query) {
-    var params = {}, e;
-    if (query) {
-        if (query.substr(0, 1) === '?') {
-            query = query.substr(1);
-        }
-
-        while (e = re.exec(query)) {
-            var k = decode(e[1]);
-            var v = decode(e[2]);
-            if (params[k] !== undefined) {
-                if (!$.isArray(params[k])) {
-                    params[k] = [params[k]];
-                }
-                params[k].push(v);
-            } else {
-                params[k] = v;
-            }
-        }
-    }
-    return params;
-};
-
 var popstateCallbacks = [];
 
 /**
@@ -59,14 +31,16 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @method initState
   */
   initState: function() {
+    set(this, 'history', get(this, 'history') || window.history);
 
-    var location = this.get('location');
-    if (location && location.search) {
-      this.set('queryParams', $.parseParams(location.search));
+    var url = this.formatURL(this.getURL()),
+        loc = get(this, 'location');
+
+    if (loc && loc.hash) {
+      url += loc.hash;
     }
 
-    set(this, 'history', get(this, 'history') || window.history);
-    this.replaceState(this.formatURL(this.getURL()));
+    this.replaceState(url);
   },
 
   /**
@@ -86,10 +60,16 @@ Ember.DiscourseLocation = Ember.Object.extend({
   */
   getURL: function() {
     var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri),
-        url = get(this, 'location').pathname;
+        location = get(this, 'location'),
+        url = location.pathname;
 
     rootURL = rootURL.replace(/\/$/, '');
     url = url.replace(rootURL, '');
+
+    if (Ember.FEATURES.isEnabled("query-params-new")) {
+      var search = location.search || '';
+      url += search;
+    }
 
     return url;
   },
@@ -186,24 +166,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
     this._previousURL = this.getURL();
   },
 
-
-  queryParamsString: function() {
-    var params = this.get('queryParams');
-    if (Em.isEmpty(params) || Em.isEmpty(Object.keys(params))) {
-      return "";
-    } else {
-      return "?" + decodeURIComponent($.param(params, true));
-    }
-  }.property('queryParams'),
-
-  // When our query params change, update the URL
-  queryParamsStringChanged: function() {
-    var loc = this;
-    Em.run.next(function () {
-      loc.replaceState(loc.formatURL(loc.getURL()));
-    });
-  }.observes('queryParamsString'),
-
   /**
     @private
 
@@ -224,7 +186,9 @@ Ember.DiscourseLocation = Ember.Object.extend({
         if (self.getURL() === self._previousURL) { return; }
       }
       var url = self.getURL();
-      popstateCallbacks.forEach(function(cb) { cb(url); });
+      popstateCallbacks.forEach(function(cb) {
+        cb(url);
+      });
       callback(url);
     });
   },
@@ -244,7 +208,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
       rootURL = rootURL.replace(/\/$/, '');
     }
 
-    return rootURL + url + this.get('queryParamsString');
+    return rootURL + url;
   },
 
   willDestroy: function() {
@@ -255,8 +219,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
 
 });
 
-Ember.Location.registerImplementation('discourse_location', Ember.DiscourseLocation);
-
 /**
   Since we're using pushState/replaceState let's add extra hooks to cloakedView to
   eject itself when the popState occurs. This results in better back button
@@ -266,6 +228,16 @@ Ember.CloakedCollectionView.reopen({
   _watchForPopState: function() {
     var self = this,
         cb = function() {
+               // Sam: This is a hack, but a very important one
+               // Due to the way we use replace state the back button works strangely
+               //
+               // If you visit a topic from the front page, scroll a bit around and then hit back
+               // you notice that first the page scrolls a bit (within the topic) and then it goes back
+               // this transition is jarring and adds uneeded rendering costs.
+               //
+               // To repro comment the hack out and wack a debugger statement here and in
+               // topic_route deactivate
+               $('.posts,#topic-title').hide();
                self.cleanUp();
                self.set('controller.postStream.loaded', false);
              };

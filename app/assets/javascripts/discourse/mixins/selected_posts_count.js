@@ -19,8 +19,27 @@ Discourse.SelectedPostsCount = Em.Mixin.create({
     }
 
     return sum;
-  }.property('selectedPosts.length', 'allPostsSelected', 'selectedReplies.length')
+  }.property('selectedPosts.length', 'allPostsSelected', 'selectedReplies.length'),
 
+  /**
+    The username that owns every selected post, or undefined if no selection or if
+    ownership is mixed.
+
+    @returns {String|undefined} username that owns all selected posts
+  **/
+  selectedPostsUsername: function() {
+    // Don't proceed if replies are selected or usernames are mixed
+    // Changing ownership in those cases normally doesn't make sense
+    if (this.get('selectedReplies') && this.get('selectedReplies').length > 0) return;
+    if (this.get('selectedPosts').length <= 0) return;
+
+    var selectedPosts = this.get('selectedPosts'),
+        username = selectedPosts[0].username;
+
+    if (selectedPosts.every(function(post) { return post.username === username; })) {
+      return username;
+    }
+  }.property('selectedPosts.length', 'selectedReplies.length')
 });
 
 

@@ -8,9 +8,9 @@ describe PostMover do
     let(:category) { Fabricate(:category, user: user) }
     let!(:topic) { Fabricate(:topic, user: user) }
     let!(:p1) { Fabricate(:post, topic: topic, user: user) }
-    let!(:p2) { Fabricate(:post, topic: topic, user: another_user, raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.")}
-    let!(:p3) { Fabricate(:post, topic: topic, user: user)}
-    let!(:p4) { Fabricate(:post, topic: topic, user: user)}
+    let!(:p2) { Fabricate(:post, topic: topic, user: another_user, raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.", reply_to_post_number: p1.post_number)}
+    let!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user)}
+    let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user)}
 
     before do
       # add a like to a post, enable observers so we get user actions
@@ -61,7 +61,7 @@ describe PostMover do
         let!(:new_topic) { topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id) }
 
         it "works correctly" do
-          TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
+          TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number.should == p3.post_number
 
           new_topic.should be_present
           new_topic.featured_user1_id.should == another_user.id
@@ -93,7 +93,7 @@ describe PostMover do
           topic.highest_post_number.should == p3.post_number
 
           # both the like and was_liked user actions should be correct
-          action = UserAction.where(user_id: another_user.id).first
+          action = UserAction.find_by(user_id: another_user.id)
           action.target_topic_id.should == new_topic.id
         end
       end
@@ -120,11 +120,15 @@ describe PostMover do
           p2.sort_order.should == 2
           p2.post_number.should == 2
           p2.topic_id.should == moved_to.id
+          p2.reply_count.should == 1
+          p2.reply_to_post_number.should == nil
 
           p4.reload
           p4.post_number.should == 3
           p4.sort_order.should == 3
           p4.topic_id.should == moved_to.id
+          p4.reply_count.should == 0
+          p4.reply_to_post_number.should == 2
 
           # Check out the original topic
           topic.reload
@@ -137,7 +141,7 @@ describe PostMover do
           topic.highest_post_number.should == p3.post_number
 
           # Should update last reads
-          TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
+          TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number.should == p3.post_number
         end
       end
 
@@ -159,18 +163,58 @@ describe PostMover do
           p1.sort_order.should == 1
           p1.post_number.should == 1
           p1.topic_id == topic.id
+          p1.reply_count.should == 0
+
+          # New first post
+          new_first = new_topic.posts.where(post_number: 1).first
+          new_first.reply_count.should == 1
 
           # Second post is in a new topic
           p2.reload
           p2.post_number.should == 2
           p2.sort_order.should == 2
           p2.topic_id == new_topic.id
+          p2.reply_to_post_number.should == 1
+          p2.reply_count.should == 0
 
           topic.reload
           topic.posts.by_post_number.should =~ [p1, p3, p4]
           topic.highest_post_number.should == p4.post_number
         end
 
+      end
+
+      context "to an existing topic with a deleted post" do
+
+        let!(:destination_topic) { Fabricate(:topic, user: user ) }
+        let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
+        let!(:destination_deleted_reply) { Fabricate(:post, topic: destination_topic, user: another_user) }
+        let(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id)}
+
+        it "works correctly" do
+          destination_deleted_reply.trash!
+
+          moved_to.should == destination_topic
+
+          # Check out new topic
+          moved_to.reload
+          moved_to.posts_count.should == 3
+          moved_to.highest_post_number.should == 4
+
+          # Posts should be re-ordered
+          p2.reload
+          p2.sort_order.should == 3
+          p2.post_number.should == 3
+          p2.topic_id.should == moved_to.id
+          p2.reply_count.should == 1
+          p2.reply_to_post_number.should == nil
+
+          p4.reload
+          p4.post_number.should == 4
+          p4.sort_order.should == 4
+          p4.topic_id.should == moved_to.id
+          p4.reply_to_post_number.should == p2.post_number
+        end
       end
 
 

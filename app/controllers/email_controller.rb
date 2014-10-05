@@ -3,6 +3,7 @@ class EmailController < ApplicationController
   layout 'no_js'
 
   before_filter :ensure_logged_in, only: :preferences_redirect
+  skip_before_filter :redirect_to_login_if_required
 
   def preferences_redirect
     redirect_to(email_preferences_path(current_user.username_lower))
@@ -12,13 +13,18 @@ class EmailController < ApplicationController
     @user = User.find_by_temporary_key(params[:key])
 
     # Don't allow the use of a key while logged in as a different user
-    @user = nil if current_user.present? && (@user != current_user)
-
-    if @user.present?
-      @user.update_column(:email_digests, false)
-    else
-      @not_found = true
+    if current_user.present? && (@user != current_user)
+      @different_user = true
+      return
     end
+
+    if @user.blank?
+      @not_found = true
+      return
+    end
+
+    @user.update_column(:email_digests, false)
+    @success = true
   end
 
   def resubscribe

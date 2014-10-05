@@ -14,12 +14,16 @@ class ListableTopicSerializer < BasicTopicSerializer
              :unread,
              :new_posts,
              :pinned,
+             :unpinned,
              :excerpt,
              :visible,
              :closed,
-             :archived
+             :archived,
+             :is_warning,
+             :notification_level
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
+
   def include_last_poster?
     object.include_last_poster
   end
@@ -35,8 +39,23 @@ class ListableTopicSerializer < BasicTopicSerializer
     false
   end
 
+  def is_warning
+    object.subtype == TopicSubtype.moderator_warning
+  end
+
+  def include_is_warning?
+    is_warning
+  end
+
   def unseen
     !seen
+  end
+
+  def notification_level
+    object.user_data.notification_level
+  end
+  def include_notification_level?
+    object.user_data.present?
   end
 
   def last_read_post_number
@@ -65,7 +84,11 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def pinned
-    PinnedCheck.new(object, object.user_data).pinned?
+    PinnedCheck.pinned?(object, object.user_data)
+  end
+
+  def unpinned
+    PinnedCheck.unpinned?(object, object.user_data)
   end
 
   protected

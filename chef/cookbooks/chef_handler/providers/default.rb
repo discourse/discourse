@@ -45,8 +45,8 @@ action :enable do
       # handler code.  TODO: add a :reload action
       converge_by("enable #{@new_resource} as a #{type} handler") do
         Chef::Log.info("Enabling #{@new_resource} as a #{type} handler")
-        Chef::Config.send("#{type.to_s}_handlers").delete_if { |v| v.class.to_s.include? @new_resource.class_name.split('::', 3).last }
-        Chef::Config.send("#{type.to_s}_handlers") << handler
+        Chef::Config.send("#{type}_handlers").delete_if { |v| v.class.to_s.include? @new_resource.class_name.split('::', 3).last }
+        Chef::Config.send("#{type}_handlers") << handler
       end
     end
   end
@@ -57,7 +57,7 @@ action :disable do
     if enabled?(type)
       converge_by("disable #{@new_resource} as a #{type} handler") do
         Chef::Log.info("Disabling #{@new_resource} as a #{type} handler")
-        Chef::Config.send("#{type.to_s}_handlers").delete_if { |v| v.class.to_s.include? @new_resource.class_name.split('::', 3).last }
+        Chef::Config.send("#{type}_handlers").delete_if { |v| v.class.to_s.include? @new_resource.class_name.split('::', 3).last }
       end
     end
   end
@@ -73,7 +73,7 @@ end
 private
 
 def enabled?(type)
-  Chef::Config.send("#{type.to_s}_handlers").select do |handler|
+  Chef::Config.send("#{type}_handlers").select do |handler|
     handler.class.to_s.include? @new_resource.class_name
   end.size >= 1
 end

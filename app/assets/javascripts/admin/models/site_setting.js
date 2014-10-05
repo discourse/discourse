@@ -8,6 +8,8 @@
 **/
 Discourse.SiteSetting = Discourse.Model.extend({
 
+  validationMessage: null,
+
   /**
     Is the boolean setting true?
 
@@ -23,10 +25,6 @@ Discourse.SiteSetting = Discourse.Model.extend({
     } else {
       // set the boolean value of the setting
       this.set('value', value ? 'true' : 'false');
-
-      // We save booleans right away, it's not like a text field where it makes sense to
-      // undo what you typed in.
-      this.save();
     }
 
   }.property('value'),
@@ -49,20 +47,15 @@ Discourse.SiteSetting = Discourse.Model.extend({
     return this.get('originalValue') !== this.get('value');
   }.property('originalValue', 'value'),
 
-  /**
-    Has the setting been overridden from its default value?
-
-    @property overridden
-  **/
   overridden: function() {
-    var val = this.get('value');
-    var defaultVal = this.get('default');
+    var val = this.get('value'),
+        defaultVal = this.get('default');
 
     if (val === null) val = '';
     if (defaultVal === null) defaultVal = '';
 
     return val.toString() !== defaultVal.toString();
-  }.property('value'),
+  }.property('value', 'default'),
 
   /**
     Reset the setting to its original value.
@@ -71,6 +64,7 @@ Discourse.SiteSetting = Discourse.Model.extend({
   **/
   resetValue: function() {
     this.set('value', this.get('originalValue'));
+    this.set('validationMessage', null);
   },
 
   /**
@@ -80,13 +74,20 @@ Discourse.SiteSetting = Discourse.Model.extend({
   **/
   save: function() {
     // Update the setting
-    var setting = this, data = {};
+    var self = this, data = {};
     data[this.get('setting')] = this.get('value');
     return Discourse.ajax("/admin/site_settings/" + this.get('setting'), {
       data: data,
       type: 'PUT'
     }).then(function() {
-      setting.set('originalValue', setting.get('value'));
+      self.set('originalValue', self.get('value'));
+      self.set('validationMessage', null);
+    }, function(e) {
+      if (e.responseJSON && e.responseJSON.errors) {
+        self.set('validationMessage', e.responseJSON.errors[0]);
+      } else {
+        self.set('validationMessage', I18n.t('generic_error'));
+      }
     });
   },
 

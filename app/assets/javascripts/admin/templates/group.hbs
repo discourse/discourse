@@ -1,0 +1,29 @@
+{{#if automatic}}
+  <h3>{{name}}</h3>
+{{else}}
+  {{text-field value=name placeholderKey="admin.groups.name_placeholder"}}
+{{/if}}
+
+<div class="control-group">
+  <label class="control-label">{{i18n admin.groups.group_members}}</label>
+  <div class="controls">
+    {{user-selector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabled=automatic}}
+  </div>
+</div>
+<div class="control-group">
+  <div class="controls">
+    {{input type="checkbox" checked=visible}} {{i18n groups.visible}}
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label">{{i18n groups.alias_levels.title}}</label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" value=alias_level content=aliasLevelOptions}}
+  </div>
+</div>
+<div class='controls'>
+  <button {{action "save"}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+  {{#unless automatic}}
+    <button {{action "destroy"}} class='btn btn-danger'><i class="fa fa-trash-o"></i>{{i18n admin.customize.delete}}</button>
+  {{/unless}}
+</div>

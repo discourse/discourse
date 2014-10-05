@@ -9,9 +9,10 @@ end
 #
 #  user_id     :integer          not null, primary key
 #  search_data :tsvector
+#  raw_data    :text
+#  locale      :text
 #
 # Indexes
 #
 #  idx_search_user  (search_data)
 #
-

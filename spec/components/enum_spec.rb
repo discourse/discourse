@@ -16,11 +16,11 @@ describe Enum do
 
   describe ".valid?" do
     it "returns true if a key exists" do
-      enum.valid?(:finn).should be_true
+      enum.valid?(:finn).should == true
     end
 
     it "returns false if a key does not exist" do
-      enum.valid?(:obama).should be_false
+      enum.valid?(:obama).should == false
     end
   end
 

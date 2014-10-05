@@ -9,14 +9,12 @@ module BackupRestore
   METADATA_FILE = "meta.json"
   LOGS_CHANNEL = "/admin/backups/logs"
 
-  def self.backup!(user_id, publish_to_message_bus = false)
-    exporter = Export::Exporter.new(user_id, publish_to_message_bus)
-    start! exporter
+  def self.backup!(user_id, opts={})
+    start! Export::Exporter.new(user_id, opts)
   end
 
-  def self.restore!(user_id, filename, publish_to_message_bus = false)
-    importer = Import::Importer.new(user_id, filename, publish_to_message_bus)
-    start! importer
+  def self.restore!(user_id, filename, publish_to_message_bus=false)
+    start! Import::Importer.new(user_id, filename, publish_to_message_bus)
   end
 
   def self.rollback!
@@ -33,10 +31,9 @@ module BackupRestore
   end
 
   def self.mark_as_running!
-    # TODO: for more safety, it should acquire a lock
-    #       and raise an exception if already running!
-    $redis.set(running_key, "1")
+    $redis.setex(running_key, 60, "1")
     save_start_logs_message_id
+    keep_it_running
   end
 
   def self.is_operation_running?
@@ -59,6 +56,7 @@ module BackupRestore
     {
       is_operation_running: is_operation_running?,
       can_rollback: can_rollback?,
+      allow_restore: Rails.env.development? || SiteSetting.allow_restore
     }
   end
 
@@ -76,28 +74,30 @@ module BackupRestore
   end
 
   def self.move_tables_between_schemas_sql(source, destination)
-    # TODO: Postgres 9.3 has "CREATE SCHEMA schema IF NOT EXISTS;"
     <<-SQL
       DO $$DECLARE row record;
       BEGIN
-        -- create "destination" schema if it does not exists already
-        -- NOTE: DROP & CREATE SCHEMA is easier, but we don't wont to drop the public schema
-        -- ortherwise extensions (like hstore & pg_trgm) won't work anymore
-        IF NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '#{destination}')
-        THEN
-          CREATE SCHEMA #{destination};
-        END IF;
-        -- move all "source" tables to "destination" schema
+        -- create <destination> schema if it does not exists already
+        -- NOTE: DROP & CREATE SCHEMA is easier, but we don't want to drop the public schema
+        -- ortherwise extensions (like hstore & pg_trgm) won't work anymore...
+        CREATE SCHEMA IF NOT EXISTS #{destination};
+        -- move all <source> tables to <destination> schema
         FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = '#{source}'
         LOOP
           EXECUTE 'DROP TABLE IF EXISTS #{destination}.' || quote_ident(row.tablename) || ' CASCADE;';
           EXECUTE 'ALTER TABLE #{source}.' || quote_ident(row.tablename) || ' SET SCHEMA #{destination};';
         END LOOP;
+        -- move all <source> views to <destination> schema
+        FOR row IN SELECT viewname FROM pg_views WHERE schemaname = '#{source}'
+        LOOP
+          EXECUTE 'DROP VIEW IF EXISTS #{destination}.' || quote_ident(row.viewname) || ' CASCADE;';
+          EXECUTE 'ALTER VIEW #{source}.' || quote_ident(row.viewname) || ' SET SCHEMA #{destination};';
+        END LOOP;
       END$$;
     SQL
   end
 
-  DatabaseConfiguration = Struct.new(:host, :username, :password, :database)
+  DatabaseConfiguration = Struct.new(:host, :port, :username, :password, :database)
 
   def self.database_configuration
     config = Rails.env.production? ? ActiveRecord::Base.connection_pool.spec.config : Rails.configuration.database_configuration[Rails.env]
@@ -105,6 +105,7 @@ module BackupRestore
 
     DatabaseConfiguration.new(
       config["host"],
+      config["port"],
       config["username"] || ENV["USER"] || "postgres",
       config["password"],
       config["database"]
@@ -115,6 +116,17 @@ module BackupRestore
 
   def self.running_key
     "backup_restore_operation_is_running"
+  end
+
+  def self.keep_it_running
+    # extend the expiry by 1 minute every 30 seconds
+    Thread.new do
+      # this thread will be killed when the fork dies
+      while true
+        $redis.expire(running_key, 1.minute)
+        sleep 30.seconds
+      end
+    end
   end
 
   def self.shutdown_signal_key

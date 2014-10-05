@@ -6,6 +6,7 @@ require_dependency 'archetype'
 require_dependency 'rate_limiter'
 require_dependency 'crawler_detection'
 require_dependency 'json_error'
+require_dependency 'letter_avatar'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -28,13 +29,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_filter :set_current_user_for_logs
   before_filter :set_locale
   before_filter :set_mobile_view
   before_filter :inject_preview_style
   before_filter :disable_customization
   before_filter :block_if_readonly_mode
   before_filter :authorize_mini_profiler
-  before_filter :store_incoming_links
   before_filter :preload_json
   before_filter :check_xhr
   before_filter :redirect_to_login_if_required
@@ -120,6 +121,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def set_current_user_for_logs
+    if current_user
+      Logster.add_to_env(request.env,"username",current_user.username)
+    end
+  end
+
   def set_locale
     I18n.locale = if SiteSetting.allow_user_locale && current_user && current_user.locale.present?
                     current_user.locale
@@ -155,7 +162,13 @@ class ApplicationController < ActionController::Base
 
   def inject_preview_style
     style = request['preview-style']
-    session[:preview_style] = style if style
+    if style.blank?
+      session[:preview_style] = nil
+    elsif style == "default"
+      session[:preview_style] = ""
+    else
+      session[:preview_style] = style
+    end
   end
 
   def disable_customization
@@ -169,9 +182,9 @@ class ApplicationController < ActionController::Base
   def serialize_data(obj, serializer, opts={})
     # If it's an array, apply the serializer as an each_serializer to the elements
     serializer_opts = {scope: guardian}.merge!(opts)
-    if obj.is_a?(Array) or obj.is_a?(ActiveRecord::Associations::CollectionProxy)
+    if obj.respond_to?(:to_ary)
       serializer_opts[:each_serializer] = serializer
-      ActiveModel::ArraySerializer.new(obj, serializer_opts).as_json
+      ActiveModel::ArraySerializer.new(obj.to_ary, serializer_opts).as_json
     else
       serializer.new(obj, serializer_opts).as_json
     end
@@ -199,11 +212,17 @@ class ApplicationController < ActionController::Base
     Middleware::AnonymousCache.anon_cache(request.env, time_length)
   end
 
-  def fetch_user_from_params
-    username_lower = params[:username].downcase
-    username_lower.gsub!(/\.json$/, '')
-
-    user = User.where(username_lower: username_lower).first
+  def fetch_user_from_params(opts=nil)
+    opts ||= {}
+    user = if params[:username]
+      username_lower = params[:username].downcase
+      username_lower.gsub!(/\.json$/, '')
+      find_opts = {username_lower: username_lower}
+      find_opts[:active] = true unless opts[:include_inactive]
+      User.find_by(find_opts)
+    elsif params[:external_id]
+      SingleSignOnRecord.find_by(external_id: params[:external_id]).try(:user)
+    end
     raise Discourse::NotFound.new if user.blank?
 
     guardian.ensure_can_see!(user)
@@ -226,6 +245,7 @@ class ApplicationController < ActionController::Base
       store_preloaded("site", Site.json_for(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
       store_preloaded("customHTML", custom_html_json)
+      store_preloaded("banner", banner_json)
     end
 
     def preload_current_user_data
@@ -235,12 +255,23 @@ class ApplicationController < ActionController::Base
     end
 
     def custom_html_json
-      MultiJson.dump({
-        top: SiteContent.content_for(:top),
-        bottom: SiteContent.content_for(:bottom)
-      }.merge(
-        (SiteSetting.tos_accept_required && !current_user) ? {tos_signup_form_message: SiteContent.content_for(:tos_signup_form_message)} : {}
-      ))
+      data = {
+        top: SiteText.text_for(:top),
+        bottom: SiteText.text_for(:bottom)
+      }
+
+      if DiscoursePluginRegistry.custom_html
+        data.merge! DiscoursePluginRegistry.custom_html
+      end
+
+      MultiJson.dump(data)
+    end
+
+    def banner_json
+      topic = Topic.where(archetype: Archetype.banner).limit(1).first
+      banner = topic.present? ? topic.banner : {}
+
+      MultiJson.dump(banner)
     end
 
     def render_json_error(obj)
@@ -248,16 +279,15 @@ class ApplicationController < ActionController::Base
     end
 
     def success_json
-      {success: 'OK'}
+      { success: 'OK' }
     end
 
     def failed_json
-      {failed: 'FAILED'}
+      { failed: 'FAILED' }
     end
 
     def json_result(obj, opts={})
       if yield(obj)
-
         json = success_json
 
         # If we were given a serializer, add the class to the json that comes back
@@ -267,21 +297,25 @@ class ApplicationController < ActionController::Base
 
         render json: MultiJson.dump(json)
       else
-        render_json_error(obj)
+        error_obj = nil
+        if opts[:additional_errors]
+          error_target = opts[:additional_errors].find do |o|
+            target = obj.send(o)
+            target && target.errors.present?
+          end
+          error_obj = obj.send(error_target) if error_target
+        end
+        render_json_error(error_obj || obj)
       end
     end
 
     def mini_profiler_enabled?
-      defined?(Rack::MiniProfiler) && current_user.try(:admin?)
+      defined?(Rack::MiniProfiler) && guardian.is_developer?
     end
 
     def authorize_mini_profiler
       return unless mini_profiler_enabled?
       Rack::MiniProfiler.authorize_request
-    end
-
-    def store_incoming_links
-      IncomingLink.add(request,current_user) unless request.xhr?
     end
 
     def check_xhr
@@ -306,8 +340,9 @@ class ApplicationController < ActionController::Base
     end
 
     def build_not_found_page(status=404, layout=false)
-      @top_viewed = Topic.top_viewed(10)
-      @recent = Topic.recent(10)
+      category_topic_ids = Category.pluck(:topic_id).compact
+      @top_viewed = Topic.where.not(id: category_topic_ids).top_viewed(10)
+      @recent = Topic.where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.gsub!('-',' ')
@@ -315,6 +350,18 @@ class ApplicationController < ActionController::Base
     end
 
   protected
+
+    def render_post_json(post, add_raw=true)
+      post_serializer = PostSerializer.new(post, scope: guardian, root: false)
+      post_serializer.add_raw = add_raw
+      post_serializer.topic_slug = post.topic.slug if post.topic.present?
+
+      counts = PostAction.counts_for([post], current_user)
+      if counts && counts = counts[post.id]
+        post_serializer.post_actions = counts
+      end
+      render_json_dump(post_serializer)
+    end
 
     def api_key_valid?
       request["api_key"] && ApiKey.where(key: request["api_key"]).exists?

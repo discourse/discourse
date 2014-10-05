@@ -6,7 +6,7 @@ module Jobs
   class ProcessPost < Jobs::Base
 
     def execute(args)
-      post = Post.where(id: args[:post_id]).first
+      post = Post.find_by(id: args[:post_id])
       # two levels of deletion
       return unless post.present? && post.topic.present?
 
@@ -16,7 +16,10 @@ module Jobs
       cp.post_process(args[:bypass_bump])
 
       # If we changed the document, save it
-      post.update_column(:cooked, cp.html) if cp.dirty?
+      if cp.dirty?
+        post.update_column(:cooked, cp.html)
+        post.publish_change_to_clients! :revised
+      end
     end
 
   end

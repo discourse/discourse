@@ -3,33 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="<%= SiteSetting.site_description %>" name="description">
-    <meta content="" name="author">
+    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <%= render partial: "layouts/head" %>
 
     <%- if SiteSetting.enable_escaped_fragments? %>
     <meta name="fragment" content="!">
     <%- end %>
 
-    <%= canonical_link_tag %>
-
-    <link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">
-    <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
-
-    <%= javascript_include_tag "preload_store" %>
-    <%= javascript_include_tag "locales/#{I18n.locale}" %>
-    <%= javascript_include_tag "vendor" %>
-    <%= javascript_include_tag "application" %>
+    <%= script "preload_store" %>
+    <%= script "locales/#{I18n.locale}" %>
+    <%= script "vendor" %>
+    <%= script "application" %>
     <%- if staff? %>
-      <%= javascript_include_tag "admin"%>
+      <%= script "admin"%>
     <%- end %>
 
-    <%= render :partial => "common/special_font_face" %>
-    <%= render :partial => "common/discourse_stylesheet" %>
-
-    <%= discourse_csrf_tags %>
-
-    <%= raw SiteContent.content_for(:head) %>
+    <%= raw SiteText.text_for(:head) %>
 
     <%= render_google_universal_analytics_code %>
 
@@ -43,7 +32,7 @@
           <div class="contents">
             <div class="row">
               <div class="title span13">
-                <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
+                <a href="/"><img src="<%= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url %>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
               </div>
             </div>
           </div>
@@ -54,6 +43,9 @@
         <%= yield %>
         <!-- :preload-content -->
       </div>
+      <footer id='noscript-footer'>
+        <p><%= t 'powered_by_html' %></p>
+      </footer>
     </noscript>
 
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
@@ -70,7 +62,7 @@
         <input name="username" type="text"     id="signin_username">
         <input name="password" type="password" id="signin_password">
         <input name="redirect" type="hidden">
-        <input type="submit" id="signin-button" value="Log In">
+        <input type="submit" id="signin-button" value="<%= t 'log_in' %>">
       </form>
     <% end %>
 
@@ -84,13 +76,10 @@
 
     <%= yield :data %>
 
-    <footer id='bottom'></footer>
+    <footer id='bottom'><%= raw SiteText.text_for(:bottom) %></footer>
 
     <%= render :partial => "common/discourse_javascript" %>
 
     <%= render_google_analytics_code %>
-
-    <!-- Discourse Version: <%= Discourse::VERSION::STRING %> -->
-    <!-- Git Version: <%= Discourse.git_version %> -->
   </body>
 </html>

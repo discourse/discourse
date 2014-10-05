@@ -4,7 +4,7 @@
 update
 
 # add this repo to Homebrew's sources
-tap homebrew/versions
+tap homebrew/dupes
 
 # install the gcc compiler required for ruby
 install apple-gcc42

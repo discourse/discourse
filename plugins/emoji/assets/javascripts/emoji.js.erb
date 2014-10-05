@@ -1,5 +1,4 @@
 (function() {
-
   var emoji = <%= Dir.glob(File.expand_path("../../../public/images/*.png", __FILE__)).map{|f| File.basename(f).split(".")[0]}.inspect %>;
 
   function imageFor(code) {
@@ -37,14 +36,26 @@
     ":-$"   : 'blush'
   };
 
+  function checkPrev(prev) {
+    if (prev && prev.length) {
+      var lastToken = prev[prev.length-1];
+      if (lastToken && lastToken.charAt) {
+        var lastChar = lastToken.charAt(lastToken.length-1);
+        if (lastChar !== ' ' && lastChar !== "\n") return false;
+      }
+    }
+    return true;
+  }
+
   var translationsWithColon = {};
   Object.keys(translations).forEach(function (t) {
     if (t[0] === ':') {
       translationsWithColon[t] = translations[t];
     } else {
       var replacement = translations[t];
-      Discourse.Dialect.inlineReplace(t, function () {
-        return imageFor(replacement);
+      Discourse.Dialect.inlineReplace(t, function (token, match, prev) {
+        if (!Discourse.SiteSettings.enable_emoji) { return token; }
+        return checkPrev(prev) ? imageFor(replacement) : token;
       });
     }
   });
@@ -53,33 +64,31 @@
     return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
   }
 
-  var translationColonRegexp = new RegExp("^" +
-                                           Object.keys(translationsWithColon).map(function (t) {
+  var translationColonRegexp = new RegExp(Object.keys(translationsWithColon).map(function (t) {
                                              return "(" + escapeRegExp(t) + ")";
-                                           }).join("|")
-                                         );
+                                           }).join("|"));
 
   Discourse.Dialect.registerInline(':', function(text, match, prev) {
+    if (!Discourse.SiteSettings.enable_emoji) { return; }
+
     var endPos = text.indexOf(':', 1),
         firstSpace = text.search(/\s/),
         contents;
 
-    if (prev && prev.length) {
-      var lastToken = prev[prev.length-1];
-      if (lastToken && lastToken.charAt) {
-        var lastChar = lastToken.charAt(lastToken.length-1);
-        if (lastChar !== ' ') return;
-      }
-    }
+    if (!checkPrev(prev)) { return; }
 
     // If there is no trailing colon, check our translations that begin with colons
     if (endPos === -1 || (firstSpace !== -1 && endPos > firstSpace)) {
       translationColonRegexp.lastIndex = 0;
-      var match = translationColonRegexp.exec(text);
-      if (match && match[0]) {
-        contents = imageFor(translationsWithColon[match[0]]);
+      var m = translationColonRegexp.exec(text);
+      if (m && m[0] && text.indexOf(m[0]) === 0) {
+
+        // Check outer edge
+        var lastChar = text.charAt(m[0].length);
+        if (lastChar && (lastChar !== ' ' && lastChar !== "\n")) return;
+        contents = imageFor(translationsWithColon[m[0]]);
         if (contents) {
-          return [match[0].length, contents];
+          return [m[0].length, contents];
         }
       }
       return;
@@ -93,8 +102,11 @@
     }
   });
 
-  if (Discourse && Discourse.ComposerView) {
-    Discourse.ComposerView.on("initWmdEditor", function(event){
+  // TODO: Make this a proper ES6 import
+  var ComposerView = (Discourse && Discourse.ComposerView) || (typeof require !== "undefined" && require('discourse/views/composer').default);
+  if (ComposerView) {
+    ComposerView.on("initWmdEditor", function(event){
+      if (!Discourse.SiteSettings.enable_emoji) { return; }
 
       var baseUrl = Discourse.getURL("/");
 
@@ -103,7 +115,7 @@
                                           "{{#each options}}" +
                                               "<li>" +
                                                 "<a href='#'>" +
-                                                "<img src='" + baseUrl + "plugins/emoji/images/{{this}}.png' class='emoji'> " +
+                                                "<img src='" + baseUrl + "plugins/emoji/images/{{this}}.png?v=1' class='emoji'> " +
                                                 "{{this}}</a>" +
                                               "</li>" +
                                           "{{/each}}" +
@@ -151,5 +163,5 @@
     });
   }
 
-  Discourse.Markdown.whiteListClass("emoji");
+  Discourse.Markdown.whiteListTag('img', 'class', 'emoji');
 }).call(this);

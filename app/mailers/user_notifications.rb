@@ -17,7 +17,7 @@ class UserNotifications < ActionMailer::Base
     build_email(user.email,
                 template: 'user_notifications.signup_after_approval',
                 email_token: opts[:email_token],
-                new_user_tips: SiteContent.content_for(:usage_tips))
+                new_user_tips: SiteText.text_for(:usage_tips))
   end
 
   def authorize_email(user, opts={})
@@ -30,6 +30,11 @@ class UserNotifications < ActionMailer::Base
                  email_token: opts[:email_token])
   end
 
+  def account_created(user, opts={})
+    build_email( user.email, template: "user_notifications.account_created", email_token: opts[:email_token])
+  end
+
+
   def digest(user, opts={})
     @user = user
     @base_url = Discourse.base_url
@@ -38,18 +43,30 @@ class UserNotifications < ActionMailer::Base
 
     @site_name = SiteSetting.title
 
+    @header_color = ColorScheme.hex_for_name('header_background')
     @last_seen_at = I18n.l(@user.last_seen_at || @user.created_at, format: :short)
 
     # A list of topics to show the user
-    @featured_topics = Topic.for_digest(user, min_date).to_a
+    @featured_topics = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics, top_order: true).to_a
 
     # Don't send email unless there is content in it
     if @featured_topics.present?
+      featured_topic_ids = @featured_topics.map(&:id)
+
+      @new_topics_since_seen = Topic.new_since_last_seen(user, min_date, featured_topic_ids).count
+      if @new_topics_since_seen > 1000
+        category_counts = Topic.new_since_last_seen(user, min_date, featured_topic_ids).group(:category_id).count
+
+        @new_by_category = []
+        if category_counts.present?
+          Category.where(id: category_counts.keys).each do |c|
+            @new_by_category << [c, category_counts[c.id]]
+          end
+          @new_by_category.sort_by! {|c| -c[1]}
+        end
+      end
+
       @featured_topics, @new_topics = @featured_topics[0..4], @featured_topics[5..-1]
-
-      # Sort the new topics by score
-      @new_topics.sort! {|a, b| (b.score || 0) - (a.score || 0) } if @new_topics.present?
-
       @markdown_linker = MarkdownLinker.new(Discourse.base_url)
 
       build_email user.email,
@@ -66,26 +83,38 @@ class UserNotifications < ActionMailer::Base
 
   def user_replied(user, opts)
     opts[:allow_reply_by_email] = true
+    opts[:use_site_subject] = true
+    opts[:show_category_in_subject] = true
     notification_email(user, opts)
   end
 
   def user_quoted(user, opts)
     opts[:allow_reply_by_email] = true
+    opts[:use_site_subject] = true
+    opts[:show_category_in_subject] = true
     notification_email(user, opts)
   end
 
   def user_mentioned(user, opts)
     opts[:allow_reply_by_email] = true
+    opts[:use_site_subject] = true
+    opts[:show_category_in_subject] = true
     notification_email(user, opts)
   end
 
   def user_posted(user, opts)
     opts[:allow_reply_by_email] = true
+    opts[:use_site_subject] = true
+    opts[:add_re_to_subject] = true
+    opts[:show_category_in_subject] = true
     notification_email(user, opts)
   end
 
   def user_private_message(user, opts)
     opts[:allow_reply_by_email] = true
+    opts[:use_site_subject] = true
+    opts[:add_re_to_subject] = true
+    opts[:show_category_in_subject] = false
 
     # We use the 'user_posted' event when you are emailed a post in a PM.
     opts[:notification_type] = 'posted'
@@ -99,6 +128,9 @@ class UserNotifications < ActionMailer::Base
       post: post,
       from_alias: post.user.username,
       allow_reply_by_email: true,
+      use_site_subject: true,
+      add_re_to_subject: true,
+      show_category_in_subject: true,
       notification_type: "posted",
       user: user
     )
@@ -141,17 +173,23 @@ class UserNotifications < ActionMailer::Base
     username = @notification.data_hash[:original_username]
     notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
-    return if user.mailing_list_mode &&
+    return if user.mailing_list_mode && !@post.topic.private_message? &&
        ["replied", "mentioned", "quoted", "posted"].include?(notification_type)
 
     title = @notification.data_hash[:topic_title]
-    allow_reply_by_email = opts[:allow_reply_by_email]
+    allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
+    use_site_subject = opts[:use_site_subject]
+    add_re_to_subject = opts[:add_re_to_subject]
+    show_category_in_subject = opts[:show_category_in_subject]
 
     send_notification_email(
       title: title,
       post: @post,
       from_alias: username,
       allow_reply_by_email: allow_reply_by_email,
+      use_site_subject: use_site_subject,
+      add_re_to_subject: add_re_to_subject,
+      show_category_in_subject: show_category_in_subject,
       notification_type: notification_type,
       user: user
     )
@@ -162,9 +200,24 @@ class UserNotifications < ActionMailer::Base
     post = opts[:post]
     title = opts[:title]
     allow_reply_by_email = opts[:allow_reply_by_email]
+    use_site_subject = opts[:use_site_subject]
+    add_re_to_subject = opts[:add_re_to_subject] && post.post_number > 1
     from_alias = opts[:from_alias]
     notification_type = opts[:notification_type]
     user = opts[:user]
+
+    # category name
+    category = Topic.find_by(id: post.topic_id).category
+    if opts[:show_category_in_subject] && post.topic_id && !category.uncategorized?
+      show_category_in_subject = category.name
+
+      # subcategory case
+      if !category.parent_category_id.nil?
+        show_category_in_subject = "#{Category.find_by(id: category.parent_category_id).name}/#{show_category_in_subject}"
+      end
+    else
+      show_category_in_subject = nil
+    end
 
     context = ""
     tu = TopicUser.get(post.topic_id, user)
@@ -180,10 +233,16 @@ class UserNotifications < ActionMailer::Base
       end
     end
 
+    top = SiteText.text_for(:notification_email_top)
+
     html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
       template: 'email/notification',
       format: :html,
-      locals: { context_posts: context_posts, post: post }
+      locals: { context_posts: context_posts,
+                post: post,
+                top: top ? PrettyText.cook(top).html_safe : nil,
+                classes: RTL.new(user).css_class
+      }
     )
 
     template = "user_notifications.user_#{notification_type}"
@@ -201,6 +260,11 @@ class UserNotifications < ActionMailer::Base
       username: from_alias,
       add_unsubscribe_link: true,
       allow_reply_by_email: allow_reply_by_email,
+      use_site_subject: use_site_subject,
+      add_re_to_subject: add_re_to_subject,
+      show_category_in_subject: show_category_in_subject,
+      private_reply: post.topic.private_message?,
+      include_respond_instructions: !user.suspended?,
       template: template,
       html_override: html,
       style: :notification

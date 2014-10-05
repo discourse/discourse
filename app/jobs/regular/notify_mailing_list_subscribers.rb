@@ -4,13 +4,16 @@ module Jobs
 
     def execute(args)
       post_id = args[:post_id]
-      post = Post.find(post_id) if post_id
+      if post_id
+        post = Post.with_deleted.find_by(id: post_id)
+        # our topic can be deleted as well
+        return if (post && post.trashed?) || !post.topic
+      end
 
       raise Discourse::InvalidParameters.new(:post_id) unless post
 
-      User.not_suspended
-          .not_blocked
-          .real
+      users =
+          User.activated.not_blocked.not_suspended.real
           .where(mailing_list_mode:  true)
           .where('NOT EXISTS(
                       SELECT 1
@@ -28,11 +31,25 @@ module Jobs
                        cu.user_id = users.id AND
                        cu.notification_level = ?
                   )', post.topic.category_id, CategoryUser.notification_levels[:muted])
-          .each do |user|
-            if Guardian.new(user).can_see?(post)
-              message = UserNotifications.mailing_list_notify(user, post)
-              Email::Sender.new(message, :mailing_list, user).send
+
+      error_count = 0
+      users.each do |user|
+        if Guardian.new(user).can_see?(post)
+          begin
+            message = UserNotifications.mailing_list_notify(user, post)
+            Email::Sender.new(message, :mailing_list, user).send
+          rescue => e
+            Discourse.handle_exception(e, error_context(
+                args,
+                "Sending post to mailing list subscribers", {
+                user_id: user.id,
+                user_email: user.email
+            }))
+            if (++error_count) >= 4
+              raise RuntimeError, "ABORTING NotifyMailingListSubscribers due to repeated failures"
             end
+          end
+        end
       end
 
     end

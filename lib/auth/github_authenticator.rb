@@ -19,11 +19,12 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       github_screen_name: screen_name,
     }
 
-    user_info = GithubUserInfo.where(github_user_id: github_user_id).first
+    user_info = GithubUserInfo.find_by(github_user_id: github_user_id)
+    result.email_valid = !!data["email_verified"]
 
     if user_info
       user = user_info.user
-    elsif user = User.find_by_email(email)
+    elsif result.email_valid && (user = User.find_by_email(email))
       user_info = GithubUserInfo.create(
           user_id: user.id,
           screen_name: screen_name,
@@ -32,7 +33,6 @@ class Auth::GithubAuthenticator < Auth::Authenticator
     end
 
     result.user = user
-    result.email_valid = false
 
     result
   end

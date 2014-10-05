@@ -1,5 +1,5 @@
 unless Rails.env.test?
-  staff = Category.where(id: SiteSetting.staff_category_id).first
+  staff = Category.find_by(id: SiteSetting.staff_category_id)
   if staff and !staff.group_ids.include?(Group[:staff].id)
 
     # Add permissions and a description to the Staff category.

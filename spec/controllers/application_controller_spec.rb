@@ -24,13 +24,6 @@ describe TopicsController do
     lambda { get :show, {id: topic.id} }.should_not raise_error
   end
 
-  it "stores an incoming link when there is an off-site referer" do
-    lambda {
-      set_referer("http://google.com/search")
-      get :show, {id: topic.id}
-    }.should change(IncomingLink, :count).by(1)
-  end
-
   describe "has_escaped_fragment?" do
     render_views
 
@@ -40,7 +33,7 @@ describe TopicsController do
       end
 
       it "uses the application layout even with an escaped fragment param" do
-        get :show, {'id' => topic.id, '_escaped_fragment_' => 'true'}
+        get :show, {'topic_id' => topic.id, 'slug' => topic.slug,  '_escaped_fragment_' => 'true'}
         response.should render_template(layout: 'application')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
@@ -52,13 +45,13 @@ describe TopicsController do
       end
 
       it "uses the application layout when there's no param" do
-        get :show, {'id' => topic.id}
+        get :show, topic_id: topic.id, slug: topic.slug
         response.should render_template(layout: 'application')
         assert_select "meta[name=fragment]", true, "it has the meta tag"
       end
 
       it "uses the crawler layout when there's an _escaped_fragment_ param" do
-        get :show, {'id' => topic.id, '_escaped_fragment_' => 'true'}
+        get :show, topic_id: topic.id, slug: topic.slug,  _escaped_fragment_: 'true'
         response.should render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
@@ -73,7 +66,7 @@ describe TopicsController do
         CrawlerDetection.expects(:crawler?).returns(false)
       end
       it "renders with the application layout" do
-        get :show, {'id' => topic.id}
+        get :show, topic_id: topic.id, slug: topic.slug
         response.should render_template(layout: 'application')
         assert_select "meta[name=fragment]", true, "it has the meta tag"
       end
@@ -84,23 +77,10 @@ describe TopicsController do
         CrawlerDetection.expects(:crawler?).returns(true)
       end
       it "renders with the crawler layout" do
-        get :show, {'id' => topic.id}
+        get :show, topic_id: topic.id, slug: topic.slug
         response.should render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
-    end
-
-  end
-
-  describe 'after inserting an incoming link' do
-
-    it 'sets last link correctly' do
-      set_referer("http://google.com/search")
-      get :show, {topic_id: topic.id}
-
-      last_link = IncomingLink.last
-      last_link.topic_id.should == topic.id
-      last_link.post_number.should == 1
     end
 
   end
@@ -130,6 +110,15 @@ describe TopicsController do
 end
 
 describe 'api' do
+
+  before do
+    ActionController::Base.allow_forgery_protection = true
+  end
+
+  after do
+    ActionController::Base.allow_forgery_protection = false
+  end
+
   describe PostsController do
     let(:user) do
       Fabricate(:user)
@@ -163,16 +152,14 @@ describe 'api' do
 
     it 'disallows phonies to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
-      lambda do
-        put :bookmark, bookmarked: "true", post_id: post.id, api_key: SecureRandom.hex(32), api_username: user.username, format: :json
-      end.should raise_error Discourse::NotLoggedIn
+      put :bookmark, bookmarked: "true", post_id: post.id, api_key: SecureRandom.hex(32), api_username: user.username, format: :json
+      response.code.to_i.should == 403
     end
 
     it 'disallows blank api' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
-      lambda do
-        put :bookmark, bookmarked: "true", post_id: post.id, api_key: "", api_username: user.username, format: :json
-      end.should raise_error Discourse::NotLoggedIn
+      put :bookmark, bookmarked: "true", post_id: post.id, api_key: "", api_username: user.username, format: :json
+      response.code.to_i.should == 403
     end
   end
 end

@@ -8,6 +8,8 @@
 **/
 Discourse.Site = Discourse.Model.extend({
 
+  isReadOnly: Em.computed.alias('is_readonly'),
+
   notificationLookup: function() {
     var result = [];
     _.each(this.get('notification_types'), function(v,k) {
@@ -22,9 +24,37 @@ Discourse.Site = Discourse.Model.extend({
     return postActionTypes.filterProperty('is_flag', true);
   }.property('post_action_types.@each'),
 
-  sortedCategories: Em.computed.sort('categories', function(a, b) {
+  categoriesByCount: Em.computed.sort('categories', function(a, b) {
     return (b.get('topic_count') || 0) - (a.get('topic_count') || 0);
   }),
+
+  // Sort subcategories under parents
+  sortedCategories: function() {
+    var cats = this.get('categoriesByCount'),
+        result = [],
+        remaining = {};
+
+    cats.forEach(function(c) {
+      var parentCategoryId = parseInt(c.get('parent_category_id'), 10);
+      if (!parentCategoryId) {
+        result.pushObject(c);
+      } else {
+        remaining[parentCategoryId] = remaining[parentCategoryId] || [];
+        remaining[parentCategoryId].pushObject(c);
+      }
+    });
+
+    Ember.keys(remaining).forEach(function(parentCategoryId) {
+      var category = result.findBy('id', parseInt(parentCategoryId, 10)),
+          index = result.indexOf(category);
+
+      if (index !== -1) {
+        result.replace(index+1, 0, remaining[parentCategoryId]);
+      }
+    });
+
+    return result;
+  }.property(),
 
   postActionTypeById: function(id) {
     return this.get("postActionByIdLookup.action" + id);
@@ -36,7 +66,7 @@ Discourse.Site = Discourse.Model.extend({
 
   updateCategory: function(newCategory) {
     var existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
-    if (existingCategory) existingCategory.mergeAttributes(newCategory);
+    if (existingCategory) existingCategory.setProperties(newCategory);
   }
 });
 
@@ -56,16 +86,17 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     var result = this._super.apply(this, arguments);
 
     if (result.categories) {
-      var byId = {};
+      result.categoriesById = {};
       result.categories = _.map(result.categories, function(c) {
-        byId[c.id] = Discourse.Category.create(c);
-        return byId[c.id];
+        result.categoriesById[c.id] = Discourse.Category.create(c);
+        return result.categoriesById[c.id];
       });
 
       // Associate the categories with their parents
       result.categories.forEach(function (c) {
         if (c.get('parent_category_id')) {
-          c.set('parentCategory', byId[c.get('parent_category_id')]);
+          c.set('parentCategory',
+            result.categoriesById[c.get('parent_category_id')]);
         }
       });
     }
@@ -99,6 +130,12 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     if (result.archetypes) {
       result.archetypes = _.map(result.archetypes,function(a) {
         return Discourse.Archetype.create(a);
+      });
+    }
+
+    if (result.user_fields) {
+      result.user_fields = result.user_fields.map(function(uf) {
+        return Ember.Object.create(uf);
       });
     }
 

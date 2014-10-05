@@ -3,14 +3,16 @@ module Validators; end
 class Validators::PostValidator < ActiveModel::Validator
   def validate(record)
     presence(record)
-    stripped_length(record)
-    raw_quality(record)
-    max_posts_validator(record)
-    max_mention_validator(record)
-    max_images_validator(record)
-    max_attachments_validator(record)
-    max_links_validator(record)
-    unique_post_validator(record)
+    unless Discourse.static_doc_topic_ids.include?(record.topic_id) && record.acting_user.try(:admin?)
+      stripped_length(record)
+      raw_quality(record)
+      max_posts_validator(record)
+      max_mention_validator(record)
+      max_images_validator(record)
+      max_attachments_validator(record)
+      max_links_validator(record)
+      unique_post_validator(record)
+    end
   end
 
   def presence(post)
@@ -66,7 +68,7 @@ class Validators::PostValidator < ActiveModel::Validator
   def unique_post_validator(post)
     return if SiteSetting.unique_posts_mins == 0
     return if post.skip_unique_check
-    return if post.acting_user.admin? || post.acting_user.moderator?
+    return if post.acting_user.staff?
 
     # If the post is empty, default to the validates_presence_of
     return if post.raw.blank?
@@ -79,7 +81,7 @@ class Validators::PostValidator < ActiveModel::Validator
   private
 
   def acting_user_is_trusted?(post)
-    post.acting_user.present? && post.acting_user.has_trust_level?(:basic)
+    post.acting_user.present? && post.acting_user.has_trust_level?(TrustLevel[1])
   end
 
   def add_error_if_count_exceeded(post, key_for_translation, current_count, max_count)

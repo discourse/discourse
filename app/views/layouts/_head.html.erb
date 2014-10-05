@@ -1,0 +1,14 @@
+
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="author" content="">
+    <meta name="generator" content="Discourse <%= Discourse::VERSION::STRING %> - https://github.com/discourse/discourse version <%= Discourse.git_version %>">
+
+    <link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">
+    <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
+
+    <%= canonical_link_tag %>
+
+    <%= render partial: "common/special_font_face" %>
+    <%= render partial: "common/discourse_stylesheet" %>
+
+    <%= discourse_csrf_tags %>

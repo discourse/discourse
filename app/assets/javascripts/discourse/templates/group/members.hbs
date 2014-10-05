@@ -1,0 +1,22 @@
+{{#if model}}
+  <table class='group-members'>
+    <tr>
+      <th colspan="3" class="seen">{{i18n last_seen}}</th>
+    </tr>
+  {{#each model}}
+  <tr>
+      <td class='avatar'>
+        {{avatar this imageSize="large"}}
+      </td>
+      <td>
+        <h3>{{#link-to 'user' this}}{{username}}{{/link-to}}</h3>
+        <p>{{name}}</p>
+      </td>
+      <td>
+        <span class='last-seen-at'>{{bound-date last_seen_at}}</span>
+      </td>
+    </tr>
+    </div>
+  {{/each}}
+</table>
+{{/if}}

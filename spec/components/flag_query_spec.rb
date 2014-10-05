@@ -23,17 +23,19 @@ describe FlagQuery do
       PostAction.act(codinghorror, post2, PostActionType.types[:spam])
       PostAction.act(user2, post2, PostActionType.types[:spam])
 
-      posts, users = FlagQuery.flagged_posts_report(admin, "")
+      posts, topics, users = FlagQuery.flagged_posts_report(admin, "")
       posts.count.should == 2
       first = posts.first
 
       users.count.should == 5
       first[:post_actions].count.should == 2
 
+      topics.count.should == 2
+
       second = posts[1]
 
       second[:post_actions].count.should == 3
-      second[:post_actions].first[:permalink].should == mod_message.related_post.topic.url
+      second[:post_actions].first[:permalink].should == mod_message.related_post.topic.relative_url
 
       posts, users = FlagQuery.flagged_posts_report(admin, "", 1)
       posts.count.should == 1

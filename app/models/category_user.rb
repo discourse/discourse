@@ -6,9 +6,21 @@ class CategoryUser < ActiveRecord::Base
     self.where(user: user, notification_level: notification_levels[level])
   end
 
+  def self.lookup_by_category(user, category)
+    self.where(user: user, category: category)
+  end
+
   # same for now
   def self.notification_levels
     TopicUser.notification_levels
+  end
+
+  def self.auto_track_new_topic(topic)
+    apply_default_to_topic(
+                           topic,
+                           TopicUser.notification_levels[:tracking],
+                           TopicUser.notification_reasons[:auto_track_category]
+                          )
   end
 
   def self.auto_watch_new_topic(topic)
@@ -35,15 +47,18 @@ class CategoryUser < ActiveRecord::Base
     end
   end
 
-  def self.auto_mute_new_topic(topic)
-    apply_default_to_topic(
-                           topic,
-                           TopicUser.notification_levels[:muted],
-                           TopicUser.notification_reasons[:auto_mute_category]
-                          )
-  end
+  def self.set_notification_level_for_category(user, level, category_id)
+    record = CategoryUser.where(user: user, category_id: category_id).first
+    # oder CategoryUser.where(user: user, category_id: category_id).destroy_all
+    # und danach mir create anlegen.
 
-  private
+    if record.present?
+      record.notification_level = level
+      record.save!
+    else
+      CategoryUser.create!(user: user, category_id: category_id, notification_level: level)
+    end
+  end
 
   def self.apply_default_to_topic(topic, level, reason)
     # Can not afford to slow down creation of topics when a pile of users are watching new topics, reverting to SQL for max perf here

@@ -6,28 +6,28 @@ describe Email do
   describe "is_valid?" do
 
     it 'treats a good email as valid' do
-      Email.is_valid?('sam@sam.com').should be_true
+      Email.is_valid?('sam@sam.com').should == true
     end
 
     it 'treats a bad email as invalid' do
-      Email.is_valid?('sam@sam').should be_false
+      Email.is_valid?('sam@sam').should == false
     end
 
     it 'allows museum tld' do
-      Email.is_valid?('sam@nic.museum').should be_true
+      Email.is_valid?('sam@nic.museum').should == true
     end
 
     it 'does not think a word is an email' do
-      Email.is_valid?('sam').should be_false
+      Email.is_valid?('sam').should == false
     end
 
   end
 
   describe "downcase" do
 
-    it 'downcases only the host part' do
-      Email.downcase('SAM@GMAIL.COM').should == 'SAM@gmail.com'
-      Email.downcase('sam@GMAIL.COM').should_not == 'SAM@gmail.com'
+    it 'downcases local and host part' do
+      Email.downcase('SAM@GMAIL.COM').should == 'sam@gmail.com'
+      Email.downcase('sam@GMAIL.COM').should == 'sam@gmail.com'
     end
 
     it 'leaves invalid emails untouched' do

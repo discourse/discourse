@@ -53,8 +53,17 @@ I18n.PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
 I18n.fallbackRules = {};
 
 I18n.pluralizationRules = {
-  en: function (n) {
+  en: function(n) {
     return n === 0 ? ["zero", "none", "other"] : n === 1 ? "one" : "other";
+  },
+  "zh_CN": function(n) {
+    return n === 0 ? ["zero", "none", "other"] : "other";
+  },
+  "zh_TW": function(n) {
+    return n === 0 ? ["zero", "none", "other"] : "other";
+  },
+  "ko": function(n) {
+    return n === 0 ? ["zero", "none", "other"] : "other";
   }
 };
 
@@ -498,3 +507,38 @@ I18n.currentLocale = function() {
 I18n.t = I18n.translate;
 I18n.l = I18n.localize;
 I18n.p = I18n.pluralize;
+
+I18n.enable_verbose_localization = function(){
+  var counter = 0;
+  var keys = {};
+  var t = I18n.t;
+
+
+  I18n.t = I18n.translate = function(scope, value){
+    var current = keys[scope];
+    if(!current) {
+      current = keys[scope] = ++counter;
+      var message = "Translation #" + current + ": " + scope;
+      if (!_.isEmpty(value)) {
+        message += ", parameters: " + JSON.stringify(value);
+      }
+      window.console.log(message);
+    }
+    return t.apply(I18n, [scope, value]) + " (t" + current + ")";
+  };
+};
+
+
+I18n.verbose_localization_session = function(){
+  sessionStorage.setItem("verbose_localization", "true");
+  I18n.enable_verbose_localization();
+  return true;
+}
+
+try {
+  if(sessionStorage && sessionStorage.getItem("verbose_localization")) {
+    I18n.enable_verbose_localization();
+  }
+} catch(e){
+  // we don't care really, can happen if cookies disabled
+}

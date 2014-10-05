@@ -1,30 +1,15 @@
 .gap {
-  background-color: lighten($secondary_background_color, 76%);
+  background-color: scale-color-diff();
   padding: 5px 15px;
-  color: $secondary_text_color;
+  color: $primary;
   text-align: center;
   margin: 0 10px;
 }
 
 .topic-post {
-  border-top: 1px solid $primary_border_color;
+  border-top: 1px solid scale-color-diff();
   padding: 6px 0 3px 0;
-  &:first-of-type {
-    border-top: none;
-  }
 }
-
-nav.post-controls {
-  background-color: $primary_background_color;
-  padding: 0;
-  border-right: 1px solid $primary_border_color;
-  margin-top: 10px;
-  button {color: lighten($primary_text_color, 35%);
-  border-radius: 4px;
-  margin-right: 2px;
-
-}
-
 
 span.badge-posts {
   margin-right: 5px;
@@ -37,19 +22,9 @@ span.badge-posts {
   }
 }
 
-
-
-button.create {
-  float: right !important;
-  margin-right: 0;
-  color: $primary_text_color;
-  padding-right: 7px;}
+nav.post-controls {
+  clear: both;
 }
-
-.create i {
-  margin-right: 5px;
-}
-
 
 button {
   border: none;
@@ -57,13 +32,18 @@ button {
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
-  float: left !important;
+  color: scale-color($primary, $lightness: 50%);
+  float: left;
   &.hidden {
     display: none;
   }
-  &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
-    float: right;
+  &.admin {
+    position: relative;
   }
+  &.expand-post {
+    margin:10px 0 10px 0;
+  }
+  &.has-like {color: $love;}
   .read-icon {
     &:before {
       font-family: "FontAwesome";
@@ -74,17 +54,54 @@ button {
         content: "\f097";
       }
     }
-    &.last-read {
-      color: $warning_text_color;
-    }
     &.bookmarked {
       &:before {
-        color: $bookmarkColor;
+        color: $tertiary;
       }
     }
   }
 }
 
+
+/* shift post reply button to the right and make it black */
+.post-controls button.create {
+  float: right;
+  color: $primary;
+}
+
+
+.post-admin-menu {
+  background-color: $secondary;
+  width: 205px;
+  padding: 10px;
+  border: 1px solid scale-color-diff();
+  position: absolute;
+  text-align: left;
+  bottom: -26px;
+  left: 0;
+  z-index: 1000;
+  display: none;
+
+  h3 {
+    color: $primary;
+    font-size: 1em;
+  }
+
+  ul {
+    list-style: none;
+    margin: 10px 0 0 0;
+  }
+
+  li {
+    width: 176px;
+    margin-bottom: 5px;
+
+    i.fa {
+      width: 14px;
+      margin-right: 14px;
+    }
+  }
+}
 
 
 .embedded-posts {
@@ -104,43 +121,45 @@ button {
 }
 
 a.reply-to-tab {
-  display: none;
+  position: absolute;
+  z-index: 400;
+  right: 80px;
+  color: scale-color($primary, $lightness: 50%);
+  span { display: none; }
 }
 
 a.star {
   display: inline-block;
   float: left;
-  font-size: 1.4em !important;
-  margin-top: 3px;
+  font-size: 1.3em;
+  margin-top: 4px;
 }
 
 #main a.star.starred {
   text-shadow: none !important;
 }
 
+.topic-post .boxed .contents {
+  float: none;
+  padding-top: 5px;
+  padding-bottom: 0px;
+  clear: both;
+}
+
 .topic-map {
 
-  .btn {
-    border-radius: 0 4px 0 4px;
-  }
-
-  .topic-links li {
-    word-wrap: break-word;
-  }
-
-  border-radius: 5px;
-  margin: 15px 10px 20px 10px;
-  border: 1px solid $primary_border_color;
+  margin: 30px 10px 10px 10px;
+  background: scale-color(scale-color-diff(), $lightness: 40%);
 
   h3 {
     margin-bottom: 4px;
-    color: $primary_text_color;
+    color: $primary;
     line-height: 23px;
   }
 
   h4 {
     margin: 0 0 3px 0;
-    color: $secondary_text_color;
+    color: $primary;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
@@ -149,6 +168,11 @@ a.star {
   p,
   .participants {
     margin: 0 0 7px;
+  }
+
+  .user {
+    float: left;
+    margin-right: 10px;
   }
 
   ul {
@@ -170,7 +194,11 @@ a.star {
       font-weight: normal;
       font-size: 11px;
       line-height: 14px;
-          }
+    }
+
+    /* limit to one line of avatars for now */
+    height:24px;
+    overflow:hidden !important; // otherwise parent mobile styles conflict
   }
 
   .avatar {
@@ -187,7 +215,7 @@ a.star {
   .map {
     li {
       float: left;
-      padding: 7px 11px;
+      padding: 7px 8px;
       &:last-of-type {
         border-right: 0;
       }
@@ -196,41 +224,54 @@ a.star {
       font-weight: bold;
       line-height: 20px;
     }
-    .number {
-      color: $emphasis_text_color;
-    }
+
     .avatar + a {
       float: left;
     }
   }
-  .avatars,
+  li.avatars {
+    display: none;
+  }
+
   .links,
   .information {
-    padding: 7px 14px;
-    color: $primary_text_color;
+    padding: 7px 10px;
+    color: $primary;
+    overflow: auto;
   }
 
   .information {
-    border-top: 1px solid $primary_border_color;
+    border-top: 2px solid scale-color-diff();
   }
+
+  .domain {
+    color: scale-color($primary, $lightness: 75%);
+  }
+
   .topic-links {
     .badge-notification {
-      margin: 0 0 4px;
+      margin: 1px 5px 2px 0;
     }
   }
+
+  td {
+    vertical-align: top;
+    padding:1px;
+  }
+
   .buttons {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid $primary_border_color;
-      border-left: 1px solid $primary_border_color;
-      padding: 0 23px;
-      color: $primary_text_color;
-      background: lighten($secondary_background_color, 60%);
+      border-bottom: 1px solid scale-color-diff();
+      border-left: 1px solid scale-color-diff();
+      padding: 0 15px;
+      color: $primary;
+      background: scale-color-diff();
       &:hover {
-        background: lighten($secondary_background_color, 60%);
-        color: $primary_text_color;
-        border-bottom: 1px solid $primary_border_color;
+        background: scale-color($primary, $lightness: 75%);
+        color: $primary;
+        border-bottom: 1px solid scale-color-diff();
 
       }
       .fa {
@@ -243,8 +284,14 @@ a.star {
 }
 
 #topic-footer-buttons {
-  border-top: 1px solid $primary_border_color;
+  border-top: 1px solid scale-color-diff();
   padding: 20px 10px 0 10px;
+}
+
+/* this is to force the drop-down notification state description para below the button */
+#topic-footer-buttons p {
+  clear: both;
+  margin: 0;
 }
 
 #suggested-topics {
@@ -256,6 +303,7 @@ a.star {
 
    a.badge-category, a.badge-category-parent {
     font-size: 10px;
+    vertical-align: top;
     }
 
    .title {
@@ -267,8 +315,8 @@ a.star {
 
 
 span.post-count {
-  background: $secondary_background_color;
-  color: $tertiary_text_color;
+  background: $primary;
+  color: $secondary;
   opacity: .8;
 }
 
@@ -283,32 +331,13 @@ span.post-count {
 
 #topic-title {
   z-index: 1000;
-  background: lighten($secondary_background_color, 76%);
   margin: 0 0 0 0 !important;
   padding: 15px 10px 15px 10px;
 }
 
 .topic-post {
-  article.boxed img {
-    max-width: 100%;
-    height: auto;
-  }
   &.moderator {
-    background-color: $emphasis_background_color;
-  }
-}
-
-.quote-button {
-  display: none;
-  position: absolute;
-  background-color: lighten($secondary_background_color, 35%);
-  color: $primary_text_color;
-  padding: 10px;
-  width: 90px;
-
-  &:hover {
-    background-color: lighten($secondary_background_color, 50%);
-    cursor: pointer;
+    background-color: scale-color($highlight, $lightness: 75%);
   }
 }
 
@@ -334,6 +363,11 @@ iframe {
 
 .dropdown-menu li  {
   margin: 5px 0;
+  .fa {
+    float: left;
+    margin-right: 5px;
+    padding-top: 1px;
+  }
 }
 
 .btn-group {
@@ -346,10 +380,6 @@ iframe {
   position: relative;
 }
 
-.contents .cooked a {
-  word-wrap: break-word;
-}
-
 .modal-body {
   input[type=text] {
     font-size: 16px;
@@ -358,20 +388,8 @@ iframe {
   }
 }
 
-
 #share-link {
-  width: 265px;
-  margin-left: -4px;
-
-    h3 {
-      margin: 5px 0;
-    }
-
-    input[type=text] {
-      font-size: 16px;
-      width: 92%;
-      margin-bottom: 10px;
-    }
+  width: 290px;
 }
 
 #selected-posts {
@@ -387,16 +405,21 @@ iframe {
   margin-top: -20px;
 }
 
+.post-action {
+  float:right;
+  margin-right: 10px;
+}
+
 .post-action .relative-date {
   margin-left: 5px;
 }
 
 .deleted {
-  background-color: $warning_background_color;
+background-color: scale-color($danger, $lightness: 75%);
 }
 
 #show-topic-admin {
-  color: lighten($primary_text_color, 35%);
+  color: scale-color($primary, $lightness: 50%);
   right: 0;
   border-right: 0;
   padding-right: 4px;
@@ -412,64 +435,24 @@ iframe {
   border-radius: 4px;
   padding: 4px;
   margin: -4px 0 0 -4px;
-  background-color: lighten(yellow, 35%);
-}
-
-.new-user a {
-  color: lighten($primary_text_color, 35%);
-}
-
-.topic-meta-data {
-  white-space: nowrap;
-  float: left;
-}
-
-
-.user-title {
-  color: #aaa;
-  padding-top: 2px;
-  padding-left: 8px;
-  overflow: hidden;
-  margin-right: 50px;
 }
 
 span.btn-text {display: none;}
 
 blockquote {
   clear:both;
-  margin: 0;
+  /* leave browser defaults for top and bottom here */
+  margin-left: 0;
+  margin-right: 0;
 }
 
-.quote-controls {
-  float: right;
-  color: $primary_text_color;
-  a {
-  margin: 0;
-  }
-    .back:before,
-    .quote-other-topic:before {
-    display: inline-block;
-    margin-left: 8px;
-    color: $primary_text_color;
-    font-family: "FontAwesome";
-    position: relative;
-    z-index: 20;
-    }
-    .back:before {
-    content: "\f062";
-    }
-    .quote-other-topic:before {
-    content: "\f061";
-    }
+// we assume blockquotes have their own margins, so all blockquotes
+// will remove margins from first (top) and last (bottom) child elements
+blockquote > *:first-child {
+  margin-top: 0 !important;
 }
-
-
-.quote .title {
-  border-left: 5px solid $primary_border_color;
-  background-color: lighten($secondary_background_color, 76%);
-  padding: 10px 10px 0 12px;
-  clear: both;
-  .avatar { margin-right: 7px; }
+blockquote > *:last-child {
+  margin-bottom: 0 !important;
 }
 
 .gutter { display: none; }
@@ -478,5 +461,49 @@ blockquote {
 }
 
 .topic-body.highlighted {
-  background-color: $emphasis_background_color;
+  background-color: scale-color($tertiary, $lightness: 75%);
+}
+
+span.highlighted {
+  background-color: scale-color($highlight, $lightness: 70%);
+}
+
+.topic-avatar {
+  float: left;
+  position: relative;
+}
+
+.topic-meta-data {
+  white-space: nowrap;
+  position: absolute;
+  width: 100%;
+  left: 0px;
+  .names {
+    margin: 5px 0 0 65px;
+    line-height: 17px;
+    span {
+      display: block;
+    }
+  }
+  .post-info {
+    float: right;
+    font-size: 12px;
+    margin: 4px 10px 0 0;
+    .edits { margin-right: 5px; }
+  }
+}
+
+.username.new-user a {
+  color: scale-color($primary, $lightness: 70%);
+}
+
+.user-title {
+  color: #aaa;
+  padding-top: 2px;
+  overflow: hidden;
+  margin-right: 50px;
+}
+
+.read-state {
+  display: none;
 }

@@ -6,21 +6,19 @@
 }
 
 #login-buttons {
-  text-align: center;
   button {
     margin: 0 0 5px 0;
   }
-  margin-top: 0;
-  margin-bottom: 0;
+  display: inline-block;
 }
 
 #login-form {
   a {
-    color: $secondary_text_color;
-    cursor: pointer;
+    color: scale-color($primary, $lightness: 35%);
   }
-  label {float: left; display: block;}
-  textarea, input, select {font-size: 16px; clear: left; margin-top: 0;}
+  label { float: left; display: block; }
+  textarea, input, select {font-size: 16px; clear: left; margin-top: 0; }
+  td { padding: 4px; }
 }
 
 a#new-account-link { white-space:nowrap; }
@@ -33,15 +31,44 @@ a#new-account-link { white-space:nowrap; }
 
 a#forgot-password-link {clear: left; float: left; }
 
-.btn-primary {margin-bottom: 10px; font-size: 15; clear: left; float: left;}
+.btn-primary {margin-bottom: 10px; font-size: 15; float: left;}
 
 .create-account .modal-body {
-  input[type=text], input[type=password] {
+  input[type=text], input[type=email], input[type=password] {
     display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 10px;
   }
+
+  tr.instructions {
+    label {
+      color: scale-color($primary, $lightness: 50%);
+    }
+  }
+
   tr.input {
     td.label {
-      padding-top: 10px;
+      padding-right: 5px;
+    }
+  }
+}
+
+.create-account {
+  .user-field.confirm {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .user-field {
+    margin-top: 10px;
+    label {
+      width: 85px;
+    }
+    input[type=text] {
+      margin-top: 0;
+      width: 184px;
+    }
+    .controls {
+      margin-left: 85px;
     }
   }
 }

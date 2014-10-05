@@ -7,15 +7,13 @@
 **/
 Discourse.Utilities = {
 
-  IMAGE_EXTENSIONS: [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff"],
-  IS_AN_IMAGE_REGEXP: /\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i,
-
   translateSize: function(size) {
     switch (size) {
       case 'tiny': return 20;
       case 'small': return 25;
       case 'medium': return 32;
       case 'large': return 45;
+      case 'extra_large': return 60;
       case 'huge': return 120;
     }
     return size;
@@ -154,7 +152,7 @@ Discourse.Utilities = {
     @method validateUploadedFiles
     @param {Array} files The list of files we want to upload
   **/
-  validateUploadedFiles: function(files) {
+  validateUploadedFiles: function(files, bypassNewUserRestriction) {
     if (!files || files.length === 0) { return false; }
 
     // can only upload one file at a time
@@ -164,11 +162,12 @@ Discourse.Utilities = {
     }
 
     var upload = files[0];
+    var type = Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment';
 
     // CHROME ONLY: if the image was pasted, sets its name to a default one
     if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
 
-    return Discourse.Utilities.validateUploadedFile(upload, Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment');
+    return Discourse.Utilities.validateUploadedFile(upload, type, bypassNewUserRestriction);
   },
 
   /**
@@ -177,21 +176,24 @@ Discourse.Utilities = {
     @method validateUploadedFile
     @param {File} file The file to be uploaded
     @param {string} type The type of the upload (image, attachment)
+    @params {bool} bypassNewUserRestriction
     @returns true whenever the upload is valid
   **/
-  validateUploadedFile: function(file, type) {
-
+  validateUploadedFile: function(file, type, bypassNewUserRestriction) {
     // check that the uploaded file is authorized
-    if (!Discourse.Utilities.isAuthorizedUpload(file)) {
+    if (!Discourse.Utilities.authorizesAllExtensions() &&
+        !Discourse.Utilities.isAuthorizedUpload(file)) {
       var extensions = Discourse.Utilities.authorizedExtensions();
       bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions }));
       return false;
     }
 
-    // ensures that new users can upload a file
-    if (!Discourse.User.current().isAllowedToUploadAFile(type)) {
-      bootbox.alert(I18n.t('post.errors.' + type + '_upload_not_allowed_for_new_user'));
-      return false;
+    if (!bypassNewUserRestriction) {
+      // ensures that new users can upload a file
+      if (!Discourse.User.current().isAllowedToUploadAFile(type)) {
+        bootbox.alert(I18n.t('post.errors.' + type + '_upload_not_allowed_for_new_user'));
+        return false;
+      }
     }
 
     // check file size
@@ -206,6 +208,16 @@ Discourse.Utilities = {
     return true;
   },
 
+
+  /**
+    Determine whether all file extensions are authorized.
+
+    @method authorizesAllExtensions
+  **/
+  authorizesAllExtensions: function() {
+    return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0;
+  },
+
   /**
     Check the extension of the file against the list of authorized extensions
 
@@ -213,9 +225,27 @@ Discourse.Utilities = {
     @param {File} file The file we want to upload
   **/
   isAuthorizedUpload: function(file) {
-    var extensions = Discourse.SiteSettings.authorized_extensions;
-    var regexp = new RegExp("(" + extensions + ")$", "i");
-    return file && file.name ? file.name.match(regexp) : false;
+    if (file && file.name) {
+      var extensions = _.chain(Discourse.SiteSettings.authorized_extensions.split("|"))
+                        .reject(function(extension) { return extension.indexOf("*") >= 0; })
+                        .map(function(extension) { return (extension.indexOf(".") === 0 ? extension.substring(1) : extension).replace(".", "\\."); })
+                        .value();
+      return new RegExp("\\.(" + extensions.join("|") + ")$", "i").test(file.name);
+    }
+    return false;
+  },
+
+  /**
+    List the authorized extension for display
+
+    @method authorizedExtensions
+  **/
+  authorizedExtensions: function() {
+    return _.chain(Discourse.SiteSettings.authorized_extensions.split("|"))
+            .reject(function(extension) { return extension.indexOf("*") >= 0; })
+            .map(function(extension) { return extension.toLowerCase(); })
+            .value()
+            .join(", ");
   },
 
   /**
@@ -239,7 +269,7 @@ Discourse.Utilities = {
     @param {String} path The path
   **/
   isAnImage: function(path) {
-    return Discourse.Utilities.IS_AN_IMAGE_REGEXP.test(path);
+    return (/\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i).test(path);
   },
 
   /**
@@ -248,11 +278,8 @@ Discourse.Utilities = {
     @method allowsAttachments
   **/
   allowsAttachments: function() {
-    return _.difference(Discourse.SiteSettings.authorized_extensions.split("|"), Discourse.Utilities.IMAGE_EXTENSIONS).length > 0;
-  },
-
-  authorizedExtensions: function() {
-    return Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
+    return Discourse.Utilities.authorizesAllExtensions() ||
+           !(/((png|jpg|jpeg|gif|bmp|tif|tiff)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
   },
 
   displayErrorForUpload: function(data) {
@@ -261,15 +288,16 @@ Discourse.Utilities = {
       switch (data.jqXHR.status) {
         // cancel from the user
         case 0: return;
+
         // entity too large, usually returned from the web server
         case 413:
           var maxSizeKB = Discourse.SiteSettings.max_image_size_kb;
           bootbox.alert(I18n.t('post.errors.image_too_large', { max_size_kb: maxSizeKB }));
           return;
+
         // the error message is provided by the server
-        case 415: // media type not authorized
-        case 422: // there has been an error on the server (mostly due to FastImage)
-          bootbox.alert(data.jqXHR.responseText);
+        case 422:
+          bootbox.alert(data.jqXHR.responseJSON.join("\n"));
           return;
       }
     }
@@ -285,14 +313,14 @@ Discourse.Utilities = {
     @method cropAvatar
     @param {String} url The url of the avatar
     @param {String} fileType The file type of the uploaded file
-    @returns {Ember.Deferred} a promise that will eventually be the cropped avatar.
+    @returns {Promise} a promise that will eventually be the cropped avatar.
   **/
   cropAvatar: function(url, fileType) {
     if (Discourse.SiteSettings.allow_animated_avatars && fileType === "image/gif") {
       // can't crop animated gifs... let the browser stretch the gif
       return Ember.RSVP.resolve(url);
     } else {
-      return Ember.Deferred.promise(function(promise) {
+      return new Ember.RSVP.Promise(function(resolve) {
         var image = document.createElement("img");
         // this event will be fired as soon as the image is loaded
         image.onload = function(e) {
@@ -317,7 +345,7 @@ Discourse.Utilities = {
           // draw the image into the canvas
           canvas.getContext("2d").drawImage(img, x, y, dimension, dimension, 0, 0, size, size);
           // retrieve the image from the canvas
-          promise.resolve(canvas.toDataURL(fileType));
+          resolve(canvas.toDataURL(fileType));
         };
         // launch the onload event
         image.src = url;

@@ -10,9 +10,10 @@ end
 #
 #  post_id     :integer          not null, primary key
 #  search_data :tsvector
+#  raw_data    :text
+#  locale      :string(255)
 #
 # Indexes
 #
 #  idx_search_post  (search_data)
 #
-

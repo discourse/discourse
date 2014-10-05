@@ -1,0 +1,20 @@
+<div class='row groups'>
+  <div class='content-list span6'>
+    <h3>{{i18n admin.groups.edit}}</h3>
+    <ul>
+      {{#each group in arrangedContent}}
+        <li>
+        <a href='#' {{action "showGroup" group}}>{{group.name}} <span class="count">{{group.userCountDisplay}}</span></a>
+        </li>
+      {{/each}}
+    </ul>
+    <div class='controls'>
+      <button class='btn' {{bind-attr disabled="refreshingAutoGroups"}} {{action "refreshAutoGroups"}}><i class="fa fa-refresh"></i>{{i18n admin.groups.refresh}}</button>
+      <button class='btn' {{action "newGroup"}}><i class="fa fa-plus"></i>{{i18n admin.groups.new}}</button>
+    </div>
+  </div>
+
+  <div class='content-editor'>
+    {{outlet}}
+  </div>
+</div>

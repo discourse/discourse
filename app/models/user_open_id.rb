@@ -21,4 +21,3 @@ end
 #
 #  index_user_open_ids_on_url  (url)
 #
-

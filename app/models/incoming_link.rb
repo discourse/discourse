@@ -1,83 +1,99 @@
 class IncomingLink < ActiveRecord::Base
-  belongs_to :topic
+  belongs_to :post
   belongs_to :user
+  belongs_to :incoming_referer
 
-  validates :url, presence: true
   validate :referer_valid
+  validates :post_id, presence: true
 
-  before_validation :extract_domain
-  before_validation :extract_topic_and_post
   after_create :update_link_counts
 
-  def self.add(request,current_user=nil)
-    user_id, host, referer = nil
+  attr_accessor :url
 
-    if request['u']
-      u = User.select(:id).where(username_lower: request['u'].downcase).first
+  def self.add(opts)
+    user_id, host, referer = nil
+    current_user = opts[:current_user]
+
+    if username = opts[:username]
+      u = User.select(:id).find_by(username_lower: username.downcase)
       user_id = u.id if u
     end
 
-    if request.referer.present?
+    if opts[:referer].present?
       begin
-        host = URI.parse(request.referer).host
-        referer = request.referer[0..999]
+        host = URI.parse(opts[:referer]).host
+        referer = opts[:referer][0..999]
       rescue URI::InvalidURIError
         # bad uri, skip
       end
     end
 
-    if host != request.host && (user_id || referer)
-      cid = current_user.id if current_user
+    if host != opts[:host] && (user_id || referer)
+
+      post_id = opts[:post_id]
+      post_id ||= Post.where(topic_id: opts[:topic_id],
+                             post_number: opts[:post_number] || 1)
+                            .pluck(:id).first
+
+      cid = current_user ? (current_user.id) : (nil)
+
+
       unless cid && cid == user_id
-        IncomingLink.create(url: request.url,
-                            referer: referer,
-                            user_id: user_id,
-                            current_user_id: cid,
-                            ip_address: request.remote_ip)
+
+        create(referer: referer,
+               user_id: user_id,
+               post_id: post_id,
+               current_user_id: cid,
+               ip_address: opts[:ip_address]) if post_id
+
       end
     end
 
   end
 
 
-  # Internal: Extract the domain from link.
-  def extract_domain
-    if referer.present?
-      # We may get a junk URI, just deal with it
-      self.domain = URI.parse(self.referer).host rescue nil
-      self.referer = nil unless self.domain
+  def referer=(referer)
+    self.incoming_referer_id = nil
+
+    # will set incoming_referer_id
+    unless referer.present?
+      return
+    end
+
+    parsed = URI.parse(referer)
+
+    if parsed.scheme == "http" || parsed.scheme == "https"
+      domain = IncomingDomain.add!(parsed)
+
+      referer = IncomingReferer.add!(path: parsed.path, incoming_domain: domain) if domain
+      self.incoming_referer_id = referer.id if referer
+    end
+
+  rescue URI::InvalidURIError
+    # ignore
+  end
+
+  def referer
+    if self.incoming_referer
+      self.incoming_referer.incoming_domain.to_url << self.incoming_referer.path
     end
   end
 
-  # Internal: If link is internal and points to topic/post, extract their IDs.
-  def extract_topic_and_post
-    if url.present?
-      parsed = URI.parse(url)
-
-      begin
-        # TODO achieve same thing with no exception
-        params = Rails.application.routes.recognize_path(parsed.path)
-        if self.topic_id = params[:topic_id]
-          self.post_number = params[:post_number] || 1
-        end
-      rescue ActionController::RoutingError
-        # If we can't route to the url, that's OK. Don't save those two fields.
-      end
+  def domain
+    if incoming_referer
+      incoming_referer.incoming_domain.name
     end
   end
+
 
   # Internal: Update appropriate link counts.
   def update_link_counts
-    if topic_id.present?
-      exec_sql("UPDATE topics
-                SET incoming_link_count = incoming_link_count + 1
-                WHERE id = ?", topic_id)
-      if post_number.present?
-        exec_sql("UPDATE posts
-                  SET incoming_link_count = incoming_link_count + 1
-                  WHERE topic_id = ? and post_number = ?", topic_id, post_number)
-      end
-    end
+    exec_sql("UPDATE topics
+              SET incoming_link_count = incoming_link_count + 1
+              WHERE id = (SELECT topic_id FROM posts where id = ?)", post_id)
+    exec_sql("UPDATE posts
+              SET incoming_link_count = incoming_link_count + 1
+              WHERE id = ?", post_id)
   end
 
   protected
@@ -98,21 +114,16 @@ end
 #
 # Table name: incoming_links
 #
-#  id              :integer          not null, primary key
-#  url             :string(1000)     not null
-#  referer         :string(1000)
-#  domain          :string(100)
-#  topic_id        :integer
-#  post_number     :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  user_id         :integer
-#  ip_address      :inet
-#  current_user_id :integer
+#  id                  :integer          not null, primary key
+#  created_at          :datetime         not null
+#  user_id             :integer
+#  ip_address          :inet
+#  current_user_id     :integer
+#  post_id             :integer          not null
+#  incoming_referer_id :integer
 #
 # Indexes
 #
-#  incoming_index                                  (topic_id,post_number)
-#  index_incoming_links_on_created_at_and_domain   (created_at,domain)
 #  index_incoming_links_on_created_at_and_user_id  (created_at,user_id)
+#  index_incoming_links_on_post_id                 (post_id)
 #

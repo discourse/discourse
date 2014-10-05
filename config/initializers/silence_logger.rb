@@ -1,4 +1,7 @@
 class SilenceLogger < Rails::Rack::Logger
+  PATH_INFO = 'PATH_INFO'.freeze
+  HTTP_X_SILENCE_LOGGER = 'HTTP_X_SILENCE_LOGGER'.freeze
+
   def initialize(app, opts = {})
     @app = app
     @opts = opts
@@ -10,11 +13,15 @@ class SilenceLogger < Rails::Rack::Logger
 
   def call(env)
     prev_level = Rails.logger.level
+    path_info = env[PATH_INFO]
 
-    if env['HTTP_X_SILENCE_LOGGER'] || @opts[:silenced].include?(env['PATH_INFO'])
+    if    env[HTTP_X_SILENCE_LOGGER] ||
+          @opts[:silenced].include?(path_info) ||
+          path_info.start_with?('/logs') ||
+          path_info.start_with?('/user_avatar') ||
+          path_info.start_with?('/letter_avatar')
       Rails.logger.level = Logger::WARN
-      result = @app.call(env)
-      result
+      @app.call(env)
     else
       super(env)
     end
@@ -23,5 +30,10 @@ class SilenceLogger < Rails::Rack::Logger
   end
 end
 
-silenced = ["/mini-profiler-resources/results", "/mini-profiler-resources/includes.js", "/mini-profiler-resources/includes.css", "/mini-profiler-resources/jquery.tmpl.js"]
+silenced = [
+  "/mini-profiler-resources/results".freeze,
+  "/mini-profiler-resources/includes.js".freeze,
+  "/mini-profiler-resources/includes.css".freeze,
+  "/mini-profiler-resources/jquery.tmpl.js".freeze
+]
 Rails.configuration.middleware.swap Rails::Rack::Logger, SilenceLogger, silenced: silenced

@@ -18,4 +18,3 @@ end
 #  index_github_user_infos_on_github_user_id  (github_user_id) UNIQUE
 #  index_github_user_infos_on_user_id         (user_id) UNIQUE
 #
-

@@ -19,40 +19,43 @@ If you haven't already, download Discourse and create a new branch for your Hero
 
         heroku create your-app-name
 
-2. Add a suitable Redis provider from [Heroku add-ons](https://addons.heroku.com/), (this service will cost you money).
+1. Add postgres addon (command below adds the free dev version)
+
+        heroku addons:add heroku-postgresql
+
+1. Add a suitable Redis provider from [Heroku add-ons](https://addons.heroku.com/), (this service will cost you money).
 
         heroku addons:add openredis:micro
 
-3. Point the app at your redis provider's URL
+1. Configure your app to connect to redis
 
         heroku config:get OPENREDIS_URL
         heroku config:set REDIS_PROVIDER_URL=<result of above command>
 
-4. Run bundler
+        heroku config:set DISCOURSE_REDIS_HOST=<host from above command>
+        heroku config:set DISCOURSE_REDIS_PORT=<port from above command>
+        heroku config:set DISCOURSE_REDIS_PASSWORD=<password from your provider>
+        heroku config:set DISCOURSE_REDIS_DB=<dbname from your provider>
+
+1. Run bundler
 
         bundle install
 
-5. Generate a secret token in the terminal.
+1. Generate a secret token in the terminal.
 
         rake secret
 
-6. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
+1. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
 
         heroku config:add SECRET_TOKEN=<generated secret>
 
-7. Precompile assets.
+1. Precompile assets.
 
     There are two options for precompilation. Either precompile locally, **before each deploy** or enable [Heroku's experimental user-env-compile](https://devcenter.heroku.com/articles/labs-user-env-compile) feature and Heroku will precompile your assets for you.
 
-    1. **Option 1:** Enable user-env-compile.
+    1. **Option 1:** Let Heroku compile your assets
 
-            heroku labs:enable user-env-compile
-
-        **Caveat:** If you should need to change or add environment variables for any reason, you will need to remove `user-env-compile`, then re-apply it after making the changes. This will then require you to make a commit, even if it is an empty commit, and then push to Heroku for the changes to be applied.
-
-        If needed, you can remove the user-env-compile option with this command.
-
-            heroku labs:disable user-env-compile
+        This is the default for new apps, and seems to work fine.
 
     2. **Option 2:** Precompile locally.
 
@@ -87,11 +90,15 @@ If you haven't already, download Discourse and create a new branch for your Hero
         git push heroku heroku:master
         ```
 
-8. Push your heroku branch to Heroku.
+1. Tell rails to serve your compiled assets
+
+        heroku config:set DISCOURSE_SERVE_STATIC_ASSETS=true
+
+1. Push your heroku branch to Heroku.
 
         git push heroku heroku:master
 
-9. Migrate and seed the database.
+1. Migrate and seed the database.
 
         heroku run rake db:migrate db:seed_fu
 
@@ -129,6 +136,14 @@ If you haven't already, download Discourse and create a new branch for your Hero
     Click on the check-box next to the Sidekiq process and click Apply Changes
 
     ##### Your Discourse application should now be functional. However, you will still need to [configure mail](#email) functionality and file storage for uploaded images. For some examples of doing this within Heroku, see [Heroku add-on examples](#heroku-add-on-examples).
+
+6. [Optional] Increase Garbage collection limit
+
+When you start up your app, the admin dashboard  will complain "Your server is using default ruby garbage collection parameters"
+
+```
+    heroku config:add RUBY_GC_MALLOC_LIMIT=90000000
+```
 
 ## Running the application locally
 
@@ -194,6 +209,25 @@ Create a .env file from the sample.
     +     :authentication => :plain
     + }
     ```
+
+## S3 (for file uploads)
+
+You can't upload files to heroku, you need to use a service like S3.
+
+Here are the [instructions for setting up S3](https://meta.discourse.org/t/setting-up-file-and-image-uploads-to-s3/7229/23)
+
+You can run this from ```heroku run console``` to test if everything is configured correctly.
+
+```ruby
+bucket_name = Discourse.store.send :s3_bucket
+bucket = Discourse.store.send :get_or_create_directory, bucket_name
+
+f = File.open('README.md')
+bucket = Discourse.store.send :upload, f, 'test.txt'
+```
+
+@adamloving: I think there is still a file size issue. I was testing with a 2MB file that wasn't big enough to trigger the "file too big" Discourse error message, but didn't make it to S3 either.
+
 
 ## Load Testing
 

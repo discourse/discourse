@@ -31,17 +31,22 @@ class TopicViewSerializer < ApplicationSerializer
              :draft_sequence,
              :starred,
              :posted,
+             :unpinned,
+             :pinned_globally,
              :pinned,    # Is topic pinned and viewer hasn't cleared the pin?
              :pinned_at, # Ignores clear pin
              :details,
              :highest_post_number,
              :last_read_post_number,
              :deleted_by,
+             :has_deleted,
              :actions_summary,
-             :expandable_first_post
+             :expandable_first_post,
+             :is_warning
+
 
   # Define a delegator for each attribute of the topic we want
-  attributes *topic_attributes
+  attributes(*topic_attributes)
   topic_attributes.each do |ta|
     class_eval %{def #{ta}
       object.topic.#{ta}
@@ -90,6 +95,8 @@ class TopicViewSerializer < ApplicationSerializer
     if has_topic_user?
       result[:notification_level] = object.topic_user.notification_level
       result[:notifications_reason_id] = object.topic_user.notifications_reason_id
+    else
+      result[:notification_level] = TopicUser.notification_levels[:regular]
     end
 
     result[:can_move_posts] = true if scope.can_move_posts?(object.topic)
@@ -104,6 +111,14 @@ class TopicViewSerializer < ApplicationSerializer
     result
   end
 
+
+  def is_warning
+    object.topic.private_message? && object.topic.subtype == TopicSubtype.moderator_warning
+  end
+
+  def include_is_warning?
+    is_warning
+  end
   def draft
     object.draft
   end
@@ -144,8 +159,16 @@ class TopicViewSerializer < ApplicationSerializer
   end
   alias_method :include_posted?, :has_topic_user?
 
+  def pinned_globally
+    object.topic.pinned_globally
+  end
+
   def pinned
-    PinnedCheck.new(object.topic, object.topic_user).pinned?
+    PinnedCheck.pinned?(object.topic, object.topic_user)
+  end
+
+  def unpinned
+    PinnedCheck.unpinned?(object.topic, object.topic_user)
   end
 
   def pinned_at
@@ -160,9 +183,17 @@ class TopicViewSerializer < ApplicationSerializer
                   count: 0,
                   hidden: false,
                   can_act: scope.post_can_act?(post, sym)}
-      # TODO: other keys? :can_clear_flags, :acted, :can_undo
+      # TODO: other keys? :can_defer_flags, :acted, :can_undo
     end
     result
+  end
+
+  def has_deleted
+    object.has_deleted?
+  end
+
+  def include_has_deleted?
+    object.guardian.can_see_deleted_posts?
   end
 
   def expandable_first_post

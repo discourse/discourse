@@ -1,11 +1,9 @@
 <h2><%= @user.username %></h2>
 
-<p><%= raw @user.bio_processed %></p>
-
-<p><%= t 'powered_by_html' %></p>
+<p><%= raw @user.user_profile.bio_processed %></p>
 
 <% content_for :head do %>
-  <%= crawlable_meta_data(title: @user.username, description: @user.bio_summary, image: @user.small_avatar_url) %>
+  <%= crawlable_meta_data(title: @user.username, description: @user.user_profile.bio_summary, image: @user.small_avatar_url) %>
 <% end %>
 
 <% content_for :title do %><%=t("js.user.profile")%> - <%= @user.username %><% end %>

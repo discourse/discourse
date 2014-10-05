@@ -44,6 +44,11 @@ describe PostAlerter do
 
       user.reload
       user.notifications.count.should == 1
+
+      # don't notify on reflection
+      post1.reload
+      PostAlerter.new.extract_linked_users(post1).length.should == 0
+
     end
   end
 

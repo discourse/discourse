@@ -41,7 +41,7 @@ describe SpamRulesEnforcer do
     end
 
     context 'first user is not new' do
-      Given!(:old_user) { Fabricate(:user, ip_address: ip_address, created_at: 2.days.ago, trust_level: TrustLevel.levels[:basic]) }
+      Given!(:old_user) { Fabricate(:user, ip_address: ip_address, created_at: 2.days.ago, trust_level: TrustLevel[1]) }
 
       context 'first user starts a topic' do
         Given!(:first_post) { create_post(user: old_user) }

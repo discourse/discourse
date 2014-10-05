@@ -14,7 +14,14 @@ class UserUpdater
       :external_links_in_new_tab,
       :enable_quoting,
       :dynamic_favicon,
-      :mailing_list_mode
+      :mailing_list_mode,
+      :disable_jump_reply,
+      :edit_history_public
+  ]
+
+  PROFILE_ATTR = [
+    :location,
+    :dismissed_banner_key
   ]
 
   def initialize(actor, user)
@@ -23,9 +30,10 @@ class UserUpdater
   end
 
   def update(attributes = {})
-    user.website = format_url(attributes.fetch(:website) { user.website })
+    user_profile = user.user_profile
+    user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
+    user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
 
-    user.bio_raw = attributes.fetch(:bio_raw) { user.bio_raw }
     user.name = attributes.fetch(:name) { user.name }
     user.locale = attributes.fetch(:locale) { user.locale }
     user.digest_after_days = attributes.fetch(:digest_after_days) { user.digest_after_days }
@@ -50,11 +58,22 @@ class UserUpdater
 
     USER_ATTR.each do |attribute|
       if attributes[attribute].present?
-        user.send("#{attribute.to_s}=", attributes[attribute] == 'true')
+        user.send("#{attribute}=", attributes[attribute] == 'true')
       end
     end
 
-    user.save
+    PROFILE_ATTR.each do |attribute|
+      user_profile.send("#{attribute}=", attributes[attribute])
+    end
+
+    fields = attributes[:custom_fields]
+    if fields.present?
+      user.custom_fields = user.custom_fields.merge(fields)
+    end
+
+    User.transaction do
+      user_profile.save && user.save
+    end
   end
 
   private

@@ -21,7 +21,7 @@ module ::PollPlugin
         return false
       end
 
-      topic.title =~ /^#{I18n.t('poll.prefix')}/i
+      topic.title =~ /^(#{I18n.t('poll.prefix').strip}|#{I18n.t('poll.closed_prefix').strip})\s?:/i
     end
 
     def has_poll_details?
@@ -54,9 +54,13 @@ module ::PollPlugin
           @post.errors.add(:poll_options, I18n.t('poll.cannot_add_or_remove_options'))
         end
       else
-        # Regular user, tell them to contact a moderator.
+        # not staff, tell them to contact one.
         @post.errors.add(:poll_options, I18n.t('poll.cannot_have_modified_options'))
       end
+    end
+
+    def is_closed?
+      @post.topic.closed? || @post.topic.archived? || (!SiteSetting.allow_user_locale? && (@post.topic.title =~ /^#{I18n.t('poll.closed_prefix')}/i) === 0)
     end
 
     def options
@@ -136,23 +140,25 @@ module ::PollPlugin
     end
 
     def set_vote!(user, option)
-      return if @post.topic.closed?
+      return if is_closed?
 
       # Get the user's current vote.
-      vote = get_vote(user)
-      vote = nil unless details.keys.include? vote
+      DistributedMutex.new(details_key).synchronize do
+        vote = get_vote(user)
+        vote = nil unless details.keys.include? vote
 
-      new_details = details.dup
-      new_details[vote] -= 1 if vote
-      new_details[option] += 1
+        new_details = details.dup
+        new_details[vote] -= 1 if vote
+        new_details[option] += 1
 
-      ::PluginStore.set("poll", vote_key(user), option)
-      set_details! new_details
+        ::PluginStore.set("poll", vote_key(user), option)
+        set_details! new_details
+      end
     end
 
     def serialize(user)
       return nil if details.nil?
-      {options: details, selected: get_vote(user)}
+      {options: details, selected: get_vote(user), closed: is_closed?}
     end
 
     private

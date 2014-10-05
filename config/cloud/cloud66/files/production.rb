@@ -52,8 +52,8 @@ Discourse::Application.configure do
   # this setting enables rack_cache so it caches various requests in redis
   config.enable_rack_cache = true
 
-  # allows admins to use mini profiler
-  config.enable_mini_profiler = true
+  # allows developers to use mini profiler
+  config.load_mini_profiler = true
 
   # allows Cross-origin resource sharing (CORS) for API access in JavaScript (default to false for security).
   # See the initializer and https://github.com/cyu/rack-cors for configuration documentation.

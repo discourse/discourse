@@ -5,6 +5,9 @@ class UserHistory < ActiveRecord::Base
   belongs_to :acting_user, class_name: 'User'
   belongs_to :target_user, class_name: 'User'
 
+  belongs_to :post
+  belongs_to :topic
+
   validates_presence_of :action
 
   scope :only_staff_actions, ->{ where("action IN (?)", UserHistory.staff_action_ids) }
@@ -12,20 +15,24 @@ class UserHistory < ActiveRecord::Base
   before_save :set_admin_only
 
   def self.actions
-    @actions ||= Enum.new( :delete_user,
-                           :change_trust_level,
-                           :change_site_setting,
-                           :change_site_customization,
-                           :delete_site_customization,
-                           :checked_for_custom_avatar,
-                           :notified_about_avatar,
-                           :notified_about_sequential_replies,
-                           :notified_about_dominating_topic,
-                           :suspend_user,
-                           :unsuspend_user,
-                           :facebook_no_email,
-                           :grant_badge,
-                           :revoke_badge)
+    @actions ||= Enum.new(:delete_user,
+                          :change_trust_level,
+                          :change_site_setting,
+                          :change_site_customization,
+                          :delete_site_customization,
+                          :checked_for_custom_avatar,
+                          :notified_about_avatar,
+                          :notified_about_sequential_replies,
+                          :notified_about_dominating_topic,
+                          :suspend_user,
+                          :unsuspend_user,
+                          :facebook_no_email,
+                          :grant_badge,
+                          :revoke_badge,
+                          :auto_trust_level_change,
+                          :check_email,
+                          :delete_post,
+                          :delete_topic)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -38,7 +45,10 @@ class UserHistory < ActiveRecord::Base
                         :suspend_user,
                         :unsuspend_user,
                         :grant_badge,
-                        :revoke_badge]
+                        :revoke_badge,
+                        :check_email,
+                        :delete_post,
+                        :delete_topic]
   end
 
   def self.staff_action_ids
@@ -56,7 +66,7 @@ class UserHistory < ActiveRecord::Base
     end
     [:acting_user, :target_user].each do |key|
       if filters[key] and obj_id = User.where(username_lower: filters[key].downcase).pluck(:id)
-        query = query.where("#{key.to_s}_id = ?", obj_id)
+        query = query.where("#{key}_id = ?", obj_id)
       end
     end
     query = query.where("subject = ?", filters[:subject]) if filters[:subject]
@@ -117,8 +127,8 @@ end
 #
 # Indexes
 #
-#  index_staff_action_logs_on_action_and_id                  (action,id)
-#  index_staff_action_logs_on_subject_and_id                 (subject,id)
-#  index_staff_action_logs_on_target_user_id_and_id          (target_user_id,id)
 #  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
+#  index_user_histories_on_action_and_id                     (action,id)
+#  index_user_histories_on_subject_and_id                    (subject,id)
+#  index_user_histories_on_target_user_id_and_id             (target_user_id,id)
 #

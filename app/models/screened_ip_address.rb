@@ -29,12 +29,15 @@ class ScreenedIpAddress < ActiveRecord::Base
     if num_wildcards == 0
       write_attribute(:ip_address, val)
     else
-      v = val.gsub(/\/.*/, '')
+      v = val.gsub(/\/.*/, '') # strip ranges like "/16" from the end if present
       if v[v.index('*')..-1] =~ /[^\.\*]/
         self.errors.add(:ip_address, :invalid)
         return
       end
-      write_attribute(:ip_address, "#{v.gsub('*', '0')}/#{32 - (num_wildcards * 8)}")
+      parts = v.split('.')
+      (4 - parts.size).times { parts << '*' } # support strings like 192.*
+      v = parts.join('.')
+      write_attribute(:ip_address, "#{v.gsub('*', '0')}/#{32 - (v.count('*') * 8)}")
     end
 
   # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
@@ -51,7 +54,7 @@ class ScreenedIpAddress < ActiveRecord::Base
       if mask == 32
         ip_address.to_s
       else
-        "#{ip_address.to_s}/#{ip_address.instance_variable_get(:@mask_addr).to_s(2).count('1')}"
+        "#{ip_address}/#{ip_address.instance_variable_get(:@mask_addr).to_s(2).count('1')}"
       end
     else
       nil
@@ -65,7 +68,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     #
     #   http://www.postgresql.org/docs/9.1/static/datatype-net-types.html
     #   http://www.postgresql.org/docs/9.1/static/functions-net.html
-    where("'#{ip_address.to_s}' <<= ip_address").first
+    find_by("'#{ip_address.to_s}' <<= ip_address")
   end
 
   def self.should_block?(ip_address)
@@ -76,10 +79,19 @@ class ScreenedIpAddress < ActiveRecord::Base
     exists_for_ip_address_and_action?(ip_address, actions[:do_nothing])
   end
 
-  def self.exists_for_ip_address_and_action?(ip_address, action_type)
+  def self.exists_for_ip_address_and_action?(ip_address, action_type, opts={})
     b = match_for_ip_address(ip_address)
-    b.record_match! if b
-    !!b and b.action_type == action_type
+    found = (!!b and b.action_type == action_type)
+    b.record_match! if found and opts[:record_match] != false
+    found
+  end
+
+  def self.block_login?(user, ip_address)
+    return false if user.nil?
+    return false if !user.admin?
+    return false if ScreenedIpAddress.where(action_type: actions[:allow_admin]).count == 0
+    return true if ip_address.nil?
+    !exists_for_ip_address_and_action?(ip_address, actions[:allow_admin], record_match: false)
   end
 end
 

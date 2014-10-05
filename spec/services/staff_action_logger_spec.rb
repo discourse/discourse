@@ -33,10 +33,46 @@ describe StaffActionLogger do
     end
   end
 
+  describe 'log_post_deletion' do
+    let(:deleted_post) { Fabricate(:post) }
+
+    subject(:log_post_deletion) { described_class.new(admin).log_post_deletion(deleted_post) }
+
+    it 'raises an error when post is nil' do
+      expect { logger.log_post_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when post is not a Post' do
+      expect { logger.log_post_deletion(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_post_deletion }.to change { UserHistory.count }.by(1)
+    end
+  end
+
+  describe 'log_topic_deletion' do
+    let(:deleted_topic) { Fabricate(:topic) }
+
+    subject(:log_topic_deletion) { described_class.new(admin).log_topic_deletion(deleted_topic) }
+
+    it 'raises an error when topic is nil' do
+      expect { logger.log_topic_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when topic is not a Topic' do
+      expect { logger.log_topic_deletion(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_topic_deletion }.to change { UserHistory.count }.by(1)
+    end
+  end
+
   describe 'log_trust_level_change' do
     let(:user) { Fabricate(:user) }
-    let(:old_trust_level) { TrustLevel.levels[:newuser] }
-    let(:new_trust_level) { TrustLevel.levels[:basic] }
+    let(:old_trust_level) { TrustLevel[0] }
+    let(:new_trust_level) { TrustLevel[1] }
 
     subject(:log_trust_level_change) { described_class.new(admin).log_trust_level_change(user, old_trust_level, new_trust_level) }
 
@@ -51,7 +87,7 @@ describe StaffActionLogger do
     end
 
     it 'raises an error when new trust level is not a Trust Level' do
-      max_level = TrustLevel.levels.values.max
+      max_level = TrustLevel.valid_range.max
       expect { logger.log_trust_level_change(user, old_trust_level, max_level + 1) }.to raise_error(Discourse::InvalidParameters)
     end
 
@@ -83,7 +119,7 @@ describe StaffActionLogger do
     it "logs new site customizations" do
       log_record = logger.log_site_customization_change(nil, valid_params)
       log_record.subject.should == valid_params[:name]
-      log_record.previous_value.should be_nil
+      log_record.previous_value.should == nil
       log_record.new_value.should be_present
       json = ::JSON.parse(log_record.new_value)
       json['stylesheet'].should be_present
@@ -109,7 +145,7 @@ describe StaffActionLogger do
       site_customization = SiteCustomization.new(name: 'Banana', stylesheet: "body {color: yellow;}", header: "h1 {color: brown;}")
       log_record = logger.log_site_customization_destroy(site_customization)
       log_record.previous_value.should be_present
-      log_record.new_value.should be_nil
+      log_record.new_value.should == nil
       json = ::JSON.parse(log_record.previous_value)
       json['stylesheet'].should == site_customization.stylesheet
       json['header'].should == site_customization.header

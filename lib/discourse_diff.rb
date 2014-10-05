@@ -7,9 +7,13 @@ class DiscourseDiff
   def initialize(before, after)
     @before = before
     @after = after
+    before_html = tokenize_html_blocks(@before)
+    after_html = tokenize_html_blocks(@after)
+    before_markdown = tokenize_line(CGI::escapeHTML(@before))
+    after_markdown = tokenize_line(CGI::escapeHTML(@after))
 
-    @block_by_block_diff = ONPDiff.new(tokenize_html_blocks(@before), tokenize_html_blocks(@after)).diff
-    @line_by_line_diff = ONPDiff.new(tokenize_line(@before), tokenize_line(@after)).short_diff
+    @block_by_block_diff = ONPDiff.new(before_html, after_html).diff
+    @line_by_line_diff = ONPDiff.new(before_markdown, after_markdown).short_diff
   end
 
   def inline_html
@@ -91,8 +95,8 @@ class DiscourseDiff
       table << "<tr>"
       op_code = @line_by_line_diff[i][1]
       if op_code == :common
-        table << "<td>#{CGI::escapeHTML(@line_by_line_diff[i][0])}</td>"
-        table << "<td>#{CGI::escapeHTML(@line_by_line_diff[i][0])}</td>"
+        table << "<td>#{@line_by_line_diff[i][0]}</td>"
+        table << "<td>#{@line_by_line_diff[i][0]}</td>"
       else
         if op_code == :delete
           opposite_op_code = :add
@@ -116,11 +120,11 @@ class DiscourseDiff
           i += 1
         else
           if op_code == :delete
-            table << "<td class=\"diff-del\">#{CGI::escapeHTML(@line_by_line_diff[i][0])}</td>"
+            table << "<td class=\"diff-del\">#{@line_by_line_diff[i][0]}</td>"
             table << "<td></td>"
           else
             table << "<td></td>"
-            table << "<td class=\"diff-ins\">#{CGI::escapeHTML(@line_by_line_diff[i][0])}</td>"
+            table << "<td class=\"diff-ins\">#{@line_by_line_diff[i][0]}</td>"
           end
         end
       end
@@ -221,8 +225,8 @@ class DiscourseDiff
       when :common
         deleted << d[0]
         inserted << d[0]
-      when :delete then deleted << "<del>#{CGI::escapeHTML(d[0])}</del>"
-      when :add then inserted << "<ins>#{CGI::escapeHTML(d[0])}</ins>"
+      when :delete then deleted << "<del>#{d[0]}</del>"
+      when :add then inserted << "<ins>#{d[0]}</ins>"
       end
     end
     [deleted, inserted]
@@ -257,6 +261,7 @@ class DiscourseDiff
     end
 
     def characters(string)
+      string = CGI::escapeHTML(string)
       @tokens.concat string.scan(/(\W|\w+[ \t]*)/).flatten
     end
 

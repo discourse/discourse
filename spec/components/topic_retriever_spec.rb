@@ -4,43 +4,59 @@ require_dependency 'topic_retriever'
 describe TopicRetriever do
 
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
-  let(:topic_retriever) { TopicRetriever.new(embed_url) }
+  let(:author_username) { "eviltrout" }
+  let(:topic_retriever) { TopicRetriever.new(embed_url, author_username: author_username) }
 
-  it "does not call perform_retrieve when embeddable_host is not set" do
-    SiteSetting.stubs(:embeddable_host).returns(nil)
-    topic_retriever.expects(:perform_retrieve).never
-    topic_retriever.retrieve
-  end
+  describe "#retrieve" do
+    context "when host is invalid" do
+      before do
+        topic_retriever.stubs(:invalid_host?).returns(true)
+      end
 
-  it "does not call perform_retrieve when embeddable_host is different than the host of the URL" do
-    SiteSetting.stubs(:embeddable_host).returns("eviltuna.com")
-    topic_retriever.expects(:perform_retrieve).never
-    topic_retriever.retrieve
-  end
-
-  it "does not call perform_retrieve when the embed url is not a url" do
-    r = TopicRetriever.new("not a url")
-    r.expects(:perform_retrieve).never
-    r.retrieve
-  end
-
-  context "with a valid host" do
-    before do
-      SiteSetting.stubs(:embeddable_host).returns("eviltrout.com")
+      it "does not perform_retrieve" do
+        topic_retriever.expects(:perform_retrieve).never
+        topic_retriever.retrieve
+      end
     end
 
-    it "calls perform_retrieve if it hasn't been retrieved recently" do
-      topic_retriever.expects(:perform_retrieve).once
-      topic_retriever.expects(:retrieved_recently?).returns(false)
-      topic_retriever.retrieve
+    context "when topics have been retrieived recently" do
+      before do
+        topic_retriever.stubs(:retrieved_recently?).returns(true)
+      end
+
+      it "does not perform_retrieve" do
+        topic_retriever.expects(:perform_retrieve).never
+        topic_retriever.retrieve
+      end
     end
 
-    it "doesn't call perform_retrieve if it's been retrieved recently" do
-      topic_retriever.expects(:perform_retrieve).never
-      topic_retriever.expects(:retrieved_recently?).returns(true)
-      topic_retriever.retrieve
-    end
+    context "when host is not invalid" do
+        before do
+          topic_retriever.stubs(:invalid_host?).returns(false)
+        end
 
+      context "when topics have been retrieived recently" do
+        before do
+          topic_retriever.stubs(:retrieved_recently?).returns(true)
+        end
+
+        it "does not perform_retrieve" do
+          topic_retriever.expects(:perform_retrieve).never
+          topic_retriever.retrieve
+        end
+      end
+
+      context "when topics have not been retrieived recently" do
+        before do
+          topic_retriever.stubs(:retrieved_recently?).returns(false)
+        end
+
+        it "does perform_retrieve" do
+          topic_retriever.expects(:perform_retrieve).once
+          topic_retriever.retrieve
+        end
+      end
+    end
   end
 
 end

@@ -10,7 +10,7 @@ if User.limit(20).count < 20 && User.where(admin: true).count == 1
       else
         emails = emails[0]
       end
-      "Congratulations, you installed Discourse! An administrator should now log in with #{emails} to finalize configuration."
+      "Congratulations, you installed Discourse! Register a new admin account with #{emails} to finalize configuration."
     end
 
   if notice != SiteSetting.global_notice

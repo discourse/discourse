@@ -24,6 +24,50 @@ class TopicFeaturedUsers
      topic.featured_user4_id].uniq.compact
   end
 
+  def self.ensure_consistency!
+
+    sql = <<SQL
+
+WITH cte as (
+    SELECT
+        t.id, p.user_id,
+        ROW_NUMBER() OVER(PARTITION BY t.id ORDER BY COUNT(*) DESC) as rank
+    FROM topics t
+    JOIN posts p ON p.topic_id = t.id
+    WHERE p.deleted_at IS NULL AND NOT p.hidden AND p.user_id <> t.user_id AND
+          p.user_id <> t.last_post_user_id
+    GROUP BY t.id, p.user_id
+)
+
+UPDATE topics tt
+SET
+  featured_user1_id = featured_user1,
+  featured_user2_id = featured_user2,
+  featured_user3_id = featured_user3,
+  featured_user4_id = featured_user4
+FROM (
+  SELECT
+      c.id,
+      MAX(case when c.rank = 1 then c.user_id end) featured_user1,
+      MAX(case when c.rank = 2 then c.user_id end) featured_user2,
+      MAX(case when c.rank = 3 then c.user_id end) featured_user3,
+      MAX(case when c.rank = 4 then c.user_id end) featured_user4
+  FROM cte as c
+  WHERE c.rank <= 4
+  GROUP BY c.id
+) x
+WHERE x.id = tt.id AND
+(
+  COALESCE(featured_user1_id,-99) <> COALESCE(featured_user1,-99) OR
+  COALESCE(featured_user2_id,-99) <> COALESCE(featured_user2,-99) OR
+  COALESCE(featured_user3_id,-99) <> COALESCE(featured_user3,-99) OR
+  COALESCE(featured_user4_id,-99) <> COALESCE(featured_user4,-99)
+)
+SQL
+
+    Topic.exec_sql(sql)
+  end
+
   private
 
     def keys(args)

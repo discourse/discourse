@@ -1,13 +1,19 @@
 module RailsMultisite
   class ConnectionManagement
     CONFIG_FILE = 'config/multisite.yml'
+    DEFAULT = 'default'.freeze
+
+    def self.has_db?(db)
+      return true if db == DEFAULT
+      (defined? @@db_spec_cache) && @@db_spec_cache && @@db_spec_cache[db]
+    end
 
     def self.rails4?
       !!(Rails.version =~ /^4/)
     end
 
     def self.establish_connection(opts)
-      if opts[:db] == "default" && (!defined?(@@default_spec) || !@@default_spec)
+      if opts[:db] == DEFAULT && (!defined?(@@default_spec) || !@@default_spec)
         # don't do anything .. handled implicitly
       else
         spec = connection_spec(opts) || @@default_spec
@@ -29,6 +35,30 @@ module RailsMultisite
 
         ActiveRecord::Base.connection_handler = handler
       end
+    end
+
+    def self.with_hostname(hostname)
+
+      unless defined? @@db_spec_cache
+        # just fake it for non multisite
+        yield hostname
+        return
+      end
+
+      old = current_hostname
+      connected = ActiveRecord::Base.connection_pool.connected?
+
+      establish_connection(:host => hostname) unless connected && hostname == old
+      rval = yield hostname
+
+      unless connected && hostname == old
+        ActiveRecord::Base.connection_handler.clear_active_connections!
+
+        establish_connection(:host => old)
+        ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
+      end
+
+      rval
     end
 
     def self.with_connection(db = "default")
@@ -101,7 +131,7 @@ module RailsMultisite
       end
 
       @@db_spec_cache = Hash[*configs.map do |k, data|
-        [k, spec_klass::Resolver.new(k, configs).spec]
+        [k, spec_klass::Resolver.new(configs).spec(k)]
       end.flatten]
 
       @@host_spec_cache = {}
@@ -112,38 +142,15 @@ module RailsMultisite
         end
       end
 
-      @@default_spec = spec_klass::Resolver.new(Rails.env, ActiveRecord::Base.configurations).spec
+      @@default_spec = spec_klass::Resolver.new(ActiveRecord::Base.configurations).spec(Rails.env)
       ActiveRecord::Base.configurations[Rails.env]["host_names"].each do |host|
         @@host_spec_cache[host] = @@default_spec
       end
 
       @@default_connection_handler = ActiveRecord::Base.connection_handler
 
-      # inject our connection_handler pool
-      # WARNING MONKEY PATCH
-      #
-      # see: https://github.com/rails/rails/issues/8344#issuecomment-10800848
-      if ActiveRecord::VERSION::MAJOR == 3
-        ActiveRecord::Base.send :include, NewConnectionHandler
-        ActiveRecord::Base.connection_handler = @@default_connection_handler
-      end
-
       @@connection_handlers = {}
       @@established_default = false
-    end
-
-    module NewConnectionHandler
-      def self.included(klass)
-        klass.class_eval do
-          define_singleton_method :connection_handler do
-            Thread.current[:connection_handler] || @connection_handler
-          end
-          define_singleton_method :connection_handler= do |handler|
-            @connection_handler ||= handler
-            Thread.current[:connection_handler] = handler
-          end
-        end
-      end
     end
 
 

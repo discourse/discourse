@@ -1,23 +1,39 @@
 require 'spec_helper'
 
 describe Admin::BadgesController do
-  it "is a subclass of AdminController" do
-    (Admin::BadgesController < Admin::AdminController).should be_true
-  end
 
   context "while logged in as an admin" do
     let!(:user) { log_in(:admin) }
     let!(:badge) { Fabricate(:badge) }
 
-    context '.index' do
-      it 'returns success' do
+    context 'index' do
+      it 'returns badge index' do
         xhr :get, :index
         response.should be_success
       end
+    end
 
-      it 'returns JSON' do
-        xhr :get, :index
-        ::JSON.parse(response.body)["badges"].should be_present
+    context '.save_badge_groupings' do
+
+      it 'can save badge groupings' do
+        groupings = BadgeGrouping.all.order(:position).to_a
+        groupings << BadgeGrouping.new(name: 'Test 1')
+        groupings << BadgeGrouping.new(name: 'Test 2')
+
+        groupings.shuffle!
+
+        names = groupings.map{|g| g.name}
+        ids = groupings.map{|g| g.id.to_s}
+
+
+        xhr :post, :save_badge_groupings, ids: ids, names: names
+
+        groupings2 = BadgeGrouping.all.order(:position).to_a
+
+        groupings2.map{|g| g.name}.should == names
+        (groupings.map(&:id) - groupings2.map{|g| g.id}).compact.should be_blank
+
+        ::JSON.parse(response.body)["badge_groupings"].length.should == groupings2.length
       end
     end
 
@@ -47,12 +63,12 @@ describe Admin::BadgesController do
 
     context '.update' do
       it 'returns success' do
-        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id
+        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id, allow_title: false, multiple_grant: false, enabled: true
         response.should be_success
       end
 
       it 'updates the badge' do
-        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id
+        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id, allow_title: false, multiple_grant: true, enabled: true
         badge.reload.name.should eq('123456')
       end
     end

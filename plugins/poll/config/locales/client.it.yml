@@ -1,9 +1,9 @@
 # encoding: utf-8
-# This file contains content for the client portion of Discourse, sent out
-# to the Javascript app.
 #
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
 
 it:
   js:
@@ -11,7 +11,8 @@ it:
       voteCount:
         one: "1 voto"
         other: "%{count} voti"
-
       results:
         show: Mostra Risultati
         hide: Nascondi Risultati
+      close_poll: "Chiudi Sondaggio"
+      open_poll: "Apri Sondaggio"

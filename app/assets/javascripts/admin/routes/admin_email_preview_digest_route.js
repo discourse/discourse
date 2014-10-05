@@ -17,7 +17,7 @@ Discourse.AdminEmailPreviewDigestRoute = Discourse.Route.extend({
     var controller = this.controllerFor('adminEmailPreviewDigest');
     controller.setProperties({
       model: model,
-      lastSeen: moment().subtract('days',7).format('YYYY-MM-DD'),
+      lastSeen: moment().subtract(7, 'days').format('YYYY-MM-DD'),
       showHtml: true
     });
   }

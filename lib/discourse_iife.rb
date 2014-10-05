@@ -12,6 +12,9 @@ class DiscourseIIFE < Sprockets::Processor
     return data if (path =~ /test\_helper\.js/)
     return data if (path =~ /javascripts\/helpers\//)
 
+    # Ignore ES6 files
+    return data if (path =~ /\.es6/)
+
     # Ignore translations
     return data if (path =~ /\/translations/)
 
@@ -19,8 +22,19 @@ class DiscourseIIFE < Sprockets::Processor
     return data if path =~ /\.handlebars/
     return data if path =~ /\.shbrs/
     return data if path =~ /\.hbrs/
+    return data if path =~ /\.hbs/
 
-    "(function () {\n\nvar $ = window.jQuery;\n// IIFE Wrapped Content Begins:\n\n#{data}\n\n// IIFE Wrapped Content Ends\n\n })(this);"
+    res = "(function () {\n\nvar $ = window.jQuery;\n// IIFE Wrapped Content Begins:\n\n#{data}\n\n// IIFE Wrapped Content Ends\n\n })(this);"
+
+    # Include JS code for JSHint
+    unless Rails.env.production?
+      req_path = path.sub(Rails.root.to_s, '')
+                     .sub("/app/assets/javascripts", "")
+                     .sub("/test/javascripts", "")
+      res << "\nwindow.__jshintSrc = window.__jshintSrc || {}; window.__jshintSrc['/assets#{req_path}'] = #{data.to_json};\n"
+    end
+
+    res
   end
 
 end

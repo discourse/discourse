@@ -6,11 +6,11 @@
       </td>
       <td>
         <a class="username" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a><br>
-        <span class='date'><%= l post.created_at, format: :short_no_year %></span>
+        <span class='notification-date'><%= l post.created_at, format: :short_no_year %></span>
       </td>
     </tr>
     <tr>
-      <td class='body'><%= PrettyText.make_all_links_absolute(post.cooked).html_safe %></td>
+      <td class='body'><%= cooked_post_for_email(post) %></td>
     </tr>
   </tbody>
 </table>

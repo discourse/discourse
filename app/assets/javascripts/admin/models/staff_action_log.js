@@ -17,19 +17,21 @@ Discourse.StaffActionLog = Discourse.Model.extend({
     var formatted = "";
     formatted += this.format('email', 'email');
     formatted += this.format('admin.logs.ip_address', 'ip_address');
+    formatted += this.format('admin.logs.topic_id', 'topic_id');
+    formatted += this.format('admin.logs.post_id', 'post_id');
     if (!this.get('useCustomModalForDetails')) {
       formatted += this.format('admin.logs.staff_actions.new_value', 'new_value');
       formatted += this.format('admin.logs.staff_actions.previous_value', 'previous_value');
     }
     if (!this.get('useModalForDetails')) {
-      if (this.get('details')) formatted += this.get('details') + '<br/>';
+      if (this.get('details')) formatted += Handlebars.Utils.escapeExpression(this.get('details')) + '<br/>';
     }
     return formatted;
-  }.property('ip_address', 'email'),
+  }.property('ip_address', 'email', 'topic_id', 'post_id'),
 
   format: function(label, propertyName) {
     if (this.get(propertyName)) {
-      return ('<b>' + I18n.t(label) + ':</b> ' + this.get(propertyName) + '<br/>');
+      return ('<b>' + I18n.t(label) + ':</b> ' + Handlebars.Utils.escapeExpression(this.get(propertyName)) + '<br/>');
     } else {
       return '';
     }

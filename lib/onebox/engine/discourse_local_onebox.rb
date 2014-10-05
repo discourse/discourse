@@ -23,8 +23,9 @@ module Onebox
           linked = "<a href='#{@url}'>#{@url}</a>"
           if route[:post_number].present? && route[:post_number].to_i > 1
             # Post Link
-            post = Post.where(topic_id: route[:topic_id], post_number: route[:post_number].to_i).first
+            post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number].to_i)
             return linked unless post
+            return linked if post.hidden
             return linked unless Guardian.new.can_see?(post)
 
             topic = post.topic
@@ -56,9 +57,15 @@ module Onebox
               }
             end
 
+            category_name = ''
+            parent_category_name = ''
             category = topic.category
-            if category
-              category = "<a href=\"/category/#{category.slug}\" class=\"badge badge-category\" style=\"background-color: ##{category.color}; color: ##{category.text_color}\">#{category.name}</a>"
+            if category && !category.uncategorized?
+              category_name = "<a href=\"#{category.url}\" class=\"badge badge-category\" style=\"background-color: ##{category.color}; color: ##{category.text_color}\">#{category.name}</a>"
+              if !category.parent_category_id.nil?
+                parent_category = Category.find_by(id: category.parent_category_id)
+                parent_category_name = "<a href=\"#{parent_category.url}\" class=\"badge badge-category\" style=\"background-color: ##{parent_category.color}; color: ##{parent_category.text_color}\">#{parent_category.name}</a>"
+              end
             end
 
             quote = post.excerpt(SiteSetting.post_onebox_maxlength)
@@ -70,7 +77,8 @@ module Onebox
                         views: topic.views,
                         posters: posters,
                         quote: quote,
-                        category: category,
+                        category_name: category_name,
+                        parent_category_name: parent_category_name,
                         topic: topic.id
 
             @template = 'topic'
@@ -79,7 +87,7 @@ module Onebox
         end
 
         return nil unless @template
-        Mustache.render(File.read("#{Rails.root}/lib/onebox/templates/discourse_#{@template}_onebox.handlebars"), args)
+        Mustache.render(File.read("#{Rails.root}/lib/onebox/templates/discourse_#{@template}_onebox.hbs"), args)
       rescue ActionController::RoutingError
         nil
       end

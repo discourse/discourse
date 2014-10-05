@@ -8,16 +8,16 @@ describe Jobs::CloseTopic do
   it 'closes a topic that is set to auto-close' do
     topic = Fabricate.build(:topic, auto_close_at: Time.zone.now, user: admin)
     topic.expects(:update_status).with('autoclosed', true, admin)
-    Topic.stubs(:where).returns([topic])
-    User.stubs(:where).returns([admin])
+    Topic.stubs(:find_by).returns(topic)
+    User.stubs(:find_by).returns(admin)
     Jobs::CloseTopic.new.execute( topic_id: 123, user_id: 234 )
   end
 
   shared_examples_for "cases when CloseTopic does nothing" do
     it 'does nothing to the topic' do
       topic.expects(:update_status).never
-      Topic.stubs(:where).returns([topic])
-      User.stubs(:where).returns([admin])
+      Topic.stubs(:find_by).returns(topic)
+      User.stubs(:find_by).returns(admin)
       Jobs::CloseTopic.new.execute( topic_id: 123, user_id: 234 )
     end
   end

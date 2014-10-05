@@ -3,14 +3,10 @@
   <head>
     <meta charset="utf-8">
     <title><%=SiteSetting.title%></title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="description">
-    <meta content="" name="author">
-    <link rel="icon" type="image/png" href=<%=SiteSetting.favicon_url%>>
-    <%= render :partial => "common/special_font_face" %>
-    <%= render :partial => "common/discourse_stylesheet" %>
-    <%= discourse_csrf_tags %>
-    <%= raw SiteContent.content_for(:head) %>
+    <meta name="description" content="">
+    <%= render partial: "layouts/head" %>
+    <%= raw SiteText.text_for(:head) %>
+    <%= yield(:no_js_head) %>
   </head>
   <body>
     <%- unless customization_disabled? %>
@@ -26,7 +22,7 @@
               </div>
               <% unless current_user %>
                 <div class='panel clearfix'>
-                  <a href="/login" class='btn btn-primary btn-small'><%= I18n.t('log_in') %></a>
+                  <a href="/login" class='btn btn-primary btn-small'><i class="fa fa-user"></i><%= I18n.t('log_in') %></a>
                 </div>
               <% end %>
             </div>
@@ -37,7 +33,7 @@
         <%= yield %>
       </div>
     </section>
-    <footer id='bottom'>
+    <footer id='bottom' class="container">
     </footer>
   </body>
 </html>

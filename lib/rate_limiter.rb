@@ -19,7 +19,7 @@ class RateLimiter
 
   def initialize(user, key, max, secs)
     @user = user
-    @key = "l-rate-limit:#{@user.id}:#{key}"
+    @key = "l-rate-limit:#{@user && @user.id}:#{key}"
     @max = max
     @secs = secs
   end
@@ -71,6 +71,6 @@ class RateLimiter
   end
 
   def rate_unlimited?
-    !!(RateLimiter.disabled? || @user.staff?)
+    !!(RateLimiter.disabled? || (@user && @user.staff?))
   end
 end

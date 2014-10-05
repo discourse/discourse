@@ -1,8 +1,7 @@
-require_dependency "concern/positionable"
-
 class Category < ActiveRecord::Base
 
-  include Concern::Positionable
+  include Positionable
+  include HasCustomFields
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
@@ -20,18 +19,24 @@ class Category < ActiveRecord::Base
   has_many :category_featured_users
   has_many :featured_users, through: :category_featured_users, source: :user
 
-  has_many :category_groups
+  has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
   validates :user_id, presence: true
-  validates :name, presence: true, uniqueness: true, length: { in: 1..50 }
+  validates :name, if: Proc.new { |c| c.new_record? || c.name_changed? },
+                   presence: true,
+                   uniqueness: { scope: :parent_category_id, case_sensitive: false },
+                   length: { in: 1..50 }
   validate :parent_category_validator
 
   before_validation :ensure_slug
   before_save :apply_permissions
+  before_save :downcase_email
+  before_save :downcase_name
   after_create :create_category_definition
   after_create :publish_categories_list
   after_destroy :publish_categories_list
+  after_update :rename_category_definition, if: :name_changed?
 
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
@@ -67,8 +72,11 @@ class Category < ActiveRecord::Base
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :displayable_topics, :permission, :subcategory_ids
+  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level
 
+  def self.last_updated_at
+    order('updated_at desc').limit(1).pluck(:updated_at).first.to_i
+  end
 
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian && guardian.is_staff?
@@ -125,7 +133,8 @@ SQL
     # If you refactor this, test performance on a large database.
 
     Category.all.each do |c|
-      topics = c.topics.where(['topics.id <> ?', c.topic_id]).visible
+      topics = c.topics.visible
+      topics = topics.where(['topics.id <> ?', c.topic_id]) if c.topic_id
       c.topics_year  = topics.created_since(1.year.ago).count
       c.topics_month = topics.created_since(1.month.ago).count
       c.topics_week  = topics.created_since(1.week.ago).count
@@ -162,7 +171,7 @@ SQL
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
     t.auto_close_hours = nil
-    t.save!
+    t.save!(validate: false)
     update_column(:topic_id, t.id)
     t.posts.create(raw: post_template, user: user)
   end
@@ -180,7 +189,7 @@ SQL
 
       # If a category with that slug already exists, set the slug to nil so the category can be found
       # another way.
-      category = Category.where(slug: self.slug)
+      category = Category.where(slug: self.slug, parent_category_id: parent_category_id)
       category = category.where("id != ?", id) if id.present?
       self.slug = '' if category.exists?
     end
@@ -196,7 +205,8 @@ SQL
 
   def parent_category_validator
     if parent_category_id
-      errors.add(:parent_category_id, I18n.t("category.errors.self_parent")) if parent_category_id == id
+      errors.add(:base, I18n.t("category.errors.self_parent")) if parent_category_id == id
+      errors.add(:base, I18n.t("category.errors.uncategorized_parent")) if uncategorized?
 
       grandfather_id = Category.where(id: parent_category_id).pluck(:parent_category_id).first
       errors.add(:base, I18n.t("category.errors.depth")) if grandfather_id
@@ -242,6 +252,14 @@ SQL
     end
   end
 
+  def downcase_email
+    self.email_in = email_in.downcase if self.email_in
+  end
+
+  def downcase_name
+    self.name_lower = name.downcase if self.name
+  end
+
   def secure_group_ids
     if self.read_restricted?
       groups.pluck("groups.id")
@@ -276,11 +294,11 @@ SQL
     full = CategoryGroup.permission_types[:full]
 
     mapped = permissions.map do |group,permission|
-      group = group.id if Group === group
+      group = group.id if group.is_a?(Group)
 
       # subtle, using Group[] ensures the group exists in the DB
-      group = Group[group.to_sym].id unless Fixnum === group
-      permission = CategoryGroup.permission_types[permission] unless Fixnum === permission
+      group = Group[group.to_sym].id unless group.is_a?(Fixnum)
+      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Fixnum)
 
       [group, permission]
     end
@@ -297,7 +315,7 @@ SQL
   end
 
   def self.query_parent_category(parent_slug)
-    self.where(slug: parent_slug).pluck(:id).first ||
+    self.where(slug: parent_slug, parent_category_id: nil).pluck(:id).first ||
     self.where(id: parent_slug.to_i).pluck(:id).first
   end
 
@@ -307,7 +325,7 @@ SQL
   end
 
   def self.find_by_email(email)
-    self.where(email_in: Email.downcase(email)).first
+    self.find_by(email_in: Email.downcase(email))
   end
 
   def has_children?
@@ -322,6 +340,16 @@ SQL
     url = "/category"
     url << "/#{parent_category.slug}" if parent_category_id
     url << "/#{slug}"
+  end
+
+  # If the name changes, try and update the category definition topic too if it's
+  # an exact match
+  def rename_category_definition
+    old_name = changed_attributes["name"]
+    return unless topic.present?
+    if topic.title == I18n.t("category.topic_prefix", category: old_name)
+      topic.update_column(:title, I18n.t("category.topic_prefix", category: name))
+    end
   end
 end
 
@@ -357,10 +385,14 @@ end
 #  email_in_allow_strangers :boolean          default(FALSE)
 #  topics_day               :integer          default(0)
 #  posts_day                :integer          default(0)
+#  logo_url                 :string(255)
+#  background_url           :string(255)
+#  allow_badges             :boolean          default(TRUE), not null
+#  name_lower               :string(50)       not null
 #
 # Indexes
 #
-#  index_categories_on_email_in            (email_in) UNIQUE
-#  index_categories_on_forum_thread_count  (topic_count)
-#  index_categories_on_name                (name) UNIQUE
+#  index_categories_on_email_in     (email_in) UNIQUE
+#  index_categories_on_topic_count  (topic_count)
+#  unique_index_categories_on_name  (name) UNIQUE
 #

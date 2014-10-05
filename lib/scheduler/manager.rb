@@ -4,6 +4,8 @@
 # 2. No stats about previous runs or failures
 # 3. Dependency on ice_cube gem causes runaway CPU
 
+require_dependency 'distributed_mutex'
+
 module Scheduler
   class Manager
     attr_accessor :random_ratio, :redis
@@ -40,13 +42,13 @@ module Scheduler
       def keep_alive
         @manager.keep_alive
       rescue => ex
-        Discourse.handle_exception(ex)
+        Discourse.handle_exception(ex, {message: "Scheduling manager keep-alive"})
       end
 
       def reschedule_orphans
         @manager.reschedule_orphans!
       rescue => ex
-        Discourse.handle_exception(ex)
+        Discourse.handle_exception(ex, {message: "Scheduling manager orphan rescheduler"})
       end
 
       def process_queue
@@ -60,8 +62,11 @@ module Scheduler
           info.prev_result = "RUNNING"
           @mutex.synchronize { info.write! }
           klass.new.perform
+        rescue Jobs::HandledExceptionWrapper
+          # Discourse.handle_exception was already called, and we don't have any extra info to give
+          failed = true
         rescue => e
-          Discourse.handle_exception(e)
+          Discourse.handle_exception(e, {message: "Running a scheduled job", job: klass})
           failed = true
         end
         duration = ((Time.now.to_f - start) * 1000).to_i
@@ -72,7 +77,7 @@ module Scheduler
           @mutex.synchronize { info.write! }
         end
       rescue => ex
-        Discourse.handle_exception(ex)
+        Discourse.handle_exception(ex, {message: "Processing scheduled job queue"})
       ensure
         @running = false
       end
@@ -220,40 +225,24 @@ module Scheduler
     end
 
     def lock
-      got_lock = false
-      lock_key = Manager.lock_key
-
-      while(!got_lock)
-        begin
-          if redis.setnx lock_key, Time.now.to_i + 60
-            redis.expire lock_key, 60
-            got_lock = true
-          else
-            begin
-              redis.watch lock_key
-              time = redis.get Manager.lock_key
-              if time && time.to_i < Time.now.to_i
-                got_lock = redis.multi do
-                  redis.set Manager.lock_key, Time.now.to_i + 60
-                end
-              end
-            ensure
-              redis.unwatch
-            end
-          end
-
-        end
+      DistributedMutex.new(Manager.lock_key).synchronize do
+        yield
       end
-      yield
-    ensure
-      redis.del Manager.lock_key
     end
 
 
     def self.discover_schedules
+      # hack for developemnt reloader is crazytown
+      # multiple classes with same name can be in
+      # object space
+      unique = Set.new
       schedules = []
       ObjectSpace.each_object(Scheduler::Schedule) do |schedule|
-        schedules << schedule if schedule.scheduled?
+        if schedule.scheduled?
+          next if unique.include?(schedule.to_s)
+          schedules << schedule
+          unique << schedule.to_s
+        end
       end
       schedules
     end
@@ -267,7 +256,7 @@ module Scheduler
     end
 
     def identity_key
-      @identity_key ||= "_scheduler_#{`hostname`}:#{Process.pid}:#{self.class.seq}"
+      @identity_key ||= "_scheduler_#{`hostname`}:#{Process.pid}:#{self.class.seq}:#{SecureRandom.hex}"
     end
 
     def self.lock_key

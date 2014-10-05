@@ -1,0 +1,161 @@
+/* Default badge styles. */
+.user-badge {
+  padding: 3px 8px;
+  color: $primary;
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+  font-size: $base-font-size * 0.86;
+  line-height: 19px;
+  margin: 0;
+  display: inline-block;
+  background-color: $secondary;
+  margin-bottom: 3px;
+
+  .fa {
+    padding-right: 3px;
+    font-size: 1.4em;
+    vertical-align: bottom;
+  }
+
+  img {
+    height: 16px;
+    width: 16px;
+  }
+
+  &.badge-type-gold .fa {
+    color: #ffd700;
+  }
+
+  &.badge-type-silver .fa {
+    color: #c0c0c0;
+  }
+
+  &.badge-type-bronze .fa {
+    color: #cd7f32;
+  }
+}
+
+/* User badge listing. */
+.user-badges-list {
+  text-align: center;
+
+  .user-badge {
+    max-width: 80px;
+    text-align: center;
+    vertical-align: top;
+    margin: 10px;
+    border: none;
+
+    .fa {
+      display: block;
+      font-size: 50px;
+      margin-bottom: 5px;
+    }
+
+    img {
+      display: inline-block;
+      width: 55px;
+      height: 55px;
+    }
+
+    .count {
+      display: block;
+      font-size: 0.8em;
+      color: scale-color($primary, $lightness: 50%);
+    }
+  }
+}
+
+/* Badge listing in /badges. */
+table.badges-listing {
+  margin: 20px 0;
+  border-bottom: 1px solid scale-color-diff();
+  width: 90%;
+
+  .user-badge {
+    font-size: $base-font-size;
+  }
+
+  tr.title td {
+    padding-top: 30px;
+    padding-bottom: 15px;
+  }
+
+  tr.title {
+    border-top: 0px solid;
+  }
+
+  td {
+    padding: 10px 0px;
+  }
+
+  td.granted{
+   color: $success;
+   font-size: 120%;
+  }
+
+  td.grant-count {
+    text-align: center;
+    color: scale-color($primary, $lightness: 40%);
+    font-size: 120%;
+  }
+
+  td.badge, td.grant-count {
+    white-space: nowrap;
+    padding-right: 10px;
+  }
+
+  td.info {
+    font-size: 0.9em;
+    text-align: right;
+  }
+
+  td.description {
+  }
+
+  tr {
+    border-top: 1px solid scale-color-diff();
+  }
+}
+
+/* /badges/:id/:slug page styling. */
+.show-badge {
+  .badge-user {
+    text-align: center;
+    width: 100px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+
+    .details {
+      margin: 0 10px;
+      padding-top: 3px;
+      color: $primary;
+    }
+
+    .date {
+      display: block;
+      color: lighten($primary, 40%);
+      font-size: 10px;
+    }
+  }
+}
+
+.show-badge .user-badge-with-posts .badge-user {
+  width: 45%;
+  padding: 0 0 0 4%;
+  margin-bottom: 20px;
+  
+  .badge-info {
+    width: 100px;
+    display: block;
+    float: left;
+  }
+
+  .post-link {
+    width: 250px;
+    display: block;
+    float: left;
+    margin-left: 18px;
+    text-align: left;
+  }
+}

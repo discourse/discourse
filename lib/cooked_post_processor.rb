@@ -27,14 +27,14 @@ class CookedPostProcessor
   def keep_reverse_index_up_to_date
     upload_ids = Set.new
 
-    @doc.search("a").each do |a|
+    @doc.css("a[href]").each do |a|
       href = a["href"].to_s
       if upload = Upload.get_from_url(href)
         upload_ids << upload.id
       end
     end
 
-    @doc.search("img").each do |img|
+    @doc.css("img[src]").each do |img|
       src = img["src"].to_s
       if upload = Upload.get_from_url(src)
         upload_ids << upload.id
@@ -55,7 +55,6 @@ class CookedPostProcessor
     return if images.blank?
 
     images.each do |img|
-      src, width, height = img["src"], img["width"], img["height"]
       limit_size!(img)
       convert_to_link!(img)
     end
@@ -64,8 +63,18 @@ class CookedPostProcessor
   end
 
   def extract_images
-    # do not extract images inside oneboxes or quotes
-    @doc.css("img") - @doc.css(".onebox-result img") - @doc.css(".quote img")
+    # all image with a src attribute
+    @doc.css("img[src]") -
+    # minus, data images
+    @doc.css("img[src^='data']") -
+    # minus, image inside oneboxes
+    oneboxed_images -
+    # minus, images inside quotes
+    @doc.css(".quote img")
+  end
+
+  def oneboxed_images
+    @doc.css(".onebox-result img, .onebox img")
   end
 
   def limit_size!(img)
@@ -89,7 +98,7 @@ class CookedPostProcessor
     return unless image_sizes.present?
     image_sizes.each do |image_size|
       url, size = image_size[0], image_size[1]
-      return [size["width"], size["height"]] if url.include?(src)
+      return [size["width"], size["height"]] if url && size && url.include?(src)
     end
   end
 
@@ -125,7 +134,6 @@ class CookedPostProcessor
 
     if upload = Upload.get_from_url(src)
       upload.create_thumbnail!(width, height)
-      # TODO: optimize_image!(img)
     end
 
     add_lightbox!(img, original_width, original_height, upload)
@@ -201,23 +209,24 @@ class CookedPostProcessor
       invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
     }
 
-    result = Oneboxer.apply(@doc) do |url, element|
-      Oneboxer.onebox(url, args)
-    end
+    # apply oneboxes
+    Oneboxer.apply(@doc) { |url| Oneboxer.onebox(url, args) }
+
+    # make sure we grab dimensions for oneboxed images
+    oneboxed_images.each { |img| limit_size!(img) }
   end
 
   def optimize_urls
-    @doc.search("a").each do |a|
+    @doc.css("a[href]").each do |a|
       href = a["href"].to_s
       a["href"] = schemaless absolute(href) if is_local(href)
     end
 
-    @doc.search("img").each do |img|
+    @doc.css("img[src]").each do |img|
       src = img["src"].to_s
       img["src"] = schemaless absolute(src) if is_local(src)
     end
   end
-
 
   def pull_hotlinked_images(bypass_bump = false)
     # is the job enabled?
@@ -236,6 +245,12 @@ class CookedPostProcessor
   def disable_if_low_on_disk_space
     if available_disk_space < SiteSetting.download_remote_images_threshold
       SiteSetting.download_remote_images_to_local = false
+      # log the site setting change
+      reason = I18n.t("disable_remote_images_download_reason")
+      staff_action_logger = StaffActionLogger.new(Discourse.system_user)
+      staff_action_logger.log_site_setting_change("download_remote_images_to_local", true, false, { details: reason })
+      # also send a private message to the site contact user
+      SystemMessage.create_from_system_user(Discourse.site_contact_user, :download_remote_images_disabled)
       return true
     end
     false

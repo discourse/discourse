@@ -16,4 +16,10 @@ describe Auth::OpenIdAuthenticator do
     result = auth.after_authenticate(info: {email: user.email}, extra: {response: response})
     result.user.should == user
   end
+
+  it "raises an exception when email is missing" do
+    auth = Auth::OpenIdAuthenticator.new("test", "id", trusted: true)
+    response = OpenStruct.new(identity_url: 'abc')
+    -> { auth.after_authenticate(info: {}, extra: { response: response }) }.should raise_error(Discourse::InvalidParameters)
+  end
 end

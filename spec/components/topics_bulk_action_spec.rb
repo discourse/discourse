@@ -3,6 +3,19 @@ require_dependency 'topics_bulk_action'
 
 describe TopicsBulkAction do
 
+  describe "dismiss_posts" do
+    it "dismisses posts" do
+      post1 = create_post
+      create_post(topic_id: post1.topic_id)
+
+      TopicsBulkAction.new(post1.user, [post1.topic_id], type: 'dismiss_posts').perform!
+
+      tu = TopicUser.find_by(user_id: post1.user_id, topic_id: post1.topic_id)
+      tu.last_read_post_number.should == 2
+      tu.seen_post_count = 2
+    end
+  end
+
   describe "invalid operation" do
     let(:user) { Fabricate.build(:user) }
 
@@ -18,7 +31,7 @@ describe TopicsBulkAction do
 
     context "when the user can edit the topic" do
       it "changes the category and returns the topic_id" do
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_name: category.name)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: category.id)
         topic_ids = tba.perform!
         topic_ids.should == [topic.id]
         topic.reload
@@ -29,7 +42,7 @@ describe TopicsBulkAction do
     context "when the user can't edit the topic" do
       it "doesn't change the category" do
         Guardian.any_instance.expects(:can_edit?).returns(false)
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_name: category.name)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: category.id)
         topic_ids = tba.perform!
         topic_ids.should == []
         topic.reload
@@ -45,6 +58,18 @@ describe TopicsBulkAction do
       tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'reset_read')
       PostTiming.expects(:destroy_for).with(topic.user_id, [topic.id])
       topic_ids = tba.perform!
+    end
+  end
+
+  describe "delete" do
+    let(:topic) { Fabricate(:topic) }
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "deletes the topic" do
+      tba = TopicsBulkAction.new(moderator, [topic.id], type: 'delete')
+      tba.perform!
+      topic.reload
+      topic.should be_trashed
     end
   end
 
@@ -94,6 +119,33 @@ describe TopicsBulkAction do
         topic_ids.should be_blank
         topic.reload
         topic.should_not be_closed
+      end
+    end
+  end
+
+  describe "archive" do
+    let(:topic) { Fabricate(:topic) }
+
+    context "when the user can moderate the topic" do
+      it "archives the topic and returns the topic_id" do
+        Guardian.any_instance.expects(:can_moderate?).returns(true)
+        Guardian.any_instance.expects(:can_create?).returns(true)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'archive')
+        topic_ids = tba.perform!
+        topic_ids.should == [topic.id]
+        topic.reload
+        topic.should be_archived
+      end
+    end
+
+    context "when the user can't edit the topic" do
+      it "doesn't archive the topic" do
+        Guardian.any_instance.expects(:can_moderate?).returns(false)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'archive')
+        topic_ids = tba.perform!
+        topic_ids.should be_blank
+        topic.reload
+        topic.should_not be_archived
       end
     end
   end

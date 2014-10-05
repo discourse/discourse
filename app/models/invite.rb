@@ -1,5 +1,3 @@
-require_dependency 'trashable'
-
 class Invite < ActiveRecord::Base
   include Trashable
 
@@ -7,17 +5,18 @@ class Invite < ActiveRecord::Base
   belongs_to :topic
   belongs_to :invited_by, class_name: 'User'
 
+  has_many :invited_groups
+  has_many :groups, through: :invited_groups
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
-  validates_presence_of :email
   validates_presence_of :invited_by_id
 
   before_create do
     self.invite_key ||= SecureRandom.hex
   end
 
-  before_save do
-    self.email = Email.downcase(email)
+  before_validation do
+    self.email = Email.downcase(email) unless email.nil?
   end
 
   validate :user_doesnt_already_exist
@@ -26,7 +25,7 @@ class Invite < ActiveRecord::Base
   def user_doesnt_already_exist
     @email_already_exists = false
     return if email.blank?
-    u = User.where("email = ?", Email.downcase(email)).first
+    u = User.find_by("email = ?", Email.downcase(email))
     if u && u.id != self.user_id
       @email_already_exists = true
       errors.add(:email)
@@ -54,46 +53,92 @@ class Invite < ActiveRecord::Base
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.invite_by_email(email, invited_by, topic=nil)
+  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil)
     lower_email = Email.downcase(email)
+    user = User.find_by(email: lower_email)
+
+    if user
+      topic.grant_permission_to_user(lower_email) if topic && topic.private_message?
+      return nil
+    end
+
     invite = Invite.with_deleted
-                   .where('invited_by_id = ? and email = ?', invited_by.id, lower_email)
+                   .where(email: lower_email, invited_by_id: invited_by.id)
                    .order('created_at DESC')
                    .first
 
-    if invite && invite.expired?
+    if invite && (invite.expired? || invite.deleted_at)
       invite.destroy
       invite = nil
     end
 
-    if invite.blank?
-      invite = Invite.create(invited_by: invited_by, email: lower_email)
-      unless invite.valid?
-        topic.grant_permission_to_user(lower_email) if topic.present? && topic.email_already_exists_for?(invite)
-        return
+    if !invite
+      invite = Invite.create!(invited_by: invited_by, email: lower_email)
+    end
+
+    if topic && !invite.topic_invites.pluck(:topic_id).include?(topic.id)
+      invite.topic_invites.create!(invite_id: invite.id, topic_id: topic.id)
+      # to correct association
+      topic.reload
+    end
+
+    if group_ids.present?
+      group_ids = group_ids - invite.invited_groups.pluck(:group_id)
+      group_ids.each do |group_id|
+        invite.invited_groups.create!(group_id: group_id)
       end
     end
 
-    # Recover deleted invites if we invite them again
-    invite.recover! if invite.deleted_at.present?
-
-    topic.topic_invites.create(invite_id: invite.id) if topic.present?
     Jobs.enqueue(:invite_email, invite_id: invite.id)
+
+    invite.reload
     invite
   end
 
-  def self.find_all_invites_from(inviter)
+
+  # generate invite tokens without email
+  def self.generate_disposable_tokens(invited_by, quantity=nil, group_names=nil)
+    invite_tokens = []
+    quantity ||= 1
+    group_ids = get_group_ids(group_names)
+
+    quantity.to_i.times do
+      invite = Invite.create!(invited_by: invited_by)
+      group_ids = group_ids - invite.invited_groups.pluck(:group_id)
+      group_ids.each do |group_id|
+        invite.invited_groups.create!(group_id: group_id)
+      end
+      invite_tokens.push(invite.invite_key)
+    end
+
+    invite_tokens
+  end
+
+  def self.get_group_ids(group_names)
+    group_ids = []
+    if group_names
+      group_names = group_names.split(',')
+      group_names.each { |group_name|
+        group_detail = Group.find_by_name(group_name)
+        group_ids.push(group_detail.id) if group_detail
+      }
+    end
+    group_ids
+  end
+
+  def self.find_all_invites_from(inviter, offset=0)
     Invite.where(invited_by_id: inviter.id)
           .includes(:user => :user_stat)
           .order('CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END',
                  'user_stats.time_read DESC',
                  'invites.redeemed_at DESC')
-          .limit(SiteSetting.invites_shown)
+          .limit(SiteSetting.invites_per_page)
+          .offset(offset)
           .references('user_stats')
   end
 
-  def self.find_redeemed_invites_from(inviter)
-    find_all_invites_from(inviter).where('invites.user_id IS NOT NULL')
+  def self.find_redeemed_invites_from(inviter, offset=0)
+    find_all_invites_from(inviter, offset).where('invites.user_id IS NOT NULL')
   end
 
   def self.filter_by(email_or_username)
@@ -108,12 +153,38 @@ class Invite < ActiveRecord::Base
   end
 
   def self.invalidate_for_email(email)
-    i = Invite.where(email: Email.downcase(email)).first
+    i = Invite.find_by(email: Email.downcase(email))
     if i
       i.invalidated_at = Time.zone.now
       i.save
     end
     i
+  end
+
+  def self.redeem_from_email(email)
+    invite = Invite.find_by(email: Email.downcase(email))
+    if invite
+      InviteRedeemer.new(invite).redeem
+    end
+    invite
+  end
+
+  def self.redeem_from_token(token, email, username=nil, name=nil, topic_id=nil)
+    invite = Invite.find_by(invite_key: token)
+    if invite
+      invite.update_column(:email, email)
+      invite.topic_invites.create!(invite_id: invite.id, topic_id: topic_id) if topic_id && Topic.find_by_id(topic_id) && !invite.topic_invites.pluck(:topic_id).include?(topic_id)
+      user = InviteRedeemer.new(invite, username, name).redeem
+    end
+    user
+  end
+
+  def self.base_directory
+    File.join(Rails.root, "public", "csv", RailsMultisite::ConnectionManagement.current_db)
+  end
+
+  def self.chunk_path(identifier, filename, chunk_number)
+    File.join(Invite.base_directory, "tmp", identifier, "#{filename}.part#{chunk_number}")
   end
 end
 
@@ -123,7 +194,7 @@ end
 #
 #  id             :integer          not null, primary key
 #  invite_key     :string(32)       not null
-#  email          :string(255)      not null
+#  email          :string(255)
 #  invited_by_id  :integer          not null
 #  user_id        :integer
 #  redeemed_at    :datetime
@@ -135,6 +206,6 @@ end
 #
 # Indexes
 #
-#  index_invites_on_email_and_invited_by_id  (email,invited_by_id) UNIQUE
+#  index_invites_on_email_and_invited_by_id  (email,invited_by_id)
 #  index_invites_on_invite_key               (invite_key) UNIQUE
 #

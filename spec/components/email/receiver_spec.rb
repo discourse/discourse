@@ -6,384 +6,348 @@ require 'email/receiver'
 describe Email::Receiver do
 
   before do
-    SiteSetting.stubs(:reply_by_email_address).returns("reply+%{reply_key}@appmail.adventuretime.ooo")
-    SiteSetting.stubs(:email_in).returns(false)
+    SiteSetting.reply_by_email_address = "reply+%{reply_key}@appmail.adventuretime.ooo"
+    SiteSetting.email_in = false
+    SiteSetting.title = "Discourse"
   end
 
-  describe 'invalid emails' do
+  describe 'parse_body' do
+    def test_parse_body(mail_string)
+      Email::Receiver.new(nil).parse_body(Mail::Message.new mail_string)
+    end
+
     it "raises EmptyEmailError if the message is blank" do
-      expect { Email::Receiver.new("").process }.to raise_error(Email::Receiver::EmptyEmailError)
+      expect { test_parse_body("") }.to raise_error(Email::Receiver::EmptyEmailError)
     end
 
-    it "raises EmailUnparsableError if the message is not an email" do
-      expect { Email::Receiver.new("asdf" * 30).process}.to raise_error(Email::Receiver::EmptyEmailError)
+    it "raises EmptyEmailError if the message is not an email" do
+      expect { test_parse_body("asdf" * 30) }.to raise_error(Email::Receiver::EmptyEmailError)
     end
-  end
 
-  describe "with multipart" do
-    let(:reply_below) { File.read("#{Rails.root}/spec/fixtures/emails/multipart.eml") }
-    let(:receiver) { Email::Receiver.new(reply_below) }
-
-    it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
-      expect(receiver.body).to eq(
-"So presumably all the quoted garbage and my (proper) signature will get
-stripped from my reply?")
+    it "raises EmptyEmailError if there is no reply content" do
+      expect { test_parse_body(fixture_file("emails/no_content_reply.eml")) }.to raise_error(Email::Receiver::EmptyEmailError)
     end
-  end
 
-  describe "html only" do
-    let(:reply_below) { File.read("#{Rails.root}/spec/fixtures/emails/html_only.eml") }
-    let(:receiver) { Email::Receiver.new(reply_below) }
-
-    it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
-      expect(receiver.body).to eq("The EC2 instance - I've seen that there tends to be odd and " +
-                                  "unrecommended settings on the Bitnami installs that I've checked out.")
+    skip "raises EmailUnparsableError if the headers are corrupted" do
+      expect { ; }.to raise_error(Email::Receiver::EmailUnparsableError)
     end
-  end
 
-  describe "it supports a dutch reply" do
-    let(:dutch) { File.read("#{Rails.root}/spec/fixtures/emails/dutch.eml") }
-    let(:receiver) { Email::Receiver.new(dutch) }
-
-    it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
-      expect(receiver.body).to eq("Dit is een antwoord in het Nederlands.")
+    it "can parse the html section" do
+      test_parse_body(fixture_file("emails/html_only.eml")).should == "The EC2 instance - I've seen that there tends to be odd and " +
+          "unrecommended settings on the Bitnami installs that I've checked out."
     end
-  end
 
-  describe "It supports a non english reply" do
-    let(:hebrew) { File.read("#{Rails.root}/spec/fixtures/emails/hebrew.eml") }
-    let(:receiver) { Email::Receiver.new(hebrew) }
+    it "supports a Dutch reply" do
+      test_parse_body(fixture_file("emails/dutch.eml")).should == "Dit is een antwoord in het Nederlands."
+    end
 
-    it "processes correctly" do
+    it "supports a Hebrew reply" do
       I18n.expects(:t).with('user_notifications.previous_discussion').returns('כלטוב')
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
-      expect(receiver.body).to eq("שלום")
+
+      # The force_encoding call is only needed for the test - it is passed on fine to the cooked post
+      test_parse_body(fixture_file("emails/hebrew.eml")).should == "שלום"
     end
-  end
 
-  describe "It supports a non UTF-8 reply" do
-    let(:big5) { File.read("#{Rails.root}/spec/fixtures/emails/big5.eml") }
-    let(:receiver) { Email::Receiver.new(big5) }
-
-    it "processes correctly" do
+    it "supports a BIG5-encoded reply" do
       I18n.expects(:t).with('user_notifications.previous_discussion').returns('媽！我上電視了！')
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
-      expect(receiver.body).to eq("媽！我上電視了！")
+
+      # The force_encoding call is only needed for the test - it is passed on fine to the cooked post
+      test_parse_body(fixture_file("emails/big5.eml")).should == "媽！我上電視了！"
     end
-  end
 
-  describe "via" do
-    let(:wrote) { File.read("#{Rails.root}/spec/fixtures/emails/via_line.eml") }
-    let(:receiver) { Email::Receiver.new(wrote) }
+    it "removes 'via' lines if they match the site title" do
+      SiteSetting.title = "Discourse"
 
-    it "removes via lines if we know them" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
-      expect(receiver.body).to eq("Hello this email has content!")
+      test_parse_body(fixture_file("emails/via_line.eml")).should == "Hello this email has content!"
     end
-  end
 
-  describe "if wrote is on a second line" do
-    let(:wrote) { File.read("#{Rails.root}/spec/fixtures/emails/multiline_wrote.eml") }
-    let(:receiver) { Email::Receiver.new(wrote) }
-
-    it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
-      expect(receiver.body).to eq("Thanks!")
+    it "removes an 'on date wrote' quoting line" do
+      test_parse_body(fixture_file("emails/on_wrote.eml")).should == "Sure, all you need to do is frobnicate the foobar and you'll be all set!"
     end
-  end
 
-  describe "remove previous discussion" do
-    let(:previous) { File.read("#{Rails.root}/spec/fixtures/emails/previous.eml") }
-    let(:receiver) { Email::Receiver.new(previous) }
-
-    it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
-      expect(receiver.body).to eq("This will not include the previous discussion that is present in this email.")
+    it "removes the 'Previous Discussion' marker" do
+      test_parse_body(fixture_file("emails/previous.eml")).should == "This will not include the previous discussion that is present in this email."
     end
-  end
 
-  describe "multiple paragraphs" do
-    let(:paragraphs) { File.read("#{Rails.root}/spec/fixtures/emails/paragraphs.eml") }
-    let(:receiver) { Email::Receiver.new(paragraphs) }
-
-    it "processes correctly" do
-      expect { receiver.process}.to raise_error(Email::Receiver::ProcessingError)
-      expect(receiver.body).to eq(
+    it "handles multiple paragraphs" do
+      test_parse_body(fixture_file("emails/paragraphs.eml")).
+          should == (
 "Is there any reason the *old* candy can't be be kept in silos while the new candy
 is imported into *new* silos?
 
 The thing about candy is it stays delicious for a long time -- we can just keep
 it there without worrying about it too much, imo.
 
-Thanks for listening.")
+Thanks for listening."
+      )
     end
+
+    it "converts back to UTF-8 at the end" do
+      result = test_parse_body(fixture_file("emails/big5.eml"))
+      result.encoding.should == Encoding::UTF_8
+
+      # should not throw
+      TextCleaner.normalize_whitespaces(
+          test_parse_body(fixture_file("emails/big5.eml"))
+      )
+    end
+  end
+
+  describe "posting replies" do
+    let(:reply_key) { raise "Override this in a lower describe block" }
+    let(:email_raw) { raise "Override this in a lower describe block" }
+    # ----
+    let(:receiver) { Email::Receiver.new(email_raw) }
+    let(:post) { create_post }
+    let(:topic) { post.topic }
+    let(:posting_user) { post.user }
+    let(:replying_user_email) { 'jake@adventuretime.ooo' }
+    let(:replying_user) { Fabricate(:user, email: replying_user_email, trust_level: 2)}
+    let(:email_log) { EmailLog.new(reply_key: reply_key,
+                                   post: post,
+                                   post_id: post.id,
+                                   topic_id: post.topic_id,
+                                   email_type: 'user_posted',
+                                   user: replying_user,
+                                   user_id: replying_user.id,
+                                   to_address: replying_user_email
+    ) }
+
+    before do
+      email_log.save
+    end
+
+    # === Success Posting ===
+
+    describe "valid_reply.eml" do
+      let!(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
+      let!(:email_raw) { fixture_file("emails/valid_reply.eml") }
+
+      it "creates a post with the correct content" do
+        start_count = topic.posts.count
+
+        receiver.process
+
+        topic.posts.count.should == (start_count + 1)
+        created_post = topic.posts.last
+        created_post.via_email.should == true
+        created_post.cooked.strip.should == fixture_file("emails/valid_reply.cooked").strip
+      end
+    end
+
+    describe "paragraphs.eml" do
+      let!(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
+      let!(:email_raw) { fixture_file("emails/paragraphs.eml") }
+
+      it "cooks multiple paragraphs with traditional Markdown linebreaks" do
+        start_count = topic.posts.count
+
+        receiver.process
+
+        topic.posts.count.should == (start_count + 1)
+        topic.posts.last.cooked.strip.should == fixture_file("emails/paragraphs.cooked").strip
+        topic.posts.last.cooked.should_not match /<br/
+      end
+    end
+
+    describe "attachment.eml" do
+      let!(:reply_key) { '636ca428858779856c226bb145ef4fad' }
+      let!(:email_raw) {
+        fixture_file("emails/attachment.eml")
+        .gsub("TO", "reply+#{reply_key}@appmail.adventuretime.ooo")
+        .gsub("FROM", replying_user_email)
+      }
+
+      let(:upload_sha) { '04df605be528d03876685c52166d4b063aabb78a' }
+
+      it "creates a post with an attachment" do
+        start_count = topic.posts.count
+        Upload.find_by(sha1: upload_sha).try :destroy
+
+        receiver.process
+
+        topic.posts.count.should == (start_count + 1)
+        topic.posts.last.cooked.should match /<img src=['"](\/uploads\/default\/\d+\/\w{16}\.png)['"] width=['"]289['"] height=['"]126['"]>/
+        Upload.find_by(sha1: upload_sha).should_not == nil
+      end
+
+    end
+
+    # === Failure Conditions ===
+
+    describe "too_short.eml" do
+      let!(:reply_key) { '636ca428858779856c226bb145ef4fad' }
+      let!(:email_raw) {
+        fixture_file("emails/too_short.eml")
+        .gsub("TO", "reply+#{reply_key}@appmail.adventuretime.ooo")
+        .gsub("FROM", replying_user_email)
+        .gsub("SUBJECT", "re: [Discourse Meta] eviltrout posted in 'Adventure Time Sux'")
+      }
+
+      it "raises an InvalidPost error" do
+        SiteSetting.min_post_length = 5
+        expect { receiver.process }.to raise_error(Email::Receiver::InvalidPost)
+      end
+    end
+
+    describe "too_many_mentions.eml" do
+      let!(:reply_key) { '636ca428858779856c226bb145ef4fad' }
+      let!(:email_raw) { fixture_file("emails/too_many_mentions.eml") }
+
+      it "raises an InvalidPost error" do
+        SiteSetting.max_mentions_per_post = 10
+        (1..11).each do |i|
+          Fabricate(:user, username: "user#{i}").save
+        end
+
+        expect { receiver.process }.to raise_error(Email::Receiver::InvalidPost)
+      end
+    end
+
+  end
+
+  describe "posting a new topic" do
+    let(:category_destination) { raise "Override this in a lower describe block" }
+    let(:email_raw) { raise "Override this in a lower describe block" }
+    let(:allow_strangers) { false }
+    # ----
+    let(:receiver) { Email::Receiver.new(email_raw) }
+    let(:user_email) { 'jake@adventuretime.ooo' }
+    let(:user) { Fabricate(:user, email: user_email, trust_level: 2)}
+    let(:category) { Fabricate(:category, email_in: category_destination, email_in_allow_strangers: allow_strangers) }
+
+    before do
+      SiteSetting.email_in = true
+      user.save
+      category.save
+    end
+
+    describe "too_short.eml" do
+      let!(:category_destination) { 'incoming+amazing@appmail.adventuretime.ooo' }
+      let(:email_raw) {
+        fixture_file("emails/too_short.eml")
+        .gsub("TO", category_destination)
+        .gsub("FROM", user_email)
+        .gsub("SUBJECT", "A long subject that passes the checks")
+      }
+
+      it "does not create a topic if the post fails" do
+        before_topic_count = Topic.count
+
+        expect { receiver.process }.to raise_error(Email::Receiver::InvalidPost)
+
+        Topic.count.should == before_topic_count
+      end
+
+    end
+
+  end
+
+  def fill_email(mail, from, to, body = nil, subject = nil)
+    result = mail.gsub("FROM", from).gsub("TO", to)
+    if body
+      result.gsub!(/Hey.*/m, body)
+    end
+    if subject
+      result.sub!(/We .*/, subject)
+    end
+    result
+  end
+
+  def process_email(opts)
+    incoming_email = fixture_file("emails/valid_incoming.eml")
+    email = fill_email(incoming_email, opts[:from],  opts[:to], opts[:body], opts[:subject])
+    Email::Receiver.new(email).process
   end
 
   describe "with a valid email" do
     let(:reply_key) { "59d8df8370b7e95c5a49fbf86aeb2c93" }
-    let(:valid_reply) { File.read("#{Rails.root}/spec/fixtures/emails/valid_reply.eml") }
+    let(:to) { SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key) }
+
+    let(:valid_reply) {
+      reply = fixture_file("emails/valid_reply.eml")
+      to = SiteSetting.reply_by_email_address.gsub("%{reply_key}", reply_key)
+      fill_email(reply, "test@test.com", to)
+    }
+
     let(:receiver) { Email::Receiver.new(valid_reply) }
-    let(:post) { Fabricate.build(:post) }
-    let(:user) { Fabricate.build(:user) }
-    let(:email_log) { EmailLog.new(reply_key: reply_key, post_id: 1234, topic_id: 4567, user_id: 6677, post: post, user: user ) }
+    let(:post) { create_post }
+    let(:user) { post.user }
+    let(:email_log) { EmailLog.new(reply_key: reply_key,
+                                   post_id: post.id,
+                                   topic_id: post.topic_id,
+                                   user_id: post.user_id,
+                                   post: post,
+                                   user: user,
+                                   email_type: 'test',
+                                   to_address: 'test@test.com'
+                                   ) }
     let(:reply_body) {
 "I could not disagree more. I am obviously biased but adventure time is the
 greatest show ever created. Everyone should watch it.
 
 - Jake out" }
 
-    describe "email with non-existant email log" do
-
-      before do
-        EmailLog.expects(:for).returns(nil)
-      end
-
-      it "raises EmailLogNotFoundError" do
-        expect{ receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
-      end
-
-    end
-
     describe "with an email log" do
 
-      before do
-        EmailLog.expects(:for).with(reply_key).returns(email_log)
+      it "extracts data" do
+        expect{ receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
 
-        creator = mock
-        PostCreator.expects(:new).with(instance_of(User),
-                                       has_entries(raw: reply_body,
-                                                   cooking_options: {traditional_markdown_linebreaks: true}))
-                                 .returns(creator)
+        email_log.save!
+        receiver.process
 
-        creator.expects(:create)
-      end
-
-      let!(:result) { receiver.process }
-
-      it "extracts the body" do
         expect(receiver.body).to eq(reply_body)
-      end
-
-      it "looks up the email log" do
         expect(receiver.email_log).to eq(email_log)
       end
 
-      it "extracts the key" do
-        expect(receiver.reply_key).to eq(reply_key)
-      end
-
-    end
-
-    describe "email with attachments" do
-      it "can find the message and create a post" do
-        User.stubs(:find_by_email).returns(user)
-        EmailLog.stubs(:for).returns(email_log)
-        attachment_email = File.read("#{Rails.root}/spec/fixtures/emails/attachment.eml")
-        r = Email::Receiver.new(attachment_email)
-        r.expects(:create_reply)
-        expect { r.process }.to_not raise_error
-        expect(r.body).to eq("here is an image attachment")
-      end
     end
 
   end
-
-  describe "processes a valid incoming email" do
-    before do
-      SiteSetting.stubs(:email_in_address).returns("discourse-in@appmail.adventuretime.ooo")
-      SiteSetting.stubs(:email_in_category).returns("42")
-      SiteSetting.stubs(:email_in).returns(true)
-    end
-
-    let(:incoming_email) { File.read("#{Rails.root}/spec/fixtures/emails/valid_incoming.eml") }
-    let(:receiver) { Email::Receiver.new(incoming_email) }
-    let(:user) { Fabricate.build(:user, id: 3456) }
-    let(:subject) { "We should have a post-by-email-feature." }
-    let(:email_body) {
-"Hey folks,
-
-I was thinking. Wouldn't it be great if we could post topics via email? Yes it would!
-
-Jakie" }
-
-    describe "email from non user" do
-
-      before do
-        User.expects(:find_by_email).returns(nil)
-      end
-
-      it "raises user not found error" do
-        expect { receiver.process }.to raise_error(Email::Receiver::UserNotFoundError)
-      end
-
-    end
-
-    describe "email from untrusted user" do
-      before do
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(user)
-        SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:elder].to_s)
-      end
-
-      it "raises untrusted user error" do
-        expect { receiver.process }.to raise_error(Email::Receiver::UserNotSufficientTrustLevelError)
-      end
-
-    end
-
-    describe "with proper user" do
-
-      before do
-        SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:newuser].to_s)
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(user)
-
-        topic_creator = mock()
-        TopicCreator.expects(:new).with(instance_of(User),
-                                        instance_of(Guardian),
-                                        has_entries(title: subject,
-                                                    category: 42))
-                                 .returns(topic_creator)
-
-        topic_creator.expects(:create).returns(topic_creator)
-        topic_creator.expects(:id).twice.returns(12345)
-
-
-        post_creator = mock
-        PostCreator.expects(:new).with(instance_of(User),
-                                       has_entries(raw: email_body,
-                                                   topic_id: 12345,
-                                                   cooking_options: {traditional_markdown_linebreaks: true}))
-                                 .returns(post_creator)
-
-        post_creator.expects(:create)
-
-        EmailLog.expects(:create).with(has_entries(
-                              email_type: 'topic_via_incoming_email',
-                              to_address: "discourse-in@appmail.adventuretime.ooo",
-                              user_id: 3456,
-                              topic_id: 12345
-                              ))
-      end
-
-      let!(:result) { receiver.process }
-
-      it "extracts the body" do
-        expect(receiver.body).to eq(email_body)
-      end
-
-    end
-
-  end
-
 
   describe "processes an email to a category" do
     before do
-      SiteSetting.stubs(:email_in_address).returns("")
-      SiteSetting.stubs(:email_in_category).returns("42")
-      SiteSetting.stubs(:email_in).returns(true)
+      SiteSetting.email_in = true
     end
 
-    let(:incoming_email) { File.read("#{Rails.root}/spec/fixtures/emails/valid_incoming.eml") }
-    let(:receiver) { Email::Receiver.new(incoming_email) }
-    let(:user) { Fabricate.build(:user, id: 3456) }
-    let(:category) { Fabricate.build(:category, id: 10) }
-    let(:subject) { "We should have a post-by-email-feature." }
-    let(:email_body) {
-"Hey folks,
 
-I was thinking. Wouldn't it be great if we could post topics via email? Yes it would!
+    it "correctly can target categories" do
+      to = "some@email.com"
 
-Jakie" }
+      Fabricate(:category, email_in_allow_strangers: false, email_in: to)
+      SiteSetting.email_in_min_trust = TrustLevel[4].to_s
 
-    describe "category not found" do
+      # no email in for user
+      expect{
+        process_email(from: "cobb@dob.com", to: "invalid@address.com")
+      }.to raise_error(Email::Receiver::BadDestinationAddress)
 
-      before do
-        Category.expects(:find_by_email).returns(nil)
+      # valid target invalid user
+      expect{
+        process_email(from: "cobb@dob.com", to: to)
+      }.to raise_error(Email::Receiver::UserNotFoundError)
+
+      # untrusted
+      user = Fabricate(:user)
+      expect{
+        process_email(from: user.email, to: to)
+      }.to raise_error(Email::Receiver::UserNotSufficientTrustLevelError)
+
+      # trusted
+      user.trust_level = 4
+      user.save
+
+      process_email(from: user.email, to: to)
+      user.posts.count.should == 1
+
+      # email too short
+      message = nil
+      begin
+        process_email(from: user.email, to: to, body: "x", subject: "this is my new topic title")
+      rescue Email::Receiver::InvalidPost => e
+        message = e.message
       end
 
-      it "raises EmailLogNotFoundError" do
-        expect{ receiver.process }.to raise_error(Email::Receiver::EmailLogNotFound)
-      end
-
-    end
-
-    describe "email from non user" do
-
-      before do
-        User.expects(:find_by_email).returns(nil)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(category)
-      end
-
-      it "raises UserNotFoundError" do
-        expect{ receiver.process }.to raise_error(Email::Receiver::UserNotFoundError)
-      end
-
-    end
-
-    describe "email from untrusted user" do
-      before do
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(user)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(category)
-        SiteSetting.stubs(:email_in_min_trust).returns(TrustLevel.levels[:elder].to_s)
-      end
-
-      it "raises untrusted user error" do
-        expect { receiver.process }.to raise_error(Email::Receiver::UserNotSufficientTrustLevelError)
-      end
-
-    end
-
-    describe "with proper user" do
-
-      before do
-        SiteSetting.stubs(:email_in_min_trust).returns(
-              TrustLevel.levels[:newuser].to_s)
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(user)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(category)
-
-        topic_creator = mock()
-        TopicCreator.expects(:new).with(instance_of(User),
-                                        instance_of(Guardian),
-                                        has_entries(title: subject,
-                                                    category: 10)) # Make sure it is posted to the right category
-                                 .returns(topic_creator)
-
-        topic_creator.expects(:create).returns(topic_creator)
-        topic_creator.expects(:id).twice.returns(12345)
-
-
-        post_creator = mock
-        PostCreator.expects(:new).with(instance_of(User),
-                                       has_entries(raw: email_body,
-                                                   topic_id: 12345,
-                                                   cooking_options: {traditional_markdown_linebreaks: true}))
-                                 .returns(post_creator)
-
-        post_creator.expects(:create)
-
-        EmailLog.expects(:create).with(has_entries(
-                              email_type: 'topic_via_incoming_email',
-                              to_address: "discourse-in@appmail.adventuretime.ooo",
-                              user_id: 3456,
-                              topic_id: 12345
-                              ))
-      end
-
-      let!(:result) { receiver.process }
-
-      it "extracts the body" do
-        expect(receiver.body).to eq(email_body)
-      end
-
+      e.message.should include("too short")
     end
 
   end
@@ -391,79 +355,21 @@ Jakie" }
 
   describe "processes an unknown email sender to category" do
     before do
-      SiteSetting.stubs(:email_in_address).returns("")
-      SiteSetting.stubs(:email_in_category).returns("42")
-      SiteSetting.stubs(:email_in).returns(true)
+      SiteSetting.email_in = true
     end
 
-    let(:incoming_email) { File.read("#{Rails.root}/spec/fixtures/emails/valid_incoming.eml") }
-    let(:receiver) { Email::Receiver.new(incoming_email) }
-    let(:non_inbox_email_category) { Fabricate.build(:category, id: 20, email_in_allow_strangers: false) }
-    let(:public_inbox_email_category) { Fabricate.build(:category, id: 25, email_in_allow_strangers: true) }
-    let(:subject) { "We should have a post-by-email-feature." }
-    let(:email_body) { "[quote=\"jake@adventuretime.ooo\"]
-Hey folks,
 
-I was thinking. Wouldn't it be great if we could post topics via email? Yes it would!
-
-Jakie
-[/quote]" }
-
-    describe "to disabled category" do
-      before do
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(nil)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(non_inbox_email_category)
-      end
-
-      it "raises UserNotFoundError" do
-        expect{ receiver.process }.to raise_error(Email::Receiver::UserNotFoundError)
-      end
-
+    it "rejects anon email" do
+      Fabricate(:category, email_in_allow_strangers: false, email_in: "bob@bob.com")
+      expect { process_email(from: "test@test.com", to: "bob@bob.com") }.to raise_error(Email::Receiver::UserNotFoundError)
     end
 
-    describe "to enabled category" do
+    it "creates a topic for allowed category" do
+      Fabricate(:category, email_in_allow_strangers: true, email_in: "bob@bob.com")
+      process_email(from: "test@test.com", to: "bob@bob.com")
 
-      before do
-        User.expects(:find_by_email).with(
-              "jake@adventuretime.ooo").returns(nil)
-        Category.expects(:find_by_email).with(
-              "discourse-in@appmail.adventuretime.ooo").returns(public_inbox_email_category)
-
-        topic_creator = mock()
-        TopicCreator.expects(:new).with(Discourse.system_user,
-                                        instance_of(Guardian),
-                                        has_entries(title: subject,
-                                                    category: 25)) # Make sure it is posted to the right category
-                                 .returns(topic_creator)
-
-        topic_creator.expects(:create).returns(topic_creator)
-        topic_creator.expects(:id).twice.returns(135)
-
-
-        post_creator = mock
-        PostCreator.expects(:new).with(Discourse.system_user,
-                                       has_entries(raw: email_body,
-                                                   topic_id: 135,
-                                                   cooking_options: {traditional_markdown_linebreaks: true}))
-                                 .returns(post_creator)
-
-        post_creator.expects(:create)
-
-        EmailLog.expects(:create).with(has_entries(
-                              email_type: 'topic_via_incoming_email',
-                              to_address: "discourse-in@appmail.adventuretime.ooo",
-                              user_id: Discourse.system_user.id,
-                              topic_id: 135
-                              ))
-      end
-
-      let!(:result) { receiver.process }
-
-      it "extracts the body" do
-        expect(receiver.body).to eq(email_body)
-      end
+      # This is the current implementation but it is wrong, it should register an account
+      Discourse.system_user.posts.order("id desc").limit(1).pluck(:raw).first.should include("Hey folks")
 
     end
 

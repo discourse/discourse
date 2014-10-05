@@ -30,7 +30,7 @@ describe EmailController do
       end
 
       it 'subscribes the user' do
-        user.email_digests.should be_true
+        user.email_digests.should == true
       end
     end
 
@@ -47,11 +47,21 @@ describe EmailController do
       end
 
       it 'unsubscribes the user' do
-        user.email_digests.should be_false
+        user.email_digests.should == false
       end
 
-      it "does not set the not_found instance variable" do
-        assigns(:not_found).should be_blank
+      it "sets the appropriate instance variables" do
+        assigns(:success).should be_present
+      end
+    end
+
+    context "with an expired key or invalid key" do
+      before do
+        get :unsubscribe, key: 'watwatwat'
+      end
+
+      it "sets the appropriate instance variables" do
+        assigns(:success).should be_blank
       end
     end
 
@@ -64,11 +74,12 @@ describe EmailController do
       end
 
       it 'does not unsubscribe the user' do
-        user.email_digests.should be_true
+        user.email_digests.should == true
       end
 
-      it 'sets not found' do
-        assigns(:not_found).should be_true
+      it 'sets the appropriate instance variables' do
+        assigns(:success).should be_blank
+        assigns(:different_user).should be_present
       end
     end
 
@@ -81,17 +92,17 @@ describe EmailController do
       end
 
       it 'unsubscribes the user' do
-        user.email_digests.should be_false
+        user.email_digests.should == false
       end
 
-      it "doesn't set not found" do
-        assigns(:not_found).should be_blank
+      it 'sets the appropriate instance variables' do
+        assigns(:success).should be_present
       end
     end
 
     it "sets not_found when the key didn't match anything" do
       get :unsubscribe, key: 'asdfasdf'
-      assigns(:not_found).should be_true
+      assigns(:not_found).should == true
     end
 
   end

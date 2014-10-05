@@ -9,21 +9,21 @@
 Discourse.AdminUsersListNewuserRoute = Discourse.Route.extend({
   setupController: function() {
     return this.controllerFor('adminUsersList').show('newuser');
-  }  
+  }
 });
 
 /**
   Handles the route that lists users at trust level 1.
 
-  @class AdminUsersListBasicRoute
+  @class AdminUsersListBasicuserRoute
   @extends Discourse.Route
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminUsersListBasicRoute = Discourse.Route.extend({
+Discourse.AdminUsersListBasicuserRoute = Discourse.Route.extend({
   setupController: function() {
     return this.controllerFor('adminUsersList').show('basic');
-  }  
+  }
 });
 
 /**
@@ -37,7 +37,7 @@ Discourse.AdminUsersListBasicRoute = Discourse.Route.extend({
 Discourse.AdminUsersListRegularRoute = Discourse.Route.extend({
   setupController: function() {
     return this.controllerFor('adminUsersList').show('regular');
-  }  
+  }
 });
 
 /**
@@ -51,7 +51,7 @@ Discourse.AdminUsersListRegularRoute = Discourse.Route.extend({
 Discourse.AdminUsersListLeadersRoute = Discourse.Route.extend({
   setupController: function() {
     return this.controllerFor('adminUsersList').show('leader');
-  }  
+  }
 });
 
 /**
@@ -65,5 +65,5 @@ Discourse.AdminUsersListLeadersRoute = Discourse.Route.extend({
 Discourse.AdminUsersListEldersRoute = Discourse.Route.extend({
   setupController: function() {
     return this.controllerFor('adminUsersList').show('elder');
-  }  
+  }
 });

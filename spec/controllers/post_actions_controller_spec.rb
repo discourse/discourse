@@ -28,7 +28,7 @@ describe PostActionsController do
       end
 
       it "fails when the user doesn't have permission to perform that action" do
-        Guardian.any_instance.expects(:post_can_act?).with(@post, :like).returns(false)
+        Guardian.any_instance.expects(:post_can_act?).with(@post, :like, taken_actions: nil).returns(false)
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
         response.should be_forbidden
       end
@@ -36,6 +36,12 @@ describe PostActionsController do
       it 'allows us to create an post action on a post' do
         PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {})
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
+      end
+
+      it "passes a list of taken actions through" do
+        PostAction.create(post_id: @post.id, user_id: @user.id, post_action_type_id: PostActionType.types[:inappropriate])
+        Guardian.any_instance.expects(:post_can_act?).with(@post, :off_topic, has_entry({:taken_actions => has_key(PostActionType.types[:inappropriate])}))
+        xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:off_topic]
       end
 
       it 'passes the message through' do
@@ -88,7 +94,7 @@ describe PostActionsController do
 
         it 'deletes the action' do
           xhr :delete, :destroy, id: post.id, post_action_type_id: 1
-          PostAction.exists?(user_id: user.id, post_id: post.id, post_action_type_id: 1, deleted_at: nil).should be_false
+          PostAction.exists?(user_id: user.id, post_id: post.id, post_action_type_id: 1, deleted_at: nil).should == false
         end
 
         it 'ensures it can be deleted' do
@@ -102,13 +108,13 @@ describe PostActionsController do
 
   end
 
-  context 'clear_flags' do
+  context 'defer_flags' do
 
     let(:flagged_post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
 
     context "not logged in" do
       it "should not allow them to clear flags" do
-        lambda { xhr :post, :clear_flags }.should raise_error(Discourse::NotLoggedIn)
+        lambda { xhr :post, :defer_flags }.should raise_error(Discourse::NotLoggedIn)
       end
     end
 
@@ -116,42 +122,37 @@ describe PostActionsController do
       let!(:user) { log_in(:moderator) }
 
       it "raises an error without a post_action_type_id" do
-        -> { xhr :post, :clear_flags, id: flagged_post.id }.should raise_error(ActionController::ParameterMissing)
+        -> { xhr :post, :defer_flags, id: flagged_post.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have access" do
-        Guardian.any_instance.expects(:can_clear_flags?).returns(false)
-        xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
+        Guardian.any_instance.expects(:can_defer_flags?).returns(false)
+        xhr :post, :defer_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
         response.should be_forbidden
       end
 
       context "success" do
         before do
-          Guardian.any_instance.expects(:can_clear_flags?).returns(true)
-          PostAction.expects(:clear_flags!).with(flagged_post, user.id, PostActionType.types[:spam])
+          Guardian.any_instance.expects(:can_defer_flags?).returns(true)
+          PostAction.expects(:defer_flags!).with(flagged_post, user)
         end
 
-        it "delegates to clear_flags" do
-          xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
+        it "delegates to defer_flags" do
+          xhr :post, :defer_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           response.should be_success
         end
 
         it "works with a deleted post" do
           flagged_post.trash!(user)
-          xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
+          xhr :post, :defer_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           response.should be_success
         end
-
 
       end
 
     end
 
-
-
   end
-
-
 
   describe 'users' do
 
@@ -187,7 +188,5 @@ describe PostActionsController do
     end
 
   end
-
-
 
 end

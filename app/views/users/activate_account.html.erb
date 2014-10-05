@@ -1,19 +1,40 @@
 <div id='simple-container'>
-
-  <%if flash[:error]%>
-    <div class='alert alert-error'>
-      <%=flash[:error]%>
-    </div>
-  <%else%>
     <h2><%= t 'activation.welcome_to', site_name: SiteSetting.title %></h2>
-    <p>
-    <% if @needs_approval %>
-      <%= t 'activation.approval_required' %>
-    <% else %>
-      <%= raw t('activation.please_continue', link: link_to(SiteSetting.title, '/')) %></a>.
+    <br/>
+    <button class='btn' id='activate-account-button'><%= t 'activation.action' %></button>
+
+    <%= form_tag(perform_activate_account_path, method: :put, id: 'activate-account-form') do %>
+      <%= hidden_field_tag 'password_confirmation' %>
+      <%= hidden_field_tag 'challenge' %>
     <% end %>
-    </p>
-
-  <%end%>
-
 </div>
+
+<%- content_for(:no_js_head) do %>
+  <%= script "vendor" %>
+<%- end %>
+
+<script language="javascript">
+  (function() {
+    function activateAccount() {
+      $('#activate-account-button').prop('disabled', true);
+      $.ajax("/users/hp").then(function(hp) {
+        $('#password_confirmation').val(hp.value);
+        $('#challenge').val(hp.challenge.split("").reverse().join(""));
+        $('#activate-account-form').submit();
+      }).fail(function() {
+        $('#activate-account-button').prop('disabled', false);
+      });
+    }
+
+    var t0 = new Date().getTime();
+    $('#activate-account-button').on('click', function() {
+      var diff = new Date().getTime() - t0;
+
+      // Ensure the form has been visible for a few ms before allowing the
+      // user to submit.
+      if (diff > 50) {
+        activateAccount();
+      }
+    });
+  })();
+</script>

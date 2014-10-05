@@ -7,7 +7,7 @@ describe Admin::GroupsController do
   end
 
   it "is a subclass of AdminController" do
-    (Admin::GroupsController < Admin::AdminController).should be_true
+    (Admin::GroupsController < Admin::AdminController).should == true
   end
 
   it "produces valid json for groups" do
@@ -22,7 +22,8 @@ describe Admin::GroupsController do
       "name"=>group.name,
       "user_count"=>1,
       "automatic"=>false,
-      "alias_level"=>0
+      "alias_level"=>0,
+      "visible"=>true
     }]
   end
 

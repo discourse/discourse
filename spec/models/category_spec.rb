@@ -9,7 +9,14 @@ describe Category do
 
   it 'validates uniqueness of name' do
     Fabricate(:category)
-    should validate_uniqueness_of(:name)
+    should validate_uniqueness_of(:name).scoped_to(:parent_category_id)
+  end
+
+  it 'validates uniqueness in case insensitive way' do
+    Fabricate(:category, name: "Cats")
+    c = Fabricate.build(:category, name: "cats")
+    c.should_not be_valid
+    c.errors[:name].should be_present
   end
 
   it { should belong_to :topic }
@@ -20,11 +27,19 @@ describe Category do
   it { should have_many :featured_topics }
   it { should belong_to :parent_category}
 
+  describe "last_updated_at" do
+    it "returns a number value of when the category was last updated" do
+      last = Category.last_updated_at
+      last.should be_present
+      last.to_i.should == last
+    end
+  end
+
   describe "resolve_permissions" do
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(:everyone => :full)
 
-      read_restricted.should be_false
+      read_restricted.should == false
       resolved.should == []
     end
   end
@@ -87,13 +102,13 @@ describe Category do
     let(:group) { Fabricate(:group) }
 
     it "secures categories correctly" do
-      category.read_restricted?.should be_false
+      category.read_restricted?.should == false
 
       category.set_permissions({})
-      category.read_restricted?.should be_true
+      category.read_restricted?.should == true
 
       category.set_permissions(:everyone => :full)
-      category.read_restricted?.should be_false
+      category.read_restricted?.should == false
 
       user.secure_categories.should be_empty
 
@@ -108,7 +123,7 @@ describe Category do
     end
 
     it "lists all secured categories correctly" do
-      uncategorized = Category.first
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
 
       group.add(user)
       category.set_permissions(group.id => :full)
@@ -131,6 +146,22 @@ describe Category do
 
   it "strips leading and trailing blanks" do
     Fabricate(:category, name: "  blanks ").name.should == "blanks"
+  end
+
+  it "sets name_lower" do
+    Fabricate(:category, name: "Not MySQL").name_lower.should == "not mysql"
+  end
+
+  it "has custom fields" do
+    category = Fabricate(:category, name: " music")
+    category.custom_fields["a"].should == nil
+
+    category.custom_fields["bob"] = "marley"
+    category.custom_fields["jack"] = "black"
+    category.save
+
+    category = Category.find(category.id)
+    category.custom_fields.should == {"bob" => "marley", "jack" => "black"}
   end
 
   describe "short name" do
@@ -185,7 +216,7 @@ describe Category do
 
       @topic.pinned_at.should be_present
 
-      Guardian.new(@category.user).can_delete?(@topic).should be_false
+      Guardian.new(@category.user).can_delete?(@topic).should == false
 
       @topic.posts.count.should == 1
 
@@ -200,23 +231,40 @@ describe Category do
       @category.topics_year.should  == 0
     end
 
+    it "renames the definition when renamed" do
+      @category.update_attributes(name: 'Troutfishing')
+      @topic.reload
+      @topic.title.should =~ /Troutfishing/
+    end
+
+    it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
+      -> { @category.update_attributes(name: 'Troutfishing', topic_id: nil) }.should_not raise_error
+    end
+
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
-      category.topic.auto_close_at.should be_nil
+      category.topic.auto_close_at.should == nil
     end
 
     describe "creating a new category with the same slug" do
-      it "should have a blank slug" do
+      it "should have a blank slug if at the same level" do
         category = Fabricate(:category, name: "Amazing Categóry")
         category.slug.should be_blank
         category.slug_for_url.should == "#{category.id}-category"
+      end
+
+      it "doesn't have a blank slug if not at the same level" do
+        parent = Fabricate(:category, name: 'Other parent')
+        category = Fabricate(:category, name: "Amazing Categóry", parent_category_id: parent.id)
+        category.slug.should == 'amazing-category'
+        category.slug_for_url.should == "amazing-category"
       end
     end
 
     describe "trying to change the category topic's category" do
       before do
         @new_cat = Fabricate(:category, name: '2nd Category', user: @category.user)
-        @topic.change_category(@new_cat.name)
+        @topic.change_category_to_id(@new_cat.id)
         @topic.reload
         @category.reload
       end
@@ -238,8 +286,8 @@ describe Category do
     end
 
     it 'is deleted correctly' do
-      Category.exists?(id: @category_id).should be_false
-      Topic.exists?(id: @topic_id).should be_false
+      Category.exists?(id: @category_id).should == false
+      Topic.exists?(id: @topic_id).should == false
     end
   end
 
@@ -332,6 +380,26 @@ describe Category do
         @category.posts_week.should == 1
       end
     end
+
+    context 'for uncategorized category' do
+      before do
+        @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+        create_post(user: Fabricate(:user), category: @uncategorized.name)
+        Category.update_stats
+        @uncategorized.reload
+      end
+
+      it 'updates topic stats' do
+        @uncategorized.topics_week.should == 1
+        @uncategorized.topics_month.should == 1
+        @uncategorized.topics_year.should == 1
+        @uncategorized.topic_count.should == 1
+        @uncategorized.post_count.should == 1
+        @uncategorized.posts_year.should == 1
+        @uncategorized.posts_month.should == 1
+        @uncategorized.posts_week.should == 1
+      end
+    end
   end
 
   describe "#url" do
@@ -347,6 +415,19 @@ describe Category do
                                 parent_category_id: parent_category.id)
         expect(subcategory.url).to eq "/category/parent/child"
       end
+    end
+  end
+
+  describe "uncategorized" do
+    let(:cat) { Category.where(id: SiteSetting.uncategorized_category_id).first }
+
+    it "reports as `uncategorized?`" do
+      cat.should be_uncategorized
+    end
+
+    it "cannot have a parent category" do
+      cat.parent_category_id = Fabricate(:category).id
+      cat.should_not be_valid
     end
   end
 
@@ -388,6 +469,18 @@ describe Category do
       end
     end
 
+  end
+
+  describe "find_by_email" do
+    it "is case insensitive" do
+      c1 = Fabricate(:category, email_in: 'lower@example.com')
+      c2 = Fabricate(:category, email_in: 'UPPER@EXAMPLE.COM')
+      c3 = Fabricate(:category, email_in: 'Mixed.Case@Example.COM')
+      Category.find_by_email('LOWER@EXAMPLE.COM').should == c1
+      Category.find_by_email('upper@example.com').should == c2
+      Category.find_by_email('mixed.case@example.com').should == c3
+      Category.find_by_email('MIXED.CASE@EXAMPLE.COM').should == c3
+    end
   end
 
 end

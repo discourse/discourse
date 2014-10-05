@@ -4,12 +4,12 @@ require_dependency 'topic_view'
 require_dependency 'rate_limiter'
 require_dependency 'text_sentinel'
 require_dependency 'text_cleaner'
-require_dependency 'trashable'
 require_dependency 'archetype'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
+  include HasCustomFields
   include Trashable
   extend Forwardable
 
@@ -21,6 +21,8 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :regular!, :notify_regular!
   def_delegator :notifier, :muted!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
+
+  attr_accessor :allowed_user_ids
 
   def self.max_sort_order
     2**31 - 1
@@ -46,7 +48,8 @@ class Topic < ActiveRecord::Base
   rate_limit :limit_topics_per_day
   rate_limit :limit_private_messages_per_day
 
-  validates :title, :presence => true,
+  validates :title, :if => Proc.new { |t| t.new_record? || t.title_changed? },
+                    :presence => true,
                     :topic_title_length => true,
                     :quality_title => { :unless => :private_message? },
                     :unique_among  => { :unless => Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
@@ -55,22 +58,26 @@ class Topic < ActiveRecord::Base
                                         :case_sensitive => false,
                                         :collection => Proc.new{ Topic.listable_topics } }
 
-  validates :category_id, :presence => true ,:exclusion => {:in => [SiteSetting.uncategorized_category_id]},
-                                     :if => Proc.new { |t|
-                                           (t.new_record? || t.category_id_changed?) &&
-                                           !SiteSetting.allow_uncategorized_topics &&
-                                           (t.archetype.nil? || t.archetype == Archetype.default) &&
-                                           (!t.user_id || !t.user.staff?)
-                                       }
+  validates :category_id,
+            :presence => true,
+            :exclusion => {
+              :in => Proc.new{[SiteSetting.uncategorized_category_id]}
+            },
+            :if => Proc.new { |t|
+                   (t.new_record? || t.category_id_changed?) &&
+                   !SiteSetting.allow_uncategorized_topics &&
+                   (t.archetype.nil? || t.archetype == Archetype.default) &&
+                   (!t.user_id || !t.user.staff?)
+            }
 
 
   before_validation do
-    self.sanitize_title
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
   end
 
   belongs_to :category
   has_many :posts
+  has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
   has_many :topic_allowed_groups
 
@@ -93,22 +100,24 @@ class Topic < ActiveRecord::Base
   has_many :invites, through: :topic_invites, source: :invite
 
   has_many :revisions, foreign_key: :topic_id, class_name: 'TopicRevision'
+  has_one :warning
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
+  attr_accessor :participants
   attr_accessor :topic_list
+  attr_accessor :meta_data
   attr_accessor :include_last_poster
+  attr_accessor :import_mode # set to true to optimize creation and save for imports
 
   # The regular order
-  scope :topic_list_order, lambda { order('topics.bumped_at desc') }
+  scope :topic_list_order, -> { order('topics.bumped_at desc') }
 
   # Return private message topics
-  scope :private_messages, lambda {
-    where(archetype: Archetype.private_message)
-  }
+  scope :private_messages, -> { where(archetype: Archetype.private_message) }
 
-  scope :listable_topics, lambda { where('topics.archetype <> ?', [Archetype.private_message]) }
+  scope :listable_topics, -> { where('topics.archetype <> ?', [Archetype.private_message]) }
 
   scope :by_newest, -> { order('topics.created_at desc, topics.id desc') }
 
@@ -116,16 +125,15 @@ class Topic < ActiveRecord::Base
 
   scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
 
-  scope :secured, lambda {|guardian=nil|
+  scope :secured, lambda { |guardian=nil|
     ids = guardian.secure_category_ids if guardian
 
     # Query conditions
-    condition =
-      if ids.present?
-        ["NOT c.read_restricted or c.id in (:cats)", cats: ids]
-      else
-        ["NOT c.read_restricted"]
-      end
+    condition = if ids.present?
+      ["NOT c.read_restricted or c.id in (:cats)", cats: ids]
+    else
+      ["NOT c.read_restricted"]
+    end
 
     where("category_id IS NULL OR category_id IN (
            SELECT c.id FROM categories c
@@ -135,7 +143,7 @@ class Topic < ActiveRecord::Base
   # Helps us limit how many topics can be starred in a day
   class StarLimiter < RateLimiter
     def initialize(user)
-      super(user, "starred:#{Date.today.to_s}", SiteSetting.max_stars_per_day, 1.day.to_i)
+      super(user, "starred:#{Date.today}", SiteSetting.max_stars_per_day, 1.day.to_i)
     end
   end
 
@@ -242,17 +250,22 @@ class Topic < ActiveRecord::Base
   end
 
   def fancy_title
-    return title unless SiteSetting.title_fancy_entities?
+    sanitized_title = title.gsub(/['&\"<>]/, {
+        "'" => '&#39;',
+        '&' => '&amp;',
+        '"' => '&quot;',
+        '<' => '&lt;',
+        '>' => '&gt;',
+      })
+
+    return unless sanitized_title
+    return sanitized_title unless SiteSetting.title_fancy_entities?
 
     # We don't always have to require this, if fancy is disabled
     # see: http://meta.discourse.org/t/pattern-for-defer-loading-gems-and-profiling-with-perftools-rb/4629
     require 'redcarpet' unless defined? Redcarpet
 
-    Redcarpet::Render::SmartyPants.render(title)
-  end
-
-  def sanitize_title
-    self.title = sanitize(title.to_s, tags: [], attributes: []).strip.presence
+    Redcarpet::Render::SmartyPants.render(sanitized_title)
   end
 
   def new_version_required?
@@ -260,26 +273,60 @@ class Topic < ActiveRecord::Base
   end
 
   # Returns hot topics since a date for display in email digest.
-  def self.for_digest(user, since)
+  def self.for_digest(user, since, opts=nil)
+    opts = opts || {}
+    score = "#{ListController.best_period_for(since)}_score"
+
     topics = Topic
               .visible
               .secured(Guardian.new(user))
+              .joins("LEFT OUTER JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{user.id.to_i}")
               .where(closed: false, archived: false)
+              .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
               .created_since(since)
               .listable_topics
-              .order(:percent_rank)
-              .limit(100)
+              .includes(:category)
 
+    if !!opts[:top_order]
+      topics = topics.joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")
+                     .order(TopicQuerySQL.order_top_for(score))
+    end
+
+    if opts[:limit]
+      topics = topics.limit(opts[:limit])
+    end
+
+    # Remove category topics
     category_topic_ids = Category.pluck(:topic_id).compact!
     if category_topic_ids.present?
-      topics = topics.where("id NOT IN (?)", category_topic_ids)
+      topics = topics.where("topics.id NOT IN (?)", category_topic_ids)
+    end
+
+    # Remove muted categories
+    muted_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
+    if muted_category_ids.present?
+      topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
     end
 
     topics
   end
 
+  # Using the digest query, figure out what's  new for a user since last seen
+  def self.new_since_last_seen(user, since, featured_topic_ids)
+    topics = Topic.for_digest(user, since)
+    topics.where("topics.id NOT IN (?)", featured_topic_ids)
+  end
+
+  def meta_data=(data)
+    custom_fields.replace(data)
+  end
+
+  def meta_data
+    custom_fields
+  end
+
   def update_meta_data(data)
-    self.meta_data = (self.meta_data || {}).merge(data.stringify_keys)
+    custom_fields.update(data)
     save
   end
 
@@ -301,8 +348,7 @@ class Topic < ActiveRecord::Base
   end
 
   def meta_data_string(key)
-    return unless meta_data.present?
-    meta_data[key.to_s]
+    custom_fields[key.to_s]
   end
 
   def self.listable_count_per_day(sinceDaysAgo=30)
@@ -313,19 +359,44 @@ class Topic < ActiveRecord::Base
     archetype == Archetype.private_message
   end
 
+  MAX_SIMILAR_BODY_LENGTH = 200
   # Search for similar topics
   def self.similar_to(title, raw, user=nil)
     return [] unless title.present?
     return [] unless raw.present?
 
-    # For now, we only match on title. We'll probably add body later on, hence the API hook
-    Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity", title: title]))
-         .visible
-         .where(closed: false, archived: false)
-         .secured(Guardian.new(user))
-         .listable_topics
-         .limit(SiteSetting.max_similar_results)
-         .order('similarity desc')
+    filter_words = Search.prepare_data(title + " " + raw[0...MAX_SIMILAR_BODY_LENGTH]);
+    ts_query = Search.ts_query(filter_words, nil, "|")
+
+    # Exclude category definitions from similar topic suggestions
+
+    candidates = Topic.visible
+       .secured(Guardian.new(user))
+       .listable_topics
+       .joins('JOIN topic_search_data s ON topics.id = s.topic_id')
+       .where("search_data @@ #{ts_query}")
+       .order("ts_rank(search_data, #{ts_query}) DESC")
+       .limit(SiteSetting.max_similar_results * 3)
+
+    exclude_topic_ids = Category.pluck(:topic_id).compact!
+    if exclude_topic_ids.present?
+      candidates = candidates.where("topics.id NOT IN (?)", exclude_topic_ids)
+    end
+
+    candidate_ids = candidates.pluck(:id)
+
+
+    return [] unless candidate_ids.present?
+
+
+    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(topics.title, :raw) AS similarity", title: title, raw: raw]))
+                     .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
+                     .limit(SiteSetting.max_similar_results)
+                     .where("topics.id IN (?)", candidate_ids)
+                     .where("similarity(topics.title, :title) + similarity(topics.title, :raw) > 0.2", raw: raw, title: title)
+                     .order('similarity desc')
+
+    similar
   end
 
   def update_status(status, enabled, user)
@@ -390,7 +461,7 @@ class Topic < ActiveRecord::Base
   end
 
   def changed_to_category(cat)
-    return true if cat.blank? || Category.where(topic_id: id).first.present?
+    return true if cat.blank? || Category.find_by(topic_id: id).present?
 
     Topic.transaction do
       old_category = category
@@ -406,9 +477,9 @@ class Topic < ActiveRecord::Base
       end
 
       if success
-        CategoryFeaturedTopic.feature_topics_for(old_category)
+        CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
         Category.where(id: cat.id).update_all 'topic_count = topic_count + 1'
-        CategoryFeaturedTopic.feature_topics_for(cat) unless old_category.try(:id) == cat.try(:id)
+        CategoryFeaturedTopic.feature_topics_for(cat) unless @import_mode || old_category.try(:id) == cat.try(:id)
       else
         return false
       end
@@ -426,7 +497,6 @@ class Topic < ActiveRecord::Base
                                 topic_id: self.id)
       new_post = creator.create
       increment!(:moderator_posts_count)
-      new_post
     end
 
     if new_post.present?
@@ -436,18 +506,20 @@ class Topic < ActiveRecord::Base
 
       # Grab any links that are present
       TopicLink.extract_from(new_post)
+      QuotedPost.extract_from(new_post)
     end
 
     new_post
   end
 
-  # Changes the category to a new name
-  def change_category(name)
+  def change_category_to_id(category_id)
+    return false if private_message?
+
     # If the category name is blank, reset the attribute
-    if name.blank?
-      cat = Category.where(id: SiteSetting.uncategorized_category_id).first
+    if (category_id.nil? || category_id.to_i == 0)
+      cat = Category.find_by(id: SiteSetting.uncategorized_category_id)
     else
-      cat = Category.where(name: name).first
+      cat = Category.where(id: category_id).first
     end
 
     return true if cat == category
@@ -455,21 +527,20 @@ class Topic < ActiveRecord::Base
     changed_to_category(cat)
   end
 
-
   def remove_allowed_user(username)
-    user = User.where(username: username).first
-    if user
-      topic_user = topic_allowed_users.where(user_id: user.id).first
+    if user = User.find_by(username: username)
+      topic_user = topic_allowed_users.find_by(user_id: user.id)
       if topic_user
         topic_user.destroy
-      else
-        false
+        return true
       end
     end
+
+    false
   end
 
   # Invite a user to the topic by username or email. Returns success/failure
-  def invite(invited_by, username_or_email)
+  def invite(invited_by, username_or_email, group_ids=nil)
     if private_message?
       # If the user exists, add them to the topic.
       user = User.find_by_username_or_email(username_or_email)
@@ -487,14 +558,14 @@ class Topic < ActiveRecord::Base
 
     if username_or_email =~ /^.+@.+$/
       # NOTE callers expect an invite object if an invite was sent via email
-      invite_by_email(invited_by, username_or_email)
+      invite_by_email(invited_by, username_or_email, group_ids)
     else
       false
     end
   end
 
-  def invite_by_email(invited_by, email)
-    Invite.invite_by_email(email, invited_by, self)
+  def invite_by_email(invited_by, email, group_ids=nil)
+    Invite.invite_by_email(email, invited_by, self, group_ids)
   end
 
   def email_already_exists_for?(invite)
@@ -502,12 +573,12 @@ class Topic < ActiveRecord::Base
   end
 
   def grant_permission_to_user(lower_email)
-    user = User.where(email: lower_email).first
+    user = User.find_by(email: lower_email)
     topic_allowed_users.create!(user_id: user.id)
   end
 
   def max_post_number
-    posts.maximum(:post_number).to_i
+    posts.with_deleted.maximum(:post_number).to_i
   end
 
   def move_posts(moved_by, post_ids, opts)
@@ -540,9 +611,12 @@ class Topic < ActiveRecord::Base
     end
   end
 
-
   def posters_summary(options = {})
     @posters_summary ||= TopicPostersSummary.new(self, options).summary
+  end
+
+  def participants_summary(options = {})
+    @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
   end
 
   # Enable/disable the star on the topic
@@ -564,6 +638,35 @@ class Topic < ActiveRecord::Base
         StarLimiter.new(user).rollback!
       end
     end
+  end
+
+  def make_banner!(user)
+    # only one banner at the same time
+    previous_banner = Topic.where(archetype: Archetype.banner).first
+    previous_banner.remove_banner!(user) if previous_banner.present?
+
+    self.archetype = Archetype.banner
+    self.add_moderator_post(user, I18n.t("archetypes.banner.message.make"))
+    self.save
+
+    MessageBus.publish('/site/banner', banner)
+  end
+
+  def remove_banner!(user)
+    self.archetype = Archetype.default
+    self.add_moderator_post(user, I18n.t("archetypes.banner.message.remove"))
+    self.save
+
+    MessageBus.publish('/site/banner', nil)
+  end
+
+  def banner
+    post = self.posts.order(:post_number).limit(1).first
+
+    {
+      html: post.cooked,
+      key: self.id
+    }
   end
 
   def self.starred_counts_per_day(sinceDaysAgo=30)
@@ -618,8 +721,14 @@ class Topic < ActiveRecord::Base
     TopicUser.change(user.id, id, cleared_pinned_at: Time.now)
   end
 
-  def update_pinned(status)
+  def re_pin_for(user)
+    return unless user.present?
+    TopicUser.change(user.id, id, cleared_pinned_at: nil)
+  end
+
+  def update_pinned(status, global=false)
     update_column(:pinned_at, status ? Time.now : nil)
+    update_column(:pinned_globally, global)
   end
 
   def draft_key
@@ -728,7 +837,7 @@ class Topic < ActiveRecord::Base
   end
 
   def apply_per_day_rate_limit_for(key, method_name)
-    RateLimiter.new(user, "#{key}-per-day:#{Date.today.to_s}", SiteSetting.send(method_name), 1.day.to_i)
+    RateLimiter.new(user, "#{key}-per-day:#{Date.today}", SiteSetting.send(method_name), 1.day.to_i)
   end
 
 end
@@ -766,7 +875,6 @@ end
 #  archived                :boolean          default(FALSE), not null
 #  bumped_at               :datetime         not null
 #  has_summary             :boolean          default(FALSE), not null
-#  meta_data               :hstore
 #  vote_count              :integer          default(0), not null
 #  archetype               :string(255)      default("regular"), not null
 #  featured_user4_id       :integer
@@ -787,11 +895,12 @@ end
 #  participant_count       :integer          default(1)
 #  word_count              :integer
 #  excerpt                 :string(1000)
+#  pinned_globally         :boolean          default(FALSE), not null
 #
 # Indexes
 #
 #  idx_topics_front_page              (deleted_at,visible,archetype,category_id,id)
 #  idx_topics_user_id_deleted_at      (user_id)
-#  index_forum_threads_on_bumped_at   (bumped_at)
+#  index_topics_on_bumped_at          (bumped_at)
 #  index_topics_on_id_and_deleted_at  (id,deleted_at)
 #

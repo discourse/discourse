@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'digest/sha1'
 
 describe Upload do
-
   it { should belong_to :user }
 
   it { should have_many :post_uploads }
@@ -10,33 +9,21 @@ describe Upload do
 
   it { should have_many :optimized_images }
 
-  it { should validate_presence_of :original_filename }
-  it { should validate_presence_of :filesize }
-
   let(:upload) { build(:upload) }
   let(:thumbnail) { build(:optimized_image, upload: upload) }
 
   let(:user_id) { 1 }
   let(:url) { "http://domain.com" }
 
-  let(:image) do
-    ActionDispatch::Http::UploadedFile.new({
-      filename: 'logo.png',
-      tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
-    })
-  end
+  let(:image) { file_from_fixtures("logo.png") }
+  let(:image_filename) { "logo.png" }
+  let(:image_filesize) { File.size(image) }
+  let(:image_sha1) { Digest::SHA1.file(image).hexdigest }
 
-  let(:image_sha1) { Digest::SHA1.file(image.tempfile).hexdigest }
-  let(:image_filesize) { File.size(image.tempfile) }
-
-  let(:attachment) do
-    ActionDispatch::Http::UploadedFile.new({
-      filename: File.basename(__FILE__),
-      tempfile: File.new(__FILE__)
-    })
-  end
-
-  let(:attachment_filesize) { File.size(attachment.tempfile) }
+  let(:attachment_path) { __FILE__ }
+  let(:attachment) { File.new(attachment_path) }
+  let(:attachment_filename) { File.basename(attachment_path) }
+  let(:attachment_filesize) { File.size(attachment_path) }
 
   context ".create_thumbnail!" do
 
@@ -60,41 +47,50 @@ describe Upload do
 
   context "#create_for" do
 
+    before { Upload.stubs(:fix_image_orientation) }
+
     it "does not create another upload if it already exists" do
-      Upload.expects(:where).with(sha1: image_sha1).returns([upload])
-      Upload.expects(:create!).never
-      Upload.create_for(user_id, image, image_filesize).should == upload
+      Upload.expects(:find_by).with(sha1: image_sha1).returns(upload)
+      Upload.expects(:save).never
+      Upload.create_for(user_id, image, image_filename, image_filesize).should == upload
+    end
+
+    it "fix image orientation" do
+      Upload.expects(:fix_image_orientation).with(image.path)
+      Upload.create_for(user_id, image, image_filename, image_filesize)
     end
 
     it "computes width & height for images" do
-      SiteSetting.expects(:authorized_image?).returns(true)
       FastImage.any_instance.expects(:size).returns([100, 200])
       ImageSizer.expects(:resize)
-      ActionDispatch::Http::UploadedFile.any_instance.expects(:rewind)
-      Upload.create_for(user_id, image, image_filesize)
+      image.expects(:rewind).twice
+      Upload.create_for(user_id, image, image_filename, image_filesize)
     end
 
     it "does not create an upload when there is an error with FastImage" do
-      SiteSetting.expects(:authorized_image?).returns(true)
-      Upload.expects(:create!).never
-      expect { Upload.create_for(user_id, attachment, attachment_filesize) }.to raise_error(FastImage::UnknownImageType)
+      FileHelper.expects(:is_image?).returns(true)
+      Upload.expects(:save).never
+      upload = Upload.create_for(user_id, attachment, attachment_filename, attachment_filesize)
+      upload.errors.size.should > 0
     end
 
     it "does not compute width & height for non-image" do
-      SiteSetting.expects(:authorized_image?).returns(false)
       FastImage.any_instance.expects(:size).never
-      Upload.create_for(user_id, image, image_filesize)
+      upload = Upload.create_for(user_id, attachment, attachment_filename, attachment_filesize)
+      upload.errors.size.should > 0
     end
 
     it "saves proper information" do
       store = {}
       Discourse.expects(:store).returns(store)
       store.expects(:store_upload).returns(url)
-      upload = Upload.create_for(user_id, image, image_filesize)
+
+      upload = Upload.create_for(user_id, image, image_filename, image_filesize)
+
       upload.user_id.should == user_id
-      upload.original_filename.should == image.original_filename
-      upload.filesize.should == File.size(image.tempfile)
-      upload.sha1.should == Digest::SHA1.file(image.tempfile).hexdigest
+      upload.original_filename.should == image_filename
+      upload.filesize.should == image_filesize
+      upload.sha1.should == image_sha1
       upload.width.should == 244
       upload.height.should == 66
       upload.url.should == url
@@ -105,18 +101,18 @@ describe Upload do
   context ".get_from_url" do
 
     it "works when the file has been uploaded" do
-      Upload.expects(:where).returns([]).once
+      Upload.expects(:find_by).returns(nil).once
       Upload.get_from_url("/uploads/default/1/10387531.jpg")
     end
 
     it "works when using a cdn" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      Upload.expects(:where).with(url: "/uploads/default/1/02395732905.jpg").returns([]).once
+      Upload.expects(:find_by).with(url: "/uploads/default/1/02395732905.jpg").returns(nil).once
       Upload.get_from_url("http://my.cdn.com/uploads/default/1/02395732905.jpg")
     end
 
     it "works only when the file has been uploaded" do
-      Upload.expects(:where).never
+      Upload.expects(:find_by).never
       Upload.get_from_url("http://domain.com/my/file.txt")
     end
 

@@ -35,7 +35,7 @@ describe ScreenedIpAddress do
 
   describe "ip_address_with_mask" do
     it "returns nil when ip_address is nil" do
-      described_class.new.ip_address_with_mask.should be_nil
+      described_class.new.ip_address_with_mask.should == nil
     end
 
     it "returns ip_address without mask if there is no mask" do
@@ -76,6 +76,8 @@ describe ScreenedIpAddress do
       test_good_value("123.12.*.*",    "123.12.0.0/16")
       test_good_value("123.12.1.*",    "123.12.1.0/24")
       test_good_value("123.12.*.*/16", "123.12.0.0/16")
+      test_good_value("123.12.*",      "123.12.0.0/16")
+      test_good_value("123.*",         "123.0.0.0/8")
     end
 
     it "handles bad input" do
@@ -232,6 +234,53 @@ describe ScreenedIpAddress do
       it 'returns false when when record matches and action is :block' do
         Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:block])
         described_class.is_whitelisted?('2001:db8::ff00:42:8329').should eq(false)
+      end
+    end
+  end
+
+  describe '#block_login?' do
+    context 'no allow_admin records exist' do
+      it "returns false when user is nil" do
+        described_class.block_login?(nil, '123.12.12.12').should == false
+      end
+
+      it "returns false for non-admin user" do
+        described_class.block_login?(Fabricate.build(:user), '123.12.12.12').should == false
+      end
+
+      it "returns false for admin user" do
+        described_class.block_login?(Fabricate.build(:admin), '123.12.12.12').should == false
+      end
+
+      it "returns false for admin user and ip_address arg is nil" do
+        described_class.block_login?(Fabricate.build(:admin), nil).should == false
+      end
+    end
+
+    context 'allow_admin record exists' do
+      before do
+        @permitted_ip_address = '111.234.23.11'
+        Fabricate(:screened_ip_address, ip_address: @permitted_ip_address, action_type: described_class.actions[:allow_admin])
+      end
+
+      it "returns false when user is nil" do
+        described_class.block_login?(nil, @permitted_ip_address).should == false
+      end
+
+      it "returns false for an admin user at the allowed ip address" do
+        described_class.block_login?(Fabricate.build(:admin), @permitted_ip_address).should == false
+      end
+
+      it "returns true for an admin user at another ip address" do
+        described_class.block_login?(Fabricate.build(:admin), '123.12.12.12').should == true
+      end
+
+      it "returns false for regular user at allowed ip address" do
+        described_class.block_login?(Fabricate.build(:user), @permitted_ip_address).should == false
+      end
+
+      it "returns false for regular user at another ip address" do
+        described_class.block_login?(Fabricate.build(:user), '123.12.12.12').should == false
       end
     end
   end

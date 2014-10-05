@@ -56,5 +56,3 @@ if User.count == 0
   puts
   puts "To get started run: bundle exec thin start"
 end
-
-

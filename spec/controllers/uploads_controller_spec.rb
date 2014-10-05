@@ -15,20 +15,20 @@ describe UploadsController do
       let(:logo) do
         ActionDispatch::Http::UploadedFile.new({
           filename: 'logo.png',
-          tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
+          tempfile: file_from_fixtures("logo.png")
         })
       end
 
       let(:logo_dev) do
         ActionDispatch::Http::UploadedFile.new({
           filename: 'logo-dev.png',
-          tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo-dev.png")
+          tempfile: file_from_fixtures("logo-dev.png")
         })
       end
 
       let(:text_file) do
         ActionDispatch::Http::UploadedFile.new({
-          filename: 'LICENSE.txt',
+          filename: 'LICENSE.TXT',
           tempfile: File.new("#{Rails.root}/LICENSE.txt")
         })
       end
@@ -39,7 +39,7 @@ describe UploadsController do
 
         context 'when authorized' do
 
-          before { SiteSetting.stubs(:authorized_extensions).returns(".png|.txt") }
+          before { SiteSetting.stubs(:authorized_extensions).returns(".PNG|.txt") }
 
           it 'is successful with an image' do
             xhr :post, :create, file: logo
@@ -51,13 +51,21 @@ describe UploadsController do
             response.status.should eq 200
           end
 
+          it 'correctly sets retain_hours for admins' do
+            log_in :admin
+            xhr :post, :create, file: logo, retain_hours: 100
+            url = JSON.parse(response.body)["url"]
+            id = url.split("/")[3].to_i
+            Upload.find(id).retain_hours.should == 100
+          end
+
           context 'with a big file' do
 
             before { SiteSetting.stubs(:max_attachment_size_kb).returns(1) }
 
             it 'rejects the upload' do
               xhr :post, :create, file: text_file
-              response.status.should eq 413
+              response.status.should eq 422
             end
 
           end
@@ -70,7 +78,23 @@ describe UploadsController do
 
           it 'rejects the upload' do
             xhr :post, :create, file: text_file
-            response.status.should eq 415
+            response.status.should eq 422
+          end
+
+        end
+
+        context 'when everything is authorized' do
+
+          before { SiteSetting.stubs(:authorized_extensions).returns("*") }
+
+          it 'is successful with an image' do
+            xhr :post, :create, file: logo
+            response.status.should eq 200
+          end
+
+          it 'is successful with an attachment' do
+            xhr :post, :create, file: text_file
+            response.status.should eq 200
           end
 
         end
@@ -100,22 +124,39 @@ describe UploadsController do
     it "returns 404 when using external storage" do
       store = stub(internal?: false)
       Discourse.stubs(:store).returns(store)
-      Upload.expects(:where).never
+      Upload.expects(:find_by).never
       get :show, site: "default", id: 1, sha: "1234567890abcdef", extension: "pdf"
       response.response_code.should == 404
     end
 
     it "returns 404 when the upload doens't exist" do
-      Upload.expects(:where).with(id: 2, url: "/uploads/default/2/1234567890abcdef.pdf").returns [nil]
+      Upload.expects(:find_by).with(id: 2, url: "/uploads/default/2/1234567890abcdef.pdf").returns(nil)
+      Upload.expects(:find_by).with(sha1: "1234567890abcdef").returns(nil)
+
       get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
       response.response_code.should == 404
     end
 
     it 'uses send_file' do
-      Fabricate(:attachment)
+      upload = build(:upload)
+      Upload.expects(:find_by).with(id: 42, url: "/uploads/default/42/66b3ed1503efc936.zip").returns(upload)
+
       controller.stubs(:render)
       controller.expects(:send_file)
+
       get :show, site: "default", id: 42, sha: "66b3ed1503efc936", extension: "zip"
+    end
+
+    context "prevent anons from downloading files" do
+
+      before { SiteSetting.stubs(:prevent_anons_from_downloading_files).returns(true) }
+
+      it "returns 404 when an anonymous user tries to download a file" do
+        Upload.expects(:find_by).never
+        get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
+        response.response_code.should == 404
+      end
+
     end
 
   end

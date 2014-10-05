@@ -6,14 +6,10 @@ describe FileStore::LocalStore do
   let(:store) { FileStore::LocalStore.new }
 
   let(:upload) { build(:upload) }
-  let(:uploaded_file) do
-    ActionDispatch::Http::UploadedFile.new({
-      filename: 'logo.png',
-      tempfile: File.new("#{Rails.root}/spec/fixtures/images/logo.png")
-    })
-  end
+  let(:uploaded_file) { file_from_fixtures("logo.png") }
 
   let(:optimized_image) { build(:optimized_image) }
+
   let(:avatar) { build(:upload) }
 
   describe ".store_upload" do
@@ -32,15 +28,6 @@ describe FileStore::LocalStore do
     it "returns a relative url" do
       store.expects(:copy_file)
       store.store_optimized_image({}, optimized_image).should == "/uploads/default/_optimized/86f/7e4/37faa5a7fc_100x200.png"
-    end
-
-  end
-
-  describe ".store_avatar" do
-
-    it "returns a relative url" do
-      store.expects(:copy_file)
-      store.store_avatar({}, upload, 100).should == "/uploads/default/avatars/e9d/71f/5ee7c92d6d/100.jpg"
     end
 
   end
@@ -125,7 +112,7 @@ describe FileStore::LocalStore do
   describe ".avatar_template" do
 
     it "is present" do
-      store.avatar_template(avatar).should == "/uploads/default/avatars/e9d/71f/5ee7c92d6d/{size}.jpg"
+      store.avatar_template(avatar).should == "/uploads/default/avatars/e9d/71f/5ee7c92d6d/{size}.png"
     end
 
   end

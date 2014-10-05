@@ -1,0 +1,7 @@
+.fa.muted {
+  color: scale-color($primary, $lightness: 40%);
+}
+.fa.tracking, .fa.watching {
+  color: $tertiary;
+  font-weight: normal;
+}

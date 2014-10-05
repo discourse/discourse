@@ -19,7 +19,7 @@ class EmailLog < ActiveRecord::Base
   end
 
   def self.for(reply_key)
-    EmailLog.where(reply_key: reply_key).first
+    EmailLog.find_by(reply_key: reply_key)
   end
 
   def self.last_sent_email_address

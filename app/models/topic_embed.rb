@@ -24,7 +24,7 @@ class TopicEmbed < ActiveRecord::Base
 
     url = normalize_url(url)
 
-    embed = TopicEmbed.where("lower(embed_url) = ?", url).first
+    embed = TopicEmbed.find_by("lower(embed_url) = ?", url)
     content_sha1 = Digest::SHA1.hexdigest(contents)
     post = nil
 
@@ -49,7 +49,7 @@ class TopicEmbed < ActiveRecord::Base
       absolutize_urls(url, contents)
       post = embed.post
       # Update the topic if it changed
-      if content_sha1 != embed.content_sha1
+      if post && post.topic && content_sha1 != embed.content_sha1
         revisor = PostRevisor.new(post)
         revisor.revise!(user, absolutize_urls(url, contents), skip_validations: true, bypass_rate_limiter: true)
         embed.update_column(:content_sha1, content_sha1)
@@ -64,10 +64,16 @@ class TopicEmbed < ActiveRecord::Base
 
     url = normalize_url(url)
     original_uri = URI.parse(url)
-    doc = Readability::Document.new(open(url).read,
-                                        tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
-                                        attributes: %w[href src],
-                                        remove_empty_nodes: false)
+    opts = {
+      tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
+      attributes: %w[href src],
+      remove_empty_nodes: false
+    }
+
+    opts[:whitelist] = SiteSetting.embed_whitelist_selector if SiteSetting.embed_whitelist_selector.present?
+    opts[:blacklist] = SiteSetting.embed_blacklist_selector if SiteSetting.embed_blacklist_selector.present?
+
+    doc = Readability::Document.new(open(url).read, opts)
 
     tags = {'img' => 'src', 'script' => 'src', 'a' => 'href'}
     title = doc.title
@@ -76,11 +82,15 @@ class TopicEmbed < ActiveRecord::Base
       url_param = tags[node.name]
       src = node[url_param]
       unless (src.empty?)
-        uri = URI.parse(src)
-        unless uri.host
-          uri.scheme = original_uri.scheme
-          uri.host = original_uri.host
-          node[url_param] = uri.to_s
+        begin
+          uri = URI.parse(src)
+          unless uri.host
+            uri.scheme = original_uri.scheme
+            uri.host = original_uri.host
+            node[url_param] = uri.to_s
+          end
+        rescue URI::InvalidURIError
+          # If there is a mistyped URL, just do nothing
         end
       end
     end
@@ -141,7 +151,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.expanded_for(post)
     Rails.cache.fetch("embed-topic:#{post.topic_id}", expires_in: 10.minutes) do
       url = TopicEmbed.where(topic_id: post.topic_id).pluck(:embed_url).first
-      title, body = TopicEmbed.find_remote(url)
+      _title, body = TopicEmbed.find_remote(url)
       body << TopicEmbed.imported_from_html(url)
       body
     end
@@ -157,9 +167,9 @@ end
 #  topic_id     :integer          not null
 #  post_id      :integer          not null
 #  embed_url    :string(255)      not null
-#  content_sha1 :string(40)       not null
-#  created_at   :datetime
-#  updated_at   :datetime
+#  content_sha1 :string(40)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
 #
 # Indexes
 #

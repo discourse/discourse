@@ -6,13 +6,10 @@ class UserActivator
     @session = session
     @cookies = cookies
     @request = request
-    @settings = SiteSetting
-    @hub = DiscourseHub
     @message = nil
   end
 
   def start
-    register_username
   end
 
   def finish
@@ -26,7 +23,7 @@ class UserActivator
   end
 
   def factory
-    if @settings.must_approve_users?
+    if SiteSetting.must_approve_users?
       ApprovalActivator
     elsif !user.active?
       EmailActivator
@@ -35,11 +32,6 @@ class UserActivator
     end
   end
 
-  def register_username
-    if user.valid? && @settings.call_discourse_hub?
-      @hub.register_username(user.username, user.email)
-    end
-  end
 end
 
 class ApprovalActivator < UserActivator

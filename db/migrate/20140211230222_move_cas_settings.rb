@@ -2,8 +2,8 @@ class MoveCasSettings < ActiveRecord::Migration
   def change
     #As part of removing the build in CAS authentication we should
     #convert the data over to be used by the plugin.
-    cas_hostname = SiteSetting.where(name: 'cas_hostname').first
-    cas_sso_hostname = SiteSetting.where(name: 'cas_sso_hostname').first
+    cas_hostname = SiteSetting.find_by(name: "cas_hostname")
+    cas_sso_hostname = SiteSetting.find_by(name: "cas_sso_hostname")
     if cas_hostname  && ! cas_sso_hostname
       #convert the setting over for use by the plugin
       cas_hostname.update_attribute(:name, 'cas_sso_hostname')
@@ -13,8 +13,8 @@ class MoveCasSettings < ActiveRecord::Migration
       cas_hostname.destroy
     end
 
-    cas_domainname = SiteSetting.where(name: 'cas_domainname').first
-    cas_sso_email_domain = SiteSetting.where(name: 'cas_sso_email_domain').first
+    cas_domainname = SiteSetting.find_by(name: "cas_domainname")
+    cas_sso_email_domain = SiteSetting.find_by(name: "cas_sso_email_domain")
     if cas_domainname  && ! cas_sso_email_domain
       #convert the setting over for use by the plugin
       cas_domainname.update_attribute(:name, 'cas_sso_email_domain')
@@ -24,7 +24,7 @@ class MoveCasSettings < ActiveRecord::Migration
       cas_domainname.destroy
     end
 
-    cas_logins = SiteSetting.where(name: 'cas_logins').first
+    cas_logins = SiteSetting.find_by(name: "cas_logins")
     if cas_logins
       cas_logins.destroy
     end

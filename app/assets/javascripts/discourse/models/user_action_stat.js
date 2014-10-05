@@ -24,5 +24,3 @@ Discourse.UserActionStat = Discourse.Model.extend({
   }.property('action_type')
 
 });
-
-

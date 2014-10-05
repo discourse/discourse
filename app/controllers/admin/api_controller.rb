@@ -5,7 +5,7 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def regenerate_key
-    api_key = ApiKey.where(id: params[:id]).first
+    api_key = ApiKey.find_by(id: params[:id])
     raise Discourse::NotFound.new if api_key.blank?
 
     api_key.regenerate!(current_user)
@@ -13,7 +13,7 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def revoke_key
-    api_key = ApiKey.where(id: params[:id]).first
+    api_key = ApiKey.find_by(id: params[:id])
     raise Discourse::NotFound.new if api_key.blank?
 
     api_key.destroy

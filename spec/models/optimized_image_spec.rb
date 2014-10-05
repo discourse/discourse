@@ -2,10 +2,7 @@ require 'spec_helper'
 
 describe OptimizedImage do
 
-  it { should belong_to :upload }
-
   let(:upload) { build(:upload) }
-
   before { upload.id = 42 }
 
   describe ".create_for" do
@@ -15,19 +12,20 @@ describe OptimizedImage do
       let(:store) { FakeInternalStore.new }
       before { Discourse.stubs(:store).returns(store) }
 
-      context "when an error happened while generatign the thumbnail" do
-
-        before { ImageSorcery.any_instance.stubs(:convert).returns(false) }
+      context "when an error happened while generating the thumbnail" do
 
         it "returns nil" do
-          OptimizedImage.create_for(upload, 100, 200).should be_nil
+          OptimizedImage.expects(:resize).returns(false)
+          OptimizedImage.create_for(upload, 100, 200).should == nil
         end
 
       end
 
       context "when the thumbnail is properly generated" do
 
-        before { ImageSorcery.any_instance.stubs(:convert).returns(true) }
+        before do
+          OptimizedImage.expects(:resize).returns(true)
+        end
 
         it "does not download a copy of the original image" do
           store.expects(:download).never
@@ -42,10 +40,10 @@ describe OptimizedImage do
         it "works" do
           oi = OptimizedImage.create_for(upload, 100, 200)
           oi.sha1.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-          oi.extension.should == ".jpg"
+          oi.extension.should == ".png"
           oi.width.should == 100
           oi.height.should == 200
-          oi.url.should == "/internally/stored/optimized/image.jpg"
+          oi.url.should == "/internally/stored/optimized/image.png"
         end
 
       end
@@ -59,31 +57,32 @@ describe OptimizedImage do
 
       context "when an error happened while generatign the thumbnail" do
 
-        before { ImageSorcery.any_instance.stubs(:convert).returns(false) }
-
         it "returns nil" do
-          OptimizedImage.create_for(upload, 100, 200).should be_nil
+          OptimizedImage.expects(:resize).returns(false)
+          OptimizedImage.create_for(upload, 100, 200).should == nil
         end
 
       end
 
       context "when the thumbnail is properly generated" do
 
-        before { ImageSorcery.any_instance.stubs(:convert).returns(true) }
+        before do
+          OptimizedImage.expects(:resize).returns(true)
+        end
 
         it "downloads a copy of the original image" do
           Tempfile.any_instance.expects(:close!).twice
-          store.expects(:download).with(upload).returns(Tempfile.new(["discourse-external", ".jpg"]))
+          store.expects(:download).with(upload).returns(Tempfile.new(["discourse-external", ".png"]))
           OptimizedImage.create_for(upload, 100, 200)
         end
 
         it "works" do
           oi = OptimizedImage.create_for(upload, 100, 200)
           oi.sha1.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-          oi.extension.should == ".jpg"
+          oi.extension.should == ".png"
           oi.width.should == 100
           oi.height.should == 200
-          oi.url.should == "/externally/stored/optimized/image.jpg"
+          oi.url.should == "/externally/stored/optimized/image.png"
         end
 
       end

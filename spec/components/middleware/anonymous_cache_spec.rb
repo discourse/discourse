@@ -13,15 +13,15 @@ describe Middleware::AnonymousCache::Helper do
 
   context "cachable?" do
     it "true by default" do
-      new_helper.cacheable?.should be_true
+      new_helper.cacheable?.should == true
     end
 
     it "is false for non GET" do
-      new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?.should be_false
+      new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?.should == false
     end
 
     it "is false if it has an auth cookie" do
-      new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1"*32}; jill=2").cacheable?.should be_false
+      new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1"*32}; jill=2").cacheable?.should == false
     end
   end
 
@@ -30,15 +30,27 @@ describe Middleware::AnonymousCache::Helper do
       new_helper("ANON_CACHE_DURATION" => 10)
     end
 
+    let!(:crawler) do
+      new_helper("ANON_CACHE_DURATION" => 10, "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)")
+    end
+
     after do
       helper.clear_cache
+      crawler.clear_cache
     end
 
     it "returns cached data for cached requests" do
       helper.is_mobile = true
-      helper.cached.should be_nil
-      helper.cache([200, {"HELLO" => "WORLD"}, ["hello ", "world"]])
-      helper.cached.should == [200, {"HELLO" => "WORLD"}, ["hello world"]]
+      helper.cached.should == nil
+      helper.cache([200, {"HELLO" => "WORLD"}, ["hello ", "my world"]])
+
+      helper = new_helper("ANON_CACHE_DURATION" => 10)
+      helper.is_mobile = true
+      helper.cached.should == [200, {"HELLO" => "WORLD"}, ["hello my world"]]
+
+      crawler.cached.should == nil
+      crawler.cache([200, {"HELLO" => "WORLD"}, ["hello ", "world"]])
+      crawler.cached.should == [200, {"HELLO" => "WORLD"}, ["hello world"]]
     end
   end
 

@@ -1,5 +1,7 @@
 task 'assets:precompile:before' do
 
+  require 'uglifier'
+
   unless %w{profile production}.include? Rails.env
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
   end
@@ -16,44 +18,36 @@ task 'assets:precompile:before' do
   # let's make precompile faster using redis magic
   require 'sprockets'
   require 'digest/sha1'
-  require_dependency 'discourse_sass_importer'
-
-  Sprockets::SassImporter = DiscourseSassImporter
 
   module ::Sprockets
+
+    def self.redis
+      @redis ||=
+        (
+          redis_url = GlobalSetting.asset_redis_url
+          if redis_url.present?
+            uri = URI.parse(redis_url)
+            options = {}
+            options[:password] = uri.password if uri.password.present?
+            options[:host] = uri.host
+            options[:port] = uri.port || 6379
+            Redis.new(options)
+          else
+            DiscourseRedis.raw_connection
+          end
+        )
+    end
 
     def self.cache_compiled(type, data)
       digest = Digest::SHA1.hexdigest(data)
       key = "SPROCKETS_#{type}_#{digest}"
-      if compiled = $redis.get(key)
-        $redis.expire(key, 1.week)
+      if compiled = redis.get(key)
+        redis.expire(key, 1.week)
       else
         compiled = yield
-        $redis.setex(key, 1.week, compiled)
+        redis.setex(key, 1.week, compiled)
       end
       compiled
-    end
-
-    class SassCompressor
-      def evaluate(context, locals, &block)
-        ::Sprockets.cache_compiled("sass", data) do
-           # HACK, SASS compiler will degrade to aweful perf with huge files
-           # Bypass if larger than 500kb, ensure assets are minified prior
-           if context.pathname &&
-              context.pathname.to_s =~ /.css$/ &&
-              data.length > 500.kilobytes
-             puts "Skipped minifying #{context.pathname} cause it is larger than 200KB, minify in source control or avoid large CSS files"
-             data
-           else
-             ::Sass::Engine.new(data, {
-                :syntax => :scss,
-                :cache => false,
-                :read_cache => false,
-                :style => :compressed
-              }).render
-           end
-        end
-      end
     end
 
     class UglifierCompressor
@@ -69,5 +63,20 @@ task 'assets:precompile:before' do
 
 end
 
-task 'assets:precompile' => 'assets:precompile:before'
+task 'assets:precompile:css' => 'environment' do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    # Heroku precompiles assets before db migration, so tables may not exist.
+    # css will get precompiled during first request instead in that case.
+    if ActiveRecord::Base.connection.table_exists?(ColorScheme.table_name)
+      puts "Compiling css for #{db}"
+      [:desktop, :mobile].each do |target|
+        puts DiscourseStylesheets.compile(target, force: true)
+      end
+    end
+  end
+end
 
+task 'assets:precompile' => 'assets:precompile:before' do
+  # Run after assets:precompile
+  Rake::Task["assets:precompile:css"].invoke
+end

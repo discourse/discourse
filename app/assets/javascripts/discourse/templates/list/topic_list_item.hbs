@@ -1,0 +1,42 @@
+{{#if bulkSelectEnabled}}
+  <td class='star'>
+    {{input type="checkbox" checked=checked}}
+  </td>
+{{else}}
+  {{#if canStar}}
+    <td class='star'>
+      <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="starTooltip"}}></a>
+    </td>
+  {{/if}}
+{{/if}}
+
+<td class='main-link clearfix' {{bind-attr colspan="titleColSpan"}}>
+  {{topic-status topic=this.model}}
+  {{topic-link this}}
+  {{#if showTopicPostBadges}}
+    {{topic-post-badges unread=unread newPosts=displayNewPosts unseen=unseen url=lastUnreadUrl}}
+  {{/if}}
+
+  {{#if hasExcerpt}}
+    <div class="topic-excerpt">
+      {{{excerpt}}}
+      {{#if excerptTruncated}}
+        {{#unless canClearPin}}<a href="{{url}}">{{i18n read_more}}</a>{{/unless}}
+      {{/if}}
+      {{#if canClearPin}}
+        <a href="#" {{action "clearPin" this}} title="{{i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
+      {{/if}}
+    </div>
+  {{/if}}
+</td>
+
+{{#unless hideCategory}}
+<td class='category'>{{bound-category-link category showParent=true}}</td>
+{{/unless}}
+
+{{view 'posters-column' posters=posters}}
+
+{{posts-count-column topic=model class="num" action="showTopicEntrance"}}
+<td {{bind-attr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
+
+{{activity-column topic=model class="num"}}

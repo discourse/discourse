@@ -1,8 +1,32 @@
 class UserBadgesController < ApplicationController
   def index
-    params.require(:username)
+    params.permit [:granted_before, :offset]
+
+    badge = fetch_badge_from_params
+    user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(96)
+    user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic)
+
+    if offset = params[:offset]
+      user_badges = user_badges.offset(offset.to_i)
+    end
+
+    render_serialized(user_badges, UserBadgeSerializer, root: "user_badges")
+  end
+
+  def username
+    params.permit [:grouped]
+
     user = fetch_user_from_params
-    render_serialized(user.user_badges, UserBadgeSerializer, root: "user_badges")
+    user_badges = user.user_badges
+
+    if params[:grouped]
+      user_badges = user_badges.group(:badge_id)
+                               .select(UserBadge.attribute_names.map {|x| "MAX(#{x}) as #{x}" }, 'COUNT(*) as count')
+    end
+
+    user_badges = user_badges.includes(badge: [:badge_grouping, :badge_type])
+
+    render_serialized(user_badges, BasicUserBadgeSerializer, root: "user_badges")
   end
 
   def create
@@ -42,9 +66,9 @@ class UserBadgesController < ApplicationController
       params.permit(:badge_name)
       if params[:badge_name].nil?
         params.require(:badge_id)
-        badge = Badge.where(id: params[:badge_id]).first
+        badge = Badge.find_by(id: params[:badge_id], enabled: true)
       else
-        badge = Badge.where(name: params[:badge_name]).first
+        badge = Badge.find_by(name: params[:badge_name], enabled: true)
       end
       raise Discourse::NotFound.new if badge.blank?
 

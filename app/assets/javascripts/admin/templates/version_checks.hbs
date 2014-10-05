@@ -1,0 +1,75 @@
+
+    <div {{bind-attr class=":dashboard-stats :version-check versionCheck.critical_updates:critical:normal"}}>
+      <table class="table table-condensed table-hover">
+        <thead>
+          {{custom-html 'upgrade-header'}}
+          <tr>
+            <th>&nbsp;</th>
+            <th>{{i18n admin.dashboard.installed_version}}</th>
+            <th>{{i18n admin.dashboard.latest_version}}</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        {{#unless loading}}
+          <tbody>
+            <td class="title">{{i18n admin.dashboard.version}}</td>
+            <td class="version-number"><a {{bind-attr href="versionCheck.gitLink"}} target="_blank">{{ versionCheck.installed_version }}</a></td>
+
+            {{#if versionCheck.noCheckPerformed}}
+              <td class="version-number">&nbsp;</td>
+              <td class="face">
+                <span class="icon critical-updates-available">☹</span>
+              </td>
+              <td class="version-notes">
+                <span class="normal-note">{{i18n admin.dashboard.no_check_performed}}</span>
+              </td>
+            {{else}}
+              {{#if versionCheck.staleData}}
+                <td class="version-number">{{#if versionCheck.version_check_pending}}{{ versionCheck.installed_version }}{{/if}}</td>
+                <td class="face">
+                  {{#if versionCheck.version_check_pending}}
+                    <span class='icon up-to-date'>☻</span>
+                  {{else}}
+                    <span class="icon critical-updates-available">☹</span>
+                  {{/if}}
+                </td>
+                <td class="version-notes">
+                  <span class="normal-note">
+                    {{#if versionCheck.version_check_pending}}
+                      {{i18n admin.dashboard.version_check_pending}}
+                    {{else}}
+                      {{i18n admin.dashboard.stale_data}}
+                    {{/if}}
+                  </span>
+                </td>
+              {{else}}
+                <td class="version-number">{{ versionCheck.latest_version }}</td>
+                <td class="face">
+                  {{#if versionCheck.upToDate }}
+                    <span class='icon up-to-date'>☻</span>
+                  {{else}}
+                    <span {{bind-attr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
+                      {{#if versionCheck.behindByOneVersion}}
+                        ☺
+                      {{else}}
+                        ☹
+                      {{/if}}
+                    </span>
+                  {{/if}}
+                </td>
+                <td class="version-notes">
+                  {{#if versionCheck.upToDate }}
+                    {{i18n admin.dashboard.up_to_date}}
+                  {{else}}
+                    <span class="critical-note">{{i18n admin.dashboard.critical_available}}</span>
+                    <span class="normal-note">{{i18n admin.dashboard.updates_available}}</span>
+                    {{i18n admin.dashboard.please_upgrade}}
+                  {{/if}}
+                </td>
+              {{/if}}
+            {{/if}}
+          </tbody>
+        {{/unless}}
+      </table>
+    </div>

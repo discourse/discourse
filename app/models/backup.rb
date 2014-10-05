@@ -1,3 +1,5 @@
+require "s3_helper"
+
 class Backup
   include UrlHelper
   include ActiveModel::SerializerSupport
@@ -10,8 +12,10 @@ class Backup
   end
 
   def self.all
-    backups = Dir.glob(File.join(Backup.base_directory, "*.tar.gz"))
-    backups.sort.reverse.map { |backup| Backup.create_from_filename(File.basename(backup)) }
+    Dir.glob(File.join(Backup.base_directory, "*.tar.gz"))
+       .sort_by { |file| File.mtime(file) }
+       .reverse
+       .map { |backup| Backup.create_from_filename(File.basename(backup)) }
   end
 
   def self.[](filename)
@@ -36,18 +40,31 @@ class Backup
     remove_from_s3 if SiteSetting.enable_s3_backups?
   end
 
+  def s3_bucket
+    return @s3_bucket if @s3_bucket
+    raise Discourse::SiteSettingMissing.new("s3_backup_bucket") if SiteSetting.s3_backup_bucket.blank?
+    @s3_bucket = SiteSetting.s3_backup_bucket.downcase
+  end
+
+  def s3
+    return @s3_helper if @s3_helper
+    @s3_helper = S3Helper.new(s3_bucket)
+  end
+
   def upload_to_s3
-    return unless fog_directory
-    fog_directory.files.create(key: @filename, public: false, body: File.read(@path))
+    return unless s3
+    File.open(@path) do |file|
+      s3.upload(file, @filename)
+    end
   end
 
   def remove_from_s3
-    return unless fog
-    fog.delete_object(SiteSetting.s3_backup_bucket, @filename)
+    return unless s3
+    s3.remove(@filename)
   end
 
   def self.base_directory
-    @base_directory ||= File.join(Rails.root, "public", "backups", RailsMultisite::ConnectionManagement.current_db)
+    File.join(Rails.root, "public", "backups", RailsMultisite::ConnectionManagement.current_db)
   end
 
   def self.chunk_path(identifier, filename, chunk_number)
@@ -63,28 +80,10 @@ class Backup
   end
 
   def self.remove_old
+    return if Rails.env.development?
     all_backups = Backup.all
-    return unless all_backups.size > SiteSetting.maximum_backups
-    all_backups[SiteSetting.maximum_backups..-1].each {|b| b.remove}
+    return if all_backups.size <= SiteSetting.maximum_backups
+    all_backups[SiteSetting.maximum_backups..-1].each(&:remove)
   end
-
-  private
-
-    def fog
-      return @fog if @fog
-      return unless SiteSetting.s3_access_key_id.present? &&
-                    SiteSetting.s3_secret_access_key.present? &&
-                    SiteSetting.s3_backup_bucket.present?
-      require 'fog'
-      @fog = Fog::Storage.new(provider: 'AWS',
-                              aws_access_key_id: SiteSetting.s3_access_key_id,
-                              aws_secret_access_key: SiteSetting.s3_secret_access_key)
-    end
-
-    def fog_directory
-      return @fog_directory if @fog_directory
-      return unless fog
-      @fog_directory ||= fog.directories.get(SiteSetting.s3_backup_bucket)
-    end
 
 end

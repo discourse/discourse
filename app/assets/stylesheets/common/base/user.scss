@@ -1,0 +1,66 @@
+
+// styling of bottom section
+.user-stream .child-actions {
+  margin-top: 8px;
+  .avatar-link {
+    float: none;
+  }
+  .fa {
+    width: 15px;
+    display: inline-block;
+    color: $primary;
+  }
+  .avatar-link {
+    margin-right: 3px;
+  }
+}
+
+.end-of-stream {
+  border: 3px solid $primary;
+  width: 100%;
+}
+
+.user-navigation {
+
+    .map {
+    height: 50px;
+  }
+  .avatar {
+    float: left;
+    width: 45px;
+  }
+  nav.buttons {
+    width: 180px;
+    padding: 0;
+    .btn {
+      width: 100%;
+      margin-bottom: 5px;
+      @include box-sizing(border-box);
+    }
+  }
+  h2 {
+    a {
+      font-size: 14px;
+      color: scale-color($tertiary, $lightness: -10%);;
+      cursor: pointer;
+    }
+  }
+
+
+}
+
+.avatar-selector {
+  label {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  #avatar-input {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+  .avatar {
+    margin: 5px 10px 5px 0;
+  }
+}
+

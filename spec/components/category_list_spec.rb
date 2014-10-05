@@ -9,8 +9,6 @@ describe CategoryList do
 
   context "security" do
     it "properly hide secure categories" do
-      user = Fabricate(:user)
-
       cat = Fabricate(:category)
       Fabricate(:topic, category: cat)
       cat.set_permissions(:admins => :full)
@@ -20,6 +18,32 @@ describe CategoryList do
       CategoryList.new(Guardian.new admin).categories.count.should == 2
       CategoryList.new(Guardian.new user).categories.count.should == 0
       CategoryList.new(Guardian.new nil).categories.count.should == 0
+    end
+
+    it "doesn't show topics that you can't view" do
+      public_cat = Fabricate(:category) # public category
+      Fabricate(:topic, category: public_cat)
+
+      private_cat = Fabricate(:category) # private category
+      Fabricate(:topic, category: private_cat)
+      private_cat.set_permissions(admins: :full)
+      private_cat.save
+
+      secret_subcat = Fabricate(:category, parent_category_id: public_cat.id) # private subcategory
+      Fabricate(:topic, category: secret_subcat)
+      secret_subcat.set_permissions(admins: :full)
+      secret_subcat.save
+
+      CategoryFeaturedTopic.feature_topics
+
+      CategoryList.new(Guardian.new(admin)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count.should == 2
+      CategoryList.new(Guardian.new(admin)).categories.find { |x| x.name == private_cat.name }.displayable_topics.count.should == 1
+
+      CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count.should == 1
+      CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == private_cat.name }.should == nil
+
+      CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count.should == 1
+      CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == private_cat.name }.should == nil
     end
   end
 
@@ -74,7 +98,7 @@ describe CategoryList do
       end
 
       it "should contain our topic" do
-        category.featured_topics.include?(topic).should be_true
+        category.featured_topics.include?(topic).should == true
       end
     end
 
@@ -89,29 +113,41 @@ describe CategoryList do
       uncategorized.save
     end
 
-    it "returns topics in specified order" do
-      cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
-      category_ids.should == [cat2.id, cat1.id]
+    context 'fixed_category_positions is enabled' do
+      before do
+        SiteSetting.stubs(:fixed_category_positions).returns(true)
+      end
+
+      it "returns categories in specified order" do
+        cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
+        category_ids.should == [cat2.id, cat1.id]
+      end
+
+      it "handles duplicate position values" do
+        cat1, cat2, cat3, cat4 = Fabricate(:category, position: 0), Fabricate(:category, position: 0), Fabricate(:category, position: nil), Fabricate(:category, position: 0)
+        first_three = category_ids[0,3] # The order is not deterministic
+        first_three.should include(cat1.id)
+        first_three.should include(cat2.id)
+        first_three.should include(cat4.id)
+        category_ids[-1].should == cat3.id
+      end
     end
 
-    it "returns default order categories" do
-      cat1, cat2 = Fabricate(:category, position: nil), Fabricate(:category, position: nil)
-      category_ids.should include(cat1.id)
-      category_ids.should include(cat2.id)
-    end
+    context 'fixed_category_positions is disabled' do
+      before do
+        SiteSetting.stubs(:fixed_category_positions).returns(false)
+      end
 
-    it "default always at the end" do
-      cat1, cat2, cat3 = Fabricate(:category, position: 0), Fabricate(:category, position: 2), Fabricate(:category, position: nil)
-      category_ids.should == [cat1.id, cat2.id, cat3.id]
-    end
+      it "returns categories in order of activity" do
+        cat1 = Fabricate(:category, position: 0, posts_week: 1, posts_month: 1, posts_year: 1)
+        cat2 = Fabricate(:category, position: 1, posts_week: 2, posts_month: 1, posts_year: 1)
+        category_ids.should == [cat2.id, cat1.id]
+      end
 
-    it "handles duplicate position values" do
-      cat1, cat2, cat3, cat4 = Fabricate(:category, position: 0), Fabricate(:category, position: 0), Fabricate(:category, position: nil), Fabricate(:category, position: 0)
-      first_three = category_ids[0,3] # The order is not deterministic
-      first_three.should include(cat1.id)
-      first_three.should include(cat2.id)
-      first_three.should include(cat4.id)
-      category_ids[-1].should == cat3.id
+      it "returns categories in order of id when there's no activity" do
+        cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
+        category_ids.should == [cat1.id, cat2.id]
+      end
     end
   end
 

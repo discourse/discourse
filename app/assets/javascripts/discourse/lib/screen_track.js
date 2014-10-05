@@ -16,7 +16,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
     this.reset();
   },
 
-  start: function(topicId) {
+  start: function(topicId, topicController) {
     var currentTopicId = this.get('topicId');
     if (currentTopicId && (currentTopicId !== topicId)) {
       this.tick();
@@ -31,9 +31,12 @@ Discourse.ScreenTrack = Ember.Object.extend({
       this.set('interval', setInterval(function () {
         self.tick();
       }, 1000));
+
+      $(window).on('scroll.screentrack', function(){self.scrolled()});
     }
 
     this.set('topicId', topicId);
+    this.set('topicController', topicController);
   },
 
   stop: function() {
@@ -41,11 +44,12 @@ Discourse.ScreenTrack = Ember.Object.extend({
       // already stopped no need to "extra stop"
       return;
     }
-
+    $(window).off('scroll.screentrack');
     this.tick();
     this.flush();
     this.reset();
     this.set('topicId', null);
+    this.set('topicController', null);
     if (this.get('interval')) {
       clearInterval(this.get('interval'));
       this.set('interval', null);
@@ -87,7 +91,8 @@ Discourse.ScreenTrack = Ember.Object.extend({
     if (!Discourse.User.current()) return;
 
     var newTimings = {},
-        totalTimings = this.get('totalTimings');
+        totalTimings = this.get('totalTimings'),
+        self = this;
 
     _.each(this.get('timings'), function(timing) {
       if (!totalTimings[timing.postNumber])
@@ -126,6 +131,14 @@ Discourse.ScreenTrack = Ember.Object.extend({
         headers: {
           'X-SILENCE-LOGGER': 'true'
         }
+      }).then(function(){
+        var controller = self.get('topicController');
+        if(controller){
+          var postNumbers = Object.keys(newTimings).map(function(v){
+            return parseInt(v,10);
+          });
+          controller.readPosts(topicId, postNumbers);
+        }
       });
 
       this.set('topicTime', 0);
@@ -138,14 +151,22 @@ Discourse.ScreenTrack = Ember.Object.extend({
     // If the user hasn't scrolled the browser in a long time, stop tracking time read
     var sinceScrolled = new Date().getTime() - this.get('lastScrolled');
     if (sinceScrolled > PAUSE_UNLESS_SCROLLED) {
-      this.reset();
       return;
     }
 
     var diff = new Date().getTime() - this.get('lastTick');
     this.set('lastFlush', this.get('lastFlush') + diff);
     this.set('lastTick', new Date().getTime());
-    if (this.get('lastFlush') > (Discourse.SiteSettings.flush_timings_secs * 1000)) {
+
+    var totalTimings = this.get('totalTimings'), timings = this.get('timings');
+    var nextFlush = Discourse.SiteSettings.flush_timings_secs * 1000;
+
+    // rush new post numbers
+    var rush = _.any(_.filter(timings, function(t){return t.time>0;}), function(t){
+      return !totalTimings[t.postNumber];
+    });
+
+    if (this.get('lastFlush') > nextFlush || rush) {
       this.flush();
     }
 

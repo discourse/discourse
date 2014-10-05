@@ -10,9 +10,10 @@ end
 #
 #  category_id :integer          not null, primary key
 #  search_data :tsvector
+#  raw_data    :text
+#  locale      :text
 #
 # Indexes
 #
 #  idx_search_category  (search_data)
 #
-

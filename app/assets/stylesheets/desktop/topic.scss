@@ -1,15 +1,3 @@
-.post-info a {
-  color: lighten($primary_text_color, 50%);
-  padding-right: 5px;
-}
-
-.topic-meta-data-inside {
-  float: right;
-  margin-top: -22px;
-  float: right;
-  font-size: 12px;
-}
-
 .post-actions {
   @include unselectable;
   clear: both;
@@ -25,29 +13,26 @@
   margin-top: 20px;
 }
 
-.post-info  {
-  display: inline-block;
-}
-
 .edits {margin-right: 5px;}
 
 #topic-title {
   z-index: 1000;
-  padding: 14px 0 8px 0;
-  margin-bottom: 20px;
+  padding-top: 14px;
+  margin-bottom: 10px;
   .star {
     font-size: 20px;
-    margin-top: 8px;
+    margin-top: 6px;
     margin-right: 6px;
+    margin-bottom: 30px; // this allows the categories to align underneath title
   }
   #edit-title { width: 500px; }
   .category-combobox {
     width: 250px;
-    .chzn-drop {
+    .select2-drop {
       left: -9000px;
       width: 248px;
     }
-    .chzn-search input {
+    .select2-search input {
       width: 198px;
     }
   }
@@ -56,22 +41,76 @@
     margin: 0;
     line-height: 1.2em;
     overflow: hidden;
-    a.badge-category { vertical-align: top; margin-top: 4px; }
-    a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
+    a {color: $primary;}
+    a.badge-category {
+      float: left;
+      vertical-align: top;
+      margin-top: 2px;
+      margin-right: 5px;
+      }
+    a.edit-topic { font-size: 17px; position: absolute; margin-left: 8px; }
+  }
+  .title-category-wrapper {
+    margin-top: 5px;
   }
   .topic-statuses {
     margin-top: -2px;
-    .fa-thumb-tack { margin-top: -1px; }
   }
-  .chzn-container { vertical-align: middle; }
+  .select2-container {
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-bottom: 2px;
+  }
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: lighten($primary_text_color, 60%); }
+.private-message-glyph {
+  color: scale-color($primary, $lightness: 75%);
+  float: left;
+  margin: 0 5px 0 0;
+}
 .private_message #topic-title .private-message-glyph { display: inline; }
 
+a.reply-new {
+  margin-top: 3px;
+  color: scale-color($primary, $lightness: 50%);
+  i {
+    margin-right: 3px;
+    background: $secondary;
+    padding: 1.5px 3px;
+    border-radius: 20px;
+    transition: linear 0.15s;
+    -webkit-transition: linear 0.15s;
+    margin-left: -20px;
+  }
+}
+
+a:hover.reply-new {
+  color: $tertiary;
+  i {
+    background: dark-light-diff($tertiary, $secondary, 90%, -65%);
+  }
+}
+
+.topic-error {
+  padding: 18px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 24px;
+  text-align: center;
+  line-height: 1.1em;
+
+  .topic-retry {
+    display: block;
+    margin-top: 28px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 #topic-closing-info {
-  border-top: 1px solid $primary_border_color;
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding-top: 10px;
   height: 20px;
 }
@@ -83,30 +122,49 @@
   bottom: 0;
   z-index: 500;
   outline: 1px solid transparent;
-}
-
-.reply-new {
-  i {
-    font-size: 12px;
-    margin-right: 5px;
-    background: $primary_background_color;
-    border: 1px solid $primary_border_color;
-    padding: 2px 4px;
-    border-radius: 20px;
-    transition: linear 0.15s;
-    -webkit-transition: linear 0.15s;
+  &.docked {
+    position: absolute;
+    bottom: -70px;
   }
 }
 
-a.reply-new {
-  position: absolute;
-  color: lighten($primary_text_color, 35%);
-  margin-top: -2px;}
-a:hover.reply-new {
-  color: $link-color;
-  i {background: $emphasis_background_color;
-    border: 1px solid $emphasis_border_color;
-    padding: 2px 4px;
+#topic-progress-expanded {
+  border: 1px solid scale-color-diff();
+  padding: 5px;
+  background: $secondary;
+  @include box-shadow(0 0px 2px rgba(0,0,0, .2));
+
+  position: relative;
+  left: 345px;
+  width: 133px;
+  padding: 5px;
+
+  button.full {
+    width: 100%;
+    margin-bottom: 5px;
+    i {
+      display: block;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      font-size: 18px;
+    }
+  }
+  .jump-form {
+    input[type="text"] {
+      float: left;
+      width: 45px;
+      height: 20px;
+      text-align: center;
+      margin-bottom: 0;
+      font-size: 16px;
+    }
+    button.btn {
+      float: right;
+      width: 55px;
+    }
+  }
+  button.btn.jump-bottom {
+    margin: 5px 0 0 0;
   }
 }
 
@@ -117,11 +175,17 @@ a:hover.reply-new {
     display: none;
   }
   border: none;
-  background-color: lighten($primary_text_color, 70%);
-  color: lighten($primary_text_color, 35%);
-  width: 130px;
+  background-color: scale-color-diff();
+  color: scale-color($primary, $lightness: 50%);
+  width: 145px;
   height: 34px;
 
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
+
+  &:hover {
+    cursor: pointer;
+  }
   .nums {
     position: relative;
     top: 9px;
@@ -129,32 +193,11 @@ a:hover.reply-new {
     text-align: center;
     z-index: 1;
   }
-  button {
-    padding: 3px 1px 0 0;
-    cursor: pointer;
-    z-index: 1000;
+  i.fa {
     position: absolute;
-    top: 2px;
-    left: 4px;
-    border: 0;
-    background: none;
-    color: lighten($primary_text_color, 35%);
-    width: 50%;
-    text-align: left;
-    height: 30px;
-    margin: 0;
-    i {
-      font-size: 18px;
-    }
-    &:nth-of-type(2) {
-      right: 4px;
-      left: auto;
-      text-align: right;
-    }
-    &:disabled {
-    cursor: default;
-    color: lighten($primary_text_color, 35%);
-    }
+    right: 8px;
+    bottom: 9px;
+    z-index: 1;
   }
   h4 {
     display: inline;
@@ -166,24 +209,9 @@ a:hover.reply-new {
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid  $primary_border_color;
-    // background-color: #d4eaf4;
-    // background-color: #C5E8F7;
-    background-color: $success_background_color;
+    border-right: 1px solid  scale-color-diff();
+    background-color:  dark-light-diff($success, $secondary, 60%, -35%);
     transition: width .75s;
-  }
-}
-
-#topic-progress-wrapper.docked {
-  position: absolute;
-  bottom: -70px;
-
-}
-
-.topic-statuses .topic-status {
-  padding: 0;
-  i {
-    font-size:20px;
   }
 }
 
@@ -194,14 +222,21 @@ a:hover.reply-new {
   }
 }
 
-.heatmap-high {color: $heatmap-high !important;}
-.heatmap-med {color: $heatmap-med !important;}
-.heatmap-low {color: $heatmap-low !important;}
+#suggested-topics .topics {
+  padding-bottom: 15px;
+}
+
+.heatmap-high {color: #fe7a15 !important;}
+.heatmap-med {color: #cf7721 !important;}
+.heatmap-low {color: #9b764f !important;}
+.heatmap-high a {color: #fe7a15 !important;}
+.heatmap-med a {color: #cf7721 !important;}
+.heatmap-low a {color: #9b764f !important;}
 
 
 
 #topic-filter {
-  background-color: $highlight_background_color;
+  background-color: scale-color($highlight, $lightness: 25%);
   padding: 8px;
   bottom: 0;
   position: fixed;
@@ -210,52 +245,20 @@ a:hover.reply-new {
   z-index: 495
 }
 
-/* Code, KBD, Sub/sup formatting */
+@media all
+and (max-width : 940px) {
 
-code,kbd,pre,samp{
-  font-family:monospace, serif; font-size:1em;
-}
-pre {
-  code {
-  white-space:pre-wrap;
-  display: block;
-  padding: 5px 10px;
-  color: $primary_text_color;
-  background: lighten($secondary_background_color, 76%);
-  max-height: 500px;
-  }
-}
-q{ quotes:"\201C" "\201D" "\2018" "\2019"; }
-small{ font-size:80%; }
-sub,sup{
-  font-size:75%;
-  line-height:0;
-  position:relative;
-  vertical-align:baseline;
-}
-sup{top:-0.5em; }
-sub{bottom:-0.25em; }
-figure{margin:0; }
-fieldset{
-  border:1px solid $primary_border_color;
-  margin:0 2px;
-  padding:0.35em 0.625em 0.75em;
-}
-legend{
-  border:0;
-  padding:0;
+  #topic-progress, #topic-progress-expanded {
+    left: 295px;
+    }
 }
 
-kbd
-{
-    background-color: $primary_background_color;
-    border:1px solid $primary_border_color;
-    border-radius: 3px;
-    box-shadow: 0 1px 0 rgba($primary_shadow_color, .9);
-    color: $primary_text_color;
-    display: inline-block;
-    font-size: 12px;
-    line-height: 1.4;
-    margin: 0 .1em;
-    padding: .1em .6em;
+
+@media all
+and (max-width : 870px) {
+
+  #topic-progress, #topic-progress-expanded {
+    left: 210px;
+    }
+
 }

@@ -11,43 +11,37 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
   setupController: function(controller, params) {
     params = params || {};
     params.track_visit = true;
-
     var topic = this.modelFor('topic'),
-        postStream = topic.get('postStream'),
-        queryParams = Discourse.URL.get('queryParams');
-
-    if (queryParams) {
-      // Set summary on the postStream if present
-      postStream.set('summary', Em.get(queryParams, 'filter') === 'summary');
-
-      // Set any username filters on the postStream
-      var userFilters = Em.get(queryParams, 'username_filters') || Em.get(queryParams, 'username_filters[]');
-      if (userFilters) {
-        if (typeof userFilters === "string") { userFilters = [userFilters]; }
-        userFilters.forEach(function (username) {
-          postStream.get('userFilters').add(username);
-        });
-      }
-    }
+        postStream = topic.get('postStream');
 
     var topicController = this.controllerFor('topic'),
+        topicProgressController = this.controllerFor('topic-progress'),
         composerController = this.controllerFor('composer');
 
     // I sincerely hope no topic gets this many posts
     if (params.nearPost === "last") { params.nearPost = 999999999; }
 
     postStream.refresh(params).then(function () {
+
+      // TODO we are seeing errors where closest post is null and this is exploding
+      // we need better handling and logging for this condition.
+
       // The post we requested might not exist. Let's find the closest post
-      var closest = postStream.closestPostNumberFor(params.nearPost) || 1;
+      var closestPost = postStream.closestPostForPostNumber(params.nearPost || 1),
+          closest = closestPost.get('post_number'),
+          progress = postStream.progressIndexOfPost(closestPost);
 
       topicController.setProperties({
         currentPost: closest,
-        progressPosition: closest,
         enteredAt: new Date().getTime().toString(),
         highlightOnInsert: closest
       });
 
-      Discourse.TopicView.jumpToPost(closest);
+      topicProgressController.setProperties({
+        progressPosition: progress,
+        expanded: false
+      });
+      Discourse.URL.jumpToPost(closest);
 
       if (topic.present('draft')) {
         composerController.open({

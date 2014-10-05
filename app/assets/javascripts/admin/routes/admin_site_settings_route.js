@@ -22,6 +22,6 @@ Discourse.AdminSiteSettingsRoute = Discourse.Route.extend({
 **/
 Discourse.AdminSiteSettingsIndexRoute = Discourse.Route.extend({
   model: function() {
-    this.transitionTo('adminSiteSettingsCategory', this.modelFor('adminSiteSettings')[0].nameKey);
+    this.replaceWith('adminSiteSettingsCategory', this.modelFor('adminSiteSettings')[0].nameKey);
   }
 });

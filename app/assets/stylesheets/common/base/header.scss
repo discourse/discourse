@@ -1,0 +1,343 @@
+.d-header {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 1001;
+    background-color: $header_background;
+    box-shadow: 0 2px 4px -2px rgba(0,0,0, .25);
+
+    .docked & {
+      position: fixed;
+
+    }
+
+    .contents {
+      margin: 10px 0;
+    }
+
+    .title {
+      display: table;
+      float: left;
+      height: 40px;
+      > a {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+
+    #site-logo {
+      max-height: 40px;
+    }
+
+    .fa-home {
+      font-size: 23px;
+    }
+
+    .panel {
+      float: right;
+      position: relative;
+    }
+
+    button.login-button, button.sign-up-button {
+      float: left;
+      margin-top: 7px;
+      padding: 6px 10px;
+      .fa { margin-right: 3px; }
+    }
+
+    button.login-button {
+      margin-left: 7px;
+    }
+
+    .icons {
+      float: left;
+      text-align: center;
+      margin: 0 0 0 5px;
+      list-style: none;
+      > li {
+        float: left;
+      }
+      .icon {
+        display: block;
+        padding: 3px;
+        color: scale-color($header_primary, $lightness: 50%);
+        text-decoration: none;
+        cursor: pointer;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+
+
+        &:hover {
+          color: $primary;
+          background-color:  scale-color-diff();
+          border-top: 1px solid transparent;
+          border-left: 1px solid transparent;
+          border-right: 1px solid transparent;
+        }
+        &:active {
+          color: $primary;
+          background-color: scale-color-diff();
+        }
+      }
+      .active .icon {
+        position: relative;
+        color: #7b7b7b;
+        background-color: $secondary;
+        cursor: default;
+        border-top: 1px solid scale-color-diff();
+        border-left: 1px solid scale-color-diff();
+        border-right: 1px solid scale-color-diff();
+        &:after {
+          display: block;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          z-index: 1101;
+          width: 100%;
+          height: 0;
+          content: "";
+          border-top: 1px solid $secondary;
+        }
+        &:hover {
+        border-bottom: none;
+        }
+      }
+      [class^="fa fa-"] {
+        width: 32px;
+        height: 32px;
+        font-size: 21px;
+        line-height: 32px;
+        display: inline-block;
+      }
+      .notifications {
+        position: relative;
+      }
+      .badge-notification {
+        position: absolute;
+        top: -9px;
+        z-index: 1;
+        margin-left: 0;
+      }
+      .unread-notifications {
+        right: -4px;
+        background-color: scale-color($tertiary, $lightness: 50%);
+      }
+      .unread-private-messages {
+        left: -4px;
+      }
+    }
+    .flagged-posts {
+      background: $danger;
+    }
+}
+
+.d-dropdown {
+    display: none;
+    position: absolute;
+    background: $secondary;
+    max-height: 417px;
+    top: 100%;
+    right: 0;
+    z-index: 1100;
+    overflow: auto;
+    border: 1px solid scale-color-diff();
+    padding: 5px;
+
+    @include box-shadow(0 2px 2px rgba(0,0,0, .4));
+
+  // note these topic counts only appear for anons in the category hamburger drop down
+  b.topics-count {
+    color: scale-color($primary, $lightness: 50%);
+    font-weight: normal;
+    font-size: 11px;
+  }
+
+  ul {
+    margin: 0;
+    list-style: none;
+  }
+
+  li:not(.category):not(.heading) {
+    font-size: 13px;
+    line-height: 16px;
+
+      .fa {
+        font-size: inherit;
+      }
+
+      a {
+        display: block;
+        padding: 5px;
+      }
+
+      &:hover a:not(.badge-notification) {
+        background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+        }
+
+      button {margin-left: 5px;}
+  }
+
+  .heading a:hover  {
+    background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+  }
+
+  .selected {
+    background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+  }
+
+
+  // Notifications
+  &#notifications-dropdown {
+    .fa { color: scale-color($primary, $lightness: 50%); }
+    .icon { color: scale-color($primary, $lightness: 30%); }
+    li {
+      background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+      i {
+        float: left;
+        margin-right: 5px;
+        padding-top: 2px;
+      }
+      span { color: $primary; }
+      &:hover a { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
+      a { padding: 4px 0 3px 2px; }
+      p {
+        margin: 0;
+        overflow: hidden;
+      }
+    }
+    .is-warning {
+      i.fa-envelope-o {
+        &:before {
+          content: "\f0e0";
+        }
+        color: $danger;
+      }
+    }
+    .read {
+      background-color: $secondary;
+    }
+    .none {
+      padding: 5px;
+    }
+    .loading {
+      padding: 10px;
+      display: block;
+      color: scale-color($primary, $lightness: 50%);
+      font-size: 24px;
+      text-align: center;
+    }
+    /* as a big ol' click target, don't let text inside be selected */
+    @include unselectable;
+  }
+
+  .category-links li:not(.heading) a {
+    display: inline-block;
+  }
+
+
+  // Site map
+
+  &#site-map-dropdown {
+    .heading {
+      padding: 5px 5px 5px 0;
+      a {padding: 0 5px;}
+    }
+  }
+
+  // Search
+
+  &#search-dropdown {
+    .heading {
+      padding: 5px 0 5px 5px;
+    .filter {
+      padding: 0 5px;
+    }
+     }
+  }
+
+  input[type='text'] {
+    width: 93%;
+    height: 22px;
+    margin: 5px;
+    padding: 5px;
+  }
+
+  .search-context {
+    padding: 0 5px;
+  }
+
+  .searching {
+    display: block;
+    position: absolute;
+    top: 17px;
+    right: 15px;
+    width: 22px;
+    height: 22px;
+    background: {
+      image: image-url("spinner_96.gif");
+      repeat: no-repeat;
+      position: 0px 50%;
+      size: 18px;
+    };
+  }
+  // I am ghetto using this to display "Show More".. be warned
+  .no-results {
+    padding: 5px;
+    height: 12px;
+    width:60%;
+  }
+  .filter {
+    float: right;
+    padding: 0;
+    &:hover {background: transparent;}
+  }
+
+  // Categories
+
+  .category {
+    float: left;
+    background-color: transparent;
+    line-height: 20px;
+    margin: 5px 5px 0 5px;
+    .badge-notification {
+      color: scale-color($primary, $lightness: 50%);
+      background-color: transparent;
+    }
+  }
+
+  &#user-dropdown {
+    width: 118px;
+  }
+
+  .btn {
+    padding: 2px 8px;
+    margin-bottom: 2px;
+    .fa {
+      margin-right: 5px;
+    }
+  }
+}
+
+.search-link .topic-statuses {
+  float: none;
+  display: inline-block;
+  color: scale-color($primary, $lightness: 50%);
+  margin: 0;
+  .fa {
+    margin: 0;
+  }
+}
+
+.search-link .badge-category {
+  padding: 4px 6px;
+  margin-left: 6px;
+}
+
+.highlight-strong {
+  background-color: dark-light-diff($highlight, $secondary, 40%, -50%);
+}
+
+.search-highlight {
+  font-weight: bold;
+}

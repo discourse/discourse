@@ -2,44 +2,34 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 # Plugin related stuff
+require_relative '../lib/discourse_event'
+require_relative '../lib/discourse_plugin'
 require_relative '../lib/discourse_plugin_registry'
 
 # Global config
 require_relative '../app/models/global_setting'
 
+require 'pry-rails' if Rails.env.development?
+
 if defined?(Bundler)
   Bundler.require(*Rails.groups(assets: %w(development test profile)))
 end
 
-# PATCH DB configuration
-class Rails::Application::Configuration
-
-  def database_configuration_with_global_config
-    if Rails.env == "production"
-      GlobalSetting.database_config
-    else
-      database_configuration_without_global_config
-    end
-  end
-
-  alias_method_chain :database_configuration, :global_config
-end
-
 module Discourse
   class Application < Rails::Application
+    def config.database_configuration
+      if Rails.env.production?
+        GlobalSetting.database_config
+      else
+        super
+      end
+    end
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    # HACK!! regression in rubygems / bundler in ruby-head
-    if RUBY_VERSION == "2.1.0"
-      $:.map! do |path|
-        path = File.expand_path(path.sub("../../","../")) if path =~ /fast_xor/ && !File.directory?(File.expand_path(path))
-        path
-      end
-    end
-
     require 'discourse'
+    require 'es6_module_transpiler/rails'
     require 'js_locale_helper'
 
     # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
@@ -61,14 +51,14 @@ module Discourse
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
-    config.assets.paths += %W(#{config.root}/config/locales)
+    config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
 
     # explicitly precompile any images in plugins ( /assets/images ) path
     config.assets.precompile += [lambda do |filename, path|
       path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
     end]
 
-    config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css', 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 'browser-update.js', 'embed.css', 'break_string.js', 'plugins.css']
+    config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css', 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 'browser-update.js', 'embed.css', 'break_string.js']
 
     # Precompile all defer
     Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
@@ -101,12 +91,11 @@ module Discourse
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [
         :password,
-        :pop3s_polling_password,
+        :pop3_polling_password,
         :s3_secret_access_key,
         :twitter_consumer_secret,
         :facebook_app_secret,
-        :github_client_secret,
-        :discourse_org_access_key,
+        :github_client_secret
     ]
 
     # Enable the asset pipeline
@@ -129,6 +118,11 @@ module Discourse
     # for some reason still seeing it in Rails 4
     config.middleware.delete Rack::Lock
 
+    # ETags are pointless, we are dynamically compressing
+    # so nginx strips etags, may revisit when mainline nginx
+    # supports etags (post 1.7)
+    config.middleware.delete Rack::ETag
+
     # route all exceptions via our router
     config.exceptions_app = self.routes
 
@@ -136,8 +130,11 @@ module Discourse
     config.handlebars.templates_root = 'discourse/templates'
 
     require 'discourse_redis'
+    require 'logster/redis_store'
     # Use redis for our cache
     config.cache_store = DiscourseRedis.new_redis_store
+    $redis = DiscourseRedis.new
+    Logster.store = Logster::RedisStore.new(DiscourseRedis.new)
 
     # we configure rack cache on demand in an initializer
     # our setup does not use rack cache and instead defers to nginx

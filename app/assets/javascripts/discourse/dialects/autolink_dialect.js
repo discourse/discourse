@@ -4,12 +4,11 @@
 **/
 var urlReplacerArgs = {
   matcher: /^((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/gm,
-  spaceBoundary: true,
+  spaceOrTagBoundary: true,
 
   emitter: function(matches) {
     var url = matches[1],
         displayUrl = url;
-
 
     // Don't autolink a markdown link to something
     if (url.match(/\]\[\d$/)) { return; }

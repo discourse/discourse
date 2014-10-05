@@ -22,17 +22,23 @@ shared_examples 'finding and showing post' do
 
     it "can't find deleted posts as an anonymous user" do
       xhr :get, action, params
-      response.should be_forbidden
+      response.status.should == 404
     end
 
     it "can't find deleted posts as a regular user" do
       log_in(:user)
       xhr :get, action, params
-      response.should be_forbidden
+      response.status.should == 404
     end
 
     it "can find posts as a moderator" do
       log_in(:moderator)
+      xhr :get, action, params
+      response.should be_success
+    end
+
+    it "can find posts as a admin" do
+      log_in(:admin)
       xhr :get, action, params
       response.should be_success
     end
@@ -47,13 +53,18 @@ end
 
 describe PostsController do
 
-  describe 'short_link' do
-    let(:post) { Fabricate(:post) }
+  describe 'cooked' do
+    before do
+      post = Post.new(cooked: 'wat')
+      PostsController.any_instance.expects(:find_post_from_params).returns(post)
+    end
 
-    it 'logs the incoming link once' do
-      IncomingLink.expects(:add).once.returns(true)
-      get :short_link, post_id: post.id, user_id: 999
-      response.should be_redirect
+    it 'returns the cooked conent' do
+      xhr :get, :cooked, id: 1234
+      response.should be_success
+      json = ::JSON.parse(response.body)
+      json.should be_present
+      json['cooked'].should == 'wat'
     end
   end
 
@@ -61,6 +72,17 @@ describe PostsController do
     include_examples 'finding and showing post' do
       let(:action) { :show }
       let(:params) { {id: post.id} }
+    end
+
+    it 'gets all the expected fields' do
+      # non fabricated test
+      new_post = create_post
+      xhr :get, :show, {id: new_post.id}
+      parsed = JSON.parse(response.body)
+      parsed["topic_slug"].should == new_post.topic.slug
+      parsed["moderator"].should == false
+      parsed["username"].should == new_post.user.username
+      parsed["cooked"].should == new_post.cooked
     end
   end
 
@@ -121,7 +143,7 @@ describe PostsController do
 
       it "uses a PostDestroyer" do
         destroyer = mock
-        PostDestroyer.expects(:new).with(user, post).returns(destroyer)
+        PostDestroyer.expects(:new).returns(destroyer)
         destroyer.expects(:destroy)
         xhr :delete, :destroy, id: post.id
       end
@@ -277,7 +299,8 @@ describe PostsController do
       let(:post) { Fabricate(:post, user: log_in) }
 
       it "raises an error if the user doesn't have permission to see the post" do
-        Guardian.any_instance.expects(:can_see?).with(post).returns(false)
+        Guardian.any_instance.expects(:can_see?).with(post).returns(false).once
+
         xhr :put, :bookmark, post_id: post.id, bookmarked: 'true'
         response.should be_forbidden
       end
@@ -296,13 +319,129 @@ describe PostsController do
 
   end
 
+  describe "wiki" do
+
+    include_examples "action requires login", :put, :wiki, post_id: 2
+
+    describe "when logged in" do
+      let(:user) {log_in}
+      let(:post) {Fabricate(:post, user: user)}
+
+      it "raises an error if the user doesn't have permission to wiki the post" do
+        Guardian.any_instance.expects(:can_wiki?).returns(false)
+
+        xhr :put, :wiki, post_id: post.id, wiki: 'true'
+
+        response.should be_forbidden
+      end
+
+      it "can wiki a post" do
+        Guardian.any_instance.expects(:can_wiki?).returns(true)
+
+        xhr :put, :wiki, post_id: post.id, wiki: 'true'
+
+        post.reload
+        post.wiki.should == true
+      end
+
+      it "can unwiki a post" do
+        wikied_post = Fabricate(:post, user: user, wiki: true)
+        Guardian.any_instance.expects(:can_wiki?).returns(true)
+
+        xhr :put, :wiki, post_id: wikied_post.id, wiki: 'false'
+
+        wikied_post.reload
+        wikied_post.wiki.should == false
+      end
+
+    end
+
+  end
+
+  describe "post_type" do
+
+    include_examples "action requires login", :put, :post_type, post_id: 2
+
+    describe "when logged in" do
+      let(:user) {log_in}
+      let(:post) {Fabricate(:post, user: user)}
+
+      it "raises an error if the user doesn't have permission to change the post type" do
+        Guardian.any_instance.expects(:can_change_post_type?).returns(false)
+
+        xhr :put, :post_type, post_id: post.id, post_type: 2
+
+        response.should be_forbidden
+      end
+
+      it "can change the post type" do
+        Guardian.any_instance.expects(:can_change_post_type?).returns(true)
+
+        xhr :put, :post_type, post_id: post.id, post_type: 2
+
+        post.reload
+        post.post_type.should == 2
+      end
+
+    end
+
+  end
+
+  describe "rebake" do
+
+    include_examples "action requires login", :put, :rebake, post_id: 2
+
+    describe "when logged in" do
+      let(:user) {log_in}
+      let(:post) {Fabricate(:post, user: user)}
+
+      it "raises an error if the user doesn't have permission to rebake the post" do
+        Guardian.any_instance.expects(:can_rebake?).returns(false)
+
+        xhr :put, :rebake, post_id: post.id
+
+        response.should be_forbidden
+      end
+
+      it "can rebake the post" do
+        Guardian.any_instance.expects(:can_rebake?).returns(true)
+
+        xhr :put, :rebake, post_id: post.id
+
+        response.should be_success
+      end
+
+    end
+
+  end
+
   describe 'creating a post' do
 
     include_examples 'action requires login', :post, :create
 
+    context 'api' do
+      it 'allows dupes through' do
+        raw = "this is a test post 123 #{SecureRandom.hash}"
+        title = "this is a title #{SecureRandom.hash}"
+
+        user = Fabricate(:user)
+        master_key = ApiKey.create_master_key.key
+
+        xhr :post, :create, {api_username: user.username, api_key: master_key, raw: raw, title: title, wpid: 1}
+        response.should be_success
+        original = response.body
+
+        xhr :post, :create, {api_username: user.username_lower, api_key: master_key, raw: raw, title: title, wpid: 2}
+        response.should be_success
+
+        response.body.should == original
+      end
+    end
+
     describe 'when logged in' do
 
       let!(:user) { log_in }
+      let(:moderator) { log_in(:moderator) }
       let(:new_post) { Fabricate.build(:post, user: user) }
 
       it "raises an exception without a raw parameter" do
@@ -322,15 +461,14 @@ describe PostsController do
       end
 
       it 'protects against dupes' do
-        # TODO we really should be using a mock redis here
-        xhr :post, :create, {raw: 'this is a test post 123', title: 'this is a test title 123', wpid: 1}
-        response.should be_success
-        original = response.body
+        raw = "this is a test post 123 #{SecureRandom.hash}"
+        title = "this is a title #{SecureRandom.hash}"
 
-        xhr :post, :create, {raw: 'this is a test post 123', title: 'this is a test title 123', wpid: 2}
+        xhr :post, :create, {raw: raw, title: title, wpid: 1}
         response.should be_success
 
-        response.body.should == original
+        xhr :post, :create, {raw: raw, title: title, wpid: 2}
+        response.should_not be_success
       end
 
       context "errors" do
@@ -412,6 +550,24 @@ describe PostsController do
           xhr :post, :create, {raw: 'hello', meta_data: {xyz: 'abc'}}
         end
 
+        context "is_warning" do
+          it "doesn't pass `is_warning` through if you're not staff" do
+            PostCreator.expects(:new).with(user, Not(has_entries('is_warning' => true))).returns(post_creator)
+            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
+          end
+
+          it "passes `is_warning` through if you're staff" do
+            PostCreator.expects(:new).with(moderator, has_entries('is_warning' => true)).returns(post_creator)
+            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
+          end
+
+          it "passes `is_warning` as false through if you're staff" do
+            PostCreator.expects(:new).with(moderator, has_entries('is_warning' => false)).returns(post_creator)
+            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'false'}
+          end
+
+        end
+
       end
 
     end
@@ -457,7 +613,7 @@ describe PostsController do
       end
 
       it "ensures trust level 4 can see the revisions" do
-        log_in(:elder)
+        log_in(:trust_level_4)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
         response.should be_success
       end
@@ -488,6 +644,20 @@ describe PostsController do
       end
     end
 
+    context "deleted topic" do
+      let(:admin) { log_in(:admin) }
+      let(:deleted_topic) { Fabricate(:topic, user: admin) }
+      let(:post) { Fabricate(:post, user: admin, topic: deleted_topic) }
+      let(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
+
+      before { deleted_topic.trash!(admin) }
+
+      it "also work on deleted topic" do
+        xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
+        response.should be_success
+      end
+    end
+
   end
 
   describe 'expandable embedded posts' do
@@ -507,4 +677,51 @@ describe PostsController do
       ::JSON.parse(response.body)['cooked'].should == "full content"
     end
   end
+
+  describe "flagged posts" do
+
+    include_examples "action requires login", :get, :flagged_posts, username: "system"
+
+    describe "when logged in" do
+      before { log_in }
+
+      it "raises an error if the user doesn't have permission to see the flagged posts" do
+        Guardian.any_instance.expects(:can_see_flagged_posts?).returns(false)
+        xhr :get, :flagged_posts, username: "system"
+        response.should be_forbidden
+      end
+
+      it "can see the flagged posts when authorized" do
+        Guardian.any_instance.expects(:can_see_flagged_posts?).returns(true)
+        xhr :get, :flagged_posts, username: "system"
+        response.should be_success
+      end
+
+    end
+
+  end
+
+  describe "deleted posts" do
+
+    include_examples "action requires login", :get, :deleted_posts, username: "system"
+
+    describe "when logged in" do
+      before { log_in }
+
+      it "raises an error if the user doesn't have permission to see the deleted posts" do
+        Guardian.any_instance.expects(:can_see_deleted_posts?).returns(false)
+        xhr :get, :deleted_posts, username: "system"
+        response.should be_forbidden
+      end
+
+      it "can see the deleted posts when authorized" do
+        Guardian.any_instance.expects(:can_see_deleted_posts?).returns(true)
+        xhr :get, :deleted_posts, username: "system"
+        response.should be_success
+      end
+
+    end
+
+  end
+
 end

@@ -8,7 +8,7 @@ require_dependency 'guardian/user_guardian'
 class Guardian
   include EnsureMagic
   include CategoryGuardian
-  include PostGuardain
+  include PostGuardian
   include TopicGuardian
   include UserGuardian
 
@@ -23,6 +23,7 @@ class Guardian
     def has_trust_level?(level); false; end
     def email; nil; end
   end
+
   def initialize(user=nil)
     @user = user.presence || AnonymousUser.new
   end
@@ -102,12 +103,19 @@ class Guardian
   end
 
   def can_moderate?(obj)
-    obj && authenticated? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(:elder)))
+    obj && authenticated? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4])))
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
   alias :can_send_activation_email? :can_moderate?
-  alias :can_grant_badges? :can_moderate?
+
+  def can_grant_badges?(_user)
+    SiteSetting.enable_badges && is_staff?
+  end
+
+  def can_see_group?(group)
+    group.present? && (is_admin? || group.visible?)
+  end
 
 
 
@@ -130,7 +138,10 @@ class Guardian
   def can_approve?(target)
     is_staff? && target && not(target.approved?)
   end
-  alias :can_activate? :can_approve?
+
+  def can_activate?(target)
+    is_staff? && target && not(target.active?)
+  end
 
   def can_suspend?(user)
     user && is_staff? && user.regular?
@@ -180,16 +191,34 @@ class Guardian
     is_me?(user)
   end
 
-  def can_invite_to_forum?
+  def can_invite_to_forum?(groups=nil)
     authenticated? &&
+    !SiteSetting.enable_sso &&
+    SiteSetting.enable_local_logins &&
     (
-      (!SiteSetting.must_approve_users? && @user.has_trust_level?(:regular)) ||
+      (!SiteSetting.must_approve_users? && @user.has_trust_level?(TrustLevel[2])) ||
       is_staff?
-    )
+    ) &&
+    (groups.blank? || is_admin?)
   end
 
-  def can_invite_to?(object)
-    can_see?(object) && can_invite_to_forum?
+  def can_invite_to?(object, group_ids=nil)
+    can_invite = can_see?(object) && can_invite_to_forum? && ( group_ids.blank? || is_admin? )
+    #TODO how should invite to PM work?
+    can_invite = can_invite && ( !object.category.read_restricted || is_admin? ) if object.is_a?(Topic) && object.category
+    can_invite
+  end
+
+  def can_bulk_invite_to_forum?(user)
+    user.admin?
+  end
+
+  def can_create_disposable_invite?(user)
+    user.admin?
+  end
+
+  def can_send_multiple_invites?(user)
+    user.staff?
   end
 
   def can_see_private_messages?(user_id)
@@ -197,15 +226,19 @@ class Guardian
   end
 
   def can_send_private_message?(target)
-    (User === target || Group === target) &&
+    (target.is_a?(Group) || target.is_a?(User)) &&
     # User is authenticated
     authenticated? &&
     # Can't send message to yourself
     is_not_me?(target) &&
     # Have to be a basic level at least
-    @user.has_trust_level?(:basic) &&
+    @user.has_trust_level?(TrustLevel[1]) &&
     # PMs are enabled
-    SiteSetting.enable_private_messages
+    (SiteSetting.enable_private_messages ||
+      @user.username == SiteSetting.site_contact_username ||
+      @user == Discourse.system_user) &&
+    # Can't send PMs to suspended users
+    (is_staff? || target.is_a?(Group) || !target.suspended?)
   end
 
   private
@@ -221,7 +254,7 @@ class Guardian
   end
 
   def is_me?(other)
-    other && authenticated? && User === other && @user == other
+    other && authenticated? && other.is_a?(User) && @user == other
   end
 
   def is_not_me?(other)

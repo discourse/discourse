@@ -9,9 +9,12 @@
 Discourse.UserStream = Discourse.Model.extend({
   loaded: false,
 
-  init: function() {
-    this.setProperties({ itemsLoaded: 0, content: [] });
-  },
+  _initialize: function() {
+    this.setProperties({
+      itemsLoaded: 0,
+      content: []
+    });
+  }.on("init"),
 
   filterParam: function() {
     var filter = this.get('filter');
@@ -20,6 +23,12 @@ Discourse.UserStream = Discourse.Model.extend({
               Discourse.UserAction.TYPES.mentions,
               Discourse.UserAction.TYPES.quotes].join(",");
     }
+
+    if(!filter) {
+      return [ Discourse.UserAction.TYPES.topics,
+               Discourse.UserAction.TYPES.posts].join(",");
+    }
+
     return filter;
   }.property('filter'),
 
@@ -33,24 +42,48 @@ Discourse.UserStream = Discourse.Model.extend({
       itemsLoaded: 0,
       content: []
     });
+
     return this.findItems();
   },
 
-  findItems: function() {
-    var userStream = this;
-    if(this.get('loading')) { return Ember.RSVP.reject(); }
+  remove: function(userAction) {
+    // 1) remove the user action from the child groups
+    this.get("content").forEach(function (ua) {
+      ["likes", "stars", "edits", "bookmarks"].forEach(function (group) {
+        var items = ua.get("childGroups." + group + ".items");
+        if (items) {
+          items.removeObject(userAction);
+        }
+      });
+    });
 
-    this.set('loading', true);
+    // 2) remove the parents that have no children
+    var content = this.get("content").filter(function (ua) {
+      return ["likes", "stars", "edits", "bookmarks"].any(function (group) {
+        return ua.get("childGroups." + group + ".items.length") > 0;
+      });
+    });
+
+    this.setProperties({
+      content: content,
+      itemsLoaded: content.length
+    });
+  },
+
+  findItems: function() {
+    var self = this;
 
     var url = this.get('baseUrl');
     if (this.get('filterParam')) {
       url += "&filter=" + this.get('filterParam');
     }
 
-    var loadingFinished = function() {
-      userStream.set('loading', false);
-    };
+    // Don't load the same stream twice. We're probably at the end.
+    var lastLoadedUrl = this.get('lastLoadedUrl');
+    if (lastLoadedUrl === url) { return Ember.RSVP.resolve(); }
 
+    if (this.get('loading')) { return Ember.RSVP.resolve(); }
+    this.set('loading', true);
     return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
       if (result && result.user_actions) {
         var copy = Em.A();
@@ -58,14 +91,16 @@ Discourse.UserStream = Discourse.Model.extend({
           copy.pushObject(Discourse.UserAction.create(action));
         });
 
-        userStream.get('content').pushObjects(Discourse.UserAction.collapseStream(copy));
-        userStream.setProperties({
+        self.get('content').pushObjects(Discourse.UserAction.collapseStream(copy));
+        self.setProperties({
           loaded: true,
-          itemsLoaded: userStream.get('itemsLoaded') + result.user_actions.length
+          itemsLoaded: self.get('itemsLoaded') + result.user_actions.length
         });
       }
-      loadingFinished();
-    }, loadingFinished);
+    }).finally(function() {
+      self.set('loading', false);
+      self.set('lastLoadedUrl', url);
+    });
   }
 
 });

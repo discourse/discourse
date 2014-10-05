@@ -8,55 +8,88 @@
 **/
 Discourse.FlaggedPost = Discourse.Post.extend({
 
-  summary: function(){
+  summary: function () {
     return _(this.post_actions)
-      .groupBy(function(a){ return a.post_action_type_id; })
-      .map(function(v,k){
-        return I18n.t('admin.flags.summary.action_type_' + k, {count: v.length});
-      })
+      .groupBy(function (a) { return a.post_action_type_id; })
+      .map(function (v,k) { return I18n.t('admin.flags.summary.action_type_' + k, { count: v.length }); })
       .join(',');
   }.property(),
 
-  flaggers: function() {
-    var r,
-      _this = this;
-    r = [];
-    _.each(this.post_actions, function(action) {
-      var user = _this.userLookup[action.user_id];
-      var flagType = I18n.t('admin.flags.summary.action_type_' + action.post_action_type_id, {count: 1});
-      r.push({user: user, flagType: flagType, flaggedAt: action.created_at});
+  flaggers: function () {
+    var self = this;
+    var flaggers = [];
+
+    _.each(this.post_actions, function (postAction) {
+      flaggers.push({
+        user: self.userLookup[postAction.user_id],
+        topic: self.topicLookup[postAction.topic_id],
+        flagType: I18n.t('admin.flags.summary.action_type_' + postAction.post_action_type_id, { count: 1 }),
+        flaggedAt: postAction.created_at,
+        disposedBy: postAction.disposed_by_id ? self.userLookup[postAction.disposed_by_id] : null,
+        disposedAt: postAction.disposed_at,
+        dispositionIcon: self.dispositionIcon(postAction.disposition),
+        tookAction: postAction.staff_took_action
+      });
     });
-    return r;
+
+    return flaggers;
   }.property(),
 
-  messages: function() {
-    var r,
-      _this = this;
-    r = [];
-    _.each(this.post_actions,function(action) {
-      if (action.message) {
-        r.push({
-          user: _this.userLookup[action.user_id],
-          message: action.message,
-          permalink: action.permalink,
-          bySystemUser: (action.user_id === -1 ? true : false)
-        });
+  dispositionIcon: function (disposition) {
+    if (!disposition) { return null; }
+    var icon, title = I18n.t('admin.flags.dispositions.' + disposition);
+    switch (disposition) {
+      case "deferred": { icon = "fa-external-link"; break; }
+      case "agreed": { icon = "fa-thumbs-o-up"; break; }
+      case "disagreed": { icon = "fa-thumbs-o-down"; break; }
+    }
+    return "<i class='fa " + icon + "' title='" + title + "'></i>";
+  },
+
+  wasEdited: function () {
+    if (this.blank("last_revised_at")) { return false; }
+    var lastRevisedAt = Date.parse(this.get("last_revised_at"));
+    return _.some(this.get("post_actions"), function (postAction) {
+      return Date.parse(postAction.created_at) < lastRevisedAt;
+    });
+  }.property("last_revised_at", "post_actions.@each.created_at"),
+
+  conversations: function () {
+    var self = this;
+    var conversations = [];
+
+    _.each(this.post_actions, function (postAction) {
+      if (postAction.conversation) {
+        var conversation = {
+          permalink: postAction.permalink,
+          hasMore: postAction.conversation.has_more,
+          response: {
+            excerpt: postAction.conversation.response.excerpt,
+            user: self.userLookup[postAction.conversation.response.user_id]
+          }
+        };
+
+        if (postAction.conversation.reply) {
+          conversation["reply"] = {
+            excerpt: postAction.conversation.reply.excerpt,
+            user: self.userLookup[postAction.conversation.reply.user_id]
+          };
+        }
+
+        conversations.push(conversation);
       }
     });
-    return r;
-  }.property(),
 
-  lastFlagged: function() {
-    return this.post_actions[0].created_at;
+    return conversations;
   }.property(),
 
   user: function() {
     return this.userLookup[this.user_id];
   }.property(),
 
-  topicHidden: function() {
-    return !this.get('topic_visible');
-  }.property('topic_hidden'),
+  topic: function () {
+    return this.topicLookup[this.topic_id];
+  }.property(),
 
   flaggedForSpam: function() {
     return !_.every(this.get('post_actions'), function(action) { return action.name_key !== 'spam'; });
@@ -71,7 +104,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   }.property('post_actions.@each.targets_topic'),
 
   canDeleteAsSpammer: function() {
-    return (Discourse.User.currentProp('staff') && this.get('flaggedForSpam') && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted'));
+    return Discourse.User.currentProp('staff') && this.get('flaggedForSpam') && this.get('user.can_delete_all_posts') && this.get('user.can_be_deleted');
   }.property('flaggedForSpam'),
 
   deletePost: function() {
@@ -82,28 +115,24 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     }
   },
 
-  disagreeFlags: function() {
+  disagreeFlags: function () {
     return Discourse.ajax('/admin/flags/disagree/' + this.id, { type: 'POST', cache: false });
   },
 
-  deferFlags: function() {
-    return Discourse.ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false });
+  deferFlags: function (deletePost) {
+    return Discourse.ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false, data: { delete_post: deletePost } });
   },
 
-  agreeFlags: function() {
-    return Discourse.ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false });
+  agreeFlags: function (actionOnPost) {
+    return Discourse.ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false, data: { action_on_post: actionOnPost } });
   },
 
   postHidden: Em.computed.alias('hidden'),
 
   extraClasses: function() {
     var classes = [];
-    if (this.get('hidden')) {
-      classes.push('hidden-post');
-    }
-    if (this.get('deleted')){
-      classes.push('deleted');
-    }
+    if (this.get('hidden')) { classes.push('hidden-post'); }
+    if (this.get('deleted')) { classes.push('deleted'); }
     return classes.join(' ');
   }.property(),
 
@@ -112,26 +141,36 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 });
 
 Discourse.FlaggedPost.reopenClass({
-  findAll: function(filter, offset) {
-
+  findAll: function (filter, offset) {
     offset = offset || 0;
 
     var result = Em.A();
     result.set('loading', true);
-    return Discourse.ajax('/admin/flags/' + filter + '.json?offset=' + offset).then(function(data) {
+
+    return Discourse.ajax('/admin/flags/' + filter + '.json?offset=' + offset).then(function (data) {
+      // users
       var userLookup = {};
-      _.each(data.users,function(user) {
+      _.each(data.users, function (user) {
         userLookup[user.id] = Discourse.AdminUser.create(user);
       });
-      _.each(data.posts,function(post) {
+
+      // topics
+      var topicLookup = {};
+      _.each(data.topics, function (topic) {
+        topicLookup[topic.id] = Discourse.Topic.create(topic);
+      });
+
+      // posts
+      _.each(data.posts, function (post) {
         var f = Discourse.FlaggedPost.create(post);
         f.userLookup = userLookup;
+        f.topicLookup = topicLookup;
         result.pushObject(f);
       });
+
       result.set('loading', false);
+
       return result;
     });
   }
 });
-
-

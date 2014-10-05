@@ -18,7 +18,7 @@ describe UserAction do
     let(:private_post) { Fabricate(:post) }
     let(:private_topic) do
       topic = private_post.topic
-      topic.update_column(:archetype, Archetype::private_message)
+      topic.update_columns(category_id: nil, archetype: Archetype::private_message)
       topic
     end
 
@@ -116,13 +116,13 @@ describe UserAction do
     context "successful like" do
       before do
         PostAction.act(liker, post, PostActionType.types[:like])
-        @liker_action = liker.user_actions.where(action_type: UserAction::LIKE).first
-        @likee_action = likee.user_actions.where(action_type: UserAction::WAS_LIKED).first
+        @liker_action = liker.user_actions.find_by(action_type: UserAction::LIKE)
+        @likee_action = likee.user_actions.find_by(action_type: UserAction::WAS_LIKED)
       end
 
       it 'should result in correct data assignment' do
-        @liker_action.should_not be_nil
-        @likee_action.should_not be_nil
+        @liker_action.should_not == nil
+        @likee_action.should_not == nil
         likee.user_stat.reload.likes_received.should == 1
         liker.user_stat.reload.likes_given.should == 1
 
@@ -136,7 +136,7 @@ describe UserAction do
     context "liking a private message" do
 
       before do
-        post.topic.update_column(:archetype, Archetype::private_message)
+        post.topic.update_columns(category_id: nil, archetype: Archetype::private_message)
       end
 
       it "doesn't add the entry to the stream" do
@@ -160,16 +160,16 @@ describe UserAction do
 
     describe 'topic action' do
       before do
-        @action = @post.user.user_actions.where(action_type: UserAction::NEW_TOPIC).first
+        @action = @post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC)
       end
       it 'should exist' do
-        @action.should_not be_nil
+        @action.should_not == nil
         @action.created_at.should be_within(1).of(@post.topic.created_at)
       end
     end
 
     it 'should not log a post user action' do
-      @post.user.user_actions.where(action_type: UserAction::REPLY).first.should be_nil
+      @post.user.user_actions.find_by(action_type: UserAction::REPLY).should == nil
     end
 
 
@@ -183,9 +183,9 @@ describe UserAction do
       end
 
       it 'should log user actions correctly' do
-        @response.user.user_actions.where(action_type: UserAction::REPLY).first.should_not be_nil
-        @post.user.user_actions.where(action_type: UserAction::RESPONSE).first.should_not be_nil
-        @mentioned.user_actions.where(action_type: UserAction::MENTION).first.should_not be_nil
+        @response.user.user_actions.find_by(action_type: UserAction::REPLY).should_not == nil
+        @post.user.user_actions.find_by(action_type: UserAction::RESPONSE).should_not == nil
+        @mentioned.user_actions.find_by(action_type: UserAction::MENTION).should_not == nil
         @post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count.should == 1
       end
 
@@ -203,7 +203,7 @@ describe UserAction do
       @post = Fabricate(:post)
       @user = @post.user
       PostAction.act(@user, @post, PostActionType.types[:bookmark])
-      @action = @user.user_actions.where(action_type: UserAction::BOOKMARK).first
+      @action = @user.user_actions.find_by(action_type: UserAction::BOOKMARK)
     end
 
     it 'should create a bookmark action correctly' do
@@ -213,7 +213,7 @@ describe UserAction do
       @action.user_id.should == @user.id
 
       PostAction.remove_act(@user, @post, PostActionType.types[:bookmark])
-      @user.user_actions.where(action_type: UserAction::BOOKMARK).first.should be_nil
+      @user.user_actions.find_by(action_type: UserAction::BOOKMARK).should == nil
     end
   end
 

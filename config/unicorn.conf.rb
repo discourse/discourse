@@ -69,6 +69,42 @@ before_fork do |server, worker|
       end
     end
 
+    sidekiqs = ENV['UNICORN_SIDEKIQS'].to_i
+    if sidekiqs > 0
+      puts "Starting up #{sidekiqs} supervised sidekiqs"
+
+      require 'demon/sidekiq'
+
+      Demon::Sidekiq.start(sidekiqs)
+
+      class ::Unicorn::HttpServer
+        alias :master_sleep_orig :master_sleep
+
+        def check_sidekiq_heartbeat
+          @sidekiq_heartbeat_interval ||= 30.minutes
+          @sidekiq_next_heartbeat_check ||= Time.new.to_i + @sidekiq_heartbeat_interval
+
+          if @sidekiq_next_heartbeat_check < Time.new.to_i
+            last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
+            if last_heartbeat < Time.new.to_i - @sidekiq_heartbeat_interval
+              STDERR.puts "Sidekiq heartbeat test failed, restarting"
+              puts "Sidekiq heartbeat test failed, restarting"
+
+              Demon::Sidekiq.restart
+            end
+            @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
+          end
+        end
+
+        def master_sleep(sec)
+          Demon::Sidekiq.ensure_running
+          check_sidekiq_heartbeat
+
+          master_sleep_orig(sec)
+        end
+      end
+    end
+
   end
 
   ActiveRecord::Base.connection.disconnect!

@@ -5,14 +5,16 @@
 **/
 Discourse.Dialect.inlineRegexp({
   start: '@',
-  matcher: /^(@[A-Za-z0-9][A-Za-z0-9_]{2,14})/m,
+  // NOTE: we really should be using SiteSettings here, but it loads later in process
+  // also, if we do, we must ensure serverside version works as well
+  matcher: /^(@[A-Za-z0-9][A-Za-z0-9_]{0,40})/m,
   wordBoundary: true,
 
   emitter: function(matches) {
     var username = matches[1],
-        mentionLookup = this.dialect.options.mentionLookup || Discourse.Mention.lookupCache;
+        mentionLookup = this.dialect.options.mentionLookup;
 
-    if (mentionLookup(username.substr(1))) {
+    if (mentionLookup && mentionLookup(username.substr(1))) {
       return ['a', {'class': 'mention', href: Discourse.getURL("/users/") + username.substr(1).toLowerCase()}, username];
     } else {
       return ['span', {'class': 'mention'}, username];
@@ -20,3 +22,20 @@ Discourse.Dialect.inlineRegexp({
   }
 });
 
+// We have to prune @mentions that are within links.
+Discourse.Dialect.on("parseNode", function(event) {
+  var node = event.node,
+      path = event.path;
+
+  if (node[1] && node[1]["class"] === 'mention')  {
+    var parent = path[path.length - 1];
+    // If the parent is an 'a', remove it
+    if (parent && parent[0] === 'a') {
+      var username = node[2];
+      node.length = 0;
+      node[0] = "__RAW";
+      node[1] = username;
+    }
+  }
+
+});

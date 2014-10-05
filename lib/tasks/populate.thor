@@ -24,7 +24,7 @@ class Populate < Thor
   def posts
     require './config/environment'
 
-    users = User.find_all_by_username_lower(options[:users].map(&:downcase))
+    users = options[:users].map { |u| User.find_by_username(u.downcase) }
     if users.length != options[:users].length
       not_found = options[:users].map(&:downcase) - users.map(&:username_lower)
       puts "No user found for these usernames: #{not_found.join(', ')}"

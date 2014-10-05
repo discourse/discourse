@@ -7,19 +7,20 @@ describe PollPlugin::Poll do
   let(:user) { Fabricate(:user) }
 
   it "should detect poll post correctly" do
-    expect(poll.is_poll?).to be_true
+    expect(poll.is_poll?).to be_truthy
     post2 = create_post(topic: topic, raw: "This is a generic reply.")
-    expect(PollPlugin::Poll.new(post2).is_poll?).to be_false
+    expect(PollPlugin::Poll.new(post2).is_poll?).to be_falsey
     post.topic.title = "Not a poll"
-    expect(poll.is_poll?).to be_false
+    expect(poll.is_poll?).to be_falsey
   end
 
-  it "allows the prefix translation to contain regular expressions" do
-    topic.title = "Poll : This might be a poll"
+  it "strips whitespace from the prefix translation" do
+    topic.title = "Polll: This might be a poll"
     topic.save
-    expect(PollPlugin::Poll.new(post).is_poll?).to be_false
-    I18n.expects(:t).with('poll.prefix').returns("Poll\\s?:")
-    expect(PollPlugin::Poll.new(post).is_poll?).to be_true
+    expect(PollPlugin::Poll.new(post).is_poll?).to be_falsey
+    I18n.expects(:t).with('poll.prefix').returns("Polll ")
+    I18n.expects(:t).with('poll.closed_prefix').returns("Closed Poll ")
+    expect(PollPlugin::Poll.new(post).is_poll?).to be_truthy
   end
 
   it "should get options correctly" do
@@ -59,10 +60,17 @@ describe PollPlugin::Poll do
   end
 
   it "should serialize correctly" do
-    poll.serialize(user).should eq({options: poll.details, selected: nil})
+    poll.serialize(user).should eq({options: poll.details, selected: nil, closed: false})
     poll.set_vote!(user, "Onodera")
-    poll.serialize(user).should eq({options: poll.details, selected: "Onodera"})
-    poll.serialize(nil).should eq({options: poll.details, selected: nil})
+    poll.serialize(user).should eq({options: poll.details, selected: "Onodera", closed: false})
+    poll.serialize(nil).should eq({options: poll.details, selected: nil, closed: false})
+
+    topic.title = "Closed Poll: my poll"
+    topic.save
+
+    post.topic.reload
+    poll = PollPlugin::Poll.new(post)
+    poll.serialize(nil).should eq({options: poll.details, selected: nil, closed: true})
   end
 
   it "should serialize to nil if there are no poll options" do

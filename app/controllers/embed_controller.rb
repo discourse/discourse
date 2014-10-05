@@ -1,7 +1,7 @@
 class EmbedController < ApplicationController
   skip_before_filter :check_xhr
   skip_before_filter :preload_json
-  skip_before_filter :store_incoming_links
+  skip_before_filter :verify_authenticity_token
 
   before_filter :ensure_embeddable
 
@@ -12,7 +12,12 @@ class EmbedController < ApplicationController
     topic_id = TopicEmbed.topic_id_for_embed(embed_url)
 
     if topic_id
-      @topic_view = TopicView.new(topic_id, current_user, limit: SiteSetting.embed_post_limit, exclude_first: true)
+      @topic_view = TopicView.new(topic_id,
+                                  current_user,
+                                  limit: SiteSetting.embed_post_limit,
+                                  exclude_first: true,
+                                  exclude_deleted_users: true)
+
       @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
       @posts_left = 0
       if @topic_view && @topic_view.posts.size == SiteSetting.embed_post_limit
@@ -28,19 +33,21 @@ class EmbedController < ApplicationController
 
   def count
 
-    urls = params[:embed_url].map {|u| u.sub(/#discourse-comments$/, '').sub(/\/$/, '') }
-    topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
-
+    embed_urls = params[:embed_url]
     by_url = {}
-    topic_embeds.each do |te|
-      url = te.embed_url 
-      url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
-      by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
+
+    if embed_urls.present?
+      urls = embed_urls.map {|u| u.sub(/#discourse-comments$/, '').sub(/\/$/, '') }
+      topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
+
+      topic_embeds.each do |te|
+        url = te.embed_url 
+        url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
+        by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
+      end
     end
 
-    respond_to do |format|
-      format.js { render json: {counts: by_url}, callback: params[:callback] }
-    end
+    render json: {counts: by_url}, callback: params[:callback]
   end
 
   private

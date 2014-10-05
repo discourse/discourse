@@ -1,0 +1,30 @@
+.error-page {
+  text-align: center;
+  padding-top: 2em;
+
+  .face {
+    font-size: 60px;
+    height: 60px;
+  }
+  .reason {
+    font-size: 24px;
+    height: 24px;
+  }
+  .url {
+    font-style: italic;
+    font-size: 11px;
+  }
+  .desc {
+    margin-top: 16px;
+    .fa-check-circle {
+      color: $success;
+    }
+  }
+  .buttons {
+    margin-top: 15px;
+
+    button {
+      margin: 0 20px;
+    }
+  }
+}

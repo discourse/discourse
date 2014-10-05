@@ -10,7 +10,8 @@
   Ember.CloakedCollectionView = Ember.CollectionView.extend({
     topVisible: null,
     bottomVisible: null,
-    offsetFixedElement: null,
+    offsetFixedTopElement: null,
+    offsetFixedBottomElement: null,
 
     init: function() {
       var cloakView = this.get('cloakView'),
@@ -82,18 +83,24 @@
     findTopView: function(childViews, viewportTop, min, max) {
       if (max < min) { return min; }
 
-      var mid = Math.floor((min + max) / 2),
-          // in case of not full-window scrolling
-          scrollOffset = this.get('wrapperTop') >> 0,
-          $view = childViews[mid].$(),
-          viewBottom = $view.position().top + scrollOffset + $view.height();
+      var wrapperTop = this.get('wrapperTop')>>0;
 
-      if (viewBottom > viewportTop) {
-        return this.findTopView(childViews, viewportTop, min, mid-1);
-      } else {
-        return this.findTopView(childViews, viewportTop, mid+1, max);
+      while(max>min){
+        var mid = Math.floor((min + max) / 2),
+            // in case of not full-window scrolling
+            $view = childViews[mid].$(),
+            viewBottom = $view.position().top + wrapperTop + $view.height();
+
+        if (viewBottom > viewportTop) {
+          max = mid-1;
+        } else {
+          min = mid+1;
+        }
       }
+
+      return min;
     },
+
 
     /**
       Determine what views are onscreen and cloak/uncloak them as necessary.
@@ -106,8 +113,10 @@
       var childViews = this.get('childViews');
       if ((!childViews) || (childViews.length === 0)) { return; }
 
-      var toUncloak = [],
+      var self = this,
+          toUncloak = [],
           onscreen = [],
+          onscreenCloaks = [],
           // calculating viewport edges
           $w = $(window),
           windowHeight = this.get('wrapperHeight') || ( window.innerHeight ? window.innerHeight : $w.height() ),
@@ -119,21 +128,27 @@
           topView = this.findTopView(childViews, viewportTop, 0, childViews.length-1),
           bodyHeight = this.get('wrapperHeight') ? this.$().height() : $('body').height(),
           bottomView = topView,
-          offsetFixedElement = this.get('offsetFixedElement');
+          offsetFixedTopElement = this.get('offsetFixedTopElement'),
+          offsetFixedBottomElement = this.get('offsetFixedBottomElement');
 
       if (windowBottom > bodyHeight) { windowBottom = bodyHeight; }
       if (viewportBottom > bodyHeight) { viewportBottom = bodyHeight; }
 
-      if (offsetFixedElement) {
-        windowTop += (offsetFixedElement.outerHeight(true) || 0);
+      if (offsetFixedTopElement) {
+        windowTop += (offsetFixedTopElement.outerHeight(true) || 0);
       }
+
+      if (offsetFixedBottomElement) {
+        windowBottom -= (offsetFixedBottomElement.outerHeight(true) || 0);
+      }
+
       // Find the bottom view and what's onscreen
       while (bottomView < childViews.length) {
         var view = childViews[bottomView],
           $view = view.$(),
           // in case of not full-window scrolling
-          scrollOffset = this.get('wrapperTop') >> 0,
-          viewTop = $view.position().top + scrollOffset,
+          scrollOffset = this.get('wrapperTop') || 0,
+          viewTop = $view.offset().top + scrollOffset,
           viewBottom = viewTop + $view.height();
 
         if (viewTop > viewportBottom) { break; }
@@ -141,6 +156,7 @@
 
         if (viewBottom > windowTop && viewTop <= windowBottom) {
           onscreen.push(view.get('content'));
+          onscreenCloaks.push(view);
         }
 
         bottomView++;
@@ -161,14 +177,27 @@
       }
 
       var toCloak = childViews.slice(0, topView).concat(childViews.slice(bottomView+1));
-      Em.run.schedule('afterRender', function() {
-        toUncloak.forEach(function (v) { v.uncloak(); });
+
+      this._uncloak = toUncloak;
+      if(this._nextUncloak){
+        Em.run.cancel(this._nextUncloak);
+        this._nextUncloak = null;
+      }
+
+      Em.run.schedule('afterRender', this, function() {
+        onscreenCloaks.forEach(function (v) {
+          if(v && v.uncloak) {
+            v.uncloak();
+          }
+        });
         toCloak.forEach(function (v) { v.cloak(); });
+        if (self._nextUncloak) { Em.run.cancel(self._nextUncloak); }
+        self._nextUncloak = Em.run.later(self, self.uncloakQueue,50);
       });
 
       for (var j=bottomView; j<childViews.length; j++) {
         var checkView = childViews[j];
-        if (!checkView.get('containedView')) {
+        if (!checkView._containedView) {
           if (!checkView.get('loading')) {
             checkView.$().html(this.get('loadingHTML') || "Loading...");
           }
@@ -178,19 +207,57 @@
 
     },
 
+    uncloakQueue: function(){
+      var maxPerRun = 3, delay = 50, processed = 0, self = this;
+
+      if(this._uncloak){
+        while(processed < maxPerRun && this._uncloak.length>0){
+          var view = this._uncloak.shift();
+          if(view && view.uncloak && !view._containedView){
+            Em.run.schedule('afterRender', view, view.uncloak);
+            processed++;
+          }
+        }
+        if(this._uncloak.length === 0){
+          this._uncloak = null;
+        } else {
+          Em.run.schedule('afterRender', self, function(){
+            if(self._nextUncloak){
+              Em.run.cancel(self._nextUncloak);
+            }
+            self._nextUncloak = Em.run.next(self, function(){
+              if(self._nextUncloak){
+                Em.run.cancel(self._nextUncloak);
+              }
+              self._nextUncloak = Em.run.later(self,self.uncloakQueue,delay);
+            });
+          });
+        }
+      }
+    },
+
     scrollTriggered: function() {
       Em.run.scheduleOnce('afterRender', this, 'scrolled');
     },
 
     _startEvents: function() {
+      if (this.get('offsetFixed')) {
+        Em.warn("Cloaked-collection's `offsetFixed` is deprecated. Use `offsetFixedTop` instead.");
+      }
+
       var self = this,
-          offsetFixed = this.get('offsetFixed'),
+          offsetFixedTop = this.get('offsetFixedTop') || this.get('offsetFixed'),
+          offsetFixedBottom = this.get('offsetFixedBottom'),
           onScrollMethod = function() {
             Ember.run.debounce(self, 'scrollTriggered', 10);
           };
 
-      if (offsetFixed) {
-        this.set('offsetFixedElement', $(offsetFixed));
+      if (offsetFixedTop) {
+        this.set('offsetFixedTopElement', $(offsetFixedTop));
+      }
+
+      if (offsetFixedBottom) {
+        this.set('offsetFixedBottomElement', $(offsetFixedBottom));
       }
 
       $(document).bind('touchmove.ember-cloak', onScrollMethod);
@@ -231,8 +298,10 @@
       @method uncloak
     */
     uncloak: function() {
-      var containedView = this.get('containedView');
-      if (!containedView) {
+      var state = this._state || this.state;
+      if (state !== 'inDOM' && state !== 'preRender') { return; }
+
+      if (!this._containedView) {
         var model = this.get('content'),
             controller = null,
             container = this.get('container');
@@ -271,10 +340,10 @@
         if (controller) { createArgs.controller = controller; }
         this.setProperties({
           style: null,
-          loading: false,
-          containedView: this.createChildView(this.get('cloaks'), createArgs)
+          loading: false
         });
 
+        this._containedView = this.createChildView(this.get('cloaks'), createArgs);
         this.rerender();
       }
     },
@@ -285,10 +354,9 @@
       @method cloak
     */
     cloak: function() {
-      var containedView = this.get('containedView'),
-          self = this;
+      var self = this;
 
-      if (containedView && this.get('state') === 'inDOM') {
+      if (this._containedView && (this._state || this.state) === 'inDOM') {
         var style = 'height: ' + this.$().height() + 'px;';
         this.set('style', style);
         this.$().prop('style', style);
@@ -296,16 +364,24 @@
         // We need to remove the container after the height of the element has taken
         // effect.
         Ember.run.schedule('afterRender', function() {
-          self.set('containedView', null);
-          containedView.willDestroyElement();
-          containedView.remove();
+          if(self._containedView){
+            self._containedView.remove();
+            self._containedView = null;
+          }
         });
       }
     },
 
+    _removeContainedView: function(){
+      if(this._containedView){
+        this._containedView.remove();
+        this._containedView = null;
+      }
+      this._super();
+    }.on('willDestroyElement'),
 
-    didInsertElement: function(){
-      if (!this.get('containedView')) {
+    _setHeights: function(){
+      if (!this._containedView) {
         // setting default height
         // but do not touch if height already defined
         if(!this.$().height()){
@@ -317,7 +393,7 @@
           this.$().css('height', defaultHeight);
         }
       }
-     },
+     }.on('didInsertElement'),
 
     /**
       Render the cloaked view if applicable.
@@ -325,12 +401,16 @@
       @method render
     */
     render: function(buffer) {
-      var containedView = this.get('containedView');
-      if (containedView && containedView.get('state') !== 'inDOM') {
+      var containedView = this._containedView, self = this;
+
+      if (containedView && (containedView._state || containedView.state) !== 'inDOM') {
+        containedView.triggerRecursively('willInsertElement');
         containedView.renderToBuffer(buffer);
         containedView.transitionTo('inDOM');
         Em.run.schedule('afterRender', function() {
-          containedView.didInsertElement();
+          if(self._containedView) {
+            self._containedView.triggerRecursively('didInsertElement');
+          }
         });
       }
     }

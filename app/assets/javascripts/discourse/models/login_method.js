@@ -31,6 +31,7 @@ Discourse.LoginMethod.reopenClass({
      * */
 
     [ "google",
+      "google_oauth2",
       "facebook",
       "cas",
       "twitter",
@@ -41,7 +42,7 @@ Discourse.LoginMethod.reopenClass({
 
         var params = {name: name};
 
-        if (name === "google") {
+        if (name === "google" || name === "google_oauth2") {
           params.frameWidth = 850;
           params.frameHeight = 500;
         } else if (name === "facebook") {

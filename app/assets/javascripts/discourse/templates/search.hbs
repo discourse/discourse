@@ -1,0 +1,32 @@
+{{view 'search-text-field' value=term searchContextEnabled=searchContextEnabled searchContext=searchContext id="search-term"}}
+{{#if searchContext}}
+<div class='search-context'>
+  <label>
+  {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
+  </label>
+</div>
+{{/if}}
+{{#if loading}}
+  <div class='searching'></div>
+{{else}}
+  {{#unless noResults}}
+    {{#each resultType in content.resultTypes}}
+      <ul>
+        <li class='heading row'>
+          {{resultType.name}}
+        </li>
+        {{view 'search-results-type' type=resultType.type displayType=resultType.displayType content=resultType.results}}
+      </ul>
+        <div class='no-results'>
+            {{#if resultType.more}}
+                <a href='#' class='filter' {{action "moreOfType" resultType.type bubbles=false}}>{{i18n show_more}} <i class="fa fa-chevron-down"></i></a>
+            {{else}}
+            {{/if}}
+        </div>
+    {{/each}}
+  {{else}}
+    <div class='no-results'>
+      {{i18n search.no_results}}
+    </div>
+  {{/unless}}
+{{/if}}
