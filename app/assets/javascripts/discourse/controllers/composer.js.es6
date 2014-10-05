@@ -316,7 +316,8 @@ export default DiscourseController.extend({
 
         // If we're already open, we don't have to do anything
         if (composerModel.get('composeState') === Discourse.Composer.OPEN &&
-            composerModel.get('draftKey') === opts.draftKey) {
+            composerModel.get('draftKey') === opts.draftKey &&
+            composerModel.action === opts.action) {
           return resolve();
         }
 
