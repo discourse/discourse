@@ -58,10 +58,11 @@ function validateAttribute(tagName, attribName, value) {
     // data-* catch-all validators
     if (tag && tag['data-*'] && !tag[attribName]) {
       var permitted = tag['data-*'];
-      if (permitted === value || permitted === '*' ||
-          ((permitted instanceof RegExp) && permitted.test(value))) {
-        return value;
-      }
+      if (permitted && (
+            permitted.indexOf(value) !== -1 ||
+            permitted.indexOf('*') !== -1 ||
+            ((permitted instanceof RegExp) && permitted.test(value)))
+        ) { return value; }
     }
   }
 
