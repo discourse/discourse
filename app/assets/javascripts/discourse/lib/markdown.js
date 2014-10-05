@@ -7,10 +7,44 @@
   @namespace Discourse
   @module Discourse
 **/
-var _validClasses = {},
-    _validIframes = [],
-    _validTags = {},
-    _decoratedCaja = false;
+
+/**
+ * An object mapping from HTML tag names to an object mapping the valid
+ * attributes on that tag to an array of permitted values.
+ *
+ * The permitted values can be strings or regexes.
+ *
+ * The pseduo-attribute 'data-*' can be used to validate any data-foo
+ * attributes without any specified validations.
+ *
+ * Code can insert into this map by calling Discourse.Markdown.whiteListTag().
+ *
+ * Example:
+ *
+ * <pre><code>
+ * {
+ *   a: {
+ *     href: ['*'],
+ *     data-mention-id: [/^\d+$/],
+ *     ...
+ *   },
+ *   code: {
+ *     class: ['ada', 'haskell', 'c', 'cpp', ... ]
+ *   },
+ *   ...
+ * }
+ * </code></pre>
+ *
+ * @private
+ */
+var _validTags = {};
+/**
+ * Classes valid on all elements. Map from class name to 'true'.
+ * @private
+ */
+var _validClasses = {};
+var _validIframes = [];
+var _decoratedCaja = false;
 
 function validateAttribute(tagName, attribName, value) {
   var tag = _validTags[tagName];
@@ -42,16 +76,33 @@ function validateAttribute(tagName, attribName, value) {
   }
 }
 
+function anchorRegexp(regex) {
+  if (/^\^.*\$$/.test(regex.source)) {
+    return regex; // already anchored
+  }
+
+  var flags = "";
+  if (regex.global) { throw "Invalid attribute validation regex - cannot be global"; }
+  if (regex.ignoreCase) { flags += "i"; }
+  if (regex.multiline) { flags += "m"; }
+  if (regex.sticky) { throw "Invalid attribute validation regex - cannot be sticky"; }
+
+  return new RegExp("^" + regex.source + "$", flags);
+}
+
 Discourse.Markdown = {
 
   /**
-    Whitelist class for only a certain tag
+    Add to the attribute whitelist for a certain HTML tag.
 
-    @param {String} tagName to whitelist
-    @param {String} attribName to whitelist
-    @param {String} value to whitelist
+    @param {String} tagName tag to whitelist the attr for
+    @param {String} attribName attr to whitelist for the tag
+    @param {String | RegExp} [value] whitelisted value for the attribute
   **/
   whiteListTag: function(tagName, attribName, value) {
+    if (value instanceof RegExp) {
+      value = anchorRegexp(value);
+    }
     _validTags[tagName] = _validTags[tagName] || {};
     _validTags[tagName][attribName] = _validTags[tagName][attribName] || [];
     _validTags[tagName][attribName].push(value || '*');
@@ -245,7 +296,7 @@ Discourse.Markdown.whiteListTag('a', 'class', 'mention');
 Discourse.Markdown.whiteListTag('a', 'data-bbcode');
 Discourse.Markdown.whiteListTag('a', 'name');
 
-Discourse.Markdown.whiteListTag('img', 'src', /^data:image.*/i);
+Discourse.Markdown.whiteListTag('img', 'src', /^data:image.*$/i);
 
 Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
