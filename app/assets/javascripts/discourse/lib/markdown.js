@@ -1,4 +1,4 @@
-/*global Markdown:true, hljs:true */
+/*global Markdown:true */
 
 /**
   Contains methods to help us with markdown formatting.
