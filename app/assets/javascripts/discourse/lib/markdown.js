@@ -52,18 +52,16 @@ function validateAttribute(tagName, attribName, value) {
   // Handle classes
   if (attribName === "class") {
     if (_validClasses[value]) { return value; }
+  }
 
-    if (tag) {
-      var classes = tag['class'];
-      if (classes && (classes.indexOf(value) !== -1 || classes.indexOf('*') !== -1)) {
+  if (attribName.indexOf('data-') === 0) {
+    // data-* catch-all validators
+    if (tag && tag['data-*'] && !tag[attribName]) {
+      var permitted = tag['data-*'];
+      if (permitted === value || permitted === '*' ||
+          ((permitted instanceof RegExp) && permitted.test(value))) {
         return value;
       }
-    }
-  } else if (attribName.indexOf('data-') === 0) {
-    // data-* attributes
-    if (tag) {
-      var allowed = tag[attribName] || tag['data-*'];
-      if (allowed && (allowed === value || allowed.indexOf('*') !== -1)) { return value; }
     }
   }
 
@@ -71,9 +69,11 @@ function validateAttribute(tagName, attribName, value) {
     var attrs = tag[attribName];
     if (attrs && (attrs.indexOf(value) !== -1 ||
                   attrs.indexOf('*') !== -1) ||
-                  _.any(attrs,function(r){return (r instanceof RegExp) && value.search(r) >= 0;})
+                  _.any(attrs, function(r) { return (r instanceof RegExp) && r.test(value); })
         ) { return value; }
   }
+
+  // return undefined;
 }
 
 function anchorRegexp(regex) {
