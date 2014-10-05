@@ -301,14 +301,6 @@ Discourse.Markdown.whiteListTag('img', 'src', /^data:image.*$/i);
 Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
 
-// explicitly whitelist classes we need allowed through for
-// syntax highlighting, grabbed from highlight.js
-hljs.listLanguages().forEach(function (language) {
-  Discourse.Markdown.whiteListTag('code', 'class', language);
-});
-Discourse.Markdown.whiteListTag('code', 'class', 'text');
-Discourse.Markdown.whiteListTag('code', 'class', 'lang-auto');
-
 Discourse.Markdown.whiteListTag('span', 'class', 'mention');
 Discourse.Markdown.whiteListTag('span', 'class', 'spoiler');
 Discourse.Markdown.whiteListTag('div', 'class', 'spoiler');
