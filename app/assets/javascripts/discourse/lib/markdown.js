@@ -289,10 +289,11 @@ Discourse.Markdown = {
 RSVP.EventTarget.mixin(Discourse.Markdown);
 
 Discourse.Markdown.whiteListTag('a', 'class', 'attachment');
-Discourse.Markdown.whiteListTag('a', 'target', '_blank');
 Discourse.Markdown.whiteListTag('a', 'class', 'onebox');
 Discourse.Markdown.whiteListTag('a', 'class', 'mention');
 
+Discourse.Markdown.whiteListTag('a', 'target', '_blank');
+Discourse.Markdown.whiteListTag('a', 'rel', 'nofollow');
 Discourse.Markdown.whiteListTag('a', 'data-bbcode');
 Discourse.Markdown.whiteListTag('a', 'name');
 
