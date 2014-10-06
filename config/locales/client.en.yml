@@ -101,6 +101,8 @@ en:
       google+: 'share this link on Google+'
       email: 'send this link in an email'
 
+    topic_admin_menu: "topic admin actions"
+
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
