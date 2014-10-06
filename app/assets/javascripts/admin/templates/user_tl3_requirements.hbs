@@ -65,13 +65,13 @@
           <th>{{i18n admin.user.tl3_requirements.flagged_posts}}</th>
           <td><i {{bind-attr class=":fa met.flagged_posts:fa-check:fa-times"}}></i></td>
           <td>{{num_flagged_posts}}</td>
-          <td>{{max_flagged_posts}} {{i18n max}}</td>
+          <td>{{i18n max_of_count count=max_flagged_posts}}</td>
         </tr>
         <tr>
           <th>{{i18n admin.user.tl3_requirements.flagged_by_users}}</th>
           <td><i {{bind-attr class=":fa met.flagged_by_users:fa-check:fa-times"}}></i></td>
           <td>{{num_flagged_by_users}}</td>
-          <td>{{max_flagged_by_users}} {{i18n max}}</td>
+          <td>{{i18n max_of_count count=max_flagged_by_users}}</td>
         </tr>
         <tr>
           <th>{{i18n admin.user.tl3_requirements.likes_given}}</th>
