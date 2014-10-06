@@ -549,11 +549,9 @@ iframe {
   }
 
   a.star {
-    margin-right: 7px;
+    margin: 10px 7px 20px 0;
     font-size: 20px;
-    margin-top: 10px;
     color: dark-light-diff($secondary, $primary, 80%, -20%) !important;
-
   }
   a.star.starred {color: $danger !important;}
 
@@ -575,10 +573,6 @@ iframe {
       margin: 0;
       padding: 0px 1px;
     }
-  }
-
-  .title-wrapper {
-    float: left;
   }
 
 }
