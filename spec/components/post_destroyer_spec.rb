@@ -128,6 +128,18 @@ describe PostDestroyer do
 
       reply1.reload.deleted_at.should_not == nil
     end
+
+    it "deletes posts immediately if delete_removed_posts_after is 0" do
+      Fabricate(:admin)
+      topic = post.topic
+      reply1 = create_post(topic: topic)
+
+      SiteSetting.stubs(:delete_removed_posts_after).returns(0)
+
+      PostDestroyer.new(reply1.user, reply1).destroy
+
+      reply1.reload.deleted_at.should_not == nil
+    end
   end
 
   describe 'basic destroying' do

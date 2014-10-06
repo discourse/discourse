@@ -41,10 +41,10 @@ class PostDestroyer
   end
 
   def destroy
-    if @user.staff?
-      staff_destroyed
+    if @user.staff? || SiteSetting.delete_removed_posts_after < 1
+      perform_delete
     elsif @user.id == @post.user_id
-      user_destroyed
+      mark_for_deletion
     end
   end
 
@@ -65,7 +65,7 @@ class PostDestroyer
 
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
   # show up in the topic
-  def staff_destroyed
+  def perform_delete
     Post.transaction do
       @post.trash!(@user)
       if @post.topic
@@ -81,9 +81,9 @@ class PostDestroyer
       remove_associated_replies
       remove_associated_notifications
       if @post.topic && @post.post_number == 1
-        StaffActionLogger.new(@user).log_topic_deletion(@post.topic, @opts.slice(:context))
+        StaffActionLogger.new(@user).log_topic_deletion(@post.topic, @opts.slice(:context)) if @user.id != @post.user_id
         @post.topic.trash!(@user)
-      else
+      elsif @user.id != @post.user_id
         StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))
       end
       update_associated_category_latest_topic
@@ -94,7 +94,7 @@ class PostDestroyer
   end
 
   # When a user 'deletes' their own post. We just change the text.
-  def user_destroyed
+  def mark_for_deletion
     Post.transaction do
       @post.revise(@user, I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after), force_new_version: true)
       @post.update_column(:user_deleted, true)
