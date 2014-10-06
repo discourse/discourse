@@ -94,7 +94,7 @@
 
     {{#if showExtraInfo}}
       <div class="extra-info-wrapper">
-        <div class="extra-info">
+        <div {{bind-attr class=":extra-info topic.category.isUncategorizedCategory::has-category"}}>
           {{#if showStarButton}}
             <a {{bind-attr class=":star topic.starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
           {{/if}}
@@ -116,9 +116,9 @@
             {{/if}}
           </h1>
           {{#if topic.category.parentCategory}}
-            {{bound-category-link topic.category.parentCategory}}
+            {{bound-category-link topic.category.parentCategory onlyStripe="true"}}
           {{/if}}
-          {{bound-category-link topic.category}}
+          {{bound-category-link topic.category onlyStripe="true"}}
         </div>
         </div>
       </div>
