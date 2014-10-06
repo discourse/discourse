@@ -136,6 +136,10 @@ aside.quote {
   }
 }
 
+p > code, li > code, pre > code {
+  color: #333;
+  background: #f8f8f8;
+}
 
 pre {
   code {
