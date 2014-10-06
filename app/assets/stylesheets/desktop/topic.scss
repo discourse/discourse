@@ -23,7 +23,6 @@
     font-size: 20px;
     margin-top: 6px;
     margin-right: 6px;
-    margin-bottom: 30px; // this allows the categories to align underneath title
   }
   #edit-title { width: 500px; }
   .category-combobox {
@@ -42,17 +41,11 @@
     line-height: 1.2em;
     overflow: hidden;
     a {color: $primary;}
-    a.badge-category {
-      float: left;
-      vertical-align: top;
-      margin-top: 2px;
-      margin-right: 5px;
-      }
-    a.edit-topic { font-size: 17px; position: absolute; margin-left: 8px; }
+
+
   }
-  .title-category-wrapper {
-    margin-top: 5px;
-  }
+
+
   .topic-statuses {
     margin-top: -2px;
   }
@@ -62,6 +55,8 @@
     margin-bottom: 2px;
   }
   .private-message-glyph { display: none; }
+
+
 }
 
 .private-message-glyph {

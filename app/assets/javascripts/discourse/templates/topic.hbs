@@ -9,11 +9,13 @@
   {{#if postStream.firstPostPresent}}
     <div id='topic-title'>
       <div class='container'>
-        <div class='inner'>
 
           {{#if showStarButton}}
             <a {{bind-attr class=":star starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="starTooltip"}}></a>
           {{/if}}
+
+          <div class="title-wrapper">
+
 
           {{#if editingTopic}}
             {{#if isPrivateMessage}}
@@ -48,19 +50,18 @@
               {{/if}}
             </h1>
 
-            <div class="title-category-wrapper">
             {{#unless isPrivateMessage}}
               {{#if category.parentCategory}}
                 {{bound-category-link category.parentCategory}}
               {{/if}}
               {{bound-category-link category}}
             {{/unless}}
-          </div>
+
+        </div>
 
           {{/if}}
           {{plugin-outlet "topic-title"}}
         </div>
-      </div>
     </div>
   {{/if}}
 

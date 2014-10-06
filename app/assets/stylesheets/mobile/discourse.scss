@@ -27,6 +27,7 @@ body {
       font-size: 20px;
       color: scale-color($primary, $lightness: 75%);
       margin-right: 8px;
+      margin-top: 4px;
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
