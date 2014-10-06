@@ -92,9 +92,6 @@ Discourse.HTML = {
         html = "<" + elem + " href=\"" + (opts.link === false ? '' : url) + "\" ",
         categoryStyle;
 
-    // Parent stripe implies onlyStripe
-    if (opts.onlyStripe) { opts.showParent = true; }
-
     html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) +
             (opts.onlyStripe ? ' clear-badge' : '') +
             extraClasses + "\" ";
@@ -116,10 +113,8 @@ Discourse.HTML = {
       html += ">" + name + "</" + elem + ">";
     }
 
-    if (opts.onlyStripe || (opts.showParent && category.get('parent_category_id'))) {
+    if (opts.showParent && category.get('parent_category_id')) {
       var parent = Discourse.Category.findById(category.get('parent_category_id'));
-      if (!parent) { parent = category; }
-
       categoryStyle = Discourse.HTML.categoryStyle(opts.onlyStripe ? category : parent) || '';
       html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent" + extraClasses + "' style=\"" + categoryStyle + 
              "\" href=\"" + (opts.link === false ? '' : url) + "\"><span class='category-name'>" +
