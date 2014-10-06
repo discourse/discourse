@@ -233,14 +233,11 @@ class UserNotifications < ActionMailer::Base
       end
     end
 
-    top = SiteText.text_for(:notification_email_top)
-
     html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
       template: 'email/notification',
       format: :html,
       locals: { context_posts: context_posts,
                 post: post,
-                top: top ? PrettyText.cook(top).html_safe : nil,
                 classes: RTL.new(user).css_class
       }
     )

@@ -626,9 +626,6 @@ en:
     bottom:
       title: "Bottom of the pages"
       description: "HTML that will be added at the bottom of every page."
-    notification_email_top:
-      title: "Notification Email Top"
-      description: "A message that will be displayed at the top of all notification emails."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
