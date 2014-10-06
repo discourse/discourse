@@ -413,6 +413,7 @@ Discourse::Application.routes.draw do
       post "upload" => "invites#upload_csv_chunk"
     end
   end
+  post "invites/reinvite" => "invites#resend_invite"
   post "invites/disposable" => "invites#create_disposable_invite"
   get "invites/redeem/:token" => "invites#redeem_disposable_invite"
   delete "invites" => "invites#destroy"
