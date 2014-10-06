@@ -21,4 +21,6 @@ class S3RegionSiteSetting < EnumSiteSetting
       'ap-northeast-1',
       'sa-east-1']
   end
+
+  private_class_method :valid_values
 end
