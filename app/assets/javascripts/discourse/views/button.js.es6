@@ -5,9 +5,10 @@ export default Discourse.View.extend({
 
   title: function() {
     return I18n.t(this.get('helpKey') || this.get('textKey'));
-  }.property('helpKey'),
+  }.property('helpKey', 'textKey'),
 
   text: function() {
+    if (Em.empty(this.get('textKey'))) { return ""; }
     return I18n.t(this.get('textKey'));
   }.property('textKey'),
 

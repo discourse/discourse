@@ -1,10 +1,11 @@
 // Styles for the topic admin menu
 
-#show-topic-admin {
+.show-topic-admin {
   position: fixed;
   top: 70px;
   right: 10px;
   z-index: 1000;
+  outline: 0;
 }
 
 .topic-admin-menu {
@@ -12,9 +13,6 @@
   width: 205px;
   padding: 10px;
   border: 1px solid scale-color-diff();
-  position: fixed;
-  top: 70px;
-  right: 10px;
   z-index: 1001;
 
   ul {

@@ -13,6 +13,10 @@ Discourse.TopicRoute = Discourse.Route.extend({
   },
 
   actions: {
+    showTopicAdminMenu: function() {
+      this.controllerFor("topic-admin-menu").send("show");
+    },
+
     // Modals that can pop up within a topic
     expandPostUser: function(post) {
       this.controllerFor('user-expansion').show(post.get('username'), post.get('uploaded_avatar_id'));
