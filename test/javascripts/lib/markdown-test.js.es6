@@ -1,6 +1,7 @@
 module("Discourse.Markdown", {
   setup: function() {
     Discourse.SiteSettings.traditional_markdown_linebreaks = false;
+    Discourse.SiteSettings.default_code_lang = "auto";
   }
 });
 
@@ -337,25 +338,25 @@ test("Code Blocks", function() {
          "it supports basic code blocks");
 
   cooked("```json\n{hello: 'world'}\n```\ntrailing",
-         "<p><pre><code class=\"json\">{hello: &#x27;world&#x27;}</code></pre></p>\n\n<p>trailing</p>",
+         "<p><pre><code class=\"lang-json\">{hello: &#x27;world&#x27;}</code></pre></p>\n\n<p>trailing</p>",
          "It does not truncate text after a code block.");
 
   cooked("```json\nline 1\n\nline 2\n\n\nline3\n```",
-         "<p><pre><code class=\"json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
+         "<p><pre><code class=\"lang-json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
          "it maintains new lines inside a code block.");
 
   cooked("hello\nworld\n```json\nline 1\n\nline 2\n\n\nline3\n```",
-         "<p>hello<br/>world<br/></p>\n\n<p><pre><code class=\"json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
+         "<p>hello<br/>world<br/></p>\n\n<p><pre><code class=\"lang-json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
          "it maintains new lines inside a code block with leading content.");
 
   cooked("```ruby\n<header>hello</header>\n```",
-         "<p><pre><code class=\"ruby\">&lt;header&gt;hello&lt;/header&gt;</code></pre></p>",
+         "<p><pre><code class=\"lang-ruby\">&lt;header&gt;hello&lt;/header&gt;</code></pre></p>",
          "it escapes code in the code block");
 
-  cooked("```text\ntext\n```", "<p><pre><code>text</code></pre></p>", "handles text without adding class");
+  cooked("```text\ntext\n```", "<p><pre><code class=\"lang-nohighlight\">text</code></pre></p>", "handles text by adding nohighlight");
 
   cooked("```ruby\n# cool\n```",
-         "<p><pre><code class=\"ruby\"># cool</code></pre></p>",
+         "<p><pre><code class=\"lang-ruby\"># cool</code></pre></p>",
          "it supports changing the language");
 
   cooked("    ```\n    hello\n    ```",
@@ -363,11 +364,11 @@ test("Code Blocks", function() {
          "only detect ``` at the begining of lines");
 
   cooked("```ruby\ndef self.parse(text)\n\n  text\nend\n```",
-         "<p><pre><code class=\"ruby\">def self.parse(text)\n\n  text\nend</code></pre></p>",
+         "<p><pre><code class=\"lang-ruby\">def self.parse(text)\n\n  text\nend</code></pre></p>",
          "it allows leading spaces on lines in a code block.");
 
   cooked("```ruby\nhello `eviltrout`\n```",
-         "<p><pre><code class=\"ruby\">hello &#x60;eviltrout&#x60;</code></pre></p>",
+         "<p><pre><code class=\"lang-ruby\">hello &#x60;eviltrout&#x60;</code></pre></p>",
          "it allows code with backticks in it");
 
   cooked("```eviltrout\nhello\n```",
