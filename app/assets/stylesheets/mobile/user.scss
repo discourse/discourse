@@ -170,6 +170,9 @@
           a {
             color: inherit;
           }
+          .btn {
+            float: none;
+          }
         }
         dt {
           color: scale-color($primary, $lightness: 75%);
