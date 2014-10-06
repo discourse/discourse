@@ -280,6 +280,40 @@ describe InvitesController do
 
   end
 
+  context '.resend_invite' do
+
+    it 'requires you to be logged in' do
+      lambda {
+        delete :resend_invite, email: 'first_name@example.com'
+      }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'while logged in' do
+      let!(:user) { log_in }
+      let!(:invite) { Fabricate(:invite, invited_by: user) }
+      let(:another_invite) { Fabricate(:invite, email: 'last_name@example.com') }
+
+      it 'raises an error when the email is missing' do
+        lambda { post :resend_invite }.should raise_error(ActionController::ParameterMissing)
+      end
+
+      it "raises an error when the email cannot be found" do
+        lambda { post :resend_invite, email: 'first_name@example.com' }.should raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'raises an error when the invite is not yours' do
+        lambda { post :resend_invite, email: another_invite.email }.should raise_error(Discourse::InvalidParameters)
+      end
+
+      it "resends the invite" do
+        Invite.any_instance.expects(:resend_invite)
+        post :resend_invite, email: invite.email
+      end
+
+    end
+
+  end
+
   context '.check_csv_chunk' do
     it 'requires you to be logged in' do
       lambda {

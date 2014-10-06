@@ -15,6 +15,14 @@ Discourse.Invite = Discourse.Model.extend({
       data: { email: this.get('email') }
     });
     this.set('rescinded', true);
+  },
+
+  reinvite: function() {
+    Discourse.ajax('/invites/reinvite', {
+      type: 'POST',
+      data: { email: this.get('email') }
+    });
+    this.set('reinvited', true);
   }
 
 });
@@ -46,5 +54,3 @@ Discourse.Invite.reopenClass({
   }
 
 });
-
-
