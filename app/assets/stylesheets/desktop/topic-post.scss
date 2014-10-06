@@ -540,12 +540,17 @@ iframe {
   }
 }
 
+.extra-info.has-category {
+  h1 {
+    line-height: 1.0em;
+  }
+}
+
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
     font-size: 1.6em;
     line-height: 1.3em;
-
   }
 
   a.star {
@@ -561,15 +566,20 @@ iframe {
     margin-top: -2px;
   }
 
-  .badge-category {
-    border-left: 5px solid;
-    border-color: #aaa;
-    font-weight: normal;
-    text-transform: lowercase;
-    padding: 0 0 0 5px;
-    margin: 0 5px 0 1px;
-    vertical-align: top;
+  .badge-wrapper {
+    margin: 0;
+    padding: 0;
 
+    .badge-category {
+      color: $primary;
+      padding: 0 0 0 3px;
+      margin-right: 5px;
+    }
+
+    .badge-category-parent {
+      margin: 0;
+      padding: 0px 1px;
+    }
   }
 
   .title-wrapper {
