@@ -99,27 +99,27 @@
             <a {{bind-attr class=":star topic.starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
           {{/if}}
           <div class="title-wrapper">
-          <h1>
-            {{#if showPrivateMessageGlyph}}
-              <span class="private-message-glyph">{{fa-icon envelope}}</span>
-            {{/if}}
-
-            {{#if topic.details.loaded}}
-              {{topic-status topic=topic}}
-              <a class='topic-link' href='{{unbound topic.url}}' {{action "jumpToTopPost"}}>{{{topic.fancy_title}}}</a>
-            {{else}}
-              {{#if topic.errorLoading}}
-                {{topic.errorTitle}}
-              {{else}}
-                {{i18n topic.loading}}
+            <h1>
+              {{#if showPrivateMessageGlyph}}
+                <span class="private-message-glyph">{{fa-icon envelope}}</span>
               {{/if}}
+
+              {{#if topic.details.loaded}}
+                {{topic-status topic=topic}}
+                <a class='topic-link' href='{{unbound topic.url}}' {{action "jumpToTopPost"}}>{{{topic.fancy_title}}}</a>
+              {{else}}
+                {{#if topic.errorLoading}}
+                  {{topic.errorTitle}}
+                {{else}}
+                  {{i18n topic.loading}}
+                {{/if}}
+              {{/if}}
+            </h1>
+            {{#if topic.category.parentCategory}}
+              {{bound-category-link topic.category.parentCategory onlyStripe="true"}}
             {{/if}}
-          </h1>
-          {{#if topic.category.parentCategory}}
-            {{bound-category-link topic.category.parentCategory onlyStripe="true"}}
-          {{/if}}
-          {{bound-category-link topic.category onlyStripe="true"}}
-        </div>
+            {{bound-category-link topic.category onlyStripe="true"}}
+          </div>
         </div>
       </div>
     {{/if}}
