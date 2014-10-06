@@ -551,7 +551,7 @@ iframe {
   a.star {
     margin-right: 7px;
     font-size: 20px;
-    margin-top: 6px;
+    margin-top: 10px;
     color: dark-light-diff($secondary, $primary, 80%, -20%) !important;
 
   }
@@ -562,11 +562,18 @@ iframe {
   }
 
   .badge-category {
+    border-left: 5px solid;
+    border-color: #aaa;
+    font-weight: normal;
+    text-transform: lowercase;
+    padding: 0 0 0 5px;
+    margin: 0 5px 0 1px;
     vertical-align: top;
-    margin-top: 2px;
+
+  }
+
+  .title-wrapper {
     float: left;
-    margin-right: 5px;
-    display: none;
   }
 
 }
