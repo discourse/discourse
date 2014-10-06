@@ -540,12 +540,7 @@ iframe {
   }
 }
 
-.extra-info.has-category {
-  h1 {
-    line-height: 1.0em;
-  }
-}
-
+/* default docked header CSS for all topics, including those without categories */
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
@@ -587,6 +582,18 @@ iframe {
   }
 
 }
+
+/* override docked header CSS for topics with categories */
+.extra-info.has-category {
+  h1 {
+    line-height: 1.1em;
+    margin: 0 0 2px 0;
+  }
+  star {
+    margin-top: 5px;
+  }
+}
+
 
 .open >.dropdown-menu {
   display: block;
