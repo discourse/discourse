@@ -120,9 +120,6 @@ describe UserNotifications do
       # subject should not include category name
       expect(mail.subject).not_to match(/Uncategorized/)
 
-      # subject should include "Re:"
-      expect(mail.subject).to match("Re:")
-
       # 2 respond to links cause we have 1 context post
       mail.html_part.to_s.scan(/To respond/).count.should == 2
 
