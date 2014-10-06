@@ -18,7 +18,6 @@ class SiteText < ActiveRecord::Base
   add_text_type :top, allow_blank: true, format: :html
   add_text_type :bottom, allow_blank: true, format: :html
   add_text_type :head, allow_blank: true, format: :html
-  add_text_type :notification_email_top, allow_blank: true, format: :markdown
 
   def site_text_type
     @site_text_type ||= SiteText.find_text_type(text_type)
