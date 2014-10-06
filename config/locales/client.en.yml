@@ -136,7 +136,7 @@ en:
     daily: "daily"
     weekly: "weekly"
     every_two_weeks: "every two weeks"
-    max: "max"
+    max_of_count: "max of {{count}}"
     character_count:
       one: "{{count}} character"
       other: "{{count}} characters"
