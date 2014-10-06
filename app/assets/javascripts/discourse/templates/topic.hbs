@@ -9,14 +9,11 @@
   {{#if postStream.firstPostPresent}}
     <div id='topic-title'>
       <div class='container'>
+        {{#if showStarButton}}
+          <a {{bind-attr class=":star starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="starTooltip"}}></a>
+        {{/if}}
 
-          {{#if showStarButton}}
-            <a {{bind-attr class=":star starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="starTooltip"}}></a>
-          {{/if}}
-
-          <div class="title-wrapper">
-
-
+        <div class="title-wrapper">
           {{#if editingTopic}}
             {{#if isPrivateMessage}}
               <span class="private-message-glyph">{{fa-icon envelope}}</span>
@@ -56,12 +53,10 @@
               {{/if}}
               {{bound-category-link category}}
             {{/unless}}
-
-        </div>
-
           {{/if}}
-          {{plugin-outlet "topic-title"}}
         </div>
+        {{plugin-outlet "topic-title"}}
+      </div>
     </div>
   {{/if}}
 
