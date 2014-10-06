@@ -85,6 +85,8 @@ class GlobalSetting
       provider.read
       provider
     end
+
+    private_class_method :parse
   end
 
   class EnvProvider < BaseProvider

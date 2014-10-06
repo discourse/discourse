@@ -14,7 +14,7 @@ class TopTopic < ActiveRecord::Base
 
   # We don't have to refresh these as often
   def self.refresh_older!
-    older_periods = TopTopic.periods - [:daily]
+    older_periods = periods - [:daily]
 
     transaction do
       older_periods.each do |period|
@@ -24,8 +24,8 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.refresh!
-    TopTopic.refresh_daily!
-    TopTopic.refresh_older!
+    refresh_daily!
+    refresh_older!
   end
 
 
@@ -38,10 +38,10 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.update_counts_and_compute_scores_for(period)
-    TopTopic.sort_orders.each do |sort|
+    sort_orders.each do |sort|
       TopTopic.send("update_#{sort}_count_for", period)
     end
-    TopTopic.compute_top_score_for(period)
+    compute_top_score_for(period)
   end
 
   def self.remove_invisible_topics
@@ -90,7 +90,7 @@ class TopTopic < ActiveRecord::Base
                AND user_id <> #{Discourse.system_user.id}
              GROUP BY topic_id"
 
-    TopTopic.update_top_topics(period, "posts", sql)
+    update_top_topics(period, "posts", sql)
   end
 
   def self.update_views_count_for(period)
@@ -99,7 +99,7 @@ class TopTopic < ActiveRecord::Base
              WHERE viewed_at >= :from
              GROUP BY topic_id"
 
-    TopTopic.update_top_topics(period, "views", sql)
+    update_top_topics(period, "views", sql)
   end
 
   def self.update_likes_count_for(period)
@@ -111,7 +111,7 @@ class TopTopic < ActiveRecord::Base
                AND post_type = #{Post.types[:regular]}
              GROUP BY topic_id"
 
-    TopTopic.update_top_topics(period, "likes", sql)
+    update_top_topics(period, "likes", sql)
   end
 
   def self.compute_top_score_for(period)
@@ -154,6 +154,9 @@ class TopTopic < ActiveRecord::Base
              from: start_of(period))
   end
 
+  private_class_method :sort_orders, :update_counts_and_compute_scores_for, :remove_invisible_topics,
+                       :add_new_visible_topics, :update_posts_count_for, :update_views_count_for, :update_likes_count_for,
+                       :compute_top_score_for, :start_of, :update_top_topics
 end
 
 # == Schema Information
