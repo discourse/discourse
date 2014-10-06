@@ -3,7 +3,7 @@ class InvitesController < ApplicationController
   skip_before_filter :check_xhr
   skip_before_filter :redirect_to_login_if_required
 
-  before_filter :ensure_logged_in, only: [:destroy, :create, :check_csv_chunk, :upload_csv_chunk]
+  before_filter :ensure_logged_in, only: [:destroy, :create, :resend_invite, :check_csv_chunk, :upload_csv_chunk]
   before_filter :ensure_new_registrations_allowed, only: [:show, :redeem_disposable_invite]
 
   def show
@@ -92,6 +92,16 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invited_by_id: current_user.id, email: params[:email])
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.trash!(current_user)
+
+    render nothing: true
+  end
+
+  def resend_invite
+    params.require(:email)
+
+    invite = Invite.find_by(invited_by_id: current_user.id, email: params[:email])
+    raise Discourse::InvalidParameters.new(:email) if invite.blank?
+    invite.resend_invite
 
     render nothing: true
   end
