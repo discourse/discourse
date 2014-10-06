@@ -416,15 +416,14 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.ajax("/users/" + this.get("username_lower") + "/emails.json", {
       type: "PUT",
       data: { context: window.location.pathname }
-    })
-    .then(function (result) {
+    }).then(function (result) {
       if (result) {
         self.setProperties({
           email: result.email,
           associated_accounts: result.associated_accounts
         });
       }
-    });
+    }, function () {});
   }
 
 });

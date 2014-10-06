@@ -367,30 +367,46 @@ Discourse.AdminUser = Discourse.User.extend({
 
   deleteAsSpammer: function(successCallback) {
     var user = this;
-    var message = I18n.t('flagging.delete_confirm', {posts: user.get('post_count'), topics: user.get('topic_count'), email: user.get('email'), ip_address: user.get('ip_address')});
-    var buttons = [{
-      "label": I18n.t("composer.cancel"),
-      "class": "cancel-inline",
-      "link":  true
-    }, {
-      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("flagging.yes_delete_spammer"),
-      "class": "btn btn-danger",
-      "callback": function() {
-        Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
-          type: 'DELETE',
-          data: {delete_posts: true, block_email: true, block_urls: true, block_ip: true, context: window.location.pathname}
-        }).then(function(data) {
-          if (data.deleted) {
-            if (successCallback) successCallback();
-          } else {
+
+    user.checkEmail().then(function() {
+      var data = {
+        posts: user.get('post_count'),
+        topics: user.get('topic_count'),
+        email: user.get('email') || I18n.t("flagging.hidden_email_address"),
+        ip_address: user.get('ip_address') || I18n.t("flagging.ip_address_missing")
+      };
+      var message = I18n.t('flagging.delete_confirm', data);
+      var buttons = [{
+        "label": I18n.t("composer.cancel"),
+        "class": "cancel-inline",
+        "link":  true
+      }, {
+        "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("flagging.yes_delete_spammer"),
+        "class": "btn btn-danger",
+        "callback": function() {
+          Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
+            type: 'DELETE',
+            data: {
+              delete_posts: true,
+              block_email: true,
+              block_urls: true,
+              block_ip: true,
+              context: window.location.pathname
+            }
+          }).then(function(result) {
+            if (result.deleted) {
+              if (successCallback) successCallback();
+            } else {
+              bootbox.alert(I18n.t("admin.user.delete_failed"));
+            }
+          }, function() {
             bootbox.alert(I18n.t("admin.user.delete_failed"));
-          }
-        }, function() {
-          bootbox.alert(I18n.t("admin.user.delete_failed"));
-        });
-      }
-    }];
-    bootbox.dialog(message, buttons, {"classes": "flagging-delete-spammer"});
+          });
+        }
+      }];
+      bootbox.dialog(message, buttons, {"classes": "flagging-delete-spammer"});
+    });
+
   },
 
   loadDetails: function() {
