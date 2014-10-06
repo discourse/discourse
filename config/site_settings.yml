@@ -339,6 +339,7 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
+    min: 0
   traditional_markdown_linebreaks:
     client: true
     default: false

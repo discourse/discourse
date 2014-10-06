@@ -233,8 +233,8 @@ Discourse.Post = Discourse.Model.extend({
   setDeletedState: function(deletedBy) {
     this.set('oldCooked', this.get('cooked'));
 
-    // Moderators can delete posts. Users can only trigger a deleted at message.
-    if (deletedBy.get('staff')) {
+    // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
+    if (deletedBy.get('staff') || Discourse.SiteSettings.delete_removed_posts_after === 0) {
       this.setProperties({
         deleted_at: new Date(),
         deleted_by: deletedBy,
