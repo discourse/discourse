@@ -474,6 +474,8 @@ en:
         expired: "This invite has expired."
         rescind: "Remove"
         rescinded: "Invite removed"
+        reinvite: "Resend Invite"
+        reinvited: "Invite re-sent"
         time_read: "Read Time"
         days_visited: "Days Visited"
         account_age_days: "Account age in days"

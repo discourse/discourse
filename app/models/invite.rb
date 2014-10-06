@@ -95,7 +95,6 @@ class Invite < ActiveRecord::Base
     invite
   end
 
-
   # generate invite tokens without email
   def self.generate_disposable_tokens(invited_by, quantity=nil, group_names=nil)
     invite_tokens = []
@@ -177,6 +176,11 @@ class Invite < ActiveRecord::Base
       user = InviteRedeemer.new(invite, username, name).redeem
     end
     user
+  end
+
+  def resend_invite
+    self.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now)
+    Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 
   def self.base_directory
