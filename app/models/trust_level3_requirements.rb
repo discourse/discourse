@@ -17,6 +17,9 @@ class TrustLevel3Requirements
                 :num_flagged_posts, :max_flagged_posts,
                 :num_likes_given, :min_likes_given,
                 :num_likes_received, :min_likes_received,
+                :num_likes_received, :min_likes_received,
+                :num_likes_received_days, :min_likes_received_days,
+                :num_likes_received_users, :min_likes_received_users,
                 :trust_level_locked, :on_grace_period
 
   def initialize(user)
@@ -35,7 +38,9 @@ class TrustLevel3Requirements
     topics_viewed_all_time >= min_topics_viewed_all_time &&
     posts_read_all_time >= min_posts_read_all_time &&
     num_likes_given >= min_likes_given &&
-    num_likes_received >= min_likes_received
+    num_likes_received >= min_likes_received &&
+    num_likes_received_users >= min_likes_received_users &&
+    num_likes_received_days >= min_likes_received_days
   end
 
   def requirements_lost?
@@ -50,7 +55,9 @@ class TrustLevel3Requirements
     topics_viewed_all_time < min_topics_viewed_all_time ||
     posts_read_all_time < min_posts_read_all_time ||
     num_likes_given < min_likes_given * LOW_WATER_MARK ||
-    num_likes_received < min_likes_received * LOW_WATER_MARK
+    num_likes_received < min_likes_received * LOW_WATER_MARK ||
+    num_likes_received_users < min_likes_received_users * LOW_WATER_MARK ||
+    num_likes_received_days < min_likes_received_days * LOW_WATER_MARK
   end
 
   def trust_level_locked
@@ -147,12 +154,34 @@ class TrustLevel3Requirements
     SiteSetting.tl3_requires_likes_given
   end
 
+  def num_likes_received_query
+    UserAction.where(user_id: @user.id, action_type: UserAction::WAS_LIKED).where('created_at > ?', TIME_PERIOD.days.ago)
+  end
+
   def num_likes_received
-    UserAction.where(user_id: @user.id, action_type: UserAction::WAS_LIKED).where('created_at > ?', TIME_PERIOD.days.ago).count
+    num_likes_received_query.count
   end
 
   def min_likes_received
     SiteSetting.tl3_requires_likes_received
+  end
+
+  def num_likes_received_days
+    # don't do a COUNT(DISTINCT date(created_at)) here!
+    num_likes_received_query.pluck('date(created_at)').uniq.size
+  end
+
+  def min_likes_received_days
+    (min_likes_received.to_f / 3.0).ceil
+  end
+
+  def num_likes_received_users
+    # don't do a COUNT(DISTINCT acting_user_id) here!
+    num_likes_received_query.pluck(:acting_user_id).uniq.size
+  end
+
+  def min_likes_received_users
+    (min_likes_received.to_f / 4.0).ceil
   end
 
 

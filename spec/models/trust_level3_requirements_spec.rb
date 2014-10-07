@@ -59,6 +59,8 @@ describe TrustLevel3Requirements do
     it "min_likes_received depends on site setting" do
       SiteSetting.stubs(:tl3_requires_likes_received).returns(20)
       tl3_requirements.min_likes_received.should == 20
+      tl3_requirements.min_likes_received_days.should == 7
+      tl3_requirements.min_likes_received_users.should == 5
     end
   end
 
@@ -188,11 +190,15 @@ describe TrustLevel3Requirements do
       recent_post1 = create_post(topic: t, user: user, created_at: 1.hour.ago)
 
       liker = Fabricate(:user)
-      Fabricate(:like, user: liker, post: recent_post1, created_at: 2.hours.ago)
-      Fabricate(:like, user: liker, post: recent_post2, created_at: 5.days.ago)
-      Fabricate(:like, user: liker, post: old_post,     created_at: 101.days.ago)
+      liker2 = Fabricate(:user)
+      Fabricate(:like, user: liker,  post: recent_post1, created_at: 2.hours.ago)
+      Fabricate(:like, user: liker2, post: recent_post1, created_at: 2.hours.ago)
+      Fabricate(:like, user: liker,  post: recent_post2, created_at: 5.days.ago)
+      Fabricate(:like, user: liker,  post: old_post,     created_at: 101.days.ago)
 
-      tl3_requirements.num_likes_received.should == 2
+      tl3_requirements.num_likes_received.should == 3
+      tl3_requirements.num_likes_received_days.should == 2
+      tl3_requirements.num_likes_received_users.should == 2
     end
   end
 
@@ -209,6 +215,8 @@ describe TrustLevel3Requirements do
       tl3_requirements.stubs(:max_flagged_by_users).returns(5)
       tl3_requirements.stubs(:min_likes_given).returns(30)
       tl3_requirements.stubs(:min_likes_received).returns(20)
+      tl3_requirements.stubs(:min_likes_received_days).returns(7)
+      tl3_requirements.stubs(:min_likes_received_users).returns(5)
 
       tl3_requirements.stubs(:days_visited).returns(50)
       tl3_requirements.stubs(:num_topics_replied_to).returns(10)
@@ -220,6 +228,8 @@ describe TrustLevel3Requirements do
       tl3_requirements.stubs(:num_flagged_by_users).returns(0)
       tl3_requirements.stubs(:num_likes_given).returns(30)
       tl3_requirements.stubs(:num_likes_received).returns(20)
+      tl3_requirements.stubs(:num_likes_received_days).returns(7)
+      tl3_requirements.stubs(:num_likes_received_users).returns(5)
     end
 
     it "are met when all requirements are met" do
@@ -271,6 +281,16 @@ describe TrustLevel3Requirements do
       tl3_requirements.requirements_met?.should == false
     end
 
+    it "are not met if not enough likes received on different days" do
+      tl3_requirements.stubs(:num_likes_received_days).returns(6)
+      tl3_requirements.requirements_met?.should == false
+    end
+
+    it "are not met if not enough likes received by different users" do
+      tl3_requirements.stubs(:num_likes_received_users).returns(4)
+      tl3_requirements.requirements_met?.should == false
+    end
+
     it "are lost if not enough likes given" do
       tl3_requirements.stubs(:num_likes_given).returns(26)
       tl3_requirements.requirements_lost?.should == true
@@ -284,6 +304,16 @@ describe TrustLevel3Requirements do
     it "are not met if suspended" do
       user.stubs(:suspended?).returns(true)
       tl3_requirements.requirements_met?.should == false
+    end
+
+    it "are lost if not enough likes received on different days" do
+      tl3_requirements.stubs(:num_likes_received_days).returns(4)
+      tl3_requirements.requirements_lost?.should == true
+    end
+
+    it "are lost if not enough likes received by different users" do
+      tl3_requirements.stubs(:num_likes_received_users).returns(3)
+      tl3_requirements.requirements_lost?.should == true
     end
 
     it "are lost if suspended" do
