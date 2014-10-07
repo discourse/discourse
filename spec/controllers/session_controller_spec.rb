@@ -2,6 +2,24 @@ require 'spec_helper'
 
 describe SessionController do
 
+  describe 'become' do
+    let!(:user) { Fabricate(:user) }
+
+    it "does not work when not in development mode" do
+      Rails.env.stubs(:development?).returns(false)
+      get :become, session_id: user.username
+      response.should_not be_redirect
+      session[:current_user_id].should be_blank
+    end
+
+    it "works in developmenet mode" do
+      Rails.env.stubs(:development?).returns(true)
+      get :become, session_id: user.username
+      response.should be_redirect
+      session[:current_user_id].should == user.id
+    end
+  end
+
   describe '.sso_login' do
 
     before do

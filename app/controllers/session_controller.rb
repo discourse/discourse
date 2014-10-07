@@ -3,7 +3,7 @@ require_dependency 'rate_limiter'
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
-  skip_before_filter :check_xhr, only: ['sso', 'sso_login']
+  skip_before_filter :check_xhr, only: ['sso', 'sso_login', 'become']
 
   def csrf
     render json: {csrf: form_authenticity_token }
@@ -15,6 +15,17 @@ class SessionController < ApplicationController
     else
       render nothing: true, status: 404
     end
+  end
+
+  # For use in development mode only when login options could be limited or disabled.
+  # NEVER allow this to work in production.
+  def become
+    raise Discourse::InvalidAccess.new unless Rails.env.development?
+    user = User.find_by_username(params[:session_id])
+    raise "User #{params[:session_id]} not found" if user.blank?
+
+    log_on_user(user)
+    redirect_to "/"
   end
 
   def sso_login

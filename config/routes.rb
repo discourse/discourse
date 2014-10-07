@@ -177,7 +177,8 @@ Discourse::Application.routes.draw do
   get "email/unsubscribe/:key" => "email#unsubscribe", as: "email_unsubscribe"
   post "email/resubscribe/:key" => "email#resubscribe", as: "email_resubscribe"
 
-  resources :session, id: USERNAME_ROUTE_FORMAT, only: [:create, :destroy] do
+  resources :session, id: USERNAME_ROUTE_FORMAT, only: [:create, :destroy, :become] do
+    get 'become'
     collection do
       post "forgot_password"
     end
