@@ -770,6 +770,12 @@ describe TopicsController do
           expect(response).not_to be_success
         end
 
+        it "returns errors when the rate limit is exceeded" do
+          EditRateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'This is a new title for the topic'
+          response.should_not be_success
+        end
+
         it "returns errors with invalid categories" do
           Topic.any_instance.expects(:change_category_to_id).returns(false)
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title
