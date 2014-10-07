@@ -62,9 +62,8 @@ class UserUpdater
       end
     end
 
-    PROFILE_ATTR.each do |attribute|
-      user_profile.send("#{attribute}=", attributes[attribute])
-    end
+    user_profile.location = attributes[:location]
+    user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[:dismissed_banner_key].present?
 
     fields = attributes[:custom_fields]
     if fields.present?
