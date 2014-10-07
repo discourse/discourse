@@ -18,6 +18,11 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
   queryPending: Em.computed.equal('query', 'pending'),
   queryHasApproval: Em.computed.or('queryNew', 'queryPending'),
 
+  searchHint: function() {
+    var searchHintKey = Discourse.User.currentProp("admin") ? "search_hint_admin" : "search_hint";
+    return I18n.t(searchHintKey);
+  }.property(),
+
   /**
     Triggered when the selectAll property is changed
 
