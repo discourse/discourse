@@ -96,6 +96,34 @@ describe AdminUserIndexQuery do
 
   describe "filtering" do
 
+    context "by email fragment" do
+      before(:each) { Fabricate(:user, email: "test1@example.com") }
+
+      context "when authenticated as a non-admin user" do
+
+        it "doesn't match the email" do
+          query = ::AdminUserIndexQuery.new({ filter: "test1@example.com" })
+          expect(query.find_users.count()).to eq(0)
+        end
+
+      end
+
+      context "when authenticated as an admin user" do
+
+        it "matches the email" do
+          query = ::AdminUserIndexQuery.new({ filter: "est1", admin: true })
+          expect(query.find_users.count()).to eq(1)
+        end
+
+        it "matches the email using any case" do
+          query = ::AdminUserIndexQuery.new({ filter: "Test1", admin: true })
+          expect(query.find_users.count()).to eq(1)
+        end
+
+      end
+
+    end
+
     context "by username fragment" do
       before(:each) { Fabricate(:user, username: "test_user_1") }
 

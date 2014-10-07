@@ -36,13 +36,17 @@ class AdminUserIndexQuery
 
   def filter_by_search
     if params[:filter].present?
-      @query.where('username_lower ILIKE :filter', filter: "%#{params[:filter]}%")
+      if params[:admin] == true
+        @query.where('username_lower ILIKE :filter OR email ILIKE :filter', filter: "%#{params[:filter]}%")
+      else
+        @query.where('username_lower ILIKE :filter', filter: "%#{params[:filter]}%")
+      end
     end
   end
 
   def filter_by_ip
     if params[:ip].present?
-      @query.where('ip_address = :ip or registration_ip_address = :ip', ip: params[:ip])
+      @query.where('ip_address = :ip OR registration_ip_address = :ip', ip: params[:ip])
     end
   end
 
