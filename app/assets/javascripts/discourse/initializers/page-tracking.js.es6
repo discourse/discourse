@@ -13,7 +13,7 @@ export default {
     // if it is present
     if (typeof window._gaq !== 'undefined') {
       pageTracker.on('change', function() {
-        Em.run.later(function {
+        Em.run.later(function() {
           window._gaq.push(["_set", "title", Discourse.title]);
           window._gaq.push(['_trackPageview', window.location.pathname+window.location.search]);
         },350);
@@ -24,7 +24,7 @@ export default {
     // Also use Universal Analytics if it is present
     if (typeof window.ga !== 'undefined') {
       pageTracker.on('change', function() {
-        Em.run.later(function {
+        Em.run.later(function() {
           window.ga('send', 'pageview', {'page':window.location.pathname+window.location.search,'title':Discourse.title});
         },350);
       });
