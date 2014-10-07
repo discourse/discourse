@@ -30,10 +30,14 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def escape_attribute(v)
-    v.gsub("&", "&amp;")
-     .gsub("\"", "&#34;")
-     .gsub("<", "&lt;")
-     .gsub(">", "&gt;")
+    return "" unless v
+
+    v = v.dup
+    v.gsub!("&", "&amp;")
+    v.gsub!("\"", "&#34;")
+    v.gsub!("<", "&lt;")
+    v.gsub!(">", "&gt;")
+    v
   end
 
   def include_tag(name, attributes)
