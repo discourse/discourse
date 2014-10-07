@@ -114,6 +114,8 @@ You should see Staff topics and the [Admin Quick Start Guide](https://github.com
 
 # Post-Install Maintenance
 
+We strongly suggest you turn on automatic security upates for Ubuntu via the `dpkg-reconfigure -plow unattended-upgrades` command.
+
 To **upgrade Discourse to the latest version**, visit `/admin/upgrade` and follow the instructions.
 
 The `launcher` command in the `/var/discourse` folder can be used for various kinds of maintenance:
@@ -156,6 +158,8 @@ Do you want...
 - A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857). We recommend [Fastly](http://www.fastly.com/).
 
 - Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/master/script/import_scripts)
+
+- A firewall on your server? [Configure firewall](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584)
 
 If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][meta], or even better, submit a pull request.
 
