@@ -7,11 +7,13 @@
     color: $primary;
     display: inline-block;
   }
-  .highlighted .topic-count {
+  .highlighted .topic-count, .select2-highlighted .category-desc {
     color: $secondary;
   }
   .category-desc {
+    color: scale-color($primary, $lightness: 45%);
     margin: 6px 0 0 3px;
     font-size: 12px;
+    line-height: 16px;
   }
 }
