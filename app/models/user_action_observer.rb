@@ -33,7 +33,7 @@ class UserActionObserver < ActiveRecord::Observer
     end
   end
 
-  def self.log_notification(post, user, notification_type)
+  def self.log_notification(post, user, notification_type, acting_user_id = nil)
     action =
       case notification_type
         when Notification.types[:quoted]
@@ -52,7 +52,7 @@ class UserActionObserver < ActiveRecord::Observer
     row = {
         action_type: action,
         user_id: user.id,
-        acting_user_id: (action == UserAction::EDIT) ? post.last_editor_id : post.user_id,
+        acting_user_id: acting_user_id || post.user_id,
         target_topic_id: post.topic_id,
         target_post_id: post.id
     }

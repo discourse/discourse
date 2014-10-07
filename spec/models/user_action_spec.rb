@@ -90,6 +90,17 @@ describe UserAction do
       # duplicate should not exception out
       log_test_action
 
+
+      # recategorize belongs to the right user
+      category2 = Fabricate(:category)
+      admin = Fabricate(:admin)
+      public_topic.acting_user = admin
+      public_topic.change_category_to_id(category2.id)
+
+      action = UserAction.stream(user_id: public_topic.user_id, guardian: Guardian.new)[0]
+      action.acting_user_id.should == admin.id
+      action.action_type.should == UserAction::EDIT
+
     end
   end
 
