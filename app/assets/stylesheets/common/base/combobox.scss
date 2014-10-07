@@ -8,7 +8,7 @@
     display: inline-block;
   }
   .highlighted .topic-count, .select2-highlighted .category-desc {
-    color: $secondary;
+    color: $primary;
   }
   .category-desc {
     color: scale-color($primary, $lightness: 45%);

@@ -331,8 +331,8 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 .select2-results-dept-7 .select2-result-label { padding-left: 120px }
 
 .select2-results .select2-highlighted {
-    background: #3875d7;
-    color: #fff;
+    background: dark-light-diff($highlight, $secondary, 50%, -80%);
+    color: $primary;
 }
 
 .select2-results li em {
