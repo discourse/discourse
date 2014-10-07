@@ -71,7 +71,7 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
     end
   end
 
-  def create_replies
+  def create_direct_replies
     puts '', "creating replies in topics"
 
     total_count = @client.query("
@@ -113,11 +113,68 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
           }
           h
         else
+          puts "No topic found for answer #{row['cid']}"
+          nil
+        end
+      end
+    end
+  end
+
+  def create_nested_replies
+    puts '', "creating nested replies in topics"
+
+    total_count = @client.query("
+        SELECT COUNT(c.cid) count
+          FROM node n
+        INNER JOIN comment AS c ON n.nid = c.nid
+        WHERE n.type = 'answer'
+           AND n.status = 1;").first['count']
+
+    batch_size = 1000
+
+    batches(batch_size) do |offset|
+
+      # WARNING: If there are more than 1000000 this might have to be revisited
+      results = @client.query("
+        SELECT (c.cid + 1000000) as cid,
+               q.field_answer_question_nid AS nid,
+               c.uid,
+               c.created,
+               cb.comment_body_value AS body
+        FROM node AS n
+          INNER JOIN field_data_field_answer_question AS q ON q.entity_id = n.nid
+          INNER JOIN comment AS c ON c.nid = n.nid
+          INNER JOIN field_data_comment_body AS cb ON cb.entity_id = c.cid
+        WHERE n.status = 1
+          AND n.type = 'answer'
+        LIMIT #{batch_size}
+        OFFSET #{offset}
+      ", cache_rows: false)
+
+      break if results.size < 1
+
+      create_posts(results, total: total_count, offset: offset) do |row|
+        topic_mapping = topic_lookup_from_imported_post_id("nid:#{row['nid']}")
+        if topic_mapping && topic_id = topic_mapping[:topic_id]
+          h = {
+            id: "cid:#{row['cid']}",
+            topic_id: topic_id,
+            user_id: user_id_from_imported_user_id(row['uid']) || -1,
+            raw: row['body'],
+            created_at: Time.zone.at(row['created']),
+          }
+          h
+        else
           puts "No topic found for comment #{row['cid']}"
           nil
         end
       end
     end
+  end
+
+  def create_replies
+    create_direct_replies
+    create_nested_replies
   end
 
 end
