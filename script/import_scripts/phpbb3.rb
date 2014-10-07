@@ -365,8 +365,6 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
         success_count += 1
 
-        puts "SUCCESS: #{upload.url}, #{post.url}"
-
         if FileHelper.is_image?(upload.url)
           %Q[<img src="#{upload.url}" width="#{[upload.width, 640].compact.min}" height="#{[upload.height,480].compact.min}"><br/>]
         else
