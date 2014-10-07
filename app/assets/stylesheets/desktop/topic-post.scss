@@ -944,16 +944,17 @@ $topic-avatar-width: 45px;
 
     .select-posts {
       position: absolute;
-      right: 5px;
+      left: 100%;
       z-index: 490;
-      top: 4px;
+      top: 8px;
+      width: 800px;
+      height: 100px;
+      background-color: $secondary;
 
       button {
+        margin-left: 8px;
         background-color: scale-color($primary, $lightness: 70%);
-        border-top: 1px solid $tertiary;
-        border-left: 1px solid $tertiary;
-        border-bottom: 1px solid scale-color-diff();
-        border-right: 1px solid scale-color-diff();
+        border: 1px solid scale-color($primary, $lightness: 60%);
         color: $primary;
       }
     }
