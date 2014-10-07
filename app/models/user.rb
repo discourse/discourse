@@ -676,6 +676,13 @@ class User < ActiveRecord::Base
     @user_fields
   end
 
+  def title=(val)
+    write_attribute(:title, val)
+    if !new_record? && user_profile
+      user_profile.update_column(:badge_granted_title, false)
+    end
+  end
+
   protected
 
   def badge_grant

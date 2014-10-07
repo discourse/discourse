@@ -9,9 +9,12 @@ module Jobs
 
     def execute(args)
       return unless SiteSetting.enable_badges
+
       Badge.all.each do |b|
         BadgeGranter.backfill(b)
       end
+
+      BadgeGranter.revoke_ungranted_titles!
     end
 
   end

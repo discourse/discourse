@@ -968,6 +968,13 @@ describe UsersController do
       badge.update_attributes allow_title: true
       xhr :put, :badge_title, user_badge_id: user_badge.id, username: user.username
       user.reload.title.should == badge.name
+      user.user_profile.badge_granted_title.should == true
+
+      user.title = "testing"
+      user.save
+      user.user_profile.reload
+      user.user_profile.badge_granted_title.should == false
+
     end
   end
 
