@@ -85,7 +85,7 @@ class UsersController < ApplicationController
       email: user.email,
       associated_accounts: user.associated_accounts
     }
-  rescue Discourse::InvalidAccess => e
+  rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
   end
 
@@ -98,7 +98,9 @@ class UsersController < ApplicationController
     user_badge = UserBadge.find_by(id: params[:user_badge_id])
     if user_badge && user_badge.user == user && user_badge.badge.allow_title?
       user.title = user_badge.badge.name
+      user.user_profile.badge_granted_title = true
       user.save!
+      user.user_profile.save!
     else
       user.title = ''
       user.save!

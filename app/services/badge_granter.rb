@@ -139,24 +139,24 @@ class BadgeGranter
   def self.contract_checks!(sql, opts = {})
     return unless sql.present?
     if Badge::Trigger.uses_post_ids?(opts[:trigger])
-      raise "Contract violation:\nQuery triggers on posts, but does not reference the ':post_ids' array" unless sql.match /:post_ids/
-      raise "Contract violation:\nQuery triggers on posts, but references the ':user_ids' array" if sql.match /:user_ids/
+      raise("Contract violation:\nQuery triggers on posts, but does not reference the ':post_ids' array") unless sql.match(/:post_ids/)
+      raise "Contract violation:\nQuery triggers on posts, but references the ':user_ids' array" if sql.match(/:user_ids/)
     end
     if Badge::Trigger.uses_user_ids?(opts[:trigger])
-      raise "Contract violation:\nQuery triggers on users, but does not reference the ':user_ids' array" unless sql.match /:user_ids/
-      raise "Contract violation:\nQuery triggers on users, but references the ':post_ids' array" if sql.match /:post_ids/
+      raise "Contract violation:\nQuery triggers on users, but does not reference the ':user_ids' array" unless sql.match(/:user_ids/)
+      raise "Contract violation:\nQuery triggers on users, but references the ':post_ids' array" if sql.match(/:post_ids/)
     end
     if opts[:trigger] && !Badge::Trigger.is_none?(opts[:trigger])
-      raise "Contract violation:\nQuery is triggered, but does not reference the ':backfill' parameter.\n(Hint: if :backfill is TRUE, you should ignore the :post_ids/:user_ids)" unless sql.match /:backfill/
+      raise "Contract violation:\nQuery is triggered, but does not reference the ':backfill' parameter.\n(Hint: if :backfill is TRUE, you should ignore the :post_ids/:user_ids)" unless sql.match(/:backfill/)
     end
 
     # TODO these three conditions have a lot of false negatives
     if opts[:target_posts]
-      raise "Contract violation:\nQuery targets posts, but does not return a 'post_id' column" unless sql.match /post_id/
+      raise "Contract violation:\nQuery targets posts, but does not return a 'post_id' column" unless sql.match(/post_id/)
     end
-    raise "Contract violation:\nQuery does not return a 'user_id' column" unless sql.match /user_id/
-    raise "Contract violation:\nQuery does not return a 'granted_at' column" unless sql.match /granted_at/
-    raise "Contract violation:\nQuery ends with a semicolon. Remove the semicolon; your sql will be used in a subquery." if sql.match /;\s*\z/
+    raise "Contract violation:\nQuery does not return a 'user_id' column" unless sql.match(/user_id/)
+    raise "Contract violation:\nQuery does not return a 'granted_at' column" unless sql.match(/granted_at/)
+    raise "Contract violation:\nQuery ends with a semicolon. Remove the semicolon; your sql will be used in a subquery." if sql.match(/;\s*\z/)
   end
 
   # Options:
@@ -300,6 +300,24 @@ class BadgeGranter
 
     badge.reset_grant_count!
 
+  end
+
+
+  def self.revoke_ungranted_titles!
+    Badge.exec_sql("UPDATE users SET title = ''
+                   WHERE NOT title IS NULL AND
+                         title <> '' AND
+                         EXISTS (
+                            SELECT 1
+                            FROM user_profiles
+                            WHERE user_id = users.id AND badge_granted_title
+                         ) AND
+                         title NOT IN (
+                            SELECT name
+                            FROM badges
+                            WHERE allow_title AND enabled
+                        )
+                   ")
   end
 
 end
