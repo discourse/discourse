@@ -12,7 +12,9 @@ class TrustLevel3RequirementsSerializer < ApplicationSerializer
              :num_flagged_posts, :max_flagged_posts,
              :num_flagged_by_users, :max_flagged_by_users,
              :num_likes_given, :min_likes_given,
-             :num_likes_received, :min_likes_received
+             :num_likes_received, :min_likes_received,
+             :num_likes_received_days, :min_likes_received_days,
+             :num_likes_received_users, :min_likes_received_users
 
   def time_period
     TrustLevel3Requirements::TIME_PERIOD

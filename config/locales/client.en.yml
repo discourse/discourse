@@ -1989,6 +1989,8 @@ en:
           flagged_by_users: "Users Who Flagged"
           likes_given: "Likes Given"
           likes_received: "Likes Received"
+          likes_received_days: "Likes Received: unique days"
+          likes_received_users: "Likes Received: unique users"
           qualifies: "Qualifies for trust level 3."
           does_not_qualify: "Doesn't qualify for trust level 3."
           will_be_promoted: "Will be promoted soon."

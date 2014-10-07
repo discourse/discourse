@@ -19,6 +19,8 @@ Discourse.TL3Requirements = Discourse.Model.extend({
       flagged_by_users: this.get('num_flagged_by_users') <= this.get('max_flagged_by_users'),
       likes_given: this.get('num_likes_given') >= this.get('min_likes_given'),
       likes_received: this.get('num_likes_received') >= this.get('min_likes_received'),
+      likes_received_days: this.get('num_likes_received_days') >= this.get('min_likes_received_days'),
+      likes_received_users: this.get('num_likes_received_users') >= this.get('min_likes_received_users'),
       level_locked: this.get('trust_level_locked')
     };
   }.property('days_visited', 'min_days_visited',
@@ -31,5 +33,8 @@ Discourse.TL3Requirements = Discourse.Model.extend({
              'num_flagged_by_users', 'max_flagged_by_users',
              'num_likes_given', 'min_likes_given',
              'num_likes_received', 'min_likes_received',
+             'num_likes_received', 'min_likes_received',
+             'num_likes_received_days', 'min_likes_received_days',
+             'num_likes_received_users', 'min_likes_received_users',
              'trust_level_locked')
 });
