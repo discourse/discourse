@@ -473,16 +473,16 @@ Discourse.Composer = Discourse.Model.extend({
     });
     this.set('composeState', CLOSED);
 
-    return Em.Deferred.promise(function(promise) {
+    return new Ember.RSVP.Promise(function(resolve, reject) {
       post.save(function(result) {
         post.updateFromPost(result);
         composer.clearState();
       }, function(error) {
         var response = $.parseJSON(error.responseText);
         if (response && response.errors) {
-          promise.reject(response.errors[0]);
+          reject(response.errors[0]);
         } else {
-          promise.reject(I18n.t('generic_error'));
+          reject(I18n.t('generic_error'));
         }
         post.set('cooked', oldCooked);
         composer.set('composeState', OPEN);
@@ -550,7 +550,7 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     var composer = this;
-    return Em.Deferred.promise(function(promise) {
+    return new Ember.RSVP.Promise(function(resolve, reject) {
 
       composer.set('composeState', SAVING);
       createdPost.save(function(result) {
@@ -584,7 +584,7 @@ Discourse.Composer = Discourse.Model.extend({
           composer.set('composeState', SAVING);
         }
 
-        return promise.resolve({ post: result });
+        return resolve({ post: result });
       }, function(error) {
         // If an error occurs
         if (postStream) {
@@ -605,7 +605,7 @@ Discourse.Composer = Discourse.Model.extend({
         catch(ex) {
           parsedError = "Unknown error saving post, try again. Error: " + error.status + " " + error.statusText;
         }
-        promise.reject(parsedError);
+        reject(parsedError);
       });
     });
   },
