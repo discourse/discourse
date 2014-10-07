@@ -90,7 +90,14 @@ class PostAlerter
     return if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:muted]
 
     # Don't notify the same user about the same notification on the same post
-    return if user.notifications.exists?(notification_type: type, topic_id: post.topic_id, post_number: post.post_number)
+    existing_notification = user.notifications
+                                .order("notifications.id desc")
+                                .find_by(notification_type: type, topic_id: post.topic_id, post_number: post.post_number)
+
+    if(existing_notification)
+       return unless existing_notification.notification_type == Notification.types[:edited] &&
+                     existing_notification.data_hash["display_username"] = opts[:display_username]
+    end
 
     collapsed = false
 
@@ -116,7 +123,7 @@ class PostAlerter
       opts[:display_username] = I18n.t('embed.replies', count: count) if count > 1
     end
 
-    UserActionObserver.log_notification(original_post, user, type)
+    UserActionObserver.log_notification(original_post, user, type, opts[:post_revision].try(:user_id))
 
     # Create the notification
     user.notifications.create(notification_type: type,

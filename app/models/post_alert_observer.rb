@@ -46,7 +46,13 @@ class PostAlertObserver < ActiveRecord::Observer
     return if post.topic.private_message?
     return if SiteSetting.disable_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID
 
-    alerter.create_notification(post.user, Notification.types[:edited], post, display_username: post_revision.user.username)
+    alerter.create_notification(
+      post.user,
+      Notification.types[:edited],
+      post,
+        display_username: post_revision.user.username,
+        post_revision: post_revision
+    )
   end
 
 
