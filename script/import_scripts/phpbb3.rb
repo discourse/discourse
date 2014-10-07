@@ -1,14 +1,24 @@
+require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 require "mysql2"
 
+
 class ImportScripts::PhpBB3 < ImportScripts::Base
+
+  include ActionView::Helpers::NumberHelper
 
   PHPBB_DB   = "phpbb"
   BATCH_SIZE = 1000
 
   ORIGINAL_SITE_PREFIX = "oldsite.example.com/forums" # without http(s)://
   NEW_SITE_PREFIX      = "http://discourse.example.com"  # with http:// or https://
+
+  # Set ATTACHMENTS_BASE_DIR to the base directory where attachment files are found.
+  # If nil, [attachment] tags won't be processed.
+  # Edit AUTHORIZED_EXTENSIONS as needed.
+  ATTACHMENTS_BASE_DIR = nil
+  AUTHORIZED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'zip', 'rar']
 
   def initialize
     super
@@ -26,6 +36,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     import_categories
     import_posts
     import_private_messages
+    import_attachments unless ATTACHMENTS_BASE_DIR.nil?
     suspend_users
   end
 
@@ -285,6 +296,93 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
   def internal_url_regexp
     @internal_url_regexp ||= Regexp.new("http(?:s)?://#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}/viewtopic\\.php?(?:\\S*)t=(\\d+)")
+  end
+
+  # This step is done separately because it can take multiple attempts to get right (because of
+  # missing files, wrong paths, authorized extensions, etc.).
+  def import_attachments
+    setting = AUTHORIZED_EXTENSIONS.join('|')
+    SiteSetting.authorized_extensions = setting if setting != SiteSetting.authorized_extensions
+
+    r = /\[attachment=[\d]+\]<\!-- [\w]+ --\>([\S]+)<\!-- [\w]+ --\>\[\/attachment\]/
+
+    user = Discourse.system_user
+
+    current_count = 0
+    total_count = Post.count
+    success_count = 0
+    fail_count = 0
+
+    puts '', "Importing attachments...", ''
+
+    Post.find_each do |post|
+      current_count += 1
+      print_status current_count, total_count
+
+      new_raw = post.raw.dup
+      new_raw.gsub!(r) do |s|
+        matches = r.match(s)
+        real_filename = matches[1]
+
+        sql = "SELECT physical_filename,
+                      mimetype
+                 FROM phpbb_attachments
+                WHERE post_msg_id = #{post.custom_fields['import_id']}
+                  AND real_filename = '#{real_filename}';"
+
+        begin
+          results = mysql_query(sql)
+        rescue Mysql2::Error => e
+          puts "SQL Error"
+          puts e.message
+          puts sql
+          fail_count += 1
+          next s
+        end
+
+        row = results.first
+        if !row
+          puts "Couldn't find phpbb_attachments record for post.id = #{post.id}, import_id = #{post.custom_fields['import_id']}, real_filename = #{real_filename}"
+          fail_count += 1
+          next s
+        end
+
+        filename = File.join(ATTACHMENTS_BASE_DIR, row['physical_filename'])
+        if !File.exists?(filename)
+          puts "Attachment file doesn't exist: #{filename}"
+          fail_count += 1
+          next s
+        end
+
+        upload = create_upload(user.id, filename, real_filename)
+
+        if upload.nil? || !upload.valid?
+          puts "Upload not valid :("
+          puts upload.errors.inspect if upload
+          fail_count += 1
+          next s
+        end
+
+        success_count += 1
+
+        puts "SUCCESS: #{upload.url}, #{post.url}"
+
+        if FileHelper.is_image?(upload.url)
+          %Q[<img src="#{upload.url}" width="#{[upload.width, 640].compact.min}" height="#{[upload.height,480].compact.min}"><br/>]
+        else
+          "<a class='attachment' href='#{upload.url}'>#{real_filename}</a> (#{number_to_human_size(upload.filesize)})"
+        end
+      end
+
+      if new_raw != post.raw
+        PostRevisor.new(post).revise!(post.user, new_raw, {bypass_bump: true, edit_reason: 'Migrate from PHPBB3'})
+      end
+    end
+
+    puts '', ''
+    puts "succeeded: #{success_count}"
+    puts "   failed: #{fail_count}" if fail_count > 0
+    puts ''
   end
 
   def mysql_query(sql)
