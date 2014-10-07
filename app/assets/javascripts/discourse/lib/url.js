@@ -250,7 +250,10 @@ Discourse.URL = Em.Object.createWithMixins({
   navigatedToHome: function(oldPath, path) {
     var homepage = Discourse.Utilities.defaultHomepage();
 
-    if (window.history && window.history.pushState && path === "/" && (oldPath === "/" || oldPath === "/" + homepage)) {
+    if (window.history &&
+        window.history.pushState &&
+        (path === "/" || path === "/" + homepage) &&
+        (oldPath === "/" || oldPath === "/" + homepage)) {
       this.appEvents.trigger('url:refresh');
       return true;
     }

@@ -37,6 +37,8 @@ var controllerOpts = {
       var filter = this.get('model.filter'),
           self = this;
 
+      this.setProperties({ order: 'default', ascending: false });
+
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
 
