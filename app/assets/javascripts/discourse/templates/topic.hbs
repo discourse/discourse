@@ -17,10 +17,12 @@
           {{#if editingTopic}}
             {{#if isPrivateMessage}}
               <span class="private-message-glyph">{{fa-icon envelope}}</span>
+              {{text-field id='edit-title' value=newTitle maxLength=maxTitleLength}}
             {{else}}
+              {{text-field id='edit-title' value=newTitle maxLength=maxTitleLength}}
+              </br>
               {{category-chooser valueAttribute="id" value=newCategoryId source=category_id}}
             {{/if}}
-            {{text-field id='edit-title' value=newTitle maxLength=maxTitleLength}}
 
             <button class='btn btn-primary btn-small no-text' {{action "finishedEditingTopic"}}>{{fa-icon check}}</button>
             <button class='btn btn-small no-text' {{action "cancelEditingTopic"}}>{{fa-icon times}}</button>
