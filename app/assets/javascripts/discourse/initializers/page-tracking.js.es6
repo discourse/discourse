@@ -13,7 +13,7 @@ export default {
     // if it is present
     if (typeof window._gaq !== 'undefined') {
       pageTracker.on('change', function() {
-        window._gaq.push(['_trackPageview']);
+        window._gaq.push(['_trackPageview', window.location.pathname+window.location.search]);
       });
       return;
     }
@@ -21,7 +21,7 @@ export default {
     // Also use Universal Analytics if it is present
     if (typeof window.ga !== 'undefined') {
       pageTracker.on('change', function() {
-        window.ga('send', 'pageview');
+        window.ga('send', 'pageview', window.location.pathname+window.location.search);
       });
     }
   }
