@@ -129,6 +129,7 @@ class TopicsController < ApplicationController
     Topic.transaction do
       success = topic.save
       success &= topic.change_category_to_id(params[:category_id].to_i) unless topic.private_message?
+      EditRateLimiter.new(current_user).performed!
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
