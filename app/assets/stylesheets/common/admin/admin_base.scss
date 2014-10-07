@@ -5,6 +5,7 @@
 
 .admin-contents table {
   width: 100%;
+  table-layout: fixed;
   tr {text-align: left;}
   td, th {padding: 8px;}
   th {border-top: 1px solid scale-color-diff();}
@@ -546,19 +547,21 @@ section.details {
   td { vertical-align: top; }
   th { text-align: left; }
   .user {
-    width: 20px;
+    width: 25px;
     padding: 8px 0 0 0;
     text-align: center;
   }
   .excerpt {
     max-width: 700px;
-    width: 700px;
+    width: 75%;
     padding: 8px;
     word-wrap: break-word;
     .fa { display: inline-block; }
     h3 {
       max-height: 1.2em;
       overflow: hidden;
+      margin-top: 0;
+      margin-bottom: 5px;
     }
   }
   .flaggers {
