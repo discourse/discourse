@@ -4,7 +4,7 @@
   {{view 'reply-history' content=replyHistory}}
 </div>
 
-<article class='boxed' {{bind-attr id="postElementId" data-post-id="id" data-user-id="user_id"}}>
+<article {{bind-attr class=":boxed via_email" id="postElementId" data-post-id="id" data-user-id="user_id"}}>
   <div class='row'>
     {{#if showUserReplyTab}}
       <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
