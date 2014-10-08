@@ -1,7 +1,11 @@
 class Admin::UserFieldsController < Admin::AdminController
 
+  def self.columns
+    [:name, :field_type, :editable, :description, :required]
+  end
+
   def create
-    field = UserField.new(params.require(:user_field).permit(:name, :field_type, :editable, :description))
+    field = UserField.new(params.require(:user_field).permit(*Admin::UserFieldsController.columns))
     json_result(field, serializer: UserFieldSerializer) do
       field.save
     end
@@ -15,10 +19,10 @@ class Admin::UserFieldsController < Admin::AdminController
     field_params = params.require(:user_field)
 
     field = UserField.where(id: params.require(:id)).first
-    field.name = field_params[:name]
-    field.field_type = field_params[:field_type]
-    field.description = field_params[:description]
-    field.editable = field_params[:editable] == "true"
+
+    Admin::UserFieldsController.columns.each do |col|
+      field.send("#{col}=", field_params[col] || false)
+    end
 
     json_result(field, serializer: UserFieldSerializer) do
       field.save

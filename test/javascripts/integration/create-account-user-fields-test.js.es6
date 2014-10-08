@@ -2,8 +2,9 @@ import { integration } from "helpers/qunit-helpers";
 
 integration("Create Account - User Fields", {
   site: {
-    user_fields: [{"id":34,"name":"I've read the terms of service","field_type":"confirm"},
-                  {"id":35,"name":"What is your pet's name?","field_type":"text"}]
+    user_fields: [{"id":34,"name":"I've read the terms of service","field_type":"confirm","required":true},
+                  {"id":35,"name":"What is your pet's name?","field_type":"text","required":true},
+                  {"id":36,"name":"What's your dad like?","field_type":"text","required":false}]
   }
 });
 
@@ -27,7 +28,7 @@ test("create account with user fields", function() {
     ok(exists('.modal-footer .btn-primary:disabled'), 'create account is still disabled due to lack of user fields');
   });
 
-  fillIn(".user-field input[type=text]", "Barky");
+  fillIn(".user-field input[type=text]:first", "Barky");
 
   andThen(function() {
     ok(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled because field is not checked');
@@ -35,7 +36,7 @@ test("create account with user fields", function() {
 
   click(".user-field input[type=checkbox]");
   andThen(function() {
-    not(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled because field is not checked');
+    not(exists('.modal-footer .btn-primary:disabled'), 'create account is enabled because field is not checked');
   });
 
   click(".user-field input[type=checkbox]");

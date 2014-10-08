@@ -32,7 +32,7 @@ describe Admin::UserFieldsController do
     context '.destroy' do
       let!(:user_field) { Fabricate(:user_field) }
 
-      it "returns a list of user fields" do
+      it "deletes the user field" do
         -> {
           xhr :delete, :destroy, id: user_field.id
           response.should be_success
@@ -43,7 +43,7 @@ describe Admin::UserFieldsController do
     context '.update' do
       let!(:user_field) { Fabricate(:user_field) }
 
-      it "returns a list of user fields" do
+      it "updates the user field" do
         xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle', field_type: 'confirm', description: 'muppet'}
         response.should be_success
         user_field.reload

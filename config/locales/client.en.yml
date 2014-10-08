@@ -2019,6 +2019,10 @@ en:
         delete: "Delete"
         cancel: "Cancel"
         delete_confirm: "Are you sure you want to delete that user field?"
+        required:
+          title: "Required at signup?"
+          enabled: "required"
+          disabled: "not required"
         editable:
           title: "Editable after signup?"
           enabled: "editable"
