@@ -49,11 +49,12 @@ class UsersController < ApplicationController
 
     if params[:user_fields].present?
       params[:custom_fields] ||= {}
-      UserField.where(editable: true).pluck(:id).each do |fid|
-        val = params[:user_fields][fid.to_s]
+      UserField.where(editable: true).each do |f|
+        val = params[:user_fields][f.id.to_s]
         val = nil if val === "false"
-        return render_json_error(I18n.t("login.missing_user_field")) if val.blank?
-        params[:custom_fields]["user_field_#{fid}"] = val
+
+        return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
+        params[:custom_fields]["user_field_#{f.id}"] = val
       end
     end
 
@@ -188,16 +189,19 @@ class UsersController < ApplicationController
     user = User.new(user_params)
 
     # Handle custom fields
-    user_field_ids = UserField.pluck(:id)
-    if user_field_ids.present?
-      if params[:user_fields].blank?
+    user_fields = UserField.all
+    if user_fields.present?
+      if params[:user_fields].blank? && UserField.where(required: true).exists?
         return fail_with("login.missing_user_field")
       else
         fields = user.custom_fields
-        user_field_ids.each do |fid|
-          field_val = params[:user_fields][fid.to_s]
-          return fail_with("login.missing_user_field") if field_val.blank?
-          fields["user_field_#{fid}"] = field_val
+        user_fields.each do |f|
+          field_val = params[:user_fields][f.id.to_s]
+          if field_val.blank?
+            return fail_with("login.missing_user_field") if f.required?
+          else
+            fields["user_field_#{f.id}"] = field_val
+          end
         end
         user.custom_fields = fields
       end

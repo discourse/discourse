@@ -9,11 +9,23 @@ export default Ember.ObjectController.extend(BufferedContent, {
     return UserField.fieldTypeById(this.get('field_type')).get('name');
   }.property('field_type'),
 
+  flags: function() {
+    var ret = [];
+    if (this.get('editable')) {
+      ret.push(I18n.t('admin.user_fields.editable.enabled'));
+    }
+    if (this.get('required')) {
+      ret.push(I18n.t('admin.user_fields.required.enabled'));
+    }
+
+    return ret.join(', ');
+  }.property('editable', 'required'),
+
   actions: {
     save: function() {
       var self = this;
 
-      var attrs = this.get('buffered').getProperties('name', 'description', 'field_type', 'editable');
+      var attrs = this.get('buffered').getProperties('name', 'description', 'field_type', 'editable', 'required');
 
       this.get('model').save(attrs).then(function(res) {
         self.set('model.id', res.user_field.id);

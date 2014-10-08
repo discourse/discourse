@@ -559,6 +559,7 @@ describe UsersController do
     context "with custom fields" do
       let!(:user_field) { Fabricate(:user_field) }
       let!(:another_field) { Fabricate(:user_field) }
+      let!(:optional_field) { Fabricate(:user_field, required: false) }
 
       context "without a value for the fields" do
         let(:create_params) { {name: @user.name, password: 'watwatwat', username: @user.username, email: @user.email} }
@@ -577,7 +578,7 @@ describe UsersController do
           }
         } }
 
-        it "should succeed" do
+        it "should succeed without the optional field" do
           xhr :post, :create, create_params
           response.should be_success
           inserted = User.where(email: @user.email).first
@@ -585,6 +586,19 @@ describe UsersController do
           inserted.custom_fields.should be_present
           inserted.custom_fields["user_field_#{user_field.id}"].should == 'value1'
           inserted.custom_fields["user_field_#{another_field.id}"].should == 'value2'
+          inserted.custom_fields["user_field_#{optional_field.id}"].should be_blank
+        end
+
+        it "should succeed with the optional field" do
+          create_params[:user_fields][optional_field.id.to_s] = 'value3'
+          xhr :post, :create, create_params.merge(create_params)
+          response.should be_success
+          inserted = User.where(email: @user.email).first
+          inserted.should be_present
+          inserted.custom_fields.should be_present
+          inserted.custom_fields["user_field_#{user_field.id}"].should == 'value1'
+          inserted.custom_fields["user_field_#{another_field.id}"].should == 'value2'
+          inserted.custom_fields["user_field_#{optional_field.id}"].should == 'value3'
         end
 
       end
@@ -904,6 +918,7 @@ describe UsersController do
         context "with user fields" do
           context "an editable field" do
             let!(:user_field) { Fabricate(:user_field) }
+            let!(:optional_field) { Fabricate(:user_field, required: false ) }
 
             it "should update the user field" do
               put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy' }

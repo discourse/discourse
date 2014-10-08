@@ -51,6 +51,7 @@ export default DiscourseController.extend(ModalFunctionality, {
 
     // Validate required fields
     var userFields = this.get('userFields');
+    if (userFields) { userFields = userFields.filterProperty('field.required'); }
     if (!Ember.empty(userFields)) {
       var anyEmpty = userFields.any(function(uf) {
         var val = uf.get('value');

@@ -15,6 +15,15 @@
   }
 }
 
+.user-field {
+  .required {
+    text-align: top;
+    color: $danger;
+    font-weight: bold;
+    font-size: 1.3em;
+  }
+}
+
 .end-of-stream {
   border: 3px solid $primary;
   width: 100%;
@@ -22,7 +31,7 @@
 
 .user-navigation {
 
-    .map {
+  .map {
     height: 50px;
   }
   .avatar {
