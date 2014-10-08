@@ -23,7 +23,6 @@ export default Discourse.View.extend({
   }.on("didInsertElement"),
 
   _changeLocation: function(location) {
-    console.log("_changeLocation", location);
     var $this = this.$();
     switch (location.position) {
       case "absolute": {
