@@ -264,12 +264,17 @@ export default function(options) {
     closeAutocomplete();
   });
 
+  $(this).on('paste', function() {
+    _.delay(function(){
+      me.trigger("keydown");
+    }, 50);
+  });
 
   $(this).keypress(function(e) {
 
     if (!options.key) return;
 
-    // keep hunting backwards till you hit a
+    // keep hunting backwards till you hit a the @ key
     if (e.which === options.key.charCodeAt(0)) {
       var caretPosition = Discourse.Utilities.caretPosition(me[0]);
       var prevChar = me.val().charAt(caretPosition - 1);
@@ -282,6 +287,10 @@ export default function(options) {
 
   $(this).keydown(function(e) {
     var c, caretPosition, i, initial, next, prev, prevIsGood, stopFound, term, total, userToComplete;
+
+    if(e.ctrlKey || e.altKey || e.metaKey){
+      return true;
+    }
 
     if(options.allowAny){
       // saves us wiring up a change event as well, keypress is while its pressed
@@ -393,7 +402,7 @@ export default function(options) {
                 i.click();
               }
             }
-            return false;
+            return true;
           }
           term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
           if (e.which >= 48 && e.which <= 90) {
@@ -406,6 +415,8 @@ export default function(options) {
             term += (e.shiftKey) ? "|" : "]";
           } else if (e.which === 222) {
             term += (e.shiftKey) ? "\"" : "'";
+          } else if (!e.which) {
+            /* fake event */
           } else if (e.which !== 8) {
             term += ",";
           }
