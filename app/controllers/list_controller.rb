@@ -186,7 +186,7 @@ class ListController < ApplicationController
     respond_to do |format|
       format.html do
         @list = list
-        store_preloaded("topic_list_#{list.filter}", MultiJson.dump(TopicListSerializer.new(list, scope: guardian)))
+        store_preloaded(list.preload_key, MultiJson.dump(TopicListSerializer.new(list, scope: guardian)))
         render 'list'
       end
       format.json do

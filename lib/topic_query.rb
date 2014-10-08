@@ -65,7 +65,7 @@ class TopicQuery
 
   # The latest view of topics
   def list_latest
-    TopicList.new(:latest, @user, latest_results)
+    create_list(:latest, {}, latest_results)
   end
 
   # The starred topics
@@ -80,11 +80,11 @@ class TopicQuery
   end
 
   def list_new
-    TopicList.new(:new, @user, new_results)
+    create_list(:new, {}, new_results)
   end
 
   def list_unread
-    TopicList.new(:new, @user, unread_results)
+    create_list(:new, {}, unread_results)
   end
 
   def list_posted
@@ -111,19 +111,19 @@ class TopicQuery
 
   def list_private_messages(user)
     list = private_messages_for(user)
-    TopicList.new(:private_messages, user, list)
+    create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_sent(user)
     list = private_messages_for(user)
     list = list.where(user_id: user.id)
-    TopicList.new(:private_messages, user, list)
+    create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_unread(user)
     list = private_messages_for(user)
     list = list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number")
-    TopicList.new(:private_messages, user, list)
+    create_list(:private_messages, {}, list)
   end
 
   def list_category(category)
@@ -158,7 +158,7 @@ class TopicQuery
     def create_list(filter, options={}, topics = nil)
       topics ||= default_results(options)
       topics = yield(topics) if block_given?
-      TopicList.new(filter, @user, topics)
+      TopicList.new(filter, @user, topics, options.merge(@options))
     end
 
     def private_messages_for(user)
@@ -241,6 +241,7 @@ class TopicQuery
       end
 
       category_id = get_category_id(options[:category])
+      @options[:category_id] = category_id
       if category_id
         if options[:no_subcategories]
           result = result.where('categories.id = ?', category_id)

@@ -43,7 +43,7 @@ describe TopicQuery do
   context 'category filter' do
     let(:category) { Fabricate(:category) }
 
-    let(:diff_category) { Fabricate(:category) }
+    let(:diff_category) { Fabricate(:diff_category) }
 
     it "returns topics in the category when we filter to it" do
       TopicQuery.new(moderator).list_latest.topics.size.should == 0
@@ -51,7 +51,10 @@ describe TopicQuery do
       # Filter by slug
       TopicQuery.new(moderator, category: category.slug).list_latest.topics.size.should == 1
       TopicQuery.new(moderator, category: "#{category.id}-category").list_latest.topics.size.should == 1
-      TopicQuery.new(moderator, category: diff_category.slug).list_latest.topics.size.should == 1
+
+      list = TopicQuery.new(moderator, category: diff_category.slug).list_latest
+      list.topics.size.should == 1
+      list.preload_key.should == "topic_list_category/different-category/l/latest"
 
       # Defaults to no category filter when slug does not exist
       TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size.should == 2
