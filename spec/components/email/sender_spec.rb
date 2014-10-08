@@ -64,11 +64,14 @@ describe Email::Sender do
       email_sender.send
     end
 
-    # will fail since topic ID has to be present
-    #it "adds a List-ID header to identify the forum" do
-    #  email_sender.send
-    #  message.header['List-ID'].should be_present
-    #end
+    context "adds a List-ID header to identify the forum" do
+      before do
+        message.header['X-Discourse-Topic-Id'] = 5577
+      end
+
+      When { email_sender.send }
+      Then { expect(message.header['List-ID']).to be_present }
+    end
 
     context 'email logs' do
       let(:email_log) { EmailLog.last }
