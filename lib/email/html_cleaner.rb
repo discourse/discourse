@@ -76,7 +76,7 @@ module Email
     def add_newlines(doc)
       # Replace <br> tags with a markdown \n
       doc.xpath('//br').each do |br|
-        br.replace(new_linebreak_node doc)
+        br.replace(new_linebreak_node doc, 2)
       end
       # Surround <p> tags with newlines, to help with line-wise postprocessing
       # and ensure markdown paragraphs
