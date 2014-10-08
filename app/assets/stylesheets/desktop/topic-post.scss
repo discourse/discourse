@@ -522,8 +522,23 @@ iframe {
   max-width: 100%;
 }
 
+@keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+@-webkit-keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
 .extra-info-wrapper {
   overflow: hidden;
+
+.star, .badge-wrapper, i,  .topic-link:not(.loading) {
+  -webkit-animation: fadein .7s;
+  animation-duration: .7s;
+  animation-name: fadein;
+}
 
   .topic-statuses {
     i  { color: $header_primary; }
@@ -549,8 +564,8 @@ iframe {
   }
 
   a.star {
-    margin: 6px 7px 20px 0;
-    font-size: 20px;
+    margin: 0 7px 20px 2px;
+    font-size: 17px;
     color: dark-light-diff($secondary, $primary, 80%, -20%) !important;
   }
   a.star.starred {color: $danger !important;}
@@ -582,9 +597,6 @@ iframe {
   h1 {
     line-height: 1.1em;
     margin: 0 0 2px 0;
-  }
-  .star {
-    margin-top: 3px;
   }
 }
 
