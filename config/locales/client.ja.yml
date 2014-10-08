@@ -106,7 +106,6 @@ ja:
     daily: "毎日"
     weekly: "毎週"
     every_two_weeks: "隔週"
-    max: "最大"
     character_count:
       other: "{{count}} 文字"
     in_n_seconds:
@@ -232,6 +231,7 @@ ja:
       other_accounts: 同じIPアドレスを持つアカウント
       no_other_accounts: （なし）
     user:
+      said: "{{username}}:"
       profile: "プロフィール"
       mute: "ミュート"
       edit: "プロフィールを編集"
@@ -394,6 +394,7 @@ ja:
         bulk_invite:
           none: "あなたはまだ誰も招待していません。"
           text: "ファイルからまとめて招待をする"
+          uploading: "アップロード中..."
           success: "ファイル通常にアップされていました。"
           error: "ファイルアップロードエラー：'{{filename}}': {{message}}"
       password:
@@ -401,6 +402,8 @@ ja:
         too_short: "パスワードが短すぎます。"
         common: "このパスワードは他の人が使用している可能性があります。"
         ok: "パスワード OK。"
+        instructions: "%{count} 文字以上の長さにしてください。"
+      associated_accounts: "関連アカウント"
       ip_address:
         title: "最終 IP アドレス"
       registration_ip_address:
@@ -686,7 +689,6 @@ ja:
       unread_topics:
         other: '{{count}}個の未読トピック'
       title: 'トピック'
-      loading_more: "さらにトピックを読み込み中..."
       loading: 'トピックを読み込み中...'
       invalid_access:
         title: "トピックはプライベートです"

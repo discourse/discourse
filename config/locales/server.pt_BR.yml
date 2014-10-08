@@ -24,6 +24,8 @@ pt_BR:
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
   errors:
+    messages:
+      too_long_validation: "está limitado para %{max} caracteres; você entrou com %{length}."
     embed:
       load_from_remote: "Houve um erro ao carregar essa mensagem."
   backup:
@@ -92,9 +94,11 @@ pt_BR:
     errors:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
     default_names:
+      everyone: "todos"
       admins: "admins"
       moderators: "moderadores"
       staff: "staff"
+      trust_level_0: "nivel_de_confianca_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
@@ -103,6 +107,26 @@ pt_BR:
     until_posts:
       one: "1 mensagem"
       other: "%{count} mensagens"
+    new-topic: |
+      Bem-vindo ao %{site_name} &mdash; **obrigado por iniciar uma nova conversação!**
+
+      - O título descreve seu tópico precisamente? Soa interessante?
+
+      - Sobre o que é isso? Quem estaria interessado? Por que isto importa? Que tipo de respostas você está esperando da comunidade?
+
+      - Inclua boas palavras chave no seu tópico para que outros possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria.
+
+      Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
+    new-reply: |
+      Bem-vindo ao %{site_name} &mdash; **obrigado por contribuir!**
+
+      - Sua resposta melhora a conversa de alguma forma?
+
+      - Seja gentil aos seus companheiros membros da comunidade.
+
+      - Críticas construtivas são bem-vindas, mas critique *idéias*, não pessoas.
+
+      Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
     avatar: |
       ### Que tal uma nova imagem para a sua conta? ⏎
       ⏎
@@ -126,6 +150,8 @@ pt_BR:
         name: "Nome da Categoria"
       post:
         raw: "Corpo"
+      user_profile:
+        bio_raw: "Sobre Mim"
     errors:
       messages:
         is_invalid: "é inválido; tente ser um pouco mais descritivo"
@@ -133,6 +159,9 @@ pt_BR:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Você só pode anexar avisos em mensagens privadas."
+              too_many_users: "Você só pode enviar avisos para um usuário de cada vez."
             archetype:
               cant_send_pm: "Desculpe, não podes enviar uma mensagem particular para esse utilizador."
         user:
@@ -148,10 +177,15 @@ pt_BR:
   user_profile:
     no_info_me: "<div class='missing-profile'>o campo Sobre mim do seu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>quer completar?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
+  vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros com nível de confiança 3 e superior."
+  meta_category_name: "Meta"
   meta_category_description: "Discussão sobre este fórum, sua organização, como ele funciona e como podemos melhorá-lo."
+  staff_category_name: "Equipe"
   staff_category_description: "Categoria particular para as discussões da equipe. Tópicos só são visíveis para os administradores e moderadores."
   assets_topic_body: "Esse é um tópico permanente, visível apenas para a equipe, para arquivar imagens e arquivos usados no design do fórum. Não o delete!\n\n\nAqui está como:\n\n\n1. Responda a esse tópico.\n2. Envie todas as imagens que você deseja para serem usadas como logos, favicons e assim por diante aqui. (Utilize o ícone da barra de upload no editor de post, arraste e solte ou cole imagens.)\n3. Enviar sua resposta para publicá-la.\n4. Clique com o botão direito do mouse nas imagens em sua nova postagem para obter o endereço das imagens enviadas, ou clique no ícone de edição para editar o seu post e recuperar o caminho para as imagens. Copie o endereço da imagem.\n5. Copie o endereço das imagens nas [configurações básicas](/admin/site_settings/category/required).\n\nTambém, se você precisa ativar diferentes tipos de envios de arquivos, edite o `authorized_extensions` em [configurações de arquivo](/admin/site_settings/category/files)."
+  lounge_welcome:
+    title: "Bem-vindo ao Salão"
   category:
     topic_prefix: "Sobre a categoria %{category} "
     replace_paragraph: "[Substitua este primeiro parágrafo com uma breve descrição de sua nova categoria. Esta orientação será exibida na área de seleção de categoria, assim, tente mantê-lo abaixo de 200 caracteres. Até que você edite o texto ou crie tópicos, esta categoria não aparecerá na página de categorias.]"
@@ -161,6 +195,12 @@ pt_BR:
       title: "usuário novo"
     basic:
       title: "utilizador básico"
+    regular:
+      title: "membro"
+    leader:
+      title: "regular"
+    elder:
+      title: "líder"
   rate_limiter:
     too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
     hours:
@@ -456,12 +496,6 @@ pt_BR:
     bottom:
       title: "Rodapé das páginas"
       description: "HTML que será adicionado no rodapé de cada página."
-    tos_signup_form_message:
-      title: "Formulário de Cadastro: Termos do Serviço de Mensagens"
-      description: "A mensagem que aparecerá ao lado de uma caixa de seleção no formulário de cadastro se a configuração do site tos_accept_required estiver habilitada."
-    notification_email_top:
-      title: "Topo dos emails de notificação"
-      description: "Uma mensagem que vai ser exibida no topo de todas as notificações por email."
   site_settings:
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que os usuários escolham suas próprias preferências de idioma de interface"
@@ -495,7 +529,6 @@ pt_BR:
     post_menu: "A ordem dos items no menu da postagem."
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento, e em qual ordem."
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
-    enable_badges: "Habilita o sistema de emblemas (experimental)"
     version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
     port: "Se você quiser especificar a porta na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
     force_hostname: "Se você quiser especificar um hostname na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
@@ -547,7 +580,6 @@ pt_BR:
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     short_progress_text_threshold: "Após o número de mensagens em um tópico for acima deste número, a barra de progresso mostrará apenas o número  da mensagem atual. Se você alterar a largura da barra de progresso, você pode precisar alterar este valor."
     default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
-    tos_accept_required: "Se ativado, os usuários terão de verificar uma caixa no formulário de cadastro para confirmar que aceitam os termos do serviço. Editar \"Formulário de Cadastro: Termos do Serviço de Mensagens\" na guia Conteúdo para alterar a mensagem."
     notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
     errors:
@@ -612,7 +644,9 @@ pt_BR:
     incorrect_username_email_or_password: "Usuário, email ou senha incorretos"
     wait_approval: "Obrigado por se registar. Você será notificado por email quando a sua conta for aprovada."
     active: "A sua conta está ativa e pronta."
+    activate_email: "<p>Você está quase lá! Enviamos um email de ativação para <b>%{email}</b>. Por favor, siga as instruções contidas nele para ativar sua conta.</p><p>Se ele não chegar, verifique sua pasta de spam, ou tente entrar novamente para enviar outro email de ativação.</p>"
     not_activated: "Ainda não podes fazer log in. Enviamos um email de ativação para você. Por favor siga as instruções no email para ativar a sua conta."
+    not_allowed_from_ip_address: "Você não pode entrar como %{username} a partir deste endereço IP."
     suspended: "Você não pode entrar até %{date}."
     suspended_with_reason: "Você não pode entrar até %{date}. Razão da sua suspensão: %{reason}"
     errors: "%{errors}"
@@ -620,9 +654,14 @@ pt_BR:
     something_already_taken: "Algo deu errado, talvez o nome de usuário ou o email já estejam registrados. Tente o link Esqueci minha Senha."
     omniauth_error: "Desculpe, Houve um erro ao autorizar a sua conta %{strategy}. Talvez você não tenha aprovado a autorização?"
     omniauth_error_unknown: "Algo deu errado no processamento do seu login, por favor tente novamente."
+    new_registrations_disabled: "Novas contas não são permitidas neste momento."
+    password_too_long: "Senhas são limitadas a 200 caracteres."
+    missing_user_field: "Você não completou todos campos de usuário"
   user:
+    no_accounts_associated: "Nenhuma conta associada"
     username:
       short: "deve ter no mínimo %{min} caracteres"
+      long: "precisa ter não mais que ${max} caracteres"
       characters: "deve incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
@@ -632,12 +671,62 @@ pt_BR:
       blocked: "não é permitido."
     ip_address:
       blocked: "está bloqueado."
+  invite_mailer:
+    subject_template: "%{invitee_name} convidou você para '%{topic_title}' em %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} convidou você para uma conversa
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      em
+
+      > %{site_title} -- %{site_description}
+
+      Se estiver interessado, clique no link abaixo:
+
+      %{invite_link}
+
+      Este convite é de um usuário de nossa confiança, assim você poderá participar da conversa imediatamente.
+  invite_forum_mailer:
+    subject_template: "%{invitee_name} convidou você para participar de %{site_domain_name}"
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
   new_version_mailer:
     subject_template: "[%{site_name}] Nova versão do Discourse, atualização disponível"
+    text_body_template: |
+      Uma nova versão do [Discourse](http://www.discourse.org) está disponível.
+
+      Sua versão: %{installed_version}
+      Nova versão: **%{new_version}**
+
+      Recomendamos:
+
+      - Ver o que há de novo nas [mudanças do GitHub] (https://github.com/discourse/discourse/commits/master)
+
+      - Atualizar visitando  [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) e pressionando o botão de "Atualizar".
+
+      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, discussões e suporte para o Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
+    text_body_template: |
+      Uma nova versão do [Discourse](http://www.discourse.org) está disponível.
+
+      Sua versão: %{installed_version}
+      Nova versão: **%{new_version}**
+
+      Sugerimos:
+
+      - Ver o que há de novo nas [mudanças do GitHub] (https://github.com/discourse/discourse/commits/master)
+
+      - Atualizar visitando  [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) e pressionando o botão de "Atualizar".
+
+      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, discussões e suporte para o Discourse.
+
+      ### Notas de lançamento
+
+      %{notes}
   flags_reminder:
     please_review: "Por favor, revise eles."
     post_number: "mensagem"
@@ -648,10 +737,121 @@ pt_BR:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
+      text_body_template: |
+        Olá,
+
+        Este é um aviso automático de %{site_name} para informá-lo que sua mensagem...
+
+        %{base_url}%{url}
+
+        ... foi escondido devido a sinalização da comunidade.
+
+        %{flag_reason}
+
+        Vários membros da comunidade sinalizaram esta mensagem antes do mesmo ser escondida, portanto por-favor considere como deve revisa-la para refletir o retorno da comunidade. **Você pode editar sua mensagem após %{edit_delay} minutos, e depois ela  automaticamente voltará a ser visível. Isto irá aumentar o seu nível de confiança.
+
+        No entanto, caso a mensagem seja escondida pela comunidade uma segunda vez, os moderadores serão notificados -- e haverá futuras atuações, incluindo uma possível suspensão da sua conta.
+
+        Para mais ajuda, por-favor consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        Esta mensagem privada tem algumas dicas para te ajudar a começar.
+
+        ## Continue rodando
+
+        Não existem botões de próxima página ou numerações de página – para ler mais, **simplesmente continue rodando para baixo!**
+
+        Conforme novas mensagens chegam, elas irão aparecer automaticamente.
+
+        ## Onde estou?
+
+        - Para buscar, sua página de usuário, ou o menu, use os **botões do ícone <kbd>☰</kbd> no canto direito superior**.
+
+        - Qualquer título de tópico irá te levar para a próxima mensagem não lida. Utilize o tempo de última atividade e contagem de mensagens para entrar no começo ou no final.
+
+        - Enquanto lê um tópico, vá para o topo &uarr; selecionando o título do tópico. Selecione a barra de progresso verde no canto direito inferior para todos controles de navegação, ou utilize as teclas <kbd>home</kbd> e <kbd>end</kbd>.
+
+            <img src="/images/welcome/progress-bar.png" width="143" height="39">
+
+        ## Como respondo?
+
+        - Para responder ao tópico geral, utilize o botão de Responder <img src="/images/welcome/reply-topic.png" width="29" height="25"> bem no final da página.
+
+        - Para responder uma mensagem em específico, utilize o botão de Responder <img src="/images/welcome/reply-post.png" width="29" height="25"> na respectiva mensagem.
+
+        - Se quiser levar a conversa para outro sentido, mas manter elas relacionadas, utilize <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Responder como um Tópico linkado à direita da mensagem.
+
+        Para citar alguém na sua resposta, selecione o texto que gostaria de citar, daí aperte qualquer botão de Responder.
+
+        <img src="/images/welcome/quote-reply.png" width="350" height="129">
+
+        Para alertar alguém na sua resposta, mencione o nome deles. Tecle `@` e um auto copmpletador surgirá.
+
+        <img src="/images/welcome/username-completion.png" width="230" height="131">
+
+        Para [Emojis padrões](http://www.emoji.codes/), simplesmente comece digitando `:` ou os tradicionais smileys `:)` :smile:
+
+        ## O que mais posso fazer?
+
+        Em baixo de cada mensagem existem os botões de ações.
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        Para deixar que saibam que você gostou a mensagem deles, utilize o botão **curtir**. Se você ver algum problema com uma mensagem, avise a pessoa pessoalmente, ou deixe nossa equipe saber a respeito com o botão **sinalizar**.
+
+        Você também pode **compartilhar** um link para uma mensagem, ou **favoritar** para referência posterior na sua página de usuário.
+
+        ## Quem está falando comigo?
+
+        Quando alguém responde ou cita as suas mensagens, ou menciona o seu `@nomedeusuário`, um número imediatamente aparecerá no topo superior da página. Utilize-o para acessar suas **notificações**.
+
+        <img src="/images/welcome/notification-panel.png" width="178" height="59">
+
+        Não se preocupe se não vir uma resposta – você receberá um email sobre respostas direcionadas (e mensagens privadas) caso você não esteja online quando elas chegarem.
+
+        ## Quando as conversas são consideradas novas?
+
+        Por padrão todas conversas com menos de dois dias são consideradas novas, e qualquer conversa da qual você participou (respondeu, criou ou leu por um período extendido) será automaticamente monitorada.
+
+        Você verá um indicador azul, de "novo" ou números, próximos aos tópicos:
+
+        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        Você pode mudar o estado de notificação individual de um tópico via o controle no final dele (isso também pode ser configurado por categorias). Para mudar como você monitora tópicos, ou a definição de "novo", veja [suas preferências de usuário](/my/preferences).
+
+        ## Por que não posso fazer algumas coisas?
+
+        Usuários novos possuem limitações por segurança. Conforme você participa, ganhará a confiança da comunidade, se tornará um cidadão, e todas essas limitações serão automaticamente removidas. Em [níveis de confiança](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) altos suficientes, você ganhará até mesmo novas abilidades para nos ajudar a cuidar da nossa comunidade juntos.
     welcome_user:
       subject_template: "Bem-vindo em %{site_name}!"
+      text_body_template: |
+        Obrigado por participar de %{site_name}, e bem-vindo!
+
+        %{new_user_tips}
+
+        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) sempre.
+
+        Diverta-se durante sua estadia!
     welcome_invite:
       subject_template: "Bem-vindo em %{site_name}!"
+      text_body_template: |
+        Obrigado por aceitar o seu convite para %{site_name}, e bem-vindo!
+
+        Geramos automaticamente um nome de usuário para você: **%{username}**, mas poderá alterá-lo quantas vezes quiser visitando [o seu perfil de usuário][prefs].
+
+        Para entrar outra vez, escolha uma das opções:
+
+        1. Utilize uma das credenciais disponíveis -- ela deve ser do **mesmo endereço de email** pelo qual você recebeu o convite original. Caso contrário não poderemos saber se é você!
+
+        2. Crie uma senha única para %{site_name} no [seu perfil de usuário][prefs].
+
+        %{new_user_tips}
+
+        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) em todos os momentos.
+
+        Divirta-se durante sua estadia!
+
+        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "Exportação completada com sucesso"
       text_body_template: "A exportação foi bem sucedida."

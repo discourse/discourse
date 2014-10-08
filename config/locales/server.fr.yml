@@ -200,27 +200,6 @@ fr:
   assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenue dans le salon"
-    body: |2
-
-      Félicitation ! :confetti_ball:
-
-      Si vous voyez ce sujet, c'est que vous avez récemment été promu au [niveau de confiance 3 (régulier)][trust].
-
-      Vous pouvez désormais &hellip;
-
-      * Modifier le titre de tous les sujets
-      * Modifier la catégorie de tous les sujets
-      * Avoir vos liens suivis [automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) est retiré)
-      * Accès à un salon privé visible uniquement pour les membres de niveau de confiance 3 ou plus.
-      * Avoir des J'aimes et signalements qui ont un plus gros impact.
-
-      Voici la [liste courante des meneurs](/badges/3/regular). Hésitez pas à dire bonjour !
-
-      Merci d'être une part importante de la communauté !
-
-      (Pour plus d'information sur les niveaux de confiance [voir ce sujet][trust]. Veuillez noter que seuls les membres qui continuerons de respecter les critères garderons ce niveau de confiance.
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "A propos de la catégorie %{category}"
     replace_paragraph: "[Remplacez ce premier paragraphe par une courte description de votre nouvelle catégorie. Ce texte apparaît dans la zone de sélection de catégorie, alors essayez de le maintenir en dessous de 200 caractères. Cette catégorie n'apparaîtra pas sur la page des catégories tant que vous modifiez ce texte ou jusqu'à ce qu'un sujet soit crée.]"
@@ -555,12 +534,6 @@ fr:
     bottom:
       title: "Pied des pages"
       description: "HTML qui sera ajouté au pied de chaque page."
-    tos_signup_form_message:
-      title: "Formulaire d'inscription : message des Conditions Générales d'Utilisation"
-      description: "Le message qui apparaît à côté d'une case à cocher sur le formulaire d'inscription si le paramètre tos_accept_required est coché."
-    notification_email_top:
-      title: "Notification en haut des courriels"
-      description: "Un message qui sera affiché en haut de tous les courriels de notification."
   site_settings:
     default_locale: "La langue par défaut de cette instance de Discourse (code ISO 639-1)"
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leur préférences."
@@ -590,7 +563,6 @@ fr:
     ninja_edit_window: "Pendant (n) secondes après la publication d'un message, l'édition de ce dernier ne provoquera pas d'historisation."
     post_edit_time_limit: "L'auteur peut modifier ou supprimer ses messages pendant (n) minutes après leurs publications. Mettre à 0 pour l'autoriser sans limite de temps."
     edit_history_visible_to_public: "Autoriser tout le monde à voir les versions précédentes d'un message modifié. Quand désactivé, seuls les membres de l'équipe peuvent voir l'historique."
-    delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures."
     max_image_width: "Largeur maximale des images dans un message"
     max_image_height: "Hauteur maximale autorisée des images dans un message"
     category_featured_topics: "Nombre de sujets affichés par catégorie sur la page /categories. Après avoir modifié cette valeur, il faut jusqu'à 15 minutes pour que la page des catégories soit mise à jour."
@@ -656,7 +628,6 @@ fr:
     redirect_users_to_top_page: "Rediriger automatiquement les nouveaux utilisateurs et les longues absences sur la page Top."
     email_token_valid_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont valides (n) jours."
     email_token_grace_period_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont encore valides pour une période de grâce de (n) heures après leur expiration."
-    enable_badges: "Activer le système de badge"
     allow_index_in_robots_txt: "Spécifier dans robots.txt que le site est autorisé à être indexer par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisé lors de la création de compte. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourrons pas s'enregistrer."
@@ -718,7 +689,6 @@ fr:
     clean_up_uploads: "Retirer les fichiers téléchargés orphelins pour prévenir les hébergements illégaux. ATTENTION: vous devriez faire une sauvegarde de votre répertoire /uploads avant d'activer ce paramètre."
     clean_orphan_uploads_grace_period_hours: "La période de grâce (en heures) avant qu'un fichier envoyé orphelin soit retiré."
     purge_deleted_uploads_grace_period_days: "La période de grâce (en jours) avant qu'un fichier envoyé et supprimé soit effacé."
-    purge_inactive_users_grace_period_days: "Période de grâce (en jours) avant qu'un utilisateur inactif soit supprimé."
     s3_use_iam_profile: 'Utiliser un role AWS EC2 IAM pour la récupération des clés. NOTE: si activé, surcharge les paramètres "s3 access key id" et "s3 secret access key".'
     s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans périodes."
     s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images."
@@ -845,7 +815,6 @@ fr:
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
     embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus embarqués."
-    tos_accept_required: "Si activé, les utilisateurs devront cocher une case sur le formulaire d'inscription pour confirmer qu'ils acceptent les conditions générales d'utilisation. Modifier \"Formulaire d'inscription : message des Conditions Générales d'Utilisation» dans l'onglet Contenu pour modifier le message."
     notify_about_flags_after: "Si il y a des signalements qui n'ont pas été traités après ce nombre d'heure, envoyer un courriel à contact_email.  Désactiver la fonctionnalité en indiquant: 0."
     enable_cdn_js_debugging: "Autoriser /logs à afficher correctement les erreurs en ajoutant des permissions de crossorigin sur toutes les inclusions de js."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."

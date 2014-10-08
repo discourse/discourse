@@ -209,27 +209,6 @@ es:
   assets_topic_body: "Este es un tema permanente, visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
-    body: |2
-
-      ¡Enhorabuena! :confetti_ball:
-
-      Si puedes ver este tema, fuiste recientemente promovido a **regular** (nivel de confianza 3).
-
-      Ahora puedes &hellip;
-
-      * Editar el título de cualquier tema
-      * Cambiar la categoría de cualquier tema
-      * Tener todos tus enlaces en follow ([nofollow automático](http://en.wikipedia.org/wiki/Nofollow) es removido)
-      * Acceso a la categoría privada Lounge solamente visible para usuarios con nivel de confianza 3 o superior
-      * Da 'me gusta' y reportar con mayor peso
-
-      Aquí esta la [lista actual de miembros regulares](/badges/3/regular). Asegúrate de decir hola.
-
-      ¡Gracias por ser una parte importante de esta comunidad!
-
-      (Para mas información en los niveles de confianza, [mira este tema][trust]. Por favor nota que solo los miembros que continúen satisfaciendo los requerimientos a lo largo del tiempo seguirán siendo regulares.)
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Definición de la categoría %{category}"
     replace_paragraph: "[Reemplaza el primer párrafo con una descripción corta de tu nueva categoría. Esta guía aparecerá en el área de selección de categoría, por lo que trata de mantenerla por debajo de los 200 caracteres.]"
@@ -569,12 +548,6 @@ es:
     bottom:
       title: "Pie de página"
       description: "HTML que va a ser añadido en la base de cada página."
-    tos_signup_form_message:
-      title: "Página de Registro: Mensaje de Términos del Servicio"
-      description: "El mensaje que aparecerá junto un checkbox en la página de registro si la configuración del sitio 'tos_accept_required' está activada."
-    notification_email_top:
-      title: "Notificación en la parte superior de los emails"
-      description: "Un mensaje que se mostrará en la parte superior de todos los emails de notificación"
   site_settings:
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
     default_locale: "El idioma por defecto de Discourse (ISO 639-1 Code)"
@@ -605,7 +578,7 @@ es:
     ninja_edit_window: "Durante (n) segundos después de publicar un post, se puede editar ese post sin crear una nueva versión en el historial."
     post_edit_time_limit: "El autor puede editar o eliminar su post durante (n) minutos después de publicarlo. Pon un 0 para que pueda hacerlo siempre."
     edit_history_visible_to_public: "Permitir a todos ver las versiones previas de un post editado. Si se deshabilita, solo los miembros del staff podrán verlas."
-    delete_removed_posts_after: "Los posts retirados por su autor serán eliminados automáticamente después de (n) horas."
+    delete_removed_posts_after: "Los posts borrados por su autor serán automáticamente eliminados después de (n) horas. Si se establece este valor a 0, los posts serán eliminados automáticamente."
     max_image_width: "Ancho máximo de las miniaturas de las imágenes en un post"
     max_image_height: "Alto máximo de las miniaturas de las imágenes en un post"
     category_featured_topics: "Número de temas mostrados por categoría en la página /categories. Este cambio puede tardar hasta 15 minutos en verse reflejado"
@@ -624,7 +597,6 @@ es:
     apple_touch_icon_url: "Icono para los dispositivos táctiles de Apple. Se recomienda un tamaño de 144px por 144px."
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
-    email_subject: "Formato del asunto para e-mails estándares."
     use_https: "¿Debería ser la URL completa del sitio (Discourse.base_url) http o https? ¡NO ACTIVES ESTO A MENOS QUE HTTPS ESTÉ CONFIGURADO Y FUNCIONANDO!"
     summary_score_threshold: "La puntuación mínima requerida para que un post sea incluido en el 'Resumen de este tema\""
     summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
@@ -673,7 +645,7 @@ es:
     show_email_on_profile: "Mostrar el e-mail los usuarios en su perfil (solamente visibles para ellos mismos y el staff)"
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
     email_token_grace_period_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas de periodo de gracia, después de ser redimidos."
-    enable_badges: "Habilitar el sistema de distinciones (experimental)"
+    enable_badges: "Activar el sistema de distintivos"
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de email con los cuales los usuarios no podrán registrarse. Ejemplo: mailinator.com trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
@@ -737,7 +709,7 @@ es:
     clean_up_uploads: "Eliminar subidas huérfanas sin referencia para prevenir hosting ilegal. AVISO: antes de habilitar esta opción quizá quieres hacer un backup de tu directorio de /uploads"
     clean_orphan_uploads_grace_period_hours: "Período de gracia (en horas) antes de que una subida huérfana sea eliminada."
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
-    purge_inactive_users_grace_period_days: "Período de gracia (en días) antes de eliminar un usuario inactivo."
+    purge_inactive_users_grace_period_days: "Periodo de gracia (en días) durante los cuales un usuario que no haya activado su cuenta no será aún eliminado."
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere de credenciales de S3 validas. (ambas clave de acceso y clave de acceso secreta)."
     s3_use_iam_profile: 'Usar el rol de AWS EC2 IAM para descargar las llaves. NOTA: habilitando esta opción ignorará la "llave de acceso s3" y "la llave de acceso secreta s3".'
     s3_upload_bucket: "El nombre del depósito de Amazon S3 donde se subirán los archivos. AVISO: debe estar escrito en minúsculas y sin puntos."
@@ -868,7 +840,6 @@ es:
     embed_post_limit: "Número máximo de posts a embeber."
     embed_whitelist_selector: "Selector CSS para los elementos que están permitidos en los embebidos."
     embed_blacklist_selector: "Selector CSS para los elementos que están eliminados desde los embebidos."
-    tos_accept_required: "Si está habilitado, los usuarios necesitarán marcar una casilla en el formulario de registro para confirmar que aceptan las condiciones de servicio. Edita 'Formulario de registro: mensaje de condiciones de servicio' en la pestaña de Contenido para cambiar el mensaje."
     notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un correo electrónico al contact_email. Deshabilita esta opción introduciendo el valor 0."
     enable_cdn_js_debugging: "Permitir /logs mostrar los errores correctamente, añadiendo permisos crossorigin en todas las inclusiones de js"
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
@@ -950,7 +921,6 @@ es:
     incorrect_username_email_or_password: "Nombre de usuario, dirección de correo o contraseña incorrectos"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprobada."
     active: "Tu cuenta está activa y lista para usar."
-    activate_email: "¡Casi hemos terminado! Te enviamos un e-mail de activación a la cuenta de e-mail que nos has proporcionado. Por favor sigue las instrucciones en el e-mail para activar tu cuenta."
     not_activated: "Aún no puedes iniciar sesión. Te hemos enviado un email de activación. Por favor, sigue las instrucciones en el email para activar tu cuenta."
     not_allowed_from_ip_address: "No puedes iniciar sesión como %{username} desde esa dirección IP."
     suspended: "No puedes iniciar sesión hasta %{date}."

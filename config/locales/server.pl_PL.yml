@@ -193,37 +193,16 @@ pl_PL:
   assets_topic_body: "Ten temat jest widoczny tylko dla członków zespołu. Służy do przechowywania obrazów i plików wykorzystywanych w wyglądzie serwisu. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie grafiki jakich chcesz użyć jako logo, favicon itd. (Użyj ikony wysyłania w edytorze wpisu lub przeciągnij i upuść.)\n3. Wyślij odpowiedź, aby je zachować.\n4. Kliknij prawym przyciskiem myszy na grafice i skopiuj jej adres URL.\n5. Wklej adres w [ogólnych ustawieniach](/admin/site_settings/category/required).\n\nJeśli chcesz włączyć możliwość przesyłania dodatkowych typów plików, zmień  `authorized_extensions` w [ustawieniach plików](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Witaj w Salonie"
-    body: |2
-
-      Gratulacje! :confetti_ball:
-
-      Jeśli widzisz ten temat, twoje konto osiągnęło trzeci poziom zaufania.
-
-      Od teraz możesz &hellip;
-
-      * Edytować temat każdego tematu
-      * Przenieść temat do innej kategorii
-      * Twoje linki nie będą posiadać już atrybutu [nofollow](http://en.wikipedia.org/wiki/Nofollow)
-      * Korzystać z prywatnego Salonu, kategorii która jest widoczna jedynie dla użytkowników na 3 poziomie zaufania lub wyższym
-      * Przyznawać polubienia i flagi o większej wadze
-
-      Możesz zobaczyć [wszystkie osoby z tym poziomem zaufania](/badges/3/regular). Nie zapomnij się przywitać.
-
-      Dziękujemy, że jesteś tak aktywną częścią naszej społeczności!
-
-      (Więcej informacji o poziomach zaufania znajduje się [pod tym adresem][trust]. Pamiętaj, że trzeci poziom zaufania zależy od utrzymywania aktywności danego konta na określonym poziomie.)
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "[Zamień ten pierwszy paragraf na krórki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go poniżej 200 znaków. Póki nie zmienisz tego tekstu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.]"
     post_template: "%{replace_paragraph}\n\nW kolejnych paragrafach możesz umieścić dłuższy opis, oraz opisać zasady i wytyczne jakie będą obowiązywać w tej kategorii. \n\nKilka rzeczy do rozważenia:\n\n- Czemu ma służyć ta kategoria? Dlaczego inni powinni wybierać tę kategorię dla swoich tematów?\n\n- Czym się różni od innych kategorii, które już mamy?\n\n- Czy potrzebujemy tej kategorii?\n\n- Czy powinniśmy ją połączyć z jakąś inną kategorią, lub podzielić na więcej kategorii?\n"
     errors:
-      uncategorized_parent: "Nieprzypisane nie mogą być podkategorią innej kategorii."
+      uncategorized_parent: "Inne nie mogą być podkategorią innej kategorii."
       self_parent: "Podkategoria nie może być swoim rodzicem"
       depth: "Nie możesz umieścić subkategorii w innej subkategorii"
     cannot_delete:
-      uncategorized: "Nie można usunąć Nieprzypisanych"
+      uncategorized: "Nie można usunąć kategorii Inne"
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
       topic_exists:
         one: "Nie można usunąć tej kategorii ponieważ zawiera temat: %{topic_link}."
@@ -573,11 +552,6 @@ pl_PL:
     bottom:
       title: "Stopka każdej strony"
       description: "Kod HTML jaki zostanie dołączony na dole każdej strony."
-    tos_signup_form_message:
-      title: "Formularz rejestracji: warunki użytkowania serwisu"
-    notification_email_top:
-      title: "Nagłówek powiadomień email"
-      description: "Wiadomość jaka zostanie umieszczona na początku każdego powiadomienia email."
   site_settings:
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"
@@ -588,7 +562,7 @@ pl_PL:
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
     min_private_message_title_length: "Minimalna ilość znaków w tytule prywatnej wiadomości"
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
-    allow_uncategorized_topics: "Pozwól na tworzenie tematów bez kategorii"
+    allow_uncategorized_topics: "Pozwól na tworzenie tematów bez kategorii."
     uncategorized_description: "Znajdują się tu wątki którym jeszcze nie przypisano odpowiedniej kategorii."
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
@@ -604,7 +578,6 @@ pl_PL:
     ninja_edit_window: "Przez tyle sekund po utworzeniu nowego wpisu jego kolejne edycje nie będą tworzyć nowych wersji w historii wpisu."
     post_edit_time_limit: "Autor może edytować lub usunąć swój wpis przez tyle minut po jego utworzeniu. Ustawienie 0 oznacza 'zawsze'."
     edit_history_visible_to_public: "Pozwól wszystkim przeglądać poprzednie wersje edytowanych wpisów. Gdy wyłączone, jedynie obsługa/staff może."
-    delete_removed_posts_after: "Wpisy wycofane przez autora będą automatycznie usunięte po tylu godzinach. "
     max_image_width: "Maksymalna szerokość miniaturki grafiki we wpisie. "
     max_image_height: "Maksymalna wysokość miniaturki grafiki we wpisie. "
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
@@ -662,7 +635,7 @@ pl_PL:
     email_editable: "Allow users to change their e-mail address after registration."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
-    suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Nieprzypisane na listach tematów."
+    suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
   notification_types:
     mentioned: "%{display_username} wspomina o Tobie w %{link}"
     liked: "%{display_username} polubił(-a) Twój wpis w %{link}"
@@ -721,7 +694,6 @@ pl_PL:
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
     wait_approval: "Dziękujemy za rejestrację. Powiadomimy Cię gdy Twoje konto zostanie aktywowane."
     active: "Twoje konto zostało aktywowane i jest gotowe do użycia."
-    activate_email: "Prawie koniec! Wysłaliśmy email aktywacyjny na adres <b>%{email}</b>. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy do Ciebie email aktywacyjny. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"

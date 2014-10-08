@@ -116,9 +116,9 @@ zh_CN:
 
       - 主题是关于什么的？谁会感兴趣？它为什么重要？您期望从社区中获得什么样的回应？
 
-      - 选择恰当的词句以便别人能找到您的主题。若想要给主题分组，，选择一个分类。
+      - 选择恰当的词句以便别人能找到您的主题。若想要给主题分组，选择一个分类。
 
-      更多的帮助信息，[请查看我们的社群准则](/guidelines)。此信息面板只在您第一个 %{education_posts_text} 时显示。
+      更多的帮助信息，[请查看我们的社群准则](/guidelines)。此信息面板只在您发布前 %{education_posts_text}时显示。
     new-reply: |
       欢迎来到 %{site_name} &mdash；**感谢您的贡献！**
 
@@ -217,6 +217,7 @@ zh_CN:
       * 改变任何主题的分类
       * 让您的链接设置为 follow 属性（[自动 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已经移除）
       * 访问一个只有信任等级3及更高才能见到的贵宾室分类
+      * 一次标记即可隐藏垃圾信息
 
       这里是[目前达到常规的用户列表](/badges/3/regular)。一定要来问个好！
 
@@ -538,13 +539,8 @@ zh_CN:
     bottom:
       title: "页面底部"
       description: "将在每一个页面底部加入的 HTML。"
-    tos_signup_form_message:
-      title: "注册表单：服务条款信息"
-      description: "如果启用了 tos_accept_required 站点设置，将会出现在注册表单的复选框内的消息。"
-    notification_email_top:
-      title: "通知邮件顶部"
-      description: "将显示于所有通知邮件顶部的消息"
   site_settings:
+    censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
     default_locale: "此论坛的缺省语言（ISO 639-1 代码）"
     allow_user_locale: "允许用户选择他们自己的语言界面"
@@ -593,7 +589,7 @@ zh_CN:
     apple_touch_icon_url: "Apple 触摸设备使用的图标。推荐 144x144 大小。"
     notification_email: "这个表格：被用于发送所有重要系统邮件的邮箱地址。指定的域名必须正确设置 SPF、DKIM 和反向 PTR 记录以发送邮件。"
     email_custom_headers: "一个逗号分离的自定义邮件头部"
-    email_subject: "标准邮件的主题格式"
+    email_subject: "标准邮件的自定义主题格式。参见 https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     use_https: "站点的完整链接（Discourse.base_url）需要是 http 还是 https？HTTPS 没有被配置并启用好前绝不要开启这个设置！"
     summary_score_threshold: "将一个帖子包含在'摘要模式'中所需的最小分值"
     summary_posts_required: "在一个主题启用'摘要模式'的最小帖子数量"
@@ -642,7 +638,7 @@ zh_CN:
     show_email_on_profile: "在用户页面显示用户的邮件地址（只有用户和职员可见）"
     email_token_valid_hours: "“忘记密码”/“激活账户” token 有效的小时数(n)。"
     email_token_grace_period_hours: "“忘记密码”/“激活账户” token 在使用后仍旧有效的小时数(n)。"
-    enable_badges: "启用徽章系统（实验性）"
+    enable_badges: "启用徽章系统"
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "一个邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com trashmail.net"
     email_domains_whitelist: "一个电子邮箱域名的列表，用户只能使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
@@ -706,7 +702,7 @@ zh_CN:
     clean_up_uploads: "移除孤立的已上传资料。警告：您可能想要在启用这个设定前备份一下 /uploads 目录。"
     clean_orphan_uploads_grace_period_hours: "删除孤立上传资料的宽限期（单位：小时）"
     purge_deleted_uploads_grace_period_days: "移除已删除的孤立上传资料的宽限期（单位：小时）"
-    purge_inactive_users_grace_period_days: "移除不活跃用户的宽限期（单位：天）。"
+    purge_inactive_users_grace_period_days: "删除不活跃用户账户的宽限期（单位：天）。"
     enable_s3_uploads: "上传至 Amazon S3 存储的地址。重要：需要有效的 S3 验证资料（包括 access key id & secret access key）。"
     s3_use_iam_profile: '使用 AWS EC2 IAM 角色来获得 key。注意：启用这个会覆盖“S3 access key id”和“S3 secret access key” 设置。'
     s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点（.）。"
@@ -837,7 +833,6 @@ zh_CN:
     embed_post_limit: "嵌入帖子的最大数量。"
     embed_whitelist_selector: "在嵌入页面加入元素 CSS 选择器。"
     embed_blacklist_selector: "在嵌入页面移除元素 CSS 选择器。"
-    tos_accept_required: "如果启用，用户将需要在注册页面选择复选框以同意服务条款。在内容标签中编辑“注册表单：服务条款信息”更改条款内容。"
     notify_about_flags_after: "如果有标记没有在设定小时后处理，发送一封邮件给 contact_email。设为 0 将禁用。"
     enable_cdn_js_debugging: "为包含的 js 启动跨源访问 /logs 权限以显示合适的错误。"
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
@@ -917,7 +912,7 @@ zh_CN:
     incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
     wait_approval: "谢谢注册帐号。我们会在您的帐号获得批准之后通知您。"
     active: "您的帐号已经被激活，可以使用了。"
-    activate_email: "快完成了！我们发送了一封激活邮件到您提供的邮箱。请按照邮件中的步骤来激活您的帐号。"
+    activate_email: "<p>快完成了！我们发送了一封激活邮件到<b>%{email}</b>。请按照邮件中的步骤来激活您的帐号。</p><p>如果您没有收到邮件，请检查您的垃圾邮件收件箱，或者试试再登录一次，看看能不能收到另一封激活邮件。</p>"
     not_activated: "您还不能登录。我们发送了一封激活邮件给您，请按照邮件中的步骤来激活您的帐号。"
     not_allowed_from_ip_address: "您不能以 %{username} 身份从该 IP 地址登陆。"
     suspended: "您要等到 %{date} 之后才能登录。"
@@ -929,6 +924,7 @@ zh_CN:
     omniauth_error_unknown: "在处理您的登录过程中发生了错误，请重试。"
     new_registrations_disabled: "现在不允许注册新账户。"
     password_too_long: "密码不能超过 200 个字符。"
+    missing_user_field: "您还没有填写完所有用户字段"
   user:
     no_accounts_associated: "无关联账户"
     username:

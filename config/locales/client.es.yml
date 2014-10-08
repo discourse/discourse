@@ -90,6 +90,7 @@ es:
       facebook: 'comparte este enlace en Facebook'
       google+: 'comparte este enlace en Google+'
       email: 'comparte este enlace por email'
+    topic_admin_menu: "acciones de administrador para el tema"
     edit: 'editar el título y la categoría de este tema'
     not_implemented: "Esta característica no ha sido implementada aún, ¡lo sentimos!"
     no_value: "No"
@@ -122,7 +123,7 @@ es:
     daily: "cada día"
     weekly: "cada semana"
     every_two_weeks: "cada dos semanas"
-    max: "máximo"
+    max_of_count: "máximo de {{count}}"
     character_count:
       one: "{{count}} carácter"
       other: "{{count}} caracteres"
@@ -218,8 +219,8 @@ es:
         members_mods_and_admins: "Solo miembros del grupo, moderadores y administradores"
         everyone: "Todos"
     user_action_groups:
-      '1': "'Me gusta' dados"
-      '2': "'Me gusta' recibidos"
+      '1': "'Me gusta' Dados"
+      '2': "'Me gusta' Recibidos"
       '3': "Marcadores"
       '4': "Temas"
       '5': "Posts"
@@ -421,6 +422,8 @@ es:
         expired: "Esta invitación ha vencido."
         rescind: "Remover"
         rescinded: "Invitación eliminada"
+        reinvite: "Reenviar Invitación"
+        reinvited: "Invitación reenviada"
         time_read: "Tiempo de Lectura"
         days_visited: "Días Visitados"
         account_age_days: "Antigüedad de la cuenta en días"
@@ -736,7 +739,6 @@ es:
         one: '1 tema sin leer'
         other: '{{count}} temas sin leer'
       title: 'Tema'
-      loading_more: "Cargando más temas..."
       loading: 'Cargando tema...'
       invalid_access:
         title: "Este tema es privado"
@@ -1174,6 +1176,8 @@ es:
       delete_spammer: "Borrar spammer"
       delete_confirm: "Estás a punto de eliminar <b>%{posts}</b> publicaciones y <b>%{topics}</b> temas de este usuario, borrar su cuenta, bloquear sus inicios de sesión desde su dirección IP <b>%{ip_address}</b>, y añadir su dirección de email <b>%{email}</b> a una lista de bloqueo permanente. ¿Estás seguro de que este usuario es realmente un spammer?"
       yes_delete_spammer: "Sí, borrar spammer"
+      ip_address_missing: "(N/D)"
+      hidden_email_address: "(oculto)"
       submit_tooltip: "Enviar el reporte privado"
       take_action_tooltip: "Alcanzar el umbral de reportes inmediatamente, en vez de esperar a más reportes de la comunidad"
       cant: "Lo sentimos, no puedes reportar este post en este momento."
@@ -1470,7 +1474,7 @@ es:
             text: "Copia de seguridad"
             title: "Crear una copia de seguridad"
             confirm: "¿Quieres iniciar una nueva copia de seguridad?"
-            without_uploads: "Sí (sin archivos subidos)"
+            without_uploads: "Sí (no incluir archivos)"
           download:
             text: "Descargar"
             title: "Descargar la copia de seguridad"
@@ -1603,6 +1607,8 @@ es:
         last_match_at: "Última coincidencia"
         match_count: "Coincidencias"
         ip_address: "IP"
+        topic_id: "ID del Tema"
+        post_id: "ID del Post"
         delete: 'Eliminar'
         edit: 'Editar'
         save: 'Guardar'
@@ -1637,6 +1643,8 @@ es:
             grant_badge: "conceder distintivo"
             revoke_badge: "revocar distintivo"
             check_email: "comprobar e-mail"
+            delete_topic: "eliminar tema"
+            delete_post: "eliminar post"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -1708,7 +1716,7 @@ es:
         not_verified: "No verificado"
         check_email:
           title: "Revelar la dirección de e-mail de este usuario"
-          text: "Mostrar e-mail"
+          text: "Mostrar"
       user:
         suspend_failed: "Algo salió mal baneando este usuario {{error}}"
         unsuspend_failed: "Algo salió mal quitando ban a este usuario {{error}}"
@@ -1827,16 +1835,21 @@ es:
           external_avatar_url: "URL del avatar"
       user_fields:
         title: "Campos de Usuario"
-        description: "Cualquier campo añadido aquí sera requerido para los usuarios que se registren."
+        help: "Los campos añadidos aquí serán requeridos a los usuarios cuando inicien sesión."
         create: "Crear Campo de Usuario"
         untitled: "Sin título"
         name: "Nombre del Campo"
         type: "Tipo de Campo"
+        description: "Descripción del Campo"
         save: "Guardar"
         edit: "Editar"
         delete: "Borrar"
         cancel: "Cancelar"
         delete_confirm: "Esta seguro que quiere borrar ese campo de usuario?"
+        editable:
+          title: "¿Editable después del registro?"
+          enabled: "editable"
+          disabled: "no editable"
         field_types:
           text: 'Campo de Texto'
           confirm: 'Confirmación'

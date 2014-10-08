@@ -430,11 +430,6 @@ zh_TW:
     bottom:
       title: "頁面底部"
       description: "此 HTML 將插入於任何業面的尾部"
-    tos_signup_form_message:
-      title: "註冊表單：服務條款訊息"
-    notification_email_top:
-      title: "通知郵件頂端"
-      description: "一段將會顯示在所有通知郵件頂端的訊息"
   site_settings:
     default_locale: "Discourse 執行個體 (instance) 的預設語言編碼 (ISO 639-1)"
     allow_user_locale: "允許用戶選擇自己的語言介面"
@@ -500,7 +495,6 @@ zh_TW:
     redirect_users_to_top_page: "將新用戶或長時間未使用的用戶自動重新導向至熱門頁面"
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     email_token_grace_period_hours: "\"忘記密碼\" / \"重啟帳號\" 的 token 在使用後仍舊有效的小時數 (n)"
-    enable_badges: "啟用勳章系統 ( 實驗性 ) "
     allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
     email_domains_blacklist: "Email域名的黑名單，在此名單內的域名將無法註冊，例如：mailinator.com trashmail.net"
     email_domains_whitelist: "Email域名的白名單，使用者 \"必須\" 使用此帳號來註冊，注意：使用者如果使用其他Email的域名將無法註冊"

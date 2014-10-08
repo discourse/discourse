@@ -195,7 +195,7 @@ it:
   assets_topic_body: "Questo è un argomento permanente, visibile solo allo staff, per salvare immagini e file utilizzati nel design del sito. Non eliminarlo!\n\n\nEcco come fare:\n\n\n1. Rispondi a questo argomento.\n2. Carica qui tutte le immagini che desideri usare per loghi, favicon e così via (usa l'icona di caricamento nell'editor del messaggio o trascina direttamente le immagini).\n3. Invia la risposta per creare il messaggio.\n4. Fai click con il tasto destro sulle immagini nel tuo nuovo messaggio per prelevare il percorso delle immagini caricate, o clicca l'icona di modifica messaggio e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni di base](/admin/site_settings/category/required).\n\nSe vuoi permettere di caricare file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Benvenuto nel Lounge"
-    body: "\nCongratulazioni! :confetti_ball: \n\nSe vedi questo argomento, sei stato recentemente promosso a **esperto** (livello di esperienza 3).\n\nAdesso puoi &hellip;\n\n\n* Modificare il titolo di qualunque argomento \n* Cambiare la categoria di qualunque argomento \n* Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://en.wikipedia.org/wiki/Nofollow) ) \n* Accedere alla categoria privata Lounge visibile solo agli utenti con livello di esperienza 3 o superiore\n* Assegnare con più forza i \"Mi piace\" e le segnalazioni \n\nEcco l'elenco degli altri [utenti esperti](/badges/3/regular). Vai a salutarli.\n\nGrazie per essere una parte importante di questa comunità! \n\n(Per maggiori informazioni sui livelli di esperienza, [leggi questa discussione][trust]. Nota che possono rimanere utenti esperti solo quegli utenti che continuano a soddisfare i criteri di selezione) \n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
+    body: "\nCongratulazioni! :confetti_ball: \n\nSe vedi questo argomento, sei stato recentemente promosso a **esperto** (livello di esperienza 3). \n\nAdesso puoi &hellip; \n\n* Modificare il titolo di qualunque argomento \n* Cambiare la categoria di qualunque argomento \n* Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://it.wikipedia.org/wiki/Nofollow) ) \n* Accedere alla categoria privata Lounge visibile solo agli utenti con livello di esperienza 3 o superiore \n* Cancellare i messaggi spam con un singolo clic\n\nEcco l'elenco degli altri [utenti esperti](/badges/3/regular). Vai a salutarli. \n\nGrazie per essere una parte importante di questa comunità! \n\n(Per maggiori informazioni sui livelli di esperienza, [leggi questa discussione][trust]. Nota che possono rimanere utenti esperti solo quegli utenti che continuano a soddisfare i criteri di selezione)\n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "[Sostituisci questo primo paragrafo con una breve descrizione della nuova categoria. Questa guida apparirà nell'area di selezione della categoria, perciò cerca di stare sotto i 200 caratteri. Finché non modifichi questo testo o non crei argomenti, questa categoria non apparirà sulla pagina delle categorie.]"
@@ -463,7 +463,7 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero di messaggi privati"
     top_referrers:
-      title: "Referenti Migliori"
+      title: "Migliori Referrer"
       xaxis: "Utente"
       num_clicks: "Click"
       num_topics: "Argomenti"
@@ -480,11 +480,11 @@ it:
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     ruby_version_warning: "Stai eseguendo la versione 2.0.0 di Ruby che ha problemi noti. Effettua l'upgrade alla patch livello 247 o seguenti."
-    host_names_warning: "Il tuo file config/database.yml sta usando l'hostname localhost di default. Aggiornalo con l'hostname del tuo sito."
+    host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
     gc_warning: 'Il tuo server usa i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori prestazioni. Leggi questo argomento sulla taratura delle prestazioni: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
-    sidekiq_warning: 'Sidekiq non è in esecuzione. Molti task, come l''invio di email, sono eseguiti in maniera asincrona da sidekiq. Perfavore assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq">Leggi di più su sidekiq qui</a>.'
-    queue_size_warning: 'Il numero di job in coda è %{queue_size}, che è alto. Questo indica un problema con i processi Sidekiq, oppure dovresti aggiungere altri Sidekiq worker.'
-    memory_warning: 'Il tuo server ha meno di 1 GB di memoria. È raccomandato avere a disposizione almeno 1 GB di memoria.'
+    sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
+    queue_size_warning: 'Il numero di job in coda è %{queue_size}, troppo alto. Potrebbe esserci un problema con i processi Sidekiq, oppure potresti dover aggiungere altri Sidekiq worker.'
+    memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
     enable_google_logins_warning: "Stai utilizzando una versione deprecata del sistema di autenticazione Google OpenID . Google terminerà il supporto di OpenID a partire dal 20 Aprile 2015. Inizia ad usare Google OAuth2 al più presto. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Guarda questa guida per saperne di più</a>"
     both_googles_warning: "Hai entrambe le impostazioni enable_google_logins e enable_google_oauth2_logins attivate. Disabilita enable_google_logins."
     google_oauth2_config_warning: 'Il server è configurato per permettere registrazioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
@@ -524,26 +524,21 @@ it:
       title: "Accesso richiesto: messaggio di benvenuto"
       description: "Messaggio che viene mostrato agli utenti non collegati quando l'impostazione \"login obbligatorio\" è attiva."
     login_required:
-      title: "Login richiesto: Homepage"
+      title: "Login Richiesto: Homepage"
       description: "Testo mostrato agli utenti non autorizzati quando il login è necessario."
     head:
       title: "Intestazione HTML"
-      description: "HTML che verrà inserito dentro i tag <head></head>"
+      description: "HTML che verrà inserito all'interno dei tag <head></head>."
     top:
       title: "Intestazione delle pagine"
       description: "HTML che verrà aggiunto in cima a ogni pagina (dopo l'header, prima della barra di navigazione o del titolo dell'argomento)."
     bottom:
-      title: "Piè di pagina"
+      title: "Fondo delle pagine"
       description: "HTML che verrà aggiunto in fondo ad ogni pagina."
-    tos_signup_form_message:
-      title: "Form di iscrizione: Termini del servizio"
-      description: "Il messaggio che comparirà all'interno di un checkbox nel form di iscrizione se l'impostazione tos_accept_required è abilitata."
-    notification_email_top:
-      title: "Testata Notifiche Email"
-      description: "Un messaggio che verrà mostrato in cima alle notifiche email."
   site_settings:
+    censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
-    default_locale: "Il linguaggio di default di questa installazione Discourse (ISO 639-1 Code)"
+    default_locale: "Il linguaggio di default di questa istanza Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
     min_post_length: "Lunghezza minima dei messaggi in caratteri"
     min_private_message_post_length: "Lunghezza minima in caratteri per i messaggi privati"
@@ -568,12 +563,13 @@ it:
     ninja_edit_window: "Per (n) secondi dopo la creazione del messaggio, le modifiche non saranno tracciate nella cronologia."
     post_edit_time_limit: "L'autore può modificare o cancellare il proprio messaggio per (n) minuti dopo averlo inserito. Metti 0 per sempre."
     edit_history_visible_to_public: "Permetti a tutti di vedere le precedenti versioni di un messaggio modificato. Se disabilitato solo i membri dello staff possono vederle."
-    delete_removed_posts_after: "I messaggi rimossi dall'autore saranno automaticamente cancellati dopo (n) ore."
+    delete_removed_posts_after: "I messaggi rimossi dall'autore saranno automaticamente cancellati dopo (n) ore. Se impostato a 0, i messaggi saranno cancellati subito."
     max_image_width: "Larghezza massima delle miniature delle immagini in un messaggio"
     max_image_height: "Altezza massima delle miniature delle immagini in un messaggio"
     category_featured_topics: "Numero di argomenti mostrati per categoria nella pagina /categories. Dopo il cambiamento di questo valore, la pagina delle categorie impiega fino a 14 minuti per aggiornarsi."
     show_subcategory_list: "Quando si accede ad una categoria, mostra l'elenco di sottocategorie anziché l'elenco di argomenti. "
     fixed_category_positions: "Se attivo, sarai in grado di ordinare le categorie. Se non attivo, le categorie saranno in ordine di attività."
+    add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Se modifichi questa opzione devi aggiornare tutti i messaggi con il comando \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Una lista di domini separati da pipe | in cui il nofollow non viene aggiunto (tld.com autorizzerà automaticamente sub.tld.com)"
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
@@ -582,7 +578,6 @@ it:
     favicon_url: "La favicon del tuo sito, vedi http://it.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
-    email_subject: "Il formato dell'oggetto per le email standard."
     use_https: "L'indirizzo completo del sito (Discourse.base_url) dovrebbe essere http o https? NON ATTIVARE QUESTA OPZIONE A MENO CHE HTTPS SIA GIA' CONFIGURATO E FUNZIONANTE!"
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
     summary_posts_required: "Minimo numero di messaggi in un argomento affinché venga abilitato 'Riassumi Questo Argomento' "
@@ -619,10 +614,11 @@ it:
     send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     topics_per_period_in_top_summary: "Numero di argomenti di punta mostrati nel riepilogo di default."
     show_email_on_profile: "Mostra l'email di un utente nel suo profilo (visibile solo a se stesso e allo staff)"
-    enable_badges: "Attiva il sistema targhette (sperimentale)"
+    enable_badges: "Attiva il sistema a targhette"
+    allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
-    port: "Usa questa porta HTTP al posto della default 80. Lasciare vuoto solo durante lo sviluppo"
-    force_hostname: "Specifica un hostname nella URL. Lasciare vuoto solo durante lo sviluppo"
+    port: "SOLO PER SVILUPPATORI! ATTENZIONE! Usa questa porta HTTP al posto della porta di default 80. Lascia vuoto per usare il default 80."
+    force_hostname: "SOLO PER SVILUPPATORI! ATTENZIONE! Specifica un hostname nella URL. Lascia vuoto per usare il default."
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
     login_required: "E' richiesta l'autenticazione per leggere contenuti su questo sito, disabilita l'accesso anonimo."
     min_username_length: "Lunghezza minima del nome utente in caratteri. ATTENZIONE: GLI UTENTI GIÀ ESISTENTI CON NOMI PIÙ CORTI DI QUESTO NON RIUSCIRANNO AD ACCEDERE AL SITO."
@@ -635,11 +631,11 @@ it:
     sso_overrides_username: "Sostituisce gli username locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle differenze dei requisiti di lunghezza)"
     sso_overrides_name: "Sostituisce i nomi locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per i nomi locali)"
     enable_google_logins: "(deprecato) Attiva l'autenticazione Google. Questo è il metodo OpenID che Google ha deprecato. Le nuove installazioni non funzioneranno con questo. Utilizza Google Oauth2 invece. Le installazioni esistenti devono migrare a Google Oauth2 entro il 20 Aprile 2015."
-    enable_yahoo_logins: "Abilita l'autenticazione via Yahoo"
-    enable_google_oauth2_logins: "Attiva autenticazione Oauth2. Questo è il metodo di autenticazione che Google attualmente supporta. Richiede una chiave e un secret."
+    enable_yahoo_logins: "Abilita l'autenticazione con Yahoo"
+    enable_google_oauth2_logins: "Abilita l'autenticazione con Google Oauth2. Questo è il metodo di autenticazione attualmente supportato da Google. Richiede una chiave e un secret."
     google_oauth2_client_id: "Client ID della tua applicazione Google."
-    google_oauth2_client_secret: "Client secret della tua applicazione Google"
-    enable_twitter_logins: "Abilita l'autenticazione via Twitter, richiede twitter_consumer_key e twitter_consumer_secret"
+    google_oauth2_client_secret: "Client secret della tua applicazione Google."
+    enable_twitter_logins: "Abilita l'autenticazione con Twitter, richiede twitter_consumer_key e twitter_consumer_secret"
     twitter_consumer_key: "Consumer key per autenticazione via Twitter, ottenibile da http://dev.twitter.com"
     twitter_consumer_secret: "Consumer secret per autenticazione via Twitter, ottenibile da  http://dev.twitter.com"
     enable_facebook_logins: "Abilita l'autenticazione via Facebook, richiede facebook_app_id e facebook_app_secret"
@@ -652,7 +648,13 @@ it:
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: Assicurati che sia un bucket privato."
     active_user_rate_limit_secs: "Quanto frequentemente viene aggiornato il campo 'last_seen_at' field, in secondi"
     previous_visit_timeout_hours: "Durata di una visita prima che venga considerata la visita 'precedente', in ore"
+    rate_limit_create_post: "Dopo aver inviato un messaggio, gli utenti devono aspettare (n) secondi prima di creare un altro messaggio. "
+    rate_limit_new_user_create_topic: "Dopo aver creato un argomento, i nuovi utenti devono aspettare (n) secondi prima di poter creare un altro argomento."
+    rate_limit_new_user_create_post: "Dopo aver inviato un messaggio, i nuovi utenti devono aspettare (n) secondi prima di creare un altro messaggio. "
+    max_likes_per_day: "Massimo numero di \"Mi piace\" per utente al giorno."
     max_flags_per_day: "Massimo numero di segnalazioni per utente al giorno."
+    max_bookmarks_per_day: "Massimo numero di segnalibri per utente al giorno."
+    max_edits_per_day: "Massimo numero di modifiche per utente al giorno."
     clean_orphan_uploads_grace_period_hours: "Quante ore prima che un upload \"orphan\" venga rimosso."
     purge_deleted_uploads_grace_period_days: "Giorni che devono trascorrere prima che un upload cancellato venga rimosso del tutto."
     s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere in minuscolo.\\"
@@ -667,6 +669,10 @@ it:
     tl2_requires_days_visited: "Per quanti giorni un utente deve visitare il sito per essere promosso a livello di esperienza 2."
     min_trust_to_create_topic: "Livello minimo richiesto per creare un nuovo argomento."
     min_trust_to_edit_wiki_post: "Livello minimo richiesto per modificare un argomento segnato come wiki."
+    newuser_max_links: "Quanti collegamenti un nuovo utente può aggiungere a un post"
+    newuser_max_images: "Quante immagini un nuovo utente può aggiungere ad un post."
+    newuser_max_attachments: "Quanti allegati un nuovo utente può aggiungere ad un post."
+    newuser_max_replies_per_topic: "Numero massimo di risposte, che un utente può inoltrare in un singolo topic, prima che qualcuno risponda."
     title_fancy_entities: "Converti caratteri ASCII comuni in HTML nei titoli dell'argomento, tipo SmartyPants http://daringfireball.net/projects/smartypants/"
     title_prettify: "Previeni refusi ed errori comuni nei titoli, inclusi Tutto maiuscolo, Primo carattere minuscolo, ! e ? ripetuti, . aggiuntivi alla fine, etc etc."
     faq_url: "Se hai un documento sulle FAQ ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
@@ -692,7 +698,6 @@ it:
     embed_truncate: "Tronca i messaggi incorporati."
     embed_category: "Categoria degli argomenti incorporati."
     embed_post_limit: "Numero massimo di messaggi da incorporare."
-    tos_accept_required: "Se abilitato, gli utenti dovranno accettare i termini del servizio durante l'iscrizione. Modifica 'Signup Form: Terms of Service Message' nel tab dei contenuti per modificare il messaggio."
     notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo tutte queste ore, invia un'email al contact_email. Imposta a 0 per disattivare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     prevent_anons_from_downloading_files: "Impedisci agli utenti anonimi di scaricare file. ATTENZIONE: ciò impedirà il funzionamento di tutti gli asset del sito inviati come allegati."
@@ -772,7 +777,6 @@ it:
     incorrect_username_email_or_password: "Nome utente, email o password errati"
     wait_approval: "Grazie per esserti registrato. Ti notificheremo quando il tuo account verrà approvato."
     active: "Il tuo account è attivo e pronto all'uso."
-    activate_email: "Ci siamo quasi! Abbiamo mandato un'email di attivazione all'indirizzo che hai fornito. Per favore segui le istruzioni contenute nell'email per attivare il tuo account."
     not_activated: "Non puoi ancora fare il login. Ti abbiamo mandato un'email di attivazione. Per favore segui le istruzioni contenute nell'email per attivare il tuo account."
     not_allowed_from_ip_address: "Non puoi collegarti come %{username} da quell'indirizzo IP."
     suspended: "Non puoi accedere fino a %{date}."
@@ -813,6 +817,9 @@ it:
   flags_reminder:
     please_review: "Per favore, revisionale."
     post_number: "messaggio"
+    subject_template:
+      one: "1 segnalazione in attesa di essere revisionata"
+      other: "%{count} segnalazioni in attesa di essere revisionate"
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](/guidelines)."
@@ -954,6 +961,8 @@ it:
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché il limite di spazio sul disco definito in `download_remote_images_threshold` è stato raggiunto."
   unsubscribe_link: "Se vuoi cancellarti per non ricevere più queste email, visita le tue [preferenze utente](%{user_preferences_url})."
+  subject_re: "R:"
+  subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     unsubscribe:
@@ -1107,6 +1116,7 @@ it:
     spam_hosts: "Questo nuovo utente ha tentato di creare post multipli con link allo stesso dominio. Guarda l'impostazione newuser_spam_host_threeshold."
   email_log:
     no_user: "Non trovo l'utente con l'id %{user_id}"
+    suspended_not_pm: "L'utente è stato sospeso, questo non è un messaggio privato."
     seen_recently: "L'utente è stato visto di recente"
     post_not_found: "Non trovo post con id %{post_id}"
     notification_already_read: "La notifica per cui è stata inviata questa mail è già stata letta"

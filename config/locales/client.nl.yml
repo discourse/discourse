@@ -122,7 +122,6 @@ nl:
     daily: "dagelijks"
     weekly: "wekelijks"
     every_two_weeks: "elke twee weken"
-    max: "max"
     character_count:
       one: "{{count}} teken"
       other: "{{count}} tekens"
@@ -730,7 +729,6 @@ nl:
         one: '1 ongelezen topic'
         other: '{{count}} ongelezen topics'
       title: 'Topic'
-      loading_more: "Er worden meer topics geladen..."
       loading: 'Bezig met laden van topic...'
       invalid_access:
         title: "Topic is privé"
@@ -1438,7 +1436,6 @@ nl:
             text: "Backup"
             title: "Maak een backup"
             confirm: "Wil je een nieuwe backup starten? "
-            without_uploads: "Ja (zonder upload)"
           download:
             text: "Download"
             title: "Download de backup"
