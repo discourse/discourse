@@ -59,7 +59,10 @@ export default function searchForTerm(term, opts) {
       }
     });
 
-    var noResults = !!((results.topics.length === 0) && (results.posts.length === 0) && (results.categories.length === 0));
+    var noResults = !!(results.topics.length === 0 &&
+                       results.posts.length === 0 &&
+                       results.users.length === 0 &&
+                       results.categories.length === 0);
 
     return noResults ? null : Em.Object.create(results);
   });
