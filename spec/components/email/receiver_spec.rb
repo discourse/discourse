@@ -82,6 +82,17 @@ Thanks for listening."
       )
     end
 
+    it "handles multiple paragraphs when parsing html" do
+      test_parse_body(fixture_file("emails/html_paragraphs.eml")).
+          should == (
+"Awesome!
+
+Pleasure to have you here!
+
+:boom:"
+      )
+    end
+
     it "converts back to UTF-8 at the end" do
       result = test_parse_body(fixture_file("emails/big5.eml"))
       result.encoding.should == Encoding::UTF_8
