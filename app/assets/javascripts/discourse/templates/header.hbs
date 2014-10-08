@@ -95,9 +95,7 @@
     {{#if showExtraInfo}}
       <div class="extra-info-wrapper">
         <div {{bind-attr class=":extra-info topic.category.isUncategorizedCategory::has-category"}}>
-          {{#if showStarButton}}
-            <a {{bind-attr class=":star topic.starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
-          {{/if}}
+
           <div class="title-wrapper">
             <h1>
               {{#if showPrivateMessageGlyph}}
@@ -105,13 +103,16 @@
               {{/if}}
 
               {{#if topic.details.loaded}}
+                {{#if showStarButton}}
+                  <a {{bind-attr class=":star topic.starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
+                {{/if}}
                 {{topic-status topic=topic}}
                 <a class='topic-link' href='{{unbound topic.url}}' {{action "jumpToTopPost"}}>{{{topic.fancy_title}}}</a>
               {{else}}
                 {{#if topic.errorLoading}}
-                  {{topic.errorTitle}}
+                  <span class="error">{{topic.errorTitle}}</span>
                 {{else}}
-                  {{i18n topic.loading}}
+                  <span class="loading">{{i18n topic.loading}}</span>
                 {{/if}}
               {{/if}}
             </h1>
