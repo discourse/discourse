@@ -90,6 +90,7 @@ pt_BR:
       facebook: 'compartilhe este link no Facebook'
       google+: 'compartilhe este link no Google+'
       email: 'enviar esse link para um email'
+    topic_admin_menu: "ações de tópico do admin"
     edit: 'edite o título e a categoria deste tópico'
     not_implemented: "Esse recurso ainda não foi implementado, desculpe!"
     no_value: "Não"
@@ -122,7 +123,7 @@ pt_BR:
     daily: "diário"
     weekly: "semanal"
     every_two_weeks: "a cada duas semanas"
-    max: "máximo"
+    max_of_count: "max de {{count}}"
     character_count:
       one: "{{count}} caracter"
       other: "{{count}} caracteres"
@@ -421,6 +422,8 @@ pt_BR:
         expired: "Este convite expirou."
         rescind: "Remover"
         rescinded: "Convite removido"
+        reinvite: "Reenviar convite"
+        reinvited: "Convite re-enviado"
         time_read: "Tempo de leitura"
         days_visited: "Dias visitados"
         account_age_days: "Idade da conta em dias"
@@ -511,6 +514,7 @@ pt_BR:
     created: 'Criado'
     created_lowercase: 'criado'
     trust_level: 'Nível de confiança'
+    search_hint: 'nome de usuário'
     create_account:
       title: "Criar nova conta"
       failed: "Alguma coisa deu errado, talvez este email já esteja registrado, tente usar o Esqueci a Senha."
@@ -735,7 +739,6 @@ pt_BR:
         one: '1 tópico não lido'
         other: '{{count}} tópicos não lidos'
       title: 'Tópico'
-      loading_more: "Carregando mais tópicos..."
       loading: 'Carregando tópico...'
       invalid_access:
         title: "Tópico é particular"
@@ -1173,6 +1176,8 @@ pt_BR:
       delete_spammer: "Apagar Spammer"
       delete_confirm: "Você está prestes a excluir <b>%{posts}</b> mensagens e <b>%{topics}</b> tópicos deste usuário, removendo a conta, bloqueando cadastro a partir do endereço IP <b>%{ip_address}</b> e adicionando o e-mail dele <b>%{email}</b> em uma lista de bloqueio permanente. Você tem certeza que este usuário é realmente um spammer?"
       yes_delete_spammer: "Sim, Apagar Spammer"
+      ip_address_missing: "(N/D)"
+      hidden_email_address: "(escondido)"
       submit_tooltip: "Enviar uma sinalização privada"
       take_action_tooltip: "Atingir o limiar de denuncias imediatamente, ao invés de esperar para mais denuncias da comunidade"
       cant: "Desculpe, não é possível colocar uma sinalização neste momento."
@@ -1469,7 +1474,7 @@ pt_BR:
             text: "Backup"
             title: "Cria um backup"
             confirm: "Você quer iniciar um novo backup?"
-            without_uploads: "Sim (sem upload)"
+            without_uploads: "Sim (não inclua arquivos)"
           download:
             text: "Download"
             title: "Download do backup"
@@ -1602,6 +1607,8 @@ pt_BR:
         last_match_at: "Última Correspondência"
         match_count: "Resultados"
         ip_address: "IP"
+        topic_id: "ID Tópico"
+        post_id: "ID Mensagem"
         delete: 'Excluir'
         edit: 'Editar'
         save: 'Salvar'
@@ -1635,6 +1642,9 @@ pt_BR:
             unsuspend_user: "readmitir usuário"
             grant_badge: "conceder emblema"
             revoke_badge: "revogar emblema"
+            check_email: "checar email"
+            delete_topic: "apagar tópico"
+            delete_post: "apagar mensagem"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de email serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -1704,6 +1714,9 @@ pt_BR:
           one: "Falha ao rejeitar 1 usuário."
           other: "Falha ao rejeitar %{count} usuários."
         not_verified: "Não verificado"
+        check_email:
+          title: "Mostrar endereço de email deste usuário"
+          text: "Mostrar"
       user:
         suspend_failed: "Algo deu errado suspendendo este usuário {{error}}"
         unsuspend_failed: "Algo deu errado reativando este usuário {{error}}"
@@ -1786,6 +1799,10 @@ pt_BR:
         suspend_modal_title: "Usuário Suspenso"
         trust_level_2_users: "Usuários de Nível de Confiança 2"
         trust_level_3_requirements: "Requisitos do Nível de Confiança 3"
+        trust_level_locked_tip: "nível de confiança está travado, sistema não irá promover ou demover o usuário"
+        trust_level_unlocked_tip: "nível de confiança está destravado, sistema poderá promover ou demover o usuário"
+        lock_trust_level: "Travar Nível de Confiança"
+        unlock_trust_level: "Destravar Nível de Confiança"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
           table_title: "Nos últimos 100 dias:"
@@ -1804,6 +1821,11 @@ pt_BR:
           likes_received: "Curtidas recebidos"
           qualifies: "Qualificado para o nível 3 de confiança."
           does_not_qualify: "Não qualificado para o nível 3 de confiança."
+          will_be_promoted: "Será promovido em breve."
+          will_be_demoted: "Será demovido em breve."
+          on_grace_period: "Atualmente em período de aprovação da promoção, não será demovido."
+          locked_will_not_be_promoted: "Nível de confiança travado. Nunca será promovido."
+          locked_will_not_be_demoted: "Nível de confiança travado. Nunca será demovido."
         sso:
           title: "Único Login"
           external_id: "ID Externo"
@@ -1813,16 +1835,21 @@ pt_BR:
           external_avatar_url: "URL do Avatar"
       user_fields:
         title: "Campos de Usuários"
-        description: "Qualquer campo adicionado aqui será requerido dos usuários quando eles criarem uma conta."
+        help: "Qualquer campo adicionado aqui será exigido dos usuários quando eles criarem uma conta."
         create: "Criar Campo de Usuário"
         untitled: "Sem título"
         name: "Nome do Campo"
         type: "Tipo do Campo"
+        description: "Descrição do Campo"
         save: "Salvar"
         edit: "Editar"
         delete: "Apagar"
         cancel: "Cancelar"
         delete_confirm: "Tem certeza que quer apagar este campo de usuário?"
+        editable:
+          title: "Editável após criar conta?"
+          enabled: "editável"
+          disabled: "não editável"
         field_types:
           text: 'Campo Texto'
           confirm: 'Confirmação'

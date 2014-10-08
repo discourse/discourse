@@ -122,7 +122,6 @@ he:
     daily: "יומית"
     weekly: "שבועית"
     every_two_weeks: "דו-שבועית"
-    max: "לכל היותר"
     character_count:
       one: "תו אחד"
       other: "{{count}} תווים"
@@ -736,7 +735,6 @@ he:
         one: '1 שלא נקרא'
         other: '{{count}} נושאים שלא נקראו'
       title: 'נושא'
-      loading_more: "טוען עוד נושאים..."
       loading: 'טוען נושא...'
       invalid_access:
         title: "הנושא פרטי"
@@ -1464,7 +1462,6 @@ he:
             text: "גיבוי"
             title: "צור גיבוי"
             confirm: "האם תרצו להתחיל גיבוי חדש?"
-            without_uploads: "כן (כולל העלאה)"
           download:
             text: "הורד"
             title: "הורד את הגיבוי"
@@ -1702,7 +1699,6 @@ he:
         not_verified: "לא מאומת"
         check_email:
           title: "חשיפת כתובת הדוא\"ל של המשתמש/ת"
-          text: "הצגת דוא\"ל"
       user:
         suspend_failed: "משהו נכשל בהשעיית המשתמש הזה {{error}}"
         unsuspend_failed: "משהו נכשל בביטול השהיית המשתמש הזה {{error}}"

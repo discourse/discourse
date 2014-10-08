@@ -110,7 +110,6 @@ sv:
     daily: "dagligen"
     weekly: "veckovis"
     every_two_weeks: "varannan vecka"
-    max: "max"
     character_count:
       one: "{{count}} tecken"
       other: "{{count}} tecken"
@@ -692,7 +691,6 @@ sv:
         one: '1 oläst tråd'
         other: '{{count}} olästa trådar'
       title: 'Tråd'
-      loading_more: "Laddar fler Trådar..."
       loading: 'Laddar tråd...'
       invalid_access:
         title: "Tråden är privat"

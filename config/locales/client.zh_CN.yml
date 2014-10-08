@@ -74,6 +74,7 @@ zh_CN:
       facebook: '分享这个链接到 Facebook'
       google+: '分享这个链接到 Google+'
       email: '用电子邮件发送这个链接'
+    topic_admin_menu: "主题管理操作"
     edit: '编辑本主题的标题和分类'
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
@@ -106,7 +107,7 @@ zh_CN:
     daily: "每天"
     weekly: "每周"
     every_two_weeks: "每两周"
-    max: "最大"
+    max_of_count: "最多 {{count}}"
     character_count:
       other: "%{count} 个字符"
     in_n_seconds:
@@ -390,6 +391,8 @@ zh_CN:
         expired: "该邀请已过期。"
         rescind: "移除"
         rescinded: "邀请已删除"
+        reinvite: "重新发送邀请"
+        reinvited: "邀请已重新发送"
         time_read: "阅读时间"
         days_visited: "访问天数"
         account_age_days: "账号建立天数"
@@ -702,7 +705,6 @@ zh_CN:
       unread_topics:
         other: '{{count}} 未读主题'
       title: '主题'
-      loading_more: "载入更多主题中..."
       loading: '载入主题中...'
       invalid_access:
         title: "这是私密主题"
@@ -1109,6 +1111,8 @@ zh_CN:
       delete_spammer: "删除垃圾发布者"
       delete_confirm: "您将删除该用户的 <b>%{posts}</b> 个帖子和 <b>%{topics}</b> 个主题，删除该账户，阻止其IP地址 <b>%{ip_address}</b> 再次注册，并将其邮件地址 <b>%{email}</b> 加入黑名单。确定吗？"
       yes_delete_spammer: "确定"
+      ip_address_missing: "（N/A）"
+      hidden_email_address: "（隐藏）"
       submit_tooltip: "提交私有标记"
       take_action_tooltip: "与其等待更多的社区的标志, 不如立刻到达标志."
       cant: "抱歉，当前您不能报告本帖。"
@@ -1399,7 +1403,7 @@ zh_CN:
             text: "备份"
             title: "建立一个备份"
             confirm: "您确定要开始建立一个备份吗？"
-            without_uploads: "是（但不上传）"
+            without_uploads: "是（不包括文件）"
           download:
             text: "下载"
             title: "下载该备份"
@@ -1532,6 +1536,8 @@ zh_CN:
         last_match_at: "最近匹配"
         match_count: "匹配"
         ip_address: "IP"
+        topic_id: "主题 ID"
+        post_id: "帖子 ID"
         delete: '删除'
         edit: '编辑'
         save: '保存'
@@ -1566,6 +1572,8 @@ zh_CN:
             grant_badge: "授予徽章"
             revoke_badge: "撤销徽章"
             check_email: "检查电子邮件"
+            delete_topic: "删除主题"
+            delete_post: "删除帖子"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -1633,7 +1641,7 @@ zh_CN:
         not_verified: "未验证"
         check_email:
           title: "显示用户电子邮件"
-          text: "显示邮件地址"
+          text: "显示"
       user:
         suspend_failed: "禁止此用户时发生了错误 {{error}}"
         unsuspend_failed: "解禁此用户时发生了错误 {{error}}"
@@ -1749,16 +1757,21 @@ zh_CN:
           external_avatar_url: "头像 URL"
       user_fields:
         title: "用户属性"
-        description: "在这里添加的任何属性将在用户注册时要求填写。"
+        help: "在这里添加的任何属性将在用户注册时要求填写。"
         create: "创建用户属性 "
         untitled: "无标题"
         name: "字段名称"
         type: "字段类型"
+        description: "字段描述信息"
         save: "保存"
         edit: "编辑"
         delete: "删除"
         cancel: "取消"
         delete_confirm: "您确定要删除这个用户字段么？"
+        editable:
+          title: "在注册后可以修改？"
+          enabled: "可修改"
+          disabled: "不可修改"
         field_types:
           text: '文本字段'
           confirm: '确认'

@@ -122,7 +122,6 @@ fr:
     daily: "quotidiennes"
     weekly: "hebdomadaires"
     every_two_weeks: "bi-mensuelles"
-    max: "max"
     character_count:
       one: "{{count}} caractère"
       other: "{{count}} caractères"
@@ -740,7 +739,6 @@ fr:
         one: '1 sujet non lu'
         other: '{{count}} sujets non lus'
       title: 'Sujet'
-      loading_more: "Chargement de sujets supplémentaires…"
       loading: 'Chargement du sujet…'
       invalid_access:
         title: "Ce sujet est privé"
@@ -1474,7 +1472,6 @@ fr:
             text: "Sauvegarder"
             title: "Créer une sauvegarde"
             confirm: "Voulez-vous démarrer une nouvelle sauvegarde ?"
-            without_uploads: "Oui (sans les fichiers envoyés)"
           download:
             text: "Télécharger"
             title: "Télécharger la sauvegarde"
@@ -1712,7 +1709,6 @@ fr:
         not_verified: "Non verifié"
         check_email:
           title: "Afficher l'adresse courriel de cet utilisateur"
-          text: "Voir l'adresse courriel"
       user:
         suspend_failed: "Il y a eu un problème pendant la suspension de cet utilisateur {{error}}"
         unsuspend_failed: "Il y a eu un problème pendant le retrait de la suspension de cet utilisateur {{error}}"
@@ -1831,7 +1827,6 @@ fr:
           external_avatar_url: "URL Avatar"
       user_fields:
         title: "Champs utilisateurs"
-        description: "Tous les champs ajoutés ici seront requis lors de l'enregistrement d'un utilisateur."
         create: "Créer un champ utilisateur"
         untitled: "Sans titre"
         name: "Nom du champ"

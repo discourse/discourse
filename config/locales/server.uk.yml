@@ -359,9 +359,6 @@ uk:
     bottom:
       title: "Нижній колонтитул сторінок"
       description: "HTML-код, що буде додаватися внизу кожної сторінки."
-    tos_signup_form_message:
-      title: "Signup Form: Terms of Service Message"
-      description: "The message that will appear beside a checkbox on the signup form if the tos_accept_required site setting is enabled."
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
@@ -447,7 +444,6 @@ uk:
     embeddable_host: "Хост, що можете вставляти коментарі з цього Discourse форуму."
     embed_truncate: "Обрізати вбудовані повідомлення. "
     embed_category: "Категорія вбудованих тем. "
-    tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
     errors:
       invalid_integer: "Значення має бути цілим."
       regex_mismatch: "Значення не відповідає потрібному формату."

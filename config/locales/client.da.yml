@@ -122,7 +122,6 @@ da:
     daily: "dagligt"
     weekly: "ugentligt"
     every_two_weeks: "hver anden uge"
-    max: "maksimum"
     character_count:
       one: "{{count}} tegn"
       other: "{{count}} tegn"
@@ -259,6 +258,7 @@ da:
       other_accounts: Andre kontoer med denne IP adresse
       no_other_accounts: (ingen)
     user:
+      said: "{{username}}:"
       profile: "Profil"
       mute: "Mute"
       edit: "Redigér indstillinger"
@@ -712,7 +712,6 @@ da:
         one: '1 ulæst emne'
         other: '{{count}} ulæste emner'
       title: 'Emne'
-      loading_more: "Indlæser flere emner…"
       loading: 'Indlæser emne…'
       invalid_access:
         title: "Emnet er privat"
@@ -1418,7 +1417,6 @@ da:
             text: "Backup"
             title: "Start backup"
             confirm: "Vil du starte en ny backup?"
-            without_uploads: "Ja (Uden upload)"
           download:
             text: "Download"
             title: "Download backuppen"
