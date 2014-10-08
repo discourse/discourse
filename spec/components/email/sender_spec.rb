@@ -73,6 +73,15 @@ describe Email::Sender do
       Then { expect(message.header['List-ID']).to be_present }
     end
 
+    context "adds Precedence header" do
+      before do
+        message.header['X-Discourse-Topic-Id'] = 5577
+      end
+
+      When { email_sender.send }
+      Then { expect(message.header['Precedence']).to be_present }
+    end
+
     context 'email logs' do
       let(:email_log) { EmailLog.last }
 
