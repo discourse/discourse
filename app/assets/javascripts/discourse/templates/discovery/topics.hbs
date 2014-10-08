@@ -37,13 +37,13 @@
           {{/if}}
         </th>
         {{/if}}
-        {{#sortable-heading}} {{i18n topic.title}} {{/sortable-heading}}
+        {{#sortable-heading class="default"}} {{i18n topic.title}} {{/sortable-heading}}
         {{#unless controller.hideCategory}}
           {{#sortable-heading sortBy="category" action="changeSort" order=order ascending=ascending}}
             {{i18n category_title}}
           {{/sortable-heading}}
         {{/unless}}
-        {{#sortable-heading}} {{i18n users}} {{/sortable-heading}}
+        {{#sortable-heading class="posters"}} {{i18n users}} {{/sortable-heading}}
         {{#sortable-heading sortBy="posts" number=true action="changeSort" order=order ascending=ascending}}
           {{i18n posts}}
         {{/sortable-heading}}
