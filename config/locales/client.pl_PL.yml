@@ -138,7 +138,6 @@ pl_PL:
     daily: "dziennie"
     weekly: "tygodniowo"
     every_two_weeks: "co dwa tygodnie"
-    max: "maks"
     character_count:
       one: "1 znak"
       few: "{{count}} znaki"
@@ -772,7 +771,6 @@ pl_PL:
         few: '{{count}} nieprzeczytane tematy'
         other: '{{count}} nieprzeczytanych tematów'
       title: 'Temat'
-      loading_more: "Wczytuję tematy…"
       loading: 'Wczytuję temat…'
       invalid_access:
         title: "Temat jest prywatny"
@@ -1537,7 +1535,6 @@ pl_PL:
             text: "Kopia zapasowa"
             title: "Wykonaj kopię zapasową"
             confirm: "Czy chcesz wykonać kopię zapasową?"
-            without_uploads: "Tak (bez załączników)"
           download:
             text: "Pobierz"
             title: "Pobierz kopię zapasową"
@@ -1779,7 +1776,6 @@ pl_PL:
         not_verified: "Niezweryfikowany"
         check_email:
           title: "Wyświetl adres email tego użytkownika"
-          text: "Pokaż email"
       user:
         suspend_failed: "Coś poszło nie tak podczas zawieszania użytkownika {{error}}"
         unsuspend_failed: "Coś poszło nie tak podczas odwieszania użytkownika {{error}}"
@@ -1901,7 +1897,6 @@ pl_PL:
           external_avatar_url: "URL awatara"
       user_fields:
         title: "Pola użytkownika"
-        description: "Wypełnienie dodanych tu pól będzie wymagane podczas rejestracji."
         create: "Dodaj pole użytkownika"
         untitled: "Bez tytułu"
         name: "Nazwa pola"

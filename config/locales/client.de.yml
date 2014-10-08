@@ -122,7 +122,6 @@ de:
     daily: "täglich"
     weekly: "wöchentlich"
     every_two_weeks: "jede zweite Woche"
-    max: "max."
     character_count:
       one: "{{count}} Zeichen"
       other: "{{count}} Zeichen"
@@ -421,6 +420,8 @@ de:
         expired: "Diese Einladung ist abgelaufen."
         rescind: "Einladung zurücknehmen"
         rescinded: "Einladung zurückgenommen"
+        reinvite: "Einladung erneut senden"
+        reinvited: "Einladung erneut gesendet"
         time_read: "Lesezeit"
         days_visited: "Besuchstage"
         account_age_days: "Konto-Alter in Tagen"
@@ -732,7 +733,6 @@ de:
         one: '1 ungelesenes Thema'
         other: '{{count}} ungelesene Themen'
       title: 'Thema'
-      loading_more: "Lade weitere Themen..."
       loading: 'Thema wird geladen...'
       invalid_access:
         title: "Thema ist privat"
@@ -1164,6 +1164,7 @@ de:
       delete_spammer: "Spammer löschen"
       delete_confirm: "Du wirst <b>%{posts}</b> Beiträge und <b>%{topics}</b> Themen von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>%{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>%{ip_address}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
+      hidden_email_address: "(versteckt)"
       submit_tooltip: "Private Meldung abschicken"
       take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
       cant: "Entschuldige, Du kannst diesen Beitrag augenblicklich nicht melden."
@@ -1457,7 +1458,6 @@ de:
             text: "Backup"
             title: "Ein Backup erstellen"
             confirm: "Willst du ein neues Backup starten?"
-            without_uploads: "Ja (ohne Upload)"
           download:
             text: "Download"
             title: "Backup herunterladen"
@@ -1590,6 +1590,8 @@ de:
         last_match_at: "Letzter Treffer"
         match_count: "Treffer"
         ip_address: "IP"
+        topic_id: "Themen-ID"
+        post_id: "Beitrags-ID"
         delete: 'Löschen'
         edit: 'Bearbeiten'
         save: 'Speichern'
@@ -1624,6 +1626,8 @@ de:
             grant_badge: "Abzeichen verleihen"
             revoke_badge: "Abzeichen entziehen"
             check_email: "E-Mail abrufen"
+            delete_topic: "Thema löschen"
+            delete_post: "Beitrag löschen"
         screened_emails:
           title: "Überprüfte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -1694,7 +1698,7 @@ de:
           other: "Konnte %{count} Benutzer nicht ablehnen."
         not_verified: "Nicht überprüft"
         check_email:
-          text: "E-Mail anzeigen"
+          text: "Anzeigen"
       user:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
         unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schief gegangen {{error}}"
@@ -1808,11 +1812,16 @@ de:
         untitled: "Unbetitelt"
         name: "Feldname"
         type: "Feldtyp"
+        description: "Feldbeschreibung"
         save: "Speichern"
         edit: "Bearbeiten"
         delete: "Löschen"
         cancel: "Abbrechen"
         delete_confirm: "Sind Sie sicher, dass Sie dieses Textfeld löschen möchten?"
+        editable:
+          title: "Nach der Registrierung editierbar?"
+          enabled: "editierbar"
+          disabled: "nicht editierbar"
         field_types:
           text: 'Textfeld'
           confirm: 'Bestätigung'

@@ -90,6 +90,7 @@ it:
       facebook: 'Condividi questo link su Facebook'
       google+: 'Condividi questo link su Google+'
       email: 'invia questo collegamento via email'
+    topic_admin_menu: "azioni amministrative sull'argomento"
     edit: 'modifica titolo e categoria dell''argomento'
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
@@ -122,7 +123,7 @@ it:
     daily: "giornaliero"
     weekly: "settimanale"
     every_two_weeks: "ogni due settimane"
-    max: "massimo"
+    max_of_count: "massimo di {{count}}"
     character_count:
       one: "{{count}} carattere"
       other: "{{count}} caratteri"
@@ -421,6 +422,8 @@ it:
         expired: "L'invito è scaduto."
         rescind: "Rimuovi"
         rescinded: "Invito revocato"
+        reinvite: "Rinvia Invito"
+        reinvited: "Invito rinviato"
         time_read: "Ora di Lettura"
         days_visited: "Presenza (giorni)"
         account_age_days: "Età dell'utente in giorni"
@@ -511,6 +514,7 @@ it:
     created: 'Creato'
     created_lowercase: 'creato'
     trust_level: 'Livello Esperienza'
+    search_hint: 'nome utente'
     create_account:
       title: "Crea Nuovo Account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
@@ -734,7 +738,6 @@ it:
         one: '1 argomento non letto'
         other: '{{count}} argomenti non letti'
       title: 'Argomento'
-      loading_more: "Caricamento di altri argomenti..."
       loading: 'Caricamento dell''argomento...'
       invalid_access:
         title: "L'argomento è privato"
@@ -886,8 +889,8 @@ it:
         topic_name: "Nuovo Nome Argomento"
         error: "Si è verificato un errore spostando il messaggio nel nuovo argomento."
         instructions:
-          one: "Stai per creare un nuovo argomento e riempirlo con il messaggio che hai selezionato."
-          other: "Stai per creare un nuovo argomento e riempirlo con i <b>{{count}}</b> messaggi che hai selezionato."
+          one: "Stai per creare un nuovo argomento riempiendolo con il messaggio che hai selezionato."
+          other: "Stai per creare un nuovo argomento riempiendolo con i <b>{{count}}</b> messaggi che hai selezionato."
       merge_topic:
         title: "Sposta in Argomento Esistente"
         action: "sposta in un argomento esistente"
@@ -1467,7 +1470,6 @@ it:
             text: "Backup"
             title: "Crea un backup"
             confirm: "Vuoi creare un nuovo backup?"
-            without_uploads: "Sì (senza caricamento)"
           download:
             text: "Download"
             title: "Scarica il backup"
@@ -1800,8 +1802,8 @@ it:
           flagged_by_users: "Utenti Segnalatori"
           likes_given: "Mi piace - Assegnati"
           likes_received: "Mi piace - Ricevuti"
-          qualifies: "Requisiti per livello esperienza 3."
-          does_not_qualify: "Non ha i requisiti per il livello esperienza 3."
+          qualifies: "Requisiti soddisfatti per il livello di esperienza 3."
+          does_not_qualify: "Mancano i requisiti per il livello esperienza 3."
         sso:
           title: "Single Sign On"
           external_id: "ID Esterno"
@@ -1990,16 +1992,16 @@ it:
           description: Ricevuto un "Mi piace"
         autobiographer:
           name: Autobiografo
-          description: Hai completato le informazioni del tuo <a href="/my/preferences">profilo</a> utente
+          description: Completato le informazioni del tuo <a href="/my/preferences">profilo</a> utente
         nice_post:
           name: Buon Messaggio
-          description: Ha ricevuto 10 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
+          description: Ricevuto 10 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
         good_post:
           name: Ottimo Messaggio
-          description: Ha ricevuto 25 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
+          description: Ricevuto 25 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
         great_post:
           name: Fantastico Messaggio
-          description: Ha ricevuto 50 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
+          description: Ricevuto 50 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.
         nice_topic:
           name: Argomento Buono
           description: Ricevuti 10 "Mi piace" per un argomento. Questa targhetta può essere assegnata più volte
@@ -2020,22 +2022,22 @@ it:
           description: Condiviso un messaggio con 1000 visitatori unici
         first_like:
           name: Primo Mi Piace
-          description: '"Mi piace" ad un messaggio'
+          description: Assegnato un "Mi piace" ad un messaggio
         first_flag:
           name: Prima Segnalazione
-          description: Ha segnalato un messaggio
+          description: Segnalato un messaggio
         first_share:
           name: Prima Condivisione
-          description: Ha condiviso un messaggio
+          description: Condiviso un messaggio
         first_link:
           name: Primo Collegamento
-          description: Ha aggiunto un collegamento interno ad un altro argomento
+          description: Aggiunto un collegamento interno ad un altro argomento
         first_quote:
           name: Prima Citazione
-          description: Ha citato un utente
+          description: Citato un utente
         read_guidelines:
           name: Linee Guida Lette
-          description: Hai letto le <a href="/guidelines">linee guida della comunità</a>
+          description: Letto le <a href="/guidelines">linee guida della comunità</a>
         reader:
           name: Lettore
-          description: Leggi tutti i messaggi in un argomento con più di 100 messaggi
+          description: Letto tutti i messaggi in un argomento con più di 100 messaggi

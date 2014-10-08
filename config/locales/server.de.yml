@@ -26,6 +26,7 @@ de:
   errors:
     messages:
       too_long_validation: "darf höchstens %{max} Zeichen lang sein; Du hast %{length} eingegeben."
+      invalid_boolean: "Ungültiger Boolescher Wert"
     embed:
       load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
   bulk_invite:
@@ -535,12 +536,6 @@ de:
     bottom:
       title: "Unterer Teil der Seiten"
       description: "HTML Code der am Ende jeder Seite eingefügt wird."
-    tos_signup_form_message:
-      title: "Anmeldungsformular: Nutzerbedingungen"
-      description: "Nachricht, die als Checkbox auf dem Registrierungsformular angezeigt wird, wenn die tos_accept_required Einstellung aktiviert ist."
-    notification_email_top:
-      title: "Benachrichtigungs-E-Mail Überschrift"
-      description: "Eine Nachricht, die oben in allen Benachrichtigungs-E-Mails angezeigt wird."
   site_settings:
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
     allow_user_locale: "Erlaube Benutzern ihre eigene Interfacesprache zu wählen"
@@ -570,7 +565,6 @@ de:
     ninja_edit_window: "Anzahl Sekunden nach Erstellen eines Beitrags, während der Änderungen am Beitrag nicht im Bearbeitungsverlauf gespeichert werden."
     post_edit_time_limit: "Der Verfasser eines Beitrags kann diesen nur für (n) Minuten nach Absenden des Beitrags bearbeiten. 0 deaktiviert diese Beschränkung."
     edit_history_visible_to_public: "Erlaube jedem, vorherige Versionen eines bearbeiteten Beitrags zu sehen. Wenn deaktiviert sind diese nur für Mitarbeiter sichtbar."
-    delete_removed_posts_after: "Vom Verfasser entfernte Nachrichten werden nach (n) Stunden automatisch gelöscht."
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
     max_image_height: "Maximale Höhe von Vorschaubildern in einer Nachricht"
     category_featured_topics: "Zahl der angezeigten Themen je Kategorie auf der Kategorieseite /categories."
@@ -589,7 +583,6 @@ de:
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-Emails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit Emails sicher zugestellt werden können."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
-    email_subject: "Betreffformat für Standard-E-Mails."
     use_https: "Soll die volle URL der Seite (Discourse.base_url) mit http oder https beginnen? AKTIVIERE DIES NICHT BIS HTTPS AUFGESETZT IST UND BEREITS FUNKTIONIERT!"
     summary_score_threshold: "Mindestpunktzahl die ein Beitrag benötigt, in der \"Thema zusammenfassen\" Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
@@ -635,7 +628,6 @@ de:
     redirect_users_to_top_page: "Verweise neue und länger abwesende Nutzer automatisch zur Top Übersichtsseite"
     email_token_valid_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind für (n) Stunden gültig."
     email_token_grace_period_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind auch nach ihrer Verwendung noch für eine Frist von (n) Stunden gültig."
-    enable_badges: "Aktiviere das Abzeichen-System (experimentell)"
     allow_index_in_robots_txt: "Suchmaschinen mittels der robots.txt Datei erlauben, die Seite zu indizieren."
     email_domains_blacklist: "Eine Liste von E-Mail-Domains, die bei der Registrierung neuer Konten nicht erlaubt sind. Beispiel: mailinator.com trashmail.net"
     email_domains_whitelist: "Eine Liste von E-Mail-Domains, mit denen neue Konten registriert werden dürfen. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains können sich dann nicht mehr registrieren!"
@@ -696,7 +688,6 @@ de:
     clean_up_uploads: "Lösche verwaiste Uploads, um illegales Hosting zu vermeiden. ACHTUNG: Du solltest ein Backup deines /uploads Verzeichnisses erstellen, bevor Du diese Funktion aktivierst."
     clean_orphan_uploads_grace_period_hours: "Frist (in Stunden) bevor ein verwaister Upload entfernt wird."
     purge_deleted_uploads_grace_period_days: "Frist (in Tagen) bevor ein entfernter Upload endgültig gelöscht wird."
-    purge_inactive_users_grace_period_days: "Schonfrist (in Tagen) bevor ein inaktiver Benutzer gelöscht wird."
     s3_use_iam_profile: 'Benutze die AWS EC2 IAM Rolle zum Abrufen von Keys. ANMERKUNG: Das Aktivieren überschreibt die Einstellungen „s3 access key id“ und „s3 secret access key“.'
     s3_upload_bucket: "Der Amazon S3 Bucketname in den hochgeladene Dateien abgelegt werden. WARNUNG: Nur Kleinbuchstaben, keine Punkte."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
@@ -786,7 +777,6 @@ de:
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
     embed_whitelist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
     embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
-    tos_accept_required: "Nutzer müssen bei der Anmeldung durch Markieren einer Checkbox bestätigen, dass sie die Nutzungsbedingungen gelesen haben. Der Text der Checkbox kann unter \"Anmeldungsformular: Nutzungsbedingungen\" auf der Inhalt-Seite bearbeitet werden."
     notify_about_flags_after: "Wenn es Markierungen gibt, dich nach nach dieser Anzahl von Stunden behandelt wurden, sende eine E-Mail an den contact_email. Setze dies auf 0 um es zu deaktivieren."
     enable_cdn_js_debugging: "Ermöglicht die Anzeige vollständiger Fehler auf /logs, indem alle eingebetteten JavaScripts Cross-Origin Zugriffsberechtigungen erhalten."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
@@ -1156,6 +1146,7 @@ de:
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
   unsubscribe_link: "Wenn Du diese Mails nicht mehr erhalten möchtest, verändere deine [Benutzereinstellungen](%{user_preferences_url})."
+  subject_re: "Antw: "
   user_notifications:
     previous_discussion: "Vorangehende Antworten"
     unsubscribe:

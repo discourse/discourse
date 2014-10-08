@@ -71,7 +71,6 @@ uk:
     daily: "щодня"
     weekly: "щотижня"
     every_two_weeks: "кожні два тижні"
-    max: "max"
     suggested_topics:
       title: "Пропоновані теми"
     bookmarks:
@@ -553,7 +552,6 @@ uk:
       list: 'Теми'
       new: 'нова тема'
       title: 'Тема'
-      loading_more: "Завантаження інших тем..."
       loading: 'Завантаження теми...'
       invalid_access:
         title: "Тема є приватною."

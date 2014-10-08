@@ -482,9 +482,6 @@ cs:
     bottom:
       title: "Patička stránky"
       description: "HTML přidané na spodek každé stránky."
-    tos_signup_form_message:
-      title: "Registrační formulář: Zpráva s podmínkami služby"
-      description: "The message that will appear beside a checkbox on the signup form if the tos_accept_required site setting is enabled."
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
@@ -554,7 +551,6 @@ cs:
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zruště pokud chcete používat vlastní plně responzivní kaskádový styl."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
-    tos_accept_required: "Uživatelé budou muset při registraci zaškrtnout, že souhlasí s Podmínkami používání. Zprávu můžete upravit v záložce Obsah webu změnou „Registrace: Zpráva s podmínkami používání“."
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"
     liked: "%{display_username} se líbí váš příspěvek v %{link}"
