@@ -15,6 +15,11 @@
 # http://yamllint.com/
 
 ro:
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"

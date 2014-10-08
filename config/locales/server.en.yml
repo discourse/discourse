@@ -15,6 +15,12 @@
 # http://yamllint.com/
 
 en:
+  # some default transliteration rules may be missing, add them to your locale
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
