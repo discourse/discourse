@@ -202,6 +202,4 @@ class AdminDashboardData
   def self.access_password_removal_key
     'dash-data:access_password_removal'
   end
-
-  private_class_method :access_password_removal_key
 end
