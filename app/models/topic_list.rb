@@ -11,10 +11,20 @@ class TopicList
                 :filter,
                 :for_period
 
-  def initialize(filter, current_user, topics)
+  def initialize(filter, current_user, topics, opts=nil)
     @filter = filter
     @current_user = current_user
     @topics_input = topics
+    @opts = opts || {}
+  end
+
+  def preload_key
+    if @opts[:category]
+      c = Category.find(@opts[:category_id])
+      "topic_list_#{c.url.sub(/^\//, '')}/l/#{@filter}"
+    else
+      "topic_list_#{@filter}"
+    end
   end
 
   # Lazy initialization
