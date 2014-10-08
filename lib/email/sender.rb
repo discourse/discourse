@@ -87,6 +87,9 @@ module Email
         @message.header['List-ID'] = list_id
 
         @message.header['List-Archive'] = topic.url if topic
+
+        # http://www.ietf.org/rfc/rfc3834.txt
+        @message.header['Precedence'] = 'list'
       end
 
       if reply_key.present?
