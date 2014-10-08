@@ -138,7 +138,6 @@ cs:
     daily: "denně"
     weekly: "týdně"
     every_two_weeks: "jednou za 14 dní"
-    max: "max"
     character_count:
       one: "{{count}} znak"
       few: "{{count}} znaky"
@@ -767,7 +766,6 @@ cs:
         few: '{{count}} nepřečtená témata'
         other: '{{count}} nepřečtených témat'
       title: 'Téma'
-      loading_more: "Nahrávám další témata..."
       loading: 'Nahrávám téma...'
       invalid_access:
         title: "Téma je soukromé"
@@ -1506,7 +1504,6 @@ cs:
           backup:
             text: "Zálohovat"
             title: "Vytvořit zálohu"
-            without_uploads: "Ano (bez nahrávání)"
           download:
             text: "Stáhnout"
             title: "Stáhnout zálohu"

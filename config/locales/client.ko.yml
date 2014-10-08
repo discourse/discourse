@@ -74,6 +74,7 @@ ko:
       facebook: 'Facebook으로 공유'
       google+: 'Google+로 공유'
       email: '이메일로 공유'
+    topic_admin_menu: "토픽 관리자 기능"
     edit: '제목과 카테고리를 편집하기'
     not_implemented: "죄송합니다. 아직 이용할 수 없는 기능입니다."
     no_value: "아니오"
@@ -106,7 +107,7 @@ ko:
     daily: "매일"
     weekly: "매주"
     every_two_weeks: "격주"
-    max: "최대"
+    max_of_count: "max of {{count}}"
     character_count:
       other: "{{count}} 자"
     in_n_seconds:
@@ -390,6 +391,8 @@ ko:
         expired: "이 초대장의 기한이 만료되었습니다."
         rescind: "삭제"
         rescinded: "초대가 제거되었습니다."
+        reinvite: "초대 메일 재전송"
+        reinvited: "초대 메일 재전송 됨"
         time_read: "읽은 시간"
         days_visited: "일일 방문"
         account_age_days: "일일 계정 나이"
@@ -702,7 +705,6 @@ ko:
       unread_topics:
         other: '{{count}}개의 읽지 않은 토픽'
       title: '토픽'
-      loading_more: "더 많은 토픽을 로딩 중..."
       loading: '토픽을 로딩 중...'
       invalid_access:
         title: "이 토픽은 비공개입니다"
@@ -1109,6 +1111,8 @@ ko:
       delete_spammer: "스팸 사용자 삭제"
       delete_confirm: "당신은 이 사용자의 %{posts}개의 게시글과 %{topics}개의 토픽을 삭제하고 IP주소 %{ip_address}와 이메일 %{email}을 영구 블락 합니다. 이 사용자가 진짜 악성 사용자 입니까? "
       yes_delete_spammer: "예, 스팸 사용자 삭제."
+      ip_address_missing: "(알 수 없음)"
+      hidden_email_address: "(감춰짐)"
       submit_tooltip: "신고 접수하기"
       take_action_tooltip: "커뮤니티의 신고 수가 채워지기 기다리지 않고, 바로 신고 수를 제재 수준까지 채웁니다."
       cant: "죄송합니다, 당신은 지금 이 게시물을 신고 할 수 없습니다."
@@ -1399,7 +1403,7 @@ ko:
             text: "백업"
             title: "백업 생성"
             confirm: "새로운 백업을 시작할까요?"
-            without_uploads: "네 (업로드 없이)"
+            without_uploads: "예 (파일을 포함하지 않음)"
           download:
             text: "다운로드"
             title: "백업 다운로드"
@@ -1532,6 +1536,8 @@ ko:
         last_match_at: "마지막 방문"
         match_count: "방문"
         ip_address: "IP"
+        topic_id: "토픽 ID"
+        post_id: "게시글 ID"
         delete: '삭제'
         edit: '편집'
         save: '저장'
@@ -1566,6 +1572,8 @@ ko:
             grant_badge: "뱃지 부여"
             revoke_badge: "뱃지 회수"
             check_email: "이메일 확인"
+            delete_topic: "토픽 삭제"
+            delete_post: "게시글 삭제"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
@@ -1633,7 +1641,7 @@ ko:
         not_verified: "확인되지 않은"
         check_email:
           title: "사용자의 이메일 주소 표시"
-          text: "이메일 보기"
+          text: "Show"
       user:
         suspend_failed: "이 사용자를 접근 금지하는데 오류 발생 {{error}}"
         unsuspend_failed: "이 사용자를 접근 허용 하는데 오류 발생 {{error}}"
@@ -1749,16 +1757,21 @@ ko:
           external_avatar_url: "Avatar URL"
       user_fields:
         title: "사용자 필드"
-        description: "사용자가 가입할 때 입력하여야 하는 필드를 여기에 추가하세요."
+        help: "사용자가 가입할 때 입력하여야 하는 필드를 여기에 추가하세요."
         create: "사용자 필드 생성하기"
         untitled: "무제"
         name: "필드명"
         type: "필드 속성"
+        description: "필드 설명"
         save: "저장"
         edit: "편집"
         delete: "삭제"
         cancel: "취소"
         delete_confirm: "사용자 필드를 삭제할까요?"
+        editable:
+          title: "가입 후 편집 가능?"
+          enabled: "편집 가능"
+          disabled: "편집 불가"
         field_types:
           text: '텍스트 필드'
           confirm: '확인'

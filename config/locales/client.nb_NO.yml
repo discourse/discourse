@@ -14,9 +14,9 @@ nb_NO:
           units:
             byte:
               one: Byte
-              other: Bytes
+              other: Byte
             gb: GB
-            kb: kB
+            kb: KB
             mb: MB
             tb: TB
     dates:
@@ -83,25 +83,25 @@ nb_NO:
           one: "1 dag siden"
           other: "%{count} dager siden"
     share:
-      topic: 'del en link til dette emnet'
-      post: 'del en link til dette innlegget'
+      topic: 'del en lenke til dette emnet'
+      post: 'del en lenke til dette innlegget'
       close: 'lukk'
-      twitter: 'del denne linken på Twitter'
-      facebook: 'del denne linken på Facebook'
-      google+: 'del denne linken på Google+'
-      email: 'del denne linken i en epost'
+      twitter: 'del denne lenken på Twitter'
+      facebook: 'del denne lenken på Facebook'
+      google+: 'del denne lenken på Google+'
+      email: 'del denne lenken i en e-post'
     edit: 'rediger tittelen og kategorien til dette emnet'
-    not_implemented: "Den funksjonen har ikke blitt implementert enda, beklager!"
+    not_implemented: "Den funksjonen har ikke blitt implementert ennå, beklager!"
     no_value: "Nei"
     yes_value: "Ja"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
-    sign_up: "Registrer Deg"
-    log_in: "Logg Inn"
+    sign_up: "Registrer deg"
+    log_in: "Logg inn"
     age: "Alder"
     joined: "Ble medlem"
     admin_title: "Admin"
-    flags_title: "Flagg"
+    flags_title: "Rapporteringer"
     show_more: "vis mer"
     links: "Lenker"
     links_lowercase: "lenker"
@@ -122,7 +122,6 @@ nb_NO:
     daily: "daglig"
     weekly: "ukentlig"
     every_two_weeks: "annenhver uke"
-    max: "maks"
     character_count:
       one: "{{count}} tegn"
       other: "{{count}} tegn"
@@ -139,18 +138,18 @@ nb_NO:
       one: "på 1 dag"
       other: "på {{count}} dager"
     suggested_topics:
-      title: "Anbefalte Emner"
+      title: "Anbefalte emner"
     about:
       simple_title: "Om"
       title: "Om %{title}"
-      stats: "Nettsidestatistikk"
-      our_admins: "Våre Administratorer"
-      our_moderators: "Våre Moderatorer"
+      stats: "Nettstedsstatistikk"
+      our_admins: "Våre administratorer"
+      our_moderators: "Våre moderatorer"
       stat:
         all_time: "Gjennom tidene"
         last_7_days: "Siste 7 dager"
-      like_count: "Antall Likes"
-      topic_count: "Antall Emner"
+      like_count: "Antall liker"
+      topic_count: "Antall emner"
       post_count: "Antall innlegg"
       user_count: "Antall brukere"
     bookmarks:
@@ -171,7 +170,7 @@ nb_NO:
     click_to_show: "Klikk for å vise"
     preview: "forhåndsvisning"
     cancel: "avbryt"
-    save: "Lagre Endringer"
+    save: "Lagre endringer"
     saving: "Lagrer..."
     saved: "Lagret!"
     upload: "Last opp"
@@ -205,6 +204,9 @@ nb_NO:
       sent_by_you: "Sendt av <a href='{{userUrl}}'>deg</a>"
     groups:
       visible: "Gruppen er synlig for alle brukere"
+      title:
+        one: "gruppe"
+        other: "grupper"
       members: "Medlemmer"
       posts: "Innlegg"
       alias_levels:
@@ -215,8 +217,8 @@ nb_NO:
         members_mods_and_admins: "Kun gruppemedlemmer, moderatorer og administratorer"
         everyone: "Alle"
     user_action_groups:
-      '1': "Likes Gitt"
-      '2': "Likes Mottatt"
+      '1': "Liker tildelt"
+      '2': "Liker mottatt"
       '3': "Bokmerker"
       '4': "Emner"
       '5': "Svar gitt"
@@ -225,10 +227,10 @@ nb_NO:
       '9': "Sitater"
       '10': "Favoritter"
       '11': "Redigeringer"
-      '12': "Sendte Elementer"
+      '12': "Sendte elementer"
       '13': "Innboks"
     categories:
-      all: "alle kategorier"
+      all: "Alle kategorier"
       all_subcategories: "alle"
       no_subcategory: "ingen"
       category: "Kategori"
@@ -236,6 +238,7 @@ nb_NO:
       topics: "Emner"
       latest: "Siste"
       latest_by: "siste av"
+      toggle_ordering: "veksle rekkefølge"
       subcategories: "Underkategorier"
       topic_stats: "Antall nye emner."
       topic_stat_sentence:
@@ -246,34 +249,34 @@ nb_NO:
         one: "%{count} nye innlegg den siste %{unit}."
         other: "%{count} nye innlegg de siste %{unit}."
     ip_lookup:
-      title: Slå opp IP Addresse
-      hostname: Hostname
+      title: Slå opp IP-adresse
+      hostname: Vertsnavn
       location: Posisjon
       location_not_found: (ukjent)
       organisation: Organisasjon
       phone: Telefon
-      other_accounts: Andre kontoer med denne IP addressen
+      other_accounts: Andre kontoer med denne IP-adressen
       no_other_accounts: (ingen)
     user:
       said: "{{username}}:"
       profile: "Profil"
-      mute: "Mute"
-      edit: "Edit Preferences"
+      mute: "Demp"
+      edit: "Rediger innstillinger"
       download_archive: "last ned arkiv av mine innlegg"
       private_message: "Privat melding"
       private_messages: "Meldinger"
       activity_stream: "Aktivitet"
-      preferences: "Preferanser"
+      preferences: "Innstillinger"
       bookmarks: "Bokmerker"
       bio: "Om meg"
-      invited_by: "Invitert Av"
+      invited_by: "Invitert av"
       trust_level: "Tillitsnivå"
-      notifications: "Påminnelser"
+      notifications: "Varsler"
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
       dynamic_favicon: "Vis innkommende meldingsvarsler på favicon (eksperimentel)"
       edit_history_public: "La andre brukere se mine innleggsrevisjoner"
-      external_links_in_new_tab: "Åpne alle eksterne linker i ny fane"
-      enable_quoting: "Aktiver siter svar for uthevet tekst"
+      external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
+      enable_quoting: "Aktiver svar med sitat for uthevet tekst"
       change: "Endre"
       moderator: "{{user}} er en moderator"
       admin: "{{user}} er en admin"
@@ -281,20 +284,20 @@ nb_NO:
       admin_tooltip: "Denne brukeren er en administrator"
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_reason: "Begrunnelse:"
-      mailing_list_mode: "Motta en epost for hvert nye innlegg (ved mindre du muter emnet eller kategorien)"
-      watched_categories: "Så"
+      mailing_list_mode: "Motta en e-post for hvert nye innlegg (ved mindre du demper emnet eller kategorien)"
+      watched_categories: "Fulgt"
       watched_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner samt at antallet uleste og nye innlegg vil vises sammen med emneoppføringen."
-      tracked_categories: "Følger"
+      tracked_categories: "Sporet"
       tracked_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategoriene. Antallet uleste og nye emner vil vises ved siden av emnet."
       muted_categories: "Dempet"
       muted_categories_instructions: "Du vil ikke bli varslet om nye emner i disse kategoriene og de vil ikke vises i listen over ulest innhold."
       delete_account: "Slett kontoen min"
       delete_account_confirm: "Er du sikker på at du vil slette kontoen din permanent? Denne handlingen kan ikke angres!"
-      deleted_yourself: "Beslettingen av din konto har vært vellykket."
+      deleted_yourself: "Slettingen av din konto har vært vellykket."
       delete_yourself_not_allowed: "Kontoen din kan ikke slettes akkurat nå. Kontakt en administrator til å slette kontoen for deg."
       unread_message_count: "Meldinger"
       staff_counters:
-        flags_given: "nyttige flagg"
+        flags_given: "nyttige rapporteringer"
         flagged_posts: "rapporterte innlegg"
         deleted_posts: "slettede innlegg"
         suspensions: "suspenderinger"
@@ -304,24 +307,24 @@ nb_NO:
         mine: "Mine"
         unread: "Uleste"
       change_password:
-        success: "(email sendt)"
-        in_progress: "(sender email)"
+        success: "(e-post sendt)"
+        in_progress: "(sender e-post)"
         error: "(feil)"
-        action: "endre"
-        set_password: "Sett Passord"
+        action: "Send e-post for passordnullstilling"
+        set_password: "Sett passord"
       change_about:
-        title: "Rediger Om Meg"
+        title: "Rediger om meg"
       change_username:
-        title: "Endre Brukernavn"
-        confirm: "Det kan være kosekvenser ved å endre ditt brukernavn. Er du sikker på at du vil gjøre det?"
+        title: "Endre brukernavn"
+        confirm: "Hvis du endrer brukernavn vil alle siteringer av dine innlegg og nevning ved ditt @navn gå i stykker. Er du sikker på at du vil gjøre det?"
         taken: "Beklager, det brukernavnet er tatt."
         error: "Det skjedde en feil ved endring av ditt brukernavn."
         invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
       change_email:
-        title: "Endre Email"
-        taken: "Beklager, den emailen er ikke tilgjengelig."
-        error: "Det skjedde en feil ved endring av din email. Kanskje den addressen allerede er i bruk?"
-        success: "Vi har sent en email til den addressen. Vennligst følg meldingens instruksjoner for bekreftelse."
+        title: "Endre e-postadresse"
+        taken: "Beklager, den e-postadressen er ikke tilgjengelig."
+        error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje den adressen allerede er i bruk?"
+        success: "Vi har sendt en e-post til den adressen. Vennligst følg meldingens instruksjoner for bekreftelse."
       change_avatar:
         title: "Bytt profilbilde"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
@@ -335,12 +338,12 @@ nb_NO:
       change_profile_background:
         title: "Profilbakgrunn"
       email:
-        title: "Email"
+        title: "E-post"
         instructions: "Vises aldri offentlig"
-        ok: "Ser bra ut. Vi sender deg en email for å bekrefte."
-        invalid: "Vennligst skriv inn en gyldig emailaddresse."
-        authenticated: "Din email har blitt autentisert av {{provider}}."
-        frequency: "Vi sender deg bare en email om vi ikke har sett deg nylig og du har ikke allerede sett tingen vi varslet deg om."
+        ok: "Ser bra ut. Vi sender deg en e-post for å bekrefte."
+        invalid: "Vennligst skriv inn en gyldig e-postadresse."
+        authenticated: "Din e-post har blitt autentisert av {{provider}}."
+        frequency: "Vi sender deg bare en e-post om vi ikke har sett deg nylig og du ikke allerede har sett det vi varsler deg om."
       name:
         title: "Naavn"
         instructions: "Ditt fulle navn."
@@ -351,36 +354,36 @@ nb_NO:
         instructions: "Unikt, kort og uten mellomrom."
         short_instructions: "Folk kan nevne deg som @{{username}}."
         available: "Ditt brukernavn er tilgjengelig."
-        global_match: "Email matcher det registrerte brukernavnet."
+        global_match: "E-post stemmer med det registrerte brukernavnet."
         global_mismatch: "Allerede registrert. Prøv {{suggestion}}?"
         not_available: "Ikke tilgjengelig. Prøv {{suggestion}}?"
         too_short: "Ditt brukernavn er for kort."
         too_long: "Ditt brukernavn er for langt."
         checking: "Sjekker brukernavnets tilgjengelighet..."
-        enter_email: 'Brukernavn funnet. Skriv inn matchende email.'
-        prefilled: "E-post passer med dette registrerte brukernavnet."
+        enter_email: 'Brukernavn funnet. Skriv inn tilhørende e-postadresse.'
+        prefilled: "E-postadresse passer med dette registrerte brukernavnet."
       locale:
         title: "Språk for grensesnitt"
         instructions: "Språk for grensesnitt. Endringen vil tre i kraft når du oppdaterer siden."
         default: "(standard)"
       password_confirmation:
-        title: "Passord Igjen"
+        title: "Passord igjen"
       last_posted: "Siste Innlegg"
-      last_emailed: "Sist Kontaktet"
-      last_seen: "Sist Sett"
-      created: "Laget Ved"
-      log_out: "Logg Ut"
+      last_emailed: "Sist kontaktet"
+      last_seen: "Sist sett"
+      created: "Medlem fra"
+      log_out: "Logg ut"
       location: "Posisjon"
-      website: "Webside"
-      email_settings: "Email"
+      website: "Nettsted"
+      email_settings: "E-post"
       email_digests:
-        title: "Når jeg ikke besøker siden, send meg ett sammendrag på email om siste nytt"
+        title: "Når du ikke besøker nettstedet, send et sammendrag på e-post om siste nytt:"
         daily: "daglig"
         weekly: "ukentlig"
         bi_weekly: "hver andre uke"
-      email_direct: "Motta en email når noen siterer deg, svarer på ditt innlegg, eller nevner ditt @brukernavn"
-      email_private_messages: "Notta en email når noen sender deg en privat melding"
-      email_always: "Ikke stans epostnotifikasjoner mens jeg er aktiv på nettsiden."
+      email_direct: "Motta en e-post når noen siterer deg, svarer på ditt innlegg, eller nevner ditt @brukernavn"
+      email_private_messages: "Motta en e-post når noen sender deg en privat melding"
+      email_always: "Ikke stans e-postvarsler mens jeg er aktiv på nettstedet."
       other_settings: "Annet"
       categories_settings: "Kategorier"
       new_topic_duration:
@@ -406,19 +409,19 @@ nb_NO:
       invited:
         search: "skriv for å søke etter invitasjoner..."
         title: "invitasjoner"
-        user: "Invitert Bruker"
+        user: "Invitert bruker"
         none: "Du har ikke invitert noen hit ennå."
         truncated: "Viser de første {{count}} invitasjoner."
         redeemed: "Løs inn invitasjoner"
         redeemed_at: "Løst inn ved"
-        pending: "Ventende Invitasjoner"
-        topics_entered: "Emner Lagt Inn"
-        posts_read_count: "Innlegg Lest"
+        pending: "Ventende invitasjoner"
+        topics_entered: "Emner vist"
+        posts_read_count: "Innlegg lest"
         expired: "Denne invitasjonen har utløpt"
         rescind: "Fjern"
-        rescinded: "Invitasjon Fjernet"
+        rescinded: "Invitasjon fjernet"
         time_read: "Lesetid"
-        days_visited: "Dager Besøkt"
+        days_visited: "Dager besøkt"
         account_age_days: "Kontoalder i dager"
         create: "Send en invitasjon"
         bulk_invite:
@@ -433,10 +436,11 @@ nb_NO:
         common: "Det passordet er for vanlig."
         ok: "Passordet ditt ser bra ut"
         instructions: "Minst %{count} tegn."
+      associated_accounts: "Tilknyttede kontoer"
       ip_address:
-        title: "Siste IP Addresse"
+        title: "Siste IP-adresse"
       registration_ip_address:
-        title: "Registreringens IP-addresse."
+        title: "Registreringens IP-adresse."
       avatar:
         title: "Profilbilde"
       title:
@@ -444,8 +448,8 @@ nb_NO:
       filters:
         all: "Alle"
       stream:
-        posted_by: "Poste av"
-        sent_by: "Sent av"
+        posted_by: "Skrevet av"
+        sent_by: "Sendt av"
         private_message: "private meldinger"
         the_topic: "emnet"
     loading: "Laster..."
@@ -457,20 +461,20 @@ nb_NO:
         forbidden: "Tilgang avslått"
         unknown: "Feil"
       desc:
-        network: "Venligst verifiser nettverkstilkoblingen din"
+        network: "Vennligst sjekk nettverkstilkoblingen din"
         network_fixed: "Ser ut som om den er tilbake."
         server: "Feilkode: {{status}}"
         forbidden: "Du har ikke tilgang til dette."
         unknown: "Noe gikk galt."
       buttons:
         back: "Gå tilbake"
-        again: "Prøv Igjen"
-        fixed: "Last Side"
+        again: "Prøv igjen"
+        fixed: "Last side"
     close: "Lukk"
-    assets_changed_confirm: "Denne siden ble nettopp oppdatert. Oppdater nå for nyeste versjon?"
+    assets_changed_confirm: "Dette nettstedet ble nettopp oppdatert. Oppdater nå for nyeste versjon?"
     read_only_mode:
-      enabled: "En administrator har aktivert read-only modus. Du kan fortsette å benytte siden men enkelte operasjoner vil muligens ikke fungere."
-      login_disabled: "Innlogging er deaktivert mens nettsiden er i read-only modus."
+      enabled: "En administrator har aktivert skrivebeskyttet modus. Du kan fortsette å benytte siden, men enkelte operasjoner vil kanskje ikke fungere."
+      login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
     too_few_topics_notice: "Opprett minst 5 offentlige tråder og %{posts} offentlige innlegg for å få i gang diskusjonen. Nye brukere kan ikke tilegne seg tillitsnivåer ved mindre det eksisterer innhold for dem å lese. Denne meldingen vises kun til forumpersonalet."
     learn_more: "lær mer..."
     year: 'år'
@@ -482,68 +486,70 @@ nb_NO:
     day: 'dag'
     first_post: Første innlegg
     mute: Demp
-    unmute: Udemp
-    last_post: Siste Innlegg
+    unmute: Fjern demping
+    last_post: Siste innlegg
     last_post_lowercase: siste innlegg
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene i følge nettsamfunnet."
       description: "Det er <b>{{count}}</b> svar."
       description_time: "Det er <b>{{count}}</b> svar med en estimert lesetid på <b>{{readingTime}} minutter</b>."
-      enable: 'Bytt til "De Beste" modus'
-      disable: 'Avslutt "De Beste"'
+      enable: 'Oppsummer dette emnet'
+      disable: 'Vis alle innlegg'
     deleted_filter:
       enabled_description: "Dette emnet inneholder slettede innlegg som har blitt skjult."
       disabled_description: "Slettede innlegg i emnet vises."
-      enable: "Skjul Slettede Innlegg"
-      disable: "Vis Slettede Innlegg"
+      enable: "Skjul slettede innlegg"
+      disable: "Vis slettede innlegg"
     private_message_info:
-      title: "Private Meldinger"
-      invite: "Inviter Andre..."
+      title: "Private meldinger"
+      invite: "Inviter andre..."
       remove_allowed_user: "Vil du virkelig fjerne {{name}} fra denne private meldingen?"
-    email: 'Email'
+    email: 'E-post'
     username: 'Brukernavn'
-    last_seen: 'Sist Sett'
+    last_seen: 'Sist sett'
     created: 'Opprettet'
     created_lowercase: 'opprettet'
     trust_level: 'Tillitsnivå'
+    search_hint: 'brukernavn'
     create_account:
       title: "Opprett ny konto"
-      failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
+      failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
-      title: "Glemt Passord"
+      title: "Glemt passord"
       action: "Jeg glemte mitt passord"
-      invite: "Skriv inn ditt brukernavn eller e-postaddresse, så sender vi deg en email for å tilbakestille ditt passord."
-      reset: "Tilbakestill Passord"
-      complete_username: "Hvis en konto med brukernavn <b>%{username}</b> finnes vil du motta en epost om kort tid med instruksjoner om hvordan du kan tilbakestille passordet."
-      complete_email: "Hvis en konto med epostaddressen <b>%{email}</b> eksisterer i systemet vil du om kort tid motta en epost med instruksjoner om hvordan du kan tilbakestille passordet."
-      complete_username_found: "Vi fant en konto med brukernavn <b>%{username}</b>. Du mottar om litt en epost med instruksjoner for hovrdan du tilbakestiller passordet."
-      complete_email_found: "Vi fant en konto med epostaddressen <b>%{email}</b>. Du mottar om litt en epost med instruksjoner for hvordan du tilbakestiller passordet."
+      invite: "Skriv inn ditt brukernavn eller din e-postadresse, så sender vi deg en e-post for å nullstille ditt passord."
+      reset: "Nullstill passord"
+      complete_username: "Hvis en konto med brukernavn <b>%{username}</b> finnes vil du motta en e-post om kort tid med instruksjoner om hvordan du kan nullstille passordet."
+      complete_email: "Hvis en konto med e-postadressen <b>%{email}</b> eksisterer i systemet vil du om kort tid motta en epost med instruksjoner om hvordan du kan nullstille passordet."
+      complete_username_found: "Vi fant en konto med brukernavn <b>%{username}</b>. Du mottar om litt en e-post med instruksjoner for hovrdan du nullstiller passordet."
+      complete_email_found: "Vi fant en konto med e-postadressen <b>%{email}</b>. Du mottar om litt en e-post med instruksjoner for hvordan du nullstiller passordet."
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
-      complete_email_not_found: "Ingen konto med epostadressen <b>%{email}</b> er registrert"
+      complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
     login:
       title: "Logg Inn"
       username: "Bruker"
       password: "Passord"
-      email_placeholder: "email addresse eller brukernavn"
+      email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
-      blank_username_or_password: "Vennligst oppgi din epostaddresse eller brukernavn og passord."
-      reset_password: 'Tilbakestill Passord'
+      blank_username_or_password: "Vennligst oppgi din e-postadresse eller brukernavn og ditt passord."
+      reset_password: 'Nullstill passord'
       logging_in: "Logger på..."
       or: "Eller"
       authenticating: "Autentiserer..."
-      awaiting_confirmation: "Din konto avventer aktivering. Bruk 'Glemt Passord' linken for å sende en ny emailfor aktivering."
-      awaiting_approval: "Din kont har ikkje blitt godkjent av en moderator enda. Du vil motta en email når den er godkjent."
+      awaiting_confirmation: "Din konto avventer aktivering. Bruk lenken for glemt passord for å sende en ny e-post for aktivering."
+      awaiting_approval: "Din konto har ikke blitt godkjent av en moderator ennå. Du vil motta en e-post når den er godkjent."
       requires_invite: "Beklager, tilgang til dette forumet er kun ved invitasjon."
-      not_activated: "Du kan ikke logge inn enda. Vi sente en email for aktivering til deg <b>{{sentTo}}</b>.. Vennligst følg instruksjonene i den emailen for å aktivere din konto."
-      resend_activation_email: "Klikk her for å sende emailen for aktivering igjen."
-      sent_activation_email_again: "Vi sendte deg enda en email for aktivering til <b>{{currentEmail}}</b>. Det kan ta noen minutter før den kommer fram; sørg for at du sjekker spamfolderen din."
+      not_activated: "Du kan ikke logge inn ennå. Vi sendte en e-post for aktivering til deg på <b>{{sentTo}}</b>. Vennligst følg instruksjonene i den e-posten for å aktivere din konto."
+      not_allowed_from_ip_address: "Du kan ikke logge inn fra den IP-adressen."
+      resend_activation_email: "Klikk her for å sende e-posten for aktivering igjen."
+      sent_activation_email_again: "Vi sendte deg en ny e-post for aktivering på <b>{{currentEmail}}</b>. Det kan ta noen minutter før den kommer fram; sørg for at du sjekker nettsøppel om du ikke finner den."
       google:
         title: "med Google"
         message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
       google_oauth2:
         title: "med Google"
-        message: "Autentiserer med Google (sørg for at pop-up blokkering ikke er aktivert)"
+        message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
       twitter:
         title: "med Twitter"
         message: "Autentiserer med Twitter (sørg for at du tillater pop-up vindu)"
@@ -574,20 +580,20 @@ nb_NO:
         post_missing: "Innlegget kan ikke være tomt"
         post_length: "Innlegget må være minst {{min}} tegn"
         category_missing: "Du må velge en kategori"
-      save_edit: "Lagre Endring"
-      reply_original: "Besvar det Originale Emnet"
-      reply_here: "Svar Her"
+      save_edit: "Lagre endring"
+      reply_original: "Besvar det originale emnet"
+      reply_here: "Svar her"
       reply: "Svar"
       cancel: "Avbryt"
-      create_topic: "Lag Emne"
-      create_pm: "Lag Privat Melding"
+      create_topic: "Opprett emne"
+      create_pm: "Send privat melding"
       title: "Eller trykk Ctrl+Enter"
       users_placeholder: "Legg til en bruker"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       edit_reason_placeholder: "hvorfor endrer du?"
       show_edit_reason: "(legg till endringsbegrunnelse)"
       reply_placeholder: "Skriv her. Bruk Markdown eller BBCode for formatering. Dra eller lim inn et bilde for å laste det opp."
-      view_new_post: "Set ditt nye innlegg."
+      view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer..."
       saved: "Lagret!"
       saved_draft: "Du har et pågående utkast. Velg dette området for å gjennoppta redigeringen."
@@ -599,9 +605,9 @@ nb_NO:
       bold_text: "sterk tekst"
       italic_title: "Kursiv"
       italic_text: "kursiv tekst"
-      link_title: "Hyperlink"
-      link_description: "beskriv linken her"
-      link_dialog_title: "Legg inn Hyperlink"
+      link_title: "Hyperlenke"
+      link_description: "beskriv lenken her"
+      link_dialog_title: "Sett inn hyperlenke"
       link_optional_text: "valgfri tittel"
       quote_title: "Sitatramme"
       quote_text: "Sitatramme"
@@ -625,9 +631,9 @@ nb_NO:
       auto_close_examples: 'Oppgi absolutt tid eller antall timer — 24, 17:00, 2013-11-22 14:00'
       auto_close_error: "Vennligst oppgi en gyldig verdi."
     notifications:
-      title: "notifikasjoner fra @brukernavn omtalelser, svar til dine innlegg og emner, private meldinger, osv"
-      none: "Du har ingen notifikasjoner akkurat nå."
-      more: "se gamle notifikasjoner"
+      title: "varsler når @brukernavn nevnes, svar til dine innlegg og emner, private meldinger, osv"
+      none: "Du har ingen varsler akkurat nå."
+      more: "se gamle varsler"
       total_flagged: "totalt rapporterte innlegg"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -645,9 +651,9 @@ nb_NO:
       title: "Legg til Bilde"
       title_with_attachments: "Legg til et bilde eller en fil"
       from_my_computer: "Fra Min Enhet"
-      from_the_web: "Fra Nettet"
-      remote_tip: "skriv inn addressen til et bilde, f.eks. http://example.com/image.jpg"
-      remote_tip_with_attachments: "link til bilde eller fil http://example.com/file.ext (tillate filtyper: {{authorized_extensions}})."
+      from_the_web: "Fra nettet"
+      remote_tip: "skriv inn adressen til et bilde, f.eks. http://example.com/image.jpg"
+      remote_tip_with_attachments: "lenke til bilde eller fil: http://example.com/file.ext (tillate filtyper: {{authorized_extensions}})."
       local_tip: "klikk for å velge et bilde fra din enhet."
       local_tip_with_attachments: "Trykk for å velge et bilde eller fil fra din enhet (tillatte file-endelser: {{authorized_extensions}})"
       hint: "(du kan også drag & drop inn i editoren for å laste dem opp)"
@@ -670,11 +676,11 @@ nb_NO:
     starred:
       title: 'Favoritt'
       help:
-        star: 'legg dette emnet til favorittlisten din'
+        star: 'legg dette emnet i favorittlisten din'
         unstar: 'fjern dette emnet fra favorittlisten din'
     topics:
       bulk:
-        reset_read: "Tilbakestill Lest"
+        reset_read: "Nullstill lest"
         delete: "Slett Emne"
         dismiss_posts: "Avvis innlegg"
         dismiss_posts_tooltip: "Tøm antallet uleste innlegg i disse emnene men fortsett å vis dem i min liste over uleste innlegg når nye innlegg blir lagt inn"
@@ -685,12 +691,13 @@ nb_NO:
         actions: "Massehandlinger"
         change_category: "Endre Kategori"
         close_topics: "Lukk Emner"
-        notification_level: "Endre Notifikasjonsnivå"
+        archive_topics: "Arkiverte emner"
+        notification_level: "Endre varslingsnivå"
         selected:
           one: "Du har valgt <b>1</b> emne."
           other: "Du har valgt <b>{{count}}</b> emner."
       none:
-        starred: "Du har ingen favoriserte emner."
+        starred: "Du har ingen favorittemner."
         unread: "Du har ingen uleste emner å lese."
         new: "Du har ingen nye emner å lese."
         read: "Du har ikke lest noen emner enda."
@@ -700,7 +707,9 @@ nb_NO:
         category: "Det er ingen {{category}} emner."
         top: "Det er ingen populære emner."
         educate:
-          starred: '<p>Dine favoriserte innlegg vises her.</p><p>For å favorisere eller fjerne et emne, bruk følgende:</p><ul><li><i class="fa fa-star"></i> ved siden av emnets tittel</li><li>Stjerneknappen på butten av hvert emne</li></ul>'
+          new: '<p>Dine nye emner vises her.</p><p>Som standard anses emner som nye, og vil ha indikatoren <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> hvis emnet ble opprettet de siste 2 dagene</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
+          unread: '<p>Dine uleste emner vises her.</p><p>Som standard anses emner som uleste, og vil vise antall uleste <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du eksplisitt har satt emnet som Sporet eller Fulgt via varslingskontrollene under hvert emne.</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
+          starred: '<p>Dine favorittemner vises her.</p><p>For å legge til eller fjerne favoritter, bruk følgende:</p><ul><li><i class="fa fa-star"></i> ved siden av emnets tittel</li><li>Favorittknappen under hvert emne</li></ul>'
       bottom:
         latest: "Det er ikke noen siste emner igjen å lese."
         hot: "Det er ikke noen populære emner igjen å lese."
@@ -708,14 +717,14 @@ nb_NO:
         read: "Det er ikke noen leste emner igjen å lese."
         new: "Det er ikke noen nye emner igjen å lese."
         unread: "Det er ikke noen uleste emner igjen å lese."
-        starred: "Det er ikke noen favorittemner igjen å lese."
+        starred: "Det er ingen favorittemner igjen å lese."
         category: "Det er ikke noen {{category}} emner igjen."
         top: "Det er ingen flere populære emner."
     topic:
       filter_to: "{{post_count}} innlegg i dette emnet."
-      create: 'Lag Emne'
-      create_long: 'Lag ett nytt Emne'
-      private_message: 'Start en private melding'
+      create: 'Opprett emne'
+      create_long: 'Opprett et nytt emne'
+      private_message: 'Start en privat melding'
       list: 'Emner'
       new: 'nytt emne'
       unread: 'ulest'
@@ -726,7 +735,6 @@ nb_NO:
         one: 'Ett ulest emne'
         other: '{{count}} uleste emner'
       title: 'Emne'
-      loading_more: "Laster flere emner"
       loading: 'Behandler emnet...'
       invalid_access:
         title: "Emnet er privat"
@@ -742,31 +750,31 @@ nb_NO:
         one: "du har 1 ulest innlegg i dette emnet"
         other: "du har {{count}} uleste innlegg i dette emnet"
       unread_posts:
-        one: "du har 1 ulest gammelt innlegg innen dette emnet"
-        other: "du har {{count}} uleste gamle innlegg innen dette emnet"
+        one: "du har 1 ulest gammelt innlegg i dette emnet"
+        other: "du har {{count}} uleste gamle innlegg i dette emnet"
       new_posts:
-        one: "Det er 1 nytt innlegg innen dette emnet siden sist du leste det"
-        other: "Det er {{count}} nye innlegg innen dette emnet siden sist du leste det"
+        one: "Det er 1 nytt innlegg i dette emnet siden sist du leste det"
+        other: "Det er {{count}} nye innlegg i dette emnet siden sist du leste det"
       likes:
-        one: "det er 1 like i dette emnet"
-        other: "det er {{count}} likes i dette emnet"
+        one: "det er 1 liker i dette emnet"
+        other: "det er {{count}} liker i dette emnet"
       back_to_list: "Tilbake til Emnelisten"
       options: "Valg for Emner"
-      show_links: "vis linker i dette emnet"
+      show_links: "vis lenker i dette emnet"
       toggle_information: "vis/skjul emnedetaljer"
       read_more_in_category: "Vil du lese mer? Bla gjennom andre emner i {{catLink}} eller {{latestLink}}."
       read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
       read_more_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller {latestLink}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
-      suggest_create_topic: Hvorfor ikke lage ett emne?
+      suggest_create_topic: Hvorfor ikke opprette et emne?
       jump_reply_up: hopp til tidligere svar
-      jump_reply_down: hopp til siste svar
+      jump_reply_down: hopp til senere svar
       deleted: "Emnet har blitt slettet"
       auto_close_notice: "Dette emnet vil automatisk lukkes %{timeLeft}."
       auto_close_title: 'Auto-Lukk Innstillinger'
       auto_close_save: "Lagre"
-      auto_close_remove: "Ikke Auto-Lukk Dette Emnet"
+      auto_close_remove: "Ikke lukk dette emnet automatisk"
       progress:
         title: emnefrangang
         go_top: "topp"
@@ -778,37 +786,37 @@ nb_NO:
         position: "innlegg %{current} av %{total}"
       notifications:
         reasons:
-          '3_6': 'Du vil motta påminnelser ettersom du følger denne kategorien'
-          '3_5': 'Du vil motta påminnelser ettersom du startet å følge dette emnet automatisk.'
-          '3_2': 'Du vil motta varslinger fordi du observerer dette emnet.'
+          '3_6': 'Du vil motta varsler fordi du følger denne kategorien'
+          '3_5': 'Du vil motta varsler fordi du startet å følge dette emnet automatisk.'
+          '3_2': 'Du vil motta varsler fordi du følger dette emnet.'
           '3_1': 'Du vil motta varsler fordi du opprettet dette emnet.'
-          '3': 'Du vil motta varslinger fordi du observerer dette emnet.'
-          '2_8': 'Du vil motta påminnelser ettersom du følger denne kategorien.'
-          '2_4': 'Du vil motta notifikasjoner fordi du svarte på dette emnet.'
-          '2_2': 'Du vil motta notifikasjoner fordi følger dette emnet.'
-          '2': 'Du vil motta notifikasjoner fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
+          '3': 'Du vil motta varsler fordi du følger dette emnet.'
+          '2_8': 'Du vil motta varsler fordi du følger denne kategorien.'
+          '2_4': 'Du vil motta varsler fordi du svarte på dette emnet.'
+          '2_2': 'Du vil motta varsler fordi du følger dette emnet.'
+          '2': 'Du vil motta varsler fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
           '1_2': 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg.'
           '1': 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg.'
-          '0_7': 'Du ignorerer alle varslinger i denne kategorien.'
-          '0_2': 'Du ignorerer alle varslinger på dette emnet.'
-          '0': 'Du ignorerer alle varslinger på dette emnet.'
+          '0_7': 'Du ignorerer alle varsler i denne kategorien.'
+          '0_2': 'Du ignorerer alle varsler på dette emnet.'
+          '0': 'Du ignorerer alle varsler på dette emnet.'
         watching_pm:
-          title: "Leser"
+          title: "Følger"
           description: "Du vil bli varslet om hvert nye innlegg i denne private meldingen. Antallet uleste og nye innlegg vil også vises ved emnets oppføring."
         watching:
-          title: "Observer"
+          title: "Følger"
           description: "Du vil bli varslet om hvert nye innlegg i dette emnet. Antallet uleste og nye emner vil også vises ved siden av emnets oppføring."
         tracking_pm:
           title: "Følger"
           description: "Antallet uleste og nye innlegg vil vises ved denne private meldingens oppføring. Du vil bli varslet kun hvis noen nevner ditt @navn eller svarer på ditt innlegg."
         tracking:
           title: "Følger"
-          description: "Antallet uleste og nye innlegg vil vises ved emnets oppføring. Du vil bli varslet kun hvis noen nevner ditt @navn eller svarer på ditt innegg."
+          description: "Antallet uleste og nye innlegg vil vises ved emnets oppføring. Du vil kun bli varslet hvis noen nevner ditt @navn eller svarer på ditt innegg."
         regular:
-          title: "Aktivt Medlem"
+          title: "Aktivt medlem"
           description: "du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg."
         regular_pm:
-          title: "Aktivt Medlem"
+          title: "Aktivt medlem"
           description: "Du vil kun bli varslet hvis noen nevner ditt @navn eller svarer på innlegget ditt i den private meldingen."
         muted_pm:
           title: "Dempet"
@@ -818,14 +826,15 @@ nb_NO:
           description: "du vil ikke bli varslet om noen ting i dette emnet, og  det vil ikke visest som ulest."
       actions:
         recover: "Gjenopprett emne"
-        delete: "Slett Emne"
+        delete: "slett emne"
         open: "Åpne Emne"
         close: "Lukk Emne"
         auto_close: "Auto-Lukk"
         make_banner: "Banneremne"
-        unpin: "Løsgjør Emne"
-        pin: "Fastsett Emne"
-        pin_globally: "Pin Emnet Globalt"
+        remove_banner: "Fjern banneremne"
+        unpin: "Løsgjør emne"
+        pin: "Fastsett emne"
+        pin_globally: "Fastsett emne globalt"
         unarchive: "Uarkiver Emne"
         archive: "Arkiver Emne"
         invisible: "Skjul Emnet"
@@ -836,31 +845,36 @@ nb_NO:
         title: 'Svar'
         help: 'begynn å skrive et svar til dette emnet'
       clear_pin:
-        title: "Løsgjør Emne"
-        help: "Løsgjør fastsatt-statusen til dette emnet så det ikke lenger visest på toppen av din emneliste."
+        title: "Løsgjør emne"
+        help: "Løsgjør fastsatt-statusen til dette emnet så det ikke lenger vises på toppen av din emneliste"
       share:
         title: 'Del'
-        help: 'del en link til dette emnet'
+        help: 'del en lenke til dette emnet'
       flag_topic:
         title: 'Rapporter'
         help: 'rapporter dette innlegget privat eller send et privat varsel om det'
         success_message: 'Du har rapportert dette emnet'
       inviting: "Inviterer..."
+      automatically_add_to_groups_optional: "Denne invitasjonen inkluderer også tilgang på disse gruppene: (valgfritt, kun for admin)"
+      automatically_add_to_groups_required: "Denne invitasjonen inkluderer også tilgang til disse gruppene: (<b>påkrevet</a>, kun for admin)"
       invite_private:
         title: 'Inviter til Privat Melding'
-        email_or_username: "Invitertes email eller brukernavn."
-        email_or_username_placeholder: "email eller brukernavn."
+        email_or_username: "Invitertes e-post eller brukernavn."
+        email_or_username_placeholder: "e-postadresse eller brukernavn"
         action: "Inviter"
         success: "Vi har invitert den brukeren til å delta i denne private meldingen."
         error: "Beklager, det oppstod en feil ved å invitere den brukeren."
         group_name: "gruppenavn"
       invite_reply:
         title: 'Inviter'
-        action: 'Email Invitasjon'
+        action: 'E-postinvitasjon'
         help: 'send invitasjoner til venner så de kan svare på dette emnet med et enkelt klikk'
+        to_topic: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke og deretter svare på dette emnet. Ingen innlogging er nødvendig."
+        to_forum: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke. Ingen innlogging er nødvendig."
         email_placeholder: 'email'
+        success: "Vi har sendt ut en invitasjon til <b>{{email}}</b>. Vi vil gi deg en varsling når invitasjonen benyttes. Se fanen for invitasjoner på din brukerside for å holde oversikt over dine invitasjoner."
         error: "Beklager, vi kunne ikke invitere den personen. Kanskje de allerede er en bruker?"
-      login_reply: 'Logg Inn for å Svare'
+      login_reply: 'Logg Inn for å svare'
       filters:
         n_posts:
           one: "1 innlegg"
@@ -872,8 +886,8 @@ nb_NO:
         topic_name: "Nytt Emnenavn:"
         error: "Det oppsto en feil ved deling av dette emnet."
         instructions:
-          one: "Du er i gang med å lage ett nytt emne basert på innlegget du har valgt.."
-          other: "Du er i gang med å lage ett nytt emne basert på <b>{{count}}</b> innlegg du har valgt."
+          one: "Du er i ferd med å lage et nytt emne basert på innlegget du har valgt.."
+          other: "Du er i ferd med å lage et nytt emne basert på <b>{{count}}</b> innlegg du har valgt."
       merge_topic:
         title: "Slå sammen Emne"
         action: "slå sammen emne"
@@ -887,6 +901,10 @@ nb_NO:
         error: "Det oppsto en feil ved endring av eierskap til innleggene."
         label: "Innleggenes nye eier"
         placeholder: "den nye eierens brukernavn"
+        instructions:
+          one: "Velg den nye eieren til innlegget av <b>{{old_user}}</b>."
+          other: "Velg den nye eieren til {{count}} innlegg av  <b>{{old_user}}</b>."
+        instructions_warn: "Merk at ingen varsler om dette innlegget vil overføres til den nye eieren i etterkant.<br>Advarsel: For øyeblikket blir ingen innleggsavhengige data overført til den nye brukeren. Bruk med omhu."
       multi_select:
         select: 'velg'
         selected: 'valgte ({{count}})'
@@ -907,13 +925,14 @@ nb_NO:
       post_number: "post {{number}}"
       in_reply_to: "svar til"
       last_edited_on: "innlegg sist redigert"
+      reply_as_new_topic: "Svar med lenket emne"
       continue_discussion: "Fortsetter diskusjonen fra {{postLink}}:"
       follow_quote: "gå til det siterte innlegget"
       show_full: "Vis hele posten"
       show_hidden: 'Se skjult innhold'
       deleted_by_author:
         one: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)"
-        other: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} timer, med mindre de blir flagget)"
+        other: "(innlegg trukket tilbake av forfatter, blir automatisk slettet etter % {count} timer, med mindre det blir rapportert)"
       expand_collapse: "utvid/vis"
       gap:
         one: "Ett innlegg skjult"
@@ -938,7 +957,7 @@ nb_NO:
         confirm: "Er du sikker på at du vil forlate innlegget ditt?"
         no_value: "Nei"
         yes_value: "Ja"
-      via_email: "Dette innlegget ankom via epost"
+      via_email: "Dette innlegget ankom via e-post"
       wiki:
         about: "Dette innlegget er en wiki; brukere kan redigere den"
       archetypes:
@@ -946,47 +965,50 @@ nb_NO:
       controls:
         reply: "begynn å skrive et svar til dette innlegget"
         like: "lik dette innlegget"
-        has_liked: "du har likt dette innlegget"
-        undo_like: "angre like"
+        has_liked: "du liker dette innlegget"
+        undo_like: "angre liker"
         edit: "rediger dette innlegget"
         edit_anonymous: "Beklager, du må være innlogget for å endre dette innlegget."
-        flag: "marker dette innlegget for oppmerksomhet eller send en varsling om det"
+        flag: "rapporter dette innlegget privat eller send et privat varsel om det"
         delete: "slett dette innlegget"
         undelete: "gjenopprett dette innlegget"
-        share: "del en link til dette innlegget"
+        share: "del en lenke til dette innlegget"
         more: "Mer"
         delete_replies:
           confirm:
             one: "Vil du òg slette det direkte svaret til dette innlegget?"
             other: "Vil du òg slette de {{count}} direkte svarene til dette innlegget?"
-          yes_value: "Ja, slett svarene òg."
+          yes_value: "Ja, slett svarene også."
           no_value: "Nei, kun dette innlegget."
         admin: "Innleggsadministrasjon"
-        wiki: "Opprett Wiki"
+        wiki: "Opprett wiki"
         unwiki: "Fjern Wiki"
         convert_to_moderator: "Legg til stabsfarge"
         revert_to_regular: "Fjern stabsfarge"
         rebake: "Gjenoppbygg HTML"
         unhide: "Vis"
       actions:
-        flag: 'Markering'
+        flag: 'Rapportering'
+        defer_flags:
+          one: "Utsett rapportering"
+          other: "Utsett rapporteringer"
         it_too:
-          off_topic: "Marker det også"
-          spam: "Marker det også"
-          inappropriate: "Marker det også"
-          custom_flag: "Marker det også"
+          off_topic: "Rapporter det også"
+          spam: "Rapporter det også"
+          inappropriate: "Rapporter det også"
+          custom_flag: "Rapporter det også"
           bookmark: "Bokmerk det også"
           like: "Lik det også"
           vote: "Stem for det også"
         undo:
-          off_topic: "Angre markering"
-          spam: "Angre markering"
-          inappropriate: "Angre markering"
+          off_topic: "Angre rapportering"
+          spam: "Angre rapportering"
+          inappropriate: "Angre rapportering"
           bookmark: "Angre bokmerke"
-          like: "Angre like"
+          like: "Angre liker"
           vote: "Angre stemme"
         people:
-          off_topic: "{{icons}} rapporterte dette som urelevant"
+          off_topic: "{{icons}} rapporterte dette som irrelevant"
           spam: "{{icons}} rapporterte dette som spam"
           inappropriate: "{{icons}} rapporterte dette som upassende"
           notify_moderators: "{{icons}} varslet moderatorene"
@@ -997,27 +1019,27 @@ nb_NO:
           like: "{{icons}} likte dette"
           vote: "{{icons}} stemte for dette"
         by_you:
-          off_topic: "Du markerte dette som urelevant"
-          spam: "Du markerte dette som spam"
-          inappropriate: "Du markerte dette som upassende"
-          notify_moderators: "Du markerte dette for moderering"
+          off_topic: "Du rapporterte dette som irrelevant"
+          spam: "Du rapporterte dette som spam"
+          inappropriate: "Du rapporterte dette som upassende"
+          notify_moderators: "Du rapporterte dette for moderering"
           notify_user: "Du sendte en private melding til denne brukeren"
           bookmark: "Du bokmerket dette innlegget"
           like: "Du likte dette"
           vote: "Du stemte for dette innlegget"
         by_you_and_others:
           off_topic:
-            one: "Du og 1 annen markerte dette som urelevant"
-            other: "Du og {{count}} andre markerte dette som urelevant"
+            one: "Du og 1 annen markerte dette som irrelevant"
+            other: "Du og {{count}} andre rapporterte dette som irrelevant"
           spam:
             one: "Du og 1 annen markerte dette som spam"
-            other: "Du og {{count}} andre markerte dette som spam"
+            other: "Du og {{count}} andre rapporterte dette som spam"
           inappropriate:
             one: "Du og 1 annen markerte dette som upassende"
-            other: "Du og {{count}} andre markerte dette som upassende"
+            other: "Du og {{count}} andre rapporterte dette som upassende"
           notify_moderators:
             one: "Du og 1 annen markerte dette for moderering"
-            other: "Du og {{count}} andre markerte dette for moderering"
+            other: "Du og {{count}} andre rapporterte dette for moderering"
           notify_user:
             one: "Du og 1 annen sendte en privat melding til denne brukeren"
             other: "Du og {{count}} andre sendte en privat melding til denne brukeren"
@@ -1032,17 +1054,17 @@ nb_NO:
             other: "Du og {{count}} andre stemte på dette innlegget"
         by_others:
           off_topic:
-            one: "1 bruker markerte dette som urelevant"
-            other: "{{count}} brukere markerte dette som urelevant"
+            one: "1 bruker markerte dette som irrelevant"
+            other: "{{count}} brukere rapporterte dette som irrelevant"
           spam:
             one: "1 bruker markerte dette som spam"
-            other: "{{count}} brukere markerte dette som spam"
+            other: "{{count}} brukere rapporterte dette som spam"
           inappropriate:
             one: "1 bruker markerte dette som upassende"
-            other: "{{count}} brukere markerte dette som upassende"
+            other: "{{count}} brukere rapporterte dette som upassende"
           notify_moderators:
             one: "1 bruker markerte dette for moderering"
-            other: "{{count}} brukere markerte dette for moderering"
+            other: "{{count}} brukere rapporterte dette for moderering"
           notify_user:
             one: "1 bruker sendte en privat melding til denne brukeren"
             other: "{{count}} brukere sendte en privat melding til denne brukeren"
@@ -1072,10 +1094,18 @@ nb_NO:
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> mot <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
+            title: "Vis endelig tekst med endringene der de er gjort"
             button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: "Vis endringer i endelig tekst side ved side"
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "Vis diff for kilderåtekst side ved side"
+            button: '<i class="fa fa-columns"></i> Raw'
         details:
           edited_by: "Endret av"
     category:
+      can: 'kan&hellip;'
       none: '(no category)'
       choose: 'Velg en katekori&hellip;'
       edit: 'rediger'
@@ -1083,8 +1113,8 @@ nb_NO:
       view: 'Se Emner i Kategori'
       general: 'Generellt'
       settings: 'Innstillinger'
-      delete: 'Slett Kategori'
-      create: 'Lag Kategori'
+      delete: 'Slett kategori'
+      create: 'Opprett kategori'
       save: 'Lagre Kategori'
       creation_error: Det oppstod en feil ved å lage denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
@@ -1093,7 +1123,7 @@ nb_NO:
       topic: "kategori emne"
       logo: "Kategoribilde"
       background_image: "Kategoriens bakgrunnsbilde"
-      badge_colors: "Badge colors"
+      badge_colors: "Merkefarger"
       background_color: "Bakgrunnsfarge"
       foreground_color: "Forgrunnsfarge"
       name_placeholder: "Bør være kortfattet."
@@ -1106,12 +1136,12 @@ nb_NO:
       already_used: 'Denne fargen er i bruk av en annen kategori'
       security: "Sikkerhet"
       images: "Bilder"
-      auto_close_label: "Auto-lukk Emner Etter:"
+      auto_close_label: "Lukk emner automatisk etter:"
       auto_close_units: "timer"
-      email_in: "Egendefinert inkommende epostaddresse:"
-      email_in_allow_strangers: "Godta epost fra anonyme brukere uten brukerkonto"
-      email_in_disabled: "Posting av nye emner via epost er deaktivert i nettsideinstillingene. For å aktivere posting av emner via epost"
-      email_in_disabled_click: 'må "epost in" aktiveres i innstillinger.'
+      email_in: "Egendefinert inkommende e-postadresse:"
+      email_in_allow_strangers: "Godta e-post fra anonyme brukere uten brukerkonto"
+      email_in_disabled: "Posting av nye emner via e-post er deaktivert i nettstedsinstillingene. For å aktivere posting av nye emner via e-post,"
+      email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
       edit_permissions: "Rediger tillatelser"
       add_permission: "Legg til tillatelser"
@@ -1124,43 +1154,61 @@ nb_NO:
       notifications:
         watching:
           title: "Følger"
-          description: "Du vil automatisk observere alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner. Antallet uleste og nye emner vil også vises."
+          description: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner. Antallet uleste og nye emner vil også vises."
         tracking:
           title: "Sporing"
+          description: "Du vil automatisk følge alle nye emner i disse kategoriene. En teller for antall uleste og nye innlegg vil vises ved siden av emnet."
         regular:
           title: "Vanlig"
-          description: "Du vil bli varslet kun hvis noen nevner ditt @navn eller svarer på ditt innlegg."
+          description: "Du vil kun bli varslet hvis noen nevner ditt @navn eller svarer på ditt innlegg."
         muted:
           title: "Dempet"
           description: "Du vil ikke bli varslet om noe vedrørende disse emnene i disse kategoriene og de vil ikke vises i din ulest-liste."
     flagging:
-      title: 'Hvorfor markerer du dette innlegget?'
-      action: 'Market Innlegg'
+      title: 'Hvorfor rapporterer du dette innlegget?'
+      action: 'Rapporter innlegg'
       take_action: "Ta Handling"
       notify_action: 'Privat melding'
-      delete_spammer: "Slett Spammer"
+      delete_spammer: "Slett spammer"
+      delete_confirm: "Du er i ferd med å slette <b>%{posts}</b> innlegg og <b>%{topics}</b> emner av denne brukeren, slette brukerens konto, blokkere registrering fra brukerens IP-adresse <b>%{ip_address}</b>, og legge brukerens e-postadresse <b>%{email}</b> i en permanent svarteliste. Er du sikker på at denne brukeren virkelig er en spammer?"
       yes_delete_spammer: "Ja, slett spammer"
-      cant: "Beklager, du kan ikke markere dette innlettet nå."
+      submit_tooltip: "Rapporter privat"
+      take_action_tooltip: "Oppnå rapporteringsterskel umiddelbart, i stedet for å vente på flere rapporteringer."
+      cant: "Beklager, du kan ikke rapportere dette innlegget nå."
       custom_placeholder_notify_user: "Hvorfor krever dette innlegget at du snakker til denne brukeren privat og direkte? Vær presis og  høfflig."
-      custom_placeholder_notify_moderators: "Hvorfor krever dette innlegget oppmerksomheten til en moderator? La oss vite nøyaktig hva du er bekymret over og del all relevant informasjon og linker."
+      custom_placeholder_notify_moderators: "Hvorfor krever dette innlegget oppmerksomheten til en moderator? La oss vite nøyaktig hva du er bekymret over og del all relevant informasjon og lenker."
       custom_message:
         at_least: "skriv minst {{n}} bokstaver"
         more: "{{n}} igjen..."
         left: "{{n}} gjenstående"
     flagging_topic:
-      title: "Hvorfor rapporterer du dette innlegget privat?"
-      action: "Rapporter Emne"
+      title: "Hvorfor rapporterer du dette innlegget?"
+      action: "Rapporter emne"
       notify_action: "Privat melding"
     topic_map:
       title: "Emneoppsummering"
       links_shown: "vis alle {{totalLinks}} linker..."
+      clicks:
+        one: "1 klikk"
+        other: "%{count} klikk"
     topic_statuses:
+      warning:
+        help: "Dette er en offisiell advarsel."
       locked:
         help: "dette emnet er låst; det aksepterer ikke lenger nye svar"
+      unpinned:
+        title: "Løsgjort"
+        help: "Dette emnet er ikke lenger fastsatt; det vil vises i standard rekkefølge"
+      pinned_globally:
+        title: "Globalt fastsatt"
+        help: "Dette emnet er globalt fastsatt; det vil vises på toppen av alle lister"
       pinned:
-        help: "dette emnet er fastsatt; det vil visest på toppen av sin kategori"
+        title: "Fastsatt"
+        help: "dette emnet er fastsatt; det vil vises på toppen av sin kategori"
       archived:
         help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
+      invisible:
+        help: "Dette emnet er ikke listet; det vil ikke vises i emnelister, og kan kun leses via en direktelenke"
     posts: "Innlegg"
     posts_lowercase: "innlegg"
     posts_long: "{{number}} innlegg i dette emnet"
@@ -1170,9 +1218,9 @@ nb_NO:
     replies: "Svar"
     views_long: "dette emnet har blit sett {{number}} ganger"
     activity: "Aktivitet"
-    likes: "Likes"
-    likes_lowercase: "likes"
-    likes_long: "det er {{number}} likes i dette emnet"
+    likes: "Liker"
+    likes_lowercase: "liker"
+    likes_long: "det er {{number}} liker i dette emnet"
     users: "Deltakere"
     users_lowercase: "brukere"
     category_title: "Kategori"
@@ -1183,14 +1231,14 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       latest:
-        title: "Nye"
-        help: "de nyeste emnene"
+        title: "Siste"
+        help: "de sist oppdaterte emnene"
       hot:
-        title: "Populær"
-        help: "en seleksjon av de mest populære emnene"
+        title: "Populære"
+        help: "et utvalg av de mest populære emnene"
       starred:
-        title: "Favorisert"
-        help: "emner du har markert som favoritter"
+        title: "Favoritter"
+        help: "emner i dine favoritter"
       read:
         title: "Lest"
         help: "emner du har lest, i den rekkefølgen du har lest dem"
@@ -1213,9 +1261,9 @@ nb_NO:
           other: "{{count}} nye"
         lower_title: "ny"
         title:
-          zero: "Ny"
-          one: "Ny (1)"
-          other: "Ny ({{count}})"
+          zero: "Nye"
+          one: "Nye (1)"
+          other: "Nye ({{count}})"
         help: "emner opprettet de siste dagene"
       posted:
         title: "Mine Innlegg"
@@ -1227,22 +1275,22 @@ nb_NO:
           other: "{{categoryName}} ({{count}})"
         help: "siste emner i {{categoryName}}-kategorien"
       top:
-        title: "Topp"
-        help: "de mest aktivete emnene det siste året, måneden, uken eller dag"
+        title: "Aktive"
+        help: "de mest aktive emnene det siste året, den siste måneden, den siste uken eller i dag"
         yearly:
-          title: "Årlig Topp"
+          title: "Årlig mest aktive"
         monthly:
-          title: "Månedlig Topp"
+          title: "Månedlig mest aktive"
         weekly:
-          title: "Ukentlig Topp"
+          title: "Ukentlig mest aktive"
         daily:
-          title: "Daglig Topp"
+          title: "Daglig mest aktive"
         this_year: "Dette året"
         this_month: "Denne måneden"
         this_week: "Denne uken"
         today: "I dag"
         other_periods: "vis flere populære emner"
-    browser_update: 'Desverre, <a href="http://www.discourse.org/faq/#browser">Din nettleser er for gammel og fungerer ikke med denne nettsiden.</a>. Venligst <a href="http://browsehappy.com">oppgrader nettleseren din</a>.'
+    browser_update: 'Dessverre, <a href="http://www.discourse.org/faq/#browser">Din nettleser er for gammel og fungerer ikke med dette nettstedet.</a>. Vennligst <a href="http://browsehappy.com">oppgrader nettleseren din</a>.'
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
@@ -1261,6 +1309,7 @@ nb_NO:
         updates_available: "Oppdateringer er tilgjengelig."
         please_upgrade: "Vennligst oppgrader!"
         no_check_performed: "En sjekk for oppdateringer har ikke blitt utført. Verifiser at sidekiq kjører."
+        stale_data: "Det har ikke vært sjekket for oppdateringer på en stund. Sjekk at sidekiq kjører."
         version_check_pending: "Ser ut som om du oppgraderte nylig. Fantastisk!"
         installed_version: "Installert"
         latest_version: "Seneste"
@@ -1289,35 +1338,70 @@ nb_NO:
         latest_changes: "Siste endringer: Vennligst oppgrader ofte!"
         by: "av"
       flags:
-        title: "Markeringer"
+        title: "Rapporteringer"
         old: "Gamle"
         active: "Aktive"
         agree: "Godta"
-        agree_title: "Bekreft at denne merknaden er gyldig og korrekt"
+        agree_title: "Bekreft at denne rapporteringen er gyldig og korrekt"
         agree_flag_modal_title: "Godta og..."
         agree_flag_hide_post: "Godta (skjul innlegg + send PM)"
         agree_flag_hide_post_title: "Skjul dette innlegget og automatisk send brukeren en privat melding med oppfordring om redigering"
         agree_flag_restore_post: "Gi medhold (gjenopprett innlegg)"
+        agree_flag_restore_post_title: "Gjenopprett dette innlegget"
+        agree_flag: "Si deg enig med rapportering"
+        agree_flag_title: "Si deg enig med rapportering og la innlegget stå urørt"
+        defer_flag: "Utsett"
+        defer_flag_title: "Fjern denne rapporteringen; den krever ingen handling på dette tidspunktet."
         delete: "Slett"
+        delete_title: "Fjern innlegget denne rapporteringen refererer til."
+        delete_post_defer_flag: "Slett innlegg og utsett rapportering"
+        delete_post_defer_flag_title: "Slett innlegg; hvis det er første innlegg, slett emnet"
+        delete_post_agree_flag: "Slett innlegg og si deg enig med rapportering"
+        delete_post_agree_flag_title: "Slett innlegg; hvis det er første innlegg, slett emnet"
         delete_flag_modal_title: "Slett og..."
+        delete_spammer: "Slett spammer"
+        delete_spammer_title: "Fjern denne brukeren og alle innlegg og emner av brukeren."
+        disagree_flag_unhide_post: "Si deg uenig med rapportering (vis innlegg)"
+        disagree_flag_unhide_post_title: "Fjern alle rapporteringer fra dette innlegget og gjør det synlig igjen"
+        disagree_flag: "Si deg uenig"
+        disagree_flag_title: "Benekt rapportering som ugyldig eller uriktig"
         clear_topic_flags: "Ferdig"
-        clear_topic_flags_title: "Emnet har blitt undersøkt og problemer har blitt løst. Klikk Ferdig for å fjerne flaggene."
+        clear_topic_flags_title: "Emnet har blitt undersøkt og problemer har blitt løst. Klikk Ferdig for å fjerne rapporteringene."
         more: "(flere svar...)"
         dispositions:
           agreed: "enig"
           disagreed: "uenig"
           deferred: "utsatt"
-        flagged_by: "Markert av"
+        flagged_by: "Rapportert av"
         resolved_by: "Løst av"
         took_action: "Tok Handling"
         system: "System"
         error: "Noe gikk galt"
         reply_message: "Svar"
-        no_results: "Det er ingen flagg"
+        no_results: "Det er ingen rapporteringer."
         topic_flagged: "Dette emnet har blitt rapportert."
         visit_topic: "Besøk emnet for å utføre handling"
+        was_edited: "Innlegget ble redigert etter første rapportering"
+        previous_flags_count: "Dette innlegget har allerede blitt rapportert {{count}} ganger."
+        summary:
+          action_type_3:
+            one: "irrelevant"
+            other: "irrelevant x{{count}}"
+          action_type_4:
+            one: "upassende"
+            other: "upassende x{{count}}"
+          action_type_6:
+            one: "tilpasset"
+            other: "tilpasset x{{count}}"
+          action_type_7:
+            one: "tilpasset"
+            other: "tilpasset x{{count}}"
+          action_type_8:
+            one: "nettsøppel"
+            other: "nettsøppel x{{count}}"
       groups:
         primary: "Primærgruppe"
+        no_primary: "(ingen primærgruppe)"
         title: "Grupper"
         edit: "Rediger Grupper"
         refresh: "Last inn på nytt"
@@ -1351,7 +1435,12 @@ nb_NO:
         none: "Ingen sikkerhetskopiering er tilgjengelig."
         read_only:
           enable:
-            title: "Aktiver read-only modus"
+            title: "Aktiver skrivebeskyttet modus"
+            text: "Aktiver skrivebeskyttet modus"
+            confirm: "Er du sikker på at du vil aktivere skrivebeskyttet modus?"
+          disable:
+            title: "Deaktiver skrivebeskyttet modus"
+            text: "Deaktiver skrivebeskyttet modus"
         logs:
           none: "Ingen logger enda..."
         columns:
@@ -1373,7 +1462,6 @@ nb_NO:
             text: "Sikkerhetskopiering"
             title: "Opprett en sikkerhetskopiering"
             confirm: "Vil du starte en ny sikkerhetskopiering?"
-            without_uploads: "Ja (uten opplasting)"
           download:
             text: "Last ned"
             title: "Last ned sikkerhetskopi"
@@ -1382,7 +1470,7 @@ nb_NO:
             title: "Fjern sikkerhetskopi"
             confirm: "Er du sikker på at du vil slette denne sikkerhetskopien"
           restore:
-            is_disabled: "Gjenoppretting er deaktivert i nettsideinnstillingene."
+            is_disabled: "Gjenoppretting er deaktivert i nettstedsinnstillingene."
             text: "Gjenopprett"
             title: "Gjenopprett sikkerhetskopien"
             confirm: "Er du sikker på at du vil gjenopprette denne sikkerhetskopien?"
@@ -1398,7 +1486,7 @@ nb_NO:
         failed: "Eksporteringen feilet. Venligst undersøk loggene."
       customize:
         title: "Tilpasse"
-        long_title: "Sidetilpassninger"
+        long_title: "Nettstedstilpasninger"
         header: "Header"
         css: "Stilark"
         mobile_header: "Mobilheader"
@@ -1408,60 +1496,102 @@ nb_NO:
         preview: "forhåndsvisning"
         undo_preview: "avbryt forhåndsvisning"
         rescue_preview: "standard stil"
-        explain_preview: "Se nettsiden med dette skreddersydde stilarket"
+        explain_preview: "Se nettstedet med dette skreddersydde stilarket"
+        explain_undo_preview: "Gå tilbake til nåværende aktivert tilpasset stilark"
+        explain_rescue_preview: "Se nettstedet med standard stilark"
         save: "Lagre"
         new: "Ny"
         new_style: "Ny Stil"
         delete: "Slett"
         delete_confirm: "Slett denne tilpasningen?"
+        about: "Endre CSS og HTML-headere på nettstedet. Legg til en tilpasning for å starte."
         color: "Farge"
+        opacity: "Opacity"
         copy: "Kopier"
+        css_html:
+          title: "CSS/HTML"
+          long_title: "CSS og HTML-tilpasninger"
         colors:
           title: "Farger"
           long_title: "Fargepanel"
-          new_name: "Nytt Fargetema"
+          about: "Endre farger som brukes på nettstedet uten å skrive CSS. Legg til et skjema for å starte."
+          new_name: "Nytt fargetema"
           copy_name_prefix: "Kopi av"
           delete_confirm: "Slett dette fargetemaet?"
           undo: "angre"
+          undo_title: "Fjern endringer av denne fargen siden sist den ble lagret."
+          revert: "gå tilbake"
+          revert_title: "Nullstill denne fargen til standard fargeskjema for Discourse"
+          primary:
+            name: 'primær'
+            description: 'Det meste av tekst, ikoner og kanter.'
+          secondary:
+            name: 'sekundær'
+            description: 'Primær bakgrunnsfarge og tekstfarge på noen knapper'
+          tertiary:
+            name: 'tertiær'
+            description: 'Lenker, noen knapper, varsler og effektfarge'
+          quaternary:
+            name: "kvartær"
+            description: "Navigasjonslenker."
+          header_background:
+            name: "bakgrunn i header"
+            description: "Bakgrunnsfarge i nettstedets header"
+          header_primary:
+            name: "primær header"
+            description: "Tekst og ikoner i nettstedets header"
+          highlight:
+            name: 'utheving'
+            description: 'Bakgrunnsfarge på uthevede elementer på siden, som innlegg og emner.'
           danger:
             name: 'fare'
+            description: 'Uthevingsfarge for handlinger som sletting av innlegg og emner.'
           success:
             name: 'suksess'
             description: 'Brukt til å indikere hvorvidt en handling var vellykket.'
           love:
-            description: "Fargen til Like-knappen."
+            name: 'liker'
+            description: "Fargen til Liker-knappen."
       email:
-        title: "Email"
+        title: "E-post"
         settings: "Instillinger"
         all: "Alle"
-        sending_test: "Sender test email"
+        sending_test: "Sender e-post for testing"
+        test_error: "Det oppsto et problem ved utsendelse av e-post for testing. Sjekk e-postinnstillinger nøye, sjekk at verten ikke blokkerer e-posttilkoblinger, og prøv igjen."
         sent: "Sendt"
         skipped: "Hoppet over"
         sent_at: "Sendt"
         time: "Tid"
         user: "Bruker"
-        email_type: "Email Type"
-        to_address: "Til Addresse"
-        test_email_address: "email addresse å teste"
+        email_type: "E-posttype"
+        to_address: "Til adresse"
+        test_email_address: "e-postadresse å teste"
+        send_test: "Send e-post for testing"
         sent_test: "sendt!"
         delivery_method: "Leveringsmetode"
         preview_digest: "Forhåndsvis Oppsummering"
-        preview_digest_desc: "Dette er et verktøy for å forhåndsvise innholdet i oppsummeringsmail sendt fra ditt forum."
+        preview_digest_desc: "Dette er et verktøy for å forhåndsvise innholdet i oppsummeringspost sendt fra ditt forum."
         refresh: "Refresh"
         format: "Format"
         html: "html"
         text: "tekst"
         last_seen_user: "Sist Sett Bruker:"
         reply_key: "Svar ID"
+        skipped_reason: "Hopp over grunn"
         logs:
+          none: "Ingen logger funnet"
           filters:
             title: "Filtrer"
             user_placeholder: "brukernavn"
             address_placeholder: "navn@eksempel.com"
+            type_placeholder: "oppsummering, registrering..."
+            reply_key_placeholder: "svarnøkkel"
+            skipped_reason_placeholder: "grunn"
       logs:
         title: "Logger"
         action: "Handling"
         created_at: "Opprettet"
+        last_match_at: "Siste treff"
         match_count: "Treff"
         ip_address: "IP"
         delete: 'Slett'
@@ -1471,8 +1601,11 @@ nb_NO:
           block: "blokker"
           do_nothing: "ikke gjør noe"
         staff_actions:
+          title: "Personalhandlinger"
           instructions: "Trykk på brukernavn og handlinger for å filtrere. Trykk på profilbilder for å gå til brukersider."
           clear_filters: "Vis alt"
+          staff_user: "Personale"
+          target_user: "Målbruker"
           subject: "Emne"
           when: "Når"
           context: "Kontekst"
@@ -1483,24 +1616,29 @@ nb_NO:
           show: "Vis"
           modal_title: "Detaljer"
           no_previous: "Det finnes ingen forrige verdi."
+          deleted: "Ingen ny verdi. Posten ble slettet."
           actions:
             delete_user: "slett bruker"
             change_trust_level: "endre tillitsnivå"
             change_site_setting: "endre nettstedsinnstilling"
+            change_site_customization: "endre tilpasninger for nettstedet"
+            delete_site_customization: "slett tilpasninger for nettstedet"
             suspend_user: "bannlys bruker"
             unsuspend_user: "gjeninnsett bruker"
-            grant_badge: "innvilg merke"
+            grant_badge: "tildel merke"
             revoke_badge: "tilbakedra merke"
+            check_email: "sjekk e-post"
         screened_emails:
-          description: "Når noen forsøker å lage en ny konto, vil de følgende e-postaddressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
-          email: "E-postaddrese"
+          description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
+          email: "E-postadresse"
           actions:
             allow: "Tillat"
         screened_urls:
+          description: "URLer listet her ble brukt i innlegg av brukere som har blitt identifisert som spammere."
           url: "URL"
           domain: "Domene"
         screened_ips:
-          description: 'IP-addresser som blir fulgt. Benytt "Tillat" for å hvitliste IP-addresser.'
+          description: 'IP-adresser som blir fulgt. Benytt "Tillat" for å hvitliste IP-adresser.'
           delete_confirm: "Er du sikker på at du vil fjerne regelen for %{ip_address}?"
           actions:
             block: "Blokker"
@@ -1508,14 +1646,17 @@ nb_NO:
             allow_admin: "Tillat Admin"
           form:
             label: "Ny:"
-            ip_address: "IP-addresse"
+            ip_address: "IP-adresse"
             add: "Legg til"
         logster:
           title: "Feillogg"
+      impersonate:
+        title: "Fremstå som"
+        help: "Bruk dette verktøyet for å fremstå som en annen bruker for feilsøking. Du må logge ut når du er ferdig."
       users:
         title: 'Brukere'
         create: 'Legg til Admin Bruker'
-        last_emailed: "Sist Kontaktet via Email"
+        last_emailed: "Sist kontaktet"
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
         active: "Aktiv"
         nav:
@@ -1530,6 +1671,9 @@ nb_NO:
         approved_selected:
           one: "godkjenn bruker"
           other: "godkjenn brukere ({{count}})"
+        reject_selected:
+          one: "avvis bruker"
+          other: "avvis brukere ({{count}})"
         titles:
           active: 'Aktive Brukere'
           new: 'Nye Brukere'
@@ -1537,7 +1681,7 @@ nb_NO:
           newuser: 'Brukere med tillitsnivå 0 (Ny Bruker)'
           basic: 'Brukere med tillitsnivå 1 (Juniormedlem)'
           regular: 'Brukere med tillitsnivå 2 (Medlem)'
-          leader: 'Brukere med tillitsnivå 3 (Aktivt Medlem)'
+          leader: 'Brukere med tillitsnivå 3 (Aktivt medlem)'
           elder: 'Brukere med tillitsnivå 4 (Leder)'
           admins: 'Admins'
           moderators: 'Moderatorer'
@@ -1546,7 +1690,12 @@ nb_NO:
         reject_successful:
           one: "Avvist 1 bruker."
           other: "Avviste %{count} brukere."
+        reject_failures:
+          one: "Kunne ikke avvise 1 bruker."
+          other: "Kunne ikke avvise %{count} brukere."
         not_verified: "Uverifisert"
+        check_email:
+          title: "Vis denne brukerens e-postadresse"
       user:
         suspend_failed: "Noe gikk galt ved å bannlyse denne brukeren {{error}}"
         unsuspend_failed: "Noe gikk galt ved å gjeninsette denne brukeren {{error}}"
@@ -1567,58 +1716,72 @@ nb_NO:
         edit_title: "Rediger Tittel"
         save_title: "Lagre Tittel"
         refresh_browsers: "Tving nettleser refresh"
-        refresh_browsers_message: "Melding sent til alle klienter!"
-        show_public_profile: "Vis Offentlig Profil"
+        refresh_browsers_message: "Melding sendt til alle klienter!"
+        show_public_profile: "Vis offentlig profil"
         impersonate: 'Gi deg ut for å være en annen'
         ip_lookup: "IP Lookup"
         log_out: "Logg ut"
         logged_out: "Brukeren ble logget ut med alle enheter"
         revoke_admin: 'Tilbakedra Admin'
-        grant_admin: 'Innfri Admin'
+        grant_admin: 'Innvilg admin'
         revoke_moderation: 'Tilbakedra Moderering'
-        grant_moderation: 'Innfri Moderering'
+        grant_moderation: 'Innvilg moderering'
         unblock: 'Opphev blokkering'
         block: 'Blokker'
         reputation: Rykte
         permissions: Tillatelser
         activity: Aktivitet
-        like_count: Likes Avgitt / Mottatt
+        like_count: Liker tildelt / mottatt
         last_100_days: 'de siste 100 dagene'
-        private_topics_count: Private Emner
-        posts_read_count: Innlegg Lest
-        post_count: Innlegg Skrevet
-        topics_entered: Emner Opprettet
-        flags_given_count: Markeringer Gitt
-        flags_received_count: Markeringer Mottatt
+        private_topics_count: Private emner
+        posts_read_count: Innlegg lest
+        post_count: Innlegg skrevet
+        topics_entered: Emner vist
+        flags_given_count: Rapporteringer tildelt
+        flags_received_count: Rapporteringer mottatt
         warnings_received_count: Advarsler mottatt
+        flags_given_received_count: 'Rapporteringer tildelt / mottatt'
         approve: 'Godta'
         approved_by: "Godtatt Av"
-        approve_success: "Brukeren er godkjent og epost med aktiveringsinstruksjoner er sendt."
+        approve_success: "Brukeren er godkjent og e-post med aktiveringsinstruksjoner er sendt."
         approve_bulk_success: "Suksess! Alle valgte brukere har blitt godkjent og varslet."
         time_read: "Lesetid"
         delete: "Slett Bruker"
         delete_forbidden_because_staff: "Administratorer og moderatorer kan ikke slettes."
+        delete_forbidden:
+          one: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)"
+          other: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dager kan ikke slettes.)"
+        cant_delete_all_posts:
+          one: "Kan ikke slette alle innlegg. Noen innlegg er eldre enn %{count} dag gammel. (Innstillingen delete_user_max_post_age.)"
+          other: "Kan ikke slette alle innlegg. Noen innlegg er eldre enn %{count} dager gamle. (Innstillingen delete_user_max_post_age.)"
+        cant_delete_all_too_many_posts:
+          one: "Kan ikke slette alle innlegg fordi brukeren har mer enn 1 innlegg. (delete_all_posts_max)"
+          other: "Kan ikke slette alle innlegg fordi brukeren har mer enn %{count} innlegg. (delete_all_posts_max)"
         delete_confirm: "Er du HELT SIKKER på at du vil slette denne brukeren? Denne handlingen er permanent!"
-        delete_and_block: "Slett og <b>blokker</b> denne epost og IP-addressen"
+        delete_and_block: "Slett og <b>blokker</b> denne e-post- og IP-adressen"
         delete_dont_block: "Bare slett"
         deleted: "Brukeren ble slettet."
         delete_failed: "Det oppstod en feil ved slettingen av den brukeren. Sørg for at alle av brukerens innlegg er slettet før du prøver å slette brukeren."
-        send_activation_email: "Send Aktiveringsemail"
-        activation_email_sent: "En aktiveringsemail har blitt sendt."
-        send_activation_email_failed: "Det oppstod et problem ved sendingen av enda en aktiveringsemail."
+        send_activation_email: "Send e-post for aktivering"
+        activation_email_sent: "En e-post for aktivering har blitt sendt."
+        send_activation_email_failed: "Det oppstod et problem ved sending av ny e-post for aktivering. %{error}"
         activate: "Aktiver Konto"
         activate_failed: "Det oppstod et problem ved aktiveringen av den brukeren."
         deactivate_account: "Deaktiver Konto"
         deactivate_failed: "Det oppstod et problem ved deaktiveringen av den brukeren."
         unblock_failed: 'Det oppstod et problem med å oppheve blokkeringen av brukeren.'
         block_failed: 'Det oppstod et problem med blokkeringen av brukeren.'
-        deactivate_explanation: "En deaktivert bruker må re-validere deres email."
+        deactivate_explanation: "En deaktivert bruker må re-validere sin e-post."
         suspended_explanation: "En bannlyst bruker kan ikke logge inn."
         block_explanation: "En blokkert bruker kan ikke poste eller starte emner."
         trust_level_change_failed: "Det oppsto et problem ved endring av brukerens tillitsnivå."
         suspend_modal_title: "Bannlys bruker"
         trust_level_2_users: "Brukere med tillitsnivå 2"
         trust_level_3_requirements: "Krav til tillitsnivå 3"
+        trust_level_locked_tip: "tillitsnivå er låst, systemet vil ikke forfremme eller degradere bruker"
+        trust_level_unlocked_tip: "tillitsnivå er ulåst, systemet kan forfremme eller degradere bruker"
+        lock_trust_level: "Lås tillitsnivå"
+        unlock_trust_level: "Lås opp tillitsnivå"
         tl3_requirements:
           title: "Krav til tillitsnivå 3"
           table_title: "De siste 100 dagene:"
@@ -1629,28 +1792,42 @@ nb_NO:
           topics_replied_to: "Emner besvart"
           topics_viewed: "Emner vist"
           topics_viewed_all_time: "Emner vist (totalt)"
-          posts_read: "Innlegg Lest"
-          posts_read_all_time: "Innlegg Lest (totalt)"
-          flagged_posts: "Markerte Innlegg"
-          flagged_by_users: "Brukere som markerte"
-          likes_given: "Likes Avgitt"
-          likes_received: "Likes Mottatt"
+          posts_read: "Innlegg lest"
+          posts_read_all_time: "Innlegg lest (totalt)"
+          flagged_posts: "Rapporterte innlegg"
+          flagged_by_users: "Brukere som rapporterte"
+          likes_given: "Likes tildelt"
+          likes_received: "Likes mottatt"
           qualifies: "Kvalifiserer til tillitsnivå 3."
           does_not_qualify: "Kvalifiserer ikke til tillitsnivå 3."
+          will_be_promoted: "Vil snart forfremmes."
+          will_be_demoted: "Vil snart degraderes."
+          on_grace_period: "For tiden i prøvetid for forfremmelse, vil ikke degraderes"
+          locked_will_not_be_promoted: "Tillitsnivå låst. Vil aldri bli forfremmet."
+          locked_will_not_be_demoted: "Tillitsnivå låst. Vil aldri bli degradert."
         sso:
           title: "Single Sign On"
           external_id: "Ekstern ID"
           external_username: "Brukernavn"
           external_name: "Navn"
-          external_email: "Epost"
+          external_email: "E-post"
           external_avatar_url: "URL til profilbilde"
       user_fields:
+        title: "Brukerfelter"
+        create: "Opprett brukerfelt"
+        untitled: "Uten tittel"
+        name: "Feltnavn"
+        type: "Felttype"
         save: "Lagre"
         edit: "Endre"
         delete: "Slett"
         cancel: "Avbryt"
         delete_confirm: "Er du sikker på at du vil fjerne brukerfeltet?"
+        field_types:
+          text: 'Tekstfelt'
+          confirm: 'Bekreftelse'
       site_text:
+        none: "Velg en innholdstype for å starte redigering."
         title: 'Tekstinnhold'
       site_settings:
         show_overriden: 'Bare vis overstyrte'
@@ -1691,27 +1868,41 @@ nb_NO:
         badge_grouping: Gruppe
         badge_groupings:
           modal_title: Merkegrupper
-        granted_by: Godkjent av
-        granted_at: Godkjent
+        granted_by: Tildelt av
+        granted_at: Tildelt
         save: Lagre
         delete: Slett
         delete_confirm: Er du sikker på at du vil slette dette merket?
         revoke: Tilbakedra
         revoke_confirm: Er du sikker på at du vil tilbakedra dette merket?
-        edit_badges: Rediger Merker
-        grant_badge: Innvilg Merke
-        granted_badges: Innvilgede Merker
-        grant: Innvilg
+        edit_badges: Rediger merker
+        grant_badge: Tildel merke
+        granted_badges: Tildelte merker
+        grant: Tildel
         no_user_badges: "%{name} har ikke blitt tildelt noen merker."
         no_badges: Det er ingen merker som kan bli tildelt.
-        allow_title: Tillatt merker å bli benyttet som titler
+        allow_title: Tillat merke å bli benyttet som en tittel
         multiple_grant: Kan bli tildelt flere ganger
         listable: Vis merket på den offentlige merkesiden
         enabled: Aktiver merke
         icon: Ikon
+        query: Spørring for merke (SQL)
+        target_posts: Spørring har innlegg som mål
+        auto_revoke: Kjør tilbakedragningsspørring daglig
+        show_posts: Vis innlegg som ga tildeling av merke på merkesiden
+        trigger: Utløser
         trigger_type:
-          trust_level_change: "Når er bruker endrer tillitsnivå"
+          none: "Oppdater daglig"
+          post_action: "Når en bruker gjør en handling på et innlegg"
+          post_revision: "Når en bruker redigerer eller lager et nytt innlegg"
+          trust_level_change: "Når bruker endrer tillitsnivå"
+          user_change: "Når en bruker blir redigert eller registrert"
         preview:
+          link_text: "Forhåndsvis tildelte merker"
+          plan_text: "Forhåndsvis med plan for spørring"
+          modal_title: "Forhåndsvisning av spørring for merke"
+          sql_error_header: "Det oppsto en feil med spørringen."
+          error_help: "Se følgende lenker for hjelp til spørringer for merker."
           bad_count_warning:
             header: "ADVARSEL!"
           grant_count:
@@ -1734,17 +1925,21 @@ nb_NO:
         latest: '<b>g</b>, <b>l</b> Siste'
         new: '<b>g</b>, <b>n</b> Nye'
         unread: '<b>g</b>, <b>u</b> Ules'
-        starred: '<b>g</b>, <b>f</b> Favorisert'
+        starred: '<b>g</b>, <b>f</b> Favoritter'
         categories: '<b>g</b>, <b>c</b> Kategorier'
         top: '<b>g</b>, <b>t</b> Topp'
       navigation:
         title: 'Navigasjon'
+        jump: '<b>#</b> Gå til innlegg #'
         back: '<b>u</b> Tilbake'
+        up_down: '<b>k</b>/<b>j</b> Flytt markering &uarr; &darr;'
+        open: '<b>o</b> or <b>Enter</b> Åpne valgt emne'
+        next_prev: '<b>shift j</b>/<b>shift k</b> Neste/forrige seksjon'
       application:
         title: 'Applikasjon'
         create: '<b>c</b> Opprett nytt emne'
-        notifications: '<b>n</b> Åpne varslinger'
-        site_map_menu: '<b>=</b> Åpne nettsidemenyen'
+        notifications: '<b>n</b> Åpne varsler'
+        site_map_menu: '<b>=</b> Åpne nettstedsmenyen'
         user_profile_menu: '<b>p</b> Åpne brukermenyen'
         show_incoming_updated_topics: '<b>.</b> Vis oppdaterte emner'
         search: '<b>/</b> Søk'
@@ -1753,17 +1948,37 @@ nb_NO:
         dismiss_topics: '<b>x</b>, <b>t</b> Avvis Emner'
       actions:
         title: 'Handlinger'
-        star: '<b>f</b> Favoriser emne'
+        star: '<b>f</b> Legg emne i favoritter'
         share_topic: '<b>shift s</b> Del emne'
         share_post: '<b>s</b> Del innlegg'
+        reply_as_new_topic: '<b>t</b> Svar med lenket emne'
         reply_topic: '<b>shift r</b> Svar på emne'
         reply_post: '<b>r</b> Svar på innlegg'
         quote_post: '<b>q</b> Siter innlegg'
         like: '<b>l</b> Lik innlegg'
+        flag: '<b>!</b> Rapporter innlegg'
+        bookmark: '<b>b</b> Bokmerk innlegg'
         edit: '<b>e</b> Rediger innlegg'
         delete: '<b>d</b> Slett innlegg'
+        mark_muted: '<b>m</b>, <b>m</b> Demp emne'
+        mark_regular: '<b>m</b>, <b>r</b> Vanlig (standard) emne'
+        mark_tracking: '<b>m</b>, <b>t</b> Spor emne'
+        mark_watching: '<b>m</b>, <b>w</b> Følg emne'
     badges:
       title: Merker
+      allow_title: "tillat merke som tittel?"
+      multiple_grant: "kan gis flere ganger?"
+      badge_count:
+        one: "1 Merke"
+        other: "%{count} Merker"
+      more_badges:
+        one: "+1 Til"
+        other: "+%{count} Til"
+      granted:
+        one: "1 tildelt"
+        other: "%{count} tildelt"
+      select_badge_for_title: Velg et merke å bruke som din tittel
+      no_title: "<ingen tittel>"
       badge_grouping:
         getting_started:
           name: Kom i gang
@@ -1781,39 +1996,40 @@ nb_NO:
           description: Første redigering av innlegg
         basic_user:
           name: Basic
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Tildelt</a> alle essentielle forumfunksjoner
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Innvilget</a> alle essensielle forumfunksjoner
         member:
           name: Medlem
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Tildeles</a> invitasjonsmulighet
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Innvilget</a> invitasjonsmulighet
         regular:
           name: Aktivt Medlem
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Innvilget</a> omkategorisering, endring av navn, fulgte lenker og salong
         leader:
           name: Leder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Tildelt</a> global redigering, pin, lukking, arkivering, split og sammensmelting
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Innvilget</a> global redigering, fastsetting, lukking, arkivering, splitting og sammenslåing
         welcome:
           name: Velkommen
-          description: Mottok en Like
+          description: Mottok en liker
         autobiographer:
           name: Selvbiograf
           description: Fylte ut informasjon om <a href="/my/preferences">brukerprofilen</a>
         nice_post:
           name: Fint innlegg
-          description: Mottok 10 Likes for et innlegg. Dette merket kan bli utstedt flere ganger
+          description: Mottok 10 liker for et innlegg. Dette merket kan bli tildelt flere ganger
         good_post:
           name: Bra innlegg
-          description: Mottok 25 Likes for et innlegg. Dette merket kan bli utstedt flere ganger
+          description: Mottok 25 liker for et innlegg. Dette merket kan bli tildelt flere ganger
         great_post:
           name: Flott Innlegg
-          description: Mottok 50 Likes for et innlegg. Dette merket kan bli utstedt flere ganger
+          description: Mottok 50 liker for et innlegg. Dette merket kan bli tildelt flere ganger
         nice_topic:
           name: Fint emne
-          description: Mottatt 10 likes for et emne. Dette merket kan tildeles flere ganger
+          description: Mottok 10 liker for et emne. Dette merket kan bli tildelt flere ganger
         good_topic:
           name: Godt emne
-          description: Mottatt 25 likes for et emne. Dette merket kan tildeles flere ganger
+          description: Mottok 25 liker for et emne. Dette merket kan bli tildelt flere ganger
         great_topic:
           name: Fantastisk emne
-          description: Mottatt 50 likes for et emne. Dette merket kan tildeles flere ganger
+          description: Mottok 50 liker for et emne. Dette merket kan bli tildelt flere ganger
         nice_share:
           name: Fin deling
           description: Delte et innlegg med 25 unike besøkende
@@ -1824,11 +2040,11 @@ nb_NO:
           name: Fantastisk Deling
           description: Delte et innlegg med 1000 unike besøkende
         first_like:
-          name: Første Like
+          name: Første liker
           description: Likte et innlegg
         first_flag:
-          name: Første markering
-          description: Markerte et innlegg
+          name: Første rapportering
+          description: Rapporterte et innlegg
         first_share:
           name: Første deling
           description: Delte et innlegg

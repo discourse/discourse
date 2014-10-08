@@ -122,7 +122,6 @@ fi:
     daily: "päivittäin"
     weekly: "viikottain"
     every_two_weeks: "kahden viikon välein"
-    max: "maksimi"
     character_count:
       one: "{{count}} merkki"
       other: "{{count}} merkkiä"
@@ -735,7 +734,6 @@ fi:
         one: '1 lukematon ketju'
         other: '{{count}} lukematonta ketjua'
       title: 'Aihe'
-      loading_more: "Ladataan lisää ketjuja..."
       loading: 'Ladataan ketjua...'
       invalid_access:
         title: "Tämä ketju on yksityinen"
@@ -1469,7 +1467,6 @@ fi:
             text: "Varmuuskopioi"
             title: "Luo varmuuskopio"
             confirm: "Haluatko luoda uuden varmuuskopion?"
-            without_uploads: "Kyllä (ilman latausta)"
           download:
             text: "Lataa"
             title: "Lataa varmuuskopio"
@@ -1813,7 +1810,6 @@ fi:
           external_avatar_url: "Avatarin URL"
       user_fields:
         title: "Käyttäjäkentät"
-        description: "Käyttäjiltä vaaditaan rekisteröitymisen yhteydessä vastaus kaikiin kenttiin, jotka lisätään tähän"
         create: "Luo käyttäjäkenttä"
         untitled: "Nimetön"
         name: "Kentän nimi"

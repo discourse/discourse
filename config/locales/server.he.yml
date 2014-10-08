@@ -531,12 +531,6 @@ he:
     bottom:
       title: "Bottom of the pages"
       description: "HTML that will be added at the bottom of every page."
-    tos_signup_form_message:
-      title: "Signup Form: Terms of Service Message"
-      description: "The message that will appear beside a checkbox on the signup form if the tos_accept_required site setting is enabled."
-    notification_email_top:
-      title: "החלק העליון של מייל ההתראה"
-      description: "מסר שיוצג בראש כל דוא\"לי ההתראה."
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
@@ -566,7 +560,6 @@ he:
     ninja_edit_window: "במשך (n) שניות לאחר הפרסום, עריכה לא תיצור גרסא חדשה בהיסטוריית הגרסאות."
     post_edit_time_limit: "העורכ/ת יכול לערות או למחקור את הפרסום שלהם במשך (0) דקות לאחר הפרסום. הזינו 0 כ\"תמיד\"."
     edit_history_visible_to_public: "אפשרו לכולם לראות גרסאות קודמות של פרסום ערוך. כאשר אפשרות זו מנוטרלת, רק חברי צוות יכולים לצפות בהן."
-    delete_removed_posts_after: "פרסום שהוסרו על ידי מי שחיבר/ה אותו ימחק באופן אוטומטי לאחר (n) שעות."
     max_image_width: "הרוחב המקסימלי של תצוגת תמונה מוקטנת בפרסום"
     max_image_height: "גובה מקסימלי של תצוגת תמונה מוקטנת בפרסום"
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
@@ -631,7 +624,6 @@ he:
     redirect_users_to_top_page: "כוון באופן אוטומטי משתמשים חדשים וכאלה שנעדרו במשך זמן לראש העמוד."
     email_token_valid_hours: "סיסמאות שכחת סיסמא / הפעלת חשבון תקפים במשך (n) שעות."
     email_token_grace_period_hours: "סיסמאות שכחת סיסמא / הפעלת חשבון עדיין זמינים לזמן חסד של (n) שעות לאחר שהופקו."
-    enable_badges: "Enable the badge system (experimental)"
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "רשימה של מתחמי דוא\"ל (email domains) בהם למשתמשים אסור לרשום חשבונות. לדוגמא: mailinator.com trashmail.net"
     email_domains_whitelist: "רשימת של מתחמי דוא\"ל (email domains) שמשתמשים חייבים(!) כדי להירשם ולפתוח חשבון. אזהרה: משתמשים עם כתובות דוא\"ל אחרות מאלו המפורטות כאן לא יאושרו באתר!"
@@ -774,7 +766,6 @@ he:
     embed_post_limit: "מספר מקסימלי של פרסומים להטמעה."
     embed_whitelist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
     embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
-    tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
     enable_cdn_js_debugging: "אפשרו ל-/logs להציג שגיאות בצורה נכונה באמצעות הוספת הרשאות לגישה בין אתרים (crossorigin permissions) בכל ה-js הכלולים."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו הודעה המבקשת מן המנהלים/מנהלות ליצור עוד נושאים."

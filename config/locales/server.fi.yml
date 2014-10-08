@@ -208,27 +208,6 @@ fi:
   assets_topic_body: "Tämä on pysyvä ketju, joka näkyy ainoastaan henkilökunnalle. Se on tarkoitettu sivuston käyttämien kuvien ja muiden tiedostojen tallentamiseen. Älä poista sitä!\n\n\nTässä ova ohjeet sen käyttämiseen:\n\n\n1. Vastaa tähän ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Lähetä viesti\n4. Klikkaa hiiren oikealla näppäimellä, tai klikkaa muokkaa-näppäintä muokataksesi viestiäsi, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nLisäksi, jos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `sallitut tiedostopäätteet` listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Tervetuloa Loungeen"
-    body: |2
-
-      Onnittelut! :confetti_ball:
-
-      Jos näet tämän ketjun, sinut on juuri ylennetty **Mestariksi** (luottamustaso 3).
-
-      Voit nyt&hellip;
-
-      * Muokata minkä hyvänsä ketjun otsikkoa
-      * Vaihtaa minkä hyvänsä ketjun toiselle alueelle
-      * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](http://en.wikipedia.org/wiki/Nofollow) on poistettu)
-      * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
-      * Jakaa tykkäyksiä ja lippuja, joiden painoarvo on suurempi
-
-      Tässä on nykyinen [lista mestareista](/badges/3/leader). Muista käydä moikkaamassa.
-
-      Kiitos, että olet tämän yhteisön arvokas jäsen!
-
-      (Saadaksesi lisätietoja luottamustasoista, [katso tämä englanninkielinen ketju][trust]. Huomaa, että pysyäksesi mestarina sinun pitää täyttää vaatimukset jatkossakin. )
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Alueesta %{category}"
     replace_paragraph: "[Korvaa tämä kappale lyhyellä kuvauksella uudesta alueesta. Tämä kuvaus näytetään alueen valinnan yhteydessä, joten yritä pitää se alle 200 merkin pituisenä. Tätä aluetta ei näytetä listauksissa ennen kuin olet muokannut tätä tekstiä tai luonut viestiketjuja.]"
@@ -567,12 +546,6 @@ fi:
     bottom:
       title: "Sivun alaosa"
       description: "HTML joka lisätään jokaisen sivun loppuun."
-    tos_signup_form_message:
-      title: "Kirjautumiskaavake: Käyttöehtojen hyväksymisteksti"
-      description: "Teksti, joka näytetään käyttäjälle kirjautumiskaavakkeessa ruksin vieressä, jos tos_accept_required asetus on otettu käyttöön."
-    notification_email_top:
-      title: "Ilmoitussähköpostin yläosa"
-      description: "Viesti, joka näytetään kaikkien ilmoitussähköpostien yläosassa."
   site_settings:
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Sivuston oletuskieli (ISO 639-1 koodi)"
@@ -600,7 +573,6 @@ fi:
     ninja_edit_window: "Muokkaus ei tallenna erillistä versiota viestihistoriaan (n) sekunnin aikana viestin lähettämisen jälkeen."
     post_edit_time_limit: "Kirjoittaja voi muokata tai poistaa viestinsä (n) minuuttia lähettämisen jälkeen. Aseta 0 poistaaksesi rajoituksen kokonaan."
     edit_history_visible_to_public: "Salli kaikkien nähdä muokatun viestin edelliset versiot. Jos asetus otetaan pois käytöstä, vain henkilökunta näkee versiot."
-    delete_removed_posts_after: "Kirjoittajalta poistetut viestit poistetaan automaattisesti (n) tunnin kuluttua."
     max_image_width: "Esikatselukuvan suurin sallittu leveys viestissä"
     max_image_height: "Esikatselukuvan suurin sallittu korkeus viestissä"
     category_featured_topics: "Näytettävien ketjujen lukumäärä alueittan Alueet-sivulla. Arvon muuttamisen jälkeen voi kestää jopa 15 minuuttia sivun päivittymiseen."
@@ -667,7 +639,6 @@ fi:
     show_email_on_profile: "Näytä käyttäjän sähköpostiosoite profiilissa (näkyy vain käyttäjälle itselleen ja henkilökunnalle)"
     email_token_valid_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat voimassa (n) tuntia."
     email_token_grace_period_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat vielä voimassa (n) tuntia käyttämisen jälkeen."
-    enable_badges: "Ota käyttöön arvomerkkijärjestelmä (kokeellinen)"
     allow_index_in_robots_txt: "Määrittele robots.txt-tiedostossa, että hakukoneet saavat luetteloida sivuston."
     email_domains_blacklist: "Lista sähköposti-verkkotunnuksista, joista käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com trashmail.net"
     email_domains_whitelist: "Lista sähköposti-verkkotunnuksista, joista käyttäjien pitää luoda tilinsä. VAROITUS: Käyttäjiä, joiden sähköpostiosoite on muusta verkkotunnuksesta ei sallita!"
@@ -731,7 +702,6 @@ fi:
     clean_up_uploads: "Poista orpoutuneet liitetiedostot, joita ei käytetä viesteissä, laittoman hostauksen estämiseksi. VAROITUS: kannattaa varmuuskopioida /uploads kansio ennen tämän asetuksen ottamista käyttöön."
     clean_orphan_uploads_grace_period_hours: "Varoaika (tunteina) kunnes orpoutuneet liitetiedostot poistetaan"
     purge_deleted_uploads_grace_period_days: "Varoaika (päivinä) kunnes poistettu liitetiedosto tuhotaan."
-    purge_inactive_users_grace_period_days: "Varoaika (päivinä) kunnes aktivoimaton käyttäjätili tuhotaan."
     enable_s3_uploads: "Lataa liitetiedostot Amazon S3:een. Tärkeää: edellyttää toimivat S3 kirjautumistiedot (access key id ja secret access key)."
     s3_use_iam_profile: 'Käytä AWS EC2 IAM roolia avainten hakuun. HUOM: käyttöönotto korvaa "s3 access key id" ja "s3 secret access key" asetukset.'
     s3_upload_bucket: "Amazon S3 bucket, jonne lataukset sijoitetaan. VAROITUS: täytyy olla pienillä kirjaimilla, ei pisteitä."
@@ -862,7 +832,6 @@ fi:
     embed_post_limit: "Upotettavien viestien maksimimäärä."
     embed_whitelist_selector: "CSS valitsin elementeille, jotka sallitaan upotetuissa viesteissä."
     embed_blacklist_selector: "CSS valitstin elementeille, jotka poistetaan upotetuista viesteistä."
-    tos_accept_required: "Jos tämä asetus on otettu käyttöön, käyttäjän täytyy ruksia ymmärtäneensä käyttöehdot luodessaan tilin. Muokkaa kohtaa 'Kirjautumiskaavake: Käyttöehdot' Sisältö-välilehdellä vaihtaaksesi muokataksesi viestiä."
     notify_about_flags_after: "Jos liputuksia ei ole käsitelty näin moneen tuntiin, lähetä sähköposti contact_email osoitteeseen. Aseta 0 ottaaksesi pois käytöstä."
     enable_cdn_js_debugging: "Salli /logs näyttää kunnolliset virheilmoitukset lisäämällä crossorigin permissions kaikkiin sisällytettyihin js-kirjastoihin."
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, huomauta ylläpitäjiä ketjujen luonnista."
@@ -944,7 +913,6 @@ fi:
     incorrect_username_email_or_password: "Väärä käyttäjänimi, sähköposti tai salasana"
     wait_approval: "Kiitos kirjautumisesta. Ilmoitamme, kun tilisi on hyväksytty."
     active: "Tilisi on aktivoitu ja valmiina käyttöön."
-    activate_email: "Olet melkein valmis! Lähetimme vahvistusviestin antamaasi osoitteeseen. Seuraa viestin ohjeita ottaaksesi tilisi käyttöön."
     not_activated: "Et voi vielä kirjautua sisään. Lähetimme sinulle vahvistusviestin. Seuraa sähköpostiviestin ohjeita ottaaksesi tunnuksen käyttöön."
     not_allowed_from_ip_address: "Et voi kirjautua käyttäjätunnuksella %{username} tästä IP-osoitteesta."
     suspended: "Et voi kirjautu sisään ennen %{date}."

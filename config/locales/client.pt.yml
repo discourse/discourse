@@ -122,7 +122,6 @@ pt:
     daily: "diário"
     weekly: "semanal"
     every_two_weeks: "a cada duas semanas"
-    max: "máx"
     character_count:
       one: "{{count}} caracter"
       other: "{{count}} caracteres"
@@ -727,7 +726,6 @@ pt:
         one: '1 tópico não lido'
         other: '{{count}} tópicos não lidos'
       title: 'Tópico'
-      loading_more: "Carregando mais tópicos..."
       loading: 'A Carregar tópico...'
       invalid_access:
         title: "Tópico é particular"
@@ -1452,7 +1450,6 @@ pt:
             text: "Backup"
             title: "Criar um backup"
             confirm: "Deseja criar um novo backup?"
-            without_uploads: "Sim (sem carregamento)"
           download:
             text: "Descarregar"
             title: "Descarregar o backup"

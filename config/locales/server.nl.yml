@@ -534,12 +534,6 @@ nl:
     bottom:
       title: "Onderkant van de pagina's"
       description: "HTML dat aan de onderkant van alle pagina's wordt toegevoegd"
-    tos_signup_form_message:
-      title: "Inschijfformulier: algemene voorwaarden"
-      description: "Het bericht dat getoond wordt met een checkbox op het inschrijfformulier als de tos_accept_required-instelling actief is."
-    notification_email_top:
-      title: "Top van notificatiemail"
-      description: "Een bericht dat bovenaan elke notificatiemail geplaatst wordt."
   site_settings:
     default_locale: "De standaard taal van dit Discourse forum (ISO 639-1 code)"
     allow_user_locale: "Gebruikers kunnen zelf een taal instellen voor de interface van de site"
@@ -572,7 +566,6 @@ nl:
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
     topics_per_period_in_top_summary: "Aantal topics in het top-topics overzicht"
-    enable_badges: "Activeer het badgesysteem (experimenteel)"
     port: "DEVELOPER ONLY! WARNING! Mocht je een specifieke poort willen toewijzen aan de URL. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     force_hostname: "DEVELOPER ONLY! WARNING! Mocht je een specifieke hostname willen toewijzen. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
@@ -638,7 +631,6 @@ nl:
     short_progress_text_threshold: "Als het aantal berichten in een topic meer is dan dit aantal zal de voortgangsbalk alleen het nummer van het huidige bericht tonen. Als je de breedte van de voortgangsbalk verandert, moet je dit getal misschien ook aanpassen."
     default_code_lang: "Standaard programmeertaal die gebruikt wordt voor syntax highlighting van GitHub codeblokken (lang-auto, ruby, python etc.)"
     embed_truncate: "Kort de geembedde berichten in"
-    tos_accept_required: "Gebruikers moeten een vinkje zetten bij het inschrijven om aan te geven dat ze akkoord gaan met de algemene voorwaarden als deze optie actief is. Ga naar 'Inschijfformulier: Algemene Voorwaarden' in de Inhoud tab om het bericht te wijzigen."
     errors:
       invalid_email: "Ongeldig e-mailadres."
       invalid_username: "Er is geen gebruiker met die gebruikersnaam."
