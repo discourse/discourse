@@ -5,7 +5,6 @@ module Onebox
       def raw
         return @raw if @raw
         response = fetch_response(url)
-
         html_doc = Nokogiri::HTML(response.body)
 
         # Determine if we should use OEmbed or OpenGraph
@@ -61,7 +60,7 @@ module Onebox
         og
       end
 
-      def fetch_response(location, limit = 5, domain = nil)
+      def fetch_response(location, limit = 5, domain = nil,headers=nil)
         raise Net::HTTPError.new('HTTP redirect too deep', location) if limit == 0
 
         uri = URI(location)
@@ -75,11 +74,18 @@ module Onebox
           http.use_ssl = true
           http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
-        response = http.request_get(uri.request_uri)
+
+        response = http.request_get(uri.request_uri,headers)
+
+        cookie = response.get_fields('set-cookie')
+        if (cookie)
+          header = {'cookie' => cookie.join("")}
+        end
+        header = nil unless header.is_a? Hash
 
         case response
         when Net::HTTPSuccess     then response
-        when Net::HTTPRedirection then fetch_response(response['location'], limit - 1, "#{uri.scheme}://#{uri.host}")
+        when Net::HTTPRedirection then fetch_response(response['location'], limit - 1, "#{uri.scheme}://#{uri.host}",header)
         else
           response.error!
         end
