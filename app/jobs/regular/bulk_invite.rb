@@ -98,7 +98,13 @@ module Jobs
       email = csv_info[0]
       group_ids = get_group_ids(csv_info[1], csv_line_number)
       topic = get_topic(csv_info[2], csv_line_number)
-      Invite.invite_by_email(email, @current_user, topic, group_ids)
+      begin
+        Invite.invite_by_email(email, @current_user, topic, group_ids)
+      rescue => e
+        log "Error inviting '#{email}' -- #{e}"
+        @sent -= 1
+        @failed += 1
+      end
     end
 
     def log(message)
