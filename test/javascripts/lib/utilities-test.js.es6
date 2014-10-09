@@ -57,7 +57,7 @@ test("prevents files that are too big from being uploaded", function() {
   sandbox.stub(bootbox, "alert");
 
   not(validUpload([image]));
-  ok(bootbox.alert.calledWith(I18n.t('post.errors.image_too_large', { max_size_kb: 5 })));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.file_too_large', { max_size_kb: 5 })));
 });
 
 var dummyBlob = function() {

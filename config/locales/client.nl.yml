@@ -935,7 +935,6 @@ nl:
         edit: "Sorry, er is iets misgegaan bij het bewerken van je bericht. Probeer het nog eens."
         upload: "Sorry, er is iets misgegaan bij het uploaden van je bestand. Probeer het nog eens."
         attachment_too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb)."
-        image_too_large: "Sorry, de afbeelding je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb), verklein de afbeelding en probeer het opnieuw."
         too_many_uploads: "Sorry, je kan maar één afbeelding tegelijk uploaden."
         upload_not_authorized: "Sorry, je mag dat type bestand niet uploaden (toegestane extensies: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen afbeeldingen uploaden."

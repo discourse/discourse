@@ -292,7 +292,7 @@ Discourse.Utilities = {
         // entity too large, usually returned from the web server
         case 413:
           var maxSizeKB = Discourse.SiteSettings.max_image_size_kb;
-          bootbox.alert(I18n.t('post.errors.image_too_large', { max_size_kb: maxSizeKB }));
+          bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb: maxSizeKB }));
           return;
 
         // the error message is provided by the server
