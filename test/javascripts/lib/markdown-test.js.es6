@@ -485,4 +485,7 @@ test("censoring", function() {
   cooked("aw shucks, golly gee whiz.",
          "<p>aw &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;, golly gee &#9632;&#9632;&#9632;&#9632;.</p>",
          "it censors words in the Site Settings");
+  cooked("you are a whizzard! I love cheesewhiz. Whiz.",
+         "<p>you are a whizzard! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
+         "it doesn't censor words unless they have boundaries.");
 });
