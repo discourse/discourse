@@ -73,6 +73,8 @@ After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</
 
 **Email is CRITICAL for account creation and notifications in Discourse. If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!**
 
+- DigitalOcean has been having problems with spammers, so your [account may have its outbound SMTP ports blocked](https://meta.discourse.org/t/email-from-do-to-mandrill-port-587-times-out/14872). To fix that, reach out to DigitalOcean support.
+
 - Already have a mail server? Great. Use your existing mail server credentials.
 
 - No existing mail server, or you don't know what it is? No problem, create a free account on [**Mandrill**][man] (or [Mailgun][gun], or [Mailjet][jet]), and use the credentials provided in the dashboard.
