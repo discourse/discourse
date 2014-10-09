@@ -98,7 +98,7 @@ If a pin isn't visible enough, you can also turn one single topic into a **banne
 
 To make (or remove) a pin or a banner, use the admin wrench at the top right of the topic.
 
-### Set the homepage
+### Set the Homepage
 
 By default your homepage is a simple list of the latest posts.
 
@@ -174,9 +174,9 @@ Virtually every action a user can take is rate limited for safety, and especiall
 
 These defaults are safe, but they may be too conservative for your site:
 
-- If you are pre-vetting users, or your site is private and you approve all new users manually, you can set everyone's `default trust level` to 1.
+- If you are pre-vetting all users, or your site is private and you approve all new users manually, you can set everyone's `default trust level` to 1.
 
-- You can individually adjust these default new user restrictions. Search the settings for `newuser`. Settings we see commonly adjusted are `newuser max images`, `newuser max replies per topic`, `newuser max links`.
+- You can relax individual new user restrictions. Search settings for `newuser`. Ones commonly adjusted are `newuser max images`, `newuser max replies per topic`, `newuser max links`.
 
 ### User Content Licensing
 
@@ -201,9 +201,18 @@ Be patient! Building communities is hard. Before launching, be sure to:
 1. Define your community's purpose in a pinned or banner topic.
 2. Seed the discussion with interesting topics.
 3. Commit to visiting and participating regularly.
-4. Link your community so people can find it.
+4. Link your community everywhere and promote it so people can find it.
 
-See more advice at: http://blog.discourse.org/2014/08/building-a-discourse-community/
+There's more advice at [http://blog.discourse.org/2014/08/building-a-discourse-community/](Building a Discourse Community].
+
+### Sending Invitations
+
+One way to get people to visit your site is to invite them via email. You can do this via:
+
+- The Invite button at the bottom of the topic.
+- The Invite area on your profile page.
+ 
+The invite area on your profile page also includes advanced Staff methods of [sending bulk invites](https://meta.discourse.org/t/sending-bulk-user-invites/16468), and [inviting users into groups](https://meta.discourse.org/t/invite-individual-users-to-a-group/15544).
 
 ### Maintenance
 
