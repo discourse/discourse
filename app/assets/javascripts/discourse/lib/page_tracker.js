@@ -1,18 +1,14 @@
 /**
-  Called whenever the "page" changes. This allows us to set up analytics 
+  Called whenever the "page" changes. This allows us to set up analytics
   and other tracking.
 
   To get notified when the page changes, you can install a hook like so:
 
   ```javascript
-    Discourse.PageTracker.current().on('change', function(url) {
-      console.log('the page changed to: ' + url);
+    Discourse.PageTracker.current().on('change', function(url, title) {
+      console.log('the page changed to: ' + url + ' and title ' + title);
     });
   ```
-
-  @class PageTracker
-  @namespace Discourse
-  @module Discourse
 **/
 Discourse.PageTracker = Ember.Object.extend(Ember.Evented, {
   start: function() {
