@@ -84,7 +84,7 @@ class TopicQuery
   end
 
   def list_unread
-    create_list(:new, {}, unread_results)
+    create_list(:unread, {}, unread_results)
   end
 
   def list_posted
