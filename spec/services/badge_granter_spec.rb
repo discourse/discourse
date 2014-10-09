@@ -13,6 +13,7 @@ describe BadgeGranter do
 
       user.user_profile.update_column(:badge_granted_title, true)
 
+      BadgeGranter.grant(badge, user)
       BadgeGranter.revoke_ungranted_titles!
 
       user.reload
