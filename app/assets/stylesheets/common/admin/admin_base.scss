@@ -5,7 +5,6 @@
 
 .admin-contents table {
   width: 100%;
-  table-layout: fixed;
   tr {text-align: left;}
   td, th {padding: 8px;}
   th {border-top: 1px solid scale-color-diff();}
@@ -539,6 +538,7 @@ section.details {
 
 
 .admin-flags {
+  table-layout: fixed;
 
   .hidden-post td.excerpt, .hidden-post td.user { opacity: 0.5; }
   .deleted td.excerpt, .deleted td.user { background-color: scale-color($danger, $lightness: 70%); }
