@@ -21,6 +21,21 @@ describe Invite do
 
   end
 
+  context 'email validators' do
+    let(:coding_horror) { Fabricate(:coding_horror) }
+    let(:invite) { Invite.create(email: "test@mailinator.com", invited_by: coding_horror) }
+
+    it "should not allow an invite with blacklisted email" do
+      invite.should_not be_valid
+    end
+
+    it "should allow an invite with non-blacklisted email" do
+      invite = Fabricate(:invite, email: "test@mail.com", invited_by: coding_horror)
+      invite.should be_valid
+    end
+
+  end
+
   context '#create' do
 
     context 'saved' do
