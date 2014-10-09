@@ -203,7 +203,7 @@ Be patient! Building communities is hard. Before launching, be sure to:
 3. Commit to visiting and participating regularly.
 4. Link your community everywhere and promote it so people can find it.
 
-There's more advice at [http://blog.discourse.org/2014/08/building-a-discourse-community/](Building a Discourse Community).
+There's more advice at [Building a Discourse Community](http://blog.discourse.org/2014/08/building-a-discourse-community/).
 
 ### Sending Invitations
 
