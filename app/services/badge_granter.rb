@@ -315,7 +315,8 @@ class BadgeGranter
                          title NOT IN (
                             SELECT name
                             FROM badges
-                            WHERE allow_title AND enabled
+                            WHERE allow_title AND enabled AND
+                              badges.id IN (SELECT badge_id FROM user_badges ub where ub.user_id = users.id)
                         )
                    ")
   end
