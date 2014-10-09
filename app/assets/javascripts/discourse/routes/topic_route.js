@@ -12,7 +12,15 @@ Discourse.TopicRoute = Discourse.Route.extend({
     show_deleted: { replace: true }
   },
 
+  titleToken: function() {
+    var model = this.modelFor('topic');
+    if (model) {
+      return model.get('title');
+    }
+  },
+
   actions: {
+
     showTopicAdminMenu: function() {
       this.controllerFor("topic-admin-menu").send("show");
     },
