@@ -1,5 +1,13 @@
 export default Discourse.Route.extend({
 
+  titleToken: function() {
+    var model = this.modelFor('user');
+    var username = model.get('username');
+    if (username) {
+      return [I18n.t("user.profile"), username];
+    }
+  },
+
   actions: {
     logout: function() {
       Discourse.logout();

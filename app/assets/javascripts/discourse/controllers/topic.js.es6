@@ -11,11 +11,21 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
   maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
 
-  contextChanged: function(){
+  contextChanged: function() {
     this.set('controllers.search.searchContext', this.get('model.searchContext'));
   }.observes('topic'),
 
-  termChanged: function(){
+  _titleChanged: function() {
+    var title = this.get('title');
+    if (!Em.empty(title)) {
+
+      // Note normally you don't have to trigger this, but topic titles can be updated
+      // and are sometimes lazily loaded.
+      this.send('refreshTitle');
+    }
+  }.observes('title'),
+
+  termChanged: function() {
     var dropdown = this.get('controllers.header.visibleDropdown');
     var term = this.get('controllers.search.term');
 

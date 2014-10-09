@@ -1,6 +1,13 @@
 var ApplicationRoute = Em.Route.extend({
 
+  siteTitle: Discourse.computed.setting('title'),
+
   actions: {
+    _collectTitleTokens: function(tokens) {
+      tokens.push(this.get('siteTitle'));
+      Discourse.set('_docTitle', tokens.join(' - '));
+    },
+
     showTopicEntrance: function(data) {
       this.controllerFor('topic-entrance').send('show', data);
     },

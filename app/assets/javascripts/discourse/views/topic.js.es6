@@ -17,11 +17,6 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
 
   postStream: Em.computed.alias('controller.postStream'),
 
-  _updateTitle: function() {
-    var title = this.get('topic.title');
-    if (title) return Discourse.set('title', _.unescape(title));
-  }.observes('topic.loaded', 'topic.title'),
-
   _composeChanged: function() {
     var composerController = Discourse.get('router.composerController');
     composerController.clearState();

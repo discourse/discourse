@@ -21,6 +21,29 @@ Discourse.Route = Em.Route.extend({
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
   },
 
+  actions: {
+    _collectTitleTokens: function(tokens) {
+      // If there's a title token method, call it and get the token
+      if (this.titleToken) {
+        var t = this.titleToken();
+        if (t && t.length) {
+          if (t instanceof Array) {
+            t.forEach(function(ti) {
+              tokens.push(ti);
+            });
+          } else {
+            tokens.push(t);
+          }
+        }
+      }
+      return true;
+    },
+
+    refreshTitle: function() {
+      this.send('_collectTitleTokens', []);
+    }
+  },
+
   redirectIfLoginRequired: function() {
     var app = this.controllerFor('application');
     if (app.get('loginRequired')) {
