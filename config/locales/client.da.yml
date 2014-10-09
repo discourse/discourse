@@ -918,7 +918,6 @@ da:
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
         upload: "Beklager, der opstod en fejl ved upload af filen. Prøv venligst igen."
         attachment_too_large: "Beklager, filen, som du forsøger at uploade, er for store (den maksimale størrelse er {{max_size_kb}}kb)."
-        image_too_large: "Beklager, billedet, som du forsøger at uploade, er for stort (den maksimale størrelse er {{max_size_kb}}kb), gør det venligst mindre og prøv igen."
         too_many_uploads: "Beklager, men du kan kun uploade én fil ad gangen."
         upload_not_authorized: "Beklager, filen, som du forsøger at uploade, er ikke godkendt (godkendte filendelser: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade billeder."

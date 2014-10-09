@@ -905,7 +905,6 @@ zh_CN:
         edit: "抱歉，在编辑您的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
         attachment_too_large: "抱歉，您上传的附件太大了（最大不能超过 {{max_size_kb}}kb）。"
-        image_too_large: "抱歉，您上传的图片太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
         too_many_uploads: "抱歉, 您只能一次上传一张图片。"
         upload_not_authorized: "抱歉, 您不能上传此类型文件（可上传的文件类型有: {{authorized_extensions}}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传图片。"

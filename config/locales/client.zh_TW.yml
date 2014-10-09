@@ -901,7 +901,6 @@ zh_TW:
         edit: "抱歉，編輯你的文章時發生錯誤，請再試一次。"
         upload: "抱歉，上傳你的檔案時發生錯誤，請再試一次。"
         attachment_too_large: "抱歉，你想上傳的檔案太大 (最大限制為 {{max_size_kb}} kb)。"
-        image_too_large: "抱歉，你想上傳的圖片太大 (最大限制為 {{max_size_kb}} kb)，請將圖片縮小後再試一次。"
         too_many_uploads: "抱歉，一次只能上傳一個檔案。"
         upload_not_authorized: "抱歉，你想上傳的是不允許的檔案 (允許的副檔名: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "抱歉，新用戶不可上傳圖片。"
