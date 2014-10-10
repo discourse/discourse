@@ -951,7 +951,6 @@ es:
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
         attachment_too_large: "Lo siento, el archivo que estas intentando subir es demasiado grande (el tamaño máximo es {{max_size_kb}}kb)."
-        image_too_large: "Lo sentimos, la imagen que está intentando cargar es demasiado grande (el tamaño máximo es de {{max_size_kb}}kb), por favor, cambie el tamaño e inténtelo de nuevo."
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
         upload_not_authorized: "Lo sentimos, el archivo que intenta cargar no está autorizado (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir imágenes."

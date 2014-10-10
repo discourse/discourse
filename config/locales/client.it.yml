@@ -950,7 +950,6 @@ it:
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
         attachment_too_large: "Spiacenti, il file che stai tentando di caricare è troppo grande (il massimo consentito è {{max_size_kb}}kb)."
-        image_too_large: "Spiacenti, l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è {{max_size_kb}}kb). Ridimensionala e riprova."
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."

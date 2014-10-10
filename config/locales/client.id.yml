@@ -190,7 +190,6 @@ id:
     post:
       errors:
         attachment_too_large: "Maaf, file yang kamu unggah terlalu besar (ukuran maksimal {{max_size_kb}}kb)."
-        image_too_large: "Maaf, file yang kamu unggah terlalu besar (ukuran maksimal {{max_size_kb}}kb), mohon diperkecil dan coba lagi."
         image_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah gambar."
         attachment_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah lampiran."
       revisions:
