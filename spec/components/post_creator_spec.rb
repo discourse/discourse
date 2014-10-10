@@ -201,6 +201,31 @@ describe PostCreator do
           topic.reload
         }.to_not change { topic.excerpt }
       end
+
+      describe "topic's auto close" do
+
+        it "doesn't update topic's auto close when it's not based on last post" do
+          auto_close_time = 1.day.from_now
+          topic = Fabricate(:topic, auto_close_at: auto_close_time, auto_close_hours: 12)
+
+          PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
+          topic.reload
+
+          topic.auto_close_at.should be_within(1.second).of(auto_close_time)
+        end
+
+        it "updates topic's auto close date when it's based on last post" do
+          auto_close_time = 1.day.from_now
+          topic = Fabricate(:topic, auto_close_at: auto_close_time, auto_close_hours: 12, auto_close_based_on_last_post: true)
+
+          PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
+          topic.reload
+
+          topic.auto_close_at.should_not be_within(1.second).of(auto_close_time)
+        end
+
+      end
+
     end
 
     context 'when auto-close param is given' do
@@ -526,4 +551,3 @@ describe PostCreator do
   end
 
 end
-

@@ -1,27 +1,40 @@
 export default Ember.Component.extend({
   autoCloseValid: false,
+  limited: false,
 
-  label: function() {
-    return I18n.t( this.get('labelKey') || 'composer.auto_close_label' );
-  }.property('labelKey'),
+  autoCloseUnits: function() {
+    var key = this.get("limited") ? "composer.auto_close.limited.units"
+                                  : "composer.auto_close.all.units";
+    return I18n.t(key);
+  }.property("limited"),
 
-  autoCloseChanged: function() {
-    if( this.get('autoCloseTime') && this.get('autoCloseTime').length > 0 ) {
-      this.set('autoCloseTime', this.get('autoCloseTime').replace(/[^:\d-\s]/g, '') );
-    }
-    this.set('autoCloseValid', this.isAutoCloseValid());
-  }.observes('autoCloseTime'),
+  autoCloseExamples: function() {
+    var key = this.get("limited") ? "composer.auto_close.limited.examples"
+                                  : "composer.auto_close.all.examples";
+    return I18n.t(key);
+  }.property("limited"),
 
-  isAutoCloseValid: function() {
-    if (this.get('autoCloseTime')) {
-      var t = this.get('autoCloseTime').trim();
-      if (t.match(/^[\d]{4}-[\d]{1,2}-[\d]{1,2} [\d]{1,2}:[\d]{2}/)) {
-        return moment(t).isAfter(); // In the future
-      } else {
-        return (t.match(/^[\d]+$/) || t.match(/^[\d]{1,2}:[\d]{2}$/)) !== null;
-      }
-    } else {
+  _updateAutoCloseValid: function() {
+    var isValid = this._isAutoCloseValid(this.get("autoCloseTime"), this.get("limited"));
+    this.set("autoCloseValid", isValid);
+  }.observes("autoCloseTime", "limited"),
+
+  _isAutoCloseValid: function(autoCloseTime, limited) {
+    var t = (autoCloseTime || "").trim();
+    if (t.length === 0) {
+      // "empty" is always valid
       return true;
+    } else if (limited) {
+      // only # of hours in limited mode
+      return t.match(/^(\d+\.)?\d+$/);
+    } else {
+      if (t.match(/^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}(\s?[AP]M)?$/i)) {
+        // timestamp must be in the future
+        return moment(t).isAfter();
+      } else {
+        // either # of hours or absolute time
+        return (t.match(/^(\d+\.)?\d+$/) || t.match(/^\d{1,2}:\d{2}(\s?[AP]M)?$/i)) !== null;
+      }
     }
   }
 });

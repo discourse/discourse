@@ -3,6 +3,7 @@ class CategorySerializer < BasicCategorySerializer
   attributes :read_restricted,
              :available_groups,
              :auto_close_hours,
+             :auto_close_based_on_last_post,
              :group_permissions,
              :position,
              :email_in,
@@ -20,7 +21,7 @@ class CategorySerializer < BasicCategorySerializer
         }
       end
       if perms.length == 0 && !object.read_restricted
-        perms << {permission_type: CategoryGroup.permission_types[:full], group_name: :everyone}
+        perms << { permission_type: CategoryGroup.permission_types[:full], group_name: :everyone }
       end
       perms
     end
@@ -29,7 +30,6 @@ class CategorySerializer < BasicCategorySerializer
   def available_groups
     Group.order(:name).pluck(:name) - group_permissions.map{|g| g[:group_name]}
   end
-
 
   def can_delete
     true

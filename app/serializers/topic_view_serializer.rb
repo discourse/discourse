@@ -57,6 +57,8 @@ class TopicViewSerializer < ApplicationSerializer
   def details
     result = {
       auto_close_at: object.topic.auto_close_at,
+      auto_close_hours: object.topic.auto_close_hours,
+      auto_close_based_on_last_post: object.topic.auto_close_based_on_last_post,
       created_by: BasicUserSerializer.new(object.topic.user, scope: scope, root: false),
       last_poster: BasicUserSerializer.new(object.topic.last_poster, scope: scope, root: false)
     }

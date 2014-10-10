@@ -705,10 +705,16 @@ en:
       toggler: "hide or show the composer panel"
 
       admin_options_title: "Optional staff settings for this topic"
-      auto_close_label: "Auto-close topic time:"
-      auto_close_units: "(# of hours, a time, or a timestamp)"
-      auto_close_examples: 'enter absolute time or number of hours — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Please enter a valid value."
+      auto_close:
+        label: "Auto-close topic time:"
+        error: "Please enter a valid value."
+        based_on_last_post: "Auto-close based on last post."
+        all:
+          units: "(# of hours, a time or a timestamp)"
+          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
+        limited:
+          units: "(# of hours)"
+          examples: 'Enter number of hours (24).'
 
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"

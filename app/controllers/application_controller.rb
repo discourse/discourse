@@ -354,7 +354,6 @@ class ApplicationController < ActionController::Base
     def render_post_json(post, add_raw=true)
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
       post_serializer.add_raw = add_raw
-      post_serializer.topic_slug = post.topic.slug if post.topic.present?
 
       counts = PostAction.counts_for([post], current_user)
       if counts && counts = counts[post.id]
