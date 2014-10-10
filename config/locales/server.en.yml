@@ -1156,6 +1156,14 @@ en:
 
       This invitation is from a trusted user, so you won't need to log in.
 
+  invite_password_instructions:
+    subject_template: "Set password for your %{site_name} account"
+    text_body_template: |
+      Thanks for accepting your invitation to %{site_name} -- welcome!
+
+      To log in again, click the following link to choose a password:
+      %{base_url}/users/password-reset/%{email_token}
+
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
     text_body_template: |
