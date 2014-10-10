@@ -1,5 +1,5 @@
-require_dependency "export/exporter"
-require_dependency "import/importer"
+require "backup_restore/backuper"
+require "backup_restore/restorer"
 
 module BackupRestore
 
@@ -10,11 +10,11 @@ module BackupRestore
   LOGS_CHANNEL = "/admin/backups/logs"
 
   def self.backup!(user_id, opts={})
-    start! Export::Exporter.new(user_id, opts)
+    start! BackupRestore::Backuper.new(user_id, opts)
   end
 
   def self.restore!(user_id, filename, publish_to_message_bus=false)
-    start! Import::Importer.new(user_id, filename, publish_to_message_bus)
+    start! BackupRestore::Restorer.new(user_id, filename, publish_to_message_bus)
   end
 
   def self.rollback!
