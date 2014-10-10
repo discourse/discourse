@@ -114,5 +114,7 @@ h2#site-text-logo
   max-height: 1em;
   overflow: hidden;
   padding: 0;
-  margin: 0;
+  margin: 8px 0 0 0;
+  text-overflow: clip;
+  white-space: nowrap;
 }
