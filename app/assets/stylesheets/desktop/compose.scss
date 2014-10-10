@@ -300,6 +300,7 @@
       border: 1px dashed scale-color-diff();
       overflow: auto;
       visibility: visible;
+      cursor: default;
       video {
         max-width: 100%;
         height: auto;
