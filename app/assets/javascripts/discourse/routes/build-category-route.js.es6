@@ -61,13 +61,17 @@ export default function(filter, params) {
       });
     },
 
+    titleToken: function() {
+      var filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0}),
+          model = this.currentModel;
+
+      return I18n.t('filters.with_category', { filter: filterText, category: model.get('name') });
+    },
+
     setupController: function(controller, model) {
       var topics = this.get('topics'),
           periods = this.controllerFor('discovery').get('periods'),
-          periodId = topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : ''),
-          filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
-
-      Discourse.set('title', I18n.t('filters.with_category', { filter: filterText, category: model.get('name') }));
+          periodId = topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
 
       this.controllerFor('navigation/category').set('canCreateTopic', topics.get('can_create_topic'));
       this.controllerFor('discovery/topics').setProperties({

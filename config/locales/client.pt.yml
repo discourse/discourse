@@ -934,7 +934,6 @@ pt:
         edit: "Desculpe, houve um erro ao editar a sua mensagem. Por favor, tente outra vez."
         upload: "Desculpe, houve um erro ao enviar esse ficheiro. Por favor, tente outra vez."
         attachment_too_large: "Desculpe, o ficheiro que está a enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb)."
-        image_too_large: "Desculpe, o ficheiro que está a enviar é muito grande (o tamanho máximo é {{max_size_kb}}kb), por favor diminua-o e tente novamente."
         too_many_uploads: "Desculpe, apenas pode enviar um ficheiro de cada vez."
         upload_not_authorized: "Desculpe, o tipo de ficheiro que está a enviar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos utilizadores não podem enviar imagens."

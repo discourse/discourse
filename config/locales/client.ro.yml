@@ -1029,7 +1029,6 @@ ro:
         edit: "Ne pare rău , s-a semnalat o eroare în editarea postării dumneavoastră . Vă rugăm încercati iar."
         upload: "Ne pare rău ,s-a semnalat o eroare în încarcarea acelui fişier. Vă rugăm încercati iar."
         attachment_too_large: "Ne pare rău, fişierul pe care-l încarcaţi este prea mare (marimea maximă este de {{max_size_kb}}kb)."
-        image_too_large: "Ne pare rău, imaginea pe care o încarcaţi este prea mare (marimea maximă este de {{max_size_kb}}kb), redimensionaţi şi încercaţi iar."
         too_many_uploads: "Ne pare rău, puteţi încarca doar cate un fişier."
         upload_not_authorized: "Ne pare rău, fişierul pe care-l încarcaţi nu este autorizat (extensia pentru autorizare: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Ne pare rău, noul utilizator nu poate încarca imagini."

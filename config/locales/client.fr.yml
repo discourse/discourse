@@ -951,7 +951,6 @@ fr:
         edit: "Désolé, il y a eu une erreur lors de l'édition de votre message. Merci de réessayer."
         upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Merci de réessayer."
         attachment_too_large: "Désolé, le fichier que vous êtes en train d'envoyer est trop grand (taille maximum de {{max_size_kb}} Ko)."
-        image_too_large: "Désolé, l'image que vous êtes en train d'envoyer est trop grande (taille maximum de {{max_size_kb}} Ko). Merci de le redimensionner et de réessayer."
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
         upload_not_authorized: "Désolé, le fichier que vous êtes en train d'envoyer n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'image."

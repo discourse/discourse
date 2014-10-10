@@ -6,7 +6,7 @@ Discourse.Dialect.addPreProcessor(function(text) {
     if (!censorRegexp) {
       var split = censored.split("|");
       if (split && split.length) {
-        censorRegexp = new RegExp(split.map(function (t) { return "(" + t.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + ")"; }).join("|"), "ig");
+        censorRegexp = new RegExp("\\b" + split.map(function (t) { return "(" + t.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + ")"; }).join("|") + "\\b", "ig");
       }
     }
 
@@ -14,7 +14,7 @@ Discourse.Dialect.addPreProcessor(function(text) {
       var m = censorRegexp.exec(text);
       while (m && m[0]) {
         var replacement = new Array(m[0].length+1).join('&#9632;');
-        text = text.replace(m[0], replacement);
+        text = text.replace(new RegExp("\\b" + m[0] + "\\b", "ig"), replacement);
         m = censorRegexp.exec(text);
       }
 

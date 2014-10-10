@@ -10,6 +10,7 @@ var DiscourseResolver = require('discourse/ember/resolver').default;
 
 window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
+  _docTitle: null,
 
   getURL: function(url) {
     // If it's a non relative URL, return it.
@@ -25,13 +26,8 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
   Resolver: DiscourseResolver,
 
-  titleChanged: function() {
-    var title = "";
-
-    if (this.get('title')) {
-      title += "" + (this.get('title')) + " - ";
-    }
-    title += Discourse.SiteSettings.title;
+  _titleChanged: function() {
+    var title = this.get('_docTitle') || Discourse.SiteSettings.title;
 
     // if we change this we can trigger changes on document.title
     // only set if changed.
@@ -44,14 +40,14 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       title = "(" + notifyCount + ") " + title;
     }
 
-    if(title !== document.title) {
+    if (title !== document.title) {
       // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
       window.setTimeout(function() {
         document.title = ".";
         document.title = title;
       }, 200);
     }
-  }.observes('title', 'hasFocus', 'notifyCount'),
+  }.observes('_docTitle', 'hasFocus', 'notifyCount'),
 
   faviconChanged: function() {
     if(Discourse.User.currentProp('dynamic_favicon')) {

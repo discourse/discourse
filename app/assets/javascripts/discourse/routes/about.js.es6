@@ -5,9 +5,7 @@ export default Discourse.Route.extend({
     });
   },
 
-  setupController: function(controller, model) {
-    controller.set('model', model);
-    Discourse.set('title', I18n.t('about.simple_title'));
+  titleToken: function() {
+    return I18n.t('about.simple_title');
   }
 });
-
