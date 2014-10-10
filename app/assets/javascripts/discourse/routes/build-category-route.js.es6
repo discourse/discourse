@@ -79,7 +79,9 @@ export default function(filter, params) {
         category: model,
         period: periods.findBy('id', periodId),
         selected: [],
-        noSubcategories: params && !!params.no_subcategories
+        noSubcategories: params && !!params.no_subcategories,
+        order: model.get('params.order'),
+        ascending: model.get('params.ascending'),
       });
 
       this.controllerFor('search').set('searchContext', model.get('searchContext'));

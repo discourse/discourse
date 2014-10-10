@@ -45,6 +45,7 @@ export default function(filter, extras) {
         return 'queryParams.' + v;
       })));
 
+
       var periods = this.controllerFor('discovery').get('periods'),
           periodId = model.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
 
@@ -52,7 +53,9 @@ export default function(filter, extras) {
         model: model,
         category: null,
         period: periods.findBy('id', periodId),
-        selected: []
+        selected: [],
+        order: model.get('params.order'),
+        ascending: model.get('params.ascending'),
       });
 
       this.openTopicDraft(model);
