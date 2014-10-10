@@ -22,7 +22,7 @@
 
 .composer-popup {
 
-  @include box-shadow(3px 3px 3px rgba(0,0,0, 0.34));
+  box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
   background: dark-light-diff($highlight, $secondary, 50%, -80%);
 
   &.urgent {
