@@ -41,6 +41,9 @@ test('code', function() {
   format("[code]\nx++\n[/code]", "<pre><code class=\"lang-auto\">x++</code></pre>", "makes code into pre");
   format("[code]\nx++\ny++\nz++\n[/code]", "<pre><code class=\"lang-auto\">x++\ny++\nz++</code></pre>", "makes code into pre");
   format("[code]abc\n#def\n[/code]", '<pre><code class=\"lang-auto\">abc\n#def</code></pre>', 'it handles headings in a [code] block');
+  format("[code]\n   s[/code]",
+         "<pre><code class=\"lang-auto\">   s</code></pre>",
+         "it doesn't trim leading whitespace");
 });
 
 test('spoiler', function() {

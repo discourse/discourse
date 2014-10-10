@@ -188,7 +188,7 @@ Discourse.Dialect.replaceBlock({
   rawContents: true,
 
   emitter: function(blockContents) {
-    var inner = blockContents.join("\n").replace(/^\s+/,'');
+    var inner = blockContents.join("\n");
     return ['p', ['pre', ['code', {'class': Discourse.SiteSettings.default_code_lang}, inner]]];
   }
 });
