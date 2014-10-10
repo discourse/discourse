@@ -144,7 +144,7 @@
     border: 1px solid scale-color-diff();
     padding: 5px;
 
-    @include box-shadow(0 2px 2px rgba(0,0,0, .4));
+    box-shadow: 0 2px 2px rgba(0,0,0, .4);
 
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {

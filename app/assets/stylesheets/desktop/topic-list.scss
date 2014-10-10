@@ -124,7 +124,7 @@
   }
   .avatar {
     &.latest:not(.single) {
-      @include box-shadow(0 0 6px 1px desaturate(scale-color($tertiary, $lightness: 30%), 35%));
+      box-shadow: 0 0 6px 1px desaturate(scale-color($tertiary, $lightness: 30%), 35%);
     }
   }
 

@@ -130,7 +130,7 @@ nav.post-controls {
 
     &:active {
       background: dark-light-diff($tertiary, $secondary, 50%, -35%);
-    @include box-shadow(inset 0 1px 3px rgba(0,0,0, .3));
+    box-shadow: inset 0 1px 3px rgba(0,0,0, .3);
 
     }
 
@@ -154,7 +154,7 @@ nav.post-controls {
         }
 
         &:active {
-            @include box-shadow(inset 0 1px 3px rgba(0,0,0, .4));
+            box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
         }
 
         &.hidden {
@@ -929,7 +929,7 @@ $topic-avatar-width: 45px;
     }
     &:active {
       @include linear-gradient(darken($tertiary, 18%), darken($tertiary, 12%));
-      @include box-shadow(inset 0 1px 3px rgba(0,0,0, 0.2));
+      box-shadow: inset 0 1px 3px rgba(0,0,0, 0.2);
       color: $secondary;
     }
     &[disabled] {
@@ -1091,7 +1091,7 @@ and (max-width : 870px) {
     &.top {
       margin-left: 6%;
       width: 91%;
-
     }
   }
+
 }
