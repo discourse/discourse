@@ -1,16 +1,16 @@
-module Import
+module BackupRestore
 
-  class ImportDisabledError  < RuntimeError; end
+  class RestoreDisabledError  < RuntimeError; end
   class FilenameMissingError < RuntimeError; end
 
-  class Importer
+  class Restorer
 
     attr_reader :success
 
     def initialize(user_id, filename, publish_to_message_bus = false)
       @user_id, @filename, @publish_to_message_bus = user_id, filename, publish_to_message_bus
 
-      ensure_import_is_enabled
+      ensure_restore_is_enabled
       ensure_no_operation_is_running
       ensure_we_have_a_user
       ensure_we_have_a_filename
@@ -22,7 +22,7 @@ module Import
       log "[STARTED]"
       log "'#{@user_info[:username]}' has started the restore!"
 
-      mark_import_as_running
+      mark_restore_as_running
 
       listen_for_shutdown_signal
 
@@ -72,8 +72,8 @@ module Import
 
     protected
 
-    def ensure_import_is_enabled
-      raise Import::ImportDisabledError unless Rails.env.development? || SiteSetting.allow_restore?
+    def ensure_restore_is_enabled
+      raise Restore::RestoreDisabledError unless Rails.env.development? || SiteSetting.allow_restore?
     end
 
     def ensure_no_operation_is_running
@@ -88,7 +88,7 @@ module Import
     end
 
     def ensure_we_have_a_filename
-      raise Import::FilenameMissingError if @filename.nil?
+      raise Restore::FilenameMissingError if @filename.nil?
     end
 
     def initialize_state
@@ -115,7 +115,7 @@ module Import
       end
     end
 
-    def mark_import_as_running
+    def mark_restore_as_running
       log "Marking restore as running..."
       BackupRestore.mark_as_running!
     end
@@ -174,7 +174,7 @@ module Import
       log "  Current version: #{@current_version}"
       log "  Restored version: #{@metadata["version"]}"
 
-      error = "You're trying to import a more recent version of the schema. You should migrate first!"
+      error = "You're trying to restore a more recent version of the schema. You should migrate first!"
       raise error if @metadata["version"] > @current_version
     end
 
@@ -290,9 +290,9 @@ module Import
       if user = User.find_by(email: @user_info[:email])
         log "Notifying '#{user.username}' of the end of the restore..."
         if @success
-          SystemMessage.create_from_system_user(user, :import_succeeded)
+          SystemMessage.create_from_system_user(user, :restore_succeeded)
         else
-          SystemMessage.create_from_system_user(user, :import_failed, logs: @logs.join("\n"))
+          SystemMessage.create_from_system_user(user, :restore_failed, logs: @logs.join("\n"))
         end
       else
         log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
@@ -304,7 +304,7 @@ module Import
       remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
-      mark_import_as_not_running
+      mark_restore_as_not_running
       log "Finished!"
     end
 
@@ -328,7 +328,7 @@ module Import
       Discourse.disable_readonly_mode
     end
 
-    def mark_import_as_not_running
+    def mark_restore_as_not_running
       log "Marking restore as finished..."
       BackupRestore.mark_as_not_running!
     end

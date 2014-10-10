@@ -1,6 +1,6 @@
-module Export
+module BackupRestore
 
-  class Exporter
+  class Backuper
 
     attr_reader :success
 
@@ -19,7 +19,7 @@ module Export
       log "[STARTED]"
       log "'#{@user.username}' has started the backup!"
 
-      mark_export_as_running
+      mark_backup_as_running
 
       listen_for_shutdown_signal
 
@@ -95,7 +95,7 @@ module Export
       end
     end
 
-    def mark_export_as_running
+    def mark_backup_as_running
       log "Marking backup as running..."
       BackupRestore.mark_as_running!
     end
@@ -275,9 +275,9 @@ module Export
     def notify_user
       log "Notifying '#{@user.username}' of the end of the backup..."
       if @success
-        SystemMessage.create_from_system_user(@user, :export_succeeded)
+        SystemMessage.create_from_system_user(@user, :backup_succeeded)
       else
-        SystemMessage.create_from_system_user(@user, :export_failed, logs: @logs.join("\n"))
+        SystemMessage.create_from_system_user(@user, :backup_failed, logs: @logs.join("\n"))
       end
     end
 
@@ -286,7 +286,7 @@ module Export
       remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
-      mark_export_as_not_running
+      mark_backup_as_not_running
       log "Finished!"
     end
 
@@ -310,7 +310,7 @@ module Export
       Discourse.disable_readonly_mode
     end
 
-    def mark_export_as_not_running
+    def mark_backup_as_not_running
       log "Marking backup as finished..."
       BackupRestore.mark_as_not_running!
     end

@@ -1,4 +1,4 @@
-require_dependency "backup_restore"
+require "backup_restore/backup_restore"
 
 class Admin::BackupsController < Admin::AdminController
 

@@ -1383,14 +1383,16 @@ en:
 
         [prefs]: %{user_preferences_url}
 
-    export_succeeded:
-      subject_template: "Export completed successfully"
-      text_body_template: "The export was successful."
+    backup_succeeded:
+      subject_template: "Backup completed successfully"
+      text_body_template: "The backup was successful.
 
-    export_failed:
-      subject_template: "Export failed"
+      Visit the [admin > backup section](/admin/backups) to download your new backup."
+
+    backup_failed:
+      subject_template: "Backup failed"
       text_body_template: |
-        The export has failed.
+        The backup has failed.
 
         Here's the log:
 
