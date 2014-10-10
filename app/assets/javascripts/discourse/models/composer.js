@@ -521,7 +521,6 @@ Discourse.Composer = Discourse.Model.extend({
       admin: currentUser.get('admin'),
       yours: true,
       newPost: true,
-      auto_close_time: Discourse.Utilities.timestampFromAutocloseString(this.get('auto_close_time'))
     });
 
     if(post) {
@@ -562,6 +561,7 @@ Discourse.Composer = Discourse.Model.extend({
           // It's no longer a new post
           createdPost.set('newPost', false);
           topic.set('draft_sequence', result.draft_sequence);
+          topic.set('details.auto_close_at', result.topic_auto_close_at);
           postStream.commitPost(createdPost);
           addedToStream = true;
         } else {

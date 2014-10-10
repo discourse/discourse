@@ -93,18 +93,27 @@ div.ac-wrap {
   display: none;
 }
 
-
 .auto-close-fields {
+  div:not(:first-child) {
+    margin-top: 10px;
+  }
+  label {
+    font-size: 14px;
+  }
   input {
+    text-align: center;
     width: 150px;
   }
   .examples {
-    margin: 10px 0 0 0;
     color: $primary;
+    font-style: italic;
   }
 }
 
 .edit-auto-close-modal {
+  .btn.pull-right {
+    margin-right: 10px;
+  }
   form {
     margin: 0;
   }
@@ -115,6 +124,14 @@ div.ac-wrap {
     }
     input {
       margin: 0;
+    }
+  }
+}
+
+.edit-category-modal {
+  .auto-close-fields {
+    input[type=text] {
+      width: 50px;
     }
   }
 }

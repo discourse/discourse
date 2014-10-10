@@ -1,12 +1,7 @@
 <section class='field'>
-  <div class="auto-close-fields">
-    <div>
-      <i class="fa fa-clock-o"></i>
-      {{i18n category.auto_close_label}}
-      {{text-field value=auto_close_hours}}
-      {{i18n category.auto_close_units}}
-    </div>
-  </div>
+  {{auto-close-form autoCloseTime=auto_close_hours
+                    autoCloseBasedOnLastPost=auto_close_based_on_last_post
+                    limited="true" }}
 </section>
 
 <section class='field'>

@@ -75,15 +75,20 @@ class CategoriesController < ApplicationController
 
   def update
     guardian.ensure_can_edit!(@category)
-    json_result(@category, serializer: CategorySerializer) { |cat|
+
+    json_result(@category, serializer: CategorySerializer) do |cat|
+
       cat.move_to(category_params[:position].to_i) if category_params[:position]
+
       if category_params.key? :email_in and category_params[:email_in].length == 0
         # properly null the value so the database constrain doesn't catch us
         category_params[:email_in] = nil
       end
+
       category_params.delete(:position)
+
       cat.update_attributes(category_params)
-    }
+    end
   end
 
   def set_notifications
@@ -125,6 +130,7 @@ class CategoriesController < ApplicationController
                         :email_in_allow_strangers,
                         :parent_category_id,
                         :auto_close_hours,
+                        :auto_close_based_on_last_post,
                         :logo_url,
                         :background_url,
                         :allow_badges,

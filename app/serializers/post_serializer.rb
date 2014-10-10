@@ -1,8 +1,7 @@
 class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
-  attr_accessor :topic_slug,
-                :topic_view,
+  attr_accessor :topic_view,
                 :parent_post,
                 :add_raw,
                 :single_post_link_counts,
@@ -20,8 +19,9 @@ class PostSerializer < BasicPostSerializer
              :reads,
              :score,
              :yours,
-             :topic_slug,
              :topic_id,
+             :topic_slug,
+             :topic_auto_close_at,
              :display_username,
              :primary_group_name,
              :version,
@@ -52,6 +52,14 @@ class PostSerializer < BasicPostSerializer
              :user_custom_fields,
              :static_doc,
              :via_email
+
+  def topic_slug
+    object.try(:topic).try(:slug)
+  end
+
+  def topic_auto_close_at
+    object.try(:topic).try(:auto_close_at)
+  end
 
   def moderator?
     !!(object.try(:user).try(:moderator?))

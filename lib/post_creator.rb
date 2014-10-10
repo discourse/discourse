@@ -76,6 +76,7 @@ class PostCreator
       store_unique_post_key
       track_topic
       update_topic_stats
+      update_topic_auto_close
       update_user_counts
       create_embedded_topic
 
@@ -206,6 +207,12 @@ class PostCreator
     attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
     attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
     @topic.update_attributes(attrs)
+  end
+
+  def update_topic_auto_close
+    if @topic.auto_close_based_on_last_post && @topic.auto_close_hours
+      @topic.set_auto_close(@topic.auto_close_hours).save
+    end
   end
 
   def setup_post

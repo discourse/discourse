@@ -147,10 +147,14 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  attr_accessor :ignore_category_auto_close
+
   before_create do
     self.bumped_at ||= Time.now
     self.last_post_user_id ||= user_id
+
     if !@ignore_category_auto_close and self.category and self.category.auto_close_hours and self.auto_close_at.nil?
+      self.auto_close_based_on_last_post = self.category.auto_close_based_on_last_post
       set_auto_close(self.category.auto_close_hours)
     end
   end
@@ -158,7 +162,6 @@ class Topic < ActiveRecord::Base
   attr_accessor :skip_callbacks
 
   after_create do
-
     unless skip_callbacks
       changed_to_category(category)
       if archetype == Archetype.private_message
@@ -167,22 +170,18 @@ class Topic < ActiveRecord::Base
         DraftSequence.next!(user, Draft::NEW_TOPIC)
       end
     end
-
   end
 
   before_save do
-
     unless skip_callbacks
       if (auto_close_at_changed? and !auto_close_at_was.nil?) or (auto_close_user_id_changed? and auto_close_at)
         self.auto_close_started_at ||= Time.zone.now if auto_close_at
         Jobs.cancel_scheduled_job(:close_topic, {topic_id: id})
-        true
       end
       if category_id.nil? && (archetype.nil? || archetype == Archetype.default)
         self.category_id = SiteSetting.uncategorized_category_id
       end
     end
-
   end
 
   after_save do
@@ -193,7 +192,6 @@ class Topic < ActiveRecord::Base
         Jobs.enqueue_at(auto_close_at, :close_topic, {topic_id: id, user_id: auto_close_user_id || user_id})
       end
     end
-
   end
 
   # TODO move into PostRevisor or TopicRevisor
@@ -745,11 +743,6 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def auto_close_hours=(num_hours)
-    @ignore_category_auto_close = true
-    set_auto_close( num_hours )
-  end
-
   def self.auto_close
     Topic.where("NOT closed AND auto_close_at < ? AND auto_close_user_id IS NOT NULL", 1.minute.ago).each do |t|
       t.auto_close
@@ -773,28 +766,51 @@ class Topic < ActiveRecord::Base
   #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
   #  * nil, to prevent the topic from automatically closing.
   def set_auto_close(arg, by_user=nil)
-    if arg.is_a?(String) && matches = /^([\d]{1,2}):([\d]{1,2})$/.match(arg.strip)
-      now = Time.zone.now
-      self.auto_close_at = Time.zone.local(now.year, now.month, now.day, matches[1].to_i, matches[2].to_i)
-      self.auto_close_at += 1.day if self.auto_close_at < now
-    elsif arg.is_a?(String) && arg.include?('-') && timestamp = Time.zone.parse(arg)
-      self.auto_close_at = timestamp
-      self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
+    self.auto_close_hours = nil
+
+    if self.auto_close_based_on_last_post
+      num_hours = arg.to_f
+      if num_hours > 0
+        last_post_created_at = self.ordered_posts.last.try(:created_at) || Time.zone.now
+        self.auto_close_at = last_post_created_at + num_hours.hours
+        self.auto_close_hours = num_hours
+      else
+        self.auto_close_at = nil
+      end
     else
-      num_hours = arg.to_i
-      self.auto_close_at = (num_hours > 0 ? num_hours.hours.from_now : nil)
+      if arg.is_a?(String) && m = /^(\d{1,2}):(\d{2})(?:\s*[AP]M)?$/i.match(arg.strip)
+        now = Time.zone.now
+        self.auto_close_at = Time.zone.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
+        self.auto_close_at += 1.day if self.auto_close_at < now
+      elsif arg.is_a?(String) && arg.include?("-") && timestamp = Time.zone.parse(arg)
+        self.auto_close_at = timestamp
+        self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
+      else
+        num_hours = arg.to_f
+        if num_hours > 0
+          self.auto_close_at = num_hours.hours.from_now
+          self.auto_close_hours = num_hours
+        else
+          self.auto_close_at = nil
+        end
+      end
     end
 
-    unless self.auto_close_at.nil?
-      self.auto_close_started_at ||= Time.zone.now
-      if by_user && by_user.staff?
+    if self.auto_close_at.nil?
+      self.auto_close_started_at = nil
+    else
+      if self.auto_close_based_on_last_post
+        self.auto_close_started_at = Time.zone.now
+      else
+        self.auto_close_started_at ||= Time.zone.now
+      end
+      if by_user.try(:staff?)
         self.auto_close_user = by_user
       else
         self.auto_close_user ||= (self.user.staff? ? self.user : Discourse.system_user)
       end
-    else
-      self.auto_close_started_at = nil
     end
+
     self
   end
 

@@ -760,6 +760,9 @@ Discourse.PostStream = Em.Object.extend({
         return existing;
       }
 
+      // Update the auto_close_at value of the topic
+      this.set("topic.details.auto_close_at", post.get("topic_auto_close_at"));
+
       post.set('topic', this.get('topic'));
       postIdentityMap.set(post.get('id'), post);
 
@@ -822,7 +825,6 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Promise} a promise that will resolve to the posts in the order requested.
   **/
   loadIntoIdentityMap: function(postIds) {
-
     // If we don't want any posts, return a promise that resolves right away
     if (Em.isEmpty(postIds)) {
       return Ember.RSVP.resolve();
