@@ -105,8 +105,7 @@ div.ac-wrap {
     width: 150px;
   }
   .examples {
-    color: $primary;
-    font-style: italic;
+    color: lighten($primary, 40%);
   }
 }
 
