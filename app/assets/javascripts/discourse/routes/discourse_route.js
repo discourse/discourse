@@ -100,7 +100,10 @@ Discourse.Route.reopenClass({
     $('header ul.icons li').removeClass('active');
     $('[data-toggle="dropdown"]').parent().removeClass('open');
     // close the lightbox
-    if ($.magnificPopup && $.magnificPopup.instance) { $.magnificPopup.instance.close(); }
+    if ($.magnificPopup && $.magnificPopup.instance) {
+      $.magnificPopup.instance.close();
+      $('body').removeClass('mfp-zoom-out-cur');
+    }
 
     // Remove any link focus
     // NOTE: the '.not("body")' is here to prevent a bug in IE10 on Win7
