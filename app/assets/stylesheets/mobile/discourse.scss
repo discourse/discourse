@@ -106,3 +106,13 @@ blockquote {
 #simple-container {
   width: 90%;
 }
+
+// if the logo is text, it can't be too big or small width devices have issues
+h2#site-text-logo
+{
+  max-width: 135px;
+  max-height: 1em;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
