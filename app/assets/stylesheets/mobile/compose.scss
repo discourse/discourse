@@ -14,9 +14,10 @@ display: none;
 }
 
 #reply-control {
+  // used for upload link
   .composer-bottom-right {
     position: absolute;
-    bottom: -47px;
+    bottom: -32px;
     right: -5px;
   }
   .toggle-preview { display:none; }
@@ -126,13 +127,13 @@ display: none;
     }
     .contents {
       input#reply-title {
-        padding: 7px 10px;
+        padding: 5px;
         margin: 6px 10px 0 0;
-        width: 92%;
+        width: 94%;
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
-        top: 120px;
+        top: 110px;
       }
     }
   }
@@ -221,9 +222,8 @@ display: none;
     right: 10px;
     position: absolute;
     top: 40px;
-    bottom: 64px;
+    bottom: 50px;
     display: block;
-
 
     #wmd-input {
       width: 100%;
