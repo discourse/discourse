@@ -171,3 +171,19 @@
 .heatmap-low {color: scale-color($danger, $lightness: 25%) !important;}
 
 sup sup, sub sup, sup sub, sub sub { top: 0; }
+
+// inline editing of title on mobile
+.title-wrapper {
+  input#edit-title {
+    width: 95%;
+    padding: 5px;
+  }
+  .btn-small {
+    padding: 8px 12px;
+    margin: 6px 6px 0 0;
+  }
+  .select2-container {
+    margin-top: 8px;
+    width: 95% !important;
+  }
+}
