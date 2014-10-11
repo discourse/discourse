@@ -33,14 +33,6 @@
 // CSS3 properties
 // --------------------------------------------------
 
-// Box sizing
-
-@mixin box-sizing($sizing) {
-  -webkit-box-sizing: $sizing;
-     -moz-box-sizing: $sizing;
-          box-sizing: $sizing;
-}
-
 // Border radius
 
 @mixin border-radius-all($radius) {
