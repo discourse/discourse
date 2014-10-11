@@ -181,7 +181,6 @@
   .spinner {
     position: absolute;
     @include fades-in(0.25s);
-    @include border-radius-all(10px);
     left: 250px;
     top: 95px;
     height: 100px;
@@ -189,8 +188,7 @@
     height: 70px;
     text-indent: -9999em;
     background: {
-      color: #000;
-      image: image-url("spinner_96_w.gif");
+      image: image-url("spinner_96.gif");
       repeat: no-repeat;
       size: 35px;
       position: 17px 17px;

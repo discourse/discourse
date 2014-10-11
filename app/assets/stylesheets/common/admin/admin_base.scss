@@ -66,24 +66,6 @@ td.flaggers td {
   }
 }
 
-.admin-loading {
-  width: 100px;
-  margin: 0 auto 30px auto;
-  background-color: #000;
-  @include border-radius-all(10px);
-  padding: 10px 10px 10px 30px;
-  font-size: 15px;
-  line-height: 23px;
-  text-align: center;
-  color: $secondary;
-  background: {
-    image: image-url("spinner_96_w.gif");
-    repeat: no-repeat;
-    position: 10px 8px;
-    size: 25px;
-  };
-}
-
 .ip-lookup {
   position: relative;
   display: inline-block;

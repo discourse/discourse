@@ -9,7 +9,7 @@
 
 <div class="admin-container">
   {{#if loading}}
-    <div class='admin-loading'>{{i18n loading}}</div>
+    <div class='spinner'></div>
   {{else}}
     {{#if length}}
       <table class='admin-flags'>
@@ -160,7 +160,7 @@
         </tbody>
       </table>
       {{#if view.loading}}
-        <div class='admin-loading'>{{i18n loading}}</div>
+        <div class='spinner'></div>
       {{/if}}
 
     {{else}}
