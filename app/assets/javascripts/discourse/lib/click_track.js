@@ -86,7 +86,6 @@ Discourse.ClickTrack = {
     if (!$link.data('href')) {
       $link.addClass('no-href');
       $link.data('href', $link.attr('href'));
-      $link.attr('href', null);
       // Don't route to this URL
       $link.data('auto-route', true);
     }

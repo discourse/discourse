@@ -42,7 +42,7 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
       self.scrolled();
     });
 
-    this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
+    this.$().on('click.discourse-redirect', '.cooked a, a.track-link', function(e) {
       var selection = window.getSelection && window.getSelection();
       // bypass if we are selecting stuff
       if (selection.type === "Range" || selection.rangeCount > 0) { return true; }
@@ -61,7 +61,7 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     $(window).unbind('resize.discourse-on-scroll');
 
     // Unbind link tracking
-    this.$().off('mouseup.discourse-redirect', '.cooked a, a.track-link');
+    this.$().off('click.discourse-redirect', '.cooked a, a.track-link');
 
     this.resetExamineDockCache();
 
