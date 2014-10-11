@@ -419,17 +419,10 @@ background-color: scale-color($danger, $lightness: 75%);
   border-right: 0;
   padding-right: 4px;
   padding-left: 5px;
-  border-radius: 4px 0 0 4px;
 }
 
 .deleted-user-avatar {
   font-size: 36px;
-}
-
-.staff a {
-  border-radius: 4px;
-  padding: 4px;
-  margin: -4px 0 0 -4px;
 }
 
 span.btn-text {display: none;}
