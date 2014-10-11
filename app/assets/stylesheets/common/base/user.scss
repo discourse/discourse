@@ -44,7 +44,7 @@
     .btn {
       width: 100%;
       margin-bottom: 5px;
-      @include box-sizing(border-box);
+      box-sizing: border-box;
     }
   }
   h2 {
