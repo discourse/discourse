@@ -129,6 +129,7 @@ display: none;
       input#reply-title {
         padding: 7px 10px;
         margin: 6px 10px 0 0;
+        width: 92%;
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
@@ -138,10 +139,9 @@ display: none;
   }
   .contents {
     padding: 10px 10px 0 10px;
-    min-width: 1280px;
     .form-element {
       .select2-container {
-        width: 400px;
+        width: 99%;
         margin-top: 6px;
         a {
           padding-top: 4px;
@@ -151,18 +151,7 @@ display: none;
           margin-top: 4px;
         }
       }
-      .category-combobox {
-        width: 430px;
-        @include medium-width { width: 285px; }
-        @include small-width { width: 220px; }
 
-        .select2-drop {
-          left: -9000px;
-          width: 428px;
-          @include medium-width { width: 283px; }
-          @include small-width { width: 218px; }
-        }
-      }
     }
     .edit-reason-input, .display-edit-reason {
       display: none;
