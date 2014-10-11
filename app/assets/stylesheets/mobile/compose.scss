@@ -5,6 +5,7 @@
   width: 47%;
 }
 
+
 .composer-popup-container {
 display: none;
 }
@@ -186,7 +187,10 @@ display: none;
     }
   }
   .category-input {
-    display: inline;
+    // hack, select2 is using inline styles
+    .select2-container {
+      width: 99% !important;
+    }
   }
   .popup-tip .close {
     padding: 0 2px 2px 8px; // so my fingers can touch the little x
