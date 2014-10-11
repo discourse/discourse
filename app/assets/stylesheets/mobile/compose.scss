@@ -16,9 +16,8 @@ display: none;
 #reply-control {
   .composer-bottom-right {
     position: absolute;
-    bottom: -37px;
-    right: 5px;
-    margin-top: 0;
+    bottom: -47px;
+    right: -5px;
   }
   .toggle-preview { display:none; }
   .mobile-file-upload {
@@ -138,7 +137,7 @@ display: none;
     }
   }
   .contents {
-    padding: 10px 10px 0 10px;
+    padding: 8px 5px 0 5px;
     .form-element {
       .select2-container {
         width: 99%;
@@ -222,7 +221,7 @@ display: none;
     right: 10px;
     position: absolute;
     top: 40px;
-    bottom: 54px;
+    bottom: 64px;
     display: block;
 
 
@@ -234,12 +233,12 @@ display: none;
       margin: 0;
       background-color: $secondary;
       word-wrap: break-word;
+      box-sizing: border-box;
     }
     #wmd-input {
       position: absolute;
       left: 0;
       top: 0;
-      font-size: 16px;
     }
     .textarea-wrapper {
       position: relative;
