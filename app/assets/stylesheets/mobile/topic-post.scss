@@ -118,6 +118,7 @@ button {
 .post-actions {
   margin-left: 10px;
   margin-top: 2px;
+  display: inline-block;
 }
 
 a.reply-to-tab {
@@ -143,7 +144,7 @@ a.star {
 
 .topic-map {
 
-  margin: 30px 10px 10px 10px;
+  margin: 10px;
   background: scale-color(scale-color-diff(), $lightness: 40%);
 
   h3 {
