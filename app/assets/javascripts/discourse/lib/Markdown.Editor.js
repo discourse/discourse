@@ -38,7 +38,7 @@
         doc = window.document,
         re = window.RegExp,
         nav = window.navigator,
-        SETTINGS = { lineLength: 72 },
+        SETTINGS = { lineLength: 72 }
 
 
     var defaultsStrings = {
