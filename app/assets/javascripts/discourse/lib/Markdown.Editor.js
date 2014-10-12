@@ -307,20 +307,6 @@
 
     // A collection of the important regions on the page.
     // Cached so we don't have to keep traversing the DOM.
-    // Also holds ieCachedRange and ieCachedScrollTop, where necessary; working around
-    // this issue:
-    // Internet explorer has problems with CSS sprite buttons that use HTML
-    // lists.  When you click on the background image "button", IE will
-    // select the non-existent link text and discard the selection in the
-    // textarea.  The solution to this is to cache the textarea selection
-    // on the button's mousedown event and set a flag.  In the part of the
-    // code where we need to grab the selection, we check for the flag
-    // and, if it's set, use the cached area instead of querying the
-    // textarea.
-    //
-    // This ONLY affects Internet Explorer (tested on versions 6, 7
-    // and 8) and ONLY on button clicks.  Keyboard shortcuts work
-    // normally since the focus never leaves the textarea.
     function PanelCollection(postfix) {
         this.buttonBar = doc.getElementById("wmd-button-bar" + postfix);
         this.preview = doc.getElementById("wmd-preview" + postfix);
@@ -726,8 +712,7 @@
 
         this.setInputAreaSelectionStartEnd = function () {
 
-            if (!panels.ieCachedRange && (inputArea.selectionStart || inputArea.selectionStart === 0)) {
-
+            if (inputArea.selectionStart || inputArea.selectionStart === 0) {
                 stateObj.start = inputArea.selectionStart;
                 stateObj.end = inputArea.selectionEnd;
             }
@@ -735,10 +720,7 @@
 
                 stateObj.text = util.fixEolChars(inputArea.value);
 
-                // IE loses the selection in the textarea when buttons are
-                // clicked.  On IE we cache the selection. Here, if something is cached,
-                // we take it.
-                var range = panels.ieCachedRange || doc.selection.createRange();
+                var range = doc.selection.createRange();
 
                 var fixedRange = util.fixEolChars(range.text);
                 var marker = "\x07";
@@ -763,10 +745,6 @@
                     range.text = fixedRange;
                 }
 
-                if (panels.ieCachedRange)
-                    stateObj.scrollTop = panels.ieCachedScrollTop; // this is set alongside with ieCachedRange
-
-                panels.ieCachedRange = null;
 
                 this.setInputAreaSelection();
             }
@@ -1002,24 +980,6 @@
 
         var isFirstTimeFilled = true;
 
-        // IE doesn't let you use innerHTML if the element is contained somewhere in a table
-        // (which is the case for inline editing) -- in that case, detach the element, set the
-        // value, and reattach. Yes, that *is* ridiculous.
-        var ieSafePreviewSet = function (previewText) {
-            var ieSafeSet = function(panel, text) {
-              var parent = panel.parentNode;
-              var sibling = panel.nextSibling;
-              parent.removeChild(panel);
-              panel.innerHTML = text;
-              if (!sibling)
-                parent.appendChild(panel);
-              else
-                parent.insertBefore(panel, sibling);
-            };
-
-            ieSafeSet(panels.preview, previewText);
-        }
-
         var nonSuckyBrowserPreviewSet = function (previewText) {
             panels.preview.innerHTML = previewText;
         }
@@ -1031,13 +991,8 @@
             if (previewSetter)
                 return previewSetter(previewText);
 
-            try {
-                nonSuckyBrowserPreviewSet(previewText);
-                previewSetter = nonSuckyBrowserPreviewSet;
-            } catch (e) {
-                previewSetter = ieSafePreviewSet;
-                previewSetter(previewText);
-            }
+            nonSuckyBrowserPreviewSet(previewText);
+            previewSetter = nonSuckyBrowserPreviewSet;
         };
 
         var pushPreviewHtml = function (previewText) {
