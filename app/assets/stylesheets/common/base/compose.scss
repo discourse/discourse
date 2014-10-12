@@ -139,18 +139,8 @@ div.ac-wrap {
   .spinner {
     position: absolute;
     @include fades-in(0.25s);
-    left: 250px;
-    top: 95px;
-    height: 100px;
-    width: 70px;
-    height: 70px;
-    text-indent: -9999em;
-    background: {
-      image: image-url("spinner_96.gif");
-      repeat: no-repeat;
-      size: 35px;
-      position: 17px 17px;
-    };
+    left: 45%;
+    top: 20%;
   }
   &.loading {
     .spinner {
