@@ -40,11 +40,6 @@
         nav = window.navigator,
         SETTINGS = { lineLength: 72 },
 
-    // Used to work around some browser bugs where we can't use feature testing.
-        uaSniffed = {
-            isIE: /msie/.test(nav.userAgent.toLowerCase()),
-            isIE_5or6: /msie 6/.test(nav.userAgent.toLowerCase()) || /msie 5/.test(nav.userAgent.toLowerCase())
-        };
 
     var defaultsStrings = {
         bold: "Strong <strong> Ctrl+B",
@@ -496,7 +491,7 @@
                 }
             }
 
-            if (!uaSniffed.isIE || mode != "moving") {
+            if (mode != "moving") {
                 timer = setTimeout(refreshState, 1);
             }
             else {
@@ -681,7 +676,7 @@
             });
 
             var handlePaste = function () {
-                if (uaSniffed.isIE || (inputStateObj && inputStateObj.text != panels.input.value)) {
+                if (inputStateObj && inputStateObj.text != panels.input.value) {
                     if (timer == undefined) {
                         mode = "paste";
                         saveState();
@@ -1097,14 +1092,8 @@
 
             var fullTop = position.getTop(panels.input) - getDocScrollTop();
 
-            if (uaSniffed.isIE) {
-                setTimeout(function () {
-                    window.scrollBy(0, fullTop - emptyTop);
-                }, 0);
-            }
-            else {
-                window.scrollBy(0, fullTop - emptyTop);
-            }
+            window.scrollBy(0, fullTop - emptyTop);
+
         };
 
         var init = function () {
@@ -1132,27 +1121,14 @@
 
         style.position = "absolute";
         style.top = "0";
-
         style.zIndex = "2000";
-
-        if (uaSniffed.isIE) {
-            style.filter = "alpha(opacity=50)";
-        }
-        else {
-            style.opacity = "0.5";
-        }
+        style.opacity = "0.5";
 
         var pageSize = position.getPageSize();
         style.height = pageSize[1] + "px";
 
-        if (uaSniffed.isIE) {
-            style.left = doc.documentElement.scrollLeft;
-            style.width = doc.documentElement.clientWidth;
-        }
-        else {
-            style.left = "0";
-            style.width = "100%";
-        }
+        style.left = "0";
+        style.width = "100%";
 
         doc.body.appendChild(background);
         return background;
@@ -1279,11 +1255,6 @@
             dialog.style.top = "50%";
             dialog.style.left = "50%";
             dialog.style.display = "block";
-            if (uaSniffed.isIE_5or6) {
-                dialog.style.position = "absolute";
-                dialog.style.top = doc.documentElement.scrollTop + 200 + "px";
-                dialog.style.left = "50%";
-            }
             doc.body.appendChild(dialog);
 
             // This has to be done AFTER adding the dialog to the form if you
@@ -1388,15 +1359,6 @@
             }
         });
 
-        // special handler because IE clears the context of the textbox on ESC
-        if (uaSniffed.isIE) {
-            util.addEvent(inputBox, "keydown", function (key) {
-                var code = key.keyCode;
-                if (code === 27) {
-                    return false;
-                }
-            });
-        }
 
 
         // Perform the button's action.
@@ -1464,19 +1426,6 @@
 
             if (isEnabled) {
                 button.disabled = false
-
-                // IE tries to select the background image "button" text (it's
-                // implemented in a list item) so we have to cache the selection
-                // on mousedown.
-                if (uaSniffed.isIE) {
-                    button.onmousedown = function () {
-                        if (doc.activeElement && doc.activeElement !== panels.input) { // we're not even in the input box, so there's no selection
-                            return;
-                        }
-                        panels.ieCachedRange = document.selection.createRange();
-                        panels.ieCachedScrollTop = panels.input.scrollTop;
-                    };
-                }
 
                 if (!button.isHelp) {
                     button.onclick = function () {
