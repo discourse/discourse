@@ -127,13 +127,13 @@
       {{{notFoundHtml}}}
     {{else}}
       <div class="topic-error">
-        {{message}}
+        <div>{{message}}</div>
         {{#if noRetry}}
           {{#unless currentUser}}
             <button {{action "showLogin"}} class='btn btn-primary topic-retry'>{{fa-icon user}} {{i18n log_in}}</button>
           {{/unless}}
         {{else}}
-          <button class="btn btn-primary topic-retry" {{action "retryLoading"}}>{{i18n errors.buttons.again}}</button>
+          <button class="btn btn-primary topic-retry" {{action "retryLoading"}}><i class="fa fa-refresh"></i> {{i18n errors.buttons.again}}</button>
         {{/if}}
       </div>
       {{#if retrying}}
