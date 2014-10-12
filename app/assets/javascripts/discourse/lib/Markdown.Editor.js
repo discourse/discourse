@@ -38,7 +38,7 @@
         doc = window.document,
         re = window.RegExp,
         nav = window.navigator,
-        SETTINGS = { lineLength: 72 }
+        SETTINGS = { lineLength: 72 };
 
 
     var defaultsStrings = {
@@ -330,43 +330,21 @@
     // Returns true if the DOM element is visible, false if it's hidden.
     // Checks if display is anything other than none.
     util.isVisible = function (elem) {
-
-        if (window.getComputedStyle) {
-            // Most browsers
-            return window.getComputedStyle(elem, null).getPropertyValue("display") !== "none";
-        }
-        else if (elem.currentStyle) {
-            // IE
-            return elem.currentStyle["display"] !== "none";
-        }
+        return window.getComputedStyle(elem, null).getPropertyValue("display") !== "none";
     };
 
 
     // Adds a listener callback to a DOM element which is fired on a specified
     // event.
     util.addEvent = function (elem, event, listener) {
-        if (elem.attachEvent) {
-            // IE only.  The "on" is mandatory.
-            elem.attachEvent("on" + event, listener);
-        }
-        else {
-            // Other browsers.
-            elem.addEventListener(event, listener, false);
-        }
+        elem.addEventListener(event, listener, false);
     };
 
 
     // Removes a listener callback from a DOM element which is fired on a specified
     // event.
     util.removeEvent = function (elem, event, listener) {
-        if (elem.detachEvent) {
-            // IE only.  The "on" is mandatory.
-            elem.detachEvent("on" + event, listener);
-        }
-        else {
-            // Other browsers.
-            elem.removeEventListener(event, listener, false);
-        }
+        elem.removeEventListener(event, listener, false);
     };
 
     // Converts \r\n and \r to \n.
@@ -449,21 +427,8 @@
             scrollHeight = doc.body.offsetHeight;
         }
 
-        if (self.innerHeight) {
-            // Non-IE browser
-            innerWidth = self.innerWidth;
-            innerHeight = self.innerHeight;
-        }
-        else if (doc.documentElement && doc.documentElement.clientHeight) {
-            // Some versions of IE (IE 6 w/ a DOCTYPE declaration)
-            innerWidth = doc.documentElement.clientWidth;
-            innerHeight = doc.documentElement.clientHeight;
-        }
-        else if (doc.body) {
-            // Other versions of IE
-            innerWidth = doc.body.clientWidth;
-            innerHeight = doc.body.clientHeight;
-        }
+        innerWidth = self.innerWidth;
+        innerHeight = self.innerHeight;
 
         var maxWidth = Math.max(scrollWidth, innerWidth);
         var maxHeight = Math.max(scrollHeight, innerHeight);
@@ -594,8 +559,7 @@
 
             if ((event.ctrlKey || event.metaKey) && !event.altKey) {
 
-                // IE and Opera do not support charCode.
-                var keyCode = event.charCode || event.keyCode;
+                var keyCode = event.charCode;
                 var keyCodeChar = String.fromCharCode(keyCode);
 
                 switch (keyCodeChar.toLowerCase()) {
