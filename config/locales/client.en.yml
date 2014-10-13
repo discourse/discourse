@@ -141,19 +141,6 @@ en:
       one: "{{count}} character"
       other: "{{count}} characters"
 
-    in_n_seconds:
-      one: "in 1 second"
-      other: "in {{count}} seconds"
-    in_n_minutes:
-      one: "in 1 minute"
-      other: "in {{count}} minutes"
-    in_n_hours:
-      one: "in 1 hour"
-      other: "in {{count}} hours"
-    in_n_days:
-      one: "in 1 day"
-      other: "in {{count}} days"
-
     suggested_topics:
       title: "Suggested Topics"
 
@@ -885,6 +872,7 @@ en:
       deleted: "The topic has been deleted"
 
       auto_close_notice: "This topic will automatically close %{timeLeft}."
+      auto_close_notice_based_on_last_post: "This topic will close %{duration} after the last reply."
       auto_close_title: 'Auto-Close Settings'
       auto_close_save: "Save"
       auto_close_remove: "Don't Auto-Close This Topic"
