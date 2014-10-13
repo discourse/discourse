@@ -49,10 +49,8 @@
 
   .main-link {
     font-size: 16px;
-
-    i.score {
-      color: $success;
-      cursor: pointer;
+    a.title {
+      padding: 15px 0;
     }
   }
 
