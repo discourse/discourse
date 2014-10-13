@@ -1723,6 +1723,9 @@ en:
           love:
             name: 'love'
             description: "The like button's color."
+          wiki:
+            name: 'wiki'
+            description: "Base color used for the background of wiki posts."
 
 
       email:
