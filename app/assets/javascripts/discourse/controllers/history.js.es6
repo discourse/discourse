@@ -25,6 +25,20 @@ export default ObjectController.extend(ModalFunctionality, {
     });
   },
 
+  hide: function(postId, postVersion) {
+    var self = this;
+    Discourse.Post.hideRevision(postId, postVersion).then(function (result) {
+      self.refresh(postId, postVersion);
+    });
+  },
+
+  show: function(postId, postVersion) {
+    var self = this;
+    Discourse.Post.showRevision(postId, postVersion).then(function (result) {
+      self.refresh(postId, postVersion);
+    });
+  },
+
   createdAtDate: function() { return moment(this.get("created_at")).format("LLLL"); }.property("created_at"),
 
   previousVersion: function() { return this.get("version") - 1; }.property("version"),
@@ -34,6 +48,9 @@ export default ObjectController.extend(ModalFunctionality, {
   displayRevisions: Em.computed.gt("revisions_count", 2),
   displayGoToNext: function() { return this.get("version") < this.get("revisions_count"); }.property("version", "revisions_count"),
   displayGoToLast: function() { return this.get("version") < this.get("revisions_count") - 1; }.property("version", "revisions_count"),
+
+  displayShow: function() { return this.get("hidden") && Discourse.User.currentProp('staff'); }.property("hidden"),
+  displayHide: function() { return !this.get("hidden") && Discourse.User.currentProp('staff'); }.property("hidden"),
 
   displayingInline: Em.computed.equal("viewMode", "inline"),
   displayingSideBySide: Em.computed.equal("viewMode", "side_by_side"),
@@ -117,6 +134,9 @@ export default ObjectController.extend(ModalFunctionality, {
     loadPreviousVersion: function() { this.refresh(this.get("post_id"), this.get("version") - 1); },
     loadNextVersion: function() { this.refresh(this.get("post_id"), this.get("version") + 1); },
     loadLastVersion: function() { this.refresh(this.get("post_id"), this.get("revisions_count")); },
+
+    hideVersion: function() { this.hide(this.get("post_id"), this.get("version")); },
+    showVersion: function() { this.show(this.get("post_id"), this.get("version")); },
 
     displayInline: function() { this.set("viewMode", "inline"); },
     displaySideBySide: function() { this.set("viewMode", "side_by_side"); },

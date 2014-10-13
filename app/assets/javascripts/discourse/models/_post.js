@@ -471,6 +471,14 @@ Discourse.Post.reopenClass({
     });
   },
 
+  hideRevision: function(postId, version) {
+    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + "/hide", { type: 'PUT' });
+  },
+
+  showRevision: function(postId, version) {
+    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + "/show", { type: 'PUT' });
+  },
+
   loadQuote: function(postId) {
     return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
       var post = Discourse.Post.create(result);
