@@ -129,8 +129,9 @@ display: none;
     .contents {
       input#reply-title {
         padding: 5px;
-        margin: 6px 10px 0 0;
-        width: 94%;
+        margin-top: 6px;
+        width: 99%;
+        box-sizing: border-box;
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
