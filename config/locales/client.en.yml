@@ -1233,6 +1233,8 @@ en:
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
+          hide: "Hide revision"
+          show: "Show revision"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

@@ -6,6 +6,12 @@
       <div id="revision-numbers" {{bind-attr class="displayRevisions::invisible"}}>{{{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="version" totalBinding="revisions_count"}}}</div>
       <button title="{{i18n post.revisions.controls.next}}" {{bind-attr class=":btn :standard displayGoToNext::invisible" disabled=loading}} {{action "loadNextVersion"}}><i class="fa fa-forward"></i></button>
       <button title="{{i18n post.revisions.controls.last}}" {{bind-attr class=":btn :standard displayGoToLast::invisible" disabled=loading}} {{action "loadLastVersion"}}><i class="fa fa-fast-forward"></i></button>
+      {{#if displayHide}}
+        <button title="{{i18n post.revisions.controls.hide}}" {{bind-attr class=":btn :standard" disabled=loading}} {{action "hideVersion"}}><i class="fa fa-trash-o"></i></button>
+      {{/if}}
+      {{#if displayShow}}
+        <button title="{{i18n post.revisions.controls.show}}" {{bind-attr class=":btn :standard" disabled=loading}} {{action "showVersion"}}><i class="fa fa-undo"></i></button>
+      {{/if}}
     </div>
     {{#if loading}}<div id='revision-loading'><i class='fa fa-spinner fa-spin'></i>{{i18n loading}}</div>{{/if}}
     <div id="display-modes">

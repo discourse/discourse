@@ -29,8 +29,8 @@ class PostRevision < ActiveRecord::Base
   end
 
   def wiki_changes
-    prev = lookup("wiki", 0)
-    cur = lookup("wiki", 1)
+    prev = previous("wiki")
+    cur = current("wiki")
     return if prev == cur
 
     {
@@ -40,8 +40,8 @@ class PostRevision < ActiveRecord::Base
   end
 
   def post_type_changes
-    prev = lookup("post_type", 0)
-    cur = lookup("post_type", 1)
+    prev = previous("post_type")
+    cur = current("post_type")
     return if prev == cur
 
     {
@@ -75,46 +75,94 @@ class PostRevision < ActiveRecord::Base
   end
 
   def previous(field)
-    lookup_with_fallback(field, 0)
+    val = lookup(field)
+    if val.nil?
+      val = lookup_in_previous_revisions(field)
+    end
+
+    if val.nil?
+      val = lookup_in_post(field)
+    end
+
+    val
   end
 
   def current(field)
-    lookup_with_fallback(field, 1)
+    val = lookup_in_next_revision(field)
+    if val.nil?
+      val = lookup_in_post(field)
+    end
+
+    if val.nil?
+      val = lookup(field)
+    end
+
+    if val.nil?
+      val = lookup_in_previous_revisions(field)
+    end
+
+    return val
   end
 
   def previous_revisions
-    @previous_revs ||= PostRevision.where("post_id = ? AND number < ?", post_id, number)
+    @previous_revs ||= PostRevision.where("post_id = ? AND number < ? AND hidden = ?", post_id, number, false)
                                    .order("number desc")
                                    .to_a
+  end
+
+  def next_revision
+    @next_revision ||= PostRevision.where("post_id = ? AND number > ? AND hidden = ?", post_id, number, false)
+                                   .order("number asc")
+                                   .to_a.first
   end
 
   def has_topic_data?
     post && post.post_number == 1
   end
 
-  def lookup_with_fallback(field, index)
-
-    unless val = lookup(field, index)
-      previous_revisions.each do |v|
-        break if val = v.lookup(field, 1)
-      end
+  def lookup_in_previous_revisions(field)
+    previous_revisions.each do |v|
+      val = v.lookup(field)
+      return val unless val.nil?
     end
 
-    unless val
-      if ["cooked", "raw"].include?(field)
-        val = post.send(field)
-      else
-        val = post.topic.send(field)
-      end
+    nil
+  end
+
+  def lookup_in_next_revision(field)
+    if next_revision
+      return next_revision.lookup(field)
+    end
+  end
+
+  def lookup_in_post(field)
+    if !post
+      return
+    elsif ["cooked", "raw"].include?(field)
+      val = post.send(field)
+    elsif ["title", "category_id"].include?(field)
+      val = post.topic.send(field)
     end
 
     val
   end
 
-  def lookup(field, index)
-    if mod = modifications[field]
-      mod[index]
+  def lookup(field)
+    return nil if hidden
+    mod = modifications[field]
+    unless mod.nil?
+      mod[0]
     end
+  end
+
+  def hide!
+    self.hidden = true
+    self.save!
+  end
+
+  def show!
+    self.hidden = false
+    self.save!
   end
 
 end
