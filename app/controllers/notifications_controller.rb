@@ -37,4 +37,21 @@ class NotificationsController < ApplicationController
 
     render_serialized(notifications, NotificationSerializer)
   end
+
+  def reset_new
+    params.permit(:user)
+
+    user = current_user
+    if params[:user]
+      user = User.find_by_username(params[:user].to_s)
+    end
+
+    Notification.where(user_id: user.id).includes(:topic).where(read: false).update_all(read: true)
+
+    current_user.saw_notification_id(Notification.recent_report(current_user, 1).max)
+    current_user.reload
+    current_user.publish_notifications_state
+
+    render nothing: true
+  end
 end
