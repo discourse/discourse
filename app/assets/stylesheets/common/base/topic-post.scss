@@ -117,7 +117,7 @@ aside.quote {
 }
 
 .wiki .topic-body {
-  background-color: rgba(64, 128, 64, .05);
+  background-color: scale-color($wiki, $lightness: 95%);
 }
 
 .post-info {
@@ -129,7 +129,7 @@ aside.quote {
   }
   &.wiki {
     cursor: pointer;
-    color: rgb(64, 128, 64);
+    color: $wiki;
   }
   &.via-email {
     color: scale-color($primary, $lightness: 70%);
