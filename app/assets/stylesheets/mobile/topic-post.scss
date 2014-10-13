@@ -77,12 +77,13 @@ button {
   border: 1px solid scale-color-diff();
   position: absolute;
   text-align: left;
-  bottom: -26px;
-  left: 0;
+  bottom: 0;
+  left: 135px;
   z-index: 1000;
   display: none;
 
   h3 {
+    margin-top: 0;
     color: $primary;
     font-size: 1em;
   }
@@ -140,6 +141,7 @@ a.star {
   padding-top: 5px;
   padding-bottom: 0px;
   clear: both;
+  position: relative;
 }
 
 .topic-map {
@@ -446,8 +448,7 @@ blockquote > *:last-child {
 
 .gutter { display: none; }
 
-.posts-wrapper {  position: relative;
-}
+.posts-wrapper {  position: relative; }
 
 .topic-body.highlighted {
   background-color: scale-color($tertiary, $lightness: 75%);
