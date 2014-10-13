@@ -304,9 +304,12 @@ export default Discourse.View.extend({
   },
 
   clickAdmin: function() {
-    var $adminMenu = this.$('.post-admin-menu');
-    this.set('adminMenu', $adminMenu);
-    $adminMenu.show();
+    var $postAdminMenu = this.$(".post-admin-menu");
+    $postAdminMenu.show();
+    $("html").on("mouseup.post-admin-menu", function() {
+      $postAdminMenu.hide();
+      $("html").off("mouseup.post-admin-menu");
+    });
   },
 
   clickToggleWiki: function() {
