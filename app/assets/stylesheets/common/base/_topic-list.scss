@@ -50,7 +50,7 @@
   .main-link {
     font-size: 16px;
     a.title {
-      padding: 15px 0;
+      padding: 15px 10px 15px 0;
     }
   }
 
@@ -81,6 +81,18 @@
     }
     a.badge-posts {
       font-weight: bold;
+    }
+  }
+
+  .num.posts {
+    a {
+      padding: 15px 5px;
+    }
+  }
+
+  .num.activity {
+    a {
+      padding: 15px 5px;
     }
   }
 
