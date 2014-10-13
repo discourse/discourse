@@ -285,6 +285,7 @@ Discourse::Application.routes.draw do
 
   get "notifications" => "notifications#recent"
   get "notifications/history" => "notifications#history"
+  put "notifications/reset-new" => 'notifications#reset_new'
 
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: [:get, :post]
   match "/auth/failure", to: "users/omniauth_callbacks#failure", via: [:get, :post]

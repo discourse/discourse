@@ -46,5 +46,9 @@ Discourse.NotificationContainer.reopenClass({
     }).catch(function(error) {
       return Discourse.NotificationContainer.createFromError(error);
     });
+  },
+
+  resetNew: function() {
+    return Discourse.ajax("/notifications/reset-new", {type: 'PUT'});
   }
 });

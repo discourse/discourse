@@ -78,6 +78,10 @@ describe Notification do
         lambda { Fabricate(:notification, user: user); user.reload }.should change(user, :unread_notifications)
       end
 
+      it 'increases total_unread_notifications' do
+        lambda { Fabricate(:notification, user: user); user.reload }.should change(user, :total_unread_notifications)
+      end
+
       it "doesn't increase unread_private_messages" do
         lambda { Fabricate(:notification, user: user); user.reload }.should_not change(user, :unread_private_messages)
       end
@@ -86,6 +90,10 @@ describe Notification do
     context 'a private message' do
       it "doesn't increase unread_notifications" do
         lambda { Fabricate(:private_message_notification, user: user); user.reload }.should_not change(user, :unread_notifications)
+      end
+
+      it 'increases total_unread_notifications' do
+        lambda { Fabricate(:notification, user: user); user.reload }.should change(user, :total_unread_notifications)
       end
 
       it "increases unread_private_messages" do
@@ -141,6 +149,7 @@ describe Notification do
     it 'should create and rollup private message notifications' do
       @target.notifications.first.notification_type.should == Notification.types[:private_message]
       @post.user.unread_notifications.should == 0
+      @post.user.total_unread_notifications.should == 0
       @target.unread_private_messages.should == 1
 
       Fabricate(:post, topic: @topic, user: @topic.user)
@@ -197,6 +206,7 @@ describe Notification do
       user.reload
 
       user.unread_notifications.should == 0
+      user.total_unread_notifications.should == 2
       user.unread_private_messages.should == 1
     end
   end
