@@ -1,5 +1,6 @@
 
 export default Ember.ArrayController.extend({
+  needs: ['user-notifications'],
   canLoadMore: true,
   loading: false,
   showDismissButton: function() {
@@ -8,9 +9,9 @@ export default Ember.ArrayController.extend({
 
   actions: {
     resetNew: function() {
+      var self = this;
       Discourse.NotificationContainer.resetNew().then(function() {
-        var c = Discourse.__container__.lookup("controller:UserNotifications")
-        c.setEach("read", true)
+        self.get('controllers.user-notifications').setEach('read', true);
       });
     },
 
