@@ -35,7 +35,8 @@
             .addClass('lazyYT-image-loaded');
 
         $.getJSON('https://gdata.youtube.com/feeds/api/videos/' + id + '?v=2&alt=json', function (data) {
-            $('#lazyYT-title-' + id).text(data.entry.title.$t);
+            //$('#lazyYT-title-' + id).text(data.entry.title.$t);         //will only find a single element with a given id
+            $('p[id=lazyYT-title-' + id + ']').text(data.entry.title.$t); //will find all elements with given id
         });
 
         $el.on('click', function (e) {
