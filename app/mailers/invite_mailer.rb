@@ -42,4 +42,13 @@ class InviteMailer < ActionMailer::Base
 
   end
 
+  def send_password_instructions(user)
+    if user.present?
+      email_token = user.email_tokens.create(email: user.email)
+      build_email(user.email,
+                  template: 'invite_password_instructions',
+                  email_token: email_token.token)
+    end
+  end
+
 end
