@@ -54,7 +54,7 @@ module Email
       style('.previous-discussion', 'font-size: 17px; color: #444;')
       style('.notification-date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")
       style('.username', "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#3b5998;text-decoration:none;font-weight:bold")
-      style('.post-wrapper', "margin-bottom:25px;max-width:761px")
+      style('.post-wrapper', "margin-bottom:25px;")
       style('.user-avatar', 'vertical-align:top;width:55px;')
       style('.user-avatar img', nil, width: '45', height: '45')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
