@@ -6,6 +6,7 @@ class Admin::UserFieldsController < Admin::AdminController
 
   def create
     field = UserField.new(params.require(:user_field).permit(*Admin::UserFieldsController.columns))
+    field.required = params[:required] == "true"
     json_result(field, serializer: UserFieldSerializer) do
       field.save
     end
