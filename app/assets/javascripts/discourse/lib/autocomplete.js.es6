@@ -261,10 +261,8 @@ export default function(options) {
   $(this).keypress(function(e) {
     var caretPosition, term;
 
-    if (!options.key) return;
-
     // keep hunting backwards till you hit a the @ key
-    if (e.which === options.key.charCodeAt(0)) {
+    if (options.key && e.which === options.key.charCodeAt(0)) {
       caretPosition = Discourse.Utilities.caretPosition(me[0]);
       var prevChar = me.val().charAt(caretPosition - 1);
       if (!prevChar || /\s/.test(prevChar)) {
