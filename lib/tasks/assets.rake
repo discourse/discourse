@@ -39,7 +39,8 @@ task 'assets:precompile:before' do
     end
 
     def self.cache_compiled(type, data)
-      digest = Digest::SHA1.hexdigest(data)
+      # add cache breaker here if uglifier options change
+      digest = Digest::SHA1.hexdigest(data) << "v1"
       key = "SPROCKETS_#{type}_#{digest}"
       if compiled = redis.get(key)
         redis.expire(key, 1.week)
@@ -54,7 +55,9 @@ task 'assets:precompile:before' do
 
       def evaluate(context, locals, &block)
         ::Sprockets.cache_compiled("uglifier", data) do
-           Uglifier.new(:comments => :none, :screw_ie8 => false, :output => {max_line_len: 1024}).compile(data)
+           Uglifier.new(:comments => :none,
+                        :screw_ie8 => false,
+                        :output => {max_line_len: 1024}).compile(data)
         end
       end
 
