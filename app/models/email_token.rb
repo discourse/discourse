@@ -22,7 +22,7 @@ class EmailToken < ActiveRecord::Base
   end
 
   def self.confirm_valid_after
-    SiteSetting.email_token_grace_period_hours.ago
+    SiteSetting.email_token_grace_period_hours.hours.ago
   end
 
   def self.unconfirmed
