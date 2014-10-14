@@ -71,6 +71,11 @@ display: none;
   }
   .control-row {
     margin: 0 0 0 5px;
+    .reply-to {
+      overflow: hidden;
+      max-width: 92%;
+      white-space: nowrap;
+    }
   }
   .saving-text {
     display: none;
