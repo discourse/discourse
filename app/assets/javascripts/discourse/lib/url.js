@@ -129,7 +129,6 @@ Discourse.URL = Em.Object.createWithMixins({
       path = path.replace(rootURL, '');
     }
 
-
     // Rewrite /my/* urls
     if (path.indexOf('/my/') === 0) {
       var currentUser = Discourse.User.current();
@@ -139,6 +138,11 @@ Discourse.URL = Em.Object.createWithMixins({
         document.location.href = "/404";
         return;
       }
+    }
+
+    // Rewrite /groups paths
+    if (path.indexOf('/group/') === 0) {
+      path = path.replace('group/', 'groups/');
     }
 
     if (this.navigatedToPost(oldPath, path)) { return; }

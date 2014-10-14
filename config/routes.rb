@@ -269,6 +269,10 @@ Discourse::Application.routes.draw do
     get 'counts'
   end
 
+  # In case people try the wrong URL
+  get '/group/:id', to: redirect('/groups/%{id}')
+  get '/group/:id/members', to: redirect('/groups/%{id}/members')
+
   resources :posts do
     put "bookmark"
     put "wiki"

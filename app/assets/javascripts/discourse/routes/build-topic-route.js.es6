@@ -41,9 +41,11 @@ export default function(filter, extras) {
 
     setupController: function(controller, model, trans) {
 
-      controller.setProperties(Em.getProperties(trans, _.keys(queryParams).map(function(v){
-        return 'queryParams.' + v;
-      })));
+      if (trans) {
+        controller.setProperties(Em.getProperties(trans, _.keys(queryParams).map(function(v){
+          return 'queryParams.' + v;
+        })));
+      }
 
 
       var periods = this.controllerFor('discovery').get('periods'),
