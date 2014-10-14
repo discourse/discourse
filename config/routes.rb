@@ -277,6 +277,8 @@ Discourse::Application.routes.draw do
     put "unhide"
     get "replies"
     get "revisions/:revision" => "posts#revisions"
+    put "revisions/:revision/hide" => "posts#hide_revision"
+    put "revisions/:revision/show" => "posts#show_revision"
     put "recover"
     collection do
       delete "destroy_many"
