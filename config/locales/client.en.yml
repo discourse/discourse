@@ -2007,7 +2007,7 @@ en:
 
       user_fields:
         title: "User Fields"
-        help: "Any fields added here will be required from users when they sign up."
+        help: "Add fields that your users can fill out."
         create: "Create User Field"
         untitled: "Untitled"
         name: "Field Name"
