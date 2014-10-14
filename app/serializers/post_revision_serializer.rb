@@ -12,7 +12,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :category_changes,
              :user_changes,
              :wiki_changes,
-             :post_type_changes
+             :post_type_changes,
+             :hidden
 
   def include_title_changes?
     object.has_topic_data?
@@ -20,6 +21,10 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def include_category_changes?
     object.has_topic_data?
+  end
+
+  def hidden
+    object.hidden
   end
 
   def version
@@ -43,7 +48,7 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def edit_reason
-    object.lookup("edit_reason", 1)
+    object.current("edit_reason")
   end
 
   def user_changes

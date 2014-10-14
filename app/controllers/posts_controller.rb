@@ -216,6 +216,20 @@ class PostsController < ApplicationController
     render_json_dump(post_revision_serializer)
   end
 
+  def hide_revision
+    post_revision = find_post_revision_from_params
+    guardian.ensure_can_hide_post_revision! post_revision
+    post_revision.hide!
+    render nothing: true
+  end
+
+  def show_revision
+    post_revision = find_post_revision_from_params
+    guardian.ensure_can_show_post_revision! post_revision
+    post_revision.show!
+    render nothing: true
+  end
+
   def bookmark
     post = find_post_from_params
     if current_user
