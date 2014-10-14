@@ -1400,14 +1400,14 @@ en:
         %{logs}
         ```
 
-    import_succeeded:
-      subject_template: "Import completed successfully"
-      text_body_template: "The import was successful."
+    restore_succeeded:
+      subject_template: "Restore completed successfully"
+      text_body_template: "The restore was successful."
 
-    import_failed:
-      subject_template: "Import failed"
+    restore_failed:
+      subject_template: "Restore failed"
       text_body_template: |
-        The import has failed.
+        The restore has failed.
 
         Here's the log:
 
