@@ -93,6 +93,10 @@ Pleasure to have you here!
       )
     end
 
+    it "properly renders email reply from MS Outlook client" do
+      test_parse_body(fixture_file("emails/outlook.eml")).should == "Microsoft Outlook 2010"
+    end
+
     it "converts back to UTF-8 at the end" do
       result = test_parse_body(fixture_file("emails/big5.eml"))
       result.encoding.should == Encoding::UTF_8
