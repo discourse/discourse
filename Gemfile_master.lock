@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/rails/actionpack-action_caching.git
-  revision: a9f3f09477b12b51faa6756005eee4103f7f4030
-  specs:
-    actionpack-action_caching (1.1.0)
-      actionpack (>= 4.0.0, < 5.0)
-
-GIT
   remote: https://github.com/rails/rails.git
   revision: aa6637d140c2ebd28bbd23fc250af033a065dbe8
   specs:
@@ -79,6 +72,8 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    actionpack-action_caching (1.1.1)
+      actionpack (>= 4.0.0, < 5.0)
     active_model_serializers (0.8.2)
       activemodel (>= 3.0)
     addressable (2.3.6)
@@ -441,7 +436,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionpack-action_caching!
+  actionpack-action_caching
   active_model_serializers (~> 0.8.0)
   annotate
   barber
