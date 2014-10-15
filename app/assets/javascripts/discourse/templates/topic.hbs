@@ -17,9 +17,9 @@
           {{#if editingTopic}}
             {{#if isPrivateMessage}}
               <span class="private-message-glyph">{{fa-icon envelope}}</span>
-              {{text-field id='edit-title' value=newTitle maxLength=maxTitleLength}}
+              {{autofocus-text-field id='edit-title' value=newTitle maxLength=maxTitleLength}}
             {{else}}
-              {{text-field id='edit-title' value=newTitle maxLength=maxTitleLength}}
+              {{autofocus-text-field id='edit-title' value=newTitle maxLength=maxTitleLength}}
               </br>
               {{category-chooser valueAttribute="id" value=newCategoryId source=category_id}}
             {{/if}}
