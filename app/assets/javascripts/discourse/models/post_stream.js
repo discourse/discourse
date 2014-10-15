@@ -259,6 +259,31 @@ Discourse.PostStream = Em.Object.extend({
   },
   hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
 
+  collapsePosts: function(from, to){
+    var posts = this.get('posts');
+    var remove = posts.filter(function(post){
+      var postNumber = post.get('post_number');
+      return postNumber >= from && postNumber <= to;
+    });
+
+    posts.removeObjects(remove);
+
+    // make gap
+    this.set('gaps', this.get('gaps') || {before: {}, after: {}});
+    var before = this.get('gaps.before');
+
+    var post = posts.find(function(post){
+      return post.get('post_number') > to;
+    });
+
+    before[post.get('id')] = remove.map(function(post){
+      return post.get('id');
+    });
+    post.set('hasGap', true);
+
+    this.get('stream').enumerableContentDidChange();
+  },
+
 
   /**
     Fill in a gap of posts before a particular post
@@ -291,6 +316,7 @@ Discourse.PostStream = Em.Object.extend({
 
           delete self.get('gaps.before')[postId];
           self.get('stream').enumerableContentDidChange();
+          post.set('hasGap', false);
         });
       }
     }
