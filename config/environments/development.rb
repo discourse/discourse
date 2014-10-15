@@ -18,7 +18,6 @@ Discourse::Application.configure do
 
   # Do not compress assets
   config.assets.compress = false
-  config.assets.js_compressor = Uglifier.new(output: {max_line_len: 1024})
 
   # Don't Digest assets, makes debugging uglier
   config.assets.digest = false
