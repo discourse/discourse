@@ -34,6 +34,11 @@ module FileStore
       "/uploads/#{RailsMultisite::ConnectionManagement.current_db}"
     end
 
+    def download_url(upload)
+      return unless upload
+      "#{relative_base_url}/#{upload.sha1}"
+    end
+
     def external?
       !internal?
     end
