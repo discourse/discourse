@@ -183,7 +183,16 @@ describe UserNotifications do
 
   def expects_build_with(condition)
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
-    UserNotifications.send(mail_type, user, notification: notification, post: notification.post)
+    mailer = UserNotifications.send(mail_type, user, notification: notification, post: notification.post)
+
+    if rails_master?
+      # Starting from Rails 4.2, calling MyMailer.some_method no longer result
+      # in an immediate call to MyMailer#some_method. Instead, a "lazy proxy" is
+      # returned (this is changed to support #deliver_later). As a quick hack to
+      # fix the test, calling #message (or anything, really) would force the
+      # Mailer object to be created and the method invoked.
+      mailer.message
+    end
   end
 
   shared_examples "supports reply by email" do
