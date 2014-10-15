@@ -38,7 +38,7 @@ end
 message = EmailTestMailer.email_test(MAILFROM, MAILTO)
 
 begin
-  message.deliver()
+  message.deliver_now()
 rescue SocketError => e
   print "Delivery failed: "+e.message.strip()+"\n"
   print " Is the server hostname correct?\n"
