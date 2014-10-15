@@ -20,11 +20,11 @@ class TopicList
 
   def preload_key
     if @opts[:category]
-      c = Category.find(@opts[:category_id])
-      "topic_list_#{c.url.sub(/^\//, '')}/l/#{@filter}"
-    else
-      "topic_list_#{@filter}"
+      c = Category.where(id: @opts[:category_id]).first
+      return "topic_list_#{c.url.sub(/^\//, '')}/l/#{@filter}" if c
     end
+
+    "topic_list_#{@filter}"
   end
 
   # Lazy initialization
