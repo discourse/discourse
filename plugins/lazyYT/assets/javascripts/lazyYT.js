@@ -33,7 +33,9 @@
         })
             .html('<p id="lazyYT-title-' + id + '" class="lazyYT-title"></p><div class="lazyYT-button"></div>')
             .addClass('lazyYT-image-loaded');
-            $el_title = $el.find("p.lazyYT-title");  //get reference to the current container title element
+            
+        var $el_title = $el.find("p.lazyYT-title");  //get reference to the current container title element
+        
         $.getJSON('https://gdata.youtube.com/feeds/api/videos/' + id + '?v=2&alt=json', function (data) {
             $el_title.text(data.entry.title.$t); 
         });
