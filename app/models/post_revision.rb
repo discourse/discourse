@@ -6,6 +6,30 @@ class PostRevision < ActiveRecord::Base
 
   serialize :modifications, Hash
 
+  def self.ensure_consistency!
+    # 1 - fix the numbers
+    sql = <<-SQL
+      UPDATE post_revisions
+         SET number = pr.rank
+        FROM (SELECT id, ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY number, created_at, updated_at) AS rank FROM post_revisions) AS pr
+       WHERE post_revisions.id = pr.id
+         AND post_revisions.number <> pr.rank
+    SQL
+
+    PostRevision.exec_sql(sql)
+
+    # 2 - fix the versions on the posts
+    sql = <<-SQL
+      UPDATE posts
+         SET version = pv.version
+        FROM (SELECT post_id, MAX(number) AS version FROM post_revisions GROUP BY post_id) AS pv
+       WHERE posts.id = pv.post_id
+         AND posts.version <> pv.version
+    SQL
+
+    PostRevision.exec_sql(sql)
+  end
+
   def body_changes
     cooked_diff = DiscourseDiff.new(previous("cooked"), current("cooked"))
     raw_diff = DiscourseDiff.new(previous("raw"), current("raw"))

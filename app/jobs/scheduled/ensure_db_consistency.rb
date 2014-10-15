@@ -9,6 +9,7 @@ module Jobs
       Notification.ensure_consistency!
       UserAction.ensure_consistency!
       TopicFeaturedUsers.ensure_consistency!
+      PostRevision.ensure_consistency!
       UserStat.update_view_counts(13.hours.ago)
     end
   end
