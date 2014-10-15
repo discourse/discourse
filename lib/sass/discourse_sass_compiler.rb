@@ -1,4 +1,5 @@
 require_dependency 'sass/discourse_sass_importer'
+require 'pathname'
 
 class DiscourseSassCompiler
 
@@ -41,7 +42,8 @@ class DiscourseSassCompiler
       env = env.instance_variable_get('@environment')
     end
 
-    context = env.context_class.new(env, "#{@target}.scss", "app/assets/stylesheets/#{@target}.scss")
+    pathname = Pathname.new("app/assets/stylesheets/#{@target}.scss")
+    context = env.context_class.new(env, "#{@target}.scss", pathname)
 
     debug_opts = Rails.env.production? ? {} : {
       line_numbers: true,
