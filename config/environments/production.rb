@@ -13,7 +13,7 @@ Discourse::Application.configure do
   config.serve_static_assets = GlobalSetting.serve_static_assets
 
   if defined?(Uglifier)
-    config.assets.js_compressor = Uglifier.new(output: {max_line_len: 1024})
+    config.assets.js_compressor = Uglifier.new(output: {max_line_len: 1024}, screw_ie8: false)
   else
     config.assets.js_compressor = :uglifier
   end
