@@ -1,6 +1,6 @@
 import UserField from 'admin/models/user-field';
 
-export default Ember.Route.extend({
+export default Discourse.Route.extend({
   model: function() {
     return UserField.findAll();
   },

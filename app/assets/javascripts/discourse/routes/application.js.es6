@@ -1,4 +1,4 @@
-var ApplicationRoute = Em.Route.extend({
+var ApplicationRoute = Discourse.Route.extend({
 
   siteTitle: Discourse.computed.setting('title'),
 
