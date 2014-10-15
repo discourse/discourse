@@ -23,7 +23,7 @@
         <tr class="input">
               <td class="label"><label for='new-account-email'>{{i18n user.email.title}}</label></td>
               <td>
-              {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated}}
+              {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated name="email"}}
               &nbsp;{{input-tip validation=emailValidation}}
               </td>
         </tr>
@@ -35,7 +35,7 @@
         <tr class="input">
               <td class="label"><label for='new-account-username'>{{i18n user.username.title}}</label></td>
               <td>
-              {{input value=accountUsername id="new-account-username" maxlength=maxUsernameLength}}
+              {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength}}
               &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
               </td>
         </tr>
