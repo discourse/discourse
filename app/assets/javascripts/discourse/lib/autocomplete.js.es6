@@ -259,19 +259,20 @@ export default function(options) {
   });
 
   $(this).keypress(function(e) {
-    var caretPosition = Discourse.Utilities.caretPosition(me[0]),
-        term;
+    var caretPosition, term;
 
     if (!options.key) return;
 
     // keep hunting backwards till you hit a the @ key
     if (e.which === options.key.charCodeAt(0)) {
+      caretPosition = Discourse.Utilities.caretPosition(me[0]);
       var prevChar = me.val().charAt(caretPosition - 1);
       if (!prevChar || /\s/.test(prevChar)) {
         completeStart = completeEnd = caretPosition;
         updateAutoComplete(options.dataSource(""));
       }
     } else if ((completeStart !== null) && (e.charCode !== 0)) {
+      caretPosition = Discourse.Utilities.caretPosition(me[0]),
       term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
       term += String.fromCharCode(e.charCode);
       updateAutoComplete(options.dataSource(term));
