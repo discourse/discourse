@@ -71,11 +71,11 @@ gem 'seed-fu', '~> 2.3.3'
 
 if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
-  gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
 else
   gem 'rails'
-  gem 'actionpack-action_caching'
 end
+
+gem 'actionpack-action_caching'
 gem 'rails-observers'
 
 # Rails 4.1.6+ will relax the mail gem version requirement to `~> 2.5, >= 2.5.4`.
