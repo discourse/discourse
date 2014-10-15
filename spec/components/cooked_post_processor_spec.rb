@@ -90,7 +90,7 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        cpp.html.should match_html '<div class="lightbox-wrapper"><a href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" width="690" height="1380"><div class="meta">
+        cpp.html.should match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" width="690" height="1380"><div class="meta">
 <span class="filename">logo.png</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
 </div></a></div>'
         cpp.should be_dirty

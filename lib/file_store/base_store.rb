@@ -23,6 +23,9 @@ module FileStore
     def relative_base_url
     end
 
+    def download_url(upload)
+    end
+
     def external?
     end
 
