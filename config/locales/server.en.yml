@@ -1107,6 +1107,7 @@ en:
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
+    close_window: "Authentication is complete. Close this window to continue."
 
   user:
     no_accounts_associated: "No accounts associated"
