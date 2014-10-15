@@ -112,14 +112,21 @@ describe UserNotifications do
       # in mailing list mode user_replies is not sent through
       response.user.mailing_list_mode = true
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
-      mail.class.should == ActionMailer::Base::NullMail
 
+      if rails_master?
+        mail.message.class.should == ActionMailer::Base::NullMail
+      else
+        mail.class.should == ActionMailer::Base::NullMail
+      end
 
       response.user.mailing_list_mode = nil
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
-      mail.class.should_not == ActionMailer::Base::NullMail
-
+      if rails_master?
+        mail.message.class.should_not == ActionMailer::Base::NullMail
+      else
+        mail.class.should_not == ActionMailer::Base::NullMail
+      end
     end
   end
 
