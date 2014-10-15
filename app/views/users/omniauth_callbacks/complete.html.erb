@@ -1,9 +1,30 @@
+<!DOCTYPE html>
 <html>
-  <head></head>
-  <body>
+<head>
+  <title><%= SiteSetting.title %></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style type="text/css">
+    body { background-color: #fff; color: #666; text-align: center; font-family: arial, sans-serif; }
+    div.dialog {
+      width: 90%;
+      padding: 0 1em;
+      margin: 2em auto 0 auto;
+      border: 1px solid #ccc;
+      border-right-color: #999;
+      border-bottom-color: #999;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dialog">
+    <p><%=t "login.close_window" %></p>
+
     <script type="text/javascript">
       window.opener.Discourse.authenticationComplete(<%=@data.to_client_hash.to_json.html_safe%>);
       window.close();
     </script>
-  </body>
+  </div>
+</body>
 </html>
