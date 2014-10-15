@@ -54,7 +54,7 @@ task 'assets:precompile:before' do
 
       def evaluate(context, locals, &block)
         ::Sprockets.cache_compiled("uglifier", data) do
-           Uglifier.new(:comments => :none, screw_ie8 => false, :output => {max_line_len: 1024}).compile(data)
+           Uglifier.new(:comments => :none, :screw_ie8 => false, :output => {max_line_len: 1024}).compile(data)
         end
       end
 
