@@ -21,6 +21,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
       // Note normally you don't have to trigger this, but topic titles can be updated
       // and are sometimes lazily loaded.
+      console.log(title);
       this.send('refreshTitle');
     }
   }.observes('title'),

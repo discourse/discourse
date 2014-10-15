@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.Route = Em.Route.extend({
+Discourse.Route = Ember.Route.extend({
 
   /**
     NOT called every time we enter a route on Discourse.

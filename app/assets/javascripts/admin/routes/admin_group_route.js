@@ -1,4 +1,4 @@
-Discourse.AdminGroupRoute = Em.Route.extend({
+Discourse.AdminGroupRoute = Discourse.Route.extend({
 
   model: function(params) {
     var groups = this.modelFor('adminGroups'),

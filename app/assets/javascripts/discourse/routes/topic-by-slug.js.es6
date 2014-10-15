@@ -1,4 +1,4 @@
-export default Ember.Route.extend({
+export default Discourse.Route.extend({
   model: function(params) {
     return Discourse.Topic.idForSlug(params.slug);
   },
