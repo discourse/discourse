@@ -6,6 +6,13 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 nl:
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -27,6 +34,7 @@ nl:
   errors:
     messages:
       too_long_validation: "is beperkt tot %{max} tekens; je gebruikt %{length}."
+      invalid_boolean: "Ongeldige boolean."
     embed:
       load_from_remote: "Er ging iets mis bij het laden van dat bericht."
   bulk_invite:
@@ -102,6 +110,7 @@ nl:
       admins: "admins"
       moderators: "moderators"
       staff: "staf"
+      trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
@@ -231,6 +240,7 @@ nl:
       title: "vaste bezoeker"
     elder:
       title: "leider"
+    change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trustlevel is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'. Als je de gebruiker wil degraderen, zet het trustlevel dan eerst vast."
   rate_limiter:
     slow_down: "Je hebt deze actie te vaak uitgevoerd. Probeer het later nog een keer."
     too_many_requests: "Er is een dagelijks limiet voor hoe vaak je dat kan doen. Wacht %{time_left} voordat je dit opnieuw probeert."
@@ -537,9 +547,28 @@ nl:
   site_settings:
     default_locale: "De standaard taal van dit Discourse forum (ISO 639-1 code)"
     allow_user_locale: "Gebruikers kunnen zelf een taal instellen voor de interface van de site"
+    min_post_length: "Minimum lengte van een bericht in tekens"
+    min_private_message_post_length: "Minimum lengte van een privé-bericht in tekens"
+    max_post_length: "Maximum lengte van een bericht in tekens"
+    min_topic_title_length: "Minimum lengte van een topictitel"
+    max_topic_title_length: "Maximum lengte van een topictitel"
+    min_private_message_title_length: "Minimum lengte van de titel van een privé-bericht in tekens"
+    min_search_term_length: "Minimum lengte van een zoekterm in tekens"
     allow_uncategorized_topics: "Sta topics zonder categorie toe"
+    allow_duplicate_topic_titles: "Sta topics met dezelfde titels toe"
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
+    title: "Korte titel van deze website, wordt gebruikt in de titeltag"
+    site_description: "Omschrijf dit forum in een zin. Deze wordt getoond in de meta omschrijvingstag."
+    contact_email: "E-mailadres van een contactpersoon van deze site. Belangrijke updates van Discourse.org worden naar dit adres gestuurd."
+    company_full_name: "ACHTERHAALD. Wordt niet meer gebruikt en zal verwijderd worden. De volledige naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos en /privacy"
+    company_short_name: "ACHTERHAALD. Wordt niet meer gebruikt en zal verwijderd worden. De korte naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos en /privacy"
+    company_domain: "ACHTERHAALD. Wordt niet meer gebruikt en zal verwijderd worden. De domeinnaam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos en /privacy"
     queue_jobs: "DEVELOPERS ONLY! WARNING! Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
+    crawl_images: "Haal afbeeldingen van externe URLs om de correcte breedte- en hoogtedimensies in te voegen"
+    download_remote_images_to_local: "Download externe afbeeldingen en sla ze lokaal op. Dit voorkomt dat afbeeldingen niet meer beschikbaar zouden kunnen worden."
+    download_remote_images_threshold: "Minimum schijfruimte vereist om externe afbeeldingen lokaal te downloaden (percentage)"
+    ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in (n) seconden."
+    post_edit_time_limit: "Berichten mogen na (n) minuten nog gewijzigd of verwijderd worden door de schrijver. Gebruik 0 voor onbeperkt."
     category_featured_topics: "Aantal topics dat wordt weergegeven in de categorielijst. An het wijzigen van dit getal kan het tot 15 minuten duren voordat de lijst is bijgewerkt."
     exclude_rel_nofollow_domains: "Een pipe-gescheiden lijst van domeinen waar 'nofollow' niet is toegevoegd (voorbeelddomein.com zal automatisch sub.voorbeelddomein.com toestaan)."
     favicon_url: "Een favicon voor je site. Zie http://nl.wikipedia.org/wiki/Favicon"
@@ -566,6 +595,9 @@ nl:
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
     topics_per_period_in_top_summary: "Aantal topics in het top-topics overzicht"
+    redirect_users_to_top_page: "Stuur nieuwe en lang-niet-geziene gebruikers door naar de top-pagina"
+    enable_badges: "Activeer het badgesysteem"
+    allow_index_in_robots_txt: "Specificeer in robots.txt dat de site geïndexeerd mag worden door zoekmachines."
     port: "DEVELOPER ONLY! WARNING! Mocht je een specifieke poort willen toewijzen aan de URL. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     force_hostname: "DEVELOPER ONLY! WARNING! Mocht je een specifieke hostname willen toewijzen. Handig in ontwikkelaars-modus. Laat leeg voor geen toewijzing."
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
@@ -717,6 +749,7 @@ nl:
     new_registrations_disabled: "Het registeren van nieuwe accounts is niet toegestaan op dit moment."
     password_too_long: "Wachtwoorden mogen maximaal 200 tekens lang zijn."
   user:
+    no_accounts_associated: "Geen accounts gekoppeld"
     username:
       short: "moet ten minste %{min} tekens zijn"
       long: "moet niet meer dan %{max} tekens zijn"
@@ -776,32 +809,6 @@ nl:
         Geniet van je verblijf!
     welcome_invite:
       subject_template: "Welkom bij %{site_name}!"
-    export_succeeded:
-      subject_template: "Export succesvol uitgevoerd"
-      text_body_template: "De export was succesvol uitgevoerd."
-    export_failed:
-      subject_template: "Export mislukt"
-      text_body_template: |
-        De export is mislukt.
-
-        Hier is het log:
-
-        ```
-        %{logs}
-        ```
-    import_succeeded:
-      subject_template: "Import succesvol uitgevoerd"
-      text_body_template: "De import was succesvol uitgevoerd."
-    import_failed:
-      subject_template: "Import mislukt"
-      text_body_template: |
-        De import is mislukt.
-
-        Hier is het log:
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       subject_template: "Data Export succesvol afgerond."
     csv_export_failed:
@@ -864,6 +871,8 @@ nl:
     download_remote_images_disabled:
       subject_template: "Het downloaden van externe afbeeldingen is uitgeschakeld"
   unsubscribe_link: "Om deze e-mails niet langer willen ontvangen, ga naar [je gebruikersinstellingen](%{user_preferences_url})."
+  subject_re: "Re:"
+  subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Vorige reacties"
     unsubscribe:
@@ -929,6 +938,7 @@ nl:
       new_activity: "Nieuwe reacties op je topics en berichten:"
       top_topics: "Populaire berichten"
       other_new_topics: "Populaire topics"
+      unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je een tijdje niet gezien gebben op onze site. Mocht je dit uit willen zetten of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
       click_here: "klik hier"
       from: "%{site_name} Digest"
       read_more: "Lees verder"

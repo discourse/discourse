@@ -209,6 +209,27 @@ es:
   assets_topic_body: "Este es un tema permanente, visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
+    body: |2
+
+      ¡Enhorabuena! :confetti_ball:
+
+      Si puedes ver este tema, es que has sido promocionado a usuario **habitual** (nivel de confianza 3).
+
+      Ahora puedes &hellip;
+
+      * Editar el título de cualquier tema
+      * Cambiar la categoría de cualquier tema
+      * Tus enlaces no llevarán automáticamente la etiqueta [nofollow](http://es.wikipedia.org/wiki/Nofollow)
+      * Acceder a la categoría privada Sala VIP, solo visible para usuarios de nivel 3 o más
+      * Ocultar spam con una sola vez que reportes
+
+      Consulta aquí [la lista actualizada de usuarios habituales](/badges/3/regular). ¡Manda un saludo!
+
+      ¡Gracias por formar la parte más importante de esta comunidad!
+
+      (Para saber más sobre niveles de confianza, [mira este tema][trust]. Por favor, ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán en el nivel de usuarios habituales.)
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Definición de la categoría %{category}"
     replace_paragraph: "[Reemplaza el primer párrafo con una descripción corta de tu nueva categoría. Esta guía aparecerá en el área de selección de categoría, por lo que trata de mantenerla por debajo de los 200 caracteres.]"
@@ -232,7 +253,7 @@ es:
     regular:
       title: "miembro"
     leader:
-      title: "avezado"
+      title: "habitual"
     elder:
       title: "líder"
     change_failed_explanation: "Trataste de degradar a %{user_name} a '%{new_trust_level}'. Sin embargo su nivel de confianza ya es '%{current_trust_level}'. %{user_name} va a permanecer en '%{current_trust_level}' - si deseas degradar al usuario primero bloquea su nivel de confianza."
@@ -549,6 +570,7 @@ es:
       title: "Pie de página"
       description: "HTML que va a ser añadido en la base de cada página."
   site_settings:
+    censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
     default_locale: "El idioma por defecto de Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
@@ -597,6 +619,7 @@ es:
     apple_touch_icon_url: "Icono para los dispositivos táctiles de Apple. Se recomienda un tamaño de 144px por 144px."
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
+    email_subject: "Formato de asunto personalizable para emails estándar. Mira https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     use_https: "¿Debería ser la URL completa del sitio (Discourse.base_url) http o https? ¡NO ACTIVES ESTO A MENOS QUE HTTPS ESTÉ CONFIGURADO Y FUNCIONANDO!"
     summary_score_threshold: "La puntuación mínima requerida para que un post sea incluido en el 'Resumen de este tema\""
     summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
@@ -921,6 +944,7 @@ es:
     incorrect_username_email_or_password: "Nombre de usuario, dirección de correo o contraseña incorrectos"
     wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprobada."
     active: "Tu cuenta está activa y lista para usar."
+    activate_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a <b>%{email}</b>. Por favor sigue las instrucciones de ese correo para activar tu cuenta.</p><p>Si no llega, mira en la carpeta de spam, o intenta iniciar sesión de nuevo para enviar de nuevo otro correo de activación.</p>"
     not_activated: "Aún no puedes iniciar sesión. Te hemos enviado un email de activación. Por favor, sigue las instrucciones en el email para activar tu cuenta."
     not_allowed_from_ip_address: "No puedes iniciar sesión como %{username} desde esa dirección IP."
     suspended: "No puedes iniciar sesión hasta %{date}."
@@ -932,6 +956,7 @@ es:
     omniauth_error_unknown: "Algo ha salido mal procesando tu inicio de sesión, por favor, vuelve a intentarlo."
     new_registrations_disabled: "El registro de nuevas cuentas no está permitido en este momento."
     password_too_long: "Las contraseñas están limitadas a 200 caracteres"
+    missing_user_field: "No has completado todos los campos de usuario"
   user:
     no_accounts_associated: "No hay cuentas relacionadas."
     username:
@@ -1121,32 +1146,6 @@ es:
         ¡Disfruta tu estancia!
 
         [prefs]: %{user_preferences_url}
-    export_succeeded:
-      subject_template: "La exportación ha finalizado satisfactoriamente"
-      text_body_template: "La exportación ha sido satisfactoria."
-    export_failed:
-      subject_template: "La exportación falló"
-      text_body_template: |
-        La exportación ha fallado.
-
-        Aquí está el registro de lo ocurrido:
-
-        ```
-        %{logs}
-        ```
-    import_succeeded:
-      subject_template: "La importación ha finalizado satisfactoriamente"
-      text_body_template: "La importación ha sido satisfactoria."
-    import_failed:
-      subject_template: "La importación falló"
-      text_body_template: |
-        La importación ha fallado.
-
-        Aquí está el registro de lo ocurrido:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Invitación masiva procesada con éxito"
       text_body_template: "Tu archivo de invitación masiva ha sido procesado, se han enviado %{sent} invitaciones."

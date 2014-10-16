@@ -929,31 +929,6 @@ he:
         תהנו מהביקור!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
-    export_succeeded:
-      subject_template: "Export completed successfully"
-      text_body_template: "The export was successful."
-    export_failed:
-      subject_template: "Export failed"
-      text_body_template: |
-        The export has failed.
-
-        Here's the log:
-
-        ```
-        %{logs}
-        ```
-    import_succeeded:
-      subject_template: "יבוא הושלם בהצלחה"
-      text_body_template: "היבוא הצליח."
-    import_failed:
-      subject_template: "היבוא נכשל"
-      text_body_template: |
-        היבוא נכשל.
-
-        הנה התיעוד:
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"
       text_body_template: "ההזמנה הקבוצתיתשלך עובדה,  %{sent}  הזמנות נשלחו."

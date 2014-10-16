@@ -702,16 +702,6 @@ zh_TW:
       subject_template: "歡迎來到 %{site_name}！"
     welcome_invite:
       subject_template: "歡迎來到 %{site_name}！"
-    export_succeeded:
-      subject_template: "匯出成功"
-      text_body_template: "匯出操作成功。"
-    export_failed:
-      subject_template: "匯出失敗"
-    import_succeeded:
-      subject_template: "導入成功"
-      text_body_template: "導入操作成功。"
-    import_failed:
-      subject_template: "匯入失敗"
     bulk_invite_succeeded:
       subject_template: "批次用戶邀請已完成處理"
     bulk_invite_failed:

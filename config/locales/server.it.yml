@@ -6,6 +6,13 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 it:
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -29,6 +36,7 @@ it:
     messages:
       too_long_validation: "è limitato a %{max} caratteri; tu ne hai inseriti %{length}."
       invalid_boolean: "Booleano non valido."
+      taken: "già preso"
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
   bulk_invite:
@@ -594,8 +602,11 @@ it:
     cooldown_minutes_after_hiding_posts: "Numero di minuti che l'utente deve attendere prima di modificare un post nascosto per segnalazione"
     max_topics_in_first_day: "Numero massimo di argomenti che l'utente può creare nel suo primo giorno di forum"
     max_replies_in_first_day: "Numero massimo di risposte che un utente può pubblicare nel suo primo giorno di forum"
+    num_flags_to_block_new_user: "Se i messaggi di un nuovo utente ricevono segnalazioni di spam da num_users_to_block_new_user diversi utenti, nascondi tutti i messaggi dell'utente e impediscigli ulteriori invii. 0 per disabilitare questa funzionalità."
+    num_users_to_block_new_user: "Se i messaggi di un nuovo utente ricevono num_flags_to_block_new_user segnalazioni di spam da così tanti utenti diversi, nascondi tutti i messaggi dell'utente e impediscigli ulteriori invii. 0 per disabilitare questa funzionalità."
     notify_mods_when_user_blocked: "Se un utente è bloccato automaticamente, manda un messaggio ai moderatori."
     flag_sockpuppets: "Se un nuovo utente risponde ad un argomento dallo stesso indirizzo IP dell'utente che ha aperto l'argomento stesso, segnala entrambi i messaggi come potenziale spam."
+    traditional_markdown_linebreaks: "Usa l'accapo tradizionale in Markdown, cioè due spazi a fine riga per andare a capo."
     post_undo_action_window_mins: "Numero di minuti durante i quali gli utenti sono autorizzati ad annullare le loro azioni su un post (segnalazioni, like, etc)"
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che loro possano accedere al sito."
     ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; per informazioni http://google.com/analytics"
@@ -862,32 +873,6 @@ it:
         Buona permanenza!
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
-    export_succeeded:
-      subject_template: "Esportazione completata con successo"
-      text_body_template: "L'esportazione è stata eseguita correttamente."
-    export_failed:
-      subject_template: "Esportazione fallita"
-      text_body_template: |
-        L'esportazione è fallita.
-
-        Ecco il log:
-
-        ```
-        %{logs}
-        ```
-    import_succeeded:
-      subject_template: "Importazione completata con successo"
-      text_body_template: "L'importazione è stata eseguita correttamente."
-    import_failed:
-      subject_template: "Importazione fallita"
-      text_body_template: |
-        L'importazione è fallita.
-
-        Ecco il log:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Invito di massa processato con successo"
       text_body_template: "Il tuo invito di massa è stato processato, %{sent} inviti spediti."

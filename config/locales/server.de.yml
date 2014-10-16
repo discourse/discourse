@@ -6,6 +6,13 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 de:
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "DD. MMM"
     short_date: "DD. MMM YYYY"
@@ -23,6 +30,7 @@ de:
   log_in: "Anmelden"
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
+  disable_remote_images_download_reason: "Da nicht mehr genug Plattenplatz vorhanden ist, wurde der Download von Bildern deaktiviert."
   errors:
     messages:
       too_long_validation: "darf höchstens %{max} Zeichen lang sein; Du hast %{length} eingegeben."
@@ -111,9 +119,9 @@ de:
       one: "1 Beitrag"
       other: "%{count} Beiträge"
     new-topic: |
-      Willkommen bei %{site_name} &mdash; **Danke, dass Du ein neues Thema erstellst!**
+      Willkommen bei %{site_name} &mdash; **Danke, dass du ein neues Thema erstellst!**
 
-      - Ist der Titel eines adäquate Beschreibung dessen, was ein Nutzer vorzufinden erwartet, wenn er dieses Thema aufruft?
+      - Ist der Titel eine adäquate Beschreibung dessen, was ein Nutzer vorzufinden erwartet, wenn er dieses Thema aufruft?
 
       - Der erste Beitrag umschreibt das Thema: Worum geht es? Wer wäre interessiert daran? Warum ist es wichtig? Welche Arten von Antworten erhoffst Du dir von der Community?
 
@@ -537,6 +545,7 @@ de:
       title: "Unterer Teil der Seiten"
       description: "HTML Code der am Ende jeder Seite eingefügt wird."
   site_settings:
+    censored_words: "Wörter, die automatisch durch&#9632;&#9632;&#9632;&#9632; ersetzt werden"
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
     allow_user_locale: "Erlaube Benutzern ihre eigene Interfacesprache zu wählen"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen."
@@ -568,7 +577,7 @@ de:
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
     max_image_height: "Maximale Höhe von Vorschaubildern in einer Nachricht"
     category_featured_topics: "Zahl der angezeigten Themen je Kategorie auf der Kategorieseite /categories."
-    show_subcategory_list: "Zeige Lister von Uterkategorien statt einer Liste von Themen wenn eine Kategorie ausgewählt wird."
+    show_subcategory_list: "Zeige Liste von Unterkategorien statt einer Liste von Themen wenn eine Kategorie ausgewählt wird."
     fixed_category_positions: "Falls aktiviert können Kategorien in einer fest vorgegebenen Reihenfolge angeordnet werden. Andernfalls werden Kategorien nach Aktivität sortiert aufgelistet."
     add_rel_nofollow_to_user_content: "Füge mit Ausnahme interner Links allen nutzergenerierten Inhalten 'rel nofollow' hinzu (inkludiert übergeordnete Domains). Die Änderung dieser Einstellung erfordert, dass Du sämtliche Markdown-Beiträge aktualisierst."
     exclude_rel_nofollow_domains: "Liste aller Domains, durch senkrechte Striche getrennt, bei denen 'nofollow' nicht hinzugefügt wird (tld.com erlaubt auch sub.tld.com)."
@@ -628,6 +637,7 @@ de:
     redirect_users_to_top_page: "Verweise neue und länger abwesende Nutzer automatisch zur Top Übersichtsseite"
     email_token_valid_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind für (n) Stunden gültig."
     email_token_grace_period_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind auch nach ihrer Verwendung noch für eine Frist von (n) Stunden gültig."
+    enable_badges: "Abzeichen aktivieren"
     allow_index_in_robots_txt: "Suchmaschinen mittels der robots.txt Datei erlauben, die Seite zu indizieren."
     email_domains_blacklist: "Eine Liste von E-Mail-Domains, die bei der Registrierung neuer Konten nicht erlaubt sind. Beispiel: mailinator.com trashmail.net"
     email_domains_whitelist: "Eine Liste von E-Mail-Domains, mit denen neue Konten registriert werden dürfen. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains können sich dann nicht mehr registrieren!"
@@ -730,6 +740,7 @@ de:
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
     reply_by_email_address: "Vorgabe der Antwort-Mail Adresse in der Form von: %{reply_key}@reply.myforum.com"
     disable_emails: "Discourse daran hindern, jegliche Art von Emails zu verschicken"
+    short_email_length: "Kurze E-Mail-Länge in Bytes"
     pop3_polling_ssl: "SSL für die Verbindung zum POP3-Server verwenden. (Empfohlen)"
     pop3_polling_username: "Der Benutzername für das POP3-Konto zum Abfragen von E-Mails."
     pop3_polling_password: "Das Passwort für das POP3-Konto zum Abfragen von E-Mails."
@@ -991,32 +1002,6 @@ de:
         Viel Vergnügen!
     welcome_invite:
       subject_template: "Willkommen bei %{site_name}!"
-    export_succeeded:
-      subject_template: "Export erfolgreich abgeschlossen"
-      text_body_template: "Der Export war erfolgreich."
-    export_failed:
-      subject_template: "Export fehlgeschlagen"
-      text_body_template: |
-        Der Export ist fehlgeschlagen.
-
-        Hier ist der Log Auszug:
-
-        ```
-        %{logs}
-        ```
-    import_succeeded:
-      subject_template: "Import erfolgreich abgeschlossen"
-      text_body_template: "Der Import war erfolgreich."
-    import_failed:
-      subject_template: "Import fehlgeschlagen"
-      text_body_template: |
-        Der Import ist fehlgeschlagen.
-
-        Hier ist der Log Auszug:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
       text_body_template: "Deine Masseneinladung von Benutzern wurde erfolgreich verarbeitet, insgesamt wurden %{sent} Einladungen per Mail verschickt."
@@ -1147,6 +1132,7 @@ de:
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
   unsubscribe_link: "Wenn Du diese Mails nicht mehr erhalten möchtest, verändere deine [Benutzereinstellungen](%{user_preferences_url})."
   subject_re: "Antw: "
+  subject_pm: "[PN]"
   user_notifications:
     previous_discussion: "Vorangehende Antworten"
     unsubscribe:

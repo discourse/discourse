@@ -90,6 +90,7 @@ nl:
       facebook: 'deel deze link op Facebook'
       google+: 'deel deze link op Google+'
       email: 'deel deze link via e-mail'
+    topic_admin_menu: "Adminacties voor topic"
     edit: 'bewerk de titel en categorie van deze topic'
     not_implemented: "Die functie is helaas nog niet beschikbaar. Sorry!"
     no_value: "Nee"
@@ -122,21 +123,10 @@ nl:
     daily: "dagelijks"
     weekly: "wekelijks"
     every_two_weeks: "elke twee weken"
+    max_of_count: "maximaal {{count}}"
     character_count:
       one: "{{count}} teken"
       other: "{{count}} tekens"
-    in_n_seconds:
-      one: "over 1 seconde"
-      other: "over {{count}} seconden"
-    in_n_minutes:
-      one: "over 1 minuut"
-      other: "over {{count}} minuten"
-    in_n_hours:
-      one: "over 1 uur"
-      other: "over {{count}} uren"
-    in_n_days:
-      one: "over 1 dag"
-      other: "over {{count}} dagen"
     suggested_topics:
       title: "Aanbevolen topics"
     about:
@@ -420,6 +410,8 @@ nl:
         expired: "Deze uitnodiging is verlopen."
         rescind: "Verwijder"
         rescinded: "Uitnodiging verwijderd"
+        reinvite: "Stuur uitnodiging opnieuw"
+        reinvited: "Uitnodiging opnieuw verstuurd"
         time_read: "Leestijd"
         days_visited: "Dagen bezocht"
         account_age_days: "leeftijd van account in dagen"
@@ -436,6 +428,7 @@ nl:
         common: "Dat wachtwoord wordt al te vaak gebruikt."
         ok: "Je wachtwoord ziet er goed uit."
         instructions: "Minimaal %{count} tekens."
+      associated_accounts: "Geassocieerde accounts"
       ip_address:
         title: "Laatste IP-adres"
       registration_ip_address:
@@ -509,6 +502,8 @@ nl:
     created: 'Gemaakt'
     created_lowercase: 'gemaakt'
     trust_level: 'Trustlevel'
+    search_hint: 'gebruikersnaam'
+    search_hint_admin: 'gebruikersnaam of e-mail'
     create_account:
       title: "Maak een nieuw account"
       failed: "Er ging iets mis, wellicht is het e-mailadres al geregistreerd. Probeer de 'Wachtwoord vergeten'-link."
@@ -570,7 +565,6 @@ nl:
       drafts_offline: "concepten offline"
       min_length:
         need_more_for_title: "Nog {{n}} tekens nodig voor de titel"
-        need_more_for_reply: "Nog {{n}} tekens nodig voor het bericht"
       error:
         title_missing: "Titel is verplicht"
         title_too_short: "Titel moet uit minstens {{min}} tekens bestaan"
@@ -624,10 +618,6 @@ nl:
       help: "Uitleg over Markdown"
       toggler: "verberg of toon de editor"
       admin_options_title: "Optionele stafinstellingen voor deze topic"
-      auto_close_label: "Sluit topic automatisch:"
-      auto_close_units: "(# uren, een tijd of een volledige datum en tijd)"
-      auto_close_examples: 'voer absoluut tijdstip of aantal uur in — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Vul een geldige waarde in."
     notifications:
       title: "notificaties van @naam vermeldingen, reacties op je berichten en topics, privé-berichten, etc."
       none: "Er zijn nu geen notificaties."
@@ -789,8 +779,6 @@ nl:
           '2_4': 'Je ontvangt notificaties omdat je een reactie aan deze topic hebt geplaatst.'
           '2_2': 'Je ontvangt notificaties omdat je deze topic volgt.'
           '2': 'Je ontvangt notificaties omdat je <a href="/users/{{username}}/preferences">deze topic hebt gelezen</a>.'
-          '1_2': 'Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht.'
-          '1': 'Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht.'
           '0_7': 'Je negeert alle notificaties in deze categorie.'
           '0_2': 'Je negeert alle notificaties in deze topic.'
           '0': 'Je negeert alle notificaties in deze topic.'
@@ -800,15 +788,12 @@ nl:
           title: "In de gaten houden"
         tracking_pm:
           title: "Volgen"
-          description: "Het aantal ongelezen en nieuwe berichten verschijnt naast het privébericht. Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht."
         tracking:
           title: "Volgen"
         regular:
           title: "Normaal"
-          description: "Je zal alleen een notificatie krijgen als iemand je @naam vermeldt of een reactie geeft op je berichten."
         regular_pm:
           title: "Vaste Bezoeker"
-          description: "Je krijgt alleen een notificatie als iemand je @naam noemt of je bericht in het prive-bericht beantwoord."
         muted_pm:
           title: "Negeren"
           description: "Je zal geen notificaties krijgen voor dit privébericht."
@@ -914,6 +899,7 @@ nl:
       post_number: "bericht {{number}}"
       in_reply_to: "reageer op"
       last_edited_on: "bericht gewijzig op"
+      reply_as_new_topic: "Reageer als gelinkt topic"
       continue_discussion: "Voortzetting van de discussie {{postLink}}:"
       follow_quote: "ga naar het geciteerde bericht"
       show_full: "Bekijk hele bericht"
@@ -944,6 +930,7 @@ nl:
         confirm: "Weet je zeker dat je dit bericht wil afbreken?"
         no_value: "Nee, behouden"
         yes_value: "Ja, verwijderen"
+      via_email: "dit bericht kwam binnen via e-mail"
       wiki:
         about: "deze discussie is een wiki; normale gebruikers kunnen hem aanpassen"
       archetypes:
@@ -969,6 +956,9 @@ nl:
         admin: "adminacties voor bericht"
         wiki: "Maak Wiki"
         unwiki: "Verwijder Wiki"
+        convert_to_moderator: "Voeg stafkleur toe"
+        revert_to_regular: "Verwijder stafkleur"
+        rebake: "Maak HTML opnieuw"
         unhide: "Toon"
       actions:
         flag: 'Markeer'
@@ -1148,6 +1138,8 @@ nl:
       delete_spammer: "Verwijder spammer"
       delete_confirm: "Je gaat nu <b>%{posts}</b> berichten en <b>%{topics}</b> van deze gebruiker verwijderen, hun account verwijderen, nieuwe aanmeldingen vanaf hun IP-adres <b>%{ip_address}</b> blokkeren en hun e-mailadres <b>%{email}</b> op een permanente blokkeerlijst zetten. Weet je zeker dat dit een spammer is?"
       yes_delete_spammer: "Ja, verwijder spammer"
+      ip_address_missing: "(N.V.T.)"
+      hidden_email_address: "(verborgen)"
       submit_tooltip: "Verstuur de privé markering"
       cant: "Sorry, je kan dit bericht momenteel niet melden."
       custom_placeholder_notify_user: "Wat maakt dat je de schrijver persoonlijk iets wil melden? Wees specifiek, constructief en altijd aardig."
@@ -1422,6 +1414,8 @@ nl:
           filename: "Bestandsnaam"
           size: "Grootte"
         upload:
+          text: "Upload"
+          uploading: "Uploaden..."
           success: "'{{filename}}' is geupload."
           error: "Er ging iets fout bij het uploaden van '{{filename}}': {{message}}"
         operations:
@@ -1435,6 +1429,7 @@ nl:
             text: "Backup"
             title: "Maak een backup"
             confirm: "Wil je een nieuwe backup starten? "
+            without_uploads: "Ja (bestanden niet invoegen)"
           download:
             text: "Download"
             title: "Download de backup"
@@ -1558,6 +1553,7 @@ nl:
             user_placeholder: "gebruikersnaam"
             address_placeholder: "naam@voorbeeld.nl"
             type_placeholder: "digest, inschijving"
+            reply_key_placeholder: "antwoordsleutel"
             skipped_reason_placeholder: "reden"
       logs:
         title: "Logs"
@@ -1566,6 +1562,8 @@ nl:
         last_match_at: "Laatste match"
         match_count: "Matches"
         ip_address: "IP"
+        topic_id: "Topic ID"
+        post_id: "Bericht ID"
         delete: 'Verwijder'
         edit: 'Wijzig'
         save: 'Opslaan'
@@ -1599,6 +1597,9 @@ nl:
             unsuspend_user: "hef schorsing op"
             grant_badge: "ken badge toe"
             revoke_badge: "trek badge in"
+            check_email: "check e-mail"
+            delete_topic: "verwijder topic"
+            delete_post: "verwijder bericht"
         screened_emails:
           title: "Gescreende e-mails"
           description: "Nieuwe accounts met een van deze mailadressen worden geblokkeerd of een andere actie wordt ondernomen."
@@ -1667,6 +1668,9 @@ nl:
           one: "Weigering van 1 gebruiker is niet gelukt"
           other: "Weigering van %{count} gebruikers is niet gelukt"
         not_verified: "Niet geverifieerd"
+        check_email:
+          title: "Laat e-mail adres van gebruiker zien"
+          text: "Bekijk"
       user:
         suspend_failed: "Er ging iets fout met het blokkeren van deze gebruiker: {{error}}"
         unsuspend_failed: "Er ging iets fout bij het deblokkeren van deze gebruiker: {{error}}"
@@ -1749,6 +1753,7 @@ nl:
         suspend_modal_title: "Schors gebruiker"
         trust_level_2_users: "Trust Level 2 leden"
         trust_level_3_requirements: "Trust Level 3 vereisten"
+        lock_trust_level: "Zet trustlevel vast"
         tl3_requirements:
           title: "Vereisten voor Trust Level 3"
           table_title: "In de afgelopen 100 dagen:"
@@ -1767,11 +1772,34 @@ nl:
           likes_received: "'Vind ik leuks' ontvangen"
           qualifies: "Komt in aanmerking voor Trust Level 3"
           does_not_qualify: "Komt niet in aanmerking voor Trust Level 3"
+          will_be_promoted: "Zal binnenkort gepromoot worden."
+          will_be_demoted: "Zal binnenkort gedegradeerd worden."
         sso:
+          external_id: "Externe ID"
           external_username: "Gebruikersnaam"
           external_name: "Naam"
           external_email: "E-mail"
           external_avatar_url: "URL voor profielfoto"
+      user_fields:
+        title: "Gebruikersvelden"
+        create: "Maak gebruikersveld"
+        untitled: "Geen titel"
+        name: "Veldnaam"
+        type: "Veldtype"
+        description: "Veldomschrijving"
+        save: "Opslaan"
+        edit: "Wijzig"
+        delete: "Verwijder"
+        cancel: "Annuleer"
+        required:
+          title: "Verplicht bij inschrijven?"
+          enabled: "verplicht"
+          disabled: "niet verplicht"
+        editable:
+          enabled: "kan gewijzigd worden"
+          disabled: "wijzigen niet mogelijk"
+        field_types:
+          text: 'Tekstveld'
       site_settings:
         show_overriden: 'Bekijk alleen bewerkte instellingen'
         title: 'Instellingen'
@@ -1830,8 +1858,11 @@ nl:
         trigger_type:
           none: "Dagelijks bijwerken"
         preview:
+          sql_error_header: "Er ging iets fout met de query."
           bad_count_warning:
             header: "LET OP!"
+          grant_count:
+            zero: "Geen badges om toe te wijzen."
           sample: "Voorbeeld:"
     lightbox:
       download: "download"
@@ -1888,10 +1919,14 @@ nl:
       badge_grouping:
         getting_started:
           name: Aan De Slag
+        community:
+          name: Community
         trust_level:
           name: Trust Level
         other:
           name: Overige
+        posting:
+          name: Schrijven
       badge:
         editor:
           name: Auteur

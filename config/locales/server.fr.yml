@@ -1030,32 +1030,6 @@ fr:
         Amusez-vous bien !
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-    export_succeeded:
-      subject_template: "Export terminé avec succès"
-      text_body_template: "L'export a réussi."
-    export_failed:
-      subject_template: "Echec de l'export"
-      text_body_template: |
-        L'export a échoué.
-
-        Voici le détail:
-
-        ```
-        %{logs}
-        ```
-    import_succeeded:
-      subject_template: "Import terminé avec succès"
-      text_body_template: "L'import a réussi."
-    import_failed:
-      subject_template: "Echec de l'import"
-      text_body_template: |
-        L'import a échoué.
-
-        Voici le détail:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Envoi des invitations en masse réussi"
       text_body_template: "Votre envoi d'invitations en masse a été effectué. %{sent} invitations envoyées."

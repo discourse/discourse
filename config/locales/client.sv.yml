@@ -113,18 +113,6 @@ sv:
     character_count:
       one: "{{count}} tecken"
       other: "{{count}} tecken"
-    in_n_seconds:
-      one: "om 1 sekund"
-      other: "om {{count}} sekunder"
-    in_n_minutes:
-      one: "om 1 minut"
-      other: "om {{count}} minuter"
-    in_n_hours:
-      one: "om 1 timme"
-      other: "om {{count}} timmar"
-    in_n_days:
-      one: "om 1 dag"
-      other: "om {{count}} dagar"
     suggested_topics:
       title: "Föreslagna trådar"
     about:
@@ -536,7 +524,6 @@ sv:
       drafts_offline: "utkast offline"
       min_length:
         need_more_for_title: "{{n}} tecken kvar för titeln"
-        need_more_for_reply: "{{n}} tecken kvar för svaret"
       error:
         title_missing: "Du måste ange en rubrik"
         title_too_short: "Titeln måste vara minst {{min}} tecken lång."
@@ -589,10 +576,6 @@ sv:
       help: "Markdown Redigeringshjälp"
       toggler: "Dölj eller visa composer-panelen"
       admin_options_title: "Valfria personalinställningar för den här tråden"
-      auto_close_label: "Tid för att automatiskt stänga tråden:"
-      auto_close_units: "(# timmar, en tid, eller en timestamp)"
-      auto_close_examples: 'Ange en absolut tid eller antal timmar — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Vänligen ange ett giltigt värde."
     notifications:
       title: "notifikationer med omnämnanden av @namn, svar på dina inlägg och trådar, privata meddelanden, etc"
       none: "Du har inte notifikationer just nu."
@@ -751,8 +734,6 @@ sv:
           '2_4': 'Du kommer ta emot notifikationer för att du postade ett svar till denna tråd.'
           '2_2': 'Du kommer ta emot notifikationer för att du följer denna tråd.'
           '2': 'Du kommer ta emot notifikationer för att du <a href="/users/{{username}}/preferences">läser denna tråd</a>.'
-          '1_2': 'Du kommer bara meddelandes om någon nämner ditt @namn eller svara på dina inlägg.'
-          '1': 'Du kommer bara meddelandes om någon nämner ditt @namn eller svara på dina inlägg.'
           '0_7': 'Du ignorerar alla notifikationer i den här kategorin.'
           '0_2': 'Du ignorerar alla notifikationer för denna tråd.'
           '0': 'Du ignorerar alla notifikationer för denna tråd.'
@@ -762,15 +743,12 @@ sv:
           title: "Kollar"
         tracking_pm:
           title: "bevakade"
-          description: "Antal olästa och nya inlägg kommer visas bredvid det privata meddelandet. Du kommer enbart notifieras om någon nämner ditt @namn eller svarar på ditt inlägg."
         tracking:
           title: "Följer"
         regular:
           title: "Vanlig"
-          description: "Du kommer endast att få notifieringar om någon nämner ditt @namn eller svarar på ditt inlägg."
         regular_pm:
           title: "Vanlig(t)"
-          description: "Du kommer bara notifieras om någon nämner ditt @namn eller svarar på ditt inlägg i det privata meddelandet."
         muted_pm:
           title: "tystade"
           description: "Du kommer aldrig att få notifieringar om något angående detta privatmeddelande."

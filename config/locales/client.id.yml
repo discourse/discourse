@@ -85,14 +85,6 @@ id:
     or: "atau"
     now: "just now"
     read_more: 'read more'
-    in_n_seconds:
-      other: "dalam {{count}} detik"
-    in_n_minutes:
-      other: "dalam {{count}} menit"
-    in_n_hours:
-      other: "dalam {{count}} jam"
-    in_n_days:
-      other: "dalam {{count}} hari"
     suggested_topics:
       title: "Suggested Topics"
     cancel: "cancel"
