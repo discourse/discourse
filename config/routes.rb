@@ -342,6 +342,10 @@ Discourse::Application.routes.draw do
     get "c/:parent_category/:category/l/top/#{period}" => "list#parent_category_category_top_#{period}", as: "parent_category_category_top_#{period}"
   end
 
+  Discourse.anonymous_filters.each do |filter|
+    get "#{filter}.rss" => "list##{filter}_feed", format: :rss
+  end
+
   Discourse.filters.each do |filter|
     get "#{filter}" => "list##{filter}"
     get "c/:category/l/#{filter}" => "list#category_#{filter}", as: "category_#{filter}"
@@ -350,10 +354,6 @@ Discourse::Application.routes.draw do
   end
 
   get "category/*path" => "categories#redirect"
-
-  Discourse.anonymous_filters.each do |filter|
-    get "#{filter}.rss" => "list##{filter}_feed", format: :rss
-  end
 
   get "top" => "list#top"
   get "search" => "search#query"
