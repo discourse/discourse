@@ -235,10 +235,11 @@ nav.post-controls {
 }
 
 .embedded-posts {
-  h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: darken(scale-color-diff(), 10%);}
+  h1, h2, h3 { margin: 10px 0; }
+  a.mention { background: darken(scale-color-diff(), 10%); }
 
   .topic-body {
+    background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
      width: 86%;
      padding-left: 1%;
      padding-right: 1%;
@@ -268,18 +269,23 @@ nav.post-controls {
     margin-left: 56px;
     width: 701px;
   }
-  &.top.topic-body {padding-left: 0; padding-right: 0;}
-    .post-date {color: scale-color($primary, $lightness: 50%);}
-    .fa-arrow-up {margin-left: 5px;}
-    .row {border-top: 1px solid darken(scale-color-diff(), 10%); padding-top: 7px;}
-    .reply:first-of-type .row {border-top: none;}
-    background: dark-light-diff($primary, $secondary, 90%, -65%);
+  &.top.topic-body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-date { color: scale-color($primary, $lightness: 50%); }
+  .fa-arrow-up { margin-left: 5px; }
+  .row {
+    border-top: 1px solid darken(scale-color-diff(), 10%);
+    padding-top: 7px;
+  }
+  .reply:first-of-type .row { border-top: none; }
 
   .quote .title, blockquote, .onebox, .onebox-result {
     background: darken(scale-color-diff(), 5%);
     border-left: 5px solid darken(scale-color-diff(), 12%);
   }
-
 
   .topic-meta-data {
     position: relative;
