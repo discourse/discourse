@@ -127,18 +127,6 @@ pt_BR:
     character_count:
       one: "{{count}} caracter"
       other: "{{count}} caracteres"
-    in_n_seconds:
-      one: "em 1 segundo"
-      other: "em {{count}} segundos"
-    in_n_minutes:
-      one: "em 1 minuto"
-      other: "em {{count}} minutos"
-    in_n_hours:
-      one: "em 1 hora"
-      other: "em {{count}} horas"
-    in_n_days:
-      one: "em 1 dia"
-      other: "em {{count}} dias"
     suggested_topics:
       title: "Tópicos sugeridos"
     about:
@@ -515,6 +503,7 @@ pt_BR:
     created_lowercase: 'criado'
     trust_level: 'Nível de confiança'
     search_hint: 'nome de usuário'
+    search_hint_admin: 'Nome de Usuário ou email'
     create_account:
       title: "Criar nova conta"
       failed: "Alguma coisa deu errado, talvez este email já esteja registrado, tente usar o Esqueci a Senha."
@@ -576,7 +565,6 @@ pt_BR:
       drafts_offline: "rascunhos offline"
       min_length:
         need_more_for_title: "Escreva no mínimo mais {{n}} caracteres"
-        need_more_for_reply: "Escreva no mínimo mais {{n}} caracteres"
       error:
         title_missing: "Título é obrigatório"
         title_too_short: "O título tem que ter no mínimo {{min}} caracteres"
@@ -630,10 +618,6 @@ pt_BR:
       help: "Ajuda da edição Markdown"
       toggler: "esconder ou exibir o painel de composição"
       admin_options_title: "Configurações opcionais da equipe para este tópico"
-      auto_close_label: "Tempo para fechamento automático do tópico:"
-      auto_close_units: "(# de horas, um horário ou data e hora por extenso)"
-      auto_close_examples: 'insira uma data ou número de horas - 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Por favor, digite um valor válido."
     notifications:
       title: "notificações de menção de @nome, respostas às suas mensagens e tópicos, mensagens privadas, etc"
       none: "Não há notifcações neste momento."
@@ -799,8 +783,6 @@ pt_BR:
           '2_4': 'Você receberá notificações porque postou uma resposta neste tópico.'
           '2_2': 'Você receberá notificações porque está monitorando este tópico.'
           '2': 'Você receberá notificações porque você <a href="/users/{{username}}/preferences">leu este tópico</a>.'
-          '1_2': 'Você receberá notificações apenas se alguém mencionar o seu @nome ou te responder.'
-          '1': 'Você receberá notificações apenas se alguém mencionar o seu @nome ou te responder.'
           '0_7': 'Você está ignorando todas as notificações nessa categoria.'
           '0_2': 'Você está ignorando todas as notificações deste tópico.'
           '0': 'Você está ignorando todas as notificações deste tópico.'
@@ -812,16 +794,12 @@ pt_BR:
           description: "Você será notificado de cada post novo neste tópico. Um contador de posts novos e não lidos também aparecerá próximo ao tópico."
         tracking_pm:
           title: "Monitorando"
-          description: "Uma contagem de respostas novas e não lidas aparecerá perto das mensagens privadas. Você será notificado se alguém mencionar seu @nome ou te responder."
         tracking:
           title: "Monitorar"
-          description: "Um contador de posts novos e não lidos aparecerá próximo ao tópico. Você será notificado apenas se alguém mencionar seu @nome ou responder ao seu post."
         regular:
           title: "Normal"
-          description: "Você será notificado apenas se alguém mencionar seu @nome ou te responder."
         regular_pm:
           title: "Regular"
-          description: "Você receberá notificações apenas se alguém mencionar o seu @nome ou responder a sua mensagem privada."
         muted_pm:
           title: "Silenciado"
           description: "Você nunca será notificado de qualquer coisa sobre essa mensagem privada."
@@ -1163,7 +1141,6 @@ pt_BR:
           description: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
         regular:
           title: "Normal"
-          description: "Você receberá notificações apenas se alguém mencionar o seu @nome ou responder ao seu post."
         muted:
           title: "Silenciar"
           description: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
@@ -1818,6 +1795,8 @@ pt_BR:
           flagged_by_users: "Usuários que foram denunciados"
           likes_given: "Curtidas dados"
           likes_received: "Curtidas recebidos"
+          likes_received_days: "Curtidas recebidas: dias únicos"
+          likes_received_users: "Curtidas recebidas: usuários únicos"
           qualifies: "Qualificado para o nível 3 de confiança."
           does_not_qualify: "Não qualificado para o nível 3 de confiança."
           will_be_promoted: "Será promovido em breve."
@@ -1834,7 +1813,6 @@ pt_BR:
           external_avatar_url: "URL do Avatar"
       user_fields:
         title: "Campos de Usuários"
-        help: "Qualquer campo adicionado aqui será exigido dos usuários quando eles criarem uma conta."
         create: "Criar Campo de Usuário"
         untitled: "Sem título"
         name: "Nome do Campo"
@@ -1845,6 +1823,10 @@ pt_BR:
         delete: "Apagar"
         cancel: "Cancelar"
         delete_confirm: "Tem certeza que quer apagar este campo de usuário?"
+        required:
+          title: "Necessário para cadastro?"
+          enabled: "necessário"
+          disabled: "não necessário"
         editable:
           title: "Editável após criar conta?"
           enabled: "editável"

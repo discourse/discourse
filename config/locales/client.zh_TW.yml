@@ -74,6 +74,7 @@ zh_TW:
       facebook: '在 Facebook 分享此連結'
       google+: '在 Google+ 分享此連結'
       email: '以電子郵件分享此連結'
+    topic_admin_menu: "討論話題管理員操作"
     edit: '編輯此討論話題的標題與分類'
     not_implemented: "抱歉，此功能尚未開放。"
     no_value: "否"
@@ -106,16 +107,9 @@ zh_TW:
     daily: "每天"
     weekly: "每週"
     every_two_weeks: "每兩週"
+    max_of_count: "（最大 {{count}}）"
     character_count:
       other: "{{count}} 個字"
-    in_n_seconds:
-      other: "在 {{count}} 秒"
-    in_n_minutes:
-      other: "在 {{count}} 分鐘"
-    in_n_hours:
-      other: "在 {{count}} 小時"
-    in_n_days:
-      other: "在 {{count}} 天"
     suggested_topics:
       title: "推薦的討論話題"
     about:
@@ -389,6 +383,8 @@ zh_TW:
         expired: "此邀請已過期"
         rescind: "移除"
         rescinded: "邀請已刪除"
+        reinvite: "重送邀請"
+        reinvited: "邀請已經重送"
         time_read: "閱讀時間"
         days_visited: "到訪天數"
         account_age_days: "帳號已建立 (天)"
@@ -480,6 +476,7 @@ zh_TW:
     created_lowercase: '已建立'
     trust_level: '信任等級'
     search_hint: '用戶名稱'
+    search_hint_admin: '使用者名稱或 email'
     create_account:
       title: "建立新帳號"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
@@ -541,7 +538,6 @@ zh_TW:
       drafts_offline: "離線草稿"
       min_length:
         need_more_for_title: "討論話題名稱還需要 {{n}} 個字"
-        need_more_for_reply: "文章還需要 {{n}} 個字"
       error:
         title_missing: "標題為必填欄位"
         title_too_short: "標題必須至少 {{min}} 個字"
@@ -595,10 +591,6 @@ zh_TW:
       help: "Markdown 編輯說明"
       toggler: "隱藏或顯示編輯面板"
       admin_options_title: "此討論話題可選用之工作人員設定選項"
-      auto_close_label: "自動關閉討論話題的期限:"
-      auto_close_units: "(小時、時間或完整的日期與時間)"
-      auto_close_examples: '輸入絕對時間或者相對小時 — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "請輸入有效的值。"
     notifications:
       title: "以 @用戶名稱 提到、回覆您的文章與討論話題、私人訊息... 的通知。"
       none: "目前沒有任何通知。"
@@ -757,8 +749,6 @@ zh_TW:
           '2_4': '你將收到關於此討論話題的通知，因為你回覆了此討論話題。'
           '2_2': '你將收到關於此討論話題的通知，因為你正在追蹤此討論話題。'
           '2': '你將收到關於此討論話題的通知，因為你<a href="/users/{{username}}/preferences">看過此討論話題</a>。'
-          '1_2': '你將在有人以 @用戶名稱 提到你或回覆你的文章時收到通知。'
-          '1': '你將在有人以 @用戶名稱 提到你或回覆你的文章時收到通知。'
           '0_7': '你正忽略此分類中的所有通知。'
           '0_2': '你正忽略此討論話題的所有通知。'
           '0': '你正忽略此討論話題的所有通知。'
@@ -770,16 +760,12 @@ zh_TW:
           description: "當此討論話題有新回覆時會通知你，討論話題旁將會顯示未讀及新文章數。"
         tracking_pm:
           title: "追蹤"
-          description: "只在有人以 @名稱 提到你或回覆你的文章時通知你，未讀文章以及新文章的數目將顯示在私人訊息旁"
         tracking:
           title: "追蹤"
-          description: "未讀文章以及新文章的數目會顯示在討論話題旁。只在有人以 @名稱 提到你或回覆你的文章時通知你。"
         regular:
           title: "普通"
-          description: "只在有人以 @用戶名稱 提到你或回覆你的文章時通知你。"
         regular_pm:
           title: "一般"
-          description: "只在有人以 \"@用戶名稱\" 提到你或回覆你的帖子時通知你。"
         muted_pm:
           title: "靜音"
           description: "你將不會收到任何關於此私人訊息的通知，此討論話題也不會出現在你的未讀清單裡。"
@@ -935,8 +921,14 @@ zh_TW:
         admin: "文章管理動作"
         wiki: "做為共筆"
         unwiki: "取消共筆"
+        convert_to_moderator: "增加工作人員顏色"
+        revert_to_regular: "移除工作人員顏色"
+        rebake: "重建 HTML"
+        unhide: "取消隱藏"
       actions:
         flag: '投訴'
+        defer_flags:
+          other: "延遲標籤"
         it_too:
           off_topic: "一起投訴"
           spam: "一起投訴"
@@ -1027,6 +1019,9 @@ zh_TW:
           side_by_side:
             title: "以並排網頁模式檢視，分開標示增加與刪減的內容"
             button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "顯示原始碼左右比對"
+            button: '<i class="fa fa-columns"></i> 原碼'
         details:
           edited_by: "編輯者"
     category:
@@ -1067,6 +1062,7 @@ zh_TW:
       email_in_allow_strangers: "接受非用戶的電郵"
       email_in_disabled: "\"用電子郵件張貼新的討論話題\"功能已被關閉。若要使用此功能，"
       email_in_disabled_click: '請啟用"email in"功能'
+      allow_badges_label: "允許授予本分類的徽章"
       edit_permissions: "編輯權限"
       add_permission: "新增權限"
       this_year: "今年"
@@ -1082,7 +1078,6 @@ zh_TW:
           title: "追蹤"
         regular:
           title: "一般"
-          description: "只在有人以 @名稱 提到你或回覆你的文章時通知你。"
         muted:
           title: "靜音"
           description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
@@ -1746,6 +1741,10 @@ zh_TW:
         listable: 在徽章頁面上顯示徽章
         enabled: 啟用徽章
         icon: 圖示
+        query: 徽章查詢語法 (SQL)
+        target_posts: 查詢文章張貼目標
+        auto_revoke: 每日執行撤銷用的 SQL 語法
+        show_posts: 在徽章頁面顯示獲得徽章的文章
         trigger: 觸發
         trigger_type:
           none: "每日更新"
@@ -1754,8 +1753,24 @@ zh_TW:
           trust_level_change: "當用戶信任等級有改變"
           user_change: "當用戶被新增或是編輯"
         preview:
+          link_text: "預覽獲得的徽章"
+          plan_text: "預覽 SQL 查詢語法"
+          modal_title: "徽章 SQL 語法預覽"
+          sql_error_header: "SQL 查詢發生了錯誤。"
+          error_help: "徽章的 SQL 查詢語法請參考以下連結。"
           bad_count_warning:
             header: "警告 !"
+            text: "查詢結果沒有授予徽章的樣本；當查詢結果回傳的使用者 ID 或文章 ID 不存在時此問題有可能發生。如此可能會發生未預期的結果 ―― 請再次檢查您的 SQL 語法。"
+          grant_count:
+            zero: "沒有指定徽章。"
+            one: "指定了 <b>1</b> 個徽章。"
+            other: "指定了 <b>%{count}</b> 個徽章。"
+          sample: "樣本："
+          grant:
+            with: <span class="username">%{username}</span>
+            with_post: '<span class="username">%{username}</span> 的文章 %{link} '
+            with_post_time: <span class="username">%{username}</span> 的文章 %{link} 在 <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
     lightbox:
       download: "下載"
     keyboard_shortcuts_help:
@@ -1823,12 +1838,16 @@ zh_TW:
           description: 首篇文章編輯
         basic_user:
           name: 初級
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">取得</a>所有基本社群功能
         member:
-          name: 融入社群
+          name: 成員
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">取得</a>邀請功能
         regular:
-          name: 成為常客
+          name: 常客
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">取得</a>重新分類、重新命名、連結跟隨（無 nofollow 屬性）、貴賓室功能
         leader:
           name: 領袖
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">取得</a>全域編輯、置頂、關閉、封存、分割、合併討論話題功能
         welcome:
           name: 歡迎
           description: 收到一個讚
@@ -1844,6 +1863,24 @@ zh_TW:
         great_post:
           name: 神文章
           description: 一篇文章收到 50 個讚。此徽章可多次獲得。
+        nice_topic:
+          name: 好話題
+          description: 一篇討論話題獲得 10 個讚。本徽章可以多次取得。
+        good_topic:
+          name: 棒話題
+          description: 一篇討論話題獲得 25 個讚。本徽章可以多次取得。
+        great_topic:
+          name: 神話題
+          description: 一篇討論話題獲得 50 個讚。本徽章可以多次取得。
+        nice_share:
+          name: 好分享
+          description: 分享一篇文章給 25 位不同的訪客
+        good_share:
+          name: 棒分享
+          description: 分享一篇文章給 300 位不同的訪客
+        great_share:
+          name: 神分享
+          description: 分享一篇文章給 1000 位不同的訪客
         first_like:
           name: 首次讚好
           description: 給此貼文按讚

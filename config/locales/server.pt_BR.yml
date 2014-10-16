@@ -852,33 +852,6 @@ pt_BR:
         Divirta-se durante sua estadia!
 
         [prefs]: %{user_preferences_url}
-    export_succeeded:
-      subject_template: "Exportação completada com sucesso"
-      text_body_template: "A exportação foi bem sucedida."
-    export_failed:
-      subject_template: "Falha na exportação"
-      text_body_template: |+
-        A exportação falhou.
-
-        Informações do registro:
-
-        ```
-        %{logs}
-        ```
-
-    import_succeeded:
-      subject_template: "Importação completada com sucesso"
-      text_body_template: "A importação foi bem sucedida."
-    import_failed:
-      subject_template: "Falha na importação"
-      text_body_template: |
-        A importação falhou.
-
-        Informações do registro:
-
-        ````
-        %{logs}
-        ```
     too_many_spam_flags:
       subject_template: "Nova conta bloqueada"
     blocked_by_staff:

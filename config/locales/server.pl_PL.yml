@@ -6,6 +6,13 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 pl_PL:
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -27,6 +34,7 @@ pl_PL:
   errors:
     messages:
       too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
+      taken: "jest już zajęty"
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
   bulk_invite:
@@ -193,6 +201,27 @@ pl_PL:
   assets_topic_body: "Ten temat jest widoczny tylko dla członków zespołu. Służy do przechowywania obrazów i plików wykorzystywanych w wyglądzie serwisu. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie grafiki jakich chcesz użyć jako logo, favicon itd. (Użyj ikony wysyłania w edytorze wpisu lub przeciągnij i upuść.)\n3. Wyślij odpowiedź, aby je zachować.\n4. Kliknij prawym przyciskiem myszy na grafice i skopiuj jej adres URL.\n5. Wklej adres w [ogólnych ustawieniach](/admin/site_settings/category/required).\n\nJeśli chcesz włączyć możliwość przesyłania dodatkowych typów plików, zmień  `authorized_extensions` w [ustawieniach plików](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Witaj w Salonie"
+    body: |2
+
+      Gratulacje! :confetti_ball:
+
+      Jeśli widzisz ten temat, twoje konto osiągnęło trzeci poziom zaufania.
+
+      Od teraz możesz &hellip;
+
+      * Edytować tytuł każdego tematu
+      * Przenieść temat do innej kategorii
+      * Twoje linki nie będą posiadać już atrybutu [nofollow](http://en.wikipedia.org/wiki/Nofollow)
+      * Korzystać z prywatnego Salonu, kategorii która jest widoczna jedynie dla użytkowników na 3 poziomie zaufania lub wyższym
+      * Przyznawać polubienia i flagi o większej wadze
+
+      Możesz zobaczyć [wszystkie osoby z tym poziomem zaufania](/badges/3/regular). Nie zapomnij się przywitać.
+
+      Dziękujemy, że jesteś tak aktywną częścią naszej społeczności!
+
+      (Więcej informacji o poziomach zaufania znajduje się [pod tym adresem][trust]. Pamiętaj, że trzeci poziom zaufania zależy od utrzymywania aktywności danego konta na określonym poziomie.)
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "[Zamień ten pierwszy paragraf na krórki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go poniżej 200 znaków. Póki nie zmienisz tego tekstu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.]"
@@ -701,6 +730,7 @@ pl_PL:
     omniauth_error: "Przepraszamy, wystąpił błąd podczas uwierzytelniania Twojego konta %{strategy}. Może nie zaakceptowałeś uwierzytelnienia?"
     omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
     password_too_long: "Hasła są ograniczone do 200 znaków."
+    close_window: "Uwierzytelnianie zakończone. Aby kontynuować, zamknij to okno."
   user:
     username:
       short: "music zawierać co najmniej %{min} znaków"
@@ -724,6 +754,13 @@ pl_PL:
       %{invite_link}
 
       To zaproszenie zostało wysłane przez zaufanego użytkownika, nie musisz się logować.
+  invite_password_instructions:
+    subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
+    text_body_template: |
+      Dziękujemy za zaakceptowanie zaproszenia na  %{site_name} -- witaj!
+
+      Aby wybrać swoje hasło i zalogować się do serwisu kliknij link:
+      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   flags_reminder:
@@ -757,12 +794,32 @@ pl_PL:
       subject_template: "Witaj na %{site_name}!"
       text_body_template: "Dziękujemy za przyjęcie zaproszenia do %{site_name} – witamy!\n\nTwoja automatycznie wygenerowana nazwa użytkownika: **%{username}**. Możesz ją zmienić w każdej chwili w [swoich ustawieniach][prefs].\n\nAby zalogować się:\n\nA) Zaloguj się przyciskiem logowania przez zewnętrzny serwis. Pamiętaj, aby podpięty pod wybrany serwis adres e-mail **był taki sam** jak ten na który dostałeś swoje zaproszenie. W przeciwnym wypadku nie będziemy mogli stwierdzić, że ty to Ty! \n\nB) Stwórz unikalne hasło w [swoich ustawieniach][prefs] i zaloguj się przy jego pomocy.\n\n%{new_user_tips}\n\nWierzymy w [cywilizowane zachowanie](%{base_url}/guidelines) jako podstawę naszej społeczności.\n\n\
         Miłego uczestnictwa! \n\n[prefs]: %{user_preferences_url}\n"
-    export_succeeded:
-      subject_template: "Eksportowanie zostało zakończone."
-      text_body_template: "Eksport się powiódł."
-    import_succeeded:
-      subject_template: "Importowanie zostało zakończone."
-      text_body_template: "Import się powiódł."
+    backup_succeeded:
+      subject_template: "Kopia zapasowa jest gotowa"
+      text_body_template: "Kopia zapasowa została wykonana pomyślnie.\nOdwiedź [admin > kopie zapasowe](/admin/backups) aby ją pobrać."
+    backup_failed:
+      subject_template: "Kopia zapasowa nieudana"
+      text_body_template: |
+        Tworzenie kopii zapasowej było nieudane.
+
+        Log poniżej:
+
+        ```
+        %{logs}
+        ```
+    restore_succeeded:
+      subject_template: "Przywrócenie udane"
+      text_body_template: "Przywrócenie zakończyło się sukcesem."
+    restore_failed:
+      subject_template: "Przywracanie nieudane"
+      text_body_template: |
+        Przywrócenie z kopii zapasowej było nieudane.
+
+        Log poniżej:
+
+        ```
+        %{logs}
+        ```
     email_reject_empty:
       text_body_template: |
         Przepraszamy, ale wysyłanie twojej wiadomości do %{destination} (o tytule %{former_title}) zakończyło się niepowodzeniem.

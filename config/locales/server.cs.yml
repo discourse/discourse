@@ -633,12 +633,6 @@ cs:
       subject_template: "Vítejte na %{site_name}!"
     welcome_invite:
       subject_template: "Vítejte na %{site_name}!"
-    export_succeeded:
-      subject_template: "Export úspěšně dokončen"
-      text_body_template: "Export proběhl úspěšně."
-    import_succeeded:
-      subject_template: "Import úspěšně dokončen"
-      text_body_template: "Import proběhl úspěšně."
     too_many_spam_flags:
       subject_template: "Účet zablokován"
     blocked_by_staff:

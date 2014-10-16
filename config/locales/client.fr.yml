@@ -125,18 +125,6 @@ fr:
     character_count:
       one: "{{count}} caractère"
       other: "{{count}} caractères"
-    in_n_seconds:
-      one: "dans 1 seconde"
-      other: "dans {{count}} secondes"
-    in_n_minutes:
-      one: "dans 1 minute"
-      other: "dans {{count}} minutes"
-    in_n_hours:
-      one: "dans 1 heure"
-      other: "dans {{count}} heures"
-    in_n_days:
-      one: "dans 1 jour"
-      other: "dans {{count}} jours"
     suggested_topics:
       title: "Sujets similaires"
     about:
@@ -572,7 +560,6 @@ fr:
       drafts_offline: "sauvegardé hors ligne"
       min_length:
         need_more_for_title: "{{n}} caractères restant pour le titre"
-        need_more_for_reply: "{{n}} caractères restant pour le message"
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -626,10 +613,6 @@ fr:
       help: "Aide Markdown"
       toggler: "Afficher ou cacher le composer"
       admin_options_title: "Paramètres optionnels pour ce sujet"
-      auto_close_label: "Heure de fermeture automatique de ce sujet:"
-      auto_close_units: "(# Nombre d'heures, une heure, ou un horodatage)"
-      auto_close_examples: 'saisir une date absolu ou un nombre d''heures  — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Merci de saisir une valeur valide"
     notifications:
       title: "Notification des mentions de votre @pseudo, réponses à vos sujets et messages, etc."
       none: "Vous n'avez aucune notification pour le moment."
@@ -799,8 +782,6 @@ fr:
           '2_4': 'Vous recevrez des notifications car vous avez posté une réponse dans ce sujet.'
           '2_2': 'Vous recevrez des notifications car vous suivez ce sujet.'
           '2': 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu ce sujet</a>.'
-          '1_2': 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
-          '1': 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
           '0_7': 'Vous ignorez toutes les notifications de cette catégorie.'
           '0_2': 'Vous ignorez toutes les notifications de ce sujet.'
           '0': 'Vous ignorez toutes les notifications de ce sujet.'
@@ -812,16 +793,12 @@ fr:
           description: "Vous serez notifier de chaque nouveau message de ce sujet. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté du sujet."
         tracking_pm:
           title: "Suivi simple"
-          description: "Le nombre de messages non lus et nouveaux apparaîtra à côté de cette conversation privée. Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message."
         tracking:
           title: "Suivi"
-          description: "Le nombre de messages non lus et de nouveaux messages apparaîtra à côté du sujet. Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message."
         regular:
           title: "Normal"
-          description: "Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message. "
         regular_pm:
           title: "Régulier"
-          description: "Vous serez averti seulement si quelqu'un mentionne votre @pseudo ou répond à votre message privé."
         muted_pm:
           title: "Silencieux"
           description: "Vous ne serez jamais averti de quoi que ce soit à propos de ​​ce message privé."
@@ -1163,7 +1140,6 @@ fr:
           description: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de messages non-lus et nouveaux apparaîtra à côté du sujet."
         regular:
           title: "Normal"
-          description: "Vous recevrez une notification seulement si quelqu'un mentionne votre @pseudo ou répond à votre message."
         muted:
           title: "Silencieux"
           description: "Vous ne recevrez aucune notification sur les sujets de ces catégories, et ils n'apparaîtront pas dans votre onglet \"non-lus\"."
