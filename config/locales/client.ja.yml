@@ -106,16 +106,9 @@ ja:
     daily: "毎日"
     weekly: "毎週"
     every_two_weeks: "隔週"
+    max_of_count: "最大 {{count}}"
     character_count:
       other: "{{count}} 文字"
-    in_n_seconds:
-      other: "あと{{count}}秒"
-    in_n_minutes:
-      other: "あと{{count}}分"
-    in_n_hours:
-      other: "あと{{count}}時間"
-    in_n_days:
-      other: "あと{{count}}日"
     suggested_topics:
       title: "関連トピック"
     about:
@@ -270,9 +263,11 @@ ja:
       delete_yourself_not_allowed: "アカウントを削除できませんでした。サイトアドミンを連絡してください。"
       unread_message_count: "メッセージ"
       staff_counters:
+        flags_given: "役に立たフラグ"
         flagged_posts: "フラグしたポスト"
         deleted_posts: "削除したポスト"
         suspensions: "suspensions"
+        warnings_received: "注意"
       messages:
         all: "すべて"
         mine: "受信トレイ"
@@ -387,6 +382,8 @@ ja:
         expired: "この招待の有効期限が切れました。"
         rescind: "削除"
         rescinded: "取り消された招待"
+        reinvite: "招待を再送する"
+        reinvited: "招待を再送しました。"
         time_read: "リード時間"
         days_visited: "訪問日数"
         account_age_days: "アカウント有効日数"
@@ -431,6 +428,7 @@ ja:
         network: "インターネット接続を確認してください。"
         network_fixed: "ネットワーク接続が回復しました。"
         server: "エラーコード : {{status}}"
+        forbidden: "閲覧する許可されていません"
         unknown: "エラーが発生しました。"
       buttons:
         back: "戻る"
@@ -456,6 +454,7 @@ ja:
     last_post: 最終ポスト
     last_post_lowercase: 最後の投稿
     summary:
+      enabled_description: "トピックのまとめを表示されています。"
       description: "<b>{{count}}</b> 返信があります。"
       description_time: "全てを確認するのに <b>{{readingTime}} 分</b> 前後を要する <b>{{count}}</b> 個の回答があります。"
       enable: 'このトピックを要訳する'
@@ -475,6 +474,8 @@ ja:
     created: '作成'
     created_lowercase: '作成'
     trust_level: 'トラストレベル'
+    search_hint: 'ユーザ名'
+    search_hint_admin: 'ユーザーメールかEメールアドレス'
     create_account:
       title: "アカウントの作成"
       failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
@@ -485,6 +486,10 @@ ja:
       reset: "パスワードをリセット"
       complete_username: "<b>%{username}</b>,アカウントにパースワード再設定メールを送りました。"
       complete_email: "<b>%{email}</b>にパースワード再設定メールを送りました。"
+      complete_username_found: "<b>%{username}</b>,アカウントにパースワード再設定メールを送りました。"
+      complete_email_found: "<b>%{email}</b>にパースワード再設定メールを送りました。"
+      complete_username_not_found: " <b>%{username}</b>のアカウントがありません"
+      complete_email_not_found: "<b>%{email}</b>で登録したアカウントがありません。"
     login:
       title: "サインイン"
       username: "ログイン名"
@@ -501,6 +506,7 @@ ja:
       awaiting_approval: "アカウントはまだスタッフメンバーに承認されていません。承認され次第メールにてお知らせいたします。"
       requires_invite: "申し訳ありませんが、このフォーラムは招待制です。"
       not_activated: "まだログインできません。<b>{{sentTo}}</b> にアクティベーションメールを送信しております。メールの指示に従ってアカウントのアクティベーションを行ってください。"
+      not_allowed_from_ip_address: "このIPアドレスでログインできません"
       resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックシてください。"
       sent_activation_email_again: "<b>{{currentEmail}}</b> にアクティベーションメールを再送しました。メール到着まで数分かかることがあります (いつまで立ってもメールが届かない場合は、念のためスパムフォルダの中も確認してみてください)。"
       google:
@@ -522,6 +528,7 @@ ja:
         title: "with GitHub"
         message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
     composer:
+      add_warning: "これは公式の警告です。"
       posting_not_on_topic: "回答したいトピックはどれですか?"
       saving_draft_tip: "保存中"
       saved_draft_tip: "保存しました"
@@ -530,7 +537,6 @@ ja:
       drafts_offline: "オフラインで下書き"
       min_length:
         need_more_for_title: "タイトルにあと{{n}}文字必要"
-        need_more_for_reply: "ポストにあと{{n}}文字必要"
       error:
         title_missing: "タイトルを入力してください。"
         title_too_short: "タイトルは{{min}}文字以上必要です。"
@@ -584,10 +590,6 @@ ja:
       help: "Markdown 編集のヘルプ"
       toggler: "編集パネルの表示/非表示"
       admin_options_title: "このトピックの詳細設定"
-      auto_close_label: "このトピックを自動的に終了する時間:"
-      auto_close_units: "(何時間後か、自動終了する具体的な時間、またはタイムスタンプ)"
-      auto_close_examples: '例: 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "正しい値を入力してください。"
     notifications:
       title: "@ユーザ名 のタグ付けやあなたのポストやトピックへの回答、プライベートメッセージなどの通知"
       none: "現在通知はありません。"
@@ -649,6 +651,7 @@ ja:
         actions: "操作"
         change_category: "カテゴリ変更"
         close_topics: "トピックを閉じる"
+        archive_topics: "アーカイブトピック"
         notification_level: "通知レベル変更"
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
@@ -745,8 +748,6 @@ ja:
           '2_4': 'このトピックに回答したため通知されます。'
           '2_2': 'このトピックをトラック中のため通知されます。'
           '2': '<a href="/users/{{username}}/preferences">このトピックを閲覧した</a>ため通知されます。'
-          '1_2': '他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。'
-          '1': '他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。'
           '0_7': 'このカテゴリに関して一切通知を受けません。'
           '0_2': 'このトピックに関して一切通知を受けません。'
           '0': 'このトピックに関して一切通知を受けません。'
@@ -758,16 +759,12 @@ ja:
           description: "このトピックに対して新しい投稿があった場合、登録されたメールアドレスと、NVコミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
         tracking_pm:
           title: "トラック中"
-          description: "プライベートメッセージ一覧に新しい投稿数と未読ポスト数がつきます。他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
         tracking:
           title: "トラック中"
-          description: "このトピックに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
         regular:
           title: "通常"
-          description: "他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
         regular_pm:
           title: "通常"
-          description: "他ユーザーからタグ付けをされた場合、またはあなたのメッセージに回答が付いた場合に通知されます。"
         muted_pm:
           title: "ミュートされました"
           description: "このプライベートメッセージについての通知を受け取りません。"
@@ -787,6 +784,8 @@ ja:
         pin_globally: "トピックを全サイト的にピン留めする"
         unarchive: "トピックのアーカイブ解除"
         archive: "トピックのアーカイブ"
+        invisible: "リストされないようにする"
+        visible: "リストする"
         reset_read: "読み込みデータをリセット"
         multi_select: "移動するポストを選択"
       reply:
@@ -867,6 +866,7 @@ ja:
       post_number: "ポスト{{number}}"
       in_reply_to: "こちらへの回答"
       last_edited_on: "ポストの最終編集日"
+      reply_as_new_topic: "リンクトピックとして引用返信"
       continue_discussion: "{{postLink}} からの議論を継続:"
       follow_quote: "引用ポストに移動"
       show_full: "全て表示"
@@ -889,10 +889,12 @@ ja:
         upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (利用可能な拡張子: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
+        attachment_download_requires_login: "ファイルをダウンロードするには、サインインする必要があります"
       abandon:
         confirm: "編集中のポストを破棄してもよろしいですか?"
         no_value: "いいえ"
         yes_value: "はい"
+      via_email: "メールで投稿されました。"
       wiki:
         about: "この投稿は「Wiki」である。ベーシックユーザが編集できます。"
       archetypes:
@@ -915,6 +917,12 @@ ja:
           yes_value: "はい、回答も一緒に削除する"
           no_value: "いいえ、ポストのみ削除する"
         admin: "ポスト管理"
+        wiki: "ウィキーポストにする"
+        unwiki: "ウィキーポストから外す"
+        convert_to_moderator: "スタッフ色を追加"
+        revert_to_regular: "スタッフ色を削除"
+        rebake: "HTML再建築"
+        unhide: "表示する"
       actions:
         flag: 'フラグ'
         it_too:
@@ -1063,7 +1071,6 @@ ja:
           description: "このカテゴリに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
         regular:
           title: "通常"
-          description: "他ユーザーからタグ付けをされた場合、またはあなたのポストに回答が付いた場合に通知されます。"
         muted:
           title: "ミュート中"
           description: "このカテゴリに投稿されたトピックについての通知を受け取りません。また、未読タブにも通知されません。"
@@ -1319,6 +1326,8 @@ ja:
           filename: "ファイル名"
           size: "サイズ"
         upload:
+          text: "アップロード"
+          uploading: "アップロード中"
           success: "ファイル'{{filename}}' がアップロードされました。"
           error: "ファイル '{{filename}}'アップロードエラー: {{message}}"
         operations:
@@ -1480,6 +1489,7 @@ ja:
             unsuspend_user: "ユーザのサスペンドを解除する"
             grant_badge: "バッジを付ける"
             revoke_badge: "バッジを取り消す"
+            check_email: "メールアドレスを表示する"
         screened_emails:
           title: "ブロック対象アドレス"
           description: "新規アカウント作成時、次のメールアドレスからの登録をブロックする。"
@@ -1541,6 +1551,9 @@ ja:
         reject_failures:
           other: "%{count}人のユーザの拒否に失敗しました。"
         not_verified: "検証されていません"
+        check_email:
+          title: "メールアドレスを表示する"
+          text: "表示する"
       user:
         suspend_failed: "ユーザのサスペンドに失敗しました {{error}}"
         unsuspend_failed: "ユーザのサスペンド解除に失敗しました {{error}}"
@@ -1758,8 +1771,12 @@ ja:
         other: "%{count} つバッジを付与されました"
       select_badge_for_title: タイトルとして使用するバッジを選択
       badge_grouping:
+        community:
+          name: コミュニティ
         trust_level:
           name: トラストレベル
+        other:
+          name: その他
         posting:
           name: 投稿中
       badge:

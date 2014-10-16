@@ -125,18 +125,6 @@ da:
     character_count:
       one: "{{count}} tegn"
       other: "{{count}} tegn"
-    in_n_seconds:
-      one: "på 1 sekund"
-      other: "på {{count}} sekunder"
-    in_n_minutes:
-      one: "på 1 minut"
-      other: "på {{count}} minutter"
-    in_n_hours:
-      one: "på 1 time"
-      other: "på {{count}} timer"
-    in_n_days:
-      one: "på 1 dag"
-      other: "på {{count}} dage"
     suggested_topics:
       title: "Foreslåede emner"
     about:
@@ -555,7 +543,6 @@ da:
       drafts_offline: "kladder offline"
       min_length:
         need_more_for_title: "der mangler {{n}} tegn i titlen"
-        need_more_for_reply: "der mangler {{n}} tegn i svaret"
       error:
         title_missing: "Titlen er påkrævet"
         title_too_short: "Titlen skal være på mindst {{min}} tegn"
@@ -609,10 +596,6 @@ da:
       help: "Hjælp til Markdown-redigering"
       toggler: "skjul eller vis editor-panelet"
       admin_options_title: "Valgfrie staff-indstillinger for dette emne"
-      auto_close_label: "Tidspunkt for automatisk lukning af emne:"
-      auto_close_units: "(antal timer, et tidspunkt eller et timestamp)"
-      auto_close_examples: 'indtast klokkeslet eller antal timer — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Indtast venligst en gyldig værdi."
     notifications:
       title: "notifikation ved @navns nævnelse, svar til dine indlæg og emner, private beskeder, mv."
       none: "Du har ikke nogen notifikationer lige nu."
@@ -772,8 +755,6 @@ da:
           '2_4': 'Du får notifikationer fordi du har besvaret dette emne.'
           '2_2': 'Du får notifikationer fordi du følger dette emne.'
           '2': 'Du får notifikationer fordi du <a href="/users/{{username}}/preferences">har læst dette emne</a>.'
-          '1_2': 'Du får kun notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg.'
-          '1': 'Du får kun notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg.'
           '0_7': 'Du ignorerer alle notifikationer i denne kategori.'
           '0_2': 'Du får ingen notifikationer for dette emne.'
           '0': 'Du får ingen notifikationer for dette emne.'
@@ -783,15 +764,12 @@ da:
           title: "Overvåger"
         tracking_pm:
           title: "Følger"
-          description: "Antallet af ulæste og nye indlæg, vil stå efter den private besked. Du bliver kun notificeret nogen nævner dit @name eller svarer på dit indlæg."
         tracking:
           title: "Følger"
         regular:
           title: "Standard"
-          description: "du får kun besked hvis nogen nævner dit @navn eller svarer på dit indlæg."
         regular_pm:
           title: "Standard"
-          description: "Du får kun notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg i denne private besked."
         muted_pm:
           title: "Lydløs"
           description: "Du vil aldrig blive underrettet om noget omhandlende denne private mailboks"
@@ -1117,7 +1095,6 @@ da:
           title: "Følger"
         regular:
           title: "Standard"
-          description: "Du får kun notifikationer hvis nogen nævner dit @navn eller svarer på dit indlæg."
         muted:
           title: "Ignoreret"
           description: "Du ignorerer automatisk alle emner i disse kategorier. De vil heller ikke stå i sin \"ulæste\" indikation."

@@ -622,7 +622,9 @@ ru:
     favicon_url: "favicon вашего сайта, дополнительная информация: http://en.wikipedia.org/wiki/Favicon"
     mobile_logo_url: "Логотип для отображения вверху в мобильной версии сайта. Если оставить пустым,  будет использован логотип из настройки `logo_url`. Пример: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Иконка используемая для тач-устройств Apple. Рекомендуемый размер 144 x 144 px."
+    notification_email: "Отправитель: E-mail использующийся при отправке всех системных писем. Домен, указанный здесь должен иметь правильно сконфигурированные SPF, DKIM и  reverse PTR записи, для успешной отправки."
     email_custom_headers: "Разделенный чертой список дополнительных заголовков в почтовых сообщениях"
+    email_subject: "Настраиваемый формат темы для стандартных писем. Смотри https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     summary_score_threshold: "Минимальная оценка сообщения, необходимая для его включения в сводку по теме"
     summary_posts_required: "Минимальное количество сообщение в теме для активации кнопки \"Сводка по теме\""
     summary_likes_required: "Минимальное количество симпатий в теме для активации кнопки \"Сводка по теме\""
@@ -985,32 +987,6 @@ ru:
         Приятного времяпровождения!
     welcome_invite:
       subject_template: "Добро пожаловать на %{site_name}!"
-    export_succeeded:
-      subject_template: "Экспорт завершен удачно"
-      text_body_template: "Экспорт прошел удачно"
-    export_failed:
-      subject_template: "Экспорт не удался"
-      text_body_template: |
-        Экспорт не удался.
-
-        Детали:
-
-        ```
-        %{logs}
-        ```
-    import_succeeded:
-      subject_template: "Импорт завершен удачно"
-      text_body_template: "Импорт прошел удачно."
-    import_failed:
-      subject_template: "Импорт не удался"
-      text_body_template: |
-        Импорт не удался.
-
-        Детали:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Массовое приглашение пользователей успешно выполнено"
       text_body_template: "Ваш файл для массового приглашения пользователей был успешно обработан, отослано приглашений - %{sent}."

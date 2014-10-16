@@ -23,6 +23,8 @@ da:
   log_in: "Log ind"
   via: "%{username} via %{site_name}"
   is_reserved: "er reservet"
+  purge_reason: "Slettet automatisk eftersom dette var gammelt og ikke verificeret"
+  disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
   errors:
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
@@ -180,6 +182,9 @@ da:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Du kan kun vedhæfte advarsler til private beskeder."
+              too_many_users: "Du kan kun sende advarsler til en bruger ad gangen."
             archetype:
               cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
         user:
@@ -219,7 +224,12 @@ da:
       title: "ny bruger"
     basic:
       title: "basis-bruger"
+    regular:
+      title: "medlem"
+    leader:
+      title: "stamgæst"
   rate_limiter:
+    slow_down: "Du har forsøgt denne handling for ofte, prøv igen senere"
     too_many_requests: "Vi har en daglig grænse for hvor mange gange den pågældende handling kan udføres. Vent venligst %{time_left} før du prøver igen."
     hours:
       one: "1 time"
@@ -337,6 +347,7 @@ da:
       long_form: 'markerede dette som stødende'
     notify_user:
       title: 'Underret {{username}}'
+      description: 'Dette indlæg indeholder noget jeg gerne vil drøfte direkte og privat med vedkommende,  Bliver ikke markeret.'
       long_form: 'underrettede bruger'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -664,12 +675,6 @@ da:
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
       subject_template: "Velkommen til %{site_name}!"
-    export_succeeded:
-      subject_template: "Eksport lykkedes"
-      text_body_template: "Eksporten lykkedes."
-    import_succeeded:
-      subject_template: "Import lykkedes"
-      text_body_template: "Importen lykkedes."
     too_many_spam_flags:
       subject_template: "Ny konto blokeret"
     blocked_by_staff:

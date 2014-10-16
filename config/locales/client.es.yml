@@ -127,18 +127,6 @@ es:
     character_count:
       one: "{{count}} carácter"
       other: "{{count}} caracteres"
-    in_n_seconds:
-      one: "en 1 segundo"
-      other: "en {{count}} segundos"
-    in_n_minutes:
-      one: "en 1 minuto"
-      other: "en {{count}} minutos"
-    in_n_hours:
-      one: "en 1 hora"
-      other: "en {{count}} horas"
-    in_n_days:
-      one: "en 1 día"
-      other: "en {{count}} días"
     suggested_topics:
       title: "Temas Sugeridos"
     about:
@@ -246,13 +234,13 @@ es:
       topic_stat_sentence:
         one: "%{count} tema nuevo en los últimos %{unit}."
         other: "%{count} temas nuevos en los últimos %{unit}."
-      post_stats: "Número de comentarios nuevos"
+      post_stats: "El número de posts nuevos."
       post_stat_sentence:
         one: "%{count} nuevo comentario en los pasados %{unit}"
         other: "%{count} nuevos comentarios en los pasados %{unit}"
     ip_lookup:
       title: Búsqueda de Direcciones IP
-      hostname: nombre del host
+      hostname: Nombre del host
       location: Ubicación
       location_not_found: (desconocido)
       organisation: Organización
@@ -370,7 +358,7 @@ es:
         default: "(por defecto)"
       password_confirmation:
         title: "Introduce de nuevo la contraseña"
-      last_posted: "Último vez que publicó"
+      last_posted: "Último post"
       last_emailed: "Último Enviado por email"
       last_seen: "Visto por última vez"
       created: "Creado el"
@@ -515,6 +503,7 @@ es:
     created_lowercase: 'creado'
     trust_level: 'Nivel de Confianza'
     search_hint: 'nombre de usuario'
+    search_hint_admin: 'nombre de usuario o e-mail'
     create_account:
       title: "Crear nueva cuenta"
       failed: "Algo ha salido mal, tal vez este e-mail ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
@@ -523,10 +512,10 @@ es:
       action: "Olvidé mi contraseña"
       invite: "Introduce tu nombre de usuario o tu dirección de e-mail, y te enviaremos un correo electrónico para cambiar tu contraseña."
       reset: "Restablecer Contraseña"
-      complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, dentro de poco deberías recibir un email con las instrucciones para cambiar tu contraseña."
-      complete_email: "Si una cuenta coincide con <b>%{email}</b>, dentro de poco deberías recibir un email con las instrucciones para cambiar tu contraseña."
-      complete_username_found: "Encontramos una cuenta que coincide con el usuario <b>%{username}</b>, deberías recibir en breve un email con instrucciones para restablecer tu contraseña."
-      complete_email_found: "Encontramos una cuenta que coincide con el email <b>%{email}</b>, deberías recibir en breve un email con instrucciones para restablecer tu contraseña."
+      complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, dentro de poco deberías recibir un e-mail con las instrucciones para cambiar tu contraseña."
+      complete_email: "Si una cuenta coincide con <b>%{email}</b>, dentro de poco deberías recibir un e-mail con las instrucciones para cambiar tu contraseña."
+      complete_username_found: "Encontramos una cuenta que coincide con el usuario <b>%{username}</b>, deberías recibir en breve un e-mail con instrucciones para restablecer tu contraseña."
+      complete_email_found: "Encontramos una cuenta que coincide con el e-mail <b>%{email}</b>, deberías recibir en breve un e-mail con instrucciones para restablecer tu contraseña."
       complete_username_not_found: "Ninguna cuenta concuerda con el nombre de usuario <b>%{username}</b>"
       complete_email_not_found: "Ninguna cuenta concuerda con <b>%{email}</b>"
     login:
@@ -536,18 +525,18 @@ es:
       email_placeholder: "dirección de e-mail o nombre de usuario"
       caps_lock_warning: "Está activado Bloqueo de Mayúsculas"
       error: "Error desconocido"
-      blank_username_or_password: "Por favor, introducir tu email o usuario y tu contraseña"
+      blank_username_or_password: "Por favor, introducir tu e-mail o usuario, y tu contraseña."
       reset_password: 'Restablecer Contraseña'
       logging_in: "Iniciando Sesión"
       or: "O"
       authenticating: "Autenticando..."
-      awaiting_confirmation: "Tu cuenta está pendiente de activación, usa el enlace de 'olvidé contraseña' para recibir otro email de activación."
-      awaiting_approval: "Tu cuenta todavía no ha sido aprobada por un moderador. Recibirás un email cuando sea aprobada."
+      awaiting_confirmation: "Tu cuenta está pendiente de activación, usa el enlace de 'olvidé contraseña' para recibir otro e-mail de activación."
+      awaiting_approval: "Tu cuenta todavía no ha sido aprobada por un moderador. Recibirás un e-mail cuando sea aprobada."
       requires_invite: "Lo sentimos pero solo se puede acceder a este foro mediante invitación."
       not_activated: "No puedes iniciar sesión todavía. Anteriormente te hemos enviado un email de activación a <b>{{sentTo}}</b>. Por favor sigue las instrucciones en ese email para activar tu cuenta."
       not_allowed_from_ip_address: "No puedes iniciar sesión desde esa dirección IP."
       resend_activation_email: "Has clic aquí para enviar el email de activación nuevamente."
-      sent_activation_email_again: "Te hemos enviado otro email de activación a <b>{{currentemail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
+      sent_activation_email_again: "Te hemos enviado otro e-mail de activación a <b>{{currentemail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
       google:
         title: "con Google"
         message: "Autenticando con Google (asegúrate de desactivar cualquier bloqueador de pop ups)"
@@ -576,7 +565,6 @@ es:
       drafts_offline: "borradores offline"
       min_length:
         need_more_for_title: "{{n}} para completar el título"
-        need_more_for_reply: "{{n}} para completar el post"
       error:
         title_missing: "Es necesario un título"
         title_too_short: "El título debe ser por lo menos de {{min}} caracteres."
@@ -585,12 +573,12 @@ es:
         post_length: "El post debe tener por lo menos {{min}} caracteres."
         category_missing: "Debes escoger una categoría."
       save_edit: "Guardar edición"
-      reply_original: "Responder en el tema original"
-      reply_here: "Responder aquí"
+      reply_original: "Responder en el Tema Original"
+      reply_here: "Responder Aquí"
       reply: "Responder"
       cancel: "Cancelar"
-      create_topic: "Crear tema"
-      create_pm: "Crear mensaje privado"
+      create_topic: "Crear Tema"
+      create_pm: "Crear Mensaje Privado"
       title: "O pulsa Ctrl+Intro"
       users_placeholder: "Añadir usuario"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
@@ -630,10 +618,6 @@ es:
       help: "Ayuda de edición con Markdown"
       toggler: "ocultar o mostrar el panel de edición"
       admin_options_title: "Opciones de moderación para este tema"
-      auto_close_label: "Hora de auto-cierre:"
-      auto_close_units: "(# de horas, una fecha, o marca de tiempo)"
-      auto_close_examples: 'Poner el tiempo exacto o el número de horas -24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Por favor, introduce un valor válido."
     notifications:
       title: "notificaciones por menciones a tu @nombre, respuestas a tus publicaciones y temas, mensajes privados, etc."
       none: "No tienes notificaciones por el momento."
@@ -799,8 +783,6 @@ es:
           '2_4': 'Recibirás notificaciones porque has publicado una respuesta en este tema.'
           '2_2': 'Recibirás notificaciones porque estás siguiendo este tema.'
           '2': 'Recibirás notificaciones porque <a href="/users/{{username}}/preferences">has leído este tema</a>.'
-          '1_2': 'Recibirás notificaciones solo si alguien menciona tu @nombre o responde a tu post.'
-          '1': 'Recibirás notificaciones solo si alguien menciona tu @nombre o responde a tu post.'
           '0_7': 'Estás ignorando todas las notificaciones en esta categoría.'
           '0_2': 'Estás ignorando todas las notificaciones en este tema.'
           '0': 'Estás ignorando todas las notificaciones en este tema.'
@@ -812,16 +794,12 @@ es:
           description: "Se te notificará de cada nuevo post en este tema. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
         tracking_pm:
           title: "Seguir"
-          description: "Aparecerá un contador de posts no leídos y posts nuevos al lado del mensaje privado. Se te notificará solo si alguien menciona tu @usuario o responde a algundo de tus posts."
         tracking:
           title: "Seguir"
-          description: "Se añadirá un contador de posts nuevos y sin leer al lado del tema. Se te notificará solo si alguien menciona tu @usuario o responde a tus posts."
         regular:
-          title: "Normal"
-          description: "Serás notificado solo si alguien menciona tu @nombre o responde a tus posts."
+          title: "Habitual"
         regular_pm:
-          title: "Normal"
-          description: "Se te notificará solo si alguien menciona tu @nombre o responde a tus posts en el hilo de mensajes privados."
+          title: "Habitual"
         muted_pm:
           title: "Silenciar"
           description: "No se te notificará sobre este mensaje privado."
@@ -1162,8 +1140,7 @@ es:
           title: "Seguir"
           description: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
         regular:
-          title: "Normal"
-          description: "Se te notificará solo si alguien te menciona con tu @usuario o se responde a alguno de tus posts."
+          title: "Habitual"
         muted:
           title: "Silenciadas"
           description: "No se te notificará de nuevos temas en estas categorías y no aparecerán en la pestaña de no leídos."
@@ -1700,7 +1677,7 @@ es:
           newuser: 'Usuarios con nivel de confianza 0 (Nuevo)'
           basic: 'Usuarios con nivel de confianza 1 (Básico)'
           regular: 'Usuarios con Nivel de confianza 2 (Miembro)'
-          leader: 'Usuarios con Nivel de confianza 3 (Normal)'
+          leader: 'Usuarios con Nivel de confianza 3 (Habitual)'
           elder: 'Usuarios con Nivel de confianza 4 (Líder)'
           admins: 'Administradores'
           moderators: 'Moderadores'
@@ -1818,6 +1795,8 @@ es:
           flagged_by_users: "Usuarios que lo reportaron"
           likes_given: "Likes dados"
           likes_received: "Likes recibidos"
+          likes_received_days: "'Me gusta' Recibidos: días únicos"
+          likes_received_users: "'Me gusta' Recibidos: usuarios únicos."
           qualifies: "Califica para el nivel de confianza 3."
           does_not_qualify: "No califica para el nivel de confianza 3."
           will_be_promoted: "Será promovido pronto."
@@ -1834,7 +1813,6 @@ es:
           external_avatar_url: "URL del avatar"
       user_fields:
         title: "Campos de Usuario"
-        help: "Los campos añadidos aquí serán requeridos a los usuarios cuando inicien sesión."
         create: "Crear Campo de Usuario"
         untitled: "Sin título"
         name: "Nombre del Campo"
@@ -1845,6 +1823,10 @@ es:
         delete: "Borrar"
         cancel: "Cancelar"
         delete_confirm: "Esta seguro que quiere borrar ese campo de usuario?"
+        required:
+          title: "¿Requerido al registrarse?"
+          enabled: "requerido"
+          disabled: "no requerido"
         editable:
           title: "¿Editable después del registro?"
           enabled: "editable"
@@ -2028,7 +2010,7 @@ es:
           name: Miembro
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Se le conceden</a> invitaciones
         regular:
-          name: Normal
+          name: Habitual
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Se le concede</a> el poder recategorizar, renombrar, publicar enlacer sin el tag no-follow y acceso a sala vip
         leader:
           name: Líder

@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+pt:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Opções da votação"
+  poll:
+    must_contain_poll_options: "tem que conter uma lista de opções de votação"
+    cannot_have_modified_options: "não podem ser modificadas depois dos primeiros cinco minutos. Contacte um moderador se precisar de as alterar."
+    cannot_add_or_remove_options: "apenas podem ser editadas, não adicionadas ou removidas. Se precisar de adicionar ou remover opções, deverá bloquear este tópico e criar um novo."
+    prefix: "Votação"
+    closed_prefix: "Votação encerrada"
