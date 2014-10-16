@@ -1,13 +1,7 @@
 {{#link-to 'badges.show' badge}}
-  <span {{bind-attr class=":user-badge badge.badgeTypeClassName" data-badge-name="badge.name" title="badge.displayDescription"}}>
-    {{#if isIcon}}
-      <i {{bind-attr class=":fa badge.icon"}}></i>
-    {{else}}
-      <img {{bind-attr src="badge.icon"}}>
-    {{/if}}
-    {{badge.displayName}}
+  {{#badge-button badge=badge}}
     {{#if showGrantCount}}
       <span class="count">(&times;&nbsp;{{count}})</span>
     {{/if}}
-  </span>
+  {{/badge-button}}
 {{/link-to}}

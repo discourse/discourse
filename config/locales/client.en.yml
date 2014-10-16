@@ -2098,6 +2098,7 @@ en:
         listable: Show badge on the public badges page
         enabled: Enable badge
         icon: Icon
+        icon_help: "Use either a Font Awesome class or URL to an image"
         query: Badge Query (SQL)
         target_posts: Query targets posts
         auto_revoke: Run revocation query daily

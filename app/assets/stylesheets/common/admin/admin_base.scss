@@ -360,6 +360,12 @@ section.details {
 
   .current-badge {
     margin: 20px;
+
+    p.help {
+      margin: 0;
+      color: scale-color($primary, $lightness: 40%);
+      font-size: 0.9em;
+    }
   }
 
   .form-horizontal {
