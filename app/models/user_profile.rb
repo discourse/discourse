@@ -29,6 +29,16 @@ class UserProfile < ActiveRecord::Base
     cook
   end
 
+  def upload_expansion_background(upload)
+    self.expansion_background = upload.url
+    self.save!
+  end
+
+  def clear_expansion_background
+    self.expansion_background = ""
+    self.save!
+  end
+
   def upload_profile_background(upload)
     self.profile_background = upload.url
     self.save!
@@ -96,6 +106,7 @@ end
 #  bio_cooked           :text
 #  dismissed_banner_key :integer
 #  profile_background   :string(255)
+#  expansion_background :string(255)
 #  bio_cooked_version   :integer
 #
 # Indexes

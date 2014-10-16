@@ -97,15 +97,25 @@
     </div>
 
     {{#if allowBackgrounds}}
-    <div class="control-group pref-profile-bg">
-      <label class="control-label">{{i18n user.change_profile_background.title}}</label>
-      <div class="controls">
-        {{image-uploader uploadUrl=imageUploadUrl
-                         imageUrl=profile_background
-                         instantDelete="true"
-                         type="profile_background"}}
+      <div class="control-group pref-profile-bg">
+        <label class="control-label">{{i18n user.change_profile_background.title}}</label>
+        <div class="controls">
+          {{image-uploader uploadUrl=imageUploadUrl
+                           imageUrl=profile_background
+                           instantDelete="true"
+                           type="profile_background"}}
+        </div>
       </div>
-    </div>
+
+      <div class="control-group pref-profile-bg">
+        <label class="control-label">{{i18n user.change_expansion_background.title}}</label>
+        <div class="controls">
+          {{image-uploader uploadUrl=imageUploadUrl
+                           imageUrl=expansion_background
+                           instantDelete="true"
+                           type="expansion_background"}}
+        </div>
+      </div>
     {{/if}}
 
     {{#if allowUserLocale}}

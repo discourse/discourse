@@ -27,6 +27,7 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :profile_background,
+             :expansion_background,
              :location,
              :can_edit,
              :can_edit_username,
@@ -115,6 +116,14 @@ class UserSerializer < BasicUserSerializer
 
   def include_profile_background?
     profile_background.present?
+  end
+
+  def expansion_background
+    object.user_profile.expansion_background
+  end
+
+  def include_expansion_background?
+    expansion_background.present?
   end
 
   def location

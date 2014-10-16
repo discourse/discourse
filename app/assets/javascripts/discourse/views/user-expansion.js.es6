@@ -7,6 +7,21 @@ var clickOutsideEventName = "mousedown.outside-user-expansion",
 export default Discourse.View.extend(CleansUp, {
   elementId: 'user-expansion',
   classNameBindings: ['controller.visible::hidden', 'controller.showBadges'],
+  allowBackgrounds: Discourse.computed.setting('allow_profile_backgrounds'),
+
+  addBackground: function() {
+    var url = this.get('controller.user.expansion_background');
+    if (!this.get('allowBackgrounds')) { return; }
+
+    var $this = this.$();
+    if (!$this) { return; }
+
+    if (Ember.empty(url)) {
+      $this.css('background-image', '');
+    } else {
+      $this.css('background-image', "url(" + url + ")");
+    }
+  }.observes('controller.user.expansion_background'),
 
   _setup: function() {
     var self = this;
