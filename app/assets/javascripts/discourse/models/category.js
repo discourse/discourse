@@ -26,7 +26,7 @@ Discourse.Category = Discourse.Model.extend({
   }.property('id'),
 
   url: function() {
-    return Discourse.getURL("/category/") + Discourse.Category.slugFor(this);
+    return Discourse.getURL("/c/") + Discourse.Category.slugFor(this);
   }.property('name'),
 
   nameLower: function() {
@@ -280,7 +280,7 @@ Discourse.Category.reopenClass({
   },
 
   reloadById: function(id) {
-    return Discourse.ajax("/category/" + id + "/show.json").then(function (result) {
+    return Discourse.ajax("/c/" + id + "/show.json").then(function (result) {
       return Discourse.Category.create(result.category);
     });
   }
