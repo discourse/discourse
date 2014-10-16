@@ -30,7 +30,7 @@
   <div id="revision-details">
     {{i18n post.revisions.details.edited_by}} {{#link-to 'user' username}}{{bound-avatar-template content.avatar_template "small"}} {{username}}{{/link-to}} <span class="date">{{bound-date created_at}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
   </div>
-  <div id="revisions">
+  <div id="revisions" {{bind-attr class="hidden:hidden-revision"}}>
     {{#if title_changes}}
       <div class="row">
         <h2>{{{title_diff}}}</h2>
