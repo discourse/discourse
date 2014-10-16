@@ -86,7 +86,7 @@ Discourse.HTML = {
     var name = Em.get(category, 'name'),
         description = Em.get(category, 'description'),
         restricted = Em.get(category, 'read_restricted'),
-        url = Discourse.getURL("/category/") + Discourse.Category.slugFor(category),
+        url = Discourse.getURL("/c/") + Discourse.Category.slugFor(category),
         elem = (opts.link === false ? 'span' : 'a'),
         extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : ''),
         html = "<" + elem + " href=\"" + (opts.link === false ? '' : url) + "\" ",

@@ -37,13 +37,13 @@ Discourse.NavItem = Discourse.Model.extend({
     var name = this.get('name');
 
     if( name.split('/')[0] === 'category' ) {
-      return 'category/' + this.get('categorySlug');
+      return 'c/' + this.get('categorySlug');
     } else {
       var mode = "",
       category = this.get("category");
 
       if(category){
-        mode += "category/";
+        mode += "c/";
         mode += Discourse.Category.slugFor(this.get('category'));
         if (this.get('noSubcategories')) { mode += '/none'; }
         mode += "/l/";

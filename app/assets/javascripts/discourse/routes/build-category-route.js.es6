@@ -22,7 +22,7 @@ export default function(filter, params) {
 
     _setupNavigation: function(model) {
       var noSubcategories = params && !!params.no_subcategories,
-          filterMode = "category/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter;
+          filterMode = "c/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter;
 
       this.controllerFor('navigation/category').setProperties({
         category: model,
@@ -47,7 +47,7 @@ export default function(filter, params) {
     },
 
     _retrieveTopicList: function(model, transition) {
-      var listFilter = "category/" + Discourse.Category.slugFor(model) + "/l/" + filter,
+      var listFilter = "c/" + Discourse.Category.slugFor(model) + "/l/" + filter,
           self = this;
 
       var findOpts = filterQueryParams(transition.queryParams, params),

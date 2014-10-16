@@ -151,7 +151,7 @@ export default ObjectController.extend(ModalFunctionality, {
       this.get('model').save().then(function(result) {
         self.send('closeModal');
         model.setProperties({slug: result.category.slug, id: result.category.id });
-        Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(model));
+        Discourse.URL.redirectTo("/c/" + Discourse.Category.slugFor(model));
 
       }).catch(function(error) {
         if (error && error.responseText) {

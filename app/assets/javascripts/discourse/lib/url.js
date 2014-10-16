@@ -1,13 +1,6 @@
 /*global LockOn:true*/
-/**
-  URL related functions.
-
-  @class URL
-  @namespace Discourse
-  @module Discourse
-**/
-
-var jumpScheduled = false;
+var jumpScheduled = false,
+    rewrites = [];
 
 Discourse.URL = Em.Object.createWithMixins({
 
@@ -102,7 +95,7 @@ Discourse.URL = Em.Object.createWithMixins({
 
     if (Em.isEmpty(path)) { return; }
 
-    if(Discourse.get("requiresRefresh")){
+    if (Discourse.get('requiresRefresh')) {
       document.location.href = path;
       return;
     }
@@ -140,10 +133,9 @@ Discourse.URL = Em.Object.createWithMixins({
       }
     }
 
-    // Rewrite /groups paths
-    if (path.indexOf('/group/') === 0) {
-      path = path.replace('group/', 'groups/');
-    }
+    rewrites.forEach(function(rw) {
+      path = path.replace(rw.regexp, rw.replacement);
+    });
 
     if (this.navigatedToPost(oldPath, path)) { return; }
     // Schedule a DOM cleanup event
@@ -161,12 +153,10 @@ Discourse.URL = Em.Object.createWithMixins({
     return this.handleURL(path);
   },
 
-  /**
-    Redirect to a URL.
-    This has been extracted so it can be tested.
+  rewrite: function(regexp, replacement) {
+    rewrites.push({ regexp: regexp, replacement: replacement });
+  },
 
-    @method redirectTo
-  **/
   redirectTo: function(url) {
     window.location = Discourse.getURL(url);
   },
