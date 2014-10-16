@@ -1,9 +1,20 @@
 
 export default Ember.ArrayController.extend({
+  needs: ['user-notifications'],
   canLoadMore: true,
   loading: false,
+  showDismissButton: function() {
+    return this.get('user').total_unread_notifications > 0;
+  }.property('user'),
 
   actions: {
+    resetNew: function() {
+      var self = this;
+      Discourse.NotificationContainer.resetNew().then(function() {
+        self.get('controllers.user-notifications').setEach('read', true);
+      });
+    },
+
     loadMore: function() {
       if (this.get('canLoadMore') && !this.get('loading')) {
         this.set('loading', true);

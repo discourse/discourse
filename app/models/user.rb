@@ -242,6 +242,7 @@ class User < ActiveRecord::Base
 
   def reload
     @unread_notifications_by_type = nil
+    @unread_total_notifications = nil
     @unread_pms = nil
     super
   end
@@ -252,6 +253,10 @@ class User < ActiveRecord::Base
 
   def unread_notifications
     unread_notifications_by_type.except(Notification.types[:private_message]).values.sum
+  end
+
+  def total_unread_notifications
+    @unread_total_notifications ||= notifications.where("read = false").count
   end
 
   def saw_notification_id(notification_id)
@@ -266,7 +271,8 @@ class User < ActiveRecord::Base
   def publish_notifications_state
     MessageBus.publish("/notification/#{id}",
                        {unread_notifications: unread_notifications,
-                        unread_private_messages: unread_private_messages},
+                        unread_private_messages: unread_private_messages,
+                        total_unread_notifications: total_unread_notifications},
                        user_ids: [id] # only publish the notification to this user
     )
   end
