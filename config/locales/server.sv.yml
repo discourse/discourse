@@ -22,6 +22,13 @@ sv:
   powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript påslaget'
   via: "%{username} via %{site_name}"
   is_reserved: "är reserverat"
+  purge_reason: "Automatiskt borttagen på grund av att vara gammal och ej verifierad"
+  errors:
+    messages:
+      invalid_boolean: "Ogiltigt boolean."
+      taken: "används redan"
+    embed:
+      load_from_remote: "Det uppstod ett fel vid laddning av artikeln."
   too_many_mentions:
     zero: "Tyvärr, du kan inte omnämna andra användare."
     one: "Tyvärr, du kan bara omnämna en annan användare i ett inlägg."
@@ -448,12 +455,6 @@ sv:
       subject_template: "Välkommen till %{site_name}!"
     welcome_invite:
       subject_template: "Välkommen till %{site_name}!"
-    export_succeeded:
-      subject_template: "Export completed successfully"
-      text_body_template: "The export was successful."
-    import_succeeded:
-      subject_template: "Import completed successfully"
-      text_body_template: "The import was successful."
     too_many_spam_flags:
       subject_template: "Nytt konto blockerat"
     blocked_by_staff:

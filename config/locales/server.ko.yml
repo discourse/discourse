@@ -820,12 +820,6 @@ ko:
         다시한번 환영합니다!
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
-    export_succeeded:
-      subject_template: "내보내기 성공"
-      text_body_template: "내보내기가 성공하였습니다."
-    import_succeeded:
-      subject_template: "가져오기 성공"
-      text_body_template: "가져오기가 성공하였습니다."
     too_many_spam_flags:
       subject_template: "새로운 계정은 블락되었습니다."
     blocked_by_staff:
@@ -891,10 +885,17 @@ ko:
         ---
         %{respond_instructions}
     digest:
+      why: "본 메일은 %{last_seen_at}에  %{site_link} 방문 이후 작성된 글들을 간략하게 요약한 내용을 담고 있습니다."
+      subject_template: "[%{site_name}] 요약 %{date}"
       new_activity: "당신의 토픽과 게시물에 등록된 새로운 활동:"
+      top_topics: "인기 게시글"
+      other_new_topics: "인기 토픽"
+      unsubscribe: "이 이메일은 사용자님께서 한동안 %{site_link}에 방문하지 않아 사이트의 활동들을 요약한것 입니다. 만약 구독 해지를 원하시면 링크를 클릭해주세요. %{unsubscribe_link}"
       click_here: "클릭"
       from: "%{site_name} 요약"
       read_more: "더 읽기"
+      posts:
+        other: "%{count} 글"
     forgot_password:
       subject_template: "[%{site_name}] 패스워드 재설정"
       text_body_template: |

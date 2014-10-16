@@ -90,6 +90,7 @@ de:
       facebook: 'diesen Link auf Facebook teilen'
       google+: 'diesen Link auf Google+ teilen'
       email: 'diesen Link per E-Mail senden'
+    topic_admin_menu: "Thema administrieren"
     edit: 'Titel und Kategorie dieses Themas ändern'
     not_implemented: "Tut uns leid, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -122,21 +123,10 @@ de:
     daily: "täglich"
     weekly: "wöchentlich"
     every_two_weeks: "jede zweite Woche"
+    max_of_count: "von max. {{count}}"
     character_count:
       one: "{{count}} Zeichen"
       other: "{{count}} Zeichen"
-    in_n_seconds:
-      one: "in einer Sekunde"
-      other: "in {{count}} Sekunden"
-    in_n_minutes:
-      one: "in einer Minute"
-      other: "in {{count}} Minuten"
-    in_n_hours:
-      one: "in einer Stunde"
-      other: "in {{count}} Stunden"
-    in_n_days:
-      one: "in einem Tag"
-      other: "in {{count}} Tagen"
     suggested_topics:
       title: "Vorgeschlagene Themen"
     about:
@@ -340,7 +330,7 @@ de:
       email:
         title: "E-Mail"
         instructions: "Wird niemals öffentlich angezeigt."
-        ok: "Schaut gut aus. Wir schicken dir eine E-Mail zur Bestätigung."
+        ok: "Wir senden dir zur Bestätigung eine E-Mail."
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein."
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt."
         frequency: "Wir werden dir nur E-Mails senden, wenn wir dich kürzlich nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gesehen hast."
@@ -359,7 +349,7 @@ de:
         not_available: "Nicht verfügbar. Wie wäre es mit {{suggestion}}?"
         too_short: "Dein Benutzername ist zu kurz."
         too_long: "Dein Benutzername ist zu lang."
-        checking: "Überprüfe die Verfügbarkeit des Benutzernamens..."
+        checking: "Verfügbarkeit wird geprüft..."
         enter_email: 'Benutzername gefunden. Gib die zugehörige E-Mail-Adresse ein.'
         prefilled: "Die E-Mail-Adresse passt zu diesem registrierten Benutzernamen."
       locale:
@@ -513,6 +503,7 @@ de:
     created_lowercase: 'erstellt'
     trust_level: 'Vertrauensstufe'
     search_hint: 'Benutzername'
+    search_hint_admin: 'Benutzername oder E-Mail-Adresse'
     create_account:
       title: "Neues Benutzerkonto erstellen"
       failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
@@ -574,7 +565,6 @@ de:
       drafts_offline: "Entwürfe offline"
       min_length:
         need_more_for_title: "im Titel fehlen noch {{n}} Zeichen"
-        need_more_for_reply: "im Beitrag fehlen noch {{n}} Zeichen"
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -628,10 +618,11 @@ de:
       help: "Hilfe zur Markdown-Formatierung"
       toggler: "Eingabebereich aus- oder einblenden"
       admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
-      auto_close_label: "Schließe das Thema automatisch nach:"
-      auto_close_units: "(Stunden, Uhrzeit oder Datum)"
-      auto_close_examples: 'Gib eine Anzahl von Stunden, eine Uhrzeit oder ein Datum ein — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Bitte einen gültigen Wert eingeben."
+      auto_close:
+        error: "Bitte geben Sie einen gültigen Wert ein."
+        limited:
+          units: "(# Stunden)"
+          examples: 'Geben Sie die Anzahl der Stunden ein (24).'
     notifications:
       title: "Benachrichtigung über Erwähnungen mit @Name, Antworten auf deine Beiträge und Themen, private Nachrichten etc."
       none: "Du hast momentan keine Benachrichtigungen."
@@ -793,26 +784,23 @@ de:
           '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
           '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
           '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
-          '1_2': 'Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
-          '1': 'Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
           '0_2': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
           '0': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
         watching_pm:
           title: "Beobachten"
+          description: "Du wirst über jeden neuen Beitrag in dieser privaten Unterhaltung benachrichtigt. Die Anzahl der ungelesenen und neuen Beiträge wird auch neben dem Thema erscheinen."
         watching:
           title: "Beobachten"
+          description: "Du wirst über jeden neuen Beitrag in diesem Thema benachrichtigt. Die Anzahl der ungelesenen und neuen Beiträge wird auch neben dem Thema erscheinen."
         tracking_pm:
           title: "Verfolgen"
-          description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Thema angezeigt. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
         tracking:
           title: "Verfolgen"
         regular:
           title: "Normal"
-          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular_pm:
           title: "Normal"
-          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deine Nachricht in der privaten Unterhaltung antwortet."
         muted_pm:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über diese private Unterhaltung."
@@ -920,6 +908,7 @@ de:
       post_number: "Beitrag {{number}}"
       in_reply_to: "als Antwort auf"
       last_edited_on: "Beitrag zuletzt bearbeitet am"
+      reply_as_new_topic: "Mit verknüpftem Thema antworten"
       continue_discussion: "Fortsetzung der Diskussion von {{postLink}}:"
       follow_quote: "springe zum zitierten Beitrag"
       show_full: "Zeige ganzen Beitrag"
@@ -1084,6 +1073,8 @@ de:
           previous: "Vorherige Überarbeitung"
           next: "Nächste Überarbeitung"
           last: "Letzte Überarbeitung"
+          hide: "Überarbeitung verstecken"
+          show: "Überarbeitung anzeigen"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs. <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1147,11 +1138,12 @@ de:
       notifications:
         watching:
           title: "Beobachten"
+          description: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Thema erscheinen."
         tracking:
           title: "Verfolgen"
+          description: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
         regular:
           title: "Normal"
-          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
@@ -1163,6 +1155,7 @@ de:
       delete_spammer: "Spammer löschen"
       delete_confirm: "Du wirst <b>%{posts}</b> Beiträge und <b>%{topics}</b> Themen von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>%{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>%{ip_address}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
+      ip_address_missing: "(nicht verfügbar)"
       hidden_email_address: "(versteckt)"
       submit_tooltip: "Private Meldung abschicken"
       take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
@@ -1199,6 +1192,8 @@ de:
         help: "Dieses Thema ist angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
       archived:
         help: "Dieses Thema ist archiviert; es ist eingefroren und kann nicht mehr geändert werden"
+      invisible:
+        help: "Dieses Thema ist unsichtbar. Es wird in keiner Themenliste angezeigt und kann nur mit einem direkten Link betrachtet werden."
     posts: "Beiträge"
     posts_lowercase: "Beiträge"
     posts_long: "dieses Thema enthält {{number}} Beiträge"
@@ -1282,7 +1277,7 @@ de:
         daily:
           title: "Angesagt täglich"
         this_year: "Dieses Jahr"
-        this_month: "Dieses Monat"
+        this_month: "Dieser Monat"
         this_week: "Diese Woche"
         today: "Heute"
         other_periods: "zeige weitere angesagte Themen"
@@ -1378,6 +1373,7 @@ de:
         topic_flagged: "Dieses <strong>Thema</strong> wurde gemeldet."
         visit_topic: "Besuche das Thema, um zu reagieren"
         was_edited: "Beitrag wurde nach der ersten Meldung bearbeitet"
+        previous_flags_count: "Dieses Thema wurde bereits {{count}} mal gemeldet."
         summary:
           action_type_3:
             one: "„am Thema vorbei“"
@@ -1457,6 +1453,7 @@ de:
             text: "Backup"
             title: "Ein Backup erstellen"
             confirm: "Willst du ein neues Backup starten?"
+            without_uploads: "Ja (ohne Dateien)"
           download:
             text: "Download"
             title: "Backup herunterladen"
@@ -1547,6 +1544,8 @@ de:
           love:
             name: 'Liebe'
             description: "Die Farbe des Like-Buttons."
+          wiki:
+            name: 'Wiki'
       email:
         title: "E-Mail"
         settings: "Einstellungen"
@@ -1697,6 +1696,7 @@ de:
           other: "Konnte %{count} Benutzer nicht ablehnen."
         not_verified: "Nicht überprüft"
         check_email:
+          title: "E-Mail-Adresse des Benutzers anzeigen"
           text: "Anzeigen"
       user:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
@@ -1780,6 +1780,10 @@ de:
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
         trust_level_3_requirements: "Anforderungen für Vertrauensstufe 3"
+        trust_level_locked_tip: "Vertrauensstufe ist nicht gesperrt. Das System wird den Benutzer nicht befördern oder degradieren. "
+        trust_level_unlocked_tip: "Vertrauensstufe ist nicht gesperrt. Das System kann den Benutzer befördern oder degradieren. "
+        lock_trust_level: "Vertrauensstufe sperren"
+        unlock_trust_level: "Vertrauensstufe entsperren"
         tl3_requirements:
           title: "Anforderungen für Vertrauensstufe 3"
           table_title: "In den letzten 100 Tagen:"
@@ -1796,8 +1800,15 @@ de:
           flagged_by_users: "Von Benutzern gemeldet"
           likes_given: "Abgegebene Likes"
           likes_received: "Erhaltene Likes"
+          likes_received_days: "Erhaltene Likes: eindeutige Tage"
+          likes_received_users: "Erhaltene Likes: eindeutige Benutzer"
           qualifies: "Erfüllt die Anforderungen für Vertrauensstufe 3."
           does_not_qualify: "Erfüllt nicht die Anforderungen für Vertrauensstufe 3."
+          will_be_promoted: "Wird bald beförderd werden."
+          will_be_demoted: "Wird bald degradiert werden."
+          on_grace_period: "Wird nicht degradiert, da derzeit in Schonfrist nach Beförderung."
+          locked_will_not_be_promoted: "Vertrauensstufe ist gesperrt. Wird nie befördert werden."
+          locked_will_not_be_demoted: "Vertrauensstufe ist gesperrt. Wird nie degradiert werden."
         sso:
           title: "Single Sign-on"
           external_id: "Externe ID"
@@ -1817,6 +1828,10 @@ de:
         delete: "Löschen"
         cancel: "Abbrechen"
         delete_confirm: "Sind Sie sicher, dass Sie dieses Textfeld löschen möchten?"
+        required:
+          title: "Bei Registrierung erforderlich?"
+          enabled: "erforderlich"
+          disabled: "nicht erforderlich"
         editable:
           title: "Nach der Registrierung editierbar?"
           enabled: "editierbar"
@@ -1825,6 +1840,7 @@ de:
           text: 'Textfeld'
           confirm: 'Bestätigung'
       site_text:
+        none: "Wähle einen Inhaltstyp, um mit dem Bearbeiten zu beginnen."
         title: 'Textinhalt'
       site_settings:
         show_overriden: 'Zeige nur geänderte Einstellungen'
@@ -1946,6 +1962,7 @@ de:
         star: '<b>f</b> Thema favorisieren'
         share_topic: '<b>⇧ Umsch</b> + <b>s</b> Thema teilen'
         share_post: '<b>s</b> Beitrag teilen'
+        reply_as_new_topic: '<b>t</b> Mit verknüpftem Thema antworten'
         reply_topic: '<b>⇧ Umsch</b> + <b>r</b> Auf Thema antworten'
         reply_post: '<b>r</b> Auf Beitrag antworten'
         quote_post: '<b>q</b> Beitrag zitieren'

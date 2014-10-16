@@ -110,14 +110,6 @@ ko:
     max_of_count: "max of {{count}}"
     character_count:
       other: "{{count}} 자"
-    in_n_seconds:
-      other: "in {{count}}초"
-    in_n_minutes:
-      other: "in {{count}}분"
-    in_n_hours:
-      other: "in {{count}}시간"
-    in_n_days:
-      other: "in {{count}}일"
     suggested_topics:
       title: "추천 토픽"
     about:
@@ -484,6 +476,7 @@ ko:
     created_lowercase: '최초 글'
     trust_level: '신뢰도'
     search_hint: '사용자명'
+    search_hint_admin: '아이디 혹은 이메일'
     create_account:
       title: "회원 가입"
       failed: "뭔가 잘못되었습니다. 이 메일은 등록이 되어있습니다. 비밀번호를 잊으셨다면 비밀번호 찾기를 눌러주세요."
@@ -545,7 +538,6 @@ ko:
       drafts_offline: "초안"
       min_length:
         need_more_for_title: "제목을 {{n}}글자 더 입력해주세요"
-        need_more_for_reply: "내용을 {{n}}글자 더 입력해주세요"
       error:
         title_missing: "제목은 필수 항목입니다"
         title_too_short: "제목은 최소 {{min}} 글자 이상이어야 합니다."
@@ -599,10 +591,6 @@ ko:
       help: "마크다운 편집 도움말"
       toggler: "작성 패널을 숨기거나 표시"
       admin_options_title: "이 토픽에 대한 옵션 설정"
-      auto_close_label: "자동 토픽 닫기: "
-      auto_close_units: "일"
-      auto_close_examples: '정확한 시간을 입력하세요. — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Please enter a valid value."
     notifications:
       title: "@사용자이름 언급, 게시글과 토픽에 대한 언급, 개인 메시지 등에 대한 알림"
       none: "현재 알림이 없습니다."
@@ -761,8 +749,6 @@ ko:
           '2_4': '이 토픽에 답글을 게시하여서 알림을 받게 됩니다.'
           '2_2': '이 토픽을 추적하고 있어서 알림을 받게 됩니다.'
           '2': '이 토픽을 읽어서 알림을 받게 됩니다. <a href="/users/{{username}}/preferences">(설정)</a>'
-          '1_2': '누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다.'
-          '1': '누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다.'
           '0_7': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
           '0_2': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
           '0': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
@@ -774,16 +760,12 @@ ko:
           description: "이 토픽의 새로운 게시글은 항상 알림이 동작합니다. 읽지 않은 글의 수는 토픽 옆에 표시됩니다."
         tracking_pm:
           title: "알림 : 새 글 표시 중"
-          description: "읽지 않은 글과 새로운 게시물 수를 볼 수 있습니다. 누군가 당신의 @name을 언급했거나 당신의 글에 답글을 작성하면 알림을 받습니다."
         tracking:
           title: "새 글 표시 중"
-          description: "읽지 않은 게시글의 수는 토픽 옆에 표시됩니다. 당신의 @이름 을 언급하거나 당신의 게시글에 답글을 작성한 경우에 알림이 작동합니다."
         regular:
           title: "알림: 일반"
-          description: "누군가가 게시물에 @사용자이름 또는 답글을 달 경우에 알림을 받게 됩니다."
         regular_pm:
           title: "알림: 일반"
-          description: "누군가 당신의 @name 으로 언급했거나 당신의 글에 답글이 달릴 때만 알림을 받게 됩니다."
         muted_pm:
           title: "알림 : 끔"
           description: "이 개인 메시지에 대해 어떠한 알림도 받지 않지 않습니다."
@@ -1098,7 +1080,6 @@ ko:
           description: "이 카테고리 내의 새로운 토픽들을 추적하도록 자동으로 설정됩니다. 토픽 옆에 읽지 않은 게시글의 수가 표시됩니다."
         regular:
           title: "알림: 일반"
-          description: "누군가 당신의 @name 으로 언급했거나 당신의 글에 답글이 달릴 때만 알림을 받게 됩니다."
         muted:
           title: "알림 꺼짐"
           description: "이 카테고리의 새로운 토픽에 대한 알림을 받지 않고 읽지 않\x1C은 탭에도 표시하지 않습니다."
@@ -1756,7 +1737,6 @@ ko:
           external_avatar_url: "Avatar URL"
       user_fields:
         title: "사용자 필드"
-        help: "사용자가 가입할 때 입력하여야 하는 필드를 여기에 추가하세요."
         create: "사용자 필드 생성하기"
         untitled: "무제"
         name: "필드명"
@@ -1767,6 +1747,10 @@ ko:
         delete: "삭제"
         cancel: "취소"
         delete_confirm: "사용자 필드를 삭제할까요?"
+        required:
+          title: "회원가입시 필수항목?"
+          enabled: "필수"
+          disabled: "필수 아님"
         editable:
           title: "가입 후 편집 가능?"
           enabled: "편집 가능"

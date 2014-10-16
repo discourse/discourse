@@ -6,6 +6,13 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 zh_CN:
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "MMMDo"
     short_date: "ll"
@@ -29,6 +36,7 @@ zh_CN:
     messages:
       too_long_validation: "最多只能有 %{max} 个字符；您已经输入了 %{length} 个字符。"
       invalid_boolean: "无效布尔值。"
+      taken: "已经被使用"
     embed:
       load_from_remote: "载入帖子时遇到错误。"
   bulk_invite:
@@ -207,7 +215,7 @@ zh_CN:
     title: "欢迎来到贵宾室"
     body: |2
 
-      恭喜！:confetti_ball:
+      恭喜！ :confetti_ball:
 
       如果您看到了这个主题，说明您已经被提升至**常规**（信任等级3）了。
 
@@ -228,7 +236,7 @@ zh_CN:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "关于分类：%{category}"
-    replace_paragraph: "[用一段简短的话描述分类，并替换此第一段内容。这段文字将出现在分类选择区域，所有试着不要超过200个字符。只要当您编辑了这段文字或者是创建了一个主题，分类才会出现在分类列表中。]"
+    replace_paragraph: "[用一段简短的话描述分类，并替换这第一段的内容。这段文字将出现在分类选择区域，所以尽量不要超过200个字符。当您编辑了这段文字或者再次分类创建了一个主题后，分类才会出现在分类列表中。]"
     post_template: "%{replace_paragraph}\n\n在接下来的一段文字中输入分类的详细描述信息，可以在这里包含在此分类下讨论的规则、内容导向等等。\n\n考虑这些事情：\n\n- 这个分类用来做什么？ 为什么人们选择这个分类寻找主题？\n\n- 这个分类和其他已有分类有什么不同？\n\n- 我们需要这个分类么？\n\n- 我们应该和已有分类合并吗？还是分离成更多的分类？\n"
     errors:
       uncategorized_parent: "未分类不能有一个父分类"
@@ -620,6 +628,7 @@ zh_CN:
     enable_escaped_fragments: "如未侦测到爬虫回退到使用 Google Ajax-Crawling API。参见 https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "通过 no script 标签启用对标准爬虫的支持。"
     allow_moderators_to_create_categories: "允许版主创建新的分类"
+    cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|starred|categories|top|read|posted"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
@@ -925,6 +934,7 @@ zh_CN:
     new_registrations_disabled: "现在不允许注册新账户。"
     password_too_long: "密码不能超过 200 个字符。"
     missing_user_field: "您还没有填写完所有用户字段"
+    close_window: "验证已经完成。关闭窗口以继续。"
   user:
     no_accounts_associated: "无关联账户"
     username:
@@ -971,6 +981,13 @@ zh_CN:
       %{invite_link}
 
       您是被一个受信任的用户邀请的，所以您可以不用登录。
+  invite_password_instructions:
+    subject_template: "为 %{site_name} 账户设置密码"
+    text_body_template: |
+      感谢您接受来自 %{site_name} 的邀请——欢迎！
+
+      要再次登录，点击下面的链接设置密码：
+      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] 电子邮件发送测试"
     text_body_template: |
@@ -1175,26 +1192,26 @@ zh_CN:
     welcome_invite:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: "感谢您接受邀请加入 %{site_name} —— 欢迎！\n\n我们为您自动生成了一个用户名：**%{username}**，但是您在任何时候都可以访问[您的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 使用您喜欢的方式登入——但是必须以**同样的邮件地址**，即您收到邀请的邮箱地址登入。否则我们就无法分辨是不是您本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n好好享受您在论坛的时光吧！\n\n[prefs]: %{user_preferences_url}\n"
-    export_succeeded:
-      subject_template: "导出成功"
-      text_body_template: "导出操作成功。"
-    export_failed:
-      subject_template: "导出失败"
+    backup_succeeded:
+      subject_template: "备份成功完成"
+      text_body_template: "备份成功。\n访问[管理 > 备份](/admin/backups)系在您的新备份。"
+    backup_failed:
+      subject_template: "备份失败"
       text_body_template: |
-        导出失败了。
+        备份已经失败了。
 
         以下是日志：
 
         ```
         %{logs}
         ```
-    import_succeeded:
-      subject_template: "导入成功"
-      text_body_template: "导入操作成功。"
-    import_failed:
-      subject_template: "导入失败"
+    restore_succeeded:
+      subject_template: "恢复成功完成"
+      text_body_template: "恢复已经成功。"
+    restore_failed:
+      subject_template: "恢复失败"
       text_body_template: |
-        导入失败了。
+        恢复失败。
 
         以下是日志：
 

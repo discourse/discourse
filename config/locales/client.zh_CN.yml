@@ -110,14 +110,6 @@ zh_CN:
     max_of_count: "最多 {{count}}"
     character_count:
       other: "%{count} 个字符"
-    in_n_seconds:
-      other: "在 {{count}} 秒钟内"
-    in_n_minutes:
-      other: "在 {{count}} 分钟内"
-    in_n_hours:
-      other: "在 {{count}} 小时内"
-    in_n_days:
-      other: "在 {{count}} 天内"
     suggested_topics:
       title: "推荐主题"
     about:
@@ -484,6 +476,7 @@ zh_CN:
     created_lowercase: '创建时间'
     trust_level: '用户级别'
     search_hint: '用户名'
+    search_hint_admin: '用户名或电子邮件'
     create_account:
       title: "创建新帐号"
       failed: "出问题了，有可能这个电子邮箱已经被注册了。试试忘记密码链接？"
@@ -545,7 +538,6 @@ zh_CN:
       drafts_offline: "离线草稿"
       min_length:
         need_more_for_title: "请给标题再输入至少 {{n}} 个字符"
-        need_more_for_reply: "请给正文内容再输入至少 {{n}} 个字符"
       error:
         title_missing: "缺少标题"
         title_too_short: "标题太短，至少 {{min}} 个字符"
@@ -599,10 +591,15 @@ zh_CN:
       help: "Markdown 编辑帮助"
       toggler: "隐藏或显示编辑面板"
       admin_options_title: "本主题可选设置"
-      auto_close_label: "自动关闭主题时间："
-      auto_close_units: "（可以是小时数，具体时间，或某个时间戳）"
-      auto_close_examples: '输入绝对时间或者小时数——24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "请输入有效值。"
+      auto_close:
+        label: "自动关闭主题时间："
+        error: "请输入一个有效值。"
+        based_on_last_post: "在最后一个帖子发表后暂不关闭主题的时间。"
+        all:
+          examples: '输入小时数（24），绝对时间（17:30）或时间戳（2013-11-22 14:00）。'
+        limited:
+          units: "(# 小时数）"
+          examples: '输入小时数（24）。'
     notifications:
       title: "使用 @用户名称 提及到您，回复您的帖子和主题，私信等等的通知消息"
       none: "您当前没有任何通知。"
@@ -738,6 +735,7 @@ zh_CN:
       jump_reply_down: 跳转至更晚的回复
       deleted: "此主题已被删除"
       auto_close_notice: "本主题将在 %{timeLeft} 后自动关闭"
+      auto_close_notice_based_on_last_post: "在最后一个帖子 %{duration} 无人回复关闭帖子的时间。"
       auto_close_title: '自动关闭设置'
       auto_close_save: "保存"
       auto_close_remove: "不要自动关闭该主题"
@@ -761,8 +759,6 @@ zh_CN:
           '2_4': '因为您在此主题内发表了回复，所以您将收到相关通知。'
           '2_2': '因为您在追踪此主题，所以您将收到相关通知。'
           '2': '因为您<a href="/users/{{username}}/preferences">阅读了此主题</a>，所以您将收到相关通知。'
-          '1_2': '仅当有人 @name 提及了您或回复了您的帖子，您才会收到相关通知。'
-          '1': '因为有人 @name 提及了您或回复了您的帖子，所以您将收到相关通知。'
           '0_7': '你将忽略关于此分类的所有通知。'
           '0_2': '您将忽略关于此主题的所有通知。'
           '0': '您将忽略关于此主题的所有通知。'
@@ -774,16 +770,12 @@ zh_CN:
           description: "一旦有关于这个主题的新帖子发表，您都会收到通知。未读贴的数量将出现在主题列表中每个主题的标题后。"
         tracking_pm:
           title: "追踪"
-          description: "未读和新帖子的数量将出现在私信旁。您只会在别人 @name 或回复您的主题时才会被提醒。"
         tracking:
           title: "追踪"
-          description: "未读贴和新帖的数量将出现在主题列表中每个主题的标题后。您只会在被人 @name 或有人回复了您的帖子时才会收到通知。"
         regular:
           title: "常规"
-          description: "只有当有人 @name 提及您或者回复您的帖子时，您才会收到通知。"
         regular_pm:
           title: "常规"
-          description: "只有当有人 @name 提及您或者回复您的私信时，您才会收到通知。"
         muted_pm:
           title: "防打扰"
           description: "您不会收到关于此私信的任何通知。"
@@ -905,6 +897,7 @@ zh_CN:
         edit: "抱歉，在编辑您的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
         attachment_too_large: "抱歉，您上传的附件太大了（最大不能超过 {{max_size_kb}}kb）。"
+        file_too_large: "抱歉，你上传的附件太大了（最大限制 {{max_size_kb}}kb）。"
         too_many_uploads: "抱歉, 您只能一次上传一张图片。"
         upload_not_authorized: "抱歉, 您不能上传此类型文件（可上传的文件类型有: {{authorized_extensions}}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传图片。"
@@ -1029,6 +1022,8 @@ zh_CN:
           previous: "上一版"
           next: "下一版"
           last: "最新版"
+          hide: "隐藏版本历史"
+          show: "显示版本历史"
           comparing_previous_to_current_out_of_total: "第 <strong>{{previous}}</strong> 版与 第 <strong>{{current}}</strong> 版 / {{total}} 的差异比较"
         displays:
           inline:
@@ -1098,7 +1093,6 @@ zh_CN:
           description: "您将会自动追踪这些分类中的所有新主题。未读和新帖子数量将出现在每个主题后。"
         regular:
           title: "常规"
-          description: "只有当有人 @name 提及你或者回复你的帖子时，你才会收到通知。"
         muted:
           title: "免打扰"
           description: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在您的未读列表中。"
@@ -1493,6 +1487,9 @@ zh_CN:
           love:
             name: '赞'
             description: "赞按钮的颜色。"
+          wiki:
+            name: '维基编辑'
+            description: "维基帖子的背景颜色"
       email:
         title: "电子邮件"
         settings: "设置"
@@ -1740,6 +1737,8 @@ zh_CN:
           flagged_by_users: "标记的用户"
           likes_given: "给出的赞"
           likes_received: "收到的赞"
+          likes_received_days: "收到的赞：每天"
+          likes_received_users: "收到的赞：每用户"
           qualifies: "符合等级3的信用度"
           does_not_qualify: "未符合等级3的信用度"
           will_be_promoted: "将在近期被提升。"
@@ -1756,7 +1755,7 @@ zh_CN:
           external_avatar_url: "头像 URL"
       user_fields:
         title: "用户属性"
-        help: "在这里添加的任何属性将在用户注册时要求填写。"
+        help: "增加用户能填写的字段。"
         create: "创建用户属性 "
         untitled: "无标题"
         name: "字段名称"
@@ -1767,6 +1766,10 @@ zh_CN:
         delete: "删除"
         cancel: "取消"
         delete_confirm: "您确定要删除这个用户字段么？"
+        required:
+          title: "在注册时需要填写？"
+          enabled: "必填"
+          disabled: "可选"
         editable:
           title: "在注册后可以修改？"
           enabled: "可修改"

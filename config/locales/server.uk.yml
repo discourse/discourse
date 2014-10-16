@@ -531,12 +531,6 @@ uk:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
     welcome_invite:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
-    export_succeeded:
-      subject_template: "Експорт завершено успішно"
-      text_body_template: "Експорт був успішним."
-    import_succeeded:
-      subject_template: "Імпорт завершено успішно"
-      text_body_template: "Імпорт був успішним."
     bulk_invite_succeeded:
       subject_template: "Масове запрошення користувачів оброблено успішно"
     bulk_invite_failed:

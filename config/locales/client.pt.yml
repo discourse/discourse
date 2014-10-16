@@ -125,18 +125,6 @@ pt:
     character_count:
       one: "{{count}} caracter"
       other: "{{count}} caracteres"
-    in_n_seconds:
-      one: "em 1 segundo"
-      other: "em {{count}} segundos"
-    in_n_minutes:
-      one: "em 1 minuto"
-      other: "em {{count}} minutos"
-    in_n_hours:
-      one: "em 1 hora"
-      other: "em {{count}} horas"
-    in_n_days:
-      one: "em 1 dia"
-      other: "em {{count}} dias"
     suggested_topics:
       title: "Tópicos Sugeridos"
     about:
@@ -566,7 +554,6 @@ pt:
       drafts_offline: "rascunhos offline"
       min_length:
         need_more_for_title: "{{n}} no título"
-        need_more_for_reply: "{{n}} para chegar à mensagem"
       error:
         title_missing: "O Título é obrigatório"
         title_too_short: "Título tem que ter no mínimo {{min}} caracteres."
@@ -620,10 +607,6 @@ pt:
       help: "Ajuda da edição Markdown"
       toggler: "esconder ou exibir o painel de composição"
       admin_options_title: "Configurações opcionais de staff para este tópico"
-      auto_close_label: "Tempo de fecho automático do tópico:"
-      auto_close_units: "(# de horas, de tempo, ou timestamp)"
-      auto_close_examples: 'insira tempo absoluto ou número de horas — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Por favor insira um valor válido."
     notifications:
       title: "notificações de menção de @nome, respostas às suas mensagens e tópicos, mensagens privadas, etc"
       none: "Não há notifcações neste momento."
@@ -786,8 +769,6 @@ pt:
           '2_4': 'Receberá notificações porque inseriu uma resposta neste tópico.'
           '2_2': 'Receberá notificações porque está a monitorizar este tópico.'
           '2': 'Receberá notificações porque <a href="/users/{{username}}/preferences">leu este tópico</a>.'
-          '1_2': 'Receberá notificações apenas se alguém mencionar o seu @nome ou responder à sua mensagem.'
-          '1': 'Receberá notificações apenas se alguém mencionar o seu @nome ou responder à sua mensagem.'
           '0_7': 'Está a ignorar todas as notificações nesta categoria.'
           '0_2': 'Está a ignorar todas as notificações para este tópico.'
           '0': 'Está a ignorar todas as notificações para este tópico.'
@@ -797,15 +778,12 @@ pt:
           title: "Observar"
         tracking_pm:
           title: "Seguir"
-          description: "Será apresentada uma contagem de posts novos e não lidos junto da mensagem privada. Será apenas notificado se alguém mencionar o seu @nome ou responder ao seu post."
         tracking:
           title: "Monitorar"
         regular:
           title: "Regular"
-          description: "Será apenas notificado quando alguém mencionar o seu @nome ou responder ao sei post."
         regular_pm:
           title: "Regular"
-          description: "Receberá notificações apenas se alguém mencionar o seu @nome ou responder ao seu post na mensagem privada."
         muted_pm:
           title: "Silenciar"
           description: "Não será notificado relativamente a nada sobre esta mensagem privada."
@@ -1141,7 +1119,6 @@ pt:
           title: "Acompanhar"
         regular:
           title: "Normal"
-          description: "Será notificado apenas se alguém mencionar o seu @nome ou responder ao seu post."
         muted:
           title: "Silenciar"
           description: "Não será notificado relativamente a nada deste tópico, e não aparecerão no seu separador de não lidos."

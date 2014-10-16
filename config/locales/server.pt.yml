@@ -593,12 +593,6 @@ pt:
       subject_template: "Bem-vindo em %{site_name}!"
     welcome_invite:
       subject_template: "Bem-vindo em %{site_name}!"
-    export_succeeded:
-      subject_template: "Exportação completada com sucesso"
-      text_body_template: "A exportação foi bem sucedida."
-    import_succeeded:
-      subject_template: "Importação completada com sucesso"
-      text_body_template: "A importação foi bem sucedida."
     too_many_spam_flags:
       subject_template: "Nova conta bloqueada"
     blocked_by_staff:
