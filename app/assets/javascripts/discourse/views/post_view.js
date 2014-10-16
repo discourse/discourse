@@ -98,7 +98,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     var expandContract = "";
     if (!$aside.data('full')) {
       expandContract = "<i class='fa fa-" + desc + "' title='" + I18n.t("post.expand_collapse") + "'></i>";
-      $aside.css('cursor', 'pointer');
+      $('.title', $aside).css('cursor', 'pointer');
     }
     $('.quote-controls', $aside).html(expandContract + navLink);
   },
