@@ -1,8 +1,8 @@
 <div class="modal-body">
   <div>
     <div id="revision-controls">
-      <button title="{{i18n post.revisions.controls.first}}" {{bind-attr class=":btn :standard displayGoToFirst::invisible" disabled=loading}} {{action "loadFirstVersion"}}><i class="fa fa-fast-backward"></i></button>
-      <button title="{{i18n post.revisions.controls.previous}}" {{bind-attr class=":btn :standard displayGoToPrevious::invisible" disabled=loading}} {{action "loadPreviousVersion"}}><i class="fa fa-backward"></i></button>
+      <button title="{{i18n post.revisions.controls.first}}" {{bind-attr class=":btn :standard :no-text displayGoToFirst::invisible" disabled=loading}} {{action "loadFirstVersion"}}><i class="fa fa-fast-backward"></i></button>
+      <button title="{{i18n post.revisions.controls.previous}}" {{bind-attr class=":btn :standard :no-text displayGoToPrevious::invisible" disabled=loading}} {{action "loadPreviousVersion"}}><i class="fa fa-backward"></i></button>
       <div id="revision-numbers" {{bind-attr class="displayRevisions::invisible"}}>
         {{#if loading}}
           <div id='revision-loading'><i class='fa fa-spinner fa-spin'></i>{{i18n loading}}</div>
@@ -10,13 +10,13 @@
           {{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="version" totalBinding="revisions_count"}}
         {{/if}}
       </div>
-      <button title="{{i18n post.revisions.controls.next}}" {{bind-attr class=":btn :standard displayGoToNext::invisible" disabled=loading}} {{action "loadNextVersion"}}><i class="fa fa-forward"></i></button>
-      <button title="{{i18n post.revisions.controls.last}}" {{bind-attr class=":btn :standard displayGoToLast::invisible" disabled=loading}} {{action "loadLastVersion"}}><i class="fa fa-fast-forward"></i></button>
+      <button title="{{i18n post.revisions.controls.next}}" {{bind-attr class=":btn :standard :no-text displayGoToNext::invisible" disabled=loading}} {{action "loadNextVersion"}}><i class="fa fa-forward"></i></button>
+      <button title="{{i18n post.revisions.controls.last}}" {{bind-attr class=":btn :standard :no-text displayGoToLast::invisible" disabled=loading}} {{action "loadLastVersion"}}><i class="fa fa-fast-forward"></i></button>
       {{#if displayHide}}
-        <button title="{{i18n post.revisions.controls.hide}}" {{bind-attr class=":btn :standard" disabled=loading}} {{action "hideVersion"}}><i class="fa fa-trash-o"></i></button>
+        <button title="{{i18n post.revisions.controls.hide}}" {{bind-attr class=":btn :standard :no-text" disabled=loading}} {{action "hideVersion"}}><i class="fa fa-trash-o"></i></button>
       {{/if}}
       {{#if displayShow}}
-        <button title="{{i18n post.revisions.controls.show}}" {{bind-attr class=":btn :standard" disabled=loading}} {{action "showVersion"}}><i class="fa fa-undo"></i></button>
+        <button title="{{i18n post.revisions.controls.show}}" {{bind-attr class=":btn :standard :no-text" disabled=loading}} {{action "showVersion"}}><i class="fa fa-undo"></i></button>
       {{/if}}
     </div>
     <div id="display-modes">
