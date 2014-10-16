@@ -32,7 +32,7 @@ export default Ember.Component.extend({
       },
       onChangeItems: function(items) {
         var categories = _.map(items, function(link) {
-          var slug = link.match(/href=['"]\/category\/([^'"]+)/)[1];
+          var slug = link.match(/href=['"]\/c\/([^'"]+)/)[1];
           return Discourse.Category.findSingleBySlug(slug);
         });
         self.set("categories", categories);
