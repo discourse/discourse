@@ -1,6 +1,7 @@
 class CurrentUserSerializer < BasicUserSerializer
 
   attributes :name,
+             :total_unread_notifications,
              :unread_notifications,
              :unread_private_messages,
              :admin?,
