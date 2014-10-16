@@ -6,10 +6,7 @@
       {{#each}}
       <li>
         <a {{action "selectBadge" this}} {{bind-attr class="selected:active"}}>
-        <span {{bind-attr class=":user-badge badgeTypeClassName" data-badge-name="name" title="displayDescription"}}>
-          <i {{bind-attr class=":fa icon"}}></i>
-          {{displayName}}
-        </span>
+          {{badge-button badge=this}}
           {{#if newBadge}}
             <span class="list-badge">{{i18n filters.new.lower_title}}</span>
           {{/if}}
@@ -39,6 +36,7 @@
       <div>
         <label for="name">{{i18n admin.badges.icon}}</label>
         {{input type="text" name="name" value=icon}}
+        <p class='help'>{{i18n admin.badges.icon_help}}</p>
       </div>
 
       <div>
