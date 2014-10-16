@@ -6,9 +6,11 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 .hljs {
   display: block;
+  overflow-x: auto;
   padding: 0.5em;
   color: #333;
   background: #f8f8f8;
+  -webkit-text-size-adjust: none;
 }
 
 .hljs-comment,
@@ -34,33 +36,32 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-number,
 .hljs-hexcolor,
 .ruby .hljs-constant {
-  color: #099;
+  color: #008080;
 }
 
 .hljs-string,
 .hljs-tag .hljs-value,
 .hljs-phpdoc,
+.hljs-dartdoc,
 .tex .hljs-formula {
   color: #d14;
 }
 
 .hljs-title,
 .hljs-id,
-.coffeescript .hljs-params,
 .scss .hljs-preprocessor {
   color: #900;
   font-weight: bold;
 }
 
 .javascript .hljs-title,
-.lisp .hljs-title,
-.clojure .hljs-title,
+.hljs-list .hljs-keyword,
 .hljs-subst {
   font-weight: normal;
 }
 
 .hljs-class .hljs-title,
-.haskell .hljs-type,
+.hljs-type,
 .vhdl .hljs-literal,
 .tex .hljs-command {
   color: #458;
@@ -88,14 +89,14 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-symbol,
 .ruby .hljs-symbol .hljs-string,
 .lisp .hljs-keyword,
+.clojure .hljs-keyword,
+.scheme .hljs-keyword,
 .tex .hljs-special,
 .hljs-prompt {
   color: #990073;
 }
 
-.hljs-built_in,
-.lisp .hljs-title,
-.clojure .hljs-built_in {
+.hljs-built_in {
   color: #0086b3;
 }
 
@@ -124,17 +125,3 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-chunk {
   color: #aaa;
 }
-
-
-/*
---------------------------------------------------------------------------------
-|                       SHOULD NOT BE REMOVED                                  |
---------------------------------------------------------------------------------
-*/
-
-p > code, li > code, pre > code {
-  color: #333;
-  background: #f8f8f8;
-}
-
-// removed some unnecessary styles here
