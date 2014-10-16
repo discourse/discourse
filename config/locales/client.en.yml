@@ -633,7 +633,7 @@ en:
 
       min_length:
         need_more_for_title: "{{n}} to go for the title"
-        need_more_for_reply: "{{n}} to go for the post"
+        need_more_for_reply: "{{n}} to go"
 
       error:
         title_missing: "Title is required"
@@ -898,8 +898,8 @@ en:
           "2_4": 'You will receive notifications because you posted a reply to this topic.'
           "2_2": 'You will receive notifications because you are tracking this topic.'
           "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
-          "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
-          "1": 'You will be notified only if someone mentions your @name or replies to your post.'
+          "1_2": 'You will be notified if someone mentions your @name or replies to your post.'
+          "1": 'You will be notified if someone mentions your @name or replies to your post.'
           "0_7": 'You are ignoring all notifications in this category.'
           "0_2": 'You are ignoring all notifications on this topic.'
           "0": 'You are ignoring all notifications on this topic.'
@@ -911,16 +911,16 @@ en:
           description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic."
         tracking_pm:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the private message. You will be notified only if someone mentions your @name or replies to your post."
+          description: "A count of unread and new posts will appear next to the private message. You will be notified if someone mentions your @name or replies to your post."
         tracking:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the topic. You will be notified only if someone mentions your @name or replies to your post. "
+          description: "A count of unread and new posts will appear next to the topic. You will be notified if someone mentions your @name or replies to your post. "
         regular:
           title: "Regular"
-          description: "You will be notified only if someone mentions your @name or replies to your post."
+          description: "You will be notified if someone mentions your @name or replies to your post."
         regular_pm:
           title: "Regular"
-          description: "You will be notified only if someone mentions your @name or replies to your post in the private message."
+          description: "You will be notified if someone mentions your @name or replies to your post in the private message."
         muted_pm:
           title: "Muted"
           description: "You will never be notified of anything about this private message."
@@ -1295,7 +1295,7 @@ en:
           description: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
-          description: "You will be notified only if someone mentions your @name or replies to your post."
+          description: "You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Muted"
           description: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
