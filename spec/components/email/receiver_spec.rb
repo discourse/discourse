@@ -146,6 +146,7 @@ Pleasure to have you here!
         topic.posts.count.should == (start_count + 1)
         created_post = topic.posts.last
         created_post.via_email.should == true
+        created_post.raw_email.should == fixture_file("emails/valid_reply.eml")
         created_post.cooked.strip.should == fixture_file("emails/valid_reply.cooked").strip
       end
     end
