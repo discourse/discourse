@@ -41,6 +41,7 @@ class PostMover
     notify_users_that_posts_have_moved
     update_statistics
     update_user_actions
+    set_last_post_user_id(destination_topic)
 
     destination_topic
   end
@@ -136,5 +137,11 @@ class PostMover
         raise Discourse::InvalidParameters.new(:post_ids) if posts.empty?
       end
     end
+  end
+
+  def set_last_post_user_id(topic)
+    user_id = topic.posts.last.user_id rescue nil
+    return if user_id.nil?
+    topic.update_attribute :last_post_user_id, user_id
   end
 end

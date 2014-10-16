@@ -74,6 +74,7 @@ describe PostMover do
           new_topic.reload
           new_topic.posts_count.should == 2
           new_topic.highest_post_number.should == 2
+          new_topic.last_post_user_id.should == new_topic.posts.last.user_id
           expect(new_topic.last_posted_at).to be_present
 
           p2.reload
