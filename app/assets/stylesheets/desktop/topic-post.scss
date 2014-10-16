@@ -238,39 +238,30 @@ nav.post-controls {
   h1, h2, h3 {margin: 10px 0;}
   a.mention {background: darken(scale-color-diff(), 10%);}
 
-  p img {
-    max-width: 579px;
-    }
   .topic-body {
      width: 86%;
      padding-left: 1%;
      padding-right: 1%;
-     border: none;
-     }
+     border-top: none;
+     // WARNING: overflow hide is required for quoted / embedded images
+     // which expect "normal" post width, but expansions are narrower
+     overflow: hidden;
+  }
 
   .topic-avatar {
      width: 45px;
      margin: 0 10px 0 15px;
      border: none;
-
   }
 
   // bottom means "reply expansion" below a post
   &.bottom {
     &.hidden {display: block; opacity: 0; }
   }
-  &.bottom .arrow {float: right; margin: 0 0 0 0;}
+  &.bottom .arrow {float: right;}
   &.bottom {
-  margin-top: -11px;
-    // WARNING *ONLY* DO THIS ON REPLY EXPANSIONS!
-    // auto-sizing of images causes massive havoc with regular post stream
-    // but we have to do this on reply expansions because the width is
-    // unavoidably narrower than a regular post
-  .lightbox-wrapper img {
-    width: 100%;
-    height: auto;
+     margin-top: -11px;
   }
-}
 
   // top means "in reply to expansion" above a post
   &.top {
