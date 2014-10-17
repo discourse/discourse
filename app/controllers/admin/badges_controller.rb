@@ -20,6 +20,12 @@ class Admin::BadgesController < Admin::AdminController
                                       trigger: params[:trigger].to_i)
   end
 
+  def new
+  end
+
+  def show
+  end
+
   def badge_types
     badge_types = BadgeType.all.to_a
     render_serialized(badge_types, BadgeTypeSerializer, root: "badge_types")
@@ -98,7 +104,7 @@ class Admin::BadgesController < Admin::AdminController
         begin
           BadgeGranter.contract_checks!(badge.query, { target_posts: badge.target_posts, trigger: badge.trigger })
         rescue => e
-          errors << [e.message]
+          errors << e.message
           raise ActiveRecord::Rollback
         end
 
@@ -106,10 +112,9 @@ class Admin::BadgesController < Admin::AdminController
         badge.save!
       end
 
-      if badge.errors
-        errors.push(*badge.errors.full_messages)
-      end
-
+      errors
+    rescue ActiveRecord::RecordInvalid
+      errors.push(*badge.errors.full_messages)
       errors
     end
 end

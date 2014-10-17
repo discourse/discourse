@@ -5,160 +5,21 @@
     <ul>
       {{#each}}
       <li>
-        <a {{action "selectBadge" this}} {{bind-attr class="selected:active"}}>
+        {{#link-to 'adminBadges.show' id}}
           {{badge-button badge=this}}
           {{#if newBadge}}
             <span class="list-badge">{{i18n filters.new.lower_title}}</span>
           {{/if}}
-        </a>
+        {{/link-to}}
       </li>
       {{/each}}
     </ul>
-    <button {{action "createNewBadge"}} {{bind-attr disabled=newBadgeExists}} class='btn'><i class="fa fa-plus"></i>{{i18n admin.badges.new}}</button>
+    {{#link-to 'adminBadges.show' 'new' class="btn"}}
+      {{fa-icon "plus"}} {{i18n admin.badges.new}}
+    {{/link-to}}
+    <br>
+    <br>
   </div>
 
-  {{#if selectedItem}}
-  {{#with selectedItem controller='adminBadge'}}
-  <div class='current-badge span13'>
-    <form class="form-horizontal">
-      <div>
-        <label for="name">{{i18n admin.badges.name}}</label>
-        {{input type="text" name="name" value=name}}
-      </div>
-
-      {{#if showDisplayName}}
-        <div>
-          <strong>{{i18n admin.badges.display_name}}</strong>
-          {{displayName}}
-        </div>
-      {{/if}}
-
-      <div>
-        <label for="name">{{i18n admin.badges.icon}}</label>
-        {{input type="text" name="name" value=icon}}
-        <p class='help'>{{i18n admin.badges.icon_help}}</p>
-      </div>
-
-      <div>
-        <label for="badge_type_id">{{i18n admin.badges.badge_type}}</label>
-        {{view Ember.Select name="badge_type_id" value=badge_type_id
-                            content=controller.badgeTypes
-                            optionValuePath="content.id"
-                            optionLabelPath="content.name"
-                            disabled=readOnly}}
-      </div>
-
-      <div>
-        <label for="badge_grouping_id">{{i18n admin.badges.badge_grouping}}</label>
-        {{view Ember.Select name="badge_grouping_id" value=badge_grouping_id
-                            content=controller.badgeGroupings
-                            optionValuePath="content.id"
-                            optionLabelPath="content.name"}}
-        &nbsp;<button {{action "editGroupings" controller.badgeGroupings}}><i class="fa fa-pencil"></i></button>
-      </div>
-
-
-      <div>
-        <label for="description">{{i18n admin.badges.description}}</label>
-        {{#if controller.canEditDescription}}
-          {{textarea name="description" value=description}}
-        {{else}}
-          {{textarea name="description" value=displayDescription disabled=true}}
-        {{/if}}
-      </div>
-
-      <div>
-        <label for="query">{{i18n admin.badges.query}}</label>
-        {{textarea name="query" value=query disabled=readOnly}}
-      </div>
-
-      {{#if hasQuery}}
-
-      <a href {{action "preview" this "false"}}>{{i18n admin.badges.preview.link_text}}</a>
-      |
-      <a href {{action "preview" this "true"}}>{{i18n admin.badges.preview.plan_text}}</a>
-      {{#if preview_loading}}
-        {{i18n loading}}...
-      {{/if}}
-
-      <div>
-        <span>
-          {{input type="checkbox" checked=auto_revoke disabled=readOnly}}
-          {{i18n admin.badges.auto_revoke}}
-        </span>
-      </div>
-
-      <div>
-        <span>
-          {{input type="checkbox" checked=target_posts disabled=readOnly}}
-          {{i18n admin.badges.target_posts}}
-        </span>
-      </div>
-
-      <div>
-        <label for="trigger">{{i18n admin.badges.trigger}}</label>
-        {{view Ember.Select name="trigger" value=trigger
-                            content=controller.badgeTriggers
-                            optionValuePath="content.id"
-                            optionLabelPath="content.name"
-                            disabled=readOnly}}
-      </div>
-
-      {{/if}}
-
-      <div>
-        <span>
-          {{input type="checkbox" checked=allow_title}}
-          {{i18n admin.badges.allow_title}}
-        </span>
-      </div>
-
-      <div>
-        <span>
-          {{input type="checkbox" checked=multiple_grant disabled=readOnly}}
-          {{i18n admin.badges.multiple_grant}}
-        </span>
-      </div>
-
-      <div>
-        <span>
-          {{input type="checkbox" checked=listable disabled=readOnly}}
-          {{i18n admin.badges.listable}}
-        </span>
-      </div>
-
-      <div>
-        <span>
-          {{input type="checkbox" checked=show_posts disabled=readOnly}}
-          {{i18n admin.badges.show_posts}}
-        </span>
-      </div>
-
-      <div>
-        <span>
-          {{input type="checkbox" checked=enabled}}
-          {{i18n admin.badges.enabled}}
-        </span>
-      </div>
-
-      <div class='buttons'>
-        <button {{action "save"}} {{bind-attr disabled=controller.disableSave}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
-        <span class='saving'>{{savingStatus}}</span>
-        {{#unless readOnly}}
-          <a {{action "destroy"}} class='delete-link'>{{i18n admin.badges.delete}}</a>
-        {{/unless}}
-      </div>
-    </form>
-  </div>
-
-  {{#if grant_count}}
-  <div class="span13 current-badge-actions">
-    <div>
-      {{#link-to 'badges.show' this}}{{i18n badges.granted count=grant_count}}{{/link-to}}
-    </div>
-  </div>
-  {{/if}}
-  {{/with}}
-  {{/if}}
-
+  {{outlet}}
 </div>
