@@ -1,6 +1,6 @@
 export default Discourse.ModalBodyView.extend({
   templateName: 'modal/raw_email',
-  title: I18n.t('raw_email'),
+  title: I18n.t('raw_email.title'),
 
   resizeModal: function(){
     var viewPortHeight = $(window).height();

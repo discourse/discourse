@@ -122,17 +122,20 @@ aside.quote {
 
 .post-info {
   &.wiki, &.via-email {
-    cursor: pointer;
     margin-right: 5px;
     i.fa {
       font-size: 14px;
     }
   }
   &.wiki {
+    cursor: pointer;
     color: $wiki;
   }
   &.via-email {
     color: scale-color($primary, $lightness: 70%);
+  }
+  &.raw-email {
+    cursor: pointer;
   }
 }
 
