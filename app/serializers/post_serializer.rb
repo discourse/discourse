@@ -51,8 +51,7 @@ class PostSerializer < BasicPostSerializer
              :wiki,
              :user_custom_fields,
              :static_doc,
-             :via_email,
-             :raw_email
+             :via_email
 
   def topic_slug
     object.try(:topic).try(:slug)

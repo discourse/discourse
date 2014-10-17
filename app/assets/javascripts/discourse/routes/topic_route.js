@@ -75,7 +75,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     showRawEmail: function(post) {
       Discourse.Route.showModal(this, 'raw-email', post);
-      this.controllerFor('raw_email').loadEmail(post.get("id"));
+      this.controllerFor('raw_email').loadRawEmail(post.get("id"));
     },
 
     mergeTopic: function() {
