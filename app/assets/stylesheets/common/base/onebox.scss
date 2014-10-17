@@ -136,19 +136,16 @@ aside.onebox {
 }
 
 .onebox-avatar {
-  height: 90px;
-  width: 90px;
+  height: 90px !important;
+  width: 90px !important;
 }
 
 blockquote {
   aside.onebox {
-
-        background: darken(scale-color-diff(), 5%);
-        border-left: 5px solid darken(scale-color-diff(), 12%);
-      }
-    }
-
-
+    background: darken(scale-color-diff(), 5%);
+    border-left: 5px solid darken(scale-color-diff(), 12%);
+  }
+}
 
 // -- Onebox Github Code Blob --
 pre.onebox code ol.lines li:before {
@@ -186,7 +183,7 @@ pre.onebox code ol.lines li {
 	padding-left: 5px;
 	margin-left: 0px;
 	border-left: 1px solid #CFCFCF;
-	min-height: 1.5em; //show empty li lines 
+	min-height: 1.5em; //show empty li lines
   white-space: pre;
 }
 
@@ -195,7 +192,7 @@ pre.onebox code li.selected{
 }
 
 pre.onebox code {
- white-space: normal; 
+ white-space: normal;
 }
 
 //Onebox - Github - Pull request
@@ -226,7 +223,7 @@ pre.onebox code {
   background-color:#6cc644;
 }
 .onebox-body .status_tag.merged{
-  background-color:#6e5494; 
+  background-color:#6e5494;
 }
 .onebox-body .status_tag.closed {
   background-color:#bd2c00;
