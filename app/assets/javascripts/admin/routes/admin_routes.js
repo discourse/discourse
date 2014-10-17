@@ -58,7 +58,9 @@ Discourse.Route.buildRoutes(function() {
       });
     });
 
-    this.route('badges');
+    this.resource('adminBadges', { path: '/badges' }, function() {
+      this.route('show', { path: '/:badge_id' });
+    });
 
   });
 });
