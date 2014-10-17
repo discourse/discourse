@@ -490,6 +490,12 @@ Discourse.Post.reopenClass({
     });
   },
 
+  loadRawEmail: function(postId) {
+    return Discourse.ajax("/posts/" + postId + "/raw-email").then(function (result) {
+      return result.raw_email;
+    });
+  },
+
   load: function(postId) {
     return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
       return Discourse.Post.create(result);

@@ -14,10 +14,10 @@ import ObjectController from 'discourse/controllers/object';
 export default ObjectController.extend(ModalFunctionality, {
   raw_email: "",
 
-  loadEmail: function(postId) {
+  loadRawEmail: function(postId) {
     var self = this;
-    Discourse.Post.load(postId).then(function (result) {
-      self.set("raw_email", result.get('raw_email'));
+    Discourse.Post.loadRawEmail(postId).then(function (raw_email) {
+      self.set("raw_email", raw_email);
     });
   }
 

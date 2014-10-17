@@ -193,6 +193,10 @@ module PostGuardian
     is_staff?
   end
 
+  def can_view_raw_email?
+    is_staff?
+  end
+
   def can_unhide?(post)
     post.try(:hidden) && is_staff?
   end

@@ -30,6 +30,12 @@ class PostsController < ApplicationController
     render json: {cooked: post.cooked}
   end
 
+  def raw_email
+    guardian.ensure_can_view_raw_email!
+    post = Post.find(params[:id].to_i)
+    render json: {raw_email: post.raw_email}
+  end
+
   def short_link
     post = Post.find(params[:post_id].to_i)
     # Stuff the user in the request object, because that's what IncomingLink wants
