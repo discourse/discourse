@@ -28,6 +28,7 @@ article.post {
     margin: 0 0 10px 0;
     background-color: scale-color-diff();
     border-left: 5px solid darken(scale-color-diff(), 10%);
+    overflow: hidden;
     p {
       margin: 0 0 10px 0;
     }
