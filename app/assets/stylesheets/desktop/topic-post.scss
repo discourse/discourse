@@ -235,18 +235,20 @@ nav.post-controls {
 }
 
 .embedded-posts {
+  background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
+
   h1, h2, h3 { margin: 10px 0; }
   a.mention { background: darken(scale-color-diff(), 10%); }
 
   .topic-body {
     background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
-     width: 86%;
-     padding-left: 1%;
-     padding-right: 1%;
-     border-top: none;
-     // WARNING: overflow hide is required for quoted / embedded images
-     // which expect "normal" post width, but expansions are narrower
-     overflow: hidden;
+    width: 86%;
+    padding-left: 1%;
+    padding-right: 1%;
+    border-top: none;
+    // WARNING: overflow hide is required for quoted / embedded images
+    // which expect "normal" post width, but expansions are narrower
+    overflow: hidden;
   }
 
   .topic-avatar {
@@ -257,11 +259,14 @@ nav.post-controls {
 
   // bottom means "reply expansion" below a post
   &.bottom {
-    &.hidden {display: block; opacity: 0; }
+    &.hidden {
+      display: block;
+      opacity: 0;
+    }
   }
-  &.bottom .arrow {float: right;}
+  &.bottom .arrow { float: right; }
   &.bottom {
-     margin-top: -11px;
+    margin-top: -11px;
   }
 
   // top means "in reply to expansion" above a post
