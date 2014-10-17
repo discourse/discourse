@@ -64,6 +64,10 @@ Discourse.Post = Discourse.Model.extend({
   hasHistory: Em.computed.gt('version', 1),
   postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
 
+  canViewRawEmail: function() {
+    return Discourse.User.currentProp('staff');
+  }.property(),
+
   bookmarkedChanged: function() {
     Discourse.Post.bookmark(this.get('id'), this.get('bookmarked'))
              .then(null, function (error) {

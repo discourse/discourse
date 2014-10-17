@@ -1382,8 +1382,12 @@ en:
     users_lowercase: "users"
     category_title: "Category"
     history: "History"
-    raw_email: "Raw Email"
     changed_by: "by {{author}}"
+
+
+    raw_email:
+      title: "Raw Email"
+      not_available: "Not available!"
 
     categories_list: "Categories List"
 
