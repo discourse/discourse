@@ -3,7 +3,7 @@
     <li>{{#link-to 'user' currentUser class="user-activity-link" }}{{i18n user.profile}}{{/link-to}}</li>
     <li>
     {{#link-to 'userPrivateMessages.index' currentUser class='user-messages-link'}}
-      {{#if currentUser.unread_private_messages}}<span class="badge-notification unread-private-messages">{{currentUser.unread_private_messages}}</span>{{/if}}{{i18n user.unread_message_count}}
+      {{i18n user.unread_message_count}}{{#if currentUser.unread_private_messages}} <span class="badge-notification unread-private-messages">{{currentUser.unread_private_messages}}</span>{{/if}}
     {{/link-to}}
     </li>
     <li>{{#link-to 'userActivity.bookmarks' currentUser}}{{i18n user.bookmarks}}{{/link-to}}</li>
