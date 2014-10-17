@@ -41,7 +41,7 @@ class SearchObserver < ActiveRecord::Observer
   end
 
   def self.update_posts_index(post_id, cooked, title, category)
-    search_data = scrub_html_for_search(cooked) << " " << title
+    search_data = scrub_html_for_search(cooked) << " " << title.dup.force_encoding('UTF-8')
     search_data << " " << category if category
     update_index('post', post_id, search_data)
   end
