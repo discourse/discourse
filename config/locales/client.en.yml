@@ -370,9 +370,11 @@ en:
 
       change_profile_background:
         title: "Profile Background"
+        instructions: "Profile backgrounds will be centered and have a default width of 850px."
 
       change_expansion_background:
         title: "User Expansion Background"
+        instructions: "Expansion images will be centered and have a default width of 590px."
 
       email:
         title: "Email"
