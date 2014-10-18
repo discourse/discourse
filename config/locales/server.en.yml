@@ -2138,4 +2138,4 @@ en:
       `in:watching` Only show watched topics  
       `in:tracking` Only show tracking topics  
       
-      Example: `bears category:test status:open order:latest` will search for topics in the category bears that are not closed or archived ordered by last post date.
+      Example: `bears category:test status:open order:latest` will search for topics containing the word `bears` in the category `test` that are not closed or archived ordered by last post date.
