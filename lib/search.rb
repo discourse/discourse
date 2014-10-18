@@ -171,6 +171,12 @@ class Search
         elsif word == 'in:posted'
           @posted_only = true
           nil
+        elsif word == 'in:watching'
+          @notification_level = TopicUser.notification_levels[:watching]
+          nil
+        elsif word == 'in:tracking'
+          @notification_level = TopicUser.notification_levels[:tracking]
+          nil
         else
           word
         end
@@ -304,6 +310,14 @@ class Search
 
         if @posted_only
           posts = posts.where("posts.user_id = #{@guardian.user.id}")
+        end
+
+        if @notification_level
+          posts = posts.where("posts.topic_id IN (
+                              SELECT tu.topic_id FROM topic_users tu
+                              WHERE tu.user_id = #{@guardian.user.id} AND
+                                    tu.notification_level >= #{@notification_level}
+                             )")
         end
 
       end
