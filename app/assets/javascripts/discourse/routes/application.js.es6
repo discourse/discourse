@@ -90,6 +90,16 @@ var ApplicationRoute = Discourse.Route.extend({
       Discourse.Route.showModal(this, 'keyboardShortcutsHelp');
     },
 
+    showSearchHelp: function() {
+      var self = this;
+
+      // TODO: @EvitTrout how do we get a loading indicator here?
+      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(function(html){
+        Discourse.Route.showModal(self, 'searchHelp', html);
+      });
+
+    },
+
 
     /**
       Close the current modal, and destroy its state.

@@ -2120,3 +2120,14 @@ en:
       If we decide to change our privacy policy, we will post those changes on this page.
 
       This document is CC-BY-SA. It was last updated May 31, 2013.
+
+  static:
+    search_help: |
+      You may include special search operators in your terms, available operators are:
+
+      `order:latest` Results will be ordered by last post time (as opposed to relevence)  
+      `status:open` Only show open topics  
+      `status:closed` Only show closed topics  
+      `category:foo` Only show topics in the category `foo`  
+      
+      Example: `bears category:test status:open order:latest` will search for topics in the category bears that are not closed or archived ordered by last post date.
