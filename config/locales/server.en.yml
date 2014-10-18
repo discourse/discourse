@@ -2123,7 +2123,7 @@ en:
 
   static:
     search_help: |
-      You may include special search operators in your terms, available operators are:
+      You may include special search operators:
 
       `order:latest` Results will be ordered by last post time (as opposed to relevence)  
       `status:open` Only show open topics  
