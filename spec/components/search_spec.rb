@@ -328,6 +328,10 @@ describe Search do
 
       Search.execute('test in:posted', guardian: Guardian.new(topic.user)).posts.length.should == 1
 
+      TopicUser.change(topic.user.id, topic.id, notification_level: TopicUser.notification_levels[:tracking])
+      Search.execute('test in:watching', guardian: Guardian.new(topic.user)).posts.length.should == 0
+      Search.execute('test in:tracking', guardian: Guardian.new(topic.user)).posts.length.should == 1
+
     end
 
     it 'can find by latest' do
