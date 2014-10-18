@@ -64,6 +64,10 @@ Discourse.Post = Discourse.Model.extend({
   hasHistory: Em.computed.gt('version', 1),
   postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
 
+  canViewRawEmail: function() {
+    return Discourse.User.currentProp('staff');
+  }.property(),
+
   bookmarkedChanged: function() {
     Discourse.Post.bookmark(this.get('id'), this.get('bookmarked'))
              .then(null, function (error) {
@@ -483,6 +487,12 @@ Discourse.Post.reopenClass({
     return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
       var post = Discourse.Post.create(result);
       return Discourse.Quote.build(post, post.get('raw'));
+    });
+  },
+
+  loadRawEmail: function(postId) {
+    return Discourse.ajax("/posts/" + postId + "/raw-email").then(function (result) {
+      return result.raw_email;
     });
   },
 

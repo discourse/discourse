@@ -73,6 +73,11 @@ Discourse.TopicRoute = Discourse.Route.extend({
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 
+    showRawEmail: function(post) {
+      Discourse.Route.showModal(this, 'raw-email', post);
+      this.controllerFor('raw_email').loadRawEmail(post.get("id"));
+    },
+
     mergeTopic: function() {
       Discourse.Route.showModal(this, 'mergeTopic', this.modelFor('topic'));
     },

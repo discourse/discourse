@@ -135,6 +135,9 @@ aside.quote {
   &.via-email {
     color: scale-color($primary, $lightness: 70%);
   }
+  &.raw-email {
+    cursor: pointer;
+  }
 }
 
 

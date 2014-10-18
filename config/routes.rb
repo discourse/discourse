@@ -416,6 +416,7 @@ Discourse::Application.routes.draw do
   get "/posts/:id/cooked" => "posts#cooked"
   get "/posts/:id/expand-embed" => "posts#expand_embed"
   get "/posts/:id/raw" => "posts#markdown_id"
+  get "/posts/:id/raw-email" => "posts#raw_email"
   get "raw/:topic_id(/:post_number)" => "posts#markdown_num"
 
   resources :invites do
