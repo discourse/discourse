@@ -36,7 +36,7 @@ class StaticController < ApplicationController
     end
 
     if I18n.exists?("static.#{@page}")
-      render text: PrettyText.cook(I18n.t("static.#{@page}")), layout: !request.xhr?, formats: [:html]
+      render text: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
       return
     end
 
