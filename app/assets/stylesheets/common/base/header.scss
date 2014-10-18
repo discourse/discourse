@@ -339,3 +339,21 @@
 .search-highlight {
   font-weight: bold;
 }
+
+.search-context .show-help {
+  position: absolute;
+  right: 10px;
+  top: 0;
+}
+
+.search-context {
+  min-height: 30px;
+  position: relative;
+}
+
+#search-dropdown .results {
+  max-height: 300px;
+  overflow: auto;
+}
+
+
