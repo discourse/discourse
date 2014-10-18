@@ -154,7 +154,10 @@ class Search
           @status = :archived
           nil
         elsif word == 'status:noreplies'
-          @no_replies = true
+          @posts_count = 1
+          nil
+        elsif word == 'status:singleuser'
+          @single_user = true
           nil
         elsif word == 'order:latest'
           @order = :latest
@@ -294,8 +297,12 @@ class Search
         posts = posts.where('topics.closed')
       end
 
-      if @no_replies
+      if @single_user
         posts = posts.where("topics.featured_user1_id IS NULL AND topics.last_post_user_id = topics.user_id")
+      end
+
+      if @posts_count
+        posts = posts.where("topics.posts_count = #{@posts_count}")
       end
 
       if @user_id
