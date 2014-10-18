@@ -35,6 +35,11 @@ class StaticController < ApplicationController
       return
     end
 
+    if I18n.exists?("static.#{@page}")
+      render text: PrettyText.cook(I18n.t("static.#{@page}")), layout: !request.xhr?, formats: [:html]
+      return
+    end
+
     file = "static/#{@page}.#{I18n.locale}"
     file = "static/#{@page}.en" if lookup_context.find_all("#{file}.html").empty?
     file = "static/#{@page}"    if lookup_context.find_all("#{file}.html").empty?

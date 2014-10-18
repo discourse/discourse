@@ -59,6 +59,12 @@ export default function searchForTerm(term, opts) {
       }
     });
 
+    // a bit awkward, but we need to get the help link in
+    // somehow
+    if(results.resultTypes && results.resultTypes[0]) {
+      results.resultTypes[0].showHelp = true;
+    }
+
     var noResults = !!(results.topics.length === 0 &&
                        results.posts.length === 0 &&
                        results.users.length === 0 &&
