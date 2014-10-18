@@ -2125,6 +2125,7 @@ en:
     search_help: |
       You may include special search operators:
 
+      `order:views` Results will be ordered by view count (as opposed to relevence)  
       `order:latest` Results will be ordered by last post time (as opposed to relevence)  
       `status:open` Only show open topics  
       `status:closed` Only show closed topics  

@@ -159,6 +159,9 @@ class Search
         elsif word == 'order:latest'
           @order = :latest
           nil
+        elsif word == 'order:views'
+          @order = :views
+          nil
         elsif word =~ /category:(.+)/
           @category_id = Category.find_by('name ilike ?', $1).try(:id)
           nil
@@ -345,6 +348,12 @@ class Search
           posts = posts.order("MAX(posts.created_at) DESC")
         else
           posts = posts.order("posts.created_at DESC")
+        end
+      elsif @order == :views
+        if opts[:aggregate_search]
+          posts = posts.order("MAX(topics.views) DESC")
+        else
+          posts = posts.order("topics.views DESC")
         end
       else
         posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
