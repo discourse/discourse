@@ -606,6 +606,8 @@ end
 #  version                 :integer          default(1), not null
 #  cook_method             :integer          default(1), not null
 #  wiki                    :boolean          default(FALSE), not null
+#  via_email               :boolean          default(FALSE), not null
+#  raw_email               :text             
 #  baked_at                :datetime
 #  baked_version           :integer
 #  hidden_at               :datetime

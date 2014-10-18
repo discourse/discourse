@@ -1384,6 +1384,10 @@ en:
     history: "History"
     changed_by: "by {{author}}"
 
+    raw_email:
+      title: "Raw Email"
+      not_available: "Not available!"
+
     categories_list: "Categories List"
 
     filters:
