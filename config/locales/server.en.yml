@@ -2128,6 +2128,8 @@ en:
       `order:latest` Results will be ordered by last post time (as opposed to relevence)  
       `status:open` Only show open topics  
       `status:closed` Only show closed topics  
+      `status:archived` Only show archived topics  
+      `status:noreplies` Show posts with a single participant  
       `category:foo` Only show topics in the category `foo`  
       
       Example: `bears category:test status:open order:latest` will search for topics in the category bears that are not closed or archived ordered by last post date.
