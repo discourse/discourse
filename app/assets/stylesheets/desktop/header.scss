@@ -72,13 +72,9 @@ and (max-width : 570px) {
   right: 30px;
 }
 
-// leave room for scroll bar
-.d-dropdown input[type='text'] {
-  width: 505px;
-}
 
-.d-dropdown .no-results .show-help {
-  position: absolute;
-  right: 15px;
+#search-dropdown .results {
+  max-height: 500px;
+  overflow: auto;
 }
 
