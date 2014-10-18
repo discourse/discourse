@@ -142,12 +142,19 @@ class Search
   private
 
     def process_advanced_search!(term)
+
       term.to_s.split(/\s+/).map do |word|
         if word == 'status:open'
           @status = :open
           nil
         elsif word == 'status:closed'
           @status = :closed
+          nil
+        elsif word == 'status:archived'
+          @status = :archived
+          nil
+        elsif word == 'status:noreplies'
+          @no_replies = true
           nil
         elsif word == 'order:latest'
           @order = :latest
@@ -263,8 +270,14 @@ class Search
 
       if @status == :open
         posts = posts.where('NOT topics.closed AND NOT topics.archived')
+      elsif @status == :archived
+        posts = posts.where('topics.archived')
       elsif @status == :closed
-        posts = posts.where('topics.closed OR topics.archived')
+        posts = posts.where('topics.closed')
+      end
+
+      if @no_replies
+        posts = posts.where("topics.featured_user1_id IS NULL AND topics.last_post_user_id = topics.user_id")
       end
 
       # If we have a search context, prioritize those posts first

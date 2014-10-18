@@ -319,8 +319,11 @@ describe Search do
       topic.closed = false
       topic.save
 
-      Search.execute('test status:closed').posts.length.should == 1
+      Search.execute('test status:archived').posts.length.should == 1
       Search.execute('test status:open').posts.length.should == 0
+
+      Search.execute('test status:noreplies').posts.length.should == 1
+
     end
 
     it 'can find by latest' do
