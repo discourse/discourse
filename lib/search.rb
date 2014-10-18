@@ -162,6 +162,15 @@ class Search
         elsif word =~ /category:(.+)/
           @category_id = Category.find_by('name ilike ?', $1).try(:id)
           nil
+        elsif word =~ /user:(.+)/
+          @user_id = User.find_by('username_lower = ?', $1.downcase).try(:id)
+          nil
+        elsif word == 'in:likes'
+          @liked_only = true
+          nil
+        elsif word == 'in:posted'
+          @posted_only = true
+          nil
         else
           word
         end
@@ -278,6 +287,25 @@ class Search
 
       if @no_replies
         posts = posts.where("topics.featured_user1_id IS NULL AND topics.last_post_user_id = topics.user_id")
+      end
+
+      if @user_id
+        posts = posts.where("posts.user_id = #{@user_id}")
+      end
+
+      if @guardian.user
+        if @liked_only
+          posts = posts.where("posts.id IN (
+                                SELECT pa.post_id FROM post_actions pa
+                                WHERE pa.user_id = #{@guardian.user.id} AND
+                                      pa.post_action_type_id = #{PostActionType.types[:like]}
+                             )")
+        end
+
+        if @posted_only
+          posts = posts.where("posts.user_id = #{@guardian.user.id}")
+        end
+
       end
 
       # If we have a search context, prioritize those posts first

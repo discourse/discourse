@@ -2131,5 +2131,8 @@ en:
       `status:archived` Only show archived topics  
       `status:noreplies` Show posts with a single participant  
       `category:foo` Only show topics in the category `foo`  
+      `user:foo` Only show posts by the user `foo`  
+      `in:likes` Only show posts you liked  
+      `in:posted` Only show posts you created  
       
       Example: `bears category:test status:open order:latest` will search for topics in the category bears that are not closed or archived ordered by last post date.
