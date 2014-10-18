@@ -6,7 +6,7 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 
 ## First Steps
 
-1. Install and configure PostgreSQL 9.1+. 
+1. Install and configure PostgreSQL 9.1+.
   1. Run `postgres -V` to see if you already have it.
   1. Make sure that the server's messages language is English; this is [required](https://github.com/rails/rails/blob/3006c59bc7a50c925f6b744447f1d94533a64241/activerecord/lib/active_record/connection_adapters/postgresql_adapter.rb#L1140) by the ActiveRecord Postgres adapter.
 2. Install and configure Redis 2+.
@@ -15,9 +15,6 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 4. Install libxml2, g++, and make.
 5. Install Ruby 2.1.3 and Bundler.
 6. Clone the project and bundle.
-7. Copy `config/database.yml.development-sample` to `config/database.yml`. Copy `config/redis.yml.sample` to `config/redis.yml`. Edit the files to point to your postgres and redis instances.
-8. Create the "vagrant" user and the development and test databases in postgres. See the postgres section in "Building your own Vagrant VM", below.
-
 
 ## Before you start Rails
 
