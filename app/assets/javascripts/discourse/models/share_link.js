@@ -48,7 +48,7 @@ Discourse.ShareLink.reopenClass({
 
 (function() {
   Discourse.ShareLink.addTarget('twitter', {
-    iconClass: 'fa-twitter',
+    iconClass: 'fa-twitter-square',
     generateUrl: function(link, title) {
       return ("http://twitter.com/intent/tweet?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(title) );
     },
@@ -66,7 +66,7 @@ Discourse.ShareLink.reopenClass({
   });
 
   Discourse.ShareLink.addTarget('google+', {
-    iconClass: 'fa-google-plus',
+    iconClass: 'fa-google-plus-square',
     generateUrl: function(link) {
       return ("https://plus.google.com/share?url=" + encodeURIComponent(link));
     },
@@ -75,7 +75,7 @@ Discourse.ShareLink.reopenClass({
   });
 
   Discourse.ShareLink.addTarget('email', {
-    iconClass: 'fa-envelope',
+    iconClass: 'fa-envelope-square',
     generateUrl: function(link, title) {
       return ("mailto:?to=&subject=" + encodeURIComponent('[' + Discourse.SiteSettings.title + '] ' + title) + "&body=" + encodeURIComponent(link));
     },
