@@ -565,6 +565,7 @@ fi:
       drafts_offline: "offline luonnokset"
       min_length:
         need_more_for_title: "Tarvitaan vielä {{n}} merkkiä otsikkoon"
+        need_more_for_reply: "vielä {{n}}"
       error:
         title_missing: "Otsikko on pakollinen"
         title_too_short: "Otsikon täytyy olla vähintään {{min}} merkkiä pitkä"
@@ -793,6 +794,8 @@ fi:
           '2_4': 'Saat ilmoituksia, koska olet kirjoittanut ketjuun viestin.'
           '2_2': 'Saat ilmoituksia, koska olet asettanut ketjun seurantaan.'
           '2': 'Saat ilmoituksia, koska <a href="/users/{{username}}/preferences">luet tätä ketjua</a>.'
+          '1_2': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi.'
+          '1': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi.'
           '0_7': 'Et saa mitään ilmoituksia tältä alueelta.'
           '0_2': 'Et saa mitään ilmoituksia tästä ketjusta.'
           '0': 'Et saa mitään ilmoituksia tästä ketjusta.'
@@ -804,12 +807,16 @@ fi:
           description: "Saat ilmoituksen kaikista uusista viesteistä tässä ketjussa. Uusien ja lukemattomien viestien lukumäärä ilmestyy näkyviin ketjun yhteydessä."
         tracking_pm:
           title: "Seuraa"
+          description: "Lukemattomien ja uusien viestien lukumäätä näytetään yksityisviestin yhteydessä. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle viestissään."
         tracking:
           title: "Seuraa"
+          description: "Lukemattomien ja uusien viestien lukumäärä näytetään ketjun yhteydessä. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle viestissään."
         regular:
           title: "Tavallinen"
+          description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi."
         regular_pm:
           title: "Tavallinen"
+          description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi yksityisessä keskustelussa."
         muted_pm:
           title: "Vaimenna"
           description: "Et saa mitään ilmoituksia tästä yksityisviestistä."
@@ -1121,7 +1128,7 @@ fi:
       background_color: "Taustaväri"
       foreground_color: "Edustan väri"
       name_placeholder: "Yksi tai kaksi sanaa enimmillään"
-      color_placeholder: "Mikä hyvänsä web-väri"
+      color_placeholder: "Web-väri"
       delete_confirm: "Oletko varma, että haluat poistaa tämän alueen?"
       delete_error: "Alueen poistossa tapahtui virhe."
       list: "Listaa alueet"
@@ -1154,6 +1161,7 @@ fi:
           description: "Näiden alueiden ketjut asetetaan automaattisesti seurantaan. Uusien ja lukemattomien viestien lukumäärä näytetään ketjujen yhteydessä."
         regular:
           title: "Tavallinen"
+          description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi."
         muted:
           title: "Vaimennettu"
           description: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä"
@@ -1547,7 +1555,7 @@ fi:
             description: 'Korostettujen elementtien, kuten viestien ja ketjujen, taustaväri.'
           danger:
             name: 'vaara'
-            description: 'Korosteväri toiminnoille, kun viestien ja ketjujen poistaminen.'
+            description: 'Korosteväri toiminnoille, kuten viestien ja ketjujen poistaminen.'
           success:
             name: 'menestys'
             description: 'Käytetään ilmaisemaan, että toiminto onnistui.'

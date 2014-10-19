@@ -262,6 +262,8 @@ pt_BR:
       invited_by: "Convidado por"
       trust_level: "Nível de Confiança"
       notifications: "Notificações"
+      dismiss_notifications: "Marcar todas como lidas"
+      dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidos"
       disable_jump_reply: "Não pular para próxima mensagens depois de responder"
       dynamic_favicon: "Exibir notificações de mensagens recebidas no favicon (experimental)"
       edit_history_public: "Deixar que os outros usuários visualizem minhas revisões na resposta"
@@ -327,6 +329,10 @@ pt_BR:
         image_is_not_a_square: "Atenção: nos cortamos sua imagem; não é quadrada."
       change_profile_background:
         title: "Fundo do perfil"
+        instructions: "Fundos do perfil será centralizado e tera uma largura padrão de 850px."
+      change_expansion_background:
+        title: "Fundo de Expansão do Usuário"
+        instructions: "Imagens de Expansão será centralizado e tera uma largura padrão de 590px."
       email:
         title: "Email"
         instructions: "Não visível publicamente."
@@ -565,6 +571,7 @@ pt_BR:
       drafts_offline: "rascunhos offline"
       min_length:
         need_more_for_title: "Escreva no mínimo mais {{n}} caracteres"
+        need_more_for_reply: "{{n}} faltando"
       error:
         title_missing: "Título é obrigatório"
         title_too_short: "O título tem que ter no mínimo {{min}} caracteres"
@@ -618,6 +625,15 @@ pt_BR:
       help: "Ajuda da edição Markdown"
       toggler: "esconder ou exibir o painel de composição"
       admin_options_title: "Configurações opcionais da equipe para este tópico"
+      auto_close:
+        label: "Tempo para fechamento automático do tópico:"
+        error: "Por favor, digite um valor válido."
+        based_on_last_post: "Não feche até que o último post no tópico seja o mais velho."
+        all:
+          examples: 'Insira o número de horaas (24), hora absoluta (17:30) ou o timestamp (2013-11-22 14:00).'
+        limited:
+          units: "(núm. de horas)"
+          examples: 'Insira o número de horas (24).'
     notifications:
       title: "notificações de menção de @nome, respostas às suas mensagens e tópicos, mensagens privadas, etc"
       none: "Não há notifcações neste momento."
@@ -760,6 +776,7 @@ pt_BR:
       jump_reply_down: pular para a resposta mais antiga
       deleted: "Este tópico foi apagado"
       auto_close_notice: "Este tópico vai ser automaticamente fechado em %{timeLeft}."
+      auto_close_notice_based_on_last_post: "Este tópico fechará %{duration} depois da última resposta."
       auto_close_title: 'Configurações para fechar automaticamente'
       auto_close_save: "Salvar"
       auto_close_remove: "Não fechar automaticamente este tópico"
@@ -783,6 +800,8 @@ pt_BR:
           '2_4': 'Você receberá notificações porque postou uma resposta neste tópico.'
           '2_2': 'Você receberá notificações porque está monitorando este tópico.'
           '2': 'Você receberá notificações porque você <a href="/users/{{username}}/preferences">leu este tópico</a>.'
+          '1_2': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua postagem.'
+          '1': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua postagem.'
           '0_7': 'Você está ignorando todas as notificações nessa categoria.'
           '0_2': 'Você está ignorando todas as notificações deste tópico.'
           '0': 'Você está ignorando todas as notificações deste tópico.'
@@ -794,12 +813,16 @@ pt_BR:
           description: "Você será notificado de cada post novo neste tópico. Um contador de posts novos e não lidos também aparecerá próximo ao tópico."
         tracking_pm:
           title: "Monitorando"
+          description: "Um contador de postagens novas e não lidas aparecerá perto das mensagens privadas. Você será notificado se alguém mencionar seu @nome ou responder à sua postagem."
         tracking:
           title: "Monitorar"
+          description: "Um contador de postagens novas e não lidas aparecerá perto do tópico. Você será notificado se alguém mencionar seu @nome ou responder à sua postagem."
         regular:
           title: "Normal"
+          description: "Você será notificado se alguém mencionar seu @nome ou responder à sua postagem."
         regular_pm:
           title: "Regular"
+          description: "Você será notificado se alguém mencionar seu @nome ou responder à sua postagem em mensagem privada."
         muted_pm:
           title: "Silenciado"
           description: "Você nunca será notificado de qualquer coisa sobre essa mensagem privada."
@@ -929,6 +952,7 @@ pt_BR:
         edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
         upload: "Desculpe, houve um erro ao enviar esse arquivo. Por favor, tente outra vez."
         attachment_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb)."
+        file_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb)."
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
         upload_not_authorized: "Desculpe, o tipo de arquivo que você está tentando enviar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
@@ -1072,6 +1096,8 @@ pt_BR:
           previous: "Revisão anterior"
           next: "Próxima revisão"
           last: "Última revisão"
+          hide: "Esconder revisão"
+          show: "Exibir revisão"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1141,6 +1167,7 @@ pt_BR:
           description: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
         regular:
           title: "Normal"
+          description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua postagem."
         muted:
           title: "Silenciar"
           description: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
@@ -1214,6 +1241,9 @@ pt_BR:
     category_title: "Categoria"
     history: "Histórico"
     changed_by: "por {{author}}"
+    raw_email:
+      title: "Email Raw"
+      not_available: "Não disponível!"
     categories_list: "Lista de categorias"
     filters:
       with_topics: "%{filter} tópicos"
@@ -1541,6 +1571,9 @@ pt_BR:
           love:
             name: 'curtir'
             description: "A cor do botão curtir."
+          wiki:
+            name: 'wiki'
+            description: "Cor base usada para o fundo em postagens do wiki."
       email:
         title: "Email"
         settings: "Settings"
@@ -1813,6 +1846,7 @@ pt_BR:
           external_avatar_url: "URL do Avatar"
       user_fields:
         title: "Campos de Usuários"
+        help: "Adicionar campos que seus usuários podem preencher."
         create: "Criar Campo de Usuário"
         untitled: "Sem título"
         name: "Nome do Campo"
@@ -1889,11 +1923,13 @@ pt_BR:
         grant: Conceder
         no_user_badges: "%{name} não teve nenhum emblema concedido."
         no_badges: Não há emblemas que podem ser concedidos.
+        none_selected: "Selecione um emblema para começar"
         allow_title: Permitir ao emblema ser usado como título
         multiple_grant: Pode ser concedido várias vezes
         listable: Mostrar emblema na página pública de emblemas
         enabled: Habilitar emblema
         icon: Ícone
+        icon_help: "Use uma classe do Font Awesome ou uma URL de uma imagem"
         query: Badge Query (SQL)
         target_posts: Consultar respostas selecionadas
         auto_revoke: Rodar revocation query todo dia

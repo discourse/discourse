@@ -6,6 +6,13 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 he:
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -24,9 +31,12 @@ he:
   via: "%{username} עם %{site_name}"
   is_reserved: "שמור"
   purge_reason: "נמחק באופן אוטומטי מכיוון שהיה ישן וללא שינוי"
+  disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אכסון פנוי."
   errors:
     messages:
       too_long_validation: "מוגבל לאורך של  %{max} תוים: את/ה הקשת %{length}."
+      invalid_boolean: "בוליאני לא חוקי."
+      taken: "כבר נשלח"
     embed:
       load_from_remote: "ארעה שגיאה בטעינת ההודעה הזו."
   bulk_invite:
@@ -195,6 +205,7 @@ he:
   meta_category_description: "דיון אודות אתר זה, הארגון שמאחוריו, איך הוא פועל ואיך נוכל לשפר אותו."
   staff_category_name: "צוות"
   staff_category_description: "קטגוריה פרטית לדיוני הצוות. נושאים נראים רק למנהלים ומנהלים ראשיים."
+  assets_topic_body: "זהו נושא קבוע, הגלוי רק לצוות, לשמירת תמונות וקבצים שמשמשים לעיצוב האתר. אל תמחקו אותו!\n\n\nכיצד:\n\n\n1. הגיבו לנושא זה.\n2. העלו כאן את כל התמונות שברצונכם להשתמש כלוגואים, לוגואים מוקטנים (favicons) וכן הלאה. (השתמשו בלוגו ההעלאה בסרגל הכלים בעורך הפרסום, או גררו-שחררו או הדביקו את התמונות.)\n3. שלחו את התגובה כדי לפרסם אותה.\n4. הקליקו עם הכפתור הימני על התמונות בפרסום החש שלכם כדי להשיג את הכתובת של התמונה שהועלתה, או הקליקו על סמל העריכה כדי לערוך את הפרסום ולאחזר את הכתובת של התמונות. העתיקו את הכתובות.\n5. הדביקו את כתובות התמונות אלתוך [הגדרות בסיסיות](/מנהל/הגדרות_אתגר/קטגוריה/נדרש).\n\nאם אתכם צריכים לאפשר העלאת קבצים מסוגים שונים, ערכו את \"הרחבות מאושרות\" בתוך [הגדרות_קובץ](/מנהל/הגדרות_אתר/קטגוריה/קבצים)."
   lounge_welcome:
     title: "ברוכים הבאים ללאונג'"
   category:
@@ -223,6 +234,7 @@ he:
       title: "רגיל/ה"
     elder:
       title: "מוביל/ה"
+    change_failed_explanation: "ניסיתם להוריד בדרגה %{user_name} ל- '%{new_trust_level}'. אולם רמת האמון שלהם היא כבר '%{current_trust_level}'. %{user_name} ישאר/תישאר ב-'%{current_trust_level}' - אם ברצונכם להוריד את המשתמש/ת נעלו קודם את רמת האמון"
   rate_limiter:
     slow_down: "ביצעתם פעולה זו מספר רב מידי של פעמים, נסו שוב מאוחר יותר"
     too_many_requests: "יש לנו מגבלה יומית על מספר הפעמים שניתן לבצע פעולה זו. אנא המתן %{time_left} לפני ניסיון חוזר."
@@ -347,7 +359,7 @@ he:
       email_title: 'הפרסום שלךב"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'התרעה למנחים'
+      title: 'התראה למנחים'
       description: 'פרסום זה דורש התייחסות של מנחה (moderator) כללי, על פי <a href="/guidelines"> הכללים המנחים </a>,  <a href="%{tos_url}">TOS</a> או מסיבה אחרת המוזכרת למעלה.'
       long_form: 'מנהלים הותרעו'
       email_title: 'הודעה ב-"%{title}" דורשת תשומת לב של מנהל'
@@ -385,6 +397,10 @@ he:
   archetypes:
     regular:
       title: "נושא רגיל"
+    banner:
+      message:
+        make: "נושא זה הוא כעת באנר. הוא יופיע בראש כל עמוד עד שישוחרר על ידי המשתמשים."
+        remove: "נושא זה כבר אינו באנר. הוא לא יופיע יותר בראש כל עמוד."
   unsubscribed:
     title: 'מנוי בוטל'
     description: "המנוי שלך בוטל. לא ניצור איתך קשר יותר!"
@@ -451,7 +467,7 @@ he:
       xaxis: "יום"
       yaxis: "מספר הודעות פרטיות"
     notify_moderators_private_messages:
-      title: "התרעה למנחים"
+      title: "התראה למנחים"
       xaxis: "יום"
       yaxis: "מספר הודעות פרטיות"
     notify_user_private_messages:
@@ -532,6 +548,8 @@ he:
       title: "Bottom of the pages"
       description: "HTML that will be added at the bottom of every page."
   site_settings:
+    censored_words: "מלים שיוחלפו באופן אוטומטי ב- &#9632;&#9632;&#9632;&#9632;"
+    delete_old_hidden_posts: "מחיקת אוטומטית של פרסומים מוסתרים שנותרים מוסתרים במשך יותר מ-30 יום."
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "מספר התווים המותר כאורך מינימלי לפרסום הודעה"
@@ -560,6 +578,7 @@ he:
     ninja_edit_window: "במשך (n) שניות לאחר הפרסום, עריכה לא תיצור גרסא חדשה בהיסטוריית הגרסאות."
     post_edit_time_limit: "העורכ/ת יכול לערות או למחקור את הפרסום שלהם במשך (0) דקות לאחר הפרסום. הזינו 0 כ\"תמיד\"."
     edit_history_visible_to_public: "אפשרו לכולם לראות גרסאות קודמות של פרסום ערוך. כאשר אפשרות זו מנוטרלת, רק חברי צוות יכולים לצפות בהן."
+    delete_removed_posts_after: "פרסומים שהוסרו על ידי מחבריהם ימחקו באופן אוטומטי לאחר (n) שעות. אם הגדרה זו מכוונת ל-0, הפרסום ימחקו מיידית."
     max_image_width: "הרוחב המקסימלי של תצוגת תמונה מוקטנת בפרסום"
     max_image_height: "גובה מקסימלי של תצוגת תמונה מוקטנת בפרסום"
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
@@ -578,6 +597,7 @@ he:
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "הטופס: נעשה שימוש בכתובת הדוא\"ל כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
     email_custom_headers: "A pipe-delimited list of custom email headers"
+    email_subject: "התאמה עצמית של מבנה נושא למיילים סטנדרטיים. ראו:\nhttps://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     use_https: "Should the full url for the site (Discourse.base_url) be http or https? DO NOT ENABLE THIS UNLESS HTTPS IS ALREADY SET UP AND WORKING!"
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפרסום ייכלל ב\"סיכום נושא זה\""
     summary_posts_required: "מספר הפרסומים המנימאלי בנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
@@ -615,6 +635,7 @@ he:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "כמה נושאים נטענים כברירת מחדל ברשימת הנושאים, ומתי גלילה למטה טוענת נושאים נוספים"
     posts_per_page: "כמה פרסומים נטענים כברירת מחדל בנושא, ומתי גלילה מטה תטען פרסומים נוספים"
+    site_contact_username: "כל המסרים האישיים האוטומטיים יהיו ממשתמש זה; אם תשאירו ריק, יעשה שימוש בחשבון ברירת המחדל של המערכת."
     send_welcome_message: "שלחו כל המשתמשים החדשים הודעת \"ברוכים הבאים\" פרטים עם הדרכה ראשונית כיצד להתחיל."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפרסום כאשר ישנה תגובה ישירה אחת לפרסום זה."
     suppress_reply_directly_above: "אל תציגו את את אפשרות ההרחבה \"בתגובה ל..\" לפרסום כאשר יש רק תגובה אחת ישירה מעל לפרסום זה."
@@ -622,11 +643,14 @@ he:
     topics_per_period_in_top_summary: "מספר הנושאים המוצגים בבריכת המחדל של סיכום הנושאים."
     topics_per_period_in_top_page: "מספר הנושאים הראשונים המוצגים בתצוגה המורחבת של \"הצג עוד\"."
     redirect_users_to_top_page: "כוון באופן אוטומטי משתמשים חדשים וכאלה שנעדרו במשך זמן לראש העמוד."
+    show_email_on_profile: "הצגת כתובת הדוא\"ל של המשתמש/ת בעמוד הפרופיל שלהם (גלוי רק להם ולצוות)"
     email_token_valid_hours: "סיסמאות שכחת סיסמא / הפעלת חשבון תקפים במשך (n) שעות."
     email_token_grace_period_hours: "סיסמאות שכחת סיסמא / הפעלת חשבון עדיין זמינים לזמן חסד של (n) שעות לאחר שהופקו."
+    enable_badges: "הפעלת מערכת התגים (badges)"
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "רשימה של מתחמי דוא\"ל (email domains) בהם למשתמשים אסור לרשום חשבונות. לדוגמא: mailinator.com trashmail.net"
     email_domains_whitelist: "רשימת של מתחמי דוא\"ל (email domains) שמשתמשים חייבים(!) כדי להירשם ולפתוח חשבון. אזהרה: משתמשים עם כתובות דוא\"ל אחרות מאלו המפורטות כאן לא יאושרו באתר!"
+    forgot_password_strict: "אל תעדכנו משתמשים על קיום חשבון כאשר הם משתמשים ב\"שכחתי סיסמא\"."
     version_checks: "שלחו פינג להאב של Discourse לעדכוני גרסה וכדי להציג מסרים אודות גרסאות בלוח התצוגה של האדמין"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסא חדשה של Discourse זמינה."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
@@ -645,6 +669,7 @@ he:
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
+    sso_overrides_avatar: "מעקף אווטאר של משתמש בעזרת אווטר אתרחיצוני מ-SSO Payload. אם אפשרות זו מופעלת, מומלץ מאוד לבטל את האפשרות להעלאת אווטר."
     enable_local_logins: "אפשרו שם חשבונות מבוססים על שן משתמש מקומי וסיסמאת התחברות. (שימו לב: אפשרות זו חייבת להיות מותרת כדי שהזמנות להצטרפות יפעלו)"
     allow_new_registrations: "אפשרו הרשמות משתמשים חדשים. בטלו סימון זה כדי למנוע יצירת חשבונות חדשים."
     enable_google_logins: "(מיושן). אפשר/י אימות באמצעות Google. זוהי שיטת ה-OpenID לאימות שגוגל הכריזה ככזה שהתיישן. התקנות חדשות לא יעבדו עם זה. השתמשו ב-Google Oauth2 במקום. התקנות קיימות חייבות לעבור ל-Google Oauth2 עד ל-20 באפריל, 2015."
@@ -664,8 +689,10 @@ he:
     allow_restore: "אפשר שחזור, אשר יכול להחליף את כל(!) המידע באתר! הותירו על \"שלילי\"/false אלא אם כן אתם מתכננים לשחזר גיבוי."
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     backup_daily: "צור גיבוי אוטומטי לאתר פעם ביום."
+    enable_s3_backups: "העלאת גיבויים ל-S3 לאחר השלמתם. חשוב: דורש הזנת הרשאות S3 תקפות להגדרות הקבצים."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
+    verbose_localization: "הצגת טיפים מורחבים של לוקליזציה בממשק המשתמש."
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
     rate_limit_create_topic: "לאחר יצירת נושא, על המשתמשים להמתין (n) שניות לפני יצירת נושא אחר."
     rate_limit_create_post: "לאחר הפרסום על המשתמשים להמתין (n) שניות לפני יצירת פרסום חדש."

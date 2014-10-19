@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ca:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Opcions d'enquesta"
+  poll:
+    must_contain_poll_options: "cal que contingui una llista d'opcions"
+    cannot_have_modified_options: "no es pot modificar quan hagin passat els primers cinc minuts. Contacta un moderador si necessites fer-hi canvis."
+    cannot_add_or_remove_options: "només es pot editar, no afegir o treure. Si necessites afegir o treure opcions, hauries de tancar aquest tema i crear-ne un de nou."
+    prefix: "Enquesta"
+    closed_prefix: "Enquesta tancada"

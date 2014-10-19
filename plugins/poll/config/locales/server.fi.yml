@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fi:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Kyselyn vaihtoehtoja"
+  poll:
+    must_contain_poll_options: "täytyy sisältää lista vastausvaihtoehdoista"
+    cannot_have_modified_options: "ei voi muokata kun viisi minuuttia on kulunut kyselyn luomisesta. Ota yhteyttä valvojaan jos sinun tarvitsee muokata vaihtoehtoja."
+    cannot_add_or_remove_options: "voi vain muokata, ei lisätä tai poistaa. Jos sinun tarvitsee lisätä tai poistaa vaihtoehtoja, sinun tulee lukita tämä ketju ja luoda uusi."
+    prefix: "Kysely"
+    closed_prefix: "Suljettu kysely"
