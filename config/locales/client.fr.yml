@@ -90,6 +90,7 @@ fr:
       facebook: 'partager ce lien sur Facebook'
       google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
+    topic_admin_menu: "action sur le sujet d'administrateur"
     edit: 'éditer le titre et la catégorie de ce sujet'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
     no_value: "Non"
@@ -122,6 +123,7 @@ fr:
     daily: "quotidiennes"
     weekly: "hebdomadaires"
     every_two_weeks: "bi-mensuelles"
+    max_of_count: "maximum sur {{count}}"
     character_count:
       one: "{{count}} caractère"
       other: "{{count}} caractères"
@@ -408,6 +410,8 @@ fr:
         expired: "Cette invitation a expirée."
         rescind: "Supprimer"
         rescinded: "Invitation annulée"
+        reinvite: "Envoyer de nouveau l'invitation"
+        reinvited: "Invitation renvoyée"
         time_read: "Temps de lecture"
         days_visited: "Ratio de présence"
         account_age_days: "Âge du compte en jours"
@@ -499,6 +503,7 @@ fr:
     created_lowercase: 'créé'
     trust_level: 'Niveau de confiance'
     search_hint: 'pseudo'
+    search_hint_admin: 'pseudo ou courriel'
     create_account:
       title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse de courriel est déjà enregistrée, essayez le lien Mot de passe oublié."
@@ -560,6 +565,7 @@ fr:
       drafts_offline: "sauvegardé hors ligne"
       min_length:
         need_more_for_title: "{{n}} caractères restant pour le titre"
+        need_more_for_reply: "{{n}} restants"
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -613,6 +619,15 @@ fr:
       help: "Aide Markdown"
       toggler: "Afficher ou cacher le composer"
       admin_options_title: "Paramètres optionnels pour ce sujet"
+      auto_close:
+        label: "Heure de fermeture automatique de cette discussion:"
+        error: "Merci d'entrer une valeur valide."
+        based_on_last_post: "Ne pas fermer tant que le dernier message dans ce sujet n'est pas plus ancien que çà."
+        all:
+          examples: 'Saisir un nombre d''heures (24), une heure absolue (17:30) ou une date(2013-11-22 14:00).'
+        limited:
+          units: "(# d'heures)"
+          examples: 'Saisir le nombre d''heures (24).'
     notifications:
       title: "Notification des mentions de votre @pseudo, réponses à vos sujets et messages, etc."
       none: "Vous n'avez aucune notification pour le moment."
@@ -759,6 +774,7 @@ fr:
       jump_reply_down: allez à des réponses ultérieures
       deleted: "Ce sujet a été supprimé"
       auto_close_notice: "Ce sujet sera automatiquement fermé %{timeLeft}."
+      auto_close_notice_based_on_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
       auto_close_title: 'Paramètres de fermeture automatique'
       auto_close_save: "Sauvegarder"
       auto_close_remove: "Ne pas fermer automatiquement ce sujet"
@@ -782,6 +798,8 @@ fr:
           '2_4': 'Vous recevrez des notifications car vous avez posté une réponse dans ce sujet.'
           '2_2': 'Vous recevrez des notifications car vous suivez ce sujet.'
           '2': 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu ce sujet</a>.'
+          '1_2': 'Vous serez notifié si un utilisateur mentionne votre @pseudo ou réponds à votre message.'
+          '1': 'Vous serez notifié si un utilisateur mentionne votre @pseudo ou réponds à votre message.'
           '0_7': 'Vous ignorez toutes les notifications de cette catégorie.'
           '0_2': 'Vous ignorez toutes les notifications de ce sujet.'
           '0': 'Vous ignorez toutes les notifications de ce sujet.'
@@ -793,12 +811,16 @@ fr:
           description: "Vous serez notifier de chaque nouveau message de ce sujet. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté du sujet."
         tracking_pm:
           title: "Suivi simple"
+          description: "Le nombre de messages non lus et nouveaux apparaîtra à côté de ce message privée. Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message."
         tracking:
           title: "Suivi"
+          description: "Le nombre de messages non lus et de nouveaux messages apparaîtra à côté du sujet. Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message."
         regular:
           title: "Normal"
+          description: "Vous serez notifié si un utilisateur mentionne votre @pseudo ou réponds à votre message."
         regular_pm:
           title: "Régulier"
+          description: "Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message privé."
         muted_pm:
           title: "Silencieux"
           description: "Vous ne serez jamais averti de quoi que ce soit à propos de ​​ce message privé."
@@ -928,6 +950,7 @@ fr:
         edit: "Désolé, il y a eu une erreur lors de l'édition de votre message. Merci de réessayer."
         upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Merci de réessayer."
         attachment_too_large: "Désolé, le fichier que vous êtes en train d'envoyer est trop grand (taille maximum de {{max_size_kb}} Ko)."
+        file_too_large: "Désolé, le fichier que vous êtes en train d'envoyer est trop grand (taille maximum de {{max_size_kb}} Ko)"
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
         upload_not_authorized: "Désolé, le fichier que vous êtes en train d'envoyer n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'image."
@@ -1071,6 +1094,8 @@ fr:
           previous: "Révision précédente"
           next: "Révision suivante"
           last: "Dernière révision"
+          hide: "Masquer la révision"
+          show: "Afficher la révision"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1140,6 +1165,7 @@ fr:
           description: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de messages non-lus et nouveaux apparaîtra à côté du sujet."
         regular:
           title: "Normal"
+          description: "Vous serez notifié si un utilisateur mentionne votre @pseudo ou réponds à votre message."
         muted:
           title: "Silencieux"
           description: "Vous ne recevrez aucune notification sur les sujets de ces catégories, et ils n'apparaîtront pas dans votre onglet \"non-lus\"."
@@ -1151,6 +1177,8 @@ fr:
       delete_spammer: "Supprimer le spammeur"
       delete_confirm: "Vous vous apprêtez à supprimer <b>%{posts}</b> messages et  <b>%{topics}</b> sujets de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>%{ip_address}</b> et à ajouter son adresse de courriel <b>%{email}</b> à la liste des utilisateurs bloqués. Etes-vous sûr que cet utilisateur est un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
+      ip_address_missing: "(N/A)"
+      hidden_email_address: "(masqué)"
       submit_tooltip: "Soumettre le signalement privé"
       take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre plus de signalement de la communauté."
       cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment"
@@ -1447,6 +1475,7 @@ fr:
             text: "Sauvegarder"
             title: "Créer une sauvegarde"
             confirm: "Voulez-vous démarrer une nouvelle sauvegarde ?"
+            without_uploads: "Oui (ne pas inclure les fichiers)"
           download:
             text: "Télécharger"
             title: "Télécharger la sauvegarde"
@@ -1537,6 +1566,9 @@ fr:
           love:
             name: 'aimer'
             description: "La couleur du bouton \"J'aime\"."
+          wiki:
+            name: 'wiki'
+            description: "Couleur de base utilisée pour le fond des messages de type wiki."
       email:
         title: "Courriel"
         settings: "Paramètrage"
@@ -1579,6 +1611,8 @@ fr:
         last_match_at: "Dernière occurence"
         match_count: "Occurences"
         ip_address: "IP"
+        topic_id: "Identifiant du sujet"
+        post_id: "Identifiant du message"
         delete: 'Supprimer'
         edit: 'Éditer'
         save: 'Sauvegarder'
@@ -1613,6 +1647,8 @@ fr:
             grant_badge: "décerné le badge"
             revoke_badge: "retirer le badge"
             check_email: "vérifier l'adresse courriel"
+            delete_topic: "Supprimer le sujet"
+            delete_post: "supprimer le message"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -1684,6 +1720,7 @@ fr:
         not_verified: "Non verifié"
         check_email:
           title: "Afficher l'adresse courriel de cet utilisateur"
+          text: "Afficher"
       user:
         suspend_failed: "Il y a eu un problème pendant la suspension de cet utilisateur {{error}}"
         unsuspend_failed: "Il y a eu un problème pendant le retrait de la suspension de cet utilisateur {{error}}"
@@ -1786,6 +1823,8 @@ fr:
           flagged_by_users: "Utilisateurs signalés"
           likes_given: "J'aimes donnés"
           likes_received: "J'aimes reçus"
+          likes_received_days: "J'aime reçus: chaque jours"
+          likes_received_users: "J'aime reçus: chaque utilisateurs"
           qualifies: "Admissible au niveau de confiance 3."
           does_not_qualify: "Non admissible au niveau de confiance 3."
           will_be_promoted: "Sera promu prochainement."
@@ -1802,15 +1841,25 @@ fr:
           external_avatar_url: "URL Avatar"
       user_fields:
         title: "Champs utilisateurs"
+        help: "Ajouter des champs que vos utilisateurs pourront remplir."
         create: "Créer un champ utilisateur"
         untitled: "Sans titre"
         name: "Nom du champ"
         type: "Type du champ"
+        description: "Description du champs"
         save: "Sauvegarder"
         edit: "Modifier"
         delete: "Supprimer"
         cancel: "Annuler"
         delete_confirm: "Etes vous sur de vouloir supprimer ce champ utilisateur ?"
+        required:
+          title: "Obligatoire à l'inscription ?"
+          enabled: "obligatoire"
+          disabled: "optionnel"
+        editable:
+          title: "Modifiable après l'inscription ?"
+          enabled: "modifiable"
+          disabled: "non modifiable"
         field_types:
           text: 'Zone de texte'
           confirm: 'Confirmation'
@@ -2026,6 +2075,7 @@ fr:
           name: Grand partage
           description: Message partagé avec 300 visiteurs uniques
         great_share:
+          name: Super Partage
           description: Message partagé avec 1000 visiteurs uniques
         first_like:
           name: Premier j'aime

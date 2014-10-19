@@ -1,0 +1,28 @@
+# encoding: utf-8
+#
+# This file contains content for the server portion of Discourse used by Ruby
+#
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-org/
+#
+# This is a "source" file, which is used by Transifex to get translations for other languages.
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+#
+#   tx push -s
+#
+# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+he:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "אפשרויות הצבעה"
+  poll:
+    must_contain_poll_options: "חובה להכיל רשימה של אפשרויות הצבעה"
+    cannot_have_modified_options: "לא ניתן לשנות את האפשרויות לאחר 5 הדקות הראשונות. יש לפנות למנהל כדי לבצע שינויים אלו."
+    cannot_add_or_remove_options: "ניתן רק לערוך, לא להוסיף או להסיר אפשרויות. כדי להוסיף או להסיר אפשרויות יש לנעול את נושא זה ולפתוח אחד חדש."
+    prefix: "הצבעה"
+    closed_prefix: "הצבעה סגורה"

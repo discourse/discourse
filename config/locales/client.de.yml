@@ -262,6 +262,8 @@ de:
       invited_by: "Eingeladen von"
       trust_level: "Vertrauensstufe"
       notifications: "Benachrichtigungen"
+      dismiss_notifications: "Alle als gelesen markieren"
+      dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       disable_jump_reply: "Nach Verfassen einer Antwort nicht zum neuen Beitrag springen"
       dynamic_favicon: "Zeige Benachrichtigungen über eingehende Nachrichten im Favicon (experimentell)"
       edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
@@ -565,6 +567,7 @@ de:
       drafts_offline: "Entwürfe offline"
       min_length:
         need_more_for_title: "im Titel fehlen noch {{n}} Zeichen"
+        need_more_for_reply: "noch {{n}}"
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -619,7 +622,11 @@ de:
       toggler: "Eingabebereich aus- oder einblenden"
       admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
       auto_close:
+        label: "Thema automatisch schließen:"
         error: "Bitte geben Sie einen gültigen Wert ein."
+        based_on_last_post: "Das Thema nicht schließen, wenn der letzte Beitrag nicht mindestens so alt ist."
+        all:
+          examples: 'Gib die Anzahl von Stunden (24), eine absolute Uhrzeit (17:30) oder einen Zeitstempel (2013-11-22 14:00) ein.'
         limited:
           units: "(# Stunden)"
           examples: 'Geben Sie die Anzahl der Stunden ein (24).'
@@ -761,6 +768,7 @@ de:
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
       auto_close_notice: "Dieses Thema wird %{timeLeft} automatisch geschlossen."
+      auto_close_notice_based_on_last_post: "Dieses Thema wird nach %{duration} der letzten Antwort geschlossen."
       auto_close_title: 'Automatisches Schließen'
       auto_close_save: "Speichern"
       auto_close_remove: "Dieses Thema nicht automatisch schließen"
@@ -784,6 +792,8 @@ de:
           '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
           '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
           '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
+          '1_2': 'Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          '1': 'Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
           '0_2': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
           '0': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
@@ -795,12 +805,15 @@ de:
           description: "Du wirst über jeden neuen Beitrag in diesem Thema benachrichtigt. Die Anzahl der ungelesenen und neuen Beiträge wird auch neben dem Thema erscheinen."
         tracking_pm:
           title: "Verfolgen"
+          description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Eintrag in der Nachrichtenliste angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
         tracking:
           title: "Verfolgen"
         regular:
           title: "Normal"
+          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular_pm:
           title: "Normal"
+          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag in der privaten Nachricht antwortet."
         muted_pm:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über diese private Unterhaltung."
@@ -930,6 +943,7 @@ de:
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
         attachment_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}} KB)."
+        file_too_large: "Achtung, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}}kb)."
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
         upload_not_authorized: "Entschuldige, die Datei, die du hochladen wolltest, ist nicht erlaubt (erlaubte Endungen: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
@@ -1144,6 +1158,7 @@ de:
           description: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
         regular:
           title: "Normal"
+          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
@@ -1217,6 +1232,8 @@ de:
     category_title: "Kategorie"
     history: "Verlauf"
     changed_by: "von {{author}}"
+    raw_email:
+      not_available: "Nicht verfügbar!"
     categories_list: "Liste der Kategorien"
     filters:
       with_topics: "%{filter}e Themen"
@@ -1546,6 +1563,7 @@ de:
             description: "Die Farbe des Like-Buttons."
           wiki:
             name: 'Wiki'
+            description: "Die Standardfarbe wird als Hintergrundfarbe für Wikiseiten genutzt."
       email:
         title: "E-Mail"
         settings: "Einstellungen"
@@ -1818,6 +1836,7 @@ de:
           external_avatar_url: "Avatar URL"
       user_fields:
         title: "Benutzerfelder"
+        help: "Füge Felder hinzu, welche deine Benutzer ausfüllen können."
         create: "Benutzerfeld erstellen"
         untitled: "Unbetitelt"
         name: "Feldname"
@@ -1911,6 +1930,7 @@ de:
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
           user_change: "Wenn ein Benutzer bearbeitet oder angelegt wird"
         preview:
+          link_text: "Abzeichen betrachten"
           plan_text: "Vorschau mit Query Plan"
           modal_title: "Vorschau für Abzeichen-Abfrage"
           sql_error_header: "Es gab einen Fehler mit der SQL-Abfrage."
