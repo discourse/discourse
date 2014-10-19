@@ -122,7 +122,7 @@ it:
     never: "mai"
     daily: "giornaliero"
     weekly: "settimanale"
-    every_two_weeks: "ogni due settimane"
+    every_two_weeks: "bisettimanale"
     max_of_count: "massimo di {{count}}"
     character_count:
       one: "{{count}} carattere"
@@ -370,7 +370,7 @@ it:
         title: "Quando non visiti il sito, invia un riassunto delle novità:"
         daily: "ogni giorno"
         weekly: "ogni settimana"
-        bi_weekly: "ogni due settimane"
+        bi_weekly: "bisettimanale"
       email_direct: "Ricevi un'email quando qualcuno ti cita, risponde ad un tuo messaggio, o menziona il tuo @nome"
       email_private_messages: "Ricevi un'email quando qualcuno ti invia un messaggio privato "
       email_always: "Non sospendere le notifiche via email anche quando sono attivo sul sito"
@@ -565,6 +565,7 @@ it:
       drafts_offline: "bozze offline"
       min_length:
         need_more_for_title: "{{n}} per andare al titolo"
+        need_more_for_reply: "ne mancano {{n}}"
       error:
         title_missing: "Il titolo è richiesto"
         title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
@@ -1611,9 +1612,9 @@ it:
           title: "Azioni Staff"
           instructions: "Clicca sui nomi degli utenti e sulle azioni per filtrare la lista. Clicca sugli avatar per andare alle pagine degli utenti."
           clear_filters: "Mostra Tutto"
-          staff_user: "Membro dello staff"
+          staff_user: "Utente"
           target_user: "Destinatario"
-          subject: "Soggetto"
+          subject: "Oggetto"
           when: "Quando"
           context: "Contesto"
           details: "Dettagli"
@@ -1864,7 +1865,7 @@ it:
         categories:
           all_results: 'Tutti'
           required: 'Obbligatorio'
-          basic: 'Impostazioni Base'
+          basic: 'Di Base'
           users: 'Utenti'
           posting: 'Pubblicazione'
           email: 'Email'
@@ -1880,7 +1881,7 @@ it:
           legal: "Legale"
           uncategorized: 'Altro'
           backups: "Backup"
-          login: "Accedi"
+          login: "Accesso"
       badges:
         title: Targhette
         new_badge: Nuova Targhetta

@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sq:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Opsionet e sondazhit"
+  poll:
+    must_contain_poll_options: "duhet të përmbajë një listë me pyetje"
+    cannot_have_modified_options: "nuk mund të ndryshohet pasi kanë kaluar pesë minuta. Kontakto një moderator nëse nevojiten ndryshime."
+    cannot_add_or_remove_options: "nuk mund të redaktohet, shtosh apo fshini pyetje. Nësë dëshironi të shtoni apo fshini pyetje ju duhet ta mbyllni këtë temë dhe të krijoni një të re."
+    prefix: "Sondazh"
+    closed_prefix: "Sondazh i Mbyllur"
