@@ -35,14 +35,15 @@ de:
     messages:
       too_long_validation: "darf höchstens %{max} Zeichen lang sein; Du hast %{length} eingegeben."
       invalid_boolean: "Ungültiger Boolescher Wert"
+      taken: "wird bereits verwendet"
     embed:
       load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV oder TXT Format vorliegen."
   backup:
     operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
-    backup_file_should_be_tar_gz: "Die Backupdatei sollte ein .tar.gz Archiv sein."
-    not_enough_space_on_disk: "Es gibt nicht genügend freien Festplattenspeicher um dieses Backup hochzuladen."
+    backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
+    not_enough_space_on_disk: "Es gibt nicht genügend freien Festplattenspeicher, um diese Sicherung hochzuladen."
   not_logged_in: "Dazu musst Du angemeldet sein."
   read_only_mode_enabled: "Die Seite befindet sich im Nur-Lesen Modus. Interaktionen sind deaktiviert."
   too_many_replies:
@@ -187,6 +188,9 @@ de:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Du kannst eine Warnung nur an eine Nachricht zugleich anhängen."
+              too_many_users: "Du kannst eine Warnung nur an einen Benutzer zugleich anhängen."
             archetype:
               cant_send_pm: "Entschuldigung, Du kannst diesem Nutzer keine private Nachricht schicken."
         user:
@@ -501,7 +505,7 @@ de:
     twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     s3_config_warning: 'Der Server wurde konfiguriert um Dateien nach s3 hochzuladen, aber mindestens der folgenden Einstellungen fehlt: s3_access_key_id, s3_secret_access_key oder s3_upload_bucket. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Besuche "How to set up image uploads to S3?" um mehr zu erfahren</a>.'
-    s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Backups auf S3 geladen werden, aber mindestens einer der folgenden Einstellungen: s3_access_key_id, s3_secret_access_key or s3_backup_bucket ist nicht gesetzt. Gehe zu <a href="/admin/site_settings">the Site Settings</a> und aktualisiere die Einstellungen. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe "Wie konfiguriere ich das Hochladen von Bildern zu S3?" um mehr darüber zu erfahren</a>.'
+    s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Datensicherungen auf S3 geladen werden, aber mindestens einer der folgenden Einstellungen: s3_access_key_id, s3_secret_access_key or s3_backup_bucket ist nicht festgelegt. Gehe Sie zu <a href="/admin/site_settings">den Seiteneinstellungen</a> und aktualisieren Sie die Einstellungen. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe "Wie konfiguriere ich das Hochladen von Bildern zu S3?" um mehr darüber zu erfahren</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
     failing_emails_warning: 'Es konnten insgesamt %{num_failed_jobs} Mails nicht versendet werden. Bitte überprüfe die Mailserver-Einstellungen in config/discourse.conf. Siehe auch: <a href="/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq</a>.'
     default_logo_warning: "Das Logo der Seite wurde noch nicht angepasst. Bitte bearbeite dieses in den <a href='/admin/site_settings'>Einstellungen</a> (siehe logo_url, logo_small_url und favicon_url)."
@@ -675,10 +679,10 @@ de:
     enable_github_logins: "Aktiviere Github Authentisierung (benötigt github_client_id und github_client_secret)."
     github_client_id: "Client-ID für Github Authentisierung, registriert auf https://github.com/settings/applications"
     github_client_secret: "Client Secret für Github Authentisierung, registriert auf https://github.com/settings/applications"
-    allow_restore: "Wiederherstellung zulassen, welche ALLE vorhandenen Daten überschreiben kann! Auf 'false' lassen, sofern du nicht planst eine Sicherung wiederherzustellen."
-    maximum_backups: "Maximale Anzahl Backups, die auf dem Server gespeichert werden. Ältere Backups werden automatisch gelöscht."
-    backup_daily: "Erstelle jeden Tag automatisch ein Backup."
-    s3_backup_bucket: "Der entfernte Speicherort für deine Backups. WARNUNG: Stelle sicher, dass es sich um einen privaten Speicherort handelt."
+    allow_restore: "Wiederherstellung zulassen, welche ALLE vorhandenen Daten überschreiben kann! Auf 'false' lassen, sofern Sie nicht planen, eine Sicherung wiederherzustellen."
+    maximum_backups: "Die maximale Anzahl an Sicherungen, die auf dem Server gespeichert werden. Ältere Sicherungen werden automatisch gelöscht."
+    backup_daily: "Jeden Tag automatisch eine Sicherung erstellen."
+    s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."
     verbose_localization: "Erweiterte Lokalisierungstipps in der Benutzeroberfläche anzeigen "
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert bevor er als 'früherer' Besuch gezählt wird."
@@ -921,6 +925,8 @@ de:
       %{invite_link}
 
       Die Einladung ist von einem vertrautem Benutzer, du musst dich daher nicht einloggen.
+  invite_password_instructions:
+    subject_template: "Legen Sie ein Passwort für Ihr %{site_name}-Konto fest"
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
   new_version_mailer:
@@ -1002,6 +1008,18 @@ de:
         Viel Vergnügen!
     welcome_invite:
       subject_template: "Willkommen bei %{site_name}!"
+    backup_succeeded:
+      subject_template: "Sicherung erfolgreich abgeschlossen"
+    backup_failed:
+      subject_template: "Sicherung fehlgeschlagen"
+      text_body_template: |
+        Die Sicherung ist fehlgeschlagen.
+
+        Hier ist das Protokoll:
+
+        ```
+        %{logs}
+        ```
     bulk_invite_succeeded:
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
       text_body_template: "Deine Masseneinladung von Benutzern wurde erfolgreich verarbeitet, insgesamt wurden %{sent} Einladungen per Mail verschickt."
