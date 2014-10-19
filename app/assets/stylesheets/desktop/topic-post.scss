@@ -830,6 +830,7 @@ $topic-avatar-width: 45px;
   font-weight: normal;
   line-height: 18px;
   color: $primary;
+  transition: all linear .15s;
 
   & > div {
     margin-left: 26px;
