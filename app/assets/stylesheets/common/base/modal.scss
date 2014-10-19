@@ -117,6 +117,9 @@
     .warning {
       color: $danger !important;
     }
+    .raw-email-textarea {
+      height: 300px;
+    }
   }
   .password-confirmation {
     display: none;
