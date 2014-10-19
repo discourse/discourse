@@ -130,7 +130,7 @@ pt_BR:
 
       - Inclua boas palavras chave no seu tópico para que outros possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria.
 
-      Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
+      Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para as suas primeiras %{education_posts_text}.
     new-reply: |
       Bem-vindo ao %{site_name} &mdash; **obrigado por contribuir!**
 
@@ -204,7 +204,7 @@ pt_BR:
 
       Parabéns! :confetti_ball:
 
-      Se você pode ver neste tópico, você foi recentemente promovido a  **regulares ** (nível de confiança 3).
+      Se você pode ver neste tópico, você foi recentemente promovido a  **regular** (nível de confiança 3).
 
       Agora você pode &hellip;
 
@@ -212,7 +212,7 @@ pt_BR:
       * Alterar a categoria de qualquer assunto
       * Ter todos os seus links seguidos ([nofollow automática] (http://en.wikipedia.org/wiki/Nofollow) é removido)
       * Acesso a categoria privada Sala visíveis apenas para os utilizadores a nível de confiança 3 e superior
-      * Esconder o spam com uma única bandeira
+      * Esconder o spam com uma única sinalização
 
       Aqui está o [lista atual de companheiros regulares] (/badges/3/regular). Não se esqueça de dizer oi.
 
@@ -1118,11 +1118,12 @@ pt_BR:
         ---
         %{respond_instructions}
     digest:
-      why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
+      why: "Um breve resumo do %{site_link} desde que viu pela última vez em %{last_seen_at}."
       subject_template: "[%{site_name}] Atividade do Fórum para %{date}"
       new_activity: "Nova atividade nos seus tópicos e postagens:"
       top_topics: "Tópicos populares"
       other_new_topics: "Tópicos populares"
+      unsubscribe: "Este resumo é enviado como uma cortesia de notificação do %{site_link}  desde o tempo que não te vimos a um tempo. Para cancelar a inscrição %{unsubscribe_link}."
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       read_more: "Leia Mais"
