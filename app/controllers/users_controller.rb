@@ -505,7 +505,7 @@ class UsersController < ApplicationController
     @user = fetch_user_from_params
     guardian.ensure_can_delete_user!(@user)
 
-    UserDestroyer.new(current_user).destroy(@user, {delete_posts: true, context: params[:context]})
+    UserDestroyer.new(current_user).destroy(@user, { delete_posts: true, context: params[:context] })
 
     render json: success_json
   end

@@ -15,9 +15,14 @@ class UserDestroyer
     raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
     @guardian.ensure_can_delete_user!(user)
     raise PostsExistError if !opts[:delete_posts] && user.posts.count != 0
+
     User.transaction do
       if opts[:delete_posts]
         user.posts.each do |post|
+          # agree with flags
+          PostAction.agree_flags!(post, @actor) if opts[:delete_as_spammer]
+
+          # block all external urls
           if opts[:block_urls]
             post.topic_links.each do |link|
               unless link.internal or Oneboxer.oneboxer_exists_for_url?(link.url)
@@ -25,15 +30,19 @@ class UserDestroyer
               end
             end
           end
+
           PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
+
           if post.topic and post.post_number == 1
             Topic.unscoped.where(id: post.topic.id).update_all(user_id: nil)
           end
         end
       end
+
       user.post_actions.each do |post_action|
         post_action.remove_act!(Discourse.system_user)
       end
+
       user.destroy.tap do |u|
         if u
           if opts[:block_email]
