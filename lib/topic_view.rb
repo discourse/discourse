@@ -21,7 +21,7 @@ class TopicView
 
     @page = @page.to_i
     @page = 1 if @page.zero?
-    @limit ||= SiteSetting.posts_per_page
+    @limit ||= SiteSetting.posts_chunksize
 
     setup_filtered_posts
 

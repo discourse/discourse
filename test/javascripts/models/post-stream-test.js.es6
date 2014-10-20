@@ -182,7 +182,7 @@ test("loading", function() {
 });
 
 test("nextWindow", function() {
-  Discourse.SiteSettings.posts_per_page = 5;
+  Discourse.SiteSettings.posts_chunksize = 5;
   var postStream = buildStream(1234, [1,2,3,5,8,9,10,11,13,14,15,16]);
 
   blank(postStream.get('nextWindow'), 'With no posts loaded, the window is blank');
@@ -199,7 +199,7 @@ test("nextWindow", function() {
 });
 
 test("previousWindow", function() {
-  Discourse.SiteSettings.posts_per_page = 5;
+  Discourse.SiteSettings.posts_chunksize = 5;
   var postStream = buildStream(1234, [1,2,3,5,8,9,10,11,13,14,15,16]);
 
   blank(postStream.get('previousWindow'), 'With no posts loaded, the window is blank');

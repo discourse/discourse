@@ -158,10 +158,6 @@ basic:
   show_subcategory_list:
     default: false
     client: true
-  posts_per_page:
-    client: true
-    default: 20
-    min: 1
   enable_badges:
     client: true
     default: true
@@ -632,6 +628,10 @@ developer:
   verbose_localization:
     default: false
     client: true
+  posts_chunksize:
+    client: true
+    default: 20
+    min: 1
 
 embedding:
   embeddable_host: ''
