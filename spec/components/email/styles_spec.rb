@@ -24,7 +24,8 @@ describe Email::Styles do
       expect(style.to_html).to be_blank
     end
 
-    it "adds a max-width to images" do
+    # Pending due to email effort @coding-horror made in d2fb2bc4c
+    pending "adds a max-width to images" do
       frag = basic_fragment("<img src='gigantic.jpg'>")
       expect(frag.at("img")["style"]).to match("max-width")
     end
