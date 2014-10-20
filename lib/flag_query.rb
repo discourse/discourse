@@ -12,7 +12,7 @@ module FlagQuery
     post_ids = actions.limit(per_page)
                       .offset(offset)
                       .group(:post_id)
-                      .order('min(post_actions.created_at) DESC')
+                      .order('MIN(post_actions.created_at) DESC')
                       .pluck(:post_id)
                       .uniq
 
@@ -114,7 +114,6 @@ module FlagQuery
                                .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
                                .joins("INNER JOIN topics ON topics.id = posts.topic_id")
                                .joins("LEFT JOIN users ON users.id = posts.user_id")
-                               .where("users.id IS NOT NULL")
 
       if filter == "old"
         post_actions.where("post_actions.disagreed_at IS NOT NULL OR

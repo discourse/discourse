@@ -128,6 +128,23 @@ describe UserDestroyer do
             spammer_topic.reload.deleted_at.should_not == nil
             spammer_topic.user_id.should == nil
           end
+
+          context "delete_as_spammer is true" do
+
+            before { destroy_opts[:delete_as_spammer] = true }
+
+            it "agrees with flags on user's posts" do
+              spammer_post = Fabricate(:post, user: @user)
+              flag = PostAction.act(@admin, spammer_post, PostActionType.types[:inappropriate])
+              flag.agreed_at.should == nil
+
+              destroy
+
+              flag.reload
+              flag.agreed_at.should_not == nil
+            end
+
+          end
         end
 
         context "users deletes self" do

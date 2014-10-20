@@ -211,22 +211,31 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def reject_bulk
-    d = UserDestroyer.new(current_user)
     success_count = 0
+    d = UserDestroyer.new(current_user)
+
     User.where(id: params[:users]).each do |u|
       success_count += 1 if guardian.can_delete_user?(u) and d.destroy(u, params.slice(:context)) rescue UserDestroyer::PostsExistError
     end
-    render json: {success: success_count, failed: (params[:users].try(:size) || 0) - success_count}
+
+    render json: {
+      success: success_count,
+      failed: (params[:users].try(:size) || 0) - success_count
+    }
   end
 
   def destroy
     user = User.find_by(id: params[:id].to_i)
     guardian.ensure_can_delete_user!(user)
     begin
-      if UserDestroyer.new(current_user).destroy(user, params.slice(:delete_posts, :block_email, :block_urls, :block_ip, :context))
-        render json: {deleted: true}
+      options = params.slice(:delete_posts, :block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
+      if UserDestroyer.new(current_user).destroy(user, options)
+        render json: { deleted: true }
       else
-        render json: {deleted: false, user: AdminDetailedUserSerializer.new(user, root: false).as_json}
+        render json: {
+          deleted: false,
+          user: AdminDetailedUserSerializer.new(user, root: false).as_json
+        }
       end
     rescue UserDestroyer::PostsExistError
       raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")

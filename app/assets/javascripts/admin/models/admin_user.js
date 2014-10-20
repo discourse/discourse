@@ -391,6 +391,7 @@ Discourse.AdminUser = Discourse.User.extend({
               block_email: true,
               block_urls: true,
               block_ip: true,
+              delete_as_spammer: true,
               context: window.location.pathname
             }
           }).then(function(result) {
