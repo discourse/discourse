@@ -37,7 +37,8 @@
 
   <script language="Javascript">
     function google_button_clicked(e) {
-      $('google-query').value = 'site:<%= local_domain %> ' + $('user-query').value;
+      var searchValue = document.getElementById('user-query').value;
+      document.getElementById('google-query').value = 'site:<%= local_domain %> ' + searchValue;
       return true;
     }
 
