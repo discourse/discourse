@@ -461,8 +461,8 @@ class UsersController < ApplicationController
         upload_avatar_for(user, upload)
       when "profile_background"
         upload_profile_background_for(user.user_profile, upload)
-      when "expansion_background"
-        upload_expansion_background_for(user.user_profile, upload)
+      when "card_background"
+        upload_card_background_for(user.user_profile, upload)
       end
     else
       render status: 422, text: upload.errors.full_messages
@@ -492,8 +492,8 @@ class UsersController < ApplicationController
     image_type = params.require(:image_type)
     if image_type == 'profile_background'
       user.user_profile.clear_profile_background
-    elsif image_type == 'expansion_background'
-      user.user_profile.clear_expansion_background
+    elsif image_type == 'card_background'
+      user.user_profile.clear_card_background
     else
       raise Discourse::InvalidParameters.new(:image_type)
     end
@@ -554,8 +554,8 @@ class UsersController < ApplicationController
       render json: { url: upload.url, width: upload.width, height: upload.height }
     end
 
-    def upload_expansion_background_for(user_profile, upload)
-      user_profile.upload_expansion_background(upload)
+    def upload_card_background_for(user_profile, upload)
+      user_profile.upload_card_background(upload)
       render json: { url: upload.url, width: upload.width, height: upload.height }
     end
 

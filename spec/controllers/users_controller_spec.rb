@@ -1156,13 +1156,13 @@ describe UsersController do
           json['height'].should == 200
         end
 
-        it 'is successful for expansion backgrounds' do
+        it 'is successful for card backgrounds' do
           upload = Fabricate(:upload)
           Upload.expects(:create_for).returns(upload)
-          xhr :post, :upload_user_image, username: user.username, file: user_image, image_type: "expansion_background"
+          xhr :post, :upload_user_image, username: user.username, file: user_image, image_type: "card_background"
           user.reload
 
-          user.user_profile.expansion_background.should == "/uploads/default/1/1234567890123456.png"
+          user.user_profile.card_background.should == "/uploads/default/1/1234567890123456.png"
 
           # returns the url, width and height of the uploaded image
           json = JSON.parse(response.body)
@@ -1220,12 +1220,12 @@ describe UsersController do
             json['height'].should == 200
           end
 
-          it 'is successful for expansion backgrounds' do
+          it 'is successful for card backgrounds' do
             upload = Fabricate(:upload)
             Upload.expects(:create_for).returns(upload)
-            xhr :post, :upload_user_image, username: user.username, file: user_image_url, image_type: "expansion_background"
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, image_type: "card_background"
             user.reload
-            user.user_profile.expansion_background.should == "/uploads/default/1/1234567890123456.png"
+            user.user_profile.card_background.should == "/uploads/default/1/1234567890123456.png"
 
             # returns the url, width and height of the uploaded image
             json = JSON.parse(response.body)
