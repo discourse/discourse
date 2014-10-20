@@ -35,7 +35,10 @@ module Email
           img['width'] = 20
           img['height'] = 20
         else
-          add_styles(img, 'max-width:100%;height:auto;') if img['style'] !~ /max-width/
+          # having no extra style on email images might work best?
+          img['width'] = 'auto'
+          img['height'] = 'auto'
+          # add_styles(img, 'max-width:100%;') if img['style'] !~ /max-width/
         end
 
         # ensure all urls are absolute
