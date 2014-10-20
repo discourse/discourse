@@ -1,5 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_dependency 'url_helper'
+require_dependency 'file_helper'
 
 require "mysql2"
 
@@ -8,17 +10,29 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
   include ActionView::Helpers::NumberHelper
 
-  PHPBB_DB   = "phpbb"
+ PHPBB_DB   = "phpbb"
   BATCH_SIZE = 1000
 
   ORIGINAL_SITE_PREFIX = "oldsite.example.com/forums" # without http(s)://
   NEW_SITE_PREFIX      = "http://discourse.example.com"  # with http:// or https://
 
-  # Set ATTACHMENTS_BASE_DIR to the base directory where attachment files are found.
-  # If nil, [attachment] tags won't be processed.
+  # Set PHPBB_BASE_DIR to the base directory of your phpBB installation.
+  # When importing, you should place the subdirectories "files" (containing all
+  # attachments) and "images" (containing avatars) in PHPBB_BASE_DIR.
+  # If nil, [attachment] tags and avatars won't be processed.
   # Edit AUTHORIZED_EXTENSIONS as needed.
-  ATTACHMENTS_BASE_DIR = nil
-  AUTHORIZED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'zip', 'rar']
+  # If you used ATTACHMENTS_BASE_DIR before, e.g. ATTACHMENTS_BASE_DIR = '/var/www/phpbb/files/'
+  # would become                                  PHPBB_BASE_DIR       = '/var/www/phpbb'
+  # now.
+  PHPBB_BASE_DIR        = '/var/www/phpbb'
+  AUTHORIZED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'zip', 'rar', 'pdf']
+
+  # Avatar types to import.:
+  #  1 = uploaded avatars (you should probably leave this here)
+  #  2 = hotlinked avatars - WARNING: this will considerably slow down your import
+  #                          if there are many hotlinked avatars and some of them unavailable!
+  #  3 = galery avatars   (the predefined avatars phpBB offers. They will be converted to uploaded avatars)
+  IMPORT_AVATARS       = [1, 3]
 
   def initialize
     super
@@ -29,6 +43,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
       #password: "password",
       database: PHPBB_DB
     )
+    phpbb_read_config
   end
 
   def execute
@@ -36,7 +51,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     import_categories
     import_posts
     import_private_messages
-    import_attachments unless ATTACHMENTS_BASE_DIR.nil?
+    import_attachments unless PHPBB_BASE_DIR.nil?
     suspend_users
   end
 
@@ -51,7 +66,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
-        "SELECT user_id id, user_email email, username, user_regdate, group_name
+        "SELECT user_id id, user_email email, username, user_regdate, group_name, user_avatar_type, user_avatar
            FROM phpbb_users u
            JOIN phpbb_groups g ON g.group_id = u.group_id
           WHERE g.group_name != 'BOTS'
@@ -68,7 +83,26 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
           username: user['username'],
           created_at: Time.zone.at(user['user_regdate']),
           moderator: user['group_name'] == 'GLOBAL_MODERATORS',
-          admin: user['group_name'] == 'ADMINISTRATORS' }
+          admin: user['group_name'] == 'ADMINISTRATORS',
+          post_create_action: proc do |newmember|
+            if not PHPBB_BASE_DIR.nil? and IMPORT_AVATARS.include?(user['user_avatar_type']) and newmember.uploaded_avatar_id.blank?
+              path = phpbb_avatar_fullpath(user['user_avatar_type'], user['user_avatar']) and begin
+                upload = create_upload(newmember.id, path, user['user_avatar'])
+                  if upload.persisted?
+                    newmember.import_mode = false
+                    newmember.create_user_avatar
+                    newmember.import_mode = true
+                    newmember.user_avatar.update(custom_upload_id: upload.id)
+                    newmember.update(uploaded_avatar_id: upload.id)
+                  else
+                    puts "Error: Upload did not persist!"
+                  end
+                rescue SystemCallError => err
+                  puts "Could not import avatar: #{err.message}"
+              end
+            end
+          end 
+        }
       end
     end
   end
@@ -304,7 +338,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     setting = AUTHORIZED_EXTENSIONS.join('|')
     SiteSetting.authorized_extensions = setting if setting != SiteSetting.authorized_extensions
 
-    r = /\[attachment=[\d]+\]<\!-- [\w]+ --\>([\S]+)<\!-- [\w]+ --\>\[\/attachment\]/
+    r = /\[attachment=[\d]+\]<\!-- [\w]+ --\>([^<]+)<\!-- [\w]+ --\>\[\/attachment\]/
 
     user = Discourse.system_user
 
@@ -323,6 +357,12 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
       new_raw.gsub!(r) do |s|
         matches = r.match(s)
         real_filename = matches[1]
+
+        # note: currently, we do not import PM attachments.
+        # If this should be desired, this has to be fixed,
+        # otherwise, the SQL state coughs up an error for the
+        # clause "WHERE post_msg_id = pm12345"...
+        next s if post.custom_fields['import_id'].start_with?('pm:')
 
         sql = "SELECT physical_filename,
                       mimetype
@@ -347,7 +387,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
           next s
         end
 
-        filename = File.join(ATTACHMENTS_BASE_DIR, row['physical_filename'])
+        filename = File.join(PHPBB_BASE_DIR+'/files', row['physical_filename'])
         if !File.exists?(filename)
           puts "Attachment file doesn't exist: #{filename}"
           fail_count += 1
@@ -382,6 +422,64 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     puts "   failed: #{fail_count}" if fail_count > 0
     puts ''
   end
+
+  # Read avatar config from phpBB configuration table.
+  # Stored there: - paths relative to the phpBB install path
+  #               - "salt", i.e. base filename for uploaded avatars
+  #
+  def phpbb_read_config
+    results = mysql_query("SELECT config_name, config_value
+                             FROM phpbb_config;")
+    if results.size<1
+      puts "could not read config... no avatars and attachments will be imported!"
+      return
+    end
+    results.each do |result|
+      if result['config_name']=='avatar_gallery_path'
+        @avatar_gallery_path  = result['config_value']
+      elsif result['config_name']=='avatar_path'
+        @avatar_path          = result['config_value']
+      elsif result['config_name']=='avatar_salt'
+        @avatar_salt          = result['config_value']
+      end
+    end
+  end
+
+  # Create the full path to the phpBB avatar specified by avatar_type and filename.
+  #
+  def phpbb_avatar_fullpath(avatar_type, filename)
+    case avatar_type
+    when 1 # uploaded avatar
+      filename.gsub!(/_[0-9]+\./,'.') # we need 1337.jpg, not 1337_2983745.jpg
+      path=@avatar_path
+      PHPBB_BASE_DIR+'/'+path+'/'+@avatar_salt+'_'+filename
+    when 3 # gallery avatar
+      path=@avatar_gallery_path
+      PHPBB_BASE_DIR+'/'+path+'/'+filename
+    when 2 # hotlinked avatar
+      begin
+        hotlinked = FileHelper.download(filename, SiteSetting.max_image_size_kb.kilobytes, "discourse-hotlinked")
+      rescue StandardError => err
+          puts "Error downloading avatar: #{err.message}. Skipping..."
+	  return nil
+      end
+      if hotlinked
+        if hotlinked.size <= SiteSetting.max_image_size_kb.kilobytes
+          return hotlinked
+        else
+          Rails.logger.error("Failed to pull hotlinked image: #{filename} - Image is bigger than #{@max_size}")
+            nil
+        end
+      else
+        Rails.logger.error("There was an error while downloading '#{filename}' locally.")
+        nil
+      end
+    else
+      puts 'Invalid avatar type #{avatar_type}, skipping'
+      nil
+    end
+  end
+
 
   def mysql_query(sql)
     @client.query(sql, cache_rows: false)
