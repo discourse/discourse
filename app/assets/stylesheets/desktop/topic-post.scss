@@ -47,8 +47,8 @@ h1 .topic-statuses .topic-status i {
   .reply-new {
     .discourse-no-touch & {
      opacity:0;
-     transition: opacity linear 0.4s;
-     -webkit-transition: opacity linear 0.4s;
+     @include transition(opacity linear 0.4s);
+
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -57,8 +57,7 @@ h1 .topic-statuses .topic-status i {
 div.actions, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
-       transition: opacity linear 0.4s;
-    -webkit-transition: opacity linear 0.4s;
+      @include transition(opacity linear 0.4s);
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -89,7 +88,8 @@ nav.post-controls {
 
   span.badge-posts {
     margin-right: 5px;
-    transition: all linear 0.15s;
+    @include transition(all linear 0.15s);
+
   }
 
   .actions {
@@ -147,7 +147,7 @@ nav.post-controls {
     background: transparent;
     border: none;
     margin-left: 3px;
-    transition: all linear 0.15s;
+    @include transition(all linear 0.15s);
          &:hover {
           background: scale-color-diff();
           color: $primary;
@@ -830,7 +830,7 @@ $topic-avatar-width: 45px;
   font-weight: normal;
   line-height: 18px;
   color: $primary;
-  transition: all linear .15s;
+  @include transition(all linear .15s);
 
   & > div {
     margin-left: 26px;
@@ -1032,8 +1032,8 @@ span.highlighted {
 
 .read-state.read {
   opacity: 0;
-  -webkit-transition: opacity 1s ease-out;
-  transition: opacity 1s ease-out;
+  @include transition(opacity ease-out 1s);
+
 }
 
 

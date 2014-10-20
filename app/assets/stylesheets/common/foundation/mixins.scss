@@ -57,7 +57,6 @@
 @mixin transition($transition) {
   .discourse-no-touch & {
     -webkit-transition: #{$transition};
-        -ms-transition: #{$transition};
             transition: #{$transition};
   }
 }
