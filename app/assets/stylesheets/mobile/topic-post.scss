@@ -116,9 +116,18 @@ button {
 }
 
 .post-actions {
-  margin-left: 10px;
-  margin-top: 2px;
   display: inline-block;
+  width: 100%;
+}
+
+.post-action {
+  float: right;
+  margin-right: 10px;
+  clear: right;
+}
+
+.post-action .relative-date {
+  margin-left: 5px;
 }
 
 a.reply-to-tab {
@@ -402,14 +411,7 @@ iframe {
   margin-top: -20px;
 }
 
-.post-action {
-  float:right;
-  margin-right: 10px;
-}
 
-.post-action .relative-date {
-  margin-left: 5px;
-}
 
 .deleted {
 background-color: scale-color($danger, $lightness: 75%);
