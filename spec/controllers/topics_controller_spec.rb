@@ -656,19 +656,19 @@ describe TopicsController do
     context 'filters' do
 
       it 'grabs first page when no filter is provided' do
-        SiteSetting.stubs(:posts_per_page).returns(20)
+        SiteSetting.stubs(:posts_chunksize).returns(20)
         TopicView.any_instance.expects(:filter_posts_in_range).with(0, 19)
         xhr :get, :show, topic_id: topic.id, slug: topic.slug
       end
 
       it 'grabs first page when first page is provided' do
-        SiteSetting.stubs(:posts_per_page).returns(20)
+        SiteSetting.stubs(:posts_chunksize).returns(20)
         TopicView.any_instance.expects(:filter_posts_in_range).with(0, 19)
         xhr :get, :show, topic_id: topic.id, slug: topic.slug, page: 1
       end
 
       it 'grabs correct range when a page number is provided' do
-        SiteSetting.stubs(:posts_per_page).returns(20)
+        SiteSetting.stubs(:posts_chunksize).returns(20)
         TopicView.any_instance.expects(:filter_posts_in_range).with(20, 39)
         xhr :get, :show, topic_id: topic.id, slug: topic.slug, page: 2
       end

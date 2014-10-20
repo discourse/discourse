@@ -149,7 +149,7 @@ Discourse.PostStream = Em.Object.extend({
     var firstIndex = this.indexOf(firstPost);
     if (firstIndex === -1) { return []; }
 
-    var startIndex = firstIndex - Discourse.SiteSettings.posts_per_page;
+    var startIndex = firstIndex - Discourse.SiteSettings.posts_chunksize;
     if (startIndex < 0) { startIndex = 0; }
     return stream.slice(startIndex, firstIndex);
 
@@ -173,7 +173,7 @@ Discourse.PostStream = Em.Object.extend({
     if ((lastIndex + 1) >= this.get('highest_post_number')) { return []; }
 
     // find our window of posts
-    return stream.slice(lastIndex+1, lastIndex+Discourse.SiteSettings.posts_per_page+1);
+    return stream.slice(lastIndex+1, lastIndex+Discourse.SiteSettings.posts_chunksize+1);
   }.property('lastLoadedPost', 'stream.@each'),
 
 
