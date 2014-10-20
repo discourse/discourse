@@ -19,6 +19,12 @@
     </div>
 
     <div>
+      <label for="name">{{i18n admin.badges.image}}</label>
+      {{input type="text" name="name" value=buffered.image}}
+      <p class='help'>{{i18n admin.badges.icon_help}}</p>
+    </div>
+
+    <div>
       <label for="badge_type_id">{{i18n admin.badges.badge_type}}</label>
       {{view Ember.Select name="badge_type_id"
                           value=buffered.badge_type_id

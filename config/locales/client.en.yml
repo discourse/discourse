@@ -418,6 +418,9 @@ en:
       created: "Joined"
       log_out: "Log Out"
       location: "Location"
+      card_badge:
+        title: "User Card Badge"
+
       website: "Web Site"
       email_settings: "Email"
       email_digests:
@@ -2106,6 +2109,7 @@ en:
         listable: Show badge on the public badges page
         enabled: Enable badge
         icon: Icon
+        image: Image
         icon_help: "Use either a Font Awesome class or URL to an image"
         query: Badge Query (SQL)
         target_posts: Query targets posts
@@ -2206,7 +2210,7 @@ en:
         one:   "1 granted"
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
-      no_title: "<no title>"
+      none: "<none>"
       badge_grouping:
         getting_started:
           name: Getting Started

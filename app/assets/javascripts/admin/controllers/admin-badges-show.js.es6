@@ -26,7 +26,7 @@ export default Ember.ObjectController.extend(BufferedContent, {
                      'listable', 'auto_revoke',
                      'enabled', 'show_posts',
                      'target_posts', 'name', 'description',
-                     'icon', 'query', 'badge_grouping_id',
+                     'icon', 'image', 'query', 'badge_grouping_id',
                      'trigger', 'badge_type_id'],
             self = this;
 

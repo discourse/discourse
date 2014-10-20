@@ -1,9 +1,10 @@
 import BadgeSelectController from "discourse/mixins/badge-select-controller";
 
 export default Ember.ArrayController.extend(BadgeSelectController, {
-
   filteredList: function() {
-    return this.get('model').filterBy('badge.allow_title', true);
+    return this.get('model').filter(function(b) {
+      return !Em.empty(b.get('badge.image'));
+    });
   }.property('model'),
 
   actions: {
@@ -11,16 +12,17 @@ export default Ember.ArrayController.extend(BadgeSelectController, {
       this.setProperties({ saved: false, saving: true });
 
       var self = this;
-      Discourse.ajax(this.get('user.path') + "/preferences/badge_title", {
+      Discourse.ajax(this.get('user.path') + "/preferences/card-badge", {
         type: "PUT",
         data: { user_badge_id: self.get('selectedUserBadgeId') }
       }).then(function() {
         self.setProperties({
           saved: true,
           saving: false,
-          "user.title": self.get('selectedUserBadge.badge.name')
+          "user.card_image_badge": self.get('selectedUserBadge.badge.image')
         });
-      }, function() {
+      }).catch(function() {
+        self.set('saving', false);
         bootbox.alert(I18n.t('generic_error'));
       });
     }

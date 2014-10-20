@@ -971,6 +971,26 @@ describe UsersController do
     end
   end
 
+  describe "badge_card" do
+    let(:user) { Fabricate(:user) }
+    let(:badge) { Fabricate(:badge) }
+    let(:user_badge) { BadgeGranter.grant(badge, user) }
+
+    it "sets the user's card image to the badge" do
+      log_in_user user
+      xhr :put, :update_card_badge, user_badge_id: user_badge.id, username: user.username
+      user.user_profile.reload.card_image_badge_id.should be_blank
+      badge.update_attributes image: "wat.com/wat.jpg"
+
+      xhr :put, :update_card_badge, user_badge_id: user_badge.id, username: user.username
+      user.user_profile.reload.card_image_badge_id.should == badge.id
+
+      # Can set to nothing
+      xhr :put, :update_card_badge, username: user.username
+      user.user_profile.reload.card_image_badge_id.should be_blank
+    end
+  end
+
   describe "badge_title" do
     let(:user) { Fabricate(:user) }
     let(:badge) { Fabricate(:badge) }

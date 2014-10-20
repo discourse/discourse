@@ -6,6 +6,8 @@ class UserProfile < ActiveRecord::Base
   before_save :cook
   after_save :trigger_badges
 
+  belongs_to :card_image_badge, class_name: 'Badge'
+
   BAKED_VERSION = 1
 
   def bio_excerpt
