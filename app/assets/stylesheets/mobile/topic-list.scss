@@ -252,8 +252,9 @@ tr.category-topic-link:nth-of-type(odd) {
 }
 .fade {
   opacity: 0;
-  -webkit-transition: opacity 0.15s linear;
-  transition: opacity 0.15s linear;
+  transition: opacity linear .15s;
+  -webkit-transition: opacity linear .15s;
+
 }
 .fade.in {
   opacity: 1;
