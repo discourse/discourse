@@ -7,6 +7,7 @@
   @module Discourse
 **/
 Discourse.ModalBodyView = Discourse.View.extend({
+  focusInput: true,
 
   _setupModal: function() {
     var self = this,
@@ -20,7 +21,7 @@ Discourse.ModalBodyView = Discourse.View.extend({
     $('#modal-alert').hide();
 
     // Focus on first element
-    if (!Discourse.Mobile.mobileView) {
+    if (!Discourse.Mobile.mobileView && self.get('focusInput')) {
       Em.run.schedule('afterRender', function() {
         self.$('input:first').focus();
       });
