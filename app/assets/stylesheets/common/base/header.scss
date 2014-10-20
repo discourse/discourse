@@ -53,6 +53,7 @@
       text-align: center;
       margin: 0 0 0 5px;
       list-style: none;
+
       > li {
         float: left;
       }
@@ -65,6 +66,7 @@
         border-top: 1px solid transparent;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
+        @include transition(all linear .15s);
 
 
         &:hover {
@@ -168,7 +170,7 @@
       a {
         display: block;
         padding: 5px;
-        transition: all linear .15s;
+        @include transition(all linear .15s);
       }
 
       &:hover a:not(.badge-notification) {

@@ -74,8 +74,7 @@ a.reply-new {
     background: $secondary;
     padding: 1.5px 3px;
     border-radius: 20px;
-    transition: linear 0.15s;
-    -webkit-transition: linear 0.15s;
+    @include transition(all linear .15s);
     margin-left: -20px;
   }
 }
@@ -206,7 +205,8 @@ a:hover.reply-new {
     width: 0;
     border-right: 1px solid  scale-color-diff();
     background-color:  dark-light-diff($success, $secondary, 60%, -35%);
-    transition: width .75s;
+    @include transition(width .75s);
+
   }
 }
 
