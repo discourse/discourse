@@ -126,7 +126,7 @@ page.runTests = function(){
   });
 
   test("has details",function(){
-    return $('#user-expansion .names').length === 1;
+    return $('#user-card .names').length === 1;
   });
 
   run();

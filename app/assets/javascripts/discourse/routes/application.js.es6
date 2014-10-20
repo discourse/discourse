@@ -20,7 +20,7 @@ var ApplicationRoute = Discourse.Route.extend({
     },
 
     expandUser: function(user) {
-      this.controllerFor('user-expansion').show(user.get('username'), user.get('uploaded_avatar_id'));
+      this.controllerFor('user-card').show(user.get('username'), user.get('uploaded_avatar_id'));
       return true;
     },
 

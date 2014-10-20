@@ -1,7 +1,7 @@
 export default Ember.Component.extend({
   tagName: 'a',
   attributeBindings: ['href'],
-  classNames: ['trigger-expansion'],
+  classNames: ['trigger-user-card'],
   href: Em.computed.alias('post.usernameUrl'),
 
   click: function(e) {

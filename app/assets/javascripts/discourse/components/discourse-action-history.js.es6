@@ -32,7 +32,7 @@ export default Em.Component.extend({
         if (c.get('usersExpanded')) {
           var postUrl;
           c.get('users').forEach(function(u) {
-            iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + u.get('username_lower') + "\" data-user-expand=\"" + u.get('username_lower') + "\">";
+            iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + u.get('username_lower') + "\" data-user-card=\"" + u.get('username_lower') + "\">";
             if (u.post_url) {
               postUrl = postUrl || u.post_url;
             }
