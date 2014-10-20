@@ -2288,3 +2288,13 @@ en:
         reader:
           name: Reader
           description: Read every post in a topic with more than 100 posts
+
+    google_search: |
+      <h2>Search with Google</h2>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>
