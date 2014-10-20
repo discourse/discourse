@@ -2123,19 +2123,40 @@ en:
 
   static:
     search_help: |
-      You may include special search operators:
-
-      `order:views` Results will be ordered by view count (as opposed to relevence)  
-      `order:latest` Results will be ordered by last post time (as opposed to relevence)  
-      `status:open` Only show open topics  
-      `status:closed` Only show closed topics  
-      `status:archived` Only show archived topics  
-      `status:noreplies` Show posts with a single participant  
-      `category:foo` Only show topics in the category `foo`  
-      `user:foo` Only show posts by the user `foo`  
-      `in:likes` Only show posts you liked  
-      `in:posted` Only show posts you created  
-      `in:watching` Only show watched topics  
-      `in:tracking` Only show tracking topics  
-      
-      Example: `bears category:test status:open order:latest` will search for topics containing the word `bears` in the category `test` that are not closed or archived ordered by last post date.
+      <h2>Tips</h2>
+      <p>
+      <ul>
+        <li>Title matches are prioritized, so when in doubt, search for titles</li>
+        <li>Unique, uncommon words will always produce the best results</li>
+        <li>Whenever possible, scope your search to a particular category or user</li>
+      </ul>
+      </p>
+      <h2>Advanced Search Operators</h2>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td>Order results by view count</td></tr>
+        <tr><td><code>order:latest</code></td><td>Order results by date of last post</td></tr>
+        <tr><td><code>status:open</code></td><td>Search open topics</td></tr>
+        <tr><td><code>status:closed</code></td><td>Search closed topics</td></tr>
+        <tr><td><code>status:archived</code></td><td>Search archived topics</td></tr>
+        <tr><td><code>status:noreplies</code></td><td>Search topics with no replies</td></tr>
+        <tr><td><code>status:singleuser</code></td><td>Search topics where only a single user posted</td></tr>
+        <tr><td><code>category:foo</code></td><td>Search topics in the 'foo' category</td></tr>
+        <tr><td><code>user:foo</code></td><td>Search posts by the user 'foo'</td></tr>
+        <tr><td><code>in:likes</code></td><td>Search posts you liked</td></tr>
+        <tr><td><code>in:posted</code></td><td>Search posts you created</td></tr>
+        <tr><td><code>in:watching</code></td><td>Search topics you are watching</td></tr>
+        <tr><td><code>in:tracking</code></td><td>Search topics you are tracking</td></tr>
+        </table>
+      </p>
+      <p>
+        <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
+      </p>
+      <h2>Search with Google</h2>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:https://meta.discourse.org ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>
