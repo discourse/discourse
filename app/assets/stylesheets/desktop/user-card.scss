@@ -145,4 +145,12 @@
     color: $danger;
     margin-bottom: 10px;
   }
+
+  .card-badge {
+    img {
+      max-width: 100px;
+    }
+    float: right;
+    margin-right: 5px;
+  }
 }

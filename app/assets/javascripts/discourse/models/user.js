@@ -338,6 +338,10 @@ Discourse.User = Discourse.Model.extend({
         });
       }
 
+      if (json.user.card_badge) {
+        json.user.card_badge = Discourse.Badge.create(json.user.card_badge);
+      }
+
       user.setProperties(json.user);
       return user;
     });

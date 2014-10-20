@@ -42,7 +42,7 @@
         <label class="control-label">{{i18n user.title.title}}</label>
         <div class="controls">
           <span class="static">{{title}}</span>
-          {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+          {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
         </div>
       </div>
     {{/if}}
@@ -154,6 +154,16 @@
       <label class="control-label">{{i18n user.website}}</label>
       <div class="controls">
         {{input type="text" value=website class="input-xxlarge"}}
+      </div>
+    </div>
+
+    <div class="control-group pref-card-badge">
+      <label class="control-label">{{i18n user.card_badge.title}}</label>
+      <div class="controls">
+        {{#if card_image_badge}}
+          {{icon-or-image card_image_badge}}
+        {{/if}}
+        {{#link-to "preferences.card-badge" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
       </div>
     </div>
 
