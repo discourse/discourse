@@ -26,7 +26,7 @@ test("basic cooking", function() {
   cooked("common/_special_font_face.html.erb", "<p>common/_special_font_face.html.erb</p>", "it doesn't intraword with a slash");
   cooked("hello \\*evil\\*", "<p>hello *evil*</p>", "it supports escaping of asterisks");
   cooked("hello \\_evil\\_", "<p>hello _evil_</p>", "it supports escaping of italics");
-  cooked("brussel sproutes are *awful*.", "<p>brussel sproutes are <em>awful</em>.</p>", "it doesn't swallow periods.");
+  cooked("brussels sprouts are *awful*.", "<p>brussels sprouts are <em>awful</em>.</p>", "it doesn't swallow periods.");
 });
 
 test("Nested bold and italics", function() {
@@ -153,7 +153,7 @@ test("Links", function() {
 
 test("simple quotes", function() {
   cooked("> nice!", "<blockquote><p>nice!</p></blockquote>", "it supports simple quotes");
-  cooked(" > nice!", "<blockquote><p>nice!</p></blockquote>", "it allows quotes with preceeding spaces");
+  cooked(" > nice!", "<blockquote><p>nice!</p></blockquote>", "it allows quotes with preceding spaces");
   cooked("> level 1\n> > level 2",
          "<blockquote><p>level 1</p><blockquote><p>level 2</p></blockquote></blockquote>",
          "it allows nesting of blockquotes");
@@ -360,7 +360,7 @@ test("Code Blocks", function() {
 
   cooked("    ```\n    hello\n    ```",
          "<pre><code>&#x60;&#x60;&#x60;\nhello\n&#x60;&#x60;&#x60;</code></pre>",
-         "only detect ``` at the begining of lines");
+         "only detect ``` at the beginning of lines");
 
   cooked("```ruby\ndef self.parse(text)\n\n  text\nend\n```",
          "<p><pre><code class=\"ruby\">def self.parse(text)\n\n  text\nend</code></pre></p>",
@@ -490,5 +490,5 @@ test("censoring", function() {
          "it doesn't censor words unless they have boundaries.");
   cooked("you are a whizzer! I love cheesewhiz. Whiz.",
          "<p>you are a &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
-         "it censor words even if previous partical matches exist.");
+         "it censors words even if previous partial matches exist.");
 });
