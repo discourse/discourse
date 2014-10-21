@@ -86,16 +86,21 @@ class StaticController < ApplicationController
     end
 
     expires_in 1.year, public: true
+
+    response.headers["Expires"] = 1.year.from_now.httpdate
     response.headers["Access-Control-Allow-Origin"] = params[:origin]
+
     begin
       response.headers["Last-Modified"] = File.ctime(path).httpdate
+      response.headers["Content-Length"] = File.size(path)
     rescue Errno::ENOENT
       raise Discourse::NotFound
     end
     opts = {
       disposition: nil
     }
-    opts[:type] = "application/x-javascript" if path =~ /\.js$/
+
+    opts[:type] = "application/javascript" if path =~ /\.js$/
 
     # we must disable acceleration otherwise NGINX strips
     # access control headers
