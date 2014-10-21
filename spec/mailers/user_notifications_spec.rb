@@ -80,7 +80,7 @@ describe UserNotifications do
     let(:notification) { Fabricate(:notification, user: user) }
 
     it 'generates a correct email' do
-      SiteSetting.stubs(:enable_names).returns(true)
+      SiteSetting.stubs(:enable_email_names).returns(true)
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
       # from should include full user name
@@ -121,7 +121,7 @@ describe UserNotifications do
     let(:notification) { Fabricate(:notification, user: user) }
 
     it 'generates a correct email' do
-      SiteSetting.stubs(:enable_names).returns(false)
+      SiteSetting.stubs(:enable_email_names).returns(false)
       mail = UserNotifications.user_posted(response.user, post: response, notification: notification)
 
       # from should not include full user name if "show user full names" is disabled
@@ -150,7 +150,7 @@ describe UserNotifications do
     let(:notification) { Fabricate(:notification, user: user) }
 
     it 'generates a correct email' do
-      SiteSetting.stubs(:enable_names).returns(true)
+      SiteSetting.stubs(:enable_email_names).returns(true)
       mail = UserNotifications.user_private_message(response.user, post: response, notification: notification)
 
       # from should include full user name
@@ -239,7 +239,7 @@ describe UserNotifications do
       end
 
       it "has a from alias" do
-        SiteSetting.stubs(:enable_names).returns(true)
+        SiteSetting.stubs(:enable_email_names).returns(true)
         expects_build_with(has_entry(:from_alias, "#{user.name}"))
       end
 
