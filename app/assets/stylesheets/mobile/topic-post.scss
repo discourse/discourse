@@ -202,10 +202,15 @@ a.star {
       line-height: 14px;
     }
 
-    /* limit to one line of avatars for now */
-    height:24px;
-    overflow:hidden !important; // otherwise parent mobile styles conflict
   }
+
+  /* in expanded avatar view, limit to one line for now */
+  .avatars.clearfix {
+    height:40px;
+    overflow:hidden;
+    margin-left: 10px;
+  }
+
 
   .avatar {
     float: left;
