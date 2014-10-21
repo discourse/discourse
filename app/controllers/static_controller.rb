@@ -92,7 +92,7 @@ class StaticController < ApplicationController
 
     begin
       response.headers["Last-Modified"] = File.ctime(path).httpdate
-      response.headers["Content-Length"] = File.size(path)
+      response.headers["Content-Length"] = File.size(path).to_s
     rescue Errno::ENOENT
       raise Discourse::NotFound
     end
