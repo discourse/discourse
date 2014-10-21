@@ -35,6 +35,11 @@ class StaticController < ApplicationController
       return
     end
 
+    if I18n.exists?("static.#{@page}")
+      render text: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
+      return
+    end
+
     file = "static/#{@page}.#{I18n.locale}"
     file = "static/#{@page}.en" if lookup_context.find_all("#{file}.html").empty?
     file = "static/#{@page}"    if lookup_context.find_all("#{file}.html").empty?
@@ -81,16 +86,21 @@ class StaticController < ApplicationController
     end
 
     expires_in 1.year, public: true
+
+    response.headers["Expires"] = 1.year.from_now.httpdate
     response.headers["Access-Control-Allow-Origin"] = params[:origin]
+
     begin
       response.headers["Last-Modified"] = File.ctime(path).httpdate
+      response.headers["Content-Length"] = File.size(path).to_s
     rescue Errno::ENOENT
       raise Discourse::NotFound
     end
     opts = {
       disposition: nil
     }
-    opts[:type] = "application/x-javascript" if path =~ /\.js$/
+
+    opts[:type] = "application/javascript" if path =~ /\.js$/
 
     # we must disable acceleration otherwise NGINX strips
     # access control headers

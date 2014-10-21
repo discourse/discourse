@@ -27,7 +27,7 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :profile_background,
-             :expansion_background,
+             :card_background,
              :location,
              :can_edit,
              :can_edit_username,
@@ -53,6 +53,7 @@ class UserSerializer < BasicUserSerializer
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
+  has_one  :card_badge, embed: :object, serializer: BadgeSerializer
 
   staff_attributes :number_of_deleted_posts,
                    :number_of_flagged_posts,
@@ -80,7 +81,9 @@ class UserSerializer < BasicUserSerializer
                      :disable_jump_reply,
                      :gravatar_avatar_upload_id,
                      :custom_avatar_upload_id,
-                     :has_title_badges
+                     :has_title_badges,
+                     :card_image_badge,
+                     :card_image_badge_id
 
   ###
   ### ATTRIBUTES
@@ -89,6 +92,11 @@ class UserSerializer < BasicUserSerializer
   def include_email?
     object.id && object.id == scope.user.try(:id)
   end
+
+  def card_badge
+    object.user_profile.card_image_badge
+  end
+
 
   def bio_raw
     object.user_profile.bio_raw
@@ -110,6 +118,22 @@ class UserSerializer < BasicUserSerializer
     website.present?
   end
 
+  def card_image_badge_id
+    object.user_profile.card_image_badge.try(:id)
+  end
+
+  def include_card_image_badge_id?
+    card_image_badge_id.present?
+  end
+
+  def card_image_badge
+    object.user_profile.card_image_badge.try(:image)
+  end
+
+  def include_card_image_badge?
+    card_image_badge.present?
+  end
+
   def profile_background
     object.user_profile.profile_background
   end
@@ -118,12 +142,12 @@ class UserSerializer < BasicUserSerializer
     profile_background.present?
   end
 
-  def expansion_background
-    object.user_profile.expansion_background
+  def card_background
+    object.user_profile.card_background
   end
 
-  def include_expansion_background?
-    expansion_background.present?
+  def include_card_background?
+    card_background.present?
   end
 
   def location

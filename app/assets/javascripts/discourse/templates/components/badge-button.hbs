@@ -1,7 +1,3 @@
-{{#if isIcon}}
-  <i {{bind-attr class=":fa badge.icon"}}></i>
-{{else}}
-  <img {{bind-attr src="badge.icon"}}>
-{{/if}}
+{{icon-or-image badge.icon}}
 {{badge.displayName}}
 {{yield}}

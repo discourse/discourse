@@ -32,13 +32,13 @@ describe UserSerializer do
       end
     end
 
-    context "with filled out expansion background" do
+    context "with filled out card background" do
       before do
-        user.user_profile.expansion_background = 'http://expansion.com'
+        user.user_profile.card_background = 'http://card.com'
       end
 
       it "has a profile background" do
-        expect(json[:expansion_background]).to eq 'http://expansion.com'
+        expect(json[:card_background]).to eq 'http://card.com'
       end
     end
 

@@ -142,6 +142,7 @@ class Search
   private
 
     def process_advanced_search!(term)
+
       term.to_s.split(/\s+/).map do |word|
         if word == 'status:open'
           @status = :open
@@ -149,11 +150,38 @@ class Search
         elsif word == 'status:closed'
           @status = :closed
           nil
+        elsif word == 'status:archived'
+          @status = :archived
+          nil
+        elsif word == 'status:noreplies'
+          @posts_count = 1
+          nil
+        elsif word == 'status:singleuser'
+          @single_user = true
+          nil
         elsif word == 'order:latest'
           @order = :latest
           nil
+        elsif word == 'order:views'
+          @order = :views
+          nil
         elsif word =~ /category:(.+)/
           @category_id = Category.find_by('name ilike ?', $1).try(:id)
+          nil
+        elsif word =~ /user:(.+)/
+          @user_id = User.find_by('username_lower = ?', $1.downcase).try(:id)
+          nil
+        elsif word == 'in:likes'
+          @liked_only = true
+          nil
+        elsif word == 'in:posted'
+          @posted_only = true
+          nil
+        elsif word == 'in:watching'
+          @notification_level = TopicUser.notification_levels[:watching]
+          nil
+        elsif word == 'in:tracking'
+          @notification_level = TopicUser.notification_levels[:tracking]
           nil
         else
           word
@@ -263,8 +291,45 @@ class Search
 
       if @status == :open
         posts = posts.where('NOT topics.closed AND NOT topics.archived')
+      elsif @status == :archived
+        posts = posts.where('topics.archived')
       elsif @status == :closed
-        posts = posts.where('topics.closed OR topics.archived')
+        posts = posts.where('topics.closed')
+      end
+
+      if @single_user
+        posts = posts.where("topics.featured_user1_id IS NULL AND topics.last_post_user_id = topics.user_id")
+      end
+
+      if @posts_count
+        posts = posts.where("topics.posts_count = #{@posts_count}")
+      end
+
+      if @user_id
+        posts = posts.where("posts.user_id = #{@user_id}")
+      end
+
+      if @guardian.user
+        if @liked_only
+          posts = posts.where("posts.id IN (
+                                SELECT pa.post_id FROM post_actions pa
+                                WHERE pa.user_id = #{@guardian.user.id} AND
+                                      pa.post_action_type_id = #{PostActionType.types[:like]}
+                             )")
+        end
+
+        if @posted_only
+          posts = posts.where("posts.user_id = #{@guardian.user.id}")
+        end
+
+        if @notification_level
+          posts = posts.where("posts.topic_id IN (
+                              SELECT tu.topic_id FROM topic_users tu
+                              WHERE tu.user_id = #{@guardian.user.id} AND
+                                    tu.notification_level >= #{@notification_level}
+                             )")
+        end
+
       end
 
       # If we have a search context, prioritize those posts first
@@ -290,6 +355,12 @@ class Search
           posts = posts.order("MAX(posts.created_at) DESC")
         else
           posts = posts.order("posts.created_at DESC")
+        end
+      elsif @order == :views
+        if opts[:aggregate_search]
+          posts = posts.order("MAX(topics.views) DESC")
+        else
+          posts = posts.order("topics.views DESC")
         end
       else
         posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")

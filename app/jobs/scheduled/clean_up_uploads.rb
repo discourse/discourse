@@ -8,7 +8,7 @@ module Jobs
 
       ignore_urls = []
       ignore_urls << UserProfile.uniq.where("profile_background IS NOT NULL AND profile_background != ''").pluck(:profile_background)
-      ignore_urls << UserProfile.uniq.where("expansion_background IS NOT NULL AND expansion_background != ''").pluck(:expansion_background)
+      ignore_urls << UserProfile.uniq.where("card_background IS NOT NULL AND card_background != ''").pluck(:card_background)
       ignore_urls << Category.uniq.where("logo_url IS NOT NULL AND logo_url != ''").pluck(:logo_url)
       ignore_urls << Category.uniq.where("background_url IS NOT NULL AND background_url != ''").pluck(:background_url)
       ignore_urls.flatten!

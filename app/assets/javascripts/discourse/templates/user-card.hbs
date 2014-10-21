@@ -55,6 +55,12 @@
       {{#if hasUserFilters}}
       <button class='btn' {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n topic.filters.cancel}}</button>
       {{/if}}
+
+      {{#if user.card_badge}}
+        {{#link-to 'badges.show' user.card_badge class="card-badge"}}
+          {{icon-or-image user.card_badge.image}}
+        {{/link-to}}
+      {{/if}}
     </div>
   {{else}}
     <p class='loading'>{{i18n loading}}</p>

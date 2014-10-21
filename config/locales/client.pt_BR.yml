@@ -330,7 +330,7 @@ pt_BR:
       change_profile_background:
         title: "Fundo do perfil"
         instructions: "Fundos do perfil será centralizado e tera uma largura padrão de 850px."
-      change_expansion_background:
+      change_card_background:
         title: "Fundo de Expansão do Usuário"
         instructions: "Imagens de Expansão será centralizado e tera uma largura padrão de 590px."
       email:

@@ -2,7 +2,7 @@
 # Sprockets::SassImporter implementation provided in sass-rails since that is used
 # during asset precompilation.
 class DiscourseSassImporter < Sass::Importers::Filesystem
-  GLOB = /\*|\[.+\]/
+  GLOB = /\*|\[.+\]/ unless defined? GLOB
 
   # Depending upon where this is passed we might either be passed a string as the
   # first argument or a sprockets context. If the first argument is a sprockets

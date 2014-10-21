@@ -117,6 +117,7 @@ en:
     admin_title: "Admin"
     flags_title: "Flags"
     show_more: "show more"
+    show_help: "help"
     links: "Links"
     links_lowercase: "links"
     faq: "FAQ"
@@ -372,9 +373,9 @@ en:
         title: "Profile Background"
         instructions: "Profile backgrounds will be centered and have a default width of 850px."
 
-      change_expansion_background:
-        title: "User Expansion Background"
-        instructions: "Expansion images will be centered and have a default width of 590px."
+      change_card_background:
+        title: "User Card Background"
+        instructions: "Background images will be centered and have a default width of 590px."
 
       email:
         title: "Email"
@@ -417,6 +418,9 @@ en:
       created: "Joined"
       log_out: "Log Out"
       location: "Location"
+      card_badge:
+        title: "User Card Badge"
+
       website: "Web Site"
       email_settings: "Email"
       email_digests:
@@ -2105,6 +2109,7 @@ en:
         listable: Show badge on the public badges page
         enabled: Enable badge
         icon: Icon
+        image: Image
         icon_help: "Use either a Font Awesome class or URL to an image"
         query: Badge Query (SQL)
         target_posts: Query targets posts
@@ -2139,6 +2144,9 @@ en:
 
     lightbox:
       download: "download"
+
+    search_help:
+      title: 'Search Help'
 
     keyboard_shortcuts_help:
       title: 'Keyboard Shortcuts'
@@ -2202,7 +2210,7 @@ en:
         one:   "1 granted"
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
-      no_title: "<no title>"
+      none: "<none>"
       badge_grouping:
         getting_started:
           name: Getting Started
@@ -2284,3 +2292,13 @@ en:
         reader:
           name: Reader
           description: Read every post in a topic with more than 100 posts
+
+    google_search: |
+      <h2>Search with Google</h2>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

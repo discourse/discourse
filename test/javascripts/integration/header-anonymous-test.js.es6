@@ -39,6 +39,6 @@ test("header", function() {
   fillIn("#search-term", "hello");
   andThen(function() {
     ok(exists("#search-dropdown .heading"), "when user completes a search, search box shows search results");
-    equal(find("#search-dropdown a:not(.filter):first").attr("href"), "/t/hello-bar-integration-issues/17638", "there is a search result");
+    equal(find("#search-dropdown .results a:first").attr("href"), "/t/hello-bar-integration-issues/17638", "there is a search result");
   });
 });
