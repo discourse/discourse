@@ -154,10 +154,10 @@ en:
       stat:
         all_time: "All Time"
         last_7_days: "Last 7 Days"
-      like_count: "Like Count"
-      topic_count: "Topic Count"
-      post_count: "Post Count"
-      user_count: "User Count"
+      like_count: "Likes"
+      topic_count: "Topics"
+      post_count: "Posts"
+      user_count: "Users"
 
     bookmarks:
       not_logged_in: "sorry, you must be logged in to bookmark posts"
