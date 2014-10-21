@@ -1466,7 +1466,7 @@ en:
         Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
 
     email_reject_no_account:
-      subject_template: "Email issue -- No Account"
+      subject_template: "Email issue -- Unknown Account"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -1507,14 +1507,14 @@ en:
         If you can correct the problem, please try again.
 
     email_reject_reply_key:
-      subject_template: "Email issue -- Bad Reply Key"
+      subject_template: "Email issue -- Unknown Reply Key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
 
     email_reject_destination:
-      subject_template: "Email issue -- Bad Destination Address(es)"
+      subject_template: "Email issue -- Unknown To: Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
