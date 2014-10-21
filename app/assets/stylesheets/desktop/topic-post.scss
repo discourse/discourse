@@ -379,9 +379,11 @@ a.star {
       font-size: 11px;
       line-height: 14px;
     }
+  }
 
-    /* limit to one line of avatars for now */
-    height: 28px;
+  /* in expanded avatar view, limit to one line for now */
+  .avatars.clearfix {
+    height: 25px;
     overflow: hidden;
   }
 
