@@ -71,15 +71,20 @@ describe UserNotifications do
   end
 
   describe '.user_replied' do
+    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
     let(:category) { Fabricate(:category, name: 'India') }
     let(:topic) { Fabricate(:topic, category: category) }
     let(:post) { Fabricate(:post, topic: topic) }
-    let(:response) { Fabricate(:post, topic: post.topic)}
+    let(:response) { Fabricate(:post, topic: post.topic, user: response_by_user)}
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:notification, user: user) }
 
     it 'generates a correct email' do
+      SiteSetting.stubs(:enable_email_names).returns(true)
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
+
+      # from should include full user name
+      expect(mail[:from].display_names).to eql(['John Doe'])
 
       # subject should include category name
       expect(mail.subject).to match(/India/)
@@ -109,13 +114,18 @@ describe UserNotifications do
   end
 
   describe '.user_posted' do
+    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
     let(:post) { Fabricate(:post) }
-    let(:response) { Fabricate(:post, topic: post.topic)}
+    let(:response) { Fabricate(:post, topic: post.topic, user: response_by_user)}
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:notification, user: user) }
 
     it 'generates a correct email' do
+      SiteSetting.stubs(:enable_email_names).returns(false)
       mail = UserNotifications.user_posted(response.user, post: response, notification: notification)
+
+      # from should not include full user name if "show user full names" is disabled
+      expect(mail[:from].display_names).to_not eql(['John Doe'])
 
       # subject should not include category name
       expect(mail.subject).not_to match(/Uncategorized/)
@@ -133,13 +143,18 @@ describe UserNotifications do
   end
 
   describe '.user_private_message' do
+    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
     let(:topic) { Fabricate(:private_message_topic) }
-    let(:response) { Fabricate(:post, topic: topic)}
+    let(:response) { Fabricate(:post, topic: topic, user: response_by_user)}
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:notification, user: user) }
 
     it 'generates a correct email' do
+      SiteSetting.stubs(:enable_email_names).returns(true)
       mail = UserNotifications.user_private_message(response.user, post: response, notification: notification)
+
+      # from should include full user name
+      expect(mail[:from].display_names).to eql(['John Doe'])
 
       # subject should include "[PM]"
       expect(mail.subject).to match("[PM]")
@@ -224,7 +239,8 @@ describe UserNotifications do
       end
 
       it "has a from alias" do
-        expects_build_with(has_entry(:from_alias, "#{username}"))
+        SiteSetting.stubs(:enable_email_names).returns(true)
+        expects_build_with(has_entry(:from_alias, "#{user.name}"))
       end
 
       it "should explain how to respond" do
