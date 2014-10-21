@@ -126,7 +126,8 @@ class UserNotifications < ActionMailer::Base
     send_notification_email(
       title: post.topic.title,
       post: post,
-      from_alias: post.user.username,
+      username: post.user.username,
+      from_alias: SiteSetting.enable_email_names ? post.user.name : post.user.username,
       allow_reply_by_email: true,
       use_site_subject: true,
       add_re_to_subject: true,
@@ -170,7 +171,11 @@ class UserNotifications < ActionMailer::Base
     return unless @notification = opts[:notification]
     return unless @post = opts[:post]
 
-    username = @notification.data_hash[:original_username]
+    user_name = @notification.data_hash[:original_username]
+    if @post && SiteSetting.enable_email_names
+      user_name = User.find_by(id: @post.user_id).name
+    end
+
     notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
     return if user.mailing_list_mode && !@post.topic.private_message? &&
@@ -185,7 +190,8 @@ class UserNotifications < ActionMailer::Base
     send_notification_email(
       title: title,
       post: @post,
-      from_alias: username,
+      username: @notification.data_hash[:original_username],
+      from_alias: user_name,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: use_site_subject,
       add_re_to_subject: add_re_to_subject,
@@ -202,6 +208,7 @@ class UserNotifications < ActionMailer::Base
     allow_reply_by_email = opts[:allow_reply_by_email]
     use_site_subject = opts[:use_site_subject]
     add_re_to_subject = opts[:add_re_to_subject] && post.post_number > 1
+    username = opts[:username]
     from_alias = opts[:from_alias]
     notification_type = opts[:notification_type]
     user = opts[:user]
@@ -254,7 +261,7 @@ class UserNotifications < ActionMailer::Base
       post_id: post.id,
       topic_id: post.topic_id,
       context: context,
-      username: from_alias,
+      username: username,
       add_unsubscribe_link: true,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: use_site_subject,
