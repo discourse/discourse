@@ -3,28 +3,28 @@
     {{input type="checkbox" checked=checked}}
   </td>
 {{else}}
-  {{#unboundIf canStar}}
+  {{#if canStar}}
     <td class='star'>
       <a {{bind-attr class=":star :fa :fa-star starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="starTooltip"}}></a>
     </td>
-  {{/unboundIf}}
+  {{/if}}
 {{/if}}
 
 <td class='main-link clearfix' {{bind-attr colspan="titleColSpan"}}>
   {{topic-status topic=this.model}}
   {{topic-link this}}
-  {{#unboundIf showTopicPostBadges}}
+  {{#if showTopicPostBadges}}
     {{topic-post-badges unread=unread newPosts=displayNewPosts unseen=unseen url=lastUnreadUrl}}
-  {{/unboundIf}}
+  {{/if}}
 
-  {{#unboundIf hasExcerpt}}
+  {{#if hasExcerpt}}
     <div class="topic-excerpt">
       {{{excerpt}}}
       {{#if excerptTruncated}}
         <a href="{{url}}">{{i18n read_more}}</a>
       {{/if}}
     </div>
-  {{/unboundIf}}
+  {{/if}}
 </td>
 
 {{#unless hideCategory}}
