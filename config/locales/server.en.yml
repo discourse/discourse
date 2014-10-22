@@ -698,9 +698,10 @@ en:
     enable_private_messages: "Allow trust level 1 users to create private messages and reply to private messages"
 
     enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
-    polling_interval: "How often should logged in user clients poll in milliseconds"
+    long_polling_interval: "Amount of time the server should wait before responding to clients when there is no data to send (logged on users only)"
+    polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
+    background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
 
     auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"

@@ -615,13 +615,16 @@ developer:
   enable_long_polling:
     client: true
     default: true
-  long_polling_interval: 15000
+  long_polling_interval: 25000
+  background_polling_interval:
+    client: true
+    default: 60000
   polling_interval:
     client: true
     default: 3000
   anon_polling_interval:
     client: true
-    default: 30000
+    default: 15000
   flush_timings_secs:
     client: true
     default: 5
