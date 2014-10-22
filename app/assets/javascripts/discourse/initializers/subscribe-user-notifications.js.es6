@@ -10,8 +10,11 @@ export default {
     var site = container.lookup('site:main'),
         siteSettings = container.lookup('site-settings:main');
 
+    var bus = Discourse.MessageBus;
+    bus.callbackInterval = siteSettings.anon_polling_interval;
+    bus.backgroundCallbackInterval = siteSettings.background_polling_interval;
+
     if (user) {
-      var bus = Discourse.MessageBus;
       bus.callbackInterval = siteSettings.polling_interval;
       bus.enableLongPolling = true;
       bus.baseUrl = Discourse.getURL("/");
