@@ -81,8 +81,9 @@ After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</
 
 # Bootstrap Discourse
 
-Save the `app.yml` file, and begin bootstrapping Discourse:
+Save the `app.yml` file, then make the `launcher` executable, and begin bootstrapping Discourse:
 
+    chmod 744 launcher
     ./launcher bootstrap app
 
 This command takes about 8 minutes. It is automagically configuring your Discourse environment.
