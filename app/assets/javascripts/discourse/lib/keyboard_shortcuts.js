@@ -237,7 +237,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
       if ($article.is('.topic-post')) {
         var tabLoc = $article.find('a.tabLoc');
         if (tabLoc.length === 0) {
-          tabLoc = $('<a href="#" class="tabLoc"></a>');
+          tabLoc = $('<a class="tabLoc"></a>');
           $article.prepend(tabLoc);
         }
         tabLoc.focus();
