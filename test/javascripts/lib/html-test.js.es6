@@ -10,7 +10,7 @@ test("Regular categoryBadge", function() {
   var category = Discourse.Category.create({
         name: 'hello',
         id: 123,
-        description: 'cool description',
+        description_text: 'cool description',
         color: 'ff0',
         text_color: 'f00'
       }),
