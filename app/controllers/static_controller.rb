@@ -77,13 +77,12 @@ class StaticController < ApplicationController
   end
 
   skip_before_filter :verify_authenticity_token, only: [:cdn_asset]
+
   def cdn_asset
     path = File.expand_path(Rails.root + "public/assets/" + params[:path])
 
     # SECURITY what if path has /../
-    unless path.start_with?(Rails.root.to_s + "/public/assets")
-      raise Discourse::NotFound
-    end
+    raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
 
     expires_in 1.year, public: true
 
@@ -96,10 +95,8 @@ class StaticController < ApplicationController
     rescue Errno::ENOENT
       raise Discourse::NotFound
     end
-    opts = {
-      disposition: nil
-    }
 
+    opts = { disposition: nil }
     opts[:type] = "application/javascript" if path =~ /\.js$/
 
     # we must disable acceleration otherwise NGINX strips
@@ -107,4 +104,5 @@ class StaticController < ApplicationController
     request.env['sendfile.type'] = ''
     send_file(path, opts)
   end
+
 end
