@@ -21,6 +21,7 @@ export default Em.Mixin.create({
       dataType: "json",
       fileInput: $upload,
       formData: { image_type: this.get('type') },
+      dropZone: this.$(),
       pasteZone: this.$()
     });
 
