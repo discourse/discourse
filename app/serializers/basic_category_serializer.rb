@@ -8,6 +8,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :topic_count,
              :post_count,
              :description,
+             :description_text,
              :topic_url,
              :read_restricted,
              :permission,

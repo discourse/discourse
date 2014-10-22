@@ -99,12 +99,6 @@ Discourse.Category = Discourse.Model.extend({
     this.get("availableGroups").addObject(permission.group_name);
   },
 
-  // note, this is used in a data attribute, data attributes get downcased
-  //  to avoid confusion later on using this naming here.
-  description_text: function(){
-    return $("<div>" + this.get("description") + "</div>").text();
-  }.property("description"),
-
   permissions: function(){
     return Em.A([
       {group_name: "everyone", permission: Discourse.PermissionType.create({id: 1})},

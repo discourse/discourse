@@ -19,14 +19,6 @@ describe Category do
     c.errors[:name].should be_present
   end
 
-  it { should belong_to :topic }
-  it { should belong_to :user }
-
-  it { should have_many :topics }
-  it { should have_many :category_featured_topics }
-  it { should have_many :featured_topics }
-  it { should belong_to :parent_category}
-
   describe "last_updated_at" do
     it "returns a number value of when the category was last updated" do
       last = Category.last_updated_at
@@ -49,7 +41,7 @@ describe Category do
 
       # NOTE we also have the uncategorized category ... hence the increased count
 
-      default_category = Fabricate(:category)
+      _default_category = Fabricate(:category)
       full_category = Fabricate(:category)
       can_post_category = Fabricate(:category)
       can_read_category = Fabricate(:category)
@@ -191,6 +183,15 @@ describe Category do
     it 'creates a blank slug' do
       category.slug.should be_blank
       category.slug_for_url.should == "#{category.id}-category"
+    end
+  end
+
+  describe 'description_text' do
+    it 'correctly generates text description as needed' do
+      c = Category.new
+      c.description_text.should == nil
+      c.description = "&lt;hello <a>test</a>."
+      c.description_text.should == "<hello test."
     end
   end
 

@@ -181,6 +181,16 @@ SQL
     topic_only_relative_url.try(:relative_url)
   end
 
+  def description_text
+    return nil unless description
+
+    @@cache ||= LruRedux::ThreadSafeCache.new(100)
+    @@cache.getset(self.description) do
+      Nokogiri::HTML(self.description).text
+    end
+
+  end
+
   def ensure_slug
     if name.present?
       self.name.strip!
