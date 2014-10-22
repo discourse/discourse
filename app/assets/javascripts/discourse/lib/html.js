@@ -84,7 +84,7 @@ Discourse.HTML = {
        ) return "";
 
     var name = Em.get(category, 'name'),
-        description = Em.get(category, 'description'),
+        description = Em.get(category, 'description_text'),
         restricted = Em.get(category, 'read_restricted'),
         url = Discourse.getURL("/c/") + Discourse.Category.slugFor(category),
         elem = (opts.link === false ? 'span' : 'a'),
@@ -101,7 +101,7 @@ Discourse.HTML = {
     name = Handlebars.Utils.escapeExpression(name);
 
     // Add description if we have it, without tags. Server has sanitized the description value.
-    if (description) html += "title=\"" + $("<div/>").html(description).text() + "\" ";
+    if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
 
     if (!opts.onlyStripe) {
       categoryStyle = Discourse.HTML.categoryStyle(category);
