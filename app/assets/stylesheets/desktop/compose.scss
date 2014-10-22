@@ -112,14 +112,12 @@
   font-size: 14px;
   position: fixed;
   .toggler {
-    display: block;
-    width: 13px;
-    height: 13px;
-    right: 13px;
+    width: 15px;
+    right: 1px;
     position: absolute;
     font-size: 15px;
     color: $primary;
-    text-decoration: none;
+    padding: 0 10px 5px 10px;
     &:before {
       font-family: "FontAwesome";
       content: "\f078";
