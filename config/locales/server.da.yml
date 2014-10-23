@@ -537,8 +537,6 @@ da:
     apple_touch_icon_url: "Ikon til Apple touch-enheder. Den anbefalede størrelse er 144px gange 144px."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
-    long_polling_interval: "Interval før det lave et nyt long poll, i millisekunder."
-    polling_interval: "Hvor ofte skal indloggede brugere polle, i millisekunder."
     anon_polling_interval: "Hvor ofte skal anonyme brugere polle, i millisekunder."
     auto_track_topics_after: "Globalt antal millisekunder før et emne automatisk spores, kan tilsidesættes af brugerne (0 for altid, -1 for aldrig)."
     new_topic_duration_minutes: "Globalt antal minutter et emne opfattes som nyt, kan tilsidesættes af brugerne (-1 for altid, -2 for seneste besøg)."

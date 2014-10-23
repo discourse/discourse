@@ -120,6 +120,7 @@ pl_PL:
     admin_title: "Administracja"
     flags_title: "Flagi"
     show_more: "pokaż więcej"
+    show_help: "pomoc"
     links: "Odnośniki"
     links_lowercase: "linki"
     faq: "FAQ"
@@ -155,10 +156,10 @@ pl_PL:
       stat:
         all_time: "Ogółem"
         last_7_days: "Ostatnich 7 dni"
-      like_count: "Liczba polubionych"
-      topic_count: "Liczba tematów"
-      post_count: "Liczba wpisów"
-      user_count: "Liczba użytkowników"
+      like_count: "Polubienia"
+      topic_count: "Tematy"
+      post_count: "Wpisy"
+      user_count: "Użytkownicy"
     bookmarks:
       not_logged_in: "przykro nam, ale należy się zalogować, aby dodawać zakładki"
       created: "zakładka dodana"
@@ -285,6 +286,8 @@ pl_PL:
       invited_by: "Zaproszono przez"
       trust_level: "Poziom zaufania"
       notifications: "Powiadomienia"
+      dismiss_notifications: "Oznacz jako przeczytane"
+      dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       disable_jump_reply: "Po odpowiedzi nie skacz do twojego nowego wpisu "
       dynamic_favicon: "Pokazuj powiadomienia o nowych wiadomościach na ikonie w karcie przeglądarki (eksperymentalne)"
       edit_history_public: "Pozwól innym oglądać historię edycji moich wpisów"
@@ -350,6 +353,10 @@ pl_PL:
         image_is_not_a_square: "Uwaga: przycięliśmy twój obraz ponieważ nie był kwadratem."
       change_profile_background:
         title: "Tło profilu"
+        instructions: "Tła w profilach są wycentrowane i posiadają domyślną szerokość 850px."
+      change_card_background:
+        title: "Tło karty użytkownika"
+        instructions: "Tło karty użytkownika est wycentrowane i posiada domyślną szerokość 590px."
       email:
         title: "Email"
         instructions: "Nie będzie publicznie widoczny."
@@ -387,6 +394,8 @@ pl_PL:
       created: "Dołączył"
       log_out: "Wyloguj"
       location: "Lokalizacja"
+      card_badge:
+        title: "Odznaka karty użytkownika"
       website: "Strona internetowa"
       email_settings: "Email"
       email_digests:
@@ -592,6 +601,7 @@ pl_PL:
       drafts_offline: "szkice offline"
       min_length:
         need_more_for_title: "jeszcze co najmniej {{n}} znaków w tytule"
+        need_more_for_reply: "jeszcze co najmniej {{n}} znaków"
       error:
         title_missing: "tytuł jest wymagany"
         title_too_short: "tytuł musi zawierać co najmniej {{min}} znaków"
@@ -615,7 +625,7 @@ pl_PL:
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisuję…"
       saved: "Zapisano!"
-      saved_draft: "Posiadasz zachowany szkic wpisu. Kliknij tutaj, aby wznowić jego edycję."
+      saved_draft: "Posiadasz zachowany szkic wpisu. Kliknij tu aby wznowić jego edycję."
       uploading: "Wczytuję…"
       show_preview: 'pokaż podgląd &raquo;'
       hide_preview: '&laquo; schowaj podgląd'
@@ -829,6 +839,8 @@ pl_PL:
           '2_4': 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem odpowiedzi w tym temacie.'
           '2_2': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz ten temat.'
           '2': 'Będziesz otrzymywać powiadomienia, ponieważ <a href="/users/{{username}}/preferences">ten temat został uznany za przeczytany</a>.'
+          '1_2': 'Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
+          '1': 'Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
           '0_7': 'Ignorujesz wszystkie powiadomienia z tej kategorii.'
           '0_2': 'Ignorujesz wszystkie powiadomienia w tym temacie.'
           '0': 'Ignorujesz wszystkie powiadomienia w tym temacie.'
@@ -840,12 +852,16 @@ pl_PL:
           description: "Dostaniesz powiadomienie o każdym nowym wpisie w tym temacie. Liczba nowych i nieprzeczytanych wpisów pojawi się obok jego tytułu."
         tracking_pm:
           title: "Śledzenie"
+          description: "Licznik nowych i nieprzeczytanych wpisów pojawi się obok prywatnej wiadomości. Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         tracking:
           title: "Śledzenie"
+          description: "Licznik nowych i nieprzeczytanych wpisów pojawi się obok tytułu tego tematu. Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         regular:
           title: "Normalny"
+          description: "Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         regular_pm:
           title: "Normalny"
+          description: "Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis w prywatnej wiadomości."
         muted_pm:
           title: "Wyciszono"
           description: "Nie będziesz dostawać jakichkolwiek powiadomień dotyczących tej prywatnej wiadomości."
@@ -1217,6 +1233,7 @@ pl_PL:
           description: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach: licznik nowych i nieprzeczytanych wpisów pojawi się obok ich tytułów."
         regular:
           title: "Normalny"
+          description: "Dostaniesz powiadomienie jedynie gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         muted:
           title: "Wyciszone"
           description: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach i nie będą się one pojawiać w karcie Nieprzeczytane."
@@ -1285,6 +1302,9 @@ pl_PL:
     category_title: "Kategoria"
     history: "Historia"
     changed_by: "przez {{author}}"
+    raw_email:
+      title: "Źródło emaila"
+      not_available: "Niedostępne!"
     categories_list: "Lista Kategorii"
     filters:
       with_topics: "%{filter} tematy"
@@ -1976,11 +1996,14 @@ pl_PL:
         grant: Przyznaj
         no_user_badges: "%{name} nie otrzymał żadnych odznak."
         no_badges: Nie ma odznak, które można by było przyznać.
+        none_selected: "Wybierz odznakę, aby rozpocząć"
         allow_title: Pozwól wykorzystywać odznakę jako tytuł
         multiple_grant: Może być przyznana wielokrotnie
         listable: Wyświetlaj odznakę na publicznych listach odznak
         enabled: Włącz odznakę
         icon: Ikona
+        image: Grafika
+        icon_help: "Użyj jednej z klas Font Awesome lub adresu URL do grafiki"
         query: 'Zapytanie odznaki (SQL) '
         target_posts: Wpisy powiązane z odznaką
         auto_revoke: Codziennie uruchamiaj zapytanie odbierające odznakę
@@ -2077,7 +2100,7 @@ pl_PL:
         few: "%{count} przyznanych"
         other: "%{count} przyznanych"
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
-      no_title: "<brak tytułu>"
+      none: "<brak>"
       badge_grouping:
         getting_started:
           name: Pierwsze kroki

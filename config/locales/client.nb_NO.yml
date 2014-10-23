@@ -138,10 +138,6 @@ nb_NO:
       stat:
         all_time: "Gjennom tidene"
         last_7_days: "Siste 7 dager"
-      like_count: "Antall liker"
-      topic_count: "Antall emner"
-      post_count: "Antall innlegg"
-      user_count: "Antall brukere"
     bookmarks:
       not_logged_in: "beklager, du må være innlogget for å kunne bokmerke innlegg"
       created: "du har bokmerket dette innlegget"
@@ -589,7 +585,6 @@ nb_NO:
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer..."
       saved: "Lagret!"
-      saved_draft: "Du har et pågående utkast. Velg dette området for å gjennoppta redigeringen."
       uploading: "Laster opp..."
       show_preview: 'se forhånsvisning &raquo;'
       hide_preview: '&laquo; skjul forhåndsvisning'
@@ -2012,7 +2007,6 @@ nb_NO:
         one: "1 tildelt"
         other: "%{count} tildelt"
       select_badge_for_title: Velg et merke å bruke som din tittel
-      no_title: "<ingen tittel>"
       badge_grouping:
         getting_started:
           name: Kom i gang

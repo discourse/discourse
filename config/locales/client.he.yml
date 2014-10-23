@@ -138,10 +138,6 @@ he:
       stat:
         all_time: "כל הזמנים"
         last_7_days: "7 הימים האחרונים"
-      like_count: "סך הלייקים"
-      topic_count: "סך הנושאים"
-      post_count: "סך הפרסומים"
-      user_count: "סך המשתמשים"
     bookmarks:
       not_logged_in: "סליחה, עליך להיות מחובר כדי להוסיף פוסט למועדפים"
       created: "סימנת הודעה זו כמועדפת"
@@ -589,7 +585,6 @@ he:
       view_new_post: "הצגת את ההודעה החדשה שלך."
       saving: "שומר..."
       saved: "נשמר!"
-      saved_draft: "יש לכם טיוטאת פרסום בתהליך. בחרו בתיבה זו כדי להמשיך בעריכה."
       uploading: "מעלה..."
       show_preview: 'הראה תצוגה מקדימה &raquo;'
       hide_preview: '&laquo; הסתר תצוגה מקדימה'
@@ -2006,7 +2001,6 @@ he:
         one: "1 הוענק"
         other: "%{count} הוענקו"
       select_badge_for_title: בחר תג שיופיע בכותרת הפרופיל שלך
-      no_title: "<no title>"
       badge_grouping:
         getting_started:
           name: מתחילים

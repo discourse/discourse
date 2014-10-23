@@ -104,6 +104,7 @@ it:
     admin_title: "Amministrazione"
     flags_title: "Segnalazioni"
     show_more: "Altro"
+    show_help: "aiuto"
     links: "Link"
     links_lowercase: "collegamenti"
     faq: "FAQ"
@@ -138,10 +139,10 @@ it:
       stat:
         all_time: "Sempre"
         last_7_days: "Ultimi 7 giorni"
-      like_count: "Conteggio Mi Piace"
-      topic_count: "Conteggio Argomenti"
-      post_count: "Conteggio Messaggi"
-      user_count: "Conteggio Utenti"
+      like_count: "Mi piace"
+      topic_count: "Argomenti"
+      post_count: "Messaggi"
+      user_count: "Utenti"
     bookmarks:
       not_logged_in: "spiacenti, devi essere connesso per aggiungere segnalibri ai messaggi"
       created: "hai inserito questo messaggio nei segnalibri."
@@ -262,6 +263,8 @@ it:
       invited_by: "Invitato Da"
       trust_level: "Livello Esperienza"
       notifications: "Notifiche"
+      dismiss_notifications: "Imposta tutti come Letti"
+      dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       disable_jump_reply: "Non saltare al nuovo messaggio dopo la risposta"
       dynamic_favicon: "Mostra la notifica dei messaggi in arrivo nella favicon (funzione sperimentale)"
       edit_history_public: "Consenti agli altri utenti di visualizzare le mie revisioni ai messaggi"
@@ -327,6 +330,10 @@ it:
         image_is_not_a_square: "Attenzione: abbiamo ritagliato la tua immagine; non è quadrata."
       change_profile_background:
         title: "Sfondo Profilo"
+        instructions: "Gli sfondi del profilo saranno centrati e avranno per difetto un'ampiezza di 850px."
+      change_card_background:
+        title: "Sfondo Scheda Utente"
+        instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
       email:
         title: "Email"
         instructions: "Mai mostrato pubblicamente."
@@ -364,6 +371,8 @@ it:
       created: "Membro da"
       log_out: "Esci"
       location: "Località"
+      card_badge:
+        title: "Targhetta Scheda Utente"
       website: "Sito Web"
       email_settings: "Email"
       email_digests:
@@ -589,7 +598,6 @@ it:
       view_new_post: "Visualizza il tuo nuovo messaggio."
       saving: "Salvataggio..."
       saved: "Salvato!"
-      saved_draft: "Hai un messaggio in bozza in sospeso. Clicca su questa barra per riprendere la modifica."
       uploading: "In caricamento..."
       show_preview: 'visualizza anteprima &raquo;'
       hide_preview: '&laquo; nascondi anteprima'
@@ -805,12 +813,16 @@ it:
           description: "Riceverai una notifica per ogni nuovo messaggio in questo argomento. Accanto all'argomento comparirà anche un conteggio dei messaggi non letti e di quelli nuovi."
         tracking_pm:
           title: "Seguito"
+          description: "Vicino al messaggio privato apparirà il totale dei messaggi non letti e nuovi. Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         tracking:
           title: "Seguito"
+          description: "Accanto all'argomento comparirà il totale dei messaggi non letti e di quelli nuovi. Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         regular:
           title: "Normale"
+          description: "Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         regular_pm:
           title: "Normale"
+          description: "Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al tuo messaggio all'interno del messaggio privato."
         muted_pm:
           title: "Ignorato"
           description: "Non ti verrà notificato nulla di questo messaggio privato."
@@ -820,8 +832,8 @@ it:
       actions:
         recover: "Ripristina Argomento"
         delete: "Cancella l'argomento"
-        open: "Apri l'argomento"
-        close: "Chiudi l'argomento"
+        open: "Apri Argomento"
+        close: "Chiudi Argomento"
         auto_close: "Chiudi Automaticamente"
         make_banner: "Argomento Annuncio"
         remove_banner: "Rimuovi Argomento Annuncio"
@@ -836,7 +848,7 @@ it:
         multi_select: "Seleziona Messaggi"
       reply:
         title: 'Rispondi'
-        help: 'inizia a scrivere una risposta in questo argomento'
+        help: 'inizia a scrivere una risposta a questo argomento'
       clear_pin:
         title: "Spunta"
         help: "Rimuovi la spunta da questo argomento, così non comparirà più in cima alla lista degli argomenti"
@@ -862,21 +874,21 @@ it:
         title: 'Invita'
         action: 'Invita via email'
         help: 'invia inviti agli amici così potranno rispondere a questo argomento con un solo click'
-        to_topic: "Invieremo una breve email che permetterà al tuo amico di entrare immediatamente e rispondere a questo argomento cliccando su un collegamento, non sarà necessario effettuare il login."
-        to_forum: "Invieremo una breve email che permetterà al tuo amico di entrare subito cliccando un collegamento, senza bisogno di effettuare il login."
+        to_topic: "Invieremo una breve email che permetterà al tuo amico di entrare immediatamente e rispondere a questo argomento cliccando su un collegamento, non sarà necessario effettuare il collegamento."
+        to_forum: "Invieremo una breve email che permetterà al tuo amico di entrare subito cliccando un collegamento, senza bisogno di effettuare il collegamento."
         email_placeholder: 'nome@esempio.com'
         success: "Abbiamo mandato un invito a <b>{{email}}</b>. Ti invieremo una notifica quando l'invito verrà confermato. Controlla gli inviti dal tab sulla tua pagina utente per tenere traccia dei tuoi inviti."
         error: "Spiacenti, non possiamo invitare quella persona. Forse è già un utente?"
-      login_reply: 'Connettiti per Rispondere'
+      login_reply: 'Collegati per Rispondere'
       filters:
         n_posts:
           one: "1 post"
           other: "{{count}} messaggi"
-        cancel: "Mostra tutti i messaggi (rimuovi filtro)."
+        cancel: "Mostra nuovamente tutti i messaggi di questo argomento."
       split_topic:
         title: "Sposta in un Nuovo Argomento"
         action: "sposta in un nuovo argomento"
-        topic_name: "Nuovo Nome Argomento"
+        topic_name: "Nome Nuovo Argomento"
         error: "Si è verificato un errore spostando il messaggio nel nuovo argomento."
         instructions:
           one: "Stai per creare un nuovo argomento riempiendolo con il messaggio che hai selezionato."
@@ -1155,6 +1167,7 @@ it:
           description: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
         regular:
           title: "Normale"
+          description: "Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al messaggio."
         muted:
           title: "Ignorato"
           description: "Non ti verrà notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nella tua  tab dei non letti."
@@ -1228,6 +1241,9 @@ it:
     category_title: "Categoria"
     history: "Storia"
     changed_by: "da {{author}}"
+    raw_email:
+      title: "Email Greggia"
+      not_available: "Non disponibile!"
     categories_list: "Lista Categorie"
     filters:
       with_topics: "%{filter} argomenti"
@@ -1907,6 +1923,7 @@ it:
         grant: Assegna
         no_user_badges: "%{name} non ha ricevuto alcuna targhetta."
         no_badges: Non ci sono targhette da assegnare.
+        none_selected: "Seleziona una targhetta per iniziare"
         allow_title: Permetti di utilizzare le targhette come titoli
         multiple_grant: Può essere assegnata più volte
         listable: Mostra targhetta sulla pagina pubblica delle targhette
@@ -2005,7 +2022,6 @@ it:
         one: "1 assegnato"
         other: "%{count} assegnate"
       select_badge_for_title: Scegli una targhetta da usare come titolo
-      no_title: "<nessun titolo>"
       badge_grouping:
         getting_started:
           name: Per Iniziare

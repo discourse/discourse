@@ -627,8 +627,6 @@ es:
     summary_percent_filter: "Cuando un usuario hace clic en 'Resumen de este tema', se muestra el n % mejores posts"
     enable_private_messages: "Permitir a los usuarios de nivel de confianza 1 crear y responder mensajes privados"
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
-    long_polling_interval: "Frecuencia del 'long polling' en milisegundos"
-    polling_interval: "¿Cuán a menudo deben hacer poll los usuarios logados en milisegundos"
     anon_polling_interval: "¿Cuán a menudo deben hacer poll los usuarios anónimos en milisegundos"
     auto_track_topics_after: "Milisegundos en los que, por defecto, un tema se sigue automáticamente, los usuarios pueden reajustar este valor para sí (0 para siempre, -1 para nunca)"
     new_topic_duration_minutes: "Minutos en los que, por defecto, un tema se considera nuevo, los usuarios pueden reajustar este valor para sí (-1 para siempre, -2 para la última visita)"
@@ -656,7 +654,6 @@ es:
     share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
     track_external_right_clicks: "Hacer seguimiento de los enlaces externos en los que se ha hecho clic con el botón derecho (ej: abrir en nueva pestaña) desactivado por defecto porque reescribe URLs"
     topics_per_page: "Cuántos temas se cargan por defecto en la lista de temas y cuando se hace scroll hacia abajo para cargar más temas"
-    posts_per_page: "Cuántos posts se cargan por defecto en un tema y cuando se hace scroll hacia abajo para cargar más posts"
     site_contact_username: "Todos los mensajes privados automatizados serán de este usuario. Si es dejado en blanco, el la cuenta del Sistema por defecto será utilizada."
     send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje privado de bienvenida con una guía rápida para comenzar."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."
@@ -867,7 +864,6 @@ es:
     enable_cdn_js_debugging: "Permitir /logs mostrar los errores correctamente, añadiendo permisos crossorigin en todas las inclusiones de js"
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     vacuum_db_days: "Correr VACUUM FULL ANALYZE para reclamar espacio en la base de datos después de las migraciones. (Poner en 0 para inhabilitar)"
-    prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1176,25 +1172,10 @@ es:
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
 
         Tu cuenta no tiene el nivel de confianza suficiente para publicar nuevos temas a esta dirección de correo electrónico. Si crees que esto es un error, contacta con algún miembro del Staff.
-    email_reject_no_account:
-      subject_template: "Error con el email -- No hay cuenta"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
-
-        No hay una cuenta asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_empty:
       subject_template: "Error con el email -- No hay contenido"
-      text_body_template: |
-        Lo sentimos, pero tu mensaje e-mail a %{destination} (titulado %{former_title}) no funciono.
-
-        No pudimos encontrar contenido en este e-mail. Asegúrate de que hayas escrito algo al inicio del e-mail - no podemos analizar respuestas en una sola linea.
-        Si estas teniendo este problema y si incluiste contenido, intenta otra vez con contenido HTML incluido en tu e-mail (no solo texto plano).
     email_reject_parsing:
       subject_template: "Error con el email -- Contenido desconocido"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
-
-        No hemos encontrado tu respuesta en el email. **Asegúrate de escribir tu entera respuesta al principio del email** - todo lo que haya debajo del inicio del mensaje a responder es descartado.
     email_reject_post_error:
       subject_template: "Error con el email -- Error de publicación"
       text_body_template: |
@@ -1212,14 +1193,10 @@ es:
 
         Si puedes corregir el problema, por favor intenta de nuevo.
     email_reject_reply_key:
-      subject_template: "Error con el email - Clave errónea"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
 
         La clave de respuesta proporcionada no es válida o es desconocida, por lo que no sabemos a qué responde este email. Contacta con algún miembro del staff.
-    email_reject_destination:
-      subject_template: "Error con el email -- Dirección(es) de destino incorrecta(s)."
-      text_body_template: "Lo sentimos, pero tu mensaje e-mail para %{destination} (titulado %{former_title}) no funciono.\n\nNinguna de las direcciones destino son reconocidas por el foro. Por favor asegúrate que el foro este en apartado To: (no CC ni BCC), y que lo estés enviando a la dirección de e-mail proveída por los administradores del foro. \n"
     email_error_notification:
       subject_template: "Error con el email -- Autenticación POP errónea"
       text_body_template: |
