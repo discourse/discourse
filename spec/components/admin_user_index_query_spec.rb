@@ -29,7 +29,6 @@ describe AdminUserIndexQuery do
 
   end
 
-
   describe "users with trust level" do
 
     TrustLevel.levels.each do |key, value|
@@ -136,6 +135,25 @@ describe AdminUserIndexQuery do
         query = ::AdminUserIndexQuery.new({ filter: "User" })
         expect(query.find_users.count).to eq(1)
       end
+    end
+
+    context "by ip address fragment" do
+      before(:each) { Fabricate(:user, ip_address: "117.207.94.9") }
+
+      context "when authenticated as a non-admin user" do
+        it "doesn't match the ip address" do
+          query = ::AdminUserIndexQuery.new({ filter: "117.207.94.9" })
+          expect(query.find_users.count()).to eq(0)
+        end
+      end
+
+      context "when authenticated as an admin user" do
+        it "matches the ip address" do
+          query = ::AdminUserIndexQuery.new({ filter: "117.207.94.9", admin: true })
+          expect(query.find_users.count()).to eq(1)
+        end
+      end
+
     end
 
   end
