@@ -577,7 +577,7 @@ en:
     created_lowercase: 'created'
     trust_level: 'Trust Level'
     search_hint: 'username'
-    search_hint_admin: 'username or email'
+    search_hint_admin: 'username, email or IP address'
 
     create_account:
       title: "Create New Account"
