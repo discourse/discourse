@@ -15,7 +15,20 @@ Discourse.TopicRoute = Discourse.Route.extend({
   titleToken: function() {
     var model = this.modelFor('topic');
     if (model) {
-      return model.get('title');
+      var result = model.get('title'),
+          cat = model.get('category');
+
+      if (cat && !cat.get('isUncategorized')) {
+        var catName = cat.get('name'),
+            parentCategory = cat.get('parentCategory');
+
+        if (parentCategory) {
+          catName = parentCategory.get('name') + " / " + catName;
+        }
+
+        return [result, catName];
+      }
+      return result;
     }
   },
 

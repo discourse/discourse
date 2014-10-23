@@ -23,7 +23,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       // and are sometimes lazily loaded.
       this.send('refreshTitle');
     }
-  }.observes('title'),
+  }.observes('title', 'category'),
 
   termChanged: function() {
     var dropdown = this.get('controllers.header.visibleDropdown');
