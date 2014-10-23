@@ -21,6 +21,10 @@ Discourse.Route = Ember.Route.extend({
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
   },
 
+  _refreshTitleOnce: function() {
+    this.send('_collectTitleTokens', []);
+  },
+
   actions: {
     _collectTitleTokens: function(tokens) {
       // If there's a title token method, call it and get the token
@@ -40,7 +44,7 @@ Discourse.Route = Ember.Route.extend({
     },
 
     refreshTitle: function() {
-      this.send('_collectTitleTokens', []);
+      Ember.run.once(this, this._refreshTitleOnce);
     }
   },
 
