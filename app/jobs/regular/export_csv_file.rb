@@ -44,7 +44,7 @@ module Jobs
 
       def get_group_names(user)
         group_names = []
-        groups = user.custom_groups
+        groups = user.groups
         groups.each do |group|
           group_names.push(group.name)
         end
