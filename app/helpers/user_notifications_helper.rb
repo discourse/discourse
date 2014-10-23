@@ -83,9 +83,9 @@ module UserNotificationsHelper
 
     result = ""
     if category.parent_category.present?
-      result << "<span style='background-color: ##{category.parent_category.color}; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px;'>&nbsp;</span>"
+      result << "<span style='background-color: ##{category.parent_category.color}; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px; white-space:nowrap;'>&nbsp;</span>"
     end
-    result << "<span style='background-color: ##{category.color}; color: ##{category.text_color}; font-size: 12px; padding: 4px 6px; font-weight: bold; margin: 0;'>#{category.name}</span>"
+    result << "<span style='background-color: ##{category.color}; color: ##{category.text_color}; font-size: 12px; padding: 4px 6px; font-weight: bold; margin: 0; white-space:nowrap;'>#{category.name}</span>"
     result.html_safe
   end
 end

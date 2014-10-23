@@ -62,8 +62,6 @@ module Email
       style('.user-avatar img', nil, width: '45', height: '45')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('.rtl', 'direction: rtl;')
-      # we can do this but it does not look right
-      # style('#main', 'font-family:"Helvetica Neue", Helvetica, Arial, sans-serif')
       style('td.body', 'padding-top:5px;', colspan: "2")
       correct_first_body_margin
       correct_footer_style
