@@ -12,7 +12,9 @@ export default DiscourseController.extend({
 
   hasCategory: function() {
     var cat = this.get('topic.category');
-    return cat && !cat.get('isUncategorizedCategory');
+    return cat &&
+           !cat.get('isUncategorizedCategory') ||
+           !this.siteSettings.suppress_uncategorized_badge;
   }.property('topic.category'),
 
   showPrivateMessageGlyph: function() {
