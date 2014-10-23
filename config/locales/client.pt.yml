@@ -136,10 +136,6 @@ pt:
       stat:
         all_time: "Sempre"
         last_7_days: "Últimos 7 Dias"
-      like_count: "Contagem de Gostos"
-      topic_count: "Contagem de Tópicos"
-      post_count: "Contagem de Posts"
-      user_count: "Contagem de Utilizadores"
     bookmarks:
       not_logged_in: "desculpe, necessita de ter a sessão iniciada para marcar posts"
       created: "adicionou este post aos marcadores"
@@ -577,7 +573,6 @@ pt:
       view_new_post: "Ver as suas novas mensagens."
       saving: "A Gravar..."
       saved: "Gravado!"
-      saved_draft: "Tem um rascunho de um post em progresso. Seleccione esta barra para retomar a edição."
       uploading: "A enviar..."
       show_preview: 'mostrar pré-visualização &raquo;'
       hide_preview: '&laquo; esconder pré-visualização'
@@ -1909,7 +1904,6 @@ pt:
         one: "1 concedida"
         other: "%{count} concedidas"
       select_badge_for_title: Selecionar uma medalha para usar como título
-      no_title: "<no title>"
       badge_grouping:
         getting_started:
           name: Dar Início

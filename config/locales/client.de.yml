@@ -138,10 +138,6 @@ de:
       stat:
         all_time: "Gesamt"
         last_7_days: "Letzte 7 Tage"
-      like_count: "Anzahl der Likes"
-      topic_count: "Anzahl der Themen"
-      post_count: "Anzahl der Beiträge"
-      user_count: "Anzahl der Benutzer"
     bookmarks:
       not_logged_in: "Entschuldigung, du musst eingeloggt sein, um ein Lesezeichen zu setzen."
       created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
@@ -329,6 +325,7 @@ de:
         image_is_not_a_square: "Achtung: wir haben dein Bild zugeschnitten, da es nicht quadratisch war."
       change_profile_background:
         title: "Profilhintergrund"
+        instructions: "Profilhintergründe werden zentriert und haben eine voreingestellte Breite von 850px."
       email:
         title: "E-Mail"
         instructions: "Wird niemals öffentlich angezeigt."
@@ -591,7 +588,6 @@ de:
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
-      saved_draft: "Du hast einen Beitrag als Entwurf gespeichert. Aktiviere diese Leiste, um den Entwurf zu bearbeiten."
       uploading: "Wird hochgeladen..."
       show_preview: 'Vorschau anzeigen &raquo;'
       hide_preview: '&laquo; Vorschau ausblenden'
@@ -1121,7 +1117,7 @@ de:
       topic: "Themenkategorie"
       logo: "Logo für Kategorie"
       background_image: "Hintergrundbild für Kategorie"
-      badge_colors: "Plakettenfarben"
+      badge_colors: "Farben von Abzeichen"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
       name_placeholder: "Ein oder maximal zwei Wörter"
@@ -1913,6 +1909,7 @@ de:
         grant: Verleihen
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
         no_badges: Es gibt keine Abzeichen die verliehen werden können.
+        none_selected: "Wähl' ein Abzeichen aus, um loszulegen"
         allow_title: Abzeichen darf als Titel verwendet werden
         multiple_grant: Kann mehrfach verliehen werden
         listable: Zeige Abzeichen auf der öffentlichen Abzeichenseite an
@@ -2009,7 +2006,6 @@ de:
         one: "1 mal verliehen"
         other: "%{count} mal verliehen"
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
-      no_title: "<keine Titel>"
       badge_grouping:
         getting_started:
           name: Erste Schritte

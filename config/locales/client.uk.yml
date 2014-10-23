@@ -1405,7 +1405,6 @@ uk:
         few: "Значків: %{count} "
         other: "Значків %{count}"
       select_badge_for_title: Оберіть значок, що буде вашим званням
-      no_title: "<no title>"
       badge_grouping:
         community:
           name: Спільнота

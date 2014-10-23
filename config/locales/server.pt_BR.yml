@@ -130,7 +130,7 @@ pt_BR:
 
       - Inclua boas palavras chave no seu tópico para que outros possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria.
 
-      Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
+      Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para as suas primeiras %{education_posts_text}.
     new-reply: |
       Bem-vindo ao %{site_name} &mdash; **obrigado por contribuir!**
 
@@ -204,7 +204,7 @@ pt_BR:
 
       Parabéns! :confetti_ball:
 
-      Se você pode ver neste tópico, você foi recentemente promovido a  **regulares ** (nível de confiança 3).
+      Se você pode ver neste tópico, você foi recentemente promovido a  **regular** (nível de confiança 3).
 
       Agora você pode &hellip;
 
@@ -212,7 +212,7 @@ pt_BR:
       * Alterar a categoria de qualquer assunto
       * Ter todos os seus links seguidos ([nofollow automática] (http://en.wikipedia.org/wiki/Nofollow) é removido)
       * Acesso a categoria privada Sala visíveis apenas para os utilizadores a nível de confiança 3 e superior
-      * Esconder o spam com uma única bandeira
+      * Esconder o spam com uma única sinalização
 
       Aqui está o [lista atual de companheiros regulares] (/badges/3/regular). Não se esqueça de dizer oi.
 
@@ -582,23 +582,35 @@ pt_BR:
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
     post_edit_time_limit: "O autor pode editar ou apagar o seu post para (n) minutos após a postagem. Defina como 0 para sempre."
+    max_image_width: "Largura máxima para imagens em um post"
+    max_image_height: "Altura máxima para imagens em um post"
     category_featured_topics: "Número de tópicos exibidos por categoria na página /categories. Depois de alterar este valor, levará até 15 minutos para a página de categorias atualizar-se."
+    show_subcategory_list: "Mostrar lista de subcategorias ao invés de lista de tópicos ao entrar em uma categoria."
     fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
     exclude_rel_nofollow_domains: "Lista de domínios separados por barras verticais (|) onde o nofollow não é adicionado (tld.com irá automaticamente disponibilizar sub.tld.com também) "
+    post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
+    logo_url: "O logo à esquerda e acima para seu site eg: http://example.com/logo.png"
+    digest_logo_url: "O logo alternativo usado no topo do resumo de e-mails do seu site. Se deixar em branco `logo_url` será usado. eg: http://example.com/logo.png"
+    logo_small_url: "O logo à esquerda e acima pequeno para seu site, visto quando se faz rolagem. eg: http://example.com/logo-small.png"
     favicon_url: "Um favicon para o seu site"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     use_https: "Deverá a URL completa para o site (Discourse.base_url) ser http ou https? Não ative isso a MENOS QUE O HTTPS ESTEJA CONFIGURADO E FUNCIONANDO!"
+    summary_posts_required: "Mensagens mínimas em um tópico antes de 'Resumir este tópico' ficar habilitado"
+    summary_likes_required: "Curtidas mínimas em um tópico antes de 'Resumir este tópico, ficar habilitado"
+    summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
-    long_polling_interval: "Intervalo em milisegundos antes de uma nova solicitação longa ser feita"
-    polling_interval: "Com que frequencia os clientes podem solicitar o servidor em milisegundos"
     anon_polling_interval: "Com que frequencia os clientes não registrados podem solicitar o servidor em milisegundos"
     auto_track_topics_after: "Quantos milisegundos esperar antes que um tópico seja automaticamente  rastreado (0 para sempre, -1 para nunca)"
     new_topic_duration_minutes: "Quantos minutos um tópico permanece considerado como novo (-1 para sempre, -2 para desde a última visita)"
     flags_required_to_hide_post: "As postagens vão ser escondidos automaticamente quando o númereo de sinalizações atingir este número (0 para nunca)"
+    cooldown_minutes_after_hiding_posts: "Número de minutos que um usuário deve esperar antes de poder editar uma publicação que foi ocultada devido a sinalização da comunidade."
     max_topics_in_first_day: "O número máximo de tópicos que um usuário tem permissão para criar em seu primeiro dia no site"
     max_replies_in_first_day: "O número máximo de respostas que um usuário tem permissão para criar em seu primeiro dia no site"
     notify_mods_when_user_blocked: "Se um usuário for bloqueado de forma automática, enviar uma mensagem para todos os moderadores."
+    flag_sockpuppets: "Se um novo usuário responder um tópico usando o mesmo endereço de IP do novo usário que começou o tópico, sinalize as duas publicações como um potencial spam."
+    post_undo_action_window_mins: "Número de minutos permitidos aos usuários para desfazerem uma ação recente em uma publicação (curtir, sinalizar, etc)"
+    must_approve_users: "Gerenciadores deverão aprovar novas contas de usuários antes das mesmas serem permitidas o acesso ao site."
     ga_tracking_code: "Código de monitoramento do Google analytics (ga.js), ex: UA-12345678-9; veja http://google.com/analytics"
     ga_domain_name: "Nome do domínio para o Google analytics (ga.js), ex: mysite.com; veja http://google.com/analytics"
     ga_universal_tracking_code: "Código de monitoramento Google Universal Analytics (analytics.js), ex: UA-12345678-9; veja http://google.com/analytics"
@@ -638,8 +650,12 @@ pt_BR:
     s3_backup_bucket: "O repositório remoto para realizar backups. AVISO: Certifique-se de que é um repositório privado."
     active_user_rate_limit_secs: "Qual a frequencia de atualização do campo 'última vez visto em', em segundos."
     previous_visit_timeout_hours: "Quanto tempo uma visita dura antes de considerarmos como 'última visita', em horas."
+    suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
+    limit_suggested_to_category: "Mostrar apenas tópicos da categoria atual em tópicos sugeridos."
+    clean_up_uploads: "Remover envios sem referência para evitar hospedagem ilegal. AVISO: você pode querer fazer um backup do seu diretório de /uploads antes de habilitar essa configuração."
     clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um upload órfão ser removido."
     purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
+    purge_inactive_users_grace_period_days: "Carência (em dias) antes de um usuário que não tenha ativado sua conta seja deletado."
     s3_upload_bucket: "O nome do bucket no Amazon S3 em que os arquivos serão armazenados. AVISO: em letras minúsculas, não usar pontos."
     min_trust_to_create_topic: "O nível de confiança mínimo necessário para criar um novo tópico."
     min_trust_to_edit_wiki_post: "O nível de confiança mínimo necessário para editar uma postagem marcada como wiki."
@@ -707,8 +723,8 @@ pt_BR:
   topic_statuses:
     archived_enabled: "Este tópico está agora arquivado. Está congelado e não pode ser alterado de qualquer forma."
     archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."
-    closed_enabled: "Este tópico está agora fechado. Novas respostas não são aceites."
-    closed_disabled: "Este tópico está agora aberto. Novas respostas serão aceites."
+    closed_enabled: "Este tópico está agora fechado. Novas respostas não são aceitas."
+    closed_disabled: "Este tópico está agora aberto. Novas respostas serão aceitas."
     autoclosed_enabled_days:
       zero: "Este tópico foi fechado automaticamente após 1 dia. Novas respostas não são mais permitidas."
       one: "Este tópico foi fechado automaticamente após 1 dia. Novas respostas não são mais permitidas."
@@ -968,7 +984,7 @@ pt_BR:
 
         Usuários novos possuem limitações por segurança. Conforme você participa, ganhará a confiança da comunidade, se tornará um cidadão, e todas essas limitações serão automaticamente removidas. Em [níveis de confiança](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) altos suficientes, você ganhará até mesmo novas abilidades para nos ajudar a cuidar da nossa comunidade juntos.
     welcome_user:
-      subject_template: "Bem-vindo em %{site_name}!"
+      subject_template: "Bem-vindo ao %{site_name}!"
       text_body_template: |
         Obrigado por participar de %{site_name}, e bem-vindo!
 
@@ -978,7 +994,7 @@ pt_BR:
 
         Diverta-se durante sua estadia!
     welcome_invite:
-      subject_template: "Bem-vindo em %{site_name}!"
+      subject_template: "Bem-vindo ao %{site_name}!"
       text_body_template: |
         Obrigado por aceitar o seu convite para %{site_name}, e bem-vindo!
 
@@ -1002,9 +1018,25 @@ pt_BR:
         Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou.
 
         Sua conta não tem o nível de confiança necessário para criar novos tópicos para este endereço de e-mail. Se você acredita que isso é um erro, entre em contato com um membro da equipe.
-    email_reject_no_account:
-      subject_template: "Problema de Email -- Sem Conta"
-      text_body_template: "Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou. \n\nNão há nenhum relato conhecido com este endereço de e-mail. Tente enviar a partir de um endereço de e-mail diferente, ou entre em contato com um membro da equipe.\n"
+    email_reject_post_error:
+      text_body_template: |
+        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou.
+
+        Algumas possíveis causas são: formatação complexa, mensagem muito grande, mensagem muito pequena. Por favor tente novamente, ou poste através do site se persistir.
+    email_reject_post_error_specified:
+      text_body_template: |
+        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou.
+
+        Razão:
+
+        %{post_error}
+
+        Se você puder corrigir, por favor tente novamente.
+    email_error_notification:
+      text_body_template: |
+        Erro de autenticação ao baixar e-mails através do servidor POP.
+
+        Por favor verifique se você configurou corretamente suas credenciais de POP nos [ajustes](%{base_url}/admin_site_settings/category/email).
     too_many_spam_flags:
       subject_template: "Nova conta bloqueada"
       text_body_template: |
@@ -1118,11 +1150,12 @@ pt_BR:
         ---
         %{respond_instructions}
     digest:
-      why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
+      why: "Um breve resumo do %{site_link} desde que viu pela última vez em %{last_seen_at}."
       subject_template: "[%{site_name}] Atividade do Fórum para %{date}"
       new_activity: "Nova atividade nos seus tópicos e postagens:"
       top_topics: "Tópicos populares"
       other_new_topics: "Tópicos populares"
+      unsubscribe: "Este resumo é enviado como uma cortesia de notificação do %{site_link}  desde o tempo que não te vimos a um tempo. Para cancelar a inscrição %{unsubscribe_link}."
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       read_more: "Leia Mais"
@@ -1143,6 +1176,8 @@ pt_BR:
     set_password:
       subject_template: "[%{site_name}] Definir Senha"
       text_body_template: "Alguém solicitou para adicionar uma senha para a sua conta em [%{site_name}] (% {base_url}). Alternativamente, você pode fazer login usando qualquer serviço online suportado (Google, Facebook, etc) que está associado a este endereço de e-mail validado.\n \nSe você não fez esse pedido, você pode ignorar este e-mail. \n \nClique no link abaixo para escolher uma senha: \n%{base_url}/users/password-reset/%{email_token}\n"
+    account_created:
+      subject_template: "[%{site_name}] Sua nova Conta"
     authorize_email:
       subject_template: "[%{site_name}] Confirma o seu novo endereço de email"
       text_body_template: |

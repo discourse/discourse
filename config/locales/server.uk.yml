@@ -377,8 +377,6 @@ uk:
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     use_https: "Чи повинна повна адреса сайта (Discourse.base_url) використовувати https (чи просто http)? ВМИКАЙТЕ ЦЕ ТІЛЬКИ ЯКЩО HTTPS ВЖЕ НАЛАШТОВАНО І ВІН ПРАЦЮЄ!"
     enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
-    polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
@@ -535,8 +533,6 @@ uk:
       subject_template: "Масове запрошення користувачів оброблено успішно"
     bulk_invite_failed:
       subject_template: "Масове запрошення користувачів оброблено з помилками"
-    email_reject_no_account:
-      subject_template: "Питання з email -- Немає облікового запису"
     email_reject_empty:
       subject_template: "Питання з email -- Немає змісту"
     too_many_spam_flags:

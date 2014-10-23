@@ -120,10 +120,6 @@ ja:
       stat:
         all_time: "All Time"
         last_7_days: "過去7日間"
-      like_count: "「いいね！」数"
-      topic_count: "トピック数"
-      post_count: "投稿数"
-      user_count: "ユーザ数"
     bookmarks:
       not_logged_in: "ポストをブックマークするには、ログインする必要があります"
       created: "このポストをブックマークしました"
@@ -560,7 +556,6 @@ ja:
       view_new_post: "新規ポストを見る。"
       saving: "保存中..."
       saved: "保存完了!"
-      saved_draft: "編集中の投稿があります。こちらをクリックすると編集を再開します。"
       uploading: "アップロード中..."
       show_preview: 'プレビューを表示する &raquo;'
       hide_preview: '&laquo; プレビューを隠す'

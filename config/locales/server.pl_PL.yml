@@ -617,8 +617,6 @@ pl_PL:
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
-    polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     auto_track_topics_after: "Liczba milisekund zanim temat jest automatycznie dodany do śledzonych. użytkownik może nadpisać tę wartość w swoich ustawieniach (0 zawsze, -1 nigdy)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
@@ -820,13 +818,6 @@ pl_PL:
         ```
         %{logs}
         ```
-    email_reject_empty:
-      text_body_template: |
-        Przepraszamy, ale wysyłanie twojej wiadomości do %{destination} (o tytule %{former_title}) zakończyło się niepowodzeniem.
-
-        Nie udało się wykryć treści. Upewnij się, że odpowiedź znajduje się na początku e-maila: nie rozpoznajemy odpowiedzi wymieszanych z cytowanym tekstem,
-
-        Dodatkowo upewnij się, że odpowiadasz e-mailem w formacie HTML (a nie czystym ASCII).
     too_many_spam_flags:
       subject_template: "Nowe konto zablokowane"
     blocked_by_staff:

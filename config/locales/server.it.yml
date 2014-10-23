@@ -225,7 +225,7 @@ it:
     basic:
       title: "utente base"
     regular:
-      title: "membro"
+      title: "assiduo"
     leader:
       title: "abituale"
     elder:
@@ -593,8 +593,6 @@ it:
     summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
     enable_private_messages: "Autorizza gli utenti con livello di esperienza 1 a creare e rispondere a messaggi privati"
     enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
-    polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     auto_track_topics_after: "Valore globale in millisecondi prima che un argomento venga automaticamente seguito, modificabile dagli utenti (0 sempre, -1 mai)"
     new_topic_duration_minutes: "Valore globale in minuti per i quali un argomento è considerato come nuovo, modificabile dagli utenti (-1 sempre, -2 ultima visita)"
@@ -621,7 +619,6 @@ it:
     share_links: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."
     track_external_right_clicks: "Segui i collegamenti esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché riscrive le URL"
     topics_per_page: "Quanti argomenti vengono caricati per difetto nella lista di argomenti, e quando si scorre in basso per caricare altri argomenti"
-    posts_per_page: "Quanti messaggi vengono caricati per difetto in un argomento, e quando si scorre in basso per caricare altri messaggi"
     send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     topics_per_period_in_top_summary: "Numero di argomenti di punta mostrati nel riepilogo di default."
     show_email_on_profile: "Mostra l'email di un utente nel suo profilo (visibile solo a se stesso e allo staff)"
@@ -631,16 +628,19 @@ it:
     port: "SOLO PER SVILUPPATORI! ATTENZIONE! Usa questa porta HTTP al posto della porta di default 80. Lascia vuoto per usare il default 80."
     force_hostname: "SOLO PER SVILUPPATORI! ATTENZIONE! Specifica un hostname nella URL. Lascia vuoto per usare il default."
     invite_expiry_days: "Per quanti giorni le chiavi per inviti utente sono valide"
+    invite_only: "La registrazione pubblica è disabilitata, tutti i nuovi utenti devono essere invitati esplicitamente da altri membri o dallo staff."
     login_required: "E' richiesta l'autenticazione per leggere contenuti su questo sito, disabilita l'accesso anonimo."
     min_username_length: "Lunghezza minima del nome utente in caratteri. ATTENZIONE: GLI UTENTI GIÀ ESISTENTI CON NOMI PIÙ CORTI DI QUESTO NON RIUSCIRANNO AD ACCEDERE AL SITO."
     max_username_length: "Lunghezza massima del nome utente in caratteri. ATTENZIONE: GLI UTENTI GIÀ ESISTENTI CON NOMI PIÙ LUNGHI DI QUESTO NON RIUSCIRANNO AD ACCEDERE AL SITO."
     min_password_length: "Minima lunghezza della password."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
+    enable_sso: "Abilita il single sign on attraverso un sito esterno (nota: disabilita gli inviti)"
     sso_url: "URL per l'endpoint del single sign on "
     sso_secret: "Stringa segreta utilizzata per criptare/decriptare le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
     sso_overrides_email: "Sostituisce le email locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per le email locali)"
     sso_overrides_username: "Sostituisce gli username locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle differenze dei requisiti di lunghezza)"
     sso_overrides_name: "Sostituisce i nomi locali con quelli del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per i nomi locali)"
+    allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
     enable_google_logins: "(deprecato) Attiva l'autenticazione Google. Questo è il metodo OpenID che Google ha deprecato. Le nuove installazioni non funzioneranno con questo. Utilizza Google Oauth2 invece. Le installazioni esistenti devono migrare a Google Oauth2 entro il 20 Aprile 2015."
     enable_yahoo_logins: "Abilita l'autenticazione con Yahoo"
     enable_google_oauth2_logins: "Abilita l'autenticazione con Google Oauth2. Questo è il metodo di autenticazione attualmente supportato da Google. Richiede una chiave e un secret."
@@ -688,6 +688,16 @@ it:
     tl2_requires_likes_received: "Quanti \"Mi piace\" deve ricevere un utente per essere promosso al livello di esperienza 2."
     tl2_requires_likes_given: "Quanti \"Mi piace\" deve dare un utente per essere promosso al livello di esperienza 2."
     tl2_requires_topic_reply_count: "A quanti argomenti deve rispondere un utente per essere promosso al livello di esperienza 2."
+    tl3_requires_days_visited: "Per quanti giorni un utente deve aver visitato il sito negli ultimi 100 giorni per essere promosso al livello di esperienza 3 (da 0 a 100)."
+    tl3_requires_topics_replied_to: "Numero minimo di argomenti cui un utente deve aver risposto negli ultinmi 100 giorni per essere promosso al livello di esperienza 3 (0 o maggiore)."
+    tl3_requires_topics_viewed: "Percentuale di argomenti creati negli ultimi 100 giorni che un utente deve leggere per essere promosso al livello di esperienza 3 (da 0 a 100)."
+    tl3_requires_posts_read: "Percentuale di messaggi creati negli ultimi 100 giorni che un utente deve leggere per essere promosso al livello di esperienza 3 (da 0 a 100)."
+    tl3_requires_topics_viewed_all_time: "Il numero minimo di argomenti che un utente deve aver letto per poter accedere al livello di esperienza 3."
+    tl3_requires_posts_read_all_time: "Il numero minimo di messaggi che un utente deve aver letto per poter accedere al livello di esperienza 3."
+    tl3_requires_max_flagged: "L'utente non deve aver ricevuto più di x segnalazioni sui messaggi da x diversi utenti negli ultimi 100 giorni, per poter essere promosso al livello di esperienza 3, dove x è il valore di questa impostazione (0 o maggiore)."
+    tl3_promotion_min_duration: "Per quanti giorni al minimo mantenere la promozione al livello di esperienza 3 prima che un utente venga degradato al livello di esperienza 2."
+    tl3_requires_likes_given: "Il minimo numero di Mi piace che devono essere dati negli ultimi 100 giorni per essere promossi al livello di esperienza 3."
+    tl3_requires_likes_received: "Il minimo numero di Mi piace che devono essere ricevuti negli ultimi 100 giorni per essere promossi al livello di esperienza 3."
     min_trust_to_create_topic: "Livello minimo richiesto per creare un nuovo argomento."
     min_trust_to_edit_wiki_post: "Livello minimo richiesto per modificare un argomento segnato come wiki."
     newuser_max_links: "Quanti collegamenti un nuovo utente può aggiungere a un post"
@@ -721,7 +731,6 @@ it:
     embed_post_limit: "Numero massimo di messaggi da incorporare."
     notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo tutte queste ore, invia un'email al contact_email. Imposta a 0 per disattivare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
-    prevent_anons_from_downloading_files: "Impedisci agli utenti anonimi di scaricare file. ATTENZIONE: ciò impedirà il funzionamento di tutti gli asset del sito inviati come allegati."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -745,7 +754,7 @@ it:
     private_message: "%{display_username} ti ha inviato un messaggio privato: %{link}"
     invited_to_private_message: "%{display_username} ti ha invitato in un messaggio privato: %{link}"
     invitee_accepted: "%{display_username} ha accettato il tuo invito"
-    linked: "%{display_username} ti ha linkato in %{link}"
+    linked: "%{display_username} ti ha collegato in %{link}"
     granted_badge: "Hai guadagnato %{link}"
   search:
     within_post: "n°%{post_number} di %{username}"
@@ -754,7 +763,7 @@ it:
       topic: 'Risultati'
       user: 'Utenti'
   original_poster: "Autore Iniziale"
-  most_posts: "Molti Post"
+  most_posts: "Maggioranza Messaggi"
   most_recent_poster: "Autore Più Recente"
   frequent_poster: "Autore Assiduo"
   redirected_to_top_reasons:
@@ -794,29 +803,32 @@ it:
     visible_enabled: "Questo argomento è stato reso visibile. Sarà mostrato nelle liste degli argomenti."
     visible_disabled: "Questo argomento è ora invisibile. Non verrà più mostrato in nessuna lista degli argomenti. Sarà possibile accedervi solo tramite collegamento diretto."
   login:
-    not_approved: "Il tuo account non è ancora stato approvato. Verrai notificato via mail quando potrai effettuare il log in."
+    not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via mail quando potrai collegarti."
     incorrect_username_email_or_password: "Nome utente, email o password errati"
-    wait_approval: "Grazie per esserti registrato. Ti notificheremo quando il tuo account verrà approvato."
+    wait_approval: "Grazie per esserti registrato. Ti avvertiremo quando il tuo account sarà approvato."
     active: "Il tuo account è attivo e pronto all'uso."
-    not_activated: "Non puoi ancora fare il login. Ti abbiamo mandato un'email di attivazione. Per favore segui le istruzioni contenute nell'email per attivare il tuo account."
+    activate_email: "<p>Ci siamo quasi! Abbiamo mandato una email di attivazione a <b>%{email}</b>. Per favore segui le istruzioni contenute nell'email per attivare il tuo account.</p><p>Se l'email non ti arriva, controlla la tua cartella spam o prova a collegarti ancora per inviare un'altra email di attivazione.</p>"
+    not_activated: "Non puoi ancora collegarti. Ti abbiamo mandato un'email di attivazione. Per favore segui le istruzioni contenute nell'email per attivare il tuo account."
     not_allowed_from_ip_address: "Non puoi collegarti come %{username} da quell'indirizzo IP."
-    suspended: "Non puoi accedere fino a %{date}."
-    suspended_with_reason: "Non puoi accedere fino a %{date}. Il motivo della sospensione è il seguente: %{reason}"
+    suspended: "Non puoi collegarti fino a %{date}."
+    suspended_with_reason: "Non puoi collegarti fino a %{date}. Il motivo della sospensione è il seguente: %{reason}"
     errors: "%{errors}"
     not_available: "Non disponibile. Prova %{suggestion}?"
-    something_already_taken: "Qualcosa è andato storto, forse lo username o l'email sono già registrati. Prova a recuperare la password."
+    something_already_taken: "Qualcosa è andato storto, forse il nome utente o l'email sono già registrati. Prova a recuperare la password."
     omniauth_error: "Spiacenti, si è verificato un errore nel verificare il tuo account %{strategy}. Forse non hai accettato l'autorizzazione?"
-    omniauth_error_unknown: "Qualcosa è andato storto tentando di loggarti, per favore riprova."
-    new_registrations_disabled: "Non sono permesse nuove registrazioni in questo momento."
+    omniauth_error_unknown: "Qualcosa è andato storto durante il collegamento, per favore riprova."
+    new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
     password_too_long: "Le password sono limitate a 200 caratteri."
+    missing_user_field: "Non hai inserito tutti i campi utente"
+    close_window: "L'autenticazione è completa. Chiudi questa finestra per continuare."
   user:
     no_accounts_associated: "Nessun account associato"
     username:
       short: "deve essere almeno di %{min} caratteri"
       long: "non deve essere più lungo di %{max} caratteri"
       characters: "deve includere solo numeri, lettere e trattini bassi"
-      unique: "dev'essere unico"
-      blank: "dev'essere presente"
+      unique: "deve essere univoco"
+      blank: "deve essere presente"
       must_begin_with_alphanumeric: "deve iniziare con una lettera o un numero"
     email:
       not_allowed: "non è permesso da quel fornitore di email. Per favore usa un altro indirizzo email."
@@ -829,6 +841,13 @@ it:
   invite_forum_mailer:
     subject_template: "%{invitee_name} ti invita a partecipare su %{site_domain_name}"
     text_body_template: "%{invitee_name} ti invita a partecipare a \n\n> **%{site_title}**\n>\n> %{site_description}\n\nSe sei interessato, clicca il collegamento in basso:\n\n%{invite_link}\n\nQuesto invito è da parte di un utente affidabile, perciò non dovrai effettuare un login.\n"
+  invite_password_instructions:
+    subject_template: "Imposta la password per il tuo account su %{site_name}"
+    text_body_template: |
+      Grazie per aver accettato l'invito su %{site_name} -- benvenuto!
+
+      Per collegarti ancora, clicca sul collegamento seguente e scegli una password:
+      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Test Invio Email"
   new_version_mailer:
@@ -836,8 +855,12 @@ it:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] aggiornamento disponibile"
   flags_reminder:
+    flags_were_submitted:
+      one: "Queste segnalazioni sono state inviate oltre un'ora fa."
+      other: "Queste segnalazioni sono state inviate oltre %{count} ore fa."
     please_review: "Per favore, revisionale."
     post_number: "messaggio"
+    how_to_disable: "Disattiva questa email impostando <pre>notify_about_flags_after</pre> a 0."
     subject_template:
       one: "1 segnalazione in attesa di essere revisionata"
       other: "%{count} segnalazioni in attesa di essere revisionate"
@@ -851,7 +874,7 @@ it:
     agreed_and_deleted: "Grazie per averci informato. Sappiamo che c'è un problema e abbiamo cancellato il messaggio."
     disagreed: "Grazie per averci informato. Stiamo provvedendo."
     deferred: "Grazie per averci informato. Stiamo provvedendo."
-    deferred_and_deleted: "Grazie per averci informato. Noi abbiamo rimosso il messaggio."
+    deferred_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
   system_messages:
     post_hidden:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
@@ -883,6 +906,8 @@ it:
         Buona permanenza!
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
+    backup_succeeded:
+      subject_template: "Backup completato correttamente"
     bulk_invite_succeeded:
       subject_template: "Invito di massa processato con successo"
       text_body_template: "Il tuo invito di massa è stato processato, %{sent} inviti spediti."
@@ -899,28 +924,17 @@ it:
         Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
 
         Il tuo utente non ha il livello di esperienza richiesto per inviare nuovi argomenti a questo indirizzo email. Se credi che ciò sia un errore, contatta un membro dello staff.
-    email_reject_no_account:
-      subject_template: "Problema email -- Nessun Account"
-      text_body_template: |
-        Ci dispiace, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non è stato processato.
-
-        Non esiste un account con questo indirizzo email. Prova ad inviarla da un altro indirizzo o contatta un membro dello staff.
     email_reject_empty:
       subject_template: "Problema email -- Nessun contenuto"
     email_reject_parsing:
       subject_template: "Problema email -- Contenuto non riconosciuto"
-      text_body_template: |
-        Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
-
-        Non è stato possibile trovare la tua risposta nella mail. **Accertati di scrivere l'intera risposta all'inizio dell'email** -- tutto quello che è al di sotto dell'inizio del messaggio della risposta-a sarà scartato.
     email_reject_post_error:
       subject_template: "Problema email -- Errore di invio"
     email_reject_post_error_specified:
       subject_template: "Problema email -- Errore di invio"
-    email_reject_destination:
-      subject_template: "Problema email - Indirizzo/i di destinazione non valido/i"
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
+      text_body_template: "Ciao, \n\nil presente è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati automaticamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. \n\nPer ulteriori informazioni, ti rimandiamo alle [Linee guida della comunità](%{base_url}/guidelines).\n"
     blocked_by_staff:
       subject_template: "Account bloccato"
       text_body_template: |
@@ -939,6 +953,8 @@ it:
         Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato bloccato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{base_url}%{user_url}).
 
         La soglia può essere modificata tramite l'impostazione di blocco dei nuovi utenti.
+    spam_post_blocked:
+      subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
     unblocked:
       subject_template: "Account sbloccato"
       text_body_template: |
@@ -1149,3 +1165,6 @@ it:
       \ controversia derivante dal presente contratto o collegata allo stesso è il tribunale di Roma. Fatta eccezione per le richieste di risarcimento ingiuntivo o per via equitativa o richieste di risarcimento relative ai diritti di proprietà intellettuale (che possono essere avanzate in qualsiasi tribunale competente senza prestare garanzie), qualsiasi controversia derivante dal presente contratto sarà risolta in conformità alle leggi italiane (Italia). La parte vincente in qualsiasi azione o procedimento per l’applicazione del presente Contratto avrà diritto di ottenere il rimborso delle spese e degli onorari legali. Nel caso in cui una parte del presente Contratto venga ritenuta non valida o non applicabile, tale parte verrà interpretata in modo da riflettere le intenzioni originali delle parti e le altre disposizioni rimarranno attive ed efficaci. Il mancato esercizio da parte di qualsiasi parte di qualsiasi termine o condizione del presente Contratto o qualsiasi violazione dello stesso, in qualsiasi unica istanza, non implicherà la rinuncia a tale termine o condizione oppure a successive violazioni. Tu puoi assegnare diritti ai sensi del presente Contratto a qualsiasi parte che acconsenta e accetti di essere vincolata dai suoi termini e condizioni; %{company_name} può assegnare i suoi diritti ai sensi del presente Contratto senza condizioni. Il presente Contratto sarà vincolante e avrà effetto a beneficio delle parti, dei subentranti e degli assegnatari autorizzati.\n\nQuesto documento è CC-BY-SA. Ultimo aggiornamento 31 maggio 2013.\n\nAdattamento dal contratto originale [Termini di Servizio WordPress](http://en.wordpress.com/tos/). \n"
   privacy_topic:
     title: "Politica della Privacy"
+    body: "<a name=\"collect\"></a>\n\n## [Quali informazioni memorizziamo?](#collect)\nQuando ti registri sul nostro sito memorizziamo alcune informazioni  e raccogliamo dati quando partecipi al forum leggendo, scrivendo e valutando il contenuto qui condiviso.\n\nQuando ti registri sul sito, ti potrebbe venir chiesto di inserire il tuo nome e il tuo indirizzo email. Puoi comunque visitare il sito senza registrarti. Il tuo indirizzo email sarà verificato attraverso l’invio di una email che contiene un collegamento univoco. Se il collegamento viene visitato, sapremo che sei tu ad avere il controllo di quell'indirizzo email.\n\nUna volta registrato, quando invii del contenuto noi registriamo l’indirizzo IP da cui il tuo messaggio ha avuto origine. Potremmo anche mantenere dei log sul server che contengono gli indirizzi IP di ogni richiesta effettuata verso il nostro server.\n\n<a name=\"use\"></a>\n\n## [A che ci servono le tue informazioni?](#use)\n\nQualunque tua informazione che memorizziamo può essere usata in uno dei modi seguenti:\n\n * Per personalizzare l’esperienza &mdash; tali informazioni ci servono a rispondere meglio alle esigenze individuali.\n * Per migliorare il nostro sito &mdash; ci sforziamo continuamente di migliorare il nostro sito usando le informazioni e i ritorni ricevuti.\n * Per inviare email periodiche &mdash; l’indirizzo email che fornisci può essere usato per inviarti informazioni, notifiche da te richieste circa modifiche agli argomenti o in risposta al tuo nome utente, rispondere a domande e/o altre richieste o domande.\n\n<a name=\"protect\"></a>\n\n## [Come proteggiamo le tue informazioni?](#protect)\n\nImplementiamo diverse misure di sicurezza per salvaguardare le tue informazioni personali, ogni volta che le inserisci, le modifichi o vi accedi.\n\n<a name=\"data-retention\"></a>\n\n## [Qual è la vostra politica di conservazione dei dati?](#data-retention)\n\nCi impegniamo a:\n\n * Conservare i log contenenti gli indirizzi IP di tutte le richieste giunte sui nostri server per non più di 90 giorni.\n * Conservare gli indirizzi IP associati agli utenti registrati\
+      \ ed ai loro messaggi per non più di 5 anni.\n\n<a name=\"cookies\"></a>\n\n## [Usate i cookie?](#cookies)\n\nSì. I cookie sono dei piccoli file che un sito copia sul tuo disco fisso attraverso il browser web (se lo permetti). Tali cookie permettono al sito di riconoscere il browser e di associarlo con il tuo account registrato, se presente. \n\nUsiamo i cookie per comprendere e memorizzare le tue preferenze per le visite future e per raccogliere dati aggregati circa il traffico sul sito e le interazioni, in modo da offrire successivamente una migliore esperienza di navigazione e migliori strumenti. Potremmo accordarci con fornitori di servizio terzi che per aiutarci a comprendere meglio i visitatori del nostro sito. Tali fornitori di servizi non hanno il permesso di usare le informazioni raccolte per nostro conto, tranne quando lo scopo è aiutarci a portare avanti e migliorare la nostra attività.\n\n<a name=\"disclose\"></a> \n\n## [Rivelate informazioni a terze parti?](#disclose)\n\nNon vendiamo, scambiamo né trasferiamo a terze parti le informazioni che ti identificano personalmente. Ciò ad esclusione di quelle parti che ci aiutano gestire il sito, a portare avanti le attività o i servizi, fintanto che tali parti acconsentano a mantenere le informazioni confidenziali. Potremmo inoltre rilasciare le informazioni quando pensiamo che il rilascio sia appropriato per il rispetto della legge, per far rispettare le regole del sito, o per proteggere i nostri o gli altrui diritti, la proprietà o la sicurezza. Tuttavia, informazioni dei visitatori che non personalmente identificanti potrebbero essere fornite ad altri soggetti per fini di marketing, pubblicità, o per altri usi.\n\n<a name=\"third-party\"></a>\n\n## [Collegamenti con terze parti](#third-party)\n\nA volte, a nostra discrezione, potremmo includere sul nostro sito offerte di prodotti o servizi di terze parti. I siti delle terze parti hanno politiche sulla privacy separate ed indipendenti dalle nostre. Pertanto non ci assumiamo alcuna responsabilità per il contenuto e le attività di tali siti collegati. Tuttavia, cercheremo\
+      \ di proteggere l'integrità del nostro sito pertanto accettiamo eventuali riscontri negativi sui siti terzi.\n\n\n<a name=\"coppa\"></a>\n\n## [Rispetto della legge sulla protezione della privacy online dei minori - Children's Online Privacy Protection Act Compliance - COPPA](#coppa)\n\nIl nostro sito, nonché i prodotti ed i servizi ad esso collegati, sono tutti diretti a persone maggiorenni. Se non si è maggiorenni secondo le leggi del proprio Paese, per il rispetto della COPPA ([Legge sulla protezione della privacy online dei minori]( http://en.wikipedia.org/wiki/Children's_Online_Privacy_Protection_Act)), non usare questo sito.\n\n<a name=\"online\"></a>\n\n## [Politica sulla privacy online](#online)\n\nLa presente politica sulla privacy online si applica soltanto alle informazioni raccolte attraverso il nostro sito e non alle informazioni fuori linea.\n\n<a name=\"consent\"></a>\n\n## [Consenso](#consent)\n\nUsando il nostro sito, accetti senza riserve la presente politica sulla privacy.\n\n<a name=\"changes\"></a>\n\n## [Cambiamenti alla politica sulla privacy](#changes)\n\nQualora decidessimo di cambiare la nostra politica sulla privacy, invieremo tali modifiche su questa pagina.\n\nQuesto documento è CC-BY-SA (http://it.wikipedia.org/wiki/Licenze_Creative_Commons). \nAggiornato il 31 maggio 2013.\n"

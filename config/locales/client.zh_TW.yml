@@ -121,10 +121,6 @@ zh_TW:
       stat:
         all_time: "所有時間"
         last_7_days: "最近 7 天"
-      like_count: "讚"
-      topic_count: "主題"
-      post_count: "回覆"
-      user_count: "使用者"
     bookmarks:
       not_logged_in: "抱歉，你必須先登入才能將文章加上書籤"
       created: "你已將此文章加上書籤"
@@ -561,7 +557,6 @@ zh_TW:
       view_new_post: "檢視你的新文章。"
       saving: "正在儲存..."
       saved: "儲存完畢!"
-      saved_draft: "你有一篇文章的草稿尚未完成，點選本欄以繼續編輯。"
       uploading: "正在上傳..."
       show_preview: '顯示預覽 &raquo;'
       hide_preview: '&laquo; 隱藏預覽'
@@ -1820,7 +1815,6 @@ zh_TW:
       granted:
         other: "%{count} 升級"
       select_badge_for_title: 選擇一枚徽章作為你的稱號
-      no_title: "<無主旨>"
       badge_grouping:
         getting_started:
           name: 開始入門

@@ -121,10 +121,6 @@ zh_CN:
       stat:
         all_time: "所有时间内"
         last_7_days: "7 天以内"
-      like_count: "赞数量"
-      topic_count: "主题数量"
-      post_count: "主题数量"
-      user_count: "用户数量"
     bookmarks:
       not_logged_in: "抱歉，您需要先登录才能给帖子加书签"
       created: "您给此帖的书签已加上"
@@ -239,6 +235,8 @@ zh_CN:
       invited_by: "邀请者为"
       trust_level: "用户级别"
       notifications: "通知"
+      dismiss_notifications: "标记所有为已读"
+      dismiss_notifications_tooltip: "标记所有未读通知为已读"
       disable_jump_reply: "不要在回复后跳转到您的新帖子"
       dynamic_favicon: "在标签页图标上动态显示未读消息提醒（测试）"
       edit_history_public: "让其他用户查看我的帖子的以前版本"
@@ -301,9 +299,10 @@ zh_CN:
         uploaded_avatar_empty: "添加自定义图片"
         upload_title: "上传图片"
         upload_picture: "上传图片"
-        image_is_not_a_square: "注意：我们已经裁剪了您的图片；它不知正方形的。"
+        image_is_not_a_square: "注意：我们已经裁剪了您的图片；它不是正方形的。"
       change_profile_background:
         title: "个人资料背景"
+        instructions: "个人资料背景将被居中，且默认宽度为 850px。"
       email:
         title: "电子邮箱"
         instructions: "绝不会被公开显示。"
@@ -562,7 +561,6 @@ zh_CN:
       view_new_post: "浏览您的新帖子。"
       saving: "保存中..."
       saved: "已保存！"
-      saved_draft: "您有一个帖子草稿尚未发表。点击该栏任意位置即可继续编辑。"
       uploading: "上传中..."
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
@@ -1173,6 +1171,9 @@ zh_CN:
     category_title: "分类"
     history: "历史"
     changed_by: "由 {{author}}"
+    raw_email:
+      title: "原始邮件"
+      not_available: "不可用！"
     categories_list: "分类列表"
     filters:
       with_topics: "%{filter} 主题"
@@ -1840,11 +1841,13 @@ zh_CN:
         grant: 授予
         no_user_badges: "%{name} 尚未被授予徽章。"
         no_badges: 没有可供授予的徽章。
+        none_selected: "选择一个徽章开始"
         allow_title: 允许将徽章用作头衔
         multiple_grant: 能被授予多次
         listable: 在公共徽章页面显示徽章
         enabled: 启用徽章系统
         icon: 图标
+        icon_help: "使用 Font Awesome class 或者图片的链接"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子
         auto_revoke: 每天运行撤销查询
@@ -1935,7 +1938,6 @@ zh_CN:
       granted:
         other: "%{count} 个已授予"
       select_badge_for_title: 选择一个徽章用作您的头衔
-      no_title: "<无标题>"
       badge_grouping:
         getting_started:
           name: 开始

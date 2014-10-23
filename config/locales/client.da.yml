@@ -136,10 +136,6 @@ da:
       stat:
         all_time: "Alt"
         last_7_days: "De sidste 7 Dage"
-      like_count: "Likes"
-      topic_count: "Emner"
-      post_count: "Indlæg"
-      user_count: "Brugere"
     bookmarks:
       not_logged_in: "Beklager, du skal været logget ind for at bogmærke indlæg"
       created: "Du har bogmærket dette indlæg."
@@ -566,7 +562,6 @@ da:
       view_new_post: "Se dit nye indlæg."
       saving: "Gemmer…"
       saved: "Gemt!"
-      saved_draft: "Du har en kladde i gang. vælg denne kasse for at forsætte med at redigere den."
       uploading: "Uploader…"
       show_preview: 'forhåndsvisning &raquo;'
       hide_preview: '&laquo; skjul forhåndsvisning'
@@ -1857,7 +1852,6 @@ da:
         one: "1 givet"
         other: "%{count} givet"
       select_badge_for_title: Vælg en badge, du vil bruge som din titel
-      no_title: "<ingen titel>"
       badge_grouping:
         getting_started:
           name: Kom igang
