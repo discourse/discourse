@@ -303,7 +303,11 @@ zh_CN:
         upload_picture: "上传图片"
         image_is_not_a_square: "注意：我们已经裁剪了您的图片；它不知正方形的。"
       change_profile_background:
-        title: "个人资料背景"
+        title: "个人资料页面背景"
+        instructions: "个人资料页面背景将被居中，默认宽度为850px。"
+      change_expansion_background:
+        title: "个人资料悬浮背景"
+        instructions: "个人资料悬浮窗背景将被居中，默认宽度为590px。"
       email:
         title: "电子邮箱"
         instructions: "绝不会被公开显示。"
