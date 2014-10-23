@@ -495,8 +495,6 @@ cs:
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     use_https: "Should the full url for the site (Discourse.base_url) be http or https?"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
-    long_polling_interval: "Interval v milisekundách než je zahájena nová dlouhá výzva"
-    polling_interval: "Jak často se mají zasílat výzvy přihlášených uživatelům v milisekundách"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
     auto_track_topics_after: "Výchozí počet milisekund než je téma automaticky sledováno, uživatelé si pomoc změnit (0 znamená vždy, -1 znamená nikdy)"
     new_topic_duration_minutes: "Výchozí počet minut, jak dlouho je téma považováno za nové, uživatelé si pomoc změnit (-1 znamená vždy, -2 znamená od poslední návštěvy)"

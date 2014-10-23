@@ -14,5 +14,5 @@ zh_CN:
     must_contain_poll_options: "必须包含投票选项列表"
     cannot_have_modified_options: "在开始的五分钟后不能修改。如果需要修改他们，请联系版主。"
     cannot_add_or_remove_options: "只能被编辑，不能添加或者删除。如果您需要添加或者删除选项，您需要锁定这个主题并创建新的。"
-    prefix: "投票："
+    prefix: "投票"
     closed_prefix: "已关闭的投票："

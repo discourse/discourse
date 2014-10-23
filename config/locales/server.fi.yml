@@ -632,8 +632,6 @@ fi:
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
     enable_private_messages: "Salli luottamustason 1 käyttäjien luoda ja vastata yksityisviesteihin"
     enable_long_polling: "Ilmoitusten käyttämä viestiväylä voi käyttää long pollingia"
-    long_polling_interval: "Uuden long pollin intervalli millisekunneissa."
-    polling_interval: "Kuinka usein kirjautuneet käyttäjät pollaavat millisekunneissa"
     anon_polling_interval: "Kuinka usein anonyymit käyttäjät pollaavat millisekunneissa"
     auto_track_topics_after: "Missä ajassa ketjua aletaan seurata oletusarvoisesti millisekunneissa, käyttäjän muokattavissa (0 aina, -1 ei koskaan)"
     new_topic_duration_minutes: "Kuinka kauan ketju lasketaan uudeksi oletusarvona minuuteissa, käyttäjän muokattavissa (-1 aina, -2 edellisen vierailun jälkeen luodut ketjut)"
@@ -662,7 +660,6 @@ fi:
     share_links: "Mitkä painikkeet näytetään Jaa-valikossa ja missä järjestyksessä."
     track_external_right_clicks: "Seuraa pois sivustolta vieviä linkkejä, jotka avataan hiiren oikealla näppäimellä (esim. avaa uudessa välilehdessä) oletuksena poistettu käytöstä, koska tämä kirjoittaa URL:n uudelleen"
     topics_per_page: "Kuinka monta ketjua ladataan avattaessa ketjulista ja kerrallaan lisää vieritettäessä sivua alaspäin"
-    posts_per_page: "Kuinka monta viestiä ladataa avattaessa viestiketju ja kerrallaan lisää vieritetäessä sivua alaspäin"
     site_contact_username: "Kaikki automaattiset yksityisviestit lähetetään tämän käyttäjän nimissä; jos jätetään tyhjäksi oletuksena on System-käyttäjä."
     send_welcome_message: "Lähetä kaikille uusille käyttäjille yksityinen tervetuliaisviesti, jossa on pikakäyttöopas."
     suppress_reply_directly_below: "Älä näytä vastausten lukumäärää viestissä, jos ainoa vastaus on seuraavassa viestissä."
@@ -873,7 +870,6 @@ fi:
     enable_cdn_js_debugging: "Salli /logs näyttää kunnolliset virheilmoitukset lisäämällä crossorigin permissions kaikkiin sisällytettyihin js-kirjastoihin."
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, huomauta ylläpitäjiä ketjujen luonnista."
     vacuum_db_days: "Aja VACUUM FULL ANALYZE vapauttaaksesi tilaa tietokantaan migraatioiden jälkeen (aseta 0 ottaaksesi pois käytöstä)"
-    prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta tiedostoja. VAROITUS: tämä estää viestin liitetiedostojen käyttämisen sivuston logoina ym."
     errors:
       invalid_email: "Sähköpostiosoite ei kelpaa."
       invalid_username: "Tällä nimellä ei löydy käyttäjää."
@@ -1291,26 +1287,10 @@ fi:
         Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
 
         Tilisi luottamustaso ei ole riittävä, jotta saisit lähettää uusia ketjuja tähän sähköpostiosoitteeseen. Jos uskot, että tämä johtuu virheestä, ota yhteyttä henkilökuntaan.
-    email_reject_no_account:
-      subject_template: "Sähköpostiongelma -- Ei tiliä"
-      text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
-
-        Tälle sähköpostiosoitteelle ei löydy käyttäjätiliä. Yritä lähettää sähköposti toisesta osoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_empty:
       subject_template: "Sähköpostiongelma -- Ei sisältöä"
-      text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
-
-        Emme löytäneet sähköpostista viestin sisältöä. Varmista, että kirjoitit jotain viestin yläreunaan - emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia.
-
-        Jos saat tämän viestin, vaikka sähköpostissa oli sisältöä, yritä uudestaan siten, että viesti sisältää HTML-sisältöä (ei pelkkää selkotekstiä).
     email_reject_parsing:
       subject_template: "Sähköpostionelma -- Tunnistamaton sisältö"
-      text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
-
-        Emme löytäneet missä viestin sisältö on sähköpostissa. **Varmista, että kirjoitit jotain viestin yläreunaan** -- kaikki vastatun viestin alun jälkeen jätetään huomiotta.
     email_reject_post_error:
       subject_template: "Sähköpostiongelma -- Lähetysvirhe"
       text_body_template: |
@@ -1328,17 +1308,10 @@ fi:
 
         Jos voit korjata ongelman, yritä uudelleen.
     email_reject_reply_key:
-      subject_template: "Sähköpostiongelma -- Huono vastausavain"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Annettu vastausavain on väärä tai tuntematon, joten emme pystyneet selvittämään mihin tämä sähköposti lähetettiin vastauksena. Ota yhteys henkilökuntaan.
-    email_reject_destination:
-      subject_template: "Sähköpostiongelma -- Väärä kohdeosoite tai -osoitteet"
-      text_body_template: |
-        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
-
-        Mitään sähköpostin kohdeosoitteista ei tunnistettu. Varmista, että sähköpostiosoite on "Vastaanottaja:"-rivillä (ei CC tai BCC) ja että yrität lähettää sähköpostia osoitteeseen, jonka palstan ylläpitäjät ovat antaneet.
     email_error_notification:
       subject_template: "Sähköpostiongelma -- POP autentikoinnin virhe"
       text_body_template: |

@@ -602,8 +602,6 @@ de:
     summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\" Ansicht."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
-    long_polling_interval: "Intervall in Millisekunden bevor ein neues Long-Poll initiiert wird."
-    polling_interval: "Pollingintervall in Millisekunden für angemeldete Nutzer-Clients."
     anon_polling_interval: "Pollingintervall in Millisekunden für anonyme Clients."
     auto_track_topics_after: "Millisekunden, bevor ein Thema automatisch verfolgt wird. Nutzer können diesen Wert überschreiben (0 heißt immer, -1 heißt niemals)."
     new_topic_duration_minutes: "Minuten, die ein neues Thema als neu aufgeführt wird. Nutzer können diesen Wert überschreiben (-1 heißt immer, -2 heißt seit dem letzten Besuch)."
@@ -631,7 +629,6 @@ de:
     share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die auf der Themen-Übersichtsseite zu Beginn und beim Scrollen geladen werden."
-    posts_per_page: "Zahl der Beiträge, die in einem Thema zu Beginn und beim Scrollen geladen werden."
     send_welcome_message: "Sende allen neuen Nutzern eine private Willkommensnachricht mit Hinweisen zur Benutzung des Forums."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der beantwortete Beitrag direkt darüber angezeigt wird."
@@ -1050,20 +1047,10 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (titled %{former_title}) hat nicht funktioniert.
 
         Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
-    email_reject_no_account:
-      subject_template: "E-Mail-Problem -- Kein Benutzerkonto"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (titled %{former_title}) hat nicht funktioniert.
-
-        Es ist kein Account mit dieser E-Mail-Adresse bekannt. Versuch die Nachricht von einer anderen E-Mail-Adresse zu verschicken oder kontaktiere einen Mitarbeiter.
     email_reject_empty:
       subject_template: "E-Mail-Problem -- Kein Inhalt"
     email_reject_parsing:
       subject_template: "E-Mail-Problem -- Inhalt nicht erkannt"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (titled %{former_title}) hat nicht funktioniert.
-
-        Wir konnten deine Antwort in der E-Mail nicht auffinden. **Stelle sicher, dass deine komplette Antwort am Beginn der E-Mail steht.** Alles unterhalb der Nachricht, auf die geantwortet wurde, wird verworfen.
     email_reject_post_error:
       subject_template: "E-Mail-Problem -- Fehler beim Posten."
       text_body_template: |
@@ -1081,7 +1068,6 @@ de:
 
         Bitte versuch es erneut, wenn du das Problem beheben kannst.
     email_reject_reply_key:
-      subject_template: "E-Mail-Problem -- Ungültiger Antwort-Schlüssel"
       text_body_template: |
         Es tut uns leid, aber die E-Mail-Nachricht an %{destination} (Titel: „%{former_title}“) hat nicht geklappt.
         Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Kontaktiere einen Mitarbeiter.

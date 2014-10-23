@@ -576,8 +576,6 @@ nl:
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
     use_https: "Gebruik http of https voor de volledige url van de site (Discourse.base_url)? GEBRUIK DIT NIET ALS HTTPS NOG NIET OPGEZET IS!"
     enable_long_polling: "De 'message bus' die gebruikt wordt voor notificaties kan 'long polling' gebruiken."
-    long_polling_interval: "Het interval in milliseconden voor dat een nieuwe 'long poll' wordt uitgestuurd"
-    polling_interval: "Hoe vaak een cliënt een 'poll' moet uitvoeren in milliseconden"
     anon_polling_interval: "Hoe vaak een anonieme client een 'poll' moet uitvoeren in milliseconden"
     auto_track_topics_after: "Hoeveel milliseconden het moet duren voordat een topic automatisch bijgehouden wordt (0 voor altijd, -1 voor nooit)"
     new_topic_duration_minutes: "Hoeveel minuten kan een topic als nieuw beschouwd worden (-1 voor altijd, -2 voor laatste bezoek)"

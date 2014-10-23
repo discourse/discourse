@@ -138,10 +138,6 @@ fi:
       stat:
         all_time: "Kaikki"
         last_7_days: "Viimeiset 7 päivää"
-      like_count: "Tykkäyksiä"
-      topic_count: "Ketjuja"
-      post_count: "Viestejä"
-      user_count: "Käyttäjiä"
     bookmarks:
       not_logged_in: "pahoittelut, sinun täytyy kirjautua sisään voidaksesi lisätä viestin kirjanmerkin"
       created: "olet lisännyt tämän viestin kirjainmerkkeihisi"
@@ -262,6 +258,8 @@ fi:
       invited_by: "Kutsuja"
       trust_level: "Luottamustaso"
       notifications: "Ilmoitukset"
+      dismiss_notifications: "Merkitse kaikki luetuiksi"
+      dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       disable_jump_reply: "Älä siirry uuteen viestiin sen lähettämisen jälkeen"
       dynamic_favicon: "Näytä ilmoitukset viesteistä faviconissa (kokeellinen)"
       edit_history_public: "Anna muiden nähdä viestieni revisiot"
@@ -589,7 +587,6 @@ fi:
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan..."
       saved: "Tallennettu!"
-      saved_draft: "Sinulla on viestiluonnos kesken. Klikkaa tätä palkkia jatkaaksesi kirjoittamista."
       uploading: "Lähettää..."
       show_preview: 'näytä esikatselu &raquo;'
       hide_preview: '&laquo; piilota esikatselu'
@@ -1235,6 +1232,8 @@ fi:
     category_title: "Alue"
     history: "Historia"
     changed_by: "käyttäjältä {{author}}"
+    raw_email:
+      not_available: "Ei käytettävissä!"
     categories_list: "Lista alueista"
     filters:
       with_topics: "%{filter} ketjut"
@@ -2012,7 +2011,6 @@ fi:
         one: "1 myönnetty"
         other: "%{count} myönnettyä"
       select_badge_for_title: Valitse tittelisi arvomerkeistä
-      no_title: "<ei otsikkoa>"
       badge_grouping:
         getting_started:
           name: Ensiaskeleet
