@@ -138,10 +138,6 @@ es:
       stat:
         all_time: "Todo el tiempo"
         last_7_days: "Últimos 7 días"
-      like_count: "Número de 'me gusta'"
-      topic_count: "Número de Temas"
-      post_count: "Número de Posts"
-      user_count: "Número de Usuarios"
     bookmarks:
       not_logged_in: "Lo sentimos, debes iniciar sesión para guardar posts en marcadores."
       created: "has marcado este post como favorito"
@@ -588,7 +584,6 @@ es:
       view_new_post: "Ver tu nuevo post."
       saving: "Guardando..."
       saved: "¡Guardado!"
-      saved_draft: "Tienes el borrador de un post sin terminar. Haz clic en esta barra para continuar editándolo."
       uploading: "Subiendo..."
       show_preview: 'mostrar vista previa &raquo;'
       hide_preview: '&laquo; ocultar vista previa'
@@ -1987,7 +1982,6 @@ es:
         one: "1 concedido"
         other: "%{count} concedido"
       select_badge_for_title: Seleccionar un distintivo para utilizar como tu título
-      no_title: "<no title>"
       badge_grouping:
         getting_started:
           name: Primeros pasos

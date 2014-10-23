@@ -138,10 +138,6 @@ nl:
       stat:
         all_time: "Sinds het begin"
         last_7_days: "Afgelopen 7 dagen"
-      like_count: "Aantal likes"
-      topic_count: "Aantal topics"
-      post_count: "Aantal berichten"
-      user_count: "Aantal gebruikers"
     bookmarks:
       not_logged_in: "sorry, je moet ingelogd zijn om berichten aan je favorieten toe te kunnen voegen"
       created: "je hebt dit bericht aan je favorieten toegevoegd"
@@ -588,7 +584,6 @@ nl:
       view_new_post: "Bekijk je nieuwe bericht."
       saving: "Opslaan..."
       saved: "Opgeslagen!"
-      saved_draft: "Je bent bezig met een conceptbericht. Klik op deze balk om verder te gaan met schrijven."
       uploading: "Uploaden..."
       show_preview: 'toon voorbeeld &raquo;'
       hide_preview: '&laquo; verberg voorbeeld'
@@ -1915,7 +1910,6 @@ nl:
         one: "1 toegekend"
         other: "%{count} toegekend"
       select_badge_for_title: Kies een badge om als je titel te gebruiken
-      no_title: "<geen titel>"
       badge_grouping:
         getting_started:
           name: Aan De Slag

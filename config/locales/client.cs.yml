@@ -153,10 +153,6 @@ cs:
       stat:
         all_time: "Za celou dobu"
         last_7_days: "Posledních 7 dní"
-      like_count: "Počet líbí se"
-      topic_count: "Počet témat"
-      post_count: "Počet příspěvků"
-      user_count: "Počet uživatelů"
     bookmarks:
       not_logged_in: "Pro přidání záložky se musíte přihlásit."
       created: "Záložka byla přidána."
@@ -612,7 +608,6 @@ cs:
       view_new_post: "Zobrazit váš nový příspěvek."
       saving: "Ukládám..."
       saved: "Uloženo!"
-      saved_draft: "Máte rozepsaný příspěvek. Pokračujte v psaní kliknutím na tuto řádku."
       uploading: "Nahrávám..."
       show_preview: 'zobrazit náhled &raquo;'
       hide_preview: '&laquo; skrýt náhled'
@@ -1908,7 +1903,6 @@ cs:
         few: "1 udělen"
         other: "%{count} uděleno"
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
-      no_title: "<no title>"
       badge_grouping:
         other:
           name: Ostatní

@@ -605,8 +605,6 @@ he:
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את  % o הפרסומים הראשונים"
     enable_private_messages: "אפשרו למשתמשים בעלי רמת אמון 1 ליצור מסרים פרטיים ולהשיב למסרים פרטיים"
     enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
-    polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
@@ -634,7 +632,6 @@ he:
     share_links: "החלט אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "כמה נושאים נטענים כברירת מחדל ברשימת הנושאים, ומתי גלילה למטה טוענת נושאים נוספים"
-    posts_per_page: "כמה פרסומים נטענים כברירת מחדל בנושא, ומתי גלילה מטה תטען פרסומים נוספים"
     site_contact_username: "כל המסרים האישיים האוטומטיים יהיו ממשתמש זה; אם תשאירו ריק, יעשה שימוש בחשבון ברירת המחדל של המערכת."
     send_welcome_message: "שלחו כל המשתמשים החדשים הודעת \"ברוכים הבאים\" פרטים עם הדרכה ראשונית כיצד להתחיל."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפרסום כאשר ישנה תגובה ישירה אחת לפרסום זה."
@@ -977,17 +974,10 @@ he:
         אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 
         אין לחשבון שלך את רמון האמון הנדרשת כדי לפרסם נושאים חדשים לכתובת דוא"ל זו. אם אתם מאמינים כי זוהי שגיאה, צרו קשר עם אחד מאנשי הצוות.
-    email_reject_no_account:
-      subject_template: "בעיית דוא\"ל - אין חשבון"
-      text_body_template: "אנו מצטערים, אבל הודעת הדוא\"ל שלך אל %{destination} (titled %{former_title}) didn't work.\nלא עברה.\n\nלא ידוע לנו על חשבון עם כתובת דוא\"ל זו. נסו לשלוח מכתובת דוא\"ל אחרת או ליצור קשר עם אנשי הצוות. \n"
     email_reject_empty:
       subject_template: "בעיית דוא\"ל - אין תוכן"
     email_reject_parsing:
       subject_template: "סוגיית דוא\"ל -- תוכן בלתי מוכר"
-      text_body_template: |
-        אנו מצטערים, אך הודעת הדוא"ל שלך אל %{destination} (titled %{former_title})  לא עברה.
-
-        לא הצלחנו לאתר את התגובה שלך במייל. **אנא הקפידו לכתוב את כל התגובה בראש המייל** כל מה שיופיע מתחת לכותרת המסר אליו הגבתם לא ייקלט על ידי המערכת.
     email_reject_post_error:
       subject_template: "בעיית דוא\"ל - שגיאת פרסום (Posting error)"
       text_body_template: |
@@ -997,7 +987,6 @@ he:
     email_reject_post_error_specified:
       subject_template: "בעיית דוא\"ל - שגיאה בפרסום."
     email_reject_reply_key:
-      subject_template: "בעיות דוא\"ל -- מפתח התגובה (Reply Key) פגום"
       text_body_template: |
         אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 

@@ -489,8 +489,6 @@ pt:
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
-    long_polling_interval: "Intervalo em milisegundos antes de uma nova solicitação longa ser feita"
-    polling_interval: "Com que frequencia os clientes podem solicitar o servidor em milisegundos"
     anon_polling_interval: "Com que frequencia os clientes não registrados podem solicitar o servidor em milisegundos"
     auto_track_topics_after: "Quantos milisegundos esperar antes que um tópico seja automaticamente  rastreado (0 para sempre, -1 para nunca)"
     new_topic_duration_minutes: "Quantos minutos um tópico permanece considerado como novo (-1 para sempre, -2 para desde a última visita)"

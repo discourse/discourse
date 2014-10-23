@@ -467,8 +467,6 @@ zh_TW:
     summary_likes_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小得到\"讚\"的數量"
     summary_percent_filter: "當用戶點擊 \"此話題的摘要\"，顯示前面多少 % 的文章"
     enable_long_polling: "啟用消息匯流排使通知功能可以使用長輪詢（long polling）"
-    long_polling_interval: "長輪詢每次請求之間的時間間隔（單位 毫秒） "
-    polling_interval: "已登入用戶用戶端輪詢時間間隔（單位 毫秒）"
     anon_polling_interval: "匿名使用者用戶端輪詢時間間隔（單位 毫秒）"
     auto_track_topics_after: "經過多少毫秒之後一個討論話題就會被自動追蹤的全域預設值，用戶可以覆寫此設定 ( 0 為總是，-1 為永不 )"
     new_topic_duration_minutes: "一個討論話題在多少分鐘之內被視為新的討論話題的全域預設值，用戶可以覆寫此設定 ( -1 為總是，-2 為上一次瀏覽 )"
@@ -488,7 +486,6 @@ zh_TW:
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     track_external_right_clicks: "追蹤外部連結的右鍵點擊 ( 例如：開啟於瀏覽器的新頁面 )，預設是關閉的，因為它會重寫URLs"
     topics_per_page: "預設在話題列表頁載入多少篇，然後捲軸下拉才會出現更多討論話題"
-    posts_per_page: "預設在文章列表頁載入多少篇，然後捲軸下拉才會出現更多文章"
     send_welcome_message: "給所有的新用戶發送一個快速引導的私訊"
     topics_per_period_in_top_summary: "預設推薦話題的顯示數量"
     topics_per_period_in_top_page: "在展開 \"顯示更多\" 推薦話題列表的顯示數量"
@@ -708,16 +705,12 @@ zh_TW:
       subject_template: "批次使用者邀請處理已經完成，發生了些錯誤"
     email_reject_trust_level:
       subject_template: "EMail 錯誤 -- 尚未達到信任等級"
-    email_reject_no_account:
-      subject_template: "EMail 錯誤 -- 沒有帳戶"
     email_reject_empty:
       subject_template: "EMail 錯誤 -- 沒有內文"
     email_reject_parsing:
       subject_template: "EMail 錯誤 -- 內容無法識別"
     email_reject_post_error:
       subject_template: "EMail 錯誤 -- 發送錯誤"
-    email_reject_reply_key:
-      subject_template: "EMail 錯誤 -- 錯誤的回覆授權"
     email_error_notification:
       subject_template: "EMail 錯誤 -- POP 驗證錯誤"
     too_many_spam_flags:

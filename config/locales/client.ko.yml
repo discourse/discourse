@@ -121,10 +121,6 @@ ko:
       stat:
         all_time: "전체"
         last_7_days: "지난 7일"
-      like_count: "'좋아요' 횟수"
-      topic_count: "토픽"
-      post_count: "게시글"
-      user_count: "사용자"
     bookmarks:
       not_logged_in: "죄송합니다. 게시물을 즐겨찾기에 추가하려면 로그인을 해야 합니다."
       created: "이 게시글을 북마크 하였습니다."
@@ -561,7 +557,6 @@ ko:
       view_new_post: "새로운 게시물을 볼 수 있습니다."
       saving: "저장 중..."
       saved: "저장 완료!"
-      saved_draft: "작성중인 글이 있습니다. 계속 작성하려면 여기를 클릭하세요."
       uploading: "업로딩 중..."
       show_preview: '미리보기를 보여줍니다 &laquo;'
       hide_preview: '&laquo; 미리보기를 숨기기'
@@ -1908,7 +1903,6 @@ ko:
       granted:
         other: "%{count} 개 부여"
       select_badge_for_title: 칭호로 사용할 뱃지를 선택하세요
-      no_title: "호칭 없음"
       badge_grouping:
         getting_started:
           name: 교육용 훈장
