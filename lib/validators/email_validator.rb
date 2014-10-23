@@ -10,7 +10,7 @@ class EmailValidator < ActiveModel::EachValidator
         record.errors.add(attribute, I18n.t(:'user.email.not_allowed'))
       end
     end
-    if record.errors[attribute].blank? and ScreenedEmail.should_block?(value)
+    if record.errors[attribute].blank? && value && ScreenedEmail.should_block?(value)
       record.errors.add(attribute, I18n.t(:'user.email.blocked'))
     end
   end
