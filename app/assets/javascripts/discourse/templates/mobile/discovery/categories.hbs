@@ -27,7 +27,7 @@
                 <div class="topic-excerpt">
                   {{{excerpt}}}
                   {{#if excerptTruncated}}
-                    {{#unless canClearPin}}<a href="{{url}}">{{i18n read_more}}</a>{{/unless}}
+                  {{#unless canClearPin}}<a href="{{unbound url}}">{{i18n read_more}}</a>{{/unless}}
                   {{/if}}
                   {{#if canClearPin}}
                     <a href="#" {{action "clearPin" this}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
