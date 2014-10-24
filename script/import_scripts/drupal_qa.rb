@@ -121,7 +121,56 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
   end
 
   def create_nested_replies
-    puts '', "creating nested replies in topics"
+    puts '', "creating nested replies to posts in topics"
+
+    total_count = @client.query("
+        SELECT COUNT(c.cid) count
+          FROM node n
+        INNER JOIN comment AS c ON n.nid = c.nid
+        WHERE n.type = 'question'
+           AND n.status = 1;").first['count']
+
+    batch_size = 1000
+
+    batches(batch_size) do |offset|
+
+      # WARNING: If there are more than 1000000 this might have to be revisited
+      results = @client.query("
+        SELECT (c.cid + 1000000) as cid,
+               c.nid,
+               c.uid,
+               c.created,
+               cb.comment_body_value AS body
+        FROM node AS n
+          INNER JOIN comment AS c ON c.nid = n.nid
+          INNER JOIN field_data_comment_body AS cb ON cb.entity_id = c.cid
+        WHERE n.status = 1
+          AND n.type = 'question'
+        LIMIT #{batch_size}
+        OFFSET #{offset}
+      ", cache_rows: false)
+
+      break if results.size < 1
+
+      create_posts(results, total: total_count, offset: offset) do |row|
+        topic_mapping = topic_lookup_from_imported_post_id("nid:#{row['nid']}")
+        if topic_mapping && topic_id = topic_mapping[:topic_id]
+          h = {
+            id: "cid:#{row['cid']}",
+            topic_id: topic_id,
+            user_id: user_id_from_imported_user_id(row['uid']) || -1,
+            raw: row['body'],
+            created_at: Time.zone.at(row['created']),
+          }
+          h
+        else
+          puts "No topic found for comment #{row['cid']}"
+          nil
+        end
+      end
+    end
+
+    puts '', "creating nested replies to answers in topics"
 
     total_count = @client.query("
         SELECT COUNT(c.cid) count
