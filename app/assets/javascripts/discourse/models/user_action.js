@@ -102,7 +102,7 @@ Discourse.UserAction = Discourse.Model.extend({
   replyType: Em.computed.equal('action_type', UserActionTypes.replies),
   postType: Em.computed.equal('action_type', UserActionTypes.posts),
   topicType: Em.computed.equal('action_type', UserActionTypes.topics),
-  bookmarkType: Em.computed.equal('action_type', UserActionTypes.bookmarks),
+  bookmarkType: Em.computed.equal('action_type', UserActionTypes.bookmarks) && this.sameUser,
   messageSentType: Em.computed.equal('action_type', UserActionTypes.messages_sent),
   messageReceivedType: Em.computed.equal('action_type', UserActionTypes.messages_received),
   mentionType: Em.computed.equal('action_type', UserActionTypes.mentions),
