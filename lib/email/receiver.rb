@@ -115,7 +115,7 @@ module Email
         text = fix_charset message.text_part
         # TODO picking text if available may be better
         # in case of email reply from MS Outlook client, prefer text
-        if (text && !html) || (text && message.header.to_s =~ /X-MS-Has-Attach/)
+        if (text && !html) || (text && (message.header.to_s =~ /X-MS-Has-Attach/ || message.header.to_s =~ /Microsoft Outlook/))
           return text
         end
       elsif message.content_type =~ /text\/html/
