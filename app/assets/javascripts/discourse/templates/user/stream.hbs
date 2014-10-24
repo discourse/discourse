@@ -13,10 +13,9 @@
       <div class='child-actions'>
         <i class="icon {{unbound icon}}"></i>
         {{#grouped-each items}}
-          {{#if bookmarkType}}
+          {{#if removableBookmark}}
             <button class="btn btn-default remove-bookmark" {{action "removeBookmark" this}}>
-              <i class="fa fa-times"></i>
-              {{i18n "bookmarks.remove"}}
+              {{fa-icon 'times'}} {{i18n "bookmarks.remove"}}
             </button>
           {{/if}}
           <a href="{{unbound userUrl}}" data-user-card="{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
