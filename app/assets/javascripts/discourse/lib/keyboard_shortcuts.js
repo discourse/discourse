@@ -131,7 +131,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   createTopic: function() {
-    Discourse.__container__.lookup('controller:composer').send('open', {action: Discourse.Composer.CREATE_TOPIC, draftKey: Discourse.Composer.DRAFT});
+    Discourse.__container__.lookup('controller:composer').open({action: Discourse.Composer.CREATE_TOPIC, draftKey: Discourse.Composer.DRAFT});
   },
 
   toggleProgress: function() {
