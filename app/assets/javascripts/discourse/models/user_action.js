@@ -108,6 +108,7 @@ Discourse.UserAction = Discourse.Model.extend({
   mentionType: Em.computed.equal('action_type', UserActionTypes.mentions),
   isPM: Em.computed.or('messageSentType', 'messageReceivedType'),
   postReplyType: Em.computed.or('postType', 'replyType'),
+  removableBookmark: Em.computed.and('bookmarkType', 'sameUser'),
 
   addChild: function(action) {
     var groups = this.get("childGroups");
