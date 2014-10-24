@@ -454,7 +454,7 @@ Discourse.Topic.reopenClass({
 
   bulkOperationByFilter: function(filter, operation, categoryId) {
     var data = { filter: filter, operation: operation };
-    if (categoryId) data['categoryId'] = categoryId;
+    if (categoryId) data['category_id'] = categoryId;
     return Discourse.ajax("/topics/bulk", {
       type: 'PUT',
       data: data
