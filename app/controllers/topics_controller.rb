@@ -359,8 +359,8 @@ class TopicsController < ApplicationController
       topic_ids = params[:topic_ids].map {|t| t.to_i}
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
-      if params[:categoryId]
-        topic_ids = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics.where('category_id = ?', params[:categoryId]).pluck(:id)
+      if params[:category_id]
+        topic_ids = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics.where('category_id = ?', params[:category_id]).pluck(:id)
       else
         topic_ids = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics.pluck(:id)
       end

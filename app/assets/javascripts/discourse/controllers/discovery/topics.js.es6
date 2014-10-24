@@ -85,8 +85,7 @@ var controllerOpts = {
       if (selected.length > 0) {
         promise = Discourse.Topic.bulkOperation(selected, operation);
       } else {
-        var category = this.get('category');
-        promise = Discourse.Topic.bulkOperationByFilter('unread', operation, category ? category.id : null);
+        promise = Discourse.Topic.bulkOperationByFilter('unread', operation, this.get('category.id'));
       }
       promise.then(function(result) {
         if (result && result.topic_ids) {
