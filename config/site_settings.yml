@@ -553,6 +553,116 @@ onebox:
     default: ''
     type: list
 
+highlight:
+  enabled_languages:
+    client: true
+    type: list
+    default: 'Apache|Bash|C#|C++|CSS|CoffeeScript|Diff|HTML, XML|HTTP|Ini|JSON|Java|JavaScript|Makefile|Markdown|Nginx|Objective C|PHP|Perl|Python'
+    choices:
+      - Apache
+      - Bash
+      - C#
+      - C++
+      - CSS
+      - CoffeeScript
+      - Diff
+      - HTML, XML
+      - HTTP
+      - Ini
+      - JSON
+      - Java
+      - JavaScript
+      - Makefile
+      - Markdown
+      - Nginx
+      - Objective C
+      - PHP
+      - Perl
+      - Python
+      - Ruby
+      - SQL
+      - 1C
+      - AVR Assembler
+      - ActionScript
+      - AppleScript
+      - AsciiDoc
+      - AutoHotkey
+      - Axapta
+      - Brainfuck
+      - CMake
+      - Cap’n Proto
+      - Clojure
+      - D
+      - DOS .bat
+      - Dart
+      - Delphi
+      - Django
+      - Dust
+      - ERB (Embedded Ruby)
+      - Elixir
+      - Erlang
+      - Erlang REPL
+      - F#
+      - FIX
+      - G-code (ISO 6983)
+      - GLSL
+      - Gherkin
+      - Go
+      - Gradle
+      - Groovy
+      - Haml
+      - Handlebars
+      - Haskell
+      - Haxe
+      - Intel x86 Assembly
+      - Lasso
+      - Less
+      - Lisp
+      - LiveCode
+      - LiveScript
+      - Lua
+      - MEL
+      - Mathematica
+      - Matlab
+      - Mizar
+      - Monkey
+      - NSIS
+      - Nimrod
+      - Nix
+      - OCaml
+      - Oracle Rules Language
+      - Oxygene
+      - Parser3
+      - PowerShell
+      - Processing
+      - Protocol Buffers
+      - Puppet
+      - Python profile
+      - Q
+      - R
+      - RenderMan RIB
+      - RenderMan RSL
+      - Rust
+      - SCSS
+      - Scala
+      - Scheme
+      - Scilab
+      - Smalltalk
+      - Stylus
+      - Swift
+      - Tcl
+      - TeX
+      - Thrift
+      - Twig
+      - TypeScript
+      - VB.NET
+      - VBScript
+      - VBScript in HTML
+      - VHDL
+      - Vala
+      - Vim Script
+      - XL
+
 spam:
   add_rel_nofollow_to_user_content: true
   exclude_rel_nofollow_domains:

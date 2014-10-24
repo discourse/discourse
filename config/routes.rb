@@ -433,6 +433,7 @@ Discourse::Application.routes.draw do
   delete "invites" => "invites#destroy"
 
   get "onebox" => "onebox#show"
+  get "javascripts/highlight.js" => "highlight#show"
 
   get "error" => "forums#error"
   get "exception" => "list#latest"
