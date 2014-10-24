@@ -18,6 +18,17 @@ class Auth::DefaultCurrentUserProvider
   def current_user
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
 
+    # bypass if we have the shared session header
+    if shared_key = @env['HTTP_X_SHARED_SESSION_KEY']
+      uid = $redis.get("shared_session_key_#{shared_key}")
+      user = nil
+      if uid
+        user = User.find_by(id: uid.to_i)
+      end
+      @env[CURRENT_USER_KEY] = user
+      return user
+    end
+
     request = @request
 
     auth_token = request.cookies[TOKEN_COOKIE]

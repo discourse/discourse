@@ -11,6 +11,17 @@ module ApplicationHelper
   include CanonicalURL::Helpers
   include ConfigurableUrls
 
+  def shared_session_key
+    if SiteSetting.long_polling_base_url != '/'.freeze && current_user
+      sk = "shared_session_key"
+      return request.env[sk] if request.env[sk]
+
+      request.env[sk] = key = (session[sk] ||= SecureRandom.hex)
+      $redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
+      key
+    end
+  end
+
   def script(*args)
     if SiteSetting.enable_cdn_js_debugging && GlobalSetting.cdn_url
       tags = javascript_include_tag(*args, "crossorigin" => "anonymous")

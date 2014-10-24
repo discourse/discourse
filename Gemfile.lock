@@ -163,7 +163,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     memory_profiler (0.0.4)
-    message_bus (1.0.0)
+    message_bus (1.0.4)
       eventmachine
       rack (>= 1.1.3)
       redis

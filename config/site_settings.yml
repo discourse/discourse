@@ -616,6 +616,9 @@ developer:
     client: true
     default: true
   long_polling_interval: 25000
+  long_polling_base_url:
+    client: true
+    default: '/'
   background_polling_interval:
     client: true
     default: 60000
