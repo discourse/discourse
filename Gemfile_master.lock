@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/rails-api/active_model_serializers.git
+  revision: b6b01d0b7396f3deaa6e661cedf4bc5efe2f4525
+  branch: 0-8-stable
+  specs:
+    active_model_serializers (0.8.2)
+      activemodel (>= 3.0)
+
+GIT
   remote: https://github.com/rails/rails.git
   revision: aa6637d140c2ebd28bbd23fc250af033a065dbe8
   specs:
@@ -74,8 +82,6 @@ GEM
   specs:
     actionpack-action_caching (1.1.1)
       actionpack (>= 4.0.0, < 5.0)
-    active_model_serializers (0.8.2)
-      activemodel (>= 3.0)
     addressable (2.3.6)
     annotate (2.6.5)
       activerecord (>= 2.3.0)
@@ -437,7 +443,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-action_caching
-  active_model_serializers (~> 0.8.0)
+  active_model_serializers!
   annotate
   barber
   better_errors
