@@ -87,6 +87,15 @@ describe Search do
     end
   end
 
+  context 'inactive users' do
+    let!(:inactive_user) { Fabricate(:inactive_user, active: false) }
+    let(:result) { Search.execute('bruce') }
+
+    it 'does not return a result' do
+      result.users.length.should == 0
+    end
+  end
+
   context 'topics' do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic}

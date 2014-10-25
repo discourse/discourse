@@ -32,6 +32,13 @@ Fabricator(:walter_white, from: :user) do
   password 'letscook'
 end
 
+Fabricator(:inactive_user, from: :user) do
+  name 'Inactive User'
+  username 'inactive_user'
+  email 'inactive@idontexist.com'
+  active false
+end
+
 Fabricator(:moderator, from: :user) do
   name { sequence(:name) {|i| "A#{i} Moderator"} }
   username { sequence(:username) {|i| "moderator#{i}"} }
