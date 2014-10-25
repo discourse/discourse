@@ -1,6 +1,29 @@
 
-class ActiveRecord::ConnectionAdapters::ConnectionPool
+if rails_master?
+  class ActiveRecord::ConnectionAdapters::AbstractAdapter
+    module LastUseExtension
+      attr_reader :last_use
 
+      def initialize(connection, logger = nil, pool = nil)
+        super
+        @last_use = false
+      end
+
+      def lease
+        synchronize do
+          unless in_use?
+            @last_use = Time.now
+            super
+          end
+        end
+      end
+    end
+
+    prepend LastUseExtension
+  end
+end
+
+class ActiveRecord::ConnectionAdapters::ConnectionPool
   # drain all idle connections
   # if idle_time is specified only connections idle for N seconds will be drained
   def drain(idle_time=nil)
@@ -29,5 +52,4 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
 
     false
   end
-
 end
