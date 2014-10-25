@@ -222,6 +222,37 @@ Pleasure to have you here!
 
   end
 
+  describe "posting reply to a closed topic" do
+    let(:reply_key) { raise "Override this in a lower describe block" }
+    let(:email_raw) { raise "Override this in a lower describe block" }
+    let(:receiver) { Email::Receiver.new(email_raw) }
+    let(:topic) { Fabricate(:topic, closed: true) }
+    let(:post) { Fabricate(:post, topic: topic, post_number: 1) }
+    let(:replying_user_email) { 'jake@adventuretime.ooo' }
+    let(:replying_user) { Fabricate(:user, email: replying_user_email, trust_level: 2) }
+    let(:email_log) { EmailLog.new(reply_key: reply_key,
+                                   post: post,
+                                   post_id: post.id,
+                                   topic_id: topic.id,
+                                   email_type: 'user_posted',
+                                   user: replying_user,
+                                   user_id: replying_user.id,
+                                   to_address: replying_user_email
+    ) }
+
+    before do
+      email_log.save
+    end
+
+    describe "should not create post" do
+      let!(:reply_key) { '59d8df8370b7e95c5a49fbf86aeb2c93' }
+      let!(:email_raw) { fixture_file("emails/valid_reply.eml") }
+      it "raises a TopicClosedError" do
+        expect { receiver.process }.to raise_error(Email::Receiver::TopicClosedError)
+      end
+    end
+  end
+
   describe "posting a new topic" do
     let(:category_destination) { raise "Override this in a lower describe block" }
     let(:email_raw) { raise "Override this in a lower describe block" }

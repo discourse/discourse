@@ -1522,6 +1522,13 @@ en:
 
         None of the destination addresses are recognized. Please make sure that the site address is in the To: line (not Cc: or Bcc:), and that you are sending to the correct email address provided by staff.
 
+    email_reject_topic_closed:
+      subject_template: "Email issue -- Topic Closed"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The topic is closed. If you believe this is in error, contact a staff member.
+
     email_error_notification:
       subject_template: "Email issue -- POP authentication error"
       text_body_template: |
