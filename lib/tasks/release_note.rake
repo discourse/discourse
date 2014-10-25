@@ -6,24 +6,60 @@ task "release_note:generate", :tag do |t, args|
   new_features = Set.new
   ux_changes = Set.new
 
-  `git log --pretty=format:%s #{tag}..HEAD`.each_line do |line|
-    if line =~ /^(FIX|BUG|BUGFIX):/i
-      bug_fixes << better(line)
-    elsif line =~ /^FEATURE:/i
-      new_features << better(line)
-    elsif line =~ /^UX:/i
-      ux_changes << better(line)
+  `git log --pretty=format:%s #{tag}..HEAD`.each_line do |comment|
+    split_comments(comment).each do |line|
+      if line =~ /^FIX:/
+        bug_fixes << better(line)
+      elsif line =~ /^FEATURE:/
+        new_features << better(line)
+      elsif line =~ /^UX:/
+        ux_changes << better(line)
+      end
     end
   end
 
-  puts "NEW FEATURES:", new_features.to_a, ""
-  puts "BUG FIXES:", bug_fixes.to_a, ""
-  puts "UX CHANGES:", ux_changes.to_a, ""
-
+  puts "NEW FEATURES:", "-------------", "", new_features.to_a, ""
+  puts "BUG FIXES:", "----------", "", bug_fixes.to_a, ""
+  puts "UX CHANGES:", "-----------", "", ux_changes.to_a, ""
 end
 
 def better(line)
-  line = line.gsub(/^(FIX|BUG|BUGFIX|FEATURE|UX):/i, "").strip
+  line = remove_prefix(line)
+  line = escape_brackets(line)
+  line[0] = '\#' if line[0] == '#'
   line[0] = line[0].capitalize
-  line
+  "- " + line
+end
+
+def remove_prefix(line)
+  line.gsub(/^(FIX|FEATURE|UX):/, "").strip
+end
+
+def escape_brackets(line)
+  line.gsub("<", "`<")
+      .gsub(">", ">`")
+      .gsub("[", "`[")
+      .gsub("]", "]`")
+end
+
+def split_comments(text)
+  text = normalize_terms(text)
+  terms = ["FIX:", "FEATURE:", "UX:"]
+  terms.each do |term|
+    text = newlines_at_term(text, term)
+  end
+  text.split("\n")
+end
+
+def normalize_terms(text)
+  text = text.gsub(/(BUGFIX|FIX|BUG):/i, "FIX:")
+  text = text.gsub(/FEATURE:/i, "FEATURE:")
+  text = text.gsub(/UX:/i, "UX:")
+end
+
+def newlines_at_term(text, term)
+  if text.include?(term)
+    text = text.split(term).map{ |l| l.strip }.join("\n#{term} ")
+  end
+  text
 end
