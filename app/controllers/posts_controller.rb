@@ -158,7 +158,7 @@ class PostsController < ApplicationController
 
   def reply_history
     post = find_post_from_params
-    render_serialized(post.reply_history, PostSerializer)
+    render_serialized(post.reply_history(params[:max_replies].to_i), PostSerializer)
   end
 
   def destroy

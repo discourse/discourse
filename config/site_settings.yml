@@ -347,6 +347,9 @@ posting:
     default: true
   suppress_reply_when_quoting:
     default: true
+  max_reply_history:
+    default: 1
+    client: true
   experimental_reply_expansion:
     default: false
     client: true
