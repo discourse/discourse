@@ -117,7 +117,6 @@ module Highlighter
       pack_scanner = StringScanner.new pack
       found_languages = []
 
-      pack_scanner_languages = []
       first_match = -1 # pos [0, first_macth] == core
       while !pack_scanner.eos?
             language_module = pack_scanner.scan_until(/(hljs\.registerLanguage\(".*?)(?=hljs\.|\z)/m)
