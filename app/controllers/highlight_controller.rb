@@ -14,6 +14,6 @@ class HighlightController < ApplicationController
   end
 
   def generate_highlight()
-    Highlighter.generate SiteSetting.enabled_languages.split('|'), "public/javascripts/highlight"
+    Highlighter.generate SiteSetting.enabled_languages.split('|'), "public/javascripts/highlight.pack.js"
   end
 end
