@@ -353,6 +353,11 @@
   position: relative;
 }
 
+.d-dropdown#search-dropdown {
+  max-height: none;
+  overflow: inherit;
+}
+
 #search-dropdown .results {
   max-height: 300px;
   overflow: auto;
