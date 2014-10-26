@@ -476,7 +476,7 @@ class Post < ActiveRecord::Base
   end
 
 
-  def reply_history
+  def reply_history(max_replies=100)
     post_ids = Post.exec_sql("WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
                               SELECT p.id, p.reply_to_post_number FROM posts AS p
                                 WHERE p.id = :post_id
@@ -486,7 +486,12 @@ class Post < ActiveRecord::Base
                                      AND p.topic_id = :topic_id
                             ) SELECT id from breadcrumb ORDER by id", post_id: id, topic_id: topic_id).to_a
 
-    post_ids.map! {|r| r['id'].to_i }.reject! {|post_id| post_id == id}
+    post_ids.map! {|r| r['id'].to_i }
+            .reject! {|post_id| post_id == id}
+
+    # [1,2,3][-10,-1] => nil
+    post_ids = (post_ids[(0-max_replies)..-1] || post_ids)
+
     Post.where(id: post_ids).includes(:user, :topic).order(:id).to_a
   end
 

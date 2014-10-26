@@ -715,6 +715,7 @@ describe Post do
 
     it "returns the posts in reply to this post" do
       p4.reply_history.should == [p1, p2]
+      p4.reply_history(1).should == [p2]
       p3.reply_history.should be_blank
       p2.reply_history.should == [p1]
     end

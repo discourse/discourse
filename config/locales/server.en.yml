@@ -741,6 +741,7 @@ en:
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
+    max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
 
     experimental_reply_expansion: "Hide intermediate replies when expanding a reply to (experimental)"
 
