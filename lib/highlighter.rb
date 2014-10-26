@@ -117,20 +117,19 @@ module Highlighter
       pack_scanner = StringScanner.new pack
       found_languages = []
 
-      first_match = -1 # pos [0, first_macth] == core
+      result = [] << pack_scanner.scan(/.+?(?=hljs\.registerLanguage\(")/ )
       while !pack_scanner.eos?
             language_module = pack_scanner.scan_until(/(hljs\.registerLanguage\(".*?)(?=hljs\.|\z)/m)
             language_name = /registerLanguage\("([A-Za-z0-9\-]+)"/.match(language_module)[1]
 
-            first_match = pack_scanner.pos - language_module.size if first_match == -1
-            found_languages << language_module if language_ids.include? language_name
+            if language_ids.include? language_name
+                  found_languages << language_name
+                  result << language_module
+            end
       end
       if found_languages.size != language_ids.size
             raise "Found languages[#{found_languages.join(',')}] not matching expected languages[#{language_ids.join(',')}]"
       end
-
-      result = pack[0, first_match]
-      result += found_languages.join("\n")
-      result
+      result.join("\n")
    end
 end

@@ -13,7 +13,7 @@ describe Highlighter do
     result =  Highlighter.generate(['Apache'], "public/javascripts/highlight.pack.js")
     result.should include("var hljs=new function(){")
     result.should include("registerLanguage(\"apache")
-      result.scan(/registerLanguage\("/).size.should eql(1)
+    result.scan(/registerLanguage\("/).size.should eql(1)
   end
 
   it "Multiple languages" do
@@ -21,7 +21,7 @@ describe Highlighter do
     result.should include("var hljs=new function(){")
     result.should include("registerLanguage(\"apache")
     result.should include("registerLanguage(\"bash")
-      result.scan(/registerLanguage\("/).size.should eql(2)
+    result.scan(/registerLanguage\("/).size.should eql(2)
   end
 
   it "All registered languages" do
