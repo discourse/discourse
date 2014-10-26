@@ -65,8 +65,6 @@ and (max-width : 570px) {
 
 .d-dropdown#search-dropdown {
   width: 540px;
-  max-height: none;
-  overflow: inherit;
 }
 
 .d-dropdown .searching {
@@ -76,5 +74,4 @@ and (max-width : 570px) {
 
 #search-dropdown .results {
   max-height: 500px;
-  overflow: auto;
 }
