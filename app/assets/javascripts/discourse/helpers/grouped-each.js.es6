@@ -82,8 +82,12 @@ DiscourseGroupedEach.prototype = {
     for (var i = 0; i < contentLength; i++) {
       var row = content.objectAt(i);
       if (keyword) {
-        data.keywords = data.keywords || {};
-        data.keywords[keyword] = row;
+        var keywords = Em.get(data, 'keywords');
+        if (!keywords) {
+          keywords = {};
+          Em.set(data, 'keywords', keywords);
+        }
+        Em.set(keywords, keyword, row);
       }
       template(row, { data: data });
     }
