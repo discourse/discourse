@@ -15,6 +15,7 @@ module Email
     class UserNotFoundError < ProcessingError; end
     class UserNotSufficientTrustLevelError < ProcessingError; end
     class BadDestinationAddress < ProcessingError; end
+    class TopicNotFoundError < ProcessingError; end
     class TopicClosedError < ProcessingError; end
     class EmailLogNotFound < ProcessingError; end
     class InvalidPost < ProcessingError; end
@@ -69,6 +70,7 @@ module Email
         @email_log = dest_info[:obj]
 
         raise EmailLogNotFound if @email_log.blank?
+        raise TopicNotFoundError if Topic.find_by_id(@email_log.topic_id).nil?
         raise TopicClosedError if Topic.find_by_id(@email_log.topic_id).closed?
 
         create_reply

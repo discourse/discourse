@@ -232,6 +232,31 @@ describe Jobs::PollMailbox do
       end
     end
 
+    describe "when topic is deleted" do
+      let(:email) { MockPop3EmailObject.new fixture_file('emails/valid_reply.eml')}
+      let(:deleted_topic) { Fabricate(:deleted_topic) }
+      let(:first_post) { Fabricate(:post, topic: deleted_topic, post_number: 1)}
+
+      before do
+        first_post.save
+        EmailLog.create(to_address: 'jake@email.example.com',
+                        email_type: 'user_posted',
+                        reply_key: '59d8df8370b7e95c5a49fbf86aeb2c93',
+                        user: user,
+                        post: first_post,
+                        topic: deleted_topic)
+      end
+
+      describe "should not create post" do
+        it "raises a TopicNotFoundError" do
+          expect_exception Email::Receiver::TopicNotFoundError
+
+          poller.handle_mail(email)
+          email.should be_deleted
+        end
+      end
+    end
+
     describe "in failure conditions" do
 
       it "a valid reply without an email log raises an EmailLogNotFound error" do
