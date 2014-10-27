@@ -27,6 +27,7 @@ module Email
     def format_basic
       uri = URI(Discourse.base_url)
 
+      # images
       @fragment.css('img').each do |img|
 
         next if img['class'] == 'site-logo'
@@ -49,6 +50,20 @@ module Email
         # ensure no schemaless urls
         if img['src'] && img['src'].starts_with?("//")
           img['src'] = "#{uri.scheme}:#{img['src']}"
+        end
+      end
+
+      # attachments
+      @fragment.css('a.attachment').each do |a|
+
+        # ensure all urls are absolute
+        if a['href'] =~ /^\/[^\/]/
+          a['href'] = "#{Discourse.base_url}#{a['href']}"
+        end
+
+        # ensure no schemaless urls
+        if a['href'] && a['href'].starts_with?("//")
+          a['href'] = "#{uri.scheme}:#{a['href']}"
         end
       end
     end
