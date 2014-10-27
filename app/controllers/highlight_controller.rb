@@ -6,15 +6,10 @@ class HighlightController < ApplicationController
   skip_before_filter :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show]
 
   def show
-
     file = generate_highlight
 
-    #response.headers["Last-Modified"] = File.ctime(file).httpdate
-    #response.headers["Content-Length"] = File.size(file).to_s
-    #expires_in 1.year, public: true
-
+    expires_in 1.year, public: true
     if stale?(last_modified: File.ctime(file), public: true)
-      expires_in 1.year, public: true
       send_file file, type: 'application/javascript', disposition: nil
     end
   end
