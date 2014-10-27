@@ -1,6 +1,6 @@
 module Highlighter
 
-   @@language_map = {
+  @@language_map = {
       "Apache" =>                "apache",
       "Bash" =>                  "bash",
       "C#" =>                    "cs",
@@ -104,32 +104,33 @@ module Highlighter
       "Vala" =>                  "vala",
       "Vim Script" =>            "vim",
       "XL" =>                    "xl"
-   }
+  }
 
-   def self.languages()
-      @@language_map
-   end
+  def self.languages()
+    @@language_map
+  end
 
-   def self.generate(languages, highlight_file)
-      language_ids = languages.map{|name| @@language_map[name.strip]}
+  def self.generate(languages, highlight_all_source)
+    language_ids = languages.map{|name| @@language_map[name.strip]}
 
-      pack = File.read(highlight_file)
-      pack_scanner = StringScanner.new pack
-      found_languages = []
+    pack = File.read(highlight_all_source)
+    pack_scanner = StringScanner.new pack
+    found_languages = []
 
-      result = [] << pack_scanner.scan(/.+?(?=hljs\.registerLanguage\(")/ )
-      while !pack_scanner.eos?
-            language_module = pack_scanner.scan_until(/(hljs\.registerLanguage\(".*?)(?=hljs\.|\z)/m)
-            language_name = /registerLanguage\("([A-Za-z0-9\-]+)"/.match(language_module)[1]
+    result = [] << pack_scanner.scan(/.+?(?=hljs\.registerLanguage\(")/ )
+    while !pack_scanner.eos?
+      language_module = pack_scanner.scan_until(/(hljs\.registerLanguage\(".*?)(?=hljs\.|\z)/m)
+      language_name = /registerLanguage\("([A-Za-z0-9\-]+)"/.match(language_module)[1]
 
-            if language_ids.include? language_name
-                  found_languages << language_name
-                  result << language_module
-            end
+      if language_ids.include? language_name
+        found_languages << language_name
+        result << language_module
       end
-      if found_languages.size != language_ids.size
-            raise "Found languages[#{found_languages.join(',')}] not matching expected languages[#{language_ids.join(',')}]"
-      end
-      result.join("\n")
-   end
+    end
+    if found_languages.size != language_ids.size
+      raise "Found languages[#{found_languages.join(',')}] not matching expected languages[#{language_ids.join(',')}]. Ensure #{highlight_all_source} contain the requested languages."
+    end
+    result.join("\n")
+  end
+
 end
