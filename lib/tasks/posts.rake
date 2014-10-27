@@ -48,7 +48,7 @@ task 'posts:normalize_code' => :environment do
   Post.where("raw like '%<pre>%<code>%'").each do |p|
     normalized = Import::Normalize.normalize_code_blocks(p.raw, lang)
     if normalized != p.raw
-      p.revise(Discourse.system_user, normalized)
+      p.revise(Discourse.system_user, { raw: normalized })
       putc "."
       i += 1
     end

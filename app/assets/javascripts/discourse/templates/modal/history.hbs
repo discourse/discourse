@@ -7,13 +7,13 @@
         {{#if loading}}
           <div id='revision-loading'><i class='fa fa-spinner fa-spin'></i>{{i18n loading}}</div>
         {{else}}
-          {{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="version" totalBinding="revisions_count"}}
+          {{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="current_version" totalBinding="version_count"}}
         {{/if}}
       </div>
       <button title="{{i18n post.revisions.controls.next}}" {{bind-attr class=":btn :standard :no-text displayGoToNext::invisible" disabled=loading}} {{action "loadNextVersion"}}><i class="fa fa-forward"></i></button>
       <button title="{{i18n post.revisions.controls.last}}" {{bind-attr class=":btn :standard :no-text displayGoToLast::invisible" disabled=loading}} {{action "loadLastVersion"}}><i class="fa fa-fast-forward"></i></button>
       {{#if displayHide}}
-        <button title="{{i18n post.revisions.controls.hide}}" {{bind-attr class=":btn :standard :no-text" disabled=loading}} {{action "hideVersion"}}><i class="fa fa-trash-o"></i></button>
+        <button title="{{i18n post.revisions.controls.hide}}" {{bind-attr class=":btn :standard :no-text :btn-danger" disabled=loading}} {{action "hideVersion"}}><i class="fa fa-trash-o"></i></button>
       {{/if}}
       {{#if displayShow}}
         <button title="{{i18n post.revisions.controls.show}}" {{bind-attr class=":btn :standard :no-text" disabled=loading}} {{action "showVersion"}}><i class="fa fa-undo"></i></button>
@@ -28,34 +28,61 @@
     </div>
   </div>
   <div id="revision-details">
-    {{i18n post.revisions.details.edited_by}} {{#link-to 'user' username}}{{bound-avatar-template content.avatar_template "small"}} {{username}}{{/link-to}} <span class="date">{{bound-date created_at}}</span> {{#if edit_reason}} &mdash; <span class="edit-reason">{{edit_reason}}</span>{{/if}}
+    {{i18n post.revisions.details.edited_by}}
+    {{#link-to 'user' username}}
+      {{bound-avatar-template content.avatar_template "small"}} {{username}}
+    {{/link-to}}
+    <span class="date">{{bound-date created_at}}</span>
+    {{#if edit_reason}}
+      &mdash; <span class="edit-reason">{{edit_reason}}</span>
+    {{/if}}
+    {{#unless site.mobileView}}
+      {{#if user_changes}}
+        &mdash; {{bound-avatar-template user_changes.previous.avatar_template "small"}} {{user_changes.previous.username}}
+        &rarr; {{bound-avatar-template user_changes.current.avatar_template "small"}} {{user_changes.current.username}}
+      {{/if}}
+      {{#if wiki_changes}}
+        &mdash; {{{wiki_diff}}}
+      {{/if}}
+      {{#if post_type_changes}}
+        &mdash; {{{post_type_diff}}}
+      {{/if}}
+      {{#if category_changes}}
+        &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
+      {{/if}}
+    {{/unless}}
   </div>
-  <div id="revisions" {{bind-attr class="hidden:hidden-revision"}}>
+  <div id="revisions" {{bind-attr class="hiddenClasses"}}>
     {{#if title_changes}}
       <div class="row">
         <h2>{{{title_diff}}}</h2>
       </div>
     {{/if}}
-    {{#if category_changes}}
-      <div class="row">
-        {{{category_diff}}}
-      </div>
+    {{#if site.mobileView}}
+      {{#if user_changes}}
+        <div class="row">
+          {{bound-avatar-template user_changes.previous.avatar_template "small"}} {{user_changes.previous.username}}
+          &rarr; {{bound-avatar-template user_changes.current.avatar_template "small"}} {{user_changes.current.username}}
+        </div>
+      {{/if}}
+      {{#if wiki_changes}}
+        <div class="row">
+          {{{wiki_diff}}}
+        </div>
+      {{/if}}
+      {{#if post_type_changes}}
+        <div class="row">
+          {{{post_type_diff}}}
+        </div>
+      {{/if}}
+      {{#if category_changes}}
+        <div class="row">
+          {{{previousCategory}}} &rarr; {{{currentCategory}}}
+        </div>
+      {{/if}}
     {{/if}}
-    {{#if user_changes}}
-      <div class="row">
-        {{bound-avatar-template user_changes.previous.avatar_template "small"}} {{user_changes.previous.username}} → {{bound-avatar-template user_changes.current.avatar_template "small"}} {{user_changes.current.username}}
-      </div>
-    {{/if}}
-    {{#if wiki_changes}}
-      <div class="row">
-        {{{wiki_diff}}}
-      </div>
-    {{/if}}
-    {{#if post_type_changes}}
-      <div class="row">
-        {{{post_type_diff}}}
-      </div>
-    {{/if}}
-    {{{body_diff}}}
+    <div class="row">
+      {{{body_diff}}}
+    </div>
   </div>
 </div>

@@ -49,7 +49,6 @@ describe UserAction do
     end
 
     it 'includes the events correctly' do
-
       mystats = stats_for_user(user)
       expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
       mystats.should == expecting
@@ -66,7 +65,6 @@ describe UserAction do
       stream_count.should == 0
 
       # groups
-
       category = Fabricate(:category, read_restricted: true)
 
       public_topic.recover!
@@ -90,18 +88,16 @@ describe UserAction do
       # duplicate should not exception out
       log_test_action
 
-
       # recategorize belongs to the right user
       category2 = Fabricate(:category)
       admin = Fabricate(:admin)
-      public_topic.acting_user = admin
-      public_topic.change_category_to_id(category2.id)
+      public_post.revise(admin, { category_id: category2.id})
 
       action = UserAction.stream(user_id: public_topic.user_id, guardian: Guardian.new)[0]
       action.acting_user_id.should == admin.id
       action.action_type.should == UserAction::EDIT
-
     end
+
   end
 
   describe 'when user likes' do
@@ -121,7 +117,6 @@ describe UserAction do
     it "creates a new stream entry" do
       PostAction.act(liker, post, PostActionType.types[:like])
       likee_stream.count.should == @old_count + 1
-
     end
 
     context "successful like" do

@@ -233,7 +233,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def can_view_edit_history
-    scope.can_view_post_revisions?(object)
+    scope.can_view_edit_history?(object)
   end
 
   def user_custom_fields
@@ -256,6 +256,10 @@ class PostSerializer < BasicPostSerializer
 
   def include_via_email?
     object.via_email?
+  end
+
+  def version
+    scope.is_staff? ? object.version : object.public_version
   end
 
   private

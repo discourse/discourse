@@ -733,6 +733,7 @@ describe TopicsController do
     describe 'when logged in' do
       before do
         @topic = Fabricate(:topic, user: log_in)
+        Fabricate(:post, topic: @topic)
       end
 
       describe 'without permission' do
@@ -778,7 +779,7 @@ describe TopicsController do
 
         it "returns errors with invalid categories" do
           Topic.any_instance.expects(:change_category_to_id).returns(false)
-          xhr :put, :update, topic_id: @topic.id, slug: @topic.title
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category_id: -1
           expect(response).not_to be_success
         end
 

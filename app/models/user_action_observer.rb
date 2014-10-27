@@ -33,7 +33,7 @@ class UserActionObserver < ActiveRecord::Observer
     end
   end
 
-  def self.log_notification(post, user, notification_type, acting_user_id = nil)
+  def self.log_notification(post, user, notification_type, acting_user_id=nil)
     action =
       case notification_type
         when Notification.types[:quoted]

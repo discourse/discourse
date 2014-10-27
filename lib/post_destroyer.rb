@@ -96,7 +96,7 @@ class PostDestroyer
   # When a user 'deletes' their own post. We just change the text.
   def mark_for_deletion
     Post.transaction do
-      @post.revise(@user, I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after), force_new_version: true)
+      @post.revise(@user, { raw: I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after) }, force_new_version: true)
       @post.update_column(:user_deleted, true)
       @post.update_flagged_posts_count
       @post.topic_links.each(&:destroy)
@@ -110,7 +110,7 @@ class PostDestroyer
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
-      @post.revise(@user, @post.revisions.last.modifications["raw"][0], force_new_version: true)
+      @post.revise(@user, { raw: @post.revisions.last.modifications["raw"][0] }, force_new_version: true)
       @post.update_flagged_posts_count
     end
 

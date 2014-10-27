@@ -111,9 +111,7 @@ Discourse.Post = Discourse.Model.extend({
   }.property('link_counts.@each.internal'),
 
   // Edits are the version - 1, so version 2 = 1 edit
-  editCount: function() {
-    return this.get('version') - 1;
-  }.property('version'),
+  editCount: function() { return this.get('version') - 1; }.property('version'),
 
   flagsAvailable: function() {
     var post = this;

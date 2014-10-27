@@ -50,8 +50,7 @@ class TopicEmbed < ActiveRecord::Base
       post = embed.post
       # Update the topic if it changed
       if post && post.topic && content_sha1 != embed.content_sha1
-        revisor = PostRevisor.new(post)
-        revisor.revise!(user, absolutize_urls(url, contents), skip_validations: true, bypass_rate_limiter: true)
+        post.revise(user, { raw: absolutize_urls(url, contents) }, skip_validations: true, bypass_rate_limiter: true)
         embed.update_column(:content_sha1, content_sha1)
       end
     end

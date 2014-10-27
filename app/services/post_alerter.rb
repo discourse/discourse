@@ -94,22 +94,20 @@ class PostAlerter
                                 .order("notifications.id desc")
                                 .find_by(notification_type: type, topic_id: post.topic_id, post_number: post.post_number)
 
-    if(existing_notification)
+    if existing_notification
        return unless existing_notification.notification_type == Notification.types[:edited] &&
                      existing_notification.data_hash["display_username"] = opts[:display_username]
     end
 
     collapsed = false
 
-    if  type == Notification.types[:replied] ||
-        type == Notification.types[:posted]
-
+    if type == Notification.types[:replied] || type == Notification.types[:posted]
       destroy_notifications(user, Notification.types[:replied] , post.topic)
       destroy_notifications(user, Notification.types[:posted] , post.topic)
       collapsed = true
     end
 
-    if  type == Notification.types[:private_message]
+    if type == Notification.types[:private_message]
       destroy_notifications(user, type, post.topic)
       collapsed = true
     end
@@ -123,7 +121,7 @@ class PostAlerter
       opts[:display_username] = I18n.t('embed.replies', count: count) if count > 1
     end
 
-    UserActionObserver.log_notification(original_post, user, type, opts[:post_revision].try(:user_id))
+    UserActionObserver.log_notification(original_post, user, type, opts[:acting_user_id])
 
     # Create the notification
     user.notifications.create(notification_type: type,

@@ -352,21 +352,21 @@ describe Topic do
       it "doesn't bump the topic on an edit to the last post that doesn't result in a new version" do
         lambda {
           SiteSetting.expects(:ninja_edit_window).returns(5.minutes)
-          @last_post.revise(@last_post.user, 'updated contents', revised_at: @last_post.created_at + 10.seconds)
+          @last_post.revise(@last_post.user, { raw: 'updated contents' }, revised_at: @last_post.created_at + 10.seconds)
           @topic.reload
         }.should_not change(@topic, :bumped_at)
       end
 
       it "bumps the topic when a new version is made of the last post" do
         lambda {
-          @last_post.revise(Fabricate(:moderator), 'updated contents')
+          @last_post.revise(Fabricate(:moderator), { raw: 'updated contents' })
           @topic.reload
         }.should change(@topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post that isn't the last post receives a new version" do
         lambda {
-          @earlier_post.revise(Fabricate(:moderator), 'updated contents')
+          @earlier_post.revise(Fabricate(:moderator), { raw: 'updated contents' })
           @topic.reload
         }.should_not change(@topic, :bumped_at)
       end
@@ -689,16 +689,17 @@ describe Topic do
   end
 
   describe 'with category' do
+
     before do
       @category = Fabricate(:category)
     end
 
     it "should not increase the topic_count with no category" do
-      lambda { Fabricate(:topic, user: @category.user); @category.reload }.should_not change(@category, :topic_count)
+      -> { Fabricate(:topic, user: @category.user); @category.reload }.should_not change(@category, :topic_count)
     end
 
     it "should increase the category's topic_count" do
-      lambda { Fabricate(:topic, user: @category.user, category_id: @category.id); @category.reload }.should change(@category, :topic_count).by(1)
+      -> { Fabricate(:topic, user: @category.user, category_id: @category.id); @category.reload }.should change(@category, :topic_count).by(1)
     end
   end
 
@@ -775,74 +776,6 @@ describe Topic do
         post.archetype.should == topic.archetype
       end
     end
-  end
-
-  describe 'revisions' do
-    let(:post) { Fabricate(:post) }
-    let(:topic) { post.topic }
-
-    it "has no revisions by default" do
-      post.revisions.size.should == 0
-    end
-
-    context 'changing title' do
-
-      before do
-        topic.title = "new title for the topic"
-        topic.save
-      end
-
-      it "creates a new revision" do
-        post.revisions.size.should == 1
-      end
-
-    end
-
-    context 'changing category' do
-      let(:category) { Fabricate(:category) }
-
-      it "creates a new revision" do
-        topic.change_category_to_id(category.id)
-        post.revisions.size.should == 1
-      end
-
-      it "does nothing for private messages" do
-        topic.archetype = "private_message"
-        topic.category_id = nil
-
-        topic.change_category_to_id(category.id)
-        topic.category_id.should == nil
-      end
-
-      context "removing a category" do
-        before do
-          topic.change_category_to_id(category.id)
-          topic.change_category_to_id(nil)
-        end
-
-        it "creates a new revision" do
-          post.revisions.size.should == 2
-          last_rev = post.revisions.order(:number).last
-          last_rev.previous("category_id").should == category.id
-          last_rev.current("category_id").should == SiteSetting.uncategorized_category_id
-          post.reload
-          post.version.should == 3
-        end
-      end
-
-    end
-
-    context 'bumping the topic' do
-      before do
-        topic.bumped_at = 10.minutes.from_now
-        topic.save
-      end
-
-      it "doesn't create a new version" do
-        post.revisions.size.should == 0
-      end
-    end
-
   end
 
   describe 'change_category' do

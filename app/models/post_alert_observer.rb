@@ -30,11 +30,13 @@ class PostAlertObserver < ActiveRecord::Observer
     post = post_action.post
     return if post_action.user.blank?
 
-    alerter.create_notification(post.user,
-                        Notification.types[:liked],
-                        post,
-                        display_username: post_action.user.username,
-                        post_action_id: post_action.id)
+    alerter.create_notification(
+      post.user,
+      Notification.types[:liked],
+      post,
+      display_username: post_action.user.username,
+      post_action_id: post_action.id
+    )
   end
 
   def after_create_post_revision(post_revision)
@@ -50,11 +52,10 @@ class PostAlertObserver < ActiveRecord::Observer
       post.user,
       Notification.types[:edited],
       post,
-        display_username: post_revision.user.username,
-        post_revision: post_revision
+      display_username: post_revision.user.username,
+      acting_user_id: post_revision.try(:user_id)
     )
   end
-
 
   protected
 

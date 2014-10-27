@@ -73,7 +73,7 @@ describe Draft do
     it 'nukes the post draft when a post is revised' do
       p = Fabricate(:post)
       Draft.set(p.user, p.topic.draft_key, 0,'hello')
-      p.revise(p.user, 'another test')
+      p.revise(p.user, { raw: 'another test' })
       s = DraftSequence.current(p.user, p.topic.draft_key)
       Draft.get(p.user, p.topic.draft_key, s).should == nil
     end

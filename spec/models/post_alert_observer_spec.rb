@@ -36,7 +36,7 @@ describe PostAlertObserver do
   context 'when editing a post' do
     it 'notifies a user of the revision' do
       lambda {
-        post.revise(evil_trout, "world is the new body of the message")
+        post.revise(evil_trout, { raw: "world is the new body of the message" })
       }.should change(post.user.notifications, :count).by(1)
     end
 
@@ -47,13 +47,13 @@ describe PostAlertObserver do
 
       it 'notifies a user of the revision made by another user' do
         lambda {
-          post.revise(evil_trout, "world is the new body of the message")
+          post.revise(evil_trout, { raw: "world is the new body of the message" })
         }.should change(post.user.notifications, :count).by(1)
       end
 
       it 'does not notifiy a user of the revision made by the system user' do
         lambda {
-          post.revise(Discourse.system_user, "world is the new body of the message")
+          post.revise(Discourse.system_user, { raw: "world is the new body of the message" })
         }.should_not change(post.user.notifications, :count)
       end
 
