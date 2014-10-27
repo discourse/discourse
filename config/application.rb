@@ -80,7 +80,7 @@ module Discourse
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = 'Eastern Time (US & Canada)'
+    config.time_zone = 'UTC'
 
     # auto-load server locale in plugins
     config.i18n.load_path += Dir["#{Rails.root}/plugins/*/config/locales/server.*.yml"]
