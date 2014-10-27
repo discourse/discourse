@@ -140,12 +140,7 @@ module PostGuardian
         can_see_topic?(post.topic)))
   end
 
-  def can_see_post_revision?(post_revision)
-    return false unless post_revision
-    can_view_post_revisions?(post_revision.post)
-  end
-
-  def can_view_post_revisions?(post)
+  def can_view_edit_history?(post)
     return false unless post
 
     if !post.hidden
@@ -155,14 +150,6 @@ module PostGuardian
     authenticated? &&
     (is_staff? || @user.has_trust_level?(TrustLevel[4]) || @user.id == post.user_id) &&
     can_see_post?(post)
-  end
-
-  def can_hide_post_revision?(post_revision)
-    is_staff?
-  end
-
-  def can_show_post_revision?(post_revision)
-    is_staff?
   end
 
   def can_vote?(post, opts={})

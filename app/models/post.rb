@@ -324,8 +324,8 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def revise(updated_by, new_raw, opts = {})
-    PostRevisor.new(self).revise!(updated_by, new_raw, opts)
+  def revise(updated_by, changes={}, opts={})
+    PostRevisor.new(self).revise!(updated_by, changes, opts)
   end
 
   def self.rebake_old(limit)
@@ -364,13 +364,14 @@ class Post < ActiveRecord::Base
   end
 
   def set_owner(new_user, actor)
-    revise(actor, self.raw, {
-        new_user: new_user,
-        changed_owner: true,
-        edit_reason: I18n.t('change_owner.post_revision_text',
-                            old_user: self.user.username_lower,
-                            new_user: new_user.username_lower)
-    })
+    return if user_id == new_user.id
+
+    edit_reason = I18n.t('change_owner.post_revision_text',
+      old_user: self.user.username_lower,
+      new_user: new_user.username_lower
+    )
+
+    revise(actor, { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason })
   end
 
   before_create do
@@ -412,14 +413,6 @@ class Post < ActiveRecord::Base
     self.cooked = cook(raw, topic_id: topic_id) unless new_record?
     self.baked_at = Time.new
     self.baked_version = BAKED_VERSION
-  end
-
-  after_save do
-    save_revision if self.version_changed?
-  end
-
-  after_update do
-    update_revision if self.changed?
   end
 
   def advance_draft_sequence
@@ -537,33 +530,6 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def save_revision
-    modifications = changes.extract!(:raw, :cooked, :edit_reason, :user_id, :wiki, :post_type)
-    # make sure cooked is always present (oneboxes might not change the cooked post)
-    modifications["cooked"] = [self.cooked, self.cooked] unless modifications["cooked"].present?
-    PostRevision.create!(
-      user_id: last_editor_id,
-      post_id: id,
-      number: version,
-      modifications: modifications
-    )
-  end
-
-  def update_revision
-    revision = PostRevision.find_by(post_id: id, number: version)
-    return unless revision
-    revision.user_id = last_editor_id
-    modifications = changes.extract!(:raw, :cooked, :edit_reason)
-    [:raw, :cooked, :edit_reason].each do |field|
-      if modifications[field].present?
-        old_value = revision.modifications[field].try(:[], 0) || ""
-        new_value = modifications[field][1]
-        revision.modifications[field] = [old_value, new_value]
-      end
-    end
-    revision.save
-  end
-
 end
 
 # == Schema Information
@@ -612,7 +578,7 @@ end
 #  cook_method             :integer          default(1), not null
 #  wiki                    :boolean          default(FALSE), not null
 #  via_email               :boolean          default(FALSE), not null
-#  raw_email               :text             
+#  raw_email               :text
 #  baked_at                :datetime
 #  baked_version           :integer
 #  hidden_at               :datetime

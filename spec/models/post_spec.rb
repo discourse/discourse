@@ -161,7 +161,7 @@ describe Post do
           post_no_images.user.trust_level = TrustLevel[0]
           post_no_images.save
           -> {
-            post_no_images.revise(post_no_images.user, post_two_images.raw)
+            post_no_images.revise(post_no_images.user, { raw: post_two_images.raw })
             post_no_images.reload
           }.should_not change(post_no_images, :raw)
         end
@@ -209,7 +209,7 @@ describe Post do
           post_no_attachments.user.trust_level = TrustLevel[0]
           post_no_attachments.save
           -> {
-            post_no_attachments.revise(post_no_attachments.user, post_two_attachments.raw)
+            post_no_attachments.revise(post_no_attachments.user, { raw: post_two_attachments.raw })
             post_no_attachments.reload
           }.should_not change(post_no_attachments, :raw)
         end
@@ -468,83 +468,56 @@ describe Post do
     it 'has no revision' do
       post.revisions.size.should == 0
       first_version_at.should be_present
-      post.revise(post.user, post.raw).should == false
+      post.revise(post.user, { raw: post.raw }).should == false
     end
 
     describe 'with the same body' do
 
       it "doesn't change version" do
-        lambda { post.revise(post.user, post.raw); post.reload }.should_not change(post, :version)
+        lambda { post.revise(post.user, { raw: post.raw }); post.reload }.should_not change(post, :version)
       end
 
     end
 
-    describe 'ninja editing' do
-      before do
-        SiteSetting.expects(:ninja_edit_window).returns(1.minute.to_i)
-        post.revise(post.user, 'updated body', revised_at: post.updated_at + 10.seconds)
-        post.reload
-      end
+    describe 'ninja editing & edit windows' do
 
-      it 'causes no update' do
+      before { SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i) }
+
+      it 'works' do
+        revised_at = post.updated_at + 2.minutes
+        new_revised_at = revised_at + 2.minutes
+
+        # ninja edit
+        post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
+        post.reload
         post.version.should == 1
+        post.public_version.should == 1
         post.revisions.size.should == 0
-        post.last_version_at.should == first_version_at
-      end
+        post.last_version_at.to_i.should == first_version_at.to_i
 
-    end
-
-    describe 'revision much later' do
-
-      let!(:revised_at) { post.updated_at + 2.minutes }
-
-      before do
-        SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
-        post.revise(post.user, 'updated body', revised_at: revised_at)
+        # revision much later
+        post.revise(post.user, { raw: 'another updated body' }, revised_at: revised_at)
         post.reload
-      end
-
-      it 'updates the version' do
         post.version.should == 2
+        post.public_version.should == 2
         post.revisions.size.should == 1
         post.last_version_at.to_i.should == revised_at.to_i
-      end
 
-      describe "new edit window" do
+        # new edit window
+        post.revise(post.user, { raw: 'yet another updated body' }, revised_at: revised_at + 10.seconds)
+        post.reload
+        post.version.should == 2
+        post.public_version.should == 2
+        post.revisions.size.should == 1
+        post.last_version_at.to_i.should == revised_at.to_i
 
-        before do
-          post.revise(post.user, 'yet another updated body', revised_at: revised_at)
-          post.reload
-        end
-
-        it "doesn't create a new version if you do another" do
-          post.version.should == 2
-        end
-
-        it "doesn't change last_version_at" do
-          post.last_version_at.to_i.should == revised_at.to_i
-        end
-
-        context "after second window" do
-
-          let!(:new_revised_at) {revised_at + 2.minutes}
-
-          before do
-            post.revise(post.user, 'yet another, another updated body', revised_at: new_revised_at)
-            post.reload
-          end
-
-          it "does create a new version after the edit window" do
-            post.version.should == 3
-          end
-
-          it "does create a new version after the edit window" do
-            post.last_version_at.to_i.should == new_revised_at.to_i
-          end
-
-        end
-
-
+        # after second window
+        post.revise(post.user, { raw: 'yet another, another updated body' }, revised_at: new_revised_at)
+        post.reload
+        post.version.should == 3
+        post.public_version.should == 3
+        post.revisions.size.should == 2
+        post.last_version_at.to_i.should == new_revised_at.to_i
       end
 
     end
@@ -554,38 +527,40 @@ describe Post do
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
-        post.revise(changed_by, 'updated body')
+        post.revise(changed_by, { raw: 'updated body' })
       end
     end
 
     describe 'with a new body' do
       let(:changed_by) { Fabricate(:coding_horror) }
-      let!(:result) { post.revise(changed_by, 'updated body') }
+      let!(:result) { post.revise(changed_by, { raw: 'updated body' }) }
 
       it 'acts correctly' do
         result.should == true
         post.raw.should == 'updated body'
         post.invalidate_oneboxes.should == true
         post.version.should == 2
+        post.public_version.should == 2
         post.revisions.size.should == 1
         post.revisions.first.user.should be_present
       end
 
       context 'second poster posts again quickly' do
-        before do
-          SiteSetting.expects(:ninja_edit_window).returns(1.minute.to_i)
-          post.revise(changed_by, 'yet another updated body', revised_at: post.updated_at + 10.seconds)
-          post.reload
-        end
 
         it 'is a ninja edit, because the second poster posted again quickly' do
+          SiteSetting.expects(:ninja_edit_window).returns(1.minute.to_i)
+          post.revise(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
+          post.reload
+
           post.version.should == 2
+          post.public_version.should == 2
           post.revisions.size.should == 1
         end
 
       end
 
     end
+
   end
 
 

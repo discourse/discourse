@@ -163,9 +163,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def moderator_already_replied?(topic, moderator)
-    topic.posts
-         .where("user_id = :user_id OR post_type = :post_type", user_id: moderator.id, post_type: Post.types[:moderator_action])
-         .exists?
+    topic.posts.where("user_id = :user_id OR post_type = :post_type", user_id: moderator.id, post_type: Post.types[:moderator_action]).exists?
   end
 
   def self.create_message_for_post_action(user, post, post_action_type_id, opts)

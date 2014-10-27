@@ -86,7 +86,7 @@ describe CategoryList do
     end
 
     context "with a topic in a category" do
-      let!(:topic) { Fabricate(:topic, category: topic_category)}
+      let!(:topic) { Fabricate(:topic, category: topic_category) }
       let(:category) { category_list.categories.first }
 
       it "should return the category" do

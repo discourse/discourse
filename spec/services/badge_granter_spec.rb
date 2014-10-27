@@ -192,7 +192,7 @@ describe BadgeGranter do
 
       UserBadge.where(user_id: user.id, badge_id: Badge::Editor).count.should eq(0)
 
-      PostRevisor.new(post).revise!(user, "This is my new test 1235 123")
+      PostRevisor.new(post).revise!(user, { raw: "This is my new test 1235 123" })
       BadgeGranter.process_queue!
 
       UserBadge.where(user_id: user.id, badge_id: Badge::Editor).count.should eq(1)

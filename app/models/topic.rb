@@ -99,7 +99,6 @@ class Topic < ActiveRecord::Base
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
 
-  has_many :revisions, foreign_key: :topic_id, class_name: 'TopicRevision'
   has_one :warning
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -148,70 +147,71 @@ class Topic < ActiveRecord::Base
   end
 
   attr_accessor :ignore_category_auto_close
+  attr_accessor :skip_callbacks
 
   before_create do
-    self.bumped_at ||= Time.now
-    self.last_post_user_id ||= user_id
-
-    if !@ignore_category_auto_close and self.category and self.category.auto_close_hours and self.auto_close_at.nil?
-      self.auto_close_based_on_last_post = self.category.auto_close_based_on_last_post
-      set_auto_close(self.category.auto_close_hours)
-    end
+    initialize_default_values
+    inherit_auto_close_from_category
   end
-
-  attr_accessor :skip_callbacks
 
   after_create do
     unless skip_callbacks
       changed_to_category(category)
-      if archetype == Archetype.private_message
-        DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
-      else
-        DraftSequence.next!(user, Draft::NEW_TOPIC)
-      end
+      advance_draft_sequence
     end
   end
 
   before_save do
     unless skip_callbacks
-      if (auto_close_at_changed? and !auto_close_at_was.nil?) or (auto_close_user_id_changed? and auto_close_at)
-        self.auto_close_started_at ||= Time.zone.now if auto_close_at
-        Jobs.cancel_scheduled_job(:close_topic, {topic_id: id})
-      end
-      if category_id.nil? && (archetype.nil? || archetype == Archetype.default)
-        self.category_id = SiteSetting.uncategorized_category_id
-      end
+      cancel_auto_close_job
+      ensure_topic_has_a_category
     end
   end
 
   after_save do
-    save_revision if should_create_new_version?
-
     unless skip_callbacks
-      if auto_close_at and (auto_close_at_changed? or auto_close_user_id_changed?)
-        Jobs.enqueue_at(auto_close_at, :close_topic, {topic_id: id, user_id: auto_close_user_id || user_id})
-      end
+      schedule_auto_close_job
     end
   end
 
-  # TODO move into PostRevisor or TopicRevisor
-  def save_revision
-    if first_post_id = posts.where(post_number: 1).pluck(:id).first
+  def initialize_default_values
+    self.bumped_at ||= Time.now
+    self.last_post_user_id ||= user_id
+  end
 
-      number = PostRevision.where(post_id: first_post_id).count + 2
-      PostRevision.create!(
-        user_id: acting_user.id,
-        post_id: first_post_id,
-        number: number,
-        modifications: changes.extract!(:category_id, :title)
-      )
-
-      Post.where(id: first_post_id).update_all(version: number)
+  def inherit_auto_close_from_category
+    if !@ignore_category_auto_close && self.category && self.category.auto_close_hours && self.auto_close_at.nil?
+      self.auto_close_based_on_last_post = self.category.auto_close_based_on_last_post
+      set_auto_close(self.category.auto_close_hours)
     end
   end
 
-  def should_create_new_version?
-    !new_record? && (category_id_changed? || title_changed?)
+  def advance_draft_sequence
+    if archetype == Archetype.private_message
+      DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
+    else
+      DraftSequence.next!(user, Draft::NEW_TOPIC)
+    end
+  end
+
+  def cancel_auto_close_job
+    if (auto_close_at_changed? && !auto_close_at_was.nil?) || (auto_close_user_id_changed? && auto_close_at)
+      self.auto_close_started_at ||= Time.zone.now if auto_close_at
+      Jobs.cancel_scheduled_job(:close_topic, { topic_id: id })
+    end
+  end
+
+  def schedule_auto_close_job
+    if auto_close_at && (auto_close_at_changed? || auto_close_user_id_changed?)
+      options = { topic_id: id, user_id: auto_close_user_id || user_id }
+      Jobs.enqueue_at(auto_close_at, :close_topic, options)
+    end
+  end
+
+  def ensure_topic_has_a_category
+    if category_id.nil? && (archetype.nil? || archetype == Archetype.default)
+      self.category_id = SiteSetting.uncategorized_category_id
+    end
   end
 
   def self.top_viewed(max = 10)
@@ -264,10 +264,6 @@ class Topic < ActiveRecord::Base
     require 'redcarpet' unless defined? Redcarpet
 
     Redcarpet::Render::SmartyPants.render(sanitized_title)
-  end
-
-  def new_version_required?
-    title_changed? || category_id_changed?
   end
 
   # Returns hot topics since a date for display in email digest.
@@ -383,9 +379,7 @@ class Topic < ActiveRecord::Base
 
     candidate_ids = candidates.pluck(:id)
 
-
     return [] unless candidate_ids.present?
-
 
     similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(topics.title, :raw) AS similarity", title: title, raw: raw]))
                      .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
@@ -451,37 +445,30 @@ class Topic < ActiveRecord::Base
                   (topics.avg_time <> x.gmean OR topics.avg_time IS NULL)")
 
     if min_topic_age
-      builder.where("topics.bumped_at > :bumped_at",
-                   bumped_at: min_topic_age)
+      builder.where("topics.bumped_at > :bumped_at", bumped_at: min_topic_age)
     end
 
     builder.exec
   end
 
-  def changed_to_category(cat)
-    return true if cat.blank? || Category.find_by(topic_id: id).present?
+  def changed_to_category(new_category)
+    return true if new_category.blank? || Category.find_by(topic_id: id).present?
+    return false if new_category.id == SiteSetting.uncategorized_category_id && !SiteSetting.allow_uncategorized_topics
 
     Topic.transaction do
       old_category = category
 
-      if category_id.present? && category_id != cat.id
-        Category.where(['id = ?', category_id]).update_all 'topic_count = topic_count - 1'
+      if self.category_id != new_category.id
+        self.category_id = new_category.id
+        self.update_column(:category_id, new_category.id)
+        Category.where(id: old_category.id).update_all("topic_count = topic_count - 1") if old_category
       end
 
-      success = true
-      if self.category_id != cat.id
-        self.category_id = cat.id
-        success = save
-      end
-
-      if success
-        CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
-        Category.where(id: cat.id).update_all 'topic_count = topic_count + 1'
-        CategoryFeaturedTopic.feature_topics_for(cat) unless @import_mode || old_category.try(:id) == cat.try(:id)
-      else
-        return false
-      end
+      Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
+      CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
+      CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
     end
+
     true
   end
 
@@ -513,15 +500,15 @@ class Topic < ActiveRecord::Base
   def change_category_to_id(category_id)
     return false if private_message?
 
-    # If the category name is blank, reset the attribute
-    if (category_id.nil? || category_id.to_i == 0)
-      cat = Category.find_by(id: SiteSetting.uncategorized_category_id)
-    else
-      cat = Category.where(id: category_id).first
-    end
+    new_category_id = category_id.to_i
+    # if the category name is blank, reset the attribute
+    new_category_id = SiteSetting.uncategorized_category_id if new_category_id == 0
 
-    return true if cat == category
+    return true if self.category_id == new_category_id
+
+    cat = Category.find_by(id: new_category_id)
     return false unless cat
+
     changed_to_category(cat)
   end
 

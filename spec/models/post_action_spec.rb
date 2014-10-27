@@ -297,7 +297,7 @@ describe PostAction do
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached]
       post.topic.visible.should == false
 
-      post.revise(post.user, post.raw + " ha I edited it ")
+      post.revise(post.user, { raw: post.raw + " ha I edited it " })
 
       post.reload
 
@@ -316,7 +316,7 @@ describe PostAction do
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached_again]
       post.topic.visible.should == false
 
-      post.revise(post.user, post.raw + " ha I edited it again ")
+      post.revise(post.user, { raw: post.raw + " ha I edited it again " })
 
       post.reload
 

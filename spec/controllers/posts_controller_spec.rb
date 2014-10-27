@@ -307,7 +307,7 @@ describe PostsController do
       end
 
       it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, 'edited body', edit_reason: 'typo')
+        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' })
         xhr :put, :update, update_params
       end
 
@@ -605,7 +605,8 @@ describe PostsController do
 
   describe "revisions" do
 
-    let(:post_revision) { Fabricate(:post_revision) }
+    let(:post) { Fabricate(:post, version: 2) }
+    let(:post_revision) { Fabricate(:post_revision, post: post) }
 
     it "throws an exception when revision is < 2" do
       expect {
@@ -636,7 +637,7 @@ describe PostsController do
 
       it "ensures poster can see the revisions" do
         user = log_in(:active_user)
-        post = Fabricate(:post, user: user)
+        post = Fabricate(:post, user: user, version: 3)
         pr = Fabricate(:post_revision, user: user, post: post)
         xhr :get, :revisions, post_id: pr.post_id, revision: pr.number
         response.should be_success
@@ -663,7 +664,7 @@ describe PostsController do
 
     context "deleted post" do
       let(:admin) { log_in(:admin) }
-      let(:deleted_post) { Fabricate(:post, user: admin) }
+      let(:deleted_post) { Fabricate(:post, user: admin, version: 3) }
       let(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
 
       before { deleted_post.trash!(admin) }
@@ -677,7 +678,7 @@ describe PostsController do
     context "deleted topic" do
       let(:admin) { log_in(:admin) }
       let(:deleted_topic) { Fabricate(:topic, user: admin) }
-      let(:post) { Fabricate(:post, user: admin, topic: deleted_topic) }
+      let(:post) { Fabricate(:post, user: admin, topic: deleted_topic, version: 3) }
       let(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
 
       before { deleted_topic.trash!(admin) }

@@ -1,6 +1,10 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
 .modal.history-modal {
+  .btn {
+    // remove transitions on the buttons in the history modal
+    transition: none;
+  }
   .modal-inner-container {
     min-width: 960px;
     min-height: 500px;
@@ -18,13 +22,13 @@
     background-color: scale-color-diff();
     padding: 5px;
     margin-top: 10px;
+    line-height: 2em;
+    height: 30px;
   }
   #revisions {
     word-wrap: break-word;
-    .row, table {
+    table {
       margin-top: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px dotted;
     }
   }
   img {

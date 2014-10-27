@@ -12,8 +12,8 @@ import ObjectController from 'discourse/controllers/object';
   @module Discourse
 **/
 export default ObjectController.extend(ModalFunctionality, {
-  loading: false,
-  viewMode: "side_by_side",
+  loading: true,
+  viewMode: Discourse.Mobile.mobileView ? "inline" : "side_by_side",
   revisionsTextKey: "post.revisions.controls.comparing_previous_to_current_out_of_total",
 
   refresh: function(postId, postVersion) {
@@ -41,87 +41,72 @@ export default ObjectController.extend(ModalFunctionality, {
 
   createdAtDate: function() { return moment(this.get("created_at")).format("LLLL"); }.property("created_at"),
 
-  previousVersion: function() { return this.get("version") - 1; }.property("version"),
+  previousVersion: function() { return this.get("current_version") - 1; }.property("current_version"),
 
-  displayGoToFirst: Em.computed.gt("version", 3),
-  displayGoToPrevious: Em.computed.gt("version", 2),
-  displayRevisions: Em.computed.gt("revisions_count", 2),
-  displayGoToNext: function() { return this.get("version") < this.get("revisions_count"); }.property("version", "revisions_count"),
-  displayGoToLast: function() { return this.get("version") < this.get("revisions_count") - 1; }.property("version", "revisions_count"),
+  displayGoToFirst: function() { return this.get("current_revision") > this.get("first_revision"); }.property("current_revision", "first_revision"),
+  displayGoToPrevious: function() { return this.get("previous_revision") && this.get("current_revision") > this.get("previous_revision"); }.property("current_revision", "previous_revision"),
+  displayRevisions: Em.computed.gt("version_count", 2),
+  displayGoToNext: function() { return this.get("next_revision") && this.get("current_revision") < this.get("next_revision"); }.property("current_revision", "next_revision"),
+  displayGoToLast: function() { return this.get("current_revision") < this.get("last_revision"); }.property("current_revision", "last_revision"),
 
-  displayShow: function() { return this.get("hidden") && Discourse.User.currentProp('staff'); }.property("hidden"),
-  displayHide: function() { return !this.get("hidden") && Discourse.User.currentProp('staff'); }.property("hidden"),
+  displayShow: function() { return !Discourse.Mobile.mobileView && this.get("previous_hidden") && Discourse.User.currentProp('staff'); }.property("previous_hidden"),
+  displayHide: function() { return !Discourse.Mobile.mobileView && !this.get("previous_hidden") && Discourse.User.currentProp('staff'); }.property("previous_hidden"),
+
+  isEitherRevisionHidden: Em.computed.or("previous_hidden", "current_hidden"),
+
+  hiddenClasses: function() {
+    if (this.get("displayingInline")) {
+      return this.get("isEitherRevisionHidden") ? "hidden-revision-either" : null;
+    } else {
+      var result = [];
+      if (this.get("previous_hidden")) { result.push("hidden-revision-previous"); }
+      if (this.get("current_hidden")) { result.push("hidden-revision-current"); }
+      return result.join(" ");
+    }
+  }.property("previous_hidden", "current_hidden", "displayingInline"),
 
   displayingInline: Em.computed.equal("viewMode", "inline"),
   displayingSideBySide: Em.computed.equal("viewMode", "side_by_side"),
   displayingSideBySideMarkdown: Em.computed.equal("viewMode", "side_by_side_markdown"),
 
-  category_diff: function() {
-    var viewMode = this.get("viewMode");
+  previousCategory: function() {
     var changes = this.get("category_changes");
-
-    if (changes === null) { return; }
-
-    var prevCategory = Discourse.Category.findById(changes.previous_category_id);
-    var curCategory = Discourse.Category.findById(changes.current_category_id);
-
-    var raw = "";
-    var opts = { allowUncategorized: true };
-    prevCategory = Discourse.HTML.categoryBadge(prevCategory, opts);
-    curCategory = Discourse.HTML.categoryBadge(curCategory, opts);
-
-    if(viewMode === "side_by_side_markdown" || viewMode === "side_by_side") {
-      raw = "<div class='span8'>" + prevCategory +  "</div> <div class='span8 offset1'>" + curCategory +  "</div>";
-    } else {
-      var diff = "<del>" + prevCategory + "</del> " + "<ins>" + curCategory + "</ins>";
-      raw = "<div class='inline-diff'>" + diff +  "</div>";
+    if (changes) {
+      var category = Discourse.Category.findById(changes["previous"]);
+      return Discourse.HTML.categoryBadge(category, { allowUncategorized: true });
     }
+  }.property("category_changes"),
 
-    return raw;
-
-  }.property("viewMode", "category_changes"),
+  currentCategory: function() {
+    var changes = this.get("category_changes");
+    if (changes) {
+      var category = Discourse.Category.findById(changes["current"]);
+      return Discourse.HTML.categoryBadge(category, { allowUncategorized: true });
+    }
+  }.property("category_changes"),
 
   wiki_diff: function() {
-    var viewMode = this.get("viewMode");
-    var changes = this.get("wiki_changes");
-    if (changes === null) { return; }
-
-    if (viewMode === "inline") {
-      var diff = changes["current_wiki"] ? '<i class="fa fa-pencil-square-o fa-2x"></i>' : '<span class="fa-stack"><i class="fa fa-pencil-square-o fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
-      return "<div class='inline-diff'>" + diff + "</div>";
-    } else {
-      var prev = changes["previous_wiki"] ? '<i class="fa fa-pencil-square-o fa-2x"></i>' : "&nbsp;";
-      var curr = changes["current_wiki"] ? '<i class="fa fa-pencil-square-o fa-2x"></i>' : '<span class="fa-stack"><i class="fa fa-pencil-square-o fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
-      return "<div class='span8'>" + prev + "</div><div class='span8 offset1'>" + curr + "</div>";
+    var changes = this.get("wiki_changes")
+    if (changes) {
+      return changes["current"] ?
+             '<span class="fa-stack"><i class="fa fa-pencil-square-o fa-stack-2x"></i></span>' :
+             '<span class="fa-stack"><i class="fa fa-pencil-square-o fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
     }
-  }.property("viewMode", "wiki_changes"),
+  }.property("wiki_changes"),
 
   post_type_diff: function () {
-    var viewMode = this.get("viewMode");
-    var changes = this.get("post_type_changes");
-    if (changes === null) { return; }
-
     var moderator = Discourse.Site.currentProp('post_types.moderator_action');
-
-    if (viewMode === "inline") {
-      var diff = changes["current_post_type"] === moderator ?
-                 '<i class="fa fa-shield fa-2x"></i>' :
-                 '<span class="fa-stack"><i class="fa fa-shield fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
-      return "<div class='inline-diff'>" + diff + "</div>";
-    } else {
-      var prev = changes["previous_post_type"] === moderator ? '<i class="fa fa-shield fa-2x"></i>' : "&nbsp;";
-      var curr = changes["current_post_type"] === moderator ?
-                 '<i class="fa fa-shield fa-2x"></i>' :
-                 '<span class="fa-stack"><i class="fa fa-shield fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
-      return "<div class='span8'>" + prev + "</div><div class='span8 offset1'>" + curr + "</div>";
+    var changes = this.get("post_type_changes");
+    if (changes) {
+      return changes["current"] == moderator ?
+             '<span class="fa-stack"><i class="fa fa-shield fa-stack-2x"></i></span>' :
+             '<span class="fa-stack"><i class="fa fa-shield fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
     }
-  }.property("viewMode", "post_type_changes"),
+  }.property("post_type_changes"),
 
   title_diff: function() {
     var viewMode = this.get("viewMode");
-    if(viewMode === "side_by_side_markdown") {
-      viewMode = "side_by_side";
-    }
+    if (viewMode === "side_by_side_markdown") { viewMode = "side_by_side"; }
     return this.get("title_changes." + viewMode);
   }.property("viewMode", "title_changes"),
 
@@ -130,13 +115,13 @@ export default ObjectController.extend(ModalFunctionality, {
   }.property("viewMode", "body_changes"),
 
   actions: {
-    loadFirstVersion: function() { this.refresh(this.get("post_id"), 2); },
-    loadPreviousVersion: function() { this.refresh(this.get("post_id"), this.get("version") - 1); },
-    loadNextVersion: function() { this.refresh(this.get("post_id"), this.get("version") + 1); },
-    loadLastVersion: function() { this.refresh(this.get("post_id"), this.get("revisions_count")); },
+    loadFirstVersion: function() { this.refresh(this.get("post_id"), this.get("first_revision")); },
+    loadPreviousVersion: function() { this.refresh(this.get("post_id"), this.get("previous_revision")); },
+    loadNextVersion: function() { this.refresh(this.get("post_id"), this.get("next_revision")); },
+    loadLastVersion: function() { this.refresh(this.get("post_id"), this.get("last_revision")); },
 
-    hideVersion: function() { this.hide(this.get("post_id"), this.get("version")); },
-    showVersion: function() { this.show(this.get("post_id"), this.get("version")); },
+    hideVersion: function() { this.hide(this.get("post_id"), this.get("current_revision")); },
+    showVersion: function() { this.show(this.get("post_id"), this.get("current_revision")); },
 
     displayInline: function() { this.set("viewMode", "inline"); },
     displaySideBySide: function() { this.set("viewMode", "side_by_side"); },

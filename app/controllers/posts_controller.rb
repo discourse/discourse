@@ -5,7 +5,7 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :expand_embed, :markdown, :raw, :cooked]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown, :raw, :cooked]
 
   skip_before_filter :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
 
@@ -99,39 +99,30 @@ class PostsController < ApplicationController
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
     if too_late_to(:edit, post)
-      render json: {errors: [I18n.t('too_late_to_edit')]}, status: 422
-      return
+      return render json: { errors: [I18n.t('too_late_to_edit')] }, status: 422
     end
 
     guardian.ensure_can_edit!(post)
 
-    # to stay consistent with the create api,
-    #  we should allow for title changes and category changes here
-    #  we should also move all of this to a post updater.
-    if post.post_number == 1 && (params[:title] || params[:post][:category_id])
-      post.topic.acting_user = current_user
-      post.topic.title = params[:title] if params[:title]
-      Topic.transaction do
-        post.topic.change_category_to_id(params[:post][:category_id].to_i)
-        post.topic.save
-      end
+    changes = {
+      raw: params[:post][:raw],
+      edit_reason: params[:post][:edit_reason]
+    }
 
-      if post.topic.errors.present?
-        render_json_error(post.topic)
-        return
-      end
+    # to stay consistent with the create api, we allow for title & category changes here
+    if post.post_number == 1
+      changes[:title] = params[:title] if params[:title]
+      changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
     end
 
     revisor = PostRevisor.new(post)
-    if revisor.revise!(current_user, params[:post][:raw], edit_reason: params[:post][:edit_reason])
+    if revisor.revise!(current_user, changes)
       TopicLink.extract_from(post)
       QuotedPost.extract_from(post)
     end
 
-    if post.errors.present?
-      render_json_error(post)
-      return
-    end
+    return render_json_error(post) if post.errors.present?
+    return render_json_error(post.topic) if post.topic.errors.present?
 
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
     post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
@@ -194,7 +185,6 @@ class PostsController < ApplicationController
   end
 
   def destroy_many
-
     params.require(:post_ids)
 
     posts = Post.where(id: post_ids_including_replies)
@@ -222,17 +212,35 @@ class PostsController < ApplicationController
     render_json_dump(post_revision_serializer)
   end
 
+  def latest_revision
+    post_revision = find_latest_post_revision_from_params
+    post_revision_serializer = PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
+    render_json_dump(post_revision_serializer)
+  end
+
   def hide_revision
     post_revision = find_post_revision_from_params
-    guardian.ensure_can_hide_post_revision! post_revision
+    guardian.ensure_can_hide_post_revision!(post_revision)
+
     post_revision.hide!
+
+    post = find_post_from_params
+    post.public_version -= 1
+    post.save
+
     render nothing: true
   end
 
   def show_revision
     post_revision = find_post_revision_from_params
-    guardian.ensure_can_show_post_revision! post_revision
+    guardian.ensure_can_show_post_revision!(post_revision)
+
     post_revision.show!
+
+    post = find_post_from_params
+    post.public_version += 1
+    post.save
+
     render nothing: true
   end
 
@@ -252,9 +260,7 @@ class PostsController < ApplicationController
     guardian.ensure_can_wiki!
 
     post = find_post_from_params
-    post.wiki = params[:wiki]
-    post.version += 1
-    post.save
+    post.revise(current_user, { wiki: params[:wiki] })
 
     render nothing: true
   end
@@ -263,9 +269,7 @@ class PostsController < ApplicationController
     guardian.ensure_can_change_post_type!
 
     post = find_post_from_params
-    post.post_type = params[:post_type].to_i
-    post.version += 1
-    post.save
+    post.revise(current_user, { post_type: params[:post_type].to_i })
 
     render nothing: true
   end
@@ -329,9 +333,26 @@ class PostsController < ApplicationController
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
     post_revision = PostRevision.find_by(post_id: post_id, number: revision)
-    post_revision.post = find_post_from_params
+    raise Discourse::NotFound unless post_revision
 
+    post_revision.post = find_post_from_params
     guardian.ensure_can_see!(post_revision)
+
+    post_revision
+  end
+
+  def find_latest_post_revision_from_params
+    post_id = params[:id] || params[:post_id]
+
+    finder = PostRevision.where(post_id: post_id).order(:number)
+    finder = finder.where(hidden: false) unless guardian.is_staff?
+    post_revision = finder.last
+
+    raise Discourse::NotFound unless post_revision
+
+    post_revision.post = find_post_from_params
+    guardian.ensure_can_see!(post_revision)
+
     post_revision
   end
 

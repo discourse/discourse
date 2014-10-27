@@ -101,7 +101,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
                   puts "Could not import avatar: #{err.message}"
               end
             end
-          end 
+          end
         }
       end
     end
@@ -413,7 +413,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
       end
 
       if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, new_raw, {bypass_bump: true, edit_reason: 'Migrate from PHPBB3'})
+        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, { bypass_bump: true, edit_reason: 'Migrate from PHPBB3' })
       end
     end
 

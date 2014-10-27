@@ -3,6 +3,7 @@ require_dependency 'guardian/ensure_magic'
 require_dependency 'guardian/post_guardian'
 require_dependency 'guardian/topic_guardian'
 require_dependency 'guardian/user_guardian'
+require_dependency 'guardian/post_revision_guardian'
 
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
@@ -11,6 +12,7 @@ class Guardian
   include PostGuardian
   include TopicGuardian
   include UserGuardian
+  include PostRevisionGuardian
 
   class AnonymousUser
     def blank?; true; end

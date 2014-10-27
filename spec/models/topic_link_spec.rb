@@ -118,7 +118,7 @@ http://b.com/#{'a'*500}
       context 'removing a link' do
 
         before do
-          post.revise(post.user, "no more linkies")
+          post.revise(post.user, { raw: "no more linkies" })
           TopicLink.extract_from(post)
         end
 

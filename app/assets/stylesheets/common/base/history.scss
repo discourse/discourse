@@ -11,6 +11,9 @@
       margin-right: 7px;
     }
   }
+  #revisions .row:first-of-type {
+    margin-top: 10px;
+  }
   ins, .diff-ins {
     code, img {
       border: 2px solid $success;
@@ -75,7 +78,17 @@
   .fa-ban {
     color: #f00;
   }
-  .hidden-revision {
-    opacity: 0.5;
+  .hidden-revision-either {
+    opacity: .5;
+  }
+  .hidden-revision-previous .row {
+    div:nth-of-type(1), td:nth-of-type(1) {
+      opacity: .5;
+    }
+  }
+  .hidden-revision-current .row {
+    div:nth-of-type(2), td:nth-of-type(2) {
+      opacity: .5;
+    }
   }
 }
