@@ -31,7 +31,7 @@ class HighlightController < ApplicationController
     Digest::MD5.hexdigest(languages.sort.join('|'))
   end
 
-  def generate_highlight(opts = {})
+  def generate_highlight
     languages = SiteSetting.enabled_languages.split('|')
 
     cached_file_path = cached_path generate_key(languages)
