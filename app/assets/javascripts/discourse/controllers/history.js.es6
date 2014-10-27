@@ -13,8 +13,12 @@ import ObjectController from 'discourse/controllers/object';
 **/
 export default ObjectController.extend(ModalFunctionality, {
   loading: true,
-  viewMode: Discourse.Mobile.mobileView ? "inline" : "side_by_side",
+  viewMode: "side_by_side",
   revisionsTextKey: "post.revisions.controls.comparing_previous_to_current_out_of_total",
+
+  _changeViewModeOnMobile: function() {
+    if (Discourse.Mobile.mobileView) { this.set("viewMode", "inline"); }
+  }.on("init"),
 
   refresh: function(postId, postVersion) {
     this.set("loading", true);
