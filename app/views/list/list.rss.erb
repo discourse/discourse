@@ -6,7 +6,7 @@
     <title><%= @title %></title>
     <link><%= @link %></link>
     <description><%= @description %></description>
-    <%= "<language>#{lang}</language>" if lang %>
+    <% if lang %><language>#{lang}</language><% end %>
     <% if @topic_list.topics && @topic_list.topics.length > 0 %>
       <lastBuildDate><%= @topic_list.topics.first.created_at.rfc2822 %></lastBuildDate>
       <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
