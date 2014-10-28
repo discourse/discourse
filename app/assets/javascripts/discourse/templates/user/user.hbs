@@ -6,6 +6,155 @@
 {{#unless loading}}
   <div class="container">
 
+    <section class='user-main'>
+      <section {{bind-attr class="collapsedInfo :about profileBackground:has-background:no-background"}}>
+      <div class='staff-counters'>
+        {{#if number_of_flags_given}}
+          <div><span class="helpful-flags">{{number_of_flags_given}}</span>&nbsp;{{i18n user.staff_counters.flags_given}}</div>
+        {{/if}}
+        {{#if number_of_flagged_posts}}
+          <div>
+            {{#link-to 'user.flaggedPosts' this}}
+              <span class="flagged-posts">{{number_of_flagged_posts}}</span>&nbsp;{{i18n user.staff_counters.flagged_posts}}
+            {{/link-to}}
+          </div>
+        {{/if}}
+        {{#if number_of_deleted_posts}}
+          <div>
+            {{#link-to 'user.deletedPosts' this}}
+              <span class="deleted-posts">{{number_of_deleted_posts}}</span>&nbsp;{{i18n user.staff_counters.deleted_posts}}
+            {{/link-to}}
+          </div>
+        {{/if}}
+        {{#if number_of_suspensions}}
+          <div><span class="suspensions">{{number_of_suspensions}}</span>&nbsp;{{i18n user.staff_counters.suspensions}}</div>
+        {{/if}}
+        {{#if number_of_warnings}}
+          <div><span class="warnings-received">{{number_of_warnings}}</span>&nbsp;{{i18n user.staff_counters.warnings_received}}</div>
+        {{/if}}
+      </div>
+        <div class='profile-image'  {{bind-attr style="profileBackground"}}>
+
+      </div>
+        <div class='details'>
+          <div class='primary'>
+
+
+            {{bound-avatar model "huge"}}
+
+            <section class='controls'>
+
+            <ul>
+
+              {{#if can_send_private_message_to_user}}
+              <li>
+                <a class='btn btn-primary right' {{action "composePrivateMessage"}}>
+                  <i class='fa fa-envelope'></i>
+                  {{i18n user.private_message}}
+                </a>
+              </li>
+              {{/if}}
+
+              {{#if viewingSelf}}
+              <li>
+                <a {{action "logout"}} class='btn btn-danger right'><i class='fa fa-sign-out'></i>{{i18n user.log_out}}</a>
+              </li>
+              {{/if}}
+
+              {{#if currentUser.staff}}
+              <li>
+                <a {{bind-attr href="adminPath"}} class='btn right'><i class="fa fa-wrench"></i>{{i18n admin.user.show_admin_profile}}</a>
+              </li>
+              {{/if}}
+
+              {{#if can_edit}}
+              <li>
+                {{#link-to 'preferences' class="btn right"}}<i class='fa fa-cog'></i>{{i18n user.preferences}}{{/link-to}}
+              </li>
+              {{/if}}
+
+              {{#if canInviteToForum}}
+              <li>
+                {{#link-to 'user.invited' class="btn right"}}<i class='fa fa-envelope-o'></i>{{i18n user.invited.title}}{{/link-to}}
+              </li>
+              {{/if}}
+
+            </ul>
+
+            </section>
+
+            <div class="primary-textual">
+              <h1>{{username}} {{{statusIcon}}}</h1>
+              <h2>{{name}}</h2>
+              <h3>
+
+              {{#if location}}
+                <i class="fa fa-map-marker"></i>
+                {{location}}
+              {{/if}}
+
+              {{#if websiteName}}
+                <i class="fa fa-globe"></i>
+                  {{#if linkWebsite}}
+                    <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
+                  {{else}}
+                    <span {{bind-attr title="website"}}>{{websiteName}}</span>
+                  {{/if}}
+              {{/if}}
+
+              </h3>
+
+              <div class='bio'>
+                {{#if isSuspended}}
+                  <div class='suspended'>
+                    <i class='fa fa-ban'></i>
+                    <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
+                    <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
+                  </div>
+                {{/if}}
+                {{{bio_cooked}}}
+              </div>
+
+              {{plugin-outlet "user-profile-primary"}}
+
+
+            </div>
+
+          </div>
+
+        <div style='clear: both'></div>
+        </div>
+
+        <div class='secondary'>
+          <dl>
+
+            {{#if created_at}}
+              <dt>{{i18n user.created}}</dt><dd>{{bound-date created_at}}</dd>
+            {{/if}}
+            {{#if last_posted_at}}
+              <dt>{{i18n user.last_posted}}</dt><dd>{{bound-date last_posted_at}}</dd>
+            {{/if}}
+            {{#if last_seen_at}}
+              <dt>{{i18n user.last_seen}}</dt><dd>{{bound-date last_seen_at}}</dd>
+            {{/if}}
+            {{#if invited_by}}
+              <dt>{{i18n user.invited_by}}</dt><dd>{{#link-to 'user' invited_by}}{{invited_by.username}}{{/link-to}}</dd>
+            {{/if}}
+            <dt>{{i18n user.trust_level}}</dt><dd>{{trustLevel.name}}</dd>
+            {{#if canCheckEmails}}
+              <dt>{{i18n user.email.title}}</dt>
+              <dd {{bind-attr title="email"}}>
+                {{#if email}}
+                  {{email}}
+                {{else}}
+                  <button class="btn btn-primary" title="{{i18n admin.users.check_email.title}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+                {{/if}}
+              </dd>
+            {{/if}}
+          </dl>
+          {{plugin-outlet "user-profile-secondary"}}
+        </div>
+      </section>
     <section class='user-navigation'>
 
       <ul class='action-list nav-stacked'>
@@ -64,133 +213,10 @@
 
     </section>
 
-    <section class='user-main'>
-      <section {{bind-attr class="collapsedInfo :about"}} {{bind-attr style="profileBackground"}}>
+    {{outlet userOutlet}}
 
-        <div class='details'>
-          <div class='primary'>
-            <div class='staff-counters'>
-              {{#if number_of_flags_given}}
-                <div><span class="pill helpful-flags">{{number_of_flags_given}}</span>&nbsp;{{i18n user.staff_counters.flags_given}}</div>
-              {{/if}}
-              {{#if number_of_flagged_posts}}
-                <div>
-                  {{#link-to 'user.flaggedPosts' this}}
-                    <span class="pill flagged-posts">{{number_of_flagged_posts}}</span>&nbsp;{{i18n user.staff_counters.flagged_posts}}
-                  {{/link-to}}
-                </div>
-              {{/if}}
-              {{#if number_of_deleted_posts}}
-                <div>
-                  {{#link-to 'user.deletedPosts' this}}
-                    <span class="pill deleted-posts">{{number_of_deleted_posts}}</span>&nbsp;{{i18n user.staff_counters.deleted_posts}}
-                  {{/link-to}}
-                </div>
-              {{/if}}
-              {{#if number_of_suspensions}}
-                <div><span class="pill suspensions">{{number_of_suspensions}}</span>&nbsp;{{i18n user.staff_counters.suspensions}}</div>
-              {{/if}}
-              {{#if number_of_warnings}}
-                <div><span class="pill warnings-received">{{number_of_warnings}}</span>&nbsp;{{i18n user.staff_counters.warnings_received}}</div>
-              {{/if}}
-            </div>
-
-            {{bound-avatar model "huge"}}
-
-            <div class="primary-textual">
-              <h1>{{username}} {{{statusIcon}}}</h1>
-              <h2>{{name}}</h2>
-
-              <div class='bio'>{{{bio_cooked}}}</div>
-
-              {{groups-list groups=custom_groups}}
-
-              {{plugin-outlet "user-profile-primary"}}
-
-              {{#if isSuspended}}
-                <div class='suspended'>
-                  <i class='fa fa-ban'></i>
-                  <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
-                  <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
-                </div>
-              {{/if}}
-            </div>
-          </div>
-
-          <div class='secondary'>
-            <dl>
-              {{#if location}}
-                <dd><i class="fa fa-map-marker"></i> {{location}}</dd>
-              {{/if}}
-              {{#if websiteName}}
-                <dt>{{i18n user.website}}</dt>
-                <dd>
-                  {{#if linkWebsite}}
-                    <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
-                  {{else}}
-                    <span {{bind-attr title="website"}}>{{websiteName}}</span>
-                  {{/if}}
-                </dd>
-              {{/if}}
-              {{#if created_at}}
-                <dt>{{i18n user.created}}</dt><dd>{{bound-date created_at}}</dd>
-              {{/if}}
-              {{#if last_posted_at}}
-                <dt>{{i18n user.last_posted}}</dt><dd>{{bound-date last_posted_at}}</dd>
-              {{/if}}
-              {{#if last_seen_at}}
-                <dt>{{i18n user.last_seen}}</dt><dd>{{bound-date last_seen_at}}</dd>
-              {{/if}}
-              {{#if invited_by}}
-                <dt>{{i18n user.invited_by}}</dt><dd>{{#link-to 'user' invited_by}}{{invited_by.username}}{{/link-to}}</dd>
-              {{/if}}
-              {{#if canCheckEmails}}
-                <dt>{{i18n user.email.title}}</dt>
-                <dd {{bind-attr title="email"}}>
-                  {{#if email}}
-                    {{email}}
-                  {{else}}
-                    <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
-                  {{/if}}
-                </dd>
-              {{/if}}
-              <dt>{{i18n user.trust_level}}</dt><dd>{{trustLevel.name}}</dd>
-            </dl>
-            {{plugin-outlet "user-profile-secondary"}}
-          </div>
-
-          <div style='clear: both'></div>
-        </div>
-
-        <section class='controls'>
-          {{#if can_send_private_message_to_user}}
-            <button class='btn btn-primary' {{action "composePrivateMessage"}}>
-              <i class='fa fa-envelope'></i>
-              {{i18n user.private_message}}
-            </button>
-          {{/if}}
-
-          {{#if viewingSelf}}
-            <button {{action "logout"}} class='btn btn-danger right'><i class='fa fa-sign-out'></i>{{i18n user.log_out}}</button>
-          {{/if}}
-
-          {{#if currentUser.staff}}
-            <a {{bind-attr href="adminPath"}} class='btn right'><i class="fa fa-wrench"></i>{{i18n admin.user.show_admin_profile}}</a>
-          {{/if}}
-
-          {{#if can_edit}}
-            {{#link-to 'preferences' class="btn right"}}<i class='fa fa-cog'></i>{{i18n user.preferences}}{{/link-to}}
-          {{/if}}
-
-          {{#if canInviteToForum}}
-            {{#link-to 'user.invited' class="btn right"}}<i class='fa fa-envelope-o'></i>{{i18n user.invited.title}}{{/link-to}}
-          {{/if}}
-
-        </section>
-      </section>
-
-      {{outlet userOutlet}}
     </section>
+
 
   </div>
 {{/unless}}
