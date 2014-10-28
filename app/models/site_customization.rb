@@ -35,10 +35,10 @@ class SiteCustomization < ActiveRecord::Base
 
   after_save do
     if stylesheet_changed?
-      File.delete(stylesheet_fullpath) if File.exists?(stylesheet_fullpath)
+      File.delete(stylesheet_fullpath) if File.exist?(stylesheet_fullpath)
     end
     if mobile_stylesheet_changed?
-      File.delete(stylesheet_fullpath(:mobile)) if File.exists?(stylesheet_fullpath(:mobile))
+      File.delete(stylesheet_fullpath(:mobile)) if File.exist?(stylesheet_fullpath(:mobile))
     end
     remove_from_cache!
     if stylesheet_changed? or mobile_stylesheet_changed?
@@ -51,10 +51,10 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   after_destroy do
-    if File.exists?(stylesheet_fullpath)
+    if File.exist?(stylesheet_fullpath)
       File.delete stylesheet_fullpath
     end
-    if File.exists?(stylesheet_fullpath(:mobile))
+    if File.exist?(stylesheet_fullpath(:mobile))
       File.delete stylesheet_fullpath(:mobile)
     end
     self.remove_from_cache!
@@ -158,7 +158,7 @@ class SiteCustomization < ActiveRecord::Base
       path = stylesheet_fullpath(target)
       dir = cache_fullpath
       FileUtils.mkdir_p(dir)
-      unless File.exists?(path)
+      unless File.exist?(path)
         File.open(path, "w") do |f|
           f.puts self.send(baked_attr)
         end

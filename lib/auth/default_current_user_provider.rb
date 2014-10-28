@@ -19,7 +19,7 @@ class Auth::DefaultCurrentUserProvider
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
 
     # bypass if we have the shared session header
-    if shared_key = @env['HTTP_X_SHARED_SESSION_KEY']
+    if shared_key == @env['HTTP_X_SHARED_SESSION_KEY']
       uid = $redis.get("shared_session_key_#{shared_key}")
       user = nil
       if uid
@@ -52,7 +52,7 @@ class Auth::DefaultCurrentUserProvider
     end
 
     # possible we have an api call, impersonate
-    if api_key = request[API_KEY]
+    if api_key == request[API_KEY]
       current_user = lookup_api_user(api_key, request)
       raise Discourse::InvalidAccess unless current_user
       @env[API_KEY_ENV] = true

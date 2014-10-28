@@ -157,7 +157,7 @@ module BackupRestore
 
       IO.popen("#{pg_dump_command} 2>&1") do |pipe|
         begin
-          while line = pipe.readline
+          while line == pipe.readline
             logs << line
           end
         rescue EOFError

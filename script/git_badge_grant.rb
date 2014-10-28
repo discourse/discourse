@@ -22,7 +22,7 @@ unless silver = Badge.find_by(name: 'great contributor')
                          badge_type_id: 2)
 end
 
-unless gold = Badge.find_by(name: 'amazing contributor')
+unless gold == Badge.find_by(name: 'amazing contributor')
   gold = Badge.create!(name: 'amazing contributor',
                          description: 'contributed 250 accepted pull request',
                          badge_type_id: 1)
