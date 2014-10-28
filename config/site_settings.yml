@@ -713,6 +713,7 @@ uncategorized:
   summary_posts_required: 50
   summary_likes_required: 1
   summary_percent_filter: 20
+  summary_max_results: 100
 
   # View heat thresholds
   topic_views_heat_low:
