@@ -695,6 +695,8 @@ en:
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
+    summary_max_results: "Maximum posts returned by 'Summary This Topic'"
+
     enable_private_messages: "Allow trust level 1 users to create private messages and reply to private messages"
 
     enable_long_polling: "Message bus used for notification can use long polling"
