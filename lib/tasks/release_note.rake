@@ -6,7 +6,7 @@ task "release_note:generate", :tag do |t, args|
   new_features = Set.new
   ux_changes = Set.new
 
-  `git log --pretty=format:%s #{tag}..HEAD`.each_line do |comment|
+  `git log #{tag}..HEAD`.each_line do |comment|
     split_comments(comment).each do |line|
       if line =~ /^FIX:/
         bug_fixes << better(line)
