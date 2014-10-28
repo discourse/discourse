@@ -53,8 +53,8 @@ export default ObjectController.extend(ModalFunctionality, {
   displayGoToNext: function() { return this.get("next_revision") && this.get("current_revision") < this.get("next_revision"); }.property("current_revision", "next_revision"),
   displayGoToLast: function() { return this.get("current_revision") < this.get("last_revision"); }.property("current_revision", "last_revision"),
 
-  displayShow: function() { return !Discourse.Mobile.mobileView && this.get("previous_hidden") && Discourse.User.currentProp('staff'); }.property("previous_hidden"),
-  displayHide: function() { return !Discourse.Mobile.mobileView && !this.get("previous_hidden") && Discourse.User.currentProp('staff'); }.property("previous_hidden"),
+  displayShow: function() { return this.get("previous_hidden") && Discourse.User.currentProp('staff') && !this.get("loading"); }.property("previous_hidden", "loading"),
+  displayHide: function() { return !this.get("previous_hidden") && Discourse.User.currentProp('staff') && !this.get("loading"); }.property("previous_hidden", "loading"),
 
   isEitherRevisionHidden: Em.computed.or("previous_hidden", "current_hidden"),
 
