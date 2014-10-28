@@ -45,6 +45,8 @@ module Jobs
           message_template = :email_reject_reply_key
         when Email::Receiver::BadDestinationAddress
           message_template = :email_reject_destination
+        when Email::Receiver::TopicNotFoundError
+          message_template = :email_reject_topic_not_found
         when Email::Receiver::TopicClosedError
           message_template = :email_reject_topic_closed
         when ActiveRecord::Rollback
