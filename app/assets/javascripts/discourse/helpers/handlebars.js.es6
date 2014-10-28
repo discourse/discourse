@@ -5,7 +5,7 @@ Handlebars.registerHelper('handlebars', function(property, options) {
 
   if(params) {
     for(var prop in params){
-      params[prop] = Em.Handlebars.get(this, params[prop]) || params[prop];
+      params[prop] = Em.Handlebars.get(this, params[prop]);
     }
   }
 

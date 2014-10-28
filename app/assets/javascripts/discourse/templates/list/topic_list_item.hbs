@@ -27,10 +27,7 @@
   {{/if}}
 </td>
 
-{{#unless hideCategory}}
-<td class='category'>{{bound-category-link category showParent=true}}</td>
-{{/unless}}
-
+{{handlebars 'list/category_column' hideCategory=hideCategory category=category}}
 {{handlebars 'list/posters_column' posters=posters}}
 
 {{posts-count-column topic=model class="num" action="showTopicEntrance"}}
