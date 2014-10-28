@@ -2,6 +2,9 @@
   @extend .clearfix;
   margin-right: auto;
   margin-left: auto;
+  .contents {
+    position: relative;
+  }
 }
 
 .full-width {
