@@ -66,129 +66,296 @@
   .bio-composer #wmd-quote-post {
     display: none;
   }
+
+  #pagedown-editor {
+    width: 100%;
+  }
+
+  textarea {width: 100%;}
 }
 
-#about-me {
-  padding: 4px;
-  margin: -4px;
-  display: block;
-  width: 220px;
-  min-height: 200px;
-  background-color: scale-color-diff();
-  color: $primary;
-  word-wrap: break-word;
+.profile-image {
+  height: 150px;
+  width: 100%;
+  background-size: cover;
+}
+
+
+.groups {
+  .group-link {
+    color: $tertiary;
+  }
+}
+
+.hasBackground .details {margin-top: 200px;
+}
+
+.user-preferences {
+  input.category-group {
+  }
+
+  .autocomplete .badge-category {
+    margin: 2px;
+    font-weight: normal;
+  }
+
+  .autocomplete .badge-category.selected {
+    font-weight: bold;
+  }
+
+  textarea {
+    height: 100px;
+  }
+
+  input[type=text] {
+    @include small-width {
+    }
+  }
+
+  .bio-composer #wmd-quote-post {
+    display: none;
+  }
+
+  .static {
+    color: $primary;
+    display: inline-block;
+  }
+  .instructions {
+    color: scale-color($primary, $lightness: 50%);
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 80%;
+    line-height: 1.4em;
+  }
+  .avatar {
+    margin-left: 3px;
+  }
+  .instructions a[href] {
+    color: $tertiary;
+  }
+  .warning {
+    background-color: scale-color($danger, $lightness: 30%);
+    padding: 5px 8px;
+    color: $secondary;
+  }
+
+}
+
+.form-horizontal .control-group.other {
+  margin-bottom: 0;
+}
+
+.form-horizontal .control-group.category {
+  margin-top: 18px;
 }
 
 .user-navigation {
+  width: 100%;
+  margin-right: 1.8018%;
+  margin-top: 20px;
 
   h3 {
-    color: scale-color($primary, $lightness: 50%);
-    padding-left: 5px;
-  }
-  .nav-stacked {
-    border-left: 0;
-    border-right: 0;
+    color: $primary;
+    margin: 20px 0 10px 0;
   }
 
 }
 
 .user-main {
-  clear: both;
+
+  width: 100%;
+  float: left;
   margin-bottom: 50px;
 
+
+  table.group-members {
+    width: 100%;
+    p {
+      max-width: 600px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    th.seen {
+      text-align: right;
+    }
+    td.avatar {
+      width: 60px;
+    }
+    td {
+      img {
+        margin-right: 10px;
+      }
+      span.last-seen-at {
+        float: right;
+        color: $primary;
+      }
+    }
+  }
+
+  .user-content {
+    padding: 10px 8px;
+    background-color: $secondary;
+    border: 1px solid scale-color-diff();
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    margin-top: 20px;
+
+    .btn.right {
+      float: right
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 10px;
+
+      th {
+        text-align: left;
+        border-bottom: 1px solid scale-color-diff();
+        padding: 5px;
+      }
+
+      td {
+        padding: 5px;
+        border-bottom: 1px solid scale-color-diff();
+      }
+    }
+  }
+
   .about {
-    background-color: scale-color-diff();
-    background-position: center center;
+    background-color: dark-light-diff($primary, $secondary, 0%, -75%);
     background-size: cover;
+    background-position: center center;
+    width: 100%;
     margin-bottom: 10px;
     overflow: hidden;
-    color: $primary;
+    color: $secondary;
+
+  .secondary {
+    background: dark-light-diff($primary, $secondary, 90%, -65%);
+    font-size: 13px;
+      .btn { padding: 3px 12px; }
+
+      dl dd {
+        display: inline;
+        margin: 0 15px 0 5px;
+        padding: 0;
+      }
+
+      dl dt {
+        display: inline-block;
+      }
+
+      dl {
+        padding: 10px 15px;
+        margin: 0;
+      }
+
+      dd {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: $primary;
+      }
+
+      dt {
+        color: dark-light-diff($secondary, $primary, 50%, -40%);
+        margin: 0;
+      }
+    }
 
     .details {
-      text-align: center;
-      padding: 10px;
+      padding: 15px 15px 4px 15px;
+      background-color: rgba($primary, .9);
 
       h1 {
         font-size: 30px;
         font-weight: normal;
+        margin: 10px 0 0 0;
       }
 
       h2 {
-        font-size: 20px;
-        margin-bottom: 6px;
+        font-size: 17px;
         font-weight: normal;
+        margin-top: 10px;
         max-width: 100%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
-      a[href] {
-        color: $primary;
+      h3 {
+        font-weight: normal;
+        font-size: 14px;
+        margin: 5px 0;
+        i:not(:first-of-type) {
+          margin-left: 10px;
+        }
       }
 
+      .groups {
+        margin-left: 10px;
+        display: inline;
+        }
+
       img.avatar {
-        border: 3px solid scale-color-diff();
-        margin-bottom: 4px;
+        float: left;
+      }
+
+      .suspended {
+        color: $danger;
       }
 
       .primary {
-        color: $secondary;
-        text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
-        max-height: 800px;
-        overflow: auto;
+        width: 100%;
+        position: relative;
+        float: left;
+        color: dark-light-diff($secondary, $primary, 75%, 0%);
 
-        a[href] {
-          color: $secondary;
-          text-decoration: underline;
-          text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
-        }
-
-        img {
-          max-width: 100%;
-        }
+        h1 {font-weight: bold;}
 
         .primary-textual {
-          width: 90%;
-          margin: 0 auto;
-          padding: 4px;
+          float: left;
+          a[href] {
+            color: dark-light-diff($secondary, $primary, 75%, -10%);
 
-          h1, h2 {
-            margin: 7px;
           }
         }
-      }
 
-      .secondary {
-        background-color: $primary;
-        text-align: left;
-        padding: 1px 10px;
+        .bio {
+          color: dark-light-diff($secondary, $primary, 75%, 0%);
+          max-height: 300px;
+          overflow: auto;
+          max-width: 700px;
 
-        dd {
-          color: $secondary;
-          margin: 0 0 7px 0;
-          a {
-            color: inherit;
+          a[href] {
+            color: dark-light-diff($secondary, $primary, 75%, 0%);
+            text-decoration: underline;
           }
-          .btn {
-            float: none;
+
+          img {
+            max-width: 100%;
           }
-        }
-        dt {
-          color: scale-color($primary, $lightness: 75%);
-          margin: 0;
         }
       }
     }
 
     .controls {
-      background-color: scale-color($primary, $lightness: 75%);
-      margin-top: 0;
-      padding: 10px 10px 0 10px;
-
-      .btn {
+      padding: 0 0 12px 0;
+      float: right;
+      ul {list-style-type: none;}
+      a {
+        padding: 5px 10px;
+        width: 140px;
         margin-bottom: 10px;
-        float: none;
+        }
+
+      .right {
+        float: right;
+        margin-left: 5px;
       }
     }
   }
@@ -196,68 +363,84 @@
   .about.collapsed-info {
     .controls {
       margin-top: 0;
+
     }
 
+    .staff-counters {
+      display: none;
+    }
+    .secondary { display: none; }
+
+  .profile-image {
+    height: 0;
+  }
+
     .details {
-      .secondary { display: none; }
+      padding: 12px 15px 2px 15px;
+      margin-top: 0;
+      background: rgba($primary, 1);
       .bio { display: none; }
 
       .primary {
-        width: 100%;
         text-align: left;
-        margin-top: 4px;
+        margin-top: 0;
+        width: 100%;
 
         .avatar {
           float: left;
           margin-right: 10px;
-          border: 2px solid $tertiary;
           width: 45px;
           height: 45px;
         }
 
         h1 {
-          margin:0;
           font-size: 20px;
-          line-height: 22px;
         }
 
         h2 {
-          font-size: 17px;
-          line-height: 16px;
+          font-size: 15px;
           margin-top: 4px;
+        }
+
+        h3 {
+          display: none;
         }
       }
     }
   }
 
+
   .user-stream {
+    .end-of-stream {
+      width: auto;
+      }
     .excerpt {
       margin: 5px 0;
       font-size: 13px;
       word-wrap: break-word;
-      color: scale-color($primary, $lightness: 50%);
+      color: $primary;
     }
     .item.moderator-action {
-      background-color:  scale-color($highlight, $lightness: 50%);
+      background-color: dark-light-diff($highlight, $secondary, 50%, -10%);
     }
     .item.deleted {
       opacity: 0.8;
-      background-color: scale-color($danger, $lightness: 50%);
+      background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -10%);
     }
     .item.hidden {
       display: block;
       opacity: 0.4;
     }
     .item {
-      padding: 10px 8px;
+      padding: 20px 0 15px 0;
       background-color: $secondary;
       border-bottom: 1px solid scale-color-diff();
     }
     .type {
-      color: scale-color($primary, $lightness: 50%);
+      color: $primary;
     }
     span.name {
-      color: scale-color($primary, $lightness: 50%);
+      color: $primary;
     }
     .time, .delete-info {
       display: block;
@@ -271,55 +454,83 @@
     }
     .avatar-link {
       float: left;
-      margin-right: 10px;
+      margin-right: 4px;
     }
     .title {
       display: block;
-      margin-bottom: 4px;
       font-size: 14px;
+      max-width: 80%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .name {
+      display: block;
+      font-size: 14px;
+      max-width: 400px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .edit-reason {
-      background-color: scale-color($highlight, $lightness: 50%);
+      background-color: scale-color($highlight, $lightness: 25%);
       padding: 3px 5px 5px 5px;
     }
     .remove-bookmark {
-      float: right !important;
-      margin-top: -8px;
+      float: right;
+      margin-top: -4px;
     }
     .notification {
-      padding: 0 8px;
+      &.unread {
+        background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+      }
+
       li { display: inline-block; }
       p {
         display: inline-block;
-        margin: 7px;
+        margin-left: 10px;
         span {
           color: $primary;
         }
       }
       .time {
         display: inline-block;
-        margin: 0;
+        margin-left: 10px;
         float: none;
       }
       // common/base/header.scss
       .fa, .icon {
         color: scale-color($primary, $lightness: 50%);
+        font-size: 24px;
       }
     }
   }
 
   .staff-counters {
-    text-align: center;
-    div {
-      padding: 2px 8px;
-      margin-bottom: 10px;
+    text-align: left;
+    background: $primary;
+    padding: 7px 0;
+    display: inline;
+    > div {
+      margin: 0 10px 0 0;
       display: inline-block;
+      padding: 5px 0;
+      &:first-of-type {
+        padding-left: 10px;
+        }
+      span {
+        padding: 1px 5px;
+        border-radius: 10px;
+        }
+
     }
-    a.active {
+    a {
+      color: $secondary;
+    }
+    .active {
       font-weight: bold;
     }
   }
-
   .pill {
     border-radius: 15px;
     display: inline-block;
@@ -335,6 +546,9 @@
   .flagged-posts {
     background-color: #E49735;
   }
+  .warnings-received {
+    background-color: #EC441B;
+  }
   .deleted-posts {
     background-color: #EC441B;
   }
@@ -342,12 +556,53 @@
     background-color: #c22020;
   }
 
-  div#pagedown-editor {
-    width: 100%;
+  .user-field.text {
+    padding-top: 18px;
   }
 
-  textarea#wmd-input {
-    width: 100%;
+  .user-field {
+    label {
+      width: 140px;
+      float: left;
+      text-align: right;
+      font-weight: bold;
+    }
+    input[type=text] {
+      width: 530px;
+    }
+    .controls {
+      label {
+        width: auto;
+        text-align: left;
+        font-weight: normal;
+        float: auto;
+      }
+      p {
+        color: scale-color($primary, $lightness: 50%);
+        margin-top: 5px;
+        margin-bottom: 10px;
+        font-size: 80%;
+        line-height: 1.4em;
+      }
+    }
+    clear: both;
+    margin-bottom: 10px;
   }
+}
 
+.paginated-topics-list {
+  margin-top: 20px;
+
+    .topic-list > tbody > tr:nth-child(odd)  {
+      background-color: darken($secondary, 3%);
+      }
+
+    .topic-list > tbody > tr:nth-child(even) {
+      background-color: $secondary;
+      }
+
+    .user-content {
+        width: 100%;
+        margin-top: 0;
+      }
 }
