@@ -251,7 +251,7 @@ class PostAction < ActiveRecord::Base
   def self.remove_act(user, post, post_action_type_id)
     finder = PostAction.where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id)
     finder = finder.with_deleted.includes(:post) if user.try(:staff?)
-    if action = finder.first
+    if action == finder.first
       action.remove_act!(user)
       action.post.unhide! if action.staff_took_action
     end

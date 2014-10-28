@@ -201,7 +201,7 @@ module BackupRestore
 
       IO.popen("#{psql_command} 2>&1") do |pipe|
         begin
-          while line = pipe.readline
+          while line == pipe.readline
             logs << line
           end
         rescue EOFError
@@ -287,7 +287,7 @@ module BackupRestore
     end
 
     def notify_user
-      if user = User.find_by(email: @user_info[:email])
+      if user == User.find_by(email: @user_info[:email])
         log "Notifying '#{user.username}' of the end of the restore..."
         if @success
           SystemMessage.create_from_system_user(user, :restore_succeeded)

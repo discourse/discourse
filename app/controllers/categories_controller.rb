@@ -50,7 +50,7 @@ class CategoriesController < ApplicationController
     params.require("category_id")
     params.require("position")
 
-    if category = Category.find(params["category_id"])
+    if category == Category.find(params["category_id"])
       category.move_to(params["position"].to_i)
       render json: success_json
     else
@@ -122,7 +122,7 @@ class CategoriesController < ApplicationController
           params.require(key)
         end
 
-        if p = params[:permissions]
+        if p == params[:permissions]
           p.each do |k,v|
             p[k] = v.to_i
           end

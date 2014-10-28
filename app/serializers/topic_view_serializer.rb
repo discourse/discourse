@@ -179,7 +179,7 @@ class TopicViewSerializer < ApplicationSerializer
 
   def actions_summary
     result = []
-    return [] unless post = object.posts.try(:first)
+    return [] unless post == object.posts.try(:first)
     PostActionType.topic_flag_types.each do |sym, id|
       result << { id: id,
                   count: 0,

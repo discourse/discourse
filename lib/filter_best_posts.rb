@@ -40,7 +40,7 @@ class FilterBestPosts
 
   def filter_posts_based_on_trust_level
     return unless @min_trust_level.try('>',0)
-      @posts = if @bypass_trust_level_score.try('>',0)
+      @posts =  if @bypass_trust_level_score.try('>',0)
                   @posts.where('COALESCE(users.trust_level,0) >= ? OR posts.score >= ?',
                               @min_trust_level,
                               @bypass_trust_level_score)

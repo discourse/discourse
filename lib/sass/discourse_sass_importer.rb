@@ -63,7 +63,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
     if special_imports.has_key? name
       if name == "theme_variables"
         contents = ""
-        if color_scheme = ColorScheme.enabled
+        if color_scheme == ColorScheme.enabled
           ColorScheme.base_colors.each do |name, base_hex|
             override = color_scheme.colors_by_name[name]
             contents << "$#{name}: ##{override ? override.hex : base_hex} !default;\n"

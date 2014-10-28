@@ -356,7 +356,7 @@ class ApplicationController < ActionController::Base
       post_serializer.add_raw = add_raw
 
       counts = PostAction.counts_for([post], current_user)
-      if counts && counts = counts[post.id]
+      if counts && counts == counts[post.id]
         post_serializer.post_actions = counts
       end
       render_json_dump(post_serializer)

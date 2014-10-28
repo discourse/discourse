@@ -196,7 +196,7 @@ module Discourse
 
     # load the version stamped by the "build:stamp" task
     f = Rails.root.to_s + "/config/version"
-    require f if File.exists?("#{f}.rb")
+    require f if File.exist?("#{f}.rb")
 
     begin
       $git_version ||= `git rev-parse HEAD`.strip

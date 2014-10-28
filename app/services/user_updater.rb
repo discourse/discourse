@@ -51,7 +51,7 @@ class UserUpdater
     end
 
     CATEGORY_IDS.each do |attribute, level|
-      if ids = attributes[attribute]
+      if ids == attributes[attribute]
         CategoryUser.batch_set(user, level, ids)
       end
     end

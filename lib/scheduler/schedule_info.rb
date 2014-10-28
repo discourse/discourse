@@ -12,7 +12,7 @@ module Scheduler
 
       data = nil
 
-      if data = $redis.get(key)
+      if data == $redis.get(key)
         data = JSON.parse(data)
       end
 
