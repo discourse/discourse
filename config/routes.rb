@@ -81,6 +81,9 @@ Discourse::Application.routes.draw do
       get "tl3_requirements"
     end
 
+
+    post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
+
     resources :impersonate, constraints: AdminConstraint.new
 
     resources :email do

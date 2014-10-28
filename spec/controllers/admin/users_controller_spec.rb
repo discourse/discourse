@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_dependency 'single_sign_on'
 
 describe Admin::UsersController do
 
@@ -314,7 +315,7 @@ describe Admin::UsersController do
         before do
           @user = Fabricate(:user)
           topic = create_topic(user: @user)
-          post = create_post(topic: topic, user: @user)
+          _post = create_post(topic: topic, user: @user)
           @user.stubs(:first_post_created_at).returns(Time.zone.now)
           User.expects(:find_by).with(id: @delete_me.id).returns(@user)
         end
@@ -391,6 +392,41 @@ describe Admin::UsersController do
       end
 
     end
+
+  end
+
+  it 'can sync up sso' do
+    log_in(:admin)
+
+    SiteSetting.enable_sso = true
+    SiteSetting.sso_overrides_email = true
+    SiteSetting.sso_overrides_name = true
+    SiteSetting.sso_overrides_username = true
+
+    SiteSetting.sso_secret = "sso secret"
+
+    sso = SingleSignOn.new
+    sso.sso_secret = "sso secret"
+    sso.name = "Bob The Bob"
+    sso.username = "bob"
+    sso.email = "bob@bob.com"
+    sso.external_id = "1"
+
+    user = DiscourseSingleSignOn.parse(sso.payload)
+                                .lookup_or_create_user
+
+
+    sso.name = "Bill"
+    sso.username = "Hokli$$!!"
+    sso.email = "bob2@bob.com"
+
+    xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
+    response.should be_success
+
+    user.reload
+    user.email.should == "bob2@bob.com"
+    user.name.should == "Bill"
+    user.username.should == "Hokli"
 
   end
 
