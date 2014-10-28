@@ -121,7 +121,6 @@ var controllerOpts = {
 
   canBulkSelect: Em.computed.alias('currentUser.staff'),
   hasTopics: Em.computed.gt('topics.length', 0),
-  showTable: Em.computed.or('hasTopics', 'topicTrackingState.hasIncoming'),
   allLoaded: Em.computed.empty('more_topics_url'),
   latest: Discourse.computed.endWith('filter', 'latest'),
   new: Discourse.computed.endWith('filter', 'new'),
