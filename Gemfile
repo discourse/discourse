@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 module ::Kernel
   def rails_master?
-    ENV["RAILS_MASTER"]
+    ENV["RAILS_MASTER"] == '1'
   end
 end
 
