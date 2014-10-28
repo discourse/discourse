@@ -12,8 +12,14 @@ function coldAgeClass(property, options) {
 
   if (!dt) { return className; }
 
+  var startDate = (options && options.hash && options.hash.startDate) || new Date();
+
+  if (typeof startDate === "string") {
+    startDate = Em.Handlebars.get(this, startDate, options);
+  }
+
   // Show heat on age
-  var nowDays = daysSinceEpoch(new Date()),
+  var nowDays = daysSinceEpoch(startDate),
       epochDays = daysSinceEpoch(new Date(dt));
 
   if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_high) return className + ' coldmap-high';
