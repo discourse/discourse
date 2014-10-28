@@ -680,6 +680,8 @@ en:
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
 
+    enabled_languages: "Choose which languages to include syntax highlighting support for"
+
     logo_url: "The logo image at the top left of your site eg: http://example.com/logo.png"
     digest_logo_url: "The alternate logo used at the top of your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
     logo_small_url: "The small logo image at the top left of your site, seen when scrolling down. eg: http://example.com/logo-small.png"

@@ -2068,6 +2068,7 @@ en:
           trust: 'Trust Levels'
           security: 'Security'
           onebox: "Onebox"
+          highlight: 'Highlight'
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Rate Limits'
