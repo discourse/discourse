@@ -31,7 +31,7 @@
 <td class='category'>{{bound-category-link category showParent=true}}</td>
 {{/unless}}
 
-{{handlebars 'posters_column' posters=posters}}
+{{handlebars 'list/posters_column' posters=posters}}
 
 {{posts-count-column topic=model class="num" action="showTopicEntrance"}}
 <td {{bind-attr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
