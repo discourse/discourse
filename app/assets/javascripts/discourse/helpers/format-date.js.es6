@@ -3,19 +3,27 @@
   update the dates on a regular interval.
 **/
 Handlebars.registerHelper('format-date', function(property, options) {
-  var leaveAgo;
-  if (property.hash) {
-    if (property.hash.leaveAgo) {
-      leaveAgo = property.hash.leaveAgo === "true";
+  var leaveAgo, format = 'medium', title = true;
+  var hash = property.hash || (options && options.hash);
+
+  if (hash) {
+    if (hash.leaveAgo) {
+      leaveAgo = hash.leaveAgo === "true";
     }
-    if (property.hash.path) {
-      property = property.hash.path;
+    if (hash.path) {
+      property = hash.path;
+    }
+    if (hash.format) {
+      format = hash.format;
+    }
+    if (hash.noTitle) {
+      title = false;
     }
   }
 
   var val = Ember.Handlebars.get(this, property, options);
   if (val) {
     var date = new Date(val);
-    return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', title: true, leaveAgo: leaveAgo}));
+    return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: format, title: title, leaveAgo: leaveAgo}));
   }
 });

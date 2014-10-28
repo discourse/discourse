@@ -8,18 +8,19 @@ export function daysSinceEpoch(dt) {
 **/
 function coldAgeClass(property, options) {
   var dt = Em.Handlebars.get(this, property, options);
+  var className = (options && options.hash && options.hash.class !== undefined) ? options.hash.class : 'age';
 
-  if (!dt) { return 'age'; }
+  if (!dt) { return className; }
 
   // Show heat on age
   var nowDays = daysSinceEpoch(new Date()),
       epochDays = daysSinceEpoch(new Date(dt));
 
-  if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_high) return 'age coldmap-high';
-  if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_medium) return 'age coldmap-med';
-  if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_low) return 'age coldmap-low';
+  if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_high) return className + ' coldmap-high';
+  if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_medium) return className + ' coldmap-med';
+  if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_low) return className + ' coldmap-low';
 
-  return 'age';
+  return className;
 }
 
 Handlebars.registerHelper('cold-age-class', coldAgeClass);

@@ -5,7 +5,9 @@ Handlebars.registerHelper('handlebars', function(property, options) {
 
   if(params) {
     for(var prop in params){
-      params[prop] = Em.Handlebars.get(this, params[prop]);
+      if(options.hashTypes[prop] === "ID") {
+        params[prop] = Em.Handlebars.get(this, params[prop], options);
+      }
     }
   }
 
