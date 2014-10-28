@@ -240,7 +240,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.summary
-    where(["(post_number = 1) or (percent_rank <= ?)", SiteSetting.summary_percent_filter.to_f / 100.0])
+    where(["(post_number = 1) or (percent_rank <= ?)", SiteSetting.summary_percent_filter.to_f / 100.0]).limit(100)
   end
 
   def update_flagged_posts_count

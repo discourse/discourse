@@ -404,7 +404,7 @@ class TopicView
     closest_posts = filter_post_ids_by("@(post_number - #{post_number})")
     return nil if closest_posts.empty?
 
-    filtered_post_ids.index(closest_posts.first)
+    filtered_post_ids.index(closest_posts.first) || filtered_post_ids[0]
   end
 
 end
