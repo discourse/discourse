@@ -189,16 +189,12 @@
     overflow: hidden;
     color: $secondary;
 
-  &.group {
-
-
-              width: 75%;
-              float: right;
-              margin-top: 20px;
-              .details {padding: 15px;}
-
-
-  }
+    &.group {
+      width: 75%;
+      float: right;
+      margin-top: 20px;
+      .details {padding: 15px;}
+    }
 
   .secondary {
     background: dark-light-diff($primary, $secondary, 90%, -65%);
