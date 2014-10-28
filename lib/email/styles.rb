@@ -155,7 +155,7 @@ module Email
 
     def strip_avatars_and_emojis
       @fragment.css('img').each do |img|
-        if img['src'] =~ /user_avatar/ || img['src'] =~ /letter_avatar/
+        if img['src'] =~ /_avatar/
           img.parent['style'] = "vertical-align: top;" if img.parent.name == 'td'
           img.remove
         end
