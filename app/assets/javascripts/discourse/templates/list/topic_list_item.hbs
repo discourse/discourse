@@ -10,21 +10,14 @@
   {{/if}}
 {{/if}}
 
-<td class='main-link clearfix' {{bind-attr colspan="titleColSpan"}}>
+<td class='main-link clearfix' colspan="{{unbound titleColSpan}}">
   {{topic-status topic=this.model}}
   {{topic-link this}}
   {{#if showTopicPostBadges}}
     {{topic-post-badges unread=unread newPosts=displayNewPosts unseen=unseen url=lastUnreadUrl}}
   {{/if}}
 
-  {{#if hasExcerpt}}
-    <div class="topic-excerpt">
-      {{{excerpt}}}
-      {{#if excerptTruncated}}
-        <a href="{{url}}">{{i18n read_more}}</a>
-      {{/if}}
-    </div>
-  {{/if}}
+  {{raw "list/topic_excerpt" topic=model}}
 </td>
 
 {{raw "list/category_column" hideCategory=hideCategory category=category}}

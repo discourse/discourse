@@ -23,7 +23,7 @@ I18n.toHumanSize = function(number, options) {
   @method i18n
   @for Handlebars
 **/
-Ember.Handlebars.registerHelper('i18n', function(property, options) {
+Handlebars.registerHelper('i18n', function(property, options) {
   // Resolve any properties
   var params = options.hash,
     self = this;
