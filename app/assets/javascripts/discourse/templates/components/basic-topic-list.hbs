@@ -28,7 +28,7 @@
                                   url=topic.lastUnreadUrl}}
             </td>
 
-            {{raw "list/category_column" hideCategory=controller.hideCategory category=topic.category}}
+            {{raw "list/category-column" hideCategory=controller.hideCategory category=topic.category}}
 
             {{posts-count-column topic=topic class="num" action="clickedPosts"}}
 
@@ -44,7 +44,7 @@
               {{number topic.views numberKey="views_long"}}
             </td>
 
-            {{raw "list/activity_column" topic=topic class="num" tagName="td"}}
+            {{raw "list/activity-column" topic=topic class="num" tagName="td"}}
           </tr>
         {{/grouped-each}}
       </tbody>
