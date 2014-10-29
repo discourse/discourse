@@ -56,7 +56,6 @@ class ImportScripts::Vanilla < ImportScripts::Base
           end
           # PERF: don't parse useless tables
           useless_tables = ["user_meta"]
-          useless_tables << "activities" unless @use_lastest_activity_as_user_bio
           next if useless_tables.include?(table)
           # parse the data
           puts "parsing #{table}..."
