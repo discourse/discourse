@@ -48,7 +48,7 @@
               {{number topic.views numberKey="views_long"}}
             </td>
 
-            {{activity-column topic=topic class="num"}}
+            {{handlebars "list/activity_column" topic=topic class="num" tagName="td"}}
           </tr>
         {{/grouped-each}}
       </tbody>
