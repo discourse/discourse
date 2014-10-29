@@ -1,7 +1,8 @@
 // base styles for every modal popup used in Discourse
 
 .modal-middle-container {
-  margin-top: 150px;
+  display:table-cell;
+  vertical-align: middle;
 }
 
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
