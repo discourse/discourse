@@ -27,10 +27,10 @@
   {{/if}}
 </td>
 
-{{handlebars "list/category_column" hideCategory=hideCategory category=category}}
-{{handlebars "list/posters_column" posters=posters}}
+{{raw "list/category_column" hideCategory=hideCategory category=category}}
+{{raw "list/posters_column" posters=posters}}
 
 {{posts-count-column topic=model class="num" action="showTopicEntrance"}}
 <td class="num views {{unbound viewsHeat}}">{{number views numberKey="views_long"}}</td>
 
-{{handlebars "list/activity_column" topic=model class="num" tagName="td"}}
+{{raw "list/activity_column" topic=model class="num" tagName="td"}}
