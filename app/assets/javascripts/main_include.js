@@ -5,6 +5,8 @@
 // Pagedown customizations
 //= require ./pagedown_custom.js
 
+// This is a BUG we should fix
+// it is only required here cause preview is not loading it using LAB
 //= require highlight.pack.js
 
 // Stuff we need to load first
