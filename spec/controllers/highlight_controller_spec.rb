@@ -30,6 +30,7 @@ describe HighlightController do
       get :show
       assert_response :success
       response.header['Last-Modified'].should_not be_nil
+      response.body.should_not include("registerLanguage(\"apache")
 
       request.headers['If-Modified-Since'] = response.header['Last-Modified']
       get :show
