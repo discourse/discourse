@@ -60,11 +60,7 @@
 
       var id = new Handlebars.AST.IdNode([{ part: 'get' }]);
 
-      if (!mustache.escaped) {
-        mustache.hash = mustache.hash || new Handlebars.AST.HashNode([]);
-        mustache.hash.pairs.push(["unescaped", new Handlebars.AST.StringNode("true")]);
-      }
-      mustache = new Handlebars.AST.MustacheNode([id].concat([mustache.id]), mustache.hash, !mustache.escaped);
+      mustache = new Handlebars.AST.MustacheNode([id].concat([mustache.id]), mustache.hash, mustache.escaped);
     }
 
     return Handlebars.Compiler.prototype.mustache.call(this, mustache);
