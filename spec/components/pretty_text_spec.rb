@@ -41,7 +41,7 @@ describe PrettyText do
     end
 
     # see: https://github.com/sparklemotion/nokogiri/issues/1173
-    pending 'allows html entities correctly' do
+    skip 'allows html entities correctly' do
       PrettyText.cook("&aleph;&pound;&#162;").should == "<p>&aleph;&pound;&#162;</p>"
     end
 

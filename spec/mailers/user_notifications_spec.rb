@@ -25,46 +25,56 @@ describe UserNotifications do
   end
 
   describe ".signup" do
+
     subject { UserNotifications.signup(user) }
 
-    its(:to) { should == [user.email] }
-    its(:subject) { should be_present }
-    its(:from) { should == [SiteSetting.notification_email] }
-    its(:body) { should be_present }
+    it "works" do
+      subject.to.should == [user.email]
+      subject.subject.should be_present
+      subject.from.should == [SiteSetting.notification_email]
+      subject.body.should be_present
+    end
+
   end
 
   describe ".forgot_password" do
+
     subject { UserNotifications.forgot_password(user) }
 
-    its(:to) { should == [user.email] }
-    its(:subject) { should be_present }
-    its(:from) { should == [SiteSetting.notification_email] }
-    its(:body) { should be_present }
+    it "works" do
+      subject.to.should == [user.email]
+      subject.subject.should be_present
+      subject.from.should == [SiteSetting.notification_email]
+      subject.body.should be_present
+    end
+
   end
 
   describe '.digest' do
+
     subject { UserNotifications.digest(user) }
 
     context "without new topics" do
-      its(:to) { should be_blank }
+
+      it "doesn't send the email" do
+        subject.to.should be_blank
+      end
+
     end
 
     context "with new topics" do
+
       before do
         Topic.expects(:for_digest).returns([Fabricate(:topic, user: Fabricate(:coding_horror))])
         Topic.expects(:new_since_last_seen).returns(Topic.none)
       end
 
-      its(:to) { should == [user.email] }
-      its(:subject) { should be_present }
-      its(:from) { should == [SiteSetting.notification_email] }
-
-      it 'should have a html body' do
+      it "works" do
+        subject.to.should == [user.email]
+        subject.subject.should be_present
+        subject.from.should == [SiteSetting.notification_email]
         subject.html_part.body.to_s.should be_present
-      end
-
-      it 'should have a text body' do
-        subject.html_part.body.to_s.should be_present
+        subject.text_part.body.to_s.should be_present
       end
 
     end
