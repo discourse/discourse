@@ -25,5 +25,23 @@ describe HighlightController do
       response.body.should eql("")
     end
 
+    it "returns 200 after If-Modified-Since anf config update" do
+      SiteSetting.stubs(:enabled_languages).returns("")
+      get :show
+      assert_response :success
+      response.header['Last-Modified'].should_not be_nil
+
+      request.headers['If-Modified-Since'] = response.header['Last-Modified']
+      get :show
+      assert_response :not_modified
+      response.body.should eql("")
+
+      SiteSetting.stubs(:enabled_languages).returns("Apache")
+      request.headers['If-Modified-Since'] = response.header['Last-Modified']
+      get :show
+      assert_response :success
+      response.body.should include("registerLanguage(\"apache")
+    end
+
   end
 end
