@@ -10,7 +10,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
   include ActionView::Helpers::NumberHelper
 
- PHPBB_DB   = "phpbb"
+  PHPBB_DB   = "phpbb"
   BATCH_SIZE = 1000
 
   ORIGINAL_SITE_PREFIX = "oldsite.example.com/forums" # without http(s)://
@@ -306,7 +306,13 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     s.gsub!(internal_url_regexp) do |phpbb_link|
       replace_internal_link(phpbb_link, $1, import_id)
     end
-
+    # convert list tags to ul and list=1 tags to ol
+    # (basically, we're only missing list=a here...)
+    s.gsub!(/\[list\](.*?)\[\/list:u\]/m, '[ul]\1[/ul]')
+    s.gsub!(/\[list=1\](.*?)\[\/list:o\]/m, '[ol]\1[/ol]')
+    # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
+    s.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
+    
     s
   end
 
