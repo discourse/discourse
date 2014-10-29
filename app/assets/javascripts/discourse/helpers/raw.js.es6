@@ -1,4 +1,4 @@
-Handlebars.registerHelper('handlebars', function(property, options) {
+Handlebars.registerHelper('raw', function(property, options) {
 
   var template = Em.TEMPLATES[property + ".raw"];
   var params = options.hash;
@@ -12,8 +12,4 @@ Handlebars.registerHelper('handlebars', function(property, options) {
   }
 
   return new Handlebars.SafeString(template(params));
-});
-
-Handlebars.registerHelper('get', function(property) {
-  return Em.get(this, property);
 });
