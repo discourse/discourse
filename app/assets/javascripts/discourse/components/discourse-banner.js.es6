@@ -1,4 +1,6 @@
-export default Ember.Component.extend({
+import VisibleComponent from "discourse/components/visible";
+
+export default VisibleComponent.extend({
 
   visible: function () {
     var bannerKey = this.get("banner.key"),
@@ -20,6 +22,7 @@ export default Ember.Component.extend({
         Discourse.KeyValueStore.set({ key: "dismissed_banner_key", value: this.get("banner.key") });
       }
     }
-  }
+  },
+
 
 });

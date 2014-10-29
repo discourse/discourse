@@ -43,7 +43,7 @@ export default Ember.Component.extend({
 
     this.sendAction('action', {
       topic: topic,
-      position: this.$('a').position()
+      position: this.$('a').offset()
     });
 
     return false;

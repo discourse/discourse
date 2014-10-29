@@ -117,14 +117,12 @@
 }
 
 .user-main {
-
-  width: 100%;
-  float: left;
   margin-bottom: 50px;
 
-
   table.group-members {
-    width: 100%;
+    width: 75%;
+    float:  right;
+
     p {
       max-width: 600px;
       white-space: nowrap;
@@ -190,6 +188,13 @@
     margin-bottom: 10px;
     overflow: hidden;
     color: $secondary;
+
+    &.group {
+      width: 75%;
+      float: right;
+      margin-top: 20px;
+      .details {padding: 15px;}
+    }
 
   .secondary {
     background: dark-light-diff($primary, $secondary, 90%, -65%);

@@ -14,16 +14,26 @@ export default Discourse.View.extend({
   classNames: ['d-header', 'clearfix'],
   classNameBindings: ['editingTopic'],
   templateName: 'header',
+  renderDropdowns: false,
 
   showDropdown: function($target) {
+    var self = this;
+
+    if(!this.get("renderDropdowns")){
+      this.set("renderDropdowns", true);
+      Em.run.next(function(){
+        self.showDropdown($target);
+      });
+      return;
+    }
+
     var elementId = $target.data('dropdown') || $target.data('notifications'),
         $dropdown = $("#" + elementId),
         $li = $target.closest('li'),
         $ul = $target.closest('ul'),
         $html = $('html'),
         $header = $('header'),
-        replyZIndex = parseInt($('#reply-control').css('z-index'), 10),
-        self = this;
+        replyZIndex = parseInt($('#reply-control').css('z-index'), 10);
 
 
     originalZIndex = originalZIndex || $('header').css('z-index');

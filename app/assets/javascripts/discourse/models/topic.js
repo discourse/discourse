@@ -1,5 +1,24 @@
 Discourse.Topic = Discourse.Model.extend({
 
+  // returns createdAt if there's no bumped date
+  bumpedAt: function() {
+    var bumpedAt = this.get('bumped_at');
+    if (bumpedAt) {
+      return new Date(bumpedAt);
+    } else {
+      return this.get('createdAt');
+    }
+  }.property('bumped_at', 'createdAt'),
+
+  bumpedAtTitle: function() {
+    return I18n.t('first_post') + ": " + Discourse.Formatter.longDate(this.get('createdAt')) + "\n" +
+           I18n.t('last_post') + ": " + Discourse.Formatter.longDate(this.get('bumpedAt'));
+  }.property('bumpedAt'),
+
+  createdAt: function() {
+    return new Date(this.get('created_at'));
+  }.property('created_at'),
+
   postStream: function() {
     return Discourse.PostStream.create({topic: this});
   }.property(),

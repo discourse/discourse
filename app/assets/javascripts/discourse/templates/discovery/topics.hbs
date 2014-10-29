@@ -26,53 +26,46 @@
       {{top-period-chooser period=period}}
     </div>
   {{/if}}
-  {{#if showTable}}
+  {{#if topicTrackingState.hasIncoming}}
+    <div class="show-more">
+      <div class='alert alert-info clickable' {{action "showInserted"}}>
+        {{countI18n topic_count_ suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+        {{i18n click_to_show}}
+      </div>
+    </div>
+  {{/if}}
+  {{#if hasTopics}}
     <table class='topic-list'>
       <thead>
-      <tr>
-        {{#if currentUser}}
-        <th class='star'>
-          {{#if canBulkSelect}}
-          <button class='btn bulk-select' {{action "toggleBulkSelect"}} title="{{i18n topics.bulk.toggle}}"><i class='fa fa-list'></i></button>
+        <tr>
+          {{#if currentUser}}
+          <th class='star'>
+            {{#if canBulkSelect}}
+            <button class='btn bulk-select' {{action "toggleBulkSelect"}} title="{{i18n topics.bulk.toggle}}"><i class='fa fa-list'></i></button>
+            {{/if}}
+          </th>
           {{/if}}
-        </th>
-        {{/if}}
-        {{#sortable-heading class="default"}} {{i18n topic.title}} {{/sortable-heading}}
-        {{#unless controller.hideCategory}}
-          {{#sortable-heading sortBy="category" action="changeSort" order=order ascending=ascending}}
-            {{i18n category_title}}
+          {{#sortable-heading class="default"}} {{i18n topic.title}} {{/sortable-heading}}
+          {{#unless controller.hideCategory}}
+            {{#sortable-heading sortBy="category" action="changeSort" order=order ascending=ascending}}
+              {{i18n category_title}}
+            {{/sortable-heading}}
+          {{/unless}}
+          {{#sortable-heading class="posters"}} {{i18n users}} {{/sortable-heading}}
+          {{#sortable-heading sortBy="posts" number=true action="changeSort" order=order ascending=ascending}}
+            {{i18n posts}}
           {{/sortable-heading}}
-        {{/unless}}
-        {{#sortable-heading class="posters"}} {{i18n users}} {{/sortable-heading}}
-        {{#sortable-heading sortBy="posts" number=true action="changeSort" order=order ascending=ascending}}
-          {{i18n posts}}
-        {{/sortable-heading}}
-        {{#sortable-heading sortBy="views" number=true action="changeSort" order=order ascending=ascending}}
-          {{i18n views}}
-        {{/sortable-heading}}
-        {{#sortable-heading sortBy="activity" number=true action="changeSort" order=order ascending=ascending}}
-          {{i18n activity}}
-        {{/sortable-heading}}
-      </tr>
+          {{#sortable-heading sortBy="views" number=true action="changeSort" order=order ascending=ascending}}
+            {{i18n views}}
+          {{/sortable-heading}}
+          {{#sortable-heading sortBy="activity" number=true action="changeSort" order=order ascending=ascending}}
+            {{i18n activity}}
+          {{/sortable-heading}}
+        </tr>
       </thead>
-
-      {{#if topicTrackingState.hasIncoming}}
-        <tbody>
-          <tr>
-            <td colspan="9">
-              <div class='alert alert-info clickable' {{action "showInserted"}}>
-                {{countI18n topic_count_ suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
-                {{i18n click_to_show}}
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      {{/if}}
-
       <tbody>
         {{each topics itemController="topic-list-item" itemView="topic-list-item"}}
       </tbody>
-
     </table>
   {{/if}}
 </div>

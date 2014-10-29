@@ -57,6 +57,16 @@ export default Ember.Component.extend({
 
   actions: {
     expand: function() {
+      var self = this;
+
+      if(!this.get('renderCategories')){
+        this.set('renderCategories',true);
+        Em.run.next(function(){
+          self.send('expand');
+        });
+        return;
+      }
+
       if (this.get('expanded')) {
         this.close();
         return;
@@ -65,8 +75,7 @@ export default Ember.Component.extend({
       if (this.get('categories')) {
         this.set('expanded', true);
       }
-      var self = this,
-          $dropdown = this.$()[0];
+      var $dropdown = this.$()[0];
 
       this.$('a[data-drop-close]').on('click.category-drop', function() {
         self.close();

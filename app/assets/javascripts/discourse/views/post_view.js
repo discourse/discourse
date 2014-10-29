@@ -131,7 +131,9 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
       topicId = parseInt(topicId, 10);
 
       Discourse.ajax("/posts/by_number/" + topicId + "/" + postId).then(function (result) {
-        var parsed = $(result.cooked);
+        // slightly double escape the cooked html to prevent jQuery from unescaping it
+        var escaped = result.cooked.replace("&", "&amp;");
+        var parsed = $(escaped);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         $blockQuote.showHtml(parsed, 'fast', finished);
       });
