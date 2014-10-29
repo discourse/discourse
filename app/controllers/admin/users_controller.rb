@@ -25,7 +25,6 @@ class Admin::UsersController < Admin::AdminController
                                     :revoke_api_key]
 
   def index
-    params.merge!({ admin: current_user.admin? })
     query = ::AdminUserIndexQuery.new(params)
     render_serialized(query.find_users, AdminUserSerializer)
   end
