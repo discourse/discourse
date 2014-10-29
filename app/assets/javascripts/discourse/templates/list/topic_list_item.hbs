@@ -27,13 +27,10 @@
   {{/if}}
 </td>
 
-{{#unless hideCategory}}
-<td class='category'>{{bound-category-link category showParent=true}}</td>
-{{/unless}}
-
-{{view 'posters-column' posters=posters}}
+{{handlebars "list/category_column" hideCategory=hideCategory category=category}}
+{{handlebars "list/posters_column" posters=posters}}
 
 {{posts-count-column topic=model class="num" action="showTopicEntrance"}}
-<td {{bind-attr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
+<td class="num views {{unbound viewsHeat}}">{{number views numberKey="views_long"}}</td>
 
-{{activity-column topic=model class="num"}}
+{{handlebars "list/activity_column" topic=model class="num" tagName="td"}}

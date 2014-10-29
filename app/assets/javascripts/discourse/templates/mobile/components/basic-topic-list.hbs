@@ -27,7 +27,7 @@
             <div class="topic-item-stats clearfix">
               <div class="pull-right">
                 {{posts-count-column topic=topic tagName="div" class="num posts" action="clickedPosts"}}
-                {{activity-column topic=topic tagName="div" class="num activity last"}}
+                {{handlebars "list/activity_column" topic=topic tagName="div" class="num activity last"}}
               </div>
               {{#unless controller.hideCategory}}
                 <div class='category'>

@@ -1,0 +1,5 @@
+<td class='posters'>
+{{#each posters}}
+<a href="{{get "user.path"}}" data-user-card="{{this.user.username}}" class="{{get "extras"}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
+{{/each}}
+</td>
