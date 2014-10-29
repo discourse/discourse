@@ -82,7 +82,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
       admin_role_id = @roles.select { |r| r[:name] == "Administrator" }.first[:role_id]
       moderator_role_id = @roles.select { |r| r[:name] == "Moderator" }.first[:role_id]
 
-      activities = @activities.reject { |a| a[:activity_user_id] != a[:regarding_user_id] }
+      activities = (@activities || []).reject { |a| a[:activity_user_id] != a[:regarding_user_id] }
 
       create_users(@users) do |user|
         next if user[:name] == "[Deleted User]"
