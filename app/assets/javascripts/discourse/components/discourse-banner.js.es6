@@ -1,4 +1,4 @@
-import VisibleComponent from "discourse/components/visible-component";
+import VisibleComponent from "discourse/components/visible";
 
 export default VisibleComponent.extend({
 

@@ -42,6 +42,7 @@
 //= require ./discourse/routes/discourse_restricted_user_route
 //= require ./discourse/components/top-title
 //= require ./discourse/components/text-field
+//= require ./discourse/components/visible
 //= require ./discourse/helpers/user-avatar
 //= require ./discourse/helpers/cold-age-class
 
