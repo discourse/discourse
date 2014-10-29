@@ -206,10 +206,13 @@ describe User do
     it { should be_valid }
     it { should_not be_admin }
     it { should_not be_approved }
-    its(:approved_at) { should be_blank }
-    its(:approved_by_id) { should be_blank }
-    its(:email_private_messages) { should == true }
-    its(:email_direct ) { should == true }
+
+    it "is properly initialized" do
+      subject.approved_at.should be_blank
+      subject.approved_by_id.should be_blank
+      subject.email_private_messages.should == true
+      subject.email_direct.should == true
+    end
 
     context 'digest emails' do
       it 'defaults to digests every week' do
@@ -230,11 +233,11 @@ describe User do
     end
 
     context 'after_save' do
-      before do
-        subject.save
-      end
+      before { subject.save }
 
-      its(:email_tokens) { should be_present }
+      it "has an email token" do
+        subject.email_tokens.should be_present
+      end
     end
 
     it "downcases email addresses" do

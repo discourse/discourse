@@ -40,8 +40,11 @@ describe Invite do
 
     context 'saved' do
       subject { Fabricate(:invite) }
-      its(:invite_key) { should be_present }
-      its(:email_already_exists) { should == false }
+
+      it "works" do
+        subject.invite_key.should be_present
+        subject.email_already_exists.should == false
+      end
 
       it 'should store a lower case version of the email' do
         subject.email.should == iceking
