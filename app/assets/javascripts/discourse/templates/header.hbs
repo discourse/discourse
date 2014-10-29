@@ -80,15 +80,19 @@
         {{/if}}
       </ul>
 
-      {{render "search"}}
+      {{#if view.renderDropdowns}}
 
-      {{render "notifications" notifications}}
+        {{render "search"}}
 
-      {{#if view.renderSiteMap}}
-        {{render "siteMap"}}
+        {{render "notifications" notifications}}
+
+        {{#if view.renderSiteMap}}
+          {{render "siteMap"}}
+        {{/if}}
+
+        {{render "user-dropdown"}}
+
       {{/if}}
-
-      {{render "user-dropdown"}}
 
     </div>
 

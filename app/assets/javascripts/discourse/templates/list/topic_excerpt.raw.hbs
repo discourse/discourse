@@ -1,0 +1,8 @@
+{{#if topic.hasExcerpt}}
+  <div class="topic-excerpt">
+    {{{topic.excerpt}}}
+    {{#if topic.excerptTruncated}}
+      <a href="{{topic.url}}">{{i18n read_more}}</a>
+    {{/if}}
+  </div>
+{{/if}}

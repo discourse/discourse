@@ -96,7 +96,7 @@ Note that pinning topics works a little differently in Discourse:
 
 If a pin isn't visible enough, you can also turn one single topic into a **banner**. The banner topic floats on top of all topics and all primary pages. Users can permanently dismiss this floating banner by clicking the &times; in the upper right corner.
 
-To make (or remove) a pin or a banner, use the admin wrench at the top right of the topic.
+To make (or remove) a pin or a banner, use the admin wrench at the top right or bottom of the topic.
 
 ### Set the Homepage
 
