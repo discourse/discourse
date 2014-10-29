@@ -79,14 +79,6 @@ export default DiscourseController.extend(ModalFunctionality, {
       this.fetchConfirmationValue();
     }
 
-    // If too short
-    if (this.get('accountName').length < 3) {
-      return Discourse.InputValidation.create({
-        failed: true,
-        reason: I18n.t('user.name.too_short')
-      });
-    }
-
     // Looks good!
     return Discourse.InputValidation.create({
       ok: true,

@@ -387,7 +387,7 @@ en:
 
       name:
         title: "Name"
-        instructions: "Your full name."
+        instructions: "Your full name (optional)."
         too_short: "Your name is too short."
         ok: "Your name looks good."
       username:
