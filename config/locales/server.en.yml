@@ -1080,18 +1080,25 @@ en:
     closed_enabled: "This topic is now closed. New replies are no longer allowed."
     closed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_enabled_days:
-      zero: "This topic was automatically closed after 1 day. New replies are no longer allowed."
       one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
     autoclosed_enabled_hours:
-      zero: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
       one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
     autoclosed_enabled_minutes:
-      zero: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
       one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
+    autoclosed_enabled_lastpost_days:
+      one: "This topic was automatically closed 1 day after the last reply. New replies are no longer allowed."
+      other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
+    autoclosed_enabled_lastpost_hours:
+      one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
+      other: "This topic was automatically closed count} hours after the last reply. New replies are no longer allowed."
+    autoclosed_enabled_lastpost_minutes:
+      one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
+      other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
+    autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
     pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
     pinned_globally_enabled: "This topic is now pinned globally. It will appear at the top of its category and all topic lists until it is unpinned by staff for everyone, or by individual users for themselves."
