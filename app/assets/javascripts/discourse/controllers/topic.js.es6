@@ -39,11 +39,24 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
   }.observes('controllers.search.term', 'controllers.header.visibleDropdown'),
 
-  filter: function(key, value) {
+  show_deleted: function(key, value) {
+    var postStream = this.get('postStream');
+    if (!postStream) { return; }
+
     if (arguments.length > 1) {
-      this.set('postStream.summary', value === "summary");
+      postStream.set('show_deleted', value);
     }
-    return this.get('postStream.summary') ? "summary" : null;
+    return postStream.get('show_deleted') ? true : null;
+  }.property('postStream.summary'),
+
+  filter: function(key, value) {
+    var postStream = this.get('postStream');
+    if (!postStream) { return; }
+
+    if (arguments.length > 1) {
+      postStream.set('summary', value === "summary");
+    }
+    return postStream.get('summary') ? "summary" : null;
   }.property('postStream.summary'),
 
   username_filters: Discourse.computed.queryAlias('postStream.streamFilters.username_filters'),
