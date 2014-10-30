@@ -14,3 +14,7 @@
 <% end %>
 
 <%= @body.html_safe %>
+
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+<% end %>

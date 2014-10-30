@@ -57,13 +57,24 @@ class ListController < ApplicationController
         list_opts[:no_definitions] = true
       end
 
+
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = construct_next_url_with(list_opts)
       list.prev_topics_url = construct_prev_url_with(list_opts)
       if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
         @rss = filter
+
+        if use_crawler_layout?
+          filter_title = I18n.t("js.filters.#{filter.to_s}.title")
+          if list_opts[:category]
+            @title = I18n.t('js.filters.with_category', filter: filter_title, category: Category.find(list_opts[:category]).name)
+          else
+            @title = I18n.t('js.filters.with_topics', filter: filter_title)
+          end
+        end
       end
+
       respond(list)
     end
 
@@ -158,6 +169,11 @@ class ListController < ApplicationController
       list.for_period = period
       list.more_topics_url = construct_next_url_with(top_options)
       list.prev_topics_url = construct_prev_url_with(top_options)
+
+      if use_crawler_layout?
+        @title = I18n.t("js.filters.top.#{period}.title")
+      end
+
       respond(list)
     end
 
