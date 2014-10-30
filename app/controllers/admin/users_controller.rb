@@ -264,7 +264,7 @@ class Admin::UsersController < Admin::AdminController
       return
     end
 
-    sso = DiscourseSingleSignOn.parse(request.query_string)
+    sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
     user = sso.lookup_or_create_user
 
     render_serialized(user, AdminDetailedUserSerializer, root: false)
