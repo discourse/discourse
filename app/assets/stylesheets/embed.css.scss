@@ -47,7 +47,6 @@ article.post {
   .author {
     padding: 10px 5px;
     float: left;
-    text-align: center;
 
     img {
       max-width: 45px;
@@ -57,7 +56,6 @@ article.post {
   h3.username {
     font-size: 13px;
     margin: 0 0 10px 0;
-    word-wrap: break-word;
 
     a {
       color: #5c5c5c
@@ -80,6 +78,7 @@ article.post {
     padding: 10px 0 20px 0;
     margin-left: 65px;
     word-wrap: break-word;
+    word-break: break-word;
 
     img {
       max-width:100%;
