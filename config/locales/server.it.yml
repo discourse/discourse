@@ -64,26 +64,26 @@ it:
       one: "1 risposta"
       other: "%{count} risposte"
   too_many_mentions:
-    zero: "Spiacente, non puoi menzionare altri utenti."
-    one: "Spiacente, puoi menzionare un solo altro utente in un messaggio."
-    other: "Spiacente, puoi menzionare %{count} utenti in un messaggio."
+    zero: "Spiacenti, non puoi menzionare altri utenti."
+    one: "Spiacenti, puoi menzionare un solo altro utente in un messaggio."
+    other: "Spiacenti, puoi menzionare solo %{count} utenti in un messaggio."
   too_many_mentions_newuser:
-    zero: "Spiacente, i nuovi utenti non possono menzionare altri utenti."
-    one: "Spiacente, i nuovi utenti possono menzionare un solo altro utente in un messaggio."
-    other: "Spiacente, i nuovi utenti possono menzionare solo %{count} utenti in un messaggio."
+    zero: "Spiacenti, i nuovi utenti non possono menzionare altri utenti."
+    one: "Spiacenti, i nuovi utenti possono menzionare un solo altro utente in un messaggio."
+    other: "Spiacenti, i nuovi utenti possono menzionare solo %{count} utenti in un messaggio."
   too_many_images:
-    zero: "Spiacente, i nuovi utenti non possono inserire immagini nei messaggi."
-    one: "Spiacente, i nuovi utenti possono inserire solo un'immagine in un messaggio."
-    other: "Spiacente, i nuovi utenti possono inserire solo %{count} immagini in un messaggio."
+    zero: "Spiacenti, i nuovi utenti non possono inserire immagini nei messaggi."
+    one: "Spiacenti, i nuovi utenti possono inserire solo un'immagine in un messaggio."
+    other: "Spiacenti, i nuovi utenti possono inserire solo %{count} immagini in un messaggio."
   too_many_attachments:
     zero: "Spiacenti, i nuovi utenti non possono inserire allegati nei messaggi."
     one: "Spiacenti, i nuovi utenti possono inserire un solo allegato in un messaggio."
     other: "Spiacenti, i nuovi utenti possono solo inserire %{count} allegati in un messaggio."
   too_many_links:
-    zero: "Spiacente, i nuovi utenti non possono inserire collegamenti nei messaggi."
-    one: "Spiacente, i nuovi utenti possono inserire solo un collegamento in un messaggio."
-    other: "Spiacente, i nuovi utenti possono inserire solo %{count} collegamenti in un messaggio."
-  spamming_host: "Spiacente, non puoi inserire un collegamento verso quel dominio."
+    zero: "Spiacenti, i nuovi utenti non possono inserire collegamenti nei messaggi."
+    one: "Spiacenti, i nuovi utenti possono inserire solo un collegamento in un messaggio."
+    other: "Spiacenti, i nuovi utenti possono inserire solo %{count} collegamenti in un messaggio."
+  spamming_host: "Spiacenti, non puoi inserire un collegamento verso quel dominio."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
   has_already_been_used: "è già stato usato"
@@ -493,7 +493,7 @@ it:
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
     queue_size_warning: 'Il numero di job in coda è %{queue_size}, troppo alto. Potrebbe esserci un problema con i processi Sidekiq, oppure potresti dover aggiungere altri Sidekiq worker.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
-    enable_google_logins_warning: "Stai utilizzando una versione deprecata del sistema di autenticazione Google OpenID . Google terminerà il supporto di OpenID a partire dal 20 Aprile 2015. Inizia ad usare Google OAuth2 al più presto. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Guarda questa guida per saperne di più</a>"
+    enable_google_logins_warning: "Stai utilizzando una versione obsoleta dell'autenticazione Google OpenID. Google terminerà il supporto ad OpenID il 20 aprile 2015. Inizia ad usare Google OAuth2 al più presto. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Leggi questa guida per saperne di più</a>"
     both_googles_warning: "Hai entrambe le impostazioni enable_google_logins e enable_google_oauth2_logins attivate. Disabilita enable_google_logins."
     google_oauth2_config_warning: 'Il server è configurato per permettere registrazioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
     facebook_config_warning: 'Il server è configurato per accettare registrazioni e login con Facebook (enable_facebook_logins), tuttavia i parametri segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
@@ -504,7 +504,7 @@ it:
     image_magick_warning: 'Il server è configurato per creare thumbnail di immagini di ampie dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando il tuo Package Manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
     failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il tuo file config/environments/production.rb e accertati che le impostazioni config.action_mailer siano corrette. <a href="/sidekiq/retries" target="_blank">Guarda i job falliti in Sidekiq</a>.'
     default_logo_warning: "Non hai personalizzato le immagini dei logo per il tuo sito. Aggiorna logo_url, logo_small_url, e favicon_url nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
-    contact_email_missing: "Non hai fornito una email di contatto per il tuo sito. Per favore aggiorna contact_email nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
+    contact_email_missing: "Non hai fornito una email di contatto per il tuo sito. Per favore aggiorna il campo contact_email nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     contact_email_invalid: "Il contatto email non è valido. Per favore aggiorna contact_email nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     title_nag: "Il titolo del sito è ancora impostato al valore di default. Per favore aggiornalo con il titolo del tuo sito, dalle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     site_description_missing: "L'impostazione site_description è vuota. Scrivi una breve descrizione del forum nelle <a href='/admin/site_settings'>Impostazioni del sito</a>."
@@ -1119,17 +1119,17 @@ it:
       too_large: "Spiacenti, la dimensione del file che vuoi caricare è eccessiva (la dimensione massima è %{max_size_kb}%kb)."
     images:
       too_large: "Spiacenti, l'immagine che stai cercando di caricare è troppo grande (le dimensioni massime sono %{max_size_kb}%kb). Per favore ridimensionala e riprova."
-      fetch_failure: "Spiacente, si è verificato un errore nel recupero dell'immagine."
-      unknown_image_type: "Spiacente, ma il file che hai provato a caricare non sembra un'immagine."
-      size_not_found: "Spiacente, ma non riusciamo a determinare la dimensione dell'immagine. Probabilmente l'immagine è corrotta?"
+      fetch_failure: "Spiacenti, si è verificato un errore nel recupero dell'immagine."
+      unknown_image_type: "Spiacenti, ma il file che hai provato a caricare non sembra un'immagine."
+      size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. E' forse danneggiata?"
   flag_reason:
     sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto con lo stesso indirizzo IP. Controlla le impostazioni di flag_sockpuppets."
-    spam_hosts: "Questo nuovo utente ha tentato di creare post multipli con link allo stesso dominio. Guarda l'impostazione newuser_spam_host_threeshold."
+    spam_hosts: "Questo nuovo utente ha tentato di creare più messaggi con collegamenti allo stesso dominio. Guarda l'impostazione newuser_spam_host_threeshold."
   email_log:
     no_user: "Non trovo l'utente con l'id %{user_id}"
     suspended_not_pm: "L'utente è stato sospeso, questo non è un messaggio privato."
     seen_recently: "L'utente è stato visto di recente"
-    post_not_found: "Non trovo post con id %{post_id}"
+    post_not_found: "Non trovo un messaggio con id %{post_id}"
     notification_already_read: "La notifica per cui è stata inviata questa mail è già stata letta"
     topic_nil: "post.topic è nil"
     post_deleted: "il messaggio è stato cancellato dal suo autore"

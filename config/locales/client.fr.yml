@@ -139,8 +139,8 @@ fr:
       stat:
         all_time: "depuis toujours"
         last_7_days: "Les 7 derniers jours"
-      like_count: "Nombre de J'aime"
-      topic_count: "Nombre de sujets"
+      like_count: "J'aime"
+      topic_count: "Sujets"
       post_count: "Nombre de messages"
       user_count: "Nombre d'utilisateurs"
     bookmarks:
@@ -511,8 +511,8 @@ fr:
     created: 'Créé'
     created_lowercase: 'créé'
     trust_level: 'Niveau de confiance'
-    search_hint: 'pseudo'
-    search_hint_admin: 'pseudo ou courriel'
+    search_hint: 'pseudo ou adresse IP'
+    search_hint_admin: 'pseudo, courriel ou adresse IP'
     create_account:
       title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse de courriel est déjà enregistrée, essayez le lien Mot de passe oublié."

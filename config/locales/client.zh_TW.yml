@@ -88,6 +88,7 @@ zh_TW:
     admin_title: "管理員"
     flags_title: "投訴"
     show_more: "顯示更多"
+    show_help: "幫助"
     links: "連結"
     links_lowercase: "Links"
     faq: "常見問答集"
@@ -121,6 +122,10 @@ zh_TW:
       stat:
         all_time: "所有時間"
         last_7_days: "最近 7 天"
+      like_count: "讚"
+      topic_count: "討論話題"
+      post_count: "文章"
+      user_count: "用戶"
     bookmarks:
       not_logged_in: "抱歉，你必須先登入才能將文章加上書籤"
       created: "你已將此文章加上書籤"
@@ -235,6 +240,8 @@ zh_TW:
       invited_by: "邀請人"
       trust_level: "信任等級"
       notifications: "通知"
+      dismiss_notifications: "全部標記為已讀"
+      dismiss_notifications_tooltip: "標記所有未讀通知為已讀"
       disable_jump_reply: "不要在回覆之後直接跳到你的新文章"
       dynamic_favicon: "在 favicon 顯示訊息通知"
       edit_history_public: "讓其他用戶檢視我的文章修訂紀錄"
@@ -300,6 +307,8 @@ zh_TW:
         image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
       change_profile_background:
         title: "基本資料背景圖案"
+      change_card_background:
+        title: "用戶卡背景"
       email:
         title: "電子郵件"
         instructions: "我們不會公開您的電子郵件信箱。"
@@ -337,6 +346,8 @@ zh_TW:
       created: "建立日期"
       log_out: "登出"
       location: "位置"
+      card_badge:
+        title: "用戶卡徽章"
       website: "網站"
       email_settings: "電子郵件"
       email_digests:
@@ -471,8 +482,8 @@ zh_TW:
     created: '已建立'
     created_lowercase: '已建立'
     trust_level: '信任等級'
-    search_hint: '用戶名稱'
-    search_hint_admin: '使用者名稱或 email'
+    search_hint: '用戶名稱或 IP 位址'
+    search_hint_admin: '用戶名稱、電子郵件、或 IP 位址'
     create_account:
       title: "建立新帳號"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
@@ -534,6 +545,7 @@ zh_TW:
       drafts_offline: "離線草稿"
       min_length:
         need_more_for_title: "討論話題名稱還需要 {{n}} 個字"
+        need_more_for_reply: "還需要 {{n}} 個字"
       error:
         title_missing: "標題為必填欄位"
         title_too_short: "標題必須至少 {{min}} 個字"
@@ -923,7 +935,7 @@ zh_TW:
       actions:
         flag: '投訴'
         defer_flags:
-          other: "延遲標籤"
+          other: "暫緩投訴"
         it_too:
           off_topic: "一起投訴"
           spam: "一起投訴"
@@ -1006,6 +1018,8 @@ zh_TW:
           previous: "上一版"
           next: "下一版"
           last: "最新版"
+          hide: "隱藏修訂紀錄"
+          show: "顯示修訂紀錄"
           comparing_previous_to_current_out_of_total: "第 <strong>{{previous}}</strong> 版與 第<strong>{{current}}</strong> 版 / {{total}} 的差異比較"
         displays:
           inline:
@@ -1084,6 +1098,8 @@ zh_TW:
       delete_spammer: "刪除垃圾文章發送者"
       delete_confirm: "您將刪除此用戶的 <b>%{posts}</b> 則文章與 <b>%{topics}</b> 個討論話題、移除他的帳號、封鎖從他使用的 IP <b>%{ip_address}</b> 登入、將他的電子郵件地址 <b>%{email}</b> 加入永久封鎖名稱，你確定此人真的發送垃圾文章嗎?"
       yes_delete_spammer: "是的，刪除垃圾文章發送者"
+      ip_address_missing: "(N/A)"
+      hidden_email_address: "( 隱藏) "
       submit_tooltip: "送出私人投訴"
       take_action_tooltip: "使其立刻達到投訴門檻，不用等待更多社群投訴"
       cant: "抱歉，你目前無法投訴此文章。"
@@ -1103,6 +1119,8 @@ zh_TW:
       clicks:
         other: "%{count} 點擊"
     topic_statuses:
+      warning:
+        help: "這是正式警告。"
       locked:
         help: "此討論話題已關閉，不再接受回覆"
       unpinned:
@@ -1248,9 +1266,13 @@ zh_TW:
         old: "舊的"
         active: "待處理"
         agree: "同意"
+        agree_title: "確認此投訴為有效且正確"
         agree_flag_modal_title: "批准並且 ..."
         agree_flag_hide_post: "批准 (隱藏文章 + 送出私人訊息)"
         agree_flag_hide_post_title: "隱藏此文章，並自動向此用戶送出私人訊息，要求盡快修改它"
+        agree_flag_restore_post_title: "回復此文章"
+        agree_flag: "同意投訴"
+        agree_flag_title: "同意投訴且不更動文章"
         defer_flag: "延遲"
         delete: "刪除"
         delete_post_defer_flag_title: "刪除文章，如果刪除的是討論話題的第一則文章，討論話題也將一併刪除"
@@ -1260,6 +1282,7 @@ zh_TW:
         delete_spammer_title: "刪除此用戶與他的所有文章與討論話題"
         disagree_flag_unhide_post: "不同意 ( 取消文章的隱藏狀態 )"
         disagree_flag: "不同意"
+        disagree_flag_title: "否決此投訴為無效或有誤"
         clear_topic_flags: "完成"
         clear_topic_flags_title: "該討論話題已被調查，問題已經解決。點擊完成以移除投訴。"
         dispositions:
@@ -1268,6 +1291,7 @@ zh_TW:
           deferred: "之後再處理"
         flagged_by: "投訴者"
         resolved_by: "處理為"
+        took_action: "採取行動"
         system: "系統"
         error: "發生了某些錯誤"
         reply_message: "回覆"
@@ -1438,6 +1462,8 @@ zh_TW:
           love:
             name: '愛'
             description: "按讚按鈕的顏色"
+          wiki:
+            name: '維基'
       email:
         title: "電郵"
         settings: "設定"
@@ -1480,6 +1506,8 @@ zh_TW:
         last_match_at: "最近出現時間"
         match_count: "出現次數"
         ip_address: "IP"
+        topic_id: "討論話題 ID"
+        post_id: "文章 ID"
         delete: '刪除'
         edit: '編輯'
         save: '儲存'
@@ -1574,6 +1602,8 @@ zh_TW:
         reject_failures:
           other: "無法拒絕 %{count} 個用戶"
         not_verified: "未確認"
+        check_email:
+          text: "顯示"
       user:
         suspend_failed: "將此用戶停權時發生錯誤 {{error}}"
         unsuspend_failed: "恢復此用戶的權限時發生錯誤 {{error}}"
@@ -1609,6 +1639,7 @@ zh_TW:
         reputation: 聲望
         permissions: 權限
         activity: 活動
+        like_count: 已給出 / 收到的讚
         last_100_days: '在過去 100 天內'
         private_topics_count: 私人討論話題
         posts_read_count: 讀過的文章
@@ -1616,6 +1647,8 @@ zh_TW:
         topics_entered: 讀過的討論話題
         flags_given_count: 投訴
         flags_received_count: 被投訴
+        warnings_received_count: 收到的警告
+        flags_given_received_count: '已提出 / 收到的投訴'
         approve: '批准'
         approved_by: "批准者"
         approve_success: "用戶已獲得批准並送出啟用帳號的電子郵件。"
@@ -1650,6 +1683,8 @@ zh_TW:
         suspend_modal_title: "將用戶停權"
         trust_level_2_users: "信任等級 2 用戶"
         trust_level_3_requirements: "信任等級 3 之條件"
+        lock_trust_level: "鎖住信任等級"
+        unlock_trust_level: "解鎖信任等級"
         tl3_requirements:
           title: "信任等級 3 之條件"
           table_title: "在過去100天內："
@@ -1674,11 +1709,23 @@ zh_TW:
           external_email: "電子郵件"
           external_avatar_url: "頭像 URL"
       user_fields:
+        untitled: "未命名"
         save: "儲存"
         edit: "編輯"
         delete: "刪除"
         cancel: "取消"
         delete_confirm: "你確定要刪除此用戶欄位 ?"
+        required:
+          enabled: "必填"
+          disabled: "非必填"
+        editable:
+          enabled: "可編輯"
+          disabled: "不可編輯"
+        field_types:
+          text: '文字區域'
+          confirm: '確認'
+      site_text:
+        title: '文字內容'
       site_settings:
         show_overriden: '只顯示修改過的項目'
         title: '設定'
@@ -1736,6 +1783,7 @@ zh_TW:
         listable: 在徽章頁面上顯示徽章
         enabled: 啟用徽章
         icon: 圖示
+        image: 圖片
         query: 徽章查詢語法 (SQL)
         target_posts: 查詢文章張貼目標
         auto_revoke: 每日執行撤銷用的 SQL 語法
@@ -1778,14 +1826,17 @@ zh_TW:
         unread: '<b>g</b> , <b>u</b> 未讀'
         starred: '<b>g</b>, <b>f</b> 已收藏'
         categories: '<b>g</b>, <b>c</b> 分類'
+        top: '<b>g</b>, <b>t</b> 頂端'
       navigation:
         title: '導航'
+        jump: '<b>#</b> 前往文章 #'
         back: '<b>u</b> 返回'
         open: '<b>o</b> 或 <b>Enter</b> 開啟已選擇討論話題'
       application:
         title: 'Application'
         create: '<b>c</b> 表示新討論話題'
         notifications: '<b>n</b> 開啟通知'
+        show_incoming_updated_topics: '<b>.</b> 顯示有更新的討論話題'
         search: '<b>/</b> 搜尋'
       actions:
         title: '行動'

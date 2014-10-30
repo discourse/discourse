@@ -88,6 +88,7 @@ ko:
     admin_title: "관리자"
     flags_title: "신고"
     show_more: "더 보기"
+    show_help: "도움말"
     links: "링크"
     links_lowercase: "링크"
     faq: "FAQ"
@@ -121,6 +122,10 @@ ko:
       stat:
         all_time: "전체"
         last_7_days: "지난 7일"
+      like_count: "좋아요"
+      topic_count: "토픽"
+      post_count: "게시글"
+      user_count: "사용자"
     bookmarks:
       not_logged_in: "죄송합니다. 게시물을 즐겨찾기에 추가하려면 로그인을 해야 합니다."
       created: "이 게시글을 북마크 하였습니다."
@@ -235,6 +240,8 @@ ko:
       invited_by: "에 의해 초대되었습니다."
       trust_level: "신뢰도"
       notifications: "알림"
+      dismiss_notifications: "모두 읽음으로 표시"
+      dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       disable_jump_reply: "댓글을 작성했을 때, 새로 작성한 댓글로 화면을 이동하지 않습니다."
       dynamic_favicon: "새로운 메시지 알림을 Favicon으로 보여줍니다. (실험적 기능)"
       edit_history_public: "내 글의 리비전을 다른 사용자들이 볼 수 있게 허용"
@@ -300,6 +307,10 @@ ko:
         image_is_not_a_square: "경고: 정사각형 이미지가 아니기 때문에 사진을 수정하였습니다."
       change_profile_background:
         title: "프로필 배경"
+        instructions: "프로필 배경은 가운데를 기준으로 표시되며 850px이 기본 가로 사이즈 입니다."
+      change_card_background:
+        title: "사용자 카드 배경"
+        instructions: "배경 이미지는 가운데를 기준으로 표시되며 590px이 기본 가로 사이즈 입니다."
       email:
         title: "이메일"
         instructions: "절대로 공개되지 않습니다."
@@ -337,6 +348,8 @@ ko:
       created: "생성일"
       log_out: "로그아웃"
       location: "위치"
+      card_badge:
+        title: "사용자 카드 뱃지"
       website: "웹사이트"
       email_settings: "이메일"
       email_digests:
@@ -471,8 +484,8 @@ ko:
     created: '생성'
     created_lowercase: '최초 글'
     trust_level: '신뢰도'
-    search_hint: '사용자명'
-    search_hint_admin: '아이디 혹은 이메일'
+    search_hint: '아이디 혹은 IP 주소'
+    search_hint_admin: '아이디, 이메일 혹은 IP 주소'
     create_account:
       title: "회원 가입"
       failed: "뭔가 잘못되었습니다. 이 메일은 등록이 되어있습니다. 비밀번호를 잊으셨다면 비밀번호 찾기를 눌러주세요."
@@ -534,6 +547,7 @@ ko:
       drafts_offline: "초안"
       min_length:
         need_more_for_title: "제목을 {{n}}글자 더 입력해주세요"
+        need_more_for_reply: "{{n}} to go"
       error:
         title_missing: "제목은 필수 항목입니다"
         title_too_short: "제목은 최소 {{min}} 글자 이상이어야 합니다."
@@ -557,6 +571,7 @@ ko:
       view_new_post: "새로운 게시물을 볼 수 있습니다."
       saving: "저장 중..."
       saved: "저장 완료!"
+      saved_draft: "작성중인 글이 있습니다. 계속 작성하려면 여기를 클릭하세요."
       uploading: "업로딩 중..."
       show_preview: '미리보기를 보여줍니다 &laquo;'
       hide_preview: '&laquo; 미리보기를 숨기기'
@@ -586,6 +601,12 @@ ko:
       help: "마크다운 편집 도움말"
       toggler: "작성 패널을 숨기거나 표시"
       admin_options_title: "이 토픽에 대한 옵션 설정"
+      auto_close:
+        label: "자동-닫기 토픽 시간:"
+        error: "유효한 값은 눌러주세요."
+        limited:
+          units: "(# 시간)"
+          examples: '시간에 해당하는 숫자를 입력하세요. (24)'
     notifications:
       title: "@사용자이름 언급, 게시글과 토픽에 대한 언급, 개인 메시지 등에 대한 알림"
       none: "현재 알림이 없습니다."
@@ -1006,6 +1027,8 @@ ko:
           previous: "Previous revision"
           next: "Next revision"
           last: "Last revision"
+          hide: "리비전 감추기"
+          show: "리비전 보기"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

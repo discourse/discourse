@@ -31,9 +31,11 @@ pl_PL:
   via: "%{username} z %{site_name}"
   is_reserved: "jest zarezerwowana"
   purge_reason: "Automatycznie usunięto z uwagi na wiek i brak weryfikacji"
+  disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   errors:
     messages:
       too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
+      invalid_boolean: "Nieprawidłowy boolean."
       taken: "jest już zajęty"
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
@@ -249,6 +251,7 @@ pl_PL:
       title: "regularny"
     elder:
       title: "starszyzna"
+    change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}' - jeśli chcesz to zmienić, najpierw zablokuj poziom zaufania temu użytkownikowi."
   rate_limiter:
     slow_down: "Ta akcja została wykonana zbyt wiele razy, próbuj ponownie za jakiś czas"
     too_many_requests: "Liczba wykonań tej czynności w ciągu dnia jest ograniczona. Odczekaj %{time_left} przed ponowną próbą."
@@ -536,6 +539,9 @@ pl_PL:
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
     queue_size_warning: 'Długość kolejki prac to %{queue_size}. To dużo. Może to oznaczać problem z Sidekiq lub konieczność zwiększenia ilości jego procesów.'
     memory_warning: 'Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany.'
+    enable_google_logins_warning: "Używasz przestarzałej wersji uwierzytelniania: Google OpenID. Google  wyłączy OpenID 20 kwietnia 2015. Zacznij używać Google OAuth2 jak najszybciej. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Zobacz ten przewodnik, aby dowiedzieć się więcej</a>"
+    both_googles_warning: "W ustawieniach serwisu włączono zarówno enable_google_logins jak i enable_google_oauth2_logins. Wyłącz enable_google_logins."
+    google_oauth2_config_warning: 'Serwis umożliwia rejestrację i logowanie poprzez Google OAuth2 (enable_google_oauth2_logins), ale ''client id'' oraz ''client secret'' nie są jeszcze ustawione. Przejdź do <a href="/admin/site_settings">Ustawień</a> i wprowadź te wartości. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
     facebook_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator i sekret aplikacji nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     twitter_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale klucz i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     github_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą GitHuba (enable_github_logins), ale id klienta i sekret nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
@@ -582,6 +588,8 @@ pl_PL:
       title: "Stopka każdej strony"
       description: "Kod HTML jaki zostanie dołączony na dole każdej strony."
   site_settings:
+    censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
+    delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"
     min_post_length: "Minimalna długość wpisu w znakach"
@@ -838,6 +846,8 @@ pl_PL:
         few: "%{count} użytkowników czeka na zatwierdzenie"
         other: "%{count} użytkowników czeka na zatwierdzenie"
   unsubscribe_link: "Możesz zrezygnować z powiadomień email w [ustawieniach konta](%{user_preferences_url})."
+  subject_re: "Re: "
+  subject_pm: "[PW] "
   user_notifications:
     previous_discussion: "Previous Replies"
     unsubscribe:
@@ -881,6 +891,15 @@ pl_PL:
         %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PW] %{topic_title}"
       text_body_template: |
         %{message}
 
@@ -948,10 +967,16 @@ pl_PL:
         Jeśli powyższy link nie jest klikalny, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
   page_not_found:
     title: "Strona, którą chciałeś odwiedzić, nie istnieje lub jest prywatna."
+    popular_topics: "Popularne"
+    recent_topics: "Ostatnie"
+    see_more: "Więcej"
+    search_title: "Szukaj w serwisie"
+    search_google: "Google"
   terms_of_service:
     signup_form_message: 'Przeczytałem i zgadzam się z <a href="/tos" target="_blank">Regulaminem Serwisu</a>.'
   deleted: 'usunięte'
   upload:
+    edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
     attachments:

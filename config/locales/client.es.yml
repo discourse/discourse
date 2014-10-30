@@ -104,6 +104,7 @@ es:
     admin_title: "Admin"
     flags_title: "Reportes"
     show_more: "ver más"
+    show_help: "ayuda"
     links: "Enlaces"
     links_lowercase: "Enlaces"
     faq: "FAQ"
@@ -138,6 +139,10 @@ es:
       stat:
         all_time: "Todo el tiempo"
         last_7_days: "Últimos 7 días"
+      like_count: "Likes"
+      topic_count: "Temas"
+      post_count: "Posts"
+      user_count: "Usuarios"
     bookmarks:
       not_logged_in: "Lo sentimos, debes iniciar sesión para guardar posts en marcadores."
       created: "has marcado este post como favorito"
@@ -258,6 +263,8 @@ es:
       invited_by: "Invitado Por"
       trust_level: "Nivel de Confianza"
       notifications: "Notificaciones"
+      dismiss_notifications: "Marcador todos como leídos"
+      dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
       disable_jump_reply: "No ir directamente a tu nuevo post al responder"
       dynamic_favicon: "Mostrar notificaciones de mensajes de entrada en favicon (experimental)"
       edit_history_public: "Dejar que otros usuarios puedan ver las revisiones de mis posts"
@@ -323,6 +330,10 @@ es:
         image_is_not_a_square: "Advertencia: hemos recortado su foto; no es cuadrada."
       change_profile_background:
         title: "Fondo de perfil"
+        instructions: "Fondos de perfil serán centrados y tendrán un ancho por default de 850px."
+      change_card_background:
+        title: "Fondo de Tarjeta de Usuario"
+        instructions: "Imágenes de fondo serán centrados y tendrán un ancho por default de 590px."
       email:
         title: "E-mail"
         instructions: "Nunca se mostrará públicamente."
@@ -360,6 +371,8 @@ es:
       created: "Creado el"
       log_out: "Cerrar sesión"
       location: "Ubicación"
+      card_badge:
+        title: "Distintivo de Tarjeta de Usuario"
       website: "Sitio Web"
       email_settings: "E-mail"
       email_digests:
@@ -498,8 +511,8 @@ es:
     created: 'Creado'
     created_lowercase: 'creado'
     trust_level: 'Nivel de Confianza'
-    search_hint: 'nombre de usuario'
-    search_hint_admin: 'nombre de usuario o e-mail'
+    search_hint: 'nombre de usuario o dirección IP'
+    search_hint_admin: 'nombre de usuario, e-mail o dirección IP'
     create_account:
       title: "Crear nueva cuenta"
       failed: "Algo ha salido mal, tal vez este e-mail ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
@@ -561,6 +574,7 @@ es:
       drafts_offline: "borradores offline"
       min_length:
         need_more_for_title: "{{n}} para completar el título"
+        need_more_for_reply: "{{n}} para completar"
       error:
         title_missing: "Es necesario un título"
         title_too_short: "El título debe ser por lo menos de {{min}} caracteres."
@@ -584,6 +598,7 @@ es:
       view_new_post: "Ver tu nuevo post."
       saving: "Guardando..."
       saved: "¡Guardado!"
+      saved_draft: "Borrador en progreso. Selecciona para continuar."
       uploading: "Subiendo..."
       show_preview: 'mostrar vista previa &raquo;'
       hide_preview: '&laquo; ocultar vista previa'
@@ -593,8 +608,8 @@ es:
       italic_title: "Cursiva"
       italic_text: "Texto en cursiva"
       link_title: "Hipervínculo"
-      link_description: "introduzca descripción de enlace aquí"
-      link_dialog_title: "Insertar enlace"
+      link_description: "introduzca descripción del enlace aquí"
+      link_dialog_title: "Insertar Enlace"
       link_optional_text: "título opcional"
       quote_title: "Cita"
       quote_text: "Cita"
@@ -610,9 +625,18 @@ es:
       hr_title: "Linea Horizontal"
       undo_title: "Deshacer"
       redo_title: "Rehacer"
-      help: "Ayuda de edición con Markdown"
+      help: "Ayuda de Edición con Markdown"
       toggler: "ocultar o mostrar el panel de edición"
       admin_options_title: "Opciones de moderación para este tema"
+      auto_close:
+        label: "Tiempo para cierre automático del tema"
+        error: "Por favor introduzca un valor válido."
+        based_on_last_post: "No cerrar hasta que el último post en el tema es al menos así de antiguo."
+        all:
+          examples: 'Introduzca el número de horas (24), tiempo absoluto (17:30) o timestamp (2013-11-22 14:00).'
+        limited:
+          units: "(# de horas)"
+          examples: 'Introduzca el número de horas (24).'
     notifications:
       title: "notificaciones por menciones a tu @nombre, respuestas a tus publicaciones y temas, mensajes privados, etc."
       none: "No tienes notificaciones por el momento."
@@ -675,7 +699,7 @@ es:
         change_category: "Cambiar categoría"
         close_topics: "Cerrar temas"
         archive_topics: "Archivar temas"
-        notification_level: "Cambiar el nivel de notificación"
+        notification_level: "Cambiar el Nivel de Notificación"
         selected:
           one: "Has seleccionado <b>1</b> tema."
           other: "Has seleccionado <b>{{count}}</b> temas."
@@ -741,12 +765,12 @@ es:
       likes:
         one: "este tema le gusta a 1 persona"
         other: "este tema les gusta a {{count}} personas"
-      back_to_list: "Volver a la lista de temas"
-      options: "Opciones del tema"
+      back_to_list: "Volver a la Lista de Temas"
+      options: "Opciones del Tema"
       show_links: "mostrar enlaces dentro de este tema"
       toggle_information: "detalles del tema"
-      read_more_in_category: "¿Quieres leer más? Consulta otros temas en {{catLink}} or {{latestLink}}."
-      read_more: "¿Quieres seguir leyendo? {{catLink}} or {{latestLink}}."
+      read_more_in_category: "¿Quieres leer más? Consulta otros temas en {{catLink}} o {{latestLink}}."
+      read_more: "¿Quieres leer más? {{catLink}} o {{latestLink}}."
       read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='/unread'>1 no leído</a> } other { <a href='/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='/new'>1 nuevo</a> topic} other { {BOTH, select, true{and } false { } other{}} <a href='/new'># nuevos</a> topics} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}."
       browse_all_categories: Ver todas las categorías
       view_latest_topics: ver los temas recientes
@@ -755,9 +779,10 @@ es:
       jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido borrado"
       auto_close_notice: "Este tema se cerrará automáticamente en %{timeLeft}."
+      auto_close_notice_based_on_last_post: "Este tema cerrara %{duration} después de la última respuesta."
       auto_close_title: 'Configuración de auto-cerrado'
       auto_close_save: "Guardar"
-      auto_close_remove: "No auto-cerrar este tema"
+      auto_close_remove: "No Auto-Cerrar Este Tema"
       progress:
         title: avances
         go_top: "arriba"
@@ -778,6 +803,8 @@ es:
           '2_4': 'Recibirás notificaciones porque has publicado una respuesta en este tema.'
           '2_2': 'Recibirás notificaciones porque estás siguiendo este tema.'
           '2': 'Recibirás notificaciones porque <a href="/users/{{username}}/preferences">has leído este tema</a>.'
+          '1_2': 'Serás notificado si alguien menciona tu @nombre o responde a un post tuyo.'
+          '1': 'Serás notificado si alguien menciona tu @nombre o responde a un post tuyo.'
           '0_7': 'Estás ignorando todas las notificaciones en esta categoría.'
           '0_2': 'Estás ignorando todas las notificaciones en este tema.'
           '0': 'Estás ignorando todas las notificaciones en este tema.'
@@ -789,12 +816,16 @@ es:
           description: "Se te notificará de cada nuevo post en este tema. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
         tracking_pm:
           title: "Seguir"
+          description: "Un contador de posts nuevos posts y posts sin ser leídos aparecerá en seguida del mensaje privado. Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
         tracking:
           title: "Seguir"
+          description: "Un contador de posts nuevos posts y posts sin ser leídos aparecerá en seguida del tema. Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
         regular:
           title: "Habitual"
+          description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
         regular_pm:
           title: "Habitual"
+          description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo en el mensaje privado."
         muted_pm:
           title: "Silenciar"
           description: "No se te notificará sobre este mensaje privado."
@@ -812,8 +843,8 @@ es:
         unpin: "Dejar de destacar"
         pin: "Destacar tema"
         pin_globally: "Destacar tema globalmente"
-        unarchive: "Desarchivar tema"
-        archive: "Archivar tema"
+        unarchive: "Desarchivar Tema"
+        archive: "Archivar Tema"
         invisible: "Hacer invisible"
         visible: "Hacer visible"
         reset_read: "Restablecer datos de lectura"
@@ -851,7 +882,7 @@ es:
         email_placeholder: 'nombre@ejemplo.com'
         success: "Hemos enviado una invitación por email a <b>{{email}}</b>. Te notificaremos cuando la invitación sea aceptada. Revisa la pestaña de invitaciones en tu página de perfil para llevar el seguimiento de tus invitaciones."
         error: "Lo sentimos, no podemos invitar a esa persona. ¿Tal vez ya es un usuario?"
-      login_reply: 'Inicia sesión para responder'
+      login_reply: 'Inicia Sesión para Responder'
       filters:
         n_posts:
           one: "1 post"
@@ -924,6 +955,7 @@ es:
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
         attachment_too_large: "Lo siento, el archivo que estas intentando subir es demasiado grande (el tamaño máximo es {{max_size_kb}}kb)."
+        file_too_large: "Lo sentimos, el archivo que estas tratando de subir es demasiado grande (el tamaño máximo es de {{max_size_kb}}kb)"
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
         upload_not_authorized: "Lo sentimos, el archivo que intenta cargar no está autorizado (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir imágenes."
@@ -1067,6 +1099,8 @@ es:
           previous: "Revisión anterior"
           next: "Siguiente revisión"
           last: "Última revisión"
+          hide: "Ocultar revisión."
+          show: "Mostrar revisión."
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs. <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1136,6 +1170,7 @@ es:
           description: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
         regular:
           title: "Habitual"
+          description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
         muted:
           title: "Silenciadas"
           description: "No se te notificará de nuevos temas en estas categorías y no aparecerán en la pestaña de no leídos."
@@ -1209,6 +1244,9 @@ es:
     category_title: "Categoría"
     history: "Historia"
     changed_by: "por {{author}}"
+    raw_email:
+      title: "E-mail Original"
+      not_available: "¡No disponible!"
     categories_list: "Lista de categorías"
     filters:
       with_topics: "%{filter} temas"
@@ -1536,6 +1574,9 @@ es:
           love:
             name: 'me gusta'
             description: "El color del botón de \"me gusta\""
+          wiki:
+            name: 'wiki'
+            description: "Color base usado para el fondo en los posts del wiki."
       email:
         title: "Email"
         settings: "Ajustes"
@@ -1808,6 +1849,7 @@ es:
           external_avatar_url: "URL del avatar"
       user_fields:
         title: "Campos de Usuario"
+        help: "Añadir campos que tus usuarios pueden llenar."
         create: "Crear Campo de Usuario"
         untitled: "Sin título"
         name: "Nombre del Campo"
@@ -1884,11 +1926,14 @@ es:
         grant: Conceder
         no_user_badges: "%{name} no tiene ningún distintivo."
         no_badges: No hay distintivos para conceder.
+        none_selected: "Selecciona un distintivo para empezar"
         allow_title: Permitir usar distintivo como título
         multiple_grant: Puede ser concedido varias veces
         listable: Mostrar distintivo en la página pública de distintivos
         enabled: Activar distintivo
         icon: Icono
+        image: Imagen
+        icon_help: "Usa ya sea una clase Font Awesome o una URL a la imagen"
         query: Consulta (SQL) para otorgar el distintivo
         target_posts: La consulta tiene como objetivo posts
         auto_revoke: Ejecutar diariamente la consulta de revocación
@@ -1921,6 +1966,8 @@ es:
             with_time: <span class="username">%{username}</span> el <span class="time">%{time}</span>
     lightbox:
       download: "descargar"
+    search_help:
+      title: 'Buscar Ayuda'
     keyboard_shortcuts_help:
       title: 'Atajos de teclado'
       jump_to:
@@ -1982,6 +2029,7 @@ es:
         one: "1 concedido"
         other: "%{count} concedido"
       select_badge_for_title: Seleccionar un distintivo para utilizar como tu título
+      none: "<none>"
       badge_grouping:
         getting_started:
           name: Primeros pasos
@@ -2063,3 +2111,12 @@ es:
         reader:
           name: Lector
           description: Leyó todos los posts en un tema con más de 100
+    google_search: |
+      <h2>Buscar con Google</h2>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>

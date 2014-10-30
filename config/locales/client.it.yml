@@ -511,8 +511,6 @@ it:
     created: 'Creato'
     created_lowercase: 'creato'
     trust_level: 'Livello Esperienza'
-    search_hint: 'nome utente'
-    search_hint_admin: 'nome utente o email'
     create_account:
       title: "Crea Nuovo Account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"

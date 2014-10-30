@@ -498,8 +498,6 @@ nl:
     created: 'Gemaakt'
     created_lowercase: 'gemaakt'
     trust_level: 'Trustlevel'
-    search_hint: 'gebruikersnaam'
-    search_hint_admin: 'gebruikersnaam of e-mail'
     create_account:
       title: "Maak een nieuw account"
       failed: "Er ging iets mis, wellicht is het e-mailadres al geregistreerd. Probeer de 'Wachtwoord vergeten'-link."

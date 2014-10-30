@@ -14,6 +14,5 @@ fi:
       results:
         show: Näytä tulokset
         hide: Piilota tulokset
-
       close_poll: "Sulje kysely"
       open_poll: "Avaa kysely"
