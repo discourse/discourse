@@ -9,6 +9,9 @@
     <h1 {{bind-attr class="staff new_user"}}>
       {{#link-to 'user' user}}{{username}}{{/link-to}}
     </h1>
+    {{#if user.title}}
+      <h2>{{user.title}}</h2>
+    {{/if}}
     {{#if showName}}
       <h2>{{#link-to 'user' user}}{{name}}{{/link-to}}</h2>
     {{/if}}
