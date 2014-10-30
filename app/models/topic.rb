@@ -421,9 +421,9 @@ class Topic < ActiveRecord::Base
                                           WHEN last_read_post_number > :highest THEN :highest
                                           ELSE last_read_post_number
                                           END,
-                  seen_post_count = CASE
-                                    WHEN seen_post_count > :highest THEN :highest
-                                    ELSE seen_post_count
+                  highest_seen_post_number = CASE
+                                    WHEN highest_seen_post_number > :highest THEN :highest
+                                    ELSE highest_seen_post_number
                                     END
               WHERE topic_id = :topic_id",
               highest: highest_post_number,

@@ -178,7 +178,7 @@ describe PostCreator do
         topic_user.should be_present
         topic_user.should be_posted
         topic_user.last_read_post_number.should == first_post.post_number
-        topic_user.seen_post_count.should == first_post.post_number
+        topic_user.highest_seen_post_number.should == first_post.post_number
 
         user2 = Fabricate(:coding_horror)
         user2.user_stat.topic_reply_count.should == 0
