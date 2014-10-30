@@ -2,17 +2,32 @@
 
 #user-card {
   position: absolute;
-  width: 460px;
+  width: 500px;
   left: 20px;
   z-index: 990;
   box-shadow: 0 2px 6px rgba(0,0,0, .6);
   margin-top: -2px;
-  background-color: $secondary;
-  padding: 12px 12px 5px 12px;
-  border: 1px solid scale-color-diff();
-
+  background-color: $primary;
+  color: $secondary;
   background-size: cover;
   background-position: center center;
+
+  .card-content {
+    padding: 12px;
+    background: rgba($primary, .85);
+    margin-top: 100px;
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
+
+&.no-bg {
+  .card-content {
+    margin-top: 0;
+  }
+}
 
   .avatar-placeholder {
     width: 120px;
@@ -27,12 +42,12 @@
     font-size: 25px;
     line-height: 1.25;
     display: block;
-    max-width: 280px;
+    max-width: 250px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     a {
-      color: $primary;
+      color: $secondary;
     }
   }
 
@@ -41,13 +56,12 @@
     line-height: 1.25;
     font-weight: normal;
     display: block;
-    max-width: 280px;
+    max-width: 250px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
     a {
-      color: $primary;
+      color: $secondary;
     }
   }
 
@@ -58,6 +72,9 @@
     color: scale-color($primary, $lightness: 50%);
     overflow: hidden;
     text-overflow: ellipsis;
+    a {
+      color: $secondary;
+    }
   }
   .groups {
     font-size: 13px;
@@ -84,9 +101,15 @@
   }
 
   .bio {
-    max-height: 100px;
+    max-height: 55px;
     overflow: auto;
-    margin-bottom: 10px;
+    float: left;
+    margin: 10px 0;
+    width: 70%;
+    a {
+      color: $secondary;
+      text-decoration: underline;
+    }
     img {
       max-width: 100%;
     }
@@ -95,6 +118,7 @@
   img.avatar {
     float: left;
     padding-right: 10px;
+    margin-top: -60px;
   }
 
   p {
@@ -108,6 +132,16 @@
 
   .btn {
     margin: 0 0 7px 0;
+    box-sizing: border-box;
+  }
+
+  .usercard-controls {
+    list-style-type: none;
+    margin: 0;
+    position: absolute;
+    right: 12px;
+
+    a {width: 100%; min-width: 150px;}
   }
 
   .new-user a {
@@ -115,17 +149,32 @@
   }
 
   &.show-badges {
-    width: 560px;
+    width: 580px;
 
     .names {
-      width: 250px;
       float: left;
+      height: 60px;
+      position: relative;
+      width: 45%;
+
+      span {
+        position: absolute;
+        bottom: 0;
+        display: block;
+      }
+
     }
 
     .badge-section {
       margin-top: 10px;
       float: left;
-      width: 270px;
+      width: 390px;
+
+      .user-badge {
+        background: transparent;
+        color: $secondary;
+
+      }
 
       h3 {
         color: $primary;
