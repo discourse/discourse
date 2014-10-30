@@ -80,6 +80,9 @@ article.post {
     word-wrap: break-word;
     word-break: break-word;
 
+    pre {
+      white-space: pre-wrap;
+    }
     img {
       max-width:100%;
     }
