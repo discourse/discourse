@@ -434,6 +434,7 @@ Discourse::Application.routes.draw do
 
   get "onebox" => "onebox#show"
   get "javascripts/highlight.js" => "highlight#show"
+  get "javascripts/highlight.js/:key" => "highlight#show"
 
   get "error" => "forums#error"
   get "exception" => "list#latest"
