@@ -65,7 +65,9 @@ class StaticController < ApplicationController
       begin
         forum_uri = URI(Discourse.base_url)
         uri = URI(params[:redirect])
-        if uri.path.present? && (uri.host.blank? || uri.host == forum_uri.host)
+        if uri.path.present? &&
+           (uri.host.blank? || uri.host == forum_uri.host) &&
+           uri.path !~ /\./
           destination = uri.path
         end
       rescue URI::InvalidURIError

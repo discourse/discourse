@@ -89,6 +89,13 @@ describe StaticController do
       end
     end
 
+    context 'with a period to force a new host' do
+      it 'redirects to the root path' do
+        xhr :post, :enter, redirect: ".org/foo"
+        expect(response).to redirect_to '/'
+      end
+    end
+
     context 'with a full url to someone else' do
       it 'redirects to the root path' do
         xhr :post, :enter, redirect: "http://eviltrout.com/foo"
