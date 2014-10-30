@@ -88,6 +88,7 @@ zh_CN:
     admin_title: "管理"
     flags_title: "报告"
     show_more: "显示更多"
+    show_help: "帮助"
     links: "链接"
     links_lowercase: "链接"
     faq: "常见问题（FAQ）"
@@ -121,10 +122,14 @@ zh_CN:
       stat:
         all_time: "所有时间内"
         last_7_days: "7 天以内"
+      like_count: "赞"
+      topic_count: "主题"
+      post_count: "帖子"
+      user_count: "用户"
     bookmarks:
       not_logged_in: "抱歉，您需要先登录才能给帖子加书签"
-      created: "您给此帖的书签已加上"
-      not_bookmarked: "您已经阅读过此帖；点此给它加上书签"
+      created: "您已经为此贴添加书签"
+      not_bookmarked: "您已经阅读过此帖；点此为其添加书签"
       last_read: "这是您阅读过的最后一帖；点此给它加上书签"
       remove: "删除书签"
     topic_count_latest:
@@ -303,6 +308,9 @@ zh_CN:
       change_profile_background:
         title: "个人资料背景"
         instructions: "个人资料背景将被居中，且默认宽度为 850px。"
+      change_card_background:
+        title: "用户资料背景"
+        instructions: "背景图片将被居中并且默认宽度为 590px。"
       email:
         title: "电子邮箱"
         instructions: "绝不会被公开显示。"
@@ -340,6 +348,8 @@ zh_CN:
       created: "加入时间"
       log_out: "登出"
       location: "地址"
+      card_badge:
+        title: "用户资料徽章"
       website: "网站"
       email_settings: "电子邮箱"
       email_digests:
@@ -474,8 +484,8 @@ zh_CN:
     created: '创建时间'
     created_lowercase: '创建时间'
     trust_level: '用户级别'
-    search_hint: '用户名'
-    search_hint_admin: '用户名或电子邮件'
+    search_hint: '用户名或IP地址'
+    search_hint_admin: '用户名，email或IP地址'
     create_account:
       title: "创建新帐号"
       failed: "出问题了，有可能这个电子邮箱已经被注册了。试试忘记密码链接？"
@@ -561,6 +571,7 @@ zh_CN:
       view_new_post: "浏览您的新帖子。"
       saving: "保存中..."
       saved: "已保存！"
+      saved_draft: "帖子还没写完，点击继续"
       uploading: "上传中..."
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
@@ -1847,6 +1858,7 @@ zh_CN:
         listable: 在公共徽章页面显示徽章
         enabled: 启用徽章系统
         icon: 图标
+        image: 图片
         icon_help: "使用 Font Awesome class 或者图片的链接"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子
@@ -1880,6 +1892,8 @@ zh_CN:
             with_time: <span class="username">%{username}</span>在<span class="time">%{time}</span>
     lightbox:
       download: "下载"
+    search_help:
+      title: '搜索帮助'
     keyboard_shortcuts_help:
       title: '键盘快捷键'
       jump_to:
@@ -1938,6 +1952,7 @@ zh_CN:
       granted:
         other: "%{count} 个已授予"
       select_badge_for_title: 选择一个徽章用作您的头衔
+      none: "<none>"
       badge_grouping:
         getting_started:
           name: 开始
@@ -2019,3 +2034,12 @@ zh_CN:
         reader:
           name: 读者
           description: 阅读一个超过 100 个帖子的主题中的每一个帖子
+    google_search: |
+      <h2>用 Google 搜索</h2>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

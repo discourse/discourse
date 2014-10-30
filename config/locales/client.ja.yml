@@ -470,8 +470,6 @@ ja:
     created: '作成'
     created_lowercase: '作成'
     trust_level: 'トラストレベル'
-    search_hint: 'ユーザ名'
-    search_hint_admin: 'ユーザーメールかEメールアドレス'
     create_account:
       title: "アカウントの作成"
       failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"

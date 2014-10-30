@@ -500,8 +500,6 @@ fi:
     created: 'Luotu'
     created_lowercase: 'luotu'
     trust_level: 'Luottamustaso'
-    search_hint: 'käyttäjätunnus'
-    search_hint_admin: 'käyttäjätunnus tai sähköposti'
     create_account:
       title: "Luo uusi tunnus"
       failed: "Jotain meni pieleen. Ehkäpä tämä sähköpostiosoite on jo rekisteröity, kokeile salasana unohtui -linkkiä."

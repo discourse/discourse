@@ -119,6 +119,8 @@ zh_TW:
         name: "分類名稱"
       post:
         raw: "內容"
+      user_profile:
+        bio_raw: "關於我"
     errors:
       messages:
         is_invalid: "無效，請嘗試寫得更明確"
@@ -411,6 +413,8 @@ zh_TW:
     education_new_topic:
       title: "新用戶教學：第一個討論話題"
       description: "在新用戶發表首兩個討論話題時，自動在編輯器上方彈出的說明資訊。"
+    usage_tips:
+      title: "新用戶指南"
     welcome_user:
       title: "歡迎: 新用戶"
       description: "當新用戶註冊後自動發送給他們的歡迎訊息。"

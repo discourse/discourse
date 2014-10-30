@@ -104,6 +104,7 @@ pt_BR:
     admin_title: "Admin"
     flags_title: "Sinalizações"
     show_more: "mostrar mais"
+    show_help: "Ajuda"
     links: "Links"
     links_lowercase: "links"
     faq: "FAQ"
@@ -138,10 +139,8 @@ pt_BR:
       stat:
         all_time: "Sempre"
         last_7_days: "Últimos 7 Dias"
-      like_count: "Contagem de Likes"
-      topic_count: "Contagem de Tópicos"
-      post_count: "Contagem de Tópicos"
-      user_count: "Contagem de Usuários"
+      topic_count: "Tópicos"
+      user_count: "Usuários"
     bookmarks:
       not_logged_in: "desculpe, você precisa estar logado para favoritar mensagens"
       created: "você favoritou essa resposta"
@@ -330,9 +329,6 @@ pt_BR:
       change_profile_background:
         title: "Fundo do perfil"
         instructions: "Fundos do perfil será centralizado e tera uma largura padrão de 850px."
-      change_card_background:
-        title: "Fundo de Expansão do Usuário"
-        instructions: "Imagens de Expansão será centralizado e tera uma largura padrão de 590px."
       email:
         title: "Email"
         instructions: "Não visível publicamente."
@@ -508,8 +504,7 @@ pt_BR:
     created: 'Criado'
     created_lowercase: 'criado'
     trust_level: 'Nível de confiança'
-    search_hint: 'nome de usuário'
-    search_hint_admin: 'Nome de Usuário ou email'
+    search_hint: 'Nome de usuário ou endereço de IP'
     create_account:
       title: "Criar nova conta"
       failed: "Alguma coisa deu errado, talvez este email já esteja registrado, tente usar o Esqueci a Senha."
@@ -595,7 +590,6 @@ pt_BR:
       view_new_post: "Ver sua nova resposta."
       saving: "Salvando..."
       saved: "Salvo!"
-      saved_draft: "Você tem um rascunho em progresso. Clique nessa barra para voltar a editar."
       uploading: "Enviando..."
       show_preview: 'mostrar pré-visualização &raquo;'
       hide_preview: '&laquo; esconder pré-visualização'
@@ -2023,7 +2017,6 @@ pt_BR:
         one: "1 emblema concedido"
         other: "%{count} emblemas concedidos"
       select_badge_for_title: Selecione um emblema para usar como título
-      no_title: "<no title>"
       badge_grouping:
         getting_started:
           name: Começando

@@ -1017,6 +1017,8 @@ de:
         ```
         %{logs}
         ```
+    restore_failed:
+      subject_template: "Wiederherstellung fehlgeschlagen"
     bulk_invite_succeeded:
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
       text_body_template: "Deine Masseneinladung von Benutzern wurde erfolgreich verarbeitet, insgesamt wurden %{sent} Einladungen per Mail verschickt."

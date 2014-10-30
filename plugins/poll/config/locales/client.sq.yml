@@ -1,10 +1,3 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
-#
-# To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
-
 sq:
   js:
     poll:
@@ -14,6 +7,5 @@ sq:
       results:
         show: Shfaq Rezultatet
         hide: Fsheh Rezultate
-
       close_poll: "Mbyll Sondazhin"
       open_poll: "Hap Sondazhin"

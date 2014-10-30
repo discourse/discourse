@@ -630,6 +630,7 @@ fr:
     summary_percent_filter: "Quand un utilisateur clique sur 'Résumé du sujet', montrer le top % des messages"
     enable_private_messages: "Autoriser les utilisateurs du niveau de confiance 1 à créer des messages et conversations privés."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
+    long_polling_base_url: "Racine de l'url utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple: http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
     polling_interval: "À quelle fréquence les clients connectés devraient-ils requêter le serveur, en millisecondes (sans utiliser les requêtes longues)"
     anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils  requêter le serveur, en millisecondes"
@@ -667,6 +668,7 @@ fr:
     suppress_reply_directly_below: "Ne pas afficher le panneau extensible des réponses d'un message quand la seule réponse est juste en dessous ce dernier."
     suppress_reply_directly_above: "Ne pas afficher 'en réponse à' sur un message quand la seule réponse est juste en dessus de ce dernier."
     suppress_reply_when_quoting: "Ne pas affiché le panneau \"En réponse à\" sur un message qui répond à une citation."
+    max_reply_history: "Nombre maximum de réponses à développer lors du développement d'une \"réponse à\""
     experimental_reply_expansion: "Masquer les réponses intermédiaires lors de l'ouverture d'une répondre à (expérimental)"
     topics_per_period_in_top_summary: "Nombre de meilleurs sujets affichés dans le résumé par défaut des meilleurs sujets."
     topics_per_period_in_top_page: "Nombre de meilleurs sujets affichés lorsqu'on sélectionne \"Voir plus\" des meilleurs sujets."
@@ -1259,6 +1261,18 @@ fr:
 
         Aucune adresse de destination n'est reconnue. Veuillez vérifier que l'adresse du site est bien renseignée dans le champs To: (et non dans les champs C:: ou Bcc:), et que vous envoyez bien
         à l'adresse de courriel fournie par l'équipe.
+    email_reject_topic_not_found:
+      subject_template: "Erreur de courriel -- Le sujet est introuvable"
+      text_body_template: |
+        Nous sommes désolé, mais votre email à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
+
+        Le sujet est introuvable. Si vous pouvez que c'est une erreur, contacter l’équipe du site.
+    email_reject_topic_closed:
+      subject_template: "Erreur de courriel -- Le sujet est fermé"
+      text_body_template: |
+        Nous sommes désolé, mais votre email à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
+
+        Le sujet est fermé. Si vous pouvez que c'est une erreur, contacter l’équipe du site.
     email_error_notification:
       subject_template: "Problème de courriel  - Erreur d'authentification POP3"
       text_body_template: |

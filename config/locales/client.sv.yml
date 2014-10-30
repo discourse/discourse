@@ -492,8 +492,6 @@ sv:
     created: 'Skapad'
     created_lowercase: 'skapad'
     trust_level: 'Förtroendenivå'
-    search_hint: 'användarnamn'
-    search_hint_admin: 'användarnamn eller lösenord'
     create_account:
       title: "Registrera nytt konto"
       failed: "Något gick fel, kanske är denna e-post redan registrerad, försök glömt lösenordslänken"

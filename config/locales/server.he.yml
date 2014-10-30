@@ -605,7 +605,11 @@ he:
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את  % o הפרסומים הראשונים"
     enable_private_messages: "אפשרו למשתמשים בעלי רמת אמון 1 ליצור מסרים פרטיים ולהשיב למסרים פרטיים"
     enable_long_polling: "Message bus used for notification can use long polling"
+    long_polling_base_url: "בסיס ה-URL שנמצא בשימוש עבור long polling (כאשר CDN מחזיר תוכן דינמי, זכרו להגדיר את ערך זה ל-Origin pull, דוגמת http://origin.site.com)"
+    long_polling_interval: "כמות הזמן שהשרת צריך לחכות לפני שעונה ללקוחות, כאשר אין מידע לשליחה (משתמשים רשומים מחוברים למערכת בלבד)"
+    polling_interval: "כאשר לא מבצעים תשאול ארוך (long polling), כל כמה זמן לקוחות מחוברים למערכת יבצעו poll, במילי-שניות"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
+    background_polling_interval: "באיזו תכיפות צריכים לקוחות לבצע תשאול (poll) במילישניות (כאשר החלון נמצא ברקע)"
     auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
@@ -626,17 +630,20 @@ he:
     enable_escaped_fragments: "חזרה ל-AJAX-Crawling API של גוגל אם לא אותר webcrawler. ראו https://support.google.com/webmasters/answer/174992?hl=he"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
+    cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפרסום, אלא אם כן נלחץ לחצן ההרחבה."
     share_links: "החלט אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "כמה נושאים נטענים כברירת מחדל ברשימת הנושאים, ומתי גלילה למטה טוענת נושאים נוספים"
+    posts_chunksize: "כמה פרסומים לטעון כברירת מחדל תחת נושא מסוים, וכאשר יש גלילה למטה ייטענו פרסומים נוספים."
     site_contact_username: "כל המסרים האישיים האוטומטיים יהיו ממשתמש זה; אם תשאירו ריק, יעשה שימוש בחשבון ברירת המחדל של המערכת."
     send_welcome_message: "שלחו כל המשתמשים החדשים הודעת \"ברוכים הבאים\" פרטים עם הדרכה ראשונית כיצד להתחיל."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפרסום כאשר ישנה תגובה ישירה אחת לפרסום זה."
     suppress_reply_directly_above: "אל תציגו את את אפשרות ההרחבה \"בתגובה ל..\" לפרסום כאשר יש רק תגובה אחת ישירה מעל לפרסום זה."
     suppress_reply_when_quoting: "אל תציגו את הפרסום המקורי בפרסומים שמצטטים תגובות"
+    experimental_reply_expansion: "החבא תגובות ביניים כאשר מרחיבים תגובה (ניסיוני)"
     topics_per_period_in_top_summary: "מספר הנושאים המוצגים בבריכת המחדל של סיכום הנושאים."
     topics_per_period_in_top_page: "מספר הנושאים הראשונים המוצגים בתצוגה המורחבת של \"הצג עוד\"."
     redirect_users_to_top_page: "כוון באופן אוטומטי משתמשים חדשים וכאלה שנעדרו במשך זמן לראש העמוד."
@@ -707,6 +714,9 @@ he:
     clean_up_uploads: "הסירו העלאות יתומות וללא הפניה כדי למנוע אירוח בלתי חוקי של חומר. אזהרה: אתם עלולי לרצות לגבות את תיקיית ה-/uploads שלכם לפנו שתאפשרו הגדרה זו."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
+    purge_inactive_users_grace_period_days: "תקופת המתנה (בימים) לפני שמשתמש שלא הפעיל את החשבון שלו יימחק."
+    enable_s3_uploads: "אחסן העלאות (uploads) על תשתית של Amazon S3. חשוב: מצריך מפתח גישה + מפתח גישה סודי שיהיו חוקיים."
+    s3_use_iam_profile: 'השתמש ב-AWS EC2 IAM role על מנת לאחזר מפתחות. שימו לב: איפשור של זה ידרוס את ההגדרות "S3 access key id" וכן את "s3 secret access key".'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase (cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
     s3_access_key_id: "מפתח הגישה (access key id) של Amazon S3 שישמש להעלאת התמונות."
     s3_secret_access_key: "מפתח הגישה הסודי (secret access key) של Amazon S3 שישמש להעלאת תמונות."
@@ -714,6 +724,24 @@ he:
     enable_flash_video_onebox: "אפשרו הטמעת קישורי swf ו-flv (פלאש של אדובי) בפרסומים. אזהרה: עלול להביא לבעיות בטיחות באתר."
     default_invitee_trust_level: "ברירת מחדל של דרגת אמון (0-4) של משתמשים מוזמנים."
     default_trust_level: "ברירת המחדל של דרגות אמון (0-4) של משתמשים חדשים."
+    tl1_requires_topics_entered: "כמה נושאים משתמש חדש צריך להתחיל למערכת עד שישודרג לרמת אמון 1."
+    tl1_requires_read_posts: "כמה פרסומים משתמש צריך לקרוא לפני שישודרג לרמת אמון 1."
+    tl1_requires_time_spent_mins: "כמה דקות משתמש חדש צריך לקרוא פרסומים לפני שישודרג לרמת אמון 1."
+    tl2_requires_topics_entered: "כמה נושאים משתמש חדש צריך להתחיל עד שישודרג לרמת אמון 2."
+    tl2_requires_read_posts: "כמה פרסומים משתמש צריך לקרוא לפני שישודרג לרמת אמון 2."
+    tl2_requires_time_spent_mins: "כמה דקות משתמש חדש צריך לקרוא פרסומים לפני שישודרג לרמת אמון 2."
+    tl2_requires_days_visited: "כמה ימים שונים משתמש צריך לבקר באתר לפני שישודרג לרמת אמון 2."
+    tl2_requires_likes_received: "כמה \"לייקים\" משתמש צריך לקבל לפני שישודרג לרמת אמון 2."
+    tl2_requires_likes_given: "כמה לייקים משתמש צריך לתת לפני שישודרג לרמת אמון 2."
+    tl2_requires_topic_reply_count: "בכמה נושאים משתמש צריך לענות לפני שישודרג לרמת אמון 2."
+    tl3_requires_days_visited: "מספר מינימלי של ימים שמשתמש צריך לבקר בהם ב-100 הימים האחרונים על מנת שיתאפשר לו להיות משודרג לרמת אמון 3 (ערך בין 0 ל-100)."
+    tl3_requires_topics_replied_to: "מספר נושאים מינימלי שמשתמש צריך היה לענות להם ב-100 הימים האחרונים על מנת שיתאפשר לו להיות משודרג לרמת אמון 3 (ערך בין 0 ל-100)."
+    tl3_requires_topics_viewed: "אחוז הנושאים שנוספו שמשתמש צריך היה לעיין בהם ב-100 הימים האחרונים על מנת שיתאפשר לו להיות משודרג לרמת אמון 3 (ערך בין 0 ל-100)."
+    tl3_requires_posts_read: "מספר הפרסומים שמשתמש פרסם ב-100 הימים האחרונים על מנת שיתאפשר לו להיות משודרג לרמת אמון 3 (ערך בין 0 ל-100)."
+    tl3_requires_topics_viewed_all_time: "מספר מינימלי של נושאים שמשתמש צריך לעיין בהם על מנת שיתאפשר לו להיות משודרג לרמת אמון 3."
+    tl3_requires_posts_read_all_time: "מספר מינימלי של פרסומים שמשתמש קרא על מנת שיוכל להיות משודרג לרמת אמון 3."
+    tl3_requires_max_flagged: "משתמש לא פרסם יותר מ-X פרסומים שסומנו (flagged) ע\"י משתמשים ב-100 הימים האחרונים, על מנת שיוכל להיות משודרג לרמת אמון 3, כאשר X הוא הערך הזה (0 או גבוה יותר)."
+    tl3_promotion_min_duration: "מספר הימים המינימלי ששדרוג לרמת אמון 3 תארך לפני שמשתמש יורד בדרגה לרמת אמון 2."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     min_trust_to_edit_wiki_post: "דרגת האמון המינימלי הנדרשת כדי לערוך פרסום שמסומן כ-wiki."
     newuser_max_links: "כמה קישורים יכול/ה משתמש/ת חדשים להוספים לפרסום."
@@ -747,6 +775,7 @@ he:
     levenshtein_distance_spammer_emails: "כאשר מתאימים דוא\"ל של ספאמרים, מספר ההבדלים בתווים שעדיין מאפשרים התאמה מטושטשת."
     reply_by_email_enabled: "אפשרו  תגובה לנושאים באמצעות הדוא\"ל."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    disable_emails: "מנעו מ-Discourse ממשלו דוא\"ל כלשהו."
     email_in: "אפשרו למשתמשים לפרסם נושאים חדשים באמצעות דוא\"ל (דורש משיכה באמצעוצ pop3). הגדירו את הכתובת בלשונית \"הגדרות\" עבור כל קטגוריה."
     email_in_min_trust: "רמת האמון המינימלית הנדרשת למשתמש/ת כדי שיוכלו להעלות נושאים חדשים באמצעות הדוא\"ל."
     email_prefix: "ה[תווית] שתשמש בנושא הודעות הדוא\"ל. אם לא יוגדר, ברירת המחדל תכוון ל'כותרת' אם לא יוגדר אחרת."
@@ -794,6 +823,7 @@ he:
     enable_cdn_js_debugging: "אפשרו ל-/logs להציג שגיאות בצורה נכונה באמצעות הוספת הרשאות לגישה בין אתרים (crossorigin permissions) בכל ה-js הכלולים."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו הודעה המבקשת מן המנהלים/מנהלות ליצור עוד נושאים."
     vacuum_db_days: "הריצו VACUUM FULL ANALYZE כדי להשיב שטח בסיס הנתונים אחרי העברות (כוונו ל-0 כדי לנטרל)"
+    prevent_anons_from_downloading_files: "מונע ממשתמשים אנונימיים להוריד צרופות (attachments). אזהרה: דבר זה ימנע מכל משאב שאינו תמונה ופורסם כצרופה לעבוד."
     errors:
       invalid_email: "כתובת דוא\"ל לא קיימת."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
@@ -827,6 +857,9 @@ he:
   most_posts: "מירב ההודעות"
   most_recent_poster: "המפרסם האחרון"
   frequent_poster: "מפרסם מתמיד"
+  redirected_to_top_reasons:
+    new_user: "ברוכים הבאים לקהילה! אלה הנושאים הפופולריים האחרונים אצלנו."
+    not_seen_in_a_month: "ברוך שובך! לא ראינו אותך כבר כמה זמן, אה? הנה כמה נושאים פופולאריים שהתווספו מאז שהיית כאן."
   move_posts:
     new_topic_moderator_post:
       one: "העברתי הודעה לנושא חדש: %{topic_link}"
@@ -858,12 +891,16 @@ he:
     pinned_disabled: "הנושא הזה הוסר מנעיצה. הוא לא יוצג יותר בראש הקטגוריה שלו."
     pinned_globally_enabled: "הנושא הזה עכשיו נעוץ גלובאלית. הוא יופיע בראש הקטגוריה שלו ובראש כל רשימות הנושאים עד שיוסר מנעיצה על ידי מנהל או שכפתור הנקה נעיצות יילחץ."
     pinned_globally_disabled: "הנושא הזה הוסר מנעיצה. הוא לא יא יופיע יותר בראש הקטגוריה שלו."
+    visible_enabled: "נושא זה כרגע רשום. הוא יוצג ברשימות נושאים."
+    visible_disabled: "נושא זה כרגע אינו רשום. הוא לא יוצג יותר ברשימת נושאים כלשהי. הדרך היחידה להגיע לנושא זה היא דרך קישור ישיר."
   login:
     not_approved: "חשבונך טרם אושר. יישלח אליך דואר אלקטרוני כשהוא יהיה מוכן להתחברות."
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
     wait_approval: "תודה על שנרשמת. אנחנו ניידע אותך כשהחשבון שלך יאושר."
     active: "החשבון שלך הופעל ומוכן לשימוש."
+    activate_email: "<p>כמעט סיימנו! שלחנו מייל אקטיביזציה אל <b>%{email}</b>. אנאעקבו אחר ההנחיות במייל כדי להפעיל את חשבונך. </p><p> אם המייל לא יגיע, בדקו את תיקיית הספאם שלכם, או נסו להתחבר פעם נוספת כדי לשלוח מייל אקטיביזציה נוסף.</p>"
     not_activated: "אינך יכול להתחבר עדיין. שלחנו לך הודעת דואר אלקטרוני לאישור. בבקשה עקוב אחר ההוראות בהודעה כדי להפעיל את חשבונך."
+    not_allowed_from_ip_address: "אינך יכול/ה להתחבר כ-%{username}  מכתובת IP זו."
     suspended: "אינך יכול להתחבר עד %{date}."
     suspended_with_reason: "אינך יכול להתחבר עד %{date}. הסיבה להשעייתך: %{reason}"
     errors: "%{errors}"
@@ -872,6 +909,8 @@ he:
     omniauth_error: "סליחה, הייתה שגיאה באישור חשבון ה-%{strategy} שלך. אולי לא אישרת לנו לחבר אותך דרכו?"
     omniauth_error_unknown: "משהו השתבש במהלך עיבוד ההתחברות שלך, אנא נסה שנית."
     new_registrations_disabled: "הוספת חשבונות חדשים אינה מותרת בעת זו."
+    password_too_long: "סיסמאות מוגבלות ל-200 תווים."
+    missing_user_field: "לא מילאת את כל שדות המשתמש/ת"
   user:
     username:
       short: "חייבים להיות לפחות %{min} תווים"
@@ -918,6 +957,12 @@ he:
       %{invite_link}
 
       הודעה זו נשלחה על ידי משתמש/ת מוכרים כך שאינך חייב/ת להתחבר.
+  invite_password_instructions:
+    text_body_template: |
+      תודה על שאישרת את ההזמנה שלך אל %{site_name} - ברוכים הבאים!
+
+      כדי להתחבר פעם נוספת, הקישו על הקישור המצורף כדי לבחור סיסמא:
+      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
   new_version_mailer:
@@ -925,8 +970,15 @@ he:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
   flags_reminder:
+    flags_were_submitted:
+      one: "סימונים אלו נשלחו לפני כשעה."
+      other: "סימונים אלה נשלחו לפני %{count} שעות."
     please_review: "Please review them."
     post_number: "post"
+    how_to_disable: "בטלו מכתבים אלה באמצעות שינוי ההגדרה <pre>notify_about_flags_after</pre> ל-0."
+    subject_template:
+      one: "סימון אחד ממתין לטיפול"
+      other: "%{count} סימונים ממתינים לטיפול"
   flag_reasons:
     off_topic: "הפרסום שלך סומן כ**מחוץ לנושא**: הקהילה מאמינה שהוא אינו תואם לנושא, כפי שהוא מוגדר כרגע בכותרת ובפרסום הראשון שבו."
     inappropriate: "הפרסום שלך סומן כ**בלתי ראוי**: הקהילה חושבת שהוא מעליב, פוגעני או מפר את [הכללים המנחים](/guidelines)."
@@ -953,6 +1005,30 @@ he:
         תהנו מהביקור!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
+    backup_succeeded:
+      subject_template: "הגיבוי הושלם בהצלחה."
+      text_body_template: "הגיבוי הושלם בהצלחה.\nבקרו ב-[admin > backup section] (/admin/backups) כדי להוריד את הגיבוי החדש."
+    backup_failed:
+      subject_template: "הגיבוי נכשל."
+      text_body_template: |+
+        הגיבוי נכשל.
+
+        הנה הלוג:
+
+        %{logs}
+
+    restore_succeeded:
+      subject_template: "השחזור הסתיים בהצלחה."
+      text_body_template: "השחזור הצליח."
+    restore_failed:
+      subject_template: "השחזור נכשל"
+      text_body_template: |
+        האחזור נכשל.
+        הנה רישום הפעולות:
+
+        ```
+        %{logs}
+        ```
     bulk_invite_succeeded:
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"
       text_body_template: "ההזמנה הקבוצתיתשלך עובדה,  %{sent}  הזמנות נשלחו."
@@ -968,16 +1044,42 @@ he:
 
         %{logs}
         ```
+    csv_export_succeeded:
+      subject_template: "יצוא המידע הושלם בהצלחה"
+      text_body_template: |
+        ייצוא המידע הסתיים בהצלחה.
+        הורדה של קובץ ה-CSV: <a class="attachment" href="%{download_link}">%{file_name}</a>
+
+        <small>הקישור להודת קובץ ה-CSV יפוג לאחר 48 שעות</small>
+    csv_export_failed:
+      subject_template: "הייצוא נכשל"
+      text_body_template: "תהליך הייצוא נכשל. בדוק את הלוגים."
     email_reject_trust_level:
       subject_template: "בעיית דוא\"ל - היעדר רמת אמון מספקת"
       text_body_template: |
         אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 
         אין לחשבון שלך את רמון האמון הנדרשת כדי לפרסם נושאים חדשים לכתובת דוא"ל זו. אם אתם מאמינים כי זוהי שגיאה, צרו קשר עם אחד מאנשי הצוות.
+    email_reject_no_account:
+      subject_template: "בעיית דוא\"ל - חשבון לא ידוע"
+      text_body_template: |
+        אנחנו מצטערים, אך הודעת הדוא"ל שלכם אל %{destination} (titled %{former_title}) לא עברה.
+
+        לא ידוע לנו על חשבון משתמש/ת עם כתובת כזו. נסו לשלוח מכתובת דוא"ל אחרת, או צרו קשר עם אנשי הצוות שלנו.
     email_reject_empty:
       subject_template: "בעיית דוא\"ל - אין תוכן"
+      text_body_template: |
+        אנחנו מצטערים, אבל הודעת הדוא"ל שלך אל  %{destination} (titled %{former_title}) לא עבדה.
+
+        לא הצלחנו לאתר תוכן בהודעת הדוא"ל שלך. אנא ודאו שהתגובה שלכם מופיעה בראש המייל - לא הצלחנו לעבד תגובות בגוף הטקסט (inline).
+
+        אם בדקתם זאת ו_כן_ כללתם תוכן נוסף, נסו שוב עם תוכן בצורת HTML בתוך המייל (לא רק טקסט פשוט- plain text).
     email_reject_parsing:
       subject_template: "סוגיית דוא\"ל -- תוכן בלתי מוכר"
+      text_body_template: |
+        מצטערים, אבל הודעת הדוא"ל שלך ל-%{destination} עם הכותרת %{former_title} לא עבדה.
+
+        לא יכולנו למצוא את תגובתך באימייל המצורף. **אנא ודאו שתגובתכם נמצאת בראש המייל** - אין לנו יכולת לעבד תגובות מוטמעות (inline replies).
     email_reject_post_error:
       subject_template: "בעיית דוא\"ל - שגיאת פרסום (Posting error)"
       text_body_template: |
@@ -986,11 +1088,33 @@ he:
         סיבות אפשריות לעניין: מבנה מורכב, המסר ארוך מידי, המסר קצר מידי. אנא נסו שוב, או פרסמו באמצעות האתר עם הבעיה נמשכת.
     email_reject_post_error_specified:
       subject_template: "בעיית דוא\"ל - שגיאה בפרסום."
+      text_body_template: |
+        אנחנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
+
+        הסיבה:
+
+        %{post_error}
+
+        אם באפשרותך לתקן את בעיה, אנא נסו שוב.
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Reason:
+
+        %{post_error}
+
+        If you can correct the problem, please try again.
     email_reject_reply_key:
+      subject_template: "בעיית דוא\"ל - מפתח תגובה (Reply) לא ידוע"
       text_body_template: |
         אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 
         מפתח התגובה לא קיים או לא מוכר, כך שאיננו יודעים לאיזה פרסום המייל הזה אמור להגיב. אנא צרו קשר עם אנשי הצוות.
+    email_reject_destination:
+      subject_template: "בעיית דוא\"ל - מען (כתובת דוא\"ל) לא ידוע"
+      text_body_template: |
+        מצטערים, אבל הודעת הדוא"ל שלך ל-%{destination} עם הכותרת %{former_title} לא הצליחה.
+
+        לא הצלחנו לזהות כתובות יעד. אנא ודא שכתובת האתר נמצאת בשדה "אל:", ולא ב-"עותק" או "עותק מוחבא (CC / BCC), ושאתה שולח לכתובת אימייל שסופקה בידי הצוות.
     email_error_notification:
       subject_template: "תקלת דוא\"ל - שגיאת אישור POP"
       text_body_template: |
@@ -1047,6 +1171,7 @@ he:
       subject_template: "הורדת תמונות מרחוק מנוטרלת"
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
   unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
+  subject_re: "תגובה: "
   user_notifications:
     previous_discussion: "Previous Replies"
     unsubscribe:
@@ -1139,6 +1264,13 @@ he:
 
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
+    account_created:
+      subject_template: "[%{site_name}] החשבון החדש שלך"
+      text_body_template: |
+        חשבון חדש נוצר עבורך ב%{site_name}
+
+        הקישו על הקישור המצורף כדי להגדיר סיסמא לחשבונך החדש:
+        %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] Confirm your new email address"
       text_body_template: |
@@ -1177,6 +1309,10 @@ he:
     see_more: "עוד"
     search_title: "חיפוש באתר זה"
     search_google: "גוגל"
+  login_required:
+    welcome_message: |
+      #[ברוכים הבאים אל %{title}](#welcome)
+      נדרש חשבון. אנא צרו חשבון או התחברו כדי להמשיך.
   terms_of_service:
     title: "תנאי השימוש"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'

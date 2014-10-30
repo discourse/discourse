@@ -605,6 +605,7 @@ zh_CN:
     summary_percent_filter: "当用户点击摘要，显示前 % 几的帖子"
     enable_private_messages: "允许信任等级1的用户创建私信或者以私信回复"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
+    long_polling_base_url: "长轮询的基本 URL（当用 CDN 分发动态能让时，请设置此至原始拉取地址）例如：http://origin.site.com"
     long_polling_interval: "当没有数据向客户端发送时服务器端应等待的时间（仅对已登录用户有效）"
     polling_interval: "当不再长轮询时，已登录的客户端多久应该轮询一次，以毫秒为单位"
     anon_polling_interval: "匿名客户端轮询时间间隔（单位：毫秒）"
@@ -642,6 +643,7 @@ zh_CN:
     suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量。"
     suppress_reply_directly_above: "当一个帖子只有一个回复时，不显示回复到该贴的回复。"
     suppress_reply_when_quoting: "当帖子引用回复时，不显示可展开的回复到某贴的标记。"
+    max_reply_history: "扩展回复至时显示的最大回复数量"
     experimental_reply_expansion: "当展开回复至内容时隐藏直接回复（实验性）"
     topics_per_period_in_top_summary: "在一个主题底部显示的默认推荐主题的数量。"
     topics_per_period_in_top_page: "在展开“显示更多”推荐主题列表显示的主题数量。"
@@ -1299,6 +1301,19 @@ zh_CN:
         我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件消息无法发送。
 
         在论坛中找不到该地址。请确认在您的发送到（而非抄送或密送）中填写的是站点的地址，并且您正在将邮件发送至论坛职员提供的邮件地址。
+    email_reject_topic_not_found:
+      subject_template: "邮件问题——主题未找到"
+      text_body_template: |+
+        十分抱歉，无法将您的信息发表到 %{destination} (titled %{former_title}) 。
+
+        我们没有找到该主题，可能其已被删除，如果您确认有问题，请与我们的工作人员联系。
+
+    email_reject_topic_closed:
+      subject_template: "邮件问题 —— 主题已关闭"
+      text_body_template: |
+        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
+
+        主题已经关闭。如果您相信这其中有错误，联系一个职员成员。
     email_error_notification:
       subject_template: "电子邮件错误 -- POP 验证错误"
       text_body_template: |

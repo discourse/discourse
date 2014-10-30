@@ -498,8 +498,6 @@ he:
     created: 'נוצר'
     created_lowercase: 'נוצר/ו'
     trust_level: 'רמת אמון'
-    search_hint: 'שם משתמש/ת'
-    search_hint_admin: 'שם משתמש/ת או דוא"ל'
     create_account:
       title: "יצירת חשבון חדש"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסה את קישור שכחתי סיסמה."

@@ -538,8 +538,8 @@ pl_PL:
     created: 'Utworzono'
     created_lowercase: 'utworzono'
     trust_level: 'Poziom zaufania'
-    search_hint: 'nazwa'
-    search_hint_admin: 'login lub email'
+    search_hint: 'nazwa użytkownika lub adres IP'
+    search_hint_admin: 'nazwa użytkownika, email lub IP'
     create_account:
       title: "Utwórz konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
@@ -2036,6 +2036,8 @@ pl_PL:
             with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
     lightbox:
       download: "pobierz"
+    search_help:
+      title: 'Wyszukiwanie pomocy'
     keyboard_shortcuts_help:
       title: 'Skróty klawiszowe'
       jump_to:
@@ -2182,3 +2184,12 @@ pl_PL:
         reader:
           name: Czytelnik
           description: Przeczytanie każdego wpisu w temacie z ponad 100 wpisami
+    google_search: |
+      <h2>Szukaj z Google</h2>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>
