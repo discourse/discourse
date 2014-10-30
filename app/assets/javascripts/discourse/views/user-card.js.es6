@@ -17,9 +17,9 @@ export default Discourse.View.extend(CleansUp, {
     if (!$this) { return; }
 
     if (Ember.empty(url)) {
-      $this.css('background-image', '');
+      $this.css('background-image', '').addClass('no-bg');
     } else {
-      $this.css('background-image', "url(" + url + ")");
+      $this.css('background-image', "url(" + url + ")").removeClass('no-bg');
     }
   }.observes('controller.user.card_background'),
 
