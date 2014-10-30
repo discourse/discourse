@@ -18,12 +18,12 @@ describe PostTiming do
       PostTiming.create!(topic_id: topic_id, user_id: user_id, post_number: post_number, msecs: 0)
     end
 
-    def topic_user(user_id, last_read_post_number, seen_post_count)
+    def topic_user(user_id, last_read_post_number, highest_seen_post_number)
       TopicUser.create!(
                         topic_id: topic_id,
                         user_id: user_id,
                         last_read_post_number: last_read_post_number,
-                        seen_post_count: seen_post_count
+                        highest_seen_post_number: highest_seen_post_number
                        )
     end
 
@@ -35,9 +35,9 @@ describe PostTiming do
       timing(3,2)
       timing(3,3)
 
-      tu_one = topic_user(1,1,1)
-      tu_two = topic_user(2,2,2)
-      tu_three = topic_user(3,3,3)
+      _tu_one = topic_user(1,1,1)
+      _tu_two = topic_user(2,2,2)
+      _tu_three = topic_user(3,3,3)
 
       PostTiming.pretend_read(topic_id, 2, 3)
 
@@ -47,15 +47,15 @@ describe PostTiming do
 
       tu = TopicUser.find_by(topic_id: topic_id, user_id: 1)
       tu.last_read_post_number.should == 1
-      tu.seen_post_count.should == 1
+      tu.highest_seen_post_number.should == 1
 
       tu = TopicUser.find_by(topic_id: topic_id, user_id: 2)
       tu.last_read_post_number.should == 3
-      tu.seen_post_count.should == 3
+      tu.highest_seen_post_number.should == 3
 
       tu = TopicUser.find_by(topic_id: topic_id, user_id: 3)
       tu.last_read_post_number.should == 3
-      tu.seen_post_count.should == 3
+      tu.highest_seen_post_number.should == 3
 
     end
   end

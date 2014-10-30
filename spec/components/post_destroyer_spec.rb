@@ -241,7 +241,7 @@ describe PostDestroyer do
       end
 
       it "sets the second user's last_read_post_number back to 1" do
-        topic_user.seen_post_count.should == 1
+        topic_user.highest_seen_post_number.should == 1
       end
 
     end
