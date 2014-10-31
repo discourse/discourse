@@ -15,7 +15,7 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
     this.set('loading', true);
     Discourse.URL.set('queryParams', this.get('filters')); // TODO: doesn't work
     Discourse.StaffActionLog.findAll(this.get('filters')).then(function(result) {
-      self.set('content', result);
+      self.set('model', result);
       self.set('loading', false);
     });
   }.observes('filters.action_name', 'filters.acting_user', 'filters.target_user', 'filters.subject'),

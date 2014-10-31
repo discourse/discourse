@@ -3,7 +3,10 @@ export function renderAvatar(user, options) {
 
   if (user) {
     var username = Em.get(user, 'username');
-    if (!username) username = Em.get(user, options.usernamePath);
+    if (!username) {
+      if (!options.usernamePath) { return ''; }
+      username = Em.get(user, options.usernamePath);
+    }
 
     var title;
     if (!options.ignoreTitle) {
