@@ -364,6 +364,10 @@ class ImportScripts::Base
     new_category
   end
 
+  def created_post(post)
+    # override if needed
+  end
+
   # Iterates through a collection of posts to be imported.
   # It can create topics and replies.
   # Attributes will be passed to the PostCreator.
@@ -395,6 +399,8 @@ class ImportScripts::Base
                 topic_id: new_post.topic_id,
                 url: new_post.url,
               }
+
+              created_post(new_post)
 
               created += 1
             else
