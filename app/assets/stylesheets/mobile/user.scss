@@ -442,8 +442,7 @@
     .time, .delete-info {
       display: block;
       float: right;
-      color: $primary;
-      margin-right: 8px;
+      color: lighten($primary, 40%);
       font-size: 11px;
     }
     .delete-info i {
