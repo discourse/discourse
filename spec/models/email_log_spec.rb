@@ -49,7 +49,7 @@ describe EmailLog do
 
     context "when user's email does not exist email logs" do
       it "returns nil" do
-        expect(user.email_logs.last_sent_email_address).should == nil
+        expect(user.email_logs.last_sent_email_address).to be_nil
       end
     end
   end
