@@ -85,7 +85,7 @@ var controllerOpts = {
       if (selected.length > 0) {
         promise = Discourse.Topic.bulkOperation(selected, operation);
       } else {
-        promise = Discourse.Topic.bulkOperationByFilter(this.get('filter'), operation);
+        promise = Discourse.Topic.bulkOperationByFilter('unread', operation, this.get('category.id'));
       }
       promise.then(function(result) {
         if (result && result.topic_ids) {
@@ -105,8 +105,12 @@ var controllerOpts = {
     return Discourse.TopicTrackingState.current();
   }.property(),
 
+  isFilterPage: function(filter, filterType) {
+    return filter.match(new RegExp(filterType + '$', 'gi')) ? true : false;
+  },
+
   showDismissRead: function() {
-    return this.get('filter') === 'unread' && this.get('topics.length') > 0;
+    return this.isFilterPage(this.get('filter'), 'unread') && this.get('topics.length') > 0;
   }.property('filter', 'topics.length'),
 
   showResetNew: function() {
@@ -114,8 +118,8 @@ var controllerOpts = {
   }.property('filter', 'topics.length'),
 
   showDismissAtTop: function() {
-    return (this.get('filter') === 'new' ||
-           this.get('filter') === 'unread') &&
+    return (this.isFilterPage(this.get('filter'), 'new') ||
+           this.isFilterPage(this.get('filter'), 'unread')) &&
            this.get('topics.length') >= 30;
   }.property('filter', 'topics.length'),
 
