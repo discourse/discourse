@@ -24,12 +24,12 @@ describe UserProfile do
     let(:user_profile) { Fabricate.build(:user_profile) }
 
     it 'is not valid without user' do
-      expect(user_profile.valid?).should == false
+      expect(user_profile.valid?).to be false
     end
 
     it 'is is valid with user' do
       user_profile.user = Fabricate.build(:user)
-      expect(user_profile.valid?).should == true
+      expect(user_profile.valid?).to be true
     end
 
     it "doesn't support really long bios" do
