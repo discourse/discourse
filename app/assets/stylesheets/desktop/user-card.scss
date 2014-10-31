@@ -11,11 +11,13 @@
   color: $secondary;
   background-size: cover;
   background-position: center center;
+  min-height: 175px;
 
   .card-content {
     padding: 12px;
     background: rgba($primary, .85);
-    margin-top: 100px;
+    margin-top: 85px;
+
     &:after {
       content: '';
       display: block;
@@ -24,6 +26,8 @@
   }
 
 &.no-bg {
+  min-height: 50px;
+
   .card-content {
     margin-top: 0;
   }
@@ -60,6 +64,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: inline;
     a {
       color: $secondary;
     }
@@ -101,8 +106,8 @@
   }
 
   .bio {
-    max-height: 55px;
-    overflow: auto;
+    max-height: 60px;
+    overflow: hidden;
     float: left;
     margin: 10px 0;
     width: 70%;
@@ -161,6 +166,7 @@
         position: absolute;
         bottom: 0;
         display: block;
+        width: 250px;
       }
 
     }
@@ -186,7 +192,6 @@
     .more-user-badges {
       @extend .user-badge;
       padding: 3px 8px;
-      font-size: 13px;
     }
   }
 
@@ -199,7 +204,10 @@
     img {
       max-width: 100px;
     }
-    float: right;
-    margin-right: 5px;
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    font-size: 30px;
+    i {color: $secondary;}
   }
 }
