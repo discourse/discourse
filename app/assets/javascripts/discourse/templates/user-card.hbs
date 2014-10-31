@@ -1,6 +1,6 @@
-{{#if username}}
+<div class="card-content">
 
-  <div class="card-content">
+{{#if username}}
 
   {{#link-to 'user' user}}{{bound-avatar avatar "huge"}}{{/link-to}}
 
@@ -9,9 +9,19 @@
     <h1 {{bind-attr class="staff new_user"}}>
       {{#link-to 'user' user}}{{username}}{{/link-to}}
     </h1>
-    {{#if user.title}}
-      <h2>{{user.title}}</h2>
+
+    {{#if user.name}}
+      <h2>{{user.name}}</h2>
     {{/if}}
+
+    {{#if user.title}}
+      {{#if user.name}}
+      <h2>/ {{user.title}}</h2>
+      {{else}}
+      <h2> {{user.title}}</h2>
+      {{/if}}
+    {{/if}}
+
     {{#if showName}}
       <h2>{{#link-to 'user' user}}{{name}}{{/link-to}}</h2>
     {{/if}}
