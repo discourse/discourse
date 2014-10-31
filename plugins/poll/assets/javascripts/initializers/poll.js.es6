@@ -9,9 +9,12 @@ var Poll = Discourse.Model.extend({
     this.updateFromJson(this.get('post.poll_details'));
   }.observes('post.poll_details'),
 
-  fetchNewPostDetails: function() {
-    this.get('post.topic.postStream').triggerChangedPost(this.get('post.id'), this.get('post.topic.updated_at'));
-  }.observes('post.topic.title'),
+  fetchNewPostDetails: Discourse.debounce(function() {
+    var self = this;
+    Discourse.debounce(function() {
+      self.get('post.topic.postStream').triggerChangedPost(self.get('post.id'), self.get('post.topic.updated_at'));
+    }, 500);
+  }).observes('post.topic.title'),
 
   updateFromJson: function(json) {
     var selectedOption = json["selected"];
@@ -24,8 +27,8 @@ var Poll = Discourse.Model.extend({
         checked: (option === selectedOption)
       }));
     });
-    this.set('options', options);
 
+    this.set('options', options);
     this.set('closed', json.closed);
   },
 
