@@ -470,12 +470,13 @@ span.highlighted {
 }
 
 .topic-meta-data {
+  margin-left: 60px;
   white-space: nowrap;
   position: absolute;
   width: 100%;
   left: 0px;
   .names {
-    margin: 5px 0 0 65px;
+    margin: 5px 0 0 5px;
     line-height: 17px;
     span {
       display: block;
