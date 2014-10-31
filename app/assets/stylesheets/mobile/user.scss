@@ -151,12 +151,11 @@
 
 .user-navigation {
   width: 100%;
-  margin-right: 1.8018%;
   margin-top: 20px;
 
   h3 {
     color: $primary;
-    margin: 20px 0 10px 0;
+    margin: 10px;
   }
 
 }
@@ -241,7 +240,6 @@
       .btn { padding: 3px 12px; }
 
       dl dd {
-        display: inline;
         margin: 0 15px 0 5px;
         padding: 0;
       }
@@ -344,8 +342,7 @@
     }
 
     .controls {
-      padding: 0 0 12px 0;
-      float: right;
+      width: 40%;
       ul {list-style-type: none;}
       a {
         padding: 5px 10px;
@@ -355,7 +352,6 @@
 
       .right {
         float: right;
-        margin-left: 5px;
       }
     }
   }
@@ -411,6 +407,7 @@
 
 
   .user-stream {
+    padding: 0 10px;
     .end-of-stream {
       width: auto;
       }
