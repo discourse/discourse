@@ -28,8 +28,8 @@ class ImportScripts::Bespoke < ImportScripts::Base
   end
 
   def execute
-    import_users
-    import_categories
+    #import_users
+    #import_categories
     import_posts
 
   end
@@ -202,18 +202,20 @@ class ImportScripts::Bespoke < ImportScripts::Base
           topic[:post_id] = post[:id]
         else
           parent = topic_lookup_from_imported_post_id(topic[:post_id])
+          next unless parent
+
           mapped[:topic_id] = parent[:topic_id]
 
           reply_to_post_id = post_id_from_imported_post_id(post[:reply_id])
           if reply_to_post_id
             reply_to_post_number = @post_number_map[reply_to_post_id]
-            if reply_to_post_number
+            if reply_to_post_number && reply_to_post_number > 1
               mapped[:reply_to_post_number] = reply_to_post_number
             end
           end
         end
 
-        return nil if topic[:deleted] or post[:deleted]
+        next if topic[:deleted] or post[:deleted]
 
         mapped
       end
