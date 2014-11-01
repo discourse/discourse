@@ -441,7 +441,7 @@ class TopicsController < ApplicationController
   end
 
   def perform_show_response
-    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false)
+    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw])
 
     respond_to do |format|
       format.html do
