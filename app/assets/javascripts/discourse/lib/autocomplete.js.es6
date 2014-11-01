@@ -331,7 +331,7 @@ export default function(options) {
     }
 
     // ESC
-    if (e.which === keys.escape) {
+    if (e.which === keys.esc) {
       if (completeStart !== null) {
         closeAutocomplete();
         return false;
