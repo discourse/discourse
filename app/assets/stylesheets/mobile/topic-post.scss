@@ -364,10 +364,6 @@ iframe {
   display: none;
 }
 
-.topic-meta-data {
-  margin-bottom: 10px;
-}
-
 .open>.dropdown-menu {
   display: block;
 }
@@ -473,7 +469,7 @@ span.highlighted {
   margin-left: 60px;
   white-space: nowrap;
   position: absolute;
-  width: 100%;
+  width: 80%;
   left: 0px;
   .names {
     margin: 5px 0 0 5px;
