@@ -10,9 +10,8 @@ body {
 
   .boxed {
     height: 100%;
-    @include border-radius-all(5px);
     .contents {
-      padding: 10px 10px 10px 10px;
+      padding: 10px;
     }
     &.white {
       background-color: $secondary;
