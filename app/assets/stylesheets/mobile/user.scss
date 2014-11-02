@@ -342,9 +342,12 @@
     }
 
     .controls {
-      width: 40%;
+      width: 55%;
       float:right;
-      ul {list-style-type: none;}
+      ul {
+        list-style-type: none;
+        margin: 0;
+      }
       a {
         padding: 5px 10px;
         width: 140px;
