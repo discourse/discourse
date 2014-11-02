@@ -7,7 +7,7 @@
   <div class="names">
     <span>
     <h1 {{bind-attr class="staff new_user"}}>
-      {{#link-to 'user' user}}{{username}}{{/link-to}}
+      {{#link-to 'user' user}}{{username}}{{{user.statusIcon}}}{{/link-to}}
     </h1>
 
     {{#if user.name}}
@@ -15,11 +15,7 @@
     {{/if}}
 
     {{#if user.title}}
-      {{#if user.name}}
-      <h2>/ {{user.title}}</h2>
-      {{else}}
-      <h2> {{user.title}}</h2>
-      {{/if}}
+      <h2>{{user.title}}</h2>
     {{/if}}
 
     {{#if showName}}
@@ -29,29 +25,6 @@
   </div>
 
   {{#if user}}
-
-      {{#if isSuspended}}
-        <div class='suspended'>
-          {{fa-icon "ban"}}
-          <b>{{i18n user.suspended_notice date="user.suspendedTillDate"}}</b><br/>
-          <b>{{i18n user.suspended_reason}}</b> {{user.suspend_reason}}
-        </div>
-      {{else}}
-        {{#if user.bio_cooked}}<div class='bio'>{{{user.bio_cooked}}}</div>{{/if}}
-      {{/if}}
-
-{{#if showBadges}}
-  <div class="badge-section">
-    {{#each user.featured_user_badges}}
-      {{user-badge badge=badge}}
-    {{/each}}
-    {{#if showMoreBadges}}
-      {{#link-to 'user.badges' user class="btn more-user-badges"}}
-        {{i18n badges.more_badges count=moreBadgesCount}}
-      {{/link-to}}
-    {{/if}}
-  </div>
-{{/if}}
 
       <ul class="usercard-controls">
         {{#if user.can_send_private_message_to_user}}
@@ -69,13 +42,47 @@
         {{/if}}
       </ul>
 
+      {{#if isSuspended}}
+        <div class='suspended'>
+          {{fa-icon "ban"}}
+          <b>{{i18n user.suspended_notice date="user.suspendedTillDate"}}</b><br/>
+          <b>{{i18n user.suspended_reason}}</b> {{user.suspend_reason}}
+        </div>
+      {{else}}
+        {{#if user.bio_cooked}}<div class='bio'><div class="overflow">{{{user.bio_cooked}}}</div></div>{{/if}}
+      {{/if}}
+
       {{#if user.card_badge}}
         {{#link-to 'badges.show' user.card_badge class="card-badge"}}
           {{icon-or-image user.card_badge.image}}
         {{/link-to}}
       {{/if}}
 
+      <div class="metadata">
+        <h3><i class="fa fa-comment"></i> {{i18n last_post}} {{format-date path="user.last_posted_at" leaveAgo="true"}} </h3>
+        <h3><i class="fa fa-user"></i> {{i18n joined}} {{format-date path="user.created_at" leaveAgo="true"}}</h3>
+        {{#if user.custom_groups}}
+
+        <h3> <i class="fa fa-group"></i> {{groups-list groups=user.custom_groups}}</h3>
+
+        {{/if}}
+
+      </div>
+
+      {{#if showBadges}}
+        <div class="badge-section">
+          {{#each user.featured_user_badges}}
+            {{user-badge badge=badge}}
+          {{/each}}
+          {{#if showMoreBadges}}
+            {{#link-to 'user.badges' user class="btn more-user-badges"}}
+              {{i18n badges.more_badges count=moreBadgesCount}}
+            {{/link-to}}
+          {{/if}}
+        </div>
+      {{/if}}
   </div>
+
   {{else}}
     <p class='loading'>{{i18n loading}}</p>
   {{/if}}
