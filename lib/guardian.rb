@@ -285,4 +285,7 @@ class Guardian
     end
   end
 
+  def self.none
+    @_none ||= Guardian.new
+  end
 end

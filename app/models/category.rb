@@ -44,13 +44,12 @@ class Category < ActiveRecord::Base
 
   scope :latest, ->{ order('topic_count desc') }
 
-  scope :secured, ->(guardian = nil) {
-    ids = guardian.secure_category_ids if guardian
-    if ids.present?
-      where("NOT categories.read_restricted or categories.id in (:cats)", cats: ids).references(:categories)
-    else
-      where("NOT categories.read_restricted").references(:categories)
-    end
+  scope :secured, ->(guardian = Guardian.none) {
+    condition = "NOT categories.read_restricted"
+    cats = guardian.secure_category_ids
+    condition += " or categories.id in (:cats)" if cats.any?
+
+    where(condition, cats: cats).references(:categories)
   }
 
   scope :topic_create_allowed, ->(guardian) {

@@ -124,19 +124,14 @@ class Topic < ActiveRecord::Base
 
   scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
 
-  scope :secured, lambda { |guardian=nil|
-    ids = guardian.secure_category_ids if guardian
-
-    # Query conditions
-    condition = if ids.present?
-      ["NOT c.read_restricted or c.id in (:cats)", cats: ids]
-    else
-      ["NOT c.read_restricted"]
-    end
+  scope :secured, ->(guardian = Guardian.none) {
+    condition = "NOT c.read_restricted"
+    cats = guardian.secure_category_ids
+    condition += " or c.id in (:cats)" if cats.any?
 
     where("category_id IS NULL OR category_id IN (
            SELECT c.id FROM categories c
-           WHERE #{condition[0]})", condition[1])
+           WHERE #{condition})", cats: cats)
   }
 
   # Helps us limit how many topics can be starred in a day
