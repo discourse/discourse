@@ -67,7 +67,7 @@ class PostRevisor
     publish_changes
     grant_badge
 
-    @post_successfully_saved && @topic_successfully_saved
+    successfully_saved_post_and_topic
   end
 
   def cleanup_whitespaces(raw)
@@ -93,11 +93,7 @@ class PostRevisor
   end
 
   def revise_post
-    if should_create_new_version?
-      revise_and_create_new_version
-    else
-      revise
-    end
+    should_create_new_version? ? revise_and_create_new_version : revise
   end
 
   def should_create_new_version?
@@ -178,11 +174,9 @@ class PostRevisor
   end
 
   def create_or_update_revision
-    if @version_changed
-      create_revision
-    else
-      update_revision
-    end
+    # don't create an empty revision if something failed
+    return unless successfully_saved_post_and_topic
+    @version_changed ? create_revision : update_revision
   end
 
   def create_revision
@@ -303,6 +297,10 @@ class PostRevisor
 
   def grant_badge
     BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
+  end
+
+  def successfully_saved_post_and_topic
+    @post_successfully_saved && @topic_successfully_saved
   end
 
 end
