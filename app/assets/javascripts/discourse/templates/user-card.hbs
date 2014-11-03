@@ -49,7 +49,7 @@
           <b>{{i18n user.suspended_reason}}</b> {{user.suspend_reason}}
         </div>
       {{else}}
-        {{#if user.bio_cooked}}<div class='bio'><div class="overflow">{{{user.bio_cooked}}}</div></div>{{/if}}
+        {{#if user.bio_cooked}}<div class='bio'>{{text-overflow class="overflow" text=user.bio_cooked}}</div>{{/if}}
       {{/if}}
 
       {{#if user.card_badge}}
@@ -62,11 +62,8 @@
         <h3><i class="fa fa-comment"></i> {{i18n last_post}} {{format-date path="user.last_posted_at" leaveAgo="true"}} </h3>
         <h3><i class="fa fa-user"></i> {{i18n joined}} {{format-date path="user.created_at" leaveAgo="true"}}</h3>
         {{#if user.custom_groups}}
-
-        <h3> <i class="fa fa-group"></i> {{groups-list groups=user.custom_groups}}</h3>
-
+          <h3> <i class="fa fa-group"></i> {{groups-list groups=user.custom_groups}}</h3>
         {{/if}}
-
       </div>
 
       {{#if showBadges}}
