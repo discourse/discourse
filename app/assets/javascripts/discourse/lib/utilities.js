@@ -269,7 +269,7 @@ Discourse.Utilities = {
     @param {String} path The path
   **/
   isAnImage: function(path) {
-    return (/\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i).test(path);
+    return (/\.(png|jpg|jpeg|gif|bmp|tif|tiff|svg|webp)$/i).test(path);
   },
 
   /**
@@ -279,7 +279,7 @@ Discourse.Utilities = {
   **/
   allowsAttachments: function() {
     return Discourse.Utilities.authorizesAllExtensions() ||
-           !(/((png|jpg|jpeg|gif|bmp|tif|tiff)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
+           !(/((png|jpg|jpeg|gif|bmp|tif|tiff|svg|webp)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
   },
 
   displayErrorForUpload: function(data) {
