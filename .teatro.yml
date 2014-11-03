@@ -1,0 +1,6 @@
+stage:
+  before:
+    - export DISCOURSE_DB_NAME=teatro
+    - export DISCOURSE_DB_USERNAME=teatro
+
+  database: RAILS_ENV=development bundle exec rake db:create db:migrate
