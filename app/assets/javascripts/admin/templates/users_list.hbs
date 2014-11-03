@@ -28,9 +28,14 @@
     </div>
   {{/if}}
 
-  <h2>{{title}}</h2>
-
-  <br/>
+  <div class="admin-title">
+    <div class="pull-left">
+      <h2>{{title}}</h2>
+    </div>
+    <div class="pull-right">
+      <button {{action "showEmails"}} class="btn">{{i18n admin.users.show_emails}}</button>
+    </div>
+  </div>
 
   {{#if loading}}
     <div class='spinner'></div>
@@ -43,6 +48,7 @@
           {{/if}}
           <th>&nbsp;</th>
           <th>{{i18n username}}</th>
+          <th>{{i18n email}}</th>
           <th>{{i18n admin.users.last_emailed}}</th>
           <th>{{i18n last_seen}}</th>
           <th>{{i18n admin.user.topics_entered}}</th>
@@ -53,7 +59,6 @@
             <th>{{i18n admin.users.approved}}</th>
           {{/if}}
           <th>&nbsp;</th>
-
         </tr>
 
         {{#each model}}
@@ -67,6 +72,7 @@
             {{/if}}
             <td>{{#link-to 'adminUser' this}}{{avatar this imageSize="small"}}{{/link-to}}</td>
             <td>{{#link-to 'adminUser' this}}{{unbound username}}{{/link-to}}</td>
+            <td>{{{unbound email}}}</td>
             <td>{{{unbound last_emailed_age}}}</td>
             <td>{{{unbound last_seen_age}}}</td>
             <td>{{{unbound topics_entered}}}</td>

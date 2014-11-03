@@ -25,8 +25,14 @@ class Admin::UsersController < Admin::AdminController
                                     :revoke_api_key]
 
   def index
-    query = ::AdminUserIndexQuery.new(params)
-    render_serialized(query.find_users, AdminUserSerializer)
+    users = ::AdminUserIndexQuery.new(params).find_users
+
+    if params[:show_emails] == "true"
+      guardian.can_see_emails = true
+      StaffActionLogger.new(current_user).log_show_emails(users)
+    end
+
+    render_serialized(users, AdminUserSerializer)
   end
 
   def show

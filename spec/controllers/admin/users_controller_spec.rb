@@ -22,6 +22,27 @@ describe Admin::UsersController do
         xhr :get, :index
         ::JSON.parse(response.body).should be_present
       end
+
+      context 'when showing emails' do
+
+        it "returns email for all the users" do
+          xhr :get, :index, show_emails: "true"
+          data = ::JSON.parse(response.body)
+          data.each do |user|
+            user["email"].should be_present
+          end
+        end
+
+        it "logs an enty for all email shown" do
+          UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count.should == 0
+
+          xhr :get, :index, show_emails: "true"
+          data = ::JSON.parse(response.body)
+
+          UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count.should == data.length
+        end
+
+      end
     end
 
     describe '.show' do
