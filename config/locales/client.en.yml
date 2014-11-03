@@ -1003,7 +1003,7 @@ en:
         n_posts:
           one: "1 post"
           other: "{{count}} posts"
-        cancel: "Show all posts in this topic again."
+        cancel: "Remove filter"
 
       split_topic:
         title: "Move to New Topic"
