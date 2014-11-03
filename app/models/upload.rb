@@ -75,13 +75,24 @@ class Upload < ActiveRecord::Base
       # deal with width & height for images
       if FileHelper.is_image?(filename)
         begin
-          # fix orientation first
-          Upload.fix_image_orientation(file.path)
-          # retrieve image info
-          image_info = FastImage.new(file, raise_on_failure: true)
-            # compute image aspect ratio
-          upload.width, upload.height = ImageSizer.resize(*image_info.size)
-          # make sure we're at the beginning of the file (FastImage moves the pointer)
+          if filename =~ /\.svg$/i
+            svg = Nokogiri::XML(file).at_css("svg")
+            width, height = svg["width"].to_i, svg["height"].to_i
+            if width == 0 || height == 0
+              upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
+            else
+              upload.width, upload.height = ImageSizer.resize(width, height)
+            end
+          else
+            # fix orientation first
+            Upload.fix_image_orientation(file.path)
+            # retrieve image info
+            image_info = FastImage.new(file, raise_on_failure: true)
+              # compute image aspect ratio
+            upload.width, upload.height = ImageSizer.resize(*image_info.size)
+          end
+          # make sure we're at the beginning of the file
+          # (FastImage and Nokogiri move the pointer)
           file.rewind
         rescue FastImage::ImageFetchFailure
           upload.errors.add(:base, I18n.t("upload.images.fetch_failure"))
