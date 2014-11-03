@@ -98,6 +98,7 @@
   .metadata {
     width: 100%;
     clear: both;
+    padding-top: 5px;
     h3 {display: inline; margin-right: 5px; }
     div {display: inline; color: scale-color($primary, $lightness: 50%);
     .group-link {color: scale-color($primary, $lightness: 50%);}
@@ -211,7 +212,9 @@
 
   .suspended {
     color: $danger;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    clear: left;
+    padding-top: 15px;
   }
 
   .card-badge {
