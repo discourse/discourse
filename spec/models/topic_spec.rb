@@ -1181,6 +1181,16 @@ describe Topic do
       Topic.for_digest(user, 1.year.ago, top_order: true).should == [topic]
     end
 
+    it "doesn't return topics from muted categories" do
+      user = Fabricate(:user)
+      category = Fabricate(:category)
+      topic = Fabricate(:topic, category: category)
+
+      CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:muted], category.id)
+
+      Topic.for_digest(user, 1.year.ago, top_order: true).should be_blank
+    end
+
   end
 
   describe 'secured' do
