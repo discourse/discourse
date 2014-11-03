@@ -101,9 +101,6 @@ class PostDestroyer
       @post.update_flagged_posts_count
       @post.topic_links.each(&:destroy)
     end
-
-    # covered by PostRevisor
-    # @post.publish_change_to_clients! :revised
   end
 
   def user_recovered
@@ -113,9 +110,6 @@ class PostDestroyer
       @post.revise(@user, { raw: @post.revisions.last.modifications["raw"][0] }, force_new_version: true)
       @post.update_flagged_posts_count
     end
-
-    # covered by PostRevisor
-    # @post.publish_change_to_clients! :revised
   end
 
 
