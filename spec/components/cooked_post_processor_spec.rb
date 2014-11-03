@@ -98,6 +98,33 @@ describe CookedPostProcessor do
 
     end
 
+    context "with title" do
+
+      let(:upload) { Fabricate(:upload) }
+      let(:post) { build(:post_with_large_image_and_title) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      before do
+        SiteSetting.max_image_height = 2000
+        SiteSetting.create_thumbnails = true
+
+        Upload.expects(:get_from_url).returns(upload)
+        FastImage.stubs(:size).returns([1000, 2000])
+
+        # hmmm this should be done in a cleaner way
+        OptimizedImage.expects(:resize).returns(true)
+      end
+
+      it "generates overlay information" do
+        cpp.post_process_images
+        cpp.html.should match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="WAT"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" title="WAT" width="690" height="1380"><div class="meta">
+       <span class="filename">WAT</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
+       </div></a></div>'
+        cpp.should be_dirty
+      end
+
+    end
+
     context "topic image" do
 
       let(:topic) { build(:topic, id: 1) }
