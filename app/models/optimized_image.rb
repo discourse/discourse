@@ -36,7 +36,6 @@ class OptimizedImage < ActiveRecord::Base
           FileUtils.cp(original_path, temp_path)
           resized = true
         else
-          original_path << "[0]" unless opts[:allow_animation]
           resized = resize(original_path, temp_path, width, height)
         end
 
@@ -80,6 +79,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize(from, to, width, height)
+    from << "[0]" unless opts[:allow_animation]
     # NOTE: ORDER is important!
     instructions = %W{
       #{from}
