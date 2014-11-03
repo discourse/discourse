@@ -1861,6 +1861,7 @@ en:
         last_emailed: "Last Emailed"
         not_found: "Sorry, that username doesn't exist in our system."
         active: "Active"
+        show_emails: "Show Emails"
         nav:
           new: "New"
           active: "Active"

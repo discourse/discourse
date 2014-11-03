@@ -90,11 +90,11 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
 
     @method refreshUsers
   **/
-  refreshUsers: function() {
+  refreshUsers: function(showEmails) {
     var adminUsersListController = this;
     adminUsersListController.set('loading', true);
 
-    Discourse.AdminUser.findAll(this.get('query'), { filter: this.get('username') }).then(function (result) {
+    Discourse.AdminUser.findAll(this.get('query'), { filter: this.get('username'), show_emails: showEmails }).then(function (result) {
       adminUsersListController.set('content', result);
       adminUsersListController.set('loading', false);
     });
@@ -140,6 +140,10 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
       bootbox.alert(message);
       controller.refreshUsers();
     });
+  },
+
+  showEmails: function() {
+    this.refreshUsers(true);
   }
 
 });
