@@ -26,10 +26,7 @@ module Jobs
           user_data.each do |user|
             user_array = Array.new
             group_names = get_group_names(user).join(';')
-            user_array.push(user['id']).push(user['name']).push(user['username']).push(user['email']).push(user['created_at'])
-              .push(user.user_stat['topics_entered']).push(user.user_stat['posts_read_count']).push(user.user_stat['time_read'])
-                .push(user.user_stat['topic_count']).push(user.user_stat['post_count']).push(user.user_stat['likes_given'])
-                  .push(user.user_stat['likes_received'])
+            user_array = get_user_fields(user)
             user_array.push(group_names) if group_names != ''
             data.push(user_array)
           end
@@ -52,6 +49,22 @@ module Jobs
           group_names.push(group.name)
         end
         return group_names
+      end
+
+      def get_user_fields(user)
+        csv_user_attrs = ['id','name','username','email','created_at']
+        csv_user_stats_attr = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
+        user_array = []
+
+        csv_user_attrs.each do |user_attr|
+          user_array.push(user.attributes[user_attr])
+        end
+
+        csv_user_stats_attr.each do |user_stat_attr|
+          user_array.push(user.user_stat.attributes[user_stat_attr])
+        end
+
+        return user_array
       end
 
       def set_file_path
