@@ -1,10 +1,20 @@
 (function() {
   var emoji = <%= Dir.glob(File.expand_path("../../../public/images/*.png", __FILE__)).map{|f| File.basename(f).split(".")[0]}.inspect %>;
 
+  var _extendedEmoji = {};
+  Discourse.Dialect.registerEmoji = function(code, url) {
+    _extendedEmoji[code] = url;
+  };
+
   function imageFor(code) {
     if (emoji.indexOf(code) !== -1) {
       var url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
       return ['img', {href: url, title: ':' + code + ':', 'class': 'emoji', alt: code}];
+    } else {
+      var url = _extendedEmoji[code];
+      if (url) {
+        return ['img', {href: url, title: ':' + code + ':', 'class': 'emoji', alt: code}];
+      }
     }
   }
 
