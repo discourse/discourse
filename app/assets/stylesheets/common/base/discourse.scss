@@ -15,6 +15,10 @@ big {
   font-size: 28px;
 }
 
+small {
+  font-size: 10px;
+}
+
 blockquote {
   background-color: scale-color-diff();
   border-left: 5px solid darken(scale-color-diff(), 10%);
