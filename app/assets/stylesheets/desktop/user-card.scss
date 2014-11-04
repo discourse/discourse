@@ -99,7 +99,13 @@
     width: 100%;
     clear: both;
     padding-top: 5px;
-    h3 {display: inline; margin-right: 5px; }
+    h3 {
+      display: inline;
+      margin-right: 5px;
+      .desc, a {
+        color: scale-color($primary, $lightness: 70%);
+      }
+    }
     div {display: inline; color: scale-color($primary, $lightness: 50%);
     .group-link {color: scale-color($primary, $lightness: 50%);}
     }
