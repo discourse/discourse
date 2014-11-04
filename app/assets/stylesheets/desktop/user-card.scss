@@ -116,9 +116,14 @@
     padding-top: 10px;
   }
 
+  &.has-card-badge-image .bio {
+    width: 75%;
+  }
+
   .bio {
     padding: 15px 0 0 0;
     clear: left;
+
     a {
       color: $secondary;
       text-decoration: underline;
@@ -198,7 +203,6 @@
         background: transparent;
         color: scale-color($primary, $lightness: 50%);
         border-color: scale-color($primary, $lightness: 50%);
-
       }
 
       h3 {
@@ -223,7 +227,7 @@
 
   .card-badge {
     img {
-      max-width: 40px;
+      max-width: 120px;
     }
     position: absolute;
     right: 12px;
