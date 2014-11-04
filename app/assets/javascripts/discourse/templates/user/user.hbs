@@ -94,11 +94,11 @@
 
               {{#if websiteName}}
                 <i class="fa fa-globe"></i>
-                  {{#if linkWebsite}}
-                    <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
-                  {{else}}
-                    <span {{bind-attr title="website"}}>{{websiteName}}</span>
-                  {{/if}}
+                {{#if linkWebsite}}
+                  <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
+                {{else}}
+                  <span {{bind-attr title="website"}}>{{websiteName}}</span>
+                {{/if}}
               {{/if}}
 
               </h3>
