@@ -59,10 +59,10 @@
       {{/if}}
 
       <div class="metadata">
-        <h3><i class="fa fa-comment"></i> {{i18n last_post}} {{format-date path="user.last_posted_at" leaveAgo="true"}} </h3>
-        <h3><i class="fa fa-user"></i> {{i18n joined}} {{format-date path="user.created_at" leaveAgo="true"}}</h3>
+        <h3><span class='desc'>{{i18n last_post}}</span> {{format-date path="user.last_posted_at" leaveAgo="true"}} </h3>
+        <h3><span class='desc'>{{i18n joined}}</span> {{format-date path="user.created_at" leaveAgo="true"}}</h3>
         {{#if user.githubProfileUrl}}
-        <a href="{{unbound user.githubProfileUrl}}"><h3><i class="fa fa-github"></i> GitHub</h3></a>
+          <h3><a href="{{unbound user.githubProfileUrl}}">GitHub</a></h3>
         {{/if}}
       </div>
 
