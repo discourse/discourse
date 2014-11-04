@@ -437,15 +437,7 @@ Discourse.User = Discourse.Model.extend({
         });
       }
     }, function () {});
-  },
-
-  githubProfileUrl: function(){
-
-    var screenName = this.get('github_screen_name');
-    if(screenName) {
-      return "https://github.com/" + screenName;
-    }
-  }.property()
+  }
 
 });
 
