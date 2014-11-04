@@ -47,7 +47,6 @@ export default ObjectController.extend({
     } else {
       this.set('avatar', null);
     }
-
     this.set('username', username);
 
     // If we click the avatar again, close it.

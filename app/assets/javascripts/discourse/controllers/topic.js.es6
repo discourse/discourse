@@ -8,6 +8,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   selectedPosts: null,
   selectedReplies: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
+  searchHighlight: null,
 
   maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
 
