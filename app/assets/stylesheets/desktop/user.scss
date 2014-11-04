@@ -292,6 +292,10 @@
           overflow: auto;
           max-width: 750px;
 
+          a.mention {
+            background-color: dark-light-diff($secondary, $primary, 50%, -60%);
+          }
+
           a[href] {
             color: dark-light-diff($secondary, $primary, 75%, 0%);
             text-decoration: underline;

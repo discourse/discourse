@@ -127,6 +127,9 @@
       max-width: 100%;
     }
 
+    a.mention {
+      background-color: dark-light-diff($secondary, $primary, 50%, -60%);
+    }
     .overflow {
       max-height: 60px;
       overflow: hidden;
