@@ -21,6 +21,7 @@ module PostStreamSerializerMixin
       object.posts.each_with_index do |p, idx|
         highest_number_in_posts = p.post_number if p.post_number > highest_number_in_posts
         ps = PostSerializer.new(p, scope: scope, root: false)
+        ps.add_raw = true if @options[:include_raw]
         ps.topic_view = object
         p.topic = object.topic
 
