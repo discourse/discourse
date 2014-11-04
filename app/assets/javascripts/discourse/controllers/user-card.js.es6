@@ -48,7 +48,7 @@ export default ObjectController.extend({
       this.set('avatar', null);
     }
 
-    this.setProperties({visible: true, username: username});
+    this.set('username', username);
 
     // If we click the avatar again, close it.
     if (username === currentUsername && wasVisible) {
@@ -67,8 +67,7 @@ export default ObjectController.extend({
     var self = this;
     self.set('user', null);
     Discourse.User.findByUsername(username).then(function (user) {
-      self.set('user', user);
-      self.set('avatar', user);
+      self.setProperties({ user: user, avatar: user, visible: true});
     });
   },
 
