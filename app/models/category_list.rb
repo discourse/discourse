@@ -8,8 +8,8 @@ class CategoryList
                 :draft_key,
                 :draft_sequence
 
-  def initialize(guardian=nil, options = {})
-    @guardian = guardian || Guardian.new
+  def initialize(guardian = Guardian.none, options = {})
+    @guardian = guardian
     @options = options
 
     find_relevant_topics unless latest_post_only?
