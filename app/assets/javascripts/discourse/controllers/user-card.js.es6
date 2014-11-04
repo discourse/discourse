@@ -28,6 +28,11 @@ export default ObjectController.extend({
 
   showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
 
+  hasCardBadgeImage: function() {
+    var img = this.get('user.card_badge.image');
+    return img && img.indexOf('fa-') === -1;
+  }.property('user.card_badge.image'),
+
   show: function(username, uploadedAvatarId) {
     // XSS protection (should be encapsulated)
     username = username.replace(/[^A-Za-z0-9_]/g, "");

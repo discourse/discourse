@@ -6,7 +6,7 @@ var clickOutsideEventName = "mousedown.outside-user-card",
 
 export default Discourse.View.extend(CleansUp, {
   elementId: 'user-card',
-  classNameBindings: ['controller.visible::hidden', 'controller.showBadges'],
+  classNameBindings: ['controller.visible::hidden', 'controller.showBadges', 'controller.hasCardBadgeImage'],
   allowBackgrounds: Discourse.computed.setting('allow_profile_backgrounds'),
 
   addBackground: function() {
