@@ -130,7 +130,7 @@ Discourse.PostStream = Em.Object.extend({
 
   hasNoFilters: function() {
     var streamFilters = this.get('streamFilters');
-    return !(streamFilters && ((streamFilters.filter === 'summary') || streamFilters.userFilters));
+    return !(streamFilters && ((streamFilters.filter === 'summary') || streamFilters.username_filters));
   }.property('streamFilters.[]', 'topic.posts_count', 'posts.length'),
 
   /**
