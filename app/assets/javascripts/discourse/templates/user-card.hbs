@@ -26,8 +26,6 @@
       <li><a class='btn btn-primary' {{action "composePrivateMessage" user}}>{{fa-icon "envelope"}}{{i18n user.private_message}}</a></li>
     {{/if}}
 
-    <li>{{#link-to 'user' user class="btn"}}{{fa-icon "user"}}{{i18n user.profile}}{{/link-to}}</li>
-
     {{#if showFilter}}
     <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</a></li>
     {{/if}}
