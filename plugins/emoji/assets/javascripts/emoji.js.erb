@@ -6,15 +6,18 @@
     _extendedEmoji[code] = url;
   };
 
+  function urlFor(code) {
+    var url = _extendedEmoji[code];
+    if (!url && emoji.indexOf(code) !== -1) {
+      url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
+    }
+    return url;
+  }
+
   function imageFor(code) {
-    if (emoji.indexOf(code) !== -1) {
-      var url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
+    var url = urlFor(code);
+    if (url) {
       return ['img', {href: url, title: ':' + code + ':', 'class': 'emoji', alt: code}];
-    } else {
-      var url = _extendedEmoji[code];
-      if (url) {
-        return ['img', {href: url, title: ':' + code + ':', 'class': 'emoji', alt: code}];
-      }
     }
   }
 
@@ -125,49 +128,55 @@
                                           "{{#each options}}" +
                                               "<li>" +
                                                 "<a href='#'>" +
-                                                "<img src='" + baseUrl + "plugins/emoji/images/{{this}}.png?v=1' class='emoji'> " +
-                                                "{{this}}</a>" +
+                                                "<img src='{{src}}' class='emoji'> " +
+                                                "{{code}}</a>" +
                                               "</li>" +
                                           "{{/each}}" +
                                        "</ul>" +
                                     "</div>");
 
+      var toSearch = emoji.concat(Object.keys(_extendedEmoji));
       $('#wmd-input').autocomplete({
         template: template,
         key: ":",
-        transformComplete: function(v){ return v + ":"; },
+        transformComplete: function(v){  return v.code + ":"; },
         dataSource: function(term){
+          return new Ember.RSVP.Promise(function(resolve) {
+            var full = ":" + term;
+            term = term.toLowerCase();
 
-          var full = ":" + term;
-          term = term.toLowerCase();
-
-          if (term === "") {
-            return Ember.RSVP.resolve(["smile", "smiley", "wink", "sunny", "blush"]);
-          }
-
-          if (translations[full]) {
-            return Ember.RSVP.resolve([translations[full]]);
-          }
-
-          var options = [];
-          var i;
-          for (i=0; i < emoji.length; i++) {
-            if (emoji[i].indexOf(term) === 0) {
-              options.push(emoji[i]);
-              if(options.length > 4) { break; }
+            if (term === "") {
+              return resolve(["smile", "smiley", "wink", "sunny", "blush"]);
             }
-          }
 
-          if (options.length <= 4) {
-            for (i=0; i < emoji.length; i++) {
-              if (emoji[i].indexOf(term) > 0) {
-                options.push(emoji[i]);
+            if (translations[full]) {
+              return resolve([translations[full]]);
+            }
+
+            var options = [];
+            var i;
+            for (i=0; i < toSearch.length; i++) {
+              if (toSearch[i].indexOf(term) === 0) {
+                options.push(toSearch[i]);
                 if(options.length > 4) { break; }
               }
             }
-          }
 
-          return Ember.RSVP.resolve(options);
+            if (options.length <= 4) {
+              for (i=0; i < toSearch.length; i++) {
+                if (toSearch[i].indexOf(term) > 0) {
+                  options.push(toSearch[i]);
+                  if(options.length > 4) { break; }
+                }
+              }
+            }
+
+            return resolve(options);
+          }).then(function(list) {
+            return list.map(function(i) {
+              return {code: i, src: urlFor(i)};
+            });
+          });
         }
       });
     });
