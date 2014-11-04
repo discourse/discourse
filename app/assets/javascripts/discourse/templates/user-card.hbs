@@ -53,8 +53,8 @@
       {{/if}}
 
       {{#if user.card_badge}}
-        {{#link-to 'badges.show' user.card_badge class="card-badge"}}
-          {{icon-or-image user.card_badge.image}}
+        {{#link-to 'badges.show' user.card_badge class="card-badge" title=user.card_badge.name}}
+          {{icon-or-image user.card_badge.image title=user.card_badge.name}}
         {{/link-to}}
       {{/if}}
 
