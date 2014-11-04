@@ -1,8 +1,8 @@
 class UserVisit < ActiveRecord::Base
 
   # A count of visits in the last month by day
-  def self.by_day(sinceDaysAgo=30)
-    where("visited_at >= ?", sinceDaysAgo.days.ago).group(:visited_at).order(:visited_at).count
+  def self.by_day(start_date, end_date)
+    where("visited_at >= ? and visited_at < ?", start_date, end_date).group(:visited_at).order(:visited_at).count
   end
 
   def self.ensure_consistency!
