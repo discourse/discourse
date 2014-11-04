@@ -1,86 +1,82 @@
 <div class="card-content">
 
 {{#if username}}
-
   {{#link-to 'user' user}}{{bound-avatar avatar "huge"}}{{/link-to}}
 
   <div class="names">
     <span>
-    <h1 {{bind-attr class="staff new_user"}}>
-      {{#link-to 'user' user}}{{username}}{{{user.statusIcon}}}{{/link-to}}
-    </h1>
+      <h1 {{bind-attr class="staff new_user"}}>
+        {{#link-to 'user' user}}{{username}}{{{user.statusIcon}}}{{/link-to}}
+      </h1>
 
-    {{#if user.name}}
-      <h2>{{user.name}}</h2>
-    {{/if}}
+      {{#if user.name}}
+        <h2>{{user.name}}</h2>
+      {{/if}}
 
-    {{#if user.title}}
-      <h2>{{user.title}}</h2>
-    {{/if}}
+      {{#if user.title}}
+        <h2>{{user.title}}</h2>
+      {{/if}}
 
-    {{#if showName}}
-      <h2>{{#link-to 'user' user}}{{name}}{{/link-to}}</h2>
-    {{/if}}
-  </span>
+      {{#if showName}}
+        <h2>{{#link-to 'user' user}}{{name}}{{/link-to}}</h2>
+      {{/if}}
+    </span>
   </div>
 
   {{#if user}}
-
-      <ul class="usercard-controls">
-        {{#if user.can_send_private_message_to_user}}
-          <li><a class='btn btn-primary' {{action "composePrivateMessage" user}}>{{fa-icon "envelope"}}{{i18n user.private_message}}</a></li>
-        {{/if}}
-
-        <li>{{#link-to 'user' user class="btn"}}{{fa-icon "user"}}{{i18n user.profile}}{{/link-to}}</li>
-
-        {{#if showFilter}}
-        <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</a></li>
-        {{/if}}
-
-        {{#if hasUserFilters}}
-        <li><a class='btn' {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n topic.filters.cancel}}</a></li>
-        {{/if}}
-      </ul>
-
-      {{#if isSuspended}}
-        <div class='suspended'>
-          {{fa-icon "ban"}}
-          <b>{{i18n user.suspended_notice date="user.suspendedTillDate"}}</b><br/>
-          <b>{{i18n user.suspended_reason}}</b> {{user.suspend_reason}}
-        </div>
-      {{else}}
-        {{#if user.bio_cooked}}<div class='bio'>{{text-overflow class="overflow" text=user.bio_cooked}}</div>{{/if}}
+    <ul class="usercard-controls">
+      {{#if user.can_send_private_message_to_user}}
+        <li><a class='btn btn-primary' {{action "composePrivateMessage" user}}>{{fa-icon "envelope"}}{{i18n user.private_message}}</a></li>
       {{/if}}
 
-      {{#if user.card_badge}}
-        {{#link-to 'badges.show' user.card_badge class="card-badge" title=user.card_badge.name}}
-          {{icon-or-image user.card_badge.image title=user.card_badge.name}}
-        {{/link-to}}
+      <li>{{#link-to 'user' user class="btn"}}{{fa-icon "user"}}{{i18n user.profile}}{{/link-to}}</li>
+
+      {{#if showFilter}}
+      <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</a></li>
       {{/if}}
 
-      <div class="metadata">
-        <h3><span class='desc'>{{i18n last_post}}</span> {{format-date path="user.last_posted_at" leaveAgo="true"}} </h3>
-        <h3><span class='desc'>{{i18n joined}}</span> {{format-date path="user.created_at" leaveAgo="true"}}</h3>
-        {{#if user.githubProfileUrl}}
-          <h3><a href="{{unbound user.githubProfileUrl}}">{{i18n user.github_profile}}</a></h3>
+      {{#if hasUserFilters}}
+      <li><a class='btn' {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n topic.filters.cancel}}</a></li>
+      {{/if}}
+    </ul>
+
+    {{#if isSuspended}}
+      <div class='suspended'>
+        {{fa-icon "ban"}}
+        <b>{{i18n user.suspended_notice date="user.suspendedTillDate"}}</b><br/>
+        <b>{{i18n user.suspended_reason}}</b> {{user.suspend_reason}}
+      </div>
+    {{else}}
+      {{#if user.bio_cooked}}<div class='bio'>{{text-overflow class="overflow" text=user.bio_cooked}}</div>{{/if}}
+    {{/if}}
+
+    {{#if user.card_badge}}
+      {{#link-to 'badges.show' user.card_badge class="card-badge" title=user.card_badge.name}}
+        {{icon-or-image user.card_badge.image title=user.card_badge.name}}
+      {{/link-to}}
+    {{/if}}
+
+    <div class="metadata">
+      <h3><span class='desc'>{{i18n last_post}}</span> {{format-date path="user.last_posted_at" leaveAgo="true"}} </h3>
+      <h3><span class='desc'>{{i18n joined}}</span> {{format-date path="user.created_at" leaveAgo="true"}}</h3>
+      {{#if user.githubProfileUrl}}
+        <h3><a href="{{unbound user.githubProfileUrl}}">{{i18n user.github_profile}}</a></h3>
+      {{/if}}
+    </div>
+
+    {{#if showBadges}}
+      <div class="badge-section">
+        {{#each user.featured_user_badges}}
+          {{user-badge badge=badge}}
+        {{/each}}
+        {{#if showMoreBadges}}
+          {{#link-to 'user.badges' user class="btn more-user-badges"}}
+            {{i18n badges.more_badges count=moreBadgesCount}}
+          {{/link-to}}
         {{/if}}
       </div>
-
-      {{#if showBadges}}
-        <div class="badge-section">
-          {{#each user.featured_user_badges}}
-            {{user-badge badge=badge}}
-          {{/each}}
-          {{#if showMoreBadges}}
-            {{#link-to 'user.badges' user class="btn more-user-badges"}}
-              {{i18n badges.more_badges count=moreBadgesCount}}
-            {{/link-to}}
-          {{/if}}
-        </div>
-      {{/if}}
-  </div>
-
-  {{else}}
-    <p class='loading'>{{i18n loading}}</p>
+    {{/if}}
   {{/if}}
 {{/if}}
+
+</div>
