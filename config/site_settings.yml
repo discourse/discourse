@@ -212,7 +212,6 @@ login:
   enable_github_logins:
     client: true
     default: false
-  public_github_screen_name: true
   github_client_id:
     default: ''
     regex: "^[a-f0-9]*$"

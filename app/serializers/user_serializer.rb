@@ -48,8 +48,7 @@ class UserSerializer < BasicUserSerializer
              :has_title_badges,
              :edit_history_public,
              :custom_fields,
-             :user_fields,
-             :github_screen_name
+             :user_fields
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
@@ -89,11 +88,6 @@ class UserSerializer < BasicUserSerializer
   ###
   ### ATTRIBUTES
   ###
-  def github_screen_name
-    if SiteSetting.public_github_screen_name
-      object.github_user_info && object.github_user_info.screen_name
-    end
-  end
 
   def include_email?
     object.id && object.id == scope.user.try(:id)
