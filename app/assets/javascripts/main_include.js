@@ -45,6 +45,7 @@
 //= require ./discourse/components/visible
 //= require ./discourse/helpers/user-avatar
 //= require ./discourse/helpers/cold-age-class
+//= require ./discourse/helpers/loading-spinner
 
 //= require ./discourse/dialects/dialect
 //= require_tree ./discourse/dialects
