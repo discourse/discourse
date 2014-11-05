@@ -510,7 +510,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   }.property('isPrivateMessage'),
 
   loadingHTML: function() {
-    return "<div class='spinner-wrap'><div class='spinner'><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>";
+    return "{{loading-spinner}}";
   }.property(),
 
 

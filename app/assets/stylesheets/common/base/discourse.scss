@@ -149,7 +149,7 @@ body {
 
 .spinner {
   height: 50px; width: 50px;
-  margin: 0 auto 0;
+  margin: 20px auto 0 auto;
   -webkit-animation: spin 1s steps(12, end) infinite;
   animation: spin 1s steps(12, end) infinite;
 }

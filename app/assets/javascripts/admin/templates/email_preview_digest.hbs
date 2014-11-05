@@ -19,7 +19,7 @@
 </div>
 
 {{#if loading}}
-  <div class='spinner-wrap'><div class='spinner'><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  {{loading-spinner}}
 {{else}}
   {{#if showHtml}}
     {{{html_content}}}
