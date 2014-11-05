@@ -1508,8 +1508,11 @@ en:
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
           all: "All"
-          view_table: "View as Table"
-          view_chart: "View as Bar Chart"
+          view_table: "table"
+          view_chart: "bar chart"
+          refresh_report: "Refresh Report"
+          start_date: "Start Date"
+          end_date: "End Date"
 
       commits:
         latest_changes: "Latest changes: please update often!"
