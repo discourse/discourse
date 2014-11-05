@@ -40,13 +40,11 @@ export default Ember.Component.extend({
 
     var renderIconIf = function(conditionProp, name, key, actionable) {
       if (!self.get(conditionProp)) { return; }
-      var title = I18n.t("topic_statuses." + key + ".help");
-
+      var title = Handlebars.Utils.escapeExpression(I18n.t("topic_statuses." + key + ".help"));
       var startTag = actionable ? "a href='#'" : "span";
       var endTag = actionable ? "a" : "span";
 
-      buffer.push("<" + startTag +
-        " title='" + title +"' class='topic-status'><i class='fa fa-" + name + "'></i></" + endTag + ">");
+      buffer.push("<" + startTag + " title='" + title + "' class='topic-status'><i class='fa fa-" + name + "'></i></" + endTag + ">");
     };
 
     // Allow a plugin to add a custom icon to a topic
