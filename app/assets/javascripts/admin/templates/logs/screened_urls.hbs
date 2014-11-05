@@ -1,7 +1,7 @@
 <p>{{i18n admin.logs.screened_urls.description}}</p>
 
 {{#if loading}}
-  <div class='spinner'></div>
+  {{loading-spinner}}
 {{else}}
   {{#if model.length}}
 

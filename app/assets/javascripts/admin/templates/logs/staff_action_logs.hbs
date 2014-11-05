@@ -45,7 +45,7 @@
 
   {{#if loading}}
     <br/>
-    <div class='spinner'></div>
+    {{loading-spinner}}
   {{else}}
     {{#if model.length}}
       {{view "staff-action-logs-list" content=controller}}
