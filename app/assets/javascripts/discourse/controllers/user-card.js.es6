@@ -7,6 +7,7 @@ export default ObjectController.extend({
   username: null,
   participant: null,
   avatar: null,
+  userLoading: null,
 
   postStream: Em.computed.alias('controllers.topic.postStream'),
   enoughPostsForFiltering: Em.computed.gte('participant.post_count', 2),
@@ -60,6 +61,11 @@ export default ObjectController.extend({
       return;
     }
 
+    if (username === currentUsername && this.get('userLoading') === username) {
+      // debounce
+      return;
+    }
+
     this.set('participant', null);
 
     // Retrieve their participants info
@@ -70,8 +76,12 @@ export default ObjectController.extend({
 
     var self = this;
     self.set('user', null);
+
+    self.set('userLoading', username);
     Discourse.User.findByUsername(username).then(function (user) {
       self.setProperties({ user: user, avatar: user, visible: true});
+    }).finally(function(){
+      self.set('userLoading', null);
     });
   },
 
