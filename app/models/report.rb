@@ -39,8 +39,8 @@ class Report
     # Load the report
     report = Report.new(type)
 
-    report.start_date = opts[:start_date]
-    report.end_date = opts[:end_date]
+    report.start_date = opts[:start_date] if opts[:start_date]
+    report.end_date = opts[:end_date] if opts[:end_date]
     send(report_method, report)
     report
   end
@@ -70,7 +70,7 @@ class Report
   end
 
   def self.report_about(report, subject_class, report_method = :count_per_day)
-    basic_report_about report, subject_class, report_method, default_days
+    basic_report_about report, subject_class, report_method, report.start_date, report.end_date
     add_counts(report, subject_class)
   end
 

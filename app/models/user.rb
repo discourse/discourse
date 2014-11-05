@@ -531,8 +531,8 @@ class User < ActiveRecord::Base
         .limit(3)
   end
 
-  def self.count_by_signup_date(sinceDaysAgo=30)
-    where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
+  def self.count_by_signup_date(start_date, end_date)
+    where('created_at >= ? and created_at < ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
   end
 
 
