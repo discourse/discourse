@@ -33,6 +33,10 @@ export default Discourse.View.extend(CleansUp, {
         if ($target.closest('.trigger-user-card').length > 0) { return; }
         if (self.$().has(e.target).length !== 0) { return; }
 
+        if ($target.data("userCard")|| $target.closest('a.mention')) {
+          return;
+        }
+
         self.get('controller').close();
       }
 
