@@ -241,6 +241,11 @@ module PrettyText
   end
 
   def self.excerpt(html, max_length, options={})
+    # TODO: properly fix this HACK in ExcerptParser without introducing XSS
+    doc = Nokogiri::HTML.fragment(html)
+    strip_image_wrapping(doc)
+    html = doc.to_html
+
     ExcerptParser.get_excerpt(html, max_length, options)
   end
 

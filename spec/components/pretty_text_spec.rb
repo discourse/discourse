@@ -3,6 +3,9 @@ require 'pretty_text'
 
 describe PrettyText do
 
+  let(:wrapped_image) { "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-04-14 at 9.47.10 PM.png</span><span class=\"informations\">966x737 1.47 MB</span><span class=\"expand\"></span>\n</div></a></div>" }
+  let(:wrapped_image_excerpt) {  }
+
   describe "Cooking" do
 
     describe "with avatar" do
@@ -110,6 +113,10 @@ describe PrettyText do
       it "should keep spoilers" do
         PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100).should match_html "<span class='spoiler'>[image]</span>"
         PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100).should match_html "<span class='spoiler'>spoiler</span>"
+      end
+
+      it "should remove meta informations" do
+        PrettyText.excerpt(wrapped_image, 100).should match_html "<a href='//localhost:3000/uploads/default/4399/33691397e78b4d75.png' class='lightbox' title='Screen Shot 2014-04-14 at 9.47.10 PM.png'>[image]</a>"
       end
     end
 
@@ -276,10 +283,8 @@ describe PrettyText do
       strip_image_wrapping(html).should == html
     end
 
-    let(:wrapped_image) { "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-04-14 at 9.47.10 PM.png</span><span class=\"informations\">966x737 1.47 MB</span><span class=\"expand\"></span>\n</div></a></div>" }
-
     it "strips the metadata" do
-      strip_image_wrapping(wrapped_image).should == "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"></a></div>"
+      strip_image_wrapping(wrapped_image).should match_html "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"></a></div>"
     end
   end
 
