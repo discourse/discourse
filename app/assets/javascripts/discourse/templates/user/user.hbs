@@ -150,6 +150,14 @@
                 {{/if}}
               </dd>
             {{/if}}
+            {{#if custom_groups}}
+              <dt>{{i18n groups.title count=custom_groups.length}}</dt>
+              <dd class='groups'>
+                {{#each custom_groups}}
+                  <span>{{#link-to 'group' this class="group-link"}}{{name}}{{/link-to}}</span>
+                {{/each}}
+              </dd>
+            {{/if}}
           </dl>
           {{plugin-outlet "user-profile-secondary"}}
         </div>
