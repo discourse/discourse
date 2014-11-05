@@ -30,7 +30,7 @@ export default ObjectController.extend({
 
   hasCardBadgeImage: function() {
     var img = this.get('user.card_badge.image');
-    return img && img.indexOf('fa-') === 0;
+    return img && img.indexOf('fa-') !== 0;
   }.property('user.card_badge.image'),
 
   show: function(username, uploadedAvatarId) {
