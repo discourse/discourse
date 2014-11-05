@@ -1324,6 +1324,10 @@ en:
       submit_tooltip: "Submit the private flag"
       take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
       cant: "Sorry, you can't flag this post at this time."
+      formatted_name:
+        off_topic: "It's Off-Topic"
+        inappropriate: "It's Inappropriate"
+        spam: "It's Spam"
       custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
       custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
       custom_message:
