@@ -23,7 +23,7 @@
 {{/each}}
 
 {{#if loading}}
-  <div class='spinner'></div>
+  {{loading-spinner}}
 {{/if}}
 {{#unless canLoadMore}}
   <div class='end-of-stream'></div>

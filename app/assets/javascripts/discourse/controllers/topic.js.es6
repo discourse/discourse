@@ -510,8 +510,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   }.property('isPrivateMessage'),
 
   loadingHTML: function() {
-    return "<div class='spinner'></div>";
+    return "{{loading-spinner}}";
   }.property(),
+
+
 
   recoverTopic: function() {
     this.get('content').recover();
