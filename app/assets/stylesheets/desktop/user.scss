@@ -217,6 +217,15 @@
         color: $primary;
       }
 
+      dd.groups {
+        span:after {
+          content: ','
+        }
+        span:last-of-type:after {
+          content:''
+        }
+      }
+
       dt {
         color: dark-light-diff($secondary, $primary, 50%, -40%);
         margin: 0;
