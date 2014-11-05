@@ -1,4 +1,5 @@
 import ObjectController from 'discourse/controllers/object';
+import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 
 export default ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
@@ -510,10 +511,8 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   }.property('isPrivateMessage'),
 
   loadingHTML: function() {
-    return "{{loading-spinner}}";
+    return spinnerHTML;
   }.property(),
-
-
 
   recoverTopic: function() {
     this.get('content').recover();
