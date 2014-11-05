@@ -422,7 +422,7 @@ en:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'This post is radically off-topic in the current topic, and should probably be moved. If this is a topic, perhaps it does not belong here.'
+      description: 'This post is not relevant to the current discussion as defined by the title and first post, and should probably be moved elsewhere.'
       long_form: 'flagged this as off-topic'
     spam:
       title: 'Spam'
@@ -440,7 +440,7 @@ en:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notify moderators'
-      description: 'This post requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
+      description: 'This post requires moderator attention for another reason not listed above.'
       long_form: 'notified moderators'
       email_title: 'A post in "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
