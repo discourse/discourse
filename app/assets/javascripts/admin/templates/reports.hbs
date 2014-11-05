@@ -1,14 +1,28 @@
-{{#if loaded}}
-  <h3>{{title}}</h3>
+<h3>{{title}}</h3>
 
-  <button class='btn'
-          {{action "viewAsTable"}}
-          {{bind-attr disabled="viewingTable"}}>{{i18n admin.dashboard.reports.view_table}}</button>
+<div>
+  {{i18n admin.dashboard.reports.start_date}} {{input type="date" value=startDate}}
+  {{i18n admin.dashboard.reports.end_date}} {{input type="date" value=endDate}}
+  <button {{action refreshReport}} class='btn btn-primary'>{{i18n admin.dashboard.reports.refresh_report}}</button>
+</div>
 
-  <button class='btn'
-          {{action "viewAsBarChart"}}
-          {{bind-attr disabled="viewingBarChart"}}>{{i18n admin.dashboard.reports.view_chart}}</button>
+<div class='view-options'>
+  {{#if viewingTable}}
+    {{i18n admin.dashboard.reports.view_table}}
+  {{else}}
+    <a href {{action "viewAsTable"}}>{{i18n admin.dashboard.reports.view_table}}</a>
+  {{/if}}
+  |
+  {{#if viewingBarChart}}
+    {{i18n admin.dashboard.reports.view_chart}}
+  {{else}}
+    <a href {{action "viewAsBarChart"}}>{{i18n admin.dashboard.reports.view_chart}}</a>
+  {{/if}}
+</div>
 
+{{#if refreshing}}
+  {{loading-spinner}}
+{{else}}
   <table class='table report'>
     <tr>
       <th>{{xaxis}}</th>
@@ -31,7 +45,4 @@
       </tr>
     {{/each}}
   </table>
-
-{{else}}
-  {{i18n loading}}
 {{/if}}
