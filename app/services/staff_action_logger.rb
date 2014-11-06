@@ -156,6 +156,14 @@ class StaffActionLogger
     SQL
   end
 
+  def log_impersonate(user, opts={})
+    raise Discourse::InvalidParameters.new("user is nil") unless user
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:impersonate],
+      target_user_id: user.id
+    }))
+  end
+
   private
 
   def params(opts)
