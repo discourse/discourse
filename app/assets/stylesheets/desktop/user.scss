@@ -198,17 +198,19 @@
 
       dl dd {
         display: inline;
-        margin: 0 15px 0 5px;
+        margin: 0 10px 0 0;
         padding: 0;
       }
 
       dl dt {
         display: inline-block;
+        margin: 0 5px 0 0;
+        padding: 0;
       }
 
       dl {
-        padding: 10px 15px;
         margin: 0;
+        padding: 8px 10px;
       }
 
       dd {
